@@ -1,28 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 01/10] dt-bindings: soc: Add dvfsrc driver bindings
-Date: Thu, 29 Aug 2019 14:16:31 -0500
-Message-ID: <20190829191631.GA15714@bogus>
+Subject: Re: [PATCH V3 02/10] dt-bindings: soc: Add opp table on scpsys
+ bindings
+Date: Thu, 29 Aug 2019 14:16:40 -0500
+Message-ID: <20190829191640.GB15714@bogus>
 References: <1566995328-15158-1-git-send-email-henryc.chen@mediatek.com>
- <1566995328-15158-2-git-send-email-henryc.chen@mediatek.com>
+ <1566995328-15158-3-git-send-email-henryc.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1566995328-15158-2-git-send-email-henryc.chen@mediatek.com>
+In-Reply-To: <1566995328-15158-3-git-send-email-henryc.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Stephen Boyd <swboyd@chromium.org>, Ryan Case <ryandcase@chromium.org>, Nicolas Boichat <drinkcat@google.com>, Fan Chen <fan.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Henry Chen <henryc.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Aug 2019 20:28:39 +0800, Henry Chen wrote:
-> Document the binding for enabling dvfsrc on MediaTek SoC.
+On Wed, 28 Aug 2019 20:28:40 +0800, Henry Chen wrote:
+> Add opp table on scpsys dt-bindings for Mediatek SoC.
 > 
 > Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
 > ---
->  .../devicetree/bindings/soc/mediatek/dvfsrc.txt    | 23 ++++++++++++++++++++++
->  include/dt-bindings/soc/mtk,dvfsrc.h               | 14 +++++++++++++
->  2 files changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
->  create mode 100644 include/dt-bindings/soc/mtk,dvfsrc.h
+>  .../devicetree/bindings/soc/mediatek/scpsys.txt    | 42 ++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
 > 
 
 Please add Acked-by/Reviewed-by tags when posting new versions. However,
