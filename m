@@ -1,253 +1,93 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 2/3] dt-bindings: Convert Arm Mali Bifrost GPU to DT schema
-Date: Wed, 28 Aug 2019 16:45:01 -0500
-Message-ID: <20190828214502.12293-3-robh@kernel.org>
-References: <20190828214502.12293-1-robh@kernel.org>
+From: "Ramuthevar, Vadivel MuruganX"
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
+ for LGM SDXC PHY
+Date: Thu, 29 Aug 2019 09:45:36 +0800
+Message-ID: <d14411be-434c-ed02-6d85-f70d4a0acded@linux.intel.com>
+References: <20190828124315.48448-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190828124315.48448-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <0DAF21CFE1B20740AE23D6AF6E54843F1FDDE99F@IRSMSX108.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190828214502.12293-1-robh@kernel.org>
+In-Reply-To: <0DAF21CFE1B20740AE23D6AF6E54843F1FDDE99F@IRSMSX108.ger.corp.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: linux-kernel@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Heiko Stuebner <heiko@sntech.de>
+To: "Langer, Thomas" <thomas.langer@intel.com>, "kishon@ti.com" <kishon@ti.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "Kim, Cheol Yong" <cheol.yong.kim@intel.com>, "Wu, Qiming" <qi-ming.wu@intel.com>, "Liem, Peter Harliman" <peter.harliman.liem@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert the Arm Bifrost GPU binding to DT schema format.
+Hi Langer,
 
-The 'clocks' property is now required. This simplifies the schema as
-effectively all the users require 'clocks' already and the upstream
-driver requires at least one clock.
+Thank you for the review comments.
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Acked-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../bindings/gpu/arm,mali-bifrost.txt         |  92 --------------
- .../bindings/gpu/arm,mali-bifrost.yaml        | 116 ++++++++++++++++++
- 2 files changed, 116 insertions(+), 92 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
+On 28/8/2019 11:37 PM, Langer, Thomas wrote:
+> Hi Vadivel,
+>
+>> +...
+>> diff --git a/Documentation/devicetree/bindings/phy/intel,syscon.yaml
+>> b/Documentation/devicetree/bindings/phy/intel,syscon.yaml
+>> new file mode 100644
+>> index 000000000000..d0b78805e49f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/intel,syscon.yaml
+>> @@ -0,0 +1,33 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/phy/intel,syscon.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Syscon for eMMC/SDXC PHY Device Tree Bindings
+> This says the binding is for eMMC/SDXC
+Agreed, fix it.
+>> +
+>> +maintainers:
+>> +  - Ramuthevar Vadivel Murugan
+>> <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: intel,syscon
+> but this is a generic syscon, behind which are many registers, not only for
+> eMMC/SDXC. Also, the registers will be different for each SoC and needed for
+> many different drivers, that is why in your example it is called "chiptop"
+> -> toplevel registers not belonging to a specific HW module.
+>
+> Rob: Do you also think this "intel,syscon" is too generic?
+>       And the binding should be outside the "phy" folder?
+>
+> What is the way to support different SoCs with this?
+> Must the driver referencing this syscon be aware of these differences?
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-deleted file mode 100644
-index b8be9dbc68b4..000000000000
---- a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.txt
-+++ /dev/null
-@@ -1,92 +0,0 @@
--ARM Mali Bifrost GPU
--====================
--
--Required properties:
--
--- compatible :
--  * Since Mali Bifrost GPU model/revision is fully discoverable by reading
--    some determined registers, must contain the following:
--    + "arm,mali-bifrost"
--  * which must be preceded by one of the following vendor specifics:
--    + "amlogic,meson-g12a-mali"
--
--- reg : Physical base address of the device and length of the register area.
--
--- interrupts : Contains the three IRQ lines required by Mali Bifrost devices,
--  in the following defined order.
--
--- interrupt-names : Contains the names of IRQ resources in this exact defined
--  order: "job", "mmu", "gpu".
--
--Optional properties:
--
--- clocks : Phandle to clock for the Mali Bifrost device.
--
--- mali-supply : Phandle to regulator for the Mali device. Refer to
--  Documentation/devicetree/bindings/regulator/regulator.txt for details.
--
--- operating-points-v2 : Refer to Documentation/devicetree/bindings/opp/opp.txt
--  for details.
--
--- resets : Phandle of the GPU reset line.
--
--Vendor-specific bindings
--------------------------
--
--The Mali GPU is integrated very differently from one SoC to
--another. In order to accommodate those differences, you have the option
--to specify one more vendor-specific compatible, among:
--
--- "amlogic,meson-g12a-mali"
--  Required properties:
--  - resets : Should contain phandles of :
--    + GPU reset line
--    + GPU APB glue reset line
--
--Example for a Mali-G31:
--
--gpu@ffa30000 {
--	compatible = "amlogic,meson-g12a-mali", "arm,mali-bifrost";
--	reg = <0xffe40000 0x10000>;
--	interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
--	interrupt-names = "job", "mmu", "gpu";
--	clocks = <&clk CLKID_MALI>;
--	mali-supply = <&vdd_gpu>;
--	operating-points-v2 = <&gpu_opp_table>;
--	resets = <&reset RESET_DVALIN_CAPB3>, <&reset RESET_DVALIN>;
--};
--
--gpu_opp_table: opp_table0 {
--	compatible = "operating-points-v2";
--
--	opp@533000000 {
--		opp-hz = /bits/ 64 <533000000>;
--		opp-microvolt = <1250000>;
--	};
--	opp@450000000 {
--		opp-hz = /bits/ 64 <450000000>;
--		opp-microvolt = <1150000>;
--	};
--	opp@400000000 {
--		opp-hz = /bits/ 64 <400000000>;
--		opp-microvolt = <1125000>;
--	};
--	opp@350000000 {
--		opp-hz = /bits/ 64 <350000000>;
--		opp-microvolt = <1075000>;
--	};
--	opp@266000000 {
--		opp-hz = /bits/ 64 <266000000>;
--		opp-microvolt = <1025000>;
--	};
--	opp@160000000 {
--		opp-hz = /bits/ 64 <160000000>;
--		opp-microvolt = <925000>;
--	};
--	opp@100000000 {
--		opp-hz = /bits/ 64 <100000000>;
--		opp-microvolt = <912500>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-new file mode 100644
-index 000000000000..5f1fd6d7ee0f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-bifrost.yaml
-@@ -0,0 +1,116 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpu/arm,mali-bifrost.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ARM Mali Bifrost GPU
-+
-+maintainers:
-+  - Rob Herring <robh@kernel.org>
-+
-+properties:
-+  $nodename:
-+    pattern: '^gpu@[a-f0-9]+$'
-+
-+  compatible:
-+    items:
-+      - enum:
-+          - amlogic,meson-g12a-mali
-+      - const: arm,mali-bifrost # Mali Bifrost GPU model/revision is fully discoverable
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: Job interrupt
-+      - description: MMU interrupt
-+      - description: GPU interrupt
-+
-+  interrupt-names:
-+    items:
-+      - const: job
-+      - const: mmu
-+      - const: gpu
-+
-+  clocks:
-+    maxItems: 1
-+
-+  mali-supply:
-+    maxItems: 1
-+
-+  operating-points-v2: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+  - clocks
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: amlogic,meson-g12a-mali
-+    then:
-+      properties:
-+        resets:
-+          minItems: 2
-+      required:
-+        - resets
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    gpu@ffe40000 {
-+      compatible = "amlogic,meson-g12a-mali", "arm,mali-bifrost";
-+      reg = <0xffe40000 0x10000>;
-+      interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
-+             <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>;
-+      interrupt-names = "job", "mmu", "gpu";
-+      clocks = <&clk 1>;
-+      mali-supply = <&vdd_gpu>;
-+      operating-points-v2 = <&gpu_opp_table>;
-+      resets = <&reset 0>, <&reset 1>;
-+    };
-+
-+    gpu_opp_table: opp_table0 {
-+      compatible = "operating-points-v2";
-+
-+      opp@533000000 {
-+        opp-hz = /bits/ 64 <533000000>;
-+        opp-microvolt = <1250000>;
-+      };
-+      opp@450000000 {
-+        opp-hz = /bits/ 64 <450000000>;
-+        opp-microvolt = <1150000>;
-+      };
-+      opp@400000000 {
-+        opp-hz = /bits/ 64 <400000000>;
-+        opp-microvolt = <1125000>;
-+      };
-+      opp@350000000 {
-+        opp-hz = /bits/ 64 <350000000>;
-+        opp-microvolt = <1075000>;
-+      };
-+      opp@266000000 {
-+        opp-hz = /bits/ 64 <266000000>;
-+        opp-microvolt = <1025000>;
-+      };
-+      opp@160000000 {
-+        opp-hz = /bits/ 64 <160000000>;
-+        opp-microvolt = <925000>;
-+      };
-+      opp@100000000 {
-+        opp-hz = /bits/ 64 <100000000>;
-+        opp-microvolt = <912500>;
-+      };
-+    };
-+
-+...
--- 
-2.20.1
+[Vadivel] : most of the IP drivers are using syscon, please suggest me 
+to keep in the right place since
+
+it is common to all(w.r.t Intel's Lightning Mountain).
+
+Best Regards
+Vadivel
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  "#reset-cells":
+>> +   const: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - "#reset-cells"
+>> +
+>> +examples:
+>> +  - |
+>> +    sysconf: chiptop@e0020000 {
+>> +       compatible = "intel,syscon", "syscon";
+>> +       reg = <0xe0020000 0x100>;
+>> +       #reset-cells = <1>;
+>> +    };
+>> --
+>> 2.11.0
+> Best regards,
+> Thomas
