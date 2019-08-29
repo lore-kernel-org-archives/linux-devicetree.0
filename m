@@ -1,42 +1,101 @@
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH 2/4] i3c: master: Check if devices have
- i3c_dev_boardinfo on i3c_master_add_i3c_dev_locked()
-Date: Thu, 29 Aug 2019 16:39:18 +0200
-Message-ID: <20190829163918.571fd0d8@collabora.com>
-References: <cover.1567071213.git.vitor.soares@synopsys.com>
-        <3e21481ddf53ea58f5899df6ec542b79b8cbcd68.1567071213.git.vitor.soares@synopsys.com>
-        <20190829124457.3a750932@collabora.com>
-        <SN6PR12MB265551F73B9B516CACB5B807AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: renesas: Add HiHope RZ/G2M board with
+ idk-1110wr display
+Date: Thu, 29 Aug 2019 17:39:09 +0300
+Message-ID: <20190829143909.GB5875@pendragon.ideasonboard.com>
+References: <1567078713-29361-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1567078713-29361-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <SN6PR12MB265551F73B9B516CACB5B807AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vitor Soares <Vitor.Soares@synopsys.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1567078713-29361-3-git-send-email-fabrizio.castro@bp.renesas.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, xu_shunji@hoperun.com, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, ebiharaml@si-linux.co.jp, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 29 Aug 2019 14:00:44 +0000
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-
-> Hi Boris,
-> 
-> From: Boris Brezillon <boris.brezillon@collabora.com>
-> Date: Thu, Aug 29, 2019 at 11:44:57
-> 
-> > On Thu, 29 Aug 2019 12:19:33 +0200
-> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> >   
-> > > The I3C devices described in DT might not be attached to the master which
-> > > doesn't allow to assign a specific dynamic address.  
-> > 
-> > I remember testing this when developing the framework, so, unless
-> > another patch regressed it, it should already work. I suspect patch 1
-> > is actually the regressing this use case.  
-> 
-> For today it doesn't address the case where the device is described with 
-> static address = 0, which isn't attached to the controller.
-
-Hm, I'm pretty sure I had designed the code to support that case (see
-[1]). It might be buggy, but nothing we can't fix I guess.
+SGkgRmFicml6aW8sCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIFRodSwgQXVnIDI5LCAy
+MDE5IGF0IDEyOjM4OjMzUE0gKzAxMDAsIEZhYnJpemlvIENhc3RybyB3cm90ZToKPiBUaGUgSGlI
+b3BlIFJaL0cyTSBpcyBhZHZlcnRpc2VkIGFzIGNvbXBhdGlibGUgd2l0aCBwYW5lbCBpZGstMTEx
+MHdyCj4gZnJvbSBBZHZhbnRlY2gsIGhvd2V2ZXIgdGhlIHBhbmVsIGlzbid0IHNvbGQgYWxvbmdz
+aWRlIHRoZSBib2FyZC4KPiBBIG5ldyBkdHMsIGFkZGluZyBldmVyeXRoaW5nIHRoYXQncyByZXF1
+aXJlZCB0byBnZXQgdGhlIHBhbmVsIHRvCj4gd29yayB0aGUgSGlIb3BlIFJaL0cyTSwgaXMgdGhl
+IG1vc3QgY29udmVuaWVudCB3YXkgdG8gc3VwcG9ydCB0aGUKPiBIaUhvcGUgUlovRzJNIHdoZW4g
+aXQncyBjb25uZWN0ZWQgdG8gdGhlIGlkay0xMTEwd3IuCj4gCj4gU2lnbmVkLW9mZi1ieTogRmFi
+cml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+Cj4gLS0tCj4gdjEt
+PnYyOgo+ICogYWRkZWQgc3BhY2UgYmV0d2VlbiBsdmRzLWNvbm5lY3Rvci1lbi1ncGlvIGFuZCBj
+dXJseSBicmFjZQo+IAo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvTWFrZWZpbGUgICAg
+ICAgICAgICAgICB8ICAxICsKPiAgLi4uL3I4YTc3NGExLWhpaG9wZS1yemcybS1leC1pZGstMTEx
+MHdyLmR0cyAgICAgICAgfCA4NiArKysrKysrKysrKysrKysrKysrKysrCj4gIDIgZmlsZXMgY2hh
+bmdlZCwgODcgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9i
+b290L2R0cy9yZW5lc2FzL3I4YTc3NGExLWhpaG9wZS1yemcybS1leC1pZGstMTExMHdyLmR0cwo+
+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvTWFrZWZpbGUgYi9h
+cmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvTWFrZWZpbGUKPiBpbmRleCA0MmI3NGMyLi41ZDk0
+MzAxIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9NYWtlZmlsZQo+
+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9NYWtlZmlsZQo+IEBAIC0xLDYgKzEs
+NyBAQAo+ICAjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4gIGR0Yi0kKENPTkZJ
+R19BUkNIX1I4QTc3NEExKSArPSByOGE3NzRhMS1oaWhvcGUtcnpnMm0uZHRiCj4gIGR0Yi0kKENP
+TkZJR19BUkNIX1I4QTc3NEExKSArPSByOGE3NzRhMS1oaWhvcGUtcnpnMm0tZXguZHRiCj4gK2R0
+Yi0kKENPTkZJR19BUkNIX1I4QTc3NEExKSArPSByOGE3NzRhMS1oaWhvcGUtcnpnMm0tZXgtaWRr
+LTExMTB3ci5kdGIKPiAgZHRiLSQoQ09ORklHX0FSQ0hfUjhBNzc0QzApICs9IHI4YTc3NGMwLWNh
+dDg3NC5kdGIgcjhhNzc0YzAtZWs4NzQuZHRiCj4gIGR0Yi0kKENPTkZJR19BUkNIX1I4QTc3OTUp
+ICs9IHI4YTc3OTUtc2FsdmF0b3IteC5kdGIgcjhhNzc5NS1oM3VsY2IuZHRiCj4gIGR0Yi0kKENP
+TkZJR19BUkNIX1I4QTc3OTUpICs9IHI4YTc3OTUtaDN1bGNiLWtmLmR0Ygo+IGRpZmYgLS1naXQg
+YS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc0YTEtaGlob3BlLXJ6ZzJtLWV4LWlk
+ay0xMTEwd3IuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3NGExLWhpaG9w
+ZS1yemcybS1leC1pZGstMTExMHdyLmR0cwo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXgg
+MDAwMDAwMC4uNjdmZTA0Ywo+IC0tLSAvZGV2L251bGwKPiArKysgYi9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL3JlbmVzYXMvcjhhNzc0YTEtaGlob3BlLXJ6ZzJtLWV4LWlkay0xMTEwd3IuZHRzCj4gQEAg
+LTAsMCArMSw4NiBAQAo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAo+ICsv
+Kgo+ICsgKiBEZXZpY2UgVHJlZSBTb3VyY2UgZm9yIHRoZSBIaUhvcGUgUlovRzJNIHN1YiBib2Fy
+ZCBjb25uZWN0ZWQgdG8gYW4KPiArICogQWR2YW50ZWNoIElESy0xMTEwV1IgMTAuMSIgTFZEUyBw
+YW5lbAo+ICsgKgo+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTkgUmVuZXNhcyBFbGVjdHJvbmljcyBD
+b3JwLgo+ICsgKi8KPiArCj4gKyNpbmNsdWRlICJyOGE3NzRhMS1oaWhvcGUtcnpnMm0tZXguZHRz
+Igo+ICsKPiArLyB7Cj4gKwliYWNrbGlnaHQgewo+ICsJCWNvbXBhdGlibGUgPSAicHdtLWJhY2ts
+aWdodCI7Cj4gKwkJcHdtcyA9IDwmcHdtMCAwIDUwMDAwPjsKPiArCj4gKwkJYnJpZ2h0bmVzcy1s
+ZXZlbHMgPSA8MCAyIDggMTYgMzIgNjQgMTI4IDI1NT47Cj4gKwkJZGVmYXVsdC1icmlnaHRuZXNz
+LWxldmVsID0gPDY+Owo+ICsJfTsKPiArCj4gKwlwYW5lbC1sdmRzIHsKPiArCQljb21wYXRpYmxl
+ID0gImFkdmFudGVjaCxpZGstMTExMHdyIiwgInBhbmVsLWx2ZHMiOwo+ICsKPiArCQl3aWR0aC1t
+bSA9IDwyMjM+Owo+ICsJCWhlaWdodC1tbSA9IDwxMjU+Owo+ICsKPiArCQlkYXRhLW1hcHBpbmcg
+PSAiamVpZGEtMjQiOwo+ICsKPiArCQlwYW5lbC10aW1pbmcgewo+ICsJCQkvKiAxMDI0eDYwMCBA
+NjBIeiAqLwo+ICsJCQljbG9jay1mcmVxdWVuY3kgPSA8NTEyMDAwMDA+Owo+ICsJCQloYWN0aXZl
+ID0gPDEwMjQ+Owo+ICsJCQl2YWN0aXZlID0gPDYwMD47Cj4gKwkJCWhzeW5jLWxlbiA9IDwyNDA+
+Owo+ICsJCQloZnJvbnQtcG9yY2ggPSA8NDA+Owo+ICsJCQloYmFjay1wb3JjaCA9IDw0MD47Cj4g
+KwkJCXZmcm9udC1wb3JjaCA9IDwxNT47Cj4gKwkJCXZiYWNrLXBvcmNoID0gPDEwPjsKPiArCQkJ
+dnN5bmMtbGVuID0gPDEwPjsKPiArCQl9Owo+ICsKPiArCQlwb3J0IHsKPiArCQkJcGFuZWxfaW46
+IGVuZHBvaW50IHsKPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbHZkczBfb3V0PjsKPiArCQkJ
+fTsKPiArCQl9Owo+ICsJfTsKPiArfTsKPiArCj4gKyZncGlvMSB7Cj4gKwkvKgo+ICsJICogV2hl
+biBHUDFfMjAgaXMgTE9XIExWRFMwIGlzIGNvbm5lY3RlZCB0byB0aGUgTFZEUyBjb25uZWN0b3IK
+PiArCSAqIFdoZW4gR1AxXzIwIGlzIEhJR0ggTFZEUzAgaXMgY29ubmVjdGVkIHRvIHRoZSBMVDg5
+MThMCj4gKwkgKi8KCkkga25ldyB0aGF0IHJ1bnRpbWUtY29uZmlndXJhYmxlIG91dHB1dCByb3V0
+aW5nIHdvdWxkIGJlIG5lZWRlZCBvbmUgZGF5LgpXaGlsZSBJJ20gbm90IG9wcG9zZWQgdG8gbWVy
+Z2luZyB0aGlzIHBhdGNoIGFzLWlzLCBpdCBtZWFucyB0aGF0IGEgYm9hcmQKc2hpcHBpbmcgdGhp
+cyBEVCB3aWxsIG5vdCBzdXBwb3J0IHRoZSBEU0kgb3V0cHV0LiBJIHN1cHBvc2UgdGhhdCdzIG5v
+dCBhCnByb2JsZW0gYXMgdXNpbmcgRFNJIHdvdWxkIHJlcXVpcmUgYW4gZXh0ZXJuYWwgRFNJIHBh
+bmVsLCB3aGljaCB3b3VsZApyZXF1aXJlIGEgZGlmZmVyZW50IERUIGFueXdheS4gSW4gdGhlIGdl
+bmVyYWwgY2FzZSwgaG93ZXZlciwKaW1wbGVtZW50aW5nIHN1cHBvcnQgaW4gdGhlIERVIGRyaXZl
+ciBmb3Igb3V0cHV0IHJvdXRpbmcgb3V0c2lkZSB0aGUgU29DCndpbGwgYmUgaW50ZXJlc3Rpbmcg
+dG8gc2F5IHRoZSBsZWFzdCA6LSkKCkFja2VkLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50
+LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Cgo+ICsJbHZkcy1jb25uZWN0b3ItZW4tZ3BpbyB7
+Cj4gKwkJZ3Bpby1ob2c7Cj4gKwkJZ3Bpb3MgPSA8MjAgR1BJT19BQ1RJVkVfSElHSD47Cj4gKwkJ
+b3V0cHV0LWxvdzsKPiArCQlsaW5lLW5hbWUgPSAibHZkcy1jb25uZWN0b3ItZW4tZ3BpbyI7Cj4g
+Kwl9Owo+ICt9Owo+ICsKPiArJmx2ZHMwIHsKPiArCXN0YXR1cyA9ICJva2F5IjsKPiArCj4gKwlw
+b3J0cyB7Cj4gKwkJcG9ydEAxIHsKPiArCQkJbHZkczBfb3V0OiBlbmRwb2ludCB7Cj4gKwkJCQly
+ZW1vdGUtZW5kcG9pbnQgPSA8JnBhbmVsX2luPjsKPiArCQkJfTsKPiArCQl9Owo+ICsJfTsKPiAr
+fTsKPiArCj4gKyZwZmMgewo+ICsJcHdtMF9waW5zOiBwd20wIHsKPiArCQlncm91cHMgPSAicHdt
+MCI7Cj4gKwkJZnVuY3Rpb24gPSAicHdtMCI7Cj4gKwl9Owo+ICt9Owo+ICsKPiArJnB3bTAgewo+
+ICsJcGluY3RybC0wID0gPCZwd20wX3BpbnM+Owo+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0
+IjsKPiArCj4gKwlzdGF0dXMgPSAib2theSI7Cj4gK307CgotLSAKUmVnYXJkcywKCkxhdXJlbnQg
+UGluY2hhcnQKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
