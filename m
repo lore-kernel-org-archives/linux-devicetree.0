@@ -1,40 +1,57 @@
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH 2/2] arm64: dts: qcom: qcs404: add the watchdog node
-Date: Thu, 29 Aug 2019 22:03:40 +0200
-Message-ID: <20190829200340.15498-2-jorge.ramirez-ortiz@linaro.org>
-References: <20190829200340.15498-1-jorge.ramirez-ortiz@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 04/11] dt-bindings: phy-mtk-tphy: add a new reference
+ clock
+Date: Thu, 29 Aug 2019 15:05:03 -0500
+Message-ID: <20190829200503.GA2542@bogus>
+References: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
+ <f6ee7d33103b43b2f1e1331c23c36057ef20b20d.1566542697.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829200340.15498-1-jorge.ramirez-ortiz@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <f6ee7d33103b43b2f1e1331c23c36057ef20b20d.1566542697.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Allows QCS404 based designs to enable watchdog support
+On Fri, Aug 23, 2019 at 03:00:11PM +0800, Chunfeng Yun wrote:
+> Usually the digital and anolog phys use the same reference clock,
+> but on some platforms, they are separated, so add another optional
+> clock to support it.
+> In order to keep the clock names consistent with PHY IP's, use
+> the da_ref for anolog phy and ref clock for digital phy.
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+> index dbc143ed5999..ed9a2641f204 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+> +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+> @@ -41,9 +41,12 @@ Optional properties (PHY_TYPE_USB2 port (child) node):
+>  - clocks	: a list of phandle + clock-specifier pairs, one for each
+>  		  entry in clock-names
+>  - clock-names	: may contain
+> -		  "ref": 48M reference clock for HighSpeed anolog phy; and 26M
+> -			reference clock for SuperSpeed anolog phy, sometimes is
+> +		  "ref": 48M reference clock for HighSpeed (digital) phy; and 26M
+> +			reference clock for SuperSpeed (digital) phy, sometimes is
+>  			24M, 25M or 27M, depended on platform.
+> +		  "da_ref": the reference clock of anolog phy, used if the clocks
+> +			of anolog and digital phys are separated, otherwise uses
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+s/amolog/analog/
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 131d8046d3be..17d4dd54c53a 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -875,6 +875,12 @@
- 			#mbox-cells = <1>;
- 		};
- 
-+		watchdog@b017000 {
-+			compatible = "qcom,kpss-wdt";
-+			reg = <0x0b017000 0x1000>;
-+			clocks = <&sleep_clk>;
-+		};
-+
- 		timer@b120000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--- 
-2.22.0
+> +			"ref" clock only if need.
+
+needed.
+
+>  
+>  - mediatek,eye-src	: u32, the value of slew rate calibrate
+>  - mediatek,eye-vrt	: u32, the selection of VRT reference voltage
+> -- 
+> 2.23.0
+> 
