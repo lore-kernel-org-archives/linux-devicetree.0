@@ -1,8 +1,7 @@
 From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v10 6/7] dt-bindings: Add depends-on property to break cyclic
- inferred dependencies
-Date: Thu, 29 Aug 2019 00:46:02 -0700
-Message-ID: <20190829074603.70424-7-saravanak@google.com>
+Subject: [PATCH v10 7/7] of: property: Add "depends-on" parsing support to of_fwnode_add_links()
+Date: Thu, 29 Aug 2019 00:46:03 -0700
+Message-ID: <20190829074603.70424-8-saravanak@google.com>
 References: <20190829074603.70424-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -13,74 +12,57 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg 
 Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-acpi@vger.kernel.org, clang-built-linux@googlegroups.com, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-The functional dependencies of a device can be inferred by looking at
-the common devicetree bindings like clocks, interconnects and
-regulators.
+If dependencies inferred by of_fwnode_add_links() result in a cycle, it
+can prevent the probing of all the devices in the cycle. The depends-on
+property has been added to explicitly override inferred dependencies
+when they create a cycle.
 
-However, this can sometimes result in cyclic dependencies where one of
-the inferred dependencies isn't really a functional dependency.
-
-Add a depends-on property that can override inferred dependencies by
-explicitly listing the suppliers of a device and thereby allow breaking
-any cyclic inferred depenencies.
+Add depends-on parsing support to of_fwnode_add_links() so that
+platforms with cyclic dependencies can use "depends-on" to break the
+cycle and continue successfully probing devices.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- .../devicetree/bindings/depends-on.txt        | 46 +++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/depends-on.txt
+ drivers/of/property.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/depends-on.txt b/Documentation/devicetree/bindings/depends-on.txt
-new file mode 100644
-index 000000000000..e6535917b189
---- /dev/null
-+++ b/Documentation/devicetree/bindings/depends-on.txt
-@@ -0,0 +1,46 @@
-+Explicit listing of dependencies
-+================================
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index 420c2d428184..78a262e24686 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -1106,6 +1106,12 @@ static struct device_node *parse_interconnects(struct device_node *np,
+ 				"#interconnect-cells");
+ }
+ 
++static struct device_node *parse_depends_on(struct device_node *np,
++					    const char *prop_name, int index)
++{
++	return parse_prop_cells(np, prop_name, index, "depends-on", NULL);
++}
 +
-+Apart from parent-child relationships, devices (consumers) often have
-+functional dependencies on other devices (suppliers). Examples of common
-+suppliers are clocks, interconnects and regulators.
+ static int strcmp_suffix(const char *str, const char *suffix)
+ {
+ 	unsigned int len, suffix_len;
+@@ -1151,6 +1157,7 @@ static const struct supplier_bindings bindings[] = {
+ 	{ .parse_prop = parse_clocks, },
+ 	{ .parse_prop = parse_interconnects, },
+ 	{ .parse_prop = parse_regulators, },
++	{ .parse_prop = parse_depends_on, },
+ 	{},
+ };
+ 
+@@ -1203,6 +1210,12 @@ static int __of_link_to_suppliers(struct device *dev,
+ 	struct property *p;
+ 	int ret = 0;
+ 
++	if (of_find_property(con_np, "depends-on", NULL)) {
++		if (of_link_property(dev, con_np, "depends-on"))
++			ret = -EAGAIN;
++		return ret;
++	}
 +
-+The consumer-supplier dependencies of most devices can be inferred by
-+simply looking at the devicetree bindings of common suppliers like clocks,
-+interconnects and regulators.  However, this can sometimes result in cyclic
-+dependencies where one of the inferred dependencies isn't really a
-+functional dependency.
-+
-+When there is an inferred cyclic dependency between devices, we need a way
-+to explicitly list the suppliers of one or more devices in the cycle so
-+that we can break the cycle.
-+
-+The depends-on property fills this need. It can be used to explicitly list
-+the suppliers of a device and override any inferred dependencies of that
-+device.
-+
-+This property shall be used ONLY to break cyclic dependencies.
-+
-+Optional properties:
-+- depends-on:	A list of phandles to suppliers of the device.
-+
-+Examples:
-+Here, the inferred depencency would state that cc2 is dependent on cc1 and
-+cc3; and cc3 is dependent on cc1 and cc2. This creates a cycle between cc2
-+and cc3.
-+
-+With the use of depends-on, cc2 is only dependent on cc1; and cc3 is still
-+dependent on cc1 and cc2. This breaks the cycle between cc2 and cc3.
-+
-+cc2: cc2@40031000 {
-+	      compatible = "cc2";
-+	      reg = <0x40031000 0x1000>;
-+	      clocks = <&cc1 10>, <&cc3 7>;
-+	      depends-on = <&cc1>;
-+};
-+
-+cc3: cc3@40034000 {
-+	      compatible = "cc3";
-+	      reg = <0x40031000 0x1000>;
-+	      clocks = <&cc1 10>, <&cc2 7>;
-+};
+ 	for_each_property_of_node(con_np, p)
+ 		if (of_link_property(dev, con_np, p->name))
+ 			ret = -EAGAIN;
 -- 
 2.23.0.187.g17f5b7556c-goog
