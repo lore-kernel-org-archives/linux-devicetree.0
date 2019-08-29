@@ -1,92 +1,36 @@
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH 2/4] i3c: master: Check if devices have
- i3c_dev_boardinfo on i3c_master_add_i3c_dev_locked()
-Date: Thu, 29 Aug 2019 18:15:20 +0200
-Message-ID: <20190829181520.0b33b642@collabora.com>
-References: <cover.1567071213.git.vitor.soares@synopsys.com>
-        <3e21481ddf53ea58f5899df6ec542b79b8cbcd68.1567071213.git.vitor.soares@synopsys.com>
-        <20190829124457.3a750932@collabora.com>
-        <SN6PR12MB265551F73B9B516CACB5B807AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-        <20190829163918.571fd0d8@collabora.com>
-        <20190829163941.45380b19@collabora.com>
-        <SN6PR12MB2655B08176E14BE9DF2BACA2AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-        <20190829172441.3a76385e@collabora.com>
-        <SN6PR12MB26553867412178B3F7190F0CAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 1/2] dt-bindings: interrupt-controller: new binding for the meson sm1 SoCs
+Date: Thu, 29 Aug 2019 18:16:34 +0200
+Message-ID: <20190829161635.25067-2-jbrunet@baylibre.com>
+References: <20190829161635.25067-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <SN6PR12MB26553867412178B3F7190F0CAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+In-Reply-To: <20190829161635.25067-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vitor Soares <Vitor.Soares@synopsys.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 29 Aug 2019 15:57:32 +0000
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+Update the dt-binding to add support for the sm1 SoC family in the
+amlogic GPIO interrupt controller driver.
 
-> -----Original Message-----
-> From: Boris Brezillon 
-> <boris.brezillon@collabora.com> 
-> Sent: Thursday, August 29, 2019 4:25 
-> PM
-> To: Vitor Soares <Vitor.Soares@synopsys.com>
-> Cc: 
-> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; 
-> linux-i3c@lists.infradead.org; bbrezillon@kernel.org; robh+dt@kernel.org; 
-> mark.rutland@arm.com; Joao.Pinto@synopsys.com
-> Subject: Re: [PATCH 2/4] 
-> i3c: master: Check if devices have i3c_dev_boardinfo on 
-> i3c_master_add_i3c_dev_locked()
-> 
-> On Thu, 29 Aug 2019 15:07:08 +0000
-> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> 
-> > From: Boris Brezillon   
-> <boris.brezillon@collabora.com>
-> > Date: Thu, Aug 29, 2019 at 15:39:41
-> >   
-> 
-> > > On Thu, 29 Aug 2019 16:39:18 +0200
-> > > Boris Brezillon <boris.brezillon@collabora.com> wrote:
-> > >     
-> > > > On Thu, 29 Aug 2019 14:00:44 +0000
-> > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > > >     
-> > > > > Hi Boris,
-> > > > > 
-> > > > > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > > > > Date: Thu, Aug 29, 2019 at 11:44:57
-> > > > >       
-> > > > > > On Thu, 29 Aug 2019 12:19:33 +0200
-> > > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > > > > >         
-> > > > > > > The I3C devices described in DT might not be attached to the master which
-> > > > > > > doesn't allow to assign a specific dynamic address.        
-> > > > > > 
-> > > > > > I remember testing this when developing the framework, so, unless
-> > > > > > another patch regressed it, it should already work. I suspect patch 1
-> > > > > > is actually the regressing this use case.        
-> > > > > 
-> > > > > For today it doesn't address the case where the device is described with 
-> > > > > static address = 0, which isn't attached to the controller.      
-> > > > 
-> > > > Hm, I'm pretty sure I had designed the code to support that case (see
-> > > > [1]). It might be buggy, but nothing we can't fix I guess.
-> > > >     
-> > > 
-> > > [1]https://urldefense.proofpoint.com/v2/url?u=https-3A__elixir.bootlin.com_linux_v5.3-2Drc6_source_drivers_i3c_master.c-23L1898&d=DwICAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=qVuU64u9x77Y0Kd0PhDK_lpxFgg6PK9PateHwjb_DY0&m=IXS1ygIgEo5vwajk0iwd5aBDVBzRnVTjO3cg4iBmGNc&s=HC-AcYm-AZPrUBoALioej_BDnqOtJHltr39Z2yPkuU4&e=     
-> > 
-> > That is only valid if you have olddev which will only exist if static 
-> > address != 0.  
-> 
-> Hm, if you revert patch 1 (and assuming the device is properly defined
-> in the DT), you should have olddev != NULL when reaching that point. If
-> that's not the case there's a bug somewhere that should be fixed.
-> 
-> No, because the device is not attached.
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ .../bindings/interrupt-controller/amlogic,meson-gpio-intc.txt    | 1 +
+ 1 file changed, 1 insertion(+)
 
-Oh, my bad, I see what you mean now. This is definitely a bug and should
-have the Fixes tags. I mean, even if we don't care about dynamic
-address assignment, I3C drivers might care about the ->of_node that's
-attached to the device.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+index 7d531d5fff29..684bb1cd75ec 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+@@ -16,6 +16,7 @@ Required properties:
+     "amlogic,meson-gxl-gpio-intc" for GXL SoCs (S905X, S912)
+     "amlogic,meson-axg-gpio-intc" for AXG SoCs (A113D, A113X)
+     "amlogic,meson-g12a-gpio-intc" for G12A SoCs (S905D2, S905X2, S905Y2)
++    "amlogic,meson-sm1-gpio-intc" for SM1 SoCs (S905D3, S905X3, S905Y3)
+ - reg : Specifies base physical address and size of the registers.
+ - interrupt-controller : Identifies the node as an interrupt controller.
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+-- 
+2.21.0
