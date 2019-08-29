@@ -1,24 +1,94 @@
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [PATCH v2 4/7] usb: mtk-xhci: support ip-sleep wakeup for MT8183
-Date: Thu, 29 Aug 2019 13:35:14 +0300
-Message-ID: <cc00a930-424f-d511-4616-f0409cbca1ac@linux.intel.com>
-References: <1566977671-22191-1-git-send-email-chunfeng.yun@mediatek.com>
- <1566977671-22191-5-git-send-email-chunfeng.yun@mediatek.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH 1/4] i3c: master: detach and free device if
+ pre_assign_dyn_addr() fails
+Date: Thu, 29 Aug 2019 12:41:15 +0200
+Message-ID: <20190829124115.482cd8ec@collabora.com>
+References: <cover.1567071213.git.vitor.soares@synopsys.com>
+        <e26948eaaf765f683d8fe0618a31a98e2ecc0e65.1567071213.git.vitor.soares@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566977671-22191-5-git-send-email-chunfeng.yun@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <e26948eaaf765f683d8fe0618a31a98e2ecc0e65.1567071213.git.vitor.soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Vitor Soares <Vitor.Soares@synopsys.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i3c@lists.infradead.org, bbrezillon@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Joao.Pinto@synopsys.com, Przemyslaw Gaj <pgaj@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On 28.8.2019 10.34, Chunfeng Yun wrote:
-> Support USB wakeup by ip-sleep mode for MT8183, it's similar to
-> MT8173
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
++Przemek
 
-Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Please try to Cc active I3C contributors so they get a chance to
+comment on your patches.
+
+On Thu, 29 Aug 2019 12:19:32 +0200
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+
+> On pre_assing_dyn_addr() the devices that fail:
+>   i3c_master_setdasa_locked()
+>   i3c_master_reattach_i3c_dev()
+>   i3c_master_retrieve_dev_info()
+> 
+> are kept in memory and master->bus.devs list. This makes the i3c devices
+> without a dynamic address are sent on DEFSLVS CCC command. Fix this by
+> detaching and freeing the devices that fail on pre_assign_dyn_addr().
+
+I don't think removing those entries is a good strategy, as one might
+want to try to use a different dynamic address if the requested one
+is not available. Why not simply skipping entries that have ->dyn_addr
+set to 0 when preparing a DEFSLVS frame
+
+> 
+> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> ---
+>  drivers/i3c/master.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> index 5f4bd52..4d29e1f 100644
+> --- a/drivers/i3c/master.c
+> +++ b/drivers/i3c/master.c
+> @@ -1438,7 +1438,7 @@ static void i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
+>  	ret = i3c_master_setdasa_locked(master, dev->info.static_addr,
+>  					dev->boardinfo->init_dyn_addr);
+>  	if (ret)
+> -		return;
+> +		goto err_detach_dev;
+>  
+>  	dev->info.dyn_addr = dev->boardinfo->init_dyn_addr;
+>  	ret = i3c_master_reattach_i3c_dev(dev, 0);
+> @@ -1453,6 +1453,10 @@ static void i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
+>  
+>  err_rstdaa:
+>  	i3c_master_rstdaa_locked(master, dev->boardinfo->init_dyn_addr);
+> +
+> +err_detach_dev:
+> +	i3c_master_detach_i3c_dev(dev);
+> +	i3c_master_free_i3c_dev(dev);
+
+We certainly shouldn't detach/free the i3c_dev_desc from here. If it
+has to be done somewhere (which I'd like to avoid), it should be done
+in i3c_master_bus_init() (i3c_master_pre_assign_dyn_addr() should be
+converted to return an int in that case).
+
+>  }
+>  
+>  static void
+> @@ -1647,7 +1651,7 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+>  	enum i3c_addr_slot_status status;
+>  	struct i2c_dev_boardinfo *i2cboardinfo;
+>  	struct i3c_dev_boardinfo *i3cboardinfo;
+> -	struct i3c_dev_desc *i3cdev;
+> +	struct i3c_dev_desc *i3cdev, *i3ctmp;
+>  	struct i2c_dev_desc *i2cdev;
+>  	int ret;
+>  
+> @@ -1746,7 +1750,8 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+>  	 * Pre-assign dynamic address and retrieve device information if
+>  	 * needed.
+>  	 */
+> -	i3c_bus_for_each_i3cdev(&master->bus, i3cdev)
+> +	list_for_each_entry_safe(i3cdev, i3ctmp, &master->bus.devs.i3c,
+> +				 common.node)
+>  		i3c_master_pre_assign_dyn_addr(i3cdev);
+>  
+>  	ret = i3c_master_do_daa(master);
