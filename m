@@ -1,7 +1,7 @@
 From: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v14 06/10] mailbox: mediatek: cmdq: clear the event in cmdq initial flow
-Date: Thu, 29 Aug 2019 09:48:12 +0800
-Message-ID: <20190829014817.25482-7-bibby.hsieh@mediatek.com>
+Subject: [PATCH v14 10/10] arm64: dts: add gce node for mt8183
+Date: Thu, 29 Aug 2019 09:48:17 +0800
+Message-ID: <20190829014817.25482-12-bibby.hsieh@mediatek.com>
 References: <20190829014817.25482-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,79 +12,40 @@ To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-GCE hardware stored event information in own internal sysram,
-if the initial value in those sysram is not zero value
-it will cause a situation that gce can wait the event immediately
-after client ask gce to wait event but not really trigger the
-corresponding hardware.
-
-In order to make sure that the wait event function is
-exactly correct, we need to clear the sysram value in
-cmdq initial flow.
-
-Fixes: 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
+add gce device node for mt8183
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- drivers/mailbox/mtk-cmdq-mailbox.c       | 5 +++++
- include/linux/mailbox/mtk-cmdq-mailbox.h | 3 +++
- include/linux/soc/mediatek/mtk-cmdq.h    | 3 ---
- 3 files changed, 8 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 69daaadc3a5f..9a6ce9f5a7db 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -21,6 +21,7 @@
- #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 66aaa07f6cec..52b9af38a00a 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/power/mt8183-power.h>
++#include <dt-bindings/gce/mt8183-gce.h>
+ #include "mt8183-pinfunc.h"
  
- #define CMDQ_CURR_IRQ_STATUS		0x10
-+#define CMDQ_SYNC_TOKEN_UPDATE		0x68
- #define CMDQ_THR_SLOT_CYCLES		0x30
- #define CMDQ_THR_BASE			0x100
- #define CMDQ_THR_SIZE			0x80
-@@ -104,8 +105,12 @@ static void cmdq_thread_resume(struct cmdq_thread *thread)
+ / {
+@@ -321,6 +322,15 @@
+ 			status = "disabled";
+ 		};
  
- static void cmdq_init(struct cmdq *cmdq)
- {
-+	int i;
++		gce: mailbox@10238000 {
++			compatible = "mediatek,mt8183-gce";
++			reg = <0 0x10238000 0 0x4000>;
++			interrupts = <GIC_SPI 162 IRQ_TYPE_LEVEL_LOW>;
++			#mbox-cells = <3>;
++			clocks = <&infracfg CLK_INFRA_GCE>;
++			clock-names = "gce";
++		};
 +
- 	WARN_ON(clk_enable(cmdq->clock) < 0);
- 	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
-+	for (i = 0; i <= CMDQ_MAX_EVENT; i++)
-+		writel(i, cmdq->base + CMDQ_SYNC_TOKEN_UPDATE);
- 	clk_disable(cmdq->clock);
- }
- 
-diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-index ccb73422c2fa..e6f54ef6698b 100644
---- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-+++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-@@ -20,6 +20,9 @@
- #define CMDQ_WFE_WAIT			BIT(15)
- #define CMDQ_WFE_WAIT_VALUE		0x1
- 
-+/** cmdq event maximum */
-+#define CMDQ_MAX_EVENT			0x3ff
-+
- /*
-  * CMDQ_CODE_MASK:
-  *   set write mask
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index f3ae45d02e80..9618debb9ceb 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -13,9 +13,6 @@
- 
- #define CMDQ_NO_TIMEOUT		0xffffffffu
- 
--/** cmdq event maximum */
--#define CMDQ_MAX_EVENT				0x3ff
--
- struct cmdq_pkt;
- 
- struct cmdq_client {
+ 		uart0: serial@11002000 {
+ 			compatible = "mediatek,mt8183-uart",
+ 				     "mediatek,mt6577-uart";
 -- 
 2.18.0
