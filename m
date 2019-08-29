@@ -1,169 +1,179 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/2] irqchip/meson-gpio: Add support for meson sm1 SoCs
-Date: Thu, 29 Aug 2019 18:16:35 +0200
-Message-ID: <20190829161635.25067-3-jbrunet@baylibre.com>
-References: <20190829161635.25067-1-jbrunet@baylibre.com>
+From: Vitor Soares <Vitor.Soares@synopsys.com>
+Subject: RE: [PATCH 1/4] i3c: master: detach and free device if
+ pre_assign_dyn_addr() fails
+Date: Thu, 29 Aug 2019 16:23:29 +0000
+Message-ID: <SN6PR12MB2655F2C2851DA16E2C624998AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+References: <cover.1567071213.git.vitor.soares@synopsys.com>
+        <e26948eaaf765f683d8fe0618a31a98e2ecc0e65.1567071213.git.vitor.soares@synopsys.com>
+        <20190829124115.482cd8ec@collabora.com>
+        <SN6PR12MB26551F172804D039F3EAA991AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+        <20190829163520.126d42d6@collabora.com>
+        <SN6PR12MB2655E9E544D7E96323BAC796AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+ <20190829173709.79c093dd@collabora.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829161635.25067-1-jbrunet@baylibre.com>
+In-Reply-To: <20190829173709.79c093dd@collabora.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@collabora.com>, Vitor Soares <Vitor.Soares@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, Przemyslaw Gaj <pgaj@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-The meson sm1 SoCs uses the same type of GPIO interrupt controller IP
-block as the other meson SoCs, A total of 100 pins can be spied on:
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Date: Thu, Aug 29, 2019 at 16:37:09
 
-- 223:100 undefined (no interrupt)
-- 99:97   3 pins on bank GPIOE
-- 96:77   20 pins on bank GPIOX
-- 76:61   16 pins on bank GPIOA
-- 60:53   8 pins on bank GPIOC
-- 52:37   16 pins on bank BOOT
-- 36:28   9 pins on bank GPIOH
-- 27:12   16 pins on bank GPIOZ
-- 11:0    12 pins in the AO domain
+> On Thu, 29 Aug 2019 15:23:30 +0000
+> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+>=20
+> > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > Date: Thu, Aug 29, 2019 at 15:35:20
+> >=20
+> > > On Thu, 29 Aug 2019 13:53:24 +0000
+> > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > >  =20
+> > > > Hi Boris,
+> > > >=20
+> > > > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > > > Date: Thu, Aug 29, 2019 at 11:41:15
+> > > >  =20
+> > > > > +Przemek
+> > > > >=20
+> > > > > Please try to Cc active I3C contributors so they get a chance to
+> > > > > comment on your patches.   =20
+> > > >=20
+> > > > I can do that next time.
+> > > >  =20
+> > > > >=20
+> > > > > On Thu, 29 Aug 2019 12:19:32 +0200
+> > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > > > >    =20
+> > > > > > On pre_assing_dyn_addr() the devices that fail:
+> > > > > >   i3c_master_setdasa_locked()
+> > > > > >   i3c_master_reattach_i3c_dev()
+> > > > > >   i3c_master_retrieve_dev_info()
+> > > > > >=20
+> > > > > > are kept in memory and master->bus.devs list. This makes the i3=
+c devices
+> > > > > > without a dynamic address are sent on DEFSLVS CCC command. Fix =
+this by
+> > > > > > detaching and freeing the devices that fail on pre_assign_dyn_a=
+ddr().   =20
+> > > > >=20
+> > > > > I don't think removing those entries is a good strategy, as one m=
+ight
+> > > > > want to try to use a different dynamic address if the requested o=
+ne
+> > > > > is not available.   =20
+> > > >=20
+> > > > Do you mean same 'assigned-address' attribute in DT? =20
+> > >=20
+> > > Yes, or say it's another device that got the address we want and this
+> > > device doesn't want to release the address (I'm assuming the !SA case=
+).
+> > >  =20
+> > > >=20
+> > > > If so, it is checked here:
+> > > >=20
+> > > > static int i3c_master_bus_init(struct i3c_master_controller *master=
+)
+> > > > ...
+> > > > 	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node) {
+> > > > 		struct i3c_device_info info =3D {
+> > > > 			.static_addr =3D i3cboardinfo->static_addr,
+> > > > 		};
+> > > >=20
+> > > > 		if (i3cboardinfo->init_dyn_addr) {
+> > > > 			status =3D i3c_bus_get_addr_slot_status(&master->bus,
+> > > > 			^
+> > > > 						i3cboardinfo->init_dyn_addr);
+> > > > 			if (status !=3D I3C_ADDR_SLOT_FREE) {
+> > > > 				ret =3D -EBUSY;
+> > > > 				goto err_detach_devs;
+> > > > 			}
+> > > > 		}
+> > > >=20
+> > > > 		i3cdev =3D i3c_master_alloc_i3c_dev(master, &info);
+> > > > 		if (IS_ERR(i3cdev)) {
+> > > > 			ret =3D PTR_ERR(i3cdev);
+> > > > 			goto err_detach_devs;
+> > > > 		}
+> > > >=20
+> > > > 		i3cdev->boardinfo =3D i3cboardinfo;
+> > > >=20
+> > > > 		ret =3D i3c_master_attach_i3c_dev(master, i3cdev);
+> > > > 		if (ret) {
+> > > > 			i3c_master_free_i3c_dev(i3cdev);
+> > > > 			goto err_detach_devs;
+> > > > 		}
+> > > > 	}
+> > > > ...
+> > > >=20
+> > > > and later if it fails i3c_master_pre_assign_dyn_addr(), the device =
+can=20
+> > > > participate in Enter Dynamic Address Assignment process.
+> > > > I may need to check the boardinfo->init_dyn_addr status on=20
+> > > > i3c_master_add_i3c_dev_locked before i3c_master_setnewda_locked(). =
+=20
+> > >=20
+> > > I need to double check but I thought we were already handling that ca=
+se
+> > > properly. =20
+> >=20
+> > Yes, it is handled in the code above.
+>=20
+> No, I meant the 'assign init_dyn_addr even if !SA', and the code I
+> pointed in my other reply tends to confirm that this is something we
+> already take into account (maybe not correctly, but the code is here).
 
-Mapping is the same as the g12a family but the sm1 controller
-allows to trig an irq on both edges of the input signal. This was
-not possible with the previous SoCs families
+Please check my last comment in patch 2/4.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- drivers/irqchip/irq-meson-gpio.c | 52 +++++++++++++++++++++++---------
- 1 file changed, 38 insertions(+), 14 deletions(-)
+>=20
+> >=20
+> > >  =20
+> > > >  =20
+> > > > > Why not simply skipping entries that have ->dyn_addr
+> > > > > set to 0 when preparing a DEFSLVS frame   =20
+> > > >=20
+> > > > I considered that solution too but if the device isn't enumerated w=
+hy=20
+> > > > should it be attached and kept in memory? =20
+> > >=20
+> > > Might be a device that supports HJ, and in that case we might want th=
+e
+> > > controller to reserve a slot in its device table for that device.
+> > > Anyway, it doesn't hurt to have it around as long as we don't pass th=
+e
+> > > device through DEFSLVS if it doesn't have a dynamic address. I really
+> > > prefer to keep the logic unchanged and fix it if it needs to be fixed=
+. =20
+> >=20
+> > Well, we aren't reserving a slot because we need another one to attach=
+=20
+> > the device when it is enumerated and hence a device may be using 2 slot=
+s=20
+> > in the controller.
+>=20
+> Right, you shouldn't reserve a slot when ->static_address =3D=3D 0 &&
+> ->dynamic_address =3D=3D 0, but I still don't see where the problem is wi=
+th
+> the solution we have right now, sorry. Note that even if you reserve a
+> slot in that case, the device only occupies 2 slots for a short amount
+> of time, because the add_i3c_dev() logic will detect that the descriptor
+> already exists and reattach the device with its new address.
 
-diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
-index dcdc23b9dce6..829084b568fa 100644
---- a/drivers/irqchip/irq-meson-gpio.c
-+++ b/drivers/irqchip/irq-meson-gpio.c
-@@ -24,14 +24,25 @@
- #define REG_PIN_47_SEL	0x08
- #define REG_FILTER_SEL	0x0c
- 
--#define REG_EDGE_POL_MASK(x)	(BIT(x) | BIT(16 + (x)))
-+/*
-+ * Note: The S905X3 datasheet reports that BOTH_EDGE is controlled by
-+ * bits 24 to 31. Tests on the actual HW show that these bits are
-+ * stuck at 0. Bits 8 to 15 are responsive and have the expected
-+ * effect.
-+ */
- #define REG_EDGE_POL_EDGE(x)	BIT(x)
- #define REG_EDGE_POL_LOW(x)	BIT(16 + (x))
-+#define REG_BOTH_EDGE(x)	BIT(8 + (x))
-+#define REG_EDGE_POL_MASK(x)    (	\
-+		REG_EDGE_POL_EDGE(x) |	\
-+		REG_EDGE_POL_LOW(x)  |	\
-+		REG_BOTH_EDGE(x))
- #define REG_PIN_SEL_SHIFT(x)	(((x) % 4) * 8)
- #define REG_FILTER_SEL_SHIFT(x)	((x) * 4)
- 
- struct meson_gpio_irq_params {
- 	unsigned int nr_hwirq;
-+	bool support_edge_both;
- };
- 
- static const struct meson_gpio_irq_params meson8_params = {
-@@ -54,6 +65,11 @@ static const struct meson_gpio_irq_params axg_params = {
- 	.nr_hwirq = 100,
- };
- 
-+static const struct meson_gpio_irq_params sm1_params = {
-+	.nr_hwirq = 100,
-+	.support_edge_both = true,
-+};
-+
- static const struct of_device_id meson_irq_gpio_matches[] = {
- 	{ .compatible = "amlogic,meson8-gpio-intc", .data = &meson8_params },
- 	{ .compatible = "amlogic,meson8b-gpio-intc", .data = &meson8b_params },
-@@ -61,11 +77,12 @@ static const struct of_device_id meson_irq_gpio_matches[] = {
- 	{ .compatible = "amlogic,meson-gxl-gpio-intc", .data = &gxl_params },
- 	{ .compatible = "amlogic,meson-axg-gpio-intc", .data = &axg_params },
- 	{ .compatible = "amlogic,meson-g12a-gpio-intc", .data = &axg_params },
-+	{ .compatible = "amlogic,meson-sm1-gpio-intc", .data = &sm1_params },
- 	{ }
- };
- 
- struct meson_gpio_irq_controller {
--	unsigned int nr_hwirq;
-+	const struct meson_gpio_irq_params *params;
- 	void __iomem *base;
- 	u32 channel_irqs[NUM_CHANNEL];
- 	DECLARE_BITMAP(channel_map, NUM_CHANNEL);
-@@ -168,14 +185,22 @@ static int meson_gpio_irq_type_setup(struct meson_gpio_irq_controller *ctl,
- 	 */
- 	type &= IRQ_TYPE_SENSE_MASK;
- 
--	if (type == IRQ_TYPE_EDGE_BOTH)
--		return -EINVAL;
-+	/*
-+	 * New controller support EDGE_BOTH trigger. This setting takes
-+	 * precedence over the other edge/polarity settings
-+	 */
-+	if (type == IRQ_TYPE_EDGE_BOTH) {
-+		if (!ctl->params->support_edge_both)
-+			return -EINVAL;
- 
--	if (type & (IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING))
--		val |= REG_EDGE_POL_EDGE(idx);
-+		val |= REG_BOTH_EDGE(idx);
-+	} else {
-+		if (type & (IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING))
-+			val |= REG_EDGE_POL_EDGE(idx);
- 
--	if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_EDGE_FALLING))
--		val |= REG_EDGE_POL_LOW(idx);
-+		if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_EDGE_FALLING))
-+			val |= REG_EDGE_POL_LOW(idx);
-+	}
- 
- 	spin_lock(&ctl->lock);
- 
-@@ -199,7 +224,7 @@ static unsigned int meson_gpio_irq_type_output(unsigned int type)
- 	 */
- 	if (sense & (IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
- 		type |= IRQ_TYPE_LEVEL_HIGH;
--	else if (sense & (IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING))
-+	else
- 		type |= IRQ_TYPE_EDGE_RISING;
- 
- 	return type;
-@@ -328,15 +353,13 @@ static int __init meson_gpio_irq_parse_dt(struct device_node *node,
- 					  struct meson_gpio_irq_controller *ctl)
- {
- 	const struct of_device_id *match;
--	const struct meson_gpio_irq_params *params;
- 	int ret;
- 
- 	match = of_match_node(meson_irq_gpio_matches, node);
- 	if (!match)
- 		return -ENODEV;
- 
--	params = match->data;
--	ctl->nr_hwirq = params->nr_hwirq;
-+	ctl->params = match->data;
- 
- 	ret = of_property_read_variable_u32_array(node,
- 						  "amlogic,channel-interrupts",
-@@ -385,7 +408,8 @@ static int __init meson_gpio_irq_of_init(struct device_node *node,
- 	if (ret)
- 		goto free_channel_irqs;
- 
--	domain = irq_domain_create_hierarchy(parent_domain, 0, ctl->nr_hwirq,
-+	domain = irq_domain_create_hierarchy(parent_domain, 0,
-+					     ctl->params->nr_hwirq,
- 					     of_node_to_fwnode(node),
- 					     &meson_gpio_irq_domain_ops,
- 					     ctl);
-@@ -396,7 +420,7 @@ static int __init meson_gpio_irq_of_init(struct device_node *node,
- 	}
- 
- 	pr_info("%d to %d gpio interrupt mux initialized\n",
--		ctl->nr_hwirq, NUM_CHANNEL);
-+		ctl->params->nr_hwirq, NUM_CHANNEL);
- 
- 	return 0;
- 
--- 
-2.21.0
+I understand that but if we have limited resources it is a problem.
+
+>=20
+> > It may cause problems in HC with reduced slots and it is another reason=
+=20
+> > why I think we should detach device without dynamic address after the=20
+> > enumeration phase.
+>=20
+> Can you please try the approach I suggest? =3D> fix the existing logic to
+> make it work without this "free undiscovered dev desc, reallocate later"
+> dance.
+
+I can do that but we still have the issue above to solve and figure how=20
+to set a dynamic address for devices without static address.
