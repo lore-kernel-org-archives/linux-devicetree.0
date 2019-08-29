@@ -1,57 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 04/11] dt-bindings: phy-mtk-tphy: add a new reference
- clock
-Date: Thu, 29 Aug 2019 15:05:03 -0500
-Message-ID: <20190829200503.GA2542@bogus>
+Subject: Re: [PATCH 05/11] dt-bindings: phy-mtk-tphy: add the properties
+ about address mapping
+Date: Thu, 29 Aug 2019 15:16:27 -0500
+Message-ID: <20190829201627.GA24612@bogus>
 References: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
- <f6ee7d33103b43b2f1e1331c23c36057ef20b20d.1566542697.git.chunfeng.yun@mediatek.com>
+ <8ce6da3118b80556f9576c5ac331312be07d8e29.1566542697.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <f6ee7d33103b43b2f1e1331c23c36057ef20b20d.1566542697.git.chunfeng.yun@mediatek.com>
+In-Reply-To: <8ce6da3118b80556f9576c5ac331312be07d8e29.1566542697.git.chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 03:00:11PM +0800, Chunfeng Yun wrote:
-> Usually the digital and anolog phys use the same reference clock,
-> but on some platforms, they are separated, so add another optional
-> clock to support it.
-> In order to keep the clock names consistent with PHY IP's, use
-> the da_ref for anolog phy and ref clock for digital phy.
+On Fri, 23 Aug 2019 15:00:12 +0800, Chunfeng Yun wrote:
+> Add three required properties about the address mapping, including
+> '#address-cells', '#size-cells' and 'ranges'
 > 
 > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 > ---
->  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> index dbc143ed5999..ed9a2641f204 100644
-> --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> @@ -41,9 +41,12 @@ Optional properties (PHY_TYPE_USB2 port (child) node):
->  - clocks	: a list of phandle + clock-specifier pairs, one for each
->  		  entry in clock-names
->  - clock-names	: may contain
-> -		  "ref": 48M reference clock for HighSpeed anolog phy; and 26M
-> -			reference clock for SuperSpeed anolog phy, sometimes is
-> +		  "ref": 48M reference clock for HighSpeed (digital) phy; and 26M
-> +			reference clock for SuperSpeed (digital) phy, sometimes is
->  			24M, 25M or 27M, depended on platform.
-> +		  "da_ref": the reference clock of anolog phy, used if the clocks
-> +			of anolog and digital phys are separated, otherwise uses
 
-s/amolog/analog/
-
-> +			"ref" clock only if need.
-
-needed.
-
->  
->  - mediatek,eye-src	: u32, the value of slew rate calibrate
->  - mediatek,eye-vrt	: u32, the selection of VRT reference voltage
-> -- 
-> 2.23.0
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
