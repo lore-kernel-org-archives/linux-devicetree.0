@@ -1,43 +1,51 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/5] dt-bindings: dma: ti-edma: Add option for reserved
- channel ranges
-Date: Thu, 29 Aug 2019 17:47:28 -0500
-Message-ID: <20190829224728.GA1198@bogus>
-References: <20190823125618.8133-1-peter.ujfalusi@ti.com>
- <20190823125618.8133-5-peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v2 4/4] dt-bindings/watchdog: Add access_cs0 option for
+ alt-boot
+Date: Thu, 29 Aug 2019 17:56:02 -0500
+Message-ID: <20190829225602.GA15783@bogus>
+References: <20190826104636.19324-1-i.mikhaylov@yadro.com>
+ <20190826104636.19324-5-i.mikhaylov@yadro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190823125618.8133-5-peter.ujfalusi@ti.com>
+In-Reply-To: <20190826104636.19324-5-i.mikhaylov@yadro.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: vkoul@kernel.org, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+To: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Alexander Amelkin <a.amelkin@yadro.com>, openbmc@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 03:56:17PM +0300, Peter Ujfalusi wrote:
-> Similarly to paRAM slots, channels can be used by other cores.
+On Mon, Aug 26, 2019 at 01:46:36PM +0300, Ivan Mikhaylov wrote:
+> The option for the ast2400/2500 to get access to CS0 at runtime.
 > 
-> Add optional property to configure the reserved channel ranges.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
 > ---
->  Documentation/devicetree/bindings/dma/ti-edma.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+>  Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> index 4bbc94d829c8..1198682ada99 100644
-> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
-> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> @@ -42,6 +42,9 @@ Optional properties:
->  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
->  		the driver, they are allocated to be used by for example the
->  		DSP. See example.
-> +- ti,edma-reserved-chan-ranges: channel ranges which should not be used by
-> +		the driver, they are allocated to be used by for example the
-> +		DSP. See example.
+> diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> index c5077a1f5cb3..023a9b578df6 100644
+> --- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> @@ -34,6 +34,13 @@ Optional properties:
+>                  engine is responsible for this.
+>  
+>   - aspeed,alt-boot:    If property is present then boot from alternate block.
+> +                       At alternate side 'access_cs0' sysfs file provides:
 
-Based on the other thread, I think extending dma-channel-mask to a 
-uint32-array makes sense here.
+What's sysfs?
 
-Rob
+Don't put Linux stuff in bindings.
+
+> +                       ast2400: a way to get access to the primary SPI flash
+> +                                chip at CS0 after booting from the alternate
+> +                                chip at CS1.
+> +                       ast2500: a way to restore the normal address mapping from
+> +                                (CS0->CS1, CS1->CS0) to (CS0->CS0, CS1->CS1).
+> +
+>   - aspeed,external-signal: If property is present then signal is sent to
+>  			external reset counter (only WDT1 and WDT2). If not
+>  			specified no external signal is sent.
+> -- 
+> 2.20.1
+> 
