@@ -1,909 +1,143 @@
-Return-Path: <SRS0=dUwE=WX=nic.cz=marek.behun@kernel.org>
-From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH mvebu-dt64 3/3] arm64: dts: marvell: add DTS for Turris Mox
-Date: Tue, 27 Aug 2019 17:16:44 +0200
-Message-Id: <20190827151644.12532-4-marek.behun@nic.cz>
-In-Reply-To: <20190827151644.12532-1-marek.behun@nic.cz>
-References: <20190827151644.12532-1-marek.behun@nic.cz>
+Return-Path: <SRS0=J67F=WZ=pengutronix.de=mfe@kernel.org>
+Date: Thu, 29 Aug 2019 14:52:14 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v9 02/13] media: v4l2-fwnode: add v4l2_fwnode_connector
+Message-ID: <20190829125214.q3u7fnpbpas5kpdp@pengutronix.de>
+References: <20190822080556.17109-1-m.felsch@pengutronix.de>
+ <20190822080556.17109-3-m.felsch@pengutronix.de>
+ <c868ab4e-206b-bf66-a276-a9901b9fc41a@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: arm@kernel.org
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c868ab4e-206b-bf66-a276-a9901b9fc41a@xs4all.nl>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This adds support for the Turris Mox board from CZ.NIC.
+On 19-08-29 11:59, Hans Verkuil wrote:
+> On 8/22/19 10:05 AM, Marco Felsch wrote:
+> > Currently every driver needs to parse the connector endpoints by it self.
+> > This is the initial work to make this generic. A generic connector has
+> > common members and connector specific members. The common members are:
+> >   - type
+> >   - label (optional)
+> >   - links
+> >   - nr_of_links
+> > 
+> > The specific members are stored within a union, since only one of them
+> > can be available at the time. Since this is the initial support the
+> > patch adds only the analog-connector specific ones.
+> > 
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > ---
+> > [1] https://patchwork.kernel.org/cover/10794703/
+> > 
+> > v8:
+> > - rename CON -> CONN
+> > - supported_tvnorms_stds -> sdtv_stds and adapt description
+> > 
+> > v7:
+> > - fix spelling issues
+> > - constify label
+> > - support variable label size
+> > - replace single remote_port/id members by links member of variable
+> >   size
+> > - squash v4l2-connector into v4l2-fwnode
+> > 
+> > @Jacopo: I dropped your r b tag because I changed the port/id logic.
+> > 
+> > v6:
+> > - fix some spelling and style issues
+> > - rm unnecessary comments
+> > - drop vga and dvi connector
+> > - fix misspelt connector
+> > 
+> > v2-v4:
+> > - nothing since the patch was squashed from series [1] into this
+> >   series.
+> > ---
+> >  include/media/v4l2-fwnode.h | 45 +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 45 insertions(+)
+> > 
+> > diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+> > index f6a7bcd13197..7ca5669ef6fa 100644
+> > --- a/include/media/v4l2-fwnode.h
+> > +++ b/include/media/v4l2-fwnode.h
+> > @@ -123,6 +123,51 @@ struct v4l2_fwnode_link {
+> >  	unsigned int remote_port;
+> >  };
+> >  
+> > +/**
+> > + * enum v4l2_connector_type - connector type
+> > + * @V4L2_CONN_UNKNOWN:   unknown connector type, no V4L2 connector configuration
+> > + * @V4L2_CONN_COMPOSITE: analog composite connector
+> > + * @V4L2_CONN_SVIDEO:    analog svideo connector
+> > + * @V4L2_CONN_HDMI:      digital hdmi connector
+> 
+> Why exactly is CONN_HDMI added if there is no V4L2 driver that uses it?
 
-Turris Mox is as modular router based on the Armada 3720 SOC (same as
-EspressoBin).
+Just for the sake of completeness..
 
-The basic board can be extended by different modules.
-If those are connected, U-Boot lets the kernel know via device-tree.
+> I would just drop it from this series.
 
-Since modules can be connected in different order and some modules can
-be connected multiple times (up to three modules containing 8-port
-ethernet switch in DSA configuration can be connected) we decided
-against using device-tree overlays, because it got complicated rather
-quickly. (For example the SFP module can be connected directly to the
-CPU, or after a switch module. There are four cases and all would need
-different SFP overlay. There are two types of switch modules (8-port
-with pass-through and 4-port with no pass-through). For those we would
-again need at least 6 more overlays.)
+Okay.
 
-We therefore decided to put all the possibly connected devices in one
-device-tree and disable them by default. When U-Boot finds out which
-modules are connected, it fixes the loaded device-tree accordingly just
-before boot. By Rob Herring's suggestion we also made it so that U-Boot
-completely removes nodes which are disabled after this fixup.
+Regards,
+  Marco
 
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
----
- arch/arm64/boot/dts/marvell/Makefile          |   1 +
- .../dts/marvell/armada-3720-turris-mox.dts    | 841 ++++++++++++++++++
- 2 files changed, 842 insertions(+)
- create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
 
-diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-index caed4334f27d..243338c914a4 100644
---- a/arch/arm64/boot/dts/marvell/Makefile
-+++ b/arch/arm64/boot/dts/marvell/Makefile
-@@ -2,6 +2,7 @@
- # Mvebu SoC Family
- dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
-+dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-turris-mox.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-uDPU.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-clearfog-gt-8k.dtb
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-new file mode 100644
-index 000000000000..32ed2bbdab27
---- /dev/null
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts
-@@ -0,0 +1,841 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Device Tree file for CZ.NIC Turris Mox Board
-+ * 2019 by Marek Behun <marek.behun@nic.cz>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/bus/moxtet.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include "armada-372x.dtsi"
-+
-+/ {
-+	model = "CZ.NIC Turris Mox Board";
-+	compatible = "cznic,turris-mox", "marvell,armada3720",
-+		     "marvell,armada3710";
-+
-+	aliases {
-+		spi0 = &spi0;
-+		ethernet1 = &eth1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		red {
-+			gpios = <&gpiosb 21 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "default-on";
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		reset {
-+			label = "reset";
-+			linux,code = <BTN_MISC>;
-+			gpios = <&gpiosb 20 GPIO_ACTIVE_LOW>;
-+			debounce-interval = <60>;
-+		};
-+	};
-+
-+	exp_usb3_vbus: usb3-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb3-vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		enable-active-high;
-+		regulator-always-on;
-+		gpio = <&gpiosb 0 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	usb3_phy: usb3-phy {
-+		compatible = "usb-nop-xceiv";
-+		vcc-supply = <&exp_usb3_vbus>;
-+	};
-+
-+	vsdc_reg: vsdc-reg {
-+		compatible = "regulator-gpio";
-+		regulator-name = "vsdc";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+
-+		gpios = <&gpiosb 23 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <0>;
-+		states = <1800000 0x1
-+			  3300000 0x0>;
-+		enable-active-high;
-+	};
-+
-+	vsdio_reg: vsdio-reg {
-+		compatible = "regulator-gpio";
-+		regulator-name = "vsdio";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+
-+		gpios = <&gpiosb 22 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <0>;
-+		states = <1800000 0x1
-+			  3300000 0x0>;
-+		enable-active-high;
-+	};
-+
-+	sdhci1_pwrseq: sdhci1-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpionb 19 GPIO_ACTIVE_HIGH>;
-+		status = "okay";
-+	};
-+
-+	sfp: sfp {
-+		compatible = "sff,sfp+";
-+		i2c-bus = <&i2c0>;
-+		los-gpio = <&moxtet_sfp 0 GPIO_ACTIVE_HIGH>;
-+		tx-fault-gpio = <&moxtet_sfp 1 GPIO_ACTIVE_HIGH>;
-+		mod-def0-gpio = <&moxtet_sfp 2 GPIO_ACTIVE_LOW>;
-+		tx-disable-gpio = <&moxtet_sfp 4 GPIO_ACTIVE_HIGH>;
-+		rate-select0-gpio = <&moxtet_sfp 5 GPIO_ACTIVE_HIGH>;
-+
-+		/* enabled by U-Boot if SFP module is present */
-+		status = "disabled";
-+	};
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+	status = "okay";
-+
-+	rtc@6f {
-+		compatible = "microchip,mcp7940x";
-+		reg = <0x6f>;
-+	};
-+};
-+
-+&pcie_reset_pins {
-+	function = "gpio";
-+};
-+
-+&pcie0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie_reset_pins &pcie_clkreq_pins>;
-+	status = "okay";
-+	max-link-speed = <2>;
-+	reset-gpios = <&gpiosb 3 GPIO_ACTIVE_LOW>;
-+	phys = <&comphy1 0>;
-+
-+	/* enabled by U-Boot if PCIe module is present */
-+	status = "disabled";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&eth0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_pins>;
-+	phy-mode = "rgmii-id";
-+	phy = <&phy1>;
-+	status = "okay";
-+};
-+
-+&eth1 {
-+	phy-mode = "2500base-x";
-+	managed = "in-band-status";
-+	phys = <&comphy0 1>;
-+
-+	/* enabled by U-Boot if switch or SFP module is present */
-+	status = "disabled";
-+};
-+
-+&sdhci0 {
-+	wp-inverted;
-+	bus-width = <4>;
-+	cd-gpios = <&gpionb 10 GPIO_ACTIVE_HIGH>;
-+	vqmmc-supply = <&vsdc_reg>;
-+	marvell,pad-type = "sd";
-+	status = "okay";
-+};
-+
-+&sdhci1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdio_pins>;
-+	non-removable;
-+	bus-width = <4>;
-+	marvell,pad-type = "sd";
-+	vqmmc-supply = <&vsdio_reg>;
-+	mmc-pwrseq = <&sdhci1_pwrseq>;
-+	status = "okay";
-+};
-+
-+&spi0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi_quad_pins &spi_cs1_pins>;
-+	assigned-clocks = <&nb_periph_clk 7>;
-+	assigned-clock-parents = <&tbg 1>;
-+	assigned-clock-rates = <20000000>;
-+
-+	spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <20000000>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "secure-firmware";
-+				reg = <0x0 0x20000>;
-+			};
-+
-+			partition@20000 {
-+				label = "u-boot";
-+				reg = <0x20000 0x160000>;
-+			};
-+
-+			partition@180000 {
-+				label = "u-boot-env";
-+				reg = <0x180000 0x10000>;
-+			};
-+
-+			partition@190000 {
-+				label = "Rescue system";
-+				reg = <0x190000 0x660000>;
-+			};
-+
-+			partition@7f0000 {
-+				label = "dtb";
-+				reg = <0x7f0000 0x10000>;
-+			};
-+		};
-+	};
-+
-+	moxtet: moxtet@1 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "cznic,moxtet";
-+		reg = <1>;
-+		reset-gpios = <&gpiosb 2 GPIO_ACTIVE_LOW>;
-+		spi-max-frequency = <10000000>;
-+		spi-cpol;
-+		spi-cpha;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		interrupt-parent = <&gpiosb>;
-+		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
-+		status = "okay";
-+
-+		moxtet_sfp: gpio@0 {
-+			compatible = "cznic,moxtet-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			reg = <0>;
-+			status = "disabled";
-+		};
-+	};
-+};
-+
-+&usb2 {
-+	status = "okay";
-+};
-+
-+&usb3 {
-+	status = "okay";
-+	phys = <&comphy2 0>;
-+	usb-phy = <&usb3_phy>;
-+};
-+
-+&mdio {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&smi_pins>;
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+
-+	/* switch nodes are enabled by U-Boot if modules are present */
-+	switch0@10 {
-+		compatible = "marvell,mv88e6190";
-+		reg = <0x10 0>;
-+		dsa,member = <0 0>;
-+		interrupt-parent = <&moxtet>;
-+		interrupts = <MOXTET_IRQ_PERIDOT(0)>;
-+		status = "disabled";
-+
-+		mdio {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			switch0phy1: switch0phy1@1 {
-+				reg = <0x1>;
-+			};
-+
-+			switch0phy2: switch0phy2@2 {
-+				reg = <0x2>;
-+			};
-+
-+			switch0phy3: switch0phy3@3 {
-+				reg = <0x3>;
-+			};
-+
-+			switch0phy4: switch0phy4@4 {
-+				reg = <0x4>;
-+			};
-+
-+			switch0phy5: switch0phy5@5 {
-+				reg = <0x5>;
-+			};
-+
-+			switch0phy6: switch0phy6@6 {
-+				reg = <0x6>;
-+			};
-+
-+			switch0phy7: switch0phy7@7 {
-+				reg = <0x7>;
-+			};
-+
-+			switch0phy8: switch0phy8@8 {
-+				reg = <0x8>;
-+			};
-+		};
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@1 {
-+				reg = <0x1>;
-+				label = "lan1";
-+				phy-handle = <&switch0phy1>;
-+			};
-+
-+			port@2 {
-+				reg = <0x2>;
-+				label = "lan2";
-+				phy-handle = <&switch0phy2>;
-+			};
-+
-+			port@3 {
-+				reg = <0x3>;
-+				label = "lan3";
-+				phy-handle = <&switch0phy3>;
-+			};
-+
-+			port@4 {
-+				reg = <0x4>;
-+				label = "lan4";
-+				phy-handle = <&switch0phy4>;
-+			};
-+
-+			port@5 {
-+				reg = <0x5>;
-+				label = "lan5";
-+				phy-handle = <&switch0phy5>;
-+			};
-+
-+			port@6 {
-+				reg = <0x6>;
-+				label = "lan6";
-+				phy-handle = <&switch0phy6>;
-+			};
-+
-+			port@7 {
-+				reg = <0x7>;
-+				label = "lan7";
-+				phy-handle = <&switch0phy7>;
-+			};
-+
-+			port@8 {
-+				reg = <0x8>;
-+				label = "lan8";
-+				phy-handle = <&switch0phy8>;
-+			};
-+
-+			port@9 {
-+				reg = <0x9>;
-+				label = "cpu";
-+				ethernet = <&eth1>;
-+				phy-mode = "2500base-x";
-+				managed = "in-band-status";
-+			};
-+
-+			switch0port10: port@a {
-+				reg = <0xa>;
-+				label = "dsa";
-+				phy-mode = "2500base-x";
-+				managed = "in-band-status";
-+				link = <&switch1port9 &switch2port9>;
-+				status = "disabled";
-+			};
-+
-+			port-sfp@a {
-+				reg = <0xa>;
-+				label = "sfp";
-+				sfp = <&sfp>;
-+				phy-mode = "sgmii";
-+				managed = "in-band-status";
-+				status = "disabled";
-+			};
-+		};
-+	};
-+
-+	switch0@2 {
-+		compatible = "marvell,mv88e6085";
-+		reg = <0x2 0>;
-+		dsa,member = <0 0>;
-+		interrupt-parent = <&moxtet>;
-+		interrupts = <MOXTET_IRQ_TOPAZ>;
-+		status = "disabled";
-+
-+		mdio {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			switch0phy1_topaz: switch0phy1@11 {
-+				reg = <0x11>;
-+			};
-+
-+			switch0phy2_topaz: switch0phy2@12 {
-+				reg = <0x12>;
-+			};
-+
-+			switch0phy3_topaz: switch0phy3@13 {
-+				reg = <0x13>;
-+			};
-+
-+			switch0phy4_topaz: switch0phy4@14 {
-+				reg = <0x14>;
-+			};
-+		};
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@1 {
-+				reg = <0x1>;
-+				label = "lan1";
-+				phy-handle = <&switch0phy1_topaz>;
-+			};
-+
-+			port@2 {
-+				reg = <0x2>;
-+				label = "lan2";
-+				phy-handle = <&switch0phy2_topaz>;
-+			};
-+
-+			port@3 {
-+				reg = <0x3>;
-+				label = "lan3";
-+				phy-handle = <&switch0phy3_topaz>;
-+			};
-+
-+			port@4 {
-+				reg = <0x4>;
-+				label = "lan4";
-+				phy-handle = <&switch0phy4_topaz>;
-+			};
-+
-+			port@5 {
-+				reg = <0x5>;
-+				label = "cpu";
-+				phy-mode = "2500base-x";
-+				managed = "in-band-status";
-+				ethernet = <&eth1>;
-+			};
-+		};
-+	};
-+
-+	switch1@11 {
-+		compatible = "marvell,mv88e6190";
-+		reg = <0x11 0>;
-+		dsa,member = <0 1>;
-+		interrupt-parent = <&moxtet>;
-+		interrupts = <MOXTET_IRQ_PERIDOT(1)>;
-+		status = "disabled";
-+
-+		mdio {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			switch1phy1: switch1phy1@1 {
-+				reg = <0x1>;
-+			};
-+
-+			switch1phy2: switch1phy2@2 {
-+				reg = <0x2>;
-+			};
-+
-+			switch1phy3: switch1phy3@3 {
-+				reg = <0x3>;
-+			};
-+
-+			switch1phy4: switch1phy4@4 {
-+				reg = <0x4>;
-+			};
-+
-+			switch1phy5: switch1phy5@5 {
-+				reg = <0x5>;
-+			};
-+
-+			switch1phy6: switch1phy6@6 {
-+				reg = <0x6>;
-+			};
-+
-+			switch1phy7: switch1phy7@7 {
-+				reg = <0x7>;
-+			};
-+
-+			switch1phy8: switch1phy8@8 {
-+				reg = <0x8>;
-+			};
-+		};
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@1 {
-+				reg = <0x1>;
-+				label = "lan9";
-+				phy-handle = <&switch1phy1>;
-+			};
-+
-+			port@2 {
-+				reg = <0x2>;
-+				label = "lan10";
-+				phy-handle = <&switch1phy2>;
-+			};
-+
-+			port@3 {
-+				reg = <0x3>;
-+				label = "lan11";
-+				phy-handle = <&switch1phy3>;
-+			};
-+
-+			port@4 {
-+				reg = <0x4>;
-+				label = "lan12";
-+				phy-handle = <&switch1phy4>;
-+			};
-+
-+			port@5 {
-+				reg = <0x5>;
-+				label = "lan13";
-+				phy-handle = <&switch1phy5>;
-+			};
-+
-+			port@6 {
-+				reg = <0x6>;
-+				label = "lan14";
-+				phy-handle = <&switch1phy6>;
-+			};
-+
-+			port@7 {
-+				reg = <0x7>;
-+				label = "lan15";
-+				phy-handle = <&switch1phy7>;
-+			};
-+
-+			port@8 {
-+				reg = <0x8>;
-+				label = "lan16";
-+				phy-handle = <&switch1phy8>;
-+			};
-+
-+			switch1port9: port@9 {
-+				reg = <0x9>;
-+				label = "dsa";
-+				phy-mode = "2500base-x";
-+				managed = "in-band-status";
-+				link = <&switch0port10>;
-+			};
-+
-+			switch1port10: port@a {
-+				reg = <0xa>;
-+				label = "dsa";
-+				phy-mode = "2500base-x";
-+				managed = "in-band-status";
-+				link = <&switch2port9>;
-+				status = "disabled";
-+			};
-+
-+			port-sfp@a {
-+				reg = <0xa>;
-+				label = "sfp";
-+				sfp = <&sfp>;
-+				phy-mode = "sgmii";
-+				managed = "in-band-status";
-+				status = "disabled";
-+			};
-+		};
-+	};
-+
-+	switch1@2 {
-+		compatible = "marvell,mv88e6085";
-+		reg = <0x2 0>;
-+		dsa,member = <0 1>;
-+		interrupt-parent = <&moxtet>;
-+		interrupts = <MOXTET_IRQ_TOPAZ>;
-+		status = "disabled";
-+
-+		mdio {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			switch1phy1_topaz: switch1phy1@11 {
-+				reg = <0x11>;
-+			};
-+
-+			switch1phy2_topaz: switch1phy2@12 {
-+				reg = <0x12>;
-+			};
-+
-+			switch1phy3_topaz: switch1phy3@13 {
-+				reg = <0x13>;
-+			};
-+
-+			switch1phy4_topaz: switch1phy4@14 {
-+				reg = <0x14>;
-+			};
-+		};
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@1 {
-+				reg = <0x1>;
-+				label = "lan9";
-+				phy-handle = <&switch1phy1_topaz>;
-+			};
-+
-+			port@2 {
-+				reg = <0x2>;
-+				label = "lan10";
-+				phy-handle = <&switch1phy2_topaz>;
-+			};
-+
-+			port@3 {
-+				reg = <0x3>;
-+				label = "lan11";
-+				phy-handle = <&switch1phy3_topaz>;
-+			};
-+
-+			port@4 {
-+				reg = <0x4>;
-+				label = "lan12";
-+				phy-handle = <&switch1phy4_topaz>;
-+			};
-+
-+			port@5 {
-+				reg = <0x5>;
-+				label = "dsa";
-+				phy-mode = "2500base-x";
-+				managed = "in-band-status";
-+				link = <&switch0port10>;
-+			};
-+		};
-+	};
-+
-+	switch2@12 {
-+		compatible = "marvell,mv88e6190";
-+		reg = <0x12 0>;
-+		dsa,member = <0 2>;
-+		interrupt-parent = <&moxtet>;
-+		interrupts = <MOXTET_IRQ_PERIDOT(2)>;
-+		status = "disabled";
-+
-+		mdio {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			switch2phy1: switch2phy1@1 {
-+				reg = <0x1>;
-+			};
-+
-+			switch2phy2: switch2phy2@2 {
-+				reg = <0x2>;
-+			};
-+
-+			switch2phy3: switch2phy3@3 {
-+				reg = <0x3>;
-+			};
-+
-+			switch2phy4: switch2phy4@4 {
-+				reg = <0x4>;
-+			};
-+
-+			switch2phy5: switch2phy5@5 {
-+				reg = <0x5>;
-+			};
-+
-+			switch2phy6: switch2phy6@6 {
-+				reg = <0x6>;
-+			};
-+
-+			switch2phy7: switch2phy7@7 {
-+				reg = <0x7>;
-+			};
-+
-+			switch2phy8: switch2phy8@8 {
-+				reg = <0x8>;
-+			};
-+		};
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@1 {
-+				reg = <0x1>;
-+				label = "lan17";
-+				phy-handle = <&switch2phy1>;
-+			};
-+
-+			port@2 {
-+				reg = <0x2>;
-+				label = "lan18";
-+				phy-handle = <&switch2phy2>;
-+			};
-+
-+			port@3 {
-+				reg = <0x3>;
-+				label = "lan19";
-+				phy-handle = <&switch2phy3>;
-+			};
-+
-+			port@4 {
-+				reg = <0x4>;
-+				label = "lan20";
-+				phy-handle = <&switch2phy4>;
-+			};
-+
-+			port@5 {
-+				reg = <0x5>;
-+				label = "lan21";
-+				phy-handle = <&switch2phy5>;
-+			};
-+
-+			port@6 {
-+				reg = <0x6>;
-+				label = "lan22";
-+				phy-handle = <&switch2phy6>;
-+			};
-+
-+			port@7 {
-+				reg = <0x7>;
-+				label = "lan23";
-+				phy-handle = <&switch2phy7>;
-+			};
-+
-+			port@8 {
-+				reg = <0x8>;
-+				label = "lan24";
-+				phy-handle = <&switch2phy8>;
-+			};
-+
-+			switch2port9: port@9 {
-+				reg = <0x9>;
-+				label = "dsa";
-+				phy-mode = "2500base-x";
-+				managed = "in-band-status";
-+				link = <&switch1port10 &switch0port10>;
-+			};
-+
-+			port-sfp@a {
-+				reg = <0xa>;
-+				label = "sfp";
-+				sfp = <&sfp>;
-+				phy-mode = "sgmii";
-+				managed = "in-band-status";
-+				status = "disabled";
-+			};
-+		};
-+	};
-+
-+	switch2@2 {
-+		compatible = "marvell,mv88e6085";
-+		reg = <0x2 0>;
-+		dsa,member = <0 2>;
-+		interrupt-parent = <&moxtet>;
-+		interrupts = <MOXTET_IRQ_TOPAZ>;
-+		status = "disabled";
-+
-+		mdio {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			switch2phy1_topaz: switch2phy1@11 {
-+				reg = <0x11>;
-+			};
-+
-+			switch2phy2_topaz: switch2phy2@12 {
-+				reg = <0x12>;
-+			};
-+
-+			switch2phy3_topaz: switch2phy3@13 {
-+				reg = <0x13>;
-+			};
-+
-+			switch2phy4_topaz: switch2phy4@14 {
-+				reg = <0x14>;
-+			};
-+		};
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@1 {
-+				reg = <0x1>;
-+				label = "lan17";
-+				phy-handle = <&switch2phy1_topaz>;
-+			};
-+
-+			port@2 {
-+				reg = <0x2>;
-+				label = "lan18";
-+				phy-handle = <&switch2phy2_topaz>;
-+			};
-+
-+			port@3 {
-+				reg = <0x3>;
-+				label = "lan19";
-+				phy-handle = <&switch2phy3_topaz>;
-+			};
-+
-+			port@4 {
-+				reg = <0x4>;
-+				label = "lan20";
-+				phy-handle = <&switch2phy4_topaz>;
-+			};
-+
-+			port@5 {
-+				reg = <0x5>;
-+				label = "dsa";
-+				phy-mode = "2500base-x";
-+				managed = "in-band-status";
-+				link = <&switch1port10 &switch0port10>;
-+			};
-+		};
-+	};
-+};
+> Regards,
+> 
+> 	Hans
+> 
+> > + */
+> > +enum v4l2_connector_type {
+> > +	V4L2_CONN_UNKNOWN,
+> > +	V4L2_CONN_COMPOSITE,
+> > +	V4L2_CONN_SVIDEO,
+> > +	V4L2_CONN_HDMI,
+> > +};
+> > +
+> > +/**
+> > + * struct v4l2_fwnode_connector_analog - analog connector data structure
+> > + * @sdtv_stds: sdtv standards this connector supports, set to V4L2_STD_ALL
+> > + *             if no restrictions are specified.
+> > + */
+> > +struct v4l2_fwnode_connector_analog {
+> > +	v4l2_std_id sdtv_stds;
+> > +};
+> > +
+> > +/**
+> > + * struct v4l2_fwnode_connector - the connector data structure
+> > + * @label: optional connector label
+> > + * @type: connector type
+> > + * @links: list of &struct v4l2_fwnode_link links the connector is connected to
+> > + * @nr_of_links: total number of links
+> > + * @connector: connector configuration
+> > + * @connector.analog: analog connector configuration
+> > + *                    &struct v4l2_fwnode_connector_analog
+> > + */
+> > +struct v4l2_fwnode_connector {
+> > +	const char *label;
+> > +	enum v4l2_connector_type type;
+> > +	struct v4l2_fwnode_link *links;
+> > +	unsigned int nr_of_links;
+> > +
+> > +	union {
+> > +		struct v4l2_fwnode_connector_analog analog;
+> > +		/* future connectors */
+> > +	} connector;
+> > +};
+> > +
+> >  /**
+> >   * v4l2_fwnode_endpoint_parse() - parse all fwnode node properties
+> >   * @fwnode: pointer to the endpoint's fwnode handle
+> > 
+> 
+> 
+
 -- 
-2.21.0
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
