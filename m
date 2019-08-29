@@ -1,71 +1,118 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: Adding depends-on DT binding to break cyclic dependencies
-Date: Thu, 29 Aug 2019 11:28:16 -0500
-Message-ID: <CAL_JsqKWcGSzCF_ZyEo6bbuayoYks51A-JAMp_oLR1RyTUzNUA@mail.gmail.com>
-References: <CAGETcx_pSnC_2D7ufLRyfE3b8uRc814XEf8zu+SpNtT7_Z8NLg@mail.gmail.com>
+From: Vitor Soares <Vitor.Soares@synopsys.com>
+Subject: RE: [PATCH 2/4] i3c: master: Check if devices have i3c_dev_boardinfo
+ on i3c_master_add_i3c_dev_locked()
+Date: Thu, 29 Aug 2019 16:33:43 +0000
+Message-ID: <SN6PR12MB26550ABF84AD52C52DE801CFAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+References: <cover.1567071213.git.vitor.soares@synopsys.com>
+        <3e21481ddf53ea58f5899df6ec542b79b8cbcd68.1567071213.git.vitor.soares@synopsys.com>
+        <20190829124457.3a750932@collabora.com>
+        <SN6PR12MB265551F73B9B516CACB5B807AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+        <20190829163918.571fd0d8@collabora.com>
+        <20190829163941.45380b19@collabora.com>
+        <SN6PR12MB2655B08176E14BE9DF2BACA2AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+        <20190829172441.3a76385e@collabora.com>
+        <SN6PR12MB26553867412178B3F7190F0CAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+ <20190829181520.0b33b642@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGETcx_pSnC_2D7ufLRyfE3b8uRc814XEf8zu+SpNtT7_Z8NLg@mail.gmail.com>
+In-Reply-To: <20190829181520.0b33b642@collabora.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <saravanak@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>, Vitor Soares <Vitor.Soares@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 1:55 AM Saravana Kannan <saravanak@google.com> wrote:
->
-> Hi Rob,
->
-> Frank, Greg and I got together during ELC and had an extensive and
-> very productive discussion about my "postboot supplier state cleanup"
-> patch series [1]. The three of us are on the same page now -- the
-> series as it stands is the direction we want to go in, with some minor
-> refactoring, documentation and naming changes.
->
-> However, one of the things Frank is concerned about (and Greg and I
-> agree) in the current patch series is that the "cyclic dependency
-> breaking" logic has been pushed off to individual drivers using the
-> edit_links() callback.
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Date: Thu, Aug 29, 2019 at 17:15:20
 
-I would think the core can detect this condition. There's nothing
-device specific once you have the dependency tree. You still need to
-know what device needs to probe first and the drivers are going to
-have that knowledge anyways. So wouldn't it be enough to allow probe
-to proceed for devices in the loop. Once 1 driver succeeds, then you
-can enforce the dependencies on the rest.
+> On Thu, 29 Aug 2019 15:57:32 +0000
+> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+>=20
+> > -----Original Message-----
+> > From: Boris Brezillon=20
+> > <boris.brezillon@collabora.com>=20
+> > Sent: Thursday, August 29, 2019 4:25=20
+> > PM
+> > To: Vitor Soares <Vitor.Soares@synopsys.com>
+> > Cc:=20
+> > linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;=20
+> > linux-i3c@lists.infradead.org; bbrezillon@kernel.org; robh+dt@kernel.or=
+g;=20
+> > mark.rutland@arm.com; Joao.Pinto@synopsys.com
+> > Subject: Re: [PATCH 2/4]=20
+> > i3c: master: Check if devices have i3c_dev_boardinfo on=20
+> > i3c_master_add_i3c_dev_locked()
+> >=20
+> > On Thu, 29 Aug 2019 15:07:08 +0000
+> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> >=20
+> > > From: Boris Brezillon  =20
+> > <boris.brezillon@collabora.com>
+> > > Date: Thu, Aug 29, 2019 at 15:39:41
+> > >  =20
+> >=20
+> > > > On Thu, 29 Aug 2019 16:39:18 +0200
+> > > > Boris Brezillon <boris.brezillon@collabora.com> wrote:
+> > > >    =20
+> > > > > On Thu, 29 Aug 2019 14:00:44 +0000
+> > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > > > >    =20
+> > > > > > Hi Boris,
+> > > > > >=20
+> > > > > > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > > > > > Date: Thu, Aug 29, 2019 at 11:44:57
+> > > > > >      =20
+> > > > > > > On Thu, 29 Aug 2019 12:19:33 +0200
+> > > > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > > > > > >        =20
+> > > > > > > > The I3C devices described in DT might not be attached to th=
+e master which
+> > > > > > > > doesn't allow to assign a specific dynamic address.       =
+=20
+> > > > > > >=20
+> > > > > > > I remember testing this when developing the framework, so, un=
+less
+> > > > > > > another patch regressed it, it should already work. I suspect=
+ patch 1
+> > > > > > > is actually the regressing this use case.       =20
+> > > > > >=20
+> > > > > > For today it doesn't address the case where the device is descr=
+ibed with=20
+> > > > > > static address =3D 0, which isn't attached to the controller.  =
+   =20
+> > > > >=20
+> > > > > Hm, I'm pretty sure I had designed the code to support that case =
+(see
+> > > > > [1]). It might be buggy, but nothing we can't fix I guess.
+> > > > >    =20
+> > > >=20
+> > > > [1]https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__elixir.bo=
+otlin.com_linux_v5.3-2Drc6_source_drivers_i3c_master.c-23L1898&d=3DDwICAg&c=
+=3DDPL6_X_6JkXFx7AXWqB0tg&r=3DqVuU64u9x77Y0Kd0PhDK_lpxFgg6PK9PateHwjb_DY0&m=
+=3DIXS1ygIgEo5vwajk0iwd5aBDVBzRnVTjO3cg4iBmGNc&s=3DHC-AcYm-AZPrUBoALioej_BD=
+nqOtJHltr39Z2yPkuU4&e=3D    =20
+> > >=20
+> > > That is only valid if you have olddev which will only exist if static=
+=20
+> > > address !=3D 0. =20
+> >=20
+> > Hm, if you revert patch 1 (and assuming the device is properly defined
+> > in the DT), you should have olddev !=3D NULL when reaching that point. =
+If
+> > that's not the case there's a bug somewhere that should be fixed.
+> >=20
+> > No, because the device is not attached.
+>=20
+> Oh, my bad, I see what you mean now. This is definitely a bug and should
+> have the Fixes tags. I mean, even if we don't care about dynamic
+> address assignment, I3C drivers might care about the ->of_node that's
+> attached to the device.
 
-> The concern being, there are going to be multiple device specific ad
-> hoc implementations to break a cyclic dependency. Also, if a device
-> can be part of a cyclic dependency, the driver for that device has to
-> check for specific system/products in which the device is part of a
-> cyclic dependency (because it might not always be part of a cycle),
-> and then potentially have cycle/product specific code to break the
-> cycle (since the cycle can be different on each system/product).
->
-> One way to avoid all of the device/driver specific code and simplify
-> my patch series by a non-trivial amount would be by adding a
-> "depends-on" DT binding that can ONLY be used to break cycles. We can
-> document it as such and reject any attempts to use it for other
-> purposes. When a depends-on property is present in a device node, that
-> specific device's supplier list will be parsed ONLY from the
-> depends-on property and the other properties won't be parsed for
-> deriving dependency information for that device.
+I didn't consider a bug because in dt-bindings says to not use 'assigned=20
+address' if SA =3D 0.
+Do you think there is a better way to solve it?
 
-Seems like only ignoring the dependencies with a cycle would be
-sufficient. For example, consider a clock controller which has 2 clock
-inputs from other clock controllers where one has a cycle and one
-doesn't. Also consider it has a regulator dependency. We only need to
-ignore the dependency for 1 of the clock inputs. The rest of the
-dependencies should be honored.
-
-> Frank, Greg and I like this usage model for a new depends-on DT
-> binding. Is this something you'd be willing to accept?
-
-To do the above, it needs to be inverted.
-
-Convince me that cycles are really a problem anywhere besides clocks.
-I'd be more comfortable with a clock specific property if we only need
-it for clocks and I'm having a hard time imagining cycles for other
-dependencies.
-
-Rob
+Best regards,
+Vitor Soares
