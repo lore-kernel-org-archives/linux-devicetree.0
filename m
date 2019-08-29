@@ -1,7 +1,7 @@
 From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v4 07/14] drm/mxsfb: Signal mode changed when bpp changed
-Date: Thu, 29 Aug 2019 14:30:08 +0300
-Message-ID: <1567078215-31601-8-git-send-email-robert.chiras@nxp.com>
+Subject: [PATCH v4 14/14] drm/mxsfb: Add support for live pixel format change
+Date: Thu, 29 Aug 2019 14:30:15 +0300
+Message-ID: <1567078215-31601-15-git-send-email-robert.chiras@nxp.com>
 References: <1567078215-31601-1-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,83 +13,53 @@ To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.
 Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mirela Rabulea <mirela.rabulea@nxp.com>
+This IP requires full stop and re-start when changing display timings,
+but we can change the pixel format while running.
 
-Add mxsfb_atomic_helper_check to signal mode changed when bpp changed.
-This will trigger the execution of disable/enable on
-a modeset with different bpp than the current one.
-
-Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
 Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
 Tested-by: Guido Günther <agx@sigxcpu.org>
 ---
- drivers/gpu/drm/mxsfb/mxsfb_drv.c | 45 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 44 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index 23027a9..f95ba63 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -26,6 +26,7 @@
- #include <drm/drm_drv.h>
- #include <drm/drm_fb_cma_helper.h>
- #include <drm/drm_fb_helper.h>
-+#include <drm/drm_fourcc.h>
- #include <drm/drm_gem_cma_helper.h>
- #include <drm/drm_gem_framebuffer_helper.h>
- #include <drm/drm_irq.h>
-@@ -105,9 +106,51 @@ void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb)
- 		clk_disable_unprepare(mxsfb->clk_axi);
- }
+diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+index 317575e..5607fc0 100644
+--- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
++++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+@@ -494,6 +494,7 @@ void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
+ 	struct drm_crtc *crtc = &pipe->crtc;
+ 	struct drm_plane_state *new_state = pipe->plane.state;
+ 	struct drm_framebuffer *fb = pipe->plane.state->fb;
++	struct drm_framebuffer *old_fb = state->fb;
+ 	struct drm_pending_vblank_event *event;
+ 	u32 fb_addr, src_off, src_w, stride, cpp = 0;
  
-+/**
-+ * mxsfb_atomic_helper_check - validate state object
-+ * @dev: DRM device
-+ * @state: the driver state object
-+ *
-+ * On top of the drm imlementation drm_atomic_helper_check,
-+ * check if the bpp is changed, if so, signal mode_changed,
-+ * this will trigger disable/enable
-+ *
-+ * RETURNS:
-+ * Zero for success or -errno
-+ */
-+static int mxsfb_atomic_helper_check(struct drm_device *dev,
-+				     struct drm_atomic_state *state)
-+{
-+	struct drm_crtc *crtc;
-+	struct drm_crtc_state *new_state;
-+	int i, ret;
+@@ -510,7 +511,7 @@ void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
+ 	}
+ 	spin_unlock_irq(&crtc->dev->event_lock);
+ 
+-	if (!fb)
++	if (!fb || !old_fb)
+ 		return;
+ 
+ 	fb_addr = mxsfb_get_fb_paddr(mxsfb);
+@@ -533,4 +534,17 @@ void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
+ 		src_w = new_state->src_w >> 16;
+ 		mxsfb_set_fb_hcrop(mxsfb, src_w, stride);
+ 	}
 +
-+	ret = drm_atomic_helper_check(dev, state);
-+	if (ret)
-+		return ret;
++	if (old_fb->format->format != fb->format->format) {
++		struct drm_format_name_buf old_fmt_buf;
++		struct drm_format_name_buf new_fmt_buf;
 +
-+	for_each_new_crtc_in_state(state, crtc, new_state, i) {
-+		struct drm_plane_state *primary_state;
-+		int old_bpp = 0;
-+		int new_bpp = 0;
-+
-+		if (!crtc->primary || !crtc->primary->old_fb)
-+			continue;
-+		primary_state =
-+			drm_atomic_get_plane_state(state, crtc->primary);
-+		if (!primary_state || !primary_state->fb)
-+			continue;
-+		old_bpp = crtc->primary->old_fb->format->depth;
-+		new_bpp = primary_state->fb->format->depth;
-+		if (old_bpp != new_bpp)
-+			new_state->mode_changed = true;
++		DRM_DEV_DEBUG_DRIVER(crtc->dev->dev,
++				"Switching pixel format: %s -> %s\n",
++				drm_get_format_name(old_fb->format->format,
++						    &old_fmt_buf),
++				drm_get_format_name(fb->format->format,
++						    &new_fmt_buf));
++		mxsfb_set_pixel_fmt(mxsfb, true);
 +	}
-+	return ret;
-+}
-+
- static const struct drm_mode_config_funcs mxsfb_mode_config_funcs = {
- 	.fb_create		= drm_gem_fb_create,
--	.atomic_check		= drm_atomic_helper_check,
-+	.atomic_check		= mxsfb_atomic_helper_check,
- 	.atomic_commit		= drm_atomic_helper_commit,
- };
- 
+ }
 -- 
 2.7.4
