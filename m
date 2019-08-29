@@ -1,7 +1,7 @@
 From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v4 04/14] drm/mxsfb: Reset vital registers for a proper initialization
-Date: Thu, 29 Aug 2019 14:30:05 +0300
-Message-ID: <1567078215-31601-5-git-send-email-robert.chiras@nxp.com>
+Subject: [PATCH v4 10/14] drm/mxsfb: Update mxsfb to support LCD reset
+Date: Thu, 29 Aug 2019 14:30:11 +0300
+Message-ID: <1567078215-31601-11-git-send-email-robert.chiras@nxp.com>
 References: <1567078215-31601-1-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,58 +13,65 @@ To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.
 Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some of the registers, like LCDC_CTRL, CTRL2_OUTSTANDING_REQS and
-CTRL1_RECOVERY_ON_UNDERFLOW needs to be properly cleared/initialized
-for a better start and stop routine.
+The eLCDIF controller has control pin for the external LCD reset pin.
+Add support for it and assert this pin in enable and de-assert it in
+disable.
 
 Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
 Tested-by: Guido Günther <agx@sigxcpu.org>
 ---
- drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 14 ++++++++++----
+ drivers/gpu/drm/mxsfb/mxsfb_regs.h |  2 ++
+ 2 files changed, 12 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-index b69ace8..5e44f57 100644
+index 1be29f5..a4ba368 100644
 --- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
 +++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
-@@ -127,6 +127,10 @@ static void mxsfb_enable_controller(struct mxsfb_drm_private *mxsfb)
+@@ -224,9 +224,12 @@ static void mxsfb_enable_controller(struct mxsfb_drm_private *mxsfb)
  		clk_prepare_enable(mxsfb->clk_disp_axi);
  	clk_prepare_enable(mxsfb->clk);
  
-+	if (mxsfb->devdata->ipversion >= 4)
-+		writel(CTRL2_OUTSTANDING_REQS(REQ_16),
-+		       mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
-+
+-	if (mxsfb->devdata->ipversion >= 4)
++	if (mxsfb->devdata->ipversion >= 4) {
+ 		writel(CTRL2_OUTSTANDING_REQS(REQ_16),
+ 		       mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
++		/* Assert LCD Reset bit */
++		writel(CTRL2_LCD_RESET, mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
++	}
+ 
  	/* If it was disabled, re-enable the mode again */
  	writel(CTRL_DOTCLK_MODE, mxsfb->base + LCDC_CTRL + REG_SET);
- 
-@@ -136,12 +140,19 @@ static void mxsfb_enable_controller(struct mxsfb_drm_private *mxsfb)
- 	writel(reg, mxsfb->base + LCDC_VDCTRL4);
- 
- 	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_SET);
-+	writel(CTRL1_RECOVERY_ON_UNDERFLOW, mxsfb->base + LCDC_CTRL1 + REG_SET);
- }
- 
- static void mxsfb_disable_controller(struct mxsfb_drm_private *mxsfb)
+@@ -244,11 +247,14 @@ static void mxsfb_disable_controller(struct mxsfb_drm_private *mxsfb)
  {
  	u32 reg;
  
-+	if (mxsfb->devdata->ipversion >= 4)
-+		writel(CTRL2_OUTSTANDING_REQS(0x7),
-+		       mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
-+
+-	if (mxsfb->devdata->ipversion >= 4)
 +	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_CLR);
 +
++	if (mxsfb->devdata->ipversion >= 4) {
+ 		writel(CTRL2_OUTSTANDING_REQS(0x7),
+ 		       mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
+-
+-	writel(CTRL_RUN, mxsfb->base + LCDC_CTRL + REG_CLR);
++		/* De-assert LCD Reset bit */
++		writel(CTRL2_LCD_RESET, mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
++	}
+ 
  	/*
  	 * Even if we disable the controller here, it will still continue
- 	 * until its FIFOs are running out of data
-@@ -295,6 +306,7 @@ void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb)
- 	dma_addr_t paddr;
+diff --git a/drivers/gpu/drm/mxsfb/mxsfb_regs.h b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+index dc4daa0..0f63ba1 100644
+--- a/drivers/gpu/drm/mxsfb/mxsfb_regs.h
++++ b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+@@ -108,6 +108,8 @@
+ #define CTRL2_LINE_PATTERN_BGR	5
+ #define CTRL2_LINE_PATTERN_CLR	7
  
- 	mxsfb_enable_axi_clk(mxsfb);
-+	writel(0, mxsfb->base + LCDC_CTRL);
- 	mxsfb_crtc_mode_set_nofb(mxsfb);
- 
- 	/* Write cur_buf as well to avoid an initial corrupt frame */
++#define CTRL2_LCD_RESET			BIT(0)
++
+ #define TRANSFER_COUNT_SET_VCOUNT(x)	REG_PUT((x), 31, 16)
+ #define TRANSFER_COUNT_GET_VCOUNT(x)	REG_GET((x), 31, 16)
+ #define TRANSFER_COUNT_SET_HCOUNT(x)	REG_PUT((x), 15, 0)
 -- 
 2.7.4
