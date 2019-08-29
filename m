@@ -1,125 +1,30 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V3 2/6] dt-bindings: PCI: tegra: Add PCIe slot supplies
- regulator entries
-Date: Thu, 29 Aug 2019 14:03:29 +0200
-Message-ID: <20190829120329.GC13187@ulmo>
-References: <20190828172850.19871-1-vidyas@nvidia.com>
- <20190828172850.19871-3-vidyas@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: arm: amlogic: add Amlogic SM1 based
+ Khadas VIM3L bindings
+Date: Thu, 29 Aug 2019 07:26:58 -0500
+Message-ID: <20190829122658.GA10660@bogus>
+References: <20190828141816.16328-1-narmstrong@baylibre.com>
+ <20190828141816.16328-3-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4ZLFUWh1odzi/v6L"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190828172850.19871-3-vidyas@nvidia.com>
+In-Reply-To: <20190828141816.16328-3-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: khilman@baylibre.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---4ZLFUWh1odzi/v6L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Aug 28, 2019 at 10:58:46PM +0530, Vidya Sagar wrote:
-> Add optional bindings "vpcie3v3-supply" and "vpcie12v-supply" to describe
-> regulators of a PCIe slot's supplies 3.3V and 12V provided the platform
-> is designed to have regulator controlled slot supplies.
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+On Wed, Aug 28, 2019 at 04:18:15PM +0200, Neil Armstrong wrote:
+> The Khadas VIM3 is also available as VIM3L with the Pin-to-pin compatible
+> Amlogic SM1 SoC in the S905D3 variant package.
+> 
+> Change the description to match the S905X3/D3/Y3 variants like the G12A
+> description, and add the khadas,vim3l compatible.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
-> V3:
-> * None
->=20
-> V2:
-> * None
->=20
->  .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt      | 8 ++++++++
->  1 file changed, 8 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.t=
-xt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> index 0ac1b867ac24..b739f92da58e 100644
-> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
-> @@ -104,6 +104,12 @@ Optional properties:
->     specified in microseconds
->  - nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency to be
->     specified in microseconds
-> +- vpcie3v3-supply: A phandle to the regulator node that supplies 3.3V to=
- the slot
-> +  if the platform has one such slot. (Ex:- x16 slot owned by C5 controll=
-er
-> +  in p2972-0000 platform).
-> +- vpcie12v-supply: A phandle to the regulator node that supplies 12V to =
-the slot
-> +  if the platform has one such slot. (Ex:- x16 slot owned by C5 controll=
-er
-> +  in p2972-0000 platform).
+>  Documentation/devicetree/bindings/arm/amlogic.yaml | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-There's an ongoing discussion regarding the use of optional power
-supplies and I'm wondering if we're not abusing this here. Why exactly
-are these regulators optional?
-
-The distinction is somewhat subtle, but the other way to look at
-modelling this in DT is that the supplies are in fact required, but may
-be connected to an always-on regulator with a fixed voltage. Or in some
-cases they may also be shorted to ground. In both cases the PCI
-controller, or rather the slot that the controller connects to, actually
-"requires" the supplies, it's just that we can get away without
-describing them because they can't be controlled anyway.
-
-Looking at the PCI connector pinout for PCI Express, I do see a bunch of
-+3.3 V and +12 V pins. To me that indicates that the 3.3 V and 12 V
-supplies are indeed required for PCI slots. I'm not sure about devices
-that are directly connected to the PCI controller, though. I'll need to
-go look at some schematics to get a better understanding of these.
-
-Bottom line: I'm wondering if we shouldn't really make these supplies
-mandatory and in case where we don't care either just leave them away
-(the regulator framework will supply a dummy regulator in that case) or
-hook them up to a fixed regulator if that matches the hardware design.
-
-Any thoughts?
-
-Thierry
-
-> =20
->  Examples:
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D
-> @@ -156,6 +162,8 @@ Tegra194:
->  			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /* pre=
-fetchable memory (16GB) */
-> =20
->  		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> +		vpcie3v3-supply =3D <&vdd_3v3_pcie>;
-> +		vpcie12v-supply =3D <&vdd_12v_pcie>;
-> =20
->  		phys =3D <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
->  		       <&p2u_hsio_5>;
-> --=20
-> 2.17.1
->=20
-
---4ZLFUWh1odzi/v6L
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1nvw4ACgkQ3SOs138+
-s6GI6w/+IG7mTCrwYZe0LN6qzkC7/2R7QVuV631kPcoyzIRoQZLYGkdNvI5EAfzF
-8NgV3IpZAIxJDeZl7slSZdXcrCF92OFxy77koBFKQncXlSc/YHKymyXx2trZLzmf
-b7+aO8xnOxaSfHCfdKPVQTndq2piK9APoyTtuVnE9mmgqEGQoEv7N4QiSMx8NabA
-q0MVvrA9l5ibiQ13lfw6QX8iT4txZ17yWQ4wcMSXOOSSnmGkxZq8kOr3OVzahIYY
-ibogwwQPEcV1Auz2TRyVdG4ZftKx21iflj+m/2sbiduh9l3p+aEuB8WIV6T2MbBk
-vXfiC+bWlOUsWpZlb+zb3zOHjte3/53YbVkrgXvdlE+66VYKK/Ok2uAnq9t9RDvT
-swdhH98bWTviSxfdvT3TXKcxX9DT1sI+4rQPqvEO5E2taflYw0VlVGklSMmZqy57
-BApIVrZoh1r0OKgVrTSr/VBkT0yVki8SyKBvH9UzKG42NDf9FNhLeg9ey5UOACZO
-A/ujEXHDjpqyTZmVlo0orYOvKB6qsaM3LS5PQD1FrIjSwFVqVWMPkGeVqZ0OE9za
-tT/v4MGRz9v7GSDTEqAYmTsVhjEzd8h2fuTsdykqxKmMlbTHohS1QVUj4MBkSwcB
-O6cGc3uLm1i5x+0980a+k7CXqmm5ooEcsRspCdi4egaGQdN1jRs=
-=CA6J
------END PGP SIGNATURE-----
-
---4ZLFUWh1odzi/v6L--
+Reviewed-by: Rob Herring <robh@kernel.org>
