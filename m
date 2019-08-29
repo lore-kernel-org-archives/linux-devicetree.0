@@ -1,230 +1,276 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: Re: [EXT] [PATCH v3 0/2] drm: bridge: Add NWL MIPI DSI host
- controller support
-Date: Thu, 29 Aug 2019 09:22:53 +0200
-Message-ID: <20190829072253.GA5078@bogon.m.sigxcpu.org>
-References: <cover.1566470526.git.agx@sigxcpu.org>
- <1567002587.3209.122.camel@nxp.com>
+From: robin <robin@protonic.nl>
+Subject: Re: [PATCH v2 1/2] input: keyboard: snvs_pwrkey: Send key events for
+ i.MX6 S, DL and Q
+Date: Thu, 29 Aug 2019 09:24:12 +0200
+Message-ID: <6d353af709ea545cc34abca5c40674e3@protonic.nl>
+References: <20190827123216.32728-1-robin@protonic.nl>
+ <20190828091550.pdc57wanu6twew5p@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1567002587.3209.122.camel@nxp.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Robert Chiras <robert.chiras@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "sam@ravnborg.org" <sam@ravnborg.org>, "narmstrong@baylibre.com" <narmstrong@baylibre.com>, "airlied@linux.ie" <airlied@linux.ie>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "jonas@kwiboo.se" <jonas@kwiboo.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, dl-linux-imx <linux-imx@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Laurent.pinchart@ideasonboard.com" <Laur>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190828091550.pdc57wanu6twew5p@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Robin Gong <yibin.gong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>, Adam Ford <aford173@gmail.com>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel @ lists . infradead . org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCk9uIFdlZCwgQXVnIDI4LCAyMDE5IGF0IDAyOjI5OjQ4UE0gKzAwMDAsIFJvYmVydCBDaGly
-YXMgd3JvdGU6Cj4gSGkgR3VpZG8sCj4gCj4gSSB0ZXN0ZWQgdGhpcyBvbiBteSBzZXR1cCBhbmQg
-aXQgd29ya3MuIE15IERTSSBwYW5lbCBpcyBhIGxpdHRsZSBiaXQKPiBkaWZmZXJlbnQgYW5kIGl0
-IGRvZXNuJ3Qgd29yayB3aXRoIHRoaXMgYXMtaXMsIGJ1dCBJIGFkZGVkIHNvbWUKPiBpbXByb3Zl
-bWVudHMgb24gdG9wIG9mIHRoaXMsIGluIG9yZGVyIHRvIGJlIGFibGUgdG8gc2V0dXAgdGhlIGNs
-b2Nrcy4KPiBUaGUgY2hhbmdlcyBJIG1hZGUgY2FuIGFycml2ZSBvbiB0b3Agb2YgdGhpcyBhcyBp
-bXByb3ZlbWVudHMsIG9mCj4gY291cnNlLCBzaW5jZSBpdCB3aWxsIGFsbG93IHRoaXMgZHJpdmVy
-IHRvIGRpbmFtaWNhbGx5IHNldCB0aGUKPiB2aWRlb19wbGwgY2xvY2sgZm9yIGFueSBraW5kIG9m
-IG1vZGUuCj4gCj4gU28sIGZvciB0aGUgd2hvbGUgcGF0Y2gtc2V0LCB5b3UgY2FuIGFkZDoKPiBU
-ZXN0ZWQtYnk6IFJvYmVydCBDaGlyYXMgPHJvYmVydC5jaGlyYXNAbnhwLmNvbT4KPiBTaWduZWQt
-b2ZmLWJ5OiBSb2JlcnQgQ2hpcmFzIDxyb2JlcnQuY2hpcmFzQG54cC5jb20+CgpBZGRlZCBmb3Ig
-djQsIHRoYW5rcyEKIC0tIEd1aWRvCgo+IAo+IEJlc3QgcmVnYXJkcywKPiBSb2JlcnQKPiAKPiBP
-biBKbywgMjAxOS0wOC0yMiBhdCAxMjo0NCArMDIwMCwgR3VpZG8gR8O8bnRoZXIgd3JvdGU6Cj4g
-PiBUaGlzIGFkZHMgaW5pdGlhbCBzdXBwb3J0IGZvciB0aGUgTldMIE1JUEkgRFNJIEhvc3QgY29u
-dHJvbGxlciBmb3VuZAo+ID4gb24gaS5NWDgKPiA+IFNvQ3MuCj4gPiAKPiA+IEl0IGFkZHMgc3Vw
-cG9ydCBmb3IgdGhlIGkuTVg4TVEgYnV0IHRoZSBzYW1lIElQIGNvcmUgY2FuIGFsc28gYmUKPiA+
-IGZvdW5kIG9uIGUuZy4KPiA+IGkuTVg4UVhQLiBJIGFkZGVkIHRoZSBuZWNlc3NhcnkgaG9va3Mg
-dG8gc3VwcG9ydCBvdGhlciBpbXg4IHZhcmlhbnRzCj4gPiBidXQgc2luY2UKPiA+IEkgb25seSBo
-YXZlIGlteDhtcSBib2FyZHMgdG8gdGVzdCBJIG9taXR0ZWQgdGhlIHBsYXRmb3JtIGRhdGEgZm9y
-Cj4gPiBvdGhlciBTb0NzLgo+ID4gCj4gPiBUaGUgY29kZSBpcyBiYXNlZCBvbiBOWFBzIEJTUCBz
-byBJIGFkZGVkIFJvYmVydCBDaGlyYXMgYXMKPiA+IENvLWF1dGhvcmVkLWJ5LiBSb2JlcnQsIGlm
-IHRoaXMgbG9va3Mgc2FuZSBjb3VsZCB5b3UgYWRkIHlvdXIKPiA+IFNpZ25lZC1vZmYtYnk6Pwo+
-ID4gCj4gPiBUaGUgbW9zdCBub3RhYmxlIGNoYW5nZXMgb3ZlciB0aGUgQlNQIGRyaXZlciBhcmUK
-PiA+IMKgLSBDYWxjdWxhdGUgSFMgbW9kZSB0aW1pbmcgZnJvbSBwaHlfY29uZmlndXJlX29wdHNf
-bWlwaV9kcGh5Cj4gPiDCoC0gUGVyZm9ybSBhbGwgY2xvY2sgc2V0dXAgdmlhIERUCj4gPiDCoC0g
-TWVyZ2UgbndsLWlteCBhbmQgbndsIGRyaXZlcnMKPiA+IMKgLSBBZGQgQjAgc2lsaW9uIHJldmlz
-aW9uIHF1aXJrCj4gPiDCoC0gYmVjb21lIGEgYnJpZGdlIGRyaXZlciB0byBob29rIGludG8gbXhz
-ZmIgKGZyb20gd2hhdCBJIHJlYWRbMF0KPiA+IERDU1MsIHdoaWNoCj4gPiDCoMKgwqBhbHNvIGNh
-biBkcml2ZSB0aGUgbndsIG9uIHRoZSBpbXg4bXEgd2lsbCBsaWtlbHkgbm90IGJlY29tZSBwYXJ0
-Cj4gPiBvZgo+ID4gwqDCoMKgaW14LWRpc3BsYXktc3Vic3lzdGVtIHNvIGl0IG1ha2VzIHNlbnNl
-IHRvIG1ha2UgaXQgZHJpdmUgYSBicmlkZ2UKPiA+IGZvciBkc2kgYXMKPiA+IMKgwqDCoHdlbGwp
-Lgo+ID4gwqAtIFVzZSBwYW5lbF9icmlkZ2UgdG8gYXR0YWNoIHRoZSBwYW5lbAo+ID4gwqAtIFVz
-ZSBtdWx0aXBsZXggZnJhbWV3b3JrIGluc3RlYWQgb2YgYWNjZXNzaW5nIHN5c2NvbiBkaXJlY3Rs
-eQo+ID4gCj4gPiBUaGlzIGhhcyBiZWVuIHRlc3RlZCBvbiBhIExpYnJlbSA1IGRldmtpdCB1c2lu
-ZyBteHNmYiB3aXRoIFJvYmVydCdzCj4gPiBwYXRjaGVzWzFdCj4gPiBhbmQgdGhlIHJvY2t0ZWNo
-LWpoMDU3bjAwOTAwIHBhbmVsIGRyaXZlciBvbiBuZXh0LTIwMTkwODIxLiBUaGUgRENTUwo+ID4g
-Y2FuIGxhdGVyCj4gPiBvbiBhbHNvIGFjdCBhcyBpbnB1dCBzb3VyY2UgdG9vLgo+ID4gCj4gPiBD
-aGFuZ2VzIGZyb20gdjI6Cj4gPiAtIFBlciByZXZpZXcgY29tbWVudHMgYnkgUm9iIEhlcnJpbmcK
-PiA+IMKgIGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3Vy
-bD1odHRwcyUzQSUyRiUyRmwKPiA+IGlzdHMuZnJlZWRlc2t0b3Aub3JnJTJGYXJjaGl2ZXMlMkZk
-cmktZGV2ZWwlMkYyMDE5LQo+ID4gQXVndXN0JTJGMjMwNDQ4Lmh0bWwmYW1wO2RhdGE9MDIlN0Mw
-MSU3Q3JvYmVydC5jaGlyYXMlNDBueHAuY29tJTdDNzU3Cj4gPiAyMDFmOWFhYTU0NjUzNTgwZTA4
-ZDcyNmVkYjI5MCU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCUKPiA+IDdD
-MCU3QzYzNzAyMDY3NDY1NDU2NjQxNCZhbXA7c2RhdGE9SmR2QWRDUEdxMkNUc1clMkJnWGduQVZs
-dFdNSWZkQ0RRbgo+ID4gZFhTTFlwbmpFSDglM0QmYW1wO3Jlc2VydmVkPTAKPiA+IMKgIC0gYmlu
-ZGluZ3M6Cj4gPiDCoMKgwqDCoC0gU2ltcGxpZnkgYnkgcmVzdHJpY3RpbmcgdG8gZnNsLGlteDht
-cS1ud2wtZHNpCj4gPiDCoMKgwqDCoC0gZG9jdW1lbnQgcmVzZXQgbGluZXMKPiA+IMKgwqDCoMKg
-LSBhZGQgcG9ydEB7MCwxfQo+ID4gwqDCoMKgwqAtIHVzZSBhIHJlYWwgY29tcGF0aWJsZSBzdHJp
-bmcgZm9yIHRoZSBwYW5lbAo+ID4gwqDCoMKgwqAtIHJlc2V0cyBhcmUgcmVxdWlyZWQKPiA+IC0g
-UGVyIHJldmlldyBjb21tZW50cyBieSBBcm5kIEJlcmdtYW5uCj4gPiDCoCBodHRwczovL2V1cjAx
-LnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZsCj4g
-PiBpc3RzLmZyZWVkZXNrdG9wLm9yZyUyRmFyY2hpdmVzJTJGZHJpLWRldmVsJTJGMjAxOS0KPiA+
-IEF1Z3VzdCUyRjIzMDg2OC5odG1sJmFtcDtkYXRhPTAyJTdDMDElN0Nyb2JlcnQuY2hpcmFzJTQw
-bnhwLmNvbSU3Qzc1Nwo+ID4gMjAxZjlhYWE1NDY1MzU4MGUwOGQ3MjZlZGIyOTAlN0M2ODZlYTFk
-M2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlCj4gPiA3QzAlN0M2MzcwMjA2NzQ2NTQ1NjY0
-MTQmYW1wO3NkYXRhPUx5SnBaalFqTUNlNXpVZHZLOENEOEVUdWNMUHh4NjIxZ1cKPiA+IHh0cEFy
-OERNNCUzRCZhbXA7cmVzZXJ2ZWQ9MAo+ID4gwqAgLSBEb24ndCBhY2Nlc3MgaW9tdXhjX2dwciBy
-ZWdzIGRpcmVjdGx5LiBUaGlzIGFsbG93cyB1cyB0byBkcm9wIHRoZQo+ID4gwqDCoMKgwqBmaXJz
-dCBwYXRjaCBpbiB0aGUgc2VyaWVzIHdpdGggdGhlIGlvbXV4Y19ncHIgZmllbGQgZGVmaW5lcy4K
-PiA+IC0gUGVyIHJldmlldyBjb21tZW50cyBieSBMYXVyZW50IFBpbmNoYXJ0Cj4gPiDCoMKgwqDC
-oC0gRml4IHdvcmRpbmcgaW4gYmluZGluZ3MKPiA+IC0gQWRkIG11eC1jb250cm9scyB0byBiaW5k
-aW5ncwo+ID4gLSBEb24ndCBwcmludCBlcnJvciBtZXNzYWdlIG9uIGRwaHkgcHJvYmUgZGVmZXJh
-bAo+ID4gCj4gPiBDaGFuZ2VzIGZyb20gdjE6Cj4gPiAtIFBlciByZXZpZXcgY29tbWVudHMgYnkg
-U2FtIFJhdm5ib3JnCj4gPiDCoCBodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91
-dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZsCj4gPiBpc3RzLmZyZWVkZXNrdG9wLm9yZyUy
-RmFyY2hpdmVzJTJGZHJpLWRldmVsJTJGMjAxOS0KPiA+IEp1bHklMkYyMjgxMzAuaHRtbCZhbXA7
-ZGF0YT0wMiU3QzAxJTdDcm9iZXJ0LmNoaXJhcyU0MG54cC5jb20lN0M3NTcyMAo+ID4gMWY5YWFh
-NTQ2NTM1ODBlMDhkNzI2ZWRiMjkwJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUl
-N0MwJTdDCj4gPiAwJTdDNjM3MDIwNjc0NjU0NTY2NDE0JmFtcDtzZGF0YT1BVTJnekl3cmJDZElC
-WmVuUFdXWVlYJTJCZ2RYNTN6YzIlMkIKPiA+IFNRaFpidU4lMkZXcFUlM0QmYW1wO3Jlc2VydmVk
-PTAKPiA+IMKgIC0gQ2hhbmdlIGJpbmRpbmcgZG9jcyB0byBZQU1MCj4gPiDCoCAtIGJ1aWxkOiBE
-b24ndCBhbHdheXMgdmlzaXQgaW14LW53bC8KPiA+IMKgIC0gYnVpbGQ6IEFkZCBoZWFkZXItdGVz
-dC15Cj4gPiDCoCAtIFNvcnQgaGVhZGVycyBhY2NvcmRpbmcgdG8gRFJNIGNvbnZlbnRpb24KPiA+
-IMKgIC0gVXNlIGRybV9kaXNwbGF5X21vZGUgaW5zdGVhZCBvZiB2aWRlbW9kZQo+ID4gLSBQZXIg
-cmV2aWV3IGNvbW1lbnRzIGJ5IEZhYmlvIEVzdGV2YW0KPiA+IMKgIGh0dHBzOi8vZXVyMDEuc2Fm
-ZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmwKPiA+IGlz
-dHMuZnJlZWRlc2t0b3Aub3JnJTJGYXJjaGl2ZXMlMkZkcmktZGV2ZWwlMkYyMDE5LQo+ID4gSnVs
-eSUyRjIyODI5OS5odG1sJmFtcDtkYXRhPTAyJTdDMDElN0Nyb2JlcnQuY2hpcmFzJTQwbnhwLmNv
-bSU3Qzc1NzIwCj4gPiAxZjlhYWE1NDY1MzU4MGUwOGQ3MjZlZGIyOTAlN0M2ODZlYTFkM2JjMmI0
-YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MKPiA+IDAlN0M2MzcwMjA2NzQ2NTQ1NjY0MTQmYW1w
-O3NkYXRhPTZrcElaNmlOQVExM2ZNWFU2c3FFTkx3eSUyRmRJV0w2ZWY4ago+ID4gZ3lhczdJMENR
-JTNEJmFtcDtyZXNlcnZlZD0wCj4gPiDCoCAtIERvbid0IHJlc3RyaWN0IGJ1aWxkIHRvIEFSQ0hf
-TVhDCj4gPiDCoCAtIERyb3AgdW51c2VkIGluY2x1ZGVzCj4gPiDCoCAtIERyb3AgdW5yZWFjaGFi
-bGUgY29kZSBpbiBpbXhfbndsX2RzaV9icmlkZ2VfbW9kZV9maXh1cCgpCj4gPiDCoCAtIERyb3Ag
-cmVtYWluaW5nIGNhbGxzIG9mIGRldl9lcnIoKSBhbmQgdXNlIERSTV9ERVZfRVJSKCkKPiA+IMKg
-wqDCoMKgY29uc2lzdGVudGx5Lgo+ID4gwqAgLSBVc2UgZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jl
-c291cmNlKCkKPiA+IMKgIC0gRHJvcCBkZXZtX2ZyZWVfaXJxKCkgaW4gcHJvYmUoKSBlcnJvciBw
-YXRoCj4gPiDCoCAtIFVzZSBzaW5nbGUgbGluZSBjb21tZW50cyB3aGVyZSBzdWZmaWNpZW50Cj4g
-PiDCoCAtIFVzZSA8bGludXgvdGltZTY0Lmg+IGluc3RlYWQgb2YgZGVmaW5pbmcgVVNFQ19QRVJf
-U0VDCj4gPiDCoCAtIE1ha2UgaW5wdXQgc291cmNlIHNlbGVjdCBpbXg4IHNwZWNpZmljCj4gPiDC
-oCAtIERyb3AgPGFzbS91bmFsaWduZWQuaD4gaW5jbHVzaW9uIChhZnRlciByZW1vdmFsIG9mCj4g
-PiBnZXRfdW5hbGlnbmVkX2xlMzIpCj4gPiDCoCAtIERyb3AgYWxsIEVYUE9SVF9TWU1CT0xfR1BM
-KCkgZm9yIGZ1bmN0aW9ucyB1c2VkIGluIHRoZSBzYW1lCj4gPiBtb2R1bGUKPiA+IMKgwqDCoMKg
-YnV0IGRpZmZlcmVudCBzb3VyY2UgZmlsZXMuCj4gPiDCoCAtIERyb3AgbndsX2RzaV9lbmFibGVf
-e3J4LHR4fV9jbG9jaygpIGJ5IGludm9raW5nCj4gPiBjbGtfcHJlcGFyZV9lbmFibGUoKQo+ID4g
-wqDCoMKgwqBkaXJlY3RseQo+ID4gwqAgLSBSZW1vdmUgcG9pbnRsZXNzIGNvbW1lbnQKPiA+IC0g
-TGF1cmVudCBQaW5jaGFydAo+ID4gwqAgaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlv
-bi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGbAo+ID4gaXN0cy5mcmVlZGVza3RvcC5v
-cmclMkZhcmNoaXZlcyUyRmRyaS1kZXZlbCUyRjIwMTktCj4gPiBKdWx5JTJGMjI4MzEzLmh0bWwm
-YW1wO2RhdGE9MDIlN0MwMSU3Q3JvYmVydC5jaGlyYXMlNDBueHAuY29tJTdDNzU3MjAKPiA+IDFm
-OWFhYTU0NjUzNTgwZTA4ZDcyNmVkYjI5MCU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAx
-NjM1JTdDMCU3Qwo+ID4gMCU3QzYzNzAyMDY3NDY1NDU2NjQxNCZhbXA7c2RhdGE9dERsVkdlRVQx
-Q1BNSDlXJTJGcW1uZVBOUjUxdk5hVEtEJTJGCj4gPiBpRk9vUjklMkZtRVNjJTNEJmFtcDtyZXNl
-cnZlZD0wCj4gPiDCoCBodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2su
-Y29tLz91cmw9aHR0cHMlM0ElMkYlMkZsCj4gPiBpc3RzLmZyZWVkZXNrdG9wLm9yZyUyRmFyY2hp
-dmVzJTJGZHJpLWRldmVsJTJGMjAxOS0KPiA+IEp1bHklMkYyMjgzMDguaHRtbCZhbXA7ZGF0YT0w
-MiU3QzAxJTdDcm9iZXJ0LmNoaXJhcyU0MG54cC5jb20lN0M3NTcyMAo+ID4gMWY5YWFhNTQ2NTM1
-ODBlMDhkNzI2ZWRiMjkwJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdD
-Cj4gPiAwJTdDNjM3MDIwNjc0NjU0NTY2NDE0JmFtcDtzZGF0YT1Oc0xHQUw4JTJCY09DMFpaeHhl
-b0dlN1Z4UUNncVNCRU40RzMKPiA+IFdWR09lWnBDbyUzRCZhbXA7cmVzZXJ2ZWQ9MAo+ID4gwqAg
-LSBEcm9wIChvbiBpTVg4TVEpIHVudXNlZCBjc3IgcmVnbWFwCj4gPiDCoCAtIFVzZSBOV0xfTUFY
-X1BMQVRGT1JNX0NMT0NLUyBldmVyeXdoZXJlCj4gPiDCoCAtIERyb3AgZ2V0X3VuYWxpZ25lZF9s
-ZTMyKCkgdXNhZ2UKPiA+IMKgIC0gcmVtb3ZlIGR1cGxpY2F0ZSAnZm9yIHRoZScgaW4gYmluZGlu
-ZyBkb2NzCj4gPiDCoCAtIERvbid0IGluY2x1ZGUgdW51c2VkIDxsaW51eC9jbGstcHJvdmlkZXIu
-aD4KPiA+IMKgIC0gRG9uJ3QgaW5jbHVkZSB1bnVzZWQgPGxpbnV4L2NvbXBvbmVudC5oPgo+ID4g
-wqAgLSBEcm9wIGRwbXNfbW9kZSBmb3IgdHJhY2tpbmcgc3RhdGUsIHRydXN0IHRoZSBkcm0gbGF5
-ZXIgb24gdGhhdAo+ID4gwqAgLSBVc2UgcG1fcnVudGltZV9wdXQoKSBpbnN0ZWFkIG9mIHBtX3J1
-bnRpbWVfcHV0X3N5bmMoKQo+ID4gwqAgLSBEb24ndCBvdmVyd3JpdGUgZW5jb2RlciB0eXBlCj4g
-PiDCoCAtIE1ha2UgaW14X253bF9wbGF0Zm9ybV9kYXRhIGNvbnN0Cj4gPiDCoCAtIFVzZSB0aGUg
-cmVzZXQgY29udHJvbGxlciBBUEkgaW5zdGVhZCBvZiBvcGVuIGNvZGluZyB0aGF0IHBsYXRmb3Jt
-Cj4gPiBzcGVjaWZpYwo+ID4gwqDCoMKgwqBwYXJ0Cj4gPiDCoCAtIFVzZSA8bGludXgvYml0Zmll
-bGQuaD4gaW50ZWFkIG9mIG1ha2luZyB1cCBvdXIgb3duIGRlZmluZXMKPiA+IMKgIC0gbmFtZSBt
-aXBpX2RzaV90cmFuc2ZlciBsZXNzIGdlbmVyaWM6IG53bF9kc2lfdHJhbnNmZXIKPiA+IMKgIC0g
-ZW5zdXJlIGNsZWFuIGluIC5yZW1vdmUgYnkgY2FsbGluZyBtaXBpX2RzaV9ob3N0X3VucmVnaXN0
-ZXIuCj4gPiDCoCAtIHByZWZpeCBjb25zdGFudHMgYnkgTldMX0RTSV8KPiA+IMKgIC0gcHJvcGVy
-bHkgZm9ybWF0IHRyYW5zZmVyX2RpcmVjdGlvbiBlbnVtCj4gPiDCoCAtIHNpbXBsaWZ5IHBsYXRm
-b3JtIGNsb2NrIGhhbmRsaW5nCj4gPiDCoCAtIERvbid0IG1vZGlmeSBzdGF0ZSBpbiBtb2RlX2Zp
-eHVwKCkgYW5kIHVzZSBtb2RlX3NldCgpIGluc3RlYWQKPiA+IMKgIC0gRHJvcCBicmlkZ2UgZGV0
-YWNoKCksIGFscmVhZHkgaGFuZGxlIGJ5IG53bF9kc2lfaG9zdF9kZXRhY2goKQo+ID4gwqAgLSBE
-cm9wIFVTRV8qX1FVSVJLKCkgbWFjcm9zCj4gPiAtIERyb3AgKGZvciBub3cpIHVudXNlZCBjbG9j
-ayBkZWZuaXRpb25zLiAncGl4ZWwnIGFuZCAnYnlwYXNzJyBjbG9jawo+ID4gd2lsbCBiZQo+ID4g
-wqAgdXNlZCBmb3IgaS5NWDggU29DcyBidXQgc2luY2UgdGhleSdyZSB1bnVzZWQgYXRtIGRyb3Ag
-dGhlCj4gPiBkZWZpbml0aW9ucyAtIGJ1dAo+ID4gwqAga2VlcCB0aGUgbG9naWMgdG8gZW5hYmxl
-L2Rpc2FibGUgc2V2ZXJhbCBjbG9ja3MgaW4gcGxhY2Ugc2luY2Ugd2UKPiA+IGtub3cgd2UnbGwK
-PiA+IMKgIG5lZWQgaXQgaW4gdGhlIGZ1dHVyZS4KPiA+IAo+ID4gQ2hhbmdlcyBmcm9tIHYwOgo+
-ID4gLSBBZGQgcXVpcmsgZm9yIElNUThNUSBzaWxpY29uIEIwIHJldmlzaW9uIHRvIG5vdCBtZXNz
-IHdpdGggdGhlCj4gPiDCoCBzeXN0ZW0gcmVzZXQgY29udHJvbGxlciBvbiBwb3dlciBkb3duIHNp
-bmNlIGVuYWJsZSgpIHdvbid0IHdvcmsKPiA+IMKgIG90aGVyd2lzZS4KPiA+IC0gRHJvcCBkZXZt
-X2ZyZWVfaXJxKCkgaGFuZGxlZCBieSB0aGUgZGV2aWNlIGRyaXZlciBjb3JlCj4gPiAtIERpc2Fi
-bGUgdHggZXNjIGNsb2NrIGFmdGVyIHRoZSBwaHkgcG93ZXIgZG93biB0byB1bmJyZWFrCj4gPiDC
-oCBkaXNhYmxlL2VuYWJsZSAodW5ibGFuay9ibGFuaykKPiA+IC0gQWRkIHBvcnRzIHRvIGR0IGJp
-bmRpbmcgZG9jcwo+ID4gLSBTZWxlY3QgR0VORVJJQ19QSFlfTUlQSV9EUEhZIGluc3RlYWQgb2Yg
-R0VORVJJQ19QSFkgZm9yCj4gPiDCoCBwaHlfbWlwaV9kcGh5X2dldF9kZWZhdWx0X2NvbmZpZwo+
-ID4gLSBTZWxlY3QgRFJNX01JUElfRFNJCj4gPiAtIEluY2x1ZGUgZHJtX3ByaW50LmggdG8gZml4
-IGJ1aWxkIG9uIG5leHQtMjAxOTA0MDgKPiA+IC0gRHJvcCBzb21lIGRlYnVnZ2luZyBtZXNzYWdl
-cwo+ID4gLSBOZXdsaW5lIHRlcm1pbmF0ZSBhbGwgRFJNXyBwcmludG91dHMKPiA+IC0gVHVybiBj
-b21wb25lbnQgZHJpdmVyIGludG8gYSBkcm0gYnJpZGdlCj4gPiAKPiA+IFswXTogaHR0cHM6Ly9l
-dXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJQo+
-ID4gMkZsaXN0cy5mcmVlZGVza3RvcC5vcmclMkZhcmNoaXZlcyUyRmRyaS1kZXZlbCUyRjIwMTkt
-Cj4gPiBNYXklMkYyMTk0ODQuaHRtbCZhbXA7ZGF0YT0wMiU3QzAxJTdDcm9iZXJ0LmNoaXJhcyU0
-MG54cC5jb20lN0M3NTcyMDEKPiA+IGY5YWFhNTQ2NTM1ODBlMDhkNzI2ZWRiMjkwJTdDNjg2ZWEx
-ZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDMAo+ID4gJTdDNjM3MDIwNjc0NjU0NTY2
-NDE0JmFtcDtzZGF0YT00SVZqaEx5M2EyWHhaNGpZd0RGRDIzRCUyQnZ3QVZBRWo0NGhZCj4gPiBm
-dnZwOE9wUSUzRCZhbXA7cmVzZXJ2ZWQ9MAo+ID4gWzFdOiBodHRwczovL2V1cjAxLnNhZmVsaW5r
-cy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlCj4gPiAyRnBhdGNod29y
-ay5mcmVlZGVza3RvcC5vcmclMkZzZXJpZXMlMkY2MjgyMiUyRiZhbXA7ZGF0YT0wMiU3QzAxJTdD
-cm8KPiA+IGJlcnQuY2hpcmFzJTQwbnhwLmNvbSU3Qzc1NzIwMWY5YWFhNTQ2NTM1ODBlMDhkNzI2
-ZWRiMjkwJTdDNjg2ZWExZDNiYwo+ID4gMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwJTdD
-NjM3MDIwNjc0NjU0NTY2NDE0JmFtcDtzZGF0YT1HdWVVQk9jCj4gPiBiYUdqV3RXY01ZQnBsTDZr
-aTJVYmdhRlBrUUhnJTJGNmVSZWlZZyUzRCZhbXA7cmVzZXJ2ZWQ9MAo+ID4gCj4gPiBUbzogRGF2
-aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4LmllPiwgRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xs
-LmNoPiwKPiA+IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+LCBNYXJrIFJ1dGxhbmQg
-PG1hcmsucnV0bGFuZEBhcm0uY29tPgo+ID4gLCBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5lbC5v
-cmc+LCBTYXNjaGEgSGF1ZXIgPHMuaGF1ZXJAcGVuZ3V0cm9uaXguCj4gPiBkZT4sIFBlbmd1dHJv
-bml4IEtlcm5lbCBUZWFtIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+LCBGYWJpbyBFc3RldmFtIDwK
-PiA+IGZlc3RldmFtQGdtYWlsLmNvbT4sIE5YUCBMaW51eCBUZWFtIDxsaW51eC1pbXhAbnhwLmNv
-bT4sIEFuZHJ6ZWoKPiA+IEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPiwgTmVpbCBBcm1zdHJv
-bmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPgo+ID4gLCBMYXVyZW50IFBpbmNoYXJ0IDxMYXVy
-ZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+LCBKb25hcyBLYXJsbWFuCj4gPiA8am9uYXNA
-a3dpYm9vLnNlPiwgSmVybmVqIFNrcmFiZWMgPGplcm5lai5za3JhYmVjQHNpb2wubmV0PiwgTGVl
-Cj4gPiBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+LCBHdWlkbyBHw7xudGhlciA8YWd4QHNp
-Z3hjcHUub3JnPiwgZHJpLWRlCj4gPiB2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnLCBkZXZpY2V0
-cmVlQHZnZXIua2VybmVsLm9yZywgbGludXgtYXJtLWtlcm4KPiA+IGVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcsIGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcsIFJvYmVydCBDaGlyYXMgPAo+ID4g
-cm9iZXJ0LmNoaXJhc0BueHAuY29tPiwgU2FtIFJhdm5ib3JnIDxzYW1AcmF2bmJvcmcub3JnPiwg
-RmFiaW8KPiA+IEVzdGV2YW0gPGZlc3RldmFtQGdtYWlsLmNvbT4sIEFybmQgQmVyZ21hbm4gPGFy
-bmRAYXJuZGIuZGU+Cj4gPiAKPiA+IAo+ID4gR3VpZG8gR8O8bnRoZXIgKDIpOgo+ID4gwqAgZHQt
-YmluZGluZ3M6IGRpc3BsYXkvYnJpZGdlOiBBZGQgYmluZGluZyBmb3IgTldMIG1pcGkgZHNpIGhv
-c3QKPiA+IMKgwqDCoMKgY29udHJvbGxlcgo+ID4gwqAgZHJtL2JyaWRnZTogQWRkIE5XTCBNSVBJ
-IERTSSBob3N0IGNvbnRyb2xsZXIgc3VwcG9ydAo+ID4gCj4gPiDCoC4uLi9iaW5kaW5ncy9kaXNw
-bGF5L2JyaWRnZS9ud2wtZHNpLnlhbWzCoMKgwqDCoMKgwqB8IDE1NSArKysrCj4gPiDCoGRyaXZl
-cnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZ8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-fMKgwqDCoDIgKwo+ID4gwqBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgfMKgwqDCoDEgKwo+ID4gwqBkcml2ZXJzL2dwdS9kcm0vYnJp
-ZGdlL253bC1kc2kvS2NvbmZpZ8KgwqDCoMKgwqDCoMKgwqB8wqDCoDE2ICsKPiA+IMKgZHJpdmVy
-cy9ncHUvZHJtL2JyaWRnZS9ud2wtZHNpL01ha2VmaWxlwqDCoMKgwqDCoMKgwqB8wqDCoMKgNCAr
-Cj4gPiDCoGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvbndsLWRzaS9ud2wtZHJ2LmPCoMKgwqDCoMKg
-wqB8IDUwMSArKysrKysrKysrKysrCj4gPiDCoGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvbndsLWRz
-aS9ud2wtZHJ2LmjCoMKgwqDCoMKgwqB8wqDCoDY1ICsrCj4gPiDCoGRyaXZlcnMvZ3B1L2RybS9i
-cmlkZ2UvbndsLWRzaS9ud2wtZHNpLmPCoMKgwqDCoMKgwqB8IDcwMAo+ID4gKysrKysrKysrKysr
-KysrKysrCj4gPiDCoGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvbndsLWRzaS9ud2wtZHNpLmjCoMKg
-wqDCoMKgwqB8IDExMiArKysKPiA+IMKgOSBmaWxlcyBjaGFuZ2VkLCAxNTU2IGluc2VydGlvbnMo
-KykKPiA+IMKgY3JlYXRlIG1vZGUgMTAwNjQ0Cj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9icmlkZ2UvbndsLWRzaS55YW1sCj4gPiDCoGNyZWF0ZSBtb2RlIDEw
-MDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL253bC1kc2kvS2NvbmZpZwo+ID4gwqBjcmVhdGUg
-bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9ud2wtZHNpL01ha2VmaWxlCj4gPiDC
-oGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL253bC1kc2kvbndsLWRy
-di5jCj4gPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL253bC1k
-c2kvbndsLWRydi5oCj4gPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYnJp
-ZGdlL253bC1kc2kvbndsLWRzaS5jCj4gPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0vYnJpZGdlL253bC1kc2kvbndsLWRzaS5oCj4gPiAKPiA+IC0tCj4gPiAyLjIwLjEKPiA+
-IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Hi Marco,
+
+On 2019-08-28 11:15, Marco Felsch wrote:
+> Hi Robin,
+> 
+> thanks for the patch.
+> 
+> On 19-08-27 14:32, Robin van der Gracht wrote:
+>> The first generation i.MX6 processors does not send an interrupt when 
+>> the
+>> power key is pressed. It sends a power down request interrupt if the 
+>> key is
+>> released before a hard shutdown (5 second press). This should allow
+>> software to bring down the SoC safely.
+>> 
+>> For this driver to work as a regular power key with the older SoCs, we 
+>> need
+>> to send a keypress AND release when we get the power down request irq.
+>> 
+>> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
+>> ---
+>>  .../devicetree/bindings/crypto/fsl-sec4.txt   | 16 ++++--
+>>  drivers/input/keyboard/Kconfig                |  2 +-
+>>  drivers/input/keyboard/snvs_pwrkey.c          | 52 
+>> ++++++++++++++++---
+> 
+> Can we split this so the dt-bindings are a standalone patch? IMHO this
+> is the usual way because the maintainer can squash them on there needs.
+
+Not sure what you mean, do you want me to make a separate patch for the
+devicetree binding documentation here?
+
+> Also it would be cool to document the changes. A common place for
+> changes is after the '---' or on the cover-letter.
+
+Agreed!
+
+v1 -> v2:
+  - Nolonger altering the existing compatible string, just add a second 
+one.
+  - Moved the event emiting work out of the irq handler to the timer 
+handler.
+  - Assign hwtype directly to of_device_id->data instead of a struct
+    platform_device_id entry which has it's .driver_data set to hwtype.
+  - Document the new device tree binding.
+  - Update commit message to make more clear why we want to make this 
+change.
+
+> 
+>>  3 files changed, 57 insertions(+), 13 deletions(-)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt 
+>> b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+>> index 2fe245ca816a..e4fbb9797082 100644
+>> --- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+>> +++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+>> @@ -420,14 +420,22 @@ EXAMPLE
+>>  =====================================================================
+>>  System ON/OFF key driver
+>> 
+>> -  The snvs-pwrkey is designed to enable POWER key function which 
+>> controlled
+>> -  by SNVS ONOFF, the driver can report the status of POWER key and 
+>> wakeup
+>> -  system if pressed after system suspend.
+>> +  The snvs-pwrkey is designed to enable POWER key function which is 
+>> controlled
+>> +  by SNVS ONOFF. It can wakeup the system if pressed after system 
+>> suspend.
+>> +
+>> +  There are two generations of SVNS pwrkey hardware. The first 
+>> generation is
+>> +  included in i.MX6 Solo, DualLite and Quad processors. The second 
+>> generation
+>> +  is included in i.MX6 SoloX and newer SoCs.
+>> +
+>> +  Second generation SNVS can detect and report the status of POWER 
+>> key, but the
+>> +  first generation can only detect a key release and so emits an 
+>> instantaneous
+>> +  press and release event when the key is released.
+>> 
+>>    - compatible:
+>>        Usage: required
+>>        Value type: <string>
+>> -      Definition: Mush include "fsl,sec-v4.0-pwrkey".
+>> +      Definition: Must include "fsl,sec-v4.0-pwrkey" for i.MX6 SoloX 
+>> and newer
+>> +	   or "fsl,imx6qdl-snvs-pwrkey" for older SoCs.
+>> 
+>>    - interrupts:
+>>        Usage: required
+>> diff --git a/drivers/input/keyboard/Kconfig 
+>> b/drivers/input/keyboard/Kconfig
+>> index 7c4f19dab34f..937e58da5ce1 100644
+>> --- a/drivers/input/keyboard/Kconfig
+>> +++ b/drivers/input/keyboard/Kconfig
+>> @@ -436,7 +436,7 @@ config KEYBOARD_SNVS_PWRKEY
+>>  	depends on OF
+>>  	help
+>>  	  This is the snvs powerkey driver for the Freescale i.MX 
+>> application
+>> -	  processors that are newer than i.MX6 SX.
+>> +	  processors.
+>> 
+>>  	  To compile this driver as a module, choose M here; the
+>>  	  module will be called snvs_pwrkey.
+>> diff --git a/drivers/input/keyboard/snvs_pwrkey.c 
+>> b/drivers/input/keyboard/snvs_pwrkey.c
+>> index 5342d8d45f81..d71c44733103 100644
+>> --- a/drivers/input/keyboard/snvs_pwrkey.c
+>> +++ b/drivers/input/keyboard/snvs_pwrkey.c
+>> @@ -29,6 +29,11 @@
+>>  #define DEBOUNCE_TIME 30
+>>  #define REPEAT_INTERVAL 60
+>> 
+>> +enum imx_snvs_hwtype {
+>> +	IMX6SX_SNVS,	/* i.MX6 SoloX and newer */
+>> +	IMX6QDL_SNVS,	/* i.MX6 Solo, DualLite and Quad */
+>> +};
+>> +
+>>  struct pwrkey_drv_data {
+>>  	struct regmap *snvs;
+>>  	int irq;
+>> @@ -37,14 +42,41 @@ struct pwrkey_drv_data {
+>>  	int wakeup;
+>>  	struct timer_list check_timer;
+>>  	struct input_dev *input;
+>> +	enum imx_snvs_hwtype hwtype;
+>>  };
+>> 
+>> +static const struct of_device_id imx_snvs_pwrkey_ids[] = {
+>> +	{
+>> +		.compatible = "fsl,sec-v4.0-pwrkey",
+>> +		.data = (const void *)IMX6SX_SNVS,
+>> +	},
+>> +	{
+>> +		.compatible = "fsl,imx6qdl-snvs-pwrkey",
+>> +		.data = (const void *)IMX6QDL_SNVS,
+>> +	},
+>> +	{ /* sentinel */ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, imx_snvs_pwrkey_ids);
+> 
+> Can we keep this on the original place if you are using ...
+> 
+>> +
+>>  static void imx_imx_snvs_check_for_events(struct timer_list *t)
+>>  {
+>>  	struct pwrkey_drv_data *pdata = from_timer(pdata, t, check_timer);
+>>  	struct input_dev *input = pdata->input;
+>>  	u32 state;
+>> 
+>> +	if (pdata->hwtype == IMX6QDL_SNVS) {
+>> +		/*
+>> +		 * The first generation i.MX6 SoCs only sends an interrupt on
+>> +		 * button release. To mimic power-key usage, we'll prepend a
+>> +		 * press event.
+>> +		 */
+>> +		input_report_key(input, pdata->keycode, 1);
+> 
+> Missing input_sync() here?
+
+Yes you are right. Odd that systemd powerkey handling didn't complain.
+
+> 
+>> +		input_report_key(input, pdata->keycode, 0);
+>> +		input_sync(input);
+>> +		pm_relax(input->dev.parent);
+>> +		return;
+>> +	}
+>> +
+>>  	regmap_read(pdata->snvs, SNVS_HPSR_REG, &state);
+>>  	state = state & SNVS_HPSR_BTN ? 1 : 0;
+>> 
+>> @@ -67,13 +99,17 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int 
+>> irq, void *dev_id)
+>>  {
+>>  	struct platform_device *pdev = dev_id;
+>>  	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
+>> +	unsigned long expire = jiffies;
+>>  	u32 lp_status;
+>> 
+>>  	pm_wakeup_event(pdata->input->dev.parent, 0);
+>> 
+>>  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
+>> -	if (lp_status & SNVS_LPSR_SPO)
+>> -		mod_timer(&pdata->check_timer, jiffies + 
+>> msecs_to_jiffies(DEBOUNCE_TIME));
+>> +	if (lp_status & SNVS_LPSR_SPO) {
+>> +		if (pdata->hwtype == IMX6SX_SNVS)
+>> +			expire += msecs_to_jiffies(DEBOUNCE_TIME);
+>> +		mod_timer(&pdata->check_timer, expire);
+> 
+> Is this desired because the timer gets triggered earlier.
+
+Yes, since the first generation has debounce implemented in hardware,
+we dont need to add another one.
+
+Now looking at it, maybe I should change the conditional to:
+
+if (pdata->hwtype != IMX6QDL_SNVS)
+         expire += msecs_to_jiffies(DEBOUNCE_TIME);
+
+to make this more clear.
+
+> 
+>> +	}
+>> 
+>>  	/* clear SPO status */
+>>  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
+>> @@ -93,6 +129,7 @@ static int imx_snvs_pwrkey_probe(struct 
+>> platform_device *pdev)
+>>  	struct pwrkey_drv_data *pdata = NULL;
+>>  	struct input_dev *input = NULL;
+>>  	struct device_node *np;
+>> +	const struct of_device_id *match;
+>>  	int error;
+>> 
+>>  	/* Get SNVS register Page */
+>> @@ -100,6 +137,10 @@ static int imx_snvs_pwrkey_probe(struct 
+>> platform_device *pdev)
+>>  	if (!np)
+>>  		return -ENODEV;
+>> 
+>> +	match = of_match_node(imx_snvs_pwrkey_ids, np);
+>> +	if (!match)
+>> +		return -ENODEV;
+> 
+> ... of_device_get_match_data() here.
+
+of_device_get_match_data() returns NULL on error. In this case, because 
+I
+assigned integer values to the .data pointers, casting NULL back to an
+integer will result in a valid hwtype.
+
+I could declare a special struct with a 'quirks' field like they did in 
+the
+flexcan diver: 'drivers/net/can/flexcan.c'.
+
+Use of_device_get_match_data() to get it, and define a quirk like:
+SNVS_QUIRK_NO_BTN_PRESS_IRQ. This might also improve readability.
+
+
+> While reading the rm it seems that
+> the snvs block has a dedicated version register. IMHO this could be a
+> better way to apply the change also to existing devices with old
+> firmware.
+
+I thought the same thing, and fully agree with you. However I do not 
+have
+a way to determine which versions are out there. Since I couldn't find 
+any
+documentation on this, and I only have i.MX6 S/DL, D/Q and UL laying 
+around.
+
+Regards,
+Robin van der Gracht
