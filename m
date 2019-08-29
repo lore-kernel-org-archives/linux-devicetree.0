@@ -1,82 +1,147 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 0/8] Add dual-LVDS panel support to EK874
-Date: Thu, 29 Aug 2019 10:26:43 -0500
-Message-ID: <CAL_Jsq+5FMHK4W4UQU24g+rm3CLjnhRcB29skygRB++GaJyM0A@mail.gmail.com>
-References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH 1/4] i3c: master: detach and free device if
+ pre_assign_dyn_addr() fails
+Date: Thu, 29 Aug 2019 17:37:09 +0200
+Message-ID: <20190829173709.79c093dd@collabora.com>
+References: <cover.1567071213.git.vitor.soares@synopsys.com>
+        <e26948eaaf765f683d8fe0618a31a98e2ecc0e65.1567071213.git.vitor.soares@synopsys.com>
+        <20190829124115.482cd8ec@collabora.com>
+        <SN6PR12MB26551F172804D039F3EAA991AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+        <20190829163520.126d42d6@collabora.com>
+        <SN6PR12MB2655E9E544D7E96323BAC796AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <SN6PR12MB2655E9E544D7E96323BAC796AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Andrzej Hajda <a.hajda@samsung.com>, Sam Ravnborg <sam@ravnborg.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, open list:MEDIA DRIVERS FOR RENESAS - FCP
+To: Vitor Soares <Vitor.Soares@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, Przemyslaw Gaj <pgaj@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 1:36 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
->
-> Dear All,
->
-> this series adds support for dual-LVDS panel IDK-2121WR
-> from Advantech:
-> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-High-Brightness/model-IDK-2121WR-K2FHA2E.htm
->
-> V3 approaches the problem in a completely different way, we now
-> have two new properties to mark the ports in the DT as receiving
-> even pixels and odd pixels: dual-lvds-even-pixels and dual-lvds-odd-pixels,
-> which means device drivers should not use bridge specific or panel
-> specific dual_link flags. Also, in this case the DT describes the
-> connection fully.
->
-> In order for the solution to be generic, I have exported a new helper
-> (drm_of_lvds_get_dual_link_configuration) to walk the device tree,
-> and figure out if the connection is dual-LVDS. The same helper gives
-> information about the configuration of the connection. If Px is connected
-> to a port expecting even pixels and Py is connected to a port expecting
-> odd pixels, then the helper returns DRM_LVDS_DUAL_LINK_EVEN_ODD_PIXELS
-> (like in the example below), otherwise it returns
-> DRM_LVDS_DUAL_LINK_ODD_EVEN_PIXELS.
->
->
->  --------            dual-lvds-even-pixels  --------
-> |        |----                         ----|        |
-> |        | Px |---------------------->| Pn |        |
-> |        |----                         ----|        |
-> | SOURCE |           dual-lvds-odd-pixels  |  SINK  |
-> |        |----                         ----|        |
-> |        | Py |---------------------->| Pm |        |
-> |        |----                         ----|        |
->  --------                                   --------
->
-> The device driver for the encoder then will work out if with the current
-> wiring the pixels need swapping or not.
->
-> The same solution works for both panels and bridges.
->
-> Since the DT describes the connection fully, driver
-> drivers/gpu/drm/panel/panel-lvds.c works out-of-the-box, no changes
-> required, however, this implementation opens up a problem with the
-> dt-bindings.
-> Driver drivers/gpu/drm/panel/panel-lvds.c can still be pleased by
-> a port node, but also by a ports node.
-> I have created Documentation/devicetree/bindings/display/bus-timings/lvds.yaml
-> with the idea of including it from panels and bridges dt-bindings
-> supporting dual-LVDS (and of course the dt-bindings for the specific
-> devices should say which port should be marked as what), but file
-> Documentation/devicetree/bindings/display/panel/lvds.yaml formally
-> requires property "port", while with this implementation it should require
-> OneOf "port" and "ports", and unfortunately I can't seem to find a neat way
-> aroud that, other than creating a new compatible string
+On Thu, 29 Aug 2019 15:23:30 +0000
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-Just add 'ports' and drop 'port' from being required in the common
-binding. Then it is up to the panel specific bindings to define which
-one is required. Or we just leave it to allow either form which the
-graph code can handle.
+> From: Boris Brezillon <boris.brezillon@collabora.com>
+> Date: Thu, Aug 29, 2019 at 15:35:20
+> 
+> > On Thu, 29 Aug 2019 13:53:24 +0000
+> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> >   
+> > > Hi Boris,
+> > > 
+> > > From: Boris Brezillon <boris.brezillon@collabora.com>
+> > > Date: Thu, Aug 29, 2019 at 11:41:15
+> > >   
+> > > > +Przemek
+> > > > 
+> > > > Please try to Cc active I3C contributors so they get a chance to
+> > > > comment on your patches.    
+> > > 
+> > > I can do that next time.
+> > >   
+> > > > 
+> > > > On Thu, 29 Aug 2019 12:19:32 +0200
+> > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> > > >     
+> > > > > On pre_assing_dyn_addr() the devices that fail:
+> > > > >   i3c_master_setdasa_locked()
+> > > > >   i3c_master_reattach_i3c_dev()
+> > > > >   i3c_master_retrieve_dev_info()
+> > > > > 
+> > > > > are kept in memory and master->bus.devs list. This makes the i3c devices
+> > > > > without a dynamic address are sent on DEFSLVS CCC command. Fix this by
+> > > > > detaching and freeing the devices that fail on pre_assign_dyn_addr().    
+> > > > 
+> > > > I don't think removing those entries is a good strategy, as one might
+> > > > want to try to use a different dynamic address if the requested one
+> > > > is not available.    
+> > > 
+> > > Do you mean same 'assigned-address' attribute in DT?  
+> > 
+> > Yes, or say it's another device that got the address we want and this
+> > device doesn't want to release the address (I'm assuming the !SA case).
+> >   
+> > > 
+> > > If so, it is checked here:
+> > > 
+> > > static int i3c_master_bus_init(struct i3c_master_controller *master)
+> > > ...
+> > > 	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node) {
+> > > 		struct i3c_device_info info = {
+> > > 			.static_addr = i3cboardinfo->static_addr,
+> > > 		};
+> > > 
+> > > 		if (i3cboardinfo->init_dyn_addr) {
+> > > 			status = i3c_bus_get_addr_slot_status(&master->bus,
+> > > 			^
+> > > 						i3cboardinfo->init_dyn_addr);
+> > > 			if (status != I3C_ADDR_SLOT_FREE) {
+> > > 				ret = -EBUSY;
+> > > 				goto err_detach_devs;
+> > > 			}
+> > > 		}
+> > > 
+> > > 		i3cdev = i3c_master_alloc_i3c_dev(master, &info);
+> > > 		if (IS_ERR(i3cdev)) {
+> > > 			ret = PTR_ERR(i3cdev);
+> > > 			goto err_detach_devs;
+> > > 		}
+> > > 
+> > > 		i3cdev->boardinfo = i3cboardinfo;
+> > > 
+> > > 		ret = i3c_master_attach_i3c_dev(master, i3cdev);
+> > > 		if (ret) {
+> > > 			i3c_master_free_i3c_dev(i3cdev);
+> > > 			goto err_detach_devs;
+> > > 		}
+> > > 	}
+> > > ...
+> > > 
+> > > and later if it fails i3c_master_pre_assign_dyn_addr(), the device can 
+> > > participate in Enter Dynamic Address Assignment process.
+> > > I may need to check the boardinfo->init_dyn_addr status on 
+> > > i3c_master_add_i3c_dev_locked before i3c_master_setnewda_locked().  
+> > 
+> > I need to double check but I thought we were already handling that case
+> > properly.  
+> 
+> Yes, it is handled in the code above.
 
-We could have this in the common binding:
+No, I meant the 'assign init_dyn_addr even if !SA', and the code I
+pointed in my other reply tends to confirm that this is something we
+already take into account (maybe not correctly, but the code is here).
 
-oneOf:
- - required: [ports]
- - required: [port]
+> 
+> >   
+> > >   
+> > > > Why not simply skipping entries that have ->dyn_addr
+> > > > set to 0 when preparing a DEFSLVS frame    
+> > > 
+> > > I considered that solution too but if the device isn't enumerated why 
+> > > should it be attached and kept in memory?  
+> > 
+> > Might be a device that supports HJ, and in that case we might want the
+> > controller to reserve a slot in its device table for that device.
+> > Anyway, it doesn't hurt to have it around as long as we don't pass the
+> > device through DEFSLVS if it doesn't have a dynamic address. I really
+> > prefer to keep the logic unchanged and fix it if it needs to be fixed.  
+> 
+> Well, we aren't reserving a slot because we need another one to attach 
+> the device when it is enumerated and hence a device may be using 2 slots 
+> in the controller.
 
-Rob
+Right, you shouldn't reserve a slot when ->static_address == 0 &&
+->dynamic_address == 0, but I still don't see where the problem is with
+the solution we have right now, sorry. Note that even if you reserve a
+slot in that case, the device only occupies 2 slots for a short amount
+of time, because the add_i3c_dev() logic will detect that the descriptor
+already exists and reattach the device with its new address.
+
+> It may cause problems in HC with reduced slots and it is another reason 
+> why I think we should detach device without dynamic address after the 
+> enumeration phase.
+
+Can you please try the approach I suggest? => fix the existing logic to
+make it work without this "free undiscovered dev desc, reallocate later"
+dance.
