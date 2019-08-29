@@ -1,7 +1,7 @@
 From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v4 08/14] drm/mxsfb: Add max-memory-bandwidth property for MXSFB
-Date: Thu, 29 Aug 2019 14:30:09 +0300
-Message-ID: <1567078215-31601-9-git-send-email-robert.chiras@nxp.com>
+Subject: [PATCH v4 07/14] drm/mxsfb: Signal mode changed when bpp changed
+Date: Thu, 29 Aug 2019 14:30:08 +0300
+Message-ID: <1567078215-31601-8-git-send-email-robert.chiras@nxp.com>
 References: <1567078215-31601-1-git-send-email-robert.chiras@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,101 +13,83 @@ To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.
 Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Because of stability issues, we may want to limit the maximum bandwidth
-required by the MXSFB (eLCDIF) driver.
+From: Mirela Rabulea <mirela.rabulea@nxp.com>
 
+Add mxsfb_atomic_helper_check to signal mode changed when bpp changed.
+This will trigger the execution of disable/enable on
+a modeset with different bpp than the current one.
+
+Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
 Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
 Tested-by: Guido Günther <agx@sigxcpu.org>
 ---
- drivers/gpu/drm/mxsfb/mxsfb_drv.c | 48 +++++++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/mxsfb/mxsfb_drv.h |  2 ++
- 2 files changed, 50 insertions(+)
+ drivers/gpu/drm/mxsfb/mxsfb_drv.c | 45 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index f95ba63..d8686c7 100644
+index 23027a9..f95ba63 100644
 --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
 +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -158,6 +158,49 @@ static const struct drm_mode_config_helper_funcs mxsfb_mode_config_helpers = {
- 	.atomic_commit_tail = drm_atomic_helper_commit_tail_rpm,
- };
- 
-+enum drm_mode_status mxsfb_pipe_mode_valid(struct drm_crtc *crtc,
-+					   const struct drm_display_mode *mode)
-+{
-+	struct drm_simple_display_pipe *pipe =
-+		container_of(crtc, struct drm_simple_display_pipe, crtc);
-+	struct mxsfb_drm_private *mxsfb = drm_pipe_to_mxsfb_drm_private(pipe);
-+	u32 bpp;
-+	u64 bw;
-+
-+	if (!pipe->plane.state->fb)
-+		bpp = 32;
-+	else
-+		bpp = pipe->plane.state->fb->format->depth;
-+
-+	bw = mode->crtc_clock * 1000;
-+	bw = bw * mode->hdisplay * mode->vdisplay * (bpp / 8);
-+	bw = div_u64(bw, mode->htotal * mode->vtotal);
-+
-+	if (mxsfb->max_bw && (bw > mxsfb->max_bw))
-+		return MODE_BAD;
-+
-+	return MODE_OK;
-+}
-+
-+static int mxsfb_pipe_check(struct drm_simple_display_pipe *pipe,
-+			    struct drm_plane_state *plane_state,
-+			    struct drm_crtc_state *crtc_state)
-+{
-+	struct drm_framebuffer *fb = plane_state->fb;
-+	struct drm_framebuffer *old_fb = pipe->plane.state->fb;
-+
-+	/* force 'mode_changed' when fb pitches changed, since
-+	 * the pitch related registers configuration of LCDIF
-+	 * can not be done when LCDIF is running.
-+	 */
-+	if (old_fb && likely(!crtc_state->mode_changed)) {
-+		if (old_fb->pitches[0] != fb->pitches[0])
-+			crtc_state->mode_changed = true;
-+	}
-+
-+	return 0;
-+}
-+
- static void mxsfb_pipe_enable(struct drm_simple_display_pipe *pipe,
- 			      struct drm_crtc_state *crtc_state,
- 			      struct drm_plane_state *plane_state)
-@@ -244,6 +287,8 @@ static void mxsfb_pipe_disable_vblank(struct drm_simple_display_pipe *pipe)
+@@ -26,6 +26,7 @@
+ #include <drm/drm_drv.h>
+ #include <drm/drm_fb_cma_helper.h>
+ #include <drm/drm_fb_helper.h>
++#include <drm/drm_fourcc.h>
+ #include <drm/drm_gem_cma_helper.h>
+ #include <drm/drm_gem_framebuffer_helper.h>
+ #include <drm/drm_irq.h>
+@@ -105,9 +106,51 @@ void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb)
+ 		clk_disable_unprepare(mxsfb->clk_axi);
  }
  
- static struct drm_simple_display_pipe_funcs mxsfb_funcs = {
-+	.mode_valid	= mxsfb_pipe_mode_valid,
-+	.check          = mxsfb_pipe_check,
- 	.enable		= mxsfb_pipe_enable,
- 	.disable	= mxsfb_pipe_disable,
- 	.update		= mxsfb_pipe_update,
-@@ -283,6 +328,9 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
- 	if (IS_ERR(mxsfb->clk_disp_axi))
- 		mxsfb->clk_disp_axi = NULL;
- 
-+	of_property_read_u32(drm->dev->of_node, "max-memory-bandwidth",
-+			     &mxsfb->max_bw);
++/**
++ * mxsfb_atomic_helper_check - validate state object
++ * @dev: DRM device
++ * @state: the driver state object
++ *
++ * On top of the drm imlementation drm_atomic_helper_check,
++ * check if the bpp is changed, if so, signal mode_changed,
++ * this will trigger disable/enable
++ *
++ * RETURNS:
++ * Zero for success or -errno
++ */
++static int mxsfb_atomic_helper_check(struct drm_device *dev,
++				     struct drm_atomic_state *state)
++{
++	struct drm_crtc *crtc;
++	struct drm_crtc_state *new_state;
++	int i, ret;
 +
- 	ret = dma_set_mask_and_coherent(drm->dev, DMA_BIT_MASK(32));
- 	if (ret)
- 		return ret;
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-index 8fb65d3..a178173 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
-@@ -32,6 +32,8 @@ struct mxsfb_drm_private {
- 	struct drm_connector		*connector;
- 	struct drm_panel		*panel;
- 	struct drm_bridge		*bridge;
++	ret = drm_atomic_helper_check(dev, state);
++	if (ret)
++		return ret;
 +
-+	u32				max_bw;
++	for_each_new_crtc_in_state(state, crtc, new_state, i) {
++		struct drm_plane_state *primary_state;
++		int old_bpp = 0;
++		int new_bpp = 0;
++
++		if (!crtc->primary || !crtc->primary->old_fb)
++			continue;
++		primary_state =
++			drm_atomic_get_plane_state(state, crtc->primary);
++		if (!primary_state || !primary_state->fb)
++			continue;
++		old_bpp = crtc->primary->old_fb->format->depth;
++		new_bpp = primary_state->fb->format->depth;
++		if (old_bpp != new_bpp)
++			new_state->mode_changed = true;
++	}
++	return ret;
++}
++
+ static const struct drm_mode_config_funcs mxsfb_mode_config_funcs = {
+ 	.fb_create		= drm_gem_fb_create,
+-	.atomic_check		= drm_atomic_helper_check,
++	.atomic_check		= mxsfb_atomic_helper_check,
+ 	.atomic_commit		= drm_atomic_helper_commit,
  };
  
- int mxsfb_setup_crtc(struct drm_device *dev);
 -- 
 2.7.4
