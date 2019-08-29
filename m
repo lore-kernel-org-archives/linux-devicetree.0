@@ -1,7 +1,7 @@
 From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v5, 22/32] drm/mediatek: add ovl0/ovl_2l0 usecase
-Date: Thu, 29 Aug 2019 22:50:44 +0800
-Message-ID: <1567090254-15566-23-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v5, 30/32] drm/mediatek: add connection from DITHER0 to DSI0
+Date: Thu, 29 Aug 2019 22:50:52 +0800
+Message-ID: <1567090254-15566-31-git-send-email-yongqiang.niu@mediatek.com>
 References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,104 +14,39 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add ovl0/ovl_2l0 usecase
-in ovl->ovl_2l0 direct link usecase:
-1. the crtc support layer number will 4+2
-2. ovl_2l0 background color input select ovl0 when crtc init
-and disable it when crtc finish
-3. config ovl_2l0 layer, if crtc config layer number is
-bigger than ovl0 support layers(max is 4)
+This patch add connection from DITHER0 to DSI0
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 38 +++++++++++++++++++++++++++++++--
- 1 file changed, 36 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index c63ff2b..b55970a 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -270,6 +270,15 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index 237824f..fd38658 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -35,10 +35,12 @@
  
- 	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
- 		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[i];
-+		enum mtk_ddp_comp_id prev;
-+
-+		if (i > 0)
-+			prev = mtk_crtc->ddp_comp[i - 1]->id;
-+		else
-+			prev = DDP_COMPONENT_ID_MAX;
-+
-+		if (prev == DDP_COMPONENT_OVL0)
-+			mtk_ddp_comp_bgclr_in_on(comp);
+ #define MT8183_DISP_OVL0_2L_MOUT_EN		0xf04
+ #define MT8183_DISP_OVL1_2L_MOUT_EN		0xf08
++#define MT8183_DISP_DITHER0_MOUT_EN		0xf0c
+ #define MT8183_DISP_PATH0_SEL_IN		0xf24
  
- 		mtk_ddp_comp_config(comp, width, height, vrefresh, bpc);
- 		mtk_ddp_comp_start(comp);
-@@ -279,9 +288,18 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
- 	for (i = 0; i < mtk_crtc->layer_nr; i++) {
- 		struct drm_plane *plane = &mtk_crtc->planes[i];
- 		struct mtk_plane_state *plane_state;
-+		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
-+		unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-+		unsigned int local_layer;
+ #define OVL0_2L_MOUT_EN_DISP_PATH0			BIT(0)
+ #define OVL1_2L_MOUT_EN_RDMA1				BIT(4)
++#define DITHER0_MOUT_IN_DSI0				BIT(0)
+ #define DISP_PATH0_SEL_IN_OVL0_2L			0x1
  
- 		plane_state = to_mtk_plane_state(plane->state);
--		mtk_ddp_comp_layer_config(mtk_crtc->ddp_comp[0], i,
-+
-+		if (i >= comp_layer_nr) {
-+			comp = mtk_crtc->ddp_comp[1];
-+			local_layer = i - comp_layer_nr;
-+		} else
-+			local_layer = i;
-+		mtk_ddp_comp_layer_config(comp, local_layer,
- 					  plane_state);
+ #define MT2701_DISP_MUTEX0_MOD0			0x2c
+@@ -323,6 +325,9 @@ static unsigned int mtk_ddp_mout_en(const struct mtk_mmsys_reg_data *data,
+ 		   next == DDP_COMPONENT_RDMA1) {
+ 		*addr = MT8183_DISP_OVL1_2L_MOUT_EN;
+ 		value = OVL1_2L_MOUT_EN_RDMA1;
++	} else if (cur == DDP_COMPONENT_DITHER && next == DDP_COMPONENT_DSI0) {
++		*addr = MT8183_DISP_DITHER0_MOUT_EN;
++		value = DITHER0_MOUT_IN_DSI0;
+ 	} else {
+ 		value = 0;
  	}
- 
-@@ -307,6 +325,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
- 					   mtk_crtc->ddp_comp[i]->id);
- 	mtk_disp_mutex_disable(mtk_crtc->mutex);
- 	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
-+		mtk_ddp_comp_bgclr_in_off(mtk_crtc->ddp_comp[i]);
- 		mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
- 					      mtk_crtc->mmsys_reg_data,
- 					      mtk_crtc->ddp_comp[i]->id,
-@@ -327,6 +346,8 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
- 	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
- 	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
- 	unsigned int i;
-+	unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-+	unsigned int local_layer;
- 
- 	/*
- 	 * TODO: instead of updating the registers here, we should prepare
-@@ -349,7 +370,14 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
- 			plane_state = to_mtk_plane_state(plane->state);
- 
- 			if (plane_state->pending.config) {
--				mtk_ddp_comp_layer_config(comp, i, plane_state);
-+				if (i >= comp_layer_nr) {
-+					comp = mtk_crtc->ddp_comp[1];
-+					local_layer = i - comp_layer_nr;
-+				} else
-+					local_layer = i;
-+
-+				mtk_ddp_comp_layer_config(comp, local_layer,
-+							  plane_state);
- 				plane_state->pending.config = false;
- 			}
- 		}
-@@ -572,6 +600,12 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
- 	}
- 
- 	mtk_crtc->layer_nr = mtk_ddp_comp_layer_nr(mtk_crtc->ddp_comp[0]);
-+	if (mtk_crtc->ddp_comp_nr > 1) {
-+		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[1];
-+
-+		if (comp->funcs->bgclr_in_on)
-+			mtk_crtc->layer_nr += mtk_ddp_comp_layer_nr(comp);
-+	}
- 	mtk_crtc->planes = devm_kcalloc(dev, mtk_crtc->layer_nr,
- 					sizeof(struct drm_plane),
- 					GFP_KERNEL);
 -- 
 1.8.1.1.dirty
