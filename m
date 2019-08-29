@@ -1,43 +1,58 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: Re: [PATCH v2 0/2] Update ethernet compatible string for SiFive FU540
-Date: Thu, 29 Aug 2019 15:24:58 +0530
-Message-ID: <CAJ2_jOGiTgGZ0TEZt6hBVB3oFxWkrrKVGQ6n__G4Zf_-ijY10Q@mail.gmail.com>
-References: <1566882364-23891-1-git-send-email-yash.shah@sifive.com> <20190828.140644.534529249197568915.davem@davemloft.net>
+From: Oliver Graute <oliver.graute@kococonnector.com>
+Subject: Re: [PATCH v3 01/11] dt-bindings: firmware: imx-scu: new binding to
+ parse clocks from device tree
+Date: Thu, 29 Aug 2019 10:01:45 +0000
+Message-ID: <20190829094624.GC18928@optiplex>
+References: <1563289265-10977-1-git-send-email-aisheng.dong@nxp.com>
+ <1563289265-10977-2-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190828.140644.534529249197568915.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>, Sachin Ghadi <sachin.ghadi@sifive.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1563289265-10977-2-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+Content-ID: <701C1D21AA60824F951B836EAA177A09@eurprd09.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, "linux-imx@nxp.com" <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 2:36 AM David Miller <davem@davemloft.net> wrote:
->
-> From: Yash Shah <yash.shah@sifive.com>
-> Date: Tue, 27 Aug 2019 10:36:02 +0530
->
-> > This patch series renames the compatible property to a more appropriate
-> > string. The patchset is based on Linux-5.3-rc6 and tested on SiFive
-> > Unleashed board
->
-> You should always base changes off of "net" or "net-next" and be explicitly
-> in your Subject lines which of those two trees your changes are for f.e.:
->
->         Subject: [PATCH v2 net-next N/M] ...
+On 16/07/19, Dong Aisheng wrote:
+> There's a few limitations on the original one cell clock binding
+> (#clock-cells = <1>) that we have to define some SW clock IDs for device
+> tree to reference. This may cause troubles if we want to use common
+> clock IDs for multi platforms support when the clock of those platforms
+> are mostly the same.
+> e.g. Current clock IDs name are defined with SS prefix.
+> 
+> However the device may reside in different SS across CPUs, that means the
+> SS prefix may not valid anymore for a new SoC. Furthermore, the device
+> availability of those clocks may also vary a bit.
+> 
+> For such situation, we want to eliminate the using of SW Clock IDs and
+> change to use a more close to HW one instead.
+> For SCU clocks usage, only two params required: Resource id + Clock Type.
+> Both parameters are platform independent. So we could use two cells binding
+> to pass those parameters,
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-I will keep this in mind for future patches.
+This Patch series (v3) is running fine for some weeks on my iMX8QM Board.
 
->
-> >
-> > Change history:
-> > Since v1:
-> > - Dropped PATCH3 because it's already merged
-> > - Change the reference url in the patch descriptions to point to a
-> >   'lore.kernel.org' link instead of 'lkml.org'
->
-> Series applied to 'net'.
+So feel free to use my Tag:
 
-Thanks!
-
-- Yash
+Tested-by: Oliver Graute <oliver.graute@kococonnector.com>
