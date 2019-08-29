@@ -1,209 +1,114 @@
-Return-Path: <SRS0=gJgO=WW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:58718 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729144AbfHZSCo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 26 Aug 2019 14:02:44 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 1/6] ARM: OMAP2+: Drop legacy platform data for dra7 mcspi
-Date: Mon, 26 Aug 2019 11:02:32 -0700
-Message-Id: <20190826180237.31571-2-tony@atomide.com>
-In-Reply-To: <20190826180237.31571-1-tony@atomide.com>
-References: <20190826180237.31571-1-tony@atomide.com>
+Return-Path: <SRS0=QOTl=WZ=jmondi.org=jacopo@kernel.org>
+Date: Thu, 29 Aug 2019 14:46:40 +0200
+From: Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v2 01/10] media: dt-bindings: Document 'location' property
+Message-ID: <20190829124639.tzjp63tqnojnytlq@uno.localdomain>
+References: <20190827092339.8858-1-jacopo@jmondi.org>
+ <20190827092339.8858-2-jacopo@jmondi.org>
+ <20190827122126.GQ5054@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Vignesh R <vigneshr@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="siklwweqobuuvov4"
+Content-Disposition: inline
+In-Reply-To: <20190827122126.GQ5054@pendragon.ideasonboard.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, tfiga@google.com, Rob Herring <robh+dt@kernel.org>, "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" <linux-media@vger.kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-With recent ti-sysc driver changes, we can probe most devices with device
-tree data only and drop the custom "ti,hwmods" property.
 
-Let's drop the legacy platform data and custom "ti,hwmods" property. We
-want to do this in a single patch as the "ti,hwmods" property is used to
-allocate platform data dynamically that we no longer want to do.
+--siklwweqobuuvov4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Cc: Vignesh R <vigneshr@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/dra7-l4.dtsi            |   4 -
- arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 116 ----------------------
- 2 files changed, 120 deletions(-)
+Hi Laurent,
 
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -1942,7 +1942,6 @@
- 
- 		target-module@98000 {			/* 0x48098000, ap 47 08.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
--			ti,hwmods = "mcspi1";
- 			reg = <0x98000 0x4>,
- 			      <0x98010 0x4>;
- 			reg-names = "rev", "sysc";
-@@ -1982,7 +1981,6 @@
- 
- 		target-module@9a000 {			/* 0x4809a000, ap 49 10.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
--			ti,hwmods = "mcspi2";
- 			reg = <0x9a000 0x4>,
- 			      <0x9a010 0x4>;
- 			reg-names = "rev", "sysc";
-@@ -2174,7 +2172,6 @@
- 
- 		target-module@b8000 {			/* 0x480b8000, ap 67 48.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
--			ti,hwmods = "mcspi3";
- 			reg = <0xb8000 0x4>,
- 			      <0xb8010 0x4>;
- 			reg-names = "rev", "sysc";
-@@ -2206,7 +2203,6 @@
- 
- 		target-module@ba000 {			/* 0x480ba000, ap 69 18.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
--			ti,hwmods = "mcspi4";
- 			reg = <0xba000 0x4>,
- 			      <0xba010 0x4>;
- 			reg-names = "rev", "sysc";
-diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
---- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-@@ -996,86 +996,6 @@ static struct omap_hwmod dra7xx_mailbox13_hwmod = {
- 	},
- };
- 
--/*
-- * 'mcspi' class
-- *
-- */
--
--static struct omap_hwmod_class_sysconfig dra7xx_mcspi_sysc = {
--	.rev_offs	= 0x0000,
--	.sysc_offs	= 0x0010,
--	.sysc_flags	= (SYSC_HAS_EMUFREE | SYSC_HAS_RESET_STATUS |
--			   SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET),
--	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
--			   SIDLE_SMART_WKUP),
--	.sysc_fields	= &omap_hwmod_sysc_type2,
--};
--
--static struct omap_hwmod_class dra7xx_mcspi_hwmod_class = {
--	.name	= "mcspi",
--	.sysc	= &dra7xx_mcspi_sysc,
--};
--
--/* mcspi1 */
--static struct omap_hwmod dra7xx_mcspi1_hwmod = {
--	.name		= "mcspi1",
--	.class		= &dra7xx_mcspi_hwmod_class,
--	.clkdm_name	= "l4per_clkdm",
--	.main_clk	= "func_48m_fclk",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = DRA7XX_CM_L4PER_MCSPI1_CLKCTRL_OFFSET,
--			.context_offs = DRA7XX_RM_L4PER_MCSPI1_CONTEXT_OFFSET,
--			.modulemode   = MODULEMODE_SWCTRL,
--		},
--	},
--};
--
--/* mcspi2 */
--static struct omap_hwmod dra7xx_mcspi2_hwmod = {
--	.name		= "mcspi2",
--	.class		= &dra7xx_mcspi_hwmod_class,
--	.clkdm_name	= "l4per_clkdm",
--	.main_clk	= "func_48m_fclk",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = DRA7XX_CM_L4PER_MCSPI2_CLKCTRL_OFFSET,
--			.context_offs = DRA7XX_RM_L4PER_MCSPI2_CONTEXT_OFFSET,
--			.modulemode   = MODULEMODE_SWCTRL,
--		},
--	},
--};
--
--/* mcspi3 */
--static struct omap_hwmod dra7xx_mcspi3_hwmod = {
--	.name		= "mcspi3",
--	.class		= &dra7xx_mcspi_hwmod_class,
--	.clkdm_name	= "l4per_clkdm",
--	.main_clk	= "func_48m_fclk",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = DRA7XX_CM_L4PER_MCSPI3_CLKCTRL_OFFSET,
--			.context_offs = DRA7XX_RM_L4PER_MCSPI3_CONTEXT_OFFSET,
--			.modulemode   = MODULEMODE_SWCTRL,
--		},
--	},
--};
--
--/* mcspi4 */
--static struct omap_hwmod dra7xx_mcspi4_hwmod = {
--	.name		= "mcspi4",
--	.class		= &dra7xx_mcspi_hwmod_class,
--	.clkdm_name	= "l4per_clkdm",
--	.main_clk	= "func_48m_fclk",
--	.prcm = {
--		.omap4 = {
--			.clkctrl_offs = DRA7XX_CM_L4PER_MCSPI4_CLKCTRL_OFFSET,
--			.context_offs = DRA7XX_RM_L4PER_MCSPI4_CONTEXT_OFFSET,
--			.modulemode   = MODULEMODE_SWCTRL,
--		},
--	},
--};
--
- /*
-  * 'mcasp' class
-  *
-@@ -2565,38 +2485,6 @@ static struct omap_hwmod_ocp_if dra7xx_l4_per3__mailbox13 = {
- 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
- };
- 
--/* l4_per1 -> mcspi1 */
--static struct omap_hwmod_ocp_if dra7xx_l4_per1__mcspi1 = {
--	.master		= &dra7xx_l4_per1_hwmod,
--	.slave		= &dra7xx_mcspi1_hwmod,
--	.clk		= "l3_iclk_div",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
--};
--
--/* l4_per1 -> mcspi2 */
--static struct omap_hwmod_ocp_if dra7xx_l4_per1__mcspi2 = {
--	.master		= &dra7xx_l4_per1_hwmod,
--	.slave		= &dra7xx_mcspi2_hwmod,
--	.clk		= "l3_iclk_div",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
--};
--
--/* l4_per1 -> mcspi3 */
--static struct omap_hwmod_ocp_if dra7xx_l4_per1__mcspi3 = {
--	.master		= &dra7xx_l4_per1_hwmod,
--	.slave		= &dra7xx_mcspi3_hwmod,
--	.clk		= "l3_iclk_div",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
--};
--
--/* l4_per1 -> mcspi4 */
--static struct omap_hwmod_ocp_if dra7xx_l4_per1__mcspi4 = {
--	.master		= &dra7xx_l4_per1_hwmod,
--	.slave		= &dra7xx_mcspi4_hwmod,
--	.clk		= "l3_iclk_div",
--	.user		= OCP_USER_MPU | OCP_USER_SDMA,
--};
--
- /* l4_cfg -> mpu */
- static struct omap_hwmod_ocp_if dra7xx_l4_cfg__mpu = {
- 	.master		= &dra7xx_l4_cfg_hwmod,
-@@ -2995,10 +2883,6 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
- 	&dra7xx_l4_per3__mailbox11,
- 	&dra7xx_l4_per3__mailbox12,
- 	&dra7xx_l4_per3__mailbox13,
--	&dra7xx_l4_per1__mcspi1,
--	&dra7xx_l4_per1__mcspi2,
--	&dra7xx_l4_per1__mcspi3,
--	&dra7xx_l4_per1__mcspi4,
- 	&dra7xx_l4_cfg__mpu,
- 	&dra7xx_l4_cfg__ocp2scp1,
- 	&dra7xx_l4_cfg__ocp2scp3,
--- 
-2.23.0
+On Tue, Aug 27, 2019 at 03:21:26PM +0300, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> Thank you for the patch.
+>
+> On Tue, Aug 27, 2019 at 11:23:27AM +0200, Jacopo Mondi wrote:
+> > Add the 'location' device property, used to specify the camera device
+> > mounting position. The property is particularly meaningful for mobile
+> > devices with a well defined usage orientation.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> > ---
+> >  .../devicetree/bindings/media/video-interfaces.txt     | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > index f884ada0bffc..865f4142f432 100644
+> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > @@ -89,6 +89,16 @@ Optional properties
+> >    but a number of degrees counter clockwise. Typical values are 0 and 180
+> >    (upside down).
+> >
+> > +- location: The camera sensor mounting location, expressed as a position
+> > +  relative to the usage orientation of the device the sensor is installed on.
+>
+> DT bindings being ABIs, we need to be precise and thorough there. One
+> particular point that bothers me is that the property is named location,
+> and its description refers to camera sensor mounting location.
+>
+> I see two options to fix this. One of them is to rename the property to
+> camera-location, but that would limit its future usage for other types
+> of devices. The other one is to document the property as applying to a
+> "device" instead of a "camera sensor", and add one sentence stating that
+> this property is valid for camera sensors only.
+>
+> This will require finding another name for the device that the device is
+> mounted on though, as using device twice would be very confusing.
+
+I had the same concern, but I cannot find another term to convey
+this... suggestions?
+
+>
+> > +  Possible values are:
+> > +  0 - Front. The image sensor is mounted on the front facing side of the device.
+> > +  For mobile devices such as smartphones, tablets and laptops the front side is
+> > +  the user facing side of the device.
+> > +  1 - Back. The image sensor is mounted on the back side of the device, which is
+> > +  defined as the opposite side of the front facing one.
+> > +  2 - External. The image sensor is connected to the device by extension cables,
+> > +  and can be freely moved, regardless of the device position.
+>
+> It could be something else than cables (wireless possibly ?). I would
+> phrase this along the lines of "The device is not attached directly to
+> the [device], or is attached in a way that allows it to move to
+> different locations."
+
+Agreed, once we find a good term for [device] :)
+
+>
+> >
+> >  Optional endpoint properties
+> >  ----------------------------
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+
+--siklwweqobuuvov4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1nyS8ACgkQcjQGjxah
+VjzL2BAAgqsNZgAW+vRkwt7RDjK6QpMnNwif5DzH5YXs/aZ9BFu0ZYLi+M9/OXq7
+yiBXbMa7OrA/eYnDRY3Z4ILQ8sEUCBCB/eC733VdWIrThEpiBSNGLLncW1z+2RoS
+fYMuCr2mBirGkyhGzu7vE4geW3FjMwJhB4oEdshuA7Wy8+mcz64LQZipOk/xo01I
+gvmwNmtZltKU5tA6uzShpZ+/UxAitiUwOV6Sh7uBNkDc4V0yYfz+Bo7pU6XexoEd
+W58m9Pprs40BUJ4T8cTGGRK9YqOi+RAAQ6Wv1GtZqgWZiBNO6uWLNC+hkOdmxgGB
+kEznLvM9lw1KjJ9KVJFSX/wX8463gyejJUkTYBzl4pz5ZAWE3P1Un4BfbxrvnoXs
+CFT+6SuRpSZUykGqxfGDLpJ/R+vUhP4QC+DgsNhbFV44jEqElbCmH/cirIdffZ5S
+o29yngV5wfIjGR8uYuJbCqEgLk+o/SCn/Aw3UMzEDA+oJ836kq7pDt+SttlB4FOH
+7dRlko11SeOEKDMJAUsCT1hhn94LshXqKRgqN9zP1CdScR947uQ8M51PRG+n0kKH
+0a+ieydHAGKlQo26jBwkXfosHHLNzNlJ9YFcHXOi2GUS0IOet80eigwmP2zfq78h
+d8SeO9FgcOQ9++h7YlixGBK8+bdxq/tdlNiYV+UZ5slu5IkJpzM=
+=kIpu
+-----END PGP SIGNATURE-----
+
+--siklwweqobuuvov4--
