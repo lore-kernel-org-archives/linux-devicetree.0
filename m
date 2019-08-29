@@ -1,90 +1,41 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [RESEND PATCH v2 1/2] dt-bindings: reset: aoss: Add AOSS reset
- binding for SC7180 SoCs
-Date: Thu, 29 Aug 2019 08:08:06 +0530
-Message-ID: <4a71d26db054be636e57c4d031b0d3ec@codeaurora.org>
-References: <20190824152411.21757-1-sibis@codeaurora.org>
- <20190824152411.21757-2-sibis@codeaurora.org>
- <1566808568.3842.2.camel@pengutronix.de>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [alsa-devel] [PATCH v5 4/4] ASoC: codecs: add wsa881x amplifier
+ support
+Date: Thu, 29 Aug 2019 11:36:52 -0500
+Message-ID: <33e04646-ac7e-3ba1-3e09-a4f27a1b250b@linux.intel.com>
+References: <20190829144442.6210-1-srinivas.kandagatla@linaro.org>
+ <20190829144442.6210-5-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566808568.3842.2.camel@pengutronix.de>
+In-Reply-To: <20190829144442.6210-5-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, spapothi@codeaurora.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hey Philipp,
-Thanks for the review!
 
-On 2019-08-26 14:06, Philipp Zabel wrote:
-> On Sat, 2019-08-24 at 20:54 +0530, Sibi Sankar wrote:
->> Add SC7180 AOSS reset to the list of possible bindings.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt 
->> b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->> index 510c748656ec5..3eb6a22ced4bc 100644
->> --- a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->> +++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->> @@ -8,8 +8,8 @@ Required properties:
->>  - compatible:
->>  	Usage: required
->>  	Value type: <string>
->> -	Definition: must be:
->> -		    "qcom,sdm845-aoss-cc"
->> +	Definition: must be one of:
->> +		"qcom,sc7180-aoss-cc", "qcom,sdm845-aoss-cc"
-> 
-> Should this emphasize that the common sdm845 compatible always has to 
-> be
-> included?
-> 
-> +	Definition: must be:
-> +		"qcom,sdm845-aoss-cc" for SDM845 or
-
-can we drop the "or" since
-we would need to keep adding
-it in the future.
-
-> +		"qcom,sc7180-aoss-cc", "qcom,sdm845-aoss-cc" for SC7180
-
-I prefer ^^ approach for the
-reasons stated below.
-
-> 
-> or like the qcom,kpss-gcc bindings:
-> 
-> +	Definition: should be one of the following. The generic
-> compatible
-> +		"qcom,sdm845-aoss-cc" should also be
-> included.
-> +		"qcom,sc7180-aoss-cc", "qcom,sdm845-aoss-cc"
+> +static int wsa881x_ramp_pa_gain(struct snd_soc_component *comp,
+> +				int min_gain, int max_gain, int udelay)
+> +{
+> +	int val;
 > +
+> +	for (val = min_gain; max_gain <= val; val--) {
+> +		snd_soc_component_update_bits(comp, WSA881X_SPKR_DRV_GAIN,
+> +					      0xF0, val << 4);
+> +		/*
+> +		 * 1ms delay is needed for every step change in gain as per
+> +		 * HW requirement.
+> +		 */
+> +		usleep_range(udelay, udelay + 10);
 
-It is extremely unlikely that
-future SoCs would maintain same
-number of reset lines/offsets
-due to the constant flux in
-remote processors being added
-to the SoCs. So a generic
-compatible might not make sense
-here.
+nit-pick: it'd be nicer to have udelay explicitly set here instead of in 
+the caller below for consistency with the comments.
 
-> 	"qcom,sdm845-aoss-cc"
-> 
-> regards
-> Philipp
+> +			wsa881x_ramp_pa_gain(comp, min_gain, max_gain, 1000);
 
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+But apart from that I didn't see anything blatantly wrong, so
+
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
