@@ -1,82 +1,75 @@
-From: Vitor Soares <Vitor.Soares@synopsys.com>
-Subject: RE: [PATCH 4/4] i3c: master: dw: reattach device on first available
- location of address table
-Date: Thu, 29 Aug 2019 14:09:08 +0000
-Message-ID: <SN6PR12MB265539D98E3B4571C1705799AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-References: <cover.1567071213.git.vitor.soares@synopsys.com>
-        <e03fb41054a8431b27cc84c3d83ada9464172ef7.1567071213.git.vitor.soares@synopsys.com>
- <20190829131519.3f420c64@collabora.com>
+From: robin <robin@protonic.nl>
+Subject: Re: [PATCH v2 1/2] input: keyboard: snvs_pwrkey: Send key events for
+ i.MX6 S, DL and Q
+Date: Thu, 29 Aug 2019 16:32:22 +0200
+Message-ID: <efbaeee1422412098076488fa494a42f@protonic.nl>
+References: <20190827123216.32728-1-robin@protonic.nl>
+ <20190828091550.pdc57wanu6twew5p@pengutronix.de>
+ <6d353af709ea545cc34abca5c40674e3@protonic.nl>
+ <20190829081712.timamprawezzbesn@pengutronix.de>
+ <VE1PR04MB6638A54664EE3FFE16BD419189A20@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20190829115052.s2m4jw4p3rknqoxb@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829131519.3f420c64@collabora.com>
-Content-Language: en-US
+In-Reply-To: <20190829115052.s2m4jw4p3rknqoxb@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@collabora.com>, Vitor Soares <Vitor.Soares@synopsys.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Robin Gong <yibin.gong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>, Adam Ford <aford173@gmail.com>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel @ lists . infradead . org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+On 2019-08-29 13:50, Marco Felsch wrote:
+> On 19-08-29 09:11, Robin Gong wrote:
+>> 
+>> On 2019-08-29 16:17, Marco Felsch wrote:
+>> > > > While reading the rm it seems that
+>> > > > the snvs block has a dedicated version register. IMHO this could be
+>> > > > a better way to apply the change also to existing devices with old
+>> > > > firmware.
+>> > >
+>> > > I thought the same thing, and fully agree with you. However I do not
+>> > > have a way to determine which versions are out there. Since I couldn't
+>> > > find any documentation on this, and I only have i.MX6 S/DL, D/Q and UL
+>> > laying around.
+>> >
+>> > @NXP Kernel Team
+>> > Can we get some more information here?
+>> Go ahead, please. That snvs version register SNVS_HPVIDR1 should work 
+>> as expect.
+>> MINOR_REV checking is enough, none-zero means for soc after i.mx6sx, 
+>> but
+>> Zero means i.mx6q/dl/sl elder soc.
+> 
+> Thanks. Robin can you integrate that so we can drop the different
+> dt-handling?
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Date: Thu, Aug 29, 2019 at 12:15:19
+No problem, I'll post an updated patch tomorrow.
 
-> On Thu, 29 Aug 2019 12:19:35 +0200
-> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
->=20
-> > For today the reattach function only update the device address on the
-> > controller.
-> >=20
-> > Update the location to the first available too, will optimize the
-> > enumeration process avoiding additional checks to keep the available
-> > positions on address table consecutive.
->=20
-> Given the number of available slots I honestly don't think it makes a
-> difference, but I also don't mind this change, so
-
-The slots are HW dependent. The point is, I need to guarantee the=20
-available slot are consecutives.
-If you have any suggestion I appreciate.
-
->=20
-> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
->=20
-> >=20
-> > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> > ---
-> >  drivers/i3c/master/dw-i3c-master.c | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> >=20
-> > diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw=
--i3c-master.c
-> > index 1d83c97..62261ac 100644
-> > --- a/drivers/i3c/master/dw-i3c-master.c
-> > +++ b/drivers/i3c/master/dw-i3c-master.c
-> > @@ -898,6 +898,22 @@ static int dw_i3c_master_reattach_i3c_dev(struct i=
-3c_dev_desc *dev,
-> >  	struct dw_i3c_i2c_dev_data *data =3D i3c_dev_get_master_data(dev);
-> >  	struct i3c_master_controller *m =3D i3c_dev_get_master(dev);
-> >  	struct dw_i3c_master *master =3D to_dw_i3c_master(m);
-> > +	int pos;
-> > +
-> > +	pos =3D dw_i3c_master_get_free_pos(master);
-> > +
-> > +	if (data->index > pos && pos > 0) {
-> > +		writel(0,
-> > +		       master->regs +
-> > +		       DEV_ADDR_TABLE_LOC(master->datstartaddr, data->index));
-> > +
-> > +		master->addrs[data->index] =3D 0;
-> > +		master->free_pos |=3D BIT(data->index);
-> > +
-> > +		data->index =3D pos;
-> > +		master->addrs[pos] =3D dev->info.dyn_addr;
-> > +		master->free_pos &=3D ~BIT(pos);
-> > +	}
-> > =20
-> >  	writel(DEV_ADDR_TABLE_DYNAMIC_ADDR(dev->info.dyn_addr),
-> >  	       master->regs +
-
-Best regards,
-Vitor Soares
+> 
+> Regards,
+>   Marco
+> 
+>> >
+>> > Regards,
+>> >   Marco
+>> >
+>> > > Regards,
+>> > > Robin van der Gracht
+>> > >
+>> >
+>> > --
+>> > Pengutronix e.K.                           |
+>> > |
+>> > Industrial Linux Solutions                 |
+>> > https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.p
+>> > engutronix.de%2F&amp;data=02%7C01%7Cyibin.gong%40nxp.com%7C8d4e1
+>> > 0cd77bd4652f3eb08d72c594e76%7C686ea1d3bc2b4c6fa92cd99c5c301635%7
+>> > C0%7C0%7C637026634390359345&amp;sdata=mhXlUxmLWg8qtwhPQfkJZm
+>> > VAn4QQ3YybLOSh83uf27E%3D&amp;reserved=0  |
+>> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
+>> > |
+>> > Amtsgericht Hildesheim, HRA 2686           | Fax:
+>> > +49-5121-206917-5555 |
+>> 
