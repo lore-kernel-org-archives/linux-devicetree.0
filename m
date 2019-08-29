@@ -1,73 +1,125 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] input: keyboard: snvs_pwrkey: Send key events for
- i.MX6 S, DL and Q
-Date: Thu, 29 Aug 2019 13:50:52 +0200
-Message-ID: <20190829115052.s2m4jw4p3rknqoxb@pengutronix.de>
-References: <20190827123216.32728-1-robin@protonic.nl>
- <20190828091550.pdc57wanu6twew5p@pengutronix.de>
- <6d353af709ea545cc34abca5c40674e3@protonic.nl>
- <20190829081712.timamprawezzbesn@pengutronix.de>
- <VE1PR04MB6638A54664EE3FFE16BD419189A20@VE1PR04MB6638.eurprd04.prod.outlook.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V3 2/6] dt-bindings: PCI: tegra: Add PCIe slot supplies
+ regulator entries
+Date: Thu, 29 Aug 2019 14:03:29 +0200
+Message-ID: <20190829120329.GC13187@ulmo>
+References: <20190828172850.19871-1-vidyas@nvidia.com>
+ <20190828172850.19871-3-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4ZLFUWh1odzi/v6L"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <VE1PR04MB6638A54664EE3FFE16BD419189A20@VE1PR04MB6638.eurprd04.prod.outlook.com>
+In-Reply-To: <20190828172850.19871-3-vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Gong <yibin.gong@nxp.com>
-Cc: robin <robin@protonic.nl>, Mark Rutland <mark.rutland@arm.com>, "devicetree @ vger . kernel . org" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>, Adam Ford <aford173@gmail.com>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel @ lists . infradead . org" <linux-arm-kernel@lists.infradead.org>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 19-08-29 09:11, Robin Gong wrote:
-> 
-> On 2019-08-29 16:17, Marco Felsch wrote:
-> > > > While reading the rm it seems that
-> > > > the snvs block has a dedicated version register. IMHO this could be
-> > > > a better way to apply the change also to existing devices with old
-> > > > firmware.
-> > >
-> > > I thought the same thing, and fully agree with you. However I do not
-> > > have a way to determine which versions are out there. Since I couldn't
-> > > find any documentation on this, and I only have i.MX6 S/DL, D/Q and UL
-> > laying around.
-> > 
-> > @NXP Kernel Team
-> > Can we get some more information here?
-> Go ahead, please. That snvs version register SNVS_HPVIDR1 should work as expect.
-> MINOR_REV checking is enough, none-zero means for soc after i.mx6sx, but
-> Zero means i.mx6q/dl/sl elder soc.
 
-Thanks. Robin can you integrate that so we can drop the different
-dt-handling?
+--4ZLFUWh1odzi/v6L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-  Marco
+On Wed, Aug 28, 2019 at 10:58:46PM +0530, Vidya Sagar wrote:
+> Add optional bindings "vpcie3v3-supply" and "vpcie12v-supply" to describe
+> regulators of a PCIe slot's supplies 3.3V and 12V provided the platform
+> is designed to have regulator controlled slot supplies.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V3:
+> * None
+>=20
+> V2:
+> * None
+>=20
+>  .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt      | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.t=
+xt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+> index 0ac1b867ac24..b739f92da58e 100644
+> --- a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+> @@ -104,6 +104,12 @@ Optional properties:
+>     specified in microseconds
+>  - nvidia,aspm-l0s-entrance-latency-us: ASPM L0s entrance latency to be
+>     specified in microseconds
+> +- vpcie3v3-supply: A phandle to the regulator node that supplies 3.3V to=
+ the slot
+> +  if the platform has one such slot. (Ex:- x16 slot owned by C5 controll=
+er
+> +  in p2972-0000 platform).
+> +- vpcie12v-supply: A phandle to the regulator node that supplies 12V to =
+the slot
+> +  if the platform has one such slot. (Ex:- x16 slot owned by C5 controll=
+er
+> +  in p2972-0000 platform).
 
-> > 
-> > Regards,
-> >   Marco
-> > 
-> > > Regards,
-> > > Robin van der Gracht
-> > >
-> > 
-> > --
-> > Pengutronix e.K.                           |
-> > |
-> > Industrial Linux Solutions                 |
-> > https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.p
-> > engutronix.de%2F&amp;data=02%7C01%7Cyibin.gong%40nxp.com%7C8d4e1
-> > 0cd77bd4652f3eb08d72c594e76%7C686ea1d3bc2b4c6fa92cd99c5c301635%7
-> > C0%7C0%7C637026634390359345&amp;sdata=mhXlUxmLWg8qtwhPQfkJZm
-> > VAn4QQ3YybLOSh83uf27E%3D&amp;reserved=0  |
-> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
-> > |
-> > Amtsgericht Hildesheim, HRA 2686           | Fax:
-> > +49-5121-206917-5555 |
-> 
+There's an ongoing discussion regarding the use of optional power
+supplies and I'm wondering if we're not abusing this here. Why exactly
+are these regulators optional?
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+The distinction is somewhat subtle, but the other way to look at
+modelling this in DT is that the supplies are in fact required, but may
+be connected to an always-on regulator with a fixed voltage. Or in some
+cases they may also be shorted to ground. In both cases the PCI
+controller, or rather the slot that the controller connects to, actually
+"requires" the supplies, it's just that we can get away without
+describing them because they can't be controlled anyway.
+
+Looking at the PCI connector pinout for PCI Express, I do see a bunch of
++3.3 V and +12 V pins. To me that indicates that the 3.3 V and 12 V
+supplies are indeed required for PCI slots. I'm not sure about devices
+that are directly connected to the PCI controller, though. I'll need to
+go look at some schematics to get a better understanding of these.
+
+Bottom line: I'm wondering if we shouldn't really make these supplies
+mandatory and in case where we don't care either just leave them away
+(the regulator framework will supply a dummy regulator in that case) or
+hook them up to a fixed regulator if that matches the hardware design.
+
+Any thoughts?
+
+Thierry
+
+> =20
+>  Examples:
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D
+> @@ -156,6 +162,8 @@ Tegra194:
+>  			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /* pre=
+fetchable memory (16GB) */
+> =20
+>  		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
+> +		vpcie3v3-supply =3D <&vdd_3v3_pcie>;
+> +		vpcie12v-supply =3D <&vdd_12v_pcie>;
+> =20
+>  		phys =3D <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
+>  		       <&p2u_hsio_5>;
+> --=20
+> 2.17.1
+>=20
+
+--4ZLFUWh1odzi/v6L
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1nvw4ACgkQ3SOs138+
+s6GI6w/+IG7mTCrwYZe0LN6qzkC7/2R7QVuV631kPcoyzIRoQZLYGkdNvI5EAfzF
+8NgV3IpZAIxJDeZl7slSZdXcrCF92OFxy77koBFKQncXlSc/YHKymyXx2trZLzmf
+b7+aO8xnOxaSfHCfdKPVQTndq2piK9APoyTtuVnE9mmgqEGQoEv7N4QiSMx8NabA
+q0MVvrA9l5ibiQ13lfw6QX8iT4txZ17yWQ4wcMSXOOSSnmGkxZq8kOr3OVzahIYY
+ibogwwQPEcV1Auz2TRyVdG4ZftKx21iflj+m/2sbiduh9l3p+aEuB8WIV6T2MbBk
+vXfiC+bWlOUsWpZlb+zb3zOHjte3/53YbVkrgXvdlE+66VYKK/Ok2uAnq9t9RDvT
+swdhH98bWTviSxfdvT3TXKcxX9DT1sI+4rQPqvEO5E2taflYw0VlVGklSMmZqy57
+BApIVrZoh1r0OKgVrTSr/VBkT0yVki8SyKBvH9UzKG42NDf9FNhLeg9ey5UOACZO
+A/ujEXHDjpqyTZmVlo0orYOvKB6qsaM3LS5PQD1FrIjSwFVqVWMPkGeVqZ0OE9za
+tT/v4MGRz9v7GSDTEqAYmTsVhjEzd8h2fuTsdykqxKmMlbTHohS1QVUj4MBkSwcB
+O6cGc3uLm1i5x+0980a+k7CXqmm5ooEcsRspCdi4egaGQdN1jRs=
+=CA6J
+-----END PGP SIGNATURE-----
+
+--4ZLFUWh1odzi/v6L--
