@@ -1,60 +1,54 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v2 07/15] dt: thermal: tsens: Document interrupt support
- in tsens driver
-Date: Thu, 29 Aug 2019 22:04:02 +0530
-Message-ID: <CAP245DVjgnwGn5rUgbYrkBOi3vtyShz0Qbx_opx80xiOV7uXeA@mail.gmail.com>
-References: <cover.1566907161.git.amit.kucheria@linaro.org>
- <66ac3d3707d6296ef85bf1fa321f7f1ee0c02131.1566907161.git.amit.kucheria@linaro.org>
- <5d65cbe9.1c69fb81.1ceb.2374@mx.google.com> <CAP245DWWKsZBHnvSqC40XOH48kGd-hykd+fr-UZfWTmvuG2KaA@mail.gmail.com>
- <5d67e6cf.1c69fb81.5aec9.3b71@mx.google.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v6 0/4] ASoC: codecs: Add WSA881x Smart Speaker amplifier support
+Date: Thu, 29 Aug 2019 17:35:10 +0100
+Message-ID: <20190829163514.11221-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d67e6cf.1c69fb81.5aec9.3b71@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Brian Masney <masneyb@onstation.org>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+To: broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
+Cc: spapothi@codeaurora.org, bgoswami@codeaurora.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 8:23 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Amit Kucheria (2019-08-29 01:48:27)
-> > On Wed, Aug 28, 2019 at 6:03 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > Quoting Amit Kucheria (2019-08-27 05:14:03)
-> > > > Define two new required properties to define interrupts and
-> > > > interrupt-names for tsens.
-> > > >
-> > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 8 ++++++++
-> > > >  1 file changed, 8 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > > > index 673cc1831ee9d..686bede72f846 100644
-> > > > --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > > > +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> > > > @@ -22,6 +22,8 @@ Required properties:
-> > > >
-> > > >  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
-> > > >  - #qcom,sensors: Number of sensors in tsens block
-> > > > +- interrupts: Interrupts generated from Always-On subsystem (AOSS)
-> > >
-> > > Is it always one? interrupt-names makes it sound like it.
-> > >
-> > > > +- interrupt-names: Must be one of the following: "uplow", "critical"
-> >
-> > Will fix to "one or more of the following"
-> >
->
-> Can we get a known quantity of interrupts for a particular compatible
-> string instead? Let's be as specific as possible. The index matters too,
-> so please list them in the order that is desired.
+This patchset adds support to WSA8810/WSA8815 Class-D Smart Speaker
+Amplifier which is SoundWire interfaced.
+This also adds support to some missing bits in SoundWire bus layer like
+Device Tree support.
 
-I *think* we can predict what platforms have uplow and critical
-interrupts based on IP version currently[1]. For newer interrupt
-types, we might need more fine-grained platform compatibles.
+This patchset along with DB845c machine driver and WCD934x codec driver
+has been tested on SDM845 SoC based DragonBoard DB845c with two
+WSA8810 speakers.
 
-[1] Caveat: this is based only on the list of platforms I've currently
-looked at, there might be something internally that breaks these
-rules.
+Most of the code in this driver is rework of Qualcomm downstream drivers
+used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
+
+TODO:
+        Add thermal sensor support in WSA881x.
+
+Thanks,
+srini
+
+Changes since v5:
+ - updated slave bindings with proper licencing and fixed up examples.
+
+Srinivas Kandagatla (4):
+  dt-bindings: soundwire: add slave bindings
+  soundwire: core: add device tree support for slave devices
+  dt-bindings: ASoC: Add WSA881x bindings
+  ASoC: codecs: add wsa881x amplifier support
+
+ .../bindings/sound/qcom,wsa881x.yaml          |   62 +
+ .../soundwire/soundwire-controller.yaml       |   82 ++
+ drivers/soundwire/bus.c                       |    2 +
+ drivers/soundwire/bus.h                       |    1 +
+ drivers/soundwire/slave.c                     |   52 +
+ sound/soc/codecs/Kconfig                      |   10 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/wsa881x.c                    | 1134 +++++++++++++++++
+ 8 files changed, 1345 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+ create mode 100644 Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+ create mode 100644 sound/soc/codecs/wsa881x.c
+
+-- 
+2.21.0
