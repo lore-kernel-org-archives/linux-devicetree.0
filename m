@@ -1,180 +1,85 @@
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH 1/4] i3c: master: detach and free device if
- pre_assign_dyn_addr() fails
-Date: Thu, 29 Aug 2019 16:35:20 +0200
-Message-ID: <20190829163520.126d42d6@collabora.com>
-References: <cover.1567071213.git.vitor.soares@synopsys.com>
-        <e26948eaaf765f683d8fe0618a31a98e2ecc0e65.1567071213.git.vitor.soares@synopsys.com>
-        <20190829124115.482cd8ec@collabora.com>
-        <SN6PR12MB26551F172804D039F3EAA991AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH v3 1/8] dt-bindings: display: Add bindings for LVDS
+ bus-timings
+Date: Thu, 29 Aug 2019 14:38:06 +0000
+Message-ID: <TY1PR01MB177060B843107361FEF44022C0A20@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1567017402-5895-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAL_JsqKWWCpEeBd4UFaqBVffS-OxUNAHfvtJKcGsLDR+f=Uytg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <SN6PR12MB26551F172804D039F3EAA991AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
+In-Reply-To: <CAL_JsqKWWCpEeBd4UFaqBVffS-OxUNAHfvtJKcGsLDR+f=Uytg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vitor Soares <Vitor.Soares@synopsys.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, Przemyslaw Gaj <pgaj@cadence.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 29 Aug 2019 13:53:24 +0000
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-
-> Hi Boris,
-> 
-> From: Boris Brezillon <boris.brezillon@collabora.com>
-> Date: Thu, Aug 29, 2019 at 11:41:15
-> 
-> > +Przemek
-> > 
-> > Please try to Cc active I3C contributors so they get a chance to
-> > comment on your patches.  
-> 
-> I can do that next time.
-> 
-> > 
-> > On Thu, 29 Aug 2019 12:19:32 +0200
-> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> >   
-> > > On pre_assing_dyn_addr() the devices that fail:
-> > >   i3c_master_setdasa_locked()
-> > >   i3c_master_reattach_i3c_dev()
-> > >   i3c_master_retrieve_dev_info()
-> > > 
-> > > are kept in memory and master->bus.devs list. This makes the i3c devices
-> > > without a dynamic address are sent on DEFSLVS CCC command. Fix this by
-> > > detaching and freeing the devices that fail on pre_assign_dyn_addr().  
-> > 
-> > I don't think removing those entries is a good strategy, as one might
-> > want to try to use a different dynamic address if the requested one
-> > is not available.  
-> 
-> Do you mean same 'assigned-address' attribute in DT?
-
-Yes, or say it's another device that got the address we want and this
-device doesn't want to release the address (I'm assuming the !SA case).
-
-> 
-> If so, it is checked here:
-> 
-> static int i3c_master_bus_init(struct i3c_master_controller *master)
-> ...
-> 	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node) {
-> 		struct i3c_device_info info = {
-> 			.static_addr = i3cboardinfo->static_addr,
-> 		};
-> 
-> 		if (i3cboardinfo->init_dyn_addr) {
-> 			status = i3c_bus_get_addr_slot_status(&master->bus,
-> 			^
-> 						i3cboardinfo->init_dyn_addr);
-> 			if (status != I3C_ADDR_SLOT_FREE) {
-> 				ret = -EBUSY;
-> 				goto err_detach_devs;
-> 			}
-> 		}
-> 
-> 		i3cdev = i3c_master_alloc_i3c_dev(master, &info);
-> 		if (IS_ERR(i3cdev)) {
-> 			ret = PTR_ERR(i3cdev);
-> 			goto err_detach_devs;
-> 		}
-> 
-> 		i3cdev->boardinfo = i3cboardinfo;
-> 
-> 		ret = i3c_master_attach_i3c_dev(master, i3cdev);
-> 		if (ret) {
-> 			i3c_master_free_i3c_dev(i3cdev);
-> 			goto err_detach_devs;
-> 		}
-> 	}
-> ...
-> 
-> and later if it fails i3c_master_pre_assign_dyn_addr(), the device can 
-> participate in Enter Dynamic Address Assignment process.
-> I may need to check the boardinfo->init_dyn_addr status on 
-> i3c_master_add_i3c_dev_locked before i3c_master_setnewda_locked().
-
-I need to double check but I thought we were already handling that case
-properly.
-
-> 
-> > Why not simply skipping entries that have ->dyn_addr
-> > set to 0 when preparing a DEFSLVS frame  
-> 
-> I considered that solution too but if the device isn't enumerated why 
-> should it be attached and kept in memory?
-
-Might be a device that supports HJ, and in that case we might want the
-controller to reserve a slot in its device table for that device.
-Anyway, it doesn't hurt to have it around as long as we don't pass the
-device through DEFSLVS if it doesn't have a dynamic address. I really
-prefer to keep the logic unchanged and fix it if it needs to be fixed.
-
-> Anyway we have i3c_boardinfo 
-> with DT information.
-> 
-> >   
-> > > 
-> > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> > > ---
-> > >  drivers/i3c/master.c | 11 ++++++++---
-> > >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-> > > index 5f4bd52..4d29e1f 100644
-> > > --- a/drivers/i3c/master.c
-> > > +++ b/drivers/i3c/master.c
-> > > @@ -1438,7 +1438,7 @@ static void i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
-> > >  	ret = i3c_master_setdasa_locked(master, dev->info.static_addr,
-> > >  					dev->boardinfo->init_dyn_addr);
-> > >  	if (ret)
-> > > -		return;
-> > > +		goto err_detach_dev;
-> > >  
-> > >  	dev->info.dyn_addr = dev->boardinfo->init_dyn_addr;
-> > >  	ret = i3c_master_reattach_i3c_dev(dev, 0);
-> > > @@ -1453,6 +1453,10 @@ static void i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
-> > >  
-> > >  err_rstdaa:
-> > >  	i3c_master_rstdaa_locked(master, dev->boardinfo->init_dyn_addr);
-> > > +
-> > > +err_detach_dev:
-> > > +	i3c_master_detach_i3c_dev(dev);
-> > > +	i3c_master_free_i3c_dev(dev);  
-> > 
-> > We certainly shouldn't detach/free the i3c_dev_desc from here. If it
-> > has to be done somewhere (which I'd like to avoid), it should be done
-> > in i3c_master_bus_init() (i3c_master_pre_assign_dyn_addr() should be
-> > converted to return an int in that case).  
-> 
-> I can change it to return an error. 
-> 
-> >   
-> > >  }
-> > >  
-> > >  static void
-> > > @@ -1647,7 +1651,7 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
-> > >  	enum i3c_addr_slot_status status;
-> > >  	struct i2c_dev_boardinfo *i2cboardinfo;
-> > >  	struct i3c_dev_boardinfo *i3cboardinfo;
-> > > -	struct i3c_dev_desc *i3cdev;
-> > > +	struct i3c_dev_desc *i3cdev, *i3ctmp;
-> > >  	struct i2c_dev_desc *i2cdev;
-> > >  	int ret;
-> > >  
-> > > @@ -1746,7 +1750,8 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
-> > >  	 * Pre-assign dynamic address and retrieve device information if
-> > >  	 * needed.
-> > >  	 */
-> > > -	i3c_bus_for_each_i3cdev(&master->bus, i3cdev)
-> > > +	list_for_each_entry_safe(i3cdev, i3ctmp, &master->bus.devs.i3c,
-> > > +				 common.node)
-> > >  		i3c_master_pre_assign_dyn_addr(i3cdev);
-> > >  
-> > >  	ret = i3c_master_do_daa(master);  
-> 
-> Thank for your feedback.
-> 
-> Best regards,
-> Vitor Soares
+SGkgUm9iLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgZmVlZGJhY2shDQoNCj4gRnJvbTogUm9iIEhl
+cnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4NCj4gU2VudDogMjkgQXVndXN0IDIwMTkgMTU6MDMN
+Cj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAxLzhdIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBBZGQg
+YmluZGluZ3MgZm9yIExWRFMgYnVzLXRpbWluZ3MNCj4gDQo+IE9uIFdlZCwgQXVnIDI4LCAyMDE5
+IGF0IDE6MzYgUE0gRmFicml6aW8gQ2FzdHJvDQo+IDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNh
+cy5jb20+IHdyb3RlOg0KPiA+DQo+ID4gRHVhbC1MVkRTIGNvbm5lY3Rpb25zIG5lZWQgbWFya2Vy
+cyBpbiB0aGUgRFQsIHRoaXMgcGF0Y2ggYWRkcw0KPiA+IHNvbWUgY29tbW9uIGRvY3VtZW50YXRp
+b24gdG8gYmUgcmVmZXJlbmNlZCBieSBib3RoIHBhbmVscyBhbmQNCj4gPiBicmlkZ2VzLg0KPiA+
+DQo+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAu
+cmVuZXNhcy5jb20+DQo+ID4NCj4gPiAtLS0NCj4gPiB2Mi0+djM6DQo+ID4gKiBuZXcgcGF0Y2gN
+Cj4gPiAtLS0NCj4gPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnVzLXRpbWluZ3MvbHZkcy55YW1s
+ICAgICAgICAgfCAzOCArKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2Vk
+LCAzOCBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9idXMtdGltaW5ncy9sdmRzLnlhbWwNCj4gPg0K
+PiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9idXMtdGltaW5ncy9sdmRzLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9idXMtDQo+IHRpbWluZ3MvbHZkcy55YW1sDQo+ID4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi5mMzViNTVhDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2J1cy10aW1p
+bmdzL2x2ZHMueWFtbA0KPiA+IEBAIC0wLDAgKzEsMzggQEANCj4gPiArIyBTUERYLUxpY2Vuc2Ut
+SWRlbnRpZmllcjogR1BMLTIuMA0KPiANCj4gKEdQTC0yLjAtb25seSBPUiBCU0QtMi1DbGF1c2Up
+IGlzIHByZWZlcnJlZCBmb3IgbmV3IGJpbmRpbmdzLg0KPiANCj4gPiArJVlBTUwgMS4yDQo+ID4g
+Ky0tLQ0KPiA+ICskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2Rpc3BsYXkvYnVz
+LXRpbWluZ3MvbHZkcy55YW1sIw0KPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcv
+bWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4gPiArDQo+ID4gK3RpdGxlOiBDb21tb24gUHJvcGVy
+dGllcyBmb3IgYnVzIHRpbWluZ3Mgb2YgTFZEUyBpbnRlcmZhY2VzDQo+ID4gKw0KPiA+ICttYWlu
+dGFpbmVyczoNCj4gPiArICAtIFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5j
+b20+DQo+ID4gKyAgLSBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2Fz
+LmNvbT4NCj4gPiArDQo+ID4gK2Rlc2NyaXB0aW9uOiB8DQo+ID4gKyAgVGhpcyBkb2N1bWVudCBk
+ZWZpbmVzIGRldmljZSB0cmVlIHByb3BlcnRpZXMgY29tbW9uIHRvIExWRFMgYW5kIGR1YWwtTFZE
+Uw0KPiA+ICsgIGludGVyZmFjZXMsIHdoZXJlIGEgZHVhbC1MVkRTIGludGVyZmFjZSBpcyBhIGR1
+YWwtbGluayBjb25uZWN0aW9uIHdpdGggZXZlbg0KPiA+ICsgIHBpeGVscyB0cmF2ZWxpbmcgb24g
+b25lIGNvbm5lY3Rpb24sIGFuZCB3aXRoIG9kZCBwaXhlbHMgdHJhdmVsaW5nIG9uIHRoZSBvdGhl
+cg0KPiA+ICsgIGNvbm5lY3Rpb24uDQo+ID4gKyAgVGhpcyBkb2N1bWVudCBkb2Vzbid0IGNvbnN0
+aXR1ZSBhIGRldmljZSB0cmVlIGJpbmRpbmcgc3BlY2lmaWNhdGlvbiBieSBpdHNlbGYNCj4gDQo+
+IHR5cG86IGNvbnN0aXR1dGUNCg0KV2VsbCBzcG90dGVkIQ0KDQo+IA0KPiA+ICsgIGJ1dCBpcyBt
+ZWFudCB0byBiZSByZWZlcmVuY2VkIGJ5IGRldmljZSB0cmVlIGJpbmRpbmdzLg0KPiA+ICsgIFdo
+ZW4gcmVmZXJlbmNlZCBmcm9tIHBhbmVsIG9yIGJyaWRnZSBkZXZpY2UgdHJlZSBiaW5kaW5ncywg
+dGhlIHByb3BlcnRpZXMNCj4gPiArICBkZWZpbmVkIGluIHRoaXMgZG9jdW1lbnQgYXJlIGRlZmlu
+ZWQgYXMgZm9sbG93cy4gVGhlIHBhbmVsIGFuZCBicmlkZ2UgZGV2aWNlDQo+ID4gKyAgdHJlZSBi
+aW5kaW5ncyBhcmUgcmVzcG9uc2libGUgZm9yIGRlZmluaW5nIHdoZXRoZXIgZWFjaCBwcm9wZXJ0
+eSBpcyByZXF1aXJlZA0KPiA+ICsgIG9yIG9wdGlvbmFsLg0KPiA+ICsNCj4gPiArcHJvcGVydGll
+czoNCj4gPiArICBkdWFsLWx2ZHMtZXZlbi1waXhlbHM6DQo+ID4gKyAgICB0eXBlOiBib29sZWFu
+DQo+ID4gKyAgICBkZXNjcmlwdGlvbjoNCj4gPiArICAgICAgVGhpcyBwcm9wZXJ0eSBpcyBzcGVj
+aWZpYyB0byBhbiBpbnB1dCBwb3J0IG9mIGEgc2luayBkZXZpY2UuIFdoZW4NCj4gDQo+IFRoZSBz
+Y2hlbWEgc2hvdWxkIGRlZmluZSB3aGF0IG5vZGVzIHRoZXNlIGdvIGluLiBUaGUgZGVzY3JpcHRp
+b24gc2VlbXMNCj4gdG8gaW5kaWNhdGUgaW4gJ3BvcnQnIG5vZGVzIChvciBlbmRwb2ludD8pLCBi
+dXQgeW91ciB1c2UgaW4gdGhlIHBhbmVsDQo+IGJpbmRpbmcgcHV0cyB0aGVtIGluIHRoZSBwYXJl
+bnQuDQoNCkRpZCB5b3UgbWFuYWdlIHRvIHJlYWQgdGhpcz8NCmh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvY292ZXIvMTExMTk2MDcvDQoNCkNvdWxkIHlvdSBwbGVhc2UgYWR2aWNlIG9uIGhv
+dyB0byBkbyB0aGlzIHByb3Blcmx5Pw0KDQo+IA0KPiA+ICsgICAgICBzcGVjaWZpZWQsIGl0IG1h
+cmtzIHRoZSBwb3J0IGFzIHJlY2lwaWVudCBvZiBldmVuLXBpeGVscy4NCj4gPiArDQo+ID4gKyAg
+ZHVhbC1sdmRzLW9kZC1waXhlbHM6DQo+ID4gKyAgICB0eXBlOiBib29sZWFuDQo+ID4gKyAgICBk
+ZXNjcmlwdGlvbjoNCj4gPiArICAgICAgVGhpcyBwcm9wZXJ0eSBpcyBzcGVjaWZpYyB0byBhbiBp
+bnB1dCBwb3J0IG9mIGEgc2luayBkZXZpY2UuIFdoZW4NCj4gPiArICAgICAgc3BlY2lmaWVkLCBp
+dCBtYXJrcyB0aGUgcG9ydCBhcyByZWNpcGllbnQgb2Ygb2RkLXBpeGVscy4NCj4gDQo+IEhvd2V2
+ZXIsIEkgZG9uJ3QgdGhpbmsgeW91IGV2ZW4gbmVlZCB0aGVzZS4gQSBwYW5lbCdzIHBvcnQgbnVt
+YmVycyBhcmUNCj4gZml4ZWQgY2FuIGltcGx5IGV2ZW4gb3Igb2RkLiBGb3IgZXhhbXBsZSBwb3J0
+QDAgY2FuIGJlIGV2ZW4gYW5kIHBvcnRAMQ0KPiBjYW4gYmUgb2RkLiBUaGUgcG9ydCBudW1iZXJp
+bmcgaXMgdHlwaWNhbGx5IHBhbmVsIHNwZWNpZmljLCBidXQgd2UgbWF5DQo+IGJlIGFibGUgdG8g
+ZGVmaW5lIHRoZSBudW1iZXJpbmcgZ2VuZXJpY2FsbHkgaWYgd2UgZG9uJ3QgYWxyZWFkeSBoYXZl
+DQo+IHBhbmVscyB3aXRoIG11bHRpcGxlIHBvcnRzLg0KPiANCj4gQWxzbywgYXJlbid0IHRoZXJl
+IGR1YWwgbGluayBEU0kgcGFuZWxzPw0KDQpUaGlzIGlzIHRoZSByZXN1bHQgb2YgYSBkaXNjdXNz
+aW9uIG9uIGhlcmU6DQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMDk1NTQ3
+Lw0KDQpIYXZlIHlvdSBjb21lIGFjcm9zcyBpdD8NCg0KVGhhbmtzIQ0KRmFiDQoNCj4gDQo+IFJv
+Yg0K
