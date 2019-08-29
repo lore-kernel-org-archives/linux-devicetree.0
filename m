@@ -1,118 +1,60 @@
-From: Vitor Soares <Vitor.Soares@synopsys.com>
-Subject: RE: [PATCH 2/4] i3c: master: Check if devices have i3c_dev_boardinfo
- on i3c_master_add_i3c_dev_locked()
-Date: Thu, 29 Aug 2019 16:33:43 +0000
-Message-ID: <SN6PR12MB26550ABF84AD52C52DE801CFAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-References: <cover.1567071213.git.vitor.soares@synopsys.com>
-        <3e21481ddf53ea58f5899df6ec542b79b8cbcd68.1567071213.git.vitor.soares@synopsys.com>
-        <20190829124457.3a750932@collabora.com>
-        <SN6PR12MB265551F73B9B516CACB5B807AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-        <20190829163918.571fd0d8@collabora.com>
-        <20190829163941.45380b19@collabora.com>
-        <SN6PR12MB2655B08176E14BE9DF2BACA2AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-        <20190829172441.3a76385e@collabora.com>
-        <SN6PR12MB26553867412178B3F7190F0CAEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
- <20190829181520.0b33b642@collabora.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v2 07/15] dt: thermal: tsens: Document interrupt support
+ in tsens driver
+Date: Thu, 29 Aug 2019 22:04:02 +0530
+Message-ID: <CAP245DVjgnwGn5rUgbYrkBOi3vtyShz0Qbx_opx80xiOV7uXeA@mail.gmail.com>
+References: <cover.1566907161.git.amit.kucheria@linaro.org>
+ <66ac3d3707d6296ef85bf1fa321f7f1ee0c02131.1566907161.git.amit.kucheria@linaro.org>
+ <5d65cbe9.1c69fb81.1ceb.2374@mx.google.com> <CAP245DWWKsZBHnvSqC40XOH48kGd-hykd+fr-UZfWTmvuG2KaA@mail.gmail.com>
+ <5d67e6cf.1c69fb81.5aec9.3b71@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829181520.0b33b642@collabora.com>
-Content-Language: en-US
+In-Reply-To: <5d67e6cf.1c69fb81.5aec9.3b71@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@collabora.com>, Vitor Soares <Vitor.Soares@synopsys.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Brian Masney <masneyb@onstation.org>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Date: Thu, Aug 29, 2019 at 17:15:20
+On Thu, Aug 29, 2019 at 8:23 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Amit Kucheria (2019-08-29 01:48:27)
+> > On Wed, Aug 28, 2019 at 6:03 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> > >
+> > > Quoting Amit Kucheria (2019-08-27 05:14:03)
+> > > > Define two new required properties to define interrupts and
+> > > > interrupt-names for tsens.
+> > > >
+> > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/thermal/qcom-tsens.txt | 8 ++++++++
+> > > >  1 file changed, 8 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > > index 673cc1831ee9d..686bede72f846 100644
+> > > > --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > > +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> > > > @@ -22,6 +22,8 @@ Required properties:
+> > > >
+> > > >  - #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
+> > > >  - #qcom,sensors: Number of sensors in tsens block
+> > > > +- interrupts: Interrupts generated from Always-On subsystem (AOSS)
+> > >
+> > > Is it always one? interrupt-names makes it sound like it.
+> > >
+> > > > +- interrupt-names: Must be one of the following: "uplow", "critical"
+> >
+> > Will fix to "one or more of the following"
+> >
+>
+> Can we get a known quantity of interrupts for a particular compatible
+> string instead? Let's be as specific as possible. The index matters too,
+> so please list them in the order that is desired.
 
-> On Thu, 29 Aug 2019 15:57:32 +0000
-> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
->=20
-> > -----Original Message-----
-> > From: Boris Brezillon=20
-> > <boris.brezillon@collabora.com>=20
-> > Sent: Thursday, August 29, 2019 4:25=20
-> > PM
-> > To: Vitor Soares <Vitor.Soares@synopsys.com>
-> > Cc:=20
-> > linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;=20
-> > linux-i3c@lists.infradead.org; bbrezillon@kernel.org; robh+dt@kernel.or=
-g;=20
-> > mark.rutland@arm.com; Joao.Pinto@synopsys.com
-> > Subject: Re: [PATCH 2/4]=20
-> > i3c: master: Check if devices have i3c_dev_boardinfo on=20
-> > i3c_master_add_i3c_dev_locked()
-> >=20
-> > On Thu, 29 Aug 2019 15:07:08 +0000
-> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> >=20
-> > > From: Boris Brezillon  =20
-> > <boris.brezillon@collabora.com>
-> > > Date: Thu, Aug 29, 2019 at 15:39:41
-> > >  =20
-> >=20
-> > > > On Thu, 29 Aug 2019 16:39:18 +0200
-> > > > Boris Brezillon <boris.brezillon@collabora.com> wrote:
-> > > >    =20
-> > > > > On Thu, 29 Aug 2019 14:00:44 +0000
-> > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > > > >    =20
-> > > > > > Hi Boris,
-> > > > > >=20
-> > > > > > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > > > > > Date: Thu, Aug 29, 2019 at 11:44:57
-> > > > > >      =20
-> > > > > > > On Thu, 29 Aug 2019 12:19:33 +0200
-> > > > > > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > > > > > >        =20
-> > > > > > > > The I3C devices described in DT might not be attached to th=
-e master which
-> > > > > > > > doesn't allow to assign a specific dynamic address.       =
-=20
-> > > > > > >=20
-> > > > > > > I remember testing this when developing the framework, so, un=
-less
-> > > > > > > another patch regressed it, it should already work. I suspect=
- patch 1
-> > > > > > > is actually the regressing this use case.       =20
-> > > > > >=20
-> > > > > > For today it doesn't address the case where the device is descr=
-ibed with=20
-> > > > > > static address =3D 0, which isn't attached to the controller.  =
-   =20
-> > > > >=20
-> > > > > Hm, I'm pretty sure I had designed the code to support that case =
-(see
-> > > > > [1]). It might be buggy, but nothing we can't fix I guess.
-> > > > >    =20
-> > > >=20
-> > > > [1]https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__elixir.bo=
-otlin.com_linux_v5.3-2Drc6_source_drivers_i3c_master.c-23L1898&d=3DDwICAg&c=
-=3DDPL6_X_6JkXFx7AXWqB0tg&r=3DqVuU64u9x77Y0Kd0PhDK_lpxFgg6PK9PateHwjb_DY0&m=
-=3DIXS1ygIgEo5vwajk0iwd5aBDVBzRnVTjO3cg4iBmGNc&s=3DHC-AcYm-AZPrUBoALioej_BD=
-nqOtJHltr39Z2yPkuU4&e=3D    =20
-> > >=20
-> > > That is only valid if you have olddev which will only exist if static=
-=20
-> > > address !=3D 0. =20
-> >=20
-> > Hm, if you revert patch 1 (and assuming the device is properly defined
-> > in the DT), you should have olddev !=3D NULL when reaching that point. =
-If
-> > that's not the case there's a bug somewhere that should be fixed.
-> >=20
-> > No, because the device is not attached.
->=20
-> Oh, my bad, I see what you mean now. This is definitely a bug and should
-> have the Fixes tags. I mean, even if we don't care about dynamic
-> address assignment, I3C drivers might care about the ->of_node that's
-> attached to the device.
+I *think* we can predict what platforms have uplow and critical
+interrupts based on IP version currently[1]. For newer interrupt
+types, we might need more fine-grained platform compatibles.
 
-I didn't consider a bug because in dt-bindings says to not use 'assigned=20
-address' if SA =3D 0.
-Do you think there is a better way to solve it?
-
-Best regards,
-Vitor Soares
+[1] Caveat: this is based only on the list of platforms I've currently
+looked at, there might be something internally that breaks these
+rules.
