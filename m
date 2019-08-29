@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v3 03/10] device property: Add functions for accessing node's parents
-Date: Thu, 29 Aug 2019 13:10:36 +0300
-Message-ID: <20190829101043.24963-4-sakari.ailus@linux.intel.com>
+Subject: [PATCH v3 09/10] lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
+Date: Thu, 29 Aug 2019 13:10:42 +0300
+Message-ID: <20190829101043.24963-10-sakari.ailus@linux.intel.com>
 References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,116 +12,137 @@ To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add two convenience functions for accessing node's parents:
+Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
+support printing full path of the node, including its name ("f") and only
+the node's name ("P") in the printk family of functions. The two flags
+have equivalent functionality to existing %pOF with the same two modifiers
+("f" and "P") on OF based systems. The ability to do the same on ACPI
+based systems is added by this patch.
 
-fwnode_count_parents() returns the number of parent nodes a given node
-has. fwnode_get_nth_parent() returns node's parent at a given distance
-from the node itself.
+On ACPI based systems the resulting strings look like
 
-Also reorder fwnode_get_parent() in property.c according to the same order
-as in property.h.
+	\_SB.PCI0.CIO2.port@1.endpoint@0
+
+where the nodes are separated by a dot (".") and the first three are
+ACPI device nodes and the latter two ACPI data nodes.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/base/property.c  | 60 +++++++++++++++++++++++++++++++++++-----
- include/linux/property.h |  3 ++
- 2 files changed, 56 insertions(+), 7 deletions(-)
+ Documentation/core-api/printk-formats.rst | 24 +++++++++++++++
+ lib/vsprintf.c                            | 37 +++++++++++++++++++++++
+ scripts/checkpatch.pl                     |  3 +-
+ 3 files changed, 63 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 81bd01ed40427..006d631e1824d 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -556,6 +556,19 @@ int device_add_properties(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(device_add_properties);
+diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+index 922a29eb70e6c..abba210f67567 100644
+--- a/Documentation/core-api/printk-formats.rst
++++ b/Documentation/core-api/printk-formats.rst
+@@ -418,6 +418,30 @@ Examples::
  
-+/**
-+ * fwnode_get_parent - Return parent firwmare node
-+ * @fwnode: Firmware whose parent is retrieved
-+ *
-+ * Return parent firmware node of the given node if possible or %NULL if no
-+ * parent was available.
-+ */
-+struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
-+{
-+	return fwnode_call_ptr_op(fwnode, get_parent);
-+}
-+EXPORT_SYMBOL_GPL(fwnode_get_parent);
+ Passed by reference.
+ 
++Fwnode handles
++--------------
 +
- /**
-  * fwnode_get_next_parent - Iterate to the node's parent
-  * @fwnode: Firmware whose parent is retrieved
-@@ -578,17 +591,50 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
- EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
++::
++
++	%pfw[fP]
++
++For printing information on fwnode handles. The default is to print the full
++node name, including the path. The modifiers are functionally equivalent to
++%pOF above.
++
++	- f - full name of the node, including the path
++	- P - the name of the node including an address (if there is one)
++
++Examples (ACPI):
++
++	%pfwf	\_SB.PCI0.CIO2.port@1.endpoint@0	- Full node name
++	%pfwP	endpoint@0				- Node name
++
++Examples (OF):
++
++	%pfwf	/ocp@68000000/i2c@48072000/camera@10/port/endpoint - Full name
++	%pfwP	endpoint				- Node name
++
+ Time and date (struct rtc_time)
+ -------------------------------
  
- /**
-- * fwnode_get_parent - Return parent firwmare node
-- * @fwnode: Firmware whose parent is retrieved
-+ * fwnode_count_parents - Return the number of parents a node has
-+ * @fwnode: The node the parents of which are to be counted
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 19f9b3f30623e..79dacd0b9e124 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -1978,6 +1978,37 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+ 	return widen_string(buf, buf - buf_start, end, spec);
+ }
+ 
++static noinline_for_stack
++char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
++		    struct printf_spec spec, const char *fmt)
++{
++	struct printf_spec str_spec = spec;
++	char *buf_start = buf;
++
++	str_spec.field_width = -1;
++
++	if (*fmt != 'w')
++		return error_string(buf, end, "(%pfw?)", spec);
++
++	if (check_pointer(&buf, end, fwnode, spec))
++		return buf;
++
++	fmt++;
++
++	switch (*fmt) {
++	case 'f':	/* full_name */
++	default:
++		buf = fwnode_full_name_string(fwnode, buf, end);
++		break;
++	case 'P':	/* name */
++		buf = string(buf, end, fwnode_get_name(fwnode),
++			     str_spec);
++		break;
++	}
++
++	return widen_string(buf, buf - buf_start, end, spec);
++}
++
+ /*
+  * Show a '%p' thing.  A kernel extension is that the '%p' is followed
+  * by an extra set of alphanumeric characters that are extended format
+@@ -2080,6 +2111,10 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+  *                  F device node flags
+  *                  c major compatible string
+  *                  C full compatible string
++ * - 'fw[fP]'	For a firmware node (struct fwnode_handle) pointer
++ *		Without an option prints the full name of the node
++ *		f full name
++ *		P node name, including a possible unit address
+  * - 'x' For printing the address. Equivalent to "%lx".
   *
-- * Return parent firmware node of the given node if possible or %NULL if no
-- * parent was available.
-+ * Returns the number of parents a node has.
-  */
--struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
-+unsigned int fwnode_count_parents(const struct fwnode_handle *__fwnode)
- {
--	return fwnode_call_ptr_op(fwnode, get_parent);
-+	struct fwnode_handle *fwnode;
-+	unsigned int count;
-+
-+	fwnode = fwnode_get_parent(__fwnode);
-+
-+	for (count = 0; fwnode; count++)
-+		fwnode = fwnode_get_next_parent(fwnode);
-+
-+	return count;
- }
--EXPORT_SYMBOL_GPL(fwnode_get_parent);
-+EXPORT_SYMBOL_GPL(fwnode_count_parents);
-+
-+/**
-+ * fwnode_get_nth_parent - Return an nth parent of a node
-+ * @fwnode: The node the parent of which is requested
-+ * @depth: Distance of the parent from the node
-+ *
-+ * Returns the nth parent of a node. If @depth is 0, the functionality is
-+ * equivalent to fwnode_handle_get(). For @depth == 1, it is fwnode_get_parent()
-+ * and so on.
-+ *
-+ * The caller is responsible for calling fwnode_handle_put() for the returned
-+ * node.
-+ */
-+struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwnode,
-+					    unsigned int depth)
-+{
-+	unsigned int i;
-+
-+	fwnode_handle_get(fwnode);
-+
-+	for (i = 0; i < depth && fwnode; i++)
-+		fwnode = fwnode_get_next_parent(fwnode);
-+
-+	return fwnode;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_get_nth_parent);
- 
- /**
-  * fwnode_get_next_child_node - Return the next child node handle for a node
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 421c76e53708d..5450e7ec219ac 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -83,6 +83,9 @@ struct fwnode_handle *fwnode_find_reference(const struct fwnode_handle *fwnode,
- struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode);
- struct fwnode_handle *fwnode_get_next_parent(
- 	struct fwnode_handle *fwnode);
-+unsigned int fwnode_count_parents(const struct fwnode_handle *fwn);
-+struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwn,
-+					    unsigned int depth);
- struct fwnode_handle *fwnode_get_next_child_node(
- 	const struct fwnode_handle *fwnode, struct fwnode_handle *child);
- struct fwnode_handle *fwnode_get_next_available_child_node(
+  * ** When making changes please also update:
+@@ -2157,6 +2192,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+ 		return flags_string(buf, end, ptr, spec, fmt);
+ 	case 'O':
+ 		return device_node_string(buf, end, ptr, spec, fmt + 1);
++	case 'f':
++		return fwnode_string(buf, end, ptr, spec, fmt + 1);
+ 	case 'x':
+ 		return pointer_string(buf, end, ptr, spec);
+ 	}
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index a60c241112cd4..8df50911ff4e9 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -5995,7 +5995,8 @@ sub process {
+ 				while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
+ 					$specifier = $1;
+ 					$extension = $2;
+-					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxt]/) {
++					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
++					    $extension =~ /^f[^w]/) {
+ 						$bad_specifier = $specifier;
+ 						last;
+ 					}
 -- 
 2.20.1
