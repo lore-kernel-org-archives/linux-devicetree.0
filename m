@@ -1,83 +1,200 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V3 1/5] thermal: qoriq: Add clock operations
-Date: Thu, 29 Aug 2019 02:49:32 +0000
-Message-ID: <DB3PR0402MB3916372A08E2FF3A9C15E0A6F5A20@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190730022126.17883-1-Anson.Huang@nxp.com>
-         <VI1PR04MB7023F219CA7B4187F86EAA42EEA10@VI1PR04MB7023.eurprd04.prod.outlook.com>
-         <AM6PR0402MB3911D45B3B148588A582F6C4F5A00@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-         <VI1PR04MB7023773DD477FF89E2D2181CEEA00@VI1PR04MB7023.eurprd04.prod.outlook.com>
-         <d9b428825654181fbdbfb4d613a6a3fd52330787.camel@intel.com>
-         <DB3PR0402MB3916D1492F43D77E3679E3B1F5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <3f268ab0e05b795c04dbb3490f0c93da998e3b2c.camel@intel.com>
- <DB3PR0402MB39168DA42F69336EB2B231E8F5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
+Subject: Re: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
+Date: Thu, 29 Aug 2019 10:50:57 +0800
+Message-ID: <34336c9a-8e87-8f84-2ae8-032b7967928f@linux.intel.com>
+References: <90cc600d6f7ded68f5a618b626bd9cffa5edf5c3.1566531960.git.eswara.kota@linux.intel.com>
+ <20190824211158.5900-1-martin.blumenstingl@googlemail.com>
+ <3813e658-1600-d878-61a4-29b4fe51b281@linux.intel.com>
+ <CAFBinCA_B9psNGBeDyhkewhoutNh6HsLUN+TRfO_8vuNqhis4Q@mail.gmail.com>
+ <48b90943-e23d-a27a-c743-f321345c9151@linux.intel.com>
+ <CAFBinCD1oKxYm8QD7XfZUWq_HC5A4GLMmLCnZrcRvpTxrKo30w@mail.gmail.com>
+ <19719490-178a-18fd-64f2-f77d955897f7@linux.intel.com>
+ <CAFBinCDmi4HN4Ayg4T8aKUeu4hrUmVQ+z-hTN-6XMhiOCUcHjg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB39168DA42F69336EB2B231E8F5A30@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <CAFBinCDmi4HN4Ayg4T8aKUeu4hrUmVQ+z-hTN-6XMhiOCUcHjg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: eswara.kota@linux.intel.com, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, qi-ming.wu@intel.com, robh@kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFJ1aQ0KDQo+ID4gT24gV2VkLCAyMDE5LTA4LTI4IGF0IDA4OjUxICswMDAwLCBBbnNvbiBI
-dWFuZyB3cm90ZToNCj4gPiA+IEhpLCBSdWkNCj4gPiA+DQo+ID4gPiA+IE9uIFR1ZSwgMjAxOS0w
-OC0yNyBhdCAxMjo0MSArMDAwMCwgTGVvbmFyZCBDcmVzdGV6IHdyb3RlOg0KPiA+ID4gPiA+IE9u
-IDI3LjA4LjIwMTkgMDQ6NTEsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+ID4gPiA+ID4gPiBJbiBh
-biBlYXJsaWVyIHNlcmllcyB0aGUgQ0xLX0lTX0NSSVRJQ0FMIGZsYWdzIHdhcyByZW1vdmVkDQo+
-ID4gPiA+ID4gPiA+IGZyb20gdGhlIFRNVSBjbG9jayBzbyBpZiB0aGUgdGhlcm1hbCBkcml2ZXIg
-ZG9lc24ndA0KPiA+ID4gPiA+ID4gPiBleHBsaWNpdGx5IGVuYWJsZSBpdCB0aGUgc3lzdGVtIHdp
-bGwgaGFuZyBvbiBwcm9iZS4gVGhpcyBpcw0KPiA+ID4gPiA+ID4gPiB3aGF0IGhhcHBlbnMgaW4g
-bGludXgtbmV4dCByaWdodCBub3chDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gVGhlIHRoZXJt
-YWwgZHJpdmVyIHNob3VsZCBiZSBidWlsdCB3aXRoIG1vZHVsZSwgc28gZGVmYXVsdA0KPiA+ID4g
-PiA+ID4ga2VybmVsIHNob3VsZCBjYW4gYm9vdCB1cCwgZG8geW91IG1vZGlmeSB0aGUgdGhlcm1h
-bCBkcml2ZXIgYXMNCj4gPiA+ID4gPiA+IGJ1aWx0LSBpbj8NCj4gPiA+ID4gPiA+DQo+ID4gPiA+
-ID4gPiA+IFVubGVzcyB0aGlzIHBhdGNoZXMgaXMgbWVyZ2VkIHNvb24gd2UnbGwgZW5kIHVwIHdp
-dGggYSA1LjQtDQo+ID4gPiA+ID4gPiA+IHJjMQ0KPiA+ID4gPiA+ID4gPiB0aGF0IGRvZXNuJ3Qg
-Ym9vdCBvbiBpbXg4bXEuIEFuIGVhc3kgZml4IHdvdWxkIGJlIHRvDQo+ID4gPiA+ID4gPiA+IGRy
-b3AvcmV2ZXJ0IGNvbW1pdA0KPiA+ID4gPiA+ID4gPiA5NTFjMWFlZjk2OTEgKCJjbGs6IGlteDht
-cTogUmVtb3ZlIENMS19JU19DUklUSUNBTCBmbGFnIGZvcg0KPiA+ID4gPiA+ID4gPiBJTVg4TVFf
-Q0xLX1RNVV9ST09UIikgdW50aWwgdGhlIHRoZXJtYWwgcGF0Y2hlcyBhcmUNCj4gYWNjZXB0ZWQu
-DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gSWYgdGhlIHRoZXJtYWwgZHJpdmVyIGlzIGJ1aWx0
-IGFzIG1vZHVsZSwgSSB0aGluayBubyBuZWVkIHRvDQo+ID4gPiA+ID4gPiByZXZlcnQgdGhlIGNv
-bW1pdCwgYnV0IGlmIGJ5IGRlZmF1bHQgdGhlcm1hbCBkcml2ZXIgaXMNCj4gPiA+ID4gPiA+IGJ1
-aWx0LWluIG9yIG1vZCBwcm9iZWQsIHRoZW4geWVzLCBpdCBzaG91bGQgTk9UIGJyZWFrIGtlcm5l
-bCBib290DQo+IHVwLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gVGhlIHFvcmlxX3RoZXJtYWwgZHJp
-dmVyIGlzIGJ1aWx0IGFzIGEgbW9kdWxlIGluIGRlZmNvbmZpZyBhbmQNCj4gPiA+ID4gPiB3aGVu
-IG1vZHVsZXMgYXJlIHByb3Blcmx5IGluc3RhbGxlZCBpbiByb290ZnMgdGhleSB3aWxsIGJlDQo+
-ID4gPiA+ID4gYXV0b21hdGljYWxseSBiZSBwcm9iZWQgb24gYm9vdCBhbmQgY2F1c2UgYSBoYW5n
-Lg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gSSB1c3VhbGx5IHJ1biBuZnNyb290IHdpdGggbW9kdWxl
-czoNCj4gPiA+ID4gPg0KPiA+ID4gPiA+ICAgICAgbWFrZSBtb2R1bGVzX2luc3RhbGwgSU5TVEFM
-TF9NT0RfUEFUSD0vc3J2L25mcy9pbXg4LXJvb3QNCj4gPiA+ID4NCj4gPiA+ID4gc28gd2UgbmVl
-ZCB0aGlzIHBhdGNoIHNoaXBwZWQgaW4gdGhlIGJlZ2lubmluZyBvZiB0aGUgbWVyZ2UNCj4gPiA+
-ID4gd2luZG93LCByaWdodD8NCj4gPiA+ID4gaWYgdGhlcmUgaXMgaGFyZCBkZXBlbmRlbmN5IGJl
-dHdlZW4gcGF0Y2hlcywgaXQncyBiZXR0ZXIgdG8gc2VuZA0KPiA+ID4gPiB0aGVtIGluIG9uZSBz
-ZXJpZXMsIGFuZCBnZXQgc2hpcHBlZCB2aWEgZWl0aGVyIHRyZWUuDQo+ID4gPg0KPiA+ID4gVGhl
-cmUgaXMgbm8gaGFyZCBkZXBlbmRlbmN5IGluIHRoaXMgcGF0Y2ggc2VyaWVzLiBQcmV2aW91cyBm
-b3IgdGhlDQo+ID4gPiBUTVUgY2xvY2sgZGlzYWJsZWQgcGF0Y2gsIHNpbmNlIHRoZXJtYWwgZHJp
-dmVyIGlzIGJ1aWx0IGFzIG1vZHVsZSBzbw0KPiA+ID4gSSBkaWQgTk9UIGZvdW5kIHRoZSBpc3N1
-ZS4gVGhlIHBhdGNoIHNlcmllcyBpcyB0aGUgY29ycmVjdCBmaXguDQo+ID4gPg0KPiA+IEdvdCBp
-dC4NCj4gPiB0aGUgY2xvY2sgcGF0Y2ggaXMgYWxzbyBxdWV1ZWQgZm9yIDUuNC1yYzEsIHJpZ2h0
-Pw0KPiA+IEkgd2lsbCBhcHBseSB0aGlzIHNlcmllcyBhbmQgdHJ5IHRvIHB1c2ggaXQgYXMgZWFy
-bHkgYXMgcG9zc2libGUNCj4gPiBkdXJpbmcgdGhlIG1lcmdlIHdpbmRvdy4NCj4gDQo+IFRoZSBj
-bG9jayBwYXRjaCBpcyBhcyBiZWxvdyBpbiBMaW51eC1uZXh0IHRyZWUsIHdoaWxlIEkgZGlkIE5P
-VCBzZWUgaXQgaW4gdjUuMy0NCj4gcmM2LCBzbyBpdCBzaG91bGQgYmUgcXVldWVkIGZvciA1LjQt
-cmMxLCByaWdodD8NCj4gVGhhbmtzIGZvciB0YWtpbmcgdGhlIHBhdGNoIHNlcmllcyENCg0KU29y
-cnkgZm9yIHB1c2hpbmcsIHNvIHlvdSB3aWxsIGFwcGx5IHRoaXMgcGF0Y2ggc2VyaWVzIHRvIGF2
-b2lkIHRoZSBpLk1YOE1RIGtlcm5lbCBib290IHVwIGhhbmcNCmNhdXNlZCBieSBpbnNtb2QgcW9y
-aXEgdGhlcm1hbCBkcml2ZXIsIHJpZ2h0PyBUaGVuIHdlIG5vIG5lZWQgdG8gcmV2ZXJ0IHRoYXQg
-VE1VIGNsb2NrIHBhdGNoDQo5NTFjMWFlZjk2OTEgKCJjbGs6IGlteDhtcTogUmVtb3ZlIENMS19J
-U19DUklUSUNBTCBmbGFnIGZvciBJTVg4TVFfQ0xLX1RNVV9ST09UIikuDQoNClRoYW5rcywNCkFu
-c29uDQoNCj4gDQo+IA0KPiBjb21taXQgOTUxYzFhZWY5NjkxNDkxZGRmNGRkNWFhYjc2ZjI2NjVk
-NTZiZDVkMw0KPiBBdXRob3I6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiBE
-YXRlOiAgIEZyaSBKdWwgNSAxMjo1NjoxMSAyMDE5ICswODAwDQo+IA0KPiAgICAgY2xrOiBpbXg4
-bXE6IFJlbW92ZSBDTEtfSVNfQ1JJVElDQUwgZmxhZyBmb3IgSU1YOE1RX0NMS19UTVVfUk9PVA0K
-PiANCj4gICAgIElNWDhNUV9DTEtfVE1VX1JPT1QgaXMgT05MWSB1c2VkIGZvciB0aGVybWFsIG1v
-ZHVsZSwgdGhlIGRyaXZlcg0KPiAgICAgc2hvdWxkIG1hbmFnZSB0aGlzIGNsb2NrLCBzbyBubyBu
-ZWVkIHRvIGhhdmUgQ0xLX0lTX0NSSVRJQ0FMIGZsYWcNCj4gICAgIHNldC4NCj4gDQo+ICAgICBT
-aWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gICAgIFJl
-dmlld2VkLWJ5OiBBYmVsIFZlc2EgPGFiZWwudmVzYUBueHAuY29tPg0KPiAgICAgQWNrZWQtYnk6
-IFN0ZXBoZW4gQm95ZCA8c2JveWRAa2VybmVsLm9yZz4NCj4gICAgIFNpZ25lZC1vZmYtYnk6IFNo
-YXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gDQo+IGRyaXZlcnMvY2xrL2lteC9jbGst
-aW14OG1xLmMNCj4gDQo+IA0KPiBUaGFua3MsDQo+IEFuc29uDQo=
+
+On 8/29/2019 4:01 AM, Martin Blumenstingl wrote:
+> Hi,
+>
+> On Wed, Aug 28, 2019 at 3:53 AM Chuan Hua, Lei
+> <chuanhua.lei@linux.intel.com> wrote:
+> [...]
+>>>>>> 1. reset-lantiq.c use index instead of register offset + bit position.
+>>>>>> index reset is good for a small system (< 64). However, it will become very
+>>>>>> difficult to use if you have  > 100 reset. So we use register offset +
+>>>>>> bit position
+>>>>> reset-lantiq uses bit bit positions for specifying the reset line.
+>>>>> for example this is from OpenWrt's vr9.dtsi:
+>>>>>      reset0: reset-controller@10 {
+>>>>>        ...
+>>>>>        reg = <0x10 4>, <0x14 4>;
+>>>>>        #reset-cells = <2>;
+>>>>>      };
+>>>>>
+>>>>>      gphy0: gphy@20 {
+>>>>>        ...
+>>>>>        resets = <&reset0 31 30>, <&reset1 7 7>;
+>>>>>        reset-names = "gphy", "gphy2";
+>>>>>      };
+>>>>>
+>>>>> in my own words this means:
+>>>>> - all reset0 reset bits are at offset 0x10 (parent is RCU)
+>>>>> - all reset0 status bits are at offset 0x14 (parent is RCU)
+>>>>> - the first reset line uses reset bit 31 and status bit 30
+>>>>> - the second reset line uses reset bit 7 and status bit 7
+>>>>> - there can be multiple reset-controller instances, each taking the
+>>>>> reset and status offsets (OpenWrt's vr9.dtsi specifies the second RCU
+>>>>> reset controller "reset1" with reset offset 0x48 and status offset
+>>>>> 0x24)
+>>>> in reset-lantiq.c, we split each reset request /status pair into one
+>>>> reset controller.
+>>>>
+>>>> Each reset controller handles up to 32 resets. It will create up to 9
+>>>> even more
+>>>> reset controllers in the new SoCs. In reality, there is only one RCU
+>>>> controller for all
+>>>> SoCs. These designs worked but did not follow what hardware implemented.
+>>>>
+>>>> After checking the existing code and referring to other implementation,
+>>>> we decided to
+>>>> use register offset + bit position method. It can support all SoCs with
+>>>> this methods
+>>>> without code change(device tree change only).
+>>> maybe I have a different interpretation of what "RCU" does.
+>>> let me explain it in my own words based on my knowledge about VRX200:
+>>> - in my own words it is a multi function device with the following
+>>> functionality:
+>>> - it contains two reset controllers (reset at 0x10, status 0x14 and
+>>> reset at 0x48, status at 0x24)
+>>> - it contains two USB2 PHYs (PHY registers at 0x18, ANA cfg at 0x38
+>>> and PHY registers at 0x34, ANA cfg at 0x3c)
+>>> - it contains the configuration for the two GPHY IP blocks (at 0x20 and 0x68)
+>>> - it contains endianness configuration registers (for PCI, PCIe, ...)
+>>> - it contains the watchdog boot status (whether the SoC was previously
+>>> reset by the WDT)
+>>> - maybe more, but I don't know anything else about it
+>> In fact, there is only one reset controller for all SoCs even it doesn't
+>> prevent software from virtualizing multiple reset controllers. Reset
+>> control does include some misc stuff which has been moved to chiptop in
+>> new SoCs so that RCU has a clean job.
+> just to confirm that I understand this correctly:
+> even the VRX200 SoC only has one physical reset controller?
+> instead of a contiguous register area (let's say: 0x10 to 0x1c) it
+> uses four separate registers:
+> - 0x10 for asserting/deasserting/pulsing the first 32 reset lines
+> - 0x14 for the status of the first 32 reset lines
+> - 0x48 for asserting/deasserting/pulsing the second 32 reset lines
+> - 0x28 for the status of the second 32 reset lines
+
+Yes, but for VRX200, reset controller registers include some other misc 
+registers. At that time,
+
+hardware doesn't use chiptop concept, they put some misc registers into 
+CGU/RCU which makes it quite messy.
+
+We also prefer to have 0x10~0x1c. However, when developing VRX200, 0x18, 
+0x20 and other address had been used by other registers. system becomes 
+more complex, need more reset bits for new modules, then hardware just 
+added them to any available place. From another angle, hardware people 
+also tried to keep backward compatible with old products like Danube.
+
+>
+> I'm not surprised that we got some of the IP block layout for the
+> VRX200 RCU "wrong" - all "documentation" we have is the old Lantiq UGW
+> (BSP).
+> with proper documentation (as in a "public datasheet for the SoC") it
+> would be easy to spot these mistakes (at least I assume that the
+> quality of the Infineon / Lantiq datasheets is excellent).
+>
+> back to reset-intel-syscon:
+> assigning only one job to the RCU hardware is a good idea (in my opinion).
+> that brings up a question: why do we need the "syscon" compatible for
+> the RCU node?
+> this is typically used when registers are accessed by another IP block
+> and the other driver has to access these registers as well. does this
+> mean that there's more hidden in the RCU registers?
+As I mentioned, some other misc registers are put into RCU even they 
+don't belong to reset functions. In MIPS, global software reset handled 
+in arch/mips/, only recently, this situation changed. This means we have 
+at least two places to access this module.
+>
+>>>>>> 2. reset-lantiq.c does not support device restart which is part of the
+>>>>>> reset in
+>>>>>> old lantiq SoC. It moved this part into arch/mips/lantiq directory.
+>>>>> it was moved to the .dts instead of the arch code. again from
+>>>>> OpenWrt's vr9.dtsi [0]:
+>>>>>      reboot {
+>>>>>        compatible = "syscon-reboot";
+>>>>>        regmap = <&rcu0>;
+>>>>>        offset = <0x10>;
+>>>>>        mask = <0xe0000000>;
+>>>>>      };
+>>>>>
+>>>>> this sets the reset0 reset bits 31, 30 and 29 at reboot
+>>>> ok. but not sure why we need to reset bit 31 and 29. global softwre
+>>>> reset is bit 30.
+>>> I don't know either. depending on what the LGM SoCs need you can
+>>> change the "mask" property to the value that fits that SoC best
+>>>
+>>> [...]
+>> All SoCs have only one global software reset bit.
+> OK
+> you can still use syscon-reboot to set the soft reset bit if Rob
+> (dt-binding maintainer) doesn't like the "intel,global-reset" property
+Dilip should check and do the necessary change.
+> [...]
+>>>>>> 4. Code not optimized and intel internal review not assessed.
+>>>>> insights from you (like the issue with the reset callback) are very
+>>>>> valuable - this shows that we should focus on having one driver.
+>>>>>
+>>>>>> Based on the above findings, I would suggest reset-lantiq.c to move to
+>>>>>> reset-intel-syscon.c
+>>>>> my concern with having two separate drivers is that it will be hard to
+>>>>> migrate from reset-lantiq to the "optimized" reset-intel-syscon
+>>>>> driver.
+>>>>> I don't have access to the datasheets for the any Lantiq/Intel SoC
+>>>>> (VRX200 and even older).
+>>>>> so debugging issues after switching from one driver to another is
+>>>>> tedious because I cannot tell which part of the driver is causing a
+>>>>> problem (it's either "all code from driver A" vs "all code from driver
+>>>>> B", meaning it's hard to narrow it down).
+>>>>> with separate commits/patches that are improving the reset-lantiq
+>>>>> driver I can do git bisect to find the cause of a problem on the older
+>>>>> SoCs (VRX200 for example)
+>>>> Our internal version supports XRX350/XRX500/PRX300(MIPS based) and
+>>>> latest Lighting Mountain(X86 based). Migration to reset-intel-syscon.c
+>>>> should be straight forward.
+>>> what about the _reset callback on the XRX350/XRX500/PRX300 SoCs - do
+>>> they only use level resets (_assert and _deassert) or are some reset
+>>> lines using reset pulses (_reset)?
+>>>
+>>> when we wanted to switch from reset-lantiq.c to reset-intel-syscon.c
+>>> we still had to add support for the _reset callback as this is missing
+>>> in reset-intel-syscon.c currently
+>> Yes. We have reset pulse(assert, then check the reset status).
+> only now I realized that the reset-intel-syscon driver does not seem
+> to use the status registers (instead it's looking at the reset
+> registers when checking the status).
+> what happened to the status registers - do they still exist in newer
+> SoCs (like LGM)? why are they not used?
+Reset status check is there. regmap_read_poll_timeout to check status 
+big. Status register offset <4) from request register. For legacy, there 
+is one exception, we can add soc specific data to handle it.
+> on VRX200 for example there seem to be some cases where the bits in
+> the reset and status registers are different (for example: the first
+> GPHY seems to use reset bit 31 but status bit 30)
+> this is currently not supported in reset-intel-syscon
+This is most tricky and ugly part for VRX200/Danube. Do you have any 
+idea to handle this nicely?
+>
+>
+> Martin
