@@ -1,95 +1,35 @@
-From: Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v4 00/14] Improvements and fixes for mxsfb DRM driver
-Date: Thu, 29 Aug 2019 14:30:01 +0300
-Message-ID: <1567078215-31601-1-git-send-email-robert.chiras@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v2 0/2] Add LVDS panel support to HiHope RZ/G2M
+Date: Thu, 29 Aug 2019 12:38:31 +0100
+Message-ID: <1567078713-29361-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>, Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Sam Ravnborg <sam@ravnborg.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com, ebiharaml@si-linux.co.jp
 List-Id: devicetree@vger.kernel.org
 
-This patch-set improves the use of eLCDIF block on iMX 8 SoCs (like 8MQ, 8MM
-and 8QXP). Following, are the new features added and fixes from this
-patch-set:
+Dear All,
 
-1. Add support for drm_bridge
-On 8MQ and 8MM, the LCDIF block is not directly connected to a parallel
-display connector, where an LCD panel can be attached, but instead it is
-connected to DSI controller. Since this DSI stands between the display
-controller (eLCDIF) and the physical connector, the DSI can be implemented
-as a DRM bridge. So, in order to be able to connect the mxsfb driver to
-the DSI driver, the support for a drm_bridge was needed in mxsfb DRM
-driver (the actual driver for the eLCDIF block).
+the HiHope RZ/G2M is advertised as supporting panel idk-1110wr from
+Advantech, but the panel doesn't come with the board, it has to purchased
+separatey, therefore this series adds panel support to a new DT.
 
-2. Add support for additional pixel formats
-Some of the pixel formats needed by Android were not implemented in this
-driver, but they were actually supported. So, add support for them.
+v1->v2
+* fixed a space according to Geert's feedback.
 
-3. Add support for horizontal stride
-Having support for horizontal stride allows the use of eLCDIF with a GPU
-(for example) that can only output resolution sizes multiple of a power of
-8. For example, 1080 is not a power of 16, so in order to support 1920x1080
-output from GPUs that can produce linear buffers only in sizes multiple to 16,
-this feature is needed.
+Thanks,
+Fab
 
-3. Few minor features and bug-fixing
-The addition of max-memory-bandwidth DT property was actually needed in order
-to limit the bandwidth usage of the eLCDIF block. This is need on systems where
-multiple display controllers are presend and the memory bandwidth is not
-enough to handle all of them at maximum capacity (like it is the case on
-8MQ, where there are two display controllers: DCSS and eLCDIF).
-The rest of the patches are bug-fixes.
+Fabrizio Castro (2):
+  dt-bindings: display: Add idk-1110wr binding
+  arm64: dts: renesas: Add HiHope RZ/G2M board with idk-1110wr display
 
-v4:
-- Removed the "Fix vblank events" patch (will cover this issue later, on a
-  separate thread)
-- Colleted "Tested-by" from Guido
-- Collected "Reviewed-by" from Rob Herring
-
-v3:
-- Removed the max-res property patches and added support for
-  max-memory-bandwidth property, as it is also implemented in other drivers
-- Removed unnecessary drm_vblank_off in probe
-
-v2:
-- Collected Tested-by from Guido
-- Split the first patch, which added more than one feature into relevant
-  patches, explaining each feature added
-- Also split the second patch into more patches, to differentiate between
-  the feature itself (additional pixel formats support) and the cleanup
-  of the register definitions for a better representation (guido)
-- Included a patch submitted by Guido, while he was testing my patch-set
-
-Guido Günther (1):
-  drm/mxsfb: Read bus flags from bridge if present
-
-Mirela Rabulea (1):
-  drm/mxsfb: Signal mode changed when bpp changed
-
-Robert Chiras (12):
-  drm/mxsfb: Update mxsfb to support a bridge
-  drm/mxsfb: Add defines for the rest of registers
-  drm/mxsfb: Reset vital registers for a proper initialization
-  drm/mxsfb: Update register definitions using bit manipulation defines
-  drm/mxsfb: Update mxsfb with additional pixel formats
-  drm/mxsfb: Add max-memory-bandwidth property for MXSFB
-  dt-bindings: display: Add max-memory-bandwidth property for mxsfb
-  drm/mxsfb: Update mxsfb to support LCD reset
-  drm/mxsfb: Improve the axi clock usage
-  drm/mxsfb: Clear OUTSTANDING_REQS bits
-  drm/mxsfb: Add support for horizontal stride
-  drm/mxsfb: Add support for live pixel format change
-
- .../devicetree/bindings/display/mxsfb.txt          |   5 +
- drivers/gpu/drm/mxsfb/mxsfb_crtc.c                 | 287 ++++++++++++++++++---
- drivers/gpu/drm/mxsfb/mxsfb_drv.c                  | 194 ++++++++++++--
- drivers/gpu/drm/mxsfb/mxsfb_drv.h                  |  12 +-
- drivers/gpu/drm/mxsfb/mxsfb_out.c                  |  26 +-
- drivers/gpu/drm/mxsfb/mxsfb_regs.h                 | 193 +++++++++-----
- 6 files changed, 581 insertions(+), 136 deletions(-)
+ .../display/panel/advantech,idk-1110wr.yaml        | 69 +++++++++++++++++
+ arch/arm64/boot/dts/renesas/Makefile               |  1 +
+ .../r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts        | 86 ++++++++++++++++++++++
+ 3 files changed, 156 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a774a1-hihope-rzg2m-ex-idk-1110wr.dts
 
 -- 
 2.7.4
