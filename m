@@ -1,15 +1,11 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v5 0/2] arm64: dts: ti: k3: Update the power-domain cells
-Date: Thu, 29 Aug 2019 10:31:26 +0300
-Message-ID: <4dab34ae-e7cc-6c6e-4adb-3a061027ab39@ti.com>
-References: <20190729123023.32702-1-lokeshvutla@ti.com>
- <9aa7eeaf-36ee-3d5f-9654-d8fa37577877@ti.com>
+From: Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH] arm64: dts: ls1028a: fix a compatible issue
+Date: Thu, 29 Aug 2019 15:34:39 +0800
+Message-ID: <20190829073439.13069-1-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9aa7eeaf-36ee-3d5f-9654-d8fa37577877@ti.com>
-Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,26 +15,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+To: shawnguo@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>, leoyang.li@nxp.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/08/2019 15:48, Lokesh Vutla wrote:
-> 
-> 
-> On 29/07/19 6:00 PM, Lokesh Vutla wrote:
->> Update the power-domains cells on all K3 based devices to reflect
->> exclusive and shared permissions in each device.
-> 
-> Gentle Ping on this series.
-> 
-> Thanks and regards,
-> Lokesh
-> 
+The I2C multiplexer used on ls1028aqds is PCA9547, not PCA9847.
+So correct it.
 
-This can't be merged until the driver portion is in. I could probably 
-live with an immutable branch though.
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+index 5e14e5a19744..f5da9e8b0d9d 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+@@ -107,7 +107,7 @@
+ 	status = "okay";
+ 
+ 	i2c-mux@77 {
+-		compatible = "nxp,pca9847";
++		compatible = "nxp,pca9547";
+ 		reg = <0x77>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-- 
+2.17.1
