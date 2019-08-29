@@ -1,132 +1,84 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v4 03/10] device property: Add functions for accessing node's parents
-Date: Thu, 29 Aug 2019 13:44:01 +0300
-Message-ID: <20190829104401.24183-1-sakari.ailus@linux.intel.com>
-References: <20190829101043.24963-4-sakari.ailus@linux.intel.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH 2/4] i3c: master: Check if devices have
+ i3c_dev_boardinfo on i3c_master_add_i3c_dev_locked()
+Date: Thu, 29 Aug 2019 12:44:57 +0200
+Message-ID: <20190829124457.3a750932@collabora.com>
+References: <cover.1567071213.git.vitor.soares@synopsys.com>
+        <3e21481ddf53ea58f5899df6ec542b79b8cbcd68.1567071213.git.vitor.soares@synopsys.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829101043.24963-4-sakari.ailus@linux.intel.com>
+In-Reply-To: <3e21481ddf53ea58f5899df6ec542b79b8cbcd68.1567071213.git.vitor.soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: Vitor Soares <Vitor.Soares@synopsys.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i3c@lists.infradead.org, bbrezillon@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Joao.Pinto@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Add two convenience functions for accessing node's parents:
+On Thu, 29 Aug 2019 12:19:33 +0200
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-fwnode_count_parents() returns the number of parent nodes a given node
-has. fwnode_get_nth_parent() returns node's parent at a given distance
-from the node itself.
+> The I3C devices described in DT might not be attached to the master which
+> doesn't allow to assign a specific dynamic address.
 
-Also reorder fwnode_get_parent() in property.c according to the same order
-as in property.h.
+I remember testing this when developing the framework, so, unless
+another patch regressed it, it should already work. I suspect patch 1
+is actually the regressing this use case.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
-since v3:
-
-- Swap __fwnode and fwnode in fwnode_count_parents(). This way the
-  user-visible argument remains "fwnode".
-
- drivers/base/property.c  | 60 +++++++++++++++++++++++++++++++++++-----
- include/linux/property.h |  3 ++
- 2 files changed, 56 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 81bd01ed40427..d2461d79139f3 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -556,6 +556,19 @@ int device_add_properties(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(device_add_properties);
- 
-+/**
-+ * fwnode_get_parent - Return parent firwmare node
-+ * @fwnode: Firmware whose parent is retrieved
-+ *
-+ * Return parent firmware node of the given node if possible or %NULL if no
-+ * parent was available.
-+ */
-+struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
-+{
-+	return fwnode_call_ptr_op(fwnode, get_parent);
-+}
-+EXPORT_SYMBOL_GPL(fwnode_get_parent);
-+
- /**
-  * fwnode_get_next_parent - Iterate to the node's parent
-  * @fwnode: Firmware whose parent is retrieved
-@@ -578,17 +591,50 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
- EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
- 
- /**
-- * fwnode_get_parent - Return parent firwmare node
-- * @fwnode: Firmware whose parent is retrieved
-+ * fwnode_count_parents - Return the number of parents a node has
-+ * @fwnode: The node the parents of which are to be counted
-  *
-- * Return parent firmware node of the given node if possible or %NULL if no
-- * parent was available.
-+ * Returns the number of parents a node has.
-  */
--struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
-+unsigned int fwnode_count_parents(const struct fwnode_handle *fwnode)
- {
--	return fwnode_call_ptr_op(fwnode, get_parent);
-+	struct fwnode_handle *__fwnode;
-+	unsigned int count;
-+
-+	__fwnode = fwnode_get_parent(fwnode);
-+
-+	for (count = 0; __fwnode; count++)
-+		__fwnode = fwnode_get_next_parent(__fwnode);
-+
-+	return count;
- }
--EXPORT_SYMBOL_GPL(fwnode_get_parent);
-+EXPORT_SYMBOL_GPL(fwnode_count_parents);
-+
-+/**
-+ * fwnode_get_nth_parent - Return an nth parent of a node
-+ * @fwnode: The node the parent of which is requested
-+ * @depth: Distance of the parent from the node
-+ *
-+ * Returns the nth parent of a node. If @depth is 0, the functionality is
-+ * equivalent to fwnode_handle_get(). For @depth == 1, it is fwnode_get_parent()
-+ * and so on.
-+ *
-+ * The caller is responsible for calling fwnode_handle_put() for the returned
-+ * node.
-+ */
-+struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwnode,
-+					    unsigned int depth)
-+{
-+	unsigned int i;
-+
-+	fwnode_handle_get(fwnode);
-+
-+	for (i = 0; i < depth && fwnode; i++)
-+		fwnode = fwnode_get_next_parent(fwnode);
-+
-+	return fwnode;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_get_nth_parent);
- 
- /**
-  * fwnode_get_next_child_node - Return the next child node handle for a node
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 421c76e53708d..5450e7ec219ac 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -83,6 +83,9 @@ struct fwnode_handle *fwnode_find_reference(const struct fwnode_handle *fwnode,
- struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode);
- struct fwnode_handle *fwnode_get_next_parent(
- 	struct fwnode_handle *fwnode);
-+unsigned int fwnode_count_parents(const struct fwnode_handle *fwn);
-+struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwn,
-+					    unsigned int depth);
- struct fwnode_handle *fwnode_get_next_child_node(
- 	const struct fwnode_handle *fwnode, struct fwnode_handle *child);
- struct fwnode_handle *fwnode_get_next_available_child_node(
--- 
-2.20.1
+> 
+> This patch check if a device has i3c_dev_boardinfo and add it to
+> i3c_dev_desc structure. In this conditions, the framework will try to
+> assign the i3c_dev_boardinfo->init_dyn_addr even if stactic address = 0.
+> 
+> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> ---
+>  drivers/i3c/master.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> index 4d29e1f..85fbda6 100644
+> --- a/drivers/i3c/master.c
+> +++ b/drivers/i3c/master.c
+> @@ -1795,6 +1795,23 @@ i3c_master_search_i3c_dev_duplicate(struct i3c_dev_desc *refdev)
+>  	return NULL;
+>  }
+>  
+> +static struct i3c_dev_boardinfo *
+> +i3c_master_search_i3c_boardinfo(struct i3c_dev_desc *dev)
+> +{
+> +	struct i3c_master_controller *master = i3c_dev_get_master(dev);
+> +	struct i3c_dev_boardinfo *boardinfo;
+> +
+> +	if (dev->boardinfo)
+> +		return NULL;
+> +
+> +	list_for_each_entry(boardinfo, &master->boardinfo.i3c, node) {
+> +		if (dev->info.pid == boardinfo->pid)
+> +			return boardinfo;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+>  /**
+>   * i3c_master_add_i3c_dev_locked() - add an I3C slave to the bus
+>   * @master: master used to send frames on the bus
+> @@ -1816,6 +1833,7 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
+>  {
+>  	struct i3c_device_info info = { .dyn_addr = addr };
+>  	struct i3c_dev_desc *newdev, *olddev;
+> +	struct i3c_dev_boardinfo *boardinfo;
+>  	u8 old_dyn_addr = addr, expected_dyn_addr;
+>  	struct i3c_ibi_setup ibireq = { };
+>  	bool enable_ibi = false;
+> @@ -1875,6 +1893,10 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
+>  	if (ret)
+>  		goto err_detach_dev;
+>  
+> +	boardinfo = i3c_master_search_i3c_boardinfo(newdev);
+> +	if (boardinfo)
+> +		newdev->boardinfo = boardinfo;
+> +
+>  	/*
+>  	 * Depending on our previous state, the expected dynamic address might
+>  	 * differ:
