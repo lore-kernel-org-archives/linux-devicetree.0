@@ -1,49 +1,57 @@
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH 2/4] i3c: master: Check if devices have
- i3c_dev_boardinfo on i3c_master_add_i3c_dev_locked()
-Date: Thu, 29 Aug 2019 16:39:41 +0200
-Message-ID: <20190829163941.45380b19@collabora.com>
-References: <cover.1567071213.git.vitor.soares@synopsys.com>
-        <3e21481ddf53ea58f5899df6ec542b79b8cbcd68.1567071213.git.vitor.soares@synopsys.com>
-        <20190829124457.3a750932@collabora.com>
-        <SN6PR12MB265551F73B9B516CACB5B807AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
-        <20190829163918.571fd0d8@collabora.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v5 0/4] ASoC: codecs: Add WSA881x Smart Speaker amplifier support
+Date: Thu, 29 Aug 2019 15:44:38 +0100
+Message-ID: <20190829144442.6210-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829163918.571fd0d8@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vitor Soares <Vitor.Soares@synopsys.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+To: broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
+Cc: spapothi@codeaurora.org, bgoswami@codeaurora.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 29 Aug 2019 16:39:18 +0200
-Boris Brezillon <boris.brezillon@collabora.com> wrote:
+Thanks for reviewing v4 patchset, here is v5 with addressing the comments in v4
 
-> On Thu, 29 Aug 2019 14:00:44 +0000
-> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> 
-> > Hi Boris,
-> > 
-> > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > Date: Thu, Aug 29, 2019 at 11:44:57
-> >   
-> > > On Thu, 29 Aug 2019 12:19:33 +0200
-> > > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
-> > >     
-> > > > The I3C devices described in DT might not be attached to the master which
-> > > > doesn't allow to assign a specific dynamic address.    
-> > > 
-> > > I remember testing this when developing the framework, so, unless
-> > > another patch regressed it, it should already work. I suspect patch 1
-> > > is actually the regressing this use case.    
-> > 
-> > For today it doesn't address the case where the device is described with 
-> > static address = 0, which isn't attached to the controller.  
-> 
-> Hm, I'm pretty sure I had designed the code to support that case (see
-> [1]). It might be buggy, but nothing we can't fix I guess.
-> 
+This patchset adds support to WSA8810/WSA8815 Class-D Smart Speaker
+Amplifier which is SoundWire interfaced.
+This also adds support to some missing bits in SoundWire bus layer like
+Device Tree support.
 
-[1]https://elixir.bootlin.com/linux/v5.3-rc6/source/drivers/i3c/master.c#L1898
+This patchset along with DB845c machine driver and WCD934x codec driver
+has been tested on SDM845 SoC based DragonBoard DB845c with two
+WSA8810 speakers.
+
+Most of the code in this driver is rework of Qualcomm downstream drivers
+used in Andriod. Credits to Banajit Goswami and Patrick Lai's Team.
+
+TODO:
+        Add thermal sensor support in WSA881x.
+
+Thanks,
+srini
+
+Changes since v4:
+ - updated slave bindings according to Rob's and Pierre Suggestion.
+ - fixup warnings from make dt_binding_check
+
+Srinivas Kandagatla (4):
+  dt-bindings: soundwire: add slave bindings
+  soundwire: core: add device tree support for slave devices
+  dt-bindings: ASoC: Add WSA881x bindings
+  ASoC: codecs: add wsa881x amplifier support
+
+ .../bindings/sound/qcom,wsa881x.yaml          |   41 +
+ .../soundwire/soundwire-controller.yaml       |   72 ++
+ drivers/soundwire/bus.c                       |    2 +
+ drivers/soundwire/bus.h                       |    1 +
+ drivers/soundwire/slave.c                     |   52 +
+ sound/soc/codecs/Kconfig                      |   10 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/wsa881x.c                    | 1134 +++++++++++++++++
+ 8 files changed, 1314 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+ create mode 100644 Documentation/devicetree/bindings/soundwire/soundwire-controller.yaml
+ create mode 100644 sound/soc/codecs/wsa881x.c
+
+-- 
+2.21.0
