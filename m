@@ -1,7 +1,7 @@
 From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v5, 21/32] drm/mediatek: add background color input select function for ovl/ovl_2l
-Date: Thu, 29 Aug 2019 22:50:43 +0800
-Message-ID: <1567090254-15566-22-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v5, 24/32] drm/mediatek: add clock property check before get it
+Date: Thu, 29 Aug 2019 22:50:46 +0800
+Message-ID: <1567090254-15566-25-git-send-email-yongqiang.niu@mediatek.com>
 References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,80 +14,33 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add background color input select function for ovl/ovl_2l
-
-ovl include 4 DRAM layer and 1 background color layer
-ovl_2l include 4 DRAM layer and 1 background color layer
-DRAM layer frame buffer data from render hardware, GPU for example.
-backgournd color layer is embed in ovl/ovl_2l, we can only set
-it color, but not support DRAM frame buffer.
-
-for ovl0->ovl0_2l direct link usecase,
-we need set ovl0_2l background color intput select from ovl0
-if render send DRAM buffer layer number <=4, all these layer read
-by ovl.
-layer0 is at the bottom of all layers.
-layer3 is at the top of all layers.
-if render send DRAM buffer layer numbfer >=4 && <=6
-ovl0 read layer0~3
-ovl0_2l read layer4~5
-layer5 is at the top ot all these layers.
-
-the decision of how to setting ovl0/ovl0_2l read these layer data
-is controlled in mtk crtc, which will be another patch
+This patch add clock property check before get it
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index baef066..eb3bf85 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -19,6 +19,8 @@
- #define DISP_REG_OVL_EN				0x000c
- #define DISP_REG_OVL_RST			0x0014
- #define DISP_REG_OVL_ROI_SIZE			0x0020
-+#define DISP_REG_OVL_DATAPATH_CON		0x0024
-+#define OVL_BGCLR_SEL_IN				BIT(2)
- #define DISP_REG_OVL_ROI_BGCLR			0x0028
- #define DISP_REG_OVL_SRC_CON			0x002c
- #define DISP_REG_OVL_CON(n)			(0x0030 + 0x20 * (n))
-@@ -237,6 +239,24 @@ static void mtk_ovl_layer_config(struct mtk_ddp_comp *comp, unsigned int idx,
- 		mtk_ovl_layer_on(comp, idx);
- }
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index a5a6689..effc24a 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -657,10 +657,12 @@ static int mtk_ddp_probe(struct platform_device *pdev)
+ 	for (i = 0; i < 10; i++)
+ 		ddp->mutex[i].id = i;
  
-+static void mtk_ovl_bgclr_in_on(struct mtk_ddp_comp *comp)
-+{
-+	unsigned int reg;
-+
-+	reg = readl(comp->regs + DISP_REG_OVL_DATAPATH_CON);
-+	reg = reg | OVL_BGCLR_SEL_IN;
-+	writel(reg, comp->regs + DISP_REG_OVL_DATAPATH_CON);
-+}
-+
-+static void mtk_ovl_bgclr_in_off(struct mtk_ddp_comp *comp)
-+{
-+	unsigned int reg;
-+
-+	reg = readl(comp->regs + DISP_REG_OVL_DATAPATH_CON);
-+	reg = reg & ~OVL_BGCLR_SEL_IN;
-+	writel(reg, comp->regs + DISP_REG_OVL_DATAPATH_CON);
-+}
-+
- static const struct mtk_ddp_comp_funcs mtk_disp_ovl_funcs = {
- 	.config = mtk_ovl_config,
- 	.start = mtk_ovl_start,
-@@ -247,6 +267,8 @@ static void mtk_ovl_layer_config(struct mtk_ddp_comp *comp, unsigned int idx,
- 	.layer_on = mtk_ovl_layer_on,
- 	.layer_off = mtk_ovl_layer_off,
- 	.layer_config = mtk_ovl_layer_config,
-+	.bgclr_in_on = mtk_ovl_bgclr_in_on,
-+	.bgclr_in_off = mtk_ovl_bgclr_in_off,
- };
+-	ddp->clk = devm_clk_get(dev, NULL);
+-	if (IS_ERR(ddp->clk)) {
+-		dev_err(dev, "Failed to get clock\n");
+-		return PTR_ERR(ddp->clk);
++	if (of_find_property(dev->of_node, "clocks", &i)) {
++		ddp->clk = devm_clk_get(dev, NULL);
++		if (IS_ERR(ddp->clk)) {
++			dev_err(dev, "Failed to get clock\n");
++			return PTR_ERR(ddp->clk);
++		}
+ 	}
  
- static int mtk_disp_ovl_bind(struct device *dev, struct device *master,
+ 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 -- 
 1.8.1.1.dirty
