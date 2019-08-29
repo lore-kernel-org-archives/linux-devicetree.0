@@ -1,118 +1,180 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: display: Add idk-1110wr binding
-Date: Thu, 29 Aug 2019 17:32:47 +0300
-Message-ID: <20190829143247.GA5875@pendragon.ideasonboard.com>
-References: <1567078713-29361-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1567078713-29361-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH 1/4] i3c: master: detach and free device if
+ pre_assign_dyn_addr() fails
+Date: Thu, 29 Aug 2019 16:35:20 +0200
+Message-ID: <20190829163520.126d42d6@collabora.com>
+References: <cover.1567071213.git.vitor.soares@synopsys.com>
+        <e26948eaaf765f683d8fe0618a31a98e2ecc0e65.1567071213.git.vitor.soares@synopsys.com>
+        <20190829124115.482cd8ec@collabora.com>
+        <SN6PR12MB26551F172804D039F3EAA991AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1567078713-29361-2-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <SN6PR12MB26551F172804D039F3EAA991AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sam Ravnborg <sam@ravnborg.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com, ebiharaml@si-linux.co.jp
+To: Vitor Soares <Vitor.Soares@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, Przemyslaw Gaj <pgaj@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
+On Thu, 29 Aug 2019 13:53:24 +0000
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-Thank you for the patch.
-
-On Thu, Aug 29, 2019 at 12:38:32PM +0100, Fabrizio Castro wrote:
-> Add binding for the idk-1110wr LVDS panel from Advantech.
+> Hi Boris,
 > 
-> Some panel-specific documentation can be found here:
-> https://buy.advantech.eu/Displays/Embedded-LCD-Kits-LCD-Kit-Modules/model-IDK-1110WR-55WSA1E.htm
+> From: Boris Brezillon <boris.brezillon@collabora.com>
+> Date: Thu, Aug 29, 2019 at 11:41:15
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
-> v1->v2:
-> * no change
+> > +Przemek
+> > 
+> > Please try to Cc active I3C contributors so they get a chance to
+> > comment on your patches.  
 > 
->  .../display/panel/advantech,idk-1110wr.yaml        | 69 ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
+> I can do that next time.
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml b/Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
-> new file mode 100644
-> index 0000000..e5fdaa0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/advantech,idk-1110wr.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/panel/advantech,idk-1110wr.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Advantech IDK-1110WR 10.1" WSVGA LVDS Display Panel
-> +
-> +maintainers:
-> +  - Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> +  - Thierry Reding <thierry.reding@gmail.com>
-> +
-> +allOf:
-> +  - $ref: lvds.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: advantech,idk-1110wr
-> +      - {} # panel-lvds, but not listed here to avoid false select
-> +
-> +  data-mapping:
-> +    const: jeida-24
-> +
-> +  width-mm:
-> +    const: 223
-> +
-> +  height-mm:
-> +    const: 125
-> +
-> +  panel-timing: true
-> +  port: true
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |+
-> +    panel {
-> +      compatible = "advantech,idk-1110wr", "panel-lvds";
-> +
-> +      width-mm = <223>;
-> +      height-mm = <125>;
-> +
-> +      data-mapping = "jeida-24";
-> +
-> +      panel-timing {
-> +        /* 1024x600 @60Hz */
-> +        clock-frequency = <51200000>;
-> +        hactive = <1024>;
-> +        vactive = <600>;
-> +        hsync-len = <240>;
-> +        hfront-porch = <40>;
-> +        hback-porch = <40>;
-> +        vsync-len = <10>;
-> +        vfront-porch = <15>;
-> +        vback-porch = <10>;
-> +      };
-> +
-> +      port {
-> +        panel_in: endpoint {
-> +          remote-endpoint = <&lvds_encoder>;
-> +        };
-> +      };
-> +    };
-> +
-> +...
+> > 
+> > On Thu, 29 Aug 2019 12:19:32 +0200
+> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> >   
+> > > On pre_assing_dyn_addr() the devices that fail:
+> > >   i3c_master_setdasa_locked()
+> > >   i3c_master_reattach_i3c_dev()
+> > >   i3c_master_retrieve_dev_info()
+> > > 
+> > > are kept in memory and master->bus.devs list. This makes the i3c devices
+> > > without a dynamic address are sent on DEFSLVS CCC command. Fix this by
+> > > detaching and freeing the devices that fail on pre_assign_dyn_addr().  
+> > 
+> > I don't think removing those entries is a good strategy, as one might
+> > want to try to use a different dynamic address if the requested one
+> > is not available.  
+> 
+> Do you mean same 'assigned-address' attribute in DT?
 
--- 
-Regards,
+Yes, or say it's another device that got the address we want and this
+device doesn't want to release the address (I'm assuming the !SA case).
 
-Laurent Pinchart
+> 
+> If so, it is checked here:
+> 
+> static int i3c_master_bus_init(struct i3c_master_controller *master)
+> ...
+> 	list_for_each_entry(i3cboardinfo, &master->boardinfo.i3c, node) {
+> 		struct i3c_device_info info = {
+> 			.static_addr = i3cboardinfo->static_addr,
+> 		};
+> 
+> 		if (i3cboardinfo->init_dyn_addr) {
+> 			status = i3c_bus_get_addr_slot_status(&master->bus,
+> 			^
+> 						i3cboardinfo->init_dyn_addr);
+> 			if (status != I3C_ADDR_SLOT_FREE) {
+> 				ret = -EBUSY;
+> 				goto err_detach_devs;
+> 			}
+> 		}
+> 
+> 		i3cdev = i3c_master_alloc_i3c_dev(master, &info);
+> 		if (IS_ERR(i3cdev)) {
+> 			ret = PTR_ERR(i3cdev);
+> 			goto err_detach_devs;
+> 		}
+> 
+> 		i3cdev->boardinfo = i3cboardinfo;
+> 
+> 		ret = i3c_master_attach_i3c_dev(master, i3cdev);
+> 		if (ret) {
+> 			i3c_master_free_i3c_dev(i3cdev);
+> 			goto err_detach_devs;
+> 		}
+> 	}
+> ...
+> 
+> and later if it fails i3c_master_pre_assign_dyn_addr(), the device can 
+> participate in Enter Dynamic Address Assignment process.
+> I may need to check the boardinfo->init_dyn_addr status on 
+> i3c_master_add_i3c_dev_locked before i3c_master_setnewda_locked().
+
+I need to double check but I thought we were already handling that case
+properly.
+
+> 
+> > Why not simply skipping entries that have ->dyn_addr
+> > set to 0 when preparing a DEFSLVS frame  
+> 
+> I considered that solution too but if the device isn't enumerated why 
+> should it be attached and kept in memory?
+
+Might be a device that supports HJ, and in that case we might want the
+controller to reserve a slot in its device table for that device.
+Anyway, it doesn't hurt to have it around as long as we don't pass the
+device through DEFSLVS if it doesn't have a dynamic address. I really
+prefer to keep the logic unchanged and fix it if it needs to be fixed.
+
+> Anyway we have i3c_boardinfo 
+> with DT information.
+> 
+> >   
+> > > 
+> > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> > > ---
+> > >  drivers/i3c/master.c | 11 ++++++++---
+> > >  1 file changed, 8 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> > > index 5f4bd52..4d29e1f 100644
+> > > --- a/drivers/i3c/master.c
+> > > +++ b/drivers/i3c/master.c
+> > > @@ -1438,7 +1438,7 @@ static void i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
+> > >  	ret = i3c_master_setdasa_locked(master, dev->info.static_addr,
+> > >  					dev->boardinfo->init_dyn_addr);
+> > >  	if (ret)
+> > > -		return;
+> > > +		goto err_detach_dev;
+> > >  
+> > >  	dev->info.dyn_addr = dev->boardinfo->init_dyn_addr;
+> > >  	ret = i3c_master_reattach_i3c_dev(dev, 0);
+> > > @@ -1453,6 +1453,10 @@ static void i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
+> > >  
+> > >  err_rstdaa:
+> > >  	i3c_master_rstdaa_locked(master, dev->boardinfo->init_dyn_addr);
+> > > +
+> > > +err_detach_dev:
+> > > +	i3c_master_detach_i3c_dev(dev);
+> > > +	i3c_master_free_i3c_dev(dev);  
+> > 
+> > We certainly shouldn't detach/free the i3c_dev_desc from here. If it
+> > has to be done somewhere (which I'd like to avoid), it should be done
+> > in i3c_master_bus_init() (i3c_master_pre_assign_dyn_addr() should be
+> > converted to return an int in that case).  
+> 
+> I can change it to return an error. 
+> 
+> >   
+> > >  }
+> > >  
+> > >  static void
+> > > @@ -1647,7 +1651,7 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+> > >  	enum i3c_addr_slot_status status;
+> > >  	struct i2c_dev_boardinfo *i2cboardinfo;
+> > >  	struct i3c_dev_boardinfo *i3cboardinfo;
+> > > -	struct i3c_dev_desc *i3cdev;
+> > > +	struct i3c_dev_desc *i3cdev, *i3ctmp;
+> > >  	struct i2c_dev_desc *i2cdev;
+> > >  	int ret;
+> > >  
+> > > @@ -1746,7 +1750,8 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+> > >  	 * Pre-assign dynamic address and retrieve device information if
+> > >  	 * needed.
+> > >  	 */
+> > > -	i3c_bus_for_each_i3cdev(&master->bus, i3cdev)
+> > > +	list_for_each_entry_safe(i3cdev, i3ctmp, &master->bus.devs.i3c,
+> > > +				 common.node)
+> > >  		i3c_master_pre_assign_dyn_addr(i3cdev);
+> > >  
+> > >  	ret = i3c_master_do_daa(master);  
+> 
+> Thank for your feedback.
+> 
+> Best regards,
+> Vitor Soares
