@@ -1,85 +1,42 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v3 1/8] dt-bindings: display: Add bindings for LVDS
- bus-timings
-Date: Thu, 29 Aug 2019 14:38:06 +0000
-Message-ID: <TY1PR01MB177060B843107361FEF44022C0A20@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1567017402-5895-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAL_JsqKWWCpEeBd4UFaqBVffS-OxUNAHfvtJKcGsLDR+f=Uytg@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Subject: Re: [PATCH 2/4] i3c: master: Check if devices have
+ i3c_dev_boardinfo on i3c_master_add_i3c_dev_locked()
+Date: Thu, 29 Aug 2019 16:39:18 +0200
+Message-ID: <20190829163918.571fd0d8@collabora.com>
+References: <cover.1567071213.git.vitor.soares@synopsys.com>
+        <3e21481ddf53ea58f5899df6ec542b79b8cbcd68.1567071213.git.vitor.soares@synopsys.com>
+        <20190829124457.3a750932@collabora.com>
+        <SN6PR12MB265551F73B9B516CACB5B807AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKWWCpEeBd4UFaqBVffS-OxUNAHfvtJKcGsLDR+f=Uytg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <SN6PR12MB265551F73B9B516CACB5B807AEA20@SN6PR12MB2655.namprd12.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sam Ravnborg <sam@ravnborg.org>
+To: Vitor Soares <Vitor.Soares@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgZmVlZGJhY2shDQoNCj4gRnJvbTogUm9iIEhl
-cnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4NCj4gU2VudDogMjkgQXVndXN0IDIwMTkgMTU6MDMN
-Cj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAxLzhdIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBBZGQg
-YmluZGluZ3MgZm9yIExWRFMgYnVzLXRpbWluZ3MNCj4gDQo+IE9uIFdlZCwgQXVnIDI4LCAyMDE5
-IGF0IDE6MzYgUE0gRmFicml6aW8gQ2FzdHJvDQo+IDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNh
-cy5jb20+IHdyb3RlOg0KPiA+DQo+ID4gRHVhbC1MVkRTIGNvbm5lY3Rpb25zIG5lZWQgbWFya2Vy
-cyBpbiB0aGUgRFQsIHRoaXMgcGF0Y2ggYWRkcw0KPiA+IHNvbWUgY29tbW9uIGRvY3VtZW50YXRp
-b24gdG8gYmUgcmVmZXJlbmNlZCBieSBib3RoIHBhbmVscyBhbmQNCj4gPiBicmlkZ2VzLg0KPiA+
-DQo+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAu
-cmVuZXNhcy5jb20+DQo+ID4NCj4gPiAtLS0NCj4gPiB2Mi0+djM6DQo+ID4gKiBuZXcgcGF0Y2gN
-Cj4gPiAtLS0NCj4gPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnVzLXRpbWluZ3MvbHZkcy55YW1s
-ICAgICAgICAgfCAzOCArKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2Vk
-LCAzOCBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9idXMtdGltaW5ncy9sdmRzLnlhbWwNCj4gPg0K
-PiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9idXMtdGltaW5ncy9sdmRzLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9idXMtDQo+IHRpbWluZ3MvbHZkcy55YW1sDQo+ID4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi5mMzViNTVhDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+
-ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2J1cy10aW1p
-bmdzL2x2ZHMueWFtbA0KPiA+IEBAIC0wLDAgKzEsMzggQEANCj4gPiArIyBTUERYLUxpY2Vuc2Ut
-SWRlbnRpZmllcjogR1BMLTIuMA0KPiANCj4gKEdQTC0yLjAtb25seSBPUiBCU0QtMi1DbGF1c2Up
-IGlzIHByZWZlcnJlZCBmb3IgbmV3IGJpbmRpbmdzLg0KPiANCj4gPiArJVlBTUwgMS4yDQo+ID4g
-Ky0tLQ0KPiA+ICskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2Rpc3BsYXkvYnVz
-LXRpbWluZ3MvbHZkcy55YW1sIw0KPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcv
-bWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4gPiArDQo+ID4gK3RpdGxlOiBDb21tb24gUHJvcGVy
-dGllcyBmb3IgYnVzIHRpbWluZ3Mgb2YgTFZEUyBpbnRlcmZhY2VzDQo+ID4gKw0KPiA+ICttYWlu
-dGFpbmVyczoNCj4gPiArICAtIFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5j
-b20+DQo+ID4gKyAgLSBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2Fz
-LmNvbT4NCj4gPiArDQo+ID4gK2Rlc2NyaXB0aW9uOiB8DQo+ID4gKyAgVGhpcyBkb2N1bWVudCBk
-ZWZpbmVzIGRldmljZSB0cmVlIHByb3BlcnRpZXMgY29tbW9uIHRvIExWRFMgYW5kIGR1YWwtTFZE
-Uw0KPiA+ICsgIGludGVyZmFjZXMsIHdoZXJlIGEgZHVhbC1MVkRTIGludGVyZmFjZSBpcyBhIGR1
-YWwtbGluayBjb25uZWN0aW9uIHdpdGggZXZlbg0KPiA+ICsgIHBpeGVscyB0cmF2ZWxpbmcgb24g
-b25lIGNvbm5lY3Rpb24sIGFuZCB3aXRoIG9kZCBwaXhlbHMgdHJhdmVsaW5nIG9uIHRoZSBvdGhl
-cg0KPiA+ICsgIGNvbm5lY3Rpb24uDQo+ID4gKyAgVGhpcyBkb2N1bWVudCBkb2Vzbid0IGNvbnN0
-aXR1ZSBhIGRldmljZSB0cmVlIGJpbmRpbmcgc3BlY2lmaWNhdGlvbiBieSBpdHNlbGYNCj4gDQo+
-IHR5cG86IGNvbnN0aXR1dGUNCg0KV2VsbCBzcG90dGVkIQ0KDQo+IA0KPiA+ICsgIGJ1dCBpcyBt
-ZWFudCB0byBiZSByZWZlcmVuY2VkIGJ5IGRldmljZSB0cmVlIGJpbmRpbmdzLg0KPiA+ICsgIFdo
-ZW4gcmVmZXJlbmNlZCBmcm9tIHBhbmVsIG9yIGJyaWRnZSBkZXZpY2UgdHJlZSBiaW5kaW5ncywg
-dGhlIHByb3BlcnRpZXMNCj4gPiArICBkZWZpbmVkIGluIHRoaXMgZG9jdW1lbnQgYXJlIGRlZmlu
-ZWQgYXMgZm9sbG93cy4gVGhlIHBhbmVsIGFuZCBicmlkZ2UgZGV2aWNlDQo+ID4gKyAgdHJlZSBi
-aW5kaW5ncyBhcmUgcmVzcG9uc2libGUgZm9yIGRlZmluaW5nIHdoZXRoZXIgZWFjaCBwcm9wZXJ0
-eSBpcyByZXF1aXJlZA0KPiA+ICsgIG9yIG9wdGlvbmFsLg0KPiA+ICsNCj4gPiArcHJvcGVydGll
-czoNCj4gPiArICBkdWFsLWx2ZHMtZXZlbi1waXhlbHM6DQo+ID4gKyAgICB0eXBlOiBib29sZWFu
-DQo+ID4gKyAgICBkZXNjcmlwdGlvbjoNCj4gPiArICAgICAgVGhpcyBwcm9wZXJ0eSBpcyBzcGVj
-aWZpYyB0byBhbiBpbnB1dCBwb3J0IG9mIGEgc2luayBkZXZpY2UuIFdoZW4NCj4gDQo+IFRoZSBz
-Y2hlbWEgc2hvdWxkIGRlZmluZSB3aGF0IG5vZGVzIHRoZXNlIGdvIGluLiBUaGUgZGVzY3JpcHRp
-b24gc2VlbXMNCj4gdG8gaW5kaWNhdGUgaW4gJ3BvcnQnIG5vZGVzIChvciBlbmRwb2ludD8pLCBi
-dXQgeW91ciB1c2UgaW4gdGhlIHBhbmVsDQo+IGJpbmRpbmcgcHV0cyB0aGVtIGluIHRoZSBwYXJl
-bnQuDQoNCkRpZCB5b3UgbWFuYWdlIHRvIHJlYWQgdGhpcz8NCmh0dHBzOi8vcGF0Y2h3b3JrLmtl
-cm5lbC5vcmcvY292ZXIvMTExMTk2MDcvDQoNCkNvdWxkIHlvdSBwbGVhc2UgYWR2aWNlIG9uIGhv
-dyB0byBkbyB0aGlzIHByb3Blcmx5Pw0KDQo+IA0KPiA+ICsgICAgICBzcGVjaWZpZWQsIGl0IG1h
-cmtzIHRoZSBwb3J0IGFzIHJlY2lwaWVudCBvZiBldmVuLXBpeGVscy4NCj4gPiArDQo+ID4gKyAg
-ZHVhbC1sdmRzLW9kZC1waXhlbHM6DQo+ID4gKyAgICB0eXBlOiBib29sZWFuDQo+ID4gKyAgICBk
-ZXNjcmlwdGlvbjoNCj4gPiArICAgICAgVGhpcyBwcm9wZXJ0eSBpcyBzcGVjaWZpYyB0byBhbiBp
-bnB1dCBwb3J0IG9mIGEgc2luayBkZXZpY2UuIFdoZW4NCj4gPiArICAgICAgc3BlY2lmaWVkLCBp
-dCBtYXJrcyB0aGUgcG9ydCBhcyByZWNpcGllbnQgb2Ygb2RkLXBpeGVscy4NCj4gDQo+IEhvd2V2
-ZXIsIEkgZG9uJ3QgdGhpbmsgeW91IGV2ZW4gbmVlZCB0aGVzZS4gQSBwYW5lbCdzIHBvcnQgbnVt
-YmVycyBhcmUNCj4gZml4ZWQgY2FuIGltcGx5IGV2ZW4gb3Igb2RkLiBGb3IgZXhhbXBsZSBwb3J0
-QDAgY2FuIGJlIGV2ZW4gYW5kIHBvcnRAMQ0KPiBjYW4gYmUgb2RkLiBUaGUgcG9ydCBudW1iZXJp
-bmcgaXMgdHlwaWNhbGx5IHBhbmVsIHNwZWNpZmljLCBidXQgd2UgbWF5DQo+IGJlIGFibGUgdG8g
-ZGVmaW5lIHRoZSBudW1iZXJpbmcgZ2VuZXJpY2FsbHkgaWYgd2UgZG9uJ3QgYWxyZWFkeSBoYXZl
-DQo+IHBhbmVscyB3aXRoIG11bHRpcGxlIHBvcnRzLg0KPiANCj4gQWxzbywgYXJlbid0IHRoZXJl
-IGR1YWwgbGluayBEU0kgcGFuZWxzPw0KDQpUaGlzIGlzIHRoZSByZXN1bHQgb2YgYSBkaXNjdXNz
-aW9uIG9uIGhlcmU6DQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMDk1NTQ3
-Lw0KDQpIYXZlIHlvdSBjb21lIGFjcm9zcyBpdD8NCg0KVGhhbmtzIQ0KRmFiDQoNCj4gDQo+IFJv
-Yg0K
+On Thu, 29 Aug 2019 14:00:44 +0000
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+
+> Hi Boris,
+> 
+> From: Boris Brezillon <boris.brezillon@collabora.com>
+> Date: Thu, Aug 29, 2019 at 11:44:57
+> 
+> > On Thu, 29 Aug 2019 12:19:33 +0200
+> > Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+> >   
+> > > The I3C devices described in DT might not be attached to the master which
+> > > doesn't allow to assign a specific dynamic address.  
+> > 
+> > I remember testing this when developing the framework, so, unless
+> > another patch regressed it, it should already work. I suspect patch 1
+> > is actually the regressing this use case.  
+> 
+> For today it doesn't address the case where the device is described with 
+> static address = 0, which isn't attached to the controller.
+
+Hm, I'm pretty sure I had designed the code to support that case (see
+[1]). It might be buggy, but nothing we can't fix I guess.
