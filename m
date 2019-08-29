@@ -1,56 +1,31 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v3 02/10] software node: Make argument to to_software_node const
-Date: Thu, 29 Aug 2019 13:10:35 +0300
-Message-ID: <20190829101043.24963-3-sakari.ailus@linux.intel.com>
-References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Vitor Soares <Vitor.Soares@synopsys.com>
+Subject: [PATCH 0/4] i3c: remove device if failed on pre_assign_dyn_addr()
+Date: Thu, 29 Aug 2019 12:19:31 +0200
+Message-ID: <cover.1567071213.git.vitor.soares@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i3c@lists.infradead.org
+Cc: bbrezillon@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Joao.Pinto@synopsys.com, Vitor Soares <Vitor.Soares@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-to_software_node() does not need to modify the fwnode_handle it operates
-on; therefore make it const. This allows passing a const fwnode_handle to
-to_software_node().
+This patch series remove the devices that fail during
+pre_assign_dyn_addr() and were being sent on DEFSVLS command.
+With the change above, during the i3c_master_add_i3c_dev_locked() is
+necessary to check if the device has i3c_boardinfo and try to assign the
+i3c_dev_boardinfo->init_dyn_addr if there no oldev. This change will
+allow to describe in DT device with preferable dynamic address but without
+static address.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/base/swnode.c    | 4 ++--
- include/linux/property.h | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+Vitor Soares (4):
+  "i3c: detach and free device if pre_assign_dyn_addr fails "
+  i3c: check i3c_boardinfo during i3c_master_add_i3c_dev_locked
+  update i3c bingins
+  i3c: master: dw: Reattach device on first empty location of DAT
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index a7cb41812cfda..951e7efd47c23 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -71,9 +71,9 @@ software_node_to_swnode(const struct software_node *node)
- 	return swnode;
- }
- 
--const struct software_node *to_software_node(struct fwnode_handle *fwnode)
-+const struct software_node *to_software_node(const struct fwnode_handle *fwnode)
- {
--	struct swnode *swnode = to_swnode(fwnode);
-+	const struct swnode *swnode = to_swnode(fwnode);
- 
- 	return swnode ? swnode->node : NULL;
- }
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 5a910ad795910..421c76e53708d 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -418,7 +418,8 @@ struct software_node {
- };
- 
- bool is_software_node(const struct fwnode_handle *fwnode);
--const struct software_node *to_software_node(struct fwnode_handle *fwnode);
-+const struct software_node *
-+to_software_node(const struct fwnode_handle *fwnode);
- struct fwnode_handle *software_node_fwnode(const struct software_node *node);
- 
- int software_node_register_nodes(const struct software_node *nodes);
+ Documentation/devicetree/bindings/i3c/i3c.txt | 13 ++++++++---
+ drivers/i3c/master.c                          | 33 ++++++++++++++++++++++++---
+ drivers/i3c/master/dw-i3c-master.c            | 16 +++++++++++++
+ 3 files changed, 56 insertions(+), 6 deletions(-)
+
 -- 
-2.20.1
+2.7.4
