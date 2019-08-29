@@ -1,93 +1,109 @@
-From: "Ramuthevar, Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
- for LGM SDXC PHY
-Date: Thu, 29 Aug 2019 09:45:36 +0800
-Message-ID: <d14411be-434c-ed02-6d85-f70d4a0acded@linux.intel.com>
-References: <20190828124315.48448-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190828124315.48448-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <0DAF21CFE1B20740AE23D6AF6E54843F1FDDE99F@IRSMSX108.ger.corp.intel.com>
+From: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v14 00/10] support gce on mt8183 platform
+Date: Thu, 29 Aug 2019 09:48:06 +0800
+Message-ID: <20190829014817.25482-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0DAF21CFE1B20740AE23D6AF6E54843F1FDDE99F@IRSMSX108.ger.corp.intel.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Langer, Thomas" <thomas.langer@intel.com>, "kishon@ti.com" <kishon@ti.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "Kim, Cheol Yong" <cheol.yong.kim@intel.com>, "Wu, Qiming" <qi-ming.wu@intel.com>, "Liem, Peter Harliman" <peter.harliman.liem@intel.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Langer,
+Changes since v13:
+ - separate poll function as poll w/ & w/o mask function
+ - directly pass inst into append_command function instead
+   of returns a pointer
+ - fixup coding style
+ - rebase onto 5.3-rc1
 
-Thank you for the review comments.
+Changes since v12:
+ - clear the value of command ptr address
+ - fixup some typo and remove unused define
 
-On 28/8/2019 11:37 PM, Langer, Thomas wrote:
-> Hi Vadivel,
->
->> +...
->> diff --git a/Documentation/devicetree/bindings/phy/intel,syscon.yaml
->> b/Documentation/devicetree/bindings/phy/intel,syscon.yaml
->> new file mode 100644
->> index 000000000000..d0b78805e49f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/intel,syscon.yaml
->> @@ -0,0 +1,33 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/phy/intel,syscon.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Syscon for eMMC/SDXC PHY Device Tree Bindings
-> This says the binding is for eMMC/SDXC
-Agreed, fix it.
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan
->> <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +properties:
->> +  compatible:
->> +    const: intel,syscon
-> but this is a generic syscon, behind which are many registers, not only for
-> eMMC/SDXC. Also, the registers will be different for each SoC and needed for
-> many different drivers, that is why in your example it is called "chiptop"
-> -> toplevel registers not belonging to a specific HW module.
->
-> Rob: Do you also think this "intel,syscon" is too generic?
->       And the binding should be outside the "phy" folder?
->
-> What is the way to support different SoCs with this?
-> Must the driver referencing this syscon be aware of these differences?
+Changes since v11:
+ - correct some data type to avoid type conversion
 
-[Vadivel] : most of the IP drivers are using syscon, please suggest me 
-to keep in the right place since
+Changes since v10:
+ - remove subsys-cell from gce device node
+ - use of_parse_phandle_with_fixed_args instead of
+   of_parse_phandle_with_args
 
-it is common to all(w.r.t Intel's Lightning Mountain).
+Changes since v8 and v9:
+ - change the error return code in cmdq_dev_get_client_reg()
 
-Best Regards
-Vadivel
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  "#reset-cells":
->> +   const: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - "#reset-cells"
->> +
->> +examples:
->> +  - |
->> +    sysconf: chiptop@e0020000 {
->> +       compatible = "intel,syscon", "syscon";
->> +       reg = <0xe0020000 0x100>;
->> +       #reset-cells = <1>;
->> +    };
->> --
->> 2.11.0
-> Best regards,
-> Thomas
+Changes since v7:
+ - remove the memory allocation out of cmdq_dev_get_client_reg()
+ - rebase onto 5.2-rc1
+
+Changes since v6:
+ - remove cmdq_dev_get_event function and gce event property
+ - separate some changes to indepentent patch
+ - change the binding document related to gce-client-reg property
+
+Changes since v5:
+ - fix typo
+ - remove gce-event-name form the dt-binding
+ - add reasons in commit message
+
+Changes since v4:
+ - refine the architecture of the packet encoder function
+ - refine the gce enevt property
+ - change the patch's title
+
+Changes since v3:
+ - fix a typo in dt-binding and dtsi
+ - cast the return value to right format
+
+Changes since v2:
+ - according to CK's review comment, change the property name and
+   refine the parameter
+ - change the patch's title
+ - remove unused property from dt-binding and dts
+
+Changes since v1:
+ - add prefix "cmdq" in the commit subject
+ - add dt-binding document for get event and subsys function
+ - add fix up tag in fixup patch
+ - fix up some coding style (alignment)
+
+MTK will support gce function on mt8183 platform.
+  dt-binding: gce: add gce header file for mt8183
+  mailbox: mediatek: cmdq: support mt8183 gce function
+  arm64: dts: add gce node for mt8183
+
+Besides above patches, we refine gce driver on those patches.
+  mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
+  mailbox: mediatek: cmdq: clear the event in cmdq initial flow
+
+In order to enhance the convenience of gce usage, we add new helper functions and refine the method of instruction combining.
+  dt-binding: gce: remove thread-num property
+  dt-binding: gce: add binding for gce client reg property
+  soc: mediatek: cmdq: define the instruction struct
+  soc: mediatek: cmdq: add polling function
+  soc: mediatek: cmdq: add cmdq_dev_get_client_reg function
+
+Bibby Hsieh (10):
+  dt-binding: gce: remove thread-num property
+  dt-binding: gce: add gce header file for mt8183
+  dt-binding: gce: add binding for gce client reg property
+  mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
+  mailbox: mediatek: cmdq: support mt8183 gce function
+  mailbox: mediatek: cmdq: clear the event in cmdq initial flow
+  soc: mediatek: cmdq: define the instruction struct
+  soc: mediatek: cmdq: add polling function
+  soc: mediatek: cmdq: add cmdq_dev_get_client_reg function
+  arm64: dts: add gce node for mt8183
+
+ .../devicetree/bindings/mailbox/mtk-gce.txt   |  23 ++-
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi      |  10 +
+ drivers/mailbox/mtk-cmdq-mailbox.c            |  18 +-
+ drivers/soc/mediatek/mtk-cmdq-helper.c        | 136 +++++++++++---
+ include/dt-bindings/gce/mt8183-gce.h          | 175 ++++++++++++++++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h      |  14 ++
+ include/linux/soc/mediatek/mtk-cmdq.h         |  56 +++++-
+ 7 files changed, 390 insertions(+), 42 deletions(-)
+ create mode 100644 include/dt-bindings/gce/mt8183-gce.h
+
+-- 
+2.18.0
