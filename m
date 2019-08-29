@@ -1,82 +1,68 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH next v11 01/11] dt-binding: usb: add usb-role-switch property
-Date: Thu, 29 Aug 2019 17:22:28 +0800
-Message-ID: <1567070558-29417-2-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH next v11 02/11] dt-bindings: connector: add optional properties for Type-B
+Date: Thu, 29 Aug 2019 17:22:29 +0800
+Message-ID: <1567070558-29417-3-git-send-email-chunfeng.yun@mediatek.com>
 References: <1567070558-29417-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1567070558-29417-1-git-send-email-chunfeng.yun@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Badhri Jagan Sridharan <badhri@google.com>, Linus Walleij <linus.walleij@linaro.org>, linux-usb@vger.kernel.org, Yu Chen <chenyu56@huawei.com>, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, linux-mediatek@lists.infradead.org, Min Guo <min.guo@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Nagarjuna Kristam <nkristam@nvidia.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, linux-arm-kernel@lists.infradead.org, Li Jun <jun.li@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Nagarjuna Kristam <nkristam@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a property usb-role-switch to tell the driver that use
-USB Role Switch framework to handle the role switch,
-it's useful when the driver has already supported other ways,
-such as extcon framework etc.
+Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+usb-b-connector
 
-Cc: Biju Das <biju.das@bp.renesas.com>
-Cc: Yu Chen <chenyu56@huawei.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-v7~v11: no changes
+v11 changes:
+ 1. add Reviewed-by Linus
 
-v6:
-    1. merge into this series patch
-    2. add Reviewed-by
+v6~v10 no changes
 
-(no v4, v5)
+v5 changes:
+ 1. add reviewed by Rob
 
-v3:
-    add property type, modify description suggested by Heikki
+v4 no changes
 
-v2:
-    describe it in terms of h/w functionality suggested by Rob
+v3 changes:
+ 1. add GPIO direction, and use fixed-regulator for GPIO controlled
+    VBUS regulator suggested by Rob;
 
-v1:
-    the property is discussed in:
-    [v2,2/7] dt-bindings: usb: renesas_usb3: add usb-role-switch property
-    https://patchwork.kernel.org/patch/10852497/
-
-    Mediatek and Hisilicon also try to use it:
-    [v4,3/6] dt-bindings: usb: mtu3: add properties about USB Role Switch
-    https://patchwork.kernel.org/patch/10918385/
-    [v4,6/6] usb: mtu3: register a USB Role Switch for dual role mode
-    https://patchwork.kernel.org/patch/10918367/
-
-    [v6,10/13] usb: dwc3: Registering a role switch in the DRD code
-    https://patchwork.kernel.org/patch/10909981/
+v2 changes:
+ 1. describe more clear for vbus-gpios and vbus-supply suggested by Hans
 ---
- Documentation/devicetree/bindings/usb/generic.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../bindings/connector/usb-connector.txt           | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-index 0a74ab8dfdc2..cf5a1ad456e6 100644
---- a/Documentation/devicetree/bindings/usb/generic.txt
-+++ b/Documentation/devicetree/bindings/usb/generic.txt
-@@ -30,6 +30,10 @@ Optional properties:
- 			optional for OTG device.
-  - adp-disable: tells OTG controllers we want to disable OTG ADP, ADP is
- 			optional for OTG device.
-+ - usb-role-switch: boolean, indicates that the device is capable of assigning
-+			the USB data role (USB host or USB device) for a given
-+			USB connector, such as Type-C, Type-B(micro).
-+			see connector/usb-connector.txt.
+diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+index cef556d4e5ee..d357987181ee 100644
+--- a/Documentation/devicetree/bindings/connector/usb-connector.txt
++++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+@@ -17,6 +17,20 @@ Optional properties:
+ - self-powered: Set this property if the usb device that has its own power
+   source.
  
- This is an attribute to a USB controller such as:
- 
++Optional properties for usb-b-connector:
++- id-gpios: an input gpio for USB ID pin.
++- vbus-gpios: an input gpio for USB VBUS pin, used to detect presence of
++  VBUS 5V.
++  see gpio/gpio.txt.
++- vbus-supply: a phandle to the regulator for USB VBUS if needed when host
++  mode or dual role mode is supported.
++  Particularly, if use an output GPIO to control a VBUS regulator, should
++  model it as a regulator.
++  see regulator/fixed-regulator.yaml
++- pinctrl-names : a pinctrl state named "default" is optional
++- pinctrl-0 : pin control group
++  see pinctrl/pinctrl-bindings.txt
++
+ Optional properties for usb-c-connector:
+ - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
+   connector has power support.
 -- 
 2.23.0
