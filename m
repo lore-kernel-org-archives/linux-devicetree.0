@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH next v11 08/11] usb: roles: get usb-role-switch from parent
-Date: Thu, 29 Aug 2019 17:22:35 +0800
-Message-ID: <1567070558-29417-9-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH next v11 07/11] usb: roles: Add fwnode_usb_role_switch_get() function
+Date: Thu, 29 Aug 2019 17:22:34 +0800
+Message-ID: <1567070558-29417-8-git-send-email-chunfeng.yun@mediatek.com>
 References: <1567070558-29417-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,79 +12,91 @@ To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation
 Cc: Mark Rutland <mark.rutland@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Nagarjuna Kristam <nkristam@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-when the USB host controller is the parent of the connector,
-usually type-B, sometimes don't need the graph, so we should
-check whether it's parent registers usb-role-switch or not
-firstly, and get it if exists.
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+The fwnode_usb_role_switch_get() function is exactly the
+same as usb_role_switch_get(), except that it takes struct
+fwnode_handle as parameter instead of struct device.
+
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Tested-by: Biju Das <biju.das@bp.renesas.com>
 ---
-v10~v11: no changes
+v11: no changes
+
+v10:
+  revert changes of v9
 
 v9:
-  1. replace signed-off-by by suggested-by Heikki
-  2. use class_find_device_by_fwnode()
+ replace signed-off-by by suggested-by Heikki
 
 v8: no changes
-v7:
-  add signed-off-by Chunfeng
+
+v7: 
+ add signed-off-by Chunfeng and tested-by Biju
 
 v6:
   new patch
 ---
- drivers/usb/roles/class.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ drivers/usb/roles/class.c | 20 ++++++++++++++++++++
+ include/linux/usb/role.h  |  7 +++++++
+ 2 files changed, 27 insertions(+)
 
 diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-index 2abb6fe384ca..94b4e7db2b94 100644
+index 0526efbc4922..2abb6fe384ca 100644
 --- a/drivers/usb/roles/class.c
 +++ b/drivers/usb/roles/class.c
-@@ -102,6 +102,19 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
- 	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
+@@ -123,6 +123,26 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
  }
+ EXPORT_SYMBOL_GPL(usb_role_switch_get);
  
-+static struct usb_role_switch *
-+usb_role_switch_is_parent(struct fwnode_handle *fwnode)
++/**
++ * fwnode_usb_role_switch_get - Find USB role switch linked with the caller
++ * @fwnode: The caller device node
++ *
++ * This is similar to the usb_role_switch_get() function above, but it searches
++ * the switch using fwnode instead of device entry.
++ */
++struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
 +{
-+	struct fwnode_handle *parent = fwnode_get_parent(fwnode);
-+	struct device *dev;
++	struct usb_role_switch *sw;
 +
-+	if (!parent || !fwnode_property_present(parent, "usb-role-switch"))
-+		return NULL;
++	sw = fwnode_connection_find_match(fwnode, "usb-role-switch", NULL,
++					  usb_role_switch_match);
++	if (!IS_ERR_OR_NULL(sw))
++		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
 +
-+	dev = class_find_device_by_fwnode(role_class, parent);
-+	return dev ? to_role_switch(dev) : ERR_PTR(-EPROBE_DEFER);
++	return sw;
 +}
++EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
 +
  /**
-  * usb_role_switch_get - Find USB role switch linked with the caller
-  * @dev: The caller device
-@@ -113,8 +126,10 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
- {
- 	struct usb_role_switch *sw;
+  * usb_role_switch_put - Release handle to a switch
+  * @sw: USB Role Switch
+diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+index da2b9641b877..2d77f97df72d 100644
+--- a/include/linux/usb/role.h
++++ b/include/linux/usb/role.h
+@@ -47,6 +47,7 @@ struct usb_role_switch_desc {
+ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
+ enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
+ struct usb_role_switch *usb_role_switch_get(struct device *dev);
++struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *node);
+ void usb_role_switch_put(struct usb_role_switch *sw);
  
--	sw = device_connection_find_match(dev, "usb-role-switch", NULL,
--					  usb_role_switch_match);
-+	sw = usb_role_switch_is_parent(dev_fwnode(dev));
-+	if (!sw)
-+		sw = device_connection_find_match(dev, "usb-role-switch", NULL,
-+						  usb_role_switch_match);
+ struct usb_role_switch *
+@@ -70,6 +71,12 @@ static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ 	return ERR_PTR(-ENODEV);
+ }
  
- 	if (!IS_ERR_OR_NULL(sw))
- 		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
-@@ -134,8 +149,10 @@ struct usb_role_switch *fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
- {
- 	struct usb_role_switch *sw;
++static inline struct usb_role_switch *
++fwnode_usb_role_switch_get(struct fwnode_handle *node)
++{
++	return ERR_PTR(-ENODEV);
++}
++
+ static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
  
--	sw = fwnode_connection_find_match(fwnode, "usb-role-switch", NULL,
--					  usb_role_switch_match);
-+	sw = usb_role_switch_is_parent(fwnode);
-+	if (!sw)
-+		sw = fwnode_connection_find_match(fwnode, "usb-role-switch",
-+						  NULL, usb_role_switch_match);
- 	if (!IS_ERR_OR_NULL(sw))
- 		WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
- 
+ static inline struct usb_role_switch *
 -- 
 2.23.0
