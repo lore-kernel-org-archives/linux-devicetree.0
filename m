@@ -1,62 +1,49 @@
-From: Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH AUTOSEL 4.14 09/14] arm64: dts: rockchip: enable usb-host
- regulators at boot on rk3328-rock64
-Date: Thu, 29 Aug 2019 06:50:38 -0400
-Message-ID: <20190829105043.2508-9-sashal@kernel.org>
-References: <20190829105043.2508-1-sashal@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] arm64: dts: renesas: Add HiHope RZ/G2M board with
+ idk-1110wr display
+Date: Thu, 29 Aug 2019 12:50:49 +0200
+Message-ID: <CAMuHMdW7asYJGC2+c-4=a6006K2WMjEAAigBLA+MTaFip03R+Q@mail.gmail.com>
+References: <1567074107-4899-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1567074107-4899-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190829105043.2508-1-sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Dmitry Voytik <voytikd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1567074107-4899-3-git-send-email-fabrizio.castro@bp.renesas.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, DRI Development <dri-devel@lists.freedesktop.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, ebiharaml@si-linux.co.jp, Thierry Reding <thierry.reding@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sam Ravnborg <sam@ravnborg.org>, xu_shunji@hoperun.com
 List-Id: devicetree@vger.kernel.org
 
-From: Dmitry Voytik <voytikd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-[ Upstream commit 26e2d7b03ea7ff254bf78305aa44dda62e70b78e ]
-
-After commit ef05bcb60c1a, boot from USB drives is broken.
-Fix this problem by enabling usb-host regulators during boot time.
-
-Fixes: ef05bcb60c1a ("arm64: dts: rockchip: fix vcc_host1_5v pin assign on rk3328-rock64")
-Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Dmitry Voytik <voytikd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Signed-off-by: Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-index e720f40bbd5d7..3f8f528099a80 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-@@ -77,6 +77,7 @@
- 		pinctrl-0 = <&usb30_host_drv>;
- 		regulator-name = "vcc_host_5v";
- 		regulator-always-on;
-+		regulator-boot-on;
- 		vin-supply = <&vcc_sys>;
- 	};
- 
-@@ -87,6 +88,7 @@
- 		pinctrl-0 = <&usb20_host_drv>;
- 		regulator-name = "vcc_host1_5v";
- 		regulator-always-on;
-+		regulator-boot-on;
- 		vin-supply = <&vcc_sys>;
- 	};
- 
--- 
-2.20.1
+SGkgRmFicml6aW8sCgpPbiBUaHUsIEF1ZyAyOSwgMjAxOSBhdCAxMjoyMiBQTSBGYWJyaXppbyBD
+YXN0cm8KPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6Cj4gVGhlIEhpSG9w
+ZSBSWi9HMk0gaXMgYWR2ZXJ0aXNlZCBhcyBjb21wYXRpYmxlIHdpdGggcGFuZWwgaWRrLTExMTB3
+cgo+IGZyb20gQWR2YW50ZWNoLCBob3dldmVyIHRoZSBwYW5lbCBpc24ndCBzb2xkIGFsb25nc2lk
+ZSB0aGUgYm9hcmQuCj4gQSBuZXcgZHRzLCBhZGRpbmcgZXZlcnl0aGluZyB0aGF0J3MgcmVxdWly
+ZWQgdG8gZ2V0IHRoZSBwYW5lbCB0bwo+IHdvcmsgdGhlIEhpSG9wZSBSWi9HMk0sIGlzIHRoZSBt
+b3N0IGNvbnZlbmllbnQgd2F5IHRvIHN1cHBvcnQgdGhlCj4gSGlIb3BlIFJaL0cyTSB3aGVuIGl0
+J3MgY29ubmVjdGVkIHRvIHRoZSBpZGstMTExMHdyLgo+Cj4gU2lnbmVkLW9mZi1ieTogRmFicml6
+aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+CgpUaGFua3MgZm9yIHlv
+dXIgcGF0Y2ghCgo+IC0tLSAvZGV2L251bGwKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Jl
+bmVzYXMvcjhhNzc0YTEtaGlob3BlLXJ6ZzJtLWV4LWlkay0xMTEwd3IuZHRzCgo+ICsmZ3BpbzEg
+ewo+ICsgICAgICAgLyoKPiArICAgICAgICAqIFdoZW4gR1AxXzIwIGlzIExPVyBMVkRTMCBpcyBj
+b25uZWN0ZWQgdG8gdGhlIExWRFMgY29ubmVjdG9yCj4gKyAgICAgICAgKiBXaGVuIEdQMV8yMCBp
+cyBISUdIIExWRFMwIGlzIGNvbm5lY3RlZCB0byB0aGUgTFQ4OTE4TAo+ICsgICAgICAgICovCj4g
+KyAgICAgICBsdmRzLWNvbm5lY3Rvci1lbi1ncGlvewoKTWlzc2luZyBzcGFjZSBiZWZvcmUgY3Vy
+bHkgYnJhY2UuCgpHcntvZXRqZSxlZXRpbmd9cywKCiAgICAgICAgICAgICAgICAgICAgICAgIEdl
+ZXJ0CgotLSAKR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlv
+bmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZwoKSW4gcGVyc29uYWwgY29udmVyc2F0aW9u
+cyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dAp3aGVu
+IEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNv
+bWV0aGluZyBsaWtlIHRoYXQuCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGlu
+dXMgVG9ydmFsZHMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
