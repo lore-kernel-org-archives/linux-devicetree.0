@@ -1,7 +1,7 @@
 From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v5, 23/32] drm/mediatek: distinguish ovl and ovl_2l by layer_nr
-Date: Thu, 29 Aug 2019 22:50:45 +0800
-Message-ID: <1567090254-15566-24-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v5, 26/32] drm/mediatek: add connection from RDMA0 to COLOR0
+Date: Thu, 29 Aug 2019 22:50:48 +0800
+Message-ID: <1567090254-15566-27-git-send-email-yongqiang.niu@mediatek.com>
 References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,41 +14,35 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-distinguish ovl and ovl_2l by layer_nr when get comp
-id
+This patch add connection from RDMA0 to COLOR0
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index eb3bf85..53f3883 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -318,7 +318,12 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
- 	if (irq < 0)
- 		return irq;
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index 42a130a..03a46ec 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -171,6 +171,8 @@ struct mtk_ddp {
  
--	comp_id = mtk_ddp_comp_get_id(dev->of_node, MTK_DISP_OVL);
-+	priv->data = of_device_get_match_data(dev);
-+
-+	comp_id = mtk_ddp_comp_get_id(dev->of_node,
-+				      priv->data->layer_nr == 4 ?
-+				      MTK_DISP_OVL :
-+				      MTK_DISP_OVL_2L);
- 	if (comp_id < 0) {
- 		dev_err(dev, "Failed to identify by alias: %d\n", comp_id);
- 		return comp_id;
-@@ -331,8 +336,6 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
- 		return ret;
+ struct mtk_mmsys_reg_data {
+ 	u32 ovl0_mout_en;
++	u32 rdma0_sout_sel_in;
++	u32 rdma0_sout_color0;
+ 	u32 rdma1_sout_sel_in;
+ 	u32 rdma1_sout_dpi0;
+ 	u32 dpi0_sel_in;
+@@ -428,6 +430,9 @@ static unsigned int mtk_ddp_sout_sel(const struct mtk_mmsys_reg_data *data,
+ 	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
+ 		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+ 		value = RDMA2_SOUT_DSI3;
++	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_COLOR0) {
++		*addr = data->rdma0_sout_sel_in;
++		value = data->rdma0_sout_color0;
+ 	} else {
+ 		value = 0;
  	}
- 
--	priv->data = of_device_get_match_data(dev);
--
- 	platform_set_drvdata(pdev, priv);
- 
- 	ret = devm_request_irq(dev, irq, mtk_disp_ovl_irq_handler,
 -- 
 1.8.1.1.dirty
