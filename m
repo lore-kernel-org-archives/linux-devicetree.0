@@ -1,7 +1,7 @@
 From: <yongqiang.niu@mediatek.com>
-Subject: [PATCH v5, 16/32] drm/mediatek: add component OVL_2L1
-Date: Thu, 29 Aug 2019 22:50:38 +0800
-Message-ID: <1567090254-15566-17-git-send-email-yongqiang.niu@mediatek.com>
+Subject: [PATCH v5, 19/32] drm/medaitek: add layer_nr for ovl private data
+Date: Thu, 29 Aug 2019 22:50:41 +0800
+Message-ID: <1567090254-15566-20-git-send-email-yongqiang.niu@mediatek.com>
 References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,38 +14,55 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 
-This patch add component OVL_2L1
+This patch add layer_nr for ovl private data
+ovl_2l almost same with with ovl hardware, except the
+layer number for ovl_2l is 2 and ovl is 4.
+this patch is a preparation for ovl-2l and
+ovl share the same driver.
 
 Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 1 +
- drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-index 4200f89..af8e872 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-@@ -260,6 +260,7 @@ struct mtk_ddp_comp_match {
- 	[DDP_COMPONENT_OVL0]	= { MTK_DISP_OVL,	0, NULL },
- 	[DDP_COMPONENT_OVL1]	= { MTK_DISP_OVL,	1, NULL },
- 	[DDP_COMPONENT_OVL_2L0]	= { MTK_DISP_OVL_2L,	0, NULL },
-+	[DDP_COMPONENT_OVL_2L1]	= { MTK_DISP_OVL_2L,	1, NULL },
- 	[DDP_COMPONENT_PWM0]	= { MTK_DISP_PWM,	0, NULL },
- 	[DDP_COMPONENT_PWM1]	= { MTK_DISP_PWM,	1, NULL },
- 	[DDP_COMPONENT_PWM2]	= { MTK_DISP_PWM,	2, NULL },
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-index 9caec2d..962d14a 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-@@ -52,6 +52,7 @@ enum mtk_ddp_comp_id {
- 	DDP_COMPONENT_OD1,
- 	DDP_COMPONENT_OVL0,
- 	DDP_COMPONENT_OVL_2L0,
-+	DDP_COMPONENT_OVL_2L1,
- 	DDP_COMPONENT_OVL1,
- 	DDP_COMPONENT_PWM0,
- 	DDP_COMPONENT_PWM1,
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+index 82eaefd..baef066 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+@@ -52,6 +52,7 @@
+ struct mtk_disp_ovl_data {
+ 	unsigned int addr;
+ 	unsigned int gmc_bits;
++	unsigned int layer_nr;
+ 	bool fmt_rgb565_is_0;
+ };
+ 
+@@ -129,7 +130,9 @@ static void mtk_ovl_config(struct mtk_ddp_comp *comp, unsigned int w,
+ 
+ static unsigned int mtk_ovl_layer_nr(struct mtk_ddp_comp *comp)
+ {
+-	return 4;
++	struct mtk_disp_ovl *ovl = comp_to_ovl(comp);
++
++	return ovl->data->layer_nr;
+ }
+ 
+ static void mtk_ovl_layer_on(struct mtk_ddp_comp *comp, unsigned int idx)
+@@ -334,12 +337,14 @@ static int mtk_disp_ovl_remove(struct platform_device *pdev)
+ static const struct mtk_disp_ovl_data mt2701_ovl_driver_data = {
+ 	.addr = DISP_REG_OVL_ADDR_MT2701,
+ 	.gmc_bits = 8,
++	.layer_nr = 4,
+ 	.fmt_rgb565_is_0 = false,
+ };
+ 
+ static const struct mtk_disp_ovl_data mt8173_ovl_driver_data = {
+ 	.addr = DISP_REG_OVL_ADDR_MT8173,
+ 	.gmc_bits = 8,
++	.layer_nr = 4,
+ 	.fmt_rgb565_is_0 = true,
+ };
+ 
 -- 
 1.8.1.1.dirty
