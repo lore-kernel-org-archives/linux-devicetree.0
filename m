@@ -1,53 +1,73 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v1 1/1] i2c: iproc: Add i2c repeated start capability
-Date: Thu, 29 Aug 2019 22:41:58 +0200
-Message-ID: <20190829204158.GV3740@ninjato>
-References: <1565150941-27297-1-git-send-email-rayagonda.kokatanur@broadcom.com>
- <a2b0ccc1-63d5-177d-2b54-d79c65057907@broadcom.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 3/3] dwc: PCI: intel: Intel PCIe RC controller driver
+Date: Thu, 29 Aug 2019 23:01:22 +0200
+Message-ID: <CAFBinCCdje3Q3=adk+gUkcxHfwvAuoB8sQERbDsyt6Q58fgcOg@mail.gmail.com>
+References: <9bd455a628d4699684c0f9d439b64af1535cccc6.1566208109.git.eswara.kota@linux.intel.com>
+ <20190824210302.3187-1-martin.blumenstingl@googlemail.com>
+ <2c71003f-06d1-9fe2-2176-94ac816b40e3@linux.intel.com> <CAFBinCDSJdq6axcYM7AkqvzUbc6X1zfOZ85Q-q1-FPwVxvgnpA@mail.gmail.com>
+ <9ba19f08-e25a-4d15-8854-8dc4f9b6faca@linux.intel.com> <CAFBinCDX2BqiKcZM-C0m7gsi4BPSK0gM15r0jHmL3+AKxff=wQ@mail.gmail.com>
+ <023c9b59-70bb-ed8d-a4c0-76eae726b574@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="o3Y+93sjbn8Tp8J9"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a2b0ccc1-63d5-177d-2b54-d79c65057907@broadcom.com>
+In-Reply-To: <023c9b59-70bb-ed8d-a4c0-76eae726b574@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>, Lori Hikichi <lori.hikichi@broadcom.com>, Icarus Chau <icarus.chau@broadcom.com>, Shivaraj Shetty <sshetty1@broadcom.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>, eswara.kota@linux.intel.com, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, gustavo.pimentel@synopsys.com, hch@infradead.org, jingoohan1@gmail.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-
---o3Y+93sjbn8Tp8J9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> Given that my name is also on the Signed-off-by since I helped to rewrite
-> part of the patch, I'm not going to add my Reviewed-by tag here.
->=20
-> Please help to review.
-
-Outstanding iproc patches are next in my queue.
-
-
---o3Y+93sjbn8Tp8J9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1oOJYACgkQFA3kzBSg
-KbbbyBAAjquRkJJZCHvzp6ow/QsO6YcL0zRxe7eofXkwatruJwf6SEPIuUOoqc7s
-OCrfJ+EhvBm3O4BV2GT0uNHGfCTVpBhPYaNzO66eFK4ZUg3ekuvh+qyAMZtMnjl+
-YW4BNxwhHtBfwXBsuJum1xoU0Z7+gyoGrShOKYutdrrEWZGa0Fi7CcwOtonTz1Ag
-6aEv8Yg8V56bpIOeNij6YeVi0aRSzFehUbdHMK6LzhY8bEcVPx8es7rKiKLYP5QX
-zRc+axs98l/CaS4lp+ZIfm/hnSY0NhyJvNWucb2o7pYHK0j5GpclyR3mvGhiVEpT
-TOMCLuXzjMl2x2BPcj19V4RnmbuQj6VlRr2aic895xqfaq47IjP59pzdzdW/2MWR
-5fkmZu01ioFDKkNcvpHS6ugFsHyu21Bx85f48VJPaAGCAD9Ib25xF2yXkIXnvgJ7
-MupHsMQNg4/6UX8+FsR0YYLeJ+SoIVaPFunEj1r/fy+u1Dx8x+We1pDp0T6wPVYm
-+Ph5VgIb3r2m/ZXCjf9Obn8mGYGnKO9+urh4E4h2nwS7pNTH+BYp6dvokK1vDjYe
-HITJ8jc7GHep6D4OpnJqQWn34Qio4kAZPOSur6pNgHEaig+shY/8gw1sL+4ae21E
-afLD0ZgRF8BSFx5A8QMi17YGWvwN/hRK8rACO+c0x502U+7Upgw=
-=oQ7R
------END PGP SIGNATURE-----
-
---o3Y+93sjbn8Tp8J9--
+SGkgS2lzaG9uLA0KDQpPbiBUaHUsIEF1ZyAyOSwgMjAxOSBhdCA3OjEwIEFNIEtpc2hvbiBWaWph
+eSBBYnJhaGFtIEkgPGtpc2hvbkB0aS5jb20+IHdyb3RlOg0KWy4uLl0NCj4gVGhlIFBDSSBFWFBS
+RVNTIENBUkQgRUxFQ1RST01FQ0hBTklDQUwgU1BFQ0lGSUNBVElPTiBkZWZpbmVzIHRoZSBQb3dl
+cg0KPiBTZXF1ZW5jaW5nIGFuZCBSZXNldCBTaWduYWwgVGltaW5ncyBpbiBUYWJsZSAyLTQuIFBs
+ZWFzZSBhbHNvIHJlZmVyIEZpZ3VyZQ0KPiAyLTEwOiBQb3dlciBVcCBvZiB0aGUgQ0VNLg0KPg0K
+PiDilZTilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilaTilZDilZDilZDi
+lZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDi
+lZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilZDilaTilZDilZDi
+lZDilZDilZDilaTilZDilZDilZDilZDilZDilaTilZDilZDilZDilZDilZDilZDilZDilZcNCj4g
+4pWRIFN5bWJvbCAgICAgIOKUgiBQYXJhbWV0ZXIgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+4pSCIE1pbiDilIIgTWF4IOKUgiBVbml0cyDilZENCj4g4pWg4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
+4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWq4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
+4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
+4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWq4pWQ4pWQ4pWQ4pWQ4pWQ4pWq4pWQ4pWQ4pWQ4pWQ4pWQ
+4pWq4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWjDQo+IOKVkSBUIFBWUEVSTCAgICDilIIgUG93ZXIg
+c3RhYmxlIHRvIFBFUlNUIyBpbmFjdGl2ZSAgICAgIOKUgiAxMDAg4pSCICAgICDilIIgbXMgICAg
+4pWRDQo+IOKVn+KUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUvOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKU
+gOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUvOKU
+gOKUgOKUgOKUgOKUgOKUvOKUgOKUgOKUgOKUgOKUgOKUvOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKV
+og0KPiDilZEgVCBQRVJTVC1DTEsg4pSCIFJFRkNMSyBzdGFibGUgYmVmb3JlIFBFUlNUIyBpbmFj
+dGl2ZSDilIIgMTAwIOKUgiAgICAg4pSCIM68cyAgICDilZENCj4g4pWf4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA
+4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pSA4pSA4pWiDQo+IOKVkSBUIFBFUlNUICAgICDilIIg
+UEVSU1QjIGFjdGl2ZSB0aW1lICAgICAgICAgICAgICAgICAgIOKUgiAxMDAg4pSCICAgICDilIIg
+zrxzICAgIOKVkQ0KPiDilZ/ilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lLzilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDi
+lIDilLzilIDilIDilIDilIDilIDilLzilIDilIDilIDilIDilIDilLzilIDilIDilIDilIDilIDi
+lIDilIDilaINCj4g4pWRIFQgRkFJTCAgICAgIOKUgiBQb3dlciBsZXZlbCBpbnZhbGlkIHRvIFBF
+UlNUIyBhY3RpdmUg4pSCICAgICDilIIgNTAwIOKUgiBucyAgICDilZENCj4g4pWf4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA
+4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pS84pSA
+4pSA4pSA4pSA4pSA4pS84pSA4pSA4pSA4pSA4pSA4pSA4pSA4pWiDQo+IOKVkSBUIFdLUkYgICAg
+ICDilIIgV0FLRSMgcmlzZSDigJMgZmFsbCB0aW1lICAgICAgICAgICAgICAg4pSCICAgICDilIIg
+MTAwIOKUgiBucyAgICDilZENCj4g4pWa4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
+4pWQ4pWQ4pWn4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
+4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ
+4pWQ4pWQ4pWQ4pWn4pWQ4pWQ4pWQ4pWQ4pWQ4pWn4pWQ4pWQ4pWQ4pWQ4pWQ4pWn4pWQ4pWQ4pWQ
+4pWQ4pWQ4pWQ4pWQ4pWdDQo+DQo+IEluIG15IGNvZGUgSSB1c2VkIFQgUEVSU1QtQ0xLIChpLmUg
+UkVGQ0xLIHN0YWJsZSBiZWZvcmUgUEVSU1QjIGluYWN0aXZlKS4NCj4gUkVGQ0xLIHRvIHRoZSBj
+YXJkIGlzIGVuYWJsZWQgYXMgcGFydCBvZiBQSFkgZW5hYmxlIGFuZCB0aGVuIHdhaXQgZm9yIDEw
+MM68cw0KPiBiZWZvcmUgbWFraW5nIFBFUlNUIyBpbmFjdGl2ZS4NCj4NCj4gUG93ZXIgdG8gdGhl
+IGRldmljZSBpcyBnaXZlbiBkdXJpbmcgYm9hcmQgcG93ZXIgdXAgYW5kIHRoZSBhc3N1bXB0aW9u
+IGhlcmUgaXMNCj4gaXQgd2lsbCB0YWtlIG1vcmUgdGhlIDEwMG1zIGZvciB0aGUgcHJvYmUgdG8g
+YmUgaW52b2tlZCBhZnRlciBib2FyZCBwb3dlciB1cA0KPiAoaS5lIGFmdGVyIFJPTSwgYm9vdGxv
+YWRlcnMgYW5kIGxpbnV4IGtlcm5lbCkuIEJ1dCBpZiB5b3UgaGF2ZSBhIHJlZ3VsYXRvciB0aGF0
+DQo+IGlzIGVuYWJsZWQgaW4gUENJIHByb2JlLCB0aGVuIFQgUFZQRVJMICgxMDBtcykgc2hvdWxk
+IGFsc28gdXNlZCBpbiBwcm9iZS4NCnRoYW5rIHlvdSBmb3IgdGhpcyBkZXRhaWxlZCBvdmVydmll
+dyBhbmQgZm9yIHRoZSBleHBsYW5hdGlvbiBhYm91dCB0aGUNCmFzc3VtcHRpb25zIHlvdSBtYWRl
+IChhbmQgd2h5KQ0KDQoNCk1hcnRpbg0K
