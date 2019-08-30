@@ -1,80 +1,72 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY
- bindings
-Date: Fri, 30 Aug 2019 09:45:20 -0700
-Message-ID: <20190830164520.GK26807@tuxbook-pro>
-References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org>
- <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org>
- <20190223165218.GB572@tuxbook-pro>
- <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
- <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH RESEND v2 1/6] dt-bindings: watchdog: Add YAML schemas
+ for the generic watchdog bindings
+Date: Fri, 30 Aug 2019 09:48:11 -0700
+Message-ID: <20190830164811.GA7911@roeck-us.net>
+References: <20190821143835.7294-1-mripard@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
+In-Reply-To: <20190821143835.7294-1-mripard@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, jackp@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
+To: Maxime Ripard <mripard@kernel.org>
+Cc: wim@linux-watchdog.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 30 Aug 09:01 PDT 2019, Stephen Boyd wrote:
-
-> Quoting Jorge Ramirez (2019-08-29 00:03:48)
-> > On 2/23/19 17:52, Bjorn Andersson wrote:
-> > > On Thu 07 Feb 03:17 PST 2019, Jorge Ramirez-Ortiz wrote:
-> > >> +
-> > >> +Required child nodes:
-> > >> +
-> > >> +- usb connector node as defined in bindings/connector/usb-connector.txt
-> > >> +  containing the property vbus-supply.
-> > >> +
-> > >> +Example:
-> > >> +
-> > >> +usb3_phy: usb3-phy@78000 {
-> > >> +    compatible = "qcom,snps-usb-ssphy";
-> > >> +    reg = <0x78000 0x400>;
-> > >> +    #phy-cells = <0>;
-> > >> +    clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
-> > >> +             <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
-> > >> +             <&gcc GCC_USB3_PHY_PIPE_CLK>;
-> > >> +    clock-names = "ref", "phy", "pipe";
-> > >> +    resets = <&gcc GCC_USB3_PHY_BCR>,
-> > >> +             <&gcc GCC_USB3PHY_PHY_BCR>;
-> > >> +    reset-names = "com", "phy";
-> > >> +    vdd-supply = <&vreg_l3_1p05>;
-> > >> +    vdda1p8-supply = <&vreg_l5_1p8>;
-> > >> +    usb3_c_connector: usb3-c-connector {
+On Wed, Aug 21, 2019 at 04:38:30PM +0200, Maxime Ripard wrote:
+> From: Maxime Ripard <maxime.ripard@bootlin.com>
 > 
-> Node name should be 'connector', not usb3-c-connector.
+> The watchdogs have a bunch of generic properties that are needed in a
+> device tree. Add a YAML schemas for those.
 > 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-It probably has to be usb-c-connector, because we have a
-micro-usb-connector on the same board.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-> > > 
-> > > The USB-C connector is attached both to the HS and SS PHYs, so I think
-> > > you should represent this external to this node and use of_graph to
-> > > query it.
-> > 
-> > but AFAICS we wont be able to retrieve the vbux-supply from an external
-> > node (that interface does not exist).
-> > 
-> > rob, do you have a suggestion?
 > 
-> Shouldn't the vbus supply be in the phy? Or is this a situation where
-> the phy itself doesn't have the vbus supply going to it because the PMIC
-> gets in the way and handles the vbus for the connector by having the SoC
-> communicate with the PMIC about when to turn the vbus on and off, etc?
+> ---
 > 
-
-That's correct, the VBUS comes out of the PMIC and goes directly to the
-connector.
-
-The additional complicating factor here is that the connector is wired
-to a USB2 phy as well, so we need to wire up detection and vbus control
-to both of them - but I think this will be fine, if we can only figure
-out a sane way of getting hold of the vbus-supply.
-
-Regards,
-Bjorn
+> Changes from v1:
+>   - New patch
+> ---
+>  .../bindings/watchdog/watchdog.yaml           | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/watchdog.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/watchdog.yaml b/Documentation/devicetree/bindings/watchdog/watchdog.yaml
+> new file mode 100644
+> index 000000000000..187bf6cb62bf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/watchdog.yaml
+> @@ -0,0 +1,26 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/watchdog/watchdog.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Watchdog Generic Bindings
+> +
+> +maintainers:
+> +  - Guenter Roeck <linux@roeck-us.net>
+> +  - Wim Van Sebroeck <wim@linux-watchdog.org>
+> +
+> +description: |
+> +  This document describes generic bindings which can be used to
+> +  describe watchdog devices in a device tree.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^watchdog(@.*|-[0-9a-f])?$"
+> +
+> +  timeout-sec:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Contains the watchdog timeout in seconds.
+> +
+> +...
+> -- 
+> 2.21.0
+> 
