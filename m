@@ -1,66 +1,50 @@
 From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v5, 24/32] drm/mediatek: add clock property check before
- get it
-Date: Fri, 30 Aug 2019 14:11:42 +0800
-Message-ID: <1567145502.5942.15.camel@mtksdaap41>
+Subject: Re: [PATCH v5, 25/32] drm/mediatek: add connection from OVL0 to
+ OVL_2L0
+Date: Fri, 30 Aug 2019 14:20:27 +0800
+Message-ID: <1567146027.5942.16.camel@mtksdaap41>
 References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
- <1567090254-15566-25-git-send-email-yongqiang.niu@mediatek.com>
+ <1567090254-15566-26-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1567090254-15566-25-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1567090254-15566-26-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: yongqiang.niu@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Yongqiang:
-
-On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> This patch add clock property check before get it
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index a5a6689..effc24a 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -657,10 +657,12 @@ static int mtk_ddp_probe(struct platform_device *pdev)
->  	for (i = 0; i < 10; i++)
->  		ddp->mutex[i].id = i;
->  
-> -	ddp->clk = devm_clk_get(dev, NULL);
-> -	if (IS_ERR(ddp->clk)) {
-> -		dev_err(dev, "Failed to get clock\n");
-> -		return PTR_ERR(ddp->clk);
-> +	if (of_find_property(dev->of_node, "clocks", &i)) {
-> +		ddp->clk = devm_clk_get(dev, NULL);
-> +		if (IS_ERR(ddp->clk)) {
-> +			dev_err(dev, "Failed to get clock\n");
-> +			return PTR_ERR(ddp->clk);
-> +		}
-
-Only "mediatek,mt8133-disp-mutex" has no clock property. For other SoC,
-clock property is required. So I think this exception is just for
-mt8183.
-
-Regards,
-CK
-
->  	}
->  
->  	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+SGksIFlvbmdxaWFuZzoKCk9uIFRodSwgMjAxOS0wOC0yOSBhdCAyMjo1MCArMDgwMCwgeW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgY29ubmVjdGlvbiBmcm9t
+IE9WTDAgdG8gT1ZMXzJMMAoKUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+
+Cgo+IAo+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0
+ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyB8
+IDUgKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyBiL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gaW5kZXggZWZmYzI0YS4uNDJhMTMwYSAxMDA2
+NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwo+ICsrKyBi
+L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gQEAgLTEzNyw2ICsxMzcs
+OCBAQAo+ICAjZGVmaW5lIERQSV9TRUxfSU5fQkxTCQkJMHgwCj4gICNkZWZpbmUgRFNJX1NFTF9J
+Tl9SRE1BCQkJMHgxCj4gIAo+ICsjZGVmaW5lIE9WTDBfTU9VVF9FTl9PVkwwXzJMCQlCSVQoNCkK
+PiArCj4gIHN0cnVjdCBtdGtfZGlzcF9tdXRleCB7Cj4gIAlpbnQgaWQ7Cj4gIAlib29sIGNsYWlt
+ZWQ7Cj4gQEAgLTI5OSw2ICszMDEsOSBAQCBzdGF0aWMgdW5zaWduZWQgaW50IG10a19kZHBfbW91
+dF9lbihjb25zdCBzdHJ1Y3QgbXRrX21tc3lzX3JlZ19kYXRhICpkYXRhLAo+ICAJfSBlbHNlIGlm
+IChjdXIgPT0gRERQX0NPTVBPTkVOVF9PRDEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX1JETUEx
+KSB7Cj4gIAkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9PRF9NT1VUX0VOOwo+ICAJCXZh
+bHVlID0gT0QxX01PVVRfRU5fUkRNQTE7Cj4gKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9O
+RU5UX09WTDAgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX09WTF8yTDApIHsKPiArCQkqYWRkciA9
+IGRhdGEtPm92bDBfbW91dF9lbjsKPiArCQl2YWx1ZSA9IE9WTDBfTU9VVF9FTl9PVkwwXzJMOwo+
+ICAJfSBlbHNlIHsKPiAgCQl2YWx1ZSA9IDA7Cj4gIAl9CgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
