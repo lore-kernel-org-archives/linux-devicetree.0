@@ -1,49 +1,64 @@
-From: santosh.shilimkar@oracle.com
-Subject: Re: [PATCHv3 00/10] soc: ti: add OMAP PRM driver (for reset)
-Date: Fri, 30 Aug 2019 09:50:33 -0700
-Message-ID: <f7d6a2fb-175c-361b-00ff-ddde67700daa@oracle.com>
-References: <20190830121816.30034-1-t-kristo@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V5 1/4] dt-bindings: watchdog: Add i.MX7ULP bindings
+Date: Fri, 30 Aug 2019 09:51:34 -0700
+Message-ID: <20190830165134.GG7911@roeck-us.net>
+References: <1566999303-18795-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190830121816.30034-1-t-kristo@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, ssantosh@kernel.org, linux-omap@vger.kernel.org, tony@atomide.com, s-anna@ti.com, p.zabel@pengutronix.de
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1566999303-18795-1-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: wim@linux-watchdog.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux@armlinux.org.uk, otavio@ossystems.com.br, leonard.crestez@nxp.com, u.kleine-koenig@pengutronix.de, schnitzeltony@gmail.com, jan.tuerk@emtrion.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On 8/30/19 5:18 AM, Tero Kristo wrote:
-> Hi,
+On Wed, Aug 28, 2019 at 09:35:00AM -0400, Anson Huang wrote:
+> Add the watchdog bindings for Freescale i.MX7ULP.
 > 
-> V3 of the series, ended up re-sending the whole series as I squashed one
-> patch from v2 and because of that the ordering has changed a bit. Changes
-> in v3 contain fixes for the comments from Philipp Zabel.
-> 
-> - added spinlock to protect register writes
-> - added own xlate function to prevent bad reset IDs to be registered
-> - use mask for the valid reset detection instead of parsing reset map
-> - fixed reset status bit handling
-> - used iopoll macro instead of handwritten poll loop for timeouts
-> - squashed patch #6 into #4 from v2 of the series
-> - some other minor fixes.
-> 
-> This series still depends on the clk driver changes for the reset<->clk
-> syncing [1].
-> 
-This has to wait for another merge window. It will also take care of 
-dependencies landing in mainline. Will push this to linux-next as
-soon as v5.4-rc1 is out. Please remind me in case you don't see it
-in next after 5.4-rc1.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Rob Herring <rohb@kernel.org>
 
-Regards,
-Snatosh
+Missed this version. For the record:
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+> Changes since V4:
+> 	- improve watchdog node name.
+> ---
+>  .../bindings/watchdog/fsl-imx7ulp-wdt.txt          | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
+> new file mode 100644
+> index 0000000..f902508
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx7ulp-wdt.txt
+> @@ -0,0 +1,22 @@
+> +* Freescale i.MX7ULP Watchdog Timer (WDT) Controller
+> +
+> +Required properties:
+> +- compatible : Should be "fsl,imx7ulp-wdt"
+> +- reg : Should contain WDT registers location and length
+> +- interrupts : Should contain WDT interrupt
+> +- clocks: Should contain a phandle pointing to the gated peripheral clock.
+> +
+> +Optional properties:
+> +- timeout-sec : Contains the watchdog timeout in seconds
+> +
+> +Examples:
+> +
+> +wdog1: watchdog@403d0000 {
+> +	compatible = "fsl,imx7ulp-wdt";
+> +	reg = <0x403d0000 0x10000>;
+> +	interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+> +	clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
+> +	assigned-clocks = <&pcc2 IMX7ULP_CLK_WDG1>;
+> +	assigned-clocks-parents = <&scg1 IMX7ULP_CLK_FIRC_BUS_CLK>;
+> +	timeout-sec = <40>;
+> +};
+> -- 
+> 2.7.4
+> 
