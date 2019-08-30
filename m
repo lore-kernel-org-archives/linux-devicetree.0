@@ -1,38 +1,59 @@
-Return-Path: <SRS0=BPCO=WJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:43780 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728656AbfHMNKA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 13 Aug 2019 09:10:00 -0400
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [v2 0/2] Add Q6SSTOP clock controller for QCS404
-Date: Tue, 13 Aug 2019 18:39:44 +0530
-Message-Id: <20190813130946.16448-1-govinds@codeaurora.org>
+Return-Path: <SRS0=ECyj=W2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60195 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728072AbfH3KRC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 30 Aug 2019 06:17:02 -0400
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v10 09/14] media: tvp5150: initialize subdev before parsing device tree
+Date: Fri, 30 Aug 2019 12:16:41 +0200
+Message-Id: <20190830101646.6530-10-m.felsch@pengutronix.de>
+In-Reply-To: <20190830101646.6530-1-m.felsch@pengutronix.de>
+References: <20190830101646.6530-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: sboyd@kernel.org
-Cc: bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-soc@vger.kernel.org, andy.gross@linaro.org, linux-remoteproc@vger.kernel.org, Govind Singh <govinds@codeaurora.org>
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org, Michael Tretter <m.tretter@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for the Q6SSTOP clock control used on qcs404
-based devices. This would allow wcss remoteproc driver to
-control the required WCSS Q6SSTOP clock/reset controls to
-bring the subsystem out of reset and shutdown the WCSS Q6DSP.
+From: Michael Tretter <m.tretter@pengutronix.de>
 
-Govind Singh (2):
-  dt-bindings: clock: qcom: Add QCOM Q6SSTOP clock controller bindings
-  clk: qcom: Add Q6SSTOP clock controller for QCS404
+There are several debug prints in the tvp5150_parse_dt() function, which
+do not print the prefix, because the v4l2_subdev is not initialized, yet.
 
- .../bindings/clock/qcom,q6sstopcc.yaml        |  45 ++++
- drivers/clk/qcom/Kconfig                      |   8 +
- drivers/clk/qcom/Makefile                     |   1 +
- drivers/clk/qcom/q6sstop-qcs404.c             | 223 ++++++++++++++++++
- .../dt-bindings/clock/qcom,q6sstopcc-qcs404.h |  18 ++
- 5 files changed, 295 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,q6sstopcc.yaml
- create mode 100644 drivers/clk/qcom/q6sstop-qcs404.c
- create mode 100644 include/dt-bindings/clock/qcom,q6sstopcc-qcs404.h
+Initialize the v4l2_subdev before parsing the device tree to fix the
+debug messages.
 
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ drivers/media/i2c/tvp5150.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index 636e8737ac44..dc8272d3a445 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -1955,6 +1955,9 @@ static int tvp5150_probe(struct i2c_client *c)
+ 
+ 	core->regmap = map;
+ 	sd = &core->sd;
++	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
++	sd->internal_ops = &tvp5150_internal_ops;
++	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+ 
+ 	if (IS_ENABLED(CONFIG_OF) && np) {
+ 		res = tvp5150_parse_dt(core, np);
+@@ -1967,10 +1970,6 @@ static int tvp5150_probe(struct i2c_client *c)
+ 		core->mbus_type = V4L2_MBUS_BT656;
+ 	}
+ 
+-	v4l2_i2c_subdev_init(sd, c, &tvp5150_ops);
+-	sd->internal_ops = &tvp5150_internal_ops;
+-	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+-
+ 	res = tvp5150_mc_init(core);
+ 	if (res)
+ 		return res;
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.20.1
