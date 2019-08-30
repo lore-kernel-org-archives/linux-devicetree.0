@@ -1,81 +1,51 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH 02/11] dt-bindings: phy-mtk-tphy: make the ref clock
- optional
-Date: Fri, 30 Aug 2019 14:22:29 +0800
-Message-ID: <1567146149.7317.40.camel@mhfsdcap03>
-References: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
- <a31d78484b64f853a16e7dcb16fae9fc0de45ebb.1566542696.git.chunfeng.yun@mediatek.com>
- <20190829192550.GA29881@bogus>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v5, 26/32] drm/mediatek: add connection from RDMA0 to
+ COLOR0
+Date: Fri, 30 Aug 2019 14:23:26 +0800
+Message-ID: <1567146206.5942.17.camel@mtksdaap41>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1567090254-15566-27-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190829192550.GA29881@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1567090254-15566-27-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: yongqiang.niu@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-08-29 at 14:25 -0500, Rob Herring wrote:
-> On Fri, Aug 23, 2019 at 03:00:09PM +0800, Chunfeng Yun wrote:
-> > Make the ref clock optional, then we no need refer to a fixed-clock
-> > in DTS anymore when the clock of USB3 PHY comes from oscillator
-> > directly
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/phy/phy-mtk-tphy.txt        | 13 +++++++------
-> >  1 file changed, 7 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > index d5b327f85fa2..1c18bf10b2fe 100644
-> > --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > @@ -34,12 +34,6 @@ Optional properties (controller (parent) node):
-> >  
-> >  Required properties (port (child) node):
-> >  - reg		: address and length of the register set for the port.
-> > -- clocks	: a list of phandle + clock-specifier pairs, one for each
-> > -		  entry in clock-names
-> > -- clock-names	: must contain
-> > -		  "ref": 48M reference clock for HighSpeed analog phy; and 26M
-> > -			reference clock for SuperSpeed analog phy, sometimes is
-> > -			24M, 25M or 27M, depended on platform.
-> >  - #phy-cells	: should be 1 (See second example)
-> >  		  cell after port phandle is phy type from:
-> >  			- PHY_TYPE_USB2
-> > @@ -48,6 +42,13 @@ Required properties (port (child) node):
-> >  			- PHY_TYPE_SATA
-> >  
-> >  Optional properties (PHY_TYPE_USB2 port (child) node):
-> > +- clocks	: a list of phandle + clock-specifier pairs, one for each
-> > +		  entry in clock-names
-> > +- clock-names	: may contain
-> > +		  "ref": 48M reference clock for HighSpeed anolog phy; and 26M
-> > +			reference clock for SuperSpeed anolog phy, sometimes is
-> > +			24M, 25M or 27M, depended on platform.
-> 
-> How do you know the frequency when it is not present?
-It's always present, but sometimes it's always on by default (e.g. 48Mhz
-of U2 PHY), or comes from oscillator directly  (e.g. 26Mhz of U3 PHY),
-so not controlled by CCF, of course we can use a fixed-clock in latter
-case, it's useful to make it optional for these two cases.
-
-Thanks
-
-> 
-> > +
-> >  - mediatek,eye-src	: u32, the value of slew rate calibrate
-> >  - mediatek,eye-vrt	: u32, the selection of VRT reference voltage
-> >  - mediatek,eye-term	: u32, the selection of HS_TX TERM reference voltage
-> > -- 
-> > 2.23.0
-> > 
+SGksIFlvbmdxaWFuZzoKCk9uIFRodSwgMjAxOS0wOC0yOSBhdCAyMjo1MCArMDgwMCwgeW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgY29ubmVjdGlvbiBmcm9t
+IFJETUEwIHRvIENPTE9SMAoKUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+
+Cgo+IAo+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0
+ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyB8
+IDUgKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyBiL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gaW5kZXggNDJhMTMwYS4uMDNhNDZlYyAxMDA2
+NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYwo+ICsrKyBi
+L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jCj4gQEAgLTE3MSw2ICsxNzEs
+OCBAQCBzdHJ1Y3QgbXRrX2RkcCB7Cj4gIAo+ICBzdHJ1Y3QgbXRrX21tc3lzX3JlZ19kYXRhIHsK
+PiAgCXUzMiBvdmwwX21vdXRfZW47Cj4gKwl1MzIgcmRtYTBfc291dF9zZWxfaW47Cj4gKwl1MzIg
+cmRtYTBfc291dF9jb2xvcjA7Cj4gIAl1MzIgcmRtYTFfc291dF9zZWxfaW47Cj4gIAl1MzIgcmRt
+YTFfc291dF9kcGkwOwo+ICAJdTMyIGRwaTBfc2VsX2luOwo+IEBAIC00MjgsNiArNDMwLDkgQEAg
+c3RhdGljIHVuc2lnbmVkIGludCBtdGtfZGRwX3NvdXRfc2VsKGNvbnN0IHN0cnVjdCBtdGtfbW1z
+eXNfcmVnX2RhdGEgKmRhdGEsCj4gIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JE
+TUEyICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kzKSB7Cj4gIAkJKmFkZHIgPSBESVNQX1JF
+R19DT05GSUdfRElTUF9SRE1BMl9TT1VUOwo+ICAJCXZhbHVlID0gUkRNQTJfU09VVF9EU0kzOwo+
+ICsJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMCAmJiBuZXh0ID09IEREUF9D
+T01QT05FTlRfQ09MT1IwKSB7Cj4gKwkJKmFkZHIgPSBkYXRhLT5yZG1hMF9zb3V0X3NlbF9pbjsK
+PiArCQl2YWx1ZSA9IGRhdGEtPnJkbWEwX3NvdXRfY29sb3IwOwo+ICAJfSBlbHNlIHsKPiAgCQl2
+YWx1ZSA9IDA7Cj4gIAl9CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVs
