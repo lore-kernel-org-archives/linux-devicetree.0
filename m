@@ -1,77 +1,83 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCHv1 0/3] Odroid c2 missing regulator linking
-Date: Fri, 30 Aug 2019 09:31:07 +0200
-Message-ID: <101a12ac-1464-8864-4f8c-56bb46034a08@baylibre.com>
-References: <20190828202723.1145-1-linux.amoon@gmail.com>
- <8c40f334-c723-b524-857c-73734b7d0827@baylibre.com>
- <CANAwSgShr-K-44UzdxFC7pvpTye_pbEMdS6ug1eWwYhnsVNGdQ@mail.gmail.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Date: Fri, 30 Aug 2019 07:37:41 +0000
+Message-ID: <AM0PR04MB448161C632722DF10989008088BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
+ <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
+ <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
+ <AM0PR04MB4481785CABB44A8C71CFB8D788BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CABb+yY2TREpO7+TFcGgsgQrkmMWwFAgtuJ4GnLPPQ+GEBuh07w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgShr-K-44UzdxFC7pvpTye_pbEMdS6ug1eWwYhnsVNGdQ@mail.gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABb+yY2TREpO7+TFcGgsgQrkmMWwFAgtuJ4GnLPPQ+GEBuh07w@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/08/2019 20:35, Anand Moon wrote:
-> Hi Neil,
-> 
-> On Thu, 29 Aug 2019 at 13:58, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> On 28/08/2019 22:27, Anand Moon wrote:
->>> Below small changes help re-configure or fix missing inter linking
->>> of regulator node.
->>>
->>> Changes based top on my prevoius series.
->>
->> For the serie:
->> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
->>
-> 
-> Thanks for your review.
-> 
->>>
->>> [0] https://patchwork.kernel.org/cover/11113091/
->>>
->>> TOOD: Add support for DVFS GXBB odroid board in next series.
->>
->> I'm curious how you will do this !
-> 
-> I was just studying you previous series on how you have implemented
-> this feature for C1, N2 and VIM3 boards.
-> 
-> [0] https://patchwork.kernel.org/cover/11114125/
-> 
-> I started gathering key inputs needed for this ie *clk / pwm*
-> like VDDCPU and VDDE clk changes.
-> 
-> But it looks like of the complex clk framework needed, so I leave this to the
-> expert like your team of developers to do this much quick and efficiently.
+Hi Jassi,
 
-On GXBB, GXL, GXM and AXG SoCs, CPU Frequency setting and PWM Regulator setup is
-done by the SCPI Co-processor via the SCPI protocol.
-
-Thus, we should not handle it from Linux, and even if we could, we don't have the
-registers documentation of the CPU clusters clock tree.
-
-SCPI works fine on all tested devices, except Odroid-C2, because Hardkernel left
-the > 1.5GHz freq in the initial SCPI tables loaded by the BL2, i.e. packed with U-Boot.
-Nowadays they have removed the bad frequencies, but still some devices uses the old
-bootloader.
-
-But in the SCPI case we trust the table returned by the firmware and use it as-in,
-and there is no (simple ?) way to override the table and set a max frequency.
-
-This is why we disabled SCPI.
-
-See https://patchwork.kernel.org/patch/9500175/
-
-Neil
-
+> Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
+> SMC/HVC mailbox
 > 
-> Best Regards,
-> -Anand
+> On Fri, Aug 30, 2019 at 1:28 AM Peng Fan <peng.fan@nxp.com> wrote:
 > 
+> > > > +examples:
+> > > > +  - |
+> > > > +    sram@910000 {
+> > > > +      compatible = "mmio-sram";
+> > > > +      reg = <0x0 0x93f000 0x0 0x1000>;
+> > > > +      #address-cells = <1>;
+> > > > +      #size-cells = <1>;
+> > > > +      ranges = <0 0x0 0x93f000 0x1000>;
+> > > > +
+> > > > +      cpu_scp_lpri: scp-shmem@0 {
+> > > > +        compatible = "arm,scmi-shmem";
+> > > > +        reg = <0x0 0x200>;
+> > > > +      };
+> > > > +
+> > > > +      cpu_scp_hpri: scp-shmem@200 {
+> > > > +        compatible = "arm,scmi-shmem";
+> > > > +        reg = <0x200 0x200>;
+> > > > +      };
+> > > > +    };
+> > > > +
+> > > > +    firmware {
+> > > > +      smc_mbox: mailbox {
+> > > > +        #mbox-cells = <1>;
+> > > > +        compatible = "arm,smc-mbox";
+> > > > +        method = "smc";
+> > > > +        arm,num-chans = <0x2>;
+> > > > +        transports = "mem";
+> > > > +        /* Optional */
+> > > > +        arm,func-ids = <0xc20000fe>, <0xc20000ff>;
+> > > >
+> > > SMC/HVC is synchronously(block) running in "secure mode", i.e, there
+> > > can only be one instance running platform wide. Right?
+> >
+> > I think there could be channel for TEE, and channel for Linux.
+> > For virtualization case, there could be dedicated channel for each VM.
+> >
+> I am talking from Linux pov. Functions 0xfe and 0xff above, can't both be
+> active at the same time, right?
+
+If I get your point correctly,
+On UP, both could not be active. On SMP, tx/rx could be both active, anyway
+this depends on secure firmware and Linux firmware design.
+
+Do you have any suggestions about arm,func-ids here?
+
+Thanks,
+Peng.
