@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 4/5] dt-bindings: arm: idle-states: Add punctuation to improve readability
-Date: Fri, 30 Aug 2019 17:03:01 +0200
-Message-ID: <20190830150302.20551-5-geert+renesas@glider.be>
+Subject: [PATCH 2/5] dt-bindings: arm: idle-states: Correct references to wake-up delay
+Date: Fri, 30 Aug 2019 17:02:59 +0200
+Message-ID: <20190830150302.20551-3-geert+renesas@glider.be>
 References: <20190830150302.20551-1-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190830150302.20551-1-geert+renesas@glider.be>
@@ -10,36 +10,27 @@ To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.mari
 Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Nicolas Pitre <nico@linaro.org>, Sebastian Capella <sebcape@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
+The paragraph explains the use of wakup-delay, as defined above.
+
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- Documentation/devicetree/bindings/arm/idle-states.txt | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/arm/idle-states.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/arm/idle-states.txt b/Documentation/devicetree/bindings/arm/idle-states.txt
-index 4ef0de5c0c7f5990..eb9d725be7a93f4a 100644
+index 610b16c28d99c3ef..6e651b7e62c328be 100644
 --- a/Documentation/devicetree/bindings/arm/idle-states.txt
 +++ b/Documentation/devicetree/bindings/arm/idle-states.txt
-@@ -214,8 +214,8 @@ processor idle states, defined as device tree nodes, are listed.
+@@ -99,8 +99,8 @@ of an idle state, e.g.:
+ wakeup-delay = exit-latency + max(entry-latency - (now - entry-timestamp), 0)
  
- 	Usage: Optional - On ARM systems, it is a container of processor idle
- 			  states nodes. If the system does not provide CPU
--			  power management capabilities or the processor just
--			  supports idle_standby an idle-states node is not
-+			  power management capabilities, or the processor just
-+			  supports idle_standby, an idle-states node is not
- 			  required.
- 
- 	Description: idle-states node is a container node, where its
-@@ -342,8 +342,8 @@ follows:
- 			    state.
- 
- 	In addition to the properties listed above, a state node may require
--	additional properties specifics to the entry-method defined in the
--	idle-states node, please refer to the entry-method bindings
-+	additional properties specific to the entry-method defined in the
-+	idle-states node. Please refer to the entry-method bindings
- 	documentation for properties definitions.
- 
- ===========================================
+ In other words, the scheduler can make its scheduling decision by selecting
+-(e.g. waking-up) the CPU with the shortest wake-up latency.
+-The wake-up latency must take into account the entry latency if that period
++(e.g. waking-up) the CPU with the shortest wake-up delay.
++The wake-up delay must take into account the entry latency if that period
+ has not expired. The abortable nature of the PREP period can be ignored
+ if it cannot be relied upon (e.g. the PREP deadline may occur much sooner than
+ the worst case since it depends on the CPU operating conditions, i.e. caches
 -- 
 2.17.1
