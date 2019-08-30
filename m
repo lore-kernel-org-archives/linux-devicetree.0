@@ -1,40 +1,98 @@
-Return-Path: <SRS0=hqGg=WY=nic.cz=marek.behun@kernel.org>
-From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH v2 mvebu-dt64 1/3] arm64: dts: marvell: armada-37xx: add SPI CS1 pinctrl
-Date: Wed, 28 Aug 2019 17:12:41 +0200
-Message-Id: <20190828151243.23542-2-marek.behun@nic.cz>
-In-Reply-To: <20190828151243.23542-1-marek.behun@nic.cz>
-References: <20190828151243.23542-1-marek.behun@nic.cz>
+Return-Path: <SRS0=qJz7=W2=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v10 07/14] media: tvp5150: fix set_selection rectangle handling
+Date: Fri, 30 Aug 2019 12:16:39 +0200
+Message-Id: <20190830101646.6530-8-m.felsch@pengutronix.de>
+In-Reply-To: <20190830101646.6530-1-m.felsch@pengutronix.de>
+References: <20190830101646.6530-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-To: arm@kernel.org
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This adds pinctrl node for the GPIO to be used as SPI chip select 1.
+Currently a local copy of sel->r is made and adapted to the hardware
+constraints. After the adaption the value is applied to the hardware but
+the driver forgot to reflect the adapted value to the user space.
 
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>
+Drop the local copy and work directly on the requested rectangle
+instead to fix this.
+
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index f43c43168b00..10812a556829 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -215,6 +215,11 @@
- 					function = "spi";
- 				};
+v10:
+- new patch
+
+ drivers/media/i2c/tvp5150.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index 477a929d4f89..c1542a89e8c8 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -1024,7 +1024,7 @@ static int tvp5150_set_selection(struct v4l2_subdev *sd,
+ 				 struct v4l2_subdev_selection *sel)
+ {
+ 	struct tvp5150 *decoder = to_tvp5150(sd);
+-	struct v4l2_rect rect = sel->r;
++	struct v4l2_rect *rect = &sel->r;
+ 	v4l2_std_id std;
+ 	int hmax;
  
-+				spi_cs1_pins: spi-cs1-pins {
-+					groups = "spi_cs1";
-+					function = "spi";
-+				};
-+
- 				i2c1_pins: i2c1-pins {
- 					groups = "i2c1";
- 					function = "i2c";
+@@ -1033,11 +1033,11 @@ static int tvp5150_set_selection(struct v4l2_subdev *sd,
+ 		return -EINVAL;
+ 
+ 	dev_dbg_lvl(sd->dev, 1, debug, "%s left=%d, top=%d, width=%d, height=%d\n",
+-		__func__, rect.left, rect.top, rect.width, rect.height);
++		__func__, rect->left, rect->top, rect->width, rect->height);
+ 
+ 	/* tvp5150 has some special limits */
+-	rect.left = clamp(rect.left, 0, TVP5150_MAX_CROP_LEFT);
+-	rect.top = clamp(rect.top, 0, TVP5150_MAX_CROP_TOP);
++	rect->left = clamp(rect->left, 0, TVP5150_MAX_CROP_LEFT);
++	rect->top = clamp(rect->top, 0, TVP5150_MAX_CROP_TOP);
+ 
+ 	/* Calculate height based on current standard */
+ 	if (decoder->norm == V4L2_STD_ALL)
+@@ -1055,26 +1055,26 @@ static int tvp5150_set_selection(struct v4l2_subdev *sd,
+ 	 *  - width = 2 due to UYVY colorspace
+ 	 *  - height, image = no special alignment
+ 	 */
+-	v4l_bound_align_image(&rect.width,
+-			      TVP5150_H_MAX - TVP5150_MAX_CROP_LEFT - rect.left,
+-			      TVP5150_H_MAX - rect.left, 1, &rect.height,
+-			      hmax - TVP5150_MAX_CROP_TOP - rect.top,
+-			      hmax - rect.top, 0, 0);
++	v4l_bound_align_image(&rect->width,
++			      TVP5150_H_MAX - TVP5150_MAX_CROP_LEFT - rect->left,
++			      TVP5150_H_MAX - rect->left, 1, &rect->height,
++			      hmax - TVP5150_MAX_CROP_TOP - rect->top,
++			      hmax - rect->top, 0, 0);
+ 
+-	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_START, rect.top);
++	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_START, rect->top);
+ 	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_STOP,
+-		     rect.top + rect.height - hmax);
++		     rect->top + rect->height - hmax);
+ 	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_MSB,
+-		     rect.left >> TVP5150_CROP_SHIFT);
++		     rect->left >> TVP5150_CROP_SHIFT);
+ 	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_LSB,
+-		     rect.left | (1 << TVP5150_CROP_SHIFT));
++		     rect->left | (1 << TVP5150_CROP_SHIFT));
+ 	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_MSB,
+-		     (rect.left + rect.width - TVP5150_MAX_CROP_LEFT) >>
++		     (rect->left + rect->width - TVP5150_MAX_CROP_LEFT) >>
+ 		     TVP5150_CROP_SHIFT);
+ 	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_LSB,
+-		     rect.left + rect.width - TVP5150_MAX_CROP_LEFT);
++		     rect->left + rect->width - TVP5150_MAX_CROP_LEFT);
+ 
+-	decoder->rect = rect;
++	decoder->rect = *rect;
+ 
+ 	return 0;
+ }
 -- 
-2.21.0
+2.20.1
