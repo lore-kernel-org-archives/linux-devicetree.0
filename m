@@ -1,36 +1,44 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/5] dt-bindings: arm: idle-states: Correct references to wake-up delay
-Date: Fri, 30 Aug 2019 17:02:59 +0200
-Message-ID: <20190830150302.20551-3-geert+renesas@glider.be>
-References: <20190830150302.20551-1-geert+renesas@glider.be>
+Subject: [PATCH 0/5] dt-bindings: arm: idle-states: Miscellaneous improvements
+Date: Fri, 30 Aug 2019 17:02:57 +0200
+Message-ID: <20190830150302.20551-1-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190830150302.20551-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Nicolas Pitre <nico@linaro.org>, Sebastian Capella <sebcape@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-The paragraph explains the use of wakup-delay, as defined above.
+  - Replace abbreviations "eg" and "ie" by "e.g." resp. "i.e.",
+  - Correct references to wake-up delay,
+  - Correct "constraints guarantees" to "constraint guarantees",
+  - Add punctuation marks to improve readability,
+  - Move exit-latency-us explanation to exit-latency-us section.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- Documentation/devicetree/bindings/arm/idle-states.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Split to ease review.
+Feel free to squash into a single commit.
 
-diff --git a/Documentation/devicetree/bindings/arm/idle-states.txt b/Documentation/devicetree/bindings/arm/idle-states.txt
-index 610b16c28d99c3ef..6e651b7e62c328be 100644
---- a/Documentation/devicetree/bindings/arm/idle-states.txt
-+++ b/Documentation/devicetree/bindings/arm/idle-states.txt
-@@ -99,8 +99,8 @@ of an idle state, e.g.:
- wakeup-delay = exit-latency + max(entry-latency - (now - entry-timestamp), 0)
- 
- In other words, the scheduler can make its scheduling decision by selecting
--(e.g. waking-up) the CPU with the shortest wake-up latency.
--The wake-up latency must take into account the entry latency if that period
-+(e.g. waking-up) the CPU with the shortest wake-up delay.
-+The wake-up delay must take into account the entry latency if that period
- has not expired. The abortable nature of the PREP period can be ignored
- if it cannot be relied upon (e.g. the PREP deadline may occur much sooner than
- the worst case since it depends on the CPU operating conditions, i.e. caches
+Geert Uytterhoeven (5):
+  dt-bindings: arm: idle-states: Use "e.g." and "i.e." consistently
+  dt-bindings: arm: idle-states: Correct references to wake-up delay
+  dt-bindings: arm: idle-states: Correct "constraint guarantees"
+  dt-bindings: arm: idle-states: Add punctuation to improve readability
+  dt-bindings: arm: idle-states: Move exit-latency-us explanation
+
+ .../devicetree/bindings/arm/idle-states.txt   | 32 +++++++++----------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
+
 -- 
 2.17.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
