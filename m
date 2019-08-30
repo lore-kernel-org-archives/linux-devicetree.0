@@ -1,48 +1,73 @@
 From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v2 07/15] dt: thermal: tsens: Document interrupt support in tsens driver
-Date: Fri, 30 Aug 2019 08:55:37 -0700
-Message-ID: <5d6946fa.1c69fb81.44ab7.8d72@mx.google.com>
-References: <cover.1566907161.git.amit.kucheria@linaro.org> <66ac3d3707d6296ef85bf1fa321f7f1ee0c02131.1566907161.git.amit.kucheria@linaro.org> <5d65cbe9.1c69fb81.1ceb.2374@mx.google.com> <CAP245DWWKsZBHnvSqC40XOH48kGd-hykd+fr-UZfWTmvuG2KaA@mail.gmail.com> <5d67e6cf.1c69fb81.5aec9.3b71@mx.google.com> <CAP245DVjgnwGn5rUgbYrkBOi3vtyShz0Qbx_opx80xiOV7uXeA@mail.gmail.com> <CAHLCerMmBmS-59eywxkUJ+5-zSccx8Twx2=NELgBgShYhM7TOw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
+Date: Fri, 30 Aug 2019 09:01:59 -0700
+Message-ID: <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
+References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org> <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org> <20190223165218.GB572@tuxbook-pro> <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHLCerMmBmS-59eywxkUJ+5-zSccx8Twx2=NELgBgShYhM7TOw@mail.gmail.com>
+In-Reply-To: <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Brian Masney <masneyb@onstation.org>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Cc: robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, jackp@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Amit Kucheria (2019-08-30 04:32:54)
-> On Thu, Aug 29, 2019 at 10:04 PM Amit Kucheria <amit.kucheria@linaro.org>=
- wrote:
-> >
-> > On Thu, Aug 29, 2019 at 8:23 PM Stephen Boyd <swboyd@chromium.org> wrot=
-e:
-> > >
-> > > Can we get a known quantity of interrupts for a particular compatible
-> > > string instead? Let's be as specific as possible. The index matters t=
-oo,
-> > > so please list them in the order that is desired.
-> >
-> > I *think* we can predict what platforms have uplow and critical
-> > interrupts based on IP version currently[1]. For newer interrupt
-> > types, we might need more fine-grained platform compatibles.
-> >
-> > [1] Caveat: this is based only on the list of platforms I've currently
-> > looked at, there might be something internally that breaks these
-> > rules.
->=20
-> What do you think if we changed the wording to something like the followi=
-ng,
->=20
-> - interrupt-names: Must be one of the following depending on IP version:
->    For compatibles qcom,msm8916-tsens, qcom,msm8974-tsens,
-> qcom,qcs404-tsens, qcom,tsens-v1, use
->               interrupt-names =3D "uplow";
->    For compatibles qcom,msm8996-tsens, qcom,msm8998-tsens,
-> qcom,sdm845-tsens, qcom,tsens-v2, use
->               interrupt-names =3D "uplow", "critical";
+Quoting Jorge Ramirez (2019-08-29 00:03:48)
+> On 2/23/19 17:52, Bjorn Andersson wrote:
+> > On Thu 07 Feb 03:17 PST 2019, Jorge Ramirez-Ortiz wrote:
+> >> +
+> >> +Required child nodes:
+> >> +
+> >> +- usb connector node as defined in bindings/connector/usb-connector.t=
+xt
+> >> +  containing the property vbus-supply.
+> >> +
+> >> +Example:
+> >> +
+> >> +usb3_phy: usb3-phy@78000 {
+> >> +    compatible =3D "qcom,snps-usb-ssphy";
+> >> +    reg =3D <0x78000 0x400>;
+> >> +    #phy-cells =3D <0>;
+> >> +    clocks =3D <&rpmcc RPM_SMD_LN_BB_CLK>,
+> >> +             <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
+> >> +             <&gcc GCC_USB3_PHY_PIPE_CLK>;
+> >> +    clock-names =3D "ref", "phy", "pipe";
+> >> +    resets =3D <&gcc GCC_USB3_PHY_BCR>,
+> >> +             <&gcc GCC_USB3PHY_PHY_BCR>;
+> >> +    reset-names =3D "com", "phy";
+> >> +    vdd-supply =3D <&vreg_l3_1p05>;
+> >> +    vdda1p8-supply =3D <&vreg_l5_1p8>;
+> >> +    usb3_c_connector: usb3-c-connector {
 
-Ok. I would still prefer YAML/JSON schema for this binding so that it's
-much more explicit about numbers and the order of interrupts, etc.
+Node name should be 'connector', not usb3-c-connector.
+
+> >=20
+> > The USB-C connector is attached both to the HS and SS PHYs, so I think
+> > you should represent this external to this node and use of_graph to
+> > query it.
+>=20
+> but AFAICS we wont be able to retrieve the vbux-supply from an external
+> node (that interface does not exist).
+>=20
+> rob, do you have a suggestion?
+
+Shouldn't the vbus supply be in the phy? Or is this a situation where
+the phy itself doesn't have the vbus supply going to it because the PMIC
+gets in the way and handles the vbus for the connector by having the SoC
+communicate with the PMIC about when to turn the vbus on and off, etc?
+
+>=20
+> >=20
+> > So the connector should look similar to example 2 in
+> > connector/usb-connector.txt.
+> >=20
+> > Regards,
+> > Bjorn
+> >=20
+> >> +            compatible =3D "usb-c-connector";
+> >> +            label =3D "USB-C";
+> >> +            type =3D "micro";
+> >> +            vbus-supply =3D <&usb3_vbus_reg>;
+> >> +    };
+> >> +};
