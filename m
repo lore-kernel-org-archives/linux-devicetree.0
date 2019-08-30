@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v3 5/7] arm64: dts: mt8183: add usb and phy nodes
-Date: Fri, 30 Aug 2019 15:40:52 +0800
-Message-ID: <1567150854-30033-6-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v3 4/7] usb: mtk-xhci: support ip-sleep wakeup for MT8183
+Date: Fri, 30 Aug 2019 15:40:51 +0800
+Message-ID: <1567150854-30033-5-git-send-email-chunfeng.yun@mediatek.com>
 References: <1567150854-30033-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,143 +12,56 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel
 Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mathias Nyman <mathias.nyman@intel.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add USB related nodes for MT8183, set it as host mode by default.
+Support USB wakeup by ip-sleep mode for MT8183, it's similar to
+MT8173
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
-v2~v3: no changes
----
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 22 +++++++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 55 +++++++++++++++++++++
- 2 files changed, 77 insertions(+)
+v3: change micros define
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-index d8e555cbb5d3..142ff52f0f42 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -6,7 +6,9 @@
-  */
+v2: no changes
+---
+ drivers/usb/host/xhci-mtk.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index 026fe18972d3..9b30a868a7ab 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -57,6 +57,12 @@
+ #define CTRL_U2_FORCE_PLL_STB	BIT(28)
  
- /dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
- #include "mt8183.dtsi"
-+#include "mt6358.dtsi"
- 
- / {
- 	model = "MediaTek MT8183 evaluation board";
-@@ -24,6 +26,16 @@
- 	chosen {
- 		stdout-path = "serial0:921600n8";
- 	};
+ /* usb remote wakeup registers in syscon */
++/* mt8183 etc */
++#define PERI_WK_CTRL0	0x20
++#define WC0_IS_C(x)	(((x) & 0xf) << 28)  /* cycle debounce */
++#define WC0_IS_P	BIT(12)	/* polarity */
++#define WC0_IS_EN	BIT(6)
 +
-+	usb_vbus: regulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "p0_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&pio 42 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
+ /* mt8173 etc */
+ #define PERI_WK_CTRL1	0x4
+ #define WC1_IS_C(x)	(((x) & 0xf) << 26)  /* cycle debounce */
+@@ -69,7 +75,8 @@
+ #define SSC_SPM_INT_EN		BIT(1)
+ 
+ enum ssusb_uwk_vers {
+-	SSUSB_UWK_V1 = 1,
++	SSUSB_UWK_V0 = 0,
++	SSUSB_UWK_V1,
+ 	SSUSB_UWK_V2,
  };
  
- &auxadc {
-@@ -135,6 +147,16 @@
+@@ -282,6 +289,11 @@ static void usb_wakeup_ip_sleep_set(struct xhci_hcd_mtk *mtk, bool enable)
+ 	u32 reg, msk, val;
  
- };
- 
-+&ssusb {
-+	vusb33-supply = <&mt6358_vusb_reg>;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usb_host {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index c2749c4631bc..28da334237c6 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/clock/mt8183-clk.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/phy/phy.h>
- #include "mt8183-pinfunc.h"
- 
- / {
-@@ -372,6 +373,35 @@
- 			status = "disabled";
- 		};
- 
-+		ssusb: usb@11201000 {
-+			compatible = "mediatek,mt8183-mtu3", "mediatek,mtu3";
-+			reg = <0 0x11201000 0 0x2e00>,
-+			      <0 0x11203e00 0 0x0100>;
-+			reg-names = "mac", "ippc";
-+			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_LOW>;
-+			phys = <&u2port0 PHY_TYPE_USB2>,
-+			       <&u3port0 PHY_TYPE_USB3>;
-+			clocks = <&infracfg CLK_INFRA_UNIPRO_SCK>,
-+				 <&infracfg CLK_INFRA_USB>;
-+			clock-names = "sys_ck", "ref_ck";
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			ranges;
-+			status = "disabled";
-+
-+			usb_host: xhci@11200000 {
-+				compatible = "mediatek,mt8183-xhci",
-+					     "mediatek,mtk-xhci";
-+				reg = <0 0x11200000 0 0x1000>;
-+				reg-names = "mac";
-+				interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_LOW>;
-+				clocks = <&infracfg CLK_INFRA_UNIPRO_SCK>,
-+					 <&infracfg CLK_INFRA_USB>;
-+				clock-names = "sys_ck", "ref_ck";
-+				status = "disabled";
-+			};
-+		};
-+
- 		audiosys: syscon@11220000 {
- 			compatible = "mediatek,mt8183-audiosys", "syscon";
- 			reg = <0 0x11220000 0 0x1000>;
-@@ -384,6 +414,31 @@
- 			reg = <0 0x11f10000 0 0x1000>;
- 		};
- 
-+		u3phy: usb-phy@11f40000 {
-+			compatible = "mediatek,mt8183-tphy",
-+				     "mediatek,generic-tphy-v2";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0 0x11f40000 0x1000>;
-+			status = "okay";
-+
-+			u2port0: usb-phy@0 {
-+				reg = <0x0 0x700>;
-+				clocks = <&clk26m>;
-+				clock-names = "ref";
-+				#phy-cells = <1>;
-+				status = "okay";
-+			};
-+
-+			u3port0: usb-phy@0700 {
-+				reg = <0x0700 0x900>;
-+				clocks = <&clk26m>;
-+				clock-names = "ref";
-+				#phy-cells = <1>;
-+				status = "okay";
-+			};
-+		};
-+
- 		mfgcfg: syscon@13000000 {
- 			compatible = "mediatek,mt8183-mfgcfg", "syscon";
- 			reg = <0 0x13000000 0 0x1000>;
+ 	switch (mtk->uwk_vers) {
++	case SSUSB_UWK_V0:
++		reg = mtk->uwk_reg_base + PERI_WK_CTRL0;
++		msk = WC0_IS_EN | WC0_IS_C(0xf) | WC0_IS_P;
++		val = enable ? (WC0_IS_EN | WC0_IS_C(0x8)) : 0;
++		break;
+ 	case SSUSB_UWK_V1:
+ 		reg = mtk->uwk_reg_base + PERI_WK_CTRL1;
+ 		msk = WC1_IS_EN | WC1_IS_C(0xf) | WC1_IS_P;
 -- 
 2.23.0
