@@ -1,575 +1,309 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v3 16/16] ARM: dts: mmp3: Add MMP3 SoC dts file
-Date: Sat, 31 Aug 2019 00:07:43 +0200
-Message-ID: <20190830220743.439670-17-lkundrak@v3.sk>
-References: <20190830220743.439670-1-lkundrak@v3.sk>
+From: "Milton Miller II" <miltonm@us.ibm.com>
+Subject: Re:  [PATCH v1 2/2] hwrng: npcm: add NPCM RNG driver
+Date: Fri, 30 Aug 2019 22:47:21 +0000
+Message-ID: <OF311056DF.80F736D6-ON00258466.007A807F-00258466.007D2F93@notes.na.collabserv.com>
+References: <20190828162617.237398-3-tmaimon77@gmail.com>,<20190828162617.237398-1-tmaimon77@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190830220743.439670-1-lkundrak@v3.sk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "To : Olof Johansson" <olof@lixom.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Lubomir Rintel <lkundrak@v3.sk>, "Cc : Rob Herring" <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190828162617.237398-3-tmaimon77@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com, yuenn@google.com, benjaminfair@google.com, sumit.garg@linaro.org, jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de, joel@jms.id.au, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Describes most of the hardware found on Marvell MMP3, aka PXA2128, aka
-Armada 620. Missing bits are the LCD controller, HSIC controllers,
-Audio and GPU. Will be completed once bindings and drivers settle.
+On August 28th around 11:28AM in some timezone, Tomer Maimon wrote
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- arch/arm/boot/dts/mmp3.dtsi | 534 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 534 insertions(+)
- create mode 100644 arch/arm/boot/dts/mmp3.dtsi
+>Add Nuvoton NPCM BMC Random Number Generator(RNG) driver.
+>
+>Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+>---
+> drivers/char/hw_random/Kconfig    |  13 ++
+> drivers/char/hw_random/Makefile   |   1 +
+> drivers/char/hw_random/npcm-rng.c | 207
+>++++++++++++++++++++++++++++++
+> 3 files changed, 221 insertions(+)
+> create mode 100644 drivers/char/hw_random/npcm-rng.c
+>
+>diff --git a/drivers/char/hw_random/Kconfig
+>b/drivers/char/hw_random/Kconfig
+>index 59f25286befe..87a1c30e7958 100644
+>--- a/drivers/char/hw_random/Kconfig
+>+++ b/drivers/char/hw_random/Kconfig
+>@@ -440,6 +440,19 @@ config HW_RANDOM_OPTEE
+> 
+> 	  If unsure, say Y.
+> 
+>+config HW_RANDOM_NPCM
+>+	tristate "NPCM Random Number Generator support"
+>+	depends on ARCH_NPCM || COMPILE_TEST
+>+	default HW_RANDOM
+>+	help
+>+ 	  This driver provides support for the Random Number
+>+	  Generator hardware available in Nuvoton NPCM SoCs.
+>+
+>+	  To compile this driver as a module, choose M here: the
+>+	  module will be called npcm-rng.
+>+
+>+ 	  If unsure, say Y.
+>+
+> endif # HW_RANDOM
+> 
+> config UML_RANDOM
+>diff --git a/drivers/char/hw_random/Makefile
+>b/drivers/char/hw_random/Makefile
+>index 7c9ef4a7667f..17b6d4e6d591 100644
+>--- a/drivers/char/hw_random/Makefile
+>+++ b/drivers/char/hw_random/Makefile
+>@@ -39,3 +39,4 @@ obj-$(CONFIG_HW_RANDOM_MTK)	+= mtk-rng.o
+> obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
+> obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
+> obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
+>+obj-$(CONFIG_HW_RANDOM_NPCM) += npcm-rng.o
+>diff --git a/drivers/char/hw_random/npcm-rng.c
+>b/drivers/char/hw_random/npcm-rng.c
+>new file mode 100644
+>index 000000000000..5b4b1b6cb362
+>--- /dev/null
+>+++ b/drivers/char/hw_random/npcm-rng.c
+>@@ -0,0 +1,207 @@
+>+// SPDX-License-Identifier: GPL-2.0
+>+// Copyright (c) 2019 Nuvoton Technology corporation.
+>+
+>+#include <linux/kernel.h>
+>+#include <linux/module.h>
+>+#include <linux/io.h>
+>+#include <linux/iopoll.h>
+>+#include <linux/init.h>
+>+#include <linux/random.h>
+>+#include <linux/err.h>
+>+#include <linux/platform_device.h>
+>+#include <linux/hw_random.h>
+>+#include <linux/delay.h>
+>+#include <linux/of_irq.h>
+>+#include <linux/pm_runtime.h>
+>+
+>+#define NPCM_RNGCS_REG		0x00	/* Control and status register */
+>+#define NPCM_RNGD_REG		0x04	/* Data register */
+>+#define NPCM_RNGMODE_REG	0x08	/* Mode register */
+>+
+>+#define NPCM_RNG_CLK_SET_25MHZ	GENMASK(4, 3) /* 20-25 MHz */
+>+#define NPCM_RNG_DATA_VALID	BIT(1)
+>+#define NPCM_RNG_ENABLE		BIT(0)
+>+#define NPCM_RNG_M1ROSEL	BIT(1)
+>+
+>+#define NPCM_RNG_TIMEOUT_POLL	20
+>+
+>+#define to_npcm_rng(p)	container_of(p, struct npcm_rng, rng)
+>+
+>+struct npcm_rng {
+>+	void __iomem *base;
+>+	struct hwrng rng;
+>+};
+>+
+>+static int npcm_rng_init(struct hwrng *rng)
+>+{
+>+	struct npcm_rng *priv = to_npcm_rng(rng);
+>+	u32 val;
+>+
+>+	val = readl(priv->base + NPCM_RNGCS_REG);
+>+	val |= NPCM_RNG_ENABLE;
+>+	writel(val, priv->base + NPCM_RNGCS_REG);
+>+
+>+	return 0;
+>+}
+>+
+>+static void npcm_rng_cleanup(struct hwrng *rng)
+>+{
+>+	struct npcm_rng *priv = to_npcm_rng(rng);
+>+	u32 val;
+>+
+>+	val = readl(priv->base + NPCM_RNGCS_REG);
+>+	val &= ~NPCM_RNG_ENABLE;
+>+	writel(val, priv->base + NPCM_RNGCS_REG);
+>+}
+>+
+>+static bool npcm_rng_wait_ready(struct hwrng *rng, bool wait)
+>+{
+>+	struct npcm_rng *priv = to_npcm_rng(rng);
+>+	int timeout_cnt = 0;
+>+	int ready;
+>+
+>+	ready = readl(priv->base + NPCM_RNGCS_REG) & NPCM_RNG_DATA_VALID;
 
-diff --git a/arch/arm/boot/dts/mmp3.dtsi b/arch/arm/boot/dts/mmp3.dtsi
-new file mode 100644
-index 0000000000000..5a6275257ebdd
---- /dev/null
-+++ b/arch/arm/boot/dts/mmp3.dtsi
-@@ -0,0 +1,534 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR MIT
-+/*
-+ *  Copyright (C) 2019 Lubomir Rintel <lkundrak@v3.sk>
-+ */
-+
-+#include <dt-bindings/clock/marvell,mmp2.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	aliases {
-+		serial0 = &uart1;
-+		serial1 = &uart2;
-+		serial2 = &uart3;
-+		serial3 = &uart4;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		enable-method = "marvell,mmp3-smp";
-+
-+		cpu@0 {
-+			compatible = "marvell,pj4b";
-+			device_type = "cpu";
-+			next-level-cache = <&l2>;
-+			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			compatible = "marvell,pj4b";
-+			device_type = "cpu";
-+			next-level-cache = <&l2>;
-+			reg = <1>;
-+		};
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		interrupt-parent = <&gic>;
-+		ranges;
-+
-+		axi@d4200000 {
-+			compatible = "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0xd4200000 0x00200000>;
-+			ranges;
-+
-+			interrupt-controller@d4282000 {
-+				compatible = "marvell,mmp3-intc";
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				reg = <0xd4282000 0x1000>,
-+				      <0xd4284000 0x100>;
-+				mrvl,intc-nr-irqs = <64>;
-+			};
-+
-+			pmic_mux: interrupt-controller@d4282150 {
-+				compatible = "mrvl,mmp2-mux-intc";
-+				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				reg = <0x150 0x4>, <0x168 0x4>;
-+				reg-names = "mux status", "mux mask";
-+				mrvl,intc-nr-irqs = <4>;
-+			};
-+
-+			rtc_mux: interrupt-controller@d4282154 {
-+				compatible = "mrvl,mmp2-mux-intc";
-+				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				reg = <0x154 0x4>, <0x16c 0x4>;
-+				reg-names = "mux status", "mux mask";
-+				mrvl,intc-nr-irqs = <2>;
-+			};
-+
-+			hsi3_mux: interrupt-controller@d42821bc {
-+				compatible = "mrvl,mmp2-mux-intc";
-+				interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				reg = <0x1bc 0x4>, <0x1a4 0x4>;
-+				reg-names = "mux status", "mux mask";
-+				mrvl,intc-nr-irqs = <3>;
-+			};
-+
-+			gpu_mux: interrupt-controller@d42821c0 {
-+				compatible = "mrvl,mmp2-mux-intc";
-+				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				reg = <0x1c0 0x4>, <0x1a8 0x4>;
-+				reg-names = "mux status", "mux mask";
-+				mrvl,intc-nr-irqs = <3>;
-+			};
-+
-+			twsi_mux: interrupt-controller@d4282158 {
-+				compatible = "mrvl,mmp2-mux-intc";
-+				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				reg = <0x158 0x4>, <0x170 0x4>;
-+				reg-names = "mux status", "mux mask";
-+				mrvl,intc-nr-irqs = <5>;
-+			};
-+
-+			hsi2_mux: interrupt-controller@d42821c4 {
-+				compatible = "mrvl,mmp2-mux-intc";
-+				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				reg = <0x1c4 0x4>, <0x1ac 0x4>;
-+				reg-names = "mux status", "mux mask";
-+				mrvl,intc-nr-irqs = <2>;
-+			};
-+
-+			dxo_mux: interrupt-controller@d42821c8 {
-+				compatible = "mrvl,mmp2-mux-intc";
-+				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				reg = <0x1c8 0x4>, <0x1b0 0x4>;
-+				reg-names = "mux status", "mux mask";
-+				mrvl,intc-nr-irqs = <2>;
-+			};
-+
-+			misc1_mux: interrupt-controller@d428215c {
-+				compatible = "mrvl,mmp2-mux-intc";
-+				interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				reg = <0x15c 0x4>, <0x174 0x4>;
-+				reg-names = "mux status", "mux mask";
-+				mrvl,intc-nr-irqs = <31>;
-+			};
-+
-+			ci_mux: interrupt-controller@d42821cc {
-+				compatible = "mrvl,mmp2-mux-intc";
-+				interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				reg = <0x1cc 0x4>, <0x1b4 0x4>;
-+				reg-names = "mux status", "mux mask";
-+				mrvl,intc-nr-irqs = <2>;
-+			};
-+
-+			ssp_mux: interrupt-controller@d4282160 {
-+				compatible = "mrvl,mmp2-mux-intc";
-+				interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				reg = <0x160 0x4>, <0x178 0x4>;
-+				reg-names = "mux status", "mux mask";
-+				mrvl,intc-nr-irqs = <2>;
-+			};
-+
-+			hsi1_mux: interrupt-controller@d4282184 {
-+				compatible = "mrvl,mmp2-mux-intc";
-+				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				reg = <0x184 0x4>, <0x17c 0x4>;
-+				reg-names = "mux status", "mux mask";
-+				mrvl,intc-nr-irqs = <4>;
-+			};
-+
-+			misc2_mux: interrupt-controller@d4282188 {
-+				compatible = "mrvl,mmp2-mux-intc";
-+				interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				reg = <0x188 0x4>, <0x180 0x4>;
-+				reg-names = "mux status", "mux mask";
-+				mrvl,intc-nr-irqs = <20>;
-+			};
-+
-+			hsi0_mux: interrupt-controller@d42821d0 {
-+				compatible = "mrvl,mmp2-mux-intc";
-+				interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+				reg = <0x1d0 0x4>, <0x1b8 0x4>;
-+				reg-names = "mux status", "mux mask";
-+				mrvl,intc-nr-irqs = <5>;
-+			};
-+
-+			usb_otg_phy0: usb-otg-phy@d4207000 {
-+				compatible = "marvell,mmp3-usb-phy";
-+				reg = <0xd4207000 0x40>;
-+				#phy-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			usb_otg0: usb-otg@d4208000 {
-+				compatible = "marvell,pxau2o-ehci";
-+				reg = <0xd4208000 0x200>;
-+				interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&soc_clocks MMP2_CLK_USB>;
-+				clock-names = "USBCLK";
-+				phys = <&usb_otg_phy0>;
-+				phy-names = "usb";
-+				status = "disabled";
-+			};
-+
-+			mmc1: mmc@d4280000 {
-+				compatible = "mrvl,pxav3-mmc";
-+				reg = <0xd4280000 0x120>;
-+				clocks = <&soc_clocks MMP2_CLK_SDH0>;
-+				clock-names = "io";
-+				interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
-+			mmc2: mmc@d4280800 {
-+				compatible = "mrvl,pxav3-mmc";
-+				reg = <0xd4280800 0x120>;
-+				clocks = <&soc_clocks MMP2_CLK_SDH1>;
-+				clock-names = "io";
-+				interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
-+			mmc3: mmc@d4281000 {
-+				compatible = "mrvl,pxav3-mmc";
-+				reg = <0xd4281000 0x120>;
-+				clocks = <&soc_clocks MMP2_CLK_SDH2>;
-+				clock-names = "io";
-+				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
-+			mmc4: mmc@d4281800 {
-+				compatible = "mrvl,pxav3-mmc";
-+				reg = <0xd4281800 0x120>;
-+				clocks = <&soc_clocks MMP2_CLK_SDH3>;
-+				clock-names = "io";
-+				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
-+			camera0: camera@d420a000 {
-+				compatible = "marvell,mmp2-ccic";
-+				reg = <0xd420a000 0x800>;
-+				interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&soc_clocks MMP2_CLK_CCIC0>;
-+				clock-names = "axi";
-+				#clock-cells = <0>;
-+				clock-output-names = "mclk";
-+				status = "disabled";
-+			};
-+
-+			camera1: camera@d420a800 {
-+				compatible = "marvell,mmp2-ccic";
-+				reg = <0xd420a800 0x800>;
-+				interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&soc_clocks MMP2_CLK_CCIC1>;
-+				clock-names = "axi";
-+				#clock-cells = <0>;
-+				clock-output-names = "mclk";
-+				status = "disabled";
-+			};
-+		};
-+
-+		apb@d4000000 {
-+			compatible = "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			reg = <0xd4000000 0x00200000>;
-+			ranges;
-+
-+			timer: timer@d4014000 {
-+				compatible = "mrvl,mmp-timer";
-+				reg = <0xd4014000 0x100>;
-+				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&soc_clocks MMP2_CLK_TIMER>;
-+			};
-+
-+			uart1: uart@d4030000 {
-+				compatible = "mrvl,mmp-uart";
-+				reg = <0xd4030000 0x1000>;
-+				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&soc_clocks MMP2_CLK_UART0>;
-+				resets = <&soc_clocks MMP2_CLK_UART0>;
-+				reg-shift = <2>;
-+				status = "disabled";
-+			};
-+
-+			uart2: uart@d4017000 {
-+				compatible = "mrvl,mmp-uart";
-+				reg = <0xd4017000 0x1000>;
-+				interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&soc_clocks MMP2_CLK_UART1>;
-+				resets = <&soc_clocks MMP2_CLK_UART1>;
-+				reg-shift = <2>;
-+				status = "disabled";
-+			};
-+
-+			uart3: uart@d4018000 {
-+				compatible = "mrvl,mmp-uart";
-+				reg = <0xd4018000 0x1000>;
-+				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&soc_clocks MMP2_CLK_UART2>;
-+				resets = <&soc_clocks MMP2_CLK_UART2>;
-+				reg-shift = <2>;
-+				status = "disabled";
-+			};
-+
-+			uart4: uart@d4016000 {
-+				compatible = "mrvl,mmp-uart";
-+				reg = <0xd4016000 0x1000>;
-+				interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&soc_clocks MMP2_CLK_UART3>;
-+				resets = <&soc_clocks MMP2_CLK_UART3>;
-+				reg-shift = <2>;
-+				status = "disabled";
-+			};
-+
-+			gpio: gpio@d4019000 {
-+				compatible = "marvell,mmp2-gpio";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				reg = <0xd4019000 0x1000>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "gpio_mux";
-+				clocks = <&soc_clocks MMP2_CLK_GPIO>;
-+				resets = <&soc_clocks MMP2_CLK_GPIO>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				ranges;
-+
-+				gcb0: gpio@d4019000 {
-+					reg = <0xd4019000 0x4>;
-+				};
-+
-+				gcb1: gpio@d4019004 {
-+					reg = <0xd4019004 0x4>;
-+				};
-+
-+				gcb2: gpio@d4019008 {
-+					reg = <0xd4019008 0x4>;
-+				};
-+
-+				gcb3: gpio@d4019100 {
-+					reg = <0xd4019100 0x4>;
-+				};
-+
-+				gcb4: gpio@d4019104 {
-+					reg = <0xd4019104 0x4>;
-+				};
-+
-+				gcb5: gpio@d4019108 {
-+					reg = <0xd4019108 0x4>;
-+				};
-+			};
-+
-+			twsi1: i2c@d4011000 {
-+				compatible = "mrvl,mmp-twsi";
-+				reg = <0xd4011000 0x1000>;
-+				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&soc_clocks MMP2_CLK_TWSI0>;
-+				resets = <&soc_clocks MMP2_CLK_TWSI0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				mrvl,i2c-fast-mode;
-+				status = "disabled";
-+			};
-+
-+			twsi2: i2c@d4031000 {
-+				compatible = "mrvl,mmp-twsi";
-+				reg = <0xd4031000 0x1000>;
-+				interrupt-parent = <&twsi_mux>;
-+				interrupts = <0>;
-+				clocks = <&soc_clocks MMP2_CLK_TWSI1>;
-+				resets = <&soc_clocks MMP2_CLK_TWSI1>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			twsi3: i2c@d4032000 {
-+				compatible = "mrvl,mmp-twsi";
-+				reg = <0xd4032000 0x1000>;
-+				interrupt-parent = <&twsi_mux>;
-+				interrupts = <1>;
-+				clocks = <&soc_clocks MMP2_CLK_TWSI2>;
-+				resets = <&soc_clocks MMP2_CLK_TWSI2>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			twsi4: i2c@d4033000 {
-+				compatible = "mrvl,mmp-twsi";
-+				reg = <0xd4033000 0x1000>;
-+				interrupt-parent = <&twsi_mux>;
-+				interrupts = <2>;
-+				clocks = <&soc_clocks MMP2_CLK_TWSI3>;
-+				resets = <&soc_clocks MMP2_CLK_TWSI3>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+
-+			twsi5: i2c@d4033800 {
-+				compatible = "mrvl,mmp-twsi";
-+				reg = <0xd4033800 0x1000>;
-+				interrupt-parent = <&twsi_mux>;
-+				interrupts = <3>;
-+				clocks = <&soc_clocks MMP2_CLK_TWSI4>;
-+				resets = <&soc_clocks MMP2_CLK_TWSI4>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			twsi6: i2c@d4034000 {
-+				compatible = "mrvl,mmp-twsi";
-+				reg = <0xd4034000 0x1000>;
-+				interrupt-parent = <&twsi_mux>;
-+				interrupts = <4>;
-+				clocks = <&soc_clocks MMP2_CLK_TWSI5>;
-+				resets = <&soc_clocks MMP2_CLK_TWSI5>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			rtc: rtc@d4010000 {
-+				compatible = "mrvl,mmp-rtc";
-+				reg = <0xd4010000 0x1000>;
-+				interrupts = <1 0>;
-+				interrupt-names = "rtc 1Hz", "rtc alarm";
-+				interrupt-parent = <&rtc_mux>;
-+				clocks = <&soc_clocks MMP2_CLK_RTC>;
-+				resets = <&soc_clocks MMP2_CLK_RTC>;
-+				status = "disabled";
-+			};
-+
-+			ssp1: spi@d4035000 {
-+				compatible = "marvell,mmp2-ssp";
-+				reg = <0xd4035000 0x1000>;
-+				clocks = <&soc_clocks MMP2_CLK_SSP0>;
-+				interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			ssp2: spi@d4036000 {
-+				compatible = "marvell,mmp2-ssp";
-+				reg = <0xd4036000 0x1000>;
-+				clocks = <&soc_clocks MMP2_CLK_SSP1>;
-+				interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			ssp3: spi@d4037000 {
-+				compatible = "marvell,mmp2-ssp";
-+				reg = <0xd4037000 0x1000>;
-+				clocks = <&soc_clocks MMP2_CLK_SSP2>;
-+				interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			ssp4: spi@d4039000 {
-+				compatible = "marvell,mmp2-ssp";
-+				reg = <0xd4039000 0x1000>;
-+				clocks = <&soc_clocks MMP2_CLK_SSP3>;
-+				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		l2: l2-cache-controller@d0020000 {
-+			compatible = "marvell,tauros3-cache", "arm,pl310-cache";
-+			reg = <0xd0020000 0x1000>;
-+			cache-unified;
-+			cache-level = <2>;
-+		};
-+
-+		soc_clocks: clocks {
-+			compatible = "marvell,mmp2-clock";
-+			reg = <0xd4050000 0x1000>,
-+			      <0xd4282800 0x400>,
-+			      <0xd4015000 0x1000>;
-+			reg-names = "mpmu", "apmu", "apbc";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
-+		snoop-control-unit@e0000000 {
-+			compatible = "arm,arm11mp-scu";
-+			reg = <0xe0000000 0x100>;
-+		};
-+
-+		gic: interrupt-controller@e0001000 {
-+			compatible = "arm,arm11mp-gic";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			reg = <0xe0001000 0x1000>,
-+			      <0xe0000100 0x100>;
-+		};
-+
-+		local-timer@e0000600 {
-+			compatible = "arm,arm11mp-twd-timer";
-+			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
-+						  IRQ_TYPE_EDGE_RISING)>;
-+			reg = <0xe0000600 0x20>;
-+		};
-+
-+		watchdog@2c000620 {
-+			compatible = "arm,arm11mp-twd-wdt";
-+			reg = <0xe0000620 0x20>;
-+			interrupts = <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
-+						  IRQ_TYPE_EDGE_RISING)>;
-+		};
-+	};
-+};
--- 
-2.21.0
+You should honor the wait paramter here.
+
+>+	while ((ready == 0) && (timeout_cnt < NPCM_RNG_TIMEOUT_POLL)) {
+>+		usleep_range(500, 1000);
+>+		ready = readl(priv->base + NPCM_RNGCS_REG) &
+>+			NPCM_RNG_DATA_VALID;
+>+		timeout_cnt++;
+>+	}
+>+
+>+	return !!ready;
+>+}
+>+
+>+static int npcm_rng_read(struct hwrng *rng, void *buf, size_t max,
+>bool wait)
+>+{
+>+	struct npcm_rng *priv = to_npcm_rng(rng);
+>+	int retval = 0;
+>+
+>+	pm_runtime_get_sync((struct device *)priv->rng.priv);
+>+
+>+	while (max >= sizeof(u32)) {
+>+		if (!npcm_rng_wait_ready(rng, wait))
+>+			break;
+>+
+>+		*(u32 *)buf = readl(priv->base + NPCM_RNGD_REG);
+>+		retval += sizeof(u32);
+>+		buf += sizeof(u32);
+>+		max -= sizeof(u32);
+>+	}
+>+
+>+	pm_runtime_mark_last_busy((struct device *)priv->rng.priv);
+>+	pm_runtime_put_sync_autosuspend((struct device *)priv->rng.priv);
+>+
+>+	return retval || !wait ? retval : -EIO;
+
+So you are doing pm get/put around each rng data sample.
+
+Have you characterized the time to enable to the time to get a sample
+and compared to the pm runtime sync parameters?
+
+Do you get any data if you set non-blocking wait above?
+
+
+>+}
+>+
+>+static int npcm_rng_probe(struct platform_device *pdev)
+>+{
+>+	struct npcm_rng *priv;
+>+	struct resource *res;
+>+	u32 quality;
+>+	int ret;
+>+
+>+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>+	if (!priv)
+>+		return -ENOMEM;
+>+
+>+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>+	priv->base = devm_ioremap_resource(&pdev->dev, res);
+>+	if (IS_ERR(priv->base))
+>+		return PTR_ERR(priv->base);
+>+
+>+	priv->rng.name = pdev->name;
+>+#ifndef CONFIG_PM
+>+	priv->rng.init = npcm_rng_init;
+>+	priv->rng.cleanup = npcm_rng_cleanup;
+
+so npcm_rng_init and npcm_rng_cleanup are unused if !CONFIG_PM.  No warnings?
+
+>+#endif
+>+	priv->rng.read = npcm_rng_read;
+>+	priv->rng.priv = (unsigned long)&pdev->dev;
+>+	if (of_property_read_u32(pdev->dev.of_node, "quality", &quality))
+>+		priv->rng.quality = 1000;
+>+	else
+>+		priv->rng.quality = quality;
+>+
+>+	writel(NPCM_RNG_M1ROSEL, priv->base + NPCM_RNGMODE_REG);
+>+#ifndef CONFIG_PM
+>+	writel(NPCM_RNG_CLK_SET_25MHZ, priv->base + NPCM_RNGCS_REG);
+>+#else
+>+	writel(NPCM_RNG_CLK_SET_25MHZ | NPCM_RNG_ENABLE,
+>+	       priv->base + NPCM_RNGCS_REG);
+>+#endif
+
+I am assuming these are safe to always set and the clock will
+bein range?
+
+Did you test without CONFIG_PM ? Looks like the ifndev should be
+ifdef otherwise the enable will never be set.
+
+Can you use a local variable for this value that is chosen by
+the config instead of ifdef'ing the code?
+
+
+
+>+
+>+	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
+>+	if (ret) {
+>+		dev_err(&pdev->dev, "Failed to register rng device: %d\n",
+>+			ret);
+>+		return ret;
+>+	}
+>+
+>+	dev_set_drvdata(&pdev->dev, priv);
+>+	pm_runtime_set_autosuspend_delay(&pdev->dev, 100);
+>+	pm_runtime_use_autosuspend(&pdev->dev);
+>+	pm_runtime_enable(&pdev->dev);
+>+
+>+	dev_info(&pdev->dev, "Random Number Generator Probed\n");
+>+
+>+	return 0;
+>+}
+>+
+>+static int npcm_rng_remove(struct platform_device *pdev)
+>+{
+>+	struct npcm_rng *priv = platform_get_drvdata(pdev);
+>+
+>+	hwrng_unregister(&priv->rng);
+>+	pm_runtime_disable(&pdev->dev);
+>+	pm_runtime_set_suspended(&pdev->dev);
+>+
+>+	return 0;
+>+}
+>+
+>+#ifdef CONFIG_PM
+>+static int npcm_rng_runtime_suspend(struct device *dev)
+>+{
+>+	struct npcm_rng *priv = dev_get_drvdata(dev);
+>+
+>+	npcm_rng_cleanup(&priv->rng);
+>+
+>+	return 0;
+>+}
+>+
+>+static int npcm_rng_runtime_resume(struct device *dev)
+>+{
+>+	struct npcm_rng *priv = dev_get_drvdata(dev);
+>+
+>+	return npcm_rng_init(&priv->rng);
+>+}
+>+#endif
+>+
+>+static const struct dev_pm_ops npcm_rng_pm_ops = {
+>+	SET_RUNTIME_PM_OPS(npcm_rng_runtime_suspend,
+>+			   npcm_rng_runtime_resume, NULL)
+>+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+>+				pm_runtime_force_resume)
+>+};
+>+
+>+static const struct of_device_id rng_dt_id[] = {
+>+	{ .compatible = "nuvoton,npcm750-rng",  },
+>+	{},
+>+};
+>+MODULE_DEVICE_TABLE(of, rng_dt_id);
+>+
+>+static struct platform_driver npcm_rng_driver = {
+>+	.driver = {
+>+		.name		= "npcm-rng",
+>+		.pm		= &npcm_rng_pm_ops,
+>+		.owner		= THIS_MODULE,
+>+		.of_match_table = of_match_ptr(rng_dt_id),
+>+	},
+>+	.probe		= npcm_rng_probe,
+>+	.remove		= npcm_rng_remove,
+>+};
+>+
+>+module_platform_driver(npcm_rng_driver);
+>+
+>+MODULE_DESCRIPTION("Nuvoton NPCM Random Number Generator Driver");
+>+MODULE_AUTHOR("Tomer Maimon <tomer.maimon@nuvoton.com>");
+>+MODULE_LICENSE("GPL v2");
+>-- 
+>2.18.0
+>
+>
