@@ -1,52 +1,80 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v2 07/15] dt: thermal: tsens: Document interrupt support
- in tsens driver
-Date: Fri, 30 Aug 2019 22:10:24 +0530
-Message-ID: <CAHLCerNJpOEevZBvN6s4FiaD5C=1C4xNRHYjVNM=0HpGCuf9RQ@mail.gmail.com>
-References: <cover.1566907161.git.amit.kucheria@linaro.org>
- <66ac3d3707d6296ef85bf1fa321f7f1ee0c02131.1566907161.git.amit.kucheria@linaro.org>
- <5d65cbe9.1c69fb81.1ceb.2374@mx.google.com> <CAP245DWWKsZBHnvSqC40XOH48kGd-hykd+fr-UZfWTmvuG2KaA@mail.gmail.com>
- <5d67e6cf.1c69fb81.5aec9.3b71@mx.google.com> <CAP245DVjgnwGn5rUgbYrkBOi3vtyShz0Qbx_opx80xiOV7uXeA@mail.gmail.com>
- <CAHLCerMmBmS-59eywxkUJ+5-zSccx8Twx2=NELgBgShYhM7TOw@mail.gmail.com> <5d6946fa.1c69fb81.44ab7.8d72@mx.google.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY
+ bindings
+Date: Fri, 30 Aug 2019 09:45:20 -0700
+Message-ID: <20190830164520.GK26807@tuxbook-pro>
+References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org>
+ <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org>
+ <20190223165218.GB572@tuxbook-pro>
+ <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
+ <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d6946fa.1c69fb81.44ab7.8d72@mx.google.com>
+Content-Disposition: inline
+In-Reply-To: <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <swboyd@chromium.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Brian Masney <masneyb@onstation.org>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+Cc: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, jackp@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 9:25 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Amit Kucheria (2019-08-30 04:32:54)
-> > On Thu, Aug 29, 2019 at 10:04 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> > >
-> > > On Thu, Aug 29, 2019 at 8:23 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> > > >
-> > > > Can we get a known quantity of interrupts for a particular compatible
-> > > > string instead? Let's be as specific as possible. The index matters too,
-> > > > so please list them in the order that is desired.
-> > >
-> > > I *think* we can predict what platforms have uplow and critical
-> > > interrupts based on IP version currently[1]. For newer interrupt
-> > > types, we might need more fine-grained platform compatibles.
-> > >
-> > > [1] Caveat: this is based only on the list of platforms I've currently
-> > > looked at, there might be something internally that breaks these
-> > > rules.
-> >
-> > What do you think if we changed the wording to something like the following,
-> >
-> > - interrupt-names: Must be one of the following depending on IP version:
-> >    For compatibles qcom,msm8916-tsens, qcom,msm8974-tsens,
-> > qcom,qcs404-tsens, qcom,tsens-v1, use
-> >               interrupt-names = "uplow";
-> >    For compatibles qcom,msm8996-tsens, qcom,msm8998-tsens,
-> > qcom,sdm845-tsens, qcom,tsens-v2, use
-> >               interrupt-names = "uplow", "critical";
->
-> Ok. I would still prefer YAML/JSON schema for this binding so that it's
-> much more explicit about numbers and the order of interrupts, etc.
+On Fri 30 Aug 09:01 PDT 2019, Stephen Boyd wrote:
 
-OK, I'll look around for some examples.
+> Quoting Jorge Ramirez (2019-08-29 00:03:48)
+> > On 2/23/19 17:52, Bjorn Andersson wrote:
+> > > On Thu 07 Feb 03:17 PST 2019, Jorge Ramirez-Ortiz wrote:
+> > >> +
+> > >> +Required child nodes:
+> > >> +
+> > >> +- usb connector node as defined in bindings/connector/usb-connector.txt
+> > >> +  containing the property vbus-supply.
+> > >> +
+> > >> +Example:
+> > >> +
+> > >> +usb3_phy: usb3-phy@78000 {
+> > >> +    compatible = "qcom,snps-usb-ssphy";
+> > >> +    reg = <0x78000 0x400>;
+> > >> +    #phy-cells = <0>;
+> > >> +    clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
+> > >> +             <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
+> > >> +             <&gcc GCC_USB3_PHY_PIPE_CLK>;
+> > >> +    clock-names = "ref", "phy", "pipe";
+> > >> +    resets = <&gcc GCC_USB3_PHY_BCR>,
+> > >> +             <&gcc GCC_USB3PHY_PHY_BCR>;
+> > >> +    reset-names = "com", "phy";
+> > >> +    vdd-supply = <&vreg_l3_1p05>;
+> > >> +    vdda1p8-supply = <&vreg_l5_1p8>;
+> > >> +    usb3_c_connector: usb3-c-connector {
+> 
+> Node name should be 'connector', not usb3-c-connector.
+> 
+
+It probably has to be usb-c-connector, because we have a
+micro-usb-connector on the same board.
+
+> > > 
+> > > The USB-C connector is attached both to the HS and SS PHYs, so I think
+> > > you should represent this external to this node and use of_graph to
+> > > query it.
+> > 
+> > but AFAICS we wont be able to retrieve the vbux-supply from an external
+> > node (that interface does not exist).
+> > 
+> > rob, do you have a suggestion?
+> 
+> Shouldn't the vbus supply be in the phy? Or is this a situation where
+> the phy itself doesn't have the vbus supply going to it because the PMIC
+> gets in the way and handles the vbus for the connector by having the SoC
+> communicate with the PMIC about when to turn the vbus on and off, etc?
+> 
+
+That's correct, the VBUS comes out of the PMIC and goes directly to the
+connector.
+
+The additional complicating factor here is that the connector is wired
+to a USB2 phy as well, so we need to wire up detection and vbus control
+to both of them - but I think this will be fine, if we can only figure
+out a sane way of getting hold of the vbus-supply.
+
+Regards,
+Bjorn
