@@ -1,130 +1,150 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCHv1 0/3] Odroid c2 missing regulator linking
-Date: Fri, 30 Aug 2019 11:50:01 +0200
-Message-ID: <c25c6610-5393-ef9d-8a91-6fad088ac2c2@baylibre.com>
-References: <20190828202723.1145-1-linux.amoon@gmail.com>
- <8c40f334-c723-b524-857c-73734b7d0827@baylibre.com>
- <CANAwSgShr-K-44UzdxFC7pvpTye_pbEMdS6ug1eWwYhnsVNGdQ@mail.gmail.com>
- <101a12ac-1464-8864-4f8c-56bb46034a08@baylibre.com>
- <CANAwSgQwZg_AXAnAY4KwDzHpwcSA9up7SrR6jyv5Bem24wtaJg@mail.gmail.com>
+From: Biwen Li <biwen.li@nxp.com>
+Subject: RE: [EXT] Re: [1/2] dt-bindings: rtc: pcf85263/pcf85363: add some
+ properties
+Date: Fri, 30 Aug 2019 10:11:03 +0000
+Message-ID: <DB7PR04MB4490C2664AE88D18D52E4B018FBD0@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190830091720.41156-1-biwen.li@nxp.com>
+ <20190830094456.GO21922@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgQwZg_AXAnAY4KwDzHpwcSA9up7SrR6jyv5Bem24wtaJg@mail.gmail.com>
+In-Reply-To: <20190830094456.GO21922@piout.net>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Leo Li <leoyang.li@nxp.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Martin Fuzzey <mfuzzey@parkeon.com>
 List-Id: devicetree@vger.kernel.org
 
-On 30/08/2019 11:34, Anand Moon wrote:
-> Hi Neil,
-> 
-> On Fri, 30 Aug 2019 at 13:01, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>
->> On 29/08/2019 20:35, Anand Moon wrote:
->>> Hi Neil,
->>>
->>> On Thu, 29 Aug 2019 at 13:58, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>>>
->>>> On 28/08/2019 22:27, Anand Moon wrote:
->>>>> Below small changes help re-configure or fix missing inter linking
->>>>> of regulator node.
->>>>>
->>>>> Changes based top on my prevoius series.
->>>>
->>>> For the serie:
->>>> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
->>>>
->>>
->>> Thanks for your review.
->>>
->>>>>
->>>>> [0] https://patchwork.kernel.org/cover/11113091/
->>>>>
->>>>> TOOD: Add support for DVFS GXBB odroid board in next series.
->>>>
->>>> I'm curious how you will do this !
->>>
->>> I was just studying you previous series on how you have implemented
->>> this feature for C1, N2 and VIM3 boards.
->>>
->>> [0] https://patchwork.kernel.org/cover/11114125/
->>>
->>> I started gathering key inputs needed for this ie *clk / pwm*
->>> like VDDCPU and VDDE clk changes.
->>>
->>> But it looks like of the complex clk framework needed, so I leave this to the
->>> expert like your team of developers to do this much quick and efficiently.
->>
->> On GXBB, GXL, GXM and AXG SoCs, CPU Frequency setting and PWM Regulator setup is
->> done by the SCPI Co-processor via the SCPI protocol.
->>
->> Thus, we should not handle it from Linux, and even if we could, we don't have the
->> registers documentation of the CPU clusters clock tree.
->>
-> 
-> Ok thanks.
-> 
->> SCPI works fine on all tested devices, except Odroid-C2, because Hardkernel left
->> the > 1.5GHz freq in the initial SCPI tables loaded by the BL2, i.e. packed with U-Boot.
->> Nowadays they have removed the bad frequencies, but still some devices uses the old
->> bootloader.
->>
->> But in the SCPI case we trust the table returned by the firmware and use it as-in,
->> and there is no (simple ?) way to override the table and set a max frequency.
->>
->> This is why we disabled SCPI.
->>
->> See https://patchwork.kernel.org/patch/9500175/
-> 
-> I have quickly enable this on my board and here the cpufreq info
-> 
-> [alarm@alarm ~]$  cpupower frequency-info
-> analyzing CPU 0:
->   driver: scpi-cpufreq
->   CPUs which run at the same hardware frequency: 0 1 2 3
->   CPUs which need to have their frequency coordinated by software: 0 1 2 3
->   maximum transition latency: 200 us
->   hardware limits: 100.0 MHz - 1.54 GHz
->   available frequency steps:  100.0 MHz, 250 MHz, 500 MHz, 1000 MHz,
-> 1.30 GHz, 1.54 GHz
->   available cpufreq governors: conservative ondemand userspace
-> powersave performance schedutil
->   current policy: frequency should be within 100.0 MHz and 1.54 GHz.
->                   The governor "ondemand" may decide which speed to use
->                   within this range.
->   current CPU frequency: Unable to call hardware
->   current CPU frequency: 250 MHz (asserted by call to kernel)
-> 
-> I did some simple stress testing and observed the freq scaling is
-> working fine when cpufreq governor is set to ondemand.
-> 
-> Powertop output.
->             Package |            CPU 0
->  100 MHz     5.2%   |  100 MHz     1.6%
->  250 MHz     4.4%   |  250 MHz     4.3%
->  500 MHz     2.6%   |  500 MHz     2.4%
-> 1000 MHz     0.5%   | 1000 MHz     0.3%
-> 1296 MHz     0.2%   | 1296 MHz     0.1%
-> 1.54 GHz     0.2%   | 1.54 GHz     0.1%
-> Idle        86.9%   | Idle        91.2%
-> 
-> Here the output on the linaro's pm-qa testing for cpufreq.
-> 
-> [1] https://pastebin.com/h880WATn
-> Almost all the test case pass with this one as off now.
-
-Thanks for passing the tests, no doubt it works with a recent
-bootloader binary, but we can't leave alone the first Odroid-C2
-devices loaded with an incorrect SCPI table.
-
-I'll let Kevin decide for the following.
-
-Neil
-
-> 
-> Best Regards
-> -Anand
-> 
+>=20
+> On 30/08/2019 17:17:19+0800, Biwen Li wrote:
+> > Add some properties for pcf85263/pcf85363 as follows:
+> >   - interrupt-output-pin: string type
+> >   - quartz-load-capacitance: integer type
+> >   - quartz-drive-strength: integer type
+> >   - quartz-low-jitter: bool type
+> >   - wakeup-source: bool type
+> >
+> > Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > ---
+> >  .../devicetree/bindings/rtc/pcf85363.txt      | 31
+> +++++++++++++++++++
+> >  include/dt-bindings/rtc/pcf85363.h            | 15 +++++++++
+> >  2 files changed, 46 insertions(+)
+> >  create mode 100644 include/dt-bindings/rtc/pcf85363.h
+> >
+> > diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > index 94adc1cf93d9..d83359990bd7 100644
+> > --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > @@ -8,10 +8,41 @@ Required properties:
+> >  Optional properties:
+> >  - interrupts: IRQ line for the RTC (not implemented).
+> >
+> > +- interrupt-output-pin: The interrupt output pin must be
+> > +  "NONE", "INTA" or "INTB", default value is "NONE"
+> > +
+>=20
+> default value can't be none if there is an interrupts property. Also, bot=
+h pins
+> can be enabled at the same time and this binding would prevent that.
+> Finally, it may also be desirable to have some interrupts on one pin and
+> other interrupts on another pin e.g. alarms and timestamping on INTA goin=
+g
+> to the SoC and only alarms on INTB going to a PMIC.
+Ok, got it, I will correct it on v2.
+>=20
+> > +- quartz-load-capacitance: The internal capacitor to select for the qu=
+artz:
+> > +     PCF85263_QUARTZCAP_7pF          [0]
+> > +     PCF85263_QUARTZCAP_6pF          [1]
+> > +     PCF85263_QUARTZCAP_12p5pF       [2] DEFAULT
+> > +
+>=20
+> The correct generic property is quartz-load-femtofarads.
+I will replace it on v2.
+>=20
+> > +- quartz-drive-strength: Drive strength for the quartz:
+> > +     PCF85263_QUARTZDRIVE_NORMAL     [0] DEFAULT
+> > +     PCF85263_QUARTZDRIVE_LOW        [1]
+> > +     PCF85263_QUARTZDRIVE_HIGH       [2]
+> > +
+>=20
+> This has to take a value in ohm to be generic and then you don't need the
+> include file.
+I will adjust it on v2.
+>=20
+> > +- quartz-low-jitter: Boolean property, if present enables low jitter
+> > +mode
+> > +  which reduces jitter at the cost of increased power consumption.
+> > +
+>=20
+> I think that property needs to be nxp specific.
+I will replace it with nxp,quartz-low-jitter on v2.
+>=20
+> > +- wakeup-source: Boolean property, mark the chip as a wakeup source,
+> > +  independently of the availability of an IRQ line connected to the So=
+C.
+> > +  This is useful if the IRQ line is connected to a PMIC or other
+> > +circuit
+> > +  that can power up the device rather than to a normal SOC interrupt.
+> > +
+>=20
+> This is already defined in bindings/power/wakeup-source.txt I guess you c=
+an
+> simply refer to it.
+I will correct it on v2.
+>=20
+> >  Example:
+> >
+> >  pcf85363: pcf85363@51 {
+> >       compatible =3D "nxp,pcf85363";
+> >       reg =3D <0x51>;
+> > +
+> > +     interrupt-parent =3D <&gpio1>;
+> > +     interrupts =3D <18 IRQ_TYPE_EDGE_FALLING>;
+> > +
+> > +     #include <dt-bindings/rtc/pcf85363.h>
+> > +     wakeup-source;
+> > +     interrupt-output-pin =3D "INTA";
+> > +     quartz-load-capacitance =3D <PCF85363_QUARTZCAP_12p5pF>;
+> > +     quartz-drive-strength =3D <PCF85363_QUARTZDRIVE_LOW>;
+> > +     quartz-low-jitter;
+> >  };
+> >
+> > diff --git a/include/dt-bindings/rtc/pcf85363.h
+> > b/include/dt-bindings/rtc/pcf85363.h
+> > new file mode 100644
+> > index 000000000000..2c06c28eb5ff
+> > --- /dev/null
+> > +++ b/include/dt-bindings/rtc/pcf85363.h
+> > @@ -0,0 +1,15 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */ #ifndef
+> > +_DT_BINDINGS_RTC_PCF85363_H #define
+> _DT_BINDINGS_RTC_PCF85363_H
+> > +
+> > +/* Quartz capacitance */
+> > +#define PCF85363_QUARTZCAP_7pF               0
+> > +#define PCF85363_QUARTZCAP_6pF               1
+> > +#define PCF85363_QUARTZCAP_12p5pF    2
+> > +
+> > +/* Quartz drive strength */
+> > +#define PCF85363_QUARTZDRIVE_NORMAL  0
+> > +#define PCF85363_QUARTZDRIVE_LOW     1
+> > +#define PCF85363_QUARTZDRIVE_HIGH    2
+> > +
+> > +#endif /* _DT_BINDINGS_RTC_PCF85363_H */
+> > --
+> > 2.17.1
+> >
+>=20
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fbootl
+> in.com&amp;data=3D02%7C01%7Cbiwen.li%40nxp.com%7C0a2e5b50f8fc45a
+> ef6a208d72d2ebe2e%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0
+> %7C637027551094795780&amp;sdata=3DPMMS6PMBPkuuIYgMJFmtOaoD%
+> 2B7fCO3eZvOtlYhTEL5w%3D&amp;reserved=3D0
