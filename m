@@ -1,57 +1,73 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 4/5] dt-bindings: dma: ti-edma: Add option for reserved
- channel ranges
-Date: Fri, 30 Aug 2019 08:37:33 +0300
-Message-ID: <a4c5688b-cbeb-5059-5351-11d9ae1b25d5@ti.com>
-References: <20190823125618.8133-1-peter.ujfalusi@ti.com>
- <20190823125618.8133-5-peter.ujfalusi@ti.com> <20190829224728.GA1198@bogus>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v5, 12/32] drm/mediatek: add mmsys private data for ddp
+ path config
+Date: Fri, 30 Aug 2019 13:40:27 +0800
+Message-ID: <1567143627.5942.10.camel@mtksdaap41>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1567090254-15566-13-git-send-email-yongqiang.niu@mediatek.com>
+ <1567142858.5942.6.camel@mtksdaap41>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829224728.GA1198@bogus>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: vkoul@kernel.org, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1567142858.5942.6.camel@mtksdaap41>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: yongqiang.niu@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Rob,
-
-On 30/08/2019 1.47, Rob Herring wrote:
-> On Fri, Aug 23, 2019 at 03:56:17PM +0300, Peter Ujfalusi wrote:
->> Similarly to paRAM slots, channels can be used by other cores.
->>
->> Add optional property to configure the reserved channel ranges.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  Documentation/devicetree/bindings/dma/ti-edma.txt | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
->> index 4bbc94d829c8..1198682ada99 100644
->> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
->> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
->> @@ -42,6 +42,9 @@ Optional properties:
->>  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
->>  		the driver, they are allocated to be used by for example the
->>  		DSP. See example.
->> +- ti,edma-reserved-chan-ranges: channel ranges which should not be used by
->> +		the driver, they are allocated to be used by for example the
->> +		DSP. See example.
-> 
-> Based on the other thread, I think extending dma-channel-mask to a 
-> uint32-array makes sense here.
-
-Yes, that is the reason I have asked on that and I'm in progress of
-converting the edma driver to use the dma-channel-mask.
-Just need to do some shuffling in the driver to get the mask in a form
-usable by the driver.
-
-I'll send an updated series early next week.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+SGksIFlvbmdxaWFuZzoKCk9uIEZyaSwgMjAxOS0wOC0zMCBhdCAxMzoyNyArMDgwMCwgQ0sgSHUg
+d3JvdGU6Cj4gSGksIFlvbmdxaWFuZzoKPiAKPiBPbiBUaHUsIDIwMTktMDgtMjkgYXQgMjI6NTAg
+KzA4MDAsIHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tIHdyb3RlOgo+ID4gRnJvbTogWW9uZ3Fp
+YW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gPiAKPiA+IFRoaXMgcGF0Y2gg
+YWRkIG1tc3lzIHByaXZhdGUgZGF0YSBmb3IgZGRwIHBhdGggY29uZmlnCj4gPiBhbGwgdGhlc2Ug
+cmVnaXN0ZXIgb2Zmc2V0IGFuZCB2YWx1ZSB3aWxsIGJlIGRpZmZlcmVudCBpbiBmdXR1cmUgU09D
+Cj4gPiBhZGQgdGhlc2UgZGVmaW5lIGludG8gbW1zeXMgcHJpdmF0ZSBkYXRhCj4gPiAJdTMyIG92
+bDBfbW91dF9lbjsKPiA+IAl1MzIgcmRtYTFfc291dF9zZWxfaW47Cj4gPiAJdTMyIHJkbWExX3Nv
+dXRfZHNpMDsKPiA+IAl1MzIgZHBpMF9zZWxfaW47Cj4gPiAJdTMyIGRwaTBfc2VsX2luX3JkbWEx
+Owo+ID4gCXUzMiBkc2kwX3NlbF9pbjsKPiA+IAl1MzIgZHNpMF9zZWxfaW5fcmRtYTE7Cj4gPiAK
+PiA+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsu
+Y29tPgo+ID4gLS0tCj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5j
+IHwgIDQgKysKPiA+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuYyAgfCA4
+NiArKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0KPiA+ICBkcml2ZXJzL2dwdS9kcm0v
+bWVkaWF0ZWsvbXRrX2RybV9kZHAuaCAgfCAgNSArKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRp
+YXRlay9tdGtfZHJtX2Rydi5jICB8ICAzICsrCj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kcm1fZHJ2LmggIHwgIDMgKysKPiA+ICA1IGZpbGVzIGNoYW5nZWQsIDc2IGluc2VydGlv
+bnMoKyksIDI1IGRlbGV0aW9ucygtKQo+ID4gCj4gCj4gW3NuaXBdCj4gCj4gPiAgCj4gPiAgdm9p
+ZCBtdGtfZGRwX2FkZF9jb21wX3RvX3BhdGgodm9pZCBfX2lvbWVtICpjb25maWdfcmVncywKPiA+
+ICsJCQkgICAgICBjb25zdCBzdHJ1Y3QgbXRrX21tc3lzX3JlZ19kYXRhICpyZWdfZGF0YSwKPiA+
+ICAJCQkgICAgICBlbnVtIG10a19kZHBfY29tcF9pZCBjdXIsCj4gPiAgCQkJICAgICAgZW51bSBt
+dGtfZGRwX2NvbXBfaWQgbmV4dCkKPiA+ICB7Cj4gPiAgCXVuc2lnbmVkIGludCBhZGRyLCB2YWx1
+ZSwgcmVnOwo+ID4gIAo+ID4gLQl2YWx1ZSA9IG10a19kZHBfbW91dF9lbihjdXIsIG5leHQsICZh
+ZGRyKTsKPiA+ICsJdmFsdWUgPSBtdGtfZGRwX21vdXRfZW4ocmVnX2RhdGEsIGN1ciwgbmV4dCwg
+JmFkZHIpOwo+ID4gIAlpZiAodmFsdWUpIHsKPiA+ICAJCXJlZyA9IHJlYWRsX3JlbGF4ZWQoY29u
+ZmlnX3JlZ3MgKyBhZGRyKSB8IHZhbHVlOwo+ID4gIAkJd3JpdGVsX3JlbGF4ZWQocmVnLCBjb25m
+aWdfcmVncyArIGFkZHIpOwo+ID4gIAl9Cj4gPiAgCj4gPiAtCW10a19kZHBfc291dF9zZWwoY29u
+ZmlnX3JlZ3MsIGN1ciwgbmV4dCk7Cj4gPiArCXZhbHVlID0gbXRrX2RkcF9zb3V0X3NlbChyZWdf
+ZGF0YSwgY3VyLCBuZXh0LCAmYWRkcik7Cj4gPiArCWlmICh2YWx1ZSkKPiA+ICsJCXdyaXRlbF9y
+ZWxheGVkKHZhbHVlLCBjb25maWdfcmVncyArIGFkZHIpOwo+IAo+IEkgdGhpbmsgdGhlIHJlZ2lz
+dGVyIGNvdWxkIGJlIHdyaXR0ZW4gaW5zaWRlIG10a19kZHBfc291dF9zZWwoKSwgd2h5IGRvCj4g
+eW91IG1vdmUgb3V0IG9mIHRoYXQgZnVuY3Rpb24/CgpPSywgYWZ0ZXIgcmV2aWV3IG90aGVyIHBh
+dGNoLCBJIHVuZGVyc3RhbmQgd2hhdCB5b3UgZG8gaGVyZS4KWW91IHdhbnQgdG8gYWxpZ24gdGhl
+IG1ldGhvZCBvZiBtdGtfZGRwX21vdXRfZW4oKSwgbXRrX2RkcF9zb3V0X3NlbCgpLAphbmQgbXRr
+X2RkcF9zZWxfaW4oKS4gc28gbW9kaWZpY2F0aW9uIGluIHRoZXNlIHRocmVlIGZ1bmN0aW9uIHdv
+dWxkIGJlCnRoZSBzYW1lIHN0eWxlLiBTbyBJIHRoaW5rIHRoaXMgYWxpZ25tZW50IHNob3VsZCBi
+ZSBhbiBpbmRlcGVuZGVudCBwYXRjaApiZWZvcmUgdGhpcyBwYXRjaC4KClJlZ2FyZHMsCkNLCgo+
+IAo+IFJlZ2FyZHMsCj4gQ0sKPiAKPiA+ICAKPiA+IC0JdmFsdWUgPSBtdGtfZGRwX3NlbF9pbihj
+dXIsIG5leHQsICZhZGRyKTsKPiA+ICsJdmFsdWUgPSBtdGtfZGRwX3NlbF9pbihyZWdfZGF0YSwg
+Y3VyLCBuZXh0LCAmYWRkcik7Cj4gPiAgCWlmICh2YWx1ZSkgewo+ID4gIAkJcmVnID0gcmVhZGxf
+cmVsYXhlZChjb25maWdfcmVncyArIGFkZHIpIHwgdmFsdWU7Cj4gPiAgCQl3cml0ZWxfcmVsYXhl
+ZChyZWcsIGNvbmZpZ19yZWdzICsgYWRkcik7Cj4gPiBAQCAtNDIwLDE4ICs0NTUsMTkgQEAgdm9p
+ZCBtdGtfZGRwX2FkZF9jb21wX3RvX3BhdGgodm9pZCBfX2lvbWVtICpjb25maWdfcmVncywKPiA+
+ICB9Cj4gPiAgCj4gPiAgCj4gPiAgCj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVs
