@@ -1,54 +1,57 @@
 From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v5, 01/32] dt-bindings: mediatek: add binding for mt8183
- display
-Date: Fri, 30 Aug 2019 13:15:29 +0800
-Message-ID: <1567142129.5942.1.camel@mtksdaap41>
+Subject: Re: [PATCH v5, 11/32] drm/mediatek: split DISP_REG_CONFIG_DSI_SEL
+ setting into another use case
+Date: Fri, 30 Aug 2019 13:21:04 +0800
+Message-ID: <1567142464.5942.4.camel@mtksdaap41>
 References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
- <1567090254-15566-2-git-send-email-yongqiang.niu@mediatek.com>
+         <1567090254-15566-12-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1567090254-15566-2-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1567090254-15566-12-git-send-email-yongqiang.niu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: yongqiang.niu@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoKCk9uIFRodSwgMjAxOS0wOC0yOSBhdCAyMjo1MCArMDgwMCwgeW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVXBkYXRlIGRldmljZSB0cmVlIGJpbmRpbmcgZG9j
-dW1lbnRpb24gZm9yIHRoZSBkaXNwbGF5IHN1YnN5c3RlbSBmb3IKPiBNZWRpYXRlayBNVDgxODMg
-U09Dcwo+IAo+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVk
-aWF0ZWsuY29tPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRl
-ayxkaXNwbGF5LnR4dCAgfCAyMSArKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5n
-ZWQsIDIxIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21lZGlhdGVrL21lZGlhdGVrLGRpc3BsYXkudHh0
-Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L21lZGlhdGVrL21lZGlhdGVrLGRpc3BsYXkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcGxheS50eHQKPiBuZXcg
-ZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLjk1MWQyYTgKPiAtLS0gL2Rldi9udWxs
-Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbWVkaWF0
-ZWsvbWVkaWF0ZWssZGlzcGxheS50eHQKPiBAQCAtMCwwICsxLDIxIEBACj4gK01lZGlhdGVrIERp
-c3BsYXkgRGV2aWNlCj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPiArCj4gK1RoZSBN
-ZWRpYXRlayBEaXNwbGF5IERldmljZSBwcm92aWRlcyBwb3dlciBjb250cm9sIHRvIHRoZSBzeXN0
-ZW0uCj4gKwo+ICtSZXF1aXJlZCBQcm9wZXJ0aWVzOgo+ICsKPiArLSBjb21wYXRpYmxlOiBTaG91
-bGQgYmUgb25lIG9mOgo+ICsJLSAibWVkaWF0ZWssbXQ4MTgzLWRpc3BsYXkiCgpJIHRoaW5rIHRo
-aXMgaXMgIm1lZGlhdGVrLG10ODE4My1tbXN5cyIuCgpSZWdhcmRzLApDSwoKPiArCj4gK1RoZSBE
-aXNwbGF5IERldmljZSBwb3dlciBuYW1lIGFyZSBkZWZpbmVkIGluCj4gK2luY2x1ZGVcZHQtYmlu
-ZGluZ3NccG93ZXJcbXQqLXBvd2VyLmgKPiArCj4gKwo+ICtFeGFtcGxlOgo+ICsKPiArZGlzcGxh
-eV9jb21wb25lbnRzOiBkaXNwc3lzQDE0MDAwMDAwIHsKPiArCWNvbXBhdGlibGUgPSAibWVkaWF0
-ZWssbXQ4MTgzLWRpc3BsYXkiOwo+ICsJcmVnID0gPDAgMHgxNDAwMDAwMCAwIDB4MTAwMD47Cj4g
-Kwlwb3dlci1kb21haW5zID0gPCZzY3BzeXMgTVQ4MTgzX1BPV0VSX0RPTUFJTl9ESVNQPjsKPiAr
-fTsKPiBcIE5vIG5ld2xpbmUgYXQgZW5kIG9mIGZpbGUKCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Hi, Yongqiang:
+
+On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> Here is two modifition in this patch:
+> 1.bls->dpi0 and rdma1->dsi are differen usecase,
+> Split DISP_REG_CONFIG_DSI_SEL setting into anther usecase
+> 2.remove DISP_REG_CONFIG_DPI_SEL setting, DPI_SEL_IN_BLS is 0 and
+> this is same with hardware defautl setting,
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> index 4866a9b..c93e1b7 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -392,10 +392,9 @@ static void mtk_ddp_sout_sel(void __iomem *config_regs,
+>  	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
+>  		writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
+>  			       config_regs + DISP_REG_CONFIG_OUT_SEL);
+> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
+>  		writel_relaxed(DSI_SEL_IN_RDMA,
+>  			       config_regs + DISP_REG_CONFIG_DSI_SEL);
+> -		writel_relaxed(DPI_SEL_IN_BLS,
+> -			       config_regs + DISP_REG_CONFIG_DPI_SEL);
+
+As internal discussion, please rewrite this to prevent breaking MT2701
+connection. It's better to add comment to address the special usage for
+MT2701.
+
+Regards,
+CK
+
+>  	}
+>  }
+>  
