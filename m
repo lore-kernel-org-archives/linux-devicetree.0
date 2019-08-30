@@ -1,12 +1,10 @@
 From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Subject: [PATCH v1 06/18] dt-bindings: interrupt-controller: Add Loongson-3 IOINTC
-Date: Fri, 30 Aug 2019 12:25:56 +0800
-Message-ID: <20190830042608.19569-7-jiaxun.yang@flygoat.com>
-References: <20190830042608.19569-1-jiaxun.yang@flygoat.com>
+Date: Fri, 30 Aug 2019 12:32:20 +0800
+Message-ID: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190830042608.19569-1-jiaxun.yang@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-mips@vger.kernel.org
 Cc: chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
