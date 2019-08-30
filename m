@@ -1,34 +1,22 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 0/2] irqchip/meson-gpio: add sm1 support
-Date: Fri, 30 Aug 2019 15:01:29 +0100
-Message-ID: <b6f1c3d5-9098-03c6-b843-6eb2ddbe35a9@arm.com>
-References: <20190829161635.25067-1-jbrunet@baylibre.com>
+From: Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v11 00/23] MT8183 IOMMU SUPPORT
+Date: Fri, 30 Aug 2019 16:21:32 +0200
+Message-ID: <20190830142132.GC29382@8bytes.org>
+References: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829161635.25067-1-jbrunet@baylibre.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1566615728-26388-1-git-send-email-yong.wu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kevin Hilman <khilman@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Yong Wu <yong.wu@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>, Rob Herring <robh+dt@kernel.org>, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>, cui.zhang@mediatek.com, chao.hao@mediatek.com, ming-fan.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 29/08/2019 17:16, Jerome Brunet wrote:
-> This patchset adds support for the new sm1 SoC family in the Amlogic gpio
-> interrupt controller.
-> 
-> Jerome Brunet (2):
->   dt-bindings: interrupt-controller: new binding for the meson sm1 SoCs
->   irqchip/meson-gpio: Add support for meson sm1 SoCs
-> 
->  .../amlogic,meson-gpio-intc.txt               |  1 +
->  drivers/irqchip/irq-meson-gpio.c              | 52 ++++++++++++++-----
->  2 files changed, 39 insertions(+), 14 deletions(-)
-> 
+On Sat, Aug 24, 2019 at 11:01:45AM +0800, Yong Wu wrote:
+> Change notes:
+> v11:
+>    1) Adjust a bit code for mtk quirk in v7s.
+>    2) Collect ack from will and Matthias of the last patch.
 
-Applied to irqchip-next.
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Applied to arm/mediatek, thanks.
