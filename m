@@ -1,61 +1,50 @@
 From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v5, 31/32] drm/mediatek: add connection from RDMA0 to DSI0
-Date: Fri, 30 Aug 2019 14:36:25 +0800
-Message-ID: <1567146985.5942.22.camel@mtksdaap41>
+Subject: Re: [PATCH v5, 32/32] drm/mediatek: add support for mediatek SOC
+ MT8183
+Date: Fri, 30 Aug 2019 14:38:04 +0800
+Message-ID: <1567147084.5942.24.camel@mtksdaap41>
 References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
- <1567090254-15566-32-git-send-email-yongqiang.niu@mediatek.com>
+ <1567090254-15566-33-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1567090254-15566-32-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1567090254-15566-33-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: yongqiang.niu@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Yongqiang:
-
-On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> This patch add connection from RDMA0 to DSI0
-
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> index fd38658..6a7cb15 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
-> @@ -42,6 +42,7 @@
->  #define OVL1_2L_MOUT_EN_RDMA1				BIT(4)
->  #define DITHER0_MOUT_IN_DSI0				BIT(0)
->  #define DISP_PATH0_SEL_IN_OVL0_2L			0x1
-> +#define DSI0_SEL_IN_RDMA0				0x1
->  
->  #define MT2701_DISP_MUTEX0_MOD0			0x2c
->  #define MT2701_DISP_MUTEX0_SOF0			0x30
-> @@ -391,6 +392,9 @@ static unsigned int mtk_ddp_sel_in(const struct mtk_mmsys_reg_data *data,
->  		   next == DDP_COMPONENT_RDMA0) {
->  		*addr = MT8183_DISP_PATH0_SEL_IN;
->  		value = DISP_PATH0_SEL_IN_OVL0_2L;
-> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI0) {
-> +		*addr = data->dsi0_sel_in;
-> +		value = DSI0_SEL_IN_RDMA0;
->  	} else {
->  		value = 0;
->  	}
+SGksIFlvbmdxaWFuZzoKCk9uIFRodSwgMjAxOS0wOC0yOSBhdCAyMjo1MCArMDgwMCwgeW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgc3VwcG9ydCBmb3IgbWVk
+aWF0ZWsgU09DIE1UODE4Mwo+IDEub3ZsXzJsIHNoYXJlIGRyaXZlciB3aXRoIG92bAo+IDIucmRt
+YTEgc2hhcmUgZHJpdmUgd2l0aCByZG1hMCwgYnV0IGZpZm8gc2l6ZSBpcyBkaWZmZXJlbnQKPiAz
+LmFkZCBtdDgxODMgbXV0ZXggcHJpdmF0ZSBkYXRhLCBhbmQgbW1zeXMgcHJpdmF0ZSBkYXRhCj4g
+NC5hZGQgbXQ4MTgzIG1haW4gYW5kIGV4dGVybmFsIHBhdGggbW9kdWxlIGZvciBjcnRjIGNyZWF0
+ZQo+IAo+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0
+ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3Bfb3ZsLmMg
+IHwgMTggKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1h
+LmMgfCAyNyArKysrKysrKysrKystCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
+X2RkcC5jICAgfCA2OSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJz
+L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuaCAgIHwgIDEgKwo+ICBkcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAgIHwgNDcgKysrKysrKysrKysrKysrKysrKysrKwo+
+ICA1IGZpbGVzIGNoYW5nZWQsIDE2MSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCgpb
+c25pcF0KCj4gQEAgLTYxMyw2ICs2NTgsOCBAQCBzdGF0aWMgU0lNUExFX0RFVl9QTV9PUFMobXRr
+X2RybV9wbV9vcHMsIG10a19kcm1fc3lzX3N1c3BlbmQsCj4gIAkgIC5kYXRhID0gJm10MjcxMl9t
+bXN5c19kcml2ZXJfZGF0YX0sCj4gIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE3My1t
+bXN5cyIsCj4gIAkgIC5kYXRhID0gJm10ODE3M19tbXN5c19kcml2ZXJfZGF0YX0sCj4gKwl7IC5j
+b21wYXRpYmxlID0gIm1lZGlhdGVrLG10ODE4My1kaXNwbGF5IiwKClRoaXMgc2hvdWxkIGJlICJt
+ZWRpYXRlayxtdDgxODMtbW1zeXMiLgoKUmVnYXJkcywKQ0sKCj4gKwkgIC5kYXRhID0gJm10ODE4
+M19tbXN5c19kcml2ZXJfZGF0YX0sCj4gIAl7IH0KPiAgfTsKPiAgCgoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
