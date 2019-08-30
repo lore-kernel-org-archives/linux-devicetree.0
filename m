@@ -1,104 +1,81 @@
-Return-Path: <SRS0=gEAL=WV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:32939 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728359AbfHYOAS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 25 Aug 2019 10:00:18 -0400
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 1/2] arm64: dts: renesas: Add LIF channel indices to vsps property
-Date: Sun, 25 Aug 2019 16:01:34 +0200
-Message-Id: <20190825140135.12150-2-jacopo+renesas@jmondi.org>
-In-Reply-To: <20190825140135.12150-1-jacopo+renesas@jmondi.org>
-References: <20190825140135.12150-1-jacopo+renesas@jmondi.org>
+Return-Path: <SRS0=qJz7=W2=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v10 10/14] media: tvp5150: add s_power callback
+Date: Fri, 30 Aug 2019 12:16:42 +0200
+Message-Id: <20190830101646.6530-11-m.felsch@pengutronix.de>
+In-Reply-To: <20190830101646.6530-1-m.felsch@pengutronix.de>
+References: <20190830101646.6530-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-According to the Renesas R-Car DU bindings documentation, the 'vsps'
-property should be composed of a phandle to the VSP instance and the
-index of the LIF channel assigned to the DU channel. Some SoC device
-tree source files do not specify any LIF channel index, relying on the
-driver defaulting it to 0 if not specified.
+Don't en-/disable the interrupts during s_stream because someone can
+disable the stream but wants to get informed if the stream is locked
+again. So keep the interrupts enabled the whole time the pipeline is
+opened.
 
-Align all device tree files by specifying the LIF channel index as
-prescribed by the bindings documentation.
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi    | 2 +-
- arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi | 2 +-
- arch/arm64/boot/dts/renesas/r8a7796.dtsi     | 2 +-
- arch/arm64/boot/dts/renesas/r8a77970.dtsi    | 2 +-
- arch/arm64/boot/dts/renesas/r8a77980.dtsi    | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/media/i2c/tvp5150.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-index 06c7c849c8ab..d179ee3da308 100644
---- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-@@ -2651,7 +2651,7 @@
- 			clock-names = "du.0", "du.1", "du.2";
- 			status = "disabled";
-
--			vsps = <&vspd0 &vspd1 &vspd2>;
-+			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>;
-
- 			ports {
- 				#address-cells = <1>;
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-index e4650ae5b75a..14d8513d2a47 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-@@ -30,7 +30,7 @@
+diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
+index dc8272d3a445..d7079809f33f 100644
+--- a/drivers/media/i2c/tvp5150.c
++++ b/drivers/media/i2c/tvp5150.c
+@@ -1354,11 +1354,26 @@ static const struct media_entity_operations tvp5150_sd_media_ops = {
+ /****************************************************************************
+ 			I2C Command
+  ****************************************************************************/
++static int tvp5150_s_power(struct  v4l2_subdev *sd, int on)
++{
++	struct tvp5150 *decoder = to_tvp5150(sd);
++	unsigned int val = 0;
++
++	if (on)
++		val = TVP5150_INT_A_LOCK;
++
++	if (decoder->irq)
++		/* Enable / Disable lock interrupt */
++		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
++				   TVP5150_INT_A_LOCK, val);
++
++	return 0;
++}
+ 
+ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
+ {
+ 	struct tvp5150 *decoder = to_tvp5150(sd);
+-	unsigned int mask, val = 0, int_val = 0;
++	unsigned int mask, val = 0;
+ 
+ 	mask = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_SYNC_OE |
+ 	       TVP5150_MISC_CTL_CLOCK_OE;
+@@ -1371,15 +1386,10 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
+ 			val = decoder->lock ? decoder->oe : 0;
+ 		else
+ 			val = decoder->oe;
+-		int_val = TVP5150_INT_A_LOCK;
+ 		v4l2_subdev_notify_event(&decoder->sd, &tvp5150_ev_fmt);
+ 	}
+ 
+ 	regmap_update_bits(decoder->regmap, TVP5150_MISC_CTL, mask, val);
+-	if (decoder->irq)
+-		/* Enable / Disable lock interrupt */
+-		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
+-				   TVP5150_INT_A_LOCK, int_val);
+ 
+ 	return 0;
+ }
+@@ -1576,6 +1586,7 @@ static const struct v4l2_subdev_core_ops tvp5150_core_ops = {
+ 	.g_register = tvp5150_g_register,
+ 	.s_register = tvp5150_s_register,
+ #endif
++	.s_power = tvp5150_s_power,
  };
-
- &du {
--	vsps = <&vspd0 &vspd1 &vspd2 &vspd3>;
-+	vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd3 0>;
- };
-
- &fcpvb1 {
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index 3dc9d73f589a..8c9bf985d436 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -2765,7 +2765,7 @@
- 			clock-names = "du.0", "du.1", "du.2";
- 			status = "disabled";
-
--			vsps = <&vspd0 &vspd1 &vspd2>;
-+			vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>;
-
- 			ports {
- 				#address-cells = <1>;
-diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-index 0cd3b376635d..2c4ab70e2a39 100644
---- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-@@ -1120,7 +1120,7 @@
- 			clock-names = "du.0";
- 			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
- 			resets = <&cpg 724>;
--			vsps = <&vspd0>;
-+			vsps = <&vspd0 0>;
- 			status = "disabled";
-
- 			ports {
-diff --git a/arch/arm64/boot/dts/renesas/r8a77980.dtsi b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-index 461a47ea656d..042f4089e546 100644
---- a/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-@@ -1495,7 +1495,7 @@
- 			clock-names = "du.0";
- 			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
- 			resets = <&cpg 724>;
--			vsps = <&vspd0>;
-+			vsps = <&vspd0 0>;
- 			status = "disabled";
-
- 			ports {
---
-2.23.0
+ 
+ static const struct v4l2_subdev_tuner_ops tvp5150_tuner_ops = {
+-- 
+2.20.1
