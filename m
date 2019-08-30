@@ -1,8 +1,8 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v3 01/16] dt-bindings: arm: cpu: Add Marvell MMP3 SMP enable
- method
-Date: Sat, 31 Aug 2019 00:07:28 +0200
-Message-ID: <20190830220743.439670-2-lkundrak@v3.sk>
+Subject: [PATCH v3 04/16] dt-bindings: mrvl,
+ intc: Add a MMP3 interrupt controller
+Date: Sat, 31 Aug 2019 00:07:31 +0200
+Message-ID: <20190830220743.439670-5-lkundrak@v3.sk>
 References: <20190830220743.439670-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,29 +22,50 @@ To: "To : Olof Johansson" <olof@lixom.net>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Lubomir Rintel <lkundrak@v3.sk>, "Cc : Rob Herring" <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the enable method for the second PJ4B core of the Marvell MMP3 SoC.
+Similar to MMP2 one, but has an extra range for the other core. The
+muxes stay the same.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 Reviewed-by: Rob Herring <robh@kernel.org>
 
 ---
-Changes since v1:
+Changes since v2:
 - Add Rob's Reviewed-by tag
 
- Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Changes since v1:
+- Reformat the compatible property documentation to higlight the valid
+  combinations
+- Drop an unneeded mmp3-intc example
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-index aa40b074b8648..fcba84e32e68a 100644
---- a/Documentation/devicetree/bindings/arm/cpus.yaml
-+++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-@@ -186,6 +186,7 @@ properties:
-               - marvell,armada-390-smp
-               - marvell,armada-xp-smp
-               - marvell,98dx3236-smp
-+              - marvell,mmp3-smp
-               - mediatek,mt6589-smp
-               - mediatek,mt81xx-tz-smp
-               - qcom,gcc-msm8660
+ .../bindings/interrupt-controller/mrvl,intc.txt    | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
+index 608fee15a4cfc..a0ed02725a9d7 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/mrvl,intc.txt
+@@ -1,13 +1,17 @@
+ * Marvell MMP Interrupt controller
+ 
+ Required properties:
+-- compatible : Should be "mrvl,mmp-intc", "mrvl,mmp2-intc" or
+-  "mrvl,mmp2-mux-intc"
++- compatible : Should be
++               "mrvl,mmp-intc" on Marvel MMP,
++               "mrvl,mmp2-intc" along with "mrvl,mmp2-mux-intc" on MMP2 or
++               "marvell,mmp3-intc" with "mrvl,mmp2-mux-intc" on MMP3
+ - reg : Address and length of the register set of the interrupt controller.
+   If the interrupt controller is intc, address and length means the range
+-  of the whole interrupt controller. If the interrupt controller is mux-intc,
+-  address and length means one register. Since address of mux-intc is in the
+-  range of intc. mux-intc is secondary interrupt controller.
++  of the whole interrupt controller. The "marvell,mmp3-intc" controller
++  also has a secondary range for the second CPU core.  If the interrupt
++  controller is mux-intc, address and length means one register. Since
++  address of mux-intc is in the range of intc. mux-intc is secondary
++  interrupt controller.
+ - reg-names : Name of the register set of the interrupt controller. It's
+   only required in mux-intc interrupt controller.
+ - interrupts : Should be the port interrupt shared by mux interrupts. It's
 -- 
 2.21.0
