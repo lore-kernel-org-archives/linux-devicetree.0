@@ -1,27 +1,82 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 06/10] lib/vsprintf: Remove support for %pF and %pf in
- favour of %pS and %ps
-Date: Fri, 30 Aug 2019 15:55:32 +0300
-Message-ID: <20190830125532.GH2680@smile.fi.intel.com>
-References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
- <20190829101043.24963-7-sakari.ailus@linux.intel.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v1 1/1] i2c: iproc: Add i2c repeated start capability
+Date: Fri, 30 Aug 2019 14:56:26 +0200
+Message-ID: <20190830125626.GC2870@ninjato>
+References: <1565150941-27297-1-git-send-email-rayagonda.kokatanur@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qjNfmADvan18RZcF"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190829101043.24963-7-sakari.ailus@linux.intel.com>
+In-Reply-To: <1565150941-27297-1-git-send-email-rayagonda.kokatanur@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Ray Jui <ray.jui@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Lori Hikichi <lori.hikichi@broadcom.com>, Icarus Chau <icarus.chau@broadcom.com>, Shivaraj Shetty <sshetty1@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 01:10:39PM +0300, Sakari Ailus wrote:
-> %pS and %ps are now the preferred conversion specifiers to print function
-> %names. The functionality is equivalent; remove the old, deprecated %pF
-> %and %pf support.
 
-Btw, too many % in the commit message.
+--qjNfmADvan18RZcF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-With Best Regards,
-Andy Shevchenko
+Hi everyone,
+
+> +/*
+> + * If 'process_call' is true, then this is a multi-msg transfer that requires
+> + * a repeated start between the messages.
+> + * More specifically, it must be a write (reg) followed by a read (data).
+> + * The i2c quirks are set to enforce this rule.
+> + */
+
+With all the limitations in place, I wonder if it might be easier to
+implement an smbus_xfer callback instead? What is left that makes this
+controller more than SMBus and real I2C?
+
+> +	/* Process the read message if this is process call */
+
+Also, the term "process call" here seriously sounds like SMBus.
+
+> +		addr = msg->addr << 1 | 1;
+
+addr = i2c_8bit_addr_from_msg(msg);
+
+> +		u32 protocol;
+
+Hmm, another SMBus terminology.
+
+
+> +	if (num > 2) {
+> +		dev_err(iproc_i2c->device,
+> +			"Only support up to 2 messages. Current msg count %d\n",
+> +			num);
+> +		return -EOPNOTSUPP;
+> +	}
+
+With your quirks flags set, the core checks it for you.
+
+Kind regards,
+
+   Wolfram
+
+
+--qjNfmADvan18RZcF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1pHPkACgkQFA3kzBSg
+Kba6Ww/+MiQX21OGgbWmV1RzOJTJcm22OqliAmcBgIMJnQ3TB9Uoo0xpA4XkwD1z
+tHnXk1VKf4NsN7NLnoGRG8hYHwZLIElSTQz89eP/PMCmNnj5pu0ebgfP9X+NvC84
+vbFUN3fhmdhMlzvWlS/ixiEbvFud28JxJE9YAOpSDv+3sTMDM/EB2rTLk+tF1Hrn
++L3B0D2C99gN/fm9kakCYow3FBCXEIwv2CSok5YQ2OXPdteG/rSNnm+3q6gSnleg
+xEgzP6MNSkCJXUaGVt4VSNZ8uek8GQSwy+ZnPr8M07bpmhEfYARJYirQCMatbBoj
+0Ga9/TZn/tFfArKiJMbVMVMJNzo479UQR+NXLpdcTSTScTckAyeNiFECAHXLAw76
+ZMx8q2SAiO2GR9u8xJl7OQoPZoyc+4nHoLxtQVLW1xf+Kfl0irzNBZGQ41dk1gVL
+veiFQy3+By3BqwzA4BaOIU2gsXMYORQ1yIczK4vQOTzq6tShAzj3gjVbrl0ijfc/
+2EtqHB2b8b9X44xd1FppKiHfzcVc8RpNLUziBdJxlWKfC0SAVqM47IcSe/2beynS
+4BUh9UbHhuIjJ+cS0fLUuaCHukk5p22G+g/DqmbctT7kP5GaZ0vQ07dWFyxzNb9/
+4e04NH5ZecIvlp2xlAuJBOn1DFIIBCHbDCPNhj59U5YhY6Mj6NQ=
+=1TD/
+-----END PGP SIGNATURE-----
+
+--qjNfmADvan18RZcF--
