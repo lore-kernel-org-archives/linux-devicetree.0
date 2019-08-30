@@ -1,39 +1,57 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [RESEND PATCH v2 1/2] dt-bindings: reset: aoss: Add AOSS reset binding for SC7180 SoCs
-Date: Thu, 29 Aug 2019 22:32:50 -0700
-Message-ID: <20190830053250.D772A21897@mail.kernel.org>
-References: <20190824152411.21757-1-sibis@codeaurora.org> <20190824152411.21757-2-sibis@codeaurora.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 4/5] dt-bindings: dma: ti-edma: Add option for reserved
+ channel ranges
+Date: Fri, 30 Aug 2019 08:37:33 +0300
+Message-ID: <a4c5688b-cbeb-5059-5351-11d9ae1b25d5@ti.com>
+References: <20190823125618.8133-1-peter.ujfalusi@ti.com>
+ <20190823125618.8133-5-peter.ujfalusi@ti.com> <20190829224728.GA1198@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190824152411.21757-2-sibis@codeaurora.org>
+In-Reply-To: <20190829224728.GA1198@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org
-Cc: agross@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
+To: Rob Herring <robh@kernel.org>
+Cc: vkoul@kernel.org, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sibi Sankar (2019-08-24 08:24:10)
-> Add SC7180 AOSS reset to the list of possible bindings.
->=20
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt | 4 ++--
+Rob,
 
-Can you convert this binding to YAML/JSON schema? Would help to describe
-the 'one of' requirement below in a more structured way.
+On 30/08/2019 1.47, Rob Herring wrote:
+> On Fri, Aug 23, 2019 at 03:56:17PM +0300, Peter Ujfalusi wrote:
+>> Similarly to paRAM slots, channels can be used by other cores.
+>>
+>> Add optional property to configure the reserved channel ranges.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/dma/ti-edma.txt | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
+>> index 4bbc94d829c8..1198682ada99 100644
+>> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
+>> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
+>> @@ -42,6 +42,9 @@ Optional properties:
+>>  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
+>>  		the driver, they are allocated to be used by for example the
+>>  		DSP. See example.
+>> +- ti,edma-reserved-chan-ranges: channel ranges which should not be used by
+>> +		the driver, they are allocated to be used by for example the
+>> +		DSP. See example.
+> 
+> Based on the other thread, I think extending dma-channel-mask to a 
+> uint32-array makes sense here.
 
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt =
-b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
-> index 510c748656ec5..3eb6a22ced4bc 100644
-> --- a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
-> +++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
-> @@ -8,8 +8,8 @@ Required properties:
->  - compatible:
->         Usage: required
->         Value type: <string>
-> -       Definition: must be:
-> -                   "qcom,sdm845-aoss-cc"
-> +       Definition: must be one of:
+Yes, that is the reason I have asked on that and I'm in progress of
+converting the edma driver to use the dma-channel-mask.
+Just need to do some shuffling in the driver to get the mask in a form
+usable by the driver.
+
+I'll send an updated series early next week.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
