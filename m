@@ -1,316 +1,60 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [RFC PATCH V2 4/4] platform: mtk-isp: Add Mediatek FD driver
-Date: Fri, 30 Aug 2019 17:33:53 +0900
-Message-ID: <CAAFQd5D-Yg1FjUE_rwmqfS1gvfE0=MZ=r-ziueU_37-uo9QTbw@mail.gmail.com>
-References: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
- <1562661672-22439-5-git-send-email-Jerry-Ch.chen@mediatek.com>
- <20190802082815.GA203993@chromium.org> <1566724680.20680.8.camel@mtksdccf07>
- <CAAFQd5Dw+jaT-+LAUEVeB8W1zdnOgPw7u+aCfDWhYW1SfbzO8g@mail.gmail.com>
- <1566957625.20680.33.camel@mtksdccf07>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1566957625.20680.33.camel@mtksdccf07>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UG8tWWFuZyBIdWFuZyAo6buD5p+P6Zm9KQ==?= <po-yang.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?U2ogSHVhbmcgKOm7g+S/oeeSiyk=?= <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <matthias.bgg>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH 1/5] dt-bindings: fsl: scu: add scu power key binding
+Date: Fri, 30 Aug 2019 16:53:45 -0400
+Message-ID: <1567198429-27886-1-git-send-email-Anson.Huang@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com, will@kernel.org, dmitry.torokhov@gmail.com, aisheng.dong@nxp.com, ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com, daniel.baluta@nxp.com, leonard.crestez@nxp.com, olof@lixom.net, mripard@kernel.org, arnd@arndb.de, jagan@amarulasolutions.com, bjorn.andersson@linaro.org, dinguyen@kernel.org, marcin.juszkiewicz@linaro.org, hsweeten@visionengravers.com, tglx@linutronix.de, gregkh@linuxfoundation.org, stefan@agner.ch, ronald@innovation.ch, ping.bai@nxp.com, m.felsch@pengutronix.de, andriy.shevchenko@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-inpu
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 11:00 AM Jerry-ch Chen
-<Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->
-> Hi Tomasz,
->
-> On Mon, 2019-08-26 at 14:36 +0800, Tomasz Figa wrote:
-> > Hi Jerry,
-> >
-> > On Sun, Aug 25, 2019 at 6:18 PM Jerry-ch Chen
-> > <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > >
-> > > Hi Tomasz,
-> > >
-> > > On Fri, 2019-08-02 at 16:28 +0800, Tomasz Figa wrote:
-> > > > Hi Jerry,
-> > > >
-> > > > On Tue, Jul 09, 2019 at 04:41:12PM +0800, Jerry-ch Chen wrote:
-> > > > > From: Jerry-ch Chen <jerry-ch.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > > >
-> > > > > This patch adds the driver of Face Detection (FD) unit in
-> > > > > Mediatek camera system, providing face detection function.
-> > > > >
-> > > > > The mtk-isp directory will contain drivers for multiple IP
-> > > > > blocks found in Mediatek ISP system. It will include ISP Pass 1
-> > > > > driver (CAM), sensor interface driver, DIP driver and face
-> > > > > detection driver.
-> > > > >
-> > > > > Signed-off-by: Jerry-ch Chen <jerry-ch.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > > > ---
-> > > > >  drivers/media/platform/Makefile               |    2 +
-> > > > >  drivers/media/platform/mtk-isp/fd/Makefile    |    5 +
-> > > > >  drivers/media/platform/mtk-isp/fd/mtk_fd.h    |  157 +++
-> > > > >  drivers/media/platform/mtk-isp/fd/mtk_fd_40.c | 1259 +++++++++++++++++++++++++
-> > > > >  include/uapi/linux/v4l2-controls.h            |    4 +
-> > > > >  5 files changed, 1427 insertions(+)
-> > > > >  create mode 100644 drivers/media/platform/mtk-isp/fd/Makefile
-> > > > >  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd.h
-> > > > >  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd_40.c
-> > > > >
-> > > >
-> > > > Thanks for the patch! I finally got a chance to fully review the code. Sorry
-> > > > for the delay. Please check my comments inline.
-> > > >
-> > > I appreciate your comments.
-> > > I've fixed most of the comments and verifying them,
-> > > Sorry for the delay, here is the reply.
-> > >
-> >
-> > Thanks for replying to all the comments, it's very helpful. I'll snip
-> > the parts that I don't have any further comments.
-> >
-> > [snip]
-> >
-> > > > > +   if (usercount == 1) {
-> > > > > +           pm_runtime_get_sync(&fd_dev->pdev->dev);
-> > > > > +           if (mtk_fd_hw_enable(fd_hw)) {
-> > > > > +                   pm_runtime_put_sync(&fd_dev->pdev->dev);
-> > > > > +                   atomic_dec_return(&fd_hw->fd_user_cnt);
-> > > > > +                   mutex_unlock(&fd_hw->fd_hw_lock);
-> > > > > +                   return -EINVAL;
-> > > > > +           }
-> > > > > +   }
-> > > >
-> > > > This is a simple mem-to-mem device, so there is no reason to keep it active
-> > > > all the time it's streaming. Please just get the runtime PM counter when
-> > > > queuing a job to the hardware and release it when the job finishes.
-> > > >
-> > > > I guess we might still want to do the costly operations like rproc_boot()
-> > > > when we start streaming, though.
-> > > >
-> > > Do you mean by moving the pm_runtime_get/put stuff to the job execution
-> > > and job finish place?
-> >
-> > Yes.
-> >
-> > > the rproc_boot() operation will be done here.
-> > >
-> >
-> > How much time does the rproc_boot() operation take?
-> >
->
-> About 0.7~1.3ms, average 0.8ms (14 measurements)
->
+NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+system controller, the system controller is in charge of system
+power, clock and power key event etc. management, Linux kernel
+has to communicate with system controller via MU (message unit)
+IPC to get power key event, add binding doc for i.MX system
+controller power key driver.
 
-Okay, I think we may want to call it when we start streaming then.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt      | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-[snip]
-
-> > > > > +static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
-> > > > > +                             unsigned int *num_buffers,
-> > > > > +                             unsigned int *num_planes,
-> > > > > +                             unsigned int sizes[],
-> > > > > +                             struct device *alloc_devs[])
-> > > > > +{
-> > > > > +   struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
-> > > > > +   struct device *dev = ctx->dev;
-> > > > > +   unsigned int size;
-> > > > > +
-> > > > > +   switch (vq->type) {
-> > > > > +   case V4L2_BUF_TYPE_META_CAPTURE:
-> > > > > +           size = ctx->dst_fmt.buffersize;
-> > > > > +           break;
-> > > > > +   case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
-> > > > > +           size = ctx->src_fmt.plane_fmt[0].sizeimage;
-> > > > > +           break;
-> > > > > +   default:
-> > > > > +           dev_err(dev, "invalid queue type: %d\n", vq->type);
-> > > >
-> > > > We should need to handle this.
-> > > >
-> > > Do you mean by giving a size instead of return -EINVAL?
-> > >
-> >
-> > Sorry, typo. I meant we shouldn't need to handle it, because we can't
-> > get any other queue type here.
-> >
->
-> Ok, I see, I will remove it.
-> also, this function will be updated as following due to the 2 plane
-> case.
->
-> static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
->                                   unsigned int *num_buffers,
->                                   unsigned int *num_planes,
->                                   unsigned int sizes[],
->                                   struct device *alloc_devs[])
-> {
->         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
->         struct device *dev = ctx->dev;
->         unsigned int size[2];
->
->         switch (vq->type) {
->         case V4L2_BUF_TYPE_META_CAPTURE:
->                 size[0] = ctx->dst_fmt.buffersize;
->                 break;
->         case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
->                 size[0] = ctx->src_fmt.plane_fmt[0].sizeimage;
->                 if (*num_planes == 2)
->                         size[1] = ctx->src_fmt.plane_fmt[1].sizeimage;
->                 break;
->         }
->
->         if (*num_planes == 1) {
->                 if (sizes[0] < size[0])
->                         return -EINVAL;
->         } else if (*num_planes == 2) {
->                 if ((sizes[0] < size[0]) && (sizes[1] < size[1]))
->                         return -EINVAL;
-
-Can we just use a loop here and combine the 2 cases above?
-
-Also, we need to fail with -EINVAL if *num_planes is > 2.
-
->         } else {
->                 *num_planes = 1;
->                 sizes[0] = size[0];
-
-This should be the case if *num_planes == 0 and the number of planes
-and sizes should match the currently active format.
-
->         }
->
->         return 0;
-> }
->
-> > [snip]
-> >
-> > > > > +static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
-> > > > > +{
-> > > > > +   struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
-> > > > > +   struct vb2_buffer *vb;
-> > > >
-> > > > How do we guarantee here that the hardware isn't still accessing the buffers
-> > > > removed below?
-> > > >
-> > > Maybe we can check the driver state flag and aborting the unfinished
-> > > jobs?
-> > > (fd_hw->state == FD_ENQ)
-> > >
-> >
-> > Yes, we need to either cancel or wait for the currently processing
-> > job. It depends on hardware capabilities, but cancelling is generally
-> > preferred for the lower latency.
-> >
-> Ok, it the state is ENQ, then we can disable the FD hw by controlling
-> the registers.
->
-> for example:
->         writel(0x0, fd->fd_base + FD_HW_ENABLE);
->         writel(0x0, fd->fd_base + FD_INT_EN);
->
-
-What's exactly the effect of writing 0 to FD_HW_ENABLE?
-
-[snip]
-
-> > > > > +}
-> > > > > +
-> > > > > +static void mtk_fd_vb2_request_complete(struct vb2_buffer *vb)
-> > > > > +{
-> > > > > +   struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vb->vb2_queue);
-> > > > > +
-> > > > > +   v4l2_ctrl_request_complete(vb->req_obj.req, &ctx->hdl);
-> > > > > +}
-> > > > > +
-> > > > > +static void mtk_fd_fill_pixfmt_mp(struct v4l2_pix_format_mplane *dfmt,
-> > > > > +                             const struct v4l2_pix_format_mplane *sfmt)
-> > > > > +{
-> > > > > +   dfmt->width = sfmt->width;
-> > > > > +   dfmt->height = sfmt->height;
-> > > > > +   dfmt->pixelformat = sfmt->pixelformat;
-> > > > > +   dfmt->field = sfmt->field;
-> > > > > +   dfmt->colorspace = sfmt->colorspace;
-> > > > > +   dfmt->num_planes = sfmt->num_planes;
-> > > > > +
-> > > > > +   /* Use default */
-> > > > > +   dfmt->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
-> > > > > +   dfmt->quantization = V4L2_QUANTIZATION_DEFAULT;
-> > > > > +   dfmt->xfer_func =
-> > > > > +           V4L2_MAP_XFER_FUNC_DEFAULT(dfmt->colorspace);
-> > > > > +   dfmt->plane_fmt[0].bytesperline = dfmt->width * 2;
-> > > > > +   dfmt->plane_fmt[0].sizeimage =
-> > > > > +           dfmt->height * dfmt->plane_fmt[0].bytesperline;
-> > > > > +   memset(dfmt->reserved, 0, sizeof(dfmt->reserved));
-> > > > > +}
-> > > >
-> > > > Could we unify this function with mtk_fd_m2m_try_fmt_out_mp()? That function
-> > > > should be almost directly reusable for the default format initialization +/-
-> > > > the arguments passed to it.
-> > > >
-> > > Ok, I will try to reuse it as following:
-> > >
-> > > static void mtk_fd_fill_pixfmt_mp(struct v4l2_pix_format_mplane *dfmt,
-> > >   const struct v4l2_pix_format_mplane *sfmt)
-> > > {
-> > > dfmt->field = V4L2_FIELD_NONE;
-> > > dfmt->colorspace = V4L2_COLORSPACE_BT2020;
-> > > dfmt->num_planes = sfmt->num_planes;
-> > > dfmt->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
-> > > dfmt->quantization = V4L2_QUANTIZATION_DEFAULT;
-> > > dfmt->xfer_func =
-> > > V4L2_MAP_XFER_FUNC_DEFAULT(dfmt->colorspace);
-> > >
-> > > /* Keep user setting as possible */
-> > > dfmt->width = clamp(dfmt->width,
-> > >     MTK_FD_OUTPUT_MIN_WIDTH,
-> > >     MTK_FD_OUTPUT_MAX_WIDTH);
-> > > dfmt->height = clamp(dfmt->height,
-> > >      MTK_FD_OUTPUT_MIN_HEIGHT,
-> > >      MTK_FD_OUTPUT_MAX_HEIGHT);
-> > >
-> > > if (sfmt->num_planes == 2) {
-> > > /* NV16M and NV61M has 1 byte per pixel */
-> > > dfmt->plane_fmt[0].bytesperline = dfmt->width;
-> > > dfmt->plane_fmt[1].bytesperline = dfmt->width;
-> > > } else {
-> > > /* 2 bytes per pixel */
-> > > dfmt->plane_fmt[0].bytesperline = dfmt->width * 2;
-> > > }
-> > >
-> > > dfmt->plane_fmt[0].sizeimage =
-> > > dfmt->height * dfmt->plane_fmt[0].bytesperline;
-> > > }
-> >
-> > How would the implementation of TRY_FMT look in this case?
-> >
->
-> It will be looked like:
->
-> static int mtk_fd_try_fmt_out_mp(struct file *file,
->                                      void *fh,
->                                      struct v4l2_format *f)
-> {
->         struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
->         const struct v4l2_pix_format_mplane *fmt;
->
->         fmt = mtk_fd_find_fmt(pix_mp->pixelformat);
->         if (!fmt)
->                 fmt = &mtk_fd_img_fmts[0];      /* Get default img fmt */
->
->         mtk_fd_fill_pixfmt_mp(pix_mp, fmt);
->         return 0;
-> }
->
-
-Okay, thanks!
-
-Best regards,
-Tomasz
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index c149fad..001d0b7 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -157,6 +157,17 @@ Required properties:
+ Optional properties:
+ - timeout-sec: contains the watchdog timeout in seconds.
+ 
++Power key bindings based on SCU Message Protocol
++------------------------------------------------------------
++
++Required properties:
++- compatible: should be:
++              "fsl,imx8qxp-sc-pwrkey"
++              followed by "fsl,imx-sc-pwrkey";
++- linux,keycodes: See Documentation/devicetree/bindings/input/keys.txt
++Optional Properties:
++- wakeup-source: See Documentation/devicetree/bindings/power/wakeup-source.txt
++
+ Example (imx8qxp):
+ -------------
+ aliases {
+@@ -220,6 +231,13 @@ firmware {
+ 			compatible = "fsl,imx8qxp-sc-rtc";
+ 		};
+ 
++		scu_pwrkey: scu-pwrkey {
++			compatible = "fsl,imx8qxp-sc-pwrkey", "fsl,imx-sc-pwrkey";
++			linux,keycode = <KEY_POWER>;
++			wakeup-source;
++			status = "disabled";
++		};
++
+ 		watchdog {
+ 			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
+ 			timeout-sec = <60>;
+-- 
+2.7.4
