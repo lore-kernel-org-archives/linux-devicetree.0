@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v2 06/11] phy: phy-mtk-tphy: add a property for disconnect threshold
-Date: Fri, 30 Aug 2019 15:14:53 +0800
-Message-ID: <1567149298-29366-6-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v2 09/11] phy: phy-mtk-tphy: remove unused u3phya_ref clock
+Date: Fri, 30 Aug 2019 15:14:56 +0800
+Message-ID: <1567149298-29366-9-git-send-email-chunfeng.yun@mediatek.com>
 References: <1567149298-29366-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,64 +12,73 @@ To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is used to tune the threshold of disconnect
+The u3phya_ref clock is already moved into sub-node, and
+renamed as ref clock, no used anymore now, so remove it,
+this can avoid confusion when support new platforms
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
 v2: no changes
 ---
- drivers/phy/mediatek/phy-mtk-tphy.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ drivers/phy/mediatek/phy-mtk-tphy.c | 18 ------------------
+ 1 file changed, 18 deletions(-)
 
 diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
-index cb2ed3b25068..5afe33621dbc 100644
+index 96c62e3a3300..c6424fd2a06d 100644
 --- a/drivers/phy/mediatek/phy-mtk-tphy.c
 +++ b/drivers/phy/mediatek/phy-mtk-tphy.c
-@@ -60,6 +60,8 @@
- #define U3P_USBPHYACR6		0x018
- #define PA6_RG_U2_BC11_SW_EN		BIT(23)
- #define PA6_RG_U2_OTG_VBUSCMP_EN	BIT(20)
-+#define PA6_RG_U2_DISCTH		GENMASK(7, 4)
-+#define PA6_RG_U2_DISCTH_VAL(x)	((0xf & (x)) << 4)
- #define PA6_RG_U2_SQTH		GENMASK(3, 0)
- #define PA6_RG_U2_SQTH_VAL(x)	(0xf & (x))
+@@ -312,8 +312,6 @@ struct mtk_phy_instance {
+ struct mtk_tphy {
+ 	struct device *dev;
+ 	void __iomem *sif_base;	/* only shared sif */
+-	/* deprecated, use @ref_clk instead in phy instance */
+-	struct clk *u3phya_ref;	/* reference clock of usb3 anolog phy */
+ 	const struct mtk_phy_pdata *pdata;
+ 	struct mtk_phy_instance **phys;
+ 	int nphys;
+@@ -921,12 +919,6 @@ static int mtk_phy_init(struct phy *phy)
+ 	struct mtk_tphy *tphy = dev_get_drvdata(phy->dev.parent);
+ 	int ret;
  
-@@ -300,6 +302,7 @@ struct mtk_phy_instance {
- 	int eye_src;
- 	int eye_vrt;
- 	int eye_term;
-+	int discth;
- 	bool bc12_en;
- };
+-	ret = clk_prepare_enable(tphy->u3phya_ref);
+-	if (ret) {
+-		dev_err(tphy->dev, "failed to enable u3phya_ref\n");
+-		return ret;
+-	}
+-
+ 	ret = clk_prepare_enable(instance->ref_clk);
+ 	if (ret) {
+ 		dev_err(tphy->dev, "failed to enable ref_clk\n");
+@@ -992,7 +984,6 @@ static int mtk_phy_exit(struct phy *phy)
+ 		u2_phy_instance_exit(tphy, instance);
  
-@@ -850,9 +853,12 @@ static void phy_parse_property(struct mtk_tphy *tphy,
- 				 &instance->eye_vrt);
- 	device_property_read_u32(dev, "mediatek,eye-term",
- 				 &instance->eye_term);
--	dev_dbg(dev, "bc12:%d, src:%d, vrt:%d, term:%d\n",
-+	device_property_read_u32(dev, "mediatek,discth",
-+				 &instance->discth);
-+	dev_dbg(dev, "bc12:%d, src:%d, vrt:%d, term:%d, disc:%d\n",
- 		instance->bc12_en, instance->eye_src,
--		instance->eye_vrt, instance->eye_term);
-+		instance->eye_vrt, instance->eye_term,
-+		instance->discth);
+ 	clk_disable_unprepare(instance->ref_clk);
+-	clk_disable_unprepare(tphy->u3phya_ref);
+ 	return 0;
  }
  
- static void u2_phy_props_set(struct mtk_tphy *tphy,
-@@ -888,6 +894,13 @@ static void u2_phy_props_set(struct mtk_tphy *tphy,
- 		tmp |= PA1_RG_TERM_SEL_VAL(instance->eye_term);
- 		writel(tmp, com + U3P_USBPHYACR1);
+@@ -1127,11 +1118,6 @@ static int mtk_tphy_probe(struct platform_device *pdev)
+ 		}
  	}
-+
-+	if (instance->discth) {
-+		tmp = readl(com + U3P_USBPHYACR6);
-+		tmp &= ~PA6_RG_U2_DISCTH;
-+		tmp |= PA6_RG_U2_DISCTH_VAL(instance->discth);
-+		writel(tmp, com + U3P_USBPHYACR6);
-+	}
- }
  
- static int mtk_phy_init(struct phy *phy)
+-	/* it's deprecated, make it optional for backward compatibility */
+-	tphy->u3phya_ref = devm_clk_get_optional(dev, "u3phya_ref");
+-	if (IS_ERR(tphy->u3phya_ref))
+-		return PTR_ERR(tphy->u3phya_ref);
+-
+ 	tphy->src_ref_clk = U3P_REF_CLK;
+ 	tphy->src_coef = U3P_SLEW_RATE_COEF;
+ 	/* update parameters of slew rate calibrate if exist */
+@@ -1178,10 +1164,6 @@ static int mtk_tphy_probe(struct platform_device *pdev)
+ 		phy_set_drvdata(phy, instance);
+ 		port++;
+ 
+-		/* if deprecated clock is provided, ignore instance's one */
+-		if (tphy->u3phya_ref)
+-			continue;
+-
+ 		instance->ref_clk = devm_clk_get_optional(&phy->dev, "ref");
+ 		if (IS_ERR(instance->ref_clk)) {
+ 			dev_err(dev, "failed to get ref_clk(id-%d)\n", port);
 -- 
 2.23.0
