@@ -1,128 +1,112 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
-Date: Fri, 30 Aug 2019 11:44:56 +0200
-Message-ID: <20190830094456.GO21922@piout.net>
-References: <20190830091720.41156-1-biwen.li@nxp.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [v5 2/2] dt-bindings: mtd: Add Cadence NAND controller driver
+Date: Fri, 30 Aug 2019 11:46:38 +0200
+Message-ID: <20190830114638.33dc4eb2@xps13>
+References: <20190725145804.8886-1-piotrs@cadence.com>
+        <20190725145955.13951-1-piotrs@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190830091720.41156-1-biwen.li@nxp.com>
+In-Reply-To: <20190725145955.13951-1-piotrs@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Biwen Li <biwen.li@nxp.com>
-Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Martin Fuzzey <mfuzzey@parkeon.com>
+To: Piotr Sroka <piotrs@cadence.com>
+Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <bbrezillon@kernel.org>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, BrianNorris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On 30/08/2019 17:17:19+0800, Biwen Li wrote:
-> Add some properties for pcf85263/pcf85363 as follows:
->   - interrupt-output-pin: string type
->   - quartz-load-capacitance: integer type
->   - quartz-drive-strength: integer type
->   - quartz-low-jitter: bool type
->   - wakeup-source: bool type
+Hi Piotr,
+
+Piotr Sroka <piotrs@cadence.com> wrote on Thu, 25 Jul 2019 15:59:55
++0100:
+
+> Document the bindings used by Cadence NAND controller driver
 > 
-> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> Signed-off-by: Piotr Sroka <piotrs@cadence.com>
 > ---
->  .../devicetree/bindings/rtc/pcf85363.txt      | 31 +++++++++++++++++++
->  include/dt-bindings/rtc/pcf85363.h            | 15 +++++++++
->  2 files changed, 46 insertions(+)
->  create mode 100644 include/dt-bindings/rtc/pcf85363.h
+> Changes for v5:
+> - replace "_" by "-" in all properties
+> - change compatible name from cdns,hpnfc to cdns,hp-nfc
+> Changes for v4:
+> - add commit message
+> Changes for v3:
+> - add unit suffix for board_delay 
+> - move child description to proper place
+> - remove prefix cadence_ for reg and sdma fields
+> Changes for v2:
+> - remove chip dependends parameters from dts bindings
+> - add names for register ranges in dts bindings
+> - add generic bindings to describe NAND chip representation
+> ---
+>  .../bindings/mtd/cadence-nand-controller.txt       | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> index 94adc1cf93d9..d83359990bd7 100644
-> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> @@ -8,10 +8,41 @@ Required properties:
->  Optional properties:
->  - interrupts: IRQ line for the RTC (not implemented).
->  
-> +- interrupt-output-pin: The interrupt output pin must be
-> +  "NONE", "INTA" or "INTB", default value is "NONE"
-> +
-
-default value can't be none if there is an interrupts property. Also,
-both pins can be enabled at the same time and this binding would prevent
-that.
-Finally, it may also be desirable to have some interrupts on one pin and
-other interrupts on another pin e.g. alarms and timestamping on INTA
-going to the SoC and only alarms on INTB going to a PMIC.
-
-> +- quartz-load-capacitance: The internal capacitor to select for the quartz:
-> +	PCF85263_QUARTZCAP_7pF		[0]
-> +	PCF85263_QUARTZCAP_6pF		[1]
-> +	PCF85263_QUARTZCAP_12p5pF	[2] DEFAULT
-> +
-
-The correct generic property is quartz-load-femtofarads.
-
-> +- quartz-drive-strength: Drive strength for the quartz:
-> +	PCF85263_QUARTZDRIVE_NORMAL	[0] DEFAULT
-> +	PCF85263_QUARTZDRIVE_LOW	[1]
-> +	PCF85263_QUARTZDRIVE_HIGH	[2]
-> +
-
-This has to take a value in ohm to be generic and then you don't need
-the include file.
-
-> +- quartz-low-jitter: Boolean property, if present enables low jitter mode
-> +  which reduces jitter at the cost of increased power consumption.
-> +
-
-I think that property needs to be nxp specific.
-
-> +- wakeup-source: Boolean property, mark the chip as a wakeup source,
-> +  independently of the availability of an IRQ line connected to the SoC.
-> +  This is useful if the IRQ line is connected to a PMIC or other circuit
-> +  that can power up the device rather than to a normal SOC interrupt.
-> +
-
-This is already defined in bindings/power/wakeup-source.txt I guess you
-can simply refer to it.
-
->  Example:
->  
->  pcf85363: pcf85363@51 {
->  	compatible = "nxp,pcf85363";
->  	reg = <0x51>;
-> +
-> +	interrupt-parent = <&gpio1>;
-> +	interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
-> +
-> +	#include <dt-bindings/rtc/pcf85363.h>
-> +	wakeup-source;
-> +	interrupt-output-pin = "INTA";
-> +	quartz-load-capacitance = <PCF85363_QUARTZCAP_12p5pF>;
-> +	quartz-drive-strength = <PCF85363_QUARTZDRIVE_LOW>;
-> +	quartz-low-jitter;
->  };
->  
-> diff --git a/include/dt-bindings/rtc/pcf85363.h b/include/dt-bindings/rtc/pcf85363.h
+> diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
 > new file mode 100644
-> index 000000000000..2c06c28eb5ff
+> index 000000000000..423547a3f993
 > --- /dev/null
-> +++ b/include/dt-bindings/rtc/pcf85363.h
-> @@ -0,0 +1,15 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _DT_BINDINGS_RTC_PCF85363_H
-> +#define _DT_BINDINGS_RTC_PCF85363_H
+> +++ b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+> @@ -0,0 +1,50 @@
+> +* Cadence NAND controller
 > +
-> +/* Quartz capacitance */
-> +#define PCF85363_QUARTZCAP_7pF		0
-> +#define PCF85363_QUARTZCAP_6pF		1
-> +#define PCF85363_QUARTZCAP_12p5pF	2
+> +Required properties:
+> +  - compatible : "cdns,hp-nfc"
+> +  - reg : Contains two entries, each of which is a tuple consisting of a
+> +	  physical address and length. The first entry is the address and
+> +	  length of the controller register set. The second entry is the
+> +	  address and length of the Slave DMA data port.
+> +  - reg-names: should contain "reg" and "sdma"
+> +  - interrupts : The interrupt number.
+> +  - clocks: phandle of the controller core clock (nf_clk).
 > +
-> +/* Quartz drive strength */
-> +#define PCF85363_QUARTZDRIVE_NORMAL	0
-> +#define PCF85363_QUARTZDRIVE_LOW	1
-> +#define PCF85363_QUARTZDRIVE_HIGH	2
+> +Optional properties:
+> +  - dmas: shall reference DMA channel associated to the NAND controller
+> +  - cdns,board-delay-ps : Estimated Board delay. The value includes the total
+> +    round trip delay for the signals and is used for deciding on values
+> +    associated with data read capture. The example formula for SDR mode is
+> +    the following:
+> +    board delay = RE#PAD delay + PCB trace to device + PCB trace from device
+> +    + DQ PAD delay
 > +
-> +#endif /* _DT_BINDINGS_RTC_PCF85363_H */
-> -- 
-> 2.17.1
-> 
+> +Child nodes represent the available NAND chips.
+> +
+> +Required properties of NAND chips:
+> +  - reg: shall contain the native Chip Select ids from 0 to max supported by
+> +    the cadence nand flash controller
+> +
+> +
+> +See Documentation/devicetree/bindings/mtd/nand.txt for more details on
+> +generic bindings.
+> +
+> +Example:
+> +
+> +nand_controller: nand-controller @60000000 {
+> +	  compatible = "cdns,hp-nfc";
+> +	  reg = <0x60000000 0x10000>, <0x80000000 0x10000>;
+> +	  reg-names = "reg", "sdma";
+> +	  clocks = <&nf_clk>;
+> +	  cdns,board-delay-ps = <4830>;
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Are you sure you want to export this to the user? Not sure it is easily
+understandable and tunable... I'm not against but I would have troubles
+tuning it myself, unless using the documented value. Maybe you should
+explain more how to derive it?
+
+The rest looks fine, let's see if Rob agrees. Maybe he will request a
+yaml schema; in this case you can check sunxi NAND bindings which
+already have been converted.
+
+> +	  interrupts = <2 0>;
+> +	  nand@0 {
+> +	      reg = <0>;
+> +	      label = "nand-1";
+> +	  };
+> +	  nand@1 {
+> +	      reg = <1>;
+> +	      label = "nand-2";
+> +	  };
+> +
+> +};
+
+Thanks,
+Miquèl
