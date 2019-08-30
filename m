@@ -1,55 +1,99 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v2 09/15] arm64: dts: msm8996: thermal: Add interrupt support
-Date: Sat, 31 Aug 2019 01:40:10 +0530
-Message-ID: <CAP245DX1PfszgyL4JB60zqbFynusXUjATrkUr1_Ps6NG-fRx=g@mail.gmail.com>
-References: <cover.1566907161.git.amit.kucheria@linaro.org>
- <1cb5ab682bce53d32f3a73b5b29cc6c3e800bfcc.1566907161.git.amit.kucheria@linaro.org>
- <5d65cc4a.1c69fb81.376b6.2486@mx.google.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 2/3] dt-bindings: sound: Add Xilinx logicPD-I2S FPGA IP
+ bindings
+Date: Fri, 30 Aug 2019 23:06:06 +0200
+Message-ID: <20190830210607.22644-2-miquel.raynal@bootlin.com>
+References: <20190830210607.22644-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d65cc4a.1c69fb81.376b6.2486@mx.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Brian Masney <masneyb@onstation.org>, DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190830210607.22644-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, alexandre@bootlin.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 6:05 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Amit Kucheria (2019-08-27 05:14:05)
-> > Register upper-lower interrupts for each of the two tsens controllers.
-> >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/msm8996.dtsi | 60 ++++++++++++++-------------
-> >  1 file changed, 32 insertions(+), 28 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> > index 96c0a481f454e..bb763b362c162 100644
-> > --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> > @@ -175,8 +175,8 @@
-> >
-> >         thermal-zones {
-> >                 cpu0-thermal {
-> > -                       polling-delay-passive = <250>;
-> > -                       polling-delay = <1000>;
-> > +                       polling-delay-passive = <0>;
-> > +                       polling-delay = <0>;
->
-> Is it really necessary to change the configuration here to be 0 instead
-> of some number? Why can't we detect that there's an interrupt and then
-> ignore these properties?
+Document the logicPD I2S FPGA block bindings in yaml.
 
-AFAICT, the thermal core currently depends on the passive and
-polling_delay being set to 0 to avoid setting dispatching polling work
-to a workqueue. If we leave the values to set, we'll continue to poll
-inspite of an interrupt. See
-thermal_core.c:thermal_zone_device_set_polling()
+Syntax verified with dt-doc-validate.
 
-But I agree, the core should detect the presence of an interrupt
-property and ignore the polling intervals. I'll see if I can fix this
-up later.
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ .../bindings/sound/xlnx,logicpd-i2s.yaml      | 57 +++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/xlnx,logicpd-i2s.yaml
 
-Regards,
-Amit
+diff --git a/Documentation/devicetree/bindings/sound/xlnx,logicpd-i2s.yaml b/Documentation/devicetree/bindings/sound/xlnx,logicpd-i2s.yaml
+new file mode 100644
+index 000000000000..cbff641af199
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/xlnx,logicpd-i2s.yaml
+@@ -0,0 +1,57 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/xlnx,logicpd-i2s.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Device-Tree bindings for Xilinx logicPD I2S FPGA block
++
++maintainers:
++  - Miquel Raynal <miquel.raynal@bootlin.com>
++
++description: |
++  The IP supports I2S playback/capture audio. It acts as a slave and
++  clocks should come from the codec. It only supports two channels and
++  S16_LE format.
++
++properties:
++  compatible:
++    items:
++      - const: xlnx,logicpd-i2s
++
++  reg:
++    maxItems: 1
++    description:
++      Base address and size of the IP core instance.
++
++  interrupts:
++    minItems: 1
++    maxItems: 2
++    items:
++      - description: tx interrupt
++      - description: rx interrupt
++    description:
++      Either the Tx interruption or the Rx interruption or both.
++
++  interrupt-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      - const: tx
++      - const: rx
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupts-controller
++
++examples:
++  - |
++    logii2s_dai: logii2s-dai@43c10000 {
++        reg = <0x43c10000 0x1000>;
++        compatible = "xlnx,logicpd-i2s-dai";
++        interrupt-parent = <&intc>;
++        interrupts = <0 29 IRQ_TYPE_LEVEL_HIGH>, <0 30 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "rx", "tx";
++    };
+-- 
+2.20.1
