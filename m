@@ -1,150 +1,167 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: RE: [EXT] Re: [1/2] dt-bindings: rtc: pcf85263/pcf85363: add some
- properties
-Date: Fri, 30 Aug 2019 10:11:03 +0000
-Message-ID: <DB7PR04MB4490C2664AE88D18D52E4B018FBD0@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190830091720.41156-1-biwen.li@nxp.com>
- <20190830094456.GO21922@piout.net>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: [PATCH v4 06/14] dt-bindings: opp: qcom-nvmem: Support pstates provided by a power domain
+Date: Fri, 30 Aug 2019 12:29:15 +0200
+Message-ID: <20190830102915.7418-1-niklas.cassel@linaro.org>
+References: <20190819100957.17095-1-niklas.cassel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190830094456.GO21922@piout.net>
-Content-Language: en-US
+In-Reply-To: <20190819100957.17095-1-niklas.cassel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Leo Li <leoyang.li@nxp.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Martin Fuzzey <mfuzzey@parkeon.com>
+To: Ilia Lin <ilia.lin@kernel.org>, Andy Gross <agross@kernel.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org, ulf.hansson@linaro.org, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->=20
-> On 30/08/2019 17:17:19+0800, Biwen Li wrote:
-> > Add some properties for pcf85263/pcf85363 as follows:
-> >   - interrupt-output-pin: string type
-> >   - quartz-load-capacitance: integer type
-> >   - quartz-drive-strength: integer type
-> >   - quartz-low-jitter: bool type
-> >   - wakeup-source: bool type
-> >
-> > Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
-> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > ---
-> >  .../devicetree/bindings/rtc/pcf85363.txt      | 31
-> +++++++++++++++++++
-> >  include/dt-bindings/rtc/pcf85363.h            | 15 +++++++++
-> >  2 files changed, 46 insertions(+)
-> >  create mode 100644 include/dt-bindings/rtc/pcf85363.h
-> >
-> > diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> > b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> > index 94adc1cf93d9..d83359990bd7 100644
-> > --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> > +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> > @@ -8,10 +8,41 @@ Required properties:
-> >  Optional properties:
-> >  - interrupts: IRQ line for the RTC (not implemented).
-> >
-> > +- interrupt-output-pin: The interrupt output pin must be
-> > +  "NONE", "INTA" or "INTB", default value is "NONE"
-> > +
->=20
-> default value can't be none if there is an interrupts property. Also, bot=
-h pins
-> can be enabled at the same time and this binding would prevent that.
-> Finally, it may also be desirable to have some interrupts on one pin and
-> other interrupts on another pin e.g. alarms and timestamping on INTA goin=
-g
-> to the SoC and only alarms on INTB going to a PMIC.
-Ok, got it, I will correct it on v2.
->=20
-> > +- quartz-load-capacitance: The internal capacitor to select for the qu=
-artz:
-> > +     PCF85263_QUARTZCAP_7pF          [0]
-> > +     PCF85263_QUARTZCAP_6pF          [1]
-> > +     PCF85263_QUARTZCAP_12p5pF       [2] DEFAULT
-> > +
->=20
-> The correct generic property is quartz-load-femtofarads.
-I will replace it on v2.
->=20
-> > +- quartz-drive-strength: Drive strength for the quartz:
-> > +     PCF85263_QUARTZDRIVE_NORMAL     [0] DEFAULT
-> > +     PCF85263_QUARTZDRIVE_LOW        [1]
-> > +     PCF85263_QUARTZDRIVE_HIGH       [2]
-> > +
->=20
-> This has to take a value in ohm to be generic and then you don't need the
-> include file.
-I will adjust it on v2.
->=20
-> > +- quartz-low-jitter: Boolean property, if present enables low jitter
-> > +mode
-> > +  which reduces jitter at the cost of increased power consumption.
-> > +
->=20
-> I think that property needs to be nxp specific.
-I will replace it with nxp,quartz-low-jitter on v2.
->=20
-> > +- wakeup-source: Boolean property, mark the chip as a wakeup source,
-> > +  independently of the availability of an IRQ line connected to the So=
-C.
-> > +  This is useful if the IRQ line is connected to a PMIC or other
-> > +circuit
-> > +  that can power up the device rather than to a normal SOC interrupt.
-> > +
->=20
-> This is already defined in bindings/power/wakeup-source.txt I guess you c=
-an
-> simply refer to it.
-I will correct it on v2.
->=20
-> >  Example:
-> >
-> >  pcf85363: pcf85363@51 {
-> >       compatible =3D "nxp,pcf85363";
-> >       reg =3D <0x51>;
-> > +
-> > +     interrupt-parent =3D <&gpio1>;
-> > +     interrupts =3D <18 IRQ_TYPE_EDGE_FALLING>;
-> > +
-> > +     #include <dt-bindings/rtc/pcf85363.h>
-> > +     wakeup-source;
-> > +     interrupt-output-pin =3D "INTA";
-> > +     quartz-load-capacitance =3D <PCF85363_QUARTZCAP_12p5pF>;
-> > +     quartz-drive-strength =3D <PCF85363_QUARTZDRIVE_LOW>;
-> > +     quartz-low-jitter;
-> >  };
-> >
-> > diff --git a/include/dt-bindings/rtc/pcf85363.h
-> > b/include/dt-bindings/rtc/pcf85363.h
-> > new file mode 100644
-> > index 000000000000..2c06c28eb5ff
-> > --- /dev/null
-> > +++ b/include/dt-bindings/rtc/pcf85363.h
-> > @@ -0,0 +1,15 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */ #ifndef
-> > +_DT_BINDINGS_RTC_PCF85363_H #define
-> _DT_BINDINGS_RTC_PCF85363_H
-> > +
-> > +/* Quartz capacitance */
-> > +#define PCF85363_QUARTZCAP_7pF               0
-> > +#define PCF85363_QUARTZCAP_6pF               1
-> > +#define PCF85363_QUARTZCAP_12p5pF    2
-> > +
-> > +/* Quartz drive strength */
-> > +#define PCF85363_QUARTZDRIVE_NORMAL  0
-> > +#define PCF85363_QUARTZDRIVE_LOW     1
-> > +#define PCF85363_QUARTZDRIVE_HIGH    2
-> > +
-> > +#endif /* _DT_BINDINGS_RTC_PCF85363_H */
-> > --
-> > 2.17.1
-> >
->=20
-> --
-> Alexandre Belloni, Bootlin
-> Embedded Linux and Kernel engineering
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fbootl
-> in.com&amp;data=3D02%7C01%7Cbiwen.li%40nxp.com%7C0a2e5b50f8fc45a
-> ef6a208d72d2ebe2e%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0
-> %7C637027551094795780&amp;sdata=3DPMMS6PMBPkuuIYgMJFmtOaoD%
-> 2B7fCO3eZvOtlYhTEL5w%3D&amp;reserved=3D0
+Some Qualcomm SoCs have support for Core Power Reduction (CPR).
+On these platforms, we need to attach to the power domain provider
+providing the performance states, so that the leaky device (the CPU)
+can configure the performance states (which represent different
+CPU clock frequencies).
+
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes since V3:
+-In Example 2: rename the node name from cpr to power-controller,
+and rename the label from cprpd to cpr.
+
+ .../bindings/opp/qcom-nvmem-cpufreq.txt       | 113 +++++++++++++++++-
+ 1 file changed, 112 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+index c5ea8b90e35d..4751029b9b74 100644
+--- a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
++++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
+@@ -14,7 +14,7 @@ operating-points-v2 table when it is parsed by the OPP framework.
+ 
+ Required properties:
+ --------------------
+-In 'cpus' nodes:
++In 'cpu' nodes:
+ - operating-points-v2: Phandle to the operating-points-v2 table to use.
+ 
+ In 'operating-points-v2' table:
+@@ -23,6 +23,15 @@ In 'operating-points-v2' table:
+ 
+ Optional properties:
+ --------------------
++In 'cpu' nodes:
++- power-domains: A phandle pointing to the PM domain specifier which provides
++		the performance states available for active state management.
++		Please refer to the power-domains bindings
++		Documentation/devicetree/bindings/power/power_domain.txt
++		and also examples below.
++- power-domain-names: Should be
++	- 'cpr' for qcs404.
++
+ In 'operating-points-v2' table:
+ - nvmem-cells: A phandle pointing to a nvmem-cells node representing the
+ 		efuse registers that has information about the
+@@ -682,3 +691,105 @@ soc {
+ 		};
+ 	};
+ };
++
++Example 2:
++---------
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		CPU0: cpu@100 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x100>;
++			....
++			clocks = <&apcs_glb>;
++			operating-points-v2 = <&cpu_opp_table>;
++			power-domains = <&cpr>;
++			power-domain-names = "cpr";
++		};
++
++		CPU1: cpu@101 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x101>;
++			....
++			clocks = <&apcs_glb>;
++			operating-points-v2 = <&cpu_opp_table>;
++			power-domains = <&cpr>;
++			power-domain-names = "cpr";
++		};
++
++		CPU2: cpu@102 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x102>;
++			....
++			clocks = <&apcs_glb>;
++			operating-points-v2 = <&cpu_opp_table>;
++			power-domains = <&cpr>;
++			power-domain-names = "cpr";
++		};
++
++		CPU3: cpu@103 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0x103>;
++			....
++			clocks = <&apcs_glb>;
++			operating-points-v2 = <&cpu_opp_table>;
++			power-domains = <&cpr>;
++			power-domain-names = "cpr";
++		};
++	};
++
++	cpu_opp_table: cpu-opp-table {
++		compatible = "operating-points-v2-kryo-cpu";
++		opp-shared;
++
++		opp-1094400000 {
++			opp-hz = /bits/ 64 <1094400000>;
++			required-opps = <&cpr_opp1>;
++		};
++		opp-1248000000 {
++			opp-hz = /bits/ 64 <1248000000>;
++			required-opps = <&cpr_opp2>;
++		};
++		opp-1401600000 {
++			opp-hz = /bits/ 64 <1401600000>;
++			required-opps = <&cpr_opp3>;
++		};
++	};
++
++	cpr_opp_table: cpr-opp-table {
++		compatible = "operating-points-v2-qcom-level";
++
++		cpr_opp1: opp1 {
++			opp-level = <1>;
++			qcom,opp-fuse-level = <1>;
++		};
++		cpr_opp2: opp2 {
++			opp-level = <2>;
++			qcom,opp-fuse-level = <2>;
++		};
++		cpr_opp3: opp3 {
++			opp-level = <3>;
++			qcom,opp-fuse-level = <3>;
++		};
++	};
++
++....
++
++soc {
++....
++	cpr: power-controller@b018000 {
++		compatible = "qcom,qcs404-cpr", "qcom,cpr";
++		reg = <0x0b018000 0x1000>;
++		....
++		vdd-apc-supply = <&pms405_s3>;
++		#power-domain-cells = <0>;
++		operating-points-v2 = <&cpr_opp_table>;
++		....
++	};
++};
+-- 
+2.21.0
