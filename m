@@ -1,107 +1,90 @@
-Return-Path: <SRS0=LAFF=WC=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=ECyj=W2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46793 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728058AbfH3KRB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 30 Aug 2019 06:17:01 -0400
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v10 11/14] media: dt-bindings: tvp5150: cleanup bindings stlye
+Date: Fri, 30 Aug 2019 12:16:43 +0200
+Message-Id: <20190830101646.6530-12-m.felsch@pengutronix.de>
+In-Reply-To: <20190830101646.6530-1-m.felsch@pengutronix.de>
+References: <20190830101646.6530-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-References: <1562576868-8124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1562576868-8124-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1562576868-8124-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 6 Aug 2019 11:02:47 +0200
-Message-ID: <CAMuHMdUAVGbvn0D=UkqhY6RpO70MR-4GBC8i931a+fV9f6+njg@mail.gmail.com>
-Subject: Re: [PATCH RFC 3/7] pinctrl: sh-pfc: Rollback to mux if requires when
- the gpio is freed
-Content-Type: text/plain; charset="UTF-8"
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Shimoda-san,
+Use underlines to highlight optional and required properties. This is
+quite common for all bindings. Align descriptions and start sentence
+with uppercase letter. Also reword the usage of the required
+endpoint properties for the output port in case BT.656 should be used.
 
-On Mon, Jul 8, 2019 at 11:08 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> R-Car PWM controller requires the gpio to output zero duty,
-> this patch allows to roll it back from gpio to mux when the gpio
-> is freed.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/media/i2c/tvp5150.txt | 30 +++++++++++--------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
-Thanks for your patch!
-
-> --- a/drivers/pinctrl/sh-pfc/pinctrl.c
-> +++ b/drivers/pinctrl/sh-pfc/pinctrl.c
-> @@ -26,6 +26,7 @@
->  #include "../pinconf.h"
->
->  struct sh_pfc_pin_config {
-> +       unsigned int mux_mark;
-
-Due to padding, adding this field will increase memory consumption by
-6 bytes per pin.
-Probably sh_pfc_pin_group.{pins,mux} should be changed from unsigned int
-to u16, but that's out of scope for this patch.
-
->         bool mux_set;
->         bool gpio_enabled;
->  };
-> @@ -353,6 +354,15 @@ static int sh_pfc_func_set_mux(struct pinctrl_dev *pctldev, unsigned selector,
->         spin_lock_irqsave(&pfc->lock, flags);
->
->         for (i = 0; i < grp->nr_pins; ++i) {
-> +               int idx = sh_pfc_get_pin_index(pfc, grp->pins[i]);
-> +               struct sh_pfc_pin_config *cfg = &pmx->configs[idx];
-> +
-> +               /*
-> +                * This doesn't assume the order which gpios are enabled
-> +                * and then mux is set.
-
-I'm sorry, I don't understand what you mean?
-Can you please reword or elaborate?
-
-> +                */
-> +               WARN_ON(cfg->gpio_enabled);
-
-Can this actually happen?
-Should this cause a failure instead?
-
-> +
->                 ret = sh_pfc_config_mux(pfc, grp->mux[i], PINMUX_TYPE_FUNCTION);
->                 if (ret < 0)
->                         goto done;
-> @@ -364,6 +374,7 @@ static int sh_pfc_func_set_mux(struct pinctrl_dev *pctldev, unsigned selector,
->                 struct sh_pfc_pin_config *cfg = &pmx->configs[idx];
->
->                 cfg->mux_set = true;
-> +               cfg->mux_mark = grp->mux[i];
->         }
->
->  done:
-> @@ -417,6 +428,9 @@ static void sh_pfc_gpio_disable_free(struct pinctrl_dev *pctldev,
->
->         spin_lock_irqsave(&pfc->lock, flags);
->         cfg->gpio_enabled = false;
-> +       /* If mux is already set, this configure it here */
-
-configures
-
-> +       if (cfg->mux_set)
-> +               sh_pfc_config_mux(pfc, cfg->mux_mark, PINMUX_TYPE_FUNCTION);
-
-Have you considered the case where more than one pin of a pinmux group
-was used as a GPIO? In that case sh_pfc_gpio_disable_free() will be called
-multiple times, possibly with the same mux_mark.
-
-I don't think this will cause issues, though.
-
->         spin_unlock_irqrestore(&pfc->lock, flags);
->  }
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+index 28b64ad149ef..cc98b38c7e73 100644
+--- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
++++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+@@ -5,12 +5,14 @@ The TVP5150 and TVP5151 are video decoders that convert baseband NTSC and PAL
+ with discrete syncs or 8-bit ITU-R BT.656 with embedded syncs output formats.
+ 
+ Required Properties:
+-- compatible: value must be "ti,tvp5150"
+-- reg: I2C slave address
++====================
++- compatible:	Value must be "ti,tvp5150".
++- reg:		I2C slave address.
+ 
+ Optional Properties:
+-- pdn-gpios: phandle for the GPIO connected to the PDN pin, if any.
+-- reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
++====================
++- pdn-gpios:	Phandle for the GPIO connected to the PDN pin, if any.
++- reset-gpios:	Phandle for the GPIO connected to the RESETB pin, if any.
+ 
+ The device node must contain one 'port' child node per device physical input
+ and output port, in accordance with the video interface bindings defined in
+@@ -24,9 +26,8 @@ are numbered as follows
+ 	  Y-OUT		src		2
+ 
+ The device node must contain at least one sink port and the src port. Each input
+-port must be linked to an endpoint defined in
+-Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt. The
+-port/connector layout is as follows
++port must be linked to an endpoint defined in [1]. The port/connector layout is
++as follows
+ 
+ tvp-5150 port@0 (AIP1A)
+ 	endpoint@0 -----------> Comp0-Con  port
+@@ -38,14 +39,17 @@ tvp-5150 port@2
+ 	endpoint (video bitstream output at YOUT[0-7] parallel bus)
+ 
+ Required Endpoint Properties for parallel synchronization on output port:
++=========================================================================
+ 
+-- hsync-active: active state of the HSYNC signal. Must be <1> (HIGH).
+-- vsync-active: active state of the VSYNC signal. Must be <1> (HIGH).
+-- field-even-active: field signal level during the even field data
+-  transmission. Must be <0>.
++- hsync-active:		Active state of the HSYNC signal. Must be <1> (HIGH).
++- vsync-active:		Active state of the VSYNC signal. Must be <1> (HIGH).
++- field-even-active:	Field signal level during the even field data
++			transmission. Must be <0>.
+ 
+-If none of hsync-active, vsync-active and field-even-active is specified,
+-the endpoint is assumed to use embedded BT.656 synchronization.
++Note: Do not specify any of these properties if you want to use the embedded
++      BT.656 synchronization.
++
++[1] Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt.
+ 
+ Example - three input sources:
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.20.1
