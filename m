@@ -1,77 +1,55 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
- SMC/HVC mailbox
-Date: Fri, 30 Aug 2019 02:52:40 -0500
-Message-ID: <CABb+yY2SrMF8e1iLyLqb-rJyBx4ajA0hZ6D=LFtuMNtXYjgccA@mail.gmail.com>
-References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
- <1567004515-3567-2-git-send-email-peng.fan@nxp.com> <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
- <AM0PR04MB4481785CABB44A8C71CFB8D788BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CABb+yY2TREpO7+TFcGgsgQrkmMWwFAgtuJ4GnLPPQ+GEBuh07w@mail.gmail.com> <AM0PR04MB448161C632722DF10989008088BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [RESEND PATCH 0/5] Add bluetooth support for Orange Pi 3
+Date: Fri, 30 Aug 2019 09:53:16 +0200
+Message-ID: <5524D5E9-FA82-4244-A91F-78CF1C3FB3FB@holtmann.org>
+References: <20190823103139.17687-1-megous@megous.com>
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM0PR04MB448161C632722DF10989008088BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+In-Reply-To: <20190823103139.17687-1-megous@megous.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: megous@megous.com
+Cc: Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 2:37 AM Peng Fan <peng.fan@nxp.com> wrote:
->
-> Hi Jassi,
->
-> > Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
-> > SMC/HVC mailbox
-> >
-> > On Fri, Aug 30, 2019 at 1:28 AM Peng Fan <peng.fan@nxp.com> wrote:
-> >
-> > > > > +examples:
-> > > > > +  - |
-> > > > > +    sram@910000 {
-> > > > > +      compatible = "mmio-sram";
-> > > > > +      reg = <0x0 0x93f000 0x0 0x1000>;
-> > > > > +      #address-cells = <1>;
-> > > > > +      #size-cells = <1>;
-> > > > > +      ranges = <0 0x0 0x93f000 0x1000>;
-> > > > > +
-> > > > > +      cpu_scp_lpri: scp-shmem@0 {
-> > > > > +        compatible = "arm,scmi-shmem";
-> > > > > +        reg = <0x0 0x200>;
-> > > > > +      };
-> > > > > +
-> > > > > +      cpu_scp_hpri: scp-shmem@200 {
-> > > > > +        compatible = "arm,scmi-shmem";
-> > > > > +        reg = <0x200 0x200>;
-> > > > > +      };
-> > > > > +    };
-> > > > > +
-> > > > > +    firmware {
-> > > > > +      smc_mbox: mailbox {
-> > > > > +        #mbox-cells = <1>;
-> > > > > +        compatible = "arm,smc-mbox";
-> > > > > +        method = "smc";
-> > > > > +        arm,num-chans = <0x2>;
-> > > > > +        transports = "mem";
-> > > > > +        /* Optional */
-> > > > > +        arm,func-ids = <0xc20000fe>, <0xc20000ff>;
-> > > > >
-> > > > SMC/HVC is synchronously(block) running in "secure mode", i.e, there
-> > > > can only be one instance running platform wide. Right?
-> > >
-> > > I think there could be channel for TEE, and channel for Linux.
-> > > For virtualization case, there could be dedicated channel for each VM.
-> > >
-> > I am talking from Linux pov. Functions 0xfe and 0xff above, can't both be
-> > active at the same time, right?
->
-> If I get your point correctly,
-> On UP, both could not be active. On SMP, tx/rx could be both active, anyway
-> this depends on secure firmware and Linux firmware design.
->
-> Do you have any suggestions about arm,func-ids here?
->
-I was thinking if this is just an instruction, why can't each channel
-be represented as a controller, i.e, have exactly one func-id per
-controller node. Define as many controllers as you need channels ?
+Hi Ondrej,
 
--j
+> (Resend to add missing lists, sorry for the noise.)
+> 
+> This series implements bluetooth support for Xunlong Orange Pi 3 board.
+> 
+> The board uses AP6256 WiFi/BT 5.0 chip.
+> 
+> Summary of changes:
+> 
+> - add more delay to let initialize the chip
+> - let the kernel detect firmware file path
+> - add new compatible and update dt-bindings
+> - update Orange Pi 3 / H6 DTS
+> 
+> Please take a look.
+> 
+> thank you and regards,
+>  Ondrej Jirman
+> 
+> Ondrej Jirman (5):
+>  dt-bindings: net: Add compatible for BCM4345C5 bluetooth device
+>  bluetooth: bcm: Add support for loading firmware for BCM4345C5
+>  bluetooth: hci_bcm: Give more time to come out of reset
+>  arm64: dts: allwinner: h6: Add pin configs for uart1
+>  arm64: dts: allwinner: orange-pi-3: Enable UART1 / Bluetooth
+> 
+> .../bindings/net/broadcom-bluetooth.txt       |  1 +
+> .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 19 +++++++++++++++++++
+> arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 10 ++++++++++
+> drivers/bluetooth/btbcm.c                     |  3 +++
+> drivers/bluetooth/hci_bcm.c                   |  3 ++-
+> 5 files changed, 35 insertions(+), 1 deletion(-)
+
+all 5 patches have been applied to bluetooth-next tree.
+
+Regards
+
+Marcel
