@@ -1,84 +1,316 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v2 2/2] arm64: dts: renesas: Add HiHope RZ/G2M board with
- idk-1110wr display
-Date: Thu, 29 Aug 2019 12:38:33 +0100
-Message-ID: <1567078713-29361-3-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1567078713-29361-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC PATCH V2 4/4] platform: mtk-isp: Add Mediatek FD driver
+Date: Fri, 30 Aug 2019 17:33:53 +0900
+Message-ID: <CAAFQd5D-Yg1FjUE_rwmqfS1gvfE0=MZ=r-ziueU_37-uo9QTbw@mail.gmail.com>
+References: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <1562661672-22439-5-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <20190802082815.GA203993@chromium.org> <1566724680.20680.8.camel@mtksdccf07>
+ <CAAFQd5Dw+jaT-+LAUEVeB8W1zdnOgPw7u+aCfDWhYW1SfbzO8g@mail.gmail.com>
+ <1566957625.20680.33.camel@mtksdccf07>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1567078713-29361-1-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, ebiharaml@si-linux.co.jp, xu_shunji@hoperun.com, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Sam Ravnborg <sam@ravnborg.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1566957625.20680.33.camel@mtksdccf07>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UG8tWWFuZyBIdWFuZyAo6buD5p+P6Zm9KQ==?= <po-yang.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?U2ogSHVhbmcgKOm7g+S/oeeSiyk=?= <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <matthias.bgg>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEhpSG9wZSBSWi9HMk0gaXMgYWR2ZXJ0aXNlZCBhcyBjb21wYXRpYmxlIHdpdGggcGFuZWwg
-aWRrLTExMTB3cgpmcm9tIEFkdmFudGVjaCwgaG93ZXZlciB0aGUgcGFuZWwgaXNuJ3Qgc29sZCBh
-bG9uZ3NpZGUgdGhlIGJvYXJkLgpBIG5ldyBkdHMsIGFkZGluZyBldmVyeXRoaW5nIHRoYXQncyBy
-ZXF1aXJlZCB0byBnZXQgdGhlIHBhbmVsIHRvCndvcmsgdGhlIEhpSG9wZSBSWi9HMk0sIGlzIHRo
-ZSBtb3N0IGNvbnZlbmllbnQgd2F5IHRvIHN1cHBvcnQgdGhlCkhpSG9wZSBSWi9HMk0gd2hlbiBp
-dCdzIGNvbm5lY3RlZCB0byB0aGUgaWRrLTExMTB3ci4KClNpZ25lZC1vZmYtYnk6IEZhYnJpemlv
-IENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPgotLS0KdjEtPnYyOgoqIGFk
-ZGVkIHNwYWNlIGJldHdlZW4gbHZkcy1jb25uZWN0b3ItZW4tZ3BpbyBhbmQgY3VybHkgYnJhY2UK
-CiBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvTWFrZWZpbGUgICAgICAgICAgICAgICB8ICAx
-ICsKIC4uLi9yOGE3NzRhMS1oaWhvcGUtcnpnMm0tZXgtaWRrLTExMTB3ci5kdHMgICAgICAgIHwg
-ODYgKysrKysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCA4NyBpbnNlcnRpb25z
-KCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3
-NGExLWhpaG9wZS1yemcybS1leC1pZGstMTExMHdyLmR0cwoKZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvcmVuZXNhcy9NYWtlZmlsZSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNh
-cy9NYWtlZmlsZQppbmRleCA0MmI3NGMyLi41ZDk0MzAxIDEwMDY0NAotLS0gYS9hcmNoL2FybTY0
-L2Jvb3QvZHRzL3JlbmVzYXMvTWFrZWZpbGUKKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9yZW5l
-c2FzL01ha2VmaWxlCkBAIC0xLDYgKzEsNyBAQAogIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjog
-R1BMLTIuMAogZHRiLSQoQ09ORklHX0FSQ0hfUjhBNzc0QTEpICs9IHI4YTc3NGExLWhpaG9wZS1y
-emcybS5kdGIKIGR0Yi0kKENPTkZJR19BUkNIX1I4QTc3NEExKSArPSByOGE3NzRhMS1oaWhvcGUt
-cnpnMm0tZXguZHRiCitkdGItJChDT05GSUdfQVJDSF9SOEE3NzRBMSkgKz0gcjhhNzc0YTEtaGlo
-b3BlLXJ6ZzJtLWV4LWlkay0xMTEwd3IuZHRiCiBkdGItJChDT05GSUdfQVJDSF9SOEE3NzRDMCkg
-Kz0gcjhhNzc0YzAtY2F0ODc0LmR0YiByOGE3NzRjMC1lazg3NC5kdGIKIGR0Yi0kKENPTkZJR19B
-UkNIX1I4QTc3OTUpICs9IHI4YTc3OTUtc2FsdmF0b3IteC5kdGIgcjhhNzc5NS1oM3VsY2IuZHRi
-CiBkdGItJChDT05GSUdfQVJDSF9SOEE3Nzk1KSArPSByOGE3Nzk1LWgzdWxjYi1rZi5kdGIKZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3NzRhMS1oaWhvcGUtcnpn
-Mm0tZXgtaWRrLTExMTB3ci5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc0
-YTEtaGlob3BlLXJ6ZzJtLWV4LWlkay0xMTEwd3IuZHRzCm5ldyBmaWxlIG1vZGUgMTAwNjQ0Cmlu
-ZGV4IDAwMDAwMDAuLjY3ZmUwNGMKLS0tIC9kZXYvbnVsbAorKysgYi9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL3JlbmVzYXMvcjhhNzc0YTEtaGlob3BlLXJ6ZzJtLWV4LWlkay0xMTEwd3IuZHRzCkBAIC0w
-LDAgKzEsODYgQEAKKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCisvKgorICog
-RGV2aWNlIFRyZWUgU291cmNlIGZvciB0aGUgSGlIb3BlIFJaL0cyTSBzdWIgYm9hcmQgY29ubmVj
-dGVkIHRvIGFuCisgKiBBZHZhbnRlY2ggSURLLTExMTBXUiAxMC4xIiBMVkRTIHBhbmVsCisgKgor
-ICogQ29weXJpZ2h0IChDKSAyMDE5IFJlbmVzYXMgRWxlY3Ryb25pY3MgQ29ycC4KKyAqLworCisj
-aW5jbHVkZSAicjhhNzc0YTEtaGlob3BlLXJ6ZzJtLWV4LmR0cyIKKworLyB7CisJYmFja2xpZ2h0
-IHsKKwkJY29tcGF0aWJsZSA9ICJwd20tYmFja2xpZ2h0IjsKKwkJcHdtcyA9IDwmcHdtMCAwIDUw
-MDAwPjsKKworCQlicmlnaHRuZXNzLWxldmVscyA9IDwwIDIgOCAxNiAzMiA2NCAxMjggMjU1PjsK
-KwkJZGVmYXVsdC1icmlnaHRuZXNzLWxldmVsID0gPDY+OworCX07CisKKwlwYW5lbC1sdmRzIHsK
-KwkJY29tcGF0aWJsZSA9ICJhZHZhbnRlY2gsaWRrLTExMTB3ciIsICJwYW5lbC1sdmRzIjsKKwor
-CQl3aWR0aC1tbSA9IDwyMjM+OworCQloZWlnaHQtbW0gPSA8MTI1PjsKKworCQlkYXRhLW1hcHBp
-bmcgPSAiamVpZGEtMjQiOworCisJCXBhbmVsLXRpbWluZyB7CisJCQkvKiAxMDI0eDYwMCBANjBI
-eiAqLworCQkJY2xvY2stZnJlcXVlbmN5ID0gPDUxMjAwMDAwPjsKKwkJCWhhY3RpdmUgPSA8MTAy
-ND47CisJCQl2YWN0aXZlID0gPDYwMD47CisJCQloc3luYy1sZW4gPSA8MjQwPjsKKwkJCWhmcm9u
-dC1wb3JjaCA9IDw0MD47CisJCQloYmFjay1wb3JjaCA9IDw0MD47CisJCQl2ZnJvbnQtcG9yY2gg
-PSA8MTU+OworCQkJdmJhY2stcG9yY2ggPSA8MTA+OworCQkJdnN5bmMtbGVuID0gPDEwPjsKKwkJ
-fTsKKworCQlwb3J0IHsKKwkJCXBhbmVsX2luOiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBv
-aW50ID0gPCZsdmRzMF9vdXQ+OworCQkJfTsKKwkJfTsKKwl9OworfTsKKworJmdwaW8xIHsKKwkv
-KgorCSAqIFdoZW4gR1AxXzIwIGlzIExPVyBMVkRTMCBpcyBjb25uZWN0ZWQgdG8gdGhlIExWRFMg
-Y29ubmVjdG9yCisJICogV2hlbiBHUDFfMjAgaXMgSElHSCBMVkRTMCBpcyBjb25uZWN0ZWQgdG8g
-dGhlIExUODkxOEwKKwkgKi8KKwlsdmRzLWNvbm5lY3Rvci1lbi1ncGlvIHsKKwkJZ3Bpby1ob2c7
-CisJCWdwaW9zID0gPDIwIEdQSU9fQUNUSVZFX0hJR0g+OworCQlvdXRwdXQtbG93OworCQlsaW5l
-LW5hbWUgPSAibHZkcy1jb25uZWN0b3ItZW4tZ3BpbyI7CisJfTsKK307CisKKyZsdmRzMCB7CisJ
-c3RhdHVzID0gIm9rYXkiOworCisJcG9ydHMgeworCQlwb3J0QDEgeworCQkJbHZkczBfb3V0OiBl
-bmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZwYW5lbF9pbj47CisJCQl9OworCQl9
-OworCX07Cit9OworCismcGZjIHsKKwlwd20wX3BpbnM6IHB3bTAgeworCQlncm91cHMgPSAicHdt
-MCI7CisJCWZ1bmN0aW9uID0gInB3bTAiOworCX07Cit9OworCismcHdtMCB7CisJcGluY3RybC0w
-ID0gPCZwd20wX3BpbnM+OworCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisKKwlzdGF0dXMg
-PSAib2theSI7Cit9OwotLSAKMi43LjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbA==
+On Wed, Aug 28, 2019 at 11:00 AM Jerry-ch Chen
+<Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>
+> Hi Tomasz,
+>
+> On Mon, 2019-08-26 at 14:36 +0800, Tomasz Figa wrote:
+> > Hi Jerry,
+> >
+> > On Sun, Aug 25, 2019 at 6:18 PM Jerry-ch Chen
+> > <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > >
+> > > Hi Tomasz,
+> > >
+> > > On Fri, 2019-08-02 at 16:28 +0800, Tomasz Figa wrote:
+> > > > Hi Jerry,
+> > > >
+> > > > On Tue, Jul 09, 2019 at 04:41:12PM +0800, Jerry-ch Chen wrote:
+> > > > > From: Jerry-ch Chen <jerry-ch.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > > >
+> > > > > This patch adds the driver of Face Detection (FD) unit in
+> > > > > Mediatek camera system, providing face detection function.
+> > > > >
+> > > > > The mtk-isp directory will contain drivers for multiple IP
+> > > > > blocks found in Mediatek ISP system. It will include ISP Pass 1
+> > > > > driver (CAM), sensor interface driver, DIP driver and face
+> > > > > detection driver.
+> > > > >
+> > > > > Signed-off-by: Jerry-ch Chen <jerry-ch.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > > > > ---
+> > > > >  drivers/media/platform/Makefile               |    2 +
+> > > > >  drivers/media/platform/mtk-isp/fd/Makefile    |    5 +
+> > > > >  drivers/media/platform/mtk-isp/fd/mtk_fd.h    |  157 +++
+> > > > >  drivers/media/platform/mtk-isp/fd/mtk_fd_40.c | 1259 +++++++++++++++++++++++++
+> > > > >  include/uapi/linux/v4l2-controls.h            |    4 +
+> > > > >  5 files changed, 1427 insertions(+)
+> > > > >  create mode 100644 drivers/media/platform/mtk-isp/fd/Makefile
+> > > > >  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd.h
+> > > > >  create mode 100644 drivers/media/platform/mtk-isp/fd/mtk_fd_40.c
+> > > > >
+> > > >
+> > > > Thanks for the patch! I finally got a chance to fully review the code. Sorry
+> > > > for the delay. Please check my comments inline.
+> > > >
+> > > I appreciate your comments.
+> > > I've fixed most of the comments and verifying them,
+> > > Sorry for the delay, here is the reply.
+> > >
+> >
+> > Thanks for replying to all the comments, it's very helpful. I'll snip
+> > the parts that I don't have any further comments.
+> >
+> > [snip]
+> >
+> > > > > +   if (usercount == 1) {
+> > > > > +           pm_runtime_get_sync(&fd_dev->pdev->dev);
+> > > > > +           if (mtk_fd_hw_enable(fd_hw)) {
+> > > > > +                   pm_runtime_put_sync(&fd_dev->pdev->dev);
+> > > > > +                   atomic_dec_return(&fd_hw->fd_user_cnt);
+> > > > > +                   mutex_unlock(&fd_hw->fd_hw_lock);
+> > > > > +                   return -EINVAL;
+> > > > > +           }
+> > > > > +   }
+> > > >
+> > > > This is a simple mem-to-mem device, so there is no reason to keep it active
+> > > > all the time it's streaming. Please just get the runtime PM counter when
+> > > > queuing a job to the hardware and release it when the job finishes.
+> > > >
+> > > > I guess we might still want to do the costly operations like rproc_boot()
+> > > > when we start streaming, though.
+> > > >
+> > > Do you mean by moving the pm_runtime_get/put stuff to the job execution
+> > > and job finish place?
+> >
+> > Yes.
+> >
+> > > the rproc_boot() operation will be done here.
+> > >
+> >
+> > How much time does the rproc_boot() operation take?
+> >
+>
+> About 0.7~1.3ms, average 0.8ms (14 measurements)
+>
+
+Okay, I think we may want to call it when we start streaming then.
+
+[snip]
+
+> > > > > +static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
+> > > > > +                             unsigned int *num_buffers,
+> > > > > +                             unsigned int *num_planes,
+> > > > > +                             unsigned int sizes[],
+> > > > > +                             struct device *alloc_devs[])
+> > > > > +{
+> > > > > +   struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+> > > > > +   struct device *dev = ctx->dev;
+> > > > > +   unsigned int size;
+> > > > > +
+> > > > > +   switch (vq->type) {
+> > > > > +   case V4L2_BUF_TYPE_META_CAPTURE:
+> > > > > +           size = ctx->dst_fmt.buffersize;
+> > > > > +           break;
+> > > > > +   case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
+> > > > > +           size = ctx->src_fmt.plane_fmt[0].sizeimage;
+> > > > > +           break;
+> > > > > +   default:
+> > > > > +           dev_err(dev, "invalid queue type: %d\n", vq->type);
+> > > >
+> > > > We should need to handle this.
+> > > >
+> > > Do you mean by giving a size instead of return -EINVAL?
+> > >
+> >
+> > Sorry, typo. I meant we shouldn't need to handle it, because we can't
+> > get any other queue type here.
+> >
+>
+> Ok, I see, I will remove it.
+> also, this function will be updated as following due to the 2 plane
+> case.
+>
+> static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
+>                                   unsigned int *num_buffers,
+>                                   unsigned int *num_planes,
+>                                   unsigned int sizes[],
+>                                   struct device *alloc_devs[])
+> {
+>         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+>         struct device *dev = ctx->dev;
+>         unsigned int size[2];
+>
+>         switch (vq->type) {
+>         case V4L2_BUF_TYPE_META_CAPTURE:
+>                 size[0] = ctx->dst_fmt.buffersize;
+>                 break;
+>         case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
+>                 size[0] = ctx->src_fmt.plane_fmt[0].sizeimage;
+>                 if (*num_planes == 2)
+>                         size[1] = ctx->src_fmt.plane_fmt[1].sizeimage;
+>                 break;
+>         }
+>
+>         if (*num_planes == 1) {
+>                 if (sizes[0] < size[0])
+>                         return -EINVAL;
+>         } else if (*num_planes == 2) {
+>                 if ((sizes[0] < size[0]) && (sizes[1] < size[1]))
+>                         return -EINVAL;
+
+Can we just use a loop here and combine the 2 cases above?
+
+Also, we need to fail with -EINVAL if *num_planes is > 2.
+
+>         } else {
+>                 *num_planes = 1;
+>                 sizes[0] = size[0];
+
+This should be the case if *num_planes == 0 and the number of planes
+and sizes should match the currently active format.
+
+>         }
+>
+>         return 0;
+> }
+>
+> > [snip]
+> >
+> > > > > +static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
+> > > > > +{
+> > > > > +   struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+> > > > > +   struct vb2_buffer *vb;
+> > > >
+> > > > How do we guarantee here that the hardware isn't still accessing the buffers
+> > > > removed below?
+> > > >
+> > > Maybe we can check the driver state flag and aborting the unfinished
+> > > jobs?
+> > > (fd_hw->state == FD_ENQ)
+> > >
+> >
+> > Yes, we need to either cancel or wait for the currently processing
+> > job. It depends on hardware capabilities, but cancelling is generally
+> > preferred for the lower latency.
+> >
+> Ok, it the state is ENQ, then we can disable the FD hw by controlling
+> the registers.
+>
+> for example:
+>         writel(0x0, fd->fd_base + FD_HW_ENABLE);
+>         writel(0x0, fd->fd_base + FD_INT_EN);
+>
+
+What's exactly the effect of writing 0 to FD_HW_ENABLE?
+
+[snip]
+
+> > > > > +}
+> > > > > +
+> > > > > +static void mtk_fd_vb2_request_complete(struct vb2_buffer *vb)
+> > > > > +{
+> > > > > +   struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vb->vb2_queue);
+> > > > > +
+> > > > > +   v4l2_ctrl_request_complete(vb->req_obj.req, &ctx->hdl);
+> > > > > +}
+> > > > > +
+> > > > > +static void mtk_fd_fill_pixfmt_mp(struct v4l2_pix_format_mplane *dfmt,
+> > > > > +                             const struct v4l2_pix_format_mplane *sfmt)
+> > > > > +{
+> > > > > +   dfmt->width = sfmt->width;
+> > > > > +   dfmt->height = sfmt->height;
+> > > > > +   dfmt->pixelformat = sfmt->pixelformat;
+> > > > > +   dfmt->field = sfmt->field;
+> > > > > +   dfmt->colorspace = sfmt->colorspace;
+> > > > > +   dfmt->num_planes = sfmt->num_planes;
+> > > > > +
+> > > > > +   /* Use default */
+> > > > > +   dfmt->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
+> > > > > +   dfmt->quantization = V4L2_QUANTIZATION_DEFAULT;
+> > > > > +   dfmt->xfer_func =
+> > > > > +           V4L2_MAP_XFER_FUNC_DEFAULT(dfmt->colorspace);
+> > > > > +   dfmt->plane_fmt[0].bytesperline = dfmt->width * 2;
+> > > > > +   dfmt->plane_fmt[0].sizeimage =
+> > > > > +           dfmt->height * dfmt->plane_fmt[0].bytesperline;
+> > > > > +   memset(dfmt->reserved, 0, sizeof(dfmt->reserved));
+> > > > > +}
+> > > >
+> > > > Could we unify this function with mtk_fd_m2m_try_fmt_out_mp()? That function
+> > > > should be almost directly reusable for the default format initialization +/-
+> > > > the arguments passed to it.
+> > > >
+> > > Ok, I will try to reuse it as following:
+> > >
+> > > static void mtk_fd_fill_pixfmt_mp(struct v4l2_pix_format_mplane *dfmt,
+> > >   const struct v4l2_pix_format_mplane *sfmt)
+> > > {
+> > > dfmt->field = V4L2_FIELD_NONE;
+> > > dfmt->colorspace = V4L2_COLORSPACE_BT2020;
+> > > dfmt->num_planes = sfmt->num_planes;
+> > > dfmt->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
+> > > dfmt->quantization = V4L2_QUANTIZATION_DEFAULT;
+> > > dfmt->xfer_func =
+> > > V4L2_MAP_XFER_FUNC_DEFAULT(dfmt->colorspace);
+> > >
+> > > /* Keep user setting as possible */
+> > > dfmt->width = clamp(dfmt->width,
+> > >     MTK_FD_OUTPUT_MIN_WIDTH,
+> > >     MTK_FD_OUTPUT_MAX_WIDTH);
+> > > dfmt->height = clamp(dfmt->height,
+> > >      MTK_FD_OUTPUT_MIN_HEIGHT,
+> > >      MTK_FD_OUTPUT_MAX_HEIGHT);
+> > >
+> > > if (sfmt->num_planes == 2) {
+> > > /* NV16M and NV61M has 1 byte per pixel */
+> > > dfmt->plane_fmt[0].bytesperline = dfmt->width;
+> > > dfmt->plane_fmt[1].bytesperline = dfmt->width;
+> > > } else {
+> > > /* 2 bytes per pixel */
+> > > dfmt->plane_fmt[0].bytesperline = dfmt->width * 2;
+> > > }
+> > >
+> > > dfmt->plane_fmt[0].sizeimage =
+> > > dfmt->height * dfmt->plane_fmt[0].bytesperline;
+> > > }
+> >
+> > How would the implementation of TRY_FMT look in this case?
+> >
+>
+> It will be looked like:
+>
+> static int mtk_fd_try_fmt_out_mp(struct file *file,
+>                                      void *fh,
+>                                      struct v4l2_format *f)
+> {
+>         struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
+>         const struct v4l2_pix_format_mplane *fmt;
+>
+>         fmt = mtk_fd_find_fmt(pix_mp->pixelformat);
+>         if (!fmt)
+>                 fmt = &mtk_fd_img_fmts[0];      /* Get default img fmt */
+>
+>         mtk_fd_fill_pixfmt_mp(pix_mp, fmt);
+>         return 0;
+> }
+>
+
+Okay, thanks!
+
+Best regards,
+Tomasz
