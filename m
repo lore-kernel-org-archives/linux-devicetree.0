@@ -1,64 +1,66 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 01/11] dt-bindings: phy-mtk-tphy: add two optional
- properties for u2phy
-Date: Fri, 30 Aug 2019 14:03:35 +0800
-Message-ID: <1567145015.7317.25.camel@mhfsdcap03>
-References: <e99c0d7a55869a4425250c601b80a3331c9d0976.1566542696.git.chunfeng.yun@mediatek.com>
- <20190829192341.GA26293@bogus>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v5, 24/32] drm/mediatek: add clock property check before
+ get it
+Date: Fri, 30 Aug 2019 14:11:42 +0800
+Message-ID: <1567145502.5942.15.camel@mtksdaap41>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1567090254-15566-25-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190829192341.GA26293@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1567090254-15566-25-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: yongqiang.niu@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-08-29 at 14:23 -0500, Rob Herring wrote:
-> On Fri, Aug 23, 2019 at 03:00:08PM +0800, Chunfeng Yun wrote:
-> > Add two optional properties, one for J-K test, another for disconnect
-> > threshold, both of them can be used to debug disconnection issues.
-> 
-> Testing and debug properties aren't really things that belong in DT.
-They are not only for test and debug, but also used to tune default
-value for some platforms, I'll modify the description
+Hi, Yongqiang:
 
+On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
 > 
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > index a5f7a4f0dbc1..d5b327f85fa2 100644
-> > --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-> > @@ -52,6 +52,8 @@ Optional properties (PHY_TYPE_USB2 port (child) node):
-> >  - mediatek,eye-vrt	: u32, the selection of VRT reference voltage
-> >  - mediatek,eye-term	: u32, the selection of HS_TX TERM reference voltage
-> >  - mediatek,bc12	: bool, enable BC12 of u2phy if support it
-> > +- mediatek,discth	: u32, the voltage of disconnect threshold
-> > +- mediatek,intr	: u32, the value of internal R (resistance)
+> This patch add clock property check before get it
 > 
-> These need units as defined in property-units.txt.
-They are in fact the choice index of different level, will modify it
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> index a5a6689..effc24a 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -657,10 +657,12 @@ static int mtk_ddp_probe(struct platform_device *pdev)
+>  	for (i = 0; i < 10; i++)
+>  		ddp->mutex[i].id = i;
+>  
+> -	ddp->clk = devm_clk_get(dev, NULL);
+> -	if (IS_ERR(ddp->clk)) {
+> -		dev_err(dev, "Failed to get clock\n");
+> -		return PTR_ERR(ddp->clk);
+> +	if (of_find_property(dev->of_node, "clocks", &i)) {
+> +		ddp->clk = devm_clk_get(dev, NULL);
+> +		if (IS_ERR(ddp->clk)) {
+> +			dev_err(dev, "Failed to get clock\n");
+> +			return PTR_ERR(ddp->clk);
+> +		}
 
-Thank you
+Only "mediatek,mt8133-disp-mutex" has no clock property. For other SoC,
+clock property is required. So I think this exception is just for
+mt8183.
 
-> 
-> >  
-> >  Example:
-> >  
-> > -- 
-> > 2.23.0
-> > 
+Regards,
+CK
+
+>  	}
+>  
+>  	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
