@@ -1,248 +1,98 @@
-From: =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
-Subject: Re: [PATCH net-next v2 2/3] dt-bindings: net: dsa: mt7530: Add
- support for port 5
-Date: Fri, 30 Aug 2019 17:16:03 +0000
-Message-ID: <20190830171603.Horde.UeVVg_YU-C4f8bcYmFJ_1Gv@www.vdorst.com>
-References: <20190821144547.15113-1-opensource@vdorst.com>
- <20190821144547.15113-3-opensource@vdorst.com>
- <20190827222251.GA30507@bogus>
- <20190828063520.Horde.4_ak7mcmFhVJlxZWWy2wo3V@www.vdorst.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH v2 01/11] asm-generic: add dma_zone_size
+Date: Fri, 30 Aug 2019 19:24:25 +0200
+Message-ID: <bdeda2206b751a1c6a8d2e0732186792282633c6.camel@suse.de>
+References: <20190820145821.27214-1-nsaenzjulienne@suse.de>
+         <20190820145821.27214-2-nsaenzjulienne@suse.de>
+         <20190826070939.GD11331@lst.de>
+         <027272c27398b950f207101a2c5dbc07a30a36bc.camel@suse.de>
+         <20190830144536.GJ36992@arrakis.emea.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190828063520.Horde.4_ak7mcmFhVJlxZWWy2wo3V@www.vdorst.com>
-Content-Disposition: inline
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Matthias Brugger <matthias.bgg@gmail.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, John Crispin <john@phrozen.org>, linux-mips@vger.kernel.org, Frank Wunderlich <frank-w@public-files.de>, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-VseoIlC7OSxnfDPpE7cN"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190830144536.GJ36992@arrakis.emea.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@lst.de>
+Cc: linux-mm@kvack.org, linux-riscv@lists.infradead.org, will@kernel.org, m.szyprowski@samsung.com, linux-arch@vger.kernel.org, f.fainelli@gmail.com, frowand.list@gmail.com, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, marc.zyngier@arm.com, robh+dt@kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, phill@raspberryi.org, mbrugger@suse.com, eric@anholt.net, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, wahrenst@gmx.net, akpm@linux-foundation.org, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-<snip>
+--=-VseoIlC7OSxnfDPpE7cN
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->>> See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list  
->>> of additional
->>> required, optional properties and how the integrated switch subnodes must
->>> be specified.
->>> @@ -94,3 +130,185 @@ Example:
->>> 			};
->>> 		};
->>> 	};
->>> +
->>> +Example 2: MT7621: Port 4 is WAN port: 2nd GMAC -> Port 5 -> PHY port 4.
->>> +
->>> +&eth {
->>> +	status = "okay";
->>
->> Don't show status in examples.
->
-> OK.
->
->> This should show the complete node.
->>
->
+On Fri, 2019-08-30 at 15:45 +0100, Catalin Marinas wrote:
+> On Mon, Aug 26, 2019 at 03:46:52PM +0200, Nicolas Saenz Julienne wrote:
+> > On Mon, 2019-08-26 at 09:09 +0200, Christoph Hellwig wrote:
+> > > On Tue, Aug 20, 2019 at 04:58:09PM +0200, Nicolas Saenz Julienne wrot=
+e:
+> > > > Some architectures have platform specific DMA addressing limitation=
+s.
+> > > > This will allow for hardware description code to provide the constr=
+aints
+> > > > in a generic manner, so as for arch code to properly setup it's mem=
+ory
+> > > > zones and DMA mask.
+> > >=20
+> > > I know this just spreads the arm code, but I still kinda hate it.
+> >=20
+> > Rob's main concern was finding a way to pass the constraint from HW
+> > definition
+> > to arch without widening fdt's architecture specific function surface. =
+I'd
+> > say
+> > it's fair to argue that having a generic mechanism makes sense as it'll=
+ now
+> > traverse multiple archs and subsystems.
+> >=20
+> > I get adding globals like this is not very appealing, yet I went with i=
+t as
+> > it
+> > was the easier to integrate with arm's code. Any alternative suggestion=
+s?
+>=20
+> In some discussion with Robin, since it's just RPi4 that we are aware of
+> having such requirement on arm64, he suggested that we have a permanent
+> ZONE_DMA on arm64 with a default size of 1GB. It should cover all arm64
+> SoCs we know of without breaking the single Image binary. The arch/arm
+> can use its current mach-* support.
+>=20
+> I may like this more than the proposed early_init_dt_get_dma_zone_size()
+> here which checks for specific SoCs (my preferred way was to build the
+> mask from all buses described in DT but I hadn't realised the
+> complications).
 
-I asked this question below in my previous email.
-May be you missed it, I hope that you have time soon to answer this so that I
-can send a new version.
+Hi Catalin, thanks for giving it a thought.
 
-> To be clear, I should take ethernet node from the mt7621.dtsi [0] or  
-> mt7623.dtsi [1] and insert the example below?, right?
+I'll be happy to implement it that way. I agree it's a good compromise.
 
-Greats,
+@Christoph, do you still want the patch where I create 'zone_dma_bits'? Wit=
+h a
+hardcoded ZONE_DMA it's not absolutely necessary. Though I remember you sai=
+d it
+was a first step towards being able to initialize dma-direct's min_mask in
+meminit.
 
-René
+Regards,
+Nicolas
 
->
-> Greats,
->
-> René
->
-> [0]:  
-> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/tree/drivers/staging/mt7621-dts/mt7621.dtsi#n397
-> [1]:  
-> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/tree/arch/arm/boot/dts/mt7623.dtsi#n1023
->
->>> +
->>> +	gmac0: mac@0 {
->>> +		compatible = "mediatek,eth-mac";
->>> +		reg = <0>;
->>> +		phy-mode = "rgmii";
->>> +
->>> +		fixed-link {
->>> +			speed = <1000>;
->>> +			full-duplex;
->>> +			pause;
->>> +		};
->>> +	};
->>> +
->>> +	gmac1: mac@1 {
->>> +		compatible = "mediatek,eth-mac";
->>> +		reg = <1>;
->>> +		phy-mode = "rgmii-txid";
->>> +		phy-handle = <&phy4>;
->>> +	};
->>> +
->>> +	mdio: mdio-bus {
->>> +		#address-cells = <1>;
->>> +		#size-cells = <0>;
->>> +
->>> +		/* Internal phy */
->>> +		phy4: ethernet-phy@4 {
->>> +			reg = <4>;
->>> +		};
->>> +
->>> +		mt7530: switch@1f {
->>> +			compatible = "mediatek,mt7621";
->>> +			#address-cells = <1>;
->>> +			#size-cells = <0>;
->>> +			reg = <0x1f>;
->>> +			pinctrl-names = "default";
->>> +			mediatek,mcm;
->>> +
->>> +			resets = <&rstctrl 2>;
->>> +			reset-names = "mcm";
->>> +
->>> +			ports {
->>> +				#address-cells = <1>;
->>> +				#size-cells = <0>;
->>> +
->>> +				port@0 {
->>> +					reg = <0>;
->>> +					label = "lan0";
->>> +				};
->>> +
->>> +				port@1 {
->>> +					reg = <1>;
->>> +					label = "lan1";
->>> +				};
->>> +
->>> +				port@2 {
->>> +					reg = <2>;
->>> +					label = "lan2";
->>> +				};
->>> +
->>> +				port@3 {
->>> +					reg = <3>;
->>> +					label = "lan3";
->>> +				};
->>> +
->>> +/* Commented out. Port 4 is handled by 2nd GMAC.
->>> +				port@4 {
->>> +					reg = <4>;
->>> +					label = "lan4";
->>> +				};
->>> +*/
->>> +
->>> +				cpu_port0: port@6 {
->>> +					reg = <6>;
->>> +					label = "cpu";
->>> +					ethernet = <&gmac0>;
->>> +					phy-mode = "rgmii";
->>> +
->>> +					fixed-link {
->>> +						speed = <1000>;
->>> +						full-duplex;
->>> +						pause;
->>> +					};
->>> +				};
->>> +			};
->>> +		};
->>> +	};
->>> +};
->>> +
->>> +Example 3: MT7621: Port 5 is connected to external PHY: Port 5 ->  
->>> external PHY.
->>> +
->>> +&eth {
->>> +	status = "okay";
->>> +
->>> +	gmac0: mac@0 {
->>> +		compatible = "mediatek,eth-mac";
->>> +		reg = <0>;
->>> +		phy-mode = "rgmii";
->>> +
->>> +		fixed-link {
->>> +			speed = <1000>;
->>> +			full-duplex;
->>> +			pause;
->>> +		};
->>> +	};
->>> +
->>> +	mdio: mdio-bus {
->>> +		#address-cells = <1>;
->>> +		#size-cells = <0>;
->>> +
->>> +		/* External phy */
->>> +		ephy5: ethernet-phy@7 {
->>> +			reg = <7>;
->>> +		};
->>> +
->>> +		mt7530: switch@1f {
->>> +			compatible = "mediatek,mt7621";
->>> +			#address-cells = <1>;
->>> +			#size-cells = <0>;
->>> +			reg = <0x1f>;
->>> +			pinctrl-names = "default";
->>> +			mediatek,mcm;
->>> +
->>> +			resets = <&rstctrl 2>;
->>> +			reset-names = "mcm";
->>> +
->>> +			ports {
->>> +				#address-cells = <1>;
->>> +				#size-cells = <0>;
->>> +
->>> +				port@0 {
->>> +					reg = <0>;
->>> +					label = "lan0";
->>> +				};
->>> +
->>> +				port@1 {
->>> +					reg = <1>;
->>> +					label = "lan1";
->>> +				};
->>> +
->>> +				port@2 {
->>> +					reg = <2>;
->>> +					label = "lan2";
->>> +				};
->>> +
->>> +				port@3 {
->>> +					reg = <3>;
->>> +					label = "lan3";
->>> +				};
->>> +
->>> +				port@4 {
->>> +					reg = <4>;
->>> +					label = "lan4";
->>> +				};
->>> +
->>> +				port@5 {
->>> +					reg = <5>;
->>> +					label = "lan5";
->>> +					phy-mode = "rgmii";
->>> +					phy-handle = <&ephy5>;
->>> +				};
->>> +
->>> +				cpu_port0: port@6 {
->>> +					reg = <6>;
->>> +					label = "cpu";
->>> +					ethernet = <&gmac0>;
->>> +					phy-mode = "rgmii";
->>> +
->>> +					fixed-link {
->>> +						speed = <1000>;
->>> +						full-duplex;
->>> +						pause;
->>> +					};
->>> +				};
->>> +			};
->>> +		};
->>> +	};
->>> +};
->>> --
->>> 2.20.1
->>>
+
+--=-VseoIlC7OSxnfDPpE7cN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1pW8kACgkQlfZmHno8
+x/4ltggAgcfG1puKlA5IJJrCySlntixj950TwNq7qMwwKwzxVCTojg/6HtjhOmlp
+IRbqq36DEjcQ12ulD0rqU84gMIP6jryt4iVDDutg18liBPSH3eekj9Wf22J+Vq7f
+5yw3zuYyCkrTcgWufsIwn4kbH0GRXCCLV8kwfKFRtXE5dtcWTRbOeNPpmh4HxIJW
+z0SkTnBc03CvX0VamQYNZ45QvBFVntqKMCExrvinZyOBUs4+/nd68IXfBU+rj9qb
+IBbZaZspKLp1NdVxSo/Tmamv2NVTodxnue9KbFzQe8r3n1bak/9VJKO4z3u0R6AK
+6x6oAxLccyXIktLiudLXEMdXMar2vw==
+=LsVM
+-----END PGP SIGNATURE-----
+
+--=-VseoIlC7OSxnfDPpE7cN--
