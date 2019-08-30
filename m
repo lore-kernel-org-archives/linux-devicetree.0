@@ -1,123 +1,115 @@
-Return-Path: <SRS0=hvZ9=WK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:57678 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727972AbfHNNOa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 14 Aug 2019 09:14:30 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 5/6] ARM: dts: Configure interconnect target module for omap3 sgx
-Date: Wed, 14 Aug 2019 06:14:07 -0700
-Message-Id: <20190814131408.57162-6-tony@atomide.com>
-In-Reply-To: <20190814131408.57162-1-tony@atomide.com>
-References: <20190814131408.57162-1-tony@atomide.com>
+Return-Path: <SRS0=qJz7=W2=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v10 02/14] media: v4l2-fwnode: add v4l2_fwnode_connector
+Date: Fri, 30 Aug 2019 12:16:34 +0200
+Message-Id: <20190830101646.6530-3-m.felsch@pengutronix.de>
+In-Reply-To: <20190830101646.6530-1-m.felsch@pengutronix.de>
+References: <20190830101646.6530-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Filip=20Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, moaz korena <moaz@korena.xyz>, Merlijn Wajer <merlijn@wizzup.org>, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, Philipp Rossak <embed3d@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Tero Kristo <t-kristo@ti.com>, linux-clk@vger.kernel.org
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Looks like omap34xx OCP registers are not readable unlike on omap36xx.
-We use SGX revision register instead of the OCP revision register for
-34xx and do not configure any SYSCONFIG register unlike for 36xx.
+Currently every driver needs to parse the connector endpoints by it self.
+This is the initial work to make this generic. A generic connector has
+common members and connector specific members. The common members are:
+  - type
+  - label (optional)
+  - links
+  - nr_of_links
 
-I've tested that the interconnect target module enables and idles
-just fine with PM runtime control via sys:
+The specific members are stored within a union, since only one of them
+can be available at the time. Since this is the initial support the
+patch adds only the analog-connector specific ones.
 
-# echo on > $(find /sys -name control | grep \/5000); rwmem 0x5000fe10
-# rwmem 0x50000014	# SGX revision register on 36xx
-0x50000014 = 0x00010205
-# echo auto > $(find /sys -name control | grep \/5000)
-# rwmem 0x5000fe00
-And when idled, it will produce "Bus error" as expected.
-
-Cc: Adam Ford <aford173@gmail.com>
-Cc: Filip Matijević <filip.matijevic.pz@gmail.com>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-Cc: moaz korena <moaz@korena.xyz>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: Philipp Rossak <embed3d@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- arch/arm/boot/dts/omap34xx.dtsi | 26 ++++++++++++++++++++++++++
- arch/arm/boot/dts/omap36xx.dtsi | 27 +++++++++++++++++++++++++++
- 2 files changed, 53 insertions(+)
+[1] https://patchwork.kernel.org/cover/10794703/
 
-diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
---- a/arch/arm/boot/dts/omap34xx.dtsi
-+++ b/arch/arm/boot/dts/omap34xx.dtsi
-@@ -100,6 +100,32 @@
- 				interrupts = <18>;
- 			};
- 		};
-+
-+		/*
-+		 * On omap34xx the OCP registers do not seem to be accessible
-+		 * at all unlike on 36xx. Maybe SGX is permanently set to
-+		 * "OCP bypass mode", or maybe there is OCP_SYSCONFIG that is
-+		 * write-only at 0x50000e10. We detect SGX based on the SGX
-+		 * revision register instead of the unreadable OCP revision
-+		 * register. Also note that on early 34xx es1 revision there
-+		 * are also different clocks, but we do not have any dts users
-+		 * for it.
-+		 */
-+		sgx_module: target-module@50000000 {
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			reg = <0x50000014 0x4>;
-+			reg-names = "rev";
-+			clocks = <&sgx_fck>, <&sgx_ick>;
-+			clock-names = "fck", "ick";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x50000000 0x4000>;
-+
-+			/*
-+			 * Closed source PowerVR driver, no cnhild device
-+			 * binding or driver in mainline
-+			 */
-+		};
- 	};
+v10:
+- drop unused V4L2_CONN_HDMI support
+
+v8:
+- rename CON -> CONN
+- supported_tvnorms_stds -> sdtv_stds and adapt description
+
+v7:
+- fix spelling issues
+- constify label
+- support variable label size
+- replace single remote_port/id members by links member of variable
+  size
+- squash v4l2-connector into v4l2-fwnode
+
+@Jacopo: I dropped your r b tag because I changed the port/id logic.
+
+v6:
+- fix some spelling and style issues
+- rm unnecessary comments
+- drop vga and dvi connector
+- fix misspelt connector
+
+v2-v4:
+- nothing since the patch was squashed from series [1] into this
+  series.
+
+ include/media/v4l2-fwnode.h | 43 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+
+diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+index f6a7bcd13197..65da646b579e 100644
+--- a/include/media/v4l2-fwnode.h
++++ b/include/media/v4l2-fwnode.h
+@@ -123,6 +123,49 @@ struct v4l2_fwnode_link {
+ 	unsigned int remote_port;
+ };
  
- 	thermal_zones: thermal-zones {
-diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
---- a/arch/arm/boot/dts/omap36xx.dtsi
-+++ b/arch/arm/boot/dts/omap36xx.dtsi
-@@ -139,6 +139,33 @@
- 				interrupts = <18>;
- 			};
- 		};
++/**
++ * enum v4l2_connector_type - connector type
++ * @V4L2_CONN_UNKNOWN:   unknown connector type, no V4L2 connector configuration
++ * @V4L2_CONN_COMPOSITE: analog composite connector
++ * @V4L2_CONN_SVIDEO:    analog svideo connector
++ */
++enum v4l2_connector_type {
++	V4L2_CONN_UNKNOWN,
++	V4L2_CONN_COMPOSITE,
++	V4L2_CONN_SVIDEO,
++};
 +
-+		/*
-+		 * The OCP register layout seems to be a subset of the
-+		 * "ti,sysc-omap4" with just sidle and midle bits.
-+		 */
-+		sgx_module: target-module@50000000 {
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0x5000fe00 0x4>,
-+			      <0x5000fe10 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			clocks = <&sgx_fck>, <&sgx_ick>;
-+			clock-names = "fck", "ick";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0x50000000 0x2000000>;
++/**
++ * struct v4l2_fwnode_connector_analog - analog connector data structure
++ * @sdtv_stds: sdtv standards this connector supports, set to V4L2_STD_ALL
++ *             if no restrictions are specified.
++ */
++struct v4l2_fwnode_connector_analog {
++	v4l2_std_id sdtv_stds;
++};
 +
-+			/*
-+			 * Closed source PowerVR driver, no cnhild device
-+			 * binding or driver in mainline
-+			 */
-+		};
- 	};
- 
- 	thermal_zones: thermal-zones {
++/**
++ * struct v4l2_fwnode_connector - the connector data structure
++ * @label: optional connector label
++ * @type: connector type
++ * @links: list of &struct v4l2_fwnode_link links the connector is connected to
++ * @nr_of_links: total number of links
++ * @connector: connector configuration
++ * @connector.analog: analog connector configuration
++ *                    &struct v4l2_fwnode_connector_analog
++ */
++struct v4l2_fwnode_connector {
++	const char *label;
++	enum v4l2_connector_type type;
++	struct v4l2_fwnode_link *links;
++	unsigned int nr_of_links;
++
++	union {
++		struct v4l2_fwnode_connector_analog analog;
++		/* future connectors */
++	} connector;
++};
++
+ /**
+  * v4l2_fwnode_endpoint_parse() - parse all fwnode node properties
+  * @fwnode: pointer to the endpoint's fwnode handle
 -- 
-2.21.0
+2.20.1
