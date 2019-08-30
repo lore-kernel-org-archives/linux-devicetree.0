@@ -1,7 +1,7 @@
 From: Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH v2 2/3] ARM: dts: aspeed: swift: Change power supplies to version 2
-Date: Fri, 30 Aug 2019 14:11:02 -0500
-Message-ID: <1567192263-15065-3-git-send-email-eajames@linux.ibm.com>
+Subject: [PATCH v2 1/3] dt-bindings: hwmon: Document ibm,cffps2 compatible string
+Date: Fri, 30 Aug 2019 14:11:01 -0500
+Message-ID: <1567192263-15065-2-git-send-email-eajames@linux.ibm.com>
 References: <1567192263-15065-1-git-send-email-eajames@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1567192263-15065-1-git-send-email-eajames@linux.ibm.com>
@@ -10,35 +10,30 @@ To: linux-hwmon@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, linux@roeck-us.net, andrew@aj.id.au, joel@jms.id.au, mark.rutland@arm.com, robh+dt@kernel.org, jdelvare@suse.com, Eddie James <eajames@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Swift power supplies are version 2 of the IBM CFFPS. Make it so in the
-devicetree.
+Document the compatible string for version 2 of the IBM CFFPS PSU.
 
 Signed-off-by: Eddie James <eajames@linux.ibm.com>
 ---
- arch/arm/boot/dts/aspeed-bmc-opp-swift.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-index f14f745..815b865 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-swift.dts
-@@ -494,7 +494,7 @@
- 	};
+diff --git a/Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt b/Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt
+index f68a0a6..1036f65 100644
+--- a/Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt
++++ b/Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt
+@@ -1,8 +1,10 @@
+-Device-tree bindings for IBM Common Form Factor Power Supply Version 1
+-----------------------------------------------------------------------
++Device-tree bindings for IBM Common Form Factor Power Supply Versions 1 and 2
++-----------------------------------------------------------------------------
  
- 	power-supply@68 {
--		compatible = "ibm,cffps1";
-+		compatible = "ibm,cffps2";
- 		reg = <0x68>;
- 	};
- 
-@@ -504,7 +504,7 @@
- 	};
- 
- 	power-supply@69 {
--		compatible = "ibm,cffps1";
-+		compatible = "ibm,cffps2";
- 		reg = <0x69>;
- 	};
+ Required properties:
+- - compatible = "ibm,cffps1";
++ - compatible				: Must be one of the following:
++						"ibm,cffps1"
++						"ibm,cffps2"
+  - reg = < I2C bus address >;		: Address of the power supply on the
+ 					  I2C bus.
  
 -- 
 1.8.3.1
