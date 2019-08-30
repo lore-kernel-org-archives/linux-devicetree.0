@@ -1,7 +1,7 @@
 From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v1 15/18] MIPS: Loongson64: Load built-in dtbs
-Date: Fri, 30 Aug 2019 12:32:29 +0800
-Message-ID: <20190830043232.20191-10-jiaxun.yang@flygoat.com>
+Subject: [PATCH v1 16/18] MIPS: Loongson: Regenerate defconfigs
+Date: Fri, 30 Aug 2019 12:32:30 +0800
+Message-ID: <20190830043232.20191-11-jiaxun.yang@flygoat.com>
 References: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,185 +12,144 @@ To: linux-mips@vger.kernel.org
 Cc: chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
 List-Id: devicetree@vger.kernel.org
 
-Load proper dtb according to firmware passed parameters and
-CPU PRID.
+We've touched kconfig a lot in previous patches.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- .../asm/mach-loongson64/builtin_dtbs.h        | 26 +++++++
- .../include/asm/mach-loongson64/loongson64.h  |  2 +
- arch/mips/loongson64/env.c                    | 67 +++++++++++++++++++
- arch/mips/loongson64/setup.c                  | 15 +++++
- 4 files changed, 110 insertions(+)
- create mode 100644 arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
+ arch/mips/configs/fuloong2e_defconfig |  8 +++-----
+ arch/mips/configs/lemote2f_defconfig  |  8 ++------
+ arch/mips/configs/loongson3_defconfig | 12 ++++--------
+ 3 files changed, 9 insertions(+), 19 deletions(-)
 
-diff --git a/arch/mips/include/asm/mach-loongson64/builtin_dtbs.h b/arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
-new file mode 100644
-index 000000000000..106287d54069
---- /dev/null
-+++ b/arch/mips/include/asm/mach-loongson64/builtin_dtbs.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ *
-+ * Built-in Generic dtbs for MACH_LOONGSON64
-+ */
-+
-+#ifndef __ASM_MACH_LOONGSON64_BUILTIN_DTBS_H_
-+#define __ASM_MACH_LOONGSON64_BUILTIN_DTBS_H_
-+
-+extern u32 __dtb_ls3a1000_780e_1way_begin[];
-+extern u32 __dtb_ls3a1000_780e_2way_begin[];
-+extern u32 __dtb_ls3a1000_780e_4way_begin[];
-+
-+extern u32 __dtb_ls3b_780e_1way_begin[];
-+extern u32 __dtb_ls3b_780e_2way_begin[];
-+
-+extern u32 __dtb_ls3a2000_780e_1way_begin[];
-+extern u32 __dtb_ls3a2000_780e_2way_begin[];
-+extern u32 __dtb_ls3a2000_780e_4way_begin[];
-+
-+extern u32 __dtb_ls3a3000_780e_1way_begin[];
-+extern u32 __dtb_ls3a3000_780e_2way_begin[];
-+extern u32 __dtb_ls3a3000_780e_4way_begin[];
-+
-+#endif
-diff --git a/arch/mips/include/asm/mach-loongson64/loongson64.h b/arch/mips/include/asm/mach-loongson64/loongson64.h
-index d877adb99d33..78daa3fb3fa7 100644
---- a/arch/mips/include/asm/mach-loongson64/loongson64.h
-+++ b/arch/mips/include/asm/mach-loongson64/loongson64.h
-@@ -45,4 +45,6 @@ extern u64 loongson_freqctrl[MAX_PACKAGES];
- 
- extern const struct plat_smp_ops loongson3_smp_ops;
- extern void __init prom_init_lefi(void);
-+extern void *loongson_fdt_blob;
-+
- #endif
-diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
-index 93658cfbf3a6..e46203c4a348 100644
---- a/arch/mips/loongson64/env.c
-+++ b/arch/mips/loongson64/env.c
-@@ -20,6 +20,7 @@
- 
- #include <loongson64.h>
- #include <boot_param.h>
-+#include <builtin_dtbs.h>
- #include <workarounds.h>
- 
- u32 cpu_clock_freq;
-@@ -126,6 +127,72 @@ void __init prom_init_lefi(void)
- 		loongson_sysconf.cores_per_node - 1) /
- 		loongson_sysconf.cores_per_node;
- 
-+	if ((read_c0_prid() & PRID_IMP_MASK) == PRID_IMP_LOONGSON_64) {
-+		switch (read_c0_prid() & PRID_REV_MASK) {
-+		case PRID_REV_LOONGSON3A_R1:
-+			switch (loongson_sysconf.nr_nodes) {
-+			case 4:
-+				loongson_fdt_blob = __dtb_ls3a1000_780e_4way_begin;
-+				break;
-+			case 2:
-+				loongson_fdt_blob = __dtb_ls3a1000_780e_2way_begin;
-+				break;
-+			case 1:
-+			default:
-+				loongson_fdt_blob = __dtb_ls3a1000_780e_1way_begin;
-+				break;
-+			}
-+			break;
-+		case PRID_REV_LOONGSON3A_R2_0:
-+		case PRID_REV_LOONGSON3A_R2_1:
-+			switch (loongson_sysconf.nr_nodes) {
-+			case 4:
-+				loongson_fdt_blob = __dtb_ls3a2000_780e_4way_begin;
-+				break;
-+			case 2:
-+				loongson_fdt_blob = __dtb_ls3a2000_780e_2way_begin;
-+				break;
-+			case 1:
-+			default:
-+				loongson_fdt_blob = __dtb_ls3a2000_780e_1way_begin;
-+				break;
-+			}
-+			break;
-+		case PRID_REV_LOONGSON3A_R3_0:
-+		case PRID_REV_LOONGSON3A_R3_1:
-+			switch (loongson_sysconf.nr_nodes) {
-+			case 4:
-+				loongson_fdt_blob = __dtb_ls3a3000_780e_4way_begin;
-+				break;
-+			case 2:
-+				loongson_fdt_blob = __dtb_ls3a3000_780e_2way_begin;
-+				break;
-+			case 1:
-+			default:
-+				loongson_fdt_blob = __dtb_ls3a3000_780e_1way_begin;
-+				break;
-+			}
-+			break;
-+		case PRID_REV_LOONGSON3B_R1:
-+		case PRID_REV_LOONGSON3B_R2:
-+			switch (loongson_sysconf.nr_nodes) {
-+			case 4:
-+				loongson_fdt_blob = __dtb_ls3b_780e_2way_begin;
-+				break;
-+			case 2:
-+			default:
-+				loongson_fdt_blob = __dtb_ls3b_780e_1way_begin;
-+				break;
-+			}
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	if (!loongson_fdt_blob)
-+		pr_err("Failed to determine built-in Loongson64 dtb\n");
-+
- 	loongson_sysconf.pci_mem_start_addr = eirq_source->pci_mem_start_addr;
- 	loongson_sysconf.pci_mem_end_addr = eirq_source->pci_mem_end_addr;
- 	loongson_sysconf.pci_io_base = eirq_source->pci_io_start_addr;
-diff --git a/arch/mips/loongson64/setup.c b/arch/mips/loongson64/setup.c
-index 24432adc8350..3b850b3128ea 100644
---- a/arch/mips/loongson64/setup.c
-+++ b/arch/mips/loongson64/setup.c
-@@ -7,9 +7,15 @@
- #include <asm/setup.h>
- #include <asm/smp-ops.h>
- #include <asm/cacheflush.h>
-+#include <linux/libfdt.h>
-+#include <linux/of_fdt.h>
-+
-+#include <asm/prom.h>
- 
- #include <loongson64.h>
- 
-+void *loongson_fdt_blob;
-+
- static void wbflush_loongson(void)
- {
- 	asm(".set\tpush\n\t"
-@@ -81,6 +87,8 @@ void __init prom_free_prom_memory(void)
- 
- void __init plat_mem_setup(void)
- {
-+	if (loongson_fdt_blob)
-+		__dt_setup_arch(loongson_fdt_blob);
- }
- 
- void __init plat_time_init(void)
-@@ -90,3 +98,10 @@ void __init plat_time_init(void)
- #endif
- }
- 
-+void __init device_tree_init(void)
-+{
-+	if (!initial_boot_params)
-+		return;
-+
-+	unflatten_and_copy_device_tree();
-+}
+diff --git a/arch/mips/configs/fuloong2e_defconfig b/arch/mips/configs/fuloong2e_defconfig
+index 7a7af706e898..ae8a904ef812 100644
+--- a/arch/mips/configs/fuloong2e_defconfig
++++ b/arch/mips/configs/fuloong2e_defconfig
+@@ -15,8 +15,7 @@ CONFIG_EXPERT=y
+ # CONFIG_COMPAT_BRK is not set
+ CONFIG_SLAB=y
+ CONFIG_PROFILING=y
+-CONFIG_MACH_LOONGSON64=y
+-CONFIG_PCI=y
++CONFIG_MACH_LOONGSON2EF=y
+ CONFIG_MIPS32_O32=y
+ CONFIG_MIPS32_N32=y
+ # CONFIG_SUSPEND is not set
+@@ -36,8 +35,6 @@ CONFIG_IP_MULTICAST=y
+ CONFIG_IP_PNP=y
+ CONFIG_IP_PNP_BOOTP=y
+ CONFIG_NET_IPIP=m
+-# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
+-# CONFIG_INET_XFRM_MODE_TUNNEL is not set
+ # CONFIG_INET_DIAG is not set
+ # CONFIG_IPV6 is not set
+ CONFIG_NETFILTER=y
+@@ -83,6 +80,7 @@ CONFIG_IP_NF_ARPFILTER=m
+ CONFIG_IP_NF_ARP_MANGLE=m
+ CONFIG_PHONET=m
+ CONFIG_NET_9P=m
++CONFIG_PCI=y
+ CONFIG_FW_LOADER=m
+ CONFIG_MTD=m
+ CONFIG_MTD_BLOCK=m
+@@ -142,6 +140,7 @@ CONFIG_HW_RANDOM=y
+ CONFIG_I2C=m
+ CONFIG_I2C_CHARDEV=m
+ CONFIG_I2C_VIAPRO=m
++CONFIG_GPIOLIB=y
+ # CONFIG_HWMON is not set
+ CONFIG_FB=y
+ CONFIG_FB_RADEON=y
+@@ -217,7 +216,6 @@ CONFIG_NLS_CODEPAGE_936=y
+ CONFIG_NLS_ISO8859_1=y
+ CONFIG_NLS_UTF8=y
+ CONFIG_CRYPTO_AUTHENC=m
+-CONFIG_CRYPTO_GCM=m
+ CONFIG_CRYPTO_CTS=m
+ CONFIG_CRYPTO_PCBC=m
+ CONFIG_CRYPTO_XTS=m
+diff --git a/arch/mips/configs/lemote2f_defconfig b/arch/mips/configs/lemote2f_defconfig
+index d44f1469cf64..0cbe1240314d 100644
+--- a/arch/mips/configs/lemote2f_defconfig
++++ b/arch/mips/configs/lemote2f_defconfig
+@@ -12,11 +12,10 @@ CONFIG_LOG_BUF_SHIFT=15
+ CONFIG_BLK_DEV_INITRD=y
+ CONFIG_EXPERT=y
+ CONFIG_PROFILING=y
+-CONFIG_MACH_LOONGSON64=y
++CONFIG_MACH_LOONGSON2EF=y
+ CONFIG_LEMOTE_MACH2F=y
+ CONFIG_KEXEC=y
+ # CONFIG_SECCOMP is not set
+-CONFIG_PCI=y
+ CONFIG_MIPS32_O32=y
+ CONFIG_MIPS32_N32=y
+ CONFIG_HIBERNATION=y
+@@ -26,7 +25,6 @@ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+ CONFIG_MODVERSIONS=y
+ CONFIG_BLK_DEV_INTEGRITY=y
+-CONFIG_IOSCHED_DEADLINE=m
+ CONFIG_BINFMT_MISC=m
+ CONFIG_NET=y
+ CONFIG_PACKET=y
+@@ -44,9 +42,6 @@ CONFIG_IP_MROUTE=y
+ CONFIG_IP_PIMSM_V1=y
+ CONFIG_IP_PIMSM_V2=y
+ CONFIG_SYN_COOKIES=y
+-CONFIG_INET_XFRM_MODE_TRANSPORT=m
+-CONFIG_INET_XFRM_MODE_TUNNEL=m
+-CONFIG_INET_XFRM_MODE_BEET=m
+ CONFIG_TCP_CONG_ADVANCED=y
+ CONFIG_TCP_CONG_BIC=y
+ CONFIG_DEFAULT_BIC=y
+@@ -77,6 +72,7 @@ CONFIG_MAC80211=m
+ CONFIG_MAC80211_LEDS=y
+ CONFIG_RFKILL=m
+ CONFIG_RFKILL_INPUT=y
++CONFIG_PCI=y
+ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_BLK_DEV_CRYPTOLOOP=m
+ CONFIG_BLK_DEV_RAM=y
+diff --git a/arch/mips/configs/loongson3_defconfig b/arch/mips/configs/loongson3_defconfig
+index 90ee0084d786..66fb44b4d845 100644
+--- a/arch/mips/configs/loongson3_defconfig
++++ b/arch/mips/configs/loongson3_defconfig
+@@ -24,15 +24,9 @@ CONFIG_BLK_DEV_INITRD=y
+ CONFIG_SYSCTL_SYSCALL=y
+ CONFIG_EMBEDDED=y
+ CONFIG_MACH_LOONGSON64=y
+-CONFIG_LOONGSON_MACH3X=y
+ CONFIG_SMP=y
+ CONFIG_HZ_256=y
+ CONFIG_KEXEC=y
+-CONFIG_PCIEPORTBUS=y
+-CONFIG_HOTPLUG_PCI_PCIE=y
+-# CONFIG_PCIEAER is not set
+-CONFIG_PCIEASPM_PERFORMANCE=y
+-CONFIG_HOTPLUG_PCI=y
+ CONFIG_MIPS32_O32=y
+ CONFIG_MIPS32_N32=y
+ CONFIG_MODULES=y
+@@ -41,8 +35,6 @@ CONFIG_MODULE_UNLOAD=y
+ CONFIG_MODULE_FORCE_UNLOAD=y
+ CONFIG_MODVERSIONS=y
+ CONFIG_PARTITION_ADVANCED=y
+-CONFIG_IOSCHED_DEADLINE=m
+-CONFIG_CFQ_GROUP_IOSCHED=y
+ CONFIG_BINFMT_MISC=m
+ CONFIG_KSM=y
+ CONFIG_NET=y
+@@ -97,6 +89,10 @@ CONFIG_CFG80211_WEXT=y
+ CONFIG_MAC80211=m
+ CONFIG_RFKILL=m
+ CONFIG_RFKILL_INPUT=y
++CONFIG_PCIEPORTBUS=y
++CONFIG_HOTPLUG_PCI_PCIE=y
++CONFIG_PCIEASPM_PERFORMANCE=y
++CONFIG_HOTPLUG_PCI=y
+ CONFIG_DEVTMPFS=y
+ CONFIG_DEVTMPFS_MOUNT=y
+ CONFIG_MTD=m
 -- 
 2.22.0
