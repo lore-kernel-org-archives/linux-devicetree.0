@@ -1,98 +1,75 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 10/10] lib/test_printf: Add tests for %pfw printk
- modifier
-Date: Fri, 30 Aug 2019 16:04:30 +0300
-Message-ID: <20190830130430.GK2680@smile.fi.intel.com>
-References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
- <20190829101043.24963-11-sakari.ailus@linux.intel.com>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [RESEND PATCH 0/5] Add bluetooth support for Orange Pi 3
+Date: Fri, 30 Aug 2019 15:20:34 +0200
+Message-ID: <20190830132034.u65arlv7umh64lx6@flea>
+References: <20190823103139.17687-1-megous@megous.com>
+ <5524D5E9-FA82-4244-A91F-78CF1C3FB3FB@holtmann.org>
+ <20190830092104.odipmbflounqpffo@flea>
+ <D02B89FB-F8C0-40AD-A99A-6C1B4FEB72A0@holtmann.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190829101043.24963-11-sakari.ailus@linux.intel.com>
+In-Reply-To: <D02B89FB-F8C0-40AD-A99A-6C1B4FEB72A0@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: megous@megous.com, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 01:10:43PM +0300, Sakari Ailus wrote:
-> Add a test for the %pfw printk modifier using software nodes.
-> 
+On Fri, Aug 30, 2019 at 02:43:48PM +0200, Marcel Holtmann wrote:
+> >>> (Resend to add missing lists, sorry for the noise.)
+> >>>
+> >>> This series implements bluetooth support for Xunlong Orange Pi 3 board.
+> >>>
+> >>> The board uses AP6256 WiFi/BT 5.0 chip.
+> >>>
+> >>> Summary of changes:
+> >>>
+> >>> - add more delay to let initialize the chip
+> >>> - let the kernel detect firmware file path
+> >>> - add new compatible and update dt-bindings
+> >>> - update Orange Pi 3 / H6 DTS
+> >>>
+> >>> Please take a look.
+> >>>
+> >>> thank you and regards,
+> >>> Ondrej Jirman
+> >>>
+> >>> Ondrej Jirman (5):
+> >>> dt-bindings: net: Add compatible for BCM4345C5 bluetooth device
+> >>> bluetooth: bcm: Add support for loading firmware for BCM4345C5
+> >>> bluetooth: hci_bcm: Give more time to come out of reset
+> >>> arm64: dts: allwinner: h6: Add pin configs for uart1
+> >>> arm64: dts: allwinner: orange-pi-3: Enable UART1 / Bluetooth
+> >>>
+> >>> .../bindings/net/broadcom-bluetooth.txt       |  1 +
+> >>> .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 19 +++++++++++++++++++
+> >>> arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 10 ++++++++++
+> >>> drivers/bluetooth/btbcm.c                     |  3 +++
+> >>> drivers/bluetooth/hci_bcm.c                   |  3 ++-
+> >>> 5 files changed, 35 insertions(+), 1 deletion(-)
+> >>
+> >> all 5 patches have been applied to bluetooth-next tree.
+> >
+> > The DTS patches (last 2) should go through the arm-soc tree, can you
+> > drop them?
+>
+> why is that? We have included DTS changes for Bluetooth devices
+> directly all the time. What is different with this hardware?
 
-Having tests is always a good thing!
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+I guess some maintainers are more relaxed with it than we are then,
+but for the why, well, it's the usual reasons, the most immediate one
+being that it reduces to a minimum the conflicts between trees.
 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  lib/test_printf.c | 37 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/lib/test_printf.c b/lib/test_printf.c
-> index 944eb50f38625..9c6d716979fb1 100644
-> --- a/lib/test_printf.c
-> +++ b/lib/test_printf.c
-> @@ -22,6 +22,8 @@
->  #include <linux/gfp.h>
->  #include <linux/mm.h>
->  
-> +#include <linux/property.h>
-> +
->  #include "../tools/testing/selftests/kselftest_module.h"
->  
->  #define BUF_SIZE 256
-> @@ -588,6 +590,40 @@ flags(void)
->  	kfree(cmp_buffer);
->  }
->  
-> +static void __init fwnode_pointer(void)
-> +{
-> +	const struct software_node softnodes[] = {
-> +		{ .name = "first", },
-> +		{ .name = "second", .parent = &softnodes[0], },
-> +		{ .name = "third", .parent = &softnodes[1], },
-> +		{ NULL /* Guardian */ },
-> +	};
-> +	const char * const full_name = "/second/third";
-> +	const char * const full_name_second = "/second";
-> +	const char * const second_name = "second";
-> +	const char * const third_name = "third";
-> +	int rval;
-> +
-> +	rval = software_node_register_nodes(softnodes);
-> +	if (rval) {
-> +		pr_warn("cannot register softnodes; rval %d\n", rval);
-> +		return;
-> +	}
-> +
-> +	test(full_name_second, "%pfw",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
-> +	test(full_name, "%pfw",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> +	test(full_name, "%pfwf",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> +	test(second_name, "%pfwP",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
-> +	test(third_name, "%pfwP",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> +
-> +	software_node_unregister_nodes(softnodes);
-> +}
-> +
->  static void __init
->  test_pointer(void)
->  {
-> @@ -610,6 +646,7 @@ test_pointer(void)
->  	bitmap();
->  	netdev_features();
->  	flags();
-> +	fwnode_pointer();
->  }
->  
->  static void __init selftest(void)
-> -- 
-> 2.20.1
-> 
+The other being that it's not really usual to merge patches supposed
+to be handled by another maintainer without (at least) his
+consent. I'm pretty sure you would have asked the same request if I
+would have merged the bluetooth patches through my tree without
+notice.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
