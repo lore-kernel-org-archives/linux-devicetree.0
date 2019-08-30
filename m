@@ -1,257 +1,466 @@
-Return-Path: <SRS0=pcha=WL=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v7 03/13] media: v4l2-fwnode: add initial connector parsing support
-Date: Thu, 15 Aug 2019 13:57:37 +0200
-Message-Id: <20190815115747.24018-4-m.felsch@pengutronix.de>
-In-Reply-To: <20190815115747.24018-1-m.felsch@pengutronix.de>
-References: <20190815115747.24018-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=ECyj=W2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.220.in.ua ([89.184.67.205]:54865 "EHLO smtp.220.in.ua"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728199AbfH3Wqd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 30 Aug 2019 18:46:33 -0400
+From: Oleh Kravchenko <oleg@kaa.org.ua>
+Subject: [PATCH v5 2/2] leds: add LED driver for EL15203000 board
+Date: Sat, 31 Aug 2019 01:46:19 +0300
+Message-Id: <20190830224619.15728-2-oleg@kaa.org.ua>
+In-Reply-To: <20190830224619.15728-1-oleg@kaa.org.ua>
+References: <20190830224619.15728-1-oleg@kaa.org.ua>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-leds@vger.kernel.org
+Cc: Oleh Kravchenko <oleg@kaa.org.ua>
 List-ID: <devicetree@vger.kernel.org>
 
-The patch adds the initial connector parsing code, so we can move from a
-driver specific parsing code to a generic one. Currently only the
-generic fields and the analog-connector specific fields are parsed. Parsing
-the other connector specific fields can be added by a simple callbacks.
+This patch adds a LED class driver for the RGB LEDs found on
+the Crane Merchandising System EL15203000 LEDs board
+(aka RED LEDs board).
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Oleh Kravchenko <oleg@kaa.org.ua>
 ---
-[1] https://patchwork.kernel.org/cover/10794703/
+ .../testing/sysfs-class-led-driver-el15203000 |  22 ++
+ drivers/leds/Kconfig                          |  13 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-el15203000.c                | 362 ++++++++++++++++++
+ 4 files changed, 398 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-class-led-driver-el15203000
+ create mode 100644 drivers/leds/leds-el15203000.c
 
-v7:
-@Jacopo: I dropped your r b tag becuase of the amount of changes I
-made..
-
-- drop unnecessary comments
-- fix commet style
-- s/v4l2_fwnode_connector_conv.name/v4l2_fwnode_connector_conv.compatible/
-- make label size variable and drop V4L2_CONNECTOR_MAX_LABEL usage
-- do not assign a default label in case of no label was specified
-- remove useless /* fall through */ comments
-- add support for N connector links
-- rename local variables to be more meaningful
-- adjust kernedoc
-- add v4l2_fwnode_connector_free()
-- improve error handling (use different error values)
-- make use of pr_warn_once()
-
-v6:
-- use unsigned count var
-- fix comment and style issues
-- place '/* fall through */' to correct places
-- fix error handling and cleanup by releasing fwnode
-- drop vga and dvi parsing support as those connectors are rarely used
-  these days
-
-v5:
-- s/strlcpy/strscpy/
-
-v2-v4:
-- nothing since the patch was squashed from series [1] into this
-  series.
----
- drivers/media/v4l2-core/v4l2-fwnode.c | 137 ++++++++++++++++++++++++++
- include/media/v4l2-fwnode.h           |  38 +++++++
- 2 files changed, 175 insertions(+)
-
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 3bd1888787eb..c6eb8a8105cc 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -595,6 +595,143 @@ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
- }
- EXPORT_SYMBOL_GPL(v4l2_fwnode_put_link);
+diff --git a/Documentation/ABI/testing/sysfs-class-led-driver-el15203000 b/Documentation/ABI/testing/sysfs-class-led-driver-el15203000
+new file mode 100644
+index 000000000000..767763409125
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-class-led-driver-el15203000
+@@ -0,0 +1,22 @@
++What:		/sys/class/leds/<led>/hw_pattern
++Date:		August 2019
++KernelVersion:	5.3
++Description:
++		Specify a hardware pattern for the EL15203000 LED.
++		The LEDs board supports only predefined patterns by firmware
++		for specific LEDs.
++
++		Breathing mode for Screen frame light tube:
++		"0 4000 1 4000"
++
++		Cascade mode for Pipe LED:
++		"1 800 2 800 4 800 8 800 16 800"
++
++		Inverted cascade mode for Pipe LED:
++		"30 800 29 800 27 800 23 800 15 800"
++
++		Bounce mode for Pipe LED:
++		"1 800 2 800 4 800 8 800 16 800 16 800 8 800 4 800 2 800 1 800"
++
++		Inverted bounce mode for Pipe LED:
++		"30 800 29 800 27 800 23 800 15 800 15 800 23 800 27 800 29 800 30 800"
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index 1988de1d64c0..6e7703fd03d0 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -132,6 +132,19 @@ config LEDS_CR0014114
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called leds-cr0014114.
  
-+static const struct v4l2_fwnode_connector_conv {
-+	enum v4l2_connector_type type;
-+	const char *compatible;
-+} connectors[] = {
-+	{
-+		.type = V4L2_CON_COMPOSITE,
-+		.compatible = "composite-video-connector",
-+	}, {
-+		.type = V4L2_CON_SVIDEO,
-+		.compatible = "svideo-connector",
-+	}, {
-+		.type = V4L2_CON_HDMI,
-+		.compatible = "hdmi-connector",
-+	},
++config LEDS_EL15203000
++	tristate "LED Support for Crane EL15203000"
++	depends on LEDS_CLASS
++	depends on SPI
++	depends on OF
++	help
++	  This option enables support for EL15203000 LED Board
++	  (aka RED LED board) which is widely used in coffee vending
++	  machines produced by Crane Merchandising Systems.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called leds-el15203000.
++
+ config LEDS_LM3530
+ 	tristate "LCD Backlight driver for LM3530"
+ 	depends on LEDS_CLASS
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index 41fb073a39c1..2da39e896ce8 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -89,6 +89,7 @@ obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
+ # LED SPI Drivers
+ obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
+ obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
++obj-$(CONFIG_LEDS_EL15203000)		+= leds-el15203000.o
+ 
+ # LED Userspace Drivers
+ obj-$(CONFIG_LEDS_USER)			+= uleds.o
+diff --git a/drivers/leds/leds-el15203000.c b/drivers/leds/leds-el15203000.c
+new file mode 100644
+index 000000000000..9de81dee3618
+--- /dev/null
++++ b/drivers/leds/leds-el15203000.c
+@@ -0,0 +1,362 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2019 Crane Merchandising Systems. All rights reserved.
++// Copyright (C) 2019 Oleh Kravchenko <oleg@kaa.org.ua>
++
++#include <linux/delay.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/spi/spi.h>
++
++/*
++ * EL15203000 SPI protocol description:
++ * +-----+---------+
++ * | LED | COMMAND |
++ * +-----+---------+
++ * |  1  |    1    |
++ * +-----+---------+
++ * (*) LEDs MCU board expects 20 msec delay per byte.
++ *
++ * LEDs:
++ * +----------+--------------+-------------------------------------------+
++ * |    ID    |     NAME     |         DESCRIPTION                       |
++ * +----------+--------------+-------------------------------------------+
++ * | 'P' 0x50 |     Pipe     | Consists from 5 LEDs, controlled by board |
++ * +----------+--------------+-------------------------------------------+
++ * | 'S' 0x53 | Screen frame | Light tube around the screen              |
++ * +----------+--------------+-------------------------------------------+
++ * | 'V' 0x56 | Vending area | Highlights a cup of coffee                |
++ * +----------+--------------+-------------------------------------------+
++ *
++ * COMMAND:
++ * +----------+-----------------+--------------+--------------+
++ * |  VALUES  |       PIPE      | SCREEN FRAME | VENDING AREA |
++ * +----------+-----------------+--------------+--------------+
++ * | '0' 0x30 |                      Off                      |
++ * +----------+-----------------------------------------------+
++ * | '1' 0x31 |                      On                       |
++ * +----------+-----------------+--------------+--------------+
++ * | '2' 0x32 |     Cascade     |   Breathing  |
++ * +----------+-----------------+--------------+
++ * | '3' 0x33 | Inverse cascade |
++ * +----------+-----------------+
++ * | '4' 0x34 |     Bounce      |
++ * +----------+-----------------+
++ * | '5' 0x35 | Inverse bounce  |
++ * +----------+-----------------+
++ */
++
++/* EL15203000 default settings */
++#define EL_FW_DELAY_USEC	20000ul
++#define EL_PATTERN_DELAY_MSEC	800u
++#define EL_PATTERN_LEN		10u
++#define EL_PATTERN_HALF_LEN	(EL_PATTERN_LEN / 2)
++
++enum el15203000_command {
++	/* for all LEDs */
++	EL_OFF			= '0',
++	EL_ON			= '1',
++
++	/* for Screen LED */
++	EL_SCREEN_BREATHING	= '2',
++
++	/* for Pipe LED */
++	EL_PIPE_CASCADE		= '2',
++	EL_PIPE_INV_CASCADE	= '3',
++	EL_PIPE_BOUNCE		= '4',
++	EL_PIPE_INV_BOUNCE	= '5',
 +};
 +
-+static enum v4l2_connector_type
-+v4l2_fwnode_string_to_connector_type(const char *con_str)
++struct el15203000_led {
++	struct el15203000	*priv;
++	struct led_classdev	ldev;
++	u8			reg;
++};
++
++struct el15203000 {
++	struct device		*dev;
++	struct mutex		lock;
++	struct spi_device	*spi;
++	unsigned long		delay;
++	size_t			count;
++	struct el15203000_led	leds[];
++};
++
++static int el15203000_cmd(struct el15203000_led *led, u8 brightness)
 +{
-+	unsigned int i;
++	int		ret;
++	u8		cmd[2];
++	size_t		i;
 +
-+	for (i = 0; i < ARRAY_SIZE(connectors); i++)
-+		if (!strcmp(con_str, connectors[i].compatible))
-+			return connectors[i].type;
++	mutex_lock(&led->priv->lock);
 +
-+	return V4L2_CON_UNKNOWN;
++	dev_dbg(led->priv->dev, "Set brightness of 0x%02x(%c) to 0x%02x(%c)",
++		led->reg, led->reg, brightness, brightness);
++
++	/* to avoid SPI mistiming with firmware we should wait some time */
++	if (time_after(led->priv->delay, jiffies)) {
++		dev_dbg(led->priv->dev, "Wait %luus to sync",
++			EL_FW_DELAY_USEC);
++
++		usleep_range(EL_FW_DELAY_USEC,
++			     EL_FW_DELAY_USEC + 1);
++	}
++
++	cmd[0] = led->reg;
++	cmd[1] = brightness;
++
++	for (i = 0; i < ARRAY_SIZE(cmd); i++) {
++		if (i)
++			usleep_range(EL_FW_DELAY_USEC,
++				     EL_FW_DELAY_USEC + 1);
++
++		ret = spi_write(led->priv->spi, &cmd[i], sizeof(cmd[i]));
++		if (ret) {
++			dev_err(led->priv->dev,
++				"spi_write() error %d", ret);
++			break;
++		}
++	}
++
++	led->priv->delay = jiffies + usecs_to_jiffies(EL_FW_DELAY_USEC);
++
++	mutex_unlock(&led->priv->lock);
++
++	return ret;
 +}
 +
-+static int
-+v4l2_fwnode_connector_parse_analog(struct fwnode_handle *fwnode,
-+				   struct v4l2_fwnode_connector *vc)
++static int el15203000_set_blocking(struct led_classdev *ldev,
++				   enum led_brightness brightness)
 +{
-+	u32 tvnorms;
-+	int ret;
++	struct el15203000_led	*led = container_of(ldev,
++						    struct el15203000_led,
++						    ldev);
 +
-+	ret = fwnode_property_read_u32(fwnode, "tvnorms", &tvnorms);
++	return el15203000_cmd(led, brightness == LED_OFF ? EL_OFF : EL_ON);
++}
 +
-+	/* The tvnorms property is optional. */
-+	vc->connector.analog.supported_tvnorms = ret ? V4L2_STD_ALL : tvnorms;
++static int el15203000_pattern_set_S(struct led_classdev *ldev,
++				    struct led_pattern *pattern,
++				    u32 len, int repeat)
++{
++	struct el15203000_led	*led = container_of(ldev,
++						    struct el15203000_led,
++						    ldev);
++
++	if (repeat > 0 || len != 2 ||
++	    pattern[0].delta_t != 4000 || pattern[0].brightness != 0 ||
++	    pattern[1].delta_t != 4000 || pattern[1].brightness != 1)
++		return -EINVAL;
++
++	dev_dbg(led->priv->dev, "Breathing mode for 0x%02x(%c)",
++		led->reg, led->reg);
++
++	return el15203000_cmd(led, EL_SCREEN_BREATHING);
++}
++
++static bool is_cascade(const struct led_pattern *pattern, u32 len,
++		       bool inv, bool right)
++{
++	int val, t;
++	u32 i;
++
++	if (len != EL_PATTERN_HALF_LEN)
++		return false;
++
++	val = right ? BIT(4) : BIT(0);
++
++	for (i = 0; i < len; i++) {
++		t = inv ? ~val & GENMASK(4, 0) : val;
++
++		if (pattern[i].delta_t != EL_PATTERN_DELAY_MSEC ||
++		    pattern[i].brightness != t)
++			return false;
++
++		val = right ? val >> 1 : val << 1;
++	}
++
++	return true;
++}
++
++static bool is_bounce(const struct led_pattern *pattern, u32 len, bool inv)
++{
++	if (len != EL_PATTERN_LEN)
++		return false;
++
++	return is_cascade(pattern, EL_PATTERN_HALF_LEN, inv, false) &&
++	       is_cascade(pattern +  EL_PATTERN_HALF_LEN,
++			  EL_PATTERN_HALF_LEN, inv, true);
++}
++
++static int el15203000_pattern_set_P(struct led_classdev *ldev,
++				    struct led_pattern *pattern,
++				    u32 len, int repeat)
++{
++	struct el15203000_led	*led = container_of(ldev,
++						    struct el15203000_led,
++						    ldev);
++
++	if (repeat > 0)
++		return -EINVAL;
++
++	if (is_cascade(pattern, len, false, false)) {
++		dev_dbg(led->priv->dev, "Cascade mode for 0x%02x(%c)",
++			led->reg, led->reg);
++
++		return el15203000_cmd(led, EL_PIPE_CASCADE);
++	} else if (is_cascade(pattern, len, true, false)) {
++		dev_dbg(led->priv->dev, "Inverse cascade mode for 0x%02x(%c)",
++			led->reg, led->reg);
++
++		return el15203000_cmd(led, EL_PIPE_INV_CASCADE);
++	} else if (is_bounce(pattern, len, false)) {
++		dev_dbg(led->priv->dev, "Bounce mode for 0x%02x(%c)",
++			led->reg, led->reg);
++
++		return el15203000_cmd(led, EL_PIPE_BOUNCE);
++	} else if (is_bounce(pattern, len, true)) {
++		dev_dbg(led->priv->dev, "Inverse bounce mode for 0x%02x(%c)",
++			led->reg, led->reg);
++
++		return el15203000_cmd(led, EL_PIPE_INV_BOUNCE);
++	}
++
++	return -EINVAL;
++}
++
++static int el15203000_pattern_clear(struct led_classdev *ldev)
++{
++	struct el15203000_led	*led = container_of(ldev,
++						    struct el15203000_led,
++						    ldev);
++
++	return el15203000_cmd(led, EL_OFF);
++}
++
++static int el15203000_probe_dt(struct el15203000 *priv)
++{
++	size_t			i = 0;
++	struct el15203000_led	*led;
++	struct fwnode_handle	*child;
++	int			ret;
++	u32			reg;
++	struct led_init_data	init_data = {};
++
++	device_for_each_child_node(priv->dev, child) {
++		led = &priv->leds[i];
++
++		init_data.fwnode = child;
++
++		ret = fwnode_property_read_u32(child, "reg", &reg);
++		if (ret) {
++			dev_err(priv->dev, "LED without ID number");
++			fwnode_handle_put(child);
++
++			return ret;
++		}
++
++		if (reg > U8_MAX) {
++			dev_err(priv->dev, "LED value %d is invalid", reg);
++			fwnode_handle_put(child);
++
++			return -EINVAL;
++		}
++
++		led->reg = reg;
++
++		fwnode_property_read_string(child, "linux,default-trigger",
++					    &led->ldev.default_trigger);
++
++		led->priv			  = priv;
++		led->ldev.max_brightness	  = LED_ON;
++		led->ldev.brightness_set_blocking = el15203000_set_blocking;
++
++		if (reg == 'S') {
++			led->ldev.pattern_set	= el15203000_pattern_set_S;
++			led->ldev.pattern_clear	= el15203000_pattern_clear;
++		} else if (reg == 'P') {
++			led->ldev.pattern_set	= el15203000_pattern_set_P;
++			led->ldev.pattern_clear	= el15203000_pattern_clear;
++		}
++
++		ret = devm_led_classdev_register_ext(priv->dev, &led->ldev,
++						     &init_data);
++		if (ret) {
++			dev_err(priv->dev,
++				"failed to register LED device %s, err %d",
++				led->ldev.name, ret);
++			fwnode_handle_put(child);
++
++			return ret;
++		}
++
++		i++;
++	}
++
++	return ret;
++}
++
++static int el15203000_probe(struct spi_device *spi)
++{
++	struct el15203000	*priv;
++	size_t			count;
++	int			ret;
++
++	count = device_get_child_node_count(&spi->dev);
++	if (!count) {
++		dev_err(&spi->dev, "LEDs are not defined in device tree!");
++		return -ENODEV;
++	}
++
++	priv = devm_kzalloc(&spi->dev, struct_size(priv, leds, count),
++			    GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	mutex_init(&priv->lock);
++	priv->count	= count;
++	priv->dev	= &spi->dev;
++	priv->spi	= spi;
++	priv->delay	= jiffies -
++			  usecs_to_jiffies(EL_FW_DELAY_USEC);
++
++	ret = el15203000_probe_dt(priv);
++	if (ret)
++		return ret;
++
++	spi_set_drvdata(spi, priv);
 +
 +	return 0;
 +}
 +
-+void v4l2_fwnode_connector_free(struct v4l2_fwnode_connector *connector)
++static int el15203000_remove(struct spi_device *spi)
 +{
-+	unsigned int i;
++	struct el15203000 *priv = spi_get_drvdata(spi);
 +
-+	if (IS_ERR_OR_NULL(connector))
-+		return;
++	mutex_destroy(&priv->lock);
 +
-+	for (i = 0; i < connector->nr_of_links; i++)
-+		v4l2_fwnode_put_link(&connector->links[i]);
-+	kfree(connector->links);
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_free);
 +
-+int v4l2_fwnode_connector_alloc_parse(struct fwnode_handle *fwnode,
-+				      struct v4l2_fwnode_connector *connector)
-+{
-+	struct fwnode_handle *remote_pp, *remote_ep;
-+	const char *type_name;
-+	unsigned int i = 0, ep_num = 0;
-+	int err;
++static const struct of_device_id el15203000_dt_ids[] = {
++	{ .compatible = "crane,el15203000", },
++	{},
++};
 +
-+	memset(connector, 0, sizeof(*connector));
++MODULE_DEVICE_TABLE(of, el15203000_dt_ids);
 +
-+	remote_pp = fwnode_graph_get_remote_port_parent(fwnode);
-+	if (!remote_pp)
-+		return -ENOLINK;
++static struct spi_driver el15203000_driver = {
++	.probe		= el15203000_probe,
++	.remove		= el15203000_remove,
++	.driver = {
++		.name		= KBUILD_MODNAME,
++		.of_match_table	= el15203000_dt_ids,
++	},
++};
 +
-+	/* Parse all common properties first. */
-+	fwnode_graph_for_each_endpoint(remote_pp, remote_ep)
-+		ep_num++;
++module_spi_driver(el15203000_driver);
 +
-+	connector->nr_of_links = ep_num;
-+	connector->links = kmalloc_array(ep_num, sizeof(*connector->links),
-+					 GFP_KERNEL);
-+	if (!connector->links) {
-+		err = -ENOMEM;
-+		goto err_put_fwnode;
-+	}
-+
-+	fwnode_graph_for_each_endpoint(remote_pp, remote_ep) {
-+		err = v4l2_fwnode_parse_link(remote_ep, &connector->links[i]);
-+		if (err) {
-+			fwnode_handle_put(remote_ep);
-+			goto err_free_links;
-+		}
-+		i++;
-+	}
-+
-+	/*
-+	 * Links reference counting guarantees access -> no duplication needed
-+	 */
-+	fwnode_property_read_string(remote_pp, "label", &connector->label);
-+
-+	/* The connector-type is stored within the compatible string. */
-+	err = fwnode_property_read_string(remote_pp, "compatible", &type_name);
-+	if (err) {
-+		err = -EINVAL;
-+		goto err_free_links;
-+	}
-+	connector->type = v4l2_fwnode_string_to_connector_type(type_name);
-+
-+	/* Now parse the connector specific properties. */
-+	switch (connector->type) {
-+	case V4L2_CON_COMPOSITE:
-+	case V4L2_CON_SVIDEO:
-+		err = v4l2_fwnode_connector_parse_analog(remote_pp, connector);
-+		break;
-+	case V4L2_CON_HDMI:
-+		pr_warn_once("Connector specific parsing is currently not supported for %s\n",
-+			     type_name);
-+		err = 0;
-+		break;
-+	case V4L2_CON_UNKNOWN:
-+	default:
-+		pr_err("Unknown connector type\n");
-+		err = -EINVAL;
-+		goto err_free_links;
-+	};
-+
-+	fwnode_handle_put(remote_pp);
-+
-+	return err;
-+
-+err_free_links:
-+	for (i = 0; i < ep_num; i++)
-+		v4l2_fwnode_put_link(&connector->links[i]);
-+	kfree(connector->links);
-+err_put_fwnode:
-+	fwnode_handle_put(remote_pp);
-+
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_alloc_parse);
-+
- static int
- v4l2_async_notifier_fwnode_parse_endpoint(struct device *dev,
- 					  struct v4l2_async_notifier *notifier,
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index e39c198882fc..235c7214be3c 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -278,6 +278,44 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
-  */
- void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link);
- 
-+/**
-+ * v4l2_fwnode_connector_free() - free the V4L2 connector acquired by
-+ * v4l2_fwnode_parse_connector()
-+ * @connector: the V4L2 connector the resources of which are to be released
-+ *
-+ * Drop references to the connection link partners and free the memory allocated
-+ * by v4l2_fwnode_parse_connector() call.
-+ *
-+ * It is safe to call this function with NULL argument or on a V4L2 connector
-+ * the parsing of which failed.
-+ */
-+void v4l2_fwnode_connector_free(struct v4l2_fwnode_connector *connector);
-+
-+/**
-+ * v4l2_fwnode_parse_connector() - parse the connector on endpoint
-+ * @fwnode: pointer to the endpoint's fwnode handle where the connector is
-+ *          connected to
-+ * @connector: pointer to the V4L2 fwnode connector data structure
-+ *
-+ * Fill the connector data structure with the connector type, label, all found
-+ * links between the host and the connector as well as connector specific data.
-+ * Since the label is optional it can be %NULL if no one was found.
-+ *
-+ * A reference is taken to both the connector and the connector destination
-+ * where the connector belongs to. This must be dropped when no longer needed.
-+ * Also the memory it has allocated to store the variable size data must be
-+ * freed. Both dropping the references and freeing the memory is done by
-+ * v4l2_fwnode_connector_free().
-+ *
-+ * Return:
-+ * * %0 on success or a negative error code on failure:
-+ * * %-ENOMEM if memory allocation failed
-+ * * %-ENOLINK if the connector can't be found
-+ * * %-EINVAL on parsing failure
-+ */
-+int v4l2_fwnode_connector_alloc_parse(struct fwnode_handle *fwnode,
-+				      struct v4l2_fwnode_connector *connector);
-+
- /**
-  * typedef parse_endpoint_func - Driver's callback function to be called on
-  *	each V4L2 fwnode endpoint.
++MODULE_AUTHOR("Oleh Kravchenko <oleg@kaa.org.ua>");
++MODULE_DESCRIPTION("el15203000 LED driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("spi:el15203000");
 -- 
-2.20.1
+2.21.0
