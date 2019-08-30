@@ -1,51 +1,66 @@
 From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v3 01/10] software node: Get reference to parent swnode
- in get_parent op
-Date: Fri, 30 Aug 2019 15:26:12 +0300
-Message-ID: <20190830122612.GA1636@kuha.fi.intel.com>
+Subject: Re: [PATCH v3 02/10] software node: Make argument to
+ to_software_node const
+Date: Fri, 30 Aug 2019 15:27:26 +0300
+Message-ID: <20190830122726.GB1636@kuha.fi.intel.com>
 References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
- <20190829101043.24963-2-sakari.ailus@linux.intel.com>
+ <20190829101043.24963-3-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190829101043.24963-2-sakari.ailus@linux.intel.com>
+In-Reply-To: <20190829101043.24963-3-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sakari Ailus <sakari.ailus@linux.intel.com>
 Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 01:10:34PM +0300, Sakari Ailus wrote:
-> The software_node_get_parent() returned a pointer to the parent swnode,
-> but did not take a reference to it, leading the caller to put a reference
-> that was not taken. Take that reference now.
+On Thu, Aug 29, 2019 at 01:10:35PM +0300, Sakari Ailus wrote:
+> to_software_node() does not need to modify the fwnode_handle it operates
+> on; therefore make it const. This allows passing a const fwnode_handle to
+> to_software_node().
 > 
-> Fixes: 59abd83672f7 ("drivers: base: Introducing software nodes to the
-> 		      firmware node framework")
 > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+OK by me.
+
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com
 
 > ---
->  drivers/base/swnode.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  drivers/base/swnode.c    | 4 ++--
+>  include/linux/property.h | 3 ++-
+>  2 files changed, 4 insertions(+), 3 deletions(-)
 > 
 > diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-> index e7b3aa3bd55ad..a7cb41812cfda 100644
+> index a7cb41812cfda..951e7efd47c23 100644
 > --- a/drivers/base/swnode.c
 > +++ b/drivers/base/swnode.c
-> @@ -520,7 +520,10 @@ software_node_get_parent(const struct fwnode_handle *fwnode)
->  {
->  	struct swnode *swnode = to_swnode(fwnode);
->  
-> -	return swnode ? (swnode->parent ? &swnode->parent->fwnode : NULL) : NULL;
-> +	if (!swnode || !swnode->parent)
-> +		return NULL;
-> +
-> +	return fwnode_handle_get(&swnode->parent->fwnode);
+> @@ -71,9 +71,9 @@ software_node_to_swnode(const struct software_node *node)
+>  	return swnode;
 >  }
 >  
->  static struct fwnode_handle *
+> -const struct software_node *to_software_node(struct fwnode_handle *fwnode)
+> +const struct software_node *to_software_node(const struct fwnode_handle *fwnode)
+>  {
+> -	struct swnode *swnode = to_swnode(fwnode);
+> +	const struct swnode *swnode = to_swnode(fwnode);
+>  
+>  	return swnode ? swnode->node : NULL;
+>  }
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> index 5a910ad795910..421c76e53708d 100644
+> --- a/include/linux/property.h
+> +++ b/include/linux/property.h
+> @@ -418,7 +418,8 @@ struct software_node {
+>  };
+>  
+>  bool is_software_node(const struct fwnode_handle *fwnode);
+> -const struct software_node *to_software_node(struct fwnode_handle *fwnode);
+> +const struct software_node *
+> +to_software_node(const struct fwnode_handle *fwnode);
+>  struct fwnode_handle *software_node_fwnode(const struct software_node *node);
+>  
+>  int software_node_register_nodes(const struct software_node *nodes);
 > -- 
 > 2.20.1
 
