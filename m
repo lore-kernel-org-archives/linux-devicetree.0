@@ -1,7 +1,7 @@
 From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v1 08/18] dt-bindings: interrupt-controller: Add Loongson-3 HTINTC
-Date: Fri, 30 Aug 2019 12:32:22 +0800
-Message-ID: <20190830043232.20191-3-jiaxun.yang@flygoat.com>
+Subject: [PATCH v1 09/18] irqchip: i8259: Add plat-poll support
+Date: Fri, 30 Aug 2019 12:32:23 +0800
+Message-ID: <20190830043232.20191-4-jiaxun.yang@flygoat.com>
 References: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,74 +12,92 @@ To: linux-mips@vger.kernel.org
 Cc: chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
 List-Id: devicetree@vger.kernel.org
 
-Document Loongson-3 HyperTransport Interrupt controller.
+For some platforms (e.g. Loongson-3), platfrom interrupt controller
+supports polling interrupt vector from i8259 automaticly and generating
+sepreated interrupt.
+
+Thus we add plat-poll OF property for these platforms and setup sepreated
+chained interrupt handler.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- .../loongson,ls3-htintc.yaml                  | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-htintc.yaml
+ drivers/irqchip/irq-i8259.c | 47 ++++++++++++++++++++++++++++++++-----
+ 1 file changed, 41 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-htintc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-htintc.yaml
-new file mode 100644
-index 000000000000..51fee46ab060
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-htintc.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/interrupt-controller/loongson,ls3-htintc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+diff --git a/drivers/irqchip/irq-i8259.c b/drivers/irqchip/irq-i8259.c
+index d000870d9b6b..e7a9895f3b2d 100644
+--- a/drivers/irqchip/irq-i8259.c
++++ b/drivers/irqchip/irq-i8259.c
+@@ -40,6 +40,12 @@ static void mask_and_ack_8259A(struct irq_data *d);
+ static void init_8259A(int auto_eoi);
+ static int (*i8259_poll)(void) = i8259_irq;
+ 
++struct plat_poll_priv {
++	struct irq_domain *domain;
++	int hwirq;
++};
++static struct plat_poll_priv plat_poll_priv[16];
 +
-+title: Loongson-3 HyperTransport Interrupt Controller
+ static struct irq_chip i8259A_chip = {
+ 	.name			= "XT-PIC",
+ 	.irq_mask		= disable_8259A_irq,
+@@ -346,22 +352,51 @@ static void i8259_irq_dispatch(struct irq_desc *desc)
+ 	generic_handle_irq(irq);
+ }
+ 
++static void plat_poll_irq_dispatch(struct irq_desc *desc)
++{
++	struct plat_poll_priv *priv = irq_desc_get_handler_data(desc);
++	unsigned int irq;
 +
-+maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
++	irq = irq_linear_revmap(priv->domain, priv->hwirq);
++	generic_handle_irq(irq);
++}
 +
-+description: |
-+  This interrupt controller is found in the Loongson-3 family of chips to transfer
-+  interrupts from PCH connected on HyperTransport bus.
+ int __init i8259_of_init(struct device_node *node, struct device_node *parent)
+ {
+ 	struct irq_domain *domain;
+-	unsigned int parent_irq;
+ 
+ 	domain = __init_i8259_irqs(node);
+ 
+-	parent_irq = irq_of_parse_and_map(node, 0);
+-	if (!parent_irq) {
+-		pr_err("Failed to map i8259 parent IRQ\n");
+-		irq_domain_remove(domain);
+-		return -ENODEV;
++	if (of_find_property(node, "plat-poll", NULL)) {
++		int i;
 +
-+properties:
-+  compatible:
-+    const: loongson,ls3-htintc
++		for (i = 0; i < 16; i++) {
++			int parent_irq = irq_of_parse_and_map(node, i);
 +
-+  reg:
-+    maxItems: 1
++			if (!parent_irq) {
++				pr_err("Failed to map %d plat-poll i8259 parent IRQ\n", i);
++				irq_domain_remove(domain);
++				return -ENODEV;
++			}
++			plat_poll_priv[i].domain = domain;
++			plat_poll_priv[i].hwirq = i;
++			irq_set_chained_handler_and_data(parent_irq,
++				plat_poll_irq_dispatch,
++				&plat_poll_priv[i]);
++		}
++	} else {
++		unsigned int parent_irq;
 +
-+  interrupts:
-+    maxItems: 4
-+    description: |
-+      Four parent interrupts that recieve chained interrupt randomly.
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - '#interrupt-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    htintc: interrupt-controller@fb000080 {
-+      compatible = "loongson,ls3-htintc";
-+      reg = <0xfb000080 0x100>;
-+      interrupt-controller;
-+      #interrupt-cells = <1>;
-+
-+      interrupt-parent = <&iointc>;
-+      interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
-+            <25 IRQ_TYPE_LEVEL_HIGH>,
-+            <26 IRQ_TYPE_LEVEL_HIGH>,
-+            <27 IRQ_TYPE_LEVEL_HIGH>;
-+    };
-+...
++		parent_irq = irq_of_parse_and_map(node, 0);
++		if (!parent_irq) {
++			pr_err("Failed to map i8259 parent IRQ\n");
++			irq_domain_remove(domain);
++			return -ENODEV;
+ 	}
+ 
+ 	irq_set_chained_handler_and_data(parent_irq, i8259_irq_dispatch,
+ 					 domain);
++	}
+ 	return 0;
+ }
+ IRQCHIP_DECLARE(i8259, "intel,i8259", i8259_of_init);
 -- 
 2.22.0
