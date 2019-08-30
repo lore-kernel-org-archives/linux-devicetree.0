@@ -1,178 +1,253 @@
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v3 01/14] dt-bindings: display: renesas,cmm: Add R-Car
- CMM documentation
-Date: Fri, 30 Aug 2019 20:01:09 +0200
-Message-ID: <20190830180108.mlei4wbfn3mktj23@uno.localdomain>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-2-jacopo+renesas@jmondi.org>
- <CAMuHMdVvjrMXap5CQ-grNYpJfOG6QeN26EW4tR_YE=VFv5ozqw@mail.gmail.com>
- <20190826075943.h7ivwagape3glym5@uno.localdomain>
- <20190826101550.GB5031@pendragon.ideasonboard.com>
+From: Eddie James <eajames@linux.ibm.com>
+Subject: Re: [PATCH 3/3] pmbus: ibm-cffps: Add support for version 2 of the
+ PSU
+Date: Fri, 30 Aug 2019 13:19:49 -0500
+Message-ID: <6b2feb94-eb69-35c5-a7a9-0ca08c392fcc@linux.ibm.com>
+References: <1567181385-22129-1-git-send-email-eajames@linux.ibm.com>
+ <1567181385-22129-4-git-send-email-eajames@linux.ibm.com>
+ <20190830173603.GA10472@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cdwthwydolvsh24c"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190826101550.GB5031@pendragon.ideasonboard.com>
+In-Reply-To: <20190830173603.GA10472@roeck-us.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp, VenkataRajesh.Kalakodima@in.bosch.com, Harsha.ManjulaMallikarjun@in.bosch.com, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org, andrew@aj.id.au, joel@jms.id.au, mark.rutland@arm.com, robh+dt@kernel.org, jdelvare@suse.com
 List-Id: devicetree@vger.kernel.org
 
 
---cdwthwydolvsh24c
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+On 8/30/19 12:36 PM, Guenter Roeck wrote:
+> On Fri, Aug 30, 2019 at 11:09:45AM -0500, Eddie James wrote:
+>> Version 2 of the PSU supports a second page of data and changes the
+>> format of the FW version. Use the devicetree binding to differentiate
+>> between the version the driver should use.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> ---
+>>   drivers/hwmon/pmbus/ibm-cffps.c | 109 ++++++++++++++++++++++++++++++++--------
+>>   1 file changed, 87 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
+>> index ee2ee9e..ca26fbd 100644
+>> --- a/drivers/hwmon/pmbus/ibm-cffps.c
+>> +++ b/drivers/hwmon/pmbus/ibm-cffps.c
+>> @@ -12,16 +12,20 @@
+>>   #include <linux/leds.h>
+>>   #include <linux/module.h>
+>>   #include <linux/mutex.h>
+>> +#include <linux/of_device.h>
+>>   #include <linux/pmbus.h>
+>>   
+>>   #include "pmbus.h"
+>>   
+>> +#define CFFPS_VERSIONS				2
+>> +
+> Any chance you can use an enum for the versions ? Using version
+> numbers 1/2 combined with array indices 0/1 is confusing, error
+> prone, and seems unnecessary.
 
-Hi Laurent,
 
-On Mon, Aug 26, 2019 at 01:15:50PM +0300, Laurent Pinchart wrote:
-> Hi Jacopo,
->
-> On Mon, Aug 26, 2019 at 09:59:43AM +0200, Jacopo Mondi wrote:
-> > On Mon, Aug 26, 2019 at 09:34:41AM +0200, Geert Uytterhoeven wrote:
-> > > On Sun, Aug 25, 2019 at 3:50 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> > > > Add device tree bindings documentation for the Renesas R-Car Display
-> > > > Unit Color Management Module.
-> > > >
-> > > > CMM is the image enhancement module available on each R-Car DU video
-> > > > channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
-> > > >
-> > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > >
-> > > Thanks for your patch!
-> > >
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
-> > > > @@ -0,0 +1,33 @@
-> > > > +* Renesas R-Car Color Management Module (CMM)
-> > > > +
-> > > > +Renesas R-Car image enhancement module connected to R-Car DU video channels.
-> > > > +
-> > > > +Required properties:
-> > > > + - compatible: shall be one or more of the following:
-> > > > +   - "renesas,cmm-r8a7795": for R8A7795 (R-Car H3) compatible CMM.
-> > > > +   - "renesas,cmm-r8a7796": for R8A7796 (R-Car M3-W) compatible CMM.
-> > > > +   - "renesas,cmm-r8a77965": for R8A77965 (R-Car M3-N) compatible CMM.
-> > > > +   - "renesas,cmm-r8a77990": for R8A77990 (R-Car E3) compatible CMM.
-> > > > +   - "renesas,cmm-r8a77995": for R8A77995 (R-Car D3) compatible CMM.
-> > >
-> > > Please use "renesas,<socype->-cmm" instead of "renesas,cmm-<soctype>".
-> >
-> > I actually copied it from the r-car gpio bindings, and I liked
-> > cmm-<soctype> better. If you prefer I can change it though.
-> >
-> > > > +   - "renesas,rcar-gen3-cmm": for a generic R-Car Gen3 compatible CMM.
-> > > > +   - "renesas,rcar-gen2-cmm": for a generic R-Car Gen2 compatible CMM.
-> > > > +
-> > > > +   When the generic compatible string is specified, the SoC-specific
-> > > > +   version corresponding to the platform should be listed first.
-> > > > +
-> > > > + - reg: the address base and length of the memory area where CMM control
-> > > > +   registers are mapped to.
-> > > > +
-> > > > + - clocks: phandle and clock-specifier pair to the CMM functional clock
-> > > > +   supplier.
-> > >
-> > > Thinking about yaml validation:
-> > >
-> > > power-domains?
-> > > resets?
-> >
-> > They should indeed be documented.
->
-> How about converting this binding to yaml alreay ? It should be fairly
-> simple.
+Sure, good idea.
 
-I'm trying to, and I'm having my portion of fun time at it.
+Thanks,
 
-The definition of the schema itself seems good, but I wonder, is this
-the first renesas schema we have? Because it seems to me the schema
-validator is having an hard time to digest the examplea 'clocks' and
-'power-domains' properties, which have 1 phandle and 2 specifiers and 1
-phandle and 1 specifier respectively for Rensas SoCs.
+Eddie
 
-In other words, if in the example I have:
-
- examples:
-   - |
-     cmm0: cmm@fea40000 {
-          compatible = "renesas,r8a7796-cmm";
-          reg = <0 0xfea40000 0 0x1000>;
-          clocks = <&cpg 711>              <---- 1 phandle + 1 specifier
-          resets = <&cpg 711>;
-          power-domains = <&sysc>;         <---- 1 phandle
-     };
-
-The schema validation is good.
-
-While if I use an actual example
-   - |
-     cmm0: cmm@fea40000 {
-          compatible = "renesas,r8a7796-cmm";
-          reg = <0 0xfea40000 0 0x1000>;
-          clocks = <&cpg CPG_MOD 711>         <---- 1 phandle + 2 specifier
-          resets = <&cpg 711>;
-          power-domains = <&sysc R8A7796_PD_ALWAYS_ON>; <---- 1 phandle
-     };                                                       + 1 specfier
-
-The schema validation fails...
-Error: Documentation/devicetree/bindings/display/renesas,cmm.example.dts:20.29-30 syntax error
-FATAL ERROR: Unable to parse input tree
-
-Are clocks properties with > 2 entries and power-domains properties with
-> 1 entries supported?
-
-Because from what I read here:
-https://github.com/robherring/yaml-bindings/blob/master/schemas/clock/clock.yaml
-"The length of a clock specifier is defined by the value of a #clock-cells
-property in the clock provider node."
-
-And that's expected, but is the examples actually validated against the
-clock provider pointed by the phandle? Because in that case, if we had a
-yaml schema for the cpg-mssr provider, it would indeed specify clock-cells=2.
-
-Do we need a schema for cpg-mssr first, or am I doing something else
-wrong?
-
-Thanks
-   j
 
 >
-> > > > +Example:
-> > > > +--------
-> > > > +
-> > > > +       cmm0: cmm@fea40000 {
-> > > > +               compatible = "renesas,cmm-r8a7796";
-> > > > +               reg = <0 0xfea40000 0 0x1000>;
-> > > > +               power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-> > > > +               clocks = <&cpg CPG_MOD 711>;
-> > > > +               resets = <&cpg 711>;
-> > > > +       };
+> Thanks,
+> Guenter
 >
-> --
-> Regards,
->
-> Laurent Pinchart
-
---cdwthwydolvsh24c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1pZGQACgkQcjQGjxah
-VjzlaA//WrMjIoh5mpirNuc1YnVXSvW7ZqWWQ6jp/mCaKrsImVVmqAmb9VEGJcfK
-KUZvxF2xlp7pEtQfPbDJWVLvEX6dey+EeNoEK2S2RwCS4AYmPkrVe7mdLZ7rXGbh
-HhVsi347kR5qeIjWazR/TmRNySank+gp/HKWvjaNguYP0LCK0U7Ybmh2GA5hjsIe
-wFJnHfvt2rOxujXtF+G0rNerKSUAI7bQJYlfcKfHyFF4471Orid05CVr5vRue/n5
-vTd9TlmFfp4Hzfv6aftHV32RWyWxNKXSKvlvy2ukH+/4Q0Cx/cAb1+PNJW8m3pEM
-O3k972DSykDQmclu4z5Ge2Z9pxScSROL6ypCCbcbLek1G2KxVuhV1VfHSQ+YgKZk
-nW9T602yRaJC/4ZbwH3Vu5OwudQXc282AL6WE/MwljwZ0mhvGG0JWSdBt0344z9v
-P00CPvZFgVuXjWeF2JQp0YYza7rIch+TQi/OLiwX8t4grcaZV+KsgQbRWl6M/FHv
-mAim2SiLt6VhPJ+1FkBNHwjKp6SAsuXO8BW5q5beXvJSXusw6gPVVv6V/YnQMHbI
-Eswoex0Kp54mWuZv/ejyaWs7pSL7288qzDj+yCwbCkUwg3AHHvN/avhdXc2BAPyn
-cNOulOiRbiCpU8e2zKidbqYcx1fyBq3qeuPvFzuhvWWXPEozD3U=
-=t2Px
------END PGP SIGNATURE-----
-
---cdwthwydolvsh24c--
+>>   #define CFFPS_FRU_CMD				0x9A
+>>   #define CFFPS_PN_CMD				0x9B
+>>   #define CFFPS_SN_CMD				0x9E
+>>   #define CFFPS_CCIN_CMD				0xBD
+>> -#define CFFPS_FW_CMD_START			0xFA
+>> -#define CFFPS_FW_NUM_BYTES			4
+>> +#define CFFPS_FW_CMD				0xFA
+>> +#define CFFPS1_FW_NUM_BYTES			4
+>> +#define CFFPS2_FW_NUM_WORDS			3
+>>   #define CFFPS_SYS_CONFIG_CMD			0xDA
+>>   
+>>   #define CFFPS_INPUT_HISTORY_CMD			0xD6
+>> @@ -61,6 +65,7 @@ struct ibm_cffps_input_history {
+>>   };
+>>   
+>>   struct ibm_cffps {
+>> +	int version;
+>>   	struct i2c_client *client;
+>>   
+>>   	struct ibm_cffps_input_history input_history;
+>> @@ -132,6 +137,8 @@ static ssize_t ibm_cffps_debugfs_op(struct file *file, char __user *buf,
+>>   	struct ibm_cffps *psu = to_psu(idxp, idx);
+>>   	char data[I2C_SMBUS_BLOCK_MAX] = { 0 };
+>>   
+>> +	pmbus_set_page(psu->client, 0);
+>> +
+>>   	switch (idx) {
+>>   	case CFFPS_DEBUGFS_INPUT_HISTORY:
+>>   		return ibm_cffps_read_input_history(psu, buf, count, ppos);
+>> @@ -152,16 +159,36 @@ static ssize_t ibm_cffps_debugfs_op(struct file *file, char __user *buf,
+>>   		rc = snprintf(data, 5, "%04X", rc);
+>>   		goto done;
+>>   	case CFFPS_DEBUGFS_FW:
+>> -		for (i = 0; i < CFFPS_FW_NUM_BYTES; ++i) {
+>> -			rc = i2c_smbus_read_byte_data(psu->client,
+>> -						      CFFPS_FW_CMD_START + i);
+>> -			if (rc < 0)
+>> -				return rc;
+>> +		switch (psu->version) {
+>> +		case 1:
+>> +			for (i = 0; i < CFFPS1_FW_NUM_BYTES; ++i) {
+>> +				rc = i2c_smbus_read_byte_data(psu->client,
+>> +							      CFFPS_FW_CMD +
+>> +								i);
+>> +				if (rc < 0)
+>> +					return rc;
+>> +
+>> +				snprintf(&data[i * 2], 3, "%02X", rc);
+>> +			}
+>>   
+>> -			snprintf(&data[i * 2], 3, "%02X", rc);
+>> -		}
+>> +			rc = i * 2;
+>> +			break;
+>> +		case 2:
+>> +			for (i = 0; i < CFFPS2_FW_NUM_WORDS; ++i) {
+>> +				rc = i2c_smbus_read_word_data(psu->client,
+>> +							      CFFPS_FW_CMD +
+>> +								i);
+>> +				if (rc < 0)
+>> +					return rc;
+>> +
+>> +				snprintf(&data[i * 4], 5, "%04X", rc);
+>> +			}
+>>   
+>> -		rc = i * 2;
+>> +			rc = i * 4;
+>> +			break;
+>> +		default:
+>> +			return -EOPNOTSUPP;
+>> +		}
+>>   		goto done;
+>>   	default:
+>>   		return -EINVAL;
+>> @@ -279,6 +306,8 @@ static void ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
+>>   			psu->led_state = CFFPS_LED_ON;
+>>   	}
+>>   
+>> +	pmbus_set_page(psu->client, 0);
+>> +
+>>   	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
+>>   				       psu->led_state);
+>>   	if (rc < 0)
+>> @@ -299,6 +328,8 @@ static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
+>>   	if (led_cdev->brightness == LED_OFF)
+>>   		return 0;
+>>   
+>> +	pmbus_set_page(psu->client, 0);
+>> +
+>>   	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
+>>   				       CFFPS_LED_BLINK);
+>>   	if (rc < 0)
+>> @@ -328,15 +359,32 @@ static void ibm_cffps_create_led_class(struct ibm_cffps *psu)
+>>   		dev_warn(dev, "failed to register led class: %d\n", rc);
+>>   }
+>>   
+>> -static struct pmbus_driver_info ibm_cffps_info = {
+>> -	.pages = 1,
+>> -	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
+>> -		PMBUS_HAVE_PIN | PMBUS_HAVE_FAN12 | PMBUS_HAVE_TEMP |
+>> -		PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 | PMBUS_HAVE_STATUS_VOUT |
+>> -		PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_STATUS_INPUT |
+>> -		PMBUS_HAVE_STATUS_TEMP | PMBUS_HAVE_STATUS_FAN12,
+>> -	.read_byte_data = ibm_cffps_read_byte_data,
+>> -	.read_word_data = ibm_cffps_read_word_data,
+>> +static struct pmbus_driver_info ibm_cffps_info[CFFPS_VERSIONS] = {
+>> +	[0] = {
+>> +		.pages = 1,
+>> +		.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
+>> +			PMBUS_HAVE_PIN | PMBUS_HAVE_FAN12 | PMBUS_HAVE_TEMP |
+>> +			PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
+>> +			PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
+>> +			PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
+>> +			PMBUS_HAVE_STATUS_FAN12,
+>> +		.read_byte_data = ibm_cffps_read_byte_data,
+>> +		.read_word_data = ibm_cffps_read_word_data,
+>> +	},
+>> +	[1] = {
+>> +		.pages = 2,
+>> +		.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
+>> +			PMBUS_HAVE_PIN | PMBUS_HAVE_FAN12 | PMBUS_HAVE_TEMP |
+>> +			PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
+>> +			PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
+>> +			PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP |
+>> +			PMBUS_HAVE_STATUS_FAN12,
+>> +		.func[1] = PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
+>> +			PMBUS_HAVE_TEMP | PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 |
+>> +			PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT,
+>> +		.read_byte_data = ibm_cffps_read_byte_data,
+>> +		.read_word_data = ibm_cffps_read_word_data,
+>> +	},
+>>   };
+>>   
+>>   static struct pmbus_platform_data ibm_cffps_pdata = {
+>> @@ -346,13 +394,21 @@ static void ibm_cffps_create_led_class(struct ibm_cffps *psu)
+>>   static int ibm_cffps_probe(struct i2c_client *client,
+>>   			   const struct i2c_device_id *id)
+>>   {
+>> -	int i, rc;
+>> +	int i, rc, vs;
+>>   	struct dentry *debugfs;
+>>   	struct dentry *ibm_cffps_dir;
+>>   	struct ibm_cffps *psu;
+>> +	const void *md = of_device_get_match_data(&client->dev);
+>> +
+>> +	if (md)
+>> +		vs = (int)md;
+>> +	else if (id)
+>> +		vs = (int)id->driver_data;
+>> +	else
+>> +		vs = 1;
+>>   
+>>   	client->dev.platform_data = &ibm_cffps_pdata;
+>> -	rc = pmbus_do_probe(client, id, &ibm_cffps_info);
+>> +	rc = pmbus_do_probe(client, id, &ibm_cffps_info[vs - 1]);
+>>   	if (rc)
+>>   		return rc;
+>>   
+>> @@ -364,6 +420,7 @@ static int ibm_cffps_probe(struct i2c_client *client,
+>>   	if (!psu)
+>>   		return 0;
+>>   
+>> +	psu->version = vs;
+>>   	psu->client = client;
+>>   	mutex_init(&psu->input_history.update_lock);
+>>   	psu->input_history.last_update = jiffies - HZ;
+>> @@ -406,12 +463,20 @@ static int ibm_cffps_probe(struct i2c_client *client,
+>>   
+>>   static const struct i2c_device_id ibm_cffps_id[] = {
+>>   	{ "ibm_cffps1", 1 },
+>> +	{ "ibm_cffps2", 2 },
+>>   	{}
+>>   };
+>>   MODULE_DEVICE_TABLE(i2c, ibm_cffps_id);
+>>   
+>>   static const struct of_device_id ibm_cffps_of_match[] = {
+>> -	{ .compatible = "ibm,cffps1" },
+>> +	{
+>> +		.compatible = "ibm,cffps1",
+>> +		.data = (void *)1
+>> +	},
+>> +	{
+>> +		.compatible = "ibm,cffps2",
+>> +		.data = (void *)2
+>> +	},
+>>   	{}
+>>   };
+>>   MODULE_DEVICE_TABLE(of, ibm_cffps_of_match);
+>> -- 
+>> 1.8.3.1
+>>
