@@ -1,49 +1,50 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 3/3] MAINTAINERS: Add an entry for the Xilinx logicPD-I2S block
-Date: Fri, 30 Aug 2019 23:06:07 +0200
-Message-ID: <20190830210607.22644-3-miquel.raynal@bootlin.com>
-References: <20190830210607.22644-1-miquel.raynal@bootlin.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 0/5] dt-bindings: arm: idle-states: Miscellaneous
+ improvements
+Date: Fri, 30 Aug 2019 23:41:06 +0200
+Message-ID: <a94a768b-f71c-959b-243a-06ab4d5f297c@linaro.org>
+References: <20190830150302.20551-1-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190830210607.22644-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, alexandre@bootlin.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190830150302.20551-1-geert+renesas@glider.be>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Nicolas Pitre <nico@linaro.org>, Sebastian Capella <sebcape@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Reference the driver and and the bindings.
+On 30/08/2019 17:02, Geert Uytterhoeven wrote:
+>   - Replace abbreviations "eg" and "ie" by "e.g." resp. "i.e.",
+>   - Correct references to wake-up delay,
+>   - Correct "constraints guarantees" to "constraint guarantees",
+>   - Add punctuation marks to improve readability,
+>   - Move exit-latency-us explanation to exit-latency-us section.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5bf8f340e6a8..382c33a1adef 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17136,6 +17136,12 @@ L:	linux-serial@vger.kernel.org
- S:	Maintained
- F:	drivers/tty/serial/uartlite.c
- 
-+XILINX LOGICPD I2S SOUND DRIVER
-+M:	Miquel Raynal <miquel.raynal@bootlin.com>
-+S:	Maintained
-+F:	sound/soc/xilinx/xlnx-logicpd-i2s.c
-+F:	Documentation/devicetree/bindings/sound/xlnx,logicpd-i2s.yaml
-+
- XILINX VIDEO IP CORES
- M:	Hyun Kwon <hyun.kwon@xilinx.com>
- M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+> Split to ease review.
+> Feel free to squash into a single commit.
+> 
+> Geert Uytterhoeven (5):
+>   dt-bindings: arm: idle-states: Use "e.g." and "i.e." consistently
+>   dt-bindings: arm: idle-states: Correct references to wake-up delay
+>   dt-bindings: arm: idle-states: Correct "constraint guarantees"
+>   dt-bindings: arm: idle-states: Add punctuation to improve readability
+>   dt-bindings: arm: idle-states: Move exit-latency-us explanation
+> 
+>  .../devicetree/bindings/arm/idle-states.txt   | 32 +++++++++----------
+>  1 file changed, 16 insertions(+), 16 deletions(-)
+> 
+
+
 -- 
-2.20.1
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
