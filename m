@@ -1,52 +1,248 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
- SMC/HVC mailbox
-Date: Fri, 30 Aug 2019 11:51:59 -0500
-Message-ID: <CABb+yY1cpGVHvHz4MCwpmVXSYayWt3HWMLJKZTrCb_LXroBc_Q@mail.gmail.com>
-References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
- <1567004515-3567-2-git-send-email-peng.fan@nxp.com> <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
- <AM0PR04MB4481785CABB44A8C71CFB8D788BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CABb+yY2TREpO7+TFcGgsgQrkmMWwFAgtuJ4GnLPPQ+GEBuh07w@mail.gmail.com>
- <AM0PR04MB448161C632722DF10989008088BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CABb+yY2SrMF8e1iLyLqb-rJyBx4ajA0hZ6D=LFtuMNtXYjgccA@mail.gmail.com> <20190830093224.GB31297@bogus>
+From: =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
+Subject: Re: [PATCH net-next v2 2/3] dt-bindings: net: dsa: mt7530: Add
+ support for port 5
+Date: Fri, 30 Aug 2019 17:16:03 +0000
+Message-ID: <20190830171603.Horde.UeVVg_YU-C4f8bcYmFJ_1Gv@www.vdorst.com>
+References: <20190821144547.15113-1-opensource@vdorst.com>
+ <20190821144547.15113-3-opensource@vdorst.com>
+ <20190827222251.GA30507@bogus>
+ <20190828063520.Horde.4_ak7mcmFhVJlxZWWy2wo3V@www.vdorst.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190830093224.GB31297@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190828063520.Horde.4_ak7mcmFhVJlxZWWy2wo3V@www.vdorst.com>
+Content-Disposition: inline
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Matthias Brugger <matthias.bgg@gmail.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, John Crispin <john@phrozen.org>, linux-mips@vger.kernel.org, Frank Wunderlich <frank-w@public-files.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 4:32 AM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Fri, Aug 30, 2019 at 02:52:40AM -0500, Jassi Brar wrote:
-> > On Fri, Aug 30, 2019 at 2:37 AM Peng Fan <peng.fan@nxp.com> wrote:
->
-> [...]
->
-> > >
-> > > If I get your point correctly,
-> > > On UP, both could not be active. On SMP, tx/rx could be both active, anyway
-> > > this depends on secure firmware and Linux firmware design.
-> > >
-> > > Do you have any suggestions about arm,func-ids here?
-> > >
-> > I was thinking if this is just an instruction, why can't each channel
-> > be represented as a controller, i.e, have exactly one func-id per
-> > controller node. Define as many controllers as you need channels ?
-> >
->
-> I might have missed to follow this, but what's the advantage of doing so ?
-> Which can't single controller instance deal with all the channels ?
->
-There are many advantages ...
-1) Design reflects the reality - two smc/hvc instructions have nothing
-tying them together.
-2) Driver code becomes simpler - don't have to pre-populate channels,
-deducting from the size of func-ids array.
-3) Driver becomes more flexible - We can have channels that pass
-func-id runtime and channels that pass via DT (if we must have the
-option of DT property).
+Hi Rob,
 
--jassi
+<snip>
+
+>>> See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list  
+>>> of additional
+>>> required, optional properties and how the integrated switch subnodes must
+>>> be specified.
+>>> @@ -94,3 +130,185 @@ Example:
+>>> 			};
+>>> 		};
+>>> 	};
+>>> +
+>>> +Example 2: MT7621: Port 4 is WAN port: 2nd GMAC -> Port 5 -> PHY port 4.
+>>> +
+>>> +&eth {
+>>> +	status = "okay";
+>>
+>> Don't show status in examples.
+>
+> OK.
+>
+>> This should show the complete node.
+>>
+>
+
+I asked this question below in my previous email.
+May be you missed it, I hope that you have time soon to answer this so that I
+can send a new version.
+
+> To be clear, I should take ethernet node from the mt7621.dtsi [0] or  
+> mt7623.dtsi [1] and insert the example below?, right?
+
+Greats,
+
+René
+
+>
+> Greats,
+>
+> René
+>
+> [0]:  
+> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/tree/drivers/staging/mt7621-dts/mt7621.dtsi#n397
+> [1]:  
+> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/tree/arch/arm/boot/dts/mt7623.dtsi#n1023
+>
+>>> +
+>>> +	gmac0: mac@0 {
+>>> +		compatible = "mediatek,eth-mac";
+>>> +		reg = <0>;
+>>> +		phy-mode = "rgmii";
+>>> +
+>>> +		fixed-link {
+>>> +			speed = <1000>;
+>>> +			full-duplex;
+>>> +			pause;
+>>> +		};
+>>> +	};
+>>> +
+>>> +	gmac1: mac@1 {
+>>> +		compatible = "mediatek,eth-mac";
+>>> +		reg = <1>;
+>>> +		phy-mode = "rgmii-txid";
+>>> +		phy-handle = <&phy4>;
+>>> +	};
+>>> +
+>>> +	mdio: mdio-bus {
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <0>;
+>>> +
+>>> +		/* Internal phy */
+>>> +		phy4: ethernet-phy@4 {
+>>> +			reg = <4>;
+>>> +		};
+>>> +
+>>> +		mt7530: switch@1f {
+>>> +			compatible = "mediatek,mt7621";
+>>> +			#address-cells = <1>;
+>>> +			#size-cells = <0>;
+>>> +			reg = <0x1f>;
+>>> +			pinctrl-names = "default";
+>>> +			mediatek,mcm;
+>>> +
+>>> +			resets = <&rstctrl 2>;
+>>> +			reset-names = "mcm";
+>>> +
+>>> +			ports {
+>>> +				#address-cells = <1>;
+>>> +				#size-cells = <0>;
+>>> +
+>>> +				port@0 {
+>>> +					reg = <0>;
+>>> +					label = "lan0";
+>>> +				};
+>>> +
+>>> +				port@1 {
+>>> +					reg = <1>;
+>>> +					label = "lan1";
+>>> +				};
+>>> +
+>>> +				port@2 {
+>>> +					reg = <2>;
+>>> +					label = "lan2";
+>>> +				};
+>>> +
+>>> +				port@3 {
+>>> +					reg = <3>;
+>>> +					label = "lan3";
+>>> +				};
+>>> +
+>>> +/* Commented out. Port 4 is handled by 2nd GMAC.
+>>> +				port@4 {
+>>> +					reg = <4>;
+>>> +					label = "lan4";
+>>> +				};
+>>> +*/
+>>> +
+>>> +				cpu_port0: port@6 {
+>>> +					reg = <6>;
+>>> +					label = "cpu";
+>>> +					ethernet = <&gmac0>;
+>>> +					phy-mode = "rgmii";
+>>> +
+>>> +					fixed-link {
+>>> +						speed = <1000>;
+>>> +						full-duplex;
+>>> +						pause;
+>>> +					};
+>>> +				};
+>>> +			};
+>>> +		};
+>>> +	};
+>>> +};
+>>> +
+>>> +Example 3: MT7621: Port 5 is connected to external PHY: Port 5 ->  
+>>> external PHY.
+>>> +
+>>> +&eth {
+>>> +	status = "okay";
+>>> +
+>>> +	gmac0: mac@0 {
+>>> +		compatible = "mediatek,eth-mac";
+>>> +		reg = <0>;
+>>> +		phy-mode = "rgmii";
+>>> +
+>>> +		fixed-link {
+>>> +			speed = <1000>;
+>>> +			full-duplex;
+>>> +			pause;
+>>> +		};
+>>> +	};
+>>> +
+>>> +	mdio: mdio-bus {
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <0>;
+>>> +
+>>> +		/* External phy */
+>>> +		ephy5: ethernet-phy@7 {
+>>> +			reg = <7>;
+>>> +		};
+>>> +
+>>> +		mt7530: switch@1f {
+>>> +			compatible = "mediatek,mt7621";
+>>> +			#address-cells = <1>;
+>>> +			#size-cells = <0>;
+>>> +			reg = <0x1f>;
+>>> +			pinctrl-names = "default";
+>>> +			mediatek,mcm;
+>>> +
+>>> +			resets = <&rstctrl 2>;
+>>> +			reset-names = "mcm";
+>>> +
+>>> +			ports {
+>>> +				#address-cells = <1>;
+>>> +				#size-cells = <0>;
+>>> +
+>>> +				port@0 {
+>>> +					reg = <0>;
+>>> +					label = "lan0";
+>>> +				};
+>>> +
+>>> +				port@1 {
+>>> +					reg = <1>;
+>>> +					label = "lan1";
+>>> +				};
+>>> +
+>>> +				port@2 {
+>>> +					reg = <2>;
+>>> +					label = "lan2";
+>>> +				};
+>>> +
+>>> +				port@3 {
+>>> +					reg = <3>;
+>>> +					label = "lan3";
+>>> +				};
+>>> +
+>>> +				port@4 {
+>>> +					reg = <4>;
+>>> +					label = "lan4";
+>>> +				};
+>>> +
+>>> +				port@5 {
+>>> +					reg = <5>;
+>>> +					label = "lan5";
+>>> +					phy-mode = "rgmii";
+>>> +					phy-handle = <&ephy5>;
+>>> +				};
+>>> +
+>>> +				cpu_port0: port@6 {
+>>> +					reg = <6>;
+>>> +					label = "cpu";
+>>> +					ethernet = <&gmac0>;
+>>> +					phy-mode = "rgmii";
+>>> +
+>>> +					fixed-link {
+>>> +						speed = <1000>;
+>>> +						full-duplex;
+>>> +						pause;
+>>> +					};
+>>> +				};
+>>> +			};
+>>> +		};
+>>> +	};
+>>> +};
+>>> --
+>>> 2.20.1
+>>>
