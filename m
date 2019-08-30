@@ -1,62 +1,128 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
- SMC/HVC mailbox
-Date: Fri, 30 Aug 2019 09:40:34 +0000
-Message-ID: <AM0PR04MB4481879790B4E2C3FC3554E088BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
- <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
- <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
- <AM0PR04MB4481785CABB44A8C71CFB8D788BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <CABb+yY2TREpO7+TFcGgsgQrkmMWwFAgtuJ4GnLPPQ+GEBuh07w@mail.gmail.com>
- <AM0PR04MB448161C632722DF10989008088BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20190830093005.GA31297@bogus>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
+Date: Fri, 30 Aug 2019 11:44:56 +0200
+Message-ID: <20190830094456.GO21922@piout.net>
+References: <20190830091720.41156-1-biwen.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190830093005.GA31297@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190830091720.41156-1-biwen.li@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Biwen Li <biwen.li@nxp.com>
+Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Martin Fuzzey <mfuzzey@parkeon.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep
+On 30/08/2019 17:17:19+0800, Biwen Li wrote:
+> Add some properties for pcf85263/pcf85363 as follows:
+>   - interrupt-output-pin: string type
+>   - quartz-load-capacitance: integer type
+>   - quartz-drive-strength: integer type
+>   - quartz-low-jitter: bool type
+>   - wakeup-source: bool type
+> 
+> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+>  .../devicetree/bindings/rtc/pcf85363.txt      | 31 +++++++++++++++++++
+>  include/dt-bindings/rtc/pcf85363.h            | 15 +++++++++
+>  2 files changed, 46 insertions(+)
+>  create mode 100644 include/dt-bindings/rtc/pcf85363.h
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> index 94adc1cf93d9..d83359990bd7 100644
+> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> @@ -8,10 +8,41 @@ Required properties:
+>  Optional properties:
+>  - interrupts: IRQ line for the RTC (not implemented).
+>  
+> +- interrupt-output-pin: The interrupt output pin must be
+> +  "NONE", "INTA" or "INTB", default value is "NONE"
+> +
 
-> Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the=
- ARM
-> SMC/HVC mailbox
->=20
-> On Fri, Aug 30, 2019 at 07:37:41AM +0000, Peng Fan wrote:
-> > Hi Jassi,
-> > > > I think there could be channel for TEE, and channel for Linux.
-> > > > For virtualization case, there could be dedicated channel for each =
-VM.
-> > > >
-> > > I am talking from Linux pov. Functions 0xfe and 0xff above, can't
-> > > both be active at the same time, right?
-> >
-> > If I get your point correctly,
-> > On UP, both could not be active. On SMP, tx/rx could be both active,
-> > anyway this depends on secure firmware and Linux firmware design.
-> >
->=20
-> Just to confirm, we can't have SMC/HVC based Rx channel as there's no
-> *architectural* way to achieve it. So it can be based on some interrupt f=
-rom
-> secure side and hence will be a *different* type of channel/controller.
->=20
-> Sorry to make this point repeatedly, but juts to be absolutely clear:
-> as it stands, SMC/HVC can be used only for Tx today.
+default value can't be none if there is an interrupts property. Also,
+both pins can be enabled at the same time and this binding would prevent
+that.
+Finally, it may also be desirable to have some interrupts on one pin and
+other interrupts on another pin e.g. alarms and timestamping on INTA
+going to the SoC and only alarms on INTB going to a PMIC.
 
-Since interrupt notification was dropped in v5, I need to drop RX descripti=
-on
-in v6.
+> +- quartz-load-capacitance: The internal capacitor to select for the quartz:
+> +	PCF85263_QUARTZCAP_7pF		[0]
+> +	PCF85263_QUARTZCAP_6pF		[1]
+> +	PCF85263_QUARTZCAP_12p5pF	[2] DEFAULT
+> +
 
-Thanks,
-Peng.
+The correct generic property is quartz-load-femtofarads.
 
->=20
-> --
-> Regards,
-> Sudeep
+> +- quartz-drive-strength: Drive strength for the quartz:
+> +	PCF85263_QUARTZDRIVE_NORMAL	[0] DEFAULT
+> +	PCF85263_QUARTZDRIVE_LOW	[1]
+> +	PCF85263_QUARTZDRIVE_HIGH	[2]
+> +
+
+This has to take a value in ohm to be generic and then you don't need
+the include file.
+
+> +- quartz-low-jitter: Boolean property, if present enables low jitter mode
+> +  which reduces jitter at the cost of increased power consumption.
+> +
+
+I think that property needs to be nxp specific.
+
+> +- wakeup-source: Boolean property, mark the chip as a wakeup source,
+> +  independently of the availability of an IRQ line connected to the SoC.
+> +  This is useful if the IRQ line is connected to a PMIC or other circuit
+> +  that can power up the device rather than to a normal SOC interrupt.
+> +
+
+This is already defined in bindings/power/wakeup-source.txt I guess you
+can simply refer to it.
+
+>  Example:
+>  
+>  pcf85363: pcf85363@51 {
+>  	compatible = "nxp,pcf85363";
+>  	reg = <0x51>;
+> +
+> +	interrupt-parent = <&gpio1>;
+> +	interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +	#include <dt-bindings/rtc/pcf85363.h>
+> +	wakeup-source;
+> +	interrupt-output-pin = "INTA";
+> +	quartz-load-capacitance = <PCF85363_QUARTZCAP_12p5pF>;
+> +	quartz-drive-strength = <PCF85363_QUARTZDRIVE_LOW>;
+> +	quartz-low-jitter;
+>  };
+>  
+> diff --git a/include/dt-bindings/rtc/pcf85363.h b/include/dt-bindings/rtc/pcf85363.h
+> new file mode 100644
+> index 000000000000..2c06c28eb5ff
+> --- /dev/null
+> +++ b/include/dt-bindings/rtc/pcf85363.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _DT_BINDINGS_RTC_PCF85363_H
+> +#define _DT_BINDINGS_RTC_PCF85363_H
+> +
+> +/* Quartz capacitance */
+> +#define PCF85363_QUARTZCAP_7pF		0
+> +#define PCF85363_QUARTZCAP_6pF		1
+> +#define PCF85363_QUARTZCAP_12p5pF	2
+> +
+> +/* Quartz drive strength */
+> +#define PCF85363_QUARTZDRIVE_NORMAL	0
+> +#define PCF85363_QUARTZDRIVE_LOW	1
+> +#define PCF85363_QUARTZDRIVE_HIGH	2
+> +
+> +#endif /* _DT_BINDINGS_RTC_PCF85363_H */
+> -- 
+> 2.17.1
+> 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
