@@ -1,69 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1 EDAC
-Date: Fri, 30 Aug 2019 16:50:24 -0500
-Message-ID: <CAL_Jsq+95qZyHWT_A-=L+SSbR0vmMqQDq8N2XcxwFJVG2HCthA@mail.gmail.com>
-References: <20190805143911.12185-1-hhhawa@amazon.com> <20190805143911.12185-2-hhhawa@amazon.com>
- <20190821191704.GA32425@bogus> <1d23d7c5-cd7b-1512-5300-d43e82ba6dc1@amazon.com>
- <CAL_Jsq+8jGbR4u7FA8r0gP5i2H+nSgOkGU_5mfiL=i=c0sOW8A@mail.gmail.com> <d46ac081-1867-2997-e2a3-bcfea42b74f3@arm.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v3 00/16] Initial support for Marvell MMP3 SoC
+Date: Sat, 31 Aug 2019 00:07:27 +0200
+Message-ID: <20190830220743.439670-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d46ac081-1867-2997-e2a3-bcfea42b74f3@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Morse <james.morse@arm.com>
-Cc: "Hawa, Hanna" <hhhawa@amazon.com>, Mark Rutland <mark.rutland@arm.com>, Borislav Petkov <bp@alien8.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, David Miller <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, benh@amazon.com, "Krupnik, Ronen" <ronenk@amazon.com>, Talel Shenhar <talel@amazon.com>, Jonathan Chocron <jonnyc@amazon.com>, "Hanoch, Uri" <hanochu@amazon.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-edac <linux-edac@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "To : Olof Johansson" <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, "Cc : Rob Herring" <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 7:45 AM James Morse <james.morse@arm.com> wrote:
->
-> Hi guys,
->
-> On 27/08/2019 14:49, Rob Herring wrote:
-> > On Mon, Aug 26, 2019 at 9:49 AM Hawa, Hanna <hhhawa@amazon.com> wrote:
-> >> On 8/21/2019 10:17 PM, Rob Herring wrote:
-> >>> Why is this even in DT? AFAICT, this is all just CortexA57 core features
-> >>> (i.e. nothing Amazon specific). The core type and the ECC capabilities
-> >>> are discoverable.
-> >>
-> >> Added to the DT in order to easily enable/disable the driver.
-> >
-> > That alone is not reason enough to put it in DT. From a DT
-> > perspective, I have no idea what the whims of a OS maintainer are
-> > regarding whether they want all this to be 1 driver or 2 drivers.
-> > (IMO, it should be 1 as this is ECC for an A57. For a core and memory
-> > controller, then 2 seems appropriate.)
-> >
-> >> You are
-> >> correct that they are CortexA57 core features and nothing Amazon
-> >> specific, but it's IMPLEMENTATION DEFINED, meaning that in different
-> >> cortex revisions (e.g. A57) the register bitmap may change. Because of
-> >> that we added an Amazon compatible which corresponds to the specific
-> >> core we are using.
->
-> I think its that the instruction encoding is in the imp-def space that is important.
->
-> CPU-implementers can add whatever registers they find useful here. A57 and A72 both
-> implemented some ECC registers here. (They are not guaranteed to be the same, but I can't
-> find any differences).
+Hi, 
 
-Two cores potentially being the same only furthers my argument that
-this shouldn't be an Amazon driver.
+this is the third spin of a patch set that adds support for the Marvell
+MMP3 processor, that I'd eventually love to see land in the Arm SoC
+tree. MMP3 is used in OLPC XO-4 laptops, Panasonic Toughpad FZ-A1 tablet
+and Dell Wyse 3020/Tx0D thin clients. 
 
-> We need some information from DT because the TRM doesn't say what happens when you read
-> from these registers on an A57 that doesn't have the 'optional ECC protection'. It could
-> take an exception due to an unimplemented system register.
-
-My read of the TRM is that L2 ECC is always there and L1 ECC/parity is
-optional. Furthermore, bit 22 of L2CTRL_EL1 indicates if L1 ECC/parity
-is supported or not and there's other non-ECC stuff like cache RAM
-timing values in that register.
-
-> The imp-def instruction space may also be trapped by a higher exception level. KVM does
-> this, and emulates these registers as if they were all undefined.
-
-So KVM provides a semi-CortexA57? Code that runs on real h/w won't as a guest.
-
-However, if we do need DT to indicate ECC support in a core or not,
-then we already have an A57 node and should put that info there.
-
-Rob
+Compared to v2, there's a handful of fixes in response to reviews. Four
+irqchip patches have been removed because they've been applied to the
+irqchip-next tree. Details in individual patches.
+ 
+Thank you
+Lubo
