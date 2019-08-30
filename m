@@ -1,63 +1,34 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv3 10/10] soc: ti: omap-prm: add omap5 PRM data
-Date: Fri, 30 Aug 2019 15:18:16 +0300
-Message-ID: <20190830121816.30034-11-t-kristo@ti.com>
-References: <20190830121816.30034-1-t-kristo@ti.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v3 01/10] software node: Get reference to parent swnode
+ in get_parent op
+Date: Fri, 30 Aug 2019 15:22:37 +0300
+Message-ID: <20190830122237.GY2680@smile.fi.intel.com>
+References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
+ <20190829101043.24963-2-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190830121816.30034-1-t-kristo@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: ssantosh@kernel.org, linux-omap@vger.kernel.org, tony@atomide.com, s-anna@ti.com, p.zabel@pengutronix.de
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190829101043.24963-2-sakari.ailus@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add PRM instance data for omap5 family of SoCs. Initially this is just
-used to provide reset support.
+On Thu, Aug 29, 2019 at 01:10:34PM +0300, Sakari Ailus wrote:
+> The software_node_get_parent() returned a pointer to the parent swnode,
+> but did not take a reference to it, leading the caller to put a reference
+> that was not taken. Take that reference now.
+> 
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- drivers/soc/ti/omap_prm.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> Fixes: 59abd83672f7 ("drivers: base: Introducing software nodes to the
+> 		      firmware node framework")
 
-diff --git a/drivers/soc/ti/omap_prm.c b/drivers/soc/ti/omap_prm.c
-index 216a4b69a6c9..6363923e77f2 100644
---- a/drivers/soc/ti/omap_prm.c
-+++ b/drivers/soc/ti/omap_prm.c
-@@ -87,6 +87,14 @@ static const struct omap_prm_data omap4_prm_data[] = {
- 	{ },
- };
- 
-+static const struct omap_prm_data omap5_prm_data[] = {
-+	{ .name = "dsp", .base = 0x4ae06400, .rstctrl = 0x10, .rstst = 0x14, .rstmap = rst_map_01 },
-+	{ .name = "core", .base = 0x4ae06700, .rstctrl = 0x210, .rstst = 0x214, .clkdm_name = "ipu", .rstmap = rst_map_012 },
-+	{ .name = "iva", .base = 0x4ae07200, .rstctrl = 0x10, .rstst = 0x14, .rstmap = rst_map_012 },
-+	{ .name = "device", .base = 0x4ae07c00, .rstctrl = 0x0, .rstst = 0x4, .rstmap = rst_map_01, .flags = OMAP_PRM_HAS_RSTCTRL | OMAP_PRM_HAS_NO_CLKDM },
-+	{ },
-+};
-+
- static const struct omap_prm_data dra7_prm_data[] = {
- 	{ .name = "dsp1", .base = 0x4ae06400, .rstctrl = 0x10, .rstst = 0x14, .rstmap = rst_map_01 },
- 	{ .name = "ipu", .base = 0x4ae06500, .rstctrl = 0x10, .rstst = 0x14, .clkdm_name = "ipu1", .rstmap = rst_map_012 },
-@@ -139,6 +147,7 @@ static const struct omap_prm_data am4_prm_data[] = {
- 
- static const struct of_device_id omap_prm_id_table[] = {
- 	{ .compatible = "ti,omap4-prm-inst", .data = omap4_prm_data },
-+	{ .compatible = "ti,omap5-prm-inst", .data = omap5_prm_data },
- 	{ .compatible = "ti,dra7-prm-inst", .data = dra7_prm_data },
- 	{ .compatible = "ti,am3-prm-inst", .data = am3_prm_data },
- 	{ .compatible = "ti,am4-prm-inst", .data = am4_prm_data },
+I dunno if scripts parse the split line like above.
+
+Nevertheless, for the code prospective looks good to me. Though you probably
+would like to Cc it to Heikki.
+
 -- 
-2.17.1
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+With Best Regards,
+Andy Shevchenko
