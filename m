@@ -1,133 +1,136 @@
 From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v5, 13/32] drm/mediatek: move rdma sout from
- mtk_ddp_mout_en into mtk_ddp_sout_sel
-Date: Fri, 30 Aug 2019 13:41:25 +0800
-Message-ID: <1567143685.5942.11.camel@mtksdaap41>
+Subject: Re: [PATCH v5, 22/32] drm/mediatek: add ovl0/ovl_2l0 usecase
+Date: Fri, 30 Aug 2019 13:58:28 +0800
+Message-ID: <1567144708.5942.14.camel@mtksdaap41>
 References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
- <1567090254-15566-14-git-send-email-yongqiang.niu@mediatek.com>
+ <1567090254-15566-23-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1567090254-15566-14-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1567090254-15566-23-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: yongqiang.niu@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoKCk9uIFRodSwgMjAxOS0wOC0yOSBhdCAyMjo1MCArMDgwMCwgeW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBtb3ZlIHJkbWEgc291dCBmcm9t
-IG10a19kZHBfbW91dF9lbiBpbnRvIG10a19kZHBfc291dF9zZWwKPiByZG1hIG9ubHkgaGFzIHNp
-bmdsZSBvdXRwdXQsIGJ1dCBubyBtdWx0aSBvdXRwdXQsCj4gYWxsIHRoZXNlIHJkbWEtPmRzaS9k
-cGkgdXNlY2FzZSBzaG91bGQgbW92ZSB0byBtdGtfZGRwX3NvdXRfc2VsCgpSZXZpZXdlZC1ieTog
-Q0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4KCj4gCj4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5n
-IE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jIHwgOTAgKysrKysrKysrKysrKysrKystLS0tLS0tLS0t
-LS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgNDUgaW5zZXJ0aW9ucygrKSwgNDUgZGVsZXRpb25z
-KC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
-cC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiBpbmRleCAzMzhj
-YzJmLi5hNWE2Njg5IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-ZHJtX2RkcC5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMK
-PiBAQCAtMjk5LDUxICsyOTksNiBAQCBzdGF0aWMgdW5zaWduZWQgaW50IG10a19kZHBfbW91dF9l
-bihjb25zdCBzdHJ1Y3QgbXRrX21tc3lzX3JlZ19kYXRhICpkYXRhLAo+ICAJfSBlbHNlIGlmIChj
-dXIgPT0gRERQX0NPTVBPTkVOVF9PRDEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX1JETUExKSB7
-Cj4gIAkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9PRF9NT1VUX0VOOwo+ICAJCXZhbHVl
-ID0gT0QxX01PVVRfRU5fUkRNQTE7Cj4gLQl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5U
-X1JETUEwICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EUEkwKSB7Cj4gLQkJKmFkZHIgPSBESVNQ
-X1JFR19DT05GSUdfRElTUF9SRE1BMF9TT1VUX0VOOwo+IC0JCXZhbHVlID0gUkRNQTBfU09VVF9E
-UEkwOwo+IC0JfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMCAmJiBuZXh0ID09
-IEREUF9DT01QT05FTlRfRFBJMSkgewo+IC0JCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1Bf
-UkRNQTBfU09VVF9FTjsKPiAtCQl2YWx1ZSA9IFJETUEwX1NPVVRfRFBJMTsKPiAtCX0gZWxzZSBp
-ZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTAgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RT
-STEpIHsKPiAtCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEwX1NPVVRfRU47Cj4g
-LQkJdmFsdWUgPSBSRE1BMF9TT1VUX0RTSTE7Cj4gLQl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09N
-UE9ORU5UX1JETUEwICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kyKSB7Cj4gLQkJKmFkZHIg
-PSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMF9TT1VUX0VOOwo+IC0JCXZhbHVlID0gUkRNQTBf
-U09VVF9EU0kyOwo+IC0JfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMCAmJiBu
-ZXh0ID09IEREUF9DT01QT05FTlRfRFNJMykgewo+IC0JCSphZGRyID0gRElTUF9SRUdfQ09ORklH
-X0RJU1BfUkRNQTBfU09VVF9FTjsKPiAtCQl2YWx1ZSA9IFJETUEwX1NPVVRfRFNJMzsKPiAtCX0g
-ZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTEgJiYgbmV4dCA9PSBERFBfQ09NUE9O
-RU5UX0RTSTEpIHsKPiAtCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUExX1NPVVRf
-RU47Cj4gLQkJdmFsdWUgPSBSRE1BMV9TT1VUX0RTSTE7Cj4gLQl9IGVsc2UgaWYgKGN1ciA9PSBE
-RFBfQ09NUE9ORU5UX1JETUExICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kyKSB7Cj4gLQkJ
-KmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMV9TT1VUX0VOOwo+IC0JCXZhbHVlID0g
-UkRNQTFfU09VVF9EU0kyOwo+IC0JfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1B
-MSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMykgewo+IC0JCSphZGRyID0gRElTUF9SRUdf
-Q09ORklHX0RJU1BfUkRNQTFfU09VVF9FTjsKPiAtCQl2YWx1ZSA9IFJETUExX1NPVVRfRFNJMzsK
-PiAtCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTEgJiYgbmV4dCA9PSBERFBf
-Q09NUE9ORU5UX0RQSTApIHsKPiAtCQkqYWRkciA9IGRhdGEtPnJkbWExX3NvdXRfc2VsX2luOwo+
-IC0JCXZhbHVlID0gZGF0YS0+cmRtYTFfc291dF9kcGkwOwo+IC0JfSBlbHNlIGlmIChjdXIgPT0g
-RERQX0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMSkgewo+IC0J
-CSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTFfU09VVF9FTjsKPiAtCQl2YWx1ZSA9
-IFJETUExX1NPVVRfRFBJMTsKPiAtCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRN
-QTIgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTApIHsKPiAtCQkqYWRkciA9IERJU1BfUkVH
-X0NPTkZJR19ESVNQX1JETUEyX1NPVVQ7Cj4gLQkJdmFsdWUgPSBSRE1BMl9TT1VUX0RQSTA7Cj4g
-LQl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICYmIG5leHQgPT0gRERQX0NP
-TVBPTkVOVF9EUEkxKSB7Cj4gLQkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMl9T
-T1VUOwo+IC0JCXZhbHVlID0gUkRNQTJfU09VVF9EUEkxOwo+IC0JfSBlbHNlIGlmIChjdXIgPT0g
-RERQX0NPTVBPTkVOVF9SRE1BMiAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMSkgewo+IC0J
-CSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTJfU09VVDsKPiAtCQl2YWx1ZSA9IFJE
-TUEyX1NPVVRfRFNJMTsKPiAtCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTIg
-JiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTIpIHsKPiAtCQkqYWRkciA9IERJU1BfUkVHX0NP
-TkZJR19ESVNQX1JETUEyX1NPVVQ7Cj4gLQkJdmFsdWUgPSBSRE1BMl9TT1VUX0RTSTI7Cj4gLQl9
-IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICYmIG5leHQgPT0gRERQX0NPTVBP
-TkVOVF9EU0kzKSB7Cj4gLQkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMl9TT1VU
-Owo+IC0JCXZhbHVlID0gUkRNQTJfU09VVF9EU0kzOwo+ICAJfSBlbHNlIHsKPiAgCQl2YWx1ZSA9
-IDA7Cj4gIAl9Cj4gQEAgLTQyMyw2ICszNzgsNTEgQEAgc3RhdGljIHVuc2lnbmVkIGludCBtdGtf
-ZGRwX3NvdXRfc2VsKGNvbnN0IHN0cnVjdCBtdGtfbW1zeXNfcmVnX2RhdGEgKmRhdGEsCj4gIAl9
-IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX0JMUyAmJiBuZXh0ID09IEREUF9DT01QT05F
-TlRfRFBJMCkgewo+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX09VVF9TRUw7Cj4gIAkJdmFs
-dWUgPSBCTFNfVE9fRFBJX1JETUExX1RPX0RTSTsKPiArCX0gZWxzZSBpZiAoY3VyID09IEREUF9D
-T01QT05FTlRfUkRNQTAgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTApIHsKPiArCQkqYWRk
-ciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEwX1NPVVRfRU47Cj4gKwkJdmFsdWUgPSBSRE1B
-MF9TT1VUX0RQSTA7Cj4gKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEwICYm
-IG5leHQgPT0gRERQX0NPTVBPTkVOVF9EUEkxKSB7Cj4gKwkJKmFkZHIgPSBESVNQX1JFR19DT05G
-SUdfRElTUF9SRE1BMF9TT1VUX0VOOwo+ICsJCXZhbHVlID0gUkRNQTBfU09VVF9EUEkxOwo+ICsJ
-fSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMCAmJiBuZXh0ID09IEREUF9DT01Q
-T05FTlRfRFNJMSkgewo+ICsJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTBfU09V
-VF9FTjsKPiArCQl2YWx1ZSA9IFJETUEwX1NPVVRfRFNJMTsKPiArCX0gZWxzZSBpZiAoY3VyID09
-IEREUF9DT01QT05FTlRfUkRNQTAgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTIpIHsKPiAr
-CQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUEwX1NPVVRfRU47Cj4gKwkJdmFsdWUg
-PSBSRE1BMF9TT1VUX0RTSTI7Cj4gKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JE
-TUEwICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kzKSB7Cj4gKwkJKmFkZHIgPSBESVNQX1JF
-R19DT05GSUdfRElTUF9SRE1BMF9TT1VUX0VOOwo+ICsJCXZhbHVlID0gUkRNQTBfU09VVF9EU0kz
-Owo+ICsJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IERE
-UF9DT01QT05FTlRfRFNJMSkgewo+ICsJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRN
-QTFfU09VVF9FTjsKPiArCQl2YWx1ZSA9IFJETUExX1NPVVRfRFNJMTsKPiArCX0gZWxzZSBpZiAo
-Y3VyID09IEREUF9DT01QT05FTlRfUkRNQTEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTIp
-IHsKPiArCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JETUExX1NPVVRfRU47Cj4gKwkJ
-dmFsdWUgPSBSRE1BMV9TT1VUX0RTSTI7Cj4gKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9O
-RU5UX1JETUExICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kzKSB7Cj4gKwkJKmFkZHIgPSBE
-SVNQX1JFR19DT05GSUdfRElTUF9SRE1BMV9TT1VUX0VOOwo+ICsJCXZhbHVlID0gUkRNQTFfU09V
-VF9EU0kzOwo+ICsJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0
-ID09IEREUF9DT01QT05FTlRfRFBJMCkgewo+ICsJCSphZGRyID0gZGF0YS0+cmRtYTFfc291dF9z
-ZWxfaW47Cj4gKwkJdmFsdWUgPSBkYXRhLT5yZG1hMV9zb3V0X2RwaTA7Cj4gKwl9IGVsc2UgaWYg
-KGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUExICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EUEkx
-KSB7Cj4gKwkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMV9TT1VUX0VOOwo+ICsJ
-CXZhbHVlID0gUkRNQTFfU09VVF9EUEkxOwo+ICsJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBP
-TkVOVF9SRE1BMiAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMCkgewo+ICsJCSphZGRyID0g
-RElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTJfU09VVDsKPiArCQl2YWx1ZSA9IFJETUEyX1NPVVRf
-RFBJMDsKPiArCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTIgJiYgbmV4dCA9
-PSBERFBfQ09NUE9ORU5UX0RQSTEpIHsKPiArCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQ
-X1JETUEyX1NPVVQ7Cj4gKwkJdmFsdWUgPSBSRE1BMl9TT1VUX0RQSTE7Cj4gKwl9IGVsc2UgaWYg
-KGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEyICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kx
-KSB7Cj4gKwkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMl9TT1VUOwo+ICsJCXZh
-bHVlID0gUkRNQTJfU09VVF9EU0kxOwo+ICsJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVO
-VF9SRE1BMiAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMikgewo+ICsJCSphZGRyID0gRElT
-UF9SRUdfQ09ORklHX0RJU1BfUkRNQTJfU09VVDsKPiArCQl2YWx1ZSA9IFJETUEyX1NPVVRfRFNJ
-MjsKPiArCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTIgJiYgbmV4dCA9PSBE
-RFBfQ09NUE9ORU5UX0RTSTMpIHsKPiArCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX1JE
-TUEyX1NPVVQ7Cj4gKwkJdmFsdWUgPSBSRE1BMl9TT1VUX0RTSTM7Cj4gIAl9IGVsc2Ugewo+ICAJ
-CXZhbHVlID0gMDsKPiAgCX0KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWw=
+Hi, Yongqiang:
+
+On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This patch add ovl0/ovl_2l0 usecase
+> in ovl->ovl_2l0 direct link usecase:
+> 1. the crtc support layer number will 4+2
+> 2. ovl_2l0 background color input select ovl0 when crtc init
+> and disable it when crtc finish
+> 3. config ovl_2l0 layer, if crtc config layer number is
+> bigger than ovl0 support layers(max is 4)
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 38 +++++++++++++++++++++++++++++++--
+>  1 file changed, 36 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> index c63ff2b..b55970a 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> @@ -270,6 +270,15 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+>  
+>  	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
+>  		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[i];
+> +		enum mtk_ddp_comp_id prev;
+> +
+> +		if (i > 0)
+> +			prev = mtk_crtc->ddp_comp[i - 1]->id;
+> +		else
+> +			prev = DDP_COMPONENT_ID_MAX;
+> +
+> +		if (prev == DDP_COMPONENT_OVL0)
+> +			mtk_ddp_comp_bgclr_in_on(comp);
+
+Even though both OVL and OVL_2L implement this function, I think we
+could still call this function for OVL and OVL_2L, and in
+mtk_ovl_bgclr_in_on(), to judge it's OVL or OVL_2L.
+
+Regards,
+CK
+
+>  
+>  		mtk_ddp_comp_config(comp, width, height, vrefresh, bpc);
+>  		mtk_ddp_comp_start(comp);
+> @@ -279,9 +288,18 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+>  	for (i = 0; i < mtk_crtc->layer_nr; i++) {
+>  		struct drm_plane *plane = &mtk_crtc->planes[i];
+>  		struct mtk_plane_state *plane_state;
+> +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+> +		unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
+> +		unsigned int local_layer;
+>  
+>  		plane_state = to_mtk_plane_state(plane->state);
+> -		mtk_ddp_comp_layer_config(mtk_crtc->ddp_comp[0], i,
+> +
+> +		if (i >= comp_layer_nr) {
+> +			comp = mtk_crtc->ddp_comp[1];
+> +			local_layer = i - comp_layer_nr;
+> +		} else
+> +			local_layer = i;
+> +		mtk_ddp_comp_layer_config(comp, local_layer,
+>  					  plane_state);
+>  	}
+>  
+> @@ -307,6 +325,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+>  					   mtk_crtc->ddp_comp[i]->id);
+>  	mtk_disp_mutex_disable(mtk_crtc->mutex);
+>  	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
+> +		mtk_ddp_comp_bgclr_in_off(mtk_crtc->ddp_comp[i]);
+>  		mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
+>  					      mtk_crtc->mmsys_reg_data,
+>  					      mtk_crtc->ddp_comp[i]->id,
+> @@ -327,6 +346,8 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+>  	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
+>  	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
+>  	unsigned int i;
+> +	unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
+> +	unsigned int local_layer;
+>  
+>  	/*
+>  	 * TODO: instead of updating the registers here, we should prepare
+> @@ -349,7 +370,14 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
+>  			plane_state = to_mtk_plane_state(plane->state);
+>  
+>  			if (plane_state->pending.config) {
+> -				mtk_ddp_comp_layer_config(comp, i, plane_state);
+> +				if (i >= comp_layer_nr) {
+> +					comp = mtk_crtc->ddp_comp[1];
+> +					local_layer = i - comp_layer_nr;
+> +				} else
+> +					local_layer = i;
+> +
+> +				mtk_ddp_comp_layer_config(comp, local_layer,
+> +							  plane_state);
+>  				plane_state->pending.config = false;
+>  			}
+>  		}
+> @@ -572,6 +600,12 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+>  	}
+>  
+>  	mtk_crtc->layer_nr = mtk_ddp_comp_layer_nr(mtk_crtc->ddp_comp[0]);
+> +	if (mtk_crtc->ddp_comp_nr > 1) {
+> +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[1];
+> +
+> +		if (comp->funcs->bgclr_in_on)
+> +			mtk_crtc->layer_nr += mtk_ddp_comp_layer_nr(comp);
+> +	}
+>  	mtk_crtc->planes = devm_kcalloc(dev, mtk_crtc->layer_nr,
+>  					sizeof(struct drm_plane),
+>  					GFP_KERNEL);
