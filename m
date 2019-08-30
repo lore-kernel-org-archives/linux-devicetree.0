@@ -1,73 +1,88 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
-Date: Fri, 30 Aug 2019 09:01:59 -0700
-Message-ID: <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
-References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org> <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org> <20190223165218.GB572@tuxbook-pro> <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: dt-bindings: sun4i-spdif: Fix dma-names warning" to
+ the asoc tree
+Date: Fri, 30 Aug 2019 17:06:07 +0100 (BST)
+Message-ID: <20190830160607.D19712742CA1@ypsilon.sirena.org.uk>
+References: <20190828125209.28173-1-mripard@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Cc: robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, jackp@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190828125209.28173-1-mripard@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Maxime Ripard <mripard@kernel.org>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jorge Ramirez (2019-08-29 00:03:48)
-> On 2/23/19 17:52, Bjorn Andersson wrote:
-> > On Thu 07 Feb 03:17 PST 2019, Jorge Ramirez-Ortiz wrote:
-> >> +
-> >> +Required child nodes:
-> >> +
-> >> +- usb connector node as defined in bindings/connector/usb-connector.t=
-xt
-> >> +  containing the property vbus-supply.
-> >> +
-> >> +Example:
-> >> +
-> >> +usb3_phy: usb3-phy@78000 {
-> >> +    compatible =3D "qcom,snps-usb-ssphy";
-> >> +    reg =3D <0x78000 0x400>;
-> >> +    #phy-cells =3D <0>;
-> >> +    clocks =3D <&rpmcc RPM_SMD_LN_BB_CLK>,
-> >> +             <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
-> >> +             <&gcc GCC_USB3_PHY_PIPE_CLK>;
-> >> +    clock-names =3D "ref", "phy", "pipe";
-> >> +    resets =3D <&gcc GCC_USB3_PHY_BCR>,
-> >> +             <&gcc GCC_USB3PHY_PHY_BCR>;
-> >> +    reset-names =3D "com", "phy";
-> >> +    vdd-supply =3D <&vreg_l3_1p05>;
-> >> +    vdda1p8-supply =3D <&vreg_l5_1p8>;
-> >> +    usb3_c_connector: usb3-c-connector {
+The patch
 
-Node name should be 'connector', not usb3-c-connector.
+   ASoC: dt-bindings: sun4i-spdif: Fix dma-names warning
 
-> >=20
-> > The USB-C connector is attached both to the HS and SS PHYs, so I think
-> > you should represent this external to this node and use of_graph to
-> > query it.
->=20
-> but AFAICS we wont be able to retrieve the vbux-supply from an external
-> node (that interface does not exist).
->=20
-> rob, do you have a suggestion?
+has been applied to the asoc tree at
 
-Shouldn't the vbus supply be in the phy? Or is this a situation where
-the phy itself doesn't have the vbus supply going to it because the PMIC
-gets in the way and handles the vbus for the connector by having the SoC
-communicate with the PMIC about when to turn the vbus on and off, etc?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
->=20
-> >=20
-> > So the connector should look similar to example 2 in
-> > connector/usb-connector.txt.
-> >=20
-> > Regards,
-> > Bjorn
-> >=20
-> >> +            compatible =3D "usb-c-connector";
-> >> +            label =3D "USB-C";
-> >> +            type =3D "micro";
-> >> +            vbus-supply =3D <&usb3_vbus_reg>;
-> >> +    };
-> >> +};
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 1a8e7cdfa4f5872bf0c202d09bff6628aba6b9f6 Mon Sep 17 00:00:00 2001
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Date: Wed, 28 Aug 2019 14:52:05 +0200
+Subject: [PATCH] ASoC: dt-bindings: sun4i-spdif: Fix dma-names warning
+
+Even though the H6 compatible has been properly added, the exeption for the
+number of DMA channels hasn't been updated, leading in a validation
+warning.
+
+Fix this.
+
+Fixes: b20453031472 ("dt-bindings: sound: sun4i-spdif: Add Allwinner H6 compatible")
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://lore.kernel.org/r/20190828125209.28173-1-mripard@kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml  | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
+index e0284d8c3b63..38d4cede0860 100644
+--- a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
++++ b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml
+@@ -70,7 +70,9 @@ allOf:
+       properties:
+         compatible:
+           contains:
+-            const: allwinner,sun8i-h3-spdif
++            enum:
++              - allwinner,sun8i-h3-spdif
++              - allwinner,sun50i-h6-spdif
+ 
+     then:
+       properties:
+-- 
+2.20.1
