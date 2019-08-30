@@ -1,56 +1,48 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH 0/5] dt-bindings: arm: idle-states: Miscellaneous improvements
-Date: Fri, 30 Aug 2019 21:25:23 +0530
-Message-ID: <CAP245DUWP6+2CyV2QA-Awo8JOUFjzjZmPHjM1On8XOyDbKGSHw@mail.gmail.com>
-References: <20190830150302.20551-1-geert+renesas@glider.be>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v2 07/15] dt: thermal: tsens: Document interrupt support in tsens driver
+Date: Fri, 30 Aug 2019 08:55:37 -0700
+Message-ID: <5d6946fa.1c69fb81.44ab7.8d72@mx.google.com>
+References: <cover.1566907161.git.amit.kucheria@linaro.org> <66ac3d3707d6296ef85bf1fa321f7f1ee0c02131.1566907161.git.amit.kucheria@linaro.org> <5d65cbe9.1c69fb81.1ceb.2374@mx.google.com> <CAP245DWWKsZBHnvSqC40XOH48kGd-hykd+fr-UZfWTmvuG2KaA@mail.gmail.com> <5d67e6cf.1c69fb81.5aec9.3b71@mx.google.com> <CAP245DVjgnwGn5rUgbYrkBOi3vtyShz0Qbx_opx80xiOV7uXeA@mail.gmail.com> <CAHLCerMmBmS-59eywxkUJ+5-zSccx8Twx2=NELgBgShYhM7TOw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190830150302.20551-1-geert+renesas@glider.be>
+In-Reply-To: <CAHLCerMmBmS-59eywxkUJ+5-zSccx8Twx2=NELgBgShYhM7TOw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Nicolas Pitre <nico@linaro.org>, Sebastian Capella <sebcape@gmail.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Brian Masney <masneyb@onstation.org>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 8:33 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
->   - Replace abbreviations "eg" and "ie" by "e.g." resp. "i.e.",
->   - Correct references to wake-up delay,
->   - Correct "constraints guarantees" to "constraint guarantees",
->   - Add punctuation marks to improve readability,
->   - Move exit-latency-us explanation to exit-latency-us section.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Quoting Amit Kucheria (2019-08-30 04:32:54)
+> On Thu, Aug 29, 2019 at 10:04 PM Amit Kucheria <amit.kucheria@linaro.org>=
+ wrote:
+> >
+> > On Thu, Aug 29, 2019 at 8:23 PM Stephen Boyd <swboyd@chromium.org> wrot=
+e:
+> > >
+> > > Can we get a known quantity of interrupts for a particular compatible
+> > > string instead? Let's be as specific as possible. The index matters t=
+oo,
+> > > so please list them in the order that is desired.
+> >
+> > I *think* we can predict what platforms have uplow and critical
+> > interrupts based on IP version currently[1]. For newer interrupt
+> > types, we might need more fine-grained platform compatibles.
+> >
+> > [1] Caveat: this is based only on the list of platforms I've currently
+> > looked at, there might be something internally that breaks these
+> > rules.
+>=20
+> What do you think if we changed the wording to something like the followi=
+ng,
+>=20
+> - interrupt-names: Must be one of the following depending on IP version:
+>    For compatibles qcom,msm8916-tsens, qcom,msm8974-tsens,
+> qcom,qcs404-tsens, qcom,tsens-v1, use
+>               interrupt-names =3D "uplow";
+>    For compatibles qcom,msm8996-tsens, qcom,msm8998-tsens,
+> qcom,sdm845-tsens, qcom,tsens-v2, use
+>               interrupt-names =3D "uplow", "critical";
 
-This improves the readability of the doc. So for the series, feel free to add
-
-Reviewed-by:  Amit Kucheria <amit.kucheria@linaro.org>
-
-> ---
-> Split to ease review.
-> Feel free to squash into a single commit.
->
-> Geert Uytterhoeven (5):
->   dt-bindings: arm: idle-states: Use "e.g." and "i.e." consistently
->   dt-bindings: arm: idle-states: Correct references to wake-up delay
->   dt-bindings: arm: idle-states: Correct "constraint guarantees"
->   dt-bindings: arm: idle-states: Add punctuation to improve readability
->   dt-bindings: arm: idle-states: Move exit-latency-us explanation
->
->  .../devicetree/bindings/arm/idle-states.txt   | 32 +++++++++----------
->  1 file changed, 16 insertions(+), 16 deletions(-)
->
-> --
-> 2.17.1
->
-> Gr{oetje,eeting}s,
->
->                                                 Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                                             -- Linus Torvalds
+Ok. I would still prefer YAML/JSON schema for this binding so that it's
+much more explicit about numbers and the order of interrupts, etc.
