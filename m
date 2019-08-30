@@ -1,142 +1,71 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
- SMC/HVC mailbox
-Date: Fri, 30 Aug 2019 06:28:25 +0000
-Message-ID: <AM0PR04MB4481785CABB44A8C71CFB8D788BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
- <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
- <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v5, 28/32] drm/mediatek: add connection from OVL_2L0 to
+ RDMA0
+Date: Fri, 30 Aug 2019 14:30:47 +0800
+Message-ID: <1567146647.5942.19.camel@mtksdaap41>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1567090254-15566-29-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1567090254-15566-29-git-send-email-yongqiang.niu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: yongqiang.niu@mediatek.com
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkhpIEphc3NpLA0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjUgMS8yXSBkdC1iaW5kaW5n
-czogbWFpbGJveDogYWRkIGJpbmRpbmcgZG9jIGZvciB0aGUgQVJNDQo+IFNNQy9IVkMgbWFpbGJv
-eA0KPiANCj4gT24gVHVlLCBBdWcgMjcsIDIwMTkgYXQgMTA6MDIgUE0gUGVuZyBGYW4gPHBlbmcu
-ZmFuQG54cC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gRnJvbTogUGVuZyBGYW4gPHBlbmcuZmFuQG54
-cC5jb20+DQo+ID4NCj4gPiBUaGUgQVJNIFNNQy9IVkMgbWFpbGJveCBiaW5kaW5nIGRlc2NyaWJl
-cyBhIGZpcm13YXJlIGludGVyZmFjZSB0bw0KPiA+IHRyaWdnZXIgYWN0aW9ucyBpbiBzb2Z0d2Fy
-ZSBsYXllcnMgcnVubmluZyBpbiB0aGUgRUwyIG9yIEVMMyBleGNlcHRpb24gbGV2ZWxzLg0KPiA+
-IFRoZSB0ZXJtICJBUk0iIGhlcmUgcmVsYXRlcyB0byB0aGUgU01DIGluc3RydWN0aW9uIGFzIHBh
-cnQgb2YgdGhlIEFSTQ0KPiA+IGluc3RydWN0aW9uIHNldCwgbm90IGFzIGEgc3RhbmRhcmQgZW5k
-b3JzZWQgYnkgQVJNIEx0ZC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFBlbmcgRmFuIDxwZW5n
-LmZhbkBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tYWls
-Ym94L2FybS1zbWMueWFtbCAgICAgICB8IDEyNQ0KPiArKysrKysrKysrKysrKysrKysrKysNCj4g
-PiAgMSBmaWxlIGNoYW5nZWQsIDEyNSBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NA0KPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tYWlsYm94L2FybS1z
-bWMueWFtbA0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tYWlsYm94L2FybS1zbWMueWFtbA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL21haWxib3gvYXJtLXNtYy55YW1sDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2
-NDQNCj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLmY4ZWIyOGQ1ZTMwNw0KPiA+IC0tLSAvZGV2L251
-bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWFpbGJveC9h
-cm0tc21jLnlhbWwNCj4gPiBAQCAtMCwwICsxLDEyNSBAQA0KPiA+ICsjIFNQRFgtTGljZW5zZS1J
-ZGVudGlmaWVyOiAoR1BMLTIuMCBPUiBCU0QtMi1DbGF1c2UpICVZQU1MIDEuMg0KPiA+ICstLS0N
-Cj4gPiArJGlkOg0KPiA+ICtodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxv
-b2suY29tLz91cmw9aHR0cCUzQSUyRiUyRmRldmkNCj4gPg0KPiArY2V0cmVlLm9yZyUyRnNjaGVt
-YXMlMkZtYWlsYm94JTJGYXJtLXNtYy55YW1sJTIzJmFtcDtkYXRhPTAyJTcNCj4gQzAxJTdDcA0K
-PiA+DQo+ICtlbmcuZmFuJTQwbnhwLmNvbSU3QzhhYTY3MWRmYTRkMDRiYTAwM2I1MDhkNzJkMGYy
-OTdmJTdDNjg2ZWExZA0KPiAzYmMyYjRjDQo+ID4NCj4gKzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAl
-N0MxJTdDNjM3MDI3NDE1NDQ4MTk2MTQ1JmFtcDtzZGF0YT14ZA0KPiBuVU9iTnFsUkYNCj4gPiAr
-bHU4TmlYU3VjMzVmWXJISXpSJTJGeWFrNkl6VzA1UTNuQSUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiA+
-ICskc2NoZW1hOg0KPiA+ICtodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxv
-b2suY29tLz91cmw9aHR0cCUzQSUyRiUyRmRldmkNCj4gPg0KPiArY2V0cmVlLm9yZyUyRm1ldGEt
-c2NoZW1hcyUyRmNvcmUueWFtbCUyMyZhbXA7ZGF0YT0wMiU3QzAxJTdDcGUNCj4gbmcuZmFuJQ0K
-PiA+DQo+ICs0MG54cC5jb20lN0M4YWE2NzFkZmE0ZDA0YmEwMDNiNTA4ZDcyZDBmMjk3ZiU3QzY4
-NmVhMWQzYmMyYjRjNg0KPiBmYTkyY2Q5DQo+ID4NCj4gKzljNWMzMDE2MzUlN0MwJTdDMSU3QzYz
-NzAyNzQxNTQ0ODE5NjE0NSZhbXA7c2RhdGE9d2wlMkZkZzA5DQo+IFFNUyUyRm9IZ0kNCj4gPiAr
-eUQ3WkJOcG9JR1hZeGZGRFJXaHlZSG9nRmQ2QSUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiA+ICsNCj4g
-PiArdGl0bGU6IEFSTSBTTUMgTWFpbGJveCBJbnRlcmZhY2UNCj4gPiArDQo+ID4gK21haW50YWlu
-ZXJzOg0KPiA+ICsgIC0gUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQo+ID4gKw0KPiA+ICtk
-ZXNjcmlwdGlvbjogfA0KPiA+ICsgIFRoaXMgbWFpbGJveCB1c2VzIHRoZSBBUk0gc21jIChzZWN1
-cmUgbW9uaXRvciBjYWxsKSBhbmQgaHZjDQo+ID4gKyhoeXBlcnZpc29yDQo+ID4gKyAgY2FsbCkg
-aW5zdHJ1Y3Rpb24gdG8gdHJpZ2dlciBhIG1haWxib3gtY29ubmVjdGVkIGFjdGl2aXR5IGluDQo+
-ID4gK2Zpcm13YXJlLA0KPiA+ICsgIGV4ZWN1dGluZyBvbiB0aGUgdmVyeSBzYW1lIGNvcmUgYXMg
-dGhlIGNhbGxlci4gQnkgbmF0dXJlIHRoaXMNCj4gPiArb3BlcmF0aW9uDQo+ID4gKyAgaXMgc3lu
-Y2hyb25vdXMgYW5kIHRoaXMgbWFpbGJveCBwcm92aWRlcyBubyB3YXkgZm9yIGFzeW5jaHJvbm91
-cw0KPiA+ICttZXNzYWdlcw0KPiA+ICsgIHRvIGJlIGRlbGl2ZXJlZCB0aGUgb3RoZXIgd2F5IHJv
-dW5kLCBmcm9tIGZpcm13YXJlIHRvIHRoZSBPUywgYnV0DQo+ID4gKyAgYXN5bmNocm9ub3VzIG5v
-dGlmaWNhdGlvbiBjb3VsZCBhbHNvIGJlIHN1cHBvcnRlZC4gSG93ZXZlciB0aGUNCj4gPiArdmFs
-dWUgb2YNCj4gPiArICByMC93MC94MCB0aGUgZmlybXdhcmUgcmV0dXJucyBhZnRlciB0aGUgc21j
-IGNhbGwgaXMgZGVsaXZlcmVkIGFzIGENCj4gPiArcmVjZWl2ZWQNCj4gPiArICBtZXNzYWdlIHRv
-IHRoZSBtYWlsYm94IGZyYW1ld29yaywgc28gYSBzeW5jaHJvbm91cyBjb21tdW5pY2F0aW9uDQo+
-ID4gK2NhbiBiZQ0KPiA+ICsgIGVzdGFibGlzaGVkLCBmb3IgYSBhc3luY2hyb25vdXMgbm90aWZp
-Y2F0aW9uLCBubyB2YWx1ZSB3aWxsIGJlIHJldHVybmVkLg0KPiA+ICsgIFRoZSBleGFjdCBtZWFu
-aW5nIG9mIGJvdGggdGhlIGFjdGlvbiB0aGUgbWFpbGJveCB0cmlnZ2VycyBhcyB3ZWxsDQo+ID4g
-K2FzIHRoZQ0KPiA+ICsgIHJldHVybiB2YWx1ZSBpcyBkZWZpbmVkIGJ5IHRoZWlyIHVzZXJzIGFu
-ZCBpcyBub3Qgc3ViamVjdCB0byB0aGlzIGJpbmRpbmcuDQo+ID4gKw0KPiA+ICsgIE9uZSB1c2Ug
-Y2FzZSBvZiB0aGlzIG1haWxib3ggaXMgdGhlIFNDTUkgaW50ZXJmYWNlLCB3aGljaCB1c2VzDQo+
-ID4gKyBzaGFyZWQgbWVtb3J5ICB0byB0cmFuc2ZlciBjb21tYW5kcyBhbmQgcGFyYW1ldGVycywg
-YW5kIGEgbWFpbGJveA0KPiB0bw0KPiA+ICsgdHJpZ2dlciBhIGZ1bmN0aW9uICBjYWxsLiBUaGlz
-IGFsbG93cyBTb0NzIHdpdGhvdXQgYSBzZXBhcmF0ZQ0KPiA+ICsgbWFuYWdlbWVudCBwcm9jZXNz
-b3IgKG9yIHdoZW4gIHN1Y2ggYSBwcm9jZXNzb3IgaXMgbm90IGF2YWlsYWJsZSBvcg0KPiA+ICsg
-dXNlZCkgdG8gdXNlIHRoaXMgc3RhbmRhcmRpemVkICBpbnRlcmZhY2UgYW55d2F5Lg0KPiA+ICsN
-Cj4gPiArICBUaGlzIGJpbmRpbmcgZGVzY3JpYmVzIG5vIGhhcmR3YXJlLCBidXQgZXN0YWJsaXNo
-ZXMgYSBmaXJtd2FyZQ0KPiBpbnRlcmZhY2UuDQo+ID4gKyAgVXBvbiByZWNlaXZpbmcgYW4gU01D
-IHVzaW5nIG9uZSBvZiB0aGUgZGVzY3JpYmVkIFNNQyBmdW5jdGlvbg0KPiA+ICsgaWRlbnRpZmll
-cnMsICB0aGUgZmlybXdhcmUgaXMgZXhwZWN0ZWQgdG8gdHJpZ2dlciBzb21lIG1haWxib3ggY29u
-bmVjdGVkDQo+IGZ1bmN0aW9uYWxpdHkuDQo+ID4gKyAgVGhlIGNvbW11bmljYXRpb24gZm9sbG93
-cyB0aGUgQVJNIFNNQyBjYWxsaW5nIGNvbnZlbnRpb24uDQo+ID4gKyAgRmlybXdhcmUgZXhwZWN0
-cyBhbiBTTUMgZnVuY3Rpb24gaWRlbnRpZmllciBpbiByMCBvciB3MC4gVGhlDQo+ID4gKyBzdXBw
-b3J0ZWQgIGlkZW50aWZpZXJzIGFyZSBwYXNzZWQgZnJvbSBjb25zdW1lcnMsIG9yIGxpc3RlZCBp
-biB0aGUNCj4gPiArIHRoZSBhcm0sZnVuYy1pZHMgIHByb3BlcnRpZXMgYXMgZGVzY3JpYmVkIGJl
-bG93LiBUaGUgZmlybXdhcmUgY2FuDQo+ID4gKyByZXR1cm4gb25lIHZhbHVlIGluICB0aGUgZmly
-c3QgU01DIHJlc3VsdCByZWdpc3RlciwgaXQgaXMgZXhwZWN0ZWQNCj4gPiArIHRvIGJlIGFuIGVy
-cm9yIHZhbHVlLCAgd2hpY2ggc2hhbGwgYmUgcHJvcGFnYXRlZCB0byB0aGUgbWFpbGJveCBjbGll
-bnQuDQo+ID4gKw0KPiA+ICsgIEFueSBjb3JlIHdoaWNoIHN1cHBvcnRzIHRoZSBTTUMgb3IgSFZD
-IGluc3RydWN0aW9uIGNhbiBiZSB1c2VkLCBhcw0KPiA+ICsgbG9uZyBhcyAgYSBmaXJtd2FyZSBj
-b21wb25lbnQgcnVubmluZyBpbiBFTDMgb3IgRUwyIGlzIGhhbmRsaW5nIHRoZXNlDQo+IGNhbGxz
-Lg0KPiA+ICsNCj4gPiArcHJvcGVydGllczoNCj4gPiArICBjb21wYXRpYmxlOg0KPiA+ICsgICAg
-Y29uc3Q6IGFybSxzbWMtbWJveA0KPiA+ICsNCj4gPiArICAiI21ib3gtY2VsbHMiOg0KPiA+ICsg
-ICAgY29uc3Q6IDENCj4gPiArDQo+ID4gKyAgYXJtLG51bS1jaGFuczoNCj4gPiArICAgIGRlc2Ny
-aXB0aW9uOiBUaGUgbnVtYmVyIG9mIGNoYW5uZWxzIHN1cHBvcnRlZC4NCj4gPiArICAgIGl0ZW1z
-Og0KPiA+ICsgICAgICBtaW5pbXVtOiAxDQo+ID4gKyAgICAgIG1heGltdW06IDQwOTYgIyBTaG91
-bGQgYmUgZW5vdWdoPw0KPiA+ICsNCj4gPiArICBtZXRob2Q6DQo+ID4gKyAgICAtIGVudW06DQo+
-ID4gKyAgICAgICAgLSBzbWMNCj4gPiArICAgICAgICAtIGh2Yw0KPiA+ICsNCj4gPiArICB0cmFu
-c3BvcnRzOg0KPiA+ICsgICAgLSBlbnVtOg0KPiA+ICsgICAgICAgIC0gbWVtDQo+ID4gKyAgICAg
-ICAgLSByZWcNCj4gPiArDQo+ID4gKyAgYXJtLGZ1bmMtaWRzOg0KPiA+ICsgICAgZGVzY3JpcHRp
-b246IHwNCj4gPiArICAgICAgQW4gYXJyYXkgb2YgMzItYml0IHZhbHVlcyBzcGVjaWZ5aW5nIHRo
-ZSBmdW5jdGlvbiBJRHMgdXNlZCBieSBlYWNoDQo+ID4gKyAgICAgIG1haWxib3ggY2hhbm5lbC4g
-VGhvc2UgZnVuY3Rpb24gSURzIGZvbGxvdyB0aGUgQVJNIFNNQyBjYWxsaW5nDQo+ID4gKyAgICAg
-IGNvbnZlbnRpb24gc3RhbmRhcmQgWzFdLg0KPiA+ICsNCj4gPiArICAgICAgVGhlcmUgaXMgb25l
-IGlkZW50aWZpZXIgcGVyIGNoYW5uZWwgYW5kIHRoZSBudW1iZXIgb2Ygc3VwcG9ydGVkDQo+ID4g
-KyAgICAgIGNoYW5uZWxzIGlzIGRldGVybWluZWQgYnkgdGhlIGxlbmd0aCBvZiB0aGlzIGFycmF5
-Lg0KPiA+ICsgICAgJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvdWludDMy
-LWFycmF5DQo+ID4gKyAgICBtaW5JdGVtczogMA0KPiA+ICsgICAgbWF4SXRlbXM6IDQwOTYgICAj
-IFNob3VsZCBiZSBlbm91Z2g/DQo+ID4gKw0KPiA+ICtyZXF1aXJlZDoNCj4gPiArICAtIGNvbXBh
-dGlibGUNCj4gPiArICAtICIjbWJveC1jZWxscyINCj4gPiArICAtIGFybSxudW0tY2hhbnMNCj4g
-PiArICAtIHRyYW5zcG9ydHMNCj4gPiArICAtIG1ldGhvZA0KPiA+ICsNCj4gPiArZXhhbXBsZXM6
-DQo+ID4gKyAgLSB8DQo+ID4gKyAgICBzcmFtQDkxMDAwMCB7DQo+ID4gKyAgICAgIGNvbXBhdGli
-bGUgPSAibW1pby1zcmFtIjsNCj4gPiArICAgICAgcmVnID0gPDB4MCAweDkzZjAwMCAweDAgMHgx
-MDAwPjsNCj4gPiArICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gKyAgICAgICNzaXpl
-LWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgICByYW5nZXMgPSA8MCAweDAgMHg5M2YwMDAgMHgxMDAw
-PjsNCj4gPiArDQo+ID4gKyAgICAgIGNwdV9zY3BfbHByaTogc2NwLXNobWVtQDAgew0KPiA+ICsg
-ICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLHNjbWktc2htZW0iOw0KPiA+ICsgICAgICAgIHJlZyA9
-IDwweDAgMHgyMDA+Ow0KPiA+ICsgICAgICB9Ow0KPiA+ICsNCj4gPiArICAgICAgY3B1X3NjcF9o
-cHJpOiBzY3Atc2htZW1AMjAwIHsNCj4gPiArICAgICAgICBjb21wYXRpYmxlID0gImFybSxzY21p
-LXNobWVtIjsNCj4gPiArICAgICAgICByZWcgPSA8MHgyMDAgMHgyMDA+Ow0KPiA+ICsgICAgICB9
-Ow0KPiA+ICsgICAgfTsNCj4gPiArDQo+ID4gKyAgICBmaXJtd2FyZSB7DQo+ID4gKyAgICAgIHNt
-Y19tYm94OiBtYWlsYm94IHsNCj4gPiArICAgICAgICAjbWJveC1jZWxscyA9IDwxPjsNCj4gPiAr
-ICAgICAgICBjb21wYXRpYmxlID0gImFybSxzbWMtbWJveCI7DQo+ID4gKyAgICAgICAgbWV0aG9k
-ID0gInNtYyI7DQo+ID4gKyAgICAgICAgYXJtLG51bS1jaGFucyA9IDwweDI+Ow0KPiA+ICsgICAg
-ICAgIHRyYW5zcG9ydHMgPSAibWVtIjsNCj4gPiArICAgICAgICAvKiBPcHRpb25hbCAqLw0KPiA+
-ICsgICAgICAgIGFybSxmdW5jLWlkcyA9IDwweGMyMDAwMGZlPiwgPDB4YzIwMDAwZmY+Ow0KPiA+
-DQo+IFNNQy9IVkMgaXMgc3luY2hyb25vdXNseShibG9jaykgcnVubmluZyBpbiAic2VjdXJlIG1v
-ZGUiLCBpLmUsIHRoZXJlIGNhbg0KPiBvbmx5IGJlIG9uZSBpbnN0YW5jZSBydW5uaW5nIHBsYXRm
-b3JtIHdpZGUuIFJpZ2h0Pw0KDQpJIHRoaW5rIHRoZXJlIGNvdWxkIGJlIGNoYW5uZWwgZm9yIFRF
-RSwgYW5kIGNoYW5uZWwgZm9yIExpbnV4Lg0KRm9yIHZpcnR1YWxpemF0aW9uIGNhc2UsIHRoZXJl
-IGNvdWxkIGJlIGRlZGljYXRlZCBjaGFubmVsIGZvciBlYWNoIFZNLg0KDQogIFRoYXQgaW1wbGll
-cyB0aGVyZSBpcyBvbmx5DQo+IG9uZSBwaHlzaWNhbCBjaGFubmVsIGluIHRoZSBwbGF0Zm9ybS4N
-Cg0KSSBkb24ndCB0aGluayBzbywgVEVFL0xpbnV4IHNob3VsZCB1c2UgZGlmZmVyZW50IHBoeXNp
-Y2FsIGNoYW5uZWxzLA0KaS5lLCBTUkFNIG1lbW9yeSBwYXJ0aXRpb25lZCB1c2luZyBUWkFTQy4N
-Cg0KIFNvIGlmIHlvdSBuZWVkIHRvIGluaXRpYXRlIGRpZmZlcmVudA0KPiBmdW5jdGlvbnMgKHR4
-LCByeCksIHlvdSBjYWxsIHRoZW0gc2VxdWVudGlhbGx5IGJ5IGNoYW5naW5nIHRoZSBmdW5jLWlk
-IGZvciBlYWNoDQo+IHJlcXVlc3QuIFdoeSBub3Q/DQoNCkkgY291bGQgbm90IGZvbGxvdyB5b3Ug
-Y2xlYXJseS4gQ291bGQgeW91IHBsZWFzZSBzaGFyZSBtb3JlIGRldGFpbHM/DQoNClRoYW5rcywN
-ClBlbmcuDQo+IA0KPiAtSmFzc2kNCg==
+Hi, Yongqiang:
+
+On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> this patch add add connection from OVL_2L0 to RDMA0
+
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> index aa6173b..943e114 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -33,6 +33,12 @@
+>  #define DISP_REG_CONFIG_DSI_SEL			0x050
+>  #define DISP_REG_CONFIG_DPI_SEL			0x064
+>  
+> +#define MT8183_DISP_OVL0_2L_MOUT_EN		0xf04
+> +#define MT8183_DISP_PATH0_SEL_IN		0xf24
+> +
+> +#define OVL0_2L_MOUT_EN_DISP_PATH0			BIT(0)
+> +#define DISP_PATH0_SEL_IN_OVL0_2L			0x1
+> +
+>  #define MT2701_DISP_MUTEX0_MOD0			0x2c
+>  #define MT2701_DISP_MUTEX0_SOF0			0x30
+>  
+> @@ -307,6 +313,10 @@ static unsigned int mtk_ddp_mout_en(const struct mtk_mmsys_reg_data *data,
+>  	} else if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_OVL_2L0) {
+>  		*addr = data->ovl0_mout_en;
+>  		value = OVL0_MOUT_EN_OVL0_2L;
+> +	} else if (cur == DDP_COMPONENT_OVL_2L0 &&
+> +		   next == DDP_COMPONENT_RDMA0) {
+> +		*addr = MT8183_DISP_OVL0_2L_MOUT_EN;
+> +		value = OVL0_2L_MOUT_EN_DISP_PATH0;
+>  	} else {
+>  		value = 0;
+>  	}
+> @@ -366,6 +376,10 @@ static unsigned int mtk_ddp_sel_in(const struct mtk_mmsys_reg_data *data,
+>  	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
+>  		*addr = DISP_REG_CONFIG_DSI_SEL;
+>  		value = DSI_SEL_IN_BLS;
+> +	} else if (cur == DDP_COMPONENT_OVL_2L0 &&
+> +		   next == DDP_COMPONENT_RDMA0) {
+> +		*addr = MT8183_DISP_PATH0_SEL_IN;
+> +		value = DISP_PATH0_SEL_IN_OVL0_2L;
+>  	} else {
+>  		value = 0;
+>  	}
