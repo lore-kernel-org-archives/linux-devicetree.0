@@ -1,62 +1,61 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [RESEND PATCH 0/5] Add bluetooth support for Orange Pi 3
-Date: Fri, 30 Aug 2019 14:43:48 +0200
-Message-ID: <D02B89FB-F8C0-40AD-A99A-6C1B4FEB72A0@holtmann.org>
-References: <20190823103139.17687-1-megous@megous.com>
- <5524D5E9-FA82-4244-A91F-78CF1C3FB3FB@holtmann.org>
- <20190830092104.odipmbflounqpffo@flea>
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1
+ EDAC
+Date: Fri, 30 Aug 2019 13:45:25 +0100
+Message-ID: <d46ac081-1867-2997-e2a3-bcfea42b74f3@arm.com>
+References: <20190805143911.12185-1-hhhawa@amazon.com>
+ <20190805143911.12185-2-hhhawa@amazon.com> <20190821191704.GA32425@bogus>
+ <1d23d7c5-cd7b-1512-5300-d43e82ba6dc1@amazon.com>
+ <CAL_Jsq+8jGbR4u7FA8r0gP5i2H+nSgOkGU_5mfiL=i=c0sOW8A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190830092104.odipmbflounqpffo@flea>
+In-Reply-To: <CAL_Jsq+8jGbR4u7FA8r0gP5i2H+nSgOkGU_5mfiL=i=c0sOW8A@mail.gmail.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <mripard@kernel.org>
-Cc: megous@megous.com, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, "Hawa, Hanna" <hhhawa@amazon.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Borislav Petkov <bp@alien8.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, David Miller <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, benh@amazon.com, "Krupnik, Ronen" <ronenk@amazon.com>, Talel Shenhar <talel@amazon.com>, Jonathan Chocron <jonnyc@amazon.com>, "Hanoch, Uri" <hanochu@amazon.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-edac <linux-edac@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+Hi guys,
 
->>> (Resend to add missing lists, sorry for the noise.)
->>> 
->>> This series implements bluetooth support for Xunlong Orange Pi 3 board.
->>> 
->>> The board uses AP6256 WiFi/BT 5.0 chip.
->>> 
->>> Summary of changes:
->>> 
->>> - add more delay to let initialize the chip
->>> - let the kernel detect firmware file path
->>> - add new compatible and update dt-bindings
->>> - update Orange Pi 3 / H6 DTS
->>> 
->>> Please take a look.
->>> 
->>> thank you and regards,
->>> Ondrej Jirman
->>> 
->>> Ondrej Jirman (5):
->>> dt-bindings: net: Add compatible for BCM4345C5 bluetooth device
->>> bluetooth: bcm: Add support for loading firmware for BCM4345C5
->>> bluetooth: hci_bcm: Give more time to come out of reset
->>> arm64: dts: allwinner: h6: Add pin configs for uart1
->>> arm64: dts: allwinner: orange-pi-3: Enable UART1 / Bluetooth
->>> 
->>> .../bindings/net/broadcom-bluetooth.txt       |  1 +
->>> .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 19 +++++++++++++++++++
->>> arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 10 ++++++++++
->>> drivers/bluetooth/btbcm.c                     |  3 +++
->>> drivers/bluetooth/hci_bcm.c                   |  3 ++-
->>> 5 files changed, 35 insertions(+), 1 deletion(-)
->> 
->> all 5 patches have been applied to bluetooth-next tree.
+On 27/08/2019 14:49, Rob Herring wrote:
+> On Mon, Aug 26, 2019 at 9:49 AM Hawa, Hanna <hhhawa@amazon.com> wrote:
+>> On 8/21/2019 10:17 PM, Rob Herring wrote:
+>>> Why is this even in DT? AFAICT, this is all just CortexA57 core features
+>>> (i.e. nothing Amazon specific). The core type and the ECC capabilities
+>>> are discoverable.
+>>
+>> Added to the DT in order to easily enable/disable the driver.
 > 
-> The DTS patches (last 2) should go through the arm-soc tree, can you
-> drop them?
+> That alone is not reason enough to put it in DT. From a DT
+> perspective, I have no idea what the whims of a OS maintainer are
+> regarding whether they want all this to be 1 driver or 2 drivers.
+> (IMO, it should be 1 as this is ECC for an A57. For a core and memory
+> controller, then 2 seems appropriate.)
+> 
+>> You are
+>> correct that they are CortexA57 core features and nothing Amazon
+>> specific, but it's IMPLEMENTATION DEFINED, meaning that in different
+>> cortex revisions (e.g. A57) the register bitmap may change. Because of
+>> that we added an Amazon compatible which corresponds to the specific
+>> core we are using.
 
-why is that? We have included DTS changes for Bluetooth devices directly all the time. What is different with this hardware?
+I think its that the instruction encoding is in the imp-def space that is important.
 
-Regards
+CPU-implementers can add whatever registers they find useful here. A57 and A72 both
+implemented some ECC registers here. (They are not guaranteed to be the same, but I can't
+find any differences).
 
-Marcel
+We need some information from DT because the TRM doesn't say what happens when you read
+from these registers on an A57 that doesn't have the 'optional ECC protection'. It could
+take an exception due to an unimplemented system register.
+
+The imp-def instruction space may also be trapped by a higher exception level. KVM does
+this, and emulates these registers as if they were all undefined.
+
+
+Thanks,
+
+James
