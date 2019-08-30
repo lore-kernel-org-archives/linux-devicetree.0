@@ -1,77 +1,57 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v2 07/11] phy: phy-mtk-tphy: add a property for internal resistance
-Date: Fri, 30 Aug 2019 15:14:54 +0800
-Message-ID: <1567149298-29366-7-git-send-email-chunfeng.yun@mediatek.com>
-References: <1567149298-29366-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Date: Fri, 30 Aug 2019 02:21:32 -0500
+Message-ID: <CABb+yY2TREpO7+TFcGgsgQrkmMWwFAgtuJ4GnLPPQ+GEBuh07w@mail.gmail.com>
+References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
+ <1567004515-3567-2-git-send-email-peng.fan@nxp.com> <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
+ <AM0PR04MB4481785CABB44A8C71CFB8D788BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567149298-29366-1-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <AM0PR04MB4481785CABB44A8C71CFB8D788BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This is used to tune internal resistance for J-K test
+On Fri, Aug 30, 2019 at 1:28 AM Peng Fan <peng.fan@nxp.com> wrote:
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
-v2: no changes
----
- drivers/phy/mediatek/phy-mtk-tphy.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
-index 5afe33621dbc..4a2dc92f10f5 100644
---- a/drivers/phy/mediatek/phy-mtk-tphy.c
-+++ b/drivers/phy/mediatek/phy-mtk-tphy.c
-@@ -43,6 +43,8 @@
- #define PA0_RG_USB20_INTR_EN		BIT(5)
- 
- #define U3P_USBPHYACR1		0x004
-+#define PA1_RG_INTR_CAL		GENMASK(23, 19)
-+#define PA1_RG_INTR_CAL_VAL(x)	((0x1f & (x)) << 19)
- #define PA1_RG_VRT_SEL			GENMASK(14, 12)
- #define PA1_RG_VRT_SEL_VAL(x)	((0x7 & (x)) << 12)
- #define PA1_RG_TERM_SEL		GENMASK(10, 8)
-@@ -302,6 +304,7 @@ struct mtk_phy_instance {
- 	int eye_src;
- 	int eye_vrt;
- 	int eye_term;
-+	int intr;
- 	int discth;
- 	bool bc12_en;
- };
-@@ -853,12 +856,14 @@ static void phy_parse_property(struct mtk_tphy *tphy,
- 				 &instance->eye_vrt);
- 	device_property_read_u32(dev, "mediatek,eye-term",
- 				 &instance->eye_term);
-+	device_property_read_u32(dev, "mediatek,intr",
-+				 &instance->intr);
- 	device_property_read_u32(dev, "mediatek,discth",
- 				 &instance->discth);
--	dev_dbg(dev, "bc12:%d, src:%d, vrt:%d, term:%d, disc:%d\n",
-+	dev_dbg(dev, "bc12:%d, src:%d, vrt:%d, term:%d, intr:%d, disc:%d\n",
- 		instance->bc12_en, instance->eye_src,
- 		instance->eye_vrt, instance->eye_term,
--		instance->discth);
-+		instance->intr, instance->discth);
- }
- 
- static void u2_phy_props_set(struct mtk_tphy *tphy,
-@@ -895,6 +900,13 @@ static void u2_phy_props_set(struct mtk_tphy *tphy,
- 		writel(tmp, com + U3P_USBPHYACR1);
- 	}
- 
-+	if (instance->intr) {
-+		tmp = readl(com + U3P_USBPHYACR1);
-+		tmp &= ~PA1_RG_INTR_CAL;
-+		tmp |= PA1_RG_INTR_CAL_VAL(instance->intr);
-+		writel(tmp, com + U3P_USBPHYACR1);
-+	}
-+
- 	if (instance->discth) {
- 		tmp = readl(com + U3P_USBPHYACR6);
- 		tmp &= ~PA6_RG_U2_DISCTH;
--- 
-2.23.0
+> > > +examples:
+> > > +  - |
+> > > +    sram@910000 {
+> > > +      compatible = "mmio-sram";
+> > > +      reg = <0x0 0x93f000 0x0 0x1000>;
+> > > +      #address-cells = <1>;
+> > > +      #size-cells = <1>;
+> > > +      ranges = <0 0x0 0x93f000 0x1000>;
+> > > +
+> > > +      cpu_scp_lpri: scp-shmem@0 {
+> > > +        compatible = "arm,scmi-shmem";
+> > > +        reg = <0x0 0x200>;
+> > > +      };
+> > > +
+> > > +      cpu_scp_hpri: scp-shmem@200 {
+> > > +        compatible = "arm,scmi-shmem";
+> > > +        reg = <0x200 0x200>;
+> > > +      };
+> > > +    };
+> > > +
+> > > +    firmware {
+> > > +      smc_mbox: mailbox {
+> > > +        #mbox-cells = <1>;
+> > > +        compatible = "arm,smc-mbox";
+> > > +        method = "smc";
+> > > +        arm,num-chans = <0x2>;
+> > > +        transports = "mem";
+> > > +        /* Optional */
+> > > +        arm,func-ids = <0xc20000fe>, <0xc20000ff>;
+> > >
+> > SMC/HVC is synchronously(block) running in "secure mode", i.e, there can
+> > only be one instance running platform wide. Right?
+>
+> I think there could be channel for TEE, and channel for Linux.
+> For virtualization case, there could be dedicated channel for each VM.
+>
+I am talking from Linux pov. Functions 0xfe and 0xff above, can't both
+be active at the same time, right?
