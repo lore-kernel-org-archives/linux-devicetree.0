@@ -1,264 +1,262 @@
-Return-Path: <SRS0=qnyR=V5=nvidia.com=skomatineni@kernel.org>
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: Re: [PATCH v7 10/20] clk: tegra: clk-dfll: Add suspend and resume
- support
-Date: Thu, 1 Aug 2019 16:10:55 +0000
-Message-ID: <BYAPR12MB3398C388471BC5811614C8FEC2DE0@BYAPR12MB3398.namprd12.prod.outlook.com>
-References: <1564607463-28802-1-git-send-email-skomatineni@nvidia.com>
- <1564607463-28802-11-git-send-email-skomatineni@nvidia.com>
- <4400ffef-685f-b9e6-3b07-4790f851282c@gmail.com>,<501a9d0e-ce78-9b35-642d-dff7f9223926@gmail.com>
-In-Reply-To: <501a9d0e-ce78-9b35-642d-dff7f9223926@gmail.com>
+Return-Path: <SRS0=qJz7=W2=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v10 03/14] media: v4l2-fwnode: add initial connector parsing support
+Date: Fri, 30 Aug 2019 12:16:35 +0200
+Message-Id: <20190830101646.6530-4-m.felsch@pengutronix.de>
+In-Reply-To: <20190830101646.6530-1-m.felsch@pengutronix.de>
+References: <20190830101646.6530-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_BYAPR12MB3398C388471BC5811614C8FEC2DE0BYAPR12MB3398namp_"
-To: Dmitry Osipenko <digetx@gmail.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "stefan@agner.ch" <stefan@agner.ch>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Jui Chang Kuo <jckuo@nvidia.com>, Joseph Lo <josephl@nvidia.com>, Timo Alho <talho@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, Sandipan Patra <spatra@nvidia.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---_000_BYAPR12MB3398C388471BC5811614C8FEC2DE0BYAPR12MB3398namp_
-Content-Type: text/plain; charset="windows-1251"
-Content-Transfer-Encoding: quoted-printable
+The patch adds the initial connector parsing code, so we can move from a
+driver specific parsing code to a generic one. Currently only the
+generic fields and the analog-connector specific fields are parsed. Parsing
+the other connector specific fields can be added by a simple callbacks.
 
-I didn=92t updated any patches. This is still same v7 just resent with CPUF=
-req maintainers in CC as I missed to add them earlier.
-________________________________
-From: Dmitry Osipenko <digetx@gmail.com>
-Sent: Thursday, August 1, 2019 3:37:21 AM
-To: Sowjanya Komatineni <skomatineni@nvidia.com>; thierry.reding@gmail.com =
-<thierry.reding@gmail.com>; Jonathan Hunter <jonathanh@nvidia.com>; tglx@li=
-nutronix.de <tglx@linutronix.de>; jason@lakedaemon.net <jason@lakedaemon.ne=
-t>; marc.zyngier@arm.com <marc.zyngier@arm.com>; linus.walleij@linaro.org <=
-linus.walleij@linaro.org>; stefan@agner.ch <stefan@agner.ch>; mark.rutland@=
-arm.com <mark.rutland@arm.com>
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>; Prashant Gaikwad <pgaikwa=
-d@nvidia.com>; sboyd@kernel.org <sboyd@kernel.org>; linux-clk@vger.kernel.o=
-rg <linux-clk@vger.kernel.org>; linux-gpio@vger.kernel.org <linux-gpio@vger=
-.kernel.org>; Jui Chang Kuo <jckuo@nvidia.com>; Joseph Lo <josephl@nvidia.c=
-om>; Timo Alho <talho@nvidia.com>; linux-tegra@vger.kernel.org <linux-tegra=
-@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.o=
-rg>; Mikko Perttunen <mperttunen@nvidia.com>; Sandipan Patra <spatra@nvidia=
-.com>; robh+dt@kernel.org <robh+dt@kernel.org>; devicetree@vger.kernel.org =
-<devicetree@vger.kernel.org>; rjw@rjwysocki.net <rjw@rjwysocki.net>; viresh=
-.kumar@linaro.org <viresh.kumar@linaro.org>; linux-pm@vger.kernel.org <linu=
-x-pm@vger.kernel.org>
-Subject: Re: [PATCH v7 10/20] clk: tegra: clk-dfll: Add suspend and resume =
-support
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+[1] https://patchwork.kernel.org/cover/10794703/
 
-01.08.2019 13:18, Dmitry Osipenko =EF=E8=F8=E5=F2:
-> 01.08.2019 0:10, Sowjanya Komatineni =EF=E8=F8=E5=F2:
->> This patch implements DFLL suspend and resume operation.
->>
->> During system suspend entry, CPU clock will switch CPU to safe
->> clock source of PLLP and disables DFLL clock output.
->>
->> DFLL driver suspend confirms DFLL disable state and errors out on
->> being active.
->>
->> DFLL is re-initialized during the DFLL driver resume as it goes
->> through complete reset during suspend entry.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>  drivers/clk/tegra/clk-dfll.c               | 56 +++++++++++++++++++++++=
-+++++++
->>  drivers/clk/tegra/clk-dfll.h               |  2 ++
->>  drivers/clk/tegra/clk-tegra124-dfll-fcpu.c |  1 +
->>  3 files changed, 59 insertions(+)
->>
->> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
->> index f8688c2ddf1a..9900097ec2aa 100644
->> --- a/drivers/clk/tegra/clk-dfll.c
->> +++ b/drivers/clk/tegra/clk-dfll.c
->> @@ -1513,6 +1513,62 @@ static int dfll_init(struct tegra_dfll *td)
->>       return ret;
->>  }
->>
->> +/**
->> + * tegra_dfll_suspend - check DFLL is disabled
->> + * @dev: DFLL device *
->> + *
->> + * DFLL clock should be disabled by the CPUFreq driver. So, make
->> + * sure it is disabled and disable all clocks needed by the DFLL.
->> + */
->> +int tegra_dfll_suspend(struct device *dev)
->> +{
->> +    struct tegra_dfll *td =3D dev_get_drvdata(dev);
->> +
->> +    if (dfll_is_running(td)) {
->> +            dev_err(td->dev, "dfll is enabled while shouldn't be\n");
->> +            return -EBUSY;
->> +    }
->> +
->> +    reset_control_assert(td->dvco_rst);
->> +
->> +    return 0;
->> +}
->> +EXPORT_SYMBOL(tegra_dfll_suspend);
->> +
->> +/**
->> + * tegra_dfll_resume - reinitialize DFLL on resume
->> + * @dev: DFLL instance
->> + *
->> + * DFLL is disabled and reset during suspend and resume.
->> + * So, reinitialize the DFLL IP block back for use.
->> + * DFLL clock is enabled later in closed loop mode by CPUFreq
->> + * driver before switching its clock source to DFLL output.
->> + */
->> +int tegra_dfll_resume(struct device *dev)
->> +{
->> +    struct tegra_dfll *td =3D dev_get_drvdata(dev);
->> +
->> +    reset_control_deassert(td->dvco_rst);
->> +
->> +    pm_runtime_irq_safe(td->dev);
->
-> Please see my previous reply.
->
+v10:
+- drop V4L2_CONN_HDMI support
+- adapt pr_err msg to reflect new state (-> connector is unkown)
 
-Also, you should always bump version of the patches no matter what.
-otherwise it turns out very confusing.
+v9:
+- Fix leading semicolon found by kbuild semicolon.cocci
 
---_000_BYAPR12MB3398C388471BC5811614C8FEC2DE0BYAPR12MB3398namp_
-Content-Type: text/html; charset="windows-1251"
-Content-Transfer-Encoding: quoted-printable
+v8:
+- V4L2_CON_* -> V4L2_CONN_*
+- tvnorms -> sdtv-standards
+- adapt to new v4l2_fwnode_connector_analog member
+- return error in case of V4L2_CONN_HDMI
 
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dwindows-1=
-251">
-</head>
-<body>
-I didn=92t updated any patches. This is still same v7 just resent with CPUF=
-req maintainers in CC as I missed to add them earlier.
-<hr style=3D"display:inline-block;width:98%" tabindex=3D"-1">
-<div id=3D"divRplyFwdMsg" dir=3D"ltr"><font face=3D"Calibri, sans-serif" st=
-yle=3D"font-size:11pt" color=3D"#000000"><b>From:</b> Dmitry Osipenko &lt;d=
-igetx@gmail.com&gt;<br>
-<b>Sent:</b> Thursday, August 1, 2019 3:37:21 AM<br>
-<b>To:</b> Sowjanya Komatineni &lt;skomatineni@nvidia.com&gt;; thierry.redi=
-ng@gmail.com &lt;thierry.reding@gmail.com&gt;; Jonathan Hunter &lt;jonathan=
-h@nvidia.com&gt;; tglx@linutronix.de &lt;tglx@linutronix.de&gt;; jason@lake=
-daemon.net &lt;jason@lakedaemon.net&gt;; marc.zyngier@arm.com
- &lt;marc.zyngier@arm.com&gt;; linus.walleij@linaro.org &lt;linus.walleij@l=
-inaro.org&gt;; stefan@agner.ch &lt;stefan@agner.ch&gt;; mark.rutland@arm.co=
-m &lt;mark.rutland@arm.com&gt;<br>
-<b>Cc:</b> Peter De Schrijver &lt;pdeschrijver@nvidia.com&gt;; Prashant Gai=
-kwad &lt;pgaikwad@nvidia.com&gt;; sboyd@kernel.org &lt;sboyd@kernel.org&gt;=
-; linux-clk@vger.kernel.org &lt;linux-clk@vger.kernel.org&gt;; linux-gpio@v=
-ger.kernel.org &lt;linux-gpio@vger.kernel.org&gt;; Jui Chang Kuo
- &lt;jckuo@nvidia.com&gt;; Joseph Lo &lt;josephl@nvidia.com&gt;; Timo Alho =
-&lt;talho@nvidia.com&gt;; linux-tegra@vger.kernel.org &lt;linux-tegra@vger.=
-kernel.org&gt;; linux-kernel@vger.kernel.org &lt;linux-kernel@vger.kernel.o=
-rg&gt;; Mikko Perttunen &lt;mperttunen@nvidia.com&gt;; Sandipan Patra
- &lt;spatra@nvidia.com&gt;; robh&#43;dt@kernel.org &lt;robh&#43;dt@kernel.o=
-rg&gt;; devicetree@vger.kernel.org &lt;devicetree@vger.kernel.org&gt;; rjw@=
-rjwysocki.net &lt;rjw@rjwysocki.net&gt;; viresh.kumar@linaro.org &lt;viresh=
-.kumar@linaro.org&gt;; linux-pm@vger.kernel.org &lt;linux-pm@vger.kernel.or=
-g&gt;<br>
-<b>Subject:</b> Re: [PATCH v7 10/20] clk: tegra: clk-dfll: Add suspend and =
-resume support</font>
-<div>&nbsp;</div>
-</div>
-<div class=3D"BodyFragment"><font size=3D"2"><span style=3D"font-size:11pt;=
-">
-<div class=3D"PlainText">01.08.2019 13:18, Dmitry Osipenko =EF=E8=F8=E5=F2:=
-<br>
-&gt; 01.08.2019 0:10, Sowjanya Komatineni =EF=E8=F8=E5=F2:<br>
-&gt;&gt; This patch implements DFLL suspend and resume operation.<br>
-&gt;&gt;<br>
-&gt;&gt; During system suspend entry, CPU clock will switch CPU to safe<br>
-&gt;&gt; clock source of PLLP and disables DFLL clock output.<br>
-&gt;&gt;<br>
-&gt;&gt; DFLL driver suspend confirms DFLL disable state and errors out on<=
-br>
-&gt;&gt; being active.<br>
-&gt;&gt;<br>
-&gt;&gt; DFLL is re-initialized during the DFLL driver resume as it goes<br=
->
-&gt;&gt; through complete reset during suspend entry.<br>
-&gt;&gt;<br>
-&gt;&gt; Signed-off-by: Sowjanya Komatineni &lt;skomatineni@nvidia.com&gt;<=
-br>
-&gt;&gt; ---<br>
-&gt;&gt;&nbsp; drivers/clk/tegra/clk-dfll.c&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | 56 &#43;&#43;&#43;&#=
-43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#=
-43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;<br>
-&gt;&gt;&nbsp; drivers/clk/tegra/clk-dfll.h&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp; 2 &#43;&#43;<b=
-r>
-&gt;&gt;&nbsp; drivers/clk/tegra/clk-tegra124-dfll-fcpu.c |&nbsp; 1 &#43;<b=
-r>
-&gt;&gt;&nbsp; 3 files changed, 59 insertions(&#43;)<br>
-&gt;&gt;<br>
-&gt;&gt; diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-=
-dfll.c<br>
-&gt;&gt; index f8688c2ddf1a..9900097ec2aa 100644<br>
-&gt;&gt; --- a/drivers/clk/tegra/clk-dfll.c<br>
-&gt;&gt; &#43;&#43;&#43; b/drivers/clk/tegra/clk-dfll.c<br>
-&gt;&gt; @@ -1513,6 &#43;1513,62 @@ static int dfll_init(struct tegra_dfll =
-*td)<br>
-&gt;&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return ret;<br>
-&gt;&gt;&nbsp; }<br>
-&gt;&gt;&nbsp; <br>
-&gt;&gt; &#43;/**<br>
-&gt;&gt; &#43; * tegra_dfll_suspend - check DFLL is disabled<br>
-&gt;&gt; &#43; * @dev: DFLL device *<br>
-&gt;&gt; &#43; *<br>
-&gt;&gt; &#43; * DFLL clock should be disabled by the CPUFreq driver. So, m=
-ake<br>
-&gt;&gt; &#43; * sure it is disabled and disable all clocks needed by the D=
-FLL.<br>
-&gt;&gt; &#43; */<br>
-&gt;&gt; &#43;int tegra_dfll_suspend(struct device *dev)<br>
-&gt;&gt; &#43;{<br>
-&gt;&gt; &#43;&nbsp;&nbsp;&nbsp; struct tegra_dfll *td =3D dev_get_drvdata(=
-dev);<br>
-&gt;&gt; &#43;<br>
-&gt;&gt; &#43;&nbsp;&nbsp;&nbsp; if (dfll_is_running(td)) {<br>
-&gt;&gt; &#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp; dev_err(td-&gt;dev, &quot;dfll is enabled while shouldn't be\n&quot;)=
-;<br>
-&gt;&gt; &#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp; return -EBUSY;<br>
-&gt;&gt; &#43;&nbsp;&nbsp;&nbsp; }<br>
-&gt;&gt; &#43;<br>
-&gt;&gt; &#43;&nbsp;&nbsp;&nbsp; reset_control_assert(td-&gt;dvco_rst);<br>
-&gt;&gt; &#43;<br>
-&gt;&gt; &#43;&nbsp;&nbsp;&nbsp; return 0;<br>
-&gt;&gt; &#43;}<br>
-&gt;&gt; &#43;EXPORT_SYMBOL(tegra_dfll_suspend);<br>
-&gt;&gt; &#43;<br>
-&gt;&gt; &#43;/**<br>
-&gt;&gt; &#43; * tegra_dfll_resume - reinitialize DFLL on resume<br>
-&gt;&gt; &#43; * @dev: DFLL instance<br>
-&gt;&gt; &#43; *<br>
-&gt;&gt; &#43; * DFLL is disabled and reset during suspend and resume.<br>
-&gt;&gt; &#43; * So, reinitialize the DFLL IP block back for use.<br>
-&gt;&gt; &#43; * DFLL clock is enabled later in closed loop mode by CPUFreq=
-<br>
-&gt;&gt; &#43; * driver before switching its clock source to DFLL output.<b=
-r>
-&gt;&gt; &#43; */<br>
-&gt;&gt; &#43;int tegra_dfll_resume(struct device *dev)<br>
-&gt;&gt; &#43;{<br>
-&gt;&gt; &#43;&nbsp;&nbsp;&nbsp; struct tegra_dfll *td =3D dev_get_drvdata(=
-dev);<br>
-&gt;&gt; &#43;<br>
-&gt;&gt; &#43;&nbsp;&nbsp;&nbsp; reset_control_deassert(td-&gt;dvco_rst);<b=
-r>
-&gt;&gt; &#43;<br>
-&gt;&gt; &#43;&nbsp;&nbsp;&nbsp; pm_runtime_irq_safe(td-&gt;dev);<br>
-&gt; <br>
-&gt; Please see my previous reply.<br>
-&gt; <br>
-<br>
-Also, you should always bump version of the patches no matter what.<br>
-otherwise it turns out very confusing.<br>
-</div>
-</span></font></div>
-</body>
-</html>
+v7:
+@Jacopo: I dropped your r b tag becuase of the amount of changes I
+made..
 
---_000_BYAPR12MB3398C388471BC5811614C8FEC2DE0BYAPR12MB3398namp_--
+- drop unnecessary comments
+- fix commet style
+- s/v4l2_fwnode_connector_conv.name/v4l2_fwnode_connector_conv.compatible/
+- make label size variable and drop V4L2_CONNECTOR_MAX_LABEL usage
+- do not assign a default label in case of no label was specified
+- remove useless /* fall through */ comments
+- add support for N connector links
+- rename local variables to be more meaningful
+- adjust kernedoc
+- add v4l2_fwnode_connector_free()
+- improve error handling (use different error values)
+- make use of pr_warn_once()
+
+v6:
+- use unsigned count var
+- fix comment and style issues
+- place '/* fall through */' to correct places
+- fix error handling and cleanup by releasing fwnode
+- drop vga and dvi parsing support as those connectors are rarely used
+  these days
+
+v5:
+- s/strlcpy/strscpy/
+
+v2-v4:
+- nothing since the patch was squashed from series [1] into this
+  series.
+
+ drivers/media/v4l2-core/v4l2-fwnode.c | 129 ++++++++++++++++++++++++++
+ include/media/v4l2-fwnode.h           |  38 ++++++++
+ 2 files changed, 167 insertions(+)
+
+diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+index 3bd1888787eb..0bfa7cbf78df 100644
+--- a/drivers/media/v4l2-core/v4l2-fwnode.c
++++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+@@ -595,6 +595,135 @@ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
+ }
+ EXPORT_SYMBOL_GPL(v4l2_fwnode_put_link);
+ 
++static const struct v4l2_fwnode_connector_conv {
++	enum v4l2_connector_type type;
++	const char *compatible;
++} connectors[] = {
++	{
++		.type = V4L2_CONN_COMPOSITE,
++		.compatible = "composite-video-connector",
++	}, {
++		.type = V4L2_CONN_SVIDEO,
++		.compatible = "svideo-connector",
++	},
++};
++
++static enum v4l2_connector_type
++v4l2_fwnode_string_to_connector_type(const char *con_str)
++{
++	unsigned int i;
++
++	for (i = 0; i < ARRAY_SIZE(connectors); i++)
++		if (!strcmp(con_str, connectors[i].compatible))
++			return connectors[i].type;
++
++	return V4L2_CONN_UNKNOWN;
++}
++
++static int
++v4l2_fwnode_connector_parse_analog(struct fwnode_handle *fwnode,
++				   struct v4l2_fwnode_connector *vc)
++{
++	u32 stds;
++	int ret;
++
++	ret = fwnode_property_read_u32(fwnode, "sdtv-standards", &stds);
++
++	/* The property is optional. */
++	vc->connector.analog.sdtv_stds = ret ? V4L2_STD_ALL : stds;
++
++	return 0;
++}
++
++void v4l2_fwnode_connector_free(struct v4l2_fwnode_connector *connector)
++{
++	unsigned int i;
++
++	if (IS_ERR_OR_NULL(connector))
++		return;
++
++	for (i = 0; i < connector->nr_of_links; i++)
++		v4l2_fwnode_put_link(&connector->links[i]);
++	kfree(connector->links);
++}
++EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_free);
++
++int v4l2_fwnode_connector_alloc_parse(struct fwnode_handle *fwnode,
++				      struct v4l2_fwnode_connector *connector)
++{
++	struct fwnode_handle *remote_pp, *remote_ep;
++	const char *type_name;
++	unsigned int i = 0, ep_num = 0;
++	int err;
++
++	memset(connector, 0, sizeof(*connector));
++
++	remote_pp = fwnode_graph_get_remote_port_parent(fwnode);
++	if (!remote_pp)
++		return -ENOLINK;
++
++	/* Parse all common properties first. */
++	fwnode_graph_for_each_endpoint(remote_pp, remote_ep)
++		ep_num++;
++
++	connector->nr_of_links = ep_num;
++	connector->links = kmalloc_array(ep_num, sizeof(*connector->links),
++					 GFP_KERNEL);
++	if (!connector->links) {
++		err = -ENOMEM;
++		goto err_put_fwnode;
++	}
++
++	fwnode_graph_for_each_endpoint(remote_pp, remote_ep) {
++		err = v4l2_fwnode_parse_link(remote_ep, &connector->links[i]);
++		if (err) {
++			fwnode_handle_put(remote_ep);
++			goto err_free_links;
++		}
++		i++;
++	}
++
++	/*
++	 * Links reference counting guarantees access -> no duplication needed
++	 */
++	fwnode_property_read_string(remote_pp, "label", &connector->label);
++
++	/* The connector-type is stored within the compatible string. */
++	err = fwnode_property_read_string(remote_pp, "compatible", &type_name);
++	if (err) {
++		err = -EINVAL;
++		goto err_free_links;
++	}
++	connector->type = v4l2_fwnode_string_to_connector_type(type_name);
++
++	/* Now parse the connector specific properties. */
++	switch (connector->type) {
++	case V4L2_CONN_COMPOSITE:
++	case V4L2_CONN_SVIDEO:
++		err = v4l2_fwnode_connector_parse_analog(remote_pp, connector);
++		break;
++	case V4L2_CONN_UNKNOWN:
++	default:
++		pr_err("Unknown connector type\n");
++		err = -EINVAL;
++		goto err_free_links;
++	}
++
++	fwnode_handle_put(remote_pp);
++
++	return err;
++
++err_free_links:
++	for (i = 0; i < ep_num; i++)
++		v4l2_fwnode_put_link(&connector->links[i]);
++	kfree(connector->links);
++err_put_fwnode:
++	fwnode_handle_put(remote_pp);
++
++	return err;
++}
++EXPORT_SYMBOL_GPL(v4l2_fwnode_connector_alloc_parse);
++
+ static int
+ v4l2_async_notifier_fwnode_parse_endpoint(struct device *dev,
+ 					  struct v4l2_async_notifier *notifier,
+diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+index 65da646b579e..800302aa84d8 100644
+--- a/include/media/v4l2-fwnode.h
++++ b/include/media/v4l2-fwnode.h
+@@ -276,6 +276,44 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
+  */
+ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link);
+ 
++/**
++ * v4l2_fwnode_connector_free() - free the V4L2 connector acquired by
++ * v4l2_fwnode_parse_connector()
++ * @connector: the V4L2 connector the resources of which are to be released
++ *
++ * Drop references to the connection link partners and free the memory allocated
++ * by v4l2_fwnode_parse_connector() call.
++ *
++ * It is safe to call this function with NULL argument or on a V4L2 connector
++ * the parsing of which failed.
++ */
++void v4l2_fwnode_connector_free(struct v4l2_fwnode_connector *connector);
++
++/**
++ * v4l2_fwnode_parse_connector() - parse the connector on endpoint
++ * @fwnode: pointer to the endpoint's fwnode handle where the connector is
++ *          connected to
++ * @connector: pointer to the V4L2 fwnode connector data structure
++ *
++ * Fill the connector data structure with the connector type, label, all found
++ * links between the host and the connector as well as connector specific data.
++ * Since the label is optional it can be %NULL if no one was found.
++ *
++ * A reference is taken to both the connector and the connector destination
++ * where the connector belongs to. This must be dropped when no longer needed.
++ * Also the memory it has allocated to store the variable size data must be
++ * freed. Both dropping the references and freeing the memory is done by
++ * v4l2_fwnode_connector_free().
++ *
++ * Return:
++ * * %0 on success or a negative error code on failure:
++ * * %-ENOMEM if memory allocation failed
++ * * %-ENOLINK if the connector can't be found
++ * * %-EINVAL on parsing failure
++ */
++int v4l2_fwnode_connector_alloc_parse(struct fwnode_handle *fwnode,
++				      struct v4l2_fwnode_connector *connector);
++
+ /**
+  * typedef parse_endpoint_func - Driver's callback function to be called on
+  *	each V4L2 fwnode endpoint.
+-- 
+2.20.1
