@@ -1,42 +1,63 @@
-From: Henry Chen <henryc.chen@mediatek.com>
-Subject: Re: [PATCH V3 01/10] dt-bindings: soc: Add dvfsrc driver bindings
-Date: Fri, 30 Aug 2019 13:26:38 +0800
-Message-ID: <1567142798.5542.5.camel@mtksdaap41>
-References: <1566995328-15158-1-git-send-email-henryc.chen@mediatek.com>
-         <1566995328-15158-2-git-send-email-henryc.chen@mediatek.com>
-         <20190829191631.GA15714@bogus>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v5, 12/32] drm/mediatek: add mmsys private data for ddp
+ path config
+Date: Fri, 30 Aug 2019 13:27:38 +0800
+Message-ID: <1567142858.5942.6.camel@mtksdaap41>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1567090254-15566-13-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829191631.GA15714@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Stephen Boyd <swboyd@chromium.org>, Ryan Case <ryandcase@chromium.org>, Nicolas Boichat <drinkcat@google.com>, Fan Chen <fan.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1567090254-15566-13-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: yongqiang.niu@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-08-29 at 14:16 -0500, Rob Herring wrote:
-> On Wed, 28 Aug 2019 20:28:39 +0800, Henry Chen wrote:
-> > Document the binding for enabling dvfsrc on MediaTek SoC.
-> > 
-> > Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/soc/mediatek/dvfsrc.txt    | 23 ++++++++++++++++++++++
-> >  include/dt-bindings/soc/mtk,dvfsrc.h               | 14 +++++++++++++
-> >  2 files changed, 37 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
-> >  create mode 100644 include/dt-bindings/soc/mtk,dvfsrc.h
-> > 
-> 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-> 
-> If a tag was not added on purpose, please state why and what changed.
-
-Hi Rob,
-
-I'm sorry for the mistake. I stand corrected, and will add tags on next
-version.
-
-Henry
+SGksIFlvbmdxaWFuZzoKCk9uIFRodSwgMjAxOS0wOC0yOSBhdCAyMjo1MCArMDgwMCwgeW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgbW1zeXMgcHJpdmF0ZSBk
+YXRhIGZvciBkZHAgcGF0aCBjb25maWcKPiBhbGwgdGhlc2UgcmVnaXN0ZXIgb2Zmc2V0IGFuZCB2
+YWx1ZSB3aWxsIGJlIGRpZmZlcmVudCBpbiBmdXR1cmUgU09DCj4gYWRkIHRoZXNlIGRlZmluZSBp
+bnRvIG1tc3lzIHByaXZhdGUgZGF0YQo+IAl1MzIgb3ZsMF9tb3V0X2VuOwo+IAl1MzIgcmRtYTFf
+c291dF9zZWxfaW47Cj4gCXUzMiByZG1hMV9zb3V0X2RzaTA7Cj4gCXUzMiBkcGkwX3NlbF9pbjsK
+PiAJdTMyIGRwaTBfc2VsX2luX3JkbWExOwo+IAl1MzIgZHNpMF9zZWxfaW47Cj4gCXUzMiBkc2kw
+X3NlbF9pbl9yZG1hMTsKPiAKPiBTaWduZWQtb2ZmLWJ5OiBZb25ncWlhbmcgTml1IDx5b25ncWlh
+bmcubml1QG1lZGlhdGVrLmNvbT4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
+a19kcm1fY3J0Yy5jIHwgIDQgKysKPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1f
+ZGRwLmMgIHwgODYgKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tCj4gIGRyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5oICB8ICA1ICsrCj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICB8ICAzICsrCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRp
+YXRlay9tdGtfZHJtX2Rydi5oICB8ICAzICsrCj4gIDUgZmlsZXMgY2hhbmdlZCwgNzYgaW5zZXJ0
+aW9ucygrKSwgMjUgZGVsZXRpb25zKC0pCj4gCgpbc25pcF0KCj4gIAo+ICB2b2lkIG10a19kZHBf
+YWRkX2NvbXBfdG9fcGF0aCh2b2lkIF9faW9tZW0gKmNvbmZpZ19yZWdzLAo+ICsJCQkgICAgICBj
+b25zdCBzdHJ1Y3QgbXRrX21tc3lzX3JlZ19kYXRhICpyZWdfZGF0YSwKPiAgCQkJICAgICAgZW51
+bSBtdGtfZGRwX2NvbXBfaWQgY3VyLAo+ICAJCQkgICAgICBlbnVtIG10a19kZHBfY29tcF9pZCBu
+ZXh0KQo+ICB7Cj4gIAl1bnNpZ25lZCBpbnQgYWRkciwgdmFsdWUsIHJlZzsKPiAgCj4gLQl2YWx1
+ZSA9IG10a19kZHBfbW91dF9lbihjdXIsIG5leHQsICZhZGRyKTsKPiArCXZhbHVlID0gbXRrX2Rk
+cF9tb3V0X2VuKHJlZ19kYXRhLCBjdXIsIG5leHQsICZhZGRyKTsKPiAgCWlmICh2YWx1ZSkgewo+
+ICAJCXJlZyA9IHJlYWRsX3JlbGF4ZWQoY29uZmlnX3JlZ3MgKyBhZGRyKSB8IHZhbHVlOwo+ICAJ
+CXdyaXRlbF9yZWxheGVkKHJlZywgY29uZmlnX3JlZ3MgKyBhZGRyKTsKPiAgCX0KPiAgCj4gLQlt
+dGtfZGRwX3NvdXRfc2VsKGNvbmZpZ19yZWdzLCBjdXIsIG5leHQpOwo+ICsJdmFsdWUgPSBtdGtf
+ZGRwX3NvdXRfc2VsKHJlZ19kYXRhLCBjdXIsIG5leHQsICZhZGRyKTsKPiArCWlmICh2YWx1ZSkK
+PiArCQl3cml0ZWxfcmVsYXhlZCh2YWx1ZSwgY29uZmlnX3JlZ3MgKyBhZGRyKTsKCkkgdGhpbmsg
+dGhlIHJlZ2lzdGVyIGNvdWxkIGJlIHdyaXR0ZW4gaW5zaWRlIG10a19kZHBfc291dF9zZWwoKSwg
+d2h5IGRvCnlvdSBtb3ZlIG91dCBvZiB0aGF0IGZ1bmN0aW9uPwoKUmVnYXJkcywKQ0sKCj4gIAo+
+IC0JdmFsdWUgPSBtdGtfZGRwX3NlbF9pbihjdXIsIG5leHQsICZhZGRyKTsKPiArCXZhbHVlID0g
+bXRrX2RkcF9zZWxfaW4ocmVnX2RhdGEsIGN1ciwgbmV4dCwgJmFkZHIpOwo+ICAJaWYgKHZhbHVl
+KSB7Cj4gIAkJcmVnID0gcmVhZGxfcmVsYXhlZChjb25maWdfcmVncyArIGFkZHIpIHwgdmFsdWU7
+Cj4gIAkJd3JpdGVsX3JlbGF4ZWQocmVnLCBjb25maWdfcmVncyArIGFkZHIpOwo+IEBAIC00MjAs
+MTggKzQ1NSwxOSBAQCB2b2lkIG10a19kZHBfYWRkX2NvbXBfdG9fcGF0aCh2b2lkIF9faW9tZW0g
+KmNvbmZpZ19yZWdzLAo+ICB9Cj4gIAo+ICAKPiAgCgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVs
