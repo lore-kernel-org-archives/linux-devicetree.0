@@ -1,82 +1,94 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [RESEND PATCH 0/5] Add bluetooth support for Orange Pi 3
-Date: Fri, 30 Aug 2019 11:21:04 +0200
-Message-ID: <20190830092104.odipmbflounqpffo@flea>
-References: <20190823103139.17687-1-megous@megous.com>
- <5524D5E9-FA82-4244-A91F-78CF1C3FB3FB@holtmann.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zvsfua4pdi5vswnn"
+From: Biwen Li <biwen.li@nxp.com>
+Subject: [1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
+Date: Fri, 30 Aug 2019 17:17:19 +0800
+Message-ID: <20190830091720.41156-1-biwen.li@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5524D5E9-FA82-4244-A91F-78CF1C3FB3FB@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: megous@megous.com, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org
+To: a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>, Martin Fuzzey <mfuzzey@parkeon.com>
 List-Id: devicetree@vger.kernel.org
 
+Add some properties for pcf85263/pcf85363 as follows:
+  - interrupt-output-pin: string type
+  - quartz-load-capacitance: integer type
+  - quartz-drive-strength: integer type
+  - quartz-low-jitter: bool type
+  - wakeup-source: bool type
 
---zvsfua4pdi5vswnn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+ .../devicetree/bindings/rtc/pcf85363.txt      | 31 +++++++++++++++++++
+ include/dt-bindings/rtc/pcf85363.h            | 15 +++++++++
+ 2 files changed, 46 insertions(+)
+ create mode 100644 include/dt-bindings/rtc/pcf85363.h
 
-Hi Marcel,
-
-On Fri, Aug 30, 2019 at 09:53:16AM +0200, Marcel Holtmann wrote:
-> > (Resend to add missing lists, sorry for the noise.)
-> >
-> > This series implements bluetooth support for Xunlong Orange Pi 3 board.
-> >
-> > The board uses AP6256 WiFi/BT 5.0 chip.
-> >
-> > Summary of changes:
-> >
-> > - add more delay to let initialize the chip
-> > - let the kernel detect firmware file path
-> > - add new compatible and update dt-bindings
-> > - update Orange Pi 3 / H6 DTS
-> >
-> > Please take a look.
-> >
-> > thank you and regards,
-> >  Ondrej Jirman
-> >
-> > Ondrej Jirman (5):
-> >  dt-bindings: net: Add compatible for BCM4345C5 bluetooth device
-> >  bluetooth: bcm: Add support for loading firmware for BCM4345C5
-> >  bluetooth: hci_bcm: Give more time to come out of reset
-> >  arm64: dts: allwinner: h6: Add pin configs for uart1
-> >  arm64: dts: allwinner: orange-pi-3: Enable UART1 / Bluetooth
-> >
-> > .../bindings/net/broadcom-bluetooth.txt       |  1 +
-> > .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 19 +++++++++++++++++++
-> > arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 10 ++++++++++
-> > drivers/bluetooth/btbcm.c                     |  3 +++
-> > drivers/bluetooth/hci_bcm.c                   |  3 ++-
-> > 5 files changed, 35 insertions(+), 1 deletion(-)
->
-> all 5 patches have been applied to bluetooth-next tree.
-
-The DTS patches (last 2) should go through the arm-soc tree, can you
-drop them?
-
-Thanks!
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---zvsfua4pdi5vswnn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXWjqgAAKCRDj7w1vZxhR
-xV8CAP417aV0QNmWtbn2xiBjkD9flY36PSlMOjyVjsX2zxv2GgEAyCygOXXu4S1z
-X+AQg5RIlPCGhi8UpGGBfw2i1qEr5gQ=
-=bUKu
------END PGP SIGNATURE-----
-
---zvsfua4pdi5vswnn--
+diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+index 94adc1cf93d9..d83359990bd7 100644
+--- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
++++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+@@ -8,10 +8,41 @@ Required properties:
+ Optional properties:
+ - interrupts: IRQ line for the RTC (not implemented).
+ 
++- interrupt-output-pin: The interrupt output pin must be
++  "NONE", "INTA" or "INTB", default value is "NONE"
++
++- quartz-load-capacitance: The internal capacitor to select for the quartz:
++	PCF85263_QUARTZCAP_7pF		[0]
++	PCF85263_QUARTZCAP_6pF		[1]
++	PCF85263_QUARTZCAP_12p5pF	[2] DEFAULT
++
++- quartz-drive-strength: Drive strength for the quartz:
++	PCF85263_QUARTZDRIVE_NORMAL	[0] DEFAULT
++	PCF85263_QUARTZDRIVE_LOW	[1]
++	PCF85263_QUARTZDRIVE_HIGH	[2]
++
++- quartz-low-jitter: Boolean property, if present enables low jitter mode
++  which reduces jitter at the cost of increased power consumption.
++
++- wakeup-source: Boolean property, mark the chip as a wakeup source,
++  independently of the availability of an IRQ line connected to the SoC.
++  This is useful if the IRQ line is connected to a PMIC or other circuit
++  that can power up the device rather than to a normal SOC interrupt.
++
+ Example:
+ 
+ pcf85363: pcf85363@51 {
+ 	compatible = "nxp,pcf85363";
+ 	reg = <0x51>;
++
++	interrupt-parent = <&gpio1>;
++	interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
++
++	#include <dt-bindings/rtc/pcf85363.h>
++	wakeup-source;
++	interrupt-output-pin = "INTA";
++	quartz-load-capacitance = <PCF85363_QUARTZCAP_12p5pF>;
++	quartz-drive-strength = <PCF85363_QUARTZDRIVE_LOW>;
++	quartz-low-jitter;
+ };
+ 
+diff --git a/include/dt-bindings/rtc/pcf85363.h b/include/dt-bindings/rtc/pcf85363.h
+new file mode 100644
+index 000000000000..2c06c28eb5ff
+--- /dev/null
++++ b/include/dt-bindings/rtc/pcf85363.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _DT_BINDINGS_RTC_PCF85363_H
++#define _DT_BINDINGS_RTC_PCF85363_H
++
++/* Quartz capacitance */
++#define PCF85363_QUARTZCAP_7pF		0
++#define PCF85363_QUARTZCAP_6pF		1
++#define PCF85363_QUARTZCAP_12p5pF	2
++
++/* Quartz drive strength */
++#define PCF85363_QUARTZDRIVE_NORMAL	0
++#define PCF85363_QUARTZDRIVE_LOW	1
++#define PCF85363_QUARTZDRIVE_HIGH	2
++
++#endif /* _DT_BINDINGS_RTC_PCF85363_H */
+-- 
+2.17.1
