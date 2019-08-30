@@ -1,211 +1,173 @@
-From: houlong wei <houlong.wei@mediatek.com>
-Subject: Re: [PATCH v14 07/10] soc: mediatek: cmdq: define the instruction
- struct
-Date: Fri, 30 Aug 2019 10:23:43 +0800
-Message-ID: <1567131823.24642.4.camel@mhfsdcap03>
-References: <20190829014817.25482-1-bibby.hsieh@mediatek.com>
-         <20190829014817.25482-9-bibby.hsieh@mediatek.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Date: Fri, 30 Aug 2019 02:47:13 +0000
+Message-ID: <AM0PR04MB448110EA89B23DBAD9EE305B88BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
+ <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
+ <20190828135802.GB21614@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829014817.25482-9-bibby.hsieh@mediatek.com>
+In-Reply-To: <20190828135802.GB21614@e107155-lin>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?= <ck.hu@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>, Dennis-YC Hsieh =?UTF-8?Q?=28=E8=AC=9D=E5=AE=87=E5=93=B2=29?= <Dennis-YC.Hsieh@mediatek.com>, houlong.wei@mediatek.com
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-08-29 at 09:48 +0800, Bibby Hsieh wrote:
-> Define an instruction structure for gce driver to append command.
-> This structure can make the client's code more readability.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> Reviewed-by: CK Hu <ck.hu@mediatek.com>
-> Reviewed-by: Houlong Wei <houlong.wei@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c   | 77 ++++++++++++++++--------
->  include/linux/mailbox/mtk-cmdq-mailbox.h | 10 +++
->  2 files changed, 61 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> index 7aa0517ff2f3..9472526ab076 100644
-> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -9,12 +9,24 @@
->  #include <linux/mailbox_controller.h>
->  #include <linux/soc/mediatek/mtk-cmdq.h>
->  
-> -#define CMDQ_ARG_A_WRITE_MASK	0xffff
->  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
->  #define CMDQ_EOC_IRQ_EN		BIT(0)
->  #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
->  				<< 32 | CMDQ_EOC_IRQ_EN)
->  
-> +struct cmdq_instruction {
-> +	union {
-> +		u32 value;
-> +		u32 mask;
-> +	};
-> +	union {
-> +		u16 offset;
-> +		u16 event;
-> +	};
-> +	u8 subsys;
-> +	u8 op;
-> +};
-> +
->  static void cmdq_client_timeout(struct timer_list *t)
->  {
->  	struct cmdq_client *client = from_timer(client, t, timer);
-> @@ -110,10 +122,10 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
->  }
->  EXPORT_SYMBOL(cmdq_pkt_destroy);
->  
-> -static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
-> -				   u32 arg_a, u32 arg_b)
-> +static int cmdq_pkt_append_command(struct cmdq_pkt *pkt,
-> +				   struct cmdq_instruction inst)
+> Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the=
+ ARM
+> SMC/HVC mailbox
+>=20
+> On Wed, Aug 28, 2019 at 03:02:58AM +0000, Peng Fan wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > The ARM SMC/HVC mailbox binding describes a firmware interface to
+> > trigger actions in software layers running in the EL2 or EL3 exception =
+levels.
+> > The term "ARM" here relates to the SMC instruction as part of the ARM
+> > instruction set, not as a standard endorsed by ARM Ltd.
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >  .../devicetree/bindings/mailbox/arm-smc.yaml       | 125
+> +++++++++++++++++++++
+> >  1 file changed, 125 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> > b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> > new file mode 100644
+> > index 000000000000..f8eb28d5e307
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> > @@ -0,0 +1,125 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause) %YAML 1.2
+> > +---
+> > +$id:
+> > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdev=
+i
+> >
+> +cetree.org%2Fschemas%2Fmailbox%2Farm-smc.yaml%23&amp;data=3D02%7
+> C01%7Cp
+> >
+> +eng.fan%40nxp.com%7C37aa729c94944730868b08d72bbfc121%7C686ea1
+> d3bc2b4c
+> >
+> +6fa92cd99c5c301635%7C0%7C1%7C637025974936865698&amp;sdata=3DInp
+> %2FLs39m
+> > +Gv1fe3dZMSaGmgmyWPT6awPh47s3mEtQ%2BQ%3D&amp;reserved=3D0
+> > +$schema:
+> > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdev=
+i
+> >
+> +cetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=3D02%7C01%7Cpe
+> ng.fan%
+> >
+> +40nxp.com%7C37aa729c94944730868b08d72bbfc121%7C686ea1d3bc2b4c
+> 6fa92cd9
+> >
+> +9c5c301635%7C0%7C1%7C637025974936865698&amp;sdata=3DjmoR1Qqm7
+> 6N5NwDbgFE
+> > +Fm8cpdW%2B%2FgqmG9mSGz9mXv58%3D&amp;reserved=3D0
+> > +
+> > +title: ARM SMC Mailbox Interface
+> > +
+> > +maintainers:
+> > +  - Peng Fan <peng.fan@nxp.com>
+> > +
+> > +description: |
+> > +  This mailbox uses the ARM smc (secure monitor call) and hvc
+> > +(hypervisor
+> > +  call) instruction to trigger a mailbox-connected activity in
+> > +firmware,
+> > +  executing on the very same core as the caller. By nature this
+> > +operation
+> > +  is synchronous and this mailbox provides no way for asynchronous
+> > +messages
+> > +  to be delivered the other way round, from firmware to the OS, but
+>=20
+>=20
+> > +  asynchronous notification could also be supported.
+>=20
+> What do you mean by that ? I would prefer to drop the above line unless I=
+ am
 
-Can we use 'struct cmdq_instruction *inst' instead of 'struct
-cmdq_instruction inst' to reduce stack memory consumption a bit?
+Ok. Dropped it in v6.
 
->  {
-> -	u64 *cmd_ptr;
-> +	struct cmdq_instruction *cmd_ptr;
->  
->  	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
->  		/*
-> @@ -129,8 +141,9 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
->  			__func__, (u32)pkt->buf_size);
->  		return -ENOMEM;
->  	}
-> +
->  	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
-> -	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
-> +	*cmd_ptr = inst;
->  	pkt->cmd_buf_size += CMDQ_INST_SIZE;
->  
->  	return 0;
-> @@ -138,24 +151,31 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
->  
->  int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
->  {
-> -	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
-> -		    (subsys << CMDQ_SUBSYS_SHIFT);
-> +	struct cmdq_instruction inst;
-> +
-> +	inst.op = CMDQ_CODE_WRITE;
-> +	inst.value = value;
-> +	inst.offset = offset;
-> +	inst.subsys = subsys;
->  
-> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
-> +	return cmdq_pkt_append_command(pkt, inst);
->  }
->  EXPORT_SYMBOL(cmdq_pkt_write);
->  
->  int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
->  			u16 offset, u32 value, u32 mask)
->  {
-> -	u32 offset_mask = offset;
-> +	struct cmdq_instruction inst = { {0} };
-> +	u16 offset_mask = offset;
->  	int err = 0;
->  
->  	if (mask != 0xffffffff) {
-> -		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
-> +		inst.op = CMDQ_CODE_MASK;
-> +		inst.mask = ~mask;
-> +		err = cmdq_pkt_append_command(pkt, inst);
->  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
->  	}
-> -	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
-> +	err |= cmdq_pkt_write(pkt, subsys, offset_mask, value);
->  
->  	return err;
->  }
-> @@ -163,43 +183,48 @@ EXPORT_SYMBOL(cmdq_pkt_write_mask);
->  
->  int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event)
->  {
-> -	u32 arg_b;
-> +	struct cmdq_instruction inst = { {0} };
->  
->  	if (event >= CMDQ_MAX_EVENT)
->  		return -EINVAL;
->  
-> -	/*
-> -	 * WFE arg_b
-> -	 * bit 0-11: wait value
-> -	 * bit 15: 1 - wait, 0 - no wait
-> -	 * bit 16-27: update value
-> -	 * bit 31: 1 - update, 0 - no update
-> -	 */
-> -	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
-> +	inst.op = CMDQ_CODE_WFE;
-> +	inst.value = CMDQ_WFE_OPTION;
-> +	inst.event = event;
->  
-> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
-> +	return cmdq_pkt_append_command(pkt, inst);
->  }
->  EXPORT_SYMBOL(cmdq_pkt_wfe);
->  
->  int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
->  {
-> +	struct cmdq_instruction inst = { {0} };
-> +
->  	if (event >= CMDQ_MAX_EVENT)
->  		return -EINVAL;
->  
-> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
-> -				       CMDQ_WFE_UPDATE);
-> +	inst.op = CMDQ_CODE_WFE;
-> +	inst.value = CMDQ_WFE_UPDATE;
-> +	inst.event = event;
-> +
-> +	return cmdq_pkt_append_command(pkt, inst);
->  }
->  EXPORT_SYMBOL(cmdq_pkt_clear_event);
->  
->  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
->  {
-> -	int err;
-> +	struct cmdq_instruction inst = { {0} };
-> +	int err = 0;
->  
->  	/* insert EOC and generate IRQ for each command iteration */
-> -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
-> +	inst.op = CMDQ_CODE_EOC;
-> +	inst.value = CMDQ_EOC_IRQ_EN;
-> +	err = cmdq_pkt_append_command(pkt, inst);
->  
->  	/* JUMP to end */
-> -	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
-> +	inst.op = CMDQ_CODE_JUMP;
-> +	inst.value = CMDQ_JUMP_PASS;
-> +	err |= cmdq_pkt_append_command(pkt, inst);
->  
->  	return err;
->  }
-> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> index e6f54ef6698b..678760548791 100644
-> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> @@ -20,6 +20,16 @@
->  #define CMDQ_WFE_WAIT			BIT(15)
->  #define CMDQ_WFE_WAIT_VALUE		0x1
->  
-> +/*
-> + * WFE arg_b
-> + * bit 0-11: wait value
-> + * bit 15: 1 - wait, 0 - no wait
-> + * bit 16-27: update value
-> + * bit 31: 1 - update, 0 - no update
-> + */
-> +#define CMDQ_WFE_OPTION			(CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
-> +					CMDQ_WFE_WAIT_VALUE)
-> +
->  /** cmdq event maximum */
->  #define CMDQ_MAX_EVENT			0x3ff
->  
+> missing something. IMO it contradicts the previous statement less you
+> elaborate more on this.
+>=20
+> > However the value of
+> > +  r0/w0/x0 the firmware returns after the smc call is delivered as a
+> > + received  message to the mailbox framework, so a synchronous
+> > + communication can be  established, for a asynchronous notification, n=
+o
+> value will be returned.
+>=20
+> I assume you refer to asynchronous communication from OS to firmware in
+> the above statement and "not asynchronous notification" from firmware to
+> OS.
+
+Since asynchronous notification dropped, so it should only be
+synchronous communication could be established. So I'll
+modify it as below:
+
+r0/w0/x0 the firmware returns after the smc call is delivered as a received
+message to the mailbox framework, so synchronous communication can be
+established
+
+>=20
+> > +  The exact meaning of both the action the mailbox triggers as well
+> > + as the  return value is defined by their users and is not subject to =
+this
+> binding.
+> > +
+> > +  One use case of this mailbox is the SCMI interface, which uses
+> > + shared memory  to transfer commands and parameters, and a mailbox
+> to
+> > + trigger a function  call. This allows SoCs without a separate
+> > + management processor (or when  such a processor is not available or
+> > + used) to use this standardized  interface anyway.
+> > +
+>=20
+> Not sure if reference to SCMI is needed at all but I don't have any objec=
+tions
+> to it, just thought worth mentioning.
+>=20
+> > +  This binding describes no hardware, but establishes a firmware
+> interface.
+> > +  Upon receiving an SMC using one of the described SMC function
+> > + identifiers,  the firmware is expected to trigger some mailbox connec=
+ted
+> functionality.
+> > +  The communication follows the ARM SMC calling convention.
+> > +  Firmware expects an SMC function identifier in r0 or w0. The
+> > + supported  identifiers are passed from consumers, or listed in the
+> > + the arm,func-ids  properties as described below. The firmware can
+> > + return one value in  the first SMC result register, it is expected
+> > + to be an error value,  which shall be propagated to the mailbox clien=
+t.
+> > +
+> > +  Any core which supports the SMC or HVC instruction can be used, as
+> > + long as  a firmware component running in EL3 or EL2 is handling these
+> calls.
+> > +
+>=20
+>=20
+> Other than the above points, I am fine with it. Once fixed,
+>=20
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+
+Thanks,
+Peng.
+
+>=20
+> Note I haven't reviewed the yaml scheme, but just binding in general.
+>=20
+> --
+> Regards,
+> Sudeep
