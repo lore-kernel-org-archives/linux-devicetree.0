@@ -1,46 +1,56 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/5] ASoC: dt-bindings: sun4i-spdif: Fix dma-names
- warning
-Date: Fri, 30 Aug 2019 10:42:40 -0500
-Message-ID: <CAL_JsqJBs_vmqbe9DmEjNJR3YO6-3mnyxrTbYq0b++0eGJnU3w@mail.gmail.com>
-References: <20190828125209.28173-1-mripard@kernel.org>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH 0/5] dt-bindings: arm: idle-states: Miscellaneous improvements
+Date: Fri, 30 Aug 2019 21:25:23 +0530
+Message-ID: <CAP245DUWP6+2CyV2QA-Awo8JOUFjzjZmPHjM1On8XOyDbKGSHw@mail.gmail.com>
+References: <20190830150302.20551-1-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190828125209.28173-1-mripard@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190830150302.20551-1-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Nicolas Pitre <nico@linaro.org>, Sebastian Capella <sebcape@gmail.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 7:52 AM Maxime Ripard <mripard@kernel.org> wrote:
+On Fri, Aug 30, 2019 at 8:33 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 >
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
+>   - Replace abbreviations "eg" and "ie" by "e.g." resp. "i.e.",
+>   - Correct references to wake-up delay,
+>   - Correct "constraints guarantees" to "constraint guarantees",
+>   - Add punctuation marks to improve readability,
+>   - Move exit-latency-us explanation to exit-latency-us section.
 >
-> Even though the H6 compatible has been properly added, the exeption for the
-> number of DMA channels hasn't been updated, leading in a validation
-> warning.
->
-> Fix this.
->
-> Fixes: b20453031472 ("dt-bindings: sound: sun4i-spdif: Add Allwinner H6 compatible")
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
->
-> ---
->
-> Changes from v1:
->   - Fix subject prefix
-> ---
->  .../devicetree/bindings/sound/allwinner,sun4i-a10-spdif.yaml  | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This improves the readability of the doc. So for the series, feel free to add
+
+Reviewed-by:  Amit Kucheria <amit.kucheria@linaro.org>
+
+> ---
+> Split to ease review.
+> Feel free to squash into a single commit.
+>
+> Geert Uytterhoeven (5):
+>   dt-bindings: arm: idle-states: Use "e.g." and "i.e." consistently
+>   dt-bindings: arm: idle-states: Correct references to wake-up delay
+>   dt-bindings: arm: idle-states: Correct "constraint guarantees"
+>   dt-bindings: arm: idle-states: Add punctuation to improve readability
+>   dt-bindings: arm: idle-states: Move exit-latency-us explanation
+>
+>  .../devicetree/bindings/arm/idle-states.txt   | 32 +++++++++----------
+>  1 file changed, 16 insertions(+), 16 deletions(-)
+>
+> --
+> 2.17.1
+>
+> Gr{oetje,eeting}s,
+>
+>                                                 Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                                             -- Linus Torvalds
