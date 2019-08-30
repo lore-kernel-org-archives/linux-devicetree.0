@@ -1,8 +1,7 @@
 From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v3 14/16] ARM: mmp: remove MMP3 USB PHY registers from
- regs-usb.h
-Date: Sat, 31 Aug 2019 00:07:41 +0200
-Message-ID: <20190830220743.439670-15-lkundrak@v3.sk>
+Subject: [PATCH v3 13/16] ARM: mmp: move cputype.h to include/linux/soc/
+Date: Sat, 31 Aug 2019 00:07:40 +0200
+Message-ID: <20190830220743.439670-14-lkundrak@v3.sk>
 References: <20190830220743.439670-1-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,117 +21,144 @@ To: "To : Olof Johansson" <olof@lixom.net>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Lubomir Rintel <lkundrak@v3.sk>, "Cc : Rob Herring" <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Nothing in mach-mmp/ uses them and they belong to the PHY driver.
+Let's move cputype.h away from mach-mmp/ so that the drivers outside that
+directory are able to tell the precise silicon revision. The MMP3 USB OTG
+PHY driver needs this.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/mach-mmp/regs-usb.h | 94 ------------------------------------
- 1 file changed, 94 deletions(-)
+ MAINTAINERS                                            | 1 +
+ arch/arm/mach-mmp/common.c                             | 2 +-
+ arch/arm/mach-mmp/devices.c                            | 2 +-
+ arch/arm/mach-mmp/mmp2.c                               | 2 +-
+ arch/arm/mach-mmp/pm-mmp2.c                            | 2 +-
+ arch/arm/mach-mmp/pm-pxa910.c                          | 2 +-
+ arch/arm/mach-mmp/pxa168.c                             | 2 +-
+ arch/arm/mach-mmp/pxa910.c                             | 2 +-
+ arch/arm/mach-mmp/time.c                               | 2 +-
+ {arch/arm/mach-mmp => include/linux/soc/mmp}/cputype.h | 0
+ 10 files changed, 9 insertions(+), 8 deletions(-)
+ rename {arch/arm/mach-mmp => include/linux/soc/mmp}/cputype.h (100%)
 
-diff --git a/arch/arm/mach-mmp/regs-usb.h b/arch/arm/mach-mmp/regs-usb.h
-index d9f08c1601542..ed0d1aa0ad6c9 100644
---- a/arch/arm/mach-mmp/regs-usb.h
-+++ b/arch/arm/mach-mmp/regs-usb.h
-@@ -121,100 +121,6 @@
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9cbcf167bdd08..176ef19f0b9db 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10797,6 +10797,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Odd Fixes
+ F:	arch/arm/boot/dts/mmp*
+ F:	arch/arm/mach-mmp/
++F:	linux/soc/mmp/
  
- #define UTMI_OTG_ADDON_OTG_ON			(1 << 0)
+ MMU GATHER AND TLB INVALIDATION
+ M:	Will Deacon <will@kernel.org>
+diff --git a/arch/arm/mach-mmp/common.c b/arch/arm/mach-mmp/common.c
+index 24c689a01ecb7..e94349d4726ca 100644
+--- a/arch/arm/mach-mmp/common.c
++++ b/arch/arm/mach-mmp/common.c
+@@ -13,7 +13,7 @@
+ #include <asm/mach/map.h>
+ #include <asm/system_misc.h>
+ #include "addr-map.h"
+-#include "cputype.h"
++#include <linux/soc/mmp/cputype.h>
  
--/* For MMP3 USB Phy */
--#define USB2_PLL_REG0		0x4
--#define USB2_PLL_REG1		0x8
--#define USB2_TX_REG0		0x10
--#define USB2_TX_REG1		0x14
--#define USB2_TX_REG2		0x18
--#define USB2_RX_REG0		0x20
--#define USB2_RX_REG1		0x24
--#define USB2_RX_REG2		0x28
--#define USB2_ANA_REG0		0x30
--#define USB2_ANA_REG1		0x34
--#define USB2_ANA_REG2		0x38
--#define USB2_DIG_REG0		0x3C
--#define USB2_DIG_REG1		0x40
--#define USB2_DIG_REG2		0x44
--#define USB2_DIG_REG3		0x48
--#define USB2_TEST_REG0		0x4C
--#define USB2_TEST_REG1		0x50
--#define USB2_TEST_REG2		0x54
--#define USB2_CHARGER_REG0	0x58
--#define USB2_OTG_REG0		0x5C
--#define USB2_PHY_MON0		0x60
--#define USB2_RESETVE_REG0	0x64
--#define USB2_ICID_REG0		0x78
--#define USB2_ICID_REG1		0x7C
--
--/* USB2_PLL_REG0 */
--/* This is for Ax stepping */
--#define USB2_PLL_FBDIV_SHIFT_MMP3		0
--#define USB2_PLL_FBDIV_MASK_MMP3		(0xFF << 0)
--
--#define USB2_PLL_REFDIV_SHIFT_MMP3		8
--#define USB2_PLL_REFDIV_MASK_MMP3		(0xF << 8)
--
--#define USB2_PLL_VDD12_SHIFT_MMP3		12
--#define USB2_PLL_VDD18_SHIFT_MMP3		14
--
--/* This is for B0 stepping */
--#define USB2_PLL_FBDIV_SHIFT_MMP3_B0		0
--#define USB2_PLL_REFDIV_SHIFT_MMP3_B0		9
--#define USB2_PLL_VDD18_SHIFT_MMP3_B0		14
--#define USB2_PLL_FBDIV_MASK_MMP3_B0		0x01FF
--#define USB2_PLL_REFDIV_MASK_MMP3_B0		0x3E00
--
--#define USB2_PLL_CAL12_SHIFT_MMP3		0
--#define USB2_PLL_CALI12_MASK_MMP3		(0x3 << 0)
--
--#define USB2_PLL_VCOCAL_START_SHIFT_MMP3	2
--
--#define USB2_PLL_KVCO_SHIFT_MMP3		4
--#define USB2_PLL_KVCO_MASK_MMP3			(0x7<<4)
--
--#define USB2_PLL_ICP_SHIFT_MMP3			8
--#define USB2_PLL_ICP_MASK_MMP3			(0x7<<8)
--
--#define USB2_PLL_LOCK_BYPASS_SHIFT_MMP3		12
--
--#define USB2_PLL_PU_PLL_SHIFT_MMP3		13
--#define USB2_PLL_PU_PLL_MASK			(0x1 << 13)
--
--#define USB2_PLL_READY_MASK_MMP3		(0x1 << 15)
--
--/* USB2_TX_REG0 */
--#define USB2_TX_IMPCAL_VTH_SHIFT_MMP3		8
--#define USB2_TX_IMPCAL_VTH_MASK_MMP3		(0x7 << 8)
--
--#define USB2_TX_RCAL_START_SHIFT_MMP3		13
--
--/* USB2_TX_REG1 */
--#define USB2_TX_CK60_PHSEL_SHIFT_MMP3		0
--#define USB2_TX_CK60_PHSEL_MASK_MMP3		(0xf << 0)
--
--#define USB2_TX_AMP_SHIFT_MMP3			4
--#define USB2_TX_AMP_MASK_MMP3			(0x7 << 4)
--
--#define USB2_TX_VDD12_SHIFT_MMP3		8
--#define USB2_TX_VDD12_MASK_MMP3			(0x3 << 8)
--
--/* USB2_TX_REG2 */
--#define USB2_TX_DRV_SLEWRATE_SHIFT		10
--
--/* USB2_RX_REG0 */
--#define USB2_RX_SQ_THRESH_SHIFT_MMP3		4
--#define USB2_RX_SQ_THRESH_MASK_MMP3		(0xf << 4)
--
--#define USB2_RX_SQ_LENGTH_SHIFT_MMP3		10
--#define USB2_RX_SQ_LENGTH_MASK_MMP3		(0x3 << 10)
--
--/* USB2_ANA_REG1*/
--#define USB2_ANA_PU_ANA_SHIFT_MMP3		14
--
--/* USB2_OTG_REG0 */
--#define USB2_OTG_PU_OTG_SHIFT_MMP3		3
--
- /* fsic registers */
- #define FSIC_MISC			0x4
- #define FSIC_INT			0x28
+ #include "common.h"
+ 
+diff --git a/arch/arm/mach-mmp/devices.c b/arch/arm/mach-mmp/devices.c
+index 130c1a603ba29..18bee66a671ff 100644
+--- a/arch/arm/mach-mmp/devices.c
++++ b/arch/arm/mach-mmp/devices.c
+@@ -11,7 +11,7 @@
+ #include <asm/irq.h>
+ #include "irqs.h"
+ #include "devices.h"
+-#include "cputype.h"
++#include <linux/soc/mmp/cputype.h>
+ #include "regs-usb.h"
+ 
+ int __init pxa_register_device(struct pxa_device_desc *desc,
+diff --git a/arch/arm/mach-mmp/mmp2.c b/arch/arm/mach-mmp/mmp2.c
+index 18ea3e1a26e69..bbc4c2274de3a 100644
+--- a/arch/arm/mach-mmp/mmp2.c
++++ b/arch/arm/mach-mmp/mmp2.c
+@@ -20,7 +20,7 @@
+ #include <asm/mach/time.h>
+ #include "addr-map.h"
+ #include "regs-apbc.h"
+-#include "cputype.h"
++#include <linux/soc/mmp/cputype.h>
+ #include "irqs.h"
+ #include "mfp.h"
+ #include "devices.h"
+diff --git a/arch/arm/mach-mmp/pm-mmp2.c b/arch/arm/mach-mmp/pm-mmp2.c
+index 2923dd5732a62..2d86381e152d6 100644
+--- a/arch/arm/mach-mmp/pm-mmp2.c
++++ b/arch/arm/mach-mmp/pm-mmp2.c
+@@ -17,7 +17,7 @@
+ #include <linux/interrupt.h>
+ #include <asm/mach-types.h>
+ 
+-#include "cputype.h"
++#include <linux/soc/mmp/cputype.h>
+ #include "addr-map.h"
+ #include "pm-mmp2.h"
+ #include "regs-icu.h"
+diff --git a/arch/arm/mach-mmp/pm-pxa910.c b/arch/arm/mach-mmp/pm-pxa910.c
+index 58535ce206dc5..69ebe18ff209f 100644
+--- a/arch/arm/mach-mmp/pm-pxa910.c
++++ b/arch/arm/mach-mmp/pm-pxa910.c
+@@ -18,7 +18,7 @@
+ #include <asm/mach-types.h>
+ #include <asm/outercache.h>
+ 
+-#include "cputype.h"
++#include <linux/soc/mmp/cputype.h>
+ #include "addr-map.h"
+ #include "pm-pxa910.h"
+ #include "regs-icu.h"
+diff --git a/arch/arm/mach-mmp/pxa168.c b/arch/arm/mach-mmp/pxa168.c
+index 6e02774889679..b642e900727a5 100644
+--- a/arch/arm/mach-mmp/pxa168.c
++++ b/arch/arm/mach-mmp/pxa168.c
+@@ -21,7 +21,7 @@
+ #include "addr-map.h"
+ #include "clock.h"
+ #include "common.h"
+-#include "cputype.h"
++#include <linux/soc/mmp/cputype.h>
+ #include "devices.h"
+ #include "irqs.h"
+ #include "mfp.h"
+diff --git a/arch/arm/mach-mmp/pxa910.c b/arch/arm/mach-mmp/pxa910.c
+index cba31c758dea6..b19a069d9fabe 100644
+--- a/arch/arm/mach-mmp/pxa910.c
++++ b/arch/arm/mach-mmp/pxa910.c
+@@ -18,7 +18,7 @@
+ #include <asm/mach/time.h>
+ #include "addr-map.h"
+ #include "regs-apbc.h"
+-#include "cputype.h"
++#include <linux/soc/mmp/cputype.h>
+ #include "irqs.h"
+ #include "mfp.h"
+ #include "devices.h"
+diff --git a/arch/arm/mach-mmp/time.c b/arch/arm/mach-mmp/time.c
+index 8f4cacbf640e9..110dcb3314d13 100644
+--- a/arch/arm/mach-mmp/time.c
++++ b/arch/arm/mach-mmp/time.c
+@@ -33,7 +33,7 @@
+ #include "regs-timers.h"
+ #include "regs-apbc.h"
+ #include "irqs.h"
+-#include "cputype.h"
++#include <linux/soc/mmp/cputype.h>
+ #include "clock.h"
+ 
+ #define TIMERS_VIRT_BASE	TIMERS1_VIRT_BASE
+diff --git a/arch/arm/mach-mmp/cputype.h b/include/linux/soc/mmp/cputype.h
+similarity index 100%
+rename from arch/arm/mach-mmp/cputype.h
+rename to include/linux/soc/mmp/cputype.h
 -- 
 2.21.0
