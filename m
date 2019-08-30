@@ -1,68 +1,48 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v2 02/11] dt-bindings: phy-mtk-tphy: make the ref clock
- optional
-Date: Fri, 30 Aug 2019 15:14:49 +0800
-Message-ID: <1567149298-29366-2-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v2 04/11] dt-bindings: phy-mtk-tphy: add a new reference clock
+Date: Fri, 30 Aug 2019 15:14:51 +0800
+Message-ID: <1567149298-29366-4-git-send-email-chunfeng.yun@mediatek.com>
 References: <1567149298-29366-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1567149298-29366-1-git-send-email-chunfeng.yun@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Make the ref clock optional, then we no need refer to a fixed-clock
-in DTS anymore when the clock of USB3 PHY comes from oscillator
-directly
+Usually the digital and analog phys use the same reference clock,
+but on some platforms, they are separated, so add another optional
+clock to support it.
+In order to keep the clock names consistent with PHY IP's, use
+the da_ref for analog phy and ref clock for digital phy.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
-v2: no changes
+v2: fix typo of analog and needed
 ---
- .../devicetree/bindings/phy/phy-mtk-tphy.txt        | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-index ce6abfbdfbe1..1f4a36dd80e0 100644
+index 48bc1a2e9299..a859b0db4051 100644
 --- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
 +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-@@ -34,12 +34,6 @@ Optional properties (controller (parent) node):
+@@ -41,9 +41,12 @@ Optional properties (PHY_TYPE_USB2 port (child) node):
+ - clocks	: a list of phandle + clock-specifier pairs, one for each
+ 		  entry in clock-names
+ - clock-names	: may contain
+-		  "ref": 48M reference clock for HighSpeed anolog phy; and 26M
+-			reference clock for SuperSpeed anolog phy, sometimes is
++		  "ref": 48M reference clock for HighSpeed (digital) phy; and 26M
++			reference clock for SuperSpeed (digital) phy, sometimes is
+ 			24M, 25M or 27M, depended on platform.
++		  "da_ref": the reference clock of analog phy, used if the clocks
++			of analog and digital phys are separated, otherwise uses
++			"ref" clock only if needed.
  
- Required properties (port (child) node):
- - reg		: address and length of the register set for the port.
--- clocks	: a list of phandle + clock-specifier pairs, one for each
--		  entry in clock-names
--- clock-names	: must contain
--		  "ref": 48M reference clock for HighSpeed analog phy; and 26M
--			reference clock for SuperSpeed analog phy, sometimes is
--			24M, 25M or 27M, depended on platform.
- - #phy-cells	: should be 1 (See second example)
- 		  cell after port phandle is phy type from:
- 			- PHY_TYPE_USB2
-@@ -48,6 +42,13 @@ Required properties (port (child) node):
- 			- PHY_TYPE_SATA
- 
- Optional properties (PHY_TYPE_USB2 port (child) node):
-+- clocks	: a list of phandle + clock-specifier pairs, one for each
-+		  entry in clock-names
-+- clock-names	: may contain
-+		  "ref": 48M reference clock for HighSpeed anolog phy; and 26M
-+			reference clock for SuperSpeed anolog phy, sometimes is
-+			24M, 25M or 27M, depended on platform.
-+
  - mediatek,eye-src	: u32, the value of slew rate calibrate
  - mediatek,eye-vrt	: u32, the selection of VRT reference voltage
- - mediatek,eye-term	: u32, the selection of HS_TX TERM reference voltage
 -- 
 2.23.0
