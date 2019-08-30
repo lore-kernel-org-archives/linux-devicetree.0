@@ -1,136 +1,158 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v5, 22/32] drm/mediatek: add ovl0/ovl_2l0 usecase
-Date: Fri, 30 Aug 2019 13:58:28 +0800
-Message-ID: <1567144708.5942.14.camel@mtksdaap41>
-References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
- <1567090254-15566-23-git-send-email-yongqiang.niu@mediatek.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Date: Fri, 30 Aug 2019 00:58:51 -0500
+Message-ID: <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
+References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com> <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1567090254-15566-23-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: yongqiang.niu@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Daniel Vetter <daniel@ffwll.ch>, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Yongqiang:
-
-On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> This patch add ovl0/ovl_2l0 usecase
-> in ovl->ovl_2l0 direct link usecase:
-> 1. the crtc support layer number will 4+2
-> 2. ovl_2l0 background color input select ovl0 when crtc init
-> and disable it when crtc finish
-> 3. config ovl_2l0 layer, if crtc config layer number is
-> bigger than ovl0 support layers(max is 4)
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+On Tue, Aug 27, 2019 at 10:02 PM Peng Fan <peng.fan@nxp.com> wrote:
+>
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
+> actions in software layers running in the EL2 or EL3 exception levels.
+> The term "ARM" here relates to the SMC instruction as part of the ARM
+> instruction set, not as a standard endorsed by ARM Ltd.
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 38 +++++++++++++++++++++++++++++++--
->  1 file changed, 36 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> index c63ff2b..b55970a 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> @@ -270,6 +270,15 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
->  
->  	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
->  		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[i];
-> +		enum mtk_ddp_comp_id prev;
+>  .../devicetree/bindings/mailbox/arm-smc.yaml       | 125 +++++++++++++++++++++
+>  1 file changed, 125 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> new file mode 100644
+> index 000000000000..f8eb28d5e307
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> @@ -0,0 +1,125 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +		if (i > 0)
-> +			prev = mtk_crtc->ddp_comp[i - 1]->id;
-> +		else
-> +			prev = DDP_COMPONENT_ID_MAX;
+> +title: ARM SMC Mailbox Interface
 > +
-> +		if (prev == DDP_COMPONENT_OVL0)
-> +			mtk_ddp_comp_bgclr_in_on(comp);
+> +maintainers:
+> +  - Peng Fan <peng.fan@nxp.com>
+> +
+> +description: |
+> +  This mailbox uses the ARM smc (secure monitor call) and hvc (hypervisor
+> +  call) instruction to trigger a mailbox-connected activity in firmware,
+> +  executing on the very same core as the caller. By nature this operation
+> +  is synchronous and this mailbox provides no way for asynchronous messages
+> +  to be delivered the other way round, from firmware to the OS, but
+> +  asynchronous notification could also be supported. However the value of
+> +  r0/w0/x0 the firmware returns after the smc call is delivered as a received
+> +  message to the mailbox framework, so a synchronous communication can be
+> +  established, for a asynchronous notification, no value will be returned.
+> +  The exact meaning of both the action the mailbox triggers as well as the
+> +  return value is defined by their users and is not subject to this binding.
+> +
+> +  One use case of this mailbox is the SCMI interface, which uses shared memory
+> +  to transfer commands and parameters, and a mailbox to trigger a function
+> +  call. This allows SoCs without a separate management processor (or when
+> +  such a processor is not available or used) to use this standardized
+> +  interface anyway.
+> +
+> +  This binding describes no hardware, but establishes a firmware interface.
+> +  Upon receiving an SMC using one of the described SMC function identifiers,
+> +  the firmware is expected to trigger some mailbox connected functionality.
+> +  The communication follows the ARM SMC calling convention.
+> +  Firmware expects an SMC function identifier in r0 or w0. The supported
+> +  identifiers are passed from consumers, or listed in the the arm,func-ids
+> +  properties as described below. The firmware can return one value in
+> +  the first SMC result register, it is expected to be an error value,
+> +  which shall be propagated to the mailbox client.
+> +
+> +  Any core which supports the SMC or HVC instruction can be used, as long as
+> +  a firmware component running in EL3 or EL2 is handling these calls.
+> +
+> +properties:
+> +  compatible:
+> +    const: arm,smc-mbox
+> +
+> +  "#mbox-cells":
+> +    const: 1
+> +
+> +  arm,num-chans:
+> +    description: The number of channels supported.
+> +    items:
+> +      minimum: 1
+> +      maximum: 4096 # Should be enough?
+> +
+> +  method:
+> +    - enum:
+> +        - smc
+> +        - hvc
+> +
+> +  transports:
+> +    - enum:
+> +        - mem
+> +        - reg
+> +
+> +  arm,func-ids:
+> +    description: |
+> +      An array of 32-bit values specifying the function IDs used by each
+> +      mailbox channel. Those function IDs follow the ARM SMC calling
+> +      convention standard [1].
+> +
+> +      There is one identifier per channel and the number of supported
+> +      channels is determined by the length of this array.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    minItems: 0
+> +    maxItems: 4096   # Should be enough?
+> +
+> +required:
+> +  - compatible
+> +  - "#mbox-cells"
+> +  - arm,num-chans
+> +  - transports
+> +  - method
+> +
+> +examples:
+> +  - |
+> +    sram@910000 {
+> +      compatible = "mmio-sram";
+> +      reg = <0x0 0x93f000 0x0 0x1000>;
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      ranges = <0 0x0 0x93f000 0x1000>;
+> +
+> +      cpu_scp_lpri: scp-shmem@0 {
+> +        compatible = "arm,scmi-shmem";
+> +        reg = <0x0 0x200>;
+> +      };
+> +
+> +      cpu_scp_hpri: scp-shmem@200 {
+> +        compatible = "arm,scmi-shmem";
+> +        reg = <0x200 0x200>;
+> +      };
+> +    };
+> +
+> +    firmware {
+> +      smc_mbox: mailbox {
+> +        #mbox-cells = <1>;
+> +        compatible = "arm,smc-mbox";
+> +        method = "smc";
+> +        arm,num-chans = <0x2>;
+> +        transports = "mem";
+> +        /* Optional */
+> +        arm,func-ids = <0xc20000fe>, <0xc20000ff>;
+>
+SMC/HVC is synchronously(block) running in "secure mode", i.e, there
+can only be one instance running platform wide. Right?  That implies
+there is only one physical channel in the platform. So if you need to
+initiate different functions (tx, rx), you call them sequentially by
+changing the func-id for each request. Why not?
 
-Even though both OVL and OVL_2L implement this function, I think we
-could still call this function for OVL and OVL_2L, and in
-mtk_ovl_bgclr_in_on(), to judge it's OVL or OVL_2L.
-
-Regards,
-CK
-
->  
->  		mtk_ddp_comp_config(comp, width, height, vrefresh, bpc);
->  		mtk_ddp_comp_start(comp);
-> @@ -279,9 +288,18 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
->  	for (i = 0; i < mtk_crtc->layer_nr; i++) {
->  		struct drm_plane *plane = &mtk_crtc->planes[i];
->  		struct mtk_plane_state *plane_state;
-> +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
-> +		unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-> +		unsigned int local_layer;
->  
->  		plane_state = to_mtk_plane_state(plane->state);
-> -		mtk_ddp_comp_layer_config(mtk_crtc->ddp_comp[0], i,
-> +
-> +		if (i >= comp_layer_nr) {
-> +			comp = mtk_crtc->ddp_comp[1];
-> +			local_layer = i - comp_layer_nr;
-> +		} else
-> +			local_layer = i;
-> +		mtk_ddp_comp_layer_config(comp, local_layer,
->  					  plane_state);
->  	}
->  
-> @@ -307,6 +325,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
->  					   mtk_crtc->ddp_comp[i]->id);
->  	mtk_disp_mutex_disable(mtk_crtc->mutex);
->  	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
-> +		mtk_ddp_comp_bgclr_in_off(mtk_crtc->ddp_comp[i]);
->  		mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
->  					      mtk_crtc->mmsys_reg_data,
->  					      mtk_crtc->ddp_comp[i]->id,
-> @@ -327,6 +346,8 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
->  	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
->  	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
->  	unsigned int i;
-> +	unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-> +	unsigned int local_layer;
->  
->  	/*
->  	 * TODO: instead of updating the registers here, we should prepare
-> @@ -349,7 +370,14 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
->  			plane_state = to_mtk_plane_state(plane->state);
->  
->  			if (plane_state->pending.config) {
-> -				mtk_ddp_comp_layer_config(comp, i, plane_state);
-> +				if (i >= comp_layer_nr) {
-> +					comp = mtk_crtc->ddp_comp[1];
-> +					local_layer = i - comp_layer_nr;
-> +				} else
-> +					local_layer = i;
-> +
-> +				mtk_ddp_comp_layer_config(comp, local_layer,
-> +							  plane_state);
->  				plane_state->pending.config = false;
->  			}
->  		}
-> @@ -572,6 +600,12 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
->  	}
->  
->  	mtk_crtc->layer_nr = mtk_ddp_comp_layer_nr(mtk_crtc->ddp_comp[0]);
-> +	if (mtk_crtc->ddp_comp_nr > 1) {
-> +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[1];
-> +
-> +		if (comp->funcs->bgclr_in_on)
-> +			mtk_crtc->layer_nr += mtk_ddp_comp_layer_nr(comp);
-> +	}
->  	mtk_crtc->planes = devm_kcalloc(dev, mtk_crtc->layer_nr,
->  					sizeof(struct drm_plane),
->  					GFP_KERNEL);
+-Jassi
