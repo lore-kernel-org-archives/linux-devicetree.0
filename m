@@ -1,128 +1,65 @@
 From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH RESEND v2 2/6] dt-bindings: watchdog: Convert Allwinner
- watchdog to a schema
-Date: Fri, 30 Aug 2019 09:48:21 -0700
-Message-ID: <20190830164821.GB7911@roeck-us.net>
+Subject: Re: [PATCH RESEND v2 3/6] dt-bindings: watchdog: sun4i: Add the
+ watchdog interrupts
+Date: Fri, 30 Aug 2019 09:48:31 -0700
+Message-ID: <20190830164831.GC7911@roeck-us.net>
 References: <20190821143835.7294-1-mripard@kernel.org>
- <20190821143835.7294-2-mripard@kernel.org>
+ <20190821143835.7294-3-mripard@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190821143835.7294-2-mripard@kernel.org>
+In-Reply-To: <20190821143835.7294-3-mripard@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Ripard <mripard@kernel.org>
 Cc: wim@linux-watchdog.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 04:38:31PM +0200, Maxime Ripard wrote:
+On Wed, Aug 21, 2019 at 04:38:32PM +0200, Maxime Ripard wrote:
 > From: Maxime Ripard <maxime.ripard@bootlin.com>
 > 
-> The Allwinner SoCs have a watchdog supported in Linux, with a matching
-> Device Tree binding.
+> The Allwinner watchdog has an interrupt, either shared or dedicated
+> depending on the SoC, that has been described in some DT, but not all of
+> them.
 > 
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for that controller over to a YAML schemas.
+> The binding is also completely missing that description. Let's add that
+> property to be consistent.
 > 
 > Reviewed-by: Rob Herring <robh@kernel.org>
 > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> 
+
 Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
 > ---
-> 
-> Changes from v1:
->   - Use generic watchdog schema
->   - Use unevaluatedProperties instead of additionalProperties
-> ---
->  .../watchdog/allwinner,sun4i-a10-wdt.yaml     | 48 +++++++++++++++++++
->  .../bindings/watchdog/sunxi-wdt.txt           | 22 ---------
->  2 files changed, 48 insertions(+), 22 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
->  delete mode 100644 Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
+>  .../bindings/watchdog/allwinner,sun4i-a10-wdt.yaml           | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 > diff --git a/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-> new file mode 100644
-> index 000000000000..dc7553f57708
-> --- /dev/null
+> index dc7553f57708..31c95c404619 100644
+> --- a/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
 > +++ b/Documentation/devicetree/bindings/watchdog/allwinner,sun4i-a10-wdt.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/watchdog/allwinner,sun4i-a10-wdt.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner A10 Watchdog Device Tree Bindings
-> +
-> +allOf:
-> +  - $ref: "watchdog.yaml#"
-> +
-> +maintainers:
-> +  - Chen-Yu Tsai <wens@csie.org>
-> +  - Maxime Ripard <maxime.ripard@bootlin.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: allwinner,sun4i-a10-wdt
-> +      - const: allwinner,sun6i-a31-wdt
-> +      - items:
-> +          - const: allwinner,sun50i-a64-wdt
-> +          - const: allwinner,sun6i-a31-wdt
-> +      - items:
-> +          - const: allwinner,sun50i-h6-wdt
-> +          - const: allwinner,sun6i-a31-wdt
-> +      - items:
-> +          - const: allwinner,suniv-f1c100s-wdt
-> +          - const: allwinner,sun4i-a10-wdt
-> +
-> +  reg:
+> @@ -31,9 +31,13 @@ properties:
+>    reg:
+>      maxItems: 1
+>  
+> +  interrupts:
 > +    maxItems: 1
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    wdt: watchdog@1c20c90 {
-> +        compatible = "allwinner,sun4i-a10-wdt";
-> +        reg = <0x01c20c90 0x10>;
-> +        timeout-sec = <10>;
-> +    };
-> +
-> +...
-> diff --git a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-> deleted file mode 100644
-> index e65198d82a2b..000000000000
-> --- a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-> +++ /dev/null
-> @@ -1,22 +0,0 @@
-> -Allwinner SoCs Watchdog timer
-> -
-> -Required properties:
-> -
-> -- compatible : should be one of
-> -	"allwinner,sun4i-a10-wdt"
-> -	"allwinner,sun6i-a31-wdt"
-> -	"allwinner,sun50i-a64-wdt","allwinner,sun6i-a31-wdt"
-> -	"allwinner,sun50i-h6-wdt","allwinner,sun6i-a31-wdt"
-> -	"allwinner,suniv-f1c100s-wdt", "allwinner,sun4i-a10-wdt"
-> -- reg : Specifies base physical address and size of the registers.
-> -
-> -Optional properties:
-> -- timeout-sec : Contains the watchdog timeout in seconds
-> -
-> -Example:
-> -
-> -wdt: watchdog@1c20c90 {
-> -	compatible = "allwinner,sun4i-a10-wdt";
-> -	reg = <0x01c20c90 0x10>;
-> -	timeout-sec = <10>;
-> -};
+>  required:
+>    - compatible
+>    - reg
+> +  - interrupts
+>  
+>  unevaluatedProperties: false
+>  
+> @@ -42,6 +46,7 @@ examples:
+>      wdt: watchdog@1c20c90 {
+>          compatible = "allwinner,sun4i-a10-wdt";
+>          reg = <0x01c20c90 0x10>;
+> +        interrupts = <24>;
+>          timeout-sec = <10>;
+>      };
+>  
 > -- 
 > 2.21.0
 > 
