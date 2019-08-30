@@ -1,35 +1,117 @@
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v1 18/18] MAINTAINERS: Add myself as maintainer of LOONGSON64
-Date: Fri, 30 Aug 2019 12:32:32 +0800
-Message-ID: <20190830043232.20191-13-jiaxun.yang@flygoat.com>
-References: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: Adding depends-on DT binding to break cyclic dependencies
+Date: Thu, 29 Aug 2019 21:58:04 -0700
+Message-ID: <CAGETcx_RL4hHHA2MFTVyV1ivgghaBZePROXpnC-UUJ7tcH4kSQ@mail.gmail.com>
+References: <CAGETcx_pSnC_2D7ufLRyfE3b8uRc814XEf8zu+SpNtT7_Z8NLg@mail.gmail.com>
+ <CAL_JsqKWcGSzCF_ZyEo6bbuayoYks51A-JAMp_oLR1RyTUzNUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
+In-Reply-To: <CAL_JsqKWcGSzCF_ZyEo6bbuayoYks51A-JAMp_oLR1RyTUzNUA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@vger.kernel.org
-Cc: chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-I'm going to help with LOONGSON64 maintainance as well.
+On Thu, Aug 29, 2019 at 9:28 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Thu, Aug 22, 2019 at 1:55 AM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > Frank, Greg and I got together during ELC and had an extensive and
+> > very productive discussion about my "postboot supplier state cleanup"
+> > patch series [1]. The three of us are on the same page now -- the
+> > series as it stands is the direction we want to go in, with some minor
+> > refactoring, documentation and naming changes.
+> >
+> > However, one of the things Frank is concerned about (and Greg and I
+> > agree) in the current patch series is that the "cyclic dependency
+> > breaking" logic has been pushed off to individual drivers using the
+> > edit_links() callback.
+>
+> I would think the core can detect this condition. There's nothing
+> device specific once you have the dependency tree. You still need to
+> know what device needs to probe first and the drivers are going to
+> have that knowledge anyways. So wouldn't it be enough to allow probe
+> to proceed for devices in the loop.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+The problem is that device links don't allow creating a cyclic
+dependency graph -- for good reasons. The last link in the cycle would
+be rejected. I don't think trying to change device link to allow
+cyclic links is the right direction to go in nor is it a can of worms
+I want to open.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 242970af939c..e14edf51ee15 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10758,6 +10758,7 @@ F:	drivers/*/*/*loongson2*
- 
- MIPS/LOONGSON64 ARCHITECTURE
- M:	Huacai Chen <chenhc@lemote.com>
-+M:	Jiaxun Yang <jiaxun.yang@flygoat.com>
- L:	linux-mips@vger.kernel.org
- S:	Maintained
- F:	arch/mips/boot/dts/loongson/
--- 
-2.22.0
+So, we'll need some other way of tracking the loop and then allowing
+only those devices in a loop to attempt probing even if their
+suppliers haven't probed. And then if a device ends up being in more
+than one loop, things could get even more complicated. And after one
+of the devices in the loop probes, we still need to somehow figure out
+the "bad" link and delete it so the last "good" link can be made
+before all the suppliers have their sync_state() called (because the
+"good" link hasn't been created yet). That all gets pretty messy. If
+we are never going to accept any DT changes, then I'd rather go with
+edit_links() and keep the complexity within the one off weird hardware
+where there are cycles instead of over complicating the driver core.
+
+> Once 1 driver succeeds, then you
+> can enforce the dependencies on the rest.
+>
+> > The concern being, there are going to be multiple device specific ad
+> > hoc implementations to break a cyclic dependency. Also, if a device
+> > can be part of a cyclic dependency, the driver for that device has to
+> > check for specific system/products in which the device is part of a
+> > cyclic dependency (because it might not always be part of a cycle),
+> > and then potentially have cycle/product specific code to break the
+> > cycle (since the cycle can be different on each system/product).
+> >
+> > One way to avoid all of the device/driver specific code and simplify
+> > my patch series by a non-trivial amount would be by adding a
+> > "depends-on" DT binding that can ONLY be used to break cycles. We can
+> > document it as such and reject any attempts to use it for other
+> > purposes. When a depends-on property is present in a device node, that
+> > specific device's supplier list will be parsed ONLY from the
+> > depends-on property and the other properties won't be parsed for
+> > deriving dependency information for that device.
+>
+> Seems like only ignoring the dependencies with a cycle would be
+> sufficient.
+
+No, we need to only ignore the "bad" dependency. We can't ignore all
+the dependencies in the cycle because that would cause the suppliers
+to clean up the hardware state before the consumers are ready.
+
+> For example, consider a clock controller which has 2 clock
+> inputs from other clock controllers where one has a cycle and one
+> doesn't. Also consider it has a regulator dependency. We only need to
+> ignore the dependency for 1 of the clock inputs. The rest of the
+> dependencies should be honored.
+
+Agreed. In this case, if the device used the depends-on property,
+it'll have to list the 1 clock controller and the regulator.
+
+> > Frank, Greg and I like this usage model for a new depends-on DT
+> > binding. Is this something you'd be willing to accept?
+>
+> To do the above, it needs to be inverted.
+
+I understand you are basically asking for a "does-not-depend-on"
+property (like a black list). But I think a whitelist on the rare
+occasions that we need to override would give more flexibility than a
+blacklist. It'll also mean we don't have to check every supplier with
+the entire black list each time.
+
+> Convince me that cycles are really a problem anywhere besides clocks.
+
+I wouldn't be surprised at all if interconnects end up with cyclic
+dependencies as support for more of them are added.
+
+> I'd be more comfortable with a clock specific property if we only need
+> it for clocks and I'm having a hard time imagining cycles for other
+> dependencies.
+
+I definitely don't want per-supplier type override. That's just making
+things too complicated and adding too many DT properties if we need to
+override more than clocks.
+
+-Saravana
