@@ -1,70 +1,50 @@
 From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 4/4] aspeed/watchdog: Add access_cs0 option for
- alt-boot
-Date: Sat, 31 Aug 2019 08:01:35 -0700
-Message-ID: <20190831150135.GA7230@roeck-us.net>
-References: <20190828102402.13155-1-i.mikhaylov@yadro.com>
- <20190828102402.13155-5-i.mikhaylov@yadro.com>
+Subject: Re: [PATCH v2 2/2] hwmon: (as370-hwmon) Add DT bindings for
+ Synaptics AS370 PVT
+Date: Sat, 31 Aug 2019 08:08:54 -0700
+Message-ID: <20190831150854.GA8653@roeck-us.net>
+References: <20190827113214.13773d45@xhacker.debian>
+ <20190827113337.384457f6@xhacker.debian>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190828102402.13155-5-i.mikhaylov@yadro.com>
+In-Reply-To: <20190827113337.384457f6@xhacker.debian>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Alexander Amelkin <a.amelkin@yadro.com>, openbmc@lists.ozlabs.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 01:24:02PM +0300, Ivan Mikhaylov wrote:
-> The option for the ast2400/2500 to get access to CS0 at runtime.
+On Tue, Aug 27, 2019 at 03:44:57AM +0000, Jisheng Zhang wrote:
+> Add device tree bindings for Synaptics AS370 PVT sensors.
 > 
-> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+
+For my reference:
 
 Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
+... but we'll have to wait for DT maintainer review.
+
 > ---
->  .../ABI/testing/sysfs-class-watchdog          | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
+>  Documentation/devicetree/bindings/hwmon/as370.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/as370.txt
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-class-watchdog b/Documentation/ABI/testing/sysfs-class-watchdog
-> index 6317ade5ad19..675f9b537661 100644
-> --- a/Documentation/ABI/testing/sysfs-class-watchdog
-> +++ b/Documentation/ABI/testing/sysfs-class-watchdog
-> @@ -72,3 +72,37 @@ Description:
->  		It is a read/write file. When read, the currently assigned
->  		pretimeout governor is returned.  When written, it sets
->  		the pretimeout governor.
+> diff --git a/Documentation/devicetree/bindings/hwmon/as370.txt b/Documentation/devicetree/bindings/hwmon/as370.txt
+> new file mode 100644
+> index 000000000000..d102fe765124
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/as370.txt
+> @@ -0,0 +1,11 @@
+> +Bindings for Synaptics AS370 PVT sensors
 > +
-> +What:		/sys/class/watchdog/watchdog1/access_cs0
-> +Date:		August 2019
-> +Contact:	Ivan Mikhaylov <i.mikhaylov@yadro.com>,
-> +		Alexander Amelkin <a.amelkin@yadro.com>
-> +Description:
-> +		It is a read/write file. This attribute exists only if the
-> +		system has booted from the alternate flash chip due to
-> +		expiration of a watchdog timer of AST2400/AST2500 when
-> +		alternate boot function was enabled with 'aspeed,alt-boot'
-> +		devicetree option for that watchdog or with an appropriate
-> +		h/w strapping (for WDT2 only).
+> +Required properties:
+> +- compatible : "syna,as370-hwmon"
+> +- reg        : address and length of the register set.
 > +
-> +		At alternate flash the 'access_cs0' sysfs node provides:
-> +			ast2400: a way to get access to the primary SPI flash
-> +				chip at CS0 after booting from the alternate
-> +				chip at CS1.
-> +			ast2500: a way to restore the normal address mapping
-> +				from (CS0->CS1, CS1->CS0) to (CS0->CS0,
-> +				CS1->CS1).
-> +
-> +		Clearing the boot code selection and timeout counter also
-> +		resets to the initial state the chip select line mapping. When
-> +		the SoC is in normal mapping state (i.e. booted from CS0),
-> +		clearing those bits does nothing for both versions of the SoC.
-> +		For alternate boot mode (booted from CS1 due to wdt2
-> +		expiration) the behavior differs as described above.
-> +
-> +		This option can be used with wdt2 (watchdog1) only.
-> +
-> +		When read, the current status of the boot code selection is
-> +		shown. When written with any non-zero value, it clears
-> +		the boot code selection and the timeout counter, which results
-> +		in chipselect reset for AST2400/AST2500.
+> +Example:
+> +	hwmon@ea0810 {
+> +		compatible = "syna,as370-hwmon";
+> +		reg = <0xea0810 0xc>;
+> +	};
