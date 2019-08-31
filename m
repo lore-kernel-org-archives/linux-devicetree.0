@@ -1,230 +1,102 @@
-Return-Path: <SRS0=mEvB=WS=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v9 07/13] media: tvp5150: add FORMAT_TRY support for get/set selection handlers
-Date: Thu, 22 Aug 2019 10:05:50 +0200
-Message-Id: <20190822080556.17109-8-m.felsch@pengutronix.de>
-In-Reply-To: <20190822080556.17109-1-m.felsch@pengutronix.de>
-References: <20190822080556.17109-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=+N9H=W3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from anchovy2.45ru.net.au ([203.30.46.146]:51393 "EHLO
+        anchovy2.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfHaKUB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 31 Aug 2019 06:20:01 -0400
+Subject: Re: [PATCH 1/2] dt-binding: iio: Add optional label property
+References: <1566876924-63608-1-git-send-email-preid@electromag.com.au>
+ <1566876924-63608-2-git-send-email-preid@electromag.com.au>
+ <a30b6dca-c598-135a-0559-1018dd5f5fde@xilinx.com>
+ <20190829230207.GA22979@bogus>
+ <b50bce2d-8819-67b1-c55c-8c2b8070a4ac@electromag.com.au>
+ <CAL_JsqKb8cC=4HR7uVHmKt-zw32U_1u62hG4h-TnbPy=a+QZZg@mail.gmail.com>
+From: Phil Reid <preid@electromag.com.au>
+Message-ID: <29f831da-d23a-bc9c-151a-885bd526a785@electromag.com.au>
+Date: Sat, 31 Aug 2019 18:19:53 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com, jacopo+renesas@jmondi.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-media@vger.kernel.org
+In-Reply-To: <CAL_JsqKb8cC=4HR7uVHmKt-zw32U_1u62hG4h-TnbPy=a+QZZg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Michal Simek <michal.simek@xilinx.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Since commit 10d5509c8d50 ("[media] v4l2: remove g/s_crop from video ops")
-the 'which' field for set/get_selection must be FORMAT_ACTIVE. There is
-no way to try different selections. The patch adds a helper function to
-select the correct selection memory space (sub-device file handle or
-driver state) which will be set/returned.
+On 30/08/2019 20:34, Rob Herring wrote:
+> On Thu, Aug 29, 2019 at 8:01 PM Phil Reid <preid@electromag.com.au> wrote:
+>>
+>> On 30/08/2019 07:02, Rob Herring wrote:
+>>> On Wed, Aug 28, 2019 at 08:09:19AM +0200, Michal Simek wrote:
+>>>> On 27. 08. 19 5:35, Phil Reid wrote:
+>>>>> This optional property defines a symbolic name for the device.
+>>>>>
+>>>>> Signed-off-by: Phil Reid <preid@electromag.com.au>
+>>>>> ---
+>>>>>    Documentation/devicetree/bindings/iio/iio-bindings.txt | 5 +++++
+>>>>>    1 file changed, 5 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>>> index 68d6f8ce063b..ffeae5aad8b5 100644
+>>>>> --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>>> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>>> @@ -18,12 +18,17 @@ Required properties:
+>>>>>                 with a single IIO output and 1 for nodes with multiple
+>>>>>                 IIO outputs.
+>>>>>
+>>>>> +Optional properties:
+>>>>> +label:                A symbolic name for the device.
+>>>>> +
+>>>>> +
+>>>>>    Example for a simple configuration with no trigger:
+>>>>>
+>>>>>      adc: voltage-sensor@35 {
+>>>>>              compatible = "maxim,max1139";
+>>>>>              reg = <0x35>;
+>>>>>              #io-channel-cells = <1>;
+>>>>> +           label = "adc_voltage_sensor";
+>>>>>      };
+>>>>>
+>>>>>    Example for a configuration with trigger:
+>>>>>
+>>>>
+>>>> Just for the record. This patch has been created based on initial
+>>>> discussion about label property. And Rob had not problem with using
+>>>> label in connection to ina226. https://lkml.org/lkml/2019/8/27/1213
+>>>
+>>> I didn't, but based on the name here I'm less convinced. 'label' is
+>>> supposed to be for needing to distinguish between more than 1 of
+>>> something. A name like 'adc_voltage_sensor' doesn't really.
+>>>
+>>> Rob
+>>>
+>>>
+>>
+>> That's the problem we're try to solve. Having multiple devices and try to
+>> determine which device is which.
+>> eg: Mutliple adc's.
+>> For example I have the same dac chip on multiple boards that do different
+>> things, it's difficult to id them.
+>>
+>> so label examples could be:
+>> label = "current_control_group1";
+>> label = "voltage_control_group1";
+>>
+>> Are you totally against this or is it a problem with me not being clear
+>> with the problem and the wording of the commit message or the example?
+> 
+> It's just the example is less than ideal. But it's just an example, so:
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> Feel free to update the example if you respin.
+> 
+Thanks Rob,
 
-The selection rectangle is updated if the format is FORMAT_ACTIVE and
-the rectangle position and/or size differs from the current set
-rectangle.
+I'll update the example if the series gets a respin.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
-Changelog:
 
-v8:
-- adapt commit message
-- remove wrong FORMAT_TRY handling for tvp5150_fill_fmt() handling
-- return 0 during set_selection if FORMAT_TRY was requested and
-  CONFIG_VIDEO_V4L2_SUBDEV_API is disabled
-- return -EINVAL during get_selection if FORMAT_TRY was requested and
-  CONFIG_VIDEO_V4L2_SUBDEV_API is disabled
-v7:
-- __tvp5150_get_pad_crop(): return error on default case
-- simplify __tvp5150_get_pad_crop() error handling
-- tvp5150_set_selection() squash __tvp5150_set_selection() execution
-  conditions
-v6:
-nothing
-v5:
- - handle stub for v4l2_subdev_get_try_crop() internal since commit
-   ("media: v4l2-subdev: add stubs for v4l2_subdev_get_try_*")
-   isn't anymore part of this series.
- - add error handling of __tvp5150_get_pad_crop()
-v4:
- - fix merge conflict due to rebase on top of media-tree/master
- - __tvp5150_get_pad_crop(): cosmetic alignment fixes
----
- drivers/media/i2c/tvp5150.c | 111 +++++++++++++++++++++++++-----------
- 1 file changed, 79 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index 477a929d4f89..62a1c7c3a7c0 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -19,6 +19,7 @@
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-fwnode.h>
- #include <media/v4l2-mc.h>
-+#include <media/v4l2-rect.h>
- 
- #include "tvp5150_reg.h"
- 
-@@ -995,6 +996,23 @@ static void tvp5150_set_default(v4l2_std_id std, struct v4l2_rect *crop)
- 		crop->height = TVP5150_V_MAX_OTHERS;
- }
- 
-+static struct v4l2_rect *
-+__tvp5150_get_pad_crop(struct tvp5150 *decoder,
-+		       struct v4l2_subdev_pad_config *cfg, unsigned int pad,
-+		       enum v4l2_subdev_format_whence which)
-+{
-+	switch (which) {
-+	case V4L2_SUBDEV_FORMAT_ACTIVE:
-+		return &decoder->rect;
-+	case V4L2_SUBDEV_FORMAT_TRY:
-+#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
-+		return v4l2_subdev_get_try_crop(&decoder->sd, cfg, pad);
-+#endif
-+	default:
-+		return ERR_PTR(-EINVAL);
-+	}
-+}
-+
- static int tvp5150_fill_fmt(struct v4l2_subdev *sd,
- 			    struct v4l2_subdev_pad_config *cfg,
- 			    struct v4l2_subdev_format *format)
-@@ -1019,36 +1037,68 @@ static int tvp5150_fill_fmt(struct v4l2_subdev *sd,
- 	return 0;
- }
- 
-+unsigned int tvp5150_get_hmax(struct v4l2_subdev *sd)
-+{
-+	struct tvp5150 *decoder = to_tvp5150(sd);
-+	v4l2_std_id std;
-+
-+	/* Calculate height based on current standard */
-+	if (decoder->norm == V4L2_STD_ALL)
-+		std = tvp5150_read_std(sd);
-+	else
-+		std = decoder->norm;
-+
-+	return (std & V4L2_STD_525_60) ?
-+		TVP5150_V_MAX_525_60 : TVP5150_V_MAX_OTHERS;
-+}
-+
-+static inline void
-+__tvp5150_set_selection(struct v4l2_subdev *sd, struct v4l2_rect rect)
-+{
-+	struct tvp5150 *decoder = to_tvp5150(sd);
-+	unsigned int hmax = tvp5150_get_hmax(sd);
-+
-+	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_START, rect.top);
-+	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_STOP,
-+		     rect.top + rect.height - hmax);
-+	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_MSB,
-+		     rect.left >> TVP5150_CROP_SHIFT);
-+	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_LSB,
-+		     rect.left | (1 << TVP5150_CROP_SHIFT));
-+	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_MSB,
-+		     (rect.left + rect.width - TVP5150_MAX_CROP_LEFT) >>
-+		     TVP5150_CROP_SHIFT);
-+	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_LSB,
-+		     rect.left + rect.width - TVP5150_MAX_CROP_LEFT);
-+}
-+
- static int tvp5150_set_selection(struct v4l2_subdev *sd,
- 				 struct v4l2_subdev_pad_config *cfg,
- 				 struct v4l2_subdev_selection *sel)
- {
- 	struct tvp5150 *decoder = to_tvp5150(sd);
- 	struct v4l2_rect rect = sel->r;
--	v4l2_std_id std;
--	int hmax;
-+	struct v4l2_rect *crop;
-+	unsigned int hmax;
- 
--	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE ||
--	    sel->target != V4L2_SEL_TGT_CROP)
-+	if (sel->target != V4L2_SEL_TGT_CROP)
- 		return -EINVAL;
- 
- 	dev_dbg_lvl(sd->dev, 1, debug, "%s left=%d, top=%d, width=%d, height=%d\n",
- 		__func__, rect.left, rect.top, rect.width, rect.height);
- 
-+	/*
-+	 * Do not apply the request in case of FORMAT_TRY and disabled
-+	 * CONFIG_VIDEO_V4L2_SUBDEV_API support.
-+	 */
-+	crop = __tvp5150_get_pad_crop(decoder, cfg, sel->pad, sel->which);
-+	if (IS_ERR(crop))
-+		return 0;
-+
- 	/* tvp5150 has some special limits */
- 	rect.left = clamp(rect.left, 0, TVP5150_MAX_CROP_LEFT);
- 	rect.top = clamp(rect.top, 0, TVP5150_MAX_CROP_TOP);
--
--	/* Calculate height based on current standard */
--	if (decoder->norm == V4L2_STD_ALL)
--		std = tvp5150_read_std(sd);
--	else
--		std = decoder->norm;
--
--	if (std & V4L2_STD_525_60)
--		hmax = TVP5150_V_MAX_525_60;
--	else
--		hmax = TVP5150_V_MAX_OTHERS;
-+	hmax = tvp5150_get_hmax(sd);
- 
- 	/*
- 	 * alignments:
-@@ -1061,20 +1111,15 @@ static int tvp5150_set_selection(struct v4l2_subdev *sd,
- 			      hmax - TVP5150_MAX_CROP_TOP - rect.top,
- 			      hmax - rect.top, 0, 0);
- 
--	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_START, rect.top);
--	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_STOP,
--		     rect.top + rect.height - hmax);
--	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_MSB,
--		     rect.left >> TVP5150_CROP_SHIFT);
--	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_LSB,
--		     rect.left | (1 << TVP5150_CROP_SHIFT));
--	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_MSB,
--		     (rect.left + rect.width - TVP5150_MAX_CROP_LEFT) >>
--		     TVP5150_CROP_SHIFT);
--	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_LSB,
--		     rect.left + rect.width - TVP5150_MAX_CROP_LEFT);
-+	/*
-+	 * Update output image size if the selection (crop) rectangle size or
-+	 * position has been modified.
-+	 */
-+	if (sel->which == V4L2_SUBDEV_FORMAT_ACTIVE &&
-+	    !v4l2_rect_equal(&rect, crop))
-+		__tvp5150_set_selection(sd, rect);
- 
--	decoder->rect = rect;
-+	*crop = rect;
- 
- 	return 0;
- }
-@@ -1084,11 +1129,9 @@ static int tvp5150_get_selection(struct v4l2_subdev *sd,
- 				 struct v4l2_subdev_selection *sel)
- {
- 	struct tvp5150 *decoder = container_of(sd, struct tvp5150, sd);
-+	struct v4l2_rect *crop;
- 	v4l2_std_id std;
- 
--	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE)
--		return -EINVAL;
--
- 	switch (sel->target) {
- 	case V4L2_SEL_TGT_CROP_BOUNDS:
- 		sel->r.left = 0;
-@@ -1106,7 +1149,11 @@ static int tvp5150_get_selection(struct v4l2_subdev *sd,
- 			sel->r.height = TVP5150_V_MAX_OTHERS;
- 		return 0;
- 	case V4L2_SEL_TGT_CROP:
--		sel->r = decoder->rect;
-+		crop = __tvp5150_get_pad_crop(decoder, cfg, sel->pad,
-+						sel->which);
-+		if (IS_ERR(crop))
-+			return PTR_ERR(crop);
-+		sel->r = *crop;
- 		return 0;
- 	default:
- 		return -EINVAL;
 -- 
-2.20.1
+Regards
+Phil Reid
