@@ -1,67 +1,72 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [Letux-kernel] [PATCH 2/2] DTS: ARM: gta04: introduce legacy
- spi-cs-high to make display work again
-Date: Sat, 31 Aug 2019 08:48:52 +0200
-Message-ID: <20190831084852.5e726cfa@aktux>
-References: <cover.1562597164.git.hns@goldelico.com>
-        <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com>
-        <20190724194259.GA25847@bogus>
-        <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com>
-        <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com>
-        <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v1 1/1] i2c: iproc: Add i2c repeated start capability
+Date: Sat, 31 Aug 2019 11:49:41 +0200
+Message-ID: <20190831094940.GA1138@kunai>
+References: <1565150941-27297-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+ <20190830125626.GC2870@ninjato>
+ <3e70fa7e-de13-4edd-2e17-b7c56e91d220@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com>
-Sender: stable-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3e70fa7e-de13-4edd-2e17-b7c56e91d220@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <ray.jui@broadcom.com>
+Cc: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>, Lori Hikichi <lori.hikichi@broadcom.com>, Icarus Chau <icarus.chau@broadcom.com>, Shivaraj Shetty <sshetty1@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Mon, 5 Aug 2019 12:29:19 +0200
-Linus Walleij <linus.walleij@linaro.org> wrote:
+--AhhlLboLdkugWU4S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Fri, Jul 26, 2019 at 12:43 AM Rob Herring <robh@kernel.org> wrote:
-> > On Thu, Jul 25, 2019 at 12:23 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:  
-> 
-> > > I tried to convince Linus that this is the right way but he convinced
-> > > me that a fix that handles all cases does not exist.
-> > >
-> > > There seem to be embedded devices with older DTB (potentially in ROM)
-> > > which provide a plain 0 value for a gpios definition. And either with
-> > > or without spi-cs-high.
-> > >
-> > > Since "0" is the same as "GPIO_ACTIVE_HIGH", the absence of
-> > > spi-cs-high was and must be interpreted as active low for these
-> > > devices. This leads to the inversion logic in code.
-> > >
-> > > AFAIR it boils down to the question if gpiolib and the bindings
-> > > should still support such legacy devices with out-of tree DTB,
-> > > but force in-tree DTS to add the legacy spi-cs-high property.
-> > >
-> > > Or if we should fix the 2 or 3 cases of in-tree legacy cases
-> > > and potentially break out-of tree DTBs.  
-> >
-> > If it is small number of platforms, then the kernel could handle those
-> > cases explicitly as needed.
-> >  
-> > > IMHO it is more general to keep the out-of-tree DTBs working
-> > > and "fix" what we can control (in-tree DTS).  
-> >
-> > If we do this, then we need to not call spi-cs-high legacy because
-> > we're stuck with it forever.  
-> 
-> I agree. The background on it is here:
-> https://lkml.org/lkml/2019/4/2/4
-> 
-> Not using the negatively defined (i.e. if it is no there, the line is
-> by default active low) spi-cs-high would break
-> PowerPC, who were AFAICT using this to ship devices.
-> 
-is this thing now just waiting for someone to do a s/legacy//?
+Hi Ray,
+
+> > With all the limitations in place, I wonder if it might be easier to
+> > implement an smbus_xfer callback instead? What is left that makes this
+> > controller more than SMBus and real I2C?
+> >=20
+>=20
+> Right. But what is the implication of using smbus_xfer instead of
+> master_xfer in our driver?
+>=20
+> Does it mean it will break existing functions of the i2c app that our
+> customers developed based on i2cdev (e.g., I2C_RDWR)?
+
+If the customers uses I2C_RDWR (and it cannot be mapped to i2c_smbus_*
+calls) then this is an indication that there is some I2C functionality
+left which the HW can provide. I'd be interested which one, though.
+
+>=20
+> 1) Does
+
+Maybe you wanted to describe it here and it got accidently cut off?
 
 Regards,
-Andreas
+
+   Wolfram
+
+
+--AhhlLboLdkugWU4S
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1qQrAACgkQFA3kzBSg
+KbbmbQ/9E9Ts1/5jZMraYl7CNxsXtWMbdSUWQFyuZDJGvO7UvZz9v7O0Aq9ct/MB
+mMb4lMVP4lLM/y1DMpVmoYoqVXyKPXzvMzGzsB0CMCs5e+XCbWKr1yCaDCLv0/Js
+HNbEe7PC1fuNz/YklNtYvHEe1LjSxf81lFWoLDFGPZ4FkSDcbUAZQkUfe/VpcKbc
+VVhYAQucc6GrBoJ12UMRSWSf3diIkR0CBqKhALZXCnrSLx9cXtTuqA0k7UnN9Piv
+qPZs/I20tTu52RCHXTpjnwFpWMLNuswRIoCWcMR6Vl1Ix6v0TB4NiUpMStk4Pw45
+KD6hdZSPBtFM4uQ04M7wbVFR634PF4mQx7wts+VjFXBe6rxEASwpIq3dMtxVFWgs
+GwZ2tyZDQBT/jqdJi2QyUsKw4UW2R7su3D3+/idNTtoT1JkqwAfsFix283Bcbees
+Kmx1W32dzB7p2G0k2vCWmNWx1CI+Mf/K16H0n2ffyD/5t4vCME7kLeIVcqkYNF7l
+i98hRkYVJm3iecvg2iVr5/y6a7T/V248YJl59WTs7ycb3wqZJib5hQDOmMKeZbmS
+DrKSbdHwlistLsHnatTQxOz8vlHG6ufoAXBy+x3PXs1b+HD21Zh94ugVqgoOHoSm
+xqIQaulWFBYVg6xi2y9ZyEPyKo4KEwBBmNFs4eTCPmSgTvKT3lg=
+=mcNR
+-----END PGP SIGNATURE-----
+
+--AhhlLboLdkugWU4S--
