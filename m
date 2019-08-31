@@ -1,309 +1,193 @@
-From: "Milton Miller II" <miltonm@us.ibm.com>
-Subject: Re:  [PATCH v1 2/2] hwrng: npcm: add NPCM RNG driver
-Date: Fri, 30 Aug 2019 22:47:21 +0000
-Message-ID: <OF311056DF.80F736D6-ON00258466.007A807F-00258466.007D2F93@notes.na.collabserv.com>
-References: <20190828162617.237398-3-tmaimon77@gmail.com>,<20190828162617.237398-1-tmaimon77@gmail.com>
+From: Saravana Kannan <saravanak@google.com>
+Subject: Re: Adding depends-on DT binding to break cyclic dependencies
+Date: Fri, 30 Aug 2019 17:32:18 -0700
+Message-ID: <CAGETcx9T_3GKgAj=3jANb=JAa5b5hP+r4CLVm9a2LYf2CQiH9Q@mail.gmail.com>
+References: <CAGETcx_pSnC_2D7ufLRyfE3b8uRc814XEf8zu+SpNtT7_Z8NLg@mail.gmail.com>
+ <CAL_JsqKWcGSzCF_ZyEo6bbuayoYks51A-JAMp_oLR1RyTUzNUA@mail.gmail.com>
+ <CAGETcx_RL4hHHA2MFTVyV1ivgghaBZePROXpnC-UUJ7tcH4kSQ@mail.gmail.com> <CAL_JsqJB+41Sjxi-udYzw8sAq0myrcnxjSyzrxeEsoctZX6pbw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190828162617.237398-3-tmaimon77@gmail.com>
+In-Reply-To: <CAL_JsqJB+41Sjxi-udYzw8sAq0myrcnxjSyzrxeEsoctZX6pbw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com, yuenn@google.com, benjaminfair@google.com, sumit.garg@linaro.org, jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de, joel@jms.id.au, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
 List-Id: devicetree@vger.kernel.org
 
-On August 28th around 11:28AM in some timezone, Tomer Maimon wrote
-
->Add Nuvoton NPCM BMC Random Number Generator(RNG) driver.
+On Fri, Aug 30, 2019 at 7:35 AM Rob Herring <robh+dt@kernel.org> wrote:
 >
->Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
->---
-> drivers/char/hw_random/Kconfig    |  13 ++
-> drivers/char/hw_random/Makefile   |   1 +
-> drivers/char/hw_random/npcm-rng.c | 207
->++++++++++++++++++++++++++++++
-> 3 files changed, 221 insertions(+)
-> create mode 100644 drivers/char/hw_random/npcm-rng.c
+> On Thu, Aug 29, 2019 at 11:58 PM Saravana Kannan <saravanak@google.com> wrote:
+> >
+> > On Thu, Aug 29, 2019 at 9:28 AM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Thu, Aug 22, 2019 at 1:55 AM Saravana Kannan <saravanak@google.com> wrote:
+> > > >
+> > > > Hi Rob,
+> > > >
+> > > > Frank, Greg and I got together during ELC and had an extensive and
+> > > > very productive discussion about my "postboot supplier state cleanup"
+> > > > patch series [1]. The three of us are on the same page now -- the
+> > > > series as it stands is the direction we want to go in, with some minor
+> > > > refactoring, documentation and naming changes.
+> > > >
+> > > > However, one of the things Frank is concerned about (and Greg and I
+> > > > agree) in the current patch series is that the "cyclic dependency
+> > > > breaking" logic has been pushed off to individual drivers using the
+> > > > edit_links() callback.
+> > >
+> > > I would think the core can detect this condition. There's nothing
+> > > device specific once you have the dependency tree. You still need to
+> > > know what device needs to probe first and the drivers are going to
+> > > have that knowledge anyways. So wouldn't it be enough to allow probe
+> > > to proceed for devices in the loop.
+> >
+> > The problem is that device links don't allow creating a cyclic
+> > dependency graph -- for good reasons. The last link in the cycle would
+> > be rejected. I don't think trying to change device link to allow
+> > cyclic links is the right direction to go in nor is it a can of worms
+> > I want to open.
+> >
+> > So, we'll need some other way of tracking the loop and then allowing
+> > only those devices in a loop to attempt probing even if their
+> > suppliers haven't probed. And then if a device ends up being in more
+> > than one loop, things could get even more complicated. And after one
+> > of the devices in the loop probes, we still need to somehow figure out
+> > the "bad" link and delete it so the last "good" link can be made
+> > before all the suppliers have their sync_state() called (because the
+> > "good" link hasn't been created yet). That all gets pretty messy. If
+> > we are never going to accept any DT changes, then I'd rather go with
+> > edit_links() and keep the complexity within the one off weird hardware
+> > where there are cycles instead of over complicating the driver core.
 >
->diff --git a/drivers/char/hw_random/Kconfig
->b/drivers/char/hw_random/Kconfig
->index 59f25286befe..87a1c30e7958 100644
->--- a/drivers/char/hw_random/Kconfig
->+++ b/drivers/char/hw_random/Kconfig
->@@ -440,6 +440,19 @@ config HW_RANDOM_OPTEE
-> 
-> 	  If unsure, say Y.
-> 
->+config HW_RANDOM_NPCM
->+	tristate "NPCM Random Number Generator support"
->+	depends on ARCH_NPCM || COMPILE_TEST
->+	default HW_RANDOM
->+	help
->+ 	  This driver provides support for the Random Number
->+	  Generator hardware available in Nuvoton NPCM SoCs.
->+
->+	  To compile this driver as a module, choose M here: the
->+	  module will be called npcm-rng.
->+
->+ 	  If unsure, say Y.
->+
-> endif # HW_RANDOM
-> 
-> config UML_RANDOM
->diff --git a/drivers/char/hw_random/Makefile
->b/drivers/char/hw_random/Makefile
->index 7c9ef4a7667f..17b6d4e6d591 100644
->--- a/drivers/char/hw_random/Makefile
->+++ b/drivers/char/hw_random/Makefile
->@@ -39,3 +39,4 @@ obj-$(CONFIG_HW_RANDOM_MTK)	+= mtk-rng.o
-> obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
-> obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
-> obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
->+obj-$(CONFIG_HW_RANDOM_NPCM) += npcm-rng.o
->diff --git a/drivers/char/hw_random/npcm-rng.c
->b/drivers/char/hw_random/npcm-rng.c
->new file mode 100644
->index 000000000000..5b4b1b6cb362
->--- /dev/null
->+++ b/drivers/char/hw_random/npcm-rng.c
->@@ -0,0 +1,207 @@
->+// SPDX-License-Identifier: GPL-2.0
->+// Copyright (c) 2019 Nuvoton Technology corporation.
->+
->+#include <linux/kernel.h>
->+#include <linux/module.h>
->+#include <linux/io.h>
->+#include <linux/iopoll.h>
->+#include <linux/init.h>
->+#include <linux/random.h>
->+#include <linux/err.h>
->+#include <linux/platform_device.h>
->+#include <linux/hw_random.h>
->+#include <linux/delay.h>
->+#include <linux/of_irq.h>
->+#include <linux/pm_runtime.h>
->+
->+#define NPCM_RNGCS_REG		0x00	/* Control and status register */
->+#define NPCM_RNGD_REG		0x04	/* Data register */
->+#define NPCM_RNGMODE_REG	0x08	/* Mode register */
->+
->+#define NPCM_RNG_CLK_SET_25MHZ	GENMASK(4, 3) /* 20-25 MHz */
->+#define NPCM_RNG_DATA_VALID	BIT(1)
->+#define NPCM_RNG_ENABLE		BIT(0)
->+#define NPCM_RNG_M1ROSEL	BIT(1)
->+
->+#define NPCM_RNG_TIMEOUT_POLL	20
->+
->+#define to_npcm_rng(p)	container_of(p, struct npcm_rng, rng)
->+
->+struct npcm_rng {
->+	void __iomem *base;
->+	struct hwrng rng;
->+};
->+
->+static int npcm_rng_init(struct hwrng *rng)
->+{
->+	struct npcm_rng *priv = to_npcm_rng(rng);
->+	u32 val;
->+
->+	val = readl(priv->base + NPCM_RNGCS_REG);
->+	val |= NPCM_RNG_ENABLE;
->+	writel(val, priv->base + NPCM_RNGCS_REG);
->+
->+	return 0;
->+}
->+
->+static void npcm_rng_cleanup(struct hwrng *rng)
->+{
->+	struct npcm_rng *priv = to_npcm_rng(rng);
->+	u32 val;
->+
->+	val = readl(priv->base + NPCM_RNGCS_REG);
->+	val &= ~NPCM_RNG_ENABLE;
->+	writel(val, priv->base + NPCM_RNGCS_REG);
->+}
->+
->+static bool npcm_rng_wait_ready(struct hwrng *rng, bool wait)
->+{
->+	struct npcm_rng *priv = to_npcm_rng(rng);
->+	int timeout_cnt = 0;
->+	int ready;
->+
->+	ready = readl(priv->base + NPCM_RNGCS_REG) & NPCM_RNG_DATA_VALID;
+> If it is so complex, then it should not be in DT.
 
-You should honor the wait paramter here.
+I'm talking about existing simple DT bindings that says what
+clocks/interconnects/regulators a device needs. Not sure what you mean
+by "it should not be in DT".
 
->+	while ((ready == 0) && (timeout_cnt < NPCM_RNG_TIMEOUT_POLL)) {
->+		usleep_range(500, 1000);
->+		ready = readl(priv->base + NPCM_RNGCS_REG) &
->+			NPCM_RNG_DATA_VALID;
->+		timeout_cnt++;
->+	}
->+
->+	return !!ready;
->+}
->+
->+static int npcm_rng_read(struct hwrng *rng, void *buf, size_t max,
->bool wait)
->+{
->+	struct npcm_rng *priv = to_npcm_rng(rng);
->+	int retval = 0;
->+
->+	pm_runtime_get_sync((struct device *)priv->rng.priv);
->+
->+	while (max >= sizeof(u32)) {
->+		if (!npcm_rng_wait_ready(rng, wait))
->+			break;
->+
->+		*(u32 *)buf = readl(priv->base + NPCM_RNGD_REG);
->+		retval += sizeof(u32);
->+		buf += sizeof(u32);
->+		max -= sizeof(u32);
->+	}
->+
->+	pm_runtime_mark_last_busy((struct device *)priv->rng.priv);
->+	pm_runtime_put_sync_autosuspend((struct device *)priv->rng.priv);
->+
->+	return retval || !wait ? retval : -EIO;
+> Things like
+> describing clocks at the gate/mux/divider level turned out to be too
+> complex to get right or complete, so we avoid that.
 
-So you are doing pm get/put around each rng data sample.
+Right, and this patch series has nothing to do with describing complex
+internals of a device.
 
-Have you characterized the time to enable to the time to get a sample
-and compared to the pm runtime sync parameters?
-
-Do you get any data if you set non-blocking wait above?
-
-
->+}
->+
->+static int npcm_rng_probe(struct platform_device *pdev)
->+{
->+	struct npcm_rng *priv;
->+	struct resource *res;
->+	u32 quality;
->+	int ret;
->+
->+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->+	if (!priv)
->+		return -ENOMEM;
->+
->+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->+	priv->base = devm_ioremap_resource(&pdev->dev, res);
->+	if (IS_ERR(priv->base))
->+		return PTR_ERR(priv->base);
->+
->+	priv->rng.name = pdev->name;
->+#ifndef CONFIG_PM
->+	priv->rng.init = npcm_rng_init;
->+	priv->rng.cleanup = npcm_rng_cleanup;
-
-so npcm_rng_init and npcm_rng_cleanup are unused if !CONFIG_PM.  No warnings?
-
->+#endif
->+	priv->rng.read = npcm_rng_read;
->+	priv->rng.priv = (unsigned long)&pdev->dev;
->+	if (of_property_read_u32(pdev->dev.of_node, "quality", &quality))
->+		priv->rng.quality = 1000;
->+	else
->+		priv->rng.quality = quality;
->+
->+	writel(NPCM_RNG_M1ROSEL, priv->base + NPCM_RNGMODE_REG);
->+#ifndef CONFIG_PM
->+	writel(NPCM_RNG_CLK_SET_25MHZ, priv->base + NPCM_RNGCS_REG);
->+#else
->+	writel(NPCM_RNG_CLK_SET_25MHZ | NPCM_RNG_ENABLE,
->+	       priv->base + NPCM_RNGCS_REG);
->+#endif
-
-I am assuming these are safe to always set and the clock will
-bein range?
-
-Did you test without CONFIG_PM ? Looks like the ifndev should be
-ifdef otherwise the enable will never be set.
-
-Can you use a local variable for this value that is chosen by
-the config instead of ifdef'ing the code?
-
-
-
->+
->+	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
->+	if (ret) {
->+		dev_err(&pdev->dev, "Failed to register rng device: %d\n",
->+			ret);
->+		return ret;
->+	}
->+
->+	dev_set_drvdata(&pdev->dev, priv);
->+	pm_runtime_set_autosuspend_delay(&pdev->dev, 100);
->+	pm_runtime_use_autosuspend(&pdev->dev);
->+	pm_runtime_enable(&pdev->dev);
->+
->+	dev_info(&pdev->dev, "Random Number Generator Probed\n");
->+
->+	return 0;
->+}
->+
->+static int npcm_rng_remove(struct platform_device *pdev)
->+{
->+	struct npcm_rng *priv = platform_get_drvdata(pdev);
->+
->+	hwrng_unregister(&priv->rng);
->+	pm_runtime_disable(&pdev->dev);
->+	pm_runtime_set_suspended(&pdev->dev);
->+
->+	return 0;
->+}
->+
->+#ifdef CONFIG_PM
->+static int npcm_rng_runtime_suspend(struct device *dev)
->+{
->+	struct npcm_rng *priv = dev_get_drvdata(dev);
->+
->+	npcm_rng_cleanup(&priv->rng);
->+
->+	return 0;
->+}
->+
->+static int npcm_rng_runtime_resume(struct device *dev)
->+{
->+	struct npcm_rng *priv = dev_get_drvdata(dev);
->+
->+	return npcm_rng_init(&priv->rng);
->+}
->+#endif
->+
->+static const struct dev_pm_ops npcm_rng_pm_ops = {
->+	SET_RUNTIME_PM_OPS(npcm_rng_runtime_suspend,
->+			   npcm_rng_runtime_resume, NULL)
->+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->+				pm_runtime_force_resume)
->+};
->+
->+static const struct of_device_id rng_dt_id[] = {
->+	{ .compatible = "nuvoton,npcm750-rng",  },
->+	{},
->+};
->+MODULE_DEVICE_TABLE(of, rng_dt_id);
->+
->+static struct platform_driver npcm_rng_driver = {
->+	.driver = {
->+		.name		= "npcm-rng",
->+		.pm		= &npcm_rng_pm_ops,
->+		.owner		= THIS_MODULE,
->+		.of_match_table = of_match_ptr(rng_dt_id),
->+	},
->+	.probe		= npcm_rng_probe,
->+	.remove		= npcm_rng_remove,
->+};
->+
->+module_platform_driver(npcm_rng_driver);
->+
->+MODULE_DESCRIPTION("Nuvoton NPCM Random Number Generator Driver");
->+MODULE_AUTHOR("Tomer Maimon <tomer.maimon@nuvoton.com>");
->+MODULE_LICENSE("GPL v2");
->-- 
->2.18.0
 >
+> > > Once 1 driver succeeds, then you
+> > > can enforce the dependencies on the rest.
+> > >
+> > > > The concern being, there are going to be multiple device specific ad
+> > > > hoc implementations to break a cyclic dependency. Also, if a device
+> > > > can be part of a cyclic dependency, the driver for that device has to
+> > > > check for specific system/products in which the device is part of a
+> > > > cyclic dependency (because it might not always be part of a cycle),
+> > > > and then potentially have cycle/product specific code to break the
+> > > > cycle (since the cycle can be different on each system/product).
+> > > >
+> > > > One way to avoid all of the device/driver specific code and simplify
+> > > > my patch series by a non-trivial amount would be by adding a
+> > > > "depends-on" DT binding that can ONLY be used to break cycles. We can
+> > > > document it as such and reject any attempts to use it for other
+> > > > purposes. When a depends-on property is present in a device node, that
+> > > > specific device's supplier list will be parsed ONLY from the
+> > > > depends-on property and the other properties won't be parsed for
+> > > > deriving dependency information for that device.
+> > >
+> > > Seems like only ignoring the dependencies with a cycle would be
+> > > sufficient.
+> >
+> > No, we need to only ignore the "bad" dependency. We can't ignore all
+> > the dependencies in the cycle because that would cause the suppliers
+> > to clean up the hardware state before the consumers are ready.
 >
+> I misunderstood. I now see this is back to duplicating all the data
+> that's already there which I've already said no to.
+
+What I proposed earlier was using depends-on for all devices. And I'm
+glad you rejected it because I like my current set of patches better
+than the earlier one. The question here is whether we can allow this
+for the rare occasions where there is a cycle. Frank, Greg and I think
+it was a reasonable compromise when we talked about it in person.
+
+>
+> > > For example, consider a clock controller which has 2 clock
+> > > inputs from other clock controllers where one has a cycle and one
+> > > doesn't. Also consider it has a regulator dependency. We only need to
+> > > ignore the dependency for 1 of the clock inputs. The rest of the
+> > > dependencies should be honored.
+> >
+> > Agreed. In this case, if the device used the depends-on property,
+> > it'll have to list the 1 clock controller and the regulator.
+> >
+> > > > Frank, Greg and I like this usage model for a new depends-on DT
+> > > > binding. Is this something you'd be willing to accept?
+> > >
+> > > To do the above, it needs to be inverted.
+> >
+> > I understand you are basically asking for a "does-not-depend-on"
+> > property (like a black list). But I think a whitelist on the rare
+> > occasions that we need to override would give more flexibility than a
+> > blacklist. It'll also mean we don't have to check every supplier with
+> > the entire black list each time.
+>
+> So if we have 10 dependencies and 1 to ignore, we're going to list the
+> 9 dependencies? And if I want to know where the cycle is, I have to
+> figure out which 1 of the 10 dependencies you omitted. Pick black or
+> white list with what's going to be shortest in the common case.
+
+Sure, but how often are we even going to encounter these?
+
+> Also, when new dependencies are added to a node, we'd have to check
+> that the dependency is added to 'depends-on' (or was it not on
+> purpose).
+
+Even if it's a "doesnt-depend-on" you'll still have that confusion of
+whether the new dependency should be added to that blacklist.
+
+> > > Convince me that cycles are really a problem anywhere besides clocks.
+> >
+> > I wouldn't be surprised at all if interconnects end up with cyclic
+> > dependencies as support for more of them are added.
+>
+> Perhaps, though I'm doubtful the drivers for them could be both
+> required at probe and built as modules.
+
+This is 100% true/possible on SDM845. They are needed for some
+consumers to write to registers. And both the consumer and the
+interconnect provider can be loaded as modules. In fact, some paths in
+the provider is left on from boot so that the CPU and other devices
+can reach memory. You asked for examples of where else there could be
+cycles, I gave you one.
+
+> > > I'd be more comfortable with a clock specific property if we only need
+> > > it for clocks and I'm having a hard time imagining cycles for other
+> > > dependencies.
+> >
+> > I definitely don't want per-supplier type override. That's just making
+> > things too complicated and adding too many DT properties if we need to
+> > override more than clocks.
+>
+> I'm all for generic properties, but not if we only have hypothetical
+> cases for anything beyond clocks. I know clocks are a somewhat common
+> problem because it has come up before. I'm just asking for specific
+> example that's not clocks.
+
+I gave you another example above and you are just dismissing it saying
+it probably can't be a module, etc. Not sure what more I can tell.
+
+> Part of the problem is we can't really police how a generic property
+> is used. Maybe Linux is only using it for cycles, but then u-boot
+> folks may think it works well for other reasons.
+
+Any property could be misused. We can't control downstream stuff or
+other projects.
+
+> Maybe a dtc check
+> could mitigate that. Warn on any dependencies that are not a cycle.
+> Actually, you could add a check for any cycles first and then we can
+> see where all they exist.
+
+Sorry, I'm not going to sign up to make dtc changes to be able to add
+DT bindings.
+
+-Saravana
