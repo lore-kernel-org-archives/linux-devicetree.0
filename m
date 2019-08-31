@@ -1,215 +1,67 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: Re: Adding depends-on DT binding to break cyclic dependencies
-Date: Fri, 30 Aug 2019 22:01:25 -0700
-Message-ID: <CAGETcx-_Mewt-ZND1WkjtdvLZ9iXTZBEdSPU6kO3G_L28mCHdQ@mail.gmail.com>
-References: <CAGETcx_pSnC_2D7ufLRyfE3b8uRc814XEf8zu+SpNtT7_Z8NLg@mail.gmail.com>
- <CAL_JsqKWcGSzCF_ZyEo6bbuayoYks51A-JAMp_oLR1RyTUzNUA@mail.gmail.com>
- <CAGETcx_RL4hHHA2MFTVyV1ivgghaBZePROXpnC-UUJ7tcH4kSQ@mail.gmail.com>
- <CAL_JsqJB+41Sjxi-udYzw8sAq0myrcnxjSyzrxeEsoctZX6pbw@mail.gmail.com> <CAGETcx9T_3GKgAj=3jANb=JAa5b5hP+r4CLVm9a2LYf2CQiH9Q@mail.gmail.com>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [Letux-kernel] [PATCH 2/2] DTS: ARM: gta04: introduce legacy
+ spi-cs-high to make display work again
+Date: Sat, 31 Aug 2019 08:48:52 +0200
+Message-ID: <20190831084852.5e726cfa@aktux>
+References: <cover.1562597164.git.hns@goldelico.com>
+        <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com>
+        <20190724194259.GA25847@bogus>
+        <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com>
+        <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com>
+        <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGETcx9T_3GKgAj=3jANb=JAa5b5hP+r4CLVm9a2LYf2CQiH9Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 5:32 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Fri, Aug 30, 2019 at 7:35 AM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Thu, Aug 29, 2019 at 11:58 PM Saravana Kannan <saravanak@google.com> wrote:
-> > >
-> > > On Thu, Aug 29, 2019 at 9:28 AM Rob Herring <robh+dt@kernel.org> wrote:
-> > > >
-> > > > On Thu, Aug 22, 2019 at 1:55 AM Saravana Kannan <saravanak@google.com> wrote:
-> > > > >
-> > > > > Hi Rob,
-> > > > >
-> > > > > Frank, Greg and I got together during ELC and had an extensive and
-> > > > > very productive discussion about my "postboot supplier state cleanup"
-> > > > > patch series [1]. The three of us are on the same page now -- the
-> > > > > series as it stands is the direction we want to go in, with some minor
-> > > > > refactoring, documentation and naming changes.
-> > > > >
-> > > > > However, one of the things Frank is concerned about (and Greg and I
-> > > > > agree) in the current patch series is that the "cyclic dependency
-> > > > > breaking" logic has been pushed off to individual drivers using the
-> > > > > edit_links() callback.
-> > > >
-> > > > I would think the core can detect this condition. There's nothing
-> > > > device specific once you have the dependency tree. You still need to
-> > > > know what device needs to probe first and the drivers are going to
-> > > > have that knowledge anyways. So wouldn't it be enough to allow probe
-> > > > to proceed for devices in the loop.
-> > >
-> > > The problem is that device links don't allow creating a cyclic
-> > > dependency graph -- for good reasons. The last link in the cycle would
-> > > be rejected. I don't think trying to change device link to allow
-> > > cyclic links is the right direction to go in nor is it a can of worms
-> > > I want to open.
-> > >
-> > > So, we'll need some other way of tracking the loop and then allowing
-> > > only those devices in a loop to attempt probing even if their
-> > > suppliers haven't probed. And then if a device ends up being in more
-> > > than one loop, things could get even more complicated. And after one
-> > > of the devices in the loop probes, we still need to somehow figure out
-> > > the "bad" link and delete it so the last "good" link can be made
-> > > before all the suppliers have their sync_state() called (because the
-> > > "good" link hasn't been created yet). That all gets pretty messy. If
-> > > we are never going to accept any DT changes, then I'd rather go with
-> > > edit_links() and keep the complexity within the one off weird hardware
-> > > where there are cycles instead of over complicating the driver core.
-> >
-> > If it is so complex, then it should not be in DT.
->
-> I'm talking about existing simple DT bindings that says what
-> clocks/interconnects/regulators a device needs. Not sure what you mean
-> by "it should not be in DT".
->
-> > Things like
-> > describing clocks at the gate/mux/divider level turned out to be too
-> > complex to get right or complete, so we avoid that.
->
-> Right, and this patch series has nothing to do with describing complex
-> internals of a device.
->
-> >
-> > > > Once 1 driver succeeds, then you
-> > > > can enforce the dependencies on the rest.
-> > > >
-> > > > > The concern being, there are going to be multiple device specific ad
-> > > > > hoc implementations to break a cyclic dependency. Also, if a device
-> > > > > can be part of a cyclic dependency, the driver for that device has to
-> > > > > check for specific system/products in which the device is part of a
-> > > > > cyclic dependency (because it might not always be part of a cycle),
-> > > > > and then potentially have cycle/product specific code to break the
-> > > > > cycle (since the cycle can be different on each system/product).
-> > > > >
-> > > > > One way to avoid all of the device/driver specific code and simplify
-> > > > > my patch series by a non-trivial amount would be by adding a
-> > > > > "depends-on" DT binding that can ONLY be used to break cycles. We can
-> > > > > document it as such and reject any attempts to use it for other
-> > > > > purposes. When a depends-on property is present in a device node, that
-> > > > > specific device's supplier list will be parsed ONLY from the
-> > > > > depends-on property and the other properties won't be parsed for
-> > > > > deriving dependency information for that device.
-> > > >
-> > > > Seems like only ignoring the dependencies with a cycle would be
-> > > > sufficient.
-> > >
-> > > No, we need to only ignore the "bad" dependency. We can't ignore all
-> > > the dependencies in the cycle because that would cause the suppliers
-> > > to clean up the hardware state before the consumers are ready.
-> >
-> > I misunderstood. I now see this is back to duplicating all the data
-> > that's already there which I've already said no to.
->
-> What I proposed earlier was using depends-on for all devices. And I'm
-> glad you rejected it because I like my current set of patches better
-> than the earlier one. The question here is whether we can allow this
-> for the rare occasions where there is a cycle. Frank, Greg and I think
-> it was a reasonable compromise when we talked about it in person.
->
-> >
-> > > > For example, consider a clock controller which has 2 clock
-> > > > inputs from other clock controllers where one has a cycle and one
-> > > > doesn't. Also consider it has a regulator dependency. We only need to
-> > > > ignore the dependency for 1 of the clock inputs. The rest of the
-> > > > dependencies should be honored.
-> > >
-> > > Agreed. In this case, if the device used the depends-on property,
-> > > it'll have to list the 1 clock controller and the regulator.
-> > >
-> > > > > Frank, Greg and I like this usage model for a new depends-on DT
-> > > > > binding. Is this something you'd be willing to accept?
-> > > >
-> > > > To do the above, it needs to be inverted.
-> > >
-> > > I understand you are basically asking for a "does-not-depend-on"
-> > > property (like a black list). But I think a whitelist on the rare
-> > > occasions that we need to override would give more flexibility than a
-> > > blacklist. It'll also mean we don't have to check every supplier with
-> > > the entire black list each time.
-> >
-> > So if we have 10 dependencies and 1 to ignore, we're going to list the
-> > 9 dependencies? And if I want to know where the cycle is, I have to
-> > figure out which 1 of the 10 dependencies you omitted. Pick black or
-> > white list with what's going to be shortest in the common case.
->
-> Sure, but how often are we even going to encounter these?
->
-> > Also, when new dependencies are added to a node, we'd have to check
-> > that the dependency is added to 'depends-on' (or was it not on
-> > purpose).
->
-> Even if it's a "doesnt-depend-on" you'll still have that confusion of
-> whether the new dependency should be added to that blacklist.
->
-> > > > Convince me that cycles are really a problem anywhere besides clocks.
-> > >
-> > > I wouldn't be surprised at all if interconnects end up with cyclic
-> > > dependencies as support for more of them are added.
-> >
-> > Perhaps, though I'm doubtful the drivers for them could be both
-> > required at probe and built as modules.
->
-> This is 100% true/possible on SDM845. They are needed for some
-> consumers to write to registers. And both the consumer and the
-> interconnect provider can be loaded as modules. In fact, some paths in
-> the provider is left on from boot so that the CPU and other devices
-> can reach memory. You asked for examples of where else there could be
-> cycles, I gave you one.
->
-> > > > I'd be more comfortable with a clock specific property if we only need
-> > > > it for clocks and I'm having a hard time imagining cycles for other
-> > > > dependencies.
-> > >
-> > > I definitely don't want per-supplier type override. That's just making
-> > > things too complicated and adding too many DT properties if we need to
-> > > override more than clocks.
-> >
-> > I'm all for generic properties, but not if we only have hypothetical
-> > cases for anything beyond clocks. I know clocks are a somewhat common
-> > problem because it has come up before. I'm just asking for specific
-> > example that's not clocks.
->
-> I gave you another example above and you are just dismissing it saying
-> it probably can't be a module, etc. Not sure what more I can tell.
->
-> > Part of the problem is we can't really police how a generic property
-> > is used. Maybe Linux is only using it for cycles, but then u-boot
-> > folks may think it works well for other reasons.
->
-> Any property could be misused. We can't control downstream stuff or
-> other projects.
->
-> > Maybe a dtc check
-> > could mitigate that. Warn on any dependencies that are not a cycle.
-> > Actually, you could add a check for any cycles first and then we can
-> > see where all they exist.
->
-> Sorry, I'm not going to sign up to make dtc changes to be able to add
-> DT bindings.
+Hi,
 
-Thinking more about this, I don't think it's worth holding back the
-entire series trying to solve the cyclic dependencies.
+On Mon, 5 Aug 2019 12:29:19 +0200
+Linus Walleij <linus.walleij@linaro.org> wrote:
 
-At least as of today, the clock framework has a hack (hack because it
-expects globally unique clock names that causes problems for some
-corner cases) that allows the supplier (the one that gets a few clocks
-from the consumers) to get away with not listing the consumer clocks
-in the supplier's clock list. So, the SDM845 avoid cycles in DT
-(despite having them in the hardware) that way.
+> On Fri, Jul 26, 2019 at 12:43 AM Rob Herring <robh@kernel.org> wrote:
+> > On Thu, Jul 25, 2019 at 12:23 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:  
+> 
+> > > I tried to convince Linus that this is the right way but he convinced
+> > > me that a fix that handles all cases does not exist.
+> > >
+> > > There seem to be embedded devices with older DTB (potentially in ROM)
+> > > which provide a plain 0 value for a gpios definition. And either with
+> > > or without spi-cs-high.
+> > >
+> > > Since "0" is the same as "GPIO_ACTIVE_HIGH", the absence of
+> > > spi-cs-high was and must be interpreted as active low for these
+> > > devices. This leads to the inversion logic in code.
+> > >
+> > > AFAIR it boils down to the question if gpiolib and the bindings
+> > > should still support such legacy devices with out-of tree DTB,
+> > > but force in-tree DTS to add the legacy spi-cs-high property.
+> > >
+> > > Or if we should fix the 2 or 3 cases of in-tree legacy cases
+> > > and potentially break out-of tree DTBs.  
+> >
+> > If it is small number of platforms, then the kernel could handle those
+> > cases explicitly as needed.
+> >  
+> > > IMHO it is more general to keep the out-of-tree DTBs working
+> > > and "fix" what we can control (in-tree DTS).  
+> >
+> > If we do this, then we need to not call spi-cs-high legacy because
+> > we're stuck with it forever.  
+> 
+> I agree. The background on it is here:
+> https://lkml.org/lkml/2019/4/2/4
+> 
+> Not using the negatively defined (i.e. if it is no there, the line is
+> by default active low) spi-cs-high would break
+> PowerPC, who were AFAICT using this to ship devices.
+> 
+is this thing now just waiting for someone to do a s/legacy//?
 
-So we can take our time trying to solve this in a generic fashion (new
-DT property/binding, edit_links(), letting devices probe, etc). In the
-meantime, maybe we'll run into more cycle issues that'll give us a
-better idea of which solution would be better as a generic solution.
-
-I'll send a new patch series addressing the concern about
-platfom_device and dropping the attempt to solve cycles.
-
-Thanks,
-Saravana
+Regards,
+Andreas
