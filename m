@@ -1,72 +1,118 @@
 From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v1 1/1] i2c: iproc: Add i2c repeated start capability
-Date: Sat, 31 Aug 2019 11:49:41 +0200
-Message-ID: <20190831094940.GA1138@kunai>
-References: <1565150941-27297-1-git-send-email-rayagonda.kokatanur@broadcom.com>
- <20190830125626.GC2870@ninjato>
- <3e70fa7e-de13-4edd-2e17-b7c56e91d220@broadcom.com>
+Subject: Re: [PATCH v3 2/9] dt-bindings: i2c: add bindings for i2c analog and
+ digital filter
+Date: Sat, 31 Aug 2019 13:39:09 +0200
+Message-ID: <20190831113909.GA1032@ninjato>
+References: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
+ <1562678049-17581-3-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3e70fa7e-de13-4edd-2e17-b7c56e91d220@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>, Lori Hikichi <lori.hikichi@broadcom.com>, Icarus Chau <icarus.chau@broadcom.com>, Shivaraj Shetty <sshetty1@broadcom.com>
+Content-Type: multipart/mixed; boundary="===============3092222965330315732=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1562678049-17581-3-git-send-email-eugen.hristev@microchip.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eugen.Hristev@microchip.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, linux-i2c@vger.kernel.org, peda@axentia.se, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---AhhlLboLdkugWU4S
+--===============3092222965330315732==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
+Content-Disposition: inline
+
+
+--fUYQa+Pmc3FrFX/N
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Ray,
-
-> > With all the limitations in place, I wonder if it might be easier to
-> > implement an smbus_xfer callback instead? What is left that makes this
-> > controller more than SMBus and real I2C?
-> >=20
+On Tue, Jul 09, 2019 at 01:19:33PM +0000, Eugen.Hristev@microchip.com wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
 >=20
-> Right. But what is the implication of using smbus_xfer instead of
-> master_xfer in our driver?
+> Some i2c controllers have a built-in digital or analog filter.
+> This is specifically required depending on the hardware PCB/board.
+> Some controllers also allow specifying the maximum width of the
+> spikes that can be filtered. The width length can be specified in nanosec=
+onds.
 >=20
-> Does it mean it will break existing functions of the i2c app that our
-> customers developed based on i2cdev (e.g., I2C_RDWR)?
-
-If the customers uses I2C_RDWR (and it cannot be mapped to i2c_smbus_*
-calls) then this is an indication that there is some I2C functionality
-left which the HW can provide. I'd be interested which one, though.
-
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 >=20
-> 1) Does
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentatio=
+n/devicetree/bindings/i2c/i2c.txt
+> index 44efafd..a2d31aa 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
+> @@ -55,6 +55,17 @@ wants to support one of the below features, it should =
+adapt the bindings below.
+>  	Number of nanoseconds the SDA signal takes to fall; t(f) in the I2C
+>  	specification.
+> =20
+> +- i2c-ana-filter
+> +	Enable analog filter for i2c lines.
+> +
+> +- i2c-dig-filter
+> +	Enable digital filter for i2c lines.
 
-Maybe you wanted to describe it here and it got accidently cut off?
+Would you be OK with writing out 'analog' and 'digital' in full form?
+The abrreviation doesn't save us much, I'd think, and I didn't find
+similar wording in existing bindings.
 
-Regards,
+> +
+> +- i2c-filter-width-ns
+> +	Width of spikes which can be filtered by either digital or analog
+> +	filters (i2c-ana-filtr or i2c-dig-filtr). This width is specified
+> +	in nanoseconds.
+> +
+>  - interrupts
+>  	interrupts used by the device.
+> =20
+> --=20
+> 2.7.4
+>=20
 
-   Wolfram
-
-
---AhhlLboLdkugWU4S
+--fUYQa+Pmc3FrFX/N
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1qQrAACgkQFA3kzBSg
-KbbmbQ/9E9Ts1/5jZMraYl7CNxsXtWMbdSUWQFyuZDJGvO7UvZz9v7O0Aq9ct/MB
-mMb4lMVP4lLM/y1DMpVmoYoqVXyKPXzvMzGzsB0CMCs5e+XCbWKr1yCaDCLv0/Js
-HNbEe7PC1fuNz/YklNtYvHEe1LjSxf81lFWoLDFGPZ4FkSDcbUAZQkUfe/VpcKbc
-VVhYAQucc6GrBoJ12UMRSWSf3diIkR0CBqKhALZXCnrSLx9cXtTuqA0k7UnN9Piv
-qPZs/I20tTu52RCHXTpjnwFpWMLNuswRIoCWcMR6Vl1Ix6v0TB4NiUpMStk4Pw45
-KD6hdZSPBtFM4uQ04M7wbVFR634PF4mQx7wts+VjFXBe6rxEASwpIq3dMtxVFWgs
-GwZ2tyZDQBT/jqdJi2QyUsKw4UW2R7su3D3+/idNTtoT1JkqwAfsFix283Bcbees
-Kmx1W32dzB7p2G0k2vCWmNWx1CI+Mf/K16H0n2ffyD/5t4vCME7kLeIVcqkYNF7l
-i98hRkYVJm3iecvg2iVr5/y6a7T/V248YJl59WTs7ycb3wqZJib5hQDOmMKeZbmS
-DrKSbdHwlistLsHnatTQxOz8vlHG6ufoAXBy+x3PXs1b+HD21Zh94ugVqgoOHoSm
-xqIQaulWFBYVg6xi2y9ZyEPyKo4KEwBBmNFs4eTCPmSgTvKT3lg=
-=mcNR
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1qXF0ACgkQFA3kzBSg
+KbbKJxAApyKizr/4AG2mt0cdPc6Pg5Q4whRHl0WPC6X1dG4zB0aR3btEB3esTmWY
+FCyB0bqxsn64ZFqHpSfnF6piDxSu7iNrtxh+ltx2j3E8SyaOASeP29gckhaJoSsH
+U2vUtPYg+I/9L6bCx8Kl6ZAf3EnXrRDFxIJU1lYGfeWbqXfrLNQgvtpcjx8jnADn
+YRDpyeezNLnD8Nz3h321Zt9d/dnkeW2kb6x78Sstg0MVEskiGY97dioCbCzR59C6
+QvAl4z/vlSMCOywBDplMKVpzYieCxD3IhE/BlydvvEwEgUmJuZWKfJDxURSuve4K
+kll9//TsFaSSDZd4mZICUiTJurdmCskq8GFV4GQQZEO/J9viPfj61lZmtl6diMcY
+eXHIWRWns+85mPJuKhdLpsCHv7Peki+u95K4lKOff4oErj9whAt1fEQ93vvz9oXF
+2ciZiio4Wx8KokmGl6usNgugA9JMxJtLbJ1sNIUmykCa4Wdso3E02k6vcF0L6Sfx
+uMEvNpxULD2zWe3yMX/LM2qkMjfadgloGJWaYI9KymKk9F5J9PjQ4GrXOCO1JmIq
+qtYFpzw3sJ5EksYq/p21JOFSAK0x/1Cw/pjTOUcsXVgaRstIwgm5k+Vatl9C111+
+JYRETvHiVYuj2qWUIboXY8TWkQuZaFCojPFv6e/kUQ6xgaPIIJA=
+=WvKa
 -----END PGP SIGNATURE-----
 
---AhhlLboLdkugWU4S--
+--fUYQa+Pmc3FrFX/N--
+
+
+--===============3092222965330315732==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3092222965330315732==--
