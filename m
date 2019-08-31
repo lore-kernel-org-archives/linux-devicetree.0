@@ -1,34 +1,29 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] dt-bindings: dmaengine: dma-common: Revise the dma-channel-mask property
-Date: Wed, 28 Aug 2019 15:39:35 +0900
-Message-Id: <1566974375-32482-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-To: vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=Mv5K=W3=verge.net.au=horms@kernel.org>
+Date: Sat, 31 Aug 2019 11:29:00 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] arm64: dts: renesas: hihope-common: Fix eMMC status
+Message-ID: <20190831092837.lgtxrnqoy55dn2oo@verge.net.au>
+References: <1567170935-19186-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdVtkBtVpXo2eCMbZ6MEJskeLHYgC4O=p1SjwOdkHLakyg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVtkBtVpXo2eCMbZ6MEJskeLHYgC4O=p1SjwOdkHLakyg@mail.gmail.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com
 List-ID: <devicetree@vger.kernel.org>
 
-The commit b37e3534ac42 ("dt-bindings: dmaengine: Add YAML schemas
-for the generic DMA bindings") changed the property from
-dma-channel-mask to dma-channel-masks. So, this patch revises it.
+On Fri, Aug 30, 2019 at 03:25:39PM +0200, Geert Uytterhoeven wrote:
+> On Fri, Aug 30, 2019 at 3:15 PM Fabrizio Castro
+> <fabrizio.castro@bp.renesas.com> wrote:
+> > SDHI3 got accidentally disabled while adding USB 2.0 support,
+> > this patch fixes it.
+> >
+> > Fixes: 734d277f412a ("arm64: dts: renesas: hihope-common: Add USB 2.0 support")
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> This is a fix for v5.3.
 
-Fixes: b37e3534ac42 ("dt-bindings: dmaengine: Add YAML schemas for the generic DMA bindings")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Documentation/devicetree/bindings/dma/dma-common.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
-index 0141af0..ed0a49a 100644
---- a/Documentation/devicetree/bindings/dma/dma-common.yaml
-+++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
-@@ -24,7 +24,7 @@ properties:
-     description:
-       Used to provide DMA controller specific information.
- 
--  dma-channel-masks:
-+  dma-channel-mask:
-     $ref: /schemas/types.yaml#definitions/uint32
-     description:
-       Bitmask of available DMA channels in ascending order that are
--- 
-2.7.4
+Thanks, applied as a fix for v5.3.
