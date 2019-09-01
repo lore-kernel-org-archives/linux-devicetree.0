@@ -1,537 +1,667 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Subject: Re: [PATCH v5 01/18] thermal: sun8i: add thermal driver for h6
-Date: Sun, 1 Sep 2019 04:06:29 +0200
-Message-ID: <20190901020629.lpzkmjpjs5wgu6e7@core.my.home>
-References: <20190810052829.6032-1-tiny.windzz@gmail.com>
- <20190810052829.6032-2-tiny.windzz@gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] arm64: dts: rockchip: Add support for TB-96AI board
+Date: Sun, 01 Sep 2019 06:36:41 +0200
+Message-ID: <3671433.J3OatT8Kjo@phil>
+References: <20190805015755.26017-1-zhangzj@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190810052829.6032-2-tiny.windzz@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yangtao Li <tiny.windzz@gmail.com>
-Cc: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190805015755.26017-1-zhangzj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Elon Zhang <zhangzj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Yangtao,
+Hi Elon,
 
-On Sat, Aug 10, 2019 at 05:28:12AM +0000, Yangtao Li wrote:
-> This patch adds the support for allwinner thermal sensor, within
-> allwinner SoC. It will register sensors for thermal framework
-> and use device tree to bind cooling device.
+Am Montag, 5. August 2019, 03:57:55 CEST schrieb Elon Zhang:
+> Add devicetree support for RK3399Pro TB-96AI board, one of
+> the 96Boards family.
 > 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> The TB-96AI board is a 96Boards Compute SOM design, launched
+> by Linaro, Rockchip and Beiqicloud.
+> 
+> More information can be obtained from the following websites:
+> 1.https://www.96boards.org/product/tb-96ai/
+> 2.http://t.rock-chips.com/
+> 3.http://www.beiqicloud.com/
+> 
+> This patch add basic node for the board and support booting up
+> to Fedora.
+> 
+> Signed-off-by: Elon Zhang <zhangzj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
->  MAINTAINERS                     |   7 +
->  drivers/thermal/Kconfig         |  14 ++
->  drivers/thermal/Makefile        |   1 +
->  drivers/thermal/sun8i_thermal.c | 399 ++++++++++++++++++++++++++++++++
->  4 files changed, 421 insertions(+)
->  create mode 100644 drivers/thermal/sun8i_thermal.c
+> changes since v1:
+> - remove needless node
+> - using a standard LED formats for 96Boards
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 47800d32cfbc..89dc43f4064d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -682,6 +682,13 @@ L:	linux-crypto@vger.kernel.org
->  S:	Maintained
->  F:	drivers/crypto/sunxi-ss/
->  
-> +ALLWINNER THERMAL DRIVER
-> +M:	Yangtao Li <tiny.windzz@gmail.com>
-> +L:	linux-pm@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
-> +F:	drivers/thermal/sun8i_thermal.c
-> +
->  ALLWINNER VPU DRIVER
->  M:	Maxime Ripard <maxime.ripard@bootlin.com>
->  M:	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 9966364a6deb..f8b73b32b92d 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -262,6 +262,20 @@ config SPEAR_THERMAL
->  	  Enable this to plug the SPEAr thermal sensor driver into the Linux
->  	  thermal framework.
->  
-> +config SUN8I_THERMAL
-> +	tristate "Allwinner sun8i thermal driver"
-> +	depends on ARCH_SUNXI || COMPILE_TEST
-> +	depends on HAS_IOMEM
-> +	depends on NVMEM
-> +	depends on OF
-> +	depends on RESET_CONTROLLER
-> +	help
-> +	  Support for the sun8i thermal sensor driver into the Linux thermal
-> +	  framework.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called sun8i-thermal.
-> +
->  config ROCKCHIP_THERMAL
->  	tristate "Rockchip thermal driver"
->  	depends on ARCH_ROCKCHIP || COMPILE_TEST
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 74a37c7f847a..fa6f8b206281 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -31,6 +31,7 @@ thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
->  obj-y				+= broadcom/
->  obj-$(CONFIG_THERMAL_MMIO)		+= thermal_mmio.o
->  obj-$(CONFIG_SPEAR_THERMAL)	+= spear_thermal.o
-> +obj-$(CONFIG_SUN8I_THERMAL)     += sun8i_thermal.o
->  obj-$(CONFIG_ROCKCHIP_THERMAL)	+= rockchip_thermal.o
->  obj-$(CONFIG_RCAR_THERMAL)	+= rcar_thermal.o
->  obj-$(CONFIG_RCAR_GEN3_THERMAL)	+= rcar_gen3_thermal.o
-> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>  .../boot/dts/rockchip/rk3399pro-tb-96ai.dts   | 560 ++++++++++++++++++
+>  2 files changed, 561 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-tb-96ai.dts
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index 5f2687acbf94..3d6c8d4363b5 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -27,3 +27,4 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire-excavator.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399pro-tb-96ai.dtb
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-tb-96ai.dts b/arch/arm64/boot/dts/rockchip/rk3399pro-tb-96ai.dts
 > new file mode 100644
-> index 000000000000..2ce36fa3fec3
+> index 000000000000..767b37b854ba
 > --- /dev/null
-> +++ b/drivers/thermal/sun8i_thermal.c
-> @@ -0,0 +1,399 @@
-> +// SPDX-License-Identifier: GPL-2.0
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399pro-tb-96ai.dts
+> @@ -0,0 +1,560 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 > +/*
-> + * Thermal sensor driver for Allwinner SOC
-> + * Copyright (C) 2019 Yangtao Li
-> + *
-> + * Based on the work of Icenowy Zheng <icenowy@aosc.io>
-> + * Based on the work of Ondrej Jirman <megous@megous.com>
-> + * Based on the work of Josef Gajdusek <atx@atx.name>
+> + * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd.
 > + */
 > +
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/nvmem-consumer.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include <linux/slab.h>
-> +#include <linux/thermal.h>
+> +/dts-v1/;
+> +#include "rk3399pro.dtsi"
+> +#include "rk3399-opp.dtsi"
 > +
-> +#define MAX_SENSOR_NUM	4
+> +/ {
+> +	compatible = "beiqi,rk3399pro-tb-96ai", "rockchip,rk3399pro";
 > +
-> +#define SUN50I_H6_SENSOR_NUM	2
-> +#define SUN50I_H6_OFFSET	-2794
-> +#define SUN50I_H6_SCALE		-67
+> +	chosen {
+> +		stdout-path = "serial2:1500000n8";
+> +	};
 > +
-> +#define FT_TEMP_MASK				GENMASK(11, 0)
-> +#define TEMP_CALIB_MASK				GENMASK(11, 0)
-> +#define TEMP_TO_REG				672
-> +#define CALIBRATE_DEFAULT			0x800
+> +	xin32k: xin32k {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <32768>;
+> +		clock-output-names = "xin32k";
+> +		#clock-cells = <0>;
+> +	};
+
+I would guess this 32kHz clock does originate from the rk809 below?
+If so please simply adjust the clock-output-names in it, so that
+it sources correctly.
+
 > +
-> +#define SUN50I_THS_CTRL0			0x00
-> +#define SUN50I_H6_THS_ENABLE			0x04
-> +#define SUN50I_H6_THS_PC			0x08
-> +#define SUN50I_H6_THS_DIC			0x10
-> +#define SUN50I_H6_THS_DIS			0x20
-> +#define SUN50I_H6_THS_MFC			0x30
-> +#define SUN50I_H6_THS_TEMP_CALIB		0xa0
-> +#define SUN50I_H6_THS_TEMP_DATA			0xc0
+> +	vcc5v0_sys: vccsys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc5v0_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +	};
+
+Please always try to construct a full regulator tree.
+(see debugfs/regulator/regulator_summary)
+
+Part of me doesn't want to believe that vcc5v0_sys is
+the root regulator getting the outside power supply ;-) .
+
+
 > +
-> +#define SUN50I_THS_CTRL0_T_ACQ(x)		((GENMASK(15, 0) & (x)) << 16)
-> +#define SUN50I_THS_FILTER_EN			BIT(2)
-> +#define SUN50I_THS_FILTER_TYPE(x)		(GENMASK(1, 0) & (x))
-> +#define SUN50I_H6_THS_PC_TEMP_PERIOD(x)		((GENMASK(19, 0) & (x)) << 12)
-> +#define SUN50I_H6_THS_DATA_IRQ_STS(x)		BIT(x)
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&work_led1>,<&work_led2>,<&work_led3>;
 > +
-> +/* millidegree celsius */
-> +#define SUN50I_H6_FT_DEVIATION			7000
+> +		work_led1 {
+> +			gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
+> +			label = "system_work_led1";
+> +			retain-state-suspended;
+> +		};
 > +
-> +struct ths_device;
+> +		work_led2 {
+> +			gpios = <&gpio2 4 GPIO_ACTIVE_HIGH>;
+> +			label = "system_work_led2";
+> +			retain-state-suspended;
+> +		};
 > +
-> +struct tsensor {
-> +	struct ths_device		*tmdev;
-> +	struct thermal_zone_device	*tzd;
-> +	int				id;
+> +		work_led3 {
+> +			gpios = <&gpio2 3 GPIO_ACTIVE_HIGH>;
+> +			label = "system_work_led3";
+> +			retain-state-suspended;
+> +		};
+> +	};
 > +};
 > +
-> +struct ths_device {
-> +	struct device				*dev;
-> +	struct regmap				*regmap;
-> +	struct reset_control			*reset;
-> +	struct clk				*bus_clk;
-> +	struct tsensor				sensor[MAX_SENSOR_NUM];
+> +&cpu_l0 {
+> +	cpu-supply = <&vdd_cpu_l>;
 > +};
 > +
-> +/* Temp Unit: millidegree Celsius */
-> +static int sun8i_ths_reg2temp(struct ths_device *tmdev,
-> +			      int reg)
-> +{
-> +	return (reg + SUN50I_H6_OFFSET) * SUN50I_H6_SCALE;
-> +}
-> +
-> +static int sun8i_ths_get_temp(void *data, int *temp)
-> +{
-> +	struct tsensor *s = data;
-> +	struct ths_device *tmdev = s->tmdev;
-> +	int val;
-> +
-> +	regmap_read(tmdev->regmap, SUN50I_H6_THS_TEMP_DATA +
-> +		    0x4 * s->id, &val);
-> +
-> +	/* ths have no data yet */
-> +	if (!val)
-> +		return -EAGAIN;
-> +
-> +	*temp = sun8i_ths_reg2temp(tmdev, val);
-> +	/*
-> +	 * XX - According to the original sdk, there are some platforms(rarely)
-> +	 * that add a fixed offset value after calculating the temperature
-> +	 * value. We can't simply put it on the formula for calculating the
-> +	 * temperature above, because the formula for calculating the
-> +	 * temperature above is also used when the sensor is calibrated. If
-> +	 * do this, the correct calibration formula is hard to know.
-> +	 */
-> +	*temp += SUN50I_H6_FT_DEVIATION;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct thermal_zone_of_device_ops ths_ops = {
-> +	.get_temp = sun8i_ths_get_temp,
+> +&cpu_l1 {
+> +	cpu-supply = <&vdd_cpu_l>;
 > +};
 > +
-> +static const struct regmap_config config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.fast_io = true,
+> +&cpu_l2 {
+> +	cpu-supply = <&vdd_cpu_l>;
 > +};
 > +
-> +static irqreturn_t sun50i_h6_irq_thread(int irq, void *data)
-> +{
-> +	struct ths_device *tmdev = data;
-> +	int i, state;
-> +
-> +	regmap_read(tmdev->regmap, SUN50I_H6_THS_DIS, &state);
-> +
-> +	for (i = 0; i < SUN50I_H6_SENSOR_NUM; i++) {
-> +
-> +		if (state & SUN50I_H6_THS_DATA_IRQ_STS(i)) {
-> +			/* clear data irq pending */
-> +			regmap_write(tmdev->regmap, SUN50I_H6_THS_DIS,
-> +				     SUN50I_H6_THS_DATA_IRQ_STS(i));
-> +
-> +			thermal_zone_device_update(tmdev->sensor[i].tzd,
-> +						   THERMAL_EVENT_UNSPECIFIED);
-> +		}
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int sun50i_ths_calibrate(struct ths_device *tmdev)
-> +{
-> +	struct nvmem_cell *calcell;
-> +	struct device *dev = tmdev->dev;
-> +	u16 *caldata;
-> +	size_t callen;
-> +	int ft_temp;
-> +	int i, ret = 0;
-> +
-> +	calcell = devm_nvmem_cell_get(dev, "calib");
-> +	if (IS_ERR(calcell)) {
-> +		if (PTR_ERR(calcell) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		/*
-> +		 * Even if the external calibration data stored in sid is
-> +		 * not accessible, the THS hardware can still work, although
-> +		 * the data won't be so accurate.
-> +		 *
-> +		 * The default value of calibration register is 0x800 for
-> +		 * every sensor, and the calibration value is usually 0x7xx
-> +		 * or 0x8xx, so they won't be away from the default value
-> +		 * for a lot.
-> +		 *
-> +		 * So here we do not return error if the calibartion data is
-> +		 * not available, except the probe needs deferring.
-> +		 */
-> +		goto out;
-> +	}
-> +
-> +	caldata = nvmem_cell_read(calcell, &callen);
-> +	if (IS_ERR(caldata)) {
-> +		ret = PTR_ERR(caldata);
-> +		goto out;
-> +	}
-> +
-> +	if (!caldata[0] || callen < 2 + 2 * SUN50I_H6_SENSOR_NUM) {
-> +		ret = -EINVAL;
-> +		goto out_free;
-> +	}
-> +
-> +	/*
-> +	 * efuse layout:
-> +	 *
-> +	 *	0   11  16	 32
-> +	 *	+-------+-------+-------+
-> +	 *	|temp|  |sensor0|sensor1|
-> +	 *	+-------+-------+-------+
-> +	 *
-> +	 * The calibration data on the H6 is the ambient temperature and
-> +	 * sensor values that are filled during the factory test stage.
-> +	 *
-> +	 * The unit of stored FT temperature is 0.1 degreee celusis.
-> +	 * Through the stored ambient temperature and the data read
-> +	 * by the sensor, after a certain calculation, the calibration
-> +	 * value to be compensated can be obtained.
-> +	 */
-> +	ft_temp = caldata[0] & FT_TEMP_MASK;
-> +
-> +	for (i = 0; i < SUN50I_H6_SENSOR_NUM; i++) {
-> +		int reg = (int)caldata[i + 1];
-> +		int sensor_temp = sun8i_ths_reg2temp(tmdev, reg);
-> +		int delta, cdata, offset;
-> +
-> +		/*
-> +		 * To calculate the calibration value:
-> +		 *
-> +		 * X(in Celsius) = Ts - ft_temp
-> +		 * delta = X * 10000 / TEMP_TO_REG
-> +		 * cdata = CALIBRATE_DEFAULT - delta
-> +		 *
-> +		 * cdata: calibration value
-> +		 */
-> +		delta = (sensor_temp - ft_temp * 100) * 10 / TEMP_TO_REG;
-> +		cdata = CALIBRATE_DEFAULT - delta;
-> +		if (cdata & ~TEMP_CALIB_MASK) {
-> +			/*
-> +			 * Calibration value more than 12-bit, but calibration
-> +			 * register is 12-bit. In this case, ths hardware can
-> +			 * still work without calibration, although the data
-> +			 * won't be so accurate.
-> +			 */
-> +			dev_warn(dev, "sensor%d is not calibrated.\n", i);
-> +
-> +			continue;
-> +		}
-> +
-> +		offset = (i % 2) << 4;
-> +		regmap_update_bits(tmdev->regmap,
-> +				   SUN50I_H6_THS_TEMP_CALIB + ((i >> 1) * 4),
-> +				   0xfff << offset,
-> +				   cdata << offset);
-> +	}
-> +
-> +out_free:
-> +	kfree(caldata);
-> +out:
-> +	return ret;
-> +}
-> +
-> +static int sun8i_ths_resource_init(struct ths_device *tmdev)
-> +{
-> +	struct device *dev = tmdev->dev;
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct resource *mem;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(dev, mem);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	tmdev->regmap = devm_regmap_init_mmio(dev, base, &config);
-> +	if (IS_ERR(tmdev->regmap))
-> +		return PTR_ERR(tmdev->regmap);
-> +
-> +	tmdev->reset = devm_reset_control_get(dev, 0);
-> +	if (IS_ERR(tmdev->reset))
-> +		return PTR_ERR(tmdev->reset);
-> +
-> +	tmdev->bus_clk = devm_clk_get(&pdev->dev, "bus");
-> +	if (IS_ERR(tmdev->bus_clk))
-> +		return PTR_ERR(tmdev->bus_clk);
-> +
-> +	ret = reset_control_deassert(tmdev->reset);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = clk_prepare_enable(tmdev->bus_clk);
-> +	if (ret)
-> +		goto assert_reset;
-> +
-> +	ret = sun50i_ths_calibrate(tmdev);
-> +	if (ret)
-> +		goto bus_disable;
-> +
-> +	return 0;
-> +
-> +bus_disable:
-> +	clk_disable_unprepare(tmdev->bus_clk);
-> +assert_reset:
-> +	reset_control_assert(tmdev->reset);
-> +
-> +	return ret;
-> +}
-> +
-> +static int sun50i_h6_thermal_init(struct ths_device *tmdev)
-> +{
-> +	int val;
-> +
-> +	/*
-> +	 * clkin = 24MHz
-> +	 * T acquire = clkin / (x + 1)
-> +	 *           = 20us
-> +	 */
-
-I suggest something along the lines of:
-
-        /*                                                                                                                                                                                             
-         * T_acq = 20us                                                                                                                                                                                
-         * clkin = 24MHz                                                                                                                                                                               
-         *                                                                                                                                                                                             
-         * x = T_acq * clkin - 1                                                                                                                                                                       
-         *   = 479                                                                                                                                                                                     
-         */       
-
-Makes it much more clear how the value in SUN50I_THS_CTRL0_T_ACQ was
-arrived at and how to calculate a new one.
-
-> +	regmap_write(tmdev->regmap, SUN50I_THS_CTRL0,
-> +		     SUN50I_THS_CTRL0_T_ACQ(479));
-> +	/* average over 4 samples */
-> +	regmap_write(tmdev->regmap, SUN50I_H6_THS_MFC,
-> +		     SUN50I_THS_FILTER_EN |
-> +		     SUN50I_THS_FILTER_TYPE(1));
-> +	/* period = (x + 1) * 4096 / clkin; ~10ms */
-
-As above, here I suggest:
-
-        /*
-         * clkin = 24MHz
-         * filter_samples = 4
-         * period = 0.25s
-         *
-         * x = period * clkin / 4096 / filter_samples - 1
-         *   = 365
-         */
-
-Also please change this to 365 from 58. I think 4 readings per second are
-enough. Certainly, 25 are a bit too much.
-
-> +	regmap_write(tmdev->regmap, SUN50I_H6_THS_PC,
-> +		     SUN50I_H6_THS_PC_TEMP_PERIOD(58));
-> +	/* enable sensor */
-> +	val = GENMASK(SUN50I_H6_SENSOR_NUM - 1, 0);
-> +	regmap_write(tmdev->regmap, SUN50I_H6_THS_ENABLE, val);
-> +	/* thermal data interrupt enable */
-> +	val = GENMASK(SUN50I_H6_SENSOR_NUM - 1, 0);
-> +	regmap_write(tmdev->regmap, SUN50I_H6_THS_DIC, val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sun8i_ths_register(struct ths_device *tmdev)
-> +{
-> +	struct thermal_zone_device *tzd;
-> +	int i;
-> +
-> +	for (i = 0; i < SUN50I_H6_SENSOR_NUM; i++) {
-> +		tmdev->sensor[i].tmdev = tmdev;
-> +		tmdev->sensor[i].id = i;
-> +		tmdev->sensor[i].tzd =
-> +			devm_thermal_zone_of_sensor_register(tmdev->dev,
-> +							     i,
-> +							     &tmdev->sensor[i],
-> +							     &ths_ops);
-> +		if (IS_ERR(tmdev->sensor[i].tzd))
-> +			return PTR_ERR(tzd);
-
-This should return PTR_ERR(tmdev->sensor[i].tzd). Otherwise this succeeds even
-if tz registration fails, and you get NULL pointer exception tryin to udpate
-nonexisting tz from the interrupt handler.
-
-regards,
-	Ondrej
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int sun8i_ths_probe(struct platform_device *pdev)
-> +{
-> +	struct ths_device *tmdev;
-> +	struct device *dev = &pdev->dev;
-> +	int ret, irq;
-> +
-> +	tmdev = devm_kzalloc(dev, sizeof(*tmdev), GFP_KERNEL);
-> +	if (!tmdev)
-> +		return -ENOMEM;
-> +
-> +	tmdev->dev = dev;
-> +	platform_set_drvdata(pdev, tmdev);
-> +
-> +	ret = sun8i_ths_resource_init(tmdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		return irq;
-> +
-> +	ret = sun50i_h6_thermal_init(tmdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = sun8i_ths_register(tmdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * Avoid entering the interrupt handler, the thermal device is not
-> +	 * registered yet, we deffer the registration of the interrupt to
-> +	 * the end.
-> +	 */
-> +	ret = devm_request_threaded_irq(dev, irq, NULL,
-> +					sun50i_h6_irq_thread,
-> +					IRQF_ONESHOT, "ths", tmdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return ret;
-> +}
-> +
-> +static int sun8i_ths_remove(struct platform_device *pdev)
-> +{
-> +	struct ths_device *tmdev = platform_get_drvdata(pdev);
-> +
-> +	clk_disable_unprepare(tmdev->bus_clk);
-> +	reset_control_assert(tmdev->reset);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id of_ths_match[] = {
-> +	{ .compatible = "allwinner,sun50i-h6-ths"},
-> +	{ /* sentinel */ },
+> +&cpu_l3 {
+> +	cpu-supply = <&vdd_cpu_l>;
 > +};
-> +MODULE_DEVICE_TABLE(of, of_ths_match);
 > +
-> +static struct platform_driver ths_driver = {
-> +	.probe = sun8i_ths_probe,
-> +	.remove = sun8i_ths_remove,
-> +	.driver = {
-> +		.name = "sun8i-thermal",
-> +		.of_match_table = of_ths_match,
-> +	},
+> +&cpu_b0 {
+> +	cpu-supply = <&vdd_cpu_b>;
 > +};
-> +module_platform_driver(ths_driver);
 > +
-> +MODULE_DESCRIPTION("Thermal sensor driver for Allwinner SOC");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.17.1
+> +&cpu_b1 {
+> +	cpu-supply = <&vdd_cpu_b>;
+> +};
+> +
+> +&emmc_phy {
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +	i2c-scl-rising-time-ns = <180>;
+> +	i2c-scl-falling-time-ns = <30>;
+> +	clock-frequency = <400000>;
+> +
+> +	rk809: pmic@20 {
+> +		compatible = "rockchip,rk809";
+> +		reg = <0x20>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <RK_PC2 IRQ_TYPE_LEVEL_LOW>;
+> +		pinctrl-names = "default", "pmic-sleep",
+> +				"pmic-power-off", "pmic-reset";
+> +		pinctrl-0 = <&pmic_int_l>;
+> +		pinctrl-1 = <&soc_slppin_slp>, <&rk809_slppin_slp>;
+> +		pinctrl-2 = <&soc_slppin_gpio>, <&rk809_slppin_pwrdn>;
+> +		pinctrl-3 = <&soc_slppin_gpio>,<&rk809_slppin_null>;
+> +		rockchip,system-power-controller;
+> +		pmic-reset-func = <1>;
+
+That is not part of the binding I think
+
+> +		wakeup-source;
+> +		#clock-cells = <1>;
+> +		clock-output-names = "rk808-clkout1", "rk808-clkout2";
+> +
+> +		vcc1-supply = <&vcc5v0_sys>;
+> +		vcc2-supply = <&vcc5v0_sys>;
+> +		vcc3-supply = <&vcc5v0_sys>;
+> +		vcc4-supply = <&vcc5v0_sys>;
+> +		vcc5-supply = <&vcc_buck5>;
+> +		vcc6-supply = <&vcc_buck5>;
+> +		vcc7-supply = <&vcc3v3_sys>;
+> +		vcc8-supply = <&vcc3v3_sys>;
+> +		vcc9-supply = <&vcc5v0_sys>;
+> +
+> +		pwrkey {
+> +			status = "okay";
+> +		};
+> +
+> +		rtc {
+> +			status = "okay";
+> +		};
+
+There is no binding for either pwrkey nor rtc subnodes and
+I think the rtc device is just created  in any case, so you should just
+drop these nodes.
+
+
+> +		pinctrl_rk8xx: pinctrl_rk8xx {
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +
+> +			rk809_slppin_null: rk809_slppin_null {
+> +				pins = "gpio_slp";
+> +				function = "pin_fun0";
+> +			};
+> +
+> +			rk809_slppin_slp: rk809_slppin_slp {
+> +				pins = "gpio_slp";
+> +				function = "pin_fun1";
+> +			};
+> +
+> +			rk809_slppin_pwrdn: rk809_slppin_pwrdn {
+> +				pins = "gpio_slp";
+> +				function = "pin_fun2";
+> +			};
+> +
+> +			rk809_slppin_rst: rk809_slppin_rst {
+> +				pins = "gpio_slp";
+> +				function = "pin_fun3";
+> +			};
+> +		};
+
+There is a binding for rk805 pinctrl, but it looks way different than this.
+Please adapt and if necessary submit binding+code for rk809 first.
+
+See Documentation/devicetree/bindings/pinctrl/pinctrl-rk805.txt
+for reference.
+
+
+> +		regulators {
+> +			vdd_center: DCDC_REG1 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <750000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-initial-mode = <0x2>;
+> +				regulator-name = "vdd_center";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <900000>;
+> +				};
+> +			};
+> +
+> +			vdd_cpu_l: DCDC_REG2 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <750000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-ramp-delay = <6001>;
+> +				regulator-initial-mode = <0x2>;
+> +				regulator-name = "vdd_cpu_l";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_ddr: DCDC_REG3 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-name = "vcc_ddr";
+> +				regulator-initial-mode = <0x2>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc3v3_sys: DCDC_REG4 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-initial-mode = <0x2>;
+> +				regulator-name = "vcc3v3_sys";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			vcc_buck5: DCDC_REG5 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <2200000>;
+> +				regulator-max-microvolt = <2200000>;
+> +				regulator-name = "vcc_buck5";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <2200000>;
+> +				};
+> +			};
+> +
+> +			vcca_0v9: LDO_REG1 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <900000>;
+> +				regulator-name = "vcca_0v9";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_1v8: LDO_REG2 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +
+> +				regulator-name = "vcc_1v8";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vcc0v9_soc: LDO_REG3 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <900000>;
+> +				regulator-max-microvolt = <900000>;
+> +
+> +				regulator-name = "vcc0v9_soc";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <900000>;
+> +				};
+> +			};
+> +
+> +			vcca_1v8: LDO_REG4 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +
+> +				regulator-name = "vcca_1v8";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vdd1v5_dvp: LDO_REG5 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1500000>;
+> +				regulator-max-microvolt = <1500000>;
+> +
+> +				regulator-name = "vdd1v5_dvp";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_1v5: LDO_REG6 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1500000>;
+> +				regulator-max-microvolt = <1500000>;
+> +
+> +				regulator-name = "vcc_1v5";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_3v0: LDO_REG7 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +
+> +				regulator-name = "vcc_3v0";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vccio_sd: LDO_REG8 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +
+> +				regulator-name = "vccio_sd";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			vcc_sd: LDO_REG9 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +
+> +				regulator-name = "vcc_sd";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			vcc5v0_usb: SWITCH_REG1 {
+> +				regulator-min-microvolt = <5000000>;
+> +				regulator-max-microvolt = <5000000>;
+> +
+> +				regulator-name = "vcc5v0_usb";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vccio_3v3: SWITCH_REG2 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +
+> +				regulator-name = "vccio_3v3";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	vdd_cpu_b: regulator@1c {
+> +		compatible = "fcs,fan53555";
+> +		reg = <0x1c>;
+> +		vin-supply = <&vcc5v0_sys>;
+> +		pinctrl-0 = <&vsel1_gpio>;
+> +		vsel-gpios = <&gpio1 RK_PC1 GPIO_ACTIVE_HIGH>;
+
+I don't think there is a vsel-gpios propety specified yet and the
+fan53555 driver cannot handle that pin yet.
+You could change that ;-)
+
+> +		regulator-name = "vdd_cpu_b";
+> +		regulator-min-microvolt = <712500>;
+> +		regulator-max-microvolt = <1500000>;
+> +		regulator-ramp-delay = <2300>;
+> +		fcs,suspend-voltage-selector = <1>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-initial-state = <3>;
+> +		regulator-state-mem {
+> +			regulator-off-in-suspend;
+> +		};
+> +	};
+> +
+> +	vdd_gpu: regulator@10 {
+> +		compatible = "fcs,fan53555";
+> +		status = "okay";
+> +		reg = <0x10>;
+> +		vin-supply = <&vcc5v0_sys>;
+> +		pinctrl-0 = <&vsel2_gpio>;
+> +		vsel-gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
+> +		regulator-name = "vdd_gpu";
+> +		regulator-min-microvolt = <735000>;
+> +		regulator-max-microvolt = <1400000>;
+> +		regulator-ramp-delay = <2300>;
+> +		fcs,suspend-voltage-selector = <1>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-state-mem {
+> +			regulator-off-in-suspend;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c8 {
+> +	status = "okay";
+> +	i2c-scl-rising-time-ns = <345>;
+> +	i2c-scl-falling-time-ns = <11>;
+> +	clock-frequency = <100000>;
+> +};
+> +
+> +&io_domains {
+> +	status = "okay";
+> +	bt656-supply = <&vcca_1v8>; /* APIO2_VDD */
+> +	audio-supply = <&vcca_1v8>; /* APIO5_VDD */
+> +	sdmmc-supply = <&vccio_sd>; /* SDMMC0_VDD */
+> +	gpio1830-supply = <&vcc_1v8>; /* APIO4_VDD */
+> +};
+> +
+> +&pinctrl {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&npu_ref_clk>;
+> +
+> +	leds {
+> +		work_led1: work_led1 {
+> +			rockchip,pins =
+> +				<2 5 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +
+> +		work_led2: work_led2 {
+> +			rockchip,pins =
+> +				<2 4 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +
+> +		work_led3: work_led3 {
+> +			rockchip,pins =
+> +				<2 3 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	npu_clk {
+> +		npu_ref_clk: npu-ref-clk {
+> +			rockchip,pins =
+> +				<0 RK_PA2 1 &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> +	pmic {
+> +		pmic_int_l: pmic-int-l {
+> +			rockchip,pins =
+> +				<1 RK_PC2 0 &pcfg_pull_up>;
+> +		};
+> +
+> +		soc_slppin_gpio: soc-slppin-gpio {
+> +			rockchip,pins =
+> +				<1 RK_PA5 0 &pcfg_output_low>;
+> +		};
+> +
+> +		soc_slppin_slp: soc-slppin-slp {
+> +			rockchip,pins =
+> +				<1 RK_PA5 1 &pcfg_pull_down>;
+> +		};
+> +
+> +		vsel1_gpio: vsel1-gpio {
+> +			rockchip,pins =
+> +				<1 RK_PC1 0 &pcfg_pull_down>;
+> +		};
+> +
+> +		vsel2_gpio: vsel2-gpio {
+> +			rockchip,pins =
+> +				<1 RK_PB6 0 &pcfg_pull_down>;
+> +		};
+> +	};
+> +
+> +	usb3 {
+> +		usb3_host_en: usb3-host-en {
+> +			rockchip,pins =
+> +				<2 RK_PA2 RK_FUNC_GPIO &pcfg_output_high>;
+> +		};
+> +	};
+> +};
+> +
+> +&pmu_io_domains {
+> +	status = "okay";
+> +	pmu1830-supply = <&vcc_1v8>;
+> +};
+> +
+> +&pwm0 {
+> +	status = "okay";
+> +};
+> +
+> +&pwm2 {
+> +	status = "okay";
+> +};
+> +
+> +&saradc {
+> +	status = "okay";
+> +	vref-supply = <&vcc_1v8>;
+> +};
+> +
+> +&sdhci {
+> +	bus-width = <8>;
+> +	mmc-hs400-1_8v;
+> +	non-removable;
+> +	keep-power-in-suspend;
+> +	mmc-hs400-enhanced-strobe;
+> +	status = "okay";
+> +};
+> +
+> +&tcphy1 {
+> +	status = "okay";
+> +};
+> +
+> +&tsadc {
+> +	rockchip,hw-tshut-mode = <1>; /* tshut mode 0:CRU 1:GPIO */
+> +	rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
+> +	status = "okay";
+> +};
+> +
+> +&u2phy1 {
+> +	status = "okay";
+> +
+> +	u2phy1_otg: otg-port {
+> +		status = "okay";
+> +	};
+> +
+> +	u2phy1_host: host-port {
+> +		phy-supply = <&vcc5v0_usb>;
+> +		status = "okay";
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_xfer &uart0_cts>;
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> +
+> +&uart4 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host0_ehci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host1_ehci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host0_ohci {
+> +	status = "okay";
+> +};
+> +
+> +&usb_host1_ohci {
+> +	status = "okay";
+> +};
+> +
+> +&usbdrd3_1 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&usb3_host_en>;
+> +};
+> +
+> +&usbdrd_dwc3_0 {
+> +	status = "okay";
+> +};
+> +
+> +&usbdrd_dwc3_1 {
+> +	snps,dis-u3-autosuspend-quirk;
+
+This property is neither part of the dwc3 driver,
+nor the dwc3 devicetree binding.
+
+> +	status = "okay";
+> +};
+> +
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+Heiko
