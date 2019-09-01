@@ -1,34 +1,82 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH v7 0/7] qcom: add OCMEM support
-Date: Sun, 1 Sep 2019 17:40:45 -0400
-Message-ID: <20190901214045.GA14321@onstation.org>
-References: <20190823121637.5861-1-masneyb@onstation.org>
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+Subject: Re: [PATCH v5 00/18] add thermal driver for h6
+Date: Sun, 1 Sep 2019 23:52:14 +0200
+Message-ID: <20190901215214.f4vbxemdd7mf3gun@core.my.home>
+References: <20190810052829.6032-1-tiny.windzz@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190823121637.5861-1-masneyb@onstation.org>
+In-Reply-To: <20190810052829.6032-1-tiny.windzz@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robdclark@gmail.com, sean@poorly.run, bjorn.andersson@linaro.org
-Cc: agross@kernel.org, robh+dt@kernel.org, airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, jonathan@marek.ca, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, jcrouse@codeaurora.org
+To: Yangtao Li <tiny.windzz@gmail.com>
+Cc: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob C / Sean P,
+Hello Yangtao,
 
-On Fri, Aug 23, 2019 at 05:16:30AM -0700, Brian Masney wrote:
-> This patch series adds support for Qualcomm's On Chip MEMory (OCMEM)
-> that is needed in order to support some a3xx and a4xx-based GPUs
-> upstream. This is based on Rob Clark's patch series that he submitted
-> in October 2015 and I am resubmitting updated patches with his
-> permission. See the individual patches for the changelog.
+On Sat, Aug 10, 2019 at 05:28:11AM +0000, Yangtao Li wrote:
+> This patchset add support for A64, H3, H5, H6 and R40 thermal sensor.
+> 
+> Thx to Icenowy and Vasily.
+> 
+> BTY, do a cleanup in thermal makfile.
 
-I talked to Bjorn in person at the Embedded Linux Conference over a
-week ago about this series. He thinks that this series should go through
-your tree. I assume it's too late for the upcoming merge window, which
-is fine. I just want to make sure that this series gets picked up for
-the following merge window.
+I've added support for A83T and also some cleanups, according to my
+feedback:
 
-I just sent out a fix for a compiler error on MIPS as a separate patch:
-https://lore.kernel.org/lkml/20190901213037.25889-1-masneyb@onstation.org/
+https://megous.com/git/linux/log/?h=ths-5.3
 
-Brian
+Feel free to pick up whatever you like from that tree.
+
+For others, there are also DTS patches in that tree for H3, H5, A83T, and H6, so
+that shoul make testing of this driver easier.
+
+regards,
+	Ondrej
+
+> Icenowy Zheng (3):
+>   thermal: sun8i: allow to use custom temperature calculation function
+>   thermal: sun8i: add support for Allwinner H5 thermal sensor
+>   thermal: sun8i: add support for Allwinner R40 thermal sensor
+> 
+> Vasily Khoruzhick (1):
+>   thermal: sun8i: add thermal driver for A64
+> 
+> Yangtao Li (14):
+>   thermal: sun8i: add thermal driver for h6
+>   dt-bindings: thermal: add binding document for h6 thermal controller
+>   thermal: fix indentation in makefile
+>   thermal: sun8i: get ths sensor number from device compatible
+>   thermal: sun8i: rework for sun8i_ths_get_temp()
+>   thermal: sun8i: get ths init func from device compatible
+>   thermal: sun8i: rework for ths irq handler func
+>   thermal: sun8i: support mod clocks
+>   thermal: sun8i: rework for ths calibrate func
+>   dt-bindings: thermal: add binding document for h3 thermal controller
+>   thermal: sun8i: add thermal driver for h3
+>   dt-bindings: thermal: add binding document for a64 thermal controller
+>   dt-bindings: thermal: add binding document for h5 thermal controller
+>   dt-bindings: thermal: add binding document for r40 thermal controller
+> 
+>  .../bindings/thermal/sun8i-thermal.yaml       | 157 +++++
+>  MAINTAINERS                                   |   7 +
+>  drivers/thermal/Kconfig                       |  14 +
+>  drivers/thermal/Makefile                      |   9 +-
+>  drivers/thermal/sun8i_thermal.c               | 596 ++++++++++++++++++
+>  5 files changed, 779 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
+>  create mode 100644 drivers/thermal/sun8i_thermal.c
+> 
+> ---
+> v5:
+> -add more support
+> -some trival fix
+> ---
+> 2.17.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
