@@ -1,82 +1,58 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Subject: Re: [PATCH v5 00/18] add thermal driver for h6
-Date: Sun, 1 Sep 2019 23:52:14 +0200
-Message-ID: <20190901215214.f4vbxemdd7mf3gun@core.my.home>
-References: <20190810052829.6032-1-tiny.windzz@gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCHv1 1/3] arm64: dts: meson: odroid-c2: Add missing regulator
+ linked to P5V0 regulator
+Date: Sun, 1 Sep 2019 23:53:41 +0200
+Message-ID: <CAFBinCCLPa64_h0JE4Z_pMuUuhb=HKUXPti2pkUFAuEPO2fE6Q@mail.gmail.com>
+References: <20190828202723.1145-1-linux.amoon@gmail.com> <20190828202723.1145-2-linux.amoon@gmail.com>
+ <CAFBinCBWq0LcdA1-a5W06zKp0RzGs5_=Mph6StGKXJ7npCgbfg@mail.gmail.com> <CANAwSgS+HGYXr290=EvdhKxh3TiBOqfbcuuF4cMAiBVX1ez9+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190810052829.6032-1-tiny.windzz@gmail.com>
+In-Reply-To: <CANAwSgS+HGYXr290=EvdhKxh3TiBOqfbcuuF4cMAiBVX1ez9+Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yangtao Li <tiny.windzz@gmail.com>
-Cc: rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Yangtao,
+Hi Anand,
 
-On Sat, Aug 10, 2019 at 05:28:11AM +0000, Yangtao Li wrote:
-> This patchset add support for A64, H3, H5, H6 and R40 thermal sensor.
-> 
-> Thx to Icenowy and Vasily.
-> 
-> BTY, do a cleanup in thermal makfile.
+On Sun, Sep 1, 2019 at 3:58 PM Anand Moon <linux.amoon@gmail.com> wrote:
+>
+> Hi Martin,
+>
+> Thanks for your review comments.
+>
+> Their have been some revision changes in S905 Odroid Schematics.
+> [0] https://dn.odroid.com/S905/Schematic/
+>
+> Well I have make my changes based on old odroid-c2_rev0.2_20151218.pdf
 
-I've added support for A83T and also some cleanups, according to my
-feedback:
+[...]
+> >
+> > according to the schematics there's both:
+> > - VDDIO_AO3V3
+> > - VCC3V3 (which is turned on by VDDIO_AO3V3, see [0])
+> >
+>
+> From the schematics it seams same.
+>
+> VDDIO_AO3V3---DMG340LSQN4 (Q4)---VCC3V3
+yes, they are the same signal. the only difference is that VCC3V3 is
+turned on later in the power-up sequence
 
-https://megous.com/git/linux/log/?h=ths-5.3
+> But this name change was done to link TFLASH_VDD_EN to TFLASH_VDD for eMMC
+>
+> VDDIO_AO3V3-----TFLASH_VDD using  TFLASH_VDD_EN gpio pin.
+>
+> Well I have tested this changes on eMMC module.
+I cannot see any of the TFLASH_* regulators being linked to eMMC (they
+are only linked to the SD card slot, I also checked
+odroid-c2_rev0.2_20151218.pdf and odroid-c2_rev0.2_20171114.pdf).
+which page of the odroid-c2_rev0.2_20151218.pdf schematics shows how
+TFLASH_VDD is linked to eMMC?
 
-Feel free to pick up whatever you like from that tree.
+please note that I don't have an Odroid-C2 board myself (so I cannot
+test any of this).
 
-For others, there are also DTS patches in that tree for H3, H5, A83T, and H6, so
-that shoul make testing of this driver easier.
 
-regards,
-	Ondrej
-
-> Icenowy Zheng (3):
->   thermal: sun8i: allow to use custom temperature calculation function
->   thermal: sun8i: add support for Allwinner H5 thermal sensor
->   thermal: sun8i: add support for Allwinner R40 thermal sensor
-> 
-> Vasily Khoruzhick (1):
->   thermal: sun8i: add thermal driver for A64
-> 
-> Yangtao Li (14):
->   thermal: sun8i: add thermal driver for h6
->   dt-bindings: thermal: add binding document for h6 thermal controller
->   thermal: fix indentation in makefile
->   thermal: sun8i: get ths sensor number from device compatible
->   thermal: sun8i: rework for sun8i_ths_get_temp()
->   thermal: sun8i: get ths init func from device compatible
->   thermal: sun8i: rework for ths irq handler func
->   thermal: sun8i: support mod clocks
->   thermal: sun8i: rework for ths calibrate func
->   dt-bindings: thermal: add binding document for h3 thermal controller
->   thermal: sun8i: add thermal driver for h3
->   dt-bindings: thermal: add binding document for a64 thermal controller
->   dt-bindings: thermal: add binding document for h5 thermal controller
->   dt-bindings: thermal: add binding document for r40 thermal controller
-> 
->  .../bindings/thermal/sun8i-thermal.yaml       | 157 +++++
->  MAINTAINERS                                   |   7 +
->  drivers/thermal/Kconfig                       |  14 +
->  drivers/thermal/Makefile                      |   9 +-
->  drivers/thermal/sun8i_thermal.c               | 596 ++++++++++++++++++
->  5 files changed, 779 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/thermal/sun8i-thermal.yaml
->  create mode 100644 drivers/thermal/sun8i_thermal.c
-> 
-> ---
-> v5:
-> -add more support
-> -some trival fix
-> ---
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Martin
