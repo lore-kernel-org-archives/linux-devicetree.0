@@ -1,14 +1,14 @@
 From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCHv1 1/3] arm64: dts: meson: odroid-c2: Add missing regulator
- linked to P5V0 regulator
-Date: Sun, 1 Sep 2019 19:27:47 +0530
-Message-ID: <CANAwSgS+HGYXr290=EvdhKxh3TiBOqfbcuuF4cMAiBVX1ez9+Q@mail.gmail.com>
-References: <20190828202723.1145-1-linux.amoon@gmail.com> <20190828202723.1145-2-linux.amoon@gmail.com>
- <CAFBinCBWq0LcdA1-a5W06zKp0RzGs5_=Mph6StGKXJ7npCgbfg@mail.gmail.com>
+Subject: Re: [PATCHv1 3/3] arm64: dts: meson: odroid-c2: Add missing regulator
+ linked to HDMI supply
+Date: Sun, 1 Sep 2019 19:28:14 +0530
+Message-ID: <CANAwSgT_K8oqwrxaQr0j_nyxZdh=Um5ivjoUDBixxWPbqJyYcA@mail.gmail.com>
+References: <20190828202723.1145-1-linux.amoon@gmail.com> <20190828202723.1145-4-linux.amoon@gmail.com>
+ <CAFBinCB9NPtncyJCMWDbbzJnQafeaY5U3XHh=NuRZSCNDdO=Hg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCBWq0LcdA1-a5W06zKp0RzGs5_=Mph6StGKXJ7npCgbfg@mail.gmail.com>
+In-Reply-To: <CAFBinCB9NPtncyJCMWDbbzJnQafeaY5U3XHh=NuRZSCNDdO=Hg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
@@ -16,111 +16,59 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Martin,
 
-Thanks for your review comments.
-
-Their have been some revision changes in S905 Odroid Schematics.
-[0] https://dn.odroid.com/S905/Schematic/
-
-Well I have make my changes based on old odroid-c2_rev0.2_20151218.pdf
-
-On Sun, 1 Sep 2019 at 17:07, Martin Blumenstingl
+On Sun, 1 Sep 2019 at 17:14, Martin Blumenstingl
 <martin.blumenstingl@googlemail.com> wrote:
+>
+> Hi Anand,
 >
 > On Wed, Aug 28, 2019 at 10:27 PM Anand Moon <linux.amoon@gmail.com> wrote:
 > >
-> > As per shematics VDDIO_AO18, VDDIO_AO3V3/VDD3V3 DDR3_1V5/DDR_VDDC:
+> > As per shematics HDMI_P5V0 is supplied by P5V0 so add missing link.
 > typo: "schematics"
 >
-OK. next time will run spell check before I send these changes.
-
-> > fixed regulator output which is supplied by P5V0.
-> >
-> > Rename vcc3v3 regulator node to vddio_ao3v3 as per shematics.
-> typo: "schematics"
-Ok.
->
-> according to the schematics there's both:
-> - VDDIO_AO3V3
-> - VCC3V3 (which is turned on by VDDIO_AO3V3, see [0])
->
-
->From the schematics it seams same.
-
-VDDIO_AO3V3---DMG340LSQN4 (Q4)---VCC3V3
-
-But this name change was done to link TFLASH_VDD_EN to TFLASH_VDD for eMMC
-
-VDDIO_AO3V3-----TFLASH_VDD using  TFLASH_VDD_EN gpio pin.
-
-Well I have tested this changes on eMMC module.
-
 > > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > > Cc: Jerome Brunet <jbrunet@baylibre.com>
 > > Cc: Neil Armstrong <narmstrong@baylibre.com>
 > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > > ---
-> >  .../boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 29 +++++++++++++++++--
-> >  1 file changed, 26 insertions(+), 3 deletions(-)
+> >  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 2 ++
+> >  1 file changed, 2 insertions(+)
 > >
 > > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> > index 792698a60a12..98e742bf44c1 100644
+> > index a078a1ee5004..47789fd50415 100644
 > > --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
 > > +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> > @@ -104,11 +104,34 @@
-> >                 regulator-max-microvolt = <1800000>;
-> >         };
-> >
-> > -       vcc3v3: regulator-vcc3v3 {
-> > +       vddio_ao1v8: regulator-vddio-ao1v8 {
-> >                 compatible = "regulator-fixed";
-> > -               regulator-name = "VCC3V3";
-> > +               regulator-name = "VDDIO_AO1V8";
-> > +               regulator-min-microvolt = <1800000>;
-> > +               regulator-max-microvolt = <1800000>;
-> > +               regulator-always-on;
-> > +               /* U17 RT9179GB */
-> > +               vin-supply = <&p5v0>;
-> > +       };
-> > +
-> > +       vddio_ao3v3: regulator-vddio-ao3v3 {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "VDDIO_AO3V3";
-> >                 regulator-min-microvolt = <3300000>;
-> >                 regulator-max-microvolt = <3300000>;
-> > +               regulator-always-on;
-> > +               /* U11 MP2161GJ-C499 */
-> > +               vin-supply = <&p5v0>;
-> > +       };
-> > +
-> > +       vddc_ddr: regulator-vddc-ddr {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "DDR_VDDC";
-> personally I would call this (along with the node name and alias) DDR3_1V5
-> odroid-c2_rev0.1_20150930.pdf shows that DDR3_1V5 and DDR_VDDC are
-> both the same. however, the DDR_VDDC signal name is not used by any
-> component in the datasheet
+> > @@ -213,6 +213,8 @@
+> >         status = "okay";
+> >         pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+> >         pinctrl-names = "default";
+> > +       /* AP2331SA-7 */
+> > +       hdmi-supply = <&p5v0>;
+> >  };
+> my understanding based on odroid-c2_rev0.1_20150930.pdf is that:
+> - there's a (fixed) hdmi_p5v0 regulator using p5v0 as input
+> - the hdmi_p5v0 is the hdmi-supply
+>
+> it doesn't change the functionality of this patch (since both supplies
+> are fixed regulators anyways)
+> you are already doing a nice cleanup with this series, so it would be
+> a shame to take a shortcut here
+>
 
-Ok Thanks I will change this to DDR3_1V5 as per the datasheet.
->
-> > +               regulator-min-microvolt = <1500000>;
-> > +               regulator-max-microvolt = <1500000>;
-> > +               regulator-always-on;
-> > +               /* U15 MP2161GJ-C499 */
-> > +               vin-supply = <&p5v0>;
-> >         };
-> >
-> >         emmc_pwrseq: emmc-pwrseq {
-> > @@ -301,7 +324,7 @@
-> >         mmc-hs200-1_8v;
-> >
-> >         mmc-pwrseq = <&emmc_pwrseq>;
-> > -       vmmc-supply = <&vcc3v3>;
-> > +       vmmc-supply = <&vddio_ao3v3>;
-> odroid-c2_rev0.1_20150930.pdf uses VCC3V3 as supply
->
->
-> Martin
+I could not find gpio control pin which could be used to enable
+hdmi-supply node.
+So that the reason for direct linking this to p5v0 node.
+
+But looking back at the schematics it and datasheet their are two more
+regulator supplies to HDMI.
+
+HDMITX_AVDD33-1 ---- VDDIO_AO3V3
+HDMITX_AVDD18-1 ---- VCC1V8
+
+Need to check the hdmi driver if these need to enable.
 
 Best Regards
-
 -Anand
+
+>
+> Martin
