@@ -1,93 +1,88 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCHv1 1/3] arm64: dts: meson: odroid-c2: Add missing regulator
- linked to P5V0 regulator
-Date: Sun, 1 Sep 2019 13:37:25 +0200
-Message-ID: <CAFBinCBWq0LcdA1-a5W06zKp0RzGs5_=Mph6StGKXJ7npCgbfg@mail.gmail.com>
-References: <20190828202723.1145-1-linux.amoon@gmail.com> <20190828202723.1145-2-linux.amoon@gmail.com>
+Subject: Re: [PATCHv1 2/3] arm64: dts: meson: odroid-c2: Add missing regulator
+ linked to VDDIO_AO3V3 regulator
+Date: Sun, 1 Sep 2019 13:41:17 +0200
+Message-ID: <CAFBinCBA-sQcshd9iAVn=ZDBKkDN3OgJs-WjKEhVLw===b0AdQ@mail.gmail.com>
+References: <20190828202723.1145-1-linux.amoon@gmail.com>
+ <20190828202723.1145-3-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190828202723.1145-2-linux.amoon@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190828202723.1145-3-linux.amoon@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Anand Moon <linux.amoon@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 On Wed, Aug 28, 2019 at 10:27 PM Anand Moon <linux.amoon@gmail.com> wrote:
 >
-> As per shematics VDDIO_AO18, VDDIO_AO3V3/VDD3V3 DDR3_1V5/DDR_VDDC:
+> As per shematics TFLASH_VDD, TF_IO, VCC3V3 fixed regulator output which
 typo: "schematics"
 
-> fixed regulator output which is supplied by P5V0.
->
-> Rename vcc3v3 regulator node to vddio_ao3v3 as per shematics.
-typo: "schematics"
-
-according to the schematics there's both:
-- VDDIO_AO3V3
-- VCC3V3 (which is turned on by VDDIO_AO3V3, see [0])
+> is supplied by VDDIO_AO3V3.
+please add a short sentence to the description (since you probably
+have to re-send a v2) like:
+"While here, move the comment name with the signal name in the
+schematics above the gpio property to make it consistent with other
+regulators"
 
 > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > Cc: Jerome Brunet <jbrunet@baylibre.com>
 > Cc: Neil Armstrong <narmstrong@baylibre.com>
 > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+with the patch rebased (see below) and the two issues from above addressed:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+
 > ---
->  .../boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 29 +++++++++++++++++--
->  1 file changed, 26 insertions(+), 3 deletions(-)
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
 >
 > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> index 792698a60a12..98e742bf44c1 100644
+> index 98e742bf44c1..a078a1ee5004 100644
 > --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
 > +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> @@ -104,11 +104,34 @@
->                 regulator-max-microvolt = <1800000>;
+> @@ -67,17 +67,19 @@
 >         };
 >
-> -       vcc3v3: regulator-vcc3v3 {
-> +       vddio_ao1v8: regulator-vddio-ao1v8 {
+>         tflash_vdd: regulator-tflash_vdd {
+> -               /*
+> -                * signal name from schematics: TFLASH_VDD_EN
+> -                */
 >                 compatible = "regulator-fixed";
-> -               regulator-name = "VCC3V3";
-> +               regulator-name = "VDDIO_AO1V8";
-> +               regulator-min-microvolt = <1800000>;
-> +               regulator-max-microvolt = <1800000>;
-> +               regulator-always-on;
-> +               /* U17 RT9179GB */
-> +               vin-supply = <&p5v0>;
-> +       };
-> +
-> +       vddio_ao3v3: regulator-vddio-ao3v3 {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "VDDIO_AO3V3";
+>
+>                 regulator-name = "TFLASH_VDD";
 >                 regulator-min-microvolt = <3300000>;
 >                 regulator-max-microvolt = <3300000>;
-> +               regulator-always-on;
-> +               /* U11 MP2161GJ-C499 */
-> +               vin-supply = <&p5v0>;
-> +       };
-> +
-> +       vddc_ddr: regulator-vddc-ddr {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "DDR_VDDC";
-personally I would call this (along with the node name and alias) DDR3_1V5
-odroid-c2_rev0.1_20150930.pdf shows that DDR3_1V5 and DDR_VDDC are
-both the same. however, the DDR_VDDC signal name is not used by any
-component in the datasheet
-
-> +               regulator-min-microvolt = <1500000>;
-> +               regulator-max-microvolt = <1500000>;
-> +               regulator-always-on;
-> +               /* U15 MP2161GJ-C499 */
-> +               vin-supply = <&p5v0>;
+>
+> +               /*
+> +                * signal name from schematics: TFLASH_VDD_EN
+> +                */
+>                 gpio = <&gpio GPIOY_12 GPIO_ACTIVE_HIGH>;
+>                 enable-active-high;
+> +               /* U16 RT9179GB */
+> +               vin-supply = <&vddio_ao3v3>;
 >         };
 >
->         emmc_pwrseq: emmc-pwrseq {
-> @@ -301,7 +324,7 @@
->         mmc-hs200-1_8v;
+>         tf_io: gpio-regulator-tf_io {
+> @@ -95,6 +97,8 @@
 >
->         mmc-pwrseq = <&emmc_pwrseq>;
-> -       vmmc-supply = <&vcc3v3>;
-> +       vmmc-supply = <&vddio_ao3v3>;
-odroid-c2_rev0.1_20150930.pdf uses VCC3V3 as supply
+>                 states = <3300000 0
+>                           1800000 1>;
+> +               /* U12/U13 RT9179GB */
+> +               vin-supply = <&vddio_ao3v3>;
+>         };
+thank you for the patch but I think it won't apply on top of Neil's
+"arm64: dts: meson: fix boards regulators states format" (which was
+applied just after you sent this series)
 
 
 Martin
