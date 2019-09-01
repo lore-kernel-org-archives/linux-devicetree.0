@@ -1,7 +1,7 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v3 1/2] dt-bindings: reset: aoss: Convert AOSS reset bindings to yaml
-Date: Sun,  1 Sep 2019 23:14:06 +0530
-Message-ID: <20190901174407.30756-2-sibis@codeaurora.org>
+Subject: [PATCH v3 2/2] dt-bindings: reset: pdc: Convert PDC Global bindings to yaml
+Date: Sun,  1 Sep 2019 23:14:07 +0530
+Message-ID: <20190901174407.30756-3-sibis@codeaurora.org>
 References: <20190901174407.30756-1-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,35 +12,35 @@ To: p.zabel@pengutronix.de, robh+dt@kernel.org, bjorn.andersson@linaro.org
 Cc: agross@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert AOSS reset bindings to yaml and add SC7180 AOSS reset to the list
+Convert PDC Global bindings to yaml and add SC7180 PDC global to the list
 of possible bindings.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- .../bindings/reset/qcom,aoss-reset.txt        | 52 -------------------
- .../bindings/reset/qcom,aoss-reset.yaml       | 47 +++++++++++++++++
+ .../bindings/reset/qcom,pdc-global.txt        | 52 -------------------
+ .../bindings/reset/qcom,pdc-global.yaml       | 47 +++++++++++++++++
  2 files changed, 47 insertions(+), 52 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
- create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.yaml
+ delete mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-global.yaml
 
-diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+diff --git a/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt b/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
 deleted file mode 100644
-index 510c748656ec5..0000000000000
---- a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+index a62a492843e70..0000000000000
+--- a/Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
 +++ /dev/null
 @@ -1,52 +0,0 @@
--Qualcomm AOSS Reset Controller
+-PDC Global
 -======================================
 -
--This binding describes a reset-controller found on AOSS-CC (always on subsystem)
--for Qualcomm SDM845 SoCs.
+-This binding describes a reset-controller found on PDC-Global (Power Domain
+-Controller) block for Qualcomm Technologies Inc SDM845 SoCs.
 -
 -Required properties:
 -- compatible:
 -	Usage: required
 -	Value type: <string>
 -	Definition: must be:
--		    "qcom,sdm845-aoss-cc"
+-		    "qcom,sdm845-pdc-global"
 -
 -- reg:
 -	Usage: required
@@ -55,64 +55,64 @@ index 510c748656ec5..0000000000000
 -
 -Example:
 -
--aoss_reset: reset-controller@c2a0000 {
--	compatible = "qcom,sdm845-aoss-cc";
--	reg = <0xc2a0000 0x31000>;
+-pdc_reset: reset-controller@b2e0000 {
+-	compatible = "qcom,sdm845-pdc-global";
+-	reg = <0xb2e0000 0x20000>;
 -	#reset-cells = <1>;
 -};
 -
--Specifying reset lines connected to IP modules
--==============================================
+-PDC reset clients
+-======================================
 -
 -Device nodes that need access to reset lines should
 -specify them as a reset phandle in their corresponding node as
 -specified in reset.txt.
 -
--For list of all valid reset indicies see
--<dt-bindings/reset/qcom,sdm845-aoss.h>
+-For a list of all valid reset indices see
+-<dt-bindings/reset/qcom,sdm845-pdc.h>
 -
 -Example:
 -
 -modem-pil@4080000 {
 -	...
 -
--	resets = <&aoss_reset AOSS_CC_MSS_RESTART>;
--	reset-names = "mss_restart";
+-	resets = <&pdc_reset PDC_MODEM_SYNC_RESET>;
+-	reset-names = "pdc_reset";
 -
 -	...
 -};
-diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.yaml b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.yaml
+diff --git a/Documentation/devicetree/bindings/reset/qcom,pdc-global.yaml b/Documentation/devicetree/bindings/reset/qcom,pdc-global.yaml
 new file mode 100644
-index 0000000000000..e2d85a1e1d637
+index 0000000000000..d7d8cec9419fa
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.yaml
++++ b/Documentation/devicetree/bindings/reset/qcom,pdc-global.yaml
 @@ -0,0 +1,47 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/reset/qcom,aoss-reset.yaml#
++$id: http://devicetree.org/schemas/reset/qcom,pdc-global.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Qualcomm AOSS Reset Controller
++title: Qualcomm PDC Global
 +
 +maintainers:
 +  - Sibi Sankar <sibis@codeaurora.org>
 +
 +description:
-+  The bindings describe the reset-controller found on AOSS-CC (always on
-+  subsystem) for Qualcomm Technologies Inc SoCs.
++  The bindings describes the reset-controller found on PDC-Global (Power Domain
++  Controller) block for Qualcomm Technologies Inc SoCs.
 +
 +properties:
 +  compatible:
 +    oneOf:
 +      - description: on SC7180 SoCs the following compatibles must be specified
 +        items:
-+          - const: "qcom,sc7180-aoss-cc"
-+          - const: "qcom,sdm845-aoss-cc"
++          - const: "qcom,sc7180-pdc-global"
++          - const: "qcom,sdm845-pdc-global"
 +
 +      - description: on SDM845 SoCs the following compatibles must be specified
 +        items:
-+          - const: "qcom,sdm845-aoss-cc"
++          - const: "qcom,sdm845-pdc-global"
 +
 +  reg:
 +    maxItems: 1
@@ -129,9 +129,9 @@ index 0000000000000..e2d85a1e1d637
 +
 +examples:
 +  - |
-+    aoss_reset: reset-controller@c2a0000 {
-+      compatible = "qcom,sdm845-aoss-cc";
-+      reg = <0xc2a0000 0x31000>;
++    pdc_reset: reset-controller@b2e0000 {
++      compatible = "qcom,sdm845-pdc-global";
++      reg = <0xb2e0000 0x20000>;
 +      #reset-cells = <1>;
 +    };
 -- 
