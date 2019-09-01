@@ -1,34 +1,141 @@
-From: Avri Altman <Avri.Altman@wdc.com>
-Subject: RE: [PATCH v4 0/3] Qualcomm UFS device reset support
-Date: Sun, 1 Sep 2019 06:12:15 +0000
-Message-ID: <MN2PR04MB699135203C45147049130AB6FCBF0@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <20190828191756.24312-1-bjorn.andersson@linaro.org>
+From: Pragnesh Patel <pragnesh.patel@sifive.com>
+Subject: [PATCH] dt-bindings: serial: Convert riscv,
+ sifive-serial to json-schema
+Date: Sun,  1 Sep 2019 12:39:21 +0530
+Message-ID: <1567321765-3738-1-git-send-email-pragnesh.patel@sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190828191756.24312-1-bjorn.andersson@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <agross@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Bean Huo <beanhuo@micron.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: palmer@sifive.com, paul.walmsley@sifive.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, linux-riscv@lists.infradead.org, Pragnesh Patel <pragnesh.patel@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,=20
->=20
-> This series adds a new ufs vops to allow platform specific methods for
-> resetting an attached UFS device, then implements this for the
-> Qualcomm driver.
-> This reset seems to be necessary for the majority of Dragonboard845c
-> devices.
->=20
-> Bean requested in v3 that a software fallback mechanism, using
-> UIC_CMD_DME_END_PT_RST. I have not been successful in validating
-> that this
-> works for me, so I'm postponing this effort and hoping we can add it
-> incrementally at a later time.
-This series looks good to me.
-Yeah - We can add and test the uic command bail-out once this is accepted.
+Convert the riscv,sifive-serial binding to DT schema using json-schema.
 
-Thanks,
-Avri
+Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
+---
+ .../devicetree/bindings/serial/sifive-serial.txt   | 33 ------------
+ .../devicetree/bindings/serial/sifive-serial.yaml  | 62 ++++++++++++++++++++++
+ 2 files changed, 62 insertions(+), 33 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.yaml
+
+diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.txt b/Documentation/devicetree/bindings/serial/sifive-serial.txt
+deleted file mode 100644
+index c86b1e5..0000000
+--- a/Documentation/devicetree/bindings/serial/sifive-serial.txt
++++ /dev/null
+@@ -1,33 +0,0 @@
+-SiFive asynchronous serial interface (UART)
+-
+-Required properties:
+-
+-- compatible: should be something similar to
+-	      "sifive,<chip>-uart" for the UART as integrated
+-	      on a particular chip, and "sifive,uart<version>" for the
+-	      general UART IP block programming model.	Supported
+-	      compatible strings as of the date of this writing are:
+-	      "sifive,fu540-c000-uart" for the SiFive UART v0 as
+-	      integrated onto the SiFive FU540 chip, or "sifive,uart0"
+-	      for the SiFive UART v0 IP block with no chip integration
+-	      tweaks (if any)
+-- reg: address and length of the register space
+-- interrupts: Should contain the UART interrupt identifier
+-- clocks: Should contain a clock identifier for the UART's parent clock
+-
+-
+-UART HDL that corresponds to the IP block version numbers can be found
+-here:
+-
+-https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/uart
+-
+-
+-Example:
+-
+-uart0: serial@10010000 {
+-	compatible = "sifive,fu540-c000-uart", "sifive,uart0";
+-	interrupt-parent = <&plic0>;
+-	interrupts = <80>;
+-	reg = <0x0 0x10010000 0x0 0x1000>;
+-	clocks = <&prci PRCI_CLK_TLCLK>;
+-};
+diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.yaml b/Documentation/devicetree/bindings/serial/sifive-serial.yaml
+new file mode 100644
+index 0000000..56fa935
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/sifive-serial.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/serial/sifive-serial.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: SiFive asynchronous serial interface (UART)
++
++maintainers:
++  - Pragnesh Patel <pragnesh.patel@sifive.com>
++  - Paul Walmsley  <paul.walmsley@sifive.com>
++  - Palmer Dabbelt <palmer@sifive.com>
++
++allOf:
++  - $ref: /schemas/serial.yaml#
++
++properties:
++  compatible:
++    enum:
++      - sifive,fu540-c000-uart
++      - sifive,uart0
++
++    description:
++      Should be something similar to "sifive,<chip>-uart"
++      for the UART as integrated on a particular chip,
++      and "sifive,uart<version>" for the general UART IP
++      block programming model.
++
++      UART HDL that corresponds to the IP block version
++      numbers can be found here -
++
++      https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/uart
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++      #include <dt-bindings/clock/sifive-fu540-prci.h>
++      serial@10010000 {
++        compatible = "sifive,fu540-c000-uart", "sifive,uart0";
++        interrupt-parent = <&plic0>;
++        interrupts = <80>;
++        reg = <0x0 0x10010000 0x0 0x1000>;
++        clocks = <&prci PRCI_CLK_TLCLK>;
++      };
++
++...
+-- 
+2.7.4
