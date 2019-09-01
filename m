@@ -1,141 +1,42 @@
-From: Pragnesh Patel <pragnesh.patel@sifive.com>
-Subject: [PATCH] dt-bindings: serial: Convert riscv,
- sifive-serial to json-schema
-Date: Sun,  1 Sep 2019 12:39:21 +0530
-Message-ID: <1567321765-3738-1-git-send-email-pragnesh.patel@sifive.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: palmer@sifive.com, paul.walmsley@sifive.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, linux-riscv@lists.infradead.org, Pragnesh Patel <pragnesh.patel@sifive.com>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCH v5 1/3] dt-bindings: pci: layerscape-pci: add compatible strings "fsl,ls1028a-pcie"
+Date: Sun,  1 Sep 2019 15:41:32 +0800
+Message-ID: <20190901074134.24455-1-xiaowei.bao@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Cc: bhelgaas@google.com, Xiaowei Bao <xiaowei.bao@nxp.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert the riscv,sifive-serial binding to DT schema using json-schema.
+Add the PCIe compatible string for LS1028A
 
-Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/serial/sifive-serial.txt   | 33 ------------
- .../devicetree/bindings/serial/sifive-serial.yaml  | 62 ++++++++++++++++++++++
- 2 files changed, 62 insertions(+), 33 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
- create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.yaml
+v2:
+ - No change.
+v3:
+ - No change.
+v4:
+ - No change.
+v5:
+ - No change.
 
-diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.txt b/Documentation/devicetree/bindings/serial/sifive-serial.txt
-deleted file mode 100644
-index c86b1e5..0000000
---- a/Documentation/devicetree/bindings/serial/sifive-serial.txt
-+++ /dev/null
-@@ -1,33 +0,0 @@
--SiFive asynchronous serial interface (UART)
--
--Required properties:
--
--- compatible: should be something similar to
--	      "sifive,<chip>-uart" for the UART as integrated
--	      on a particular chip, and "sifive,uart<version>" for the
--	      general UART IP block programming model.	Supported
--	      compatible strings as of the date of this writing are:
--	      "sifive,fu540-c000-uart" for the SiFive UART v0 as
--	      integrated onto the SiFive FU540 chip, or "sifive,uart0"
--	      for the SiFive UART v0 IP block with no chip integration
--	      tweaks (if any)
--- reg: address and length of the register space
--- interrupts: Should contain the UART interrupt identifier
--- clocks: Should contain a clock identifier for the UART's parent clock
--
--
--UART HDL that corresponds to the IP block version numbers can be found
--here:
--
--https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/uart
--
--
--Example:
--
--uart0: serial@10010000 {
--	compatible = "sifive,fu540-c000-uart", "sifive,uart0";
--	interrupt-parent = <&plic0>;
--	interrupts = <80>;
--	reg = <0x0 0x10010000 0x0 0x1000>;
--	clocks = <&prci PRCI_CLK_TLCLK>;
--};
-diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.yaml b/Documentation/devicetree/bindings/serial/sifive-serial.yaml
-new file mode 100644
-index 0000000..56fa935
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/sifive-serial.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/serial/sifive-serial.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: SiFive asynchronous serial interface (UART)
-+
-+maintainers:
-+  - Pragnesh Patel <pragnesh.patel@sifive.com>
-+  - Paul Walmsley  <paul.walmsley@sifive.com>
-+  - Palmer Dabbelt <palmer@sifive.com>
-+
-+allOf:
-+  - $ref: /schemas/serial.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - sifive,fu540-c000-uart
-+      - sifive,uart0
-+
-+    description:
-+      Should be something similar to "sifive,<chip>-uart"
-+      for the UART as integrated on a particular chip,
-+      and "sifive,uart<version>" for the general UART IP
-+      block programming model.
-+
-+      UART HDL that corresponds to the IP block version
-+      numbers can be found here -
-+
-+      https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/uart
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+      #include <dt-bindings/clock/sifive-fu540-prci.h>
-+      serial@10010000 {
-+        compatible = "sifive,fu540-c000-uart", "sifive,uart0";
-+        interrupt-parent = <&plic0>;
-+        interrupts = <80>;
-+        reg = <0x0 0x10010000 0x0 0x1000>;
-+        clocks = <&prci PRCI_CLK_TLCLK>;
-+      };
-+
-+...
+ Documentation/devicetree/bindings/pci/layerscape-pci.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+index e20ceaa..99a386e 100644
+--- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
++++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+@@ -21,6 +21,7 @@ Required properties:
+         "fsl,ls1046a-pcie"
+         "fsl,ls1043a-pcie"
+         "fsl,ls1012a-pcie"
++        "fsl,ls1028a-pcie"
+   EP mode:
+ 	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
+ - reg: base addresses and lengths of the PCIe controller register blocks.
 -- 
-2.7.4
+2.9.5
