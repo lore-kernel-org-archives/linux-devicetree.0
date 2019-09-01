@@ -1,58 +1,102 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCHv1 1/3] arm64: dts: meson: odroid-c2: Add missing regulator
- linked to P5V0 regulator
-Date: Sun, 1 Sep 2019 23:53:41 +0200
-Message-ID: <CAFBinCCLPa64_h0JE4Z_pMuUuhb=HKUXPti2pkUFAuEPO2fE6Q@mail.gmail.com>
-References: <20190828202723.1145-1-linux.amoon@gmail.com> <20190828202723.1145-2-linux.amoon@gmail.com>
- <CAFBinCBWq0LcdA1-a5W06zKp0RzGs5_=Mph6StGKXJ7npCgbfg@mail.gmail.com> <CANAwSgS+HGYXr290=EvdhKxh3TiBOqfbcuuF4cMAiBVX1ez9+Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v3 0/6] counter: new TI eQEP driver
+Date: Sun,  1 Sep 2019 17:58:21 -0500
+Message-ID: <20190901225827.12301-1-david@lechnology.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgS+HGYXr290=EvdhKxh3TiBOqfbcuuF4cMAiBVX1ez9+Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
+To: linux-iio@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, William Breathitt Gray <vilhelm.gray@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anand,
+This series adds device tree bindings and a new counter driver for the Texas
+Instruments Enhanced Quadrature Encoder Pulse (eQEP).
 
-On Sun, Sep 1, 2019 at 3:58 PM Anand Moon <linux.amoon@gmail.com> wrote:
->
-> Hi Martin,
->
-> Thanks for your review comments.
->
-> Their have been some revision changes in S905 Odroid Schematics.
-> [0] https://dn.odroid.com/S905/Schematic/
->
-> Well I have make my changes based on old odroid-c2_rev0.2_20151218.pdf
+As mentioned in one of the commit messages, to start with, the driver only
+supports reading the current counter value and setting the min/max values.
+Other features can be added as the counter subsystem gains support for them.
 
-[...]
-> >
-> > according to the schematics there's both:
-> > - VDDIO_AO3V3
-> > - VCC3V3 (which is turned on by VDDIO_AO3V3, see [0])
-> >
->
-> From the schematics it seams same.
->
-> VDDIO_AO3V3---DMG340LSQN4 (Q4)---VCC3V3
-yes, they are the same signal. the only difference is that VCC3V3 is
-turned on later in the power-up sequence
+v3 changes:
+- Minor changes to device tree bindings (style and generic node name)
+- Drop action in initializer
+- Fix ordering of pm runtime disable
+v2 changes:
+- New patch to move TI PWMSS driver from drivers/pwm/ to drivers/bus/
+- Device tree bindings converted to .yaml format
+- Device tree clock renamed from "fck" to "sysclkout"
+- Dropped unused index and strobe signals from counter driver
+- Added synapses and actions to counter driver
+- Fixed base in of kstrtouint()
+- Clarifications in commit messages
 
-> But this name change was done to link TFLASH_VDD_EN to TFLASH_VDD for eMMC
->
-> VDDIO_AO3V3-----TFLASH_VDD using  TFLASH_VDD_EN gpio pin.
->
-> Well I have tested this changes on eMMC module.
-I cannot see any of the TFLASH_* regulators being linked to eMMC (they
-are only linked to the SD card slot, I also checked
-odroid-c2_rev0.2_20151218.pdf and odroid-c2_rev0.2_20171114.pdf).
-which page of the odroid-c2_rev0.2_20151218.pdf schematics shows how
-TFLASH_VDD is linked to eMMC?
+This series has been tested on a BeagleBone Blue with the following script:
 
-please note that I don't have an Odroid-C2 board myself (so I cannot
-test any of this).
+#!/usr/bin/env python3
 
+from os import path
+from time import sleep
 
-Martin
+COUNTER_PATH = '/sys/bus/counter/devices'
+COUNTERS = ['counter0', 'counter1', 'counter2']
+COUNT0 = 'count0'
+COUNT = 'count'
+FUNCTION = 'function'
+CEILING = 'ceiling'
+FLOOR = 'floor'
+ENABLE = 'enable'
+
+cnts = []
+
+for c in COUNTERS:
+    function_path = path.join(COUNTER_PATH, c, COUNT0, FUNCTION)
+    with open(function_path, 'w') as f:
+        f.write('quadrature x4')
+    floor_path = path.join(COUNTER_PATH, c, COUNT0, FLOOR)
+    with open(floor_path, 'w') as f:
+        f.write(str(0))
+    ceiling_path = path.join(COUNTER_PATH, c, COUNT0, CEILING)
+    with open(ceiling_path, 'w') as f:
+        f.write(str(0xffffffff))
+    enable_path = path.join(COUNTER_PATH, c, COUNT0, ENABLE)
+    with open(enable_path, 'w') as f:
+        f.write('1')
+
+    cnt_path = path.join(COUNTER_PATH, c, COUNT0, COUNT)
+    cnts.append(open(cnt_path, 'r'))
+
+while True:
+    for c in cnts:
+        c.seek(0)
+        val = int(c.read())
+        if val >= 0x80000000:
+            val -= 0x100000000
+        print(val, end=' ')
+    print()
+    sleep(1)
+
+David Lechner (6):
+  bus/ti-pwmss: move TI PWMSS driver from PWM to bus subsystem
+  dt-bindings: counter: new bindings for TI eQEP
+  counter: new TI eQEP driver
+  ARM: dts: am33xx: Add nodes for eQEP
+  ARM: dts: am335x-boneblue: Enable eQEP
+  ARM: dts: am335x-boneblue: Use of am335x-osd335x-common.dtsi
+
+ .../devicetree/bindings/counter/ti-eqep.yaml  |  50 ++
+ MAINTAINERS                                   |   6 +
+ arch/arm/boot/dts/am335x-boneblue.dts         | 146 +++---
+ arch/arm/boot/dts/am33xx-l4.dtsi              |  27 +
+ drivers/bus/Kconfig                           |   9 +
+ drivers/bus/Makefile                          |   1 +
+ drivers/{pwm/pwm-tipwmss.c => bus/ti-pwmss.c} |   0
+ drivers/counter/Kconfig                       |  11 +
+ drivers/counter/Makefile                      |   1 +
+ drivers/counter/ti-eqep.c                     | 473 ++++++++++++++++++
+ drivers/pwm/Kconfig                           |   9 -
+ drivers/pwm/Makefile                          |   1 -
+ 12 files changed, 634 insertions(+), 100 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/counter/ti-eqep.yaml
+ rename drivers/{pwm/pwm-tipwmss.c => bus/ti-pwmss.c} (100%)
+ create mode 100644 drivers/counter/ti-eqep.c
+
+-- 
+2.17.1
