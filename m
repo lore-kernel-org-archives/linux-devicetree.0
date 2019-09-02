@@ -1,76 +1,82 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] drm/panel: Add DT bindings for Sony ACX424AKP
-Date: Mon, 2 Sep 2019 16:31:41 +0100
-Message-ID: <20190902153141.GA28522@bogus>
-References: <20190902090633.24239-1-linus.walleij@linaro.org>
- <20190902093517.GA12946@ulmo>
- <CACRpkdb_X+Eia=mhHrXBcBn0osMtw6bKU6uAS5AV8ASV63qBkg@mail.gmail.com>
- <20190902144006.GB1445@ulmo>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v4 08/11] lib/vsprintf: Make use of fwnode API to obtain
+ node names and separators
+Date: Mon, 2 Sep 2019 18:41:49 +0300
+Message-ID: <20190902154149.GO5475@paasikivi.fi.intel.com>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-9-sakari.ailus@linux.intel.com>
+ <20190902151803.wgt2x5rtpziggtgx@pathway.suse.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190902144006.GB1445@ulmo>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sam Ravnborg <sam@ravnborg.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>
+In-Reply-To: <20190902151803.wgt2x5rtpziggtgx@pathway.suse.cz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Petr Mladek <pmladek@suse.com>
+Cc: rafael@kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBTZXAgMDIsIDIwMTkgYXQgMDQ6NDA6MDZQTSArMDIwMCwgVGhpZXJyeSBSZWRpbmcg
-d3JvdGU6Cj4gT24gTW9uLCBTZXAgMDIsIDIwMTkgYXQgMDE6NDQ6MzhQTSArMDIwMCwgTGludXMg
-V2FsbGVpaiB3cm90ZToKPiA+IE9uIE1vbiwgU2VwIDIsIDIwMTkgYXQgMTE6MzUgQU0gVGhpZXJy
-eSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbT4gd3JvdGU6Cj4gPiAKPiA+ID4gPiAr
-ICBkc2ktY29tbWFuZC1tb2RlOgo+ID4gPiA+ICsgICAgIHR5cGU6IGJvb2xlYW4KPiA+ID4gPiAr
-ICAgICBkZXNjcmlwdGlvbjoKPiA+ID4gPiArICAgICAgIElmIHRoaXMgaXMgc3BlY2lmaWVkLCB0
-aGUgcGFuZWwgd2lsbCBiZSB1c2VkIGluIGNvbW1hbmQKPiA+ID4gPiArICAgICAgIG1vZGUgaW5z
-dGVhZCBvZiB2aWRlbyBtb2RlLgo+ID4gPgo+ID4gPiBJJ20gbm90IHN1cmUgdGhlcmUncyBjb25j
-ZW5zdXMgb24gdGhpcyBvbmUgeWV0LiBJIHRoaW5rIHNvIGZhciB0aGUKPiA+ID4gZHJpdmVyIGRl
-Y2lkZXMgd2hpY2ggbW9kZSB0byB1c2UgdGhlIHBhbmVsIGluLiBUZWNobmljYWxseSB0aGlzIGZh
-bGxzCj4gPiA+IGludG8gdGhlIGNhdGVnb3J5IG9mIGNvbmZpZ3VyYXRpb24sIHNvIGl0IGRvZXNu
-J3QgcmVhbGx5IGJlbG9uZyBpbiB0aGUKPiA+ID4gRFQuCj4gPiAKPiA+IFRoZSB3YXkgd2UndmUg
-dXNlZCBEVCBpcyBmb3IgYSBiaXQgb2YgYm90aCBoYXJkd2FyZSBkZXNjcmlwdGlvbgo+ID4gYW5k
-IGNvbmZpZ3VyYXRpb24gSSdkIHNheSwgYnV0IEknbSBubyBhdXRob3JpdHkgb24gdGhlIHN1Ympl
-Y3QuCgpJJ20gb2theSB3aXRoIHRoaXMgaWYgdGhlcmUncyBjb25zZW5zdXMsIGJ1dCBpdCBzaG91
-bGQgYmUgaW4gYSBjb21tb24gCmRvYy4gV2UgcHJvYmFibHkgbmVlZCBhIGRzaS1jb21tb20gc2No
-ZW1hIHdpdGggdGhpcywgcmVnLCA/Py4KCj4gPiAKPiA+ID4gSSB2YWd1ZWx5IHJlY2FsbCBmcm9t
-IGRpc2N1c3Npb25zIEkndmUgaGFkIG9uIHRoaXMgc3ViamVjdCB0aGF0IHRoZXJlJ3MKPiA+ID4g
-dXN1YWxseSBubyByZWFzb24gdG8gZG8gdmlkZW8gbW9kZSBpZiB5b3UgY2FuIGRvIGNvbW1hbmQg
-bW9kZSBiZWNhdXNlCj4gPiA+IGNvbW1hbmQgbW9kZSBpcyBtb3JlIHBvd2VyIGVmZmljaWVudC4g
-VGhpcyB3YXMgYSBsb25nIHRpbWUgYWdvLCBzbyBJIG1heQo+ID4gPiBiZSBtaXNyZW1lbWJlcmlu
-Zy4gUGVyaGFwcyB5b3UgaGF2ZSBkaWZmZXJlbnQgaW5mb3JtYXRpb24gb24gdGhpcz8KCjMwIG9y
-IDYwZnBzIHVwZGF0ZXMgdGVuZCB0byBiZSBpbXBvc3NpYmxlIGJlY2F1c2UgeW91IGhhdmUgbGVz
-cyBiL3cgYW5kIAppdCdzIGFzeW5jIHRvIHRoZSByZWZyZXNoLgoKSSB0aGluayBtb3N0IHBhbmVs
-cyB0aGF0IGNhbiBkbyBib3RoLCBhbHdheXMgbmVlZCBjb21tYW5kIG1vZGUgdG9vIGZvciAKaW5p
-dGlhbGl6YXRpb24uCgo+ID4gTm8gaWRlYS4gSSB3YXMgdW5kZXIgdGhlIGltcHJlc3Npb24gdGhh
-dCB2aWRlbyBtb2RlIHdhcyBwcmVmZXJyZWQKPiA+IGJ1dCBJIGhhdmUgbm8gaWRlYSB3aHkuCj4g
-Cj4gSG0uLi4gbXkgcmVjb2xsZWN0aW9uIGlzIHRoYXQgY29tbWFuZCBtb2RlIGlzIG9ubHkgc3Vw
-cG9ydGVkIG9uICJzbWFydCIKPiBwYW5lbHMgdGhhdCBoYXZlIGFuIGludGVybmFsIGZyYW1lYnVm
-ZmVyLiBTbyB0aGUgY29tbWFuZHMgYWN0dWFsbHkKPiBpbnN0cnVjdCB0aGUgcGFuZWwgdG8gdXBk
-YXRlIHRoZWlyIGludGVybmFsIGZyYW1lYnVmZmVyLCB3aGljaCBtZWFucyB5b3UKPiBjYW4gdGVj
-aG5pY2FsbHkgc3dpdGNoIG9mZiB0aGUgZGlzcGxheSBlbmdpbmUgd2hlbiB0aGVyZSBhcmUgbm8g
-dXBkYXRlcy4KPgo+IFVuZGVyIHRob3NlIGNpcmN1bXN0YW5jZXMgSSB0aGluayBpdCdkIG1ha2Ug
-c2Vuc2UgdG8gZGVmYXVsdCB0byBjb21tYW5kCj4gbW9kZSBpZiBib3RoIHRoZSBwYW5lbCBhbmQg
-dGhlIGhvc3Qgc3VwcG9ydCBpdCBhbmQgc3RpY2sgd2l0aCB2aWRlbyBtb2RlCj4gaWYgZm9yIGV4
-YW1wbGUgdGhlIGhvc3QgY2FuJ3QgZG8gY29tbWFuZCBtb2RlLgo+IAo+IE9yIHBlcmhhcHMgdGhp
-cyBpcyBzb21ldGhpbmcgdGhhdCBjb3VsZCBiZSBzZXQgZnJvbSBzb21lIHVzZXJzcGFjZQo+IHBv
-bGljeSBtYWtlciB2aWEgYSBjb25uZWN0b3IgcHJvcGVydHk/IEEgY29tcG9zaXRvciBmb3IgaW5z
-dGFuY2Ugd291bGQKPiBoYXZlIGEgcHJldHR5IGdvb2QgaWRlYSBvZiB3aGF0IGtpbmQgb2YgYWN0
-aXZpdHkgaXMgZ29pbmcgb24sIHNvIGl0Cj4gY291bGQgYXQgc29tZSBwb2ludCBkZWNpZGUgdG8g
-c3dpdGNoIGJldHdlZW4gdmlkZW8gbW9kZSBhbmQgY29tbWFuZCBtb2RlCj4gaWYgb25lIG9mIHRo
-ZW0gaXMgbW9yZSBhcHByb3ByaWF0ZSBmb3IgdGhlIGdpdmVuIHdvcmtsb2FkLgo+IAo+IENvbW1h
-bmQgbW9kZSBjYW4gYWxzbyBiZSB1c2VkIHRvIGRvIHBhcnRpYWwgdXBkYXRlcywgaWYgSSByZW1l
-bWJlcgo+IGNvcnJlY3RseSwgd2hpY2ggYWdhaW4gd291bGQgbWFrZSBpdCBwb3NzaWJsZSBmb3Ig
-YSBjb21wb3NpdG9yIHRvIHNlbmQKPiBvbmx5IGEgc3Vic2V0IG9mIGEgc2NyZWVuIHVwZGF0ZS4K
-CkFsbCBtYWtlcyBzZW5zZSB0byBtZS4KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWw=
+Hi Petr,
+
+Thanks for the review.
+
+On Mon, Sep 02, 2019 at 05:18:03PM +0200, Petr Mladek wrote:
+> On Mon 2019-09-02 11:32:37, Sakari Ailus wrote:
+> > Instead of implementing our own means of discovering parent nodes, node
+> > names or counting how many parents a node has, use the newly added
+> > functions in the fwnode API to obtain that information.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  lib/vsprintf.c | 38 ++++++++++++++++----------------------
+> >  1 file changed, 16 insertions(+), 22 deletions(-)
+> > 
+> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> > index b00b57f9f911f..a04a2167101ef 100644
+> > --- a/lib/vsprintf.c
+> > +++ b/lib/vsprintf.c
+> > @@ -1863,32 +1864,24 @@ char *flags_string(char *buf, char *end, void *flags_ptr,
+> >  	return format_flags(buf, end, flags, names);
+> >  }
+> >  
+> > -static const char *device_node_name_for_depth(const struct device_node *np, int depth)
+> > -{
+> > -	for ( ; np && depth; depth--)
+> > -		np = np->parent;
+> > -
+> > -	return kbasename(np->full_name);
+> > -}
+> > -
+> >  static noinline_for_stack
+> > -char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
+> > +char *fwnode_full_name_string(struct fwnode_handle *fwnode, char *buf,
+> > +			      char *end)
+> >  {
+> >  	int depth;
+> > -	const struct device_node *parent = np->parent;
+> >  
+> > -	/* special case for root node */
+> > -	if (!parent)
+> > -		return string_nocheck(buf, end, "/", default_str_spec);
+> > +	for (depth = fwnode_count_parents(fwnode); depth >= 0; depth--) {
+> 
+> It looked suspicious that it iterated "depth + 1" times. It might be
+> obvious for people traversing paths every day but not for me ;-)
+> Please, add a comment, for example:
+> 
+> 	/* Iterate over parents and current node. */
+> 
+> With the above comment:
+> 
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Thanks.
+
+How about:
+
+	/* Loop starting from the root node to the current node. */
+
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
