@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v5 04/11] device property: Add functions for accessing node's parents
-Date: Mon,  2 Sep 2019 16:57:25 +0300
-Message-ID: <20190902135732.23455-5-sakari.ailus@linux.intel.com>
+Subject: [PATCH v5 11/11] lib/test_printf: Add tests for %pfw printk modifier
+Date: Mon,  2 Sep 2019 16:57:32 +0300
+Message-ID: <20190902135732.23455-12-sakari.ailus@linux.intel.com>
 References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,89 +12,75 @@ To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Add two convenience functions for accessing node's parents:
-
-fwnode_count_parents() returns the number of parent nodes a given node
-has. fwnode_get_nth_parent() returns node's parent at a given distance
-from the node itself.
+Add a test for the %pfw printk modifier using software nodes.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/base/property.c  | 46 ++++++++++++++++++++++++++++++++++++++++
- include/linux/property.h |  3 +++
- 2 files changed, 49 insertions(+)
+ lib/test_printf.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 3d9dffbe96378..f2e555e68b56a 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -590,6 +590,52 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
- }
- EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
+diff --git a/lib/test_printf.c b/lib/test_printf.c
+index 944eb50f38625..9c6d716979fb1 100644
+--- a/lib/test_printf.c
++++ b/lib/test_printf.c
+@@ -22,6 +22,8 @@
+ #include <linux/gfp.h>
+ #include <linux/mm.h>
  
-+/**
-+ * fwnode_count_parents - Return the number of parents a node has
-+ * @fwnode: The node the parents of which are to be counted
-+ *
-+ * Returns the number of parents a node has.
-+ */
-+unsigned int fwnode_count_parents(const struct fwnode_handle *fwnode)
++#include <linux/property.h>
++
+ #include "../tools/testing/selftests/kselftest_module.h"
+ 
+ #define BUF_SIZE 256
+@@ -588,6 +590,40 @@ flags(void)
+ 	kfree(cmp_buffer);
+ }
+ 
++static void __init fwnode_pointer(void)
 +{
-+	struct fwnode_handle *__fwnode;
-+	unsigned int count;
++	const struct software_node softnodes[] = {
++		{ .name = "first", },
++		{ .name = "second", .parent = &softnodes[0], },
++		{ .name = "third", .parent = &softnodes[1], },
++		{ NULL /* Guardian */ },
++	};
++	const char * const full_name = "/second/third";
++	const char * const full_name_second = "/second";
++	const char * const second_name = "second";
++	const char * const third_name = "third";
++	int rval;
 +
-+	__fwnode = fwnode_get_parent(fwnode);
++	rval = software_node_register_nodes(softnodes);
++	if (rval) {
++		pr_warn("cannot register softnodes; rval %d\n", rval);
++		return;
++	}
 +
-+	for (count = 0; __fwnode; count++)
-+		__fwnode = fwnode_get_next_parent(__fwnode);
++	test(full_name_second, "%pfw",
++	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
++	test(full_name, "%pfw",
++	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
++	test(full_name, "%pfwf",
++	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
++	test(second_name, "%pfwP",
++	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
++	test(third_name, "%pfwP",
++	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
 +
-+	return count;
++	software_node_unregister_nodes(softnodes);
 +}
-+EXPORT_SYMBOL_GPL(fwnode_count_parents);
 +
-+/**
-+ * fwnode_get_nth_parent - Return an nth parent of a node
-+ * @fwnode: The node the parent of which is requested
-+ * @depth: Distance of the parent from the node
-+ *
-+ * Returns the nth parent of a node. If there is no parent at the requested
-+ * @depth, %NULL is returned. If @depth is 0, the functionality is equivalent to
-+ * fwnode_handle_get(). For @depth == 1, it is fwnode_get_parent() and so on.
-+ *
-+ * The caller is responsible for calling fwnode_handle_put() for the returned
-+ * node.
-+ */
-+struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwnode,
-+					    unsigned int depth)
-+{
-+	unsigned int i;
-+
-+	fwnode_handle_get(fwnode);
-+
-+	for (i = 0; i < depth && fwnode; i++)
-+		fwnode = fwnode_get_next_parent(fwnode);
-+
-+	return fwnode;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_get_nth_parent);
-+
- /**
-  * fwnode_get_next_child_node - Return the next child node handle for a node
-  * @fwnode: Firmware node to find the next child node for.
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 421c76e53708d..5450e7ec219ac 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -83,6 +83,9 @@ struct fwnode_handle *fwnode_find_reference(const struct fwnode_handle *fwnode,
- struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode);
- struct fwnode_handle *fwnode_get_next_parent(
- 	struct fwnode_handle *fwnode);
-+unsigned int fwnode_count_parents(const struct fwnode_handle *fwn);
-+struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwn,
-+					    unsigned int depth);
- struct fwnode_handle *fwnode_get_next_child_node(
- 	const struct fwnode_handle *fwnode, struct fwnode_handle *child);
- struct fwnode_handle *fwnode_get_next_available_child_node(
+ static void __init
+ test_pointer(void)
+ {
+@@ -610,6 +646,7 @@ test_pointer(void)
+ 	bitmap();
+ 	netdev_features();
+ 	flags();
++	fwnode_pointer();
+ }
+ 
+ static void __init selftest(void)
 -- 
 2.20.1
