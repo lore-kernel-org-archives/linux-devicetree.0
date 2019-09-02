@@ -1,69 +1,39 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCHv1 1/3] arm64: dts: meson: odroid-c2: Add missing regulator
- linked to P5V0 regulator
-Date: Mon, 2 Sep 2019 06:48:06 +0530
-Message-ID: <CANAwSgRVkJXNckcNELKhj4R_Lex62WJn3K4ct1wkuocMjfWAAg@mail.gmail.com>
-References: <20190828202723.1145-1-linux.amoon@gmail.com> <20190828202723.1145-2-linux.amoon@gmail.com>
- <CAFBinCBWq0LcdA1-a5W06zKp0RzGs5_=Mph6StGKXJ7npCgbfg@mail.gmail.com>
- <CANAwSgS+HGYXr290=EvdhKxh3TiBOqfbcuuF4cMAiBVX1ez9+Q@mail.gmail.com> <CAFBinCCLPa64_h0JE4Z_pMuUuhb=HKUXPti2pkUFAuEPO2fE6Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCH v3 00/11] *** SUBJECT HERE ***
+Date: Mon,  2 Sep 2019 11:17:05 +0800
+Message-ID: <20190902031716.43195-1-xiaowei.bao@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCCLPa64_h0JE4Z_pMuUuhb=HKUXPti2pkUFAuEPO2fE6Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Cc: arnd@arndb.de, gregkh@linuxfoundation.org, zhiqiang.hou@nxp.com, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+*** BLURB HERE ***
 
-On Mon, 2 Sep 2019 at 03:23, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Anand,
->
-> On Sun, Sep 1, 2019 at 3:58 PM Anand Moon <linux.amoon@gmail.com> wrote:
-> >
-> > Hi Martin,
-> >
-> > Thanks for your review comments.
-> >
-> > Their have been some revision changes in S905 Odroid Schematics.
-> > [0] https://dn.odroid.com/S905/Schematic/
-> >
-> > Well I have make my changes based on old odroid-c2_rev0.2_20151218.pdf
->
-> [...]
-> > >
-> > > according to the schematics there's both:
-> > > - VDDIO_AO3V3
-> > > - VCC3V3 (which is turned on by VDDIO_AO3V3, see [0])
-> > >
-> >
-> > From the schematics it seams same.
-> >
-> > VDDIO_AO3V3---DMG340LSQN4 (Q4)---VCC3V3
-> yes, they are the same signal. the only difference is that VCC3V3 is
-> turned on later in the power-up sequence
->
-> > But this name change was done to link TFLASH_VDD_EN to TFLASH_VDD for eMMC
-> >
-> > VDDIO_AO3V3-----TFLASH_VDD using  TFLASH_VDD_EN gpio pin.
-> >
-> > Well I have tested this changes on eMMC module.
-> I cannot see any of the TFLASH_* regulators being linked to eMMC (they
-> are only linked to the SD card slot, I also checked
-> odroid-c2_rev0.2_20151218.pdf and odroid-c2_rev0.2_20171114.pdf).
-> which page of the odroid-c2_rev0.2_20151218.pdf schematics shows how
-> TFLASH_VDD is linked to eMMC?
->
-> please note that I don't have an Odroid-C2 board myself (so I cannot
-> test any of this).
->
->
-> Martin
+Xiaowei Bao (11):
+  PCI: designware-ep: Add multiple PFs support for DWC
+  PCI: designware-ep: Add the doorbell mode of MSI-X in EP mode
+  PCI: designware-ep: Move the function of getting MSI capability
+    forward
+  PCI: designware-ep: Modify MSI and MSIX CAP way of finding
+  dt-bindings: pci: layerscape-pci: add compatible strings for ls1088a
+    and ls2088a
+  PCI: layerscape: Fix some format issue of the code
+  PCI: layerscape: Modify the way of getting capability with different
+    PEX
+  PCI: layerscape: Modify the MSIX to the doorbell mode
+  PCI: layerscape: Add EP mode support for ls1088a and ls2088a
+  arm64: dts: layerscape: Add PCIe EP node for ls1088a
+  misc: pci_endpoint_test: Add LS1088a in pci_device_id table
 
-Thanks I will double check again and re-post then with correction again.
+ .../devicetree/bindings/pci/layerscape-pci.txt     |   4 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi     |  31 +++
+ drivers/misc/pci_endpoint_test.c                   |   1 +
+ drivers/pci/controller/dwc/pci-layerscape-ep.c     | 100 ++++++--
+ drivers/pci/controller/dwc/pcie-designware-ep.c    | 255 +++++++++++++++++----
+ drivers/pci/controller/dwc/pcie-designware.c       |  59 +++--
+ drivers/pci/controller/dwc/pcie-designware.h       |  48 +++-
+ 7 files changed, 404 insertions(+), 94 deletions(-)
 
-Best Regards
--Anand
+-- 
+2.9.5
