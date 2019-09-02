@@ -1,90 +1,78 @@
-Return-Path: <SRS0=UWh6=XB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.220.in.ua ([89.184.67.205]:54090 "EHLO smtp.220.in.ua"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388895AbfIFN3k (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 6 Sep 2019 09:29:40 -0400
-From: Oleh Kravchenko <oleg@kaa.org.ua>
-Subject: [PATCH v6 1/2] dt-bindings: Add docs for EL15203000
-Date: Fri,  6 Sep 2019 16:29:16 +0300
-Message-Id: <20190906132916.12423-2-oleg@kaa.org.ua>
-In-Reply-To: <20190906132916.12423-1-oleg@kaa.org.ua>
-References: <20190906132916.12423-1-oleg@kaa.org.ua>
+Return-Path: <SRS0=Molx=W5=onstation.org=masneyb@kernel.org>
+Date: Mon, 2 Sep 2019 17:29:38 -0400
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH v5 4/5] interconnect: qcom: Add QCS404 interconnect
+ provider driver
+Message-ID: <20190902212938.GA5080@onstation.org>
+References: <20190723142339.27772-1-georgi.djakov@linaro.org>
+ <20190723142339.27772-5-georgi.djakov@linaro.org>
+ <20190825204155.GA6879@onstation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz
-Cc: Oleh Kravchenko <oleg@kaa.org.ua>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190825204155.GA6879@onstation.org>
+To: Georgi Djakov <georgi.djakov@linaro.org>, bjorn.andersson@linaro.org
+Cc: robh+dt@kernel.org, agross@kernel.org, vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add documentation and example for dt-bindings EL15203000.
-LED board (aka RED LED board) from Crane Merchandising Systems.
+On Sun, Aug 25, 2019 at 04:41:55PM -0400, Brian Masney wrote:
+> Hi Georgi and Bjorn,
+> 
+> I'm finishing up a msm8974 interconnect driver and I used qcs404 as a
+> starting point. I have a question below.
+> 
+> On Tue, Jul 23, 2019 at 05:23:38PM +0300, Georgi Djakov wrote:
+> > From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > 
+> > Add driver for the interconnect buses found in Qualcomm QCS404-based
+> > platforms. The topology consists of three NoCs that are controlled by
+> > a remote processor. This remote processor collects the aggregated
+> > bandwidth for each master-slave pairs.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> > ---
+> 
+> [snip]
+> 
+> > +enum {
+> > +       QCS404_MASTER_AMPSS_M0 = 1,
+> 
+> [snip]
+> 
+> > +#define DEFINE_QNODE(_name, _id, _buswidth, _mas_rpm_id, _slv_rpm_id,	\
+> > +		     ...)						\
+> > +		static struct qcom_icc_node _name = {			\
+> > +		.name = #_name,						\
+> > +		.id = _id,						\
+> > +		.buswidth = _buswidth,					\
+> > +		.mas_rpm_id = _mas_rpm_id,				\
+> > +		.slv_rpm_id = _slv_rpm_id,				\
+> > +		.num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),	\
+> > +		.links = { __VA_ARGS__ },				\
+> > +	}
+> > +
+> > +DEFINE_QNODE(mas_apps_proc, QCS404_MASTER_AMPSS_M0, 8, 0, -1, QCS404_SLAVE_EBI_CH0, QCS404_BIMC_SNOC_SLV);
+> 
+> [snip]
+> 
+> > +static struct qcom_icc_node *qcs404_bimc_nodes[] = {
+> > +	[MASTER_AMPSS_M0] = &mas_apps_proc,
+> 
+> Should the id in DEFINE_QNODE() above be MASTER_AMPSS_M0 instead of
+> QCS404_MASTER_AMPSS_M0?
+> 
+> of_icc_xlate_onecell() looks up the id by the array index
+> MASTER_AMPSS_M0 (1), however qnoc_probe() passes the id that's
+> in struct qcom_icc_node to icc_node_create(), which is
+> QCS404_MASTER_AMPSS_M0 (0). They have different values and I'm unsure
+> why we can't just use the ids that are in qcom,qcs404.h and drop the
+> enum above.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Oleh Kravchenko <oleg@kaa.org.ua>
----
- .../bindings/leds/leds-el15203000.txt         | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-el15203000.txt
+I dug through the interconnect code some more and I now see why these
+separate IDs are needed.
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-el15203000.txt b/Documentation/devicetree/bindings/leds/leds-el15203000.txt
-new file mode 100644
-index 000000000000..c00e1b55db97
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-el15203000.txt
-@@ -0,0 +1,54 @@
-+Crane Merchandising System - el15203000 LED driver
-+--------------------------------------------------
-+
-+This LED Board (aka RED LEDs board) is widely used in
-+coffee vending machines produced by Crane Merchandising Systems.
-+
-+Required properties:
-+- compatible : "crane,el15203000"
-+- reg :
-+	see Documentation/devicetree/bindings/spi/spi-bus.txt
-+- spi-max-frequency : (optional)
-+	see Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+Optional LED sub-node properties:
-+- function:
-+	see Documentation/devicetree/bindings/leds/common.txt
-+- color:
-+	see Documentation/devicetree/bindings/leds/common.txt
-+- label:
-+	see Documentation/devicetree/bindings/leds/common.txt (deprecated)
-+
-+Example
-+-------
-+
-+#include <dt-bindings/leds/common.h>
-+
-+led-controller@0 {
-+	compatible = "crane,el15203000";
-+	reg = <0>;
-+	spi-max-frequency = <50000>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	/* water pipe */
-+	led@50 {
-+		reg = <0x50>;
-+		function = "pipe";
-+		color = <LED_COLOR_ID_RED>;
-+	};
-+
-+	/* screen frame */
-+	led@53 {
-+		reg = <0x53>;
-+		function = "screen";
-+		color = <LED_COLOR_ID_RED>;
-+	};
-+
-+	/* vending area */
-+	led@56 {
-+		reg = <0x56>;
-+		function = "vend";
-+		color = <LED_COLOR_ID_RED>;
-+	};
-+};
--- 
-2.21.0
+I posted a work in progress msm8974 interconnect driver:
+https://lore.kernel.org/lkml/20190902211925.27169-1-masneyb@onstation.org/T/#t
+
+Brian
