@@ -1,56 +1,57 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCHv2-next 3/3] arm64: dts: meson: odroid-c2: Add missing regulator linked to HDMI supply
-Date: Mon,  2 Sep 2019 08:58:21 +0000
-Message-ID: <20190902085821.1263-4-linux.amoon@gmail.com>
-References: <20190902085821.1263-1-linux.amoon@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/2] drm/panel: Add DT bindings for Sony ACX424AKP
+Date: Mon,  2 Sep 2019 11:06:32 +0200
+Message-ID: <20190902090633.24239-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190902085821.1263-1-linux.amoon@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As per schematics HDMI_P5V0 is supplied by P5V0 so add missing link.
-
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-As per Martin's suggestion added the HDMI_P5V0 fix regulator node.
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index ef2c3b74415b..a520ec0d73ff 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -66,6 +66,15 @@
- 		regulator-always-on;
- 	};
- 
-+	hdmi_p5v0: regulator-hdmi_p5v0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "HDMI_P5V0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		/* AP2331SA-7 */
-+		vin-supply = <&p5v0>;
-+	};
-+
- 	tflash_vdd: regulator-tflash_vdd {
- 		compatible = "regulator-fixed";
- 
-@@ -220,6 +229,7 @@
- 	status = "okay";
- 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
- 	pinctrl-names = "default";
-+	hdmi-supply = <&hdmi_p5v0>;
- };
- 
- &hdmi_tx_tmds_port {
--- 
-2.23.0
+VGhpcyBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgU29ueSBBQ1g0MjRBS1AgcGFu
+ZWwuCkxldCdzIHVzZSBZQU1MLgoKQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnClNpZ25l
+ZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4KLS0tCiAu
+Li4vZGlzcGxheS9wYW5lbC9zb255LGFjeDQyNGFrcC55YW1sICAgICAgICAgfCA1MyArKysrKysr
+KysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNTMgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
+L3NvbnksYWN4NDI0YWtwLnlhbWwKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zb255LGFjeDQyNGFrcC55YW1sIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc29ueSxhY3g0MjRha3AueWFt
+bApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAuLjI5ZjQxZmVlMWI2OQot
+LS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L3BhbmVsL3NvbnksYWN4NDI0YWtwLnlhbWwKQEAgLTAsMCArMSw1MyBAQAorIyBTUERYLUxp
+Y2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAtb25seSBPUiBCU0QtMi1DbGF1c2UpCislWUFNTCAx
+LjIKKy0tLQorJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9kaXNwbGF5L3BhbmVs
+L3NvbnksYWN4NDI0YWtwLnlhbWwjCiskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0
+YS1zY2hlbWFzL2NvcmUueWFtbCMKKwordGl0bGU6IFNvbnkgQUNYNDI0QUtQIDQiIDQ4MHg4NjQg
+QU1PTEVEIHBhbmVsCisKK21haW50YWluZXJzOgorICAtIExpbnVzIFdhbGxlaWogPGxpbnVzLndh
+bGxlaWpAbGluYXJvLm9yZz4KKworYWxsT2Y6CisgIC0gJHJlZjogcGFuZWwtY29tbW9uLnlhbWwj
+CisKK3Byb3BlcnRpZXM6CisgIGNvbXBhdGlibGU6CisgICAgY29uc3Q6IHNvbnksYWN4NDI0YWtw
+CisgIHJlZzogdHJ1ZQorICBwb3J0OiB0cnVlCisgIHJlc2V0LWdwaW9zOiB0cnVlCisgIHZkZGkt
+c3VwcGx5OgorICAgICBkZXNjcmlwdGlvbjogcmVndWxhdG9yIHRoYXQgc3VwcGxpZXMgdGhlIHZk
+ZGkgdm9sdGFnZQorICBkc2ktY29tbWFuZC1tb2RlOgorICAgICB0eXBlOiBib29sZWFuCisgICAg
+IGRlc2NyaXB0aW9uOgorICAgICAgIElmIHRoaXMgaXMgc3BlY2lmaWVkLCB0aGUgcGFuZWwgd2ls
+bCBiZSB1c2VkIGluIGNvbW1hbmQKKyAgICAgICBtb2RlIGluc3RlYWQgb2YgdmlkZW8gbW9kZS4K
+KworcmVxdWlyZWQ6CisgIC0gY29tcGF0aWJsZQorICAtIHJlZworICAtIHBvcnQKKyAgLSByZXNl
+dC1ncGlvcworICAtIHBvd2VyLXN1cHBseQorCithZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UK
+KworZXhhbXBsZXM6CisgIC0gfAorICAgIHBhbmVsQDAgeworICAgICAgICBjb21wYXRpYmxlID0g
+InNvbnksYWN4NDI0YWtwIjsKKyAgICAgICAgcmVnID0gPDA+OworICAgICAgICB2ZGRpLXN1cHBs
+eSA9IDwmZm9vPjsKKyAgICAgICAgcmVzZXQtZ3Bpb3MgPSA8JmZvb19ncGlvIDAgR1BJT19BQ1RJ
+VkVfTE9XPjsKKworICAgICAgICBwb3J0IHsKKyAgICAgICAgICAgIHBhbmVsX2luOiBlbmRwb2lu
+dCB7CisgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZkc2lfb3V0PjsKKyAgICAg
+ICAgICAgIH07CisgICAgICAgIH07CisgICAgfTsKKworLi4uClwgTm8gbmV3bGluZSBhdCBlbmQg
+b2YgZmlsZQotLSAKMi4yMS4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWw=
