@@ -1,82 +1,57 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v3 0/8] Add dual-LVDS panel support to EK874
-Date: Mon, 2 Sep 2019 10:01:01 +0000
-Message-ID: <TY1PR01MB17700DA7BEC8DA3AA32BEA53C0BE0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1567017402-5895-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAL_Jsq+5FMHK4W4UQU24g+rm3CLjnhRcB29skygRB++GaJyM0A@mail.gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 01/11] software node: Get reference to parent swnode
+ in get_parent op
+Date: Mon, 2 Sep 2019 13:10:28 +0300
+Message-ID: <20190902101028.GZ2680@smile.fi.intel.com>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-2-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+5FMHK4W4UQU24g+rm3CLjnhRcB29skygRB++GaJyM0A@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190902083240.20367-2-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Andrzej Hajda <a.hajda@samsung.com>, Sam Ravnborg <sam@ravnborg.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kerne>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgZmVlZGJhY2shDQoNCj4gRnJvbTogUm9iIEhl
-cnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4NCj4gU2VudDogMjkgQXVndXN0IDIwMTkgMTY6MjcN
-Cj4gVG86IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPg0K
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDAvOF0gQWRkIGR1YWwtTFZEUyBwYW5lbCBzdXBwb3J0
-IHRvIEVLODc0DQo+IA0KPiBPbiBXZWQsIEF1ZyAyOCwgMjAxOSBhdCAxOjM2IFBNIEZhYnJpemlv
-IENhc3Rybw0KPiA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPg0K
-PiA+IERlYXIgQWxsLA0KPiA+DQo+ID4gdGhpcyBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBkdWFs
-LUxWRFMgcGFuZWwgSURLLTIxMjFXUg0KPiA+IGZyb20gQWR2YW50ZWNoOg0KPiA+IGh0dHBzOi8v
-YnV5LmFkdmFudGVjaC5ldS9EaXNwbGF5cy9FbWJlZGRlZC1MQ0QtS2l0cy1IaWdoLUJyaWdodG5l
-c3MvbW9kZWwtSURLLTIxMjFXUi1LMkZIQTJFLmh0bQ0KPiA+DQo+ID4gVjMgYXBwcm9hY2hlcyB0
-aGUgcHJvYmxlbSBpbiBhIGNvbXBsZXRlbHkgZGlmZmVyZW50IHdheSwgd2Ugbm93DQo+ID4gaGF2
-ZSB0d28gbmV3IHByb3BlcnRpZXMgdG8gbWFyayB0aGUgcG9ydHMgaW4gdGhlIERUIGFzIHJlY2Vp
-dmluZw0KPiA+IGV2ZW4gcGl4ZWxzIGFuZCBvZGQgcGl4ZWxzOiBkdWFsLWx2ZHMtZXZlbi1waXhl
-bHMgYW5kIGR1YWwtbHZkcy1vZGQtcGl4ZWxzLA0KPiA+IHdoaWNoIG1lYW5zIGRldmljZSBkcml2
-ZXJzIHNob3VsZCBub3QgdXNlIGJyaWRnZSBzcGVjaWZpYyBvciBwYW5lbA0KPiA+IHNwZWNpZmlj
-IGR1YWxfbGluayBmbGFncy4gQWxzbywgaW4gdGhpcyBjYXNlIHRoZSBEVCBkZXNjcmliZXMgdGhl
-DQo+ID4gY29ubmVjdGlvbiBmdWxseS4NCj4gPg0KPiA+IEluIG9yZGVyIGZvciB0aGUgc29sdXRp
-b24gdG8gYmUgZ2VuZXJpYywgSSBoYXZlIGV4cG9ydGVkIGEgbmV3IGhlbHBlcg0KPiA+IChkcm1f
-b2ZfbHZkc19nZXRfZHVhbF9saW5rX2NvbmZpZ3VyYXRpb24pIHRvIHdhbGsgdGhlIGRldmljZSB0
-cmVlLA0KPiA+IGFuZCBmaWd1cmUgb3V0IGlmIHRoZSBjb25uZWN0aW9uIGlzIGR1YWwtTFZEUy4g
-VGhlIHNhbWUgaGVscGVyIGdpdmVzDQo+ID4gaW5mb3JtYXRpb24gYWJvdXQgdGhlIGNvbmZpZ3Vy
-YXRpb24gb2YgdGhlIGNvbm5lY3Rpb24uIElmIFB4IGlzIGNvbm5lY3RlZA0KPiA+IHRvIGEgcG9y
-dCBleHBlY3RpbmcgZXZlbiBwaXhlbHMgYW5kIFB5IGlzIGNvbm5lY3RlZCB0byBhIHBvcnQgZXhw
-ZWN0aW5nDQo+ID4gb2RkIHBpeGVscywgdGhlbiB0aGUgaGVscGVyIHJldHVybnMgRFJNX0xWRFNf
-RFVBTF9MSU5LX0VWRU5fT0REX1BJWEVMUw0KPiA+IChsaWtlIGluIHRoZSBleGFtcGxlIGJlbG93
-KSwgb3RoZXJ3aXNlIGl0IHJldHVybnMNCj4gPiBEUk1fTFZEU19EVUFMX0xJTktfT0REX0VWRU5f
-UElYRUxTLg0KPiA+DQo+ID4NCj4gPiAgLS0tLS0tLS0gICAgICAgICAgICBkdWFsLWx2ZHMtZXZl
-bi1waXhlbHMgIC0tLS0tLS0tDQo+ID4gfCAgICAgICAgfC0tLS0gICAgICAgICAgICAgICAgICAg
-ICAgICAgLS0tLXwgICAgICAgIHwNCj4gPiB8ICAgICAgICB8IFB4IHwtLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tPnwgUG4gfCAgICAgICAgfA0KPiA+IHwgICAgICAgIHwtLS0tICAgICAgICAgICAgICAg
-ICAgICAgICAgIC0tLS18ICAgICAgICB8DQo+ID4gfCBTT1VSQ0UgfCAgICAgICAgICAgZHVhbC1s
-dmRzLW9kZC1waXhlbHMgIHwgIFNJTksgIHwNCj4gPiB8ICAgICAgICB8LS0tLSAgICAgICAgICAg
-ICAgICAgICAgICAgICAtLS0tfCAgICAgICAgfA0KPiA+IHwgICAgICAgIHwgUHkgfC0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0+fCBQbSB8ICAgICAgICB8DQo+ID4gfCAgICAgICAgfC0tLS0gICAgICAg
-ICAgICAgICAgICAgICAgICAgLS0tLXwgICAgICAgIHwNCj4gPiAgLS0tLS0tLS0gICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tLS0tDQo+ID4NCj4gPiBUaGUgZGV2aWNlIGRy
-aXZlciBmb3IgdGhlIGVuY29kZXIgdGhlbiB3aWxsIHdvcmsgb3V0IGlmIHdpdGggdGhlIGN1cnJl
-bnQNCj4gPiB3aXJpbmcgdGhlIHBpeGVscyBuZWVkIHN3YXBwaW5nIG9yIG5vdC4NCj4gPg0KPiA+
-IFRoZSBzYW1lIHNvbHV0aW9uIHdvcmtzIGZvciBib3RoIHBhbmVscyBhbmQgYnJpZGdlcy4NCj4g
-Pg0KPiA+IFNpbmNlIHRoZSBEVCBkZXNjcmliZXMgdGhlIGNvbm5lY3Rpb24gZnVsbHksIGRyaXZl
-cg0KPiA+IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1sdmRzLmMgd29ya3Mgb3V0LW9mLXRo
-ZS1ib3gsIG5vIGNoYW5nZXMNCj4gPiByZXF1aXJlZCwgaG93ZXZlciwgdGhpcyBpbXBsZW1lbnRh
-dGlvbiBvcGVucyB1cCBhIHByb2JsZW0gd2l0aCB0aGUNCj4gPiBkdC1iaW5kaW5ncy4NCj4gPiBE
-cml2ZXIgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLWx2ZHMuYyBjYW4gc3RpbGwgYmUgcGxl
-YXNlZCBieQ0KPiA+IGEgcG9ydCBub2RlLCBidXQgYWxzbyBieSBhIHBvcnRzIG5vZGUuDQo+ID4g
-SSBoYXZlIGNyZWF0ZWQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-YnVzLXRpbWluZ3MvbHZkcy55YW1sDQo+ID4gd2l0aCB0aGUgaWRlYSBvZiBpbmNsdWRpbmcgaXQg
-ZnJvbSBwYW5lbHMgYW5kIGJyaWRnZXMgZHQtYmluZGluZ3MNCj4gPiBzdXBwb3J0aW5nIGR1YWwt
-TFZEUyAoYW5kIG9mIGNvdXJzZSB0aGUgZHQtYmluZGluZ3MgZm9yIHRoZSBzcGVjaWZpYw0KPiA+
-IGRldmljZXMgc2hvdWxkIHNheSB3aGljaCBwb3J0IHNob3VsZCBiZSBtYXJrZWQgYXMgd2hhdCks
-IGJ1dCBmaWxlDQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvbHZkcy55YW1sIGZvcm1hbGx5DQo+ID4gcmVxdWlyZXMgcHJvcGVydHkgInBvcnQiLCB3
-aGlsZSB3aXRoIHRoaXMgaW1wbGVtZW50YXRpb24gaXQgc2hvdWxkIHJlcXVpcmUNCj4gPiBPbmVP
-ZiAicG9ydCIgYW5kICJwb3J0cyIsIGFuZCB1bmZvcnR1bmF0ZWx5IEkgY2FuJ3Qgc2VlbSB0byBm
-aW5kIGEgbmVhdCB3YXkNCj4gPiBhcm91ZCB0aGF0LCBvdGhlciB0aGFuIGNyZWF0aW5nIGEgbmV3
-IGNvbXBhdGlibGUgc3RyaW5nDQo+IA0KPiBKdXN0IGFkZCAncG9ydHMnIGFuZCBkcm9wICdwb3J0
-JyBmcm9tIGJlaW5nIHJlcXVpcmVkIGluIHRoZSBjb21tb24NCj4gYmluZGluZy4gVGhlbiBpdCBp
-cyB1cCB0byB0aGUgcGFuZWwgc3BlY2lmaWMgYmluZGluZ3MgdG8gZGVmaW5lIHdoaWNoDQo+IG9u
-ZSBpcyByZXF1aXJlZC4gT3Igd2UganVzdCBsZWF2ZSBpdCB0byBhbGxvdyBlaXRoZXIgZm9ybSB3
-aGljaCB0aGUNCj4gZ3JhcGggY29kZSBjYW4gaGFuZGxlLg0KPiANCj4gV2UgY291bGQgaGF2ZSB0
-aGlzIGluIHRoZSBjb21tb24gYmluZGluZzoNCj4gDQo+IG9uZU9mOg0KPiAgLSByZXF1aXJlZDog
-W3BvcnRzXQ0KPiAgLSByZXF1aXJlZDogW3BvcnRdDQoNCg0KVGhhbmsgeW91IGZvciBSb2IgZm9y
-IGxvb2tpbmcgaW50byB0aGlzLiBJIHdpbGwgd2FpdCBmb3IgYSBmZWVkYmFjayBmcm9tIExhdXJl
-bnQNCm9uIHRoZSBjb2RlIGJlZm9yZSBzZW5kaW5nIG91dCB2NC4NCg0KVGhhbmtzLA0KRmFiDQoN
-Cj4gDQo+IFJvYg0K
+On Mon, Sep 02, 2019 at 11:32:30AM +0300, Sakari Ailus wrote:
+> The software_node_get_parent() returned a pointer to the parent swnode,
+> but did not take a reference to it, leading the caller to put a reference
+> that was not taken. Take that reference now.
+> 
+
+Missed already given
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Fixes: 59abd83672f7 ("drivers: base: Introducing software nodes to the firmware node framework")
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> ---
+>  drivers/base/swnode.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> index e7b3aa3bd55ad..a7cb41812cfda 100644
+> --- a/drivers/base/swnode.c
+> +++ b/drivers/base/swnode.c
+> @@ -520,7 +520,10 @@ software_node_get_parent(const struct fwnode_handle *fwnode)
+>  {
+>  	struct swnode *swnode = to_swnode(fwnode);
+>  
+> -	return swnode ? (swnode->parent ? &swnode->parent->fwnode : NULL) : NULL;
+> +	if (!swnode || !swnode->parent)
+> +		return NULL;
+> +
+> +	return fwnode_handle_get(&swnode->parent->fwnode);
+>  }
+>  
+>  static struct fwnode_handle *
+> -- 
+> 2.20.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
