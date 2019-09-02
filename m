@@ -1,115 +1,119 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 06/18] dt-bindings: interrupt-controller: Add
- Loongson-3 IOINTC
-Date: Mon, 02 Sep 2019 14:38:59 +0100
-Message-ID: <20190902041114.GA27186@bogus>
-References: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH 2/3] dt-bindings: sound: Add Xilinx
+ logicPD-I2S FPGA IP bindings
+Date: Mon, 02 Sep 2019 14:39:09 +0100
+Message-ID: <20190902044231.GA17348@bogus>
+References: <20190830210607.22644-1-miquel.raynal@bootlin.com>
+ <20190830210607.22644-2-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-mips@vger.kernel.org, chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org
+In-Reply-To: <20190830210607.22644-2-miquel.raynal@bootlin.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, alexandre@bootlin.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 12:32:20PM +0800, Jiaxun Yang wrote:
-> Document Loongson-3 I/O Interrupt controller.
+On Fri, Aug 30, 2019 at 11:06:06PM +0200, Miquel Raynal wrote:
+> Document the logicPD I2S FPGA block bindings in yaml.
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Syntax verified with dt-doc-validate.
+> 
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > ---
->  .../loongson,ls3-iointc.yaml                  | 75 +++++++++++++++++++
->  1 file changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-iointc.yaml
+>  .../bindings/sound/xlnx,logicpd-i2s.yaml      | 57 +++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/xlnx,logicpd-i2s.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-iointc.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-iointc.yaml
+> diff --git a/Documentation/devicetree/bindings/sound/xlnx,logicpd-i2s.yaml b/Documentation/devicetree/bindings/sound/xlnx,logicpd-i2s.yaml
 > new file mode 100644
-> index 000000000000..9aee10abd5cd
+> index 000000000000..cbff641af199
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls3-iointc.yaml
-> @@ -0,0 +1,75 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +++ b/Documentation/devicetree/bindings/sound/xlnx,logicpd-i2s.yaml
+> @@ -0,0 +1,57 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 > +%YAML 1.2
 > +---
-> +$id: "http://devicetree.org/schemas/interrupt-controller/loongson,ls3-iointc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +$id: http://devicetree.org/schemas/sound/xlnx,logicpd-i2s.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +title: Loongson-3 I/O Interrupt Controller
+> +title: Device-Tree bindings for Xilinx logicPD I2S FPGA block
 > +
 > +maintainers:
-> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +  - Miquel Raynal <miquel.raynal@bootlin.com>
 > +
 > +description: |
-> +  This interrupt controller is found in the Loongson-3 family of chips as the primary
-> +  package interrupt source which can route interrupt to interrupt line of cores.
+> +  The IP supports I2S playback/capture audio. It acts as a slave and
+> +  clocks should come from the codec. It only supports two channels and
+> +  S16_LE format.
 > +
 > +properties:
 > +  compatible:
-> +    const: loongson,ls3-iointc
+> +    items:
+> +      - const: xlnx,logicpd-i2s
 > +
 > +  reg:
 > +    maxItems: 1
+> +    description:
+> +      Base address and size of the IP core instance.
 > +
-> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: tx interrupt
+> +      - description: rx interrupt
+> +    description:
+> +      Either the Tx interruption or the Rx interruption or both.
 
-Extra blank line.
+The schema says either tx or both. Doesn't really matter here as it's 
+just numbers.
 
-> +  interrupt-controller: true
 > +
-> +  "#interrupt-cells":
-> +    description: |
-> +      Specifies the number of cells needed to encode an interrupt source.
-> +      Must be 2 or 4.
-> +      If the system requires describing interrupt line & core mapping, than
-> +      it must be 4.
-> +
-> +      The 1st cell is the hardware interrupt number.
-> +
-> +      The 2nd cell is the flags, encoded as follows:
-> +        bits[3:0] trigger type and level flags.
-> +          1 = low-to-high edge triggered
-> +          2 = high-to-low edge triggered
-> +          4 = active high level-sensitive
-> +          8 = active low level-sensitive.
-> +
-> +      The 3rd is the parent interrupt line that interrupt would map to.
-> +      As the CPU preserved 4 interrupt lines for I/O, in theory any of the iointc
-> +      interrupt can be chained to any interrupt lines on a core. But currently
-> +      we can only map all the interrupt to a single parent, so this cell must be
-> +      set uniformly for all the child interrupts corresponding to the parent
-> +      interrupt.
-> +
-> +      The 4th is the parent core that interrupt would map to. The interrupt
-> +      contoller can map any of the interrupt to the specified core on a package.
-> +      This cell determined the core. It must be the bootcore.
-> +
-> +      If the 3rd, 4th cell is not set, it will default to the 0# interrupt line
-> +      and bootcore.
-> +
-> +    enum: [ 2, 4 ]
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: tx
+> +      - const: rx
+
+But here it does matter.
+
+The easiest way to express this is:
+
+oneOf:
+  - items:
+      - enum: [ tx, rx ]
+  - items:
+      - const: tx
+      - const: rx
+
 > +
 > +required:
 > +  - compatible
 > +  - reg
 > +  - interrupts
-
-Missing from the property list and needs to define how many.
-
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-> +
+> +  - interrupts-controller
 > +
 > +examples:
 > +  - |
-> +    iointc: interrupt-controller@3ff01400 {
-> +        compatible = "loongson,ls3-io-intc";
-> +        reg = <0x3ff01400 0x60>;
-> +        interrupts = <2>;
-> +        interrupt-controller;
-> +        #interrupt-cells = <4>;
+> +    logii2s_dai: logii2s-dai@43c10000 {
+> +        reg = <0x43c10000 0x1000>;
+> +        compatible = "xlnx,logicpd-i2s-dai";
+> +        interrupt-parent = <&intc>;
+> +        interrupts = <0 29 IRQ_TYPE_LEVEL_HIGH>, <0 30 IRQ_TYPE_LEVEL_HIGH>;
+> +        interrupt-names = "rx", "tx";
 > +    };
-> +...
 > -- 
-> 2.22.0
+> 2.20.1
 > 
