@@ -1,180 +1,495 @@
-From: Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [PATCH V4 3/4] staging: iio: adc: ad7192: Add system calibration support
-Date: Mon, 2 Sep 2019 16:08:30 +0300
-Message-ID: <20190902130831.23057-3-mircea.caprioru@analog.com>
-References: <20190902130831.23057-1-mircea.caprioru@analog.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
+Date: Mon,  2 Sep 2019 14:24:00 +0100
+Message-ID: <20190902132400.14084-1-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190902130831.23057-1-mircea.caprioru@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
+To: agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, bjorn.andersson@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch will add a system calibration attribute for each channel. Using
-this option the user will have the ability to calibrate each channel for
-zero scale and full scale. It uses the iio_chan_spec_ext_info and IIO_ENUM
-to implement the functionality.
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+The Lenovo Yoga C630 is built on the SDM850 from Qualcomm, but this seem
+to be similar enough to the SDM845 that we can reuse the sdm845.dtsi.
+
+Supported by this patch is: keyboard, battery monitoring, UFS storage,
+USB host and Bluetooth.
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
-Changelog V2:
-- no changes here
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 450 ++++++++++++++++++
+ 2 files changed, 451 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
 
-Changelog V3:
-- no changes here
-
-Changelog V4:
-- add an attribute to start the system calibration
-- the mode attribute does not trigger the calibration
-- added ABI documentation
-
- .../ABI/testing/sysfs-bus-iio-adc-ad7192      | 24 ++++++
- drivers/staging/iio/adc/ad7192.c              | 79 ++++++++++++++++++-
- 2 files changed, 102 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192 b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
-index 74a2873045bf..7627d3be08f5 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
-+++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
-@@ -13,3 +13,27 @@ Description:
- 		need to minimize the system current consumption.
- 		Reading gives the state of the bridge switch.
- 		Writing '1' enables the bridge switch.
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 0a7e5dfce6f7..670c6c65f9e9 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+new file mode 100644
+index 000000000000..3177b054035f
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+@@ -0,0 +1,450 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Lenovo Yoga C630
++ *
++ * Copyright (c) 2019, Linaro Ltd.
++ */
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/in_voltagex_sys_calibration
-+KernelVersion:
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Initiates the system calibration procedure. This is done on a
-+		single channel at a time. Write '1' to start the calibration.
++/dts-v1/;
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/in_voltagex_sys_calibration_mode_available
-+KernelVersion:
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Reading returns a list with the possible calibration modes.
-+		There are two available options:
-+		"zero_scale" - calibrate to zero scale
-+		"full_scale" - calibrate to full scale
++#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
++#include "sdm845.dtsi"
++#include "pm8998.dtsi"
 +
-+What:		/sys/bus/iio/devices/iio:deviceX/in_voltagex_sys_calibration_mode
-+KernelVersion:
-+Contact:	linux-iio@vger.kernel.org
-+Description:
-+		Sets up the calibration mode used in the system calibration
-+		procedure. Reading returns the current calibration mode.
-+		Writing sets the system calibration mode.
-diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
-index d58ce08f3693..c5106d98c9b3 100644
---- a/drivers/staging/iio/adc/ad7192.c
-+++ b/drivers/staging/iio/adc/ad7192.c
-@@ -155,6 +155,11 @@
-  * The DOUT/RDY output must also be wired to an interrupt capable GPIO.
-  */
- 
-+enum {
-+   AD7192_SYSCALIB_ZERO_SCALE,
-+   AD7192_SYSCALIB_FULL_SCALE,
++/ {
++	model = "Lenovo Yoga C630";
++	compatible = "lenovo,yoga-c630", "qcom,sdm845";
++
++	aliases {
++		hsuart0 = &uart6;
++	};
 +};
 +
- struct ad7192_state {
- 	struct regulator		*avdd;
- 	struct regulator		*dvdd;
-@@ -169,10 +174,80 @@ struct ad7192_state {
- 	u8				devid;
- 	u8				clock_sel;
- 	struct mutex			lock;	/* protect sensor state */
-+	u8				syscalib_mode[8];
- 
- 	struct ad_sigma_delta		sd;
- };
- 
-+static const char * const ad7192_syscalib_modes[] = {
-+	[AD7192_SYSCALIB_ZERO_SCALE] = "zero_scale",
-+	[AD7192_SYSCALIB_FULL_SCALE] = "full_scale",
++&apps_rsc {
++	pm8998-rpmh-regulators {
++		compatible = "qcom,pm8998-rpmh-regulators";
++		qcom,pmic-id = "a";
++
++		vdd-l2-l8-l17-supply = <&vreg_s3a_1p35>;
++		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
++
++		vreg_s2a_1p125: smps2 {
++		};
++
++		vreg_s3a_1p35: smps3 {
++			regulator-min-microvolt = <1352000>;
++			regulator-max-microvolt = <1352000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_s4a_1p8: smps4 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_s5a_2p04: smps5 {
++			regulator-min-microvolt = <2040000>;
++			regulator-max-microvolt = <2040000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_s7a_1p025: smps7 {
++		};
++
++		vdd_qusb_hs0:
++		vdda_hp_pcie_core:
++		vdda_mipi_csi0_0p9:
++		vdda_mipi_csi1_0p9:
++		vdda_mipi_csi2_0p9:
++		vdda_mipi_dsi0_pll:
++		vdda_mipi_dsi1_pll:
++		vdda_qlink_lv:
++		vdda_qlink_lv_ck:
++		vdda_qrefs_0p875:
++		vdda_pcie_core:
++		vdda_pll_cc_ebi01:
++		vdda_pll_cc_ebi23:
++		vdda_sp_sensor:
++		vdda_ufs1_core:
++		vdda_ufs2_core:
++		vdda_usb1_ss_core:
++		vdda_usb2_ss_core:
++		vreg_l1a_0p875: ldo1 {
++			regulator-min-microvolt = <880000>;
++			regulator-max-microvolt = <880000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vddpx_10:
++		vreg_l2a_1p2: ldo2 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++			regulator-always-on;
++		};
++
++		vreg_l3a_1p0: ldo3 {
++		};
++
++		vdd_wcss_cx:
++		vdd_wcss_mx:
++		vdda_wcss_pll:
++		vreg_l5a_0p8: ldo5 {
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vddpx_13:
++		vreg_l6a_1p8: ldo6 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l7a_1p8: ldo7 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l8a_1p2: ldo8 {
++		};
++
++		vreg_l9a_1p8: ldo9 {
++		};
++
++		vreg_l10a_1p8: ldo10 {
++		};
++
++		vreg_l11a_1p0: ldo11 {
++		};
++
++		vdd_qfprom:
++		vdd_qfprom_sp:
++		vdda_apc1_cs_1p8:
++		vdda_gfx_cs_1p8:
++		vdda_qrefs_1p8:
++		vdda_qusb_hs0_1p8:
++		vddpx_11:
++		vreg_l12a_1p8: ldo12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vddpx_2:
++		vreg_l13a_2p95: ldo13 {
++		};
++
++		vreg_l14a_1p88: ldo14 {
++			regulator-min-microvolt = <1880000>;
++			regulator-max-microvolt = <1880000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l15a_1p8: ldo15 {
++		};
++
++		vreg_l16a_2p7: ldo16 {
++		};
++
++		vreg_l17a_1p3: ldo17 {
++			regulator-min-microvolt = <1304000>;
++			regulator-max-microvolt = <1304000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l18a_2p7: ldo18 {
++		};
++
++		vreg_l19a_3p0: ldo19 {
++			regulator-min-microvolt = <3100000>;
++			regulator-max-microvolt = <3108000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l20a_2p95: ldo20 {
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2960000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l21a_2p95: ldo21 {
++		};
++
++		vreg_l22a_2p85: ldo22 {
++		};
++
++		vreg_l23a_3p3: ldo23 {
++		};
++
++		vdda_qusb_hs0_3p1:
++		vreg_l24a_3p075: ldo24 {
++			regulator-min-microvolt = <3075000>;
++			regulator-max-microvolt = <3083000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l25a_3p3: ldo25 {
++			regulator-min-microvolt = <3104000>;
++			regulator-max-microvolt = <3112000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vdda_hp_pcie_1p2:
++		vdda_hv_ebi0:
++		vdda_hv_ebi1:
++		vdda_hv_ebi2:
++		vdda_hv_ebi3:
++		vdda_mipi_csi_1p25:
++		vdda_mipi_dsi0_1p2:
++		vdda_mipi_dsi1_1p2:
++		vdda_pcie_1p2:
++		vdda_ufs1_1p2:
++		vdda_ufs2_1p2:
++		vdda_usb1_ss_1p2:
++		vdda_usb2_ss_1p2:
++		vreg_l26a_1p2: ldo26 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1208000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vreg_l28a_3p0: ldo28 {
++		};
++
++		vreg_lvs1a_1p8: lvs1 {
++		};
++
++		vreg_lvs2a_1p8: lvs2 {
++		};
++	};
 +};
 +
-+static int ad7192_set_syscalib_mode(struct iio_dev *indio_dev,
-+				    const struct iio_chan_spec *chan,
-+				    unsigned int mode)
-+{
-+	struct ad7192_state *st = iio_priv(indio_dev);
-+
-+	st->syscalib_mode[chan->channel] = mode;
-+
-+	return 0;
-+}
-+
-+static int ad7192_get_syscalib_mode(struct iio_dev *indio_dev,
-+				    const struct iio_chan_spec *chan)
-+{
-+	struct ad7192_state *st = iio_priv(indio_dev);
-+
-+	return st->syscalib_mode[chan->channel];
-+}
-+
-+static ssize_t ad7192_write_syscalib(struct iio_dev *indio_dev,
-+				     uintptr_t private,
-+				     const struct iio_chan_spec *chan,
-+				     const char *buf, size_t len)
-+{
-+	struct ad7192_state *st = iio_priv(indio_dev);
-+	bool sys_calib;
-+	int ret, temp;
-+
-+	ret = strtobool(buf, &sys_calib);
-+	if (ret)
-+		return ret;
-+
-+	temp = st->syscalib_mode[chan->channel];
-+	if (sys_calib) {
-+		if (temp == AD7192_SYSCALIB_ZERO_SCALE)
-+			ret = ad_sd_calibrate(&st->sd, AD7192_MODE_CAL_SYS_ZERO,
-+					      chan->address);
-+		else
-+			ret = ad_sd_calibrate(&st->sd, AD7192_MODE_CAL_SYS_FULL,
-+					      chan->address);
-+	}
-+
-+	return ret ? ret : len;
-+}
-+
-+static const struct iio_enum ad7192_syscalib_mode_enum = {
-+	.items = ad7192_syscalib_modes,
-+	.num_items = ARRAY_SIZE(ad7192_syscalib_modes),
-+	.set = ad7192_set_syscalib_mode,
-+	.get = ad7192_get_syscalib_mode
++&apps_smmu {
++	/* TODO: Figure out how to survive booting with this enabled */
++	status = "disabled";
 +};
 +
-+static const struct iio_chan_spec_ext_info ad7192_calibsys_ext_info[] = {
-+	{
-+		.name = "sys_calibration",
-+		.write = ad7192_write_syscalib,
-+		.shared = IIO_SEPARATE,
-+	},
-+	IIO_ENUM("sys_calibration_mode", IIO_SEPARATE,
-+		 &ad7192_syscalib_mode_enum),
-+	IIO_ENUM_AVAILABLE("sys_calibration_mode", &ad7192_syscalib_mode_enum),
-+	{}
++&gcc {
++	protected-clocks = <GCC_QSPI_CORE_CLK>,
++			   <GCC_QSPI_CORE_CLK_SRC>,
++			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
 +};
 +
- static struct ad7192_state *ad_sigma_delta_to_ad7192(struct ad_sigma_delta *sd)
- {
- 	return container_of(sd, struct ad7192_state, sd);
-@@ -769,9 +844,11 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
- 		*chan = channels[i];
- 		chan->info_mask_shared_by_all |=
- 			BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY);
--		if (chan->type != IIO_TEMP)
-+		if (chan->type != IIO_TEMP) {
- 			chan->info_mask_shared_by_type_available |=
- 				BIT(IIO_CHAN_INFO_SCALE);
-+			chan->ext_info = ad7192_calibsys_ext_info;
-+		}
- 		chan++;
- 	}
- 
++&i2c1 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	battery@70 {
++		compatible = "some,battery";
++		reg = <0x70>;
++	};
++};
++
++&i2c3 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	hid@15 {
++		compatible = "hid-over-i2c";
++		reg = <0x15>;
++		hid-descr-addr = <0x1>;
++
++		interrupts-extended = <&tlmm 37 IRQ_TYPE_EDGE_RISING>;
++	};
++
++	hid@2c {
++		compatible = "hid-over-i2c";
++		reg = <0x2c>;
++		hid-descr-addr = <0x20>;
++
++		interrupts-extended = <&tlmm 37 IRQ_TYPE_EDGE_RISING>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c2_hid_active>;
++	};
++};
++
++&i2c5 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	hid@10 {
++		compatible = "hid-over-i2c";
++		reg = <0x10>;
++		hid-descr-addr = <0x1>;
++
++		interrupts-extended = <&tlmm 125 IRQ_TYPE_EDGE_FALLING>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c6_hid_active>;
++	};
++};
++
++&i2c11 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	hid@5c {
++		compatible = "hid-over-i2c";
++		reg = <0x5c>;
++		hid-descr-addr = <0x1>;
++
++		interrupts-extended = <&tlmm 92 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c12_hid_active>;
++	};
++};
++
++&qupv3_id_0 {
++	status = "okay";
++};
++
++&qupv3_id_1 {
++	status = "okay";
++};
++
++&tlmm {
++	gpio-reserved-ranges = <0 4>, <81 4>;
++
++	i2c2_hid_active: i2c2-hid-active {
++		pins = <37>;
++		function = "gpio";
++
++		input-enable;
++		bias-pull-up;
++		drive-strength = <2>;
++	};
++
++	i2c6_hid_active: i2c6-hid-active {
++		pins = <125>;
++		function = "gpio";
++
++		input-enable;
++		bias-pull-up;
++		drive-strength = <2>;
++	};
++
++	i2c12_hid_active: i2c12-hid-active {
++		pins = <92>;
++		function = "gpio";
++
++		input-enable;
++		bias-pull-up;
++		drive-strength = <2>;
++	};
++};
++
++&uart6 {
++       status = "okay";
++
++       bluetooth {
++	       compatible = "qcom,wcn3990-bt";
++
++	       vddio-supply = <&vreg_s4a_1p8>;
++	       vddxo-supply = <&vreg_l7a_1p8>;
++	       vddrf-supply = <&vreg_l17a_1p3>;
++	       vddch0-supply = <&vreg_l25a_3p3>;
++	       max-speed = <3200000>;
++       };
++};
++
++&ufs_mem_hc {
++	status = "okay";
++
++	vcc-supply = <&vreg_l20a_2p95>;
++	vcc-max-microamp = <600000>;
++};
++
++&ufs_mem_phy {
++	status = "okay";
++
++	vdda-phy-supply = <&vdda_ufs1_core>;
++	vdda-pll-supply = <&vdda_ufs1_1p2>;
++};
++
++&usb_1 {
++	status = "okay";
++};
++
++&usb_1_dwc3 {
++	dr_mode = "host";
++};
++
++&usb_1_hsphy {
++	status = "okay";
++
++	vdd-supply = <&vdda_usb1_ss_core>;
++	vdda-pll-supply = <&vdda_qusb_hs0_1p8>;
++	vdda-phy-dpdm-supply = <&vdda_qusb_hs0_3p1>;
++
++	qcom,imp-res-offset-value = <8>;
++	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
++	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
++	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
++};
++
++&usb_1_qmpphy {
++	status = "okay";
++
++	vdda-phy-supply = <&vdda_usb1_ss_1p2>;
++	vdda-pll-supply = <&vdda_usb1_ss_core>;
++};
++
++&usb_2 {
++	status = "okay";
++};
++
++&usb_2_dwc3 {
++	dr_mode = "host";
++};
++
++&usb_2_hsphy {
++	status = "okay";
++
++	vdd-supply = <&vdda_usb2_ss_core>;
++	vdda-pll-supply = <&vdda_qusb_hs0_1p8>;
++	vdda-phy-dpdm-supply = <&vdda_qusb_hs0_3p1>;
++
++	qcom,imp-res-offset-value = <8>;
++	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_22_8_MA>;
++};
++
++&usb_2_qmpphy {
++	status = "okay";
++
++	vdda-phy-supply = <&vdda_usb2_ss_1p2>;
++	vdda-pll-supply = <&vdda_usb2_ss_core>;
++};
++
++&qup_i2c12_default {
++	drive-strength = <2>;
++	bias-disable;
++};
++
++&qup_uart6_default {
++       pinmux {
++               pins = "gpio45", "gpio46", "gpio47", "gpio48";
++               function = "qup6";
++       };
++
++       cts {
++	       pins = "gpio45";
++	       bias-pull-down;
++       };
++
++       rts-tx {
++	       pins = "gpio46", "gpio47";
++	       drive-strength = <2>;
++	       bias-disable;
++       };
++
++       rx {
++	       pins = "gpio48";
++	       bias-pull-up;
++       };
++};
 -- 
 2.17.1
