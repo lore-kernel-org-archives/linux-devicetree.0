@@ -1,68 +1,79 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH V3 3/6] PCI: tegra: Add support to configure sideband pins
-Date: Mon, 2 Sep 2019 11:18:56 +0100
-Message-ID: <20190902101855.GV14582@e119886-lin.cambridge.arm.com>
-References: <20190828172850.19871-1-vidyas@nvidia.com>
- <20190828172850.19871-4-vidyas@nvidia.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 09/11] lib/vsprintf: OF nodes are first and foremost,
+ struct device_nodes
+Date: Mon, 2 Sep 2019 13:21:21 +0300
+Message-ID: <20190902102121.GD2680@smile.fi.intel.com>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-10-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190828172850.19871-4-vidyas@nvidia.com>
+In-Reply-To: <20190902083240.20367-10-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 10:58:47PM +0530, Vidya Sagar wrote:
-> Add support to configure sideband signal pins when information is present
-> in respective controller's device-tree node.
+On Mon, Sep 02, 2019 at 11:32:38AM +0300, Sakari Ailus wrote:
+> Factor out static kobject_string() function that simply calls
+> device_node_string(), and thus remove references to kobjects (as these are
+> struct device_node).
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 > ---
-> V3:
-> * Used 'dev' instead of 'pcie->dev'
+>  lib/vsprintf.c | 16 ++++------------
+>  1 file changed, 4 insertions(+), 12 deletions(-)
 > 
-> V2:
-> * Addressed review comment from Andrew Murray
-> * Handled failure case of pinctrl_pm_select_default_state() cleanly
-> 
->  drivers/pci/controller/dwc/pcie-tegra194.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index fc0dbeb31d78..77fa6f70bc96 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -1304,8 +1304,13 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
->  	if (ret < 0) {
->  		dev_err(dev, "Failed to get runtime sync for PCIe dev: %d\n",
->  			ret);
-> -		pm_runtime_disable(dev);
-> -		return ret;
-> +		goto fail_pm_get_sync;
-> +	}
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index a04a2167101ef..4ad9332d54ba6 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -1905,6 +1905,9 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+>  	struct printf_spec str_spec = spec;
+>  	str_spec.field_width = -1;
+>  
+> +	if (fmt[0] != 'F')
+> +		return error_string(buf, end, "(%pO?)", spec);
 > +
-> +	ret = pinctrl_pm_select_default_state(dev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to configure sideband pins: %d\n", ret);
-> +		goto fail_pinctrl;
->  	}
+>  	if (!IS_ENABLED(CONFIG_OF))
+>  		return error_string(buf, end, "(%pOF?)", spec);
 >  
->  	tegra_pcie_init_controller(pcie);
-> @@ -1332,7 +1337,9 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
->  
->  fail_host_init:
->  	tegra_pcie_deinit_controller(pcie);
-> +fail_pinctrl:
->  	pm_runtime_put_sync(dev);
-> +fail_pm_get_sync:
->  	pm_runtime_disable(dev);
->  	return ret;
+> @@ -1978,17 +1981,6 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+>  	return widen_string(buf, buf - buf_start, end, spec);
 >  }
+>  
+> -static char *kobject_string(char *buf, char *end, void *ptr,
+> -			    struct printf_spec spec, const char *fmt)
+> -{
+> -	switch (fmt[1]) {
+> -	case 'F':
+> -		return device_node_string(buf, end, ptr, spec, fmt + 1);
+> -	}
+> -
+> -	return error_string(buf, end, "(%pO?)", spec);
+> -}
+> -
+>  /*
+>   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
+>   * by an extra set of alphanumeric characters that are extended format
+> @@ -2167,7 +2159,7 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>  	case 'G':
+>  		return flags_string(buf, end, ptr, spec, fmt);
+>  	case 'O':
+> -		return kobject_string(buf, end, ptr, spec, fmt);
+> +		return device_node_string(buf, end, ptr, spec, fmt + 1);
+>  	case 'x':
+>  		return pointer_string(buf, end, ptr, spec);
+>  	}
 > -- 
-> 2.17.1
+> 2.20.1
 > 
+
+-- 
+With Best Regards,
+Andy Shevchenko
