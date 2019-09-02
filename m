@@ -1,44 +1,70 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 11/11] lib/test_printf: Add tests for %pfw printk
- modifier
-Date: Mon, 2 Sep 2019 15:26:27 +0300
-Message-ID: <20190902122627.GG2680@smile.fi.intel.com>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
- <20190902083240.20367-12-sakari.ailus@linux.intel.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v3 05/11] dt-bindings: pci: layerscape-pci: add
+ compatible strings for ls1088a and ls2088a
+Date: Mon, 2 Sep 2019 13:31:40 +0100
+Message-ID: <20190902123140.GI9720@e119886-lin.cambridge.arm.com>
+References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+ <20190902031716.43195-6-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190902083240.20367-12-sakari.ailus@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+In-Reply-To: <20190902031716.43195-6-xiaowei.bao@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: mark.rutland@arm.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, devicetree@vger.kernel.org, jingoohan1@gmail.com, zhiqiang.hou@nxp.com, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, minghuan.Lian@nxp.com, robh+dt@kernel.org, gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org, gustavo.pimentel@synopsys.com, leoyang.li@nxp.com, shawnguo@kernel.org, mingkai.hu@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:32:40AM +0300, Sakari Ailus wrote:
-> Add a test for the %pfw printk modifier using software nodes.
+On Mon, Sep 02, 2019 at 11:17:10AM +0800, Xiaowei Bao wrote:
+> Add compatible strings for ls1088a and ls2088a.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+> v2:
+>  - No change.
+> v3:
+>  - Use one valid combination of compatible strings.
+> 
+>  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> index e20ceaa..762ae41 100644
+> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> @@ -22,7 +22,9 @@ Required properties:
+>          "fsl,ls1043a-pcie"
+>          "fsl,ls1012a-pcie"
+>    EP mode:
+> -	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
+> +	"fsl,ls1046a-pcie-ep" "fsl,ls-pcie-ep"
+> +	"fsl,ls1088a-pcie-ep" "fsl,ls-pcie-ep"
+> +	"fsl,ls2088a-pcie-ep" "fsl,ls-pcie-ep"
 
-> +	const struct software_node softnodes[] = {
-> +		{ .name = "first", },
-> +		{ .name = "second", .parent = &softnodes[0], },
-> +		{ .name = "third", .parent = &softnodes[1], },
-> +		{ NULL /* Guardian */ },
-> +	};
+This isn't consistent with "[PATCH v3 09/11] PCI: layerscape: Add EP mode..."
+as that patch drops the fallback "fsl,ls-pcie-ep". Either the fallback must
+be preserved in the driver, or you need to drop it here.
 
-> +	test(full_name_second, "%pfw",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
-> +	test(full_name, "%pfw",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> +	test(full_name, "%pfwf",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> +	test(second_name, "%pfwP",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
-> +	test(third_name, "%pfwP",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+What if there are existing users that depend on the fallback?
 
+(I'm also not sure if that comma should have been dropped).
 
-These can be shorted and easier to parse if you use absolute indexes.
+Thanks,
 
--- 
-With Best Regards,
-Andy Shevchenko
+Andrew Murray
+
+>  - reg: base addresses and lengths of the PCIe controller register blocks.
+>  - interrupts: A list of interrupt outputs of the controller. Must contain an
+>    entry for each entry in the interrupt-names property.
+> -- 
+> 2.9.5
+> 
