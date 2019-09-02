@@ -1,128 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
- SMC/HVC mailbox
-Date: Mon, 2 Sep 2019 15:20:00 +0100
-Message-ID: <CAL_JsqLauLbgVg=Aguebqk3q6e+BOxiMNJ+xqTgkmpAjOh8BpA@mail.gmail.com>
-References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
- <1567004515-3567-2-git-send-email-peng.fan@nxp.com> <5d6d1b86.1c69fb81.f86b5.3988@mx.google.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 2/2] iommu: dma: Use of_iommu_get_resv_regions()
+Date: Mon, 2 Sep 2019 15:22:35 +0100
+Message-ID: <1caeaaa0-c5aa-b630-6d42-055b26764f40@arm.com>
+References: <20190829111407.17191-1-thierry.reding@gmail.com>
+ <20190829111407.17191-3-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d6d1b86.1c69fb81.f86b5.3988@mx.google.com>
+In-Reply-To: <20190829111407.17191-3-thierry.reding@gmail.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Thierry Reding <thierry.reding@gmail.com>, Joerg Roedel <joro@8bytes.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Will Deacon <will@kernel.org>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 2:39 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Aug 28, 2019 at 03:02:58AM +0000, Peng Fan wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
-> > actions in software layers running in the EL2 or EL3 exception levels.
-> > The term "ARM" here relates to the SMC instruction as part of the ARM
-> > instruction set, not as a standard endorsed by ARM Ltd.
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  .../devicetree/bindings/mailbox/arm-smc.yaml       | 125 +++++++++++++++++++++
-> >  1 file changed, 125 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> > new file mode 100644
-> > index 000000000000..f8eb28d5e307
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> > @@ -0,0 +1,125 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ARM SMC Mailbox Interface
-> > +
-> > +maintainers:
-> > +  - Peng Fan <peng.fan@nxp.com>
-> > +
-> > +description: |
-> > +  This mailbox uses the ARM smc (secure monitor call) and hvc (hypervisor
-> > +  call) instruction to trigger a mailbox-connected activity in firmware,
-> > +  executing on the very same core as the caller. By nature this operation
-> > +  is synchronous and this mailbox provides no way for asynchronous messages
-> > +  to be delivered the other way round, from firmware to the OS, but
-> > +  asynchronous notification could also be supported. However the value of
-> > +  r0/w0/x0 the firmware returns after the smc call is delivered as a received
-> > +  message to the mailbox framework, so a synchronous communication can be
-> > +  established, for a asynchronous notification, no value will be returned.
-> > +  The exact meaning of both the action the mailbox triggers as well as the
-> > +  return value is defined by their users and is not subject to this binding.
-> > +
-> > +  One use case of this mailbox is the SCMI interface, which uses shared memory
-> > +  to transfer commands and parameters, and a mailbox to trigger a function
-> > +  call. This allows SoCs without a separate management processor (or when
-> > +  such a processor is not available or used) to use this standardized
-> > +  interface anyway.
-> > +
-> > +  This binding describes no hardware, but establishes a firmware interface.
-> > +  Upon receiving an SMC using one of the described SMC function identifiers,
-> > +  the firmware is expected to trigger some mailbox connected functionality.
-> > +  The communication follows the ARM SMC calling convention.
-> > +  Firmware expects an SMC function identifier in r0 or w0. The supported
-> > +  identifiers are passed from consumers, or listed in the the arm,func-ids
-> > +  properties as described below. The firmware can return one value in
-> > +  the first SMC result register, it is expected to be an error value,
-> > +  which shall be propagated to the mailbox client.
-> > +
-> > +  Any core which supports the SMC or HVC instruction can be used, as long as
-> > +  a firmware component running in EL3 or EL2 is handling these calls.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: arm,smc-mbox
-> > +
-> > +  "#mbox-cells":
-> > +    const: 1
-> > +
-> > +  arm,num-chans:
-> > +    description: The number of channels supported.
-> > +    items:
-> > +      minimum: 1
-> > +      maximum: 4096 # Should be enough?
-> > +
-> > +  method:
-> > +    - enum:
->
-> Did you build this with 'make dt_binding_check' as this should be a
-> warning. This should not be a list entry (i.e. drop the '-').
->
-> > +        - smc
-> > +        - hvc
-> > +
-> > +  transports:
->
-> arm,transports
->
-> > +    - enum:
-> > +        - mem
-> > +        - reg
-> > +
-> > +  arm,func-ids:
-> > +    description: |
-> > +      An array of 32-bit values specifying the function IDs used by each
-> > +      mailbox channel. Those function IDs follow the ARM SMC calling
-> > +      convention standard [1].
-> > +
-> > +      There is one identifier per channel and the number of supported
-> > +      channels is determined by the length of this array.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+On 29/08/2019 12:14, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> For device tree nodes, use the standard of_iommu_get_resv_regions()
+> implementation to obtain the reserved memory regions associated with a
+> device.
 
-Also, this doesn't work. You need:
+This covers the window between iommu_probe_device() setting up a default 
+domain and the device's driver finally probing and taking control, but 
+iommu_probe_device() represents the point that the IOMMU driver first 
+knows about this device - there's still a window from whenever the IOMMU 
+driver itself probed up to here where the "unidentified" traffic may 
+have already been disrupted. Some IOMMU drivers have no option but to 
+make the necessary configuration during their own probe routine, at 
+which point a struct device for the display/etc. endpoint may not even 
+exist yet.
 
-allOf:
-  - $ref: /schemas/types.yaml#/definitions/uint32-array
+Robin.
 
-> > +    minItems: 0
-> > +    maxItems: 4096   # Should be enough?
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>   drivers/iommu/dma-iommu.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index de68b4a02aea..31d48e55ab55 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -19,6 +19,7 @@
+>   #include <linux/iova.h>
+>   #include <linux/irq.h>
+>   #include <linux/mm.h>
+> +#include <linux/of_iommu.h>
+>   #include <linux/pci.h>
+>   #include <linux/scatterlist.h>
+>   #include <linux/vmalloc.h>
+> @@ -164,6 +165,8 @@ void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
+>   	if (!is_of_node(dev_iommu_fwspec_get(dev)->iommu_fwnode))
+>   		iort_iommu_msi_get_resv_regions(dev, list);
+>   
+> +	if (dev->of_node)
+> +		of_iommu_get_resv_regions(dev, list);
+>   }
+>   EXPORT_SYMBOL(iommu_dma_get_resv_regions);
+>   
+> 
