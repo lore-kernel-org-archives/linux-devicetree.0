@@ -1,38 +1,56 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v3 01/10] software node: Get reference to parent swnode
- in get_parent op
-Date: Mon, 2 Sep 2019 09:46:05 +0300
-Message-ID: <20190902064605.GB5475@paasikivi.fi.intel.com>
-References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
- <20190829101043.24963-2-sakari.ailus@linux.intel.com>
- <20190830122237.GY2680@smile.fi.intel.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv3 00/10] soc: ti: add OMAP PRM driver (for reset)
+Date: Mon, 2 Sep 2019 09:50:48 +0300
+Message-ID: <178f8d3a-3658-132f-e937-64313c912dd0@ti.com>
+References: <20190830121816.30034-1-t-kristo@ti.com>
+ <f7d6a2fb-175c-361b-00ff-ddde67700daa@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190830122237.GY2680@smile.fi.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <f7d6a2fb-175c-361b-00ff-ddde67700daa@oracle.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: santosh.shilimkar@oracle.com, ssantosh@kernel.org, linux-omap@vger.kernel.org, tony@atomide.com, s-anna@ti.com, p.zabel@pengutronix.de
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 03:22:37PM +0300, Andy Shevchenko wrote:
-> On Thu, Aug 29, 2019 at 01:10:34PM +0300, Sakari Ailus wrote:
-> > The software_node_get_parent() returned a pointer to the parent swnode,
-> > but did not take a reference to it, leading the caller to put a reference
-> > that was not taken. Take that reference now.
-> > 
-> 
-> > Fixes: 59abd83672f7 ("drivers: base: Introducing software nodes to the
-> > 		      firmware node framework")
-> 
-> I dunno if scripts parse the split line like above.
-> 
-> Nevertheless, for the code prospective looks good to me. Though you probably
-> would like to Cc it to Heikki.
+On 30/08/2019 19:50, santosh.shilimkar@oracle.com wrote:
+> On 8/30/19 5:18 AM, Tero Kristo wrote:
+>> Hi,
+>>
+>> V3 of the series, ended up re-sending the whole series as I squashed one
+>> patch from v2 and because of that the ordering has changed a bit. Changes
+>> in v3 contain fixes for the comments from Philipp Zabel.
+>>
+>> - added spinlock to protect register writes
+>> - added own xlate function to prevent bad reset IDs to be registered
+>> - use mask for the valid reset detection instead of parsing reset map
+>> - fixed reset status bit handling
+>> - used iopoll macro instead of handwritten poll loop for timeouts
+>> - squashed patch #6 into #4 from v2 of the series
+>> - some other minor fixes.
+>>
+>> This series still depends on the clk driver changes for the reset<->clk
+>> syncing [1].
+>>
+> This has to wait for another merge window. It will also take care of 
+> dependencies landing in mainline. Will push this to linux-next as
+> soon as v5.4-rc1 is out. Please remind me in case you don't see it
+> in next after 5.4-rc1.
 
-I will cc him for v4.
+Yep it is very late so did not expect it getting in, just wanted to get 
+the patches rolling. I still hope to see the clock patches getting in 
+this cycle due to dependency, lets keep fingers crossed.
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
