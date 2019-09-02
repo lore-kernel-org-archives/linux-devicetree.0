@@ -1,42 +1,92 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 10/13] mfd: mt6323: add mt6323 rtc+pwrc
-Date: Mon, 2 Sep 2019 10:50:01 +0100
-Message-ID: <20190902095001.GV32232@dell>
-References: <20190818135611.7776-1-frank-w@public-files.de>
- <20190818135611.7776-11-frank-w@public-files.de>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v4 0/7] Amazon's Annapurna Labs DT-based PCIe host
+ controller driver
+Date: Mon, 2 Sep 2019 10:58:06 +0100
+Message-ID: <20190902095806.GA14841@e121166-lin.cambridge.arm.com>
+References: <20190821153545.17635-1-jonnyc@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190818135611.7776-11-frank-w@public-files.de>
+In-Reply-To: <20190821153545.17635-1-jonnyc@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wunderlich <frank-w@public-files.de>
-Cc: linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, "linux-arm-kernel @ lists . infradead . org Alessandro Zummo" <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Eddie Huang <eddie.huang@mediatek.com>, Josef Friedl <josef.friedl@speed.at>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre@kernel.org>, Tianping Fang <tianping.fang@mediatek.com>
+To: Jonathan Chocron <jonnyc@amazon.com>
+Cc: bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com, andrew.murray@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 18 Aug 2019, Frank Wunderlich wrote:
-
-> From: Josef Friedl <josef.friedl@speed.at>
+On Wed, Aug 21, 2019 at 06:35:40PM +0300, Jonathan Chocron wrote:
+> This series adds support for Amazon's Annapurna Labs DT-based PCIe host
+> controller driver.
+> Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patches.
 > 
-> add entry for rtc and power-controller to mt6323
+> Changes since v3:
+> - Removed PATCH 8/8 since the usage of the PCI flags will be discussed
+>   in the upcoming LPC
+> - Align commit subject with the folder convention
+> - Added explanation regarding ECAM "overload" mechanism
+> - Switched to read/write{_relaxed} APIs
+> - Modified a dev_err to dev_dbg
+> - Removed unnecessary variable
+> - Removed driver details from dt-binding description
+> - Changed to SoC specific compatibles
+> - Fixed typo in a commit message
+> - Added comment regarding MSI in the MSI-X quirk
 > 
-> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-> ---
-> changes since v5: none
-> changes since v4: none
-> changes since v3: none
-> changes since v2: only splitting, second part of v2 part 4
-> ---
->  drivers/mfd/mt6397-core.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
+> Changes since v2:
+> - Added al_pcie_controller_readl/writel() wrappers
+> - Reorganized local vars in several functions according to reverse
+>   tree structure
+> - Removed unnecessary check of ret value
+> - Changed return type of al_pcie_config_prepare() from int to void
+> - Removed check if link is up from probe() [done internally in
+>   dw_pcie_rd/wr_conf()]
+> 
+> Changes since v1:
+> - Added comment regarding 0x0031 being used as a dev_id for non root-port devices as well
+> - Fixed different message/comment/print wordings
+> - Added panic stacktrace to commit message of MSI-x quirk patch
+> - Changed to pci_warn() instead of dev_warn()
+> - Added unit_address after node_name in dt-binding
+> - Updated Kconfig help description
+> - Used GENMASK and FIELD_PREP/GET where appropriate
+> - Removed leftover field from struct al_pcie and moved all ptrs to
+>   the beginning
+> - Re-wrapped function definitions and invocations to use fewer lines
+> - Change %p to %px in dbg prints in rd/wr_conf() functions
+> - Removed validation that the port is configured to RC mode (as this is
+>   added generically in PATCH 7/8)
+> - Removed unnecessary variable initializations
+> - Swtiched to %pR for printing resources
+> 
+> 
+> Ali Saidi (1):
+>   PCI: Add ACS quirk for Amazon Annapurna Labs root ports
+> 
+> Jonathan Chocron (6):
+>   PCI: Add Amazon's Annapurna Labs vendor ID
+>   PCI/VPD: Add VPD release quirk for Amazon's Annapurna Labs Root Port
+>   PCI: Add quirk to disable MSI-X support for Amazon's Annapurna Labs
+>     Root Port
+>   dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
+>   PCI: dwc: al: Add support for DW based driver type
+>   PCI: dwc: Add validation that PCIe core is set to correct mode
+> 
+>  .../devicetree/bindings/pci/pcie-al.txt       |  46 +++
+>  MAINTAINERS                                   |   3 +-
+>  drivers/pci/controller/dwc/Kconfig            |  12 +
+>  drivers/pci/controller/dwc/pcie-al.c          | 365 ++++++++++++++++++
+>  .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
+>  .../pci/controller/dwc/pcie-designware-host.c |   8 +
+>  drivers/pci/quirks.c                          |  37 ++
+>  drivers/pci/vpd.c                             |  16 +
+>  include/linux/pci_ids.h                       |   2 +
+>  9 files changed, 496 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
 
-Applied, thanks.
+Hi Jonathan,
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+are you going to send a v5 for this series ? If we should consider
+it for v5.4 I expect it to be on the list this week as soon as possible.
+
+Thanks,
+Lorenzo
