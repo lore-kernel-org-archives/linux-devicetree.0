@@ -1,38 +1,39 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3 2/2] dt-bindings: reset: pdc: Convert PDC Global
- bindings to yaml
-Date: Mon, 02 Sep 2019 17:14:34 +0200
-Message-ID: <1567437274.3666.9.camel@pengutronix.de>
-References: <20190901174407.30756-1-sibis@codeaurora.org>
-         <20190901174407.30756-3-sibis@codeaurora.org>
-         <20190902150138.GA29400@bogus>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC, v5, 1/5] media: dt-bindings: mt8183: Added camera ISP Pass 1
+Date: Mon, 2 Sep 2019 16:17:26 +0100
+Message-ID: <20190902151726.GA24001@bogus>
+References: <jungo.lin@mediatek.com>
+ <20190902075135.1332-1-jungo.lin@mediatek.com>
+ <20190902075135.1332-2-jungo.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190902150138.GA29400@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Sibi Sankar <sibis@codeaurora.org>
-Cc: robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sboyd@kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190902075135.1332-2-jungo.lin@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: ryan.yu@mediatek.com, frankie.chiu@mediatek.com, laurent.pinchart@ideasonboard.com, robh@kernel.org, Rynn.Wu@mediatek.com, suleiman@chromium.org, Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com, frederic.chen@mediatek.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, hverkuil-cisco@xs4all.nl, shik@chromium.org, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, Sean.Cheng@mediatek.com, srv_heupstream@mediatek.com, sj.huang@mediatek.com, tfiga@chromium.org, zwisler@chromium.org, ddavenport@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-09-02 at 16:01 +0100, Rob Herring wrote:
-> On Sun,  1 Sep 2019 23:14:07 +0530, Sibi Sankar wrote:
-> > Convert PDC Global bindings to yaml and add SC7180 PDC global to the list
-> > of possible bindings.
-> > 
-> > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> > ---
-> >  .../bindings/reset/qcom,pdc-global.txt        | 52 -------------------
-> >  .../bindings/reset/qcom,pdc-global.yaml       | 47 +++++++++++++++++
-> >  2 files changed, 47 insertions(+), 52 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
-> >  create mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-global.yaml
-> > 
+On Mon, 2 Sep 2019 15:51:31 +0800, Jungo Lin wrote:
+> This patch adds DT binding document for the Pass 1 (P1) unit
+> in Mediatek's camera ISP system. The Pass 1 unit grabs the sensor
+> data out from the sensor interface, applies ISP image effects
+> from tuning data and outputs the image data or statistics data to DRAM.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
+> ---
+>  .../bindings/media/mediatek,camisp.txt        | 73 +++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek,camisp.txt
+> 
 
-Thank you, both applied to reset/next.
-
-regards
-Philipp
+Reviewed-by: Rob Herring <robh@kernel.org>
