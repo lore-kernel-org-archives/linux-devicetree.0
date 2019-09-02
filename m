@@ -1,66 +1,74 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 2/2] iommu: dma: Use of_iommu_get_resv_regions()
-Date: Mon, 2 Sep 2019 15:22:35 +0100
-Message-ID: <1caeaaa0-c5aa-b630-6d42-055b26764f40@arm.com>
-References: <20190829111407.17191-1-thierry.reding@gmail.com>
- <20190829111407.17191-3-thierry.reding@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v4 2/9] dt-bindings: i2c: add bindings for i2c analog and
+ digital filter
+Date: Mon, 2 Sep 2019 16:22:51 +0200
+Message-ID: <20190902142251.GC21922@piout.net>
+References: <1567418773-2427-1-git-send-email-eugen.hristev@microchip.com>
+ <1567418773-2427-3-git-send-email-eugen.hristev@microchip.com>
+ <9a9c209c-2fb8-0a4c-4e0a-b04fefda3360@axentia.se>
+ <b6528812-65d3-6561-38e7-c0545af900d8@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829111407.17191-3-thierry.reding@gmail.com>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <b6528812-65d3-6561-38e7-c0545af900d8@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Joerg Roedel <joro@8bytes.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Will Deacon <will@kernel.org>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Eugen.Hristev@microchip.com
+Cc: peda@axentia.se, wsa@the-dreams.de, mark.rutland@arm.com, Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 29/08/2019 12:14, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> For device tree nodes, use the standard of_iommu_get_resv_regions()
-> implementation to obtain the reserved memory regions associated with a
-> device.
+Eugen,
 
-This covers the window between iommu_probe_device() setting up a default 
-domain and the device's driver finally probing and taking control, but 
-iommu_probe_device() represents the point that the IOMMU driver first 
-knows about this device - there's still a window from whenever the IOMMU 
-driver itself probed up to here where the "unidentified" traffic may 
-have already been disrupted. Some IOMMU drivers have no option but to 
-make the necessary configuration during their own probe routine, at 
-which point a struct device for the display/etc. endpoint may not even 
-exist yet.
-
-Robin.
-
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->   drivers/iommu/dma-iommu.c | 3 +++
->   1 file changed, 3 insertions(+)
+On 02/09/2019 14:15:14+0000, Eugen.Hristev@microchip.com wrote:
+> On 02.09.2019 13:49, Peter Rosin wrote:
 > 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index de68b4a02aea..31d48e55ab55 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -19,6 +19,7 @@
->   #include <linux/iova.h>
->   #include <linux/irq.h>
->   #include <linux/mm.h>
-> +#include <linux/of_iommu.h>
->   #include <linux/pci.h>
->   #include <linux/scatterlist.h>
->   #include <linux/vmalloc.h>
-> @@ -164,6 +165,8 @@ void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
->   	if (!is_of_node(dev_iommu_fwspec_get(dev)->iommu_fwnode))
->   		iort_iommu_msi_get_resv_regions(dev, list);
->   
-> +	if (dev->of_node)
-> +		of_iommu_get_resv_regions(dev, list);
->   }
->   EXPORT_SYMBOL(iommu_dma_get_resv_regions);
->   
+> > On 2019-09-02 12:12, Eugen.Hristev@microchip.com wrote:
+> >> From: Eugen Hristev <eugen.hristev@microchip.com>
+> >>
+> >> Some i2c controllers have a built-in digital or analog filter.
+> >> This is specifically required depending on the hardware PCB/board.
+> >> Some controllers also allow specifying the maximum width of the
+> >> spikes that can be filtered. The width length can be specified in nanoseconds.
+> >>
+> >> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/i2c/i2c.txt | 11 +++++++++++
+> >>   1 file changed, 11 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
+> >> index 44efafd..8dbff67 100644
+> >> --- a/Documentation/devicetree/bindings/i2c/i2c.txt
+> >> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
+> >> @@ -55,6 +55,17 @@ wants to support one of the below features, it should adapt the bindings below.
+> >>   	Number of nanoseconds the SDA signal takes to fall; t(f) in the I2C
+> >>   	specification.
+> >>   
+> >> +- i2c-analog-filter
+> >> +	Enable analog filter for i2c lines.
+> >> +
+> >> +- i2c-digital-filter
+> >> +	Enable digital filter for i2c lines.
+> >> +
+> >> +- i2c-filter-width-ns
+> >> +	Width of spikes which can be filtered by either digital or analog
+> >> +	filters (i2c-analog-filtr or i2c-digital-filtr). This width is specified
+> > 
+> > filtr -> filter (two instances)
+> > 
+> > What if you want/need to have different bandwidth for the digital and analog
+> > filters? After all, this is a generic binding...
 > 
+> For our needs, this is enough: the purpose of the filters is to avoid 
+> noise on the lines, the noise is as big as it is for the digital and for 
+> the analog filters, since we use an absolute measurement for them. So I 
+> do not know how useful it would be to make a difference.
+> 
+
+You are adding generic properties so they have to be generic and not
+tied to your particular use case.
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
