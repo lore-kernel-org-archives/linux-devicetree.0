@@ -1,79 +1,171 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 09/11] lib/vsprintf: OF nodes are first and foremost,
- struct device_nodes
-Date: Mon, 2 Sep 2019 13:21:21 +0300
-Message-ID: <20190902102121.GD2680@smile.fi.intel.com>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
- <20190902083240.20367-10-sakari.ailus@linux.intel.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH V3 4/6] PCI: tegra: Add support to enable slot regulators
+Date: Mon, 2 Sep 2019 11:29:00 +0100
+Message-ID: <20190902102859.GA9720@e119886-lin.cambridge.arm.com>
+References: <20190828172850.19871-1-vidyas@nvidia.com>
+ <20190828172850.19871-5-vidyas@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190902083240.20367-10-sakari.ailus@linux.intel.com>
+In-Reply-To: <20190828172850.19871-5-vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:32:38AM +0300, Sakari Ailus wrote:
-> Factor out static kobject_string() function that simply calls
-> device_node_string(), and thus remove references to kobjects (as these are
-> struct device_node).
+On Wed, Aug 28, 2019 at 10:58:48PM +0530, Vidya Sagar wrote:
+> Add support to get regulator information of 3.3V and 12V supplies of a PCIe
+> slot from the respective controller's device-tree node and enable those
+> supplies. This is required in platforms like p2972-0000 where the supplies
+> to x16 slot owned by C5 controller need to be enabled before attempting to
+> enumerate the devices.
 > 
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 > ---
->  lib/vsprintf.c | 16 ++++------------
->  1 file changed, 4 insertions(+), 12 deletions(-)
+> V3:
+> * Added a dev_err() print for failure case of tegra_pcie_get_slot_regulators() API
+> * Modified to make 100ms sleep valid only if at least one of the regulator handles exist
 > 
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index a04a2167101ef..4ad9332d54ba6 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -1905,6 +1905,9 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
->  	struct printf_spec str_spec = spec;
->  	str_spec.field_width = -1;
+> V2:
+> * Addressed review comments from Thierry Reding and Andrew Murray
+> * Handled failure case of devm_regulator_get_optional() for -ENODEV cleanly
+> 
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 83 ++++++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 77fa6f70bc96..18453cc5e7e4 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -278,6 +278,8 @@ struct tegra_pcie_dw {
+>  	u32 aspm_l0s_enter_lat;
 >  
-> +	if (fmt[0] != 'F')
-> +		return error_string(buf, end, "(%pO?)", spec);
-> +
->  	if (!IS_ENABLED(CONFIG_OF))
->  		return error_string(buf, end, "(%pOF?)", spec);
+>  	struct regulator *pex_ctl_supply;
+> +	struct regulator *slot_ctl_3v3;
+> +	struct regulator *slot_ctl_12v;
 >  
-> @@ -1978,17 +1981,6 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
->  	return widen_string(buf, buf - buf_start, end, spec);
+>  	unsigned int phy_count;
+>  	struct phy **phys;
+> @@ -1047,6 +1049,73 @@ static void tegra_pcie_downstream_dev_to_D0(struct tegra_pcie_dw *pcie)
+>  	}
 >  }
 >  
-> -static char *kobject_string(char *buf, char *end, void *ptr,
-> -			    struct printf_spec spec, const char *fmt)
-> -{
-> -	switch (fmt[1]) {
-> -	case 'F':
-> -		return device_node_string(buf, end, ptr, spec, fmt + 1);
-> -	}
-> -
-> -	return error_string(buf, end, "(%pO?)", spec);
-> -}
-> -
->  /*
->   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
->   * by an extra set of alphanumeric characters that are extended format
-> @@ -2167,7 +2159,7 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
->  	case 'G':
->  		return flags_string(buf, end, ptr, spec, fmt);
->  	case 'O':
-> -		return kobject_string(buf, end, ptr, spec, fmt);
-> +		return device_node_string(buf, end, ptr, spec, fmt + 1);
->  	case 'x':
->  		return pointer_string(buf, end, ptr, spec);
+> +static int tegra_pcie_get_slot_regulators(struct tegra_pcie_dw *pcie)
+> +{
+> +	pcie->slot_ctl_3v3 = devm_regulator_get_optional(pcie->dev, "vpcie3v3");
+> +	if (IS_ERR(pcie->slot_ctl_3v3)) {
+> +		if (PTR_ERR(pcie->slot_ctl_3v3) != -ENODEV)
+> +			return PTR_ERR(pcie->slot_ctl_3v3);
+> +
+> +		pcie->slot_ctl_3v3 = NULL;
+> +	}
+> +
+> +	pcie->slot_ctl_12v = devm_regulator_get_optional(pcie->dev, "vpcie12v");
+> +	if (IS_ERR(pcie->slot_ctl_12v)) {
+> +		if (PTR_ERR(pcie->slot_ctl_12v) != -ENODEV)
+> +			return PTR_ERR(pcie->slot_ctl_12v);
+> +
+> +		pcie->slot_ctl_12v = NULL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra_pcie_enable_slot_regulators(struct tegra_pcie_dw *pcie)
+> +{
+> +	int ret;
+> +
+> +	if (pcie->slot_ctl_3v3) {
+> +		ret = regulator_enable(pcie->slot_ctl_3v3);
+> +		if (ret < 0) {
+> +			dev_err(pcie->dev,
+> +				"Failed to enable 3.3V slot supply: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	if (pcie->slot_ctl_12v) {
+> +		ret = regulator_enable(pcie->slot_ctl_12v);
+> +		if (ret < 0) {
+> +			dev_err(pcie->dev,
+> +				"Failed to enable 12V slot supply: %d\n", ret);
+> +			goto fail_12v_enable;
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * According to PCI Express Card Electromechanical Specification
+> +	 * Revision 1.1, Table-2.4, T_PVPERL (Power stable to PERST# inactive)
+> +	 * should be a minimum of 100ms.
+> +	 */
+> +	if (pcie->slot_ctl_3v3 || pcie->slot_ctl_12v)
+> +		msleep(100);
+> +
+> +	return 0;
+> +
+> +fail_12v_enable:
+> +	if (pcie->slot_ctl_3v3)
+> +		regulator_disable(pcie->slot_ctl_3v3);
+> +	return ret;
+> +}
+> +
+> +static void tegra_pcie_disable_slot_regulators(struct tegra_pcie_dw *pcie)
+> +{
+> +	if (pcie->slot_ctl_12v)
+> +		regulator_disable(pcie->slot_ctl_12v);
+> +	if (pcie->slot_ctl_3v3)
+> +		regulator_disable(pcie->slot_ctl_3v3);
+> +}
+> +
+>  static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>  					bool en_hw_hot_rst)
+>  {
+> @@ -1060,6 +1129,10 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>  		return ret;
 >  	}
+>  
+> +	ret = tegra_pcie_enable_slot_regulators(pcie);
+> +	if (ret < 0)
+> +		goto fail_slot_reg_en;
+> +
+>  	ret = regulator_enable(pcie->pex_ctl_supply);
+>  	if (ret < 0) {
+>  		dev_err(pcie->dev, "Failed to enable regulator: %d\n", ret);
+> @@ -1142,6 +1215,8 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+>  fail_core_clk:
+>  	regulator_disable(pcie->pex_ctl_supply);
+>  fail_reg_en:
+> +	tegra_pcie_disable_slot_regulators(pcie);
+> +fail_slot_reg_en:
+>  	tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+>  
+>  	return ret;
+> @@ -1174,6 +1249,8 @@ static int __deinit_controller(struct tegra_pcie_dw *pcie)
+>  		return ret;
+>  	}
+>  
+> +	tegra_pcie_disable_slot_regulators(pcie);
+> +
+>  	ret = tegra_pcie_bpmp_set_ctrl_state(pcie, false);
+>  	if (ret) {
+>  		dev_err(pcie->dev, "Failed to disable controller %d: %d\n",
+> @@ -1373,6 +1450,12 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	ret = tegra_pcie_get_slot_regulators(pcie);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to get slot regulators: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+>  	pcie->pex_ctl_supply = devm_regulator_get(dev, "vddio-pex-ctl");
+>  	if (IS_ERR(pcie->pex_ctl_supply)) {
+>  		dev_err(dev, "Failed to get regulator: %ld\n",
 > -- 
-> 2.20.1
+> 2.17.1
 > 
-
--- 
-With Best Regards,
-Andy Shevchenko
