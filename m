@@ -1,78 +1,55 @@
-From: Philippe CORNU <philippe.cornu@st.com>
-Subject: Re: [PATCH] drm/stm: ltdc: add pinctrl for DPI encoder mode
-Date: Mon, 2 Sep 2019 08:47:06 +0000
-Message-ID: <ada48bc2-ac6a-8732-9aa6-03ef1c104abf@st.com>
-References: <1564757262-6166-1-git-send-email-yannick.fertre@st.com>
+From: <Eugen.Hristev@microchip.com>
+Subject: Re: [PATCH v3 5/9] i2c: at91: add support for digital filtering
+Date: Mon, 2 Sep 2019 08:54:06 +0000
+Message-ID: <d461426b-50ac-bf6c-79e0-71e17a63400e@microchip.com>
+References: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
+ <1562678049-17581-6-git-send-email-eugen.hristev@microchip.com>
+ <20190831121308.GB1032@ninjato> <20190831121751.GC1032@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1564757262-6166-1-git-send-email-yannick.fertre@st.com>
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190831121751.GC1032@ninjato>
 Content-Language: en-US
-Content-ID: <8400DF40637355459F46929D8BCFF92C@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yannick FERTRE <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Fabrice GASNIER <fabrice.gasnier@st.com>
+Content-ID: <6F1F9E0097244B4784028B912D065ADD@namprd11.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wsa@the-dreams.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, linux-i2c@vger.kernel.org, peda@axentia.se, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgWWFubmljaywNCg0KT24gOC8yLzE5IDQ6NDcgUE0sIFlhbm5pY2sgRmVydHLDqSB3cm90ZToN
-Cj4gVGhlIGltcGxlbWVudGF0aW9uIG9mIGZ1bmN0aW9ucyBlbmNvZGVyX2VuYWJsZSBhbmQgZW5j
-b2Rlcl9kaXNhYmxlDQo+IG1ha2UgcG9zc2libGUgdG8gY29udHJvbCB0aGUgcGluY3RybCBhY2Nv
-cmRpbmcgdG8gdGhlIGVuY29kZXIgdHlwZS4NCj4gVGhlIHBpbmN0cmwgbXVzdCBiZSBhY3RpdmF0
-ZWQgb25seSBpZiB0aGUgZW5jb2RlciB0eXBlIGlzIERQSS4NCj4gVGhpcyBoZWxwcyB0byBtb3Zl
-IHRoZSBEUEktcmVsYXRlZCBwaW5jdHJsIGNvbmZpZ3VyYXRpb24gZnJvbQ0KPiBhbGwgdGhlIHBh
-bmVsIG9yIGJyaWRnZSB0byB0aGUgTFREQyBkdCBub2RlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
-WWFubmljayBGZXJ0csOpIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+DQo+IC0tLQ0KPiAgIGRyaXZl
-cnMvZ3B1L2RybS9zdG0vbHRkYy5jIHwgMzUgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysNCj4gICAxIGZpbGUgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jIGIvZHJpdmVycy9ncHUvZHJtL3N0bS9s
-dGRjLmMNCj4gaW5kZXggM2FiNGZiZi4uMWM0ZmRlMCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9n
-cHUvZHJtL3N0bS9sdGRjLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3N0bS9sdGRjLmMNCj4g
-QEAgLTE1LDYgKzE1LDcgQEANCj4gICAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQo+ICAgI2lu
-Y2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4NCj4gICAjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGgu
-aD4NCj4gKyNpbmNsdWRlIDxsaW51eC9waW5jdHJsL2NvbnN1bWVyLmg+DQo+ICAgI2luY2x1ZGUg
-PGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiAgICNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1l
-Lmg+DQo+ICAgI2luY2x1ZGUgPGxpbnV4L3Jlc2V0Lmg+DQo+IEBAIC0xMDQwLDYgKzEwNDEsMzYg
-QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZW5jb2Rlcl9mdW5jcyBsdGRjX2VuY29kZXJfZnVu
-Y3MgPSB7DQo+ICAgCS5kZXN0cm95ID0gZHJtX2VuY29kZXJfY2xlYW51cCwNCj4gICB9Ow0KPiAg
-IA0KPiArc3RhdGljIHZvaWQgbHRkY19lbmNvZGVyX2Rpc2FibGUoc3RydWN0IGRybV9lbmNvZGVy
-ICplbmNvZGVyKQ0KPiArew0KPiArCXN0cnVjdCBkcm1fZGV2aWNlICpkZGV2ID0gZW5jb2Rlci0+
-ZGV2Ow0KPiArDQo+ICsJRFJNX0RFQlVHX0RSSVZFUigiXG4iKTsNCj4gKw0KPiArCS8qIFNldCB0
-byBzbGVlcCBzdGF0ZSB0aGUgcGluY3RybCB3aGF0ZXZlciB0eXBlIG9mIGVuY29kZXIgKi8NCj4g
-KwlwaW5jdHJsX3BtX3NlbGVjdF9zbGVlcF9zdGF0ZShkZGV2LT5kZXYpOw0KPiArfQ0KPiArDQo+
-ICtzdGF0aWMgdm9pZCBsdGRjX2VuY29kZXJfZW5hYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5j
-b2RlcikNCj4gK3sNCj4gKwlzdHJ1Y3QgZHJtX2RldmljZSAqZGRldiA9IGVuY29kZXItPmRldjsN
-Cj4gKw0KPiArCURSTV9ERUJVR19EUklWRVIoIlxuIik7DQo+ICsNCj4gKwkvKg0KPiArCSAqIFNl
-dCB0byBkZWZhdWx0IHN0YXRlIHRoZSBwaW5jdHJsIG9ubHkgd2l0aCBEUEkgdHlwZS4NCj4gKwkg
-KiBPdGhlcnMgdHlwZXMgbGlrZSBEU0ksIGRvbid0IG5lZWQgcGluY3RybCBkdWUgdG8NCj4gKwkg
-KiBpbnRlcm5hbCBicmlkZ2UgKHRoZSBzaWduYWxzIGRvIG5vdCBjb21lIG91dCBvZiB0aGUgY2hp
-cHNldCkuDQo+ICsJICovDQo+ICsJaWYgKGVuY29kZXItPmVuY29kZXJfdHlwZSA9PSBEUk1fTU9E
-RV9FTkNPREVSX0RQSSkNCj4gKwkJcGluY3RybF9wbV9zZWxlY3RfZGVmYXVsdF9zdGF0ZShkZGV2
-LT5kZXYpOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9lbmNvZGVyX2hl
-bHBlcl9mdW5jcyBsdGRjX2VuY29kZXJfaGVscGVyX2Z1bmNzID0gew0KPiArCS5kaXNhYmxlID0g
-bHRkY19lbmNvZGVyX2Rpc2FibGUsDQo+ICsJLmVuYWJsZSA9IGx0ZGNfZW5jb2Rlcl9lbmFibGUs
-DQo+ICt9Ow0KPiArDQo+ICAgc3RhdGljIGludCBsdGRjX2VuY29kZXJfaW5pdChzdHJ1Y3QgZHJt
-X2RldmljZSAqZGRldiwgc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkNCj4gICB7DQo+ICAgCXN0
-cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcjsNCj4gQEAgLTEwNTUsNiArMTA4Niw4IEBAIHN0YXRp
-YyBpbnQgbHRkY19lbmNvZGVyX2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRkZXYsIHN0cnVjdCBk
-cm1fYnJpZGdlICpicmlkZ2UpDQo+ICAgCWRybV9lbmNvZGVyX2luaXQoZGRldiwgZW5jb2Rlciwg
-Jmx0ZGNfZW5jb2Rlcl9mdW5jcywNCj4gICAJCQkgRFJNX01PREVfRU5DT0RFUl9EUEksIE5VTEwp
-Ow0KPiAgIA0KPiArCWRybV9lbmNvZGVyX2hlbHBlcl9hZGQoZW5jb2RlciwgJmx0ZGNfZW5jb2Rl
-cl9oZWxwZXJfZnVuY3MpOw0KPiArDQo+ICAgCXJldCA9IGRybV9icmlkZ2VfYXR0YWNoKGVuY29k
-ZXIsIGJyaWRnZSwgTlVMTCk7DQo+ICAgCWlmIChyZXQpIHsNCj4gICAJCWRybV9lbmNvZGVyX2Ns
-ZWFudXAoZW5jb2Rlcik7DQo+IEBAIC0xMjgwLDYgKzEzMTMsOCBAQCBpbnQgbHRkY19sb2FkKHN0
-cnVjdCBkcm1fZGV2aWNlICpkZGV2KQ0KPiAgIA0KPiAgIAljbGtfZGlzYWJsZV91bnByZXBhcmUo
-bGRldi0+cGl4ZWxfY2xrKTsNCj4gICANCj4gKwlwaW5jdHJsX3BtX3NlbGVjdF9zbGVlcF9zdGF0
-ZShkZGV2LT5kZXYpOw0KPiArDQoNClJldmlld2VkLWJ5OiBQaGlsaXBwZSBDb3JudSA8cGhpbGlw
-cGUuY29ybnVAc3QuY29tPg0KDQpUaGFua3MNClBoaWxpcHBlIDopDQoNCj4gICAJcG1fcnVudGlt
-ZV9lbmFibGUoZGRldi0+ZGV2KTsNCj4gICANCj4gICAJcmV0dXJuIDA7DQo+IApfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+
+On 31.08.2019 15:17, Wolfram Sang wrote:
+>=20
+>>> +	dev->enable_dig_filt =3D of_property_read_bool(pdev->dev.of_node,
+>>> +						     "i2c-dig-filter");
+>>> +
+>>
+>> What do you think of the idea to introduce 'flags' to struct i2c_timings
+>> and parse the bindings in the core, too? Then you'd have sth like:
+>>
+>> 	if (t->flags & I2C_TIMINGS_ANALOG_FILTER)
+>>
+>> Would that be useful for you?
+>=20
+> Forgot to say, we can also implement this incrementally to make sure
+> your patches land in 5.4 in case you are currently busy with sth else.
+>=20
+
+Hi Wolfram,
+
+Your idea looks good but I would prefer to have it as a separate=20
+enhancement patch, after this series gets in.
+As things are now, this series/patches do just the filtering part. We=20
+can then move all the optional 'flags' as another change.
+So yes, we can do this incrementally.
+
+Thanks !
+Eugen
+
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>=20
