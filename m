@@ -1,59 +1,53 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 1/3] ASoC: xlnx: add Xilinx logicPD-I2S
-	FPGA IP support
-Date: Mon, 2 Sep 2019 22:21:11 +0200
-Message-ID: <20190902222111.045ede17@xps13>
-References: <20190830210607.22644-1-miquel.raynal@bootlin.com>
- <df36fc2d-ed62-2556-513d-158a7707d5cd@xilinx.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] arm64: dts: imx8mn-ddr4-evk: Enable GPIO LED
+Date: Mon, 2 Sep 2019 22:31:44 +0200
+Message-ID: <20190902203144.GA4787@bug>
+References: <1567457138-3002-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <df36fc2d-ed62-2556-513d-158a7707d5cd@xilinx.com>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Maruthi Srinivas Bayyavarapu <maruthis@xilinx.com>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, praveenv@xilinx.com, alexandre@bootlin.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1567457138-3002-1-git-send-email-Anson.Huang@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWljaGFsLAoKTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT4gd3JvdGUg
-b24gTW9uLCAyIFNlcCAyMDE5CjA5OjM5OjExICswMjAwOgoKPiBIaSBNaXF1ZWwKPiAKPiBPbiAz
-MC4gMDguIDE5IDIzOjA2LCBNaXF1ZWwgUmF5bmFsIHdyb3RlOgo+ID4gVGhpcyBJUCBpcyB2ZXJ5
-IHNpbXBsZSBzbyB0aGlzIGRyaXZlciBtYW5hZ2UgYm90aCB0aGUgREFJIGFuZCB0aGUgUENNCj4g
-PiBzdHJlYW1zLCBoZW5jZSB0aGUgcHJlc2VuY2Ugb2YgYm90aCBjb21wb25lbnRzIGluIHRoaXMg
-ZHJpdmVyLgo+ID4gCj4gPiBUaGVyZSBhcmUgcGxlbnR5IGF2YWlsYWJsZSBpbnRlcnJ1cHRpb25z
-IHdoZW4gY2FwdHVyaW5nIG9yIHBsYXlpbmcKPiA+IGJhY2sgYXVkaW8gdGhhdCBjYW4gYmUgdHJp
-Z2dlcmVkIGJ1dCB0aGUgb25seSBvbmUgdGhhdCBmaXRzIHRoZSBBTFNBCj4gPiBzb3VuZCBzeXN0
-ZW0gaXMgdGhlIFhGRVJfRE9ORSB3aGljaCBpcyB1c2VkIHRvIGJvdW5kIHNvdW5kCj4gPiBwZXJp
-b2RzLiBPdGhlciBpbnRlcnJ1cHRzIGFyZSBtYXNrZWQuIFBsZWFzZSBub3RlIHRoYXQgY2FwdHVy
-ZSBhbmQKPiA+IHBsYXliYWNrIGFyZSBub3QgcG9zc2libGUgYXQgdGhlIHNhbWUgdGltZSB0aG91
-Z2guCj4gPiAKPiA+IENhcHR1cmUgc2VlbXMgdG8gd29yayAoYXQgbGVhc3QgaXQgY3JlYXRlcyBh
-IGZpbGUgd2l0aCBzb21ldGhpbmcKPiA+IGluc2lkZSkgYnV0IEkgaGF2ZSBubyBjYXB0dXJlIG1l
-Y2hhbmlzbSBvbiB0aGUgYm9hcmQgdG8gYWN0dWFsbHkgdGVzdAo+ID4gdGhhdCBpdCB3b3JrcyBj
-b3JyZWN0bHkuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5y
-YXluYWxAYm9vdGxpbi5jb20+Cj4gPiAtLS0KPiA+IAo+ID4gSGVsbG8sCj4gPiAKPiA+IFRoaXMg
-aXMgbXkgZmlyc3QgY29udHJpYnV0aW9uIGluIHRoZSBzb3VuZCBzdWJzeXN0ZW0sIEkgaG9wZSBJ
-J3ZlCj4gPiB1bmRlcnN0b29kIHRoZSBjb3JlIGJ1dCBJIG1pZ2h0IGJlIGVudGlyZWx5IHdyb25n
-IGFzIHdlbGwsIHNvIHBsZWFzZQo+ID4gZG8gbm90IGhlc2l0YXRlIHRvIGJlIGNyaXRpY2FsIG9u
-IG15IGNob2ljZXMuCj4gPiAKPiA+IFRoYW5rcywKPiA+IE1pcXXDqGwKPiA+IAo+ID4gIHNvdW5k
-L3NvYy94aWxpbngvS2NvbmZpZyAgICAgICAgICAgIHwgICA3ICsKPiA+ICBzb3VuZC9zb2MveGls
-aW54L01ha2VmaWxlICAgICAgICAgICB8ICAgMiArCj4gPiAgc291bmQvc29jL3hpbGlueC94bG54
-LWxvZ2ljcGQtaTJzLmMgfCA0NjggKysrKysrKysrKysrKysrKysrKysrKysrKysrKyAgCj4gCj4g
-V2hhdCBJUCBpcyB0aGlzPwo+IGh0dHBzOi8vd3d3LnhpbGlueC5jb20vcHJvZHVjdHMvaW50ZWxs
-ZWN0dWFsLXByb3BlcnR5L2F1ZGlvLWkycy5odG1sCj4gCj4gaHR0cHM6Ly9naXRodWIuY29tL1hp
-bGlueC9saW51eC14bG54L2Jsb2IvbWFzdGVyL3NvdW5kL3NvYy94aWxpbngveGxueF9pMnMuYwo+
-IAo+IEFueXdheSBJIGFtIGFkZGluZyBQcmF2ZWVuIGFuZCBNYXJ1dGhpIHRvIHRha2UgYSBsb29r
-LgoKQWN0dWFsbHkgSSBoYXZlIGJlZW4gdHJpY2tlZCBieSBhIGRhdGFzaGVldCB3aXRoIHRoZSB3
-cm9uZyB0aXRsZTogdGhpcwppcyBhIExvZ2ljUEQgSVAsIGl0IGlzIG5vdCBmcm9tIFhpbGlueC4g
-SSB3aWxsIHJlc3VibWl0IHdpdGggYSBuZXcKZHJpdmVyIG5hbWUvY29tcGF0aWJsZSBhbmQgYWRk
-IHRoZSByZWxldmFudCBwZW9wbGUuCgpUaGFua3MsCk1pcXXDqGwKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxz
-YS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHBzOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3Jn
-L21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+On Mon 2019-09-02 16:45:38, Anson Huang wrote:
+> i.MX8MN DDR4 EVK board has a GPIO LED to indicate status,
+> add support for it.
+
+LED maintainers want to be on the cc list...
+
+> @@ -15,6 +15,18 @@
+>  		stdout-path = &uart2;
+>  	};
+>  
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_gpio_led>;
+> +
+> +		status {
+> +			label = "status";
+> +			gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
+> +			default-state = "on";
+> +		};
+
+And we should really standardize labels for user-controlled status LEDs. Mentioning
+color would be nice, for a start.
+
+Best regards,
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
