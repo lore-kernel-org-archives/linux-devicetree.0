@@ -1,58 +1,48 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v4 2/9] dt-bindings: i2c: add bindings for i2c analog and
- digital filter
-Date: Mon, 2 Sep 2019 17:47:12 +0200
-Message-ID: <20190902154712.GA5213@kunai>
-References: <1567418773-2427-1-git-send-email-eugen.hristev@microchip.com>
- <1567418773-2427-3-git-send-email-eugen.hristev@microchip.com>
- <9a9c209c-2fb8-0a4c-4e0a-b04fefda3360@axentia.se>
- <b6528812-65d3-6561-38e7-c0545af900d8@microchip.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 07/11] lib/vsprintf: Remove support for %pF and %pf in
+ favour of %pS and %ps
+Date: Mon, 2 Sep 2019 19:01:39 +0300
+Message-ID: <20190902160139.GQ2680@smile.fi.intel.com>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-8-sakari.ailus@linux.intel.com>
+ <20190902143935.xtd44jdvhjuc2wxe@pathway.suse.cz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b6528812-65d3-6561-38e7-c0545af900d8@microchip.com>
+In-Reply-To: <20190902143935.xtd44jdvhjuc2wxe@pathway.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eugen.Hristev@microchip.com
-Cc: peda@axentia.se, mark.rutland@arm.com, Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com, alexandre.belloni@bootlin.com, robh+dt@kernel.org
+To: Petr Mladek <pmladek@suse.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, rafael@kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 02, 2019 at 04:39:35PM +0200, Petr Mladek wrote:
+> On Mon 2019-09-02 11:32:36, Sakari Ailus wrote:
+> > %pS and %ps are now the preferred conversion specifiers to print function
+> > names. The functionality is equivalent; remove the old, deprecated %pF
+> > and %pf support.
+> 
+> Hmm, I see the following in master:
+> 
+> $> git grep %pF
+> tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt:or events have "%pF" or "%pS" parameter in its format string. It is common to
+> 
+> $> git grep %pf
+> tools/lib/traceevent/event-parse.c:             if (asprintf(&format, "%%pf: (NO FORMAT FOUND at %llx)\n", addr) < 0)
+> tools/lib/traceevent/event-parse.c:     if (asprintf(&format, "%s: %s", "%pf", printk->printk) < 0)
+> 
+> I wonder how this is related to printk(). In each case, it seems
 
---envbJBWh7q8WU6mo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It's going thru binary printf() I suppose. The fist stage just saves the format
+string and argument addresses or so and prints in later on when user is looking
+for human-readable output.
 
-Hi Eugen,
+> that libtraceevent somehow implements the non-standard kernel
+> %p mofifiers. It looks error-prone to keep another %pf user
+> with the old semantic around.
+> 
+> I am adding some tracing people into CC.
 
-> Wolfram, what do you think ?
-
-Yes, the bindings should be generic. Peter's reasoning makes much sense
-to me. I am quite sure if the two of you can work things out, I'll have
-nothing to add.
-
-Thanks,
-
-   Wolfram
-
---envbJBWh7q8WU6mo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1tOXsACgkQFA3kzBSg
-KbZ7WA/8CbJ1UkV+wsS6wze/wZkPVWdaE81SHoM/BY0/LIXC1uApajeR60OQDs8U
-nrX2j4+7BJyqB9UxW+qfYe5XDbhKeb7a2iL3JNx1hBZgTZ6Gi1O58teEdkWyooD6
-Jxze/jkMdt4GB8862rK7Qg4L6yzOSBVYwenv5zKgyKjcq2T4IciumJ0yY3XkmFQ+
-/q+kYiEPdGdKH8Mt/YQI6emeVSwcBo+ngHSt+6GeIu8P+2RUd5tvWKfx8E3lKIaN
-P5ISf+KG3IEInS09yI5Dzn5mh55VFHIvU3Vg/BDomAJyU5eszjT4ECwplkWRRX64
-eTxFhJfpxhmY+MHDiFsOG16TCS7yQAXFTHiVddvJY4/POL6zfEEHT8Kix8BRDZoR
-z5Q6CBmMXDgHPlMLSs6yJ7vo1A1vguT/kjO1sTeGlmZXQYp0fJt1E5+UtCp3dMvH
-KE5Pj8++x6W3KhUG9oESkckfwFXB1w32uM4uUCcHQV0Z/t/HA289cWxoHuVtG2H6
-PyiR9zuCYU9s4iG72JrlzZmEmo8pxz4df9sy37Xph1ssF9vuBcRDbwoqU+NiuWea
-EDWvL4HeJTUQh6O6rICgDMg8WZXpKDuFzXqHDY3hB31L0TT4qc8kIwRAOoxIKp3/
-EFCJL/jKr+Sr4HiHvP1QN9luY7W/eHKjvZtGEfaby2QO+YeIfEA=
-=4puT
------END PGP SIGNATURE-----
-
---envbJBWh7q8WU6mo--
+-- 
+With Best Regards,
+Andy Shevchenko
