@@ -1,89 +1,111 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [RFC 1/5] media: dt-bindings: Document 'location' property
-Date: Mon, 2 Sep 2019 10:11:25 +0200
-Message-ID: <20190902081125.GD15850@amd>
-References: <20190814202815.32491-1-jacopo@jmondi.org>
- <20190814202815.32491-2-jacopo@jmondi.org>
- <20190815065635.GJ6133@paasikivi.fi.intel.com>
- <20190901172414.GB1047@bug>
- <20190902080211.GD4777@pendragon.ideasonboard.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v5, 22/32] drm/mediatek: add ovl0/ovl_2l0 usecase
+Date: Mon, 2 Sep 2019 16:11:32 +0800
+Message-ID: <1567411892.5812.4.camel@mtksdaap41>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1567090254-15566-23-git-send-email-yongqiang.niu@mediatek.com>
+ <1567144708.5942.14.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="n2Pv11Ogg/Ox8ay5"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190902080211.GD4777@pendragon.ideasonboard.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Jacopo Mondi <jacopo@jmondi.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" <linux-media@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1567144708.5942.14.camel@mtksdaap41>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: yongqiang.niu@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---n2Pv11Ogg/Ox8ay5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon 2019-09-02 11:02:11, Laurent Pinchart wrote:
-> Hi Pavel,
->=20
-> On Sun, Sep 01, 2019 at 07:24:15PM +0200, Pavel Machek wrote:
-> > > > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > > > @@ -89,6 +89,10 @@ Optional properties
-> > > >    but a number of degrees counter clockwise. Typical values are 0 =
-and 180
-> > > >    (upside down).
-> > > >=20
-> > > > +- location: The camera device mounting position, relative to the d=
-evice
-> > > > +  usage orientation. Possible values are:
-> > > > +  0 - Front camera. The image sensor is mounted on the front side =
-of the device.
-> > > > +  1 - Back camera. The image sensor is mounted on the back side of=
- the device.
-> > >=20
-> > > Would it make sense to make this a little more generic? Such as s/ima=
-ge
-> > > sensor/ device/, for instance?
-> > >=20
-> > > Is this also relevant for flash or lens devices?
-> > >=20
-> > > Flash (torch) devices could be present, at least principle, without a
-> > > camera. There once was even such a Nokia phone, 1100 unless I'm mista=
-ken.
-> > > :-)
-> >=20
-> > Well, I'd call them LEDs, not camera flashes ... if there's no camera. =
-And IIRC=20
-> > these devices had LEDs on top of the phone... so neither front nor back=
- side.
->=20
-> I would go for the name "torch" in that case. It really depends on the
-> device, but in any case, the torch LEDs would have a location (and we
-> would possibly need to expand this property to
-> include the top, bottom, left and right sides).
-
-Yes, but please let the torch devices be handled by LED subsystem
-(/sys/class/leds). media/ subsystem is a bit too big and complex for
-toggling LEDs on and off...
-
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---n2Pv11Ogg/Ox8ay5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1szq0ACgkQMOfwapXb+vKnHQCgjekAFWoxQmyBJvoBF9kp1qOf
-E/0AoKfpZkQ0lr19PAOslOpMFN75pBfR
-=f3wG
------END PGP SIGNATURE-----
-
---n2Pv11Ogg/Ox8ay5--
+SGksIFlvbmdxaWFuZzoKCk9uIEZyaSwgMjAxOS0wOC0zMCBhdCAxMzo1OCArMDgwMCwgQ0sgSHUg
+d3JvdGU6Cj4gSGksIFlvbmdxaWFuZzoKPiAKPiBPbiBUaHUsIDIwMTktMDgtMjkgYXQgMjI6NTAg
+KzA4MDAsIHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tIHdyb3RlOgo+ID4gRnJvbTogWW9uZ3Fp
+YW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gPiAKPiA+IFRoaXMgcGF0Y2gg
+YWRkIG92bDAvb3ZsXzJsMCB1c2VjYXNlCj4gPiBpbiBvdmwtPm92bF8ybDAgZGlyZWN0IGxpbmsg
+dXNlY2FzZToKPiA+IDEuIHRoZSBjcnRjIHN1cHBvcnQgbGF5ZXIgbnVtYmVyIHdpbGwgNCsyCj4g
+PiAyLiBvdmxfMmwwIGJhY2tncm91bmQgY29sb3IgaW5wdXQgc2VsZWN0IG92bDAgd2hlbiBjcnRj
+IGluaXQKPiA+IGFuZCBkaXNhYmxlIGl0IHdoZW4gY3J0YyBmaW5pc2gKPiA+IDMuIGNvbmZpZyBv
+dmxfMmwwIGxheWVyLCBpZiBjcnRjIGNvbmZpZyBsYXllciBudW1iZXIgaXMKPiA+IGJpZ2dlciB0
+aGFuIG92bDAgc3VwcG9ydCBsYXllcnMobWF4IGlzIDQpCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6
+IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tPgo+ID4gLS0tCj4gPiAg
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIHwgMzggKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKy0tCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDM2IGluc2VydGlvbnMo
+KyksIDIgZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
+bWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
+bV9jcnRjLmMKPiA+IGluZGV4IGM2M2ZmMmIuLmI1NTk3MGEgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYwo+ID4gQEAgLTI3MCw2ICsyNzAsMTUgQEAgc3Rh
+dGljIGludCBtdGtfY3J0Y19kZHBfaHdfaW5pdChzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0
+YykKPiA+ICAKPiA+ICAJZm9yIChpID0gMDsgaSA8IG10a19jcnRjLT5kZHBfY29tcF9ucjsgaSsr
+KSB7Cj4gPiAgCQlzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wID0gbXRrX2NydGMtPmRkcF9jb21w
+W2ldOwo+ID4gKwkJZW51bSBtdGtfZGRwX2NvbXBfaWQgcHJldjsKPiA+ICsKPiA+ICsJCWlmIChp
+ID4gMCkKPiA+ICsJCQlwcmV2ID0gbXRrX2NydGMtPmRkcF9jb21wW2kgLSAxXS0+aWQ7Cj4gPiAr
+CQllbHNlCj4gPiArCQkJcHJldiA9IEREUF9DT01QT05FTlRfSURfTUFYOwo+ID4gKwo+ID4gKwkJ
+aWYgKHByZXYgPT0gRERQX0NPTVBPTkVOVF9PVkwwKQo+ID4gKwkJCW10a19kZHBfY29tcF9iZ2Ns
+cl9pbl9vbihjb21wKTsKPiAKPiBFdmVuIHRob3VnaCBib3RoIE9WTCBhbmQgT1ZMXzJMIGltcGxl
+bWVudCB0aGlzIGZ1bmN0aW9uLCBJIHRoaW5rIHdlCj4gY291bGQgc3RpbGwgY2FsbCB0aGlzIGZ1
+bmN0aW9uIGZvciBPVkwgYW5kIE9WTF8yTCwgYW5kIGluCj4gbXRrX292bF9iZ2Nscl9pbl9vbigp
+LCB0byBqdWRnZSBpdCdzIE9WTCBvciBPVkxfMkwuCgpBcyBpbnRlcm5hbCBkaXNjdXNzaW9uLCB5
+b3UgbWVudGlvbiB0aGF0IE9WTCBhbmQgT1ZMXzJMIGJvdGggaGFzCmJnY2xyX2luIGZ1bmN0aW9u
+LCBzbyBJIHRoaW5rIHdlIHNob3VsZCBrZWVwIGJnY2xyX2luIGZ1bmN0aW9uIGZvciBib3RoCk9W
+TCBhbmQgT1ZMXzJMLiBBbmQgaW4gY3J0YywgYWx3YXlzIGVuYWJsZSBiZ2Nscl9pbiBmb3IgY29t
+cFsxXSwgc28gY29kZQpoZXJlIGNvdWxkIGJlCgppZiAoaSA9PSAxKQoJbXRrX2RkcF9jb21wX2Jn
+Y2xyX2luX29uKGNvbXApOwoKUmVnYXJkcywKQ0sKCj4gCj4gUmVnYXJkcywKPiBDSwo+IAo+ID4g
+IAo+ID4gIAkJbXRrX2RkcF9jb21wX2NvbmZpZyhjb21wLCB3aWR0aCwgaGVpZ2h0LCB2cmVmcmVz
+aCwgYnBjKTsKPiA+ICAJCW10a19kZHBfY29tcF9zdGFydChjb21wKTsKPiA+IEBAIC0yNzksOSAr
+Mjg4LDE4IEBAIHN0YXRpYyBpbnQgbXRrX2NydGNfZGRwX2h3X2luaXQoc3RydWN0IG10a19kcm1f
+Y3J0YyAqbXRrX2NydGMpCj4gPiAgCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+bGF5ZXJfbnI7
+IGkrKykgewo+ID4gIAkJc3RydWN0IGRybV9wbGFuZSAqcGxhbmUgPSAmbXRrX2NydGMtPnBsYW5l
+c1tpXTsKPiA+ICAJCXN0cnVjdCBtdGtfcGxhbmVfc3RhdGUgKnBsYW5lX3N0YXRlOwo+ID4gKwkJ
+c3RydWN0IG10a19kZHBfY29tcCAqY29tcCA9IG10a19jcnRjLT5kZHBfY29tcFswXTsKPiA+ICsJ
+CXVuc2lnbmVkIGludCBjb21wX2xheWVyX25yID0gbXRrX2RkcF9jb21wX2xheWVyX25yKGNvbXAp
+Owo+ID4gKwkJdW5zaWduZWQgaW50IGxvY2FsX2xheWVyOwo+ID4gIAo+ID4gIAkJcGxhbmVfc3Rh
+dGUgPSB0b19tdGtfcGxhbmVfc3RhdGUocGxhbmUtPnN0YXRlKTsKPiA+IC0JCW10a19kZHBfY29t
+cF9sYXllcl9jb25maWcobXRrX2NydGMtPmRkcF9jb21wWzBdLCBpLAo+ID4gKwo+ID4gKwkJaWYg
+KGkgPj0gY29tcF9sYXllcl9ucikgewo+ID4gKwkJCWNvbXAgPSBtdGtfY3J0Yy0+ZGRwX2NvbXBb
+MV07Cj4gPiArCQkJbG9jYWxfbGF5ZXIgPSBpIC0gY29tcF9sYXllcl9ucjsKPiA+ICsJCX0gZWxz
+ZQo+ID4gKwkJCWxvY2FsX2xheWVyID0gaTsKPiA+ICsJCW10a19kZHBfY29tcF9sYXllcl9jb25m
+aWcoY29tcCwgbG9jYWxfbGF5ZXIsCj4gPiAgCQkJCQkgIHBsYW5lX3N0YXRlKTsKPiA+ICAJfQo+
+ID4gIAo+ID4gQEAgLTMwNyw2ICszMjUsNyBAQCBzdGF0aWMgdm9pZCBtdGtfY3J0Y19kZHBfaHdf
+ZmluaShzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0YykKPiA+ICAJCQkJCSAgIG10a19jcnRj
+LT5kZHBfY29tcFtpXS0+aWQpOwo+ID4gIAltdGtfZGlzcF9tdXRleF9kaXNhYmxlKG10a19jcnRj
+LT5tdXRleCk7Cj4gPiAgCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+ZGRwX2NvbXBfbnIgLSAx
+OyBpKyspIHsKPiA+ICsJCW10a19kZHBfY29tcF9iZ2Nscl9pbl9vZmYobXRrX2NydGMtPmRkcF9j
+b21wW2ldKTsKPiA+ICAJCW10a19kZHBfcmVtb3ZlX2NvbXBfZnJvbV9wYXRoKG10a19jcnRjLT5j
+b25maWdfcmVncywKPiA+ICAJCQkJCSAgICAgIG10a19jcnRjLT5tbXN5c19yZWdfZGF0YSwKPiA+
+ICAJCQkJCSAgICAgIG10a19jcnRjLT5kZHBfY29tcFtpXS0+aWQsCj4gPiBAQCAtMzI3LDYgKzM0
+Niw4IEBAIHN0YXRpYyB2b2lkIG10a19jcnRjX2RkcF9jb25maWcoc3RydWN0IGRybV9jcnRjICpj
+cnRjKQo+ID4gIAlzdHJ1Y3QgbXRrX2NydGNfc3RhdGUgKnN0YXRlID0gdG9fbXRrX2NydGNfc3Rh
+dGUobXRrX2NydGMtPmJhc2Uuc3RhdGUpOwo+ID4gIAlzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21w
+ID0gbXRrX2NydGMtPmRkcF9jb21wWzBdOwo+ID4gIAl1bnNpZ25lZCBpbnQgaTsKPiA+ICsJdW5z
+aWduZWQgaW50IGNvbXBfbGF5ZXJfbnIgPSBtdGtfZGRwX2NvbXBfbGF5ZXJfbnIoY29tcCk7Cj4g
+PiArCXVuc2lnbmVkIGludCBsb2NhbF9sYXllcjsKPiA+ICAKPiA+ICAJLyoKPiA+ICAJICogVE9E
+TzogaW5zdGVhZCBvZiB1cGRhdGluZyB0aGUgcmVnaXN0ZXJzIGhlcmUsIHdlIHNob3VsZCBwcmVw
+YXJlCj4gPiBAQCAtMzQ5LDcgKzM3MCwxNCBAQCBzdGF0aWMgdm9pZCBtdGtfY3J0Y19kZHBfY29u
+ZmlnKHN0cnVjdCBkcm1fY3J0YyAqY3J0YykKPiA+ICAJCQlwbGFuZV9zdGF0ZSA9IHRvX210a19w
+bGFuZV9zdGF0ZShwbGFuZS0+c3RhdGUpOwo+ID4gIAo+ID4gIAkJCWlmIChwbGFuZV9zdGF0ZS0+
+cGVuZGluZy5jb25maWcpIHsKPiA+IC0JCQkJbXRrX2RkcF9jb21wX2xheWVyX2NvbmZpZyhjb21w
+LCBpLCBwbGFuZV9zdGF0ZSk7Cj4gPiArCQkJCWlmIChpID49IGNvbXBfbGF5ZXJfbnIpIHsKPiA+
+ICsJCQkJCWNvbXAgPSBtdGtfY3J0Yy0+ZGRwX2NvbXBbMV07Cj4gPiArCQkJCQlsb2NhbF9sYXll
+ciA9IGkgLSBjb21wX2xheWVyX25yOwo+ID4gKwkJCQl9IGVsc2UKPiA+ICsJCQkJCWxvY2FsX2xh
+eWVyID0gaTsKPiA+ICsKPiA+ICsJCQkJbXRrX2RkcF9jb21wX2xheWVyX2NvbmZpZyhjb21wLCBs
+b2NhbF9sYXllciwKPiA+ICsJCQkJCQkJICBwbGFuZV9zdGF0ZSk7Cj4gPiAgCQkJCXBsYW5lX3N0
+YXRlLT5wZW5kaW5nLmNvbmZpZyA9IGZhbHNlOwo+ID4gIAkJCX0KPiA+ICAJCX0KPiA+IEBAIC01
+NzIsNiArNjAwLDEyIEBAIGludCBtdGtfZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNl
+ICpkcm1fZGV2LAo+ID4gIAl9Cj4gPiAgCj4gPiAgCW10a19jcnRjLT5sYXllcl9uciA9IG10a19k
+ZHBfY29tcF9sYXllcl9ucihtdGtfY3J0Yy0+ZGRwX2NvbXBbMF0pOwo+ID4gKwlpZiAobXRrX2Ny
+dGMtPmRkcF9jb21wX25yID4gMSkgewo+ID4gKwkJc3RydWN0IG10a19kZHBfY29tcCAqY29tcCA9
+IG10a19jcnRjLT5kZHBfY29tcFsxXTsKPiA+ICsKPiA+ICsJCWlmIChjb21wLT5mdW5jcy0+Ymdj
+bHJfaW5fb24pCj4gPiArCQkJbXRrX2NydGMtPmxheWVyX25yICs9IG10a19kZHBfY29tcF9sYXll
+cl9ucihjb21wKTsKPiA+ICsJfQo+ID4gIAltdGtfY3J0Yy0+cGxhbmVzID0gZGV2bV9rY2FsbG9j
+KGRldiwgbXRrX2NydGMtPmxheWVyX25yLAo+ID4gIAkJCQkJc2l6ZW9mKHN0cnVjdCBkcm1fcGxh
+bmUpLAo+ID4gIAkJCQkJR0ZQX0tFUk5FTCk7Cj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVs
