@@ -1,105 +1,53 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 00/10] arm64: dts: allwinner: h5: Enable CPU
- DVFS (cpufreq)
-Date: Mon, 2 Sep 2019 16:03:23 +0200
-Message-ID: <20190902140323.fgfrifyow5qgoce4@core.my.home>
-References: <20190130084203.25053-1-wens@csie.org>
-Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
+From: <Eugen.Hristev@microchip.com>
+Subject: Re: [PATCH v4 1/9] dt-bindings: i2c: at91: add new compatible
+Date: Mon, 2 Sep 2019 14:12:12 +0000
+Message-ID: <fc80aaff-fbb2-4a85-88e5-6a204cb9088f@microchip.com>
+References: <1567418773-2427-1-git-send-email-eugen.hristev@microchip.com>
+ <1567418773-2427-2-git-send-email-eugen.hristev@microchip.com>
+ <47d618da-263f-199c-3cc6-35e8f8c6015d@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDXLF6FR5INBBLOCWTVQKGQERWQSLXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190130084203.25053-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Emmanuel Vadot <manu-h+KGxgPPiopAfugRpC6u6w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <47d618da-263f-199c-3cc6-35e8f8c6015d@axentia.se>
+Content-Language: en-US
+Content-ID: <E633220A2F413847A9A13589734114FB@namprd11.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: peda@axentia.se, wsa@the-dreams.de, mark.rutland@arm.com, Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com, alexandre.belloni@bootlin.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Jan 30, 2019 at 04:41:53PM +0800, Chen-Yu Tsai wrote:
-> Hi everyone,
-> 
-> This series enables DVFS for the CPU cores (aka cpufreq) on the
-> Allwinner H5 SoC. The OPP table was taken from Armbian, with minor
-> tweaks to the maximum voltage to account for slightly increased voltage
-> on some of the boards.
-> 
-> This has been tested on the Bananapi M2+ v1.2 and Libre Computer
-> ALL-H3-CC H5 ver..  I do not have the remaining boards so I've CC-ed
-> people who did the original submission or have modified the board
-> specifically later on.
-> 
-> Patch 1 fixes the voltages specified for the GPIO-controlled regulator
-> on the Bananapi M2+ v1.2. The voltages are slightly higher than what
-> was originally written.
-> 
-> Patch 2 adds a fixed regulator for the CPU on the original Bananapi M2+.
-> This is for the retail version, not the engineering samples that had an
-> even higher voltage setting.
-> 
-> Patch 3 hooks up the CPU regulator supply for H5 boards that already
-> define the regulator, but were missing the property to tie it to the
-> CPUs.
-> 
-> Patch 4 ~ 8 adds the CPU regulator for boards that don't have it
-> defined. This is based on each vendor's schematics. I need people
-> to test each of these specifically and the whole series.
-> 
-> Patch 9 ties the CPU clock to the CPU cores.
-> 
-> Patch 10 adds the OPP table, based on the one from Armbian.
-> 
-> Please have a look and please help test this.
-
-Looks like this patch series got forgotten. Or is it waiting for some
-user testing?
-
-regards,
-	o.
-
-> 
-> Regards
-> ChenYu
-> 
-> 
-> Chen-Yu Tsai (10):
->   ARM: dts: sunxi: bananapi-m2-plus-v1.2: Fix CPU supply voltages
->   ARM: dts: bananapi-m2-plus: Add CPU supply regulator
->   arm64: dts: allwinner: h5: Hook up cpu regulator supplies
->   arm64: dts: allwinner: h5: nanopi-neo2: Add CPU regulator supply
->   arm64: dts: allwinner: h5: orange-pi-zero-plus: Add CPU regulator
->     supply
->   arm64: dts: allwinner: h5: orange-pi-zero-plus2: Add CPU regulator
->     supply
->   arm64: dts: allwinner: h5: orange-pi-pc2: Add CPU regulator supply
->   arm64: dts: allwinner: h5: orange-pi-prime: Add CPU regulator supply
->   arm64: dts: allwinner: h5: Add clock to CPU cores
->   arm64: dts: allwinner: h5: Add CPU Operating Performance Points table
-> 
->  .../boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 30 +++-----
->  arch/arm/boot/dts/sunxi-bananapi-m2-plus.dtsi | 14 ++++
->  .../sun50i-h5-emlid-neutis-n5-devboard.dts    |  4 +
->  .../allwinner/sun50i-h5-nanopi-neo-plus2.dts  |  4 +
->  .../dts/allwinner/sun50i-h5-nanopi-neo2.dts   | 20 +++++
->  .../dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 28 +++++++
->  .../allwinner/sun50i-h5-orangepi-prime.dts    | 28 +++++++
->  .../sun50i-h5-orangepi-zero-plus.dts          | 20 +++++
->  .../sun50i-h5-orangepi-zero-plus2.dts         | 20 +++++
->  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  | 75 +++++++++++++++++++
->  10 files changed, 224 insertions(+), 19 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+DQoNCk9uIDAyLjA5LjIwMTkgMTM6NDQsIFBldGVyIFJvc2luIHdyb3RlOg0KDQo+IA0KPiBPbiAy
+MDE5LTA5LTAyIDEyOjExLCBFdWdlbi5IcmlzdGV2QG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+PiBG
+cm9tOiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+Pg0KPj4g
+QWRkIGNvbXBhdGlibGUgZm9yIG5ldyBNaWNyb2NoaXAgU29DLCBzYW05eDYwDQo+Pg0KPj4gUmV2
+aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+DQo+PiBTaWduZWQtb2ZmLWJ5
+OiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+PiAtLS0NCj4+
+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXQ5MS50eHQgfCAz
+ICsrLQ0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0p
+DQo+Pg0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9p
+MmMvaTJjLWF0OTEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9p
+MmMtYXQ5MS50eHQNCj4+IGluZGV4IGI3Y2VjMTcuLjIyMTBmNDMgMTAwNjQ0DQo+PiAtLS0gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJjL2kyYy1hdDkxLnR4dA0KPj4gKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtYXQ5MS50eHQNCj4+
+IEBAIC0zLDcgKzMsOCBAQCBJMkMgZm9yIEF0bWVsIHBsYXRmb3Jtcw0KPj4gICBSZXF1aXJlZCBw
+cm9wZXJ0aWVzIDoNCj4+ICAgLSBjb21wYXRpYmxlIDogTXVzdCBiZSAiYXRtZWwsYXQ5MXJtOTIw
+MC1pMmMiLCAiYXRtZWwsYXQ5MXNhbTkyNjEtaTJjIiwNCj4+ICAgICAgICAiYXRtZWwsYXQ5MXNh
+bTkyNjAtaTJjIiwgImF0bWVsLGF0OTFzYW05ZzIwLWkyYyIsICJhdG1lbCxhdDkxc2FtOWcxMC1p
+MmMiLA0KPj4gLSAgICAgImF0bWVsLGF0OTFzYW05eDUtaTJjIiwgImF0bWVsLHNhbWE1ZDQtaTJj
+IiBvciAiYXRtZWwsc2FtYTVkMi1pMmMiDQo+PiArICAgICAiYXRtZWwsYXQ5MXNhbTl4NS1pMmMi
+LCAiYXRtZWwsc2FtYTVkNC1pMmMiLCAiYXRtZWwsc2FtYTVkMi1pMmMiIG9yDQo+PiArICAgICAi
+bWljcm9jaGlwLHNhbTl4NjAtaTJjIg0KPiANCj4gSUlVQywgdGhpcyBsaXN0IHNob3VsZCBpZGVh
+bGx5IGJlIHJlZm9ybWF0dGVkIHdpdGggb25lIGNvbXBhdGlibGUgcGVyIGxpbmUuDQo+IA0KPiBT
+aWRlIG5vdGU7IHVuZm9ydHVuYXRlIG5hbWluZyB3aXRoIFNBTTl4NjAsIHdoZW4gdGhlcmUgaXMg
+YSBwcmVleGlzdGluZyA5MjYwDQo+IGZpdHRpbmcgdGhlICJ3aWxkY2FyZCIgKEFGQUlDVCwgaXQn
+cyBub3QgYSB3aWxkY2FyZCBpbiB0aGlzIGNhc2UsIGJ1dCBpdCBzdXJlDQo+IGxvb2tzIGxpa2Ug
+b25lKS4NCj4gDQoNClllcywgdGhpcyBpcyBhIHNlcGFyYXRlIFNvQy4gSXQgaXMgbmFtZWQgU0FN
+OVg2MCBhbmQgbm90IHJlbGF0ZWQgdG8gb2xkIA0KOTI2MA0KDQpSZWZvcm1hdHRpbmcgdGhlIGxp
+c3Qgd291bGQgYmUgdXNlZnVsIHBlcmhhcHMgaW4gYSBkaWZmZXJlbnQgY29zbWV0aWMgDQpwYXRj
+aCA/DQoNCj4gQ2hlZXJzLA0KPiBQZXRlcg0KPiANCj4+ICAgLSByZWc6IHBoeXNpY2FsIGJhc2Ug
+YWRkcmVzcyBvZiB0aGUgY29udHJvbGxlciBhbmQgbGVuZ3RoIG9mIG1lbW9yeSBtYXBwZWQNCj4+
+ICAgICAgICByZWdpb24uDQo+PiAgIC0gaW50ZXJydXB0czogaW50ZXJydXB0IG51bWJlciB0byB0
+aGUgY3B1Lg0KPj4NCj4gDQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fDQo+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0DQo+IGxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwNCj4gDQo+IA0K
