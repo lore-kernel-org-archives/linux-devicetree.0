@@ -1,41 +1,118 @@
-From: <Eugen.Hristev@microchip.com>
-Subject: [PATCH v4 9/9] ARM: dts: at91: sama5d4_xplained: add digital filter
- for i2c
-Date: Mon, 2 Sep 2019 10:12:20 +0000
-Message-ID: <1567418773-2427-10-git-send-email-eugen.hristev@microchip.com>
-References: <1567418773-2427-1-git-send-email-eugen.hristev@microchip.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 04/11] device property: Add functions for accessing
+ node's parents
+Date: Mon, 2 Sep 2019 13:14:26 +0300
+Message-ID: <20190902101426.GB2680@smile.fi.intel.com>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-5-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567418773-2427-1-git-send-email-eugen.hristev@microchip.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190902083240.20367-5-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, peda@axentia.se, mark.rutland@arm.com, Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com, alexandre.belloni@bootlin.com, robh+dt@kernel.org
-Cc: Nicolas.Ferre@microchip.com, Eugen.Hristev@microchip.com
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+On Mon, Sep 02, 2019 at 11:32:33AM +0300, Sakari Ailus wrote:
+> Add two convenience functions for accessing node's parents:
+> 
+> fwnode_count_parents() returns the number of parent nodes a given node
+> has. fwnode_get_nth_parent() returns node's parent at a given distance
+> from the node itself.
+> 
 
-Add property for digital filter for i2c0 node sama5d4_xplained
+Much better now, thanks!
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- arch/arm/boot/dts/at91-sama5d4_xplained.dts | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dt=
-s/at91-sama5d4_xplained.dts
-index fdfc37d..924d949 100644
---- a/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-@@ -49,6 +49,7 @@
- 			};
-=20
- 			i2c0: i2c@f8014000 {
-+				i2c-digital-filter;
- 				status =3D "okay";
- 			};
-=20
---=20
-2.7.4
+though one question below.
+
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  drivers/base/property.c  | 46 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/property.h |  3 +++
+>  2 files changed, 49 insertions(+)
+> 
+> diff --git a/drivers/base/property.c b/drivers/base/property.c
+> index 3d9dffbe96378..d2461d79139f3 100644
+> --- a/drivers/base/property.c
+> +++ b/drivers/base/property.c
+> @@ -590,6 +590,52 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
+>  }
+>  EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
+>  
+> +/**
+> + * fwnode_count_parents - Return the number of parents a node has
+> + * @fwnode: The node the parents of which are to be counted
+> + *
+> + * Returns the number of parents a node has.
+> + */
+> +unsigned int fwnode_count_parents(const struct fwnode_handle *fwnode)
+> +{
+> +	struct fwnode_handle *__fwnode;
+> +	unsigned int count;
+> +
+> +	__fwnode = fwnode_get_parent(fwnode);
+> +
+> +	for (count = 0; __fwnode; count++)
+> +		__fwnode = fwnode_get_next_parent(__fwnode);
+> +
+> +	return count;
+> +}
+> +EXPORT_SYMBOL_GPL(fwnode_count_parents);
+> +
+> +/**
+> + * fwnode_get_nth_parent - Return an nth parent of a node
+> + * @fwnode: The node the parent of which is requested
+> + * @depth: Distance of the parent from the node
+> + *
+> + * Returns the nth parent of a node. If @depth is 0, the functionality is
+> + * equivalent to fwnode_handle_get(). For @depth == 1, it is fwnode_get_parent()
+> + * and so on.
+> + *
+> + * The caller is responsible for calling fwnode_handle_put() for the returned
+> + * node.
+> + */
+> +struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwnode,
+> +					    unsigned int depth)
+> +{
+> +	unsigned int i;
+> +
+> +	fwnode_handle_get(fwnode);
+> +
+> +	for (i = 0; i < depth && fwnode; i++)
+> +		fwnode = fwnode_get_next_parent(fwnode);
+> +
+
+If 'fnode == NULL' and 'i < depth', shan't we return some kind of error?
+
+> +	return fwnode;
+> +}
+> +EXPORT_SYMBOL_GPL(fwnode_get_nth_parent);
+> +
+>  /**
+>   * fwnode_get_next_child_node - Return the next child node handle for a node
+>   * @fwnode: Firmware node to find the next child node for.
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> index 421c76e53708d..5450e7ec219ac 100644
+> --- a/include/linux/property.h
+> +++ b/include/linux/property.h
+> @@ -83,6 +83,9 @@ struct fwnode_handle *fwnode_find_reference(const struct fwnode_handle *fwnode,
+>  struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode);
+>  struct fwnode_handle *fwnode_get_next_parent(
+>  	struct fwnode_handle *fwnode);
+> +unsigned int fwnode_count_parents(const struct fwnode_handle *fwn);
+> +struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwn,
+> +					    unsigned int depth);
+>  struct fwnode_handle *fwnode_get_next_child_node(
+>  	const struct fwnode_handle *fwnode, struct fwnode_handle *child);
+>  struct fwnode_handle *fwnode_get_next_available_child_node(
+> -- 
+> 2.20.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
