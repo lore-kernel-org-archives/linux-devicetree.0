@@ -1,67 +1,37 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH] ARM: dts: stm32: move ltdc pinctrl on stm32mp157a dk1 board
-Date: Mon, 2 Sep 2019 11:35:22 +0200
-Message-ID: <CA+M3ks5GaN2-jEHO5-QGGkhYG2U-ExQR4=kNuk0jBxH2BkRGYQ@mail.gmail.com>
-References: <1564754931-13861-1-git-send-email-yannick.fertre@st.com> <50695b37-df51-08d6-a11e-99f9349aa481@st.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v6 01/13] dt-bindings: mfd: mediatek: mt6397: change to
+ relative paths
+Date: Mon, 2 Sep 2019 10:43:13 +0100
+Message-ID: <20190902094313.GP32232@dell>
+References: <20190818135611.7776-1-frank-w@public-files.de>
+ <20190818135611.7776-2-frank-w@public-files.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50695b37-df51-08d6-a11e-99f9349aa481@st.com>
+Content-Disposition: inline
+In-Reply-To: <20190818135611.7776-2-frank-w@public-files.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe CORNU <philippe.cornu@st.com>
-Cc: Yannick FERTRE <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Fabrice GASNIER <fabrice.gasnier@st.com>
+To: Frank Wunderlich <frank-w@public-files.de>
+Cc: linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, "linux-arm-kernel @ lists . infradead . org Alessandro Zummo" <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Eddie Huang <eddie.huang@mediatek.com>, Josef Friedl <josef.friedl@speed.at>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre@kernel.org>, Tianping Fang <tianping.fang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-+ dri-devel mailing list
+On Sun, 18 Aug 2019, Frank Wunderlich wrote:
 
-Le lun. 2 sept. 2019 =C3=A0 10:45, Philippe CORNU <philippe.cornu@st.com> a=
- =C3=A9crit :
->
-> Hi Yannick,
->
-> On 8/2/19 4:08 PM, Yannick Fertr=C3=A9 wrote:
-> > The ltdc pinctrl must be in the display controller node and
-> > not in the peripheral node (hdmi bridge).
-> >
-> > Signed-off-by: Yannick Fertr=C3=A9 <yannick.fertre@st.com>
-> > ---
-> >   arch/arm/boot/dts/stm32mp157a-dk1.dts | 6 +++---
-> >   1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/=
-stm32mp157a-dk1.dts
-> > index f3f0e37..1285cfc 100644
-> > --- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-> > +++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-> > @@ -99,9 +99,6 @@
-> >               reset-gpios =3D <&gpioa 10 GPIO_ACTIVE_LOW>;
-> >               interrupts =3D <1 IRQ_TYPE_EDGE_FALLING>;
-> >               interrupt-parent =3D <&gpiog>;
-> > -             pinctrl-names =3D "default", "sleep";
-> > -             pinctrl-0 =3D <&ltdc_pins_a>;
-> > -             pinctrl-1 =3D <&ltdc_pins_sleep_a>;
-> >               status =3D "okay";
-> >
-> >               ports {
-> > @@ -276,6 +273,9 @@
-> >   };
-> >
-> >   &ltdc {
-> > +     pinctrl-names =3D "default", "sleep";
-> > +     pinctrl-0 =3D <&ltdc_pins_a>;
-> > +     pinctrl-1 =3D <&ltdc_pins_sleep_a>;
->
-> Reviewed-by: Philippe Cornu <philippe.cornu@st.com>
->
-> Thanks
-> Philippe :)
->
-> >       status =3D "okay";
-> >
-> >       port {
-> >
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> paths in dt-bindings should be relative as suggested by Lee Johnes
+> 
+> Suggested-By: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> ---
+> changes since v5: splitted from dt-bindings: add powercontroller
+> ---
+>  Documentation/devicetree/bindings/mfd/mt6397.txt | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+
+Applied, thanks.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
