@@ -1,53 +1,82 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] arm64: dts: imx8mn-ddr4-evk: Enable GPIO LED
-Date: Mon, 2 Sep 2019 22:31:44 +0200
-Message-ID: <20190902203144.GA4787@bug>
-References: <1567457138-3002-1-git-send-email-Anson.Huang@nxp.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
+Date: Mon, 2 Sep 2019 22:42:08 +0200
+Message-ID: <20190902204208.GA7253@kunai>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-3-luca@lucaceresoli.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1567457138-3002-1-git-send-email-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190723203723.11730-3-luca@lucaceresoli.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luca Ceresoli <luca@lucaceresoli.net>
+Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Vladimir Zapolskiy <vz@mleia.com>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 2019-09-02 16:45:38, Anson Huang wrote:
-> i.MX8MN DDR4 EVK board has a GPIO LED to indicate status,
-> add support for it.
 
-LED maintainers want to be on the cc list...
+--SUOF0GtieIMvvwua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> @@ -15,6 +15,18 @@
->  		stdout-path = &uart2;
->  	};
->  
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpio_led>;
-> +
-> +		status {
-> +			label = "status";
-> +			gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
-> +			default-state = "on";
-> +		};
+Hi Luca,
 
-And we should really standardize labels for user-controlled status LEDs. Mentioning
-color would be nice, for a start.
+> + * Topology:
+> + *
+> + *                       Slave X @ 0x10
+> + *               .-----.   |
+> + *   .-----.     |     |---+---- B
+> + *   | CPU |--A--| ATR |
+> + *   `-----'     |     |---+---- C
+> + *               `-----'   |
+> + *                       Slave Y @ 0x10
+> + *
+> + * Alias table:
+> + *
+> + *   Client  Alias
+> + *   -------------
+> + *      X    0x20
+> + *      Y    0x30
 
-Best regards,
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Great that you already provided docs for this driver!
+
+One huge drawback for me is the attach/detach callbacks. One year ago, I
+removed a similar callback from the I2C core ("[PATCH 0/2] i2c: remove
+deprecated attach_adapter callback") because some drivers did a lot of
+crazy things there. It took years to remove all that.
+
+What I could imagine here: the adapter (B and C each in the picture
+above) gets a flag like NEEDS_ATR before registering to the core. The
+flag means all clients on that bus will have their address translated.
+The core will figure out a free alias when a device is registered. We
+can then have an ATR specific callback with the original and translated
+address as arguments, so one can setup the HW as needed.
+
+Do you think that would work? Jacopo, does that meet GMSL as well?
+
+Regards,
+
+   Wolfram
+
+--SUOF0GtieIMvvwua
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1tfpwACgkQFA3kzBSg
+KbYMqw/7B+tsA9k6JQpEn3lIgySHVigNyDkBrhwtllVTPWmdTX67GS6UmzOu5vsN
+JwVMAPeXvrB1/R8d3wudXYWwz9AL+b/GUmCcZiOpJShWtVZg7ynCbJT2LJq578zG
+JS1D8HvawfMMRW2XcotIPKXZbxP8WoIV/wQP7qb7Cg1z196bPmiN96pHIPNUJKRu
+MYvMC1RYwv8q54US8nX7HIU8KREEUKTcwNQeUWwQqGtqtMUchy9A8Qrb8HRugTy9
+cym7RrnkJ43/nDaG/XocQ/h4finto7md9wkQ2y4WoblumpyY+xWIeQ1esAU66q89
+BJbRQMDOEO3P0U8kdpo0rIRMCie/RAU4tNLTA8sW65oPi0OGWAk9DW/raJ2QD5yw
+6co4sWJJKBFjWI6nSxdneBQhzPB0u1hiiCqkkHp8NZScXZzZ1X2uUN0qKIuXDQwS
+GZwzF9Nq+8X5NJt0rofFtkR3hcpKBQgdWqRx/omsV58mPFJFC+XKGKAQgZpE+k4m
+IZFWVfpmIh2N3Fcl2m34qKf6Ca2pbMhy2EnzkqQdIVrB8Y81cm8RdCLbz/KSmFPK
+ZAxrdo1ohwezmkoSAzXuwy1TGsPgaNtyl8yZdEu3f+9C3jYnQJbUGc4qIJtvrQvD
+0BrJHQRwJB+9v5CMLrNqAv6e5Cv/ZsuDswWM0ZajUz0mhUUnczA=
+=hGfN
+-----END PGP SIGNATURE-----
+
+--SUOF0GtieIMvvwua--
