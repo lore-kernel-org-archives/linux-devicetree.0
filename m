@@ -1,188 +1,59 @@
-Return-Path: <SRS0=sI6G=W5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43356 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfIBPvs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Sep 2019 11:51:48 -0400
-Date: Mon, 2 Sep 2019 08:51:44 -0700
+Return-Path: <SRS0=3RKS=W5=gmail.com=dmitry.torokhov@kernel.org>
+Date: Mon, 2 Sep 2019 08:48:39 -0700
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Subject: Re: [PATCH v2] Input: tsc2007 - use GPIO descriptor
-Message-ID: <20190902155144.GK187474@dtor-ws>
+Message-ID: <20190902154839.GJ187474@dtor-ws>
 References: <20190823071021.5598-1-linus.walleij@linaro.org>
+ <20190826220022.GA7663@dtor-ws>
+ <CACRpkdbv8yVP==WDo-wBgotyvnPhApTCD2x7oamCHBQKuNp3RQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190823071021.5598-1-linus.walleij@linaro.org>
-Sender: devicetree-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>
-Cc: linux-input@vger.kernel.org, Denis Carikli <denis@eukrea.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, "H . Nikolaus Schaller" <hns@goldelico.com>, devicetree@vger.kernel.org
+In-Reply-To: <CACRpkdbv8yVP==WDo-wBgotyvnPhApTCD2x7oamCHBQKuNp3RQ@mail.gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Harish Jenny K N <harish_kandiga@mentor.com>, Rob Herring <robh+dt@kernel.org>, Linux Input <linux-input@vger.kernel.org>, Denis Carikli <denis@eukrea.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, "H . Nikolaus Schaller" <hns@goldelico.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Aug 23, 2019 at 09:10:21AM +0200, Linus Walleij wrote:
-> This switches the TSC2007 to use a GPIO descriptor to read
-> the pendown GPIO line.
+On Tue, Aug 27, 2019 at 09:42:46AM +0200, Linus Walleij wrote:
+> On Tue, Aug 27, 2019 at 12:00 AM Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
 > 
-> As this will make the gpiolib start to respect polarity
-> inversion flags on the GPIO lines, drop the inversion when
-> reading the line with gpio_get_value(), fix two offenders
-> in the i.MX device trees, and also emphasize the importance
-> of marking the polarity right in the device tree bindings.
+> > >  Optional properties:
+> > >  - gpios: the interrupt gpio the chip is connected to (trough the penirq pin).
+> > > -  The penirq pin goes to low when the panel is touched.
+> > > +  The penirq pin goes to low when the panel is touched, so make sure to tag
+> > > +  the GPIO line with GPIO_ACTIVE_LOW.
+> >
+> > I think this is too strong. I am sure that one can come up with a way to
+> > connect the attention signal though polarity inverter and then one would
+> > have to specify GPIO_ACTIVE_HIGH in the DT.
 > 
-> Cc: Denis Carikli <denis@eukrea.com>
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> Cc: NXP Linux Team <linux-imx@nxp.com>
-> Cc: H. Nikolaus Schaller <hns@goldelico.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> ChangeLog v1->v2:
-> - Drop inversion on the GPIO descriptor value, rely on the
->   gpiolib to handle polarity inversion.
-> - Comb through device trees, identify two offenders, fix
->   them as part of the patch for a clean cut.
-> - Also fix the device tree bindings.
-> ---
->  .../bindings/input/touchscreen/tsc2007.txt         |  5 +++--
->  arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi       |  3 ++-
->  arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi       |  3 ++-
+> Yeah this is something that has been discussed recently as
+> Harish is suggesting to add an actual inverter to the device
+> tree model. As the description of reality in the device tree is
+> incomplete, these flags, which should nominally be consumer
+> flags and indicate the behavior of the consumer, becomes
+> a panacea for solving shortcomings in the device tree model.
+> 
+> I am in favor of introducing explicit inverters in device tree,
+> as it makes the descriptions more consistent: e.g. regulators
+> are consumer oriented, they even model rails to make things
+> very clear on where a voltage applies, whereas GPIO polarity
+> is defined as "trial-and-error until whatever makes the system
+> run" more or less.
+> 
+> > Can we say:
+> >
+> > The penirq pin goes to low when the panel is touched, so GPIO line
+> > should normally be tagged with GPIO_ACTIVE_LOW.
+> 
+> Sure, this is not the place for hashing out DT design issues,
+> can you fix when applying or should I send a new version?
 
-Shawn, Sascha, any objections to these DTS changes?
+I can fix it up on my side, once I hear from DY folks that they are OK
+with existing DTS changes.
 
->  drivers/input/touchscreen/tsc2007.h                |  4 +++-
->  drivers/input/touchscreen/tsc2007_core.c           | 14 +++++++-------
->  5 files changed, 17 insertions(+), 12 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
-> index ed00f61b8c08..b08b54d49699 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
-> @@ -7,7 +7,8 @@ Required properties:
->  
->  Optional properties:
->  - gpios: the interrupt gpio the chip is connected to (trough the penirq pin).
-> -  The penirq pin goes to low when the panel is touched.
-> +  The penirq pin goes to low when the panel is touched, so make sure to tag
-> +  the GPIO line with GPIO_ACTIVE_LOW.
->    (see GPIO binding[1] for more details).
->  - interrupts: (gpio) interrupt to which the chip is connected
->    (see interrupt binding[0]).
-> @@ -31,7 +32,7 @@ Example:
->  			reg = <0x49>;
->  			interrupt-parent = <&gpio4>;
->  			interrupts = <0x0 0x8>;
-> -			gpios = <&gpio4 0 0>;
-> +			gpios = <&gpio4 0 GPIO_ACTIVE_LOW>;
->  			ti,x-plate-ohms = <180>;
->  		};
->  
-> diff --git a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-> index 17bd2a97609a..b8ac60622936 100644
-> --- a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-> +++ b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
-> @@ -3,6 +3,7 @@
->   * Copyright 2013 Eukr�a Electromatique <denis@eukrea.com>
->   */
->  
-> +#include <dt-bindings/gpio/gpio.h>
->  #include "imx35.dtsi"
->  
->  / {
-> @@ -33,7 +34,7 @@
->  
->  	tsc2007: tsc2007@48 {
->  		compatible = "ti,tsc2007";
-> -		gpios = <&gpio3 2 0>;
-> +		gpios = <&gpio3 2 GPIO_ACTIVE_LOW>;
->  		interrupt-parent = <&gpio3>;
->  		interrupts = <0x2 0x8>;
->  		pinctrl-names = "default";
-> diff --git a/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi b/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
-> index c2a929ba8ceb..016d0bc64bdb 100644
-> --- a/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
-> +++ b/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
-> @@ -3,6 +3,7 @@
->   * Copyright 2013 Eukr�a Electromatique <denis@eukrea.com>
->   */
->  
-> +#include <dt-bindings/gpio/gpio.h>
->  #include "imx51.dtsi"
->  
->  / {
-> @@ -33,7 +34,7 @@
->  
->  	tsc2007: tsc2007@49 {
->  		compatible = "ti,tsc2007";
-> -		gpios = <&gpio4 0 1>;
-> +		gpios = <&gpio4 0 GPIO_ACTIVE_LOW>;
->  		interrupt-parent = <&gpio4>;
->  		interrupts = <0x0 0x8>;
->  		pinctrl-names = "default";
-> diff --git a/drivers/input/touchscreen/tsc2007.h b/drivers/input/touchscreen/tsc2007.h
-> index 91c60bf6dcaf..0306c38b56c7 100644
-> --- a/drivers/input/touchscreen/tsc2007.h
-> +++ b/drivers/input/touchscreen/tsc2007.h
-> @@ -49,6 +49,8 @@
->  #define READ_X		(ADC_ON_12BIT | TSC2007_MEASURE_X)
->  #define PWRDOWN		(TSC2007_12BIT | TSC2007_POWER_OFF_IRQ_EN)
->  
-> +struct gpio_desc;
-> +
->  struct ts_event {
->  	u16	x;
->  	u16	y;
-> @@ -69,7 +71,7 @@ struct tsc2007 {
->  	int			fuzzy;
->  	int			fuzzz;
->  
-> -	unsigned int		gpio;
-> +	struct gpio_desc	*gpiod;
->  	int			irq;
->  
->  	wait_queue_head_t	wait;
-> diff --git a/drivers/input/touchscreen/tsc2007_core.c b/drivers/input/touchscreen/tsc2007_core.c
-> index 3b80abfc1eca..0eadd6d86fa0 100644
-> --- a/drivers/input/touchscreen/tsc2007_core.c
-> +++ b/drivers/input/touchscreen/tsc2007_core.c
-> @@ -23,7 +23,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/i2c.h>
->  #include <linux/of_device.h>
-> -#include <linux/of_gpio.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/platform_data/tsc2007.h>
->  #include "tsc2007.h"
->  
-> @@ -226,7 +226,7 @@ static int tsc2007_get_pendown_state_gpio(struct device *dev)
->  	struct i2c_client *client = to_i2c_client(dev);
->  	struct tsc2007 *ts = i2c_get_clientdata(client);
->  
-> -	return !gpio_get_value(ts->gpio);
-> +	return gpiod_get_value(ts->gpiod);
->  }
->  
->  static int tsc2007_probe_dt(struct i2c_client *client, struct tsc2007 *ts)
-> @@ -266,13 +266,13 @@ static int tsc2007_probe_dt(struct i2c_client *client, struct tsc2007 *ts)
->  		return -EINVAL;
->  	}
->  
-> -	ts->gpio = of_get_gpio(np, 0);
-> -	if (gpio_is_valid(ts->gpio))
-> +	ts->gpiod = devm_gpiod_get_optional(&client->dev, NULL, GPIOD_IN);
-> +	if (IS_ERR(ts->gpiod))
-> +		return PTR_ERR(ts->gpiod);
-> +	if (ts->gpiod)
->  		ts->get_pendown_state = tsc2007_get_pendown_state_gpio;
->  	else
-> -		dev_warn(&client->dev,
-> -			 "GPIO not specified in DT (of_get_gpio returned %d)\n",
-> -			 ts->gpio);
-> +		dev_warn(&client->dev, "GPIO not specified in DT\n");
->  
->  	return 0;
->  }
-> -- 
-> 2.21.0
-> 
+Thanks.
 
 -- 
 Dmitry
