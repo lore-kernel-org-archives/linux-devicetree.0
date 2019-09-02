@@ -1,127 +1,51 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 05/13] rtc: mt6397: move some common definitions into
- rtc.h
-Date: Mon, 2 Sep 2019 10:47:00 +0100
-Message-ID: <20190902094700.GS32232@dell>
-References: <20190818135611.7776-1-frank-w@public-files.de>
- <20190818135611.7776-6-frank-w@public-files.de>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v3 07/10] lib/vsprintf: Make use of fwnode API to obtain
+ node names and separators
+Date: Mon, 2 Sep 2019 12:48:02 +0300
+Message-ID: <20190902094802.GT2680@smile.fi.intel.com>
+References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
+ <20190829101043.24963-8-sakari.ailus@linux.intel.com>
+ <20190830125314.GG2680@smile.fi.intel.com>
+ <20190902071130.GF5475@paasikivi.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190818135611.7776-6-frank-w@public-files.de>
+In-Reply-To: <20190902071130.GF5475@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wunderlich <frank-w@public-files.de>
-Cc: linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, "linux-arm-kernel @ lists . infradead . org Alessandro Zummo" <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Eddie Huang <eddie.huang@mediatek.com>, Josef Friedl <josef.friedl@speed.at>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@mediatek.com>, Sebastian Reichel <sre@kernel.org>, Tianping Fang <tianping.fang@mediatek.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 18 Aug 2019, Frank Wunderlich wrote:
-
-> From: Josef Friedl <josef.friedl@speed.at>
+On Mon, Sep 02, 2019 at 10:11:30AM +0300, Sakari Ailus wrote:
+> On Fri, Aug 30, 2019 at 03:53:14PM +0300, Andy Shevchenko wrote:
+> > On Thu, Aug 29, 2019 at 01:10:40PM +0300, Sakari Ailus wrote:
+> > > Instead of implementing our own means of discovering parent nodes, node
+> > > names or counting how many parents a node has, use the newly added
+> > > functions in the fwnode API to obtain that information.
+> > > 
+> > 
+> > Some style comments below.
+> > Nevertheless,
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> move code to separate header-file to reuse definitions later
-> in poweroff-driver (drivers/power/reset/mt6323-poweroff.c)
+> Thanks!
+
+> > >  		case 'f':	/* full_name */
+> > > -			buf = device_node_gen_full_name(dn, buf, end);
+> > 
+> > > +			buf = fwnode_full_name_string(of_fwnode_handle(dn), buf,
+> > > +						      end);
+> > 
+> > Ditto, disregard checkpatch.
 > 
-> Suggested-by: Frank Wunderlich <frank-w@public-files.de>
-> Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
-> changes since v5: none
-> changes since v4: none
-> changes since v3: none
-> changes since v2: add missing commit-message
-> ---
->  drivers/rtc/rtc-mt6397.c       | 55 +-------------------------
->  include/linux/mfd/mt6397/rtc.h | 71 ++++++++++++++++++++++++++++++++++
->  2 files changed, 72 insertions(+), 54 deletions(-)
->  create mode 100644 include/linux/mfd/mt6397/rtc.h
-> 
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index b46ed4dc7015..c08ee5edf865 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -9,60 +9,7 @@
->  #include <linux/module.h>
->  #include <linux/regmap.h>
->  #include <linux/rtc.h>
-> -#include <linux/irqdomain.h>
-> -#include <linux/platform_device.h>
-> -#include <linux/of_address.h>
-> -#include <linux/of_irq.h>
-> -#include <linux/io.h>
-> -#include <linux/mfd/mt6397/core.h>
-> -
-> -#define RTC_BBPU		0x0000
-> -#define RTC_BBPU_CBUSY		BIT(6)
-> -
-> -#define RTC_WRTGR		0x003c
-> -
-> -#define RTC_IRQ_STA		0x0002
-> -#define RTC_IRQ_STA_AL		BIT(0)
-> -#define RTC_IRQ_STA_LP		BIT(3)
-> -
-> -#define RTC_IRQ_EN		0x0004
-> -#define RTC_IRQ_EN_AL		BIT(0)
-> -#define RTC_IRQ_EN_ONESHOT	BIT(2)
-> -#define RTC_IRQ_EN_LP		BIT(3)
-> -#define RTC_IRQ_EN_ONESHOT_AL	(RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
-> -
-> -#define RTC_AL_MASK		0x0008
-> -#define RTC_AL_MASK_DOW		BIT(4)
-> -
-> -#define RTC_TC_SEC		0x000a
-> -/* Min, Hour, Dom... register offset to RTC_TC_SEC */
-> -#define RTC_OFFSET_SEC		0
-> -#define RTC_OFFSET_MIN		1
-> -#define RTC_OFFSET_HOUR		2
-> -#define RTC_OFFSET_DOM		3
-> -#define RTC_OFFSET_DOW		4
-> -#define RTC_OFFSET_MTH		5
-> -#define RTC_OFFSET_YEAR		6
-> -#define RTC_OFFSET_COUNT	7
-> -
-> -#define RTC_AL_SEC		0x0018
-> -
-> -#define RTC_PDN2		0x002e
-> -#define RTC_PDN2_PWRON_ALARM	BIT(4)
-> -
-> -#define RTC_MIN_YEAR		1968
-> -#define RTC_BASE_YEAR		1900
-> -#define RTC_NUM_YEARS		128
-> -#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
-> -
-> -struct mt6397_rtc {
-> -	struct device		*dev;
-> -	struct rtc_device	*rtc_dev;
-> -	struct mutex		lock;
-> -	struct regmap		*regmap;
-> -	int			irq;
-> -	u32			addr_base;
-> -};
-> +#include <linux/mfd/mt6397/rtc.h>
->  
->  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
->  {
-> diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
-> new file mode 100644
-> index 000000000000..b702c29e8c74
-> --- /dev/null
-> +++ b/include/linux/mfd/mt6397/rtc.h
-> @@ -0,0 +1,71 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2014-2018 MediaTek Inc.
+> Why? I see no reason to avoid wrapping here; in fact, if I'd review a patch
+> that contained such code, I'd ask the submitter to wrap the lines.
 
-This is out of date.
+For sake of readability. If you look to that file we broke that rule few times
+for the same reason.
 
-Once corrected, please apply my:
-
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+With Best Regards,
+Andy Shevchenko
