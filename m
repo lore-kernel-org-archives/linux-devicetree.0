@@ -1,495 +1,567 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
-Date: Mon,  2 Sep 2019 14:24:00 +0100
-Message-ID: <20190902132400.14084-1-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, bjorn.andersson@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+Subject: Re: [PATCH 2/2] media: i2c: dw9768: Add DW9768 VCM driver
+Date: Mon, 2 Sep 2019 21:35:31 +0800
+Message-ID: <1567431331.21623.57.camel@mhfsdcap03>
+References: <20190708100641.2702-1-dongchun.zhu@mediatek.com>
+ <20190708100641.2702-3-dongchun.zhu@mediatek.com>
+ <576bb964-c16d-2ca2-e3ec-feff2e155d3c@linux.intel.com>
+ <0255a021cb9b424f85ec53c22f5e8dad@mtkmbs07n1.mediatek.inc>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <0255a021cb9b424f85ec53c22f5e8dad@mtkmbs07n1.mediatek.inc>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bingbu Cao <bingbu.cao@linux.intel.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, drinkcat@chromium.org, srv_heupstream@mediatek.com, tfiga@google.com, shengnan.wang@mediatek.com, louis.kuo@mediatek.com, sj.huang@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, bingbu.cao@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Hi Bingbu,
 
-The Lenovo Yoga C630 is built on the SDM850 from Qualcomm, but this seem
-to be similar enough to the SDM845 that we can reuse the sdm845.dtsi.
+On Wed, 2019-07-24 at 11:16 +0800, Bingbu Cao wrote:
+> On 7/8/19 6:06 PM, dongchun.zhu@mediatek.com wrote:
+> > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> >
+> > This patch adds a V4L2 sub-device driver for DW9768 lens voice coil,
+> > and provides control to set the desired focus.
+> >
+> > The DW9807 is a 10 bit DAC from Dongwoon, designed for linear control
+> > of voice coil motor.
+> >
+> > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > ---
+> >  MAINTAINERS                |   1 +
+> >  drivers/media/i2c/Kconfig  |  10 +
+> >  drivers/media/i2c/Makefile |   1 +
+> >  drivers/media/i2c/dw9768.c | 458
+> > +++++++++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 470 insertions(+)
+> >  create mode 100644 drivers/media/i2c/dw9768.c
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS index 8f6ac93..17152d7 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -4877,6 +4877,7 @@ M:Dongchun Zhu <dongchun.zhu@mediatek.com>
+> >  L:linux-media@vger.kernel.org
+> >  T:git git://linuxtv.org/media_tree.git
+> >  S:Maintained
+> > +F:drivers/media/i2c/dw9768.c
+> >  F:Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt
+> >
+> >  DONGWOON DW9807 LENS VOICE COIL DRIVER diff --git
+> > a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig index
+> > 7793358..8ff6c95 100644
+> > --- a/drivers/media/i2c/Kconfig
+> > +++ b/drivers/media/i2c/Kconfig
+> > @@ -1014,6 +1014,16 @@ config VIDEO_DW9714
+> >    capability. This is designed for linear control of
+> >    voice coil motors, controlled via I2C serial interface.
+> >
+> > +config VIDEO_DW9768
+> > +tristate "DW9768 lens voice coil support"
+> > +depends on I2C && VIDEO_V4L2 && MEDIA_CONTROLLER
+> > +depends on VIDEO_V4L2_SUBDEV_API
+> > +help
+> > +  This is a driver for the DW9768 camera lens voice coil.
+> > +  DW9768 is a 10 bit DAC with 100mA output current sink
+> > +  capability. This is designed for linear control of
+> > +  voice coil motors, controlled via I2C serial interface.
+> > +
+> >  config VIDEO_DW9807_VCM
+> >  tristate "DW9807 lens voice coil support"
+> >  depends on I2C && VIDEO_V4L2 && MEDIA_CONTROLLER diff --git
+> > a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile index
+> > d8ad9da..944fbf6 100644
+> > --- a/drivers/media/i2c/Makefile
+> > +++ b/drivers/media/i2c/Makefile
+> > @@ -24,6 +24,7 @@ obj-$(CONFIG_VIDEO_SAA6752HS) += saa6752hs.o
+> >  obj-$(CONFIG_VIDEO_AD5820)  += ad5820.o
+> >  obj-$(CONFIG_VIDEO_AK7375)  += ak7375.o
+> >  obj-$(CONFIG_VIDEO_DW9714)  += dw9714.o
+> > +obj-$(CONFIG_VIDEO_DW9768)  += dw9768.o
+> >  obj-$(CONFIG_VIDEO_DW9807_VCM)  += dw9807-vcm.o
+> >  obj-$(CONFIG_VIDEO_ADV7170) += adv7170.o
+> >  obj-$(CONFIG_VIDEO_ADV7175) += adv7175.o diff --git
+> > a/drivers/media/i2c/dw9768.c b/drivers/media/i2c/dw9768.c new file
+> > mode 100644 index 0000000..f5b5591
+> > --- /dev/null
+> > +++ b/drivers/media/i2c/dw9768.c
+> > @@ -0,0 +1,458 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (c) 2018 MediaTek Inc.
+> > + */
+> > +
+> > +#include <linux/delay.h>
+> > +#include <linux/i2c.h>
+> > +#include <linux/module.h>
+> > +#include <linux/regulator/consumer.h> #include <linux/pm_runtime.h>
+> > +#include <media/v4l2-ctrls.h> #include <media/v4l2-device.h> #include
+> > +<media/v4l2-subdev.h>
+> > +
+> > +#define DW9768_VOLTAGE_ANALOG2800000
+> > +#define DW9768_NAME"dw9768"
+> > +#define DW9768_MAX_FOCUS_POS1023
+> > +/*
+> > + * This sets the minimum granularity for the focus positions.
+> > + * A value of 1 gives maximum accuracy for a desired focus position
+> > +*/
+> > +#define DW9768_FOCUS_STEPS1
+> > +
+> > +#define DW9768_CTRL_DELAY_US5000
+> > +
+> > +#define DW9768_REG_DAC_MSB0x03
+> > +#define DW9768_REG_DAC_LSB0x04
+> > +#define DW9768_REG_NULL0xff
+> > +
+> > +#define DW9768_DAC_SHIFT8
+> > +
+> > +#define DW9768_REG_VALUE_16BIT2
+> > +
+> > +/* dw9768 device structure */
+> > +struct dw9768_device {
+> > +struct v4l2_ctrl_handler ctrls;
+> > +struct v4l2_subdev sd;
+> > +struct regulator *analog_regulator;
+> > +/*
+> > + * Serialize control access, get/set format, get selection
+> > + * and start streaming.
+> > + */
+> > +struct mutex power_lock;
+> > +
+> > +int power_count;
+> > +bool standby;
+> > +};
+> > +
+> > +static inline struct dw9768_device *to_dw9768_vcm(struct v4l2_ctrl
+> > +*ctrl) {
+> > +return container_of(ctrl->handler, struct dw9768_device, ctrls); }
+> > +
+> > +static inline struct dw9768_device *sd_to_dw9768_vcm(struct
+> > +v4l2_subdev *subdev) {
+> > +return container_of(subdev, struct dw9768_device, sd); }
+> > +
+> > +static int dw9768_i2c_write(struct dw9768_device *dw9768_dev, u8 *data,
+> > +    int size)
+> > +{
+> > +struct i2c_client *client = v4l2_get_subdevdata(&dw9768_dev->sd);
+> > +struct i2c_msg msg;
+> > +u8 *w_buf = NULL;
+> > +u8 retry_cnt = 3;
+> > +int ret;
+> > +
+> > +if (!client->adapter)
+> > +return -ENODEV;
+> > +
+> > +if (size != 1 && size != 2)
+> > +return -EINVAL;
+> > +
+> > +memset(&msg, 0, sizeof(struct i2c_msg));
+> > +
+> > +w_buf = kzalloc(size, GFP_KERNEL);
+> > +if (!w_buf)
+> > +return -1;
+> return -ENOMEM;
 
-Supported by this patch is: keyboard, battery monitoring, UFS storage,
-USB host and Bluetooth.
+Fixed in next release.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 450 ++++++++++++++++++
- 2 files changed, 451 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> > +
+> > +memcpy(w_buf, data, size);
+> > +
+> > +msg.addr  = client->addr;
+> > +msg.flags = 0;
+> > +msg.len   = size;
+> > +msg.buf   = w_buf;
+> > +
+> > +do {
+> > +ret = i2c_transfer(client->adapter, &msg, 1);
+> > +if (ret != 1)
+> > +dev_err(&client->dev, "write fail, ret:%d, retry:%d\n",
+> > +ret, retry_cnt);
+> > +else
+> > +break;
+> > +retry_cnt--;
+> > +} while (retry_cnt != 0);
+> > +
+> > +if (retry_cnt == 0){
+> > +dev_err(&client->dev, "i2c write fail(%d)\n", ret);
+> > +return -EIO;
+> > +}
+> > +
+> > +kfree(w_buf);
+> > +
+> > +return 0;
+> > +}
+> > +
+> > +static int dw9768_release(struct dw9768_device *dw9768_dev) {
+> > +unsigned char i;
+> > +int ret;
+> > +
+> > +char puSendCmdArray[4][2] = {
+> > +{0x02, 0x00}, {DW9768_REG_NULL, DW9768_REG_NULL},
+> > +{0x01, 0x00}, {DW9768_REG_NULL, DW9768_REG_NULL},
+> > +};
+> > +
+> > +for (i = 0; i < (sizeof(puSendCmdArray) / sizeof(char)) /
+> > +     (sizeof(puSendCmdArray[0]) / sizeof(char)); i++) {> +if (puSendCmdArray[i][0] != DW9768_REG_NULL) {
+> > +ret = dw9768_i2c_write(dw9768_dev, puSendCmdArray[i],
+> > +       DW9768_REG_VALUE_16BIT);
+> > +if (ret < 0)
+> > +return ret;
+> > +} else {
+> > +usleep_range(DW9768_CTRL_DELAY_US,
+> > +     DW9768_CTRL_DELAY_US + 100);
+> > +}
+> > +}
+> Can we make this block more simple?  I think the loop is not necessary.
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 0a7e5dfce6f7..670c6c65f9e9 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-new file mode 100644
-index 000000000000..3177b054035f
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-@@ -0,0 +1,450 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Lenovo Yoga C630
-+ *
-+ * Copyright (c) 2019, Linaro Ltd.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-+#include "sdm845.dtsi"
-+#include "pm8998.dtsi"
-+
-+/ {
-+	model = "Lenovo Yoga C630";
-+	compatible = "lenovo,yoga-c630", "qcom,sdm845";
-+
-+	aliases {
-+		hsuart0 = &uart6;
-+	};
-+};
-+
-+&apps_rsc {
-+	pm8998-rpmh-regulators {
-+		compatible = "qcom,pm8998-rpmh-regulators";
-+		qcom,pmic-id = "a";
-+
-+		vdd-l2-l8-l17-supply = <&vreg_s3a_1p35>;
-+		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
-+
-+		vreg_s2a_1p125: smps2 {
-+		};
-+
-+		vreg_s3a_1p35: smps3 {
-+			regulator-min-microvolt = <1352000>;
-+			regulator-max-microvolt = <1352000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s4a_1p8: smps4 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s5a_2p04: smps5 {
-+			regulator-min-microvolt = <2040000>;
-+			regulator-max-microvolt = <2040000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_s7a_1p025: smps7 {
-+		};
-+
-+		vdd_qusb_hs0:
-+		vdda_hp_pcie_core:
-+		vdda_mipi_csi0_0p9:
-+		vdda_mipi_csi1_0p9:
-+		vdda_mipi_csi2_0p9:
-+		vdda_mipi_dsi0_pll:
-+		vdda_mipi_dsi1_pll:
-+		vdda_qlink_lv:
-+		vdda_qlink_lv_ck:
-+		vdda_qrefs_0p875:
-+		vdda_pcie_core:
-+		vdda_pll_cc_ebi01:
-+		vdda_pll_cc_ebi23:
-+		vdda_sp_sensor:
-+		vdda_ufs1_core:
-+		vdda_ufs2_core:
-+		vdda_usb1_ss_core:
-+		vdda_usb2_ss_core:
-+		vreg_l1a_0p875: ldo1 {
-+			regulator-min-microvolt = <880000>;
-+			regulator-max-microvolt = <880000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vddpx_10:
-+		vreg_l2a_1p2: ldo2 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-always-on;
-+		};
-+
-+		vreg_l3a_1p0: ldo3 {
-+		};
-+
-+		vdd_wcss_cx:
-+		vdd_wcss_mx:
-+		vdda_wcss_pll:
-+		vreg_l5a_0p8: ldo5 {
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vddpx_13:
-+		vreg_l6a_1p8: ldo6 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7a_1p8: ldo7 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l8a_1p2: ldo8 {
-+		};
-+
-+		vreg_l9a_1p8: ldo9 {
-+		};
-+
-+		vreg_l10a_1p8: ldo10 {
-+		};
-+
-+		vreg_l11a_1p0: ldo11 {
-+		};
-+
-+		vdd_qfprom:
-+		vdd_qfprom_sp:
-+		vdda_apc1_cs_1p8:
-+		vdda_gfx_cs_1p8:
-+		vdda_qrefs_1p8:
-+		vdda_qusb_hs0_1p8:
-+		vddpx_11:
-+		vreg_l12a_1p8: ldo12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vddpx_2:
-+		vreg_l13a_2p95: ldo13 {
-+		};
-+
-+		vreg_l14a_1p88: ldo14 {
-+			regulator-min-microvolt = <1880000>;
-+			regulator-max-microvolt = <1880000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l15a_1p8: ldo15 {
-+		};
-+
-+		vreg_l16a_2p7: ldo16 {
-+		};
-+
-+		vreg_l17a_1p3: ldo17 {
-+			regulator-min-microvolt = <1304000>;
-+			regulator-max-microvolt = <1304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l18a_2p7: ldo18 {
-+		};
-+
-+		vreg_l19a_3p0: ldo19 {
-+			regulator-min-microvolt = <3100000>;
-+			regulator-max-microvolt = <3108000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l20a_2p95: ldo20 {
-+			regulator-min-microvolt = <2960000>;
-+			regulator-max-microvolt = <2960000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l21a_2p95: ldo21 {
-+		};
-+
-+		vreg_l22a_2p85: ldo22 {
-+		};
-+
-+		vreg_l23a_3p3: ldo23 {
-+		};
-+
-+		vdda_qusb_hs0_3p1:
-+		vreg_l24a_3p075: ldo24 {
-+			regulator-min-microvolt = <3075000>;
-+			regulator-max-microvolt = <3083000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l25a_3p3: ldo25 {
-+			regulator-min-microvolt = <3104000>;
-+			regulator-max-microvolt = <3112000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vdda_hp_pcie_1p2:
-+		vdda_hv_ebi0:
-+		vdda_hv_ebi1:
-+		vdda_hv_ebi2:
-+		vdda_hv_ebi3:
-+		vdda_mipi_csi_1p25:
-+		vdda_mipi_dsi0_1p2:
-+		vdda_mipi_dsi1_1p2:
-+		vdda_pcie_1p2:
-+		vdda_ufs1_1p2:
-+		vdda_ufs2_1p2:
-+		vdda_usb1_ss_1p2:
-+		vdda_usb2_ss_1p2:
-+		vreg_l26a_1p2: ldo26 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1208000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l28a_3p0: ldo28 {
-+		};
-+
-+		vreg_lvs1a_1p8: lvs1 {
-+		};
-+
-+		vreg_lvs2a_1p8: lvs2 {
-+		};
-+	};
-+};
-+
-+&apps_smmu {
-+	/* TODO: Figure out how to survive booting with this enabled */
-+	status = "disabled";
-+};
-+
-+&gcc {
-+	protected-clocks = <GCC_QSPI_CORE_CLK>,
-+			   <GCC_QSPI_CORE_CLK_SRC>,
-+			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	battery@70 {
-+		compatible = "some,battery";
-+		reg = <0x70>;
-+	};
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	hid@15 {
-+		compatible = "hid-over-i2c";
-+		reg = <0x15>;
-+		hid-descr-addr = <0x1>;
-+
-+		interrupts-extended = <&tlmm 37 IRQ_TYPE_EDGE_RISING>;
-+	};
-+
-+	hid@2c {
-+		compatible = "hid-over-i2c";
-+		reg = <0x2c>;
-+		hid-descr-addr = <0x20>;
-+
-+		interrupts-extended = <&tlmm 37 IRQ_TYPE_EDGE_RISING>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c2_hid_active>;
-+	};
-+};
-+
-+&i2c5 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	hid@10 {
-+		compatible = "hid-over-i2c";
-+		reg = <0x10>;
-+		hid-descr-addr = <0x1>;
-+
-+		interrupts-extended = <&tlmm 125 IRQ_TYPE_EDGE_FALLING>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c6_hid_active>;
-+	};
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	hid@5c {
-+		compatible = "hid-over-i2c";
-+		reg = <0x5c>;
-+		hid-descr-addr = <0x1>;
-+
-+		interrupts-extended = <&tlmm 92 IRQ_TYPE_LEVEL_LOW>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c12_hid_active>;
-+	};
-+};
-+
-+&qupv3_id_0 {
-+	status = "okay";
-+};
-+
-+&qupv3_id_1 {
-+	status = "okay";
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <0 4>, <81 4>;
-+
-+	i2c2_hid_active: i2c2-hid-active {
-+		pins = <37>;
-+		function = "gpio";
-+
-+		input-enable;
-+		bias-pull-up;
-+		drive-strength = <2>;
-+	};
-+
-+	i2c6_hid_active: i2c6-hid-active {
-+		pins = <125>;
-+		function = "gpio";
-+
-+		input-enable;
-+		bias-pull-up;
-+		drive-strength = <2>;
-+	};
-+
-+	i2c12_hid_active: i2c12-hid-active {
-+		pins = <92>;
-+		function = "gpio";
-+
-+		input-enable;
-+		bias-pull-up;
-+		drive-strength = <2>;
-+	};
-+};
-+
-+&uart6 {
-+       status = "okay";
-+
-+       bluetooth {
-+	       compatible = "qcom,wcn3990-bt";
-+
-+	       vddio-supply = <&vreg_s4a_1p8>;
-+	       vddxo-supply = <&vreg_l7a_1p8>;
-+	       vddrf-supply = <&vreg_l17a_1p3>;
-+	       vddch0-supply = <&vreg_l25a_3p3>;
-+	       max-speed = <3200000>;
-+       };
-+};
-+
-+&ufs_mem_hc {
-+	status = "okay";
-+
-+	vcc-supply = <&vreg_l20a_2p95>;
-+	vcc-max-microamp = <600000>;
-+};
-+
-+&ufs_mem_phy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vdda_ufs1_core>;
-+	vdda-pll-supply = <&vdda_ufs1_1p2>;
-+};
-+
-+&usb_1 {
-+	status = "okay";
-+};
-+
-+&usb_1_dwc3 {
-+	dr_mode = "host";
-+};
-+
-+&usb_1_hsphy {
-+	status = "okay";
-+
-+	vdd-supply = <&vdda_usb1_ss_core>;
-+	vdda-pll-supply = <&vdda_qusb_hs0_1p8>;
-+	vdda-phy-dpdm-supply = <&vdda_qusb_hs0_3p1>;
-+
-+	qcom,imp-res-offset-value = <8>;
-+	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
-+	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
-+	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
-+};
-+
-+&usb_1_qmpphy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vdda_usb1_ss_1p2>;
-+	vdda-pll-supply = <&vdda_usb1_ss_core>;
-+};
-+
-+&usb_2 {
-+	status = "okay";
-+};
-+
-+&usb_2_dwc3 {
-+	dr_mode = "host";
-+};
-+
-+&usb_2_hsphy {
-+	status = "okay";
-+
-+	vdd-supply = <&vdda_usb2_ss_core>;
-+	vdda-pll-supply = <&vdda_qusb_hs0_1p8>;
-+	vdda-phy-dpdm-supply = <&vdda_qusb_hs0_3p1>;
-+
-+	qcom,imp-res-offset-value = <8>;
-+	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_22_8_MA>;
-+};
-+
-+&usb_2_qmpphy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vdda_usb2_ss_1p2>;
-+	vdda-pll-supply = <&vdda_usb2_ss_core>;
-+};
-+
-+&qup_i2c12_default {
-+	drive-strength = <2>;
-+	bias-disable;
-+};
-+
-+&qup_uart6_default {
-+       pinmux {
-+               pins = "gpio45", "gpio46", "gpio47", "gpio48";
-+               function = "qup6";
-+       };
-+
-+       cts {
-+	       pins = "gpio45";
-+	       bias-pull-down;
-+       };
-+
-+       rts-tx {
-+	       pins = "gpio46", "gpio47";
-+	       drive-strength = <2>;
-+	       bias-disable;
-+       };
-+
-+       rx {
-+	       pins = "gpio48";
-+	       bias-pull-up;
-+       };
-+};
--- 
-2.17.1
+Fixed in next release.
+
+> > +
+> > +return 0;
+> > +}
+> > +
+> > +static int dw9768_init(struct dw9768_device *dw9768_dev) {
+> > +unsigned char i;
+> > +int ret;
+> > +
+> > +char puSendCmdArray[5][2] = {
+> > +{0x02, 0x02}, {DW9768_REG_NULL, DW9768_REG_NULL},
+> > +{0x06, 0x41}, {0x07, 0x39}, {DW9768_REG_NULL, DW9768_REG_NULL},
+> > +};
+> > +
+> > +for (i = 0; i < (sizeof(puSendCmdArray) / sizeof(char)) /
+> > +     (sizeof(puSendCmdArray[0]) / sizeof(char)); i++) {
+> > +if (puSendCmdArray[i][0] != DW9768_REG_NULL) {
+> > +ret = dw9768_i2c_write(dw9768_dev, puSendCmdArray[i],
+> > +       DW9768_REG_VALUE_16BIT);
+> > +if (ret < 0)
+> > +return ret;
+> > +} else {
+> > +usleep_range(DW9768_CTRL_DELAY_US,
+> > +     DW9768_CTRL_DELAY_US + 100);
+> > +}
+> > +}
+> Ditto.
+
+Fixed in next release.
+
+> > +
+> > +return 0;
+> > +}
+> > +
+> > +/*
+> > + * Power handling
+> > + */
+> > +static int dw9768_power_off(struct dw9768_device *dw9768_dev, bool
+> > +standby) {
+> > +struct i2c_client *client = v4l2_get_subdevdata(&dw9768_dev->sd);
+> > +int ret;
+> > +
+> > +/*
+> > + * Go to standby first as real power off my be denied by the
+> > +hardware
+> typo? "may be denied"
+
+Sorry for the typo. Fixed in next release.
+
+> > + * (single power line control for both dw9768_dev and sensor).
+> > + */
+> > +if (standby) {
+> > +dw9768_dev->standby = true;
+> > +ret = dw9768_release(dw9768_dev);
+> > +if (ret)
+> > +dev_err(&client->dev, "dw9768_release failed!\n");
+> > +}
+> > +ret = regulator_disable(dw9768_dev->analog_regulator);
+> > +if (ret)
+> > +return ret;
+> > +
+> > +return 0;
+> > +}
+> > +
+> > +static int dw9768_power_on(struct dw9768_device *dw9768_dev, bool
+> > +restore) {
+> > +int ret;
+> > +
+> > +ret = regulator_enable(dw9768_dev->analog_regulator);
+> > +if (ret < 0)
+> > +return ret;
+> > +
+> > +if (restore) {
+> > +/* Restore the hardware settings. */
+> > +dw9768_dev->standby = false;
+> > +ret = dw9768_init(dw9768_dev);
+> > +if (ret < 0)
+> > +goto fail;
+> > +}
+> > +
+> > +return 0;
+> > +
+> > +fail:
+> > +dw9768_dev->standby = true;
+> > +regulator_disable(dw9768_dev->analog_regulator);
+> > +
+> > +return ret;
+> > +}
+> > +
+> > +/*
+> > + * Calculate status word and write it to the device based on current
+> > + * values of V4L2 controls. It is assumed that the stored V4L2
+> > +control
+> > + * values are properly limited and rounded.
+> > + */
+> > +static int dw9768_update_hw(struct dw9768_device *dw9768_dev, u16
+> > +val) {
+> > +unsigned char i;
+> > +int ret;
+> > +
+> > +char puSendCmdArray[2][2] = {
+> > +{DW9768_REG_DAC_MSB, (char)(val >> DW9768_DAC_SHIFT)},
+> > +{DW9768_REG_DAC_LSB, (char)(val & 0xFF)},
+> > +};
+> > +
+> > +for (i = 0; i < (sizeof(puSendCmdArray) / sizeof(char)) /
+> > +     (sizeof(puSendCmdArray[0]) / sizeof(char)); i++) {
+> > +ret = dw9768_i2c_write(dw9768_dev, puSendCmdArray[i],
+> > +       DW9768_REG_VALUE_16BIT);
+> > +if (ret)
+> > +return ret;
+> > +}
+> ditto.
+
+Fixed in next release.
+
+> > +
+> > +return 0;
+> > +}
+> > +
+> > +static int dw9768_set_ctrl(struct v4l2_ctrl *ctrl) {
+> > +struct dw9768_device *dw9768_dev = to_dw9768_vcm(ctrl);
+> > +
+> > +if (ctrl->id == V4L2_CID_FOCUS_ABSOLUTE)
+> > +return dw9768_update_hw(dw9768_dev, ctrl->val);
+> > +
+> > +return 0;
+> > +}
+> > +
+> > +static const struct v4l2_ctrl_ops dw9768_vcm_ctrl_ops = {
+> > +.s_ctrl = dw9768_set_ctrl,
+> > +};
+> > +
+> > +static int
+> > +dw9768_set_power(struct v4l2_subdev *subdev, int on) {
+> > +struct dw9768_device *dw9768_dev = sd_to_dw9768_vcm(subdev);
+> > +int ret = 0;
+> > +
+> > +mutex_lock(&dw9768_dev->power_lock);
+> > +
+> > +/*
+> > + * If the power count is modified from 0 to != 0 or from != 0 to 0,
+> > + * update the power state.
+> > + */
+> > +if (dw9768_dev->power_count == !on) {
+> > +ret = on ? dw9768_power_on(dw9768_dev, true) :
+> > +dw9768_power_off(dw9768_dev, true);
+> > +if (ret < 0)
+> > +goto done;
+> > +}
+> > +
+> > +/* Update the power count. */
+> > +dw9768_dev->power_count += on ? 1 : -1;
+> > +WARN_ON(dw9768_dev->power_count < 0);
+> > +
+> > +done:
+> > +mutex_unlock(&dw9768_dev->power_lock);
+> > +return ret;
+> > +}
+> > +
+> > +static int dw9768_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh
+> > +*fh) {
+> > +return dw9768_set_power(sd, 1);
+> > +}
+> > +
+> > +static int dw9768_close(struct v4l2_subdev *sd, struct v4l2_subdev_fh
+> > +*fh) {
+> > +return dw9768_set_power(sd, 0);
+> > +}
+> I am a little confused about the pm control here.
+> Could we use the pm generic APIs to help do this?
+
+Fixed in next release.
+
+> > +
+> > +static const struct v4l2_subdev_internal_ops dw9768_int_ops = {
+> > +.open = dw9768_open,
+> > +.close = dw9768_close,
+> > +};
+> > +
+> > +static const struct v4l2_subdev_ops dw9768_ops = { };
+> > +
+> > +static void dw9768_subdev_cleanup(struct dw9768_device *dw9768_dev) {
+> > +v4l2_async_unregister_subdev(&dw9768_dev->sd);
+> > +v4l2_ctrl_handler_free(&dw9768_dev->ctrls);
+> > +media_entity_cleanup(&dw9768_dev->sd.entity);
+> > +}
+> > +
+> > +static int dw9768_init_controls(struct dw9768_device *dw9768_dev) {
+> > +struct v4l2_ctrl_handler *hdl = &dw9768_dev->ctrls;
+> > +const struct v4l2_ctrl_ops *ops = &dw9768_vcm_ctrl_ops;
+> > +
+> > +v4l2_ctrl_handler_init(hdl, 1);
+> > +
+> > +v4l2_ctrl_new_std(hdl, ops, V4L2_CID_FOCUS_ABSOLUTE,
+> > +  0, DW9768_MAX_FOCUS_POS, DW9768_FOCUS_STEPS, 0);
+> > +
+> > +if (hdl->error) {
+> > +dev_err(dw9768_dev->sd.dev, "%s fail error: 0x%x\n",
+> > +__func__, hdl->error);
+> > +return hdl->error;
+> > +}
+> > +
+> > +dw9768_dev->sd.ctrl_handler = hdl;
+> > +
+> > +return 0;
+> > +}
+> > +
+> > +static int dw9768_probe(struct i2c_client *client) {
+> > +struct device *dev = &client->dev;
+> > +struct dw9768_device *dw9768_dev;
+> > +int rval;
+> > +
+> > +dw9768_dev = devm_kzalloc(&client->dev, sizeof(*dw9768_dev),
+> > +  GFP_KERNEL);
+> > +if (!dw9768_dev)
+> > +return -ENOMEM;
+> > +
+> > +dw9768_dev->analog_regulator = devm_regulator_get(dev, "afvdd");
+> > +if (IS_ERR(dw9768_dev->analog_regulator)) {
+> > +dev_err(dev, "cannot get analog regulator\n");
+> > +return PTR_ERR(dw9768_dev->analog_regulator);
+> > +}
+> > +
+> > +rval = regulator_set_voltage(dw9768_dev->analog_regulator,
+> > +     DW9768_VOLTAGE_ANALOG,
+> > +     DW9768_VOLTAGE_ANALOG);
+> > +if (rval < 0) {
+> > +dev_err(dev, "cannot set analog voltage\n");
+> > +return rval;
+> > +}
+> > +
+> > +mutex_init(&dw9768_dev->power_lock);
+> > +
+> > +v4l2_i2c_subdev_init(&dw9768_dev->sd, client, &dw9768_ops);
+> > +dw9768_dev->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> > +dw9768_dev->sd.internal_ops = &dw9768_int_ops;
+> > +
+> > +rval = dw9768_init_controls(dw9768_dev);
+> > +if (rval)
+> > +goto err_cleanup;
+> > +
+> > +rval = media_entity_pads_init(&dw9768_dev->sd.entity, 0, NULL);
+> > +if (rval < 0)
+> > +goto err_cleanup;
+> > +
+> > +dw9768_dev->sd.entity.function = MEDIA_ENT_F_LENS;
+> > +
+> > +rval = v4l2_async_register_subdev(&dw9768_dev->sd);
+> > +if (rval < 0)
+> > +goto err_cleanup;
+> > +
+> > +pm_runtime_set_active(dev);
+> > +pm_runtime_enable(dev);
+> > +pm_runtime_idle(dev);
+> > +
+> > +return 0;
+> > +
+> > +err_cleanup:
+> > +mutex_destroy(&dw9768_dev->power_lock);
+> > +dw9768_subdev_cleanup(dw9768_dev);
+> > +dev_err(dev, "Probe failed: %d\n", rval);
+> > +return rval;
+> > +}
+> > +
+> > +static int dw9768_remove(struct i2c_client *client) {
+> > +struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> > +struct dw9768_device *dw9768_dev = sd_to_dw9768_vcm(sd);
+> > +
+> > +pm_runtime_disable(&client->dev);
+> > +dw9768_subdev_cleanup(dw9768_dev);
+> > +
+> > +return 0;
+> > +}
+> > +
+> > +/*
+> > + * This function sets the vcm position, so it consumes least current
+> > + * The lens position is gradually moved in units of
+> > +DW9768_CTRL_STEPS,
+> > + * to make the movements smoothly.
+> > + */
+> > +static int __maybe_unused dw9768_vcm_suspend(struct device *dev) {
+> > +struct i2c_client *client = to_i2c_client(dev);
+> > +struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> > +struct dw9768_device *dw9768_dev = sd_to_dw9768_vcm(sd);
+> > +
+> > +if (!dw9768_dev->power_count)
+> > +return 0;
+> > +
+> > +return dw9768_power_off(dw9768_dev, false); }
+> > +
+> > +/*
+> > + * This function sets the vcm position to the value set by the user
+> > + * through v4l2_ctrl_ops s_ctrl handler
+> > + * The lens position is gradually moved in units of
+> > +DW9768_CTRL_STEPS,
+> > + * to make the movements smoothly.
+> > + */
+> > +static int __maybe_unused dw9768_vcm_resume(struct device *dev) {
+> > +struct i2c_client *client = to_i2c_client(dev);
+> > +struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> > +struct dw9768_device *dw9768_dev = sd_to_dw9768_vcm(sd);
+> > +
+> > +if (!dw9768_dev->power_count)
+> > +return 0;
+> > +
+> > +return dw9768_power_on(dw9768_dev, true); }
+> > +
+> > +static const struct i2c_device_id dw9768_id_table[] = {
+> > +{ DW9768_NAME, 0 },
+> > +{ { 0 } }
+> > +};
+> > +MODULE_DEVICE_TABLE(i2c, dw9768_id_table);
+> > +
+> > +static const struct of_device_id dw9768_of_table[] = {
+> > +{ .compatible = "dongwoon,dw9768" },
+> > +{ { 0 } }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, dw9768_of_table);
+> > +
+> > +static const struct dev_pm_ops dw9768_pm_ops = {
+> > +SET_SYSTEM_SLEEP_PM_OPS(dw9768_vcm_suspend, dw9768_vcm_resume)
+> > +SET_RUNTIME_PM_OPS(dw9768_vcm_suspend, dw9768_vcm_resume, NULL) };
+> > +
+> > +static struct i2c_driver dw9768_i2c_driver = {
+> > +.driver = {
+> > +.name = DW9768_NAME,
+> > +.pm = &dw9768_pm_ops,
+> > +.of_match_table = dw9768_of_table,
+> > +},
+> > +.probe_new  = dw9768_probe,
+> > +.remove = dw9768_remove,
+> > +.id_table = dw9768_id_table,
+> > +};
+> > +
+> > +module_i2c_driver(dw9768_i2c_driver);
+> > +
+> > +MODULE_AUTHOR("Dongchun Zhu <dongchun.zhu@mediatek.com>");
+> > +MODULE_DESCRIPTION("DW9768 VCM driver"); MODULE_LICENSE("GPL v2");
+> >
+> *********************MEDIATEK Confidential/Internal Use*********************
