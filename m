@@ -1,48 +1,39 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 07/11] lib/vsprintf: Remove support for %pF and %pf in
- favour of %pS and %ps
-Date: Mon, 2 Sep 2019 19:01:39 +0300
-Message-ID: <20190902160139.GQ2680@smile.fi.intel.com>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
- <20190902083240.20367-8-sakari.ailus@linux.intel.com>
- <20190902143935.xtd44jdvhjuc2wxe@pathway.suse.cz>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] arm64: dts: meson: sm1: set gpio interrupt controller compatible
+Date: Mon,  2 Sep 2019 18:03:34 +0200
+Message-ID: <20190902160334.14321-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190902143935.xtd44jdvhjuc2wxe@pathway.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, rafael@kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 04:39:35PM +0200, Petr Mladek wrote:
-> On Mon 2019-09-02 11:32:36, Sakari Ailus wrote:
-> > %pS and %ps are now the preferred conversion specifiers to print function
-> > names. The functionality is equivalent; remove the old, deprecated %pF
-> > and %pf support.
-> 
-> Hmm, I see the following in master:
-> 
-> $> git grep %pF
-> tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt:or events have "%pF" or "%pS" parameter in its format string. It is common to
-> 
-> $> git grep %pf
-> tools/lib/traceevent/event-parse.c:             if (asprintf(&format, "%%pf: (NO FORMAT FOUND at %llx)\n", addr) < 0)
-> tools/lib/traceevent/event-parse.c:     if (asprintf(&format, "%s: %s", "%pf", printk->printk) < 0)
-> 
-> I wonder how this is related to printk(). In each case, it seems
+Set the appropriate gpio interrupt controller compatible for the
+sm1 SoC family. This newer version of the controller can now
+trig irq on both edge of the input signal
 
-It's going thru binary printf() I suppose. The fist stage just saves the format
-string and argument addresses or so and prints in later on when user is looking
-for human-readable output.
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-sm1.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> that libtraceevent somehow implements the non-standard kernel
-> %p mofifiers. It looks error-prone to keep another %pf user
-> with the old semantic around.
-> 
-> I am adding some tracing people into CC.
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+index 521573f3a5ba..6152e928aef2 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+@@ -134,6 +134,11 @@
+ 	power-domains = <&pwrc PWRC_SM1_ETH_ID>;
+ };
+ 
++&gpio_intc {
++	compatible = "amlogic,meson-sm1-gpio-intc",
++		     "amlogic,meson-gpio-intc";
++};
++
+ &pwrc {
+ 	compatible = "amlogic,meson-sm1-pwrc";
+ };
 -- 
-With Best Regards,
-Andy Shevchenko
+2.21.0
