@@ -1,61 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH next v11 03/11] dt-bindings: usb: add binding for USB GPIO based connection detection driver
-Date: Mon, 02 Sep 2019 14:38:53 +0100
-Message-ID: <5d6d1b6d.1c69fb81.a78b7.2ccb@mx.google.com>
-References: <1567070558-29417-1-git-send-email-chunfeng.yun@mediatek.com> <1567070558-29417-4-git-send-email-chunfeng.yun@mediatek.com>
-Content-Type: text/plain
+Subject: Re: [PATCH RFC 04/14] of: irq: document properties for wakeup interrupt parent
+Date: Mon, 02 Sep 2019 14:38:56 +0100
+Message-ID: <5d6d1b71.1c69fb81.f86b5.3963@mx.google.com>
+References: <20190829181203.2660-1-ilina@codeaurora.org> <20190829181203.2660-5-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567070558-29417-4-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <20190829181203.2660-5-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Biju Das <biju.das@bp.renesas.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Li Jun <jun.li@nxp.com>, Badhri Jagan Sridharan <badhri@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Nagarjuna Kristam <nkristam@nvidia.com>
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 29 Aug 2019 17:22:30 +0800, Chunfeng Yun wrote:
-> It's used to support dual role switch via GPIO when use Type-B
-> receptacle, typically the USB ID pin is connected to an input
-> GPIO, and also used to enable/disable device when the USB Vbus
-> pin is connected to an input GPIO.
+On Thu, 29 Aug 2019 12:11:53 -0600, Lina Iyer wrote:
+> Some interrupt controllers in a SoC, are always powered on and have a
+> select interrupts routed to them, so that they can wakeup the SoC from
+> suspend. Add wakeup-parent DT property to refer to these interrupt
+> controllers.
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 > ---
-> v11 changes:
->  1. add Reviewed-by Linus
->  2. change compatible as "gpio-usb-b-connector", and remove label
->     in example suggested by Rob
-> 
-> v9~v10 no changes
-> 
-> v8 changes:
->  1. rename the title
->  2. change the compatible as "linux,usb-conn-gpio" instead of
->     "linux,typeb-conn-gpio"
-> 
-> v7 changes:
->  1. add description for device only mode
-> 
-> v6 changes:
->  1. remove status and port nodes in example
->  2. make vbus-supply as optional property
-> 
-> v5 changes:
->  1. treat type-B connector as child device of USB controller's, but not
->     as a separate virtual device, suggested by Rob
->  2. put connector's port node under connector node, suggested by Rob
-> 
-> v4 no changes
-> 
-> v3 changes:
->  1. treat type-B connector as a virtual device, but not child device of
->     USB controller's
-> 
-> v2 changes:
->   1. new patch to make binding clear suggested by Hans
-> ---
->  .../devicetree/bindings/usb/usb-conn-gpio.txt | 30 +++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
+>  .../bindings/interrupt-controller/interrupts.txt    | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
