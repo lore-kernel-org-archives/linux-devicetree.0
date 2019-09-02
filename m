@@ -1,70 +1,72 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v3 05/11] dt-bindings: pci: layerscape-pci: add
- compatible strings for ls1088a and ls2088a
-Date: Mon, 2 Sep 2019 13:31:40 +0100
-Message-ID: <20190902123140.GI9720@e119886-lin.cambridge.arm.com>
-References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
- <20190902031716.43195-6-xiaowei.bao@nxp.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v4 04/11] device property: Add functions for accessing
+ node's parents
+Date: Mon, 2 Sep 2019 15:34:31 +0300
+Message-ID: <20190902123431.GK5475@paasikivi.fi.intel.com>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-5-sakari.ailus@linux.intel.com>
+ <20190902101426.GB2680@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190902031716.43195-6-xiaowei.bao@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: mark.rutland@arm.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, devicetree@vger.kernel.org, jingoohan1@gmail.com, zhiqiang.hou@nxp.com, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, minghuan.Lian@nxp.com, robh+dt@kernel.org, gregkh@linuxfoundation.org, linux-arm-kernel@lists.infradead.org, gustavo.pimentel@synopsys.com, leoyang.li@nxp.com, shawnguo@kernel.org, mingkai.hu@nxp.com
+In-Reply-To: <20190902101426.GB2680@smile.fi.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:17:10AM +0800, Xiaowei Bao wrote:
-> Add compatible strings for ls1088a and ls2088a.
+Hi Andy,
+
+On Mon, Sep 02, 2019 at 01:14:26PM +0300, Andy Shevchenko wrote:
+> On Mon, Sep 02, 2019 at 11:32:33AM +0300, Sakari Ailus wrote:
+> > Add two convenience functions for accessing node's parents:
+> > 
+> > fwnode_count_parents() returns the number of parent nodes a given node
+> > has. fwnode_get_nth_parent() returns node's parent at a given distance
+> > from the node itself.
+> > 
 > 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - No change.
-> v3:
->  - Use one valid combination of compatible strings.
+> Much better now, thanks!
 > 
->  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> index e20ceaa..762ae41 100644
-> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> @@ -22,7 +22,9 @@ Required properties:
->          "fsl,ls1043a-pcie"
->          "fsl,ls1012a-pcie"
->    EP mode:
-> -	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
-> +	"fsl,ls1046a-pcie-ep" "fsl,ls-pcie-ep"
-> +	"fsl,ls1088a-pcie-ep" "fsl,ls-pcie-ep"
-> +	"fsl,ls2088a-pcie-ep" "fsl,ls-pcie-ep"
+> though one question below.
 
-This isn't consistent with "[PATCH v3 09/11] PCI: layerscape: Add EP mode..."
-as that patch drops the fallback "fsl,ls-pcie-ep". Either the fallback must
-be preserved in the driver, or you need to drop it here.
+Thanks!
 
-What if there are existing users that depend on the fallback?
+...
 
-(I'm also not sure if that comma should have been dropped).
-
-Thanks,
-
-Andrew Murray
-
->  - reg: base addresses and lengths of the PCIe controller register blocks.
->  - interrupts: A list of interrupt outputs of the controller. Must contain an
->    entry for each entry in the interrupt-names property.
-> -- 
-> 2.9.5
+> > +/**
+> > + * fwnode_get_nth_parent - Return an nth parent of a node
+> > + * @fwnode: The node the parent of which is requested
+> > + * @depth: Distance of the parent from the node
+> > + *
+> > + * Returns the nth parent of a node. If @depth is 0, the functionality is
+> > + * equivalent to fwnode_handle_get(). For @depth == 1, it is fwnode_get_parent()
+> > + * and so on.
+> > + *
+> > + * The caller is responsible for calling fwnode_handle_put() for the returned
+> > + * node.
+> > + */
+> > +struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwnode,
+> > +					    unsigned int depth)
+> > +{
+> > +	unsigned int i;
+> > +
+> > +	fwnode_handle_get(fwnode);
+> > +
+> > +	for (i = 0; i < depth && fwnode; i++)
+> > +		fwnode = fwnode_get_next_parent(fwnode);
+> > +
 > 
+> If 'fnode == NULL' and 'i < depth', shan't we return some kind of error?
+
+How about adding to the comment, after the first sentence of the
+description:
+
+	If there is no parent at the requested depth, NULL is returned.
+
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
