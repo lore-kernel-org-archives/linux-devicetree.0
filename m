@@ -1,91 +1,59 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [RESEND v2 1/2] dt-binding docs: sbs_sbs-battery: Addition of
- force_load binding
-Date: Mon, 2 Sep 2019 20:23:54 +0200
-Message-ID: <20190902182354.p2o6pb4wy7bggywz@earth.universe>
-References: <1564481404-39505-1-git-send-email-rtresidd@electromag.com.au>
- <1564481404-39505-2-git-send-email-rtresidd@electromag.com.au>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 1/3] ASoC: xlnx: add Xilinx logicPD-I2S
+	FPGA IP support
+Date: Mon, 2 Sep 2019 22:21:11 +0200
+Message-ID: <20190902222111.045ede17@xps13>
+References: <20190830210607.22644-1-miquel.raynal@bootlin.com>
+ <df36fc2d-ed62-2556-513d-158a7707d5cd@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kxy72r42udvqwqdq"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1564481404-39505-2-git-send-email-rtresidd@electromag.com.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Tresidder <rtresidd@electromag.com.au>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, kstewart@linuxfoundation.org, gregkh@linuxfoundation.org, tglx@linutronix.de, rfontana@redhat.com, allison@lohutok.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <df36fc2d-ed62-2556-513d-158a7707d5cd@xilinx.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Maruthi Srinivas Bayyavarapu <maruthis@xilinx.com>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, praveenv@xilinx.com, alexandre@bootlin.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---kxy72r42udvqwqdq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Tue, Jul 30, 2019 at 06:10:03PM +0800, Richard Tresidder wrote:
-> Add device tree binding documentation for addition of force_load boolean =
-value
-> to allow loading a battery during boot even if notpresent at that time.
->=20
-> Signed-off-by: Richard Tresidder <rtresidd@electromag.com.au>
-> ---
->  Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt | 4 +=
-++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/sbs_sbs-batte=
-ry.txt b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-> index 4e78e51..187d7bb 100644
-> --- a/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/sbs_sbs-battery.txt
-> @@ -15,7 +15,8 @@ Optional properties :
->     after an external change notification.
->   - sbs,battery-detect-gpios : The gpio which signals battery detection a=
-nd
->     a flag specifying its polarity.
-> -
-> + - sbs,force-load : Allow loading of a hot-pluggable battery when there =
-is no
-> +   GPIO detect available and the module is statically built.
-
-This does not describe hardware configuration and is not an
-acceptable DT property.
-
--- Sebastian
-
->  Example:
-> =20
->  	battery@b {
-> @@ -24,4 +25,5 @@ Example:
->  		sbs,i2c-retry-count =3D <2>;
->  		sbs,poll-retry-count =3D <10>;
->  		sbs,battery-detect-gpios =3D <&gpio-controller 122 1>;
-> +		sbs,force-load;
->  	}
-> --=20
-> 1.8.3.1
->=20
-
---kxy72r42udvqwqdq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1tXjcACgkQ2O7X88g7
-+potIhAAh3upX8+LvEe6Q2MDNqs1lToaIapy6jXTBI9HHhb0i78GbnqV/dducdPJ
-TpZo7N4G8+3/jz8h8wPOZtOZuAUm1RE44+aqP39CHE1wfrzuNGa7Q2JVPijT2xAN
-6dmeIWCz1qkK6cskT3MngTcUNHwul1RMHuhdrlzZ8I+BxvfjQXo7VBjK8oMhGys/
-sKZ1ZMv4IQx37iEfbFibTo8HhcJJKsy1Qg2qwoizyQytuu8axlg+PYh4sS+oEcbf
-1DAWUh+KeHX5IG6BKJFkWth17HGPvJUVpFqm/Wx6SWAQ76k9j4lL3jRnhZPWRuLF
-B9Oq8ikQCgCk2Blt1oNPVSpHv39r6vQFLPuUXYAA1ZCPEISYRFu63ACeA354eddL
-r0IDU+l1aMVumX9Flrj2pY5+tWEKtZER9ieuHsERyA9JNZetuvz3Um3CzP964wut
-WRERDWcJhxl6Hwv7YvWTx0lQgT7hO9yvAa9dzXux8UYX53lAGvlq5PXf2I9AHPlo
-z7jlCokUtjG195B36QvZLZoiGDEZ7p+kfFRTFIhTKc4c/dsbQX/gKB99TeVAp6TB
-2Kc6Ge3sRkqHaVKqmNc4B5/56YmSDTAttxZQGEY0c4wAdvLz7DTDPQdcDxF792Ap
-BDji1wHRt9323nXptnhzPE+IF2qnvfvJ/jV5MIncVst+EmAxnx0=
-=tOBC
------END PGP SIGNATURE-----
-
---kxy72r42udvqwqdq--
+SGkgTWljaGFsLAoKTWljaGFsIFNpbWVrIDxtaWNoYWwuc2ltZWtAeGlsaW54LmNvbT4gd3JvdGUg
+b24gTW9uLCAyIFNlcCAyMDE5CjA5OjM5OjExICswMjAwOgoKPiBIaSBNaXF1ZWwKPiAKPiBPbiAz
+MC4gMDguIDE5IDIzOjA2LCBNaXF1ZWwgUmF5bmFsIHdyb3RlOgo+ID4gVGhpcyBJUCBpcyB2ZXJ5
+IHNpbXBsZSBzbyB0aGlzIGRyaXZlciBtYW5hZ2UgYm90aCB0aGUgREFJIGFuZCB0aGUgUENNCj4g
+PiBzdHJlYW1zLCBoZW5jZSB0aGUgcHJlc2VuY2Ugb2YgYm90aCBjb21wb25lbnRzIGluIHRoaXMg
+ZHJpdmVyLgo+ID4gCj4gPiBUaGVyZSBhcmUgcGxlbnR5IGF2YWlsYWJsZSBpbnRlcnJ1cHRpb25z
+IHdoZW4gY2FwdHVyaW5nIG9yIHBsYXlpbmcKPiA+IGJhY2sgYXVkaW8gdGhhdCBjYW4gYmUgdHJp
+Z2dlcmVkIGJ1dCB0aGUgb25seSBvbmUgdGhhdCBmaXRzIHRoZSBBTFNBCj4gPiBzb3VuZCBzeXN0
+ZW0gaXMgdGhlIFhGRVJfRE9ORSB3aGljaCBpcyB1c2VkIHRvIGJvdW5kIHNvdW5kCj4gPiBwZXJp
+b2RzLiBPdGhlciBpbnRlcnJ1cHRzIGFyZSBtYXNrZWQuIFBsZWFzZSBub3RlIHRoYXQgY2FwdHVy
+ZSBhbmQKPiA+IHBsYXliYWNrIGFyZSBub3QgcG9zc2libGUgYXQgdGhlIHNhbWUgdGltZSB0aG91
+Z2guCj4gPiAKPiA+IENhcHR1cmUgc2VlbXMgdG8gd29yayAoYXQgbGVhc3QgaXQgY3JlYXRlcyBh
+IGZpbGUgd2l0aCBzb21ldGhpbmcKPiA+IGluc2lkZSkgYnV0IEkgaGF2ZSBubyBjYXB0dXJlIG1l
+Y2hhbmlzbSBvbiB0aGUgYm9hcmQgdG8gYWN0dWFsbHkgdGVzdAo+ID4gdGhhdCBpdCB3b3JrcyBj
+b3JyZWN0bHkuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5y
+YXluYWxAYm9vdGxpbi5jb20+Cj4gPiAtLS0KPiA+IAo+ID4gSGVsbG8sCj4gPiAKPiA+IFRoaXMg
+aXMgbXkgZmlyc3QgY29udHJpYnV0aW9uIGluIHRoZSBzb3VuZCBzdWJzeXN0ZW0sIEkgaG9wZSBJ
+J3ZlCj4gPiB1bmRlcnN0b29kIHRoZSBjb3JlIGJ1dCBJIG1pZ2h0IGJlIGVudGlyZWx5IHdyb25n
+IGFzIHdlbGwsIHNvIHBsZWFzZQo+ID4gZG8gbm90IGhlc2l0YXRlIHRvIGJlIGNyaXRpY2FsIG9u
+IG15IGNob2ljZXMuCj4gPiAKPiA+IFRoYW5rcywKPiA+IE1pcXXDqGwKPiA+IAo+ID4gIHNvdW5k
+L3NvYy94aWxpbngvS2NvbmZpZyAgICAgICAgICAgIHwgICA3ICsKPiA+ICBzb3VuZC9zb2MveGls
+aW54L01ha2VmaWxlICAgICAgICAgICB8ICAgMiArCj4gPiAgc291bmQvc29jL3hpbGlueC94bG54
+LWxvZ2ljcGQtaTJzLmMgfCA0NjggKysrKysrKysrKysrKysrKysrKysrKysrKysrKyAgCj4gCj4g
+V2hhdCBJUCBpcyB0aGlzPwo+IGh0dHBzOi8vd3d3LnhpbGlueC5jb20vcHJvZHVjdHMvaW50ZWxs
+ZWN0dWFsLXByb3BlcnR5L2F1ZGlvLWkycy5odG1sCj4gCj4gaHR0cHM6Ly9naXRodWIuY29tL1hp
+bGlueC9saW51eC14bG54L2Jsb2IvbWFzdGVyL3NvdW5kL3NvYy94aWxpbngveGxueF9pMnMuYwo+
+IAo+IEFueXdheSBJIGFtIGFkZGluZyBQcmF2ZWVuIGFuZCBNYXJ1dGhpIHRvIHRha2UgYSBsb29r
+LgoKQWN0dWFsbHkgSSBoYXZlIGJlZW4gdHJpY2tlZCBieSBhIGRhdGFzaGVldCB3aXRoIHRoZSB3
+cm9uZyB0aXRsZTogdGhpcwppcyBhIExvZ2ljUEQgSVAsIGl0IGlzIG5vdCBmcm9tIFhpbGlueC4g
+SSB3aWxsIHJlc3VibWl0IHdpdGggYSBuZXcKZHJpdmVyIG5hbWUvY29tcGF0aWJsZSBhbmQgYWRk
+IHRoZSByZWxldmFudCBwZW9wbGUuCgpUaGFua3MsCk1pcXXDqGwKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxz
+YS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHBzOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3Jn
+L21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
