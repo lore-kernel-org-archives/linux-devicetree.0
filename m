@@ -1,39 +1,92 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH] arm64: dts: meson: sm1: set gpio interrupt controller compatible
-Date: Mon,  2 Sep 2019 18:03:34 +0200
-Message-ID: <20190902160334.14321-1-jbrunet@baylibre.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v5 07/13] dt-bindings: pwm: add a property "num-pwms"
+Date: Mon, 2 Sep 2019 18:04:45 +0200
+Message-ID: <20190902160445.fitoa65t4ndzjq6v@pengutronix.de>
+References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
+ <1566457123-20791-8-git-send-email-sam.shih@mediatek.com>
+ <20190827183924.GA24178@bogus>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190827183924.GA24178@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sam Shih <sam.shih@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Set the appropriate gpio interrupt controller compatible for the
-sm1 SoC family. This newer version of the controller can now
-trig irq on both edge of the input signal
+On Tue, Aug 27, 2019 at 01:39:24PM -0500, Rob Herring wrote:
+> On Thu, Aug 22, 2019 at 02:58:37PM +0800, Sam Shih wrote:
+> > From: Ryder Lee <ryder.lee@mediatek.com>
+> 
+> The subject should indicate this is for Mediatek.
+> 
+> > 
+> > This adds a property "num-pwms" in example so that we could
+> > specify the number of PWM channels via device tree.
+> > 
+> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > ---
+> > Changes since v5:
+> > - Add an Acked-by tag
+> > - This file is original v4 patch 5/10
+> > (https://patchwork.kernel.org/patch/11102577/)
+> > 
+> > Change-Id: I429048afeffa96f3f14533910efe242f88776043
+> > ---
+> >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > index 991728cb46cb..ea95b490a913 100644
+> > --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > @@ -14,12 +14,12 @@ Required properties:
+> >                  has no clocks
+> >     - "top": the top clock generator
+> >     - "main": clock used by the PWM core
+> > -   - "pwm1-8": the eight per PWM clocks for mt2712
+> > -   - "pwm1-6": the six per PWM clocks for mt7622
+> > -   - "pwm1-5": the five per PWM clocks for mt7623
+> > +   - "pwm1-N": the PWM clocks for each channel
+> > +   where N starting from 1 to the maximum number of PWM channels
+> 
+> Once converted to schema, you are going to be back to listing them out.
+> 
+> >   - pinctrl-names: Must contain a "default" entry.
+> >   - pinctrl-0: One property must exist for each entry in pinctrl-names.
+> >     See pinctrl/pinctrl-bindings.txt for details of the property values.
+> > + - num-pwms: the number of PWM channels.
+> 
+> You can't add new required properties without breaking compatibility. 
+> 
+> You already have to imply the number of channels from the compatible (or 
+> number of clocks) and you have to keep doing so to maintain 
+> compatibility, so why not just keep doing that for new chips?
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-sm1.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+This was a suggestion by me. The driver still handles compatibility
+(i.e. falls back to the number of PWMs that was implied by the
+compatible before). Given that there are various drivers that all solve
+the same problem (i.e. different variants with different number of PWMs)
+I thought it would be a good idea to introduce a property in the device
+tree that specifies this number.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
-index 521573f3a5ba..6152e928aef2 100644
---- a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
-@@ -134,6 +134,11 @@
- 	power-domains = <&pwrc PWRC_SM1_ETH_ID>;
- };
- 
-+&gpio_intc {
-+	compatible = "amlogic,meson-sm1-gpio-intc",
-+		     "amlogic,meson-gpio-intc";
-+};
-+
- &pwrc {
- 	compatible = "amlogic,meson-sm1-pwrc";
- };
+Only for newly introduced compatibles the num-pwms property is really
+required. Differentiating the ones that need it and the ones that don't
+seems over-engineered to me.
+
+(BTW, using the number of clks doesn't really work because there are
+also some variants without clocks. It is still under discussion if in
+this case dummy-clocks should be provided IIRC.)
+
+Best regards
+Uwe
+
 -- 
-2.21.0
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
