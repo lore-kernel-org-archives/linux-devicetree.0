@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v4 04/11] device property: Add functions for accessing node's parents
-Date: Mon,  2 Sep 2019 11:32:33 +0300
-Message-ID: <20190902083240.20367-5-sakari.ailus@linux.intel.com>
+Subject: [PATCH v4 01/11] software node: Get reference to parent swnode in get_parent op
+Date: Mon,  2 Sep 2019 11:32:30 +0300
+Message-ID: <20190902083240.20367-2-sakari.ailus@linux.intel.com>
 References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,88 +12,32 @@ To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Add two convenience functions for accessing node's parents:
+The software_node_get_parent() returned a pointer to the parent swnode,
+but did not take a reference to it, leading the caller to put a reference
+that was not taken. Take that reference now.
 
-fwnode_count_parents() returns the number of parent nodes a given node
-has. fwnode_get_nth_parent() returns node's parent at a given distance
-from the node itself.
-
+Fixes: 59abd83672f7 ("drivers: base: Introducing software nodes to the firmware node framework")
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
- drivers/base/property.c  | 46 ++++++++++++++++++++++++++++++++++++++++
- include/linux/property.h |  3 +++
- 2 files changed, 49 insertions(+)
+ drivers/base/swnode.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 3d9dffbe96378..d2461d79139f3 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -590,6 +590,52 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
- }
- EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index e7b3aa3bd55ad..a7cb41812cfda 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -520,7 +520,10 @@ software_node_get_parent(const struct fwnode_handle *fwnode)
+ {
+ 	struct swnode *swnode = to_swnode(fwnode);
  
-+/**
-+ * fwnode_count_parents - Return the number of parents a node has
-+ * @fwnode: The node the parents of which are to be counted
-+ *
-+ * Returns the number of parents a node has.
-+ */
-+unsigned int fwnode_count_parents(const struct fwnode_handle *fwnode)
-+{
-+	struct fwnode_handle *__fwnode;
-+	unsigned int count;
+-	return swnode ? (swnode->parent ? &swnode->parent->fwnode : NULL) : NULL;
++	if (!swnode || !swnode->parent)
++		return NULL;
 +
-+	__fwnode = fwnode_get_parent(fwnode);
-+
-+	for (count = 0; __fwnode; count++)
-+		__fwnode = fwnode_get_next_parent(__fwnode);
-+
-+	return count;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_count_parents);
-+
-+/**
-+ * fwnode_get_nth_parent - Return an nth parent of a node
-+ * @fwnode: The node the parent of which is requested
-+ * @depth: Distance of the parent from the node
-+ *
-+ * Returns the nth parent of a node. If @depth is 0, the functionality is
-+ * equivalent to fwnode_handle_get(). For @depth == 1, it is fwnode_get_parent()
-+ * and so on.
-+ *
-+ * The caller is responsible for calling fwnode_handle_put() for the returned
-+ * node.
-+ */
-+struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwnode,
-+					    unsigned int depth)
-+{
-+	unsigned int i;
-+
-+	fwnode_handle_get(fwnode);
-+
-+	for (i = 0; i < depth && fwnode; i++)
-+		fwnode = fwnode_get_next_parent(fwnode);
-+
-+	return fwnode;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_get_nth_parent);
-+
- /**
-  * fwnode_get_next_child_node - Return the next child node handle for a node
-  * @fwnode: Firmware node to find the next child node for.
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 421c76e53708d..5450e7ec219ac 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -83,6 +83,9 @@ struct fwnode_handle *fwnode_find_reference(const struct fwnode_handle *fwnode,
- struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode);
- struct fwnode_handle *fwnode_get_next_parent(
- 	struct fwnode_handle *fwnode);
-+unsigned int fwnode_count_parents(const struct fwnode_handle *fwn);
-+struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwn,
-+					    unsigned int depth);
- struct fwnode_handle *fwnode_get_next_child_node(
- 	const struct fwnode_handle *fwnode, struct fwnode_handle *child);
- struct fwnode_handle *fwnode_get_next_available_child_node(
++	return fwnode_handle_get(&swnode->parent->fwnode);
+ }
+ 
+ static struct fwnode_handle *
 -- 
 2.20.1
