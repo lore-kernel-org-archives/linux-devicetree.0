@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v5 02/11] software node: Make argument to to_software_node const
-Date: Mon,  2 Sep 2019 16:57:23 +0300
-Message-ID: <20190902135732.23455-3-sakari.ailus@linux.intel.com>
+Subject: [PATCH v5 08/11] lib/vsprintf: Make use of fwnode API to obtain node names and separators
+Date: Mon,  2 Sep 2019 16:57:29 +0300
+Message-ID: <20190902135732.23455-9-sakari.ailus@linux.intel.com>
 References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,47 +12,94 @@ To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-to_software_node() does not need to modify the fwnode_handle it operates
-on; therefore make it const. This allows passing a const fwnode_handle to
-to_software_node().
+Instead of implementing our own means of discovering parent nodes, node
+names or counting how many parents a node has, use the newly added
+functions in the fwnode API to obtain that information.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
- drivers/base/swnode.c    | 4 ++--
- include/linux/property.h | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ lib/vsprintf.c | 38 ++++++++++++++++----------------------
+ 1 file changed, 16 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index a7cb41812cfda..951e7efd47c23 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -71,9 +71,9 @@ software_node_to_swnode(const struct software_node *node)
- 	return swnode;
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index b00b57f9f911f..a04a2167101ef 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -38,6 +38,7 @@
+ #include <net/addrconf.h>
+ #include <linux/siphash.h>
+ #include <linux/compiler.h>
++#include <linux/property.h>
+ #ifdef CONFIG_BLOCK
+ #include <linux/blkdev.h>
+ #endif
+@@ -1863,32 +1864,24 @@ char *flags_string(char *buf, char *end, void *flags_ptr,
+ 	return format_flags(buf, end, flags, names);
  }
  
--const struct software_node *to_software_node(struct fwnode_handle *fwnode)
-+const struct software_node *to_software_node(const struct fwnode_handle *fwnode)
+-static const char *device_node_name_for_depth(const struct device_node *np, int depth)
+-{
+-	for ( ; np && depth; depth--)
+-		np = np->parent;
+-
+-	return kbasename(np->full_name);
+-}
+-
+ static noinline_for_stack
+-char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
++char *fwnode_full_name_string(struct fwnode_handle *fwnode, char *buf,
++			      char *end)
  {
--	struct swnode *swnode = to_swnode(fwnode);
-+	const struct swnode *swnode = to_swnode(fwnode);
+ 	int depth;
+-	const struct device_node *parent = np->parent;
  
- 	return swnode ? swnode->node : NULL;
+-	/* special case for root node */
+-	if (!parent)
+-		return string_nocheck(buf, end, "/", default_str_spec);
++	for (depth = fwnode_count_parents(fwnode); depth >= 0; depth--) {
++		struct fwnode_handle *__fwnode =
++			fwnode_get_nth_parent(fwnode, depth);
+ 
+-	for (depth = 0; parent->parent; depth++)
+-		parent = parent->parent;
+-
+-	for ( ; depth >= 0; depth--) {
+-		buf = string_nocheck(buf, end, "/", default_str_spec);
+-		buf = string(buf, end, device_node_name_for_depth(np, depth),
++		buf = string(buf, end, fwnode_get_name_prefix(__fwnode),
++			     default_str_spec);
++		buf = string(buf, end, fwnode_get_name(__fwnode),
+ 			     default_str_spec);
++
++		fwnode_handle_put(__fwnode);
+ 	}
++
+ 	return buf;
  }
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 5a910ad795910..421c76e53708d 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -418,7 +418,8 @@ struct software_node {
- };
  
- bool is_software_node(const struct fwnode_handle *fwnode);
--const struct software_node *to_software_node(struct fwnode_handle *fwnode);
-+const struct software_node *
-+to_software_node(const struct fwnode_handle *fwnode);
- struct fwnode_handle *software_node_fwnode(const struct software_node *node);
+@@ -1933,10 +1926,11 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
  
- int software_node_register_nodes(const struct software_node *nodes);
+ 		switch (*fmt) {
+ 		case 'f':	/* full_name */
+-			buf = device_node_gen_full_name(dn, buf, end);
++			buf = fwnode_full_name_string(of_fwnode_handle(dn), buf,
++						      end);
+ 			break;
+ 		case 'n':	/* name */
+-			p = kbasename(of_node_full_name(dn));
++			p = fwnode_get_name(of_fwnode_handle(dn));
+ 			precision = str_spec.precision;
+ 			str_spec.precision = strchrnul(p, '@') - p;
+ 			buf = string(buf, end, p, str_spec);
+@@ -1946,7 +1940,7 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+ 			buf = number(buf, end, (unsigned int)dn->phandle, num_spec);
+ 			break;
+ 		case 'P':	/* path-spec */
+-			p = kbasename(of_node_full_name(dn));
++			p = fwnode_get_name(of_fwnode_handle(dn));
+ 			if (!p[1])
+ 				p = "/";
+ 			buf = string(buf, end, p, str_spec);
 -- 
 2.20.1
