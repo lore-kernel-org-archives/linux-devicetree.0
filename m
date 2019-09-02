@@ -1,34 +1,70 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5,
- 05/32] dt-bindings: mediatek: add mutex description for mt8183 display
-Date: Mon, 02 Sep 2019 14:38:55 +0100
-Message-ID: <5d6d1b70.1c69fb81.67069.6e61@mx.google.com>
-References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
- <1567090254-15566-6-git-send-email-yongqiang.niu@mediatek.com>
+Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI
+ config register
+Date: Mon, 02 Sep 2019 14:38:57 +0100
+Message-ID: <5d6d1b72.1c69fb81.ee88.efcf@mx.google.com>
+References: <20190829181203.2660-1-ilina@codeaurora.org>
+ <20190829181203.2660-6-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1567090254-15566-6-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Yongqiang Niu <yongqiang.niu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190829181203.2660-6-ilina@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyOSBBdWcgMjAxOSAyMjo1MDoyNyArMDgwMCwgPHlvbmdxaWFuZy5uaXVAbWVkaWF0
-ZWsuY29tPiB3cm90ZToKPiBGcm9tOiBZb25ncWlhbmcgTml1IDx5b25ncWlhbmcubml1QG1lZGlh
-dGVrLmNvbT4KPiAKPiBUaGlzIHBhdGNoIGFkZCBtdXRleCBkZXNjcmlwdGlvbiBmb3IgbXQ4MTgz
-IGRpc3BsYXkKPiAKPiBTaWduZWQtb2ZmLWJ5OiBZb25ncWlhbmcgTml1IDx5b25ncWlhbmcubml1
-QG1lZGlhdGVrLmNvbT4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZGlzcC50eHQgfCAxICsKPiAgMSBmaWxlIGNoYW5n
-ZWQsIDEgaW5zZXJ0aW9uKCspCj4gCgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
-Lm9yZz4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Thu, Aug 29, 2019 at 12:11:54PM -0600, Lina Iyer wrote:
+> In addition to configuring the PDC, additional registers that interface
+> the GIC have to be configured to match the GPIO type. The registers on
+> some QCOM SoCs are access restricted, while on other SoCs are not. They
+> SoCs with access restriction to these SPI registers need to be written
+
+Took me a minute to figure out this is GIC SPI interrupts, not SPI bus.
+
+> from the firmware using the SCM interface. Add a flag to indicate if the
+> register is to be written using SCM interface.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
+>  .../bindings/interrupt-controller/qcom,pdc.txt           | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+> index 8e0797cb1487..852fcba98ea6 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+> @@ -50,15 +50,22 @@ Properties:
+>  		    The second element is the GIC hwirq number for the PDC port.
+>  		    The third element is the number of interrupts in sequence.
+>  
+> +- qcom,scm-spi-cfg:
+> +	Usage: optional
+> +	Value type: <bool>
+> +	Definition: Specifies if the SPI configuration registers have to be
+> +		    written from the firmware.
+> +
+>  Example:
+>  
+>  	pdc: interrupt-controller@b220000 {
+>  		compatible = "qcom,sdm845-pdc";
+> -		reg = <0xb220000 0x30000>;
+> +		reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
+
+There needs to be a description for reg updated. These aren't GIC 
+registers are they? Because those go in the GIC node.
+
+>  		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
+>  		#interrupt-cells = <2>;
+>  		interrupt-parent = <&intc>;
+>  		interrupt-controller;
+> +		qcom,scm-spi-cfg;
+>  	};
+>  
+>  DT binding of a device that wants to use the GIC SPI 514 as a wakeup
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
