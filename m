@@ -1,30 +1,40 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v3 08/10] lib/vsprintf: OF nodes are first and foremost,
- struct device_nodes
-Date: Mon, 2 Sep 2019 10:28:05 +0300
-Message-ID: <20190902072805.GH5475@paasikivi.fi.intel.com>
+Subject: Re: [PATCH v3 03/10] device property: Add functions for accessing
+ node's parents
+Date: Mon, 2 Sep 2019 10:30:17 +0300
+Message-ID: <20190902073017.GJ5475@paasikivi.fi.intel.com>
 References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
- <20190829101043.24963-9-sakari.ailus@linux.intel.com>
- <20190830125749.GI2680@smile.fi.intel.com>
+ <20190829101043.24963-4-sakari.ailus@linux.intel.com>
+ <20190830123448.GB2680@smile.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190830125749.GI2680@smile.fi.intel.com>
+In-Reply-To: <20190830123448.GB2680@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 03:57:49PM +0300, Andy Shevchenko wrote:
-> On Thu, Aug 29, 2019 at 01:10:41PM +0300, Sakari Ailus wrote:
-> > Factor out static kobject_string() function that simply calls
-> > device_node_string(), and thus remove references to kobjects (as these are
-> > struct device_node).
+On Fri, Aug 30, 2019 at 03:34:48PM +0300, Andy Shevchenko wrote:
+> On Thu, Aug 29, 2019 at 01:10:36PM +0300, Sakari Ailus wrote:
+> > Add two convenience functions for accessing node's parents:
+> > 
+> > fwnode_count_parents() returns the number of parent nodes a given node
+> > has. fwnode_get_nth_parent() returns node's parent at a given distance
+> > from the node itself.
+> > 
+> > Also reorder fwnode_get_parent() in property.c according to the same order
+> > as in property.h.
 > 
-> Not sure. This removes "(%pO?)" error string.
+> > +/**
+> > + * fwnode_get_parent - Return parent firwmare node
+> > + * @fwnode: Firmware whose parent is retrieved
+> 
+> I guess you may leave this in the same location. The change will be more clear
+> to review and smaller.
 
-Indeed. I'll add it back for v4.
+I added a separate patch that just moves it up.
 
 -- 
 Sakari Ailus
