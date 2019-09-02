@@ -1,7 +1,7 @@
 From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v3 08/11] PCI: layerscape: Modify the MSIX to the doorbell mode
-Date: Mon,  2 Sep 2019 11:17:13 +0800
-Message-ID: <20190902031716.43195-9-xiaowei.bao@nxp.com>
+Subject: [PATCH v3 11/11] misc: pci_endpoint_test: Add LS1088a in pci_device_id table
+Date: Mon,  2 Sep 2019 11:17:16 +0800
+Message-ID: <20190902031716.43195-12-xiaowei.bao@nxp.com>
 References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190902031716.43195-1-xiaowei.bao@nxp.com>
@@ -10,36 +10,30 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nx
 Cc: arnd@arndb.de, gregkh@linuxfoundation.org, zhiqiang.hou@nxp.com, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-dw_pcie_ep_raise_msix_irq was never called in the exisitng driver
-before, because the ls1046a platform don't support the MSIX feature
-and msix_capable was always set to false.
-Now that add the ls1088a platform with MSIX support, but the existing
-dw_pcie_ep_raise_msix_irq doesn't work, so use the doorbell method to
-support the MSIX feature.
+Add LS1088a in pci_device_id table so that pci-epf-test can be used
+for testing PCIe EP in LS1088a.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 ---
-v2: 
- - No change
+v2:
+ - No change.
 v3:
- - Modify the commit message make it clearly.
+ - No change.
+ 
+ drivers/misc/pci_endpoint_test.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/pci/controller/dwc/pci-layerscape-ep.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-index 1e07287..5f0cb99 100644
---- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-@@ -79,7 +79,8 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
- 	case PCI_EPC_IRQ_MSI:
- 		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
- 	case PCI_EPC_IRQ_MSIX:
--		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
-+		return dw_pcie_ep_raise_msix_irq_doorbell(ep, func_no,
-+							  interrupt_num);
- 	default:
- 		dev_err(pci->dev, "UNKNOWN IRQ type\n");
- 		return -EINVAL;
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 6e208a0..d531951 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -793,6 +793,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x80c0) },
+ 	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, NULL) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
+ 	  .driver_data = (kernel_ulong_t)&am654_data
 -- 
 2.9.5
