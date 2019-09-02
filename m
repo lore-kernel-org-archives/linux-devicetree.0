@@ -1,145 +1,107 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: serial: Convert riscv,sifive-serial to
- json-schema
-Date: Mon, 02 Sep 2019 14:39:12 +0100
-Message-ID: <5d6d1b81.1c69fb81.7eabb.cabd@mx.google.com>
-References: <1567321765-3738-1-git-send-email-pragnesh.patel@sifive.com>
+Subject: Re: [1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
+Date: Mon, 02 Sep 2019 14:39:04 +0100
+Message-ID: <5d6d1b79.1c69fb81.29f0d.e042@mx.google.com>
+References: <20190830091720.41156-1-biwen.li@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1567321765-3738-1-git-send-email-pragnesh.patel@sifive.com>
+In-Reply-To: <20190830091720.41156-1-biwen.li@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pragnesh Patel <pragnesh.patel@sifive.com>
-Cc: palmer@sifive.com, paul.walmsley@sifive.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Biwen Li <biwen.li@nxp.com>
+Cc: a.zummo@towertech.it, alexandre.belloni@bootlin.com, mark.rutland@arm.com, leoyang.li@nxp.com, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Martin Fuzzey <mfuzzey@parkeon.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 01, 2019 at 12:39:21PM +0530, Pragnesh Patel wrote:
-> Convert the riscv,sifive-serial binding to DT schema using json-schema.
+On Fri, Aug 30, 2019 at 05:17:19PM +0800, Biwen Li wrote:
+> Add some properties for pcf85263/pcf85363 as follows:
+>   - interrupt-output-pin: string type
+>   - quartz-load-capacitance: integer type
+>   - quartz-drive-strength: integer type
+>   - quartz-low-jitter: bool type
+>   - wakeup-source: bool type
 > 
-> Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
+> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
 > ---
->  .../devicetree/bindings/serial/sifive-serial.txt   | 33 ------------
->  .../devicetree/bindings/serial/sifive-serial.yaml  | 62 ++++++++++++++++++++++
->  2 files changed, 62 insertions(+), 33 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
->  create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.yaml
+>  .../devicetree/bindings/rtc/pcf85363.txt      | 31 +++++++++++++++++++
+>  include/dt-bindings/rtc/pcf85363.h            | 15 +++++++++
+>  2 files changed, 46 insertions(+)
+>  create mode 100644 include/dt-bindings/rtc/pcf85363.h
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.txt b/Documentation/devicetree/bindings/serial/sifive-serial.txt
-> deleted file mode 100644
-> index c86b1e5..0000000
-> --- a/Documentation/devicetree/bindings/serial/sifive-serial.txt
-> +++ /dev/null
-> @@ -1,33 +0,0 @@
-> -SiFive asynchronous serial interface (UART)
-> -
-> -Required properties:
-> -
-> -- compatible: should be something similar to
-> -	      "sifive,<chip>-uart" for the UART as integrated
-> -	      on a particular chip, and "sifive,uart<version>" for the
-> -	      general UART IP block programming model.	Supported
-> -	      compatible strings as of the date of this writing are:
-> -	      "sifive,fu540-c000-uart" for the SiFive UART v0 as
-> -	      integrated onto the SiFive FU540 chip, or "sifive,uart0"
-> -	      for the SiFive UART v0 IP block with no chip integration
-> -	      tweaks (if any)
-> -- reg: address and length of the register space
-> -- interrupts: Should contain the UART interrupt identifier
-> -- clocks: Should contain a clock identifier for the UART's parent clock
-> -
-> -
-> -UART HDL that corresponds to the IP block version numbers can be found
-> -here:
-> -
-> -https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/uart
-> -
-> -
-> -Example:
-> -
-> -uart0: serial@10010000 {
-> -	compatible = "sifive,fu540-c000-uart", "sifive,uart0";
-> -	interrupt-parent = <&plic0>;
-> -	interrupts = <80>;
-> -	reg = <0x0 0x10010000 0x0 0x1000>;
-> -	clocks = <&prci PRCI_CLK_TLCLK>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.yaml b/Documentation/devicetree/bindings/serial/sifive-serial.yaml
+> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> index 94adc1cf93d9..d83359990bd7 100644
+> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> @@ -8,10 +8,41 @@ Required properties:
+>  Optional properties:
+>  - interrupts: IRQ line for the RTC (not implemented).
+>  
+> +- interrupt-output-pin: The interrupt output pin must be
+> +  "NONE", "INTA" or "INTB", default value is "NONE"
+> +
+> +- quartz-load-capacitance: The internal capacitor to select for the quartz:
+> +	PCF85263_QUARTZCAP_7pF		[0]
+> +	PCF85263_QUARTZCAP_6pF		[1]
+> +	PCF85263_QUARTZCAP_12p5pF	[2] DEFAULT
+
+We have a common property for this. Use it.
+
+> +
+> +- quartz-drive-strength: Drive strength for the quartz:
+> +	PCF85263_QUARTZDRIVE_NORMAL	[0] DEFAULT
+> +	PCF85263_QUARTZDRIVE_LOW	[1]
+> +	PCF85263_QUARTZDRIVE_HIGH	[2]
+> +
+> +- quartz-low-jitter: Boolean property, if present enables low jitter mode
+> +  which reduces jitter at the cost of increased power consumption.
+
+These 2  need vendor prefixes.
+
+> +
+> +- wakeup-source: Boolean property, mark the chip as a wakeup source,
+> +  independently of the availability of an IRQ line connected to the SoC.
+> +  This is useful if the IRQ line is connected to a PMIC or other circuit
+> +  that can power up the device rather than to a normal SOC interrupt.
+> +
+>  Example:
+>  
+>  pcf85363: pcf85363@51 {
+>  	compatible = "nxp,pcf85363";
+>  	reg = <0x51>;
+> +
+> +	interrupt-parent = <&gpio1>;
+> +	interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +	#include <dt-bindings/rtc/pcf85363.h>
+> +	wakeup-source;
+> +	interrupt-output-pin = "INTA";
+> +	quartz-load-capacitance = <PCF85363_QUARTZCAP_12p5pF>;
+> +	quartz-drive-strength = <PCF85363_QUARTZDRIVE_LOW>;
+> +	quartz-low-jitter;
+>  };
+>  
+> diff --git a/include/dt-bindings/rtc/pcf85363.h b/include/dt-bindings/rtc/pcf85363.h
 > new file mode 100644
-> index 0000000..56fa935
+> index 000000000000..2c06c28eb5ff
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/sifive-serial.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/serial/sifive-serial.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +++ b/include/dt-bindings/rtc/pcf85363.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _DT_BINDINGS_RTC_PCF85363_H
+> +#define _DT_BINDINGS_RTC_PCF85363_H
 > +
-> +title: SiFive asynchronous serial interface (UART)
+> +/* Quartz capacitance */
+> +#define PCF85363_QUARTZCAP_7pF		0
+> +#define PCF85363_QUARTZCAP_6pF		1
+> +#define PCF85363_QUARTZCAP_12p5pF	2
 > +
-> +maintainers:
-> +  - Pragnesh Patel <pragnesh.patel@sifive.com>
-> +  - Paul Walmsley  <paul.walmsley@sifive.com>
-> +  - Palmer Dabbelt <palmer@sifive.com>
+> +/* Quartz drive strength */
+> +#define PCF85363_QUARTZDRIVE_NORMAL	0
+> +#define PCF85363_QUARTZDRIVE_LOW	1
+> +#define PCF85363_QUARTZDRIVE_HIGH	2
 > +
-> +allOf:
-> +  - $ref: /schemas/serial.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - sifive,fu540-c000-uart
-> +      - sifive,uart0
-
-This is wrong and should have warned if you tested this on 5.3.
-
-items:
-  - const: sifive,fu540-c000-uart
-  - const: sifive,uart0
-
-
-> +
-> +    description:
-> +      Should be something similar to "sifive,<chip>-uart"
-> +      for the UART as integrated on a particular chip,
-> +      and "sifive,uart<version>" for the general UART IP
-> +      block programming model.
-> +
-> +      UART HDL that corresponds to the IP block version
-> +      numbers can be found here -
-> +
-> +      https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/uart
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +      #include <dt-bindings/clock/sifive-fu540-prci.h>
-> +      serial@10010000 {
-> +        compatible = "sifive,fu540-c000-uart", "sifive,uart0";
-> +        interrupt-parent = <&plic0>;
-> +        interrupts = <80>;
-> +        reg = <0x0 0x10010000 0x0 0x1000>;
-> +        clocks = <&prci PRCI_CLK_TLCLK>;
-> +      };
-> +
-> +...
+> +#endif /* _DT_BINDINGS_RTC_PCF85363_H */
 > -- 
-> 2.7.4
+> 2.17.1
 > 
