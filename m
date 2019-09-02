@@ -1,86 +1,104 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v4 11/11] lib/test_printf: Add tests for %pfw printk modifier
-Date: Mon,  2 Sep 2019 11:32:40 +0300
-Message-ID: <20190902083240.20367-12-sakari.ailus@linux.intel.com>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+Subject: [PATCH v4 00/11] Device property improvements, add %pfw format specifier
+Date: Mon,  2 Sep 2019 11:32:29 +0300
+Message-ID: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a test for the %pfw printk modifier using software nodes.
+Hi all,
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- lib/test_printf.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+This set adds functionality into the device property API (counting a
+node's parents as well as obtaining its name) in order to support printing
+fwnode names using a new conversion specifier "%pfw". The names that are
+produced are equivalent to its OF counterpart "%pOF" on OF systems for the
+two supported modifiers ("f" and "P").
 
-diff --git a/lib/test_printf.c b/lib/test_printf.c
-index 944eb50f38625..9c6d716979fb1 100644
---- a/lib/test_printf.c
-+++ b/lib/test_printf.c
-@@ -22,6 +22,8 @@
- #include <linux/gfp.h>
- #include <linux/mm.h>
- 
-+#include <linux/property.h>
-+
- #include "../tools/testing/selftests/kselftest_module.h"
- 
- #define BUF_SIZE 256
-@@ -588,6 +590,40 @@ flags(void)
- 	kfree(cmp_buffer);
- }
- 
-+static void __init fwnode_pointer(void)
-+{
-+	const struct software_node softnodes[] = {
-+		{ .name = "first", },
-+		{ .name = "second", .parent = &softnodes[0], },
-+		{ .name = "third", .parent = &softnodes[1], },
-+		{ NULL /* Guardian */ },
-+	};
-+	const char * const full_name = "/second/third";
-+	const char * const full_name_second = "/second";
-+	const char * const second_name = "second";
-+	const char * const third_name = "third";
-+	int rval;
-+
-+	rval = software_node_register_nodes(softnodes);
-+	if (rval) {
-+		pr_warn("cannot register softnodes; rval %d\n", rval);
-+		return;
-+	}
-+
-+	test(full_name_second, "%pfw",
-+	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
-+	test(full_name, "%pfw",
-+	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-+	test(full_name, "%pfwf",
-+	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-+	test(second_name, "%pfwP",
-+	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
-+	test(third_name, "%pfwP",
-+	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-+
-+	software_node_unregister_nodes(softnodes);
-+}
-+
- static void __init
- test_pointer(void)
- {
-@@ -610,6 +646,7 @@ test_pointer(void)
- 	bitmap();
- 	netdev_features();
- 	flags();
-+	fwnode_pointer();
- }
- 
- static void __init selftest(void)
+Printing a node's name is something that's been available on OF for a long
+time and if something is converted to device property API (such as the
+V4L2 fwnode framework) it always got removed of a nice feature that was
+sometimes essential in debugging. With this set, that no longer is the
+case.
+
+since v3:
+
+- Remove underscores in argument name of fwnode_count_parents().
+
+- Re-introduce "%pO?" error string.
+
+- Unwrap a call to string() in fwnode_string().
+
+- Removed a useless Depends-on: on a patch that was merged long ago.
+
+- Unwrap a Fixes: line.
+
+- Added a patch to move fwnode_get_parent() up to make the review of the
+  following patch easier.
+
+since v2:
+
+- Better comments in acpi_fwnode_get_name_prefix().
+
+- Added swnode implementation.
+
+- Fixed swnode refcounting in get_parent() ("swnode: Get reference to
+  parent swnode in get_parent op")
+
+- Make argument to to_software_node() const (a new patch)
+
+- Factored out confusingly named kobject_string() that had a single
+  caller.
+
+- Cleaner fwnode_count_parents() implementation (as discussed in review).
+
+- Made fwnode_count_parents() argument const.
+
+- Added tests (last patch in the set).
+
+since v1:
+
+- Add patch to remove support for %pf and %pF (depends on another patch
+  removing all use of %pf and %pF) (now 4th patch)
+
+- Fix kerneldoc argument documentation for fwnode_get_name (2nd patch)
+
+- Align kerneldoc style with the rest of drivers/base/property.c (no extra
+  newline after function name)
+
+- Make checkpatch.pl complain about "%pf" not followed by "w" (6th patch)
+
+- WARN_ONCE() on use of invalid conversion specifiers ("%pf" not followed
+  by "w")
+
+Sakari Ailus (11):
+  software node: Get reference to parent swnode in get_parent op
+  software node: Make argument to to_software_node const
+  device property: Move fwnode_get_parent() up
+  device property: Add functions for accessing node's parents
+  device property: Add fwnode_get_name for returning the name of a node
+  device property: Add a function to obtain a node's prefix
+  lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
+  lib/vsprintf: Make use of fwnode API to obtain node names and
+    separators
+  lib/vsprintf: OF nodes are first and foremost, struct device_nodes
+  lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
+  lib/test_printf: Add tests for %pfw printk modifier
+
+ Documentation/core-api/printk-formats.rst | 34 ++++++---
+ drivers/acpi/property.c                   | 48 +++++++++++++
+ drivers/base/property.c                   | 83 +++++++++++++++++++--
+ drivers/base/swnode.c                     | 55 +++++++++++++-
+ drivers/of/property.c                     | 16 +++++
+ include/linux/fwnode.h                    |  4 ++
+ include/linux/property.h                  |  8 ++-
+ lib/test_printf.c                         | 37 ++++++++++
+ lib/vsprintf.c                            | 88 ++++++++++++++---------
+ scripts/checkpatch.pl                     |  4 +-
+ 10 files changed, 319 insertions(+), 58 deletions(-)
+
 -- 
 2.20.1
