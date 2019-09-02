@@ -1,71 +1,62 @@
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Subject: Re: [PATCH v5 00/18] add thermal driver for h6
-Date: Mon, 2 Sep 2019 12:58:16 +0200
-Message-ID: <20190902105816.zurkkh2vjfexft7t@core.my.home>
-References: <20190810052829.6032-1-tiny.windzz@gmail.com>
- <20190901215214.f4vbxemdd7mf3gun@core.my.home>
- <20190902072735.zkrueocyz4glc26n@flea>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V3 1/6] dt-bindings: PCI: tegra: Add sideband pins
+ configuration entries
+Date: Mon, 2 Sep 2019 13:38:18 +0200
+Message-ID: <20190902113818.GD19263@ulmo>
+References: <20190828172850.19871-1-vidyas@nvidia.com>
+ <20190828172850.19871-2-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="LTeJQqWS0MN7I/qa"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190902072735.zkrueocyz4glc26n@flea>
+In-Reply-To: <20190828172850.19871-2-vidyas@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Yangtao Li <tiny.windzz@gmail.com>, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+To: Vidya Sagar <vidyas@nvidia.com>
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Maxime,
 
-On Mon, Sep 02, 2019 at 09:27:35AM +0200, Maxime Ripard wrote:
-> Hi,
-> 
-> On Sun, Sep 01, 2019 at 11:52:14PM +0200, Ondřej Jirman wrote:
-> > Hello Yangtao,
-> >
-> > On Sat, Aug 10, 2019 at 05:28:11AM +0000, Yangtao Li wrote:
-> > > This patchset add support for A64, H3, H5, H6 and R40 thermal sensor.
-> > >
-> > > Thx to Icenowy and Vasily.
-> > >
-> > > BTY, do a cleanup in thermal makfile.
-> >
-> > I've added support for A83T and also some cleanups, according to my
-> > feedback:
-> >
-> > https://megous.com/git/linux/log/?h=ths-5.3
-> >
-> > Feel free to pick up whatever you like from that tree.
-> >
-> > For others, there are also DTS patches in that tree for H3, H5, A83T, and H6, so
-> > that shoul make testing of this driver easier.
-> 
-> I'm not convinced that always expanding the number of SoC supported is
-> the best strategy to get this merged. Usually, keeping the same
-> feature set across version, consolidating that, and then once it's in
-> sending the new SoC support works best.
+--LTeJQqWS0MN7I/qa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That's fine and all, but I've mostly added DT descriptions for already supported
-SoCs and fixed bugs in the driver, so that people can actually test the existing
-driver.
+On Wed, Aug 28, 2019 at 10:58:45PM +0530, Vidya Sagar wrote:
+> Add optional bindings "pinctrl-names" and "pinctrl-0" to describe pin
+> configuration information of a particular PCIe controller.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V3:
+> * None
+>=20
+> V2:
+> * None
+>=20
+>  .../devicetree/bindings/pci/nvidia,tegra194-pcie.txt      | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-I think adding DT changes will actually help get needed exposure for this
-patch series.
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-A83T support that I added, was actually just a small change to the driver.
+--LTeJQqWS0MN7I/qa
+Content-Type: application/pgp-signature; name="signature.asc"
 
-regards,
-	o.
+-----BEGIN PGP SIGNATURE-----
 
-> Maxime
-> 
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl1s/ycACgkQ3SOs138+
+s6FLlQ//RFadCCy0+ywuyNwstWFl2JPShvqLv7sExZxKzKf4dNbyo0pVeTDUFWDX
+Xs25hc51nQ3J6PSG/U8KFvEhhZjYizZNXlCr0kdFrsaM+NAOejcC2BQ+cArIDb2w
+Gq3FBww/kgr1UCbfiDIThGlBgwalXABkZ32vk7pu9TKbDpMZLWyCHPEms6fFwo1g
+RhSLQJlMkf7fm4sp1ZFUvzvUjm5lEkqqQreRAfMO7NgVKwziBsrpc2wkNNwHqj9w
+XjeQ0hP2pSwKeB6IHGA4JFioQlb1eYhG8dqTAQem7qV0uOV9n2oIE86GgjiBXqea
+F3LiggKv47SQFBbyx/0TofZW3UVHWgtPlbZm5dIb/qPreNBX4/CKyAIZhn2Nt073
+pj4IZdllTRlPGchj0eW9a6W4PKOz/q/ZksK1kWjbw3yd9oKI7gpePqOoed416ALO
+5sVkOi1siz7sIyj/VowG7rRfPC/QqRtoVGVEYHtrdox2cPqjvXb30uCp8hqB9PZ0
+gXBVi/b0kWfAzl1S5Bwuh2WcXSkNEaUtSC4mnNLsbgiSA3P4qszsb9g4GZwrVN5T
+TlrWTAk7Hsm8AefUMM1SxseUH/VrkHnWDBEuN/K9t620vz8lyWCLcyAj+UdAWzUZ
+IXXXM7Jy2zYyR319UK74mkMxGokz1Pue5oJLciykKIyy+g9cDMQ=
+=eTUT
+-----END PGP SIGNATURE-----
+
+--LTeJQqWS0MN7I/qa--
