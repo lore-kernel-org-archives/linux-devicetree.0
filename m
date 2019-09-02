@@ -1,52 +1,180 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v4 11/11] lib/test_printf: Add tests for %pfw printk
- modifier
-Date: Mon, 2 Sep 2019 16:09:25 +0300
-Message-ID: <20190902130925.GL5475@paasikivi.fi.intel.com>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
- <20190902083240.20367-12-sakari.ailus@linux.intel.com>
- <20190902122627.GG2680@smile.fi.intel.com>
+From: Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [PATCH V4 3/4] staging: iio: adc: ad7192: Add system calibration support
+Date: Mon, 2 Sep 2019 16:08:30 +0300
+Message-ID: <20190902130831.23057-3-mircea.caprioru@analog.com>
+References: <20190902130831.23057-1-mircea.caprioru@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190902122627.GG2680@smile.fi.intel.com>
+In-Reply-To: <20190902130831.23057-1-mircea.caprioru@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: jic23@kernel.org
+Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 03:26:27PM +0300, Andy Shevchenko wrote:
-> On Mon, Sep 02, 2019 at 11:32:40AM +0300, Sakari Ailus wrote:
-> > Add a test for the %pfw printk modifier using software nodes.
-> 
-> > +	const struct software_node softnodes[] = {
-> > +		{ .name = "first", },
-> > +		{ .name = "second", .parent = &softnodes[0], },
-> > +		{ .name = "third", .parent = &softnodes[1], },
-> > +		{ NULL /* Guardian */ },
-> > +	};
-> 
-> > +	test(full_name_second, "%pfw",
-> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
-> > +	test(full_name, "%pfw",
-> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> > +	test(full_name, "%pfwf",
-> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> > +	test(second_name, "%pfwP",
-> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
-> > +	test(third_name, "%pfwP",
-> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> 
-> 
-> These can be shorted and easier to parse if you use absolute indexes.
+This patch will add a system calibration attribute for each channel. Using
+this option the user will have the ability to calibrate each channel for
+zero scale and full scale. It uses the iio_chan_spec_ext_info and IIO_ENUM
+to implement the functionality.
 
-The above doesn't end up accessing out-of-bounds memory without compiler
-errors or warnings if the array is changed, therefore I'd prefer to keep it
-as-is.
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+---
+Changelog V2:
+- no changes here
 
-But I'll remove the comma from the guardian entry for v5. :-)
+Changelog V3:
+- no changes here
 
+Changelog V4:
+- add an attribute to start the system calibration
+- the mode attribute does not trigger the calibration
+- added ABI documentation
+
+ .../ABI/testing/sysfs-bus-iio-adc-ad7192      | 24 ++++++
+ drivers/staging/iio/adc/ad7192.c              | 79 ++++++++++++++++++-
+ 2 files changed, 102 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192 b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
+index 74a2873045bf..7627d3be08f5 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
++++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-ad7192
+@@ -13,3 +13,27 @@ Description:
+ 		need to minimize the system current consumption.
+ 		Reading gives the state of the bridge switch.
+ 		Writing '1' enables the bridge switch.
++
++What:		/sys/bus/iio/devices/iio:deviceX/in_voltagex_sys_calibration
++KernelVersion:
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Initiates the system calibration procedure. This is done on a
++		single channel at a time. Write '1' to start the calibration.
++
++What:		/sys/bus/iio/devices/iio:deviceX/in_voltagex_sys_calibration_mode_available
++KernelVersion:
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Reading returns a list with the possible calibration modes.
++		There are two available options:
++		"zero_scale" - calibrate to zero scale
++		"full_scale" - calibrate to full scale
++
++What:		/sys/bus/iio/devices/iio:deviceX/in_voltagex_sys_calibration_mode
++KernelVersion:
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Sets up the calibration mode used in the system calibration
++		procedure. Reading returns the current calibration mode.
++		Writing sets the system calibration mode.
+diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
+index d58ce08f3693..c5106d98c9b3 100644
+--- a/drivers/staging/iio/adc/ad7192.c
++++ b/drivers/staging/iio/adc/ad7192.c
+@@ -155,6 +155,11 @@
+  * The DOUT/RDY output must also be wired to an interrupt capable GPIO.
+  */
+ 
++enum {
++   AD7192_SYSCALIB_ZERO_SCALE,
++   AD7192_SYSCALIB_FULL_SCALE,
++};
++
+ struct ad7192_state {
+ 	struct regulator		*avdd;
+ 	struct regulator		*dvdd;
+@@ -169,10 +174,80 @@ struct ad7192_state {
+ 	u8				devid;
+ 	u8				clock_sel;
+ 	struct mutex			lock;	/* protect sensor state */
++	u8				syscalib_mode[8];
+ 
+ 	struct ad_sigma_delta		sd;
+ };
+ 
++static const char * const ad7192_syscalib_modes[] = {
++	[AD7192_SYSCALIB_ZERO_SCALE] = "zero_scale",
++	[AD7192_SYSCALIB_FULL_SCALE] = "full_scale",
++};
++
++static int ad7192_set_syscalib_mode(struct iio_dev *indio_dev,
++				    const struct iio_chan_spec *chan,
++				    unsigned int mode)
++{
++	struct ad7192_state *st = iio_priv(indio_dev);
++
++	st->syscalib_mode[chan->channel] = mode;
++
++	return 0;
++}
++
++static int ad7192_get_syscalib_mode(struct iio_dev *indio_dev,
++				    const struct iio_chan_spec *chan)
++{
++	struct ad7192_state *st = iio_priv(indio_dev);
++
++	return st->syscalib_mode[chan->channel];
++}
++
++static ssize_t ad7192_write_syscalib(struct iio_dev *indio_dev,
++				     uintptr_t private,
++				     const struct iio_chan_spec *chan,
++				     const char *buf, size_t len)
++{
++	struct ad7192_state *st = iio_priv(indio_dev);
++	bool sys_calib;
++	int ret, temp;
++
++	ret = strtobool(buf, &sys_calib);
++	if (ret)
++		return ret;
++
++	temp = st->syscalib_mode[chan->channel];
++	if (sys_calib) {
++		if (temp == AD7192_SYSCALIB_ZERO_SCALE)
++			ret = ad_sd_calibrate(&st->sd, AD7192_MODE_CAL_SYS_ZERO,
++					      chan->address);
++		else
++			ret = ad_sd_calibrate(&st->sd, AD7192_MODE_CAL_SYS_FULL,
++					      chan->address);
++	}
++
++	return ret ? ret : len;
++}
++
++static const struct iio_enum ad7192_syscalib_mode_enum = {
++	.items = ad7192_syscalib_modes,
++	.num_items = ARRAY_SIZE(ad7192_syscalib_modes),
++	.set = ad7192_set_syscalib_mode,
++	.get = ad7192_get_syscalib_mode
++};
++
++static const struct iio_chan_spec_ext_info ad7192_calibsys_ext_info[] = {
++	{
++		.name = "sys_calibration",
++		.write = ad7192_write_syscalib,
++		.shared = IIO_SEPARATE,
++	},
++	IIO_ENUM("sys_calibration_mode", IIO_SEPARATE,
++		 &ad7192_syscalib_mode_enum),
++	IIO_ENUM_AVAILABLE("sys_calibration_mode", &ad7192_syscalib_mode_enum),
++	{}
++};
++
+ static struct ad7192_state *ad_sigma_delta_to_ad7192(struct ad_sigma_delta *sd)
+ {
+ 	return container_of(sd, struct ad7192_state, sd);
+@@ -769,9 +844,11 @@ static int ad7192_channels_config(struct iio_dev *indio_dev)
+ 		*chan = channels[i];
+ 		chan->info_mask_shared_by_all |=
+ 			BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY);
+-		if (chan->type != IIO_TEMP)
++		if (chan->type != IIO_TEMP) {
+ 			chan->info_mask_shared_by_type_available |=
+ 				BIT(IIO_CHAN_INFO_SCALE);
++			chan->ext_info = ad7192_calibsys_ext_info;
++		}
+ 		chan++;
+ 	}
+ 
 -- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+2.17.1
