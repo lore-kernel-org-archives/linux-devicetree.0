@@ -1,55 +1,40 @@
-From: <Eugen.Hristev@microchip.com>
-Subject: Re: [PATCH v3 5/9] i2c: at91: add support for digital filtering
-Date: Mon, 2 Sep 2019 08:54:06 +0000
-Message-ID: <d461426b-50ac-bf6c-79e0-71e17a63400e@microchip.com>
-References: <1562678049-17581-1-git-send-email-eugen.hristev@microchip.com>
- <1562678049-17581-6-git-send-email-eugen.hristev@microchip.com>
- <20190831121308.GB1032@ninjato> <20190831121751.GC1032@ninjato>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCHv2-next 0/3] Odroid c2 missing regulator linking
+Date: Mon,  2 Sep 2019 08:58:18 +0000
+Message-ID: <20190902085821.1263-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190831121751.GC1032@ninjato>
-Content-Language: en-US
-Content-ID: <6F1F9E0097244B4784028B912D065ADD@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, linux-i2c@vger.kernel.org, peda@axentia.se, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Below small changes help re-configure or fix missing inter linking
+of regulator node.
 
+Rebased on linux-next-20190830
 
-On 31.08.2019 15:17, Wolfram Sang wrote:
->=20
->>> +	dev->enable_dig_filt =3D of_property_read_bool(pdev->dev.of_node,
->>> +						     "i2c-dig-filter");
->>> +
->>
->> What do you think of the idea to introduce 'flags' to struct i2c_timings
->> and parse the bindings in the core, too? Then you'd have sth like:
->>
->> 	if (t->flags & I2C_TIMINGS_ANALOG_FILTER)
->>
->> Would that be useful for you?
->=20
-> Forgot to say, we can also implement this incrementally to make sure
-> your patches land in 5.4 in case you are currently busy with sth else.
->=20
+Changes based top on my prevoius series.
+[0] https://patchwork.kernel.org/cover/11125987/
 
-Hi Wolfram,
+Changes for prevoius changes.
+Fix some typo.
+Updated few patches as per Martin's suggetion.
 
-Your idea looks good but I would prefer to have it as a separate=20
-enhancement patch, after this series gets in.
-As things are now, this series/patches do just the filtering part. We=20
-can then move all the optional 'flags' as another change.
-So yes, we can do this incrementally.
+Best Regards
+-Anand
 
-Thanks !
-Eugen
+Anand Moon (3):
+  arm64: dts: meson: odroid-c2: Add missing regulator linked to P5V0
+    regulator
+  arm64: dts: meson: odroid-c2: Add missing regulator linked to
+    VDDIO_AO3V3 regulator
+  arm64: dts: meson: odroid-c2: Add missing regulator linked to HDMI
+    supply
 
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->=20
+ .../boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 53 +++++++++++++++++--
+ 1 file changed, 50 insertions(+), 3 deletions(-)
+
+-- 
+2.23.0
