@@ -1,80 +1,188 @@
-Return-Path: <SRS0=Klmi=W7=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH RESEND v7 3/3] dt-bindings: usb: renesas_usb3: Document usb role switch support
-Date: Wed,  4 Sep 2019 09:15:41 +0100
-Message-Id: <1567584941-13690-4-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1567584941-13690-1-git-send-email-biju.das@bp.renesas.com>
-References: <1567584941-13690-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Biju Das <biju.das@bp.renesas.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=sI6G=W5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43356 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfIBPvs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 2 Sep 2019 11:51:48 -0400
+Date: Mon, 2 Sep 2019 08:51:44 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2] Input: tsc2007 - use GPIO descriptor
+Message-ID: <20190902155144.GK187474@dtor-ws>
+References: <20190823071021.5598-1-linus.walleij@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190823071021.5598-1-linus.walleij@linaro.org>
+Sender: devicetree-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-input@vger.kernel.org, Denis Carikli <denis@eukrea.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, "H . Nikolaus Schaller" <hns@goldelico.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Update the DT bindings documentation to support usb role switch
-for USB Type-C connector using USB role switch class framework.
+On Fri, Aug 23, 2019 at 09:10:21AM +0200, Linus Walleij wrote:
+> This switches the TSC2007 to use a GPIO descriptor to read
+> the pendown GPIO line.
+> 
+> As this will make the gpiolib start to respect polarity
+> inversion flags on the GPIO lines, drop the inversion when
+> reading the line with gpio_get_value(), fix two offenders
+> in the i.MX device trees, and also emphasize the importance
+> of marking the polarity right in the device tree bindings.
+> 
+> Cc: Denis Carikli <denis@eukrea.com>
+> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> Cc: NXP Linux Team <linux-imx@nxp.com>
+> Cc: H. Nikolaus Schaller <hns@goldelico.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> ChangeLog v1->v2:
+> - Drop inversion on the GPIO descriptor value, rely on the
+>   gpiolib to handle polarity inversion.
+> - Comb through device trees, identify two offenders, fix
+>   them as part of the patch for a clean cut.
+> - Also fix the device tree bindings.
+> ---
+>  .../bindings/input/touchscreen/tsc2007.txt         |  5 +++--
+>  arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi       |  3 ++-
+>  arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi       |  3 ++-
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- V7--> V7 RESEND
-  * Rebased to the new file name renesas,usb3-peri.txt.
-  * Added Reviewed-by tags of Rob and Shimoda-San.
- V6-->V7
-  * Incorporated shimoda-san's review comments.
-    (https://patchwork.kernel.org/patch/10944631/)
- V5-->V6
-  * Updated description
-  * Added usb-role-switch-property
- V4-->V5
-  * No Change
- V3-->V4
-  * No Change
- V2-->V3
-  * Added optional renesas,usb-role-switch property.
- V1-->V2
-  * Added usb-role-switch-property
-  * Updated the example with usb-role-switch property.
----
- .../devicetree/bindings/usb/renesas,usb3-peri.txt  | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+Shawn, Sascha, any objections to these DTS changes?
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas,usb3-peri.txt b/Documentation/devicetree/bindings/usb/renesas,usb3-peri.txt
-index 35039e7..5eecfbc 100644
---- a/Documentation/devicetree/bindings/usb/renesas,usb3-peri.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas,usb3-peri.txt
-@@ -22,6 +22,12 @@ Required properties:
- Optional properties:
-   - phys: phandle + phy specifier pair
-   - phy-names: must be "usb"
-+  - usb-role-switch: support role switch. see usb/generic.txt
-+
-+Sub-nodes:
-+- any connector to the data bus of this controller should be modelled using the
-+  OF graph bindings specified in bindings/graph.txt, if the "usb-role-switch"
-+  property is used.
- 
- Example of R-Car H3 ES1.x:
- 	usb3_peri0: usb@ee020000 {
-@@ -39,3 +45,20 @@ Example of R-Car H3 ES1.x:
- 		interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cpg CPG_MOD 327>;
- 	};
-+
-+Example of RZ/G2E:
-+	usb3_peri0: usb@ee020000 {
-+		compatible = "renesas,r8a774c0-usb3-peri",
-+			     "renesas,rcar-gen3-usb3-peri";
-+		reg = <0 0xee020000 0 0x400>;
-+		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg CPG_MOD 328>;
-+		companion = <&xhci0>;
-+		usb-role-switch;
-+
-+		port {
-+			usb3_role_switch: endpoint {
-+				remote-endpoint = <&hd3ss3220_ep>;
-+			};
-+		};
-+	};
+>  drivers/input/touchscreen/tsc2007.h                |  4 +++-
+>  drivers/input/touchscreen/tsc2007_core.c           | 14 +++++++-------
+>  5 files changed, 17 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+> index ed00f61b8c08..b08b54d49699 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2007.txt
+> @@ -7,7 +7,8 @@ Required properties:
+>  
+>  Optional properties:
+>  - gpios: the interrupt gpio the chip is connected to (trough the penirq pin).
+> -  The penirq pin goes to low when the panel is touched.
+> +  The penirq pin goes to low when the panel is touched, so make sure to tag
+> +  the GPIO line with GPIO_ACTIVE_LOW.
+>    (see GPIO binding[1] for more details).
+>  - interrupts: (gpio) interrupt to which the chip is connected
+>    (see interrupt binding[0]).
+> @@ -31,7 +32,7 @@ Example:
+>  			reg = <0x49>;
+>  			interrupt-parent = <&gpio4>;
+>  			interrupts = <0x0 0x8>;
+> -			gpios = <&gpio4 0 0>;
+> +			gpios = <&gpio4 0 GPIO_ACTIVE_LOW>;
+>  			ti,x-plate-ohms = <180>;
+>  		};
+>  
+> diff --git a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
+> index 17bd2a97609a..b8ac60622936 100644
+> --- a/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
+> +++ b/arch/arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
+> @@ -3,6 +3,7 @@
+>   * Copyright 2013 Eukr�a Electromatique <denis@eukrea.com>
+>   */
+>  
+> +#include <dt-bindings/gpio/gpio.h>
+>  #include "imx35.dtsi"
+>  
+>  / {
+> @@ -33,7 +34,7 @@
+>  
+>  	tsc2007: tsc2007@48 {
+>  		compatible = "ti,tsc2007";
+> -		gpios = <&gpio3 2 0>;
+> +		gpios = <&gpio3 2 GPIO_ACTIVE_LOW>;
+>  		interrupt-parent = <&gpio3>;
+>  		interrupts = <0x2 0x8>;
+>  		pinctrl-names = "default";
+> diff --git a/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi b/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
+> index c2a929ba8ceb..016d0bc64bdb 100644
+> --- a/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
+> +++ b/arch/arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
+> @@ -3,6 +3,7 @@
+>   * Copyright 2013 Eukr�a Electromatique <denis@eukrea.com>
+>   */
+>  
+> +#include <dt-bindings/gpio/gpio.h>
+>  #include "imx51.dtsi"
+>  
+>  / {
+> @@ -33,7 +34,7 @@
+>  
+>  	tsc2007: tsc2007@49 {
+>  		compatible = "ti,tsc2007";
+> -		gpios = <&gpio4 0 1>;
+> +		gpios = <&gpio4 0 GPIO_ACTIVE_LOW>;
+>  		interrupt-parent = <&gpio4>;
+>  		interrupts = <0x0 0x8>;
+>  		pinctrl-names = "default";
+> diff --git a/drivers/input/touchscreen/tsc2007.h b/drivers/input/touchscreen/tsc2007.h
+> index 91c60bf6dcaf..0306c38b56c7 100644
+> --- a/drivers/input/touchscreen/tsc2007.h
+> +++ b/drivers/input/touchscreen/tsc2007.h
+> @@ -49,6 +49,8 @@
+>  #define READ_X		(ADC_ON_12BIT | TSC2007_MEASURE_X)
+>  #define PWRDOWN		(TSC2007_12BIT | TSC2007_POWER_OFF_IRQ_EN)
+>  
+> +struct gpio_desc;
+> +
+>  struct ts_event {
+>  	u16	x;
+>  	u16	y;
+> @@ -69,7 +71,7 @@ struct tsc2007 {
+>  	int			fuzzy;
+>  	int			fuzzz;
+>  
+> -	unsigned int		gpio;
+> +	struct gpio_desc	*gpiod;
+>  	int			irq;
+>  
+>  	wait_queue_head_t	wait;
+> diff --git a/drivers/input/touchscreen/tsc2007_core.c b/drivers/input/touchscreen/tsc2007_core.c
+> index 3b80abfc1eca..0eadd6d86fa0 100644
+> --- a/drivers/input/touchscreen/tsc2007_core.c
+> +++ b/drivers/input/touchscreen/tsc2007_core.c
+> @@ -23,7 +23,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/i2c.h>
+>  #include <linux/of_device.h>
+> -#include <linux/of_gpio.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/platform_data/tsc2007.h>
+>  #include "tsc2007.h"
+>  
+> @@ -226,7 +226,7 @@ static int tsc2007_get_pendown_state_gpio(struct device *dev)
+>  	struct i2c_client *client = to_i2c_client(dev);
+>  	struct tsc2007 *ts = i2c_get_clientdata(client);
+>  
+> -	return !gpio_get_value(ts->gpio);
+> +	return gpiod_get_value(ts->gpiod);
+>  }
+>  
+>  static int tsc2007_probe_dt(struct i2c_client *client, struct tsc2007 *ts)
+> @@ -266,13 +266,13 @@ static int tsc2007_probe_dt(struct i2c_client *client, struct tsc2007 *ts)
+>  		return -EINVAL;
+>  	}
+>  
+> -	ts->gpio = of_get_gpio(np, 0);
+> -	if (gpio_is_valid(ts->gpio))
+> +	ts->gpiod = devm_gpiod_get_optional(&client->dev, NULL, GPIOD_IN);
+> +	if (IS_ERR(ts->gpiod))
+> +		return PTR_ERR(ts->gpiod);
+> +	if (ts->gpiod)
+>  		ts->get_pendown_state = tsc2007_get_pendown_state_gpio;
+>  	else
+> -		dev_warn(&client->dev,
+> -			 "GPIO not specified in DT (of_get_gpio returned %d)\n",
+> -			 ts->gpio);
+> +		dev_warn(&client->dev, "GPIO not specified in DT\n");
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.21.0
+> 
+
 -- 
-2.7.4
+Dmitry
