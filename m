@@ -1,96 +1,71 @@
 From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v6 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
-Date: Mon,  2 Sep 2019 11:43:18 +0800
-Message-ID: <20190902034319.14026-2-xiaowei.bao@nxp.com>
-References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+Subject: RE: [PATCH v3 00/11] *** SUBJECT HERE ***
+Date: Mon, 2 Sep 2019 03:54:37 +0000
+Message-ID: <AM5PR04MB3299774FBEAEE66B82B44DFCF5BE0@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+ <DB8PR04MB6747A1DAD5A83F686C987C6A84BE0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+In-Reply-To: <DB8PR04MB6747A1DAD5A83F686C987C6A84BE0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Cc: bhelgaas@google.com, Xiaowei Bao <xiaowei.bao@nxp.com>, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+To: "Z.q. Hou" <zhiqiang.hou@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev@lis
+Cc: "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-LS1028a implements 2 PCIe 3.0 controllers.
-
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
----
-v2:
- - Fix up the legacy INTx allocate failed issue.
-v3:
- - No change.
-v4:
- - Remove the num-lanes property.
-v5:
- - Add the num-viewport property.
-v6:
- - move num-viewport to 8.
-
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 52 ++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 72b9a75..c043b1d 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -625,6 +625,58 @@
- 			};
- 		};
- 
-+		pcie@3400000 {
-+			compatible = "fsl,ls1028a-pcie";
-+			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
-+			       0x80 0x00000000 0x0 0x00002000>; /* configuration space */
-+			reg-names = "regs", "config";
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
-+				     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
-+			interrupt-names = "pme", "aer";
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+			dma-coherent;
-+			num-viewport = <8>;
-+			bus-range = <0x0 0xff>;
-+			ranges = <0x81000000 0x0 0x00000000 0x80 0x00010000 0x0 0x00010000   /* downstream I/O */
-+				  0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-+			msi-parent = <&its>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 7>;
-+			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 2 &gic 0 0 GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		pcie@3500000 {
-+			compatible = "fsl,ls1028a-pcie";
-+			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
-+			       0x88 0x00000000 0x0 0x00002000>; /* configuration space */
-+			reg-names = "regs", "config";
-+			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "pme", "aer";
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+			dma-coherent;
-+			num-viewport = <8>;
-+			bus-range = <0x0 0xff>;
-+			ranges = <0x81000000 0x0 0x00000000 0x88 0x00010000 0x0 0x00010000   /* downstream I/O */
-+				  0x82000000 0x0 0x40000000 0x88 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
-+			msi-parent = <&its>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 7>;
-+			interrupt-map = <0000 0 0 1 &gic 0 0 GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 2 &gic 0 0 GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 3 &gic 0 0 GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+					<0000 0 0 4 &gic 0 0 GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
- 		pcie@1f0000000 { /* Integrated Endpoint Root Complex */
- 			compatible = "pci-host-ecam-generic";
- 			reg = <0x01 0xf0000000 0x0 0x100000>;
--- 
-2.9.5
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogWi5xLiBIb3UNCj4gU2Vu
+dDogMjAxOcTqOdTCMsjVIDExOjUyDQo+IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9Abnhw
+LmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXdu
+Z3VvQGtlcm5lbC5vcmc7IExlbyBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRp
+LmNvbTsgbG9yZW56by5waWVyYWxpc2lAYXJtLmNvbTsgTS5oLiBMaWFuDQo+IDxtaW5naHVhbi5s
+aWFuQG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kgWmFuZw0K
+PiA8cm95LnphbmdAbnhwLmNvbT47IGppbmdvb2hhbjFAZ21haWwuY29tOw0KPiBndXN0YXZvLnBp
+bWVudGVsQHN5bm9wc3lzLmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNl
+dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96
+bGFicy5vcmcNCj4gQ2M6IGFybmRAYXJuZGIuZGU7IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3Jn
+OyBYaWFvd2VpIEJhbw0KPiA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gU3ViamVjdDogUkU6IFtQ
+QVRDSCB2MyAwMC8xMV0gKioqIFNVQkpFQ1QgSEVSRSAqKioNCj4gDQo+IFhpYW93ZWksDQo+IA0K
+PiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogWGlhb3dlaSBCYW8gPHhp
+YW93ZWkuYmFvQG54cC5jb20+DQo+ID4gU2VudDogMjAxOcTqOdTCMsjVIDExOjE3DQo+ID4gVG86
+IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5l
+bC5vcmc7DQo+IExlbw0KPiA+IExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29t
+OyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOw0KPiA+IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlh
+bkBueHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsNCj4gPiBSb3kgWmFu
+ZyA8cm95LnphbmdAbnhwLmNvbT47IGppbmdvb2hhbjFAZ21haWwuY29tOw0KPiA+IGd1c3Rhdm8u
+cGltZW50ZWxAc3lub3BzeXMuY29tOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiA+IGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0K
+PiA+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXhwcGMtZGV2QGxp
+c3RzLm96bGFicy5vcmcNCj4gPiBDYzogYXJuZEBhcm5kYi5kZTsgZ3JlZ2toQGxpbnV4Zm91bmRh
+dGlvbi5vcmc7IFoucS4gSG91DQo+ID4gPHpoaXFpYW5nLmhvdUBueHAuY29tPjsgWGlhb3dlaSBC
+YW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+ID4gU3ViamVjdDogW1BBVENIIHYzIDAwLzExXSAq
+KiogU1VCSkVDVCBIRVJFICoqKg0KPiA+DQo+ID4gKioqIEJMVVJCIEhFUkUgKioqDQo+IA0KPiBB
+ZGQgc3ViamVjdCBhbmQgYmx1cmIgZm9yIHRoaXMgc2VyaWVzLg0KDQpPSywgdGhhbmtzLg0KDQoN
+Cj4gDQo+IFRoYW5rcywNCj4gWmhpcWlhbmcNCj4gDQo+ID4NCj4gPiBYaWFvd2VpIEJhbyAoMTEp
+Og0KPiA+ICAgUENJOiBkZXNpZ253YXJlLWVwOiBBZGQgbXVsdGlwbGUgUEZzIHN1cHBvcnQgZm9y
+IERXQw0KPiA+ICAgUENJOiBkZXNpZ253YXJlLWVwOiBBZGQgdGhlIGRvb3JiZWxsIG1vZGUgb2Yg
+TVNJLVggaW4gRVAgbW9kZQ0KPiA+ICAgUENJOiBkZXNpZ253YXJlLWVwOiBNb3ZlIHRoZSBmdW5j
+dGlvbiBvZiBnZXR0aW5nIE1TSSBjYXBhYmlsaXR5DQo+ID4gICAgIGZvcndhcmQNCj4gPiAgIFBD
+STogZGVzaWdud2FyZS1lcDogTW9kaWZ5IE1TSSBhbmQgTVNJWCBDQVAgd2F5IG9mIGZpbmRpbmcN
+Cj4gPiAgIGR0LWJpbmRpbmdzOiBwY2k6IGxheWVyc2NhcGUtcGNpOiBhZGQgY29tcGF0aWJsZSBz
+dHJpbmdzIGZvciBsczEwODhhDQo+ID4gICAgIGFuZCBsczIwODhhDQo+ID4gICBQQ0k6IGxheWVy
+c2NhcGU6IEZpeCBzb21lIGZvcm1hdCBpc3N1ZSBvZiB0aGUgY29kZQ0KPiA+ICAgUENJOiBsYXll
+cnNjYXBlOiBNb2RpZnkgdGhlIHdheSBvZiBnZXR0aW5nIGNhcGFiaWxpdHkgd2l0aCBkaWZmZXJl
+bnQNCj4gPiAgICAgUEVYDQo+ID4gICBQQ0k6IGxheWVyc2NhcGU6IE1vZGlmeSB0aGUgTVNJWCB0
+byB0aGUgZG9vcmJlbGwgbW9kZQ0KPiA+ICAgUENJOiBsYXllcnNjYXBlOiBBZGQgRVAgbW9kZSBz
+dXBwb3J0IGZvciBsczEwODhhIGFuZCBsczIwODhhDQo+ID4gICBhcm02NDogZHRzOiBsYXllcnNj
+YXBlOiBBZGQgUENJZSBFUCBub2RlIGZvciBsczEwODhhDQo+ID4gICBtaXNjOiBwY2lfZW5kcG9p
+bnRfdGVzdDogQWRkIExTMTA4OGEgaW4gcGNpX2RldmljZV9pZCB0YWJsZQ0KPiA+DQo+ID4gIC4u
+Li9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS50eHQgICAgIHwgICA0ICst
+DQo+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLmR0c2kgICAg
+IHwgIDMxICsrKw0KPiA+ICBkcml2ZXJzL21pc2MvcGNpX2VuZHBvaW50X3Rlc3QuYyAgICAgICAg
+ICAgICAgICAgICB8ICAgMSArDQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1s
+YXllcnNjYXBlLWVwLmMgICAgIHwgMTAwICsrKysrKy0tDQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRy
+b2xsZXIvZHdjL3BjaWUtZGVzaWdud2FyZS1lcC5jICAgIHwgMjU1DQo+ID4gKysrKysrKysrKysr
+KysrKystLS0tDQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVzaWdud2Fy
+ZS5jICAgICAgIHwgIDU5ICsrKy0tDQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3Bj
+aWUtZGVzaWdud2FyZS5oICAgICAgIHwgIDQ4ICsrKy0NCj4gPiAgNyBmaWxlcyBjaGFuZ2VkLCA0
+MDQgaW5zZXJ0aW9ucygrKSwgOTQgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiAtLQ0KPiA+IDIuOS41
+DQoNCg==
