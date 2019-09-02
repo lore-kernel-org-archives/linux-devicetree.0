@@ -1,80 +1,31 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] drm/panel: Add DT bindings for Sony ACX424AKP
-Date: Mon, 2 Sep 2019 19:25:40 +0200
-Message-ID: <CACRpkdb6+aqj8A_JDHc82O17dVx9KjHPi-iCK_AjFMda0miChw@mail.gmail.com>
-References: <20190902090633.24239-1-linus.walleij@linaro.org>
- <20190902093517.GA12946@ulmo>
- <CACRpkdb_X+Eia=mhHrXBcBn0osMtw6bKU6uAS5AV8ASV63qBkg@mail.gmail.com>
- <20190902144006.GB1445@ulmo>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: Re: [PATCH 02/13] MIPS: Loongson64: Sepreate loongson2ef/loongson64
+ code
+Date: Mon, 2 Sep 2019 20:51:42 +0300
+Message-ID: <20190902175142.GB4339@darkstar.musicnaut.iki.fi>
+References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
+ <20190827085302.5197-3-jiaxun.yang@flygoat.com>
+ <20190827220506.GK30291@darkstar.musicnaut.iki.fi>
+ <c03045cd-25df-a3b9-3b3b-cf09b7fdd3fa@flygoat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190902144006.GB1445@ulmo>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sam Ravnborg <sam@ravnborg.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c03045cd-25df-a3b9-3b3b-cf09b7fdd3fa@flygoat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-mips@vger.kernel.org, chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBTZXAgMiwgMjAxOSBhdCA0OjQwIFBNIFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJl
-ZGluZ0BnbWFpbC5jb20+IHdyb3RlOgoKPiBIbS4uLiBteSByZWNvbGxlY3Rpb24gaXMgdGhhdCBj
-b21tYW5kIG1vZGUgaXMgb25seSBzdXBwb3J0ZWQgb24gInNtYXJ0Igo+IHBhbmVscyB0aGF0IGhh
-dmUgYW4gaW50ZXJuYWwgZnJhbWVidWZmZXIuIFNvIHRoZSBjb21tYW5kcyBhY3R1YWxseQo+IGlu
-c3RydWN0IHRoZSBwYW5lbCB0byB1cGRhdGUgdGhlaXIgaW50ZXJuYWwgZnJhbWVidWZmZXIsIHdo
-aWNoIG1lYW5zIHlvdQo+IGNhbiB0ZWNobmljYWxseSBzd2l0Y2ggb2ZmIHRoZSBkaXNwbGF5IGVu
-Z2luZSB3aGVuIHRoZXJlIGFyZSBubyB1cGRhdGVzLgoKVGhhdCBpcyBteSB1bmRlcnN0YW5kaW5n
-IGFzIHdlbGwuCgo+IFVuZGVyIHRob3NlIGNpcmN1bXN0YW5jZXMgSSB0aGluayBpdCdkIG1ha2Ug
-c2Vuc2UgdG8gZGVmYXVsdCB0byBjb21tYW5kCj4gbW9kZSBpZiBib3RoIHRoZSBwYW5lbCBhbmQg
-dGhlIGhvc3Qgc3VwcG9ydCBpdCBhbmQgc3RpY2sgd2l0aCB2aWRlbyBtb2RlCj4gaWYgZm9yIGV4
-YW1wbGUgdGhlIGhvc3QgY2FuJ3QgZG8gY29tbWFuZCBtb2RlLgoKTWFrZXMgc2Vuc2UgdG8gbWUu
-CgpNYXliZSB3ZSBzaG91bGQgcmF0aGVyIGhhdmUgYSBnZW5lcmljIHNldHRpbmcgbGlrZToKZHNp
-LWVuZm9yY2UtdmlkZW8tbW9kZTsKYW5kIHRoZSBkZWZhdWx0IGFsd2F5cyBiZWluZyBjb21tYW5k
-IG1vZGUsIGlmCndlIGhhdmUgY29uc2Vuc3VzIHRoYXQgY29tbWFuZCBtb2RlIHNob3VsZCBhbHdh
-eXMKYmUgcHJlZmVycmVkLgoKPiBPciBwZXJoYXBzIHRoaXMgaXMgc29tZXRoaW5nIHRoYXQgY291
-bGQgYmUgc2V0IGZyb20gc29tZSB1c2Vyc3BhY2UKPiBwb2xpY3kgbWFrZXIgdmlhIGEgY29ubmVj
-dG9yIHByb3BlcnR5PyBBIGNvbXBvc2l0b3IgZm9yIGluc3RhbmNlIHdvdWxkCj4gaGF2ZSBhIHBy
-ZXR0eSBnb29kIGlkZWEgb2Ygd2hhdCBraW5kIG9mIGFjdGl2aXR5IGlzIGdvaW5nIG9uLCBzbyBp
-dAo+IGNvdWxkIGF0IHNvbWUgcG9pbnQgZGVjaWRlIHRvIHN3aXRjaCBiZXR3ZWVuIHZpZGVvIG1v
-ZGUgYW5kIGNvbW1hbmQgbW9kZQo+IGlmIG9uZSBvZiB0aGVtIGlzIG1vcmUgYXBwcm9wcmlhdGUg
-Zm9yIHRoZSBnaXZlbiB3b3JrbG9hZC4KCkl0J3MgcHJvYmFibHkgbW9yZSB0aGF0IHVzZXJzcGFj
-ZSBzaG91bGQgYmUgbWFkZSBhd2FyZSBvZiB0aGUKZmFjdCB0aGF0IHdlIGhhdmUgcGFydGlhbCB1
-cGRhdGVzLCBhbmQgaWYgSSB1bmRlcnN0YW5kIGNvcnJlY3RseSB0aGF0CmlzIGRvbmUgYnkgZGly
-dHlyZWN0L2RhbWFnZSBBUEkgaW4KZHJtX2RhbWFnZV9oZWxwZXIuYwoKKFZlcnkgbmljZSBvdmVy
-dmlldyBkb2MgYXQgdGhlIHRvcCBvZiB0aGUgZmlsZSEpCgpUaGUgZHJpdmVyIGVuYWJsZXMgZGFt
-YWdlIGJ5IGNhbGxpbmcKZHJtX3BsYW5lX2VuYWJsZV9mYl9kYW1hZ2VfY2xpcHMoKQp0aGVuIGlu
-IHRoZSAudXBkYXRlKCkgY2FsbGJhY2sgdXNlcyBkcm1fYXRvbWljX2hlbHBlcl9kYW1hZ2VfbWVy
-Z2VkKCkKdG8gZmlndXJlIG91dCBkYW1hZ2VkIHJlY3RhbmdsZXMgYW5kIHVwZGF0ZSB0aG9zZSB3
-aXRoIHNwZWNpYWwKY29tbWFuZHMuCgp0aW55ZHJtL2lsaTkyMjUuYyBpcyBhIHByZXR0eSBjbGVh
-biBleGFtcGxlIG9mIGEgZHJpdmVyCmFjdHVhbGx5IGRvaW5nIHRoaXMuIFRoZXJlIGFyZSBub3Qg
-bWFueSBvZiB0aGVtLgoKPiBDb21tYW5kIG1vZGUgY2FuIGFsc28gYmUgdXNlZCB0byBkbyBwYXJ0
-aWFsIHVwZGF0ZXMsIGlmIEkgcmVtZW1iZXIKPiBjb3JyZWN0bHksIHdoaWNoIGFnYWluIHdvdWxk
-IG1ha2UgaXQgcG9zc2libGUgZm9yIGEgY29tcG9zaXRvciB0byBzZW5kCj4gb25seSBhIHN1YnNl
-dCBvZiBhIHNjcmVlbiB1cGRhdGUuCgpJbmRlZWQsIHdobyBuZWVkcyBhIGJsaXR0ZXIgd2hlbiB5
-b3UgY2FuIGp1c3QgdXBkYXRlIHRoZQpkaXJ0eXJlY3RzLgoKSXQgaXMgYSBiaXQgdGVyc2UgYnV0
-IGludHVpdGl2ZWx5IEkgZmVlbCB0aGF0IHRoZSBkYW1hZ2UgaW50ZXJmYWNlIGlzIHdoYXQKdXNl
-cnNwYWNlIHNob3VsZCB1c2UsIHRoZW4gRFJNIHNob3VsZCBiZSBhYmxlIHRvIGluZmVyIHRoYXQg
-YQpkYW1hZ2VkIHJlY3RhbmdsZSBjYW4gYmUgdXBkYXRlZCBvbiB0aGUgZGlzcGxheSwgYW5kIHRo
-ZQpkaXNwbGF5IGNvbnRyb2xsZXIgbmVlZCB0byBhbm5vdW5jZSB0aGF0IGl0IGNhbiBoYW5kbGUg
-dGhlc2UKcGFydGlhbCB1cGRhdGVzLgoKVGhpcyByZXF1aXJlcyB0aGF0IHRoZSBkaXNwbGF5IGNv
-bnRyb2xsZXIgY2FuIGdlbmVyYXRlIHN1Y2gKY29tcGxleCBjb21tYW5kIHN0cmVhbXMgaW4gcmVz
-cG9uc2UgdG8KZHJtX2F0b21pY19oZWxwZXJfZGFtYWdlX21lcmdlZCgpCm9mIGNvdXJzZSwgZnJv
-bSBhIERTSSBwcm90b2NvbApsZXZlbCBpdCBpcyBzdXBwb3J0ZWQsIGJ1dCB3ZSBhcmUgbm90IHdy
-aXRpbmcgdGhlc2UgY29tbWFuZApzZXF1ZW5jZXMgd2l0aCBzb2Z0d2FyZSwgdGhleSBhcmUgZ2Vu
-ZXJhdGVkIGJ5IGhhcmR3YXJlLgoKU28gdGhlIGRpc3BsYXkgY29udHJvbGxlciBEU0kgcG9ydGlv
-bnMgbXVzdCBiZSBhYmxlIHRvIHNlbmQKaW5kaXZpZHVhbCByZWN0YW5nbGVzIGFzIHdlbGwuCgpC
-dXQgdGhpcyBpcyBhbGwgc2NpZW5jZSBmaWN0aW9uLiBXaGF0IGFsbCBEU0kgZGlzcGxheSBjb250
-cm9sbGVycwppbiBtYWlsaW5lIGRvIHRvZGF5IChJIHRoaW5rKSBpcyB0byBzaW1wbHkgc2NhbiBv
-dXQgdGhlIHdob2xlCmZyYW1lYnVmZmVyIGNvbnRpbm91c2x5IHdpdGggYSB2YmxhbmsgVEUgSVJR
-IHRvIGF2b2lkIHRlYXJpbmcuCgpBbmRyemVqIGtub3dzIGZvciBzdXJlIHdoYXQgaXMgb3V0IHRo
-ZXJlIEkgdGhpbmsuCgpZb3VycywKTGludXMgV2FsbGVpagpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On Wed, Aug 28, 2019 at 08:37:34AM +0800, Jiaxun Yang wrote:
+> On 2019/8/28 上午6:05, Aaro Koskinen wrote:
+> Hi Aaro,
+> >You need to update lemote2f_defconfig with his patch.
+> 
+> How to generate this config? We should not edit it manually right?
+
+It's possible to edit changed symbols by hand. Minimal defconfigs are
+generated with "make savedefconfig".
+
+A.
