@@ -1,79 +1,82 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 03/11] device property: Move fwnode_get_parent() up
-Date: Mon, 2 Sep 2019 13:11:53 +0300
-Message-ID: <20190902101153.GA2680@smile.fi.intel.com>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
- <20190902083240.20367-4-sakari.ailus@linux.intel.com>
+From: <Eugen.Hristev@microchip.com>
+Subject: [PATCH v4 0/9] i2c: add support for filters
+Date: Mon, 2 Sep 2019 10:11:55 +0000
+Message-ID: <1567418773-2427-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190902083240.20367-4-sakari.ailus@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: wsa@the-dreams.de, peda@axentia.se, mark.rutland@arm.com, Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, pierre-yves.mordret@st.com, alexandre.belloni@bootlin.com, robh+dt@kernel.org
+Cc: Nicolas.Ferre@microchip.com, Eugen.Hristev@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:32:32AM +0300, Sakari Ailus wrote:
-> Move fwnode_get_parent() above fwnode_get_next_parent(), making the order
-> the same as in the header file.
-> 
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Hello,
 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  drivers/base/property.c | 26 +++++++++++++-------------
->  1 file changed, 13 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index 81bd01ed40427..3d9dffbe96378 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -556,6 +556,19 @@ int device_add_properties(struct device *dev,
->  }
->  EXPORT_SYMBOL_GPL(device_add_properties);
->  
-> +/**
-> + * fwnode_get_parent - Return parent firwmare node
-> + * @fwnode: Firmware whose parent is retrieved
-> + *
-> + * Return parent firmware node of the given node if possible or %NULL if no
-> + * parent was available.
-> + */
-> +struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
-> +{
-> +	return fwnode_call_ptr_op(fwnode, get_parent);
-> +}
-> +EXPORT_SYMBOL_GPL(fwnode_get_parent);
-> +
->  /**
->   * fwnode_get_next_parent - Iterate to the node's parent
->   * @fwnode: Firmware whose parent is retrieved
-> @@ -577,19 +590,6 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
->  }
->  EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
->  
-> -/**
-> - * fwnode_get_parent - Return parent firwmare node
-> - * @fwnode: Firmware whose parent is retrieved
-> - *
-> - * Return parent firmware node of the given node if possible or %NULL if no
-> - * parent was available.
-> - */
-> -struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
-> -{
-> -	return fwnode_call_ptr_op(fwnode, get_parent);
-> -}
-> -EXPORT_SYMBOL_GPL(fwnode_get_parent);
-> -
->  /**
->   * fwnode_get_next_child_node - Return the next child node handle for a node
->   * @fwnode: Firmware node to find the next child node for.
-> -- 
-> 2.20.1
-> 
+This series adds support for analog and digital filters for i2c controllers
 
--- 
-With Best Regards,
-Andy Shevchenko
+This series is based on the series:
+[PATCH v2 0/9] i2c: at91: filters support for at91 SoCs
+and enhanced to add the bindings for all controllers plus an extra binding
+for the width of the spikes in nanoseconds.
+
+First, bindings are created for
+'i2c-analog-filter'
+'i2c-digital-filter'
+'i2c-filter-width-ns'
+
+The support is added in the i2c core to retrieve filter width and add it
+to the timings structure.
+Next, the at91 driver is enhanced for supporting digital filter, advanced
+digital filter (with selectable spike width) and the analog filter.
+
+Finally the device tree for two boards are modified to make use of the
+new properties.
+
+This series is the result of the comments on the ML in the direction
+requested: to make the bindings globally available for i2c drivers.
+
+Changes in v4:
+- renamed i2c-ana-filter to i2c-analog-filter
+- renamed i2c-dig-filter to i2c-digital-filter
+
+Changes in v3:
+- made bindings global for i2c controllers and modified accordingly
+- gave up PADFCDF bit because it's a lack in datasheet
+- the computation on the width of the spike is based on periph clock as it
+is done for hold time.
+
+Changes in v2:
+- added device tree bindings and support for enable-ana-filt and
+enable-dig-filt
+- added the new properties to the DT for sama5d4_xplained/sama5d2_xplained
+
+Eugen Hristev (9):
+  dt-bindings: i2c: at91: add new compatible
+  dt-bindings: i2c: add bindings for i2c analog and digital filter
+  i2c: add support for filter-width-ns optional property
+  i2c: at91: add new platform support for sam9x60
+  i2c: at91: add support for digital filtering
+  i2c: at91: add support for advanced digital filtering
+  i2c: at91: add support for analog filtering
+  ARM: dts: at91: sama5d2_xplained: add analog and digital filter for
+    i2c
+  ARM: dts: at91: sama5d4_xplained: add digital filter for i2c
+
+ Documentation/devicetree/bindings/i2c/i2c-at91.txt |  3 +-
+ Documentation/devicetree/bindings/i2c/i2c.txt      | 11 +++++
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  6 +++
+ arch/arm/boot/dts/at91-sama5d4_xplained.dts        |  1 +
+ drivers/i2c/busses/i2c-at91-core.c                 | 38 +++++++++++++++++
+ drivers/i2c/busses/i2c-at91-master.c               | 49 ++++++++++++++++++=
+++--
+ drivers/i2c/busses/i2c-at91.h                      | 13 ++++++
+ drivers/i2c/i2c-core-base.c                        |  2 +
+ include/linux/i2c.h                                |  2 +
+ 9 files changed, 121 insertions(+), 4 deletions(-)
+
+--=20
+2.7.4
