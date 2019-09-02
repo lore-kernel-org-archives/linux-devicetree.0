@@ -1,73 +1,145 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/5] dt-bindings: fsl: scu: add scu power key binding
-Date: Mon, 02 Sep 2019 14:39:14 +0100
-Message-ID: <20190902043521.GA14143@bogus>
-References: <1567198429-27886-1-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH] dt-bindings: serial: Convert riscv,sifive-serial to
+ json-schema
+Date: Mon, 02 Sep 2019 14:39:12 +0100
+Message-ID: <5d6d1b81.1c69fb81.7eabb.cabd@mx.google.com>
+References: <1567321765-3738-1-git-send-email-pragnesh.patel@sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1567198429-27886-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1567321765-3738-1-git-send-email-pragnesh.patel@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com, will@kernel.org, dmitry.torokhov@gmail.com, aisheng.dong@nxp.com, ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com, daniel.baluta@nxp.com, leonard.crestez@nxp.com, olof@lixom.net, mripard@kernel.org, arnd@arndb.de, jagan@amarulasolutions.com, bjorn.andersson@linaro.org, dinguyen@kernel.org, marcin.juszkiewicz@linaro.org, hsweeten@visionengravers.com, tglx@linutronix.de, gregkh@linuxfoundation.org, stefan@agner.ch, ronald@innovation.ch, ping.bai@nxp.com, m.felsch@pengutronix.de, andriy.shevchenko@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, Linux-imx
+To: Pragnesh Patel <pragnesh.patel@sifive.com>
+Cc: palmer@sifive.com, paul.walmsley@sifive.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 04:53:45PM -0400, Anson Huang wrote:
-> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-> system controller, the system controller is in charge of system
-> power, clock and power key event etc. management, Linux kernel
-> has to communicate with system controller via MU (message unit)
-> IPC to get power key event, add binding doc for i.MX system
-> controller power key driver.
+On Sun, Sep 01, 2019 at 12:39:21PM +0530, Pragnesh Patel wrote:
+> Convert the riscv,sifive-serial binding to DT schema using json-schema.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
 > ---
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt      | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+>  .../devicetree/bindings/serial/sifive-serial.txt   | 33 ------------
+>  .../devicetree/bindings/serial/sifive-serial.yaml  | 62 ++++++++++++++++++++++
+>  2 files changed, 62 insertions(+), 33 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
+>  create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> index c149fad..001d0b7 100644
-> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> @@ -157,6 +157,17 @@ Required properties:
->  Optional properties:
->  - timeout-sec: contains the watchdog timeout in seconds.
->  
-> +Power key bindings based on SCU Message Protocol
-> +------------------------------------------------------------
+> diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.txt b/Documentation/devicetree/bindings/serial/sifive-serial.txt
+> deleted file mode 100644
+> index c86b1e5..0000000
+> --- a/Documentation/devicetree/bindings/serial/sifive-serial.txt
+> +++ /dev/null
+> @@ -1,33 +0,0 @@
+> -SiFive asynchronous serial interface (UART)
+> -
+> -Required properties:
+> -
+> -- compatible: should be something similar to
+> -	      "sifive,<chip>-uart" for the UART as integrated
+> -	      on a particular chip, and "sifive,uart<version>" for the
+> -	      general UART IP block programming model.	Supported
+> -	      compatible strings as of the date of this writing are:
+> -	      "sifive,fu540-c000-uart" for the SiFive UART v0 as
+> -	      integrated onto the SiFive FU540 chip, or "sifive,uart0"
+> -	      for the SiFive UART v0 IP block with no chip integration
+> -	      tweaks (if any)
+> -- reg: address and length of the register space
+> -- interrupts: Should contain the UART interrupt identifier
+> -- clocks: Should contain a clock identifier for the UART's parent clock
+> -
+> -
+> -UART HDL that corresponds to the IP block version numbers can be found
+> -here:
+> -
+> -https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/uart
+> -
+> -
+> -Example:
+> -
+> -uart0: serial@10010000 {
+> -	compatible = "sifive,fu540-c000-uart", "sifive,uart0";
+> -	interrupt-parent = <&plic0>;
+> -	interrupts = <80>;
+> -	reg = <0x0 0x10010000 0x0 0x1000>;
+> -	clocks = <&prci PRCI_CLK_TLCLK>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.yaml b/Documentation/devicetree/bindings/serial/sifive-serial.yaml
+> new file mode 100644
+> index 0000000..56fa935
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/sifive-serial.yaml
+> @@ -0,0 +1,62 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/serial/sifive-serial.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +Required properties:
-> +- compatible: should be:
-> +              "fsl,imx8qxp-sc-pwrkey"
-> +              followed by "fsl,imx-sc-pwrkey";
-> +- linux,keycodes: See Documentation/devicetree/bindings/input/keys.txt
-> +Optional Properties:
-> +- wakeup-source: See Documentation/devicetree/bindings/power/wakeup-source.txt
+> +title: SiFive asynchronous serial interface (UART)
 > +
->  Example (imx8qxp):
->  -------------
->  aliases {
-> @@ -220,6 +231,13 @@ firmware {
->  			compatible = "fsl,imx8qxp-sc-rtc";
->  		};
->  
-> +		scu_pwrkey: scu-pwrkey {
-> +			compatible = "fsl,imx8qxp-sc-pwrkey", "fsl,imx-sc-pwrkey";
-> +			linux,keycode = <KEY_POWER>;
-> +			wakeup-source;
-
-wakeup-source implies an interrupt property.
-
-> +			status = "disabled";
-
-Don't should status in examples.
-
-> +		};
+> +maintainers:
+> +  - Pragnesh Patel <pragnesh.patel@sifive.com>
+> +  - Paul Walmsley  <paul.walmsley@sifive.com>
+> +  - Palmer Dabbelt <palmer@sifive.com>
 > +
->  		watchdog {
->  			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
->  			timeout-sec = <60>;
+> +allOf:
+> +  - $ref: /schemas/serial.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - sifive,fu540-c000-uart
+> +      - sifive,uart0
+
+This is wrong and should have warned if you tested this on 5.3.
+
+items:
+  - const: sifive,fu540-c000-uart
+  - const: sifive,uart0
+
+
+> +
+> +    description:
+> +      Should be something similar to "sifive,<chip>-uart"
+> +      for the UART as integrated on a particular chip,
+> +      and "sifive,uart<version>" for the general UART IP
+> +      block programming model.
+> +
+> +      UART HDL that corresponds to the IP block version
+> +      numbers can be found here -
+> +
+> +      https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/uart
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +      #include <dt-bindings/clock/sifive-fu540-prci.h>
+> +      serial@10010000 {
+> +        compatible = "sifive,fu540-c000-uart", "sifive,uart0";
+> +        interrupt-parent = <&plic0>;
+> +        interrupts = <80>;
+> +        reg = <0x0 0x10010000 0x0 0x1000>;
+> +        clocks = <&prci PRCI_CLK_TLCLK>;
+> +      };
+> +
+> +...
 > -- 
 > 2.7.4
 > 
