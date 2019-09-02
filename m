@@ -1,57 +1,64 @@
-Return-Path: <SRS0=hEzS=W6=gapp.nthu.edu.tw=chu.stanley@kernel.org>
+Return-Path: <SRS0=R5JT=W5=ideasonboard.com=laurent.pinchart@kernel.org>
+Date: Mon, 2 Sep 2019 19:35:37 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] dt-bindings: sh-mobile-ceu: Remove now unimplemented
+ bindings documentation
+Message-ID: <20190902163537.GD12197@pendragon.ideasonboard.com>
+References: <20190902084352.7974-1-horms+renesas@verge.net.au>
 MIME-Version: 1.0
-References: <20190828191756.24312-1-bjorn.andersson@linaro.org>
- <20190828191756.24312-2-bjorn.andersson@linaro.org> <BN7PR08MB5684EEDE565DC4AAC9E658A3DBBE0@BN7PR08MB5684.namprd08.prod.outlook.com>
-In-Reply-To: <BN7PR08MB5684EEDE565DC4AAC9E658A3DBBE0@BN7PR08MB5684.namprd08.prod.outlook.com>
-From: Stanley Chu <chu.stanley@gapp.nthu.edu.tw>
-Date: Tue, 3 Sep 2019 13:01:33 +0800
-Message-ID: <CAOBeenYPtGF2JsmE3i9C5YokPYsARjSfZCsqODR2RSWsR6=qxA@mail.gmail.com>
-Subject: Re: [EXT] [PATCH v4 1/3] scsi: ufs: Introduce vops for resetting device
-Content-Type: multipart/alternative; boundary="0000000000001a1be605919efccb"
-To: "Bean Huo (beanhuo)" <beanhuo@micron.com>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>, Andy Gross <agross@kernel.org>, Avri Altman <avri.altman@wdc.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, "James E.J. Bottomley" <jejb@linux.ibm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190902084352.7974-1-horms+renesas@verge.net.au>
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Jacopo Mondi <jacopo@jmondi.org>, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---0000000000001a1be605919efccb
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Simon,
 
-Bean Huo (beanhuo) <beanhuo@micron.com>=E6=96=BC 2019=E5=B9=B49=E6=9C=882=
-=E6=97=A5 =E9=80=B1=E4=B8=80=EF=BC=8C=E4=B8=8B=E5=8D=884:39=E5=AF=AB=E9=81=
-=93=EF=BC=9A
+Thank you for the patch.
 
-> >
-> >Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-> >Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Reviewed-by: Bean Huo <beanhuo@micron.com>
->
-> //Bean Huo
+On Mon, Sep 02, 2019 at 10:43:52AM +0200, Simon Horman wrote:
+> Remove the SH Mobile CEU bindings documentation as the corresponding driver
+> was removed v5.1 by the following commit:
+> 
+> 43a445f188e1 ("media: sh_mobile_ceu_camera: remove obsolete soc_camera driver")
+> 
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+One less file to convert to yaml ;-)
 
->
->
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
---0000000000001a1be605919efccb
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> ---
+>  .../devicetree/bindings/media/sh_mobile_ceu.txt         | 17 -----------------
+>  1 file changed, 17 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/sh_mobile_ceu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/sh_mobile_ceu.txt b/Documentation/devicetree/bindings/media/sh_mobile_ceu.txt
+> deleted file mode 100644
+> index cfa4ffada8ae..000000000000
+> --- a/Documentation/devicetree/bindings/media/sh_mobile_ceu.txt
+> +++ /dev/null
+> @@ -1,17 +0,0 @@
+> -Bindings, specific for the sh_mobile_ceu_camera.c driver:
+> - - compatible: Should be "renesas,sh-mobile-ceu"
+> - - reg: register base and size
+> - - interrupts: the interrupt number
+> - - renesas,max-width: maximum image width, supported on this SoC
+> - - renesas,max-height: maximum image height, supported on this SoC
+> -
+> -Example:
+> -
+> -ceu0: ceu@fe910000 {
+> -	compatible = "renesas,sh-mobile-ceu";
+> -	reg = <0xfe910000 0xa0>;
+> -	interrupt-parent = <&intcs>;
+> -	interrupts = <0x880>;
+> -	renesas,max-width = <8188>;
+> -	renesas,max-height = <8188>;
+> -};
 
-<div>Bean Huo (beanhuo) &lt;<a href=3D"mailto:beanhuo@micron.com">beanhuo@m=
-icron.com</a>&gt;=E6=96=BC 2019=E5=B9=B49=E6=9C=882=E6=97=A5 =E9=80=B1=E4=
-=B8=80=EF=BC=8C=E4=B8=8B=E5=8D=884:39=E5=AF=AB=E9=81=93=EF=BC=9A<br></div><=
-div><div class=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D"m=
-argin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">&gt;<br>
-&gt;Reviewed-by: Alim Akhtar &lt;<a href=3D"mailto:alim.akhtar@samsung.com"=
- target=3D"_blank">alim.akhtar@samsung.com</a>&gt;<br>
-&gt;Signed-off-by: Bjorn Andersson &lt;<a href=3D"mailto:bjorn.andersson@li=
-naro.org" target=3D"_blank">bjorn.andersson@linaro.org</a>&gt;<br>
-Reviewed-by: Bean Huo &lt;<a href=3D"mailto:beanhuo@micron.com" target=3D"_=
-blank">beanhuo@micron.com</a>&gt;<br>
-<br>
-//Bean Huo</blockquote><div dir=3D"auto">Reviewed-by: Stanley Chu &lt;<a hr=
-ef=3D"mailto:stanley.chu@mediatek.com">stanley.chu@mediatek.com</a>&gt;<br>=
-</div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-l=
-eft:1px #ccc solid;padding-left:1ex"><br>
-</blockquote></div></div>
+-- 
+Regards,
 
---0000000000001a1be605919efccb--
+Laurent Pinchart
