@@ -1,98 +1,71 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v3 10/11] arm64: dts: layerscape: Add PCIe EP node for
- ls1088a
-Date: Mon, 2 Sep 2019 14:06:28 +0100
-Message-ID: <20190902130628.GL9720@e119886-lin.cambridge.arm.com>
-References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
- <20190902031716.43195-11-xiaowei.bao@nxp.com>
+From: Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [PATCH V4 2/4] iio: adc: ad_sigma_delta: Export ad_sd_calibrate
+Date: Mon, 2 Sep 2019 16:08:29 +0300
+Message-ID: <20190902130831.23057-2-mircea.caprioru@analog.com>
+References: <20190902130831.23057-1-mircea.caprioru@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190902031716.43195-11-xiaowei.bao@nxp.com>
+In-Reply-To: <20190902130831.23057-1-mircea.caprioru@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, arnd@arndb.de, gregkh@linuxfoundation.org, zhiqiang.hou@nxp.com
+To: jic23@kernel.org
+Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Mircea Caprioru <mircea.caprioru@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:17:15AM +0800, Xiaowei Bao wrote:
-> Add PCIe EP node for ls1088a to support EP mode.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - Remove the pf-offset proparty.
-> v3:
->  - No change.
->  
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 31 ++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index c676d07..da246ab 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -483,6 +483,17 @@
->  			status = "disabled";
->  		};
->  
-> +		pcie_ep@3400000 {
-> +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
+This patch exports the ad_sd_calibrate function in order to be able to
+call it from outside ad_sigma_delta.
 
-Here you specify a fallback "fsl,ls-pcie-ep" that is removed by this series.
+There are cases where the option to calibrate one channel at a time is
+necessary (ex. system calibration for zero scale and full scale).
 
-Besides that, this looks OK.
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+---
+Changelog V2:
+- no changes here
 
-Thanks,
+Changelog V3:
+- no changes here
 
-Andrew Murray
+Changelog V4:
+- no changes here
 
-> +			reg = <0x00 0x03400000 0x0 0x00100000
-> +			       0x20 0x00000000 0x8 0x00000000>;
-> +			reg-names = "regs", "addr_space";
-> +			num-ib-windows = <24>;
-> +			num-ob-windows = <128>;
-> +			max-functions = /bits/ 8 <2>;
-> +			status = "disabled";
-> +		};
-> +
->  		pcie@3500000 {
->  			compatible = "fsl,ls1088a-pcie";
->  			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
-> @@ -508,6 +519,16 @@
->  			status = "disabled";
->  		};
->  
-> +		pcie_ep@3500000 {
-> +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-> +			reg = <0x00 0x03500000 0x0 0x00100000
-> +			       0x28 0x00000000 0x8 0x00000000>;
-> +			reg-names = "regs", "addr_space";
-> +			num-ib-windows = <6>;
-> +			num-ob-windows = <8>;
-> +			status = "disabled";
-> +		};
-> +
->  		pcie@3600000 {
->  			compatible = "fsl,ls1088a-pcie";
->  			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
-> @@ -533,6 +554,16 @@
->  			status = "disabled";
->  		};
->  
-> +		pcie_ep@3600000 {
-> +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-> +			reg = <0x00 0x03600000 0x0 0x00100000
-> +			       0x30 0x00000000 0x8 0x00000000>;
-> +			reg-names = "regs", "addr_space";
-> +			num-ib-windows = <6>;
-> +			num-ob-windows = <8>;
-> +			status = "disabled";
-> +		};
-> +
->  		smmu: iommu@5000000 {
->  			compatible = "arm,mmu-500";
->  			reg = <0 0x5000000 0 0x800000>;
-> -- 
-> 2.9.5
-> 
+ drivers/iio/adc/ad_sigma_delta.c       | 3 ++-
+ include/linux/iio/adc/ad_sigma_delta.h | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
+index 2640b75fb774..8ba90486c787 100644
+--- a/drivers/iio/adc/ad_sigma_delta.c
++++ b/drivers/iio/adc/ad_sigma_delta.c
+@@ -205,7 +205,7 @@ int ad_sd_reset(struct ad_sigma_delta *sigma_delta,
+ }
+ EXPORT_SYMBOL_GPL(ad_sd_reset);
+ 
+-static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
++int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
+ 	unsigned int mode, unsigned int channel)
+ {
+ 	int ret;
+@@ -242,6 +242,7 @@ static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(ad_sd_calibrate);
+ 
+ /**
+  * ad_sd_calibrate_all() - Performs channel calibration
+diff --git a/include/linux/iio/adc/ad_sigma_delta.h b/include/linux/iio/adc/ad_sigma_delta.h
+index 7716fa0c9fce..8a4e25a7080c 100644
+--- a/include/linux/iio/adc/ad_sigma_delta.h
++++ b/include/linux/iio/adc/ad_sigma_delta.h
+@@ -119,6 +119,8 @@ int ad_sd_reset(struct ad_sigma_delta *sigma_delta,
+ 
+ int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+ 	const struct iio_chan_spec *chan, int *val);
++int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
++	unsigned int mode, unsigned int channel);
+ int ad_sd_calibrate_all(struct ad_sigma_delta *sigma_delta,
+ 	const struct ad_sd_calib_data *cd, unsigned int n);
+ int ad_sd_init(struct ad_sigma_delta *sigma_delta, struct iio_dev *indio_dev,
+-- 
+2.17.1
