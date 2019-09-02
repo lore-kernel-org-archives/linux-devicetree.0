@@ -1,51 +1,136 @@
-Return-Path: <SRS0=4mjv=W6=flygoat.com=jiaxun.yang@kernel.org>
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-In-Reply-To: <20190903085904.bwmm4knaodopvzvd@pburton-laptop>
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
-	 <20190827085302.5197-12-jiaxun.yang@flygoat.com>
-	 <CAL_JsqL6htVye-LSBWw1WwRy9xH=zwuH6gurscwoCWj9Te_hAg@mail.gmail.com>
-	 <d94eff2b-76ec-5cd2-512d-5ee0406a1bb9@flygoat.com>
-	 <20190827204105.7nyt4pi7lvxse5ij@pburton-laptop>
-	 <CAL_Jsq+VmFi6r1-WOa9RJ4vfqsZLqcn5HMbv1oyQjhtJ8Qd8Lw@mail.gmail.com> <20190903085904.bwmm4knaodopvzvd@pburton-laptop>
-Subject: Re: [PATCH 11/13] dt-bindings: mips: Add loongson cpus & boards
+Return-Path: <SRS0=lNVK=W5=linux.intel.com=sakari.ailus@kernel.org>
+Date: Mon, 2 Sep 2019 10:22:22 +0300
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v3 09/10] lib/vsprintf: Add %pfw conversion specifier for
+ printing fwnode names
+Message-ID: <20190902072222.GG5475@paasikivi.fi.intel.com>
+References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
+ <20190829101043.24963-10-sakari.ailus@linux.intel.com>
+ <20190830130349.GJ2680@smile.fi.intel.com>
 MIME-Version: 1.0
-Date: Wed, 04 Sep 2019 00:35:19 +0800
-Message-Id: <25561341567528519@sas2-c8fd3ed78d67.qloud-c.yandex.net>
-Content-Transfer-Encoding: base64
-Content-Type: text/html; charset=utf-8
-To: Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@mips.com>
-Cc: "open list:MIPS" <linux-mips@vger.kernel.org>, Huacai Chen <chenhc@lemote.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.co>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830130349.GJ2680@smile.fi.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-PGJyIC8+PGJyIC8+MTc6MDcsIDIwMTnlubQ55pyIM+aXpSwgUGF1bCBCdXJ0b24gJmx0O3BhdWwu
-YnVydG9uQG1pcHMuY29tJmd0Ozo8YnIgLz48YmxvY2txdW90ZSBjbGFzcz0iYjRmZDVjZjJlYzky
-YmM2OGNiODk4NzAwYmI4MTM1NWZ3bWktcXVvdGUiPjxwPkhpIFJvYiw8YnIgLz48YnIgLz5PbiBN
-b24sIFNlcCAwMiwgMjAxOSBhdCAwMzo1MDo0N1BNICswMTAwLCBSb2IgSGVycmluZyB3cm90ZTo8
-YnIgLz48L3A+PGJsb2NrcXVvdGUgY2xhc3M9ImI0ZmQ1Y2YyZWM5MmJjNjhjYjg5ODcwMGJiODEz
-NTVmd21pLXF1b3RlIj7CoCZndDsgSW4gZ2VuZXJhbCBvbiBNSVBTIHdlIGRldGVjdCBDUFUgcHJv
-cGVydGllcyBhdCBydW50aW1lIGZyb20gY29wcm9jZXNzb3I8YnIgLz7CoCZndDsgMCByZWdpc3Rl
-cnMgJmFtcDsgc2ltaWxhciBzb3VyY2VzIG9mIGluZm9ybWF0aW9uLCBzbyB0aGVyZSdzIG5vdCBy
-ZWFsbHkgYTxiciAvPsKgJmd0OyBuZWVkIHRvIHNwZWNpZnkgYW55dGhpbmcgYWJvdXQgdGhlIENQ
-VSBpbiBkZXZpY2V0cmVlLjxiciAvPjxiciAvPsKgV2UgdGhvdWdodCB0aGUgc2FtZSB0aGluZyBp
-bml0aWFsbHkgZm9yIEFybS4uLiBNb3N0bHkgd2hhdCBpcyBpbiBEVCBpczxiciAvPsKgbm90IHdo
-YXQgaXMgZGlzY292ZXJhYmxlLiBBcmUgY2xvY2sgc3BlZWRzLCBwb3dlciBkb21haW5zLCBsb3cg
-cG93ZXI8YnIgLz7CoHN0YXRlcywgZXRjLiBhbGwgZGlzY292ZXJhYmxlPzxiciAvPjwvYmxvY2tx
-dW90ZT48cD48YnIgLz5ObywgdGhhdCdzIGEgZ29vZCBwb2ludCAtIGNsb2NrcyBldGMgbWF5IG5l
-ZWQgdG8gYmUgc3BlY2lmaWVkIGluIERULiBJPGJyIC8+anVzdCBkb24ndCBzZWUgYW55IG9mIHRo
-YXQgaW4gdGhpcyBwYXRjaHNldCAtIGl0IGFwcGVhcnMgYWxsIHRoYXQgaXM8YnIgLz5zcGVjaWZp
-ZWQgaXMgY2FjaGUgc2l6ZXMgd2hpY2ggd2UgYWxyZWFkeSBkZXRlY3QuIFNvIGluIHRoaXMgY2Fz
-ZSBJPGJyIC8+ZG9uJ3Qgc2VlIGEgbmVlZCBmb3IgaW5jbHVkaW5nIENQVXMgaW4gRFQgYXQgYWxs
-LjxiciAvPjxiciAvPkppYXh1biAtIGRpZCB5b3UgYWRkIGFsbCB0aGlzIGluZm9ybWF0aW9uIHRv
-IERUIHRvIGF2b2lkIHRoZSAiY2FjaGVpbmZvOjxiciAvPlVuYWJsZSB0byBkZXRlY3QgY2FjaGUg
-aGllcmFyY2h5IGZvciBDUFUiIG1lc3NhZ2VzIGR1cmluZyBib290PyBJZiBzbzxiciAvPnRoYXQg
-c2hvdWxkIGJlIGZpeGVkIGJ5IGNvbW1pdCBiOGJlYThhNWU1ZDkgKCJtaXBzOiBmaXggY2FjaGVp
-bmZvIikuIElmPGJyIC8+bm90LCBjb3VsZCB5b3UgZGVzY3JpYmUgd2h5IHRoZSBDUFUgbm9kZXMg
-YXJlIG5lZWRlZCBoZXJlPzwvcD48L2Jsb2NrcXVvdGU+QmVjYXVzZSBsYXRlciBJJ20gZ29pbmcg
-dG8gY29udmVydCBtb3JlIGNvZGUgaW50byBEVCwgYW5kIHRoZSBDUFUgbm9kZXMgY2FuIGJlIHVz
-ZWQgdG8gZGV0ZXJtaW5lIE5VTUEgZGVzdGluY2UvY2xvY2sgZG9tYWlucyBldGMuPGRpdj48YnIg
-Lz48L2Rpdj48ZGl2PkZvciB0aGUgY2FjaGUgcGFydCwga2VybmVsIG5vd2FkYXlzIGNhbid0IGhh
-bmRsZSBtdWx0aXBsZSBTQ2FjaGUgc2hhcmVkIGJ5IG11bHRpcGxlIG5vZGVzIHdlbGwgKGN1cnJl
-bnQgY29kZSBpcyB2ZXJ5IExvb25nc29uIHNwZWNpZmllZCkuIEknbSBhbHNvIHNlZWtpbmcgYSB3
-YXkgdG8gaW1wcm92ZSBpdCwgYW5kIHdlIGNhbiByZWx5IG9uIG5vdGhpbmcgYnV0IERUIHRvIGRl
-dGVybWluZSBob3cgZG8gd2Ugc2hhcmUgdGhlc2UgQ2FjaGUuPGJyIC8+PGJyIC8+VGhhbmtzPGJy
-IC8+LS0gPGJyIC8+SmlheHVuIFlhbmc8L2Rpdj4=
+Hi Andy,
+
+Thanks for the review.
+
+On Fri, Aug 30, 2019 at 04:03:49PM +0300, Andy Shevchenko wrote:
+> On Thu, Aug 29, 2019 at 01:10:42PM +0300, Sakari Ailus wrote:
+> > Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
+> > support printing full path of the node, including its name ("f") and only
+> > the node's name ("P") in the printk family of functions. The two flags
+> > have equivalent functionality to existing %pOF with the same two modifiers
+> > ("f" and "P") on OF based systems. The ability to do the same on ACPI
+> > based systems is added by this patch.
+> > 
+> > On ACPI based systems the resulting strings look like
+> > 
+> > 	\_SB.PCI0.CIO2.port@1.endpoint@0
+> > 
+> > where the nodes are separated by a dot (".") and the first three are
+> > ACPI device nodes and the latter two ACPI data nodes.
+> 
+> Couple of comments below, FWIW,
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+Thanks!
+
+> 
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  Documentation/core-api/printk-formats.rst | 24 +++++++++++++++
+> >  lib/vsprintf.c                            | 37 +++++++++++++++++++++++
+> >  scripts/checkpatch.pl                     |  3 +-
+> >  3 files changed, 63 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> > index 922a29eb70e6c..abba210f67567 100644
+> > --- a/Documentation/core-api/printk-formats.rst
+> > +++ b/Documentation/core-api/printk-formats.rst
+> > @@ -418,6 +418,30 @@ Examples::
+> >  
+> >  Passed by reference.
+> >  
+> > +Fwnode handles
+> > +--------------
+> > +
+> > +::
+> > +
+> > +	%pfw[fP]
+> 
+> I'm not familiar with all flavours of the OF case, the question is do we use
+> same letters for analogues?
+
+Yes. There are some that may be unworkable to be extended, but in general
+this helps folks who are familiar with the OF conversion specifiers.
+
+> 
+> > +
+> > +For printing information on fwnode handles. The default is to print the full
+> > +node name, including the path. The modifiers are functionally equivalent to
+> > +%pOF above.
+> > +
+> > +	- f - full name of the node, including the path
+> > +	- P - the name of the node including an address (if there is one)
+> > +
+> > +Examples (ACPI):
+> > +
+> > +	%pfwf	\_SB.PCI0.CIO2.port@1.endpoint@0	- Full node name
+> > +	%pfwP	endpoint@0				- Node name
+> > +
+> > +Examples (OF):
+> > +
+> > +	%pfwf	/ocp@68000000/i2c@48072000/camera@10/port/endpoint - Full name
+> > +	%pfwP	endpoint				- Node name
+> > +
+> >  Time and date (struct rtc_time)
+> >  -------------------------------
+> >  
+> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> > index 19f9b3f30623e..79dacd0b9e124 100644
+> > --- a/lib/vsprintf.c
+> > +++ b/lib/vsprintf.c
+> > @@ -1978,6 +1978,37 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+> >  	return widen_string(buf, buf - buf_start, end, spec);
+> >  }
+> >  
+> > +static noinline_for_stack
+> > +char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
+> > +		    struct printf_spec spec, const char *fmt)
+> > +{
+> > +	struct printf_spec str_spec = spec;
+> > +	char *buf_start = buf;
+> > +
+> > +	str_spec.field_width = -1;
+> > +
+> > +	if (*fmt != 'w')
+> > +		return error_string(buf, end, "(%pfw?)", spec);
+> > +
+> > +	if (check_pointer(&buf, end, fwnode, spec))
+> > +		return buf;
+> > +
+> > +	fmt++;
+> > +
+> > +	switch (*fmt) {
+> > +	case 'f':	/* full_name */
+> > +	default:
+> > +		buf = fwnode_full_name_string(fwnode, buf, end);
+> > +		break;
+> > +	case 'P':	/* name */
+> 
+> > +		buf = string(buf, end, fwnode_get_name(fwnode),
+> > +			     str_spec);
+> 
+> Perfectly one line.
+
+Fixed.
+
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
