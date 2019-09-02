@@ -1,39 +1,69 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC, v5, 1/5] media: dt-bindings: mt8183: Added camera ISP Pass 1
-Date: Mon, 2 Sep 2019 16:17:26 +0100
-Message-ID: <20190902151726.GA24001@bogus>
-References: <jungo.lin@mediatek.com>
- <20190902075135.1332-1-jungo.lin@mediatek.com>
- <20190902075135.1332-2-jungo.lin@mediatek.com>
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v4 08/11] lib/vsprintf: Make use of fwnode API to obtain
+ node names and separators
+Date: Mon, 2 Sep 2019 17:18:03 +0200
+Message-ID: <20190902151803.wgt2x5rtpziggtgx@pathway.suse.cz>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-9-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190902075135.1332-2-jungo.lin@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: ryan.yu@mediatek.com, frankie.chiu@mediatek.com, laurent.pinchart@ideasonboard.com, robh@kernel.org, Rynn.Wu@mediatek.com, suleiman@chromium.org, Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com, frederic.chen@mediatek.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, hverkuil-cisco@xs4all.nl, shik@chromium.org, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, Sean.Cheng@mediatek.com, srv_heupstream@mediatek.com, sj.huang@mediatek.com, tfiga@chromium.org, zwisler@chromium.org, ddavenport@chromium.org
+In-Reply-To: <20190902083240.20367-9-sakari.ailus@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: rafael@kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2 Sep 2019 15:51:31 +0800, Jungo Lin wrote:
-> This patch adds DT binding document for the Pass 1 (P1) unit
-> in Mediatek's camera ISP system. The Pass 1 unit grabs the sensor
-> data out from the sensor interface, applies ISP image effects
-> from tuning data and outputs the image data or statistics data to DRAM.
+On Mon 2019-09-02 11:32:37, Sakari Ailus wrote:
+> Instead of implementing our own means of discovering parent nodes, node
+> names or counting how many parents a node has, use the newly added
+> functions in the fwnode API to obtain that information.
 > 
-> Signed-off-by: Jungo Lin <jungo.lin@mediatek.com>
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  .../bindings/media/mediatek,camisp.txt        | 73 +++++++++++++++++++
->  1 file changed, 73 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek,camisp.txt
+>  lib/vsprintf.c | 38 ++++++++++++++++----------------------
+>  1 file changed, 16 insertions(+), 22 deletions(-)
 > 
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index b00b57f9f911f..a04a2167101ef 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -1863,32 +1864,24 @@ char *flags_string(char *buf, char *end, void *flags_ptr,
+>  	return format_flags(buf, end, flags, names);
+>  }
+>  
+> -static const char *device_node_name_for_depth(const struct device_node *np, int depth)
+> -{
+> -	for ( ; np && depth; depth--)
+> -		np = np->parent;
+> -
+> -	return kbasename(np->full_name);
+> -}
+> -
+>  static noinline_for_stack
+> -char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
+> +char *fwnode_full_name_string(struct fwnode_handle *fwnode, char *buf,
+> +			      char *end)
+>  {
+>  	int depth;
+> -	const struct device_node *parent = np->parent;
+>  
+> -	/* special case for root node */
+> -	if (!parent)
+> -		return string_nocheck(buf, end, "/", default_str_spec);
+> +	for (depth = fwnode_count_parents(fwnode); depth >= 0; depth--) {
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+It looked suspicious that it iterated "depth + 1" times. It might be
+obvious for people traversing paths every day but not for me ;-)
+Please, add a comment, for example:
+
+	/* Iterate over parents and current node. */
+
+With the above comment:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regards,
+Petr
