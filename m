@@ -1,68 +1,123 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI
- config register
-Date: Mon, 2 Sep 2019 14:53:49 +0100
-Message-ID: <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com>
-References: <20190829181203.2660-1-ilina@codeaurora.org>
- <20190829181203.2660-6-ilina@codeaurora.org>
- <5d6d1b72.1c69fb81.ee88.efcf@mx.google.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 1/2] iommu: Implement of_iommu_get_resv_regions()
+Date: Mon, 2 Sep 2019 14:54:23 +0100
+Message-ID: <0b7e050a-cec6-6ce7-9ed6-2146eabb2fe8@arm.com>
+References: <20190829111407.17191-1-thierry.reding@gmail.com>
+ <20190829111407.17191-2-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d6d1b72.1c69fb81.ee88.efcf@mx.google.com>
-Content-Language: en-US
+In-Reply-To: <20190829111407.17191-2-thierry.reding@gmail.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Lina Iyer <ilina@codeaurora.org>
-Cc: swboyd@chromium.org, evgreen@chromium.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Joerg Roedel <joro@8bytes.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Will Deacon <will@kernel.org>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/09/2019 14:38, Rob Herring wrote:
-> On Thu, Aug 29, 2019 at 12:11:54PM -0600, Lina Iyer wrote:
->> In addition to configuring the PDC, additional registers that interface
->> the GIC have to be configured to match the GPIO type. The registers on
->> some QCOM SoCs are access restricted, while on other SoCs are not. They
->> SoCs with access restriction to these SPI registers need to be written
+On 29/08/2019 12:14, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
 > 
-> Took me a minute to figure out this is GIC SPI interrupts, not SPI bus.
+> This is an implementation that IOMMU drivers can use to obtain reserved
+> memory regions from a device tree node. It uses the reserved-memory DT
+> bindings to find the regions associated with a given device. These
+> regions will be used to create 1:1 mappings in the IOMMU domain that
+> the devices will be attached to.
 > 
->> from the firmware using the SCM interface. Add a flag to indicate if the
->> register is to be written using SCM interface.
->>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> ---
->>  .../bindings/interrupt-controller/qcom,pdc.txt           | 9 ++++++++-
->>  1 file changed, 8 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->> index 8e0797cb1487..852fcba98ea6 100644
->> --- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->> @@ -50,15 +50,22 @@ Properties:
->>  		    The second element is the GIC hwirq number for the PDC port.
->>  		    The third element is the number of interrupts in sequence.
->>  
->> +- qcom,scm-spi-cfg:
->> +	Usage: optional
->> +	Value type: <bool>
->> +	Definition: Specifies if the SPI configuration registers have to be
->> +		    written from the firmware.
->> +
->>  Example:
->>  
->>  	pdc: interrupt-controller@b220000 {
->>  		compatible = "qcom,sdm845-pdc";
->> -		reg = <0xb220000 0x30000>;
->> +		reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+>   drivers/iommu/of_iommu.c | 39 +++++++++++++++++++++++++++++++++++++++
+>   include/linux/of_iommu.h |  8 ++++++++
+>   2 files changed, 47 insertions(+)
 > 
-> There needs to be a description for reg updated. These aren't GIC 
-> registers are they? Because those go in the GIC node.
+> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+> index 614a93aa5305..0d47f626b854 100644
+> --- a/drivers/iommu/of_iommu.c
+> +++ b/drivers/iommu/of_iommu.c
+> @@ -9,6 +9,7 @@
+>   #include <linux/iommu.h>
+>   #include <linux/limits.h>
+>   #include <linux/of.h>
+> +#include <linux/of_address.h>
+>   #include <linux/of_iommu.h>
+>   #include <linux/of_pci.h>
+>   #include <linux/slab.h>
+> @@ -225,3 +226,41 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
+>   
+>   	return ops;
+>   }
+> +
+> +/**
+> + * of_iommu_get_resv_regions - reserved region driver helper for device tree
+> + * @dev: device for which to get reserved regions
+> + * @list: reserved region list
+> + *
+> + * IOMMU drivers can use this to implement their .get_resv_regions() callback
+> + * for memory regions attached to a device tree node. See the reserved-memory
+> + * device tree bindings on how to use these:
+> + *
+> + *   Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> + */
+> +void of_iommu_get_resv_regions(struct device *dev, struct list_head *list)
+> +{
+> +	struct of_phandle_iterator it;
+> +	int err;
+> +
+> +	of_for_each_phandle(&it, err, dev->of_node, "memory-region", NULL, 0) {
+> +		struct iommu_resv_region *region;
+> +		struct resource res;
+> +
+> +		err = of_address_to_resource(it.node, 0, &res);
+> +		if (err < 0) {
+> +			dev_err(dev, "failed to parse memory region %pOF: %d\n",
+> +				it.node, err);
+> +			continue;
+> +		}
 
-This is completely insane. Why are the GIC registers configured as
-secure the first place, if they are expected to be in control of the
-non-secure?
+What if the device node has memory regions for other purposes, like 
+private CMA carveouts? We wouldn't want to force mappings of those (and 
+in the very worst case doing so could even render them unusable).
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Robin.
+
+> +
+> +		region = iommu_alloc_resv_region(res.start, resource_size(&res),
+> +						 IOMMU_READ | IOMMU_WRITE,
+> +						 IOMMU_RESV_DIRECT_RELAXABLE);
+> +		if (!region)
+> +			continue;
+> +
+> +		list_add_tail(&region->list, list);
+> +	}
+> +}
+> +EXPORT_SYMBOL(of_iommu_get_resv_regions);
+> diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
+> index f3d40dd7bb66..fa16b26f55bc 100644
+> --- a/include/linux/of_iommu.h
+> +++ b/include/linux/of_iommu.h
+> @@ -15,6 +15,9 @@ extern int of_get_dma_window(struct device_node *dn, const char *prefix,
+>   extern const struct iommu_ops *of_iommu_configure(struct device *dev,
+>   					struct device_node *master_np);
+>   
+> +extern void of_iommu_get_resv_regions(struct device *dev,
+> +				      struct list_head *list);
+> +
+>   #else
+>   
+>   static inline int of_get_dma_window(struct device_node *dn, const char *prefix,
+> @@ -30,6 +33,11 @@ static inline const struct iommu_ops *of_iommu_configure(struct device *dev,
+>   	return NULL;
+>   }
+>   
+> +static inline void of_iommu_get_resv_regions(struct device *dev,
+> +					     struct list_head *list)
+> +{
+> +}
+> +
+>   #endif	/* CONFIG_OF_IOMMU */
+>   
+>   #endif /* __OF_IOMMU_H */
+> 
