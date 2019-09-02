@@ -1,156 +1,100 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCHv4-next 3/3] arm64: dts: meson: odroid-c2: Disable usb_otg bus to avoid power failed warning
-Date: Mon,  2 Sep 2019 05:49:35 +0000
-Message-ID: <20190902054935.4899-4-linux.amoon@gmail.com>
-References: <20190902054935.4899-1-linux.amoon@gmail.com>
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY
+ bindings
+Date: Mon, 2 Sep 2019 08:23:04 +0200
+Message-ID: <f3584f38-dabc-7e7a-d1cb-84c80ed26215@linaro.org>
+References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org>
+ <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org>
+ <20190223165218.GB572@tuxbook-pro>
+ <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
+ <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
+ <20190830164520.GK26807@tuxbook-pro>
+ <5d696ad2.1c69fb81.977ea.39e5@mx.google.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190902054935.4899-1-linux.amoon@gmail.com>
+In-Reply-To: <5d696ad2.1c69fb81.977ea.39e5@mx.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, jackp@codeaurora.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-usb_otg bus needs to get initialize from the u-boot to be configured
-to used as power source to SBC or usb otg port will get configured
-as host device. Right now this support is missing in the u-boot and
-phy driver so to avoid power failed warning, we would disable this
-feature  until proper fix is found.
+On 8/30/19 20:28, Stephen Boyd wrote:
+> Quoting Bjorn Andersson (2019-08-30 09:45:20)
+>> On Fri 30 Aug 09:01 PDT 2019, Stephen Boyd wrote:
+>>
+>>> Quoting Jorge Ramirez (2019-08-29 00:03:48)
+>>>> On 2/23/19 17:52, Bjorn Andersson wrote:
+>>>>> On Thu 07 Feb 03:17 PST 2019, Jorge Ramirez-Ortiz wrote:
+>>>>>> +
+>>>>>> +Required child nodes:
+>>>>>> +
+>>>>>> +- usb connector node as defined in bindings/connector/usb-connector.txt
+>>>>>> +  containing the property vbus-supply.
+>>>>>> +
+>>>>>> +Example:
+>>>>>> +
+>>>>>> +usb3_phy: usb3-phy@78000 {
+>>>>>> +    compatible = "qcom,snps-usb-ssphy";
+>>>>>> +    reg = <0x78000 0x400>;
+>>>>>> +    #phy-cells = <0>;
+>>>>>> +    clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
+>>>>>> +             <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
+>>>>>> +             <&gcc GCC_USB3_PHY_PIPE_CLK>;
+>>>>>> +    clock-names = "ref", "phy", "pipe";
+>>>>>> +    resets = <&gcc GCC_USB3_PHY_BCR>,
+>>>>>> +             <&gcc GCC_USB3PHY_PHY_BCR>;
+>>>>>> +    reset-names = "com", "phy";
+>>>>>> +    vdd-supply = <&vreg_l3_1p05>;
+>>>>>> +    vdda1p8-supply = <&vreg_l5_1p8>;
+>>>>>> +    usb3_c_connector: usb3-c-connector {
+>>>
+>>> Node name should be 'connector', not usb3-c-connector.
+>>>
+>>
+>> It probably has to be usb-c-connector, because we have a
+>> micro-usb-connector on the same board.
+> 
+> Ok. Or connector@1 and connector@2? Our toplevel node container story is
+> sort of sad because we have to play tricks with node names. But in the
+> example, just connector I presume? 
+> 
+>>
+>>>>>
+>>>>> The USB-C connector is attached both to the HS and SS PHYs, so I think
+>>>>> you should represent this external to this node and use of_graph to
+>>>>> query it.
+>>>>
+>>>> but AFAICS we wont be able to retrieve the vbux-supply from an external
+>>>> node (that interface does not exist).
+>>>>
+>>>> rob, do you have a suggestion?
+>>>
+>>> Shouldn't the vbus supply be in the phy? Or is this a situation where
+>>> the phy itself doesn't have the vbus supply going to it because the PMIC
+>>> gets in the way and handles the vbus for the connector by having the SoC
+>>> communicate with the PMIC about when to turn the vbus on and off, etc?
+>>>
+>>
+>> That's correct, the VBUS comes out of the PMIC and goes directly to the
+>> connector.
+>>
+>> The additional complicating factor here is that the connector is wired
+>> to a USB2 phy as well, so we need to wire up detection and vbus control
+>> to both of them - but I think this will be fine, if we can only figure
+>> out a sane way of getting hold of the vbus-supply.
+>>
+> 
+> Does it really matter to describe this situation though? Maybe it's
+> simpler to throw the vbus supply into the phy and control it from the
+> phy driver, even if it never really goes there. Or put it into the
+> toplevel usb controller?
+> 
+that would work for me - the connector definition seemed a better way to
+explain the connectivity but since we cant retrieve the supply from the
+external node is not of much functional use.
 
-[    2.716048] phy phy-c0000000.phy.0: USB ID detect failed!
-[    2.720186] phy phy-c0000000.phy.0: phy poweron failed --> -22
-[    2.726001] ------------[ cut here ]------------
-[    2.730583] WARNING: CPU: 0 PID: 12 at drivers/regulator/core.c:2039 _regulator_put+0x3c/0xe8
-[    2.738983] Modules linked in:
-[    2.742005] CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.9-1-ARCH #1
-[    2.748643] Hardware name: Hardkernel ODROID-C2 (DT)
-[    2.753566] Workqueue: events deferred_probe_work_func
-[    2.758649] pstate: 60000005 (nZCv daif -PAN -UAO)
-[    2.763394] pc : _regulator_put+0x3c/0xe8
-[    2.767361] lr : _regulator_put+0x3c/0xe8
-[    2.771326] sp : ffff000011aa3a50
-[    2.774604] x29: ffff000011aa3a50 x28: ffff80007ed1b600
-[    2.779865] x27: ffff80007f7036a8 x26: ffff80007f7036a8
-[    2.785126] x25: 0000000000000000 x24: ffff000011a44458
-[    2.790387] x23: ffff000011344218 x22: 0000000000000009
-[    2.795649] x21: ffff000011aa3b68 x20: ffff80007ed1b500
-[    2.800910] x19: ffff80007ed1b500 x18: 0000000000000010
-[    2.806171] x17: 000000005be5943c x16: 00000000f1c73b29
-[    2.811432] x15: ffffffffffffffff x14: ffff0000117396c8
-[    2.816694] x13: ffff000091aa37a7 x12: ffff000011aa37af
-[    2.821955] x11: ffff000011763000 x10: ffff000011aa3730
-[    2.827216] x9 : 00000000ffffffd0 x8 : ffff000010871760
-[    2.832477] x7 : 00000000000000d0 x6 : ffff0000119d151b
-[    2.837739] x5 : 000000000000000f x4 : 0000000000000000
-[    2.843000] x3 : 0000000000000000 x2 : 38104b2678c20100
-[    2.848261] x1 : 0000000000000000 x0 : 0000000000000024
-[    2.853523] Call trace:
-[    2.855940]  _regulator_put+0x3c/0xe8
-[    2.859562]  regulator_put+0x34/0x48
-[    2.863098]  regulator_bulk_free+0x40/0x58
-[    2.867153]  devm_regulator_bulk_release+0x24/0x30
-[    2.871896]  release_nodes+0x1f0/0x2e0
-[    2.875604]  devres_release_all+0x64/0xa4
-[    2.879571]  really_probe+0x1c8/0x3e0
-[    2.883194]  driver_probe_device+0xe4/0x138
-[    2.887334]  __device_attach_driver+0x90/0x110
-[    2.891733]  bus_for_each_drv+0x8c/0xd8
-[    2.895527]  __device_attach+0xdc/0x160
-[    2.899322]  device_initial_probe+0x24/0x30
-[    2.903463]  bus_probe_device+0x9c/0xa8
-[    2.907258]  deferred_probe_work_func+0xa0/0xf0
-[    2.911745]  process_one_work+0x1b4/0x408
-[    2.915711]  worker_thread+0x54/0x4b8
-[    2.919334]  kthread+0x12c/0x130
-[    2.922526]  ret_from_fork+0x10/0x1c
-[    2.926060] ---[ end trace 51a68f4c0035d6c0 ]---
-[    2.930691] ------------[ cut here ]------------
-[    2.935242] WARNING: CPU: 0 PID: 12 at drivers/regulator/core.c:2039 _regulator_put+0x3c/0xe8
-[    2.943653] Modules linked in:
-[    2.946675] CPU: 0 PID: 12 Comm: kworker/0:1 Tainted: G        W         5.2.9-1-ARCH #1
-[    2.954694] Hardware name: Hardkernel ODROID-C2 (DT)
-[    2.959613] Workqueue: events deferred_probe_work_func
-[    2.964700] pstate: 60000005 (nZCv daif -PAN -UAO)
-[    2.969445] pc : _regulator_put+0x3c/0xe8
-[    2.973412] lr : _regulator_put+0x3c/0xe8
-[    2.977377] sp : ffff000011aa3a50
-[    2.980655] x29: ffff000011aa3a50 x28: ffff80007ed1b600
-[    2.985916] x27: ffff80007f7036a8 x26: ffff80007f7036a8
-[    2.991177] x25: 0000000000000000 x24: ffff000011a44458
-[    2.996439] x23: ffff000011344218 x22: 0000000000000009
-[    3.001700] x21: ffff000011aa3b68 x20: ffff80007ed1bd00
-[    3.006961] x19: ffff80007ed1bd00 x18: 0000000000000010
-[    3.012222] x17: 000000005be5943c x16: 00000000f1c73b29
-[    3.017484] x15: ffffffffffffffff x14: ffff0000117396c8
-[    3.022745] x13: ffff000091aa37a7 x12: ffff000011aa37af
-[    3.028006] x11: ffff000011763000 x10: ffff000011aa3730
-[    3.033267] x9 : 00000000ffffffd0 x8 : ffff000010871760
-[    3.038528] x7 : 00000000000000fd x6 : ffff0000119d151b
-[    3.043790] x5 : 000000000000000f x4 : 0000000000000000
-[    3.049051] x3 : 0000000000000000 x2 : 38104b2678c20100
-[    3.054312] x1 : 0000000000000000 x0 : 0000000000000024
-[    3.059574] Call trace:
-[    3.061991]  _regulator_put+0x3c/0xe8
-[    3.065613]  regulator_put+0x34/0x48
-[    3.069149]  regulator_bulk_free+0x40/0x58
-[    3.073203]  devm_regulator_bulk_release+0x24/0x30
-[    3.077947]  release_nodes+0x1f0/0x2e0
-[    3.081655]  devres_release_all+0x64/0xa4
-[    3.085622]  really_probe+0x1c8/0x3e0
-[    3.089245]  driver_probe_device+0xe4/0x138
-[    3.093385]  __device_attach_driver+0x90/0x110
-[    3.097784]  bus_for_each_drv+0x8c/0xd8
-[    3.101578]  __device_attach+0xdc/0x160
-[    3.105373]  device_initial_probe+0x24/0x30
-[    3.109514]  bus_probe_device+0x9c/0xa8
-[    3.113309]  deferred_probe_work_func+0xa0/0xf0
-[    3.117796]  process_one_work+0x1b4/0x408
-[    3.121762]  worker_thread+0x54/0x4b8
-[    3.125384]  kthread+0x12c/0x130
-[    3.128575]  ret_from_fork+0x10/0x1c
-[    3.132110] ---[ end trace 51a68f4c0035d6c1 ]---
-[    3.136753] dwc2: probe of c9000000.usb failed with error -22
-
-Fixes: 5a0803bd5ae2 ("ARM64: dts: meson-gxbb-odroidc2: Enable USB Nodes")
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-Rebased on linux-next
-Added Acked by Martin
-
-[0] https://patchwork.kernel.org/patch/10757569/
-Earlier my approach to initialize the usb0 bus was limited, some more
-phy tuning is required both at driver and u-boot to get this feature
-working. So for now just disable this.
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index d4c8b896dd26..3e51f0835c8d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -312,7 +312,7 @@
- };
- 
- &usb0_phy {
--	status = "okay";
-+	status = "disabled";
- 	phy-supply = <&usb_otg_pwr>;
- };
- 
-@@ -322,7 +322,7 @@
- };
- 
- &usb0 {
--	status = "okay";
-+	status = "disabled";
- };
- 
- &usb1 {
--- 
-2.23.0
+but please let me know how to proceed. shall I add the supply back to
+the phy?
