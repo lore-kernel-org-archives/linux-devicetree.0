@@ -1,110 +1,101 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v5 00/11] Device property improvements, add %pfw format specifier
-Date: Mon,  2 Sep 2019 16:57:21 +0300
-Message-ID: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
+Subject: [PATCH v5 07/11] lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
+Date: Mon,  2 Sep 2019 16:57:28 +0300
+Message-ID: <20190902135732.23455-8-sakari.ailus@linux.intel.com>
+References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+%pS and %ps are now the preferred conversion specifiers to print function
+names. The functionality is equivalent; remove the old, deprecated %pF
+and %pf support.
 
-This set adds functionality into the device property API (counting a
-node's parents as well as obtaining its name) in order to support printing
-fwnode names using a new conversion specifier "%pfw". The names that are
-produced are equivalent to its OF counterpart "%pOF" on OF systems for the
-two supported modifiers ("f" and "P").
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ Documentation/core-api/printk-formats.rst | 10 ----------
+ lib/vsprintf.c                            |  8 ++------
+ scripts/checkpatch.pl                     |  1 -
+ 3 files changed, 2 insertions(+), 17 deletions(-)
 
-Printing a node's name is something that's been available on OF for a long
-time and if something is converted to device property API (such as the
-V4L2 fwnode framework) it always got removed of a nice feature that was
-sometimes essential in debugging. With this set, that no longer is the
-case.
-
-since v4:
-
-- Improved documentation for fwnode_get_nth_parent().
-
-- Removed comma from the guardian entry in fwnode_pointer() testcase.
-
-since v3:
-
-- Remove underscores in argument name of fwnode_count_parents().
-
-- Re-introduce "%pO?" error string.
-
-- Unwrap a call to string() in fwnode_string().
-
-- Removed a useless Depends-on: on a patch that was merged long ago.
-
-- Unwrap a Fixes: line.
-
-- Added a patch to move fwnode_get_parent() up to make the review of the
-  following patch easier.
-
-since v2:
-
-- Better comments in acpi_fwnode_get_name_prefix().
-
-- Added swnode implementation.
-
-- Fixed swnode refcounting in get_parent() ("swnode: Get reference to
-  parent swnode in get_parent op")
-
-- Make argument to to_software_node() const (a new patch)
-
-- Factored out confusingly named kobject_string() that had a single
-  caller.
-
-- Cleaner fwnode_count_parents() implementation (as discussed in review).
-
-- Made fwnode_count_parents() argument const.
-
-- Added tests (last patch in the set).
-
-since v1:
-
-- Add patch to remove support for %pf and %pF (depends on another patch
-  removing all use of %pf and %pF) (now 4th patch)
-
-- Fix kerneldoc argument documentation for fwnode_get_name (2nd patch)
-
-- Align kerneldoc style with the rest of drivers/base/property.c (no extra
-  newline after function name)
-
-- Make checkpatch.pl complain about "%pf" not followed by "w" (6th patch)
-
-- WARN_ONCE() on use of invalid conversion specifiers ("%pf" not followed
-  by "w")
-
-Sakari Ailus (11):
-  software node: Get reference to parent swnode in get_parent op
-  software node: Make argument to to_software_node const
-  device property: Move fwnode_get_parent() up
-  device property: Add functions for accessing node's parents
-  device property: Add fwnode_get_name for returning the name of a node
-  device property: Add a function to obtain a node's prefix
-  lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
-  lib/vsprintf: Make use of fwnode API to obtain node names and
-    separators
-  lib/vsprintf: OF nodes are first and foremost, struct device_nodes
-  lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
-  lib/test_printf: Add tests for %pfw printk modifier
-
- Documentation/core-api/printk-formats.rst | 34 ++++++---
- drivers/acpi/property.c                   | 48 +++++++++++++
- drivers/base/property.c                   | 83 +++++++++++++++++++--
- drivers/base/swnode.c                     | 55 +++++++++++++-
- drivers/of/property.c                     | 16 +++++
- include/linux/fwnode.h                    |  4 ++
- include/linux/property.h                  |  8 ++-
- lib/test_printf.c                         | 37 ++++++++++
- lib/vsprintf.c                            | 88 ++++++++++++++---------
- scripts/checkpatch.pl                     |  4 +-
- 10 files changed, 319 insertions(+), 58 deletions(-)
-
+diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+index c6224d039bcbe..922a29eb70e6c 100644
+--- a/Documentation/core-api/printk-formats.rst
++++ b/Documentation/core-api/printk-formats.rst
+@@ -86,8 +86,6 @@ Symbols/Function Pointers
+ 
+ 	%pS	versatile_init+0x0/0x110
+ 	%ps	versatile_init
+-	%pF	versatile_init+0x0/0x110
+-	%pf	versatile_init
+ 	%pSR	versatile_init+0x9/0x110
+ 		(with __builtin_extract_return_addr() translation)
+ 	%pB	prev_fn_of_versatile_init+0x88/0x88
+@@ -97,14 +95,6 @@ The ``S`` and ``s`` specifiers are used for printing a pointer in symbolic
+ format. They result in the symbol name with (S) or without (s)
+ offsets. If KALLSYMS are disabled then the symbol address is printed instead.
+ 
+-Note, that the ``F`` and ``f`` specifiers are identical to ``S`` (``s``)
+-and thus deprecated. We have ``F`` and ``f`` because on ia64, ppc64 and
+-parisc64 function pointers are indirect and, in fact, are function
+-descriptors, which require additional dereferencing before we can lookup
+-the symbol. As of now, ``S`` and ``s`` perform dereferencing on those
+-platforms (when needed), so ``F`` and ``f`` exist for compatibility
+-reasons only.
+-
+ The ``B`` specifier results in the symbol name with offsets and should be
+ used when printing stack backtraces. The specifier takes into
+ consideration the effect of compiler optimisations which may occur
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index b0967cf17137d..b00b57f9f911f 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -909,7 +909,7 @@ char *symbol_string(char *buf, char *end, void *ptr,
+ #ifdef CONFIG_KALLSYMS
+ 	if (*fmt == 'B')
+ 		sprint_backtrace(sym, value);
+-	else if (*fmt != 'f' && *fmt != 's')
++	else if (*fmt != 's')
+ 		sprint_symbol(sym, value);
+ 	else
+ 		sprint_symbol_no_offset(sym, value);
+@@ -2007,9 +2007,7 @@ static char *kobject_string(char *buf, char *end, void *ptr,
+  *
+  * - 'S' For symbolic direct pointers (or function descriptors) with offset
+  * - 's' For symbolic direct pointers (or function descriptors) without offset
+- * - 'F' Same as 'S'
+- * - 'f' Same as 's'
+- * - '[FfSs]R' as above with __builtin_extract_return_addr() translation
++ * - '[Ss]R' as above with __builtin_extract_return_addr() translation
+  * - 'B' For backtraced symbolic direct pointers with offset
+  * - 'R' For decoded struct resource, e.g., [mem 0x0-0x1f 64bit pref]
+  * - 'r' For raw struct resource, e.g., [mem 0x0-0x1f flags 0x201]
+@@ -2112,8 +2110,6 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+ 	      struct printf_spec spec)
+ {
+ 	switch (*fmt) {
+-	case 'F':
+-	case 'f':
+ 	case 'S':
+ 	case 's':
+ 		ptr = dereference_symbol_descriptor(ptr);
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 93a7edfe0f059..a60c241112cd4 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -6012,7 +6012,6 @@ sub process {
+ 					my $ext_type = "Invalid";
+ 					my $use = "";
+ 					if ($bad_specifier =~ /p[Ff]/) {
+-						$ext_type = "Deprecated";
+ 						$use = " - use %pS instead";
+ 						$use =~ s/pS/ps/ if ($bad_specifier =~ /pf/);
+ 					}
 -- 
 2.20.1
