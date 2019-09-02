@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v5 10/11] lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
-Date: Mon,  2 Sep 2019 16:57:31 +0300
-Message-ID: <20190902135732.23455-11-sakari.ailus@linux.intel.com>
+Subject: [PATCH v5 09/11] lib/vsprintf: OF nodes are first and foremost, struct device_nodes
+Date: Mon,  2 Sep 2019 16:57:30 +0300
+Message-ID: <20190902135732.23455-10-sakari.ailus@linux.intel.com>
 References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,137 +12,56 @@ To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
-support printing full path of the node, including its name ("f") and only
-the node's name ("P") in the printk family of functions. The two flags
-have equivalent functionality to existing %pOF with the same two modifiers
-("f" and "P") on OF based systems. The ability to do the same on ACPI
-based systems is added by this patch.
-
-On ACPI based systems the resulting strings look like
-
-	\_SB.PCI0.CIO2.port@1.endpoint@0
-
-where the nodes are separated by a dot (".") and the first three are
-ACPI device nodes and the latter two ACPI data nodes.
+Factor out static kobject_string() function that simply calls
+device_node_string(), and thus remove references to kobjects (as these are
+struct device_node).
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- Documentation/core-api/printk-formats.rst | 24 +++++++++++++++
- lib/vsprintf.c                            | 36 +++++++++++++++++++++++
- scripts/checkpatch.pl                     |  3 +-
- 3 files changed, 62 insertions(+), 1 deletion(-)
+ lib/vsprintf.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-index 922a29eb70e6c..abba210f67567 100644
---- a/Documentation/core-api/printk-formats.rst
-+++ b/Documentation/core-api/printk-formats.rst
-@@ -418,6 +418,30 @@ Examples::
- 
- Passed by reference.
- 
-+Fwnode handles
-+--------------
-+
-+::
-+
-+	%pfw[fP]
-+
-+For printing information on fwnode handles. The default is to print the full
-+node name, including the path. The modifiers are functionally equivalent to
-+%pOF above.
-+
-+	- f - full name of the node, including the path
-+	- P - the name of the node including an address (if there is one)
-+
-+Examples (ACPI):
-+
-+	%pfwf	\_SB.PCI0.CIO2.port@1.endpoint@0	- Full node name
-+	%pfwP	endpoint@0				- Node name
-+
-+Examples (OF):
-+
-+	%pfwf	/ocp@68000000/i2c@48072000/camera@10/port/endpoint - Full name
-+	%pfwP	endpoint				- Node name
-+
- Time and date (struct rtc_time)
- -------------------------------
- 
 diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 4ad9332d54ba6..b9b4c835db063 100644
+index a04a2167101ef..4ad9332d54ba6 100644
 --- a/lib/vsprintf.c
 +++ b/lib/vsprintf.c
-@@ -1981,6 +1981,36 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+@@ -1905,6 +1905,9 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+ 	struct printf_spec str_spec = spec;
+ 	str_spec.field_width = -1;
+ 
++	if (fmt[0] != 'F')
++		return error_string(buf, end, "(%pO?)", spec);
++
+ 	if (!IS_ENABLED(CONFIG_OF))
+ 		return error_string(buf, end, "(%pOF?)", spec);
+ 
+@@ -1978,17 +1981,6 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
  	return widen_string(buf, buf - buf_start, end, spec);
  }
  
-+static noinline_for_stack
-+char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
-+		    struct printf_spec spec, const char *fmt)
-+{
-+	struct printf_spec str_spec = spec;
-+	char *buf_start = buf;
-+
-+	str_spec.field_width = -1;
-+
-+	if (*fmt != 'w')
-+		return error_string(buf, end, "(%pfw?)", spec);
-+
-+	if (check_pointer(&buf, end, fwnode, spec))
-+		return buf;
-+
-+	fmt++;
-+
-+	switch (*fmt) {
-+	case 'f':	/* full_name */
-+	default:
-+		buf = fwnode_full_name_string(fwnode, buf, end);
-+		break;
-+	case 'P':	/* name */
-+		buf = string(buf, end, fwnode_get_name(fwnode), str_spec);
-+		break;
-+	}
-+
-+	return widen_string(buf, buf - buf_start, end, spec);
-+}
-+
+-static char *kobject_string(char *buf, char *end, void *ptr,
+-			    struct printf_spec spec, const char *fmt)
+-{
+-	switch (fmt[1]) {
+-	case 'F':
+-		return device_node_string(buf, end, ptr, spec, fmt + 1);
+-	}
+-
+-	return error_string(buf, end, "(%pO?)", spec);
+-}
+-
  /*
   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
   * by an extra set of alphanumeric characters that are extended format
-@@ -2083,6 +2113,10 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
-  *                  F device node flags
-  *                  c major compatible string
-  *                  C full compatible string
-+ * - 'fw[fP]'	For a firmware node (struct fwnode_handle) pointer
-+ *		Without an option prints the full name of the node
-+ *		f full name
-+ *		P node name, including a possible unit address
-  * - 'x' For printing the address. Equivalent to "%lx".
-  *
-  * ** When making changes please also update:
-@@ -2160,6 +2194,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+@@ -2167,7 +2159,7 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+ 	case 'G':
  		return flags_string(buf, end, ptr, spec, fmt);
  	case 'O':
- 		return device_node_string(buf, end, ptr, spec, fmt + 1);
-+	case 'f':
-+		return fwnode_string(buf, end, ptr, spec, fmt + 1);
+-		return kobject_string(buf, end, ptr, spec, fmt);
++		return device_node_string(buf, end, ptr, spec, fmt + 1);
  	case 'x':
  		return pointer_string(buf, end, ptr, spec);
  	}
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index a60c241112cd4..8df50911ff4e9 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -5995,7 +5995,8 @@ sub process {
- 				while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
- 					$specifier = $1;
- 					$extension = $2;
--					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxt]/) {
-+					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
-+					    $extension =~ /^f[^w]/) {
- 						$bad_specifier = $specifier;
- 						last;
- 					}
 -- 
 2.20.1
