@@ -1,75 +1,31 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v4 2/9] dt-bindings: i2c: add bindings for i2c analog and
- digital filter
-Date: Mon, 2 Sep 2019 14:40:55 +0000
-Message-ID: <52038b5a-5940-2ac0-b7b4-5677c2fc5fbf@axentia.se>
-References: <1567418773-2427-1-git-send-email-eugen.hristev@microchip.com>
- <1567418773-2427-3-git-send-email-eugen.hristev@microchip.com>
- <9a9c209c-2fb8-0a4c-4e0a-b04fefda3360@axentia.se>
- <b6528812-65d3-6561-38e7-c0545af900d8@microchip.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v7 07/11] dt-bindings: pwm: pwm-mediatek: add a property
+ "num-pwms"
+Date: Mon, 2 Sep 2019 15:43:37 +0100
+Message-ID: <20190902144337.GA25200@bogus>
+References: <1567137437-10041-1-git-send-email-sam.shih@mediatek.com>
+ <1567137437-10041-8-git-send-email-sam.shih@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b6528812-65d3-6561-38e7-c0545af900d8@microchip.com>
-Content-Language: en-US
-Content-ID: <8C56B3A8B13F234BBB6A1FFC3502C322@eurprd02.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <1567137437-10041-8-git-send-email-sam.shih@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Ludovic.Desroches@microchip.com" <Ludovic.Desroches@microchip.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "pierre-yves.mordret@st.com" <pierre-yves.mordret@st.com>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: Sam Shih <sam.shih@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOS0wOS0wMiAxNjoxNSwgRXVnZW4uSHJpc3RldkBtaWNyb2NoaXAuY29tIHdyb3RlOg0K
-PiANCj4gDQo+IE9uIDAyLjA5LjIwMTkgMTM6NDksIFBldGVyIFJvc2luIHdyb3RlOg0KPiANCj4+
-IE9uIDIwMTktMDktMDIgMTI6MTIsIEV1Z2VuLkhyaXN0ZXZAbWljcm9jaGlwLmNvbSB3cm90ZToN
-Cj4+PiBGcm9tOiBFdWdlbiBIcmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+
-Pj4NCj4+PiBTb21lIGkyYyBjb250cm9sbGVycyBoYXZlIGEgYnVpbHQtaW4gZGlnaXRhbCBvciBh
-bmFsb2cgZmlsdGVyLg0KPj4+IFRoaXMgaXMgc3BlY2lmaWNhbGx5IHJlcXVpcmVkIGRlcGVuZGlu
-ZyBvbiB0aGUgaGFyZHdhcmUgUENCL2JvYXJkLg0KPj4+IFNvbWUgY29udHJvbGxlcnMgYWxzbyBh
-bGxvdyBzcGVjaWZ5aW5nIHRoZSBtYXhpbXVtIHdpZHRoIG9mIHRoZQ0KPj4+IHNwaWtlcyB0aGF0
-IGNhbiBiZSBmaWx0ZXJlZC4gVGhlIHdpZHRoIGxlbmd0aCBjYW4gYmUgc3BlY2lmaWVkIGluIG5h
-bm9zZWNvbmRzLg0KPj4+DQo+Pj4gU2lnbmVkLW9mZi1ieTogRXVnZW4gSHJpc3RldiA8ZXVnZW4u
-aHJpc3RldkBtaWNyb2NoaXAuY29tPg0KPj4+IC0tLQ0KPj4+ICAgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMudHh0IHwgMTEgKysrKysrKysrKysNCj4+PiAgIDEgZmls
-ZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspDQo+Pj4NCj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMudHh0IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMudHh0DQo+Pj4gaW5kZXggNDRlZmFmZC4uOGRiZmY2
-NyAxMDA2NDQNCj4+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJj
-L2kyYy50eHQNCj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaTJj
-L2kyYy50eHQNCj4+PiBAQCAtNTUsNiArNTUsMTcgQEAgd2FudHMgdG8gc3VwcG9ydCBvbmUgb2Yg
-dGhlIGJlbG93IGZlYXR1cmVzLCBpdCBzaG91bGQgYWRhcHQgdGhlIGJpbmRpbmdzIGJlbG93Lg0K
-Pj4+ICAgCU51bWJlciBvZiBuYW5vc2Vjb25kcyB0aGUgU0RBIHNpZ25hbCB0YWtlcyB0byBmYWxs
-OyB0KGYpIGluIHRoZSBJMkMNCj4+PiAgIAlzcGVjaWZpY2F0aW9uLg0KPj4+ICAgDQo+Pj4gKy0g
-aTJjLWFuYWxvZy1maWx0ZXINCj4+PiArCUVuYWJsZSBhbmFsb2cgZmlsdGVyIGZvciBpMmMgbGlu
-ZXMuDQo+Pj4gKw0KPj4+ICstIGkyYy1kaWdpdGFsLWZpbHRlcg0KPj4+ICsJRW5hYmxlIGRpZ2l0
-YWwgZmlsdGVyIGZvciBpMmMgbGluZXMuDQo+Pj4gKw0KPj4+ICstIGkyYy1maWx0ZXItd2lkdGgt
-bnMNCj4+PiArCVdpZHRoIG9mIHNwaWtlcyB3aGljaCBjYW4gYmUgZmlsdGVyZWQgYnkgZWl0aGVy
-IGRpZ2l0YWwgb3IgYW5hbG9nDQo+Pj4gKwlmaWx0ZXJzIChpMmMtYW5hbG9nLWZpbHRyIG9yIGky
-Yy1kaWdpdGFsLWZpbHRyKS4gVGhpcyB3aWR0aCBpcyBzcGVjaWZpZWQNCj4+DQo+PiBmaWx0ciAt
-PiBmaWx0ZXIgKHR3byBpbnN0YW5jZXMpDQo+Pg0KPj4gV2hhdCBpZiB5b3Ugd2FudC9uZWVkIHRv
-IGhhdmUgZGlmZmVyZW50IGJhbmR3aWR0aCBmb3IgdGhlIGRpZ2l0YWwgYW5kIGFuYWxvZw0KPj4g
-ZmlsdGVycz8gQWZ0ZXIgYWxsLCB0aGlzIGlzIGEgZ2VuZXJpYyBiaW5kaW5nLi4uDQo+IA0KPiBI
-aSBQZXRlciwNCj4gDQo+IEZvciBvdXIgbmVlZHMsIHRoaXMgaXMgZW5vdWdoOiB0aGUgcHVycG9z
-ZSBvZiB0aGUgZmlsdGVycyBpcyB0byBhdm9pZCANCj4gbm9pc2Ugb24gdGhlIGxpbmVzLCB0aGUg
-bm9pc2UgaXMgYXMgYmlnIGFzIGl0IGlzIGZvciB0aGUgZGlnaXRhbCBhbmQgZm9yIA0KPiB0aGUg
-YW5hbG9nIGZpbHRlcnMsIHNpbmNlIHdlIHVzZSBhbiBhYnNvbHV0ZSBtZWFzdXJlbWVudCBmb3Ig
-dGhlbS4gU28gSSANCj4gZG8gbm90IGtub3cgaG93IHVzZWZ1bCBpdCB3b3VsZCBiZSB0byBtYWtl
-IGEgZGlmZmVyZW5jZS4NCkkgdGhpbmsgbXkgZ3JpcGUgaXMgdGhhdCB0aGUgZGVzY3JpcHRpb24g
-YWxzbyBzZWVtcyBub24tZ2VuZXJpYy4gQW5hbG9nDQpmaWx0ZXJzIG5ldmVyIChvaywgdXN1YWxs
-eSwgYnV0IEkgaGF2ZSBhIGhhcmQgdGltZSBzZWVpbmcgaG93IGEgc2ltcGxlDQphbmFsb2cgZmls
-dGVyIGNhbikgd29yayBpbiB0ZXJtcyBvZiBzb21lICJ3aWR0aCBvZiBzcGlrZXMiLiBUaGF0IHBo
-cmFzaW5nDQpzZWVtcyBsaWtlIHNvbWV0aGluZyBpbmhlcmVudCB0byB0cml2aWFsIGRpZ2l0YWwg
-ZmlsdGVycy4gRm9yIGFuYWxvZw0KZmlsdGVycywgc3BlY2lmeWluZyB0aGUgYmFuZHdpZHRoIG9y
-IGN1dC1vZmYgZnJlcXVlbmN5IHNlZW1zIG11Y2ggbW9yZQ0KYXBwcm9wcmlhdGUuIEFuZCBiYW5k
-d2lkdGggd291bGQgd29yayBlcXVhbGx5IHdlbGwgZm9yIGRpZ2l0YWwgZmlsdGVycywNCm1ldGhp
-bmtzLg0KDQpJIGFsc28gdGhpbmsgaXQgc2hvdWxkIGJlIG1lbnRpb25lZCBleHBsaWNpdGx5IHRo
-YXQgdGhpcyBiaW5kaW5nIGlzIGZvcg0KTFAgZmlsdGVycy4gSSBkb24ndCB0aGluayBhbnl0aGlu
-ZyBlbHNlIHdvdWxkIGJlIHVzZWZ1bCwgYnV0IGJldHRlciBzYWZlDQp0aGFuIHNvcnJ5Li4uDQoN
-CkhtbSwgd291bGQgaXQgYmUgZ29vZCBvciBiYWQgdG8gc3BlY2lmeSB0aGUgYmFuZHdpZHRoIHJl
-bGF0aXZlIHRvIHRoZQ0KY3VycmVudCBtYXhpbXVtIGJ1cyBzcGVlZD8NCg0KQ2hlZXJzLA0KUGV0
-ZXINCg0KPiBXb2xmcmFtLCB3aGF0IGRvIHlvdSB0aGluayA/DQo+IA0KPiBFdWdlbg0KPiANCj4g
-DQo+Pg0KPj4gQ2hlZXJzLA0KPj4gUGV0ZXINCj4+DQo+Pj4gKwlpbiBuYW5vc2Vjb25kcy4NCj4+
-PiArDQo+Pj4gICAtIGludGVycnVwdHMNCj4+PiAgIAlpbnRlcnJ1cHRzIHVzZWQgYnkgdGhlIGRl
-dmljZS4NCj4+PiAgIA0KPj4+DQo+Pg0KPj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18NCj4+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0DQo+PiBs
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4+IGh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbA0KPj4NCj4+DQoNCg==
+On Fri, Aug 30, 2019 at 11:57:13AM +0800, Sam Shih wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
+> 
+> This adds a property "num-pwms" in example so that we could
+> specify the number of PWM channels via device tree.
+
+Please respond to my questions on v5.
+
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
