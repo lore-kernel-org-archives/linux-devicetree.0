@@ -1,59 +1,116 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V3 1/5] dt-bindings: fsl: scu: add scu key binding
-Date: Tue,  3 Sep 2019 17:36:36 -0400
-Message-ID: <1567546600-21566-1-git-send-email-Anson.Huang@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com, will@kernel.org, dmitry.torokhov@gmail.com, aisheng.dong@nxp.com, ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com, daniel.baluta@nxp.com, leonard.crestez@nxp.com, mripard@kernel.org, olof@lixom.net, arnd@arndb.de, jagan@amarulasolutions.com, bjorn.andersson@linaro.org, dinguyen@kernel.org, marcin.juszkiewicz@linaro.org, stefan@agner.ch, gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com, yuehaibing@huawei.com, tglx@linutronix.de, ronald@innovation.ch, m.felsch@pengutronix.de, ping.bai@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.
-Cc: Linux-imx@nxp.com
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 00/14] Clean up "mediatek,larb" after adding device_link
+Date: Tue, 3 Sep 2019 17:37:22 +0800
+Message-ID: <1567503456-24725-1-git-send-email-yong.wu@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chao.hao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ming-fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-system controller, the system controller is in charge of system
-power, clock and scu key event etc. management, Linux kernel has
-to communicate with system controller via MU (message unit) IPC
-to get scu key event, add binding doc for i.MX system controller
-key driver.
+MediaTek IOMMU block diagram always like below:
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V2:
-	- use "key" instead of "pwrkey" as the key function can be defined in DT.
----
- .../devicetree/bindings/arm/freescale/fsl,scu.txt          | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+        M4U
+         |
+    smi-common
+         |
+  -------------
+  |         |  ...
+  |         |
+larb1     larb2
+  |         |
+vdec       venc
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index c149fad..5eab7d0 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -157,6 +157,15 @@ Required properties:
- Optional properties:
- - timeout-sec: contains the watchdog timeout in seconds.
- 
-+SCU key bindings based on SCU Message Protocol
-+------------------------------------------------------------
-+
-+Required properties:
-+- compatible: should be:
-+              "fsl,imx8qxp-sc-key"
-+              followed by "fsl,imx-sc-key";
-+- linux,keycodes: See Documentation/devicetree/bindings/input/keys.txt
-+
- Example (imx8qxp):
- -------------
- aliases {
-@@ -220,6 +229,11 @@ firmware {
- 			compatible = "fsl,imx8qxp-sc-rtc";
- 		};
- 
-+		scu_key: scu-key {
-+			compatible = "fsl,imx8qxp-sc-key", "fsl,imx-sc-key";
-+			linux,keycode = <KEY_POWER>;
-+		};
-+
- 		watchdog {
- 			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
- 			timeout-sec = <60>;
+All the consumer connect with smi-larb, then connect with smi-common.
+
+MediaTek IOMMU don't have its power-domain. When the consumer works,
+it should enable the smi-larb's power which also need enable the smi-common's
+power firstly.
+
+Thus, Firstly, use the device link connect the consumer and the
+smi-larbs. then add device link between the smi-larb and smi-common.
+
+After adding the device_link, then "mediatek,larb" property can be removed.
+the iommu consumer don't need call the mtk_smi_larb_get/put to enable
+the power and clock of smi-larb and smi-common.
+
+This patchset depends on "MT8183 IOMMU SUPPORT"[1].
+
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2019-August/022611.html
+
+Change notes:
+v3: 1) rebase on v5.3-rc1 and the latest mt8183 patchset.
+    2) Use device_is_bound to check whether the driver is ready from Matthias.    
+    3) Add DL_FLAG_STATELESS flag when calling device_link_add and explain the
+   reason in the commit message[3/14].
+    4) Add a display patch[12/14] into this series. otherwise it may affect
+   display HW fastlogo even though it don't happen in mt8183.
+   
+v2: http://lists.infradead.org/pipermail/linux-mediatek/2019-June/020440.html
+   1) rebase on v5.2-rc1.
+   2) Move adding device_link between the consumer and smi-larb into
+iommu_add_device from Robin.
+   3) add DL_FLAG_AUTOREMOVE_CONSUMER even though the smi is built-in from Evan.
+   4) Remove the shutdown callback in iommu.   
+
+v1: https://lists.linuxfoundation.org/pipermail/iommu/2019-January/032387.html
+
+Yong Wu (13):
+  dt-binding: mediatek: Get rid of mediatek,larb for multimedia HW
+  iommu/mediatek: Add probe_defer for smi-larb
+  iommu/mediatek: Add device_link between the consumer and the larb
+    devices
+  memory: mtk-smi: Add device-link between smi-larb and smi-common
+  media: mtk-jpeg: Get rid of mtk_smi_larb_get/put
+  media: mtk-mdp: Get rid of mtk_smi_larb_get/put
+  media: mtk-vcodec: Get rid of mtk_smi_larb_get/put
+  drm/mediatek: Get rid of mtk_smi_larb_get/put
+  memory: mtk-smi: Get rid of mtk_smi_larb_get/put
+  iommu/mediatek: Use builtin_platform_driver
+  memory: mtk-smi: Use device_is_bound to check if smi-common is ready
+  arm: dts: mediatek: Get rid of mediatek,larb for MM nodes
+  arm64: dts: mediatek: Get rid of mediatek,larb for MM nodes
+
+Yongqiang Niu (1):
+  drm/mediatek: Add pm runtime support for ovl and rdma
+
+ .../bindings/display/mediatek/mediatek,disp.txt    |  9 ----
+ .../bindings/media/mediatek-jpeg-decoder.txt       |  4 --
+ .../devicetree/bindings/media/mediatek-mdp.txt     |  8 ----
+ .../devicetree/bindings/media/mediatek-vcodec.txt  |  4 --
+ arch/arm/boot/dts/mt2701.dtsi                      |  1 -
+ arch/arm/boot/dts/mt7623.dtsi                      |  1 -
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           | 15 ------
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c            |  5 ++
+ drivers/gpu/drm/mediatek/mtk_disp_rdma.c           |  5 ++
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c            | 20 ++++----
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        | 31 ++----------
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  2 +-
+ drivers/iommu/mtk_iommu.c                          | 56 ++++++++++------------
+ drivers/iommu/mtk_iommu_v1.c                       | 49 ++++++++++---------
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c    | 22 ---------
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h    |  2 -
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.c      | 38 ---------------
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.h      |  2 -
+ drivers/media/platform/mtk-mdp/mtk_mdp_core.c      |  1 -
+ .../media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c  | 22 ---------
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h |  3 --
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c |  1 -
+ .../media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c  | 47 ------------------
+ drivers/memory/mtk-smi.c                           | 41 +++++++---------
+ include/soc/mediatek/smi.h                         | 20 --------
+ 25 files changed, 93 insertions(+), 316 deletions(-)
+
 -- 
-2.7.4
+1.9.1 
