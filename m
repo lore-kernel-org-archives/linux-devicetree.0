@@ -1,258 +1,171 @@
-Return-Path: <SRS0=vWkV=W6=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48725 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728094AbfICHnc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Sep 2019 03:43:32 -0400
-Subject: Re: [PATCH V2 2/5] input: keyboard: imx_sc: Add i.MX system
+Return-Path: <SRS0=x5b/=W6=nxp.com=anson.huang@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V2 2/5] input: keyboard: imx_sc: Add i.MX system
  controller power key support
+Date: Tue, 3 Sep 2019 07:35:06 +0000
+Message-ID: 
+ <DB3PR0402MB3916FB4618F86DD891013FEEF5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
  <1567519424-32271-2-git-send-email-Anson.Huang@nxp.com>
  <6d8dd5df-02da-b4cd-e61d-a4a15d0bf0c8@pengutronix.de>
  <DB3PR0402MB391602C6B425DD7EBFB9AF1DF5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
  <dbe0ba0a-29bc-ee96-541d-244b3dbf0b81@pengutronix.de>
- <DB3PR0402MB3916FB4618F86DD891013FEEF5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Message-ID: <4f2aa5a1-d8db-0fa9-3104-5e4b2a036b36@pengutronix.de>
-Date: Tue, 3 Sep 2019 09:43:25 +0200
-MIME-Version: 1.0
-In-Reply-To: <DB3PR0402MB3916FB4618F86DD891013FEEF5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <dbe0ba0a-29bc-ee96-541d-244b3dbf0b81@pengutronix.de>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Sender: devicetree-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "mripard@kernel.org" <mripard@kernel.org>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "dinguyen@kernel.org" <dinguyen@kernel.org>, "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>, "stefan@agner.ch" <stefan@agner.ch>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "yuehaibing@huawei.com" <yuehaibing@huawei.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "ronald@innovation.ch" <ronald@innovation.ch>, "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>, Jacky Bai <ping.bai@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Oleksij Rempel <o.rempel@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "mripard@kernel.org" <mripard@kernel.org>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "dinguyen@kernel.org" <dinguyen@kernel.org>, "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>, "stefan@agner.ch" <stefan@agner.ch>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "yuehaibing@huawei.com" <yuehaibing@huawei.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "ronald@innovation.ch" <ronald@innovation.ch>, "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>, Jacky Bai <ping.bai@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-
-
-On 03.09.19 09:35, Anson Huang wrote:
-> Hi, Oleksij
-> 
->> On 03.09.19 08:48, Anson Huang wrote:
->>> Hi, Oleksij
->>>
->>>> On 03.09.19 16:03, Anson Huang wrote:
->>>>> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
->>>>> inside, the system controller is in charge of controlling power,
->>>>> clock and power key etc..
->>>>>
->>>>> Adds i.MX system controller power key driver support, Linux kernel
->>>>> has to communicate with system controller via MU (message unit) IPC
->>>>> to get power key's status.
->>>>>
->>>>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
->>>>> ---
->>>>> Changes since V1:
->>>>> 	- remove "wakeup-source" property operation, scu power key uses
->>>> generic scu irq,
->>>>> 	  no need to have this property for device wakeup operation.
->>>>> ---
->>>>>     drivers/input/keyboard/Kconfig         |   7 ++
->>>>>     drivers/input/keyboard/Makefile        |   1 +
->>>>>     drivers/input/keyboard/imx_sc_pwrkey.c | 169
->>>> +++++++++++++++++++++++++++++++++
->>>>>     3 files changed, 177 insertions(+)
->>>>>     create mode 100644 drivers/input/keyboard/imx_sc_pwrkey.c
->>>>>
->>>>> diff --git a/drivers/input/keyboard/Kconfig
->>>>> b/drivers/input/keyboard/Kconfig index 2e6d288..3aaeb9c 100644
->>>>> --- a/drivers/input/keyboard/Kconfig
->>>>> +++ b/drivers/input/keyboard/Kconfig
->>>>> @@ -469,6 +469,13 @@ config KEYBOARD_IMX
->>>>>     	  To compile this driver as a module, choose M here: the
->>>>>     	  module will be called imx_keypad.
->>>>>
->>>>> +config KEYBOARD_IMX_SC_PWRKEY
->>>>> +	tristate "IMX SCU Power Key Driver"
->>>>> +	depends on IMX_SCU
->>>>> +	help
->>>>> +	  This is the system controller powerkey driver for NXP i.MX SoCs with
->>>>> +	  system controller inside.
->>>>
->>>> The KEY is configurable over devicetree, why is it called PWRKEY? It
->>>> looks for me as generic SCU key handler.
->>>
->>> We always use it as power key, NOT a generic key, as it has HW
->>> function designed for power key purpose.
->>
->> gpio-key driver is mostly used for power or reboot key. And it is still called
->> gpio-key driver. If it is used for power key only, why is it configurable? I can
->> configure it as KEY_ENTER or some thing different. This driver has not
->> KEY_POWER specific any thing.
-> 
-> Understood, I am making the V3 with all "power" removed, just using the "key".
-> 
->>
->>>
->>>>
->>>>>     config KEYBOARD_NEWTON
->>>>>     	tristate "Newton keyboard"
->>>>>     	select SERIO
->>>>> diff --git a/drivers/input/keyboard/Makefile
->>>>> b/drivers/input/keyboard/Makefile index 9510325..9ea5585 100644
->>>>> --- a/drivers/input/keyboard/Makefile
->>>>> +++ b/drivers/input/keyboard/Makefile
->>>>> @@ -29,6 +29,7 @@ obj-$(CONFIG_KEYBOARD_HIL)		+=
->> hil_kbd.o
->>>>>     obj-$(CONFIG_KEYBOARD_HIL_OLD)		+= hilkbd.o
->>>>>     obj-$(CONFIG_KEYBOARD_IPAQ_MICRO)	+= ipaq-micro-keys.o
->>>>>     obj-$(CONFIG_KEYBOARD_IMX)		+= imx_keypad.o
->>>>> +obj-$(CONFIG_KEYBOARD_IMX_SC_PWRKEY)	+= imx_sc_pwrkey.o
->>>>>     obj-$(CONFIG_KEYBOARD_HP6XX)		+= jornada680_kbd.o
->>>>>     obj-$(CONFIG_KEYBOARD_HP7XX)		+= jornada720_kbd.o
->>>>>     obj-$(CONFIG_KEYBOARD_LKKBD)		+= lkkbd.o
->>>>> diff --git a/drivers/input/keyboard/imx_sc_pwrkey.c
->>>>> b/drivers/input/keyboard/imx_sc_pwrkey.c
->>>>> new file mode 100644
->>>>> index 0000000..53aa9a4
->>>>> --- /dev/null
->>>>> +++ b/drivers/input/keyboard/imx_sc_pwrkey.c
->>>>> @@ -0,0 +1,169 @@
->>>>> +// SPDX-License-Identifier: GPL-2.0
->>>>> +/*
->>>>> + * Copyright 2019 NXP.
->>>>> + */
->>>>> +
->>>>> +#include <linux/device.h>
->>>>> +#include <linux/err.h>
->>>>> +#include <linux/firmware/imx/sci.h> #include <linux/init.h>
->>>>> +#include <linux/input.h> #include <linux/interrupt.h> #include
->>>>> +<linux/jiffies.h> #include <linux/kernel.h> #include
->>>>> +<linux/module.h> #include <linux/of.h> #include
->>>>> +<linux/of_address.h> #include <linux/platform_device.h>
->>>>> +
->>>>> +#define DEBOUNCE_TIME	100
->>>>> +#define REPEAT_INTERVAL	60
->>>>> +
->>>>> +#define SC_IRQ_BUTTON		1
->>>>> +#define SC_IRQ_GROUP_WAKE	3
->>>>> +#define IMX_SC_MISC_FUNC_GET_BUTTON_STATUS	18
->>>>> +
->>>>> +struct imx_pwrkey_drv_data {
->>>>> +	int keycode;
->>>>> +	bool keystate;  /* 1: pressed, 0: release */
->>>>> +	bool delay_check;
->>>>> +	struct delayed_work check_work;
->>>>> +	struct input_dev *input;
->>>>> +};
->>>>> +
->>>>> +struct imx_sc_msg_pwrkey {
->>>>> +	struct imx_sc_rpc_msg hdr;
->>>>> +	u8 state;
->>>>> +};
->>>>> +static struct imx_pwrkey_drv_data *pdata;
->>>>
->>>> Why is it global struct? It seems to be flexible configurable over devicetree.
->>>> So I would assume it should be able to handle more then one button.
->>>> Please remove global variables, make it allocatable per OF node.
->>>
->>> There is ONLY one button available for SC key, but yes, I think I can
->>> make the structure private and get all necessary data from the structure
->> using container_of.
->>
->> And we will never need more then 640 kB RAM ;)
->> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fen.wi
->> kiquote.org%2Fwiki%2FTalk%3ABill_Gates&amp;data=02%7C01%7Canson.hu
->> ang%40nxp.com%7C4d4d7458087747e0d8f008d7304057e9%7C686ea1d3bc2
->> b4c6fa92cd99c5c301635%7C0%7C0%7C637030925236150243&amp;sdata=w
->> %2FGXBaHfnBdLwjTxjbzWSPeIw3ExL%2Fs9IMOgF1onL6A%3D&amp;reserved
->> =0
->>
->>>
->>>>
->>>> Please use different name "pdata" is usually used as platform data.
->>>> Please, use "priv".
->>>
->>> OK.
->>>
->>>>
->>>>> +static struct imx_sc_ipc *pwrkey_ipc_handle;
->>>>
->>>> same as before, no global variables.
->>>
->>> Will move it into private platform data structure.
->>>
->>>>
->>>>> +
->>>>> +static int imx_sc_pwrkey_notify(struct notifier_block *nb,
->>>>> +				unsigned long event, void *group) {
->>>>> +	if ((event & SC_IRQ_BUTTON) && (*(u8 *)group ==
->>>> SC_IRQ_GROUP_WAKE)
->>>>> +	    && !pdata->delay_check) {
->>>>> +		pdata->delay_check = 1;
->>>>> +		schedule_delayed_work(&pdata->check_work,
->>>>> +				      msecs_to_jiffies(REPEAT_INTERVAL));
->>>>> +	}
->>>>> +
->>>>> +	return 0;
->>>>> +}
->>>>> +
->>>>> +static void imx_sc_check_for_events(struct work_struct *work) {
->>>>> +	struct input_dev *input = pdata->input;
->>>>> +	struct imx_sc_msg_pwrkey msg;
->>>>> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
->>>>> +	bool state;
->>>>> +
->>>>> +	hdr->ver = IMX_SC_RPC_VERSION;
->>>>> +	hdr->svc = IMX_SC_RPC_SVC_MISC;
->>>>> +	hdr->func = IMX_SC_MISC_FUNC_GET_BUTTON_STATUS;
->>>>> +	hdr->size = 1;
->>>>> +
->>>>> +	/*
->>>>> +	 * Current SCU firmware does NOT have return value for
->>>>> +	 * this API, that means it is always successful.
->>>>> +	 */
->>>>
->>>> It is not true for the kernel part:
->>>> https://elixir.
->>>>
->> bootlin.com%2Flinux%2Flatest%2Fsource%2Fdrivers%2Ffirmware%2Fimx%2F
->>>> imx-
->>>>
->> scu.c%23L157&amp;data=02%7C01%7Canson.huang%40nxp.com%7C7a5ed3
->>>>
->> ef3b2541e61be808d7303810a9%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C
->>>>
->> 0%7C0%7C637030889669489141&amp;sdata=d3uw6x6WCPeavJu3QYf9o9cxx
->>>> Rx4mJar04fQFLF9EhE%3D&amp;reserved=0
->>>>
->>>> imx_scu_call_rpc() may fail in different ways and provide proper error
->> value.
->>>> Please use it.
->>>
->>> There are about 3 APIs are special, this API is one of them, this API
->>> has no return value from SCU FW API, but it has response data from it,
->>> so that means if we set the response to false, the stack will be free
->>> and mailbox will have NULL pointer issue when response data passed
->>> from SCU FW. If we set the response to true, as the SCU FW has no
->>> return value, the return value will be the msg->func which will be
->>> already failed, that is why we have to skip the return value check. This is
->> one restriction/bug of SCU FW, we will notify SCU FW owner to fix/improve.
->>
->> Ok, I see. imx_scu_call_rpc() can return kernel side errors, for example from
->> imx-scu.c framework EINVAL or ETIMEDOUT or what ever error mbox
->> framework may also provide.
->> Aaaannnndd... it can extract an error from SCU package and return it over
->> same way as other errors.
->>
->> And current SCU version has some bugs, so it is providing wrong error value.
->> Soo... as usual the NXP has decided to make the linux kernel a bit more
->> worse to make the SCU firmware happy? Is it what you trying to describe?
->> Really ?! :D
->>
->> Please. Fix the SCU first. The provide fixed kernel patch.
-> 
-> Understood, I will notify SCU owner to fix it, meanwhile it does NOT block this driver,
-> I will add return value check in this driver.
-
-It is great! Thank you!
-
-Kind regards,
-Oleksij Rempel
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+SGksIE9sZWtzaWoNCg0KPiBPbiAwMy4wOS4xOSAwODo0OCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+
+ID4gSGksIE9sZWtzaWoNCj4gPg0KPiA+PiBPbiAwMy4wOS4xOSAxNjowMywgQW5zb24gSHVhbmcg
+d3JvdGU6DQo+ID4+PiBpLk1YOFFYUCBpcyBhbiBBUk12OCBTb0Mgd2hpY2ggaGFzIGEgQ29ydGV4
+LU00IHN5c3RlbSBjb250cm9sbGVyDQo+ID4+PiBpbnNpZGUsIHRoZSBzeXN0ZW0gY29udHJvbGxl
+ciBpcyBpbiBjaGFyZ2Ugb2YgY29udHJvbGxpbmcgcG93ZXIsDQo+ID4+PiBjbG9jayBhbmQgcG93
+ZXIga2V5IGV0Yy4uDQo+ID4+Pg0KPiA+Pj4gQWRkcyBpLk1YIHN5c3RlbSBjb250cm9sbGVyIHBv
+d2VyIGtleSBkcml2ZXIgc3VwcG9ydCwgTGludXgga2VybmVsDQo+ID4+PiBoYXMgdG8gY29tbXVu
+aWNhdGUgd2l0aCBzeXN0ZW0gY29udHJvbGxlciB2aWEgTVUgKG1lc3NhZ2UgdW5pdCkgSVBDDQo+
+ID4+PiB0byBnZXQgcG93ZXIga2V5J3Mgc3RhdHVzLg0KPiA+Pj4NCj4gPj4+IFNpZ25lZC1vZmYt
+Ynk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+Pj4gLS0tDQo+ID4+PiBD
+aGFuZ2VzIHNpbmNlIFYxOg0KPiA+Pj4gCS0gcmVtb3ZlICJ3YWtldXAtc291cmNlIiBwcm9wZXJ0
+eSBvcGVyYXRpb24sIHNjdSBwb3dlciBrZXkgdXNlcw0KPiA+PiBnZW5lcmljIHNjdSBpcnEsDQo+
+ID4+PiAJICBubyBuZWVkIHRvIGhhdmUgdGhpcyBwcm9wZXJ0eSBmb3IgZGV2aWNlIHdha2V1cCBv
+cGVyYXRpb24uDQo+ID4+PiAtLS0NCj4gPj4+ICAgIGRyaXZlcnMvaW5wdXQva2V5Ym9hcmQvS2Nv
+bmZpZyAgICAgICAgIHwgICA3ICsrDQo+ID4+PiAgICBkcml2ZXJzL2lucHV0L2tleWJvYXJkL01h
+a2VmaWxlICAgICAgICB8ICAgMSArDQo+ID4+PiAgICBkcml2ZXJzL2lucHV0L2tleWJvYXJkL2lt
+eF9zY19wd3JrZXkuYyB8IDE2OQ0KPiA+PiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysNCj4gPj4+ICAgIDMgZmlsZXMgY2hhbmdlZCwgMTc3IGluc2VydGlvbnMoKykNCj4gPj4+ICAg
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2lucHV0L2tleWJvYXJkL2lteF9zY19wd3JrZXku
+Yw0KPiA+Pj4NCj4gPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lucHV0L2tleWJvYXJkL0tjb25m
+aWcNCj4gPj4+IGIvZHJpdmVycy9pbnB1dC9rZXlib2FyZC9LY29uZmlnIGluZGV4IDJlNmQyODgu
+LjNhYWViOWMgMTAwNjQ0DQo+ID4+PiAtLS0gYS9kcml2ZXJzL2lucHV0L2tleWJvYXJkL0tjb25m
+aWcNCj4gPj4+ICsrKyBiL2RyaXZlcnMvaW5wdXQva2V5Ym9hcmQvS2NvbmZpZw0KPiA+Pj4gQEAg
+LTQ2OSw2ICs0NjksMTMgQEAgY29uZmlnIEtFWUJPQVJEX0lNWA0KPiA+Pj4gICAgCSAgVG8gY29t
+cGlsZSB0aGlzIGRyaXZlciBhcyBhIG1vZHVsZSwgY2hvb3NlIE0gaGVyZTogdGhlDQo+ID4+PiAg
+ICAJICBtb2R1bGUgd2lsbCBiZSBjYWxsZWQgaW14X2tleXBhZC4NCj4gPj4+DQo+ID4+PiArY29u
+ZmlnIEtFWUJPQVJEX0lNWF9TQ19QV1JLRVkNCj4gPj4+ICsJdHJpc3RhdGUgIklNWCBTQ1UgUG93
+ZXIgS2V5IERyaXZlciINCj4gPj4+ICsJZGVwZW5kcyBvbiBJTVhfU0NVDQo+ID4+PiArCWhlbHAN
+Cj4gPj4+ICsJICBUaGlzIGlzIHRoZSBzeXN0ZW0gY29udHJvbGxlciBwb3dlcmtleSBkcml2ZXIg
+Zm9yIE5YUCBpLk1YIFNvQ3Mgd2l0aA0KPiA+Pj4gKwkgIHN5c3RlbSBjb250cm9sbGVyIGluc2lk
+ZS4NCj4gPj4NCj4gPj4gVGhlIEtFWSBpcyBjb25maWd1cmFibGUgb3ZlciBkZXZpY2V0cmVlLCB3
+aHkgaXMgaXQgY2FsbGVkIFBXUktFWT8gSXQNCj4gPj4gbG9va3MgZm9yIG1lIGFzIGdlbmVyaWMg
+U0NVIGtleSBoYW5kbGVyLg0KPiA+DQo+ID4gV2UgYWx3YXlzIHVzZSBpdCBhcyBwb3dlciBrZXks
+IE5PVCBhIGdlbmVyaWMga2V5LCBhcyBpdCBoYXMgSFcNCj4gPiBmdW5jdGlvbiBkZXNpZ25lZCBm
+b3IgcG93ZXIga2V5IHB1cnBvc2UuDQo+IA0KPiBncGlvLWtleSBkcml2ZXIgaXMgbW9zdGx5IHVz
+ZWQgZm9yIHBvd2VyIG9yIHJlYm9vdCBrZXkuIEFuZCBpdCBpcyBzdGlsbCBjYWxsZWQNCj4gZ3Bp
+by1rZXkgZHJpdmVyLiBJZiBpdCBpcyB1c2VkIGZvciBwb3dlciBrZXkgb25seSwgd2h5IGlzIGl0
+IGNvbmZpZ3VyYWJsZT8gSSBjYW4NCj4gY29uZmlndXJlIGl0IGFzIEtFWV9FTlRFUiBvciBzb21l
+IHRoaW5nIGRpZmZlcmVudC4gVGhpcyBkcml2ZXIgaGFzIG5vdA0KPiBLRVlfUE9XRVIgc3BlY2lm
+aWMgYW55IHRoaW5nLg0KDQpVbmRlcnN0b29kLCBJIGFtIG1ha2luZyB0aGUgVjMgd2l0aCBhbGwg
+InBvd2VyIiByZW1vdmVkLCBqdXN0IHVzaW5nIHRoZSAia2V5Ii4NCg0KPiANCj4gPg0KPiA+Pg0K
+PiA+Pj4gICAgY29uZmlnIEtFWUJPQVJEX05FV1RPTg0KPiA+Pj4gICAgCXRyaXN0YXRlICJOZXd0
+b24ga2V5Ym9hcmQiDQo+ID4+PiAgICAJc2VsZWN0IFNFUklPDQo+ID4+PiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9pbnB1dC9rZXlib2FyZC9NYWtlZmlsZQ0KPiA+Pj4gYi9kcml2ZXJzL2lucHV0L2tl
+eWJvYXJkL01ha2VmaWxlIGluZGV4IDk1MTAzMjUuLjllYTU1ODUgMTAwNjQ0DQo+ID4+PiAtLS0g
+YS9kcml2ZXJzL2lucHV0L2tleWJvYXJkL01ha2VmaWxlDQo+ID4+PiArKysgYi9kcml2ZXJzL2lu
+cHV0L2tleWJvYXJkL01ha2VmaWxlDQo+ID4+PiBAQCAtMjksNiArMjksNyBAQCBvYmotJChDT05G
+SUdfS0VZQk9BUkRfSElMKQkJKz0NCj4gaGlsX2tiZC5vDQo+ID4+PiAgICBvYmotJChDT05GSUdf
+S0VZQk9BUkRfSElMX09MRCkJCSs9IGhpbGtiZC5vDQo+ID4+PiAgICBvYmotJChDT05GSUdfS0VZ
+Qk9BUkRfSVBBUV9NSUNSTykJKz0gaXBhcS1taWNyby1rZXlzLm8NCj4gPj4+ICAgIG9iai0kKENP
+TkZJR19LRVlCT0FSRF9JTVgpCQkrPSBpbXhfa2V5cGFkLm8NCj4gPj4+ICtvYmotJChDT05GSUdf
+S0VZQk9BUkRfSU1YX1NDX1BXUktFWSkJKz0gaW14X3NjX3B3cmtleS5vDQo+ID4+PiAgICBvYmot
+JChDT05GSUdfS0VZQk9BUkRfSFA2WFgpCQkrPSBqb3JuYWRhNjgwX2tiZC5vDQo+ID4+PiAgICBv
+YmotJChDT05GSUdfS0VZQk9BUkRfSFA3WFgpCQkrPSBqb3JuYWRhNzIwX2tiZC5vDQo+ID4+PiAg
+ICBvYmotJChDT05GSUdfS0VZQk9BUkRfTEtLQkQpCQkrPSBsa2tiZC5vDQo+ID4+PiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9pbnB1dC9rZXlib2FyZC9pbXhfc2NfcHdya2V5LmMNCj4gPj4+IGIvZHJp
+dmVycy9pbnB1dC9rZXlib2FyZC9pbXhfc2NfcHdya2V5LmMNCj4gPj4+IG5ldyBmaWxlIG1vZGUg
+MTAwNjQ0DQo+ID4+PiBpbmRleCAwMDAwMDAwLi41M2FhOWE0DQo+ID4+PiAtLS0gL2Rldi9udWxs
+DQo+ID4+PiArKysgYi9kcml2ZXJzL2lucHV0L2tleWJvYXJkL2lteF9zY19wd3JrZXkuYw0KPiA+
+Pj4gQEAgLTAsMCArMSwxNjkgQEANCj4gPj4+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjog
+R1BMLTIuMA0KPiA+Pj4gKy8qDQo+ID4+PiArICogQ29weXJpZ2h0IDIwMTkgTlhQLg0KPiA+Pj4g
+KyAqLw0KPiA+Pj4gKw0KPiA+Pj4gKyNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4NCj4gPj4+ICsj
+aW5jbHVkZSA8bGludXgvZXJyLmg+DQo+ID4+PiArI2luY2x1ZGUgPGxpbnV4L2Zpcm13YXJlL2lt
+eC9zY2kuaD4gI2luY2x1ZGUgPGxpbnV4L2luaXQuaD4NCj4gPj4+ICsjaW5jbHVkZSA8bGludXgv
+aW5wdXQuaD4gI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPiAjaW5jbHVkZQ0KPiA+Pj4gKzxs
+aW51eC9qaWZmaWVzLmg+ICNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4gI2luY2x1ZGUNCj4gPj4+
+ICs8bGludXgvbW9kdWxlLmg+ICNpbmNsdWRlIDxsaW51eC9vZi5oPiAjaW5jbHVkZQ0KPiA+Pj4g
+KzxsaW51eC9vZl9hZGRyZXNzLmg+ICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4N
+Cj4gPj4+ICsNCj4gPj4+ICsjZGVmaW5lIERFQk9VTkNFX1RJTUUJMTAwDQo+ID4+PiArI2RlZmlu
+ZSBSRVBFQVRfSU5URVJWQUwJNjANCj4gPj4+ICsNCj4gPj4+ICsjZGVmaW5lIFNDX0lSUV9CVVRU
+T04JCTENCj4gPj4+ICsjZGVmaW5lIFNDX0lSUV9HUk9VUF9XQUtFCTMNCj4gPj4+ICsjZGVmaW5l
+IElNWF9TQ19NSVNDX0ZVTkNfR0VUX0JVVFRPTl9TVEFUVVMJMTgNCj4gPj4+ICsNCj4gPj4+ICtz
+dHJ1Y3QgaW14X3B3cmtleV9kcnZfZGF0YSB7DQo+ID4+PiArCWludCBrZXljb2RlOw0KPiA+Pj4g
+Kwlib29sIGtleXN0YXRlOyAgLyogMTogcHJlc3NlZCwgMDogcmVsZWFzZSAqLw0KPiA+Pj4gKwli
+b29sIGRlbGF5X2NoZWNrOw0KPiA+Pj4gKwlzdHJ1Y3QgZGVsYXllZF93b3JrIGNoZWNrX3dvcms7
+DQo+ID4+PiArCXN0cnVjdCBpbnB1dF9kZXYgKmlucHV0Ow0KPiA+Pj4gK307DQo+ID4+PiArDQo+
+ID4+PiArc3RydWN0IGlteF9zY19tc2dfcHdya2V5IHsNCj4gPj4+ICsJc3RydWN0IGlteF9zY19y
+cGNfbXNnIGhkcjsNCj4gPj4+ICsJdTggc3RhdGU7DQo+ID4+PiArfTsNCj4gPj4+ICtzdGF0aWMg
+c3RydWN0IGlteF9wd3JrZXlfZHJ2X2RhdGEgKnBkYXRhOw0KPiA+Pg0KPiA+PiBXaHkgaXMgaXQg
+Z2xvYmFsIHN0cnVjdD8gSXQgc2VlbXMgdG8gYmUgZmxleGlibGUgY29uZmlndXJhYmxlIG92ZXIg
+ZGV2aWNldHJlZS4NCj4gPj4gU28gSSB3b3VsZCBhc3N1bWUgaXQgc2hvdWxkIGJlIGFibGUgdG8g
+aGFuZGxlIG1vcmUgdGhlbiBvbmUgYnV0dG9uLg0KPiA+PiBQbGVhc2UgcmVtb3ZlIGdsb2JhbCB2
+YXJpYWJsZXMsIG1ha2UgaXQgYWxsb2NhdGFibGUgcGVyIE9GIG5vZGUuDQo+ID4NCj4gPiBUaGVy
+ZSBpcyBPTkxZIG9uZSBidXR0b24gYXZhaWxhYmxlIGZvciBTQyBrZXksIGJ1dCB5ZXMsIEkgdGhp
+bmsgSSBjYW4NCj4gPiBtYWtlIHRoZSBzdHJ1Y3R1cmUgcHJpdmF0ZSBhbmQgZ2V0IGFsbCBuZWNl
+c3NhcnkgZGF0YSBmcm9tIHRoZSBzdHJ1Y3R1cmUNCj4gdXNpbmcgY29udGFpbmVyX29mLg0KPiAN
+Cj4gQW5kIHdlIHdpbGwgbmV2ZXIgbmVlZCBtb3JlIHRoZW4gNjQwIGtCIFJBTSA7KQ0KPiBodHRw
+czovL2V1cjAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0El
+MkYlMkZlbi53aQ0KPiBraXF1b3RlLm9yZyUyRndpa2klMkZUYWxrJTNBQmlsbF9HYXRlcyZhbXA7
+ZGF0YT0wMiU3QzAxJTdDYW5zb24uaHUNCj4gYW5nJTQwbnhwLmNvbSU3QzRkNGQ3NDU4MDg3NzQ3
+ZTBkOGYwMDhkNzMwNDA1N2U5JTdDNjg2ZWExZDNiYzINCj4gYjRjNmZhOTJjZDk5YzVjMzAxNjM1
+JTdDMCU3QzAlN0M2MzcwMzA5MjUyMzYxNTAyNDMmYW1wO3NkYXRhPXcNCj4gJTJGR1hCYUhmbkJk
+THdqVHhqYnpXU1BlSXczRXhMJTJGczlJTU9nRjFvbkw2QSUzRCZhbXA7cmVzZXJ2ZWQNCj4gPTAN
+Cj4gDQo+ID4NCj4gPj4NCj4gPj4gUGxlYXNlIHVzZSBkaWZmZXJlbnQgbmFtZSAicGRhdGEiIGlz
+IHVzdWFsbHkgdXNlZCBhcyBwbGF0Zm9ybSBkYXRhLg0KPiA+PiBQbGVhc2UsIHVzZSAicHJpdiIu
+DQo+ID4NCj4gPiBPSy4NCj4gPg0KPiA+Pg0KPiA+Pj4gK3N0YXRpYyBzdHJ1Y3QgaW14X3NjX2lw
+YyAqcHdya2V5X2lwY19oYW5kbGU7DQo+ID4+DQo+ID4+IHNhbWUgYXMgYmVmb3JlLCBubyBnbG9i
+YWwgdmFyaWFibGVzLg0KPiA+DQo+ID4gV2lsbCBtb3ZlIGl0IGludG8gcHJpdmF0ZSBwbGF0Zm9y
+bSBkYXRhIHN0cnVjdHVyZS4NCj4gPg0KPiA+Pg0KPiA+Pj4gKw0KPiA+Pj4gK3N0YXRpYyBpbnQg
+aW14X3NjX3B3cmtleV9ub3RpZnkoc3RydWN0IG5vdGlmaWVyX2Jsb2NrICpuYiwNCj4gPj4+ICsJ
+CQkJdW5zaWduZWQgbG9uZyBldmVudCwgdm9pZCAqZ3JvdXApIHsNCj4gPj4+ICsJaWYgKChldmVu
+dCAmIFNDX0lSUV9CVVRUT04pICYmICgqKHU4ICopZ3JvdXAgPT0NCj4gPj4gU0NfSVJRX0dST1VQ
+X1dBS0UpDQo+ID4+PiArCSAgICAmJiAhcGRhdGEtPmRlbGF5X2NoZWNrKSB7DQo+ID4+PiArCQlw
+ZGF0YS0+ZGVsYXlfY2hlY2sgPSAxOw0KPiA+Pj4gKwkJc2NoZWR1bGVfZGVsYXllZF93b3JrKCZw
+ZGF0YS0+Y2hlY2tfd29yaywNCj4gPj4+ICsJCQkJICAgICAgbXNlY3NfdG9famlmZmllcyhSRVBF
+QVRfSU5URVJWQUwpKTsNCj4gPj4+ICsJfQ0KPiA+Pj4gKw0KPiA+Pj4gKwlyZXR1cm4gMDsNCj4g
+Pj4+ICt9DQo+ID4+PiArDQo+ID4+PiArc3RhdGljIHZvaWQgaW14X3NjX2NoZWNrX2Zvcl9ldmVu
+dHMoc3RydWN0IHdvcmtfc3RydWN0ICp3b3JrKSB7DQo+ID4+PiArCXN0cnVjdCBpbnB1dF9kZXYg
+KmlucHV0ID0gcGRhdGEtPmlucHV0Ow0KPiA+Pj4gKwlzdHJ1Y3QgaW14X3NjX21zZ19wd3JrZXkg
+bXNnOw0KPiA+Pj4gKwlzdHJ1Y3QgaW14X3NjX3JwY19tc2cgKmhkciA9ICZtc2cuaGRyOw0KPiA+
+Pj4gKwlib29sIHN0YXRlOw0KPiA+Pj4gKw0KPiA+Pj4gKwloZHItPnZlciA9IElNWF9TQ19SUENf
+VkVSU0lPTjsNCj4gPj4+ICsJaGRyLT5zdmMgPSBJTVhfU0NfUlBDX1NWQ19NSVNDOw0KPiA+Pj4g
+KwloZHItPmZ1bmMgPSBJTVhfU0NfTUlTQ19GVU5DX0dFVF9CVVRUT05fU1RBVFVTOw0KPiA+Pj4g
+KwloZHItPnNpemUgPSAxOw0KPiA+Pj4gKw0KPiA+Pj4gKwkvKg0KPiA+Pj4gKwkgKiBDdXJyZW50
+IFNDVSBmaXJtd2FyZSBkb2VzIE5PVCBoYXZlIHJldHVybiB2YWx1ZSBmb3INCj4gPj4+ICsJICog
+dGhpcyBBUEksIHRoYXQgbWVhbnMgaXQgaXMgYWx3YXlzIHN1Y2Nlc3NmdWwuDQo+ID4+PiArCSAq
+Lw0KPiA+Pg0KPiA+PiBJdCBpcyBub3QgdHJ1ZSBmb3IgdGhlIGtlcm5lbCBwYXJ0Og0KPiA+PiBo
+dHRwczovL2VsaXhpci4NCj4gPj4NCj4gYm9vdGxpbi5jb20lMkZsaW51eCUyRmxhdGVzdCUyRnNv
+dXJjZSUyRmRyaXZlcnMlMkZmaXJtd2FyZSUyRmlteCUyRg0KPiA+PiBpbXgtDQo+ID4+DQo+IHNj
+dS5jJTIzTDE1NyZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5zb24uaHVhbmclNDBueHAuY29tJTdDN2E1
+ZWQzDQo+ID4+DQo+IGVmM2IyNTQxZTYxYmU4MDhkNzMwMzgxMGE5JTdDNjg2ZWExZDNiYzJiNGM2
+ZmE5MmNkOTljNWMzMDE2MzUlN0MNCj4gPj4NCj4gMCU3QzAlN0M2MzcwMzA4ODk2Njk0ODkxNDEm
+YW1wO3NkYXRhPWQzdXc2eDZXQ1BlYXZKdTNRWWY5bzljeHgNCj4gPj4gUng0bUphcjA0ZlFGTEY5
+RWhFJTNEJmFtcDtyZXNlcnZlZD0wDQo+ID4+DQo+ID4+IGlteF9zY3VfY2FsbF9ycGMoKSBtYXkg
+ZmFpbCBpbiBkaWZmZXJlbnQgd2F5cyBhbmQgcHJvdmlkZSBwcm9wZXIgZXJyb3INCj4gdmFsdWUu
+DQo+ID4+IFBsZWFzZSB1c2UgaXQuDQo+ID4NCj4gPiBUaGVyZSBhcmUgYWJvdXQgMyBBUElzIGFy
+ZSBzcGVjaWFsLCB0aGlzIEFQSSBpcyBvbmUgb2YgdGhlbSwgdGhpcyBBUEkNCj4gPiBoYXMgbm8g
+cmV0dXJuIHZhbHVlIGZyb20gU0NVIEZXIEFQSSwgYnV0IGl0IGhhcyByZXNwb25zZSBkYXRhIGZy
+b20gaXQsDQo+ID4gc28gdGhhdCBtZWFucyBpZiB3ZSBzZXQgdGhlIHJlc3BvbnNlIHRvIGZhbHNl
+LCB0aGUgc3RhY2sgd2lsbCBiZSBmcmVlDQo+ID4gYW5kIG1haWxib3ggd2lsbCBoYXZlIE5VTEwg
+cG9pbnRlciBpc3N1ZSB3aGVuIHJlc3BvbnNlIGRhdGEgcGFzc2VkDQo+ID4gZnJvbSBTQ1UgRlcu
+IElmIHdlIHNldCB0aGUgcmVzcG9uc2UgdG8gdHJ1ZSwgYXMgdGhlIFNDVSBGVyBoYXMgbm8NCj4g
+PiByZXR1cm4gdmFsdWUsIHRoZSByZXR1cm4gdmFsdWUgd2lsbCBiZSB0aGUgbXNnLT5mdW5jIHdo
+aWNoIHdpbGwgYmUNCj4gPiBhbHJlYWR5IGZhaWxlZCwgdGhhdCBpcyB3aHkgd2UgaGF2ZSB0byBz
+a2lwIHRoZSByZXR1cm4gdmFsdWUgY2hlY2suIFRoaXMgaXMNCj4gb25lIHJlc3RyaWN0aW9uL2J1
+ZyBvZiBTQ1UgRlcsIHdlIHdpbGwgbm90aWZ5IFNDVSBGVyBvd25lciB0byBmaXgvaW1wcm92ZS4N
+Cj4gDQo+IE9rLCBJIHNlZS4gaW14X3NjdV9jYWxsX3JwYygpIGNhbiByZXR1cm4ga2VybmVsIHNp
+ZGUgZXJyb3JzLCBmb3IgZXhhbXBsZSBmcm9tDQo+IGlteC1zY3UuYyBmcmFtZXdvcmsgRUlOVkFM
+IG9yIEVUSU1FRE9VVCBvciB3aGF0IGV2ZXIgZXJyb3IgbWJveA0KPiBmcmFtZXdvcmsgbWF5IGFs
+c28gcHJvdmlkZS4NCj4gQWFhYW5ubm5kZC4uLiBpdCBjYW4gZXh0cmFjdCBhbiBlcnJvciBmcm9t
+IFNDVSBwYWNrYWdlIGFuZCByZXR1cm4gaXQgb3Zlcg0KPiBzYW1lIHdheSBhcyBvdGhlciBlcnJv
+cnMuDQo+IA0KPiBBbmQgY3VycmVudCBTQ1UgdmVyc2lvbiBoYXMgc29tZSBidWdzLCBzbyBpdCBp
+cyBwcm92aWRpbmcgd3JvbmcgZXJyb3IgdmFsdWUuDQo+IFNvby4uLiBhcyB1c3VhbCB0aGUgTlhQ
+IGhhcyBkZWNpZGVkIHRvIG1ha2UgdGhlIGxpbnV4IGtlcm5lbCBhIGJpdCBtb3JlDQo+IHdvcnNl
+IHRvIG1ha2UgdGhlIFNDVSBmaXJtd2FyZSBoYXBweT8gSXMgaXQgd2hhdCB5b3UgdHJ5aW5nIHRv
+IGRlc2NyaWJlPw0KPiBSZWFsbHkgPyEgOkQNCj4gDQo+IFBsZWFzZS4gRml4IHRoZSBTQ1UgZmly
+c3QuIFRoZSBwcm92aWRlIGZpeGVkIGtlcm5lbCBwYXRjaC4NCg0KVW5kZXJzdG9vZCwgSSB3aWxs
+IG5vdGlmeSBTQ1Ugb3duZXIgdG8gZml4IGl0LCBtZWFud2hpbGUgaXQgZG9lcyBOT1QgYmxvY2sg
+dGhpcyBkcml2ZXIsDQpJIHdpbGwgYWRkIHJldHVybiB2YWx1ZSBjaGVjayBpbiB0aGlzIGRyaXZl
+ci4NCg0KVGhhbmtzLA0KQW5zb24NCg==
