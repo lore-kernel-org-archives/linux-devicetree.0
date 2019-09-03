@@ -1,171 +1,114 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [RFC 5/9] dt-bindings: arm: samsung: Convert Exynos PMU bindings
- to json-schema
-Date: Tue, 3 Sep 2019 13:03:15 +0200
-Message-ID: <CAJKOXPfnvu=c5f6AcOSiQ_9E-C2fMf9qbEpy1Tr3QvH8LgAtpQ@mail.gmail.com>
-References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-5-krzk@kernel.org>
- <CAL_JsqJybT41cEqiTriLMywUQj1BtAG_9muJ4=84OkF23y53CA@mail.gmail.com>
- <CAJKOXPc0SY_8BHMsWLN=1M3VQh41+bdBiH21L4KQPA+iLPYy+A@mail.gmail.com> <CAL_JsqKdsABWK9Og_f38T9zf3SCFFdhU8WOJ4uJjREantoYvYQ@mail.gmail.com>
+From: Luca Ceresoli <luca@lucaceresoli.net>
+Subject: Re: [RFC,v2 3/6] media: dt-bindings: add DS90UB954-Q1 video
+ deserializer
+Date: Tue, 3 Sep 2019 13:03:27 +0200
+Message-ID: <f3640020-0291-f837-8639-c3ba39800ead@lucaceresoli.net>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-4-luca@lucaceresoli.net> <20190902204841.GB7253@kunai>
+ <63d99d6d-ecdd-7dd8-0dcb-126bfd89b258@lucaceresoli.net>
+ <20190903093455.GD1020@kunai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKdsABWK9Og_f38T9zf3SCFFdhU8WOJ4uJjREantoYvYQ@mail.gmail.com>
+In-Reply-To: <20190903093455.GD1020@kunai>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, notify@kernel.orgArnd Bergmann <ar>
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Vladimir Zapolskiy <vz@mleia.com>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 3 Sep 2019 at 10:25, Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Tue, Sep 3, 2019 at 8:58 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > On Mon, 26 Aug 2019 at 13:54, Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > >
-> > > > Convert Samsung Exynos Power Management Unit (PMU) bindings to DT schema
-> > > > format using json-schema.
-> > > >
-> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > > ---
-> > > >  .../devicetree/bindings/arm/samsung/pmu.txt   | 72 --------------
-> > > >  .../devicetree/bindings/arm/samsung/pmu.yaml  | 93 +++++++++++++++++++
-> > > >  2 files changed, 93 insertions(+), 72 deletions(-)
-> > > >  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> > > >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> > >
-> > >
-> > > > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..818c6f3488ef
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> > > > @@ -0,0 +1,93 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/arm/samsung/pmu.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Samsung Exynos SoC series Power Management Unit (PMU)
-> > > > +
-> > > > +maintainers:
-> > > > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    items:
-> > > > +      - enum:
-> > > > +          - samsung,exynos3250-pmu
-> > > > +          - samsung,exynos4210-pmu
-> > > > +          - samsung,exynos4412-pmu
-> > > > +          - samsung,exynos5250-pmu
-> > > > +          - samsung,exynos5260-pmu
-> > > > +          - samsung,exynos5410-pmu
-> > > > +          - samsung,exynos5420-pmu
-> > > > +          - samsung,exynos5433-pmu
-> > > > +          - samsung,exynos7-pmu
-> > > > +      - const: syscon
-> > > > +
-> > > > +  reg:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  '#clock-cells':
-> > > > +    const: 1
-> > > > +
-> > > > +  clock-names:
-> > > > +    description:
-> > > > +      list of clock names for particular CLKOUT mux inputs
-> > > > +    # TODO: what is the maximum number of elements (mux inputs)?
-> > > > +    minItems: 1
-> > > > +    maxItems: 32
-> > > > +    items:
-> > > > +      - enum:
-> > >
-> > > This isn't correct as you are only defining possible names for the
-> > > first item. Drop the '-' (making items a schema instead of a list) and
-> > > then it applies to all. However, doing that will cause a meta-schema
-> > > error which I need to fix to allow. Or if there's a small set of
-> > > possibilities of number of inputs, you can list them under a 'oneOf'
-> > > list.
-> >
-> > Mhmm, I cannot test it or I have an error in the schema. if I
-> > understand correctly, this would be:
-> >
-> >   clock-names:
-> >     description:
-> >       List of clock names for particular CLKOUT mux inputs
-> >     minItems: 1
-> >     maxItems: 16
-> >     items:
-> >       clkout0
-> >       clkout1
-> >       clkout2
-> >       clkout3
-> >       clkout4
-> >       clkout5
-> >       clkout6
-> >       clkout7
-> >       clkout8
-> >       clkout9
-> >       clkout10
-> >       clkout11
-> >       clkout12
-> >       clkout13
-> >       clkout14
-> >       clkout15
-> >       clkout16
-> >
-> > Now it produces the error "ignoring, error in schema 'items'" but
-> > maybe it is expected with current meta-schema?
->
-> 'make dt_binding_check' will give more detailed errors.
->
-> Are the inputs always contiguous 0-N? If so, you want:
->
-> items:
->   - const: clkout0
->   - const: clkout1
->   - const: clkout2
->   ...
->
-> If you want to express any number and order of strings is valid, then you need:
->
-> items:
->   enum:
->     - clkout0
->     - clkout1
->     - clkout2
->
-> Doing that is discouraged for bindings though. Currently, it will
-> generate an error from the meta-schema, but we could change that.
+Hi Wolfram,
 
-It's the second case. The inputs are not contiguous. Examples:
+On 03/09/19 11:34, Wolfram Sang wrote:
+> 
+>> Not if you define enough addresses in the pool. E.g. the DS90UB954
+>> hardware can have 8 aliases per port, so if you have (n_ports * 8)
+>> addresses in the pool the problem is solved.
+> 
+> And then you plug-in somewhere another board with another need for ATR
+> and you are out of addresses.
 
-system-controller {
-    compatible = "samsung,exynos3250-pmu", "syscon";
-    clock-names = "clkout8";
-    clocks = <&cmu CLK_FIN_PLL>;
-}
+Now I got what you mean: the aliases in a pool are reserved to an ATR
+and not available to another ATR. What about hoisting the pool one level
+up in DT, to the adapter where the ATRs are connected?
 
-system-controller {
-    compatible = "samsung,exynos4412-pmu", "syscon";
-    clock-names = "clkout0", "clkout1", "clkout2", "clkout3",
-                  "clkout4", "clkout8", "clkout9";
-    clocks = <&clock CLK_OUT_DMC>, <&clock CLK_OUT_TOP>,
-             <&clock CLK_OUT_LEFTBUS>, <&clock CLK_OUT_RIGHTBUS>,
-             <&clock CLK_OUT_CPU>, <&clock CLK_XXTI>, <&clock CLK_XUSBXTI>;
-}
+>>> And another add-on module with
+>>> non-repogrammable devices may occupy addresses from the defined pool
+>>> above.
+>>
+>> You mean a new device on the local (SoC-to-ATR) bus? Well, it could as
+>> well occupy a non-described address that the ATR has already picked as
+>> an alias.
+> 
+> Nope, I mean a seperate add-on which has a hardcoded I2C address on the
+> bus of the ATR parent. Then this hardcoded address needs to be removed
+> from the pool if it is in the wrong range.
 
-The bindings never required any specific ordering. Also the driver
-just go through all indices and parses them.
+As I understand it, we are referring to the same use case:
 
-Your second syntax fails:
-Documentation/devicetree/bindings/arm/samsung/pmu.yaml:
-properties:clock-names:items: {'enum': ['clkout0', 'clkout1',
-'clkout2', 'clkout3', 'clkout4', 'clkout5', 'clkout6', 'clkout7',
-'clkout8', 'clkout9', 'clkout10', 'clkout11', 'clkout12', 'clkout13',
-'clkout14', 'clkout15', 'clkout16']} is not of type 'array'
+.---------------.       .-----.   .-------------------.
+| adapter (SoC) |---+---| ATR |---| remote slave 0x10 |
+'---------------'   |   '-----'   '-------------------'
+                    |
+              .----------.
+              | device X |
+              '----------'
 
-Best regards,
-Krzysztof
+Here device X with hard-coded address 0x20 is plugged in at runtime.
+
+As you say it, if 0x20 is in the ATR pool we have a problem.
+
+But even without an explicit pool, initially 0x20 is unused and the ATR
+can use it for remote slave 0x10. Then at some point device X is
+connected, and suddenly 0x20 conflicts.
+
+To a limited extend the explicit pool could help if the list of possible
+addons is known: one can put in the pool only address that will never
+appear in addons.
+
+Hey, wait, the no-pool solution could have a way to handle this
+conflict. When device X is connected, the adapter can look for a new
+alias (0x21), call the i2c_atr_deconfigure_hw() and i2c_atr_setup_hw()
+callbacks to stop using 0x20 and start using 0x21. Doesn't look very
+lovely, but may be worth considering.
+
+>>> I am not perfectly happy with the assumption that all undescribed
+>>> addresses are automatically free. That also might need DTS updates to
+>>> describe all clients properly. But this change only needs to be done
+>>> once, and it will improve the description of the hardware.
+>>
+>> Right, but I still suspect some users won't do their homework and
+>> discover address conflicts at runtime, maybe months later, in a painful
+>> way. Also a chip might be undocumented on a given board, so they could
+>> do their homework and still have problems.
+> 
+> Yes, we probably need a binding to mark an address as used even though
+> we don't know the device or don't have a driver for it.
+> 
+> Don't get me wrong, I know what you mean. One of my boards has a client
+> soldered in a way so that it is still in debug mode. That means it
+> listens to addresses 0x03-0x07 to provide debug information. Took me a
+> while to find out what is happening there.
+> 
+> But still, 'i2cdetect' showed all of these.
+> 
+>> Despite my comments, I'm not strongly against your proposal. To me it
+>> doesn't seem to solve any problem, while it does introduce some degree
+>> of risk. Could you elaborate more on but what benefit it introduces?
+> 
+> I'd think the risk of running out of defined addresses is somewhere
+> equal to running into (after a while) an unexpectedly used address.
+> I like the fix for the latter better because describing what is on the
+> bus is more helpful and generic than updating the pool-property every
+> time you need it. Plus, as mentioned above, other add-on hardware may
+> disturb your pool allocation.
+> 
+> I expect this topic to be one of the discussion points of the BoF.
+
+Definitely.  And having a list of use cases would help a lot IMO. I had
+never considered the use case described above, for example.
+
+Thanks,
+-- 
+Luca
