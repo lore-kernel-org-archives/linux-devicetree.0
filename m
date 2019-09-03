@@ -1,89 +1,45 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
-Date: Tue, 3 Sep 2019 11:06:22 +0200
-Message-ID: <20190903090621.GB1020@kunai>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-3-luca@lucaceresoli.net>
- <20190902204208.GA7253@kunai>
- <8482d1e2-b1d9-3da5-5b1f-b7e492a87368@lucaceresoli.net>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH 11/13] dt-bindings: mips: Add loongson cpus & boards
+Date: Tue, 3 Sep 2019 09:07:51 +0000
+Message-ID: <20190903085904.bwmm4knaodopvzvd@pburton-laptop>
+References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
+ <20190827085302.5197-12-jiaxun.yang@flygoat.com>
+ <CAL_JsqL6htVye-LSBWw1WwRy9xH=zwuH6gurscwoCWj9Te_hAg@mail.gmail.com>
+ <d94eff2b-76ec-5cd2-512d-5ee0406a1bb9@flygoat.com>
+ <20190827204105.7nyt4pi7lvxse5ij@pburton-laptop>
+ <CAL_Jsq+VmFi6r1-WOa9RJ4vfqsZLqcn5HMbv1oyQjhtJ8Qd8Lw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="v9Ux+11Zm5mwPlX6"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8482d1e2-b1d9-3da5-5b1f-b7e492a87368@lucaceresoli.net>
+In-Reply-To: <CAL_Jsq+VmFi6r1-WOa9RJ4vfqsZLqcn5HMbv1oyQjhtJ8Qd8Lw@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <4A796A79D38DD0458284E8705F3EA529@namprd22.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Ceresoli <luca@lucaceresoli.net>
-Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Vladimir Zapolskiy <vz@mleia.com>, Peter Rosin <peda@axentia.se>
+To: Rob Herring <robh+dt@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: "open list:MIPS" <linux-mips@vger.kernel.org>, Huacai Chen <chenhc@lemote.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.co>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
---v9Ux+11Zm5mwPlX6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> > One huge drawback for me is the attach/detach callbacks. One year ago, I
-> > removed a similar callback from the I2C core ("[PATCH 0/2] i2c: remove
-> > deprecated attach_adapter callback") because some drivers did a lot of
-> > crazy things there. It took years to remove all that.
+On Mon, Sep 02, 2019 at 03:50:47PM +0100, Rob Herring wrote:
+> > In general on MIPS we detect CPU properties at runtime from coprocessor
+> > 0 registers & similar sources of information, so there's not really a
+> > need to specify anything about the CPU in devicetree.
 >=20
-> Oh dear, I was completely unaware, apologies! :-)
+> We thought the same thing initially for Arm... Mostly what is in DT is
+> not what is discoverable. Are clock speeds, power domains, low power
+> states, etc. all discoverable?
 
-Oh, no need to apologize. You don't have to research the whole I2C history
-before implementing something. Keeping the big picture is what I happily
-provide.
+No, that's a good point - clocks etc may need to be specified in DT. I
+just don't see any of that in this patchset - it appears all that is
+specified is cache sizes which we already detect. So in this case I
+don't see a need for including CPUs in DT at all.
 
-> > What I could imagine here: the adapter (B and C each in the picture
-> > above) gets a flag like NEEDS_ATR before registering to the core. The
-> > flag means all clients on that bus will have their address translated.
-> > The core will figure out a free alias when a device is registered. We
-> > can then have an ATR specific callback with the original and translated
-> > address as arguments, so one can setup the HW as needed.
->=20
-> Do you mean moving the alias selection code from i2c-atr.c to the i2c
-> core? And the rest of the ATR core too?
+Jiaxun - did you add all this information to DT to avoid the "cacheinfo:
+Unable to detect cache hierarchy for CPU" messages during boot? If so
+that should be fixed by commit b8bea8a5e5d9 ("mips: fix cacheinfo"). If
+not, could you describe why the CPU nodes are needed here?
 
-I hope for something like this in the I2C core (simplified, naming needs
-to be improved etc.) in i2c_new_device:
-
-	if (client->adapter->flag & NEEDS_ATR) {
-		i2c_atr_get_alias_address();
-		/* probably a wrapper around a callback */
-		i2c_atr_setup_hw();
-	}
-
-with all the i2c_atr_* functions in a seperate file. It would be great
-if that file could be a completely independent module, but if it turns
-out that we need some simple helpers in the core, I am probably OK with
-that, too.
-
-> > Do you think that would work?
->=20
-> Yes.
-
-Cool!
-
-
---v9Ux+11Zm5mwPlX6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1uLQkACgkQFA3kzBSg
-KbYlUg//QLHDG326il+ci8KTo6kaFt1uzUDGdfsvBHCrmjnaV9lyCqSbinKTaRrU
-LanYdd7SOTNFpTsuxE3FfWCJwAxdOogPD3Eatfu5EWQmTse6AgqHdAOEzNu2NqFW
-DpRfFpXvzYfbaQ2Y+AWqyvUAjE63ddHw0oi9LwS5XPPV0fSwqBQOU8135a6Qj9zd
-Zdp40L4XDpglDOt5jTUKvqyVCLpHGD6Seciw/4oNhsrdK4ZhhaZtC3hj0fSy5AxV
-2/2pkLxcNrEOnZl1q0+inRBZZOphH1VUwzHxS56O6leTlNo1CxLQ/Y71vURqIgwd
-N3WM5FuTCnBoN5bFbTNGegyUsqsgiYzONmDjxcM7lxmE1XTJDw7L6k5m7hwoxLLd
-BmZJAdCnpbQOixbg+iDKUrMkDklhfjXfmhvhWaedvc+y8iKfeUlvd+YVmJygqDgt
-h2FV5OYQdWipo4TsOM+ORcfFFyFtFSziHxOdsEv0EpdVk8R+ROIp9FJldlQRwQZ/
-iiCpEyXXLt0Yw3iq1gG3GE4WFxGgeUty9pECsXmT3BwRQhroUBeuiXR/j2AzpXkE
-Alr5B6hXmPL0iACDHHK/lMn2svKcRQWG51Nno1VR3KOCGiWj9sjM0H6Y4WHmCQcG
-6gB7hUyzLHI9+VuDBLBMVyLHmEtC5yLsPxrFZTDuNL0xBGPp1jo=
-=5VsA
------END PGP SIGNATURE-----
-
---v9Ux+11Zm5mwPlX6--
+Thanks,
+    Paul
