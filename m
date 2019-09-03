@@ -1,21 +1,11 @@
-From: Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>
-Subject: Re: [RFC PATCH V2 4/4] platform: mtk-isp: Add Mediatek FD driver
-Date: Tue, 3 Sep 2019 14:44:41 +0800
-Message-ID: <1567493081.18318.49.camel@mtksdccf07>
-References: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
- <1562661672-22439-5-git-send-email-Jerry-Ch.chen@mediatek.com>
- <20190802082815.GA203993@chromium.org>
- <1566724680.20680.8.camel@mtksdccf07>
- <CAAFQd5Dw+jaT-+LAUEVeB8W1zdnOgPw7u+aCfDWhYW1SfbzO8g@mail.gmail.com>
- <1566957625.20680.33.camel@mtksdccf07>
- <CAAFQd5D-Yg1FjUE_rwmqfS1gvfE0=MZ=r-ziueU_37-uo9QTbw@mail.gmail.com>
- <1567424859.18318.32.camel@mtksdccf07>
- <CAAFQd5AGgeFbto6V1KkL0dp1QPziOKV3pWQDU2OJ+S1QKvnBdg@mail.gmail.com>
+From: Jianxin Pan <jianxin.pan@amlogic.com>
+Subject: [PATCH 0/4] arm64: Add basic support for Amlogic A1 SoC Family
+Date: Tue, 3 Sep 2019 02:51:11 -0400
+Message-ID: <1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAAFQd5AGgeFbto6V1KkL0dp1QPziOKV3pWQDU2OJ+S1QKvnBdg@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,206 +15,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <tfiga@chromium.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sean Cheng =?UTF-8?Q?=28=E9=84=AD=E6=98=87=E5=BC=98=29?= <Sean.Cheng@mediatek.com>, "laurent.pinchart+renesas@ideasonboard.com" <laurent.pinchart+renesas@ideasonboard.com>, Rynn Wu =?UTF-8?Q?=28=E5=90=B3=E8=82=B2=E6=81=A9=29?= <Rynn.Wu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Po-Yang Huang =?UTF-8?Q?=28=E9=BB=83=E6=9F=8F=E9=99=BD=29?= <po-yang.huang@mediatek.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "suleiman@chromium.org" <suleiman@chromium.org>, "shik@chromium.org" <shik@chromium.org>, Jungo Lin =?UTF-8?Q?=28=E6=9E=97=E6=98=8E=E4=BF=8A=29?= <jungo.lin@mediatek.com>, Sj Huang =?UTF-8?Q?=28=E9=BB=83=E4=BF=A1=E7=92=8B=29?= <sj.huang@mediatek.com>, "yuzhao@chromium.org" <yuzhao@chromium.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, zwisler@chromium.or
+To: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, Qiufang Dai <qiufang.dai@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Carlo Caione <carlo@caione.org>, Tao Zeng <tao.zeng@amlogic.com>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-09-03 at 13:19 +0800, Tomasz Figa wrote:
-> On Mon, Sep 2, 2019 at 8:47 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
-> >
-> > Hi Tomasz,
-> >
-> > On Fri, 2019-08-30 at 16:33 +0800, Tomasz Figa wrote:
-> > > On Wed, Aug 28, 2019 at 11:00 AM Jerry-ch Chen
-> > > <Jerry-ch.Chen@mediatek.com> wrote:
-> > > >
-> > > > Hi Tomasz,
-> > > >
-> > > > On Mon, 2019-08-26 at 14:36 +0800, Tomasz Figa wrote:
-> > > > > Hi Jerry,
-> > > > >
-> > > > > On Sun, Aug 25, 2019 at 6:18 PM Jerry-ch Chen
-> > > > > <Jerry-ch.Chen@mediatek.com> wrote:
-> > > > > >
-> > > > > > Hi Tomasz,
-> > > > > >
-> > > > > > On Fri, 2019-08-02 at 16:28 +0800, Tomasz Figa wrote:
-> > > > > > > Hi Jerry,
-> > > > > > >
-> > > > > > > On Tue, Jul 09, 2019 at 04:41:12PM +0800, Jerry-ch Chen wrote:
-> [snip]
-> > > > static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
-> > > >                                   unsigned int *num_buffers,
-> > > >                                   unsigned int *num_planes,
-> > > >                                   unsigned int sizes[],
-> > > >                                   struct device *alloc_devs[])
-> > > > {
-> > > >         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
-> > > >         struct device *dev = ctx->dev;
-> > > >         unsigned int size[2];
-> > > >
-> > > >         switch (vq->type) {
-> > > >         case V4L2_BUF_TYPE_META_CAPTURE:
-> > > >                 size[0] = ctx->dst_fmt.buffersize;
-> > > >                 break;
-> > > >         case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
-> > > >                 size[0] = ctx->src_fmt.plane_fmt[0].sizeimage;
-> > > >                 if (*num_planes == 2)
-> > > >                         size[1] = ctx->src_fmt.plane_fmt[1].sizeimage;
-> > > >                 break;
-> > > >         }
-> > > >
-> > > >         if (*num_planes == 1) {
-> > > >                 if (sizes[0] < size[0])
-> > > >                         return -EINVAL;
-> > > >         } else if (*num_planes == 2) {
-> > > >                 if ((sizes[0] < size[0]) && (sizes[1] < size[1]))
-> > > >                         return -EINVAL;
-> > >
-> > > Can we just use a loop here and combine the 2 cases above?
-> > >
-> > > Also, we need to fail with -EINVAL if *num_planes is > 2.
-> > >
-> > > >         } else {
-> > > >                 *num_planes = 1;
-> > > >                 sizes[0] = size[0];
-> > >
-> > > This should be the case if *num_planes == 0 and the number of planes
-> > > and sizes should match the currently active format.
-> > >
-> > I appreciate your comments,
-> >
-> > Ok, I will update as following:
-> > static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
-> >                                   unsigned int *num_buffers,
-> >                                   unsigned int *num_planes,
-> >                                   unsigned int sizes[],
-> >                                   struct device *alloc_devs[])
-> > {
-> >         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
-> >         unsigned int size[2];
-> >         unsigned int plane;
-> >
-> >         switch (vq->type) {
-> >         case V4L2_BUF_TYPE_META_CAPTURE:
-> >                 size[0] = ctx->dst_fmt.buffersize;
-> >                 break;
-> >         case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
-> >                 size[0] = ctx->src_fmt.plane_fmt[0].sizeimage;
-> >                 if (*num_planes == 2)
-> >                         size[1] = ctx->src_fmt.plane_fmt[1].sizeimage;
-> >                 break;
-> >         }
-> >
-> >         if (*num_planes > 2)
-> >                 return -EINVAL;
-> >         if (*num_planes == 0) {
-> >                 if (vq->type == V4L2_BUF_TYPE_META_CAPTURE) {
-> >                         sizes[0] = ctx->dst_fmt.buffersize;
-> >                         *num_planes = 1;
-> >                         return 0;
-> >                 }
-> >
-> >                 *num_planes = ctx->src_fmt.num_planes;
-> >                 for (plane = 0; plane < *num_planes; plane++)
-> >                         sizes[plane] = ctx->src_fmt.plane_fmt[plane].sizeimage;
-> >                 return 0;
-> >         }
-> >
-> >         for (plane = 0; plane < *num_planes; plane++) {
-> >                 if(sizes[plane] < size[plane])
-> >                         return -EINVAL;
-> >         }
-> >         return 0;
-> > }
-> >
-> 
-> Looks good, thanks!
-> 
-> > > >         }
-> > > >
-> > > >         return 0;
-> > > > }
-> > > >
-> > > > > [snip]
-> > > > >
-> > > > > > > > +static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
-> > > > > > > > +{
-> > > > > > > > +   struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
-> > > > > > > > +   struct vb2_buffer *vb;
-> > > > > > >
-> > > > > > > How do we guarantee here that the hardware isn't still accessing the buffers
-> > > > > > > removed below?
-> > > > > > >
-> > > > > > Maybe we can check the driver state flag and aborting the unfinished
-> > > > > > jobs?
-> > > > > > (fd_hw->state == FD_ENQ)
-> > > > > >
-> > > > >
-> > > > > Yes, we need to either cancel or wait for the currently processing
-> > > > > job. It depends on hardware capabilities, but cancelling is generally
-> > > > > preferred for the lower latency.
-> > > > >
-> > > > Ok, it the state is ENQ, then we can disable the FD hw by controlling
-> > > > the registers.
-> > > >
-> > > > for example:
-> > > >         writel(0x0, fd->fd_base + FD_HW_ENABLE);
-> > > >         writel(0x0, fd->fd_base + FD_INT_EN);
-> > > >
-> > >
-> > > What's exactly the effect of writing 0 to FD_HW_ENABLE?
-> > >
-> > Sorry, my last reply didn't solve the question,
-> > we should implement a mtk_fd_job_abort() for v4l2_m2m_ops().
-> >
-> > which is able to readl_poll_timeout_atomic()
-> > and check the HW busy bits in the register FD_INT_EN;
-> >
-> > if they are not cleared until timeout, we could handle the last
-> > processing job.
-> > Otherwise, the FD irq handler should have handled the last processing
-> > job and we could continue the stop_streaming().
-> >
-> > For job_abort():
-> > static void mtk_fd_job_abort(void *priv)
-> > {
-> >         struct mtk_fd_ctx *ctx = priv;
-> >         struct mtk_fd_dev *fd = ctx->fd_dev;
-> >         u32 val;
-> >         u32 ret;
-> >
-> >         ret = readl_poll_timeout_atomic(fd->fd_base + MTK_FD_REG_OFFSET_INT_EN,
-> >                                         val,
-> >                                         (val & MTK_FD_HW_BUSY_MASK) ==
-> >                                         MTK_FD_HW_STATE_IS_BUSY,
-> >                                         USEC_PER_MSEC, MTK_FD_STOP_HW_TIMEOUT);
-> 
-> Hmm, would it be possible to avoid the busy wait by having a
-> completion that could be signalled from the interrupt handler?
-> 
-> Best regards,
-> Tomasz
+A1 is an application processor designed for smart audio and IoT applications,
+with Dual core ARM Cortex-A35 CPU. Unlike the previous GXL and G12 series,
+there is no Cortex-M3 AO CPU in it.
 
-I suppose that would be wakeup a wait queue in the interrupt handler,
-the the wait_event_interrupt_timeout() will be used in here and system
-suspend e.g. mtk_fd_suspend().
-Or do you suggest to wait_event_interrupt_timeout() every frame in the
-mtk_fd_ipi_handler()?
-I think maybe the readl_poll_timeout_atomic would be good enough.
+This serial add basic support for the Amlogic A1 based Amlogic AD401 board:
+which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
+Timer, UART. It's capable of booting up into the serial console.
 
+The pclk for uart_AO_B need to be fixed once A1 clock driver is merged.
+In this version, it rely on bootloader to enable the pclk gate
 
-One more thing, for the mtk_fd_video_device_register()
-Sorry that I would need to use intermediate variable here since the 80
-columns check.
+Jianxin Pan (4):
+  soc: amlogic: meson-gx-socinfo: Add A1 and A113L IDs
+  dt-bindings: arm: amlogic: add A1 bindings
+  dt-bindings: arm: amlogic: add Amlogic AD401 bindings
+  arm64: dts: add support for A1 based Amlogic AD401
 
-	function = MEDIA_ENT_F_PROC_VIDEO_STATISTICS;
-	ret = v4l2_m2m_register_media_controller(m2m_dev, vfd, function);
-	if (ret) {
-		dev_err(dev, "Failed to init mem2mem media controller\n");
-		goto err_unreg_video;
-	}
+ Documentation/devicetree/bindings/arm/amlogic.yaml |   6 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts     |  30 +++++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          | 121 +++++++++++++++++++++
+ drivers/soc/amlogic/meson-gx-socinfo.c             |   2 +
+ 5 files changed, 160 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1.dtsi
 
-
-Thanks and Best regards,
-Jerry
+-- 
+2.7.4
