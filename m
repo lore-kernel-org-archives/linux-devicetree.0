@@ -1,65 +1,51 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC 4/5] ARM: dts: omap3-n950-n9: remove opp-v1 table
-Date: Tue, 3 Sep 2019 11:44:03 +0530
-Message-ID: <20190903061403.k3d333f54gj2kuxi@vireshk-i7>
-References: <cover.1567421750.git.hns@goldelico.com>
- <2f978667c1533e46e3a5df58871e9048f3eb74e9.1567421751.git.hns@goldelico.com>
- <20190903023635.44yf32jowpm3hgfp@vireshk-i7>
- <8BC1AEC9-7B24-4C07-8659-16741D018164@goldelico.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
+Date: Tue, 3 Sep 2019 07:20:40 +0100
+Message-ID: <20190903062040.GC26880@dell>
+References: <20190902132400.14084-1-lee.jones@linaro.org>
+ <20190903054451.GV6167@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8BC1AEC9-7B24-4C07-8659-16741D018164@goldelico.com>
+In-Reply-To: <20190903054451.GV6167@minitux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03-09-19, 08:01, H. Nikolaus Schaller wrote:
+On Mon, 02 Sep 2019, Bjorn Andersson wrote:
+
+> On Mon 02 Sep 06:24 PDT 2019, Lee Jones wrote:
 > 
-> > Am 03.09.2019 um 04:36 schrieb Viresh Kumar <viresh.kumar@linaro.org>:
+> > From: Bjorn Andersson <bjorn.andersson@linaro.org>
 > > 
-> > On 02-09-19, 12:55, H. Nikolaus Schaller wrote:
-> >> With opp-v2 in omap36xx.dtsi and ti-cpufreq driver the
-> >> 1GHz capability is automatically detected.
-> >> 
-> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> >> ---
-> >> arch/arm/boot/dts/omap3-n950-n9.dtsi | 7 -------
-> >> 1 file changed, 7 deletions(-)
-> >> 
-> >> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> >> index 5441e9ffdbb4..e98b0c615f19 100644
-> >> --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> >> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> >> @@ -11,13 +11,6 @@
-> >> 	cpus {
-> >> 		cpu@0 {
-> >> 			cpu0-supply = <&vcc>;
-> >> -			operating-points = <
-> >> -				/* kHz    uV */
-> >> -				300000  1012500
-> >> -				600000  1200000
-> >> -				800000  1325000
-> >> -				1000000	1375000
-> >> -			>;
-> >> 		};
-> >> 	};
+> > The Lenovo Yoga C630 is built on the SDM850 from Qualcomm, but this seem
+> > to be similar enough to the SDM845 that we can reuse the sdm845.dtsi.
 > > 
-> > This should be merged with 2/5 ?
+> > Supported by this patch is: keyboard, battery monitoring, UFS storage,
+> > USB host and Bluetooth.
 > 
-> Well, it bloats 2/5.
+> Applied this to next-20190829 and booted it, got a little bit of EFI FB,
+> then the screen goes blank and after a while I'm back in GRUB.
+> 
+> I've not been able to figure out what's causing this though.
 
-It is logically the right place to do this as that's where we are
-adding opp-v2.
+Probably DMA.  There is still an issue in the COM GENI Serial Engine
+Driver which reboots the system when a DMA transaction is initiated.
 
-> What I hope (I can't test) is that this opp-v1 table
-> is ignored if an opp-v2 table exists. So that it can be
-> removed by a separate follow-up patch.
+However, with a workaround patch applied to the Serial Engine driver
+(drivers/soc/qcom/qcom-geni-se.c) this DTS has no issue booting the
+system.
 
-It should work as that's what we are doing in OPP core, but I still
-feel this better get merged with 2/5.
+We have ~12 weeks to either fix or elegantly work around the Serial
+Engine issue.  IMHO is makes no sense to hold back this enablement
+patch (which cannot go in via the -rcs) for something which is likely
+to be fixed and applied during v3.4-rcX.
 
 -- 
-viresh
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
