@@ -1,65 +1,54 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 100/167] ARM: dts: qcom: ipq4019: enlarge PCIe BAR range
-Date: Tue,  3 Sep 2019 12:24:12 -0400
-Message-ID: <20190903162519.7136-100-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 099/167] ARM: dts: qcom: ipq4019: Fix MSI IRQ type
+Date: Tue,  3 Sep 2019 12:24:11 -0400
+Message-ID: <20190903162519.7136-99-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Christian Lamparter <chunkeey@gmail.com>, David Bauer <mail@david-bauer.net>, Andy Gross <agross@kernel.org>, Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Niklas Cassel <niklas.cassel@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@gmail.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
 
-[ Upstream commit f3e35357cd460a8aeb48b8113dc4b761a7d5c828 ]
+[ Upstream commit 97131f85c08e024df49480ed499aae8fb754067f ]
 
-David Bauer reported that the VDSL modem (attached via PCIe)
-on his AVM Fritz!Box 7530 was complaining about not having
-enough space in the BAR. A closer inspection of the old
-qcom-ipq40xx.dtsi pulled from the GL-iNet repository listed:
+The databook clearly states that the MSI IRQ (msi_ctrl_int) is a level
+triggered interrupt.
 
-| qcom,pcie@80000 {
-|	compatible = "qcom,msm_pcie";
-|	reg = <0x80000 0x2000>,
-|	      <0x99000 0x800>,
-|	      <0x40000000 0xf1d>,
-|	      <0x40000f20 0xa8>,
-|	      <0x40100000 0x1000>,
-|	      <0x40200000 0x100000>,
-|	      <0x40300000 0xd00000>;
-|	reg-names = "parf", "phy", "dm_core", "elbi",
-|			"conf", "io", "bars";
+The msi_ctrl_int will be high for as long as any MSI status bit is set,
+thus the IRQ type should be set to IRQ_TYPE_LEVEL_HIGH, causing the
+IRQ handler to keep getting called, as long as any MSI status bit is set.
 
-Matching the reg-names with the listed reg leads to
-<0xd00000> as the size for the "bars".
+A git grep shows that ipq4019 is the only SoC using snps,dw-pcie that has
+configured this IRQ incorrectly.
 
-Cc: stable@vger.kernel.org
-BugLink: https://www.mail-archive.com/openwrt-devel@lists.openwrt.org/msg45212.html
-Reported-by: David Bauer <mail@david-bauer.net>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Andy Gross <agross@kernel.org>
+Not having the correct IRQ type defined will cause us to lose interrupts,
+which in turn causes timeouts in the PCIe endpoint drivers.
+
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index 814ab7283228a..54d056b01bb51 100644
+index 2c3168d95a2d5..814ab7283228a 100644
 --- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
 +++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -386,8 +386,8 @@
- 			#address-cells = <3>;
- 			#size-cells = <2>;
+@@ -389,7 +389,7 @@
+ 			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000
+ 				  0x82000000 0 0x40300000 0x40300000 0 0x400000>;
  
--			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000
--				  0x82000000 0 0x40300000 0x40300000 0 0x400000>;
-+			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000>,
-+				 <0x82000000 0 0x40300000 0x40300000 0 0x00d00000>;
- 
- 			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>;
++			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
  			interrupt-names = "msi";
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 0x7>;
 -- 
 2.20.1
