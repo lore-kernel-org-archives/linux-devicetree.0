@@ -1,64 +1,79 @@
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
-Date: Tue, 3 Sep 2019 10:48:41 +0200
-Message-ID: <8482d1e2-b1d9-3da5-5b1f-b7e492a87368@lucaceresoli.net>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-3-luca@lucaceresoli.net> <20190902204208.GA7253@kunai>
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v5 09/11] lib/vsprintf: OF nodes are first and foremost,
+ struct device_nodes
+Date: Tue, 3 Sep 2019 10:52:33 +0200
+Message-ID: <20190903085233.oksjcwqwdxb53eig@pathway.suse.cz>
+References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
+ <20190902135732.23455-10-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190902204208.GA7253@kunai>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190902135732.23455-10-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Vladimir Zapolskiy <vz@mleia.com>, Peter Rosin <peda@axentia.se>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: rafael@kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
-
-On 02/09/19 22:42, Wolfram Sang wrote:
-> Hi Luca,
+On Mon 2019-09-02 16:57:30, Sakari Ailus wrote:
+> Factor out static kobject_string() function that simply calls
+> device_node_string(), and thus remove references to kobjects (as these are
+> struct device_node).
 > 
->> + * Topology:
->> + *
->> + *                       Slave X @ 0x10
->> + *               .-----.   |
->> + *   .-----.     |     |---+---- B
->> + *   | CPU |--A--| ATR |
->> + *   `-----'     |     |---+---- C
->> + *               `-----'   |
->> + *                       Slave Y @ 0x10
->> + *
->> + * Alias table:
->> + *
->> + *   Client  Alias
->> + *   -------------
->> + *      X    0x20
->> + *      Y    0x30
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  lib/vsprintf.c | 16 ++++------------
+>  1 file changed, 4 insertions(+), 12 deletions(-)
 > 
-> Great that you already provided docs for this driver!
-> 
-> One huge drawback for me is the attach/detach callbacks. One year ago, I
-> removed a similar callback from the I2C core ("[PATCH 0/2] i2c: remove
-> deprecated attach_adapter callback") because some drivers did a lot of
-> crazy things there. It took years to remove all that.
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index a04a2167101ef..4ad9332d54ba6 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -1905,6 +1905,9 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+>  	struct printf_spec str_spec = spec;
+>  	str_spec.field_width = -1;
+>  
+> +	if (fmt[0] != 'F')
+> +		return error_string(buf, end, "(%pO?)", spec);
+> +
+>  	if (!IS_ENABLED(CONFIG_OF))
+>  		return error_string(buf, end, "(%pOF?)", spec);
+>  
+> @@ -1978,17 +1981,6 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+>  	return widen_string(buf, buf - buf_start, end, spec);
+>  }
+>  
+> -static char *kobject_string(char *buf, char *end, void *ptr,
+> -			    struct printf_spec spec, const char *fmt)
+> -{
+> -	switch (fmt[1]) {
+> -	case 'F':
+> -		return device_node_string(buf, end, ptr, spec, fmt + 1);
+> -	}
+> -
+> -	return error_string(buf, end, "(%pO?)", spec);
+> -}
+> -
+>  /*
+>   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
+>   * by an extra set of alphanumeric characters that are extended format
+> @@ -2167,7 +2159,7 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>  	case 'G':
+>  		return flags_string(buf, end, ptr, spec, fmt);
+>  	case 'O':
+> -		return kobject_string(buf, end, ptr, spec, fmt);
+> +		return device_node_string(buf, end, ptr, spec, fmt + 1);
 
-Oh dear, I was completely unaware, apologies! :-)
+I know that this come from from kobject_string(). But please, modify
+it to follow the style used by other %p modifiers. I mean to pass
+"fmt" as is and then use:
 
-> What I could imagine here: the adapter (B and C each in the picture
-> above) gets a flag like NEEDS_ATR before registering to the core. The
-> flag means all clients on that bus will have their address translated.
-> The core will figure out a free alias when a device is registered. We
-> can then have an ATR specific callback with the original and translated
-> address as arguments, so one can setup the HW as needed.
+	if (fmt[1] != 'F')
 
-Do you mean moving the alias selection code from i2c-atr.c to the i2c
-core? And the rest of the ATR core too?
+With the above change:
 
-> Do you think that would work?
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-Yes.
-
--- 
-Luca
+Best Regards,
+Petr
