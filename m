@@ -1,45 +1,103 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v5 00/11] Device property improvements, add %pfw format
- specifier
-Date: Tue, 03 Sep 2019 02:38:48 -0700
-Message-ID: <be9cd5d933486de9cf88a1550c2020c56348670d.camel@perches.com>
-References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 04/14] memory: mtk-smi: Add device-link between smi-larb
+	and smi-common
+Date: Tue, 3 Sep 2019 17:37:26 +0800
+Message-ID: <1567503456-24725-5-git-send-email-yong.wu@mediatek.com>
+References: <1567503456-24725-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1567503456-24725-1-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, cui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chao.hao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, ming-fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, anan.sun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-09-02 at 16:57 +0300, Sakari Ailus wrote:
-> Hi all,
-> 
-> This set adds functionality into the device property API (counting a
-> node's parents as well as obtaining its name) in order to support printing
-> fwnode names using a new conversion specifier "%pfw". The names that are
-> produced are equivalent to its OF counterpart "%pOF" on OF systems for the
-> two supported modifiers ("f" and "P").
-> 
-> Printing a node's name is something that's been available on OF for a long
-> time and if something is converted to device property API (such as the
-> V4L2 fwnode framework) it always got removed of a nice feature that was
-> sometimes essential in debugging. With this set, that no longer is the
-> case.
+Normally, If the smi-larb HW need work, we should enable the smi-common
+HW power and clock firstly.
+This patch adds device-link between the smi-larb dev and the smi-common
+dev. then If pm_runtime_get_sync(smi-larb-dev), the pm_runtime_get_sync
+(smi-common-dev) will be called automatically.
 
-Doesn't this still have dependencies on removing all
-existing %p[fF] uses?
+Also, Add DL_FLAG_STATELESS to avoid the smi-common clocks be gated when
+probe.
 
-In Linus' tree:
+CC: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Suggested-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/memory/mtk-smi.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt:or events have "%pF" or "%pS" parameter in its format string. It is common to
-tools/lib/traceevent/event-parse.c:             if (asprintf(&format, "%%pf: (NO FORMAT FOUND at %llx)\n", addr) < 0)
-tools/lib/traceevent/event-parse.c:     if (asprintf(&format, "%s: %s", "%pf", printk->printk) < 0)
-
-And these in -next:
-
-drivers/scsi/lpfc/lpfc_hbadisc.c:                                        "3185 FIND node filter %pf DID "
-drivers/scsi/lpfc/lpfc_hbadisc.c:                        "3186 FIND node filter %pf NOT FOUND.\n", filter);
-drivers/scsi/lpfc/lpfc_sli.c:                           "(%d):0307 Mailbox cmd x%x (x%x/x%x) Cmpl %pf "
+diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+index 439d7d8..5dab56c 100644
+--- a/drivers/memory/mtk-smi.c
++++ b/drivers/memory/mtk-smi.c
+@@ -273,6 +273,7 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *smi_node;
+ 	struct platform_device *smi_pdev;
++	struct device_link *link;
+ 
+ 	larb = devm_kzalloc(dev, sizeof(*larb), GFP_KERNEL);
+ 	if (!larb)
+@@ -312,6 +313,12 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+ 		if (!platform_get_drvdata(smi_pdev))
+ 			return -EPROBE_DEFER;
+ 		larb->smi_common_dev = &smi_pdev->dev;
++		link = device_link_add(dev, larb->smi_common_dev,
++				       DL_FLAG_PM_RUNTIME | DL_FLAG_STATELESS);
++		if (!link) {
++			dev_err(dev, "Unable to link smi-common dev\n");
++			return -ENODEV;
++		}
+ 	} else {
+ 		dev_err(dev, "Failed to get the smi_common device\n");
+ 		return -EINVAL;
+@@ -324,6 +331,9 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+ 
+ static int mtk_smi_larb_remove(struct platform_device *pdev)
+ {
++	struct mtk_smi_larb *larb = platform_get_drvdata(pdev);
++
++	device_link_remove(&pdev->dev, larb->smi_common_dev);
+ 	pm_runtime_disable(&pdev->dev);
+ 	component_del(&pdev->dev, &mtk_smi_larb_component_ops);
+ 	return 0;
+@@ -335,17 +345,9 @@ static int __maybe_unused mtk_smi_larb_resume(struct device *dev)
+ 	const struct mtk_smi_larb_gen *larb_gen = larb->larb_gen;
+ 	int ret;
+ 
+-	/* Power on smi-common. */
+-	ret = pm_runtime_get_sync(larb->smi_common_dev);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to pm get for smi-common(%d).\n", ret);
+-		return ret;
+-	}
+-
+ 	ret = mtk_smi_clk_enable(&larb->smi);
+ 	if (ret < 0) {
+ 		dev_err(dev, "Failed to enable clock(%d).\n", ret);
+-		pm_runtime_put_sync(larb->smi_common_dev);
+ 		return ret;
+ 	}
+ 
+@@ -360,7 +362,6 @@ static int __maybe_unused mtk_smi_larb_suspend(struct device *dev)
+ 	struct mtk_smi_larb *larb = dev_get_drvdata(dev);
+ 
+ 	mtk_smi_clk_disable(&larb->smi);
+-	pm_runtime_put_sync(larb->smi_common_dev);
+ 	return 0;
+ }
+ 
+-- 
+1.9.1
