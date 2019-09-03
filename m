@@ -1,204 +1,512 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [RFC PATCH V2 4/4] platform: mtk-isp: Add Mediatek FD driver
-Date: Tue, 3 Sep 2019 14:19:32 +0900
-Message-ID: <CAAFQd5AGgeFbto6V1KkL0dp1QPziOKV3pWQDU2OJ+S1QKvnBdg@mail.gmail.com>
-References: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
- <1562661672-22439-5-git-send-email-Jerry-Ch.chen@mediatek.com>
- <20190802082815.GA203993@chromium.org> <1566724680.20680.8.camel@mtksdccf07>
- <CAAFQd5Dw+jaT-+LAUEVeB8W1zdnOgPw7u+aCfDWhYW1SfbzO8g@mail.gmail.com>
- <1566957625.20680.33.camel@mtksdccf07>
- <CAAFQd5D-Yg1FjUE_rwmqfS1gvfE0=MZ=r-ziueU_37-uo9QTbw@mail.gmail.com>
- <1567424859.18318.32.camel@mtksdccf07>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
+Date: Mon, 2 Sep 2019 22:44:51 -0700
+Message-ID: <20190903054451.GV6167@minitux>
+References: <20190902132400.14084-1-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1567424859.18318.32.camel@mtksdccf07>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <Sean.Cheng@mediatek.com>, "laurent.pinchart+renesas@ideasonboard.com" <laurent.pinchart+renesas@ideasonboard.com>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, =?UTF-8?B?UG8tWWFuZyBIdWFuZyAo6buD5p+P6Zm9KQ==?= <po-yang.huang@mediatek.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "suleiman@chromium.org" <suleiman@chromium.org>, "shik@chromium.org" <shik@chromium.org>, =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin@mediatek.com>, =?UTF-8?B?U2ogSHVhbmcgKOm7g+S/oeeSiyk=?= <sj.huang@mediatek.com>, "yuzhao@chromium.org" <yuzhao@chromium.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "zwisler@chromium.org" <zwisler@chromium.org>, "matthias.bgg@gmail.com" <matthias.bgg>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190902132400.14084-1-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 8:47 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
->
-> Hi Tomasz,
->
-> On Fri, 2019-08-30 at 16:33 +0800, Tomasz Figa wrote:
-> > On Wed, Aug 28, 2019 at 11:00 AM Jerry-ch Chen
-> > <Jerry-ch.Chen@mediatek.com> wrote:
-> > >
-> > > Hi Tomasz,
-> > >
-> > > On Mon, 2019-08-26 at 14:36 +0800, Tomasz Figa wrote:
-> > > > Hi Jerry,
-> > > >
-> > > > On Sun, Aug 25, 2019 at 6:18 PM Jerry-ch Chen
-> > > > <Jerry-ch.Chen@mediatek.com> wrote:
-> > > > >
-> > > > > Hi Tomasz,
-> > > > >
-> > > > > On Fri, 2019-08-02 at 16:28 +0800, Tomasz Figa wrote:
-> > > > > > Hi Jerry,
-> > > > > >
-> > > > > > On Tue, Jul 09, 2019 at 04:41:12PM +0800, Jerry-ch Chen wrote:
-[snip]
-> > > static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
-> > >                                   unsigned int *num_buffers,
-> > >                                   unsigned int *num_planes,
-> > >                                   unsigned int sizes[],
-> > >                                   struct device *alloc_devs[])
-> > > {
-> > >         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
-> > >         struct device *dev = ctx->dev;
-> > >         unsigned int size[2];
-> > >
-> > >         switch (vq->type) {
-> > >         case V4L2_BUF_TYPE_META_CAPTURE:
-> > >                 size[0] = ctx->dst_fmt.buffersize;
-> > >                 break;
-> > >         case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
-> > >                 size[0] = ctx->src_fmt.plane_fmt[0].sizeimage;
-> > >                 if (*num_planes == 2)
-> > >                         size[1] = ctx->src_fmt.plane_fmt[1].sizeimage;
-> > >                 break;
-> > >         }
-> > >
-> > >         if (*num_planes == 1) {
-> > >                 if (sizes[0] < size[0])
-> > >                         return -EINVAL;
-> > >         } else if (*num_planes == 2) {
-> > >                 if ((sizes[0] < size[0]) && (sizes[1] < size[1]))
-> > >                         return -EINVAL;
-> >
-> > Can we just use a loop here and combine the 2 cases above?
-> >
-> > Also, we need to fail with -EINVAL if *num_planes is > 2.
-> >
-> > >         } else {
-> > >                 *num_planes = 1;
-> > >                 sizes[0] = size[0];
-> >
-> > This should be the case if *num_planes == 0 and the number of planes
-> > and sizes should match the currently active format.
-> >
-> I appreciate your comments,
->
-> Ok, I will update as following:
-> static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
->                                   unsigned int *num_buffers,
->                                   unsigned int *num_planes,
->                                   unsigned int sizes[],
->                                   struct device *alloc_devs[])
-> {
->         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
->         unsigned int size[2];
->         unsigned int plane;
->
->         switch (vq->type) {
->         case V4L2_BUF_TYPE_META_CAPTURE:
->                 size[0] = ctx->dst_fmt.buffersize;
->                 break;
->         case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
->                 size[0] = ctx->src_fmt.plane_fmt[0].sizeimage;
->                 if (*num_planes == 2)
->                         size[1] = ctx->src_fmt.plane_fmt[1].sizeimage;
->                 break;
->         }
->
->         if (*num_planes > 2)
->                 return -EINVAL;
->         if (*num_planes == 0) {
->                 if (vq->type == V4L2_BUF_TYPE_META_CAPTURE) {
->                         sizes[0] = ctx->dst_fmt.buffersize;
->                         *num_planes = 1;
->                         return 0;
->                 }
->
->                 *num_planes = ctx->src_fmt.num_planes;
->                 for (plane = 0; plane < *num_planes; plane++)
->                         sizes[plane] = ctx->src_fmt.plane_fmt[plane].sizeimage;
->                 return 0;
->         }
->
->         for (plane = 0; plane < *num_planes; plane++) {
->                 if(sizes[plane] < size[plane])
->                         return -EINVAL;
->         }
->         return 0;
-> }
->
+On Mon 02 Sep 06:24 PDT 2019, Lee Jones wrote:
 
-Looks good, thanks!
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> The Lenovo Yoga C630 is built on the SDM850 from Qualcomm, but this seem
+> to be similar enough to the SDM845 that we can reuse the sdm845.dtsi.
+> 
+> Supported by this patch is: keyboard, battery monitoring, UFS storage,
+> USB host and Bluetooth.
 
-> > >         }
-> > >
-> > >         return 0;
-> > > }
-> > >
-> > > > [snip]
-> > > >
-> > > > > > > +static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
-> > > > > > > +{
-> > > > > > > +   struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
-> > > > > > > +   struct vb2_buffer *vb;
-> > > > > >
-> > > > > > How do we guarantee here that the hardware isn't still accessing the buffers
-> > > > > > removed below?
-> > > > > >
-> > > > > Maybe we can check the driver state flag and aborting the unfinished
-> > > > > jobs?
-> > > > > (fd_hw->state == FD_ENQ)
-> > > > >
-> > > >
-> > > > Yes, we need to either cancel or wait for the currently processing
-> > > > job. It depends on hardware capabilities, but cancelling is generally
-> > > > preferred for the lower latency.
-> > > >
-> > > Ok, it the state is ENQ, then we can disable the FD hw by controlling
-> > > the registers.
-> > >
-> > > for example:
-> > >         writel(0x0, fd->fd_base + FD_HW_ENABLE);
-> > >         writel(0x0, fd->fd_base + FD_INT_EN);
-> > >
-> >
-> > What's exactly the effect of writing 0 to FD_HW_ENABLE?
-> >
-> Sorry, my last reply didn't solve the question,
-> we should implement a mtk_fd_job_abort() for v4l2_m2m_ops().
->
-> which is able to readl_poll_timeout_atomic()
-> and check the HW busy bits in the register FD_INT_EN;
->
-> if they are not cleared until timeout, we could handle the last
-> processing job.
-> Otherwise, the FD irq handler should have handled the last processing
-> job and we could continue the stop_streaming().
->
-> For job_abort():
-> static void mtk_fd_job_abort(void *priv)
-> {
->         struct mtk_fd_ctx *ctx = priv;
->         struct mtk_fd_dev *fd = ctx->fd_dev;
->         u32 val;
->         u32 ret;
->
->         ret = readl_poll_timeout_atomic(fd->fd_base + MTK_FD_REG_OFFSET_INT_EN,
->                                         val,
->                                         (val & MTK_FD_HW_BUSY_MASK) ==
->                                         MTK_FD_HW_STATE_IS_BUSY,
->                                         USEC_PER_MSEC, MTK_FD_STOP_HW_TIMEOUT);
+Applied this to next-20190829 and booted it, got a little bit of EFI FB,
+then the screen goes blank and after a while I'm back in GRUB.
 
-Hmm, would it be possible to avoid the busy wait by having a
-completion that could be signalled from the interrupt handler?
+I've not been able to figure out what's causing this though.
 
-Best regards,
-Tomasz
+Regards,
+Bjorn
+
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile             |   1 +
+>  .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 450 ++++++++++++++++++
+>  2 files changed, 451 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index 0a7e5dfce6f7..670c6c65f9e9 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> new file mode 100644
+> index 000000000000..3177b054035f
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> @@ -0,0 +1,450 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Lenovo Yoga C630
+> + *
+> + * Copyright (c) 2019, Linaro Ltd.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+> +#include "sdm845.dtsi"
+> +#include "pm8998.dtsi"
+> +
+> +/ {
+> +	model = "Lenovo Yoga C630";
+> +	compatible = "lenovo,yoga-c630", "qcom,sdm845";
+> +
+> +	aliases {
+> +		hsuart0 = &uart6;
+> +	};
+> +};
+> +
+> +&apps_rsc {
+> +	pm8998-rpmh-regulators {
+> +		compatible = "qcom,pm8998-rpmh-regulators";
+> +		qcom,pmic-id = "a";
+> +
+> +		vdd-l2-l8-l17-supply = <&vreg_s3a_1p35>;
+> +		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
+> +
+> +		vreg_s2a_1p125: smps2 {
+> +		};
+> +
+> +		vreg_s3a_1p35: smps3 {
+> +			regulator-min-microvolt = <1352000>;
+> +			regulator-max-microvolt = <1352000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_s4a_1p8: smps4 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_s5a_2p04: smps5 {
+> +			regulator-min-microvolt = <2040000>;
+> +			regulator-max-microvolt = <2040000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_s7a_1p025: smps7 {
+> +		};
+> +
+> +		vdd_qusb_hs0:
+> +		vdda_hp_pcie_core:
+> +		vdda_mipi_csi0_0p9:
+> +		vdda_mipi_csi1_0p9:
+> +		vdda_mipi_csi2_0p9:
+> +		vdda_mipi_dsi0_pll:
+> +		vdda_mipi_dsi1_pll:
+> +		vdda_qlink_lv:
+> +		vdda_qlink_lv_ck:
+> +		vdda_qrefs_0p875:
+> +		vdda_pcie_core:
+> +		vdda_pll_cc_ebi01:
+> +		vdda_pll_cc_ebi23:
+> +		vdda_sp_sensor:
+> +		vdda_ufs1_core:
+> +		vdda_ufs2_core:
+> +		vdda_usb1_ss_core:
+> +		vdda_usb2_ss_core:
+> +		vreg_l1a_0p875: ldo1 {
+> +			regulator-min-microvolt = <880000>;
+> +			regulator-max-microvolt = <880000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vddpx_10:
+> +		vreg_l2a_1p2: ldo2 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1200000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +			regulator-always-on;
+> +		};
+> +
+> +		vreg_l3a_1p0: ldo3 {
+> +		};
+> +
+> +		vdd_wcss_cx:
+> +		vdd_wcss_mx:
+> +		vdda_wcss_pll:
+> +		vreg_l5a_0p8: ldo5 {
+> +			regulator-min-microvolt = <800000>;
+> +			regulator-max-microvolt = <800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vddpx_13:
+> +		vreg_l6a_1p8: ldo6 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l7a_1p8: ldo7 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l8a_1p2: ldo8 {
+> +		};
+> +
+> +		vreg_l9a_1p8: ldo9 {
+> +		};
+> +
+> +		vreg_l10a_1p8: ldo10 {
+> +		};
+> +
+> +		vreg_l11a_1p0: ldo11 {
+> +		};
+> +
+> +		vdd_qfprom:
+> +		vdd_qfprom_sp:
+> +		vdda_apc1_cs_1p8:
+> +		vdda_gfx_cs_1p8:
+> +		vdda_qrefs_1p8:
+> +		vdda_qusb_hs0_1p8:
+> +		vddpx_11:
+> +		vreg_l12a_1p8: ldo12 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vddpx_2:
+> +		vreg_l13a_2p95: ldo13 {
+> +		};
+> +
+> +		vreg_l14a_1p88: ldo14 {
+> +			regulator-min-microvolt = <1880000>;
+> +			regulator-max-microvolt = <1880000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l15a_1p8: ldo15 {
+> +		};
+> +
+> +		vreg_l16a_2p7: ldo16 {
+> +		};
+> +
+> +		vreg_l17a_1p3: ldo17 {
+> +			regulator-min-microvolt = <1304000>;
+> +			regulator-max-microvolt = <1304000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l18a_2p7: ldo18 {
+> +		};
+> +
+> +		vreg_l19a_3p0: ldo19 {
+> +			regulator-min-microvolt = <3100000>;
+> +			regulator-max-microvolt = <3108000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l20a_2p95: ldo20 {
+> +			regulator-min-microvolt = <2960000>;
+> +			regulator-max-microvolt = <2960000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l21a_2p95: ldo21 {
+> +		};
+> +
+> +		vreg_l22a_2p85: ldo22 {
+> +		};
+> +
+> +		vreg_l23a_3p3: ldo23 {
+> +		};
+> +
+> +		vdda_qusb_hs0_3p1:
+> +		vreg_l24a_3p075: ldo24 {
+> +			regulator-min-microvolt = <3075000>;
+> +			regulator-max-microvolt = <3083000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l25a_3p3: ldo25 {
+> +			regulator-min-microvolt = <3104000>;
+> +			regulator-max-microvolt = <3112000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vdda_hp_pcie_1p2:
+> +		vdda_hv_ebi0:
+> +		vdda_hv_ebi1:
+> +		vdda_hv_ebi2:
+> +		vdda_hv_ebi3:
+> +		vdda_mipi_csi_1p25:
+> +		vdda_mipi_dsi0_1p2:
+> +		vdda_mipi_dsi1_1p2:
+> +		vdda_pcie_1p2:
+> +		vdda_ufs1_1p2:
+> +		vdda_ufs2_1p2:
+> +		vdda_usb1_ss_1p2:
+> +		vdda_usb2_ss_1p2:
+> +		vreg_l26a_1p2: ldo26 {
+> +			regulator-min-microvolt = <1200000>;
+> +			regulator-max-microvolt = <1208000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_l28a_3p0: ldo28 {
+> +		};
+> +
+> +		vreg_lvs1a_1p8: lvs1 {
+> +		};
+> +
+> +		vreg_lvs2a_1p8: lvs2 {
+> +		};
+> +	};
+> +};
+> +
+> +&apps_smmu {
+> +	/* TODO: Figure out how to survive booting with this enabled */
+> +	status = "disabled";
+> +};
+> +
+> +&gcc {
+> +	protected-clocks = <GCC_QSPI_CORE_CLK>,
+> +			   <GCC_QSPI_CORE_CLK_SRC>,
+> +			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +	clock-frequency = <400000>;
+> +
+> +	battery@70 {
+> +		compatible = "some,battery";
+> +		reg = <0x70>;
+> +	};
+> +};
+> +
+> +&i2c3 {
+> +	status = "okay";
+> +	clock-frequency = <400000>;
+> +
+> +	hid@15 {
+> +		compatible = "hid-over-i2c";
+> +		reg = <0x15>;
+> +		hid-descr-addr = <0x1>;
+> +
+> +		interrupts-extended = <&tlmm 37 IRQ_TYPE_EDGE_RISING>;
+> +	};
+> +
+> +	hid@2c {
+> +		compatible = "hid-over-i2c";
+> +		reg = <0x2c>;
+> +		hid-descr-addr = <0x20>;
+> +
+> +		interrupts-extended = <&tlmm 37 IRQ_TYPE_EDGE_RISING>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&i2c2_hid_active>;
+> +	};
+> +};
+> +
+> +&i2c5 {
+> +	status = "okay";
+> +	clock-frequency = <400000>;
+> +
+> +	hid@10 {
+> +		compatible = "hid-over-i2c";
+> +		reg = <0x10>;
+> +		hid-descr-addr = <0x1>;
+> +
+> +		interrupts-extended = <&tlmm 125 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&i2c6_hid_active>;
+> +	};
+> +};
+> +
+> +&i2c11 {
+> +	status = "okay";
+> +	clock-frequency = <400000>;
+> +
+> +	hid@5c {
+> +		compatible = "hid-over-i2c";
+> +		reg = <0x5c>;
+> +		hid-descr-addr = <0x1>;
+> +
+> +		interrupts-extended = <&tlmm 92 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&i2c12_hid_active>;
+> +	};
+> +};
+> +
+> +&qupv3_id_0 {
+> +	status = "okay";
+> +};
+> +
+> +&qupv3_id_1 {
+> +	status = "okay";
+> +};
+> +
+> +&tlmm {
+> +	gpio-reserved-ranges = <0 4>, <81 4>;
+> +
+> +	i2c2_hid_active: i2c2-hid-active {
+> +		pins = <37>;
+> +		function = "gpio";
+> +
+> +		input-enable;
+> +		bias-pull-up;
+> +		drive-strength = <2>;
+> +	};
+> +
+> +	i2c6_hid_active: i2c6-hid-active {
+> +		pins = <125>;
+> +		function = "gpio";
+> +
+> +		input-enable;
+> +		bias-pull-up;
+> +		drive-strength = <2>;
+> +	};
+> +
+> +	i2c12_hid_active: i2c12-hid-active {
+> +		pins = <92>;
+> +		function = "gpio";
+> +
+> +		input-enable;
+> +		bias-pull-up;
+> +		drive-strength = <2>;
+> +	};
+> +};
+> +
+> +&uart6 {
+> +       status = "okay";
+> +
+> +       bluetooth {
+> +	       compatible = "qcom,wcn3990-bt";
+> +
+> +	       vddio-supply = <&vreg_s4a_1p8>;
+> +	       vddxo-supply = <&vreg_l7a_1p8>;
+> +	       vddrf-supply = <&vreg_l17a_1p3>;
+> +	       vddch0-supply = <&vreg_l25a_3p3>;
+> +	       max-speed = <3200000>;
+> +       };
+> +};
+> +
+> +&ufs_mem_hc {
+> +	status = "okay";
+> +
+> +	vcc-supply = <&vreg_l20a_2p95>;
+> +	vcc-max-microamp = <600000>;
+> +};
+> +
+> +&ufs_mem_phy {
+> +	status = "okay";
+> +
+> +	vdda-phy-supply = <&vdda_ufs1_core>;
+> +	vdda-pll-supply = <&vdda_ufs1_1p2>;
+> +};
+> +
+> +&usb_1 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_1_dwc3 {
+> +	dr_mode = "host";
+> +};
+> +
+> +&usb_1_hsphy {
+> +	status = "okay";
+> +
+> +	vdd-supply = <&vdda_usb1_ss_core>;
+> +	vdda-pll-supply = <&vdda_qusb_hs0_1p8>;
+> +	vdda-phy-dpdm-supply = <&vdda_qusb_hs0_3p1>;
+> +
+> +	qcom,imp-res-offset-value = <8>;
+> +	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
+> +	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
+> +	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
+> +};
+> +
+> +&usb_1_qmpphy {
+> +	status = "okay";
+> +
+> +	vdda-phy-supply = <&vdda_usb1_ss_1p2>;
+> +	vdda-pll-supply = <&vdda_usb1_ss_core>;
+> +};
+> +
+> +&usb_2 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_2_dwc3 {
+> +	dr_mode = "host";
+> +};
+> +
+> +&usb_2_hsphy {
+> +	status = "okay";
+> +
+> +	vdd-supply = <&vdda_usb2_ss_core>;
+> +	vdda-pll-supply = <&vdda_qusb_hs0_1p8>;
+> +	vdda-phy-dpdm-supply = <&vdda_qusb_hs0_3p1>;
+> +
+> +	qcom,imp-res-offset-value = <8>;
+> +	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_22_8_MA>;
+> +};
+> +
+> +&usb_2_qmpphy {
+> +	status = "okay";
+> +
+> +	vdda-phy-supply = <&vdda_usb2_ss_1p2>;
+> +	vdda-pll-supply = <&vdda_usb2_ss_core>;
+> +};
+> +
+> +&qup_i2c12_default {
+> +	drive-strength = <2>;
+> +	bias-disable;
+> +};
+> +
+> +&qup_uart6_default {
+> +       pinmux {
+> +               pins = "gpio45", "gpio46", "gpio47", "gpio48";
+> +               function = "qup6";
+> +       };
+> +
+> +       cts {
+> +	       pins = "gpio45";
+> +	       bias-pull-down;
+> +       };
+> +
+> +       rts-tx {
+> +	       pins = "gpio46", "gpio47";
+> +	       drive-strength = <2>;
+> +	       bias-disable;
+> +       };
+> +
+> +       rx {
+> +	       pins = "gpio48";
+> +	       bias-pull-up;
+> +       };
+> +};
+> -- 
+> 2.17.1
+> 
