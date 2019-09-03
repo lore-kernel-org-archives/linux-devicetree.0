@@ -1,7 +1,7 @@
 From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH 2/4] dt-bindings: arm: amlogic: add A1 bindings
-Date: Tue, 3 Sep 2019 02:51:13 -0400
-Message-ID: <1567493475-75451-3-git-send-email-jianxin.pan@amlogic.com>
+Subject: [PATCH 3/4] dt-bindings: arm: amlogic: add Amlogic AD401 bindings
+Date: Tue, 3 Sep 2019 02:51:14 -0400
+Message-ID: <1567493475-75451-4-git-send-email-jianxin.pan@amlogic.com>
 References: <1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,28 +21,24 @@ To: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
 Cc: devicetree@vger.kernel.org, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, Qiufang Dai <qiufang.dai@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Carlo Caione <carlo@caione.org>, Tao Zeng <tao.zeng@amlogic.com>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add bindings for the new Amlogic A1 SoC family.
-
-A1 is an application processor designed for smart audio and IoT applications,
-with dual core Cortex-A35.
+Add the compatible for the Amlogic A1 Based AD401 board.
 
 Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
 ---
- Documentation/devicetree/bindings/arm/amlogic.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
-index b48ea1e..aa07b76 100644
+index aa07b76..dc4abce 100644
 --- a/Documentation/devicetree/bindings/arm/amlogic.yaml
 +++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
-@@ -155,4 +155,8 @@ properties:
-               - seirobotics,sei610
-               - khadas,vim3l
-           - const: amlogic,sm1
-+
-+      - description: Boards with the Amlogic Meson A1 A113L SoC
-+        items:
-+          - const: amlogic,a1
+@@ -158,5 +158,7 @@ properties:
+ 
+       - description: Boards with the Amlogic Meson A1 A113L SoC
+         items:
++          - enum:
++              - amlogic,ad401
+           - const: amlogic,a1
  ...
 -- 
 2.7.4
