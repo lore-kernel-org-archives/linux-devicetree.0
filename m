@@ -1,11 +1,13 @@
 From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH 0/4] arm64: Add basic support for Amlogic A1 SoC Family
-Date: Tue, 3 Sep 2019 02:51:11 -0400
-Message-ID: <1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com>
+Subject: [PATCH 1/4] soc: amlogic: meson-gx-socinfo: Add A1 and A113L IDs
+Date: Tue, 3 Sep 2019 02:51:12 -0400
+Message-ID: <1567493475-75451-2-git-send-email-jianxin.pan@amlogic.com>
+References: <1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,31 +21,32 @@ To: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
 Cc: devicetree@vger.kernel.org, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, Qiufang Dai <qiufang.dai@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Carlo Caione <carlo@caione.org>, Tao Zeng <tao.zeng@amlogic.com>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-A1 is an application processor designed for smart audio and IoT applications,
-with Dual core ARM Cortex-A35 CPU. Unlike the previous GXL and G12 series,
-there is no Cortex-M3 AO CPU in it.
+Add the SoC IDs for the A113L Amlogic A1 SoC.
 
-This serial add basic support for the Amlogic A1 based Amlogic AD401 board:
-which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
-Timer, UART. It's capable of booting up into the serial console.
+Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+---
+ drivers/soc/amlogic/meson-gx-socinfo.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The pclk for uart_AO_B need to be fixed once A1 clock driver is merged.
-In this version, it rely on bootloader to enable the pclk gate
-
-Jianxin Pan (4):
-  soc: amlogic: meson-gx-socinfo: Add A1 and A113L IDs
-  dt-bindings: arm: amlogic: add A1 bindings
-  dt-bindings: arm: amlogic: add Amlogic AD401 bindings
-  arm64: dts: add support for A1 based Amlogic AD401
-
- Documentation/devicetree/bindings/arm/amlogic.yaml |   6 +
- arch/arm64/boot/dts/amlogic/Makefile               |   1 +
- arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts     |  30 +++++
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi          | 121 +++++++++++++++++++++
- drivers/soc/amlogic/meson-gx-socinfo.c             |   2 +
- 5 files changed, 160 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-
+diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
+index 6d0d04f..3c86d8d 100644
+--- a/drivers/soc/amlogic/meson-gx-socinfo.c
++++ b/drivers/soc/amlogic/meson-gx-socinfo.c
+@@ -40,6 +40,7 @@ static const struct meson_gx_soc_id {
+ 	{ "G12A", 0x28 },
+ 	{ "G12B", 0x29 },
+ 	{ "SM1", 0x2b },
++	{ "A1", 0x2c },
+ };
+ 
+ static const struct meson_gx_package_id {
+@@ -68,6 +69,7 @@ static const struct meson_gx_package_id {
+ 	{ "S922X", 0x29, 0x40, 0xf0 },
+ 	{ "A311D", 0x29, 0x10, 0xf0 },
+ 	{ "S905X3", 0x2b, 0x5, 0xf },
++	{ "A113L", 0x2c, 0x0, 0xf8 },
+ };
+ 
+ static inline unsigned int socinfo_to_major(u32 socinfo)
 -- 
 2.7.4
