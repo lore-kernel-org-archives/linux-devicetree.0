@@ -1,118 +1,234 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [RFC 5/9] dt-bindings: arm: samsung: Convert Exynos PMU bindings
- to json-schema
-Date: Tue, 3 Sep 2019 09:58:21 +0200
-Message-ID: <CAJKOXPc0SY_8BHMsWLN=1M3VQh41+bdBiH21L4KQPA+iLPYy+A@mail.gmail.com>
-References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-5-krzk@kernel.org>
- <CAL_JsqJybT41cEqiTriLMywUQj1BtAG_9muJ4=84OkF23y53CA@mail.gmail.com>
+From: Jianxin Pan <jianxin.pan@amlogic.com>
+Subject: Re: [PATCH 4/4] arm64: dts: add support for A1 based Amlogic AD401
+Date: Tue, 3 Sep 2019 16:00:15 +0800
+Message-ID: <de374b4a-be2e-0b85-ff3f-f7cdc785c26a@amlogic.com>
+References: <1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com>
+ <1567493475-75451-5-git-send-email-jianxin.pan@amlogic.com>
+ <1jef0xrg5d.fsf@starbuckisacylon.baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJybT41cEqiTriLMywUQj1BtAG_9muJ4=84OkF23y53CA@mail.gmail.com>
+In-Reply-To: <1jef0xrg5d.fsf@starbuckisacylon.baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, notify@kernel.orgArnd Bergmann <ar>
+To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Tao Zeng <tao.zeng@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Aug 2019 at 13:54, Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > Convert Samsung Exynos Power Management Unit (PMU) bindings to DT schema
-> > format using json-schema.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  .../devicetree/bindings/arm/samsung/pmu.txt   | 72 --------------
-> >  .../devicetree/bindings/arm/samsung/pmu.yaml  | 93 +++++++++++++++++++
-> >  2 files changed, 93 insertions(+), 72 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.yaml
->
->
-> > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> > new file mode 100644
-> > index 000000000000..818c6f3488ef
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> > @@ -0,0 +1,93 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/arm/samsung/pmu.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Samsung Exynos SoC series Power Management Unit (PMU)
-> > +
-> > +maintainers:
-> > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +          - samsung,exynos3250-pmu
-> > +          - samsung,exynos4210-pmu
-> > +          - samsung,exynos4412-pmu
-> > +          - samsung,exynos5250-pmu
-> > +          - samsung,exynos5260-pmu
-> > +          - samsung,exynos5410-pmu
-> > +          - samsung,exynos5420-pmu
-> > +          - samsung,exynos5433-pmu
-> > +          - samsung,exynos7-pmu
-> > +      - const: syscon
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  '#clock-cells':
-> > +    const: 1
-> > +
-> > +  clock-names:
-> > +    description:
-> > +      list of clock names for particular CLKOUT mux inputs
-> > +    # TODO: what is the maximum number of elements (mux inputs)?
-> > +    minItems: 1
-> > +    maxItems: 32
-> > +    items:
-> > +      - enum:
->
-> This isn't correct as you are only defining possible names for the
-> first item. Drop the '-' (making items a schema instead of a list) and
-> then it applies to all. However, doing that will cause a meta-schema
-> error which I need to fix to allow. Or if there's a small set of
-> possibilities of number of inputs, you can list them under a 'oneOf'
-> list.
+Hi Jerome,
 
-Mhmm, I cannot test it or I have an error in the schema. if I
-understand correctly, this would be:
+Thanks for your suggestion.
 
-  clock-names:
-    description:
-      List of clock names for particular CLKOUT mux inputs
-    minItems: 1
-    maxItems: 16
-    items:
-      clkout0
-      clkout1
-      clkout2
-      clkout3
-      clkout4
-      clkout5
-      clkout6
-      clkout7
-      clkout8
-      clkout9
-      clkout10
-      clkout11
-      clkout12
-      clkout13
-      clkout14
-      clkout15
-      clkout16
+I will fix them in the next version.
 
-Now it produces the error "ignoring, error in schema 'items'" but
-maybe it is expected with current meta-schema?
 
-Best regards,
-Krzysztof
+On 2019/9/3 15:30, Jerome Brunet wrote:
+> On Tue 03 Sep 2019 at 02:51, Jianxin Pan <jianxin.pan@amlogic.com> wrote:
+> 
+>> Add basic support for the Amlogic A1 based Amlogic AD401 board:
+>> which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
+>> Timer, UART. It's capable of booting up into the serial console.
+>>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>> ---
+>>  arch/arm64/boot/dts/amlogic/Makefile           |   1 +
+>>  arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts |  30 ++++++
+>>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi      | 121 +++++++++++++++++++++++++
+>>  3 files changed, 152 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+>>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+>> index edbf128..1720c45 100644
+>> --- a/arch/arm64/boot/dts/amlogic/Makefile
+>> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+>> @@ -36,3 +36,4 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
+>>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-vega-s96.dtb
+>>  dtb-$(CONFIG_ARCH_MESON) += meson-sm1-sei610.dtb
+>>  dtb-$(CONFIG_ARCH_MESON) += meson-sm1-khadas-vim3l.dtb
+>> +dtb-$(CONFIG_ARCH_MESON) += meson-a1-ad401.dtb
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+>> new file mode 100644
+>> index 00000000..3c05cc0
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+>> @@ -0,0 +1,30 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "meson-a1.dtsi"
+>> +
+>> +/ {
+>> +	compatible = "amlogic,ad401", "amlogic,a1";
+>> +	model = "Amlogic Meson A1 AD401 Development Board";
+>> +
+>> +	aliases {
+>> +		serial0 = &uart_AO_B;
+>> +	};
+> 
+> Newline here please
+> 
+>> +	chosen {
+>> +		stdout-path = "serial0:115200n8";
+>> +	};
+> 
+> same
+> 
+>> +	memory@0 {
+>> +		device_type = "memory";
+>> +		linux,usable-memory = <0x0 0x0 0x0 0x8000000>;
+>> +	};
+>> +};
+>> +
+>> +&uart_AO_B {
+>> +	status = "okay";
+>> +	/*pinctrl-0 = <&uart_ao_a_pins>;*/
+>> +	/*pinctrl-names = "default";*/
+> 
+> Remove the commented code please
+> 
+>> +};
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> new file mode 100644
+>> index 00000000..b98d648
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> @@ -0,0 +1,121 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +/ {
+>> +	compatible = "amlogic,a1";
+>> +
+>> +	interrupt-parent = <&gic>;
+>> +	#address-cells = <2>;
+>> +	#size-cells = <2>;
+>> +
+>> +	cpus {
+>> +		#address-cells = <0x2>;
+>> +		#size-cells = <0x0>;
+>> +
+>> +		cpu0: cpu@0 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a35";
+>> +			reg = <0x0 0x0>;
+>> +			enable-method = "psci";
+>> +			next-level-cache = <&l2>;
+>> +		};
+>> +
+>> +		cpu1: cpu@1 {
+>> +			device_type = "cpu";
+>> +			compatible = "arm,cortex-a35";
+>> +			reg = <0x0 0x1>;
+>> +			enable-method = "psci";
+>> +			next-level-cache = <&l2>;
+>> +		};
+>> +
+>> +		l2: l2-cache0 {
+>> +			compatible = "cache";
+>> +		};
+>> +	};
+> 
+> New line here please
+> 
+> With this minor comments adressed, looks good.
+> 
+> Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+> 
+>> +	psci {
+>> +		compatible = "arm,psci-1.0";
+>> +		method = "smc";
+>> +	};
+>> +
+>> +	reserved-memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		linux,cma {
+>> +			compatible = "shared-dma-pool";
+>> +			reusable;
+>> +			size = <0x0 0x800000>;
+>> +			alignment = <0x0 0x400000>;
+>> +			linux,cma-default;
+>> +		};
+>> +	};
+>> +
+>> +	sm: secure-monitor {
+>> +		compatible = "amlogic,meson-gxbb-sm";
+>> +	};
+>> +
+>> +	soc {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		uart_AO: serial@fe001c00 {
+>> +			compatible = "amlogic,meson-gx-uart",
+>> +				     "amlogic,meson-ao-uart";
+>> +			reg = <0x0 0xfe001c00 0x0 0x18>;
+>> +			interrupts = <GIC_SPI 25 IRQ_TYPE_EDGE_RISING>;
+>> +			clocks = <&xtal>, <&xtal>, <&xtal>;
+>> +			clock-names = "xtal", "pclk", "baud";
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		uart_AO_B: serial@fe002000 {
+>> +			compatible = "amlogic,meson-gx-uart",
+>> +				     "amlogic,meson-ao-uart";
+>> +				     reg = <0x0 0xfe002000 0x0 0x18>;
+>> +			interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
+>> +			clocks = <&xtal>, <&xtal>, <&xtal>;
+>> +			clock-names = "xtal", "pclk", "baud";
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		gic: interrupt-controller@ff901000 {
+>> +			compatible = "arm,gic-400";
+>> +			reg = <0x0 0xff901000 0x0 0x1000>,
+>> +			      <0x0 0xff902000 0x0 0x2000>,
+>> +			      <0x0 0xff904000 0x0 0x2000>,
+>> +			      <0x0 0xff906000 0x0 0x2000>;
+>> +			interrupt-controller;
+>> +			interrupts = <GIC_PPI 9
+>> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+>> +			#interrupt-cells = <3>;
+>> +			#address-cells = <0>;
+>> +		};
+>> +	};
+>> +
+>> +	timer {
+>> +		compatible = "arm,armv8-timer";
+>> +		interrupts = <GIC_PPI 13
+>> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 14
+>> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 11
+>> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 10
+>> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>;
+>> +	};
+>> +
+>> +	xtal: xtal-clk {
+>> +		compatible = "fixed-clock";
+>> +		clock-frequency = <24000000>;
+>> +		clock-output-names = "xtal";
+>> +		#clock-cells = <0>;
+>> +	};
+>> +};
+>> -- 
+>> 2.7.4
+> 
+> .
+> 
