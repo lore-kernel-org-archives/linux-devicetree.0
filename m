@@ -1,135 +1,37 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv3 01/10] dt-bindings: omap: add new binding for PRM
- instances
-Date: Tue, 3 Sep 2019 10:25:52 +0300
-Message-ID: <e8d700cd-8f3c-5cea-a022-b20a595fc1e1@ti.com>
-References: <20190830121816.30034-1-t-kristo@ti.com>
- <20190830121816.30034-2-t-kristo@ti.com> <20190902042631.GA22055@bogus>
+From: Robert Richter <rrichter@marvell.com>
+Subject: Re: [PATCH v3 4/4] edac: Add support for Amazon's Annapurna Labs L2
+ EDAC
+Date: Tue, 3 Sep 2019 07:27:06 +0000
+Message-ID: <20190903072655.kz5x7n3477dg4yap@rric.localdomain>
+References: <1563197049-12679-1-git-send-email-hhhawa@amazon.com>
+ <1563197049-12679-5-git-send-email-hhhawa@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190902042631.GA22055@bogus>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1563197049-12679-5-git-send-email-hhhawa@amazon.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, tony@atomide.com, p.zabel@pengutronix.de, ssantosh@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-ID: <3759893DBDA27647BD9141AB7D7966BA@namprd18.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hanna Hawa <hhhawa@amazon.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "bp@alien8.de" <bp@alien8.de>, "mchehab@kernel.org" <mchehab@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "davem@davemloft.net" <davem@davemloft.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>, "benh@amazon.com" <benh@amazon.com>, "ronenk@amazon.com" <ronenk@amazon.com>, "talel@amazon.com" <talel@amazon.com>, "jonnyc@amazon.com" <jonnyc@amazon.com>, "hanochu@amazon.com" <hanochu@>
 List-Id: devicetree@vger.kernel.org
 
-On 02/09/2019 16:39, Rob Herring wrote:
-> On Fri, Aug 30, 2019 at 03:18:07PM +0300, Tero Kristo wrote:
->> Add new binding for OMAP PRM (Power and Reset Manager) instances. Each
->> of these will act as a power domain controller and potentially as a reset
->> provider.
->>
-> 
-> Converting this to schema would be nice.
+On 15.07.19 16:24:09, Hanna Hawa wrote:
+> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
+> report L2 errors.
+>=20
+> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+> ---
+>  MAINTAINERS               |   6 ++
+>  drivers/edac/Kconfig      |   8 ++
+>  drivers/edac/Makefile     |   1 +
+>  drivers/edac/al_l2_edac.c | 187 ++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  4 files changed, 202 insertions(+)
+>  create mode 100644 drivers/edac/al_l2_edac.c
 
-Do you have documentation about schema somewhere? Basically what I need 
-to do to fix this.
+>From a brief look at it, it seems some of my comments from 2/4 apply
+here too. Please look through it.
 
-> 
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->>   .../devicetree/bindings/arm/omap/prm-inst.txt | 31 +++++++++++++++++++
-> 
-> bindings/reset/
-
-I did not put this under reset, because this is basically a 
-multi-purpose function. Reset just happens to be the first functionality 
-it is going to provide. It will be followed by power domain support 
-later on.
-
-Any thoughts?
-
-> 
->>   1 file changed, 31 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/arm/omap/prm-inst.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
->> new file mode 100644
->> index 000000000000..7c7527c37734
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
->> @@ -0,0 +1,31 @@
->> +OMAP PRM instance bindings
->> +
->> +Power and Reset Manager is an IP block on OMAP family of devices which
->> +handle the power domains and their current state, and provide reset
->> +handling for the domains and/or separate IP blocks under the power domain
->> +hierarchy.
->> +
->> +Required properties:
->> +- compatible:	Must be one of:
->> +		"ti,am3-prm-inst"
->> +		"ti,am4-prm-inst"
->> +		"ti,omap4-prm-inst"
->> +		"ti,omap5-prm-inst"
->> +		"ti,dra7-prm-inst"
-> 
-> '-inst' seems a bit redundant.
-
-ti,xyz-prm is already reserved by the parent node of all these.
-
-The hierarchy is basically like this (omap4 as example):
-
-prm: prm@4a306000 {
-   compatible = "ti,omap4-prm";
-   ...
-
-   prm_dsp: prm@400 {
-     compatible = "ti,omap4-prm-inst";
-     ...
-   };
-
-   prm_device: prm@1b00 {
-     compatible = "ti,omap4-prm-inst";
-     ...
-   };
-
-   ...
-};
-
-
-
-> 
->> +- reg:		Contains PRM instance register address range
->> +		(base address and length)
->> +
->> +Optional properties:
->> +- #reset-cells:	Should be 1 if the PRM instance in question supports resets.
->> +- clocks:	Associated clocks for the reset signals if any. Certain reset
->> +		signals can't be toggled properly without functional clock
->> +		being active for them.
->> +
->> +Example:
->> +
->> +prm_dsp2: prm@1b00 {
-> 
-> reset-controller@...
-
-Well, as said, the same node is going to be also power domain provider 
-later on...
-
-> 
->> +	compatible = "ti,dra7-prm-inst";
->> +	reg = <0x1b00 0x40>;
->> +	#reset-cells = <1>;
->> +	clocks = <&dsp2_clkctrl DRA7_DSP2_MMU0_DSP2_CLKCTRL 0>;
->> +};
->> -- 
->> 2.17.1
->>
->> --
-> 
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-Robert
