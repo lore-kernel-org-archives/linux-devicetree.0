@@ -1,81 +1,94 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH V2 1/5] dt-bindings: fsl: scu: add scu power key binding
-Date: Tue, 3 Sep 2019 08:32:15 +0200
-Message-ID: <21d2e400-976a-35c3-6875-4cc0c476fdf2@pengutronix.de>
-References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [RFC 4/5] ARM: dts: omap3-n950-n9: remove opp-v1 table
+Date: Tue, 3 Sep 2019 08:34:50 +0200
+Message-ID: <98AF4586-C6FF-43A5-99B9-797145F50D07@goldelico.com>
+References: <cover.1567421750.git.hns@goldelico.com> <2f978667c1533e46e3a5df58871e9048f3eb74e9.1567421751.git.hns@goldelico.com> <20190903023635.44yf32jowpm3hgfp@vireshk-i7> <8BC1AEC9-7B24-4C07-8659-16741D018164@goldelico.com> <20190903061403.k3d333f54gj2kuxi@vireshk-i7> <6B7B0EDB-8A60-48A0-AFAB-8A266358300C@goldelico.com> <20190903062808.p6jkgwylyqxcjs4z@vireshk-i7>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20190903062808.p6jkgwylyqxcjs4z@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com, will@kernel.org, dmitry.torokhov@gmail.com, aisheng.dong@nxp.com, ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com, daniel.baluta@nxp.com, leonard.crestez@nxp.com, mripard@kernel.org, olof@lixom.net, arnd@arndb.de, jagan@amarulasolutions.com, bjorn.andersson@linaro.org, dinguyen@kernel.org, marcin.juszkiewicz@linaro.org, stefan@agner.ch, gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com, yuehaibing@huawei.com, tglx@linutronix.de, ronald@innovation.ch, m.felsch@pengutronix.de, ping.bai@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lis
-Cc: Linux-imx@nxp.com
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
 
+> Am 03.09.2019 um 08:28 schrieb Viresh Kumar <viresh.kumar@linaro.org>:
+>=20
+> On 03-09-19, 08:23, H. Nikolaus Schaller wrote:
+>>=20
+>>> Am 03.09.2019 um 08:14 schrieb Viresh Kumar =
+<viresh.kumar@linaro.org>:
+>>>=20
+>>> On 03-09-19, 08:01, H. Nikolaus Schaller wrote:
+>>>>=20
+>>>>> Am 03.09.2019 um 04:36 schrieb Viresh Kumar =
+<viresh.kumar@linaro.org>:
+>>>>>=20
+>>>>> On 02-09-19, 12:55, H. Nikolaus Schaller wrote:
+>>>>>> With opp-v2 in omap36xx.dtsi and ti-cpufreq driver the
+>>>>>> 1GHz capability is automatically detected.
+>>>>>>=20
+>>>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>>>>> ---
+>>>>>> arch/arm/boot/dts/omap3-n950-n9.dtsi | 7 -------
+>>>>>> 1 file changed, 7 deletions(-)
+>>>>>>=20
+>>>>>> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi =
+b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+>>>>>> index 5441e9ffdbb4..e98b0c615f19 100644
+>>>>>> --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
+>>>>>> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+>>>>>> @@ -11,13 +11,6 @@
+>>>>>> 	cpus {
+>>>>>> 		cpu@0 {
+>>>>>> 			cpu0-supply =3D <&vcc>;
+>>>>>> -			operating-points =3D <
+>>>>>> -				/* kHz    uV */
+>>>>>> -				300000  1012500
+>>>>>> -				600000  1200000
+>>>>>> -				800000  1325000
+>>>>>> -				1000000	1375000
+>>>>>> -			>;
+>>>>>> 		};
+>>>>>> 	};
+>>>>>=20
+>>>>> This should be merged with 2/5 ?
+>>>>=20
+>>>> Well, it bloats 2/5.
+>>>=20
+>>> It is logically the right place to do this as that's where we are
+>>> adding opp-v2.
+>>=20
+>> Well, sometimes the philosophy of patches is to add something new
+>> first and remove the old in a second separate patch if the system
+>> can live with both. This makes it easier to digest single patches
+>> (because they are smaller) and might also better pinpoint an issue
+>> by bisect.
+>=20
+> Right, but you already removed some of the opp-v1 stuff in patch 2/5.
+> Why leave this one out ?
+>=20
+>>>=20
+>>>> What I hope (I can't test) is that this opp-v1 table
+>>>> is ignored if an opp-v2 table exists. So that it can be
+>>>> removed by a separate follow-up patch.
+>>>=20
+>>> It should work as that's what we are doing in OPP core, but I still
+>>> feel this better get merged with 2/5.
+>>=20
+>> Ok, I see. Noted for RFCv2.
+>>=20
+>> There will also be a big batch of changes for the compatible record
+>> (omap3530->omap35xx, add omap34xx where needed) of ca. 10 board =
+definition
+>> DTS files. Should this then also become part of the new 2/5?
+>=20
+> Compatible thing should be separate patch anyway, I was just talking
+> about replacing opp-v1 with v2.
 
-On 03.09.19 16:03, Anson Huang wrote:
-> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-> system controller, the system controller is in charge of system
-> power, clock and power key event etc. management, Linux kernel
-> has to communicate with system controller via MU (message unit)
-> IPC to get power key event, add binding doc for i.MX system
-> controller power key driver.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> Changes since V1:
-> 	- remove "wakeup-source" property, as it is NOT needed for SCU interrupt;
-> 	- remove "status" in example.
-> ---
->   .../devicetree/bindings/arm/freescale/fsl,scu.txt          | 14 ++++++++++++++
->   1 file changed, 14 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> index c149fad..f93e2e4 100644
-> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-> @@ -157,6 +157,15 @@ Required properties:
->   Optional properties:
->   - timeout-sec: contains the watchdog timeout in seconds.
->   
-> +Power key bindings based on SCU Message Protocol
-> +------------------------------------------------------------
-> +
-> +Required properties:
-> +- compatible: should be:
-> +              "fsl,imx8qxp-sc-pwrkey"
-> +              followed by "fsl,imx-sc-pwrkey";
-> +- linux,keycodes: See Documentation/devicetree/bindings/input/keys.txt
+Ok, understood.
 
-linux,keycodes is required parameter. So, this kay cab be anything. Why the compatible is 
-called pwrkey? Probably it is better to call it "*-sc-key"
-
-> +
->   Example (imx8qxp):
->   -------------
->   aliases {
-> @@ -220,6 +229,11 @@ firmware {
->   			compatible = "fsl,imx8qxp-sc-rtc";
->   		};
->   
-> +		scu_pwrkey: scu-pwrkey {
-> +			compatible = "fsl,imx8qxp-sc-pwrkey", "fsl,imx-sc-pwrkey";
-> +			linux,keycode = <KEY_POWER>;
-> +		};
-> +
->   		watchdog {
->   			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
->   			timeout-sec = <60>;
-> 
-
-Kind regards,
-Oleksij Rempel
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+BR and thanks,
+Nikolaus
