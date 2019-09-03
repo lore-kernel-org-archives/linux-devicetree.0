@@ -1,50 +1,65 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH V2 2/5] input: keyboard: imx_sc: Add i.MX system
- controller power key support
-Date: Mon, 2 Sep 2019 23:12:14 -0700
-Message-ID: <CAKdAkRRX4Cs1m7iwTuM0dpNr+xjp3qAZ1fo1pqreE7rR8KFgQQ@mail.gmail.com>
-References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
- <1567519424-32271-2-git-send-email-Anson.Huang@nxp.com> <CAOMZO5CHmvrbVG_h8hOb7hMjXasV_QwtNoXpEw9kqY=4Jj5HAg@mail.gmail.com>
- <DB3PR0402MB391636D31F486639FB8B3BA6F5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC 4/5] ARM: dts: omap3-n950-n9: remove opp-v1 table
+Date: Tue, 3 Sep 2019 11:44:03 +0530
+Message-ID: <20190903061403.k3d333f54gj2kuxi@vireshk-i7>
+References: <cover.1567421750.git.hns@goldelico.com>
+ <2f978667c1533e46e3a5df58871e9048f3eb74e9.1567421751.git.hns@goldelico.com>
+ <20190903023635.44yf32jowpm3hgfp@vireshk-i7>
+ <8BC1AEC9-7B24-4C07-8659-16741D018164@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB391636D31F486639FB8B3BA6F5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <8BC1AEC9-7B24-4C07-8659-16741D018164@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: Fabio Estevam <festevam@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Catalin Marinas <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "mripard@kernel.org" <mripard@kernel.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Jagan Teki <jagan@amarulasolutions.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Dinh Nguyen <dinguyen@kernel.org>, marcin
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 8:11 PM Anson Huang <anson.huang@nxp.com> wrote:
->
-> Hi, Fabio
->
-> > On Mon, Sep 2, 2019 at 11:05 PM Anson Huang <Anson.Huang@nxp.com>
-> > wrote:
-> >
-> > > +       ret = input_register_device(input);
-> > > +       if (ret < 0) {
-> > > +               dev_err(&pdev->dev, "failed to register input device\n");
-> > > +               return ret;
-> > > +       }
-> > > +
-> > > +       pdata->input = input;
-> > > +       platform_set_drvdata(pdev, pdata);
-> > > +
-> > > +       ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE,
-> > SC_IRQ_BUTTON, true);
-> > > +       if (ret) {
-> > > +               dev_warn(&pdev->dev, "enable scu group irq failed\n");
-> > > +               return ret;
-> >
-> > Better do a 'goto input_unregister' here instead and call
-> > input_unregister_device().
->
-> Agreed, will fix in V3 later.
+On 03-09-19, 08:01, H. Nikolaus Schaller wrote:
+> 
+> > Am 03.09.2019 um 04:36 schrieb Viresh Kumar <viresh.kumar@linaro.org>:
+> > 
+> > On 02-09-19, 12:55, H. Nikolaus Schaller wrote:
+> >> With opp-v2 in omap36xx.dtsi and ti-cpufreq driver the
+> >> 1GHz capability is automatically detected.
+> >> 
+> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> >> ---
+> >> arch/arm/boot/dts/omap3-n950-n9.dtsi | 7 -------
+> >> 1 file changed, 7 deletions(-)
+> >> 
+> >> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> >> index 5441e9ffdbb4..e98b0c615f19 100644
+> >> --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> >> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> >> @@ -11,13 +11,6 @@
+> >> 	cpus {
+> >> 		cpu@0 {
+> >> 			cpu0-supply = <&vcc>;
+> >> -			operating-points = <
+> >> -				/* kHz    uV */
+> >> -				300000  1012500
+> >> -				600000  1200000
+> >> -				800000  1325000
+> >> -				1000000	1375000
+> >> -			>;
+> >> 		};
+> >> 	};
+> > 
+> > This should be merged with 2/5 ?
+> 
+> Well, it bloats 2/5.
 
-Not needed actually as input device is managed by devm.
+It is logically the right place to do this as that's where we are
+adding opp-v2.
 
-Thanks.
+> What I hope (I can't test) is that this opp-v1 table
+> is ignored if an opp-v2 table exists. So that it can be
+> removed by a separate follow-up patch.
+
+It should work as that's what we are doing in OPP core, but I still
+feel this better get merged with 2/5.
 
 -- 
-Dmitry
+viresh
