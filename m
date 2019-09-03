@@ -1,77 +1,63 @@
-From: allen <allen.chen@ite.com.tw>
-Subject: [PATCH v2 1/2] dt-bindings: Add binding for IT6505.
-Date: Tue, 3 Sep 2019 18:51:53 +0800
-Message-ID: <1567507915-9844-2-git-send-email-allen.chen@ite.com.tw>
-References: <1567507915-9844-1-git-send-email-allen.chen@ite.com.tw>
+From: Vitor Soares <Vitor.Soares@synopsys.com>
+Subject: RE: [PATCH v2 1/5] i3c: master: detach and free device if
+ pre_assign_dyn_addr() fails
+Date: Tue, 3 Sep 2019 11:10:52 +0000
+Message-ID: <SN6PR12MB2655676567F5A9EFF7619DCDAEB90@SN6PR12MB2655.namprd12.prod.outlook.com>
+References: <cover.1567437955.git.vitor.soares@synopsys.com>
+        <105a3ac1653e9ae658056a5ec9ddc2a084a61669.1567437955.git.vitor.soares@synopsys.com>
+ <20190903125237.13a382b2@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567507915-9844-1-git-send-email-allen.chen@ite.com.tw>
+In-Reply-To: <20190903125237.13a382b2@collabora.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Allen Chen <allen.chen@ite.com.tw>, Pi-Hsun Shih <pihsun@chromium.org>, Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, CK Hu <ck.hu@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Boris Brezillon <boris.brezillon@collabora.com>, Vitor Soares <Vitor.Soares@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pgaj@cadence.com" <pgaj@cadence.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Allen Chen <allen.chen@ite.com.tw>
+Hi Boris,
 
-Add a DT binding documentation for IT6505.
+From: Boris Brezillon <boris.brezillon@collabora.com>
+Date: Tue, Sep 03, 2019 at 11:52:37
 
-Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+> On Tue,  3 Sep 2019 12:35:50 +0200
+> Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+>=20
+> > On pre_assing_dyn_addr() the devices that fail:
+> >   i3c_master_setdasa_locked()
+> >   i3c_master_reattach_i3c_dev()
+> >   i3c_master_retrieve_dev_info()
+> >=20
+> > are kept in memory and master->bus.devs list. This makes the i3c device=
+s
+> > without a dynamic address are sent on DEFSLVS CCC command. Fix this by
+> > detaching and freeing the devices that fail on pre_assign_dyn_addr().
+> >=20
+> > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> > ---
+> > Changes in v2:
+> >   - Move out detach/free the i3c_dev_desc from pre_assign_dyn_addr()
+>=20
+> So, you decided to ignore my comment about leaving the i3c_dev_desc
+> allocated and skipping entries that don't have a dynamic address when
+> forging the DEFSLVS frame instead of doing this
+> allocate/free/re-allocate dance, and more importantly, you didn't even
+> bother explaining why.
+>=20
+> I'm not willing to accept this patch unless you come up with solid
+> reasons.
 
----
-Comments in v1 would be addressed later in v3.
----
- .../bindings/display/bridge/ite,it6505.txt         | 30 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- 2 files changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
+I think I already give a strong reason for my decision. Let say that my=20
+controller only has space for 4 devices and one of them is offline during=20
+pre_assign_dyn_addr() and hence it fails. When device tries to do the HJ=20
+I won't be able to do the enumeration because there is no space left.=20
+Anyway, you are right and I need to add this to commit message.
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
-new file mode 100644
-index 0000000..c3506ac
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
-@@ -0,0 +1,30 @@
-+iTE it6505 DP bridge bindings
-+
-+Required properties:
-+        - compatible: "ite,it6505"
-+        - reg: i2c address of the bridge
-+        - ovdd-supply: I/O voltage
-+        - pwr18-supply: Core voltage
-+        - interrupts: interrupt specifier of INT pin
-+        - reset-gpios: gpio specifier of RESET pin
-+
-+Example:
-+	it6505dptx: it6505dptx@5c {
-+                compatible = "ite,it6505";
-+                status = "okay";
-+                interrupt-parent = <&pio>;
-+                interrupts = <152 IRQ_TYPE_EDGE_RISING 152 0>;
-+                reg = <0x5c>;
-+                pinctrl-names = "default";
-+                pinctrl-0 = <&it6505_pins>;
-+                ovdd-supply = <&mt6358_vsim1_reg>;
-+                pwr18-supply = <&it6505_pp18_reg>;
-+                reset-gpios = <&pio 179 1>;
-+                hpd-gpios = <&pio 9 0>;
-+                extcon = <&usbc_extcon>;
-+                port {
-+                        it6505_in: endpoint {
-+                                remote-endpoint = <&dpi_out>;
-+                        };
-+                };
-+        };
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 2c3fc51..c088646 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -184,6 +184,7 @@ iom	Iomega Corporation
- isee	ISEE 2007 S.L.
- isil	Intersil
- issi	Integrated Silicon Solutions Inc.
-+ite	iTE Tech. Inc.
- itead	ITEAD Intelligent Systems Co.Ltd
- iwave  iWave Systems Technologies Pvt. Ltd.
- jdi	Japan Display Inc.
--- 
-1.9.1
+BTW, It is not clear to me why should we keep non addressed devices=20
+allocated when we have i3c_dev_boardinfo list with ->of_node information=20
+and what is the problem with allocate/free/re-allocate dance?
+
+Best regards,
+Vitor Soares
