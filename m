@@ -1,131 +1,80 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
- for LGM SDXC PHY
-Date: Tue, 3 Sep 2019 10:19:18 +0100
-Message-ID: <CAL_JsqKm=-5F-Ej1mzRaygJnjS2Lec6uJF4J3vfCnqdkQNNbug@mail.gmail.com>
-References: <20190828124315.48448-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190828124315.48448-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190902033716.GA18092@bogus> <9f4d6bdd-072a-ab71-1ef1-1d00c22bd064@linux.intel.com>
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v5 09/11] lib/vsprintf: OF nodes are first and foremost,
+ struct device_nodes
+Date: Tue, 3 Sep 2019 11:28:16 +0200
+Message-ID: <20190903092816.qutqnjba7okcauim@pathway.suse.cz>
+References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
+ <20190902135732.23455-10-sakari.ailus@linux.intel.com>
+ <20190903085233.oksjcwqwdxb53eig@pathway.suse.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9f4d6bdd-072a-ab71-1ef1-1d00c22bd064@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <20190903085233.oksjcwqwdxb53eig@pathway.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Ramuthevar, Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: rafael@kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 2:57 AM Ramuthevar, Vadivel MuruganX
-<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->
-> Hi Rob,
->
-> Thank you for review comments.
->
-> On 2/9/2019 9:38 PM, Rob Herring wrote:
-> > On Wed, Aug 28, 2019 at 08:43:14PM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> >> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> >>
-> >> Add a YAML schema to use the host controller driver with the
-> >> SDXC PHY on Intel's Lightning Mountain SoC.
-> >>
-> >> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> >> ---
-> >>   .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 52 ++++++++++++++++++++++
-> >>   .../devicetree/bindings/phy/intel,syscon.yaml      | 33 ++++++++++++++
-> >>   2 files changed, 85 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
-> >>   create mode 100644 Documentation/devicetree/bindings/phy/intel,syscon.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
-> >> new file mode 100644
-> >> index 000000000000..99647207b414
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
-> >> @@ -0,0 +1,52 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
-> >> +
-> >> +maintainers:
-> >> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> >> +
-> >> +allOf:
-> >> +  - $ref: "intel,syscon.yaml"
-> > You don't need this. It should be selected and applied by the compatible
-> > string matching.
-> Agreed, fix it in the next patch.
-> >> +
-> >> +description: Binding for SDXC PHY
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    const: intel,lgm-sdxc-phy
-> >> +
-> >> +  intel,syscon:
-> >> +    description: phandle to the sdxc through syscon
-> >> +
-> >> +  clocks:
-> >> +    maxItems: 1
-> >> +
-> >> +  clock-names:
-> >> +    maxItems: 1
-> >> +
-> >> +  "#phy-cells":
-> >> +    const: 0
-> >> +
-> >> +required:
-> >> +  - "#phy-cells"
-> >> +  - compatible
-> >> +  - intel,syscon
-> >> +  - clocks
-> >> +  - clock-names
-> >> +
-> >> +additionalProperties: false
-> >> +
-> >> +examples:
-> >> +  - |
-> >> +    sdxc_phy: sdxc_phy {
-> >> +        compatible = "intel,lgm-sdxc-phy";
-> >> +        intel,syscon = <&sysconf>;
-> > Make this a child of the below node and then you don't need this.
-> >
-> > If there's a register address range associated with this, then add a reg
-> > property.
->
-> Thanks for comments,  I have defined herewith example
->
-> sysconf: chiptop@e0020000 {
->              compatible = "intel,syscon";
+On Tue 2019-09-03 10:52:33, Petr Mladek wrote:
+> On Mon 2019-09-02 16:57:30, Sakari Ailus wrote:
+> > Factor out static kobject_string() function that simply calls
+> > device_node_string(), and thus remove references to kobjects (as these are
+> > struct device_node).
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  lib/vsprintf.c | 16 ++++------------
+> >  1 file changed, 4 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> > index a04a2167101ef..4ad9332d54ba6 100644
+> > --- a/lib/vsprintf.c
+> > +++ b/lib/vsprintf.c
+> > @@ -1905,6 +1905,9 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+> >  	struct printf_spec str_spec = spec;
+> >  	str_spec.field_width = -1;
+> >  
+> > +	if (fmt[0] != 'F')
+> > +		return error_string(buf, end, "(%pO?)", spec);
+> > +
+> >  	if (!IS_ENABLED(CONFIG_OF))
+> >  		return error_string(buf, end, "(%pOF?)", spec);
+> >  
+> > @@ -1978,17 +1981,6 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+> >  	return widen_string(buf, buf - buf_start, end, spec);
+> >  }
+> >  
+> > -static char *kobject_string(char *buf, char *end, void *ptr,
+> > -			    struct printf_spec spec, const char *fmt)
+> > -{
+> > -	switch (fmt[1]) {
+> > -	case 'F':
+> > -		return device_node_string(buf, end, ptr, spec, fmt + 1);
+> > -	}
+> > -
+> > -	return error_string(buf, end, "(%pO?)", spec);
+> > -}
+> > -
+> >  /*
+> >   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
+> >   * by an extra set of alphanumeric characters that are extended format
+> > @@ -2167,7 +2159,7 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+> >  	case 'G':
+> >  		return flags_string(buf, end, ptr, spec, fmt);
+> >  	case 'O':
+> > -		return kobject_string(buf, end, ptr, spec, fmt);
+> > +		return device_node_string(buf, end, ptr, spec, fmt + 1);
+> 
+> I know that this come from from kobject_string(). But please, modify
+> it to follow the style used by other %p modifiers. I mean to pass
+> "fmt" as is and then use:
+> 
+> 	if (fmt[1] != 'F')
 
-Needs to be SoC specific value.
+Ah, I see that it would need more changes in device_node_string().
+OK, let's leave the patch as is. I am sorry for the noise.
 
->              reg = <0xe0020000 0x100>;
->
->              emmc_phy: emmc_phy {
->                  compatible = "intel,lgm-emmc-phy";
->                  intel,syscon = <&sysconf>;
-
-This is redundant because you can just get the parent node.
-
-If there's a defined register range within the 'intel,syscon' block
-then define it here with 'reg'.
-
->                  clocks = <&emmc>;
->                  clock-names = "emmcclk";
->                  #phy-cells = <0>;
->             };
-> };
->
-> Is this way need to add right?
->
-> >> +        clocks = <&sdxc>;
-> >> +        clock-names = "sdxcclk";
-> >> +        #phy-cells = <0>;
-> >> +    };
-> >> +
-> >> +...
+Best Regards,
+Petr
