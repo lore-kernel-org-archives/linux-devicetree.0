@@ -1,32 +1,65 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH] arm64: dts: imx8mn-ddr4-evk: Enable GPIO LED
-Date: Tue, 3 Sep 2019 01:30:28 +0000
-Message-ID: <DB3PR0402MB39163A67EBD2E00310973D97F5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1567457138-3002-1-git-send-email-Anson.Huang@nxp.com>
- <20190902203144.GA4787@bug>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCH v3 05/11] dt-bindings: pci: layerscape-pci: add compatible
+ strings for ls1088a and ls2088a
+Date: Tue, 3 Sep 2019 01:33:47 +0000
+Message-ID: <AM5PR04MB329957D1325CED60804D0C08F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+ <20190902031716.43195-6-xiaowei.bao@nxp.com>
+ <20190902123140.GI9720@e119886-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="gb2312"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190902203144.GA4787@bug>
+In-Reply-To: <20190902123140.GI9720@e119886-lin.cambridge.arm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Andrew Murray <andrew.murray@arm.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.o>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFBhdmVsDQoNCj4gT24gTW9uIDIwMTktMDktMDIgMTY6NDU6MzgsIEFuc29uIEh1YW5nIHdy
-b3RlOg0KPiA+IGkuTVg4TU4gRERSNCBFVksgYm9hcmQgaGFzIGEgR1BJTyBMRUQgdG8gaW5kaWNh
-dGUgc3RhdHVzLCBhZGQgc3VwcG9ydA0KPiA+IGZvciBpdC4NCj4gDQo+IExFRCBtYWludGFpbmVy
-cyB3YW50IHRvIGJlIG9uIHRoZSBjYyBsaXN0Li4uDQoNClRoZSBnZXRfbWFpbnRhaW5lci5wbCBk
-b2VzIE5PVCBzaG93IHRoZSBMRUQgbWFpbnRhaW5lcnMuLi5CdXQgSSBoYXZlIGFkZGVkIGl0DQpp
-biBWMi4NCg0KPiANCj4gPiBAQCAtMTUsNiArMTUsMTggQEANCj4gPiAgCQlzdGRvdXQtcGF0aCA9
-ICZ1YXJ0MjsNCj4gPiAgCX07DQo+ID4NCj4gPiArCWxlZHMgew0KPiA+ICsJCWNvbXBhdGlibGUg
-PSAiZ3Bpby1sZWRzIjsNCj4gPiArCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiA+ICsJ
-CXBpbmN0cmwtMCA9IDwmcGluY3RybF9ncGlvX2xlZD47DQo+ID4gKw0KPiA+ICsJCXN0YXR1cyB7
-DQo+ID4gKwkJCWxhYmVsID0gInN0YXR1cyI7DQo+ID4gKwkJCWdwaW9zID0gPCZncGlvMyAxNiBH
-UElPX0FDVElWRV9ISUdIPjsNCj4gPiArCQkJZGVmYXVsdC1zdGF0ZSA9ICJvbiI7DQo+ID4gKwkJ
-fTsNCj4gDQo+IEFuZCB3ZSBzaG91bGQgcmVhbGx5IHN0YW5kYXJkaXplIGxhYmVscyBmb3IgdXNl
-ci1jb250cm9sbGVkIHN0YXR1cyBMRURzLg0KPiBNZW50aW9uaW5nIGNvbG9yIHdvdWxkIGJlIG5p
-Y2UsIGZvciBhIHN0YXJ0Lg0KDQpPSywgSSBjaGFuZ2UgdGhlIGxhYmVsIHRvICJ5ZWxsb3c6c3Rh
-dHVzIiBpbiBWMiwgcGxlYXNlIGhlbHAgcmV2aWV3LCB0aGFua3MuDQoNCkFuc29uDQoNCg==
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8
+YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo51MIyyNUgMjA6MzINCj4gVG86
+IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogcm9iaCtkdEBrZXJuZWwu
+b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvDQo+IExp
+IDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOyBsb3JlbnpvLnBpZXJhbGlzaUBh
+cm0uY29tOyBNLmguDQo+IExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IE1pbmdrYWkgSHUg
+PG1pbmdrYWkuaHVAbnhwLmNvbT47IFJveQ0KPiBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgamlu
+Z29vaGFuMUBnbWFpbC5jb207DQo+IGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tOyBsaW51
+eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGlu
+dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsNCj4gYXJuZEBhcm5kYi5k
+ZTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IFoucS4gSG91DQo+IDx6aGlxaWFuZy5ob3VA
+bnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAwNS8xMV0gZHQtYmluZGluZ3M6IHBj
+aTogbGF5ZXJzY2FwZS1wY2k6IGFkZCBjb21wYXRpYmxlDQo+IHN0cmluZ3MgZm9yIGxzMTA4OGEg
+YW5kIGxzMjA4OGENCj4gDQo+IE9uIE1vbiwgU2VwIDAyLCAyMDE5IGF0IDExOjE3OjEwQU0gKzA4
+MDAsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+IEFkZCBjb21wYXRpYmxlIHN0cmluZ3MgZm9yIGxz
+MTA4OGEgYW5kIGxzMjA4OGEuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8
+eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiB2MjoNCj4gPiAgLSBObyBjaGFuZ2Uu
+DQo+ID4gdjM6DQo+ID4gIC0gVXNlIG9uZSB2YWxpZCBjb21iaW5hdGlvbiBvZiBjb21wYXRpYmxl
+IHN0cmluZ3MuDQo+ID4NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bj
+aS9sYXllcnNjYXBlLXBjaS50eHQgfCA0ICsrKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5z
+ZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+ID4gYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLnR4dA0K
+PiA+IGluZGV4IGUyMGNlYWEuLjc2MmFlNDEgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS50eHQNCj4gPiArKysgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2xheWVyc2NhcGUtcGNpLnR4dA0K
+PiA+IEBAIC0yMiw3ICsyMiw5IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gICAgICAgICAg
+ImZzbCxsczEwNDNhLXBjaWUiDQo+ID4gICAgICAgICAgImZzbCxsczEwMTJhLXBjaWUiDQo+ID4g
+ICAgRVAgbW9kZToNCj4gPiAtCSJmc2wsbHMxMDQ2YS1wY2llLWVwIiwgImZzbCxscy1wY2llLWVw
+Ig0KPiA+ICsJImZzbCxsczEwNDZhLXBjaWUtZXAiICJmc2wsbHMtcGNpZS1lcCINCj4gPiArCSJm
+c2wsbHMxMDg4YS1wY2llLWVwIiAiZnNsLGxzLXBjaWUtZXAiDQo+ID4gKwkiZnNsLGxzMjA4OGEt
+cGNpZS1lcCIgImZzbCxscy1wY2llLWVwIg0KPiANCj4gVGhpcyBpc24ndCBjb25zaXN0ZW50IHdp
+dGggIltQQVRDSCB2MyAwOS8xMV0gUENJOiBsYXllcnNjYXBlOiBBZGQgRVAgbW9kZS4uLiINCj4g
+YXMgdGhhdCBwYXRjaCBkcm9wcyB0aGUgZmFsbGJhY2sgImZzbCxscy1wY2llLWVwIi4gRWl0aGVy
+IHRoZSBmYWxsYmFjayBtdXN0IGJlDQo+IHByZXNlcnZlZCBpbiB0aGUgZHJpdmVyLCBvciB5b3Ug
+bmVlZCB0byBkcm9wIGl0IGhlcmUuDQo+IA0KPiBXaGF0IGlmIHRoZXJlIGFyZSBleGlzdGluZyB1
+c2VycyB0aGF0IGRlcGVuZCBvbiB0aGUgZmFsbGJhY2s/DQo+IA0KPiAoSSdtIGFsc28gbm90IHN1
+cmUgaWYgdGhhdCBjb21tYSBzaG91bGQgaGF2ZSBiZWVuIGRyb3BwZWQpLg0KDQpIaSBBbmRyZXcs
+DQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50cywgSSBsb3NlIHRoZSBjb21tYS4NCg0KVGhhbmtz
+IA0KWGlhb3dlaQ0KDQo+IA0KPiBUaGFua3MsDQo+IA0KPiBBbmRyZXcgTXVycmF5DQo+IA0KPiA+
+ICAtIHJlZzogYmFzZSBhZGRyZXNzZXMgYW5kIGxlbmd0aHMgb2YgdGhlIFBDSWUgY29udHJvbGxl
+ciByZWdpc3RlciBibG9ja3MuDQo+ID4gIC0gaW50ZXJydXB0czogQSBsaXN0IG9mIGludGVycnVw
+dCBvdXRwdXRzIG9mIHRoZSBjb250cm9sbGVyLiBNdXN0IGNvbnRhaW4gYW4NCj4gPiAgICBlbnRy
+eSBmb3IgZWFjaCBlbnRyeSBpbiB0aGUgaW50ZXJydXB0LW5hbWVzIHByb3BlcnR5Lg0KPiA+IC0t
+DQo+ID4gMi45LjUNCj4gPg0K
