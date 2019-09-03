@@ -1,94 +1,138 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 4/5] dt-bindings: dma: ti-edma: Add option for reserved
- channel ranges
-Date: Tue, 3 Sep 2019 13:19:45 +0300
-Message-ID: <15d5dc03-d6ca-f438-f37a-e71298abda95@ti.com>
-References: <20190823125618.8133-1-peter.ujfalusi@ti.com>
- <20190823125618.8133-5-peter.ujfalusi@ti.com> <20190829224728.GA1198@bogus>
- <a4c5688b-cbeb-5059-5351-11d9ae1b25d5@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
+ for LGM SDXC PHY
+Date: Tue, 3 Sep 2019 11:34:16 +0100
+Message-ID: <CAL_Jsq+f27t5Wu+qtynDd_O9vBVZFKHCrgCP7WhyGo+W1y-XAA@mail.gmail.com>
+References: <20190828124315.48448-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190828124315.48448-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190902033716.GA18092@bogus> <9f4d6bdd-072a-ab71-1ef1-1d00c22bd064@linux.intel.com>
+ <CAL_JsqKm=-5F-Ej1mzRaygJnjS2Lec6uJF4J3vfCnqdkQNNbug@mail.gmail.com> <39d6fe60-e9f5-d205-ec6c-4a3143fe1e13@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a4c5688b-cbeb-5059-5351-11d9ae1b25d5@ti.com>
-Content-Language: en-US
+In-Reply-To: <39d6fe60-e9f5-d205-ec6c-4a3143fe1e13@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: vkoul@kernel.org, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+To: "Ramuthevar, Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Tue, Sep 3, 2019 at 11:08 AM Ramuthevar, Vadivel MuruganX
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>
+> Hi Rob,
+>
+>   Thank you so much for prompt reply.
+>
+> On 3/9/2019 5:19 PM, Rob Herring wrote:
+> > On Tue, Sep 3, 2019 at 2:57 AM Ramuthevar, Vadivel MuruganX
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> >> Hi Rob,
+> >>
+> >> Thank you for review comments.
+> >>
+> >> On 2/9/2019 9:38 PM, Rob Herring wrote:
+> >>> On Wed, Aug 28, 2019 at 08:43:14PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> >>>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >>>>
+> >>>> Add a YAML schema to use the host controller driver with the
+> >>>> SDXC PHY on Intel's Lightning Mountain SoC.
+> >>>>
+> >>>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >>>> ---
+> >>>>    .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 52 ++++++++++++++++++++++
+> >>>>    .../devicetree/bindings/phy/intel,syscon.yaml      | 33 ++++++++++++++
+> >>>>    2 files changed, 85 insertions(+)
+> >>>>    create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> >>>>    create mode 100644 Documentation/devicetree/bindings/phy/intel,syscon.yaml
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> >>>> new file mode 100644
+> >>>> index 000000000000..99647207b414
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> >>>> @@ -0,0 +1,52 @@
+> >>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >>>> +%YAML 1.2
+> >>>> +---
+> >>>> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
+> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>>> +
+> >>>> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
+> >>>> +
+> >>>> +maintainers:
+> >>>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >>>> +
+> >>>> +allOf:
+> >>>> +  - $ref: "intel,syscon.yaml"
+> >>> You don't need this. It should be selected and applied by the compatible
+> >>> string matching.
+> >> Agreed, fix it in the next patch.
+> >>>> +
+> >>>> +description: Binding for SDXC PHY
+> >>>> +
+> >>>> +properties:
+> >>>> +  compatible:
+> >>>> +    const: intel,lgm-sdxc-phy
+> >>>> +
+> >>>> +  intel,syscon:
+> >>>> +    description: phandle to the sdxc through syscon
+> >>>> +
+> >>>> +  clocks:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  clock-names:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  "#phy-cells":
+> >>>> +    const: 0
+> >>>> +
+> >>>> +required:
+> >>>> +  - "#phy-cells"
+> >>>> +  - compatible
+> >>>> +  - intel,syscon
+> >>>> +  - clocks
+> >>>> +  - clock-names
+> >>>> +
+> >>>> +additionalProperties: false
+> >>>> +
+> >>>> +examples:
+> >>>> +  - |
+> >>>> +    sdxc_phy: sdxc_phy {
+> >>>> +        compatible = "intel,lgm-sdxc-phy";
+> >>>> +        intel,syscon = <&sysconf>;
+> >>> Make this a child of the below node and then you don't need this.
+> >>>
+> >>> If there's a register address range associated with this, then add a reg
+> >>> property.
+> >> Thanks for comments,  I have defined herewith example
+> >>
+> >> sysconf: chiptop@e0020000 {
+> >>               compatible = "intel,syscon";
+> > Needs to be SoC specific value.
+> Agreed! it should be "intel, lgm-syscon"
+> >>               reg = <0xe0020000 0x100>;
+> >>
+> >>               emmc_phy: emmc_phy {
+> >>                   compatible = "intel,lgm-emmc-phy";
+> >>                   intel,syscon = <&sysconf>;
+> > This is redundant because you can just get the parent node.
+> >
+> > If there's a defined register range within the 'intel,syscon' block
+> > then define it here with 'reg'.
+>
+> Agreed!, avoided redundant
+>
+> sysconf: chiptop@e0020000 {
+>              compatible = "intel,lgm-syscon";
+>              emmc_phy: emmc_phy {
+>                  compatible = "intel,lgm-emmc-phy";
+>                  reg = <0xe0020000 0x100>;
 
-On 30/08/2019 8.37, Peter Ujfalusi wrote:
-> Rob,
-> 
-> On 30/08/2019 1.47, Rob Herring wrote:
->> On Fri, Aug 23, 2019 at 03:56:17PM +0300, Peter Ujfalusi wrote:
->>> Similarly to paRAM slots, channels can be used by other cores.
->>>
->>> Add optional property to configure the reserved channel ranges.
->>>
->>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>> ---
->>>  Documentation/devicetree/bindings/dma/ti-edma.txt | 5 +++++
->>>  1 file changed, 5 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
->>> index 4bbc94d829c8..1198682ada99 100644
->>> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
->>> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
->>> @@ -42,6 +42,9 @@ Optional properties:
->>>  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
->>>  		the driver, they are allocated to be used by for example the
->>>  		DSP. See example.
->>> +- ti,edma-reserved-chan-ranges: channel ranges which should not be used by
->>> +		the driver, they are allocated to be used by for example the
->>> +		DSP. See example.
->>
->> Based on the other thread, I think extending dma-channel-mask to a 
->> uint32-array makes sense here.
-> 
-> Yes, that is the reason I have asked on that and I'm in progress of
-> converting the edma driver to use the dma-channel-mask.
-> Just need to do some shuffling in the driver to get the mask in a form
-> usable by the driver.
-> 
-> I'll send an updated series early next week.
+This is the same addresses you had for the parent, so that doesn't
+seem right. The parent should have the entire range and then the child
+nodes only the addresses for their functions. However, if the
+registers are all interleaved then you can really put 'reg' in the
+child nodes and just have it only in the parent. We don't want to have
+overlapping addresses in DT.
 
-How should the dma-channel-mask uint31-array should be documented and used?
-
-Basically some EDMA have 32, some 64 channels. This is fine.
-Let's say I want to mask out channel 0-4 and 24-27
-
-This would look like in case of EDMA with 32 channels:
-&edma {
-	/* channel 0-4 and 24-27 is not to be used */
-	dma-channel-mask = <0xf0fffff0>;
-};
-
-How this should look like in case when I have 64 channels?
-&edma {
-	/* channel 0-4 and 24-27 is not to be used */
-	dma-channel-mask = <0xf0fffff0>, <0xffffffff>;
-};
-
-When I read the u32s then
-chan_mask[0] is for channel 0-31 (LSB is channel 0)
-chan_maks[1] is for channel 32-63 (LSB is channel 32)
-
-Or:
-&edma {
-	/* channel 0-4 and 24-27 is not to be used */
-	dma-channel-mask = <0xffffffff>, <0xf0fffff0>;
-};
-
-chan_maks[0] is for channel 32-63 (LSB is channel 32)
-chan_mask[1] is for channel 0-31 (LSB is channel 0)
-
-Do you have pointer on already established notion on how to document and
-handle this?
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Rob
