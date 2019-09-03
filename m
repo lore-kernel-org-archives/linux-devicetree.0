@@ -1,7 +1,7 @@
 From: Vitor Soares <Vitor.Soares@synopsys.com>
-Subject: [PATCH v2 4/5] dt-bindings: i3c: add a note for no guarantee of 'assigned-address' use
-Date: Tue,  3 Sep 2019 12:35:53 +0200
-Message-ID: <159ae86a8f87b8d518bf63a8946b03b14e6b5500.1567437955.git.vitor.soares@synopsys.com>
+Subject: [PATCH v2 5/5] i3c: master: dw: reattach device on first available location of address table
+Date: Tue,  3 Sep 2019 12:35:54 +0200
+Message-ID: <594bce70368177256376fc2f592736db78cf40db.1567437955.git.vitor.soares@synopsys.com>
 References: <cover.1567437955.git.vitor.soares@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1567437955.git.vitor.soares@synopsys.com>
@@ -12,29 +12,48 @@ To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i3c@lists.in
 Cc: bbrezillon@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, pgaj@cadence.com, Joao.Pinto@synopsys.com, Vitor Soares <Vitor.Soares@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-By default, the framework will try to assign the 'assigned-address' to the
-device but if the address is already in use the device dynamic address
-will be different.
+For today the reattach function only update the device address on the
+controller.
+
+Update the location to the first available too, will optimize the
+enumeration process avoiding additional checks to keep the available
+positions on address table consecutive.
 
 Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 ---
- Documentation/devicetree/bindings/i3c/i3c.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Change in v2:
+  - Add Boris rb-tag
 
-diff --git a/Documentation/devicetree/bindings/i3c/i3c.txt b/Documentation/devicetree/bindings/i3c/i3c.txt
-index c851e75..e777f09 100644
---- a/Documentation/devicetree/bindings/i3c/i3c.txt
-+++ b/Documentation/devicetree/bindings/i3c/i3c.txt
-@@ -98,7 +98,9 @@ Required properties
+ drivers/i3c/master/dw-i3c-master.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
+index 1d83c97..62261ac 100644
+--- a/drivers/i3c/master/dw-i3c-master.c
++++ b/drivers/i3c/master/dw-i3c-master.c
+@@ -898,6 +898,22 @@ static int dw_i3c_master_reattach_i3c_dev(struct i3c_dev_desc *dev,
+ 	struct dw_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
+ 	struct i3c_master_controller *m = i3c_dev_get_master(dev);
+ 	struct dw_i3c_master *master = to_dw_i3c_master(m);
++	int pos;
++
++	pos = dw_i3c_master_get_free_pos(master);
++
++	if (data->index > pos && pos > 0) {
++		writel(0,
++		       master->regs +
++		       DEV_ADDR_TABLE_LOC(master->datstartaddr, data->index));
++
++		master->addrs[data->index] = 0;
++		master->free_pos |= BIT(data->index);
++
++		data->index = pos;
++		master->addrs[pos] = dev->info.dyn_addr;
++		master->free_pos &= ~BIT(pos);
++	}
  
- Optional properties
- -------------------
--- assigned-address: dynamic address to be assigned to this device.
-+- assigned-address: dynamic address to be assigned to this device. The framework
-+		    will try to assign this dynamic address but if something
-+		    fails the device dynamic address will be different.
- 
- 
- Example:
+ 	writel(DEV_ADDR_TABLE_DYNAMIC_ADDR(dev->info.dyn_addr),
+ 	       master->regs +
 -- 
 2.7.4
