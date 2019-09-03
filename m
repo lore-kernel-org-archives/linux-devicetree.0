@@ -1,35 +1,125 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v3 4/4] edac: Add support for Amazon's Annapurna Labs L2
- EDAC
-Date: Tue, 3 Sep 2019 10:58:16 +0200
-Message-ID: <20190903085816.GA11641@zn.tnic>
-References: <1563197049-12679-1-git-send-email-hhhawa@amazon.com>
- <1563197049-12679-5-git-send-email-hhhawa@amazon.com>
- <20190903072655.kz5x7n3477dg4yap@rric.localdomain>
- <2bce020a-bf7e-1d54-48c3-0aa6d23c84d8@amazon.com>
- <20190903084614.mthff6hzbchkw7t2@rric.localdomain>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: power: syscon-reboot: Convert bindings
+ to json-schema
+Date: Tue, 3 Sep 2019 10:00:12 +0100
+Message-ID: <CAL_JsqJUfGBRAv=StPyavQU1DiHnFwUseNCvP6Ce_ZMohJXTXQ@mail.gmail.com>
+References: <20190902150336.3600-1-krzk@kernel.org> <CAL_JsqK_O+7zQDGxAhAHDW=AkMy+RtyijTXUuRStOgu8CYXe0g@mail.gmail.com>
+ <CAJKOXPfO0yBzGFPvF_WwsGGJBZSBGMLsFi2CQ2Eg5RVfyfW3nA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190903084614.mthff6hzbchkw7t2@rric.localdomain>
+In-Reply-To: <CAJKOXPfO0yBzGFPvF_WwsGGJBZSBGMLsFi2CQ2Eg5RVfyfW3nA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Richter <rrichter@marvell.com>
-Cc: "Hawa, Hanna" <hhhawa@amazon.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "davem@davemloft.net" <davem@davemloft.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>, "benh@amazon.com" <benh@amazon.com>, "ronenk@amazon.com" <ronenk@amazon.com>, "talel@amazon.com" <talel@amazon.com>, "jonnyc@amazon.com" <jonnyc@amazon.com>, "hanochu@amazon.com" <hano>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 08:46:24AM +0000, Robert Richter wrote:
-> This is good, but recent practice is also to have all the drivers for
-> the same piece of hardware in a single file, see e.g. thunderx_edac.c.
-> I don't know how detailed this was discussed already, but I would
-> prefer to join the code.
+On Tue, Sep 3, 2019 at 8:47 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Tue, 3 Sep 2019 at 09:14, Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Mon, Sep 2, 2019 at 4:03 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > >
+> > > Convert the Syscon reboot bindings to DT schema format using
+> > > json-schema.
+> > >
+> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > ---
+> > >  .../bindings/power/reset/syscon-reboot.txt    | 30 --------
+> > >  .../bindings/power/reset/syscon-reboot.yaml   | 68 +++++++++++++++++++
+> > >  2 files changed, 68 insertions(+), 30 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> >
+> > > diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> > > new file mode 100644
+> > > index 000000000000..a583f3dc8ef4
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> > > @@ -0,0 +1,68 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/power/reset/syscon-reboot.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Generic SYSCON mapped register reset driver
+> > > +
+> > > +maintainers:
+> > > +  - Sebastian Reichel <sre@kernel.org>
+> > > +
+> > > +description: |+
+> > > +  This is a generic reset driver using syscon to map the reset register.
+> > > +  The reset is generally performed with a write to the reset register
+> > > +  defined by the register map pointed by syscon reference plus the offset
+> > > +  with the value and mask defined in the reboot node.
+> > > +  Default will be little endian mode, 32 bit access only.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: syscon-reboot
+> > > +
+> > > +  mask:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: Update only the register bits defined by the mask (32 bit).
+> > > +    maxItems: 1
+> >
+> > Drop this as that is already defined for uint32.
+> >
+> > It also doesn't actually work. The $ref has to be under an 'allOf' if
+> > you have additional schemas. A quirk of json-schema...
+> >
+> > > +
+> > > +  offset:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: Offset in the register map for the reboot register (in bytes).
+> > > +    maxItems: 1
+> > > +
+> > > +  regmap:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > > +    description: Phandle to the register map node.
+> > > +    maxItems: 1
+> > > +
+> > > +  value:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: The reset value written to the reboot register (32 bit access).
+> > > +    maxItems: 1
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - regmap
+> > > +  - offset
+> > > +
+> > > +allOf:
+> > > +  - if:
+> > > +      properties:
+> > > +        value:
+> > > +          not:
+> > > +            type: array
+> >
+> > I think you could make this a bit more readable with:
+> >
+> > if:
+> >   not:
+> >     required:
+> >       - value
+>
+> I do not understand how does it work (value is not mentioned in the
+> required fields so why checking of it?)... but it works fine.
 
-This is no longer needed anymore. Check out this thread:
+What's under required doesn't have to be listed as a property.
 
-https://lkml.kernel.org/r/1559211329-13098-3-git-send-email-hhhawa@amazon.com
+> > However, if the tree is free of legacy usage, then you could just drop all this.
+>
+> One of them - mask or value - has to be provided.
 
--- 
-Regards/Gruss,
-    Boris.
+Or both, right?
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Actually, a better way to express it is probably this:
+
+oneOf:
+  - required: [ value ]
+  - required: [ mask ]
+  - required: [ value, mask ]
+
+Rob
