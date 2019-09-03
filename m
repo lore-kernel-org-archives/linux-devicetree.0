@@ -1,162 +1,133 @@
-From: Krzysztof Wilczynski <kw-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] PCI: Remove unused includes and superfluous struct
-	declaration
-Date: Tue,  3 Sep 2019 13:30:59 +0200
-Message-ID: <20190903113059.2901-1-kw@linux.com>
-References: <20190901112506.8469-1-kw@linux.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: power: syscon-reboot: Convert bindings
+ to json-schema
+Date: Tue, 3 Sep 2019 13:44:20 +0200
+Message-ID: <CAJKOXPcjF9nERQxDdSVBLsfc2V_M1_BPZ6iM6EXvEx4tdr3rDQ@mail.gmail.com>
+References: <20190902150336.3600-1-krzk@kernel.org> <CAL_JsqK_O+7zQDGxAhAHDW=AkMy+RtyijTXUuRStOgu8CYXe0g@mail.gmail.com>
+ <CAJKOXPfO0yBzGFPvF_WwsGGJBZSBGMLsFi2CQ2Eg5RVfyfW3nA@mail.gmail.com> <CAL_JsqJUfGBRAv=StPyavQU1DiHnFwUseNCvP6Ce_ZMohJXTXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20190901112506.8469-1-kw-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Gustavo Pimentel <gustavo.pimentel-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJUfGBRAv=StPyavQU1DiHnFwUseNCvP6Ce_ZMohJXTXQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove <linux/pci.h> and <linux/msi.h> from being included
-directly as part of the include/linux/of_pci.h, and remove
-superfluous declaration of struct of_phandle_args.
+On Tue, 3 Sep 2019 at 11:00, Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Tue, Sep 3, 2019 at 8:47 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > On Tue, 3 Sep 2019 at 09:14, Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Mon, Sep 2, 2019 at 4:03 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > >
+> > > > Convert the Syscon reboot bindings to DT schema format using
+> > > > json-schema.
+> > > >
+> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > ---
+> > > >  .../bindings/power/reset/syscon-reboot.txt    | 30 --------
+> > > >  .../bindings/power/reset/syscon-reboot.yaml   | 68 +++++++++++++++++++
+> > > >  2 files changed, 68 insertions(+), 30 deletions(-)
+> > > >  delete mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> > > >  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> > >
+> > > > diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..a583f3dc8ef4
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> > > > @@ -0,0 +1,68 @@
+> > > > +# SPDX-License-Identifier: GPL-2.0
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/power/reset/syscon-reboot.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Generic SYSCON mapped register reset driver
+> > > > +
+> > > > +maintainers:
+> > > > +  - Sebastian Reichel <sre@kernel.org>
+> > > > +
+> > > > +description: |+
+> > > > +  This is a generic reset driver using syscon to map the reset register.
+> > > > +  The reset is generally performed with a write to the reset register
+> > > > +  defined by the register map pointed by syscon reference plus the offset
+> > > > +  with the value and mask defined in the reboot node.
+> > > > +  Default will be little endian mode, 32 bit access only.
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    const: syscon-reboot
+> > > > +
+> > > > +  mask:
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > > +    description: Update only the register bits defined by the mask (32 bit).
+> > > > +    maxItems: 1
+> > >
+> > > Drop this as that is already defined for uint32.
+> > >
+> > > It also doesn't actually work. The $ref has to be under an 'allOf' if
+> > > you have additional schemas. A quirk of json-schema...
+> > >
+> > > > +
+> > > > +  offset:
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > > +    description: Offset in the register map for the reboot register (in bytes).
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  regmap:
+> > > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > > > +    description: Phandle to the register map node.
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  value:
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > > +    description: The reset value written to the reboot register (32 bit access).
+> > > > +    maxItems: 1
+> > > > +
+> > > > +required:
+> > > > +  - compatible
+> > > > +  - regmap
+> > > > +  - offset
+> > > > +
+> > > > +allOf:
+> > > > +  - if:
+> > > > +      properties:
+> > > > +        value:
+> > > > +          not:
+> > > > +            type: array
+> > >
+> > > I think you could make this a bit more readable with:
+> > >
+> > > if:
+> > >   not:
+> > >     required:
+> > >       - value
+> >
+> > I do not understand how does it work (value is not mentioned in the
+> > required fields so why checking of it?)... but it works fine.
+>
+> What's under required doesn't have to be listed as a property.
+>
+> > > However, if the tree is free of legacy usage, then you could just drop all this.
+> >
+> > One of them - mask or value - has to be provided.
+>
+> Or both, right?
+>
+> Actually, a better way to express it is probably this:
+>
+> oneOf:
+>   - required: [ value ]
+>   - required: [ mask ]
+>   - required: [ value, mask ]
 
-Move users of include <linux/of_pci.h> to include <linux/pci.h>
-and <linux/msi.h> directly rather than rely on both being
-included transitively through <linux/of_pci.h>.
+This does not work mask+value would be valid everywhere:
 
-Signed-off-by: Krzysztof Wilczynski <kw-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
----
- drivers/iommu/of_iommu.c                          | 2 ++
- drivers/irqchip/irq-gic-v2m.c                     | 1 +
- drivers/irqchip/irq-gic-v3-its-pci-msi.c          | 1 +
- drivers/pci/controller/dwc/pcie-designware-host.c | 1 +
- drivers/pci/controller/pci-aardvark.c             | 1 +
- drivers/pci/controller/pci-thunder-pem.c          | 1 +
- drivers/pci/pci.c                                 | 1 +
- drivers/pci/probe.c                               | 1 +
- include/linux/of_pci.h                            | 5 ++---
- 9 files changed, 11 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-index 614a93aa5305..026ad2b29dcd 100644
---- a/drivers/iommu/of_iommu.c
-+++ b/drivers/iommu/of_iommu.c
-@@ -8,6 +8,8 @@
- #include <linux/export.h>
- #include <linux/iommu.h>
- #include <linux/limits.h>
-+#include <linux/pci.h>
-+#include <linux/msi.h>
- #include <linux/of.h>
- #include <linux/of_iommu.h>
- #include <linux/of_pci.h>
-diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
-index e88e75c22b6a..fbec07d634ad 100644
---- a/drivers/irqchip/irq-gic-v2m.c
-+++ b/drivers/irqchip/irq-gic-v2m.c
-@@ -17,6 +17,7 @@
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
-+#include <linux/pci.h>
- #include <linux/msi.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
-diff --git a/drivers/irqchip/irq-gic-v3-its-pci-msi.c b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-index 229d586c3d7a..87711e0f8014 100644
---- a/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-+++ b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <linux/acpi_iort.h>
-+#include <linux/pci.h>
- #include <linux/msi.h>
- #include <linux/of.h>
- #include <linux/of_irq.h>
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d3156446ff27..7a9bef993e57 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -10,6 +10,7 @@
- 
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
-+#include <linux/msi.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
- #include <linux/pci_regs.h>
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index fc0fe4d4de49..3a05f6ca95b0 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -16,6 +16,7 @@
- #include <linux/pci.h>
- #include <linux/init.h>
- #include <linux/platform_device.h>
-+#include <linux/msi.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
- 
-diff --git a/drivers/pci/controller/pci-thunder-pem.c b/drivers/pci/controller/pci-thunder-pem.c
-index f127ce8bd4ef..9491e266b1ea 100644
---- a/drivers/pci/controller/pci-thunder-pem.c
-+++ b/drivers/pci/controller/pci-thunder-pem.c
-@@ -6,6 +6,7 @@
- #include <linux/bitfield.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
-+#include <linux/pci.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
- #include <linux/pci-acpi.h>
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 484e35349565..571e7e00984b 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -13,6 +13,7 @@
- #include <linux/delay.h>
- #include <linux/dmi.h>
- #include <linux/init.h>
-+#include <linux/msi.h>
- #include <linux/of.h>
- #include <linux/of_pci.h>
- #include <linux/pci.h>
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 169943f17a4c..11b11a652d18 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -7,6 +7,7 @@
- #include <linux/delay.h>
- #include <linux/init.h>
- #include <linux/pci.h>
-+#include <linux/msi.h>
- #include <linux/of_device.h>
- #include <linux/of_pci.h>
- #include <linux/pci_hotplug.h>
-diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-index 21a89c4880fa..29658c0ee71f 100644
---- a/include/linux/of_pci.h
-+++ b/include/linux/of_pci.h
-@@ -2,11 +2,10 @@
- #ifndef __OF_PCI_H
- #define __OF_PCI_H
- 
--#include <linux/pci.h>
--#include <linux/msi.h>
-+#include <linux/types.h>
-+#include <linux/errno.h>
- 
- struct pci_dev;
--struct of_phandle_args;
- struct device_node;
- 
- #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_PCI)
--- 
-2.23.0
+arch/arm/boot/dts/exynos3250-artik5-eval.dt.yaml: syscon-reboot:
+{'regmap': [[9]], 'mask': [[1]], '$nodename': ['syscon-reboot'],
+'value': [[1]], 'offset': [[1024]], 'compatible': ['syscon-reboot']}
+is valid under each of {'required': ['mask']}, {'required': ['value',
+'mask']}, {'required': ['value']}
