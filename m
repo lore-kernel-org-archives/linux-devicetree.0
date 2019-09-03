@@ -1,25 +1,117 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] dt-bindings: arm: amlogic: add Amlogic AD401 bindings
-Date: Tue, 3 Sep 2019 18:38:30 +0100
-Message-ID: <20190903173830.GA30743@bogus>
-References: <1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com>
- <1567493475-75451-4-git-send-email-jianxin.pan@amlogic.com>
+From: Jack Pham <jackp@codeaurora.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY
+ bindings
+Date: Tue, 3 Sep 2019 10:39:24 -0700
+Message-ID: <20190903173924.GB9754@jackp-linux.qualcomm.com>
+References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org>
+ <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org>
+ <20190223165218.GB572@tuxbook-pro>
+ <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
+ <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
+ <20190830164520.GK26807@tuxbook-pro>
+ <5d696ad2.1c69fb81.977ea.39e5@mx.google.com>
+ <f3584f38-dabc-7e7a-d1cb-84c80ed26215@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1567493475-75451-4-git-send-email-jianxin.pan@amlogic.com>
+In-Reply-To: <f3584f38-dabc-7e7a-d1cb-84c80ed26215@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, Jianxin Pan <jianxin.pan@amlogic.com>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Tao Zeng <tao.zeng@amlogic.com>
+To: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Cc: Stephen Boyd <swboyd@chromium.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 3 Sep 2019 02:51:14 -0400, Jianxin Pan wrote:
-> Add the compatible for the Amlogic A1 Based AD401 board.
+On Mon, Sep 02, 2019 at 08:23:04AM +0200, Jorge Ramirez wrote:
+> On 8/30/19 20:28, Stephen Boyd wrote:
+> > Quoting Bjorn Andersson (2019-08-30 09:45:20)
+> >> On Fri 30 Aug 09:01 PDT 2019, Stephen Boyd wrote:
+> >>
+> >>> Quoting Jorge Ramirez (2019-08-29 00:03:48)
+> >>>> On 2/23/19 17:52, Bjorn Andersson wrote:
+> >>>>> On Thu 07 Feb 03:17 PST 2019, Jorge Ramirez-Ortiz wrote:
+> >>>>>> +
+> >>>>>> +Required child nodes:
+> >>>>>> +
+> >>>>>> +- usb connector node as defined in bindings/connector/usb-connector.txt
+> >>>>>> +  containing the property vbus-supply.
+> >>>>>> +
+> >>>>>> +Example:
+> >>>>>> +
+> >>>>>> +usb3_phy: usb3-phy@78000 {
+> >>>>>> +    compatible = "qcom,snps-usb-ssphy";
+> >>>>>> +    reg = <0x78000 0x400>;
+> >>>>>> +    #phy-cells = <0>;
+> >>>>>> +    clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
+> >>>>>> +             <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
+> >>>>>> +             <&gcc GCC_USB3_PHY_PIPE_CLK>;
+> >>>>>> +    clock-names = "ref", "phy", "pipe";
+> >>>>>> +    resets = <&gcc GCC_USB3_PHY_BCR>,
+> >>>>>> +             <&gcc GCC_USB3PHY_PHY_BCR>;
+> >>>>>> +    reset-names = "com", "phy";
+> >>>>>> +    vdd-supply = <&vreg_l3_1p05>;
+> >>>>>> +    vdda1p8-supply = <&vreg_l5_1p8>;
+> >>>>>> +    usb3_c_connector: usb3-c-connector {
+> >>>
+> >>> Node name should be 'connector', not usb3-c-connector.
+> >>>
+> >>
+> >> It probably has to be usb-c-connector, because we have a
+> >> micro-usb-connector on the same board.
+> > 
+> > Ok. Or connector@1 and connector@2? Our toplevel node container story is
+> > sort of sad because we have to play tricks with node names. But in the
+> > example, just connector I presume? 
+> > 
+> >>
+> >>>>>
+> >>>>> The USB-C connector is attached both to the HS and SS PHYs, so I think
+> >>>>> you should represent this external to this node and use of_graph to
+> >>>>> query it.
+> >>>>
+> >>>> but AFAICS we wont be able to retrieve the vbux-supply from an external
+> >>>> node (that interface does not exist).
+> >>>>
+> >>>> rob, do you have a suggestion?
+> >>>
+> >>> Shouldn't the vbus supply be in the phy? Or is this a situation where
+> >>> the phy itself doesn't have the vbus supply going to it because the PMIC
+> >>> gets in the way and handles the vbus for the connector by having the SoC
+> >>> communicate with the PMIC about when to turn the vbus on and off, etc?
+> >>>
+> >>
+> >> That's correct, the VBUS comes out of the PMIC and goes directly to the
+> >> connector.
+> >>
+> >> The additional complicating factor here is that the connector is wired
+> >> to a USB2 phy as well, so we need to wire up detection and vbus control
+> >> to both of them - but I think this will be fine, if we can only figure
+> >> out a sane way of getting hold of the vbus-supply.
+> >>
+> > 
+> > Does it really matter to describe this situation though? Maybe it's
+> > simpler to throw the vbus supply into the phy and control it from the
+> > phy driver, even if it never really goes there. Or put it into the
+> > toplevel usb controller?
+> > 
+> that would work for me - the connector definition seemed a better way to
+> explain the connectivity but since we cant retrieve the supply from the
+> external node is not of much functional use.
 > 
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> ---
->  Documentation/devicetree/bindings/arm/amlogic.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+> but please let me know how to proceed. shall I add the supply back to
+> the phy?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Putting it in the toplevel usb node makes sense to me, since that's
+usually the driver that knows when it's switching into host mode and
+needs to turn on VBUS. The dwc3-qcom driver & bindings currently don't 
+do this but there's precedent in a couple of the other dwc3 "glues"--see
+Documentation/devicetree/bindings/usb/{amlogic\,dwc3,omap-usb}.txt
+
+One exception is if the PMIC is also USB-PD capable and can do power
+role swap, in which case the VBUS control needs to be done by the TCPM,
+so that'd be a case where having vbus-supply in the connector node might
+make more sense.
+
+Jack
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
