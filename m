@@ -1,40 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] PCI: Remove unused includes and superfluous struct
- declaration
-Date: Tue, 3 Sep 2019 18:20:10 +0100
-Message-ID: <20190903172010.GA26505@bogus>
-References: <20190901112506.8469-1-kw@linux.com>
- <20190903113059.2901-1-kw@linux.com>
+Subject: Re: [PATCH net-next v3 2/3] dt-bindings: net: dsa: mt7530: Add
+ support for port 5
+Date: Tue, 3 Sep 2019 18:28:53 +0100
+Message-ID: <20190903172853.GA14176@bogus>
+References: <20190902130226.26845-1-opensource@vdorst.com>
+ <20190902130226.26845-3-opensource@vdorst.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190903113059.2901-1-kw@linux.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Wilczynski <kw@linux.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Joerg Roedel <joro@8bytes.org>, Jingoo Han <jingoohan1@gmail.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <20190902130226.26845-3-opensource@vdorst.com>
+Sender: netdev-owner@vger.kernel.org
+Cc: Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Matthias Brugger <matthias.bgg@gmail.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Russell King <linux@armlinux.org.uk>, John Crispin <john@phrozen.org>, linux-mips@vger.kernel.org, Frank Wunderlich <frank-w@public-files.de>, =?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 01:30:59PM +0200, Krzysztof Wilczynski wrote:
-> Remove <linux/pci.h> and <linux/msi.h> from being included
-> directly as part of the include/linux/of_pci.h, and remove
-> superfluous declaration of struct of_phandle_args.
+On Mon,  2 Sep 2019 15:02:25 +0200, =?UTF-8?q?Ren=C3=A9=20van=20Dorst?= wrote:
+> MT7530 port 5 has many modes/configurations.
+> Update the documentation how to use port 5.
 > 
-> Move users of include <linux/of_pci.h> to include <linux/pci.h>
-> and <linux/msi.h> directly rather than rely on both being
-> included transitively through <linux/of_pci.h>.
-> 
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> Signed-off-by: René van Dorst <opensource@vdorst.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Herring <robh@kernel.org>
 > ---
->  drivers/iommu/of_iommu.c                          | 2 ++
->  drivers/irqchip/irq-gic-v2m.c                     | 1 +
->  drivers/irqchip/irq-gic-v3-its-pci-msi.c          | 1 +
->  drivers/pci/controller/dwc/pcie-designware-host.c | 1 +
->  drivers/pci/controller/pci-aardvark.c             | 1 +
->  drivers/pci/controller/pci-thunder-pem.c          | 1 +
->  drivers/pci/pci.c                                 | 1 +
->  drivers/pci/probe.c                               | 1 +
->  include/linux/of_pci.h                            | 5 ++---
->  9 files changed, 11 insertions(+), 3 deletions(-)
+> v2->v3:
+> * Remove 'status = "okay";' lines, suggested by Rob Herring
+> v1->v2:
+> * Adding extra note about RGMII2 and gpio use.
+> rfc->v1:
+> * No change
+> 
+>  .../devicetree/bindings/net/dsa/mt7530.txt    | 214 ++++++++++++++++++
+>  1 file changed, 214 insertions(+)
+> 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
