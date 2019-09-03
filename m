@@ -1,59 +1,32 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V2] arm64: dts: imx8mn-ddr4-evk: Enable GPIO LED
-Date: Tue,  3 Sep 2019 09:27:57 -0400
-Message-ID: <1567517277-30919-1-git-send-email-Anson.Huang@nxp.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH] arm64: dts: imx8mn-ddr4-evk: Enable GPIO LED
+Date: Tue, 3 Sep 2019 01:30:28 +0000
+Message-ID: <DB3PR0402MB39163A67EBD2E00310973D97F5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1567457138-3002-1-git-send-email-Anson.Huang@nxp.com>
+ <20190902203144.GA4787@bug>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190902203144.GA4787@bug>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com
+To: Pavel Machek <pavel@ucw.cz>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-i.MX8MN DDR4 EVK board has a GPIO LED to indicate status,
-add support for it.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- Mention color in the label.
----
- arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-index b698061..bf1c097 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-@@ -15,6 +15,18 @@
- 		stdout-path = &uart2;
- 	};
- 
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_led>;
-+
-+		status {
-+			label = "yellow:status";
-+			gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+	};
-+
- 	reg_usdhc2_vmmc: regulator-usdhc2 {
- 		compatible = "regulator-fixed";
- 		pinctrl-names = "default";
-@@ -54,6 +66,12 @@
- 		>;
- 	};
- 
-+	pinctrl_gpio_led: gpioledgrp {
-+		fsl,pins = <
-+			MX8MN_IOMUXC_NAND_READY_B_GPIO3_IO16	0x19
-+		>;
-+	};
-+
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins = <
- 			MX8MN_IOMUXC_I2C1_SCL_I2C1_SCL		0x400001c3
--- 
-2.7.4
+SGksIFBhdmVsDQoNCj4gT24gTW9uIDIwMTktMDktMDIgMTY6NDU6MzgsIEFuc29uIEh1YW5nIHdy
+b3RlOg0KPiA+IGkuTVg4TU4gRERSNCBFVksgYm9hcmQgaGFzIGEgR1BJTyBMRUQgdG8gaW5kaWNh
+dGUgc3RhdHVzLCBhZGQgc3VwcG9ydA0KPiA+IGZvciBpdC4NCj4gDQo+IExFRCBtYWludGFpbmVy
+cyB3YW50IHRvIGJlIG9uIHRoZSBjYyBsaXN0Li4uDQoNClRoZSBnZXRfbWFpbnRhaW5lci5wbCBk
+b2VzIE5PVCBzaG93IHRoZSBMRUQgbWFpbnRhaW5lcnMuLi5CdXQgSSBoYXZlIGFkZGVkIGl0DQpp
+biBWMi4NCg0KPiANCj4gPiBAQCAtMTUsNiArMTUsMTggQEANCj4gPiAgCQlzdGRvdXQtcGF0aCA9
+ICZ1YXJ0MjsNCj4gPiAgCX07DQo+ID4NCj4gPiArCWxlZHMgew0KPiA+ICsJCWNvbXBhdGlibGUg
+PSAiZ3Bpby1sZWRzIjsNCj4gPiArCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiA+ICsJ
+CXBpbmN0cmwtMCA9IDwmcGluY3RybF9ncGlvX2xlZD47DQo+ID4gKw0KPiA+ICsJCXN0YXR1cyB7
+DQo+ID4gKwkJCWxhYmVsID0gInN0YXR1cyI7DQo+ID4gKwkJCWdwaW9zID0gPCZncGlvMyAxNiBH
+UElPX0FDVElWRV9ISUdIPjsNCj4gPiArCQkJZGVmYXVsdC1zdGF0ZSA9ICJvbiI7DQo+ID4gKwkJ
+fTsNCj4gDQo+IEFuZCB3ZSBzaG91bGQgcmVhbGx5IHN0YW5kYXJkaXplIGxhYmVscyBmb3IgdXNl
+ci1jb250cm9sbGVkIHN0YXR1cyBMRURzLg0KPiBNZW50aW9uaW5nIGNvbG9yIHdvdWxkIGJlIG5p
+Y2UsIGZvciBhIHN0YXJ0Lg0KDQpPSywgSSBjaGFuZ2UgdGhlIGxhYmVsIHRvICJ5ZWxsb3c6c3Rh
+dHVzIiBpbiBWMiwgcGxlYXNlIGhlbHAgcmV2aWV3LCB0aGFua3MuDQoNCkFuc29uDQoNCg==
