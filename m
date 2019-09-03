@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 102/167] dt-bindings: mmc: Add disable-cqe-dcmd property.
-Date: Tue,  3 Sep 2019 12:24:14 -0400
-Message-ID: <20190903162519.7136-102-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 138/167] ARM: dts: gemini: Set DIR-685 SPI CS as active low
+Date: Tue,  3 Sep 2019 12:24:50 -0400
+Message-ID: <20190903162519.7136-138-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,39 +9,38 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Christoph Muellner <christoph.muellner@theobroma-systems.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Ulf Hansson <ulf.hansson@linaro.org>, Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 28f22fb755ecf9f933f045bc0afdb8140641b01c ]
+[ Upstream commit f90b8fda3a9d72a9422ea80ae95843697f94ea4a ]
 
-Add disable-cqe-dcmd as optional property for MMC hosts.
-This property allows to disable or not enable the direct command
-features of the command queue engine.
+The SPI to the display on the DIR-685 is active low, we were
+just saved by the SPI library enforcing active low on everything
+before, so set it as active low to avoid ambiguity.
 
-Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-Fixes: 84362d79f436 ("mmc: sdhci-of-arasan: Add CQHCI support for arasan,sdhci-5.1")
+Link: https://lore.kernel.org/r/20190715202101.16060-1-linus.walleij@linaro.org
 Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/gemini-dlink-dir-685.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-index cdbcfd3a4ff21..c269dbe384fea 100644
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -64,6 +64,8 @@ Optional properties:
-   whether pwrseq-simple is used. Default to 10ms if no available.
- - supports-cqe : The presence of this property indicates that the corresponding
-   MMC host controller supports HW command queue feature.
-+- disable-cqe-dcmd: This property indicates that the MMC controller's command
-+  queue engine (CQE) does not support direct commands (DCMDs).
+diff --git a/arch/arm/boot/dts/gemini-dlink-dir-685.dts b/arch/arm/boot/dts/gemini-dlink-dir-685.dts
+index 502a361d1fe90..15d6157b661db 100644
+--- a/arch/arm/boot/dts/gemini-dlink-dir-685.dts
++++ b/arch/arm/boot/dts/gemini-dlink-dir-685.dts
+@@ -65,7 +65,7 @@
+ 		gpio-miso = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+ 		gpio-mosi = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+ 		/* Collides with pflash CE1, not so cool */
+-		cs-gpios = <&gpio0 20 GPIO_ACTIVE_HIGH>;
++		cs-gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
+ 		num-chipselects = <1>;
  
- *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
- polarity properties, we have to fix the meaning of the "normal" and "inverted"
+ 		panel: display@0 {
 -- 
 2.20.1
