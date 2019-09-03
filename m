@@ -1,114 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: serial: Convert riscv,sifive-serial to json-schema
-Date: Tue, 3 Sep 2019 15:24:12 +0100
-Message-ID: <CAL_Jsq+Y3=xXuaqO=UoAShw5OxJA4wDBZVUE3=OT_DL9kw9t-Q@mail.gmail.com>
-References: <1567321765-3738-1-git-send-email-pragnesh.patel@sifive.com>
- <5d6d1b81.1c69fb81.7eabb.cabd@mx.google.com> <CAN8ut8KMjo4KVcgLp6AhZOpuLwWMJ8HeiecH70RgYnLQQ05M9w@mail.gmail.com>
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: [PATCH v2 0/4] Reset xHCI port PHY on disconnect
+Date: Tue, 3 Sep 2019 20:29:35 +0530
+Message-ID: <CABe79T7=Kat6DjUDmOvfA79Ex0tzuU7ov4aoZodbeB=UO8DOZg@mail.gmail.com>
+References: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAN8ut8KMjo4KVcgLp6AhZOpuLwWMJ8HeiecH70RgYnLQQ05M9w@mail.gmail.com>
+In-Reply-To: <1564568395-9980-1-git-send-email-srinath.mannam@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pragnesh Patel <pragnesh.patel@sifive.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 7:52 AM Pragnesh Patel <pragnesh.patel@sifive.com> wrote:
->
-> On Mon, Sep 2, 2019 at 7:09 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Sun, Sep 01, 2019 at 12:39:21PM +0530, Pragnesh Patel wrote:
-> > > Convert the riscv,sifive-serial binding to DT schema using json-schema.
-> > >
-> > > Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
-> > > ---
-> > >  .../devicetree/bindings/serial/sifive-serial.txt   | 33 ------------
-> > >  .../devicetree/bindings/serial/sifive-serial.yaml  | 62 ++++++++++++++++++++++
-> > >  2 files changed, 62 insertions(+), 33 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/serial/sifive-serial.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.txt b/Documentation/devicetree/bindings/serial/sifive-serial.txt
-> > > deleted file mode 100644
-> > > index c86b1e5..0000000
-> > > --- a/Documentation/devicetree/bindings/serial/sifive-serial.txt
-> > > +++ /dev/null
-> > > @@ -1,33 +0,0 @@
-> > > -SiFive asynchronous serial interface (UART)
-> > > -
-> > > -Required properties:
-> > > -
-> > > -- compatible: should be something similar to
-> > > -           "sifive,<chip>-uart" for the UART as integrated
-> > > -           on a particular chip, and "sifive,uart<version>" for the
-> > > -           general UART IP block programming model.  Supported
-> > > -           compatible strings as of the date of this writing are:
-> > > -           "sifive,fu540-c000-uart" for the SiFive UART v0 as
-> > > -           integrated onto the SiFive FU540 chip, or "sifive,uart0"
-> > > -           for the SiFive UART v0 IP block with no chip integration
-> > > -           tweaks (if any)
-> > > -- reg: address and length of the register space
-> > > -- interrupts: Should contain the UART interrupt identifier
-> > > -- clocks: Should contain a clock identifier for the UART's parent clock
-> > > -
-> > > -
-> > > -UART HDL that corresponds to the IP block version numbers can be found
-> > > -here:
-> > > -
-> > > -https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/uart
-> > > -
-> > > -
-> > > -Example:
-> > > -
-> > > -uart0: serial@10010000 {
-> > > -     compatible = "sifive,fu540-c000-uart", "sifive,uart0";
-> > > -     interrupt-parent = <&plic0>;
-> > > -     interrupts = <80>;
-> > > -     reg = <0x0 0x10010000 0x0 0x1000>;
-> > > -     clocks = <&prci PRCI_CLK_TLCLK>;
-> > > -};
-> > > diff --git a/Documentation/devicetree/bindings/serial/sifive-serial.yaml b/Documentation/devicetree/bindings/serial/sifive-serial.yaml
-> > > new file mode 100644
-> > > index 0000000..56fa935
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/serial/sifive-serial.yaml
-> > > @@ -0,0 +1,62 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/serial/sifive-serial.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: SiFive asynchronous serial interface (UART)
-> > > +
-> > > +maintainers:
-> > > +  - Pragnesh Patel <pragnesh.patel@sifive.com>
-> > > +  - Paul Walmsley  <paul.walmsley@sifive.com>
-> > > +  - Palmer Dabbelt <palmer@sifive.com>
-> > > +
-> > > +allOf:
-> > > +  - $ref: /schemas/serial.yaml#
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - sifive,fu540-c000-uart
-> > > +      - sifive,uart0
-> >
-> > This is wrong and should have warned if you tested this on 5.3.
-> >
-> > items:
-> >   - const: sifive,fu540-c000-uart
-> >   - const: sifive,uart0
-> >
->
-> Thanks for the correction, i will update this in v2 patch.
->
-> I haven't got any warnings due to my patch.
-> For your reference, following is the list of warnings when i did "make
-> dtbs_check" (kernel version - 5.3.0-rc7)
+Hi Mathias,
 
-Thanks for the confirmation. I've now fixed it to correctly catch
-that. Update your dtschema to the latest.
+Could you please help to review this patch series?
 
-Rob
+Regards,
+Srinath.
+
+On Wed, Jul 31, 2019 at 3:50 PM Srinath Mannam
+<srinath.mannam@broadcom.com> wrote:
+>
+> This patch set adds a quirk in xHCI driver to reset PHY of xHCI port on
+> its disconnect event.
+>
+> This patch set is based on Linux-5.2-rc4.
+>
+> Changes from v1:
+>   - Addressed Mathias's comments
+>     - Modified mapping of HC ports and their corresponding PHYs
+>   - Addressed Rob's comments
+>     - Removed usb-phy-port-reset DT property.
+>     - Added quirk in platform data using HCI compatible string.
+>   - Add phy ports in phy attr structure to have enabled ports bitmask.
+>   - Modified #phy-cells of sr-phy to pass phy ports bitmask.
+>
+> Srinath Mannam (4):
+>   phy: Add phy ports in attrs
+>   dt-bindings: phy: Modify Stingray USB PHY #phy-cells
+>   phy: sr-usb: Set phy ports
+>   dt-bindings: usb-xhci: Add platform specific compatible for Stingray
+>     xHCI
+>   drivers: xhci: Add quirk to reset xHCI port PHY
+>
+>  .../devicetree/bindings/phy/brcm,stingray-usb-phy.txt | 14 ++++++++------
+>  Documentation/devicetree/bindings/usb/usb-xhci.txt    |  1 +
+>  drivers/phy/broadcom/phy-bcm-sr-usb.c                 |  9 ++++++++-
+>  drivers/usb/core/hcd.c                                |  6 ++++++
+>  drivers/usb/core/phy.c                                | 19 +++++++++++++++++++
+>  drivers/usb/core/phy.h                                |  1 +
+>  drivers/usb/host/xhci-plat.c                          | 10 ++++++++++
+>  drivers/usb/host/xhci-plat.h                          |  1 +
+>  drivers/usb/host/xhci-ring.c                          |  9 ++++++---
+>  drivers/usb/host/xhci.h                               |  1 +
+>  include/linux/phy/phy.h                               | 10 ++++++++++
+>  include/linux/usb/hcd.h                               |  1 +
+>  12 files changed, 72 insertions(+), 10 deletions(-)
+>
+> --
+> 2.7.4
+>
