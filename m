@@ -1,94 +1,43 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 068/167] iio: adc: exynos-adc: Use proper number of channels for Exynos4x12
-Date: Tue,  3 Sep 2019 12:23:40 -0400
-Message-ID: <20190903162519.7136-68-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 098/167] ARM: dts: qcom: ipq4019: fix PCI range
+Date: Tue,  3 Sep 2019 12:24:10 -0400
+Message-ID: <20190903162519.7136-98-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Stable@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mathias Kresin <dev@kresin.me>, John Crispin <john@phrozen.org>, Andy Gross <andy.gross@linaro.org>, Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Mathias Kresin <dev@kresin.me>
 
-[ Upstream commit 103cda6a3b8d2c10d5f8cd7abad118e9db8f4776 ]
+[ Upstream commit da89f500cb55fb3f19c4b399b46d8add0abbd4d6 ]
 
-Exynos4212 and Exynos4412 have only four ADC channels so using
-"samsung,exynos-adc-v1" compatible (for eight channels ADCv1) on them is
-wrong.  Add a new compatible for Exynos4x12.
+The PCI range is invalid and PCI attached devices doen't work.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Mathias Kresin <dev@kresin.me>
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../bindings/iio/adc/samsung,exynos-adc.txt     |  4 +++-
- drivers/iio/adc/exynos_adc.c                    | 17 +++++++++++++++++
- 2 files changed, 20 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
-index a10c1f89037de..e1fe02f3e3e9c 100644
---- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
-@@ -11,11 +11,13 @@ New driver handles the following
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index 78db67337ed4a..2c3168d95a2d5 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -387,7 +387,7 @@
+ 			#size-cells = <2>;
  
- Required properties:
- - compatible:		Must be "samsung,exynos-adc-v1"
--				for exynos4412/5250 controllers.
-+				for Exynos5250 controllers.
- 			Must be "samsung,exynos-adc-v2" for
- 				future controllers.
- 			Must be "samsung,exynos3250-adc" for
- 				controllers compatible with ADC of Exynos3250.
-+			Must be "samsung,exynos4212-adc" for
-+				controllers compatible with ADC of Exynos4212 and Exynos4412.
- 			Must be "samsung,exynos7-adc" for
- 				the ADC in Exynos7 and compatibles
- 			Must be "samsung,s3c2410-adc" for
-diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-index 41da522fc6735..1ca2c4d39f878 100644
---- a/drivers/iio/adc/exynos_adc.c
-+++ b/drivers/iio/adc/exynos_adc.c
-@@ -115,6 +115,7 @@
- #define MAX_ADC_V2_CHANNELS		10
- #define MAX_ADC_V1_CHANNELS		8
- #define MAX_EXYNOS3250_ADC_CHANNELS	2
-+#define MAX_EXYNOS4212_ADC_CHANNELS	4
- #define MAX_S5PV210_ADC_CHANNELS	10
+ 			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000
+-				  0x82000000 0 0x48000000 0x48000000 0 0x10000000>;
++				  0x82000000 0 0x40300000 0x40300000 0 0x400000>;
  
- /* Bit definitions common for ADC_V1 and ADC_V2 */
-@@ -271,6 +272,19 @@ static void exynos_adc_v1_start_conv(struct exynos_adc *info,
- 	writel(con1 | ADC_CON_EN_START, ADC_V1_CON(info->regs));
- }
- 
-+/* Exynos4212 and 4412 is like ADCv1 but with four channels only */
-+static const struct exynos_adc_data exynos4212_adc_data = {
-+	.num_channels	= MAX_EXYNOS4212_ADC_CHANNELS,
-+	.mask		= ADC_DATX_MASK,	/* 12 bit ADC resolution */
-+	.needs_adc_phy	= true,
-+	.phy_offset	= EXYNOS_ADCV1_PHY_OFFSET,
-+
-+	.init_hw	= exynos_adc_v1_init_hw,
-+	.exit_hw	= exynos_adc_v1_exit_hw,
-+	.clear_irq	= exynos_adc_v1_clear_irq,
-+	.start_conv	= exynos_adc_v1_start_conv,
-+};
-+
- static const struct exynos_adc_data exynos_adc_v1_data = {
- 	.num_channels	= MAX_ADC_V1_CHANNELS,
- 	.mask		= ADC_DATX_MASK,	/* 12 bit ADC resolution */
-@@ -492,6 +506,9 @@ static const struct of_device_id exynos_adc_match[] = {
- 	}, {
- 		.compatible = "samsung,s5pv210-adc",
- 		.data = &exynos_adc_s5pv210_data,
-+	}, {
-+		.compatible = "samsung,exynos4212-adc",
-+		.data = &exynos4212_adc_data,
- 	}, {
- 		.compatible = "samsung,exynos-adc-v1",
- 		.data = &exynos_adc_v1_data,
+ 			interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>;
+ 			interrupt-names = "msi";
 -- 
 2.20.1
