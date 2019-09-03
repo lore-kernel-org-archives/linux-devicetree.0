@@ -1,210 +1,246 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH 4/4] arm64: dts: add support for A1 based Amlogic AD401
-Date: Tue, 3 Sep 2019 02:51:15 -0400
-Message-ID: <1567493475-75451-5-git-send-email-jianxin.pan@amlogic.com>
-References: <1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com>
+From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC PATCH V2 4/4] platform: mtk-isp: Add Mediatek FD driver
+Date: Tue, 3 Sep 2019 16:04:29 +0900
+Message-ID: <CAAFQd5DWM=R7sFHYGhhR_rXrzgRnc4xtH_t8Pig-4tcP9KTSYg@mail.gmail.com>
+References: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <1562661672-22439-5-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <20190802082815.GA203993@chromium.org> <1566724680.20680.8.camel@mtksdccf07>
+ <CAAFQd5Dw+jaT-+LAUEVeB8W1zdnOgPw7u+aCfDWhYW1SfbzO8g@mail.gmail.com>
+ <1566957625.20680.33.camel@mtksdccf07>
+ <CAAFQd5D-Yg1FjUE_rwmqfS1gvfE0=MZ=r-ziueU_37-uo9QTbw@mail.gmail.com>
+ <1567424859.18318.32.camel@mtksdccf07>
+ <CAAFQd5AGgeFbto6V1KkL0dp1QPziOKV3pWQDU2OJ+S1QKvnBdg@mail.gmail.com>
+ <1567493081.18318.49.camel@mtksdccf07>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, Qiufang Dai <qiufang.dai@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Carlo Caione <carlo@caione.org>, Tao Zeng <tao.zeng@amlogic.com>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1567493081.18318.49.camel@mtksdccf07>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UG8tWWFuZyBIdWFuZyAo6buD5p+P6Zm9KQ==?= <po-yang.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?U2ogSHVhbmcgKOm7g+S/oeeSiyk=?= <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <matthias.bgg>
 List-Id: devicetree@vger.kernel.org
 
-Add basic support for the Amlogic A1 based Amlogic AD401 board:
-which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
-Timer, UART. It's capable of booting up into the serial console.
+On Tue, Sep 3, 2019 at 3:44 PM Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>
+> On Tue, 2019-09-03 at 13:19 +0800, Tomasz Figa wrote:
+> > On Mon, Sep 2, 2019 at 8:47 PM Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > >
+> > > Hi Tomasz,
+> > >
+> > > On Fri, 2019-08-30 at 16:33 +0800, Tomasz Figa wrote:
+> > > > On Wed, Aug 28, 2019 at 11:00 AM Jerry-ch Chen
+> > > > <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > >
+> > > > > Hi Tomasz,
+> > > > >
+> > > > > On Mon, 2019-08-26 at 14:36 +0800, Tomasz Figa wrote:
+> > > > > > Hi Jerry,
+> > > > > >
+> > > > > > On Sun, Aug 25, 2019 at 6:18 PM Jerry-ch Chen
+> > > > > > <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > > > >
+> > > > > > > Hi Tomasz,
+> > > > > > >
+> > > > > > > On Fri, 2019-08-02 at 16:28 +0800, Tomasz Figa wrote:
+> > > > > > > > Hi Jerry,
+> > > > > > > >
+> > > > > > > > On Tue, Jul 09, 2019 at 04:41:12PM +0800, Jerry-ch Chen wrote:
+> > [snip]
+> > > > > static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
+> > > > >                                   unsigned int *num_buffers,
+> > > > >                                   unsigned int *num_planes,
+> > > > >                                   unsigned int sizes[],
+> > > > >                                   struct device *alloc_devs[])
+> > > > > {
+> > > > >         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+> > > > >         struct device *dev = ctx->dev;
+> > > > >         unsigned int size[2];
+> > > > >
+> > > > >         switch (vq->type) {
+> > > > >         case V4L2_BUF_TYPE_META_CAPTURE:
+> > > > >                 size[0] = ctx->dst_fmt.buffersize;
+> > > > >                 break;
+> > > > >         case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
+> > > > >                 size[0] = ctx->src_fmt.plane_fmt[0].sizeimage;
+> > > > >                 if (*num_planes == 2)
+> > > > >                         size[1] = ctx->src_fmt.plane_fmt[1].sizeimage;
+> > > > >                 break;
+> > > > >         }
+> > > > >
+> > > > >         if (*num_planes == 1) {
+> > > > >                 if (sizes[0] < size[0])
+> > > > >                         return -EINVAL;
+> > > > >         } else if (*num_planes == 2) {
+> > > > >                 if ((sizes[0] < size[0]) && (sizes[1] < size[1]))
+> > > > >                         return -EINVAL;
+> > > >
+> > > > Can we just use a loop here and combine the 2 cases above?
+> > > >
+> > > > Also, we need to fail with -EINVAL if *num_planes is > 2.
+> > > >
+> > > > >         } else {
+> > > > >                 *num_planes = 1;
+> > > > >                 sizes[0] = size[0];
+> > > >
+> > > > This should be the case if *num_planes == 0 and the number of planes
+> > > > and sizes should match the currently active format.
+> > > >
+> > > I appreciate your comments,
+> > >
+> > > Ok, I will update as following:
+> > > static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
+> > >                                   unsigned int *num_buffers,
+> > >                                   unsigned int *num_planes,
+> > >                                   unsigned int sizes[],
+> > >                                   struct device *alloc_devs[])
+> > > {
+> > >         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+> > >         unsigned int size[2];
+> > >         unsigned int plane;
+> > >
+> > >         switch (vq->type) {
+> > >         case V4L2_BUF_TYPE_META_CAPTURE:
+> > >                 size[0] = ctx->dst_fmt.buffersize;
+> > >                 break;
+> > >         case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
+> > >                 size[0] = ctx->src_fmt.plane_fmt[0].sizeimage;
+> > >                 if (*num_planes == 2)
+> > >                         size[1] = ctx->src_fmt.plane_fmt[1].sizeimage;
+> > >                 break;
+> > >         }
+> > >
+> > >         if (*num_planes > 2)
+> > >                 return -EINVAL;
+> > >         if (*num_planes == 0) {
+> > >                 if (vq->type == V4L2_BUF_TYPE_META_CAPTURE) {
+> > >                         sizes[0] = ctx->dst_fmt.buffersize;
+> > >                         *num_planes = 1;
+> > >                         return 0;
+> > >                 }
+> > >
+> > >                 *num_planes = ctx->src_fmt.num_planes;
+> > >                 for (plane = 0; plane < *num_planes; plane++)
+> > >                         sizes[plane] = ctx->src_fmt.plane_fmt[plane].sizeimage;
+> > >                 return 0;
+> > >         }
+> > >
+> > >         for (plane = 0; plane < *num_planes; plane++) {
+> > >                 if(sizes[plane] < size[plane])
+> > >                         return -EINVAL;
+> > >         }
+> > >         return 0;
+> > > }
+> > >
+> >
+> > Looks good, thanks!
+> >
+> > > > >         }
+> > > > >
+> > > > >         return 0;
+> > > > > }
+> > > > >
+> > > > > > [snip]
+> > > > > >
+> > > > > > > > > +static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
+> > > > > > > > > +{
+> > > > > > > > > +   struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+> > > > > > > > > +   struct vb2_buffer *vb;
+> > > > > > > >
+> > > > > > > > How do we guarantee here that the hardware isn't still accessing the buffers
+> > > > > > > > removed below?
+> > > > > > > >
+> > > > > > > Maybe we can check the driver state flag and aborting the unfinished
+> > > > > > > jobs?
+> > > > > > > (fd_hw->state == FD_ENQ)
+> > > > > > >
+> > > > > >
+> > > > > > Yes, we need to either cancel or wait for the currently processing
+> > > > > > job. It depends on hardware capabilities, but cancelling is generally
+> > > > > > preferred for the lower latency.
+> > > > > >
+> > > > > Ok, it the state is ENQ, then we can disable the FD hw by controlling
+> > > > > the registers.
+> > > > >
+> > > > > for example:
+> > > > >         writel(0x0, fd->fd_base + FD_HW_ENABLE);
+> > > > >         writel(0x0, fd->fd_base + FD_INT_EN);
+> > > > >
+> > > >
+> > > > What's exactly the effect of writing 0 to FD_HW_ENABLE?
+> > > >
+> > > Sorry, my last reply didn't solve the question,
+> > > we should implement a mtk_fd_job_abort() for v4l2_m2m_ops().
+> > >
+> > > which is able to readl_poll_timeout_atomic()
+> > > and check the HW busy bits in the register FD_INT_EN;
+> > >
+> > > if they are not cleared until timeout, we could handle the last
+> > > processing job.
+> > > Otherwise, the FD irq handler should have handled the last processing
+> > > job and we could continue the stop_streaming().
+> > >
+> > > For job_abort():
+> > > static void mtk_fd_job_abort(void *priv)
+> > > {
+> > >         struct mtk_fd_ctx *ctx = priv;
+> > >         struct mtk_fd_dev *fd = ctx->fd_dev;
+> > >         u32 val;
+> > >         u32 ret;
+> > >
+> > >         ret = readl_poll_timeout_atomic(fd->fd_base + MTK_FD_REG_OFFSET_INT_EN,
+> > >                                         val,
+> > >                                         (val & MTK_FD_HW_BUSY_MASK) ==
+> > >                                         MTK_FD_HW_STATE_IS_BUSY,
+> > >                                         USEC_PER_MSEC, MTK_FD_STOP_HW_TIMEOUT);
+> >
+> > Hmm, would it be possible to avoid the busy wait by having a
+> > completion that could be signalled from the interrupt handler?
+> >
+> > Best regards,
+> > Tomasz
+>
+> I suppose that would be wakeup a wait queue in the interrupt handler,
+> the the wait_event_interrupt_timeout() will be used in here and system
+> suspend e.g. mtk_fd_suspend().
 
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/Makefile           |   1 +
- arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts |  30 ++++++
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi      | 121 +++++++++++++++++++++++++
- 3 files changed, 152 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+Yes, that should work.
 
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index edbf128..1720c45 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -36,3 +36,4 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-vega-s96.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-sm1-sei610.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-sm1-khadas-vim3l.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-a1-ad401.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
-new file mode 100644
-index 00000000..3c05cc0
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
-@@ -0,0 +1,30 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-a1.dtsi"
-+
-+/ {
-+	compatible = "amlogic,ad401", "amlogic,a1";
-+	model = "Amlogic Meson A1 AD401 Development Board";
-+
-+	aliases {
-+		serial0 = &uart_AO_B;
-+	};
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+	memory@0 {
-+		device_type = "memory";
-+		linux,usable-memory = <0x0 0x0 0x0 0x8000000>;
-+	};
-+};
-+
-+&uart_AO_B {
-+	status = "okay";
-+	/*pinctrl-0 = <&uart_ao_a_pins>;*/
-+	/*pinctrl-names = "default";*/
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-new file mode 100644
-index 00000000..b98d648
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -0,0 +1,121 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "amlogic,a1";
-+
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <0x2>;
-+		#size-cells = <0x0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a35";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a35";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+		};
-+
-+		l2: l2-cache0 {
-+			compatible = "cache";
-+		};
-+	};
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		linux,cma {
-+			compatible = "shared-dma-pool";
-+			reusable;
-+			size = <0x0 0x800000>;
-+			alignment = <0x0 0x400000>;
-+			linux,cma-default;
-+		};
-+	};
-+
-+	sm: secure-monitor {
-+		compatible = "amlogic,meson-gxbb-sm";
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		uart_AO: serial@fe001c00 {
-+			compatible = "amlogic,meson-gx-uart",
-+				     "amlogic,meson-ao-uart";
-+			reg = <0x0 0xfe001c00 0x0 0x18>;
-+			interrupts = <GIC_SPI 25 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&xtal>, <&xtal>, <&xtal>;
-+			clock-names = "xtal", "pclk", "baud";
-+			status = "disabled";
-+		};
-+
-+		uart_AO_B: serial@fe002000 {
-+			compatible = "amlogic,meson-gx-uart",
-+				     "amlogic,meson-ao-uart";
-+				     reg = <0x0 0xfe002000 0x0 0x18>;
-+			interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&xtal>, <&xtal>, <&xtal>;
-+			clock-names = "xtal", "pclk", "baud";
-+			status = "disabled";
-+		};
-+
-+		gic: interrupt-controller@ff901000 {
-+			compatible = "arm,gic-400";
-+			reg = <0x0 0xff901000 0x0 0x1000>,
-+			      <0x0 0xff902000 0x0 0x2000>,
-+			      <0x0 0xff904000 0x0 0x2000>,
-+			      <0x0 0xff906000 0x0 0x2000>;
-+			interrupt-controller;
-+			interrupts = <GIC_PPI 9
-+				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10
-+			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	xtal: xtal-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		clock-output-names = "xtal";
-+		#clock-cells = <0>;
-+	};
-+};
--- 
-2.7.4
+> Or do you suggest to wait_event_interrupt_timeout() every frame in the
+> mtk_fd_ipi_handler()?
+
+Nope, we shouldn't need that.
+
+> I think maybe the readl_poll_timeout_atomic would be good enough.
+>
+
+Not really. Busy waiting should be avoided as much as possible. What's
+the point of entering suspend if you end up burning the power by
+spinning the CPU for some milliseconds?
+
+>
+> One more thing, for the mtk_fd_video_device_register()
+> Sorry that I would need to use intermediate variable here since the 80
+> columns check.
+>
+>         function = MEDIA_ENT_F_PROC_VIDEO_STATISTICS;
+>         ret = v4l2_m2m_register_media_controller(m2m_dev, vfd, function);
+
+Why not just make it like this:
+
+ret = v4l2_m2m_register_media_controller(m2m_dev,
+                MEDIA_ENT_F_PROC_VIDEO_STATISTICS);
+
+The above line is aligned using tabs so that its end is as close to
+the 80 character boundary as possible.
+
+Best regards,
+Tomasz
