@@ -1,45 +1,63 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH 11/13] dt-bindings: mips: Add loongson cpus & boards
-Date: Tue, 3 Sep 2019 09:07:51 +0000
-Message-ID: <20190903085904.bwmm4knaodopvzvd@pburton-laptop>
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
- <20190827085302.5197-12-jiaxun.yang@flygoat.com>
- <CAL_JsqL6htVye-LSBWw1WwRy9xH=zwuH6gurscwoCWj9Te_hAg@mail.gmail.com>
- <d94eff2b-76ec-5cd2-512d-5ee0406a1bb9@flygoat.com>
- <20190827204105.7nyt4pi7lvxse5ij@pburton-laptop>
- <CAL_Jsq+VmFi6r1-WOa9RJ4vfqsZLqcn5HMbv1oyQjhtJ8Qd8Lw@mail.gmail.com>
+From: Luca Ceresoli <luca@lucaceresoli.net>
+Subject: Re: [RFC,v2 3/6] media: dt-bindings: add DS90UB954-Q1 video
+ deserializer
+Date: Tue, 3 Sep 2019 11:09:55 +0200
+Message-ID: <63d99d6d-ecdd-7dd8-0dcb-126bfd89b258@lucaceresoli.net>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-4-luca@lucaceresoli.net> <20190902204841.GB7253@kunai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+VmFi6r1-WOa9RJ4vfqsZLqcn5HMbv1oyQjhtJ8Qd8Lw@mail.gmail.com>
+In-Reply-To: <20190902204841.GB7253@kunai>
 Content-Language: en-US
-Content-ID: <4A796A79D38DD0458284E8705F3EA529@namprd22.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: "open list:MIPS" <linux-mips@vger.kernel.org>, Huacai Chen <chenhc@lemote.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.co>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Vladimir Zapolskiy <vz@mleia.com>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Wolfram,
 
-On Mon, Sep 02, 2019 at 03:50:47PM +0100, Rob Herring wrote:
-> > In general on MIPS we detect CPU properties at runtime from coprocessor
-> > 0 registers & similar sources of information, so there's not really a
-> > need to specify anything about the CPU in devicetree.
->=20
-> We thought the same thing initially for Arm... Mostly what is in DT is
-> not what is discoverable. Are clock speeds, power domains, low power
-> states, etc. all discoverable?
+On 02/09/19 22:48, Wolfram Sang wrote:
+> 
+>> + - i2c-alias-pool: list of I2C addresses that are known to be available on the
+>> +                   "local" (SoC-to-deser) I2C bus; they will be picked at
+>> +		   runtime and used as aliases to reach remove I2C chips
+> 
+> After some internal discussion, I have been kinda convinced that it may
+> be better to assume all non-described addresses are free to use and
+> enter the pool.
+> 
+> The problem with the binding above is that you may run out of aliases
+> depending on how many aliases one to-be-attached module needs or how
+> many modules will be attached.
 
-No, that's a good point - clocks etc may need to be specified in DT. I
-just don't see any of that in this patchset - it appears all that is
-specified is cache sizes which we already detect. So in this case I
-don't see a need for including CPUs in DT at all.
+Not if you define enough addresses in the pool. E.g. the DS90UB954
+hardware can have 8 aliases per port, so if you have (n_ports * 8)
+addresses in the pool the problem is solved.
 
-Jiaxun - did you add all this information to DT to avoid the "cacheinfo:
-Unable to detect cache hierarchy for CPU" messages during boot? If so
-that should be fixed by commit b8bea8a5e5d9 ("mips: fix cacheinfo"). If
-not, could you describe why the CPU nodes are needed here?
+> And another add-on module with
+> non-repogrammable devices may occupy addresses from the defined pool
+> above.
+
+You mean a new device on the local (SoC-to-ATR) bus? Well, it could as
+well occupy a non-described address that the ATR has already picked as
+an alias.
+
+> I am not perfectly happy with the assumption that all undescribed
+> addresses are automatically free. That also might need DTS updates to
+> describe all clients properly. But this change only needs to be done
+> once, and it will improve the description of the hardware.
+
+Right, but I still suspect some users won't do their homework and
+discover address conflicts at runtime, maybe months later, in a painful
+way. Also a chip might be undocumented on a given board, so they could
+do their homework and still have problems.
+
+Despite my comments, I'm not strongly against your proposal. To me it
+doesn't seem to solve any problem, while it does introduce some degree
+of risk. Could you elaborate more on but what benefit it introduces?
 
 Thanks,
-    Paul
+-- 
+Luca
