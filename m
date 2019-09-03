@@ -1,66 +1,72 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 090/167] arm64: dts: stratix10: add the sysmgr-syscon property from the gmac's
-Date: Tue,  3 Sep 2019 12:24:02 -0400
-Message-ID: <20190903162519.7136-90-sashal@kernel.org>
-References: <20190903162519.7136-1-sashal@kernel.org>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI
+ config register
+Date: Tue, 3 Sep 2019 11:07:22 -0600
+Message-ID: <20190903170722.GA31716@codeaurora.org>
+References: <20190829181203.2660-1-ilina@codeaurora.org>
+ <20190829181203.2660-6-ilina@codeaurora.org>
+ <5d6d1b72.1c69fb81.ee88.efcf@mx.google.com>
+ <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Dinh Nguyen <dinguyen@kernel.org>, Ley Foon Tan <ley.foon.tan@intel.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Rob Herring <robh@kernel.org>, swboyd@chromium.org, evgreen@chromium.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen@kernel.org>
+On Mon, Sep 02 2019 at 07:58 -0600, Marc Zyngier wrote:
+>On 02/09/2019 14:38, Rob Herring wrote:
+>> On Thu, Aug 29, 2019 at 12:11:54PM -0600, Lina Iyer wrote:
+>>> In addition to configuring the PDC, additional registers that interface
+>>> the GIC have to be configured to match the GPIO type. The registers on
+>>> some QCOM SoCs are access restricted, while on other SoCs are not. They
+>>> SoCs with access restriction to these SPI registers need to be written
+>>
+>> Took me a minute to figure out this is GIC SPI interrupts, not SPI bus.
+>>
+>>> from the firmware using the SCM interface. Add a flag to indicate if the
+>>> register is to be written using SCM interface.
+>>>
+>>> Cc: devicetree@vger.kernel.org
+>>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>>> ---
+>>>  .../bindings/interrupt-controller/qcom,pdc.txt           | 9 ++++++++-
+>>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+>>> index 8e0797cb1487..852fcba98ea6 100644
+>>> --- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+>>> @@ -50,15 +50,22 @@ Properties:
+>>>  		    The second element is the GIC hwirq number for the PDC port.
+>>>  		    The third element is the number of interrupts in sequence.
+>>>
+>>> +- qcom,scm-spi-cfg:
+>>> +	Usage: optional
+>>> +	Value type: <bool>
+>>> +	Definition: Specifies if the SPI configuration registers have to be
+>>> +		    written from the firmware.
+>>> +
+>>>  Example:
+>>>
+>>>  	pdc: interrupt-controller@b220000 {
+>>>  		compatible = "qcom,sdm845-pdc";
+>>> -		reg = <0xb220000 0x30000>;
+>>> +		reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
+>>
+>> There needs to be a description for reg updated. These aren't GIC
+>> registers are they? Because those go in the GIC node.
+>
+They are not GIC registers. I will update this documentation.
 
-[ Upstream commit 8efd6365417a044db03009724ecc1a9521524913 ]
+>This is completely insane. Why are the GIC registers configured as
+>secure the first place, if they are expected to be in control of the
+>non-secure?
+These are not GIC registers but located on the PDC interface to the GIC.
+They may or may not be secure access controlled, depending on the SoC.
 
-The gmac ethernet driver uses the "altr,sysmgr-syscon" property to
-configure phy settings for the gmac controller.
-
-Add the "altr,sysmgr-syscon" property to all gmac nodes.
-
-This patch fixes:
-
-[    0.917530] socfpga-dwmac ff800000.ethernet: No sysmgr-syscon node found
-[    0.924209] socfpga-dwmac ff800000.ethernet: Unable to parse OF data
-
-Cc: stable@vger.kernel.org
-Reported-by: Ley Foon Tan <ley.foon.tan@intel.com>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-index 5089aa64088fc..9a1ea8a464057 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-@@ -140,6 +140,7 @@
- 			tx-fifo-depth = <16384>;
- 			rx-fifo-depth = <16384>;
- 			snps,multicast-filter-bins = <256>;
-+			altr,sysmgr-syscon = <&sysmgr 0x44 0>;
- 			status = "disabled";
- 		};
- 
-@@ -156,6 +157,7 @@
- 			tx-fifo-depth = <16384>;
- 			rx-fifo-depth = <16384>;
- 			snps,multicast-filter-bins = <256>;
-+			altr,sysmgr-syscon = <&sysmgr 0x48 0>;
- 			status = "disabled";
- 		};
- 
-@@ -172,6 +174,7 @@
- 			tx-fifo-depth = <16384>;
- 			rx-fifo-depth = <16384>;
- 			snps,multicast-filter-bins = <256>;
-+			altr,sysmgr-syscon = <&sysmgr 0x4c 0>;
- 			status = "disabled";
- 		};
- 
--- 
-2.20.1
+Thanks,
+Lina
