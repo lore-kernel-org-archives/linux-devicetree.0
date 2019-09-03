@@ -1,90 +1,87 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: power: syscon-reboot: Convert bindings
- to json-schema
-Date: Tue, 3 Sep 2019 15:29:19 +0200
-Message-ID: <CAJKOXPcGWuW7HP-_kj_OjpPyHtj9gr36bpVUeT5VF2V9wTZY9Q@mail.gmail.com>
-References: <20190902150336.3600-1-krzk@kernel.org> <CAL_JsqK_O+7zQDGxAhAHDW=AkMy+RtyijTXUuRStOgu8CYXe0g@mail.gmail.com>
- <CAJKOXPfO0yBzGFPvF_WwsGGJBZSBGMLsFi2CQ2Eg5RVfyfW3nA@mail.gmail.com>
- <CAL_JsqJUfGBRAv=StPyavQU1DiHnFwUseNCvP6Ce_ZMohJXTXQ@mail.gmail.com>
- <CAJKOXPcjF9nERQxDdSVBLsfc2V_M1_BPZ6iM6EXvEx4tdr3rDQ@mail.gmail.com> <CAL_Jsq+1NEcmvrKPp9N=07CbxT3ZUsViXk7GGb1v0NzsxvWEdg@mail.gmail.com>
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v4 11/11] lib/test_printf: Add tests for %pfw printk
+ modifier
+Date: Tue, 3 Sep 2019 15:38:41 +0200
+Message-ID: <20190903133841.dhb6k2lwx2gglyjs@pathway.suse.cz>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-12-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+1NEcmvrKPp9N=07CbxT3ZUsViXk7GGb1v0NzsxvWEdg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190902083240.20367-12-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: rafael@kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 3 Sep 2019 at 15:12, Rob Herring <robh+dt@kernel.org> wrote:
-> > arch/arm/boot/dts/exynos3250-artik5-eval.dt.yaml: syscon-reboot:
-> > {'regmap': [[9]], 'mask': [[1]], '$nodename': ['syscon-reboot'],
-> > 'value': [[1]], 'offset': [[1024]], 'compatible': ['syscon-reboot']}
-> > is valid under each of {'required': ['mask']}, {'required': ['value',
-> > 'mask']}, {'required': ['value']}
->
-> Ahh, right. 'anyOf' is what we want:
->
-> anyOf:
->   - required: [ value ]
->   - required: [ mask ]
+On Mon 2019-09-02 11:32:40, Sakari Ailus wrote:
+> Add a test for the %pfw printk modifier using software nodes.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  lib/test_printf.c | 37 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
+> diff --git a/lib/test_printf.c b/lib/test_printf.c
+> index 944eb50f38625..9c6d716979fb1 100644
+> --- a/lib/test_printf.c
+> +++ b/lib/test_printf.c
+> @@ -22,6 +22,8 @@
+>  #include <linux/gfp.h>
+>  #include <linux/mm.h>
+>  
+> +#include <linux/property.h>
+> +
+>  #include "../tools/testing/selftests/kselftest_module.h"
+>  
+>  #define BUF_SIZE 256
+> @@ -588,6 +590,40 @@ flags(void)
+>  	kfree(cmp_buffer);
+>  }
+>  
+> +static void __init fwnode_pointer(void)
+> +{
+> +	const struct software_node softnodes[] = {
+> +		{ .name = "first", },
+> +		{ .name = "second", .parent = &softnodes[0], },
+> +		{ .name = "third", .parent = &softnodes[1], },
+> +		{ NULL /* Guardian */ },
+> +	};
+> +	const char * const full_name = "/second/third";
+> +	const char * const full_name_second = "/second";
+> +	const char * const second_name = "second";
+> +	const char * const third_name = "third";
+> +	int rval;
+> +
+> +	rval = software_node_register_nodes(softnodes);
+> +	if (rval) {
+> +		pr_warn("cannot register softnodes; rval %d\n", rval);
+> +		return;
+> +	}
+> +
+> +	test(full_name_second, "%pfw",
+> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
 
-This triggers meta-schema error:
+"ARRAY_SIZE(softnodes) - 3" is quite cryptic.
+Is there any particular reason to use it instead of &softnodes[1] ?
 
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
-Traceback (most recent call last):
-  File "/home/kozik/.local/lib/python3.5/site-packages/dtschema/lib.py",
-line 429, in process_schema
-    DTValidator.check_schema(schema)
-  File "/home/kozik/.local/lib/python3.5/site-packages/dtschema/lib.py",
-line 575, in check_schema
-    raise jsonschema.SchemaError.create_from(error)
-jsonschema.exceptions.SchemaError: Additional properties are not
-allowed ('anyOf' was unexpected)
+And is it expected that it does not print the "/first" parent?
 
-Failed validating 'additionalProperties' in metaschema['allOf'][0]:
-    {'$id': 'http://devicetree.org/meta-schemas/base.yaml#',
-     '$schema': 'http://json-schema.org/draft-07/schema#',
-     'additionalProperties': False,
-     'allOf': [{'$ref': 'http://json-schema.org/draft-07/schema#'}],
-     'description': 'Metaschema for devicetree binding documentation',
-     'properties': {'$id': {'pattern':
-'http://devicetree.org/schemas/.*\\.yaml#'},
-                    '$schema': {'enum':
-['http://devicetree.org/meta-schemas/core.yaml#',
+> +	test(full_name, "%pfw",
+> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+> +	test(full_name, "%pfwf",
+> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+> +	test(second_name, "%pfwP",
+> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
+> +	test(third_name, "%pfwP",
+> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+> +
+> +	software_node_unregister_nodes(softnodes);
+> +}
 
-'http://devicetree.org/meta-schemas/base.yaml#']},
-                    'additionalProperties': {'type': 'boolean'},
-                    'allOf': {'items': {'propertyNames': {'enum': ['$ref',
-                                                                   'if',
-                                                                   'then',
-                                                                   'else']}}},
-                    'definitions': True,
-                    'dependencies': True,
-                    'description': True,
-                    'else': True,
-                    'examples': {'items': {'type': 'string'},
-                                 'type': 'array'},
-                    'if': True,
-                    'maintainers': {'items': {'format': 'email',
-                                              'type': 'string'},
-                                    'type': 'array'},
-                    'oneOf': True,
-                    'patternProperties': True,
-                    'properties': True,
-                    'required': True,
-                    'select': {'allOf': [{'$ref':
-'http://json-schema.org/draft-07/schema#'},
-                                         {'oneOf': [{'properties':
-{'properties': True,
+Anyway, thanks for the tests.
 
-'required': True},
-                                                     'type': 'object'},
-                                                    {'type': 'boolean'}]}]},
-                    'then': True,
-                    'title': {'maxLength': 100},
-                    'unevaluatedProperties': {'type': 'boolean'}},
-     'required': ['$id', '$schema', 'title', 'maintainers']}
-
-Best regards,
-Krzysztof
+Best Regards,
+Petr
