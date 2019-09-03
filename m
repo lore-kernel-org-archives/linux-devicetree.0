@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 099/167] ARM: dts: qcom: ipq4019: Fix MSI IRQ type
-Date: Tue,  3 Sep 2019 12:24:11 -0400
-Message-ID: <20190903162519.7136-99-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 090/167] arm64: dts: stratix10: add the sysmgr-syscon property from the gmac's
+Date: Tue,  3 Sep 2019 12:24:02 -0400
+Message-ID: <20190903162519.7136-90-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,46 +9,58 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Niklas Cassel <niklas.cassel@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Dinh Nguyen <dinguyen@kernel.org>, Ley Foon Tan <ley.foon.tan@intel.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel@linaro.org>
+From: Dinh Nguyen <dinguyen@kernel.org>
 
-[ Upstream commit 97131f85c08e024df49480ed499aae8fb754067f ]
+[ Upstream commit 8efd6365417a044db03009724ecc1a9521524913 ]
 
-The databook clearly states that the MSI IRQ (msi_ctrl_int) is a level
-triggered interrupt.
+The gmac ethernet driver uses the "altr,sysmgr-syscon" property to
+configure phy settings for the gmac controller.
 
-The msi_ctrl_int will be high for as long as any MSI status bit is set,
-thus the IRQ type should be set to IRQ_TYPE_LEVEL_HIGH, causing the
-IRQ handler to keep getting called, as long as any MSI status bit is set.
+Add the "altr,sysmgr-syscon" property to all gmac nodes.
 
-A git grep shows that ipq4019 is the only SoC using snps,dw-pcie that has
-configured this IRQ incorrectly.
+This patch fixes:
 
-Not having the correct IRQ type defined will cause us to lose interrupts,
-which in turn causes timeouts in the PCIe endpoint drivers.
+[    0.917530] socfpga-dwmac ff800000.ethernet: No sysmgr-syscon node found
+[    0.924209] socfpga-dwmac ff800000.ethernet: Unable to parse OF data
 
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Cc: stable@vger.kernel.org
+Reported-by: Ley Foon Tan <ley.foon.tan@intel.com>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index 2c3168d95a2d5..814ab7283228a 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -389,7 +389,7 @@
- 			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000
- 				  0x82000000 0 0x40300000 0x40300000 0 0x400000>;
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index 5089aa64088fc..9a1ea8a464057 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -140,6 +140,7 @@
+ 			tx-fifo-depth = <16384>;
+ 			rx-fifo-depth = <16384>;
+ 			snps,multicast-filter-bins = <256>;
++			altr,sysmgr-syscon = <&sysmgr 0x44 0>;
+ 			status = "disabled";
+ 		};
  
--			interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "msi";
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
+@@ -156,6 +157,7 @@
+ 			tx-fifo-depth = <16384>;
+ 			rx-fifo-depth = <16384>;
+ 			snps,multicast-filter-bins = <256>;
++			altr,sysmgr-syscon = <&sysmgr 0x48 0>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -172,6 +174,7 @@
+ 			tx-fifo-depth = <16384>;
+ 			rx-fifo-depth = <16384>;
+ 			snps,multicast-filter-bins = <256>;
++			altr,sysmgr-syscon = <&sysmgr 0x4c 0>;
+ 			status = "disabled";
+ 		};
+ 
 -- 
 2.20.1
