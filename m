@@ -1,82 +1,47 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 147/167] drm/panel: Add support for Armadeus
- ST0700 Adapt
-Date: Tue,  3 Sep 2019 12:24:59 -0400
-Message-ID: <20190903162519.7136-147-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 101/167] dt-bindings: mmc: Add supports-cqe property
+Date: Tue,  3 Sep 2019 12:24:13 -0400
+Message-ID: <20190903162519.7136-101-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>, Sam Ravnborg <sam@ravnborg.org>
+Cc: Sowjanya Komatineni <skomatineni@nvidia.com>, Thierry Reding <treding@nvidia.com>, Rob Herring <robh@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogU8OpYmFzdGllbiBTenltYW5za2kgPHNlYmFzdGllbi5zenltYW5za2lAYXJtYWRldXMu
-Y29tPgoKWyBVcHN0cmVhbSBjb21taXQgYzQ3OTQ1MGY2MWM3ZjFmMjQ4YzlhNTRhZWRhY2QyYTZj
-YTUyMWZmOCBdCgpUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgdGhlIEFybWFkZXVzIFNUMDcw
-MCBBZGFwdC4gSXQgY29tZXMgd2l0aCBhClNhbnRlayBTVDA3MDBJNVktUkJTTFcgNy4wIiBXVkdB
-ICg4MDB4NDgwKSBURlQgYW5kIGFuIGFkYXB0ZXIgYm9hcmQgc28KdGhhdCBpdCBjYW4gYmUgY29u
-bmVjdGVkIG9uIHRoZSBURlQgaGVhZGVyIG9mIEFybWFkZXVzIERldiBib2FyZHMuCgpDYzogc3Rh
-YmxlQHZnZXIua2VybmVsLm9yZyAjIHY0LjE5ClJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9i
-aEBrZXJuZWwub3JnPgpTaWduZWQtb2ZmLWJ5OiBTw6liYXN0aWVuIFN6eW1hbnNraSA8c2ViYXN0
-aWVuLnN6eW1hbnNraUBhcm1hZGV1cy5jb20+ClNpZ25lZC1vZmYtYnk6IFNhbSBSYXZuYm9yZyA8
-c2FtQHJhdm5ib3JnLm9yZz4KTGluazogaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3Jn
-L3BhdGNoL21zZ2lkLzIwMTkwNTA3MTUyNzEzLjI3NDk0LTEtc2ViYXN0aWVuLnN6eW1hbnNraUBh
-cm1hZGV1cy5jb20KU2lnbmVkLW9mZi1ieTogU2FzaGEgTGV2aW4gPHNhc2hhbEBrZXJuZWwub3Jn
-PgotLS0KIC4uLi9kaXNwbGF5L3BhbmVsL2FybWFkZXVzLHN0MDcwMC1hZGFwdC50eHQgICB8ICA5
-ICsrKysrKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgIHwg
-MjkgKysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCAzOCBpbnNlcnRpb25zKCsp
-CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcGFuZWwvYXJtYWRldXMsc3QwNzAwLWFkYXB0LnR4dAoKZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FybWFkZXVzLHN0MDcw
-MC1hZGFwdC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
-YW5lbC9hcm1hZGV1cyxzdDA3MDAtYWRhcHQudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4
-IDAwMDAwMDAwMDAwMDAuLmEzMGQ2M2RiM2M4ZjcKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hcm1hZGV1cyxzdDA3MDAt
-YWRhcHQudHh0CkBAIC0wLDAgKzEsOSBAQAorQXJtYWRldXMgU1QwNzAwIEFkYXB0LiBBIFNhbnRl
-ayBTVDA3MDBJNVktUkJTTFcgNy4wIiBXVkdBICg4MDB4NDgwKSBURlQgd2l0aAorYW4gYWRhcHRl
-ciBib2FyZC4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZTogImFybWFkZXVz
-LHN0MDcwMC1hZGFwdCIKKy0gcG93ZXItc3VwcGx5OiBzZWUgcGFuZWwtY29tbW9uLnR4dAorCitP
-cHRpb25hbCBwcm9wZXJ0aWVzOgorLSBiYWNrbGlnaHQ6IHNlZSBwYW5lbC1jb21tb24udHh0CmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgYi9kcml2ZXJz
-L2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKaW5kZXggYjFkNDFjNDkyMWRkNS4uNWZkOTRl
-MjA2MDI5NyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5j
-CisrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwpAQCAtNDM2LDYgKzQz
-NiwzMiBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgYW1waXJlX2FtODAwNDgwcjN0
-bXF3YTFoID0gewogCS5idXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I2NjZfMVgxOCwKIH07
-CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZGlzcGxheV90aW1pbmcgc2FudGVrX3N0MDcwMGk1eV9y
-YnNsd19mX3RpbWluZyA9IHsKKwkucGl4ZWxjbG9jayA9IHsgMjY0MDAwMDAsIDMzMzAwMDAwLCA0
-NjgwMDAwMCB9LAorCS5oYWN0aXZlID0geyA4MDAsIDgwMCwgODAwIH0sCisJLmhmcm9udF9wb3Jj
-aCA9IHsgMTYsIDIxMCwgMzU0IH0sCisJLmhiYWNrX3BvcmNoID0geyA0NSwgMzYsIDYgfSwKKwku
-aHN5bmNfbGVuID0geyAxLCAxMCwgNDAgfSwKKwkudmFjdGl2ZSA9IHsgNDgwLCA0ODAsIDQ4MCB9
-LAorCS52ZnJvbnRfcG9yY2ggPSB7IDcsIDIyLCAxNDcgfSwKKwkudmJhY2tfcG9yY2ggPSB7IDIy
-LCAxMywgMyB9LAorCS52c3luY19sZW4gPSB7IDEsIDEwLCAyMCB9LAorCS5mbGFncyA9IERJU1BM
-QVlfRkxBR1NfSFNZTkNfTE9XIHwgRElTUExBWV9GTEFHU19WU1lOQ19MT1cgfAorCQlESVNQTEFZ
-X0ZMQUdTX0RFX0hJR0ggfCBESVNQTEFZX0ZMQUdTX1BJWERBVEFfUE9TRURHRQorfTsKKworc3Rh
-dGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGFybWFkZXVzX3N0MDcwMF9hZGFwdCA9IHsKKwku
-dGltaW5ncyA9ICZzYW50ZWtfc3QwNzAwaTV5X3Jic2x3X2ZfdGltaW5nLAorCS5udW1fdGltaW5n
-cyA9IDEsCisJLmJwYyA9IDYsCisJLnNpemUgPSB7CisJCS53aWR0aCA9IDE1NCwKKwkJLmhlaWdo
-dCA9IDg2LAorCX0sCisJLmJ1c19mb3JtYXQgPSBNRURJQV9CVVNfRk1UX1JHQjY2Nl8xWDE4LAor
-CS5idXNfZmxhZ3MgPSBEUk1fQlVTX0ZMQUdfREVfSElHSCB8IERSTV9CVVNfRkxBR19QSVhEQVRB
-X1BPU0VER0UsCit9OworCiBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgYXVv
-X2IxMDFhdzAzX21vZGUgPSB7CiAJLmNsb2NrID0gNTE0NTAsCiAJLmhkaXNwbGF5ID0gMTAyNCwK
-QEAgLTIzMzAsNiArMjM1Niw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBs
-YXRmb3JtX29mX21hdGNoW10gPSB7CiAJfSwgewogCQkuY29tcGF0aWJsZSA9ICJhbXBpcmUsYW04
-MDA0ODByM3RtcXdhMWgiLAogCQkuZGF0YSA9ICZhbXBpcmVfYW04MDA0ODByM3RtcXdhMWgsCisJ
-fSwgeworCQkuY29tcGF0aWJsZSA9ICJhcm1hZGV1cyxzdDA3MDAtYWRhcHQiLAorCQkuZGF0YSA9
-ICZhcm1hZGV1c19zdDA3MDBfYWRhcHQsCiAJfSwgewogCQkuY29tcGF0aWJsZSA9ICJhdW8sYjEw
-MWF3MDMiLAogCQkuZGF0YSA9ICZhdW9fYjEwMWF3MDMsCi0tIAoyLjIwLjEKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+
+[ Upstream commit c7fddbd5db5cffd10ed4d18efa20e36803d1899f ]
+
+Add supports-cqe optional property for MMC hosts.
+
+This property is used to identify the specific host controller
+supporting command queue.
+
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+index f5a0923b34ca1..cdbcfd3a4ff21 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+@@ -62,6 +62,8 @@ Optional properties:
+   be referred to mmc-pwrseq-simple.txt. But now it's reused as a tunable delay
+   waiting for I/O signalling and card power supply to be stable, regardless of
+   whether pwrseq-simple is used. Default to 10ms if no available.
++- supports-cqe : The presence of this property indicates that the corresponding
++  MMC host controller supports HW command queue feature.
+ 
+ *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+ polarity properties, we have to fix the meaning of the "normal" and "inverted"
+-- 
+2.20.1
