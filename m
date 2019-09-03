@@ -1,173 +1,82 @@
-From: "Ramuthevar, Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
- for LGM SDXC PHY
-Date: Tue, 3 Sep 2019 09:57:48 +0800
-Message-ID: <9f4d6bdd-072a-ab71-1ef1-1d00c22bd064@linux.intel.com>
-References: <20190828124315.48448-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190828124315.48448-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190902033716.GA18092@bogus>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCH v3 10/11] arm64: dts: layerscape: Add PCIe EP node for
+ ls1088a
+Date: Tue, 3 Sep 2019 02:01:32 +0000
+Message-ID: <AM5PR04MB329926C6F424C4BE1CE9B787F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+ <20190902031716.43195-11-xiaowei.bao@nxp.com>
+ <20190902130628.GL9720@e119886-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190902033716.GA18092@bogus>
+In-Reply-To: <20190902130628.GL9720@e119886-lin.cambridge.arm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
+To: Andrew Murray <andrew.murray@arm.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.o>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thank you for review comments.
-
-On 2/9/2019 9:38 PM, Rob Herring wrote:
-> On Wed, Aug 28, 2019 at 08:43:14PM +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> Add a YAML schema to use the host controller driver with the
->> SDXC PHY on Intel's Lightning Mountain SoC.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 52 ++++++++++++++++++++++
->>   .../devicetree/bindings/phy/intel,syscon.yaml      | 33 ++++++++++++++
->>   2 files changed, 85 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
->>   create mode 100644 Documentation/devicetree/bindings/phy/intel,syscon.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
->> new file mode 100644
->> index 000000000000..99647207b414
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
->> @@ -0,0 +1,52 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +allOf:
->> +  - $ref: "intel,syscon.yaml"
-> You don't need this. It should be selected and applied by the compatible
-> string matching.
-Agreed, fix it in the next patch.
->> +
->> +description: Binding for SDXC PHY
->> +
->> +properties:
->> +  compatible:
->> +    const: intel,lgm-sdxc-phy
->> +
->> +  intel,syscon:
->> +    description: phandle to the sdxc through syscon
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    maxItems: 1
->> +
->> +  "#phy-cells":
->> +    const: 0
->> +
->> +required:
->> +  - "#phy-cells"
->> +  - compatible
->> +  - intel,syscon
->> +  - clocks
->> +  - clock-names
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    sdxc_phy: sdxc_phy {
->> +        compatible = "intel,lgm-sdxc-phy";
->> +        intel,syscon = <&sysconf>;
-> Make this a child of the below node and then you don't need this.
->
-> If there's a register address range associated with this, then add a reg
-> property.
-
-Thanks for comments,  I have defined herewith example
-
-sysconf: chiptop@e0020000 {
-             compatible = "intel,syscon";
-             reg = <0xe0020000 0x100>;
-
-             emmc_phy: emmc_phy {
-                 compatible = "intel,lgm-emmc-phy";
-                 intel,syscon = <&sysconf>;
-                 clocks = <&emmc>;
-                 clock-names = "emmcclk";
-                 #phy-cells = <0>;
-            };
-};
-
-Is this way need to add right?
-
->> +        clocks = <&sdxc>;
->> +        clock-names = "sdxcclk";
->> +        #phy-cells = <0>;
->> +    };
->> +
->> +...
->> diff --git a/Documentation/devicetree/bindings/phy/intel,syscon.yaml b/Documentation/devicetree/bindings/phy/intel,syscon.yaml
->> new file mode 100644
->> index 000000000000..d0b78805e49f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/intel,syscon.yaml
->> @@ -0,0 +1,33 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/phy/intel,syscon.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Syscon for eMMC/SDXC PHY Device Tree Bindings
-> Nothing else in this h/w block? If there are other functions, then this
-> should not be in bindings/phy/.
-Drop this one.
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +properties:
->> +  compatible:
->> +    const: intel,syscon
-> Needs to be more specific and reflect h/w blocks. 'syscon' is a Linux
-> thing to some extent.
-Agreed, will drop it.
-
-Best Regards
-vadivel
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  "#reset-cells":
->> +   const: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - "#reset-cells"
->> +
->> +examples:
->> +  - |
->> +    sysconf: chiptop@e0020000 {
->> +       compatible = "intel,syscon", "syscon";
->> +       reg = <0xe0020000 0x100>;
->> +       #reset-cells = <1>;
->> +    };
->> -- 
->> 2.11.0
->>
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8
+YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo51MIyyNUgMjE6MDYNCj4gVG86
+IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogcm9iaCtkdEBrZXJuZWwu
+b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvDQo+IExp
+IDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOyBsb3JlbnpvLnBpZXJhbGlzaUBh
+cm0uY29tOyBNLmguDQo+IExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IE1pbmdrYWkgSHUg
+PG1pbmdrYWkuaHVAbnhwLmNvbT47IFJveQ0KPiBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgamlu
+Z29vaGFuMUBnbWFpbC5jb207DQo+IGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tOyBsaW51
+eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGlu
+dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsNCj4gYXJuZEBhcm5kYi5k
+ZTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IFoucS4gSG91DQo+IDx6aGlxaWFuZy5ob3VA
+bnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAxMC8xMV0gYXJtNjQ6IGR0czogbGF5
+ZXJzY2FwZTogQWRkIFBDSWUgRVAgbm9kZSBmb3INCj4gbHMxMDg4YQ0KPiANCj4gT24gTW9uLCBT
+ZXAgMDIsIDIwMTkgYXQgMTE6MTc6MTVBTSArMDgwMCwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+ID4g
+QWRkIFBDSWUgRVAgbm9kZSBmb3IgbHMxMDg4YSB0byBzdXBwb3J0IEVQIG1vZGUuDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiAt
+LS0NCj4gPiB2MjoNCj4gPiAgLSBSZW1vdmUgdGhlIHBmLW9mZnNldCBwcm9wYXJ0eS4NCj4gPiB2
+MzoNCj4gPiAgLSBObyBjaGFuZ2UuDQo+ID4NCj4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
+c2NhbGUvZnNsLWxzMTA4OGEuZHRzaSB8IDMxDQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysr
+DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzMSBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0t
+Z2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA4OGEuZHRzaQ0KPiBi
+L2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLmR0c2kNCj4gPiBpbmRl
+eCBjNjc2ZDA3Li5kYTI0NmFiIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
+ZnJlZXNjYWxlL2ZzbC1sczEwODhhLmR0c2kNCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRz
+L2ZyZWVzY2FsZS9mc2wtbHMxMDg4YS5kdHNpDQo+ID4gQEAgLTQ4Myw2ICs0ODMsMTcgQEANCj4g
+PiAgCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiAgCQl9Ow0KPiA+DQo+ID4gKwkJcGNpZV9l
+cEAzNDAwMDAwIHsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJmc2wsbHMxMDg4YS1wY2llLWVwIiwi
+ZnNsLGxzLXBjaWUtZXAiOw0KPiANCj4gSGVyZSB5b3Ugc3BlY2lmeSBhIGZhbGxiYWNrICJmc2ws
+bHMtcGNpZS1lcCIgdGhhdCBpcyByZW1vdmVkIGJ5IHRoaXMgc2VyaWVzLg0KPiANCj4gQmVzaWRl
+cyB0aGF0LCB0aGlzIGxvb2tzIE9LLg0KDQpBcyBleHBsYWluZWQsIHRoZSAiZnNsLGxzLXBjaWUt
+ZXAiIGlzIG5lZWRlZCwgZHVlIHRvIHRoZSB1LWJvb3Qgd2lsbCBmaXh1cCB0aGUgc3RhdHVzDQpw
+cm9wZXJ0eSBiYXNlIG9uIHRoaXMgY29tcGF0aWJsZSwgSSB0aGluayB3ZSByZXNlcnZlIHRoaXMg
+Y29tcGF0aWJsZSBpcyBoZWxwZnVsbHksDQppZiBkZWxhdGUgdGhpcyBjb21wYXRpYmxlLCBJIGhh
+dmUgdG8gbW9kaWZ5IHRoZSBjb2RlIG9mIGJvb3Rsb2FkZXIuDQoNClRoYW5rcyANClhJYW93ZWkN
+Cg0KPiANCj4gVGhhbmtzLA0KPiANCj4gQW5kcmV3IE11cnJheQ0KPiANCj4gPiArCQkJcmVnID0g
+PDB4MDAgMHgwMzQwMDAwMCAweDAgMHgwMDEwMDAwMA0KPiA+ICsJCQkgICAgICAgMHgyMCAweDAw
+MDAwMDAwIDB4OCAweDAwMDAwMDAwPjsNCj4gPiArCQkJcmVnLW5hbWVzID0gInJlZ3MiLCAiYWRk
+cl9zcGFjZSI7DQo+ID4gKwkJCW51bS1pYi13aW5kb3dzID0gPDI0PjsNCj4gPiArCQkJbnVtLW9i
+LXdpbmRvd3MgPSA8MTI4PjsNCj4gPiArCQkJbWF4LWZ1bmN0aW9ucyA9IC9iaXRzLyA4IDwyPjsN
+Cj4gPiArCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiAgCQlw
+Y2llQDM1MDAwMDAgew0KPiA+ICAJCQljb21wYXRpYmxlID0gImZzbCxsczEwODhhLXBjaWUiOw0K
+PiA+ICAJCQlyZWcgPSA8MHgwMCAweDAzNTAwMDAwIDB4MCAweDAwMTAwMDAwICAgLyogY29udHJv
+bGxlcg0KPiByZWdpc3RlcnMgKi8NCj4gPiBAQCAtNTA4LDYgKzUxOSwxNiBAQA0KPiA+ICAJCQlz
+dGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICAJCX07DQo+ID4NCj4gPiArCQlwY2llX2VwQDM1MDAw
+MDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gImZzbCxsczEwODhhLXBjaWUtZXAiLCJmc2wsbHMt
+cGNpZS1lcCI7DQo+ID4gKwkJCXJlZyA9IDwweDAwIDB4MDM1MDAwMDAgMHgwIDB4MDAxMDAwMDAN
+Cj4gPiArCQkJICAgICAgIDB4MjggMHgwMDAwMDAwMCAweDggMHgwMDAwMDAwMD47DQo+ID4gKwkJ
+CXJlZy1uYW1lcyA9ICJyZWdzIiwgImFkZHJfc3BhY2UiOw0KPiA+ICsJCQludW0taWItd2luZG93
+cyA9IDw2PjsNCj4gPiArCQkJbnVtLW9iLXdpbmRvd3MgPSA8OD47DQo+ID4gKwkJCXN0YXR1cyA9
+ICJkaXNhYmxlZCI7DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gIAkJcGNpZUAzNjAwMDAwIHsNCj4g
+PiAgCQkJY29tcGF0aWJsZSA9ICJmc2wsbHMxMDg4YS1wY2llIjsNCj4gPiAgCQkJcmVnID0gPDB4
+MDAgMHgwMzYwMDAwMCAweDAgMHgwMDEwMDAwMCAgIC8qIGNvbnRyb2xsZXINCj4gcmVnaXN0ZXJz
+ICovDQo+ID4gQEAgLTUzMyw2ICs1NTQsMTYgQEANCj4gPiAgCQkJc3RhdHVzID0gImRpc2FibGVk
+IjsNCj4gPiAgCQl9Ow0KPiA+DQo+ID4gKwkJcGNpZV9lcEAzNjAwMDAwIHsNCj4gPiArCQkJY29t
+cGF0aWJsZSA9ICJmc2wsbHMxMDg4YS1wY2llLWVwIiwiZnNsLGxzLXBjaWUtZXAiOw0KPiA+ICsJ
+CQlyZWcgPSA8MHgwMCAweDAzNjAwMDAwIDB4MCAweDAwMTAwMDAwDQo+ID4gKwkJCSAgICAgICAw
+eDMwIDB4MDAwMDAwMDAgMHg4IDB4MDAwMDAwMDA+Ow0KPiA+ICsJCQlyZWctbmFtZXMgPSAicmVn
+cyIsICJhZGRyX3NwYWNlIjsNCj4gPiArCQkJbnVtLWliLXdpbmRvd3MgPSA8Nj47DQo+ID4gKwkJ
+CW51bS1vYi13aW5kb3dzID0gPDg+Ow0KPiA+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+
+ICsJCX07DQo+ID4gKw0KPiA+ICAJCXNtbXU6IGlvbW11QDUwMDAwMDAgew0KPiA+ICAJCQljb21w
+YXRpYmxlID0gImFybSxtbXUtNTAwIjsNCj4gPiAgCQkJcmVnID0gPDAgMHg1MDAwMDAwIDAgMHg4
+MDAwMDA+Ow0KPiA+IC0tDQo+ID4gMi45LjUNCj4gPg0K
