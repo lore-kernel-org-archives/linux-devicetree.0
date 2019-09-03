@@ -1,51 +1,57 @@
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v4 07/11] lib/vsprintf: Remove support for %pF and %pf in
- favour of %pS and %ps
-Date: Tue, 3 Sep 2019 16:04:20 +0200
-Message-ID: <20190903140420.kmb42cwr3scrfd3e@pathway.suse.cz>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
- <20190902083240.20367-8-sakari.ailus@linux.intel.com>
- <20190902143935.xtd44jdvhjuc2wxe@pathway.suse.cz>
- <20190902160139.GQ2680@smile.fi.intel.com>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH v6 3/3] soc: fsl: add RCPM driver
+Date: Tue, 3 Sep 2019 16:12:48 +0200
+Message-ID: <20190903141248.GA8354@amd>
+References: <20190821031537.46824-1-ran.wang_1@nxp.com>
+ <20190821031537.46824-3-ran.wang_1@nxp.com>
+ <DB8PR04MB6826A9EA5D9232D55FE8BDEFF1AA0@DB8PR04MB6826.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190902160139.GQ2680@smile.fi.intel.com>
+In-Reply-To: <DB8PR04MB6826A9EA5D9232D55FE8BDEFF1AA0@DB8PR04MB6826.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Namhyung Kim <namhyung@kernel.org>, rafael@kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org, Tzvetomir Stoyanov <tstoyanov@vmware.com>
+To: Ran Wang <ran.wang_1@nxp.com>
+Cc: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Biwen Li <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 2019-09-02 19:01:39, Andy Shevchenko wrote:
-> On Mon, Sep 02, 2019 at 04:39:35PM +0200, Petr Mladek wrote:
-> > On Mon 2019-09-02 11:32:36, Sakari Ailus wrote:
-> > > %pS and %ps are now the preferred conversion specifiers to print function
-> > > names. The functionality is equivalent; remove the old, deprecated %pF
-> > > and %pf support.
-> > 
-> > Hmm, I see the following in master:
-> > 
-> > $> git grep %pF
-> > tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt:or events have "%pF" or "%pS" parameter in its format string. It is common to
-> > 
-> > $> git grep %pf
-> > tools/lib/traceevent/event-parse.c:             if (asprintf(&format, "%%pf: (NO FORMAT FOUND at %llx)\n", addr) < 0)
-> > tools/lib/traceevent/event-parse.c:     if (asprintf(&format, "%s: %s", "%pf", printk->printk) < 0)
-> > 
-> > I wonder how this is related to printk(). In each case, it seems
-> 
-> It's going thru binary printf() I suppose. The fist stage just saves the format
-> string and argument addresses or so and prints in later on when user is looking
-> for human-readable output.
 
-It seems that vbin_printf() still thinks that %pf and %pF
-handle function pointers. If I get it correctly, it just
-stores the binary data and the formating is done when
-tracing log is read. The idea is the function pointers
-will stay the same.
+--EeQfGwPcQSOJBaQU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-We need to fix/obsolete this path as well.
+Hi!
 
-Best Regards,
-Petr
+> > +	/* Begin with first registered wakeup source */
+> > +	ws =3D wakeup_source_get_start(&idx);
+>=20
+> Since I have mad some change in this version, could you please take a loo=
+k on this.
+> If it's OK to you, I would re-add 'Acked-by: Pavel Machek <pavel@ucw.cz> '
+
+I'm sorry, I'm a bit busy at the moment and this is not really my
+area.
+
+Best regards,
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--EeQfGwPcQSOJBaQU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1udOAACgkQMOfwapXb+vLLrwCgprpkyPdWIRm3F6Lv4rV9h5Vg
+zkUAnRa7EWL6E5/thkcXz87A7zdQUWUB
+=oBPe
+-----END PGP SIGNATURE-----
+
+--EeQfGwPcQSOJBaQU--
