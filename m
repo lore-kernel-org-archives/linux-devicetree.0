@@ -1,43 +1,162 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 09/11] lib/vsprintf: OF nodes are first and foremost,
- struct device_nodes
-Date: Tue, 3 Sep 2019 14:28:00 +0300
-Message-ID: <20190903112800.GW2680@smile.fi.intel.com>
-References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
- <20190902135732.23455-10-sakari.ailus@linux.intel.com>
- <20190903085233.oksjcwqwdxb53eig@pathway.suse.cz>
- <20190903092816.qutqnjba7okcauim@pathway.suse.cz>
+From: Krzysztof Wilczynski <kw-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] PCI: Remove unused includes and superfluous struct
+	declaration
+Date: Tue,  3 Sep 2019 13:30:59 +0200
+Message-ID: <20190903113059.2901-1-kw@linux.com>
+References: <20190901112506.8469-1-kw@linux.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190903092816.qutqnjba7okcauim@pathway.suse.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, rafael@kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20190901112506.8469-1-kw-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Gustavo Pimentel <gustavo.pimentel-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 11:28:16AM +0200, Petr Mladek wrote:
-> On Tue 2019-09-03 10:52:33, Petr Mladek wrote:
-> > On Mon 2019-09-02 16:57:30, Sakari Ailus wrote:
-> > > Factor out static kobject_string() function that simply calls
-> > > device_node_string(), and thus remove references to kobjects (as these are
-> > > struct device_node).
+Remove <linux/pci.h> and <linux/msi.h> from being included
+directly as part of the include/linux/of_pci.h, and remove
+superfluous declaration of struct of_phandle_args.
 
-> > > -		return kobject_string(buf, end, ptr, spec, fmt);
-> > > +		return device_node_string(buf, end, ptr, spec, fmt + 1);
-> > 
-> > I know that this come from from kobject_string(). But please, modify
-> > it to follow the style used by other %p modifiers. I mean to pass
-> > "fmt" as is and then use:
-> > 
-> > 	if (fmt[1] != 'F')
-> 
-> Ah, I see that it would need more changes in device_node_string().
-> OK, let's leave the patch as is. I am sorry for the noise.
+Move users of include <linux/of_pci.h> to include <linux/pci.h>
+and <linux/msi.h> directly rather than rely on both being
+included transitively through <linux/of_pci.h>.
 
-I came to the same conclusions, though can we consider to drop this patch?
+Signed-off-by: Krzysztof Wilczynski <kw-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+---
+ drivers/iommu/of_iommu.c                          | 2 ++
+ drivers/irqchip/irq-gic-v2m.c                     | 1 +
+ drivers/irqchip/irq-gic-v3-its-pci-msi.c          | 1 +
+ drivers/pci/controller/dwc/pcie-designware-host.c | 1 +
+ drivers/pci/controller/pci-aardvark.c             | 1 +
+ drivers/pci/controller/pci-thunder-pem.c          | 1 +
+ drivers/pci/pci.c                                 | 1 +
+ drivers/pci/probe.c                               | 1 +
+ include/linux/of_pci.h                            | 5 ++---
+ 9 files changed, 11 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+index 614a93aa5305..026ad2b29dcd 100644
+--- a/drivers/iommu/of_iommu.c
++++ b/drivers/iommu/of_iommu.c
+@@ -8,6 +8,8 @@
+ #include <linux/export.h>
+ #include <linux/iommu.h>
+ #include <linux/limits.h>
++#include <linux/pci.h>
++#include <linux/msi.h>
+ #include <linux/of.h>
+ #include <linux/of_iommu.h>
+ #include <linux/of_pci.h>
+diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
+index e88e75c22b6a..fbec07d634ad 100644
+--- a/drivers/irqchip/irq-gic-v2m.c
++++ b/drivers/irqchip/irq-gic-v2m.c
+@@ -17,6 +17,7 @@
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/kernel.h>
++#include <linux/pci.h>
+ #include <linux/msi.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+diff --git a/drivers/irqchip/irq-gic-v3-its-pci-msi.c b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
+index 229d586c3d7a..87711e0f8014 100644
+--- a/drivers/irqchip/irq-gic-v3-its-pci-msi.c
++++ b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <linux/acpi_iort.h>
++#include <linux/pci.h>
+ #include <linux/msi.h>
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index d3156446ff27..7a9bef993e57 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/irqdomain.h>
++#include <linux/msi.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+ #include <linux/pci_regs.h>
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index fc0fe4d4de49..3a05f6ca95b0 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -16,6 +16,7 @@
+ #include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/platform_device.h>
++#include <linux/msi.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+ 
+diff --git a/drivers/pci/controller/pci-thunder-pem.c b/drivers/pci/controller/pci-thunder-pem.c
+index f127ce8bd4ef..9491e266b1ea 100644
+--- a/drivers/pci/controller/pci-thunder-pem.c
++++ b/drivers/pci/controller/pci-thunder-pem.c
+@@ -6,6 +6,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
++#include <linux/pci.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+ #include <linux/pci-acpi.h>
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 484e35349565..571e7e00984b 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -13,6 +13,7 @@
+ #include <linux/delay.h>
+ #include <linux/dmi.h>
+ #include <linux/init.h>
++#include <linux/msi.h>
+ #include <linux/of.h>
+ #include <linux/of_pci.h>
+ #include <linux/pci.h>
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 169943f17a4c..11b11a652d18 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -7,6 +7,7 @@
+ #include <linux/delay.h>
+ #include <linux/init.h>
+ #include <linux/pci.h>
++#include <linux/msi.h>
+ #include <linux/of_device.h>
+ #include <linux/of_pci.h>
+ #include <linux/pci_hotplug.h>
+diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+index 21a89c4880fa..29658c0ee71f 100644
+--- a/include/linux/of_pci.h
++++ b/include/linux/of_pci.h
+@@ -2,11 +2,10 @@
+ #ifndef __OF_PCI_H
+ #define __OF_PCI_H
+ 
+-#include <linux/pci.h>
+-#include <linux/msi.h>
++#include <linux/types.h>
++#include <linux/errno.h>
+ 
+ struct pci_dev;
+-struct of_phandle_args;
+ struct device_node;
+ 
+ #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_PCI)
 -- 
-With Best Regards,
-Andy Shevchenko
+2.23.0
