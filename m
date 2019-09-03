@@ -1,74 +1,51 @@
-Return-Path: <SRS0=Pz7k=W5=ysoft.com=michal.vokac@kernel.org>
-From: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-Subject: [PATCH input-next 2/4] dt-bindings: input: mpr121: Add poll-interval property
-Date: Mon,  2 Sep 2019 13:40:15 +0200
-Message-Id: <1567424417-3914-3-git-send-email-michal.vokac@ysoft.com>
-In-Reply-To: <1567424417-3914-1-git-send-email-michal.vokac@ysoft.com>
-References: <1567424417-3914-1-git-send-email-michal.vokac@ysoft.com>
+Return-Path: <SRS0=4mjv=W6=flygoat.com=jiaxun.yang@kernel.org>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+In-Reply-To: <20190903085904.bwmm4knaodopvzvd@pburton-laptop>
+References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
+	 <20190827085302.5197-12-jiaxun.yang@flygoat.com>
+	 <CAL_JsqL6htVye-LSBWw1WwRy9xH=zwuH6gurscwoCWj9Te_hAg@mail.gmail.com>
+	 <d94eff2b-76ec-5cd2-512d-5ee0406a1bb9@flygoat.com>
+	 <20190827204105.7nyt4pi7lvxse5ij@pburton-laptop>
+	 <CAL_Jsq+VmFi6r1-WOa9RJ4vfqsZLqcn5HMbv1oyQjhtJ8Qd8Lw@mail.gmail.com> <20190903085904.bwmm4knaodopvzvd@pburton-laptop>
+Subject: Re: [PATCH 11/13] dt-bindings: mips: Add loongson cpus & boards
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
+Date: Wed, 04 Sep 2019 00:35:19 +0800
+Message-Id: <25561341567528519@sas2-c8fd3ed78d67.qloud-c.yandex.net>
+Content-Transfer-Encoding: base64
+Content-Type: text/html; charset=utf-8
+To: Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@mips.com>
+Cc: "open list:MIPS" <linux-mips@vger.kernel.org>, Huacai Chen <chenhc@lemote.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.co>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add an option to periodicaly poll the device to get the buttons states
-as the interrupt line may not be used on some platforms.
-
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
----
-I am not sure how to propperly handle this.
-Either interrupt or linux,poll-interval is required, but not both.
-
- .../bindings/input/fsl,mpr121-touchkey.yaml          | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/input/fsl,mpr121-touchkey.yaml b/Documentation/devicetree/bindings/input/fsl,mpr121-touchkey.yaml
-index c463c1c81755..2b3073a3c9f4 100644
---- a/Documentation/devicetree/bindings/input/fsl,mpr121-touchkey.yaml
-+++ b/Documentation/devicetree/bindings/input/fsl,mpr121-touchkey.yaml
-@@ -34,6 +34,10 @@ properties:
-     minItems: 1
-     maxItems: 12
- 
-+  linux,poll-interval:
-+    description: Poll interval time in milliseconds.
-+    maxItems: 1
-+
-   wakeup-source: Use any event on keypad as wakeup event.
-     type: boolean
- 
-@@ -44,12 +48,12 @@ properties:
- required:
-   - compatible
-   - reg
--  - interrupts
-   - vdd-supply
-   - linux,keycodes
- 
- examples:
-   - |
-+    // Example with interrupts
-     #include "dt-bindings/input/input.h"
-     touchkey: mpr121@5a {
-         compatible = "fsl,mpr121-touchkey";
-@@ -62,3 +66,17 @@ examples:
-                          <KEY_4> <KEY_5>, <KEY_6>, <KEY_7>,
-                          <KEY_8>, <KEY_9>, <KEY_A>, <KEY_B>;
-     };
-+
-+  - |
-+    // Example with polling
-+    #include "dt-bindings/input/input.h"
-+    touchkey: mpr121@5a {
-+        compatible = "fsl,mpr121-touchkey";
-+        reg = <0x5a>;
-+        linux,poll-interval = <20>;
-+        autorepeat;
-+        vdd-supply = <&ldo4_reg>;
-+        linux,keycodes = <KEY_0>, <KEY_1>, <KEY_2>, <KEY_3>,
-+                         <KEY_4> <KEY_5>, <KEY_6>, <KEY_7>,
-+                         <KEY_8>, <KEY_9>, <KEY_A>, <KEY_B>;
-+    );
--- 
-2.1.4
+PGJyIC8+PGJyIC8+MTc6MDcsIDIwMTnlubQ55pyIM+aXpSwgUGF1bCBCdXJ0b24gJmx0O3BhdWwu
+YnVydG9uQG1pcHMuY29tJmd0Ozo8YnIgLz48YmxvY2txdW90ZSBjbGFzcz0iYjRmZDVjZjJlYzky
+YmM2OGNiODk4NzAwYmI4MTM1NWZ3bWktcXVvdGUiPjxwPkhpIFJvYiw8YnIgLz48YnIgLz5PbiBN
+b24sIFNlcCAwMiwgMjAxOSBhdCAwMzo1MDo0N1BNICswMTAwLCBSb2IgSGVycmluZyB3cm90ZTo8
+YnIgLz48L3A+PGJsb2NrcXVvdGUgY2xhc3M9ImI0ZmQ1Y2YyZWM5MmJjNjhjYjg5ODcwMGJiODEz
+NTVmd21pLXF1b3RlIj7CoCZndDsgSW4gZ2VuZXJhbCBvbiBNSVBTIHdlIGRldGVjdCBDUFUgcHJv
+cGVydGllcyBhdCBydW50aW1lIGZyb20gY29wcm9jZXNzb3I8YnIgLz7CoCZndDsgMCByZWdpc3Rl
+cnMgJmFtcDsgc2ltaWxhciBzb3VyY2VzIG9mIGluZm9ybWF0aW9uLCBzbyB0aGVyZSdzIG5vdCBy
+ZWFsbHkgYTxiciAvPsKgJmd0OyBuZWVkIHRvIHNwZWNpZnkgYW55dGhpbmcgYWJvdXQgdGhlIENQ
+VSBpbiBkZXZpY2V0cmVlLjxiciAvPjxiciAvPsKgV2UgdGhvdWdodCB0aGUgc2FtZSB0aGluZyBp
+bml0aWFsbHkgZm9yIEFybS4uLiBNb3N0bHkgd2hhdCBpcyBpbiBEVCBpczxiciAvPsKgbm90IHdo
+YXQgaXMgZGlzY292ZXJhYmxlLiBBcmUgY2xvY2sgc3BlZWRzLCBwb3dlciBkb21haW5zLCBsb3cg
+cG93ZXI8YnIgLz7CoHN0YXRlcywgZXRjLiBhbGwgZGlzY292ZXJhYmxlPzxiciAvPjwvYmxvY2tx
+dW90ZT48cD48YnIgLz5ObywgdGhhdCdzIGEgZ29vZCBwb2ludCAtIGNsb2NrcyBldGMgbWF5IG5l
+ZWQgdG8gYmUgc3BlY2lmaWVkIGluIERULiBJPGJyIC8+anVzdCBkb24ndCBzZWUgYW55IG9mIHRo
+YXQgaW4gdGhpcyBwYXRjaHNldCAtIGl0IGFwcGVhcnMgYWxsIHRoYXQgaXM8YnIgLz5zcGVjaWZp
+ZWQgaXMgY2FjaGUgc2l6ZXMgd2hpY2ggd2UgYWxyZWFkeSBkZXRlY3QuIFNvIGluIHRoaXMgY2Fz
+ZSBJPGJyIC8+ZG9uJ3Qgc2VlIGEgbmVlZCBmb3IgaW5jbHVkaW5nIENQVXMgaW4gRFQgYXQgYWxs
+LjxiciAvPjxiciAvPkppYXh1biAtIGRpZCB5b3UgYWRkIGFsbCB0aGlzIGluZm9ybWF0aW9uIHRv
+IERUIHRvIGF2b2lkIHRoZSAiY2FjaGVpbmZvOjxiciAvPlVuYWJsZSB0byBkZXRlY3QgY2FjaGUg
+aGllcmFyY2h5IGZvciBDUFUiIG1lc3NhZ2VzIGR1cmluZyBib290PyBJZiBzbzxiciAvPnRoYXQg
+c2hvdWxkIGJlIGZpeGVkIGJ5IGNvbW1pdCBiOGJlYThhNWU1ZDkgKCJtaXBzOiBmaXggY2FjaGVp
+bmZvIikuIElmPGJyIC8+bm90LCBjb3VsZCB5b3UgZGVzY3JpYmUgd2h5IHRoZSBDUFUgbm9kZXMg
+YXJlIG5lZWRlZCBoZXJlPzwvcD48L2Jsb2NrcXVvdGU+QmVjYXVzZSBsYXRlciBJJ20gZ29pbmcg
+dG8gY29udmVydCBtb3JlIGNvZGUgaW50byBEVCwgYW5kIHRoZSBDUFUgbm9kZXMgY2FuIGJlIHVz
+ZWQgdG8gZGV0ZXJtaW5lIE5VTUEgZGVzdGluY2UvY2xvY2sgZG9tYWlucyBldGMuPGRpdj48YnIg
+Lz48L2Rpdj48ZGl2PkZvciB0aGUgY2FjaGUgcGFydCwga2VybmVsIG5vd2FkYXlzIGNhbid0IGhh
+bmRsZSBtdWx0aXBsZSBTQ2FjaGUgc2hhcmVkIGJ5IG11bHRpcGxlIG5vZGVzIHdlbGwgKGN1cnJl
+bnQgY29kZSBpcyB2ZXJ5IExvb25nc29uIHNwZWNpZmllZCkuIEknbSBhbHNvIHNlZWtpbmcgYSB3
+YXkgdG8gaW1wcm92ZSBpdCwgYW5kIHdlIGNhbiByZWx5IG9uIG5vdGhpbmcgYnV0IERUIHRvIGRl
+dGVybWluZSBob3cgZG8gd2Ugc2hhcmUgdGhlc2UgQ2FjaGUuPGJyIC8+PGJyIC8+VGhhbmtzPGJy
+IC8+LS0gPGJyIC8+SmlheHVuIFlhbmc8L2Rpdj4=
