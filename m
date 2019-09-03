@@ -1,35 +1,36 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V2 2/5] input: keyboard: imx_sc: Add i.MX system
- controller power key support
-Date: Mon, 2 Sep 2019 23:38:54 -0300
-Message-ID: <CAOMZO5CHmvrbVG_h8hOb7hMjXasV_QwtNoXpEw9kqY=4Jj5HAg@mail.gmail.com>
-References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com> <1567519424-32271-2-git-send-email-Anson.Huang@nxp.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [RFC 2/5] ARM: dts: add support for opp-v2 for omap34xx and
+ omap36xx
+Date: Tue, 3 Sep 2019 08:09:41 +0530
+Message-ID: <20190903023941.pgh24mz4jh325xrc@vireshk-i7>
+References: <cover.1567421750.git.hns@goldelico.com>
+ <d0dc1623ed6b1bd657f169dc2b4482b269bdba37.1567421751.git.hns@goldelico.com>
+ <20190903023805.qum23m7tge3zkb5a@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567519424-32271-2-git-send-email-Anson.Huang@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <20190903023805.qum23m7tge3zkb5a@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, Fugang Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, mripard@kernel.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Jagan Teki <jagan@amarulasolutions.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Dinh Nguyen <dinguyen@kernel.org>, marcin.juszkiewicz@linaro.org, Stefan Agner <stefan@agn>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
+On 03-09-19, 08:08, Viresh Kumar wrote:
+> On 02-09-19, 12:55, H. Nikolaus Schaller wrote:
+> > +		opp1-125000000 {
+> > +			opp-hz = /bits/ 64 <125000000>;
+> > +			// we currently only select the max voltage from table Table 3-3 of the omap3530 Data sheet (SPRS507F)
+> > +			// <target min max> could also be single <target>
+> > +			opp-microvolt = <975000 975000 975000>;
+> > +			// first value is silicon revision, second one 720MHz Device Identification
+> 
+> > +			opp-supported-hw = <0xffffffff 3>;
+> 
+> I don't see the driver changes using this field, am I missing
+> something ?
 
-On Mon, Sep 2, 2019 at 11:05 PM Anson Huang <Anson.Huang@nxp.com> wrote:
+The driver already had them it seems. Hmm..
 
-> +       ret = input_register_device(input);
-> +       if (ret < 0) {
-> +               dev_err(&pdev->dev, "failed to register input device\n");
-> +               return ret;
-> +       }
-> +
-> +       pdata->input = input;
-> +       platform_set_drvdata(pdev, pdata);
-> +
-> +       ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, true);
-> +       if (ret) {
-> +               dev_warn(&pdev->dev, "enable scu group irq failed\n");
-> +               return ret;
-
-Better do a 'goto input_unregister' here instead and call
-input_unregister_device().
+-- 
+viresh
