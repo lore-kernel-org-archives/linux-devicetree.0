@@ -1,94 +1,230 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [RFC 4/5] ARM: dts: omap3-n950-n9: remove opp-v1 table
-Date: Tue, 3 Sep 2019 08:34:50 +0200
-Message-ID: <98AF4586-C6FF-43A5-99B9-797145F50D07@goldelico.com>
-References: <cover.1567421750.git.hns@goldelico.com> <2f978667c1533e46e3a5df58871e9048f3eb74e9.1567421751.git.hns@goldelico.com> <20190903023635.44yf32jowpm3hgfp@vireshk-i7> <8BC1AEC9-7B24-4C07-8659-16741D018164@goldelico.com> <20190903061403.k3d333f54gj2kuxi@vireshk-i7> <6B7B0EDB-8A60-48A0-AFAB-8A266358300C@goldelico.com> <20190903062808.p6jkgwylyqxcjs4z@vireshk-i7>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190903062808.p6jkgwylyqxcjs4z@vireshk-i7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+From: Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>
+Subject: Re: [RFC PATCH V2 4/4] platform: mtk-isp: Add Mediatek FD driver
+Date: Tue, 3 Sep 2019 14:44:41 +0800
+Message-ID: <1567493081.18318.49.camel@mtksdccf07>
+References: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <1562661672-22439-5-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <20190802082815.GA203993@chromium.org>
+ <1566724680.20680.8.camel@mtksdccf07>
+ <CAAFQd5Dw+jaT-+LAUEVeB8W1zdnOgPw7u+aCfDWhYW1SfbzO8g@mail.gmail.com>
+ <1566957625.20680.33.camel@mtksdccf07>
+ <CAAFQd5D-Yg1FjUE_rwmqfS1gvfE0=MZ=r-ziueU_37-uo9QTbw@mail.gmail.com>
+ <1567424859.18318.32.camel@mtksdccf07>
+ <CAAFQd5AGgeFbto6V1KkL0dp1QPziOKV3pWQDU2OJ+S1QKvnBdg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAAFQd5AGgeFbto6V1KkL0dp1QPziOKV3pWQDU2OJ+S1QKvnBdg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sean Cheng =?UTF-8?Q?=28=E9=84=AD=E6=98=87=E5=BC=98=29?= <Sean.Cheng@mediatek.com>, "laurent.pinchart+renesas@ideasonboard.com" <laurent.pinchart+renesas@ideasonboard.com>, Rynn Wu =?UTF-8?Q?=28=E5=90=B3=E8=82=B2=E6=81=A9=29?= <Rynn.Wu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Po-Yang Huang =?UTF-8?Q?=28=E9=BB=83=E6=9F=8F=E9=99=BD=29?= <po-yang.huang@mediatek.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "suleiman@chromium.org" <suleiman@chromium.org>, "shik@chromium.org" <shik@chromium.org>, Jungo Lin =?UTF-8?Q?=28=E6=9E=97=E6=98=8E=E4=BF=8A=29?= <jungo.lin@mediatek.com>, Sj Huang =?UTF-8?Q?=28=E9=BB=83=E4=BF=A1=E7=92=8B=29?= <sj.huang@mediatek.com>, "yuzhao@chromium.org" <yuzhao@chromium.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, zwisler@chromium.or
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2019-09-03 at 13:19 +0800, Tomasz Figa wrote:
+> On Mon, Sep 2, 2019 at 8:47 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
+> >
+> > Hi Tomasz,
+> >
+> > On Fri, 2019-08-30 at 16:33 +0800, Tomasz Figa wrote:
+> > > On Wed, Aug 28, 2019 at 11:00 AM Jerry-ch Chen
+> > > <Jerry-ch.Chen@mediatek.com> wrote:
+> > > >
+> > > > Hi Tomasz,
+> > > >
+> > > > On Mon, 2019-08-26 at 14:36 +0800, Tomasz Figa wrote:
+> > > > > Hi Jerry,
+> > > > >
+> > > > > On Sun, Aug 25, 2019 at 6:18 PM Jerry-ch Chen
+> > > > > <Jerry-ch.Chen@mediatek.com> wrote:
+> > > > > >
+> > > > > > Hi Tomasz,
+> > > > > >
+> > > > > > On Fri, 2019-08-02 at 16:28 +0800, Tomasz Figa wrote:
+> > > > > > > Hi Jerry,
+> > > > > > >
+> > > > > > > On Tue, Jul 09, 2019 at 04:41:12PM +0800, Jerry-ch Chen wrote:
+> [snip]
+> > > > static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
+> > > >                                   unsigned int *num_buffers,
+> > > >                                   unsigned int *num_planes,
+> > > >                                   unsigned int sizes[],
+> > > >                                   struct device *alloc_devs[])
+> > > > {
+> > > >         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+> > > >         struct device *dev = ctx->dev;
+> > > >         unsigned int size[2];
+> > > >
+> > > >         switch (vq->type) {
+> > > >         case V4L2_BUF_TYPE_META_CAPTURE:
+> > > >                 size[0] = ctx->dst_fmt.buffersize;
+> > > >                 break;
+> > > >         case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
+> > > >                 size[0] = ctx->src_fmt.plane_fmt[0].sizeimage;
+> > > >                 if (*num_planes == 2)
+> > > >                         size[1] = ctx->src_fmt.plane_fmt[1].sizeimage;
+> > > >                 break;
+> > > >         }
+> > > >
+> > > >         if (*num_planes == 1) {
+> > > >                 if (sizes[0] < size[0])
+> > > >                         return -EINVAL;
+> > > >         } else if (*num_planes == 2) {
+> > > >                 if ((sizes[0] < size[0]) && (sizes[1] < size[1]))
+> > > >                         return -EINVAL;
+> > >
+> > > Can we just use a loop here and combine the 2 cases above?
+> > >
+> > > Also, we need to fail with -EINVAL if *num_planes is > 2.
+> > >
+> > > >         } else {
+> > > >                 *num_planes = 1;
+> > > >                 sizes[0] = size[0];
+> > >
+> > > This should be the case if *num_planes == 0 and the number of planes
+> > > and sizes should match the currently active format.
+> > >
+> > I appreciate your comments,
+> >
+> > Ok, I will update as following:
+> > static int mtk_fd_vb2_queue_setup(struct vb2_queue *vq,
+> >                                   unsigned int *num_buffers,
+> >                                   unsigned int *num_planes,
+> >                                   unsigned int sizes[],
+> >                                   struct device *alloc_devs[])
+> > {
+> >         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+> >         unsigned int size[2];
+> >         unsigned int plane;
+> >
+> >         switch (vq->type) {
+> >         case V4L2_BUF_TYPE_META_CAPTURE:
+> >                 size[0] = ctx->dst_fmt.buffersize;
+> >                 break;
+> >         case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
+> >                 size[0] = ctx->src_fmt.plane_fmt[0].sizeimage;
+> >                 if (*num_planes == 2)
+> >                         size[1] = ctx->src_fmt.plane_fmt[1].sizeimage;
+> >                 break;
+> >         }
+> >
+> >         if (*num_planes > 2)
+> >                 return -EINVAL;
+> >         if (*num_planes == 0) {
+> >                 if (vq->type == V4L2_BUF_TYPE_META_CAPTURE) {
+> >                         sizes[0] = ctx->dst_fmt.buffersize;
+> >                         *num_planes = 1;
+> >                         return 0;
+> >                 }
+> >
+> >                 *num_planes = ctx->src_fmt.num_planes;
+> >                 for (plane = 0; plane < *num_planes; plane++)
+> >                         sizes[plane] = ctx->src_fmt.plane_fmt[plane].sizeimage;
+> >                 return 0;
+> >         }
+> >
+> >         for (plane = 0; plane < *num_planes; plane++) {
+> >                 if(sizes[plane] < size[plane])
+> >                         return -EINVAL;
+> >         }
+> >         return 0;
+> > }
+> >
+> 
+> Looks good, thanks!
+> 
+> > > >         }
+> > > >
+> > > >         return 0;
+> > > > }
+> > > >
+> > > > > [snip]
+> > > > >
+> > > > > > > > +static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
+> > > > > > > > +{
+> > > > > > > > +   struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+> > > > > > > > +   struct vb2_buffer *vb;
+> > > > > > >
+> > > > > > > How do we guarantee here that the hardware isn't still accessing the buffers
+> > > > > > > removed below?
+> > > > > > >
+> > > > > > Maybe we can check the driver state flag and aborting the unfinished
+> > > > > > jobs?
+> > > > > > (fd_hw->state == FD_ENQ)
+> > > > > >
+> > > > >
+> > > > > Yes, we need to either cancel or wait for the currently processing
+> > > > > job. It depends on hardware capabilities, but cancelling is generally
+> > > > > preferred for the lower latency.
+> > > > >
+> > > > Ok, it the state is ENQ, then we can disable the FD hw by controlling
+> > > > the registers.
+> > > >
+> > > > for example:
+> > > >         writel(0x0, fd->fd_base + FD_HW_ENABLE);
+> > > >         writel(0x0, fd->fd_base + FD_INT_EN);
+> > > >
+> > >
+> > > What's exactly the effect of writing 0 to FD_HW_ENABLE?
+> > >
+> > Sorry, my last reply didn't solve the question,
+> > we should implement a mtk_fd_job_abort() for v4l2_m2m_ops().
+> >
+> > which is able to readl_poll_timeout_atomic()
+> > and check the HW busy bits in the register FD_INT_EN;
+> >
+> > if they are not cleared until timeout, we could handle the last
+> > processing job.
+> > Otherwise, the FD irq handler should have handled the last processing
+> > job and we could continue the stop_streaming().
+> >
+> > For job_abort():
+> > static void mtk_fd_job_abort(void *priv)
+> > {
+> >         struct mtk_fd_ctx *ctx = priv;
+> >         struct mtk_fd_dev *fd = ctx->fd_dev;
+> >         u32 val;
+> >         u32 ret;
+> >
+> >         ret = readl_poll_timeout_atomic(fd->fd_base + MTK_FD_REG_OFFSET_INT_EN,
+> >                                         val,
+> >                                         (val & MTK_FD_HW_BUSY_MASK) ==
+> >                                         MTK_FD_HW_STATE_IS_BUSY,
+> >                                         USEC_PER_MSEC, MTK_FD_STOP_HW_TIMEOUT);
+> 
+> Hmm, would it be possible to avoid the busy wait by having a
+> completion that could be signalled from the interrupt handler?
+> 
+> Best regards,
+> Tomasz
 
-> Am 03.09.2019 um 08:28 schrieb Viresh Kumar <viresh.kumar@linaro.org>:
->=20
-> On 03-09-19, 08:23, H. Nikolaus Schaller wrote:
->>=20
->>> Am 03.09.2019 um 08:14 schrieb Viresh Kumar =
-<viresh.kumar@linaro.org>:
->>>=20
->>> On 03-09-19, 08:01, H. Nikolaus Schaller wrote:
->>>>=20
->>>>> Am 03.09.2019 um 04:36 schrieb Viresh Kumar =
-<viresh.kumar@linaro.org>:
->>>>>=20
->>>>> On 02-09-19, 12:55, H. Nikolaus Schaller wrote:
->>>>>> With opp-v2 in omap36xx.dtsi and ti-cpufreq driver the
->>>>>> 1GHz capability is automatically detected.
->>>>>>=20
->>>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>>>>> ---
->>>>>> arch/arm/boot/dts/omap3-n950-n9.dtsi | 7 -------
->>>>>> 1 file changed, 7 deletions(-)
->>>>>>=20
->>>>>> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi =
-b/arch/arm/boot/dts/omap3-n950-n9.dtsi
->>>>>> index 5441e9ffdbb4..e98b0c615f19 100644
->>>>>> --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
->>>>>> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
->>>>>> @@ -11,13 +11,6 @@
->>>>>> 	cpus {
->>>>>> 		cpu@0 {
->>>>>> 			cpu0-supply =3D <&vcc>;
->>>>>> -			operating-points =3D <
->>>>>> -				/* kHz    uV */
->>>>>> -				300000  1012500
->>>>>> -				600000  1200000
->>>>>> -				800000  1325000
->>>>>> -				1000000	1375000
->>>>>> -			>;
->>>>>> 		};
->>>>>> 	};
->>>>>=20
->>>>> This should be merged with 2/5 ?
->>>>=20
->>>> Well, it bloats 2/5.
->>>=20
->>> It is logically the right place to do this as that's where we are
->>> adding opp-v2.
->>=20
->> Well, sometimes the philosophy of patches is to add something new
->> first and remove the old in a second separate patch if the system
->> can live with both. This makes it easier to digest single patches
->> (because they are smaller) and might also better pinpoint an issue
->> by bisect.
->=20
-> Right, but you already removed some of the opp-v1 stuff in patch 2/5.
-> Why leave this one out ?
->=20
->>>=20
->>>> What I hope (I can't test) is that this opp-v1 table
->>>> is ignored if an opp-v2 table exists. So that it can be
->>>> removed by a separate follow-up patch.
->>>=20
->>> It should work as that's what we are doing in OPP core, but I still
->>> feel this better get merged with 2/5.
->>=20
->> Ok, I see. Noted for RFCv2.
->>=20
->> There will also be a big batch of changes for the compatible record
->> (omap3530->omap35xx, add omap34xx where needed) of ca. 10 board =
-definition
->> DTS files. Should this then also become part of the new 2/5?
->=20
-> Compatible thing should be separate patch anyway, I was just talking
-> about replacing opp-v1 with v2.
+I suppose that would be wakeup a wait queue in the interrupt handler,
+the the wait_event_interrupt_timeout() will be used in here and system
+suspend e.g. mtk_fd_suspend().
+Or do you suggest to wait_event_interrupt_timeout() every frame in the
+mtk_fd_ipi_handler()?
+I think maybe the readl_poll_timeout_atomic would be good enough.
 
-Ok, understood.
 
-BR and thanks,
-Nikolaus
+One more thing, for the mtk_fd_video_device_register()
+Sorry that I would need to use intermediate variable here since the 80
+columns check.
+
+	function = MEDIA_ENT_F_PROC_VIDEO_STATISTICS;
+	ret = v4l2_m2m_register_media_controller(m2m_dev, vfd, function);
+	if (ret) {
+		dev_err(dev, "Failed to init mem2mem media controller\n");
+		goto err_unreg_video;
+	}
+
+
+Thanks and Best regards,
+Jerry
