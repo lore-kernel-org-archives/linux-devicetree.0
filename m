@@ -1,90 +1,106 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC 4/5] ARM: dts: omap3-n950-n9: remove opp-v1 table
-Date: Tue, 3 Sep 2019 11:58:08 +0530
-Message-ID: <20190903062808.p6jkgwylyqxcjs4z@vireshk-i7>
-References: <cover.1567421750.git.hns@goldelico.com>
- <2f978667c1533e46e3a5df58871e9048f3eb74e9.1567421751.git.hns@goldelico.com>
- <20190903023635.44yf32jowpm3hgfp@vireshk-i7>
- <8BC1AEC9-7B24-4C07-8659-16741D018164@goldelico.com>
- <20190903061403.k3d333f54gj2kuxi@vireshk-i7>
- <6B7B0EDB-8A60-48A0-AFAB-8A266358300C@goldelico.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Biwen Li <biwen.li@nxp.com>
+Subject: [v3,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
+Date: Tue,  3 Sep 2019 14:18:52 +0800
+Message-ID: <20190903061853.19793-1-biwen.li@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6B7B0EDB-8A60-48A0-AFAB-8A266358300C@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+To: a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>, Martin Fuzzey <mfuzzey@parkeon.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03-09-19, 08:23, H. Nikolaus Schaller wrote:
-> 
-> > Am 03.09.2019 um 08:14 schrieb Viresh Kumar <viresh.kumar@linaro.org>:
-> > 
-> > On 03-09-19, 08:01, H. Nikolaus Schaller wrote:
-> >> 
-> >>> Am 03.09.2019 um 04:36 schrieb Viresh Kumar <viresh.kumar@linaro.org>:
-> >>> 
-> >>> On 02-09-19, 12:55, H. Nikolaus Schaller wrote:
-> >>>> With opp-v2 in omap36xx.dtsi and ti-cpufreq driver the
-> >>>> 1GHz capability is automatically detected.
-> >>>> 
-> >>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> >>>> ---
-> >>>> arch/arm/boot/dts/omap3-n950-n9.dtsi | 7 -------
-> >>>> 1 file changed, 7 deletions(-)
-> >>>> 
-> >>>> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> >>>> index 5441e9ffdbb4..e98b0c615f19 100644
-> >>>> --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> >>>> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> >>>> @@ -11,13 +11,6 @@
-> >>>> 	cpus {
-> >>>> 		cpu@0 {
-> >>>> 			cpu0-supply = <&vcc>;
-> >>>> -			operating-points = <
-> >>>> -				/* kHz    uV */
-> >>>> -				300000  1012500
-> >>>> -				600000  1200000
-> >>>> -				800000  1325000
-> >>>> -				1000000	1375000
-> >>>> -			>;
-> >>>> 		};
-> >>>> 	};
-> >>> 
-> >>> This should be merged with 2/5 ?
-> >> 
-> >> Well, it bloats 2/5.
-> > 
-> > It is logically the right place to do this as that's where we are
-> > adding opp-v2.
-> 
-> Well, sometimes the philosophy of patches is to add something new
-> first and remove the old in a second separate patch if the system
-> can live with both. This makes it easier to digest single patches
-> (because they are smaller) and might also better pinpoint an issue
-> by bisect.
+Add some properties for pcf85263/pcf85363 as follows:
+  - interrupt-output-pin: string type
+  - quartz-load-femtofarads: integer type
+  - nxp,quartz-drive-strength: integer type
+  - nxp,quartz-low-jitter: bool type
+  - wakeup-source: bool type
 
-Right, but you already removed some of the opp-v1 stuff in patch 2/5.
-Why leave this one out ?
+Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+Change in v3:
+	- None
 
-> > 
-> >> What I hope (I can't test) is that this opp-v1 table
-> >> is ignored if an opp-v2 table exists. So that it can be
-> >> removed by a separate follow-up patch.
-> > 
-> > It should work as that's what we are doing in OPP core, but I still
-> > feel this better get merged with 2/5.
-> 
-> Ok, I see. Noted for RFCv2.
-> 
-> There will also be a big batch of changes for the compatible record
-> (omap3530->omap35xx, add omap34xx where needed) of ca. 10 board definition
-> DTS files. Should this then also become part of the new 2/5?
+Change in v2:
+	- Replace properties name
+	  quartz-load-capacitance -> quartz-load-femtofarads
+	  quartz-drive-strength -> nxp,quartz-drive-strength
+	  quartz-low-jitter -> nxp,quartz-low-jitter
+	- Replace drive strength name
+	  PCF85263_QUARTZDRIVE_NORMAL -> PCF85263_QUARTZDRIVE_100ko
+	  PCF85263_QUARTZDRIVE_LOW -> PCF85263_QUARTZDRIVE_60ko
+	  PCF85263_QUARTZDRIVE_HIGH -> PCF85263_QUARTZDRIVE_500ko
+	- Set default interrupt-output-pin as "INTA"
 
-Compatible thing should be separate patch anyway, I was just talking
-about replacing opp-v1 with v2.
+ .../devicetree/bindings/rtc/pcf85363.txt      | 29 +++++++++++++++++++
+ include/dt-bindings/rtc/pcf85363.h            | 15 ++++++++++
+ 2 files changed, 44 insertions(+)
+ create mode 100644 include/dt-bindings/rtc/pcf85363.h
 
+diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+index 94adc1cf93d9..588f688b30d1 100644
+--- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
++++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+@@ -8,10 +8,39 @@ Required properties:
+ Optional properties:
+ - interrupts: IRQ line for the RTC (not implemented).
+ 
++- interrupt-output-pin: The interrupt output pin must be
++  "INTA" or "INTB", default value is "INTA"
++
++- quartz-load-femtofarads: The internal capacitor to select for the quartz:
++	PCF85263_QUARTZCAP_7pF		[0]
++	PCF85263_QUARTZCAP_6pF		[1]
++	PCF85263_QUARTZCAP_12p5pF	[2] DEFAULT
++
++- nxp,quartz-drive-strength: Drive strength for the quartz:
++	PCF85263_QUARTZDRIVE_100ko	[0] DEFAULT
++	PCF85263_QUARTZDRIVE_60ko	[1]
++	PCF85263_QUARTZDRIVE_500ko	[2]
++
++- nxp,quartz-low-jitter: Boolean property, if present enables low jitter mode
++  which reduces jitter at the cost of increased power consumption.
++
++- wakeup-source: Boolean property, Please refer to
++  Documentation/devicetree/bindings/power/wakeup-source.txt
++
+ Example:
+ 
+ pcf85363: pcf85363@51 {
+ 	compatible = "nxp,pcf85363";
+ 	reg = <0x51>;
++
++	interrupt-parent = <&gpio1>;
++	interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
++
++	#include <dt-bindings/rtc/pcf85363.h>
++	wakeup-source;
++	interrupt-output-pin = "INTA";
++	quartz-load-femtofarads = <PCF85363_QUARTZCAP_12p5pF>;
++	nxp,quartz-drive-strength = <PCF85363_QUARTZDRIVE_60ko>;
++	nxp,quartz-low-jitter;
+ };
+ 
+diff --git a/include/dt-bindings/rtc/pcf85363.h b/include/dt-bindings/rtc/pcf85363.h
+new file mode 100644
+index 000000000000..f71b151bc481
+--- /dev/null
++++ b/include/dt-bindings/rtc/pcf85363.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _DT_BINDINGS_RTC_PCF85363_H
++#define _DT_BINDINGS_RTC_PCF85363_H
++
++/* Quartz capacitance */
++#define PCF85363_QUARTZCAP_7pF		0
++#define PCF85363_QUARTZCAP_6pF		1
++#define PCF85363_QUARTZCAP_12p5pF	2
++
++/* Quartz drive strength */
++#define PCF85363_QUARTZDRIVE_100ko	0
++#define PCF85363_QUARTZDRIVE_60ko	1
++#define PCF85363_QUARTZDRIVE_500ko	2
++
++#endif /* _DT_BINDINGS_RTC_PCF85363_H */
 -- 
-viresh
+2.17.1
