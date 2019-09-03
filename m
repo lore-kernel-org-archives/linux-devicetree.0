@@ -1,99 +1,122 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH v3 07/11] PCI: layerscape: Modify the way of getting
- capability with different PEX
-Date: Tue, 3 Sep 2019 02:13:12 +0000
-Message-ID: <AM5PR04MB329925CC756321C1072B3DA7F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
- <20190902031716.43195-8-xiaowei.bao@nxp.com>
- <20190902133747.GN9720@e119886-lin.cambridge.arm.com>
+From: Biwen Li <biwen.li@nxp.com>
+Subject: RE: [EXT] Re: [1/2] dt-bindings: rtc: pcf85263/pcf85363: add some
+ properties
+Date: Tue, 3 Sep 2019 02:15:56 +0000
+Message-ID: <DB7PR04MB4490460F9C011289CE85A0028FB90@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190830091720.41156-1-biwen.li@nxp.com>
+ <5d6d1b79.1c69fb81.29f0d.e042@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190902133747.GN9720@e119886-lin.cambridge.arm.com>
+In-Reply-To: <5d6d1b79.1c69fb81.29f0d.e042@mx.google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Murray <andrew.murray@arm.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.o>
+To: Rob Herring <robh@kernel.org>
+Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Leo Li <leoyang.li@nxp.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Martin Fuzzey <mfuzzey@parkeon.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8
-YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiBTZW50OiAyMDE5xOo51MIyyNUgMjE6MzgNCj4gVG86
-IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogcm9iaCtkdEBrZXJuZWwu
-b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvDQo+IExp
-IDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOyBsb3JlbnpvLnBpZXJhbGlzaUBh
-cm0uY29tOyBNLmguDQo+IExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IE1pbmdrYWkgSHUg
-PG1pbmdrYWkuaHVAbnhwLmNvbT47IFJveQ0KPiBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgamlu
-Z29vaGFuMUBnbWFpbC5jb207DQo+IGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tOyBsaW51
-eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGlu
-dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsNCj4gYXJuZEBhcm5kYi5k
-ZTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IFoucS4gSG91DQo+IDx6aGlxaWFuZy5ob3VA
-bnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAwNy8xMV0gUENJOiBsYXllcnNjYXBl
-OiBNb2RpZnkgdGhlIHdheSBvZiBnZXR0aW5nDQo+IGNhcGFiaWxpdHkgd2l0aCBkaWZmZXJlbnQg
-UEVYDQo+IA0KPiBPbiBNb24sIFNlcCAwMiwgMjAxOSBhdCAxMToxNzoxMkFNICswODAwLCBYaWFv
-d2VpIEJhbyB3cm90ZToNCj4gPiBUaGUgZGlmZmVyZW50IFBDSWUgY29udHJvbGxlciBpbiBvbmUg
-Ym9hcmQgbWF5IGJlIGhhdmUgZGlmZmVyZW50DQo+ID4gY2FwYWJpbGl0eSBvZiBNU0kgb3IgTVNJ
-WCwgc28gY2hhbmdlIHRoZSB3YXkgb2YgZ2V0dGluZyB0aGUgTVNJDQo+ID4gY2FwYWJpbGl0eSwg
-bWFrZSBpdCBtb3JlIGZsZXhpYmxlLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBC
-YW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+IA0KPiBQbGVhc2Ugc2VlIHRoZSBjb21tZW50cyBJ
-IGp1c3QgbWFkZSB0byBLaXNob24ncyBmZWVkYmFjayBpbiB0aGUgdGhyZWFkIGZvcg0KPiB0aGlz
-IHBhdGNoIGluIHNlcmllcyB2Mi4NCg0KSSBoYXZlIHJlcGx5IHRoZSBjb21tZW50cyBpbiBzZXJp
-ZXMgdjIsIGV4cGVjdCBLaXNob24ncyBmZWVkYmFjay4NCg0KVGhhbmtzDQpYaWFvd2VpDQoNCj4g
-DQo+IFRoYW5rcywNCj4gDQo+IEFuZHJldyBNdXJyYXkNCj4gDQo+ID4gLS0tDQo+ID4gdjI6DQo+
-ID4gIC0gUmVtb3ZlIHRoZSByZXBlYXRlZCBhc3NpZ25tZW50IGNvZGUuDQo+ID4gdjM6DQo+ID4g
-IC0gVXNlIGVwX2Z1bmMgbXNpX2NhcCBhbmQgbXNpeF9jYXAgdG8gZGVjaWRlIHRoZSBtc2lfY2Fw
-YWJsZSBhbmQNCj4gPiAgICBtc2l4X2NhcGFibGUgb2YgcGNpX2VwY19mZWF0dXJlcyBzdHJ1Y3Qu
-DQo+ID4NCj4gPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAu
-YyB8IDMxDQo+ID4gKysrKysrKysrKysrKysrKysrKy0tLS0tLS0NCj4gPiAgMSBmaWxlIGNoYW5n
-ZWQsIDIzIGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+IGIv
-ZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+IGluZGV4
-IGE5YzU1MmUuLjFlMDcyODcgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxl
-ci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xs
-ZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMNCj4gPiBAQCAtMjIsNiArMjIsNyBAQA0KPiA+DQo+
-ID4gIHN0cnVjdCBsc19wY2llX2VwIHsNCj4gPiAgCXN0cnVjdCBkd19wY2llCQkqcGNpOw0KPiA+
-ICsJc3RydWN0IHBjaV9lcGNfZmVhdHVyZXMJKmxzX2VwYzsNCj4gPiAgfTsNCj4gPg0KPiA+ICAj
-ZGVmaW5lIHRvX2xzX3BjaWVfZXAoeCkJZGV2X2dldF9kcnZkYXRhKCh4KS0+ZGV2KQ0KPiA+IEBA
-IC00MCwyNiArNDEsMzEgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQNCj4gbHNf
-cGNpZV9lcF9vZl9tYXRjaFtdID0gew0KPiA+ICAJeyB9LA0KPiA+ICB9Ow0KPiA+DQo+ID4gLXN0
-YXRpYyBjb25zdCBzdHJ1Y3QgcGNpX2VwY19mZWF0dXJlcyBsc19wY2llX2VwY19mZWF0dXJlcyA9
-IHsNCj4gPiAtCS5saW5rdXBfbm90aWZpZXIgPSBmYWxzZSwNCj4gPiAtCS5tc2lfY2FwYWJsZSA9
-IHRydWUsDQo+ID4gLQkubXNpeF9jYXBhYmxlID0gZmFsc2UsDQo+ID4gLQkuYmFyX2ZpeGVkXzY0
-Yml0ID0gKDEgPDwgQkFSXzIpIHwgKDEgPDwgQkFSXzQpLA0KPiA+IC19Ow0KPiA+IC0NCj4gPiAg
-c3RhdGljIGNvbnN0IHN0cnVjdCBwY2lfZXBjX2ZlYXR1cmVzKiAgbHNfcGNpZV9lcF9nZXRfZmVh
-dHVyZXMoc3RydWN0DQo+ID4gZHdfcGNpZV9lcCAqZXApICB7DQo+ID4gLQlyZXR1cm4gJmxzX3Bj
-aWVfZXBjX2ZlYXR1cmVzOw0KPiA+ICsJc3RydWN0IGR3X3BjaWUgKnBjaSA9IHRvX2R3X3BjaWVf
-ZnJvbV9lcChlcCk7DQo+ID4gKwlzdHJ1Y3QgbHNfcGNpZV9lcCAqcGNpZSA9IHRvX2xzX3BjaWVf
-ZXAocGNpKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gcGNpZS0+bHNfZXBjOw0KPiA+ICB9DQo+ID4N
-Cj4gPiAgc3RhdGljIHZvaWQgbHNfcGNpZV9lcF9pbml0KHN0cnVjdCBkd19wY2llX2VwICplcCkg
-IHsNCj4gPiAgCXN0cnVjdCBkd19wY2llICpwY2kgPSB0b19kd19wY2llX2Zyb21fZXAoZXApOw0K
-PiA+ICsJc3RydWN0IGxzX3BjaWVfZXAgKnBjaWUgPSB0b19sc19wY2llX2VwKHBjaSk7DQo+ID4g
-KwlzdHJ1Y3QgZHdfcGNpZV9lcF9mdW5jICplcF9mdW5jOw0KPiA+ICAJZW51bSBwY2lfYmFybm8g
-YmFyOw0KPiA+DQo+ID4gKwllcF9mdW5jID0gZHdfcGNpZV9lcF9nZXRfZnVuY19mcm9tX2VwKGVw
-LCAwKTsNCj4gPiArCWlmICghZXBfZnVuYykNCj4gPiArCQlyZXR1cm47DQo+ID4gKw0KPiA+ICAJ
-Zm9yIChiYXIgPSBCQVJfMDsgYmFyIDw9IEJBUl81OyBiYXIrKykNCj4gPiAgCQlkd19wY2llX2Vw
-X3Jlc2V0X2JhcihwY2ksIGJhcik7DQo+ID4gKw0KPiA+ICsJcGNpZS0+bHNfZXBjLT5tc2lfY2Fw
-YWJsZSA9IGVwX2Z1bmMtPm1zaV9jYXAgPyB0cnVlIDogZmFsc2U7DQo+ID4gKwlwY2llLT5sc19l
-cGMtPm1zaXhfY2FwYWJsZSA9IGVwX2Z1bmMtPm1zaXhfY2FwID8gdHJ1ZSA6IGZhbHNlOw0KPiA+
-ICB9DQo+ID4NCj4gPiAgc3RhdGljIGludCBsc19wY2llX2VwX3JhaXNlX2lycShzdHJ1Y3QgZHdf
-cGNpZV9lcCAqZXAsIHU4IGZ1bmNfbm8sIEBADQo+ID4gLTExOSw2ICsxMjUsNyBAQCBzdGF0aWMg
-aW50IF9faW5pdCBsc19wY2llX2VwX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4gKnBk
-ZXYpDQo+ID4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0KPiA+ICAJc3RydWN0
-IGR3X3BjaWUgKnBjaTsNCj4gPiAgCXN0cnVjdCBsc19wY2llX2VwICpwY2llOw0KPiA+ICsJc3Ry
-dWN0IHBjaV9lcGNfZmVhdHVyZXMgKmxzX2VwYzsNCj4gPiAgCXN0cnVjdCByZXNvdXJjZSAqZGJp
-X2Jhc2U7DQo+ID4gIAlpbnQgcmV0Ow0KPiA+DQo+ID4gQEAgLTEzMCw2ICsxMzcsMTAgQEAgc3Rh
-dGljIGludCBfX2luaXQgbHNfcGNpZV9lcF9wcm9iZShzdHJ1Y3QNCj4gcGxhdGZvcm1fZGV2aWNl
-ICpwZGV2KQ0KPiA+ICAJaWYgKCFwY2kpDQo+ID4gIAkJcmV0dXJuIC1FTk9NRU07DQo+ID4NCj4g
-PiArCWxzX2VwYyA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqbHNfZXBjKSwgR0ZQX0tFUk5F
-TCk7DQo+ID4gKwlpZiAoIWxzX2VwYykNCj4gPiArCQlyZXR1cm4gLUVOT01FTTsNCj4gPiArDQo+
-ID4gIAlkYmlfYmFzZSA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZV9ieW5hbWUocGRldiwgSU9SRVNP
-VVJDRV9NRU0sDQo+ICJyZWdzIik7DQo+ID4gIAlwY2ktPmRiaV9iYXNlID0gZGV2bV9wY2lfcmVt
-YXBfY2ZnX3Jlc291cmNlKGRldiwgZGJpX2Jhc2UpOw0KPiA+ICAJaWYgKElTX0VSUihwY2ktPmRi
-aV9iYXNlKSkNCj4gPiBAQCAtMTQwLDYgKzE1MSwxMCBAQCBzdGF0aWMgaW50IF9faW5pdCBsc19w
-Y2llX2VwX3Byb2JlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gIAlwY2kt
-Pm9wcyA9ICZsc19wY2llX2VwX29wczsNCj4gPiAgCXBjaWUtPnBjaSA9IHBjaTsNCj4gPg0KPiA+
-ICsJbHNfZXBjLT5iYXJfZml4ZWRfNjRiaXQgPSAoMSA8PCBCQVJfMikgfCAoMSA8PCBCQVJfNCks
-DQo+ID4gKw0KPiA+ICsJcGNpZS0+bHNfZXBjID0gbHNfZXBjOw0KPiA+ICsNCj4gPiAgCXBsYXRm
-b3JtX3NldF9kcnZkYXRhKHBkZXYsIHBjaWUpOw0KPiA+DQo+ID4gIAlyZXQgPSBsc19hZGRfcGNp
-ZV9lcChwY2llLCBwZGV2KTsNCj4gPiAtLQ0KPiA+IDIuOS41DQo+ID4NCg==
+>=20
+> Caution: EXT Email
+>=20
+> On Fri, Aug 30, 2019 at 05:17:19PM +0800, Biwen Li wrote:
+> > Add some properties for pcf85263/pcf85363 as follows:
+> >   - interrupt-output-pin: string type
+> >   - quartz-load-capacitance: integer type
+> >   - quartz-drive-strength: integer type
+> >   - quartz-low-jitter: bool type
+> >   - wakeup-source: bool type
+> >
+> > Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > ---
+> >  .../devicetree/bindings/rtc/pcf85363.txt      | 31
+> +++++++++++++++++++
+> >  include/dt-bindings/rtc/pcf85363.h            | 15 +++++++++
+> >  2 files changed, 46 insertions(+)
+> >  create mode 100644 include/dt-bindings/rtc/pcf85363.h
+> >
+> > diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > index 94adc1cf93d9..d83359990bd7 100644
+> > --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > @@ -8,10 +8,41 @@ Required properties:
+> >  Optional properties:
+> >  - interrupts: IRQ line for the RTC (not implemented).
+> >
+> > +- interrupt-output-pin: The interrupt output pin must be
+> > +  "NONE", "INTA" or "INTB", default value is "NONE"
+> > +
+> > +- quartz-load-capacitance: The internal capacitor to select for the qu=
+artz:
+> > +     PCF85263_QUARTZCAP_7pF          [0]
+> > +     PCF85263_QUARTZCAP_6pF          [1]
+> > +     PCF85263_QUARTZCAP_12p5pF       [2] DEFAULT
+>=20
+> We have a common property for this. Use it.
+Ok, I will replace it in v2.
+>=20
+> > +
+> > +- quartz-drive-strength: Drive strength for the quartz:
+> > +     PCF85263_QUARTZDRIVE_NORMAL     [0] DEFAULT
+> > +     PCF85263_QUARTZDRIVE_LOW        [1]
+> > +     PCF85263_QUARTZDRIVE_HIGH       [2]
+> > +
+> > +- quartz-low-jitter: Boolean property, if present enables low jitter
+> > +mode
+> > +  which reduces jitter at the cost of increased power consumption.
+>=20
+> These 2  need vendor prefixes.
+Okay, I will add vendor prefixes in v2.
+>=20
+> > +
+> > +- wakeup-source: Boolean property, mark the chip as a wakeup source,
+> > +  independently of the availability of an IRQ line connected to the So=
+C.
+> > +  This is useful if the IRQ line is connected to a PMIC or other
+> > +circuit
+> > +  that can power up the device rather than to a normal SOC interrupt.
+> > +
+> >  Example:
+> >
+> >  pcf85363: pcf85363@51 {
+> >       compatible =3D "nxp,pcf85363";
+> >       reg =3D <0x51>;
+> > +
+> > +     interrupt-parent =3D <&gpio1>;
+> > +     interrupts =3D <18 IRQ_TYPE_EDGE_FALLING>;
+> > +
+> > +     #include <dt-bindings/rtc/pcf85363.h>
+> > +     wakeup-source;
+> > +     interrupt-output-pin =3D "INTA";
+> > +     quartz-load-capacitance =3D <PCF85363_QUARTZCAP_12p5pF>;
+> > +     quartz-drive-strength =3D <PCF85363_QUARTZDRIVE_LOW>;
+> > +     quartz-low-jitter;
+> >  };
+> >
+> > diff --git a/include/dt-bindings/rtc/pcf85363.h
+> > b/include/dt-bindings/rtc/pcf85363.h
+> > new file mode 100644
+> > index 000000000000..2c06c28eb5ff
+> > --- /dev/null
+> > +++ b/include/dt-bindings/rtc/pcf85363.h
+> > @@ -0,0 +1,15 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */ #ifndef
+> > +_DT_BINDINGS_RTC_PCF85363_H #define
+> _DT_BINDINGS_RTC_PCF85363_H
+> > +
+> > +/* Quartz capacitance */
+> > +#define PCF85363_QUARTZCAP_7pF               0
+> > +#define PCF85363_QUARTZCAP_6pF               1
+> > +#define PCF85363_QUARTZCAP_12p5pF    2
+> > +
+> > +/* Quartz drive strength */
+> > +#define PCF85363_QUARTZDRIVE_NORMAL  0
+> > +#define PCF85363_QUARTZDRIVE_LOW     1
+> > +#define PCF85363_QUARTZDRIVE_HIGH    2
+> > +
+> > +#endif /* _DT_BINDINGS_RTC_PCF85363_H */
+> > --
+> > 2.17.1
+> >
