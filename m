@@ -1,58 +1,64 @@
-From: Robert Richter <rrichter@marvell.com>
-Subject: Re: [PATCH v3 4/4] edac: Add support for Amazon's Annapurna Labs L2
- EDAC
-Date: Tue, 3 Sep 2019 08:46:24 +0000
-Message-ID: <20190903084614.mthff6hzbchkw7t2@rric.localdomain>
-References: <1563197049-12679-1-git-send-email-hhhawa@amazon.com>
- <1563197049-12679-5-git-send-email-hhhawa@amazon.com>
- <20190903072655.kz5x7n3477dg4yap@rric.localdomain>
- <2bce020a-bf7e-1d54-48c3-0aa6d23c84d8@amazon.com>
+From: Luca Ceresoli <luca@lucaceresoli.net>
+Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
+Date: Tue, 3 Sep 2019 10:48:41 +0200
+Message-ID: <8482d1e2-b1d9-3da5-5b1f-b7e492a87368@lucaceresoli.net>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-3-luca@lucaceresoli.net> <20190902204208.GA7253@kunai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2bce020a-bf7e-1d54-48c3-0aa6d23c84d8@amazon.com>
+In-Reply-To: <20190902204208.GA7253@kunai>
 Content-Language: en-US
-Content-ID: <0F1F622723E9814484DCF6155A64ADD3@namprd18.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Hawa, Hanna" <hhhawa@amazon.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "bp@alien8.de" <bp@alien8.de>, "mchehab@kernel.org" <mchehab@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "davem@davemloft.net" <davem@davemloft.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>, "benh@amazon.com" <benh@amazon.com>, "ronenk@amazon.com" <ronenk@amazon.com>, "talel@amazon.com" <talel@amazon.com>, "jonnyc@amazon.com" <jonnyc@amazon.com>, "hanochu@amazon.com" <hanochu@>
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Vladimir Zapolskiy <vz@mleia.com>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-On 03.09.19 11:28:41, Hawa, Hanna wrote:
-> On 9/3/2019 10:27 AM, Robert Richter wrote:
-> > On 15.07.19 16:24:09, Hanna Hawa wrote:
-> > > Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
-> > > report L2 errors.
-> > >=20
-> > > Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-> > > ---
-> > >   MAINTAINERS               |   6 ++
-> > >   drivers/edac/Kconfig      |   8 ++
-> > >   drivers/edac/Makefile     |   1 +
-> > >   drivers/edac/al_l2_edac.c | 187 +++++++++++++++++++++++++++++++++++=
-+++++++++++
-> > >   4 files changed, 202 insertions(+)
-> > >   create mode 100644 drivers/edac/al_l2_edac.c
-> >=20
-> >  From a brief look at it, it seems some of my comments from 2/4 apply
-> > here too. Please look through it.
->=20
-> Thanks for your review, will look and fix on top of v5.
+Hi Wolfram,
 
-I have later seen your newer versions posted which haven't made it
-into my inbox. But looking at the changelog my comments are still
-valid. Thanks for addressing them.
+On 02/09/19 22:42, Wolfram Sang wrote:
+> Hi Luca,
+> 
+>> + * Topology:
+>> + *
+>> + *                       Slave X @ 0x10
+>> + *               .-----.   |
+>> + *   .-----.     |     |---+---- B
+>> + *   | CPU |--A--| ATR |
+>> + *   `-----'     |     |---+---- C
+>> + *               `-----'   |
+>> + *                       Slave Y @ 0x10
+>> + *
+>> + * Alias table:
+>> + *
+>> + *   Client  Alias
+>> + *   -------------
+>> + *      X    0x20
+>> + *      Y    0x30
+> 
+> Great that you already provided docs for this driver!
+> 
+> One huge drawback for me is the attach/detach callbacks. One year ago, I
+> removed a similar callback from the I2C core ("[PATCH 0/2] i2c: remove
+> deprecated attach_adapter callback") because some drivers did a lot of
+> crazy things there. It took years to remove all that.
 
->From the changelog:
+Oh dear, I was completely unaware, apologies! :-)
 
-"Changes since v1:
------------------
-- Split into two drivers"
+> What I could imagine here: the adapter (B and C each in the picture
+> above) gets a flag like NEEDS_ATR before registering to the core. The
+> flag means all clients on that bus will have their address translated.
+> The core will figure out a free alias when a device is registered. We
+> can then have an ATR specific callback with the original and translated
+> address as arguments, so one can setup the HW as needed.
 
-This is good, but recent practice is also to have all the drivers for
-the same piece of hardware in a single file, see e.g. thunderx_edac.c.
-I don't know how detailed this was discussed already, but I would
-prefer to join the code.
+Do you mean moving the alias selection code from i2c-atr.c to the i2c
+core? And the rest of the ATR core too?
 
--Robert
+> Do you think that would work?
+
+Yes.
+
+-- 
+Luca
