@@ -1,43 +1,47 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 098/167] ARM: dts: qcom: ipq4019: fix PCI range
-Date: Tue,  3 Sep 2019 12:24:10 -0400
-Message-ID: <20190903162519.7136-98-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 102/167] dt-bindings: mmc: Add disable-cqe-dcmd property.
+Date: Tue,  3 Sep 2019 12:24:14 -0400
+Message-ID: <20190903162519.7136-102-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Mathias Kresin <dev@kresin.me>, John Crispin <john@phrozen.org>, Andy Gross <andy.gross@linaro.org>, Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Christoph Muellner <christoph.muellner@theobroma-systems.com>, Philipp Tomsich <philipp.tomsich@theobroma-systems.com>, Ulf Hansson <ulf.hansson@linaro.org>, Sasha Levin <sashal@kernel.org>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mathias Kresin <dev@kresin.me>
+From: Christoph Muellner <christoph.muellner@theobroma-systems.com>
 
-[ Upstream commit da89f500cb55fb3f19c4b399b46d8add0abbd4d6 ]
+[ Upstream commit 28f22fb755ecf9f933f045bc0afdb8140641b01c ]
 
-The PCI range is invalid and PCI attached devices doen't work.
+Add disable-cqe-dcmd as optional property for MMC hosts.
+This property allows to disable or not enable the direct command
+features of the command queue engine.
 
-Signed-off-by: Mathias Kresin <dev@kresin.me>
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+Fixes: 84362d79f436 ("mmc: sdhci-of-arasan: Add CQHCI support for arasan,sdhci-5.1")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index 78db67337ed4a..2c3168d95a2d5 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -387,7 +387,7 @@
- 			#size-cells = <2>;
+diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+index cdbcfd3a4ff21..c269dbe384fea 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+@@ -64,6 +64,8 @@ Optional properties:
+   whether pwrseq-simple is used. Default to 10ms if no available.
+ - supports-cqe : The presence of this property indicates that the corresponding
+   MMC host controller supports HW command queue feature.
++- disable-cqe-dcmd: This property indicates that the MMC controller's command
++  queue engine (CQE) does not support direct commands (DCMDs).
  
- 			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000
--				  0x82000000 0 0x48000000 0x48000000 0 0x10000000>;
-+				  0x82000000 0 0x40300000 0x40300000 0 0x400000>;
- 
- 			interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>;
- 			interrupt-names = "msi";
+ *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+ polarity properties, we have to fix the meaning of the "normal" and "inverted"
 -- 
 2.20.1
