@@ -1,63 +1,131 @@
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Subject: Re: [RFC,v2 3/6] media: dt-bindings: add DS90UB954-Q1 video
- deserializer
-Date: Tue, 3 Sep 2019 11:09:55 +0200
-Message-ID: <63d99d6d-ecdd-7dd8-0dcb-126bfd89b258@lucaceresoli.net>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-4-luca@lucaceresoli.net> <20190902204841.GB7253@kunai>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
+ for LGM SDXC PHY
+Date: Tue, 3 Sep 2019 10:19:18 +0100
+Message-ID: <CAL_JsqKm=-5F-Ej1mzRaygJnjS2Lec6uJF4J3vfCnqdkQNNbug@mail.gmail.com>
+References: <20190828124315.48448-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190828124315.48448-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190902033716.GA18092@bogus> <9f4d6bdd-072a-ab71-1ef1-1d00c22bd064@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190902204841.GB7253@kunai>
-Content-Language: en-US
+In-Reply-To: <9f4d6bdd-072a-ab71-1ef1-1d00c22bd064@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Vladimir Zapolskiy <vz@mleia.com>, Peter Rosin <peda@axentia.se>
+To: "Ramuthevar, Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@intel.com>, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+On Tue, Sep 3, 2019 at 2:57 AM Ramuthevar, Vadivel MuruganX
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>
+> Hi Rob,
+>
+> Thank you for review comments.
+>
+> On 2/9/2019 9:38 PM, Rob Herring wrote:
+> > On Wed, Aug 28, 2019 at 08:43:14PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> >> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >>
+> >> Add a YAML schema to use the host controller driver with the
+> >> SDXC PHY on Intel's Lightning Mountain SoC.
+> >>
+> >> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >> ---
+> >>   .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 52 ++++++++++++++++++++++
+> >>   .../devicetree/bindings/phy/intel,syscon.yaml      | 33 ++++++++++++++
+> >>   2 files changed, 85 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> >>   create mode 100644 Documentation/devicetree/bindings/phy/intel,syscon.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> >> new file mode 100644
+> >> index 000000000000..99647207b414
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> >> @@ -0,0 +1,52 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
+> >> +
+> >> +maintainers:
+> >> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >> +
+> >> +allOf:
+> >> +  - $ref: "intel,syscon.yaml"
+> > You don't need this. It should be selected and applied by the compatible
+> > string matching.
+> Agreed, fix it in the next patch.
+> >> +
+> >> +description: Binding for SDXC PHY
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: intel,lgm-sdxc-phy
+> >> +
+> >> +  intel,syscon:
+> >> +    description: phandle to the sdxc through syscon
+> >> +
+> >> +  clocks:
+> >> +    maxItems: 1
+> >> +
+> >> +  clock-names:
+> >> +    maxItems: 1
+> >> +
+> >> +  "#phy-cells":
+> >> +    const: 0
+> >> +
+> >> +required:
+> >> +  - "#phy-cells"
+> >> +  - compatible
+> >> +  - intel,syscon
+> >> +  - clocks
+> >> +  - clock-names
+> >> +
+> >> +additionalProperties: false
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    sdxc_phy: sdxc_phy {
+> >> +        compatible = "intel,lgm-sdxc-phy";
+> >> +        intel,syscon = <&sysconf>;
+> > Make this a child of the below node and then you don't need this.
+> >
+> > If there's a register address range associated with this, then add a reg
+> > property.
+>
+> Thanks for comments,  I have defined herewith example
+>
+> sysconf: chiptop@e0020000 {
+>              compatible = "intel,syscon";
 
-On 02/09/19 22:48, Wolfram Sang wrote:
-> 
->> + - i2c-alias-pool: list of I2C addresses that are known to be available on the
->> +                   "local" (SoC-to-deser) I2C bus; they will be picked at
->> +		   runtime and used as aliases to reach remove I2C chips
-> 
-> After some internal discussion, I have been kinda convinced that it may
-> be better to assume all non-described addresses are free to use and
-> enter the pool.
-> 
-> The problem with the binding above is that you may run out of aliases
-> depending on how many aliases one to-be-attached module needs or how
-> many modules will be attached.
+Needs to be SoC specific value.
 
-Not if you define enough addresses in the pool. E.g. the DS90UB954
-hardware can have 8 aliases per port, so if you have (n_ports * 8)
-addresses in the pool the problem is solved.
+>              reg = <0xe0020000 0x100>;
+>
+>              emmc_phy: emmc_phy {
+>                  compatible = "intel,lgm-emmc-phy";
+>                  intel,syscon = <&sysconf>;
 
-> And another add-on module with
-> non-repogrammable devices may occupy addresses from the defined pool
-> above.
+This is redundant because you can just get the parent node.
 
-You mean a new device on the local (SoC-to-ATR) bus? Well, it could as
-well occupy a non-described address that the ATR has already picked as
-an alias.
+If there's a defined register range within the 'intel,syscon' block
+then define it here with 'reg'.
 
-> I am not perfectly happy with the assumption that all undescribed
-> addresses are automatically free. That also might need DTS updates to
-> describe all clients properly. But this change only needs to be done
-> once, and it will improve the description of the hardware.
-
-Right, but I still suspect some users won't do their homework and
-discover address conflicts at runtime, maybe months later, in a painful
-way. Also a chip might be undocumented on a given board, so they could
-do their homework and still have problems.
-
-Despite my comments, I'm not strongly against your proposal. To me it
-doesn't seem to solve any problem, while it does introduce some degree
-of risk. Could you elaborate more on but what benefit it introduces?
-
-Thanks,
--- 
-Luca
+>                  clocks = <&emmc>;
+>                  clock-names = "emmcclk";
+>                  #phy-cells = <0>;
+>             };
+> };
+>
+> Is this way need to add right?
+>
+> >> +        clocks = <&sdxc>;
+> >> +        clock-names = "sdxcclk";
+> >> +        #phy-cells = <0>;
+> >> +    };
+> >> +
+> >> +...
