@@ -1,87 +1,53 @@
-Return-Path: <SRS0=vWkV=W6=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49203 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbfICGsF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 3 Sep 2019 02:48:05 -0400
-Subject: Re: [PATCH V2 1/5] dt-bindings: fsl: scu: add scu power key binding
+Return-Path: <SRS0=x5b/=W6=nxp.com=anson.huang@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH V2 1/5] dt-bindings: fsl: scu: add scu power key binding
+Date: Tue, 3 Sep 2019 06:37:00 +0000
+Message-ID: 
+ <DB3PR0402MB391656FC3603B30300ADBF27F5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
  <21d2e400-976a-35c3-6875-4cc0c476fdf2@pengutronix.de>
- <DB3PR0402MB391656FC3603B30300ADBF27F5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Message-ID: <7c3b6ae3-9f22-11f8-2464-79d02ac656f3@pengutronix.de>
-Date: Tue, 3 Sep 2019 08:47:57 +0200
-MIME-Version: 1.0
-In-Reply-To: <DB3PR0402MB391656FC3603B30300ADBF27F5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <21d2e400-976a-35c3-6875-4cc0c476fdf2@pengutronix.de>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Sender: devicetree-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "mripard@kernel.org" <mripard@kernel.org>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "dinguyen@kernel.org" <dinguyen@kernel.org>, "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>, "stefan@agner.ch" <stefan@agner.ch>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "yuehaibing@huawei.com" <yuehaibing@huawei.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "ronald@innovation.ch" <ronald@innovation.ch>, "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>, Jacky Bai <ping.bai@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Oleksij Rempel <o.rempel@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "mripard@kernel.org" <mripard@kernel.org>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "dinguyen@kernel.org" <dinguyen@kernel.org>, "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>, "stefan@agner.ch" <stefan@agner.ch>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "yuehaibing@huawei.com" <yuehaibing@huawei.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "ronald@innovation.ch" <ronald@innovation.ch>, "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>, Jacky Bai <ping.bai@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-
-
-On 03.09.19 08:37, Anson Huang wrote:
-> Hi, Oleksij
-> 
->> On 03.09.19 16:03, Anson Huang wrote:
->>> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as system
->>> controller, the system controller is in charge of system power, clock
->>> and power key event etc. management, Linux kernel has to communicate
->>> with system controller via MU (message unit) IPC to get power key
->>> event, add binding doc for i.MX system controller power key driver.
->>>
->>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
->>> ---
->>> Changes since V1:
->>> 	- remove "wakeup-source" property, as it is NOT needed for SCU
->> interrupt;
->>> 	- remove "status" in example.
->>> ---
->>>    .../devicetree/bindings/arm/freescale/fsl,scu.txt          | 14
->> ++++++++++++++
->>>    1 file changed, 14 insertions(+)
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
->>> b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
->>> index c149fad..f93e2e4 100644
->>> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
->>> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
->>> @@ -157,6 +157,15 @@ Required properties:
->>>    Optional properties:
->>>    - timeout-sec: contains the watchdog timeout in seconds.
->>>
->>> +Power key bindings based on SCU Message Protocol
->>> +------------------------------------------------------------
->>> +
->>> +Required properties:
->>> +- compatible: should be:
->>> +              "fsl,imx8qxp-sc-pwrkey"
->>> +              followed by "fsl,imx-sc-pwrkey";
->>> +- linux,keycodes: See
->>> +Documentation/devicetree/bindings/input/keys.txt
->>
->> linux,keycodes is required parameter. So, this kay cab be anything. Why the
->> compatible is called pwrkey? Probably it is better to call it "*-sc-key"
-> 
-> This key is kind of special, it is ON/OFF button which is designed for power key
-> purpose, it has HW function such as long pressing it would shutdown the system power,
-> so we always use it as power key, NOT general key, does it make sense?
-
-I assume, OF devs will argue: DT is describing hardware not software.
-On other hand, software will get notification about assertion/deassertion of this key. So, 
-it is just normal key. If, for some reason, it will trigger world destruction, if it is 
-pressed too long... probably no body cares.
-You can provide fsl,imx-sc-key as additional compatible. In case linux will need some 
-quirks, we still can fall back to more precise compatible "fsl,imx8qxp-sc-pwrkey".
-
-Kind regards,
-Oleksij Rempel
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+SGksIE9sZWtzaWoNCg0KPiBPbiAwMy4wOS4xOSAxNjowMywgQW5zb24gSHVhbmcgd3JvdGU6DQo+
+ID4gTlhQIGkuTVg4UVhQIGlzIGFuIEFSTXY4IFNvQyB3aXRoIGEgQ29ydGV4LU00IGNvcmUgaW5z
+aWRlIGFzIHN5c3RlbQ0KPiA+IGNvbnRyb2xsZXIsIHRoZSBzeXN0ZW0gY29udHJvbGxlciBpcyBp
+biBjaGFyZ2Ugb2Ygc3lzdGVtIHBvd2VyLCBjbG9jaw0KPiA+IGFuZCBwb3dlciBrZXkgZXZlbnQg
+ZXRjLiBtYW5hZ2VtZW50LCBMaW51eCBrZXJuZWwgaGFzIHRvIGNvbW11bmljYXRlDQo+ID4gd2l0
+aCBzeXN0ZW0gY29udHJvbGxlciB2aWEgTVUgKG1lc3NhZ2UgdW5pdCkgSVBDIHRvIGdldCBwb3dl
+ciBrZXkNCj4gPiBldmVudCwgYWRkIGJpbmRpbmcgZG9jIGZvciBpLk1YIHN5c3RlbSBjb250cm9s
+bGVyIHBvd2VyIGtleSBkcml2ZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFu
+ZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIHNpbmNlIFYxOg0K
+PiA+IAktIHJlbW92ZSAid2FrZXVwLXNvdXJjZSIgcHJvcGVydHksIGFzIGl0IGlzIE5PVCBuZWVk
+ZWQgZm9yIFNDVQ0KPiBpbnRlcnJ1cHQ7DQo+ID4gCS0gcmVtb3ZlICJzdGF0dXMiIGluIGV4YW1w
+bGUuDQo+ID4gLS0tDQo+ID4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxl
+L2ZzbCxzY3UudHh0ICAgICAgICAgIHwgMTQNCj4gKysrKysrKysrKysrKysNCj4gPiAgIDEgZmls
+ZSBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0DQo+ID4gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4
+dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVlc2NhbGUv
+ZnNsLHNjdS50eHQNCj4gPiBpbmRleCBjMTQ5ZmFkLi5mOTNlMmU0IDEwMDY0NA0KPiA+IC0tLSBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3Uu
+dHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVl
+c2NhbGUvZnNsLHNjdS50eHQNCj4gPiBAQCAtMTU3LDYgKzE1NywxNSBAQCBSZXF1aXJlZCBwcm9w
+ZXJ0aWVzOg0KPiA+ICAgT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiAgIC0gdGltZW91dC1zZWM6
+IGNvbnRhaW5zIHRoZSB3YXRjaGRvZyB0aW1lb3V0IGluIHNlY29uZHMuDQo+ID4NCj4gPiArUG93
+ZXIga2V5IGJpbmRpbmdzIGJhc2VkIG9uIFNDVSBNZXNzYWdlIFByb3RvY29sDQo+ID4gKy0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
+PiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSBjb21wYXRpYmxlOiBzaG91
+bGQgYmU6DQo+ID4gKyAgICAgICAgICAgICAgImZzbCxpbXg4cXhwLXNjLXB3cmtleSINCj4gPiAr
+ICAgICAgICAgICAgICBmb2xsb3dlZCBieSAiZnNsLGlteC1zYy1wd3JrZXkiOw0KPiA+ICstIGxp
+bnV4LGtleWNvZGVzOiBTZWUNCj4gPiArRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2lucHV0L2tleXMudHh0DQo+IA0KPiBsaW51eCxrZXljb2RlcyBpcyByZXF1aXJlZCBwYXJhbWV0
+ZXIuIFNvLCB0aGlzIGtheSBjYWIgYmUgYW55dGhpbmcuIFdoeSB0aGUNCj4gY29tcGF0aWJsZSBp
+cyBjYWxsZWQgcHdya2V5PyBQcm9iYWJseSBpdCBpcyBiZXR0ZXIgdG8gY2FsbCBpdCAiKi1zYy1r
+ZXkiDQoNClRoaXMga2V5IGlzIGtpbmQgb2Ygc3BlY2lhbCwgaXQgaXMgT04vT0ZGIGJ1dHRvbiB3
+aGljaCBpcyBkZXNpZ25lZCBmb3IgcG93ZXIga2V5DQpwdXJwb3NlLCBpdCBoYXMgSFcgZnVuY3Rp
+b24gc3VjaCBhcyBsb25nIHByZXNzaW5nIGl0IHdvdWxkIHNodXRkb3duIHRoZSBzeXN0ZW0gcG93
+ZXIsDQpzbyB3ZSBhbHdheXMgdXNlIGl0IGFzIHBvd2VyIGtleSwgTk9UIGdlbmVyYWwga2V5LCBk
+b2VzIGl0IG1ha2Ugc2Vuc2U/DQoNClRoYW5rcywNCkFuc29uLg0K
