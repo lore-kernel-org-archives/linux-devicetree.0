@@ -1,109 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Add binding for IT6505.
-Date: Tue, 3 Sep 2019 18:48:44 +0100
-Message-ID: <20190903174844.GA4044@bogus>
-References: <1567507915-9844-1-git-send-email-allen.chen@ite.com.tw>
- <1567507915-9844-2-git-send-email-allen.chen@ite.com.tw>
+Subject: Re: [PATCH V3 1/5] dt-bindings: fsl: scu: add scu key binding
+Date: Tue, 3 Sep 2019 19:01:19 +0100
+Message-ID: <20190903180119.GA5856@bogus>
+References: <1567546600-21566-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1567507915-9844-2-git-send-email-allen.chen@ite.com.tw>
+In-Reply-To: <1567546600-21566-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: allen <allen.chen@ite.com.tw>
-Cc: Pi-Hsun Shih <pihsun@chromium.org>, Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, CK Hu <ck.hu@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com, will@kernel.org, dmitry.torokhov@gmail.com, aisheng.dong@nxp.com, ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com, daniel.baluta@nxp.com, leonard.crestez@nxp.com, mripard@kernel.org, olof@lixom.net, arnd@arndb.de, jagan@amarulasolutions.com, bjorn.andersson@linaro.org, dinguyen@kernel.org, marcin.juszkiewicz@linaro.org, stefan@agner.ch, gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com, yuehaibing@huawei.com, tglx@linutronix.de, ronald@innovation.ch, m.felsch@pengutronix.de, ping.bai@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 06:51:53PM +0800, allen wrote:
-> From: Allen Chen <allen.chen@ite.com.tw>
+On Tue,  3 Sep 2019 17:36:36 -0400, Anson Huang wrote:
+> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+> system controller, the system controller is in charge of system
+> power, clock and scu key event etc. management, Linux kernel has
+> to communicate with system controller via MU (message unit) IPC
+> to get scu key event, add binding doc for i.MX system controller
+> key driver.
 > 
-> Add a DT binding documentation for IT6505.
-> 
-> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
-> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
-> Comments in v1 would be addressed later in v3.
+> Changes since V2:
+> 	- use "key" instead of "pwrkey" as the key function can be defined in DT.
 > ---
->  .../bindings/display/bridge/ite,it6505.txt         | 30 ++++++++++++++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  2 files changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
-
-This won't apply. Base your patches on current (latest -rc) kernels.
-
-We've moved to a DT schema format. Minimally vendor-prefixes.txt will 
-have to change. It's also preferred for display bridges.
-
+>  .../devicetree/bindings/arm/freescale/fsl,scu.txt          | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
-> new file mode 100644
-> index 0000000..c3506ac
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.txt
-> @@ -0,0 +1,30 @@
-> +iTE it6505 DP bridge bindings
-> +
-> +Required properties:
-> +        - compatible: "ite,it6505"
-> +        - reg: i2c address of the bridge
-> +        - ovdd-supply: I/O voltage
-> +        - pwr18-supply: Core voltage
-> +        - interrupts: interrupt specifier of INT pin
-> +        - reset-gpios: gpio specifier of RESET pin
-> +
-> +Example:
-> +	it6505dptx: it6505dptx@5c {
 
-dp-bridge@5c
-
-> +                compatible = "ite,it6505";
-> +                status = "okay";
-
-Don't show status in examples.
-
-> +                interrupt-parent = <&pio>;
-
-And interrupt-parent.
-
-> +                interrupts = <152 IRQ_TYPE_EDGE_RISING 152 0>;
-> +                reg = <0x5c>;
-> +                pinctrl-names = "default";
-> +                pinctrl-0 = <&it6505_pins>;
-> +                ovdd-supply = <&mt6358_vsim1_reg>;
-> +                pwr18-supply = <&it6505_pp18_reg>;
-> +                reset-gpios = <&pio 179 1>;
-> +                hpd-gpios = <&pio 9 0>;
-
-This goes in a connector node.
-
-> +                extcon = <&usbc_extcon>;
-
-extcon is deprecated. Drop or use the usb-connector binding.
-
-Plus this is not documented above.
-
-> +                port {
-
-Need to list what each port is. You're going to need an output port too 
-for a dp-connector or usb-c connector.
-
-> +                        it6505_in: endpoint {
-> +                                remote-endpoint = <&dpi_out>;
-> +                        };
-> +                };
-> +        };
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 2c3fc51..c088646 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -184,6 +184,7 @@ iom	Iomega Corporation
->  isee	ISEE 2007 S.L.
->  isil	Intersil
->  issi	Integrated Silicon Solutions Inc.
-> +ite	iTE Tech. Inc.
->  itead	ITEAD Intelligent Systems Co.Ltd
->  iwave  iWave Systems Technologies Pvt. Ltd.
->  jdi	Japan Display Inc.
-> -- 
-> 1.9.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
