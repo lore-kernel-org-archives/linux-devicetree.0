@@ -1,216 +1,190 @@
-Return-Path: <SRS0=ZhZM=XA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:20588 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390151AbfIEPDy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Sep 2019 11:03:54 -0400
-Content-Type: text/plain; charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH 4/6] ARM: dts: Configure sgx for omap5
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20190826145530.GT52127@atomide.com>
-Date: Thu, 5 Sep 2019 17:03:28 +0200
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4BC961D4-1D6E-457B-944A-7137414BC163@goldelico.com>
-References: <20190814131408.57162-1-tony@atomide.com> <20190814131408.57162-5-tony@atomide.com> <20190815182348.8A1BA2063F@mail.kernel.org> <20190817065615.GI52127@atomide.com> <20190826145530.GT52127@atomide.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, devicetree <devicetree@vger.kernel.org>, Adam Ford <aford173@gmail.com>, =?utf-8?Q?Filip_Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, moaz korena <moaz@korena.xyz>, Merlijn Wajer <merlijn@wizzup.org>, =?utf-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, Philipp Rossak <embed3d@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Michael Turquette <mturquette@baylibre.com>, Tero Kristo <t-kristo@ti.com>, linux-clk@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 3 Sep 2019 19:00:34 +0100
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 5/7 v3] mfd: ab8500: augment DT bindings
+Message-ID: <20190903180034.GA20595@bogus>
+References: <20190903150612.12246-1-linus.walleij@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903150612.12246-1-linus.walleij@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mboumba Cedric Madianga <cedric.madianga@gmail.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Tony,
-I found some time to update my drivers/stating/pvr/1.14.369993 tree to =
-make
-use of the new sgx soc integration code and it works on omap5!
-
-> root@letux:~# modprobe pvrsrvkm_omap_omap5_sgx544_116
-> [  106.478254] pvrsrvkm_omap_omap5_sgx544_116: module is from the =
-staging directory, the quality is unknown, you have been warned.
-> [  106.526201] [drm] Initialized pvr 1.14.3699939 20110701 for =
-5600fe00.sgx on minor 1
-> root@letux:~# pvrsrvctl --no-module --start
-> [  261.091978] PVR_K: UM DDK-(3699939) and KM DDK-(3699939) match. [ =
-OK ]
-> root@letux:~# gles1test1 0
-> ^C
-> root@letux:~#=20
-
-
-To make it work, I have added a child node to the target-module@56000000
-that describes the img,sgx5xx. Here are the work-in-progress patches if
-you want to take a look inside:
-
-	=
-https://github.com/openpvrsgx-devgroup/linux_openpvrsgx/commits/letux/omap=
--pvr-soc-glue-v2
-
-On omap3630 the driver module loads but pvrsrvinit fails:
-
-> root@letux:~# modprobe pvrsrvkm_omap_omap3630_sgx530_125
-> [  390.429260] pvrsrvkm_omap_omap3630_sgx530_125: module is from the =
-staging directory, the quality is unknown, you have been warned.
-> [  390.474304] [drm] Initialized pvr 1.14.3699939 20110701 for =
-50000000.sgx on minor 1
-> root@letux:~# pvrsrvctl --start --no-module
-> [  402.200439] PVR_K: UM DDK-(3699939) and KM DDK-(3699939) match. [ =
-OK ]
-> [  402.219604] PVR_K:(Error): BridgedDispatchKM: Initialisation =
-failed.  Driver unusable.
-> PVR:(Error): LoaduKernelProgram : SGX ukernel program Device Addr: =
-0xe400000 invalid alignment [0, ]
-> PVR:(Error): SetupuKernel : Failed to load uKernel programs [0, ]
-> PVR:(Error): SrvInit: Initialisation for device of class 0, type 7, =
-index 0, failed (1) [0, ]
-> PVR:(Error): PVRSRVBridgeCall: Failed to access device.  Function =
-ID:3223086862 (strerror returns no value.). [0, ]
-> pvrsrvctl: SrvInit failed (already initialized?) =
-(err=3DPVRSRV_ERROR_OUT_OF_MEMORY - Unable to allocate required memory)
-> root@letux:~#=20
-
-Maybe I do not have done the address range translation properly. Or I am =
-missing
-some of your PRM rstctrl patches since I am working on top of =
-linus/master.
-Because of that I had to comment out prm_gfx in am33xx.dtsi to get it =
-compile and could
-not test yet on Beagle Bone.
-
-A little unclear is how to properly handle omap4. omap4430/4440 and 4460 =
-have the sgx540
-while only omap4470 has an sgx544 inside. But omap4420/30 share one =
-.dtsi and omap4460/70
-the other. So we might have to define a new omap4470.dtsi and #include =
-in the real omap4470
-boards.
-
-And am3517 and am43/am57/am65/... support is missing. But that can be =
-added later if we
-have it running on omap3 and am33xx.
-
-Anyways, we again have made a big step forwards. Let's hope that we can =
-get
-the FLOSS part of the sgx drivers to staging in some not too far future.
-
-BR and thanks,
-Nikolaus
-
-
-> Am 26.08.2019 um 16:55 schrieb Tony Lindgren <tony@atomide.com>:
->=20
-> * Tony Lindgren <tony@atomide.com> [190817 06:56]:
->> * Stephen Boyd <sboyd@kernel.org> [190815 18:24]:
->>> Quoting Tony Lindgren (2019-08-14 06:14:06)
->>>> diff --git a/arch/arm/boot/dts/omap54xx-clocks.dtsi =
-b/arch/arm/boot/dts/omap54xx-clocks.dtsi
->>>> --- a/arch/arm/boot/dts/omap54xx-clocks.dtsi
->>>> +++ b/arch/arm/boot/dts/omap54xx-clocks.dtsi
->>>> @@ -1146,6 +1146,20 @@
->>>>                };
->>>>        };
->>>>=20
->>>> +       gpu_cm: gpu_cm@1500 {
->>>=20
->>> Node names shouldn't have underscores. Maybe clock-controller?
->>=20
->> OK yeah clock-controller sounds good to me.
->=20
-> Below is this one updated to use clock-controller naming.
->=20
-> Regards,
->=20
-> Tony
->=20
-> 8< ---------------------------
-> =46rom tony Mon Sep 17 00:00:00 2001
-> From: Tony Lindgren <tony@atomide.com>
-> Date: Wed, 14 Aug 2019 05:18:16 -0700
-> Subject: [PATCH] ARM: dts: Configure sgx for omap5
-> MIME-Version: 1.0
-> Content-Type: text/plain; charset=3DUTF-8
-> Content-Transfer-Encoding: 8bit
->=20
-> I've tested that the interconnect target module enables and idles
-> just fine when probed with ti-sysc with PM runtime control via sys:
->=20
-> # echo on > $(find /sys -name control | grep \/5600)
-> # rwmem 0x5600fe00	# OCP Revision
-> 0x5600fe00 =3D 0x40000000
-> # echo auto > $(find /sys -name control | grep \/5600)
-> # rwmem 0x5600fe10
-> # rwmem 0x56000024
->=20
-> Cc: Adam Ford <aford173@gmail.com>
-> Cc: Filip Matijevi=C4=87 <filip.matijevic.pz@gmail.com>
-> Cc: "H. Nikolaus Schaller" <hns@goldelico.com>
-> Cc: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-> Cc: moaz korena <moaz@korena.xyz>
-> Cc: Merlijn Wajer <merlijn@wizzup.org>
-> Cc: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> Cc: Philipp Rossak <embed3d@gmail.com>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+On Tue, Sep 03, 2019 at 05:06:12PM +0200, Linus Walleij wrote:
+> As we migrate the AB8500 GPADC driver to use IIO, we need to augment
+> the bindings to account for defining the ADC channels in the device
+> tree.
+> 
+> Cc: devicetree@vger.kernel.org
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
-> arch/arm/boot/dts/omap5.dtsi           | 23 +++++++++++++++++++++++
-> arch/arm/boot/dts/omap54xx-clocks.dtsi | 14 ++++++++++++++
-> 2 files changed, 37 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/omap5.dtsi =
-b/arch/arm/boot/dts/omap5.dtsi
-> --- a/arch/arm/boot/dts/omap5.dtsi
-> +++ b/arch/arm/boot/dts/omap5.dtsi
-> @@ -257,6 +257,29 @@
-> 			ports-implemented =3D <0x1>;
-> 		};
->=20
-> +		target-module@56000000 {
-> +			compatible =3D "ti,sysc-omap4", "ti,sysc";
-> +			reg =3D <0x5600fe00 0x4>,
-> +			      <0x5600fe10 0x4>;
-> +			reg-names =3D "rev", "sysc";
-> +			ti,sysc-midle =3D <SYSC_IDLE_FORCE>,
-> +					<SYSC_IDLE_NO>,
-> +					<SYSC_IDLE_SMART>;
-> +			ti,sysc-sidle =3D <SYSC_IDLE_FORCE>,
-> +					<SYSC_IDLE_NO>,
-> +					<SYSC_IDLE_SMART>;
-> +			clocks =3D <&gpu_clkctrl OMAP5_GPU_CLKCTRL 0>;
-> +			clock-names =3D "fck";
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <1>;
-> +			ranges =3D <0 0x56000000 0x2000000>;
+> ChangeLog v2->v3:
+> - Change "adc-channel@" to "channel@" as per preferred notation.
+> - Add some full stops to the end of sentences.
+> - Reference the new ADC-specific documentation for channel specifier
+>   etc.
+> - Collect Lee's ACK.
+> ChangeLog v1->v2:
+> - Rebased on v5.3-rc5
+
+Must have missed the DT list...
+
+> ---
+>  .../devicetree/bindings/mfd/ab8500.txt        | 119 ++++++++++++++++++
+>  1 file changed, 119 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/ab8500.txt b/Documentation/devicetree/bindings/mfd/ab8500.txt
+> index cd9e90c5d171..ff517e5d7ee0 100644
+> --- a/Documentation/devicetree/bindings/mfd/ab8500.txt
+> +++ b/Documentation/devicetree/bindings/mfd/ab8500.txt
+> @@ -69,6 +69,18 @@ Required child device properties:
+>  - compatible             : "stericsson,ab8500-[bm|btemp|charger|fg|gpadc|gpio|ponkey|
+>                                                 pwm|regulator|rtc|sysctrl|usb]";
+>  
+> +  A few child devices require ADC channels from the GPADC node. Those follow the
+> +  standard bindings from iio/iio-bindings.txt and iio/adc/adc.txt
 > +
-> +			/*
-> +			 * Closed source PowerVR driver, no child device
-> +			 * binding or driver in mainline
-> +			 */
+> +  abx500-temp		 : io-channels "aux1" and "aux2" for measuring external
+> +			   temperatures.
+> +  ab8500_fg		 : io-channel "main_bat_v" for measuring main battery voltage,
+> +  ab8500_btemp		 : io-channels "btemp_ball" and "bat_ctrl" for measuring the
+> +			   battery voltage.
+> +  ab8500_charger	 : io-channels "main_charger_v", "main_charger_c", "vbus_v",
+> +			   "usb_charger_c" for measuring voltage and current of the
+> +			   different charging supplies.
+
+s/_/-/ for node names.
+
+> +
+>  Optional child device properties:
+>  - interrupts             : contains the device IRQ(s) using the 2-cell format (see above)
+>  - interrupt-names        : contains names of IRQ resource in the order in which they were
+> @@ -102,8 +114,115 @@ ab8500 {
+>                                39 0x4>;
+>                  interrupt-names = "HW_CONV_END", "SW_CONV_END";
+>                  vddadc-supply = <&ab8500_ldo_tvout_reg>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		#io-channel-cells = <1>;
+> +
+> +		/* GPADC channels */
+> +		bat_ctrl: channel@01 {
+
+Drop leading 0s. dtc should give you warnings for this.
+
+> +			reg = <0x01>;
 > +		};
-> +
-> 		dss: dss@58000000 {
-> 			compatible =3D "ti,omap5-dss";
-> 			reg =3D <0x58000000 0x80>;
-> diff --git a/arch/arm/boot/dts/omap54xx-clocks.dtsi =
-b/arch/arm/boot/dts/omap54xx-clocks.dtsi
-> --- a/arch/arm/boot/dts/omap54xx-clocks.dtsi
-> +++ b/arch/arm/boot/dts/omap54xx-clocks.dtsi
-> @@ -1146,6 +1146,20 @@
-> 		};
-> 	};
->=20
-> +	gpu_cm: clock-controller@1500 {
-> +		compatible =3D "ti,omap4-cm";
-> +		reg =3D <0x1500 0x100>;
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		ranges =3D <0 0x1500 0x100>;
-> +
-> +		gpu_clkctrl: clk@20 {
-> +			compatible =3D "ti,clkctrl";
-> +			reg =3D <0x20 0x4>;
-> +			#clock-cells =3D <2>;
+
+I guess these nodes aren't new, but why do you need them other than 
+defining how many ADC channels.
+
+> +		btemp_ball: channel@02 {
+> +			reg = <0x02>;
 > +		};
+> +		main_charger_v: channel@03 {
+> +			reg = <0x03>;
+> +		};
+> +		acc_detect1: channel@04 {
+> +			reg = <0x04>;
+> +		};
+> +		acc_detect2: channel@05 {
+> +			reg = <0x05>;
+> +		};
+> +		adc_aux1: channel@06 {
+> +			reg = <0x06>;
+> +		};
+> +		adc_aux2: channel@07 {
+> +			reg = <0x07>;
+> +		};
+> +		main_batt_v: channel@08 {
+> +			reg = <0x08>;
+> +		};
+> +		vbus_v: channel@09 {
+> +			reg = <0x09>;
+> +		};
+> +		main_charger_c: channel@0a {
+> +			reg = <0x0a>;
+> +		};
+> +		usb_charger_c: channel@0b {
+> +			reg = <0x0b>;
+> +		};
+> +		bk_bat_v: channel@0c {
+> +			reg = <0x0c>;
+> +		};
+> +		die_temp: channel@0d {
+> +			reg = <0x0d>;
+> +		};
+> +		usb_id: channel@0e {
+> +			reg = <0x0e>;
+> +		};
+> +		xtal_temp: channel@12 {
+> +			reg = <0x12>;
+> +		};
+> +		vbat_true_meas: channel@13 {
+> +			reg = <0x13>;
+> +		};
+> +		bat_ctrl_and_ibat: channel@1c {
+> +			reg = <0x1c>;
+> +		};
+> +		vbat_meas_and_ibat: channel@1d {
+> +			reg = <0x1d>;
+> +		};
+> +		vbat_true_meas_and_ibat: channel@1e {
+> +			reg = <0x1e>;
+> +		};
+> +		bat_temp_and_ibat: channel@1f {
+> +			reg = <0x1f>;
+> +		};
+>          };
+>  
+> +	ab8500_temp {
+> +		compatible = "stericsson,abx500-temp";
+> +		io-channels = <&gpadc 0x06>,
+> +			      <&gpadc 0x07>;
+> +		io-channel-name = "aux1", "aux2";
 > +	};
 > +
-> 	l3init_cm: l3init_cm@1600 {
-> 		compatible =3D "ti,omap4-cm";
-> 		reg =3D <0x1600 0x100>;
-> --=20
-> 2.23.0
+> +	ab8500_battery: ab8500_battery {
+> +		stericsson,battery-type = "LIPO";
+> +		thermistor-on-batctrl;
+> +	};
+> +
+> +	ab8500_fg {
+> +		compatible = "stericsson,ab8500-fg";
+> +		battery	   = <&ab8500_battery>;
+> +		io-channels = <&gpadc 0x08>;
+> +		io-channel-name = "main_bat_v";
+> +	};
+> +
+> +	ab8500_btemp {
+> +		compatible = "stericsson,ab8500-btemp";
+> +		battery	   = <&ab8500_battery>;
+> +		io-channels = <&gpadc 0x02>,
+> +			      <&gpadc 0x01>;
+> +		io-channel-name = "btemp_ball",
+> +				"bat_ctrl";
+> +	};
+> +
+> +	ab8500_charger {
+> +		compatible	= "stericsson,ab8500-charger";
+> +		battery		= <&ab8500_battery>;
+> +		vddadc-supply	= <&ab8500_ldo_tvout_reg>;
+> +		io-channels = <&gpadc 0x03>,
+> +			      <&gpadc 0x0a>,
+> +			      <&gpadc 0x09>,
+> +			      <&gpadc 0x0b>;
+> +		io-channel-name = "main_charger_v",
+> +				"main_charger_c",
+> +				"vbus_v",
+> +				"usb_charger_c";
+> +	};
+> +
+>          ab8500-usb {
+>                  compatible = "stericsson,ab8500-usb";
+>                  interrupts = < 90 0x4
+> -- 
+> 2.21.0
+> 
