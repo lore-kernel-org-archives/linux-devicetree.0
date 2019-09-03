@@ -1,17 +1,15 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv3 01/10] dt-bindings: omap: add new binding for PRM
- instances
-Date: Tue, 3 Sep 2019 11:14:19 +0300
-Message-ID: <7c2c8a4d-d24e-ceec-afc1-04cdc4d5d952@ti.com>
-References: <20190830121816.30034-1-t-kristo@ti.com>
- <20190830121816.30034-2-t-kristo@ti.com> <20190902042631.GA22055@bogus>
- <e8d700cd-8f3c-5cea-a022-b20a595fc1e1@ti.com>
- <CAL_Jsq+AJj1bgOQYG=c86A5HC_g2UZph387oVEKZyP4M18kURw@mail.gmail.com>
+From: Jianxin Pan <jianxin.pan@amlogic.com>
+Subject: Re: [PATCH 4/4] arm64: dts: add support for A1 based Amlogic AD401
+Date: Tue, 3 Sep 2019 16:16:57 +0800
+Message-ID: <f06ab4c9-4b86-3b6f-062d-b5fe365bcd10@amlogic.com>
+References: <1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com>
+ <1567493475-75451-5-git-send-email-jianxin.pan@amlogic.com>
+ <97a462d6-d98e-f778-96d5-bacd4801df6b@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq+AJj1bgOQYG=c86A5HC_g2UZph387oVEKZyP4M18kURw@mail.gmail.com>
+In-Reply-To: <97a462d6-d98e-f778-96d5-bacd4801df6b@baylibre.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -22,107 +20,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Philipp Zabel <p.zabel@pengutronix.de>, Santosh Shilimkar <ssantosh@kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "moderated
- list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, Qiufang Dai <qiufang.dai@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Carlo Caione <carlo@caione.org>, Tao Zeng <tao.zeng@amlogic.com>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/09/2019 11:10, Rob Herring wrote:
-> On Tue, Sep 3, 2019 at 8:26 AM Tero Kristo <t-kristo@ti.com> wrote:
->>
->> On 02/09/2019 16:39, Rob Herring wrote:
->>> On Fri, Aug 30, 2019 at 03:18:07PM +0300, Tero Kristo wrote:
->>>> Add new binding for OMAP PRM (Power and Reset Manager) instances. Each
->>>> of these will act as a power domain controller and potentially as a reset
->>>> provider.
->>>>
->>>
->>> Converting this to schema would be nice.
->>
->> Do you have documentation about schema somewhere? Basically what I need
->> to do to fix this.
-> 
-> Documentation/devicetree/writing-schema.md (.rst in -next)
-> Documentation/devicetree/bindings/example-schema.yaml
-> 
->>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>>> ---
->>>>    .../devicetree/bindings/arm/omap/prm-inst.txt | 31 +++++++++++++++++++
->>>
->>> bindings/reset/
->>
->> I did not put this under reset, because this is basically a
->> multi-purpose function. Reset just happens to be the first functionality
->> it is going to provide. It will be followed by power domain support
->> later on.
->>
->> Any thoughts?
-> 
-> I prefer that bindings be complete as possible even if driver support
-> is not there yet. Adding power domain support may only mean adding
-> '#power-domain-cells'.
-> 
-> The location is fine then.
+Hi Neil,
 
-Yeah, I assume just adding power-domain-cells should be enough. I am not 
-too sure before I start trying this out though so did not want to add it 
-yet.
+Thanks for your time.
+Please see my comments below.
 
+On 2019/9/3 15:42, Neil Armstrong wrote:
+> Hi,
 > 
->>>>    1 file changed, 31 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/arm/omap/prm-inst.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
->>>> new file mode 100644
->>>> index 000000000000..7c7527c37734
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
->>>> @@ -0,0 +1,31 @@
->>>> +OMAP PRM instance bindings
->>>> +
->>>> +Power and Reset Manager is an IP block on OMAP family of devices which
->>>> +handle the power domains and their current state, and provide reset
->>>> +handling for the domains and/or separate IP blocks under the power domain
->>>> +hierarchy.
->>>> +
->>>> +Required properties:
->>>> +- compatible:       Must be one of:
->>>> +            "ti,am3-prm-inst"
->>>> +            "ti,am4-prm-inst"
->>>> +            "ti,omap4-prm-inst"
->>>> +            "ti,omap5-prm-inst"
->>>> +            "ti,dra7-prm-inst"
->>>
->>> '-inst' seems a bit redundant.
->>
->> ti,xyz-prm is already reserved by the parent node of all these.
->>
->> The hierarchy is basically like this (omap4 as example):
->>
->> prm: prm@4a306000 {
->>     compatible = "ti,omap4-prm";
->>     ...
->>
->>     prm_dsp: prm@400 {
->>       compatible = "ti,omap4-prm-inst";
->>       ...
->>     };
->>
->>     prm_device: prm@1b00 {
->>       compatible = "ti,omap4-prm-inst";
->>       ...
->>     };
->>
->>     ...
->> };
+> On 03/09/2019 08:51, Jianxin Pan wrote:
+>> Add basic support for the Amlogic A1 based Amlogic AD401 board:
+>> which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
+[...]
+>> +	chosen {
+>> +		stdout-path = "serial0:115200n8";
+>> +	};
+>> +	memory@0 {
+>> +		device_type = "memory";
+>> +		linux,usable-memory = <0x0 0x0 0x0 0x8000000>;
 > 
-> Okay. Then you need to state this binding must be a child of PRM. The
-> schema would need to take this into account too, so probably best to
-> not convert this yet.
+> I'll prefer usage of reg, it's handled the same but linux,usable-memory
+> is not documented.
 > 
-
-Ok thanks, I'll make the necessary updates and post v4.
-
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+OK, I will fix it in the next version. Thanks for your review.
+>> +	};
+>> +};
+>> +
+>> +&uart_AO_B {
+>> +	status = "okay";
+>> +	/*pinctrl-0 = <&uart_ao_a_pins>;*/
+>> +	/*pinctrl-names = "default";*/
+> 
+> Please remove these lines instead of commenting them.
+> 
+OK, I will fix it in the next version.
+>> +};
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> new file mode 100644
+>> index 00000000..b98d648
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> @@ -0,0 +1,121 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +/ {
+[...]
+>> +
+>> +	reserved-memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+> 
+> Isn't there secmon reserved memory ?
+> 
+A1 uses internal SRAM as secmon memory.
+And there is no secmon reserved memory in ddr side.
+>> +
+>> +		linux,cma {
+>> +			compatible = "shared-dma-pool";
+>> +			reusable;
+>> +			size = <0x0 0x800000>;
+[...]
+>>
+> 
+> Thanks,
+> Neil
+> 
+> .
+> 
