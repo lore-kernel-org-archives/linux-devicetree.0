@@ -1,35 +1,42 @@
-Return-Path: <SRS0=bKmG=XA=flex--osk.bounces.google.com=3ph5xXQMKB5kHLD9HH9E7.5HFKH4A+6MD7KG7E.HK9@kernel.org>
-Date: Thu,  5 Sep 2019 10:41:30 -0400
-In-Reply-To: <20190905144130.220713-1-osk@google.com>
-Message-Id: <20190905144130.220713-3-osk@google.com>
-Mime-Version: 1.0
-References: <20190905144130.220713-1-osk@google.com>
-Subject: [PATCH v3 3/3] arm: dts: aspeed: Add vuart aspeed,sirq-polarity-sense
- to aspeed-g5.dtsi
-From: Oskar Senft <osk@google.com>
-Content-Type: text/plain; charset="UTF-8"
-To: joel@jms.id.au, andrew@aj.id.au, robh+dt@kernel.org, gregkh@linuxfoundation.org, jk@ozlabs.org
-Cc: openbmc@lists.ozlabs.org, linux-aspeed@lists.ozlabs.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Oskar Senft <osk@google.com>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 3 Sep 2019 07:56:15 +0100
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH input-next 1/4] dt-bindings: input: Convert mpr121
+ binding to json-schema
+Message-ID: <20190903065615.GA17646@bogus>
+References: <1567424417-3914-1-git-send-email-michal.vokac@ysoft.com>
+ <1567424417-3914-2-git-send-email-michal.vokac@ysoft.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1567424417-3914-2-git-send-email-michal.vokac@ysoft.com>
+To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Enable auto-configuration of VUART SIRQ polarity on AST2500.
+On Mon, Sep 02, 2019 at 01:40:14PM +0200, Michal Vokáč wrote:
+> Convert the mpr121 binding to DT schema format using json-schema.
+> 
+> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+> ---
+> Hi Rob,
+> 
+> I will appreciate your help converting this binding. Currently
+> the scheme is not valid and the error output of dt_binding_check
+> is not really helpful.
 
-Signed-off-by: Oskar Senft <osk@google.com>
----
- arch/arm/boot/dts/aspeed-g5.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+What's the error? I don't see anything obvious.
 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 5b1ca265c2ce..06e489c1d0cb 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -351,6 +351,7 @@
- 				interrupts = <8>;
- 				clocks = <&syscon ASPEED_CLK_APB>;
- 				no-loopback-test;
-+				aspeed,sirq-polarity-sense = <&syscon 0x70 25>;
- 				status = "disabled";
- 			};
- 
--- 
-2.23.0.187.g17f5b7556c-goog
+> 
+> Also, who shoud be the maintainer of this binding?
+> I put Dmitry in there as he is the input subsystem maintainer but
+> I am not sure it is correct.
+
+My preference is the author or driver maintainer.
+
+>  .../bindings/input/fsl,mpr121-touchkey.yaml        | 64 ++++++++++++++++++++++
+>  .../devicetree/bindings/input/mpr121-touchkey.txt  | 30 ----------
+>  2 files changed, 64 insertions(+), 30 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/fsl,mpr121-touchkey.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/input/mpr121-touchkey.txt
