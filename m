@@ -1,155 +1,51 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv3 01/10] dt-bindings: omap: add new binding for PRM
- instances
-Date: Tue, 3 Sep 2019 16:50:26 +0300
-Message-ID: <e6fd5cd6-8176-55f9-5285-d52b84435649@ti.com>
-References: <20190830121816.30034-1-t-kristo@ti.com>
- <20190830121816.30034-2-t-kristo@ti.com> <20190902042631.GA22055@bogus>
- <e8d700cd-8f3c-5cea-a022-b20a595fc1e1@ti.com>
- <CAHCN7xKNSj_DW+Gcbpy4ehphBYCbJw9mSATOcWzT7ZcZR81r6g@mail.gmail.com>
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v4 07/11] lib/vsprintf: Remove support for %pF and %pf in
+ favour of %pS and %ps
+Date: Tue, 3 Sep 2019 16:04:20 +0200
+Message-ID: <20190903140420.kmb42cwr3scrfd3e@pathway.suse.cz>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-8-sakari.ailus@linux.intel.com>
+ <20190902143935.xtd44jdvhjuc2wxe@pathway.suse.cz>
+ <20190902160139.GQ2680@smile.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAHCN7xKNSj_DW+Gcbpy4ehphBYCbJw9mSATOcWzT7ZcZR81r6g@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Adam Ford <aford173@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, p.zabel@pengutronix.de, Santosh Shilimkar <ssantosh@kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190902160139.GQ2680@smile.fi.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Namhyung Kim <namhyung@kernel.org>, rafael@kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org, Tzvetomir Stoyanov <tstoyanov@vmware.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/09/2019 16:19, Adam Ford wrote:
-> On Tue, Sep 3, 2019 at 2:26 AM Tero Kristo <t-kristo@ti.com> wrote:
->>
->> On 02/09/2019 16:39, Rob Herring wrote:
->>> On Fri, Aug 30, 2019 at 03:18:07PM +0300, Tero Kristo wrote:
->>>> Add new binding for OMAP PRM (Power and Reset Manager) instances. Each
->>>> of these will act as a power domain controller and potentially as a reset
->>>> provider.
->>>>
->>>
->>> Converting this to schema would be nice.
->>
->> Do you have documentation about schema somewhere? Basically what I need
->> to do to fix this.
->>
->>>
->>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>>> ---
->>>>    .../devicetree/bindings/arm/omap/prm-inst.txt | 31 +++++++++++++++++++
->>>
->>> bindings/reset/
->>
->> I did not put this under reset, because this is basically a
->> multi-purpose function. Reset just happens to be the first functionality
->> it is going to provide. It will be followed by power domain support
->> later on.
->>
->> Any thoughts?
->>
->>>
->>>>    1 file changed, 31 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/arm/omap/prm-inst.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
->>>> new file mode 100644
->>>> index 000000000000..7c7527c37734
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
->>>> @@ -0,0 +1,31 @@
->>>> +OMAP PRM instance bindings
->>>> +
->>>> +Power and Reset Manager is an IP block on OMAP family of devices which
->>>> +handle the power domains and their current state, and provide reset
->>>> +handling for the domains and/or separate IP blocks under the power domain
->>>> +hierarchy.
->>>> +
->>>> +Required properties:
->>>> +- compatible:       Must be one of:
->>>> +            "ti,am3-prm-inst"
+On Mon 2019-09-02 19:01:39, Andy Shevchenko wrote:
+> On Mon, Sep 02, 2019 at 04:39:35PM +0200, Petr Mladek wrote:
+> > On Mon 2019-09-02 11:32:36, Sakari Ailus wrote:
+> > > %pS and %ps are now the preferred conversion specifiers to print function
+> > > names. The functionality is equivalent; remove the old, deprecated %pF
+> > > and %pf support.
+> > 
+> > Hmm, I see the following in master:
+> > 
+> > $> git grep %pF
+> > tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt:or events have "%pF" or "%pS" parameter in its format string. It is common to
+> > 
+> > $> git grep %pf
+> > tools/lib/traceevent/event-parse.c:             if (asprintf(&format, "%%pf: (NO FORMAT FOUND at %llx)\n", addr) < 0)
+> > tools/lib/traceevent/event-parse.c:     if (asprintf(&format, "%s: %s", "%pf", printk->printk) < 0)
+> > 
+> > I wonder how this is related to printk(). In each case, it seems
 > 
-> Would it make sense to call it am33 instead of am3?  The AM35xx is
-> different than AM33.
+> It's going thru binary printf() I suppose. The fist stage just saves the format
+> string and argument addresses or so and prints in later on when user is looking
+> for human-readable output.
 
-Well, am35xx is effectively just a variant of omap3, they just named it 
-funnily. Same for dra7 vs. am57xx. Also, bindings of type "ti,am3-*" 
-exist for other am33xx functionality already.
+It seems that vbin_printf() still thinks that %pf and %pF
+handle function pointers. If I get it correctly, it just
+stores the binary data and the formating is done when
+tracing log is read. The idea is the function pointers
+will stay the same.
 
--Tero
+We need to fix/obsolete this path as well.
 
-> 
->>>> +            "ti,am4-prm-inst"
->>>> +            "ti,omap4-prm-inst"
->>>> +            "ti,omap5-prm-inst"
->>>> +            "ti,dra7-prm-inst"
->>>
->>> '-inst' seems a bit redundant.
->>
->> ti,xyz-prm is already reserved by the parent node of all these.
->>
->> The hierarchy is basically like this (omap4 as example):
->>
->> prm: prm@4a306000 {
->>     compatible = "ti,omap4-prm";
->>     ...
->>
->>     prm_dsp: prm@400 {
->>       compatible = "ti,omap4-prm-inst";
->>       ...
->>     };
->>
->>     prm_device: prm@1b00 {
->>       compatible = "ti,omap4-prm-inst";
->>       ...
->>     };
->>
->>     ...
->> };
->>
->>
->>
->>>
->>>> +- reg:              Contains PRM instance register address range
->>>> +            (base address and length)
->>>> +
->>>> +Optional properties:
->>>> +- #reset-cells:     Should be 1 if the PRM instance in question supports resets.
->>>> +- clocks:   Associated clocks for the reset signals if any. Certain reset
->>>> +            signals can't be toggled properly without functional clock
->>>> +            being active for them.
->>>> +
->>>> +Example:
->>>> +
->>>> +prm_dsp2: prm@1b00 {
->>>
->>> reset-controller@...
->>
->> Well, as said, the same node is going to be also power domain provider
->> later on...
->>
->>>
->>>> +    compatible = "ti,dra7-prm-inst";
->>>> +    reg = <0x1b00 0x40>;
->>>> +    #reset-cells = <1>;
->>>> +    clocks = <&dsp2_clkctrl DRA7_DSP2_MMU0_DSP2_CLKCTRL 0>;
->>>> +};
->>>> --
->>>> 2.17.1
->>>>
->>>> --
->>>
->>
-> 
-> adam
->> --
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Best Regards,
+Petr
