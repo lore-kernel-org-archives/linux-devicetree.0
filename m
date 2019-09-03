@@ -1,52 +1,51 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
-Date: Tue, 3 Sep 2019 09:37:20 +0200
-Message-ID: <20190903073719.GA1020@kunai>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-3-luca@lucaceresoli.net>
- <20190901143101.humomdehy5ee73sk@vino>
- <20bac324-c4d3-270c-5175-0a7f261fd760@lucaceresoli.net>
+From: =?UTF-8?Q?S=c3=a9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+Subject: Re: [PATCH v2 1/2] ARM: dts: opos6ul/opos6uldev: rework device tree
+ to support i.MX6ULL
+Date: Tue, 3 Sep 2019 09:38:11 +0200
+Message-ID: <194bd606-e4bf-d8fd-ece2-cbec1f5e025f@armadeus.com>
+References: <20190724120623.2385-1-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20bac324-c4d3-270c-5175-0a7f261fd760@lucaceresoli.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Ceresoli <luca@lucaceresoli.net>
-Cc: jacopo mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Vladimir Zapolskiy <vz@mleia.com>, Peter Rosin <peda@axentia.se>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190724120623.2385-1-sebastien.szymanski@armadeus.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---a8Wt8u1KmwUX3Y2C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-
-> Adding the ATR features to i2c-mux.c was very tricky and error-prone due
-> to all of this code, that's why I have moved ATR to its own file in RFCv2.
-
-I forgot to say that I like this.
-
-
---a8Wt8u1KmwUX3Y2C
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1uGCoACgkQFA3kzBSg
-KbZidw/9EM+Hx6X3hquMtRxGgJV6HJWi8UYyPYgFrwAIYCAt7gtjHWnk1cNizf98
-4DSVtoi6zpMeLx4zM76DZ3P2nnDSDNQ+QwJRYRIoWLs3yWkZ56EPQvCxcc4lhNRW
-+XDgzFLnoVnkn4PJlAjztG7xcVm0u9XfM+8Ion0U9A9E7wIR1ml3XwctccOL0Zd7
-VW2zR+nzhEEH9iV/bCKeKTQXg75YgHyIIUlJm48FuP1mA5uWMqtX9hf5h6ctRZK4
-AYcxw1uLOICIBmbW5WaTOHq0xd3TaE4R0+lI9fcODckq7CVFijl1/odDsmgy/ISU
-24A0v/ulqd6b8XMXq3DyU3hyFmbwbJjWitI0nYQKdpCvF9hNFJ5KR++ko/P2I4s8
-inR7erFYYab2RSo0VKsZLgB4t45jmbQmCQtwKjla9uDcz2lHgG5/JzumGaPYdDEa
-DdQZOM8vz1GxM/3Yf2sCNkE2WJ5S0dT8PvrtsIhkn4Sqd9WiGPDiyjpK9mhdU1ap
-H9aXNKDRl+t4/x0zRe1K1gCydQzRsmLByXzAbs/sq+aKtUHl/obBKt9j6XFHMStG
-hOdIT2mQCys07yZpSK/LApFds0PbYBIB8XQjEsXIzGbSwau0BUJl3Ezwn7seZeer
-1SKdzmZlqUCJTeGdvjz6ef8RWeFRKrtl4srdu6ApbgvYAxGvcVk=
-=RqGE
------END PGP SIGNATURE-----
-
---a8Wt8u1KmwUX3Y2C--
+SGVsbG8sCgpPbiA3LzI0LzE5IDI6MDYgUE0sIFPDqWJhc3RpZW4gU3p5bWFuc2tpIHdyb3RlOgo+
+IFJld29yayB0aGUgZGV2aWNlIHRyZWVzIG9mIHRoZSBPUE9TNlVMIGFuZCBPUE9TNlVMRGV2IGJv
+YXJkcyB0byBzdXBwb3J0Cj4gdGhlIE9QT1M2VUwgU29NIHdpdGggYW4gaS5NWDZVTEwgU29DLiAg
+VGhlIGRldmljZSB0cmVlcyBhcmUgbm93IGFzCj4gZm9sbG93aW5nOgo+IAo+IC0gaW14NnVsLWlt
+eDZ1bGwtb3BvczZ1bC5kdHNpCj4gICBjb21tb24gZm9yIGJvdGggaS5NWDZVTCBhbmQgaS5NWDZV
+TEwgT1BPUzZVTCBTb00uCj4gLSBpbXg2dWwtb3BvczZ1bC5kdHNpCj4gICBmb3IgaS5NWDZVTCBP
+UE9TNlVMIFNvTS4gSXQgaW5jbHVkZXMgaW14NnVsLmR0c2kgYW5kCj4gICBpbXg2dWwtaW14NnVs
+bC1vcG9zNnVsLmR0c2kuCj4gLSBpbXg2dWxsLW9wb3M2dWwuZHRzaQo+ICAgZm9yIGkuTVg2VUxM
+IE9QT1M2VUwgU29NLiBJdCBpbmNsdWRlcyBpbXg2dWxsLmR0c2kgYW5kCj4gICBpbXg2dWwtaW14
+NnVsbC1vcG9zNnVsLmR0c2kuCj4gCj4gLSBpbXg2dWwtaW14NnVsbC1vcG9zNnVsZGV2LmR0c2kK
+PiAgIE9QT1M2VUxEZXYgYmFzZSBkZXZpY2UgdHJlZS4KPiAtIGlteDZ1bC1vcG9zNnVsZGV2LmR0
+cwo+ICAgT1BPUzZVTERldiBib2FyZCB3aXRoIGFuIGkuTVg2VUwgT1BPUzZVTCBTb00uIEl0IGlu
+Y2x1ZGVzCj4gICBpbXg2dWwtb3BvczZ1bC5kdHNpIGFuZCBpbXg2dWwtaW14NnVsbC1vcG9zNnVs
+ZGV2ZHRzaS4KPiAtIGlteDZ1bGwtb3BvczZ1bGRldi5kdHMKPiAgIE9QT1M2VUxEZXYgYm9hcmQg
+d2l0aCBhbiBpLk1YNlVMTCBPUE9TNlVMIFNvTS4gSXQgaW5jbHVkZXMKPiAgIGlteDZ1bGwtb3Bv
+czZ1bC5kdHNpIGFuZCBpbXg2dWwtaW14NnVsbC1vcG9zNnVsZGV2ZHRzaS4KPiAKPiBTaWduZWQt
+b2ZmLWJ5OiBTw6liYXN0aWVuIFN6eW1hbnNraSA8c2ViYXN0aWVuLnN6eW1hbnNraUBhcm1hZGV1
+cy5jb20+Cj4gLS0tCj4gCj4gQ2hhbmdlcyBmb3IgdjI6Cj4gLSBleHBsYWluIHRoZSBmaWxlIGhp
+ZXJhcmNoeSBpbiB0aGUgY29tbWl0IGxvZwo+IC0gdXNlIE1JVCBsaWNlbnNlIGluc3RlYWQgb2Yg
+WDExCj4gLSBDaGFuZ2UgY29tcGF0aWJsZSBwcm9wZXJ0aWVzIHRvICJhcm1hZGV1cyxpbXg2e3Vs
+LHVsbH0tb3BvczZ1bCIgYW5kCj4gICAiYXJtYWRldXMsaW14Nnt1bCx1bGx9LW9wb3M2dWxkZXYi
+IHRvIGZvbGxvdyB0aGUgYmluZGluZ3Mgb2YgdGhlCj4gICBBcm1hZGV1cyBib2FyZHMgYWxyZWFk
+eSBzdXBwb3J0ZWQuCgpnZW50bGUgcGluZy4uLgoKUmVnYXJkcywKClPDqWJhc3RpZW4KCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
+ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
