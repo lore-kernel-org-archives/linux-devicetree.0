@@ -1,92 +1,58 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: regulator: add regulator-fixed-clock binding
-Date: Tue, 3 Sep 2019 09:45:13 +0100
-Message-ID: <CAL_JsqLnqZ80soGVMvZjAMZvu+K=ebDUz2bM_ZodPp7YRvUnDw@mail.gmail.com>
-References: <20190903080336.32288-1-philippe.schenker@toradex.com> <20190903080336.32288-4-philippe.schenker@toradex.com>
+From: Robert Richter <rrichter@marvell.com>
+Subject: Re: [PATCH v3 4/4] edac: Add support for Amazon's Annapurna Labs L2
+ EDAC
+Date: Tue, 3 Sep 2019 08:46:24 +0000
+Message-ID: <20190903084614.mthff6hzbchkw7t2@rric.localdomain>
+References: <1563197049-12679-1-git-send-email-hhhawa@amazon.com>
+ <1563197049-12679-5-git-send-email-hhhawa@amazon.com>
+ <20190903072655.kz5x7n3477dg4yap@rric.localdomain>
+ <2bce020a-bf7e-1d54-48c3-0aa6d23c84d8@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190903080336.32288-4-philippe.schenker@toradex.com>
+In-Reply-To: <2bce020a-bf7e-1d54-48c3-0aa6d23c84d8@amazon.com>
+Content-Language: en-US
+Content-ID: <0F1F622723E9814484DCF6155A64ADD3@namprd18.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <philippe.schenker@toradex.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Max Krummenacher <max.krummenacher@toradex.com>, Stefan Agner <stefan.agner@toradex.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Mark Rutland <mark.rutland@arm.com>, Luka Pivk <luka.pivk@toradex.com>
+To: "Hawa, Hanna" <hhhawa@amazon.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "bp@alien8.de" <bp@alien8.de>, "mchehab@kernel.org" <mchehab@kernel.org>, "james.morse@arm.com" <james.morse@arm.com>, "davem@davemloft.net" <davem@davemloft.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>, "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>, "benh@amazon.com" <benh@amazon.com>, "ronenk@amazon.com" <ronenk@amazon.com>, "talel@amazon.com" <talel@amazon.com>, "jonnyc@amazon.com" <jonnyc@amazon.com>, "hanochu@amazon.com" <hanochu@>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 9:03 AM Philippe Schenker
-<philippe.schenker@toradex.com> wrote:
->
-> This adds the documentation to the compatible regulator-fixed-clock
+On 03.09.19 11:28:41, Hawa, Hanna wrote:
+> On 9/3/2019 10:27 AM, Robert Richter wrote:
+> > On 15.07.19 16:24:09, Hanna Hawa wrote:
+> > > Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
+> > > report L2 errors.
+> > >=20
+> > > Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+> > > ---
+> > >   MAINTAINERS               |   6 ++
+> > >   drivers/edac/Kconfig      |   8 ++
+> > >   drivers/edac/Makefile     |   1 +
+> > >   drivers/edac/al_l2_edac.c | 187 +++++++++++++++++++++++++++++++++++=
++++++++++++
+> > >   4 files changed, 202 insertions(+)
+> > >   create mode 100644 drivers/edac/al_l2_edac.c
+> >=20
+> >  From a brief look at it, it seems some of my comments from 2/4 apply
+> > here too. Please look through it.
+>=20
+> Thanks for your review, will look and fix on top of v5.
 
-Please explain what that is in this patch.
+I have later seen your newer versions posted which haven't made it
+into my inbox. But looking at the changelog my comments are still
+valid. Thanks for addressing them.
 
->
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
->
-> ---
->
->  .../bindings/regulator/fixed-regulator.yaml    | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-> index a650b457085d..5fd081e80b43 100644
-> --- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-> +++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-> @@ -19,9 +19,19 @@ description:
->  allOf:
->    - $ref: "regulator.yaml#"
->
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: regulator-fixed-clock
-> +  required:
-> +    - clocks
+>From the changelog:
 
-You don't need this.
+"Changes since v1:
+-----------------
+- Split into two drivers"
 
-If you add a new compatible, then this should probably be a new schema
-doc. Is the 'gpio' property valid in this case as if a clock is the
-enable, can you also have a gpio enable? That said, it seems like the
-new compatible is only for validating the DT in the driver. You could
-just use a clock if present and default to current behavior if not.
-It's not the kernel's job to validate DTs.
+This is good, but recent practice is also to have all the drivers for
+the same piece of hardware in a single file, see e.g. thunderx_edac.c.
+I don't know how detailed this was discussed already, but I would
+prefer to join the code.
 
->
->  properties:
->    compatible:
-> -    const: regulator-fixed
-> +    items:
-> +      - const: regulator-fixed
-> +      - const: regulator-fixed-clock
-
-This says you must have 'compatible = "regulator-fixed",
-"regulator-fixed-clock";'.
-
-What you want is:
-
-enum:
-  - regulator-fixed
-  - regulator-fixed-clock
-
->    regulator-name: true
->
-> @@ -29,6 +39,12 @@ properties:
->      description: gpio to use for enable control
->      maxItems: 1
->
-> +  clocks:
-> +    description:
-> +      clock to use for enable control. This binding is only available if
-> +      the compatible is chosen to regulator-fixed-clock. The clock binding
-> +      is mandatory if compatible is chosen to regulator-fixed-clock.
-
-Need to define how many clocks (maxItems: 1).
-
-> +
->    startup-delay-us:
->      description: startup time in microseconds
->      $ref: /schemas/types.yaml#/definitions/uint32
-> --
-> 2.23.0
->
+-Robert
