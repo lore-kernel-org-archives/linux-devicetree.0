@@ -1,99 +1,70 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: regulator: add regulator-fixed-clock binding
-Date: Wed, 4 Sep 2019 10:06:14 +0100
-Message-ID: <CAL_JsqLLSUWhkguCx2mc2oyV-0MHp4RWwJr5oTWRUvQiovn4Gw@mail.gmail.com>
-References: <20190903080336.32288-1-philippe.schenker@toradex.com>
- <20190903080336.32288-4-philippe.schenker@toradex.com> <CAL_JsqLnqZ80soGVMvZjAMZvu+K=ebDUz2bM_ZodPp7YRvUnDw@mail.gmail.com>
- <e64429ba4b86411da1741ab54176fb5b4b7a36de.camel@toradex.com>
+From: Vitor Soares <Vitor.Soares@synopsys.com>
+Subject: RE: [PATCH v2 1/5] i3c: master: detach and free device if
+ pre_assign_dyn_addr() fails
+Date: Wed, 4 Sep 2019 09:06:40 +0000
+Message-ID: <SN6PR12MB26554483310EE0BC00E87EF3AEB80@SN6PR12MB2655.namprd12.prod.outlook.com>
+References: <cover.1567437955.git.vitor.soares@synopsys.com>
+ <105a3ac1653e9ae658056a5ec9ddc2a084a61669.1567437955.git.vitor.soares@synopsys.com>
+ <20190903111356.GA23588@global.cadence.com>
+ <SN6PR12MB2655B0C2E9076EF7187A52F3AEB90@SN6PR12MB2655.namprd12.prod.outlook.com>
+ <20190904044718.GB23588@global.cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e64429ba4b86411da1741ab54176fb5b4b7a36de.camel@toradex.com>
+In-Reply-To: <20190904044718.GB23588@global.cadence.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <philippe.schenker@toradex.com>
-Cc: Max Krummenacher <max.krummenacher@toradex.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Luka Pivk <luka.pivk@toradex.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "broonie@kernel.org" <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Stefan Agner <stefan.agner@toradex.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+To: Przemyslaw Gaj <pgaj@cadence.com>, Vitor Soares <Vitor.Soares@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, Rafal Ciepiela <rafalc@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 9:07 AM Philippe Schenker
-<philippe.schenker@toradex.com> wrote:
->
-> On Tue, 2019-09-03 at 09:45 +0100, Rob Herring wrote:
-> > On Tue, Sep 3, 2019 at 9:03 AM Philippe Schenker
-> > <philippe.schenker@toradex.com> wrote:
-> > > This adds the documentation to the compatible regulator-fixed-clock
-> >
-> > Please explain what that is in this patch.
->
-> Hi Rob and thanks for your comments. I will change this commit message
-> for a possible v2 into this:
->
-> This adds the documentation to the compatible regulator-fixed-clock.
-> This binding is a special binding of regulator-fixed and adds the
-> ability to add a clock to regulator-fixed, so the regulator can be
-> enabled and disabled with that clock.
-> If the special compatible regulator-fixed-clock is used it is mandatory
-> to supply a clock.
->
-> > >
-> >
-> > > Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> > >
-> > > ---
-> > >
-> > >  .../bindings/regulator/fixed-regulator.yaml    | 18
-> > > +++++++++++++++++-
-> > >  1 file changed, 17 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/regulator/fixed-
-> > > regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-
-> > > regulator.yaml
-> > > index a650b457085d..5fd081e80b43 100644
-> > > --- a/Documentation/devicetree/bindings/regulator/fixed-
-> > > regulator.yaml
-> > > +++ b/Documentation/devicetree/bindings/regulator/fixed-
-> > > regulator.yaml
-> > > @@ -19,9 +19,19 @@ description:
-> > >  allOf:
-> > >    - $ref: "regulator.yaml#"
-> > >
-> > > +select:
-> > > +  properties:
-> > > +    compatible:
-> > > +      contains:
-> > > +        const: regulator-fixed-clock
-> > > +  required:
-> > > +    - clocks
-> >
-> > You don't need this.
-> >
-> > If you add a new compatible, then this should probably be a new schema
-> > doc. Is the 'gpio' property valid in this case as if a clock is the
-> > enable, can you also have a gpio enable? That said, it seems like the
-> > new compatible is only for validating the DT in the driver. You could
-> > just use a clock if present and default to current behavior if not.
-> > It's not the kernel's job to validate DTs.
->
-> The gpio property is valid with this compatible. I added regulator-
-> fixed-clock to regulator-fixed hence I also don't want to create a new
-> schema file.
-
-Okay, if all the other properties are valid then adding to this file is fine.
-
-> With the above select statement I wanted to state clocks as required
-> when the compatible regulator-fixed-clock is given.
-
-select is not the right way to do that. select is for whether to apply
-the schema to a node or not. What you have will silently not apply the
-schema if 'clocks' is missing or compatible is 'regulator-fixed'.
-Essentially what you need to do here is:
-
-if:
-  properties:
-    compatible:
-      contains:
-        const: regulator-fixed-clock
-then:
-  required:
-    - clocks
-
-Rob
+RnJvbTogUHJ6ZW15c2xhdyBHYWogPHBnYWpAY2FkZW5jZS5jb20+DQpEYXRlOiBXZWQsIFNlcCAw
+NCwgMjAxOSBhdCAwNTo0NzoxOA0KDQo+IFRoZSAwOS8wMy8yMDE5IDExOjU3LCBWaXRvciBTb2Fy
+ZXMgd3JvdGU6DQo+ID4gRVhURVJOQUwgTUFJTA0KPiA+IA0KPiA+IA0KPiA+IEZyb206IFByemVt
+eXNsYXcgR2FqIDxwZ2FqQGNhZGVuY2UuY29tPg0KPiA+IERhdGU6IFR1ZSwgU2VwIDAzLCAyMDE5
+IGF0IDEyOjEzOjU3DQo+ID4gDQo+ID4gPiBIaSBWaXRvciwNCj4gPiA+IA0KPiA+ID4gSSdtIHNv
+cnJ5IGZvciB0aGUgZGVsYXkuDQo+ID4gPiANCj4gPiA+IFRoZSAwOS8wMy8yMDE5IDEyOjM1LCBW
+aXRvciBTb2FyZXMgd3JvdGU6DQo+ID4gPiA+IEVYVEVSTkFMIE1BSUwNCj4gPiA+ID4gDQo+ID4g
+PiA+IA0KPiA+ID4gPiBPbiBwcmVfYXNzaW5nX2R5bl9hZGRyKCkgdGhlIGRldmljZXMgdGhhdCBm
+YWlsOg0KPiA+ID4gPiAgIGkzY19tYXN0ZXJfc2V0ZGFzYV9sb2NrZWQoKQ0KPiA+ID4gPiAgIGkz
+Y19tYXN0ZXJfcmVhdHRhY2hfaTNjX2RldigpDQo+ID4gPiA+ICAgaTNjX21hc3Rlcl9yZXRyaWV2
+ZV9kZXZfaW5mbygpDQo+ID4gPiA+IA0KPiA+ID4gPiBhcmUga2VwdCBpbiBtZW1vcnkgYW5kIG1h
+c3Rlci0+YnVzLmRldnMgbGlzdC4gVGhpcyBtYWtlcyB0aGUgaTNjIGRldmljZXMNCj4gPiA+ID4g
+d2l0aG91dCBhIGR5bmFtaWMgYWRkcmVzcyBhcmUgc2VudCBvbiBERUZTTFZTIENDQyBjb21tYW5k
+LiBGaXggdGhpcyBieQ0KPiA+ID4gPiBkZXRhY2hpbmcgYW5kIGZyZWVpbmcgdGhlIGRldmljZXMg
+dGhhdCBmYWlsIG9uIHByZV9hc3NpZ25fZHluX2FkZHIoKS4NCj4gPiA+IA0KPiA+ID4gV2hhdCBp
+cyB0aGUgcHJvYmxlbSB3aXRoIHNlbmRpbmcgZGV2aWNlcyB3aXRob3V0IGR5bmFtaWMgYWRkcmVz
+cyBpbiBERUZTTFZTPw0KPiA+IA0KPiA+IEhvdyBkbyB5b3UgYWRkcmVzcyB0aGVtPw0KPiA+IEZv
+ciB0aGUgREEgZmllbGQgaW4gREVGU0xWUyBmcmFtZSwgdGhlIHNwZWMgc2F5czogInNoYWxsIGNv
+bnRhaW4gdGhlIA0KPiA+IGN1cnJlbnQgdmFsdWUgb2YgdGhlIFNsYXZlJ3MgYXNzaWduZWQgNy1i
+aXQgRHluYW1pYyBhZGRyZXNzIi4gSWYgdGhlIA0KPiA+IGRldmljZSBkb2Vzbid0IGhhdmUgdGhl
+IGR5bmFtaWMgYWRkcmVzcyBhc3NpZ25lZCB5ZXQgd2h5IHNlbmQgaXQ/DQo+ID4NCj4gDQo+IFdo
+YXQgc3RvcHMgdXMgZnJvbSBvcGVyYXRpbmcgd2l0aCB0aGlzIGRldmljZSBpbiBJMkMgbW9kZSB1
+c2luZyBoaXMgU0E/DQoNClNvLCBzZW5kIGl0IGFzIGFuIEkyQyBkZXZpY2UgYXMgc3BlYyBzYXlz
+Lg0KDQo+IA0KPiA+ID4gU2hvdWxkbid0IHdlIHN0aWxsIGluZm9ybSByZXN0IG9mIHRoZSBkZXZp
+Y2VzIGFib3V0IHRoYXQ/IEFib3V0IGZhY3QgdGhhdA0KPiA+ID4gZGV2aWNlIHdpdGggU0Egd2l0
+aG91dCBEQSBleGlzdHMgb24gdGhlIGJ1cz8NCj4gPiANCj4gPiBJIHdvdWxkIGxpa2UgdG8gdW5k
+ZXJzdGFuZCB3aGF0IGlzIHRoZSB1c2UgY2FzZSBmb3IgdGhpcz8gDQo+IA0KPiBMb29rIGFib3Zl
+LiBJMkMgbW9kZSBzdGlsbCBzaG91bGQgYmUgcG9zc2libGUgSU1PLiBKdXN0IGNvbnNpZGVyIHRo
+ZSBjYXNlIHdoZW4NCj4geW91IHJlYWxseSBuZWVkIHNvbWUgaW5mb3JtYXRpb24gZnJvbSB0aGF0
+IGRldmljZSwgbWFpbiBtYXN0ZXIgY2FuIGFzc2lnbg0KPiBkeW5hbWljIGFkZHJlc3MgbGF0ZXIg
+YnV0IHlvdSBjYW4gbWFrZSBzb21lIHRyYW5zZmVycy4NCg0KSXQgaXMgdHJ1ZSwgYnV0IGFnYWlu
+IGl0IGlzIGEgSTJDIGRldmljZSBhbmQgbm90IEkzQyBkZXZpY2UuIEl0IHdvbid0IA0KcmVwbHkg
+dG8gSTNDIGNvbW1hbmRzIHVudGlsIGhhcyBhIERBLg0KSG93IHdpbGwgeW91IGtub3cgdGhhdCB0
+aGUgREEgc2VudCBpbiBERUZTTFZTIGlzIG5vdCBhc3NpZ25lZCB5ZXQ/DQoNCj4gSSBrbm93IG91
+ciBmcmFtZXdvcmsNCj4gZG9lcyBub3Qgc3VwcG9ydCB0aGF0IGNhc2UgYnV0IHNlY29uZGFyeSBt
+YXN0ZXIgY2FuIGJlIGRpZmZlcmVudCBzeXN0ZW0gd2hpY2gNCj4gc2hvdWxkIGtub3cgdGhhdCB0
+aGlzIGRldmljZSBleGlzdHMgYW5kIGRvbid0IGhhdmUgREEgeWV0LCBzbyBJMkMgbW9kZSBpcw0K
+PiBhdmFpbGFibGUuDQoNCklmIHRoZSBISiBoYXBwZW4gaW4gc2Vjb25kYXJ5IG1hc3RlciBzaWRl
+LCB0aGVyZSBpcyBhIGNoYW5nZSB0byBkZXNjcmliZSANCmluIERUIHdoYXQgc2hvdWxkIGJlIERB
+LiBQbGVhc2UgY2hlY2sgMm5kIHBhdGNoLg0KDQo+IA0KPiA+IA0KPiA+IE9uIEkzQyBzcGVjIHRh
+YmxlICJJM0MgRGV2aWNlcyBSb2xlcyB2cyBSZXNwb25zaWJpbGl0aWVzIiwgU2Vjb25kYXJ5IA0K
+PiA+IE1hc3RlciBpcyBub3QgcmVzcG9uc2libGUgdG8gZG8gRHluYW1pYyBBZGRyZXNzIEFzc2ln
+bm1lbnQgYnV0IGl0IGlzIA0KPiA+IG9wdGlvbmFsIHRvIGRvIEhvdC1Kb2luIER5bmFtaWMgQWRk
+cmVzcyBBc3NpZ25tZW50Lg0KPiA+IA0KPiANCj4gWWVzLCB3ZSBkaXNjdXNzZWQgdGhhdCBmZXcg
+dGltZXMgZHVyaW5nIHRoZSByZXZpZXcgb2YgTWFzdGVyc2hpcCBwYXRjaCBzZXJpZXMuDQoNCkhl
+bmNlLCBiYXNlZCBvbiB0aGF0IHRhYmxlLCBzZWNvbmRhcnkgbWFzdGVyIHdvbid0IGRvIERBQSBq
+dXN0IGJlY2F1c2UgaGUgDQp3YW50LCBJdCBuZWVkcyBhIEhKIHRvIHRyaWdnZXIgREFBLg0KU29y
+cnksIGJ1dCBmb3IgbWUgYmFzZWQgb24gd2hhdCBzcGVjIHNheXMgdGhpcyB1c2UgY2FzZSBpcyBu
+b3QgZmVhc2libGUuIA0KDQoNCkJlc3QgcmVnYXJkcywNClZpdG9yIFNvYXJlcw0KDQoNCg0KDQo=
