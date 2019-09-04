@@ -1,55 +1,133 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
-Date: Wed, 4 Sep 2019 17:12:47 +0100
-Message-ID: <20190904161247.GP26880@dell>
-References: <20190904121606.17474-1-lee.jones@linaro.org>
- <20190904141257.GB6144@bogus>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 16/94] ARM: dts: Fix incomplete dts data for am3 and am4 mmc
+Date: Wed,  4 Sep 2019 11:56:21 -0400
+Message-ID: <20190904155739.2816-16-sashal@kernel.org>
+References: <20190904155739.2816-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190904141257.GB6144@bogus>
+In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Tony Lindgren <tony@atomide.com>, David Lechner <david@lechnology.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 04 Sep 2019, Sudeep Holla wrote:
+From: Tony Lindgren <tony@atomide.com>
 
-> On Wed, Sep 04, 2019 at 01:16:06PM +0100, Lee Jones wrote:
-> > From: Bjorn Andersson <bjorn.andersson@linaro.org>
-> >
-> > The Lenovo Yoga C630 is built on the SDM850 from Qualcomm, but this seem
-> > to be similar enough to the SDM845 that we can reuse the sdm845.dtsi.
-> >
-> > Supported by this patch is: keyboard, battery monitoring, UFS storage,
-> > USB host and Bluetooth.
-> >
-> 
-> Just curious to know if the idea of booting using ACPI is completely
-> dropped as it's extremely difficult(because the firmware is so hacked
-> up and may violate spec, just my opinion) for whatever reasons.
+[ Upstream commit 5b63fb90adb95a178ad403e1703f59bf1ff2c16b ]
 
-Once [0] is applied, we can boot Mainline using ACPI.
+Commit 4e27f752ab8c ("ARM: OMAP2+: Drop mmc platform data for am330x and
+am43xx") dropped legacy mmc platform data for am3 and am4, but missed the
+fact that we never updated the dts files for mmc3 that is directly on l3
+interconnect instead of l4 interconnect. This leads to a situation with
+no legacy platform data and incomplete dts data.
 
-> We just made ACPI table version checking more lenient for this platform
-> and would be good to know if we continue to run ACPI on that or will
-> abandon and just use DT.
+Let's update the mmc instances on l3 interconnect to probe properly with
+ti-sysc interconnect target module driver to make mmc3 work again. Let's
+still keep legacy "ti,hwmods" property around for v5.2 kernel and only
+drop it later on.
 
-Which patch are you referring to?  If you mean the ACPI v5.0 vs v5.1
-patch authored by Ard, then yes I know, I instigated it's existence
-due to these devices.
+Note that there is no need to use property status = "disabled" for mmc3.
+The default for dts is enabled, and runtime PM will idle unused instances
+just fine.
 
-DT will *always* be more enabled than ACPI, so it's advised that you
-use DT for anything useful.  ACPI booting is ideal for things like
-installing distros however, since they do not tend to provide DTBs in
-their installers.
+Fixes: 4e27f752ab8c ("ARM: OMAP2+: Drop mmc platform data for am330x and am43xx")
+Reported-by: David Lechner <david@lechnology.com>
+Tested-by: David Lechner <david@lechnology.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/am33xx.dtsi | 32 ++++++++++++++++++++++++++------
+ arch/arm/boot/dts/am4372.dtsi | 32 ++++++++++++++++++++++++++------
+ 2 files changed, 52 insertions(+), 12 deletions(-)
 
-[0] https://lkml.org/lkml/2019/9/3/580
-
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index e5c2f71a7c77d..fb6b8aa12cc56 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -234,13 +234,33 @@
+ 			interrupt-names = "edma3_tcerrint";
+ 		};
+ 
+-		mmc3: mmc@47810000 {
+-			compatible = "ti,omap4-hsmmc";
++		target-module@47810000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
+ 			ti,hwmods = "mmc3";
+-			ti,needs-special-reset;
+-			interrupts = <29>;
+-			reg = <0x47810000 0x1000>;
+-			status = "disabled";
++			reg = <0x478102fc 0x4>,
++			      <0x47810110 0x4>,
++			      <0x47810114 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
++					 SYSC_OMAP2_ENAWAKEUP |
++					 SYSC_OMAP2_SOFTRESET |
++					 SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,syss-mask = <1>;
++			clocks = <&l3s_clkctrl AM3_L3S_MMC3_CLKCTRL 0>;
++			clock-names = "fck";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x47810000 0x1000>;
++
++			mmc3: mmc@0 {
++				compatible = "ti,omap4-hsmmc";
++				ti,needs-special-reset;
++				interrupts = <29>;
++				reg = <0x0 0x1000>;
++			};
+ 		};
+ 
+ 		usb: usb@47400000 {
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index 55aff4db9c7c2..848e2a8884e2c 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -228,13 +228,33 @@
+ 			interrupt-names = "edma3_tcerrint";
+ 		};
+ 
+-		mmc3: mmc@47810000 {
+-			compatible = "ti,omap4-hsmmc";
+-			reg = <0x47810000 0x1000>;
++		target-module@47810000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
+ 			ti,hwmods = "mmc3";
+-			ti,needs-special-reset;
+-			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+-			status = "disabled";
++			reg = <0x478102fc 0x4>,
++			      <0x47810110 0x4>,
++			      <0x47810114 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
++					 SYSC_OMAP2_ENAWAKEUP |
++					 SYSC_OMAP2_SOFTRESET |
++					 SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,syss-mask = <1>;
++			clocks = <&l3s_clkctrl AM4_L3S_MMC3_CLKCTRL 0>;
++			clock-names = "fck";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x47810000 0x1000>;
++
++			mmc3: mmc@0 {
++				compatible = "ti,omap4-hsmmc";
++				ti,needs-special-reset;
++				interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x1000>;
++			};
+ 		};
+ 
+ 		sham: sham@53100000 {
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.20.1
