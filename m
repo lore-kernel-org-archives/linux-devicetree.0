@@ -1,28 +1,106 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v3 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
-Date: Wed, 4 Sep 2019 19:14:38 +0530
-Message-ID: <20190904134438.GZ2672@vkoul-mobl>
-References: <20190904121606.17474-1-lee.jones@linaro.org>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v4 11/11] lib/test_printf: Add tests for %pfw printk
+ modifier
+Date: Wed, 4 Sep 2019 17:03:45 +0300
+Message-ID: <20190904140345.GT5475@paasikivi.fi.intel.com>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-12-sakari.ailus@linux.intel.com>
+ <20190903133841.dhb6k2lwx2gglyjs@pathway.suse.cz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190904121606.17474-1-lee.jones@linaro.org>
+In-Reply-To: <20190903133841.dhb6k2lwx2gglyjs@pathway.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+To: Petr Mladek <pmladek@suse.com>
+Cc: rafael@kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04-09-19, 13:16, Lee Jones wrote:
-> From: Bjorn Andersson <bjorn.andersson@linaro.org>
-> 
-> The Lenovo Yoga C630 is built on the SDM850 from Qualcomm, but this seem
-> to be similar enough to the SDM845 that we can reuse the sdm845.dtsi.
-> 
-> Supported by this patch is: keyboard, battery monitoring, UFS storage,
-> USB host and Bluetooth.
+Hi Petr,
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Thanks for the comments.
+
+On Tue, Sep 03, 2019 at 03:38:41PM +0200, Petr Mladek wrote:
+> On Mon 2019-09-02 11:32:40, Sakari Ailus wrote:
+> > Add a test for the %pfw printk modifier using software nodes.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  lib/test_printf.c | 37 +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 37 insertions(+)
+> > 
+> > diff --git a/lib/test_printf.c b/lib/test_printf.c
+> > index 944eb50f38625..9c6d716979fb1 100644
+> > --- a/lib/test_printf.c
+> > +++ b/lib/test_printf.c
+> > @@ -22,6 +22,8 @@
+> >  #include <linux/gfp.h>
+> >  #include <linux/mm.h>
+> >  
+> > +#include <linux/property.h>
+> > +
+> >  #include "../tools/testing/selftests/kselftest_module.h"
+> >  
+> >  #define BUF_SIZE 256
+> > @@ -588,6 +590,40 @@ flags(void)
+> >  	kfree(cmp_buffer);
+> >  }
+> >  
+> > +static void __init fwnode_pointer(void)
+> > +{
+> > +	const struct software_node softnodes[] = {
+> > +		{ .name = "first", },
+> > +		{ .name = "second", .parent = &softnodes[0], },
+> > +		{ .name = "third", .parent = &softnodes[1], },
+> > +		{ NULL /* Guardian */ },
+> > +	};
+> > +	const char * const full_name = "/second/third";
+> > +	const char * const full_name_second = "/second";
+> > +	const char * const second_name = "second";
+> > +	const char * const third_name = "third";
+> > +	int rval;
+> > +
+> > +	rval = software_node_register_nodes(softnodes);
+> > +	if (rval) {
+> > +		pr_warn("cannot register softnodes; rval %d\n", rval);
+> > +		return;
+> > +	}
+> > +
+> > +	test(full_name_second, "%pfw",
+> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
+> 
+> "ARRAY_SIZE(softnodes) - 3" is quite cryptic.
+> Is there any particular reason to use it instead of &softnodes[1] ?
+
+I'm fine using a direct index, rather than refer to entries from the top
+downwards.
+
+> 
+> And is it expected that it does not print the "/first" parent?
+
+Heikki actually commented on an issue related to the "root" nodes. I'll
+reply to his comment, on the 5th patch of the set.
+
+> 
+> > +	test(full_name, "%pfw",
+> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+> > +	test(full_name, "%pfwf",
+> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+> > +	test(second_name, "%pfwP",
+> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
+> > +	test(third_name, "%pfwP",
+> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+> > +
+> > +	software_node_unregister_nodes(softnodes);
+> > +}
+> 
+> Anyway, thanks for the tests.
+
+You're welcome!
 
 -- 
-~Vinod
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
