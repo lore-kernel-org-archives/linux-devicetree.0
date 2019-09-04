@@ -1,338 +1,194 @@
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v3 2/2] dwc: PCI: intel: Intel PCIe RC controller driver
-Date: Wed, 4 Sep 2019 16:05:04 +0300
-Message-ID: <20190904130504.GN2680@smile.fi.intel.com>
-References: <cover.1567585181.git.eswara.kota@linux.intel.com>
- <35316bac59d3bc681e76d33e0345f4ef950c4414.1567585181.git.eswara.kota@linux.intel.com>
+From: Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC PATCH V2 4/4] platform: mtk-isp: Add Mediatek FD driver
+Date: Wed, 4 Sep 2019 21:19:03 +0800
+Message-ID: <1567603143.22453.27.camel@mtksdccf07>
+References: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <1562661672-22439-5-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <20190802082815.GA203993@chromium.org>
+ <1566724680.20680.8.camel@mtksdccf07>
+ <CAAFQd5Dw+jaT-+LAUEVeB8W1zdnOgPw7u+aCfDWhYW1SfbzO8g@mail.gmail.com>
+ <1566957625.20680.33.camel@mtksdccf07>
+ <CAAFQd5D-Yg1FjUE_rwmqfS1gvfE0=MZ=r-ziueU_37-uo9QTbw@mail.gmail.com>
+ <1567424859.18318.32.camel@mtksdccf07>
+ <CAAFQd5AGgeFbto6V1KkL0dp1QPziOKV3pWQDU2OJ+S1QKvnBdg@mail.gmail.com>
+ <1567493081.18318.49.camel@mtksdccf07>
+ <CAAFQd5DWM=R7sFHYGhhR_rXrzgRnc4xtH_t8Pig-4tcP9KTSYg@mail.gmail.com>
+ <1567511169.18318.65.camel@mtksdccf07>
+ <CAAFQd5DiPcUxd+R-v_-BdRx+QqZ35Riii_jpgbqr5mc3BnQvDw@mail.gmail.com>
+ <1567568281.18318.80.camel@mtksdccf07>
+ <CAAFQd5CRC2cyV30B4Qv59HdrJ7Cpe_yK5aY-BecQQ3J3i0PtCQ@mail.gmail.com>
+ <1567577389.18318.100.camel@mtksdccf07>
+ <CAAFQd5AxTQPD+nP9CJs45QTzGHKssjv3vRtMqHONABfp12afYw@mail.gmail.com>
+ <1567584577.22453.11.camel@mtksdccf07>
+ <CAAFQd5Dzxy10g-MKHMnNbVO6kp9_L_jm1m+gtN+p=YF2LyBiag@mail.gmail.com>
+ <1567587708.22453.15.camel@mtksdccf07>
+ <CAAFQd5DWfEEiGthPi=qoxD-mpAWa68GOCi55mqpmagS-tsGYkA@mail.gmail.com>
+ <1567589188.22453.24.camel@mtksdccf07>
+ <CAAFQd5Ckz9qH7AnLNM4HRTM2gJQP1HXRS09+o6Prf++D1PQhng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <35316bac59d3bc681e76d33e0345f4ef950c4414.1567585181.git.eswara.kota@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dilip Kota <eswara.kota@linux.intel.com>
-Cc: jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com, robh@kernel.org, martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org, hch@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAAFQd5Ckz9qH7AnLNM4HRTM2gJQP1HXRS09+o6Prf++D1PQhng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sean Cheng =?UTF-8?Q?=28=E9=84=AD=E6=98=87=E5=BC=98=29?= <Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rynn Wu =?UTF-8?Q?=28=E5=90=B3=E8=82=B2=E6=81=A9=29?= <Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Po-Yang Huang =?UTF-8?Q?=28=E9=BB=83=E6=9F=8F=E9=99=BD=29?= <po-yang.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jungo Lin =?UTF-8?Q?=28=E6=9E=97=E6=98=8E=E4=BF=8A=29?= <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sj Huang =?UTF-8?Q?=28=E9=BB=83=E4=BF=A1=E7=92=8B=29?= <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, zwisler-F7+t8E8rja8pug/h7KTFAQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 06:10:31PM +0800, Dilip Kota wrote:
-> Add support to PCIe RC controller on Intel Universal
-> Gateway SoC. PCIe controller is based of Synopsys
-> Designware pci core.
-
-Thanks for an update. My comments below.
-
-> +config PCIE_INTEL_AXI
-> +        bool "Intel AHB/AXI PCIe host controller support"
-> +        depends on PCI_MSI
-> +        depends on PCI
-> +        depends on OF
-> +        select PCIE_DW_HOST
-> +        help
-> +          Say 'Y' here to enable support for Intel AHB/AXI PCIe Host
-> +	  controller driver.
-> +	  The Intel PCIe controller is based on the Synopsys Designware
-> +	  pcie core and therefore uses the Designware core functions to
-> +	  implement the driver.
-
-This hunk is full of indentation issues. Please, see how it's done in other
-cases which are already part of upstream kernel.
-
-> +#define PCIE_APP_INTX_OFST	12
-> +#define PCIE_APP_IRN_INT	(PCIE_APP_IRN_AER_REPORT | PCIE_APP_IRN_PME | \
-
-It would be slightly easier to read if the value starts from the next line.
-
-> +			PCIE_APP_IRN_RX_VDM_MSG | PCIE_APP_IRN_SYS_ERR_RC | \
-> +			PCIE_APP_IRN_PM_TO_ACK | PCIE_APP_IRN_MSG_LTR | \
-> +			PCIE_APP_IRN_BW_MGT | PCIE_APP_IRN_LINK_AUTO_BW_STAT | \
-> +			(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTA) | \
-> +			(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTB) | \
-> +			(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTC) | \
-> +			(PCIE_APP_INTX_OFST + PCI_INTERRUPT_INTD))
-
-> +static void intel_pcie_link_setup(struct intel_pcie_port *lpp)
-> +{
-> +	u32 val;
-> +
-> +	val = pcie_rc_cfg_rd(lpp, PCIE_LCAP);
-> +	lpp->max_speed = FIELD_GET(PCIE_LCAP_MAX_LINK_SPEED, val);
-> +	lpp->max_width = FIELD_GET(PCIE_LCAP_MAX_LENGTH_WIDTH, val);
-> +
-> +	val = pcie_rc_cfg_rd(lpp, PCIE_LCTLSTS);
-> +
-> +	val &= ~(PCIE_LCTLSTS_LINK_DISABLE | PCIE_LCTLSTS_ASPM_ENABLE);
-
-> +	val |= (PCIE_LCTLSTS_SLOT_CLK_CFG | PCIE_LCTLSTS_COM_CLK_CFG |
-> +		PCIE_LCTLSTS_RCB128);
-
-Unnecessary parentheses.
-
-> +	pcie_rc_cfg_wr(lpp, val, PCIE_LCTLSTS);
-> +}
-
-> +	switch (lpp->max_speed) {
-> +	case PCIE_LINK_SPEED_GEN1:
-> +	case PCIE_LINK_SPEED_GEN2:
-> +		fts = PCIE_AFR_GEN12_FTS_NUM_DFT;
-> +		break;
-
-You may group this with default case, right?
-
-> +	case PCIE_LINK_SPEED_GEN3:
-> +		fts = PCIE_AFR_GEN3_FTS_NUM_DFT;
-> +		break;
-> +	case PCIE_LINK_SPEED_GEN4:
-> +		fts = PCIE_AFR_GEN4_FTS_NUM_DFT;
-> +		break;
-> +	default:
-> +		fts = PCIE_AFR_GEN12_FTS_NUM_DFT;
-> +		break;
-> +	}
-
-> +	trace_printk("PCIe misc interrupt status 0x%x\n", reg);
-
-Hmm... Doesn't it give you a BIG warning?
-
-kernel/trace/trace.c:trace_printk_init_buffers()
-
-> +	return IRQ_HANDLED;
-> +}
-
-Perhaps the PCI needs some trace points instead.
-
-> +static int intel_pcie_setup_irq(struct intel_pcie_port *lpp)
-> +{
-> +	struct device *dev = lpp->pci.dev;
-> +	struct platform_device *pdev;
-> +	char *irq_name;
-> +	int irq, ret;
-> +
-> +	pdev = to_platform_device(dev);
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-
-> +		dev_err(dev, "missing sys integrated irq resource\n");
-
-Redundant since this cycle.
-
-> +		return irq;
-> +	}
-
-> +	irq_name = devm_kasprintf(dev, GFP_KERNEL, "pcie_misc%d", lpp->id);
-> +	if (!irq_name) {
-
-> +		dev_err(dev, "failed to alloc irq name\n");
-
-Not very useful. initcall_debug shows an error code.
-
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = devm_request_irq(dev, irq, intel_pcie_core_isr,
-> +			       IRQF_SHARED, irq_name, lpp);
-> +	if (ret) {
-> +		dev_err(dev, "request irq %d failed\n", irq);
-> +		return ret;
-> +	}
-
-+ blank line.
-
-> +	/* Enable integrated interrupts */
-> +	pcie_app_wr_mask(lpp, PCIE_APP_IRN_INT,
-> +			 PCIE_APP_IRN_INT, PCIE_APP_IRNEN);
-
-At least one parameter can be located on the previous line.
-
-> +	return ret;
-> +}
-
-> +static int intel_pcie_get_resources(struct platform_device *pdev)
-> +{
-> +	struct intel_pcie_port *lpp;
-> +	struct resource *res;
-> +	struct dw_pcie *pci;
-> +	struct device *dev;
-> +	int ret;
-> +
-
-> +	lpp = platform_get_drvdata(pdev);
-> +	pci = &lpp->pci;
-> +	dev = pci->dev;
-
-You may save here and there few LOCs by adding these to corresponding
-definition blocks.
-
-> +
-> +	ret = device_property_read_u32(dev, "linux,pci-domain", &lpp->id);
-> +	if (ret) {
-> +		dev_err(dev, "failed to get domain id, errno %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-
-> +	if (!res)
-> +		return -ENXIO;
-
-Redundant. It's done in below call.
-
-> +
-> +	pci->dbi_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(pci->dbi_base))
-> +		return PTR_ERR(pci->dbi_base);
-
-> +
-> +	lpp->core_clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(lpp->core_clk)) {
-> +		ret = PTR_ERR(lpp->core_clk);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to get clks: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	lpp->core_rst = devm_reset_control_get(dev, NULL);
-> +	if (IS_ERR(lpp->core_rst)) {
-> +		ret = PTR_ERR(lpp->core_rst);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to get resets: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = device_property_match_string(dev, "device_type", "pci");
-> +	if (ret) {
-> +		dev_err(dev, "failed to find pci device type: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-
-> +	if (device_property_read_u32(dev, "reset-assert-ms",
-> +				     &lpp->rst_interval))
-
-I would rather leave it on one line.
-
-
-> +		lpp->rst_interval = RST_INTRVL_DFT_MS;
-> +
-> +	if (device_property_read_u32(dev, "max-link-speed", &lpp->link_gen))
-> +		lpp->link_gen = 0; /* Fallback to auto */
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
-
-> +	if (!res)
-> +		return -ENXIO;
-
-Redundant.
-
-> +
-> +	lpp->app_base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(lpp->app_base))
-> +		return PTR_ERR(lpp->app_base);
-> +
-> +	ret = intel_pcie_ep_rst_init(lpp);
-> +	if (ret)
-> +		return ret;
-> +
-> +	lpp->phy = devm_phy_get(dev, "pciephy");
-> +	if (IS_ERR(lpp->phy)) {
-> +		ret = PTR_ERR(lpp->phy);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "couldn't get pcie-phy: %d\n", ret);
-> +		return ret;
-> +	}
-> +	return 0;
-> +}
-
-> +static int intel_pcie_host_setup(struct intel_pcie_port *lpp)
-> +{
-> +	int ret;
-> +
-> +	intel_pcie_core_rst_assert(lpp);
-> +	intel_pcie_device_rst_assert(lpp);
-> +
-> +	ret = phy_init(lpp->phy);
-> +	if (ret)
-> +		return ret;
-> +
-> +	intel_pcie_core_rst_deassert(lpp);
-> +
-> +	ret = clk_prepare_enable(lpp->core_clk);
-> +	if (ret) {
-> +		dev_err(lpp->pci.dev, "Core clock enable failed: %d\n", ret);
-> +		goto clk_err;
-> +	}
-> +
-> +	intel_pcie_rc_setup(lpp);
-> +	ret = intel_pcie_app_logic_setup(lpp);
-> +	if (ret)
-> +		goto app_init_err;
-> +
-> +	ret = intel_pcie_setup_irq(lpp);
-> +	if (!ret)
-> +		return ret;
-> +
-> +	intel_pcie_turn_off(lpp);
-> +app_init_err:
-> +	clk_disable_unprepare(lpp->core_clk);
-> +clk_err:
-> +	intel_pcie_core_rst_assert(lpp);
-
-> +	intel_pcie_deinit_phy(lpp);
-
-Why not phy_exit()?
-
-> +	return ret;
-> +}
-
-> +static ssize_t pcie_width_store(struct device *dev,
-> +				struct device_attribute *attr,
-> +				const char *buf, size_t len)
-> +{
-> +	struct intel_pcie_port *lpp;
-> +	unsigned long val;
-> +
-> +	lpp = dev_get_drvdata(dev);
-> +
-
-> +	if (kstrtoul(buf, 10, &val))
-
-> +		return -EINVAL;
-
-Why shadowing error code?
-
-> +
-> +	if (val > lpp->max_width)
-> +		return -EINVAL;
-> +
-> +	lpp->lanes = val;
-> +	intel_pcie_max_link_width_setup(lpp);
-> +
-> +	return len;
-> +}
-
-> +	pcie_rc_cfg_wr_mask(lpp, PCI_COMMAND_MEMORY | PCI_COMMAND_MASTER,
-> +			    0, PCI_COMMAND);
-
-0 is pretty much fits previous line.
-
-You need to fix your editor settings.
-
-> +int intel_pcie_msi_init(struct pcie_port *pp)
-> +{
-> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +
-
-> +	dev_dbg(pci->dev, "PCIe MSI/MSIx is handled by MSI in x86 processor\n");
-
-Is it useful message?
-
-> +	return 0;
-> +}
-
-> +	dev_info(dev,
-> +		 "Intel AXI PCIe Root Complex Port %d Init Done\n", lpp->id);
-
-Same, literal can be placed on previous line.
-
--- 
-With Best Regards,
-Andy Shevchenko
+On Wed, 2019-09-04 at 21:12 +0800, Tomasz Figa wrote:
+> On Wed, Sep 4, 2019 at 6:26 PM Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >
+> > Hi Tomasz,
+> >
+> > On Wed, 2019-09-04 at 17:03 +0800, Tomasz Figa wrote:
+> > > On Wed, Sep 4, 2019 at 6:02 PM Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > >
+> > > > Hi Tomasz,
+> > > >
+> > > > On Wed, 2019-09-04 at 16:25 +0800, Tomasz Figa wrote:
+> > > > > On Wed, Sep 4, 2019 at 5:09 PM Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > > >
+> > > > > > Hi Tomasz,
+> > > > > >
+> > > > > > On Wed, 2019-09-04 at 14:34 +0800, Tomasz Figa wrote:
+> > > > > > > On Wed, Sep 4, 2019 at 3:09 PM Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > > > > >
+> > > > > > > > Hi Tomasz,
+> > > > > > > >
+> > > > > > > > On Wed, 2019-09-04 at 12:15 +0800, Tomasz Figa wrote:
+> > > > > > > > > On Wed, Sep 4, 2019 at 12:38 PM Jerry-ch Chen
+> > > > > > > > > <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > > > > > > >
+> > > > > > > > > > Hi Tomasz,
+> > > > > > > > > >
+> > > > > > > > > > On Tue, 2019-09-03 at 20:05 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > On Tue, Sep 3, 2019 at 8:46 PM Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > > > > > > > > >
+> > > > > > > > > > > > Hi Tomasz,
+> > > > > > > > > > > >
+> > > > > > > > > > > > On Tue, 2019-09-03 at 15:04 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > > > On Tue, Sep 3, 2019 at 3:44 PM Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > On Tue, 2019-09-03 at 13:19 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > > > > > On Mon, Sep 2, 2019 at 8:47 PM Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > Hi Tomasz,
+> > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > On Fri, 2019-08-30 at 16:33 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > > > > > > > On Wed, Aug 28, 2019 at 11:00 AM Jerry-ch Chen
+> > > > > > > > > > > > > > > > > <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > Hi Tomasz,
+> > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > On Mon, 2019-08-26 at 14:36 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > > > > > > > > > Hi Jerry,
+> > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > On Sun, Aug 25, 2019 at 6:18 PM Jerry-ch Chen
+> > > > > > > > > > > > > > > > > > > <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > > Hi Tomasz,
+> > > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > > On Fri, 2019-08-02 at 16:28 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > > > > > > > > > > > Hi Jerry,
+> > > > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > > > On Tue, Jul 09, 2019 at 04:41:12PM +0800, Jerry-ch Chen wrote:
+> > [snip]
+> > > > > > static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
+> > > > > > {
+> > > > > >         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+> > > > > >         struct mtk_fd_dev *fd = ctx->fd_dev;
+> > > > > >         struct vb2_v4l2_buffer *vb;
+> > > > > >         struct v4l2_m2m_ctx *m2m_ctx = ctx->fh.m2m_ctx;
+> > > > > >         struct v4l2_m2m_queue_ctx *queue_ctx;
+> > > > > >         u32 ret;
+> > > > > >
+> > > > > >         if (!fd->fd_irq_done.done)
+> > > > >
+> > > > > We shouldn't access internal fields of completion.
+> > > > >
+> > > > > >                 ret = wait_for_completion_timeout(&fd->fd_irq_done,
+> > > > > >                                                   msecs_to_jiffies(
+> > > > > >                                                         MTK_FD_HW_TIMEOUT));
+> > > > > >         queue_ctx = V4L2_TYPE_IS_OUTPUT(vq->type) ?
+> > > > > >                                         &m2m_ctx->out_q_ctx :
+> > > > > >                                         &m2m_ctx->cap_q_ctx;
+> > > > > >         while ((vb = v4l2_m2m_buf_remove(queue_ctx)))
+> > > > > >                 v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
+> > > > > >
+> > > > > >         if (vq->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
+> > > > > >                 mtk_fd_hw_disconnect(fd);
+> > > > > > }
+> > > > > >
+> > > > > > I've also tried to wait completion unconditionally for both queues and
+> > > > > > the second time will wait until timeout, as a result, it takes longer to
+> > > > > > swap the camera every time and close the camera app.
+> > > > >
+> > > > > I think it should work better if we call complete_all() instead of complete().
+> > > > >
+> > > > Thanks,
+> > > >
+> > > > I use complete_all(), and it works fine now.
+> > > >
+> > > > static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
+> > > > {
+> > > >         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+> > > >         struct mtk_fd_dev *fd = ctx->fd_dev;
+> > > >         struct vb2_v4l2_buffer *vb;
+> > > >         struct v4l2_m2m_ctx *m2m_ctx = ctx->fh.m2m_ctx;
+> > > >         struct v4l2_m2m_queue_ctx *queue_ctx;
+> > > >
+> > > >         wait_for_completion_timeout(&fd->fd_irq_done,
+> > > >                                           msecs_to_jiffies(MTK_FD_HW_TIMEOUT));
+> > >
+> > > Shouldn't we still send some command to the hardware to stop? Like a
+> > > reset. Otherwise we don't know if it isn't still accessing the memory.
+> > >
+> > I thought no more jobs will be enqueued here when stop_streaming so we
+> > don't need it.
+> 
+> That's true for the case when the wait completed successfully, but we
+> also need to ensure the hardware is stopped even if a timeout happens.
+> 
+> > We still could send an ipi command to reset the HW, and wait for it's
+> > callback or we could set the register MTK_FD_REG_OFFSET_HW_ENABLE to
+> > zero to disable the HW.
+> 
+> Since it's for handling a timeout, a reset should be more likely to
+> bring the hardware back to a reasonable state.
+> 
+
+Ok, I will send the ipi command to reset the HW.
+
+Thanks and best regards,
+Jerry
+> >
+> > Best regards,
+> > Jerry
+> >
+> > > >         queue_ctx = V4L2_TYPE_IS_OUTPUT(vq->type) ?
+> > > >                                         &m2m_ctx->out_q_ctx :
+> > > >                                         &m2m_ctx->cap_q_ctx;
+> > > >         while ((vb = v4l2_m2m_buf_remove(queue_ctx)))
+> > > >                 v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
+> > > >
+> > > >         if (vq->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
+> > > >                 mtk_fd_hw_disconnect(fd);
+> > > > }
+> > > >
+> > > > Best regards,
+> > > > Jerry
+> > > >
+> > > > > Best regards,
+> > > > > Tomasz
+> > > >
+> > > >
+> >
+> >
