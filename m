@@ -1,93 +1,133 @@
-From: Saravana Kannan <saravanak@google.com>
-Subject: [PATCH v11 6/6] of: property: Create device links for all
- child-supplier depencencies
-Date: Wed,  4 Sep 2019 14:11:25 -0700
-Message-ID: <20190904211126.47518-7-saravanak@google.com>
-References: <20190904211126.47518-1-saravanak@google.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/2] i2c: qcom-geni: Provide an option to select FIFO
+ processing
+Date: Wed, 4 Sep 2019 23:23:37 +0200
+Message-ID: <20190904212337.GF23608@ninjato>
+References: <20190904113613.14997-1-lee.jones@linaro.org>
+ <20190904203548.GC580@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kbCYTQG2MZjuOjyn"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190904211126.47518-1-saravanak@google.com>
+Content-Disposition: inline
+In-Reply-To: <20190904203548.GC580@tuxbook-pro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-acpi@vger.kernel.org, clang-built-linux@googlegroups.com, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, alokc@codeaurora.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-A parent device can have child devices that it adds when it probes. But
-this probing of the parent device can happen way after kernel init is done
--- for example, when the parent device's driver is loaded as a module.
 
-In such cases, if the child devices depend on a supplier in the system, we
-need to make sure the supplier gets the sync_state() callback only after
-these child devices are added and probed.
+--kbCYTQG2MZjuOjyn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-To achieve this, when creating device links for a device by looking at its
-DT node, don't just look at DT references at the top node level. Look at DT
-references in all the descendant nodes too and create device links from the
-ancestor device to all these supplier devices.
+On Wed, Sep 04, 2019 at 01:35:48PM -0700, Bjorn Andersson wrote:
+> On Wed 04 Sep 04:36 PDT 2019, Lee Jones wrote:
+>=20
+> The subject implies that we select FIFO mode instead of DMA, but that's
+> not really true, because with DMA enabled we still fall back to FIFO for
+> messages below 32 bytes.=20
+>=20
+> So what this does it to disable DMA, which neither the subject or the DT
+> property describes.
+>=20
+> Also missing is a description of why this is needed.
 
-This way, when the parent device probes and adds child devices, the child
-devices can then create their own device links to the suppliers and further
-delay the supplier's sync_state() callback to after the child devices are
-probed.
+Yes.
 
-Example:
-In this illustration, -> denotes DT references and indentation
-represents child status.
+I am willing to help to get this resolved soonish. However, I have
+issues with the approach.
 
-Device node A
-	Device node B -> D
-	Device node C -> B, D
+It looks like a workaround to me. It would be interesting to hear which
+I2C client breaks with DMA and if it's driver can't be fixed somehow
+instead. But even if we agree on a workaround short term, adding a
+binding for this workaround seems like a no-go to me. We have to live
+with this binding forever. Sidenote: I could think of a generic
+'disable-dma' which could be reused everywhere but we probably won't get
+that upstream that late in the cycle.
 
-Device node D
+Is there no other way to disable DMA which is local to this driver so we
+can easily revert the workaround later?
 
-Assume all these devices have their drivers loaded as modules.
+>=20
+> Regards,
+> Bjorn
+>=20
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  drivers/i2c/busses/i2c-qcom-geni.c | 14 ++++++++++----
+> >  1 file changed, 10 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2=
+c-qcom-geni.c
+> > index a89bfce5388e..dfdbce067827 100644
+> > --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> > +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> > @@ -353,13 +353,16 @@ static void geni_i2c_tx_fsm_rst(struct geni_i2c_d=
+ev *gi2c)
+> >  static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_m=
+sg *msg,
+> >  				u32 m_param)
+> >  {
+> > +	struct device_node *np =3D gi2c->se.dev->of_node;
+> >  	dma_addr_t rx_dma;
+> >  	unsigned long time_left;
+> > -	void *dma_buf;
+> > +	void *dma_buf =3D NULL;
+> >  	struct geni_se *se =3D &gi2c->se;
+> >  	size_t len =3D msg->len;
+> > =20
+> > -	dma_buf =3D i2c_get_dma_safe_msg_buf(msg, 32);
+> > +	if (!of_property_read_bool(np, "qcom,geni-se-fifo"))
+> > +		dma_buf =3D i2c_get_dma_safe_msg_buf(msg, 32);
+> > +
+> >  	if (dma_buf)
+> >  		geni_se_select_mode(se, GENI_SE_DMA);
+> >  	else
+> > @@ -392,13 +395,16 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_de=
+v *gi2c, struct i2c_msg *msg,
+> >  static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_m=
+sg *msg,
+> >  				u32 m_param)
+> >  {
+> > +	struct device_node *np =3D gi2c->se.dev->of_node;
+> >  	dma_addr_t tx_dma;
+> >  	unsigned long time_left;
+> > -	void *dma_buf;
+> > +	void *dma_buf =3D NULL;
+> >  	struct geni_se *se =3D &gi2c->se;
+> >  	size_t len =3D msg->len;
+> > =20
+> > -	dma_buf =3D i2c_get_dma_safe_msg_buf(msg, 32);
+> > +	if (!of_property_read_bool(np, "qcom,geni-se-fifo"))
+> > +		dma_buf =3D i2c_get_dma_safe_msg_buf(msg, 32);
+> > +
+> >  	if (dma_buf)
+> >  		geni_se_select_mode(se, GENI_SE_DMA);
+> >  	else
+> > --=20
+> > 2.17.1
+> >=20
 
-Without this patch, this is the sequence of events:
-1. D is added.
-2. A is added.
-3. Device D probes.
-4. Device D gets its sync_state() callback.
-5. Device B and C might malfunction because their resources got
-   altered/turned off before they can make active requests for them.
+--kbCYTQG2MZjuOjyn
+Content-Type: application/pgp-signature; name="signature.asc"
 
-With this patch, this is the sequence of events:
-1. D is added.
-2. A is added and creates device links to D.
-3. Device link from A to B is not added because A is a parent of B.
-4. Device D probes.
-5. Device D does not get it's sync_state() callback because consumer A
-   hasn't probed yet.
-5. Device A probes.
-5. a. Devices B and C are added.
-5. b. Device links from B and C to D are added.
-5. c. Device A's probe completes.
-6. Device D does not get it's sync_state() callback because consumer A
-   has probed but consumers B and C haven't probed yet.
-7. Device B and C probe.
-8. Device D gets it's sync_state() callback because all its consumers
-   have probed.
-9. None of the devices malfunction.
+-----BEGIN PGP SIGNATURE-----
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/of/property.c | 4 ++++
- 1 file changed, 4 insertions(+)
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1wK1kACgkQFA3kzBSg
+KbYdkBAAgFs9RXf2jczJ4+RRvtmpQ2kMs/T+w039wUaHrptyk1cujtkKBxIzzaQ5
+PuTTxkEAxUQdfp8NX2fpjFDU9OJZPMwtXJ6kDLDINm/o35+dVZeJ/d2OealTBHwn
+v3yDd7w6vR/ilOUW395nT0RF5ngxXMKOr9Mcy1qUPygIf7WJmhSUqL8Ps0jLai2F
+xgV3dSHPAXjtciwzNwV7uhsSGEQl19COjYxG/CeQqRQrWy31i/3Pr71xYiTEre0K
+mgg0O23T7h0TZvoXFYrWb62XqpM/kk2z5YCgYx2d3Zy9mVMCBVhoZkAnlzZ8aigb
+nvPaO6y25m6kFeI4NlgMxqQH7IhCqCHWGx5Y2fdGFOqCt/2nTYwBmzaQvRozrXoa
+q6oL30dW5dewd8sTN9RMH0C43TXApsPOOUFieARIIcszOZPJBRWuvAx69UEMEYdw
+/U9Q5uknA9K72KMoNfQwRmK1SlQur5sZ0obxir8hvbDdg3+11oek+2h90fom2ZZy
+Jdcg9i51an87RBRHe6YIXwOVstFWuq0GwOvB8gTT0m9v8TcnoFALWNrYlGaCmt1a
+HvBw24Ds4n25HfcM4OCPnsxDJ1LN9/kAaupXUGwUbo6X1XVKRPQG1OzrYxhehQW8
+N4v1tQBpjvVEN5DK5+hfU8zJozEAu8kqOVBWQJ4s12GvFYy18/0=
+=Qcw2
+-----END PGP SIGNATURE-----
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 23b5ee5b0570..923d6f88a99c 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1207,6 +1207,10 @@ static int __of_link_to_suppliers(struct device *dev,
- 		if (of_link_property(dev, con_np, p->name))
- 			ret = -EAGAIN;
- 
-+	for_each_child_of_node(con_np, child)
-+		if (__of_link_to_suppliers(dev, child))
-+			ret = -EAGAIN;
-+
- 	return ret;
- }
- 
--- 
-2.23.0.187.g17f5b7556c-goog
+--kbCYTQG2MZjuOjyn--
