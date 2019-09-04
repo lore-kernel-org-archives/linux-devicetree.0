@@ -1,106 +1,199 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v4 11/11] lib/test_printf: Add tests for %pfw printk
- modifier
-Date: Wed, 4 Sep 2019 17:03:45 +0300
-Message-ID: <20190904140345.GT5475@paasikivi.fi.intel.com>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
- <20190902083240.20367-12-sakari.ailus@linux.intel.com>
- <20190903133841.dhb6k2lwx2gglyjs@pathway.suse.cz>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v4 3/7] PCI/VPD: Add VPD release quirk for Amazon's
+ Annapurna Labs Root Port
+Date: Wed, 4 Sep 2019 15:08:19 +0100
+Message-ID: <20190904140819.GW9720@e119886-lin.cambridge.arm.com>
+References: <20190821153545.17635-1-jonnyc@amazon.com>
+ <20190821153545.17635-4-jonnyc@amazon.com>
+ <20190822114146.GP23903@e119886-lin.cambridge.arm.com>
+ <5a2c0097471e933d6f6a3964ac9fba9520994991.camel@amazon.com>
+ <20190822150752.GQ23903@e119886-lin.cambridge.arm.com>
+ <0e53d9536ede1bff2e178192256392779d1d0455.camel@amazon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190903133841.dhb6k2lwx2gglyjs@pathway.suse.cz>
+In-Reply-To: <0e53d9536ede1bff2e178192256392779d1d0455.camel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: rafael@kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+To: "Chocron, Jonathan" <jonnyc@amazon.com>
+Cc: "babu.moger@oracle.com" <babu.moger@oracle.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, "Hanoch, Uri" <hanochu@amazon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "Wasserstrom, Barak" <barakw@amazon.com>, "Saidi, Ali" <alisaidi@amazon.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Hawa, Hanna" <hhhawa@amazon.com>, "Shenhar, Talel" <talel@amazon.com>, "Krupnik, Ronen" <ronenk@amazon.com>, "bhelgaas@google.com" <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Petr,
-
-Thanks for the comments.
-
-On Tue, Sep 03, 2019 at 03:38:41PM +0200, Petr Mladek wrote:
-> On Mon 2019-09-02 11:32:40, Sakari Ailus wrote:
-> > Add a test for the %pfw printk modifier using software nodes.
+On Wed, Sep 04, 2019 at 01:36:12PM +0000, Chocron, Jonathan wrote:
+> On Thu, 2019-08-22 at 16:07 +0100, Andrew Murray wrote:
+> > On Thu, Aug 22, 2019 at 02:36:24PM +0000, Chocron, Jonathan wrote:
+> > > On Thu, 2019-08-22 at 12:41 +0100, Andrew Murray wrote:
+> > > > On Wed, Aug 21, 2019 at 06:35:43PM +0300, Jonathan Chocron wrote:
+> > > > > The Amazon Annapurna Labs PCIe Root Port exposes the VPD
+> > > > > capability,
+> > > > > but there is no actual support for it.
+> > > > > 
+> > > > > The reason for not using the already existing
+> > > > > quirk_blacklist_vpd()
+> > > > > is that, although this fails pci_vpd_read/write, the 'vpd'
+> > > > > sysfs
+> > > > > entry still exists. When running lspci -vv, for example, this
+> > > > > results in the following error:
+> > > > > 
+> > > > > pcilib: sysfs_read_vpd: read failed: Input/output error
+> > > > 
+> > > > Oh that's not nice. It's probably triggered by the -EIO in
+> > > > pci_vpd_read.
+> > > > A quick search online seems to show that other people have
+> > > > experienced
+> > > > this too - though from as far as I can tell this just gives you a
+> > > > warning and pcilib will continnue to give other output?
+> > > > 
+> > > 
+> > > Correct.
+> > > 
+> > > > I guess every vpd blacklist'd driver will have the same issue.
+> > > > And
+> > > > for
+> > > > this reason I don't think that this patch is the right solution -
+> > > > as
+> > > > otherwise all the other blacklisted drivers could follow your
+> > > > lead.
+> > > > 
+> > > 
+> > > I think that going forward, they should follow my lead, I just
+> > > didn't
+> > > want to possibly break any assumptions other vendors' tools might
+> > > have
+> > > regarding the existence/non-existence of the vpd sysfs entry.
+> > > 
+> > > > I don't think you need to fix this specifically for the AL driver
+> > > > and
+> > > > so
+> > > > I'd suggest that you can probably drop this patch. (Ideally
+> > > > pciutils
+> > > > could be updated to not warn for this specific use-case).
+> > > > 
+> > > 
+> > > I don't think that solution should be implemented in pcituils. It
+> > > rightfully warns when it fails to read from the vpd sysfs file - it
+> > > first 'open's the file which succeeds, and then fails when trying
+> > > to
+> > > 'read' from it.
 > > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  lib/test_printf.c | 37 +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
+> > Indeed - this is correct.
 > > 
-> > diff --git a/lib/test_printf.c b/lib/test_printf.c
-> > index 944eb50f38625..9c6d716979fb1 100644
-> > --- a/lib/test_printf.c
-> > +++ b/lib/test_printf.c
-> > @@ -22,6 +22,8 @@
-> >  #include <linux/gfp.h>
-> >  #include <linux/mm.h>
-> >  
-> > +#include <linux/property.h>
-> > +
-> >  #include "../tools/testing/selftests/kselftest_module.h"
-> >  
-> >  #define BUF_SIZE 256
-> > @@ -588,6 +590,40 @@ flags(void)
-> >  	kfree(cmp_buffer);
-> >  }
-> >  
-> > +static void __init fwnode_pointer(void)
-> > +{
-> > +	const struct software_node softnodes[] = {
-> > +		{ .name = "first", },
-> > +		{ .name = "second", .parent = &softnodes[0], },
-> > +		{ .name = "third", .parent = &softnodes[1], },
-> > +		{ NULL /* Guardian */ },
-> > +	};
-> > +	const char * const full_name = "/second/third";
-> > +	const char * const full_name_second = "/second";
-> > +	const char * const second_name = "second";
-> > +	const char * const third_name = "third";
-> > +	int rval;
-> > +
-> > +	rval = software_node_register_nodes(softnodes);
-> > +	if (rval) {
-> > +		pr_warn("cannot register softnodes; rval %d\n", rval);
-> > +		return;
-> > +	}
-> > +
-> > +	test(full_name_second, "%pfw",
-> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
-> 
-> "ARRAY_SIZE(softnodes) - 3" is quite cryptic.
-> Is there any particular reason to use it instead of &softnodes[1] ?
+> > > I don't think that it should specifically "mask" out
+> > > -EIO, since it shouldn't have to "know" that the underlying reason
+> > > is a
+> > 
+> > You're probably right - I guess the kernel should document somewhere
+> > (ABI/testing/sysfs-bus-pci?) what the kernel does when such a quirk
+> > exists,
+> > then userspace can conform. For example if -EIO cannot be returned
+> > any
+> > other way then it would be OK for pciutils to mask it out - but its
+> > ambigious at the moment.
+> > 
+> > > VPD quirk (or more precisely vpd->len == 0). Furthermore, it is
+> > > possible that this error code would be returned for some other
+> > > reason
+> > > (not sure if currently this occurs).
+> > > 
+> > > I think that if the device doesn't properly support vpd, the kernel
+> > > shouldn't expose the "empty" sysfs file in the first place.
+> > > 
+> > > In the long run, quirk_blacklist_vpd() should probably be modified
+> > > to
+> > > do what our quirk does or something similar (and then the al quirk
+> > > can
+> > > be removed). What do you think?
+> > 
+> > When I first saw your quirk, I did wonder why quirk_blacklist_vpd
+> > doesn't
+> > do what your quirk does. Perhaps there isn't a reason. It was first
+> > introduced in 2016:
+> > 
+> > 7c20078a8197 ("PCI: Prevent VPD access for buggy devices")
+> > 
+> > Some may argue that actually because your hardware has a VPD
+> > capability
+> > it should have the sysfs file - but the capability doesn't work and
+> > so
+> > the sysfs file should return an error.
+> > 
+> > I'd be keen to change quirk_blacklist_vpd - Babu, Bjorn any
+> > objections?
+> > 
+> Since the merge window is closing and I don't want to affect any other
+> PCIe controllers without having their maintainers testing this change,
+> I'll remove this function and register our device_id with the existing
+> quirk_blacklist_vpd. This will be part of v5.
 
-I'm fine using a direct index, rather than refer to entries from the top
-downwards.
-
-> 
-> And is it expected that it does not print the "/first" parent?
-
-Heikki actually commented on an issue related to the "root" nodes. I'll
-reply to his comment, on the 5th patch of the set.
+Thanks - this sounds like a reasonable approach.
 
 > 
-> > +	test(full_name, "%pfw",
-> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> > +	test(full_name, "%pfwf",
-> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> > +	test(second_name, "%pfwP",
-> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
-> > +	test(third_name, "%pfwP",
-> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> > +
-> > +	software_node_unregister_nodes(softnodes);
-> > +}
+> I'll then submit a separate patch (for the next kernel version) which
+> changes the quirk_blacklist_vpd to do what I originally intended.
+
+Thanks - we can then see what the wider consensus on this is.
+
+I'll look forward to your respin.
+
+Thanks,
+
+Andrew Murray
+
 > 
-> Anyway, thanks for the tests.
-
-You're welcome!
-
--- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > 
+> > > > Thanks,
+> > > > 
+> > > > Andrew Murray
+> > > > 
+> > > > > 
+> > > > > This quirk removes the sysfs entry, which avoids the error
+> > > > > print.
+> > > > > 
+> > > > > Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> > > > > Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > > > > ---
+> > > > >  drivers/pci/vpd.c | 16 ++++++++++++++++
+> > > > >  1 file changed, 16 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> > > > > index 4963c2e2bd4c..c23a8ec08db9 100644
+> > > > > --- a/drivers/pci/vpd.c
+> > > > > +++ b/drivers/pci/vpd.c
+> > > > > @@ -644,4 +644,20 @@ static void
+> > > > > quirk_chelsio_extend_vpd(struct
+> > > > > pci_dev *dev)
+> > > > >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+> > > > >  			quirk_chelsio_extend_vpd);
+> > > > >  
+> > > > > +static void quirk_al_vpd_release(struct pci_dev *dev)
+> > > > > +{
+> > > > > +	if (dev->vpd) {
+> > > > > +		pci_vpd_release(dev);
+> > > > > +		dev->vpd = NULL;
+> > > > > +		pci_warn(dev, FW_BUG "Releasing VPD capability
+> > > > > (No
+> > > > > support for VPD read/write transactions)\n");
+> > > > > +	}
+> > > > > +}
+> > > > > +
+> > > > > +/*
+> > > > > + * The 0031 device id is reused for other non Root Port device
+> > > > > types,
+> > > > > + * therefore the quirk is registered for the
+> > > > > PCI_CLASS_BRIDGE_PCI
+> > > > > class.
+> > > > > + */
+> > > > > +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_L
+> > > > > ABS,
+> > > > > 0x0031,
+> > > > > +			      PCI_CLASS_BRIDGE_PCI, 8,
+> > > > > quirk_al_vpd_release);
+> > > > > +
+> > > > >  #endif
+> > > > > -- 
+> > > > > 2.17.1
+> > > > > 
