@@ -1,40 +1,88 @@
-Return-Path: <sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAL_JsqLpVDJBh5qZwudncB8sggb85f3efqs1z9EA+zbVPWX++g@mail.gmail.com>
-References: <20190823131401.4011-1-govinds@codeaurora.org> <20190823131401.4011-2-govinds@codeaurora.org> <CAL_JsqLpVDJBh5qZwudncB8sggb85f3efqs1z9EA+zbVPWX++g@mail.gmail.com>
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH_v3 1/2] dt-bindings: clock: qcom: Add QCOM Q6SSTOP clock controller bindings
-Date: Fri, 06 Sep 2019 13:31:30 -0700
-Message-Id: <20190906203131.936A22070C@mail.kernel.org>
-To: Govind Singh <govinds@codeaurora.org>, Rob Herring <robh@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>
+Return-Path: <SRS0=Vpbw=W7=lemote.com=chenhc@kernel.org>
+From: "=?utf-8?B?6ZmI5Y2O5omN?=" <chenhc@lemote.com>
+Subject: Re:[PATCH v1 12/18] dt-bindings: mips: Add loongson cpus & boards
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Wed, 4 Sep 2019 11:46:33 +0800
+Message-ID: <tencent_2F3E488B13DC603F284772DC@qq.com>
+References: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
+	<20190830043232.20191-7-jiaxun.yang@flygoat.com>
+In-Reply-To: <20190830043232.20191-7-jiaxun.yang@flygoat.com>
+To: =?utf-8?B?SmlheHVuIFlhbmc=?= <jiaxun.yang@flygoat.com>, =?utf-8?B?bGludXgtbWlwcw==?= <linux-mips@vger.kernel.org>
+Cc: =?utf-8?B?cGF1bC5idXJ0b24=?= <paul.burton@mips.com>, =?utf-8?B?dGdseA==?= <tglx@linutronix.de>, =?utf-8?B?amFzb24=?= <jason@lakedaemon.net>, =?utf-8?B?bWF6?= <maz@kernel.org>, =?utf-8?B?bGludXgta2VybmVs?= <linux-kernel@vger.kernel.org>, =?utf-8?B?cm9iaCtkdA==?= <robh+dt@kernel.org>, =?utf-8?B?bWFyay5ydXRsYW5k?= <mark.rutland@arm.co>, =?utf-8?B?ZGV2aWNldHJlZQ==?= <devicetree@vger.kernel.org>, =?utf-8?B?SHVhY2FpIENoZW4=?= <chenhuacai@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Quoting Rob Herring (2019-08-27 05:27:19)
-> On Fri, Aug 23, 2019 at 8:14 AM Govind Singh <govinds@codeaurora.org> wro=
-te:
-> >
-> > Add devicetree binding for the Q6SSTOP clock controller found in QCS404.
-> >
-> > Signed-off-by: Govind Singh <govinds@codeaurora.org>
-> > ---
-> >  .../bindings/clock/qcom,q6sstopcc.yaml        | 47 +++++++++++++++++++
-> >  1 file changed, 47 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/clock/qcom,q6ssto=
-pcc.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/clock/qcom,q6sstopcc.yam=
-l b/Documentation/devicetree/bindings/clock/qcom,q6sstopcc.yaml
-> > new file mode 100644
-> > index 000000000000..39621e2e2f4e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/qcom,q6sstopcc.yaml
-> > @@ -0,0 +1,47 @@
-> > +# SPDX-License-Identifier: BSD-2-Clause
->=20
-> Dual license please.
->=20
-
-Yes, please fix the binding.
+SGksIEppYXh1biwNCg0KUGxlYXNlIGRvbid0IHVzZSAibHMzYi03ODBlLTF3YXkiLCBpbiBv
+dGhlciB3b3JkcywgcGxlYXNlIHVzZSAibHMzYjEwMDAtNzgwZS0xd2F5IiwgImxzM2IxNTAw
+LTc4MGUtMXdheSIsIGV0Yy4NCg0KSHVhY2FpDQotLS0NCiAuLi4vYmluZGluZ3MvbWlwcy9s
+b29uZ3Nvbi9jcHVzLnlhbWwgICAgICAgICAgfCAzOCArKysrKysrKysrKw0KIC4uLi9iaW5k
+aW5ncy9taXBzL2xvb25nc29uL2RldmljZXMueWFtbCAgICAgICB8IDY0ICsrKysrKysrKysr
+KysrKysrKysNCiAyIGZpbGVzIGNoYW5nZWQsIDEwMiBpbnNlcnRpb25zKCspDQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXBzL2xv
+b25nc29uL2NwdXMueWFtbA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbWlwcy9sb29uZ3Nvbi9kZXZpY2VzLnlhbWwNCg0KZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXBzL2xvb25nc29u
+L2NwdXMueWFtbCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXBzL2xv
+b25nc29uL2NwdXMueWFtbA0KbmV3IGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4IDAwMDAwMDAw
+MDAwMC4uZGM2ZGQ1MTE0ZDVlDQotLS0gL2Rldi9udWxsDQorKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbWlwcy9sb29uZ3Nvbi9jcHVzLnlhbWwNCkBAIC0wLDAg
+KzEsMzggQEANCisjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMC1vbmx5IE9S
+IEJTRC0yLUNsYXVzZSkNCislWUFNTCAxLjINCistLS0NCiskaWQ6IGh0dHA6Ly9kZXZpY2V0
+cmVlLm9yZy9zY2hlbWFzL21pcHMvbG9vbmdzb24vY3B1cy55YW1sIw0KKyRzY2hlbWE6IGh0
+dHA6Ly9kZXZpY2V0cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIw0KKw0KK3RpdGxl
+OiBMb29uZ3NvbiBDUFVzIGJpbmRpbmdzDQorDQorbWFpbnRhaW5lcnM6DQorICAtIEppYXh1
+biBZYW5nIDxqaWF4dW4ueWFuZ0BmbHlnb2F0LmNvbT4NCisNCitkZXNjcmlwdGlvbjogfCsN
+CisgIFRoZSBkZXZpY2UgdHJlZSBhbGxvd3MgdG8gZGVzY3JpYmUgdGhlIGxheW91dCBvZiBD
+UFVzIGluIGEgc3lzdGVtIHRocm91Z2gNCisgIHRoZSAiY3B1cyIgbm9kZSwgd2hpY2ggaW4g
+dHVybiBjb250YWlucyBhIG51bWJlciBvZiBzdWJub2RlcyAoaWUgImNwdSIpDQorICBkZWZp
+bmluZyBwcm9wZXJ0aWVzIGZvciBldmVyeSBjcHUuDQorDQorICBCaW5kaW5ncyBmb3IgQ1BV
+IG5vZGVzIGZvbGxvdyB0aGUgRGV2aWNldHJlZSBTcGVjaWZpY2F0aW9uLCBhdmFpbGFibGUg
+ZnJvbToNCisNCisgIGh0dHBzOi8vd3d3LmRldmljZXRyZWUub3JnL3NwZWNpZmljYXRpb25z
+Lw0KKw0KK3Byb3BlcnRpZXM6DQorICByZWc6DQorICAgIG1heEl0ZW1zOiAxDQorICAgIGRl
+c2NyaXB0aW9uOiB8DQorICAgICAgUGh5c2ljYWwgSUQgb2YgYSBDUFUsIENhbiBiZSByZWFk
+IGZyb20gQ1AwIEVCYXNlLkNQVU51bS4NCisNCisgIGNvbXBhdGlibGU6DQorICAgIGVudW06
+DQorICAgICAgLSBsb29uZ3NvbixnczQ2NA0KKyAgICAgIC0gbG9vbmdzb24sZ3M0NjRlDQor
+ICAgICAgLSBsb29uZ3NvbixnczI2NA0KKyAgICAgIC0gbG9vbmdzb24sZ3M0NjR2DQorDQor
+cmVxdWlyZWQ6DQorICAtIGRldmljZV90eXBlDQorICAtIHJlZw0KKyAgLSBjb21wYXRpYmxl
+DQorLi4uDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L21pcHMvbG9vbmdzb24vZGV2aWNlcy55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21pcHMvbG9vbmdzb24vZGV2aWNlcy55YW1sDQpuZXcgZmlsZSBtb2RlIDEw
+MDY0NA0KaW5kZXggMDAwMDAwMDAwMDAwLi5hYTZjNDIwMTNkMmMNCi0tLSAvZGV2L251bGwN
+CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9taXBzL2xvb25nc29u
+L2RldmljZXMueWFtbA0KQEAgLTAsMCArMSw2NCBAQA0KKyMgU1BEWC1MaWNlbnNlLUlkZW50
+aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQ0KKyVZQU1MIDEuMg0KKy0t
+LQ0KKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvbWlwcy9sb29uZ3Nvbi9k
+ZXZpY2VzLnlhbWwjDQorJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2No
+ZW1hcy9jb3JlLnlhbWwjDQorDQordGl0bGU6IExvb25nc29uIGJhc2VkIFBsYXRmb3JtcyBE
+ZXZpY2UgVHJlZSBCaW5kaW5ncw0KKw0KK21haW50YWluZXJzOg0KKyAgLSBKaWF4dW4gWWFu
+ZyA8amlheHVuLnlhbmdAZmx5Z29hdC5jb20+DQorZGVzY3JpcHRpb246IHwNCisgIERldmlj
+ZXMgd2l0aCBhIExvb25nc29uIENQVSBzaGFsbCBoYXZlIHRoZSBmb2xsb3dpbmcgcHJvcGVy
+dGllcy4NCisNCitwcm9wZXJ0aWVzOg0KKyAgJG5vZGVuYW1lOg0KKyAgICBjb25zdDogJy8n
+DQorICBjb21wYXRpYmxlOg0KKyAgICBvbmVPZjoNCisNCisgICAgICAtIGRlc2NyaXB0aW9u
+OiBMb29uZ3NvbiAzQTEwMDAgKyBSUzc4MEUgMVdheQ0KKyAgICAgICAgaXRlbXM6DQorICAg
+ICAgICAgIC0gY29uc3Q6IGxvb25nc29uLGxzM2ExMDAwLTc4MGUtMXdheQ0KKw0KKyAgICAg
+IC0gZGVzY3JpcHRpb246IExvb25nc29uIDNBMTAwMCArIFJTNzgwRSAyV2F5DQorICAgICAg
+ICBpdGVtczoNCisgICAgICAgICAgLSBjb25zdDogbG9vbmdzb24sbHMzYTEwMDAtNzgwZS0y
+d2F5DQorDQorICAgICAgLSBkZXNjcmlwdGlvbjogTG9vbmdzb24gM0ExMDAwICsgUlM3ODBF
+IDRXYXkNCisgICAgICAgIGl0ZW1zOg0KKyAgICAgICAgICAtIGNvbnN0OiBsb29uZ3Nvbixs
+czNhMTAwMC03ODBlLTR3YXkNCisNCisgICAgICAtIGRlc2NyaXB0aW9uOiBMb29uZ3NvbiAz
+QjEwMDAvMTUwMCArIFJTNzgwRSAxV2F5DQorICAgICAgICBpdGVtczoNCisgICAgICAgICAg
+LSBjb25zdDogbG9vbmdzb24sbHMzYi03ODBlLTF3YXkNCisNCisgICAgICAtIGRlc2NyaXB0
+aW9uOiBMb29uZ3NvbiAzQjEwMDAvMTUwMCArIFJTNzgwRSAyV2F5DQorICAgICAgICBpdGVt
+czoNCisgICAgICAgICAgLSBjb25zdDogbG9vbmdzb24sbHMzYi03ODBlLTJ3YXkNCisNCisg
+ICAgICAtIGRlc2NyaXB0aW9uOiBMb29uZ3NvbiAzQTIwMDAgKyBSUzc4MEUgMVdheQ0KKyAg
+ICAgICAgaXRlbXM6DQorICAgICAgICAgIC0gY29uc3Q6IGxvb25nc29uLGxzM2EyMDAwLTc4
+MGUtMXdheQ0KKw0KKyAgICAgIC0gZGVzY3JpcHRpb246IExvb25nc29uIDNBMjAwMCArIFJT
+NzgwRSAyV2F5DQorICAgICAgICBpdGVtczoNCisgICAgICAgICAgLSBjb25zdDogbG9vbmdz
+b24sbHMzYTIwMDAtNzgwZS0yd2F5DQorDQorICAgICAgLSBkZXNjcmlwdGlvbjogTG9vbmdz
+b24gM0EyMDAwICsgUlM3ODBFIDRXYXkNCisgICAgICAgIGl0ZW1zOg0KKyAgICAgICAgICAt
+IGNvbnN0OiBsb29uZ3NvbixsczNhMjAwMC03ODBlLTR3YXkNCisNCisgICAgICAtIGRlc2Ny
+aXB0aW9uOiBMb29uZ3NvbiAzQTMwMDAgKyBSUzc4MEUgMVdheQ0KKyAgICAgICAgaXRlbXM6
+DQorICAgICAgICAgIC0gY29uc3Q6IGxvb25nc29uLGxzM2EzMDAwLTc4MGUtMXdheQ0KKw0K
+KyAgICAgIC0gZGVzY3JpcHRpb246IExvb25nc29uIDNBMzAwMCArIFJTNzgwRSAyV2F5DQor
+ICAgICAgICBpdGVtczoNCisgICAgICAgICAgLSBjb25zdDogbG9vbmdzb24sbHMzYTMwMDAt
+NzgwZS0yd2F5DQorDQorICAgICAgLSBkZXNjcmlwdGlvbjogTG9vbmdzb24gM0EzMDAwICsg
+UlM3ODBFIDRXYXkNCisgICAgICAgIGl0ZW1zOg0KKyAgICAgICAgICAtIGNvbnN0OiBsb29u
+Z3NvbixsczNhMzAwMC03ODBlLTR3YXkNCisNCisuLi4NCi0tIA0KMi4yMi4w
