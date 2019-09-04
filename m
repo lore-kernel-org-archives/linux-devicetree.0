@@ -1,88 +1,73 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
-Date: Wed, 4 Sep 2019 17:22:34 +0530
-Message-ID: <20190904115234.GV2672@vkoul-mobl>
-References: <20190904113917.15223-1-lee.jones@linaro.org>
+Subject: Re: [PATCH 1/2] i2c: qcom-geni: Provide an option to select FIFO
+ processing
+Date: Wed, 4 Sep 2019 17:26:09 +0530
+Message-ID: <20190904115609.GW2672@vkoul-mobl>
+References: <20190904113613.14997-1-lee.jones@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190904113917.15223-1-lee.jones@linaro.org>
+In-Reply-To: <20190904113613.14997-1-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Lee Jones <lee.jones@linaro.org>
-Cc: agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: alokc@codeaurora.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04-09-19, 12:39, Lee Jones wrote:
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+On 04-09-19, 12:36, Lee Jones wrote:
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/i2c/busses/i2c-qcom-geni.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> index a89bfce5388e..dfdbce067827 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -353,13 +353,16 @@ static void geni_i2c_tx_fsm_rst(struct geni_i2c_dev *gi2c)
+>  static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>  				u32 m_param)
+>  {
+> +	struct device_node *np = gi2c->se.dev->of_node;
+>  	dma_addr_t rx_dma;
+>  	unsigned long time_left;
+> -	void *dma_buf;
+> +	void *dma_buf = NULL;
+>  	struct geni_se *se = &gi2c->se;
+>  	size_t len = msg->len;
+>  
+> -	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
+> +	if (!of_property_read_bool(np, "qcom,geni-se-fifo"))
 
-Can we keep this sorted, so before mtp.
+Where is this property documented, I dont see anything in linux-next for
+today
 
->  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> new file mode 100644
-> index 000000000000..ad160c718b33
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> @@ -0,0 +1,454 @@
-> +// SPDX-License-Identifier: GPL-2.0
-
-Are we going to make this dual? or BSD..
-
-> +&apps_rsc {
-> +	pm8998-rpmh-regulators {
-> +		compatible = "qcom,pm8998-rpmh-regulators";
-> +		qcom,pmic-id = "a";
+> +		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
 > +
-> +		vdd-l2-l8-l17-supply = <&vreg_s3a_1p35>;
-> +		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
+>  	if (dma_buf)
+>  		geni_se_select_mode(se, GENI_SE_DMA);
+>  	else
+> @@ -392,13 +395,16 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>  static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>  				u32 m_param)
+>  {
+> +	struct device_node *np = gi2c->se.dev->of_node;
+>  	dma_addr_t tx_dma;
+>  	unsigned long time_left;
+> -	void *dma_buf;
+> +	void *dma_buf = NULL;
+>  	struct geni_se *se = &gi2c->se;
+>  	size_t len = msg->len;
+>  
+> -	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
+> +	if (!of_property_read_bool(np, "qcom,geni-se-fifo"))
+> +		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
 > +
-> +		vreg_s2a_1p125: smps2 {
-> +		};
-> +
-> +		vreg_s3a_1p35: smps3 {
-> +			regulator-min-microvolt = <1352000>;
-> +			regulator-max-microvolt = <1352000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_s4a_1p8: smps4 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_s5a_2p04: smps5 {
-> +			regulator-min-microvolt = <2040000>;
-> +			regulator-max-microvolt = <2040000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_s7a_1p025: smps7 {
-
-Any reason why we dont specify the mode and min/max voltage for this
-and few others below..?
-
-> +&i2c1 {
-> +	status = "okay";
-> +	clock-frequency = <400000>;
-> +	qcom,geni-se-fifo;
-> +
-> +	battery@70 {
-> +		compatible = "some,battery";
-
-some,battery ..?
-
-> +&qup_i2c12_default {
-
-Please move the qup nodes up so that nodes are sorted alphabetically
+>  	if (dma_buf)
+>  		geni_se_select_mode(se, GENI_SE_DMA);
+>  	else
+> -- 
+> 2.17.1
 
 -- 
 ~Vinod
