@@ -1,42 +1,38 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v5 11/11] lib/test_printf: Add tests for %pfw printk
- modifier
-Date: Wed, 4 Sep 2019 20:22:22 +0300
-Message-ID: <20190904172222.GV2680@smile.fi.intel.com>
-References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
- <20190902135732.23455-12-sakari.ailus@linux.intel.com>
- <20190902161352.GS2680@smile.fi.intel.com>
- <20190904161051.GX5475@paasikivi.fi.intel.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v13 7/8] ARM: dts: exynos: add DMC device for exynos5422
+Date: Wed, 4 Sep 2019 20:25:02 +0200
+Message-ID: <20190904182502.GA12918@kozik-lap>
+References: <20190821104303.32079-1-l.luba@partner.samsung.com>
+ <CGME20190821104324eucas1p16bdeb27250c8c9fa87591d6bd9743a17@eucas1p1.samsung.com>
+ <20190821104303.32079-8-l.luba@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190904161051.GX5475@paasikivi.fi.intel.com>
+In-Reply-To: <20190821104303.32079-8-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Lukasz Luba <l.luba@partner.samsung.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, b.zolnierkie@samsung.com, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 07:10:51PM +0300, Sakari Ailus wrote:
-> On Mon, Sep 02, 2019 at 07:13:52PM +0300, Andy Shevchenko wrote:
-> > On Mon, Sep 02, 2019 at 04:57:32PM +0300, Sakari Ailus wrote:
-> > > Add a test for the %pfw printk modifier using software nodes.
-> > 
-> > > +static void __init fwnode_pointer(void)
-> > > +{
-> > > +	const struct software_node softnodes[] = {
-> > > +		{ .name = "first", },
-> > > +		{ .name = "second", .parent = &softnodes[0], },
-> > > +		{ .name = "third", .parent = &softnodes[1], },
-> > > +		{ NULL /* Guardian */ },
-> > 
-> > Comma is still here :-)
+On Wed, Aug 21, 2019 at 12:43:02PM +0200, Lukasz Luba wrote:
+> Add description of Dynamic Memory Controller and PPMU counters.
+> They are used by exynos5422-dmc driver.
+> There is a definition of the memory chip, which is then used during
+> calculation of timings for each OPP.
+> The algorithm in the driver needs these two sets to bound the timings.
 > 
-> Oops. I ended up removing the comma in a wrong patch which wasn't submitted
-> to the list. Will fix for v6.
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5420.dtsi             |  71 +++++++++++
+>  arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 116 ++++++++++++++++++
+>  2 files changed, 187 insertions(+)
 
-Also you may remove NULL there since it's default.
+Thanks, applied conditionally. Please send a follow up fixing the
+checkpatch error about undocumented binding:
+https://krzk.eu/#/builders/26/builds/392
 
--- 
-With Best Regards,
-Andy Shevchenko
+You should not skip such checkpatch warning.
+
+Best regards,
+Krzysztof
