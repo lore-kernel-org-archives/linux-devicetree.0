@@ -1,83 +1,34 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [Patch V8 6/8] arm64: tegra: Enable xudc on Jetson TX1
-Date: Wed, 4 Sep 2019 17:47:15 +0800
-Message-ID: <1567590435.7317.55.camel@mhfsdcap03>
-References: <1567585440-13751-1-git-send-email-nkristam@nvidia.com>
-         <1567585440-13751-7-git-send-email-nkristam@nvidia.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 0/5] dmaengine: ti: edma: Multicore usage related fixes
+Date: Wed, 4 Sep 2019 15:19:56 +0530
+Message-ID: <20190904094956.GT2672@vkoul-mobl>
+References: <20190823125618.8133-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567585440-13751-7-git-send-email-nkristam@nvidia.com>
+Content-Disposition: inline
+In-Reply-To: <20190823125618.8133-1-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nagarjuna Kristam <nkristam@nvidia.com>
-Cc: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: robh+dt@kernel.org, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-09-04 at 13:53 +0530, Nagarjuna Kristam wrote:
-> Enable XUSB device mode driver for USB0 slot on Jetson TX1.
+On 23-08-19, 15:56, Peter Ujfalusi wrote:
+> Hi,
 > 
-> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-> Reviewed-by: JC Kuo <jckuo@nvidia.com>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 31 +++++++++++++++++++++++++-
->  1 file changed, 30 insertions(+), 1 deletion(-)
+> When other cores want to use EDMA for their use cases Linux was not playing
+> nicely.
+> By design EDMA is supporting shared use with shadow regions. Linux is using
+> region0, others can be used by other cores.
 > 
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-> index a7dc319..6aba1ba 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-> @@ -1362,7 +1362,7 @@
->  				status = "okay";
->  
->  				lanes {
-> -					usb2-0 {
-> +					micro_b: usb2-0 {
->  						nvidia,function = "xusb";
->  						status = "okay";
->  					};
-> @@ -1483,6 +1483,21 @@
->  		vmmc-supply = <&vdd_3v3_sd>;
->  	};
->  
-> +	usb@700d0000 {
-> +		status = "okay";
-> +		phys = <&micro_b>;
-> +		phy-names = "usb2";
-> +		avddio-usb-supply = <&vdd_3v3_sys>;
-> +		hvdd-usb-supply = <&vdd_1v8>;
-> +		usb-role-switch;
-> +
-> +		port {
-> +			usb_role_switch: endpoint {
-> +				remote-endpoint = <&usb_b_conn_ep>;
-> +			};
-> +		};
-> +	};
-> +
->  	regulators {
->  		compatible = "simple-bus";
->  		#address-cells = <1>;
-> @@ -1641,4 +1656,18 @@
->  			linux,code = <KEY_VOLUMEUP>;
->  		};
->  	};
-> +
-> +	usb_type_b: connector {
-> +		compatible = "linux,usb-conn-gpio", "gpio-usb-b-connector";
-please use "gpio-usb-b-connector" and "usb-b-connector", due to
-"linux,usb-conn-gpio" is not supported now
+> In order to not break multicore shared usage of EDMA:
+> - do not reset paRAM slots which is not allocated for Linux (reserved paRAM
+>   slots)
+> - Only reset region0 access registers, do not touch other regions
+> - Add option for reserved channels which should not be used by Linux in a similar
+>   fashion as we already have for reserved paRAM slots.
 
+Applied 1 to 3, thanks
 
-> +		label = "micro-USB";
-> +		type = "micro";
-> +		vbus-gpio = <&gpio TEGRA_GPIO(Z, 0) GPIO_ACTIVE_LOW>;
-> +
-> +		port {
-> +			usb_b_conn_ep: endpoint {
-> +				remote-endpoint = <&usb_role_switch>;
-> +			};
-> +		};
-> +	};
-> +
->  };
+-- 
+~Vinod
