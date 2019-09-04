@@ -1,59 +1,107 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: milbeaut-m10v-hdmac: Add Socionext
- Milbeaut HDMAC bindings
-Date: Wed, 4 Sep 2019 01:18:48 -0500
-Message-ID: <CABb+yY1RT2TuUyuU2C+m6w=AOVzXkuG7cOwbWsccywxU7HwkQg@mail.gmail.com>
-References: <20190818051647.17475-1-jassisinghbrar@gmail.com>
- <20190818051754.17548-1-jassisinghbrar@gmail.com> <20190904055037.GC2672@vkoul-mobl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: "Ramuthevar,Vadivel MuruganX"
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v3 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema for LGM SDXC PHY
+Date: Wed,  4 Sep 2019 14:27:18 +0800
+Message-ID: <20190904062719.37462-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190904055037.GC2672@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: kishon@ti.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com, vadivel.muruganx.ramuthevar@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 12:51 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 18-08-19, 00:17, jassisinghbrar@gmail.com wrote:
-> > From: Jassi Brar <jaswinder.singh@linaro.org>
-> >
-> > Document the devicetree bindings for Socionext Milbeaut HDMAC
-> > controller. Controller has upto 8 floating channels, that need
-> > a predefined slave-id to work from a set of slaves.
-> >
-> > Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-> > ---
-> >  .../bindings/dma/milbeaut-m10v-hdmac.txt      | 32 +++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > new file mode 100644
-> > index 000000000000..f0960724f1c7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > @@ -0,0 +1,32 @@
-> > +* Milbeaut AHB DMA Controller
-> > +
-> > +Milbeaut AHB DMA controller has transfer capability bellow.
->
-> s/bellow/below:
->
-> > + - device to memory transfer
-> > + - memory to device transfer
-> > +
-> > +Required property:
-> > +- compatible:       Should be  "socionext,milbeaut-m10v-hdmac"
-> > +- reg:              Should contain DMA registers location and length.
-> > +- interrupts:       Should contain all of the per-channel DMA interrupts.
-> > +                     Number of channels is configurable - 2, 4 or 8, so
-> > +                     the number of interrupts specfied should be {2,4,8}.
->
-> s/specfied/specified
->
-Hi Vinod,
-  Do you want me to spin yet another revision for the two types in text?
+From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 
-thnx
+Add a YAML schema to use the host controller driver with the
+SDXC PHY on Intel's Lightning Mountain SoC.
+
+Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+---
+ changes in v3:
+   - Rob's review comments addressed and updated the patch
+   - merged syscon and sdxc yaml file as single file after discussion
+
+ changes in v2:
+   - As per Rob's review comment syscon node entry added instead of reference
+   - splitted two patches one for syscon and another for sdxc phy
+---
+ .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 69 ++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+
+diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+new file mode 100644
+index 000000000000..dfdedcf10f3f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
++
++maintainers:
++  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
++
++description: Bindings for SDXC PHY on Intel's Lightning Mountain SoC, syscon
++  node is used to reference the base address of SDXC phy registers.
++
++select:
++  properties:
++    compatible:
++      contains:
++        const: intel,lgm-syscon
++
++    reg:
++      maxItems: 1
++
++  required:
++    - compatible
++    - reg
++
++properties:
++  "#phy-cells":
++    const: 0
++
++  compatible:
++    contains:
++      const: intel,lgm-sdxc-phy
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    maxItems: 1
++
++required:
++  - "#phy-cells"
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    sysconf: chiptop@e0200000 {
++      compatible = "intel,lgm-syscon";
++      reg = <0xe0200000 0x100>;
++
++      sdxc-phy: sdxc-phy {
++        compatible = "intel,lgm-sdxc-phy";
++        reg = <0x0080 0x4>,
++              <0x0084 0x4>,
++              <0x0088 0x4>,
++              <0x008c 0x4>;
++        clocks = <&sdxc>;
++        clock-names = "sdxcclk";
++        #phy-cells = <0>;
++      };
++    };
++...
+-- 
+2.11.0
