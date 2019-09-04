@@ -1,170 +1,73 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/2] media: i2c: dw9768: Add DW9768 VCM driver
-Date: Wed, 4 Sep 2019 17:33:25 +0300
-Message-ID: <CAHp75VcV_tFNMm=oRNVBtwn8orQGuokSgT6YDzNVpQ0vXw_Yag@mail.gmail.com>
-References: <20190708100641.2702-1-dongchun.zhu@mediatek.com>
- <20190708100641.2702-3-dongchun.zhu@mediatek.com>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v13 0/8] Exynos5 Dynamic Memory Controller driver
+Date: Wed, 4 Sep 2019 16:59:59 +0200
+Message-ID: <760cdf64-af1b-2b5f-fb42-a950fdfa8c36@partner.samsung.com>
+References: <CGME20190821104316eucas1p2ecd715f3105921ec83e0acf1291201f8@eucas1p2.samsung.com>
+        <20190821104303.32079-1-l.luba@partner.samsung.com>
+        <CAJKOXPehHNDasNQDgTC+WtVpb_h-s0iTxXiDQY1WT=+zEdB18A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190708100641.2702-3-dongchun.zhu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dongchun.zhu@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, srv_heupstream@mediatek.com, shengnan.wang@mediatek.com, Tomasz Figa <tfiga@chromium.org>, louis.kuo@mediatek.com, sj.huang@mediatek.com, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, bingbu.cao@intel.com, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPehHNDasNQDgTC+WtVpb_h-s0iTxXiDQY1WT=+zEdB18A@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 8, 2019 at 5:13 PM <dongchun.zhu@mediatek.com> wrote:
->
-> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
->
-> This patch adds a V4L2 sub-device driver for DW9768 lens voice coil,
-> and provides control to set the desired focus.
->
-> The DW9807 is a 10 bit DAC from Dongwoon, designed for linear
-> control of voice coil motor.
+Hi Krzysztof,
 
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + */
+On 9/4/19 12:16 PM, Krzysztof Kozlowski wrote:
+> On Wed, 21 Aug 2019 at 12:43, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> Hi all,
+>>
+>> This is v13 which makes cosmetic changes. It is based on current mainline
+>> (v5.3-rc5) with with devfreq/for-next where there is a PPMU patch [1].
+>>
+>> The patch set adds support of Dynamic Memory Controller for Exynos5422 SoC.
+>> The driver supports Dynamic Voltage and Frequency Scaling
+>> for the DMC and DRAM. It also provides needed timings for different
+>> speed operations of the DRAM memory.
+>> There is also new generic code in of_memory and headers which allows to parse
+>> LPDDR3 memories defined in device-tree.
+>>
+>> Here are the last changes suggested by Krzysztof during his review.
+>> For the previous changes in older revisions please refer to [2], there is
+>> more detailed change log.
+>>
+>> changes:
+>> v13:
+>> - skipped patch with chipID changes in DT, since it is not used anymore,
+>> - removed license comment in of_memory.c since SPDX has been merged,
+>> - aligned comment to the current fields in the structure,
+>> - changed printed warning when timings are not found,
+>>
+>> Regards,
+>> Lukasz Luba
+>>
+>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/commit/?h=for-next&id=b617376df8f01c975dee66802f4da16291f92079
+>> [2] https://lkml.org/lkml/2019/7/22/251
+>>
+> 
+> Hi Lukasz,
+> 
+> Thanks for the effort and work on this patchset. The text-based
+> bindings are slowly converted to JSON-schema but your patches were
+> developed some time ago and have Rob's review. It would be nice if you
+> or someone converted it to JSON schema later.
+> Anyway, I'll pick up everything today evening either for this merge
+> window or eventually postponed till next one. It is quite late in the
+> cycle and I want the patches to sit in linux-next for some time.
+Thank you for taking the patches.
+OK, I will convert the bindings to JSON format later, when the patches
+land into mainline.
 
-2019?
-
-> +       if (!client->adapter)
-> +               return -ENODEV;
-
-Is it ever possible?
-
-> +       w_buf = kzalloc(size, GFP_KERNEL);
-> +       if (!w_buf)
-> +               return -1;
-
-Error code?
-
-> +       do {
-> +               ret = i2c_transfer(client->adapter, &msg, 1);
-
-> +               if (ret != 1)
-> +                       dev_err(&client->dev, "write fail, ret:%d, retry:%d\n",
-> +                               ret, retry_cnt);
-
-This is noise. And better to use positive condition.
-
-> +               else
-> +                       break;
-
-> +               retry_cnt--;
-> +       } while (retry_cnt != 0);
-> +
-
-} while (--retry_cnt);
-
-> +       if (retry_cnt == 0)     {
-> +               dev_err(&client->dev, "i2c write fail(%d)\n", ret);
-> +               return -EIO;
-> +       }
-
-> +
-> +       kfree(w_buf);
-> +
-> +       return 0;
-> +}
-
-> +static int dw9768_power_off(struct dw9768_device *dw9768_dev, bool standby)
-> +{
-> +       struct i2c_client *client = v4l2_get_subdevdata(&dw9768_dev->sd);
-> +       int ret;
-> +
-> +       /*
-> +        * Go to standby first as real power off my be denied by the hardware
-> +        * (single power line control for both dw9768_dev and sensor).
-> +        */
-> +       if (standby) {
-> +               dw9768_dev->standby = true;
-> +               ret = dw9768_release(dw9768_dev);
-
-> +               if (ret)
-
-> +                       dev_err(&client->dev, "dw9768_release failed!\n");
-
-Is it fatal or not?
-
-> +       }
-
-> +       ret = regulator_disable(dw9768_dev->analog_regulator);
-> +       if (ret)
-> +               return ret;
-> +
-> +       return 0;
-
-return regulator_disable(...);
-
-> +}
-
-> +               dev_err(dw9768_dev->sd.dev, "%s fail error: 0x%x\n",
-> +                       __func__, hdl->error);
-
-Non-informative message.
-
-> +static int dw9768_probe(struct i2c_client *client)
-> +{
-> +       struct device *dev = &client->dev;
-> +       struct dw9768_device *dw9768_dev;
-> +       int rval;
-> +
-> +       dw9768_dev = devm_kzalloc(&client->dev, sizeof(*dw9768_dev),
-> +                                 GFP_KERNEL);
-> +       if (!dw9768_dev)
-> +               return -ENOMEM;
-> +
-> +       dw9768_dev->analog_regulator = devm_regulator_get(dev, "afvdd");
-> +       if (IS_ERR(dw9768_dev->analog_regulator)) {
-
-> +               dev_err(dev, "cannot get analog regulator\n");
-
-Would be noise in case of deferred probe.
-
-> +               return PTR_ERR(dw9768_dev->analog_regulator);
-> +       }
-
-> +err_cleanup:
-> +       mutex_destroy(&dw9768_dev->power_lock);
-> +       dw9768_subdev_cleanup(dw9768_dev);
-
-> +       dev_err(dev, "Probe failed: %d\n", rval);
-
-Noise. Device core has this already.
-
-> +       return rval;
-> +}
-
-> +static const struct i2c_device_id dw9768_id_table[] = {
-> +       { DW9768_NAME, 0 },
-> +       { { 0 } }
-
-{} is enough.
-
-> +};
-> +MODULE_DEVICE_TABLE(i2c, dw9768_id_table);
-> +
-> +static const struct of_device_id dw9768_of_table[] = {
-> +       { .compatible = "dongwoon,dw9768" },
-
-> +       { { 0 } }
-
-Ditto.
-
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
+Regards,
+Lukasz Luba
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
