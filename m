@@ -1,77 +1,170 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [RESEND PATCH 0/5] Add bluetooth support for Orange Pi 3
-Date: Wed, 4 Sep 2019 16:19:37 +0200
-Message-ID: <76FD40C7-10C5-4818-8EF9-60326ECA4243@holtmann.org>
-References: <20190823103139.17687-1-megous@megous.com>
- <5524D5E9-FA82-4244-A91F-78CF1C3FB3FB@holtmann.org>
- <20190830092104.odipmbflounqpffo@flea>
- <D02B89FB-F8C0-40AD-A99A-6C1B4FEB72A0@holtmann.org>
- <20190830132034.u65arlv7umh64lx6@flea>
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190830132034.u65arlv7umh64lx6@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <mripard@kernel.org>
-Cc: megous@megous.com, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 2/2] media: i2c: dw9768: Add DW9768 VCM driver
+Date: Wed, 4 Sep 2019 17:33:25 +0300
+Message-ID: <CAHp75VcV_tFNMm=oRNVBtwn8orQGuokSgT6YDzNVpQ0vXw_Yag@mail.gmail.com>
+References: <20190708100641.2702-1-dongchun.zhu@mediatek.com>
+ <20190708100641.2702-3-dongchun.zhu@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190708100641.2702-3-dongchun.zhu@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dongchun.zhu@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, srv_heupstream@mediatek.com, shengnan.wang@mediatek.com, Tomasz Figa <tfiga@chromium.org>, louis.kuo@mediatek.com, sj.huang@mediatek.com, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, bingbu.cao@intel.com, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+On Mon, Jul 8, 2019 at 5:13 PM <dongchun.zhu@mediatek.com> wrote:
+>
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+>
+> This patch adds a V4L2 sub-device driver for DW9768 lens voice coil,
+> and provides control to set the desired focus.
+>
+> The DW9807 is a 10 bit DAC from Dongwoon, designed for linear
+> control of voice coil motor.
 
->>>>> (Resend to add missing lists, sorry for the noise.)
->>>>> 
->>>>> This series implements bluetooth support for Xunlong Orange Pi 3 board.
->>>>> 
->>>>> The board uses AP6256 WiFi/BT 5.0 chip.
->>>>> 
->>>>> Summary of changes:
->>>>> 
->>>>> - add more delay to let initialize the chip
->>>>> - let the kernel detect firmware file path
->>>>> - add new compatible and update dt-bindings
->>>>> - update Orange Pi 3 / H6 DTS
->>>>> 
->>>>> Please take a look.
->>>>> 
->>>>> thank you and regards,
->>>>> Ondrej Jirman
->>>>> 
->>>>> Ondrej Jirman (5):
->>>>> dt-bindings: net: Add compatible for BCM4345C5 bluetooth device
->>>>> bluetooth: bcm: Add support for loading firmware for BCM4345C5
->>>>> bluetooth: hci_bcm: Give more time to come out of reset
->>>>> arm64: dts: allwinner: h6: Add pin configs for uart1
->>>>> arm64: dts: allwinner: orange-pi-3: Enable UART1 / Bluetooth
->>>>> 
->>>>> .../bindings/net/broadcom-bluetooth.txt       |  1 +
->>>>> .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 19 +++++++++++++++++++
->>>>> arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 10 ++++++++++
->>>>> drivers/bluetooth/btbcm.c                     |  3 +++
->>>>> drivers/bluetooth/hci_bcm.c                   |  3 ++-
->>>>> 5 files changed, 35 insertions(+), 1 deletion(-)
->>>> 
->>>> all 5 patches have been applied to bluetooth-next tree.
->>> 
->>> The DTS patches (last 2) should go through the arm-soc tree, can you
->>> drop them?
->> 
->> why is that? We have included DTS changes for Bluetooth devices
->> directly all the time. What is different with this hardware?
-> 
-> I guess some maintainers are more relaxed with it than we are then,
-> but for the why, well, it's the usual reasons, the most immediate one
-> being that it reduces to a minimum the conflicts between trees.
-> 
-> The other being that it's not really usual to merge patches supposed
-> to be handled by another maintainer without (at least) his
-> consent. I'm pretty sure you would have asked the same request if I
-> would have merged the bluetooth patches through my tree without
-> notice.
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018 MediaTek Inc.
+> + */
 
-I took the two DTS patches out now and let the submitter deal with getting these merged.
+2019?
 
-Regards
+> +       if (!client->adapter)
+> +               return -ENODEV;
 
-Marcel
+Is it ever possible?
+
+> +       w_buf = kzalloc(size, GFP_KERNEL);
+> +       if (!w_buf)
+> +               return -1;
+
+Error code?
+
+> +       do {
+> +               ret = i2c_transfer(client->adapter, &msg, 1);
+
+> +               if (ret != 1)
+> +                       dev_err(&client->dev, "write fail, ret:%d, retry:%d\n",
+> +                               ret, retry_cnt);
+
+This is noise. And better to use positive condition.
+
+> +               else
+> +                       break;
+
+> +               retry_cnt--;
+> +       } while (retry_cnt != 0);
+> +
+
+} while (--retry_cnt);
+
+> +       if (retry_cnt == 0)     {
+> +               dev_err(&client->dev, "i2c write fail(%d)\n", ret);
+> +               return -EIO;
+> +       }
+
+> +
+> +       kfree(w_buf);
+> +
+> +       return 0;
+> +}
+
+> +static int dw9768_power_off(struct dw9768_device *dw9768_dev, bool standby)
+> +{
+> +       struct i2c_client *client = v4l2_get_subdevdata(&dw9768_dev->sd);
+> +       int ret;
+> +
+> +       /*
+> +        * Go to standby first as real power off my be denied by the hardware
+> +        * (single power line control for both dw9768_dev and sensor).
+> +        */
+> +       if (standby) {
+> +               dw9768_dev->standby = true;
+> +               ret = dw9768_release(dw9768_dev);
+
+> +               if (ret)
+
+> +                       dev_err(&client->dev, "dw9768_release failed!\n");
+
+Is it fatal or not?
+
+> +       }
+
+> +       ret = regulator_disable(dw9768_dev->analog_regulator);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return 0;
+
+return regulator_disable(...);
+
+> +}
+
+> +               dev_err(dw9768_dev->sd.dev, "%s fail error: 0x%x\n",
+> +                       __func__, hdl->error);
+
+Non-informative message.
+
+> +static int dw9768_probe(struct i2c_client *client)
+> +{
+> +       struct device *dev = &client->dev;
+> +       struct dw9768_device *dw9768_dev;
+> +       int rval;
+> +
+> +       dw9768_dev = devm_kzalloc(&client->dev, sizeof(*dw9768_dev),
+> +                                 GFP_KERNEL);
+> +       if (!dw9768_dev)
+> +               return -ENOMEM;
+> +
+> +       dw9768_dev->analog_regulator = devm_regulator_get(dev, "afvdd");
+> +       if (IS_ERR(dw9768_dev->analog_regulator)) {
+
+> +               dev_err(dev, "cannot get analog regulator\n");
+
+Would be noise in case of deferred probe.
+
+> +               return PTR_ERR(dw9768_dev->analog_regulator);
+> +       }
+
+> +err_cleanup:
+> +       mutex_destroy(&dw9768_dev->power_lock);
+> +       dw9768_subdev_cleanup(dw9768_dev);
+
+> +       dev_err(dev, "Probe failed: %d\n", rval);
+
+Noise. Device core has this already.
+
+> +       return rval;
+> +}
+
+> +static const struct i2c_device_id dw9768_id_table[] = {
+> +       { DW9768_NAME, 0 },
+> +       { { 0 } }
+
+{} is enough.
+
+> +};
+> +MODULE_DEVICE_TABLE(i2c, dw9768_id_table);
+> +
+> +static const struct of_device_id dw9768_of_table[] = {
+> +       { .compatible = "dongwoon,dw9768" },
+
+> +       { { 0 } }
+
+Ditto.
+
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
