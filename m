@@ -1,24 +1,83 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v2 2/5] soundwire: stream: make stream name a const
- pointer
-Date: Wed, 4 Sep 2019 14:59:19 +0530
-Message-ID: <20190904092919.GP2672@vkoul-mobl>
-References: <20190813083550.5877-1-srinivas.kandagatla@linaro.org>
- <20190813083550.5877-3-srinivas.kandagatla@linaro.org>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [Patch V8 6/8] arm64: tegra: Enable xudc on Jetson TX1
+Date: Wed, 4 Sep 2019 17:47:15 +0800
+Message-ID: <1567590435.7317.55.camel@mhfsdcap03>
+References: <1567585440-13751-1-git-send-email-nkristam@nvidia.com>
+         <1567585440-13751-7-git-send-email-nkristam@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190813083550.5877-3-srinivas.kandagatla@linaro.org>
+In-Reply-To: <1567585440-13751-7-git-send-email-nkristam@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: broonie@kernel.org, bgoswami@codeaurora.org, plai@codeaurora.org, pierre-louis.bossart@linux.intel.com, robh+dt@kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, spapothi@codeaurora.org
+To: Nagarjuna Kristam <nkristam@nvidia.com>
+Cc: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13-08-19, 09:35, Srinivas Kandagatla wrote:
-> Make stream name const pointer
+On Wed, 2019-09-04 at 13:53 +0530, Nagarjuna Kristam wrote:
+> Enable XUSB device mode driver for USB0 slot on Jetson TX1.
+> 
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> Reviewed-by: JC Kuo <jckuo@nvidia.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 31 +++++++++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+> index a7dc319..6aba1ba 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+> @@ -1362,7 +1362,7 @@
+>  				status = "okay";
+>  
+>  				lanes {
+> -					usb2-0 {
+> +					micro_b: usb2-0 {
+>  						nvidia,function = "xusb";
+>  						status = "okay";
+>  					};
+> @@ -1483,6 +1483,21 @@
+>  		vmmc-supply = <&vdd_3v3_sd>;
+>  	};
+>  
+> +	usb@700d0000 {
+> +		status = "okay";
+> +		phys = <&micro_b>;
+> +		phy-names = "usb2";
+> +		avddio-usb-supply = <&vdd_3v3_sys>;
+> +		hvdd-usb-supply = <&vdd_1v8>;
+> +		usb-role-switch;
+> +
+> +		port {
+> +			usb_role_switch: endpoint {
+> +				remote-endpoint = <&usb_b_conn_ep>;
+> +			};
+> +		};
+> +	};
+> +
+>  	regulators {
+>  		compatible = "simple-bus";
+>  		#address-cells = <1>;
+> @@ -1641,4 +1656,18 @@
+>  			linux,code = <KEY_VOLUMEUP>;
+>  		};
+>  	};
+> +
+> +	usb_type_b: connector {
+> +		compatible = "linux,usb-conn-gpio", "gpio-usb-b-connector";
+please use "gpio-usb-b-connector" and "usb-b-connector", due to
+"linux,usb-conn-gpio" is not supported now
 
-Good catch,  Applied, thanks
 
--- 
-~Vinod
+> +		label = "micro-USB";
+> +		type = "micro";
+> +		vbus-gpio = <&gpio TEGRA_GPIO(Z, 0) GPIO_ACTIVE_LOW>;
+> +
+> +		port {
+> +			usb_b_conn_ep: endpoint {
+> +				remote-endpoint = <&usb_role_switch>;
+> +			};
+> +		};
+> +	};
+> +
+>  };
