@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 09/94] arm64: dts: meson-g12a: add missing dwc2 phy-names
-Date: Wed,  4 Sep 2019 11:56:14 -0400
-Message-ID: <20190904155739.2816-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 12/94] ARM: dts: am335x: Fix UARTs length
+Date: Wed,  4 Sep 2019 11:56:17 -0400
+Message-ID: <20190904155739.2816-12-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,43 +9,80 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
+Cc: Emmanuel Vadot <manu@freebsd.org>, Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Emmanuel Vadot <manu@freebsd.org>
 
-[ Upstream commit 3d4bacdc207a7b62941700b374e7199cbb184a43 ]
+[ Upstream commit 8613e2ca4fff764f23785eadfa54a08631ee682a ]
 
-The G12A USB2 OTG capable PHY uses a 8bit large UTMI bus, and the OTG
-controller gets the PHY but width by probing the associated phy.
+As seen on the AM335x TRM all the UARTs controller only are 0x1000 in size.
+Fix this in the DTS.
 
-By default it will use 16bit wide settings if a phy is not specified,
-in our case we specified the phy, but not the phy-names.
-
-The dwc2 bindings specifies that if phys is present, phy-names shall be
-"usb2-phy".
-
-Adding phy-names = "usb2-phy" solves the OTG PHY bus configuration.
-
-Fixes: 9baf7d6be730 ("arm64: dts: meson: g12a: Add G12A USB nodes")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/am33xx-l4.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index 9f72396ba7103..4c92c197aeb8a 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -591,6 +591,7 @@
- 				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
- 				clock-names = "ddr";
- 				phys = <&usb2_phy1>;
-+				phy-names = "usb2-phy";
- 				dr_mode = "peripheral";
- 				g-rx-fifo-size = <192>;
- 				g-np-tx-fifo-size = <128>;
+diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+index 4bd22c1edf963..46849d6ecb3e2 100644
+--- a/arch/arm/boot/dts/am33xx-l4.dtsi
++++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+@@ -185,7 +185,7 @@
+ 			uart0: serial@0 {
+ 				compatible = "ti,am3352-uart", "ti,omap3-uart";
+ 				clock-frequency = <48000000>;
+-				reg = <0x0 0x2000>;
++				reg = <0x0 0x1000>;
+ 				interrupts = <72>;
+ 				status = "disabled";
+ 				dmas = <&edma 26 0>, <&edma 27 0>;
+@@ -934,7 +934,7 @@
+ 			uart1: serial@0 {
+ 				compatible = "ti,am3352-uart", "ti,omap3-uart";
+ 				clock-frequency = <48000000>;
+-				reg = <0x0 0x2000>;
++				reg = <0x0 0x1000>;
+ 				interrupts = <73>;
+ 				status = "disabled";
+ 				dmas = <&edma 28 0>, <&edma 29 0>;
+@@ -966,7 +966,7 @@
+ 			uart2: serial@0 {
+ 				compatible = "ti,am3352-uart", "ti,omap3-uart";
+ 				clock-frequency = <48000000>;
+-				reg = <0x0 0x2000>;
++				reg = <0x0 0x1000>;
+ 				interrupts = <74>;
+ 				status = "disabled";
+ 				dmas = <&edma 30 0>, <&edma 31 0>;
+@@ -1614,7 +1614,7 @@
+ 			uart3: serial@0 {
+ 				compatible = "ti,am3352-uart", "ti,omap3-uart";
+ 				clock-frequency = <48000000>;
+-				reg = <0x0 0x2000>;
++				reg = <0x0 0x1000>;
+ 				interrupts = <44>;
+ 				status = "disabled";
+ 			};
+@@ -1644,7 +1644,7 @@
+ 			uart4: serial@0 {
+ 				compatible = "ti,am3352-uart", "ti,omap3-uart";
+ 				clock-frequency = <48000000>;
+-				reg = <0x0 0x2000>;
++				reg = <0x0 0x1000>;
+ 				interrupts = <45>;
+ 				status = "disabled";
+ 			};
+@@ -1674,7 +1674,7 @@
+ 			uart5: serial@0 {
+ 				compatible = "ti,am3352-uart", "ti,omap3-uart";
+ 				clock-frequency = <48000000>;
+-				reg = <0x0 0x2000>;
++				reg = <0x0 0x1000>;
+ 				interrupts = <46>;
+ 				status = "disabled";
+ 			};
 -- 
 2.20.1
