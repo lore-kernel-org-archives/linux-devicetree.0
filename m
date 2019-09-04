@@ -1,181 +1,89 @@
-Return-Path: <SRS0=IphV=W7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:7675 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfIDE6i (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 4 Sep 2019 00:58:38 -0400
-Subject: Re: [PATCH V4 2/2] gpio: inverter: document the inverter bindings
-From: Harish Jenny K N <harish_kandiga@mentor.com>
-References: <1561714250-19613-1-git-send-email-harish_kandiga@mentor.com>
- <CAL_Jsq+-xWLkvku-nLmJnFvbuS=dSD=9dG=GS4uBUqL50tdcDg@mail.gmail.com>
- <06c95f15-d577-e43d-e046-ee222f86c406@mentor.com>
- <CAL_JsqLQvjtnfUsZ2RP4eozvdwMLzNxtgmT+XFaxW4xzoFjL=w@mail.gmail.com>
- <f1616784-4dbf-d0fa-b33e-c85fd569383a@mentor.com>
- <CACRpkdZ+vXG-mGjn0Tt5gyGowAuxiCSQNdjEPGTP9qj23CwkSw@mail.gmail.com>
- <CAL_JsqLp___2O-naU+2PPQy0QmJX6+aN3hByz-OB9+qFvWgN9Q@mail.gmail.com>
- <CACRpkdbmyc9LsJ2xiX=zAQR9FZ9dmwu-nPrNbt1Tgud9+rBGpw@mail.gmail.com>
- <978af20e-12aa-a8e9-5da9-9af6d6b8f553@mentor.com>
- <f47588d5-226a-6a7a-6c74-c0caaafaf572@mentor.com>
- <6673873d-3ed2-ba98-8448-8047eccc994f@mentor.com>
-Message-ID: <fbc51f91-75ac-ef57-137b-0d8231cccc34@mentor.com>
-Date: Wed, 4 Sep 2019 10:28:20 +0530
-MIME-Version: 1.0
-In-Reply-To: <6673873d-3ed2-ba98-8448-8047eccc994f@mentor.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-Sender: devicetree-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, robh@kernel.org
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Balasubramani Vivekanandan <balasubramani_vivekanandan@mentor.com>
+Return-Path: <SRS0=Klmi=W7=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH RESEND v7 0/3] Add USB3.0 and TI HD3SS3220 driver support
+Date: Wed,  4 Sep 2019 09:15:38 +0100
+Message-Id: <1567584941-13690-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Rob, Hi Linus,
+This series adds USB 3.0 support for the CAT874 platform, including a
+new driver for the TI HD3SS3220 USB Type-C DRP port controller.
+
+Patch4-7 on the v7 series been accepted and is in linux-rc tree.
+Resending patch 1-3 of v7 series, since the dependency patches [1], [2],[3],[4]
+is accpted for usb-next.
+
+This patchset is based on usb-next tree.
+
+[1] commit 451d15a1731c7db9d4868 ("dt-binding: usb: add usb-role-switch property")
+[2] commit 977607653cdd06a2c4d1d ("usb: roles: Introduce stubs for the exiting functions in role.h")
+[3] commit 44493062abc38e5895e0c ("device connection: Add fwnode_connection_find_match()")
+[4] commit a31f01777bc54a0a9d576 ("usb: roles: Add fwnode_usb_role_switch_get() function")
+
+V7-->V7 RESEND
+  * No change
+    (https://patchwork.kernel.org/patch/10969911/)
+V6-->V7
+  * Rebased on the below patch series
+    (https://patchwork.kernel.org/project/linux-usb/list/?series=124223)
+  * Updted the hd3ss3220 binding documentation
+    -> Removed Rob's reviewed by tag, since there is a rework.
+    -> Incorporated Sergie and Shimoda-San's review comment.
+     (https://patchwork.kernel.org/patch/10944629/)
+  * Rebased hd3ss3220 driver based on the new API
+    --> Removed Heikki's review comment, since there is a rework
+    (https://patchwork.kernel.org/patch/10942499/)
+  * Incorporated shimoda-san's review comments for renesas usb3 binding
+    (https://patchwork.kernel.org/patch/10944631/)
+  * Incorporated shimoda-san's review comments for renesas usb3 driver
+    (https://patchwork.kernel.org/patch/10944643/)
+V5-->V6
+  * Updated bindings patch by using usb-role-switch property
+  * Used graph api's to get role switch supported by the usb-c-connector
+V4-->V5
+  * Incorporated Heikki's review comment.
+    (https://patchwork.kernel.org/patch/10902531/)
+  * Patch 1 is a dependency patch to make the compilation successful.
+    (https://patchwork.kernel.org/patch/10909971/)
+  * Patch 2 is also dependency patch to make the compilation successful.
+    Rebased on top of Patch1 and fixed Heikki's review comments
+    (https://patchwork.kernel.org/patch/10882555/)
+  * Incorporated Shimoda-San's review comment.
+    (https://patchwork.kernel.org/patch/10902535/)
+V3-->V4
+  * Incorporated Chunfeng Yun's review comment
+    (https://patchwork.kernel.org/project/linux-usb/list/?submitter=133171)
+  * Used fwnode API's to get roleswitch handle
+
+V2-->V3
+  * Used the new API to usb_role_switch by node to find the remote endpoint
+    (https://patchwork.kernel.org/patch/10882555/)
+  * Added renesas,usb-role-switch property
+  * Incorporated shimoda-san's review comment
+    (https://patchwork.kernel.org/patch/10852507/)
+
+V1-->V2
+  * Use USB role class instead of extcon to receive connect and disconnect
+    events and also for the dual role switch.
+  * Dropped patch 6
+  * Squashed patch 8 and patch 9
+  * https://patchwork.kernel.org/cover/10840641/
 
 
-On 30/08/19 10:51 AM, Harish Jenny K N wrote:
-> Hi Rob,
->
->
-> On 27/08/19 1:17 PM, Harish Jenny K N wrote:
->> Hi Rob,
->>
->>
->> On 19/08/19 3:06 PM, Harish Jenny K N wrote:
->>> Hi Rob,
->>>
->>>
->>> On 10/08/19 2:21 PM, Linus Walleij wrote:
->>>> On Fri, Aug 9, 2019 at 4:08 PM Rob Herring <robh+dt@kernel.org> wrote:
->>>>> On Mon, Aug 5, 2019 at 5:15 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->>>>>> There is some level of ambition here which is inherently a bit fuzzy
->>>>>> around the edges. ("How long is the coast of Britain?" comes to mind.)
->>>>>>
->>>>>> Surely the intention of device tree is not to recreate the schematic
->>>>>> in all detail. What we want is a model of the hardware that will
->>>>>> suffice for the operating system usecases.
->>>>>>
->>>>>> But sometimes the DTS files will become confusing: why is this
->>>>>> component using GPIO_ACTIVE_LOW when another system
->>>>>> doesn't have that flag? If there is an explicit inverter, the
->>>>>> DTS gets more readable for a human.
->>>>>>
->>>>>> But arguable that is case for adding inverters as syntactic
->>>>>> sugar in the DTS compiler instead...
->>>>> If you really want something more explicit, then add a new GPIO
->>>>> 'inverted' flag. Then a device can always have the same HIGH/LOW flag.
->>>>> That also solves the abstract it for userspace problem.
->>>> I think there are some intricate ontologies at work here.
->>>>
->>>> Consider this example: a GPIO is controlling a chip select
->>>> regulator, say Acme Foo. The chip select
->>>> has a pin named CSN. We know from convention that the
->>>> "N" at the end of that pin name means "negative" i.e. active
->>>> low, and that is how the electronics engineers think about
->>>> that chip select line: it activates the IC when
->>>> the line goes low.
->>>>
->>>> The regulator subsystem and I think all subsystems in the
->>>> Linux kernel say the consumer pin should be named and
->>>> tagged after the datsheet of the regulator.
->>>>
->>>> So it has for example:
->>>>
->>>> foo {
->>>>     compatible = "acme,foo";
->>>>     cs-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
->>>> };
->>>>
->>>> (It would be inappropriate to name it "csn-gpios" since
->>>> we have an established flag for active low. But it is another
->>>> of these syntactic choices where people likely do mistakes.)
->>>>
->>>> I think it would be appropriate for the DT binding to say
->>>> that this flag must always be GPIO_ACTIVE_LOW since
->>>> the bindings are seen from the component point of view,
->>>> and thus this is always active low.
->>>>
->>>> It would even be reasonable for a yaml schema to enfore
->>>> this, if it could. It is defined as active low after all.
->>>>
->>>> Now if someone adds an inverter on that line between
->>>> gpio0 and Acme Foo it looks like this:
->>>>
->>>> foo {
->>>>     compatible = "acme,foo";
->>>>     cs-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
->>>> };
->>>>
->>>> And now we get cognitive dissonance or whatever I should
->>>> call it: someone reading this DTS sheet and the data
->>>> sheet for the component Acme Foo to troubleshoot
->>>> this will be confused: this component has CS active
->>>> low and still it is specified as active high? Unless they
->>>> also look at the schematic or the board and find the
->>>> inverter things are pretty muddy and they will likely curse
->>>> and solve the situation with the usual trial-and-error,
->>>> inserting some random cursewords as a comment.
->>>>
->>>> With an intermediate inverter node, the cs-gpios
->>>> can go back to GPIO_ACTIVE_LOW and follow
->>>> the bindings:
->>>>
->>>> inv0: inverter {
->>>>     compatible = "gpio-inverter";
->>>>     gpio-controller;
->>>>     #gpio-cells = <1>;
->>>>     inverted-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
->>>> };
->>>>
->>>> foo {
->>>>     compatible = "acme,foo";
->>>>     cs-gpios = <&inv0 0 GPIO_ACTIVE_LOW>;
->>>> };
->>>>
->>>> And now Acme Foo bindings can keep enforcing cs-gpios
->>>> to always be tagged GPIO_ACTIVE_LOW.
->>> Can you please review/let us know your opinion on this ? I think the idea here is to also isolate the changes to a separate consumer driver and avoid getting inversions inside gpiolib.
->>>
->>>
->>> Thanks.
->>>
->>>
->>> Regards,
->>>
->>> Harish Jenny K N
->>>
->> Can you please comment on this ?
->>
->>
->> Thanks,
->>
->> Harish Jenny K N
->>
-> Friendly Reminder.
->
-> can we please finalize this ?
->
-> Linus has also mentioned in another patchset "[PATCH v2] Input: tsc2007 - use GPIO descriptor" that
->
-> he is in favor of introducing explicit inverters in device tree.
->
->
-> Please consider this and let us know your inputs.
->
->
->
-> Thanks,
->
-> Harish Jenny K N
->
+Biju Das (3):
+  dt-bindings: usb: hd3ss3220 device tree binding document
+  usb: typec: driver for TI HD3SS3220 USB Type-C DRP port controller
+  dt-bindings: usb: renesas_usb3: Document usb role switch support
 
-Can we please finalize this ?
+ .../devicetree/bindings/usb/renesas,usb3-peri.txt  |  23 ++
+ .../devicetree/bindings/usb/ti,hd3ss3220.txt       |  38 +++
+ drivers/usb/typec/Kconfig                          |  10 +
+ drivers/usb/typec/Makefile                         |   1 +
+ drivers/usb/typec/hd3ss3220.c                      | 259 +++++++++++++++++++++
+ 5 files changed, 331 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
+ create mode 100644 drivers/usb/typec/hd3ss3220.c
 
-
-Sorry for the repeated emails.
-
-Am I missing something here ? I am not getting replies.
-
-
-
-Thanks,
-
-Harish Jenny K N
+-- 
+2.7.4
