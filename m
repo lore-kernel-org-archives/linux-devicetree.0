@@ -1,199 +1,270 @@
-From: "Ramuthevar,Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v3 2/2] phy: intel-lgm-sdxc: Add support for SDXC PHY
-Date: Wed,  4 Sep 2019 14:27:19 +0800
-Message-ID: <20190904062719.37462-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20190904062719.37462-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190904062719.37462-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com, vadivel.muruganx.ramuthevar@linux.intel.com
+From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC PATCH V2 4/4] platform: mtk-isp: Add Mediatek FD driver
+Date: Wed, 4 Sep 2019 15:34:49 +0900
+Message-ID: <CAAFQd5AxTQPD+nP9CJs45QTzGHKssjv3vRtMqHONABfp12afYw@mail.gmail.com>
+References: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <1562661672-22439-5-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <20190802082815.GA203993@chromium.org> <1566724680.20680.8.camel@mtksdccf07>
+ <CAAFQd5Dw+jaT-+LAUEVeB8W1zdnOgPw7u+aCfDWhYW1SfbzO8g@mail.gmail.com>
+ <1566957625.20680.33.camel@mtksdccf07>
+ <CAAFQd5D-Yg1FjUE_rwmqfS1gvfE0=MZ=r-ziueU_37-uo9QTbw@mail.gmail.com>
+ <1567424859.18318.32.camel@mtksdccf07>
+ <CAAFQd5AGgeFbto6V1KkL0dp1QPziOKV3pWQDU2OJ+S1QKvnBdg@mail.gmail.com>
+ <1567493081.18318.49.camel@mtksdccf07>
+ <CAAFQd5DWM=R7sFHYGhhR_rXrzgRnc4xtH_t8Pig-4tcP9KTSYg@mail.gmail.com>
+ <1567511169.18318.65.camel@mtksdccf07>
+ <CAAFQd5DiPcUxd+R-v_-BdRx+QqZ35Riii_jpgbqr5mc3BnQvDw@mail.gmail.com>
+ <1567568281.18318.80.camel@mtksdccf07>
+ <CAAFQd5CRC2cyV30B4Qv59HdrJ7Cpe_yK5aY-BecQQ3J3i0PtCQ@mail.gmail.com>
+ <1567577389.18318.100.camel@mtksdccf07>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1567577389.18318.100.camel@mtksdccf07>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UG8tWWFuZyBIdWFuZyAo6buD5p+P6Zm9KQ==?= <po-yang.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?U2ogSHVhbmcgKOm7g+S/oeeSiyk=?= <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <matthias.bgg>
 List-Id: devicetree@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Wed, Sep 4, 2019 at 3:09 PM Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>
+> Hi Tomasz,
+>
+> On Wed, 2019-09-04 at 12:15 +0800, Tomasz Figa wrote:
+> > On Wed, Sep 4, 2019 at 12:38 PM Jerry-ch Chen
+> > <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > >
+> > > Hi Tomasz,
+> > >
+> > > On Tue, 2019-09-03 at 20:05 +0800, Tomasz Figa wrote:
+> > > > On Tue, Sep 3, 2019 at 8:46 PM Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > >
+> > > > > Hi Tomasz,
+> > > > >
+> > > > > On Tue, 2019-09-03 at 15:04 +0800, Tomasz Figa wrote:
+> > > > > > On Tue, Sep 3, 2019 at 3:44 PM Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > > > >
+> > > > > > > On Tue, 2019-09-03 at 13:19 +0800, Tomasz Figa wrote:
+> > > > > > > > On Mon, Sep 2, 2019 at 8:47 PM Jerry-ch Chen <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > > > > > >
+> > > > > > > > > Hi Tomasz,
+> > > > > > > > >
+> > > > > > > > > On Fri, 2019-08-30 at 16:33 +0800, Tomasz Figa wrote:
+> > > > > > > > > > On Wed, Aug 28, 2019 at 11:00 AM Jerry-ch Chen
+> > > > > > > > > > <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > > > > > > > >
+> > > > > > > > > > > Hi Tomasz,
+> > > > > > > > > > >
+> > > > > > > > > > > On Mon, 2019-08-26 at 14:36 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > > Hi Jerry,
+> > > > > > > > > > > >
+> > > > > > > > > > > > On Sun, Aug 25, 2019 at 6:18 PM Jerry-ch Chen
+> > > > > > > > > > > > <Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Hi Tomasz,
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > On Fri, 2019-08-02 at 16:28 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > > > > Hi Jerry,
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > On Tue, Jul 09, 2019 at 04:41:12PM +0800, Jerry-ch Chen wrote:
+> > > [snip]
+> > > > > > > > > > > > [snip]
+> > > > > > > > > > > >
+> > > > > > > > > > > > > > > +static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
+> > > > > > > > > > > > > > > +{
+> > > > > > > > > > > > > > > +   struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+> > > > > > > > > > > > > > > +   struct vb2_buffer *vb;
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > > How do we guarantee here that the hardware isn't still accessing the buffers
+> > > > > > > > > > > > > > removed below?
+> > > > > > > > > > > > > >
+> > > > > > > > > > > > > Maybe we can check the driver state flag and aborting the unfinished
+> > > > > > > > > > > > > jobs?
+> > > > > > > > > > > > > (fd_hw->state == FD_ENQ)
+> > > > > > > > > > > > >
+> > > > > > > > > > > >
+> > > > > > > > > > > > Yes, we need to either cancel or wait for the currently processing
+> > > > > > > > > > > > job. It depends on hardware capabilities, but cancelling is generally
+> > > > > > > > > > > > preferred for the lower latency.
+> > > > > > > > > > > >
+> > > > > > > > > > > Ok, it the state is ENQ, then we can disable the FD hw by controlling
+> > > > > > > > > > > the registers.
+> > > > > > > > > > >
+> > > > > > > > > > > for example:
+> > > > > > > > > > >         writel(0x0, fd->fd_base + FD_HW_ENABLE);
+> > > > > > > > > > >         writel(0x0, fd->fd_base + FD_INT_EN);
+> > > > > > > > > > >
+> > > > > > > > > >
+> > > > > > > > > > What's exactly the effect of writing 0 to FD_HW_ENABLE?
+> > > > > > > > > >
+> > > > > > > > > Sorry, my last reply didn't solve the question,
+> > > > > > > > > we should implement a mtk_fd_job_abort() for v4l2_m2m_ops().
+> > > > > > > > >
+> > > > > > > > > which is able to readl_poll_timeout_atomic()
+> > > > > > > > > and check the HW busy bits in the register FD_INT_EN;
+> > > > > > > > >
+> > > > > > > > > if they are not cleared until timeout, we could handle the last
+> > > > > > > > > processing job.
+> > > > > > > > > Otherwise, the FD irq handler should have handled the last processing
+> > > > > > > > > job and we could continue the stop_streaming().
+> > > > > > > > >
+> > > > > > > > > For job_abort():
+> > > > > > > > > static void mtk_fd_job_abort(void *priv)
+> > > > > > > > > {
+> > > > > > > > >         struct mtk_fd_ctx *ctx = priv;
+> > > > > > > > >         struct mtk_fd_dev *fd = ctx->fd_dev;
+> > > > > > > > >         u32 val;
+> > > > > > > > >         u32 ret;
+> > > > > > > > >
+> > > > > > > > >         ret = readl_poll_timeout_atomic(fd->fd_base + MTK_FD_REG_OFFSET_INT_EN,
+> > > > > > > > >                                         val,
+> > > > > > > > >                                         (val & MTK_FD_HW_BUSY_MASK) ==
+> > > > > > > > >                                         MTK_FD_HW_STATE_IS_BUSY,
+> > > > > > > > >                                         USEC_PER_MSEC, MTK_FD_STOP_HW_TIMEOUT);
+> > > > > > > >
+> > > > > > > > Hmm, would it be possible to avoid the busy wait by having a
+> > > > > > > > completion that could be signalled from the interrupt handler?
+> > > > > > > >
+> > > > > > > > Best regards,
+> > > > > > > > Tomasz
+> > > > > > >
+> > > > > > > I suppose that would be wakeup a wait queue in the interrupt handler,
+> > > > > > > the the wait_event_interrupt_timeout() will be used in here and system
+> > > > > > > suspend e.g. mtk_fd_suspend().
+> > > > > >
+> > > > > > Yes, that should work.
+> > > > > >
+> > > > > > > Or do you suggest to wait_event_interrupt_timeout() every frame in the
+> > > > > > > mtk_fd_ipi_handler()?
+> > > > > >
+> > > > > > Nope, we shouldn't need that.
+> > > > > >
+> > > > > > > I think maybe the readl_poll_timeout_atomic would be good enough.
+> > > > > > >
+> > > > > >
+> > > > > > Not really. Busy waiting should be avoided as much as possible. What's
+> > > > > > the point of entering suspend if you end up burning the power by
+> > > > > > spinning the CPU for some milliseconds?
+> > > > > >
+> > > > > Ok, I see, busy waiting is not a good idea, I will use the wait queue
+> > > > > instead. the job abort will refine as following:
+> > > > >
+> > > > > static void mtk_fd_job_abort(void *priv)
+> > > > > {
+> > > > >         struct mtk_fd_ctx *ctx = priv;
+> > > > >         struct mtk_fd_dev *fd = ctx->fd_dev;
+> > > > >         u32 ret;
+> > > > >
+> > > > >         ret = wait_event_interruptible_timeout
+> > > > >                 (fd->wq, (fd->fd_irq_result & MTK_FD_HW_IRQ_MASK),
+> > > > >                  usecs_to_jiffies(50000));
+> > > > >         if (ret)
+> > > > >                 mtk_fd_hw_job_finish(fd, VB2_BUF_STATE_ERROR);
+> > > > >         dev_dbg(fd->dev, "%s, ret:%d\n", __func__, ret);
+> > > > >
+> > > > >         fd->fd_irq_result = 0;
+> > > > > }
+> > > > >
+> > > > > static struct v4l2_m2m_ops fd_m2m_ops = {
+> > > > >         .device_run = mtk_fd_device_run,
+> > > > >         .job_abort = mtk_fd_job_abort,
+> > > >
+> > > > I'm not sure we should be using the functon above as the .job_abort
+> > > > callback. It's expected to abort the job, but we're just waiting for
+> > > > it to finish. I think we should just call mtk_fd_job_abort() manually
+> > > > from .stop_streaming.
+> > > >
+> > >
+> > > Ok, I will fix it.
+> > >
+> > > > > };
+> > > > >
+> > > > > and we could use it in suspend.
+> > > > > static int mtk_fd_suspend(struct device *dev)
+> > > > > {
+> > > > >         struct mtk_fd_dev *fd = dev_get_drvdata(dev);
+> > > > >
+> > > > >         if (pm_runtime_suspended(dev))
+> > > > >                 return 0;
+> > > > >
+> > > > >         if (fd->fd_stream_count)
+> > > > >                 mtk_fd_job_abort(fd->ctx);
+> > > > >
+> > > > >         /* suspend FD HW */
+> > > > >         writel(0x0, fd->fd_base + MTK_FD_REG_OFFSET_INT_EN);
+> > > > >         writel(0x0, fd->fd_base + MTK_FD_REG_OFFSET_HW_ENABLE);
+> > > > >         clk_disable_unprepare(fd->fd_clk);
+> > > > >         dev_dbg(dev, "%s:disable clock\n", __func__);
+> > > > >
+> > > > >         return 0;
+> > > > > }
+> > > > >
+> > > > > static irqreturn_t mtk_fd_irq(int irq, void *data)
+> > > > > {
+> > > > >         struct mtk_fd_dev *fd = (struct mtk_fd_dev *)data;
+> > > > >
+> > > > >         fd->fd_irq_result = readl(fd->fd_base + MTK_FD_REG_OFFSET_INT_VAL);
+> > > > >         wake_up_interruptible(&fd->wq);
+> > > >
+> > > > The wake up should be done at the very end of this function. Otherwise
+> > > > we end up with m2m framework racing with the mtk_fd_hw_job_finish()
+> > > > below.
+> > > >
+> > > > Also, I'd use a completion here rather than an open coded wait and
+> > > > wake-up. The driver could reinit_completion() before queuing a job to
+> > > > the hardware and the IRQ handler would complete(). There would be no
+> > > > need to store the IRQ flags in driver data anymore.
+> > > Ok, It will be refined as following:
+> > >
+> > > suspend and stop streaming will call mtk_fd_job_abort()
+> > >
+> > > static void mtk_fd_job_abort(struct mtk_fd_dev *fd)
+> > > {
+> > >         u32 ret;
+> > >
+> > >         ret = wait_for_completion_timeout(&fd->fd_irq_done,
+> > >                                           msecs_to_jiffies(MTK_FD_HW_TIMEOUT));
+> > >         if (ret)
+> >
+> > For the _timeout variants, !ret means the timeout and ret > 0 means
+> > that the wait ended successfully before.
+> >
+> Thanks, fixed.
+>
+> > Also please make sure that the timeout is big enough not to happen
+> > normally on a heavily loaded system. Something like 1 second should be
+> > good.
+> >
+> Ok, I will make it 1 second
+> #define MTK_FD_HW_TIMEOUT 1000
+>
+> Also, I will add a condition in mtk_fd_vb2_stop_streaming(), since it
+> would be called twice, now it works fine whether I reuse the condition
+> with mtk_fd_hw_disconnect or not, however, I think do it before buffer
+> remove looks more reasonable.
+>
+> static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
+> {
+>         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+>         struct mtk_fd_dev *fd = ctx->fd_dev;
+>         struct vb2_v4l2_buffer *vb;
+>         struct v4l2_m2m_ctx *m2m_ctx = ctx->fh.m2m_ctx;
+>         struct v4l2_m2m_queue_ctx *queue_ctx;
+>
+>         if (vq->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
+>                 mtk_fd_job_abort(fd);
 
-Add support for SDXC PHY on Intel's Lightning Mountain SoC.
+We need to do it regardless of the queue type, otherwise we could
+still free CAPTURE buffers before the hardware releases them.
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
----
- drivers/phy/intel/Kconfig          |   6 ++
- drivers/phy/intel/Makefile         |   1 +
- drivers/phy/intel/phy-intel-sdxc.c | 144 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 151 insertions(+)
- create mode 100644 drivers/phy/intel/phy-intel-sdxc.c
-
-diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
-index 4ea6a8897cd7..d6356c762a6b 100644
---- a/drivers/phy/intel/Kconfig
-+++ b/drivers/phy/intel/Kconfig
-@@ -7,3 +7,9 @@ config PHY_INTEL_EMMC
- 	select GENERIC_PHY
- 	help
- 	  Enable this to support the Intel EMMC PHY
-+
-+config PHY_INTEL_SDXC
-+       tristate "Intel SDXC PHY driver"
-+       select GENERIC_PHY
-+       help
-+         Enable this to support the Intel SDXC PHY driver
-diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
-index 6b876a75599d..3c6e7523200c 100644
---- a/drivers/phy/intel/Makefile
-+++ b/drivers/phy/intel/Makefile
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PHY_INTEL_EMMC)            += phy-intel-emmc.o
-+obj-$(CONFIG_PHY_INTEL_SDXC)            += phy-intel-sdxc.o
-diff --git a/drivers/phy/intel/phy-intel-sdxc.c b/drivers/phy/intel/phy-intel-sdxc.c
-new file mode 100644
-index 000000000000..7e13fd9ced5b
---- /dev/null
-+++ b/drivers/phy/intel/phy-intel-sdxc.c
-@@ -0,0 +1,144 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel SDXC PHY driver
-+ * Copyright (C) 2019 Intel, Corp.
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/* SDXC PHY register definitions */
-+#define SDXC_PHYCTRL_REG	0x88
-+#define OTAPDLYENA_MASK		BIT(14)
-+#define OTAPDLYSEL(x)		((x) << 10)
-+#define OTAPDLYSEL_ALL		OTAPDLYSEL(GENMASK(3, 0))
-+
-+struct intel_sdxc_phy {
-+	struct regmap *syscfg;
-+	struct clk *sdxcclk;
-+};
-+
-+static int intel_sdxc_phy_init(struct phy *phy)
-+{
-+	struct intel_sdxc_phy *priv = phy_get_drvdata(phy);
-+
-+	/*
-+	 * We purposely get the clock here and not in probe to avoid the
-+	 * circular dependency problem.  We expect:
-+	 * - PHY driver to probe
-+	 * - SDHCI driver to start probe
-+	 * - SDHCI driver to register it's clock
-+	 * - SDHCI driver to get the PHY
-+	 * - SDHCI driver to init the PHY
-+	 *
-+	 * The clock is optional, so upon any error just return it like
-+	 * any other error to user.
-+	 */
-+	priv->sdxcclk = clk_get_optional(&phy->dev, "sdxcclk");
-+	if (IS_ERR(priv->sdxcclk)) {
-+		dev_err(&phy->dev, "Error getting sdxcclk\n");
-+		return PTR_ERR(priv->sdxcclk);
-+	}
-+
-+	return 0;
-+}
-+
-+static int intel_sdxc_phy_exit(struct phy *phy)
-+{
-+	struct intel_sdxc_phy *priv = phy_get_drvdata(phy);
-+
-+	clk_put(priv->sdxcclk);
-+
-+	return 0;
-+}
-+
-+static int intel_sdxc_phy_power_on(struct phy *phy)
-+{
-+	struct intel_sdxc_phy *priv = phy_get_drvdata(phy);
-+
-+	/* Output tap delay: disable */
-+	regmap_update_bits(priv->syscfg, SDXC_PHYCTRL_REG, OTAPDLYENA_MASK, 0);
-+
-+	/* Output tap delay */
-+	regmap_update_bits(priv->syscfg, SDXC_PHYCTRL_REG, OTAPDLYSEL_ALL,
-+			   OTAPDLYSEL_ALL);
-+
-+	return 0;
-+}
-+
-+static int intel_sdxc_phy_power_off(struct phy *phy)
-+{
-+	/* Do nothing */
-+	return 0;
-+}
-+
-+static const struct phy_ops ops = {
-+	.init		= intel_sdxc_phy_init,
-+	.exit		= intel_sdxc_phy_exit,
-+	.power_on	= intel_sdxc_phy_power_on,
-+	.power_off	= intel_sdxc_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int intel_sdxc_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct intel_sdxc_phy *priv;
-+	struct phy *generic_phy;
-+	struct phy_provider *phy_provider;
-+
-+	if (!dev->parent || !dev->parent->of_node)
-+		return -ENODEV;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	/* Get SDXC phy (accessed via chiptop) regmap */
-+	priv->syscfg = syscon_regmap_lookup_by_phandle(dev->of_node,
-+						       "intel,syscon");
-+	if (IS_ERR(priv->syscfg)) {
-+		dev_err(dev, "No syscon phandle for chiptop\n");
-+		return PTR_ERR(priv->syscfg);
-+	}
-+
-+	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
-+	if (IS_ERR(generic_phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(generic_phy);
-+	}
-+
-+	phy_set_drvdata(generic_phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id intel_sdxc_phy_dt_ids[] = {
-+	{ .compatible = "intel,lgm-sdxc-phy" },
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, intel_sdxc_phy_dt_ids);
-+
-+static struct platform_driver intel_sdxc_driver = {
-+	.probe		= intel_sdxc_phy_probe,
-+	.driver		= {
-+		.name	= "intel-sdxc-phy",
-+		.of_match_table = intel_sdxc_phy_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(intel_sdxc_driver);
-+
-+MODULE_AUTHOR("Peter Harliman Liem <peter.harliman.liem@intel.com>");
-+MODULE_DESCRIPTION("Intel SDXC PHY driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+Best regards,
+Tomasz
