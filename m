@@ -1,30 +1,84 @@
-From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 4/7] serial: fsl_linflexuart: Be consistent with the
- name
-Date: Wed, 4 Sep 2019 09:52:59 +0200
-Message-ID: <20190904075259.GA10983@kroah.com>
-References: <20190823191115.18490-1-stefan-gabriel.mirea@nxp.com>
- <20190823191115.18490-5-stefan-gabriel.mirea@nxp.com>
+From: Philippe Schenker <philippe.schenker@toradex.com>
+Subject: Re: [PATCH 3/3] dt-bindings: regulator: add regulator-fixed-clock
+ binding
+Date: Wed, 4 Sep 2019 08:07:47 +0000
+Message-ID: <e64429ba4b86411da1741ab54176fb5b4b7a36de.camel@toradex.com>
+References: <20190903080336.32288-1-philippe.schenker@toradex.com>
+         <20190903080336.32288-4-philippe.schenker@toradex.com>
+         <CAL_JsqLnqZ80soGVMvZjAMZvu+K=ebDUz2bM_ZodPp7YRvUnDw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190823191115.18490-5-stefan-gabriel.mirea@nxp.com>
+In-Reply-To: <CAL_JsqLnqZ80soGVMvZjAMZvu+K=ebDUz2bM_ZodPp7YRvUnDw@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <6F6969123F304048AF083CD716008E7C@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Cc: "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "jslaby@suse.com" <jslaby@suse.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: Max Krummenacher <max.krummenacher@toradex.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Luka Pivk <luka.pivk@toradex.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "broonie@kernel.org" <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Stefan Agner <stefan.agner@toradex.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 07:11:37PM +0000, Stefan-gabriel Mirea wrote:
-> For consistency reasons, spell the controller name as "LINFlexD" in
-> comments and documentation.
-> 
-> Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 2 +-
->  drivers/tty/serial/Kconfig                      | 8 ++++----
->  drivers/tty/serial/fsl_linflexuart.c            | 4 ++--
->  include/uapi/linux/serial_core.h                | 4 ++--
->  4 files changed, 9 insertions(+), 9 deletions(-)
-
-Doesn't apply to my tty-next tree :(
+T24gVHVlLCAyMDE5LTA5LTAzIGF0IDA5OjQ1ICswMTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gVHVlLCBTZXAgMywgMjAxOSBhdCA5OjAzIEFNIFBoaWxpcHBlIFNjaGVua2VyDQo+IDxwaGls
+aXBwZS5zY2hlbmtlckB0b3JhZGV4LmNvbT4gd3JvdGU6DQo+ID4gVGhpcyBhZGRzIHRoZSBkb2N1
+bWVudGF0aW9uIHRvIHRoZSBjb21wYXRpYmxlIHJlZ3VsYXRvci1maXhlZC1jbG9jaw0KPiANCj4g
+UGxlYXNlIGV4cGxhaW4gd2hhdCB0aGF0IGlzIGluIHRoaXMgcGF0Y2guDQoNCkhpIFJvYiBhbmQg
+dGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzLiBJIHdpbGwgY2hhbmdlIHRoaXMgY29tbWl0IG1lc3Nh
+Z2UNCmZvciBhIHBvc3NpYmxlIHYyIGludG8gdGhpczoNCg0KVGhpcyBhZGRzIHRoZSBkb2N1bWVu
+dGF0aW9uIHRvIHRoZSBjb21wYXRpYmxlIHJlZ3VsYXRvci1maXhlZC1jbG9jay4NClRoaXMgYmlu
+ZGluZyBpcyBhIHNwZWNpYWwgYmluZGluZyBvZiByZWd1bGF0b3ItZml4ZWQgYW5kIGFkZHMgdGhl
+DQphYmlsaXR5IHRvIGFkZCBhIGNsb2NrIHRvIHJlZ3VsYXRvci1maXhlZCwgc28gdGhlIHJlZ3Vs
+YXRvciBjYW4gYmUNCmVuYWJsZWQgYW5kIGRpc2FibGVkIHdpdGggdGhhdCBjbG9jay4NCklmIHRo
+ZSBzcGVjaWFsIGNvbXBhdGlibGUgcmVndWxhdG9yLWZpeGVkLWNsb2NrIGlzIHVzZWQgaXQgaXMg
+bWFuZGF0b3J5DQp0byBzdXBwbHkgYSBjbG9jay4NCg0KPiA+IA0KPiANCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBQaGlsaXBwZSBTY2hlbmtlciA8cGhpbGlwcGUuc2NoZW5rZXJAdG9yYWRleC5jb20+DQo+
+ID4gDQo+ID4gLS0tDQo+ID4gDQo+ID4gIC4uLi9iaW5kaW5ncy9yZWd1bGF0b3IvZml4ZWQtcmVn
+dWxhdG9yLnlhbWwgICAgfCAxOA0KPiA+ICsrKysrKysrKysrKysrKysrLQ0KPiA+ICAxIGZpbGUg
+Y2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+IA0KPiA+IGRpZmYg
+LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL2ZpeGVk
+LQ0KPiA+IHJlZ3VsYXRvci55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3JlZ3VsYXRvci9maXhlZC0NCj4gPiByZWd1bGF0b3IueWFtbA0KPiA+IGluZGV4IGE2NTBiNDU3
+MDg1ZC4uNWZkMDgxZTgwYjQzIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvZml4ZWQtDQo+ID4gcmVndWxhdG9yLnlhbWwNCj4gPiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL2ZpeGVkLQ0K
+PiA+IHJlZ3VsYXRvci55YW1sDQo+ID4gQEAgLTE5LDkgKzE5LDE5IEBAIGRlc2NyaXB0aW9uOg0K
+PiA+ICBhbGxPZjoNCj4gPiAgICAtICRyZWY6ICJyZWd1bGF0b3IueWFtbCMiDQo+ID4gDQo+ID4g
+K3NlbGVjdDoNCj4gPiArICBwcm9wZXJ0aWVzOg0KPiA+ICsgICAgY29tcGF0aWJsZToNCj4gPiAr
+ICAgICAgY29udGFpbnM6DQo+ID4gKyAgICAgICAgY29uc3Q6IHJlZ3VsYXRvci1maXhlZC1jbG9j
+aw0KPiA+ICsgIHJlcXVpcmVkOg0KPiA+ICsgICAgLSBjbG9ja3MNCj4gDQo+IFlvdSBkb24ndCBu
+ZWVkIHRoaXMuDQo+IA0KPiBJZiB5b3UgYWRkIGEgbmV3IGNvbXBhdGlibGUsIHRoZW4gdGhpcyBz
+aG91bGQgcHJvYmFibHkgYmUgYSBuZXcgc2NoZW1hDQo+IGRvYy4gSXMgdGhlICdncGlvJyBwcm9w
+ZXJ0eSB2YWxpZCBpbiB0aGlzIGNhc2UgYXMgaWYgYSBjbG9jayBpcyB0aGUNCj4gZW5hYmxlLCBj
+YW4geW91IGFsc28gaGF2ZSBhIGdwaW8gZW5hYmxlPyBUaGF0IHNhaWQsIGl0IHNlZW1zIGxpa2Ug
+dGhlDQo+IG5ldyBjb21wYXRpYmxlIGlzIG9ubHkgZm9yIHZhbGlkYXRpbmcgdGhlIERUIGluIHRo
+ZSBkcml2ZXIuIFlvdSBjb3VsZA0KPiBqdXN0IHVzZSBhIGNsb2NrIGlmIHByZXNlbnQgYW5kIGRl
+ZmF1bHQgdG8gY3VycmVudCBiZWhhdmlvciBpZiBub3QuDQo+IEl0J3Mgbm90IHRoZSBrZXJuZWwn
+cyBqb2IgdG8gdmFsaWRhdGUgRFRzLg0KDQpUaGUgZ3BpbyBwcm9wZXJ0eSBpcyB2YWxpZCB3aXRo
+IHRoaXMgY29tcGF0aWJsZS4gSSBhZGRlZCByZWd1bGF0b3ItDQpmaXhlZC1jbG9jayB0byByZWd1
+bGF0b3ItZml4ZWQgaGVuY2UgSSBhbHNvIGRvbid0IHdhbnQgdG8gY3JlYXRlIGEgbmV3DQpzY2hl
+bWEgZmlsZS4NCg0KV2l0aCB0aGUgYWJvdmUgc2VsZWN0IHN0YXRlbWVudCBJIHdhbnRlZCB0byBz
+dGF0ZSBjbG9ja3MgYXMgcmVxdWlyZWQNCndoZW4gdGhlIGNvbXBhdGlibGUgcmVndWxhdG9yLWZp
+eGVkLWNsb2NrIGlzIGdpdmVuLg0KDQo+IA0KPiA+ICBwcm9wZXJ0aWVzOg0KPiA+ICAgIGNvbXBh
+dGlibGU6DQo+ID4gLSAgICBjb25zdDogcmVndWxhdG9yLWZpeGVkDQo+ID4gKyAgICBpdGVtczoN
+Cj4gPiArICAgICAgLSBjb25zdDogcmVndWxhdG9yLWZpeGVkDQo+ID4gKyAgICAgIC0gY29uc3Q6
+IHJlZ3VsYXRvci1maXhlZC1jbG9jaw0KPiANCj4gVGhpcyBzYXlzIHlvdSBtdXN0IGhhdmUgJ2Nv
+bXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVkIiwNCj4gInJlZ3VsYXRvci1maXhlZC1jbG9jayI7
+Jy4NCj4gDQo+IFdoYXQgeW91IHdhbnQgaXM6DQo+IA0KPiBlbnVtOg0KPiAgIC0gcmVndWxhdG9y
+LWZpeGVkDQo+ICAgLSByZWd1bGF0b3ItZml4ZWQtY2xvY2sNCg0KVGhhbmtzLCB0aGlzIHdhcyBl
+eGFjdGx5IHdoYXQgSSB3YW50ZWQgdG8gZG8uDQoNCj4gDQo+ID4gICAgcmVndWxhdG9yLW5hbWU6
+IHRydWUNCj4gPiANCj4gPiBAQCAtMjksNiArMzksMTIgQEAgcHJvcGVydGllczoNCj4gPiAgICAg
+IGRlc2NyaXB0aW9uOiBncGlvIHRvIHVzZSBmb3IgZW5hYmxlIGNvbnRyb2wNCj4gPiAgICAgIG1h
+eEl0ZW1zOiAxDQo+ID4gDQo+ID4gKyAgY2xvY2tzOg0KPiA+ICsgICAgZGVzY3JpcHRpb246DQo+
+ID4gKyAgICAgIGNsb2NrIHRvIHVzZSBmb3IgZW5hYmxlIGNvbnRyb2wuIFRoaXMgYmluZGluZyBp
+cyBvbmx5DQo+ID4gYXZhaWxhYmxlIGlmDQo+ID4gKyAgICAgIHRoZSBjb21wYXRpYmxlIGlzIGNo
+b3NlbiB0byByZWd1bGF0b3ItZml4ZWQtY2xvY2suIFRoZSBjbG9jaw0KPiA+IGJpbmRpbmcNCj4g
+PiArICAgICAgaXMgbWFuZGF0b3J5IGlmIGNvbXBhdGlibGUgaXMgY2hvc2VuIHRvIHJlZ3VsYXRv
+ci1maXhlZC0NCj4gPiBjbG9jay4NCj4gDQo+IE5lZWQgdG8gZGVmaW5lIGhvdyBtYW55IGNsb2Nr
+cyAobWF4SXRlbXM6IDEpLg0KDQpXaWxsIGRvIGZvciBhIHBvc3NpYmxlIHYyLiBJIHdhbnQgdG8g
+d2FpdCB3aGF0IE1hcmsgQnJvd24gc2F5cyBhYm91dCB0aGUNCmFkZGl0aW9uIGluIGdlbmVyYWws
+IG1heWJlIEkgaGF2ZSB0byBjaGFuZ2UgYWxsIG92ZXIgaG93IHRoaXMgc3BlY2lhbGl0eQ0KaXMg
+YWRkZWQgaW50byByZWd1bGF0b3Igc3Vic3lzdGVtIGFuZCB0aGVyZWZvcmUgYWxzbyB0aGUgYmlu
+ZGluZyB3aWxsDQpjaGFuZ2UuDQoNClBoaWxpcHBlDQo+IA0KPiA+ICsNCj4gPiAgICBzdGFydHVw
+LWRlbGF5LXVzOg0KPiA+ICAgICAgZGVzY3JpcHRpb246IHN0YXJ0dXAgdGltZSBpbiBtaWNyb3Nl
+Y29uZHMNCj4gPiAgICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3Vp
+bnQzMg0KPiA+IC0tDQo+ID4gMi4yMy4wDQo+ID4gDQo=
