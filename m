@@ -1,267 +1,173 @@
-From: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Subject: [PATCH V2 12/12] serial: tegra: Add PIO mode support
-Date: Wed, 4 Sep 2019 10:13:07 +0530
-Message-ID: <1567572187-29820-13-git-send-email-kyarlagadda@nvidia.com>
-References: <1567572187-29820-1-git-send-email-kyarlagadda@nvidia.com>
+From: Przemyslaw Gaj <pgaj@cadence.com>
+Subject: Re: [PATCH v2 1/5] i3c: master: detach and free device if
+ pre_assign_dyn_addr() fails
+Date: Wed, 4 Sep 2019 05:47:18 +0100
+Message-ID: <20190904044718.GB23588@global.cadence.com>
+References: <cover.1567437955.git.vitor.soares@synopsys.com>
+ <105a3ac1653e9ae658056a5ec9ddc2a084a61669.1567437955.git.vitor.soares@synopsys.com>
+ <20190903111356.GA23588@global.cadence.com>
+ <SN6PR12MB2655B0C2E9076EF7187A52F3AEB90@SN6PR12MB2655.namprd12.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567572187-29820-1-git-send-email-kyarlagadda@nvidia.com>
+Content-Disposition: inline
+In-Reply-To: <SN6PR12MB2655B0C2E9076EF7187A52F3AEB90@SN6PR12MB2655.namprd12.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, ldewangan@nvidia.com, jslaby@suse.com
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Krishna Yarlagadda <kyarlagadda@nvidia.com>, Shardar Shariff Md <smohammed@nvidia.com>
+To: Vitor Soares <Vitor.Soares@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, Rafal Ciepiela <rafalc@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Add PIO mode support in receive and transmit path with RX interrupt
-trigger of 16 bytes for Tegra194 and older chips.
+The 09/03/2019 11:57, Vitor Soares wrote:
+> EXTERNAL MAIL
+> 
+> 
+> From: Przemyslaw Gaj <pgaj@cadence.com>
+> Date: Tue, Sep 03, 2019 at 12:13:57
+> 
+> > Hi Vitor,
+> > 
+> > I'm sorry for the delay.
+> > 
+> > The 09/03/2019 12:35, Vitor Soares wrote:
+> > > EXTERNAL MAIL
+> > > 
+> > > 
+> > > On pre_assing_dyn_addr() the devices that fail:
+> > >   i3c_master_setdasa_locked()
+> > >   i3c_master_reattach_i3c_dev()
+> > >   i3c_master_retrieve_dev_info()
+> > > 
+> > > are kept in memory and master->bus.devs list. This makes the i3c devices
+> > > without a dynamic address are sent on DEFSLVS CCC command. Fix this by
+> > > detaching and freeing the devices that fail on pre_assign_dyn_addr().
+> > 
+> > What is the problem with sending devices without dynamic address in DEFSLVS?
+> 
+> How do you address them?
+> For the DA field in DEFSLVS frame, the spec says: "shall contain the 
+> current value of the Slave's assigned 7-bit Dynamic address". If the 
+> device doesn't have the dynamic address assigned yet why send it?
+>
 
-Signed-off-by: Shardar Shariff Md <smohammed@nvidia.com>
-Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
----
- drivers/tty/serial/serial-tegra.c | 117 ++++++++++++++++++++++++++++----------
- 1 file changed, 86 insertions(+), 31 deletions(-)
+What stops us from operating with this device in I2C mode using his SA?
 
-diff --git a/drivers/tty/serial/serial-tegra.c b/drivers/tty/serial/serial-tegra.c
-index d0fd417..2f59951 100644
---- a/drivers/tty/serial/serial-tegra.c
-+++ b/drivers/tty/serial/serial-tegra.c
-@@ -139,6 +139,8 @@ struct tegra_uart_port {
- 	int					n_adjustable_baud_rates;
- 	int					required_rate;
- 	int					configured_rate;
-+	bool					use_rx_pio;
-+	bool					use_tx_pio;
- };
- 
- static void tegra_uart_start_next_tx(struct tegra_uart_port *tup);
-@@ -567,7 +569,7 @@ static void tegra_uart_start_next_tx(struct tegra_uart_port *tup)
- 	if (!count)
- 		return;
- 
--	if (count < TEGRA_UART_MIN_DMA)
-+	if (tup->use_tx_pio || count < TEGRA_UART_MIN_DMA)
- 		tegra_uart_start_pio_tx(tup, count);
- 	else if (BYTES_TO_ALIGN(tail) > 0)
- 		tegra_uart_start_pio_tx(tup, BYTES_TO_ALIGN(tail));
-@@ -800,6 +802,18 @@ static void tegra_uart_handle_modem_signal_change(struct uart_port *u)
- 		uart_handle_cts_change(&tup->uport, msr & UART_MSR_CTS);
- }
- 
-+static void do_handle_rx_pio(struct tegra_uart_port *tup)
-+{
-+	struct tty_struct *tty = tty_port_tty_get(&tup->uport.state->port);
-+	struct tty_port *port = &tup->uport.state->port;
-+
-+	tegra_uart_handle_rx_pio(tup, port);
-+	if (tty) {
-+		tty_flip_buffer_push(port);
-+		tty_kref_put(tty);
-+	}
-+}
-+
- static irqreturn_t tegra_uart_isr(int irq, void *data)
- {
- 	struct tegra_uart_port *tup = data;
-@@ -813,7 +827,7 @@ static irqreturn_t tegra_uart_isr(int irq, void *data)
- 	while (1) {
- 		iir = tegra_uart_read(tup, UART_IIR);
- 		if (iir & UART_IIR_NO_INT) {
--			if (is_rx_int) {
-+			if (!tup->use_rx_pio && is_rx_int) {
- 				tegra_uart_handle_rx_dma(tup);
- 				if (tup->rx_in_progress) {
- 					ier = tup->ier_shadow;
-@@ -841,7 +855,7 @@ static irqreturn_t tegra_uart_isr(int irq, void *data)
- 		case 4: /* End of data */
- 		case 6: /* Rx timeout */
- 		case 2: /* Receive */
--			if (!is_rx_int) {
-+			if (!tup->use_rx_pio && !is_rx_int) {
- 				is_rx_int = true;
- 				/* Disable Rx interrupts */
- 				ier = tup->ier_shadow;
-@@ -851,6 +865,8 @@ static irqreturn_t tegra_uart_isr(int irq, void *data)
- 					UART_IER_RTOIE | TEGRA_UART_IER_EORD);
- 				tup->ier_shadow = ier;
- 				tegra_uart_write(tup, ier, UART_IER);
-+			} else {
-+				do_handle_rx_pio(tup);
- 			}
- 			break;
- 
-@@ -869,6 +885,7 @@ static irqreturn_t tegra_uart_isr(int irq, void *data)
- static void tegra_uart_stop_rx(struct uart_port *u)
- {
- 	struct tegra_uart_port *tup = to_tegra_uport(u);
-+	struct tty_port *port = &tup->uport.state->port;
- 	struct dma_tx_state state;
- 	unsigned long ier;
- 
-@@ -886,9 +903,13 @@ static void tegra_uart_stop_rx(struct uart_port *u)
- 	tup->ier_shadow = ier;
- 	tegra_uart_write(tup, ier, UART_IER);
- 	tup->rx_in_progress = 0;
--	dmaengine_terminate_all(tup->rx_dma_chan);
--	dmaengine_tx_status(tup->rx_dma_chan, tup->rx_cookie, &state);
--	tegra_uart_rx_buffer_push(tup, state.residue);
-+	if (tup->rx_dma_chan && !tup->use_rx_pio) {
-+		dmaengine_terminate_all(tup->rx_dma_chan);
-+		dmaengine_tx_status(tup->rx_dma_chan, tup->rx_cookie, &state);
-+		tegra_uart_rx_buffer_push(tup, state.residue);
-+	} else {
-+		tegra_uart_handle_rx_pio(tup, port);
-+	}
- }
- 
- static void tegra_uart_hw_deinit(struct tegra_uart_port *tup)
-@@ -939,8 +960,10 @@ static void tegra_uart_hw_deinit(struct tegra_uart_port *tup)
- 	tup->rx_in_progress = 0;
- 	tup->tx_in_progress = 0;
- 
--	tegra_uart_dma_channel_free(tup, true);
--	tegra_uart_dma_channel_free(tup, false);
-+	if (!tup->use_rx_pio)
-+		tegra_uart_dma_channel_free(tup, true);
-+	if (!tup->use_tx_pio)
-+		tegra_uart_dma_channel_free(tup, false);
- 
- 	clk_disable_unprepare(tup->uart_clk);
- }
-@@ -985,10 +1008,14 @@ static int tegra_uart_hw_init(struct tegra_uart_port *tup)
- 	 */
- 	tup->fcr_shadow = UART_FCR_ENABLE_FIFO;
- 
--	if (tup->cdata->max_dma_burst_bytes == 8)
--		tup->fcr_shadow |= UART_FCR_R_TRIG_10;
--	else
--		tup->fcr_shadow |= UART_FCR_R_TRIG_01;
-+	if (tup->use_rx_pio) {
-+		tup->fcr_shadow |= UART_FCR_R_TRIG_11;
-+	} else {
-+		if (tup->cdata->max_dma_burst_bytes == 8)
-+			tup->fcr_shadow |= UART_FCR_R_TRIG_10;
-+		else
-+			tup->fcr_shadow |= UART_FCR_R_TRIG_01;
-+	}
- 
- 	tup->fcr_shadow |= TEGRA_UART_TX_TRIG_16B;
- 	tegra_uart_write(tup, tup->fcr_shadow, UART_FCR);
-@@ -1016,19 +1043,23 @@ static int tegra_uart_hw_init(struct tegra_uart_port *tup)
- 	 * (115200, N, 8, 1) so that the receive DMA buffer may be
- 	 * enqueued
- 	 */
--	tup->lcr_shadow = TEGRA_UART_DEFAULT_LSR;
- 	ret = tegra_set_baudrate(tup, TEGRA_UART_DEFAULT_BAUD);
- 	if (ret < 0) {
- 		dev_err(tup->uport.dev, "Failed to set baud rate\n");
- 		return ret;
- 	}
--	tup->fcr_shadow |= UART_FCR_DMA_SELECT;
--	tegra_uart_write(tup, tup->fcr_shadow, UART_FCR);
-+	if (!tup->use_rx_pio) {
-+		tup->lcr_shadow = TEGRA_UART_DEFAULT_LSR;
-+		tup->fcr_shadow |= UART_FCR_DMA_SELECT;
-+		tegra_uart_write(tup, tup->fcr_shadow, UART_FCR);
- 
--	ret = tegra_uart_start_rx_dma(tup);
--	if (ret < 0) {
--		dev_err(tup->uport.dev, "Not able to start Rx DMA\n");
--		return ret;
-+		ret = tegra_uart_start_rx_dma(tup);
-+		if (ret < 0) {
-+			dev_err(tup->uport.dev, "Not able to start Rx DMA\n");
-+			return ret;
-+		}
-+	} else {
-+		tegra_uart_write(tup, tup->fcr_shadow, UART_FCR);
- 	}
- 	tup->rx_in_progress = 1;
- 
-@@ -1050,7 +1081,12 @@ static int tegra_uart_hw_init(struct tegra_uart_port *tup)
- 	 * both the EORD as well as RX_TIMEOUT - SW sees RX_TIMEOUT first
- 	 * then the EORD.
- 	 */
--	tup->ier_shadow = UART_IER_RLSI | UART_IER_RTOIE | TEGRA_UART_IER_EORD;
-+	if (!tup->use_rx_pio)
-+		tup->ier_shadow = UART_IER_RLSI | UART_IER_RTOIE |
-+			TEGRA_UART_IER_EORD;
-+	else
-+		tup->ier_shadow = UART_IER_RLSI | UART_IER_RTOIE | UART_IER_RDI;
-+
- 	tegra_uart_write(tup, tup->ier_shadow, UART_IER);
- 	return 0;
- }
-@@ -1145,16 +1181,22 @@ static int tegra_uart_startup(struct uart_port *u)
- 	struct tegra_uart_port *tup = to_tegra_uport(u);
- 	int ret;
- 
--	ret = tegra_uart_dma_channel_allocate(tup, false);
--	if (ret < 0) {
--		dev_err(u->dev, "Tx Dma allocation failed, err = %d\n", ret);
--		return ret;
-+	if (!tup->use_tx_pio) {
-+		ret = tegra_uart_dma_channel_allocate(tup, false);
-+		if (ret < 0) {
-+			dev_err(u->dev, "Tx Dma allocation failed, err = %d\n",
-+				ret);
-+			return ret;
-+		}
- 	}
- 
--	ret = tegra_uart_dma_channel_allocate(tup, true);
--	if (ret < 0) {
--		dev_err(u->dev, "Rx Dma allocation failed, err = %d\n", ret);
--		goto fail_rx_dma;
-+	if (!tup->use_rx_pio) {
-+		ret = tegra_uart_dma_channel_allocate(tup, true);
-+		if (ret < 0) {
-+			dev_err(u->dev, "Rx Dma allocation failed, err = %d\n",
-+				ret);
-+			goto fail_rx_dma;
-+		}
- 	}
- 
- 	ret = tegra_uart_hw_init(tup);
-@@ -1172,9 +1214,11 @@ static int tegra_uart_startup(struct uart_port *u)
- 	return 0;
- 
- fail_hw_init:
--	tegra_uart_dma_channel_free(tup, true);
-+	if (!tup->use_rx_pio)
-+		tegra_uart_dma_channel_free(tup, true);
- fail_rx_dma:
--	tegra_uart_dma_channel_free(tup, false);
-+	if (!tup->use_tx_pio)
-+		tegra_uart_dma_channel_free(tup, false);
- 	return ret;
- }
- 
-@@ -1378,7 +1422,6 @@ static int tegra_uart_parse_dt(struct platform_device *pdev,
- 	int count;
- 	int n_entries;
- 
--
- 	port = of_alias_get_id(np, "serial");
- 	if (port < 0) {
- 		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", port);
-@@ -1388,6 +1431,18 @@ static int tegra_uart_parse_dt(struct platform_device *pdev,
- 
- 	tup->enable_modem_interrupt = of_property_read_bool(np,
- 					"nvidia,enable-modem-interrupt");
-+
-+	index = of_property_match_string(np, "dma-names", "rx");
-+	if (index < 0) {
-+		tup->use_rx_pio = true;
-+		dev_info(&pdev->dev, "RX in PIO mode\n");
-+	}
-+	index = of_property_match_string(np, "dma-names", "tx");
-+	if (index < 0) {
-+		tup->use_tx_pio = true;
-+		dev_info(&pdev->dev, "TX in PIO mode\n");
-+	}
-+
- 	n_entries = of_property_count_u32_elems(np, "nvidia,adjust-baud-rates");
- 	if (n_entries > 0) {
- 		tup->n_adjustable_baud_rates = n_entries / 3;
+> > Shouldn't we still inform rest of the devices about that? About fact that
+> > device with SA without DA exists on the bus?
+> 
+> I would like to understand what is the use case for this? 
+
+Look above. I2C mode still should be possible IMO. Just consider the case when
+you really need some information from that device, main master can assign
+dynamic address later but you can make some transfers. I know our framework
+does not support that case but secondary master can be different system which
+should know that this device exists and don't have DA yet, so I2C mode is
+available.
+
+> 
+> On I3C spec table "I3C Devices Roles vs Responsibilities", Secondary 
+> Master is not responsible to do Dynamic Address Assignment but it is 
+> optional to do Hot-Join Dynamic Address Assignment.
+> 
+
+Yes, we discussed that few times during the review of Mastership patch series.
+
+> > 
+> > I think that this is limitation for us. Espacially we have SA and DA fields in
+> > DEFSLVS frame so we are able to distinguish devices with and without Dynamic
+> > Address.
+> 
+> I would say the reason behind is regarding how to distinguish i2c from 
+> i3c devices.
+> 
+> > 
+> > > 
+> > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> > > ---
+> > > Changes in v2:
+> > >   - Move out detach/free the i3c_dev_desc from pre_assign_dyn_addr()
+> > >   - Convert i3c_master_pre_assign_dyn_addr() to return an int
+> > > 
+> > >  drivers/i3c/master.c | 22 +++++++++++++++-------
+> > >  1 file changed, 15 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> > > index 5f4bd52..586e34f 100644
+> > > --- a/drivers/i3c/master.c
+> > > +++ b/drivers/i3c/master.c
+> > > @@ -1426,19 +1426,19 @@ static void i3c_master_detach_i2c_dev(struct i2c_dev_desc *dev)
+> > >  		master->ops->detach_i2c_dev(dev);
+> > >  }
+> > >  
+> > > -static void i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
+> > > +static int i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
+> > >  {
+> > >  	struct i3c_master_controller *master = i3c_dev_get_master(dev);
+> > >  	int ret;
+> > >  
+> > >  	if (!dev->boardinfo || !dev->boardinfo->init_dyn_addr ||
+> > >  	    !dev->boardinfo->static_addr)
+> > > -		return;
+> > > +		return 0;
+> > >  
+> > >  	ret = i3c_master_setdasa_locked(master, dev->info.static_addr,
+> > >  					dev->boardinfo->init_dyn_addr);
+> > >  	if (ret)
+> > > -		return;
+> > > +		return ret;
+> > >  
+> > >  	dev->info.dyn_addr = dev->boardinfo->init_dyn_addr;
+> > >  	ret = i3c_master_reattach_i3c_dev(dev, 0);
+> > > @@ -1449,10 +1449,12 @@ static void i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
+> > >  	if (ret)
+> > >  		goto err_rstdaa;
+> > >  
+> > > -	return;
+> > > +	return 0;
+> > >  
+> > >  err_rstdaa:
+> > >  	i3c_master_rstdaa_locked(master, dev->boardinfo->init_dyn_addr);
+> > > +
+> > > +	return ret;
+> > >  }
+> > >  
+> > >  static void
+> > > @@ -1647,7 +1649,7 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+> > >  	enum i3c_addr_slot_status status;
+> > >  	struct i2c_dev_boardinfo *i2cboardinfo;
+> > >  	struct i3c_dev_boardinfo *i3cboardinfo;
+> > > -	struct i3c_dev_desc *i3cdev;
+> > > +	struct i3c_dev_desc *i3cdev, *i3ctmp;
+> > >  	struct i2c_dev_desc *i2cdev;
+> > >  	int ret;
+> > >  
+> > > @@ -1746,8 +1748,14 @@ static int i3c_master_bus_init(struct i3c_master_controller *master)
+> > >  	 * Pre-assign dynamic address and retrieve device information if
+> > >  	 * needed.
+> > >  	 */
+> > > -	i3c_bus_for_each_i3cdev(&master->bus, i3cdev)
+> > > -		i3c_master_pre_assign_dyn_addr(i3cdev);
+> > > +	list_for_each_entry_safe(i3cdev, i3ctmp, &master->bus.devs.i3c,
+> > > +				 common.node) {
+> > > +		ret = i3c_master_pre_assign_dyn_addr(i3cdev);
+> > > +		if (ret) {
+> > > +			i3c_master_detach_i3c_dev(i3cdev);
+> > > +			i3c_master_free_i3c_dev(i3cdev);
+> > > +		}
+> > > +	}
+> > >  
+> > >  	ret = i3c_master_do_daa(master);
+> > >  	if (ret)
+> > > -- 
+> > > 2.7.4
+> > > 
+> > 
+> > -- 
+> > -- 
+> > Przemyslaw Gaj
+> 
+> Best regards,
+> Vitor Soares
+
 -- 
-2.7.4
+-- 
+Przemyslaw Gaj
