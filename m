@@ -1,72 +1,74 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 1/2] i2c: qcom-geni: Provide an option to select FIFO
- processing
-Date: Wed, 4 Sep 2019 17:28:27 +0530
-Message-ID: <20190904115827.GY2672@vkoul-mobl>
-References: <20190904113613.14997-1-lee.jones@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
+Date: Wed, 4 Sep 2019 13:08:55 +0100
+Message-ID: <20190904120855.GJ26880@dell>
+References: <20190904113917.15223-1-lee.jones@linaro.org>
+ <20190904115234.GV2672@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190904113613.14997-1-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: alokc@codeaurora.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190904115234.GV2672@vkoul-mobl>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vkoul@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04-09-19, 12:36, Lee Jones wrote:
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-
-> ---
->  drivers/i2c/busses/i2c-qcom-geni.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> index a89bfce5388e..dfdbce067827 100644
-> --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> @@ -353,13 +353,16 @@ static void geni_i2c_tx_fsm_rst(struct geni_i2c_dev *gi2c)
->  static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
->  				u32 m_param)
->  {
-> +	struct device_node *np = gi2c->se.dev->of_node;
->  	dma_addr_t rx_dma;
->  	unsigned long time_left;
-> -	void *dma_buf;
-> +	void *dma_buf = NULL;
->  	struct geni_se *se = &gi2c->se;
->  	size_t len = msg->len;
->  
-> -	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> +	if (!of_property_read_bool(np, "qcom,geni-se-fifo"))
-> +		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> +
->  	if (dma_buf)
->  		geni_se_select_mode(se, GENI_SE_DMA);
->  	else
-> @@ -392,13 +395,16 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
->  static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
->  				u32 m_param)
->  {
-> +	struct device_node *np = gi2c->se.dev->of_node;
->  	dma_addr_t tx_dma;
->  	unsigned long time_left;
-> -	void *dma_buf;
-> +	void *dma_buf = NULL;
->  	struct geni_se *se = &gi2c->se;
->  	size_t len = msg->len;
->  
-> -	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> +	if (!of_property_read_bool(np, "qcom,geni-se-fifo"))
-> +		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> +
->  	if (dma_buf)
->  		geni_se_select_mode(se, GENI_SE_DMA);
->  	else
-> -- 
-> 2.17.1
-
--- 
-~Vinod
+T24gV2VkLCAwNCBTZXAgMjAxOSwgVmlub2QgS291bCB3cm90ZToKCj4gT24gMDQtMDktMTksIDEy
+OjM5LCBMZWUgSm9uZXMgd3JvdGU6Cj4gPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20v
+TWFrZWZpbGUKPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9NYWtlZmlsZQo+ID4g
+QEAgLTEyLDUgKzEyLDYgQEAgZHRiLSQoQ09ORklHX0FSQ0hfUUNPTSkJKz0gc2RtODQ1LWNoZXph
+LXIyLmR0Ygo+ID4gIGR0Yi0kKENPTkZJR19BUkNIX1FDT00pCSs9IHNkbTg0NS1jaGV6YS1yMy5k
+dGIKPiA+ICBkdGItJChDT05GSUdfQVJDSF9RQ09NKQkrPSBzZG04NDUtZGI4NDVjLmR0Ygo+ID4g
+IGR0Yi0kKENPTkZJR19BUkNIX1FDT00pCSs9IHNkbTg0NS1tdHAuZHRiCj4gPiArZHRiLSQoQ09O
+RklHX0FSQ0hfUUNPTSkJKz0gc2RtODUwLWxlbm92by15b2dhLWM2MzAuZHRiCj4gCj4gQ2FuIHdl
+IGtlZXAgdGhpcyBzb3J0ZWQsIHNvIGJlZm9yZSBtdHAuCgpMb29rIGNsb3Nlci4gOikKCj4gPiAg
+ZHRiLSQoQ09ORklHX0FSQ0hfUUNPTSkJKz0gcWNzNDA0LWV2Yi0xMDAwLmR0Ygo+ID4gIGR0Yi0k
+KENPTkZJR19BUkNIX1FDT00pCSs9IHFjczQwNC1ldmItNDAwMC5kdGIKPiA+IGRpZmYgLS1naXQg
+YS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODUwLWxlbm92by15b2dhLWM2MzAuZHRzIGIv
+YXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg1MC1sZW5vdm8teW9nYS1jNjMwLmR0cwo+ID4g
+bmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uYWQxNjBjNzE4YjMz
+Cj4gPiAtLS0gL2Rldi9udWxsCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2Rt
+ODUwLWxlbm92by15b2dhLWM2MzAuZHRzCj4gPiBAQCAtMCwwICsxLDQ1NCBAQAo+ID4gKy8vIFNQ
+RFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4gCj4gQXJlIHdlIGdvaW5nIHRvIG1ha2Ug
+dGhpcyBkdWFsPyBvciBCU0QuLgoKVGhpcyBwYXRjaGVzIHRoZSBEVFMgZmlsZXMgYWxyZWFkeSBp
+biB0aGlzIGRpcmVjdG9yeS4KCj4gPiArJmFwcHNfcnNjIHsKPiA+ICsJcG04OTk4LXJwbWgtcmVn
+dWxhdG9ycyB7Cj4gPiArCQljb21wYXRpYmxlID0gInFjb20scG04OTk4LXJwbWgtcmVndWxhdG9y
+cyI7Cj4gPiArCQlxY29tLHBtaWMtaWQgPSAiYSI7Cj4gPiArCj4gPiArCQl2ZGQtbDItbDgtbDE3
+LXN1cHBseSA9IDwmdnJlZ19zM2FfMXAzNT47Cj4gPiArCQl2ZGQtbDctbDEyLWwxNC1sMTUtc3Vw
+cGx5ID0gPCZ2cmVnX3M1YV8ycDA0PjsKPiA+ICsKPiA+ICsJCXZyZWdfczJhXzFwMTI1OiBzbXBz
+MiB7Cj4gPiArCQl9Owo+ID4gKwo+ID4gKwkJdnJlZ19zM2FfMXAzNTogc21wczMgewo+ID4gKwkJ
+CXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDEzNTIwMDA+Owo+ID4gKwkJCXJlZ3VsYXRvci1t
+YXgtbWljcm92b2x0ID0gPDEzNTIwMDA+Owo+ID4gKwkJCXJlZ3VsYXRvci1pbml0aWFsLW1vZGUg
+PSA8UlBNSF9SRUdVTEFUT1JfTU9ERV9IUE0+Owo+ID4gKwkJfTsKPiA+ICsKPiA+ICsJCXZyZWdf
+czRhXzFwODogc21wczQgewo+ID4gKwkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDE4MDAw
+MDA+Owo+ID4gKwkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE4MDAwMDA+Owo+ID4gKwkJ
+CXJlZ3VsYXRvci1pbml0aWFsLW1vZGUgPSA8UlBNSF9SRUdVTEFUT1JfTU9ERV9IUE0+Owo+ID4g
+KwkJfTsKPiA+ICsKPiA+ICsJCXZyZWdfczVhXzJwMDQ6IHNtcHM1IHsKPiA+ICsJCQlyZWd1bGF0
+b3ItbWluLW1pY3Jvdm9sdCA9IDwyMDQwMDAwPjsKPiA+ICsJCQlyZWd1bGF0b3ItbWF4LW1pY3Jv
+dm9sdCA9IDwyMDQwMDAwPjsKPiA+ICsJCQlyZWd1bGF0b3ItaW5pdGlhbC1tb2RlID0gPFJQTUhf
+UkVHVUxBVE9SX01PREVfSFBNPjsKPiA+ICsJCX07Cj4gPiArCj4gPiArCQl2cmVnX3M3YV8xcDAy
+NTogc21wczcgewo+IAo+IEFueSByZWFzb24gd2h5IHdlIGRvbnQgc3BlY2lmeSB0aGUgbW9kZSBh
+bmQgbWluL21heCB2b2x0YWdlIGZvciB0aGlzCj4gYW5kIGZldyBvdGhlcnMgYmVsb3cuLj8KCk1p
+Z2h0IGhhdmUgdG8gYXNrIEJqb3JuIHRoYXQgb25lLgoKPiA+ICsmaTJjMSB7Cj4gPiArCXN0YXR1
+cyA9ICJva2F5IjsKPiA+ICsJY2xvY2stZnJlcXVlbmN5ID0gPDQwMDAwMD47Cj4gPiArCXFjb20s
+Z2VuaS1zZS1maWZvOwo+ID4gKwo+ID4gKwliYXR0ZXJ5QDcwIHsKPiA+ICsJCWNvbXBhdGlibGUg
+PSAic29tZSxiYXR0ZXJ5IjsKPiAKPiBzb21lLGJhdHRlcnkgLi4/CgpHb29kIHNwb3QuICBUaGlz
+IHRoZSBiYXR0ZXJ5IGxldmVsL0FDIGRldGVjdGlvbiBkcml2ZXIgdGhhdCBpc24ndAp1cHN0cmVh
+bSB5ZXQuICBXaWxsIHJlbW92ZS4KCj4gPiArJnF1cF9pMmMxMl9kZWZhdWx0IHsKPiAKPiBQbGVh
+c2UgbW92ZSB0aGUgcXVwIG5vZGVzIHVwIHNvIHRoYXQgbm9kZXMgYXJlIHNvcnRlZCBhbHBoYWJl
+dGljYWxseQoKU3VyZS4KCi0tIApMZWUgSm9uZXMgW+adjueQvOaWr10KTGluYXJvIFNlcnZpY2Vz
+IFRlY2huaWNhbCBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBB
+Uk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
+IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
