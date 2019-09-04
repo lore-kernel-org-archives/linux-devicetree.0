@@ -1,58 +1,88 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v10 06/13] drivers: memory: extend of_memory by LPDDR3
- support
-Date: Wed, 4 Sep 2019 13:52:20 +0200
-Message-ID: <20190904115220.GA9370@kroah.com>
-References: <CGME20190614095325eucas1p20083d9290b36eca945ec3f1428bdbd4f@eucas1p2.samsung.com>
- <20190614095309.24100-1-l.luba@partner.samsung.com>
- <20190614095309.24100-7-l.luba@partner.samsung.com>
- <CAJKOXPcDDyYmuX-RpkpxKSBK2JfV=tYakn+g8FM5Lau+rmkm+g@mail.gmail.com>
- <2e35d4bc-92b9-cba7-bd05-a41a1dcb300e@partner.samsung.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
+Date: Wed, 4 Sep 2019 17:22:34 +0530
+Message-ID: <20190904115234.GV2672@vkoul-mobl>
+References: <20190904113917.15223-1-lee.jones@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2e35d4bc-92b9-cba7-bd05-a41a1dcb300e@partner.samsung.com>
+In-Reply-To: <20190904113917.15223-1-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+To: Lee Jones <lee.jones@linaro.org>
+Cc: agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 03:34:48PM +0200, Lukasz Luba wrote:
-> 
-> 
-> On 6/14/19 2:43 PM, Krzysztof Kozlowski wrote:
-> > On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
-> >>
-> >> The patch adds AC timings information needed to support LPDDR3 and memory
-> >> controllers. The structure is used in of_memory and currently in Exynos
-> >> 5422 DMC. Add parsing data needed for LPDDR3 support.
-> >> It is currently used in Exynos5422 Dynamic Memory Controller.
-> >>
-> >> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> >> ---
-> >>   drivers/memory/of_memory.c | 154 +++++++++++++++++++++++++++++++++++++
-> >>   drivers/memory/of_memory.h |  18 +++++
-> >>   include/memory/jedec_ddr.h |  62 +++++++++++++++
-> >>   3 files changed, 234 insertions(+)
-> > 
-> > Previously this was going through Greg, so if I am going to take it
-> > along with drivers/memory/samsung patches, I need some acks.
-> > 
-> > Greg, Rob,
-> > Are you okay with this patch and with taking it through samsung-soc?
-> 
-> Greg, Rob: gentle ping.
-> 
-> Currently there is a v13, with only minor changes to this patch:
-> https://lkml.org/lkml/2019/8/21/289
-> (you are on cc list of the patch set)
-> 
-> Could you please have a look. Thank you.
+On 04-09-19, 12:39, Lee Jones wrote:
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
 
-I don't seem to be able to find this anywhere in my tree.  And I don't
-remember being the maintainer of drivers/memory/ so don't wait for
-anything from me!
+Can we keep this sorted, so before mtp.
 
-greg k-h
+>  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> new file mode 100644
+> index 000000000000..ad160c718b33
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> @@ -0,0 +1,454 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+Are we going to make this dual? or BSD..
+
+> +&apps_rsc {
+> +	pm8998-rpmh-regulators {
+> +		compatible = "qcom,pm8998-rpmh-regulators";
+> +		qcom,pmic-id = "a";
+> +
+> +		vdd-l2-l8-l17-supply = <&vreg_s3a_1p35>;
+> +		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
+> +
+> +		vreg_s2a_1p125: smps2 {
+> +		};
+> +
+> +		vreg_s3a_1p35: smps3 {
+> +			regulator-min-microvolt = <1352000>;
+> +			regulator-max-microvolt = <1352000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_s4a_1p8: smps4 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_s5a_2p04: smps5 {
+> +			regulator-min-microvolt = <2040000>;
+> +			regulator-max-microvolt = <2040000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_s7a_1p025: smps7 {
+
+Any reason why we dont specify the mode and min/max voltage for this
+and few others below..?
+
+> +&i2c1 {
+> +	status = "okay";
+> +	clock-frequency = <400000>;
+> +	qcom,geni-se-fifo;
+> +
+> +	battery@70 {
+> +		compatible = "some,battery";
+
+some,battery ..?
+
+> +&qup_i2c12_default {
+
+Please move the qup nodes up so that nodes are sorted alphabetically
+
+-- 
+~Vinod
