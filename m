@@ -1,114 +1,65 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 08/94] ARM: dts: Fix incorrect dcan register mapping for am3, am4 and dra7
-Date: Wed,  4 Sep 2019 11:56:13 -0400
-Message-ID: <20190904155739.2816-8-sashal@kernel.org>
-References: <20190904155739.2816-1-sashal@kernel.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v3 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
+Date: Wed, 4 Sep 2019 17:52:47 +0100
+Message-ID: <20190904165246.GA25356@bogus>
+References: <20190904121606.17474-1-lee.jones@linaro.org>
+ <20190904141257.GB6144@bogus>
+ <20190904161247.GP26880@dell>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190904161247.GP26880@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+On Wed, Sep 04, 2019 at 05:12:47PM +0100, Lee Jones wrote:
+> On Wed, 04 Sep 2019, Sudeep Holla wrote:
+>
+> > On Wed, Sep 04, 2019 at 01:16:06PM +0100, Lee Jones wrote:
+> > > From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > >
+> > > The Lenovo Yoga C630 is built on the SDM850 from Qualcomm, but this seem
+> > > to be similar enough to the SDM845 that we can reuse the sdm845.dtsi.
+> > >
+> > > Supported by this patch is: keyboard, battery monitoring, UFS storage,
+> > > USB host and Bluetooth.
+> > >
+> >
+> > Just curious to know if the idea of booting using ACPI is completely
+> > dropped as it's extremely difficult(because the firmware is so hacked
+> > up and may violate spec, just my opinion) for whatever reasons.
+>
+> Once [0] is applied, we can boot Mainline using ACPI.
+>
 
-[ Upstream commit 89bbc6f1eb90809b1538b3a9c54030c558180e3b ]
+Good to know.
 
-We are currently using a wrong register for dcan revision. Although
-this is currently only used for detecting the dcan module, let's
-fix it to avoid confusion.
+> > We just made ACPI table version checking more lenient for this platform
+> > and would be good to know if we continue to run ACPI on that or will
+> > abandon and just use DT.
+>
+> Which patch are you referring to?  If you mean the ACPI v5.0 vs v5.1
+> patch authored by Ard, then yes I know, I instigated it's existence
+> due to these devices.
+>
 
-Tested-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/am33xx-l4.dtsi | 4 ++++
- arch/arm/boot/dts/am437x-l4.dtsi | 4 ++++
- arch/arm/boot/dts/dra7-l4.dtsi   | 4 ++--
- drivers/bus/ti-sysc.c            | 3 ++-
- 4 files changed, 12 insertions(+), 3 deletions(-)
+Yes exactly that one.
 
-diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-index ced1a19d5f898..4bd22c1edf963 100644
---- a/arch/arm/boot/dts/am33xx-l4.dtsi
-+++ b/arch/arm/boot/dts/am33xx-l4.dtsi
-@@ -1758,6 +1758,8 @@
- 
- 		target-module@cc000 {			/* 0x481cc000, ap 60 46.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0xcc020 0x4>;
-+			reg-names = "rev";
- 			ti,hwmods = "d_can0";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
- 			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN0_CLKCTRL 0>,
-@@ -1780,6 +1782,8 @@
- 
- 		target-module@d0000 {			/* 0x481d0000, ap 62 42.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0xd0020 0x4>;
-+			reg-names = "rev";
- 			ti,hwmods = "d_can1";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
- 			clocks = <&l4ls_clkctrl AM3_L4LS_D_CAN1_CLKCTRL 0>,
-diff --git a/arch/arm/boot/dts/am437x-l4.dtsi b/arch/arm/boot/dts/am437x-l4.dtsi
-index 989cb60b90295..04bee4ff9dcb8 100644
---- a/arch/arm/boot/dts/am437x-l4.dtsi
-+++ b/arch/arm/boot/dts/am437x-l4.dtsi
-@@ -1574,6 +1574,8 @@
- 
- 		target-module@cc000 {			/* 0x481cc000, ap 50 46.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0xcc020 0x4>;
-+			reg-names = "rev";
- 			ti,hwmods = "d_can0";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
- 			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN0_CLKCTRL 0>;
-@@ -1593,6 +1595,8 @@
- 
- 		target-module@d0000 {			/* 0x481d0000, ap 52 3a.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
-+			reg = <0xd0020 0x4>;
-+			reg-names = "rev";
- 			ti,hwmods = "d_can1";
- 			/* Domains (P, C): per_pwrdm, l4ls_clkdm */
- 			clocks = <&l4ls_clkctrl AM4_L4LS_D_CAN1_CLKCTRL 0>;
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-index 63628e166c0cd..21e5914fdd620 100644
---- a/arch/arm/boot/dts/dra7-l4.dtsi
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -3025,7 +3025,7 @@
- 
- 		target-module@80000 {			/* 0x48480000, ap 31 16.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
--			reg = <0x80000 0x4>;
-+			reg = <0x80020 0x4>;
- 			reg-names = "rev";
- 			clocks = <&l4per2_clkctrl DRA7_L4PER2_DCAN2_CLKCTRL 0>;
- 			clock-names = "fck";
-@@ -4577,7 +4577,7 @@
- 
- 		target-module@c000 {			/* 0x4ae3c000, ap 30 04.0 */
- 			compatible = "ti,sysc-omap4", "ti,sysc";
--			reg = <0xc000 0x4>;
-+			reg = <0xc020 0x4>;
- 			reg-names = "rev";
- 			clocks = <&wkupaon_clkctrl DRA7_WKUPAON_DCAN1_CLKCTRL 0>;
- 			clock-names = "fck";
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index 56a2399f341e8..58b38630171ff 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -1127,7 +1127,8 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("control", 0, 0, 0x10, -1, 0x40000900, 0xffffffff, 0),
- 	SYSC_QUIRK("cpgmac", 0, 0x1200, 0x1208, 0x1204, 0x4edb1902,
- 		   0xffff00f0, 0),
--	SYSC_QUIRK("dcan", 0, 0, -1, -1, 0xffffffff, 0xffffffff, 0),
-+	SYSC_QUIRK("dcan", 0, 0x20, -1, -1, 0xa3170504, 0xffffffff, 0),
-+	SYSC_QUIRK("dcan", 0, 0x20, -1, -1, 0x4edb1902, 0xffffffff, 0),
- 	SYSC_QUIRK("dmic", 0, 0, 0x10, -1, 0x50010000, 0xffffffff, 0),
- 	SYSC_QUIRK("dwc3", 0, 0, 0x10, -1, 0x500a0200, 0xffffffff, 0),
- 	SYSC_QUIRK("epwmss", 0, 0, 0x4, -1, 0x47400001, 0xffffffff, 0),
--- 
-2.20.1
+> DT will *always* be more enabled than ACPI, so it's advised that you
+> use DT for anything useful.  ACPI booting is ideal for things like
+> installing distros however, since they do not tend to provide DTBs in
+> their installers.
+>
+
+OK, as along as it gets tested/used in some form, that's fine. I do agree
+that DT will be more useful on that platform as it was derived from mobile
+based SoC SDM845 rather than solely designed for Laptops and with more
+alignment with ACPI spec. The way whole power/clock management is done
+with ACPI on this pulls me towards DT ;)
+
+--
+Regards,
+Sudeep
