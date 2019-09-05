@@ -1,90 +1,35 @@
-From: Pi-Hsun Shih <pihsun@chromium.org>
-Subject: [PATCH v18 5/5] arm64: dts: mt8183: add scp node
-Date: Thu,  5 Sep 2019 12:44:26 +0800
-Message-ID: <20190905044432.150131-6-pihsun@chromium.org>
-References: <20190905044432.150131-1-pihsun@chromium.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
+Date: Thu, 5 Sep 2019 10:31:24 +0530
+Message-ID: <20190905050124.kopzxxouuuta37n6@vireshk-i7>
+References: <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
+ <20190819090928.pke6cov52n4exlbp@vireshk-i7>
+ <b831d7c5-c830-fd65-20cf-02e209889c28@samsung.com>
+ <20190819112533.bvfyinw7fsebkufr@vireshk-i7>
+ <b7093aaf-ea56-c390-781f-6f9d0780bd8e@samsung.com>
+ <20190820030114.6flnn2omeys3lih3@vireshk-i7>
+ <06ccff05-2152-4bcc-7537-8f24da75f163@samsung.com>
+ <CGME20190820092123epcas2p2170ae19467a5fb19fcfc1acdbecf9381@epcas2p2.samsung.com>
+ <20190820092113.gojhe3romdnvm7eu@vireshk-i7>
+ <4e6379a7-0d4b-8e0d-c225-49976b2587e0@samsung.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190905044432.150131-1-pihsun@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <4e6379a7-0d4b-8e0d-c225-49976b2587e0@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Pi-Hsun Shih <pihsun@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC
-        support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC
-        support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, krzk@kernel.org, robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-From: Eddie Huang <eddie.huang@mediatek.com>
+On 04-09-19, 14:37, Sylwester Nawrocki wrote:
+> I have changed the code to use dev_pm_opp_adjust_voltage(). I was wondering 
+> though, what did you mean by "triplet" when commenting on this patch
+> https://patchwork.kernel.org/patch/11092245 ?
 
-Add scp node to mt8183 and mt8183-evb
+The voltage value in the OPP core is stored as a triplet,
+min/max/target kind of stuff. You can check DT binding for OPPs and
+see the details. That's called as triplet.
 
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
----
-Changes from v17, v16, v15, v14:
- - No change.
-
-Changes from v13:
- - Change the size of the cfg register region.
-
-Changes from v12, v11, v10:
- - No change.
-
-Changes from v9:
- - Remove extra reserve-memory-vpu_share node.
-
-Changes from v8:
- - New patch.
----
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 11 +++++++++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 12 ++++++++++++
- 2 files changed, 23 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-index 1fb195c683c3..ddb7a7ac9655 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -24,6 +24,17 @@
- 	chosen {
- 		stdout-path = "serial0:921600n8";
- 	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		scp_mem_reserved: scp_mem_region {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0x50000000 0 0x2900000>;
-+			no-map;
-+		};
-+	};
- };
- 
- &auxadc {
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 97f84aa9fc6e..3dd1b76bbaf5 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -269,6 +269,18 @@
- 			clock-names = "spi", "wrap";
- 		};
- 
-+		scp: scp@10500000 {
-+			compatible = "mediatek,mt8183-scp";
-+			reg = <0 0x10500000 0 0x80000>,
-+			      <0 0x105c0000 0 0x19080>;
-+			reg-names = "sram", "cfg";
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&infracfg CLK_INFRA_SCPSYS>;
-+			clock-names = "main";
-+			memory-region = <&scp_mem_reserved>;
-+			status = "disabled";
-+		};
-+
- 		auxadc: auxadc@11001000 {
- 			compatible = "mediatek,mt8183-auxadc",
- 				     "mediatek,mt8173-auxadc";
 -- 
-2.23.0.187.g17f5b7556c-goog
+viresh
