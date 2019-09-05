@@ -1,13 +1,14 @@
 From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
 Subject: Re: [PATCH] ARM: dts: aspeed-g4: Add all flash chips
-Date: Thu, 5 Sep 2019 08:43:43 +0200
-Message-ID: <3b7605e2-533e-2123-b866-4ef5c601dc2a@kaod.org>
+Date: Thu, 5 Sep 2019 08:45:06 +0200
+Message-ID: <6348d0f1-6e2e-cae6-7f76-996825de0527@kaod.org>
 References: <20190905000221.31445-1-joel@jms.id.au>
+ <d9805fa2-db79-457b-a166-7c84e1608128@www.fastmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190905000221.31445-1-joel@jms.id.au>
+In-Reply-To: <d9805fa2-db79-457b-a166-7c84e1608128@www.fastmail.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -18,30 +19,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+To: Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>
 Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUvMDkvMjAxOSAwMjowMiwgSm9lbCBTdGFubGV5IHdyb3RlOgo+IFRoZSBGTUMgc3VwcG9y
-dHMgZml2ZSBjaGlwIHNlbGVjdHMsIHNvIGRlc2NyaWJlIHRoZSBmaXZlIHBvc3NpYmxlIGZsYXNo
-Cj4gY2hpcHMuCj4gCj4gU2lnbmVkLW9mZi1ieTogSm9lbCBTdGFubGV5IDxqb2VsQGptcy5pZC5h
-dT4KCgpSZXZpZXdlZC1ieTogQ8OpZHJpYyBMZSBHb2F0ZXIgPGNsZ0BrYW9kLm9yZz4KClRoYW5r
-cywKCkMuCgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzQuZHRzaSB8IDIwICsr
-KysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspCj4g
-Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1nNC5kdHNpIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvYXNwZWVkLWc0LmR0c2kKPiBpbmRleCBlNDY1Y2RhNDBmZTcuLmRmZmI1OTVk
-MzBlNCAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzQuZHRzaQo+ICsr
-KyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1nNC5kdHNpCj4gQEAgLTY3LDYgKzY3LDI2IEBA
-Cj4gIAkJCQljb21wYXRpYmxlID0gImplZGVjLHNwaS1ub3IiOwo+ICAJCQkJc3RhdHVzID0gImRp
-c2FibGVkIjsKPiAgCQkJfTsKPiArCQkJZmxhc2hAMSB7Cj4gKwkJCQlyZWcgPSA8IDEgPjsKPiAr
-CQkJCWNvbXBhdGlibGUgPSAiamVkZWMsc3BpLW5vciI7Cj4gKwkJCQlzdGF0dXMgPSAiZGlzYWJs
-ZWQiOwo+ICsJCQl9Owo+ICsJCQlmbGFzaEAyIHsKPiArCQkJCXJlZyA9IDwgMiA+Owo+ICsJCQkJ
-Y29tcGF0aWJsZSA9ICJqZWRlYyxzcGktbm9yIjsKPiArCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7
-Cj4gKwkJCX07Cj4gKwkJCWZsYXNoQDMgewo+ICsJCQkJcmVnID0gPCAzID47Cj4gKwkJCQljb21w
-YXRpYmxlID0gImplZGVjLHNwaS1ub3IiOwo+ICsJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiAr
-CQkJfTsKPiArCQkJZmxhc2hANCB7Cj4gKwkJCQlyZWcgPSA8IDQgPjsKPiArCQkJCWNvbXBhdGli
-bGUgPSAiamVkZWMsc3BpLW5vciI7Cj4gKwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsJCQl9
-Owo+ICAJCX07Cj4gIAo+ICAJCXNwaTogc3BpQDFlNjMwMDAwIHsKPiAKCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On 05/09/2019 02:33, Andrew Jeffery wrote:
+> 
+> 
+> On Thu, 5 Sep 2019, at 09:32, Joel Stanley wrote:
+>> The FMC supports five chip selects, so describe the five possible flash
+>> chips.
+>>
+>> Signed-off-by: Joel Stanley <joel@jms.id.au>
+>> ---
+>>  arch/arm/boot/dts/aspeed-g4.dtsi | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+>> index e465cda40fe7..dffb595d30e4 100644
+>> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
+>> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+>> @@ -67,6 +67,26 @@
+>>  				compatible = "jedec,spi-nor";
+>>  				status = "disabled";
+>>  			};
+>> +			flash@1 {
+>> +				reg = < 1 >;
+>> +				compatible = "jedec,spi-nor";
+>> +				status = "disabled";
+>> +			};
+>> +			flash@2 {
+>> +				reg = < 2 >;
+>> +				compatible = "jedec,spi-nor";
+>> +				status = "disabled";
+>> +			};
+>> +			flash@3 {
+>> +				reg = < 3 >;
+>> +				compatible = "jedec,spi-nor";
+>> +				status = "disabled";
+>> +			};
+>> +			flash@4 {
+>> +				reg = < 4 >;
+>> +				compatible = "jedec,spi-nor";
+>> +				status = "disabled";
+>> +			};
+> 
+> The FMC supports parallel NOR and NAND interfaces too, but so far no-one has
+> cared for these options, so if they ever do we'll fix it then.
+
+New Aspeed SoCs only have SPI support. So I don't think the other interfaces
+were ever used.
+
+C. 
+ 
+> 
+> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+> 
