@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 5/8] ASoC: meson: tdmin: expose all 16 inputs
-Date: Thu,  5 Sep 2019 14:01:17 +0200
-Message-ID: <20190905120120.31752-6-jbrunet@baylibre.com>
+Subject: [PATCH 8/8] ASoC: meson: tdmout: add sm1 support
+Date: Thu,  5 Sep 2019 14:01:20 +0200
+Message-ID: <20190905120120.31752-9-jbrunet@baylibre.com>
 References: <20190905120120.31752-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,88 +12,155 @@ To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-The TDMIN component, as it, has a maximum of 16 input. Depending on
-the SoC, these may not all be connected.
-
-Instead of decribing only the connected inputs of each SoC, describe
-them all and let ASoC routing do the rest.
+On the sm1, the TDMOUT number of input is extended and the
+the gain enable bit moved to accommodate this extension
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- sound/soc/meson/axg-tdmin.c | 47 +++++++++++++++++++++++++++----------
- 1 file changed, 34 insertions(+), 13 deletions(-)
+ sound/soc/meson/axg-tdmout.c | 103 ++++++++++++++++++++++++++++-------
+ 1 file changed, 84 insertions(+), 19 deletions(-)
 
-diff --git a/sound/soc/meson/axg-tdmin.c b/sound/soc/meson/axg-tdmin.c
-index cb87f17f3e95..973d4c02ef8d 100644
---- a/sound/soc/meson/axg-tdmin.c
-+++ b/sound/soc/meson/axg-tdmin.c
-@@ -43,7 +43,8 @@ static const struct regmap_config axg_tdmin_regmap_cfg = {
+diff --git a/sound/soc/meson/axg-tdmout.c b/sound/soc/meson/axg-tdmout.c
+index 86537fc0ecb5..418ec314b37d 100644
+--- a/sound/soc/meson/axg-tdmout.c
++++ b/sound/soc/meson/axg-tdmout.c
+@@ -24,6 +24,7 @@
+ #define TDMOUT_CTRL1			0x04
+ #define  TDMOUT_CTRL1_TYPE_MASK		GENMASK(6, 4)
+ #define  TDMOUT_CTRL1_TYPE(x)		((x) << 4)
++#define  SM1_TDMOUT_CTRL1_GAIN_EN	7
+ #define  TDMOUT_CTRL1_MSB_POS_MASK	GENMASK(12, 8)
+ #define  TDMOUT_CTRL1_MSB_POS(x)	((x) << 8)
+ #define  TDMOUT_CTRL1_SEL_SHIFT		24
+@@ -51,25 +52,6 @@ static const struct regmap_config axg_tdmout_regmap_cfg = {
+ 	.max_register	= TDMOUT_MASK_VAL,
  };
  
- static const char * const axg_tdmin_sel_texts[] = {
--	"IN 0", "IN 1", "IN 2", "IN 3", "IN 4", "IN 5",
-+	"IN 0", "IN 1", "IN 2",  "IN 3",  "IN 4",  "IN 5",  "IN 6",  "IN 7",
-+	"IN 8", "IN 9", "IN 10", "IN 11", "IN 12", "IN 13", "IN 14", "IN 15",
- };
- 
- /* Change to special mux control to reset dapm */
-@@ -164,12 +165,22 @@ static int axg_tdmin_prepare(struct regmap *map,
+-static const struct snd_kcontrol_new axg_tdmout_controls[] = {
+-	SOC_DOUBLE("Lane 0 Volume", TDMOUT_GAIN0,  0,  8, 255, 0),
+-	SOC_DOUBLE("Lane 1 Volume", TDMOUT_GAIN0, 16, 24, 255, 0),
+-	SOC_DOUBLE("Lane 2 Volume", TDMOUT_GAIN1,  0,  8, 255, 0),
+-	SOC_DOUBLE("Lane 3 Volume", TDMOUT_GAIN1, 16, 24, 255, 0),
+-	SOC_SINGLE("Gain Enable Switch", TDMOUT_CTRL1,
+-		   TDMOUT_CTRL1_GAIN_EN, 1, 0),
+-};
+-
+-static const char * const tdmout_sel_texts[] = {
+-	"IN 0", "IN 1", "IN 2",
+-};
+-
+-static SOC_ENUM_SINGLE_DECL(axg_tdmout_sel_enum, TDMOUT_CTRL1,
+-			    TDMOUT_CTRL1_SEL_SHIFT, tdmout_sel_texts);
+-
+-static const struct snd_kcontrol_new axg_tdmout_in_mux =
+-	SOC_DAPM_ENUM("Input Source", axg_tdmout_sel_enum);
+-
+ static struct snd_soc_dai *
+ axg_tdmout_get_be(struct snd_soc_dapm_widget *w)
+ {
+@@ -197,6 +179,25 @@ static int axg_tdmout_prepare(struct regmap *map,
+ 	return axg_tdm_formatter_set_channel_masks(map, ts, TDMOUT_MASK0);
  }
  
- static const struct snd_soc_dapm_widget axg_tdmin_dapm_widgets[] = {
--	SND_SOC_DAPM_AIF_IN("IN 0", NULL, 0, SND_SOC_NOPM, 0, 0),
--	SND_SOC_DAPM_AIF_IN("IN 1", NULL, 0, SND_SOC_NOPM, 0, 0),
--	SND_SOC_DAPM_AIF_IN("IN 2", NULL, 0, SND_SOC_NOPM, 0, 0),
--	SND_SOC_DAPM_AIF_IN("IN 3", NULL, 0, SND_SOC_NOPM, 0, 0),
--	SND_SOC_DAPM_AIF_IN("IN 4", NULL, 0, SND_SOC_NOPM, 0, 0),
--	SND_SOC_DAPM_AIF_IN("IN 5", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 0",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 1",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 2",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 3",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 4",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 5",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 6",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 7",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 8",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 9",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 10", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 11", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 12", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 13", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 14", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 15", NULL, 0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_MUX("SRC SEL", SND_SOC_NOPM, 0, 0, &axg_tdmin_in_mux),
- 	SND_SOC_DAPM_PGA_E("DEC", SND_SOC_NOPM, 0, 0, NULL, 0,
- 			   axg_tdm_formatter_event,
-@@ -178,12 +189,22 @@ static const struct snd_soc_dapm_widget axg_tdmin_dapm_widgets[] = {
++static const struct snd_kcontrol_new axg_tdmout_controls[] = {
++	SOC_DOUBLE("Lane 0 Volume", TDMOUT_GAIN0,  0,  8, 255, 0),
++	SOC_DOUBLE("Lane 1 Volume", TDMOUT_GAIN0, 16, 24, 255, 0),
++	SOC_DOUBLE("Lane 2 Volume", TDMOUT_GAIN1,  0,  8, 255, 0),
++	SOC_DOUBLE("Lane 3 Volume", TDMOUT_GAIN1, 16, 24, 255, 0),
++	SOC_SINGLE("Gain Enable Switch", TDMOUT_CTRL1,
++		   TDMOUT_CTRL1_GAIN_EN, 1, 0),
++};
++
++static const char * const axg_tdmout_sel_texts[] = {
++	"IN 0", "IN 1", "IN 2",
++};
++
++static SOC_ENUM_SINGLE_DECL(axg_tdmout_sel_enum, TDMOUT_CTRL1,
++			    TDMOUT_CTRL1_SEL_SHIFT, axg_tdmout_sel_texts);
++
++static const struct snd_kcontrol_new axg_tdmout_in_mux =
++	SOC_DAPM_ENUM("Input Source", axg_tdmout_sel_enum);
++
+ static const struct snd_soc_dapm_widget axg_tdmout_dapm_widgets[] = {
+ 	SND_SOC_DAPM_AIF_IN("IN 0", NULL, 0, SND_SOC_NOPM, 0, 0),
+ 	SND_SOC_DAPM_AIF_IN("IN 1", NULL, 0, SND_SOC_NOPM, 0, 0),
+@@ -252,6 +253,67 @@ static const struct axg_tdm_formatter_driver g12a_tdmout_drv = {
+ 	},
  };
  
- static const struct snd_soc_dapm_route axg_tdmin_dapm_routes[] = {
--	{ "SRC SEL", "IN 0", "IN 0" },
--	{ "SRC SEL", "IN 1", "IN 1" },
--	{ "SRC SEL", "IN 2", "IN 2" },
--	{ "SRC SEL", "IN 3", "IN 3" },
--	{ "SRC SEL", "IN 4", "IN 4" },
--	{ "SRC SEL", "IN 5", "IN 5" },
-+	{ "SRC SEL", "IN 0",  "IN 0" },
-+	{ "SRC SEL", "IN 1",  "IN 1" },
-+	{ "SRC SEL", "IN 2",  "IN 2" },
-+	{ "SRC SEL", "IN 3",  "IN 3" },
-+	{ "SRC SEL", "IN 4",  "IN 4" },
-+	{ "SRC SEL", "IN 5",  "IN 5" },
-+	{ "SRC SEL", "IN 6",  "IN 6" },
-+	{ "SRC SEL", "IN 7",  "IN 7" },
-+	{ "SRC SEL", "IN 8",  "IN 8" },
-+	{ "SRC SEL", "IN 9",  "IN 9" },
-+	{ "SRC SEL", "IN 10", "IN 10" },
-+	{ "SRC SEL", "IN 11", "IN 11" },
-+	{ "SRC SEL", "IN 12", "IN 12" },
-+	{ "SRC SEL", "IN 13", "IN 13" },
-+	{ "SRC SEL", "IN 14", "IN 14" },
-+	{ "SRC SEL", "IN 15", "IN 15" },
- 	{ "DEC", NULL, "SRC SEL" },
- 	{ "OUT", NULL, "DEC" },
++static const struct snd_kcontrol_new sm1_tdmout_controls[] = {
++	SOC_DOUBLE("Lane 0 Volume", TDMOUT_GAIN0,  0,  8, 255, 0),
++	SOC_DOUBLE("Lane 1 Volume", TDMOUT_GAIN0, 16, 24, 255, 0),
++	SOC_DOUBLE("Lane 2 Volume", TDMOUT_GAIN1,  0,  8, 255, 0),
++	SOC_DOUBLE("Lane 3 Volume", TDMOUT_GAIN1, 16, 24, 255, 0),
++	SOC_SINGLE("Gain Enable Switch", TDMOUT_CTRL1,
++		   SM1_TDMOUT_CTRL1_GAIN_EN, 1, 0),
++};
++
++static const char * const sm1_tdmout_sel_texts[] = {
++	"IN 0", "IN 1", "IN 2", "IN 3", "IN 4",
++};
++
++static SOC_ENUM_SINGLE_DECL(sm1_tdmout_sel_enum, TDMOUT_CTRL1,
++			    TDMOUT_CTRL1_SEL_SHIFT, sm1_tdmout_sel_texts);
++
++static const struct snd_kcontrol_new sm1_tdmout_in_mux =
++	SOC_DAPM_ENUM("Input Source", sm1_tdmout_sel_enum);
++
++static const struct snd_soc_dapm_widget sm1_tdmout_dapm_widgets[] = {
++	SND_SOC_DAPM_AIF_IN("IN 0", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 1", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 2", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 3", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 4", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_MUX("SRC SEL", SND_SOC_NOPM, 0, 0, &sm1_tdmout_in_mux),
++	SND_SOC_DAPM_PGA_E("ENC", SND_SOC_NOPM, 0, 0, NULL, 0,
++			   axg_tdm_formatter_event,
++			   (SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_PRE_PMD)),
++	SND_SOC_DAPM_AIF_OUT("OUT", NULL, 0, SND_SOC_NOPM, 0, 0),
++};
++
++static const struct snd_soc_dapm_route sm1_tdmout_dapm_routes[] = {
++	{ "SRC SEL", "IN 0", "IN 0" },
++	{ "SRC SEL", "IN 1", "IN 1" },
++	{ "SRC SEL", "IN 2", "IN 2" },
++	{ "SRC SEL", "IN 3", "IN 3" },
++	{ "SRC SEL", "IN 4", "IN 4" },
++	{ "ENC", NULL, "SRC SEL" },
++	{ "OUT", NULL, "ENC" },
++};
++
++static const struct snd_soc_component_driver sm1_tdmout_component_drv = {
++	.controls		= sm1_tdmout_controls,
++	.num_controls		= ARRAY_SIZE(sm1_tdmout_controls),
++	.dapm_widgets		= sm1_tdmout_dapm_widgets,
++	.num_dapm_widgets	= ARRAY_SIZE(sm1_tdmout_dapm_widgets),
++	.dapm_routes		= sm1_tdmout_dapm_routes,
++	.num_dapm_routes	= ARRAY_SIZE(sm1_tdmout_dapm_routes),
++};
++
++static const struct axg_tdm_formatter_driver sm1_tdmout_drv = {
++	.component_drv	= &sm1_tdmout_component_drv,
++	.regmap_cfg	= &axg_tdmout_regmap_cfg,
++	.ops		= &axg_tdmout_ops,
++	.quirks		= &(const struct axg_tdm_formatter_hw) {
++		.invert_sclk = true,
++		.skew_offset = 2,
++	},
++};
++
+ static const struct of_device_id axg_tdmout_of_match[] = {
+ 	{
+ 		.compatible = "amlogic,axg-tdmout",
+@@ -259,6 +321,9 @@ static const struct of_device_id axg_tdmout_of_match[] = {
+ 	}, {
+ 		.compatible = "amlogic,g12a-tdmout",
+ 		.data = &g12a_tdmout_drv,
++	}, {
++		.compatible = "amlogic,sm1-tdmout",
++		.data = &sm1_tdmout_drv,
+ 	}, {}
  };
+ MODULE_DEVICE_TABLE(of, axg_tdmout_of_match);
 -- 
 2.21.0
