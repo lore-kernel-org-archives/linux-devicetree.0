@@ -1,58 +1,61 @@
-Return-Path: <SRS0=eFhx=XA=the-dreams.de=wsa@kernel.org>
-Date: Thu, 5 Sep 2019 22:22:24 +0200
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RESEND v3 1/1] i2c: qcom-geni: Disable DMA processing on the
- Lenovo Yoga C630
-Message-ID: <20190905202224.GA8989@ninjato>
-References: <20190905192412.23116-1-lee.jones@linaro.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
-Content-Disposition: inline
-In-Reply-To: <20190905192412.23116-1-lee.jones@linaro.org>
-To: Lee Jones <lee.jones@linaro.org>
-Cc: alokc@codeaurora.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, vkoul@kernel.org, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=Hvtx=XA=linaro.org=lee.jones@kernel.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [RESEND v3 1/1] i2c: qcom-geni: Disable DMA processing on the Lenovo Yoga C630
+Date: Thu,  5 Sep 2019 20:24:12 +0100
+Message-Id: <20190905192412.23116-1-lee.jones@linaro.org>
+To: alokc@codeaurora.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, vkoul@kernel.org, wsa@the-dreams.de
+Cc: linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
+We have a production-level laptop (Lenovo Yoga C630) which is exhibiting
+a rather horrific bug.  When I2C HID devices are being scanned for at
+boot-time the QCom Geni based I2C (Serial Engine) attempts to use DMA.
+When it does, the laptop reboots and the user never sees the OS.
 
---UlVJffcvxoiEqYs2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Attempts are being made to debug the reason for the spontaneous reboot.
+No luck so far, hence the requirement for this hot-fix.  This workaround
+will be removed once we have a viable fix.
 
-On Thu, Sep 05, 2019 at 08:24:12PM +0100, Lee Jones wrote:
-> We have a production-level laptop (Lenovo Yoga C630) which is exhibiting
-> a rather horrific bug.  When I2C HID devices are being scanned for at
-> boot-time the QCom Geni based I2C (Serial Engine) attempts to use DMA.
-> When it does, the laptop reboots and the user never sees the OS.
->=20
-> Attempts are being made to debug the reason for the spontaneous reboot.
-> No luck so far, hence the requirement for this hot-fix.  This workaround
-> will be removed once we have a viable fix.
->=20
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/i2c/busses/i2c-qcom-geni.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-Perfect now. Applied to for-current, thanks!
-
-
---UlVJffcvxoiEqYs2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1xbnwACgkQFA3kzBSg
-Kba33BAAo5WjqT1D+WfeoYxUWoPMcS53ngjWw/Ga7hVwL9XplajKI0mfbVDy/3AN
-1M9+UtAkVbR2XytRpoDd+xt8aHwLXnOAgdILapvUNJcPFzHQDhOFGaeFFaENqWs/
-m/BL7XXBq2Qi6HtexsZ/4JiAkD9e3pdWlzOStWSGEKEIdJozp0Jw4TW7vwcSFmoq
-e9CNjp55yaxw8KHwj0feHBQF2Q5uD7Ey9T4U8tPNVQx47877AtDKeMMQx/TBfNB9
-ariibhw4jUrSbCjH+d/PzjrtuCpw0j1s0H4LOhELUb9HlowBGw3rzpyDeIObHRYT
-OLyt2O8t1oggwy1FU5Zv4lRuFqxvoVZKuiehSnkyk+LBfcwgD1NObLfFLhxXZWEQ
-x2agoa/G2d+E3zFpuXAKhOfXgebScIuXg+6PUp3FKVjqufLFufC5UwUsm/oF3Yib
-9Mlhhs7daZ2zVESprl9Ki3s5yB8AHX13S2JyFgyz/IiIcon47AOMbSQhmr5cR88h
-mBjk3CBpkYAnHWT83nKZteBVMf4VpYhLLwo4Vlusd9DnD7vOyNRlH0elytkBFp2k
-4hQpUZtnG9nY8zleh1ZMH9tngq7E3C4rldcjfxD8s8FaPkUv42f2UjxE67F1bVIL
-3htgI0iPQOo7dHlw6KygB2dmYV2NidgF7LxxFSV7v9cwsM9qDFM=
-=n2QB
------END PGP SIGNATURE-----
-
---UlVJffcvxoiEqYs2--
+diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+index a89bfce5388e..17abf60c94ae 100644
+--- a/drivers/i2c/busses/i2c-qcom-geni.c
++++ b/drivers/i2c/busses/i2c-qcom-geni.c
+@@ -355,11 +355,13 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+ {
+ 	dma_addr_t rx_dma;
+ 	unsigned long time_left;
+-	void *dma_buf;
++	void *dma_buf = NULL;
+ 	struct geni_se *se = &gi2c->se;
+ 	size_t len = msg->len;
+ 
+-	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
++	if (!of_machine_is_compatible("lenovo,yoga-c630"))
++		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
++
+ 	if (dma_buf)
+ 		geni_se_select_mode(se, GENI_SE_DMA);
+ 	else
+@@ -394,11 +396,13 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+ {
+ 	dma_addr_t tx_dma;
+ 	unsigned long time_left;
+-	void *dma_buf;
++	void *dma_buf = NULL;
+ 	struct geni_se *se = &gi2c->se;
+ 	size_t len = msg->len;
+ 
+-	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
++	if (!of_machine_is_compatible("lenovo,yoga-c630"))
++		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
++
+ 	if (dma_buf)
+ 		geni_se_select_mode(se, GENI_SE_DMA);
+ 	else
+-- 
+2.17.1
