@@ -1,153 +1,313 @@
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v3 01/14] dt-bindings: display: renesas,cmm: Add R-Car
- CMM documentation
-Date: Thu, 5 Sep 2019 15:28:26 +0200
-Message-ID: <20190905132826.k5yn5ltsias2cyi2@uno.localdomain>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-2-jacopo+renesas@jmondi.org>
- <CAMuHMdVvjrMXap5CQ-grNYpJfOG6QeN26EW4tR_YE=VFv5ozqw@mail.gmail.com>
- <20190826075943.h7ivwagape3glym5@uno.localdomain>
- <20190826101550.GB5031@pendragon.ideasonboard.com>
- <20190830180108.mlei4wbfn3mktj23@uno.localdomain>
- <20190905115017.GI5035@pendragon.ideasonboard.com>
- <CAMuHMdW-MEQvf7MgY7XQkKap-mm8=TO8V61BFtVv63oacFTfYQ@mail.gmail.com>
- <20190905122059.GK5035@pendragon.ideasonboard.com>
+From: Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>
+Subject: Re: [RFC PATCH V2 4/4] platform: mtk-isp: Add Mediatek FD driver
+Date: Thu, 5 Sep 2019 21:36:17 +0800
+Message-ID: <1567690577.22453.45.camel@mtksdccf07>
+References: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <1562661672-22439-5-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <20190802082815.GA203993@chromium.org>
+ <1566724680.20680.8.camel@mtksdccf07>
+ <CAAFQd5Dw+jaT-+LAUEVeB8W1zdnOgPw7u+aCfDWhYW1SfbzO8g@mail.gmail.com>
+ <1566957625.20680.33.camel@mtksdccf07>
+ <CAAFQd5D-Yg1FjUE_rwmqfS1gvfE0=MZ=r-ziueU_37-uo9QTbw@mail.gmail.com>
+ <1567424859.18318.32.camel@mtksdccf07>
+ <CAAFQd5AGgeFbto6V1KkL0dp1QPziOKV3pWQDU2OJ+S1QKvnBdg@mail.gmail.com>
+ <1567493081.18318.49.camel@mtksdccf07>
+ <CAAFQd5DWM=R7sFHYGhhR_rXrzgRnc4xtH_t8Pig-4tcP9KTSYg@mail.gmail.com>
+ <1567511169.18318.65.camel@mtksdccf07>
+ <CAAFQd5DiPcUxd+R-v_-BdRx+QqZ35Riii_jpgbqr5mc3BnQvDw@mail.gmail.com>
+ <1567568281.18318.80.camel@mtksdccf07>
+ <CAAFQd5CRC2cyV30B4Qv59HdrJ7Cpe_yK5aY-BecQQ3J3i0PtCQ@mail.gmail.com>
+ <1567577389.18318.100.camel@mtksdccf07>
+ <CAAFQd5AxTQPD+nP9CJs45QTzGHKssjv3vRtMqHONABfp12afYw@mail.gmail.com>
+ <1567584577.22453.11.camel@mtksdccf07>
+ <CAAFQd5Dzxy10g-MKHMnNbVO6kp9_L_jm1m+gtN+p=YF2LyBiag@mail.gmail.com>
+ <1567587708.22453.15.camel@mtksdccf07>
+ <CAAFQd5DWfEEiGthPi=qoxD-mpAWa68GOCi55mqpmagS-tsGYkA@mail.gmail.com>
+ <1567589188.22453.24.camel@mtksdccf07>
+ <CAAFQd5Ckz9qH7AnLNM4HRTM2gJQP1HXRS09+o6Prf++D1PQhng@mail.gmail.com>
+ <1567603143.22453.27.camel@mtksdccf07>
+ <1567666940.22453.31.camel@mtksdccf07>
+ <CAAFQd5A=D33nUWTyYjt3acV43r3fqjSEkLbt3_Sr1YG1PzQgqQ@mail.gmail.com>
+ <1567671418.22453.41.camel@mtksdccf07>
+ <CAAFQd5D2ketE19RPr20BVYGhqg2Lh2ZNTtAr5J2GoWU9RiSAsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gxheopgdktwghftq"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190905122059.GK5035@pendragon.ideasonboard.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp, VenkataRajesh.Kalakodima@in.bosch.com, Harsha.ManjulaMallikarjun@in.bosch.com, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAAFQd5D2ketE19RPr20BVYGhqg2Lh2ZNTtAr5J2GoWU9RiSAsA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sean Cheng =?UTF-8?Q?=28=E9=84=AD=E6=98=87=E5=BC=98=29?= <Sean.Cheng@mediatek.com>, "laurent.pinchart+renesas@ideasonboard.com" <laurent.pinchart+renesas@ideasonboard.com>, Rynn Wu =?UTF-8?Q?=28=E5=90=B3=E8=82=B2=E6=81=A9=29?= <Rynn.Wu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Po-Yang Huang =?UTF-8?Q?=28=E9=BB=83=E6=9F=8F=E9=99=BD=29?= <po-yang.huang@mediatek.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "suleiman@chromium.org" <suleiman@chromium.org>, "shik@chromium.org" <shik@chromium.org>, Jungo Lin =?UTF-8?Q?=28=E6=9E=97=E6=98=8E=E4=BF=8A=29?= <jungo.lin@mediatek.com>, Sj Huang =?UTF-8?Q?=28=E9=BB=83=E4=BF=A1=E7=92=8B=29?= <sj.huang@mediatek.com>, "yuzhao@chromium.org" <yuzhao@chromium.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, zwisler@chromium.or
 List-Id: devicetree@vger.kernel.org
 
-
---gxheopgdktwghftq
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Laurent, Geert,
-
-
-On Thu, Sep 05, 2019 at 03:20:59PM +0300, Laurent Pinchart wrote:
-> Hi Geert,
->
-> On Thu, Sep 05, 2019 at 02:05:34PM +0200, Geert Uytterhoeven wrote:
-> > On Thu, Sep 5, 2019 at 1:50 PM Laurent Pinchart wrote:
-> > > On Fri, Aug 30, 2019 at 08:01:09PM +0200, Jacopo Mondi wrote:
-> > > > On Mon, Aug 26, 2019 at 01:15:50PM +0300, Laurent Pinchart wrote:
-> > > > > How about converting this binding to yaml alreay ? It should be fairly
-> > > > > simple.
+On Thu, 2019-09-05 at 16:52 +0800, Tomasz Figa wrote:
+> On Thu, Sep 5, 2019 at 5:17 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
+> >
+> > Hi Tomasz,
+> >
+> > On Thu, 2019-09-05 at 15:13 +0800, Tomasz Figa wrote:
+> > > On Thu, Sep 5, 2019 at 4:02 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
 > > > >
-> > > > I'm trying to, and I'm having my portion of fun time at it.
+> > > > Hi Tomasz,
 > > > >
-> > > > The definition of the schema itself seems good, but I wonder, is this
-> > > > the first renesas schema we have? Because it seems to me the schema
-> > > > validator is having an hard time to digest the examplea 'clocks' and
-> > > > 'power-domains' properties, which have 1 phandle and 2 specifiers and 1
-> > > > phandle and 1 specifier respectively for Rensas SoCs.
+> > > > On Wed, 2019-09-04 at 21:19 +0800, Jerry-ch Chen wrote:
+> > > > > On Wed, 2019-09-04 at 21:12 +0800, Tomasz Figa wrote:
+> > > > > > On Wed, Sep 4, 2019 at 6:26 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
+> > > > > > >
+> > > > > > > Hi Tomasz,
+> > > > > > >
+> > > > > > > On Wed, 2019-09-04 at 17:03 +0800, Tomasz Figa wrote:
+> > > > > > > > On Wed, Sep 4, 2019 at 6:02 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
+> > > > > > > > >
+> > > > > > > > > Hi Tomasz,
+> > > > > > > > >
+> > > > > > > > > On Wed, 2019-09-04 at 16:25 +0800, Tomasz Figa wrote:
+> > > > > > > > > > On Wed, Sep 4, 2019 at 5:09 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
+> > > > > > > > > > >
+> > > > > > > > > > > Hi Tomasz,
+> > > > > > > > > > >
+> > > > > > > > > > > On Wed, 2019-09-04 at 14:34 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > > On Wed, Sep 4, 2019 at 3:09 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > Hi Tomasz,
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > On Wed, 2019-09-04 at 12:15 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > > > > On Wed, Sep 4, 2019 at 12:38 PM Jerry-ch Chen
+> > > > > > > > > > > > > > <Jerry-ch.Chen@mediatek.com> wrote:
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > Hi Tomasz,
+> > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > On Tue, 2019-09-03 at 20:05 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > > > > > > On Tue, Sep 3, 2019 at 8:46 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
+> > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > Hi Tomasz,
+> > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > On Tue, 2019-09-03 at 15:04 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > > > > > > > > On Tue, Sep 3, 2019 at 3:44 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
+> > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > On Tue, 2019-09-03 at 13:19 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > > > > > > > > > > On Mon, Sep 2, 2019 at 8:47 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
+> > > > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > > > Hi Tomasz,
+> > > > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > > > On Fri, 2019-08-30 at 16:33 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > > > > > > > > > > > > On Wed, Aug 28, 2019 at 11:00 AM Jerry-ch Chen
+> > > > > > > > > > > > > > > > > > > > > > <Jerry-ch.Chen@mediatek.com> wrote:
+> > > > > > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > > > > > Hi Tomasz,
+> > > > > > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > > > > > On Mon, 2019-08-26 at 14:36 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > > > > > > > > > > > > > > Hi Jerry,
+> > > > > > > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > > > > > > On Sun, Aug 25, 2019 at 6:18 PM Jerry-ch Chen
+> > > > > > > > > > > > > > > > > > > > > > > > <Jerry-ch.Chen@mediatek.com> wrote:
+> > > > > > > > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > > > > > > > Hi Tomasz,
+> > > > > > > > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > > > > > > > On Fri, 2019-08-02 at 16:28 +0800, Tomasz Figa wrote:
+> > > > > > > > > > > > > > > > > > > > > > > > > > Hi Jerry,
+> > > > > > > > > > > > > > > > > > > > > > > > > >
+> > > > > > > > > > > > > > > > > > > > > > > > > > On Tue, Jul 09, 2019 at 04:41:12PM +0800, Jerry-ch Chen wrote:
+> > > > > > > [snip]
+> > > > > > > > > > > static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
+> > > > > > > > > > > {
+> > > > > > > > > > >         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+> > > > > > > > > > >         struct mtk_fd_dev *fd = ctx->fd_dev;
+> > > > > > > > > > >         struct vb2_v4l2_buffer *vb;
+> > > > > > > > > > >         struct v4l2_m2m_ctx *m2m_ctx = ctx->fh.m2m_ctx;
+> > > > > > > > > > >         struct v4l2_m2m_queue_ctx *queue_ctx;
+> > > > > > > > > > >         u32 ret;
+> > > > > > > > > > >
+> > > > > > > > > > >         if (!fd->fd_irq_done.done)
+> > > > > > > > > >
+> > > > > > > > > > We shouldn't access internal fields of completion.
+> > > > > > > > > >
+> > > > > > > > > > >                 ret = wait_for_completion_timeout(&fd->fd_irq_done,
+> > > > > > > > > > >                                                   msecs_to_jiffies(
+> > > > > > > > > > >                                                         MTK_FD_HW_TIMEOUT));
+> > > > > > > > > > >         queue_ctx = V4L2_TYPE_IS_OUTPUT(vq->type) ?
+> > > > > > > > > > >                                         &m2m_ctx->out_q_ctx :
+> > > > > > > > > > >                                         &m2m_ctx->cap_q_ctx;
+> > > > > > > > > > >         while ((vb = v4l2_m2m_buf_remove(queue_ctx)))
+> > > > > > > > > > >                 v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
+> > > > > > > > > > >
+> > > > > > > > > > >         if (vq->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
+> > > > > > > > > > >                 mtk_fd_hw_disconnect(fd);
+> > > > > > > > > > > }
+> > > > > > > > > > >
+> > > > > > > > > > > I've also tried to wait completion unconditionally for both queues and
+> > > > > > > > > > > the second time will wait until timeout, as a result, it takes longer to
+> > > > > > > > > > > swap the camera every time and close the camera app.
+> > > > > > > > > >
+> > > > > > > > > > I think it should work better if we call complete_all() instead of complete().
+> > > > > > > > > >
+> > > > > > > > > Thanks,
+> > > > > > > > >
+> > > > > > > > > I use complete_all(), and it works fine now.
+> > > > > > > > >
+> > > > > > > > > static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
+> > > > > > > > > {
+> > > > > > > > >         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+> > > > > > > > >         struct mtk_fd_dev *fd = ctx->fd_dev;
+> > > > > > > > >         struct vb2_v4l2_buffer *vb;
+> > > > > > > > >         struct v4l2_m2m_ctx *m2m_ctx = ctx->fh.m2m_ctx;
+> > > > > > > > >         struct v4l2_m2m_queue_ctx *queue_ctx;
+> > > > > > > > >
+> > > > > > > > >         wait_for_completion_timeout(&fd->fd_irq_done,
+> > > > > > > > >                                           msecs_to_jiffies(MTK_FD_HW_TIMEOUT));
+> > > > > > > >
+> > > > > > > > Shouldn't we still send some command to the hardware to stop? Like a
+> > > > > > > > reset. Otherwise we don't know if it isn't still accessing the memory.
+> > > > > > > >
+> > > > > > > I thought no more jobs will be enqueued here when stop_streaming so we
+> > > > > > > don't need it.
+> > > > > >
+> > > > > > That's true for the case when the wait completed successfully, but we
+> > > > > > also need to ensure the hardware is stopped even if a timeout happens.
+> > > > > >
+> > > > > > > We still could send an ipi command to reset the HW, and wait for it's
+> > > > > > > callback or we could set the register MTK_FD_REG_OFFSET_HW_ENABLE to
+> > > > > > > zero to disable the HW.
+> > > > > >
+> > > > > > Since it's for handling a timeout, a reset should be more likely to
+> > > > > > bring the hardware back to a reasonable state.
+> > > > > >
+> > > > >
+> > > > > Ok, I will send the ipi command to reset the HW.
+> > > > >
+> > > > > Thanks and best regards,
+> > > > > Jerry
+> > > > I've tested and will refine as following:
 > > > >
-> > > > In other words, if in the example I have:
+> > > > static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
+> > > > {
+> > > >         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+> > > >         struct mtk_fd_dev *fd = ctx->fd_dev;
+> > > >         struct vb2_v4l2_buffer *vb;
+> > > >         struct v4l2_m2m_ctx *m2m_ctx = ctx->fh.m2m_ctx;
+> > > >         struct v4l2_m2m_queue_ctx *queue_ctx;
+> > > >         u32 ret;
 > > > >
-> > > >  examples:
-> > > >    - |
-> > > >      cmm0: cmm@fea40000 {
-> > > >           compatible = "renesas,r8a7796-cmm";
-> > > >           reg = <0 0xfea40000 0 0x1000>;
-> > > >           clocks = <&cpg 711>              <---- 1 phandle + 1 specifier
-> > > >           resets = <&cpg 711>;
-> > > >           power-domains = <&sysc>;         <---- 1 phandle
-> > > >      };
+> > > >         ret = wait_for_completion_timeout(&fd->fd_irq_done,
+> > > >                                           msecs_to_jiffies(MTK_FD_HW_TIMEOUT));
+> > > >         /* Disable FD HW */
+> > > >         if(!ret) {
+> > > >                 struct ipi_message fd_ipi_msg;
 > > > >
-> > > > The schema validation is good.
-> > > >
-> > > > While if I use an actual example
-> > > >    - |
-> > > >      cmm0: cmm@fea40000 {
-> > > >           compatible = "renesas,r8a7796-cmm";
-> > > >           reg = <0 0xfea40000 0 0x1000>;
-> > > >           clocks = <&cpg CPG_MOD 711>         <---- 1 phandle + 2 specifier
-> > > >           resets = <&cpg 711>;
-> > > >           power-domains = <&sysc R8A7796_PD_ALWAYS_ON>; <---- 1 phandle
-> > > >      };                                                       + 1 specfier
-> > > >
-> > > > The schema validation fails...
-> > > > Error: Documentation/devicetree/bindings/display/renesas,cmm.example.dts:20.29-30 syntax error
-> > > > FATAL ERROR: Unable to parse input tree
-> > > >
-> > > > Are clocks properties with > 2 entries and power-domains properties with
-> > > > > 1 entries supported?
-> > > >
-> > > > Because from what I read here:
-> > > > https://github.com/robherring/yaml-bindings/blob/master/schemas/clock/clock.yaml
-> > > > "The length of a clock specifier is defined by the value of a #clock-cells
-> > > > property in the clock provider node."
-> > > >
-> > > > And that's expected, but is the examples actually validated against the
-> > > > clock provider pointed by the phandle? Because in that case, if we had a
-> > > > yaml schema for the cpg-mssr provider, it would indeed specify clock-cells=2.
-> > > >
-> > > > Do we need a schema for cpg-mssr first, or am I doing something else
-> > > > wrong?
+> > > >                 fd_ipi_msg.cmd_id = MTK_FD_IPI_CMD_RESET;
+> > > >                 ret = scp_ipi_send(fd->scp_pdev, SCP_IPI_FD_CMD, &fd_ipi_msg,
+> > > >                                    sizeof(fd_ipi_msg), MTK_FD_IPI_SEND_TIMEOUT);
+> > > >                 if (ret)
+> > > >                         dev_err(fd->dev, "FD Reset HW error\n");
+> > > >         }
 > > >
-> > > I think you just need to #include the headers that define CPG_MOD and
-> > > R8A7796_PD_ALWAYS_ON.
+> > > Would you also put the same code in suspend handler? If so, perhaps
+> > > it's better to keep this in a helper function (mtk_fd_job_abort()) as
+> > > we had before?
+> > >
 > >
-> > If that helps, you might want to replace the symbols in the examples by their
-> > actual values (1 resp. 32).
+> > Ok, done, It will reset the HW and return ETIMEOUT if the last job is
+> > timeout, the return value will be used in suspend for further action.
 > >
-> > And perhaps keep the symbols as comments?
+> > static int mtk_fd_job_abort(struct mtk_fd_dev *fd)
+> > {
+> >         u32 ret;
 > >
-> >         clocks = <&cpg 1 /* CPG_MOD */ 711>;
-> >         power-domains = <&sysc 32 /* R8A7796_PD_ALWAYS_ON */>;
->
-> I think adding the required #include at the beginning of the example is
-> a better solution.
+> >         ret = wait_for_completion_timeout(&fd->fd_irq_done,
+> >                                           msecs_to_jiffies(MTK_FD_HW_TIMEOUT));
+> >         /* Reset FD HW */
+> >         if (!ret) {
+> >                 struct ipi_message fd_ipi_msg;
+> >
+> >                 fd_ipi_msg.cmd_id = MTK_FD_IPI_CMD_RESET;
+> >                 if (scp_ipi_send(fd->scp_pdev, SCP_IPI_FD_CMD, &fd_ipi_msg,
+> >                                  sizeof(fd_ipi_msg), MTK_FD_IPI_SEND_TIMEOUT))
+> >                         dev_err(fd->dev, "FD Reset HW error\n");
+> >                 return -ETIMEDOUT;
+> >         }
+> >         return 0;
+> > }
+> >
+> > static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
+> > {
+> >         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
+> >         struct mtk_fd_dev *fd = ctx->fd_dev;
+> >         struct vb2_v4l2_buffer *vb;
+> >         struct v4l2_m2m_ctx *m2m_ctx = ctx->fh.m2m_ctx;
+> >         struct v4l2_m2m_queue_ctx *queue_ctx;
+> >
+> >         mtk_fd_job_abort(fd);
+> >         queue_ctx = V4L2_TYPE_IS_OUTPUT(vq->type) ?
+> >                                         &m2m_ctx->out_q_ctx :
+> >                                         &m2m_ctx->cap_q_ctx;
+> >         while ((vb = v4l2_m2m_buf_remove(queue_ctx)))
+> >                 v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
+> >
+> >         if (vq->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
+> >                 mtk_fd_hw_disconnect(fd);
+> > }
+> >
+> > static int mtk_fd_suspend(struct device *dev)
+> > {
+> >         struct mtk_fd_dev *fd = dev_get_drvdata(dev);
+> >
+> >         if (pm_runtime_suspended(dev))
+> >                 return 0;
+> >
+> >         if (fd->fd_stream_count)
+> >                 if (mtk_fd_job_abort(fd))
+> >                         mtk_fd_hw_job_finish(fd, VB2_BUF_STATE_ERROR);
+> 
+> Wouldn't this cause the next job to be run?
+> 
+> >
+> >         /* suspend FD HW */
+> >         writel(0x0, fd->fd_base + MTK_FD_REG_OFFSET_INT_EN);
+> >         writel(0x0, fd->fd_base + MTK_FD_REG_OFFSET_HW_ENABLE);
+> >         clk_disable_unprepare(fd->fd_clk);
+> >         dev_dbg(dev, "%s:disable clock\n", __func__);
+> >
+> >         return 0;
+> > }
+> >
+> > > >         queue_ctx = V4L2_TYPE_IS_OUTPUT(vq->type) ?
+> > > >                                         &m2m_ctx->out_q_ctx :
+> > > >                                         &m2m_ctx->cap_q_ctx;
+> > > >         while ((vb = v4l2_m2m_buf_remove(queue_ctx)))
+> > > >                 v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
+> > > >
+> > > >         if (vq->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
+> > > >                 mtk_fd_hw_disconnect(fd);
+> > > > }
+> > > >
+> > > > If there is no other concern, may I send the RFC v3 patch for review?
+> > >
+> > > Thanks, technically it looks good now. Just one comment about avoiding
+> > > code duplication above.
+> > >
+> >
+> > Thanks,
+> >
+> > I will send the v3 if the above fix-up is accepted,
+> 
+> I think there is a bigger issue here actually, related to how the m2m
+> helpers work. Let's just keep the code as you proposed and post v3.
+> 
+> We can continue the discussion there.
+> 
 
-I didn't realize that, but it actually makes sense, as the example is
-extracted and actually compiled from the yaml schema.. brilliant!
+Ok, I will send v3 soon.
 
-With a simple:
+Thanks and best regards,
+Jerry
 
---- a/Documentation/devicetree/bindings/display/renesas,cmm.yaml
-+++ b/Documentation/devicetree/bindings/display/renesas,cmm.yaml
-@@ -51,6 +51,9 @@ additionalProperties: false
-
- examples:
-   - |
-+    #include <dt-bindings/clock/r8a7796-cpg-mssr.h>
-+    #include <dt-bindings/power/r8a7796-sysc.h>
-
-The example now compiles.
-
-Thanks, I will submit the bindings in yaml format in next iteration.
-
->
-> --
-> Regards,
->
-> Laurent Pinchart
-
---gxheopgdktwghftq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1xDXoACgkQcjQGjxah
-Vjy4Dg/8DGPc6KerGdHYq5Hdpy8U5Y92IMizppaQy9fpz+qQHURT/Y79Rli9j6zx
-EGVP1SE/D2DKYkWn9OyVtjcQib0ZR5emr7UoID8I+Pmwq1syn1pbuAxXNhV+Gj/I
-bECVgYyHyWzmutgUb41OL8doagWUmmNKk9W5B6jS+mFBpeSySPczvGU4rh8SiDQs
-1GdAjDWJ9H7I6xVfjU1mPlYBMr0/ufzw6tkYHapCPHayDvuYR9LVdTaw70WD8iLZ
-bwAVMaTVuD4ir7Uh8KGNcdub3vF85/naLzd9yWCz4Clzkg0CQCmUI5411jNVS0dK
-3iyEO/6BDy/LG8UDguFL5IaM+46Hh2fVVkwnwBZd50cWP+CUHu+w7uNdc4XGmVO4
-hG2SqpBZIOaBeIfWPb7yhVt66/LEgC9nmOVfjgVynO5+9CwZw8DuApb5iLG4+7Ds
-Z+pp46sfrMEQLU/Aw1/MGj2wksYEC427UI161pdVjPka7wnhlNr2hasNgb36ShDz
-TQHOEVp7OGsajo9oqxsKyAvTIx8HXflrd/LTNZmmMrRF8B0QKU8i1Xj8v1AJMvGw
-Cyr8oV0BCnZQg+Qa/Ujhv0bxmCnrXrhmdVhfCqvhTo2ulOdpNEnp7oWa05QRdpMS
-55MjegmjoLIHvl8ZJeRquJMGGoVwzjaIT0bAVd6/8OGXBWQQZyQ=
-=tNT+
------END PGP SIGNATURE-----
-
---gxheopgdktwghftq--
+> Best regards,
+> Tomasz
