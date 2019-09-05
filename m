@@ -1,32 +1,32 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v3 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
-Date: Thu, 5 Sep 2019 10:21:05 +0100
-Message-ID: <20190905092105.GA28839@bogus>
-References: <20190904121606.17474-1-lee.jones@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: arm: Convert Realtek board/soc bindings to json-schema
+Date: Thu, 5 Sep 2019 10:21:48 +0100
+Message-ID: <CAL_JsqKGX1n-jsi0xtG8_Q=1LAhT=ufe0y2ZNBNoE3fR10K_xQ@mail.gmail.com>
+References: <20190905081721.1548-1-james.tai@realtek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190904121606.17474-1-lee.jones@linaro.org>
+In-Reply-To: <20190905081721.1548-1-james.tai@realtek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
+To: jamestai.sky@gmail.com
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Mark Rutland <mark.rutland@arm.com>, CY_Huang <cy.huang@realtek.com>, Phinex Hung <phinex@realtek.com>, "james.tai" <james.tai@realtek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 01:16:06PM +0100, Lee Jones wrote:
-> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Thu, Sep 5, 2019 at 9:19 AM <jamestai.sky@gmail.com> wrote:
 >
-> The Lenovo Yoga C630 is built on the SDM850 from Qualcomm, but this seem
-> to be similar enough to the SDM845 that we can reuse the sdm845.dtsi.
+> From: "james.tai" <james.tai@realtek.com>
 >
-> Supported by this patch is: keyboard, battery monitoring, UFS storage,
-> USB host and Bluetooth.
+> Convert Realtek SoC bindings to DT schema format using json-schema.
 >
+> Signed-off-by: james.tai <james.tai@realtek.com>
+> ---
+>  .../devicetree/bindings/arm/realtek.txt       | 22 -------------------
+>  .../devicetree/bindings/arm/realtek.yaml      | 17 ++++++++++++++
+>  2 files changed, 17 insertions(+), 22 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/realtek.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/realtek.yaml
 
-FWIW :),
+I've already submitted a patch for this that's *still* waiting on
+Andreas to apply or comment on the licensing.
 
-Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-
---
-Regards,
-Sudeep
+Also, your patch isn't valid schema. Please check with 'make dt_binding_check'.
