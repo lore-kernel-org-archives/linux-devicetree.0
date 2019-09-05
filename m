@@ -1,56 +1,67 @@
-From: <dongchun.zhu@mediatek.com>
-Subject: [V2, 1/2] media: i2c: dw9768: Add DT support and MAINTAINERS entry
-Date: Thu, 5 Sep 2019 15:21:41 +0800
-Message-ID: <20190905072142.14606-2-dongchun.zhu@mediatek.com>
-References: <20190905072142.14606-1-dongchun.zhu@mediatek.com>
+From: <dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [V2, 0/2] media: i2c: add support for DW9768 VCM driver
+Date: Thu, 5 Sep 2019 15:21:40 +0800
+Message-ID: <20190905072142.14606-1-dongchun.zhu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190905072142.14606-1-dongchun.zhu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mchehab@kernel.org, andriy.shevchenko@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, sakari.ailus@linux.intel.com, drinkcat@chromium.org, tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com
-Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, shengnan.wang@mediatek.com, sj.huang@mediatek.com, linux-mediatek@lists.infradead.org, dongchun.zhu@mediatek.com, sam.hung@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bingbu.cao-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, shengnan.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sam.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogRG9uZ2NodW4gWmh1IDxkb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tPgoKVGhpcyBwYXRj
-aCBpcyB0byBhZGQgdGhlIERldmljZXRyZWUgYmluZGluZyBkb2N1bWVudGF0aW9uIGFuZApNQUlO
-VEFJTkVSUyBlbnRyeSBmb3IgZHc5NzY4IGFjdHVhdG9yLgoKU2lnbmVkLW9mZi1ieTogRG9uZ2No
-dW4gWmh1IDxkb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tPgotLS0KIERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvZG9uZ3dvb24sZHc5NzY4LnR4dCB8IDkgKysrKysr
-KysrCiBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCA3ICsrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMTYgaW5zZXJ0aW9ucygr
-KQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
-ZWRpYS9pMmMvZG9uZ3dvb24sZHc5NzY4LnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvZG9uZ3dvb24sZHc5NzY4LnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvZG9uZ3dvb24sZHc5NzY4LnR4
-dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi45NGI4ZWMzCi0tLSAvZGV2L251
-bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9kb25n
-d29vbixkdzk3NjgudHh0CkBAIC0wLDAgKzEsOSBAQAorRG9uZ3dvb24gQW5hdGVjaCBEVzk3Njgg
-Y2FtZXJhIHZvaWNlIGNvaWwgbGVucyBkcml2ZXIKKworRFc5NzY4IGlzIGEgMTAtYml0IERBQyB3
-aXRoIGN1cnJlbnQgc2luayBjYXBhYmlsaXR5LiBJdCBpcyBpbnRlbmRlZAorZm9yIGRyaXZpbmcg
-dm9pY2UgY29pbCBsZW5zZXMgaW4gY2FtZXJhIG1vZHVsZXMuCisKK01hbmRhdG9yeSBwcm9wZXJ0
-aWVzOgorCistIGNvbXBhdGlibGU6ICJkb25nd29vbixkdzk3NjgiCistIHJlZzogScKyQyBzbGF2
-ZSBhZGRyZXNzCmRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCmluZGV4IDc4
-MzU2OWUuLjE5MmE2NzEgMTAwNjQ0Ci0tLSBhL01BSU5UQUlORVJTCisrKyBiL01BSU5UQUlORVJT
-CkBAIC00OTcxLDYgKzQ5NzEsMTMgQEAgUzoJTWFpbnRhaW5lZAogRjoJZHJpdmVycy9tZWRpYS9p
-MmMvZHc5NzE0LmMKIEY6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9p
-MmMvZG9uZ3dvb24sZHc5NzE0LnR4dAogCitET05HV09PTiBEVzk3NjggTEVOUyBWT0lDRSBDT0lM
-IERSSVZFUgorTToJRG9uZ2NodW4gWmh1IDxkb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tPgorTDoJ
-bGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnCitUOglnaXQgZ2l0Oi8vbGludXh0di5vcmcvbWVk
-aWFfdHJlZS5naXQKK1M6CU1haW50YWluZWQKK0Y6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tZWRpYS9pMmMvZG9uZ3dvb24sZHc5NzY4LnR4dAorCiBET05HV09PTiBEVzk4MDcg
-TEVOUyBWT0lDRSBDT0lMIERSSVZFUgogTToJU2FrYXJpIEFpbHVzIDxzYWthcmkuYWlsdXNAbGlu
-dXguaW50ZWwuY29tPgogTDoJbGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnCi0tIAoyLjkuMgoK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
-ZXJuZWwK
+From: Dongchun Zhu <dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+
+Hello,
+
+Add a v4l2 sub-device driver for Dongwoon's DW9768 lens voice coil.
+This is a voice coil module using the i2c bus to control the focus position.
+
+The DW9768 can control the position with 10 bits value and
+consists of two 8 bit registers show as below.
+register 0x04(DW9768_REG_POSITION):
+     +---+---+---+---+---+---+---+---+
+     |D07|D06|D05|D04|D03|D02|D01|D00|
+     +---+---+---+---+---+---+---+---+
+register 0x03:
+     +---+---+---+---+---+---+---+---+
+     |---|---|---|---|---|---|D09|D08|
+     +---+---+---+---+---+---+---+---+
+
+This driver supports:
+ - set DW9768 to standby mode once suspend and turn it back to active if resume
+ - set the position via V4L2_CID_FOCUS_ABSOLUTE ctrl
+
+Mainly changes of v2 are addressing the comments from Tomasz, Bingbu, Andy,
+including,
+ - Use i2c_smbus_write_byte_data/i2c_smbus_write_block_data to write I2C register
+ - Adopt the runtime PM suspend/resume callbacks to powering off/on
+ - Check the PM runtime status before powering off in dw9768_remove function
+ - Add one more regulator vin for the I2C interface
+ - Remove or refine redundant log print
+ - Fix other reviewed issues in v1
+
+Dongchun Zhu (2):
+  media: i2c: dw9768: Add DT support and MAINTAINERS entry
+  media: i2c: Add DW9768 VCM driver
+
+ .../bindings/media/i2c/dongwoon,dw9768.txt         |   9 +
+ MAINTAINERS                                        |   8 +
+ drivers/media/i2c/Kconfig                          |  10 +
+ drivers/media/i2c/Makefile                         |   1 +
+ drivers/media/i2c/dw9768.c                         | 349 +++++++++++++++++++++
+ 5 files changed, 377 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt
+ create mode 100644 drivers/media/i2c/dw9768.c
+
+-- 
+2.9.2
