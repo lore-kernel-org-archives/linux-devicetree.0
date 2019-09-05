@@ -1,149 +1,102 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 01/14] dt-bindings: display: renesas,cmm: Add R-Car
- CMM documentation
-Date: Thu, 5 Sep 2019 14:50:17 +0300
-Message-ID: <20190905115017.GI5035@pendragon.ideasonboard.com>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-2-jacopo+renesas@jmondi.org>
- <CAMuHMdVvjrMXap5CQ-grNYpJfOG6QeN26EW4tR_YE=VFv5ozqw@mail.gmail.com>
- <20190826075943.h7ivwagape3glym5@uno.localdomain>
- <20190826101550.GB5031@pendragon.ideasonboard.com>
- <20190830180108.mlei4wbfn3mktj23@uno.localdomain>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [RESEND PATCH 0/5] Add bluetooth support for Orange Pi 3
+Date: Thu, 5 Sep 2019 14:56:53 +0300
+Message-ID: <20190905115653.o2w7eyl4hvqegucv@flea>
+References: <20190823103139.17687-1-megous@megous.com>
+ <5524D5E9-FA82-4244-A91F-78CF1C3FB3FB@holtmann.org>
+ <20190830092104.odipmbflounqpffo@flea>
+ <D02B89FB-F8C0-40AD-A99A-6C1B4FEB72A0@holtmann.org>
+ <20190830132034.u65arlv7umh64lx6@flea>
+ <76FD40C7-10C5-4818-8EF9-60326ECA4243@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="66mhhep6w5jiiqrl"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190830180108.mlei4wbfn3mktj23@uno.localdomain>
+In-Reply-To: <76FD40C7-10C5-4818-8EF9-60326ECA4243@holtmann.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo@jmondi.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp, VenkataRajesh.Kalakodima@in.bosch.com, Harsha.ManjulaMallikarjun@in.bosch.com, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: megous@megous.com, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
 
-On Fri, Aug 30, 2019 at 08:01:09PM +0200, Jacopo Mondi wrote:
-> On Mon, Aug 26, 2019 at 01:15:50PM +0300, Laurent Pinchart wrote:
-> > On Mon, Aug 26, 2019 at 09:59:43AM +0200, Jacopo Mondi wrote:
-> >> On Mon, Aug 26, 2019 at 09:34:41AM +0200, Geert Uytterhoeven wrote:
-> >>> On Sun, Aug 25, 2019 at 3:50 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> >>>> Add device tree bindings documentation for the Renesas R-Car Display
-> >>>> Unit Color Management Module.
+--66mhhep6w5jiiqrl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Sep 04, 2019 at 04:19:37PM +0200, Marcel Holtmann wrote:
+> Hi Maxime,
+>
+> >>>>> (Resend to add missing lists, sorry for the noise.)
+> >>>>>
+> >>>>> This series implements bluetooth support for Xunlong Orange Pi 3 board.
+> >>>>>
+> >>>>> The board uses AP6256 WiFi/BT 5.0 chip.
+> >>>>>
+> >>>>> Summary of changes:
+> >>>>>
+> >>>>> - add more delay to let initialize the chip
+> >>>>> - let the kernel detect firmware file path
+> >>>>> - add new compatible and update dt-bindings
+> >>>>> - update Orange Pi 3 / H6 DTS
+> >>>>>
+> >>>>> Please take a look.
+> >>>>>
+> >>>>> thank you and regards,
+> >>>>> Ondrej Jirman
+> >>>>>
+> >>>>> Ondrej Jirman (5):
+> >>>>> dt-bindings: net: Add compatible for BCM4345C5 bluetooth device
+> >>>>> bluetooth: bcm: Add support for loading firmware for BCM4345C5
+> >>>>> bluetooth: hci_bcm: Give more time to come out of reset
+> >>>>> arm64: dts: allwinner: h6: Add pin configs for uart1
+> >>>>> arm64: dts: allwinner: orange-pi-3: Enable UART1 / Bluetooth
+> >>>>>
+> >>>>> .../bindings/net/broadcom-bluetooth.txt       |  1 +
+> >>>>> .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 19 +++++++++++++++++++
+> >>>>> arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 10 ++++++++++
+> >>>>> drivers/bluetooth/btbcm.c                     |  3 +++
+> >>>>> drivers/bluetooth/hci_bcm.c                   |  3 ++-
+> >>>>> 5 files changed, 35 insertions(+), 1 deletion(-)
 > >>>>
-> >>>> CMM is the image enhancement module available on each R-Car DU video
-> >>>> channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
-> >>>>
-> >>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >>>> all 5 patches have been applied to bluetooth-next tree.
 > >>>
-> >>> Thanks for your patch!
-> >>>
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/display/renesas,cmm.txt
-> >>>> @@ -0,0 +1,33 @@
-> >>>> +* Renesas R-Car Color Management Module (CMM)
-> >>>> +
-> >>>> +Renesas R-Car image enhancement module connected to R-Car DU video channels.
-> >>>> +
-> >>>> +Required properties:
-> >>>> + - compatible: shall be one or more of the following:
-> >>>> +   - "renesas,cmm-r8a7795": for R8A7795 (R-Car H3) compatible CMM.
-> >>>> +   - "renesas,cmm-r8a7796": for R8A7796 (R-Car M3-W) compatible CMM.
-> >>>> +   - "renesas,cmm-r8a77965": for R8A77965 (R-Car M3-N) compatible CMM.
-> >>>> +   - "renesas,cmm-r8a77990": for R8A77990 (R-Car E3) compatible CMM.
-> >>>> +   - "renesas,cmm-r8a77995": for R8A77995 (R-Car D3) compatible CMM.
-> >>>
-> >>> Please use "renesas,<socype->-cmm" instead of "renesas,cmm-<soctype>".
+> >>> The DTS patches (last 2) should go through the arm-soc tree, can you
+> >>> drop them?
 > >>
-> >> I actually copied it from the r-car gpio bindings, and I liked
-> >> cmm-<soctype> better. If you prefer I can change it though.
-> >>
-> >>>> +   - "renesas,rcar-gen3-cmm": for a generic R-Car Gen3 compatible CMM.
-> >>>> +   - "renesas,rcar-gen2-cmm": for a generic R-Car Gen2 compatible CMM.
-> >>>> +
-> >>>> +   When the generic compatible string is specified, the SoC-specific
-> >>>> +   version corresponding to the platform should be listed first.
-> >>>> +
-> >>>> + - reg: the address base and length of the memory area where CMM control
-> >>>> +   registers are mapped to.
-> >>>> +
-> >>>> + - clocks: phandle and clock-specifier pair to the CMM functional clock
-> >>>> +   supplier.
-> >>>
-> >>> Thinking about yaml validation:
-> >>>
-> >>> power-domains?
-> >>> resets?
-> >>
-> >> They should indeed be documented.
+> >> why is that? We have included DTS changes for Bluetooth devices
+> >> directly all the time. What is different with this hardware?
 > >
-> > How about converting this binding to yaml alreay ? It should be fairly
-> > simple.
-> 
-> I'm trying to, and I'm having my portion of fun time at it.
-> 
-> The definition of the schema itself seems good, but I wonder, is this
-> the first renesas schema we have? Because it seems to me the schema
-> validator is having an hard time to digest the examplea 'clocks' and
-> 'power-domains' properties, which have 1 phandle and 2 specifiers and 1
-> phandle and 1 specifier respectively for Rensas SoCs.
-> 
-> In other words, if in the example I have:
-> 
->  examples:
->    - |
->      cmm0: cmm@fea40000 {
->           compatible = "renesas,r8a7796-cmm";
->           reg = <0 0xfea40000 0 0x1000>;
->           clocks = <&cpg 711>              <---- 1 phandle + 1 specifier
->           resets = <&cpg 711>;
->           power-domains = <&sysc>;         <---- 1 phandle
->      };
-> 
-> The schema validation is good.
-> 
-> While if I use an actual example
->    - |
->      cmm0: cmm@fea40000 {
->           compatible = "renesas,r8a7796-cmm";
->           reg = <0 0xfea40000 0 0x1000>;
->           clocks = <&cpg CPG_MOD 711>         <---- 1 phandle + 2 specifier
->           resets = <&cpg 711>;
->           power-domains = <&sysc R8A7796_PD_ALWAYS_ON>; <---- 1 phandle
->      };                                                       + 1 specfier
-> 
-> The schema validation fails...
-> Error: Documentation/devicetree/bindings/display/renesas,cmm.example.dts:20.29-30 syntax error
-> FATAL ERROR: Unable to parse input tree
-> 
-> Are clocks properties with > 2 entries and power-domains properties with
-> > 1 entries supported?
-> 
-> Because from what I read here:
-> https://github.com/robherring/yaml-bindings/blob/master/schemas/clock/clock.yaml
-> "The length of a clock specifier is defined by the value of a #clock-cells
-> property in the clock provider node."
-> 
-> And that's expected, but is the examples actually validated against the
-> clock provider pointed by the phandle? Because in that case, if we had a
-> yaml schema for the cpg-mssr provider, it would indeed specify clock-cells=2.
-> 
-> Do we need a schema for cpg-mssr first, or am I doing something else
-> wrong?
+> > I guess some maintainers are more relaxed with it than we are then,
+> > but for the why, well, it's the usual reasons, the most immediate one
+> > being that it reduces to a minimum the conflicts between trees.
+> >
+> > The other being that it's not really usual to merge patches supposed
+> > to be handled by another maintainer without (at least) his
+> > consent. I'm pretty sure you would have asked the same request if I
+> > would have merged the bluetooth patches through my tree without
+> > notice.
+>
+> I took the two DTS patches out now and let the submitter deal with
+> getting these merged.
 
-I think you just need to #include the headers that define CPG_MOD and
-R8A7796_PD_ALWAYS_ON.
+Thanks!
+Maxime
 
-> >>>> +Example:
-> >>>> +--------
-> >>>> +
-> >>>> +       cmm0: cmm@fea40000 {
-> >>>> +               compatible = "renesas,cmm-r8a7796";
-> >>>> +               reg = <0 0xfea40000 0 0x1000>;
-> >>>> +               power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-> >>>> +               clocks = <&cpg CPG_MOD 711>;
-> >>>> +               resets = <&cpg 711>;
-> >>>> +       };
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
--- 
-Regards,
+--66mhhep6w5jiiqrl
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Laurent Pinchart
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXXD4BQAKCRDj7w1vZxhR
+xRuEAQD4NBPiyuvLlo3LM5wXaUbunkvUUCDpAZ3nIkj1OvPjIgD8Da8U574V2FaU
+aFSxv34yqbNn72v/P/KP/9zxT3Y40g8=
+=SOn6
+-----END PGP SIGNATURE-----
+
+--66mhhep6w5jiiqrl--
