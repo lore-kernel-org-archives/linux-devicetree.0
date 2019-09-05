@@ -1,180 +1,164 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: meson: axg-frddr: add sm1 support" to the asoc tree
-Date: Thu,  5 Sep 2019 18:38:51 +0100 (BST)
-Message-ID: <20190905173851.D62452742D1F@ypsilon.sirena.org.uk>
-References: <20190905120120.31752-7-jbrunet@baylibre.com>
+From: Jack Pham <jackp@codeaurora.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY
+ bindings
+Date: Thu, 5 Sep 2019 10:58:02 -0700
+Message-ID: <20190905175802.GA19599@jackp-linux.qualcomm.com>
+References: <20190223165218.GB572@tuxbook-pro>
+ <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
+ <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
+ <20190830164520.GK26807@tuxbook-pro>
+ <5d696ad2.1c69fb81.977ea.39e5@mx.google.com>
+ <f3584f38-dabc-7e7a-d1cb-84c80ed26215@linaro.org>
+ <20190903173924.GB9754@jackp-linux.qualcomm.com>
+ <5d6edee5.1c69fb81.a3896.1d05@mx.google.com>
+ <20190903233410.GQ26807@tuxbook-pro>
+ <c9481b7d-4805-25c6-f40f-9cbfc40afc93@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190905120120.31752-7-jbrunet@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <c9481b7d-4805-25c6-f40f-9cbfc40afc93@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+To: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <swboyd@chromium.org>, robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi Jorge, Bjorn,
 
-   ASoC: meson: axg-frddr: add sm1 support
+On Thu, Sep 05, 2019 at 09:18:57AM +0200, Jorge Ramirez wrote:
+> On 9/4/19 01:34, Bjorn Andersson wrote:
+> > On Tue 03 Sep 14:45 PDT 2019, Stephen Boyd wrote:
+> > 
+> >> Quoting Jack Pham (2019-09-03 10:39:24)
+> >>> On Mon, Sep 02, 2019 at 08:23:04AM +0200, Jorge Ramirez wrote:
+> >>>> On 8/30/19 20:28, Stephen Boyd wrote:
+> >>>>> Quoting Bjorn Andersson (2019-08-30 09:45:20)
+> >>>>>> On Fri 30 Aug 09:01 PDT 2019, Stephen Boyd wrote:
+> >>>>>>
+> >>>>>>>>>
+> >>>>>>>>> The USB-C connector is attached both to the HS and SS PHYs, so I think
+> >>>>>>>>> you should represent this external to this node and use of_graph to
+> >>>>>>>>> query it.
+> >>>>>>>>
+> >>>>>>>> but AFAICS we wont be able to retrieve the vbux-supply from an external
+> >>>>>>>> node (that interface does not exist).
+> >>>>>>>>
+> >>>>>>>> rob, do you have a suggestion?
+> >>>>>>>
+> >>>>>>> Shouldn't the vbus supply be in the phy? Or is this a situation where
+> >>>>>>> the phy itself doesn't have the vbus supply going to it because the PMIC
+> >>>>>>> gets in the way and handles the vbus for the connector by having the SoC
+> >>>>>>> communicate with the PMIC about when to turn the vbus on and off, etc?
+> >>>>>>>
+> >>>>>>
+> >>>>>> That's correct, the VBUS comes out of the PMIC and goes directly to the
+> >>>>>> connector.
+> >>>>>>
+> >>>>>> The additional complicating factor here is that the connector is wired
+> >>>>>> to a USB2 phy as well, so we need to wire up detection and vbus control
+> >>>>>> to both of them - but I think this will be fine, if we can only figure
+> >>>>>> out a sane way of getting hold of the vbus-supply.
+> >>>>>>
+> >>>>>
+> >>>>> Does it really matter to describe this situation though? Maybe it's
+> >>>>> simpler to throw the vbus supply into the phy and control it from the
+> >>>>> phy driver, even if it never really goes there. Or put it into the
+> >>>>> toplevel usb controller?
+> >>>>>
+> >>>> that would work for me - the connector definition seemed a better way to
+> >>>> explain the connectivity but since we cant retrieve the supply from the
+> >>>> external node is not of much functional use.
+> >>>>
+> >>>> but please let me know how to proceed. shall I add the supply back to
+> >>>> the phy?
+> >>
+> >> So does the vbus actually go to the phy? I thought it never went there
+> >> and the power for the phy was different (and possibly lower in voltage).
+> >>
+> > 
+> > No, the PHYs use different - lower voltage - supplies to operate. VBUS
+> > is coming from a 5V supply straight to the connector and plug-detect
+> > logic (which is passive in this design).
+> > 
+> >>>
+> >>> Putting it in the toplevel usb node makes sense to me, since that's
+> >>> usually the driver that knows when it's switching into host mode and
+> >>> needs to turn on VBUS. The dwc3-qcom driver & bindings currently don't 
+> >>> do this but there's precedent in a couple of the other dwc3 "glues"--see
+> >>> Documentation/devicetree/bindings/usb/{amlogic\,dwc3,omap-usb}.txt
+> >>>
+> >>> One exception is if the PMIC is also USB-PD capable and can do power
+> >>> role swap, in which case the VBUS control needs to be done by the TCPM,
+> >>> so that'd be a case where having vbus-supply in the connector node might
+> >>> make more sense.
+> >>>
+> >>
+> >> The other way is to implement the code to get the vbus supply out of a
+> >> connector. Then any driver can do the work if it knows it needs to and
+> >> we don't have to care that the vbus isn't going somewhere. I suppose
+> >> that would need an of_regulator_get() sort of API that can get the
+> >> regulator out of there? Or to make the connector into a struct device
+> >> that can get the regulator out per some generic connector driver and
+> >> then pass it through to the USB controller when it asks for it. Maybe
+> >> try to prototype that out?
+> >>
+> > 
+> > The examples given in the DT bindings describes the connector as a child
+> > of a PMIC, with of_graph somehow tying it to the various inputs. But in
+> > these examples vbus is handled by implicitly inside the MFD, where
+> > extcon is informed about the plug event they toggle vbus as well.
+> > 
+> > In our case we have a extcon-usb-gpio to detect mode, which per Jorge's
+> > proposal will trickle down to the PHY and become a regulator calls on
+> > either some external regulator or more typically one of the chargers in
+> > the system.
 
-has been applied to the asoc tree at
+Interesting you mention extcon-usb-gpio. I thought extcon at least from
+bindings perspective is passé now. Maybe this is what you need (just
+landed in usb-next):
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+usb: common: add USB GPIO based connection detection driver
+https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=usb-next&id=4602f3bff2669012c1147eecfe74c121765f5c56
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+dt-bindings: usb: add binding for USB GPIO based connection detection driver
+https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=usb-next&id=f651c73e71f53f65e9846677d79d8e120452b59f
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Fortunately this new driver might check the right boxes for you:
+- usb connector binding
+- ID detect GPIO
+- vbus-supply regulator
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+With that, I think you can also keep the connector subnode out of the
+SSPHY node well, and similarly get rid of the vbus toggle handling from
+the PHY driver.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+The big thing missing now is that this driver replaces extcon
+completely, so we'll need handling in dwc3/dwc3-qcom to retrieve the
+role switch state to know when host mode is entered. I saw this a while
+back but don't think it got picked up:
 
-Thanks,
-Mark
+https://patchwork.kernel.org/patch/10909981/
 
->From 52dd80d8f7386483bc60b2b7470e47a2e6f61d7c Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu, 5 Sep 2019 14:01:18 +0200
-Subject: [PATCH] ASoC: meson: axg-frddr: add sm1 support
+> > So if we come up with a struct device for the connector and some API for
+> > toggling the vbus we're going to have to fairly abstract entities
+> > representing pretty much the same thing - and in a design with a mux we
+> > would have a different setup.
+> 
+> I am a bit unclear - not sure if we have gone full circle on this
+> subject. what is then the direction to get this merged?
+> 
+> I did have look last week and the level of effort to support regulators
+> on external nodes is not neglectable meaning that I might not have the
+> time to deliver that feature (perhaps someone else wishes to take over?)
+> 
+> > 
+> > Regards,
+> > Bjorn
+> > 
+> 
 
-On sm1, the output routing bits have moved to CTRL2 register
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20190905120120.31752-7-jbrunet@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/meson/axg-fifo.c  |  2 +-
- sound/soc/meson/axg-fifo.h  |  1 +
- sound/soc/meson/axg-frddr.c | 73 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 75 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/meson/axg-fifo.c b/sound/soc/meson/axg-fifo.c
-index 80a3dde35b5c..5a3749938900 100644
---- a/sound/soc/meson/axg-fifo.c
-+++ b/sound/soc/meson/axg-fifo.c
-@@ -306,7 +306,7 @@ static const struct regmap_config axg_fifo_regmap_cfg = {
- 	.reg_bits	= 32,
- 	.val_bits	= 32,
- 	.reg_stride	= 4,
--	.max_register	= FIFO_INIT_ADDR,
-+	.max_register	= FIFO_CTRL2,
- };
- 
- int axg_fifo_probe(struct platform_device *pdev)
-diff --git a/sound/soc/meson/axg-fifo.h b/sound/soc/meson/axg-fifo.h
-index 5caf81241dfe..bb1e2ce50256 100644
---- a/sound/soc/meson/axg-fifo.h
-+++ b/sound/soc/meson/axg-fifo.h
-@@ -61,6 +61,7 @@ struct snd_soc_pcm_runtime;
- #define  STATUS1_INT_STS(x)		((x) << 0)
- #define FIFO_STATUS2			0x18
- #define FIFO_INIT_ADDR			0x24
-+#define FIFO_CTRL2			0x28
- 
- struct axg_fifo {
- 	struct regmap *map;
-diff --git a/sound/soc/meson/axg-frddr.c b/sound/soc/meson/axg-frddr.c
-index 0968e8375000..6ab111c31b28 100644
---- a/sound/soc/meson/axg-frddr.c
-+++ b/sound/soc/meson/axg-frddr.c
-@@ -23,6 +23,12 @@
- #define CTRL0_SEL3_SHIFT		8
- #define CTRL0_SEL3_EN_SHIFT		11
- #define CTRL1_FRDDR_FORCE_FINISH	BIT(12)
-+#define CTRL2_SEL1_SHIFT		0
-+#define CTRL2_SEL1_EN_SHIFT		4
-+#define CTRL2_SEL2_SHIFT		8
-+#define CTRL2_SEL2_EN_SHIFT		12
-+#define CTRL2_SEL3_SHIFT		16
-+#define CTRL2_SEL3_EN_SHIFT		20
- 
- static int g12a_frddr_dai_prepare(struct snd_pcm_substream *substream,
- 				  struct snd_soc_dai *dai)
-@@ -269,6 +275,70 @@ static const struct axg_fifo_match_data g12a_frddr_match_data = {
- 	.dai_drv	= &g12a_frddr_dai_drv
- };
- 
-+/* On SM1, the output selection in on CTRL2 */
-+static const struct snd_kcontrol_new sm1_frddr_out1_enable =
-+	SOC_DAPM_SINGLE_AUTODISABLE("Switch", FIFO_CTRL2,
-+				    CTRL2_SEL1_EN_SHIFT, 1, 0);
-+static const struct snd_kcontrol_new sm1_frddr_out2_enable =
-+	SOC_DAPM_SINGLE_AUTODISABLE("Switch", FIFO_CTRL2,
-+				    CTRL2_SEL2_EN_SHIFT, 1, 0);
-+static const struct snd_kcontrol_new sm1_frddr_out3_enable =
-+	SOC_DAPM_SINGLE_AUTODISABLE("Switch", FIFO_CTRL2,
-+				    CTRL2_SEL3_EN_SHIFT, 1, 0);
-+
-+static SOC_ENUM_SINGLE_DECL(sm1_frddr_sel1_enum, FIFO_CTRL2, CTRL2_SEL1_SHIFT,
-+			    axg_frddr_sel_texts);
-+static SOC_ENUM_SINGLE_DECL(sm1_frddr_sel2_enum, FIFO_CTRL2, CTRL2_SEL2_SHIFT,
-+			    axg_frddr_sel_texts);
-+static SOC_ENUM_SINGLE_DECL(sm1_frddr_sel3_enum, FIFO_CTRL2, CTRL2_SEL3_SHIFT,
-+			    axg_frddr_sel_texts);
-+
-+static const struct snd_kcontrol_new sm1_frddr_out1_demux =
-+	SOC_DAPM_ENUM("Output Src 1", sm1_frddr_sel1_enum);
-+static const struct snd_kcontrol_new sm1_frddr_out2_demux =
-+	SOC_DAPM_ENUM("Output Src 2", sm1_frddr_sel2_enum);
-+static const struct snd_kcontrol_new sm1_frddr_out3_demux =
-+	SOC_DAPM_ENUM("Output Src 3", sm1_frddr_sel3_enum);
-+
-+static const struct snd_soc_dapm_widget sm1_frddr_dapm_widgets[] = {
-+	SND_SOC_DAPM_AIF_OUT("SRC 1", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("SRC 2", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("SRC 3", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_SWITCH("SRC 1 EN", SND_SOC_NOPM, 0, 0,
-+			    &sm1_frddr_out1_enable),
-+	SND_SOC_DAPM_SWITCH("SRC 2 EN", SND_SOC_NOPM, 0, 0,
-+			    &sm1_frddr_out2_enable),
-+	SND_SOC_DAPM_SWITCH("SRC 3 EN", SND_SOC_NOPM, 0, 0,
-+			    &sm1_frddr_out3_enable),
-+	SND_SOC_DAPM_DEMUX("SINK 1 SEL", SND_SOC_NOPM, 0, 0,
-+			   &sm1_frddr_out1_demux),
-+	SND_SOC_DAPM_DEMUX("SINK 2 SEL", SND_SOC_NOPM, 0, 0,
-+			   &sm1_frddr_out2_demux),
-+	SND_SOC_DAPM_DEMUX("SINK 3 SEL", SND_SOC_NOPM, 0, 0,
-+			   &sm1_frddr_out3_demux),
-+	SND_SOC_DAPM_AIF_OUT("OUT 0", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("OUT 1", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("OUT 2", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("OUT 3", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("OUT 4", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("OUT 5", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("OUT 6", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("OUT 7", NULL, 0, SND_SOC_NOPM, 0, 0),
-+};
-+
-+static const struct snd_soc_component_driver sm1_frddr_component_drv = {
-+	.dapm_widgets		= sm1_frddr_dapm_widgets,
-+	.num_dapm_widgets	= ARRAY_SIZE(sm1_frddr_dapm_widgets),
-+	.dapm_routes		= g12a_frddr_dapm_routes,
-+	.num_dapm_routes	= ARRAY_SIZE(g12a_frddr_dapm_routes),
-+	.ops			= &g12a_fifo_pcm_ops
-+};
-+
-+static const struct axg_fifo_match_data sm1_frddr_match_data = {
-+	.component_drv	= &sm1_frddr_component_drv,
-+	.dai_drv	= &g12a_frddr_dai_drv
-+};
-+
- static const struct of_device_id axg_frddr_of_match[] = {
- 	{
- 		.compatible = "amlogic,axg-frddr",
-@@ -276,6 +346,9 @@ static const struct of_device_id axg_frddr_of_match[] = {
- 	}, {
- 		.compatible = "amlogic,g12a-frddr",
- 		.data = &g12a_frddr_match_data,
-+	}, {
-+		.compatible = "amlogic,sm1-frddr",
-+		.data = &sm1_frddr_match_data,
- 	}, {}
- };
- MODULE_DEVICE_TABLE(of, axg_frddr_of_match);
+Jack
 -- 
-2.20.1
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
