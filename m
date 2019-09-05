@@ -1,57 +1,44 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH V4 0/6] PCI: tegra: Enable PCIe C5 controller of Tegra194
- in p2972-0000 platform
-Date: Thu, 5 Sep 2019 12:20:55 +0100
-Message-ID: <20190905112055.GB16642@e121166-lin.cambridge.arm.com>
-References: <20190905104553.2884-1-vidyas@nvidia.com>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 31/49] ath11k: add mac.c
+Date: Thu, 05 Sep 2019 14:24:11 +0300
+Message-ID: <878sr3nfz8.fsf@kamboji.qca.qualcomm.com>
+References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
+        <1566316095-27507-32-git-send-email-kvalo@codeaurora.org>
+        <4076919b34cad119eb4146025f587285ef40e37c.camel@sipsolutions.net>
+        <ee38dc5e80097d0ebc186f81b2f11d37@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190905104553.2884-1-vidyas@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vidya Sagar <vidyas@nvidia.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com, gustavo.pimentel@synopsys.com, digetx@gmail.com, mperttunen@nvidia.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Content-Type: text/plain
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ee38dc5e80097d0ebc186f81b2f11d37-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (Vasanthakumar
+        Thiagarajan's message of "Fri, 23 Aug 2019 17:45:41 +0530")
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 04:15:47PM +0530, Vidya Sagar wrote:
-> This patch series enables Tegra194's C5 controller which owns x16 slot in
-> p2972-0000 platform. C5 controller's PERST# and CLKREQ# are not configured as
-> output and bi-directional signals by default and hence they need to be
-> configured explicitly. Also, x16 slot's 3.3V and 12V supplies are controlled
-> through GPIOs and hence they need to be enabled through regulator framework.
-> This patch series adds required infrastructural support to address both the
-> aforementioned requirements.
-> Testing done on p2972-0000 platform
-> - Able to enumerate devices connected to x16 slot (owned by C5 controller)
-> - Enumerated device's functionality verified
-> - Suspend-Resume sequence is verified with device connected to x16 slot
-> 
-> V4:
-> * Rebased (Patch-4/6 particularly) on top of Lorenzo's pci/tegra branch
-> 
-> V3:
-> * Addressed some more review comments from Andrew Murray and Thierry Reding
-> 
-> V2:
-> * Changed the order of patches in the series for easy merging
-> * Addressed review comments from Thierry Reding and Andrew Murray
-> 
-> Vidya Sagar (6):
->   dt-bindings: PCI: tegra: Add sideband pins configuration entries
->   dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
->   PCI: tegra: Add support to configure sideband pins
->   PCI: tegra: Add support to enable slot regulators
->   arm64: tegra: Add configuration for PCIe C5 sideband signals
->   arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
-> 
->  .../bindings/pci/nvidia,tegra194-pcie.txt     | 16 ++++
->  .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 24 +++++
->  .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  4 +-
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi      | 38 +++++++-
->  drivers/pci/controller/dwc/pcie-tegra194.c    | 94 ++++++++++++++++++-
->  5 files changed, 172 insertions(+), 4 deletions(-)
+Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
 
-Applied to pci/tegra for v5.4, thanks.
+> On 2019-08-21 02:16, Johannes Berg wrote:
+>> On Tue, 2019-08-20 at 18:47 +0300, Kalle Valo wrote:
+>>
+>>> +static int ath11k_mac_op_config(struct ieee80211_hw *hw, u32 changed)
+>>> +{
+>>> +	struct ath11k *ar = hw->priv;
+>>> +	int ret = 0;
+>>> +
+>>> +	/* mac80211 requires this op to be present and that's why
+>>> +	 * there's an empty function, this can be extended when
+>>> +	 * required.
+>>> +	 */
+>>
+>> Well, oops. Maybe it shouldn't be required?
+>
+> I think we require this for some configuration handling. The comment
+> is to be updated with proper information. We'll address that.
 
-Lorenzo
+The way I'm understanding Johannes' comment is that maybe we should
+change mac80211 to require this op to be present. Should be easy to fix
+in mac80211, right?
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
