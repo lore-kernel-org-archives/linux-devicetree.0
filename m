@@ -1,39 +1,50 @@
-Return-Path: <SRS0=nT/u=XA=flex--osk.bounces.google.com=3pR5xXQMKB5gGKC8GG8D6.4GEJG39+5LC6JF6D.GJ8@kernel.org>
-Date: Thu,  5 Sep 2019 10:41:29 -0400
-In-Reply-To: <20190905144130.220713-1-osk@google.com>
-Message-Id: <20190905144130.220713-2-osk@google.com>
-Mime-Version: 1.0
-References: <20190905144130.220713-1-osk@google.com>
-Subject: [PATCH v3 2/3] dt-bindings: serial: 8250: Add aspeed,sirq-polarity-sense.
-From: Oskar Senft <osk@google.com>
-Content-Type: text/plain; charset="UTF-8"
-To: joel@jms.id.au, andrew@aj.id.au, robh+dt@kernel.org, gregkh@linuxfoundation.org, jk@ozlabs.org
-Cc: openbmc@lists.ozlabs.org, linux-aspeed@lists.ozlabs.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Oskar Senft <osk@google.com>
+Return-Path: <SRS0=ZhZM=XA=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:17907 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731461AbfIEG1D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Sep 2019 02:27:03 -0400
+Subject: Re: [PATCH 1/8] clk: tegra: Add PLLE HW power sequencer control
+References: <20190614074652.21960-1-jckuo@nvidia.com>
+ <20190614074652.21960-2-jckuo@nvidia.com>
+ <1d215b49-73f7-8f5c-c8cb-81bf73553b19@nvidia.com>
+From: JC Kuo <jckuo@nvidia.com>
+Message-ID: <fb9517e8-e7db-613b-6922-b640c95f2a1a@nvidia.com>
+Date: Thu, 5 Sep 2019 14:26:58 +0800
+MIME-Version: 1.0
+In-Reply-To: <1d215b49-73f7-8f5c-c8cb-81bf73553b19@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>, gregkh@linuxfoundation.org, thierry.reding@gmail.com, pdeschrijver@nvidia.com, afrid@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add documentation for 8250_aspeed_vuart's aspeed,sirq-polarity-sense
-property that enables to auto-configure the VUART's SIRQ polarity.
+On 7/4/19 8:16 PM, Jon Hunter wrote:
+> 
+> On 14/06/2019 08:46, JC Kuo wrote:
+>> PLLE hardware power sequencer has to be enabled after PEX/SATA
+>> UPHY PLL's sequencers are enabled.
+>>
+>> tegra210_plle_hw_sequence_start() for XUSB PADCTL driver to enable
+>> PLLE hardware sequencer at proper time.
+>>
+>> tegra210_plle_hw_sequence_is_enabled() for XUSB PADCTL driver to
+>> check whether PLLE hardware sequencer has been enabled or not.
+> 
+> I think that here to be clear about what is going on you should state
+> that you are "adding the function tegra210_plle_hw_sequence_start() ..."
+Thanks. I will amend the commit message accordingly.
+> 
+> Are these functions dependent upon clk_plle_tegra210_enable() already
+> being called? I assume that there must be some dependency between the
+> above functions and the existing plle enable function. If there is a
+> dependency, how do you ensure the existing enable is already called?
+Yes, tegra210_plle_hw_sequence_start() has to be invoked after PLLE is
+enabled/locked. Caller is in charge of calling with correct sequence.
+I will add a check in tegra210_plle_hw_sequence_start() to ensure that
+PLLE HW sequencer will not be accidentally enabled when PLLE is not
+enabled/locked yet.
 
-Signed-off-by: Oskar Senft <osk@google.com>
----
- Documentation/devicetree/bindings/serial/8250.txt | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
-index 20d351f268ef..55700f20f6ee 100644
---- a/Documentation/devicetree/bindings/serial/8250.txt
-+++ b/Documentation/devicetree/bindings/serial/8250.txt
-@@ -56,6 +56,11 @@ Optional properties:
- - {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD
-   line respectively. It will use specified GPIO instead of the peripheral
-   function pin for the UART feature. If unsure, don't specify this property.
-+- aspeed,sirq-polarity-sense: Only applicable to aspeed,ast2500-vuart.
-+  phandle to aspeed,ast2500-scu compatible syscon alongside register offset
-+  and bit number to identify how the SIRQ polarity should be configured.
-+  One possible data source is the LPC/eSPI mode bit.
-+  Example: aspeed,sirq-polarity-sense = <&syscon 0x70 25>
- 
- Note:
- * fsl,ns16550:
--- 
-2.23.0.187.g17f5b7556c-goog
+Thanks,
+JC
