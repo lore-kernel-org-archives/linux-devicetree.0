@@ -1,60 +1,96 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 31/49] ath11k: add mac.c
-Date: Thu, 05 Sep 2019 15:29:40 +0300
-Message-ID: <87woenkjt7.fsf@kamboji.qca.qualcomm.com>
-References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
-        <1566316095-27507-32-git-send-email-kvalo@codeaurora.org>
-        <4076919b34cad119eb4146025f587285ef40e37c.camel@sipsolutions.net>
-        <ee38dc5e80097d0ebc186f81b2f11d37@codeaurora.org>
-        <878sr3nfz8.fsf@kamboji.qca.qualcomm.com>
-        <8e90a557c1659995d117c6dc8b728d7f@codeaurora.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC PATCH V2 3/4] media: platform: Add Mediatek FD driver KConfig
+Date: Thu, 5 Sep 2019 15:30:54 +0300
+Message-ID: <20190905123054.GL5035@pendragon.ideasonboard.com>
+References: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
+ <1562661672-22439-4-git-send-email-Jerry-Ch.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8e90a557c1659995d117c6dc8b728d7f-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (Vasanthakumar
-        Thiagarajan's message of "Thu, 05 Sep 2019 17:28:53 +0530")
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1562661672-22439-4-git-send-email-Jerry-Ch.chen@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jerry-ch Chen <Jerry-Ch.chen@mediatek.com>
+Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, po-yang.huang@mediatek.com, suleiman@chromium.org, shik@chromium.org, tfiga@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, hans.verkuil@cisco.com, zwisler@chromium.org, frederic.chen@mediatek.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+Hi Jerry,
 
-> On 2019-09-05 16:54, Kalle Valo wrote:
->> Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
->>
->>> On 2019-08-21 02:16, Johannes Berg wrote:
->>>> On Tue, 2019-08-20 at 18:47 +0300, Kalle Valo wrote:
->>>>
->>>>> +static int ath11k_mac_op_config(struct ieee80211_hw *hw, u32
->>>>> changed)
->>>>> +{
->>>>> +	struct ath11k *ar = hw->priv;
->>>>> +	int ret = 0;
->>>>> +
->>>>> +	/* mac80211 requires this op to be present and that's why
->>>>> +	 * there's an empty function, this can be extended when
->>>>> +	 * required.
->>>>> +	 */
->>>>
->>>> Well, oops. Maybe it shouldn't be required?
->>>
->>> I think we require this for some configuration handling. The comment
->>> is to be updated with proper information. We'll address that.
->>
->> The way I'm understanding Johannes' comment is that maybe we should
->> change mac80211 to require this op to be present. Should be easy to fix
->> in mac80211, right?
->
-> Ok. So make this callback optional in mac80211? should be a simple
-> code change.
+Thank you for the patch.
 
-Yeah, I was supposed to write:
+On Tue, Jul 09, 2019 at 04:41:11PM +0800, Jerry-ch Chen wrote:
+> From: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
+> 
+> This patch adds KConfig for Mediatek Face Detection driver (FD).
+> FD is embedded in Mediatek SoCs. It can provide hardware
+> accelerated face detection function.
+> 
+> Signed-off-by: Jerry-ch Chen <jerry-ch.chen@mediatek.com>
 
-"maybe we should change mac80211 to not require this op to be present"
+You can squash this patch with 4/4, there's no need to keep it separate.
 
-But of course I could have just misunderstood, let's see what Johannes
-says :)
+> ---
+>  drivers/media/platform/Kconfig            |  2 ++
+>  drivers/media/platform/mtk-isp/fd/Kconfig | 17 +++++++++++++++++
+>  2 files changed, 19 insertions(+)
+>  create mode 100644 drivers/media/platform/mtk-isp/fd/Kconfig
+> 
+> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+> index a505e9f..ae99258e 100644
+> --- a/drivers/media/platform/Kconfig
+> +++ b/drivers/media/platform/Kconfig
+> @@ -32,6 +32,8 @@ source "drivers/media/platform/davinci/Kconfig"
+>  
+>  source "drivers/media/platform/omap/Kconfig"
+>  
+> +source "drivers/media/platform/mtk-isp/fd/Kconfig"
+> +
+>  config VIDEO_ASPEED
+>  	tristate "Aspeed AST2400 and AST2500 Video Engine driver"
+>  	depends on VIDEO_V4L2
+> diff --git a/drivers/media/platform/mtk-isp/fd/Kconfig b/drivers/media/platform/mtk-isp/fd/Kconfig
+> new file mode 100644
+> index 0000000..0c5eaf0
+> --- /dev/null
+> +++ b/drivers/media/platform/mtk-isp/fd/Kconfig
+> @@ -0,0 +1,17 @@
+> +config VIDEO_MEDIATEK_FD
+> +	bool "Mediatek face detection processing function"
+> +	select DMA_SHARED_BUFFER
+> +	select VIDEOBUF2_DMA_CONTIG
+> +	select VIDEOBUF2_CORE
+> +	select VIDEOBUF2_V4L2
+> +	select VIDEOBUF2_MEMOPS
+> +	select VIDEOBUF2_VMALLOC
+
+Do you need both VIDEOBUF2_DMA_CONTIG and VIDEOBUF2_VMALLOC ? The driver
+doesn't seem to make use of VIDEOBUF2_VMALLOC.
+
+> +	select MEDIA_CONTROLLER
+> +
+> +	default n
+> +	help
+> +		Support the Face Detectioin (FD) feature.
+
+s/Detectioin/Detection/
+
+Maybe "... feature found in the Mediatek <list of SoCs> SoCs." ?
+
+> +
+> +		FD driver is a V4L2 memory-to-memory device driver which
+> +		provides hardware accelerated face detection function,
+> +		it can detect different sizes of faces in a raw image.
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Regards,
+
+Laurent Pinchart
