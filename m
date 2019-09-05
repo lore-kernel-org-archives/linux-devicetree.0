@@ -1,32 +1,51 @@
-Return-Path: <SRS0=WogO=XE=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1567666326-27373-1-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1567666326-27373-1-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 9 Sep 2019 14:55:15 +0200
-Message-ID: <CAMuHMdUeMZ5MOfgS7k+PTV8GO1u_gBWTffEuZA96djX=sF0EBw@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: power: Add r8a774b1 SYSC power domain definitions
-Content-Type: text/plain; charset="UTF-8"
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Return-Path: <SRS0=qxAe=XA=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH] dt-bindings: power: Add r8a774b1 SYSC power domain definitions
+Date: Thu,  5 Sep 2019 07:52:06 +0100
+Message-Id: <1567666326-27373-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Sep 5, 2019 at 8:58 AM Biju Das <biju.das@bp.renesas.com> wrote:
-> This patch adds power domain indices for RZ/G2N(a.k.a r8a774b1) SoC.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+This patch adds power domain indices for RZ/G2N(a.k.a r8a774b1) SoC.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.5, on a branch to be shared by the
-SYSC driver and DTS user.
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+ include/dt-bindings/power/r8a774b1-sysc.h | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 include/dt-bindings/power/r8a774b1-sysc.h
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/include/dt-bindings/power/r8a774b1-sysc.h b/include/dt-bindings/power/r8a774b1-sysc.h
+new file mode 100644
+index 0000000..3737364
+--- /dev/null
++++ b/include/dt-bindings/power/r8a774b1-sysc.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * Copyright (C) 2019 Renesas Electronics Corp.
++ */
++#ifndef __DT_BINDINGS_POWER_R8A774B1_SYSC_H__
++#define __DT_BINDINGS_POWER_R8A774B1_SYSC_H__
++
++/*
++ * These power domain indices match the numbers of the interrupt bits
++ * representing the power areas in the various Interrupt Registers
++ * (e.g. SYSCISR, Interrupt Status Register)
++ */
++
++#define R8A774B1_PD_CA57_CPU0		 0
++#define R8A774B1_PD_CA57_CPU1		 1
++#define R8A774B1_PD_A3VP		 9
++#define R8A774B1_PD_CA57_SCU		12
++#define R8A774B1_PD_A3VC		14
++#define R8A774B1_PD_3DG_A		17
++#define R8A774B1_PD_3DG_B		18
++#define R8A774B1_PD_A2VC1		26
++
++/* Always-on power area */
++#define R8A774B1_PD_ALWAYS_ON		32
++
++#endif /* __DT_BINDINGS_POWER_R8A774B1_SYSC_H__ */
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.7.4
