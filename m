@@ -1,10 +1,10 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: meson: add reset binding" to the asoc tree
+Subject: Applied "ASoC: meson: add sm1 compatibles" to the asoc tree
 Date: Thu,  5 Sep 2019 18:38:54 +0100 (BST)
-Message-ID: <20190905173854.9BF082742D17@ypsilon.sirena.org.uk>
-References: <20190905120120.31752-3-jbrunet@baylibre.com>
+Message-ID: <20190905173854.CD1272742D1C@ypsilon.sirena.org.uk>
+References: <20190905120120.31752-2-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190905120120.31752-3-jbrunet@baylibre.com>
+In-Reply-To: <20190905120120.31752-2-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jerome Brunet <jbrunet@baylibre.com>
 Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
@@ -12,7 +12,7 @@ List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: meson: add reset binding
+   ASoC: meson: add sm1 compatibles
 
 has been applied to the asoc tree at
 
@@ -37,108 +37,111 @@ to this mail.
 Thanks,
 Mark
 
->From 6b59b8f8222146fc1912e0b783c81e4122e240ac Mon Sep 17 00:00:00 2001
+>From f466309534b6f21304e1ee0573a60df9c4590272 Mon Sep 17 00:00:00 2001
 From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu, 5 Sep 2019 14:01:14 +0200
-Subject: [PATCH] ASoC: meson: add reset binding
+Date: Thu, 5 Sep 2019 14:01:13 +0200
+Subject: [PATCH] ASoC: meson: add sm1 compatibles
 
-The g12a audio subsystem, which is a derivative of the axg subsystem,
-provides a dedicated reset line for each of the audio components.
-
-The axg did not provide that and it is unclear if/when these reset are
-required. The reset already helped solve a channel mapping issue on the
-tdm formatter devices. Let's add the reset binding for the other
-components, so we can describe this in DT. We'll use it later on
-in the driver when/if needed.
+Document the compatible strings of the audio devices of the sm1 SoC
+family
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20190905120120.31752-3-jbrunet@baylibre.com
+Link: https://lore.kernel.org/r/20190905120120.31752-2-jbrunet@baylibre.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt | 5 ++++-
- Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt  | 3 +++
- .../devicetree/bindings/sound/amlogic,axg-spdifin.txt        | 3 +++
- .../devicetree/bindings/sound/amlogic,axg-spdifout.txt       | 3 +++
- .../devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt      | 2 ++
- 5 files changed, 15 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt  | 4 +++-
+ Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt   | 3 ++-
+ .../devicetree/bindings/sound/amlogic,axg-spdifin.txt         | 3 ++-
+ .../devicetree/bindings/sound/amlogic,axg-spdifout.txt        | 3 ++-
+ .../devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt  | 4 +++-
+ .../devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt       | 3 ++-
+ 6 files changed, 14 insertions(+), 6 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
-index 4b17073c8f8c..3080979350a0 100644
+index 4330fc9dca6d..4b17073c8f8c 100644
 --- a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
 +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
-@@ -12,7 +12,10 @@ Required properties:
+@@ -4,7 +4,9 @@ Required properties:
+ - compatible: 'amlogic,axg-toddr' or
+ 	      'amlogic,axg-toddr' or
+ 	      'amlogic,g12a-frddr' or
+-	      'amlogic,g12a-toddr'
++	      'amlogic,g12a-toddr' or
++	      'amlogic,sm1-frddr' or
++	      'amlogic,sm1-toddr'
+ - reg: physical base address of the controller and length of memory
+        mapped region.
  - interrupts: interrupt specifier for the fifo.
- - clocks: phandle to the fifo peripheral clock provided by the audio
- 	  clock controller.
--- resets: phandle to memory ARB line provided by the arb reset controller.
-+- resets: list of reset phandle, one for each entry reset-names.
-+- reset-names: should contain the following:
-+  * "arb" : memory ARB line (required)
-+  * "rst" : dedicated device reset line (optional)
- - #sound-dai-cells: must be 0.
- 
- Example of FRDDR A on the A113 SoC:
 diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
-index b3f097976e6b..716878107a24 100644
+index 73f473a9365f..b3f097976e6b 100644
 --- a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
 +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
-@@ -13,6 +13,9 @@ Required properties:
-   * "sysclk" : dsp system clock
- - #sound-dai-cells: must be 0.
+@@ -2,7 +2,8 @@
  
-+Optional property:
-+- resets: phandle to the dedicated reset line of the pdm input.
-+
- Example of PDM on the A113 SoC:
- 
- pdm: audio-controller@ff632000 {
+ Required properties:
+ - compatible: 'amlogic,axg-pdm' or
+-	      'amlogic,g12a-pdm'
++	      'amlogic,g12a-pdm' or
++	      'amlogic,sm1-pdm'
+ - reg: physical base address of the controller and length of memory
+        mapped region.
+ - clocks: list of clock phandle, one for each entry clock-names.
 diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
-index 62e5bca71664..df92a4ecf288 100644
+index 0b82504fa419..62e5bca71664 100644
 --- a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
 +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
-@@ -11,6 +11,9 @@ Required properties:
-   * "refclk" : spdif input reference clock
- - #sound-dai-cells: must be 0.
+@@ -2,7 +2,8 @@
  
-+Optional property:
-+- resets: phandle to the dedicated reset line of the spdif input.
-+
- Example on the A113 SoC:
- 
- spdifin: audio-controller@400 {
+ Required properties:
+ - compatible: 'amlogic,axg-spdifin' or
+-	      'amlogic,g12a-spdifin'
++	      'amlogic,g12a-spdifin' or
++	      'amlogic,sm1-spdifin'
+ - interrupts: interrupt specifier for the spdif input.
+ - clocks: list of clock phandle, one for each entry clock-names.
+ - clock-names: should contain the following:
 diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
-index d38aa35ec630..28381dd1f633 100644
+index 826152730508..d38aa35ec630 100644
 --- a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
 +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
-@@ -10,6 +10,9 @@ Required properties:
-   * "mclk" : master clock
- - #sound-dai-cells: must be 0.
+@@ -2,7 +2,8 @@
  
-+Optional property:
-+- resets: phandle to the dedicated reset line of the spdif output.
-+
- Example on the A113 SoC:
- 
- spdifout: audio-controller@480 {
+ Required properties:
+ - compatible: 'amlogic,axg-spdifout' or
+-	      'amlogic,g12a-spdifout'
++	      'amlogic,g12a-spdifout' or
++	      'amlogic,sm1-spdifout'
+ - clocks: list of clock phandle, one for each entry clock-names.
+ - clock-names: should contain the following:
+   * "pclk" : peripheral clock.
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
+index 8835a43edfbb..5996c0cd89c2 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
+@@ -4,7 +4,9 @@ Required properties:
+ - compatible: 'amlogic,axg-tdmin' or
+ 	      'amlogic,axg-tdmout' or
+ 	      'amlogic,g12a-tdmin' or
+-	      'amlogic,g12a-tdmout'
++	      'amlogic,g12a-tdmout' or
++	      'amlogic,sm1-tdmin' or
++	      'amlogic,sm1-tdmout
+ - reg: physical base address of the controller and length of memory
+        mapped region.
+ - clocks: list of clock phandle, one for each entry clock-names.
 diff --git a/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt b/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
-index 173a95045540..4e8cd7eb7cec 100644
+index aa6c35570d31..173a95045540 100644
 --- a/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
 +++ b/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
-@@ -6,6 +6,7 @@ Required properties:
+@@ -1,7 +1,8 @@
+ * Amlogic HDMI Tx control glue
+ 
+ Required properties:
+-- compatible: "amlogic,g12a-tohdmitx"
++- compatible: "amlogic,g12a-tohdmitx" or
++	      "amlogic,sm1-tohdmitx"
  - reg: physical base address of the controller and length of memory
         mapped region.
  - #sound-dai-cells: should be 1.
-+- resets: phandle to the dedicated reset line of the hdmitx glue.
- 
- Example on the S905X2 SoC:
- 
-@@ -13,6 +14,7 @@ tohdmitx: audio-controller@744 {
- 	compatible = "amlogic,g12a-tohdmitx";
- 	reg = <0x0 0x744 0x0 0x4>;
- 	#sound-dai-cells = <1>;
-+	resets = <&clkc_audio AUD_RESET_TOHDMITX>;
- };
- 
- Example of an 'amlogic,axg-sound-card':
 -- 
 2.20.1
