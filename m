@@ -1,74 +1,99 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v2 4/4] arm64: dts: add support for A1 based Amlogic AD401
-Date: Thu, 5 Sep 2019 22:15:34 +0200
-Message-ID: <CAFBinCBSmW4y-Dz7EkJMV8HOU4k6Z0G-K6T77XnVrHyubaSsdg@mail.gmail.com>
-References: <1567667251-33466-1-git-send-email-jianxin.pan@amlogic.com> <1567667251-33466-5-git-send-email-jianxin.pan@amlogic.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+Date: Thu, 5 Sep 2019 22:31:29 +0200
+Message-ID: <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com>
+References: <cover.1567585181.git.eswara.kota@linux.intel.com> <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567667251-33466-5-git-send-email-jianxin.pan@amlogic.com>
+In-Reply-To: <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jianxin Pan <jianxin.pan@amlogic.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Tao Zeng <tao.zeng@amlogic.com>
+To: Dilip Kota <eswara.kota@linux.intel.com>
+Cc: jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com, robh@kernel.org, linux-pci@vger.kernel.org, hch@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jianxin,
+Hi Dilip,
 
-(it's great to see that you and your team are upstreaming this early)
-
-On Thu, Sep 5, 2019 at 9:08 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
+On Wed, Sep 4, 2019 at 12:11 PM Dilip Kota <eswara.kota@linux.intel.com> wrote:
 [...]
-> +       memory@0 {
-> +               device_type = "memory";
-> +               reg = <0x0 0x0 0x0 0x8000000>;
-> +               /*linux,usable-memory = <0x0 0x0 0x0 0x8000000>;*/
-why do we need that comment here (I don't understand it - why doesn't
-the "reg" property cover this)?
-
-> +       };
-> +};
-> +
-> +&uart_AO_B {
-> +       status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> new file mode 100644
-> index 00000000..4d476ac
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> @@ -0,0 +1,122 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +       compatible = "amlogic,a1";
-> +
-> +       interrupt-parent = <&gic>;
-> +       #address-cells = <2>;
-> +       #size-cells = <2>;
-> +
-> +       cpus {
-> +               #address-cells = <0x2>;
-> +               #size-cells = <0x0>;
-only now I notice that all our other .dtsi also use hex values
-(instead of decimal as just a few lines above) here
-do you know if there is a particular reason for this?
+> +properties:
+> +  compatible:
+> +    const: intel,lgm-pcie
+should we add the "snps,dw-pcie" here (and in the example below) as well?
+(this is what for example
+Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt does)
 
 [...]
-> +               uart_AO_B: serial@fe002000 {
-> +                       compatible = "amlogic,meson-gx-uart",
-> +                                    "amlogic,meson-ao-uart";
-> +                                    reg = <0x0 0xfe002000 0x0 0x18>;
-the indentation of the "reg" property is off here
+> +  phy-names:
+> +    const: pciephy
+the most popular choice in Documentation/devicetree/bindings/pci/ is "pcie-phy"
+if Rob is happy with "pciephy" (which is already part of two other
+bindings) then I'm happy with "pciephy" as well
 
-also I'm a bit surprised to see no busses (like aobus, cbus, periphs, ...) here
-aren't there any busses defined in the A1 SoC implementation or are
-were you planning to add them later?
+> +  num-lanes:
+> +    description: Number of lanes to use for this port.
+are there SoCs with more than 2 lanes?
+you can list the allowed values in an enum so "num-lanes = <16>"
+causes an error when someone accidentally has this in their .dts (and
+runs the dt-bindings validation)
+
+[...]
+> +  reset-assert-ms:
+maybe add:
+  $ref: /schemas/types.yaml#/definitions/uint32
+
+> +    description: |
+> +      Device reset interval in ms.
+> +      Some devices need an interval upto 500ms. By default it is 100ms.
+> +
+> +required:
+> +  - compatible
+> +  - device_type
+> +  - reg
+> +  - reg-names
+> +  - ranges
+> +  - resets
+> +  - clocks
+> +  - phys
+> +  - phy-names
+> +  - reset-gpios
+> +  - num-lanes
+> +  - linux,pci-domain
+> +  - interrupts
+> +  - interrupt-map
+> +  - interrupt-map-mask
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pcie10:pcie@d0e00000 {
+> +      compatible = "intel,lgm-pcie";
+> +      device_type = "pci";
+> +      #address-cells = <3>;
+> +      #size-cells = <2>;
+> +      reg = <
+> +            0xd0e00000 0x1000
+> +            0xd2000000 0x800000
+> +            0xd0a41000 0x1000
+> +            >;
+> +      reg-names = "dbi", "config", "app";
+> +      linux,pci-domain = <0>;
+> +      max-link-speed = <4>;
+> +      bus-range = <0x00 0x08>;
+> +      interrupt-parent = <&ioapic1>;
+> +      interrupts = <67 1>;
+> +      #interrupt-cells = <1>;
+> +      interrupt-map-mask = <0 0 0 0x7>;
+> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+> +                      <0 0 0 2 &ioapic1 28 1>,
+> +                      <0 0 0 3 &ioapic1 29 1>,
+> +                      <0 0 0 4 &ioapic1 30 1>;
+is the "1" in the interrupts and interrupt-map properties IRQ_TYPE_EDGE_RISING?
+you can use these macros in this example as well, see
+Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml for
+example
 
 
 Martin
