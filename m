@@ -1,33 +1,116 @@
-From: Bin Meng <bmeng.cn@gmail.com>
-Subject: Re: [PATCH] riscv: dts: sifive: Add missing "clock-frequency" to
- cpu0/cpu1 nodes
-Date: Thu, 5 Sep 2019 20:01:41 +0800
-Message-ID: <CAEUhbmV8v2rjhAZfOMauJC15eZpxYUZ=9YS-YN2dhNRv4H8bEg@mail.gmail.com>
-References: <1565158960-12240-1-git-send-email-bmeng.cn@gmail.com> <alpine.DEB.2.21.9999.1908130758550.27195@viisi.sifive.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 7/8] ASoC: meson: axg-toddr: add sm1 support
+Date: Thu,  5 Sep 2019 14:01:19 +0200
+Message-ID: <20190905120120.31752-8-jbrunet@baylibre.com>
+References: <20190905120120.31752-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.9999.1908130758550.27195@viisi.sifive.com>
+In-Reply-To: <20190905120120.31752-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>, Palmer Dabbelt <palmer@sifive.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-riscv <linux-riscv@lists.infradead.org>
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 11:00 PM Paul Walmsley <paul.walmsley@sifive.com> wrote:
->
-> On Tue, 6 Aug 2019, Bin Meng wrote:
->
-> > Add the missing "clock-frequency" property to the cpu0/cpu1 nodes
-> > for consistency with other cpu nodes.
-> >
-> > Signed-off-by: Bin Meng <bmeng.cn@gmail.com>
->
-> Is this being driven by a schema validator warning?  If not, and this
-> property isn't required, it seems better just to drop it.  It seems
-> useless?
->
+On sm1, the maximum number TODDR inputs is extended to 16.
 
-Yes, I think we can drop it. I will send v2.
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ sound/soc/meson/axg-toddr.c | 68 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
 
-Regards,
-Bin
+diff --git a/sound/soc/meson/axg-toddr.c b/sound/soc/meson/axg-toddr.c
+index 2e9a2e5862ce..c8ea2145f576 100644
+--- a/sound/soc/meson/axg-toddr.c
++++ b/sound/soc/meson/axg-toddr.c
+@@ -25,6 +25,7 @@
+ #define CTRL0_TODDR_LSB_POS_MASK	GENMASK(7, 3)
+ #define CTRL0_TODDR_LSB_POS(x)		((x) << 3)
+ #define CTRL1_TODDR_FORCE_FINISH	BIT(25)
++#define CTRL1_SEL_SHIFT			28
+ 
+ #define TODDR_MSB_POS	31
+ 
+@@ -221,6 +222,70 @@ static const struct axg_fifo_match_data g12a_toddr_match_data = {
+ 	.dai_drv	= &g12a_toddr_dai_drv
+ };
+ 
++static const char * const sm1_toddr_sel_texts[] = {
++	"IN 0", "IN 1", "IN 2",  "IN 3",  "IN 4",  "IN 5",  "IN 6",  "IN 7",
++	"IN 8", "IN 9", "IN 10", "IN 11", "IN 12", "IN 13", "IN 14", "IN 15"
++};
++
++static SOC_ENUM_SINGLE_DECL(sm1_toddr_sel_enum, FIFO_CTRL1, CTRL1_SEL_SHIFT,
++			    sm1_toddr_sel_texts);
++
++static const struct snd_kcontrol_new sm1_toddr_in_mux =
++	SOC_DAPM_ENUM("Input Source", sm1_toddr_sel_enum);
++
++static const struct snd_soc_dapm_widget sm1_toddr_dapm_widgets[] = {
++	SND_SOC_DAPM_MUX("SRC SEL", SND_SOC_NOPM, 0, 0, &sm1_toddr_in_mux),
++	SND_SOC_DAPM_AIF_IN("IN 0",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 1",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 2",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 3",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 4",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 5",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 6",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 7",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 8",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 9",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 10", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 11", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 12", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 13", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 14", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 15", NULL, 0, SND_SOC_NOPM, 0, 0),
++};
++
++static const struct snd_soc_dapm_route sm1_toddr_dapm_routes[] = {
++	{ "Capture", NULL, "SRC SEL" },
++	{ "SRC SEL", "IN 0",  "IN 0" },
++	{ "SRC SEL", "IN 1",  "IN 1" },
++	{ "SRC SEL", "IN 2",  "IN 2" },
++	{ "SRC SEL", "IN 3",  "IN 3" },
++	{ "SRC SEL", "IN 4",  "IN 4" },
++	{ "SRC SEL", "IN 5",  "IN 5" },
++	{ "SRC SEL", "IN 6",  "IN 6" },
++	{ "SRC SEL", "IN 7",  "IN 7" },
++	{ "SRC SEL", "IN 8",  "IN 8" },
++	{ "SRC SEL", "IN 9",  "IN 9" },
++	{ "SRC SEL", "IN 10", "IN 10" },
++	{ "SRC SEL", "IN 11", "IN 11" },
++	{ "SRC SEL", "IN 12", "IN 12" },
++	{ "SRC SEL", "IN 13", "IN 13" },
++	{ "SRC SEL", "IN 14", "IN 14" },
++	{ "SRC SEL", "IN 15", "IN 15" },
++};
++
++static const struct snd_soc_component_driver sm1_toddr_component_drv = {
++	.dapm_widgets		= sm1_toddr_dapm_widgets,
++	.num_dapm_widgets	= ARRAY_SIZE(sm1_toddr_dapm_widgets),
++	.dapm_routes		= sm1_toddr_dapm_routes,
++	.num_dapm_routes	= ARRAY_SIZE(sm1_toddr_dapm_routes),
++	.ops			= &g12a_fifo_pcm_ops
++};
++
++static const struct axg_fifo_match_data sm1_toddr_match_data = {
++	.component_drv	= &sm1_toddr_component_drv,
++	.dai_drv	= &g12a_toddr_dai_drv
++};
++
+ static const struct of_device_id axg_toddr_of_match[] = {
+ 	{
+ 		.compatible = "amlogic,axg-toddr",
+@@ -228,6 +293,9 @@ static const struct of_device_id axg_toddr_of_match[] = {
+ 	}, {
+ 		.compatible = "amlogic,g12a-toddr",
+ 		.data = &g12a_toddr_match_data,
++	}, {
++		.compatible = "amlogic,sm1-toddr",
++		.data = &sm1_toddr_match_data,
+ 	}, {}
+ };
+ MODULE_DEVICE_TABLE(of, axg_toddr_of_match);
+-- 
+2.21.0
