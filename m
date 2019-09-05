@@ -1,75 +1,487 @@
-From: jamestai.sky@gmail.com
-Subject: [PATCH] dt-bindings: arm: Convert Realtek board/soc bindings to json-schema
-Date: Thu,  5 Sep 2019 16:17:21 +0800
-Message-ID: <20190905081721.1548-1-james.tai@realtek.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, CY_Huang <cy.huang@realtek.com>, Phinex Hung <phinex@realtek.com>, "james.tai" <james.tai@realtek.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [V2, 2/2] media: i2c: Add DW9768 VCM driver
+Date: Thu, 5 Sep 2019 11:21:34 +0300
+Message-ID: <20190905082134.GY5475@paasikivi.fi.intel.com>
+References: <20190905072142.14606-1-dongchun.zhu@mediatek.com>
+ <20190905072142.14606-3-dongchun.zhu@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190905072142.14606-3-dongchun.zhu@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dongchun.zhu@mediatek.com
+Cc: mark.rutland@arm.com, drinkcat@chromium.org, andriy.shevchenko@linux.intel.com, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, sam.hung@mediatek.com, shengnan.wang@mediatek.com, tfiga@chromium.org, sj.huang@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, bingbu.cao@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: "james.tai" <james.tai@realtek.com>
+Hi Dongchun,
 
-Convert Realtek SoC bindings to DT schema format using json-schema.
+Thanks for the update. A few comments below.
 
-Signed-off-by: james.tai <james.tai@realtek.com>
----
- .../devicetree/bindings/arm/realtek.txt       | 22 -------------------
- .../devicetree/bindings/arm/realtek.yaml      | 17 ++++++++++++++
- 2 files changed, 17 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/realtek.txt
- create mode 100644 Documentation/devicetree/bindings/arm/realtek.yaml
+On Thu, Sep 05, 2019 at 03:21:42PM +0800, dongchun.zhu@mediatek.com wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> =
 
-diff --git a/Documentation/devicetree/bindings/arm/realtek.txt b/Documentation/devicetree/bindings/arm/realtek.txt
-deleted file mode 100644
-index 95839e19ae92..000000000000
---- a/Documentation/devicetree/bindings/arm/realtek.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--Realtek platforms device tree bindings
----------------------------------------
--
--
--RTD1295 SoC
--===========
--
--Required root node properties:
--
-- - compatible :  must contain "realtek,rtd1295"
--
--
--Root node property compatible must contain, depending on board:
--
-- - MeLE V9: "mele,v9"
-- - ProBox2 AVA: "probox2,ava"
-- - Zidoo X9S: "zidoo,x9s"
--
--
--Example:
--
--    compatible = "zidoo,x9s", "realtek,rtd1295";
-diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
-new file mode 100644
-index 000000000000..ad9b13bc42f0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/realtek.yaml
-@@ -0,0 +1,17 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/realtek.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Realtek platforms device tree bindings
-+
-+properties:
-+  compatible:
-+    oneOf:
-+        items:
-+          - enum:
-+              - mele,v9
-+              - probox2,ava
-+              - zidoo,x9s
-+          - const: realtek,rtd1295
--- 
-2.17.1
+> This patch adds a V4L2 sub-device driver for DW9768 lens voice coil,
+> and provides control to set the desired focus.
+> =
+
+> The DW9768 is a 10 bit DAC with 100mA output current sink capability
+> from Dongwoon, designed for linear control of voice coil motor,
+> and controlled via I2C serial interface.
+> =
+
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> ---
+>  MAINTAINERS                |   1 +
+>  drivers/media/i2c/Kconfig  |  10 ++
+>  drivers/media/i2c/Makefile |   1 +
+>  drivers/media/i2c/dw9768.c | 349 +++++++++++++++++++++++++++++++++++++++=
+++++++
+>  4 files changed, 361 insertions(+)
+>  create mode 100644 drivers/media/i2c/dw9768.c
+> =
+
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 192a671..c5c9a0e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4976,6 +4976,7 @@ M:	Dongchun Zhu <dongchun.zhu@mediatek.com>
+>  L:	linux-media@vger.kernel.org
+>  T:	git git://linuxtv.org/media_tree.git
+>  S:	Maintained
+> +F:	drivers/media/i2c/dw9768.c
+>  F:	Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt
+>  =
+
+>  DONGWOON DW9807 LENS VOICE COIL DRIVER
+> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> index 79ce9ec..dfb665c 100644
+> --- a/drivers/media/i2c/Kconfig
+> +++ b/drivers/media/i2c/Kconfig
+> @@ -1016,6 +1016,16 @@ config VIDEO_DW9714
+>  	  capability. This is designed for linear control of
+>  	  voice coil motors, controlled via I2C serial interface.
+>  =
+
+> +config VIDEO_DW9768
+> +	tristate "DW9768 lens voice coil support"
+> +	depends on I2C && VIDEO_V4L2 && MEDIA_CONTROLLER
+> +	depends on VIDEO_V4L2_SUBDEV_API
+> +	help
+> +	  This is a driver for the DW9768 camera lens voice coil.
+> +	  DW9768 is a 10 bit DAC with 100mA output current sink
+> +	  capability. This is designed for linear control of
+> +	  voice coil motors, controlled via I2C serial interface.
+> +
+>  config VIDEO_DW9807_VCM
+>  	tristate "DW9807 lens voice coil support"
+>  	depends on I2C && VIDEO_V4L2 && MEDIA_CONTROLLER
+> diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+> index fd4ea86..2561239 100644
+> --- a/drivers/media/i2c/Makefile
+> +++ b/drivers/media/i2c/Makefile
+> @@ -24,6 +24,7 @@ obj-$(CONFIG_VIDEO_SAA6752HS) +=3D saa6752hs.o
+>  obj-$(CONFIG_VIDEO_AD5820)  +=3D ad5820.o
+>  obj-$(CONFIG_VIDEO_AK7375)  +=3D ak7375.o
+>  obj-$(CONFIG_VIDEO_DW9714)  +=3D dw9714.o
+> +obj-$(CONFIG_VIDEO_DW9768)  +=3D dw9768.o
+>  obj-$(CONFIG_VIDEO_DW9807_VCM)  +=3D dw9807-vcm.o
+>  obj-$(CONFIG_VIDEO_ADV7170) +=3D adv7170.o
+>  obj-$(CONFIG_VIDEO_ADV7175) +=3D adv7175.o
+> diff --git a/drivers/media/i2c/dw9768.c b/drivers/media/i2c/dw9768.c
+> new file mode 100644
+> index 0000000..66d1712
+> --- /dev/null
+> +++ b/drivers/media/i2c/dw9768.c
+> @@ -0,0 +1,349 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2019 MediaTek Inc.
+> +
+> +#include <linux/delay.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/pm_runtime.h>
+> +#include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-device.h>
+> +#include <media/v4l2-subdev.h>
+> +
+> +#define DW9768_NAME				"dw9768"
+> +#define DW9768_MAX_FOCUS_POS			1023
+> +/*
+> + * This sets the minimum granularity for the focus positions.
+> + * A value of 1 gives maximum accuracy for a desired focus position
+> + */
+> +#define DW9768_FOCUS_STEPS			1
+> +/*
+> + * DW9768 separates two registers to control the VCM position.
+> + * One for MSB value, another is LSB value.
+> + */
+> +#define DW9768_REG_MASK_MSB			0x03
+> +#define DW9768_REG_MASK_LSB			0xff
+> +#define DW9768_SET_POSITION_ADDR                0x03
+> +
+> +#define DW9768_CMD_DELAY			0xff
+> +#define DW9768_CTRL_DELAY_US			5000
+> +
+> +#define DW9768_DAC_SHIFT			8
+> +
+> +/* dw9768 device structure */
+> +struct dw9768 {
+> +	struct v4l2_ctrl_handler ctrls;
+> +	struct v4l2_subdev sd;
+> +	struct regulator *vin;
+> +	struct regulator *vdd;
+> +};
+> +
+> +static inline struct dw9768 *to_dw9768_vcm(struct v4l2_ctrl *ctrl)
+> +{
+> +	return container_of(ctrl->handler, struct dw9768, ctrls);
+> +}
+> +
+> +static inline struct dw9768 *sd_to_dw9768_vcm(struct v4l2_subdev *subdev)
+> +{
+> +	return container_of(subdev, struct dw9768, sd);
+> +}
+> +
+> +struct regval_list {
+> +	unsigned char reg_num;
+> +	unsigned char value;
+> +};
+> +
+> +static struct regval_list dw9768_init_regs[] =3D {
+> +	{0x02, 0x02},
+> +	{DW9768_CMD_DELAY, DW9768_CMD_DELAY},
+> +	{0x06, 0x41},
+> +	{0x07, 0x39},
+
+These need to be documented. Please add #defines for the register addresses
+and bits in the registers as needed.
+
+The writes would better be done as function calls; the same applies to the
+delays.
+
+> +	{DW9768_CMD_DELAY, DW9768_CMD_DELAY},
+> +};
+> +
+> +static struct regval_list dw9768_release_regs[] =3D {
+> +	{0x02, 0x00},
+> +	{DW9768_CMD_DELAY, DW9768_CMD_DELAY},
+> +	{0x01, 0x00},
+
+Same here.
+
+> +	{DW9768_CMD_DELAY, DW9768_CMD_DELAY},
+> +};
+> +
+> +static int dw9768_write_smbus(struct dw9768 *dw9768, unsigned char reg,
+> +			      unsigned char value)
+> +{
+> +	struct i2c_client *client =3D v4l2_get_subdevdata(&dw9768->sd);
+> +	int ret;
+> +
+> +	if (reg =3D=3D DW9768_CMD_DELAY  && value =3D=3D DW9768_CMD_DELAY)
+> +		usleep_range(DW9768_CTRL_DELAY_US,
+> +			     DW9768_CTRL_DELAY_US + 100);
+> +	else
+> +		ret =3D i2c_smbus_write_byte_data(client, reg, value);
+> +	return ret;
+> +}
+> +
+> +static int dw9768_write_array(struct dw9768 *dw9768, struct regval_list =
+*vals,
+> +			      u32 len)
+> +{
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	for (i =3D 0; i < len; i++) {
+> +		ret =3D dw9768_write_smbus(dw9768, vals->reg_num, vals->value);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int dw9768_set_position(struct dw9768 *dw9768, u16 val)
+> +{
+> +	struct i2c_client *client =3D v4l2_get_subdevdata(&dw9768->sd);
+> +	u8 addr[2];
+> +
+> +	addr[0] =3D (val >> DW9768_DAC_SHIFT) & DW9768_REG_MASK_MSB;
+> +	addr[1] =3D val & DW9768_REG_MASK_LSB;
+> +
+> +	return i2c_smbus_write_block_data(client, DW9768_SET_POSITION_ADDR,
+> +					  ARRAY_SIZE(addr), addr);
+> +}
+> +
+> +static int dw9768_release(struct dw9768 *dw9768)
+> +{
+> +	return dw9768_write_array(dw9768, dw9768_release_regs,
+> +				  ARRAY_SIZE(dw9768_release_regs));
+> +}
+> +
+> +static int dw9768_init(struct dw9768 *dw9768)
+> +{
+> +	return dw9768_write_array(dw9768, dw9768_init_regs,
+> +				  ARRAY_SIZE(dw9768_init_regs));
+> +}
+> +
+> +/* Power handling */
+> +static int dw9768_power_off(struct dw9768 *dw9768)
+> +{
+> +	struct i2c_client *client =3D v4l2_get_subdevdata(&dw9768->sd);
+> +	int ret;
+> +
+> +	ret =3D dw9768_release(dw9768);
+> +	if (ret)
+> +		dev_err(&client->dev, "dw9768 release failed!\n");
+> +
+> +	ret =3D regulator_disable(dw9768->vin);
+> +	if (ret)
+> +		return ret;
+
+You'll need to disable the other regulator unconditionally here.
+
+> +
+> +	return regulator_disable(dw9768->vdd);
+> +}
+> +
+> +static int dw9768_power_on(struct dw9768 *dw9768)
+> +{
+> +	int ret;
+> +
+> +	ret =3D regulator_enable(dw9768->vin);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret =3D regulator_enable(dw9768->vdd);
+> +	if (ret < 0)
+
+You'll need another label to disable only vin.
+
+> +		return ret;
+> +
+> +	ret =3D dw9768_init(dw9768);
+> +	if (ret < 0)
+> +		goto fail;
+> +
+> +	return 0;
+> +
+> +fail:
+> +	regulator_disable(dw9768->vin);
+> +	regulator_disable(dw9768->vdd);
+> +
+> +	return ret;
+> +}
+> +
+> +static int dw9768_set_ctrl(struct v4l2_ctrl *ctrl)
+> +{
+> +	struct dw9768 *dw9768 =3D to_dw9768_vcm(ctrl);
+> +
+> +	if (ctrl->id =3D=3D V4L2_CID_FOCUS_ABSOLUTE)
+> +		return dw9768_set_position(dw9768, ctrl->val);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_ctrl_ops dw9768_vcm_ctrl_ops =3D {
+> +	.s_ctrl =3D dw9768_set_ctrl,
+> +};
+> +
+> +static int dw9768_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
+> +{
+> +	int ret;
+> +
+> +	ret =3D pm_runtime_get_sync(sd->dev);
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(sd->dev);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int dw9768_close(struct v4l2_subdev *sd, struct v4l2_subdev_fh *f=
+h)
+> +{
+> +	pm_runtime_put(sd->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_subdev_internal_ops dw9768_int_ops =3D {
+> +	.open =3D dw9768_open,
+> +	.close =3D dw9768_close,
+> +};
+> +
+> +static const struct v4l2_subdev_ops dw9768_ops =3D { };
+> +
+> +static void dw9768_subdev_cleanup(struct dw9768 *dw9768)
+> +{
+> +	v4l2_async_unregister_subdev(&dw9768->sd);
+> +	v4l2_ctrl_handler_free(&dw9768->ctrls);
+> +	media_entity_cleanup(&dw9768->sd.entity);
+> +}
+> +
+> +static int dw9768_init_controls(struct dw9768 *dw9768)
+> +{
+> +	struct v4l2_ctrl_handler *hdl =3D &dw9768->ctrls;
+> +	const struct v4l2_ctrl_ops *ops =3D &dw9768_vcm_ctrl_ops;
+> +
+> +	v4l2_ctrl_handler_init(hdl, 1);
+> +
+> +	v4l2_ctrl_new_std(hdl, ops, V4L2_CID_FOCUS_ABSOLUTE,
+> +			  0, DW9768_MAX_FOCUS_POS, DW9768_FOCUS_STEPS, 0);
+> +
+> +	if (hdl->error)
+> +		return hdl->error;
+> +
+> +	dw9768->sd.ctrl_handler =3D hdl;
+> +
+> +	return 0;
+> +}
+> +
+> +static int dw9768_probe(struct i2c_client *client)
+> +{
+> +	struct device *dev =3D &client->dev;
+> +	struct dw9768 *dw9768;
+> +	int ret;
+> +
+> +	dw9768 =3D devm_kzalloc(dev, sizeof(*dw9768), GFP_KERNEL);
+> +	if (!dw9768)
+> +		return -ENOMEM;
+> +
+> +	dw9768->vin =3D devm_regulator_get(dev, "vin");
+> +	if (IS_ERR(dw9768->vin)) {
+> +		ret =3D PTR_ERR(dw9768->vin);
+> +		if (ret !=3D -EPROBE_DEFER)
+> +			dev_err(dev, "cannot get vin regulator\n");
+> +		return ret;
+> +	}
+> +
+> +	dw9768->vdd =3D devm_regulator_get(dev, "vdd");
+> +	if (IS_ERR(dw9768->vdd)) {
+> +		ret =3D PTR_ERR(dw9768->vdd);
+> +		if (ret !=3D -EPROBE_DEFER)
+> +			dev_err(dev, "cannot get vdd regulator\n");
+> +		return ret;
+> +	}
+> +
+> +	v4l2_i2c_subdev_init(&dw9768->sd, client, &dw9768_ops);
+> +	dw9768->sd.flags |=3D V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +	dw9768->sd.internal_ops =3D &dw9768_int_ops;
+> +
+> +	ret =3D dw9768_init_controls(dw9768);
+> +	if (ret)
+> +		goto err_cleanup;
+> +
+> +	ret =3D media_entity_pads_init(&dw9768->sd.entity, 0, NULL);
+> +	if (ret < 0)
+> +		goto err_cleanup;
+> +
+> +	dw9768->sd.entity.function =3D MEDIA_ENT_F_LENS;
+> +
+> +	ret =3D v4l2_async_register_subdev(&dw9768->sd);
+> +	if (ret < 0)
+> +		goto err_cleanup;
+> +
+> +	pm_runtime_enable(dev);
+> +
+> +	return 0;
+> +
+> +err_cleanup:
+> +	dw9768_subdev_cleanup(dw9768);
+> +	return ret;
+> +}
+> +
+> +static int dw9768_remove(struct i2c_client *client)
+> +{
+> +	struct v4l2_subdev *sd =3D i2c_get_clientdata(client);
+> +	struct dw9768 *dw9768 =3D sd_to_dw9768_vcm(sd);
+> +
+> +	dw9768_subdev_cleanup(dw9768);
+> +	pm_runtime_disable(&client->dev);
+> +	if (!pm_runtime_status_suspended(&client->dev))
+> +		dw9768_power_off(dw9768);
+> +	pm_runtime_set_suspended(&client->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused dw9768_vcm_suspend(struct device *dev)
+> +{
+> +	struct i2c_client *client =3D to_i2c_client(dev);
+> +	struct v4l2_subdev *sd =3D i2c_get_clientdata(client);
+> +	struct dw9768 *dw9768 =3D sd_to_dw9768_vcm(sd);
+> +
+> +	return dw9768_power_off(dw9768);
+
+Please merge this function with dw9768_power_off(); same for
+dw9768_vcm_resume() below.
+
+> +}
+> +
+> +static int __maybe_unused dw9768_vcm_resume(struct device *dev)
+> +{
+> +	struct i2c_client *client =3D to_i2c_client(dev);
+> +	struct v4l2_subdev *sd =3D i2c_get_clientdata(client);
+> +	struct dw9768 *dw9768 =3D sd_to_dw9768_vcm(sd);
+> +
+> +	return dw9768_power_on(dw9768);
+> +}
+> +
+> +static const struct i2c_device_id dw9768_id_table[] =3D {
+> +	{ DW9768_NAME, 0 },
+> +	{ },
+
+Could you drop the I=B2C ID table?
+
+> +};
+> +MODULE_DEVICE_TABLE(i2c, dw9768_id_table);
+> +
+> +static const struct of_device_id dw9768_of_table[] =3D {
+> +	{ .compatible =3D "dongwoon,dw9768" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, dw9768_of_table);
+> +
+> +static const struct dev_pm_ops dw9768_pm_ops =3D {
+> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> +				pm_runtime_force_resume)
+> +	SET_RUNTIME_PM_OPS(dw9768_vcm_suspend, dw9768_vcm_resume, NULL)
+> +};
+> +
+> +static struct i2c_driver dw9768_i2c_driver =3D {
+> +	.driver =3D {
+> +		.name =3D DW9768_NAME,
+> +		.pm =3D &dw9768_pm_ops,
+> +		.of_match_table =3D dw9768_of_table,
+> +	},
+> +	.probe_new  =3D dw9768_probe,
+> +	.remove =3D dw9768_remove,
+> +	.id_table =3D dw9768_id_table,
+> +};
+> +
+> +module_i2c_driver(dw9768_i2c_driver);
+> +
+> +MODULE_AUTHOR("Dongchun Zhu <dongchun.zhu@mediatek.com>");
+> +MODULE_DESCRIPTION("DW9768 VCM driver");
+> +MODULE_LICENSE("GPL v2");
+
+-- =
+
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
