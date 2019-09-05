@@ -1,62 +1,65 @@
 From: Vitor Soares <Vitor.Soares@synopsys.com>
-Subject: [PATCH v3 0/5] i3c: detach/free device fail pre_assign_dyn_addr()
-Date: Thu,  5 Sep 2019 12:00:33 +0200
-Message-ID: <cover.1567608245.git.vitor.soares@synopsys.com>
+Subject: [PATCH v3 3/5] dt-bindings: i3c: Make 'assigned-address' valid if static address == 0
+Date: Thu,  5 Sep 2019 12:00:36 +0200
+Message-ID: <35e317ef6c9c0c729f713e57a55a2cd8bd55899b.1567608245.git.vitor.soares@synopsys.com>
+References: <cover.1567608245.git.vitor.soares@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1567608245.git.vitor.soares@synopsys.com>
+In-Reply-To: <cover.1567608245.git.vitor.soares@synopsys.com>
+References: <cover.1567608245.git.vitor.soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i3c@lists.infradead.org
 Cc: bbrezillon@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, pgaj@cadence.com, Joao.Pinto@synopsys.com, Vitor Soares <Vitor.Soares@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-As for today, the I3C framework is keeping in memory and master->bus.devs
-list the devices that fail during pre_assign_dyn_addr() and send them on
-DEFSLVS command.
+The I3C devices without a static address can require a specific dynamic
+address for priority reasons.
 
-According to MIPI I3C Bus spec the DEFSLVS command is used to inform any
-Secondary Master about the Dynamic Addresses that were assigned to I3C
-devices and the I2C devices present on the bus.
+Let's update the binding document to make the 'assigned-address' property
+valid if static address == 0 and add an example with this use case.
 
-This issue could be fixed by changing i3c_master_defslvs_locked() to
-ignore unaddressed i3c devices but the i3c_dev_desc would be allocated and
-attached to HC unnecessarily. This can cause that some HC aren't able to
-do DAA for HJ capable devices due of lack of space.
-
-This patch-series propose to detach/free devices that are failing during
-pre_assign_dyn_addr() and to propagate i3c_boardinfo, if available, to
-i3c_dev_desc during i3c_master_add_i3c_dev_locked(). Besides the fix for
-the problem mention above, this change will permit to describe devices
-with a preferable dynamic address (important due to priority reason) but
-without a static address in DT.
-
-In addition, I'm improving the management of the Data Address Table in
-DW I3C Master by keeping the free slots consecutive.
-
+Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 Change in v3:
-  - Change cover letter
-  - Change commit message for patch 1
-  - Add Rob rb-tags
+  - Add Rob rb-tag
 
 Change in v2:
-  - Move out detach/free the i3c_dev_desc from pre_assign_dyn_addr()
-  - Change i3c_master_search_i3c_boardinfo(newdev) to
-  i3c_master_init_i3c_dev_boardinfo(newdev)
-  - Add fixes, stable tags on patch 2
-  - Add a note for no guarantee of 'assigned-address' use
+  - Fix typo in commit message
 
-Vitor Soares (5):
-  i3c: master: detach and free device if pre_assign_dyn_addr() fails
-  i3c: master: make sure ->boardinfo is initialized in
-    add_i3c_dev_locked()
-  dt-bindings: i3c: Make 'assigned-address' valid if static address == 0
-  dt-bindings: i3c: add a note for no guarantee of 'assigned-address'
-    use
-  i3c: master: dw: reattach device on first available location of
-    address table
+ Documentation/devicetree/bindings/i3c/i3c.txt | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
- Documentation/devicetree/bindings/i3c/i3c.txt | 15 ++++++--
- drivers/i3c/master.c                          | 49 ++++++++++++++++++++++-----
- drivers/i3c/master/dw-i3c-master.c            | 16 +++++++++
- 3 files changed, 68 insertions(+), 12 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/i3c/i3c.txt b/Documentation/devicetree/bindings/i3c/i3c.txt
+index ab729a0..c851e75 100644
+--- a/Documentation/devicetree/bindings/i3c/i3c.txt
++++ b/Documentation/devicetree/bindings/i3c/i3c.txt
+@@ -98,9 +98,7 @@ Required properties
+ 
+ Optional properties
+ -------------------
+-- assigned-address: dynamic address to be assigned to this device. This
+-		    property is only valid if the I3C device has a static
+-		    address (first cell of the reg property != 0).
++- assigned-address: dynamic address to be assigned to this device.
+ 
+ 
+ Example:
+@@ -129,6 +127,15 @@ Example:
+ 
+ 		/*
+ 		 * I3C device without a static I2C address but requiring
++		 * specific dynamic address.
++		 */
++		sensor@0,39200154004 {
++			reg = <0x0 0x6072 0x303904d2>;
++			assigned-address = <0xb>;
++		};
++
++		/*
++		 * I3C device without a static I2C address but requiring
+ 		 * resources described in the DT.
+ 		 */
+ 		sensor@0,39200154004 {
 -- 
 2.7.4
