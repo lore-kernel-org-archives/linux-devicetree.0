@@ -1,13 +1,15 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 00/16] Initial support for Marvell MMP3 SoC
-Date: Thu, 5 Sep 2019 12:24:04 +0200
-Message-ID: <CAK8P3a0Jq93AVYau_7odZz73ZL22buVCveiHoC6oGf=Oy6KEKQ@mail.gmail.com>
-References: <20190830220743.439670-1-lkundrak@v3.sk>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [V2, 2/2] media: i2c: Add DW9768 VCM driver
+Date: Thu, 5 Sep 2019 13:26:33 +0300
+Message-ID: <20190905102633.GC2680@smile.fi.intel.com>
+References: <20190905072142.14606-1-dongchun.zhu@mediatek.com>
+ <20190905072142.14606-3-dongchun.zhu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190830220743.439670-1-lkundrak@v3.sk>
+Content-Disposition: inline
+In-Reply-To: <20190905072142.14606-3-dongchun.zhu@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,25 +19,118 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "Cc : Rob Herring" <robh+dt@kernel.org>, "To : Olof Johansson" <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, Kishon Vijay Abraham I <kishon@ti.com>, linux-clk <linux-clk@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: dongchun.zhu@mediatek.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, drinkcat@chromium.org, srv_heupstream@mediatek.com, sam.hung@mediatek.com, shengnan.wang@mediatek.com, tfiga@chromium.org, sj.huang@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, sakari.ailus@linux.intel.com, matthias.bgg@gmail.com, bingbu.cao@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 12:08 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> this is the third spin of a patch set that adds support for the Marvell
-> MMP3 processor, that I'd eventually love to see land in the Arm SoC
-> tree. MMP3 is used in OLPC XO-4 laptops, Panasonic Toughpad FZ-A1 tablet
-> and Dell Wyse 3020/Tx0D thin clients.
->
-> Compared to v2, there's a handful of fixes in response to reviews. Four
-> irqchip patches have been removed because they've been applied to the
-> irqchip-next tree. Details in individual patches.
+On Thu, Sep 05, 2019 at 03:21:42PM +0800, dongchun.zhu@mediatek.com wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> =
 
-I just looked at the series, looks great overall, but the timing means
-this is going to be 5.5 material by now. Please send a pull request
-to soc@kernel.org cc:lakml after -rc1 is out.
+> This patch adds a V4L2 sub-device driver for DW9768 lens voice coil,
+> and provides control to set the desired focus.
+> =
 
-I replied with a couple of comments for details I noticed.
+> The DW9768 is a 10 bit DAC with 100mA output current sink capability
+> from Dongwoon, designed for linear control of voice coil motor,
+> and controlled via I2C serial interface.
 
-       Arnd
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> ---
+>  MAINTAINERS                |   1 +
+
+This should go to the same patch, where you introduce a record in the
+MAINTAINERS database.
+
+> +#define DW9768_SET_POSITION_ADDR                0x03
+
+Indentation issue.
+
+> +static struct regval_list dw9768_init_regs[] =3D {
+> +	{0x02, 0x02},
+> +	{DW9768_CMD_DELAY, DW9768_CMD_DELAY},
+> +	{0x06, 0x41},
+> +	{0x07, 0x39},
+> +	{DW9768_CMD_DELAY, DW9768_CMD_DELAY},
+> +};
+> +
+> +static struct regval_list dw9768_release_regs[] =3D {
+> +	{0x02, 0x00},
+> +	{DW9768_CMD_DELAY, DW9768_CMD_DELAY},
+> +	{0x01, 0x00},
+> +	{DW9768_CMD_DELAY, DW9768_CMD_DELAY},
+> +};
+> +
+> +static int dw9768_write_smbus(struct dw9768 *dw9768, unsigned char reg,
+> +			      unsigned char value)
+> +{
+> +	struct i2c_client *client =3D v4l2_get_subdevdata(&dw9768->sd);
+> +	int ret;
+> +
+
+> +	if (reg =3D=3D DW9768_CMD_DELAY  && value =3D=3D DW9768_CMD_DELAY)
+
+Indentation issue.
+But see other's comments.
+
+> +		usleep_range(DW9768_CTRL_DELAY_US,
+> +			     DW9768_CTRL_DELAY_US + 100);
+
+> +	else
+
+This needs an explanation.
+
+> +		ret =3D i2c_smbus_write_byte_data(client, reg, value);
+> +	return ret;
+> +}
+
+I'm wondering if we can benefit from regmap I=B2C API in this driver.
+
+> +static int __maybe_unused dw9768_vcm_suspend(struct device *dev)
+> +{
+
+> +	struct i2c_client *client =3D to_i2c_client(dev);
+> +	struct v4l2_subdev *sd =3D i2c_get_clientdata(client);
+
+isn't is simple dev_get_drvdata() ?
+
+> +	struct dw9768 *dw9768 =3D sd_to_dw9768_vcm(sd);
+> +
+> +	return dw9768_power_off(dw9768);
+> +}
+> +
+> +static int __maybe_unused dw9768_vcm_resume(struct device *dev)
+> +{
+
+> +	struct i2c_client *client =3D to_i2c_client(dev);
+> +	struct v4l2_subdev *sd =3D i2c_get_clientdata(client);
+
+Ditto.
+
+> +	struct dw9768 *dw9768 =3D sd_to_dw9768_vcm(sd);
+> +
+> +	return dw9768_power_on(dw9768);
+> +}
+
+> +static const struct i2c_device_id dw9768_id_table[] =3D {
+> +	{ DW9768_NAME, 0 },
+
+> +	{ },
+
+No comma.
+
+> +};
+
+> +static const struct of_device_id dw9768_of_table[] =3D {
+> +	{ .compatible =3D "dongwoon,dw9768" },
+
+> +	{ },
+
+Ditto.
+
+> +};
+
+-- =
+
+With Best Regards,
+Andy Shevchenko
