@@ -1,44 +1,36 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 31/49] ath11k: add mac.c
-Date: Thu, 05 Sep 2019 14:24:11 +0300
-Message-ID: <878sr3nfz8.fsf@kamboji.qca.qualcomm.com>
-References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
-        <1566316095-27507-32-git-send-email-kvalo@codeaurora.org>
-        <4076919b34cad119eb4146025f587285ef40e37c.camel@sipsolutions.net>
-        <ee38dc5e80097d0ebc186f81b2f11d37@codeaurora.org>
+From: Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v3 2/2] dwc: PCI: intel: Intel PCIe RC controller driver
+Date: Thu, 5 Sep 2019 04:26:10 -0700
+Message-ID: <20190905112610.GB10199@infradead.org>
+References: <cover.1567585181.git.eswara.kota@linux.intel.com>
+ <35316bac59d3bc681e76d33e0345f4ef950c4414.1567585181.git.eswara.kota@linux.intel.com>
+ <20190905104517.GX9720@e119886-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ee38dc5e80097d0ebc186f81b2f11d37-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (Vasanthakumar
-        Thiagarajan's message of "Fri, 23 Aug 2019 17:45:41 +0530")
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190905104517.GX9720@e119886-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Murray <andrew.murray@arm.com>
+Cc: Dilip Kota <eswara.kota@linux.intel.com>, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com, robh@kernel.org, martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org, hch@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+On Thu, Sep 05, 2019 at 11:45:18AM +0100, Andrew Murray wrote:
+> > +        depends on OF
+> > +        select PCIE_DW_HOST
+> > +        help
+> > +          Say 'Y' here to enable support for Intel AHB/AXI PCIe Host
+> > +	  controller driver.
+> > +	  The Intel PCIe controller is based on the Synopsys Designware
+> > +	  pcie core and therefore uses the Designware core functions to
+> > +	  implement the driver.
+> 
+> I can see this description is similar to others in the same Kconfig,
+> however I'm not sure what value a user gains by knowing implementation
+> details - it's helpful to know that PCIE_INTEL_AXI is based on the
+> Designware core, but is it helpful to know that the Designware core
+> functions are used?
 
-> On 2019-08-21 02:16, Johannes Berg wrote:
->> On Tue, 2019-08-20 at 18:47 +0300, Kalle Valo wrote:
->>
->>> +static int ath11k_mac_op_config(struct ieee80211_hw *hw, u32 changed)
->>> +{
->>> +	struct ath11k *ar = hw->priv;
->>> +	int ret = 0;
->>> +
->>> +	/* mac80211 requires this op to be present and that's why
->>> +	 * there's an empty function, this can be extended when
->>> +	 * required.
->>> +	 */
->>
->> Well, oops. Maybe it shouldn't be required?
->
-> I think we require this for some configuration handling. The comment
-> is to be updated with proper information. We'll address that.
-
-The way I'm understanding Johannes' comment is that maybe we should
-change mac80211 to require this op to be present. Should be easy to fix
-in mac80211, right?
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Not really.  What would be extremely useful for a user is what Intel
+SOC contains this IP block, or the fact that most of those were
+actually produced by Lantiq, a company bought by Intel.
