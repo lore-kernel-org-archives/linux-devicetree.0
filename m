@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 7/8] ASoC: meson: axg-toddr: add sm1 support
-Date: Thu,  5 Sep 2019 14:01:19 +0200
-Message-ID: <20190905120120.31752-8-jbrunet@baylibre.com>
+Subject: [PATCH 2/8] ASoC: meson: add reset binding
+Date: Thu,  5 Sep 2019 14:01:14 +0200
+Message-ID: <20190905120120.31752-3-jbrunet@baylibre.com>
 References: <20190905120120.31752-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,105 +12,101 @@ To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On sm1, the maximum number TODDR inputs is extended to 16.
+The g12a audio subsystem, which is a derivative of the axg subsystem,
+provides a dedicated reset line for each of the audio components.
+
+The axg did not provide that and it is unclear if/when these reset are
+required. The reset already helped solve a channel mapping issue on the
+tdm formatter devices. Let's add the reset binding for the other
+components, so we can describe this in DT. We'll use it later on
+in the driver when/if needed.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- sound/soc/meson/axg-toddr.c | 68 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+ Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt | 5 ++++-
+ Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt  | 3 +++
+ .../devicetree/bindings/sound/amlogic,axg-spdifin.txt        | 3 +++
+ .../devicetree/bindings/sound/amlogic,axg-spdifout.txt       | 3 +++
+ .../devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt      | 2 ++
+ 5 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/meson/axg-toddr.c b/sound/soc/meson/axg-toddr.c
-index 2e9a2e5862ce..c8ea2145f576 100644
---- a/sound/soc/meson/axg-toddr.c
-+++ b/sound/soc/meson/axg-toddr.c
-@@ -25,6 +25,7 @@
- #define CTRL0_TODDR_LSB_POS_MASK	GENMASK(7, 3)
- #define CTRL0_TODDR_LSB_POS(x)		((x) << 3)
- #define CTRL1_TODDR_FORCE_FINISH	BIT(25)
-+#define CTRL1_SEL_SHIFT			28
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
+index 4b17073c8f8c..3080979350a0 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
+@@ -12,7 +12,10 @@ Required properties:
+ - interrupts: interrupt specifier for the fifo.
+ - clocks: phandle to the fifo peripheral clock provided by the audio
+ 	  clock controller.
+-- resets: phandle to memory ARB line provided by the arb reset controller.
++- resets: list of reset phandle, one for each entry reset-names.
++- reset-names: should contain the following:
++  * "arb" : memory ARB line (required)
++  * "rst" : dedicated device reset line (optional)
+ - #sound-dai-cells: must be 0.
  
- #define TODDR_MSB_POS	31
+ Example of FRDDR A on the A113 SoC:
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
+index b3f097976e6b..716878107a24 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
+@@ -13,6 +13,9 @@ Required properties:
+   * "sysclk" : dsp system clock
+ - #sound-dai-cells: must be 0.
  
-@@ -221,6 +222,70 @@ static const struct axg_fifo_match_data g12a_toddr_match_data = {
- 	.dai_drv	= &g12a_toddr_dai_drv
++Optional property:
++- resets: phandle to the dedicated reset line of the pdm input.
++
+ Example of PDM on the A113 SoC:
+ 
+ pdm: audio-controller@ff632000 {
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
+index 62e5bca71664..df92a4ecf288 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
+@@ -11,6 +11,9 @@ Required properties:
+   * "refclk" : spdif input reference clock
+ - #sound-dai-cells: must be 0.
+ 
++Optional property:
++- resets: phandle to the dedicated reset line of the spdif input.
++
+ Example on the A113 SoC:
+ 
+ spdifin: audio-controller@400 {
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
+index d38aa35ec630..28381dd1f633 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
+@@ -10,6 +10,9 @@ Required properties:
+   * "mclk" : master clock
+ - #sound-dai-cells: must be 0.
+ 
++Optional property:
++- resets: phandle to the dedicated reset line of the spdif output.
++
+ Example on the A113 SoC:
+ 
+ spdifout: audio-controller@480 {
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt b/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
+index 173a95045540..4e8cd7eb7cec 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
+@@ -6,6 +6,7 @@ Required properties:
+ - reg: physical base address of the controller and length of memory
+        mapped region.
+ - #sound-dai-cells: should be 1.
++- resets: phandle to the dedicated reset line of the hdmitx glue.
+ 
+ Example on the S905X2 SoC:
+ 
+@@ -13,6 +14,7 @@ tohdmitx: audio-controller@744 {
+ 	compatible = "amlogic,g12a-tohdmitx";
+ 	reg = <0x0 0x744 0x0 0x4>;
+ 	#sound-dai-cells = <1>;
++	resets = <&clkc_audio AUD_RESET_TOHDMITX>;
  };
  
-+static const char * const sm1_toddr_sel_texts[] = {
-+	"IN 0", "IN 1", "IN 2",  "IN 3",  "IN 4",  "IN 5",  "IN 6",  "IN 7",
-+	"IN 8", "IN 9", "IN 10", "IN 11", "IN 12", "IN 13", "IN 14", "IN 15"
-+};
-+
-+static SOC_ENUM_SINGLE_DECL(sm1_toddr_sel_enum, FIFO_CTRL1, CTRL1_SEL_SHIFT,
-+			    sm1_toddr_sel_texts);
-+
-+static const struct snd_kcontrol_new sm1_toddr_in_mux =
-+	SOC_DAPM_ENUM("Input Source", sm1_toddr_sel_enum);
-+
-+static const struct snd_soc_dapm_widget sm1_toddr_dapm_widgets[] = {
-+	SND_SOC_DAPM_MUX("SRC SEL", SND_SOC_NOPM, 0, 0, &sm1_toddr_in_mux),
-+	SND_SOC_DAPM_AIF_IN("IN 0",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 1",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 2",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 3",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 4",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 5",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 6",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 7",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 8",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 9",  NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 10", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 11", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 12", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 13", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 14", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 15", NULL, 0, SND_SOC_NOPM, 0, 0),
-+};
-+
-+static const struct snd_soc_dapm_route sm1_toddr_dapm_routes[] = {
-+	{ "Capture", NULL, "SRC SEL" },
-+	{ "SRC SEL", "IN 0",  "IN 0" },
-+	{ "SRC SEL", "IN 1",  "IN 1" },
-+	{ "SRC SEL", "IN 2",  "IN 2" },
-+	{ "SRC SEL", "IN 3",  "IN 3" },
-+	{ "SRC SEL", "IN 4",  "IN 4" },
-+	{ "SRC SEL", "IN 5",  "IN 5" },
-+	{ "SRC SEL", "IN 6",  "IN 6" },
-+	{ "SRC SEL", "IN 7",  "IN 7" },
-+	{ "SRC SEL", "IN 8",  "IN 8" },
-+	{ "SRC SEL", "IN 9",  "IN 9" },
-+	{ "SRC SEL", "IN 10", "IN 10" },
-+	{ "SRC SEL", "IN 11", "IN 11" },
-+	{ "SRC SEL", "IN 12", "IN 12" },
-+	{ "SRC SEL", "IN 13", "IN 13" },
-+	{ "SRC SEL", "IN 14", "IN 14" },
-+	{ "SRC SEL", "IN 15", "IN 15" },
-+};
-+
-+static const struct snd_soc_component_driver sm1_toddr_component_drv = {
-+	.dapm_widgets		= sm1_toddr_dapm_widgets,
-+	.num_dapm_widgets	= ARRAY_SIZE(sm1_toddr_dapm_widgets),
-+	.dapm_routes		= sm1_toddr_dapm_routes,
-+	.num_dapm_routes	= ARRAY_SIZE(sm1_toddr_dapm_routes),
-+	.ops			= &g12a_fifo_pcm_ops
-+};
-+
-+static const struct axg_fifo_match_data sm1_toddr_match_data = {
-+	.component_drv	= &sm1_toddr_component_drv,
-+	.dai_drv	= &g12a_toddr_dai_drv
-+};
-+
- static const struct of_device_id axg_toddr_of_match[] = {
- 	{
- 		.compatible = "amlogic,axg-toddr",
-@@ -228,6 +293,9 @@ static const struct of_device_id axg_toddr_of_match[] = {
- 	}, {
- 		.compatible = "amlogic,g12a-toddr",
- 		.data = &g12a_toddr_match_data,
-+	}, {
-+		.compatible = "amlogic,sm1-toddr",
-+		.data = &sm1_toddr_match_data,
- 	}, {}
- };
- MODULE_DEVICE_TABLE(of, axg_toddr_of_match);
+ Example of an 'amlogic,axg-sound-card':
 -- 
 2.21.0
