@@ -1,10 +1,10 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: meson: add sm1 compatibles" to the asoc tree
-Date: Thu,  5 Sep 2019 18:38:54 +0100 (BST)
-Message-ID: <20190905173854.CD1272742D1C@ypsilon.sirena.org.uk>
-References: <20190905120120.31752-2-jbrunet@baylibre.com>
+Subject: Applied "ASoC: meson: tdmin: expose all 16 inputs" to the asoc tree
+Date: Thu,  5 Sep 2019 18:38:52 +0100 (BST)
+Message-ID: <20190905173852.0CE5A2742D22@ypsilon.sirena.org.uk>
+References: <20190905120120.31752-6-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190905120120.31752-2-jbrunet@baylibre.com>
+In-Reply-To: <20190905120120.31752-6-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jerome Brunet <jbrunet@baylibre.com>
 Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
@@ -12,7 +12,7 @@ List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: meson: add sm1 compatibles
+   ASoC: meson: tdmin: expose all 16 inputs
 
 has been applied to the asoc tree at
 
@@ -37,111 +37,95 @@ to this mail.
 Thanks,
 Mark
 
->From f466309534b6f21304e1ee0573a60df9c4590272 Mon Sep 17 00:00:00 2001
+>From cde9f12e5f0d288d516c810f95c2ee4c171e0245 Mon Sep 17 00:00:00 2001
 From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu, 5 Sep 2019 14:01:13 +0200
-Subject: [PATCH] ASoC: meson: add sm1 compatibles
+Date: Thu, 5 Sep 2019 14:01:17 +0200
+Subject: [PATCH] ASoC: meson: tdmin: expose all 16 inputs
 
-Document the compatible strings of the audio devices of the sm1 SoC
-family
+The TDMIN component, as it, has a maximum of 16 input. Depending on
+the SoC, these may not all be connected.
+
+Instead of decribing only the connected inputs of each SoC, describe
+them all and let ASoC routing do the rest.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20190905120120.31752-2-jbrunet@baylibre.com
+Link: https://lore.kernel.org/r/20190905120120.31752-6-jbrunet@baylibre.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt  | 4 +++-
- Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt   | 3 ++-
- .../devicetree/bindings/sound/amlogic,axg-spdifin.txt         | 3 ++-
- .../devicetree/bindings/sound/amlogic,axg-spdifout.txt        | 3 ++-
- .../devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt  | 4 +++-
- .../devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt       | 3 ++-
- 6 files changed, 14 insertions(+), 6 deletions(-)
+ sound/soc/meson/axg-tdmin.c | 47 +++++++++++++++++++++++++++----------
+ 1 file changed, 34 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
-index 4330fc9dca6d..4b17073c8f8c 100644
---- a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
-+++ b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
-@@ -4,7 +4,9 @@ Required properties:
- - compatible: 'amlogic,axg-toddr' or
- 	      'amlogic,axg-toddr' or
- 	      'amlogic,g12a-frddr' or
--	      'amlogic,g12a-toddr'
-+	      'amlogic,g12a-toddr' or
-+	      'amlogic,sm1-frddr' or
-+	      'amlogic,sm1-toddr'
- - reg: physical base address of the controller and length of memory
-        mapped region.
- - interrupts: interrupt specifier for the fifo.
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
-index 73f473a9365f..b3f097976e6b 100644
---- a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
-+++ b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
-@@ -2,7 +2,8 @@
+diff --git a/sound/soc/meson/axg-tdmin.c b/sound/soc/meson/axg-tdmin.c
+index cb87f17f3e95..973d4c02ef8d 100644
+--- a/sound/soc/meson/axg-tdmin.c
++++ b/sound/soc/meson/axg-tdmin.c
+@@ -43,7 +43,8 @@ static const struct regmap_config axg_tdmin_regmap_cfg = {
+ };
  
- Required properties:
- - compatible: 'amlogic,axg-pdm' or
--	      'amlogic,g12a-pdm'
-+	      'amlogic,g12a-pdm' or
-+	      'amlogic,sm1-pdm'
- - reg: physical base address of the controller and length of memory
-        mapped region.
- - clocks: list of clock phandle, one for each entry clock-names.
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
-index 0b82504fa419..62e5bca71664 100644
---- a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
-+++ b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
-@@ -2,7 +2,8 @@
+ static const char * const axg_tdmin_sel_texts[] = {
+-	"IN 0", "IN 1", "IN 2", "IN 3", "IN 4", "IN 5",
++	"IN 0", "IN 1", "IN 2",  "IN 3",  "IN 4",  "IN 5",  "IN 6",  "IN 7",
++	"IN 8", "IN 9", "IN 10", "IN 11", "IN 12", "IN 13", "IN 14", "IN 15",
+ };
  
- Required properties:
- - compatible: 'amlogic,axg-spdifin' or
--	      'amlogic,g12a-spdifin'
-+	      'amlogic,g12a-spdifin' or
-+	      'amlogic,sm1-spdifin'
- - interrupts: interrupt specifier for the spdif input.
- - clocks: list of clock phandle, one for each entry clock-names.
- - clock-names: should contain the following:
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
-index 826152730508..d38aa35ec630 100644
---- a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
-+++ b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
-@@ -2,7 +2,8 @@
+ /* Change to special mux control to reset dapm */
+@@ -164,12 +165,22 @@ static int axg_tdmin_prepare(struct regmap *map,
+ }
  
- Required properties:
- - compatible: 'amlogic,axg-spdifout' or
--	      'amlogic,g12a-spdifout'
-+	      'amlogic,g12a-spdifout' or
-+	      'amlogic,sm1-spdifout'
- - clocks: list of clock phandle, one for each entry clock-names.
- - clock-names: should contain the following:
-   * "pclk" : peripheral clock.
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
-index 8835a43edfbb..5996c0cd89c2 100644
---- a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
-+++ b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
-@@ -4,7 +4,9 @@ Required properties:
- - compatible: 'amlogic,axg-tdmin' or
- 	      'amlogic,axg-tdmout' or
- 	      'amlogic,g12a-tdmin' or
--	      'amlogic,g12a-tdmout'
-+	      'amlogic,g12a-tdmout' or
-+	      'amlogic,sm1-tdmin' or
-+	      'amlogic,sm1-tdmout
- - reg: physical base address of the controller and length of memory
-        mapped region.
- - clocks: list of clock phandle, one for each entry clock-names.
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt b/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
-index aa6c35570d31..173a95045540 100644
---- a/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
-+++ b/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
-@@ -1,7 +1,8 @@
- * Amlogic HDMI Tx control glue
+ static const struct snd_soc_dapm_widget axg_tdmin_dapm_widgets[] = {
+-	SND_SOC_DAPM_AIF_IN("IN 0", NULL, 0, SND_SOC_NOPM, 0, 0),
+-	SND_SOC_DAPM_AIF_IN("IN 1", NULL, 0, SND_SOC_NOPM, 0, 0),
+-	SND_SOC_DAPM_AIF_IN("IN 2", NULL, 0, SND_SOC_NOPM, 0, 0),
+-	SND_SOC_DAPM_AIF_IN("IN 3", NULL, 0, SND_SOC_NOPM, 0, 0),
+-	SND_SOC_DAPM_AIF_IN("IN 4", NULL, 0, SND_SOC_NOPM, 0, 0),
+-	SND_SOC_DAPM_AIF_IN("IN 5", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 0",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 1",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 2",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 3",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 4",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 5",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 6",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 7",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 8",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 9",  NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 10", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 11", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 12", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 13", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 14", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 15", NULL, 0, SND_SOC_NOPM, 0, 0),
+ 	SND_SOC_DAPM_MUX("SRC SEL", SND_SOC_NOPM, 0, 0, &axg_tdmin_in_mux),
+ 	SND_SOC_DAPM_PGA_E("DEC", SND_SOC_NOPM, 0, 0, NULL, 0,
+ 			   axg_tdm_formatter_event,
+@@ -178,12 +189,22 @@ static const struct snd_soc_dapm_widget axg_tdmin_dapm_widgets[] = {
+ };
  
- Required properties:
--- compatible: "amlogic,g12a-tohdmitx"
-+- compatible: "amlogic,g12a-tohdmitx" or
-+	      "amlogic,sm1-tohdmitx"
- - reg: physical base address of the controller and length of memory
-        mapped region.
- - #sound-dai-cells: should be 1.
+ static const struct snd_soc_dapm_route axg_tdmin_dapm_routes[] = {
+-	{ "SRC SEL", "IN 0", "IN 0" },
+-	{ "SRC SEL", "IN 1", "IN 1" },
+-	{ "SRC SEL", "IN 2", "IN 2" },
+-	{ "SRC SEL", "IN 3", "IN 3" },
+-	{ "SRC SEL", "IN 4", "IN 4" },
+-	{ "SRC SEL", "IN 5", "IN 5" },
++	{ "SRC SEL", "IN 0",  "IN 0" },
++	{ "SRC SEL", "IN 1",  "IN 1" },
++	{ "SRC SEL", "IN 2",  "IN 2" },
++	{ "SRC SEL", "IN 3",  "IN 3" },
++	{ "SRC SEL", "IN 4",  "IN 4" },
++	{ "SRC SEL", "IN 5",  "IN 5" },
++	{ "SRC SEL", "IN 6",  "IN 6" },
++	{ "SRC SEL", "IN 7",  "IN 7" },
++	{ "SRC SEL", "IN 8",  "IN 8" },
++	{ "SRC SEL", "IN 9",  "IN 9" },
++	{ "SRC SEL", "IN 10", "IN 10" },
++	{ "SRC SEL", "IN 11", "IN 11" },
++	{ "SRC SEL", "IN 12", "IN 12" },
++	{ "SRC SEL", "IN 13", "IN 13" },
++	{ "SRC SEL", "IN 14", "IN 14" },
++	{ "SRC SEL", "IN 15", "IN 15" },
+ 	{ "DEC", NULL, "SRC SEL" },
+ 	{ "OUT", NULL, "DEC" },
+ };
 -- 
 2.20.1
