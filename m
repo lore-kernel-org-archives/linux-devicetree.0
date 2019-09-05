@@ -1,37 +1,65 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 13/16] ARM: mmp: move cputype.h to include/linux/soc/
-Date: Thu, 5 Sep 2019 12:20:56 +0200
-Message-ID: <CAK8P3a1kpRcmTW0hH7-9vd4SiJjEuTMRPb6Kb06LSiRj0AGd8A@mail.gmail.com>
-References: <20190830220743.439670-14-lkundrak@v3.sk> <201909021510.0g4L7Wva%lkp@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v3 1/1] i2c: qcom-geni: Provide an option to disable DMA processing
+Date: Thu,  5 Sep 2019 11:22:47 +0100
+Message-ID: <20190905102247.27583-1-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201909021510.0g4L7Wva%lkp@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: Lubomir Rintel <lkundrak@v3.sk>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Stephen Boyd <sboyd@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, "Cc : Rob Herring" <robh+dt@kernel.org>, kbuild-all@01.org, "To : Olof Johansson" <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, linux-clk <linux-clk@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: alokc@codeaurora.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, vkoul@kernel.org, wsa@the-dreams.de
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 10:16 AM kbuild test robot <lkp@intel.com> wrote:
+We have a production-level laptop (Lenovo Yoga C630) which is exhibiting
+a rather horrific bug.  When I2C HID devices are being scanned for at
+boot-time the QCom Geni based I2C (Serial Engine) attempts to use DMA.
+When it does, the laptop reboots and the user never sees the OS.
 
->
-> vim +5 include/linux/soc/mmp/cputype.h
->
-> 49cbe78637eb05 arch/arm/mach-mmp/include/mach/cputype.h Eric Miao 2009-01-20  4
-> 49cbe78637eb05 arch/arm/mach-mmp/include/mach/cputype.h Eric Miao 2009-01-20 @5  #include <asm/cputype.h>
-> 49cbe78637eb05 arch/arm/mach-mmp/include/mach/cputype.h Eric Miao 2009-01-20  6
->
+The beautiful thing about this approach is that, *if* the Geni SE DMA
+ever starts working, we can remove the C code and any old properties
+left in older DTs just become NOOP.  Older kernels with newer DTs (less
+of a priority) *still* will not work - but they do not work now anyway.
 
-You can probably do something like
+Fixes: 8bc529b25354 ("soc: qcom: geni: Add support for ACPI")
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+---
+ drivers/i2c/busses/i2c-qcom-geni.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-#ifdef CONFIG_ARM
-#include <asm/cputype.h>
-#else
-static inline read_cpuid_id(void) { return 0; }
-#endif
-
-Then again, ideally drivers don't even have to know about this,
-but would distinguish between devices based on the
-compatible string for the particular device.
-
-       Arnd
+diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+index a89bfce5388e..17abf60c94ae 100644
+--- a/drivers/i2c/busses/i2c-qcom-geni.c
++++ b/drivers/i2c/busses/i2c-qcom-geni.c
+@@ -355,11 +355,13 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+ {
+ 	dma_addr_t rx_dma;
+ 	unsigned long time_left;
+-	void *dma_buf;
++	void *dma_buf = NULL;
+ 	struct geni_se *se = &gi2c->se;
+ 	size_t len = msg->len;
+ 
+-	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
++	if (!of_machine_is_compatible("lenovo,yoga-c630"))
++		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
++
+ 	if (dma_buf)
+ 		geni_se_select_mode(se, GENI_SE_DMA);
+ 	else
+@@ -394,11 +396,13 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+ {
+ 	dma_addr_t tx_dma;
+ 	unsigned long time_left;
+-	void *dma_buf;
++	void *dma_buf = NULL;
+ 	struct geni_se *se = &gi2c->se;
+ 	size_t len = msg->len;
+ 
+-	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
++	if (!of_machine_is_compatible("lenovo,yoga-c630"))
++		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
++
+ 	if (dma_buf)
+ 		geni_se_select_mode(se, GENI_SE_DMA);
+ 	else
+-- 
+2.17.1
