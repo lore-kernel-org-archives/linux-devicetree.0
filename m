@@ -1,39 +1,52 @@
-From: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Subject: Re: [PATCH v3 4/7] serial: fsl_linflexuart: Be consistent with the
- name
-Date: Thu, 5 Sep 2019 11:32:06 +0000
-Message-ID: <VI1PR0402MB2863B0A0D1D12FA9CC2515E2DFBB0@VI1PR0402MB2863.eurprd04.prod.outlook.com>
-References: <20190823191115.18490-1-stefan-gabriel.mirea@nxp.com>
- <20190823191115.18490-5-stefan-gabriel.mirea@nxp.com>
- <20190904075259.GA10983@kroah.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [V2, 1/2] media: i2c: dw9768: Add DT support and MAINTAINERS entry
+Date: Thu, 5 Sep 2019 14:35:09 +0300
+Message-ID: <20190905113509.GD2680@smile.fi.intel.com>
+References: <20190905072142.14606-1-dongchun.zhu@mediatek.com>
+ <20190905072142.14606-2-dongchun.zhu@mediatek.com>
+ <20190905101406.GA2680@smile.fi.intel.com>
+ <20190905104829.GB5475@paasikivi.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "jslaby@suse.com" <jslaby@suse.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190905104829.GB5475@paasikivi.fi.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, drinkcat@chromium.org, srv_heupstream@mediatek.com, sam.hung@mediatek.com, shengnan.wang@mediatek.com, tfiga@chromium.org, sj.huang@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, dongchun.zhu@mediatek.com, matthias.bgg@gmail.com, bingbu.cao@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Greg,=0A=
-=0A=
-On 9/4/2019 10:53 AM, gregkh@linuxfoundation.org wrote:=0A=
-> On Fri, Aug 23, 2019 at 07:11:37PM +0000, Stefan-gabriel Mirea wrote:=0A=
->> For consistency reasons, spell the controller name as "LINFlexD" in=0A=
->> comments and documentation.=0A=
->>=0A=
->> Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>=0A=
->> ---=0A=
->>  Documentation/admin-guide/kernel-parameters.txt | 2 +-=0A=
->>  drivers/tty/serial/Kconfig                      | 8 ++++----=0A=
->>  drivers/tty/serial/fsl_linflexuart.c            | 4 ++--=0A=
->>  include/uapi/linux/serial_core.h                | 4 ++--=0A=
->>  4 files changed, 9 insertions(+), 9 deletions(-)=0A=
-> =0A=
-> Doesn't apply to my tty-next tree :(=0A=
-=0A=
-Thanks for letting me know; I will fix this in v4.=0A=
-=0A=
-Regards,=0A=
-Stefan=0A=
+On Thu, Sep 05, 2019 at 01:48:30PM +0300, Sakari Ailus wrote:
+> On Thu, Sep 05, 2019 at 01:14:06PM +0300, Andy Shevchenko wrote:
+> > On Thu, Sep 05, 2019 at 03:21:41PM +0800, dongchun.zhu@mediatek.com wrote:
+> > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > 
+> > > This patch is to add the Devicetree binding documentation and
+> > > MAINTAINERS entry for dw9768 actuator.
+> > > 
+> > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt | 9 +++++++++
+> > >  MAINTAINERS                                                     | 7 +++++++
+> > 
+> > This should be:
+> > 1) two separate patches
+> 
+> Why? The MAINTAINERS entry is usually added in the first patch needing it,
+> isn't it?
+
+Bindings are required to be a separate patch.
+Rob, is it still the case or am I mistaken?
+
+-- 
+With Best Regards,
+Andy Shevchenko
