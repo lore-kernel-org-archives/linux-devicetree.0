@@ -1,60 +1,54 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 01/49] dt: bindings: net: add qcom,ath11k.txt
-Date: Thu, 05 Sep 2019 16:18:08 +0300
-Message-ID: <87o8zylw4v.fsf@kamboji.qca.qualcomm.com>
-References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
-        <1566316095-27507-2-git-send-email-kvalo@codeaurora.org>
-        <20190827171307.GA23128@bogus>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v1] watchdog: imx_sc: this patch just fixes whitespaces
+Date: Thu, 5 Sep 2019 06:24:23 -0700
+Message-ID: <016e268c-f289-4127-a47e-3d8faa790ded@roeck-us.net>
+References: <20190905073730.22258-1-oliver.graute@kococonnector.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20190827171307.GA23128@bogus> (Rob Herring's message of "Tue, 27
-        Aug 2019 12:13:07 -0500")
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190905073730.22258-1-oliver.graute@kococonnector.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oliver Graute <oliver.graute@kococonnector.com>, "oliver.graute@gmail.com" <oliver.graute@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Aisheng Dong <aisheng.dong@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+On 9/5/19 12:44 AM, Oliver Graute wrote:
+> Fix only whitespace errors in imx_sc_wdt_probe()
+> 
+> Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
 
-> On Tue, Aug 20, 2019 at 06:47:27PM +0300, Kalle Valo wrote:
->
-> Missing commit message and Sob (and on the other patches).
+This patch no longer applies due to commit "watchdog: imx_sc: Remove
+unnecessary error log".
 
-My original plan was to commit all this in one commit and use the cover
-letter as my commit. But based on your comment I realised we should have
-three commits:
+Guenter
 
-1. devicetree bindings doc
-2. ath11k itself
-3. add entry to MAINTAINERS file
-
->> ---
->>  .../bindings/net/wireless/qcom,ath11k.txt          | 127 +++++++++++++++++++++
->>  1 file changed, 127 insertions(+)
->
-> Please use the DT schema format (YAML). See writing-schema.md.
-
-Oh, I didn't know about the new format. We'll use that.
-
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath11k.txt
->> @@ -0,0 +1,127 @@
->> +* Qualcomm Technologies ath11k wireless devices
->> +
->> +Required properties:
->> +- compatible: Should be "qcom,ipq8074-wifi"
->> +
->> +AHB based ipq8074 uses most of the properties defined in this doc.
->> +
->> +Optional properties:
->> +- reg: Address and length of the register set for the device.
->> +- interrupts: List of interrupt lines. Must contain an entry
->> +	      for each entry in the interrupt-names property.
->
-> Need to be explicit as to how many interrupts and what they are.
-
-Ok, we'll add that.
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> ---
+>   drivers/watchdog/imx_sc_wdt.c | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
+> index 78eaaf75a263..94db949042c9 100644
+> --- a/drivers/watchdog/imx_sc_wdt.c
+> +++ b/drivers/watchdog/imx_sc_wdt.c
+> @@ -175,12 +175,12 @@ static int imx_sc_wdt_probe(struct platform_device *pdev)
+>   	watchdog_stop_on_unregister(wdog);
+>   
+>   	ret = devm_watchdog_register_device(dev, wdog);
+> -
+> - 	if (ret) {
+> - 		dev_err(dev, "Failed to register watchdog device\n");
+> - 		return ret;
+> - 	}
+> -
+> +
+> +	if (ret) {
+> +		dev_err(dev, "Failed to register watchdog device\n");
+> +		return ret;
+> +	}
+> +
+>   	ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
+>   				       SC_IRQ_WDOG,
+>   				       true);
+> 
