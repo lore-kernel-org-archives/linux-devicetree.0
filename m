@@ -1,98 +1,62 @@
 From: Vitor Soares <Vitor.Soares@synopsys.com>
-Subject: [PATCH v3 2/5] i3c: master: make sure ->boardinfo is initialized in add_i3c_dev_locked()
-Date: Thu,  5 Sep 2019 12:00:35 +0200
-Message-ID: <ed18fd927b5759a6a1edb351113ceca615283189.1567608245.git.vitor.soares@synopsys.com>
-References: <cover.1567608245.git.vitor.soares@synopsys.com>
+Subject: [PATCH v3 0/5] i3c: detach/free device fail pre_assign_dyn_addr()
+Date: Thu,  5 Sep 2019 12:00:33 +0200
+Message-ID: <cover.1567608245.git.vitor.soares@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1567608245.git.vitor.soares@synopsys.com>
-In-Reply-To: <cover.1567608245.git.vitor.soares@synopsys.com>
-References: <cover.1567608245.git.vitor.soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i3c@lists.infradead.org
-Cc: bbrezillon@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, pgaj@cadence.com, Joao.Pinto@synopsys.com, Vitor Soares <Vitor.Soares@synopsys.com>, stable@vger.kernel.org
+Cc: bbrezillon@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, pgaj@cadence.com, Joao.Pinto@synopsys.com, Vitor Soares <Vitor.Soares@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-The newdev->boardinfo assignment was missing in
-i3c_master_add_i3c_dev_locked() and hence the ->of_node info isn't
-propagated to i3c_dev_desc.
+As for today, the I3C framework is keeping in memory and master->bus.devs
+list the devices that fail during pre_assign_dyn_addr() and send them on
+DEFSLVS command.
 
-Fix this by trying to initialize device i3c_dev_boardinfo if available.
+According to MIPI I3C Bus spec the DEFSLVS command is used to inform any
+Secondary Master about the Dynamic Addresses that were assigned to I3C
+devices and the I2C devices present on the bus.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 3a379bbcea0a ("i3c: Add core I3C infrastructure")
-Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
----
+This issue could be fixed by changing i3c_master_defslvs_locked() to
+ignore unaddressed i3c devices but the i3c_dev_desc would be allocated and
+attached to HC unnecessarily. This can cause that some HC aren't able to
+do DAA for HJ capable devices due of lack of space.
+
+This patch-series propose to detach/free devices that are failing during
+pre_assign_dyn_addr() and to propagate i3c_boardinfo, if available, to
+i3c_dev_desc during i3c_master_add_i3c_dev_locked(). Besides the fix for
+the problem mention above, this change will permit to describe devices
+with a preferable dynamic address (important due to priority reason) but
+without a static address in DT.
+
+In addition, I'm improving the management of the Data Address Table in
+DW I3C Master by keeping the free slots consecutive.
+
 Change in v3:
-  - None
+  - Change cover letter
+  - Change commit message for patch 1
+  - Add Rob rb-tags
 
-Changes in v2:
-  - Change commit message
+Change in v2:
+  - Move out detach/free the i3c_dev_desc from pre_assign_dyn_addr()
   - Change i3c_master_search_i3c_boardinfo(newdev) to
   i3c_master_init_i3c_dev_boardinfo(newdev)
-  - Add fixes, stable tags
+  - Add fixes, stable tags on patch 2
+  - Add a note for no guarantee of 'assigned-address' use
 
- drivers/i3c/master.c | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+Vitor Soares (5):
+  i3c: master: detach and free device if pre_assign_dyn_addr() fails
+  i3c: master: make sure ->boardinfo is initialized in
+    add_i3c_dev_locked()
+  dt-bindings: i3c: Make 'assigned-address' valid if static address == 0
+  dt-bindings: i3c: add a note for no guarantee of 'assigned-address'
+    use
+  i3c: master: dw: reattach device on first available location of
+    address table
 
-diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-index 586e34f..9fb99bc 100644
---- a/drivers/i3c/master.c
-+++ b/drivers/i3c/master.c
-@@ -1798,6 +1798,22 @@ i3c_master_search_i3c_dev_duplicate(struct i3c_dev_desc *refdev)
- 	return NULL;
- }
- 
-+static void i3c_master_init_i3c_dev_boardinfo(struct i3c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *master = i3c_dev_get_master(dev);
-+	struct i3c_dev_boardinfo *boardinfo;
-+
-+	if (dev->boardinfo)
-+		return;
-+
-+	list_for_each_entry(boardinfo, &master->boardinfo.i3c, node) {
-+		if (dev->info.pid == boardinfo->pid) {
-+			dev->boardinfo = boardinfo;
-+			return;
-+		}
-+	}
-+}
-+
- /**
-  * i3c_master_add_i3c_dev_locked() - add an I3C slave to the bus
-  * @master: master used to send frames on the bus
-@@ -1818,8 +1834,9 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
- 				  u8 addr)
- {
- 	struct i3c_device_info info = { .dyn_addr = addr };
--	struct i3c_dev_desc *newdev, *olddev;
- 	u8 old_dyn_addr = addr, expected_dyn_addr;
-+	enum i3c_addr_slot_status addrstatus;
-+	struct i3c_dev_desc *newdev, *olddev;
- 	struct i3c_ibi_setup ibireq = { };
- 	bool enable_ibi = false;
- 	int ret;
-@@ -1878,6 +1895,8 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
- 	if (ret)
- 		goto err_detach_dev;
- 
-+	i3c_master_init_i3c_dev_boardinfo(newdev);
-+
- 	/*
- 	 * Depending on our previous state, the expected dynamic address might
- 	 * differ:
-@@ -1895,7 +1914,11 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
- 	else
- 		expected_dyn_addr = newdev->info.dyn_addr;
- 
--	if (newdev->info.dyn_addr != expected_dyn_addr) {
-+	addrstatus = i3c_bus_get_addr_slot_status(&master->bus,
-+						  expected_dyn_addr);
-+
-+	if (newdev->info.dyn_addr != expected_dyn_addr &&
-+	    addrstatus == I3C_ADDR_SLOT_FREE) {
- 		/*
- 		 * Try to apply the expected dynamic address. If it fails, keep
- 		 * the address assigned by the master.
+ Documentation/devicetree/bindings/i3c/i3c.txt | 15 ++++++--
+ drivers/i3c/master.c                          | 49 ++++++++++++++++++++++-----
+ drivers/i3c/master/dw-i3c-master.c            | 16 +++++++++
+ 3 files changed, 68 insertions(+), 12 deletions(-)
+
 -- 
 2.7.4
