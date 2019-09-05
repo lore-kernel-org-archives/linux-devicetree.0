@@ -1,35 +1,81 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
-Date: Thu, 5 Sep 2019 10:31:24 +0530
-Message-ID: <20190905050124.kopzxxouuuta37n6@vireshk-i7>
-References: <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
- <20190819090928.pke6cov52n4exlbp@vireshk-i7>
- <b831d7c5-c830-fd65-20cf-02e209889c28@samsung.com>
- <20190819112533.bvfyinw7fsebkufr@vireshk-i7>
- <b7093aaf-ea56-c390-781f-6f9d0780bd8e@samsung.com>
- <20190820030114.6flnn2omeys3lih3@vireshk-i7>
- <06ccff05-2152-4bcc-7537-8f24da75f163@samsung.com>
- <CGME20190820092123epcas2p2170ae19467a5fb19fcfc1acdbecf9381@epcas2p2.samsung.com>
- <20190820092113.gojhe3romdnvm7eu@vireshk-i7>
- <4e6379a7-0d4b-8e0d-c225-49976b2587e0@samsung.com>
+Subject: Re: [RFC v2 0/3] OMAP3: convert opp-v1 to opp-v2 and read speed
+ binned / 720MHz grade bits
+Date: Thu, 5 Sep 2019 10:33:02 +0530
+Message-ID: <20190905050302.t7dsmyl7xa25umjg@vireshk-i7>
+References: <cover.1567587220.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4e6379a7-0d4b-8e0d-c225-49976b2587e0@samsung.com>
+In-Reply-To: <cover.1567587220.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, krzk@kernel.org, robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-On 04-09-19, 14:37, Sylwester Nawrocki wrote:
-> I have changed the code to use dev_pm_opp_adjust_voltage(). I was wondering 
-> though, what did you mean by "triplet" when commenting on this patch
-> https://patchwork.kernel.org/patch/11092245 ?
+On 04-09-19, 10:53, H. Nikolaus Schaller wrote:
+> Changes V2:
+> * merge separate patch to remove opp-v1 table from n950-n9 into
+>   the general omap3xxx.dtsi patch
+> * add legacy compatibility to ti,omap3430 and ti,omap3630 for
+>   the ti-cpufreq driver
+> * make driver and omap3xxx.dtsi patches pass checkpatch
+> * add bulk patch to explicitly define compatibility to ti,omap3430
+>   and ti,omap36xx in addition to ti,omap3 of all in-tree boards
+>   where it was missing
+> 
+> RFC V1 2019-09-02 12:55:55:
+> 
+> This patch set converts the opp tables to opp-v2 format
+> and extends the ti-cpufreq to support omap3.
+> 
+> It adds 720 MHz (omap34xx) and 1 GHz (omap36xx) OPPs but
+> tells the ti-cpufreq driver to disable them if the speed
+> binned / 720MHz grade eFuse bits indicate that the chip
+> is not rated for that speed. 
+> 
+> It has been tested (for chip variant detection, not reliability
+> of the high speed OPPs) on:
+> 
+> * BeagleBoard C2 (omap3430 600MHz)
+> * BeagleBoard XM B (dm3730 800MHz)
+> * GTA04A4 (dm3730 800MHz)
+> * GTA04A5 (dm3730 1GHz)
+> 
+> 
+> H. Nikolaus Schaller (3):
+>   cpufreq: ti-cpufreq: add support for omap34xx and omap36xx
+>   ARM: dts: replace opp-v1 tables by opp-v2 for omap34xx and omap36xx
+>   ARM: dts: omap3: bulk convert compatible to be explicitly ti,omap3430
+>     or ti,omap36xx
+> 
+>  arch/arm/boot/dts/am3517_mt_ventoux.dts       |  2 +-
+>  .../boot/dts/logicpd-som-lv-35xx-devkit.dts   |  2 +-
+>  .../boot/dts/logicpd-som-lv-37xx-devkit.dts   |  2 +-
+>  .../boot/dts/logicpd-torpedo-35xx-devkit.dts  |  2 +-
+>  .../boot/dts/logicpd-torpedo-37xx-devkit.dts  |  2 +-
+>  arch/arm/boot/dts/omap3-beagle.dts            |  2 +-
+>  arch/arm/boot/dts/omap3-cm-t3530.dts          |  2 +-
+>  arch/arm/boot/dts/omap3-devkit8000-lcd43.dts  |  2 +-
+>  arch/arm/boot/dts/omap3-devkit8000-lcd70.dts  |  2 +-
+>  arch/arm/boot/dts/omap3-devkit8000.dts        |  2 +-
+>  arch/arm/boot/dts/omap3-evm-37xx.dts          |  2 +-
+>  arch/arm/boot/dts/omap3-ha-lcd.dts            |  2 +-
+>  arch/arm/boot/dts/omap3-ha.dts                |  2 +-
+>  arch/arm/boot/dts/omap3-ldp.dts               |  2 +-
+>  arch/arm/boot/dts/omap3-n950-n9.dtsi          |  7 --
+>  arch/arm/boot/dts/omap3-sbc-t3530.dts         |  2 +-
+>  arch/arm/boot/dts/omap3-thunder.dts           |  2 +-
+>  arch/arm/boot/dts/omap3430-sdp.dts            |  2 +-
+>  arch/arm/boot/dts/omap34xx.dtsi               | 65 ++++++++++++--
+>  arch/arm/boot/dts/omap36xx.dtsi               | 53 +++++++++--
+>  drivers/cpufreq/cpufreq-dt-platdev.c          |  2 +-
+>  drivers/cpufreq/ti-cpufreq.c                  | 87 ++++++++++++++++++-
+>  22 files changed, 204 insertions(+), 44 deletions(-)
 
-The voltage value in the OPP core is stored as a triplet,
-min/max/target kind of stuff. You can check DT binding for OPPs and
-see the details. That's called as triplet.
+Most of the stuff looks fine to me here. I will pick the patches when
+the SoC maintainers provide an Ack.
 
 -- 
 viresh
