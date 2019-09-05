@@ -1,131 +1,56 @@
-From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY
- bindings
-Date: Thu, 5 Sep 2019 09:18:57 +0200
-Message-ID: <c9481b7d-4805-25c6-f40f-9cbfc40afc93@linaro.org>
-References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org>
- <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org>
- <20190223165218.GB572@tuxbook-pro>
- <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
- <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
- <20190830164520.GK26807@tuxbook-pro>
- <5d696ad2.1c69fb81.977ea.39e5@mx.google.com>
- <f3584f38-dabc-7e7a-d1cb-84c80ed26215@linaro.org>
- <20190903173924.GB9754@jackp-linux.qualcomm.com>
- <5d6edee5.1c69fb81.a3896.1d05@mx.google.com>
- <20190903233410.GQ26807@tuxbook-pro>
+From: <dongchun.zhu@mediatek.com>
+Subject: [V2, 1/2] media: i2c: dw9768: Add DT support and MAINTAINERS entry
+Date: Thu, 5 Sep 2019 15:21:41 +0800
+Message-ID: <20190905072142.14606-2-dongchun.zhu@mediatek.com>
+References: <20190905072142.14606-1-dongchun.zhu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190903233410.GQ26807@tuxbook-pro>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <swboyd@chromium.org>
-Cc: Jack Pham <jackp@codeaurora.org>, robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190905072142.14606-1-dongchun.zhu@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: mchehab@kernel.org, andriy.shevchenko@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, sakari.ailus@linux.intel.com, drinkcat@chromium.org, tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com
+Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, shengnan.wang@mediatek.com, sj.huang@mediatek.com, linux-mediatek@lists.infradead.org, dongchun.zhu@mediatek.com, sam.hung@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/4/19 01:34, Bjorn Andersson wrote:
-> On Tue 03 Sep 14:45 PDT 2019, Stephen Boyd wrote:
-> 
->> Quoting Jack Pham (2019-09-03 10:39:24)
->>> On Mon, Sep 02, 2019 at 08:23:04AM +0200, Jorge Ramirez wrote:
->>>> On 8/30/19 20:28, Stephen Boyd wrote:
->>>>> Quoting Bjorn Andersson (2019-08-30 09:45:20)
->>>>>> On Fri 30 Aug 09:01 PDT 2019, Stephen Boyd wrote:
->>>>>>
->>>>>>>>>
->>>>>>>>> The USB-C connector is attached both to the HS and SS PHYs, so I think
->>>>>>>>> you should represent this external to this node and use of_graph to
->>>>>>>>> query it.
->>>>>>>>
->>>>>>>> but AFAICS we wont be able to retrieve the vbux-supply from an external
->>>>>>>> node (that interface does not exist).
->>>>>>>>
->>>>>>>> rob, do you have a suggestion?
->>>>>>>
->>>>>>> Shouldn't the vbus supply be in the phy? Or is this a situation where
->>>>>>> the phy itself doesn't have the vbus supply going to it because the PMIC
->>>>>>> gets in the way and handles the vbus for the connector by having the SoC
->>>>>>> communicate with the PMIC about when to turn the vbus on and off, etc?
->>>>>>>
->>>>>>
->>>>>> That's correct, the VBUS comes out of the PMIC and goes directly to the
->>>>>> connector.
->>>>>>
->>>>>> The additional complicating factor here is that the connector is wired
->>>>>> to a USB2 phy as well, so we need to wire up detection and vbus control
->>>>>> to both of them - but I think this will be fine, if we can only figure
->>>>>> out a sane way of getting hold of the vbus-supply.
->>>>>>
->>>>>
->>>>> Does it really matter to describe this situation though? Maybe it's
->>>>> simpler to throw the vbus supply into the phy and control it from the
->>>>> phy driver, even if it never really goes there. Or put it into the
->>>>> toplevel usb controller?
->>>>>
->>>> that would work for me - the connector definition seemed a better way to
->>>> explain the connectivity but since we cant retrieve the supply from the
->>>> external node is not of much functional use.
->>>>
->>>> but please let me know how to proceed. shall I add the supply back to
->>>> the phy?
->>
->> So does the vbus actually go to the phy? I thought it never went there
->> and the power for the phy was different (and possibly lower in voltage).
->>
-> 
-> No, the PHYs use different - lower voltage - supplies to operate. VBUS
-> is coming from a 5V supply straight to the connector and plug-detect
-> logic (which is passive in this design).
-> 
->>>
->>> Putting it in the toplevel usb node makes sense to me, since that's
->>> usually the driver that knows when it's switching into host mode and
->>> needs to turn on VBUS. The dwc3-qcom driver & bindings currently don't 
->>> do this but there's precedent in a couple of the other dwc3 "glues"--see
->>> Documentation/devicetree/bindings/usb/{amlogic\,dwc3,omap-usb}.txt
->>>
->>> One exception is if the PMIC is also USB-PD capable and can do power
->>> role swap, in which case the VBUS control needs to be done by the TCPM,
->>> so that'd be a case where having vbus-supply in the connector node might
->>> make more sense.
->>>
->>
->> The other way is to implement the code to get the vbus supply out of a
->> connector. Then any driver can do the work if it knows it needs to and
->> we don't have to care that the vbus isn't going somewhere. I suppose
->> that would need an of_regulator_get() sort of API that can get the
->> regulator out of there? Or to make the connector into a struct device
->> that can get the regulator out per some generic connector driver and
->> then pass it through to the USB controller when it asks for it. Maybe
->> try to prototype that out?
->>
-> 
-> The examples given in the DT bindings describes the connector as a child
-> of a PMIC, with of_graph somehow tying it to the various inputs. But in
-> these examples vbus is handled by implicitly inside the MFD, where
-> extcon is informed about the plug event they toggle vbus as well.
-> 
-> In our case we have a extcon-usb-gpio to detect mode, which per Jorge's
-> proposal will trickle down to the PHY and become a regulator calls on
-> either some external regulator or more typically one of the chargers in
-> the system.
-> 
-> 
-> So if we come up with a struct device for the connector and some API for
-> toggling the vbus we're going to have to fairly abstract entities
-> representing pretty much the same thing - and in a design with a mux we
-> would have a different setup.
-
-I am a bit unclear - not sure if we have gone full circle on this
-subject. what is then the direction to get this merged?
-
-I did have look last week and the level of effort to support regulators
-on external nodes is not neglectable meaning that I might not have the
-time to deliver that feature (perhaps someone else wishes to take over?)
-
-> 
-> Regards,
-> Bjorn
-> 
+RnJvbTogRG9uZ2NodW4gWmh1IDxkb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tPgoKVGhpcyBwYXRj
+aCBpcyB0byBhZGQgdGhlIERldmljZXRyZWUgYmluZGluZyBkb2N1bWVudGF0aW9uIGFuZApNQUlO
+VEFJTkVSUyBlbnRyeSBmb3IgZHc5NzY4IGFjdHVhdG9yLgoKU2lnbmVkLW9mZi1ieTogRG9uZ2No
+dW4gWmh1IDxkb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tPgotLS0KIERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvZG9uZ3dvb24sZHc5NzY4LnR4dCB8IDkgKysrKysr
+KysrCiBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfCA3ICsrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgMTYgaW5zZXJ0aW9ucygr
+KQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+ZWRpYS9pMmMvZG9uZ3dvb24sZHc5NzY4LnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvZG9uZ3dvb24sZHc5NzY4LnR4dCBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvZG9uZ3dvb24sZHc5NzY4LnR4
+dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi45NGI4ZWMzCi0tLSAvZGV2L251
+bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9kb25n
+d29vbixkdzk3NjgudHh0CkBAIC0wLDAgKzEsOSBAQAorRG9uZ3dvb24gQW5hdGVjaCBEVzk3Njgg
+Y2FtZXJhIHZvaWNlIGNvaWwgbGVucyBkcml2ZXIKKworRFc5NzY4IGlzIGEgMTAtYml0IERBQyB3
+aXRoIGN1cnJlbnQgc2luayBjYXBhYmlsaXR5LiBJdCBpcyBpbnRlbmRlZAorZm9yIGRyaXZpbmcg
+dm9pY2UgY29pbCBsZW5zZXMgaW4gY2FtZXJhIG1vZHVsZXMuCisKK01hbmRhdG9yeSBwcm9wZXJ0
+aWVzOgorCistIGNvbXBhdGlibGU6ICJkb25nd29vbixkdzk3NjgiCistIHJlZzogScKyQyBzbGF2
+ZSBhZGRyZXNzCmRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCmluZGV4IDc4
+MzU2OWUuLjE5MmE2NzEgMTAwNjQ0Ci0tLSBhL01BSU5UQUlORVJTCisrKyBiL01BSU5UQUlORVJT
+CkBAIC00OTcxLDYgKzQ5NzEsMTMgQEAgUzoJTWFpbnRhaW5lZAogRjoJZHJpdmVycy9tZWRpYS9p
+MmMvZHc5NzE0LmMKIEY6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9p
+MmMvZG9uZ3dvb24sZHc5NzE0LnR4dAogCitET05HV09PTiBEVzk3NjggTEVOUyBWT0lDRSBDT0lM
+IERSSVZFUgorTToJRG9uZ2NodW4gWmh1IDxkb25nY2h1bi56aHVAbWVkaWF0ZWsuY29tPgorTDoJ
+bGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnCitUOglnaXQgZ2l0Oi8vbGludXh0di5vcmcvbWVk
+aWFfdHJlZS5naXQKK1M6CU1haW50YWluZWQKK0Y6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tZWRpYS9pMmMvZG9uZ3dvb24sZHc5NzY4LnR4dAorCiBET05HV09PTiBEVzk4MDcg
+TEVOUyBWT0lDRSBDT0lMIERSSVZFUgogTToJU2FrYXJpIEFpbHVzIDxzYWthcmkuYWlsdXNAbGlu
+dXguaW50ZWwuY29tPgogTDoJbGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnCi0tIAoyLjkuMgoK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
+bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
+ZXJuZWwK
