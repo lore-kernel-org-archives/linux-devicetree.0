@@ -1,52 +1,50 @@
-From: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Subject: [PATCH v4 6/6] arm64: defconfig: Enable configs for S32V234
-Date: Thu, 5 Sep 2019 11:58:41 +0000
-Message-ID: <20190905115803.19565-7-stefan-gabriel.mirea@nxp.com>
-References: <20190905115803.19565-1-stefan-gabriel.mirea@nxp.com>
+From: Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 31/49] ath11k: add mac.c
+Date: Thu, 05 Sep 2019 17:28:53 +0530
+Message-ID: <8e90a557c1659995d117c6dc8b728d7f@codeaurora.org>
+References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
+ <1566316095-27507-32-git-send-email-kvalo@codeaurora.org>
+ <4076919b34cad119eb4146025f587285ef40e37c.camel@sipsolutions.net>
+ <ee38dc5e80097d0ebc186f81b2f11d37@codeaurora.org>
+ <878sr3nfz8.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190905115803.19565-1-stefan-gabriel.mirea@nxp.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>
-Cc: "jslaby@suse.com" <jslaby@suse.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Cosmin Stefan Stoica <cosmin.stoica@nxp.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <878sr3nfz8.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mihaela Martinas <Mihaela.Martinas@freescale.com>
+On 2019-09-05 16:54, Kalle Valo wrote:
+> Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+> 
+>> On 2019-08-21 02:16, Johannes Berg wrote:
+>>> On Tue, 2019-08-20 at 18:47 +0300, Kalle Valo wrote:
+>>> 
+>>>> +static int ath11k_mac_op_config(struct ieee80211_hw *hw, u32 
+>>>> changed)
+>>>> +{
+>>>> +	struct ath11k *ar = hw->priv;
+>>>> +	int ret = 0;
+>>>> +
+>>>> +	/* mac80211 requires this op to be present and that's why
+>>>> +	 * there's an empty function, this can be extended when
+>>>> +	 * required.
+>>>> +	 */
+>>> 
+>>> Well, oops. Maybe it shouldn't be required?
+>> 
+>> I think we require this for some configuration handling. The comment
+>> is to be updated with proper information. We'll address that.
+> 
+> The way I'm understanding Johannes' comment is that maybe we should
+> change mac80211 to require this op to be present. Should be easy to fix
+> in mac80211, right?
 
-Enable support for the S32V234 SoC, including the previously added UART
-driver.
+Ok. So make this callback optional in mac80211? should be a simple code 
+change.
 
-Signed-off-by: Mihaela Martinas <Mihaela.Martinas@freescale.com>
-Signed-off-by: Adrian.Nitu <adrian.nitu@freescale.com>
-Signed-off-by: Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>
-Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
----
- arch/arm64/configs/defconfig | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 0e58ef02880c..bb5aa95a8455 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -48,6 +48,7 @@ CONFIG_ARCH_MXC=3Dy
- CONFIG_ARCH_QCOM=3Dy
- CONFIG_ARCH_RENESAS=3Dy
- CONFIG_ARCH_ROCKCHIP=3Dy
-+CONFIG_ARCH_S32=3Dy
- CONFIG_ARCH_SEATTLE=3Dy
- CONFIG_ARCH_STRATIX10=3Dy
- CONFIG_ARCH_SYNQUACER=3Dy
-@@ -347,6 +348,8 @@ CONFIG_SERIAL_XILINX_PS_UART=3Dy
- CONFIG_SERIAL_XILINX_PS_UART_CONSOLE=3Dy
- CONFIG_SERIAL_FSL_LPUART=3Dy
- CONFIG_SERIAL_FSL_LPUART_CONSOLE=3Dy
-+CONFIG_SERIAL_FSL_LINFLEXUART=3Dy
-+CONFIG_SERIAL_FSL_LINFLEXUART_CONSOLE=3Dy
- CONFIG_SERIAL_MVEBU_UART=3Dy
- CONFIG_SERIAL_DEV_BUS=3Dy
- CONFIG_VIRTIO_CONSOLE=3Dy
---=20
-2.22.0
+Vasanth
