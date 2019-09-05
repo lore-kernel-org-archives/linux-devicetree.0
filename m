@@ -1,90 +1,47 @@
-From: Pi-Hsun Shih <pihsun@chromium.org>
-Subject: [PATCH v19 4/4] arm64: dts: mt8183: add scp node
-Date: Thu,  5 Sep 2019 14:19:37 +0800
-Message-ID: <20190905061943.242729-5-pihsun@chromium.org>
-References: <20190905061943.242729-1-pihsun@chromium.org>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH] ARM: dts: aspeed-g4: Add all flash chips
+Date: Thu, 5 Sep 2019 08:43:43 +0200
+Message-ID: <3b7605e2-533e-2123-b866-4ef5c601dc2a@kaod.org>
+References: <20190905000221.31445-1-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190905061943.242729-1-pihsun@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Pi-Hsun Shih <pihsun@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC
-        support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC
-        support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190905000221.31445-1-joel@jms.id.au>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Eddie Huang <eddie.huang@mediatek.com>
-
-Add scp node to mt8183 and mt8183-evb
-
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
----
-Changes from v18, v17, v16, v15, v14:
- - No change.
-
-Changes from v13:
- - Change the size of the cfg register region.
-
-Changes from v12, v11, v10:
- - No change.
-
-Changes from v9:
- - Remove extra reserve-memory-vpu_share node.
-
-Changes from v8:
- - New patch.
----
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 11 +++++++++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 12 ++++++++++++
- 2 files changed, 23 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-index 1fb195c683c3..ddb7a7ac9655 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -24,6 +24,17 @@
- 	chosen {
- 		stdout-path = "serial0:921600n8";
- 	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		scp_mem_reserved: scp_mem_region {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0x50000000 0 0x2900000>;
-+			no-map;
-+		};
-+	};
- };
- 
- &auxadc {
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 97f84aa9fc6e..3dd1b76bbaf5 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -269,6 +269,18 @@
- 			clock-names = "spi", "wrap";
- 		};
- 
-+		scp: scp@10500000 {
-+			compatible = "mediatek,mt8183-scp";
-+			reg = <0 0x10500000 0 0x80000>,
-+			      <0 0x105c0000 0 0x19080>;
-+			reg-names = "sram", "cfg";
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&infracfg CLK_INFRA_SCPSYS>;
-+			clock-names = "main";
-+			memory-region = <&scp_mem_reserved>;
-+			status = "disabled";
-+		};
-+
- 		auxadc: auxadc@11001000 {
- 			compatible = "mediatek,mt8183-auxadc",
- 				     "mediatek,mt8173-auxadc";
--- 
-2.23.0.187.g17f5b7556c-goog
+T24gMDUvMDkvMjAxOSAwMjowMiwgSm9lbCBTdGFubGV5IHdyb3RlOgo+IFRoZSBGTUMgc3VwcG9y
+dHMgZml2ZSBjaGlwIHNlbGVjdHMsIHNvIGRlc2NyaWJlIHRoZSBmaXZlIHBvc3NpYmxlIGZsYXNo
+Cj4gY2hpcHMuCj4gCj4gU2lnbmVkLW9mZi1ieTogSm9lbCBTdGFubGV5IDxqb2VsQGptcy5pZC5h
+dT4KCgpSZXZpZXdlZC1ieTogQ8OpZHJpYyBMZSBHb2F0ZXIgPGNsZ0BrYW9kLm9yZz4KClRoYW5r
+cywKCkMuCgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzQuZHRzaSB8IDIwICsr
+KysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspCj4g
+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1nNC5kdHNpIGIvYXJjaC9h
+cm0vYm9vdC9kdHMvYXNwZWVkLWc0LmR0c2kKPiBpbmRleCBlNDY1Y2RhNDBmZTcuLmRmZmI1OTVk
+MzBlNCAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzQuZHRzaQo+ICsr
+KyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1nNC5kdHNpCj4gQEAgLTY3LDYgKzY3LDI2IEBA
+Cj4gIAkJCQljb21wYXRpYmxlID0gImplZGVjLHNwaS1ub3IiOwo+ICAJCQkJc3RhdHVzID0gImRp
+c2FibGVkIjsKPiAgCQkJfTsKPiArCQkJZmxhc2hAMSB7Cj4gKwkJCQlyZWcgPSA8IDEgPjsKPiAr
+CQkJCWNvbXBhdGlibGUgPSAiamVkZWMsc3BpLW5vciI7Cj4gKwkJCQlzdGF0dXMgPSAiZGlzYWJs
+ZWQiOwo+ICsJCQl9Owo+ICsJCQlmbGFzaEAyIHsKPiArCQkJCXJlZyA9IDwgMiA+Owo+ICsJCQkJ
+Y29tcGF0aWJsZSA9ICJqZWRlYyxzcGktbm9yIjsKPiArCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7
+Cj4gKwkJCX07Cj4gKwkJCWZsYXNoQDMgewo+ICsJCQkJcmVnID0gPCAzID47Cj4gKwkJCQljb21w
+YXRpYmxlID0gImplZGVjLHNwaS1ub3IiOwo+ICsJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiAr
+CQkJfTsKPiArCQkJZmxhc2hANCB7Cj4gKwkJCQlyZWcgPSA8IDQgPjsKPiArCQkJCWNvbXBhdGli
+bGUgPSAiamVkZWMsc3BpLW5vciI7Cj4gKwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsJCQl9
+Owo+ICAJCX07Cj4gIAo+ICAJCXNwaTogc3BpQDFlNjMwMDAwIHsKPiAKCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
