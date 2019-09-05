@@ -1,67 +1,39 @@
-From: "Andrew Jeffery" <andrew@aj.id.au>
-Subject: Re: [PATCH] ARM: dts: aspeed-g4: Add all flash chips
-Date: Thu, 05 Sep 2019 10:03:33 +0930
-Message-ID: <d9805fa2-db79-457b-a166-7c84e1608128@www.fastmail.com>
-References: <20190905000221.31445-1-joel@jms.id.au>
+From: Rashmica Gupta <rashmica.g@gmail.com>
+Subject: [PATCH v2 4/4] gpio: dt-bindings: Update documentation with ast2600 controllers
+Date: Thu,  5 Sep 2019 11:18:00 +1000
+Message-ID: <20190905011800.16156-1-rashmica.g@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190905000221.31445-1-joel@jms.id.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>
-Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org
+Cc: Rashmica Gupta <rashmica.g@gmail.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The ast2600 is a new generation of SoC from ASPEED. Similarly to the
+ast2400 and ast2500, it has a GPIO controller for it's 3.6V GPIO pins.
+Additionally, it has a GPIO controller for 36 1.8V GPIO pins. These
+voltages are fixed and cannot be configured via pinconf, so we have two
+separate drivers for them.
 
+Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+---
+ Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On Thu, 5 Sep 2019, at 09:32, Joel Stanley wrote:
-> The FMC supports five chip selects, so describe the five possible flash
-> chips.
-> 
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> ---
->  arch/arm/boot/dts/aspeed-g4.dtsi | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-> index e465cda40fe7..dffb595d30e4 100644
-> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
-> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-> @@ -67,6 +67,26 @@
->  				compatible = "jedec,spi-nor";
->  				status = "disabled";
->  			};
-> +			flash@1 {
-> +				reg = < 1 >;
-> +				compatible = "jedec,spi-nor";
-> +				status = "disabled";
-> +			};
-> +			flash@2 {
-> +				reg = < 2 >;
-> +				compatible = "jedec,spi-nor";
-> +				status = "disabled";
-> +			};
-> +			flash@3 {
-> +				reg = < 3 >;
-> +				compatible = "jedec,spi-nor";
-> +				status = "disabled";
-> +			};
-> +			flash@4 {
-> +				reg = < 4 >;
-> +				compatible = "jedec,spi-nor";
-> +				status = "disabled";
-> +			};
-
-The FMC supports parallel NOR and NAND interfaces too, but so far no-one has
-cared for these options, so if they ever do we'll fix it then.
-
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+index 7e9b586770b0..cd388797e07c 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+@@ -2,7 +2,8 @@ Aspeed GPIO controller Device Tree Bindings
+ -------------------------------------------
+ 
+ Required properties:
+-- compatible		: Either "aspeed,ast2400-gpio" or "aspeed,ast2500-gpio"
++- compatible		: Either "aspeed,ast2400-gpio", "aspeed,ast2500-gpio",
++					  "aspeed,ast2600-gpio", or "aspeed,ast2600-1-8v-gpio"
+ 
+ - #gpio-cells 		: Should be two
+ 			  - First cell is the GPIO line number
+-- 
+2.20.1
