@@ -1,62 +1,43 @@
-From: Vitor Soares <Vitor.Soares@synopsys.com>
-Subject: [PATCH v3 5/5] i3c: master: dw: reattach device on first available location of address table
-Date: Thu,  5 Sep 2019 12:00:38 +0200
-Message-ID: <245de28c177b3169ce5b8c26d807f5fd46c2921c.1567608245.git.vitor.soares@synopsys.com>
-References: <cover.1567608245.git.vitor.soares@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1567608245.git.vitor.soares@synopsys.com>
-In-Reply-To: <cover.1567608245.git.vitor.soares@synopsys.com>
-References: <cover.1567608245.git.vitor.soares@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i3c@lists.infradead.org
-Cc: bbrezillon@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, pgaj@cadence.com, Joao.Pinto@synopsys.com, Vitor Soares <Vitor.Soares@synopsys.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [V2, 1/2] media: i2c: dw9768: Add DT support and MAINTAINERS entry
+Date: Thu, 5 Sep 2019 13:14:06 +0300
+Message-ID: <20190905101406.GA2680@smile.fi.intel.com>
+References: <20190905072142.14606-1-dongchun.zhu@mediatek.com>
+ <20190905072142.14606-2-dongchun.zhu@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190905072142.14606-2-dongchun.zhu@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dongchun.zhu@mediatek.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, drinkcat@chromium.org, srv_heupstream@mediatek.com, sam.hung@mediatek.com, shengnan.wang@mediatek.com, tfiga@chromium.org, sj.huang@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, sakari.ailus@linux.intel.com, matthias.bgg@gmail.com, bingbu.cao@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-For today the reattach function only update the device address on the
-controller.
+On Thu, Sep 05, 2019 at 03:21:41PM +0800, dongchun.zhu@mediatek.com wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> 
+> This patch is to add the Devicetree binding documentation and
+> MAINTAINERS entry for dw9768 actuator.
+> 
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt | 9 +++++++++
+>  MAINTAINERS                                                     | 7 +++++++
 
-Update the location to the first available too, will optimize the
-enumeration process avoiding additional checks to keep the available
-positions on address table consecutive.
+This should be:
+1) two separate patches
+2) binding in YAML
 
-Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
----
-Change in v3:
-  - None
-
-Change in v2:
-  - Add Boris rb-tag
-
- drivers/i3c/master/dw-i3c-master.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
-index 1d83c97..62261ac 100644
---- a/drivers/i3c/master/dw-i3c-master.c
-+++ b/drivers/i3c/master/dw-i3c-master.c
-@@ -898,6 +898,22 @@ static int dw_i3c_master_reattach_i3c_dev(struct i3c_dev_desc *dev,
- 	struct dw_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
- 	struct i3c_master_controller *m = i3c_dev_get_master(dev);
- 	struct dw_i3c_master *master = to_dw_i3c_master(m);
-+	int pos;
-+
-+	pos = dw_i3c_master_get_free_pos(master);
-+
-+	if (data->index > pos && pos > 0) {
-+		writel(0,
-+		       master->regs +
-+		       DEV_ADDR_TABLE_LOC(master->datstartaddr, data->index));
-+
-+		master->addrs[data->index] = 0;
-+		master->free_pos |= BIT(data->index);
-+
-+		data->index = pos;
-+		master->addrs[pos] = dev->info.dyn_addr;
-+		master->free_pos &= ~BIT(pos);
-+	}
- 
- 	writel(DEV_ADDR_TABLE_DYNAMIC_ADDR(dev->info.dyn_addr),
- 	       master->regs +
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
