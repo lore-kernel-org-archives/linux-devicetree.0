@@ -1,92 +1,131 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v5, 32/32] drm/mediatek: add support for mediatek SOC
- MT8183
-Date: Thu, 5 Sep 2019 15:17:01 +0800
-Message-ID: <1567667821.13819.4.camel@mtksdaap41>
-References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
- <1567090254-15566-33-git-send-email-yongqiang.niu@mediatek.com>
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY
+ bindings
+Date: Thu, 5 Sep 2019 09:18:57 +0200
+Message-ID: <c9481b7d-4805-25c6-f40f-9cbfc40afc93@linaro.org>
+References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org>
+ <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org>
+ <20190223165218.GB572@tuxbook-pro>
+ <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
+ <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
+ <20190830164520.GK26807@tuxbook-pro>
+ <5d696ad2.1c69fb81.977ea.39e5@mx.google.com>
+ <f3584f38-dabc-7e7a-d1cb-84c80ed26215@linaro.org>
+ <20190903173924.GB9754@jackp-linux.qualcomm.com>
+ <5d6edee5.1c69fb81.a3896.1d05@mx.google.com>
+ <20190903233410.GQ26807@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1567090254-15566-33-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: yongqiang.niu@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190903233410.GQ26807@tuxbook-pro>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <swboyd@chromium.org>
+Cc: Jack Pham <jackp@codeaurora.org>, robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoKCk9uIFRodSwgMjAxOS0wOC0yOSBhdCAyMjo1MCArMDgwMCwgeW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
-YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgc3VwcG9ydCBmb3IgbWVk
-aWF0ZWsgU09DIE1UODE4Mwo+IDEub3ZsXzJsIHNoYXJlIGRyaXZlciB3aXRoIG92bAo+IDIucmRt
-YTEgc2hhcmUgZHJpdmUgd2l0aCByZG1hMCwgYnV0IGZpZm8gc2l6ZSBpcyBkaWZmZXJlbnQKPiAz
-LmFkZCBtdDgxODMgbXV0ZXggcHJpdmF0ZSBkYXRhLCBhbmQgbW1zeXMgcHJpdmF0ZSBkYXRhCj4g
-NC5hZGQgbXQ4MTgzIG1haW4gYW5kIGV4dGVybmFsIHBhdGggbW9kdWxlIGZvciBjcnRjIGNyZWF0
-ZQo+IAo+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0
-ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3Bfb3ZsLmMg
-IHwgMTggKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1h
-LmMgfCAyNyArKysrKysrKysrKystCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2RkcC5jICAgfCA2OSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJz
-L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuaCAgIHwgIDEgKwo+ICBkcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAgIHwgNDcgKysrKysrKysrKysrKysrKysrKysrKwo+
-ICA1IGZpbGVzIGNoYW5nZWQsIDE2MSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCgpb
-c25pcF0KCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9y
-ZG1hLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jCj4gaW5kZXgg
-OWE2ZjBhMi4uMjQ5NDVmZSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2Rpc3BfcmRtYS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNw
-X3JkbWEuYwo+IEBAIC02Miw2ICs2Miw3IEBAIHN0cnVjdCBtdGtfZGlzcF9yZG1hIHsKPiAgCXN0
-cnVjdCBtdGtfZGRwX2NvbXAJCWRkcF9jb21wOwo+ICAJc3RydWN0IGRybV9jcnRjCQkJKmNydGM7
-Cj4gIAljb25zdCBzdHJ1Y3QgbXRrX2Rpc3BfcmRtYV9kYXRhCSpkYXRhOwo+ICsJdTMyCQkJCWZp
-Zm9fc2l6ZTsKPiAgfTsKPiAgCj4gIHN0YXRpYyBpbmxpbmUgc3RydWN0IG10a19kaXNwX3JkbWEg
-KmNvbXBfdG9fcmRtYShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wKQo+IEBAIC0xMzAsMTAgKzEz
-MSwxNiBAQCBzdGF0aWMgdm9pZCBtdGtfcmRtYV9jb25maWcoc3RydWN0IG10a19kZHBfY29tcCAq
-Y29tcCwgdW5zaWduZWQgaW50IHdpZHRoLAo+ICAJdW5zaWduZWQgaW50IHRocmVzaG9sZDsKPiAg
-CXVuc2lnbmVkIGludCByZWc7Cj4gIAlzdHJ1Y3QgbXRrX2Rpc3BfcmRtYSAqcmRtYSA9IGNvbXBf
-dG9fcmRtYShjb21wKTsKPiArCXUzMiByZG1hX2ZpZm9fc2l6ZTsKPiAgCj4gIAlyZG1hX3VwZGF0
-ZV9iaXRzKGNvbXAsIERJU1BfUkVHX1JETUFfU0laRV9DT05fMCwgMHhmZmYsIHdpZHRoKTsKPiAg
-CXJkbWFfdXBkYXRlX2JpdHMoY29tcCwgRElTUF9SRUdfUkRNQV9TSVpFX0NPTl8xLCAweGZmZmZm
-LCBoZWlnaHQpOwo+ICAKPiArCWlmIChyZG1hLT5maWZvX3NpemUpCj4gKwkJcmRtYV9maWZvX3Np
-emUgPSByZG1hLT5maWZvX3NpemU7Cj4gKwllbHNlCj4gKwkJcmRtYV9maWZvX3NpemUgPSBSRE1B
-X0ZJRk9fU0laRShyZG1hKTsKCkkgdGhpbmsgdGhlIGZpZm8gc2l6ZSBwYXJ0IHNob3VsZCBiZSBh
-biBpbmRlcGVuZGVudCBwYXRjaCBiZWNhdXNlIGl0IGhhcwpubyBzdHJvbmcgcmVsYXRpb24gd2l0
-aCBNVDgxODMuCgo+ICsKPiAgCS8qCj4gIAkgKiBFbmFibGUgRklGTyB1bmRlcmZsb3cgc2luY2Ug
-RFNJIGFuZCBEUEkgY2FuJ3QgYmUgYmxvY2tlZC4KPiAgCSAqIEtlZXAgdGhlIEZJRk8gcHNldWRv
-IHNpemUgcmVzZXQgZGVmYXVsdCBvZiA4IEtpQi4gU2V0IHRoZQo+IEBAIC0xNDIsNyArMTQ5LDcg
-QEAgc3RhdGljIHZvaWQgbXRrX3JkbWFfY29uZmlnKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAs
-IHVuc2lnbmVkIGludCB3aWR0aCwKPiAgCSAqLwo+ICAJdGhyZXNob2xkID0gd2lkdGggKiBoZWln
-aHQgKiB2cmVmcmVzaCAqIDQgKiA3IC8gMTAwMDAwMDsKPiAgCXJlZyA9IFJETUFfRklGT19VTkRF
-UkZMT1dfRU4gfAo+IC0JICAgICAgUkRNQV9GSUZPX1BTRVVET19TSVpFKFJETUFfRklGT19TSVpF
-KHJkbWEpKSB8Cj4gKwkgICAgICBSRE1BX0ZJRk9fUFNFVURPX1NJWkUocmRtYV9maWZvX3NpemUp
-IHwKPiAgCSAgICAgIFJETUFfT1VUUFVUX1ZBTElEX0ZJRk9fVEhSRVNIT0xEKHRocmVzaG9sZCk7
-Cj4gIAl3cml0ZWwocmVnLCBjb21wLT5yZWdzICsgRElTUF9SRUdfUkRNQV9GSUZPX0NPTik7Cj4g
-IH0KPiBAQCAtMjg0LDYgKzI5MSwxOCBAQCBzdGF0aWMgaW50IG10a19kaXNwX3JkbWFfcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCQlyZXR1cm4gY29tcF9pZDsKPiAgCX0K
-PiAgCj4gKwlpZiAob2ZfZmluZF9wcm9wZXJ0eShkZXYtPm9mX25vZGUsICJtZWRpYXRlayxyZG1h
-X2ZpZm9fc2l6ZSIsICZyZXQpKSB7Cj4gKwkJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIoZGV2
-LT5vZl9ub2RlLAo+ICsJCQkJCSAgICJtZWRpYXRlayxyZG1hX2ZpZm9fc2l6ZSIsCj4gKwkJCQkJ
-ICAgJnByaXYtPmZpZm9fc2l6ZSk7Cj4gKwkJaWYgKHJldCkgewo+ICsJCQlkZXZfZXJyKGRldiwg
-IkZhaWxlZCB0byBnZXQgcmRtYSBmaWZvIHNpemVcbiIpOwo+ICsJCQlyZXR1cm4gcmV0Owo+ICsJ
-CX0KPiArCj4gKwkJcHJpdi0+Zmlmb19zaXplICo9IFNaXzFLOwo+ICsJfQo+ICsKPiAgCXJldCA9
-IG10a19kZHBfY29tcF9pbml0KGRldiwgZGV2LT5vZl9ub2RlLCAmcHJpdi0+ZGRwX2NvbXAsIGNv
-bXBfaWQsCj4gIAkJCQkmbXRrX2Rpc3BfcmRtYV9mdW5jcyk7Cj4gIAlpZiAocmV0KSB7Cj4gQEAg
-LTMyOCwxMSArMzQ3LDE3IEBAIHN0YXRpYyBpbnQgbXRrX2Rpc3BfcmRtYV9yZW1vdmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCS5maWZvX3NpemUgPSBTWl84SywKPiAgfTsKPiAg
-Cgpbc25pcF0KCj4gQEAgLTUxNCw2ICs1NTgsNyBAQCBzdGF0aWMgaW50IG10a19kcm1fcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCQkgKi8KPiAgCQlpZiAoY29tcF90eXBl
-ID09IE1US19ESVNQX0NPTE9SIHx8Cj4gIAkJICAgIGNvbXBfdHlwZSA9PSBNVEtfRElTUF9PVkwg
-fHwKPiArCQkgICAgY29tcF90eXBlID09IE1US19ESVNQX09WTF8yTCB8fAoKSSB0aGluayB0aGlz
-IHNob3VsZCBiZSBzcXVhc2hlZCBpbnRvICJbdjUsMTUvMzJdIGRybS9tZWRpYXRlazogYWRkCmNv
-bW1wb25lbnQgT1ZMXzJMMCcuCgpSZWdhcmRzLApDSwoKPiAgCQkgICAgY29tcF90eXBlID09IE1U
-S19ESVNQX1JETUEgfHwKPiAgCQkgICAgY29tcF90eXBlID09IE1US19EU0kgfHwKPiAgCQkgICAg
-Y29tcF90eXBlID09IE1US19EUEkpIHsKIAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbA==
+On 9/4/19 01:34, Bjorn Andersson wrote:
+> On Tue 03 Sep 14:45 PDT 2019, Stephen Boyd wrote:
+> 
+>> Quoting Jack Pham (2019-09-03 10:39:24)
+>>> On Mon, Sep 02, 2019 at 08:23:04AM +0200, Jorge Ramirez wrote:
+>>>> On 8/30/19 20:28, Stephen Boyd wrote:
+>>>>> Quoting Bjorn Andersson (2019-08-30 09:45:20)
+>>>>>> On Fri 30 Aug 09:01 PDT 2019, Stephen Boyd wrote:
+>>>>>>
+>>>>>>>>>
+>>>>>>>>> The USB-C connector is attached both to the HS and SS PHYs, so I think
+>>>>>>>>> you should represent this external to this node and use of_graph to
+>>>>>>>>> query it.
+>>>>>>>>
+>>>>>>>> but AFAICS we wont be able to retrieve the vbux-supply from an external
+>>>>>>>> node (that interface does not exist).
+>>>>>>>>
+>>>>>>>> rob, do you have a suggestion?
+>>>>>>>
+>>>>>>> Shouldn't the vbus supply be in the phy? Or is this a situation where
+>>>>>>> the phy itself doesn't have the vbus supply going to it because the PMIC
+>>>>>>> gets in the way and handles the vbus for the connector by having the SoC
+>>>>>>> communicate with the PMIC about when to turn the vbus on and off, etc?
+>>>>>>>
+>>>>>>
+>>>>>> That's correct, the VBUS comes out of the PMIC and goes directly to the
+>>>>>> connector.
+>>>>>>
+>>>>>> The additional complicating factor here is that the connector is wired
+>>>>>> to a USB2 phy as well, so we need to wire up detection and vbus control
+>>>>>> to both of them - but I think this will be fine, if we can only figure
+>>>>>> out a sane way of getting hold of the vbus-supply.
+>>>>>>
+>>>>>
+>>>>> Does it really matter to describe this situation though? Maybe it's
+>>>>> simpler to throw the vbus supply into the phy and control it from the
+>>>>> phy driver, even if it never really goes there. Or put it into the
+>>>>> toplevel usb controller?
+>>>>>
+>>>> that would work for me - the connector definition seemed a better way to
+>>>> explain the connectivity but since we cant retrieve the supply from the
+>>>> external node is not of much functional use.
+>>>>
+>>>> but please let me know how to proceed. shall I add the supply back to
+>>>> the phy?
+>>
+>> So does the vbus actually go to the phy? I thought it never went there
+>> and the power for the phy was different (and possibly lower in voltage).
+>>
+> 
+> No, the PHYs use different - lower voltage - supplies to operate. VBUS
+> is coming from a 5V supply straight to the connector and plug-detect
+> logic (which is passive in this design).
+> 
+>>>
+>>> Putting it in the toplevel usb node makes sense to me, since that's
+>>> usually the driver that knows when it's switching into host mode and
+>>> needs to turn on VBUS. The dwc3-qcom driver & bindings currently don't 
+>>> do this but there's precedent in a couple of the other dwc3 "glues"--see
+>>> Documentation/devicetree/bindings/usb/{amlogic\,dwc3,omap-usb}.txt
+>>>
+>>> One exception is if the PMIC is also USB-PD capable and can do power
+>>> role swap, in which case the VBUS control needs to be done by the TCPM,
+>>> so that'd be a case where having vbus-supply in the connector node might
+>>> make more sense.
+>>>
+>>
+>> The other way is to implement the code to get the vbus supply out of a
+>> connector. Then any driver can do the work if it knows it needs to and
+>> we don't have to care that the vbus isn't going somewhere. I suppose
+>> that would need an of_regulator_get() sort of API that can get the
+>> regulator out of there? Or to make the connector into a struct device
+>> that can get the regulator out per some generic connector driver and
+>> then pass it through to the USB controller when it asks for it. Maybe
+>> try to prototype that out?
+>>
+> 
+> The examples given in the DT bindings describes the connector as a child
+> of a PMIC, with of_graph somehow tying it to the various inputs. But in
+> these examples vbus is handled by implicitly inside the MFD, where
+> extcon is informed about the plug event they toggle vbus as well.
+> 
+> In our case we have a extcon-usb-gpio to detect mode, which per Jorge's
+> proposal will trickle down to the PHY and become a regulator calls on
+> either some external regulator or more typically one of the chargers in
+> the system.
+> 
+> 
+> So if we come up with a struct device for the connector and some API for
+> toggling the vbus we're going to have to fairly abstract entities
+> representing pretty much the same thing - and in a design with a mux we
+> would have a different setup.
+
+I am a bit unclear - not sure if we have gone full circle on this
+subject. what is then the direction to get this merged?
+
+I did have look last week and the level of effort to support regulators
+on external nodes is not neglectable meaning that I might not have the
+time to deliver that feature (perhaps someone else wishes to take over?)
+
+> 
+> Regards,
+> Bjorn
+> 
