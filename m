@@ -1,40 +1,60 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [V2, 1/2] media: i2c: dw9768: Add DT support and MAINTAINERS entry
-Date: Thu, 5 Sep 2019 15:24:49 +0300
-Message-ID: <20190905122449.GG2680@smile.fi.intel.com>
-References: <20190905072142.14606-1-dongchun.zhu@mediatek.com>
- <20190905072142.14606-2-dongchun.zhu@mediatek.com>
- <20190905101406.GA2680@smile.fi.intel.com>
- <20190905104829.GB5475@paasikivi.fi.intel.com>
- <20190905113509.GD2680@smile.fi.intel.com>
- <CABxcv=knP+-x0O-Ga-Dy8WTNovHk6GfX4ZEv0vVjnQvwchuVzg@mail.gmail.com>
- <20190905120012.GD5475@paasikivi.fi.intel.com>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 31/49] ath11k: add mac.c
+Date: Thu, 05 Sep 2019 15:29:40 +0300
+Message-ID: <87woenkjt7.fsf@kamboji.qca.qualcomm.com>
+References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
+        <1566316095-27507-32-git-send-email-kvalo@codeaurora.org>
+        <4076919b34cad119eb4146025f587285ef40e37c.camel@sipsolutions.net>
+        <ee38dc5e80097d0ebc186f81b2f11d37@codeaurora.org>
+        <878sr3nfz8.fsf@kamboji.qca.qualcomm.com>
+        <8e90a557c1659995d117c6dc8b728d7f@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190905120012.GD5475@paasikivi.fi.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, drinkcat@chromium.org, srv_heupstream@mediatek.com, sam.hung@mediatek.com, shengnan.wang@mediatek.com, Tomasz Figa <tfiga@chromium.org>, sj.huang@mediatek.com, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, dongchun.zhu@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, bingbu.cao@intel.com, Javier Martinez Canillas <javier@dowhile0.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8e90a557c1659995d117c6dc8b728d7f-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (Vasanthakumar
+        Thiagarajan's message of "Thu, 05 Sep 2019 17:28:53 +0530")
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 03:00:12PM +0300, Sakari Ailus wrote:
+Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
 
-> And I see no reason to add a separate patch just for
-> MAINTAINERS change.
+> On 2019-09-05 16:54, Kalle Valo wrote:
+>> Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+>>
+>>> On 2019-08-21 02:16, Johannes Berg wrote:
+>>>> On Tue, 2019-08-20 at 18:47 +0300, Kalle Valo wrote:
+>>>>
+>>>>> +static int ath11k_mac_op_config(struct ieee80211_hw *hw, u32
+>>>>> changed)
+>>>>> +{
+>>>>> +	struct ath11k *ar = hw->priv;
+>>>>> +	int ret = 0;
+>>>>> +
+>>>>> +	/* mac80211 requires this op to be present and that's why
+>>>>> +	 * there's an empty function, this can be extended when
+>>>>> +	 * required.
+>>>>> +	 */
+>>>>
+>>>> Well, oops. Maybe it shouldn't be required?
+>>>
+>>> I think we require this for some configuration handling. The comment
+>>> is to be updated with proper information. We'll address that.
+>>
+>> The way I'm understanding Johannes' comment is that maybe we should
+>> change mac80211 to require this op to be present. Should be easy to fix
+>> in mac80211, right?
+>
+> Ok. So make this callback optional in mac80211? should be a simple
+> code change.
 
-It's up to maintainers of the subsystem.
+Yeah, I was supposed to write:
+
+"maybe we should change mac80211 to not require this op to be present"
+
+But of course I could have just misunderstood, let's see what Johannes
+says :)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
