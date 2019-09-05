@@ -1,98 +1,54 @@
-From: Sam Shih <sam.shih@mediatek.com>
-Subject: Re: [PATCH v5 07/13] dt-bindings: pwm: add a property "num-pwms"
-Date: Thu, 5 Sep 2019 11:27:30 +0800
-Message-ID: <1567654050.23074.38.camel@mtksdccf07>
-References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
-         <1566457123-20791-8-git-send-email-sam.shih@mediatek.com>
-         <20190827183924.GA24178@bogus>
-         <20190902160445.fitoa65t4ndzjq6v@pengutronix.de>
+From: "Andrew Jeffery" <andrew@aj.id.au>
+Subject: =?UTF-8?Q?Re:_[PATCH_v2_4/4]_gpio:_dt-bindings:_Update_documentation_wit?=
+ =?UTF-8?Q?h_ast2600_controllers?=
+Date: Thu, 05 Sep 2019 13:29:29 +0930
+Message-ID: <3f9d48eb-79ed-42e9-a346-761871e74c98@www.fastmail.com>
+References: <20190905011800.16156-1-rashmica.g@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190902160445.fitoa65t4ndzjq6v@pengutronix.de>
+In-Reply-To: <20190905011800.16156-1-rashmica.g@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: Rashmica Gupta <rashmica.g@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-09-02 at 18:04 +0200, Uwe Kleine-König wrote:
-> On Tue, Aug 27, 2019 at 01:39:24PM -0500, Rob Herring wrote:
-> > On Thu, Aug 22, 2019 at 02:58:37PM +0800, Sam Shih wrote:
-> > > From: Ryder Lee <ryder.lee@mediatek.com>
-> > 
-> > The subject should indicate this is for Mediatek.
-> > 
-> > > 
-> > > This adds a property "num-pwms" in example so that we could
-> > > specify the number of PWM channels via device tree.
-> > > 
-> > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> > > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> > > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > > ---
-> > > Changes since v5:
-> > > - Add an Acked-by tag
-> > > - This file is original v4 patch 5/10
-> > > (https://patchwork.kernel.org/patch/11102577/)
-> > > 
-> > > Change-Id: I429048afeffa96f3f14533910efe242f88776043
-> > > ---
-> > >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
-> > >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> > > index 991728cb46cb..ea95b490a913 100644
-> > > --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> > > +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> > > @@ -14,12 +14,12 @@ Required properties:
-> > >                  has no clocks
-> > >     - "top": the top clock generator
-> > >     - "main": clock used by the PWM core
-> > > -   - "pwm1-8": the eight per PWM clocks for mt2712
-> > > -   - "pwm1-6": the six per PWM clocks for mt7622
-> > > -   - "pwm1-5": the five per PWM clocks for mt7623
-> > > +   - "pwm1-N": the PWM clocks for each channel
-> > > +   where N starting from 1 to the maximum number of PWM channels
-> > 
-> > Once converted to schema, you are going to be back to listing them out.
-> > 
-> > >   - pinctrl-names: Must contain a "default" entry.
-> > >   - pinctrl-0: One property must exist for each entry in pinctrl-names.
-> > >     See pinctrl/pinctrl-bindings.txt for details of the property values.
-> > > + - num-pwms: the number of PWM channels.
-> > 
-> > You can't add new required properties without breaking compatibility. 
-> > 
-> > You already have to imply the number of channels from the compatible (or 
-> > number of clocks) and you have to keep doing so to maintain 
-> > compatibility, so why not just keep doing that for new chips?
+
+
+On Thu, 5 Sep 2019, at 10:48, Rashmica Gupta wrote:
+> The ast2600 is a new generation of SoC from ASPEED. Similarly to the
+> ast2400 and ast2500, it has a GPIO controller for it's 3.6V GPIO pins.
+> Additionally, it has a GPIO controller for 36 1.8V GPIO pins. These
+> voltages are fixed and cannot be configured via pinconf, so we have two
+> separate drivers for them.
+
+See 3/4 for discussion about the commit message.
+
 > 
-> This was a suggestion by me. The driver still handles compatibility
-> (i.e. falls back to the number of PWMs that was implied by the
-> compatible before). Given that there are various drivers that all solve
-> the same problem (i.e. different variants with different number of PWMs)
-> I thought it would be a good idea to introduce a property in the device
-> tree that specifies this number.
-> Only for newly introduced compatibles the num-pwms property is really
-> required. Differentiating the ones that need it and the ones that don't
-> seems over-engineered to me.
+> Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt 
+> b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+> index 7e9b586770b0..cd388797e07c 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+> @@ -2,7 +2,8 @@ Aspeed GPIO controller Device Tree Bindings
+>  -------------------------------------------
+>  
+>  Required properties:
+> -- compatible		: Either "aspeed,ast2400-gpio" or "aspeed,ast2500-gpio"
+> +- compatible		: Either "aspeed,ast2400-gpio", "aspeed,ast2500-gpio",
+> +					  "aspeed,ast2600-gpio", or "aspeed,ast2600-1-8v-gpio"
 
-I'm fine with both.
+See the discussion on patch 3/4 about how we might eliminate the
+aspeed,ast2600-1-8v-gpio compatible string.
 
-num-pwms and pwm1-N is required properties for new chip, but it still
-have backward compatibility for old dt without num-pwms properties.
+Also, this patch should be the first in the series and start the subject with
+"dt-bindings: gpio: aspeed: ..."
 
+Cheers,
 
-> (BTW, using the number of clks doesn't really work because there are
-> also some variants without clocks. It is still under discussion if in
-> this case dummy-clocks should be provided IIRC.)
-
-Yes, the dummy-clocks of "top", "main" is needed in old MIPS dt.
-We also need fixed-clock for period calculation.
-
-
-
-Best Regards,
-Sam
+Andrew
