@@ -1,136 +1,151 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [V2, 2/2] media: i2c: Add DW9768 VCM driver
-Date: Thu, 5 Sep 2019 13:26:33 +0300
-Message-ID: <20190905102633.GC2680@smile.fi.intel.com>
-References: <20190905072142.14606-1-dongchun.zhu@mediatek.com>
- <20190905072142.14606-3-dongchun.zhu@mediatek.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] arm64: dts: mt8183: Add node for the Mali GPU
+Date: Thu, 5 Sep 2019 11:32:29 +0100
+Message-ID: <CAL_JsqLAEe1qYkTWCw7VPau9WnXTMUqtHR5XWGuk7ynZBiuLQA@mail.gmail.com>
+References: <20190905081546.42716-1-drinkcat@chromium.org> <CAL_JsqJCO2G90TTT9Mpy4kjVKQyXWw4aXEEnbRp_SE8X=EGc5g@mail.gmail.com>
+ <CANMq1KCTPdFhJG1SLf-i+-557Yx-1WLzWCHu3tT_5Q2BF+JgdQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190905072142.14606-3-dongchun.zhu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dongchun.zhu@mediatek.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, drinkcat@chromium.org, srv_heupstream@mediatek.com, sam.hung@mediatek.com, shengnan.wang@mediatek.com, tfiga@chromium.org, sj.huang@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, sakari.ailus@linux.intel.com, matthias.bgg@gmail.com, bingbu.cao@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANMq1KCTPdFhJG1SLf-i+-557Yx-1WLzWCHu3tT_5Q2BF+JgdQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Boichat <drinkcat@chromium.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nick Fan <nick.fan@mediatek.com>, Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>, Boris Brezillon <boris.brezillon@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 03:21:42PM +0800, dongchun.zhu@mediatek.com wrote:
-> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> =
+On Thu, Sep 5, 2019 at 10:49 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> Thanks for the quick review!
+>
+> On Thu, Sep 5, 2019 at 5:09 PM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Thu, Sep 5, 2019 at 9:16 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
+> > >
+> > > Add a basic GPU node and opp table for mt8183.
+> > >
+> > > The binding we use with out-of-tree Mali drivers includes more
+> > > clocks, I assume this would be required eventually if we have an
+> > > in-tree driver:
+> >
+> > We have an in-tree driver...
+>
+> Right but AFAICT it does not support Bifrost GPU (yet?).
 
-> This patch adds a V4L2 sub-device driver for DW9768 lens voice coil,
-> and provides control to set the desired focus.
-> =
+It's mostly the mesa userspace side that's missing. The kernel driver
+needs the compatible string and page table support[1]. The former
+should be enough to access the registers which is typically enough to
+sort out an platform specific clock, reset, power issues.
 
-> The DW9768 is a 10 bit DAC with 100mA output current sink capability
-> from Dongwoon, designed for linear control of voice coil motor,
-> and controlled via I2C serial interface.
+> > > clocks =
+> > >         <&topckgen CLK_TOP_MFGPLL_CK>,
+> > >         <&topckgen CLK_TOP_MUX_MFG>,
+> > >         <&clk26m>,
+> > >         <&mfgcfg CLK_MFG_BG3D>;
+> > > clock-names =
+> > >         "clk_main_parent",
+> > >         "clk_mux",
+> > >         "clk_sub_parent",
+> > >         "subsys_mfg_cg";
+>
+> Do you think we should add those to the binding document? May not be
+> easy to match what the amlogic binding does (I'm not sure to
+> understand the details of this device, but I can dig further/ask).
 
-> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> ---
->  MAINTAINERS                |   1 +
+I somewhat expect this needs more investigation. I'm doubtful that
+there's a 26MHz clock going to Mali. Ideally, the clocks are what are
+actually connected to the h/w, not just a list of all the clocks
+needed on some platform because we fail to manage them elsewhere (like
+an interconnect driver). Otherwise we end up with a different list for
+every platform.
 
-This should go to the same patch, where you introduce a record in the
-MAINTAINERS database.
+> > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > >
+> > > ---
+> > > Upstreaming what matches existing bindings from our Chromium OS tree:
+> > > https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.19/arch/arm64/boot/dts/mediatek/mt8183.dtsi#1348
+> > >
+> > > The evb part of this change depends on this patch to add PMIC dtsi:
+> > > https://patchwork.kernel.org/patch/10928161/
+> > >
+> > >  arch/arm64/boot/dts/mediatek/mt8183-evb.dts |   7 ++
+> > >  arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 103 ++++++++++++++++++++
+> > >  2 files changed, 110 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> > > index 1fb195c683c3d01..200d8e65a6368a1 100644
+> > > --- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> > > +++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> > > @@ -7,6 +7,7 @@
+> > >
+> > >  /dts-v1/;
+> > >  #include "mt8183.dtsi"
+> > > +#include "mt6358.dtsi"
+> > >
+> > >  / {
+> > >         model = "MediaTek MT8183 evaluation board";
+> > > @@ -30,6 +31,12 @@
+> > >         status = "okay";
+> > >  };
+> > >
+> > > +&gpu {
+> > > +       supply-names = "mali", "mali_sram";
+> > > +       mali-supply = <&mt6358_vgpu_reg>;
+> > > +       mali_sram-supply = <&mt6358_vsram_gpu_reg>;
+> >
+> > Not documented. Just 'sram-supply' is enough.
+>
+> Will fix.
+>
+> > Note that the binding doc queued up for 5.4 has been converted to DT schema.
+>
+> Yep I see that in linux-next.
+>
+> >
+> > > +};
+> > > +
+> > >  &i2c0 {
+> > >         pinctrl-names = "default";
+> > >         pinctrl-0 = <&i2c_pins_0>;
+> > > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > > index 97f84aa9fc6e1c1..8ea548a762ea252 100644
+> > > --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > > @@ -579,6 +579,109 @@
+> > >                         #clock-cells = <1>;
+> > >                 };
+> > >
+> > > +               gpu: mali@13040000 {
+> >
+> > gpu@...
+> >
+> > > +                       compatible = "mediatek,mt8183-mali", "arm,mali-bifrost";
+> >
+> > You need to add this compatible string too.
+>
+> Will do.
+>
+> >
+> > > +                       reg = <0 0x13040000 0 0x4000>;
+> > > +                       interrupts =
+> > > +                               <GIC_SPI 280 IRQ_TYPE_LEVEL_LOW>,
+> > > +                               <GIC_SPI 279 IRQ_TYPE_LEVEL_LOW>,
+> > > +                               <GIC_SPI 278 IRQ_TYPE_LEVEL_LOW>;
+> > > +                       interrupt-names = "job", "mmu", "gpu";
+> > > +
+> > > +                       clocks = <&topckgen CLK_TOP_MFGPLL_CK>;
+> > > +                       power-domains =
+> > > +                               <&scpsys MT8183_POWER_DOMAIN_MFG_CORE0>,
+> > > +                               <&scpsys MT8183_POWER_DOMAIN_MFG_CORE1>,
+> > > +                               <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
+> >
+> > This needs to be documented too.
+>
+> I see that Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+> has power-domains in the example both not in the yaml, is that
+> expected?
 
-> +#define DW9768_SET_POSITION_ADDR                0x03
+Err, no. Probably some copy-n-paste from utgard.
 
-Indentation issue.
+Rob
 
-> +static struct regval_list dw9768_init_regs[] =3D {
-> +	{0x02, 0x02},
-> +	{DW9768_CMD_DELAY, DW9768_CMD_DELAY},
-> +	{0x06, 0x41},
-> +	{0x07, 0x39},
-> +	{DW9768_CMD_DELAY, DW9768_CMD_DELAY},
-> +};
-> +
-> +static struct regval_list dw9768_release_regs[] =3D {
-> +	{0x02, 0x00},
-> +	{DW9768_CMD_DELAY, DW9768_CMD_DELAY},
-> +	{0x01, 0x00},
-> +	{DW9768_CMD_DELAY, DW9768_CMD_DELAY},
-> +};
-> +
-> +static int dw9768_write_smbus(struct dw9768 *dw9768, unsigned char reg,
-> +			      unsigned char value)
-> +{
-> +	struct i2c_client *client =3D v4l2_get_subdevdata(&dw9768->sd);
-> +	int ret;
-> +
-
-> +	if (reg =3D=3D DW9768_CMD_DELAY  && value =3D=3D DW9768_CMD_DELAY)
-
-Indentation issue.
-But see other's comments.
-
-> +		usleep_range(DW9768_CTRL_DELAY_US,
-> +			     DW9768_CTRL_DELAY_US + 100);
-
-> +	else
-
-This needs an explanation.
-
-> +		ret =3D i2c_smbus_write_byte_data(client, reg, value);
-> +	return ret;
-> +}
-
-I'm wondering if we can benefit from regmap I=B2C API in this driver.
-
-> +static int __maybe_unused dw9768_vcm_suspend(struct device *dev)
-> +{
-
-> +	struct i2c_client *client =3D to_i2c_client(dev);
-> +	struct v4l2_subdev *sd =3D i2c_get_clientdata(client);
-
-isn't is simple dev_get_drvdata() ?
-
-> +	struct dw9768 *dw9768 =3D sd_to_dw9768_vcm(sd);
-> +
-> +	return dw9768_power_off(dw9768);
-> +}
-> +
-> +static int __maybe_unused dw9768_vcm_resume(struct device *dev)
-> +{
-
-> +	struct i2c_client *client =3D to_i2c_client(dev);
-> +	struct v4l2_subdev *sd =3D i2c_get_clientdata(client);
-
-Ditto.
-
-> +	struct dw9768 *dw9768 =3D sd_to_dw9768_vcm(sd);
-> +
-> +	return dw9768_power_on(dw9768);
-> +}
-
-> +static const struct i2c_device_id dw9768_id_table[] =3D {
-> +	{ DW9768_NAME, 0 },
-
-> +	{ },
-
-No comma.
-
-> +};
-
-> +static const struct of_device_id dw9768_of_table[] =3D {
-> +	{ .compatible =3D "dongwoon,dw9768" },
-
-> +	{ },
-
-Ditto.
-
-> +};
-
--- =
-
-With Best Regards,
-Andy Shevchenko
+[1] https://patchwork.freedesktop.org/patch/304731/
