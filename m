@@ -1,7 +1,7 @@
 From: Jan Kotas <jank@cadence.com>
-Subject: [PATCH v2 1/3] media: dt-bindings: Update bindings for Cadence CSI2RX
-Date: Thu, 5 Sep 2019 11:55:59 +0100
-Message-ID: <20190905105601.27034-2-jank@cadence.com>
+Subject: [PATCH v2 2/3] media: Add lane checks for Cadence CSI2RX
+Date: Thu, 5 Sep 2019 11:56:00 +0100
+Message-ID: <20190905105601.27034-3-jank@cadence.com>
 References: <20190905105601.27034-1-jank@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,29 +12,51 @@ To: maxime.ripard@bootlin.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutl
 Cc: rafalc@cadence.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kotas <jank@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a DT bindings documentation for
-Cadence CSI2RX v1.3 and v2.1 controllers.
+This patch adds lane checks for CSI2RX, to prevent clock lane
+being used as a data lane.
 
 Signed-off-by: Jan Kotas <jank@cadence.com>
 ---
- Documentation/devicetree/bindings/media/cdns,csi2rx.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/media/platform/cadence/cdns-csi2rx.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-index 6b02a0657..df828e4e4 100644
---- a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-+++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-@@ -5,7 +5,10 @@ The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to 4 CSI
- lanes in input, and 4 different pixel streams in output.
+diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
+index 31ace114e..97ec09e72 100644
+--- a/drivers/media/platform/cadence/cdns-csi2rx.c
++++ b/drivers/media/platform/cadence/cdns-csi2rx.c
+@@ -2,7 +2,7 @@
+ /*
+  * Driver for Cadence MIPI-CSI2 RX Controller v1.3
+  *
+- * Copyright (C) 2017 Cadence Design Systems Inc.
++ * Copyright (C) 2017-2019 Cadence Design Systems Inc.
+  */
  
- Required properties:
--  - compatible: must be set to "cdns,csi2rx" and an SoC-specific compatible
-+  - compatible: must be set to:
-+    * "cdns,csi2rx" or "cdns,csi2rx-1.3" for version 1.3 of the controller,
-+    * "cdns,csi2rx-2.1" for v2.1,
-+    and an SoC-specific compatible
-   - reg: base address and size of the memory mapped region
-   - clocks: phandles to the clocks driving the controller
-   - clock-names: must contain:
+ #include <linux/clk.h>
+@@ -364,7 +364,7 @@ static int csi2rx_parse_dt(struct csi2rx_priv *csi2rx)
+ 	struct v4l2_fwnode_endpoint v4l2_ep = { .bus_type = 0 };
+ 	struct fwnode_handle *fwh;
+ 	struct device_node *ep;
+-	int ret;
++	int ret, i;
+ 
+ 	ep = of_graph_get_endpoint_by_regs(csi2rx->dev->of_node, 0, 0);
+ 	if (!ep)
+@@ -395,6 +395,15 @@ static int csi2rx_parse_dt(struct csi2rx_priv *csi2rx)
+ 		return -EINVAL;
+ 	}
+ 
++	for (i = 0; i < csi2rx->num_lanes; i++) {
++		if (csi2rx->lanes[i] < 1) {
++			dev_err(csi2rx->dev, "Invalid lane[%d] number: %u\n",
++				i, csi2rx->lanes[i]);
++			of_node_put(ep);
++			return -EINVAL;
++		}
++	}
++
+ 	csi2rx->asd.match.fwnode = fwnode_graph_get_remote_port_parent(fwh);
+ 	csi2rx->asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
+ 	of_node_put(ep);
 -- 
 2.15.0
