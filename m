@@ -1,39 +1,67 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 0/5] arm64: dts: meson: audio updates
-Date: Thu,  5 Sep 2019 14:59:51 +0200
-Message-ID: <20190905125956.4384-1-jbrunet@baylibre.com>
+Subject: [PATCH 3/5] arm64: dts: meson: g12: add a g12 layer
+Date: Thu,  5 Sep 2019 14:59:54 +0200
+Message-ID: <20190905125956.4384-4-jbrunet@baylibre.com>
+References: <20190905125956.4384-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190905125956.4384-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@baylibre.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patchset features a few updates to prepare the addition of the audio
-on sm1. It fixes the register range of audio fifo which was incorrect.
+While the sm1 is very close to the g12a/b family, somethings apply
+differently on the g12a/b and not the sm1. This introduce a new layer
+of dtsi for part which apply to the g12a and g12b but not the sm1.
 
-It also create another layer of dtsi, common to g12a and g12b but not sm1.
-The audio related device are moved to this file.
-
-This was done because the audio bus, which was at 0xff642000 on g12, has
-moved 0xff660000 on sm1. Overwriting the reg property was option but it
-would have left confusing node names on the sm1.
-
-Jerome Brunet (5):
-  arm64: dts: meson: axg: fix audio fifo reg size
-  arm64: dts: meson: g12: fix audio fifo reg size
-  arm64: dts: meson: g12: add a g12 layer
-  arm64: dts: meson: g12: factor the power domain.
-  arm64: dts: meson: g12: move audio bus out of g12-common
-
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  12 +-
- .../boot/dts/amlogic/meson-g12-common.dtsi    | 320 ----------------
- arch/arm64/boot/dts/amlogic/meson-g12.dtsi    | 344 ++++++++++++++++++
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   |  15 +-
- arch/arm64/boot/dts/amlogic/meson-g12b.dtsi   |  14 +-
- 5 files changed, 352 insertions(+), 353 deletions(-)
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-g12.dtsi  | 7 +++++++
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-g12b.dtsi | 2 +-
+ 3 files changed, 9 insertions(+), 2 deletions(-)
  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12.dtsi
 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
+new file mode 100644
+index 000000000000..1e30061fb2a7
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
+@@ -0,0 +1,7 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2019 BayLibre, SAS
++ * Author: Jerome Brunet <jbrunet@baylibre.com>
++ */
++
++#include "meson-g12-common.dtsi"
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+index eb5d177d7a99..69339d69dfd4 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+@@ -3,7 +3,7 @@
+  * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
+  */
+ 
+-#include "meson-g12-common.dtsi"
++#include "meson-g12.dtsi"
+ #include <dt-bindings/power/meson-g12a-power.h>
+ 
+ / {
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
+index 5628ccd54531..eefac0ef092b 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
+@@ -4,7 +4,7 @@
+  * Author: Neil Armstrong <narmstrong@baylibre.com>
+  */
+ 
+-#include "meson-g12-common.dtsi"
++#include "meson-g12.dtsi"
+ #include <dt-bindings/power/meson-g12a-power.h>
+ 
+ / {
 -- 
 2.21.0
