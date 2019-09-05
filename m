@@ -1,221 +1,92 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [RFC PATCH V2 4/4] platform: mtk-isp: Add Mediatek FD driver
-Date: Thu, 5 Sep 2019 16:13:56 +0900
-Message-ID: <CAAFQd5A=D33nUWTyYjt3acV43r3fqjSEkLbt3_Sr1YG1PzQgqQ@mail.gmail.com>
-References: <1562661672-22439-1-git-send-email-Jerry-Ch.chen@mediatek.com>
- <1562661672-22439-5-git-send-email-Jerry-Ch.chen@mediatek.com>
- <20190802082815.GA203993@chromium.org> <1566724680.20680.8.camel@mtksdccf07>
- <CAAFQd5Dw+jaT-+LAUEVeB8W1zdnOgPw7u+aCfDWhYW1SfbzO8g@mail.gmail.com>
- <1566957625.20680.33.camel@mtksdccf07>
- <CAAFQd5D-Yg1FjUE_rwmqfS1gvfE0=MZ=r-ziueU_37-uo9QTbw@mail.gmail.com>
- <1567424859.18318.32.camel@mtksdccf07>
- <CAAFQd5AGgeFbto6V1KkL0dp1QPziOKV3pWQDU2OJ+S1QKvnBdg@mail.gmail.com>
- <1567493081.18318.49.camel@mtksdccf07>
- <CAAFQd5DWM=R7sFHYGhhR_rXrzgRnc4xtH_t8Pig-4tcP9KTSYg@mail.gmail.com>
- <1567511169.18318.65.camel@mtksdccf07>
- <CAAFQd5DiPcUxd+R-v_-BdRx+QqZ35Riii_jpgbqr5mc3BnQvDw@mail.gmail.com>
- <1567568281.18318.80.camel@mtksdccf07>
- <CAAFQd5CRC2cyV30B4Qv59HdrJ7Cpe_yK5aY-BecQQ3J3i0PtCQ@mail.gmail.com>
- <1567577389.18318.100.camel@mtksdccf07>
- <CAAFQd5AxTQPD+nP9CJs45QTzGHKssjv3vRtMqHONABfp12afYw@mail.gmail.com>
- <1567584577.22453.11.camel@mtksdccf07>
- <CAAFQd5Dzxy10g-MKHMnNbVO6kp9_L_jm1m+gtN+p=YF2LyBiag@mail.gmail.com>
- <1567587708.22453.15.camel@mtksdccf07>
- <CAAFQd5DWfEEiGthPi=qoxD-mpAWa68GOCi55mqpmagS-tsGYkA@mail.gmail.com>
- <1567589188.22453.24.camel@mtksdccf07>
- <CAAFQd5Ckz9qH7AnLNM4HRTM2gJQP1HXRS09+o6Prf++D1PQhng@mail.gmail.com>
- <1567603143.22453.27.camel@mtksdccf07> <1567666940.22453.31.camel@mtksdccf07>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v5, 32/32] drm/mediatek: add support for mediatek SOC
+ MT8183
+Date: Thu, 5 Sep 2019 15:17:01 +0800
+Message-ID: <1567667821.13819.4.camel@mtksdaap41>
+References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1567090254-15566-33-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1567666940.22453.31.camel@mtksdccf07>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?B?U2VhbiBDaGVuZyAo6YSt5piH5byYKQ==?= <Sean.Cheng@mediatek.com>, "laurent.pinchart+renesas@ideasonboard.com" <laurent.pinchart+renesas@ideasonboard.com>, =?UTF-8?B?UnlubiBXdSAo5ZCz6IKy5oGpKQ==?= <Rynn.Wu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, =?UTF-8?B?UG8tWWFuZyBIdWFuZyAo6buD5p+P6Zm9KQ==?= <po-yang.huang@mediatek.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "suleiman@chromium.org" <suleiman@chromium.org>, "shik@chromium.org" <shik@chromium.org>, =?UTF-8?B?SnVuZ28gTGluICjmnpfmmI7kv4op?= <jungo.lin@mediatek.com>, =?UTF-8?B?U2ogSHVhbmcgKOm7g+S/oeeSiyk=?= <sj.huang@mediatek.com>, "yuzhao@chromium.org" <yuzhao@chromium.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "zwisler@chromium.org" <zwisler@chromium.org>, "matthias.bgg@gmail.com" <matthias.bgg>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1567090254-15566-33-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: yongqiang.niu@mediatek.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 4:02 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
->
-> Hi Tomasz,
->
-> On Wed, 2019-09-04 at 21:19 +0800, Jerry-ch Chen wrote:
-> > On Wed, 2019-09-04 at 21:12 +0800, Tomasz Figa wrote:
-> > > On Wed, Sep 4, 2019 at 6:26 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
-> > > >
-> > > > Hi Tomasz,
-> > > >
-> > > > On Wed, 2019-09-04 at 17:03 +0800, Tomasz Figa wrote:
-> > > > > On Wed, Sep 4, 2019 at 6:02 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
-> > > > > >
-> > > > > > Hi Tomasz,
-> > > > > >
-> > > > > > On Wed, 2019-09-04 at 16:25 +0800, Tomasz Figa wrote:
-> > > > > > > On Wed, Sep 4, 2019 at 5:09 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
-> > > > > > > >
-> > > > > > > > Hi Tomasz,
-> > > > > > > >
-> > > > > > > > On Wed, 2019-09-04 at 14:34 +0800, Tomasz Figa wrote:
-> > > > > > > > > On Wed, Sep 4, 2019 at 3:09 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > Hi Tomasz,
-> > > > > > > > > >
-> > > > > > > > > > On Wed, 2019-09-04 at 12:15 +0800, Tomasz Figa wrote:
-> > > > > > > > > > > On Wed, Sep 4, 2019 at 12:38 PM Jerry-ch Chen
-> > > > > > > > > > > <Jerry-ch.Chen@mediatek.com> wrote:
-> > > > > > > > > > > >
-> > > > > > > > > > > > Hi Tomasz,
-> > > > > > > > > > > >
-> > > > > > > > > > > > On Tue, 2019-09-03 at 20:05 +0800, Tomasz Figa wrote:
-> > > > > > > > > > > > > On Tue, Sep 3, 2019 at 8:46 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > Hi Tomasz,
-> > > > > > > > > > > > > >
-> > > > > > > > > > > > > > On Tue, 2019-09-03 at 15:04 +0800, Tomasz Figa wrote:
-> > > > > > > > > > > > > > > On Tue, Sep 3, 2019 at 3:44 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
-> > > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > > On Tue, 2019-09-03 at 13:19 +0800, Tomasz Figa wrote:
-> > > > > > > > > > > > > > > > > On Mon, Sep 2, 2019 at 8:47 PM Jerry-ch Chen <Jerry-ch.Chen@mediatek.com> wrote:
-> > > > > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > > > > Hi Tomasz,
-> > > > > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > > > > On Fri, 2019-08-30 at 16:33 +0800, Tomasz Figa wrote:
-> > > > > > > > > > > > > > > > > > > On Wed, Aug 28, 2019 at 11:00 AM Jerry-ch Chen
-> > > > > > > > > > > > > > > > > > > <Jerry-ch.Chen@mediatek.com> wrote:
-> > > > > > > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > > > > > > Hi Tomasz,
-> > > > > > > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > > > > > > On Mon, 2019-08-26 at 14:36 +0800, Tomasz Figa wrote:
-> > > > > > > > > > > > > > > > > > > > > Hi Jerry,
-> > > > > > > > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > > > > > > > On Sun, Aug 25, 2019 at 6:18 PM Jerry-ch Chen
-> > > > > > > > > > > > > > > > > > > > > <Jerry-ch.Chen@mediatek.com> wrote:
-> > > > > > > > > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > > > > > > > > Hi Tomasz,
-> > > > > > > > > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > > > > > > > > On Fri, 2019-08-02 at 16:28 +0800, Tomasz Figa wrote:
-> > > > > > > > > > > > > > > > > > > > > > > Hi Jerry,
-> > > > > > > > > > > > > > > > > > > > > > >
-> > > > > > > > > > > > > > > > > > > > > > > On Tue, Jul 09, 2019 at 04:41:12PM +0800, Jerry-ch Chen wrote:
-> > > > [snip]
-> > > > > > > > static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
-> > > > > > > > {
-> > > > > > > >         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
-> > > > > > > >         struct mtk_fd_dev *fd = ctx->fd_dev;
-> > > > > > > >         struct vb2_v4l2_buffer *vb;
-> > > > > > > >         struct v4l2_m2m_ctx *m2m_ctx = ctx->fh.m2m_ctx;
-> > > > > > > >         struct v4l2_m2m_queue_ctx *queue_ctx;
-> > > > > > > >         u32 ret;
-> > > > > > > >
-> > > > > > > >         if (!fd->fd_irq_done.done)
-> > > > > > >
-> > > > > > > We shouldn't access internal fields of completion.
-> > > > > > >
-> > > > > > > >                 ret = wait_for_completion_timeout(&fd->fd_irq_done,
-> > > > > > > >                                                   msecs_to_jiffies(
-> > > > > > > >                                                         MTK_FD_HW_TIMEOUT));
-> > > > > > > >         queue_ctx = V4L2_TYPE_IS_OUTPUT(vq->type) ?
-> > > > > > > >                                         &m2m_ctx->out_q_ctx :
-> > > > > > > >                                         &m2m_ctx->cap_q_ctx;
-> > > > > > > >         while ((vb = v4l2_m2m_buf_remove(queue_ctx)))
-> > > > > > > >                 v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
-> > > > > > > >
-> > > > > > > >         if (vq->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
-> > > > > > > >                 mtk_fd_hw_disconnect(fd);
-> > > > > > > > }
-> > > > > > > >
-> > > > > > > > I've also tried to wait completion unconditionally for both queues and
-> > > > > > > > the second time will wait until timeout, as a result, it takes longer to
-> > > > > > > > swap the camera every time and close the camera app.
-> > > > > > >
-> > > > > > > I think it should work better if we call complete_all() instead of complete().
-> > > > > > >
-> > > > > > Thanks,
-> > > > > >
-> > > > > > I use complete_all(), and it works fine now.
-> > > > > >
-> > > > > > static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
-> > > > > > {
-> > > > > >         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
-> > > > > >         struct mtk_fd_dev *fd = ctx->fd_dev;
-> > > > > >         struct vb2_v4l2_buffer *vb;
-> > > > > >         struct v4l2_m2m_ctx *m2m_ctx = ctx->fh.m2m_ctx;
-> > > > > >         struct v4l2_m2m_queue_ctx *queue_ctx;
-> > > > > >
-> > > > > >         wait_for_completion_timeout(&fd->fd_irq_done,
-> > > > > >                                           msecs_to_jiffies(MTK_FD_HW_TIMEOUT));
-> > > > >
-> > > > > Shouldn't we still send some command to the hardware to stop? Like a
-> > > > > reset. Otherwise we don't know if it isn't still accessing the memory.
-> > > > >
-> > > > I thought no more jobs will be enqueued here when stop_streaming so we
-> > > > don't need it.
-> > >
-> > > That's true for the case when the wait completed successfully, but we
-> > > also need to ensure the hardware is stopped even if a timeout happens.
-> > >
-> > > > We still could send an ipi command to reset the HW, and wait for it's
-> > > > callback or we could set the register MTK_FD_REG_OFFSET_HW_ENABLE to
-> > > > zero to disable the HW.
-> > >
-> > > Since it's for handling a timeout, a reset should be more likely to
-> > > bring the hardware back to a reasonable state.
-> > >
-> >
-> > Ok, I will send the ipi command to reset the HW.
-> >
-> > Thanks and best regards,
-> > Jerry
-> I've tested and will refine as following:
->
-> static void mtk_fd_vb2_stop_streaming(struct vb2_queue *vq)
-> {
->         struct mtk_fd_ctx *ctx = vb2_get_drv_priv(vq);
->         struct mtk_fd_dev *fd = ctx->fd_dev;
->         struct vb2_v4l2_buffer *vb;
->         struct v4l2_m2m_ctx *m2m_ctx = ctx->fh.m2m_ctx;
->         struct v4l2_m2m_queue_ctx *queue_ctx;
->         u32 ret;
->
->         ret = wait_for_completion_timeout(&fd->fd_irq_done,
->                                           msecs_to_jiffies(MTK_FD_HW_TIMEOUT));
->         /* Disable FD HW */
->         if(!ret) {
->                 struct ipi_message fd_ipi_msg;
->
->                 fd_ipi_msg.cmd_id = MTK_FD_IPI_CMD_RESET;
->                 ret = scp_ipi_send(fd->scp_pdev, SCP_IPI_FD_CMD, &fd_ipi_msg,
->                                    sizeof(fd_ipi_msg), MTK_FD_IPI_SEND_TIMEOUT);
->                 if (ret)
->                         dev_err(fd->dev, "FD Reset HW error\n");
->         }
-
-Would you also put the same code in suspend handler? If so, perhaps
-it's better to keep this in a helper function (mtk_fd_job_abort()) as
-we had before?
-
->         queue_ctx = V4L2_TYPE_IS_OUTPUT(vq->type) ?
->                                         &m2m_ctx->out_q_ctx :
->                                         &m2m_ctx->cap_q_ctx;
->         while ((vb = v4l2_m2m_buf_remove(queue_ctx)))
->                 v4l2_m2m_buf_done(vb, VB2_BUF_STATE_ERROR);
->
->         if (vq->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
->                 mtk_fd_hw_disconnect(fd);
-> }
->
-> If there is no other concern, may I send the RFC v3 patch for review?
-
-Thanks, technically it looks good now. Just one comment about avoiding
-code duplication above.
-
-Best regards,
-Tomasz
+SGksIFlvbmdxaWFuZzoKCk9uIFRodSwgMjAxOS0wOC0yOSBhdCAyMjo1MCArMDgwMCwgeW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20gd3JvdGU6Cj4gRnJvbTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3Fp
+YW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gCj4gVGhpcyBwYXRjaCBhZGQgc3VwcG9ydCBmb3IgbWVk
+aWF0ZWsgU09DIE1UODE4Mwo+IDEub3ZsXzJsIHNoYXJlIGRyaXZlciB3aXRoIG92bAo+IDIucmRt
+YTEgc2hhcmUgZHJpdmUgd2l0aCByZG1hMCwgYnV0IGZpZm8gc2l6ZSBpcyBkaWZmZXJlbnQKPiAz
+LmFkZCBtdDgxODMgbXV0ZXggcHJpdmF0ZSBkYXRhLCBhbmQgbW1zeXMgcHJpdmF0ZSBkYXRhCj4g
+NC5hZGQgbXQ4MTgzIG1haW4gYW5kIGV4dGVybmFsIHBhdGggbW9kdWxlIGZvciBjcnRjIGNyZWF0
+ZQo+IAo+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0
+ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3Bfb3ZsLmMg
+IHwgMTggKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1h
+LmMgfCAyNyArKysrKysrKysrKystCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
+X2RkcC5jICAgfCA2OSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJz
+L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAuaCAgIHwgIDEgKwo+ICBkcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAgIHwgNDcgKysrKysrKysrKysrKysrKysrKysrKwo+
+ICA1IGZpbGVzIGNoYW5nZWQsIDE2MSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gCgpb
+c25pcF0KCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9y
+ZG1hLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jCj4gaW5kZXgg
+OWE2ZjBhMi4uMjQ5NDVmZSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2Rpc3BfcmRtYS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNw
+X3JkbWEuYwo+IEBAIC02Miw2ICs2Miw3IEBAIHN0cnVjdCBtdGtfZGlzcF9yZG1hIHsKPiAgCXN0
+cnVjdCBtdGtfZGRwX2NvbXAJCWRkcF9jb21wOwo+ICAJc3RydWN0IGRybV9jcnRjCQkJKmNydGM7
+Cj4gIAljb25zdCBzdHJ1Y3QgbXRrX2Rpc3BfcmRtYV9kYXRhCSpkYXRhOwo+ICsJdTMyCQkJCWZp
+Zm9fc2l6ZTsKPiAgfTsKPiAgCj4gIHN0YXRpYyBpbmxpbmUgc3RydWN0IG10a19kaXNwX3JkbWEg
+KmNvbXBfdG9fcmRtYShzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wKQo+IEBAIC0xMzAsMTAgKzEz
+MSwxNiBAQCBzdGF0aWMgdm9pZCBtdGtfcmRtYV9jb25maWcoc3RydWN0IG10a19kZHBfY29tcCAq
+Y29tcCwgdW5zaWduZWQgaW50IHdpZHRoLAo+ICAJdW5zaWduZWQgaW50IHRocmVzaG9sZDsKPiAg
+CXVuc2lnbmVkIGludCByZWc7Cj4gIAlzdHJ1Y3QgbXRrX2Rpc3BfcmRtYSAqcmRtYSA9IGNvbXBf
+dG9fcmRtYShjb21wKTsKPiArCXUzMiByZG1hX2ZpZm9fc2l6ZTsKPiAgCj4gIAlyZG1hX3VwZGF0
+ZV9iaXRzKGNvbXAsIERJU1BfUkVHX1JETUFfU0laRV9DT05fMCwgMHhmZmYsIHdpZHRoKTsKPiAg
+CXJkbWFfdXBkYXRlX2JpdHMoY29tcCwgRElTUF9SRUdfUkRNQV9TSVpFX0NPTl8xLCAweGZmZmZm
+LCBoZWlnaHQpOwo+ICAKPiArCWlmIChyZG1hLT5maWZvX3NpemUpCj4gKwkJcmRtYV9maWZvX3Np
+emUgPSByZG1hLT5maWZvX3NpemU7Cj4gKwllbHNlCj4gKwkJcmRtYV9maWZvX3NpemUgPSBSRE1B
+X0ZJRk9fU0laRShyZG1hKTsKCkkgdGhpbmsgdGhlIGZpZm8gc2l6ZSBwYXJ0IHNob3VsZCBiZSBh
+biBpbmRlcGVuZGVudCBwYXRjaCBiZWNhdXNlIGl0IGhhcwpubyBzdHJvbmcgcmVsYXRpb24gd2l0
+aCBNVDgxODMuCgo+ICsKPiAgCS8qCj4gIAkgKiBFbmFibGUgRklGTyB1bmRlcmZsb3cgc2luY2Ug
+RFNJIGFuZCBEUEkgY2FuJ3QgYmUgYmxvY2tlZC4KPiAgCSAqIEtlZXAgdGhlIEZJRk8gcHNldWRv
+IHNpemUgcmVzZXQgZGVmYXVsdCBvZiA4IEtpQi4gU2V0IHRoZQo+IEBAIC0xNDIsNyArMTQ5LDcg
+QEAgc3RhdGljIHZvaWQgbXRrX3JkbWFfY29uZmlnKHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAs
+IHVuc2lnbmVkIGludCB3aWR0aCwKPiAgCSAqLwo+ICAJdGhyZXNob2xkID0gd2lkdGggKiBoZWln
+aHQgKiB2cmVmcmVzaCAqIDQgKiA3IC8gMTAwMDAwMDsKPiAgCXJlZyA9IFJETUFfRklGT19VTkRF
+UkZMT1dfRU4gfAo+IC0JICAgICAgUkRNQV9GSUZPX1BTRVVET19TSVpFKFJETUFfRklGT19TSVpF
+KHJkbWEpKSB8Cj4gKwkgICAgICBSRE1BX0ZJRk9fUFNFVURPX1NJWkUocmRtYV9maWZvX3NpemUp
+IHwKPiAgCSAgICAgIFJETUFfT1VUUFVUX1ZBTElEX0ZJRk9fVEhSRVNIT0xEKHRocmVzaG9sZCk7
+Cj4gIAl3cml0ZWwocmVnLCBjb21wLT5yZWdzICsgRElTUF9SRUdfUkRNQV9GSUZPX0NPTik7Cj4g
+IH0KPiBAQCAtMjg0LDYgKzI5MSwxOCBAQCBzdGF0aWMgaW50IG10a19kaXNwX3JkbWFfcHJvYmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCQlyZXR1cm4gY29tcF9pZDsKPiAgCX0K
+PiAgCj4gKwlpZiAob2ZfZmluZF9wcm9wZXJ0eShkZXYtPm9mX25vZGUsICJtZWRpYXRlayxyZG1h
+X2ZpZm9fc2l6ZSIsICZyZXQpKSB7Cj4gKwkJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIoZGV2
+LT5vZl9ub2RlLAo+ICsJCQkJCSAgICJtZWRpYXRlayxyZG1hX2ZpZm9fc2l6ZSIsCj4gKwkJCQkJ
+ICAgJnByaXYtPmZpZm9fc2l6ZSk7Cj4gKwkJaWYgKHJldCkgewo+ICsJCQlkZXZfZXJyKGRldiwg
+IkZhaWxlZCB0byBnZXQgcmRtYSBmaWZvIHNpemVcbiIpOwo+ICsJCQlyZXR1cm4gcmV0Owo+ICsJ
+CX0KPiArCj4gKwkJcHJpdi0+Zmlmb19zaXplICo9IFNaXzFLOwo+ICsJfQo+ICsKPiAgCXJldCA9
+IG10a19kZHBfY29tcF9pbml0KGRldiwgZGV2LT5vZl9ub2RlLCAmcHJpdi0+ZGRwX2NvbXAsIGNv
+bXBfaWQsCj4gIAkJCQkmbXRrX2Rpc3BfcmRtYV9mdW5jcyk7Cj4gIAlpZiAocmV0KSB7Cj4gQEAg
+LTMyOCwxMSArMzQ3LDE3IEBAIHN0YXRpYyBpbnQgbXRrX2Rpc3BfcmRtYV9yZW1vdmUoc3RydWN0
+IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCS5maWZvX3NpemUgPSBTWl84SywKPiAgfTsKPiAg
+Cgpbc25pcF0KCj4gQEAgLTUxNCw2ICs1NTgsNyBAQCBzdGF0aWMgaW50IG10a19kcm1fcHJvYmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCQkgKi8KPiAgCQlpZiAoY29tcF90eXBl
+ID09IE1US19ESVNQX0NPTE9SIHx8Cj4gIAkJICAgIGNvbXBfdHlwZSA9PSBNVEtfRElTUF9PVkwg
+fHwKPiArCQkgICAgY29tcF90eXBlID09IE1US19ESVNQX09WTF8yTCB8fAoKSSB0aGluayB0aGlz
+IHNob3VsZCBiZSBzcXVhc2hlZCBpbnRvICJbdjUsMTUvMzJdIGRybS9tZWRpYXRlazogYWRkCmNv
+bW1wb25lbnQgT1ZMXzJMMCcuCgpSZWdhcmRzLApDSwoKPiAgCQkgICAgY29tcF90eXBlID09IE1U
+S19ESVNQX1JETUEgfHwKPiAgCQkgICAgY29tcF90eXBlID09IE1US19EU0kgfHwKPiAgCQkgICAg
+Y29tcF90eXBlID09IE1US19EUEkpIHsKIAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbA==
