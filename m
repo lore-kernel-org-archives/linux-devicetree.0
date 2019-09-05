@@ -1,81 +1,51 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v3 1/1] i2c: qcom-geni: Provide an option to disable DMA
- processing
-Date: Thu, 5 Sep 2019 15:49:41 +0200
-Message-ID: <20190905134941.GG1157@kunai>
-References: <20190905102247.27583-1-lee.jones@linaro.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v2 1/2] reset: dt-bindings: meson: update arb bindings for sm1
+Date: Thu,  5 Sep 2019 15:50:39 +0200
+Message-ID: <20190905135040.6635-2-jbrunet@baylibre.com>
+References: <20190905135040.6635-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jt0yj30bxbg11sci"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190905102247.27583-1-lee.jones@linaro.org>
+In-Reply-To: <20190905135040.6635-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: alokc@codeaurora.org, agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, vkoul@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+SM1 SoC family adds two new audio FIFOs with the related arb reset lines
 
---jt0yj30bxbg11sci
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ .../devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt  | 3 ++-
+ include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h        | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-Hi Lee,
-
-I understand you are in a hurry, but please double check before
-sending...
-
-On Thu, Sep 05, 2019 at 11:22:47AM +0100, Lee Jones wrote:
-> We have a production-level laptop (Lenovo Yoga C630) which is exhibiting
-> a rather horrific bug.  When I2C HID devices are being scanned for at
-> boot-time the QCom Geni based I2C (Serial Engine) attempts to use DMA.
-> When it does, the laptop reboots and the user never sees the OS.
->=20
-> The beautiful thing about this approach is that, *if* the Geni SE DMA
-> ever starts working, we can remove the C code and any old properties
-> left in older DTs just become NOOP.  Older kernels with newer DTs (less
-> of a priority) *still* will not work - but they do not work now anyway.
-
-=2E.. becasue this paragraph doesn't fit anymore. Needs to be reworded.
-
->=20
-> Fixes: 8bc529b25354 ("soc: qcom: geni: Add support for ACPI")
-
-As said in the other thread, I don't get it, but this is not a show
-stopper for me.
-
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-
-I'd like Vinod to resend his review. Because IMO the change since v2 was
-not trivial, so the old rev-by has to be dropped.
-
-Other than that, the code looks good to me!
-
-Regards,
-
-   Wolfram
-
-
---jt0yj30bxbg11sci
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1xEnUACgkQFA3kzBSg
-KbZADQ//bVc8JLCde99ZKqUN8Y09DkUCfN9nWo2ec5DwxFmDGC8HdJ6mtz50/MLV
-jBJDWvml349aU4YwpmGf5ON51GWxey0iWmJ0Fo/km09XZp3JVHObxS+66M1y7p34
-T60tKi6kct3QpVwT+jaqMimTvGDGY6W78cG/GCVErlFbthDEEeDfPzy1iuU0D/OW
-j/rdRGz6Q8VlN2CvN6EPPn9njVwBQBIgsSAGeUULgGxb6dUs9oVp6CbRvPQMzwPV
-7sPJzdV5bZ5YPWRaExFUiR6AfCkeDtJwK26jWKVVVLh2Xfc+FMSJ/pOQrQfzoGDA
-Dv50xlVGa3oQV3zeyHzOIFhUZpjsTChbfzVNSt0GGzgYlc09U3ltyWZBR6iEyPfm
-00x/oA1oyMjLpsaOq3xf5+AP7+PScfvB0910iujc+nPd2agCZRRDtl8hCmCiisBK
-W2RB7RnLd3ZKf09bqU0xwkMNUXHSllk0bZK27lxdGFXIK8XCRjf9SJ6bQe1jvXWO
-P5FG1/PuaQIjh8l7u2t15uFpzISvYvKAhypuSpV1Sbgc9fOfZSlbo20SrVkYAmd1
-Y2JcfmTJBjlmRfpyXoVEzOGJclp1AlyrFQd955dzl/LAVBUdvDlHLaFkZ1molQF4
-Ou0LwmX7yn69/N//1QKohUFuLjAkW+tJHd17zYtqMF/HAPcmZl0=
-=pZZv
------END PGP SIGNATURE-----
-
---jt0yj30bxbg11sci--
+diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt b/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
+index 26e542eb96df..43e580ef64ba 100644
+--- a/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
++++ b/Documentation/devicetree/bindings/reset/amlogic,meson-axg-audio-arb.txt
+@@ -4,7 +4,8 @@ The Amlogic Audio ARB is a simple device which enables or
+ disables the access of Audio FIFOs to DDR on AXG based SoC.
+ 
+ Required properties:
+-- compatible: 'amlogic,meson-axg-audio-arb'
++- compatible: 'amlogic,meson-axg-audio-arb' or
++	      'amlogic,meson-sm1-audio-arb'
+ - reg: physical base address of the controller and length of memory
+        mapped region.
+ - clocks: phandle to the fifo peripheral clock provided by the audio
+diff --git a/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h b/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
+index 05c36367875c..1ef807856cb8 100644
+--- a/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
++++ b/include/dt-bindings/reset/amlogic,meson-axg-audio-arb.h
+@@ -13,5 +13,7 @@
+ #define AXG_ARB_FRDDR_A	3
+ #define AXG_ARB_FRDDR_B	4
+ #define AXG_ARB_FRDDR_C	5
++#define AXG_ARB_TODDR_D	6
++#define AXG_ARB_FRDDR_D	7
+ 
+ #endif /* _DT_BINDINGS_AMLOGIC_MESON_AXG_AUDIO_ARB_H */
+-- 
+2.21.0
