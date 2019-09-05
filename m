@@ -1,73 +1,83 @@
-From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [V3, 2/2] media: i2c: Add Omnivision OV02A10 camera sensor driver
-Date: Fri, 6 Sep 2019 06:58:05 +0800
-Message-ID: <CANMq1KDVMGkeBvu1nO5WHopWwec9mxHfhmLmX2BzvaYVLzxoXw@mail.gmail.com>
-References: <20190819034331.13098-1-dongchun.zhu@mediatek.com>
- <20190819034331.13098-3-dongchun.zhu@mediatek.com>
- <20190819083009.GC6133@paasikivi.fi.intel.com>
- <1567676465.21623.100.camel@mhfsdcap03>
- <20190905104546.GA5475@paasikivi.fi.intel.com>
- <CAAFQd5Bh-11D9RR9WVH5A3DbXZoxWhbMhXSNKUV25mempMi+ag@mail.gmail.com>
- <20190905160512.GG5475@paasikivi.fi.intel.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
+Date: Thu, 5 Sep 2019 16:04:43 -0700
+Message-ID: <20190905230443.GA52127@atomide.com>
+References: <20190828150037.2640-1-aford173@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190905160512.GG5475@paasikivi.fi.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, shengnan.wang@mediatek.com, Tomasz Figa <tfiga@chromium.org>, Louis Kuo <louis.kuo@mediatek.com>, Sj Huang <sj.huang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Dongchun Zhu <dongchun.zhu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Cao Bing Bu <bingbu.cao@intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>,
- Joerg Roedel <joro@8bytes.org>, " <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190828150037.2640-1-aford173@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Adam Ford <aford173@gmail.com>
+Cc: linux-omap@vger.kernel.org, pali.rohar@gmail.com, t-kristo@ti.com, aaro.koskinen@iki.fi, adam.ford@logicpd.com, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Paul Walmsley <paul@pwsan.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 12:05 AM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> On Thu, Sep 05, 2019 at 07:53:37PM +0900, Tomasz Figa wrote:
-> > On Thu, Sep 5, 2019 at 7:45 PM Sakari Ailus
-> > <sakari.ailus@linux.intel.com> wrote:
-> > >
-> > > Hi Dongchun,
-> > >
-> > > On Thu, Sep 05, 2019 at 05:41:05PM +0800, Dongchun Zhu wrote:
-> > >
-> > > ...
-> > >
-> > > > > > + ret = regulator_bulk_enable(OV02A10_NUM_SUPPLIES, ov02a10->supplies);
-> > > > > > + if (ret < 0) {
-> > > > > > +         dev_err(dev, "Failed to enable regulators\n");
-> > > > > > +         goto disable_clk;
-> > > > > > + }
-> > > > > > + msleep_range(7);
-> > > > >
-> > > > > This has some potential of clashing with more generic functions in the
-> > > > > future. Please use usleep_range directly, or msleep.
-> > > > >
-> > > >
-> > > > Did you mean using usleep_range(7*1000, 8*1000), as used in patch v1?
-> > > > https://patchwork.kernel.org/patch/10957225/
-> > >
-> > > Yes, please.
-> >
-> > Why not just msleep()?
->
-> msleep() is usually less accurate. I'm not sure it makes a big different in
-> this case. Perhaps, if someone wants that the sensor is powered on and
-> streaming as soon as possible.
+Hi,
 
-https://elixir.bootlin.com/linux/latest/source/Documentation/timers/timers-howto.txt#L70
+* Adam Ford <aford173@gmail.com> [190828 15:01]:
+> The datasheet for the AM3517 shows the RNG is connected to L4.
+> It shows the module address for the RNG is 0x480A0000, and it
+> matches the omap2.dtsi description.  Since the driver can support
+> omap2 and omap4, it seems reasonable to assume the omap3 would
+> use the same core for the RNG.
+> 
+> This RFC, mimics much of the omap2 hwmods on the OMAP3. It
+> also adds the necessary clock for driving the RNG.  Unfortunately,
+> it appears non-functional.  If anyone has any suggestions on how
+> to finish the hwmod (or port it to the newer l4 device tree
+> format), feedback is requested.
 
-Use usleep_range for delays up to 20ms (at least that's what the
-documentation (still) says?)
+Yup I'll take the bait :) The patch below seems to do the trick
+for me on dm3730 based on translating your patch to probe with
+ti-sysc.
 
-> --
-> Sakari Ailus
-> sakari.ailus@linux.intel.com
+Not sure about 34xx, it seems we're missing rng_clk? Care
+to give it a try and attempt simlar patches for 34xx and
+3517?
+
+At least I'm not needing the "ti,no-reset-on-init" property
+that your patch has a comment for. Maybe that's needed on
+some other omap3.
+
+Oh and this needs to default to status = "disabled" for
+HS devices like n900 as it needs to use the omap3-rom-rng.
+
+Regards,
+
+Tony
+
+8< -----------------------
+diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
+--- a/arch/arm/boot/dts/omap36xx.dtsi
++++ b/arch/arm/boot/dts/omap36xx.dtsi
+@@ -140,6 +140,29 @@
+ 			};
+ 		};
+ 
++		rng_target: target-module@480a0000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
++			reg = <0x480a003c 0x4>,
++			      <0x480a0040 0x4>,
++			      <0x480a0044 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>;
++			ti,syss-mask = <1>;
++			clocks = <&rng_ick>;
++			clock-names = "ick";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x480a0000 0x2000>;
++
++			rng: rng@0 {
++				compatible = "ti,omap2-rng";
++				reg = <0x0 0x2000>;
++				interrupts = <52>;
++			};
++		};
++
+ 		/*
+ 		 * Note that the sysconfig register layout is a subset of the
+ 		 * "ti,sysc-omap4" type register with just sidle and midle bits
