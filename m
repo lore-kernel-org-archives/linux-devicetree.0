@@ -1,54 +1,40 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [V3, 2/2] media: i2c: Add Omnivision OV02A10 camera sensor driver
-Date: Thu, 5 Sep 2019 19:53:37 +0900
-Message-ID: <CAAFQd5Bh-11D9RR9WVH5A3DbXZoxWhbMhXSNKUV25mempMi+ag@mail.gmail.com>
-References: <20190819034331.13098-1-dongchun.zhu@mediatek.com>
- <20190819034331.13098-3-dongchun.zhu@mediatek.com>
- <20190819083009.GC6133@paasikivi.fi.intel.com>
- <1567676465.21623.100.camel@mhfsdcap03>
- <20190905104546.GA5475@paasikivi.fi.intel.com>
+From: Jan Kotas <jank@cadence.com>
+Subject: [PATCH v2 1/3] media: dt-bindings: Update bindings for Cadence CSI2RX
+Date: Thu, 5 Sep 2019 11:55:59 +0100
+Message-ID: <20190905105601.27034-2-jank@cadence.com>
+References: <20190905105601.27034-1-jank@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190905104546.GA5475@paasikivi.fi.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, srv_heupstream <srv_heupstream@mediatek.com>, shengnan.wang@mediatek.com, Louis Kuo <louis.kuo@mediatek.com>, Sj Huang <sj.huang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Dongchun Zhu <dongchun.zhu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Cao Bing Bu <bingbu.cao@intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>,
- Joerg Roedel <joro@8bytes.org>, " <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190905105601.27034-1-jank@cadence.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: maxime.ripard@bootlin.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: rafalc@cadence.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kotas <jank@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 7:45 PM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
->
-> Hi Dongchun,
->
-> On Thu, Sep 05, 2019 at 05:41:05PM +0800, Dongchun Zhu wrote:
->
-> ...
->
-> > > > + ret = regulator_bulk_enable(OV02A10_NUM_SUPPLIES, ov02a10->supplies);
-> > > > + if (ret < 0) {
-> > > > +         dev_err(dev, "Failed to enable regulators\n");
-> > > > +         goto disable_clk;
-> > > > + }
-> > > > + msleep_range(7);
-> > >
-> > > This has some potential of clashing with more generic functions in the
-> > > future. Please use usleep_range directly, or msleep.
-> > >
-> >
-> > Did you mean using usleep_range(7*1000, 8*1000), as used in patch v1?
-> > https://patchwork.kernel.org/patch/10957225/
->
-> Yes, please.
+This patch adds a DT bindings documentation for
+Cadence CSI2RX v1.3 and v2.1 controllers.
 
-Why not just msleep()?
+Signed-off-by: Jan Kotas <jank@cadence.com>
+---
+ Documentation/devicetree/bindings/media/cdns,csi2rx.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+index 6b02a0657..df828e4e4 100644
+--- a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
++++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+@@ -5,7 +5,10 @@ The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to 4 CSI
+ lanes in input, and 4 different pixel streams in output.
+ 
+ Required properties:
+-  - compatible: must be set to "cdns,csi2rx" and an SoC-specific compatible
++  - compatible: must be set to:
++    * "cdns,csi2rx" or "cdns,csi2rx-1.3" for version 1.3 of the controller,
++    * "cdns,csi2rx-2.1" for v2.1,
++    and an SoC-specific compatible
+   - reg: base address and size of the memory mapped region
+   - clocks: phandles to the clocks driving the controller
+   - clock-names: must contain:
+-- 
+2.15.0
