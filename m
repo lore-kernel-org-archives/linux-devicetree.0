@@ -1,32 +1,24 @@
-Return-Path: <SRS0=zDWJ=XE=cyberdimension.org=GNUtoo@kernel.org>
-From: Denis 'GNUtoo' Carikli <GNUtoo@cyberdimension.org>
-Subject: [PATCH 1/2] dt-bindings: arm: fsl: Add the Kobo Aura H2O Edition 2
-Date: Mon,  9 Sep 2019 19:59:30 +0200
-Message-Id: <20190909175930.5026-1-GNUtoo@cyberdimension.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Denis 'GNUtoo' Carikli <GNUtoo@cyberdimension.org>
+Return-Path: <SRS0=qxAe=XA=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 0/3] RZ/G2N SoC identification support
+Date: Thu,  5 Sep 2019 10:30:40 +0100
+Message-Id: <1567675844-19247-1-git-send-email-biju.das@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The Aura H2O Edition 2 is an e-reader made by Kobo.
+This patch series aims to add SoC identification support
+for RZ/G2N SoC. RZ/G2N SoC is similar to R-Car Gen3 M3-N SoC.
 
-Signed-off-by: Denis 'GNUtoo' Carikli <GNUtoo@cyberdimension.org>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Biju Das (3):
+  dt-bindings: arm: Document RZ/G2N SoC DT bindings
+  soc: renesas: Identify RZ/G2N
+  arm64: Add Renesas R8A774B1 support
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 7294ac36f4c0..8029e8a14f63 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -148,6 +148,7 @@ properties:
-         items:
-           - enum:
-               - fsl,imx6sll-evk
-+              - kobo,aura-h2o-2
-           - const: fsl,imx6sll
- 
-       - description: i.MX6SX based Boards
+ Documentation/devicetree/bindings/arm/renesas.yaml | 4 ++++
+ drivers/soc/renesas/Kconfig                        | 6 ++++++
+ drivers/soc/renesas/renesas-soc.c                  | 8 ++++++++
+ 3 files changed, 18 insertions(+)
+
 -- 
-2.23.0
+2.7.4
