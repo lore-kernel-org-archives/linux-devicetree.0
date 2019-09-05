@@ -1,47 +1,45 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 0/3] media: Add support for Cadence CSI2RX version 2.1
-Date: Thu, 5 Sep 2019 15:01:19 +0300
-Message-ID: <20190905120119.q4u6iyc555simdqa@flea>
-References: <20190905105601.27034-1-jank@cadence.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/8] ASoC: meson: add sm1 support
+Date: Thu,  5 Sep 2019 14:01:12 +0200
+Message-ID: <20190905120120.31752-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="b24bcaatzpnvmlil"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190905105601.27034-1-jank@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jan Kotas <jank@cadence.com>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, rafalc@cadence.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+This patchset prepare then add the audio support on the amlogic sm1
+SoC family in ASoC.
 
---b24bcaatzpnvmlil
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This has been tested on sei610 platform. Since this platform does
+not have spdif, this patchset does not include the change necessary
+to support spdif input or output on the sm1.
 
-On Thu, Sep 05, 2019 at 11:55:58AM +0100, Jan Kotas wrote:
-> This patchset adds support for Cadence CSI2RX controller version 2.1.
-> It currently limits maximum amount of data lanes to 4.
-> Existing compatibility with v1.3 is maintained.
+Jerome Brunet (8):
+  ASoC: meson: add sm1 compatibles
+  ASoC: meson: add reset binding
+  ASoC: meson: axg-frddr: expose all 8 outputs
+  ASoC: meson: axg-toddr: expose all 8 inputs
+  ASoC: meson: tdmin: expose all 16 inputs
+  ASoC: meson: axg-frddr: add sm1 support
+  ASoC: meson: axg-toddr: add sm1 support
+  ASoC: meson: tdmout: add sm1 support
 
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
+ .../bindings/sound/amlogic,axg-fifo.txt       |   9 +-
+ .../bindings/sound/amlogic,axg-pdm.txt        |   6 +-
+ .../bindings/sound/amlogic,axg-spdifin.txt    |   6 +-
+ .../bindings/sound/amlogic,axg-spdifout.txt   |   6 +-
+ .../sound/amlogic,axg-tdm-formatters.txt      |   4 +-
+ .../bindings/sound/amlogic,g12a-tohdmitx.txt  |   5 +-
+ sound/soc/meson/axg-fifo.c                    |   2 +-
+ sound/soc/meson/axg-fifo.h                    |   1 +
+ sound/soc/meson/axg-frddr.c                   | 105 ++++++++++++++++--
+ sound/soc/meson/axg-tdmin.c                   |  47 +++++---
+ sound/soc/meson/axg-tdmout.c                  | 103 +++++++++++++----
+ sound/soc/meson/axg-toddr.c                   |  83 ++++++++++++--
+ 12 files changed, 321 insertions(+), 56 deletions(-)
 
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---b24bcaatzpnvmlil
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXXD5DwAKCRDj7w1vZxhR
-xQJ2AP4vHOC198ms6cJrZMAAchsCkPuTHioJxT9R8iNtLc4xLQEAzBQGZPtWmbHN
-kN+/tPIFPPcrCzburPlR7qQWBzj8iw0=
-=BN76
------END PGP SIGNATURE-----
-
---b24bcaatzpnvmlil--
+-- 
+2.21.0
