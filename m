@@ -1,68 +1,27 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 1/1] i2c: qcom-geni: Provide an option to disable DMA
- processing
-Date: Thu, 5 Sep 2019 15:33:45 +0100
-Message-ID: <20190905143345.GF26880@dell>
-References: <20190905102247.27583-1-lee.jones@linaro.org>
- <20190905134941.GG1157@kunai>
- <3458ed2a-ae49-b46b-3e89-ce039a2749b4@axentia.se>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC v2 0/3] OMAP3: convert opp-v1 to opp-v2 and read speed
+ binned / 720MHz grade bits
+Date: Thu, 5 Sep 2019 07:33:47 -0700
+Message-ID: <20190905143347.GX52127@atomide.com>
+References: <cover.1567587220.git.hns@goldelico.com>
+ <20190905050302.t7dsmyl7xa25umjg@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3458ed2a-ae49-b46b-3e89-ce039a2749b4@axentia.se>
+In-Reply-To: <20190905050302.t7dsmyl7xa25umjg@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Wolfram Sang <wsa@the-dreams.de>, "alokc@codeaurora.org" <alokc@codeaurora.org>, "agross@kernel.org" <agross@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "vkoul@kernel.org" <vkoul@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 05 Sep 2019, Peter Rosin wrote:
+* Viresh Kumar <viresh.kumar@linaro.org> [190905 05:03]:
+> Most of the stuff looks fine to me here. I will pick the patches when
+> the SoC maintainers provide an Ack.
 
-> On 2019-09-05 15:49, Wolfram Sang wrote:
-> > Hi Lee,
-> > 
-> > I understand you are in a hurry, but please double check before
-> > sending...
-> 
-> Linus indicated that an rc8 is coming up, which should provide an extra week.
-> https://lwn.net/Articles/798152/
+I noticed few issues with the dts changes but other than that
+looks good to me.
 
-That is good news.
+Regards,
 
-> > On Thu, Sep 05, 2019 at 11:22:47AM +0100, Lee Jones wrote:
-> >> We have a production-level laptop (Lenovo Yoga C630) which is exhibiting
-> >> a rather horrific bug.  When I2C HID devices are being scanned for at
-> >> boot-time the QCom Geni based I2C (Serial Engine) attempts to use DMA.
-> >> When it does, the laptop reboots and the user never sees the OS.
-> >>
-> >> The beautiful thing about this approach is that, *if* the Geni SE DMA
-> >> ever starts working, we can remove the C code and any old properties
-> >> left in older DTs just become NOOP.  Older kernels with newer DTs (less
-> >> of a priority) *still* will not work - but they do not work now anyway.
-> > 
-> > ... becasue this paragraph doesn't fit anymore. Needs to be reworded.
-
-Yes, you're right.  I noticed almost the moment I pressed send. :(
-
-> >> Fixes: 8bc529b25354 ("soc: qcom: geni: Add support for ACPI")
-> > 
-> > As said in the other thread, I don't get it, but this is not a show
-> > stopper for me.
-
-Ah wait.  Yes, this is applied against the wrong patch.
-
-Please ignore.
-
-> WAG: because ACPI made some driver load at all, and when it
-> did it something started happening which crashed some machines.
-
-I'm not sure I understand this sentence.
-
-... resending now.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Tony
