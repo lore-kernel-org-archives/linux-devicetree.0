@@ -1,84 +1,62 @@
-From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Subject: Re: [PATCH 1/6] dt-bindings: mailbox: qcom: Add clock-name optional
- property
-Date: Thu, 5 Sep 2019 09:30:30 +0200
-Message-ID: <d655e638-b937-eb03-1a6f-946864d7722d@linaro.org>
-References: <20190826164807.7028-1-jorge.ramirez-ortiz@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Zhou Yanjie <zhouyanjie@zoho.com>
+Subject: [PATCH 2/4] MMC: Ingenic: Add 8bit mode support.
+Date: Thu,  5 Sep 2019 15:38:07 +0800
+Message-ID: <1567669089-88693-3-git-send-email-zhouyanjie@zoho.com>
+References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190826164807.7028-1-jorge.ramirez-ortiz@linaro.org>
-Content-Language: en-US
+In-Reply-To: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com
-Cc: niklas.cassel@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, paul.burton@mips.com, linus.walleij@linaro.org, paul@crapouillou.net, malat@debian.org, yuehaibing@huawei.com, ezequiel@collabora.com, robh+dt@kernel.org, mark.rutland@arm.com, syq@debian.org, jiaxun.yang@flygoat.com
 List-Id: devicetree@vger.kernel.org
 
-On 8/26/19 18:48, Jorge Ramirez-Ortiz wrote:
-> When the APCS clock is registered (platform dependent), it retrieves
-> its parent names from hardcoded values in the driver.
-> 
-> The following commit allows the DT node to provide such clock names to
-> the platform data based clock driver therefore avoiding having to
-> explicitly embed those names in the clock driver source code.
-> 
-> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  .../mailbox/qcom,apcs-kpss-global.txt         | 24 ++++++++++++++++---
->  1 file changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-> index 1232fc9fc709..b69310322b09 100644
-> --- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-> @@ -18,10 +18,11 @@ platforms.
->  	Usage: required
->  	Value type: <prop-encoded-array>
->  	Definition: must specify the base address and size of the global block
-> +
->  - clocks:
-> -	Usage: required if #clocks-cells property is present
-> -	Value type: <phandle>
-> -	Definition: phandle to the input PLL, which feeds the APCS mux/divider
-> +	Usage: required if #clock-names property is present
-> +	Value type: <phandle array>
-> +	Definition: phandles to the two parent clocks of the clock driver.
->  
->  - #mbox-cells:
->  	Usage: required
-> @@ -33,6 +34,12 @@ platforms.
->  	Value type: <u32>
->  	Definition: as described in clock.txt, must be 0
->  
-> +- clock-names:
-> +	Usage: required if the platform data based clock driver needs to
-> +	retrieve the parent clock names from device tree.
-> +	This will requires two mandatory clocks to be defined.
-> +	Value type: <string-array>
-> +	Definition: must be "aux" and "pll"
->  
->  = EXAMPLE
->  The following example describes the APCS HMSS found in MSM8996 and part of the
-> @@ -65,3 +72,14 @@ Below is another example of the APCS binding on MSM8916 platforms:
->  		clocks = <&a53pll>;
->  		#clock-cells = <0>;
->  	};
-> +
-> +Below is another example of the APCS binding on QCS404 platforms:
-> +
-> +	apcs_glb: mailbox@b011000 {
-> +		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
-> +		reg = <0x0b011000 0x1000>;
-> +		#mbox-cells = <1>;
-> +		clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
-> +		clock-names = "aux", "pll";
-> +		#clock-cells = <0>;
-> +	};
-> 
+Add support for 8bit mode, now supports 1bit/4bit/8bit modes.
 
-just a quick follow up, is this series being picked-up?
+Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+---
+ drivers/mmc/host/jz4740_mmc.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
+index 1b1fcb7..d6811a7 100644
+--- a/drivers/mmc/host/jz4740_mmc.c
++++ b/drivers/mmc/host/jz4740_mmc.c
+@@ -79,6 +79,8 @@
+ 
+ #define JZ_MMC_CMDAT_IO_ABORT BIT(11)
+ #define JZ_MMC_CMDAT_BUS_WIDTH_4BIT BIT(10)
++#define JZ_MMC_CMDAT_BUS_WIDTH_8BIT (BIT(10) | BIT(9))
++#define	JZ_MMC_CMDAT_BUS_WIDTH_MASK (BIT(10) | BIT(9))
+ #define JZ_MMC_CMDAT_DMA_EN BIT(8)
+ #define JZ_MMC_CMDAT_INIT BIT(7)
+ #define JZ_MMC_CMDAT_BUSY BIT(6)
+@@ -899,11 +901,16 @@ static void jz4740_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+ 
+ 	switch (ios->bus_width) {
+ 	case MMC_BUS_WIDTH_1:
+-		host->cmdat &= ~JZ_MMC_CMDAT_BUS_WIDTH_4BIT;
++		host->cmdat &= ~JZ_MMC_CMDAT_BUS_WIDTH_MASK;
+ 		break;
+ 	case MMC_BUS_WIDTH_4:
++		host->cmdat &= ~JZ_MMC_CMDAT_BUS_WIDTH_MASK;
+ 		host->cmdat |= JZ_MMC_CMDAT_BUS_WIDTH_4BIT;
+ 		break;
++	case MMC_BUS_WIDTH_8:
++		host->cmdat &= ~JZ_MMC_CMDAT_BUS_WIDTH_MASK;
++		host->cmdat |= JZ_MMC_CMDAT_BUS_WIDTH_8BIT;
++		break;
+ 	default:
+ 		break;
+ 	}
+@@ -1034,7 +1041,8 @@ static int jz4740_mmc_probe(struct platform_device* pdev)
+ 
+ 	dev_info(&pdev->dev, "Using %s, %d-bit mode\n",
+ 		 host->use_dma ? "DMA" : "PIO",
+-		 (mmc->caps & MMC_CAP_4_BIT_DATA) ? 4 : 1);
++		 (mmc->caps & MMC_CAP_8_BIT_DATA) ? 8 :
++		 ((mmc->caps & MMC_CAP_4_BIT_DATA) ? 4 : 1));
+ 
+ 	return 0;
+ 
+-- 
+2.7.4
