@@ -1,77 +1,29 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH] ARM: dts: aspeed-g4: Add all flash chips
-Date: Thu, 5 Sep 2019 08:45:06 +0200
-Message-ID: <6348d0f1-6e2e-cae6-7f76-996825de0527@kaod.org>
-References: <20190905000221.31445-1-joel@jms.id.au>
- <d9805fa2-db79-457b-a166-7c84e1608128@www.fastmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v6 0/7] Support dsi for mt8183
+Date: Thu, 5 Sep 2019 08:49:51 +0200
+Message-ID: <20190905064951.mttzwrg7muhfimdw@pengutronix.de>
+References: <20190811104008.53372-1-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <d9805fa2-db79-457b-a166-7c84e1608128@www.fastmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>
-Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190811104008.53372-1-jitao.shi@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jitao Shi <jitao.shi@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <treding@nvidia.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sean Paul <seanpaul@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Andy Yan <andy.yan@rock-chips.com>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.o
 List-Id: devicetree@vger.kernel.org
 
-On 05/09/2019 02:33, Andrew Jeffery wrote:
-> 
-> 
-> On Thu, 5 Sep 2019, at 09:32, Joel Stanley wrote:
->> The FMC supports five chip selects, so describe the five possible flash
->> chips.
->>
->> Signed-off-by: Joel Stanley <joel@jms.id.au>
->> ---
->>  arch/arm/boot/dts/aspeed-g4.dtsi | 20 ++++++++++++++++++++
->>  1 file changed, 20 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
->> index e465cda40fe7..dffb595d30e4 100644
->> --- a/arch/arm/boot/dts/aspeed-g4.dtsi
->> +++ b/arch/arm/boot/dts/aspeed-g4.dtsi
->> @@ -67,6 +67,26 @@
->>  				compatible = "jedec,spi-nor";
->>  				status = "disabled";
->>  			};
->> +			flash@1 {
->> +				reg = < 1 >;
->> +				compatible = "jedec,spi-nor";
->> +				status = "disabled";
->> +			};
->> +			flash@2 {
->> +				reg = < 2 >;
->> +				compatible = "jedec,spi-nor";
->> +				status = "disabled";
->> +			};
->> +			flash@3 {
->> +				reg = < 3 >;
->> +				compatible = "jedec,spi-nor";
->> +				status = "disabled";
->> +			};
->> +			flash@4 {
->> +				reg = < 4 >;
->> +				compatible = "jedec,spi-nor";
->> +				status = "disabled";
->> +			};
-> 
-> The FMC supports parallel NOR and NAND interfaces too, but so far no-one has
-> cared for these options, so if they ever do we'll fix it then.
+Hello,
 
-New Aspeed SoCs only have SPI support. So I don't think the other interfaces
-were ever used.
+I somehow fail to see how this is relevant for the linux-pwm list. Did
+you add this list to the recipents by accident, or is there something I
+missed?
 
-C. 
- 
-> 
-> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-> 
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
