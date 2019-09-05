@@ -1,85 +1,106 @@
-Return-Path: <SRS0=5Xim=XE=kaa.org.ua=oleg@kernel.org>
-From: Oleh Kravchenko <oleg@kaa.org.ua>
-Subject: [PATCH v7 1/2] dt-bindings: Add docs for EL15203000
-Date: Mon,  9 Sep 2019 10:16:31 +0300
-Message-Id: <20190909071632.14392-2-oleg@kaa.org.ua>
-In-Reply-To: <20190909071632.14392-1-oleg@kaa.org.ua>
-References: <20190909071632.14392-1-oleg@kaa.org.ua>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: devicetree@vger.kernel.org, linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz
-Cc: Oleh Kravchenko <oleg@kaa.org.ua>, Rob Herring <robh@kernel.org>
+Return-Path: <SRS0=ZhZM=XA=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from sender4-pp-o95.zoho.com ([136.143.188.95]:25512 "EHLO
+        sender4-pp-o95.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732150AbfIEHjV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 5 Sep 2019 03:39:21 -0400
+From: Zhou Yanjie <zhouyanjie@zoho.com>
+Subject: [PATCH 1/4] MMC: Ingenic: Adjust the macro definition name.
+Date: Thu,  5 Sep 2019 15:38:06 +0800
+Message-Id: <1567669089-88693-2-git-send-email-zhouyanjie@zoho.com>
+In-Reply-To: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
+References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, paul.burton@mips.com, linus.walleij@linaro.org, paul@crapouillou.net, malat@debian.org, yuehaibing@huawei.com, ezequiel@collabora.com, robh+dt@kernel.org, mark.rutland@arm.com, syq@debian.org, jiaxun.yang@flygoat.com
 List-ID: <devicetree@vger.kernel.org>
 
-Add documentation and example for dt-bindings EL15203000.
-LED board (aka RED LED board) from Crane Merchandising Systems.
+Adjust the macro definition name to match the corresponding
+register name in the datasheet.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Oleh Kravchenko <oleg@kaa.org.ua>
+Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 ---
- .../bindings/leds/leds-el15203000.txt         | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-el15203000.txt
+ drivers/mmc/host/jz4740_mmc.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-el15203000.txt b/Documentation/devicetree/bindings/leds/leds-el15203000.txt
-new file mode 100644
-index 000000000000..c00e1b55db97
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-el15203000.txt
-@@ -0,0 +1,54 @@
-+Crane Merchandising System - el15203000 LED driver
-+--------------------------------------------------
-+
-+This LED Board (aka RED LEDs board) is widely used in
-+coffee vending machines produced by Crane Merchandising Systems.
-+
-+Required properties:
-+- compatible : "crane,el15203000"
-+- reg :
-+	see Documentation/devicetree/bindings/spi/spi-bus.txt
-+- spi-max-frequency : (optional)
-+	see Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+Optional LED sub-node properties:
-+- function:
-+	see Documentation/devicetree/bindings/leds/common.txt
-+- color:
-+	see Documentation/devicetree/bindings/leds/common.txt
-+- label:
-+	see Documentation/devicetree/bindings/leds/common.txt (deprecated)
-+
-+Example
-+-------
-+
-+#include <dt-bindings/leds/common.h>
-+
-+led-controller@0 {
-+	compatible = "crane,el15203000";
-+	reg = <0>;
-+	spi-max-frequency = <50000>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	/* water pipe */
-+	led@50 {
-+		reg = <0x50>;
-+		function = "pipe";
-+		color = <LED_COLOR_ID_RED>;
-+	};
-+
-+	/* screen frame */
-+	led@53 {
-+		reg = <0x53>;
-+		function = "screen";
-+		color = <LED_COLOR_ID_RED>;
-+	};
-+
-+	/* vending area */
-+	led@56 {
-+		reg = <0x56>;
-+		function = "vend";
-+		color = <LED_COLOR_ID_RED>;
-+	};
-+};
+diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
+index ffdbfaa..1b1fcb7 100644
+--- a/drivers/mmc/host/jz4740_mmc.c
++++ b/drivers/mmc/host/jz4740_mmc.c
+@@ -28,7 +28,7 @@
+ #include <asm/mach-jz4740/dma.h>
+ 
+ #define JZ_REG_MMC_STRPCL	0x00
+-#define JZ_REG_MMC_STATUS	0x04
++#define JZ_REG_MMC_STAT		0x04
+ #define JZ_REG_MMC_CLKRT	0x08
+ #define JZ_REG_MMC_CMDAT	0x0C
+ #define JZ_REG_MMC_RESTO	0x10
+@@ -40,7 +40,7 @@
+ #define JZ_REG_MMC_IREG		0x28
+ #define JZ_REG_MMC_CMD		0x2C
+ #define JZ_REG_MMC_ARG		0x30
+-#define JZ_REG_MMC_RESP_FIFO	0x34
++#define JZ_REG_MMC_RES		0x34
+ #define JZ_REG_MMC_RXFIFO	0x38
+ #define JZ_REG_MMC_TXFIFO	0x3C
+ #define JZ_REG_MMC_DMAC		0x44
+@@ -391,7 +391,7 @@ static void jz4740_mmc_clock_disable(struct jz4740_mmc_host *host)
+ 
+ 	writew(JZ_MMC_STRPCL_CLOCK_STOP, host->base + JZ_REG_MMC_STRPCL);
+ 	do {
+-		status = readl(host->base + JZ_REG_MMC_STATUS);
++		status = readl(host->base + JZ_REG_MMC_STAT);
+ 	} while (status & JZ_MMC_STATUS_CLK_EN && --timeout);
+ }
+ 
+@@ -403,7 +403,7 @@ static void jz4740_mmc_reset(struct jz4740_mmc_host *host)
+ 	writew(JZ_MMC_STRPCL_RESET, host->base + JZ_REG_MMC_STRPCL);
+ 	udelay(10);
+ 	do {
+-		status = readl(host->base + JZ_REG_MMC_STATUS);
++		status = readl(host->base + JZ_REG_MMC_STAT);
+ 	} while (status & JZ_MMC_STATUS_IS_RESETTING && --timeout);
+ }
+ 
+@@ -446,7 +446,7 @@ static void jz4740_mmc_transfer_check_state(struct jz4740_mmc_host *host,
+ {
+ 	int status;
+ 
+-	status = readl(host->base + JZ_REG_MMC_STATUS);
++	status = readl(host->base + JZ_REG_MMC_STAT);
+ 	if (status & JZ_MMC_STATUS_WRITE_ERROR_MASK) {
+ 		if (status & (JZ_MMC_STATUS_TIMEOUT_WRITE)) {
+ 			host->req->cmd->error = -ETIMEDOUT;
+@@ -580,10 +580,10 @@ static bool jz4740_mmc_read_data(struct jz4740_mmc_host *host,
+ 	/* For whatever reason there is sometime one word more in the fifo then
+ 	 * requested */
+ 	timeout = 1000;
+-	status = readl(host->base + JZ_REG_MMC_STATUS);
++	status = readl(host->base + JZ_REG_MMC_STAT);
+ 	while (!(status & JZ_MMC_STATUS_DATA_FIFO_EMPTY) && --timeout) {
+ 		d = readl(fifo_addr);
+-		status = readl(host->base + JZ_REG_MMC_STATUS);
++		status = readl(host->base + JZ_REG_MMC_STAT);
+ 	}
+ 
+ 	return false;
+@@ -614,7 +614,7 @@ static void jz4740_mmc_read_response(struct jz4740_mmc_host *host,
+ {
+ 	int i;
+ 	uint16_t tmp;
+-	void __iomem *fifo_addr = host->base + JZ_REG_MMC_RESP_FIFO;
++	void __iomem *fifo_addr = host->base + JZ_REG_MMC_RES;
+ 
+ 	if (cmd->flags & MMC_RSP_136) {
+ 		tmp = readw(fifo_addr);
+@@ -797,7 +797,7 @@ static irqreturn_t jz_mmc_irq(int irq, void *devid)
+ 	struct mmc_command *cmd = host->cmd;
+ 	uint32_t irq_reg, status, tmp;
+ 
+-	status = readl(host->base + JZ_REG_MMC_STATUS);
++	status = readl(host->base + JZ_REG_MMC_STAT);
+ 	irq_reg = jz4740_mmc_read_irq_reg(host);
+ 
+ 	tmp = irq_reg;
 -- 
-2.21.0
+2.7.4
