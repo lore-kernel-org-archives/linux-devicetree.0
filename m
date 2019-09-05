@@ -1,24 +1,104 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v2 6/6] arm64: dts: Add rsc power domain for sdm845
-Date: Thu, 05 Sep 2019 10:33:45 -0700
-Message-ID: <5d7146fa.1c69fb81.8444a.8f49@mx.google.com>
-References: <20190823081703.17325-1-mkshah@codeaurora.org> <20190823081703.17325-7-mkshah@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: meson: axg-toddr: expose all 8 inputs" to the asoc tree
+Date: Thu,  5 Sep 2019 18:38:52 +0100 (BST)
+Message-ID: <20190905173852.3FF342742D07@ypsilon.sirena.org.uk>
+References: <20190905120120.31752-5-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190823081703.17325-7-mkshah@codeaurora.org>
+In-Reply-To: <20190905120120.31752-5-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: agross@kernel.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, bjorn.andersson@linaro.org, evgreen@chromium.org, dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org, Maulik Shah <mkshah@codeaurora.org>, devicetree@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Maulik Shah (2019-08-23 01:17:03)
-> Add rsc power domain to enable sending sleep and wake votes
-> using generic power domain infrastructure.
->=20
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
+The patch
 
-Can this be combined with the previous patch?
+   ASoC: meson: axg-toddr: expose all 8 inputs
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 6beced211c22dd8c3e546c956512fddd8e09884f Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Thu, 5 Sep 2019 14:01:16 +0200
+Subject: [PATCH] ASoC: meson: axg-toddr: expose all 8 inputs
+
+The TODDR component, as it, has a maximum of 8 input. Depending on
+the SoC, these may not all be connected or some input components may
+not be supported
+
+Instead of decribing only the connected inputs, describe them all
+and let ASoC routing do the rest.
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20190905120120.31752-5-jbrunet@baylibre.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/meson/axg-toddr.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/sound/soc/meson/axg-toddr.c b/sound/soc/meson/axg-toddr.c
+index 4f63e434fad4..2e9a2e5862ce 100644
+--- a/sound/soc/meson/axg-toddr.c
++++ b/sound/soc/meson/axg-toddr.c
+@@ -142,16 +142,11 @@ static struct snd_soc_dai_driver axg_toddr_dai_drv = {
+ };
+ 
+ static const char * const axg_toddr_sel_texts[] = {
+-	"IN 0", "IN 1", "IN 2", "IN 3", "IN 4", "IN 6"
++	"IN 0", "IN 1", "IN 2", "IN 3", "IN 4", "IN 5", "IN 6", "IN 7"
+ };
+ 
+-static const unsigned int axg_toddr_sel_values[] = {
+-	0, 1, 2, 3, 4, 6
+-};
+-
+-static SOC_VALUE_ENUM_SINGLE_DECL(axg_toddr_sel_enum, FIFO_CTRL0,
+-				  CTRL0_SEL_SHIFT, CTRL0_SEL_MASK,
+-				  axg_toddr_sel_texts, axg_toddr_sel_values);
++static SOC_ENUM_SINGLE_DECL(axg_toddr_sel_enum, FIFO_CTRL0, CTRL0_SEL_SHIFT,
++			    axg_toddr_sel_texts);
+ 
+ static const struct snd_kcontrol_new axg_toddr_in_mux =
+ 	SOC_DAPM_ENUM("Input Source", axg_toddr_sel_enum);
+@@ -163,7 +158,9 @@ static const struct snd_soc_dapm_widget axg_toddr_dapm_widgets[] = {
+ 	SND_SOC_DAPM_AIF_IN("IN 2", NULL, 0, SND_SOC_NOPM, 0, 0),
+ 	SND_SOC_DAPM_AIF_IN("IN 3", NULL, 0, SND_SOC_NOPM, 0, 0),
+ 	SND_SOC_DAPM_AIF_IN("IN 4", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 5", NULL, 0, SND_SOC_NOPM, 0, 0),
+ 	SND_SOC_DAPM_AIF_IN("IN 6", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_IN("IN 7", NULL, 0, SND_SOC_NOPM, 0, 0),
+ };
+ 
+ static const struct snd_soc_dapm_route axg_toddr_dapm_routes[] = {
+@@ -173,7 +170,9 @@ static const struct snd_soc_dapm_route axg_toddr_dapm_routes[] = {
+ 	{ "SRC SEL", "IN 2", "IN 2" },
+ 	{ "SRC SEL", "IN 3", "IN 3" },
+ 	{ "SRC SEL", "IN 4", "IN 4" },
++	{ "SRC SEL", "IN 5", "IN 5" },
+ 	{ "SRC SEL", "IN 6", "IN 6" },
++	{ "SRC SEL", "IN 7", "IN 7" },
+ };
+ 
+ static const struct snd_soc_component_driver axg_toddr_component_drv = {
+-- 
+2.20.1
