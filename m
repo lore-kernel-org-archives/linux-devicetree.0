@@ -1,50 +1,76 @@
-From: Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 31/49] ath11k: add mac.c
-Date: Thu, 05 Sep 2019 17:28:53 +0530
-Message-ID: <8e90a557c1659995d117c6dc8b728d7f@codeaurora.org>
-References: <1566316095-27507-1-git-send-email-kvalo@codeaurora.org>
- <1566316095-27507-32-git-send-email-kvalo@codeaurora.org>
- <4076919b34cad119eb4146025f587285ef40e37c.camel@sipsolutions.net>
- <ee38dc5e80097d0ebc186f81b2f11d37@codeaurora.org>
- <878sr3nfz8.fsf@kamboji.qca.qualcomm.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [V2, 1/2] media: i2c: dw9768: Add DT support and MAINTAINERS entry
+Date: Thu, 5 Sep 2019 15:00:12 +0300
+Message-ID: <20190905120012.GD5475@paasikivi.fi.intel.com>
+References: <20190905072142.14606-1-dongchun.zhu@mediatek.com>
+ <20190905072142.14606-2-dongchun.zhu@mediatek.com>
+ <20190905101406.GA2680@smile.fi.intel.com>
+ <20190905104829.GB5475@paasikivi.fi.intel.com>
+ <20190905113509.GD2680@smile.fi.intel.com>
+ <CABxcv=knP+-x0O-Ga-Dy8WTNovHk6GfX4ZEv0vVjnQvwchuVzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <878sr3nfz8.fsf-HodKDYzPHsUD5k0oWYwrnHL1okKdlPRT@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath11k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CABxcv=knP+-x0O-Ga-Dy8WTNovHk6GfX4ZEv0vVjnQvwchuVzg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, drinkcat@chromium.org, srv_heupstream@mediatek.com, sam.hung@mediatek.com, shengnan.wang@mediatek.com, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Tomasz Figa <tfiga@chromium.org>, sj.huang@mediatek.com, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, dongchun.zhu@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, bingbu.cao@intel.com, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@lists.infradead.org, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-09-05 16:54, Kalle Valo wrote:
-> Vasanthakumar Thiagarajan <vthiagar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+On Thu, Sep 05, 2019 at 01:49:28PM +0200, Javier Martinez Canillas wrote:
+> On Thu, Sep 5, 2019 at 1:35 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Thu, Sep 05, 2019 at 01:48:30PM +0300, Sakari Ailus wrote:
+> > > On Thu, Sep 05, 2019 at 01:14:06PM +0300, Andy Shevchenko wrote:
+> > > > On Thu, Sep 05, 2019 at 03:21:41PM +0800, dongchun.zhu@mediatek.com wrote:
+> > > > > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > > >
+> > > > > This patch is to add the Devicetree binding documentation and
+> > > > > MAINTAINERS entry for dw9768 actuator.
+> > > > >
+> > > > > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/media/i2c/dongwoon,dw9768.txt | 9 +++++++++
+> > > > >  MAINTAINERS                                                     | 7 +++++++
+> > > >
+> > > > This should be:
+> > > > 1) two separate patches
+> > >
+> > > Why? The MAINTAINERS entry is usually added in the first patch needing it,
+> > > isn't it?
+> >
+> > Bindings are required to be a separate patch.
+> > Rob, is it still the case or am I mistaken?
+> >
 > 
->> On 2019-08-21 02:16, Johannes Berg wrote:
->>> On Tue, 2019-08-20 at 18:47 +0300, Kalle Valo wrote:
->>> 
->>>> +static int ath11k_mac_op_config(struct ieee80211_hw *hw, u32 
->>>> changed)
->>>> +{
->>>> +	struct ath11k *ar = hw->priv;
->>>> +	int ret = 0;
->>>> +
->>>> +	/* mac80211 requires this op to be present and that's why
->>>> +	 * there's an empty function, this can be extended when
->>>> +	 * required.
->>>> +	 */
->>> 
->>> Well, oops. Maybe it shouldn't be required?
->> 
->> I think we require this for some configuration handling. The comment
->> is to be updated with proper information. We'll address that.
+> According to the rule 0 in [1] it should be a separate patch indeed
+> and also use as subject "dt-bindings: <binding dir>: ..." which this
+> patch also doesn't follow.
+> So if I'm reading that document correctly, then I think the
+> maintainers entry should be added in patch 2/2 along with the driver.
+
+I understand [1] discussing the need for the bindings to be a "separate
+patch" means a separate patch from the _driver_ for the device, not the
+MAINTAINERS change.
+
+Bindings come before the driver, and MAINTAINERS entry needs to be there no
+later than the files. And I see no reason to add a separate patch just for
+MAINTAINERS change.
+
 > 
-> The way I'm understanding Johannes' comment is that maybe we should
-> change mac80211 to require this op to be present. Should be easy to fix
-> in mac80211, right?
+> [1]: https://www.kernel.org/doc/Documentation/devicetree/bindings/submitting-patches.txt
 
-Ok. So make this callback optional in mac80211? should be a simple code 
-change.
-
-Vasanth
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
