@@ -1,45 +1,31 @@
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH 2/2] dt-bindings: net: dwmac: document 'mac-mode' property
-Date: Fri, 6 Sep 2019 16:02:56 +0300
-Message-ID: <20190906130256.10321-2-alexandru.ardelean@analog.com>
-References: <20190906130256.10321-1-alexandru.ardelean@analog.com>
+From: Frank Wunderlich <frank-w@public-files.de>
+Subject: Re: [PATCH v6 00/13] implement poweroff for mt6323 / bpi-r2
+Date: Fri, 06 Sep 2019 15:06:19 +0200
+Message-ID: <BB9183EF-A385-473B-A7D7-61D96499A291@public-files.de>
+References: <20190818135611.7776-1-frank-w@public-files.de>
+Reply-To: frank-w@public-files.de
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190906130256.10321-1-alexandru.ardelean@analog.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: davem@davemloft.net, robh+dt@kernel.org, peppe.cavallaro@st.com, alexandre.torgue@st.com, --cc=andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190818135611.7776-1-frank-w@public-files.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-mediatek@lists.infradead.org
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, "linux-arm-kernel @ lists . infradead . org Alessandro Zummo" <a.zummo@towertech.it>, linux-pm@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Josef Friedl <josef.friedl@speed.at>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Eddie Huang <eddie.huang@mediatek.com>, Sebastian Reichel <sre@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Tianping Fang <tianping.fang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This change documents the 'mac-mode' property that was introduced in the
-'stmmac' driver to support passive mode converters that can sit in-between
-the MAC & PHY.
+Hi,
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- Documentation/devicetree/bindings/net/snps,dwmac.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Just a friedly reminder.
 
-diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-index c78be15704b9..ebe4537a7cce 100644
---- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-+++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-@@ -112,6 +112,14 @@ properties:
-   reset-names:
-     const: stmmaceth
- 
-+  mac-mode:
-+    maxItems: 1
-+    description:
-+      The property is identical to 'phy-mode', and assumes that there is mode
-+      converter in-between the MAC & PHY (e.g. GMII-to-RGMII). This converter
-+      can be passive (no SW requirement), and requires that the MAC operate
-+      in a different mode than the PHY in order to function.
-+
-   snps,axi-config:
-     $ref: /schemas/types.yaml#definitions/phandle
-     description:
--- 
-2.20.1
+MFD-part was applied and visible in linux-next, the other parts acknowledged by maintainers. Is anything additional needed before applying the rtc/power/dts-parts?
+
+Regards Frank
