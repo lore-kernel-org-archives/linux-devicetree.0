@@ -1,88 +1,71 @@
-From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-Subject: Re: [V3, 2/2] media: i2c: Add Omnivision OV02A10 camera sensor driver
-Date: Fri, 6 Sep 2019 09:33:05 +0800
-Message-ID: <1567733585.21623.163.camel@mhfsdcap03>
-References: <20190819034331.13098-1-dongchun.zhu@mediatek.com>
- <20190819034331.13098-3-dongchun.zhu@mediatek.com>
- <20190819083009.GC6133@paasikivi.fi.intel.com>
- <1567676465.21623.100.camel@mhfsdcap03>
- <20190905104546.GA5475@paasikivi.fi.intel.com>
- <CAAFQd5Bh-11D9RR9WVH5A3DbXZoxWhbMhXSNKUV25mempMi+ag@mail.gmail.com>
- <20190905160512.GG5475@paasikivi.fi.intel.com>
- <CANMq1KDVMGkeBvu1nO5WHopWwec9mxHfhmLmX2BzvaYVLzxoXw@mail.gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [Patch V8 7/8] usb: gadget: Add UDC driver for tegra XUSB
+ device mode controller
+Date: Fri, 6 Sep 2019 09:43:12 +0800
+Message-ID: <1567734192.7317.68.camel@mhfsdcap03>
+References: <1567585440-13751-1-git-send-email-nkristam@nvidia.com>
+         <1567585440-13751-8-git-send-email-nkristam@nvidia.com>
+         <1567593053.7317.64.camel@mhfsdcap03>
+         <36447248-1ddb-ff1d-a731-de6afb445a9d@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CANMq1KDVMGkeBvu1nO5WHopWwec9mxHfhmLmX2BzvaYVLzxoXw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Boichat <drinkcat@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, shengnan.wang@mediatek.com, Tomasz Figa <tfiga@chromium.org>, Louis Kuo <louis.kuo@mediatek.com>, Sj Huang <sj.huang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek
- SoC support" <linux-mediatek@lists.infradead.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Cao Bing Bu <bingbu.cao@intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "list@263.net:IOMMU
- DRIVERS <iommu@lists.linux-foundation.org>,  Joerg  Roedel
- <joro@8bytes.org>, " <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <36447248-1ddb-ff1d-a731-de6afb445a9d@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nagarjuna Kristam <nkristam@nvidia.com>
+Cc: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-09-06 at 06:58 +0800, Nicolas Boichat wrote:
-> On Fri, Sep 6, 2019 at 12:05 AM Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
-> >
-> > On Thu, Sep 05, 2019 at 07:53:37PM +0900, Tomasz Figa wrote:
-> > > On Thu, Sep 5, 2019 at 7:45 PM Sakari Ailus
-> > > <sakari.ailus@linux.intel.com> wrote:
-> > > >
-> > > > Hi Dongchun,
-> > > >
-> > > > On Thu, Sep 05, 2019 at 05:41:05PM +0800, Dongchun Zhu wrote:
-> > > >
-> > > > ...
-> > > >
-> > > > > > > + ret = regulator_bulk_enable(OV02A10_NUM_SUPPLIES, ov02a10->supplies);
-> > > > > > > + if (ret < 0) {
-> > > > > > > +         dev_err(dev, "Failed to enable regulators\n");
-> > > > > > > +         goto disable_clk;
-> > > > > > > + }
-> > > > > > > + msleep_range(7);
-> > > > > >
-> > > > > > This has some potential of clashing with more generic functions in the
-> > > > > > future. Please use usleep_range directly, or msleep.
-> > > > > >
-> > > > >
-> > > > > Did you mean using usleep_range(7*1000, 8*1000), as used in patch v1?
-> > > > > https://patchwork.kernel.org/patch/10957225/
-> > > >
-> > > > Yes, please.
-> > >
-> > > Why not just msleep()?
-> >
-> > msleep() is usually less accurate. I'm not sure it makes a big different in
-> > this case. Perhaps, if someone wants that the sensor is powered on and
-> > streaming as soon as possible.
+On Thu, 2019-09-05 at 09:57 +0530, Nagarjuna Kristam wrote:
 > 
-> https://elixir.bootlin.com/linux/latest/source/Documentation/timers/timers-howto.txt#L70
+> On 04-09-2019 16:00, Chunfeng Yun wrote:
+> > On Wed, 2019-09-04 at 13:53 +0530, Nagarjuna Kristam wrote:
+> >> This patch adds UDC driver for tegra XUSB 3.0 device mode controller.
+> >> XUSB device mode controller supports SS, HS and FS modes
+> >>
+> >> Based on work by:
+> >>   Mark Kuo <mkuo@nvidia.com>
+> >>   Hui Fu <hfu@nvidia.com>
+> >>   Andrew Bresticker <abrestic@chromium.org>
+> >>
+> >> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> >> Acked-by: Thierry Reding <treding@nvidia.com>
+> >> ---
+> >>  drivers/usb/gadget/udc/Kconfig      |   12 +
+> >>  drivers/usb/gadget/udc/Makefile     |    1 +
+> >>  drivers/usb/gadget/udc/tegra-xudc.c | 3791 +++++++++++++++++++++++++++++++++++
+> >>  3 files changed, 3804 insertions(+)
+> >>  create mode 100644 drivers/usb/gadget/udc/tegra-xudc.c
+> >>
+> >> diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
+> >> index d354036..0fe7577 100644
+> >> --- a/drivers/usb/gadget/udc/Kconfig
+> >> +++ b/drivers/usb/gadget/udc/Kconfig
+> >> @@ -441,6 +441,18 @@ config USB_GADGET_XILINX
+> >>  	  dynamically linked module called "udc-xilinx" and force all
+> >>  	  gadget drivers to also be dynamically linked.
+> >>  
+> >> +config USB_TEGRA_XUDC
+> >> +	tristate "NVIDIA Tegra Superspeed USB 3.0 Device Controller"
+> >> +	depends on ARCH_TEGRA || COMPILE_TEST
+> >> +	depends on PHY_TEGRA_XUSB
+> >> +	select USB_CONN_GPIO
+> > To me, needn't select this driver, without it, the driver still build
+> > pass
+> > 
+> Yes compilation passes with out this. Added select for getting USB_CONN_GPIO
+> driver functionality.
+We can enable it in defconfig, think about one day use type-c to do
+dual-role switch, or other ways, will needn't select it then.
+
 > 
-> Use usleep_range for delays up to 20ms (at least that's what the
-> documentation (still) says?)
-> 
-
-Thank you for your clarifications.
->From the doc,
-"msleep(1~20) may not do what the caller intends, and
-will often sleep longer (~20 ms actual sleep for any
-value given in the 1~20ms range). In many cases this
-is not the desired behavior."
-
-So, it is supposed to use usleep_range in shorter sleep case,
-such as 5ms.
-
-> > --
-> > Sakari Ailus
-> > sakari.ailus@linux.intel.com
+> >> +	help
+> >> +	 Enables NVIDIA Tegra USB 3.0 device mode controller driver.
+> >> +
+> >> +	 Say "y" to link the driver statically, or "m" to build a
+> >> +	 dynamically linked module called "tegra_xudc" and force all
+> >> +	 gadget drivers to also be dynamically linked.
+> >> +
+> >>  source "drivers/usb/gadget/udc/aspeed-vhub/Kconfig"
+> >>  
