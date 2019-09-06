@@ -1,77 +1,104 @@
-From: Hui Song <hui.song_1@nxp.com>
-Subject: [PATCH] gpio/mpc8xxx: change irq handler from chained to normal
-Date: Fri,  6 Sep 2019 19:56:14 +0800
-Message-ID: <20190906115614.5645-1-hui.song_1@nxp.com>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH 3/3] dt-bindings: ddr: Add bindings for Samsung LPDDR3
+ memories
+Date: Fri, 6 Sep 2019 14:14:07 +0200
+Message-ID: <99d2f2be-80f8-258c-2621-a4b5ff5cd177@partner.samsung.com>
+References: <CGME20190906101407eucas1p15eb0df53374b27497b4793eab24becf6@eucas1p1.samsung.com>
+        <20190906101344.3535-1-l.luba@partner.samsung.com>
+        <20190906101344.3535-4-l.luba@partner.samsung.com>
+        <CAJKOXPfoYxTVvt_bMQOs1=BkHzUuW_WvL9zn0jTGS6LLpv=fhQ@mail.gmail.com>
+        <52963d0d-cf48-7085-5581-a94c6e15e0bd@partner.samsung.com>
+        <CAJKOXPfEcURr_bLRaAdjWT3cb7mcuKTk8rmn7OTO=xtvjvJ=jQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPfEcURr_bLRaAdjWT3cb7mcuKTk8rmn7OTO=xtvjvJ=jQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Song Hui <hui.song_1@nxp.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
 
-more one gpio controller use share one interrupt,
-make request interrupt to be shared.
 
-Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
- drivers/gpio/gpio-mpc8xxx.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+On 9/6/19 1:50 PM, Krzysztof Kozlowski wrote:
+> On Fri, 6 Sep 2019 at 13:39, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> Hi Krzysztof,
+>>
+>> On 9/6/19 12:56 PM, Krzysztof Kozlowski wrote:
+>>> On Fri, 6 Sep 2019 at 12:14, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>>>
+>>>> Add description of bindings for Samsung k3qf2f20db LPDDR3 memory.
+>>>> Minor fixes in the old documentation.
+>>>>
+>>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>>>> ---
+>>>>    .../devicetree/bindings/ddr/lpddr3.txt        | 29 +++++++++++++++++--
+>>>>    1 file changed, 27 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/ddr/lpddr3.txt b/Documentation/devicetree/bindings/ddr/lpddr3.txt
+>>>> index 3b2485b84b3f..de0905239767 100644
+>>>> --- a/Documentation/devicetree/bindings/ddr/lpddr3.txt
+>>>> +++ b/Documentation/devicetree/bindings/ddr/lpddr3.txt
+>>>> @@ -40,10 +40,34 @@ Child nodes:
+>>>>      a given speed-bin. Please see Documentation/devicetree/
+>>>>      bindings/ddr/lpddr3-timings.txt for more information on "lpddr3-timings"
+>>>>
+>>>> +Samsung K3QF2F20DB LPDDR3 memory
+>>>> +------------------------------------------------------------
+>>>> +
+>>>> +This binding uses the LPDDR3 binding (described above)
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible:  Should be:
+>>>> +               "samsung,K3QF2F20DB"
+>>>> +               followed by "jedec,lpddr3"
+>>>> +- density  : <u32> representing density in Mb (Mega bits)
+>>>> +- io-width : <u32> representing bus width. Possible value 32
+>>>> +- #address-cells: Must be set to 1
+>>>> +- #size-cells: Must be set to 0
+>>>
+>>> If you decided to repeat all properties again, then it deserves its
+>>> own bindings file. However I though about simpler solution - just
+>>> document compatible. Exactly the same as AT24 or AT25 EEPROM bindings.
+>>> There is not much benefit from copying all these properties.
+>> OK, I see. I will add only 'compatible' and skip the rest then.
+>> So the lpddr3.txt file will get this addition:
+>>
+>> +Samsung K3QF2F20DB LPDDR3 memory
+>> +------------------------------------------------------------
+>> +
+>> +This binding uses the LPDDR3 binding (described above)
+>> +
+>> +Required properties:
+>> +- compatible:  Should be:
+>> +               "samsung,K3QF2F20DB"
+>> +               followed by "jedec,lpddr3"
+>> +
+>> +Optional properties:
+>> +
+>> +The optional properties are the same as in the LPDDR3 generic bindings and
+>> +values should be taken from the data-sheet. Detailed bindings are described
+>> +above.
+>> +
+>> +Child nodes:
+>> +
+>> +Detailed bindings are described in LPDDR3 generic bindings described above.
+>> +
+>>
+>> Is it OK?
+> 
+> To me it is still a lot of text just for one compatible and I can
+> image more of such entries for other memories... However I do not mind
+> and anyway, YAML will simplify it. If you're in doubt, wait for Rob's
+> reply as this is his part.
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 16a47de..4006250 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -22,6 +22,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/interrupt.h>
- 
- #define MPC8XXX_GPIO_PINS	32
- 
-@@ -127,10 +128,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 		return -ENXIO;
- }
- 
--static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-+static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
- {
--	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
- 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
- 	unsigned int mask;
- 
-@@ -139,8 +139,8 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
- 	if (mask)
- 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
- 						     32 - ffs(mask)));
--	if (chip->irq_eoi)
--		chip->irq_eoi(&desc->irq_data);
-+
-+	return IRQ_HANDLED;
- }
- 
- static void mpc8xxx_irq_unmask(struct irq_data *d)
-@@ -409,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	if (devtype->gpio_dir_in_init)
- 		devtype->gpio_dir_in_init(gc);
- 
--	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
--					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-+	ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-+		IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
-+	if (ret) {
-+		pr_err("%s: failed to request_irq(%d), ret = %d\n",
-+				np->full_name, mpc8xxx_gc->irqn, ret);
-+		goto err;
-+	}
-+
- 	return 0;
- err:
- 	iounmap(mpc8xxx_gc->regs);
--- 
-2.9.5
+You are definitely right, YAML will simplify this.
+I will wait a few days with the v2 series, maybe Rob would like to see
+something different. If not, I will send v2 with the above change.
+Thank you for your comments.
+
+Regards,
+Lukasz
