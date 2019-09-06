@@ -1,7 +1,7 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [RFC 3/3] dmaengine: Support for requesting channels preferring DMA domain controller
-Date: Fri, 6 Sep 2019 17:17:17 +0300
-Message-ID: <20190906141717.23859-4-peter.ujfalusi@ti.com>
+Subject: [RFC 2/3] dmaengine: of_dma: Function to look up the DMA domain of a client
+Date: Fri, 6 Sep 2019 17:17:16 +0300
+Message-ID: <20190906141717.23859-3-peter.ujfalusi@ti.com>
 References: <20190906141717.23859-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,107 +13,96 @@ To: vinod.koul@intel.com, robh+dt@kernel.org
 Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In case the channel is not requested via the slave API, use the
-of_find_dma_domain() to see if a system default DMA controller is
-specified.
+Find the DMA domain controller of the client device by iterating up in
+device tree looking for the closest 'dma-domain-controller' property.
 
-Add new function which can be used by clients to request channels by mask
-from their DMA domain controller if specified.
-
-Client drivers can take advantage of the domain support by moving from
-dma_request_chan_by_mask() to dma_domain_request_chan_by_mask()
+If the client's node is not provided then check the DT root for the
+controller.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/dma/dmaengine.c   | 17 ++++++++++++-----
- include/linux/dmaengine.h |  9 ++++++---
- 2 files changed, 18 insertions(+), 8 deletions(-)
+ drivers/dma/of-dma.c   | 42 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_dma.h |  7 +++++++
+ 2 files changed, 49 insertions(+)
 
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 6baddf7dcbfd..087450eed68c 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -640,6 +640,10 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
- 	struct dma_device *device, *_d;
- 	struct dma_chan *chan = NULL;
+diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+index c2d779daa4b5..04b5795cd76b 100644
+--- a/drivers/dma/of-dma.c
++++ b/drivers/dma/of-dma.c
+@@ -18,6 +18,48 @@
+ static LIST_HEAD(of_dma_list);
+ static DEFINE_MUTEX(of_dma_lock);
  
-+	/* If np is not specified, get the default DMA domain controller */
-+	if (!np)
-+		np = of_find_dma_domain(NULL);
++/**
++ * of_find_dma_domain - Get the domain DMA controller
++ * @np:		device node of the client device
++ *
++ * Look up the DMA controller of the domain the client device is part of.
++ * Finds the dma-domain controller the client device belongs to. It is used when
++ * requesting non slave channels (like channel for memcpy) to make sure that the
++ * channel can be request from a DMA controller which can service the given
++ * domain best.
++ *
++ * Returns the device_node pointer of the DMA controller or succes or NULL on
++ * error.
++ */
++struct device_node *of_find_dma_domain(struct device_node *np)
++{
++	struct device_node *dma_domain = NULL;
++	phandle dma_phandle;
 +
- 	/* Find a channel */
- 	mutex_lock(&dma_list_mutex);
- 	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
-@@ -751,19 +755,22 @@ struct dma_chan *dma_request_slave_channel(struct device *dev,
- EXPORT_SYMBOL_GPL(dma_request_slave_channel);
- 
++	/*
++	 * If no device_node is provided look at the root level for system
++	 * default DMA controller for modules.
++	 */
++	if (!np)
++		np = of_root;
++
++	if (!np || !of_node_get(np))
++		return NULL;
++
++	do {
++		if (of_property_read_u32(np, "dma-domain-controller",
++					 &dma_phandle))
++			np = of_get_next_parent(np);
++		else {
++			dma_domain = of_find_node_by_phandle(dma_phandle);
++			of_node_put(np);
++		}
++	} while (!dma_domain && np);
++
++	return dma_domain;
++}
++EXPORT_SYMBOL_GPL(of_find_dma_domain);
++
  /**
-- * dma_request_chan_by_mask - allocate a channel satisfying certain capabilities
-- * @mask: capabilities that the channel must satisfy
-+ * dma_domain_request_chan_by_mask - allocate a channel by mask from DMA domain
-+ * @dev:	pointer to client device structure
-+ * @mask:	capabilities that the channel must satisfy
-  *
-  * Returns pointer to appropriate DMA channel on success or an error pointer.
-  */
--struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
-+struct dma_chan *dma_domain_request_chan_by_mask(struct device *dev,
-+						 const dma_cap_mask_t *mask)
- {
- 	struct dma_chan *chan;
+  * of_dma_find_controller - Get a DMA controller in DT DMA helpers list
+  * @dma_spec:	pointer to DMA specifier as found in the device tree
+diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+index fd706cdf255c..6eab0a8d3335 100644
+--- a/include/linux/of_dma.h
++++ b/include/linux/of_dma.h
+@@ -32,6 +32,8 @@ struct of_dma_filter_info {
+ };
  
- 	if (!mask)
- 		return ERR_PTR(-ENODEV);
+ #ifdef CONFIG_DMA_OF
++extern struct device_node *of_find_dma_domain(struct device_node *np);
++
+ extern int of_dma_controller_register(struct device_node *np,
+ 		struct dma_chan *(*of_dma_xlate)
+ 		(struct of_phandle_args *, struct of_dma *),
+@@ -52,6 +54,11 @@ extern struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec
+ 		struct of_dma *ofdma);
  
--	chan = __dma_request_channel(mask, NULL, NULL, NULL);
-+	chan = __dma_request_channel(mask, NULL, NULL,
-+				     of_find_dma_domain(dev->of_node));
- 	if (!chan) {
- 		mutex_lock(&dma_list_mutex);
- 		if (list_empty(&dma_device_list))
-@@ -775,7 +782,7 @@ struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
- 
- 	return chan;
- }
--EXPORT_SYMBOL_GPL(dma_request_chan_by_mask);
-+EXPORT_SYMBOL_GPL(dma_domain_request_chan_by_mask);
- 
- void dma_release_channel(struct dma_chan *chan)
- {
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 3b2e8e302f6c..9f94df81e83f 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -1438,7 +1438,8 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
- struct dma_chan *dma_request_slave_channel(struct device *dev, const char *name);
- 
- struct dma_chan *dma_request_chan(struct device *dev, const char *name);
--struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
-+struct dma_chan *dma_domain_request_chan_by_mask(struct device *dev,
-+						 const dma_cap_mask_t *mask);
- 
- void dma_release_channel(struct dma_chan *chan);
- int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
-@@ -1475,8 +1476,8 @@ static inline struct dma_chan *dma_request_chan(struct device *dev,
- {
- 	return ERR_PTR(-ENODEV);
- }
--static inline struct dma_chan *dma_request_chan_by_mask(
--						const dma_cap_mask_t *mask)
-+static inline struct dma_chan *dma_domain_request_chan_by_mask(struct device *dev,
-+			const dma_cap_mask_t *mask)
- {
- 	return ERR_PTR(-ENODEV);
- }
-@@ -1537,6 +1538,8 @@ struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
- 	__dma_request_channel(&(mask), x, y, NULL)
- #define dma_request_slave_channel_compat(mask, x, y, dev, name) \
- 	__dma_request_slave_channel_compat(&(mask), x, y, dev, name)
-+#define dma_request_chan_by_mask(mask) \
-+	dma_domain_request_chan_by_mask(NULL, mask)
- 
- static inline struct dma_chan
- *__dma_request_slave_channel_compat(const dma_cap_mask_t *mask,
+ #else
++static inline struct device_node *of_find_dma_domain(struct device_node *np)
++{
++	return NULL;
++}
++
+ static inline int of_dma_controller_register(struct device_node *np,
+ 		struct dma_chan *(*of_dma_xlate)
+ 		(struct of_phandle_args *, struct of_dma *),
 -- 
 Peter
 
