@@ -1,55 +1,47 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH 1/3]  memory: Exynos5422: minor fixes in DMC
-Date: Fri,  6 Sep 2019 12:13:42 +0200
-Message-ID: <20190906101344.3535-2-l.luba@partner.samsung.com>
-References: <20190906101344.3535-1-l.luba@partner.samsung.com>
- <CGME20190906101405eucas1p2e3da7b461810a3a520e76c636a06e486@eucas1p2.samsung.com>
+From: Roger Lu <roger.lu@mediatek.com>
+Subject: Re: [PATCH v5 0/3] PM / AVS: SVS: Introduce SVS engine
+Date: Fri, 6 Sep 2019 18:15:53 +0800
+Message-ID: <1567764953.472.2.camel@mtksdaap41>
+References: <20190906100514.30803-1-roger.lu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190906101344.3535-1-l.luba@partner.samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, willy.mh.wolff.ml@gmail.com, b.zolnierkie@samsung.com, krzk@kernel.org, Lukasz Luba <l.luba@partner.samsung.com>, cw00.choi@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, kgene@kernel.org, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, m.szyprowski@samsung.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190906100514.30803-1-roger.lu@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Nicolas Boichat <drinkcat@google.com>, Stephen Boyd <sboyd@kernel.org>, Fan Chen <fan.chen@mediatek.com>, HenryC Chen <HenryC.Chen@mediatek.com>, yt.lee@mediatek.com, Angus Lin <Angus.Lin@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Small fixes captured by static analyzes.
+Excuse me, I forgot to add "changes since" below. Add it back now.
 
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- drivers/memory/samsung/exynos5422-dmc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Fri, 2019-09-06 at 18:05 +0800, Roger Lu wrote:
+> 1. SVS driver use OPP adjust event in [1] to update OPP table voltage part.
+> 2. SVS dts node refers to CPU opp table [2] and GPU opp table [3].
+> 3. SVS dts node refers to thermal efuse [4] and PMIC regulator [5].
+> 
+> [1] https://patchwork.kernel.org/patch/11092245/
+> [2] https://patchwork.kernel.org/patch/10934123/
+> [3] https://patchwork.kernel.org/patch/11132381/
+> [4] https://patchwork.kernel.org/patch/11093655/
+> [5] https://patchwork.kernel.org/patch/11110493/
 
-diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-index 8c2ec29a7d57..a809fa997c03 100644
---- a/drivers/memory/samsung/exynos5422-dmc.c
-+++ b/drivers/memory/samsung/exynos5422-dmc.c
-@@ -269,7 +269,7 @@ static int exynos5_init_freq_table(struct exynos5_dmc *dmc,
- 	return 0;
- 
- err_free_tables:
--	kfree(dmc->opp);
-+	devm_kfree(dmc->dev, dmc->opp);
- err_opp:
- 	dev_pm_opp_of_remove_table(dmc->dev);
- 
-@@ -732,7 +732,7 @@ static struct devfreq_dev_profile exynos5_dmc_df_profile = {
-  * statistics engine which supports only registered values. Thus, some alignment
-  * must be made.
-  */
--unsigned long
-+static unsigned long
- exynos5_dmc_align_init_freq(struct exynos5_dmc *dmc,
- 			    unsigned long bootloader_init_freq)
- {
--- 
-2.17.1
+changes since v4:
+- Add SVS dts node patch in SVS patch series.
+
+> Roger Lu (3):
+>   dt-bindings: soc: add mtk svs dt-bindings
+>   arm64: dts: mt8183: add svs device information
+>   PM / AVS: SVS: Introduce SVS engine
+> 
+>  .../devicetree/bindings/power/mtk-svs.txt     |   88 +
+>  arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |   16 +
+>  arch/arm64/boot/dts/mediatek/mt8183.dtsi      |   38 +
+>  drivers/power/avs/Kconfig                     |   10 +
+>  drivers/power/avs/Makefile                    |    1 +
+>  drivers/power/avs/mtk_svs.c                   | 2075 +++++++++++++++++
+>  include/linux/power/mtk_svs.h                 |   23 +
+>  7 files changed, 2251 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
+>  create mode 100644 drivers/power/avs/mtk_svs.c
+>  create mode 100644 include/linux/power/mtk_svs.h
