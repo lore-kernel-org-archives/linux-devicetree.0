@@ -1,130 +1,121 @@
-From: Liviu Dudau <liviu.dudau@arm.com>
-Subject: Re: [v4 2/2] drm/arm/mali-dp: Add display QoS interface
- configuration for Mali DP500
-Date: Fri, 6 Sep 2019 15:17:52 +0100
-Message-ID: <20190906141751.unabowxoglygg4kp@e110455-lin.cambridge.arm.com>
-References: <20190822021135.10288-1-wen.he_1@nxp.com>
- <20190822021135.10288-2-wen.he_1@nxp.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [RFC 3/3] dmaengine: Support for requesting channels preferring DMA domain controller
+Date: Fri, 6 Sep 2019 17:18:16 +0300
+Message-ID: <20190906141816.24095-4-peter.ujfalusi@ti.com>
+References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190822021135.10288-2-wen.he_1@nxp.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Wen He <wen.he_1@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, leoyang.li@nxp.com, linux-devel@linux.nxdi.nxp.com, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190906141816.24095-1-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vkoul@kernel.org, robh+dt@kernel.org
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgV2VuLAoKT24gVGh1LCBBdWcgMjIsIDIwMTkgYXQgMTA6MTE6MzVBTSArMDgwMCwgV2VuIEhl
-IHdyb3RlOgo+IENvbmZpZ3VyZSB0aGUgZGlzcGxheSBRdWFsaXR5IG9mIHNlcnZpY2UgKFFvUykg
-bGV2ZWxzIHByaW9yaXR5IGlmIHRoZQo+IG9wdGlvbmFsIHByb3BlcnR5IG5vZGUgImFybSxtYWxp
-ZHAtYXFyb3MtdmFsdWUiIGlzIGRlZmluZWQgaW4gRFRTIGZpbGUuCj4gCj4gUW9TIHNpZ25hbGlu
-ZyB1c2luZyBBUVJPUyBhbmQgQVdRT1MgQVhJIGludGVyZmFjZSBzaWduYWxzLCB0aGUgQVFST1Mg
-aXMKPiBkcml2ZW4gZnJvbSB0aGUgIlJRT1MiIHJlZ2lzdGVyLCBzbyBuZWVkZWQgdG8gcHJvZ3Jh
-bSB0aGUgUlFPUyByZWdpc3Rlcgo+IHRvIGF2b2lkIHRoZSBoaWdoIHJlc29sdXRpb25zIGZsaWNr
-ZXIgaXNzdWUgb24gdGhlIExTMTAyOEEgcGxhdGZvcm0uCj4gCj4gU2lnbmVkLW9mZi1ieTogV2Vu
-IEhlIDx3ZW4uaGVfMUBueHAuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlk
-cF9kcnYuYyAgfCAgNiArKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfaHcuYyAg
-IHwgMTMgKysrKysrKysrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9ody5oICAg
-fCAgMyArKysKPiAgZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfcmVncy5oIHwgMTAgKysrKysr
-KysrKwo+ICA0IGZpbGVzIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfZHJ2LmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJt
-L21hbGlkcF9kcnYuYwo+IGluZGV4IGMyN2ZmNDU2ZWRkYy4uODBlOGQxNTc2MGFjIDEwMDY0NAo+
-IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX2Rydi5jCj4gKysrIGIvZHJpdmVycy9n
-cHUvZHJtL2FybS9tYWxpZHBfZHJ2LmMKPiBAQCAtODE1LDYgKzgxNSwxMiBAQCBzdGF0aWMgaW50
-IG1hbGlkcF9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldikKPiAgCj4gIAltYWxpZHAtPmNvcmVfaWQg
-PSB2ZXJzaW9uOwo+ICAKPiArCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKGRldi0+b2Zfbm9k
-ZSwKPiArCQkJCQkiYXJtLG1hbGlkcC1hcnFvcy12YWx1ZSIsCj4gKwkJCQkJJmh3ZGV2LT5hcnFv
-c192YWx1ZSk7Cj4gKwlpZiAocmV0KQo+ICsJCWh3ZGV2LT5hcnFvc192YWx1ZSA9IDB4MDsKPiAr
-Cj4gIAkvKiBzZXQgdGhlIG51bWJlciBvZiBsaW5lcyB1c2VkIGZvciBvdXRwdXQgb2YgUkdCIGRh
-dGEgKi8KPiAgCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdThfYXJyYXkoZGV2LT5vZl9ub2RlLAo+
-ICAJCQkJCSJhcm0sbWFsaWRwLW91dHB1dC1wb3J0LWxpbmVzIiwKPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9ncHUvZHJtL2FybS9tYWxpZHBfaHcuYyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRw
-X2h3LmMKPiBpbmRleCAzODBiZTY2ZDRjNmUuLmY5MGEzNjdhNWJjOSAxMDA2NDQKPiAtLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9ody5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2Fy
-bS9tYWxpZHBfaHcuYwo+IEBAIC0zNzQsNiArMzc0LDE5IEBAIHN0YXRpYyB2b2lkIG1hbGlkcDUw
-MF9tb2Rlc2V0KHN0cnVjdCBtYWxpZHBfaHdfZGV2aWNlICpod2Rldiwgc3RydWN0IHZpZGVvbW9k
-ZSAqCj4gIAkJbWFsaWRwX2h3X3NldGJpdHMoaHdkZXYsIE1BTElEUF9ESVNQX0ZVTkNfSUxBQ0VE
-LCBNQUxJRFBfREVfRElTUExBWV9GVU5DKTsKPiAgCWVsc2UKPiAgCQltYWxpZHBfaHdfY2xlYXJi
-aXRzKGh3ZGV2LCBNQUxJRFBfRElTUF9GVU5DX0lMQUNFRCwgTUFMSURQX0RFX0RJU1BMQVlfRlVO
-Qyk7Cj4gKwo+ICsJLyoKPiArCSAqIFByb2dyYW0gdGhlIFJRb1MgcmVnaXN0ZXIgdG8gYXZvaWQg
-aGlnaCByZXNvbHV0aW9ucyBmbGlja2VyCj4gKwkgKiBpc3N1ZSBvbiB0aGUgTFMxMDI4QS4KPiAr
-CSAqLwo+ICsJaWYgKGh3ZGV2LT5hcnFvc192YWx1ZSkgewo+ICsJCXZhbCA9IGh3ZGV2LT5hcnFv
-c192YWx1ZTsKPiArCj4gKwkJaWYgKG1vZGUtPnBpeGVsY2xvY2sgPiAxNDg1MDAwMDApCj4gKwkJ
-CW1hbGlkcF9od19zZXRiaXRzKGh3ZGV2LCB2YWwsIE1BTElEUDUwMF9SUU9TX1FVQUxJVFkpOwo+
-ICsJCWVsc2UKPiArCQkJbWFsaWRwX2h3X2NsZWFyYml0cyhod2RldiwgdmFsLCBNQUxJRFA1MDBf
-UlFPU19RVUFMSVRZKTsKPiArCX0KClRoaXMgYXBwbGljYXRpb24gb2YgdGhlIGFycW9zX3ZhbHVl
-IGJhc2VkIG9uIGEgcGl4ZWwgY2xvY2sgdmFsdWUgYm90aGVycyBtZSwKYmVjYXVzZSBpdCBoYXMg
-dHdvIHByb2JsZW1zOgoKMS4gU29tZSBvdGhlciB1c2VyIG9mIHRoZSBNYWxpIERQIGRyaXZlciBj
-YW4ndCBhcHBseSBhIHN5c3RlbSBRb1MgdmFsdWUgdGhhdCB0aGV5IGNhbgpub3cgc3BlY2lmeSBp
-biB0aGUgRFQsIHVubGVzcyB0aGUgcmVxdWVzdGVkIHBpeGVsIGNsb2NrIGlzIGJpZ2dlciB0aGFu
-IDE0NU1Iei4gOigKCjIuIChBIGd1ZXNzKSBUaGUgZmxpY2tlcmluZyBpc3N1ZSBzaG93cyB1cCBv
-biBhIGNvbWJpbmF0aW9uIG9mIHBpeGVsY2xvY2sgYW5kCnJlc29sdXRpb24gKGkuZS4gaXQgaXMg
-YSBiYW5kd2lkdGggcHJvYmxlbSksIGJ1dCB5b3Ugb25seSBhZGRyZXNzIG9uZSBvZiB0aGUKdmFy
-aWFibGVzLiBIYXZlbid0IHRlc3RlZCBvbiB0aGUgTFMxMDI4QSB5ZXQsIGJ1dCBkbyB5b3Uga25v
-dyBpZiAodGhlb3JldGljYWxseSkgaXQKd291bGQgaGF2ZSBhIGZsaWNrZXIgcHJvYmxlbSBkb2lu
-ZyA2NDB4NDgwQDIwME1IeiB3aXRob3V0IHRoZSBRb1MgdmFsdWU/CgpIb3cgYWJvdXQgdGhpcyBp
-bnN0ZWFkPwoKLS04PC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2Fy
-bS9tYWxpZHBfaHcuYyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX2h3LmMKaW5kZXggMzgw
-YmU2NmQ0YzZlYi4uZTJmOTZkY2UxMzg1MCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2Fy
-bS9tYWxpZHBfaHcuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9ody5jCkBAIC0z
-NzQsNiArMzc0LDIyIEBAIHN0YXRpYyB2b2lkIG1hbGlkcDUwMF9tb2Rlc2V0KHN0cnVjdCBtYWxp
-ZHBfaHdfZGV2aWNlICpod2Rldiwgc3RydWN0IHZpZGVvbW9kZSAqCiAJCW1hbGlkcF9od19zZXRi
-aXRzKGh3ZGV2LCBNQUxJRFBfRElTUF9GVU5DX0lMQUNFRCwgTUFMSURQX0RFX0RJU1BMQVlfRlVO
-Qyk7CiAJZWxzZQogCQltYWxpZHBfaHdfY2xlYXJiaXRzKGh3ZGV2LCBNQUxJRFBfRElTUF9GVU5D
-X0lMQUNFRCwgTUFMSURQX0RFX0RJU1BMQVlfRlVOQyk7CisKKwkvKgorCSAqIFByb2dyYW0gdGhl
-IFJRb1MgcmVnaXN0ZXIuIExTMTAyOEEgaGFzIGFuIGlzc3VlIHdoZXJlIHNjcmVlbiB3aWxsCisJ
-ICogZmxpY2tlciBvbiBwaXhlbGNsb2NrcyBoaWdoZXIgdGhhbiAxNDguNU1IeiBidXQgb3RoZXJ3
-aXNlIGRvZXNuJ3QKKwkgKiB3YW50IGFuIFJRb1MgdmFsdWUsIHNvIHNwZWNpYWwgY2FzZSBpdCBm
-b3IgdGhlbS4KKwkgKi8KKwlpZiAoaHdkZXYtPmFycW9zX3ZhbHVlKSB7CisJCXZhbCA9IGh3ZGV2
-LT5hcnFvc192YWx1ZTsKKworI2lmZGVmIE1BTElEUF9MUzEwMjhBCisJCWlmIChtb2RlLT5waXhl
-bGNsb2NrIDw9IDE0ODUwMDAwMCkKKwkJCW1hbGlkcF9od19jbGVhcmJpdHMoaHdkZXYsIHZhbCwg
-TUFMSURQNTAwX1JRT1NfUVVBTElUWSk7CisJCWVsc2UKKyNlbmRpZgorCQkJbWFsaWRwX2h3X3Nl
-dGJpdHMoaHdkZXYsIHZhbCwgTUFMSURQNTAwX1JRT1NfUVVBTElUWSk7CisJfQogfQogCiBpbnQg
-bWFsaWRwX2Zvcm1hdF9nZXRfYnBwKHUzMiBmbXQpCi0tODwtLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCkFuZCB0aGVu
-IHlvdSBuZWVkIHRvIGRlZmluZSBhIE1BTElEUF9MUzEwMjhBIGluIGEgdmVuZG9yIHBhdGNoIG9u
-IHRvcCBvZiB0aGUga2VybmVsCnNvdXJjZSBjb2RlLgoKQmVzdCByZWdhcmRzLApMaXZpdQoKCj4g
-IH0KPiAgCj4gIGludCBtYWxpZHBfZm9ybWF0X2dldF9icHAodTMyIGZtdCkKPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfaHcuaCBiL2RyaXZlcnMvZ3B1L2RybS9hcm0v
-bWFsaWRwX2h3LmgKPiBpbmRleCA5NjhhNjVlZWQzNzEuLmU0YzM2YmM5MGJkYSAxMDA2NDQKPiAt
-LS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9ody5oCj4gKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL2FybS9tYWxpZHBfaHcuaAo+IEBAIC0yNTEsNiArMjUxLDkgQEAgc3RydWN0IG1hbGlkcF9o
-d19kZXZpY2Ugewo+ICAKPiAgCS8qIHNpemUgb2YgbWVtb3J5IHVzZWQgZm9yIHJvdGF0aW5nIGxh
-eWVycywgdXAgdG8gdHdvIGJhbmtzIGF2YWlsYWJsZSAqLwo+ICAJdTMyIHJvdGF0aW9uX21lbW9y
-eVsyXTsKPiArCj4gKwkvKiBwcmlvcml0eSBsZXZlbCBvZiBSUU9TIHJlZ2lzdGVyIHVzZWQgZm9y
-IGRyaXZlbiB0aGUgQVJRT1Mgc2lnbmFsICovCj4gKwl1MzIgYXJxb3NfdmFsdWU7Cj4gIH07Cj4g
-IAo+ICBzdGF0aWMgaW5saW5lIHUzMiBtYWxpZHBfaHdfcmVhZChzdHJ1Y3QgbWFsaWRwX2h3X2Rl
-dmljZSAqaHdkZXYsIHUzMiByZWcpCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0v
-bWFsaWRwX3JlZ3MuaCBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX3JlZ3MuaAo+IGluZGV4
-IDk5MzAzMTU0MmZhMS4uNTE0YzUwZGNiNzRkIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
-bS9hcm0vbWFsaWRwX3JlZ3MuaAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX3Jl
-Z3MuaAo+IEBAIC0yMTAsNiArMjEwLDE2IEBACj4gICNkZWZpbmUgTUFMSURQNTAwX0NPTkZJR19W
-QUxJRAkJMHgwMGYwMAo+ICAjZGVmaW5lIE1BTElEUDUwMF9DT05GSUdfSUQJCTB4MDBmZDQKPiAg
-Cj4gKy8qCj4gKyAqIFRoZSBxdWFsaXR5IG9mIHNlcnZpY2UgKFFvUykgcmVnaXN0ZXIgb24gdGhl
-IERQNTAwLiBSUU9TIHJlZ2lzdGVyIHZhbHVlcwo+ICsgKiBhcmUgZHJpdmVuIGJ5IHRoZSBBUlFP
-UyBzaWduYWwsIHVzaW5nIEFYSSB0cmFuc2FjYXRpb25zLCBkZXBlbmRlbnQgb24gdGhlCj4gKyAq
-IEZJRk8gaW5wdXQgbGV2ZWwuCj4gKyAqIFRoZSBSUU9TIHJlZ2lzdGVyIGNhbiBhbHNvIHNldCBR
-b1MgbGV2ZWxzIGZvcjoKPiArICogICAgLSBSRURfQVJRT1MgICBAIEEgNC1iaXQgc2lnbmFsIHZh
-bHVlIGZvciBjbG9zZSB0byB1bmRlcmZsb3cgY29uZGl0aW9ucwo+ICsgKiAgICAtIEdSRUVOX0FS
-UU9TIEAgQSA0LWJpdCBzaWduYWwgdmFsdWUgZm9yIG5vcm1hbCBjb25kaXRpb25zCj4gKyAqLwo+
-ICsjZGVmaW5lIE1BTElEUDUwMF9SUU9TX1FVQUxJVFkgICAgICAgICAgMHgwMDUwMAo+ICsKPiAg
-LyogcmVnaXN0ZXIgb2Zmc2V0cyBhbmQgYml0cyBzcGVjaWZpYyB0byBEUDU1MC9EUDY1MCAqLwo+
-ICAjZGVmaW5lIE1BTElEUDU1MF9BRERSX1NQQUNFX1NJWkUJMHgxMDAwMAo+ICAjZGVmaW5lIE1B
-TElEUDU1MF9ERV9DT05UUk9MCQkweDAwMDEwCj4gLS0gCj4gMi4xNy4xCj4gCgotLSAKPT09PT09
-PT09PT09PT09PT09PT0KfCBJIHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8Cnwg
-YnV0IHRoZXkncmUgbm90IHwKfCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEgIC8K
-ICAtLS0tLS0tLS0tLS0tLS0KICAgIMKvXF8o44OEKV8vwq8KX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+In case the channel is not requested via the slave API, use the
+of_find_dma_domain() to see if a system default DMA controller is
+specified.
+
+Add new function which can be used by clients to request channels by mask
+from their DMA domain controller if specified.
+
+Client drivers can take advantage of the domain support by moving from
+dma_request_chan_by_mask() to dma_domain_request_chan_by_mask()
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ drivers/dma/dmaengine.c   | 17 ++++++++++++-----
+ include/linux/dmaengine.h |  9 ++++++---
+ 2 files changed, 18 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 6baddf7dcbfd..087450eed68c 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -640,6 +640,10 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+ 	struct dma_device *device, *_d;
+ 	struct dma_chan *chan = NULL;
+ 
++	/* If np is not specified, get the default DMA domain controller */
++	if (!np)
++		np = of_find_dma_domain(NULL);
++
+ 	/* Find a channel */
+ 	mutex_lock(&dma_list_mutex);
+ 	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
+@@ -751,19 +755,22 @@ struct dma_chan *dma_request_slave_channel(struct device *dev,
+ EXPORT_SYMBOL_GPL(dma_request_slave_channel);
+ 
+ /**
+- * dma_request_chan_by_mask - allocate a channel satisfying certain capabilities
+- * @mask: capabilities that the channel must satisfy
++ * dma_domain_request_chan_by_mask - allocate a channel by mask from DMA domain
++ * @dev:	pointer to client device structure
++ * @mask:	capabilities that the channel must satisfy
+  *
+  * Returns pointer to appropriate DMA channel on success or an error pointer.
+  */
+-struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
++struct dma_chan *dma_domain_request_chan_by_mask(struct device *dev,
++						 const dma_cap_mask_t *mask)
+ {
+ 	struct dma_chan *chan;
+ 
+ 	if (!mask)
+ 		return ERR_PTR(-ENODEV);
+ 
+-	chan = __dma_request_channel(mask, NULL, NULL, NULL);
++	chan = __dma_request_channel(mask, NULL, NULL,
++				     of_find_dma_domain(dev->of_node));
+ 	if (!chan) {
+ 		mutex_lock(&dma_list_mutex);
+ 		if (list_empty(&dma_device_list))
+@@ -775,7 +782,7 @@ struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
+ 
+ 	return chan;
+ }
+-EXPORT_SYMBOL_GPL(dma_request_chan_by_mask);
++EXPORT_SYMBOL_GPL(dma_domain_request_chan_by_mask);
+ 
+ void dma_release_channel(struct dma_chan *chan)
+ {
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 3b2e8e302f6c..9f94df81e83f 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -1438,7 +1438,8 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+ struct dma_chan *dma_request_slave_channel(struct device *dev, const char *name);
+ 
+ struct dma_chan *dma_request_chan(struct device *dev, const char *name);
+-struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
++struct dma_chan *dma_domain_request_chan_by_mask(struct device *dev,
++						 const dma_cap_mask_t *mask);
+ 
+ void dma_release_channel(struct dma_chan *chan);
+ int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
+@@ -1475,8 +1476,8 @@ static inline struct dma_chan *dma_request_chan(struct device *dev,
+ {
+ 	return ERR_PTR(-ENODEV);
+ }
+-static inline struct dma_chan *dma_request_chan_by_mask(
+-						const dma_cap_mask_t *mask)
++static inline struct dma_chan *dma_domain_request_chan_by_mask(struct device *dev,
++			const dma_cap_mask_t *mask)
+ {
+ 	return ERR_PTR(-ENODEV);
+ }
+@@ -1537,6 +1538,8 @@ struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
+ 	__dma_request_channel(&(mask), x, y, NULL)
+ #define dma_request_slave_channel_compat(mask, x, y, dev, name) \
+ 	__dma_request_slave_channel_compat(&(mask), x, y, dev, name)
++#define dma_request_chan_by_mask(mask) \
++	dma_domain_request_chan_by_mask(NULL, mask)
+ 
+ static inline struct dma_chan
+ *__dma_request_slave_channel_compat(const dma_cap_mask_t *mask,
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
