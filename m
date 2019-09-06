@@ -1,24 +1,77 @@
 From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v2 3/3] phy: qcom-qmp: Add SM8150 QMP UFS PHY support
-Date: Thu, 05 Sep 2019 22:15:39 -0700
-Message-ID: <5d71eb7c.1c69fb81.7bdfb.3205@mx.google.com>
-References: <20190906051017.26846-1-vkoul@kernel.org> <20190906051017.26846-4-vkoul@kernel.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
+Date: Thu, 05 Sep 2019 22:26:12 -0700
+Message-ID: <5d71edf5.1c69fb81.1f307.fdd6@mx.google.com>
+References: <20190223165218.GB572@tuxbook-pro> <5d694878.1c69fb81.5f13b.ec4f@mx.google.com> <20190830164520.GK26807@tuxbook-pro> <5d696ad2.1c69fb81.977ea.39e5@mx.google.com> <f3584f38-dabc-7e7a-d1cb-84c80ed26215@linaro.org> <20190903173924.GB9754@jackp-linux.qualcomm.com> <5d6edee5.1c69fb81.a3896.1d05@mx.google.com> <20190903233410.GQ26807@tuxbook-pro> <c9481b7d-4805-25c6-f40f-9cbfc40afc93@linaro.org> <20190905175802.GA19599@jackp-linux.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190906051017.26846-4-vkoul@kernel.org>
+In-Reply-To: <20190905175802.GA19599@jackp-linux.qualcomm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Jack Pham <jackp@codeaurora.org>, Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Vinod Koul (2019-09-05 22:10:17)
-> SM8150 UFS PHY is v4 of QMP phy. Add support for V4 QMP phy register
-> defines and support for SM8150 QMP UFS PHY.
+Quoting Jack Pham (2019-09-05 10:58:02)
+> Hi Jorge, Bjorn,
 >=20
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+> On Thu, Sep 05, 2019 at 09:18:57AM +0200, Jorge Ramirez wrote:
+> > On 9/4/19 01:34, Bjorn Andersson wrote:
+> > > On Tue 03 Sep 14:45 PDT 2019, Stephen Boyd wrote:
+> > >> that would need an of_regulator_get() sort of API that can get the
+> > >> regulator out of there? Or to make the connector into a struct device
+> > >> that can get the regulator out per some generic connector driver and
+> > >> then pass it through to the USB controller when it asks for it. Maybe
+> > >> try to prototype that out?
+> > >>
+> > >=20
+> > > The examples given in the DT bindings describes the connector as a ch=
+ild
+> > > of a PMIC, with of_graph somehow tying it to the various inputs. But =
+in
+> > > these examples vbus is handled by implicitly inside the MFD, where
+> > > extcon is informed about the plug event they toggle vbus as well.
+> > >=20
+> > > In our case we have a extcon-usb-gpio to detect mode, which per Jorge=
+'s
+> > > proposal will trickle down to the PHY and become a regulator calls on
+> > > either some external regulator or more typically one of the chargers =
+in
+> > > the system.
+>=20
+> Interesting you mention extcon-usb-gpio. I thought extcon at least from
+> bindings perspective is pass=C3=83=C2=A9 now. Maybe this is what you need=
+ (just
+> landed in usb-next):
+>=20
+> usb: common: add USB GPIO based connection detection driver
+> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=
+=3Dusb-next&id=3D4602f3bff2669012c1147eecfe74c121765f5c56
+>=20
+> dt-bindings: usb: add binding for USB GPIO based connection detection dri=
+ver
+> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=
+=3Dusb-next&id=3Df651c73e71f53f65e9846677d79d8e120452b59f
+>=20
+> Fortunately this new driver might check the right boxes for you:
+> - usb connector binding
+> - ID detect GPIO
+> - vbus-supply regulator
+>=20
+> With that, I think you can also keep the connector subnode out of the
+> SSPHY node well, and similarly get rid of the vbus toggle handling from
+> the PHY driver.
+>=20
+> The big thing missing now is that this driver replaces extcon
+> completely, so we'll need handling in dwc3/dwc3-qcom to retrieve the
+> role switch state to know when host mode is entered. I saw this a while
+> back but don't think it got picked up:
+>=20
+> https://patchwork.kernel.org/patch/10909981/
+>=20
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Yes this looks like the approach that should be taken. One question
+though, is this a micro-b connector or a type-c connector on the board?
+I thought it was a type-c, so then this USB gpio based connection driver
+isn't an exact fit?
