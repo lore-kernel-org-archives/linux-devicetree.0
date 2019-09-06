@@ -1,68 +1,24 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: milbeaut-m10v-hdmac: Add Socionext
- Milbeaut HDMAC bindings
-Date: Fri, 6 Sep 2019 10:42:21 +0530
-Message-ID: <20190906051221.GF2672@vkoul-mobl>
-References: <20190818051647.17475-1-jassisinghbrar@gmail.com>
- <20190818051754.17548-1-jassisinghbrar@gmail.com>
- <20190904055037.GC2672@vkoul-mobl>
- <CABb+yY1RT2TuUyuU2C+m6w=AOVzXkuG7cOwbWsccywxU7HwkQg@mail.gmail.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v2 3/3] phy: qcom-qmp: Add SM8150 QMP UFS PHY support
+Date: Thu, 05 Sep 2019 22:15:39 -0700
+Message-ID: <5d71eb7c.1c69fb81.7bdfb.3205@mx.google.com>
+References: <20190906051017.26846-1-vkoul@kernel.org> <20190906051017.26846-4-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABb+yY1RT2TuUyuU2C+m6w=AOVzXkuG7cOwbWsccywxU7HwkQg@mail.gmail.com>
+In-Reply-To: <20190906051017.26846-4-vkoul@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: dmaengine@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-arm-msm@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04-09-19, 01:18, Jassi Brar wrote:
-> On Wed, Sep 4, 2019 at 12:51 AM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > On 18-08-19, 00:17, jassisinghbrar@gmail.com wrote:
-> > > From: Jassi Brar <jaswinder.singh@linaro.org>
-> > >
-> > > Document the devicetree bindings for Socionext Milbeaut HDMAC
-> > > controller. Controller has upto 8 floating channels, that need
-> > > a predefined slave-id to work from a set of slaves.
-> > >
-> > > Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-> > > ---
-> > >  .../bindings/dma/milbeaut-m10v-hdmac.txt      | 32 +++++++++++++++++++
-> > >  1 file changed, 32 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > > new file mode 100644
-> > > index 000000000000..f0960724f1c7
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > > @@ -0,0 +1,32 @@
-> > > +* Milbeaut AHB DMA Controller
-> > > +
-> > > +Milbeaut AHB DMA controller has transfer capability bellow.
-> >
-> > s/bellow/below:
-> >
-> > > + - device to memory transfer
-> > > + - memory to device transfer
-> > > +
-> > > +Required property:
-> > > +- compatible:       Should be  "socionext,milbeaut-m10v-hdmac"
-> > > +- reg:              Should contain DMA registers location and length.
-> > > +- interrupts:       Should contain all of the per-channel DMA interrupts.
-> > > +                     Number of channels is configurable - 2, 4 or 8, so
-> > > +                     the number of interrupts specfied should be {2,4,8}.
-> >
-> > s/specfied/specified
-> >
-> Hi Vinod,
->   Do you want me to spin yet another revision for the two types in text?
+Quoting Vinod Koul (2019-09-05 22:10:17)
+> SM8150 UFS PHY is v4 of QMP phy. Add support for V4 QMP phy register
+> defines and support for SM8150 QMP UFS PHY.
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-Yes that would be easier for me
-
-Thanks
-
--- 
-~Vinod
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
