@@ -1,111 +1,53 @@
-Return-Path: <krzk@kernel.org>
+Return-Path: <SRS0=UWh6=XB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:39075 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2393354AbfIFNml (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Sep 2019 09:42:41 -0400
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v4 2/9] dt-bindings: display, renesas,du: Document cmms property
+Date: Fri,  6 Sep 2019 15:43:34 +0200
+Message-Id: <20190906134341.9879-3-jacopo+renesas@jmondi.org>
+In-Reply-To: <20190906134341.9879-1-jacopo+renesas@jmondi.org>
+References: <20190906134341.9879-1-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-References: <20190902150336.3600-1-krzk@kernel.org> <CAL_JsqK_O+7zQDGxAhAHDW=AkMy+RtyijTXUuRStOgu8CYXe0g@mail.gmail.com>
-In-Reply-To: <CAL_JsqK_O+7zQDGxAhAHDW=AkMy+RtyijTXUuRStOgu8CYXe0g@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Date: Tue, 3 Sep 2019 09:46:49 +0200
-Message-ID: <CAJKOXPfO0yBzGFPvF_WwsGGJBZSBGMLsFi2CQ2Eg5RVfyfW3nA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: power: syscon-reboot: Convert bindings
- to json-schema
-Content-Type: text/plain; charset="UTF-8"
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: laurent.pinchart@ideasonboard.com, kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org, horms@verge.net.au, uli@fpond.eu, VenkataRajesh.Kalakodima@in.bosch.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, 3 Sep 2019 at 09:14, Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Mon, Sep 2, 2019 at 4:03 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > Convert the Syscon reboot bindings to DT schema format using
-> > json-schema.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  .../bindings/power/reset/syscon-reboot.txt    | 30 --------
-> >  .../bindings/power/reset/syscon-reboot.yaml   | 68 +++++++++++++++++++
-> >  2 files changed, 68 insertions(+), 30 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-> >  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
->
-> > diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
-> > new file mode 100644
-> > index 000000000000..a583f3dc8ef4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
-> > @@ -0,0 +1,68 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/power/reset/syscon-reboot.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Generic SYSCON mapped register reset driver
-> > +
-> > +maintainers:
-> > +  - Sebastian Reichel <sre@kernel.org>
-> > +
-> > +description: |+
-> > +  This is a generic reset driver using syscon to map the reset register.
-> > +  The reset is generally performed with a write to the reset register
-> > +  defined by the register map pointed by syscon reference plus the offset
-> > +  with the value and mask defined in the reboot node.
-> > +  Default will be little endian mode, 32 bit access only.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: syscon-reboot
-> > +
-> > +  mask:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: Update only the register bits defined by the mask (32 bit).
-> > +    maxItems: 1
->
-> Drop this as that is already defined for uint32.
->
-> It also doesn't actually work. The $ref has to be under an 'allOf' if
-> you have additional schemas. A quirk of json-schema...
->
-> > +
-> > +  offset:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: Offset in the register map for the reboot register (in bytes).
-> > +    maxItems: 1
-> > +
-> > +  regmap:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> > +    description: Phandle to the register map node.
-> > +    maxItems: 1
-> > +
-> > +  value:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: The reset value written to the reboot register (32 bit access).
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - regmap
-> > +  - offset
-> > +
-> > +allOf:
-> > +  - if:
-> > +      properties:
-> > +        value:
-> > +          not:
-> > +            type: array
->
-> I think you could make this a bit more readable with:
->
-> if:
->   not:
->     required:
->       - value
+Document the newly added 'cmms' property which accepts a list of phandle
+and channel index pairs that point to the CMM units available for each
+Display Unit output video channel.
 
-I do not understand how does it work (value is not mentioned in the
-required fields so why checking of it?)... but it works fine.
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> However, if the tree is free of legacy usage, then you could just drop all this.
+diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+index c97dfacad281..1773b0a2f54f 100644
+--- a/Documentation/devicetree/bindings/display/renesas,du.txt
++++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+@@ -45,6 +45,10 @@ Required Properties:
+     instance that serves the DU channel, and the channel index identifies the
+     LIF instance in that VSP.
 
-One of them - mask or value - has to be provided.
++  - renesas,cmms: A list of phandles to the CMM instances present in the SoC,
++    one for each available DU channel. The property shall not be specified for
++    SoCs that do not provide any CMM (such as V3M and V3H).
++
+ Required nodes:
 
-Thanks for review,
-Kryzsztof
+ The connections to the DU output video ports are modeled using the OF graph
+@@ -91,6 +95,7 @@ Example: R8A7795 (R-Car H3) ES2.0 DU
+ 			 <&cpg CPG_MOD 721>;
+ 		clock-names = "du.0", "du.1", "du.2", "du.3";
+ 		vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
++		renesas,cmms = <&cmm0 &cmm1 &cmm2 &cmm3>;
+
+ 		ports {
+ 			#address-cells = <1>;
+--
+2.23.0
