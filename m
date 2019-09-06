@@ -1,77 +1,90 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
-Date: Thu, 05 Sep 2019 22:26:12 -0700
-Message-ID: <5d71edf5.1c69fb81.1f307.fdd6@mx.google.com>
-References: <20190223165218.GB572@tuxbook-pro> <5d694878.1c69fb81.5f13b.ec4f@mx.google.com> <20190830164520.GK26807@tuxbook-pro> <5d696ad2.1c69fb81.977ea.39e5@mx.google.com> <f3584f38-dabc-7e7a-d1cb-84c80ed26215@linaro.org> <20190903173924.GB9754@jackp-linux.qualcomm.com> <5d6edee5.1c69fb81.a3896.1d05@mx.google.com> <20190903233410.GQ26807@tuxbook-pro> <c9481b7d-4805-25c6-f40f-9cbfc40afc93@linaro.org> <20190905175802.GA19599@jackp-linux.qualcomm.com>
+From: Jianxin Pan <jianxin.pan@amlogic.com>
+Subject: Re: [PATCH v2 4/4] arm64: dts: add support for A1 based Amlogic AD401
+Date: Fri, 6 Sep 2019 13:59:05 +0800
+Message-ID: <be032a85-b60d-f7f0-8404-b27784d809df@amlogic.com>
+References: <1567667251-33466-1-git-send-email-jianxin.pan@amlogic.com>
+ <1567667251-33466-5-git-send-email-jianxin.pan@amlogic.com>
+ <CAFBinCBSmW4y-Dz7EkJMV8HOU4k6Z0G-K6T77XnVrHyubaSsdg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190905175802.GA19599@jackp-linux.qualcomm.com>
+In-Reply-To: <CAFBinCBSmW4y-Dz7EkJMV8HOU4k6Z0G-K6T77XnVrHyubaSsdg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jack Pham <jackp@codeaurora.org>, Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Tao Zeng <tao.zeng@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jack Pham (2019-09-05 10:58:02)
-> Hi Jorge, Bjorn,
->=20
-> On Thu, Sep 05, 2019 at 09:18:57AM +0200, Jorge Ramirez wrote:
-> > On 9/4/19 01:34, Bjorn Andersson wrote:
-> > > On Tue 03 Sep 14:45 PDT 2019, Stephen Boyd wrote:
-> > >> that would need an of_regulator_get() sort of API that can get the
-> > >> regulator out of there? Or to make the connector into a struct device
-> > >> that can get the regulator out per some generic connector driver and
-> > >> then pass it through to the USB controller when it asks for it. Maybe
-> > >> try to prototype that out?
-> > >>
-> > >=20
-> > > The examples given in the DT bindings describes the connector as a ch=
-ild
-> > > of a PMIC, with of_graph somehow tying it to the various inputs. But =
-in
-> > > these examples vbus is handled by implicitly inside the MFD, where
-> > > extcon is informed about the plug event they toggle vbus as well.
-> > >=20
-> > > In our case we have a extcon-usb-gpio to detect mode, which per Jorge=
-'s
-> > > proposal will trickle down to the PHY and become a regulator calls on
-> > > either some external regulator or more typically one of the chargers =
-in
-> > > the system.
->=20
-> Interesting you mention extcon-usb-gpio. I thought extcon at least from
-> bindings perspective is pass=C3=83=C2=A9 now. Maybe this is what you need=
- (just
-> landed in usb-next):
->=20
-> usb: common: add USB GPIO based connection detection driver
-> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=
-=3Dusb-next&id=3D4602f3bff2669012c1147eecfe74c121765f5c56
->=20
-> dt-bindings: usb: add binding for USB GPIO based connection detection dri=
-ver
-> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=
-=3Dusb-next&id=3Df651c73e71f53f65e9846677d79d8e120452b59f
->=20
-> Fortunately this new driver might check the right boxes for you:
-> - usb connector binding
-> - ID detect GPIO
-> - vbus-supply regulator
->=20
-> With that, I think you can also keep the connector subnode out of the
-> SSPHY node well, and similarly get rid of the vbus toggle handling from
-> the PHY driver.
->=20
-> The big thing missing now is that this driver replaces extcon
-> completely, so we'll need handling in dwc3/dwc3-qcom to retrieve the
-> role switch state to know when host mode is entered. I saw this a while
-> back but don't think it got picked up:
->=20
-> https://patchwork.kernel.org/patch/10909981/
->=20
+Hi Martin,
 
-Yes this looks like the approach that should be taken. One question
-though, is this a micro-b connector or a type-c connector on the board?
-I thought it was a type-c, so then this USB gpio based connection driver
-isn't an exact fit?
+Thanks for the review, we really appreciate your time.
+Please see my comments below.
+
+On 2019/9/6 4:15, Martin Blumenstingl wrote:
+> Hi Jianxin,
+> 
+> (it's great to see that you and your team are upstreaming this early)
+> 
+> On Thu, Sep 5, 2019 at 9:08 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
+> [...]
+>> +       memory@0 {
+>> +               device_type = "memory";
+>> +               reg = <0x0 0x0 0x0 0x8000000>;
+>> +               /*linux,usable-memory = <0x0 0x0 0x0 0x8000000>;*/
+> why do we need that comment here (I don't understand it - why doesn't
+> the "reg" property cover this)?
+> I replaced "linux,usable-memory" with reg, but forgot to remove this comment line. 
+I will remove this line in the next version. Thank you.
+>> +       };
+>> +};
+>> +
+>> +&uart_AO_B {
+>> +       status = "okay";
+>> +};
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> new file mode 100644
+>> index 00000000..4d476ac
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+>> @@ -0,0 +1,122 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +/ {
+>> +       compatible = "amlogic,a1";
+>> +
+>> +       interrupt-parent = <&gic>;
+>> +       #address-cells = <2>;
+>> +       #size-cells = <2>;
+>> +
+>> +       cpus {
+>> +               #address-cells = <0x2>;
+>> +               #size-cells = <0x0>;
+> only now I notice that all our other .dtsi also use hex values
+> (instead of decimal as just a few lines above) here
+> do you know if there is a particular reason for this?
+> 
+I just copied from the previous series, and didn't notice the difference before.> [...]
+>> +               uart_AO_B: serial@fe002000 {
+>> +                       compatible = "amlogic,meson-gx-uart",
+>> +                                    "amlogic,meson-ao-uart";
+>> +                                    reg = <0x0 0xfe002000 0x0 0x18>;
+> the indentation of the "reg" property is off here
+OK, I will fix it.
+> 
+> also I'm a bit surprised to see no busses (like aobus, cbus, periphs, ...) here
+> aren't there any busses defined in the A1 SoC implementation or are
+> were you planning to add them later?
+>Unlike previous series,there is no Cortex-M3 AO CPU in A1, and there is no AO/EE power domain.
+Most of the registers are on the apb_32b bus.  aobus, cbus and periphs are not used in A1.
+> 
+> Martin
+> 
+> .
+> 
