@@ -1,47 +1,49 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v5 11/11] lib/test_printf: Add tests for %pfw printk
- modifier
-Date: Fri, 6 Sep 2019 10:00:36 +0300
-Message-ID: <20190906070036.GI5475@paasikivi.fi.intel.com>
+Subject: Re: [PATCH v5 09/11] lib/vsprintf: OF nodes are first and foremost,
+ struct device_nodes
+Date: Fri, 6 Sep 2019 10:04:26 +0300
+Message-ID: <20190906070426.GJ5475@paasikivi.fi.intel.com>
 References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
- <20190902135732.23455-12-sakari.ailus@linux.intel.com>
- <20190902161352.GS2680@smile.fi.intel.com>
- <20190904161051.GX5475@paasikivi.fi.intel.com>
- <20190904172222.GV2680@smile.fi.intel.com>
+ <20190902135732.23455-10-sakari.ailus@linux.intel.com>
+ <20190903085233.oksjcwqwdxb53eig@pathway.suse.cz>
+ <20190903092816.qutqnjba7okcauim@pathway.suse.cz>
+ <20190903112800.GW2680@smile.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190904172222.GV2680@smile.fi.intel.com>
+In-Reply-To: <20190903112800.GW2680@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, rafael@kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 08:22:22PM +0300, Andy Shevchenko wrote:
-> On Wed, Sep 04, 2019 at 07:10:51PM +0300, Sakari Ailus wrote:
-> > On Mon, Sep 02, 2019 at 07:13:52PM +0300, Andy Shevchenko wrote:
-> > > On Mon, Sep 02, 2019 at 04:57:32PM +0300, Sakari Ailus wrote:
-> > > > Add a test for the %pfw printk modifier using software nodes.
-> > > 
-> > > > +static void __init fwnode_pointer(void)
-> > > > +{
-> > > > +	const struct software_node softnodes[] = {
-> > > > +		{ .name = "first", },
-> > > > +		{ .name = "second", .parent = &softnodes[0], },
-> > > > +		{ .name = "third", .parent = &softnodes[1], },
-> > > > +		{ NULL /* Guardian */ },
-> > > 
-> > > Comma is still here :-)
-> > 
-> > Oops. I ended up removing the comma in a wrong patch which wasn't submitted
-> > to the list. Will fix for v6.
+On Tue, Sep 03, 2019 at 02:28:00PM +0300, Andy Shevchenko wrote:
+> On Tue, Sep 03, 2019 at 11:28:16AM +0200, Petr Mladek wrote:
+> > On Tue 2019-09-03 10:52:33, Petr Mladek wrote:
+> > > On Mon 2019-09-02 16:57:30, Sakari Ailus wrote:
+> > > > Factor out static kobject_string() function that simply calls
+> > > > device_node_string(), and thus remove references to kobjects (as these are
+> > > > struct device_node).
 > 
-> Also you may remove NULL there since it's default.
+> > > > -		return kobject_string(buf, end, ptr, spec, fmt);
+> > > > +		return device_node_string(buf, end, ptr, spec, fmt + 1);
+> > > 
+> > > I know that this come from from kobject_string(). But please, modify
+> > > it to follow the style used by other %p modifiers. I mean to pass
+> > > "fmt" as is and then use:
+> > > 
+> > > 	if (fmt[1] != 'F')
+> > 
+> > Ah, I see that it would need more changes in device_node_string().
+> > OK, let's leave the patch as is. I am sorry for the noise.
+> 
+> I came to the same conclusions, though can we consider to drop this patch?
 
-Then it'd become GCC specific. Albeit I'm not sure that's any kind of a
-problem in practice. I guess Clang must cope with that, too? Still, I
-prefer not to use compiler specific syntax if there's no need to.
+It's a cleanup. I'd prefer to keep the patch.
+
+Albeit fmt++; in device_node_string() would do the trick of avoiding fmt +
+1 in the caller. That said, I'd prefer to keep the original patch as-is.
 
 -- 
 Sakari Ailus
