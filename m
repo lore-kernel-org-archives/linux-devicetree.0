@@ -1,90 +1,74 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY
- bindings
-Date: Fri, 6 Sep 2019 11:25:30 -0700
-Message-ID: <20190906182530.GD11938@tuxbook-pro>
-References: <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
- <20190830164520.GK26807@tuxbook-pro>
- <5d696ad2.1c69fb81.977ea.39e5@mx.google.com>
- <f3584f38-dabc-7e7a-d1cb-84c80ed26215@linaro.org>
- <20190903173924.GB9754@jackp-linux.qualcomm.com>
- <5d6edee5.1c69fb81.a3896.1d05@mx.google.com>
- <20190903233410.GQ26807@tuxbook-pro>
- <c9481b7d-4805-25c6-f40f-9cbfc40afc93@linaro.org>
- <20190905175802.GA19599@jackp-linux.qualcomm.com>
- <5d71edf5.1c69fb81.1f307.fdd6@mx.google.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/9] crypto: add sun8i-ce driver for Allwinner
+ crypto engine
+Date: Fri,  6 Sep 2019 20:45:42 +0200
+Message-ID: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5d71edf5.1c69fb81.1f307.fdd6@mx.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Jack Pham <jackp@codeaurora.org>, Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7YLCN32UNBB26SZLVQKGQECACQQ4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 05 Sep 22:26 PDT 2019, Stephen Boyd wrote:
+Hello
 
-> Quoting Jack Pham (2019-09-05 10:58:02)
-> > Hi Jorge, Bjorn,
-> > 
-> > On Thu, Sep 05, 2019 at 09:18:57AM +0200, Jorge Ramirez wrote:
-> > > On 9/4/19 01:34, Bjorn Andersson wrote:
-> > > > On Tue 03 Sep 14:45 PDT 2019, Stephen Boyd wrote:
-> > > >> that would need an of_regulator_get() sort of API that can get the
-> > > >> regulator out of there? Or to make the connector into a struct device
-> > > >> that can get the regulator out per some generic connector driver and
-> > > >> then pass it through to the USB controller when it asks for it. Maybe
-> > > >> try to prototype that out?
-> > > >>
-> > > > 
-> > > > The examples given in the DT bindings describes the connector as a child
-> > > > of a PMIC, with of_graph somehow tying it to the various inputs. But in
-> > > > these examples vbus is handled by implicitly inside the MFD, where
-> > > > extcon is informed about the plug event they toggle vbus as well.
-> > > > 
-> > > > In our case we have a extcon-usb-gpio to detect mode, which per Jorge's
-> > > > proposal will trickle down to the PHY and become a regulator calls on
-> > > > either some external regulator or more typically one of the chargers in
-> > > > the system.
-> > 
-> > Interesting you mention extcon-usb-gpio. I thought extcon at least from
-> > bindings perspective is passé now. Maybe this is what you need (just
-> > landed in usb-next):
-> > 
-> > usb: common: add USB GPIO based connection detection driver
-> > https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=usb-next&id=4602f3bff2669012c1147eecfe74c121765f5c56
-> > 
-> > dt-bindings: usb: add binding for USB GPIO based connection detection driver
-> > https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=usb-next&id=f651c73e71f53f65e9846677d79d8e120452b59f
-> > 
-> > Fortunately this new driver might check the right boxes for you:
-> > - usb connector binding
-> > - ID detect GPIO
-> > - vbus-supply regulator
-> > 
-> > With that, I think you can also keep the connector subnode out of the
-> > SSPHY node well, and similarly get rid of the vbus toggle handling from
-> > the PHY driver.
-> > 
-> > The big thing missing now is that this driver replaces extcon
-> > completely, so we'll need handling in dwc3/dwc3-qcom to retrieve the
-> > role switch state to know when host mode is entered. I saw this a while
-> > back but don't think it got picked up:
-> > 
-> > https://patchwork.kernel.org/patch/10909981/
-> > 
-> 
-> Yes this looks like the approach that should be taken. One question
-> though, is this a micro-b connector or a type-c connector on the board?
-> I thought it was a type-c, so then this USB gpio based connection driver
-> isn't an exact fit?
-> 
+This patch serie adds support for the Allwinner crypto engine.
+The Crypto Engine is the third generation of Allwinner cryptogaphic offloader.
+The first generation is the Security System already handled by the
+sun4i-ss driver.
+The second is named also Security System and is present on A80 and A83T
+SoCs, originaly this driver supported it also, but supporting both IP bringing
+too much complexity and another driver (sun8i-ss) will came for it.
 
-For this particular case it's a type c connector, but the port
-controller is operated completely passively (and there's no PD or DP
-involved), so the GPIO based approach seems like a good fit.
+For the moment, the driver support only DES3/AES in ECB/CBC mode.
+Patchs for CTR/CTS/XTS and RNGs will came later.
 
-Regards,
-Bjorn
+Regards
+
+Corentin Labbe (9):
+  crypto: Add allwinner subdirectory
+  crypto: Add Allwinner sun8i-ce Crypto Engine
+  dt-bindings: crypto: Add DT bindings documentation for sun8i-ce Crypto
+    Engine
+  ARM: dts: sun8i: r40: add crypto engine node
+  ARM: dts: sun8i: h3: Add Crypto Engine node
+  ARM64: dts: allwinner: sun50i: Add Crypto Engine node on A64
+  ARM64: dts: allwinner: sun50i: Add crypto engine node on H5
+  ARM64: dts: allwinner: sun50i: Add Crypto Engine node on H6
+  sunxi_defconfig: add new crypto options
+
+ .../bindings/crypto/allwinner,sun8i-ce.yaml   |  84 +++
+ MAINTAINERS                                   |   6 +
+ arch/arm/boot/dts/sun8i-h3.dtsi               |  11 +
+ arch/arm/boot/dts/sun8i-r40.dtsi              |  11 +
+ arch/arm/configs/sunxi_defconfig              |   2 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  11 +
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  11 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 +
+ drivers/crypto/Kconfig                        |   2 +
+ drivers/crypto/Makefile                       |   1 +
+ drivers/crypto/allwinner/Kconfig              |  32 +
+ drivers/crypto/allwinner/Makefile             |   1 +
+ drivers/crypto/allwinner/sun8i-ce/Makefile    |   2 +
+ .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 390 +++++++++++
+ .../crypto/allwinner/sun8i-ce/sun8i-ce-core.c | 630 ++++++++++++++++++
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h  | 256 +++++++
+ 16 files changed, 1460 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
+ create mode 100644 drivers/crypto/allwinner/Kconfig
+ create mode 100644 drivers/crypto/allwinner/Makefile
+ create mode 100644 drivers/crypto/allwinner/sun8i-ce/Makefile
+ create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+ create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
+ create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
+
+-- 
+2.21.0
