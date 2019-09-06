@@ -1,91 +1,37 @@
-From: Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH] gpio/mpc8xxx: change irq handler from chained to normal
-Date: Fri, 6 Sep 2019 16:46:54 -0500
-Message-ID: <CADRPPNSjOV4RvJiFU2krj_-0gwcvw07x27Ku9t7h+VKNd=BStQ@mail.gmail.com>
-References: <20190906115614.5645-1-hui.song_1@nxp.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 11/16] ARM: mmp: add support for MMP3 SoC
+Date: Fri, 06 Sep 2019 16:48:18 -0700
+Message-ID: <20190906234818.EC0DA20842@mail.kernel.org>
+References: <20190830220743.439670-1-lkundrak@v3.sk> <20190830220743.439670-12-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190906115614.5645-1-hui.song_1@nxp.com>
+In-Reply-To: <20190830220743.439670-12-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hui Song <hui.song_1@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org
+To: "To : Olof Johansson" <olof@lixom.net>
+Cc: "Cc : Rob Herring" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Kishon Vijay Abraham I <kishon@ti.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 10:20 AM Hui Song <hui.song_1@nxp.com> wrote:
->
-> From: Song Hui <hui.song_1@nxp.com>
->
+Quoting Lubomir Rintel (2019-08-30 15:07:38)
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index 801fa1cd03217..8bb2ac83a1fcc 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -301,6 +301,11 @@ config COMMON_CLK_STM32H7
+>         ---help---
+>           Support for stm32h7 SoC family clocks
+> =20
+> +config COMMON_CLK_MMP2
+> +       def_bool COMMON_CLK && (MACH_MMP2_DT || MACH_MMP3_DT)
 
-The English below need to be fixed.
+Does it need to depend on COMMON_CLK? I thought that by being part of
+the menuconfig (even if it's a hidden symbol) mean that it wouldn't be
+evaulated unless the COMMON_CLK define is =3DY.
 
-> more one gpio controller use share one interrupt,
-> make request interrupt to be shared.
-
-More than one gpio controllers can share one interrupt, change the
-driver to request shared irq.
-
->
-> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
-> ---
->  drivers/gpio/gpio-mpc8xxx.c | 20 +++++++++++++-------
->  1 file changed, 13 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-> index 16a47de..4006250 100644
-> --- a/drivers/gpio/gpio-mpc8xxx.c
-> +++ b/drivers/gpio/gpio-mpc8xxx.c
-> @@ -22,6 +22,7 @@
->  #include <linux/irq.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/bitops.h>
-> +#include <linux/interrupt.h>
->
->  #define MPC8XXX_GPIO_PINS      32
->
-> @@ -127,10 +128,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
->                 return -ENXIO;
->  }
->
-> -static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-> +static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
->  {
-> -       struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
-> -       struct irq_chip *chip = irq_desc_get_chip(desc);
-> +       struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
->         struct gpio_chip *gc = &mpc8xxx_gc->gc;
->         unsigned int mask;
->
-> @@ -139,8 +139,8 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
->         if (mask)
->                 generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
->                                                      32 - ffs(mask)));
-> -       if (chip->irq_eoi)
-> -               chip->irq_eoi(&desc->irq_data);
+> +       help
+> +         Support for Marvell MMP2 and MMP3 SoC clocks
 > +
-> +       return IRQ_HANDLED;
->  }
->
->  static void mpc8xxx_irq_unmask(struct irq_data *d)
-> @@ -409,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->         if (devtype->gpio_dir_in_init)
->                 devtype->gpio_dir_in_init(gc);
->
-> -       irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
-> -                                        mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-> +       ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-> +               IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
-> +       if (ret) {
-> +               pr_err("%s: failed to request_irq(%d), ret = %d\n",
-> +                               np->full_name, mpc8xxx_gc->irqn, ret);
-> +               goto err;
-> +       }
-> +
->         return 0;
->  err:
->         iounmap(mpc8xxx_gc->regs);
-> --
-> 2.9.5
->
+>  config COMMON_CLK_BD718XX
+>         tristate "Clock driver for ROHM BD718x7 PMIC"
+>         depends on MFD_ROHM_BD718XX || MFD_ROHM_BD70528
