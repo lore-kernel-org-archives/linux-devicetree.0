@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/4] gpio: of: Make of_gpio_simple_xlate() private
-Date: Fri,  6 Sep 2019 10:45:37 +0200
-Message-ID: <20190906084539.21838-3-geert+renesas@glider.be>
+Subject: [PATCH 1/4] gpio: of: Make of_get_named_gpiod_flags() private
+Date: Fri,  6 Sep 2019 10:45:36 +0200
+Message-ID: <20190906084539.21838-2-geert+renesas@glider.be>
 References: <20190906084539.21838-1-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190906084539.21838-1-geert+renesas@glider.be>
@@ -10,69 +10,53 @@ To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@
 Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Since commit 9a95e8d25a140ba9 ("gpio: remove etraxfs driver"), there are
-no more users of of_gpio_simple_xlate() outside gpiolib-of.c.
-All GPIO drivers that need it now rely on of_gpiochip_add() setting it
-up as the default translate function.
+Since commit f626d6dfb7098525 ("gpio: of: Break out OF-only code"),
+there are no more users of of_get_named_gpiod_flags() outside
+gpiolib-of.c.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/gpio/gpiolib-of.c |  6 +++---
- include/linux/of_gpio.h   | 11 -----------
- 2 files changed, 3 insertions(+), 14 deletions(-)
+ drivers/gpio/gpiolib-of.c | 2 +-
+ drivers/gpio/gpiolib-of.h | 7 -------
+ 2 files changed, 1 insertion(+), 8 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 4c6b366cb7bd5cd0..fad3aad667558325 100644
+index b034abe59f287bff..4c6b366cb7bd5cd0 100644
 --- a/drivers/gpio/gpiolib-of.c
 +++ b/drivers/gpio/gpiolib-of.c
-@@ -637,8 +637,9 @@ static int of_gpiochip_scan_gpios(struct gpio_chip *chip)
-  * GPIO chips. This function performs only one sanity check: whether GPIO
-  * is less than ngpios (that is specified in the gpio_chip).
+@@ -223,7 +223,7 @@ static void of_gpio_flags_quirks(struct device_node *np,
+  * value on the error condition. If @flags is not NULL the function also fills
+  * in flags for the GPIO.
   */
--int of_gpio_simple_xlate(struct gpio_chip *gc,
--			 const struct of_phandle_args *gpiospec, u32 *flags)
-+static int of_gpio_simple_xlate(struct gpio_chip *gc,
-+				const struct of_phandle_args *gpiospec,
-+				u32 *flags)
+-struct gpio_desc *of_get_named_gpiod_flags(struct device_node *np,
++static struct gpio_desc *of_get_named_gpiod_flags(struct device_node *np,
+ 		     const char *propname, int index, enum of_gpio_flags *flags)
  {
- 	/*
- 	 * We're discouraging gpio_cells < 2, since that way you'll have to
-@@ -662,7 +663,6 @@ int of_gpio_simple_xlate(struct gpio_chip *gc,
- 
- 	return gpiospec->args[0];
+ 	struct of_phandle_args gpiospec;
+diff --git a/drivers/gpio/gpiolib-of.h b/drivers/gpio/gpiolib-of.h
+index 454d1658ee2d45fb..9768831b1fe2f25b 100644
+--- a/drivers/gpio/gpiolib-of.h
++++ b/drivers/gpio/gpiolib-of.h
+@@ -11,8 +11,6 @@ struct gpio_desc *of_find_gpio(struct device *dev,
+ 			       const char *con_id,
+ 			       unsigned int idx,
+ 			       unsigned long *lookupflags);
+-struct gpio_desc *of_get_named_gpiod_flags(struct device_node *np,
+-		   const char *list_name, int index, enum of_gpio_flags *flags);
+ int of_gpiochip_add(struct gpio_chip *gc);
+ void of_gpiochip_remove(struct gpio_chip *gc);
+ int of_gpio_get_count(struct device *dev, const char *con_id);
+@@ -25,11 +23,6 @@ static inline struct gpio_desc *of_find_gpio(struct device *dev,
+ {
+ 	return ERR_PTR(-ENOENT);
  }
--EXPORT_SYMBOL(of_gpio_simple_xlate);
- 
- /**
-  * of_mm_gpiochip_add_data - Add memory mapped GPIO chip (bank)
-diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-index f9737dea9d1f945a..16967390a3fe3b12 100644
---- a/include/linux/of_gpio.h
-+++ b/include/linux/of_gpio.h
-@@ -61,10 +61,6 @@ static inline int of_mm_gpiochip_add(struct device_node *np,
- }
- extern void of_mm_gpiochip_remove(struct of_mm_gpio_chip *mm_gc);
- 
--extern int of_gpio_simple_xlate(struct gpio_chip *gc,
--				const struct of_phandle_args *gpiospec,
--				u32 *flags);
--
- #else /* CONFIG_OF_GPIO */
- 
- /* Drivers may not strictly depend on the GPIO support, so let them link. */
-@@ -77,13 +73,6 @@ static inline int of_get_named_gpio_flags(struct device_node *np,
- 	return -ENOSYS;
- }
- 
--static inline int of_gpio_simple_xlate(struct gpio_chip *gc,
--				       const struct of_phandle_args *gpiospec,
--				       u32 *flags)
+-static inline struct gpio_desc *of_get_named_gpiod_flags(struct device_node *np,
+-		   const char *list_name, int index, enum of_gpio_flags *flags)
 -{
--	return -ENOSYS;
+-	return ERR_PTR(-ENOENT);
 -}
--
- #endif /* CONFIG_OF_GPIO */
- 
- /**
+ static inline int of_gpiochip_add(struct gpio_chip *gc) { return 0; }
+ static inline void of_gpiochip_remove(struct gpio_chip *gc) { }
+ static inline int of_gpio_get_count(struct device *dev, const char *con_id)
 -- 
 2.17.1
