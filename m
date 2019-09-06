@@ -1,55 +1,47 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v4 07/11] lib/vsprintf: Remove support for %pF and %pf in
- favour of %pS and %ps
-Date: Fri, 6 Sep 2019 09:59:07 +0300
-Message-ID: <20190906065907.GH5475@paasikivi.fi.intel.com>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
- <20190902083240.20367-8-sakari.ailus@linux.intel.com>
- <20190902143935.xtd44jdvhjuc2wxe@pathway.suse.cz>
- <20190902160139.GQ2680@smile.fi.intel.com>
- <20190903140420.kmb42cwr3scrfd3e@pathway.suse.cz>
+Subject: Re: [PATCH v5 11/11] lib/test_printf: Add tests for %pfw printk
+ modifier
+Date: Fri, 6 Sep 2019 10:00:36 +0300
+Message-ID: <20190906070036.GI5475@paasikivi.fi.intel.com>
+References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
+ <20190902135732.23455-12-sakari.ailus@linux.intel.com>
+ <20190902161352.GS2680@smile.fi.intel.com>
+ <20190904161051.GX5475@paasikivi.fi.intel.com>
+ <20190904172222.GV2680@smile.fi.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190903140420.kmb42cwr3scrfd3e@pathway.suse.cz>
+In-Reply-To: <20190904172222.GV2680@smile.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Steven Rostedt <rostedt@goodmis.org>, Namhyung Kim <namhyung@kernel.org>, rafael@kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org, Tzvetomir Stoyanov <tstoyanov@vmware.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 04:04:20PM +0200, Petr Mladek wrote:
-> On Mon 2019-09-02 19:01:39, Andy Shevchenko wrote:
-> > On Mon, Sep 02, 2019 at 04:39:35PM +0200, Petr Mladek wrote:
-> > > On Mon 2019-09-02 11:32:36, Sakari Ailus wrote:
-> > > > %pS and %ps are now the preferred conversion specifiers to print function
-> > > > names. The functionality is equivalent; remove the old, deprecated %pF
-> > > > and %pf support.
+On Wed, Sep 04, 2019 at 08:22:22PM +0300, Andy Shevchenko wrote:
+> On Wed, Sep 04, 2019 at 07:10:51PM +0300, Sakari Ailus wrote:
+> > On Mon, Sep 02, 2019 at 07:13:52PM +0300, Andy Shevchenko wrote:
+> > > On Mon, Sep 02, 2019 at 04:57:32PM +0300, Sakari Ailus wrote:
+> > > > Add a test for the %pfw printk modifier using software nodes.
 > > > 
-> > > Hmm, I see the following in master:
+> > > > +static void __init fwnode_pointer(void)
+> > > > +{
+> > > > +	const struct software_node softnodes[] = {
+> > > > +		{ .name = "first", },
+> > > > +		{ .name = "second", .parent = &softnodes[0], },
+> > > > +		{ .name = "third", .parent = &softnodes[1], },
+> > > > +		{ NULL /* Guardian */ },
 > > > 
-> > > $> git grep %pF
-> > > tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt:or events have "%pF" or "%pS" parameter in its format string. It is common to
-> > > 
-> > > $> git grep %pf
-> > > tools/lib/traceevent/event-parse.c:             if (asprintf(&format, "%%pf: (NO FORMAT FOUND at %llx)\n", addr) < 0)
-> > > tools/lib/traceevent/event-parse.c:     if (asprintf(&format, "%s: %s", "%pf", printk->printk) < 0)
-> > > 
-> > > I wonder how this is related to printk(). In each case, it seems
+> > > Comma is still here :-)
 > > 
-> > It's going thru binary printf() I suppose. The fist stage just saves the format
-> > string and argument addresses or so and prints in later on when user is looking
-> > for human-readable output.
+> > Oops. I ended up removing the comma in a wrong patch which wasn't submitted
+> > to the list. Will fix for v6.
 > 
-> It seems that vbin_printf() still thinks that %pf and %pF
-> handle function pointers. If I get it correctly, it just
-> stores the binary data and the formating is done when
-> tracing log is read. The idea is the function pointers
-> will stay the same.
-> 
-> We need to fix/obsolete this path as well.
+> Also you may remove NULL there since it's default.
 
-Agreed. I'll include a patch to do that in v6.
+Then it'd become GCC specific. Albeit I'm not sure that's any kind of a
+problem in practice. I guess Clang must cope with that, too? Still, I
+prefer not to use compiler specific syntax if there's no need to.
 
 -- 
 Sakari Ailus
