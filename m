@@ -1,104 +1,40 @@
-Return-Path: <jic23@kernel.org>
-Date: Sun, 8 Sep 2019 13:14:55 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/2] dt-binding: iio: Add optional label property
-Message-ID: <20190908131455.51d1c7a6@archlinux>
-In-Reply-To: <29f831da-d23a-bc9c-151a-885bd526a785@electromag.com.au>
-References: <1566876924-63608-1-git-send-email-preid@electromag.com.au>
-	<1566876924-63608-2-git-send-email-preid@electromag.com.au>
-	<a30b6dca-c598-135a-0559-1018dd5f5fde@xilinx.com>
-	<20190829230207.GA22979@bogus>
-	<b50bce2d-8819-67b1-c55c-8c2b8070a4ac@electromag.com.au>
-	<CAL_JsqKb8cC=4HR7uVHmKt-zw32U_1u62hG4h-TnbPy=a+QZZg@mail.gmail.com>
-	<29f831da-d23a-bc9c-151a-885bd526a785@electromag.com.au>
+Return-Path: <sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-To: Phil Reid <preid@electromag.com.au>
-Cc: Rob Herring <robh@kernel.org>, Michal Simek <michal.simek@xilinx.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAL_JsqLpVDJBh5qZwudncB8sggb85f3efqs1z9EA+zbVPWX++g@mail.gmail.com>
+References: <20190823131401.4011-1-govinds@codeaurora.org> <20190823131401.4011-2-govinds@codeaurora.org> <CAL_JsqLpVDJBh5qZwudncB8sggb85f3efqs1z9EA+zbVPWX++g@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH_v3 1/2] dt-bindings: clock: qcom: Add QCOM Q6SSTOP clock controller bindings
+Date: Fri, 06 Sep 2019 13:31:30 -0700
+Message-Id: <20190906203131.936A22070C@mail.kernel.org>
+To: Govind Singh <govinds@codeaurora.org>, Rob Herring <robh@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Sat, 31 Aug 2019 18:19:53 +0800
-Phil Reid <preid@electromag.com.au> wrote:
+Quoting Rob Herring (2019-08-27 05:27:19)
+> On Fri, Aug 23, 2019 at 8:14 AM Govind Singh <govinds@codeaurora.org> wro=
+te:
+> >
+> > Add devicetree binding for the Q6SSTOP clock controller found in QCS404.
+> >
+> > Signed-off-by: Govind Singh <govinds@codeaurora.org>
+> > ---
+> >  .../bindings/clock/qcom,q6sstopcc.yaml        | 47 +++++++++++++++++++
+> >  1 file changed, 47 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/qcom,q6ssto=
+pcc.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/clock/qcom,q6sstopcc.yam=
+l b/Documentation/devicetree/bindings/clock/qcom,q6sstopcc.yaml
+> > new file mode 100644
+> > index 000000000000..39621e2e2f4e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/qcom,q6sstopcc.yaml
+> > @@ -0,0 +1,47 @@
+> > +# SPDX-License-Identifier: BSD-2-Clause
+>=20
+> Dual license please.
+>=20
 
-> On 30/08/2019 20:34, Rob Herring wrote:
-> > On Thu, Aug 29, 2019 at 8:01 PM Phil Reid <preid@electromag.com.au> wrote:  
-> >>
-> >> On 30/08/2019 07:02, Rob Herring wrote:  
-> >>> On Wed, Aug 28, 2019 at 08:09:19AM +0200, Michal Simek wrote:  
-> >>>> On 27. 08. 19 5:35, Phil Reid wrote:  
-> >>>>> This optional property defines a symbolic name for the device.
-> >>>>>
-> >>>>> Signed-off-by: Phil Reid <preid@electromag.com.au>
-> >>>>> ---
-> >>>>>    Documentation/devicetree/bindings/iio/iio-bindings.txt | 5 +++++
-> >>>>>    1 file changed, 5 insertions(+)
-> >>>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> >>>>> index 68d6f8ce063b..ffeae5aad8b5 100644
-> >>>>> --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> >>>>> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> >>>>> @@ -18,12 +18,17 @@ Required properties:
-> >>>>>                 with a single IIO output and 1 for nodes with multiple
-> >>>>>                 IIO outputs.
-> >>>>>
-> >>>>> +Optional properties:
-> >>>>> +label:                A symbolic name for the device.
-> >>>>> +
-> >>>>> +
-> >>>>>    Example for a simple configuration with no trigger:
-> >>>>>
-> >>>>>      adc: voltage-sensor@35 {
-> >>>>>              compatible = "maxim,max1139";
-> >>>>>              reg = <0x35>;
-> >>>>>              #io-channel-cells = <1>;
-> >>>>> +           label = "adc_voltage_sensor";
-> >>>>>      };
-> >>>>>
-> >>>>>    Example for a configuration with trigger:
-> >>>>>  
-> >>>>
-> >>>> Just for the record. This patch has been created based on initial
-> >>>> discussion about label property. And Rob had not problem with using
-> >>>> label in connection to ina226. https://lkml.org/lkml/2019/8/27/1213  
-> >>>
-> >>> I didn't, but based on the name here I'm less convinced. 'label' is
-> >>> supposed to be for needing to distinguish between more than 1 of
-> >>> something. A name like 'adc_voltage_sensor' doesn't really.
-> >>>
-> >>> Rob
-> >>>
-> >>>  
-> >>
-> >> That's the problem we're try to solve. Having multiple devices and try to
-> >> determine which device is which.
-> >> eg: Mutliple adc's.
-> >> For example I have the same dac chip on multiple boards that do different
-> >> things, it's difficult to id them.
-> >>
-> >> so label examples could be:
-> >> label = "current_control_group1";
-> >> label = "voltage_control_group1";
-> >>
-> >> Are you totally against this or is it a problem with me not being clear
-> >> with the problem and the wording of the commit message or the example?  
-> > 
-> > It's just the example is less than ideal. But it's just an example, so:
-> > 
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > 
-> > Feel free to update the example if you respin.
-> >   
-> Thanks Rob,
-> 
-> I'll update the example if the series gets a respin.
-
-Please do respin some more 'example' suited names :)
-
-Thanks,
-
-Jonathan
-
-> 
-> 
-> 
+Yes, please fix the binding.
