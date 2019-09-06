@@ -1,118 +1,38 @@
 From: Roger Lu <roger.lu@mediatek.com>
-Subject: [PATCH v5 1/3] dt-bindings: soc: add mtk svs dt-bindings
-Date: Fri, 6 Sep 2019 18:05:13 +0800
-Message-ID: <20190906100514.30803-2-roger.lu@mediatek.com>
-References: <20190906100514.30803-1-roger.lu@mediatek.com>
+Subject: [PATCH v5 0/3] PM / AVS: SVS: Introduce SVS engine
+Date: Fri, 6 Sep 2019 18:05:12 +0800
+Message-ID: <20190906100514.30803-1-roger.lu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190906100514.30803-1-roger.lu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Nicolas Boichat <drinkcat@google.com>, Stephen Boyd <sboyd@kernel.org>
 Cc: Fan Chen <fan.chen@mediatek.com>, HenryC Chen <HenryC.Chen@mediatek.com>, yt.lee@mediatek.com, Angus Lin <Angus.Lin@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Nishanth Menon <nm@ti.com>, Roger Lu <roger.lu@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document the binding for enabling mtk svs on MediaTek SoC.
+1. SVS driver use OPP adjust event in [1] to update OPP table voltage part.
+2. SVS dts node refers to CPU opp table [2] and GPU opp table [3].
+3. SVS dts node refers to thermal efuse [4] and PMIC regulator [5].
 
-Signed-off-by: Roger Lu <roger.lu@mediatek.com>
----
- .../devicetree/bindings/power/mtk-svs.txt     | 88 +++++++++++++++++++
- 1 file changed, 88 insertions(+)
+[1] https://patchwork.kernel.org/patch/11092245/
+[2] https://patchwork.kernel.org/patch/10934123/
+[3] https://patchwork.kernel.org/patch/11132381/
+[4] https://patchwork.kernel.org/patch/11093655/
+[5] https://patchwork.kernel.org/patch/11110493/
+
+Roger Lu (3):
+  dt-bindings: soc: add mtk svs dt-bindings
+  arm64: dts: mt8183: add svs device information
+  PM / AVS: SVS: Introduce SVS engine
+
+ .../devicetree/bindings/power/mtk-svs.txt     |   88 +
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |   16 +
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi      |   38 +
+ drivers/power/avs/Kconfig                     |   10 +
+ drivers/power/avs/Makefile                    |    1 +
+ drivers/power/avs/mtk_svs.c                   | 2075 +++++++++++++++++
+ include/linux/power/mtk_svs.h                 |   23 +
+ 7 files changed, 2251 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
-
-diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
-new file mode 100644
-index 000000000000..6a71992ef162
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
-@@ -0,0 +1,88 @@
-+* Mediatek Smart Voltage Scaling (MTK SVS)
-+
-+This describes the device tree binding for the MTK SVS controller (bank)
-+which helps provide the optimized CPU/GPU/CCI voltages. This device also
-+needs thermal data to calculate thermal slope for accurately compensate
-+the voltages when temperature change.
-+
-+Required properties:
-+- compatible:
-+  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
-+- reg: Address range of the MTK SVS controller.
-+- interrupts: IRQ for the MTK SVS controller.
-+- clocks, clock-names: Clocks needed for the svs controller. required
-+                       clocks are:
-+		       "main_clk": Main clock needed for register access
-+- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
-+- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
-+
-+Subnodes:
-+- svs_cpu_little: SVS bank device node of little CPU
-+  compatible: "mediatek,mt8183-svs-cpu-little"
-+  operating-points-v2: OPP table hooked by SVS little CPU bank.
-+		       SVS will optimze this OPP table voltage part.
-+  vcpu-little-supply: PMIC buck of little CPU
-+- svs_cpu_big: SVS bank device node of big CPU
-+  compatible: "mediatek,mt8183-svs-cpu-big"
-+  operating-points-v2: OPP table hooked by SVS big CPU bank.
-+		       SVS will optimze this OPP table voltage part.
-+  vcpu-big-supply: PMIC buck of big CPU
-+- svs_cci: SVS bank device node of CCI
-+  compatible: "mediatek,mt8183-svs-cci"
-+  operating-points-v2: OPP table hooked by SVS CCI bank.
-+		       SVS will optimze this OPP table voltage part.
-+  vcci-supply: PMIC buck of CCI
-+- svs_gpu: SVS bank device node of GPU
-+  compatible: "mediatek,mt8183-svs-gpu"
-+  operating-points-v2: OPP table hooked by SVS GPU bank.
-+		       SVS will optimze this OPP table voltage part.
-+  vgpu-spply: PMIC buck of GPU
-+
-+Example:
-+
-+	svs: svs@1100b000 {
-+		compatible = "mediatek,mt8183-svs";
-+		reg = <0 0x1100b000 0 0x1000>;
-+		interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW 0>;
-+		clocks = <&infracfg CLK_INFRA_THERM>;
-+		clock-names = "main_clk";
-+		nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
-+		nvmem-cell-names = "svs-calibration-data", "calibration-data";
-+
-+		svs_cpu_little: svs_cpu_little {
-+			compatible = "mediatek,mt8183-svs-cpu-little";
-+			operating-points-v2 = <&cluster0_opp>;
-+		};
-+
-+		svs_cpu_big: svs_cpu_big {
-+			compatible = "mediatek,mt8183-svs-cpu-big";
-+			operating-points-v2 = <&cluster1_opp>;
-+		};
-+
-+		svs_cci: svs_cci {
-+			compatible = "mediatek,mt8183-svs-cci";
-+			operating-points-v2 = <&cci_opp>;
-+		};
-+
-+		svs_gpu: svs_gpu {
-+			compatible = "mediatek,mt8183-svs-gpu";
-+			power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
-+			operating-points-v2 = <&gpu_opp_table>;
-+		};
-+	};
-+
-+	&svs_cpu_little {
-+		vcpu-little-supply = <&mt6358_vproc12_reg>;
-+	};
-+
-+	&svs_cpu_big {
-+		vcpu-big-supply = <&mt6358_vproc11_reg>;
-+	};
-+
-+	&svs_cci {
-+		vcci-supply = <&mt6358_vproc12_reg>;
-+	};
-+
-+	&svs_gpu {
-+		vgpu-spply = <&mt6358_vgpu_reg>;
-+	};
--- 
-2.18.0
+ create mode 100644 drivers/power/avs/mtk_svs.c
+ create mode 100644 include/linux/power/mtk_svs.h
