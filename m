@@ -1,53 +1,65 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 0/4] gpio: API boundary cleanups
-Date: Fri,  6 Sep 2019 10:45:35 +0200
-Message-ID: <20190906084539.21838-1-geert+renesas@glider.be>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH] arm64: dts: meson: sm1: set gpio interrupt controller compatible
+Date: Fri, 06 Sep 2019 10:47:30 +0200
+Message-ID: <1jmufh3j6l.fsf@starbuckisacylon.baylibre.com>
+References: <20190902160334.14321-1-jbrunet@baylibre.com> <7hpnkeqxxy.fsf@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7hpnkeqxxy.fsf@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-	Hi Linus, Bartosz,
+On Thu 05 Sep 2019 at 13:40, Kevin Hilman <khilman@baylibre.com> wrote:
 
-This patch series contains various API boundary cleanups for gpiolib:
-  - The first two patches make two functions private,
-  - The last two patches switch the remaining gpiolib exported functions
-    from EXPORT_SYMBOL() to EXPORT_SYMBOL_GPL().
+> Jerome Brunet <jbrunet@baylibre.com> writes:
+>
+>> Set the appropriate gpio interrupt controller compatible for the
+>> sm1 SoC family. This newer version of the controller can now
+>> trig irq on both edge of the input signal
+>>
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>
+> Queued.
+>
+> I may do a late round for the dev cycle of v5.4, otherwise this will go
+> for v5.5.
 
-After this there is only a single GPIO driver function exported with
-EXPORT_SYMBOL();
+No problem
 
-    drivers/gpio/gpio-htc-egpio.c:EXPORT_SYMBOL(htc_egpio_get_wakeup_irq);
+> If it goes for v5.5, it should probably have a Fixes tag, no?
 
-I believe this symbol was never used upstream, and may be a relic of the
-original out-of-tree code the htc-egpio was based on.  I don't know if
-there (still) exist out-of-tree users of the symbol.
+Maybe, but then every change to meson-sm1.dtsi would be some kind of fix
+on what is provided by meson-g12-common.dtsi.
 
-Thanks for your comments!
+Not sure this really qualify as a fix but I'll do as you prefer, just
+let me know
 
-Geert Uytterhoeven (4):
-  gpio: of: Make of_get_named_gpiod_flags() private
-  gpio: of: Make of_gpio_simple_xlate() private
-  gpio: of: Switch to EXPORT_SYMBOL_GPL()
-  gpio: devres: Switch to EXPORT_SYMBOL_GPL()
 
- drivers/gpio/gpiolib-devres.c | 28 ++++++++++++++--------------
- drivers/gpio/gpiolib-of.c     | 16 ++++++++--------
- drivers/gpio/gpiolib-of.h     |  7 -------
- include/linux/of_gpio.h       | 11 -----------
- 4 files changed, 22 insertions(+), 40 deletions(-)
-
--- 
-2.17.1
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+>
+> Kevin
+>
+>> ---
+>>  arch/arm64/boot/dts/amlogic/meson-sm1.dtsi | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+>> index 521573f3a5ba..6152e928aef2 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+>> @@ -134,6 +134,11 @@
+>>  	power-domains = <&pwrc PWRC_SM1_ETH_ID>;
+>>  };
+>>  
+>> +&gpio_intc {
+>> +	compatible = "amlogic,meson-sm1-gpio-intc",
+>> +		     "amlogic,meson-gpio-intc";
+>> +};
+>> +
+>>  &pwrc {
+>>  	compatible = "amlogic,meson-sm1-pwrc";
+>>  };
+>> -- 
+>> 2.21.0
