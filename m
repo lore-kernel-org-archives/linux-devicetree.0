@@ -1,45 +1,53 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v5 1/4] dt-bindings: EDAC: Add Amazon's Annapurna Labs L1
- EDAC
-Date: Fri, 6 Sep 2019 17:28:59 +0100
-Message-ID: <21050550-7629-e8f7-2d30-16c1858cf3cc@arm.com>
-References: <20190805143911.12185-1-hhhawa@amazon.com>
- <20190805143911.12185-2-hhhawa@amazon.com> <20190821191704.GA32425@bogus>
- <1d23d7c5-cd7b-1512-5300-d43e82ba6dc1@amazon.com>
- <CAL_Jsq+8jGbR4u7FA8r0gP5i2H+nSgOkGU_5mfiL=i=c0sOW8A@mail.gmail.com>
- <d46ac081-1867-2997-e2a3-bcfea42b74f3@arm.com>
- <CAL_Jsq+95qZyHWT_A-=L+SSbR0vmMqQDq8N2XcxwFJVG2HCthA@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH V4 01/11] dt-bindings: firmware: imx-scu: new binding to
+ parse clocks from device tree
+Date: Fri, 06 Sep 2019 09:56:44 -0700
+Message-ID: <20190906165645.9253120838@mail.kernel.org>
+References: <1566299605-15641-1-git-send-email-aisheng.dong@nxp.com>
+ <1566299605-15641-2-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+95qZyHWT_A-=L+SSbR0vmMqQDq8N2XcxwFJVG2HCthA@mail.gmail.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "Hawa, Hanna" <hhhawa@amazon.com>, Mark Rutland <mark.rutland@arm.com>, Borislav Petkov <bp@alien8.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, David Miller <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, "Woodhouse, David" <dwmw@amazon.co.uk>, benh@amazon.com, "Krupnik, Ronen" <ronenk@amazon.com>, Talel Shenhar <talel@amazon.com>, Jonathan Chocron <jonnyc@amazon.com>, "Hanoch, Uri" <hanochu@amazon.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-edac <linux-edac@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1566299605-15641-2-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-clk@vger.kernel.org
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, mturquette@baylibre.com, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Quoting Dong Aisheng (2019-08-20 04:13:15)
+> There's a few limitations on the original one cell clock binding
+> (#clock-cells = <1>) that we have to define some SW clock IDs for device
+> tree to reference. This may cause troubles if we want to use common
+> clock IDs for multi platforms support when the clock of those platforms
+> are mostly the same.
+> e.g. Current clock IDs name are defined with SS prefix.
+> 
+> However the device may reside in different SS across CPUs, that means the
+> SS prefix may not valid anymore for a new SoC. Furthermore, the device
+> availability of those clocks may also vary a bit.
+> 
+> For such situation, we want to eliminate the using of SW Clock IDs and
+> change to use a more close to HW one instead.
+> For SCU clocks usage, only two params required: Resource id + Clock Type.
+> Both parameters are platform independent. So we could use two cells binding
+> to pass those parameters,
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
 
-On 30/08/2019 22:50, Rob Herring wrote:
-> So KVM provides a semi-CortexA57? Code that runs on real h/w won't as a guest.
-
-KVM provides the architectural bits of Cortex-A57's EL1, when running on A57.
-
-Code that depends on EL2, won't run as a guest. Code that depends on some
-non-architectural behaviour of A57 won't work in a guest, (e.g. the PMU)
-Features the hypervisor doesn't completely support may get hidden. The aim is to provide
-an virtual CPU, it might not be exactly the same as the one you're running on.
-
-Hypervisors have to disable access to the imp-def registers as they may allow the guest to
-break its confinement. (e.g. messing with the L2 timing)
-
-Code using imp-def instructions at EL1 needs to know they aren't trapped/disabled by a
-higher exception level. If someone wants to emulate these, something would need a model of
-what those imp-def instructions do.
-
-
-Thanks,
-
-James
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
