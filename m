@@ -1,176 +1,426 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC 5/9] dt-bindings: arm: samsung: Convert Exynos PMU bindings
- to json-schema
-Date: Fri, 6 Sep 2019 16:48:53 +0100
-Message-ID: <CAL_JsqKyj3s-Mn3q_Lna0w38K3DJzvKN5d72WHzqt4CUVf5X4Q@mail.gmail.com>
-References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-5-krzk@kernel.org>
- <CAL_JsqJybT41cEqiTriLMywUQj1BtAG_9muJ4=84OkF23y53CA@mail.gmail.com>
- <CAJKOXPc0SY_8BHMsWLN=1M3VQh41+bdBiH21L4KQPA+iLPYy+A@mail.gmail.com>
- <CAL_JsqKdsABWK9Og_f38T9zf3SCFFdhU8WOJ4uJjREantoYvYQ@mail.gmail.com> <CAJKOXPfnvu=c5f6AcOSiQ_9E-C2fMf9qbEpy1Tr3QvH8LgAtpQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] ASoC: dt-bindings: Convert Allwinner A10 codec to
+ a schema
+Date: Fri, 6 Sep 2019 16:58:42 +0100
+Message-ID: <CAL_Jsq+a=YaN79A-NXVvnPzLijjkoVkjQJcceq4xwhH6ujpgqA@mail.gmail.com>
+References: <20190906151221.3148-1-mripard@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPfnvu=c5f6AcOSiQ_9E-C2fMf9qbEpy1Tr3QvH8LgAtpQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, notify@kernel.orgArnd Bergmann <ar>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190906151221.3148-1-mripard@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 12:03 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Fri, Sep 6, 2019 at 4:12 PM Maxime Ripard <mripard@kernel.org> wrote:
 >
-> On Tue, 3 Sep 2019 at 10:25, Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Tue, Sep 3, 2019 at 8:58 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >
-> > > On Mon, 26 Aug 2019 at 13:54, Rob Herring <robh+dt@kernel.org> wrote:
-> > > >
-> > > > On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > > >
-> > > > > Convert Samsung Exynos Power Management Unit (PMU) bindings to DT schema
-> > > > > format using json-schema.
-> > > > >
-> > > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > > > ---
-> > > > >  .../devicetree/bindings/arm/samsung/pmu.txt   | 72 --------------
-> > > > >  .../devicetree/bindings/arm/samsung/pmu.yaml  | 93 +++++++++++++++++++
-> > > > >  2 files changed, 93 insertions(+), 72 deletions(-)
-> > > > >  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> > > > >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> > > >
-> > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> > > > > new file mode 100644
-> > > > > index 000000000000..818c6f3488ef
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> > > > > @@ -0,0 +1,93 @@
-> > > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > > +%YAML 1.2
-> > > > > +---
-> > > > > +$id: http://devicetree.org/schemas/arm/samsung/pmu.yaml#
-> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > +
-> > > > > +title: Samsung Exynos SoC series Power Management Unit (PMU)
-> > > > > +
-> > > > > +maintainers:
-> > > > > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > > > > +
-> > > > > +properties:
-> > > > > +  compatible:
-> > > > > +    items:
-> > > > > +      - enum:
-> > > > > +          - samsung,exynos3250-pmu
-> > > > > +          - samsung,exynos4210-pmu
-> > > > > +          - samsung,exynos4412-pmu
-> > > > > +          - samsung,exynos5250-pmu
-> > > > > +          - samsung,exynos5260-pmu
-> > > > > +          - samsung,exynos5410-pmu
-> > > > > +          - samsung,exynos5420-pmu
-> > > > > +          - samsung,exynos5433-pmu
-> > > > > +          - samsung,exynos7-pmu
-> > > > > +      - const: syscon
-> > > > > +
-> > > > > +  reg:
-> > > > > +    maxItems: 1
-> > > > > +
-> > > > > +  '#clock-cells':
-> > > > > +    const: 1
-> > > > > +
-> > > > > +  clock-names:
-> > > > > +    description:
-> > > > > +      list of clock names for particular CLKOUT mux inputs
-> > > > > +    # TODO: what is the maximum number of elements (mux inputs)?
-> > > > > +    minItems: 1
-> > > > > +    maxItems: 32
-> > > > > +    items:
-> > > > > +      - enum:
-> > > >
-> > > > This isn't correct as you are only defining possible names for the
-> > > > first item. Drop the '-' (making items a schema instead of a list) and
-> > > > then it applies to all. However, doing that will cause a meta-schema
-> > > > error which I need to fix to allow. Or if there's a small set of
-> > > > possibilities of number of inputs, you can list them under a 'oneOf'
-> > > > list.
-> > >
-> > > Mhmm, I cannot test it or I have an error in the schema. if I
-> > > understand correctly, this would be:
-> > >
-> > >   clock-names:
-> > >     description:
-> > >       List of clock names for particular CLKOUT mux inputs
-> > >     minItems: 1
-> > >     maxItems: 16
-> > >     items:
-> > >       clkout0
-> > >       clkout1
-> > >       clkout2
-> > >       clkout3
-> > >       clkout4
-> > >       clkout5
-> > >       clkout6
-> > >       clkout7
-> > >       clkout8
-> > >       clkout9
-> > >       clkout10
-> > >       clkout11
-> > >       clkout12
-> > >       clkout13
-> > >       clkout14
-> > >       clkout15
-> > >       clkout16
-> > >
-> > > Now it produces the error "ignoring, error in schema 'items'" but
-> > > maybe it is expected with current meta-schema?
-> >
-> > 'make dt_binding_check' will give more detailed errors.
-> >
-> > Are the inputs always contiguous 0-N? If so, you want:
-> >
-> > items:
-> >   - const: clkout0
-> >   - const: clkout1
-> >   - const: clkout2
-> >   ...
-> >
-> > If you want to express any number and order of strings is valid, then you need:
-> >
-> > items:
-> >   enum:
-> >     - clkout0
-> >     - clkout1
-> >     - clkout2
-> >
-> > Doing that is discouraged for bindings though. Currently, it will
-> > generate an error from the meta-schema, but we could change that.
+> From: Maxime Ripard <maxime.ripard@bootlin.com>
 >
-> It's the second case. The inputs are not contiguous. Examples:
+> The Allwinner SoCs have an embedded audio codec that is supported in Linux,
+> with a matching Device Tree binding.
 >
-> system-controller {
->     compatible = "samsung,exynos3250-pmu", "syscon";
->     clock-names = "clkout8";
->     clocks = <&cmu CLK_FIN_PLL>;
-> }
+> Now that we have the DT validation in place, let's convert the device tree
+> bindings for that controller over to a YAML schemas.
 >
-> system-controller {
->     compatible = "samsung,exynos4412-pmu", "syscon";
->     clock-names = "clkout0", "clkout1", "clkout2", "clkout3",
->                   "clkout4", "clkout8", "clkout9";
->     clocks = <&clock CLK_OUT_DMC>, <&clock CLK_OUT_TOP>,
->              <&clock CLK_OUT_LEFTBUS>, <&clock CLK_OUT_RIGHTBUS>,
->              <&clock CLK_OUT_CPU>, <&clock CLK_XXTI>, <&clock CLK_XUSBXTI>;
-> }
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 >
-> The bindings never required any specific ordering. Also the driver
-> just go through all indices and parses them.
+> ---
 >
-> Your second syntax fails:
-> Documentation/devicetree/bindings/arm/samsung/pmu.yaml:
-> properties:clock-names:items: {'enum': ['clkout0', 'clkout1',
-> 'clkout2', 'clkout3', 'clkout4', 'clkout5', 'clkout6', 'clkout7',
-> 'clkout8', 'clkout9', 'clkout10', 'clkout11', 'clkout12', 'clkout13',
-> 'clkout14', 'clkout15', 'clkout16']} is not of type 'array'
+> Changes from v2:
+>   - Change the audio-routing values to an enum, and enforce boundaries on
+>     the size
+>   - Add restrictions to the possible values of audio-routing
+>
+> Changes from v1:
+>   - Fix subject prefix
+> ---
+>  .../sound/allwinner,sun4i-a10-codec.yaml      | 262 ++++++++++++++++++
+>  .../devicetree/bindings/sound/sun4i-codec.txt |  94 -------
+>  2 files changed, 262 insertions(+), 94 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-codec.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/sound/sun4i-codec.txt
+>
+> diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-codec.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-codec.yaml
+> new file mode 100644
+> index 000000000000..faa75b91c072
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/allwinner,sun4i-a10-codec.yaml
+> @@ -0,0 +1,262 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/allwinner,sun4i-a10-codec.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allwinner A10 Codec Device Tree Bindings
+> +
+> +maintainers:
+> +  - Chen-Yu Tsai <wens@csie.org>
+> +  - Maxime Ripard <maxime.ripard@bootlin.com>
+> +
+> +properties:
+> +  "#sound-dai-cells":
+> +    const: 0
+> +
+> +  compatible:
+> +    enum:
+> +      - allwinner,sun4i-a10-codec
+> +      - allwinner,sun6i-a31-codec
+> +      - allwinner,sun7i-a20-codec
+> +      - allwinner,sun8i-a23-codec
+> +      - allwinner,sun8i-h3-codec
+> +      - allwinner,sun8i-v3s-codec
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Bus Clock
+> +      - description: Module Clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: apb
+> +      - const: codec
+> +
+> +  dmas:
+> +    items:
+> +      - description: RX DMA Channel
+> +      - description: TX DMA Channel
+> +
+> +  dma-names:
+> +    items:
+> +      - const: rx
+> +      - const: tx
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  allwinner,audio-routing:
+> +    description: |-
+> +      A list of the connections between audio components.  Each entry
+> +      is a pair of strings, the first being the connection's sink, the
+> +      second being the connection's source.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/non-unique-string-array
+> +      - minItems: 2
+> +        maxItems: 18
+> +        enum:
+> +          # Audio Pins on the SoC
+> +          - HP
+> +          - HPCOM
+> +          - LINEIN
+> +          - LINEOUT
+> +          - MIC1
+> +          - MIC2
+> +          - MIC3
+> +
+> +          # Microphone Biases from the SoC
+> +          - HBIAS
+> +          - MBIAS
+> +
+> +          # Board Connectors
+> +          - Headphone
+> +          - Headset Mic
+> +          - Line In
+> +          - Line Out
+> +          - Mic
+> +          - Speaker
+> +
+> +  allwinner,codec-analog-controls:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: Phandle to the codec analog controls in the PRCM
+> +
+> +  allwinner,pa-gpios:
+> +    description: GPIO to enable the external amplifier
+> +
+> +required:
+> +  - "#sound-dai-cells"
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - dmas
+> +  - dma-names
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - allwinner,sun6i-a31-codec
+> +            - allwinner,sun8i-a23-codec
+> +            - allwinner,sun8i-h3-codec
+> +            - allwinner,sun8i-v3s-codec
+> +
+> +    then:
+> +      if:
+> +        properties:
+> +          compatible:
+> +            const: allwinner,sun6i-a31-codec
+> +
+> +      then:
+> +        required:
+> +          - resets
+> +          - allwinner,audio-routing
+> +
+> +      else:
+> +        required:
+> +          - resets
+> +          - allwinner,audio-routing
+> +          - allwinner,codec-analog-controls
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - allwinner,sun6i-a31-codec
+> +
+> +    then:
+> +      properties:
+> +        allwinner,audio-routing:
+> +          enum:
+> +            - HP
+> +            - HPCOM
+> +            - LINEIN
+> +            - LINEOUT
+> +            - MIC1
+> +            - MIC2
+> +            - MIC3
+> +            - HBIAS
+> +            - MBIAS
+> +            - Headphone
+> +            - Headset Mic
+> +            - Line In
+> +            - Line Out
+> +            - Mic
+> +            - Speaker
 
-Update dt-schema and try again. It should be allowed now. You'll also
-need to define minItems and maxItems though.
+This looks like the same list as the default...
 
-Rob
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - allwinner,sun8i-a23-codec
+> +
+> +    then:
+> +      properties:
+> +        allwinner,audio-routing:
+> +          enum:
+> +            - HP
+> +            - HPCOM
+> +            - LINEIN
+> +            - MIC1
+> +            - MIC2
+> +            - HBIAS
+> +            - MBIAS
+> +            - Headphone
+> +            - Headset Mic
+> +            - Line In
+> +            - Line Out
+> +            - Mic
+> +            - Speaker
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - allwinner,sun8i-h3-codec
+> +
+> +    then:
+> +      properties:
+> +        allwinner,audio-routing:
+> +          enum:
+> +            - HP
+> +            - HPCOM
+> +            - LINEIN
+> +            - LINEOUT
+> +            - MIC1
+> +            - MIC2
+> +            - HBIAS
+> +            - MBIAS
+> +            - Headphone
+> +            - Headset Mic
+> +            - Line In
+> +            - Line Out
+> +            - Mic
+> +            - Speaker
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - allwinner,sun8i-v3s-codec
+> +
+> +    then:
+> +      properties:
+> +        allwinner,audio-routing:
+> +          enum:
+> +            - HP
+> +            - HPCOM
+> +            - MIC1
+> +            - HBIAS
+> +            - Headphone
+> +            - Headset Mic
+> +            - Line In
+> +            - Line Out
+> +            - Mic
+> +            - Speaker
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    codec@1c22c00 {
+> +        #sound-dai-cells = <0>;
+> +        compatible = "allwinner,sun7i-a20-codec";
+> +        reg = <0x01c22c00 0x40>;
+> +        interrupts = <0 30 4>;
+> +        clocks = <&apb0_gates 0>, <&codec_clk>;
+> +        clock-names = "apb", "codec";
+> +        dmas = <&dma 0 19>, <&dma 0 19>;
+> +        dma-names = "rx", "tx";
+> +    };
+> +
+> +  - |
+> +    codec@1c22c00 {
+> +        #sound-dai-cells = <0>;
+> +        compatible = "allwinner,sun6i-a31-codec";
+> +        reg = <0x01c22c00 0x98>;
+> +        interrupts = <0 29 4>;
+> +        clocks = <&ccu 61>, <&ccu 135>;
+> +        clock-names = "apb", "codec";
+> +        resets = <&ccu 42>;
+> +        dmas = <&dma 15>, <&dma 15>;
+> +        dma-names = "rx", "tx";
+> +        allwinner,audio-routing =
+> +            "Headphone", "HP",
+> +            "Speaker", "LINEOUT",
+> +            "LINEIN", "Line In",
+> +            "MIC1", "MBIAS",
+> +            "MIC1", "Mic",
+> +            "MIC2", "HBIAS",
+> +            "MIC2", "Headset Mic";
+> +    };
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/sound/sun4i-codec.txt b/Documentation/devicetree/bindings/sound/sun4i-codec.txt
+> deleted file mode 100644
+> index 66579bbd3294..000000000000
+> --- a/Documentation/devicetree/bindings/sound/sun4i-codec.txt
+> +++ /dev/null
+> @@ -1,94 +0,0 @@
+> -* Allwinner A10 Codec
+> -
+> -Required properties:
+> -- compatible: must be one of the following compatibles:
+> -               - "allwinner,sun4i-a10-codec"
+> -               - "allwinner,sun6i-a31-codec"
+> -               - "allwinner,sun7i-a20-codec"
+> -               - "allwinner,sun8i-a23-codec"
+> -               - "allwinner,sun8i-h3-codec"
+> -               - "allwinner,sun8i-v3s-codec"
+> -- reg: must contain the registers location and length
+> -- interrupts: must contain the codec interrupt
+> -- dmas: DMA channels for tx and rx dma. See the DMA client binding,
+> -       Documentation/devicetree/bindings/dma/dma.txt
+> -- dma-names: should include "tx" and "rx".
+> -- clocks: a list of phandle + clock-specifer pairs, one for each entry
+> -  in clock-names.
+> -- clock-names: should contain the following:
+> -   - "apb": the parent APB clock for this controller
+> -   - "codec": the parent module clock
+> -
+> -Optional properties:
+> -- allwinner,pa-gpios: gpio to enable external amplifier
+> -
+> -Required properties for the following compatibles:
+> -               - "allwinner,sun6i-a31-codec"
+> -               - "allwinner,sun8i-a23-codec"
+> -               - "allwinner,sun8i-h3-codec"
+> -               - "allwinner,sun8i-v3s-codec"
+> -- resets: phandle to the reset control for this device
+> -- allwinner,audio-routing: A list of the connections between audio components.
+> -                          Each entry is a pair of strings, the first being the
+> -                          connection's sink, the second being the connection's
+> -                          source. Valid names include:
+> -
+> -                          Audio pins on the SoC:
+> -                          "HP"
+> -                          "HPCOM"
+> -                          "LINEIN"     (not on sun8i-v3s)
+> -                          "LINEOUT"    (not on sun8i-a23 or sun8i-v3s)
+> -                          "MIC1"
+> -                          "MIC2"       (not on sun8i-v3s)
+> -                          "MIC3"       (sun6i-a31 only)
+> -
+> -                          Microphone biases from the SoC:
+> -                          "HBIAS"
+> -                          "MBIAS"      (not on sun8i-v3s)
+> -
+> -                          Board connectors:
+> -                          "Headphone"
+> -                          "Headset Mic"
+> -                          "Line In"
+> -                          "Line Out"
+> -                          "Mic"
+> -                          "Speaker"
+> -
+> -Required properties for the following compatibles:
+> -               - "allwinner,sun8i-a23-codec"
+> -               - "allwinner,sun8i-h3-codec"
+> -               - "allwinner,sun8i-v3s-codec"
+> -- allwinner,codec-analog-controls: A phandle to the codec analog controls
+> -                                  block in the PRCM.
+> -
+> -Example:
+> -codec: codec@1c22c00 {
+> -       #sound-dai-cells = <0>;
+> -       compatible = "allwinner,sun7i-a20-codec";
+> -       reg = <0x01c22c00 0x40>;
+> -       interrupts = <0 30 4>;
+> -       clocks = <&apb0_gates 0>, <&codec_clk>;
+> -       clock-names = "apb", "codec";
+> -       dmas = <&dma 0 19>, <&dma 0 19>;
+> -       dma-names = "rx", "tx";
+> -};
+> -
+> -codec: codec@1c22c00 {
+> -       #sound-dai-cells = <0>;
+> -       compatible = "allwinner,sun6i-a31-codec";
+> -       reg = <0x01c22c00 0x98>;
+> -       interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+> -       clocks = <&ccu CLK_APB1_CODEC>, <&ccu CLK_CODEC>;
+> -       clock-names = "apb", "codec";
+> -       resets = <&ccu RST_APB1_CODEC>;
+> -       dmas = <&dma 15>, <&dma 15>;
+> -       dma-names = "rx", "tx";
+> -       allwinner,audio-routing =
+> -               "Headphone", "HP",
+> -               "Speaker", "LINEOUT",
+> -               "LINEIN", "Line In",
+> -               "MIC1", "MBIAS",
+> -               "MIC1", "Mic",
+> -               "MIC2", "HBIAS",
+> -               "MIC2", "Headset Mic";
+> -};
+> --
+> 2.21.0
+>
