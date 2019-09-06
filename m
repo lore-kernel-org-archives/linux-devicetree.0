@@ -1,125 +1,101 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [RFC v2 3/3] ARM: dts: omap3: bulk convert compatible to be explicitly ti,omap3430 or ti,omap36xx
-Date: Fri, 6 Sep 2019 19:15:09 +0200
-Message-ID: <2BA36283-F867-44C0-8AAA-B7CCFA616C8D@goldelico.com>
-References: <cover.1567587220.git.hns@goldelico.com> <a2b56edcada7b9000a6e906387a02c0ee42681db.1567587220.git.hns@goldelico.com> <20190905142734.GV52127@atomide.com> <4BC39938-D63E-4BDC-BA28-5132F77F602D@goldelico.com> <20190906154732.GC52127@atomide.com> <8C8644AC-FA12-4D26-B96A-76B78798612A@goldelico.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+Date: Fri, 6 Sep 2019 19:17:11 +0200
+Message-ID: <CAFBinCABoe89Z9CiG=3Bz6+JoRCYcpxWJ6jzEqMo16SCCoXPmQ@mail.gmail.com>
+References: <cover.1567585181.git.eswara.kota@linux.intel.com>
+ <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
+ <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com> <ce4e04ee-9a8f-fbe1-0133-4a18c92dc136@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8C8644AC-FA12-4D26-B96A-76B78798612A@goldelico.com>
+In-Reply-To: <ce4e04ee-9a8f-fbe1-0133-4a18c92dc136@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux-OMAP <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+To: "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
+Cc: Dilip Kota <eswara.kota@linux.intel.com>, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com, robh@kernel.org, linux-pci@vger.kernel.org, hch@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Sep 6, 2019 at 5:22 AM Chuan Hua, Lei
+<chuanhua.lei@linux.intel.com> wrote:
+[...]
+> >> +examples:
+> >> +  - |
+> >> +    pcie10:pcie@d0e00000 {
+> >> +      compatible = "intel,lgm-pcie";
+> >> +      device_type = "pci";
+> >> +      #address-cells = <3>;
+> >> +      #size-cells = <2>;
+> >> +      reg = <
+> >> +            0xd0e00000 0x1000
+> >> +            0xd2000000 0x800000
+> >> +            0xd0a41000 0x1000
+> >> +            >;
+> >> +      reg-names = "dbi", "config", "app";
+> >> +      linux,pci-domain = <0>;
+> >> +      max-link-speed = <4>;
+> >> +      bus-range = <0x00 0x08>;
+> >> +      interrupt-parent = <&ioapic1>;
+> >> +      interrupts = <67 1>;
+> >> +      #interrupt-cells = <1>;
+> >> +      interrupt-map-mask = <0 0 0 0x7>;
+> >> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+> >> +                      <0 0 0 2 &ioapic1 28 1>,
+> >> +                      <0 0 0 3 &ioapic1 29 1>,
+> >> +                      <0 0 0 4 &ioapic1 30 1>;
+> > is the "1" in the interrupts and interrupt-map properties IRQ_TYPE_EDGE_RISING?
+> > you can use these macros in this example as well, see
+> > Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml for
+> > example
+>
+> No. 1 here means index from arch/x86/devicetree.c
+>
+> static struct of_ioapic_type of_ioapic_type[] =
+> {
+>      {
+>          .out_type    = IRQ_TYPE_EDGE_RISING,
+>          .trigger    = IOAPIC_EDGE,
+>          .polarity    = 1,
+>      },
+>      {
+>          .out_type    = IRQ_TYPE_LEVEL_LOW,
+>          .trigger    = IOAPIC_LEVEL,
+>          .polarity    = 0,
+>      },
+>      {
+>          .out_type    = IRQ_TYPE_LEVEL_HIGH,
+>          .trigger    = IOAPIC_LEVEL,
+>          .polarity    = 1,
+>      },
+>      {
+>          .out_type    = IRQ_TYPE_EDGE_FALLING,
+>          .trigger    = IOAPIC_EDGE,
+>          .polarity    = 0,
+>      },
+> };
+>
+> static int dt_irqdomain_alloc(struct irq_domain *domain, unsigned int virq,
+>                    unsigned int nr_irqs, void *arg)
+> {
+>      struct irq_fwspec *fwspec = (struct irq_fwspec *)arg;
+>      struct of_ioapic_type *it;
+>      struct irq_alloc_info tmp;
+>      int type_index;
+>
+>      if (WARN_ON(fwspec->param_count < 2))
+>          return -EINVAL;
+>
+>      type_index = fwspec->param[1]; // index.
+>      if (type_index >= ARRAY_SIZE(of_ioapic_type))
+>          return -EINVAL;
+>
+> I would not see this definition is user-friendly. But it is how x86
+> handles at the moment.
+thank you for explaining this - I had no idea x86 is different from
+all other platforms I know
+the only upstream x86 .dts I could find
+(arch/x86/platform/ce4100/falconfalls.dts) also uses the magic x86
+numbers
+so I'm fine with this until someone else knows a better solution
 
-> Am 06.09.2019 um 19:08 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> Hi Tony,
->=20
->> Am 06.09.2019 um 17:47 schrieb Tony Lindgren <tony@atomide.com>:
->>=20
->> * H. Nikolaus Schaller <hns@goldelico.com> [190906 07:53]:
->>>> Am 05.09.2019 um 16:27 schrieb Tony Lindgren <tony@atomide.com>:
->>>> compatible =3D "ti,omap3-ldp", "ti,omap3430", "ti,omap34xx", =
-"ti,omap3";
->>>=20
->>> After thinking a little about the whole topic the main rule of this =
-change must be:
->>>=20
->>> * do not break any existing in-tree DTS
->>> 	=3D> only *add* to compatible what we need to distinguish =
-between omap34 and omap36
->>>=20
->>> * additions shall only follow new scheme
->>> 	=3D> we only add "ti,omap34xx" or "ti,omap36xx"
->>>          but neither "ti,omap3630" nor "ti,omap3430"
->>=20
->> Sorry I don't follow you on this one.. We should always add =
-"ti,omap3630"
->> where "ti,omap36xx" is currently used so we can eventually get rid of
->> "ti,omap36xx". And the same for 34xx.
->=20
-> Ah, ok now I see.
->=20
-> You want to make the "ti,omap3630" the official one and "ti,omap36xx" =
-legacy.
-> It is probably an arbitrary choice if we want to get rid of the xx or =
-the 30.
->=20
-> I had thought to do it the other way round because I had done this =
-statistics:
->=20
-> for i in 3430 34xx 3630 36xx; do echo $i $(fgrep '"'ti,omap$i'"' =
-arch/arm/boot/dts/*.dts* | wc -l); done
->=20
-> 3430 12
-> 34xx 28
-> 3630 3
-> 36xx 23
 
-sorry, here is the correct result. I had some .bak files sitting around:
-
-3430 12
-34xx 5
-3630 3
-36xx 23
-
-> which would indicate that 34xx and 36xx are more common.
->=20
->>> * cover some out-of-tree DTS
->>> 	=3D> make the ti-cpufreq driver still match "ti,omap3430" or =
-"ti,omap3630"
->>> 	   even if this duplicates compatibility
->>>=20
->>> This would mean that the logicpd-som-lv-37xx-devkit.dts gets the =
-additional "ti,omap36xx"
->>> while the omap3-ldp.dts would only get an "ti,omap34xx" but no =
-"ti,omap3430" (since we
->>> do not use it anywhere).
->>>=20
->>> Could you agree on this approach?
->>=20
->> Yeah sounds like logicpd-som-lv-37xx-devkit.dts currently still needs
->> "ti,omap36xx" for now.
->>=20
->> If modifying omap3-ldp.dts, also add "ti,omap3430" in additon to
->> "ti,omap34xx" that it already has.
->>=20
->> So basically let's assume the following:
->>=20
->> "ti,omap3430" =3D=3D "ti,omap34xx"
->> "ti,omap3630" =3D=3D "ti,omap36xx"
->>=20
->> This means code needs to parse both.
->=20
-> Yes, it already does everywhere.
->=20
-> BTW there is also some code that does special SoC detection based on
-> soc_device_match(), mainly in omapdrm/dss.
->=20
-> If we were to use this mechanism in the ti-cpufreq driver we could
-> match it to ti,omap3 and could avoid all these changes.
->=20
-> But make it less maintainable and code more complex.
->=20
->>=20
->> And eventually we just drop the "xx" variants.
->=20
->>=20
->> So while patching compatibles, let's also update for this to
->> avoid multiple patches churning the same compatibles over and
->> over.
->=20
-> Ok. I'll rework the patch so that we never add "ti,34xx" or "ti,36xx"
-> but add "ti,3430" or "ti,3630" if missing.
->=20
-> I'll also take a look at omap.txt bindings since that likely needs
-> an update as well to better describe what the official ones are
-> and which are legacy.
->=20
-> BR and thanks,
-> Nikolaus
->=20
+Martin
