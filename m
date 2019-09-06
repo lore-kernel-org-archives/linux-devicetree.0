@@ -1,15 +1,15 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V4 01/11] dt-bindings: firmware: imx-scu: new binding to
+Subject: Re: [PATCH V4 02/11] dt-bindings: clock: imx-lpcg: add support to
  parse clocks from device tree
-Date: Fri, 06 Sep 2019 09:56:44 -0700
-Message-ID: <20190906165645.9253120838@mail.kernel.org>
+Date: Fri, 06 Sep 2019 10:00:37 -0700
+Message-ID: <20190906170038.7271720693@mail.kernel.org>
 References: <1566299605-15641-1-git-send-email-aisheng.dong@nxp.com>
- <1566299605-15641-2-git-send-email-aisheng.dong@nxp.com>
+ <1566299605-15641-3-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1566299605-15641-2-git-send-email-aisheng.dong@nxp.com>
+In-Reply-To: <1566299605-15641-3-git-send-email-aisheng.dong@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,23 +23,16 @@ To: linux-clk@vger.kernel.org
 Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, mturquette@baylibre.com, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Dong Aisheng (2019-08-20 04:13:15)
-> There's a few limitations on the original one cell clock binding
-> (#clock-cells = <1>) that we have to define some SW clock IDs for device
-> tree to reference. This may cause troubles if we want to use common
-> clock IDs for multi platforms support when the clock of those platforms
-> are mostly the same.
-> e.g. Current clock IDs name are defined with SS prefix.
+Quoting Dong Aisheng (2019-08-20 04:13:16)
+> MX8QM and MX8QXP LPCG Clocks are mostly the same except they may reside
+> in different subsystems across CPUs and also vary a bit on the availability.
 > 
-> However the device may reside in different SS across CPUs, that means the
-> SS prefix may not valid anymore for a new SoC. Furthermore, the device
-> availability of those clocks may also vary a bit.
+> Same as SCU clock, we want to move the clock definition into device tree
+> which can fully decouple the dependency of Clock ID definition from device
+> tree and make us be able to write a fully generic lpcg clock driver.
 > 
-> For such situation, we want to eliminate the using of SW Clock IDs and
-> change to use a more close to HW one instead.
-> For SCU clocks usage, only two params required: Resource id + Clock Type.
-> Both parameters are platform independent. So we could use two cells binding
-> to pass those parameters,
+> And we can also use the existence of clock nodes in device tree to address
+> the device and clock availability differences across different SoCs.
 > 
 > Cc: Rob Herring <robh+dt@kernel.org>
 > Cc: Stephen Boyd <sboyd@kernel.org>
@@ -51,3 +44,49 @@ Quoting Dong Aisheng (2019-08-20 04:13:15)
 > ---
 
 Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+
+> ChangeLog:
+> v3->v4:
+>  * change bit-offset property to clock-indices
+>  * use constant macro to define clock indinces
+>  * drop hw-autogate property which is still not used by drivers
+> v2->v3:
+>  * no changes
+> v1->v2:
+>  * Update example
+>  * Add power domain property
+> ---
+>  .../devicetree/bindings/clock/imx8qxp-lpcg.txt     | 36 ++++++++++++++++++----
+>  include/dt-bindings/clock/imx8-lpcg.h              | 14 +++++++++
+>  2 files changed, 44 insertions(+), 6 deletions(-)
+>  create mode 100644 include/dt-bindings/clock/imx8-lpcg.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
+> index 965cfa4..cad8fc4 100644
+> --- a/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
+> +++ b/Documentation/devicetree/bindings/clock/imx8qxp-lpcg.txt
+> @@ -11,6 +11,21 @@ enabled by these control bits, it might still not be running based
+>  on the base resource.
+>  
+>  Required properties:
+> +- compatible:          Should be one of:
+> +                         "fsl,imx8qxp-lpcg"
+> +                         "fsl,imx8qm-lpcg" followed by "fsl,imx8qxp-lpcg".
+> +- reg:                 Address and length of the register set.
+> +- #clock-cells:                Should be 1. One LPCG supports multiple clocks.
+> +- clocks:              Input parent clocks phandle array for each clock.
+> +- clock-indices:       An integer array indicating the bit offset for each clock.
+> +                       Refer to <include/dt-bindings/clock/imx8-lpcg.h> for the
+> +                       supported LPCG clock indices.
+
+This is an interesting solution.
+
+> +- clock-output-names:  Shall be the corresponding names of the outputs.
+> +                       NOTE this property must be specified in the same order
+> +                       as the clock-indices property.
+> +- power-domains:       Should contain the power domain used by this clock.
+> +
+> +Legacy binding (DEPRECATED):
+>  - compatible:  Should be one of:
+>                   "fsl,imx8qxp-lpcg-adma",
+>                   "fsl,imx8qxp-lpcg-conn",
