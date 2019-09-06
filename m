@@ -1,7 +1,7 @@
 From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCHv3-next 1/3] arm64: dts: meson: odroid-c2: Add missing regulator linked to P5V0 regulator
-Date: Fri,  6 Sep 2019 12:32:57 +0000
-Message-ID: <20190906123259.351-2-linux.amoon@gmail.com>
+Subject: [PATCHv3-next 2/3] arm64: dts: meson: odroid-c2: Add missing regulator linked to VDDIO_AO3V3 regulator
+Date: Fri,  6 Sep 2019 12:32:58 +0000
+Message-ID: <20190906123259.351-3-linux.amoon@gmail.com>
 References: <20190906123259.351-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,8 +12,12 @@ To: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@g
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As per schematics VDDIO_AO18, VDDIO_AO3V3/VDD3V3 DDR3_1V5/DDR_VDDC:
-fixed regulator output which is supplied by P5V0.
+As per schematics TFLASH_VDD, TF_IO, VCC3V3 fixed regulator output which
+is supplied by VDDIO_AO3V3.
+
+While here, move the comment name with the signal name in the
+schematics above the gpio property to make it consistent with other
+regulators.
 
 Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>
@@ -22,58 +26,62 @@ Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
-Changes from previous.
-patchv1.
-- drop the rename and linking vcc3v3 regulator node.
-- fix the typo spelling.
-patchv2.
-- change the vddc_ddr node name to ddr3_1v5 as per Martin's suggestion
-- Added Matrin's and Neil's Reviewed-by.
+changes from previous.
+Patchv1
+- Fix the typo.
+- Add the comment as per Martin's suggestion.
+- Added Martin's review tags
+Patchv2
+- Added missing Neil's Reviewed-by tags.
 ---
----
- .../boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 3e51f0835c8d..9ea336c33d00 100644
+index 9ea336c33d00..5624ff034659 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
 +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -111,6 +111,36 @@
- 		regulator-max-microvolt = <3300000>;
+@@ -67,17 +67,19 @@
  	};
  
-+	vddio_ao1v8: regulator-vddio-ao1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
+ 	tflash_vdd: regulator-tflash_vdd {
+-		/*
+-		 * signal name from schematics: TFLASH_VDD_EN
+-		 */
+ 		compatible = "regulator-fixed";
+ 
+ 		regulator-name = "TFLASH_VDD";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 
++		/*
++		 * signal name from schematics: TFLASH_VDD_EN
++		 */
+ 		gpio = <&gpio GPIOY_12 GPIO_ACTIVE_HIGH>;
+ 		enable-active-high;
++		/* U16 RT9179GB */
++		vin-supply = <&vddio_ao3v3>;
+ 	};
+ 
+ 	tf_io: gpio-regulator-tf_io {
+@@ -95,6 +97,8 @@
+ 
+ 		states = <3300000 0>,
+ 			 <1800000 1>;
++		/* U12/U13 RT9179GB */
++		vin-supply = <&vddio_ao3v3>;
+ 	};
+ 
+ 	vcc1v8: regulator-vcc1v8 {
+@@ -102,6 +106,9 @@
+ 		regulator-name = "VCC1V8";
+ 		regulator-min-microvolt = <1800000>;
+ 		regulator-max-microvolt = <1800000>;
 +		regulator-always-on;
-+		/* U17 RT9179GB */
-+		vin-supply = <&p5v0>;
-+	};
-+
-+	vddio_ao3v3: regulator-vddio-ao3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_AO3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		/* U11 MP2161GJ-C499 */
-+		vin-supply = <&p5v0>;
-+	};
-+
-+	ddr3_1v5: regulator-ddr3_1v5 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "DDR3_1V5";
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-always-on;
-+		/* U15 MP2161GJ-C499 */
-+		vin-supply = <&p5v0>;
-+	};
-+
- 	emmc_pwrseq: emmc-pwrseq {
- 		compatible = "mmc-pwrseq-emmc";
- 		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
++		/* U18 RT9179GB */
++		vin-supply = <&vddio_ao3v3>;
+ 	};
+ 
+ 	vcc3v3: regulator-vcc3v3 {
 -- 
 2.23.0
