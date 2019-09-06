@@ -1,103 +1,72 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [RFC 1/3] dt-bindings: dma: Add documentation for DMA domains
-Date: Fri, 6 Sep 2019 17:17:15 +0300
-Message-ID: <20190906141717.23859-2-peter.ujfalusi@ti.com>
-References: <20190906141717.23859-1-peter.ujfalusi@ti.com>
+Subject: [RFC 0/3] dmaengine: Support for DMA domain controllers
+Date: Fri, 6 Sep 2019 17:17:14 +0300
+Message-ID: <20190906141717.23859-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190906141717.23859-1-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: vinod.koul@intel.com, robh+dt@kernel.org
 Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On systems where multiple DMA controllers available, none Slave (for example
-memcpy operation) users can not be described in DT as there is no device
-involved from the DMA controller's point of view, DMA binding is not usable.
-However in these systems still a peripheral might need to be serviced by or
-it is better to serviced by specific DMA controller.
-When a memcpy is used to/from a memory mapped region for example a DMA in the
-same domain can perform better.
-For generic software modules doing mem 2 mem operations it also matter that
-they will get a channel from a controller which is faster in DDR to DDR mode
-rather then from the first controller happen to be loaded.
+Hi,
 
-This property is inherited, so it may be specified in a device node or in any
-of its parent nodes.
+More and more SoC have more than one DMA controller integrated.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+If a device needs none slave DMA channel for operation (block copy from/to
+memory mapped regions for example) at the moment when they request a channel it
+is going to be taken from the first DMA controller which was registered, but
+this might be not optimal for the device.
+
+For example on AM654 we have two DMAs: main_udmap and mcu_udmap.
+DDR to DDR memcpy is twice as fast on main_udmap compared to mcu_udmap, while
+devices on MCU domain (OSPI for example) are more than twice as fast on
+mcu_udmap than with main_udmap.
+
+Because of probing order (mcu_udmap is probing first) modules would use
+mcu_udmap instead of the better main_udmap. Currently the only solution is to
+make a choice and disable the MEM_TO_MEM functionality on one of them which is
+not a great solution.
+
+With the introduction of DMA domain controllers we can utilize the best DMA
+controller for the job around the SoC without the need to degrade performance.
+
+If the dma-domain-controller is not present in DT or booted w/o DT the none
+slave channel request will work as it does today.
+
+The last patch introduces a new dma_domain_request_chan_by_mask() function and
+I have a define for dma_request_chan_by_mask() to avoid breaking users of the
+dma_request_chan_by_mask, but looking at the kernel we have small amount of
+users:
+drivers/gpu/drm/vc4/vc4_dsi.c
+drivers/media/platform/omap/omap_vout_vrfb.c
+drivers/media/platform/omap3isp/isphist.c
+drivers/mtd/spi-nor/cadence-quadspi.c
+drivers/spi/spi-ti-qspi.c
+
+If it is acceptable we can modify the parameters of dma_request_chan_by_mask()
+to include ther device pointer and at the same time change all of the clients
+by giving NULL or in case of the last two their dev.
+
+Regards,
+Peter
 ---
+Peter Ujfalusi (3):
+  dt-bindings: dma: Add documentation for DMA domains
+  dmaengine: of_dma: Function to look up the DMA domain of a client
+  dmaengine: Support for requesting channels preferring DMA domain
+    controller
+
  .../devicetree/bindings/dma/dma-domain.yaml   | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ drivers/dma/dmaengine.c                       | 17 ++++--
+ drivers/dma/of-dma.c                          | 42 +++++++++++++
+ include/linux/dmaengine.h                     |  9 ++-
+ include/linux/of_dma.h                        |  7 +++
+ 5 files changed, 126 insertions(+), 8 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
 
-diff --git a/Documentation/devicetree/bindings/dma/dma-domain.yaml b/Documentation/devicetree/bindings/dma/dma-domain.yaml
-new file mode 100644
-index 000000000000..c2f182f30081
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/dma-domain.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: DMA Domain Controller Definition
-+
-+maintainers:
-+  - Vinod Koul <vkoul@kernel.org>
-+
-+allOf:
-+  - $ref: "dma-controller.yaml#"
-+
-+description:
-+  On systems where multiple DMA controllers available, none Slave (for example
-+  memcpy operation) users can not be described in DT as there is no device
-+  involved from the DMA controller's point of view, DMA binding is not usable.
-+  However in these systems still a peripheral might need to be serviced by or
-+  it is better to serviced by specific DMA controller.
-+  When a memcpy is used to/from a memory mapped region for example a DMA in the
-+  same domain can perform better.
-+  For generic software modules doing mem 2 mem operations it also matter that
-+  they will get a channel from a controller which is faster in DDR to DDR mode
-+  rather then from the first controller happen to be loaded.
-+
-+  This property is inherited, so it may be specified in a device node or in any
-+  of its parent nodes.
-+
-+properties:
-+  $dma-domain-controller:
-+    $ref: /schemas/types.yaml#definitions/phandle
-+    description:
-+      phande to the DMA controller node which should be used for the device or
-+      domain.
-+
-+examples:
-+  - |
-+    / {
-+        model = "Texas Instruments K3 AM654 SoC";
-+        compatible = "ti,am654";
-+        interrupt-parent = <&gic500>;
-+        /* For modules without device, DDR to DDR is faster on main UDMAP */
-+        dma-domain-controller = <&main_udmap>;
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+        ...
-+    };
-+
-+    &cbass_main {
-+        /* For modules within MAIN domain, use main UDMAP */
-+        dma-domain-controller = <&main_udmap>;
-+    };
-+
-+    &cbass_mcu {
-+        /* For modules within MCU domain, use mcu UDMAP */
-+        dma-domain-controller = <&mcu_udmap>;
-+    };
-+...
 -- 
 Peter
 
