@@ -1,7 +1,7 @@
 From: Anand Moon <linux.amoon@gmail.com>
 Subject: [PATCHv3-next 0/3] Odroid c2 missing regulator linking
-Date: Fri,  6 Sep 2019 12:20:41 +0000
-Message-ID: <20190906122044.372-1-linux.amoon@gmail.com>
+Date: Fri,  6 Sep 2019 12:32:56 +0000
+Message-ID: <20190906123259.351-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
