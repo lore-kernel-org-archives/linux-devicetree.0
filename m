@@ -1,38 +1,30 @@
-Return-Path: <SRS0=sI6G=W5=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from uho.ysoft.cz ([81.19.3.130]:43734 "EHLO uho.ysoft.cz"
+Return-Path: <SRS0=UWh6=XB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.220.in.ua ([89.184.67.205]:54369 "EHLO smtp.220.in.ua"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729623AbfIBLko (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 2 Sep 2019 07:40:44 -0400
-From: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-Subject: [PATCH input-next 0/4] Add polling mode to the MPR121 touchkey
-Date: Mon,  2 Sep 2019 13:40:13 +0200
-Message-Id: <1567424417-3914-1-git-send-email-michal.vokac@ysoft.com>
+        id S2405133AbfIFNdh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 6 Sep 2019 09:33:37 -0400
+Subject: Re: EL15203000
+From: Oleh Kravchenko <oleg@kaa.org.ua>
+References: <20190906132916.12423-1-oleg@kaa.org.ua>
+Message-ID: <f43c6f3a-859d-e180-ad09-6876926dbe87@kaa.org.ua>
+Date: Fri, 6 Sep 2019 16:33:29 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20190906132916.12423-1-oleg@kaa.org.ua>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <festevam@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
+To: devicetree@vger.kernel.org, linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz
 List-ID: <devicetree@vger.kernel.org>
 
-This series is another attempt to use the MPR121 touch sensor
-controller in polling mode. This version uses the brand new
-input-poller API that is currently queued in input/next.
+Sorry,
+I screwed up with Subject :(
 
-Michal Vokáč (4):
-  dt-bindings: input: Convert mpr121 binding to json-schema
-  dt-bindings: input: mpr121: Add poll-interval property
-  Input: mpr121: Add polling mode
-  ARM: dts: imx6dl-yapp4: Enable the MPR121 touchkey controller on Hydra
-
- .../bindings/input/fsl,mpr121-touchkey.yaml        | 82 ++++++++++++++++++++++
- .../devicetree/bindings/input/mpr121-touchkey.txt  | 30 --------
- arch/arm/boot/dts/imx6dl-yapp4-common.dtsi         | 13 ++++
- arch/arm/boot/dts/imx6dl-yapp4-hydra.dts           |  4 ++
- drivers/input/keyboard/mpr121_touchkey.c           | 68 +++++++++++++-----
- 5 files changed, 149 insertions(+), 48 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/fsl,mpr121-touchkey.yaml
- delete mode 100644 Documentation/devicetree/bindings/input/mpr121-touchkey.txt
-
--- 
-2.1.4
+06.09.19 16:29, Oleh Kravchenko пише:
+> [PATCH v6 1/2] dt-bindings: Add docs for EL15203000
+> [PATCH v6 2/2] leds: add LED driver for EL15203000 board
+>
+> Reworked few minor issues:
+> - added 'repeat' entity in test documentation
+> - removed variable i
+> - few lines of code was moved to make code clear
