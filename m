@@ -1,13 +1,14 @@
 From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/9] crypto: add sun8i-ce driver for Allwinner
- crypto engine
-Date: Fri,  6 Sep 2019 20:45:42 +0200
-Message-ID: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
+Subject: [PATCH 1/9] crypto: Add allwinner subdirectory
+Date: Fri,  6 Sep 2019 20:45:43 +0200
+Message-ID: <20190906184551.17858-2-clabbe.montjoie@gmail.com>
+References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
 Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBB26SZLVQKGQECACQQ4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7YLCN32UNBB3GSZLVQKGQE2HLZKXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190906184551.17858-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,57 +19,69 @@ To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMR
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello
+Since a second Allwinner crypto driver will be added, it is better to
+create a dedicated subdirectory.
 
-This patch serie adds support for the Allwinner crypto engine.
-The Crypto Engine is the third generation of Allwinner cryptogaphic offloader.
-The first generation is the Security System already handled by the
-sun4i-ss driver.
-The second is named also Security System and is present on A80 and A83T
-SoCs, originaly this driver supported it also, but supporting both IP bringing
-too much complexity and another driver (sun8i-ss) will came for it.
-
-For the moment, the driver support only DES3/AES in ECB/CBC mode.
-Patchs for CTR/CTS/XTS and RNGs will came later.
-
-Regards
-
-Corentin Labbe (9):
-  crypto: Add allwinner subdirectory
-  crypto: Add Allwinner sun8i-ce Crypto Engine
-  dt-bindings: crypto: Add DT bindings documentation for sun8i-ce Crypto
-    Engine
-  ARM: dts: sun8i: r40: add crypto engine node
-  ARM: dts: sun8i: h3: Add Crypto Engine node
-  ARM64: dts: allwinner: sun50i: Add Crypto Engine node on A64
-  ARM64: dts: allwinner: sun50i: Add crypto engine node on H5
-  ARM64: dts: allwinner: sun50i: Add Crypto Engine node on H6
-  sunxi_defconfig: add new crypto options
-
- .../bindings/crypto/allwinner,sun8i-ce.yaml   |  84 +++
- MAINTAINERS                                   |   6 +
- arch/arm/boot/dts/sun8i-h3.dtsi               |  11 +
- arch/arm/boot/dts/sun8i-r40.dtsi              |  11 +
- arch/arm/configs/sunxi_defconfig              |   2 +
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  11 +
- arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  11 +
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 +
- drivers/crypto/Kconfig                        |   2 +
- drivers/crypto/Makefile                       |   1 +
- drivers/crypto/allwinner/Kconfig              |  32 +
- drivers/crypto/allwinner/Makefile             |   1 +
- drivers/crypto/allwinner/sun8i-ce/Makefile    |   2 +
- .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 390 +++++++++++
- .../crypto/allwinner/sun8i-ce/sun8i-ce-core.c | 630 ++++++++++++++++++
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h  | 256 +++++++
- 16 files changed, 1460 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
+Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ MAINTAINERS                      | 6 ++++++
+ drivers/crypto/Kconfig           | 2 ++
+ drivers/crypto/Makefile          | 1 +
+ drivers/crypto/allwinner/Kconfig | 6 ++++++
+ 4 files changed, 15 insertions(+)
  create mode 100644 drivers/crypto/allwinner/Kconfig
- create mode 100644 drivers/crypto/allwinner/Makefile
- create mode 100644 drivers/crypto/allwinner/sun8i-ce/Makefile
- create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
- create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
- create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ee4e873c0f9a..d62ddf8ff262 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -681,6 +681,12 @@ L:	linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ S:	Maintained
+ F:	drivers/crypto/sunxi-ss/
+ 
++ALLWINNER CRYPTO ENGINE
++M:	Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++L:	linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
++S:	Maintained
++F:	drivers/crypto/allwinner/
++
+ ALLWINNER VPU DRIVER
+ M:	Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+ M:	Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+index 83271d944a96..fe90dd74797c 100644
+--- a/drivers/crypto/Kconfig
++++ b/drivers/crypto/Kconfig
+@@ -11,6 +11,8 @@ menuconfig CRYPTO_HW
+ 
+ if CRYPTO_HW
+ 
++source "drivers/crypto/allwinner/Kconfig"
++
+ config CRYPTO_DEV_PADLOCK
+ 	tristate "Support for VIA PadLock ACE"
+ 	depends on X86 && !UML
+diff --git a/drivers/crypto/Makefile b/drivers/crypto/Makefile
+index afc4753b5d28..90d60eff5ecc 100644
+--- a/drivers/crypto/Makefile
++++ b/drivers/crypto/Makefile
+@@ -1,4 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_CRYPTO_DEV_ALLWINNER) += allwinner/
+ obj-$(CONFIG_CRYPTO_DEV_ATMEL_AES) += atmel-aes.o
+ obj-$(CONFIG_CRYPTO_DEV_ATMEL_SHA) += atmel-sha.o
+ obj-$(CONFIG_CRYPTO_DEV_ATMEL_TDES) += atmel-tdes.o
+diff --git a/drivers/crypto/allwinner/Kconfig b/drivers/crypto/allwinner/Kconfig
+new file mode 100644
+index 000000000000..0c8a99f7959d
+--- /dev/null
++++ b/drivers/crypto/allwinner/Kconfig
+@@ -0,0 +1,6 @@
++config CRYPTO_DEV_ALLWINNER
++	bool "Support for Allwinner cryptographic offloader"
++	depends on ARCH_SUNXI || COMPILE_TEST
++	default y if ARCH_SUNXI
++	help
++	  Say Y here to get to see options for Allwinner hardware crypto devices
 -- 
 2.21.0
