@@ -1,49 +1,33 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v4 2/9] dt-bindings: display, renesas,du: Document cmms property
-Date: Fri,  6 Sep 2019 15:54:29 +0200
-Message-ID: <20190906135436.10622-3-jacopo+renesas@jmondi.org>
-References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH v3 0/3] arm64: meson-g12b: Add support for the Ugoos AM6
+Date: Fri,  6 Sep 2019 18:04:56 +0400
+Message-ID: <1567778699-59231-1-git-send-email-christianshewitt@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: laurent.pinchart@ideasonboard.com, kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org, horms@verge.net.au, uli+renesas@fpond.eu, VenkataRajesh.Kalakodima@in.bosch.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, airlied@linux.ie, daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp, Harsha.ManjulaMallikarjun@in.bosch.com, linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Chrisitian Hewitt <christianshewitt@gmail.com>, Oleg Ivanov <balbes-150@yandex.ru>
 List-Id: devicetree@vger.kernel.org
 
-Document the newly added 'cmms' property which accepts a list of phandle
-and channel index pairs that point to the CMM units available for each
-Display Unit output video channel.
+This patchset adds support for the Ugoos AM6, an Android STB based on
+the Amlogic W400 reference design with the S922X chipset.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+v2: correction of minor nits
 
-diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
-index c97dfacad281..1773b0a2f54f 100644
---- a/Documentation/devicetree/bindings/display/renesas,du.txt
-+++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-@@ -45,6 +45,10 @@ Required Properties:
-     instance that serves the DU channel, and the channel index identifies the
-     LIF instance in that VSP.
+v3: address regulator and GPIO corrections from Neil Armstrong (using
+schematic excerpts from Ugoos) and related v2 comments from Martin
+Blumenstingle. Add acks on patches 1/2 from Rob Herring.
 
-+  - renesas,cmms: A list of phandles to the CMM instances present in the SoC,
-+    one for each available DU channel. The property shall not be specified for
-+    SoCs that do not provide any CMM (such as V3M and V3H).
-+
- Required nodes:
+Christian Hewitt (3):
+  dt-bindings: Add vendor prefix for Ugoos
+  dt-bindings: arm: amlogic: Add support for the Ugoos AM6
+  arm64: dts: meson-g12b-ugoos-am6: add initial device-tree
 
- The connections to the DU output video ports are modeled using the OF graph
-@@ -91,6 +95,7 @@ Example: R8A7795 (R-Car H3) ES2.0 DU
- 			 <&cpg CPG_MOD 721>;
- 		clock-names = "du.0", "du.1", "du.2", "du.3";
- 		vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
-+		renesas,cmms = <&cmm0 &cmm1 &cmm2 &cmm3>;
+ Documentation/devicetree/bindings/arm/amlogic.yaml |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ .../boot/dts/amlogic/meson-g12b-ugoos-am6.dts      | 557 +++++++++++++++++++++
+ 4 files changed, 561 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
 
- 		ports {
- 			#address-cells = <1>;
---
-2.23.0
+-- 
+2.7.4
