@@ -1,52 +1,56 @@
-From: Rashmica Gupta <rashmica.g@gmail.com>
-Subject: [PATCH v3 1/5] dt-bindings: gpio: aspeed: Update documentation with ast2600 controllers
-Date: Fri,  6 Sep 2019 16:25:47 +1000
-Message-ID: <20190906062547.13264-1-rashmica.g@gmail.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v4 07/11] lib/vsprintf: Remove support for %pF and %pf in
+ favour of %pS and %ps
+Date: Fri, 6 Sep 2019 09:59:07 +0300
+Message-ID: <20190906065907.GH5475@paasikivi.fi.intel.com>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-8-sakari.ailus@linux.intel.com>
+ <20190902143935.xtd44jdvhjuc2wxe@pathway.suse.cz>
+ <20190902160139.GQ2680@smile.fi.intel.com>
+ <20190903140420.kmb42cwr3scrfd3e@pathway.suse.cz>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190903140420.kmb42cwr3scrfd3e@pathway.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org
-Cc: Rashmica Gupta <rashmica.g@gmail.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/ASPEED MACHINE
-        SUPPORT" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/ASPEED MACHINE
-        SUPPORT" <linux-aspeed@lists.ozlabs.org>, open list <linux-kernel@vger.kernel.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Steven Rostedt <rostedt@goodmis.org>, Namhyung Kim <namhyung@kernel.org>, rafael@kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org, Tzvetomir Stoyanov <tstoyanov@vmware.com>
 List-Id: devicetree@vger.kernel.org
 
-The ast2600 is a new generation of SoC from ASPEED. Similarly to the
-ast2400 and ast2500, it has a GPIO controller for it's 3.3V GPIO pins.
-Additionally, it has a GPIO controller for 36 1.8V GPIO pins.  We use
-the ngpio property to differentiate between these controllers.
+On Tue, Sep 03, 2019 at 04:04:20PM +0200, Petr Mladek wrote:
+> On Mon 2019-09-02 19:01:39, Andy Shevchenko wrote:
+> > On Mon, Sep 02, 2019 at 04:39:35PM +0200, Petr Mladek wrote:
+> > > On Mon 2019-09-02 11:32:36, Sakari Ailus wrote:
+> > > > %pS and %ps are now the preferred conversion specifiers to print function
+> > > > names. The functionality is equivalent; remove the old, deprecated %pF
+> > > > and %pf support.
+> > > 
+> > > Hmm, I see the following in master:
+> > > 
+> > > $> git grep %pF
+> > > tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt:or events have "%pF" or "%pS" parameter in its format string. It is common to
+> > > 
+> > > $> git grep %pf
+> > > tools/lib/traceevent/event-parse.c:             if (asprintf(&format, "%%pf: (NO FORMAT FOUND at %llx)\n", addr) < 0)
+> > > tools/lib/traceevent/event-parse.c:     if (asprintf(&format, "%s: %s", "%pf", printk->printk) < 0)
+> > > 
+> > > I wonder how this is related to printk(). In each case, it seems
+> > 
+> > It's going thru binary printf() I suppose. The fist stage just saves the format
+> > string and argument addresses or so and prints in later on when user is looking
+> > for human-readable output.
+> 
+> It seems that vbin_printf() still thinks that %pf and %pF
+> handle function pointers. If I get it correctly, it just
+> stores the binary data and the formating is done when
+> tracing log is read. The idea is the function pointers
+> will stay the same.
+> 
+> We need to fix/obsolete this path as well.
 
-Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
----
- Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Agreed. I'll include a patch to do that in v6.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-index 7e9b586770b0..b2033fc3a71a 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-@@ -2,7 +2,8 @@ Aspeed GPIO controller Device Tree Bindings
- -------------------------------------------
- 
- Required properties:
--- compatible		: Either "aspeed,ast2400-gpio" or "aspeed,ast2500-gpio"
-+- compatible		: Either "aspeed,ast2400-gpio", "aspeed,ast2500-gpio",
-+					or "aspeed,ast2600-gpio".
- 
- - #gpio-cells 		: Should be two
- 			  - First cell is the GPIO line number
-@@ -17,7 +18,9 @@ Required properties:
- 
- Optional properties:
- 
--- clocks                : A phandle to the clock to use for debounce timings
-+- clocks		: A phandle to the clock to use for debounce timings
-+- ngpios		: Number of GPIOs controlled by this controller. Should	be set
-+				  when there are multiple GPIO controllers on a SoC (ast2600).
- 
- The gpio and interrupt properties are further described in their respective
- bindings documentation:
 -- 
-2.20.1
+Sakari Ailus
+sakari.ailus@linux.intel.com
