@@ -1,71 +1,125 @@
-From: Pradeep P V K <ppvk@codeaurora.org>
-Subject: [RFC 2/2] dt-bindings: mmc: sdhci-msm: Add Bus BW vote supported strings
-Date: Fri,  6 Sep 2019 18:17:17 +0530
-Message-ID: <1567774037-2344-3-git-send-email-ppvk@codeaurora.org>
-References: <1567774037-2344-1-git-send-email-ppvk@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567774037-2344-1-git-send-email-ppvk@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org
-Cc: asutoshd@codeaurora.org, vbadigan@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, rampraka@codeaurora.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Pradeep P V K <ppvk@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: arm: renesas: Convert 'renesas,
+ prr' to json-schema
+Date: Fri, 6 Sep 2019 13:54:26 +0100
+Message-ID: <CAL_Jsq+yp6vw=RoUb+-C3rX2322Y=8xD=wr8OYWxmbvq2SOuKg@mail.gmail.com>
+References: <20190906111435.5706-1-horms+renesas@verge.net.au>
+ <CAL_JsqLvU4=kaQ-nSwMuh4VXX67U5URZAPvVJohfKzQsQdFTrA@mail.gmail.com>
+ <20190906114857.4mgunm4feehakc4u@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190906114857.4mgunm4feehakc4u@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Bus bandwidth voting supported strings for qcom-sdhci controller.
+On Fri, Sep 6, 2019 at 12:49 PM Simon Horman <horms@verge.net.au> wrote:
+>
+> On Fri, Sep 06, 2019 at 12:21:58PM +0100, Rob Herring wrote:
+> > On Fri, Sep 6, 2019 at 12:14 PM Simon Horman <horms+renesas@verge.net.au> wrote:
+> > >
+> > > Convert Renesas Product Register bindings documentation to json-schema.
+> > >
+> > > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> > > ---
+> > > Based on v5.3-rc1
+> > > Tested using:
+> > >   make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/renesas,prr.yaml
+> > > ---
+> > >  .../devicetree/bindings/arm/renesas,prr.txt        | 20 ------------
+> > >  .../devicetree/bindings/arm/renesas,prr.yaml       | 36 ++++++++++++++++++++++
+> > >  2 files changed, 36 insertions(+), 20 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/arm/renesas,prr.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/arm/renesas,prr.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/arm/renesas,prr.txt b/Documentation/devicetree/bindings/arm/renesas,prr.txt
+> > > deleted file mode 100644
+> > > index 08e482e953ca..000000000000
+> > > --- a/Documentation/devicetree/bindings/arm/renesas,prr.txt
+> > > +++ /dev/null
+> > > @@ -1,20 +0,0 @@
+> > > -Renesas Product Register
+> > > -
+> > > -Most Renesas ARM SoCs have a Product Register or Boundary Scan ID Register that
+> > > -allows to retrieve SoC product and revision information.  If present, a device
+> > > -node for this register should be added.
+> > > -
+> > > -Required properties:
+> > > -  - compatible: Must be one of:
+> > > -    "renesas,prr"
+> > > -    "renesas,bsid"
+> > > -  - reg: Base address and length of the register block.
+> > > -
+> > > -
+> > > -Examples
+> > > ---------
+> > > -
+> > > -       prr: chipid@ff000044 {
+> > > -               compatible = "renesas,prr";
+> > > -               reg = <0 0xff000044 0 4>;
+> > > -       };
+> > > diff --git a/Documentation/devicetree/bindings/arm/renesas,prr.yaml b/Documentation/devicetree/bindings/arm/renesas,prr.yaml
+> > > new file mode 100644
+> > > index 000000000000..9df003041456
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/arm/renesas,prr.yaml
+> > > @@ -0,0 +1,36 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/arm/renesas,prr.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Renesas Product Register
+> > > +
+> > > +maintainers:
+> > > +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> > > +  - Magnus Damm <magnus.damm@gmail.com>
+> > > +
+> > > +description: |
+> > > +  Most Renesas ARM SoCs have a Product Register or Boundary Scan ID
+> > > +  Register that allows to retrieve SoC product and revision information.
+> > > +  If present, a device node for this register should be added.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    oneOf:
+> > > +        - const: "renesas,prr"
+> > > +        - const: "renesas,bsid"
+> >
+> > enum is better than oneOf+const and drop the quotes. oneOf/allOf/anyOf
+> > result in terrible error messages.
+>
+> Thanks Rob,
+>
+> Like this?
+>
+>   compatible:
+>     enum:
+>       - renesas,prr
+>       - renesas,bsid
+>
+> > > +  reg:
+> > > +    items:
+> > > +      - description: Base address and length of the register block.
+> >
+> > That's what 'reg' *always* is... Just 'maxItems: 1' is sufficient when
+> > there is" only 1 entry.
+>
+> And this?
+>
+>   reg:
+>     maxItems: 1
 
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
----
- .../devicetree/bindings/mmc/sdhci-msm.txt          | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-index da4edb1..8255d92 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-@@ -39,6 +39,25 @@ Required properties:
- 	"cal"	- reference clock for RCLK delay calibration (optional)
- 	"sleep"	- sleep clock for RCLK delay calibration (optional)
- 
-+Optional Properties:
-+* Following bus parameters are required for bus bw voting:
-+- interconnects: Pairs of phandles and interconnect provider specifier
-+		 to denote the edge source and destination ports of
-+		 the interconnect path. Please refer to
-+		 Documentation/devicetree/bindings/interconnect/
-+		 for more details.
-+- interconnect-names: List of interconnect path name strings sorted in the same
-+		order as the interconnects property. Consumers drivers will use
-+		interconnect-names to match interconnect paths with interconnect
-+		specifiers. Please refer to Documentation/devicetree/bindings/
-+		interconnect/ for more details.
-+- qcom,msm-bus,name: string describing the bus path
-+- qcom,msm-bus,num-cases: number of configurations in which sdhc can operate in
-+- qcom,msm-bus,num-paths: number of paths to vote for
-+- qcom,msm-bus,vectors-KBps: Takes a tuple <ib ab>, <ib ab> (2 tuples for 2
-+				num-paths) The number of these entries *must*
-+				be same as num-cases.
-+
- Example:
- 
- 	sdhc_1: sdhci@f9824900 {
-@@ -56,6 +75,19 @@ Example:
- 
- 		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
- 		clock-names = "core", "iface";
-+		interconnects = <&qnoc 50 &qnoc 512>,
-+				<&qnoc 1 &qnoc 544>;
-+		interconnect-names = "sdhc-ddr","cpu-sdhc";
-+		qcom,msm-bus,name = "sdhc1";
-+		qcom,msm-bus,num-cases = <3>;
-+		qcom,msm-bus,num-paths = <2>;
-+		qcom,msm-bus,vectors-KBps =
-+		/* No Vote */
-+		<0 0>, <0 0>,
-+		/* 50 MB/s */
-+		<130718 200000>, <133320 133320>,
-+		/* 200 MB/s */
-+		<1338562 4096000>, <1338562 4096000>;
- 	};
- 
- 	sdhc_2: sdhci@f98a4900 {
--- 
-1.9.1
+Yes, for both.
