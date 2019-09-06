@@ -1,110 +1,130 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [RFC 2/3] dmaengine: of_dma: Function to look up the DMA domain of a client
-Date: Fri, 6 Sep 2019 17:18:15 +0300
-Message-ID: <20190906141816.24095-3-peter.ujfalusi@ti.com>
-References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
+From: Liviu Dudau <liviu.dudau@arm.com>
+Subject: Re: [v4 2/2] drm/arm/mali-dp: Add display QoS interface
+ configuration for Mali DP500
+Date: Fri, 6 Sep 2019 15:17:52 +0100
+Message-ID: <20190906141751.unabowxoglygg4kp@e110455-lin.cambridge.arm.com>
+References: <20190822021135.10288-1-wen.he_1@nxp.com>
+ <20190822021135.10288-2-wen.he_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190906141816.24095-1-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vkoul@kernel.org, robh+dt@kernel.org
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190822021135.10288-2-wen.he_1@nxp.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Wen He <wen.he_1@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, leoyang.li@nxp.com, linux-devel@linux.nxdi.nxp.com, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Find the DMA domain controller of the client device by iterating up in
-device tree looking for the closest 'dma-domain-controller' property.
-
-If the client's node is not provided then check the DT root for the
-controller.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/dma/of-dma.c   | 42 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_dma.h |  7 +++++++
- 2 files changed, 49 insertions(+)
-
-diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
-index c2d779daa4b5..04b5795cd76b 100644
---- a/drivers/dma/of-dma.c
-+++ b/drivers/dma/of-dma.c
-@@ -18,6 +18,48 @@
- static LIST_HEAD(of_dma_list);
- static DEFINE_MUTEX(of_dma_lock);
- 
-+/**
-+ * of_find_dma_domain - Get the domain DMA controller
-+ * @np:		device node of the client device
-+ *
-+ * Look up the DMA controller of the domain the client device is part of.
-+ * Finds the dma-domain controller the client device belongs to. It is used when
-+ * requesting non slave channels (like channel for memcpy) to make sure that the
-+ * channel can be request from a DMA controller which can service the given
-+ * domain best.
-+ *
-+ * Returns the device_node pointer of the DMA controller or succes or NULL on
-+ * error.
-+ */
-+struct device_node *of_find_dma_domain(struct device_node *np)
-+{
-+	struct device_node *dma_domain = NULL;
-+	phandle dma_phandle;
-+
-+	/*
-+	 * If no device_node is provided look at the root level for system
-+	 * default DMA controller for modules.
-+	 */
-+	if (!np)
-+		np = of_root;
-+
-+	if (!np || !of_node_get(np))
-+		return NULL;
-+
-+	do {
-+		if (of_property_read_u32(np, "dma-domain-controller",
-+					 &dma_phandle))
-+			np = of_get_next_parent(np);
-+		else {
-+			dma_domain = of_find_node_by_phandle(dma_phandle);
-+			of_node_put(np);
-+		}
-+	} while (!dma_domain && np);
-+
-+	return dma_domain;
-+}
-+EXPORT_SYMBOL_GPL(of_find_dma_domain);
-+
- /**
-  * of_dma_find_controller - Get a DMA controller in DT DMA helpers list
-  * @dma_spec:	pointer to DMA specifier as found in the device tree
-diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
-index fd706cdf255c..6eab0a8d3335 100644
---- a/include/linux/of_dma.h
-+++ b/include/linux/of_dma.h
-@@ -32,6 +32,8 @@ struct of_dma_filter_info {
- };
- 
- #ifdef CONFIG_DMA_OF
-+extern struct device_node *of_find_dma_domain(struct device_node *np);
-+
- extern int of_dma_controller_register(struct device_node *np,
- 		struct dma_chan *(*of_dma_xlate)
- 		(struct of_phandle_args *, struct of_dma *),
-@@ -52,6 +54,11 @@ extern struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec
- 		struct of_dma *ofdma);
- 
- #else
-+static inline struct device_node *of_find_dma_domain(struct device_node *np)
-+{
-+	return NULL;
-+}
-+
- static inline int of_dma_controller_register(struct device_node *np,
- 		struct dma_chan *(*of_dma_xlate)
- 		(struct of_phandle_args *, struct of_dma *),
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+SGkgV2VuLAoKT24gVGh1LCBBdWcgMjIsIDIwMTkgYXQgMTA6MTE6MzVBTSArMDgwMCwgV2VuIEhl
+IHdyb3RlOgo+IENvbmZpZ3VyZSB0aGUgZGlzcGxheSBRdWFsaXR5IG9mIHNlcnZpY2UgKFFvUykg
+bGV2ZWxzIHByaW9yaXR5IGlmIHRoZQo+IG9wdGlvbmFsIHByb3BlcnR5IG5vZGUgImFybSxtYWxp
+ZHAtYXFyb3MtdmFsdWUiIGlzIGRlZmluZWQgaW4gRFRTIGZpbGUuCj4gCj4gUW9TIHNpZ25hbGlu
+ZyB1c2luZyBBUVJPUyBhbmQgQVdRT1MgQVhJIGludGVyZmFjZSBzaWduYWxzLCB0aGUgQVFST1Mg
+aXMKPiBkcml2ZW4gZnJvbSB0aGUgIlJRT1MiIHJlZ2lzdGVyLCBzbyBuZWVkZWQgdG8gcHJvZ3Jh
+bSB0aGUgUlFPUyByZWdpc3Rlcgo+IHRvIGF2b2lkIHRoZSBoaWdoIHJlc29sdXRpb25zIGZsaWNr
+ZXIgaXNzdWUgb24gdGhlIExTMTAyOEEgcGxhdGZvcm0uCj4gCj4gU2lnbmVkLW9mZi1ieTogV2Vu
+IEhlIDx3ZW4uaGVfMUBueHAuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlk
+cF9kcnYuYyAgfCAgNiArKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfaHcuYyAg
+IHwgMTMgKysrKysrKysrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9ody5oICAg
+fCAgMyArKysKPiAgZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfcmVncy5oIHwgMTAgKysrKysr
+KysrKwo+ICA0IGZpbGVzIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfZHJ2LmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJt
+L21hbGlkcF9kcnYuYwo+IGluZGV4IGMyN2ZmNDU2ZWRkYy4uODBlOGQxNTc2MGFjIDEwMDY0NAo+
+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX2Rydi5jCj4gKysrIGIvZHJpdmVycy9n
+cHUvZHJtL2FybS9tYWxpZHBfZHJ2LmMKPiBAQCAtODE1LDYgKzgxNSwxMiBAQCBzdGF0aWMgaW50
+IG1hbGlkcF9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldikKPiAgCj4gIAltYWxpZHAtPmNvcmVfaWQg
+PSB2ZXJzaW9uOwo+ICAKPiArCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKGRldi0+b2Zfbm9k
+ZSwKPiArCQkJCQkiYXJtLG1hbGlkcC1hcnFvcy12YWx1ZSIsCj4gKwkJCQkJJmh3ZGV2LT5hcnFv
+c192YWx1ZSk7Cj4gKwlpZiAocmV0KQo+ICsJCWh3ZGV2LT5hcnFvc192YWx1ZSA9IDB4MDsKPiAr
+Cj4gIAkvKiBzZXQgdGhlIG51bWJlciBvZiBsaW5lcyB1c2VkIGZvciBvdXRwdXQgb2YgUkdCIGRh
+dGEgKi8KPiAgCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdThfYXJyYXkoZGV2LT5vZl9ub2RlLAo+
+ICAJCQkJCSJhcm0sbWFsaWRwLW91dHB1dC1wb3J0LWxpbmVzIiwKPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9ncHUvZHJtL2FybS9tYWxpZHBfaHcuYyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRw
+X2h3LmMKPiBpbmRleCAzODBiZTY2ZDRjNmUuLmY5MGEzNjdhNWJjOSAxMDA2NDQKPiAtLS0gYS9k
+cml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9ody5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2Fy
+bS9tYWxpZHBfaHcuYwo+IEBAIC0zNzQsNiArMzc0LDE5IEBAIHN0YXRpYyB2b2lkIG1hbGlkcDUw
+MF9tb2Rlc2V0KHN0cnVjdCBtYWxpZHBfaHdfZGV2aWNlICpod2Rldiwgc3RydWN0IHZpZGVvbW9k
+ZSAqCj4gIAkJbWFsaWRwX2h3X3NldGJpdHMoaHdkZXYsIE1BTElEUF9ESVNQX0ZVTkNfSUxBQ0VE
+LCBNQUxJRFBfREVfRElTUExBWV9GVU5DKTsKPiAgCWVsc2UKPiAgCQltYWxpZHBfaHdfY2xlYXJi
+aXRzKGh3ZGV2LCBNQUxJRFBfRElTUF9GVU5DX0lMQUNFRCwgTUFMSURQX0RFX0RJU1BMQVlfRlVO
+Qyk7Cj4gKwo+ICsJLyoKPiArCSAqIFByb2dyYW0gdGhlIFJRb1MgcmVnaXN0ZXIgdG8gYXZvaWQg
+aGlnaCByZXNvbHV0aW9ucyBmbGlja2VyCj4gKwkgKiBpc3N1ZSBvbiB0aGUgTFMxMDI4QS4KPiAr
+CSAqLwo+ICsJaWYgKGh3ZGV2LT5hcnFvc192YWx1ZSkgewo+ICsJCXZhbCA9IGh3ZGV2LT5hcnFv
+c192YWx1ZTsKPiArCj4gKwkJaWYgKG1vZGUtPnBpeGVsY2xvY2sgPiAxNDg1MDAwMDApCj4gKwkJ
+CW1hbGlkcF9od19zZXRiaXRzKGh3ZGV2LCB2YWwsIE1BTElEUDUwMF9SUU9TX1FVQUxJVFkpOwo+
+ICsJCWVsc2UKPiArCQkJbWFsaWRwX2h3X2NsZWFyYml0cyhod2RldiwgdmFsLCBNQUxJRFA1MDBf
+UlFPU19RVUFMSVRZKTsKPiArCX0KClRoaXMgYXBwbGljYXRpb24gb2YgdGhlIGFycW9zX3ZhbHVl
+IGJhc2VkIG9uIGEgcGl4ZWwgY2xvY2sgdmFsdWUgYm90aGVycyBtZSwKYmVjYXVzZSBpdCBoYXMg
+dHdvIHByb2JsZW1zOgoKMS4gU29tZSBvdGhlciB1c2VyIG9mIHRoZSBNYWxpIERQIGRyaXZlciBj
+YW4ndCBhcHBseSBhIHN5c3RlbSBRb1MgdmFsdWUgdGhhdCB0aGV5IGNhbgpub3cgc3BlY2lmeSBp
+biB0aGUgRFQsIHVubGVzcyB0aGUgcmVxdWVzdGVkIHBpeGVsIGNsb2NrIGlzIGJpZ2dlciB0aGFu
+IDE0NU1Iei4gOigKCjIuIChBIGd1ZXNzKSBUaGUgZmxpY2tlcmluZyBpc3N1ZSBzaG93cyB1cCBv
+biBhIGNvbWJpbmF0aW9uIG9mIHBpeGVsY2xvY2sgYW5kCnJlc29sdXRpb24gKGkuZS4gaXQgaXMg
+YSBiYW5kd2lkdGggcHJvYmxlbSksIGJ1dCB5b3Ugb25seSBhZGRyZXNzIG9uZSBvZiB0aGUKdmFy
+aWFibGVzLiBIYXZlbid0IHRlc3RlZCBvbiB0aGUgTFMxMDI4QSB5ZXQsIGJ1dCBkbyB5b3Uga25v
+dyBpZiAodGhlb3JldGljYWxseSkgaXQKd291bGQgaGF2ZSBhIGZsaWNrZXIgcHJvYmxlbSBkb2lu
+ZyA2NDB4NDgwQDIwME1IeiB3aXRob3V0IHRoZSBRb1MgdmFsdWU/CgpIb3cgYWJvdXQgdGhpcyBp
+bnN0ZWFkPwoKLS04PC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2Fy
+bS9tYWxpZHBfaHcuYyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX2h3LmMKaW5kZXggMzgw
+YmU2NmQ0YzZlYi4uZTJmOTZkY2UxMzg1MCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2Fy
+bS9tYWxpZHBfaHcuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9ody5jCkBAIC0z
+NzQsNiArMzc0LDIyIEBAIHN0YXRpYyB2b2lkIG1hbGlkcDUwMF9tb2Rlc2V0KHN0cnVjdCBtYWxp
+ZHBfaHdfZGV2aWNlICpod2Rldiwgc3RydWN0IHZpZGVvbW9kZSAqCiAJCW1hbGlkcF9od19zZXRi
+aXRzKGh3ZGV2LCBNQUxJRFBfRElTUF9GVU5DX0lMQUNFRCwgTUFMSURQX0RFX0RJU1BMQVlfRlVO
+Qyk7CiAJZWxzZQogCQltYWxpZHBfaHdfY2xlYXJiaXRzKGh3ZGV2LCBNQUxJRFBfRElTUF9GVU5D
+X0lMQUNFRCwgTUFMSURQX0RFX0RJU1BMQVlfRlVOQyk7CisKKwkvKgorCSAqIFByb2dyYW0gdGhl
+IFJRb1MgcmVnaXN0ZXIuIExTMTAyOEEgaGFzIGFuIGlzc3VlIHdoZXJlIHNjcmVlbiB3aWxsCisJ
+ICogZmxpY2tlciBvbiBwaXhlbGNsb2NrcyBoaWdoZXIgdGhhbiAxNDguNU1IeiBidXQgb3RoZXJ3
+aXNlIGRvZXNuJ3QKKwkgKiB3YW50IGFuIFJRb1MgdmFsdWUsIHNvIHNwZWNpYWwgY2FzZSBpdCBm
+b3IgdGhlbS4KKwkgKi8KKwlpZiAoaHdkZXYtPmFycW9zX3ZhbHVlKSB7CisJCXZhbCA9IGh3ZGV2
+LT5hcnFvc192YWx1ZTsKKworI2lmZGVmIE1BTElEUF9MUzEwMjhBCisJCWlmIChtb2RlLT5waXhl
+bGNsb2NrIDw9IDE0ODUwMDAwMCkKKwkJCW1hbGlkcF9od19jbGVhcmJpdHMoaHdkZXYsIHZhbCwg
+TUFMSURQNTAwX1JRT1NfUVVBTElUWSk7CisJCWVsc2UKKyNlbmRpZgorCQkJbWFsaWRwX2h3X3Nl
+dGJpdHMoaHdkZXYsIHZhbCwgTUFMSURQNTAwX1JRT1NfUVVBTElUWSk7CisJfQogfQogCiBpbnQg
+bWFsaWRwX2Zvcm1hdF9nZXRfYnBwKHUzMiBmbXQpCi0tODwtLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KCkFuZCB0aGVu
+IHlvdSBuZWVkIHRvIGRlZmluZSBhIE1BTElEUF9MUzEwMjhBIGluIGEgdmVuZG9yIHBhdGNoIG9u
+IHRvcCBvZiB0aGUga2VybmVsCnNvdXJjZSBjb2RlLgoKQmVzdCByZWdhcmRzLApMaXZpdQoKCj4g
+IH0KPiAgCj4gIGludCBtYWxpZHBfZm9ybWF0X2dldF9icHAodTMyIGZtdCkKPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfaHcuaCBiL2RyaXZlcnMvZ3B1L2RybS9hcm0v
+bWFsaWRwX2h3LmgKPiBpbmRleCA5NjhhNjVlZWQzNzEuLmU0YzM2YmM5MGJkYSAxMDA2NDQKPiAt
+LS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9ody5oCj4gKysrIGIvZHJpdmVycy9ncHUv
+ZHJtL2FybS9tYWxpZHBfaHcuaAo+IEBAIC0yNTEsNiArMjUxLDkgQEAgc3RydWN0IG1hbGlkcF9o
+d19kZXZpY2Ugewo+ICAKPiAgCS8qIHNpemUgb2YgbWVtb3J5IHVzZWQgZm9yIHJvdGF0aW5nIGxh
+eWVycywgdXAgdG8gdHdvIGJhbmtzIGF2YWlsYWJsZSAqLwo+ICAJdTMyIHJvdGF0aW9uX21lbW9y
+eVsyXTsKPiArCj4gKwkvKiBwcmlvcml0eSBsZXZlbCBvZiBSUU9TIHJlZ2lzdGVyIHVzZWQgZm9y
+IGRyaXZlbiB0aGUgQVJRT1Mgc2lnbmFsICovCj4gKwl1MzIgYXJxb3NfdmFsdWU7Cj4gIH07Cj4g
+IAo+ICBzdGF0aWMgaW5saW5lIHUzMiBtYWxpZHBfaHdfcmVhZChzdHJ1Y3QgbWFsaWRwX2h3X2Rl
+dmljZSAqaHdkZXYsIHUzMiByZWcpCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0v
+bWFsaWRwX3JlZ3MuaCBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX3JlZ3MuaAo+IGluZGV4
+IDk5MzAzMTU0MmZhMS4uNTE0YzUwZGNiNzRkIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9hcm0vbWFsaWRwX3JlZ3MuaAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX3Jl
+Z3MuaAo+IEBAIC0yMTAsNiArMjEwLDE2IEBACj4gICNkZWZpbmUgTUFMSURQNTAwX0NPTkZJR19W
+QUxJRAkJMHgwMGYwMAo+ICAjZGVmaW5lIE1BTElEUDUwMF9DT05GSUdfSUQJCTB4MDBmZDQKPiAg
+Cj4gKy8qCj4gKyAqIFRoZSBxdWFsaXR5IG9mIHNlcnZpY2UgKFFvUykgcmVnaXN0ZXIgb24gdGhl
+IERQNTAwLiBSUU9TIHJlZ2lzdGVyIHZhbHVlcwo+ICsgKiBhcmUgZHJpdmVuIGJ5IHRoZSBBUlFP
+UyBzaWduYWwsIHVzaW5nIEFYSSB0cmFuc2FjYXRpb25zLCBkZXBlbmRlbnQgb24gdGhlCj4gKyAq
+IEZJRk8gaW5wdXQgbGV2ZWwuCj4gKyAqIFRoZSBSUU9TIHJlZ2lzdGVyIGNhbiBhbHNvIHNldCBR
+b1MgbGV2ZWxzIGZvcjoKPiArICogICAgLSBSRURfQVJRT1MgICBAIEEgNC1iaXQgc2lnbmFsIHZh
+bHVlIGZvciBjbG9zZSB0byB1bmRlcmZsb3cgY29uZGl0aW9ucwo+ICsgKiAgICAtIEdSRUVOX0FS
+UU9TIEAgQSA0LWJpdCBzaWduYWwgdmFsdWUgZm9yIG5vcm1hbCBjb25kaXRpb25zCj4gKyAqLwo+
+ICsjZGVmaW5lIE1BTElEUDUwMF9SUU9TX1FVQUxJVFkgICAgICAgICAgMHgwMDUwMAo+ICsKPiAg
+LyogcmVnaXN0ZXIgb2Zmc2V0cyBhbmQgYml0cyBzcGVjaWZpYyB0byBEUDU1MC9EUDY1MCAqLwo+
+ICAjZGVmaW5lIE1BTElEUDU1MF9BRERSX1NQQUNFX1NJWkUJMHgxMDAwMAo+ICAjZGVmaW5lIE1B
+TElEUDU1MF9ERV9DT05UUk9MCQkweDAwMDEwCj4gLS0gCj4gMi4xNy4xCj4gCgotLSAKPT09PT09
+PT09PT09PT09PT09PT0KfCBJIHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8Cnwg
+YnV0IHRoZXkncmUgbm90IHwKfCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEgIC8K
+ICAtLS0tLS0tLS0tLS0tLS0KICAgIMKvXF8o44OEKV8vwq8KX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
