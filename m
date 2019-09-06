@@ -1,27 +1,26 @@
-Return-Path: <SRS0=vEa5=XC=cloudbear.ru=vitaly.gaiduk@kernel.org>
+Return-Path: <SRS0=z3yq=XB=cloudbear.ru=vitaly.gaiduk@kernel.org>
 From: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
-In-Reply-To: <20190907153919.GC21922@lunn.ch>
-References: <20190907153919.GC21922@lunn.ch> <1567700761-14195-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
-	 <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
+In-Reply-To: <1567703176.6344.4.camel@impinj.com>
+References: <1567700761-14195-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+	 <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru> <1567703176.6344.4.camel@impinj.com>
 Subject: Re: [PATCH 1/2] net: phy: dp83867: Add documentation for SGMII mode type
 MIME-Version: 1.0
-Date: Sun, 08 Sep 2019 01:47:19 +0300
-Message-Id: <2894361567896439@iva5-be053096037b.qloud-c.yandex.net>
+Date: Fri, 06 Sep 2019 19:21:40 +0300
+Message-Id: <1287771567786900@iva4-b954b1b05fd9.qloud-c.yandex.net>
 Content-Transfer-Encoding: base64
 Content-Type: text/html; charset=utf-8
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Trent Piepho <tpiepho@impinj.com>
+To: Trent Piepho <tpiepho@impinj.com>, "davem@davemloft.net" <davem@davemloft.net>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "andrew@lunn.ch" <andrew@lunn.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGksIEFuZHJldy48ZGl2PknigJltIHJlYWR5IHRvIGRvIHRoaXMgcHJvcGVydHkgd2l0aCBzdWNo
-IG5hbWUgYnV0IGlzIGl0IGdvb2QgcHJhY3RpY2UgdG8gZG8gc3VjaCBsb25nIG5hbWVzPyA6KTwv
-ZGl2PjxkaXY+QWxzbywgVHJlbnQgUGllcGhvIHdyb3RlIGFib3V0IHNnbWlpLWNsayBhbmQgbWVy
-Z2VkIGFsbCBpZGVhcyB3ZSBoYXZlIOKAnHRpLHNnbWlpLXJlZi1jbGvigJ0uPC9kaXY+PGRpdj5J
-dOKAmXMgYmV0dGVyLCBpc27igJl0IGl0PzwvZGl2PjxkaXY+Vml0YWx5LjwvZGl2PjxkaXY+PGRp
-dj48YnIgLz4wNy4wOS4yMDE5LCAxODozOSwgIkFuZHJldyBMdW5uIiAmbHQ7YW5kcmV3QGx1bm4u
-Y2gmZ3Q7OjxiciAvPjxibG9ja3F1b3RlPjxwPk9uIFRodSwgU2VwIDA1LCAyMDE5IGF0IDA3OjI2
-OjAwUE0gKzAzMDAsIFZpdGFseSBHYWlkdWsgd3JvdGU6PGJyIC8+PC9wPjxibG9ja3F1b3RlIGNs
-YXNzPSJiNGZkNWNmMmVjOTJiYzY4Y2I4OTg3MDBiYjgxMzU1ZndtaS1xdW90ZSI+wqBBZGQgZG9j
+PGRpdj5PaCwgc29ycnkgZm9yIGRlbGF5ZWQgcmVwbHkuPC9kaXY+PGRpdj5UaGlzIHZhbHVlIG1l
+YW5zIGNob3NlbiBzZ21paSB0eXBlIHdoaWNoIGNhbiBiZSAwIG9yIDEgb25seS48L2Rpdj48ZGl2
+PklkZWEgd2l0aCBwaHktbW9kZSA9ICJzZ21paS1jbGsiIGFkZHMgd29yayB3aXRoIGR0cyBiZWNh
+dXNlIHRoaXMgbm9kZSBpcyB1c3VhbGx5IHBsYWNlZCBpbiBtYWMgbm9kZSBhcyBJIGtub3cuIE1h
+eWJlIHVzZSBzb2x1dGlvbiB3aXRoICJzZ21paS1jbGsiIGJvb2xlYW4/PC9kaXY+PGRpdj7CoDwv
+ZGl2PjxkaXY+MDUuMDkuMjAxOSwgMjA6MDYsICJUcmVudCBQaWVwaG8iICZsdDt0cGllcGhvQGlt
+cGluai5jb20mZ3Q7OjwvZGl2PjxibG9ja3F1b3RlPjxwPk9uIFRodSwgMjAxOS0wOS0wNSBhdCAx
+OToyNiArMDMwMCwgVml0YWx5IEdhaWR1ayB3cm90ZTo8L3A+PGJsb2NrcXVvdGU+wqBBZGQgZG9j
 dW1lbnRhdGlvbiBvZiB0aSxzZ21paS10eXBlIHdoaWNoIGNhbiBiZSB1c2VkIHRvIHNlbGVjdDxi
 ciAvPsKgU0dNSUkgbW9kZSB0eXBlICg0IG9yIDYtd2lyZSkuPGJyIC8+PGJyIC8+wqBTaWduZWQt
 b2ZmLWJ5OiBWaXRhbHkgR2FpZHVrICZsdDs8YSBocmVmPSJtYWlsdG86dml0YWx5LmdhaWR1a0Bj
@@ -35,16 +34,19 @@ MDA2NDQ8YnIgLz7CoC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQv
 dGksZHA4Mzg2Ny50eHQ8YnIgLz7CoCsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
 aW5ncy9uZXQvdGksZHA4Mzg2Ny50eHQ8YnIgLz7CoEBAIC0zNyw2ICszNyw3IEBAIE9wdGlvbmFs
 IHByb3BlcnR5OjxiciAvPsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBmb3IgYXBwbGljYWJsZSB2YWx1ZXMuICBUaGUgQ0xLX09V
-VCBwaW4gY2FuIGFsc288YnIgLz7CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYmUgZGlzYWJsZWQgYnkgdGhpcyBwcm9wZXJ0eS4g
-IFdoZW4gb21pdHRlZCwgdGhlPGJyIC8+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoFBIWSdzIGRlZmF1bHQgd2lsbCBiZSBsZWZ0
-IGFzIGlzLjxiciAvPsKgKwktIHRpLHNnbWlpLXR5cGUgLSBUaGlzIGRlbm90ZXMgdGhlIGZhY3Qg
-d2hpY2ggU0dNSUkgbW9kZSBpcyB1c2VkICg0IG9yIDYtd2lyZSkuPGJyIC8+PC9ibG9ja3F1b3Rl
-PjxwPjxiciAvPkhpIFZpdGFseTxiciAvPjxiciAvPllvdSBwcm9iYWJseSB3YW50IHRvIG1ha2Ug
-dGhpcyBhIEJvb2xlYW4uIEkgZG9uJ3QgdGhpbmsgU0dNSUkgdHlwZSBpczxiciAvPmEgZ29vZCBp
-ZGVhLiBUaGlzIGlzIGFib3V0IGVuYWJsaW5nIHRoZSByZWNlaXZlIGNsb2NrIHRvIGJlIHBhc3Nl
-ZCB0bzxiciAvPnRoZSBNQUMuIFNvIGhvdyBhYm91dCB0aSxzZ21paS1yZWYtY2xvY2stb3V0cHV0
-LWVuYWJsZS48YnIgLz48YnIgLz7CoMKgwqDCoEFuZHJldzxiciAvPjwvcD48L2Jsb2NrcXVvdGU+
-PC9kaXY+PC9kaXY+
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBmb3IgYXBwbGljYWJsZSB2YWx1ZXMuIFRoZSBDTEtfT1VU
+IHBpbiBjYW4gYWxzbzxiciAvPsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBiZSBkaXNhYmxlZCBieSB0aGlzIHByb3BlcnR5LiBX
+aGVuIG9taXR0ZWQsIHRoZTxiciAvPsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBQSFkncyBkZWZhdWx0IHdpbGwgYmUgbGVmdCBh
+cyBpcy48YnIgLz7CoCsgLSB0aSxzZ21paS10eXBlIC0gVGhpcyBkZW5vdGVzIHRoZSBmYWN0IHdo
+aWNoIFNHTUlJIG1vZGUgaXMgdXNlZCAoNCBvciA2LXdpcmUpLjwvYmxvY2txdW90ZT48cD48YnIg
+Lz5SZWFsbHkgc2hvdWxkIGV4cGxhaW4gd2hhdCBraW5kIG9mIHZhbHVlIGl0IGlzIGFuZCB3aGF0
+IHRoZSB2YWx1ZXM8YnIgLz5tZWFuLiBJLmUuLCBzaG91bGQgdGhpcyBiZSB0aSxzZ2ltaWktdHlw
+ZSA9ICZsdDs0Jmd0OyB0byBzZWxlY3QgNCB3aXJlPzxiciAvPjxiciAvPk1heWJlIGEgYm9vbGVh
+biwgInNnbWlpLWNsb2NrIiwgdG8gaW5kaWNhdGUgdGhlIHByZXNlbmNlIG9mIHNnbWlpIHJ4PGJy
+IC8+Y2xvY2sgbGluZXMsIHdvdWxkIG1ha2UgbW9yZSBzZW5zZT88YnIgLz48YnIgLz5JIGFsc28g
+d29uZGVyIGlmIHBoeS1tb2RlID0gInNnbWlpLWNsayIgb3IgInNnbWlpLTZ3aXJlIiwgdnMgdGhl
+PGJyIC8+ZXhpc3RpbmcgcGh5LW1vZGUgPSAic2dtaWkiLCBtaWdodCBhbHNvIGJlIGEgYmV0dGVy
+IHdheSB0byBkZXNjcmliZTxiciAvPnRoaXMgaW5zdGVhZCBvZiBhIG5ldyBwcm9wZXJ0eS48L3A+
+PC9ibG9ja3F1b3RlPg==
