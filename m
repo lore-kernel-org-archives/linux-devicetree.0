@@ -1,95 +1,88 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI config register
-Date: Thu, 05 Sep 2019 17:03:18 -0700
-Message-ID: <5d71a247.1c69fb81.2146f.7ed2@mx.google.com>
-References: <20190829181203.2660-1-ilina@codeaurora.org> <20190829181203.2660-6-ilina@codeaurora.org> <5d6d1b72.1c69fb81.ee88.efcf@mx.google.com> <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com> <20190903170722.GA31716@codeaurora.org>
+From: Dongchun Zhu <dongchun.zhu@mediatek.com>
+Subject: Re: [V3, 2/2] media: i2c: Add Omnivision OV02A10 camera sensor driver
+Date: Fri, 6 Sep 2019 09:33:05 +0800
+Message-ID: <1567733585.21623.163.camel@mhfsdcap03>
+References: <20190819034331.13098-1-dongchun.zhu@mediatek.com>
+ <20190819034331.13098-3-dongchun.zhu@mediatek.com>
+ <20190819083009.GC6133@paasikivi.fi.intel.com>
+ <1567676465.21623.100.camel@mhfsdcap03>
+ <20190905104546.GA5475@paasikivi.fi.intel.com>
+ <CAAFQd5Bh-11D9RR9WVH5A3DbXZoxWhbMhXSNKUV25mempMi+ag@mail.gmail.com>
+ <20190905160512.GG5475@paasikivi.fi.intel.com>
+ <CANMq1KDVMGkeBvu1nO5WHopWwec9mxHfhmLmX2BzvaYVLzxoXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190903170722.GA31716@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Rob Herring <robh@kernel.org>, evgreen@chromium.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CANMq1KDVMGkeBvu1nO5WHopWwec9mxHfhmLmX2BzvaYVLzxoXw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Boichat <drinkcat@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, shengnan.wang@mediatek.com, Tomasz Figa <tfiga@chromium.org>, Louis Kuo <louis.kuo@mediatek.com>, Sj Huang <sj.huang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek
+ SoC support" <linux-mediatek@lists.infradead.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Cao Bing Bu <bingbu.cao@intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "list@263.net:IOMMU
+ DRIVERS <iommu@lists.linux-foundation.org>,  Joerg  Roedel
+ <joro@8bytes.org>, " <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lina Iyer (2019-09-03 10:07:22)
-> On Mon, Sep 02 2019 at 07:58 -0600, Marc Zyngier wrote:
-> >On 02/09/2019 14:38, Rob Herring wrote:
-> >> On Thu, Aug 29, 2019 at 12:11:54PM -0600, Lina Iyer wrote:
-> >>> In addition to configuring the PDC, additional registers that interfa=
-ce
-> >>> the GIC have to be configured to match the GPIO type. The registers on
-> >>> some QCOM SoCs are access restricted, while on other SoCs are not. Th=
-ey
-> >>> SoCs with access restriction to these SPI registers need to be written
-> >>
-> >> Took me a minute to figure out this is GIC SPI interrupts, not SPI bus.
-> >>
-> >>> from the firmware using the SCM interface. Add a flag to indicate if =
-the
-> >>> register is to be written using SCM interface.
-> >>>
-> >>> Cc: devicetree@vger.kernel.org
-> >>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> >>> ---
-> >>>  .../bindings/interrupt-controller/qcom,pdc.txt           | 9 +++++++=
-+-
-> >>>  1 file changed, 8 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/q=
-com,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,p=
-dc.txt
-> >>> index 8e0797cb1487..852fcba98ea6 100644
-> >>> --- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc=
-.txt
-> >>> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc=
-.txt
-> >>> @@ -50,15 +50,22 @@ Properties:
-> >>>                 The second element is the GIC hwirq number for the PD=
-C port.
-> >>>                 The third element is the number of interrupts in sequ=
-ence.
-> >>>
-> >>> +- qcom,scm-spi-cfg:
-> >>> +   Usage: optional
-> >>> +   Value type: <bool>
-> >>> +   Definition: Specifies if the SPI configuration registers have to =
-be
-> >>> +               written from the firmware.
-> >>> +
-> >>>  Example:
-> >>>
-> >>>     pdc: interrupt-controller@b220000 {
-> >>>             compatible =3D "qcom,sdm845-pdc";
-> >>> -           reg =3D <0xb220000 0x30000>;
-> >>> +           reg =3D <0xb220000 0x30000>, <0x179900f0 0x60>;
-> >>
-> >> There needs to be a description for reg updated. These aren't GIC
-> >> registers are they? Because those go in the GIC node.
+On Fri, 2019-09-06 at 06:58 +0800, Nicolas Boichat wrote:
+> On Fri, Sep 6, 2019 at 12:05 AM Sakari Ailus
+> <sakari.ailus@linux.intel.com> wrote:
 > >
-> They are not GIC registers. I will update this documentation.
->=20
-> >This is completely insane. Why are the GIC registers configured as
-> >secure the first place, if they are expected to be in control of the
-> >non-secure?
-> These are not GIC registers but located on the PDC interface to the GIC.
-> They may or may not be secure access controlled, depending on the SoC.
->=20
+> > On Thu, Sep 05, 2019 at 07:53:37PM +0900, Tomasz Figa wrote:
+> > > On Thu, Sep 5, 2019 at 7:45 PM Sakari Ailus
+> > > <sakari.ailus@linux.intel.com> wrote:
+> > > >
+> > > > Hi Dongchun,
+> > > >
+> > > > On Thu, Sep 05, 2019 at 05:41:05PM +0800, Dongchun Zhu wrote:
+> > > >
+> > > > ...
+> > > >
+> > > > > > > + ret = regulator_bulk_enable(OV02A10_NUM_SUPPLIES, ov02a10->supplies);
+> > > > > > > + if (ret < 0) {
+> > > > > > > +         dev_err(dev, "Failed to enable regulators\n");
+> > > > > > > +         goto disable_clk;
+> > > > > > > + }
+> > > > > > > + msleep_range(7);
+> > > > > >
+> > > > > > This has some potential of clashing with more generic functions in the
+> > > > > > future. Please use usleep_range directly, or msleep.
+> > > > > >
+> > > > >
+> > > > > Did you mean using usleep_range(7*1000, 8*1000), as used in patch v1?
+> > > > > https://patchwork.kernel.org/patch/10957225/
+> > > >
+> > > > Yes, please.
+> > >
+> > > Why not just msleep()?
+> >
+> > msleep() is usually less accurate. I'm not sure it makes a big different in
+> > this case. Perhaps, if someone wants that the sensor is powered on and
+> > streaming as soon as possible.
+> 
+> https://elixir.bootlin.com/linux/latest/source/Documentation/timers/timers-howto.txt#L70
+> 
+> Use usleep_range for delays up to 20ms (at least that's what the
+> documentation (still) says?)
+> 
 
-It looks like it falls under this "mailbox" device which is really the
-catch all bucket for bits with no home besides they're related to the
-apps CPUs/subsystem.
+Thank you for your clarifications.
+>From the doc,
+"msleep(1~20) may not do what the caller intends, and
+will often sleep longer (~20 ms actual sleep for any
+value given in the 1~20ms range). In many cases this
+is not the desired behavior."
 
-	apss_shared: mailbox@17990000 {
-		compatible =3D "qcom,sdm845-apss-shared";
-		reg =3D <0 0x17990000 0 0x1000>;
-		#mbox-cells =3D <1>;
-	};
+So, it is supposed to use usleep_range in shorter sleep case,
+such as 5ms.
 
-Can you point to this node with a phandle and then parse the reg
-property out of it to use in the scm readl/writel APIs? Maybe it can be
-a two cell property with <&apps_shared 0xf0> to indicate the offset to
-the registers to read/write? In non-secure mode presumably we need to
-also write these registers? Good news is that there's a regmap for this
-driver already, so maybe that can be acquired from the pdc driver.
+> > --
+> > Sakari Ailus
+> > sakari.ailus@linux.intel.com
