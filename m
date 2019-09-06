@@ -1,108 +1,72 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [RFC 2/3] dmaengine: of_dma: Function to look up the DMA domain of a client
-Date: Fri, 6 Sep 2019 17:17:16 +0300
-Message-ID: <20190906141717.23859-3-peter.ujfalusi@ti.com>
-References: <20190906141717.23859-1-peter.ujfalusi@ti.com>
+Subject: [RFC 0/3] dmaengine: Support for DMA domain controllers
+Date: Fri, 6 Sep 2019 17:18:13 +0300
+Message-ID: <20190906141816.24095-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190906141717.23859-1-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, robh+dt@kernel.org
+To: vkoul@kernel.org, robh+dt@kernel.org
 Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Find the DMA domain controller of the client device by iterating up in
-device tree looking for the closest 'dma-domain-controller' property.
+Hi,
 
-If the client's node is not provided then check the DT root for the
-controller.
+More and more SoC have more than one DMA controller integrated.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+If a device needs none slave DMA channel for operation (block copy from/to
+memory mapped regions for example) at the moment when they request a channel it
+is going to be taken from the first DMA controller which was registered, but
+this might be not optimal for the device.
+
+For example on AM654 we have two DMAs: main_udmap and mcu_udmap.
+DDR to DDR memcpy is twice as fast on main_udmap compared to mcu_udmap, while
+devices on MCU domain (OSPI for example) are more than twice as fast on
+mcu_udmap than with main_udmap.
+
+Because of probing order (mcu_udmap is probing first) modules would use
+mcu_udmap instead of the better main_udmap. Currently the only solution is to
+make a choice and disable the MEM_TO_MEM functionality on one of them which is
+not a great solution.
+
+With the introduction of DMA domain controllers we can utilize the best DMA
+controller for the job around the SoC without the need to degrade performance.
+
+If the dma-domain-controller is not present in DT or booted w/o DT the none
+slave channel request will work as it does today.
+
+The last patch introduces a new dma_domain_request_chan_by_mask() function and
+I have a define for dma_request_chan_by_mask() to avoid breaking users of the
+dma_request_chan_by_mask, but looking at the kernel we have small amount of
+users:
+drivers/gpu/drm/vc4/vc4_dsi.c
+drivers/media/platform/omap/omap_vout_vrfb.c
+drivers/media/platform/omap3isp/isphist.c
+drivers/mtd/spi-nor/cadence-quadspi.c
+drivers/spi/spi-ti-qspi.c
+
+If it is acceptable we can modify the parameters of dma_request_chan_by_mask()
+to include ther device pointer and at the same time change all of the clients
+by giving NULL or in case of the last two their dev.
+
+Regards,
+Peter
 ---
- drivers/dma/of-dma.c   | 42 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_dma.h |  7 +++++++
- 2 files changed, 49 insertions(+)
+Peter Ujfalusi (3):
+  dt-bindings: dma: Add documentation for DMA domains
+  dmaengine: of_dma: Function to look up the DMA domain of a client
+  dmaengine: Support for requesting channels preferring DMA domain
+    controller
 
-diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
-index c2d779daa4b5..04b5795cd76b 100644
---- a/drivers/dma/of-dma.c
-+++ b/drivers/dma/of-dma.c
-@@ -18,6 +18,48 @@
- static LIST_HEAD(of_dma_list);
- static DEFINE_MUTEX(of_dma_lock);
- 
-+/**
-+ * of_find_dma_domain - Get the domain DMA controller
-+ * @np:		device node of the client device
-+ *
-+ * Look up the DMA controller of the domain the client device is part of.
-+ * Finds the dma-domain controller the client device belongs to. It is used when
-+ * requesting non slave channels (like channel for memcpy) to make sure that the
-+ * channel can be request from a DMA controller which can service the given
-+ * domain best.
-+ *
-+ * Returns the device_node pointer of the DMA controller or succes or NULL on
-+ * error.
-+ */
-+struct device_node *of_find_dma_domain(struct device_node *np)
-+{
-+	struct device_node *dma_domain = NULL;
-+	phandle dma_phandle;
-+
-+	/*
-+	 * If no device_node is provided look at the root level for system
-+	 * default DMA controller for modules.
-+	 */
-+	if (!np)
-+		np = of_root;
-+
-+	if (!np || !of_node_get(np))
-+		return NULL;
-+
-+	do {
-+		if (of_property_read_u32(np, "dma-domain-controller",
-+					 &dma_phandle))
-+			np = of_get_next_parent(np);
-+		else {
-+			dma_domain = of_find_node_by_phandle(dma_phandle);
-+			of_node_put(np);
-+		}
-+	} while (!dma_domain && np);
-+
-+	return dma_domain;
-+}
-+EXPORT_SYMBOL_GPL(of_find_dma_domain);
-+
- /**
-  * of_dma_find_controller - Get a DMA controller in DT DMA helpers list
-  * @dma_spec:	pointer to DMA specifier as found in the device tree
-diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
-index fd706cdf255c..6eab0a8d3335 100644
---- a/include/linux/of_dma.h
-+++ b/include/linux/of_dma.h
-@@ -32,6 +32,8 @@ struct of_dma_filter_info {
- };
- 
- #ifdef CONFIG_DMA_OF
-+extern struct device_node *of_find_dma_domain(struct device_node *np);
-+
- extern int of_dma_controller_register(struct device_node *np,
- 		struct dma_chan *(*of_dma_xlate)
- 		(struct of_phandle_args *, struct of_dma *),
-@@ -52,6 +54,11 @@ extern struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec
- 		struct of_dma *ofdma);
- 
- #else
-+static inline struct device_node *of_find_dma_domain(struct device_node *np)
-+{
-+	return NULL;
-+}
-+
- static inline int of_dma_controller_register(struct device_node *np,
- 		struct dma_chan *(*of_dma_xlate)
- 		(struct of_phandle_args *, struct of_dma *),
+ .../devicetree/bindings/dma/dma-domain.yaml   | 59 +++++++++++++++++++
+ drivers/dma/dmaengine.c                       | 17 ++++--
+ drivers/dma/of-dma.c                          | 42 +++++++++++++
+ include/linux/dmaengine.h                     |  9 ++-
+ include/linux/of_dma.h                        |  7 +++
+ 5 files changed, 126 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
+
 -- 
 Peter
 
