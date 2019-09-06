@@ -1,67 +1,154 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v13 5/8] drivers: memory: add DMC driver for Exynos5422
-Date: Fri, 6 Sep 2019 10:44:21 +0200
-Message-ID: <72d1096b-b81e-ee21-d4e1-8b40a69ca2fe@partner.samsung.com>
-References: <20190821104303.32079-1-l.luba@partner.samsung.com>
-        <CGME20190821104323eucas1p1ab979133de45373866e9db1a5f63fb76@eucas1p1.samsung.com>
-        <20190821104303.32079-6-l.luba@partner.samsung.com>
-        <20190904183510.GC12918@kozik-lap>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 4/4] gpio: devres: Switch to EXPORT_SYMBOL_GPL()
+Date: Fri,  6 Sep 2019 10:45:39 +0200
+Message-ID: <20190906084539.21838-5-geert+renesas@glider.be>
+References: <20190906084539.21838-1-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190904183510.GC12918@kozik-lap>
-Content-Language: en-US
+In-Reply-To: <20190906084539.21838-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, b.zolnierkie@samsung.com, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
+To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
+Change all exported symbols for managed GPIO functions from
+EXPORT_SYMBOL() to EXPORT_SYMBOL_GPL(), like is used for their
+non-managed counterparts.
 
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+The only exception was gpiod_get_from_of_node(), as everything in
+drivers/gpio/gpiolib-of.c used EXPORT_SYMBOL(), until the previous
+patch.
+---
+ drivers/gpio/gpiolib-devres.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-On 9/4/19 8:35 PM, Krzysztof Kozlowski wrote:
-> On Wed, Aug 21, 2019 at 12:43:00PM +0200, Lukasz Luba wrote:
->> This patch adds driver for Exynos5422 Dynamic Memory Controller.
->> The driver provides support for dynamic frequency and voltage scaling
->> for DMC and DRAM. It supports changing timings of DRAM running with
->> different frequency. There is also an algorithm to calculate timigns
->> based on memory description provided in DT.
->> The patch also contains needed MAINTAINERS file update.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   MAINTAINERS                             |    8 +
->>   drivers/memory/samsung/Kconfig          |   13 +
->>   drivers/memory/samsung/Makefile         |    1 +
->>   drivers/memory/samsung/exynos5422-dmc.c | 1257 +++++++++++++++++++++++
->>   4 files changed, 1279 insertions(+)
->>   create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
-> 
-> Thanks, applied... or almost. Let's fix it incrementally.
-> 
-> You have two smatch warnings:
->    CHECK   ../drivers/memory/samsung/exynos5422-dmc.c
-> drivers/memory/samsung/exynos5422-dmc.c:272 exynos5_init_freq_table() warn: passing devm_ allocated variable to kfree. 'dmc->opp'
->    CHECK   ../drivers/memory/jedec_ddr_data.c
-> drivers/memory/samsung/exynos5422-dmc.c:565 exynos5_dmc_get_volt_freq() warn: passing zero to 'PTR_ERR'
-> 
-> The second looks like false positive, but first seems to be real.
-Right, I will fix it.
-> 
-> You have also sparse warning to fix:
-> ../drivers/memory/samsung/exynos5422-dmc.c:736:1: warning: symbol 'exynos5_dmc_align_init_freq' was not declared. Should it be static?
-Yes, it should be static but due to the artificial line break I have
-missed it.
-
-It will be sent in the follow up patch.
-
-Thank you!
-
-Regards,
-Lukasz
-> 
-> Best regards,
-> Krzysztof
-> 
-> 
-> 
+diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
+index 0acc2cc6e868fdef..98e3c20d9730e66a 100644
+--- a/drivers/gpio/gpiolib-devres.c
++++ b/drivers/gpio/gpiolib-devres.c
+@@ -59,7 +59,7 @@ struct gpio_desc *__must_check devm_gpiod_get(struct device *dev,
+ {
+ 	return devm_gpiod_get_index(dev, con_id, 0, flags);
+ }
+-EXPORT_SYMBOL(devm_gpiod_get);
++EXPORT_SYMBOL_GPL(devm_gpiod_get);
+ 
+ /**
+  * devm_gpiod_get_optional - Resource-managed gpiod_get_optional()
+@@ -77,7 +77,7 @@ struct gpio_desc *__must_check devm_gpiod_get_optional(struct device *dev,
+ {
+ 	return devm_gpiod_get_index_optional(dev, con_id, 0, flags);
+ }
+-EXPORT_SYMBOL(devm_gpiod_get_optional);
++EXPORT_SYMBOL_GPL(devm_gpiod_get_optional);
+ 
+ /**
+  * devm_gpiod_get_index - Resource-managed gpiod_get_index()
+@@ -127,7 +127,7 @@ struct gpio_desc *__must_check devm_gpiod_get_index(struct device *dev,
+ 
+ 	return desc;
+ }
+-EXPORT_SYMBOL(devm_gpiod_get_index);
++EXPORT_SYMBOL_GPL(devm_gpiod_get_index);
+ 
+ /**
+  * devm_gpiod_get_from_of_node() - obtain a GPIO from an OF node
+@@ -182,7 +182,7 @@ struct gpio_desc *devm_gpiod_get_from_of_node(struct device *dev,
+ 
+ 	return desc;
+ }
+-EXPORT_SYMBOL(devm_gpiod_get_from_of_node);
++EXPORT_SYMBOL_GPL(devm_gpiod_get_from_of_node);
+ 
+ /**
+  * devm_fwnode_get_index_gpiod_from_child - get a GPIO descriptor from a
+@@ -239,7 +239,7 @@ struct gpio_desc *devm_fwnode_get_index_gpiod_from_child(struct device *dev,
+ 
+ 	return desc;
+ }
+-EXPORT_SYMBOL(devm_fwnode_get_index_gpiod_from_child);
++EXPORT_SYMBOL_GPL(devm_fwnode_get_index_gpiod_from_child);
+ 
+ /**
+  * devm_gpiod_get_index_optional - Resource-managed gpiod_get_index_optional()
+@@ -268,7 +268,7 @@ struct gpio_desc *__must_check devm_gpiod_get_index_optional(struct device *dev,
+ 
+ 	return desc;
+ }
+-EXPORT_SYMBOL(devm_gpiod_get_index_optional);
++EXPORT_SYMBOL_GPL(devm_gpiod_get_index_optional);
+ 
+ /**
+  * devm_gpiod_get_array - Resource-managed gpiod_get_array()
+@@ -303,7 +303,7 @@ struct gpio_descs *__must_check devm_gpiod_get_array(struct device *dev,
+ 
+ 	return descs;
+ }
+-EXPORT_SYMBOL(devm_gpiod_get_array);
++EXPORT_SYMBOL_GPL(devm_gpiod_get_array);
+ 
+ /**
+  * devm_gpiod_get_array_optional - Resource-managed gpiod_get_array_optional()
+@@ -328,7 +328,7 @@ devm_gpiod_get_array_optional(struct device *dev, const char *con_id,
+ 
+ 	return descs;
+ }
+-EXPORT_SYMBOL(devm_gpiod_get_array_optional);
++EXPORT_SYMBOL_GPL(devm_gpiod_get_array_optional);
+ 
+ /**
+  * devm_gpiod_put - Resource-managed gpiod_put()
+@@ -344,7 +344,7 @@ void devm_gpiod_put(struct device *dev, struct gpio_desc *desc)
+ 	WARN_ON(devres_release(dev, devm_gpiod_release, devm_gpiod_match,
+ 		&desc));
+ }
+-EXPORT_SYMBOL(devm_gpiod_put);
++EXPORT_SYMBOL_GPL(devm_gpiod_put);
+ 
+ /**
+  * devm_gpiod_unhinge - Remove resource management from a gpio descriptor
+@@ -374,7 +374,7 @@ void devm_gpiod_unhinge(struct device *dev, struct gpio_desc *desc)
+ 	/* Anything else we should warn about */
+ 	WARN_ON(ret);
+ }
+-EXPORT_SYMBOL(devm_gpiod_unhinge);
++EXPORT_SYMBOL_GPL(devm_gpiod_unhinge);
+ 
+ /**
+  * devm_gpiod_put_array - Resource-managed gpiod_put_array()
+@@ -390,7 +390,7 @@ void devm_gpiod_put_array(struct device *dev, struct gpio_descs *descs)
+ 	WARN_ON(devres_release(dev, devm_gpiod_release_array,
+ 			       devm_gpiod_match_array, &descs));
+ }
+-EXPORT_SYMBOL(devm_gpiod_put_array);
++EXPORT_SYMBOL_GPL(devm_gpiod_put_array);
+ 
+ 
+ 
+@@ -444,7 +444,7 @@ int devm_gpio_request(struct device *dev, unsigned gpio, const char *label)
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL(devm_gpio_request);
++EXPORT_SYMBOL_GPL(devm_gpio_request);
+ 
+ /**
+  *	devm_gpio_request_one - request a single GPIO with initial setup
+@@ -474,7 +474,7 @@ int devm_gpio_request_one(struct device *dev, unsigned gpio,
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL(devm_gpio_request_one);
++EXPORT_SYMBOL_GPL(devm_gpio_request_one);
+ 
+ /**
+  *      devm_gpio_free - free a GPIO
+@@ -492,4 +492,4 @@ void devm_gpio_free(struct device *dev, unsigned int gpio)
+ 	WARN_ON(devres_release(dev, devm_gpio_release, devm_gpio_match,
+ 		&gpio));
+ }
+-EXPORT_SYMBOL(devm_gpio_free);
++EXPORT_SYMBOL_GPL(devm_gpio_free);
+-- 
+2.17.1
