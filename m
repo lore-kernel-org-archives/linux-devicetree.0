@@ -1,64 +1,32 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv4 01/10] dt-bindings: omap: add new binding for PRM
- instances
-Date: Fri, 6 Sep 2019 23:02:28 +0300
-Message-ID: <e2b75368-df70-b6c9-e019-61610859f146@ti.com>
-References: <20190830121816.30034-2-t-kristo@ti.com>
- <20190906103558.17694-1-t-kristo@ti.com>
- <CAL_JsqLHTsEz6RJSi3rZ9AKyTBc00abyAxqwG8B9zAqL6cnv+w@mail.gmail.com>
- <20190906153658.GB52127@atomide.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
+Date: Fri, 06 Sep 2019 13:40:24 -0700
+Message-ID: <5d72c439.1c69fb81.484c6.fe28@mx.google.com>
+References: <5d694878.1c69fb81.5f13b.ec4f@mx.google.com> <5d696ad2.1c69fb81.977ea.39e5@mx.google.com> <f3584f38-dabc-7e7a-d1cb-84c80ed26215@linaro.org> <20190903173924.GB9754@jackp-linux.qualcomm.com> <5d6edee5.1c69fb81.a3896.1d05@mx.google.com> <20190903233410.GQ26807@tuxbook-pro> <c9481b7d-4805-25c6-f40f-9cbfc40afc93@linaro.org> <20190905175802.GA19599@jackp-linux.qualcomm.com> <5d71edf5.1c69fb81.1f307.fdd6@mx.google.com> <20190906182530.GD11938@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190906153658.GB52127@atomide.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-omap <linux-omap@vger.kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Santosh Shilimkar <ssantosh@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM
- ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190906182530.GD11938@tuxbook-pro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Jack Pham <jackp@codeaurora.org>, Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/09/2019 18:36, Tony Lindgren wrote:
-> * Rob Herring <robh+dt@kernel.org> [190906 12:57]:
->> On Fri, Sep 6, 2019 at 11:36 AM Tero Kristo <t-kristo@ti.com> wrote:
->>>
->>> Add new binding for OMAP PRM (Power and Reset Manager) instances. Each
->>> of these will act as a power domain controller and potentially as a reset
->>> provider.
->>>
->>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>> ---
->>> v4:
->>> - renamed nodes as power-controller
->>> - added documentation about hierarchy
->>>
->>>   .../devicetree/bindings/arm/omap/prm-inst.txt | 31 +++++++++++++++++++
->>>   1 file changed, 31 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/arm/omap/prm-inst.txt
->>
->> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> Looks good to me too:
-> 
-> Reviewed-by: Tony Lindgren <tony@atomide.com>
-> 
+Quoting Bjorn Andersson (2019-09-06 11:25:30)
+> On Thu 05 Sep 22:26 PDT 2019, Stephen Boyd wrote:
+>=20
+> >=20
+> > Yes this looks like the approach that should be taken. One question
+> > though, is this a micro-b connector or a type-c connector on the board?
+> > I thought it was a type-c, so then this USB gpio based connection driver
+> > isn't an exact fit?
+> >=20
+>=20
+> For this particular case it's a type c connector, but the port
+> controller is operated completely passively (and there's no PD or DP
+> involved), so the GPIO based approach seems like a good fit.
+>=20
 
-I may need to re-spin slightly new version of this. Stephen has some 
-comments on the clock driver side I am depending on, he does not like 
-the hard link between reset + clocks, so I may need to ditch the 
-"clocks" property from this one also.
-
-I'll see next week which direction I need to go.
-
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+OK. Perhaps the binding needs an update then to have another compatible
+string indicating type-c connector that's not able to support PD or DP?
