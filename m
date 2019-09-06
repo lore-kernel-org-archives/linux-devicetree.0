@@ -1,12 +1,13 @@
 From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 5/9] ARM: dts: sun8i: h3: Add Crypto Engine node
-Date: Fri,  6 Sep 2019 20:45:47 +0200
-Message-ID: <20190906184551.17858-6-clabbe.montjoie@gmail.com>
+Subject: [PATCH 3/9] dt-bindings: crypto: Add DT bindings
+ documentation for sun8i-ce Crypto Engine
+Date: Fri,  6 Sep 2019 20:45:45 +0200
+Message-ID: <20190906184551.17858-4-clabbe.montjoie@gmail.com>
 References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
 Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBB46SZLVQKGQE3BYIXNI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7YLCN32UNBB4GSZLVQKGQEUD3RLZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190906184551.17858-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,38 +20,104 @@ To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMR
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Crypto Engine is a hardware cryptographic accelerator that supports
-many algorithms.
-It could be found on most Allwinner SoCs.
-
-This patch enables the Crypto Engine on the Allwinner H3 SoC Device-tree.
+This patch adds documentation for Device-Tree bindings for the
+Crypto Engine cryptographic accelerator driver.
 
 Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ .../bindings/crypto/allwinner,sun8i-ce.yaml   | 84 +++++++++++++++++++
+ 1 file changed, 84 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index e37c30e811d3..873abe1b279b 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -153,6 +153,17 @@
- 			allwinner,sram = <&ve_sram 1>;
- 		};
- 
-+		crypto: crypto@1c15000 {
-+			compatible = "allwinner,sun8i-h3-crypto";
-+			reg = <0x01c15000 0x1000>;
-+			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "ce_ns";
-+			resets = <&ccu RST_BUS_CE>;
-+			reset-names = "ahb";
-+			clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>;
-+			clock-names = "ahb", "mod";
-+		};
+diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
+new file mode 100644
+index 000000000000..bd8ccedd6059
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/crypto/allwinner,sun8i-ce.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 		mali: gpu@1c40000 {
- 			compatible = "allwinner,sun8i-h3-mali", "arm,mali-400";
- 			reg = <0x01c40000 0x10000>;
++title: Allwinner Crypto Engine driver
++
++maintainers:
++  - Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
++
++properties:
++  compatible:
++    oneOf:
++      - const: allwinner,sun8i-h3-crypto
++      - const: allwinner,sun8i-r40-crypto
++      - const: allwinner,sun50i-a64-crypto
++      - const: allwinner,sun50i-h5-crypto
++      - const: allwinner,sun50i-h6-crypto
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++if:
++  properties:
++    compatible:
++      contains:
++        const: allwinner,sun50i-h6-crypto
++then:
++  clocks:
++    items:
++      - description: Bus clock
++      - description: Module clock
++      - description: MBus clock
++
++  clock-names:
++    items:
++      - const: ahb
++      - const: mod
++      - const: mbus
++else:
++  clocks:
++    items:
++      - description: Bus clock
++      - description: Module clock
++
++  clock-names:
++    items:
++      - const: ahb
++      - const: mod
++
++  resets:
++    maxItems: 1
++
++  reset-names:
++    const: ahb
++
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/sun50i-a64-ccu.h>
++    #include <dt-bindings/reset/sun50i-a64-ccu.h>
++
++    crypto: crypto@1c15000 {
++      compatible = "allwinner,sun8i-h3-crypto";
++      reg = <0x01c15000 0x1000>;
++      interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
++      clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>;
++      clock-names = "ahb", "mod";
++      resets = <&ccu RST_BUS_CE>;
++      reset-names = "ahb";
++    };
++
 -- 
 2.21.0
