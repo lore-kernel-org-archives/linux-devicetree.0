@@ -1,82 +1,83 @@
-From: Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: Re: [Patch V8 7/8] usb: gadget: Add UDC driver for tegra XUSB device
- mode controller
-Date: Fri, 6 Sep 2019 16:01:53 +0530
-Message-ID: <7f24dbd0-e556-20c1-7aeb-5ddbdbe0349c@nvidia.com>
-References: <1567585440-13751-1-git-send-email-nkristam@nvidia.com>
- <1567585440-13751-8-git-send-email-nkristam@nvidia.com>
- <1567593053.7317.64.camel@mhfsdcap03>
- <36447248-1ddb-ff1d-a731-de6afb445a9d@nvidia.com>
- <1567734192.7317.68.camel@mhfsdcap03>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [PATCHv4 01/10] dt-bindings: omap: add new binding for PRM instances
+Date: Fri, 6 Sep 2019 13:35:58 +0300
+Message-ID: <20190906103558.17694-1-t-kristo@ti.com>
+References: <20190830121816.30034-2-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567734192.7317.68.camel@mhfsdcap03>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190830121816.30034-2-t-kristo@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ssantosh@kernel.org, linux-omap@vger.kernel.org, tony@atomide.com, s-anna@ti.com, p.zabel@pengutronix.de, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Add new binding for OMAP PRM (Power and Reset Manager) instances. Each
+of these will act as a power domain controller and potentially as a reset
+provider.
 
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+v4:
+- renamed nodes as power-controller
+- added documentation about hierarchy
 
-On 06-09-2019 07:13, Chunfeng Yun wrote:
-> On Thu, 2019-09-05 at 09:57 +0530, Nagarjuna Kristam wrote:
->>
->> On 04-09-2019 16:00, Chunfeng Yun wrote:
->>> On Wed, 2019-09-04 at 13:53 +0530, Nagarjuna Kristam wrote:
->>>> This patch adds UDC driver for tegra XUSB 3.0 device mode controller.
->>>> XUSB device mode controller supports SS, HS and FS modes
->>>>
->>>> Based on work by:
->>>>   Mark Kuo <mkuo@nvidia.com>
->>>>   Hui Fu <hfu@nvidia.com>
->>>>   Andrew Bresticker <abrestic@chromium.org>
->>>>
->>>> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
->>>> Acked-by: Thierry Reding <treding@nvidia.com>
->>>> ---
->>>>  drivers/usb/gadget/udc/Kconfig      |   12 +
->>>>  drivers/usb/gadget/udc/Makefile     |    1 +
->>>>  drivers/usb/gadget/udc/tegra-xudc.c | 3791 +++++++++++++++++++++++++++++++++++
->>>>  3 files changed, 3804 insertions(+)
->>>>  create mode 100644 drivers/usb/gadget/udc/tegra-xudc.c
->>>>
->>>> diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
->>>> index d354036..0fe7577 100644
->>>> --- a/drivers/usb/gadget/udc/Kconfig
->>>> +++ b/drivers/usb/gadget/udc/Kconfig
->>>> @@ -441,6 +441,18 @@ config USB_GADGET_XILINX
->>>>  	  dynamically linked module called "udc-xilinx" and force all
->>>>  	  gadget drivers to also be dynamically linked.
->>>>  
->>>> +config USB_TEGRA_XUDC
->>>> +	tristate "NVIDIA Tegra Superspeed USB 3.0 Device Controller"
->>>> +	depends on ARCH_TEGRA || COMPILE_TEST
->>>> +	depends on PHY_TEGRA_XUSB
->>>> +	select USB_CONN_GPIO
->>> To me, needn't select this driver, without it, the driver still build
->>> pass
->>>
->> Yes compilation passes with out this. Added select for getting USB_CONN_GPIO
->> driver functionality.
-> We can enable it in defconfig, think about one day use type-c to do
-> dual-role switch, or other ways, will needn't select it then.
-> 
+ .../devicetree/bindings/arm/omap/prm-inst.txt | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/prm-inst.txt
 
-Thanks for details, will get it enabled via defconfig instead.
+diff --git a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+new file mode 100644
+index 000000000000..7c7527c37734
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+@@ -0,0 +1,35 @@
++OMAP PRM instance bindings
++
++Power and Reset Manager is an IP block on OMAP family of devices which
++handle the power domains and their current state, and provide reset
++handling for the domains and/or separate IP blocks under the power domain
++hierarchy. A PRM instance node must be a child of a PRM node [1].
++
++[1] Documentation/devicetree/bindings/arm/omap/prcm.txt
++
++Required properties:
++- compatible:	Must be one of:
++		"ti,am3-prm-inst"
++		"ti,am4-prm-inst"
++		"ti,omap4-prm-inst"
++		"ti,omap5-prm-inst"
++		"ti,dra7-prm-inst"
++- reg:		Contains PRM instance register address range
++		(base address and length)
++
++Optional properties:
++- #reset-cells:	Should be 1 if the PRM instance in question supports resets.
++- clocks:	Associated clocks for the reset signals if any. Certain reset
++		signals can't be toggled properly without functional clock
++		being active for them.
++
++Example:
++
++&prm {
++	prm_dsp2: power-controller@1b00 {
++		compatible = "ti,dra7-prm-inst";
++		reg = <0x1b00 0x40>;
++		#reset-cells = <1>;
++		clocks = <&dsp2_clkctrl DRA7_DSP2_MMU0_DSP2_CLKCTRL 0>;
++	};
++};
+-- 
+2.17.1
 
-- Nagarjuna
->>
->>>> +	help
->>>> +	 Enables NVIDIA Tegra USB 3.0 device mode controller driver.
->>>> +
->>>> +	 Say "y" to link the driver statically, or "m" to build a
->>>> +	 dynamically linked module called "tegra_xudc" and force all
->>>> +	 gadget drivers to also be dynamically linked.
->>>> +
->>>>  source "drivers/usb/gadget/udc/aspeed-vhub/Kconfig"
->>>>  
-> 
-> 
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
