@@ -1,32 +1,55 @@
-Return-Path: <SRS0=/oPt=XC=gmail.com=robdclark@kernel.org>
-MIME-Version: 1.0
-References: <20190905192412.23116-1-lee.jones@linaro.org> <5d71ef95.1c69fb81.6d090.085d@mx.google.com>
- <20190906061448.GJ26880@dell> <20190906065018.GA1019@kunai>
- <20190906075600.GL26880@dell> <20190906102355.GA3146@kunai>
- <20190906105445.GO26880@dell> <20190906183139.GB19123@kunai>
-In-Reply-To: <20190906183139.GB19123@kunai>
-From: Rob Clark <robdclark@gmail.com>
-Date: Sat, 7 Sep 2019 10:56:34 -0700
-Message-ID: <CAF6AEGsHOaR1dRf8xGH5sRa38=S+Y3NvNiAJ9DpMkddWoLBw8g@mail.gmail.com>
+Return-Path: <SRS0=jf+R=XB=the-dreams.de=wsa@kernel.org>
+Date: Fri, 6 Sep 2019 20:31:39 +0200
+From: Wolfram Sang <wsa@the-dreams.de>
 Subject: Re: [RESEND v3 1/1] i2c: qcom-geni: Disable DMA processing on the
  Lenovo Yoga C630
-Content-Type: text/plain; charset="UTF-8"
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Lee Jones <lee.jones@linaro.org>, Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>, alokc@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, vkoul@kernel.org, linux-i2c@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Message-ID: <20190906183139.GB19123@kunai>
+References: <20190905192412.23116-1-lee.jones@linaro.org>
+ <5d71ef95.1c69fb81.6d090.085d@mx.google.com>
+ <20190906061448.GJ26880@dell>
+ <20190906065018.GA1019@kunai>
+ <20190906075600.GL26880@dell>
+ <20190906102355.GA3146@kunai>
+ <20190906105445.GO26880@dell>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
+Content-Disposition: inline
+In-Reply-To: <20190906105445.GO26880@dell>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Stephen Boyd <swboyd@chromium.org>, agross@kernel.org, alokc@codeaurora.org, bjorn.andersson@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org, vkoul@kernel.org, linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Sat, Sep 7, 2019 at 9:17 AM Wolfram Sang <wsa@the-dreams.de> wrote:
->
->
-> > Does this mean you plan to have this merged for v5.4?
->
-> Only if the machine DTS is expected to land in 5.4. But Stephen said it
-> is not in liunx-next yet?
->
 
-It appears to be in arm-soc for-next:
+--ftEhullJWpWg/VHq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/log/?h=for-next
 
-BR,
--R
+> Does this mean you plan to have this merged for v5.4?
+
+Only if the machine DTS is expected to land in 5.4. But Stephen said it
+is not in liunx-next yet?
+
+
+--ftEhullJWpWg/VHq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1ypgsACgkQFA3kzBSg
+KbYCEQ//bNKUnXoHDN1BlZHVkF2nPozmMWYN7sE0jaWENzmPcEzBRn4ra1QyARPs
+xnnkcaJjK4Doc0RUSkiEmyyZB6Ifbs6GNn5V9RwW0AwyLkYavAKkDHj3nujgyY0H
+i9yuFo2u32XI6BQY6ZFtyWyJPFYnSomA9vxDVS96mc+5hmFR7nXdBxASCobWTEIB
+NDdQXBf3YQ7BPTW5Lce9UIGvUDjqqlQTlmfsQShkUqOpgFsYmjnbTa4xP9y4X/yZ
+U/LbtpPBlUayr/3Jcjt0sOKPyEjbtQhriox/G1iIcN+zgfppHMNDYuJBcMVdJxY+
+o/R5F4/BoLG95htnnBJs1Hk9nZJBy+drd8sdg2UAQ8DJFOC9an1FA6LVfYHrssZl
+VepEC4UM4n3GnhU1ArYPvnVlqR8aFRwXt8RUywMqjSH6jmASQzaxnM0FzXmNl0Gs
+Ydp4cAVjbZ0JHf9ghQTrKMunolyhX6LwFMM9Jse4j5l+Z4uvwDqfmjxE8kIeyMjO
+7TIs/qMTbxWP6HZMzuOhMfGzUhpikOthAIfP1Cl4TBCYydRkXkQ69h9ksMKCwEzJ
+k2joHx3eGKk/6ioYigI23wcm1Z19iYYK6dAlYgYzQ7fQrSvfiMVLFX6xTOXOR3xP
+vmMN2F+Iwo/BULDxSmxgA13gH1QKV0EHE+bPW8LcVnShDT7Y2Yg=
+=euYY
+-----END PGP SIGNATURE-----
+
+--ftEhullJWpWg/VHq--
