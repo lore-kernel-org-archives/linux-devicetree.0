@@ -1,70 +1,32 @@
-Return-Path: <SRS0=e9ed=XI=the-dreams.de=wsa@kernel.org>
-Date: Fri, 13 Sep 2019 15:28:21 +0100
-From: Wolfram Sang <wsa@the-dreams.de>
+Return-Path: <SRS0=/oPt=XC=gmail.com=robdclark@kernel.org>
+MIME-Version: 1.0
+References: <20190905192412.23116-1-lee.jones@linaro.org> <5d71ef95.1c69fb81.6d090.085d@mx.google.com>
+ <20190906061448.GJ26880@dell> <20190906065018.GA1019@kunai>
+ <20190906075600.GL26880@dell> <20190906102355.GA3146@kunai>
+ <20190906105445.GO26880@dell> <20190906183139.GB19123@kunai>
+In-Reply-To: <20190906183139.GB19123@kunai>
+From: Rob Clark <robdclark@gmail.com>
+Date: Sat, 7 Sep 2019 10:56:34 -0700
+Message-ID: <CAF6AEGsHOaR1dRf8xGH5sRa38=S+Y3NvNiAJ9DpMkddWoLBw8g@mail.gmail.com>
 Subject: Re: [RESEND v3 1/1] i2c: qcom-geni: Disable DMA processing on the
  Lenovo Yoga C630
-Message-ID: <20190913142821.GD1022@kunai>
-References: <20190905192412.23116-1-lee.jones@linaro.org>
- <5d71ef95.1c69fb81.6d090.085d@mx.google.com>
- <20190906061448.GJ26880@dell>
- <20190906065018.GA1019@kunai>
- <20190906075600.GL26880@dell>
- <20190906102355.GA3146@kunai>
- <20190906105445.GO26880@dell>
- <20190906183139.GB19123@kunai>
- <CAF6AEGsHOaR1dRf8xGH5sRa38=S+Y3NvNiAJ9DpMkddWoLBw8g@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5gxpn/Q6ypwruk0T"
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGsHOaR1dRf8xGH5sRa38=S+Y3NvNiAJ9DpMkddWoLBw8g@mail.gmail.com>
-To: Rob Clark <robdclark@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+To: Wolfram Sang <wsa@the-dreams.de>
 Cc: Lee Jones <lee.jones@linaro.org>, Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>, alokc@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, vkoul@kernel.org, linux-i2c@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
+On Sat, Sep 7, 2019 at 9:17 AM Wolfram Sang <wsa@the-dreams.de> wrote:
+>
+>
+> > Does this mean you plan to have this merged for v5.4?
+>
+> Only if the machine DTS is expected to land in 5.4. But Stephen said it
+> is not in liunx-next yet?
+>
 
---5gxpn/Q6ypwruk0T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It appears to be in arm-soc for-next:
 
-On Sat, Sep 07, 2019 at 10:56:34AM -0700, Rob Clark wrote:
-> On Sat, Sep 7, 2019 at 9:17 AM Wolfram Sang <wsa@the-dreams.de> wrote:
-> >
-> >
-> > > Does this mean you plan to have this merged for v5.4?
-> >
-> > Only if the machine DTS is expected to land in 5.4. But Stephen said it
-> > is not in liunx-next yet?
-> >
->=20
-> It appears to be in arm-soc for-next:
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/log/?h=3D=
-for-next
+https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/log/?h=for-next
 
-Still not in linux-next. Please ping me or resend this patch once it
-hits linux-next.
-
-
---5gxpn/Q6ypwruk0T
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl17p4UACgkQFA3kzBSg
-KbYW9BAAmbuD7qUfL9wWm1m0gAjG2VvKTbyG22SMQKbxK1tBv+lIn7Bam5Q/j6zm
-FnceT8ZkX4guUKWODkVOJoqrgU8AYuMOHqacTP08myUU3D9AfdmHZ7i3Hw9thNXl
-evtohMN5ncbd8Pq6Rny7UqZZ/LV/IHOnEFvSNgtAFWCl91d6ID3kBi0sdmqbgUj7
-/3HNJmFtHqdeC61yMcpsbGmCh4vaZ4tv+MwIKOF7goLCubzvsUaicvCF4yVFlqls
-5xYSNBUuGvDbAra/q6IB6i754p8+4SVV7hzCpz3wquHZRaVV7PE8+gbLtTrulgpc
-A20gW2KOdpS6vsAN3+NqxCx1yMFgBw4Yh5MYxKw7HQS37Z6/fM3mtDTxTGGYHAol
-3ywiNokvKi+sDDWnqk4qUhJnIc4/CSeAktlbp7GgE1hK6IeJB3vFpLWql8lCXqxs
-KbK71ULKAgFKfvQuj7U9j9gaydVMmLXwDmFLKzHJSrEhMq9Z8zpldXK3LNHpUMTT
-KCTp++JE+tYRqpYY8n4RTiEa11l0OHTp7G+e0SdTF+7FijkaHjLYWdoH0us6vZgu
-VKbn2y1JnprMW3Awwiwy/2FgFJtMOq4/kJrv/JozlDJeLhxVDtHSi0/l3LdR9KS/
-NZockGBMx40MlBpM5eOtgjLZlFEQkdCSMdB60rG0kPL6a+SCpPM=
-=AHNK
------END PGP SIGNATURE-----
-
---5gxpn/Q6ypwruk0T--
+BR,
+-R
