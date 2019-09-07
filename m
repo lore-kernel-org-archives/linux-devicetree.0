@@ -1,43 +1,35 @@
-From: Andrew Lunn <andrew@lunn.ch>
+From: Florian Fainelli <f.fainelli@gmail.com>
 Subject: Re: [PATCH 1/2] net: phy: dp83867: Add documentation for SGMII mode
  type
-Date: Sat, 7 Sep 2019 17:39:19 +0200
-Message-ID: <20190907153919.GC21922@lunn.ch>
+Date: Sat, 7 Sep 2019 08:41:22 -0700
+Message-ID: <8055f8ce-5a8e-fa53-311d-3f27a72f58bd@gmail.com>
 References: <1567700761-14195-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
  <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
+ <20190906192919.GA2339@lunn.ch>
+ <23dc47ea-209f-9f51-d4a5-161e62e2a69e@cloudbear.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
+In-Reply-To: <23dc47ea-209f-9f51-d4a5-161e62e2a69e@cloudbear.ru>
+Content-Language: en-US
 Sender: netdev-owner@vger.kernel.org
-To: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
-Cc: davem@davemloft.net, robh+dt@kernel.org, f.fainelli@gmail.com, Mark Rutland <mark.rutland@arm.com>, Trent Piepho <tpiepho@impinj.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>, Andrew Lunn <andrew@lunn.ch>
+Cc: davem@davemloft.net, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Trent Piepho <tpiepho@impinj.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 07:26:00PM +0300, Vitaly Gaiduk wrote:
-> Add documentation of ti,sgmii-type which can be used to select
-> SGMII mode type (4 or 6-wire).
+
+
+On 9/6/2019 1:45 PM, Vitaly Gaiduk wrote:
+> Hi, Andrew.
 > 
-> Signed-off-by: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
-> ---
->  Documentation/devicetree/bindings/net/ti,dp83867.txt | 1 +
->  1 file changed, 1 insertion(+)
+> I'm not familiar with generic PHY HW archs but suppose that it is
+> proprietary to TI.
 > 
-> diff --git a/Documentation/devicetree/bindings/net/ti,dp83867.txt b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-> index db6aa3f2215b..18e7fd52897f 100644
-> --- a/Documentation/devicetree/bindings/net/ti,dp83867.txt
-> +++ b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-> @@ -37,6 +37,7 @@ Optional property:
->  			      for applicable values.  The CLK_OUT pin can also
->  			      be disabled by this property.  When omitted, the
->  			      PHY's default will be left as is.
-> +	- ti,sgmii-type - This denotes the fact which SGMII mode is used (4 or 6-wire).
+> I'v never seen such feature so moved it in TI dts field.
 
-Hi Vitaly
-
-You probably want to make this a Boolean. I don't think SGMII type is
-a good idea. This is about enabling the receive clock to be passed to
-the MAC. So how about ti,sgmii-ref-clock-output-enable.
-
-    Andrew
+My search engine results seem to indicate that this is indeed TI
+specific only and this is not something that exists with other vendors
+apparently. The "ti," prefix is therefore appropriate.
+-- 
+Florian
