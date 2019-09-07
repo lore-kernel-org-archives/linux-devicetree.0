@@ -1,58 +1,91 @@
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH v2 14/19] MIPS: Loongson64: Add generic dts
-Date: Sat, 7 Sep 2019 11:14:09 +0800
-Message-ID: <182a271e-6a66-ed71-2d68-509d8e85d857@flygoat.com>
-References: <20190905144316.12527-1-jiaxun.yang@flygoat.com>
- <20190905144316.12527-15-jiaxun.yang@flygoat.com>
- <CAAhV-H7jzUZr9fGHF_=F3pri9F3zN3ygHhd3xWZevOugaStcfA@mail.gmail.com>
+From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [V3, 2/2] media: i2c: Add Omnivision OV02A10 camera sensor driver
+Date: Sat, 7 Sep 2019 12:51:23 +0900
+Message-ID: <CAAFQd5AjF491heU7BJTnsB-OsZp2LnYeAFArnEqWcNRPXykKrQ@mail.gmail.com>
+References: <20190819034331.13098-1-dongchun.zhu@mediatek.com>
+ <20190819034331.13098-3-dongchun.zhu@mediatek.com>
+ <20190819083009.GC6133@paasikivi.fi.intel.com>
+ <1567676465.21623.100.camel@mhfsdcap03>
+ <20190905104546.GA5475@paasikivi.fi.intel.com>
+ <CAAFQd5Bh-11D9RR9WVH5A3DbXZoxWhbMhXSNKUV25mempMi+ag@mail.gmail.com>
+ <20190905160512.GG5475@paasikivi.fi.intel.com>
+ <CANMq1KDVMGkeBvu1nO5WHopWwec9mxHfhmLmX2BzvaYVLzxoXw@mail.gmail.com>
+ <1567733585.21623.163.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAhV-H7jzUZr9fGHF_=F3pri9F3zN3ygHhd3xWZevOugaStcfA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Huacai Chen <chenhc@lemote.com>
-Cc: "open list:MIPS" <linux-mips@vger.kernel.org>, Paul Burton <paul.burton@mips.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.co>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1567733585.21623.163.camel@mhfsdcap03>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Dongchun Zhu <dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, shengnan.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Louis Kuo <louis.kuo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sj Huang <sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cao Bing Bu <bingbu.cao-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+ Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 2019/9/7 上午10:53, Huacai Chen wrote:
-> On Thu, Sep 5, 2019 at 10:47 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->> Add generic device dts for Loongson-3 devices.
->> They seems identical but will be different later.
->>
->> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Hi, Jiaxun,
+On Fri, Sep 6, 2019 at 10:33 AM Dongchun Zhu <dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
 >
-> I'm very glad to see that dts files become less in this version, but I
-> think we also don't need to distinguish cpu types (i.e.,
-> 3a1000/3b1500/3a2000/3a3000). Then, we only need three dts files
-> (loongson3_ls2h.dts, loongson3_ls7a.dts, loongson3_rs780.dts) which is
-> the same as in our own git repository. If we really need to
-> distinguish cpu type, PRID or CPUCFG in Loongson-3A4000 is more
-> suitable than dts. In other words, I want dts only do as minimal as
-> possible.
-
-Hi Huacai,
-
-I have the  same consideration with you. However, the reason why I split 
-this dts is that these chips have significant differences.
-
-For example, 3B1x00 have different memory and config registers layout, 
-Their HT config space is a delicate node, HTMSI interrupts is not 
-functional until 3A3000, and their syscon registers are not identical.
-
-You may say they can be identified by PRID, but I'm not intend to spread 
-PRID all the way in other subsystems, thus I think dts is still the best 
-way to tell these differences.
-
-Thanks
-
---
-
-Jiaxun Yang
-
+> On Fri, 2019-09-06 at 06:58 +0800, Nicolas Boichat wrote:
+> > On Fri, Sep 6, 2019 at 12:05 AM Sakari Ailus
+> > <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> > >
+> > > On Thu, Sep 05, 2019 at 07:53:37PM +0900, Tomasz Figa wrote:
+> > > > On Thu, Sep 5, 2019 at 7:45 PM Sakari Ailus
+> > > > <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> > > > >
+> > > > > Hi Dongchun,
+> > > > >
+> > > > > On Thu, Sep 05, 2019 at 05:41:05PM +0800, Dongchun Zhu wrote:
+> > > > >
+> > > > > ...
+> > > > >
+> > > > > > > > + ret = regulator_bulk_enable(OV02A10_NUM_SUPPLIES, ov02a10->supplies);
+> > > > > > > > + if (ret < 0) {
+> > > > > > > > +         dev_err(dev, "Failed to enable regulators\n");
+> > > > > > > > +         goto disable_clk;
+> > > > > > > > + }
+> > > > > > > > + msleep_range(7);
+> > > > > > >
+> > > > > > > This has some potential of clashing with more generic functions in the
+> > > > > > > future. Please use usleep_range directly, or msleep.
+> > > > > > >
+> > > > > >
+> > > > > > Did you mean using usleep_range(7*1000, 8*1000), as used in patch v1?
+> > > > > > https://patchwork.kernel.org/patch/10957225/
+> > > > >
+> > > > > Yes, please.
+> > > >
+> > > > Why not just msleep()?
+> > >
+> > > msleep() is usually less accurate. I'm not sure it makes a big different in
+> > > this case. Perhaps, if someone wants that the sensor is powered on and
+> > > streaming as soon as possible.
+> >
+> > https://elixir.bootlin.com/linux/latest/source/Documentation/timers/timers-howto.txt#L70
+> >
+> > Use usleep_range for delays up to 20ms (at least that's what the
+> > documentation (still) says?)
+> >
 >
-> Huacai
+> Thank you for your clarifications.
+> From the doc,
+> "msleep(1~20) may not do what the caller intends, and
+> will often sleep longer (~20 ms actual sleep for any
+> value given in the 1~20ms range). In many cases this
+> is not the desired behavior."
 >
+> So, it is supposed to use usleep_range in shorter sleep case,
+> such as 5ms.
+
+Thanks for double checking. usleep_range() sounds good then. Sorry for
+the noise.
+
+Best regards,
+Tomasz
