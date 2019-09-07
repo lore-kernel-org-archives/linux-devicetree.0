@@ -1,59 +1,89 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: [RFCv1 1/1] arm64: dts: meson: odroid-c2: Enable SCPI DVFS for cpu
-Date: Sat,  7 Sep 2019 16:51:32 +0000
-Message-ID: <20190907165132.464-2-linux.amoon@gmail.com>
-References: <20190907165132.464-1-linux.amoon@gmail.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v5 2/7] PCI: Add ACS quirk for Amazon Annapurna Labs root
+ ports
+Date: Sat, 7 Sep 2019 11:54:50 -0500
+Message-ID: <20190907165450.GL103977@google.com>
+References: <20190905140018.5139-1-jonnyc@amazon.com>
+ <20190905140018.5139-3-jonnyc@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190907165132.464-1-linux.amoon@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190905140018.5139-3-jonnyc@amazon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Chocron <jonnyc@amazon.com>
+Cc: lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com, andrew.murray@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable System Control and Power Interface, DVFS for cpu
-with setting 1.54 GHz as max freq in the initial SCPI tables
-loaded by the BL2, i.e. packed with U-Boot.
+On Thu, Sep 05, 2019 at 05:00:16PM +0300, Jonathan Chocron wrote:
+> From: Ali Saidi <alisaidi@amazon.com>
+> 
+> The Amazon's Annapurna Labs root ports don't advertise an ACS
+> capability, but they don't allow peer-to-peer transactions and do
+> validate bus numbers through the SMMU. Additionally, it's not possible
+> for one RP to pass traffic to another RP.
+> 
+> Signed-off-by: Ali Saidi <alisaidi@amazon.com>
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-Fixes: f7bcd4b6f698 (ARM64: dts: meson-gxbb-odroidc2: Disable SCPI DVFS)
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>
-Suggested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-In discuss on other mailing list thread below.
-[0] https://lkml.org/lkml/2019/8/30/186
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Tested on mainline U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
-on archlinux distro.
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+But please tweak it as below ...
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 6ae9fafe4244..7e822408ba26 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -307,7 +307,7 @@
- };
- 
- &scpi_clocks {
--	status = "disabled";
-+	status = "okay";
- };
- 
- /* SD */
--- 
-2.23.0
+> ---
+>  drivers/pci/quirks.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index ded60757a573..8fe765592943 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4418,6 +4418,24 @@ static int pci_quirk_qcom_rp_acs(struct pci_dev *dev, u16 acs_flags)
+>  	return ret;
+>  }
+>  
+> +static int pci_quirk_al_acs(struct pci_dev *dev, u16 acs_flags)
+> +{
+> +	/*
+> +	 * Amazon's Annapurna Labs root ports don't include an ACS capability,
+> +	 * but do include ACS-like functionality. The hardware doesn't support
+> +	 * peer-to-peer transactions via the root port and each has a unique
+> +	 * segment number.
+> +	 *
+> +	 * Additionally, the root ports cannot send traffic to each other.
+> +	 */
+> +	acs_flags &= ~(PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_SV | PCI_ACS_UF);
+
+There are several quirks that use this same set of bits, but they
+don't use the same order, which is a needless difference.
+
+Can you reorder them in the bit 0 ... bit 7 order?  I.e.,
+
+    PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF
+
+> +	if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
+> +		return -ENOTTY;
+
+This could go first (above the comment) so all the acs_flags stuff is
+together.
+
+> +	return acs_flags ? 0 : 1;
+> +}
+> +
+>  /*
+>   * Sunrise Point PCH root ports implement ACS, but unfortunately as shown in
+>   * the datasheet (Intel 100 Series Chipset Family PCH Datasheet, Vol. 2,
+> @@ -4611,6 +4629,8 @@ static const struct pci_dev_acs_enabled {
+>  	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
+>  	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
+>  	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
+> +	/* Amazon Annapurna Labs */
+> +	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
+>  	{ 0 }
+>  };
+>  
+> -- 
+> 2.17.1
+> 
