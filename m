@@ -1,7 +1,7 @@
-From: marek.vasut@gmail.com
-Subject: [PATCH] arm64: dts: renesas: Add /soc dma-ranges
-Date: Sat,  7 Sep 2019 18:16:34 +0200
-Message-ID: <20190907161634.27378-1-marek.vasut@gmail.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [RFCv1 0/1] Odroid C2: Enable DVFS for cpu
+Date: Sat,  7 Sep 2019 16:51:31 +0000
+Message-ID: <20190907165132.464-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -15,67 +15,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Marek Vasut <marek.vasut+renesas@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Marek Vasut <marek.vasut+renesas@gmail.com>
+This patch enable DVFS on GXBB Odroid C2.
 
-Add dma-ranges property into /soc node to describe the DMA capabilities
-of the bus. This is currently needed to translate PCI DMA ranges, which
-are limited to 32bit addresses.
+DVFS has been tested by running the arm64 cpuburn
+[1] https://github.com/ssvb/cpuburn-arm/blob/master/cpuburn-a53.S
+PM-QA testing
+[2] https://git.linaro.org/power/pm-qa.git [cpufreq testcase]
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: devicetree@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
----
-NOTE: This is needed for the following patches to work correctly:
-      https://patchwork.ozlabs.org/patch/1144870/
-      https://patchwork.ozlabs.org/patch/1144871/
----
- arch/arm64/boot/dts/renesas/r8a7795.dtsi  | 1 +
- arch/arm64/boot/dts/renesas/r8a7796.dtsi  | 1 +
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 +
- 3 files changed, 3 insertions(+)
+Tested on latest U-Boot 2019.07-1 (Aug 01 2019 - 23:58:01 +0000) Arch Linux ARM
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index 95deff66eeb6..2102140a6723 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -330,6 +330,7 @@
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
-+		dma-ranges = <0 0x40000000 0 0x40000000 0 0xc0000000>;
- 
- 		rwdt: watchdog@e6020000 {
- 			compatible = "renesas,r8a7795-wdt", "renesas,rcar-gen3-wdt";
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index 3dc9d73f589a..d115ff34d0db 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -300,6 +300,7 @@
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
-+		dma-ranges = <0 0x40000000 0 0x40000000 0 0xc0000000>;
- 
- 		rwdt: watchdog@e6020000 {
- 			compatible = "renesas,r8a7796-wdt",
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index 4ae163220f60..74d934cfe44e 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -183,6 +183,7 @@
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
-+		dma-ranges = <0 0x40000000 0 0x40000000 0 0xc0000000>;
- 
- 		rwdt: watchdog@e6020000 {
- 			compatible = "renesas,r8a77965-wdt",
+Patch based on my linu-next-20190904 on top of my previous patch's.
+
+Best Regards
+-Anand
+
+Anand Moon (1):
+  arm64: dts: meson: odroid-c2: Enable SCPI DVFS for cpu
+
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 -- 
-2.23.0.rc1
+2.23.0
