@@ -1,50 +1,39 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH 6/9] ARM64: dts: allwinner: sun50i: Add Crypto Engine
- node on A64
-Date: Sat, 7 Sep 2019 19:54:53 +0200
-Message-ID: <20190907175453.GC2628@Red>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 9/9] sunxi_defconfig: add new crypto options
+Date: Sat, 7 Sep 2019 19:55:35 +0200
+Message-ID: <20190907175535.GD2628@Red>
 References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
- <20190906184551.17858-7-clabbe.montjoie@gmail.com>
- <20190907040254.5ecohywqbekokwfx@flea>
+ <20190906184551.17858-10-clabbe.montjoie@gmail.com>
+ <20190907040353.hrz7gmqgzpfpo4xj@flea>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBGW6Z7VQKGQEYZBHBCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190907040254.5ecohywqbekokwfx@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <mripard@kernel.org>
-Cc: davem@davemloft.net, herbert@gondor.apana.org.au, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+In-Reply-To: <20190907040353.hrz7gmqgzpfpo4xj@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 07:02:54AM +0300, Maxime Ripard wrote:
-> On Fri, Sep 06, 2019 at 08:45:48PM +0200, Corentin Labbe wrote:
-> > The Crypto Engine is a hardware cryptographic accelerator that supports
-> > many algorithms.
-> > It could be found on most Allwinner SoCs.
+On Sat, Sep 07, 2019 at 07:03:53AM +0300, Maxime Ripard wrote:
+> On Fri, Sep 06, 2019 at 08:45:51PM +0200, Corentin Labbe wrote:
+> > This patch adds the new allwinner crypto configs to sunxi_defconfig
 > >
-> > This patch enables the Crypto Engine on the Allwinner A64 SoC Device-tree.
-> >
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > index 69128a6dfc46..c9e30d462ab1 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> > @@ -487,6 +487,17 @@
-> >  			reg = <0x1c14000 0x400>;
-> >  		};
-> >
-> > +		crypto: crypto@1c15000 {
-> > +			compatible = "allwinner,sun50i-a64-crypto";
-> > +			reg = <0x01c15000 0x1000>;
-> > +			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-> > +			interrupt-names = "ce_ns";
+> >  arch/arm/configs/sunxi_defconfig | 2 ++
+> >  1 file changed, 2 insertions(+)
 > 
-> You didn't document that property
+> Can you also enable it in arm64's defconfig as a module?
 > 
 
-It is unnecessary, I forgot to remove it.
-Fixed, thanks.
+Will do.
+
+Regards
