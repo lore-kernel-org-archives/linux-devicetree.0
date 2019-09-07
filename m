@@ -1,221 +1,412 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 1/4] cpufreq: ti-cpufreq: add support for omap34xx and
- omap36xx
-Date: Sat, 7 Sep 2019 09:37:35 +0200
-Message-ID: <F12B47AA-DED2-4BD9-B144-2463A2AE6094@goldelico.com>
-References: <cover.1567839375.git.hns@goldelico.com>
- <0eb7129f6148faac0150d6299ac97347484c7125.1567839375.git.hns@goldelico.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <0eb7129f6148faac0150d6299ac97347484c7125.1567839375.git.hns@goldelico.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Roger Quadros <rogerq@ti.com>, Teresa Remmet <t.remmet@phytec.de>, Nikolaus Schaller <hns@goldelico.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, linux-pm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@pyra-handheld.com, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH 2/9] crypto: Add Allwinner sun8i-ce Crypto Engine
+Date: Sat, 7 Sep 2019 11:19:51 +0300
+Message-ID: <20190907081951.v2huvhm44jfprfop@flea>
+References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
+ <20190906184551.17858-3-clabbe.montjoie@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190906184551.17858-3-clabbe.montjoie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: davem@davemloft.net, herbert@gondor.apana.org.au, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-> Am 07.09.2019 um 08:56 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
-> 
-> This adds code and tables to read the silicon revision and
-> eFuse (speed binned / 720 MHz grade) bits for selecting
-> opp-v2 table entries.
-> 
-> Since these bits are not always part of the syscon register
-> range (like for am33xx, am43, dra7), we add code to directly
-> read the register values using ioremap() if syscon access fails.
-> 
-> The format of the opp-supported-hw entries is that it has
-> two 32 bit bitfields. E.g.:
-> 
-> 	opp-supported-hw = <0xffffffff 3>
-> 
-> The first value is matched against the bit position of the
-> silicon revision which is (see TRM)
-> 
-> omap34xx:
-> BIT(0)	ES1.0
-> BIT(1)	ES2.0
-> BIT(2)	ES2.1
-> BIT(3)	ES3.0
-> BIT(4)	ES3.1
-> BIT(7)	ES3.1.2
-> 
-> omap36xx:
-> BIT(0)	ES1.0
-> BIT(1)	ES1.1
-> BIT(2)	ES1.2
-> 
-> The second value is matched against the speed grade eFuse:
-> 
-> BIT(0)	no high speed OPP
-> BIT(1)	high speed OPP
-> 
-> This means for the example above that it is always enabled
-> while e.g.
-> 
-> 	opp-supported-hw = <0x1 2>
-> 
-> enables the OPP only for ES1.0 BIT(0) and if the high speed
-> eFuse is set BIT(1).
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
-> drivers/cpufreq/ti-cpufreq.c | 91 +++++++++++++++++++++++++++++++++++-
-> 1 file changed, 89 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
-> index 2ad1ae17932d..f2f58d689320 100644
-> --- a/drivers/cpufreq/ti-cpufreq.c
-> +++ b/drivers/cpufreq/ti-cpufreq.c
-> @@ -31,6 +31,11 @@
-> #define DRA7_EFUSE_OD_MPU_OPP			BIT(1)
-> #define DRA7_EFUSE_HIGH_MPU_OPP			BIT(2)
-> 
-> +#define OMAP3_CONTROL_DEVICE_STATUS		0x4800244C
-> +#define OMAP3_CONTROL_IDCODE			0x4830A204
-> +#define OMAP34xx_ProdID_SKUID			0x4830A20C
-> +#define OMAP3_SYSCON_BASE	(0x48000000 + 0x2000 + 0x270)
+I can't really comment on the crypto side, so my review is going to be
+pretty boring.
+
+On Fri, Sep 06, 2019 at 08:45:44PM +0200, Corentin Labbe wrote:
+> +static const struct ce_variant ce_h3_variant = {
+> +	.alg_cipher = { CE_ID_NOTSUPP, CE_ALG_AES, CE_ALG_DES, CE_ALG_3DES,
+> +		CE_ID_NOTSUPP,
+> +	},
+
+As far as I can see, it's always the same value, so I'm not sure why
+it's a parameter.
+
+> +	.op_mode = { CE_ID_NOTSUPP, CE_OP_ECB, CE_OP_CBC
+> +	},
+
+Ditto
+
+> +	.intreg = CE_ISR,
+
+Ditto
+
+> +	.maxflow = 4,
+
+Ditto
+
+> +	.ce_clks = {
+> +		{ "ahb", 200000000 },
+
+This is the default IIRC, and the clock driver will ignore any clock
+rate change on it anyway, so the clock rate is pretty much useless
+there.
+
+> +		{ "mod", 48000000 },
+
+48MHz seems pretty slow, especially compared to the other rates you
+have listed there. Is that on purpose?
+
+Also, I'm not sure what is the point of having the clocks names be
+parameters there as well. It's constant across all the compatibles,
+the only thing that isn't is the number of clocks and the module clock
+rate. It's what you should have in there.
+
+> +		}
+> +};
 > +
-> #define VERSION_COUNT				2
-> 
-> struct ti_cpufreq_data;
-> @@ -84,6 +89,13 @@ static unsigned long dra7_efuse_xlate(struct ti_cpufreq_data *opp_data,
-> 	return calculated_efuse;
-> }
-> 
-> +static unsigned long omap3_efuse_xlate(struct ti_cpufreq_data *opp_data,
-> +				      unsigned long efuse)
+> +static const struct ce_variant ce_h5_variant = {
+> +	.alg_cipher = { CE_ID_NOTSUPP, CE_ALG_AES, CE_ALG_DES, CE_ALG_3DES,
+> +		CE_ID_NOTSUPP,
+> +	},
+> +	.op_mode = { CE_ID_NOTSUPP, CE_OP_ECB, CE_OP_CBC
+> +	},
+> +	.intreg = CE_ISR,
+> +	.maxflow = 4,
+> +	.ce_clks = {
+> +		{ "ahb", 200000000 },
+> +		{ "mod", 300000000 },
+> +		}
+> +};
+> +
+> +static const struct ce_variant ce_h6_variant = {
+> +	.alg_cipher = { CE_ID_NOTSUPP, CE_ALG_AES, CE_ALG_DES, CE_ALG_3DES,
+> +		CE_ALG_RAES,
+> +	},
+> +	.op_mode = { CE_ID_NOTSUPP, CE_OP_ECB, CE_OP_CBC
+> +	},
+> +	.model = CE_v2,
+
+Can't that be derived from the version register and / or the
+compatible? This seems to be redundant with each.
+
+> +	.intreg = CE_ISR,
+> +	.maxflow = 4,
+> +	.ce_clks = {
+> +		{ "ahb", 200000000 },
+> +		{ "mod", 300000000 },
+> +		{ "mbus", 400000000 },
+
+That rate is going to be ignored as well.
+
+> +		}
+> +};
+> +
+> +static const struct ce_variant ce_a64_variant = {
+> +	.alg_cipher = { CE_ID_NOTSUPP, CE_ALG_AES, CE_ALG_DES, CE_ALG_3DES,
+> +		CE_ID_NOTSUPP,
+> +	},
+> +	.op_mode = { CE_ID_NOTSUPP, CE_OP_ECB, CE_OP_CBC
+> +	},
+> +	.intreg = CE_ISR,
+> +	.maxflow = 4,
+> +	.ce_clks = {
+> +		{ "ahb", 200000000 },
+> +		{ "mod", 300000000 },
+> +		}
+> +};
+
+You should order your variants by alphabetical order.
+
+> +static const struct ce_variant ce_r40_variant = {
+> +	.alg_cipher = { CE_ID_NOTSUPP, CE_ALG_AES, CE_ALG_DES, CE_ALG_3DES,
+> +		CE_ID_NOTSUPP,
+> +	},
+> +	.op_mode = { CE_ID_NOTSUPP, CE_OP_ECB, CE_OP_CBC
+> +	},
+> +	.intreg = CE_ISR,
+> +	.maxflow = 4,
+> +	.ce_clks = {
+> +		{ "ahb", 200000000 },
+> +		{ "mod", 300000000 },
+> +		}
+> +};
+> +
+
+...
+
+> +int sun8i_ce_get_engine_number(struct sun8i_ce_dev *ce)
 > +{
-> +	/* OPP enable bit ("Speed Binned") */
-> +	return BIT(efuse);
+> +	return atomic_inc_return(&ce->flow) % ce->variant->maxflow;
 > +}
+
+I'm not sure what this is supposed to be doing, but that mod there
+seems pretty dangerous.
+
+...
+
+> +static int sun8i_ce_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *res;
+> +	u32 v;
+> +	int err, i, ce_method, id, irq;
+> +	unsigned long cr;
+> +	struct sun8i_ce_dev *ce;
 > +
-> static struct ti_cpufreq_soc_data am3x_soc_data = {
-> 	.efuse_xlate = amx3_efuse_xlate,
-> 	.efuse_fallback = AM33XX_800M_ARM_MPU_MAX_FREQ,
-> @@ -111,6 +123,56 @@ static struct ti_cpufreq_soc_data dra7_soc_data = {
-> 	.multi_regulator = true,
-> };
-> 
-> +/*
-> + * OMAP35x TRM (SPRUF98K):
-> + *  CONTROL_IDCODE (0x4830 A204) describes Silicon revisions.
-> + *  Control OMAP Status Register 15:0 (Address 0x4800 244C)
-> + *    to separate between omap3503, omap3515, omap3525, omap3530
-> + *    and feature presence.
-> + *    There are encodings for versions limited to 400/266MHz
-> + *    but we ignore.
-> + *    Not clear if this also holds for omap34xx.
-> + *  some eFuse values e.g. CONTROL_FUSE_OPP1_VDD1
-> + *    are stored in the SYSCON register range
-> + *  Register 0x4830A20C [ProdID.SKUID] [0:3]
-> + *    0x0 for normal 600/430MHz device.
-> + *    0x8 for 720/520MHz device.
-> + *    Not clear what omap34xx value is.
-> + */
+> +	if (!pdev->dev.of_node)
+> +		return -ENODEV;
+
+This is pretty much guaranteed already
+
+> +	ce = devm_kzalloc(&pdev->dev, sizeof(*ce), GFP_KERNEL);
+> +	if (!ce)
+> +		return -ENOMEM;
 > +
-> +static struct ti_cpufreq_soc_data omap34xx_soc_data = {
-> +	.efuse_xlate = omap3_efuse_xlate,
-> +	.efuse_offset = OMAP34xx_ProdID_SKUID - OMAP3_SYSCON_BASE,
-> +	.efuse_shift = 3,
-> +	.efuse_mask = BIT(3),
-> +	.rev_offset = OMAP3_CONTROL_IDCODE - OMAP3_SYSCON_BASE,
-> +	.multi_regulator = false,
-> +};
+> +	ce->variant = of_device_get_match_data(&pdev->dev);
+> +	if (!ce->variant) {
+> +		dev_err(&pdev->dev, "Missing Crypto Engine variant\n");
+> +		return -EINVAL;
+> +	}
 > +
-> +/*
-> + * AM/DM37x TRM (SPRUGN4M)
-> + *  CONTROL_IDCODE (0x4830 A204) describes Silicon revisions.
-> + *  Control Device Status Register 15:0 (Address 0x4800 244C)
-> + *    to separate between am3703, am3715, dm3725, dm3730
-> + *    and feature presence.
-> + *   Speed Binned = Bit 9
-> + *     0 800/600 MHz
-> + *     1 1000/800 MHz
-> + *  some eFuse values e.g. CONTROL_FUSE_OPP 1G_VDD1
-> + *    are stored in the SYSCON register range.
-> + *  There is no 0x4830A20C [ProdID.SKUID] register (exists but
-> + *    seems to always read as 0).
-> + */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	ce->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(ce->base)) {
+> +		err = PTR_ERR(ce->base);
+> +		dev_err(&pdev->dev, "Cannot request MMIO err=%d\n", err);
+> +		return err;
+
+ioremap_resource already prints an error message on failure, so this
+is redundant.
+
+> +	}
 > +
-> +static struct ti_cpufreq_soc_data omap36xx_soc_data = {
-> +	.efuse_xlate = omap3_efuse_xlate,
-> +	.efuse_offset = OMAP3_CONTROL_DEVICE_STATUS - OMAP3_SYSCON_BASE,
-> +	.efuse_shift = 9,
-> +	.efuse_mask = BIT(9),
-> +	.rev_offset = OMAP3_CONTROL_IDCODE - OMAP3_SYSCON_BASE,
-> +	.multi_regulator = false,
-> +};
-> +
-> /**
->  * ti_cpufreq_get_efuse() - Parse and return efuse value present on SoC
->  * @opp_data: pointer to ti_cpufreq_data context
-> @@ -127,7 +189,17 @@ static int ti_cpufreq_get_efuse(struct ti_cpufreq_data *opp_data,
-> 
-> 	ret = regmap_read(opp_data->syscon, opp_data->soc_data->efuse_offset,
-> 			  &efuse);
-> -	if (ret) {
-> +	if (ret == -EIO) {
-> +		/* not a syscon register! */
-> +		void __iomem *regs = ioremap(OMAP3_SYSCON_BASE +
-> +				opp_data->soc_data->efuse_offset, 4);
-> +
-> +		if (!regs)
-> +			return -ENOMEM;
-> +		efuse = readl(regs);
-> +		iounmap(regs);
+> +	for (i = 0; i < CE_MAX_CLOCKS; i++) {
+> +		if (!ce->variant->ce_clks[i].name)
+> +			continue;
+> +		dev_info(&pdev->dev, "Get %s clock\n", ce->variant->ce_clks[i].name);
+
+There's no reason to print this at the info level
+
+> +		ce->ceclks[i] = devm_clk_get(&pdev->dev, ce->variant->ce_clks[i].name);
+> +		if (IS_ERR(ce->ceclks[i])) {
+> +			err = PTR_ERR(ce->ceclks[i]);
+> +			dev_err(&pdev->dev, "Cannot get %s CE clock err=%d\n",
+> +				ce->variant->ce_clks[i].name, err);
 > +		}
-> +	else if (ret) {
-> 		dev_err(dev,
-> 			"Failed to read the efuse value from syscon: %d\n",
-> 			ret);
-> @@ -158,7 +230,17 @@ static int ti_cpufreq_get_rev(struct ti_cpufreq_data *opp_data,
-> 
-> 	ret = regmap_read(opp_data->syscon, opp_data->soc_data->rev_offset,
-> 			  &revision);
-> -	if (ret) {
-> +	if (ret == -EIO) {
-> +		/* not a syscon register! */
-> +		void __iomem *regs = ioremap(OMAP3_SYSCON_BASE +
-> +				opp_data->soc_data->rev_offset, 4);
-> +
-> +		if (!regs)
-> +			return -ENOMEM;
-> +		revision = readl(regs);
-> +		iounmap(regs);
+> +		cr = clk_get_rate(ce->ceclks[i]);
+
+So on error you'd call clk_get_rate on the clock still? That seems
+pretty fragile, you should return there, it's a hard error.
+
+> +		if (ce->variant->ce_clks[i].freq) {
+> +			dev_info(&pdev->dev, "Set %s clock to %lu (%lu Mhz) from %lu (%lu Mhz)\n",
+> +				 ce->variant->ce_clks[i].name,
+> +				 ce->variant->ce_clks[i].freq,
+> +				 ce->variant->ce_clks[i].freq / 1000000,
+> +				 cr,
+> +				 cr / 1000000);
+
+Same remark about that message than the previous one.
+
+> +			err = clk_set_rate(ce->ceclks[i], ce->variant->ce_clks[i].freq);
+> +			if (err)
+> +				dev_err(&pdev->dev, "Fail to set %s clk speed to %lu\n",
+> +					ce->variant->ce_clks[i].name,
+> +					ce->variant->ce_clks[i].freq);
+> +		} else {
+> +			dev_info(&pdev->dev, "%s run at %lu\n",
+> +				 ce->variant->ce_clks[i].name, cr);
+
+Ditto.
+
 > +		}
-> +	else if (ret) {
-> 		dev_err(dev,
-> 			"Failed to read the revision number from syscon: %d\n",
-> 			ret);
-> @@ -190,6 +272,11 @@ static const struct of_device_id ti_cpufreq_of_match[] = {
-> 	{ .compatible = "ti,am33xx", .data = &am3x_soc_data, },
-> 	{ .compatible = "ti,am43", .data = &am4x_soc_data, },
-> 	{ .compatible = "ti,dra7", .data = &dra7_soc_data },
-> +	{ .compatible = "ti,omap34xx", .data = &omap34xx_soc_data, },
-> +	{ .compatible = "ti,omap36xx", .data = &omap36xx_soc_data, },
-> +	/* legacy */
-> +	{ .compatible = "ti,omap3430", .data = &omap34xx_soc_data, },
-> +	{ .compatible = "ti,omap3630", .data = &omap36xx_soc_data, },
+> +		err = clk_prepare_enable(ce->ceclks[i]);
 
-Well, I just realized that with the latest DTS changes,
+Do you really need this right now though?
 
-ti,omap34xx and ti,omap36xx are legacy and
-ti,omap3430 and ti,omap3630 are now official.
+> +		if (err) {
+> +			dev_err(&pdev->dev, "Cannot prepare_enable %s\n",
+> +				ce->variant->ce_clks[i].name);
+> +			return err;
+> +		}
+> +	}
+> +
+> +	/* Get Non Secure IRQ */
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		dev_err(ce->dev, "Cannot get NS IRQ\n");
+> +		return irq;
+> +	}
+> +
+> +	err = devm_request_irq(&pdev->dev, irq, ce_irq_handler, 0,
+> +			       "sun8i-ce-ns", ce);
+> +	if (err < 0) {
+> +		dev_err(ce->dev, "Cannot request NS IRQ\n");
+> +		return err;
+> +	}
+> +
+> +	ce->reset = devm_reset_control_get_optional(&pdev->dev, "ahb");
+> +	if (IS_ERR(ce->reset)) {
+> +		if (PTR_ERR(ce->reset) == -EPROBE_DEFER)
+> +			return PTR_ERR(ce->reset);
+> +		dev_info(&pdev->dev, "No reset control found\n");
 
-> 	{},
-> };
-> 
-> -- 
-> 2.19.1
-> 
+It's not optional though.
+
+> +		ce->reset = NULL;
+> +	}
+> +
+> +	err = reset_control_deassert(ce->reset);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Cannot deassert reset control\n");
+> +		goto error_clk;
+> +	}
+
+Again, you don't really need this at this moment. Using runtime_pm
+would make more sense.
+
+> +	v = readl(ce->base + CE_CTR);
+> +	v >>= 16;
+> +	v &= 0x07;
+
+This should be in a define
+
+> +	dev_info(&pdev->dev, "CE_NS Die ID %x\n", v);
+
+And if that really makes sense to print it, the error message should
+be made less cryptic.
+
+> +
+> +	ce->dev = &pdev->dev;
+> +	platform_set_drvdata(pdev, ce);
+> +
+> +	mutex_init(&ce->mlock);
+> +
+> +	ce->chanlist = devm_kcalloc(ce->dev, ce->variant->maxflow,
+> +				    sizeof(struct sun8i_ce_flow), GFP_KERNEL);
+> +	if (!ce->chanlist) {
+> +		err = -ENOMEM;
+> +		goto error_flow;
+> +	}
+> +
+> +	for (i = 0; i < ce->variant->maxflow; i++) {
+> +		init_completion(&ce->chanlist[i].complete);
+> +		mutex_init(&ce->chanlist[i].lock);
+> +
+> +		ce->chanlist[i].engine = crypto_engine_alloc_init(ce->dev, true);
+> +		if (!ce->chanlist[i].engine) {
+> +			dev_err(ce->dev, "Cannot allocate engine\n");
+> +			i--;
+> +			goto error_engine;
+> +		}
+> +		err = crypto_engine_start(ce->chanlist[i].engine);
+> +		if (err) {
+> +			dev_err(ce->dev, "Cannot start engine\n");
+> +			goto error_engine;
+> +		}
+> +		ce->chanlist[i].tl = dma_alloc_coherent(ce->dev,
+> +							sizeof(struct ce_task),
+> +							&ce->chanlist[i].t_phy,
+> +							GFP_KERNEL);
+> +		if (!ce->chanlist[i].tl) {
+> +			dev_err(ce->dev, "Cannot get DMA memory for task %d\n",
+> +				i);
+> +			err = -ENOMEM;
+> +			goto error_engine;
+> +		}
+> +	}
+
+All this initialization should be done before calling
+request_irq. You're using some of those fields in your handler.
+
+> +
+> +#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
+> +	ce->dbgfs_dir = debugfs_create_dir("sun8i-ce", NULL);
+> +	if (IS_ERR_OR_NULL(ce->dbgfs_dir)) {
+> +		dev_err(ce->dev, "Fail to create debugfs dir");
+> +		err = -ENOMEM;
+> +		goto error_engine;
+> +	}
+> +	ce->dbgfs_stats = debugfs_create_file("stats", 0444,
+> +					      ce->dbgfs_dir, ce,
+> +					      &sun8i_ce_debugfs_fops);
+> +	if (IS_ERR_OR_NULL(ce->dbgfs_stats)) {
+> +		dev_err(ce->dev, "Fail to create debugfs stat");
+> +		err = -ENOMEM;
+> +		goto error_debugfs;
+> +	}
+> +#endif
+> +	for (i = 0; i < ARRAY_SIZE(ce_algs); i++) {
+> +		ce_algs[i].ce = ce;
+> +		switch (ce_algs[i].type) {
+> +		case CRYPTO_ALG_TYPE_SKCIPHER:
+> +			id = ce_algs[i].ce_algo_id;
+> +			ce_method = ce->variant->alg_cipher[id];
+> +			if (ce_method == CE_ID_NOTSUPP) {
+> +				dev_info(ce->dev,
+> +					 "DEBUG: Algo of %s not supported\n",
+> +					 ce_algs[i].alg.skcipher.base.cra_name);
+> +				ce_algs[i].ce = NULL;
+> +				break;
+> +			}
+> +			id = ce_algs[i].ce_blockmode;
+> +			ce_method = ce->variant->op_mode[id];
+> +			if (ce_method == CE_ID_NOTSUPP) {
+> +				dev_info(ce->dev, "DEBUG: Blockmode of %s not supported\n",
+> +					 ce_algs[i].alg.skcipher.base.cra_name);
+> +				ce_algs[i].ce = NULL;
+> +				break;
+> +			}
+> +			dev_info(ce->dev, "DEBUG: Register %s\n",
+> +				 ce_algs[i].alg.skcipher.base.cra_name);
+> +			err = crypto_register_skcipher(&ce_algs[i].alg.skcipher);
+> +			if (err) {
+> +				dev_err(ce->dev, "Fail to register %s\n",
+> +					ce_algs[i].alg.skcipher.base.cra_name);
+> +				ce_algs[i].ce = NULL;
+> +				goto error_alg;
+> +			}
+> +			break;
+> +		default:
+> +			dev_err(ce->dev, "ERROR: tryed to register an unknown algo\n");
+> +		}
+> +	}
+> +
+> +	return 0;
+> +error_alg:
+> +	i--;
+> +	for (; i >= 0; i--) {
+> +		switch (ce_algs[i].type) {
+> +		case CRYPTO_ALG_TYPE_SKCIPHER:
+> +			if (ce_algs[i].ce)
+> +				crypto_unregister_skcipher(&ce_algs[i].alg.skcipher);
+> +			break;
+> +		}
+> +	}
+> +#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
+> +error_debugfs:
+> +	debugfs_remove_recursive(ce->dbgfs_dir);
+> +#endif
+> +	i = ce->variant->maxflow;
+> +error_engine:
+> +	while (i >= 0) {
+> +		crypto_engine_exit(ce->chanlist[i].engine);
+> +		if (ce->chanlist[i].tl)
+> +			dma_free_coherent(ce->dev, sizeof(struct ce_task),
+> +					  ce->chanlist[i].tl,
+> +					  ce->chanlist[i].t_phy);
+> +		i--;
+> +	}
+> +error_flow:
+> +	reset_control_assert(ce->reset);
+> +error_clk:
+> +	for (i = 0; i < CE_MAX_CLOCKS; i++)
+> +		clk_disable_unprepare(ce->ceclks[i]);
+> +	return err;
+> +}
+
+So that function takes around 200-250 LoC, this is definitely too
+much and should be split into multiple functions.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
