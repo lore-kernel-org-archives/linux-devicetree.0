@@ -1,38 +1,74 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [RFC 5/9] dt-bindings: arm: samsung: Convert Exynos PMU bindings
- to json-schema
-Date: Sat, 7 Sep 2019 11:22:03 +0200
-Message-ID: <CAJKOXPfg4p1CAbXeF1++b7+OaR99RdeJGrkbusisNKNywoNHHg@mail.gmail.com>
-References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-5-krzk@kernel.org>
- <CAL_JsqJybT41cEqiTriLMywUQj1BtAG_9muJ4=84OkF23y53CA@mail.gmail.com>
- <CAJKOXPc0SY_8BHMsWLN=1M3VQh41+bdBiH21L4KQPA+iLPYy+A@mail.gmail.com>
- <CAL_JsqKdsABWK9Og_f38T9zf3SCFFdhU8WOJ4uJjREantoYvYQ@mail.gmail.com>
- <CAJKOXPfnvu=c5f6AcOSiQ_9E-C2fMf9qbEpy1Tr3QvH8LgAtpQ@mail.gmail.com> <CAL_JsqKyj3s-Mn3q_Lna0w38K3DJzvKN5d72WHzqt4CUVf5X4Q@mail.gmail.com>
+From: <dongchun.zhu@mediatek.com>
+Subject: [V4, 0/2] media: i2c: Add support for OV02A10 sensor
+Date: Sat, 7 Sep 2019 17:27:26 +0800
+Message-ID: <20190907092728.23897-1-dongchun.zhu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKyj3s-Mn3q_Lna0w38K3DJzvKN5d72WHzqt4CUVf5X4Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, notify@kernel.orgArnd Bergmann <ar>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: mchehab@kernel.org, andriy.shevchenko@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, sakari.ailus@linux.intel.com, drinkcat@chromium.org, tfiga@chromium.org, matthias.bgg@gmail.com, bingbu.cao@intel.com
+Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, shengnan.wang@mediatek.com, sj.huang@mediatek.com, linux-mediatek@lists.infradead.org, dongchun.zhu@mediatek.com, louis.kuo@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 6 Sep 2019 at 17:49, Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > The bindings never required any specific ordering. Also the driver
-> > just go through all indices and parses them.
-> >
-> > Your second syntax fails:
-> > Documentation/devicetree/bindings/arm/samsung/pmu.yaml:
-> > properties:clock-names:items: {'enum': ['clkout0', 'clkout1',
-> > 'clkout2', 'clkout3', 'clkout4', 'clkout5', 'clkout6', 'clkout7',
-> > 'clkout8', 'clkout9', 'clkout10', 'clkout11', 'clkout12', 'clkout13',
-> > 'clkout14', 'clkout15', 'clkout16']} is not of type 'array'
->
-> Update dt-schema and try again. It should be allowed now. You'll also
-> need to define minItems and maxItems though.
+From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 
-Thanks, works!
+Hello,
 
-Best regards,
-Krzysztof
+This patch adds driver and bindings for Omnivision's OV02A10 2 megapixel CMOS 1/5" sensor,
+which has a single MIPI lane interface and output format of 10-bit Raw.
+
+The driver is implemented wth V4L2 framework.
+1. Async registered as a V4L2 I2C sub-device.
+2. A media entity that can provide several source pads and sink pads to link with other device like Seninf, ISP one after another
+   to create a default overall camera topology, image frame or meta-data from sensor can flow through particular path to output
+   preview or capture image or 3A info.
+
+Changes of v4 mainly address the comments from Sakari, Rob, Tomasz.
+ - Remove data-lanes property in DT
+ - Add link frequencies in DT to match the expect value that driver requires
+ - Omit open callback as int_cfg is implemented
+ - Use i2c_smbus_write_byte_data/i2c_smbus_read_byte_data instead of customed APIs
+ - Use do_div to calculate pixel rate
+ - Use usleep_range directly for shoter sleep case
+ - Re-adjust sensor power up/off sequence
+ - Re-set pd/rst GPIO inverter property according to the datasheet
+ - Refine set_exposure/set_gain/set_vblanking/set_test_pattern functions
+ - Fix other reviewed issues in v3
+
+Changes of v3 are mainly addressing comments from Rob, Sakari, Bingbu.
+ - Fix coding style errors in dt-bindings
+ - Use macro flag to describle basic line 1224 when updating v-blanking
+ - Remove unnecessary debug log in driver
+
+Mainly changes of v2 are addressing the comments from Nicolas, Bingbu, Sakari, Rob,
+including,
+ - Put dt binding before driver in series
+ - Add MAINTAINERS entries
+ - Squash the MAINTAINERS entry and Kconfig to driver patch
+ - Add rotation support for driver
+ - Fix other reviewed issues in v1
+
+Dongchun Zhu (2):
+  media: dt-bindings: media: i2c: Add bindings for OV02A10
+  media: i2c: Add Omnivision OV02A10 camera sensor driver
+
+ .../devicetree/bindings/media/i2c/ov02a10.txt      |   54 +
+ MAINTAINERS                                        |    8 +
+ drivers/media/i2c/Kconfig                          |   11 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/ov02a10.c                        | 1062 ++++++++++++++++++++
+ 5 files changed, 1136 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov02a10.txt
+ create mode 100644 drivers/media/i2c/ov02a10.c
+
+-- 
+2.9.2
