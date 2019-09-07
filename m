@@ -1,412 +1,130 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH 2/9] crypto: Add Allwinner sun8i-ce Crypto Engine
-Date: Sat, 7 Sep 2019 11:19:51 +0300
-Message-ID: <20190907081951.v2huvhm44jfprfop@flea>
-References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
- <20190906184551.17858-3-clabbe.montjoie@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2 01/11] dt-bindings: power: syscon-reboot: Convert bindings to json-schema
+Date: Sat,  7 Sep 2019 11:19:57 +0200
+Message-ID: <20190907092007.9946-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190906184551.17858-3-clabbe.montjoie@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: davem@davemloft.net, herbert@gondor.apana.org.au, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Convert the Syscon reboot bindings to DT schema format using
+json-schema.
 
-I can't really comment on the crypto side, so my review is going to be
-pretty boring.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-On Fri, Sep 06, 2019 at 08:45:44PM +0200, Corentin Labbe wrote:
-> +static const struct ce_variant ce_h3_variant = {
-> +	.alg_cipher = { CE_ID_NOTSUPP, CE_ALG_AES, CE_ALG_DES, CE_ALG_3DES,
-> +		CE_ID_NOTSUPP,
-> +	},
+---
 
-As far as I can see, it's always the same value, so I'm not sure why
-it's a parameter.
+Changes since v1:
+1. Remove unneeded maxItems from uint32 fields,
+2. Simplify if-else-then.
+---
+ .../bindings/power/reset/syscon-reboot.txt    | 30 ----------
+ .../bindings/power/reset/syscon-reboot.yaml   | 60 +++++++++++++++++++
+ 2 files changed, 60 insertions(+), 30 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+ create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
 
-> +	.op_mode = { CE_ID_NOTSUPP, CE_OP_ECB, CE_OP_CBC
-> +	},
-
-Ditto
-
-> +	.intreg = CE_ISR,
-
-Ditto
-
-> +	.maxflow = 4,
-
-Ditto
-
-> +	.ce_clks = {
-> +		{ "ahb", 200000000 },
-
-This is the default IIRC, and the clock driver will ignore any clock
-rate change on it anyway, so the clock rate is pretty much useless
-there.
-
-> +		{ "mod", 48000000 },
-
-48MHz seems pretty slow, especially compared to the other rates you
-have listed there. Is that on purpose?
-
-Also, I'm not sure what is the point of having the clocks names be
-parameters there as well. It's constant across all the compatibles,
-the only thing that isn't is the number of clocks and the module clock
-rate. It's what you should have in there.
-
-> +		}
-> +};
-> +
-> +static const struct ce_variant ce_h5_variant = {
-> +	.alg_cipher = { CE_ID_NOTSUPP, CE_ALG_AES, CE_ALG_DES, CE_ALG_3DES,
-> +		CE_ID_NOTSUPP,
-> +	},
-> +	.op_mode = { CE_ID_NOTSUPP, CE_OP_ECB, CE_OP_CBC
-> +	},
-> +	.intreg = CE_ISR,
-> +	.maxflow = 4,
-> +	.ce_clks = {
-> +		{ "ahb", 200000000 },
-> +		{ "mod", 300000000 },
-> +		}
-> +};
-> +
-> +static const struct ce_variant ce_h6_variant = {
-> +	.alg_cipher = { CE_ID_NOTSUPP, CE_ALG_AES, CE_ALG_DES, CE_ALG_3DES,
-> +		CE_ALG_RAES,
-> +	},
-> +	.op_mode = { CE_ID_NOTSUPP, CE_OP_ECB, CE_OP_CBC
-> +	},
-> +	.model = CE_v2,
-
-Can't that be derived from the version register and / or the
-compatible? This seems to be redundant with each.
-
-> +	.intreg = CE_ISR,
-> +	.maxflow = 4,
-> +	.ce_clks = {
-> +		{ "ahb", 200000000 },
-> +		{ "mod", 300000000 },
-> +		{ "mbus", 400000000 },
-
-That rate is going to be ignored as well.
-
-> +		}
-> +};
-> +
-> +static const struct ce_variant ce_a64_variant = {
-> +	.alg_cipher = { CE_ID_NOTSUPP, CE_ALG_AES, CE_ALG_DES, CE_ALG_3DES,
-> +		CE_ID_NOTSUPP,
-> +	},
-> +	.op_mode = { CE_ID_NOTSUPP, CE_OP_ECB, CE_OP_CBC
-> +	},
-> +	.intreg = CE_ISR,
-> +	.maxflow = 4,
-> +	.ce_clks = {
-> +		{ "ahb", 200000000 },
-> +		{ "mod", 300000000 },
-> +		}
-> +};
-
-You should order your variants by alphabetical order.
-
-> +static const struct ce_variant ce_r40_variant = {
-> +	.alg_cipher = { CE_ID_NOTSUPP, CE_ALG_AES, CE_ALG_DES, CE_ALG_3DES,
-> +		CE_ID_NOTSUPP,
-> +	},
-> +	.op_mode = { CE_ID_NOTSUPP, CE_OP_ECB, CE_OP_CBC
-> +	},
-> +	.intreg = CE_ISR,
-> +	.maxflow = 4,
-> +	.ce_clks = {
-> +		{ "ahb", 200000000 },
-> +		{ "mod", 300000000 },
-> +		}
-> +};
-> +
-
-...
-
-> +int sun8i_ce_get_engine_number(struct sun8i_ce_dev *ce)
-> +{
-> +	return atomic_inc_return(&ce->flow) % ce->variant->maxflow;
-> +}
-
-I'm not sure what this is supposed to be doing, but that mod there
-seems pretty dangerous.
-
-...
-
-> +static int sun8i_ce_probe(struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	u32 v;
-> +	int err, i, ce_method, id, irq;
-> +	unsigned long cr;
-> +	struct sun8i_ce_dev *ce;
-> +
-> +	if (!pdev->dev.of_node)
-> +		return -ENODEV;
-
-This is pretty much guaranteed already
-
-> +	ce = devm_kzalloc(&pdev->dev, sizeof(*ce), GFP_KERNEL);
-> +	if (!ce)
-> +		return -ENOMEM;
-> +
-> +	ce->variant = of_device_get_match_data(&pdev->dev);
-> +	if (!ce->variant) {
-> +		dev_err(&pdev->dev, "Missing Crypto Engine variant\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	ce->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(ce->base)) {
-> +		err = PTR_ERR(ce->base);
-> +		dev_err(&pdev->dev, "Cannot request MMIO err=%d\n", err);
-> +		return err;
-
-ioremap_resource already prints an error message on failure, so this
-is redundant.
-
-> +	}
-> +
-> +	for (i = 0; i < CE_MAX_CLOCKS; i++) {
-> +		if (!ce->variant->ce_clks[i].name)
-> +			continue;
-> +		dev_info(&pdev->dev, "Get %s clock\n", ce->variant->ce_clks[i].name);
-
-There's no reason to print this at the info level
-
-> +		ce->ceclks[i] = devm_clk_get(&pdev->dev, ce->variant->ce_clks[i].name);
-> +		if (IS_ERR(ce->ceclks[i])) {
-> +			err = PTR_ERR(ce->ceclks[i]);
-> +			dev_err(&pdev->dev, "Cannot get %s CE clock err=%d\n",
-> +				ce->variant->ce_clks[i].name, err);
-> +		}
-> +		cr = clk_get_rate(ce->ceclks[i]);
-
-So on error you'd call clk_get_rate on the clock still? That seems
-pretty fragile, you should return there, it's a hard error.
-
-> +		if (ce->variant->ce_clks[i].freq) {
-> +			dev_info(&pdev->dev, "Set %s clock to %lu (%lu Mhz) from %lu (%lu Mhz)\n",
-> +				 ce->variant->ce_clks[i].name,
-> +				 ce->variant->ce_clks[i].freq,
-> +				 ce->variant->ce_clks[i].freq / 1000000,
-> +				 cr,
-> +				 cr / 1000000);
-
-Same remark about that message than the previous one.
-
-> +			err = clk_set_rate(ce->ceclks[i], ce->variant->ce_clks[i].freq);
-> +			if (err)
-> +				dev_err(&pdev->dev, "Fail to set %s clk speed to %lu\n",
-> +					ce->variant->ce_clks[i].name,
-> +					ce->variant->ce_clks[i].freq);
-> +		} else {
-> +			dev_info(&pdev->dev, "%s run at %lu\n",
-> +				 ce->variant->ce_clks[i].name, cr);
-
-Ditto.
-
-> +		}
-> +		err = clk_prepare_enable(ce->ceclks[i]);
-
-Do you really need this right now though?
-
-> +		if (err) {
-> +			dev_err(&pdev->dev, "Cannot prepare_enable %s\n",
-> +				ce->variant->ce_clks[i].name);
-> +			return err;
-> +		}
-> +	}
-> +
-> +	/* Get Non Secure IRQ */
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(ce->dev, "Cannot get NS IRQ\n");
-> +		return irq;
-> +	}
-> +
-> +	err = devm_request_irq(&pdev->dev, irq, ce_irq_handler, 0,
-> +			       "sun8i-ce-ns", ce);
-> +	if (err < 0) {
-> +		dev_err(ce->dev, "Cannot request NS IRQ\n");
-> +		return err;
-> +	}
-> +
-> +	ce->reset = devm_reset_control_get_optional(&pdev->dev, "ahb");
-> +	if (IS_ERR(ce->reset)) {
-> +		if (PTR_ERR(ce->reset) == -EPROBE_DEFER)
-> +			return PTR_ERR(ce->reset);
-> +		dev_info(&pdev->dev, "No reset control found\n");
-
-It's not optional though.
-
-> +		ce->reset = NULL;
-> +	}
-> +
-> +	err = reset_control_deassert(ce->reset);
-> +	if (err) {
-> +		dev_err(&pdev->dev, "Cannot deassert reset control\n");
-> +		goto error_clk;
-> +	}
-
-Again, you don't really need this at this moment. Using runtime_pm
-would make more sense.
-
-> +	v = readl(ce->base + CE_CTR);
-> +	v >>= 16;
-> +	v &= 0x07;
-
-This should be in a define
-
-> +	dev_info(&pdev->dev, "CE_NS Die ID %x\n", v);
-
-And if that really makes sense to print it, the error message should
-be made less cryptic.
-
-> +
-> +	ce->dev = &pdev->dev;
-> +	platform_set_drvdata(pdev, ce);
-> +
-> +	mutex_init(&ce->mlock);
-> +
-> +	ce->chanlist = devm_kcalloc(ce->dev, ce->variant->maxflow,
-> +				    sizeof(struct sun8i_ce_flow), GFP_KERNEL);
-> +	if (!ce->chanlist) {
-> +		err = -ENOMEM;
-> +		goto error_flow;
-> +	}
-> +
-> +	for (i = 0; i < ce->variant->maxflow; i++) {
-> +		init_completion(&ce->chanlist[i].complete);
-> +		mutex_init(&ce->chanlist[i].lock);
-> +
-> +		ce->chanlist[i].engine = crypto_engine_alloc_init(ce->dev, true);
-> +		if (!ce->chanlist[i].engine) {
-> +			dev_err(ce->dev, "Cannot allocate engine\n");
-> +			i--;
-> +			goto error_engine;
-> +		}
-> +		err = crypto_engine_start(ce->chanlist[i].engine);
-> +		if (err) {
-> +			dev_err(ce->dev, "Cannot start engine\n");
-> +			goto error_engine;
-> +		}
-> +		ce->chanlist[i].tl = dma_alloc_coherent(ce->dev,
-> +							sizeof(struct ce_task),
-> +							&ce->chanlist[i].t_phy,
-> +							GFP_KERNEL);
-> +		if (!ce->chanlist[i].tl) {
-> +			dev_err(ce->dev, "Cannot get DMA memory for task %d\n",
-> +				i);
-> +			err = -ENOMEM;
-> +			goto error_engine;
-> +		}
-> +	}
-
-All this initialization should be done before calling
-request_irq. You're using some of those fields in your handler.
-
-> +
-> +#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
-> +	ce->dbgfs_dir = debugfs_create_dir("sun8i-ce", NULL);
-> +	if (IS_ERR_OR_NULL(ce->dbgfs_dir)) {
-> +		dev_err(ce->dev, "Fail to create debugfs dir");
-> +		err = -ENOMEM;
-> +		goto error_engine;
-> +	}
-> +	ce->dbgfs_stats = debugfs_create_file("stats", 0444,
-> +					      ce->dbgfs_dir, ce,
-> +					      &sun8i_ce_debugfs_fops);
-> +	if (IS_ERR_OR_NULL(ce->dbgfs_stats)) {
-> +		dev_err(ce->dev, "Fail to create debugfs stat");
-> +		err = -ENOMEM;
-> +		goto error_debugfs;
-> +	}
-> +#endif
-> +	for (i = 0; i < ARRAY_SIZE(ce_algs); i++) {
-> +		ce_algs[i].ce = ce;
-> +		switch (ce_algs[i].type) {
-> +		case CRYPTO_ALG_TYPE_SKCIPHER:
-> +			id = ce_algs[i].ce_algo_id;
-> +			ce_method = ce->variant->alg_cipher[id];
-> +			if (ce_method == CE_ID_NOTSUPP) {
-> +				dev_info(ce->dev,
-> +					 "DEBUG: Algo of %s not supported\n",
-> +					 ce_algs[i].alg.skcipher.base.cra_name);
-> +				ce_algs[i].ce = NULL;
-> +				break;
-> +			}
-> +			id = ce_algs[i].ce_blockmode;
-> +			ce_method = ce->variant->op_mode[id];
-> +			if (ce_method == CE_ID_NOTSUPP) {
-> +				dev_info(ce->dev, "DEBUG: Blockmode of %s not supported\n",
-> +					 ce_algs[i].alg.skcipher.base.cra_name);
-> +				ce_algs[i].ce = NULL;
-> +				break;
-> +			}
-> +			dev_info(ce->dev, "DEBUG: Register %s\n",
-> +				 ce_algs[i].alg.skcipher.base.cra_name);
-> +			err = crypto_register_skcipher(&ce_algs[i].alg.skcipher);
-> +			if (err) {
-> +				dev_err(ce->dev, "Fail to register %s\n",
-> +					ce_algs[i].alg.skcipher.base.cra_name);
-> +				ce_algs[i].ce = NULL;
-> +				goto error_alg;
-> +			}
-> +			break;
-> +		default:
-> +			dev_err(ce->dev, "ERROR: tryed to register an unknown algo\n");
-> +		}
-> +	}
-> +
-> +	return 0;
-> +error_alg:
-> +	i--;
-> +	for (; i >= 0; i--) {
-> +		switch (ce_algs[i].type) {
-> +		case CRYPTO_ALG_TYPE_SKCIPHER:
-> +			if (ce_algs[i].ce)
-> +				crypto_unregister_skcipher(&ce_algs[i].alg.skcipher);
-> +			break;
-> +		}
-> +	}
-> +#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
-> +error_debugfs:
-> +	debugfs_remove_recursive(ce->dbgfs_dir);
-> +#endif
-> +	i = ce->variant->maxflow;
-> +error_engine:
-> +	while (i >= 0) {
-> +		crypto_engine_exit(ce->chanlist[i].engine);
-> +		if (ce->chanlist[i].tl)
-> +			dma_free_coherent(ce->dev, sizeof(struct ce_task),
-> +					  ce->chanlist[i].tl,
-> +					  ce->chanlist[i].t_phy);
-> +		i--;
-> +	}
-> +error_flow:
-> +	reset_control_assert(ce->reset);
-> +error_clk:
-> +	for (i = 0; i < CE_MAX_CLOCKS; i++)
-> +		clk_disable_unprepare(ce->ceclks[i]);
-> +	return err;
-> +}
-
-So that function takes around 200-250 LoC, this is definitely too
-much and should be split into multiple functions.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+deleted file mode 100644
+index e23dea8344f8..000000000000
+--- a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
++++ /dev/null
+@@ -1,30 +0,0 @@
+-Generic SYSCON mapped register reset driver
+-
+-This is a generic reset driver using syscon to map the reset register.
+-The reset is generally performed with a write to the reset register
+-defined by the register map pointed by syscon reference plus the offset
+-with the value and mask defined in the reboot node.
+-
+-Required properties:
+-- compatible: should contain "syscon-reboot"
+-- regmap: this is phandle to the register map node
+-- offset: offset in the register map for the reboot register (in bytes)
+-- value: the reset value written to the reboot register (32 bit access)
+-
+-Optional properties:
+-- mask: update only the register bits defined by the mask (32 bit)
+-
+-Legacy usage:
+-If a node doesn't contain a value property but contains a mask property, the
+-mask property is used as the value.
+-
+-Default will be little endian mode, 32 bit access only.
+-
+-Examples:
+-
+-	reboot {
+-	   compatible = "syscon-reboot";
+-	   regmap = <&regmapnode>;
+-	   offset = <0x0>;
+-	   mask = <0x1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+new file mode 100644
+index 000000000000..a7920f5eef79
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+@@ -0,0 +1,60 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/reset/syscon-reboot.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Generic SYSCON mapped register reset driver
++
++maintainers:
++  - Sebastian Reichel <sre@kernel.org>
++
++description: |+
++  This is a generic reset driver using syscon to map the reset register.
++  The reset is generally performed with a write to the reset register
++  defined by the register map pointed by syscon reference plus the offset
++  with the value and mask defined in the reboot node.
++  Default will be little endian mode, 32 bit access only.
++
++properties:
++  compatible:
++    const: syscon-reboot
++
++  mask:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Update only the register bits defined by the mask (32 bit).
++
++  offset:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Offset in the register map for the reboot register (in bytes).
++
++  regmap:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: Phandle to the register map node.
++
++  value:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: The reset value written to the reboot register (32 bit access).
++
++required:
++  - compatible
++  - regmap
++  - offset
++
++allOf:
++  - if:
++      not:
++        required:
++          - mask
++    then:
++      required:
++        - value
++
++examples:
++  - |
++    reboot {
++      compatible = "syscon-reboot";
++      regmap = <&regmapnode>;
++      offset = <0x0>;
++      mask = <0x1>;
++    };
+-- 
+2.17.1
