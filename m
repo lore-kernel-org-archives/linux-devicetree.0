@@ -1,64 +1,30 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 1/6] dt-bindings: pci: amlogic,meson-pcie: Add G12A bindings
-Date: Sun,  8 Sep 2019 13:42:53 +0000
-Message-ID: <1567950178-4466-2-git-send-email-narmstrong@baylibre.com>
-References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
+From: thesven73@gmail.com
+Subject: [PATCH] dt-bindings: anybus-controller: move to staging/ tree
+Date: Sun,  8 Sep 2019 09:48:05 -0400
+Message-ID: <20190908134805.30957-1-TheSven73@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: khilman@baylibre.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com, devicetree@vger.kernel.org
-Cc: repk@triplefau.lt, Neil Armstrong <narmstrong@baylibre.com>, maz@kernel.org, linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org, Sven Van Asbroeck <TheSven73@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Add PCIE bindings for the Amlogic G12A SoC, the support is the same
-but the PHY is shared with USB3 to control the differential lines.
+From: Sven Van Asbroeck <TheSven73@gmail.com>
 
-Thus this adds a phy phandle to control the PHY, and sets invalid
-MIPI clock as optional for G12A.
+The devicetree bindings for anybus-controller were mistakenly
+merged into the main Linux tree. Its driver resides in
+staging/, so the bindings belong in staging/ too.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 20a980e957bf ("dt-bindings: anybus-controller: document devicetree binding")
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
- .../devicetree/bindings/pci/amlogic,meson-pcie.txt   | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/fieldbus/arcx,anybus-controller.txt       | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename {Documentation => drivers/staging/fieldbus/Documentation}/devicetree/bindings/fieldbus/arcx,anybus-controller.txt (100%)
 
-diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-index efa2c8b9b85a..84fdc422792e 100644
---- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-@@ -9,13 +9,16 @@ Additional properties are described here:
- 
- Required properties:
- - compatible:
--	should contain "amlogic,axg-pcie" to identify the core.
-+	should contain :
-+	- "amlogic,axg-pcie" for AXG SoC Family
-+	- "amlogic,g12a-pcie" for G12A SoC Family
-+	to identify the core.
- - reg:
- 	should contain the configuration address space.
- - reg-names: Must be
- 	- "elbi"	External local bus interface registers
- 	- "cfg"		Meson specific registers
--	- "phy"		Meson PCIE PHY registers
-+	- "phy"		Meson PCIE PHY registers for AXG SoC Family
- 	- "config"	PCIe configuration space
- - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
- - clocks: Must contain an entry for each entry in clock-names.
-@@ -23,12 +26,13 @@ Required properties:
- 	- "pclk"       PCIe GEN 100M PLL clock
- 	- "port"       PCIe_x(A or B) RC clock gate
- 	- "general"    PCIe Phy clock
--	- "mipi"       PCIe_x(A or B) 100M ref clock gate
-+	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
- - resets: phandle to the reset lines.
- - reset-names: must contain "phy" "port" and "apb"
--       - "phy"         Share PHY reset
-+       - "phy"         Share PHY reset for AXG SoC Family
-        - "port"        Port A or B reset
-        - "apb"         Share APB reset
-+- phys: should contain a phandle to the shared phy for G12A SoC Family
- - device_type:
- 	should be "pci". As specified in designware-pcie.txt
- 
+diff --git a/Documentation/devicetree/bindings/fieldbus/arcx,anybus-controller.txt b/drivers/staging/fieldbus/Documentation/devicetree/bindings/fieldbus/arcx,anybus-controller.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/fieldbus/arcx,anybus-controller.txt
+rename to drivers/staging/fieldbus/Documentation/devicetree/bindings/fieldbus/arcx,anybus-controller.txt
 -- 
 2.17.1
