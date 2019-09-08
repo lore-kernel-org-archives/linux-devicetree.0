@@ -1,27 +1,69 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH 0/2] backlight_lm3630a: add enable_gpios property
-Date: Sun,  8 Sep 2019 22:37:02 +0200
-Message-ID: <20190908203704.30147-1-andreas@kemnade.info>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
+Date: Sun, 8 Sep 2019 23:45:53 +0300
+Message-ID: <aedad45b-16d6-d189-b045-329727440ca5@mleia.com>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-3-luca@lucaceresoli.net>
+ <20190901143101.humomdehy5ee73sk@vino>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190901143101.humomdehy5ee73sk@vino>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Andreas Kemnade <andreas@kemnade.info>
+To: jacopo mondi <jacopo@jmondi.org>, Luca Ceresoli <luca@lucaceresoli.net>, Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>
+Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-To be able to handle the HWEN pin of the lm3630a, add
-an enable gpio to the driver and a property.
+Hi Luca, Jacopo, Wolfram, Peter,
 
-Tested on Kobo Clara HD
+On 09/01/2019 05:31 PM, jacopo mondi wrote:
+> Hi Luca,
+>    thanks for keep pushing this series! I hope we can use part of this
+> for the (long time) on-going GMSL work...
+> 
+> I hope you will be patient enough to provide (another :) overview
+> of this work during the BoF Wolfram has organized at LPC for the next
+> week.
+> 
+> In the meantime I would have some comments after having a read at the
+> series and trying to apply its concept to GMSL
+> 
 
-Andreas Kemnade (2):
-  backlight: lm3630a: add an enable gpio for the HWEN pin
-  dt-bindings: backlight: lm3630a: add enable_gpios
+I won't attend the LPC, however I would appreciate if you book some
+time to review my original / alternative implementation of the TI
+DS90Ux9xx I2C bridge device driver.
 
- .../leds/backlight/lm3630a-backlight.yaml      |  4 ++++
- drivers/video/backlight/lm3630a_bl.c           | 18 ++++++++++++++++++
- 2 files changed, 22 insertions(+)
+For your convenience the links to the driver are given below:
+* dt bindings: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#mead5ea226550b
+* driver code: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#m2fe3664c5f884
+* usage example: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#m56c146f5decdc
 
--- 
-2.20.1
+The reasons why my driver is better/more flexible/more functional are
+discussed earlier, please let me know, if you expect anything else
+from me to add, also I would be happy to get a summary of your offline
+discussion.
+
+The undeniable fact is that the device tree bindings in my I2C bridge
+implementation can be improved further, thanks to Luca for the comments.
+
+> On Tue, Jul 23, 2019 at 10:37:19PM +0200, Luca Ceresoli wrote:
+>> An ATR is a device that looks similar to an i2c-mux: it has an I2C
+>> slave "upstream" port and N master "downstream" ports, and forwards
+>> transactions from upstream to the appropriate downstream port. But is
+>> is different in that the forwarded transaction has a different slave
+>> address. The address used on the upstream bus is called the "alias"
+>> and is (potentially) different from the physical slave address of the
+>> downstream chip.
+>>
+>> Add a helper file (just like i2c-mux.c for a mux or switch) to allow
+>> implementing ATR features in a device driver. The helper takes care or
+>> adapter creation/destruction and translates addresses at each transaction.
+>>
+>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+>>
+
+--
+Best wishes,
+Vladimir
