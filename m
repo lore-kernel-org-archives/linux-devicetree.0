@@ -1,7 +1,7 @@
 From: Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH 1/2] backlight: lm3630a: add an enable gpio for the HWEN pin
-Date: Sun,  8 Sep 2019 22:37:03 +0200
-Message-ID: <20190908203704.30147-2-andreas@kemnade.info>
+Subject: [PATCH 2/2] dt-bindings: backlight: lm3630a: add enable_gpios
+Date: Sun,  8 Sep 2019 22:37:04 +0200
+Message-ID: <20190908203704.30147-3-andreas@kemnade.info>
 References: <20190908203704.30147-1-andreas@kemnade.info>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,73 +12,27 @@ To: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, jace
 Cc: Andreas Kemnade <andreas@kemnade.info>
 List-Id: devicetree@vger.kernel.org
 
-For now just enable it in the probe function to allow i2c
-access and disable it on remove. Disabling also means resetting
-the register values to default.
-
-Tested on Kobo Clara HD.
+add enable-gpios to describe HWEN pin
 
 Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 ---
- drivers/video/backlight/lm3630a_bl.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ .../devicetree/bindings/leds/backlight/lm3630a-backlight.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index b04b35d007a2..3b45a1733198 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -12,6 +12,8 @@
- #include <linux/uaccess.h>
- #include <linux/interrupt.h>
- #include <linux/regmap.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio.h>
- #include <linux/pwm.h>
- #include <linux/platform_data/lm3630a_bl.h>
+diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+index dc129d9a329e..a9656d72b668 100644
+--- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
++++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+@@ -29,6 +29,10 @@ properties:
+   '#size-cells':
+     const: 0
  
-@@ -48,6 +50,7 @@ struct lm3630a_chip {
- 	struct lm3630a_platform_data *pdata;
- 	struct backlight_device *bleda;
- 	struct backlight_device *bledb;
-+	struct gpio_desc *enable_gpio;
- 	struct regmap *regmap;
- 	struct pwm_device *pwmd;
- };
-@@ -506,6 +509,14 @@ static int lm3630a_probe(struct i2c_client *client,
- 		return -ENOMEM;
- 	pchip->dev = &client->dev;
- 
-+	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
-+						GPIOD_ASIS);
-+	if (IS_ERR(pchip->enable_gpio)) {
-+		rval = PTR_ERR(pchip->enable_gpio);
-+		return rval;
-+	}
++  enable-gpios:
++    description: GPIO to use to enable/disable the backlight (HWEN pin).
++    maxItems: 1
 +
-+
- 	pchip->regmap = devm_regmap_init_i2c(client, &lm3630a_regmap);
- 	if (IS_ERR(pchip->regmap)) {
- 		rval = PTR_ERR(pchip->regmap);
-@@ -535,6 +546,10 @@ static int lm3630a_probe(struct i2c_client *client,
- 	}
- 	pchip->pdata = pdata;
- 
-+	if (pchip->enable_gpio) {
-+		gpiod_set_value_cansleep(pchip->enable_gpio, 1);
-+		usleep_range(1000, 2000);
-+	}
- 	/* chip initialize */
- 	rval = lm3630a_chip_init(pchip);
- 	if (rval < 0) {
-@@ -586,6 +601,9 @@ static int lm3630a_remove(struct i2c_client *client)
- 	if (rval < 0)
- 		dev_err(pchip->dev, "i2c failed to access register\n");
- 
-+	if (pchip->enable_gpio)
-+		gpiod_set_value_cansleep(pchip->enable_gpio, 0);
-+
- 	if (pchip->irq) {
- 		free_irq(pchip->irq, pchip);
- 		flush_workqueue(pchip->irqthread);
+ required:
+   - compatible
+   - reg
 -- 
 2.20.1
