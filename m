@@ -1,38 +1,27 @@
 From: Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH 2/2] dt-bindings: backlight: lm3630a: add enable_gpios
-Date: Sun,  8 Sep 2019 22:37:04 +0200
-Message-ID: <20190908203704.30147-3-andreas@kemnade.info>
-References: <20190908203704.30147-1-andreas@kemnade.info>
+Subject: [PATCH 0/2] backlight_lm3630a: add enable_gpios property
+Date: Sun,  8 Sep 2019 22:37:02 +0200
+Message-ID: <20190908203704.30147-1-andreas@kemnade.info>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190908203704.30147-1-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
 To: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
 Cc: Andreas Kemnade <andreas@kemnade.info>
 List-Id: devicetree@vger.kernel.org
 
-add enable-gpios to describe HWEN pin
+To be able to handle the HWEN pin of the lm3630a, add
+an enable gpio to the driver and a property.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
- .../devicetree/bindings/leds/backlight/lm3630a-backlight.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+Tested on Kobo Clara HD
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-index dc129d9a329e..a9656d72b668 100644
---- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-+++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-@@ -29,6 +29,10 @@ properties:
-   '#size-cells':
-     const: 0
- 
-+  enable-gpios:
-+    description: GPIO to use to enable/disable the backlight (HWEN pin).
-+    maxItems: 1
-+
- required:
-   - compatible
-   - reg
+Andreas Kemnade (2):
+  backlight: lm3630a: add an enable gpio for the HWEN pin
+  dt-bindings: backlight: lm3630a: add enable_gpios
+
+ .../leds/backlight/lm3630a-backlight.yaml      |  4 ++++
+ drivers/video/backlight/lm3630a_bl.c           | 18 ++++++++++++++++++
+ 2 files changed, 22 insertions(+)
+
 -- 
 2.20.1
