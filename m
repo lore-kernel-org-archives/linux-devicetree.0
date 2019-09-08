@@ -1,95 +1,64 @@
-From: mirq-linux@rere.qmqm.pl
-Subject: Re: [PATCH v2 6/6] ASoC: atmel_ssc_dai: Enable shared FSYNC source
- in frame-slave mode
-Date: Sun, 8 Sep 2019 15:39:30 +0200
-Message-ID: <20190908133929.GA32003@qmqm.qmqm.pl>
-References: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
- <b56ebac96ad232e2d9871067b13654eb9223f28f.1566677788.git.mirq-linux@rere.qmqm.pl>
- <a42ede6e-4cc9-6dbf-4c58-71d2298fd3d5@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Transfer-Encoding: 8bit
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 1/6] dt-bindings: pci: amlogic,meson-pcie: Add G12A bindings
+Date: Sun,  8 Sep 2019 13:42:53 +0000
+Message-ID: <1567950178-4466-2-git-send-email-narmstrong@baylibre.com>
+References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a42ede6e-4cc9-6dbf-4c58-71d2298fd3d5@microchip.com>
+In-Reply-To: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Codrin.Ciubotariu@microchip.com
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, arnd@arndb.de, 3chas3@gmail.com, gregkh@linuxfoundation.org, perex@perex.cz, lgirdwood@gmail.com, Ludovic.Desroches@microchip.com, broonie@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, robh-dt@kernel.org, tiwai@suse.com, linux-kernel@vger.kernel.org
+To: khilman@baylibre.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com, devicetree@vger.kernel.org
+Cc: repk@triplefau.lt, Neil Armstrong <narmstrong@baylibre.com>, maz@kernel.org, linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 03:05:06PM +0000, Codrin.Ciubotariu@microchip.com wrote:
-> On 24.08.2019 23:26, Micha³ Miros³aw wrote:
-> > SSC driver allows only synchronous TX and RX. In slave mode for BCLK
-> > it uses only one of TK or RK pin, but for LRCLK it configured separate
-> > inputs from TF and RF pins. Allow configuration with common FS signal.
-> > 
-> > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
-> > 
-> > ---
-> >   v2: use alternate DT binding
-> >       split DT and drivers/misc changes
-> > 
-> > ---
-> >   sound/soc/atmel/atmel_ssc_dai.c | 26 ++++++++++++++++++++++----
-> >   1 file changed, 22 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/sound/soc/atmel/atmel_ssc_dai.c b/sound/soc/atmel/atmel_ssc_dai.c
-> > index 48e9eef34c0f..035d4da58f2b 100644
-> > --- a/sound/soc/atmel/atmel_ssc_dai.c
-> > +++ b/sound/soc/atmel/atmel_ssc_dai.c
-> > @@ -605,14 +605,32 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
-> >   		return -EINVAL;
-> >   	}
-> >   
-> > -	if (!atmel_ssc_cfs(ssc_p)) {
-> > +	if (atmel_ssc_cfs(ssc_p)) {
-> > +		/*
-> > +		 * SSC provides LRCLK
-> > +		 *
-> > +		 * Both TF and RF are generated, so use them directly.
-> > +		 */
-> > +		rcmr |=	  SSC_BF(RCMR_START, fs_edge);
-> > +		tcmr |=	  SSC_BF(TCMR_START, fs_edge);
-> 
-> Hmm, how would this work if capture and playback start/run at the same time?
+Add PCIE bindings for the Amlogic G12A SoC, the support is the same
+but the PHY is shared with USB3 to control the differential lines.
 
-Same as it did before this patch: as there is only one bi-directional link
-between SSC and codec, whichever stream starts first defines the rate.
+Thus this adds a phy phandle to control the PHY, and sets invalid
+MIPI clock as optional for G12A.
 
-> > +	} else {
-> >   		fslen = fslen_ext = 0;
-> >   		rcmr_period = tcmr_period = 0;
-> >   		fs_osync = SSC_FSOS_NONE;
-> > -	}
-> >   
-> > -	rcmr |=	  SSC_BF(RCMR_START, fs_edge);
-> > -	tcmr |=	  SSC_BF(TCMR_START, fs_edge);
-> > +		if (ssc->lrclk_from_tf_pin) {
-> > +			rcmr |=	  SSC_BF(RCMR_START, SSC_START_TX_RX);
-> > +			tcmr |=	  SSC_BF(TCMR_START, fs_edge);
-> > +		} else if (ssc->lrclk_from_rf_pin) {
-> > +			/* assume RF is to be used when RK is used as BCLK input */
-> 
-> This comment is not longer true...
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../devicetree/bindings/pci/amlogic,meson-pcie.txt   | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-Removed for next version.
-
-> 
-> > +			/* Note: won't work correctly on SAMA5D2 due to errata */
-> > +			rcmr |=	  SSC_BF(RCMR_START, fs_edge);
-> > +			tcmr |=	  SSC_BF(TCMR_START, SSC_START_TX_RX);
-> > +		} else {
-> > +			rcmr |=	  SSC_BF(RCMR_START, fs_edge);
-> > +			tcmr |=	  SSC_BF(TCMR_START, fs_edge);
-> > +		}
-> > +	}
-> >   
-> >   	if (atmel_ssc_cbs(ssc_p)) {
-> >   		/*
-> > 
-> 
-> Thanks and best regards,
-> Codrin
-
-Best Regards,
-Micha³ Miros³aw
+diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+index efa2c8b9b85a..84fdc422792e 100644
+--- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+@@ -9,13 +9,16 @@ Additional properties are described here:
+ 
+ Required properties:
+ - compatible:
+-	should contain "amlogic,axg-pcie" to identify the core.
++	should contain :
++	- "amlogic,axg-pcie" for AXG SoC Family
++	- "amlogic,g12a-pcie" for G12A SoC Family
++	to identify the core.
+ - reg:
+ 	should contain the configuration address space.
+ - reg-names: Must be
+ 	- "elbi"	External local bus interface registers
+ 	- "cfg"		Meson specific registers
+-	- "phy"		Meson PCIE PHY registers
++	- "phy"		Meson PCIE PHY registers for AXG SoC Family
+ 	- "config"	PCIe configuration space
+ - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+ - clocks: Must contain an entry for each entry in clock-names.
+@@ -23,12 +26,13 @@ Required properties:
+ 	- "pclk"       PCIe GEN 100M PLL clock
+ 	- "port"       PCIe_x(A or B) RC clock gate
+ 	- "general"    PCIe Phy clock
+-	- "mipi"       PCIe_x(A or B) 100M ref clock gate
++	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
+ - resets: phandle to the reset lines.
+ - reset-names: must contain "phy" "port" and "apb"
+-       - "phy"         Share PHY reset
++       - "phy"         Share PHY reset for AXG SoC Family
+        - "port"        Port A or B reset
+        - "apb"         Share APB reset
++- phys: should contain a phandle to the shared phy for G12A SoC Family
+ - device_type:
+ 	should be "pci". As specified in designware-pcie.txt
+ 
+-- 
+2.17.1
