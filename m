@@ -1,52 +1,116 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 0/6] counter: new TI eQEP driver
-Date: Sun, 8 Sep 2019 12:16:18 +0100
-Message-ID: <20190908121618.3e7e5618@archlinux>
-References: <20190901225827.12301-1-david@lechnology.com>
- <20190905133721.GA728346@icarus>
- <20190905141053.GU52127@atomide.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [RFC 1/3] dt-bindings: dma: Add documentation for DMA domains
+Date: Sun, 8 Sep 2019 17:36:42 +0530
+Message-ID: <20190908120642.GK2672@vkoul-mobl>
+References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
+ <20190906141816.24095-2-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190905141053.GU52127@atomide.com>
+Content-Disposition: inline
+In-Reply-To: <20190906141816.24095-2-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: William Breathitt Gray <vilhelm.gray@gmail.com>, David Lechner <david@lechnology.com>, linux-iio@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: robh+dt@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 5 Sep 2019 07:10:53 -0700
-Tony Lindgren <tony@atomide.com> wrote:
+On 06-09-19, 17:18, Peter Ujfalusi wrote:
+> On systems where multiple DMA controllers available, none Slave (for example
 
-> * William Breathitt Gray <vilhelm.gray@gmail.com> [190905 13:38]:
-> > On Sun, Sep 01, 2019 at 05:58:21PM -0500, David Lechner wrote:  
-> > > This series adds device tree bindings and a new counter driver for the Texas
-> > > Instruments Enhanced Quadrature Encoder Pulse (eQEP).
-> > > 
-> > > As mentioned in one of the commit messages, to start with, the driver only
-> > > supports reading the current counter value and setting the min/max values.
-> > > Other features can be added as the counter subsystem gains support for them.  
-> ...
+On systems with multiple DMA controllers, non Slave...
+
+> memcpy operation) users can not be described in DT as there is no device
+> involved from the DMA controller's point of view, DMA binding is not usable.
+> However in these systems still a peripheral might need to be serviced by or
+> it is better to serviced by specific DMA controller.
+> When a memcpy is used to/from a memory mapped region for example a DMA in the
+> same domain can perform better.
+> For generic software modules doing mem 2 mem operations it also matter that
+> they will get a channel from a controller which is faster in DDR to DDR mode
+> rather then from the first controller happen to be loaded.
 > 
-> > I'm satisfied with this version of the patchset.
-> > 
-> > Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-> > 
-> > Jonathan, if you have no objections please pick up this up so that it
-> > can make it to the 5.4 merge window coming in soon. Alternatively, I can
-> > merge it into my repository instead and hold it for a while longer
-> > there, if you prefer that route.  
+> This property is inherited, so it may be specified in a device node or in any
+> of its parent nodes.
 > 
-> Looks good to me too:
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  .../devicetree/bindings/dma/dma-domain.yaml   | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
 > 
-> Acked-by: Tony Lindgren <tony@atomide.com>
+> diff --git a/Documentation/devicetree/bindings/dma/dma-domain.yaml b/Documentation/devicetree/bindings/dma/dma-domain.yaml
+> new file mode 100644
+> index 000000000000..c2f182f30081
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/dma-domain.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: DMA Domain Controller Definition
+> +
+> +maintainers:
+> +  - Vinod Koul <vkoul@kernel.org>
+> +
+> +allOf:
+> +  - $ref: "dma-controller.yaml#"
+> +
+> +description:
+> +  On systems where multiple DMA controllers available, none Slave (for example
+> +  memcpy operation) users can not be described in DT as there is no device
+> +  involved from the DMA controller's point of view, DMA binding is not usable.
+> +  However in these systems still a peripheral might need to be serviced by or
+> +  it is better to serviced by specific DMA controller.
+> +  When a memcpy is used to/from a memory mapped region for example a DMA in the
+> +  same domain can perform better.
+> +  For generic software modules doing mem 2 mem operations it also matter that
+> +  they will get a channel from a controller which is faster in DDR to DDR mode
+> +  rather then from the first controller happen to be loaded.
+> +
+> +  This property is inherited, so it may be specified in a device node or in any
+> +  of its parent nodes.
+> +
+> +properties:
+> +  $dma-domain-controller:
+> +    $ref: /schemas/types.yaml#definitions/phandle
+> +    description:
+> +      phande to the DMA controller node which should be used for the device or
+> +      domain.
+> +
+> +examples:
+> +  - |
+> +    / {
+> +        model = "Texas Instruments K3 AM654 SoC";
+> +        compatible = "ti,am654";
+> +        interrupt-parent = <&gic500>;
+> +        /* For modules without device, DDR to DDR is faster on main UDMAP */
+> +        dma-domain-controller = <&main_udmap>;
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        ...
+> +    };
+> +
+> +    &cbass_main {
+> +        /* For modules within MAIN domain, use main UDMAP */
+> +        dma-domain-controller = <&main_udmap>;
+> +    };
+> +
+> +    &cbass_mcu {
+> +        /* For modules within MCU domain, use mcu UDMAP */
+> +        dma-domain-controller = <&mcu_udmap>;
 
-Sorry, too close to the likely opening of the 5.4 merge window for it to
-go via IIO this cycle (unless there is a significant delay for some reason!)
-I'm happy to queue it up for 5.5 but before I do this, see replies to patch 1
-about whether an immutable branch is needed as we are going across multiple
-trees.
+perhaps add the example of main_udmap and mcu_udmap as well
 
-Thanks,
+> +    };
+> +...
+> -- 
+> Peter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
-Jonathan
+-- 
+~Vinod
