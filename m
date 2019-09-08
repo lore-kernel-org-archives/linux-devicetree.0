@@ -1,91 +1,95 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 11/11] dt-bindings: iio: adc: exynos: Remove old
- requirement of two register address ranges
-Date: Sun, 8 Sep 2019 13:31:22 +0100
-Message-ID: <20190908133122.7080a124@archlinux>
-References: <20190907092007.9946-1-krzk@kernel.org>
-        <20190907092007.9946-11-krzk@kernel.org>
+From: mirq-linux@rere.qmqm.pl
+Subject: Re: [PATCH v2 6/6] ASoC: atmel_ssc_dai: Enable shared FSYNC source
+ in frame-slave mode
+Date: Sun, 8 Sep 2019 15:39:30 +0200
+Message-ID: <20190908133929.GA32003@qmqm.qmqm.pl>
+References: <cover.1566677788.git.mirq-linux@rere.qmqm.pl>
+ <b56ebac96ad232e2d9871067b13654eb9223f28f.1566677788.git.mirq-linux@rere.qmqm.pl>
+ <a42ede6e-4cc9-6dbf-4c58-71d2298fd3d5@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-2
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190907092007.9946-11-krzk@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <a42ede6e-4cc9-6dbf-4c58-71d2298fd3d5@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, =?UTF-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
+To: Codrin.Ciubotariu@microchip.com
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, alexandre.belloni@bootlin.com, arnd@arndb.de, 3chas3@gmail.com, gregkh@linuxfoundation.org, perex@perex.cz, lgirdwood@gmail.com, Ludovic.Desroches@microchip.com, broonie@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, robh-dt@kernel.org, tiwai@suse.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat,  7 Sep 2019 11:20:07 +0200
-Krzysztof Kozlowski <krzk@kernel.org> wrote:
-
-> Commit fafb37cfae6d ("iio: exyno-adc: use syscon for PMU
-> register access") changed the Exynos ADC driver so the PMU syscon
-> phandle is required instead of second register address space.  The
-> bindings were not updated so fix them now.
+On Mon, Aug 26, 2019 at 03:05:06PM +0000, Codrin.Ciubotariu@microchip.com wrote:
+> On 24.08.2019 23:26, Micha³ Miros³aw wrote:
+> > SSC driver allows only synchronous TX and RX. In slave mode for BCLK
+> > it uses only one of TK or RK pin, but for LRCLK it configured separate
+> > inputs from TF and RF pins. Allow configuration with common FS signal.
+> > 
+> > Signed-off-by: Micha³ Miros³aw <mirq-linux@rere.qmqm.pl>
+> > 
+> > ---
+> >   v2: use alternate DT binding
+> >       split DT and drivers/misc changes
+> > 
+> > ---
+> >   sound/soc/atmel/atmel_ssc_dai.c | 26 ++++++++++++++++++++++----
+> >   1 file changed, 22 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/sound/soc/atmel/atmel_ssc_dai.c b/sound/soc/atmel/atmel_ssc_dai.c
+> > index 48e9eef34c0f..035d4da58f2b 100644
+> > --- a/sound/soc/atmel/atmel_ssc_dai.c
+> > +++ b/sound/soc/atmel/atmel_ssc_dai.c
+> > @@ -605,14 +605,32 @@ static int atmel_ssc_hw_params(struct snd_pcm_substream *substream,
+> >   		return -EINVAL;
+> >   	}
+> >   
+> > -	if (!atmel_ssc_cfs(ssc_p)) {
+> > +	if (atmel_ssc_cfs(ssc_p)) {
+> > +		/*
+> > +		 * SSC provides LRCLK
+> > +		 *
+> > +		 * Both TF and RF are generated, so use them directly.
+> > +		 */
+> > +		rcmr |=	  SSC_BF(RCMR_START, fs_edge);
+> > +		tcmr |=	  SSC_BF(TCMR_START, fs_edge);
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Hmm, how would this work if capture and playback start/run at the same time?
 
-Seems sensible. Thanks for cleaning this up.
+Same as it did before this patch: as there is only one bi-directional link
+between SSC and codec, whichever stream starts first defines the rate.
 
-As before I'll wait on review from Rob or similar. If they
-are going via another path (fine by me as well).
+> > +	} else {
+> >   		fslen = fslen_ext = 0;
+> >   		rcmr_period = tcmr_period = 0;
+> >   		fs_osync = SSC_FSOS_NONE;
+> > -	}
+> >   
+> > -	rcmr |=	  SSC_BF(RCMR_START, fs_edge);
+> > -	tcmr |=	  SSC_BF(TCMR_START, fs_edge);
+> > +		if (ssc->lrclk_from_tf_pin) {
+> > +			rcmr |=	  SSC_BF(RCMR_START, SSC_START_TX_RX);
+> > +			tcmr |=	  SSC_BF(TCMR_START, fs_edge);
+> > +		} else if (ssc->lrclk_from_rf_pin) {
+> > +			/* assume RF is to be used when RK is used as BCLK input */
+> 
+> This comment is not longer true...
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> for
-both IIO related binding patches.
-
-Thanks,
-
-Jonathan
+Removed for next version.
 
 > 
-> ---
+> > +			/* Note: won't work correctly on SAMA5D2 due to errata */
+> > +			rcmr |=	  SSC_BF(RCMR_START, fs_edge);
+> > +			tcmr |=	  SSC_BF(TCMR_START, SSC_START_TX_RX);
+> > +		} else {
+> > +			rcmr |=	  SSC_BF(RCMR_START, fs_edge);
+> > +			tcmr |=	  SSC_BF(TCMR_START, fs_edge);
+> > +		}
+> > +	}
+> >   
+> >   	if (atmel_ssc_cbs(ssc_p)) {
+> >   		/*
+> > 
 > 
-> Changes since v1:
-> 1. New patch.
-> ---
->  .../bindings/iio/adc/samsung,exynos-adc.yaml     | 16 ++--------------
->  1 file changed, 2 insertions(+), 14 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-> index dd58121f25b1..b4c6c26681d9 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-> @@ -25,8 +25,7 @@ properties:
->        - samsung,s5pv210-adc
->  
->    reg:
-> -    minItems: 1
-> -    maxItems: 2
-> +    maxItems: 1
->  
->    clocks:
->      description:
-> @@ -55,7 +54,7 @@ properties:
->      $ref: '/schemas/types.yaml#/definitions/phandle'
->      description:
->        Phandle to the PMU system controller node (to access the ADC_PHY
-> -      register on Exynos5250/5420/5800/3250).
-> +      register on Exynos3250/4x12/5250/5420/5800).
->  
->    has-touchscreen:
->      description:
-> @@ -83,19 +82,8 @@ allOf:
->                - samsung,exynos4212-adc
->                - samsung,s5pv210-adc
->      then:
-> -      properties:
-> -        reg:
-> -          items:
-> -            # For S5P and Exynos
-> -            - description: base registers
-> -            - description: phy registers
->        required:
->          - samsung,syscon-phandle
-> -    else:
-> -      properties:
-> -        reg:
-> -          items:
-> -            - description: base registers
->  
->    - if:
->        properties:
+> Thanks and best regards,
+> Codrin
+
+Best Regards,
+Micha³ Miros³aw
