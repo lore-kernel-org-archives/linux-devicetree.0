@@ -1,113 +1,104 @@
-Return-Path: <SRS0=CSxX=XC=gmail.com=marek.vasut@kernel.org>
-From: marek.vasut@gmail.com
-Subject: [PATCH V2] of: Fix of_empty_ranges_quirk()
-Date: Sat,  7 Sep 2019 18:15:37 +0200
-Message-Id: <20190907161537.27258-1-marek.vasut@gmail.com>
+Return-Path: <SRS0=/XwL=XD=atomide.com=tony@kernel.org>
+Date: Sun, 8 Sep 2019 12:42:41 -0700
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] clk: ti: clkctrl: Fix hidden dependency to node name
+ with reg-names
+Message-ID: <20190908194241.GL52127@atomide.com>
+References: <20190905215532.8357-1-tony@atomide.com>
+ <20190907035518.EB40C208C3@mail.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: devicetree@vger.kernel.org
-Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190907035518.EB40C208C3@mail.kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Marek Vasut <marek.vasut+renesas@gmail.com>
+* Stephen Boyd <sboyd@kernel.org> [190907 03:55]:
+> Quoting Tony Lindgren (2019-09-05 14:55:32)
+> > We currently have a hidden dependency to the device tree node name for
+> > the clkctrl clocks. Instead of using standard node name like "clock", we
+> > must use "l4-per-clkctrl" naming so the clock driver can find the
+> 
+> The node name is "clk" though.
 
-The of_empty_ranges_quirk() returns a mix of boolean and signed integer
-types, which cannot work well. Replace that with boolean only and fix
-usage logic in of_translate_one() -- the check should trigger when the
-ranges are NULL and the quirk is applicable on the hardware.
+Yes for some it's "clk" and for some it's "l4-per-clkctrl".
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org
-To: devicetree@vger.kernel.org
----
-V2: - Rename of_empty_ranges_quirk() to of_missing_ranges_is_ok()
-    - Move comment into the of_missing_ranges_is_ok() function
-    - Make of_missing_ranges_is_ok() a bit more readable by adding
-      a variable marking the quirk_state as initialized.
-    - Reinstate check for !of_missing_ranges_is_ok() in of_translate_one()
----
- drivers/of/address.c | 47 ++++++++++++++++++++++++--------------------
- 1 file changed, 26 insertions(+), 21 deletions(-)
+In general, the clock node name should be "clock@foo", rather than
+"clk@foo", right?
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 978427a9d5e6..df82ef88823f 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -473,21 +473,42 @@ static struct of_bus *of_match_bus(struct device_node *np)
- 	return NULL;
- }
- 
--static int of_empty_ranges_quirk(struct device_node *np)
-+static bool of_missing_ranges_is_ok(struct device_node *np)
- {
-+	/*
-+	 * Normally, an absence of a "ranges" property means we are
-+	 * crossing a non-translatable boundary, and thus the addresses
-+	 * below the current cannot be converted to CPU physical ones.
-+	 * Unfortunately, while this is very clear in the spec, it's not
-+	 * what Apple understood, and they do have things like /uni-n or
-+	 * /ht nodes with no "ranges" property and a lot of perfectly
-+	 * useable mapped devices below them. Thus we treat the absence of
-+	 * "ranges" as equivalent to an empty "ranges" property which means
-+	 * a 1:1 translation at that level. It's up to the caller not to try
-+	 * to translate addresses that aren't supposed to be translated in
-+	 * the first place. --BenH.
-+	 *
-+	 * As far as we know, this damage only exists on Apple machines, so
-+	 * This code is only enabled on powerpc.
-+	 */
-+
- 	if (IS_ENABLED(CONFIG_PPC)) {
- 		/* To save cycles, we cache the result for global "Mac" setting */
--		static int quirk_state = -1;
-+		static int quirk_state_initialized;
-+		static bool quirk_state;
- 
- 		/* PA-SEMI sdc DT bug */
- 		if (of_device_is_compatible(np, "1682m-sdc"))
- 			return true;
- 
- 		/* Make quirk cached */
--		if (quirk_state < 0)
-+		if (!quirk_state_initialized) {
-+			quirk_state_initialized = 1;
- 			quirk_state =
- 				of_machine_is_compatible("Power Macintosh") ||
- 				of_machine_is_compatible("MacRISC");
-+		}
-+
- 		return quirk_state;
- 	}
- 	return false;
-@@ -502,25 +523,9 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
- 	int rone;
- 	u64 offset = OF_BAD_ADDR;
- 
--	/*
--	 * Normally, an absence of a "ranges" property means we are
--	 * crossing a non-translatable boundary, and thus the addresses
--	 * below the current cannot be converted to CPU physical ones.
--	 * Unfortunately, while this is very clear in the spec, it's not
--	 * what Apple understood, and they do have things like /uni-n or
--	 * /ht nodes with no "ranges" property and a lot of perfectly
--	 * useable mapped devices below them. Thus we treat the absence of
--	 * "ranges" as equivalent to an empty "ranges" property which means
--	 * a 1:1 translation at that level. It's up to the caller not to try
--	 * to translate addresses that aren't supposed to be translated in
--	 * the first place. --BenH.
--	 *
--	 * As far as we know, this damage only exists on Apple machines, so
--	 * This code is only enabled on powerpc. --gcl
--	 */
- 	ranges = of_get_property(parent, rprop, &rlen);
--	if (ranges == NULL && !of_empty_ranges_quirk(parent)) {
--		pr_debug("no ranges; cannot translate\n");
-+	if (ranges == NULL && !of_missing_ranges_is_ok(parent)) {
-+		pr_err("no ranges; cannot translate\n");
- 		return 1;
- 	}
- 	if (ranges == NULL || rlen == 0) {
--- 
-2.23.0.rc1
+> > associated clock domain. Further, if "clk" is specified for a clock node
+> > name, the driver sets TI_CLK_CLKCTRL_COMPAT flag that uses different
+> > logic with earlier naming for the clock node name.
+> > 
+> > If the clock node naming dependency is not understood, the related
+> > clockdomain is not found, or a wrong one can get used if a clock manager
+> > instance has multiple domains.
+> > 
+> > As each clkctrl instance represents a single clock domain with it's
+> > reg property describing the clocks available in that clock domain,
+> > we can simply use "reg-names" property for the clock domain.
+> > 
+> > This simplifies things and removes the hidden dependency to the node
+> > name. And then later on, we should be able to drop the related code
+> > for parsing the node names.
+> > 
+> > Let's also update the binding to use standard "clock" node naming
+> > instead of "clk".
+> > 
+> > Cc: devicetree@vger.kernel.org
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> > ---
+> >  Documentation/devicetree/bindings/clock/ti-clkctrl.txt |  6 +++++-
+> >  drivers/clk/ti/clkctrl.c                               | 10 ++++++++--
+> >  2 files changed, 13 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/ti-clkctrl.txt b/Documentation/devicetree/bindings/clock/ti-clkctrl.txt
+> > --- a/Documentation/devicetree/bindings/clock/ti-clkctrl.txt
+> > +++ b/Documentation/devicetree/bindings/clock/ti-clkctrl.txt
+> > @@ -20,15 +20,19 @@ Required properties :
+> >  - #clock-cells : shall contain 2 with the first entry being the instance
+> >                  offset from the clock domain base and the second being the
+> >                  clock index
+> > +- reg : clock registers
+> > +- reg-names : clock register names for the clock, should be same as the
+> > +             domain name
+> 
+> Is this necessary? I'd rather see that the names of the clks don't
+> actually matter by means of connecting the clk tree through the "clocks"
+> property when the parent clks are provided by external nodes and through
+> direct pointers when they're within a controller. If that works then it
+> should be possible to ignore this name in general?
+
+This is not for names of the clocks :) This is to name the clock
+provider register range. The name of the register range is the
+same as the clockdomain that this range of clocks belongs to.
+This property is used by the clock provider on init to initialize the
+clock provider, not when a clock is requested.
+
+In this case a clkctrl clock provider instance has one to some tens
+clocks where they all belong to the same domain. If some similar clock
+would have multiple domains, then it would simply just have multiple
+reg ranges and multiple reg-names properties.
+
+Or do you have some better ideas on how to name a clock controller
+in the device tree?
+
+Regards,
+
+Tony
+
+> >  Example: Clock controller node on omap 4430:
+> >  
+> >  &cm2 {
+> >         l4per: cm@1400 {
+> >                 cm_l4per@0 {
+> > -                       cm_l4per_clkctrl: clk@20 {
+> > +                       cm_l4per_clkctrl: clock@20 {
+> >                                 compatible = "ti,clkctrl";
+> >                                 reg = <0x20 0x1b0>;
+> > +                               reg-names = "l4_per";
+> >                                 #clock-cells = <2>;
+> >                         };
+> >                 };
