@@ -1,77 +1,66 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v2 04/14] dmaengine: Add metadata_ops for
- dma_async_tx_descriptor
-Date: Sun, 8 Sep 2019 19:42:07 +0530
-Message-ID: <20190908141207.GO2672@vkoul-mobl>
+Subject: Re: [PATCH v2 06/14] dmaengine: ti: Add cppi5 header for UDMA
+Date: Sun, 8 Sep 2019 19:55:28 +0530
+Message-ID: <20190908142528.GP2672@vkoul-mobl>
 References: <20190730093450.12664-1-peter.ujfalusi@ti.com>
- <20190730093450.12664-5-peter.ujfalusi@ti.com>
+ <20190730093450.12664-7-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190730093450.12664-5-peter.ujfalusi@ti.com>
+In-Reply-To: <20190730093450.12664-7-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Cc: robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com, j-keerthy@ti.com
 List-Id: devicetree@vger.kernel.org
 
 On 30-07-19, 12:34, Peter Ujfalusi wrote:
-> The metadata is best described as side band data or parameters traveling
-> alongside the data DMAd by the DMA engine. It is data
-> which is understood by the peripheral and the peripheral driver only, the
-> DMA engine see it only as data block and it is not interpreting it in any
-> way.
-> 
-> The metadata can be different per descriptor as it is a parameter for the
-> data being transferred.
-> 
-> If the DMA supports per descriptor metadata it can implement the attach,
-> get_ptr/set_len callbacks.
-> 
-> Client drivers must only use either attach or get_ptr/set_len to avoid
-> misconfiguration.
-> 
-> Client driver can check if a given metadata mode is supported by the
-> channel during probe time with
-> dmaengine_is_metadata_mode_supported(chan, DESC_METADATA_CLIENT);
-> dmaengine_is_metadata_mode_supported(chan, DESC_METADATA_ENGINE);
-> 
-> and based on this information can use either mode.
-> 
-> Wrappers are also added for the metadata_ops.
-> 
-> To be used in DESC_METADATA_CLIENT mode:
-> dmaengine_desc_attach_metadata()
-> 
-> To be used in DESC_METADATA_ENGINE mode:
-> dmaengine_desc_get_metadata_ptr()
-> dmaengine_desc_set_metadata_len()
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/dma/dmaengine.c   |  73 ++++++++++++++++++++++++++
->  include/linux/dmaengine.h | 108 ++++++++++++++++++++++++++++++++++++++
->  2 files changed, 181 insertions(+)
-> 
-> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-> index 03ac4b96117c..6baddf7dcbfd 100644
-> --- a/drivers/dma/dmaengine.c
-> +++ b/drivers/dma/dmaengine.c
-> @@ -1302,6 +1302,79 @@ void dma_async_tx_descriptor_init(struct dma_async_tx_descriptor *tx,
->  }
->  EXPORT_SYMBOL(dma_async_tx_descriptor_init);
->  
-> +static inline int desc_check_and_set_metadata_mode(
-> +	struct dma_async_tx_descriptor *desc, enum dma_desc_metadata_mode mode)
-> +{
-> +	/* Make sure that the metadata mode is not mixed */
-> +	if (!desc->desc_metadata_mode) {
-> +		if (dmaengine_is_metadata_mode_supported(desc->chan, mode))
-> +			desc->desc_metadata_mode = mode;
 
-So do we have different descriptors supporting different modes or is it
-controlled based? For latter we can do this check at controller
-registration!
+> +/**
+> + * Descriptor header, present in all types of descriptors
+> + */
+> +struct cppi5_desc_hdr_t {
+> +	u32 pkt_info0;	/* Packet info word 0 (n/a in Buffer desc) */
+> +	u32 pkt_info1;	/* Packet info word 1 (n/a in Buffer desc) */
+> +	u32 pkt_info2;	/* Packet info word 2 Buffer reclamation info */
+> +	u32 src_dst_tag; /* Packet info word 3 (n/a in Buffer desc) */
+
+Can we move these comments to kernel-doc style please
+
+> +/**
+> + * cppi5_desc_get_type - get descriptor type
+> + * @desc_hdr: packet descriptor/TR header
+> + *
+> + * Returns descriptor type:
+> + * CPPI5_INFO0_DESC_TYPE_VAL_HOST
+> + * CPPI5_INFO0_DESC_TYPE_VAL_MONO
+> + * CPPI5_INFO0_DESC_TYPE_VAL_TR
+> + */
+> +static inline u32 cppi5_desc_get_type(struct cppi5_desc_hdr_t *desc_hdr)
+> +{
+> +	WARN_ON(!desc_hdr);
+
+why WARN_ON and not return error!
+
+> +/**
+> + * cppi5_hdesc_calc_size - Calculate Host Packet Descriptor size
+> + * @epib: is EPIB present
+> + * @psdata_size: PSDATA size
+> + * @sw_data_size: SWDATA size
+> + *
+> + * Returns required Host Packet Descriptor size
+> + * 0 - if PSDATA > CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE
+> + */
+> +static inline u32 cppi5_hdesc_calc_size(bool epib, u32 psdata_size,
+> +					u32 sw_data_size)
+> +{
+> +	u32 desc_size;
+> +
+> +	if (psdata_size > CPPI5_INFO0_HDESC_PSDATA_MAX_SIZE)
+> +		return 0;
+> +	//TODO_GS: align
+
+:)
 
 -- 
 ~Vinod
