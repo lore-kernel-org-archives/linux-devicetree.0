@@ -1,26 +1,41 @@
-Return-Path: <SRS0=5uQn=XE=xilinx.com=michals@kernel.org>
+Return-Path: <jic23@kernel.org>
+Date: Sun, 8 Sep 2019 13:17:08 +0100
+From: Jonathan Cameron <jic23@kernel.org>
 Subject: Re: [PATCH 2/2] iio: core: Add optional symbolic label to device
  attributes
-References: <1566876924-63608-1-git-send-email-preid@electromag.com.au>
- <1566876924-63608-3-git-send-email-preid@electromag.com.au>
-From: Michal Simek <michal.simek@xilinx.com>
-Message-ID: <349d8473-7892-cf1d-519c-231cb91085d2@xilinx.com>
-Date: Mon, 9 Sep 2019 09:45:47 +0200
-MIME-Version: 1.0
+Message-ID: <20190908131708.79bfbc60@archlinux>
 In-Reply-To: <1566876924-63608-3-git-send-email-preid@electromag.com.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+References: <1566876924-63608-1-git-send-email-preid@electromag.com.au>
+	<1566876924-63608-3-git-send-email-preid@electromag.com.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-To: Phil Reid <preid@electromag.com.au>, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, michal.simek@xilinx.com
+To: Phil Reid <preid@electromag.com.au>
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, michal.simek@xilinx.com
 List-ID: <devicetree@vger.kernel.org>
 
-On 27. 08. 19 5:35, Phil Reid wrote:
+On Tue, 27 Aug 2019 11:35:24 +0800
+Phil Reid <preid@electromag.com.au> wrote:
+
 > If a label is defined in the device tree for this device add that
 > to the device specific attributes. This is useful for userspace to
 > be able to identify an individual device when multiple identical
 > chips are present in the system.
 > 
 > Signed-off-by: Phil Reid <preid@electromag.com.au>
+
+Looks good to me.  I like this as it finally gets us around some
+perhaps slightly dubious decisions I made about the name attribute
+a long time ago and the bunch of uses that don't actually conform
+even to what I had in mind back then.
+
+I'll pick it up for the 5.5 cycle once you've respun to give
+more example friendly names in patch 1 and Rob is happy with it.
+
+Thanks,
+
+Jonathan
+
 > ---
 >  drivers/iio/industrialio-core.c | 17 +++++++++++++++++
 >  include/linux/iio/iio.h         |  1 +
@@ -87,9 +102,3 @@ On 27. 08. 19 5:35, Phil Reid wrote:
 >  	const struct iio_info		*info;
 >  	clockid_t			clock_id;
 >  	struct mutex			info_exist_lock;
-> 
-
-Tested-by: Michal Simek <michal.simek@xilinx.com>
-
-Thanks,
-Michal
