@@ -1,66 +1,110 @@
-Return-Path: <robherring2@gmail.com>
-Message-ID: <5d6d1b60.1c69fb81.f3a3a.1619@mx.google.com>
-Date: Mon, 02 Sep 2019 14:38:40 +0100
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 01/10] media: dt-bindings: Document 'location' property
-References: <20190827092339.8858-1-jacopo@jmondi.org>
- <20190827092339.8858-2-jacopo@jmondi.org>
- <20190827122126.GQ5054@pendragon.ideasonboard.com>
- <20190829124639.tzjp63tqnojnytlq@uno.localdomain>
+Return-Path: <SRS0=7ntj=XD=verge.net.au=horms@kernel.org>
+Date: Sun, 8 Sep 2019 13:58:48 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 1/9] dt-bindings: display: renesas,cmm: Add R-Car CMM
+ documentation
+Message-ID: <20190908115844.5dmli3ur73er6rhi@verge.net.au>
+References: <20190906134341.9879-1-jacopo+renesas@jmondi.org>
+ <20190906134341.9879-2-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190829124639.tzjp63tqnojnytlq@uno.localdomain>
-To: Jacopo Mondi <jacopo@jmondi.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, tfiga@google.com, "open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" <linux-media@vger.kernel.org>, devicetree@vger.kernel.org
+In-Reply-To: <20190906134341.9879-2-jacopo+renesas@jmondi.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: laurent.pinchart@ideasonboard.com, kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org, uli@fpond.eu, VenkataRajesh.Kalakodima@in.bosch.com, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Aug 29, 2019 at 02:46:40PM +0200, Jacopo Mondi wrote:
-> Hi Laurent,
+On Fri, Sep 06, 2019 at 03:43:33PM +0200, Jacopo Mondi wrote:
+> Add device tree bindings documentation for the Renesas R-Car Display
+> Unit Color Management Module.
 > 
-> On Tue, Aug 27, 2019 at 03:21:26PM +0300, Laurent Pinchart wrote:
-> > Hi Jacopo,
-> >
-> > Thank you for the patch.
-> >
-> > On Tue, Aug 27, 2019 at 11:23:27AM +0200, Jacopo Mondi wrote:
-> > > Add the 'location' device property, used to specify the camera device
-> > > mounting position. The property is particularly meaningful for mobile
-> > > devices with a well defined usage orientation.
-> > >
-> > > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-> > > ---
-> > >  .../devicetree/bindings/media/video-interfaces.txt     | 10 ++++++++++
-> > >  1 file changed, 10 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > > index f884ada0bffc..865f4142f432 100644
-> > > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > > @@ -89,6 +89,16 @@ Optional properties
-> > >    but a number of degrees counter clockwise. Typical values are 0 and 180
-> > >    (upside down).
-> > >
-> > > +- location: The camera sensor mounting location, expressed as a position
-> > > +  relative to the usage orientation of the device the sensor is installed on.
-> >
-> > DT bindings being ABIs, we need to be precise and thorough there. One
-> > particular point that bothers me is that the property is named location,
-> > and its description refers to camera sensor mounting location.
-> >
-> > I see two options to fix this. One of them is to rename the property to
-> > camera-location, but that would limit its future usage for other types
-> > of devices. The other one is to document the property as applying to a
-> > "device" instead of a "camera sensor", and add one sentence stating that
-> > this property is valid for camera sensors only.
-> >
-> > This will require finding another name for the device that the device is
-> > mounted on though, as using device twice would be very confusing.
+> CMM is the image enhancement module available on each R-Car DU video
+> channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
 > 
-> I had the same concern, but I cannot find another term to convey
-> this... suggestions?
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  .../bindings/display/renesas,cmm.yaml         | 64 +++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/renesas,cmm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/renesas,cmm.yaml b/Documentation/devicetree/bindings/display/renesas,cmm.yaml
+> new file mode 100644
+> index 000000000000..9e5922689cd7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/renesas,cmm.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/renesas,cmm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas R-Car Color Management Module (CMM)
+> +
+> +maintainers:
+> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +  - Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> +  - Jacopo Mondi <jacopo+renesas@jmondi.org>
+> +
+> +description: |+
+> +  Renesas R-Car color management module connected to R-Car DU video channels.
+> +  It provides image enhancement functions such as 1-D look-up tables (LUT),
+> +  3-D look-up tables (CMU), 1D-histogram generation (HGO), and color
+> +  space conversion (CSC).
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - renesas,r8a7795-cmm
+> +        - renesas,r8a7796-cmm
+> +        - renesas,r8a77965-cmm
+> +        - renesas,r8a77990-cmm
+> +        - renesas,r8a77995-cmm
+> +      - enum:
+> +        - renesas,rcar-gen3-cmm
+> +        - renesas,rcar-gen2-cmm
 
-For accelerometers and/or gyroscopes, we already have 'mount-matrix'. 
-That would replace 'rotation'. Maybe we can do something similar here?
+Should we continue the long standing practice in .txt bindings
+for Renesas IP blocks to document briefly the purpose of each compat string?
 
-Rob
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - resets
+> +  - power-domains
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/r8a7796-cpg-mssr.h>
+> +    #include <dt-bindings/power/r8a7796-sysc.h>
+> +
+> +    cmm0: cmm@fea40000 {
+> +         compatible = "renesas,r8a7796-cmm";
+
+Should "renesas,rcar-gen3-cmm" be listed as the secondary compat string
+here?
+
+> +         reg = <0 0xfea40000 0 0x1000>;
+> +         power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> +         clocks = <&cpg CPG_MOD 711>;
+> +         resets = <&cpg 711>;
+> +    };
+> --
+> 2.23.0
+> 
