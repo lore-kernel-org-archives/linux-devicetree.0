@@ -1,51 +1,75 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH V4 4/4] dt-bindings: iio: adc: ad7192: Add binding
- documentation for AD7192
-Date: Sun, 8 Sep 2019 11:29:07 +0100
-Message-ID: <20190908112907.6d9b8370@archlinux>
+Subject: Re: [PATCH V4 2/4] iio: adc: ad_sigma_delta: Export ad_sd_calibrate
+Date: Sun, 8 Sep 2019 10:35:44 +0100
+Message-ID: <20190908103544.18568d02@archlinux>
 References: <20190902130831.23057-1-mircea.caprioru@analog.com>
-        <20190902130831.23057-4-mircea.caprioru@analog.com>
-        <20190903172937.GA15494@bogus>
+        <20190902130831.23057-2-mircea.caprioru@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190903172937.GA15494@bogus>
+In-Reply-To: <20190902130831.23057-2-mircea.caprioru@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mircea Caprioru <mircea.caprioru@analog.com>, Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
+To: Mircea Caprioru <mircea.caprioru@analog.com>
+Cc: Michael.Hennerich@analog.com, stefan.popa@analog.com, lars@metafoo.de, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 3 Sep 2019 18:29:37 +0100
-Rob Herring <robh@kernel.org> wrote:
+On Mon, 2 Sep 2019 16:08:29 +0300
+Mircea Caprioru <mircea.caprioru@analog.com> wrote:
 
-> On Mon, 2 Sep 2019 16:08:31 +0300, Mircea Caprioru wrote:
-> > This patch add device tree binding documentation for AD7192 adc in YAML
-> > format.
-> > 
-> > Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-It seems that I messed up before and didn't actually revert the v3 patch.
-
-I'll roll a small fix patch to bring the tree inline with this and send out to the
-list.
-
-Sorry about this. One of many things that went wrong in that last pull request!
-
-Jonathan
-
-> > ---
-> > Changelog V2:
-> > - no changes here
-> > 
-> > Changelog V3:
-> > - no changes here
-> > 
-> > Changelog V4:
-> > - remove the const value from avdd and dvdd supply
-> > 
-> >  .../bindings/iio/adc/adi,ad7192.yaml          | 119 ++++++++++++++++++
-> >  1 file changed, 119 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml
-> >   
+> This patch exports the ad_sd_calibrate function in order to be able to
+> call it from outside ad_sigma_delta.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> There are cases where the option to calibrate one channel at a time is
+> necessary (ex. system calibration for zero scale and full scale).
+> 
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+Applied, Thanks,
+> ---
+> Changelog V2:
+> - no changes here
+> 
+> Changelog V3:
+> - no changes here
+> 
+> Changelog V4:
+> - no changes here
+> 
+>  drivers/iio/adc/ad_sigma_delta.c       | 3 ++-
+>  include/linux/iio/adc/ad_sigma_delta.h | 2 ++
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
+> index 2640b75fb774..8ba90486c787 100644
+> --- a/drivers/iio/adc/ad_sigma_delta.c
+> +++ b/drivers/iio/adc/ad_sigma_delta.c
+> @@ -205,7 +205,7 @@ int ad_sd_reset(struct ad_sigma_delta *sigma_delta,
+>  }
+>  EXPORT_SYMBOL_GPL(ad_sd_reset);
+>  
+> -static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
+> +int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
+>  	unsigned int mode, unsigned int channel)
+>  {
+>  	int ret;
+> @@ -242,6 +242,7 @@ static int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
+>  
+>  	return ret;
+>  }
+> +EXPORT_SYMBOL_GPL(ad_sd_calibrate);
+>  
+>  /**
+>   * ad_sd_calibrate_all() - Performs channel calibration
+> diff --git a/include/linux/iio/adc/ad_sigma_delta.h b/include/linux/iio/adc/ad_sigma_delta.h
+> index 7716fa0c9fce..8a4e25a7080c 100644
+> --- a/include/linux/iio/adc/ad_sigma_delta.h
+> +++ b/include/linux/iio/adc/ad_sigma_delta.h
+> @@ -119,6 +119,8 @@ int ad_sd_reset(struct ad_sigma_delta *sigma_delta,
+>  
+>  int ad_sigma_delta_single_conversion(struct iio_dev *indio_dev,
+>  	const struct iio_chan_spec *chan, int *val);
+> +int ad_sd_calibrate(struct ad_sigma_delta *sigma_delta,
+> +	unsigned int mode, unsigned int channel);
+>  int ad_sd_calibrate_all(struct ad_sigma_delta *sigma_delta,
+>  	const struct ad_sd_calib_data *cd, unsigned int n);
+>  int ad_sd_init(struct ad_sigma_delta *sigma_delta, struct iio_dev *indio_dev,
