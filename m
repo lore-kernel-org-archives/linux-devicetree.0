@@ -1,13 +1,12 @@
 From: <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [RFC PATCH V3 4/5] platform: mtk-isp: Add Mediatek DIP driver
-Date: Tue, 10 Sep 2019 03:22:43 +0800
-Message-ID: <20190909192244.9367-5-frederic.chen@mediatek.com>
-References: <20190909192244.9367-1-frederic.chen@mediatek.com>
+Subject: [RFC PATCH V3 0/5] media: platform: Add support for Digital Image
+ Processing (DIP) on mt8183 SoC
+Date: Tue, 10 Sep 2019 03:22:39 +0800
+Message-ID: <20190909192244.9367-1-frederic.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190909192244.9367-1-frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
  <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
@@ -21,19 +20,5940 @@ To: hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, laurent.pinchart+renes
 Cc: shik-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean.Cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Rynn.Wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Allan.Yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, holmes.chiou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, suleiman-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jerry-ch.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jungo.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yuzhao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zwisler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, christie.yu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Hello,
 
-This patch adds the driver of Digital Image Processing (DIP)
-unit in Mediatek ISP system, providing image format
-conversion, resizing, and rotation features.
+This RFC patch series added Digital Image Processing (DIP) driver on Mediatek
+mt8183 SoC. It belongs to the Mediatek's ISP driver series based on V4L2 and
+media controller framework. I posted the main part of the DIP driver as RFC to
+discuss first and would like some review comments.
 
-The mtk-isp directory will contain drivers for multiple IP
-blocks found in Mediatek ISP system. It will include ISP
-Pass 1 driver(CAM), sensor interface driver, DIP driver and
-face detection driver.
+I appreciate the comment of Tomasz in RFC V2. The RFC V3 patch addressed on all
+issues reviewed in V2 except the one about Mediatek proprietary MDP stride, 
+depth and raw depth usage which is still under discussion. I will refactor 
+the related parts once we come to the conclusion.
 
-Signed-off-by: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
+You can check the following URL for the detail.
+http://lists.infradead.org/pipermail/linux-mediatek/2019-September/023254.html
+
+
+In V3, I also removed all workaround solution about the following V4L2 
+compliance tool issues so that we got the related failed result. 
+
+1. Request API test doesn't know which buffers of the video devices are
+required so we got failed in testRequests()
+
+2. V4L2 compliance test check if the driver return error when passing an
+invalid image size, but in vb2_create_bufs() case, we don't know if the
+size check is required or not.
+
+Please see the following URL for the detail.
+http://lists.infradead.org/pipermail/linux-mediatek/2019-June/020884.html
+
+
+Besides that, we got a new issue about the test case. When receiving the
+VIDIOC_SUBDEV_G_FMT ioctl on a DIP sub device's pad which connects with a 
+meta video device, we return -EINVEL since it doesn't represent an image
+data flow (no width and height information), but the test case expects
+that the driver return some media format information.
+
+	Sub-Device ioctls (Sink Pad 1):
+	fail: v4l2-test-subdevs.cpp(352): doioctl(node, VIDIOC_SUBDEV_G_FMT, &fmt)
+	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
+
+
+==============
+ Introduction
+==============
+
+Digital Image Processing (DIP) unit can accept the tuning parameters and
+adjust the image content in Mediatek ISP system. Furthermore, it performs
+demosaicing and noise reduction on the image to support the advanced camera
+features of the application. The DIP driver also support image format
+conversion, resizing and rotation with its hardware path.
+
+The driver is implemented with V4L2 and media controller framework. We
+have the following entities describing the DIP path. Since a DIP frame has
+multiple buffers, the driver uses Request API to control the multiple
+buffer's enqueue flow.
+
+1. Meta (output video device): connects to DIP sub device. It accepts the
+input tuning buffer from userspace. The metadata interface used currently
+is only a temporary solution to kick off driver development and is not
+ready for reviewed yet.
+
+2. RAW (output video device): connects to DIP sub device. It accepts input
+image buffer from userspace.
+
+3. DIP (sub device): connects to MDP-0 and MDP-1. When processing an image,
+DIP hardware support multiple output images with different size and format
+so it needs two capture video devices to return the streaming data to the
+user.
+
+4. MDP-0 (capture video device): return the processed image data.
+
+5. MDP-1 (capture video device): return the processed image data, the
+image size and format can be different from the ones of MDP-0.
+
+The overall file structure of the DIP driver is as following:
+
+* mtk_dip-v4l2.c: implements DIP platform driver, V4L2 and vb2 operations.
+
+* mtk_dip-sys.c: implements the hardware job handling flow including the part of
+interaction with the SCP and MDP.
+
+* mtk_dip-dev.c: implements dip pipe utilities. DIP driver supports 3 software
+pipes (preview, capture and reprocessing) at the same time. All
+the pipes share the same DIP hardware to process the images.
+
+
+==================
+ Changes in v3
+==================
+* mtk_dip-sys.c:
+1. Use mtk_dip_pipe_job_finish() in mtk_dip_hw_streamoff()
+
+2. Splice the pipe's running job list into a local list_head in 
+mtk_dip_hw_streamoff()
+
+3. In dip_composer_workfunc(), use down() instead custom wait_event() calls
+
+4. Added error handling of SCP ipi sending failure in dip_composer_workfunc(),
+which returns the buffers in the error case.
+
+5. Remove jobs which are not queued to the hardware in
+mtk_dip_hw_flush_pipe_jobs() and wait for the job already in SCP to be finished.
+When streaming off, dip returns buffers after it finish the above operations.
+
+6. Call mtk_dip_hw_flush_pipe_jobs() first in mtk_dip_hw_streamon()
+7. In dip_scp_handler() and dip_composer_workfunc(), we get buffer pointers back
+from the driver with job ids instead of the va field of the IPI structure
+8. Use dma_map_resource()/dma_unmap_resource instead of ma_map_page_attrs()/
+dma_unmap_page_attrs
+
+
+* mtk_dip-v4l2.c: 
+1. Serialized full link_setup, start_streaming and stop_streaming with 
+pipe->lock
+
+2. Added pipe->nodes_streaming and pipe->nodes_enabled bitmasks
+
+3. Used media_pipeline_start to lock the link state when first node starts
+streaming and the last node stops streaming.
+
+4. Support B8, F8, B12, F12, B14, F14 input formats
+
+5. Enabled RPM auto suspension and improved the rpm/pm ops implementation
+
+6. Moved the v4l2_device_register_subdev_nodes() call from
+mtk_dip_pipe_v4l2_register() to mtk_dip_dev_v4l2_init().
+
+7. Merged struct mtk_dip_dev and struct mtk_dip_hw
+
+8. Moved mtk_dip_hw_res_init() call from mtk_dip_hw_connect() to probe()
+
+9. Separated meta and video vb2 ops implementation
+
+10. Moved pending job adding codes from .req_validate() to .req_queue()
+
+11. Added helper mtk_dip_media_req_to_dip_req() and removed error-prone codes
+about the casting between struct mtk_dip_request and media_request
+
+12. Removed unnecessary ctrl handler initialization of nodes which doesn't
+support ctrl. (Only MTK_DIP_VIDEO_NODE_ID_MDP0_CAPTURE support ctrl)
+
+13. Refactored mtk_dip_pipe_try_fmt()/ mtk_dip_videoc_try_fmt()/
+mtk_dip_videoc_s_fmt() so that we can remove the codes changing driver internal
+status in mtk_dip_videoc_try_fmt().
+
+14. Support noise reduction and shading video devices
+
+* mtk_dip-dev.c
+1. Merged struct mtk_dip_pipe_job_info and struct mtk_dip_request. 
+
+2. Added pass_1_align and num_cplanes fields in mtk_dip_dev_format
+
+3. Use bytesperline set in mtk_dip_pipe_try_fmt() when preparing HW setting
+instead of calling mtk_dip_pipe_get_stride() again
+
+4. Removed unnecessary local list used in mtk_dip_pipe_try_enqueue()
+
+==================
+ Changes in v2
+==================
+* mtk_dip-smem.c
+1. Removed mtk_dip-smem.c and the custom code of SCP and DIP's share memory
+operation, and uses SCP device as the allocation device instead. (SCP creates
+the shared DMA pool of DMA buffers and can hook to DMA mapping APIs)
+
+* mtk_dip-ctrl.c
+1. Merged mtk_dip-ctrl.c into mtk_dip-v4l2.c since we only have a HW ctrl.
+(V4L2_CID_ROTATE)
+
+* mtk_dip-sys.c:
+1. Removed struct mtk_dip_hw_work, mtk_dip_hw_submit_work and the related memory
+management flow (use mtk_dip_request instead)
+
+2. Uses workqueue mdp_wq instead of dip_runner_thread kthread to simplify the
+design
+
+3. Removed dip_gcejoblist and use mtk_dip_job_info list instead
+
+4. Removed framejob and mtk_dip_hw_mdpcb_work and the related alloc and free
+since it already embedded in the new struct mtk_dip_request
+
+5. Integrated struct mtk_dip_hw_user_id and struct with mtk_dip_pipe, and
+removed dip_hw->dip_useridlist
+
+6. Pass mtk_dip_request to mdp_cmdq_sendtask() as cb data
+
+7. Use spinlock instead of mutex as struct mtk_dip_hw_queue's queuelock so that
+we can use direct function call instead of mdpcb_workqueue works
+
+8. Removed dip_send() and use scp_ipi_send() directly
+
+9. Removed composing_wq and the related macro, we use semaphore instead
+
+10. Use array to keep constant number of working buffer pointers in dip_hw
+instead a list
+
+11. Allocates the SCP working buffer before scheduling the job into SCP. When
+there is no free buffer, we hold the job until there are any working buffers
+available.
+
+12. Re-designed the request handling flow. We implement
+mtk_dip_vb2_request_validate() to collect the job data including buffers and
+check if we got minimum required buffers. mtk_dip_pipe_try_enqueue() is added to
+simplify the job scheduling flow in both streamon() case with buffers already in
+queues and .buf_queue() during streaming. In streamon() function, we call
+mtk_dip_pipe_try_enqueue() to execute as many as jobs in the pending list
+
+13. Fixed the issue about passing the kernel pointer to SCP
+
+14. Re-designed mtk_dip_hw_flush_by_id() to remove the unnecessary loop and
+interrupt abort
+
+15. Added codes to wait for pending jobs already in SCP during suspend flow. In
+mtk_dip_suspend() and dip_submit_worker(), we get mutex hw_op_lock before read
+and update the SCP job number to avoid the race condition when system suspend
+happens and DIP driver is sending ipi command to trigger the firmware job.
+
+16. Removed struct mtk_dip_hw's dip_user_cnt and dip_state, and uses
+dip_stream_cnt instead
+
+17. Uses dma_alloc_coherent() instead of scp_get_reserve_mem_phys()/
+scp_get_reserve_mem_size() to allocate DIP working buffers
+
+* mtk_dip-v4l2.c: 
+1. Call mtk_dip_hw_stream{on, off} in mtk_dip_subdev_s_stream() directly instead
+mtk_dip_pipe_stream_on and mtk_dip_pipe_stream_off
+
+2. Removed buf usage HW ctrl and uses dma port configured in node's description
+instead
+
+3. Moved platform driver ops to mtk_dip-v4l2.c (which includes the V4L2/media
+ops implementation)
+
+4. Moved hardware related operation in sub-device open/close to
+streamon()/streamoff() ops
+
+5. Uses dip_pipe->lock to synchronize streamon, streamoff and link setup flow
+
+6. Added a counter dip_pipe->cnt_nodes_not_streaming to check if the pipe can be
+streamon or not (instead of the mtk_dip_all_nodes_streaming())
+
+7. Moved the buffer size checking code from .queue_setup() to .buf_prepare()
+
+8. Added multiple-plane formats support
+
+9. Created interfaces and interface links for input and output video nodes
+
+10. Added error handling and improved the cleanup codes in
+mtk_dip_dev_v4l2_init() and mtk_dip_pipe_v4l2_register()
+
+11. Added mtk_dip_video_device_v4l2_register() to simplify
+mtk_dip_pipe_v4l2_register()'s implementation
+
+12. Added mtk_dip_video_device.flags instead of enable, dynamic and immutable
+fields in struct mtk_dip_video_device.
+
+13. Added a list to mtk_dip_video_device to hold queued buffers instead of
+accessing vbq.bufs directly.
+
+14. Merged struct mtk_dip_dev_meta_format and struct mtk_dip_dev_mdp_format into
+struct mtk_dip_dev_format
+
+15. Changed the try_fmt() implementation. If the pixelformat is not supported,
+we use the default one but keep the valid fields.
+
+16. Moved the mtk_dip_hw_connect()/mtk_dip_hw_disconnect() call from
+mtk_dip_subdev_s_stream() to mtk_dip_hw_streamon()/mtk_dip_hw_streamoff() and
+removed some redundant check about stream count.
+
+17. Re-implemented dev_pm_ops
+
+* mtk_dip-dev.c: 
+1. Added mtk_dip_request extending media_request and embedded pipe_job_info in
+it.
+
+2. Removed mtk_dip_pipe_stream{on, off} and move the content to
+mtk_dip_hw_stream{on, off}
+
+3. Removed fill_ipi_img_param() and extends fill_ipi_img_param_mp() so that it
+can support both multiple non-contiguous and multiple contiguous planes buffers.
+
+4. Added mtk_dip_pipe_get_stride() to reduce redundant codes.
+
+5. Removed call_mtk_dip_pipe_finish() and merged its content into its callers
+
+6. Removed unused ctrl handler from struct mtk_dip_pipe.
+
+==================
+ Changes in v1
+==================
+1. Uses Request API instead of DIP's buffer collection design
+
+2. Removed unnecessary abstraction structurally, including mtk_dip_ctx and
+related ops
+
+3. Removed the dip_smem node from device tree
+
+4. Improved the dip_work list's management flow
+
+5. Fixed the common issues Tomasz commented on Mediatek ISP Pass 1's RFC v0
+patch series
+
+==================
+ Dependent patch
+==================
+
+DIP driver depends on MDP 3 driver and SCP driver. The patches are as
+following:
+
+[1]. support mdp3 on mt8183 platform
+https://patchwork.kernel.org/cover/10945585/
+
+[2]. Add support for mt8183 SCP
+https://patchwork.kernel.org/cover/11027245/
+
+==================
+ Compliance test
+==================
+
+* Test command: v4l2-compliance -m /dev/media0
+* test output:
+
+v4l2-compliance SHA: not available, 32 bits
+
+Compliance test for mtk-cam-dip device /dev/media0:
+
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+
+Required ioctls:
+	test MEDIA_IOC_DEVICE_INFO: OK
+
+Allow for multiple opens:
+	test second /dev/media0 open: OK
+	test MEDIA_IOC_DEVICE_INFO: OK
+	test for unlimited opens: OK
+
+Media Controller ioctls:
+	test MEDIA_IOC_G_TOPOLOGY: OK
+	Entities: 27 Interfaces: 51 Pads: 48 Links: 75
+	test MEDIA_IOC_ENUM_ENTITIES/LINKS: OK
+	test MEDIA_IOC_SETUP_LINK: OK
+
+Total for mtk-cam-dip device /dev/media0: 7, Succeeded: 7, Failed: 0, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video0:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300000c
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000000a (10)
+	Name             : mtk-cam-dip preview Raw Input
+	Function         : V4L2 I/O
+	Pad 0x0100000b   : 0: Source
+	  Link 0x0200000e: to remote pad 0x1000002 of entity 'preview': Data, Enabled
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video0 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip pre device /dev/video0: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video0:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300000c
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000000a (10)
+	Name             : mtk-cam-dip preview Raw Input
+	Function         : V4L2 I/O
+	Pad 0x0100000b   : 0: Source
+	  Link 0x0200000e: to remote pad 0x1000002 of entity 'preview': Data, Enabled
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video0 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip pre device /dev/video0: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video1:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x8c200000
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x0c200000
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000014
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000012 (18)
+	Name             : mtk-cam-dip preview Tuning
+	Function         : V4L2 I/O
+	Pad 0x01000013   : 0: Source
+	  Link 0x02000016: to remote pad 0x1000003 of entity 'preview': Data
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video1 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(604): q.reqbufs(node, 1)
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+		fail: v4l2-test-buffers.cpp(741): VIDIOC_EXPBUF is supported, but the V4L2_MEMORY_MMAP support is missing or malfunctioning.
+		fail: v4l2-test-buffers.cpp(742): VIDIOC_EXPBUF is supported, but the V4L2_MEMORY_MMAP support is missing, probably due to earlier failing format tests.
+	test VIDIOC_EXPBUF: OK (Not Supported)
+	test Requests: OK
+
+Total for mtk-cam-dip pre device /dev/video1: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video1:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x8c200000
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x0c200000
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000014
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000012 (18)
+	Name             : mtk-cam-dip preview Tuning
+	Function         : V4L2 I/O
+	Pad 0x01000013   : 0: Source
+	  Link 0x02000016: to remote pad 0x1000003 of entity 'preview': Data
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video1 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(604): q.reqbufs(node, 1)
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+		fail: v4l2-test-buffers.cpp(741): VIDIOC_EXPBUF is supported, but the V4L2_MEMORY_MMAP support is missing or malfunctioning.
+		fail: v4l2-test-buffers.cpp(742): VIDIOC_EXPBUF is supported, but the V4L2_MEMORY_MMAP support is missing, probably due to earlier failing format tests.
+	test VIDIOC_EXPBUF: OK (Not Supported)
+	test Requests: OK
+
+Total for mtk-cam-dip pre device /dev/video1: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video2:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300001c
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000001a (26)
+	Name             : mtk-cam-dip preview NR Input
+	Function         : V4L2 I/O
+	Pad 0x0100001b   : 0: Source
+	  Link 0x0200001e: to remote pad 0x1000004 of entity 'preview': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video2 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip pre device /dev/video2: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video2:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300001c
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000001a (26)
+	Name             : mtk-cam-dip preview NR Input
+	Function         : V4L2 I/O
+	Pad 0x0100001b   : 0: Source
+	  Link 0x0200001e: to remote pad 0x1000004 of entity 'preview': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video2 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip pre device /dev/video2: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video3:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000024
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000022 (34)
+	Name             : mtk-cam-dip preview Shading
+	Function         : V4L2 I/O
+	Pad 0x01000023   : 0: Source
+	  Link 0x02000026: to remote pad 0x1000005 of entity 'preview': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video3 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip pre device /dev/video3: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video3:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000024
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000022 (34)
+	Name             : mtk-cam-dip preview Shading
+	Function         : V4L2 I/O
+	Pad 0x01000023   : 0: Source
+	  Link 0x02000026: to remote pad 0x1000005 of entity 'preview': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video3 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip pre device /dev/video3: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video4:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300002c
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000002a (42)
+	Name             : mtk-cam-dip preview MDP0
+	Function         : V4L2 I/O
+	Pad 0x0100002b   : 0: Sink
+	  Link 0x0200002e: from remote pad 0x1000006 of entity 'preview': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video4 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 2 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+		fail: v4l2-test-buffers.cpp(1622): doioctl_fd(req_fd, MEDIA_REQUEST_IOC_QUEUE, 0) != ENOENT
+	test Requests: FAIL
+
+Total for mtk-cam-dip pre device /dev/video4: 45, Succeeded: 43, Failed: 2, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video4:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300002c
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000002a (42)
+	Name             : mtk-cam-dip preview MDP0
+	Function         : V4L2 I/O
+	Pad 0x0100002b   : 0: Sink
+	  Link 0x0200002e: from remote pad 0x1000006 of entity 'preview': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video4 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 2 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+		fail: v4l2-test-buffers.cpp(1622): doioctl_fd(req_fd, MEDIA_REQUEST_IOC_QUEUE, 0) != ENOENT
+	test Requests: FAIL
+
+Total for mtk-cam-dip pre device /dev/video4: 45, Succeeded: 43, Failed: 2, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video5:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000034
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000032 (50)
+	Name             : mtk-cam-dip preview MDP1
+	Function         : V4L2 I/O
+	Pad 0x01000033   : 0: Sink
+	  Link 0x02000036: from remote pad 0x1000007 of entity 'preview': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video5 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip pre device /dev/video5: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video5:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000034
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000032 (50)
+	Name             : mtk-cam-dip preview MDP1
+	Function         : V4L2 I/O
+	Pad 0x01000033   : 0: Sink
+	  Link 0x02000036: from remote pad 0x1000007 of entity 'preview': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video5 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip pre device /dev/video5: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video6:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300003c
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000003a (58)
+	Name             : mtk-cam-dip preview IMG2
+	Function         : V4L2 I/O
+	Pad 0x0100003b   : 0: Sink
+	  Link 0x0200003e: from remote pad 0x1000008 of entity 'preview': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video6 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip pre device /dev/video6: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video6:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300003c
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000003a (58)
+	Name             : mtk-cam-dip preview IMG2
+	Function         : V4L2 I/O
+	Pad 0x0100003b   : 0: Sink
+	  Link 0x0200003e: from remote pad 0x1000008 of entity 'preview': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video6 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip pre device /dev/video6: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video7:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000044
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000042 (66)
+	Name             : mtk-cam-dip preview IMG3
+	Function         : V4L2 I/O
+	Pad 0x01000043   : 0: Sink
+	  Link 0x02000046: from remote pad 0x1000009 of entity 'preview': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video7 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip pre device /dev/video7: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip pre device /dev/video7:
+
+Driver Info:
+	Driver name      : mtk-cam-dip pre
+	Card type        : mtk-cam-dip preview
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000044
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000042 (66)
+	Name             : mtk-cam-dip preview IMG3
+	Function         : V4L2 I/O
+	Pad 0x01000043   : 0: Sink
+	  Link 0x02000046: from remote pad 0x1000009 of entity 'preview': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video7 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip pre device /dev/video7: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video8:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000055
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000053 (83)
+	Name             : mtk-cam-dip capture Raw Input
+	Function         : V4L2 I/O
+	Pad 0x01000054   : 0: Source
+	  Link 0x02000057: to remote pad 0x100004b of entity 'capture': Data, Enabled
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video8 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip cap device /dev/video8: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video8:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000055
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000053 (83)
+	Name             : mtk-cam-dip capture Raw Input
+	Function         : V4L2 I/O
+	Pad 0x01000054   : 0: Source
+	  Link 0x02000057: to remote pad 0x100004b of entity 'capture': Data, Enabled
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video8 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip cap device /dev/video8: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video9:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x8c200000
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x0c200000
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300005d
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000005b (91)
+	Name             : mtk-cam-dip capture Tuning
+	Function         : V4L2 I/O
+	Pad 0x0100005c   : 0: Source
+	  Link 0x0200005f: to remote pad 0x100004c of entity 'capture': Data
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video9 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(604): q.reqbufs(node, 1)
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+		fail: v4l2-test-buffers.cpp(741): VIDIOC_EXPBUF is supported, but the V4L2_MEMORY_MMAP support is missing or malfunctioning.
+		fail: v4l2-test-buffers.cpp(742): VIDIOC_EXPBUF is supported, but the V4L2_MEMORY_MMAP support is missing, probably due to earlier failing format tests.
+	test VIDIOC_EXPBUF: OK (Not Supported)
+	test Requests: OK
+
+Total for mtk-cam-dip cap device /dev/video9: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video9:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x8c200000
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x0c200000
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300005d
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000005b (91)
+	Name             : mtk-cam-dip capture Tuning
+	Function         : V4L2 I/O
+	Pad 0x0100005c   : 0: Source
+	  Link 0x0200005f: to remote pad 0x100004c of entity 'capture': Data
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video9 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(604): q.reqbufs(node, 1)
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+		fail: v4l2-test-buffers.cpp(741): VIDIOC_EXPBUF is supported, but the V4L2_MEMORY_MMAP support is missing or malfunctioning.
+		fail: v4l2-test-buffers.cpp(742): VIDIOC_EXPBUF is supported, but the V4L2_MEMORY_MMAP support is missing, probably due to earlier failing format tests.
+	test VIDIOC_EXPBUF: OK (Not Supported)
+	test Requests: OK
+
+Total for mtk-cam-dip cap device /dev/video9: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video10:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000065
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000063 (99)
+	Name             : mtk-cam-dip capture NR Input
+	Function         : V4L2 I/O
+	Pad 0x01000064   : 0: Source
+	  Link 0x02000067: to remote pad 0x100004d of entity 'capture': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video10 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip cap device /dev/video10: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video10:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000065
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000063 (99)
+	Name             : mtk-cam-dip capture NR Input
+	Function         : V4L2 I/O
+	Pad 0x01000064   : 0: Source
+	  Link 0x02000067: to remote pad 0x100004d of entity 'capture': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video10 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip cap device /dev/video10: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video11:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300006d
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000006b (107)
+	Name             : mtk-cam-dip capture Shading
+	Function         : V4L2 I/O
+	Pad 0x0100006c   : 0: Source
+	  Link 0x0200006f: to remote pad 0x100004e of entity 'capture': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video11 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip cap device /dev/video11: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video11:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300006d
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000006b (107)
+	Name             : mtk-cam-dip capture Shading
+	Function         : V4L2 I/O
+	Pad 0x0100006c   : 0: Source
+	  Link 0x0200006f: to remote pad 0x100004e of entity 'capture': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video11 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip cap device /dev/video11: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video12:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000075
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000073 (115)
+	Name             : mtk-cam-dip capture MDP0
+	Function         : V4L2 I/O
+	Pad 0x01000074   : 0: Sink
+	  Link 0x02000077: from remote pad 0x100004f of entity 'capture': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video12 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 2 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+		fail: v4l2-test-buffers.cpp(1622): doioctl_fd(req_fd, MEDIA_REQUEST_IOC_QUEUE, 0) != ENOENT
+	test Requests: FAIL
+
+Total for mtk-cam-dip cap device /dev/video12: 45, Succeeded: 43, Failed: 2, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video12:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000075
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000073 (115)
+	Name             : mtk-cam-dip capture MDP0
+	Function         : V4L2 I/O
+	Pad 0x01000074   : 0: Sink
+	  Link 0x02000077: from remote pad 0x100004f of entity 'capture': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video12 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 2 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+		fail: v4l2-test-buffers.cpp(1622): doioctl_fd(req_fd, MEDIA_REQUEST_IOC_QUEUE, 0) != ENOENT
+	test Requests: FAIL
+
+Total for mtk-cam-dip cap device /dev/video12: 45, Succeeded: 43, Failed: 2, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video13:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300007d
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000007b (123)
+	Name             : mtk-cam-dip capture MDP1
+	Function         : V4L2 I/O
+	Pad 0x0100007c   : 0: Sink
+	  Link 0x0200007f: from remote pad 0x1000050 of entity 'capture': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video13 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip cap device /dev/video13: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video13:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300007d
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000007b (123)
+	Name             : mtk-cam-dip capture MDP1
+	Function         : V4L2 I/O
+	Pad 0x0100007c   : 0: Sink
+	  Link 0x0200007f: from remote pad 0x1000050 of entity 'capture': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video13 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip cap device /dev/video13: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video14:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000085
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000083 (131)
+	Name             : mtk-cam-dip capture IMG2
+	Function         : V4L2 I/O
+	Pad 0x01000084   : 0: Sink
+	  Link 0x02000087: from remote pad 0x1000051 of entity 'capture': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video14 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip cap device /dev/video14: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video14:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x03000085
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x00000083 (131)
+	Name             : mtk-cam-dip capture IMG2
+	Function         : V4L2 I/O
+	Pad 0x01000084   : 0: Sink
+	  Link 0x02000087: from remote pad 0x1000051 of entity 'capture': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video14 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip cap device /dev/video14: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video15:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300008d
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000008b (139)
+	Name             : mtk-cam-dip capture IMG3
+	Function         : V4L2 I/O
+	Pad 0x0100008c   : 0: Sink
+	  Link 0x0200008f: from remote pad 0x1000052 of entity 'capture': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video15 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip cap device /dev/video15: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip cap device /dev/video15:
+
+Driver Info:
+	Driver name      : mtk-cam-dip cap
+	Card type        : mtk-cam-dip capture
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300008d
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000008b (139)
+	Name             : mtk-cam-dip capture IMG3
+	Function         : V4L2 I/O
+	Pad 0x0100008c   : 0: Sink
+	  Link 0x0200008f: from remote pad 0x1000052 of entity 'capture': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video15 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip cap device /dev/video15: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video16:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300009e
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000009c (156)
+	Name             : mtk-cam-dip reprocess Raw Input
+	Function         : V4L2 I/O
+	Pad 0x0100009d   : 0: Source
+	  Link 0x020000a0: to remote pad 0x1000094 of entity 'reprocess': Data, Enabled
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video16 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip rep device /dev/video16: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video16:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x0300009e
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x0000009c (156)
+	Name             : mtk-cam-dip reprocess Raw Input
+	Function         : V4L2 I/O
+	Pad 0x0100009d   : 0: Source
+	  Link 0x020000a0: to remote pad 0x1000094 of entity 'reprocess': Data, Enabled
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video16 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip rep device /dev/video16: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video17:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x8c200000
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x0c200000
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000a6
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x000000a4 (164)
+	Name             : mtk-cam-dip reprocess Tuning
+	Function         : V4L2 I/O
+	Pad 0x010000a5   : 0: Source
+	  Link 0x020000a8: to remote pad 0x1000095 of entity 'reprocess': Data
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video17 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(604): q.reqbufs(node, 1)
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+		fail: v4l2-test-buffers.cpp(741): VIDIOC_EXPBUF is supported, but the V4L2_MEMORY_MMAP support is missing or malfunctioning.
+		fail: v4l2-test-buffers.cpp(742): VIDIOC_EXPBUF is supported, but the V4L2_MEMORY_MMAP support is missing, probably due to earlier failing format tests.
+	test VIDIOC_EXPBUF: OK (Not Supported)
+	test Requests: OK
+
+Total for mtk-cam-dip rep device /dev/video17: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video17:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x8c200000
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x0c200000
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000a6
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x000000a4 (164)
+	Name             : mtk-cam-dip reprocess Tuning
+	Function         : V4L2 I/O
+	Pad 0x010000a5   : 0: Source
+	  Link 0x020000a8: to remote pad 0x1000095 of entity 'reprocess': Data
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video17 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(604): q.reqbufs(node, 1)
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+		fail: v4l2-test-buffers.cpp(741): VIDIOC_EXPBUF is supported, but the V4L2_MEMORY_MMAP support is missing or malfunctioning.
+		fail: v4l2-test-buffers.cpp(742): VIDIOC_EXPBUF is supported, but the V4L2_MEMORY_MMAP support is missing, probably due to earlier failing format tests.
+	test VIDIOC_EXPBUF: OK (Not Supported)
+	test Requests: OK
+
+Total for mtk-cam-dip rep device /dev/video17: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video18:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000ae
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x000000ac (172)
+	Name             : mtk-cam-dip reprocess NR Input
+	Function         : V4L2 I/O
+	Pad 0x010000ad   : 0: Source
+	  Link 0x020000b0: to remote pad 0x1000096 of entity 'reprocess': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video18 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip rep device /dev/video18: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video18:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000ae
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x000000ac (172)
+	Name             : mtk-cam-dip reprocess NR Input
+	Function         : V4L2 I/O
+	Pad 0x010000ad   : 0: Source
+	  Link 0x020000b0: to remote pad 0x1000096 of entity 'reprocess': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video18 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip rep device /dev/video18: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video19:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000b6
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x000000b4 (180)
+	Name             : mtk-cam-dip reprocess Shading
+	Function         : V4L2 I/O
+	Pad 0x010000b5   : 0: Source
+	  Link 0x020000b8: to remote pad 0x1000097 of entity 'reprocess': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video19 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip rep device /dev/video19: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video19:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04202000
+		Video Output Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000b6
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x000000b4 (180)
+	Name             : mtk-cam-dip reprocess Shading
+	Function         : V4L2 I/O
+	Pad 0x010000b5   : 0: Source
+	  Link 0x020000b8: to remote pad 0x1000097 of entity 'reprocess': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video19 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip rep device /dev/video19: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video20:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000be
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x000000bc (188)
+	Name             : mtk-cam-dip reprocess MDP0
+	Function         : V4L2 I/O
+	Pad 0x010000bd   : 0: Sink
+	  Link 0x020000c0: from remote pad 0x1000098 of entity 'reprocess': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video20 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 2 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+		fail: v4l2-test-buffers.cpp(1622): doioctl_fd(req_fd, MEDIA_REQUEST_IOC_QUEUE, 0) != ENOENT
+	test Requests: FAIL
+
+Total for mtk-cam-dip rep device /dev/video20: 45, Succeeded: 43, Failed: 2, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video20:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000be
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x000000bc (188)
+	Name             : mtk-cam-dip reprocess MDP0
+	Function         : V4L2 I/O
+	Pad 0x010000bd   : 0: Sink
+	  Link 0x020000c0: from remote pad 0x1000098 of entity 'reprocess': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video20 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 2 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+		fail: v4l2-test-buffers.cpp(1622): doioctl_fd(req_fd, MEDIA_REQUEST_IOC_QUEUE, 0) != ENOENT
+	test Requests: FAIL
+
+Total for mtk-cam-dip rep device /dev/video20: 45, Succeeded: 43, Failed: 2, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video21:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000c6
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x000000c4 (196)
+	Name             : mtk-cam-dip reprocess MDP1
+	Function         : V4L2 I/O
+	Pad 0x010000c5   : 0: Sink
+	  Link 0x020000c8: from remote pad 0x1000099 of entity 'reprocess': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video21 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip rep device /dev/video21: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video21:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000c6
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x000000c4 (196)
+	Name             : mtk-cam-dip reprocess MDP1
+	Function         : V4L2 I/O
+	Pad 0x010000c5   : 0: Sink
+	  Link 0x020000c8: from remote pad 0x1000099 of entity 'reprocess': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video21 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip rep device /dev/video21: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video22:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000ce
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x000000cc (204)
+	Name             : mtk-cam-dip reprocess IMG2
+	Function         : V4L2 I/O
+	Pad 0x010000cd   : 0: Sink
+	  Link 0x020000d0: from remote pad 0x100009a of entity 'reprocess': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video22 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip rep device /dev/video22: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video22:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000ce
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x000000cc (204)
+	Name             : mtk-cam-dip reprocess IMG2
+	Function         : V4L2 I/O
+	Pad 0x010000cd   : 0: Sink
+	  Link 0x020000d0: from remote pad 0x100009a of entity 'reprocess': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video22 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip rep device /dev/video22: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video23:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000d6
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x000000d4 (212)
+	Name             : mtk-cam-dip reprocess IMG3
+	Function         : V4L2 I/O
+	Pad 0x010000d5   : 0: Sink
+	  Link 0x020000d8: from remote pad 0x100009b of entity 'reprocess': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video23 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip rep device /dev/video23: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip rep device /dev/video23:
+
+Driver Info:
+	Driver name      : mtk-cam-dip rep
+	Card type        : mtk-cam-dip reprocess
+	Bus info         : platform:15022000.dip
+	Driver version   : 4.19.66
+	Capabilities     : 0x84201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04201000
+		Video Capture Multiplanar
+		Streaming
+		Extended Pix Format
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000d6
+	Type             : V4L Video
+Entity Info:
+	ID               : 0x000000d4 (212)
+	Name             : mtk-cam-dip reprocess IMG3
+	Function         : V4L2 I/O
+	Pad 0x010000d5   : 0: Sink
+	  Link 0x020000d8: from remote pad 0x100009b of entity 'reprocess': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video23 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		fail: v4l2-test-buffers.cpp(709): q.create_bufs(node, 1, &fmt) != EINVAL
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK
+
+Total for mtk-cam-dip rep device /dev/video23: 45, Succeeded: 44, Failed: 1, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip device /dev/v4l-subdev0:
+
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000dc
+	Type             : V4L Sub-Device
+Entity Info:
+	ID               : 0x00000001 (1)
+	Name             : preview
+	Function         : Video Pixel Formatter
+	Pad 0x01000002   : 0: Sink
+	  Link 0x0200000e: from remote pad 0x100000b of entity 'mtk-cam-dip preview Raw Input': Data, Enabled
+	Pad 0x01000003   : 1: Sink
+	  Link 0x02000016: from remote pad 0x1000013 of entity 'mtk-cam-dip preview Tuning': Data
+	Pad 0x01000004   : 2: Sink
+	  Link 0x0200001e: from remote pad 0x100001b of entity 'mtk-cam-dip preview NR Input': Data, Dynamic
+	Pad 0x01000005   : 3: Sink
+	  Link 0x02000026: from remote pad 0x1000023 of entity 'mtk-cam-dip preview Shading': Data, Dynamic
+	Pad 0x01000006   : 4: Source
+	  Link 0x0200002e: to remote pad 0x100002b of entity 'mtk-cam-dip preview MDP0': Data, Dynamic
+	Pad 0x01000007   : 5: Source
+	  Link 0x02000036: to remote pad 0x1000033 of entity 'mtk-cam-dip preview MDP1': Data, Dynamic
+	Pad 0x01000008   : 6: Source
+	  Link 0x0200003e: to remote pad 0x100003b of entity 'mtk-cam-dip preview IMG2': Data, Dynamic
+	Pad 0x01000009   : 7: Source
+	  Link 0x02000046: to remote pad 0x1000043 of entity 'mtk-cam-dip preview IMG3': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+
+Allow for multiple opens:
+	test second /dev/v4l-subdev0 open: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Sub-Device ioctls (Sink Pad 0):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Sink Pad 1):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+		fail: v4l2-test-subdevs.cpp(352): doioctl(node, VIDIOC_SUBDEV_G_FMT, &fmt)
+	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+		fail: v4l2-test-subdevs.cpp(352): doioctl(node, VIDIOC_SUBDEV_G_FMT, &fmt)
+	test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Sink Pad 2):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Sink Pad 3):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Source Pad 4):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Source Pad 5):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Source Pad 6):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Source Pad 7):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK (Not Supported)
+	test VIDIOC_TRY_FMT: OK (Not Supported)
+	test VIDIOC_S_FMT: OK (Not Supported)
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
+	test VIDIOC_EXPBUF: OK (Not Supported)
+	test Requests: OK (Not Supported)
+
+Total for mtk-cam-dip device /dev/v4l-subdev0: 97, Succeeded: 95, Failed: 2, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip device /dev/v4l-subdev1:
+
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000de
+	Type             : V4L Sub-Device
+Entity Info:
+	ID               : 0x0000004a (74)
+	Name             : capture
+	Function         : Video Pixel Formatter
+	Pad 0x0100004b   : 0: Sink
+	  Link 0x02000057: from remote pad 0x1000054 of entity 'mtk-cam-dip capture Raw Input': Data, Enabled
+	Pad 0x0100004c   : 1: Sink
+	  Link 0x0200005f: from remote pad 0x100005c of entity 'mtk-cam-dip capture Tuning': Data
+	Pad 0x0100004d   : 2: Sink
+	  Link 0x02000067: from remote pad 0x1000064 of entity 'mtk-cam-dip capture NR Input': Data, Dynamic
+	Pad 0x0100004e   : 3: Sink
+	  Link 0x0200006f: from remote pad 0x100006c of entity 'mtk-cam-dip capture Shading': Data, Dynamic
+	Pad 0x0100004f   : 4: Source
+	  Link 0x02000077: to remote pad 0x1000074 of entity 'mtk-cam-dip capture MDP0': Data, Dynamic
+	Pad 0x01000050   : 5: Source
+	  Link 0x0200007f: to remote pad 0x100007c of entity 'mtk-cam-dip capture MDP1': Data, Dynamic
+	Pad 0x01000051   : 6: Source
+	  Link 0x02000087: to remote pad 0x1000084 of entity 'mtk-cam-dip capture IMG2': Data, Dynamic
+	Pad 0x01000052   : 7: Source
+	  Link 0x0200008f: to remote pad 0x100008c of entity 'mtk-cam-dip capture IMG3': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+
+Allow for multiple opens:
+	test second /dev/v4l-subdev1 open: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Sub-Device ioctls (Sink Pad 0):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Sink Pad 1):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+		fail: v4l2-test-subdevs.cpp(352): doioctl(node, VIDIOC_SUBDEV_G_FMT, &fmt)
+	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+		fail: v4l2-test-subdevs.cpp(352): doioctl(node, VIDIOC_SUBDEV_G_FMT, &fmt)
+	test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Sink Pad 2):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Sink Pad 3):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Source Pad 4):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Source Pad 5):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Source Pad 6):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Source Pad 7):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK (Not Supported)
+	test VIDIOC_TRY_FMT: OK (Not Supported)
+	test VIDIOC_S_FMT: OK (Not Supported)
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
+	test VIDIOC_EXPBUF: OK (Not Supported)
+	test Requests: OK (Not Supported)
+
+Total for mtk-cam-dip device /dev/v4l-subdev1: 97, Succeeded: 95, Failed: 2, Warnings: 0
+--------------------------------------------------------------------------------
+Compliance test for mtk-cam-dip device /dev/v4l-subdev2:
+
+Media Driver Info:
+	Driver name      : mtk-cam-dip
+	Model            : mtk-cam-dip
+	Serial           : 
+	Bus info         : platform:15022000.dip
+	Media version    : 4.19.66
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.19.66
+Interface Info:
+	ID               : 0x030000e0
+	Type             : V4L Sub-Device
+Entity Info:
+	ID               : 0x00000093 (147)
+	Name             : reprocess
+	Function         : Video Pixel Formatter
+	Pad 0x01000094   : 0: Sink
+	  Link 0x020000a0: from remote pad 0x100009d of entity 'mtk-cam-dip reprocess Raw Input': Data, Enabled
+	Pad 0x01000095   : 1: Sink
+	  Link 0x020000a8: from remote pad 0x10000a5 of entity 'mtk-cam-dip reprocess Tuning': Data
+	Pad 0x01000096   : 2: Sink
+	  Link 0x020000b0: from remote pad 0x10000ad of entity 'mtk-cam-dip reprocess NR Input': Data, Dynamic
+	Pad 0x01000097   : 3: Sink
+	  Link 0x020000b8: from remote pad 0x10000b5 of entity 'mtk-cam-dip reprocess Shading': Data, Dynamic
+	Pad 0x01000098   : 4: Source
+	  Link 0x020000c0: to remote pad 0x10000bd of entity 'mtk-cam-dip reprocess MDP0': Data, Dynamic
+	Pad 0x01000099   : 5: Source
+	  Link 0x020000c8: to remote pad 0x10000c5 of entity 'mtk-cam-dip reprocess MDP1': Data, Dynamic
+	Pad 0x0100009a   : 6: Source
+	  Link 0x020000d0: to remote pad 0x10000cd of entity 'mtk-cam-dip reprocess IMG2': Data, Dynamic
+	Pad 0x0100009b   : 7: Source
+	  Link 0x020000d8: to remote pad 0x10000d5 of entity 'mtk-cam-dip reprocess IMG3': Data, Dynamic
+
+Required ioctls:
+	test MC information (see 'Media Driver Info' above): OK
+
+Allow for multiple opens:
+	test second /dev/v4l-subdev2 open: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Sub-Device ioctls (Sink Pad 0):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Sink Pad 1):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+		fail: v4l2-test-subdevs.cpp(352): doioctl(node, VIDIOC_SUBDEV_G_FMT, &fmt)
+	test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+		fail: v4l2-test-subdevs.cpp(352): doioctl(node, VIDIOC_SUBDEV_G_FMT, &fmt)
+	test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Sink Pad 2):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Sink Pad 3):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Source Pad 4):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Source Pad 5):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Source Pad 6):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Sub-Device ioctls (Source Pad 7):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK (Not Supported)
+	test VIDIOC_TRY_FMT: OK (Not Supported)
+	test VIDIOC_S_FMT: OK (Not Supported)
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
+	test VIDIOC_EXPBUF: OK (Not Supported)
+	test Requests: OK (Not Supported)
+
+Total for mtk-cam-dip device /dev/v4l-subdev2: 97, Succeeded: 95, Failed: 2, Warnings: 0
+
+Grand Total for mtk-cam-dip device /dev/media0: 2458, Succeeded: 2398, Failed: 60, Warnings: 0
+
+
+
+Frederic Chen (5):
+  dt-bindings: mt8183: Added DIP dt-bindings
+  dts: arm64: mt8183: Add DIP nodes
+  media: platform: Add Mediatek DIP driver KConfig
+  platform: mtk-isp: Add Mediatek DIP driver
+  media: platform: mtk-mdp3: Add struct tuning_addr and img_sw_buffer
+
+ .../bindings/media/mediatek,mt8183-dip.txt    |   40 +
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi      |   16 +
+ drivers/media/platform/Kconfig                |    2 +
+ drivers/media/platform/mtk-isp/Kconfig        |   19 +
  drivers/media/platform/mtk-isp/Makefile       |    7 +
  .../media/platform/mtk-isp/isp_50/Makefile    |    7 +
  .../platform/mtk-isp/isp_50/dip/Makefile      |   18 +
@@ -42,7 +5962,10 @@ Signed-off-by: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.
  .../platform/mtk-isp/isp_50/dip/mtk_dip-hw.h  |  156 ++
  .../platform/mtk-isp/isp_50/dip/mtk_dip-sys.c |  521 ++++
  .../mtk-isp/isp_50/dip/mtk_dip-v4l2.c         | 2255 +++++++++++++++++
- 8 files changed, 4180 insertions(+)
+ drivers/media/platform/mtk-mdp3/mtk-img-ipi.h |   15 +-
+ 13 files changed, 4270 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-dip.txt
+ create mode 100644 drivers/media/platform/mtk-isp/Kconfig
  create mode 100644 drivers/media/platform/mtk-isp/Makefile
  create mode 100644 drivers/media/platform/mtk-isp/isp_50/Makefile
  create mode 100644 drivers/media/platform/mtk-isp/isp_50/dip/Makefile
@@ -52,4233 +5975,5 @@ Signed-off-by: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.
  create mode 100644 drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-sys.c
  create mode 100644 drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-v4l2.c
 
-diff --git a/drivers/media/platform/mtk-isp/Makefile b/drivers/media/platform/mtk-isp/Makefile
-new file mode 100644
-index 000000000000..b08d3bdf2800
---- /dev/null
-+++ b/drivers/media/platform/mtk-isp/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (C) 2019 MediaTek Inc.
-+#
-+
-+obj-y += isp_50/
-+
-diff --git a/drivers/media/platform/mtk-isp/isp_50/Makefile b/drivers/media/platform/mtk-isp/isp_50/Makefile
-new file mode 100644
-index 000000000000..564c3889c34c
---- /dev/null
-+++ b/drivers/media/platform/mtk-isp/isp_50/Makefile
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (C) 2019 MediaTek Inc.
-+#
-+
-+obj-$(CONFIG_VIDEO_MEDIATEK_ISP_DIP) += dip/
-+
-diff --git a/drivers/media/platform/mtk-isp/isp_50/dip/Makefile b/drivers/media/platform/mtk-isp/isp_50/dip/Makefile
-new file mode 100644
-index 000000000000..99e760d7d5a9
---- /dev/null
-+++ b/drivers/media/platform/mtk-isp/isp_50/dip/Makefile
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (C) 2019 MediaTek Inc.
-+#
-+
-+$(info $(srctree))
-+ccflags-y += -I$(srctree)/drivers/media/platform/mtk-mdp3
-+
-+obj-$(CONFIG_VIDEO_MEDIATEK_ISP_DIP) += mtk_dip-v4l2.o
-+
-+# Utilities to provide frame-based streaming model
-+# with v4l2 user interfaces and alloc context managing
-+# memory shared between ISP and coprocessor
-+mtk_dip_util-objs := \
-+mtk_dip-dev.o \
-+mtk_dip-sys.o
-+
-+obj-$(CONFIG_VIDEO_MEDIATEK_ISP_DIP) += mtk_dip_util.o
-diff --git a/drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-dev.c b/drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-dev.c
-new file mode 100644
-index 000000000000..d964ae0c4700
---- /dev/null
-+++ b/drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-dev.c
-@@ -0,0 +1,650 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018 MediaTek Inc.
-+ *
-+ * Author: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *
-+ */
-+
-+#include <linux/dma-mapping.h>
-+#include <linux/platform_device.h>
-+#include <media/videobuf2-dma-contig.h>
-+#include <media/v4l2-event.h>
-+#include "mtk_dip-dev.h"
-+#include "mtk-mdp3-regs.h"
-+#include "mtk-img-ipi.h"
-+
-+int mtk_dip_pipe_init(struct mtk_dip_dev *dip_dev, struct mtk_dip_pipe *pipe,
-+		      const struct mtk_dip_pipe_desc *setting)
-+{
-+	int ret, i;
-+
-+	pipe->dip_dev = dip_dev;
-+	pipe->desc = setting;
-+	pipe->nodes_enabled = 0;
-+	pipe->nodes_streaming = 0;
-+
-+	atomic_set(&pipe->pipe_job_sequence, 0);
-+	INIT_LIST_HEAD(&pipe->pipe_job_running_list);
-+	INIT_LIST_HEAD(&pipe->pipe_job_pending_list);
-+	spin_lock_init(&pipe->job_lock);
-+	mutex_init(&pipe->lock);
-+
-+	for (i = 0; i < pipe->desc->total_queues; i++) {
-+		pipe->nodes[i].desc = &pipe->desc->queue_descs[i];
-+		pipe->nodes[i].flags = pipe->nodes[i].desc->flags;
-+		spin_lock_init(&pipe->nodes[i].buf_list_lock);
-+		INIT_LIST_HEAD(&pipe->nodes[i].buf_list);
-+
-+		if (pipe->nodes[i].flags & MEDIA_LNK_FL_ENABLED)
-+			pipe->nodes_enabled |= 1 << i;
-+
-+		pipe->nodes[i].crop.left = 0;
-+		pipe->nodes[i].crop.top = 0;
-+		pipe->nodes[i].crop.width =
-+			pipe->nodes[i].desc->frmsizeenum->stepwise.max_width;
-+		pipe->nodes[i].crop.height =
-+			pipe->nodes[i].desc->frmsizeenum->stepwise.max_height;
-+		pipe->nodes[i].compose.left = 0;
-+		pipe->nodes[i].compose.top = 0;
-+		pipe->nodes[i].compose.width =
-+			pipe->nodes[i].desc->frmsizeenum->stepwise.max_width;
-+		pipe->nodes[i].compose.height =
-+			pipe->nodes[i].desc->frmsizeenum->stepwise.max_height;
-+	}
-+
-+	ret = mtk_dip_pipe_v4l2_register(pipe, &dip_dev->mdev,
-+					 &dip_dev->v4l2_dev);
-+	if (ret) {
-+		dev_err(pipe->dip_dev->dev,
-+			"%s: failed(%d) to create V4L2 devices\n",
-+			pipe->desc->name, ret);
-+
-+		goto err_destroy_pipe_lock;
-+	}
-+
-+	return 0;
-+
-+err_destroy_pipe_lock:
-+	mutex_destroy(&pipe->lock);
-+
-+	return ret;
-+}
-+
-+int mtk_dip_pipe_release(struct mtk_dip_pipe *pipe)
-+{
-+	mtk_dip_pipe_v4l2_unregister(pipe);
-+	mutex_destroy(&pipe->lock);
-+
-+	return 0;
-+}
-+
-+int mtk_dip_pipe_next_job_id(struct mtk_dip_pipe *pipe)
-+{
-+	int global_job_id = atomic_inc_return(&pipe->pipe_job_sequence);
-+
-+	return (global_job_id & 0x0000ffff) | (pipe->desc->id << 16);
-+}
-+
-+struct mtk_dip_request *mtk_dip_pipe_get_running_job(struct mtk_dip_pipe *pipe,
-+						     int id)
-+{
-+	struct mtk_dip_request *req;
-+
-+	spin_lock(&pipe->job_lock);
-+	list_for_each_entry(req,
-+			    &pipe->pipe_job_running_list, list) {
-+		if (req->id == id) {
-+			spin_unlock(&pipe->job_lock);
-+			return req;
-+		}
-+	}
-+	spin_unlock(&pipe->job_lock);
-+
-+	return NULL;
-+}
-+
-+void mtk_dip_pipe_remove_job(struct mtk_dip_request *req)
-+{
-+	spin_lock(&req->dip_pipe->job_lock);
-+	list_del(&req->list);
-+	req->dip_pipe->num_jobs = req->dip_pipe->num_jobs - 1;
-+	spin_unlock(&req->dip_pipe->job_lock);
-+}
-+
-+void mtk_dip_pipe_job_finish(struct mtk_dip_request *req,
-+			     enum vb2_buffer_state vbf_state)
-+{
-+	struct mtk_dip_pipe *pipe = req->dip_pipe;
-+	struct mtk_dip_dev_buffer *in_buf;
-+	int i;
-+
-+	in_buf = req->buf_map[MTK_DIP_VIDEO_NODE_ID_RAW_OUT];
-+
-+	for (i = 0; i < pipe->desc->total_queues; i++) {
-+		struct mtk_dip_dev_buffer *dev_buf = req->buf_map[i];
-+		struct mtk_dip_video_device *node;
-+
-+		if (!dev_buf)
-+			continue;
-+
-+		if (dev_buf != in_buf)
-+			dev_buf->vbb.vb2_buf.timestamp =
-+				in_buf->vbb.vb2_buf.timestamp;
-+
-+		vb2_buffer_done(&dev_buf->vbb.vb2_buf, vbf_state);
-+
-+		node = mtk_dip_vbq_to_node(dev_buf->vbb.vb2_buf.vb2_queue);
-+		spin_lock(&node->buf_list_lock);
-+		list_del(&dev_buf->list);
-+		spin_unlock(&node->buf_list_lock);
-+	}
-+}
-+
-+static u32 dip_pass1_fmt_get_stride(struct v4l2_pix_format_mplane *mfmt,
-+				    const struct mtk_dip_dev_format *fmt,
-+				    unsigned int plane)
-+{
-+	unsigned int width = ALIGN(mfmt->width, 4);
-+	unsigned int pixel_bits = fmt->row_depth[0];
-+	unsigned int bpl, ppl;
-+
-+	ppl = DIV_ROUND_UP(width * fmt->depth[0], fmt->row_depth[0]);
-+	bpl = DIV_ROUND_UP(ppl * pixel_bits, 8);
-+
-+	return ALIGN(bpl, fmt->pass_1_align);
-+}
-+
-+/* Stride that is accepted by MDP HW */
-+static u32 dip_mdp_fmt_get_stride(struct v4l2_pix_format_mplane *mfmt,
-+				  const struct mtk_dip_dev_format *fmt,
-+				  unsigned int plane)
-+{
-+	enum mdp_color c = fmt->mdp_color;
-+	u32 bytesperline = (mfmt->width * fmt->row_depth[plane]) / 8;
-+	u32 stride = (bytesperline * DIP_MCOLOR_BITS_PER_PIXEL(c))
-+		/ fmt->row_depth[0];
-+
-+	if (plane == 0)
-+		return stride;
-+
-+	if (plane < DIP_MCOLOR_GET_PLANE_COUNT(c)) {
-+		if (DIP_MCOLOR_IS_BLOCK_MODE(c))
-+			stride = stride / 2;
-+		return stride;
-+	}
-+
-+	return 0;
-+}
-+
-+/* Stride that is accepted by MDP HW of format with contiguous planes */
-+static u32
-+dip_mdp_fmt_get_stride_contig(const struct mtk_dip_dev_format *fmt,
-+			      u32 pix_stride, unsigned int plane)
-+{
-+	enum mdp_color c = fmt->mdp_color;
-+	u32 stride = pix_stride;
-+
-+	if (plane == 0)
-+		return stride;
-+
-+	if (plane < DIP_MCOLOR_GET_PLANE_COUNT(c)) {
-+		stride = stride >> DIP_MCOLOR_GET_H_SUBSAMPLE(c);
-+		if (DIP_MCOLOR_IS_UV_COPLANE(c) && !DIP_MCOLOR_IS_BLOCK_MODE(c))
-+			stride = stride * 2;
-+		return stride;
-+	}
-+
-+	return 0;
-+}
-+
-+/* Plane size that is accepted by MDP HW */
-+static u32
-+dip_mdp_fmt_get_plane_size(const struct mtk_dip_dev_format *fmt,
-+			   u32 stride, u32 height, unsigned int plane)
-+{
-+	enum mdp_color c = fmt->mdp_color;
-+	u32 bytesperline;
-+
-+	bytesperline = (stride * fmt->row_depth[0])
-+		/ DIP_MCOLOR_BITS_PER_PIXEL(c);
-+
-+	if (plane == 0)
-+		return bytesperline * height;
-+	if (plane < DIP_MCOLOR_GET_PLANE_COUNT(c)) {
-+		height = height >> DIP_MCOLOR_GET_V_SUBSAMPLE(c);
-+		if (DIP_MCOLOR_IS_BLOCK_MODE(c))
-+			bytesperline = bytesperline * 2;
-+		return bytesperline * height;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_pipe_get_stride(struct mtk_dip_pipe *pipe,
-+				   struct v4l2_pix_format_mplane *mfmt,
-+				   const struct mtk_dip_dev_format *dfmt,
-+				   int plane, const char *buf_name)
-+{
-+	int bpl;
-+
-+	if (dfmt->pass_1_align)
-+		bpl = dip_pass1_fmt_get_stride(mfmt, dfmt, plane);
-+	else
-+		bpl = dip_mdp_fmt_get_stride(mfmt, dfmt, plane);
-+
-+	return bpl;
-+}
-+
-+void mtk_dip_pipe_try_fmt(struct mtk_dip_pipe *pipe,
-+			  struct mtk_dip_video_device *node,
-+			  struct v4l2_format *fmt,
-+			  const struct v4l2_format *ufmt,
-+			  const struct mtk_dip_dev_format *dfmt)
-+{
-+	int i;
-+
-+	fmt->type = ufmt->type;
-+	fmt->fmt.pix_mp.width =
-+		clamp_val(ufmt->fmt.pix_mp.width,
-+			  node->desc->frmsizeenum->stepwise.min_width,
-+			  node->desc->frmsizeenum->stepwise.max_width);
-+	fmt->fmt.pix_mp.height =
-+		clamp_val(ufmt->fmt.pix_mp.height,
-+			  node->desc->frmsizeenum->stepwise.min_height,
-+			  node->desc->frmsizeenum->stepwise.max_height);
-+	fmt->fmt.pix_mp.num_planes = ufmt->fmt.pix_mp.num_planes;
-+	fmt->fmt.pix_mp.field = V4L2_FIELD_NONE;
-+
-+	if (ufmt->fmt.pix_mp.quantization != V4L2_QUANTIZATION_FULL_RANGE)
-+		fmt->fmt.pix_mp.quantization = V4L2_QUANTIZATION_DEFAULT;
-+	else
-+		fmt->fmt.pix_mp.quantization =  ufmt->fmt.pix_mp.quantization;
-+
-+	if (ufmt->fmt.pix_mp.colorspace < 0xFF)
-+		fmt->fmt.pix_mp.colorspace = ufmt->fmt.pix_mp.colorspace;
-+	else
-+		fmt->fmt.pix_mp.colorspace = V4L2_COLORSPACE_DEFAULT;
-+
-+	/* Only MDP 0 and MDP 1 allow the color space change */
-+	if (node->desc->id != MTK_DIP_VIDEO_NODE_ID_MDP0_CAPTURE &&
-+	    node->desc->id != MTK_DIP_VIDEO_NODE_ID_MDP1_CAPTURE) {
-+		fmt->fmt.pix_mp.quantization = V4L2_QUANTIZATION_FULL_RANGE;
-+		fmt->fmt.pix_mp.colorspace = V4L2_COLORSPACE_DEFAULT;
-+	}
-+
-+	fmt->fmt.pix_mp.pixelformat = dfmt->format;
-+	fmt->fmt.pix_mp.num_planes = dfmt->num_planes;
-+	fmt->fmt.pix_mp.ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
-+	fmt->fmt.pix_mp.field = V4L2_FIELD_NONE;
-+
-+	for (i = 0; i < fmt->fmt.pix_mp.num_planes; ++i) {
-+		unsigned int stride;
-+		unsigned int sizeimage;
-+
-+		stride = mtk_dip_pipe_get_stride(pipe, &fmt->fmt.pix_mp,
-+						 dfmt, i, node->desc->name);
-+		if (dfmt->pass_1_align)
-+			sizeimage = stride * fmt->fmt.pix_mp.height;
-+		else
-+			sizeimage = DIV_ROUND_UP(stride *
-+						 fmt->fmt.pix_mp.height *
-+						 dfmt->depth[i],
-+						 dfmt->row_depth[i]);
-+
-+		fmt->fmt.pix_mp.plane_fmt[i].sizeimage = sizeimage;
-+		fmt->fmt.pix_mp.plane_fmt[i].bytesperline = stride;
-+	}
-+}
-+
-+static void set_meta_fmt(struct mtk_dip_pipe *pipe,
-+			 struct v4l2_meta_format *fmt,
-+			 const struct mtk_dip_dev_format *dev_fmt)
-+{
-+	fmt->dataformat = dev_fmt->format;
-+
-+	if (dev_fmt->buffer_size <= 0)
-+		fmt->buffersize =
-+			MTK_DIP_DEV_META_BUF_DEFAULT_SIZE;
-+	else
-+		fmt->buffersize = dev_fmt->buffer_size;
-+}
-+
-+void mtk_dip_pipe_load_default_fmt(struct mtk_dip_pipe *pipe,
-+				   struct mtk_dip_video_device *node,
-+				   struct v4l2_format *fmt)
-+{
-+	int idx = node->desc->default_fmt_idx;
-+
-+	if (idx >= node->desc->num_fmts) {
-+		dev_err(pipe->dip_dev->dev,
-+			"%s:%s: invalid idx(%d), must < num_fmts(%d)\n",
-+			__func__, node->desc->name, idx, node->desc->num_fmts);
-+
-+		idx = 0;
-+	}
-+
-+	fmt->type = node->desc->buf_type;
-+	if (mtk_dip_buf_is_meta(node->desc->buf_type)) {
-+		set_meta_fmt(pipe, &fmt->fmt.meta,
-+			     &node->desc->fmts[idx]);
-+	} else {
-+		fmt->fmt.pix_mp.width = node->desc->default_width;
-+		fmt->fmt.pix_mp.height = node->desc->default_height;
-+		mtk_dip_pipe_try_fmt(pipe, node, fmt, fmt,
-+				     &node->desc->fmts[idx]);
-+	}
-+}
-+
-+const struct mtk_dip_dev_format*
-+mtk_dip_pipe_find_fmt(struct mtk_dip_pipe *pipe,
-+		      struct mtk_dip_video_device *node,
-+		      u32 format)
-+{
-+	int i;
-+
-+	for (i = 0; i < node->desc->num_fmts; i++) {
-+		if (node->desc->fmts[i].format == format)
-+			return &node->desc->fmts[i];
-+	}
-+
-+	return NULL;
-+}
-+
-+static enum mdp_ycbcr_profile
-+mtk_dip_map_ycbcr_prof_mplane(struct v4l2_pix_format_mplane *pix_mp,
-+			      u32 mdp_color)
-+{
-+	switch (pix_mp->colorspace) {
-+	case V4L2_COLORSPACE_DEFAULT:
-+		if (pix_mp->quantization == V4L2_QUANTIZATION_FULL_RANGE)
-+			return MDP_YCBCR_PROFILE_FULL_BT601;
-+		return MDP_YCBCR_PROFILE_BT601;
-+	case V4L2_COLORSPACE_JPEG:
-+		return MDP_YCBCR_PROFILE_JPEG;
-+	case V4L2_COLORSPACE_REC709:
-+	case V4L2_COLORSPACE_DCI_P3:
-+		if (pix_mp->quantization == V4L2_QUANTIZATION_FULL_RANGE)
-+			return MDP_YCBCR_PROFILE_FULL_BT709;
-+		return MDP_YCBCR_PROFILE_BT709;
-+	case V4L2_COLORSPACE_BT2020:
-+		if (pix_mp->quantization == V4L2_QUANTIZATION_FULL_RANGE)
-+			return MDP_YCBCR_PROFILE_FULL_BT2020;
-+		return MDP_YCBCR_PROFILE_BT2020;
-+	}
-+
-+	if (DIP_MCOLOR_IS_RGB(mdp_color))
-+		return MDP_YCBCR_PROFILE_FULL_BT601;
-+
-+	if (pix_mp->quantization == V4L2_QUANTIZATION_FULL_RANGE)
-+		return MDP_YCBCR_PROFILE_FULL_BT601;
-+
-+	return MDP_YCBCR_PROFILE_BT601;
-+}
-+
-+static inline int
-+mtk_dip_is_contig_mp_buffer(struct mtk_dip_dev_buffer *dev_buf)
-+{
-+	return !(dev_buf->dev_fmt->num_cplanes == 1);
-+}
-+
-+static void mtk_dip_fill_ipi_img_param_mp(struct mtk_dip_pipe *pipe,
-+					  struct img_image_buffer *b,
-+					  struct mtk_dip_dev_buffer *dev_buf,
-+					  char *buf_name)
-+{
-+	struct v4l2_pix_format_mplane *pix_mp = &dev_buf->fmt.fmt.pix_mp;
-+	const struct mtk_dip_dev_format *mdp_fmt = dev_buf->dev_fmt;
-+	unsigned int i;
-+	unsigned int total_plane_size = 0;
-+
-+	b->usage = dev_buf->dma_port;
-+	b->format.colorformat = dev_buf->dev_fmt->mdp_color;
-+	b->format.width = dev_buf->fmt.fmt.pix_mp.width;
-+	b->format.height = dev_buf->fmt.fmt.pix_mp.height;
-+	b->format.ycbcr_prof =
-+		mtk_dip_map_ycbcr_prof_mplane(pix_mp,
-+					      dev_buf->dev_fmt->mdp_color);
-+
-+	for (i = 0; i < pix_mp->num_planes; ++i) {
-+		u32 stride = pix_mp->plane_fmt[i].bytesperline;
-+
-+		/*
-+		 * We use dip_mdp_fmt_get_plane_size() to get the plane sizes of
-+		 * non-M multiple plane image buffers. In this case,
-+		 * pix_mp->plane_fmt[0].sizeimage is the total size of all
-+		 * b->format.plane_fmt[i].
-+		 */
-+		b->format.plane_fmt[i].stride = stride;
-+		b->format.plane_fmt[i].size =
-+			dip_mdp_fmt_get_plane_size(mdp_fmt, stride,
-+						   pix_mp->height, i);
-+		b->iova[i] = dev_buf->isp_daddr[i];
-+		total_plane_size += b->format.plane_fmt[i].size;
-+	}
-+
-+	if (!mtk_dip_is_contig_mp_buffer(dev_buf))
-+		return;
-+
-+	for (; i < DIP_MCOLOR_GET_PLANE_COUNT(b->format.colorformat); ++i) {
-+		u32 stride = dip_mdp_fmt_get_stride_contig
-+				(mdp_fmt, b->format.plane_fmt[0].stride, i);
-+
-+		b->format.plane_fmt[i].stride = stride;
-+		b->format.plane_fmt[i].size =
-+			dip_mdp_fmt_get_plane_size(mdp_fmt, stride,
-+						   pix_mp->height, i);
-+		b->iova[i] = b->iova[i - 1] + b->format.plane_fmt[i - 1].size;
-+		total_plane_size += b->format.plane_fmt[i].size;
-+	}
-+}
-+
-+static void mtk_dip_fill_input_ipi_param(struct mtk_dip_pipe *pipe,
-+					 struct img_input *iin,
-+					 struct mtk_dip_dev_buffer *dev_buf,
-+					 char *buf_name)
-+{
-+	mtk_dip_fill_ipi_img_param_mp(pipe, &iin->buffer, dev_buf, buf_name);
-+}
-+
-+static void mtk_dip_fill_output_ipi_param(struct mtk_dip_pipe *pipe,
-+					  struct img_output *iout,
-+					  struct mtk_dip_dev_buffer *buf_out,
-+					  struct mtk_dip_dev_buffer *buf_in,
-+					  char *buf_name)
-+{
-+	mtk_dip_fill_ipi_img_param_mp(pipe, &iout->buffer, buf_out, buf_name);
-+	iout->crop.left = 0;
-+	iout->crop.top = 0;
-+	iout->crop.width = buf_in->fmt.fmt.pix_mp.width;
-+	iout->crop.height = buf_in->fmt.fmt.pix_mp.height;
-+	iout->crop.left_subpix = 0;
-+	iout->crop.top_subpix = 0;
-+	iout->crop.width_subpix = 0;
-+	iout->crop.height_subpix = 0;
-+	iout->rotation = 0;
-+}
-+
-+static u32 mtk_dip_to_fixed(u32 *r, struct v4l2_fract *f)
-+{
-+	u32 q;
-+
-+	if (f->denominator == 0) {
-+		*r = 0;
-+		return 0;
-+	}
-+
-+	q = f->numerator / f->denominator;
-+	*r = (((u64)f->numerator - q * f->denominator) << IMG_SUBPIXEL_SHIFT)
-+		/ f->denominator;
-+	return q;
-+}
-+
-+static void mtk_dip_set_src_crop(struct img_crop *c, struct mtk_dip_crop *crop)
-+{
-+	c->left = crop->c.left
-+		+ mtk_dip_to_fixed(&c->left_subpix, &crop->left_subpix);
-+	c->top = crop->c.top
-+		+ mtk_dip_to_fixed(&c->top_subpix, &crop->top_subpix);
-+	c->width = crop->c.width
-+		+ mtk_dip_to_fixed(&c->width_subpix, &crop->width_subpix);
-+	c->height = crop->c.height
-+		+ mtk_dip_to_fixed(&c->height_subpix, &crop->height_subpix);
-+}
-+
-+static void mtk_dip_set_orientation(struct img_output *out,
-+				    s32 rotation, bool hflip, bool vflip)
-+{
-+	u8 flip = 0;
-+
-+	if (hflip)
-+		flip ^= 1;
-+	if (vflip) {
-+		/*
-+		 * A vertical flip is equivalent to
-+		 * a 180-degree rotation with a horizontal flip
-+		 */
-+		rotation += 180;
-+		flip ^= 1;
-+	}
-+
-+	out->rotation = rotation % 360;
-+	if (flip != 0)
-+		out->flags |= IMG_CTRL_FLAG_HFLIP;
-+	else
-+		out->flags &= ~IMG_CTRL_FLAG_HFLIP;
-+}
-+
-+static void mtk_dip_set_crop_config(struct mtk_dip_dev *dip_dev,
-+				    struct mtk_dip_dev_buffer *dev_buf_out,
-+				    struct img_output *iout, char *buf_name)
-+{
-+	iout->buffer.format.width = dev_buf_out->compose.width;
-+	iout->buffer.format.height = dev_buf_out->compose.height;
-+
-+	mtk_dip_set_src_crop(&iout->crop, &dev_buf_out->crop);
-+}
-+
-+static void mtk_dip_set_rotate_config(struct mtk_dip_dev *dip_dev,
-+				      struct mtk_dip_dev_buffer *dev_buf_in,
-+				  struct mtk_dip_dev_buffer *dev_buf_out,
-+				  struct img_output *iout, char *buf_name)
-+{
-+	mtk_dip_set_orientation(iout, dev_buf_out->rotation,
-+				dev_buf_out->hflip, dev_buf_out->vflip);
-+}
-+
-+void mtk_dip_pipe_ipi_params_config(struct mtk_dip_request *req)
-+{
-+	struct mtk_dip_pipe *pipe = req->dip_pipe;
-+	int buf_out_idx;
-+	int buf_in_idx;
-+	struct img_ipi_frameparam *dip_param = &req->img_fparam.frameparam;
-+	struct mtk_dip_dev_buffer *buf_in;
-+	struct mtk_dip_dev_buffer *buf_out;
-+	struct mtk_dip_dev_buffer *buf_tuning;
-+	int i = 0;
-+	int mdp_ids[2] = {MTK_DIP_VIDEO_NODE_ID_MDP0_CAPTURE,
-+			  MTK_DIP_VIDEO_NODE_ID_MDP1_CAPTURE};
-+	char *mdp_names[2] = {"mdp0", "mdp1"};
-+
-+	memset(dip_param, 0, sizeof(*dip_param));
-+	dip_param->index = req->id;
-+	dip_param->type = STREAM_ISP_IC;
-+
-+	/* Tuning buffer */
-+	buf_tuning =
-+		req->buf_map[MTK_DIP_VIDEO_NODE_ID_TUNING_OUT];
-+	if (buf_tuning) {
-+		dip_param->tuning_data.pa =
-+			(uint32_t)buf_tuning->scp_daddr[0];
-+		dip_param->tuning_data.present = true;
-+		dip_param->tuning_data.iova =
-+			(uint32_t)buf_tuning->isp_daddr[0];
-+	}
-+
-+	buf_in_idx = 0;
-+
-+	/*
-+	 * Raw-in buffer
-+	 * The input buffer is guaranteed by .request_validate()
-+	 */
-+	buf_in = req->buf_map[MTK_DIP_VIDEO_NODE_ID_RAW_OUT];
-+	mtk_dip_fill_input_ipi_param
-+		(pipe, &dip_param->inputs[buf_in_idx++],
-+		 buf_in, "RAW");
-+
-+	/* NR buffer (optional input) */
-+	if (req->buf_map[MTK_DIP_VIDEO_NODE_ID_NR_OUT])
-+		mtk_dip_fill_input_ipi_param
-+			(pipe, &dip_param->inputs[buf_in_idx++],
-+			 req->buf_map[MTK_DIP_VIDEO_NODE_ID_NR_OUT],
-+			 "NR");
-+
-+	/* Shading buffer (optional input)*/
-+	if (req->buf_map[MTK_DIP_VIDEO_NODE_ID_SHADING_OUT])
-+		mtk_dip_fill_input_ipi_param
-+			(pipe, &dip_param->inputs[buf_in_idx++],
-+			 req->buf_map[MTK_DIP_VIDEO_NODE_ID_SHADING_OUT],
-+			 "Shading");
-+
-+	/* MDP buffers */
-+	buf_out_idx = 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(mdp_ids); i++) {
-+		buf_out =
-+			req->buf_map[mdp_ids[i]];
-+		if (buf_out) {
-+			struct img_output *iout =
-+				&dip_param->outputs[buf_out_idx++];
-+
-+			mtk_dip_fill_output_ipi_param(pipe, iout, buf_out,
-+						      buf_in, mdp_names[i]);
-+			mtk_dip_set_crop_config(pipe->dip_dev, buf_out,
-+						iout, mdp_names[i]);
-+
-+			/* MDP 0 support rotation */
-+			if (i == 0)
-+				mtk_dip_set_rotate_config(pipe->dip_dev,
-+							  buf_in, buf_out, iout,
-+							  mdp_names[i]);
-+		}
-+	}
-+
-+	/* IMG2O buffer */
-+	buf_out = req->buf_map[MTK_DIP_VIDEO_NODE_ID_IMG2_CAPTURE];
-+	if (req->buf_map[MTK_DIP_VIDEO_NODE_ID_IMG2_CAPTURE])
-+		mtk_dip_fill_output_ipi_param
-+			(pipe, &dip_param->outputs[buf_out_idx++],
-+			 buf_out, buf_in, "IMG2O");
-+
-+	/* IMG3O buffer */
-+	buf_out = req->buf_map[MTK_DIP_VIDEO_NODE_ID_IMG3_CAPTURE];
-+	if (buf_out)
-+		mtk_dip_fill_output_ipi_param
-+			(pipe, &dip_param->outputs[buf_out_idx++],
-+			 buf_out, buf_in, "IMG3O");
-+
-+	dip_param->num_outputs = buf_out_idx;
-+	dip_param->num_inputs = buf_in_idx;
-+}
-+
-+void mtk_dip_pipe_try_enqueue(struct mtk_dip_pipe *pipe)
-+{
-+	struct mtk_dip_request *req, *tmp_req;
-+
-+	if (!pipe->streaming)
-+		return;
-+
-+	spin_lock(&pipe->job_lock);
-+	list_for_each_entry_safe(req, tmp_req,
-+				 &pipe->pipe_job_pending_list, list) {
-+		list_del(&req->list);
-+		pipe->num_pending_jobs--;
-+		list_add_tail(&req->list,
-+			      &pipe->pipe_job_running_list);
-+		pipe->num_jobs++;
-+		mtk_dip_hw_enqueue(pipe->dip_dev, req);
-+	}
-+	spin_unlock(&pipe->job_lock);
-+}
-diff --git a/drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-dev.h b/drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-dev.h
-new file mode 100644
-index 000000000000..54da4fed95b4
---- /dev/null
-+++ b/drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-dev.h
-@@ -0,0 +1,566 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2018 MediaTek Inc.
-+ *
-+ * Author: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *
-+ */
-+
-+#ifndef _MTK_DIP_DEV_H_
-+#define _MTK_DIP_DEV_H_
-+
-+#include <linux/types.h>
-+#include <linux/platform_device.h>
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-subdev.h>
-+#include <media/v4l2-device.h>
-+#include <linux/videodev2.h>
-+#include <media/videobuf2-core.h>
-+#include <media/videobuf2-v4l2.h>
-+#include "mtk_dip-hw.h"
-+
-+#define MTK_DIP_PIPE_ID_PREVIEW			0
-+#define MTK_DIP_PIPE_ID_CAPTURE			1
-+#define MTK_DIP_PIPE_ID_REPROCESS		2
-+#define MTK_DIP_PIPE_ID_TOTAL_NUM		3
-+
-+#define MTK_DIP_VIDEO_NODE_ID_RAW_OUT		0
-+#define MTK_DIP_VIDEO_NODE_ID_TUNING_OUT	1
-+#define MTK_DIP_VIDEO_NODE_ID_NR_OUT		2
-+#define MTK_DIP_VIDEO_NODE_ID_SHADING_OUT	3
-+#define MTK_DIP_VIDEO_NODE_ID_MDP0_CAPTURE	4
-+#define MTK_DIP_VIDEO_NODE_ID_MDP1_CAPTURE	5
-+#define MTK_DIP_VIDEO_NODE_ID_IMG2_CAPTURE	6
-+#define MTK_DIP_VIDEO_NODE_ID_IMG3_CAPTURE	7
-+#define MTK_DIP_VIDEO_NODE_ID_TOTAL_NUM		8
-+
-+#define MTK_DIP_OUTPUT_MIN_WIDTH		2U
-+#define MTK_DIP_OUTPUT_MIN_HEIGHT		2U
-+#define MTK_DIP_OUTPUT_MAX_WIDTH		5376U
-+#define MTK_DIP_OUTPUT_MAX_HEIGHT		4032U
-+#define MTK_DIP_CAPTURE_MIN_WIDTH		2U
-+#define MTK_DIP_CAPTURE_MIN_HEIGHT		2U
-+#define MTK_DIP_CAPTURE_MAX_WIDTH		5376U
-+#define MTK_DIP_CAPTURE_MAX_HEIGHT		4032U
-+
-+#define MTK_DIP_DEV_META_BUF_DEFAULT_SIZE	(1024 * 128)
-+#define MTK_DIP_DEV_META_BUF_POOL_MAX_SIZE	(1024 * 1024 * 16)
-+
-+/**
-+ * struct mtk_dip_dev_format - DIP buffer format
-+ * @format:	the corresponding V4L2 pixel format
-+ * @mdp_color:	color information setting
-+ * @depth:	bytes per pixel of the format
-+ * @row_depth:	bits per pixel
-+ * @num_planes:	the number of planes
-+ * @num_cplanes:	the number of color planes carried in a
-+ *			single v4l2 plane
-+ * @flags:	flags setting which will be passed to media_create_pad_link()
-+ * @buffer_size:	the buffer size of the buffer. It is used when it is
-+ *			a meta type format.
-+ * @pass_1_align:	the alignment setting of the stride .If pass_1_align
-+ *			is greater than 0, the stride must be align with it.
-+ *
-+ * The structure defines the DIP internal buffer format information. The fields
-+ * is used in V4L2 try/set format calculation flow.
-+ */
-+struct mtk_dip_dev_format {
-+	u32 format;
-+	u32 mdp_color;
-+	u8 depth[VIDEO_MAX_PLANES];
-+	u8 row_depth[VIDEO_MAX_PLANES];
-+	u8 num_planes;
-+	u8 num_cplanes;
-+	u32 flags;
-+	u32 buffer_size;
-+	u8 pass_1_align;
-+};
-+
-+/**
-+ * struct mtk_dip_crop - DIP crop setting
-+ * @c:	crop region
-+ * @left_subpix: the left subpixel part of the corp region
-+ * @top_subpix: the top subpixel part of the corp region
-+ * @width_subpix: the width subpixel part of the corp region
-+ * @height_subpix: the height subpixel part of the corp region
-+ *
-+ * The structure includes the crop setting which can be passed to
-+ * DIP hardware.
-+ */
-+struct mtk_dip_crop {
-+	struct v4l2_rect	c;
-+	struct v4l2_fract	left_subpix;
-+	struct v4l2_fract	top_subpix;
-+	struct v4l2_fract	width_subpix;
-+	struct v4l2_fract	height_subpix;
-+};
-+
-+/**
-+ * struct mtk_dip_dev_buffer - Buffer information used by DIP
-+ * @vbb:	the vb2 buffer associated
-+ * @fmt:	the corresponding v4l2 format
-+ * @dev_fmt:	the DIP internal format
-+ * @pipe_job_id: the global id of the request owned the buffer
-+ * @isp_daddr:	the address which can be used by ISP hardware
-+ * @scp_daddr:	the address which can be used in coprocessor
-+ * @dma_port:	dma port id of the buffer
-+ * @crop:	corp setting of the buffer
-+ * @compose:	compose setting of the buffer
-+ * @rotation:	rotation degree of the buffer
-+ * @hflip:	need horizontal flip or not
-+ * @vflip:	need vertical flip or not
-+ *
-+ * The structure includes the Buffer setting which can be used by
-+ * DIP hardware.
-+ */
-+struct mtk_dip_dev_buffer {
-+	struct vb2_v4l2_buffer vbb;
-+	struct v4l2_format fmt;
-+	const struct mtk_dip_dev_format *dev_fmt;
-+	int pipe_job_id;
-+	dma_addr_t isp_daddr[VB2_MAX_PLANES];
-+	dma_addr_t scp_daddr[VB2_MAX_PLANES];
-+	unsigned int dma_port;
-+	struct mtk_dip_crop crop;
-+	struct v4l2_rect compose;
-+	int rotation;
-+	int hflip;
-+	int vflip;
-+	struct list_head list;
-+};
-+
-+/**
-+ * struct mtk_dip_pipe_desc - dip pipe descriptor
-+ * @name:	name of the pipe, which will be used as a part of the video
-+ *		device and sub device name
-+ * @id:		the id of the pipe
-+ * @queue_descs:	the setting of the queues belong to this pipe
-+ * @total_queues: the number of queue/video nodes supported by this pipe
-+ *
-+ * The structure describes the pipe of DIP. A pipe may contains a raw output
-+ * video device and at least one MDP capture device.
-+ */
-+struct mtk_dip_pipe_desc {
-+	const char *name;
-+	int id;
-+	const struct mtk_dip_video_device_desc *queue_descs;
-+	int total_queues;
-+};
-+
-+/**
-+ * struct mtk_dip_video_device_desc - video device descriptor
-+ * @name:	name of the video device
-+ * @id:		the id of the video device
-+ * @buf_type:	buffer type of the video device
-+ * @cap:	device capabilities
-+ * @smem_alloc:	use the co-processor and CPU shared memory allocator or not
-+ * @supports_ctrls: support ctrl handler or not. If it is true, The DIP driver
-+ *		    initialized the ctrl handler for this video node.
-+ * @fmts:	buffer format supported by this video device
-+ * @num_fmts:	total number of buffer format supported by this video device
-+ * @description: description of the video device. It will be returned when
-+ *		 V4L2 enum_fmt calls
-+ * @dma_port:	dma port id associated to this video device
-+ * @frmsizeenum: frame size supported
-+ * @ops:	v4l2_ioctl_ops pointer used by this video device
-+ * @vb2_ops:	vb2_ops pointer used by this video device
-+ * @flags:	flags used in media_create_intf_link()
-+ * @default_fmt_idx: indeciate the default format with index of @fmts
-+ *
-+ * The structure describes the video device setting of DIP, which are used to
-+ * register the video devices and support the related V4L2 and VB2 operations.
-+ */
-+struct mtk_dip_video_device_desc {
-+	const char *name;
-+	int id;
-+	u32 buf_type;
-+	u32 cap;
-+	int smem_alloc;
-+	int supports_ctrls;
-+	const struct mtk_dip_dev_format *fmts;
-+	int num_fmts;
-+	const char *description;
-+	int default_width;
-+	int default_height;
-+	unsigned int dma_port;
-+	const struct v4l2_frmsizeenum *frmsizeenum;
-+	const struct v4l2_ioctl_ops *ops;
-+	const struct vb2_ops *vb2_ops;
-+	u32 flags;
-+	int default_fmt_idx;
-+};
-+
-+/**
-+ * struct mtk_dip_dev_queue - dip's video device queue
-+ * @vbq:	vb2_queue of the dip's video device
-+ * @lock:		serializes vb2 queue and video device operations.
-+ * @dev_fmt:	buffer format of the video device
-+ *
-+ * The structure supports a vb2_queue of dip's video device with the DIP's
-+ * internal buffer format.
-+ */
-+struct mtk_dip_dev_queue {
-+	struct vb2_queue vbq;
-+	/* Serializes vb2 queue and video device operations */
-+	struct mutex lock;
-+	const struct mtk_dip_dev_format *dev_fmt;
-+};
-+
-+/**
-+ * struct mtk_dip_video_device - DIP's video device
-+ * @vdev:	video_device of the dip's video device
-+ * @dev_q:	the mtk_dip_dev_queue providing vb2 device queue for the
-+ *		video device
-+ * @vdev_fmt:	the current v4l2 format of the video device
-+ * @vdev_pad:	the pad connected to the dip sub device of the pipe
-+ * @pad_fmt:	the pad format of vdev_pad
-+ * @ctrl_handler: the v4l2_ctrl_handler of the video device. Only the video
-+ *		  device supporting rotation initialized the handler.
-+ * @flags:	the flags recording the link status between the video device
-+ *		and the sub device of the pipe
-+ * @desc:	setting of the video device. The driver initialize the video
-+ *		device according to the settings.
-+ * @buf_list:	the list of vb2 buffers enqueued through this video device
-+ * @buf_list_lock: protect the in-device buffer list
-+ * @crop:	crop setting of the video device
-+ * @compose:	compose setting the video device
-+ * @rotation:	rotation setting of the video device
-+ *
-+ * The structure extends video_device and integrates the vb2 queue, a media_pad
-+ * connected to DIP's sub device, and a v4l2_ctrl_handler to handling ctrl.
-+ */
-+struct mtk_dip_video_device {
-+	struct video_device vdev;
-+	struct mtk_dip_dev_queue dev_q;
-+	struct v4l2_format vdev_fmt;
-+	struct media_pad vdev_pad;
-+	struct v4l2_mbus_framefmt pad_fmt;
-+	struct v4l2_ctrl_handler ctrl_handler;
-+	u32 flags;
-+	const struct mtk_dip_video_device_desc *desc;
-+	struct list_head buf_list;
-+	/* the list of vb2 buffers enqueued through this video device */
-+	spinlock_t buf_list_lock;
-+	struct v4l2_rect crop;
-+	struct v4l2_rect compose;
-+	int rotation;
-+};
-+
-+/**
-+ * struct mtk_dip_pipe - DIP's pipe
-+ * @dip_dev:	the dip driver device instance
-+ * @mtk_dip_video_device: the video devices of the pipe. The entry must be NULL
-+ *			  if there is no video devices for the ID
-+ * @nodes_streaming:	bitmask records the video devices which are streaming
-+ * @nodes_enabled:	bitmask records the video devices which are enabled
-+ * @streaming:		true if the pipe is streaming
-+ * @subdev:		sub device connected to the output and capture video
-+ *			device named as the pipe's name
-+ * @pipe_job_sequence:	the last sequence number of the pipe jobs
-+ * @pipe_job_pending_list: the list saving jobs before it has been put into
-+ *			   running state by mtk_dip_pipe_try_enqueue().
-+ * @num_pending_jobs:	number of jobs in pipe_job_pending_list
-+ * @pipe_job_running_list: the list saving jobs already scheduled into DIP
-+ * @num_jobs:		number of jobs in pipe_job_running_list
-+ * @lock:		serializes pipe's stream on/off and buffers enqueue
-+ *			operations
-+ * @job_lock:		protect the pipe job list
-+ * @desc:		the settings of the pipe
-+ *
-+ * The structure represents a DIP pipe. A pipe may contains a raw output
-+ * video device and at least one MDP capture device.
-+ */
-+struct mtk_dip_pipe {
-+	struct mtk_dip_dev *dip_dev;
-+	struct mtk_dip_video_device nodes[MTK_DIP_VIDEO_NODE_ID_TOTAL_NUM];
-+	unsigned int nodes_streaming;
-+	unsigned int nodes_enabled;
-+	int streaming;
-+	struct media_pad *subdev_pads;
-+	struct media_pipeline pipeline;
-+	struct v4l2_subdev subdev;
-+	atomic_t pipe_job_sequence;
-+	struct list_head pipe_job_pending_list;
-+	int num_pending_jobs;
-+	struct list_head pipe_job_running_list;
-+	int num_jobs;
-+	/*serializes pipe's stream on/off and buffers enqueue operations*/
-+	struct mutex lock;
-+	spinlock_t job_lock; /* protect the pipe job list */
-+	const struct mtk_dip_pipe_desc *desc;
-+};
-+
-+/**
-+ * struct mtk_dip_dev - DIP's device instance
-+ * @dev:	the device structure of DIP
-+ * @mdev:	media device of DIP. All video devices and sub devices of
-+ *		DIP are registered to the media device.
-+ * @v4l2_dev:	v4l2_device representing the device-level status of DIP
-+ * @dip_pipe:	pipes of the DIP device. For example, capture, preview and
-+ *		reprocessing pipes.
-+ * @clks:	clocks required by DIP hardware
-+ * @num_clks:	the total number of clocks of DIP hardware
-+ * @composer_wq:	The work queue for jobs which are going to be sent to
-+ *			coprocessor.
-+ * @num_composing: number of jobs in SCP
-+ * @mdp_wq:	the work queue for jobs which are going to be sent to MDP
-+ *		driver and GCE hardware.
-+ *
-+ * @flushing_waitq:	the waiting queue to keep the process which are
-+ *			waiting for the jobs in SCP to be finished.
-+ * @mdpcb_wq:	the work queue for jobs with abnormal status back from MDP/GCE
-+ *		, it need to pass to SCP to check the error status instead of
-+ *		returning the buffer to user directly.
-+ * @mdp_pdev:	mdp platform device which handling the MDP part jobs and
-+ *		pass the task to GCE hardware.
-+ * @scp_pdev:	SCP platform device which handling the commands to and from
-+ *		coprocessor
-+ * @rproc_handle:	remote processor handle to control SCP
-+ * @dip_freebufferlist:	free working buffer list
-+ * @working_buf_mem_scp_daddr:	the SCP caddress of the memory area of working
-+ *				buffers
-+ * @working_buf_mem_vaddr:	the cpu address of the memory area of working
-+ *				buffers
-+ * @working_buf_mem_isp_daddr:	the isp dma address of the memory area of
-+ *				working buffers
-+ * @working_buf_mem_size:	total size in bytes of the memory area of
-+ *				working buffers
-+ * @working_buf:	the working buffers of DIP
-+ *
-+ * @dip_enqueue_cnt:	it is used to create the sequence number of the job
-+ *			which is already enqueued to DIP.
-+ * @dip_stream_cnt:	the number of streaming pipe in DIP
-+ * @hw_op_lock:		serialize request operation to DIP coprocessor and
-+ *			hardware
-+ * @sem:		To restrict the max number of request be send to SCP.
-+ *
-+ * The structure maintains DIP's device level status.
-+ */
-+struct mtk_dip_dev {
-+	struct device *dev;
-+	struct media_device mdev;
-+	struct v4l2_device v4l2_dev;
-+	struct mtk_dip_pipe dip_pipe[MTK_DIP_PIPE_ID_TOTAL_NUM];
-+	struct clk_bulk_data clks[MTK_DIP_CLK_NUM];
-+	int num_clks;
-+	struct workqueue_struct *composer_wq;
-+	struct workqueue_struct *mdp_wq;
-+	wait_queue_head_t flushing_waitq;
-+	atomic_t num_composing;
-+	struct workqueue_struct *mdpcb_wq;
-+	struct platform_device *mdp_pdev;
-+	struct platform_device *scp_pdev;
-+	struct rproc *rproc_handle;
-+	struct mtk_dip_hw_working_buf_list dip_freebufferlist;
-+	dma_addr_t working_buf_mem_scp_daddr;
-+	void *working_buf_mem_vaddr;
-+	dma_addr_t working_buf_mem_isp_daddr;
-+	int working_buf_mem_size;
-+	struct mtk_dip_hw_subframe working_buf[DIP_SUB_FRM_DATA_NUM];
-+	atomic_t dip_enqueue_cnt;
-+	int dip_stream_cnt;
-+	/* To serialize request opertion to DIP co-procrosser and hadrware */
-+	struct mutex hw_op_lock;
-+	/* To restrict the max number of request be send to SCP */
-+	struct semaphore sem;
-+};
-+
-+/**
-+ * struct mtk_dip_request - DIP's request
-+ * @req:	the media_request object of the request
-+ * @dip_pipe:	the pipe owning of the request; a request can only belongs one
-+ *		DIP pipe
-+ * @id:		the unique job id in DIP
-+ * @buf_map:	the buffers of the request. The entry should be NULL if the
-+ *		corresponding video device doesn't enqueue the buffer.
-+ * @img_fparam:	frame related parameters which will be passed to coprocessor
-+ * @fw_work:	work_struct used to be sent to composer_wq of mtk_dip_dev
-+ * @mdp_work:	work_struct used to be sent to mdp_wq of mtk_dip_dev
-+ * @mdpcb_work:	work_struct used to be sent to mdpcb_wq of mtk_dip_dev.
-+ *		It is used only in error handling flow.
-+ * @working_buf: working buffer of the request
-+ * @buf_count:	the number of buffers in the request
-+ *
-+ * The structure extends media_request and integrates a map of the buffers,
-+ * and the working buffer pointers. It is the job instance used in DIP's
-+ * drivers.
-+ */
-+struct mtk_dip_request {
-+	struct media_request req;
-+	struct mtk_dip_pipe *dip_pipe;
-+	int id;
-+	struct mtk_dip_dev_buffer *buf_map[MTK_DIP_VIDEO_NODE_ID_TOTAL_NUM];
-+	struct img_frameparam img_fparam;
-+	struct work_struct fw_work;
-+	struct work_struct mdp_work;
-+	struct work_struct mdpcb_work;
-+	struct mtk_dip_hw_subframe *working_buf;
-+	atomic_t buf_count;
-+	struct list_head list;
-+};
-+
-+int mtk_dip_dev_media_register(struct device *dev,
-+			       struct media_device *media_dev);
-+
-+void mtk_dip_dev_v4l2_release(struct mtk_dip_dev *dip_dev);
-+
-+int mtk_dip_dev_v4l2_register(struct device *dev,
-+			      struct media_device *media_dev,
-+			      struct v4l2_device *v4l2_dev);
-+
-+int mtk_dip_pipe_v4l2_register(struct mtk_dip_pipe *pipe,
-+			       struct media_device *media_dev,
-+			       struct v4l2_device *v4l2_dev);
-+
-+void mtk_dip_pipe_v4l2_unregister(struct mtk_dip_pipe *pipe);
-+
-+int mtk_dip_pipe_queue_buffers(struct media_request *req, int initial);
-+
-+int mtk_dip_pipe_init(struct mtk_dip_dev *dip_dev, struct mtk_dip_pipe *pipe,
-+		      const struct mtk_dip_pipe_desc *setting);
-+
-+void mtk_dip_pipe_ipi_params_config(struct mtk_dip_request *req);
-+
-+int mtk_dip_pipe_release(struct mtk_dip_pipe *pipe);
-+
-+struct mtk_dip_request *
-+mtk_dip_pipe_get_running_job(struct mtk_dip_pipe *pipe,
-+			     int id);
-+
-+void mtk_dip_pipe_remove_job(struct mtk_dip_request *req);
-+
-+int mtk_dip_pipe_next_job_id(struct mtk_dip_pipe *pipe);
-+
-+void mtk_dip_pipe_debug_job(struct mtk_dip_pipe *pipe,
-+			    struct mtk_dip_request *req);
-+
-+void mtk_dip_pipe_job_finish(struct mtk_dip_request *req,
-+			     enum vb2_buffer_state vbf_state);
-+
-+const struct mtk_dip_dev_format *
-+mtk_dip_pipe_find_fmt(struct mtk_dip_pipe *pipe,
-+		      struct mtk_dip_video_device *node,
-+		      u32 format);
-+
-+void mtk_dip_pipe_try_fmt(struct mtk_dip_pipe *pipe,
-+			  struct mtk_dip_video_device *node,
-+			  struct v4l2_format *fmt,
-+			  const struct v4l2_format *ufmt,
-+			  const struct mtk_dip_dev_format *dfmt);
-+
-+void mtk_dip_pipe_load_default_fmt(struct mtk_dip_pipe *pipe,
-+				   struct mtk_dip_video_device *node,
-+				   struct v4l2_format *fmt_to_fill);
-+
-+void mtk_dip_pipe_try_enqueue(struct mtk_dip_pipe *pipe);
-+
-+void mtk_dip_hw_enqueue(struct mtk_dip_dev *dip_dev,
-+			struct mtk_dip_request *req);
-+
-+int mtk_dip_hw_streamoff(struct mtk_dip_pipe *pipe);
-+
-+int mtk_dip_hw_streamon(struct mtk_dip_pipe *pipe);
-+
-+int mtk_dip_hw_working_buf_pool_init(struct mtk_dip_dev *dip_dev);
-+
-+void mtk_dip_hw_working_buf_pool_release(struct mtk_dip_dev *dip_dev);
-+
-+static inline struct mtk_dip_pipe*
-+mtk_dip_dev_get_pipe(struct mtk_dip_dev *dip_dev, unsigned int pipe_id)
-+{
-+	if (pipe_id < 0 && pipe_id >= MTK_DIP_PIPE_ID_TOTAL_NUM)
-+		return NULL;
-+
-+	return &dip_dev->dip_pipe[pipe_id];
-+}
-+
-+static inline struct mtk_dip_video_device*
-+mtk_dip_file_to_node(struct file *file)
-+{
-+	return container_of(video_devdata(file),
-+			    struct mtk_dip_video_device, vdev);
-+}
-+
-+static inline struct mtk_dip_pipe*
-+mtk_dip_subdev_to_pipe(struct v4l2_subdev *sd)
-+{
-+	return container_of(sd, struct mtk_dip_pipe, subdev);
-+}
-+
-+static inline struct mtk_dip_dev*
-+mtk_dip_mdev_to_dev(struct media_device *mdev)
-+{
-+	return container_of(mdev, struct mtk_dip_dev, mdev);
-+}
-+
-+static inline struct mtk_dip_video_device*
-+mtk_dip_vbq_to_node(struct vb2_queue *vq)
-+{
-+	return container_of(vq, struct mtk_dip_video_device, dev_q.vbq);
-+}
-+
-+static inline struct mtk_dip_dev_buffer*
-+mtk_dip_vb2_buf_to_dev_buf(struct vb2_buffer *vb)
-+{
-+	return container_of(vb, struct mtk_dip_dev_buffer, vbb.vb2_buf);
-+}
-+
-+static inline struct mtk_dip_request*
-+mtk_dip_media_req_to_dip_req(struct media_request *req)
-+{
-+	return container_of(req, struct mtk_dip_request, req);
-+}
-+
-+static inline struct mtk_dip_request*
-+mtk_dip_hw_fw_work_to_req(struct work_struct *fw_work)
-+{
-+	return container_of(fw_work, struct mtk_dip_request, fw_work);
-+}
-+
-+static inline struct mtk_dip_request*
-+mtk_dip_hw_mdp_work_to_req(struct work_struct *mdp_work)
-+{
-+	return container_of(mdp_work, struct mtk_dip_request, mdp_work);
-+}
-+
-+static inline struct mtk_dip_request *
-+mtk_dip_hw_mdpcb_work_to_req(struct work_struct *mdpcb_work)
-+{
-+	return container_of(mdpcb_work, struct mtk_dip_request, mdpcb_work);
-+}
-+
-+static inline int mtk_dip_buf_is_meta(u32 type)
-+{
-+	return type == V4L2_BUF_TYPE_META_CAPTURE ||
-+		type == V4L2_BUF_TYPE_META_OUTPUT;
-+}
-+
-+static inline int mtk_dip_pipe_get_pipe_from_job_id(int id)
-+{
-+	return (id >> 16) & 0x0000ffff;
-+}
-+
-+static inline void
-+mtk_dip_wbuf_to_ipi_img_sw_addr(struct img_sw_addr *ipi_addr,
-+				struct mtk_dip_hw_working_buf *wbuf)
-+{
-+	ipi_addr->pa = (u32)wbuf->scp_daddr;
-+}
-+
-+static inline void
-+mtk_dip_wbuf_to_ipi_img_addr(struct img_addr *ipi_addr,
-+			     struct mtk_dip_hw_working_buf *wbuf)
-+{
-+	ipi_addr->pa = (u32)wbuf->scp_daddr;
-+	ipi_addr->iova = (u32)wbuf->isp_daddr;
-+}
-+
-+static inline void
-+mtk_dip_wbuf_to_ipi_tuning_addr(struct tuning_addr *ipi_addr,
-+				struct mtk_dip_hw_working_buf *wbuf)
-+{
-+	ipi_addr->pa = (u32)wbuf->scp_daddr;
-+	ipi_addr->iova = (u32)wbuf->isp_daddr;
-+}
-+
-+#endif /* _MTK_DIP_DEV_H_ */
-diff --git a/drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-hw.h b/drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-hw.h
-new file mode 100644
-index 000000000000..9a414fd91094
---- /dev/null
-+++ b/drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-hw.h
-@@ -0,0 +1,156 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2018 MediaTek Inc.
-+ *
-+ * Author: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *         Holmes Chiou <holmes.chiou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *
-+ */
-+
-+#ifndef _MTK_DIP_HW_H_
-+#define _MTK_DIP_HW_H_
-+
-+#include <linux/clk.h>
-+#include "mtk-img-ipi.h"
-+
-+#define MTK_DIP_CLK_NUM			2
-+
-+#define DIP_COMPOSING_MAX_NUM		3
-+#define DIP_FRM_SZ			(84 * 1024)
-+#define DIP_SUB_FRM_SZ			(20 * 1024)
-+#define DIP_TUNING_SZ			(32 * 1024)
-+#define DIP_COMP_SZ			(28 * 1024)
-+#define DIP_FRAMEPARAM_SZ		(4 * 1024)
-+
-+#define DIP_TUNING_OFFSET		DIP_SUB_FRM_SZ
-+#define DIP_COMP_OFFSET			(DIP_TUNING_OFFSET + DIP_TUNING_SZ)
-+#define DIP_FRAMEPARAM_OFFSET		(DIP_COMP_OFFSET + DIP_COMP_SZ)
-+#define DIP_SUB_FRM_DATA_NUM		32
-+
-+/*
-+ * MDP native color code
-+ * Plane count: 1, 2, 3
-+ * H-subsample: 0, 1, 2
-+ * V-subsample: 0, 1
-+ * Color group: 0-RGB, 1-YUV, 2-raw
-+ */
-+#define DIP_MDP_COLOR(PACKED, LOOSE, VIDEO, PLANE, HF, VF, BITS, GROUP, SWAP, \
-+	ID) \
-+	(((PACKED) << 27) | ((LOOSE) << 26) | ((VIDEO) << 23) |\
-+	((PLANE) << 21) | ((HF) << 19) | ((VF) << 18) | ((BITS) << 8) |\
-+	((GROUP) << 6) | ((SWAP) << 5) | ((ID) << 0))
-+
-+#define DIP_MCOLOR_IS_BLOCK_MODE(c)	((0x00800000 & (c)) >> 23)
-+#define DIP_MCOLOR_GET_PLANE_COUNT(c)	((0x00600000 & (c)) >> 21)
-+#define DIP_MCOLOR_GET_H_SUBSAMPLE(c)	((0x00180000 & (c)) >> 19)
-+#define DIP_MCOLOR_GET_V_SUBSAMPLE(c)	((0x00040000 & (c)) >> 18)
-+#define DIP_MCOLOR_BITS_PER_PIXEL(c)	((0x0003ff00 & (c)) >>  8)
-+#define DIP_MCOLOR_GET_GROUP(c)		((0x000000c0 & (c)) >>  6)
-+#define DIP_MCOLOR_IS_RGB(c)		(DIP_MCOLOR_GET_GROUP(c) == 0)
-+#define DIP_MCOLOR_IS_YUV(c)		(DIP_MCOLOR_GET_GROUP(c) == 1)
-+#define DIP_MCOLOR_IS_UV_COPLANE(c)	((DIP_MCOLOR_GET_PLANE_COUNT(c) == \
-+					  2) && \
-+					 DIP_MCOLOR_IS_YUV(c))
-+
-+enum DIP_MDP_COLOR {
-+	DIP_MCOLOR_UNKNOWN	= 0,
-+
-+	DIP_MCOLOR_FULLG8_RGGB = DIP_MDP_COLOR(0, 0, 0, 1, 0, 0, 8, 2, 0, 21),
-+	DIP_MCOLOR_FULLG8_GRBG = DIP_MDP_COLOR(0, 0, 0, 1, 0, 1, 8, 2, 0, 21),
-+	DIP_MCOLOR_FULLG8_GBRG = DIP_MDP_COLOR(0, 0, 0, 1, 1, 0, 8, 2, 0, 21),
-+	DIP_MCOLOR_FULLG8_BGGR = DIP_MDP_COLOR(0, 0, 0, 1, 1, 1, 8, 2, 0, 21),
-+	DIP_MCOLOR_FULLG8      = DIP_MCOLOR_FULLG8_BGGR,
-+
-+	DIP_MCOLOR_FULLG10_RGGB = DIP_MDP_COLOR(0, 0, 0, 1, 0, 0, 10, 2, 0, 21),
-+	DIP_MCOLOR_FULLG10_GRBG = DIP_MDP_COLOR(0, 0, 0, 1, 0, 1, 10, 2, 0, 21),
-+	DIP_MCOLOR_FULLG10_GBRG = DIP_MDP_COLOR(0, 0, 0, 1, 1, 0, 10, 2, 0, 21),
-+	DIP_MCOLOR_FULLG10_BGGR = DIP_MDP_COLOR(0, 0, 0, 1, 1, 1, 10, 2, 0, 21),
-+	DIP_MCOLOR_FULLG10	= DIP_MCOLOR_FULLG10_BGGR,
-+
-+	DIP_MCOLOR_FULLG12_RGGB = DIP_MDP_COLOR(0, 0, 0, 1, 0, 0, 12, 2, 0, 21),
-+	DIP_MCOLOR_FULLG12_GRBG = DIP_MDP_COLOR(0, 0, 0, 1, 0, 1, 12, 2, 0, 21),
-+	DIP_MCOLOR_FULLG12_GBRG = DIP_MDP_COLOR(0, 0, 0, 1, 1, 0, 12, 2, 0, 21),
-+	DIP_MCOLOR_FULLG12_BGGR = DIP_MDP_COLOR(0, 0, 0, 1, 1, 1, 12, 2, 0, 21),
-+	DIP_MCOLOR_FULLG12	= DIP_MCOLOR_FULLG12_BGGR,
-+
-+	DIP_MCOLOR_FULLG14_RGGB = DIP_MDP_COLOR(0, 0, 0, 1, 0, 0, 14, 2, 0, 21),
-+	DIP_MCOLOR_FULLG14_GRBG = DIP_MDP_COLOR(0, 0, 0, 1, 0, 1, 14, 2, 0, 21),
-+	DIP_MCOLOR_FULLG14_GBRG = DIP_MDP_COLOR(0, 0, 0, 1, 1, 0, 14, 2, 0, 21),
-+	DIP_MCOLOR_FULLG14_BGGR = DIP_MDP_COLOR(0, 0, 0, 1, 1, 1, 14, 2, 0, 21),
-+	DIP_MCOLOR_FULLG14	= DIP_MCOLOR_FULLG14_BGGR,
-+
-+	DIP_MCOLOR_BAYER8_RGGB  = DIP_MDP_COLOR(0, 0, 0, 1, 0, 0, 8, 2, 0, 20),
-+	DIP_MCOLOR_BAYER8_GRBG  = DIP_MDP_COLOR(0, 0, 0, 1, 0, 1, 8, 2, 0, 20),
-+	DIP_MCOLOR_BAYER8_GBRG  = DIP_MDP_COLOR(0, 0, 0, 1, 1, 0, 8, 2, 0, 20),
-+	DIP_MCOLOR_BAYER8_BGGR  = DIP_MDP_COLOR(0, 0, 0, 1, 1, 1, 8, 2, 0, 20),
-+	DIP_MCOLOR_BAYER8	= DIP_MCOLOR_BAYER8_BGGR,
-+
-+	DIP_MCOLOR_BAYER10_RGGB = DIP_MDP_COLOR(0, 0, 0, 1, 0, 0, 10, 2, 0, 20),
-+	DIP_MCOLOR_BAYER10_GRBG = DIP_MDP_COLOR(0, 0, 0, 1, 0, 1, 10, 2, 0, 20),
-+	DIP_MCOLOR_BAYER10_GBRG = DIP_MDP_COLOR(0, 0, 0, 1, 1, 0, 10, 2, 0, 20),
-+	DIP_MCOLOR_BAYER10_BGGR = DIP_MDP_COLOR(0, 0, 0, 1, 1, 1, 10, 2, 0, 20),
-+	DIP_MCOLOR_BAYER10	= DIP_MCOLOR_BAYER10_BGGR,
-+
-+	DIP_MCOLOR_BAYER12_RGGB = DIP_MDP_COLOR(0, 0, 0, 1, 0, 0, 12, 2, 0, 20),
-+	DIP_MCOLOR_BAYER12_GRBG = DIP_MDP_COLOR(0, 0, 0, 1, 0, 1, 12, 2, 0, 20),
-+	DIP_MCOLOR_BAYER12_GBRG = DIP_MDP_COLOR(0, 0, 0, 1, 1, 0, 12, 2, 0, 20),
-+	DIP_MCOLOR_BAYER12_BGGR = DIP_MDP_COLOR(0, 0, 0, 1, 1, 1, 12, 2, 0, 20),
-+	DIP_MCOLOR_BAYER12	= DIP_MCOLOR_BAYER12_BGGR,
-+
-+	DIP_MCOLOR_BAYER14_RGGB = DIP_MDP_COLOR(0, 0, 0, 1, 0, 0, 14, 2, 0, 20),
-+	DIP_MCOLOR_BAYER14_GRBG = DIP_MDP_COLOR(0, 0, 0, 1, 0, 1, 14, 2, 0, 20),
-+	DIP_MCOLOR_BAYER14_GBRG = DIP_MDP_COLOR(0, 0, 0, 1, 1, 0, 14, 2, 0, 20),
-+	DIP_MCOLOR_BAYER14_BGGR = DIP_MDP_COLOR(0, 0, 0, 1, 1, 1, 14, 2, 0, 20),
-+	DIP_MCOLOR_BAYER14	= DIP_MCOLOR_BAYER14_BGGR,
-+
-+	DIP_MCOLOR_UYVY		= DIP_MDP_COLOR(0, 0, 0, 1, 1, 0, 16, 1, 0, 4),
-+	DIP_MCOLOR_VYUY		= DIP_MDP_COLOR(0, 0, 0, 1, 1, 0, 16, 1, 1, 4),
-+	DIP_MCOLOR_YUYV		= DIP_MDP_COLOR(0, 0, 0, 1, 1, 0, 16, 1, 0, 5),
-+	DIP_MCOLOR_YVYU		= DIP_MDP_COLOR(0, 0, 0, 1, 1, 0, 16, 1, 1, 5),
-+
-+	DIP_MCOLOR_I420		= DIP_MDP_COLOR(0, 0, 0, 3, 1, 1,  8, 1, 0, 8),
-+	DIP_MCOLOR_YV12		= DIP_MDP_COLOR(0, 0, 0, 3, 1, 1,  8, 1, 1, 8),
-+
-+	DIP_MCOLOR_NV12		= DIP_MDP_COLOR(0, 0, 0, 2, 1, 1,  8, 1, 0, 12),
-+};
-+
-+#define FRAME_STATE_INIT	0
-+#define FRAME_STATE_HW_TIMEOUT	1
-+
-+#define STREAM_UNKNOWN		0
-+#define STREAM_BITBLT		1
-+#define STREAM_GPU_BITBLT	2
-+#define STREAM_DUAL_BITBLT	3
-+#define STREAM_2ND_BITBLT	4
-+#define STREAM_ISP_IC		5
-+#define STREAM_ISP_VR		6
-+#define STREAM_ISP_ZSD		7
-+#define STREAM_ISP_IP		8
-+#define STREAM_ISP_VSS		9
-+#define STREAM_ISP_ZSD_SLOW	10
-+#define STREAM_WPE		11
-+#define STREAM_WPE2		12
-+
-+struct mtk_dip_hw_working_buf {
-+	dma_addr_t scp_daddr;
-+	void *vaddr;
-+	dma_addr_t isp_daddr;
-+};
-+
-+struct mtk_dip_hw_subframe {
-+	struct mtk_dip_hw_working_buf buffer;
-+	int size;
-+	struct mtk_dip_hw_working_buf config_data;
-+	struct mtk_dip_hw_working_buf tuning_buf;
-+	struct mtk_dip_hw_working_buf frameparam;
-+	struct list_head list_entry;
-+};
-+
-+struct mtk_dip_hw_working_buf_list {
-+	struct list_head list;
-+	u32 cnt;
-+	spinlock_t lock; /* protect the list and cnt */
-+};
-+
-+#endif /* _MTK_DIP_HW_H_ */
-+
-diff --git a/drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-sys.c b/drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-sys.c
-new file mode 100644
-index 000000000000..9a0456342fcd
---- /dev/null
-+++ b/drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-sys.c
-@@ -0,0 +1,521 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018 MediaTek Inc.
-+ *
-+ * Author: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *         Holmes Chiou <holmes.chiou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/dma-iommu.h>
-+#include <linux/freezer.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/remoteproc.h>
-+#include <linux/remoteproc/mtk_scp.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/wait.h>
-+#include "mtk-mdp3-cmdq.h"
-+#include "mtk_dip-dev.h"
-+#include "mtk_dip-hw.h"
-+
-+int mtk_dip_hw_working_buf_pool_init(struct mtk_dip_dev *dip_dev)
-+{
-+	int i;
-+	const int working_buf_size = round_up(DIP_FRM_SZ, PAGE_SIZE);
-+	phys_addr_t working_buf_paddr;
-+
-+	INIT_LIST_HEAD(&dip_dev->dip_freebufferlist.list);
-+	spin_lock_init(&dip_dev->dip_freebufferlist.lock);
-+	dip_dev->dip_freebufferlist.cnt = 0;
-+
-+	dip_dev->working_buf_mem_size = DIP_SUB_FRM_DATA_NUM *
-+		working_buf_size;
-+	dip_dev->working_buf_mem_vaddr =
-+		dma_alloc_coherent(&dip_dev->scp_pdev->dev,
-+				   dip_dev->working_buf_mem_size,
-+				   &dip_dev->working_buf_mem_scp_daddr,
-+				   GFP_KERNEL);
-+	if (!dip_dev->working_buf_mem_vaddr) {
-+		dev_err(dip_dev->dev,
-+			"memory alloc size %ld failed\n",
-+			dip_dev->working_buf_mem_size);
-+		return -ENOMEM;
-+	}
-+
-+	/*
-+	 * We got the incorrect physical address mapped when
-+	 * using dma_map_single() so I used dma_map_page_attrs()
-+	 * directly to workaround here.
-+	 *
-+	 * When I use dma_map_single() to map the address, the
-+	 * physical address retrieved back with iommu_get_domain_for_dev()
-+	 * and iommu_iova_to_phys() was not equal to the
-+	 * SCP dma address (it should be the same as the physical address
-+	 * since we don't have iommu), and was shifted by 0x4000000.
-+	 */
-+	working_buf_paddr = dip_dev->working_buf_mem_scp_daddr;
-+
-+	dip_dev->working_buf_mem_isp_daddr =
-+		dma_map_resource(dip_dev->dev, working_buf_paddr,
-+				 dip_dev->working_buf_mem_size,
-+				 DMA_BIDIRECTIONAL, DMA_ATTR_SKIP_CPU_SYNC);
-+	if (dma_mapping_error(dip_dev->dev,
-+			      dip_dev->working_buf_mem_isp_daddr)) {
-+		dev_err(dip_dev->dev,
-+			"failed to map buffer: s_daddr(%pad)\n",
-+			&dip_dev->working_buf_mem_scp_daddr);
-+		dma_free_coherent(&dip_dev->scp_pdev->dev,
-+				  dip_dev->working_buf_mem_size,
-+				  dip_dev->working_buf_mem_vaddr,
-+				  dip_dev->working_buf_mem_scp_daddr);
-+
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < DIP_SUB_FRM_DATA_NUM; i++) {
-+		struct mtk_dip_hw_subframe *buf = &dip_dev->working_buf[i];
-+		int offset;
-+
-+		/*
-+		 * Total: 0 ~ 72 KB
-+		 * SubFrame: 0 ~ 16 KB
-+		 */
-+		offset = i * working_buf_size;
-+		buf->buffer.scp_daddr =
-+			dip_dev->working_buf_mem_scp_daddr + offset;
-+		buf->buffer.vaddr =
-+			dip_dev->working_buf_mem_vaddr + offset;
-+		buf->buffer.isp_daddr =
-+			dip_dev->working_buf_mem_isp_daddr + offset;
-+		buf->size = working_buf_size;
-+
-+		/* Tuning: 16 ~ 48 KB */
-+		buf->tuning_buf.scp_daddr =
-+			buf->buffer.scp_daddr + DIP_TUNING_OFFSET;
-+		buf->tuning_buf.vaddr =
-+			buf->buffer.vaddr + DIP_TUNING_OFFSET;
-+		buf->tuning_buf.isp_daddr =
-+			buf->buffer.isp_daddr + DIP_TUNING_OFFSET;
-+
-+		/* Config_data: 48 ~ 72 KB */
-+		buf->config_data.scp_daddr =
-+			buf->buffer.scp_daddr + DIP_COMP_OFFSET;
-+		buf->config_data.vaddr = buf->buffer.vaddr + DIP_COMP_OFFSET;
-+
-+		/* Frame parameters: 72 ~ 76 KB */
-+		buf->frameparam.scp_daddr =
-+			buf->buffer.scp_daddr + DIP_FRAMEPARAM_OFFSET;
-+		buf->frameparam.vaddr =
-+			buf->buffer.vaddr + DIP_FRAMEPARAM_OFFSET;
-+
-+		list_add_tail(&buf->list_entry,
-+			      &dip_dev->dip_freebufferlist.list);
-+		dip_dev->dip_freebufferlist.cnt++;
-+	}
-+
-+	return 0;
-+}
-+
-+void mtk_dip_hw_working_buf_pool_release(struct mtk_dip_dev *dip_dev)
-+{
-+	/* All the buffer should be in the freebufferlist when release */
-+	dma_unmap_resource(dip_dev->dev,
-+			   dip_dev->working_buf_mem_isp_daddr,
-+			   dip_dev->working_buf_mem_size, DMA_BIDIRECTIONAL,
-+			   DMA_ATTR_SKIP_CPU_SYNC);
-+
-+	dma_free_coherent(&dip_dev->scp_pdev->dev,
-+			  dip_dev->working_buf_mem_size,
-+			  dip_dev->working_buf_mem_vaddr,
-+			  dip_dev->working_buf_mem_scp_daddr);
-+}
-+
-+static void mtk_dip_hw_working_buf_free(struct mtk_dip_dev *dip_dev,
-+					struct mtk_dip_hw_subframe *working_buf)
-+{
-+	if (!working_buf)
-+		return;
-+
-+	spin_lock(&dip_dev->dip_freebufferlist.lock);
-+	list_add_tail(&working_buf->list_entry,
-+		      &dip_dev->dip_freebufferlist.list);
-+	dip_dev->dip_freebufferlist.cnt++;
-+	spin_unlock(&dip_dev->dip_freebufferlist.lock);
-+}
-+
-+static struct mtk_dip_hw_subframe*
-+mtk_dip_hw_working_buf_alloc(struct mtk_dip_dev *dip_dev)
-+{
-+	struct mtk_dip_hw_subframe *working_buf;
-+
-+	spin_lock(&dip_dev->dip_freebufferlist.lock);
-+	if (list_empty(&dip_dev->dip_freebufferlist.list)) {
-+		spin_unlock(&dip_dev->dip_freebufferlist.lock);
-+		return NULL;
-+	}
-+
-+	working_buf = list_first_entry(&dip_dev->dip_freebufferlist.list,
-+				       struct mtk_dip_hw_subframe, list_entry);
-+	list_del(&working_buf->list_entry);
-+	dip_dev->dip_freebufferlist.cnt--;
-+	spin_unlock(&dip_dev->dip_freebufferlist.lock);
-+
-+	return working_buf;
-+}
-+
-+static void mtk_dip_notify(struct mtk_dip_request *req)
-+{
-+	struct mtk_dip_dev *dip_dev = req->dip_pipe->dip_dev;
-+	struct mtk_dip_pipe *pipe = req->dip_pipe;
-+	struct img_ipi_frameparam *iparam = &req->img_fparam.frameparam;
-+	enum vb2_buffer_state vbf_state;
-+
-+	if (iparam->state != FRAME_STATE_HW_TIMEOUT)
-+		vbf_state = VB2_BUF_STATE_DONE;
-+	else
-+		vbf_state = VB2_BUF_STATE_ERROR;
-+
-+	pm_runtime_mark_last_busy(dip_dev->dev);
-+	pm_runtime_put_autosuspend(dip_dev->dev);
-+
-+	/*
-+	 * The job may be aleady removed by streamoff, so I need to check
-+	 * it by id here.
-+	 */
-+	if (mtk_dip_pipe_get_running_job(pipe, req->id)) {
-+		mtk_dip_pipe_remove_job(req);
-+		mtk_dip_pipe_job_finish(req, vbf_state);
-+		mtk_dip_hw_working_buf_free(dip_dev, req->working_buf);
-+		req->working_buf = NULL;
-+		wake_up(&dip_dev->flushing_waitq);
-+	}
-+}
-+
-+static void mdp_cb_timeout_worker(struct work_struct *work)
-+{
-+	struct mtk_dip_request *req = mtk_dip_hw_mdpcb_work_to_req(work);
-+	struct img_ipi_param ipi_param;
-+
-+	ipi_param.usage = IMG_IPI_DEBUG;
-+	scp_ipi_send(req->dip_pipe->dip_dev->scp_pdev, SCP_IPI_DIP,
-+		     &ipi_param, sizeof(ipi_param), 0);
-+	mtk_dip_notify(req);
-+}
-+
-+/* Maybe in IRQ context of cmdq */
-+static void dip_mdp_cb_func(struct cmdq_cb_data data)
-+{
-+	struct mtk_dip_request *req;
-+	struct mtk_dip_dev *dip_dev;
-+
-+	if (!data.data) {
-+		pr_err("%s: data->data is NULL\n",
-+		       __func__);
-+		return;
-+	}
-+
-+	req = data.data;
-+	dip_dev = req->dip_pipe->dip_dev;
-+
-+	dev_dbg(dip_dev->dev, "%s: req(%p), idx(%d), no(%d), s(%d), n_in(%d), n_out(%d)\n",
-+		__func__, req, req->img_fparam.frameparam.index,
-+		req->img_fparam.frameparam.frame_no,
-+		req->img_fparam.frameparam.state,
-+		req->img_fparam.frameparam.num_inputs,
-+		req->img_fparam.frameparam.num_outputs);
-+
-+	if (data.sta != CMDQ_CB_NORMAL) {
-+		dev_err(dip_dev->dev, "%s: frame no(%d) HW timeout\n",
-+			__func__, req->img_fparam.frameparam.frame_no);
-+		req->img_fparam.frameparam.state = FRAME_STATE_HW_TIMEOUT;
-+		INIT_WORK(&req->mdpcb_work, mdp_cb_timeout_worker);
-+		queue_work(req->dip_pipe->dip_dev->mdpcb_wq,
-+			   &req->mdpcb_work);
-+	} else {
-+		mtk_dip_notify(req);
-+	}
-+}
-+
-+static void dip_runner_func(struct work_struct *work)
-+{
-+	struct mtk_dip_request *req = mtk_dip_hw_mdp_work_to_req(work);
-+	struct mtk_dip_dev *dip_dev = req->dip_pipe->dip_dev;
-+	struct img_config *config_data =
-+		(struct img_config *)req->working_buf->config_data.vaddr;
-+
-+	/*
-+	 * Call MDP/GCE API to do HW excecution
-+	 * Pass the framejob to MDP driver
-+	 */
-+	pm_runtime_get_sync(dip_dev->dev);
-+	mdp_cmdq_sendtask(dip_dev->mdp_pdev, config_data,
-+			  &req->img_fparam.frameparam, NULL, false,
-+			  dip_mdp_cb_func, req);
-+}
-+
-+static void dip_scp_handler(void *data, unsigned int len, void *priv)
-+{
-+	int job_id;
-+	struct mtk_dip_pipe *pipe;
-+	int pipe_id;
-+	struct mtk_dip_request *req;
-+	struct img_ipi_frameparam *frameparam;
-+	struct mtk_dip_dev *dip_dev = (struct mtk_dip_dev *)priv;
-+	struct img_ipi_param *ipi_param;
-+	u32 num;
-+
-+	if (WARN_ONCE(!data, "%s: failed due to NULL data\n", __func__))
-+		return;
-+
-+	if (WARN_ONCE(len == sizeof(ipi_param),
-+		      "%s: len(%d) not match ipi_param\n", __func__))
-+		return;
-+
-+	ipi_param = (struct img_ipi_param *)data;
-+	if (ipi_param->usage == IMG_IPI_INIT)
-+		return;
-+
-+	if (ipi_param->usage != IMG_IPI_FRAME) {
-+		dev_warn(dip_dev->dev,
-+			 "%s: recevied unknown ipi_param, usage(%d)\n",
-+			 __func__, ipi_param->usage);
-+		return;
-+	}
-+
-+	job_id = ipi_param->frm_param.handle;
-+	pipe_id = mtk_dip_pipe_get_pipe_from_job_id(job_id);
-+	pipe = mtk_dip_dev_get_pipe(dip_dev, pipe_id);
-+	if (!pipe) {
-+		dev_warn(dip_dev->dev,
-+			 "%s: get invalid img_ipi_frameparam index(%d) from firmware\n",
-+			 __func__, job_id);
-+		return;
-+	}
-+
-+	req = mtk_dip_pipe_get_running_job(pipe, job_id);
-+	if (WARN_ONCE(!req, "%s: frame_no(%d) is lost\n", __func__, job_id))
-+		return;
-+
-+	frameparam = req->working_buf->frameparam.vaddr;
-+	req->img_fparam.frameparam = *frameparam;
-+	num = atomic_dec_return(&dip_dev->num_composing);
-+	up(&dip_dev->sem);
-+
-+	dev_dbg(dip_dev->dev,
-+		"%s: frame_no(%d) is back, index(%d), composing num(%d)\n",
-+		__func__, frameparam->frame_no, frameparam->index, num);
-+
-+	INIT_WORK(&req->mdp_work, dip_runner_func);
-+	queue_work(dip_dev->mdp_wq, &req->mdp_work);
-+}
-+
-+static void dip_composer_workfunc(struct work_struct *work)
-+{
-+	struct mtk_dip_request *req = mtk_dip_hw_fw_work_to_req(work);
-+	struct mtk_dip_dev *dip_dev = req->dip_pipe->dip_dev;
-+	struct img_ipi_param ipi_param;
-+	struct mtk_dip_hw_subframe *buf;
-+	int ret;
-+
-+	down(&dip_dev->sem);
-+
-+	buf = mtk_dip_hw_working_buf_alloc(req->dip_pipe->dip_dev);
-+	if (!buf) {
-+		dev_err(req->dip_pipe->dip_dev->dev,
-+			"%s:%s:req(%p): no free working buffer available\n",
-+			__func__, req->dip_pipe->desc->name, req);
-+	}
-+
-+	req->working_buf = buf;
-+	mtk_dip_wbuf_to_ipi_img_addr(&req->img_fparam.frameparam.subfrm_data,
-+				     &buf->buffer);
-+	memset(buf->buffer.vaddr, 0, DIP_SUB_FRM_SZ);
-+	mtk_dip_wbuf_to_ipi_img_sw_addr(&req->img_fparam.frameparam.config_data,
-+					&buf->config_data);
-+	memset(buf->config_data.vaddr, 0, DIP_COMP_SZ);
-+
-+	if (!req->img_fparam.frameparam.tuning_data.present) {
-+		/*
-+		 * When user enqueued without tuning buffer,
-+		 * it would use driver internal buffer.
-+		 */
-+		dev_dbg(dip_dev->dev,
-+			"%s: frame_no(%d) has no tuning_data\n",
-+			__func__, req->img_fparam.frameparam.frame_no);
-+
-+		mtk_dip_wbuf_to_ipi_tuning_addr
-+				(&req->img_fparam.frameparam.tuning_data,
-+				 &buf->tuning_buf);
-+		memset(buf->tuning_buf.vaddr, 0, DIP_TUNING_SZ);
-+	}
-+
-+	mtk_dip_wbuf_to_ipi_img_sw_addr(&req->img_fparam.frameparam.self_data,
-+					&buf->frameparam);
-+	memcpy(buf->frameparam.vaddr, &req->img_fparam.frameparam,
-+	       sizeof(req->img_fparam.frameparam));
-+	ipi_param.usage = IMG_IPI_FRAME;
-+	ipi_param.frm_param.handle = req->id;
-+	ipi_param.frm_param.scp_addr = (u32)buf->frameparam.scp_daddr;
-+
-+	mutex_lock(&dip_dev->hw_op_lock);
-+	atomic_inc(&dip_dev->num_composing);
-+	ret = scp_ipi_send(dip_dev->scp_pdev, SCP_IPI_DIP, &ipi_param,
-+			   sizeof(ipi_param), 0);
-+	if (ret) {
-+		dev_err(dip_dev->dev,
-+			"%s: frame_no(%d) send SCP_IPI_DIP_FRAME failed %d\n",
-+			__func__, req->img_fparam.frameparam.frame_no, ret);
-+		mtk_dip_pipe_remove_job(req);
-+		mtk_dip_pipe_job_finish(req, VB2_BUF_STATE_ERROR);
-+		mtk_dip_hw_working_buf_free(dip_dev, req->working_buf);
-+		req->working_buf = NULL;
-+		wake_up(&dip_dev->flushing_waitq);
-+	}
-+	mutex_unlock(&dip_dev->hw_op_lock);
-+
-+	dev_dbg(dip_dev->dev,
-+		"%s: frame_no(%d),idx(0x%x), composing num(%d)\n",
-+		__func__, req->img_fparam.frameparam.frame_no,
-+		req->img_fparam.frameparam.index,
-+		atomic_read(&dip_dev->num_composing));
-+}
-+
-+static int mtk_dip_hw_flush_pipe_jobs(struct mtk_dip_pipe *pipe)
-+{
-+	struct mtk_dip_request *req;
-+	struct list_head job_list = LIST_HEAD_INIT(job_list);
-+	int num;
-+	int ret;
-+
-+	spin_lock(&pipe->job_lock);
-+	list_splice_init(&pipe->pipe_job_running_list, &job_list);
-+	pipe->num_jobs = 0;
-+	spin_unlock(&pipe->job_lock);
-+
-+	ret = wait_event_freezable_timeout
-+		(pipe->dip_dev->flushing_waitq,
-+		 !(num = atomic_read(&pipe->dip_dev->num_composing)),
-+		 msecs_to_jiffies(1000 / 30 * DIP_COMPOSING_MAX_NUM * 3));
-+	if (!ret && num) {
-+		dev_err(pipe->dip_dev->dev,
-+			"%s: flushing is aborted, num(%d)\n",
-+			__func__, num);
-+		return -EINVAL;
-+	}
-+
-+	list_for_each_entry(req, &job_list, list)
-+		mtk_dip_pipe_job_finish(req, VB2_BUF_STATE_ERROR);
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_hw_connect(struct mtk_dip_dev *dip_dev)
-+{
-+	int ret;
-+	struct img_ipi_param ipi_param;
-+
-+	pm_runtime_get_sync(dip_dev->dev);
-+	scp_ipi_register(dip_dev->scp_pdev, SCP_IPI_DIP, dip_scp_handler,
-+			 dip_dev);
-+	memset(&ipi_param, 0, sizeof(ipi_param));
-+	ipi_param.usage = IMG_IPI_INIT;
-+
-+	ret = scp_ipi_send(dip_dev->scp_pdev, SCP_IPI_DIP, &ipi_param,
-+			   sizeof(ipi_param), 200);
-+	if (ret) {
-+		dev_err(dip_dev->dev, "%s: send SCP_IPI_DIP_FRAME failed %d\n",
-+			__func__, ret);
-+		return -EBUSY;
-+	}
-+	pm_runtime_mark_last_busy(dip_dev->dev);
-+	pm_runtime_put_autosuspend(dip_dev->dev);
-+
-+	return 0;
-+}
-+
-+static void mtk_dip_hw_disconnect(struct mtk_dip_dev *dip_dev)
-+{
-+	struct img_ipi_param ipi_param;
-+	int ret;
-+
-+	ipi_param.usage = IMG_IPI_DEINIT;
-+	ret = scp_ipi_send(dip_dev->scp_pdev, SCP_IPI_DIP, &ipi_param,
-+			   sizeof(ipi_param), 0);
-+	if (ret) {
-+		dev_err(dip_dev->dev,
-+			"%s: SCP IMG_IPI_DEINIT failed(%d)\n", __func__, ret);
-+	}
-+
-+	scp_ipi_unregister(dip_dev->scp_pdev, SCP_IPI_DIP);
-+}
-+
-+int mtk_dip_hw_streamon(struct mtk_dip_pipe *pipe)
-+{
-+	struct mtk_dip_dev *dip_dev = pipe->dip_dev;
-+	int ret;
-+
-+	mutex_lock(&dip_dev->hw_op_lock);
-+	if (!dip_dev->dip_stream_cnt) {
-+		ret = mtk_dip_hw_connect(pipe->dip_dev);
-+		if (ret) {
-+			dev_err(pipe->dip_dev->dev,
-+				"%s:%s: pipe(%d) connect to dip_hw failed\n",
-+				__func__, pipe->desc->name, pipe->desc->id);
-+
-+			mutex_unlock(&dip_dev->hw_op_lock);
-+
-+			return ret;
-+		}
-+	}
-+	dip_dev->dip_stream_cnt++;
-+	mutex_unlock(&dip_dev->hw_op_lock);
-+
-+	pipe->streaming = 1;
-+	mtk_dip_pipe_try_enqueue(pipe);
-+
-+	return 0;
-+}
-+
-+int mtk_dip_hw_streamoff(struct mtk_dip_pipe *pipe)
-+{
-+	struct mtk_dip_dev *dip_dev = pipe->dip_dev;
-+	int ret;
-+
-+	pipe->streaming = 0;
-+
-+	ret = mtk_dip_hw_flush_pipe_jobs(pipe);
-+	if (WARN_ON(ret != 0)) {
-+		dev_err(dip_dev->dev,
-+			"%s:%s: mtk_dip_hw_flush_pipe_jobs, ret(%d)\n",
-+			__func__, pipe->desc->name, ret);
-+	}
-+
-+	/* Stop the hardware if there is no streaming pipe */
-+	mutex_lock(&dip_dev->hw_op_lock);
-+	dip_dev->dip_stream_cnt--;
-+	if (!dip_dev->dip_stream_cnt)
-+		mtk_dip_hw_disconnect(dip_dev);
-+
-+	mutex_unlock(&dip_dev->hw_op_lock);
-+
-+	return 0;
-+}
-+
-+void mtk_dip_hw_enqueue(struct mtk_dip_dev *dip_dev,
-+			struct mtk_dip_request *req)
-+{
-+	struct img_ipi_frameparam *frameparams = &req->img_fparam.frameparam;
-+
-+	mtk_dip_pipe_ipi_params_config(req);
-+	frameparams->state = FRAME_STATE_INIT;
-+	frameparams->frame_no = atomic_inc_return(&dip_dev->dip_enqueue_cnt);
-+
-+	dev_dbg(dip_dev->dev,
-+		"%s: hw job id(%d), frame_no(%d) into worklist\n",
-+		__func__, frameparams->index, frameparams->frame_no);
-+
-+	INIT_WORK(&req->fw_work, dip_composer_workfunc);
-+	queue_work(dip_dev->composer_wq, &req->fw_work);
-+}
-diff --git a/drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-v4l2.c b/drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-v4l2.c
-new file mode 100644
-index 000000000000..57a016438960
---- /dev/null
-+++ b/drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-v4l2.c
-@@ -0,0 +1,2255 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018 MediaTek Inc.
-+ *
-+ * Author: Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *
-+ */
-+
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/remoteproc.h>
-+#include <linux/remoteproc/mtk_scp.h>
-+#include <linux/videodev2.h>
-+#include <media/videobuf2-dma-contig.h>
-+#include <media/v4l2-ioctl.h>
-+#include <media/v4l2-subdev.h>
-+#include <media/v4l2-event.h>
-+#include "mtk_dip-dev.h"
-+#include "mtk_dip-hw.h"
-+#include "mtk-mdp3-cmdq.h"
-+
-+static int mtk_dip_subdev_open(struct v4l2_subdev *sd,
-+			       struct v4l2_subdev_fh *fh)
-+{
-+	int i;
-+	struct mtk_dip_pipe *pipe = mtk_dip_subdev_to_pipe(sd);
-+
-+	for (i = 0; i < pipe->desc->total_queues; i++) {
-+		*v4l2_subdev_get_try_format(&pipe->subdev, fh->pad, i) =
-+			pipe->nodes[i].pad_fmt;
-+		*v4l2_subdev_get_try_crop(&pipe->subdev, fh->pad, i) =
-+			pipe->nodes[i].crop;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_subdev_s_stream(struct v4l2_subdev *sd,
-+				   int enable)
-+{
-+	struct mtk_dip_pipe *pipe = mtk_dip_subdev_to_pipe(sd);
-+	int ret;
-+
-+	if (enable) {
-+		ret = mtk_dip_hw_streamon(pipe);
-+		if (ret)
-+			dev_err(pipe->dip_dev->dev,
-+				"%s:%s: pipe(%d) streamon failed\n",
-+				__func__, pipe->desc->name, pipe->desc->id);
-+	} else {
-+		ret = mtk_dip_hw_streamoff(pipe);
-+		if (ret)
-+			dev_err(pipe->dip_dev->dev,
-+				"%s:%s: pipe(%d) streamon off with errors\n",
-+				__func__, pipe->desc->name, pipe->desc->id);
-+	}
-+
-+	return ret;
-+}
-+
-+static int mtk_dip_subdev_get_fmt(struct v4l2_subdev *sd,
-+				  struct v4l2_subdev_pad_config *cfg,
-+				  struct v4l2_subdev_format *fmt)
-+{
-+	struct mtk_dip_pipe *dip_pipe = mtk_dip_subdev_to_pipe(sd);
-+	struct v4l2_mbus_framefmt *mf;
-+	u32 pad = fmt->pad;
-+
-+	if (pad == MTK_DIP_VIDEO_NODE_ID_TUNING_OUT)
-+		return -EINVAL;
-+
-+	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
-+		fmt->format = dip_pipe->nodes[pad].pad_fmt;
-+	} else {
-+		mf = v4l2_subdev_get_try_format(sd, cfg, pad);
-+		fmt->format = *mf;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_subdev_set_fmt(struct v4l2_subdev *sd,
-+				  struct v4l2_subdev_pad_config *cfg,
-+				  struct v4l2_subdev_format *fmt)
-+{
-+	struct mtk_dip_pipe *dip_pipe = mtk_dip_subdev_to_pipe(sd);
-+	struct v4l2_mbus_framefmt *mf;
-+	u32 pad = fmt->pad;
-+	struct mtk_dip_video_device *node = &dip_pipe->nodes[pad];
-+
-+	if (pad == MTK_DIP_VIDEO_NODE_ID_TUNING_OUT)
-+		return -EINVAL;
-+
-+	if (fmt->which == V4L2_SUBDEV_FORMAT_TRY)
-+		mf = v4l2_subdev_get_try_format(sd, cfg, pad);
-+	else
-+		mf = &dip_pipe->nodes[pad].pad_fmt;
-+
-+	fmt->format.code = mf->code;
-+	fmt->format.width =
-+		clamp_val(fmt->format.width,
-+			  node->desc->frmsizeenum->stepwise.min_width,
-+			  node->desc->frmsizeenum->stepwise.max_width);
-+	fmt->format.height =
-+		clamp_val(fmt->format.height,
-+			  node->desc->frmsizeenum->stepwise.min_height,
-+			  node->desc->frmsizeenum->stepwise.max_height);
-+
-+	*mf = fmt->format;
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_subdev_get_selection(struct v4l2_subdev *sd,
-+					struct v4l2_subdev_pad_config *cfg,
-+					struct v4l2_subdev_selection *sel)
-+{
-+	struct v4l2_rect *try_sel, *r;
-+	struct mtk_dip_pipe *dip_pipe = mtk_dip_subdev_to_pipe(sd);
-+
-+	if (sel->pad != MTK_DIP_VIDEO_NODE_ID_MDP0_CAPTURE &&
-+	    sel->pad != MTK_DIP_VIDEO_NODE_ID_MDP1_CAPTURE) {
-+		dev_dbg(dip_pipe->dip_dev->dev,
-+			"g_select failed(%s:%d):not support\n",
-+			dip_pipe->nodes[sel->pad].desc->name, sel->pad);
-+		return -EINVAL;
-+	}
-+
-+	switch (sel->target) {
-+	case V4L2_SEL_TGT_CROP:
-+		try_sel = v4l2_subdev_get_try_crop(sd, cfg, sel->pad);
-+		r = &dip_pipe->nodes[sel->pad].crop;  /* effective resolution */
-+		break;
-+	default:
-+		dev_dbg(dip_pipe->dip_dev->dev,
-+			"s_select failed(%s:%d):target(%d) not support\n",
-+			dip_pipe->nodes[sel->pad].desc->name, sel->pad,
-+			sel->target);
-+		return -EINVAL;
-+	}
-+
-+	if (sel->which == V4L2_SUBDEV_FORMAT_TRY)
-+		sel->r = *try_sel;
-+	else
-+		sel->r = *r;
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_subdev_set_selection(struct v4l2_subdev *sd,
-+					struct v4l2_subdev_pad_config *cfg,
-+					struct v4l2_subdev_selection *sel)
-+{
-+	struct v4l2_rect *rect, *try_sel;
-+	struct mtk_dip_pipe *dip_pipe = mtk_dip_subdev_to_pipe(sd);
-+
-+	if (sel->pad != MTK_DIP_VIDEO_NODE_ID_MDP0_CAPTURE &&
-+	    sel->pad != MTK_DIP_VIDEO_NODE_ID_MDP1_CAPTURE) {
-+		dev_dbg(dip_pipe->dip_dev->dev,
-+			"g_select failed(%s:%d):not support\n",
-+			dip_pipe->nodes[sel->pad].desc->name, sel->pad);
-+		return -EINVAL;
-+	}
-+
-+	switch (sel->target) {
-+	case V4L2_SEL_TGT_CROP:
-+		try_sel = v4l2_subdev_get_try_crop(sd, cfg, sel->pad);
-+		rect = &dip_pipe->nodes[sel->pad].crop;
-+		break;
-+	default:
-+		dev_dbg(dip_pipe->dip_dev->dev,
-+			"s_select failed(%s:%d):target(%d) not support\n",
-+			dip_pipe->nodes[sel->pad].desc->name, sel->pad,
-+			sel->target);
-+		return -EINVAL;
-+	}
-+
-+	if (sel->which == V4L2_SUBDEV_FORMAT_TRY)
-+		*try_sel = sel->r;
-+	else
-+		*rect = sel->r;
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_link_setup(struct media_entity *entity,
-+			      const struct media_pad *local,
-+			      const struct media_pad *remote,
-+			      u32 flags)
-+{
-+	struct mtk_dip_pipe *pipe =
-+		container_of(entity, struct mtk_dip_pipe, subdev.entity);
-+	u32 pad = local->index;
-+
-+	WARN_ON(entity->obj_type != MEDIA_ENTITY_TYPE_V4L2_SUBDEV);
-+	WARN_ON(pad >= pipe->desc->total_queues);
-+
-+	mutex_lock(&pipe->lock);
-+
-+	if (flags & MEDIA_LNK_FL_ENABLED)
-+		pipe->nodes_enabled |= 1 << pad;
-+	else
-+		pipe->nodes_enabled &= ~(1 << pad);
-+
-+	pipe->nodes[pad].flags &= ~MEDIA_LNK_FL_ENABLED;
-+	pipe->nodes[pad].flags |= flags & MEDIA_LNK_FL_ENABLED;
-+
-+	mutex_unlock(&pipe->lock);
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_vb2_meta_buf_prepare(struct vb2_buffer *vb)
-+{
-+	struct mtk_dip_pipe *pipe = vb2_get_drv_priv(vb->vb2_queue);
-+	struct mtk_dip_video_device *node = mtk_dip_vbq_to_node(vb->vb2_queue);
-+	struct device *dev = pipe->dip_dev->dev;
-+	const struct v4l2_format *fmt = &node->vdev_fmt;
-+
-+	if (vb->planes[0].length < fmt->fmt.meta.buffersize) {
-+		dev_dbg(dev,
-+			"%s:%s:%s: size error(user:%d, required:%d)\n",
-+			__func__, pipe->desc->name, node->desc->name,
-+			vb->planes[0].length, fmt->fmt.meta.buffersize);
-+		return -EINVAL;
-+	}
-+
-+	if (vb->planes[0].bytesused != fmt->fmt.meta.buffersize) {
-+		dev_err(dev,
-+			"%s:%s:%s: bytesused(%d) must be %d\n",
-+			__func__, pipe->desc->name, node->desc->name,
-+			vb->planes[0].bytesused,
-+			fmt->fmt.meta.buffersize);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_vb2_video_buf_prepare(struct vb2_buffer *vb)
-+{
-+	struct mtk_dip_pipe *pipe = vb2_get_drv_priv(vb->vb2_queue);
-+	struct mtk_dip_video_device *node = mtk_dip_vbq_to_node(vb->vb2_queue);
-+	struct device *dev = pipe->dip_dev->dev;
-+	const struct v4l2_format *fmt = &node->vdev_fmt;
-+	unsigned int size;
-+	int i;
-+
-+	for (i = 0; i < vb->num_planes; i++) {
-+		size = fmt->fmt.pix_mp.plane_fmt[i].sizeimage;
-+		if (vb->planes[i].length < size) {
-+			dev_dbg(dev,
-+				"%s:%s:%s: size error(user:%d, max:%d)\n",
-+				__func__, pipe->desc->name, node->desc->name,
-+				vb->planes[i].length, size);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_vb2_buf_out_validate(struct vb2_buffer *vb)
-+{
-+	struct vb2_v4l2_buffer *v4l2_buf = to_vb2_v4l2_buffer(vb);
-+
-+	if (v4l2_buf->field == V4L2_FIELD_ANY)
-+		v4l2_buf->field = V4L2_FIELD_NONE;
-+
-+	if (v4l2_buf->field != V4L2_FIELD_NONE)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_vb2_meta_buf_init(struct vb2_buffer *vb)
-+{
-+	struct mtk_dip_dev_buffer *dev_buf = mtk_dip_vb2_buf_to_dev_buf(vb);
-+	struct mtk_dip_pipe *pipe = vb2_get_drv_priv(vb->vb2_queue);
-+	struct mtk_dip_video_device *node = mtk_dip_vbq_to_node(vb->vb2_queue);
-+	phys_addr_t buf_paddr;
-+
-+	dev_buf->scp_daddr[0] = vb2_dma_contig_plane_dma_addr(vb, 0);
-+	buf_paddr = dev_buf->scp_daddr[0];
-+	dev_buf->isp_daddr[0] =	dma_map_resource(pipe->dip_dev->dev,
-+						 buf_paddr,
-+						 vb->planes[0].length,
-+						 DMA_BIDIRECTIONAL,
-+						 DMA_ATTR_SKIP_CPU_SYNC);
-+	if (dma_mapping_error(pipe->dip_dev->dev,
-+			      dev_buf->isp_daddr[0])) {
-+		dev_err(pipe->dip_dev->dev,
-+			"%s:%s: failed to map buffer: s_daddr(%pad)\n",
-+			pipe->desc->name, node->desc->name,
-+			&dev_buf->scp_daddr[0]);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_vb2_video_buf_init(struct vb2_buffer *vb)
-+{
-+	struct mtk_dip_dev_buffer *dev_buf = mtk_dip_vb2_buf_to_dev_buf(vb);
-+	int i;
-+
-+	for (i = 0; i < vb->num_planes; i++) {
-+		dev_buf->scp_daddr[i] = 0;
-+		dev_buf->isp_daddr[i] =	vb2_dma_contig_plane_dma_addr(vb, i);
-+	}
-+
-+	return 0;
-+}
-+
-+static void mtk_dip_vb2_queue_meta_buf_cleanup(struct vb2_buffer *vb)
-+{
-+	struct mtk_dip_dev_buffer *dev_buf = mtk_dip_vb2_buf_to_dev_buf(vb);
-+	struct mtk_dip_pipe *pipe = vb2_get_drv_priv(vb->vb2_queue);
-+
-+	dma_unmap_resource(pipe->dip_dev->dev, dev_buf->isp_daddr[0],
-+			   vb->planes[0].length, DMA_BIDIRECTIONAL,
-+			   DMA_ATTR_SKIP_CPU_SYNC);
-+}
-+
-+static void mtk_dip_vb2_buf_queue(struct vb2_buffer *vb)
-+{
-+	struct mtk_dip_dev_buffer *dev_buf = mtk_dip_vb2_buf_to_dev_buf(vb);
-+	struct mtk_dip_request *req = mtk_dip_media_req_to_dip_req(vb->request);
-+	struct mtk_dip_video_device *node =
-+		mtk_dip_vbq_to_node(vb->vb2_queue);
-+	struct mtk_dip_dev *dip_dev = dip_dev;
-+	int buf_count;
-+
-+	dev_buf->fmt = node->vdev_fmt;
-+	dev_buf->dev_fmt = node->dev_q.dev_fmt;
-+	dev_buf->dma_port = node->desc->dma_port;
-+	dev_buf->rotation = node->rotation;
-+	dev_buf->crop.c = node->crop;
-+	dev_buf->compose = node->compose;
-+
-+	spin_lock(&node->buf_list_lock);
-+	list_add_tail(&dev_buf->list, &node->buf_list);
-+	spin_unlock(&node->buf_list_lock);
-+
-+	buf_count = atomic_dec_return(&req->buf_count);
-+	if (!buf_count) {
-+		mutex_lock(&req->dip_pipe->lock);
-+		mtk_dip_pipe_try_enqueue(req->dip_pipe);
-+		mutex_unlock(&req->dip_pipe->lock);
-+	}
-+}
-+
-+static int mtk_dip_vb2_meta_queue_setup(struct vb2_queue *vq,
-+					unsigned int *num_buffers,
-+					unsigned int *num_planes,
-+					unsigned int sizes[],
-+					struct device *alloc_devs[])
-+{
-+	struct mtk_dip_video_device *node = mtk_dip_vbq_to_node(vq);
-+	const struct v4l2_format *fmt = &node->vdev_fmt;
-+	unsigned int size;
-+
-+	if (!*num_planes)
-+		*num_planes = 1;
-+
-+	if (sizes[0] <= 0)
-+		size = fmt->fmt.meta.buffersize;
-+
-+	*num_buffers = clamp_val(*num_buffers, 1, VB2_MAX_FRAME);
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_vb2_video_queue_setup(struct vb2_queue *vq,
-+					 unsigned int *num_buffers,
-+					 unsigned int *num_planes,
-+					 unsigned int sizes[],
-+					 struct device *alloc_devs[])
-+{
-+	struct mtk_dip_pipe *pipe = vb2_get_drv_priv(vq);
-+	struct mtk_dip_video_device *node = mtk_dip_vbq_to_node(vq);
-+	const struct v4l2_format *fmt = &node->vdev_fmt;
-+	int i;
-+
-+	if (!*num_planes)
-+		*num_planes = 1;
-+
-+	for (i = 0; i < *num_planes; i++) {
-+		if (sizes[i] <= 0) {
-+			dev_dbg(pipe->dip_dev->dev,
-+				"%s:%s:%s: invalid buf: %u < %u\n",
-+				__func__, pipe->desc->name,
-+				node->desc->name, sizes[i],
-+				fmt->fmt.pix_mp.plane_fmt[i].sizeimage);
-+			sizes[i] = fmt->fmt.pix_mp.plane_fmt[i].sizeimage;
-+		}
-+
-+		*num_buffers = clamp_val(*num_buffers, 1, VB2_MAX_FRAME);
-+	}
-+
-+	return 0;
-+}
-+
-+static void mtk_dip_return_all_buffers(struct mtk_dip_pipe *pipe,
-+				       struct mtk_dip_video_device *node,
-+				       enum vb2_buffer_state state)
-+{
-+	struct mtk_dip_dev_buffer *b, *b0;
-+
-+	spin_lock(&node->buf_list_lock);
-+	list_for_each_entry_safe(b, b0, &node->buf_list, list) {
-+		list_del(&b->list);
-+		vb2_buffer_done(&b->vbb.vb2_buf, state);
-+	}
-+	spin_unlock(&node->buf_list_lock);
-+}
-+
-+static int mtk_dip_vb2_start_streaming(struct vb2_queue *vq, unsigned int count)
-+{
-+	struct mtk_dip_pipe *pipe = vb2_get_drv_priv(vq);
-+	struct mtk_dip_video_device *node = mtk_dip_vbq_to_node(vq);
-+	int ret;
-+
-+	mutex_lock(&pipe->lock);
-+	if (!pipe->nodes_streaming) {
-+		ret = media_pipeline_start(&node->vdev.entity, &pipe->pipeline);
-+		if (ret < 0) {
-+			dev_err(pipe->dip_dev->dev,
-+				"%s:%s: media_pipeline_start failed(%d)\n",
-+				pipe->desc->name, node->desc->name, ret);
-+			goto fail_return_bufs;
-+		}
-+	}
-+
-+	if (!(node->flags & MEDIA_LNK_FL_ENABLED)) {
-+		dev_err(pipe->dip_dev->dev,
-+			"%s:%s: stream on failed, node is not enabled\n",
-+			pipe->desc->name, node->desc->name);
-+
-+		ret = -ENOLINK;
-+		goto fail_stop_pipeline;
-+	}
-+
-+	pipe->nodes_streaming |= 1 << node->desc->id;
-+	if (pipe->nodes_streaming == pipe->nodes_enabled) {
-+		/* Start streaming of the whole pipeline */
-+		ret = v4l2_subdev_call(&pipe->subdev, video, s_stream, 1);
-+		if (ret < 0) {
-+			dev_err(pipe->dip_dev->dev,
-+				"%s:%s: sub dev s_stream(1) failed(%d)\n",
-+				pipe->desc->name, node->desc->name, ret);
-+
-+			goto fail_stop_pipeline;
-+		}
-+	}
-+
-+	mutex_unlock(&pipe->lock);
-+
-+	return 0;
-+
-+fail_stop_pipeline:
-+	media_pipeline_stop(&node->vdev.entity);
-+
-+fail_return_bufs:
-+	mtk_dip_return_all_buffers(pipe, node, VB2_BUF_STATE_QUEUED);
-+	mutex_unlock(&pipe->lock);
-+
-+	return ret;
-+}
-+
-+static void mtk_dip_vb2_stop_streaming(struct vb2_queue *vq)
-+{
-+	struct mtk_dip_pipe *pipe = vb2_get_drv_priv(vq);
-+	struct mtk_dip_video_device *node = mtk_dip_vbq_to_node(vq);
-+	int ret;
-+
-+	mutex_lock(&pipe->lock);
-+
-+	if (pipe->streaming) {
-+		ret = v4l2_subdev_call(&pipe->subdev, video, s_stream, 0);
-+		if (ret)
-+			dev_err(pipe->dip_dev->dev,
-+				"%s:%s: sub dev s_stream(0) failed(%d)\n",
-+				pipe->desc->name, node->desc->name, ret);
-+	}
-+
-+	pipe->nodes_streaming &= ~(1 << node->desc->id);
-+	if (!pipe->nodes_streaming)
-+		media_pipeline_stop(&node->vdev.entity);
-+
-+	mtk_dip_return_all_buffers(pipe, node, VB2_BUF_STATE_ERROR);
-+
-+	mutex_unlock(&pipe->lock);
-+}
-+
-+static void mtk_dip_vb2_request_complete(struct vb2_buffer *vb)
-+{
-+	struct mtk_dip_video_device *node = mtk_dip_vbq_to_node(vb->vb2_queue);
-+
-+	v4l2_ctrl_request_complete(vb->req_obj.req,
-+				   &node->ctrl_handler);
-+}
-+
-+static int mtk_dip_videoc_querycap(struct file *file, void *fh,
-+				   struct v4l2_capability *cap)
-+{
-+	struct mtk_dip_pipe *pipe = video_drvdata(file);
-+
-+	snprintf(cap->driver, sizeof(cap->driver), "%s %s",
-+		 dev_driver_string(pipe->dip_dev->dev), pipe->desc->name);
-+	snprintf(cap->card, sizeof(cap->card), "%s %s",
-+		 dev_driver_string(pipe->dip_dev->dev), pipe->desc->name);
-+	snprintf(cap->bus_info, sizeof(cap->bus_info),
-+		 "platform:%s", dev_name(pipe->dip_dev->mdev.dev));
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_videoc_try_fmt(struct file *file, void *fh,
-+				  struct v4l2_format *f)
-+{
-+	struct mtk_dip_pipe *pipe = video_drvdata(file);
-+	struct mtk_dip_video_device *node = mtk_dip_file_to_node(file);
-+	const struct mtk_dip_dev_format *dev_fmt;
-+	struct v4l2_format try_fmt;
-+
-+	memset(&try_fmt, 0, sizeof(try_fmt));
-+
-+	dev_fmt = mtk_dip_pipe_find_fmt(pipe, node,
-+					f->fmt.pix_mp.pixelformat);
-+	if (!dev_fmt) {
-+		dev_fmt = &node->desc->fmts[node->desc->default_fmt_idx];
-+		dev_dbg(pipe->dip_dev->dev,
-+			"%s:%s:%s: dev_fmt(%d) not found, use default(%d)\n",
-+			__func__, pipe->desc->name, node->desc->name,
-+			f->fmt.pix_mp.pixelformat, dev_fmt->format);
-+	}
-+
-+	mtk_dip_pipe_try_fmt(pipe, node, &try_fmt, f, dev_fmt);
-+	*f = try_fmt;
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_videoc_g_fmt(struct file *file, void *fh,
-+				struct v4l2_format *f)
-+{
-+	struct mtk_dip_video_device *node = mtk_dip_file_to_node(file);
-+
-+	*f = node->vdev_fmt;
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_videoc_s_fmt(struct file *file, void *fh,
-+				struct v4l2_format *f)
-+{
-+	struct mtk_dip_video_device *node = mtk_dip_file_to_node(file);
-+	struct mtk_dip_pipe *pipe = video_drvdata(file);
-+	const struct mtk_dip_dev_format *dev_fmt;
-+
-+	if (pipe->streaming || vb2_is_busy(&node->dev_q.vbq))
-+		return -EBUSY;
-+
-+	dev_fmt = mtk_dip_pipe_find_fmt(pipe, node,
-+					f->fmt.pix_mp.pixelformat);
-+	if (!dev_fmt) {
-+		dev_fmt = &node->desc->fmts[node->desc->default_fmt_idx];
-+		dev_dbg(pipe->dip_dev->dev,
-+			"%s:%s:%s: dev_fmt(%d) not found, use default(%d)\n",
-+			__func__, pipe->desc->name, node->desc->name,
-+			f->fmt.pix_mp.pixelformat, dev_fmt->format);
-+	}
-+
-+	memset(&node->vdev_fmt, 0, sizeof(node->vdev_fmt));
-+
-+	mtk_dip_pipe_try_fmt(pipe, node, &node->vdev_fmt, f, dev_fmt);
-+	*f = node->vdev_fmt;
-+
-+	node->dev_q.dev_fmt = dev_fmt;
-+	node->vdev_fmt = *f;
-+	node->crop.left = 0; /* reset crop setting of nodes */
-+	node->crop.top = 0;
-+	node->crop.width = f->fmt.pix_mp.width;
-+	node->crop.height = f->fmt.pix_mp.height;
-+	node->compose.left = 0;
-+	node->compose.top = 0;
-+	node->compose.width = f->fmt.pix_mp.width;
-+	node->compose.height = f->fmt.pix_mp.height;
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_videoc_enum_framesizes(struct file *file, void *priv,
-+					  struct v4l2_frmsizeenum *sizes)
-+{
-+	struct mtk_dip_pipe *pipe = video_drvdata(file);
-+	struct mtk_dip_video_device *node = mtk_dip_file_to_node(file);
-+	const struct mtk_dip_dev_format *dev_fmt;
-+
-+	dev_fmt = mtk_dip_pipe_find_fmt(pipe, node, sizes->pixel_format);
-+
-+	if (!dev_fmt || sizes->index)
-+		return -EINVAL;
-+
-+	sizes->type = node->desc->frmsizeenum->type;
-+	sizes->stepwise.max_width =
-+		node->desc->frmsizeenum->stepwise.max_width;
-+	sizes->stepwise.min_width =
-+		node->desc->frmsizeenum->stepwise.min_width;
-+	sizes->stepwise.max_height =
-+		node->desc->frmsizeenum->stepwise.max_height;
-+	sizes->stepwise.min_height =
-+		node->desc->frmsizeenum->stepwise.min_height;
-+	sizes->stepwise.step_height =
-+		node->desc->frmsizeenum->stepwise.step_height;
-+	sizes->stepwise.step_width =
-+		node->desc->frmsizeenum->stepwise.step_width;
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_videoc_enum_fmt(struct file *file, void *fh,
-+				   struct v4l2_fmtdesc *f)
-+{
-+	struct mtk_dip_video_device *node = mtk_dip_file_to_node(file);
-+
-+	if (f->index >= node->desc->num_fmts)
-+		return -EINVAL;
-+
-+	strscpy(f->description, node->desc->description,
-+		sizeof(f->description));
-+	f->pixelformat = node->desc->fmts[f->index].format;
-+	f->flags = 0;
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_meta_enum_format(struct file *file, void *fh,
-+				    struct v4l2_fmtdesc *f)
-+{
-+	struct mtk_dip_video_device *node = mtk_dip_file_to_node(file);
-+
-+	if (f->index > 0)
-+		return -EINVAL;
-+
-+	strscpy(f->description, node->desc->description,
-+		sizeof(f->description));
-+
-+	f->pixelformat = node->vdev_fmt.fmt.meta.dataformat;
-+	f->flags = 0;
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_videoc_g_meta_fmt(struct file *file, void *fh,
-+				     struct v4l2_format *f)
-+{
-+	struct mtk_dip_video_device *node = mtk_dip_file_to_node(file);
-+	*f = node->vdev_fmt;
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_video_device_s_ctrl(struct v4l2_ctrl *ctrl)
-+{
-+	struct mtk_dip_video_device *node =
-+		container_of(ctrl->handler,
-+			     struct mtk_dip_video_device, ctrl_handler);
-+
-+	if (ctrl->id != V4L2_CID_ROTATE) {
-+		pr_debug("[%s] doesn't support ctrl(%d)\n",
-+			 node->desc->name, ctrl->id);
-+		return -EINVAL;
-+	}
-+
-+	node->rotation = ctrl->val;
-+
-+	return 0;
-+}
-+
-+/******************** function pointers ********************/
-+
-+static const struct v4l2_subdev_internal_ops mtk_dip_subdev_internal_ops = {
-+	.open = mtk_dip_subdev_open,
-+};
-+
-+static const struct v4l2_subdev_video_ops mtk_dip_subdev_video_ops = {
-+	.s_stream = mtk_dip_subdev_s_stream,
-+};
-+
-+static const struct v4l2_subdev_pad_ops mtk_dip_subdev_pad_ops = {
-+	.link_validate = v4l2_subdev_link_validate_default,
-+	.get_fmt = mtk_dip_subdev_get_fmt,
-+	.set_fmt = mtk_dip_subdev_set_fmt,
-+	.get_selection = mtk_dip_subdev_get_selection,
-+	.set_selection = mtk_dip_subdev_set_selection,
-+};
-+
-+static const struct v4l2_subdev_ops mtk_dip_subdev_ops = {
-+	.video = &mtk_dip_subdev_video_ops,
-+	.pad = &mtk_dip_subdev_pad_ops,
-+};
-+
-+static const struct media_entity_operations mtk_dip_media_ops = {
-+	.link_setup = mtk_dip_link_setup,
-+	.link_validate = v4l2_subdev_link_validate,
-+};
-+
-+static struct media_request *mtk_dip_request_alloc(struct media_device *mdev)
-+{
-+	struct mtk_dip_request *dip_req;
-+
-+	dip_req = kzalloc(sizeof(*dip_req), GFP_KERNEL);
-+
-+	return &dip_req->req;
-+}
-+
-+static void mtk_dip_request_free(struct media_request *req)
-+{
-+	struct mtk_dip_request *dip_req = mtk_dip_media_req_to_dip_req(req);
-+
-+	kfree(dip_req);
-+}
-+
-+static int mtk_dip_vb2_request_validate(struct media_request *req)
-+{
-+	struct media_request_object *obj;
-+	struct mtk_dip_dev *dip_dev = mtk_dip_mdev_to_dev(req->mdev);
-+	struct mtk_dip_request *dip_req = mtk_dip_media_req_to_dip_req(req);
-+	struct mtk_dip_pipe *pipe = NULL;
-+	struct mtk_dip_pipe *pipe_prev = NULL;
-+	struct mtk_dip_dev_buffer **map = dip_req->buf_map;
-+	int buf_count = 0;
-+
-+	memset(map, 0, sizeof(dip_req->buf_map));
-+
-+	list_for_each_entry(obj, &req->objects, list) {
-+		struct vb2_buffer *vb;
-+		struct mtk_dip_dev_buffer *dev_buf;
-+		struct mtk_dip_video_device *node;
-+
-+		if (!vb2_request_object_is_buffer(obj))
-+			continue;
-+
-+		vb = container_of(obj, struct vb2_buffer, req_obj);
-+		node = mtk_dip_vbq_to_node(vb->vb2_queue);
-+		pipe = vb2_get_drv_priv(vb->vb2_queue);
-+		if (pipe_prev && pipe != pipe_prev) {
-+			dev_dbg(dip_dev->dev,
-+				"%s:%s:%s:found buf of different pipes(%p,%p)\n",
-+				__func__, node->desc->name,
-+				req->debug_str, pipe, pipe_prev);
-+			return -EINVAL;
-+		}
-+
-+		pipe_prev = pipe;
-+		dev_buf = mtk_dip_vb2_buf_to_dev_buf(vb);
-+		dip_req->buf_map[node->desc->id] = dev_buf;
-+		buf_count++;
-+	}
-+
-+	if (!pipe) {
-+		dev_dbg(dip_dev->dev,
-+			"%s: no buffer in the request(%p)\n",
-+			req->debug_str, req);
-+
-+		return -EINVAL;
-+	}
-+
-+	if (!map[MTK_DIP_VIDEO_NODE_ID_RAW_OUT] ||
-+	    (!map[MTK_DIP_VIDEO_NODE_ID_MDP0_CAPTURE] &&
-+	     !map[MTK_DIP_VIDEO_NODE_ID_MDP1_CAPTURE] &&
-+	     !map[MTK_DIP_VIDEO_NODE_ID_IMG3_CAPTURE])) {
-+		dev_dbg(dip_dev->dev,
-+			"won't trigger hw job: raw(%p), mdp0(%p), mdp1(%p), img3(%p)\n",
-+			map[MTK_DIP_VIDEO_NODE_ID_RAW_OUT],
-+			map[MTK_DIP_VIDEO_NODE_ID_MDP0_CAPTURE],
-+			map[MTK_DIP_VIDEO_NODE_ID_MDP1_CAPTURE],
-+			map[MTK_DIP_VIDEO_NODE_ID_IMG3_CAPTURE]);
-+		return -EINVAL;
-+	}
-+
-+	atomic_set(&dip_req->buf_count, buf_count);
-+	dip_req->id = mtk_dip_pipe_next_job_id(pipe);
-+	dip_req->dip_pipe = pipe;
-+
-+	return vb2_request_validate(req);
-+}
-+
-+static void mtk_dip_vb2_request_queue(struct media_request *req)
-+{
-+	struct mtk_dip_request *dip_req = mtk_dip_media_req_to_dip_req(req);
-+	struct mtk_dip_pipe *pipe = dip_req->dip_pipe;
-+
-+	spin_lock(&pipe->job_lock);
-+	list_add_tail(&dip_req->list, &pipe->pipe_job_pending_list);
-+	pipe->num_pending_jobs++;
-+	spin_unlock(&pipe->job_lock);
-+
-+	vb2_request_queue(req);
-+}
-+
-+static const struct media_device_ops mtk_dip_media_req_ops = {
-+	.req_validate = mtk_dip_vb2_request_validate,
-+	.req_queue = mtk_dip_vb2_request_queue,
-+	.req_alloc = mtk_dip_request_alloc,
-+	.req_free = mtk_dip_request_free,
-+};
-+
-+static const struct v4l2_ctrl_ops mtk_dip_video_device_ctrl_ops = {
-+	.s_ctrl = mtk_dip_video_device_s_ctrl,
-+};
-+
-+static const struct vb2_ops mtk_dip_vb2_meta_ops = {
-+	.buf_queue = mtk_dip_vb2_buf_queue,
-+	.queue_setup = mtk_dip_vb2_meta_queue_setup,
-+	.buf_init = mtk_dip_vb2_meta_buf_init,
-+	.buf_prepare  = mtk_dip_vb2_meta_buf_prepare,
-+	.buf_out_validate = mtk_dip_vb2_buf_out_validate,
-+	.buf_cleanup = mtk_dip_vb2_queue_meta_buf_cleanup,
-+	.start_streaming = mtk_dip_vb2_start_streaming,
-+	.stop_streaming = mtk_dip_vb2_stop_streaming,
-+	.wait_prepare = vb2_ops_wait_prepare,
-+	.wait_finish = vb2_ops_wait_finish,
-+	.buf_request_complete = mtk_dip_vb2_request_complete,
-+};
-+
-+static const struct vb2_ops mtk_dip_vb2_video_ops = {
-+	.buf_queue = mtk_dip_vb2_buf_queue,
-+	.queue_setup = mtk_dip_vb2_video_queue_setup,
-+	.buf_init = mtk_dip_vb2_video_buf_init,
-+	.buf_prepare  = mtk_dip_vb2_video_buf_prepare,
-+	.buf_out_validate = mtk_dip_vb2_buf_out_validate,
-+	.start_streaming = mtk_dip_vb2_start_streaming,
-+	.stop_streaming = mtk_dip_vb2_stop_streaming,
-+	.wait_prepare = vb2_ops_wait_prepare,
-+	.wait_finish = vb2_ops_wait_finish,
-+	.buf_request_complete = mtk_dip_vb2_request_complete,
-+};
-+
-+static const struct v4l2_file_operations mtk_dip_v4l2_fops = {
-+	.unlocked_ioctl = video_ioctl2,
-+	.open = v4l2_fh_open,
-+	.release = vb2_fop_release,
-+	.poll = vb2_fop_poll,
-+	.mmap = vb2_fop_mmap,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl32 = v4l2_compat_ioctl32,
-+#endif
-+};
-+
-+int mtk_dip_dev_media_register(struct device *dev,
-+			       struct media_device *media_dev)
-+{
-+	int ret;
-+
-+	media_dev->dev = dev;
-+	strlcpy(media_dev->model, dev_driver_string(dev),
-+		sizeof(media_dev->model));
-+	snprintf(media_dev->bus_info, sizeof(media_dev->bus_info),
-+		 "platform:%s", dev_name(dev));
-+	media_dev->hw_revision = 0;
-+	media_dev->ops = &mtk_dip_media_req_ops;
-+	media_device_init(media_dev);
-+
-+	ret = media_device_register(media_dev);
-+	if (ret) {
-+		dev_err(dev, "failed to register media device (%d)\n", ret);
-+		media_device_unregister(media_dev);
-+		media_device_cleanup(media_dev);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mtk_dip_video_device_v4l2_register(struct mtk_dip_pipe *pipe,
-+					      struct mtk_dip_video_device *node)
-+{
-+	struct vb2_queue *vbq = &node->dev_q.vbq;
-+	struct video_device *vdev = &node->vdev;
-+	struct media_link *link;
-+	int ret;
-+
-+	mutex_init(&node->dev_q.lock);
-+
-+	vdev->device_caps = node->desc->cap;
-+	vdev->ioctl_ops = node->desc->ops;
-+	node->vdev_fmt.type = node->desc->buf_type;
-+	mtk_dip_pipe_load_default_fmt(pipe, node, &node->vdev_fmt);
-+
-+	node->pad_fmt.width = node->vdev_fmt.fmt.pix_mp.width;
-+	node->pad_fmt.height = node->vdev_fmt.fmt.pix_mp.height;
-+	node->pad_fmt.code = MEDIA_BUS_FMT_FIXED;
-+	node->pad_fmt.field = node->vdev_fmt.fmt.pix_mp.field;
-+	node->pad_fmt.colorspace = node->vdev_fmt.fmt.pix_mp.colorspace;
-+	node->pad_fmt.quantization = node->vdev_fmt.fmt.pix_mp.quantization;
-+	node->crop.left = 0;
-+	node->crop.top = 0;
-+	node->crop.width = node->vdev_fmt.fmt.pix_mp.width;
-+	node->crop.height = node->vdev_fmt.fmt.pix_mp.height;
-+	node->compose.left = 0;
-+	node->compose.top = 0;
-+	node->compose.width = node->vdev_fmt.fmt.pix_mp.width;
-+	node->compose.height = node->vdev_fmt.fmt.pix_mp.height;
-+
-+	ret = media_entity_pads_init(&vdev->entity, 1, &node->vdev_pad);
-+	if (ret) {
-+		dev_err(pipe->dip_dev->dev,
-+			"failed initialize media entity (%d)\n", ret);
-+		goto err_mutex_destroy;
-+	}
-+
-+	node->vdev_pad.flags = V4L2_TYPE_IS_OUTPUT(node->desc->buf_type) ?
-+		MEDIA_PAD_FL_SOURCE : MEDIA_PAD_FL_SINK;
-+
-+	vbq->type = node->vdev_fmt.type;
-+	vbq->io_modes = VB2_MMAP | VB2_DMABUF;
-+	vbq->ops = node->desc->vb2_ops;
-+	vbq->mem_ops = &vb2_dma_contig_memops;
-+	vbq->supports_requests = true;
-+	vbq->buf_struct_size = sizeof(struct mtk_dip_dev_buffer);
-+	vbq->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_COPY;
-+	vbq->min_buffers_needed = 0;
-+	vbq->drv_priv = pipe;
-+	vbq->lock = &node->dev_q.lock;
-+
-+	ret = vb2_queue_init(vbq);
-+	if (ret) {
-+		dev_err(pipe->dip_dev->dev,
-+			"%s:%s:%s: failed to init vb2 queue(%d)\n",
-+			__func__, pipe->desc->name, node->desc->name,
-+			ret);
-+		goto err_media_entity_cleanup;
-+	}
-+
-+	snprintf(vdev->name, sizeof(vdev->name), "%s %s %s",
-+		 dev_driver_string(pipe->dip_dev->dev), pipe->desc->name,
-+		 node->desc->name);
-+	vdev->entity.name = vdev->name;
-+	vdev->entity.function = MEDIA_ENT_F_IO_V4L;
-+	vdev->entity.ops = NULL;
-+	vdev->release = video_device_release_empty;
-+	vdev->fops = &mtk_dip_v4l2_fops;
-+	vdev->lock = &node->dev_q.lock;
-+	if (node->desc->supports_ctrls)
-+		vdev->ctrl_handler = &node->ctrl_handler;
-+	else
-+		vdev->ctrl_handler = NULL;
-+	vdev->v4l2_dev = &pipe->dip_dev->v4l2_dev;
-+	vdev->queue = &node->dev_q.vbq;
-+	vdev->vfl_dir = V4L2_TYPE_IS_OUTPUT(node->desc->buf_type) ?
-+		VFL_DIR_TX : VFL_DIR_RX;
-+
-+	if (node->desc->smem_alloc)
-+		vdev->queue->dev = &pipe->dip_dev->scp_pdev->dev;
-+	else
-+		vdev->queue->dev = pipe->dip_dev->dev;
-+
-+	video_set_drvdata(vdev, pipe);
-+
-+	ret = video_register_device(vdev, VFL_TYPE_GRABBER, -1);
-+	if (ret) {
-+		dev_err(pipe->dip_dev->dev,
-+			"failed to register video device (%d)\n", ret);
-+		goto err_vb2_queue_release;
-+	}
-+
-+	if (V4L2_TYPE_IS_OUTPUT(node->desc->buf_type))
-+		ret = media_create_pad_link(&vdev->entity, 0,
-+					    &pipe->subdev.entity,
-+					    node->desc->id, node->flags);
-+	else
-+		ret = media_create_pad_link(&pipe->subdev.entity,
-+					    node->desc->id, &vdev->entity,
-+					    0, node->flags);
-+	if (ret)
-+		goto err_video_unregister_device;
-+
-+	vdev->intf_devnode = media_devnode_create(&pipe->dip_dev->mdev,
-+						  MEDIA_INTF_T_V4L_VIDEO, 0,
-+						  VIDEO_MAJOR, vdev->minor);
-+	if (!vdev->intf_devnode) {
-+		ret = -ENOMEM;
-+		goto err_rm_links;
-+	}
-+
-+	link = media_create_intf_link(&vdev->entity,
-+				      &vdev->intf_devnode->intf,
-+				      node->flags);
-+	if (!link) {
-+		ret = -ENOMEM;
-+		goto err_rm_devnode;
-+	}
-+
-+	return 0;
-+
-+err_rm_devnode:
-+	media_devnode_remove(vdev->intf_devnode);
-+
-+err_rm_links:
-+	media_entity_remove_links(&vdev->entity);
-+
-+err_video_unregister_device:
-+	video_unregister_device(vdev);
-+
-+err_vb2_queue_release:
-+	vb2_queue_release(&node->dev_q.vbq);
-+
-+err_media_entity_cleanup:
-+	media_entity_cleanup(&node->vdev.entity);
-+
-+err_mutex_destroy:
-+	mutex_destroy(&node->dev_q.lock);
-+
-+	return ret;
-+}
-+
-+static int mtk_dip_pipe_v4l2_ctrl_init(struct mtk_dip_pipe *dip_pipe)
-+{
-+	int i, ret;
-+	struct mtk_dip_video_device *ctrl_node;
-+
-+	for (i = 0; i < MTK_DIP_VIDEO_NODE_ID_TOTAL_NUM; i++) {
-+		ctrl_node = &dip_pipe->nodes[i];
-+		if (!ctrl_node->desc->supports_ctrls)
-+			continue;
-+
-+		v4l2_ctrl_handler_init(&ctrl_node->ctrl_handler, 1);
-+		v4l2_ctrl_new_std(&ctrl_node->ctrl_handler,
-+				  &mtk_dip_video_device_ctrl_ops,
-+				  V4L2_CID_ROTATE, 0, 270, 90, 0);
-+		ret = ctrl_node->ctrl_handler.error;
-+		if (ret) {
-+			dev_err(dip_pipe->dip_dev->dev,
-+				"%s create rotate ctrl failed:(%d)",
-+				ctrl_node->desc->name, ret);
-+			goto err_free_ctrl_handlers;
-+		}
-+	}
-+
-+	return 0;
-+
-+err_free_ctrl_handlers:
-+	for (; i >= 0; i--) {
-+		ctrl_node = &dip_pipe->nodes[i];
-+		if (!ctrl_node->desc->supports_ctrls)
-+			continue;
-+		v4l2_ctrl_handler_free(&ctrl_node->ctrl_handler);
-+	}
-+
-+	return ret;
-+}
-+
-+static void mtk_dip_pipe_v4l2_ctrl_release(struct mtk_dip_pipe *dip_pipe)
-+{
-+	struct mtk_dip_video_device *ctrl_node =
-+		&dip_pipe->nodes[MTK_DIP_VIDEO_NODE_ID_MDP0_CAPTURE];
-+
-+	v4l2_ctrl_handler_free(&ctrl_node->ctrl_handler);
-+}
-+
-+int mtk_dip_pipe_v4l2_register(struct mtk_dip_pipe *pipe,
-+			       struct media_device *media_dev,
-+			       struct v4l2_device *v4l2_dev)
-+{
-+	int i, ret;
-+
-+	ret = mtk_dip_pipe_v4l2_ctrl_init(pipe);
-+	if (ret) {
-+		dev_err(pipe->dip_dev->dev,
-+			"%s: failed(%d) to initialize ctrls\n",
-+			pipe->desc->name, ret);
-+
-+		return ret;
-+	}
-+
-+	pipe->streaming = 0;
-+
-+	/* Initialize subdev media entity */
-+	pipe->subdev_pads = devm_kcalloc(pipe->dip_dev->dev,
-+					 pipe->desc->total_queues,
-+					 sizeof(*pipe->subdev_pads),
-+					 GFP_KERNEL);
-+	if (!pipe->subdev_pads) {
-+		dev_err(pipe->dip_dev->dev,
-+			"failed to alloc pipe->subdev_pads (%d)\n", ret);
-+		ret = -ENOMEM;
-+		goto err_release_ctrl;
-+	}
-+	ret = media_entity_pads_init(&pipe->subdev.entity,
-+				     pipe->desc->total_queues,
-+				     pipe->subdev_pads);
-+	if (ret) {
-+		dev_err(pipe->dip_dev->dev,
-+			"failed initialize subdev media entity (%d)\n", ret);
-+		goto err_free_subdev_pads;
-+	}
-+
-+	/* Initialize subdev */
-+	v4l2_subdev_init(&pipe->subdev, &mtk_dip_subdev_ops);
-+
-+	pipe->subdev.entity.function =
-+		MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER;
-+	pipe->subdev.entity.ops = &mtk_dip_media_ops;
-+	pipe->subdev.flags =
-+		V4L2_SUBDEV_FL_HAS_DEVNODE | V4L2_SUBDEV_FL_HAS_EVENTS;
-+	pipe->subdev.ctrl_handler = NULL;
-+	pipe->subdev.internal_ops = &mtk_dip_subdev_internal_ops;
-+
-+	for (i = 0; i < pipe->desc->total_queues; i++)
-+		pipe->subdev_pads[i].flags =
-+			V4L2_TYPE_IS_OUTPUT(pipe->nodes[i].desc->buf_type) ?
-+			MEDIA_PAD_FL_SINK : MEDIA_PAD_FL_SOURCE;
-+
-+	snprintf(pipe->subdev.name, sizeof(pipe->subdev.name),
-+		 "%s", pipe->desc->name);
-+	v4l2_set_subdevdata(&pipe->subdev, pipe);
-+
-+	ret = v4l2_device_register_subdev(&pipe->dip_dev->v4l2_dev,
-+					  &pipe->subdev);
-+	if (ret) {
-+		dev_err(pipe->dip_dev->dev,
-+			"failed initialize subdev (%d)\n", ret);
-+		goto err_media_entity_cleanup;
-+	}
-+
-+	/* Create video nodes and links */
-+	for (i = 0; i < pipe->desc->total_queues; i++) {
-+		ret = mtk_dip_video_device_v4l2_register(pipe,
-+							 &pipe->nodes[i]);
-+		if (ret)
-+			goto err_unregister_subdev;
-+	}
-+
-+	return 0;
-+
-+err_unregister_subdev:
-+	v4l2_device_unregister_subdev(&pipe->subdev);
-+
-+err_media_entity_cleanup:
-+	media_entity_cleanup(&pipe->subdev.entity);
-+
-+err_free_subdev_pads:
-+	devm_kfree(pipe->dip_dev->dev, pipe->subdev_pads);
-+
-+err_release_ctrl:
-+	mtk_dip_pipe_v4l2_ctrl_release(pipe);
-+
-+	return ret;
-+}
-+
-+void mtk_dip_pipe_v4l2_unregister(struct mtk_dip_pipe *pipe)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < pipe->desc->total_queues; i++) {
-+		video_unregister_device(&pipe->nodes[i].vdev);
-+		vb2_queue_release(&pipe->nodes[i].dev_q.vbq);
-+		media_entity_cleanup(&pipe->nodes[i].vdev.entity);
-+		mutex_destroy(&pipe->nodes[i].dev_q.lock);
-+	}
-+
-+	v4l2_device_unregister_subdev(&pipe->subdev);
-+	media_entity_cleanup(&pipe->subdev.entity);
-+	mtk_dip_pipe_v4l2_ctrl_release(pipe);
-+}
-+
-+/********************************************
-+ * MTK DIP V4L2 Settings *
-+ ********************************************/
-+
-+static const struct v4l2_ioctl_ops mtk_dip_v4l2_video_out_ioctl_ops = {
-+	.vidioc_querycap = mtk_dip_videoc_querycap,
-+
-+	.vidioc_enum_framesizes = mtk_dip_videoc_enum_framesizes,
-+	.vidioc_enum_fmt_vid_out = mtk_dip_videoc_enum_fmt,
-+	.vidioc_g_fmt_vid_out_mplane = mtk_dip_videoc_g_fmt,
-+	.vidioc_s_fmt_vid_out_mplane = mtk_dip_videoc_s_fmt,
-+	.vidioc_try_fmt_vid_out_mplane = mtk_dip_videoc_try_fmt,
-+
-+	.vidioc_reqbufs = vb2_ioctl_reqbufs,
-+	.vidioc_create_bufs = vb2_ioctl_create_bufs,
-+	.vidioc_prepare_buf = vb2_ioctl_prepare_buf,
-+	.vidioc_querybuf = vb2_ioctl_querybuf,
-+	.vidioc_qbuf = vb2_ioctl_qbuf,
-+	.vidioc_dqbuf = vb2_ioctl_dqbuf,
-+	.vidioc_streamon = vb2_ioctl_streamon,
-+	.vidioc_streamoff = vb2_ioctl_streamoff,
-+	.vidioc_expbuf = vb2_ioctl_expbuf,
-+
-+	.vidioc_subscribe_event = v4l2_ctrl_subscribe_event,
-+	.vidioc_unsubscribe_event = v4l2_event_unsubscribe,
-+};
-+
-+static const struct v4l2_ioctl_ops mtk_dip_v4l2_video_cap_ioctl_ops = {
-+	.vidioc_querycap = mtk_dip_videoc_querycap,
-+
-+	.vidioc_enum_framesizes = mtk_dip_videoc_enum_framesizes,
-+	.vidioc_enum_fmt_vid_cap = mtk_dip_videoc_enum_fmt,
-+	.vidioc_g_fmt_vid_cap_mplane = mtk_dip_videoc_g_fmt,
-+	.vidioc_s_fmt_vid_cap_mplane = mtk_dip_videoc_s_fmt,
-+	.vidioc_try_fmt_vid_cap_mplane = mtk_dip_videoc_try_fmt,
-+
-+	.vidioc_reqbufs = vb2_ioctl_reqbufs,
-+	.vidioc_create_bufs = vb2_ioctl_create_bufs,
-+	.vidioc_prepare_buf = vb2_ioctl_prepare_buf,
-+	.vidioc_querybuf = vb2_ioctl_querybuf,
-+	.vidioc_qbuf = vb2_ioctl_qbuf,
-+	.vidioc_dqbuf = vb2_ioctl_dqbuf,
-+	.vidioc_streamon = vb2_ioctl_streamon,
-+	.vidioc_streamoff = vb2_ioctl_streamoff,
-+	.vidioc_expbuf = vb2_ioctl_expbuf,
-+
-+	.vidioc_subscribe_event = v4l2_ctrl_subscribe_event,
-+	.vidioc_unsubscribe_event = v4l2_event_unsubscribe,
-+};
-+
-+static const struct v4l2_ioctl_ops mtk_dip_v4l2_meta_out_ioctl_ops = {
-+	.vidioc_querycap = mtk_dip_videoc_querycap,
-+
-+	.vidioc_enum_fmt_meta_out = mtk_dip_meta_enum_format,
-+	.vidioc_g_fmt_meta_out = mtk_dip_videoc_g_meta_fmt,
-+	.vidioc_s_fmt_meta_out = mtk_dip_videoc_g_meta_fmt,
-+	.vidioc_try_fmt_meta_out = mtk_dip_videoc_g_meta_fmt,
-+
-+	.vidioc_reqbufs = vb2_ioctl_reqbufs,
-+	.vidioc_create_bufs = vb2_ioctl_create_bufs,
-+	.vidioc_prepare_buf = vb2_ioctl_prepare_buf,
-+	.vidioc_querybuf = vb2_ioctl_querybuf,
-+	.vidioc_qbuf = vb2_ioctl_qbuf,
-+	.vidioc_dqbuf = vb2_ioctl_dqbuf,
-+	.vidioc_streamon = vb2_ioctl_streamon,
-+	.vidioc_streamoff = vb2_ioctl_streamoff,
-+	.vidioc_expbuf = vb2_ioctl_expbuf,
-+};
-+
-+static const struct mtk_dip_dev_format fw_param_fmts[] = {
-+	{
-+		.format = V4L2_META_FMT_MTISP_PARAMS,
-+		.buffer_size = 1024 * (128 + 288),
-+	},
-+};
-+
-+static const struct mtk_dip_dev_format lcei_fmts[] = {
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SBGGR8,
-+		.mdp_color = DIP_MCOLOR_BAYER8,
-+		.depth = { 8 },
-+		.row_depth = { 8 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+	},
-+};
-+
-+static const struct mtk_dip_dev_format in_fmts[] = {
-+	{
-+		.format = V4L2_PIX_FMT_VYUY,
-+		.mdp_color = DIP_MCOLOR_VYUY,
-+		.depth	 = { 16 },
-+		.row_depth = { 16 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_YUYV,
-+		.mdp_color = DIP_MCOLOR_YUYV,
-+		.depth	 = { 16 },
-+		.row_depth = { 16 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_YVYU,
-+		.mdp_color = DIP_MCOLOR_YVYU,
-+		.depth	 = { 16 },
-+		.row_depth = { 16 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_NV12,
-+		.mdp_color = DIP_MCOLOR_NV12,
-+		.depth = { 12 },
-+		.row_depth = { 8 },
-+		.num_planes = 1,
-+		.num_cplanes = 2,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SBGGR8,
-+		.mdp_color = DIP_MCOLOR_BAYER8_BGGR,
-+		.depth = { 8 },
-+		.row_depth = { 8 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SGBRG8,
-+		.mdp_color = DIP_MCOLOR_BAYER8_GBRG,
-+		.depth = { 8 },
-+		.row_depth = { 8 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SGRBG8,
-+		.mdp_color = DIP_MCOLOR_BAYER8_GRBG,
-+		.depth = { 8 },
-+		.row_depth = { 8 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SRGGB8,
-+		.mdp_color = DIP_MCOLOR_BAYER8_RGGB,
-+		.depth = { 8 },
-+		.row_depth = { 8 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SBGGR8F,
-+		.mdp_color = DIP_MCOLOR_FULLG8_BGGR,
-+		.depth = { 12 },
-+		.row_depth = { 8},
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 8,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SGBRG8F,
-+		.mdp_color = DIP_MCOLOR_FULLG8_GBRG,
-+		.depth = { 12 },
-+		.row_depth = { 8 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 8,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SGRBG8F,
-+		.mdp_color = DIP_MCOLOR_FULLG8_GRBG,
-+		.depth = { 12 },
-+		.row_depth = { 8 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 8,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SRGGB8F,
-+		.mdp_color = DIP_MCOLOR_FULLG8_RGGB,
-+		.depth = { 12 },
-+		.row_depth = { 8 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 8,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SBGGR10,
-+		.mdp_color = DIP_MCOLOR_BAYER10_BGGR,
-+		.depth = { 10 },
-+		.row_depth = { 10 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SGBRG10,
-+		.mdp_color = DIP_MCOLOR_BAYER10_GBRG,
-+		.depth = { 10 },
-+		.row_depth = { 10 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SGRBG10,
-+		.mdp_color = DIP_MCOLOR_BAYER10_GRBG,
-+		.depth = { 10 },
-+		.row_depth = { 10 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SRGGB10,
-+		.mdp_color = DIP_MCOLOR_BAYER10_RGGB,
-+		.depth = { 10 },
-+		.row_depth = { 10 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SBGGR10F,
-+		.mdp_color = DIP_MCOLOR_FULLG10_BGGR,
-+		.depth = { 15 },
-+		.row_depth = { 10 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SGBRG10F,
-+		.mdp_color = DIP_MCOLOR_FULLG10_GBRG,
-+		.depth = { 15 },
-+		.row_depth = { 10 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SGRBG10F,
-+		.mdp_color = DIP_MCOLOR_FULLG10_GRBG,
-+		.depth = { 15 },
-+		.row_depth = { 10 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SRGGB10F,
-+		.mdp_color = DIP_MCOLOR_FULLG10_RGGB,
-+		.depth = { 15 },
-+		.row_depth = { 10 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SBGGR12,
-+		.mdp_color = DIP_MCOLOR_BAYER12_BGGR,
-+		.depth = { 12 },
-+		.row_depth = { 12 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SGBRG12,
-+		.mdp_color = DIP_MCOLOR_BAYER12_GBRG,
-+		.depth = { 12 },
-+		.row_depth = { 12 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SGRBG12,
-+		.mdp_color = DIP_MCOLOR_BAYER12_GRBG,
-+		.depth = { 12 },
-+		.row_depth = { 12 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SRGGB12,
-+		.mdp_color = DIP_MCOLOR_BAYER12_RGGB,
-+		.depth = { 12 },
-+		.row_depth = { 12 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 4,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SBGGR12F,
-+		.mdp_color = DIP_MCOLOR_FULLG12_BGGR,
-+		.depth = { 18 },
-+		.row_depth = { 12 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 8,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SGBRG12F,
-+		.mdp_color = DIP_MCOLOR_FULLG12_GBRG,
-+		.depth = { 18 },
-+		.row_depth = { 12 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 8,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SGRBG12F,
-+		.mdp_color = DIP_MCOLOR_FULLG12_GRBG,
-+		.depth = { 18 },
-+		.row_depth = { 12 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 8,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SRGGB12F,
-+		.mdp_color = DIP_MCOLOR_FULLG12_RGGB,
-+		.depth = { 18 },
-+		.row_depth = { 12 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 8,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SBGGR14F,
-+		.mdp_color = DIP_MCOLOR_FULLG14_BGGR,
-+		.depth = { 21 },
-+		.row_depth = { 14 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 8,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SGBRG14F,
-+		.mdp_color = DIP_MCOLOR_FULLG14_GBRG,
-+		.depth = { 21 },
-+		.row_depth = { 14 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 8,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SGRBG14F,
-+		.mdp_color = DIP_MCOLOR_FULLG14_GRBG,
-+		.depth = { 21 },
-+		.row_depth = { 14 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 8,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_MTISP_SRGGB14F,
-+		.mdp_color = DIP_MCOLOR_FULLG14_RGGB,
-+		.depth = { 21 },
-+		.row_depth = { 14 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+		.pass_1_align = 8,
-+	},
-+	{
-+		.format	= V4L2_PIX_FMT_YUV420M,
-+		.mdp_color	= DIP_MCOLOR_I420,
-+		.depth		= { 8, 2, 2 },
-+		.row_depth	= { 8, 4, 4 },
-+		.num_planes	= 3,
-+		.num_cplanes = 1,
-+	},
-+	{
-+		.format	= V4L2_PIX_FMT_YVU420M,
-+		.mdp_color	= DIP_MCOLOR_YV12,
-+		.depth		= { 8, 2, 2 },
-+		.row_depth	= { 8, 4, 4 },
-+		.num_planes	= 3,
-+		.num_cplanes = 1,
-+	},
-+	{
-+		.format	= V4L2_PIX_FMT_NV12M,
-+		.mdp_color	= DIP_MCOLOR_NV12,
-+		.depth		= { 8, 4 },
-+		.row_depth	= { 8, 8 },
-+		.num_planes	= 2,
-+		.num_cplanes = 1,
-+	},
-+};
-+
-+static const struct mtk_dip_dev_format mdp_fmts[] = {
-+	{
-+		.format = V4L2_PIX_FMT_VYUY,
-+		.mdp_color = DIP_MCOLOR_VYUY,
-+		.depth = { 16 },
-+		.row_depth = { 16 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_YUYV,
-+		.mdp_color = DIP_MCOLOR_YUYV,
-+		.depth = { 16 },
-+		.row_depth = { 16 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_YVYU,
-+		.mdp_color = DIP_MCOLOR_YVYU,
-+		.depth = { 16 },
-+		.row_depth = { 16 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_YVU420,
-+		.mdp_color = DIP_MCOLOR_YV12,
-+		.depth = { 12 },
-+		.row_depth = { 8 },
-+		.num_planes = 1,
-+		.num_cplanes = 3,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_NV12,
-+		.mdp_color = DIP_MCOLOR_NV12,
-+		.depth = { 12 },
-+		.row_depth = { 8 },
-+		.num_planes = 1,
-+		.num_cplanes = 2,
-+	},
-+	{
-+		.format	= V4L2_PIX_FMT_YUV420M,
-+		.mdp_color	= DIP_MCOLOR_I420,
-+		.depth		= { 8, 2, 2 },
-+		.row_depth	= { 8, 4, 4 },
-+		.num_planes	= 3,
-+		.num_cplanes = 1,
-+	},
-+	{
-+		.format	= V4L2_PIX_FMT_YVU420M,
-+		.mdp_color	= DIP_MCOLOR_YV12,
-+		.depth		= { 8, 2, 2 },
-+		.row_depth	= { 8, 4, 4 },
-+		.num_planes	= 3,
-+		.num_cplanes = 1,
-+	},
-+	{
-+		.format	= V4L2_PIX_FMT_NV12M,
-+		.mdp_color	= DIP_MCOLOR_NV12,
-+		.depth		= { 8, 4 },
-+		.row_depth	= { 8, 8 },
-+		.num_planes	= 2,
-+		.num_cplanes = 1,
-+	}
-+};
-+
-+static const struct mtk_dip_dev_format img2_fmts[] = {
-+	{
-+		.format = V4L2_PIX_FMT_YUYV,
-+		.mdp_color = DIP_MCOLOR_YUYV,
-+		.depth = { 16 },
-+		.row_depth = { 16 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+	},
-+};
-+
-+static const struct mtk_dip_dev_format img3_fmts[] = {
-+	{
-+		.format = V4L2_PIX_FMT_VYUY,
-+		.mdp_color = DIP_MCOLOR_VYUY,
-+		.depth = { 16 },
-+		.row_depth = { 16 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_YUYV,
-+		.mdp_color = DIP_MCOLOR_YUYV,
-+		.depth = { 16 },
-+		.row_depth = { 16 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_YVYU,
-+		.mdp_color = DIP_MCOLOR_YVYU,
-+		.depth = { 16 },
-+		.row_depth = { 16 },
-+		.num_planes = 1,
-+		.num_cplanes = 1,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_YVU420,
-+		.mdp_color = DIP_MCOLOR_YV12,
-+		.depth = { 12 },
-+		.row_depth = { 8 },
-+		.num_planes = 1,
-+		.num_cplanes = 3,
-+	},
-+	{
-+		.format = V4L2_PIX_FMT_NV12,
-+		.mdp_color = DIP_MCOLOR_NV12,
-+		.depth = { 12 },
-+		.row_depth = { 8 },
-+		.num_planes = 1,
-+		.num_cplanes = 2,
-+	}
-+};
-+
-+static const struct v4l2_frmsizeenum in_frmsizeenum = {
-+	.type = V4L2_FRMSIZE_TYPE_CONTINUOUS,
-+	.stepwise.max_width = MTK_DIP_CAPTURE_MAX_WIDTH,
-+	.stepwise.min_width = MTK_DIP_CAPTURE_MIN_WIDTH,
-+	.stepwise.max_height = MTK_DIP_CAPTURE_MAX_HEIGHT,
-+	.stepwise.min_height = MTK_DIP_CAPTURE_MIN_HEIGHT,
-+	.stepwise.step_height = 1,
-+	.stepwise.step_width = 1,
-+};
-+
-+static const struct v4l2_frmsizeenum out_frmsizeenum = {
-+	.type = V4L2_FRMSIZE_TYPE_CONTINUOUS,
-+	.stepwise.max_width = MTK_DIP_OUTPUT_MAX_WIDTH,
-+	.stepwise.min_width = MTK_DIP_OUTPUT_MIN_WIDTH,
-+	.stepwise.max_height = MTK_DIP_OUTPUT_MAX_HEIGHT,
-+	.stepwise.min_height = MTK_DIP_OUTPUT_MIN_HEIGHT,
-+	.stepwise.step_height = 1,
-+	.stepwise.step_width = 1,
-+};
-+
-+static const struct mtk_dip_video_device_desc
-+queues_setting[MTK_DIP_VIDEO_NODE_ID_TOTAL_NUM] = {
-+	{
-+		.id = MTK_DIP_VIDEO_NODE_ID_RAW_OUT,
-+		.name = "Raw Input",
-+		.cap = V4L2_CAP_VIDEO_OUTPUT_MPLANE | V4L2_CAP_STREAMING,
-+		.buf_type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE,
-+		.smem_alloc = 0,
-+		.flags = MEDIA_LNK_FL_ENABLED,
-+		.fmts = in_fmts,
-+		.num_fmts = ARRAY_SIZE(in_fmts),
-+		.default_fmt_idx = 4,
-+		.default_width = MTK_DIP_OUTPUT_MAX_WIDTH,
-+		.default_height = MTK_DIP_OUTPUT_MAX_HEIGHT,
-+		.dma_port = 0,
-+		.frmsizeenum = &in_frmsizeenum,
-+		.ops = &mtk_dip_v4l2_video_out_ioctl_ops,
-+		.vb2_ops = &mtk_dip_vb2_video_ops,
-+		.description = "Main image source",
-+	},
-+	{
-+		.id = MTK_DIP_VIDEO_NODE_ID_TUNING_OUT,
-+		.name = "Tuning",
-+		.cap = V4L2_CAP_META_OUTPUT | V4L2_CAP_STREAMING,
-+		.buf_type = V4L2_BUF_TYPE_META_OUTPUT,
-+		.smem_alloc = 1,
-+		.flags = 0,
-+		.fmts = fw_param_fmts,
-+		.num_fmts = ARRAY_SIZE(fw_param_fmts),
-+		.default_fmt_idx = 0,
-+		.dma_port = 0,
-+		.frmsizeenum = &in_frmsizeenum,
-+		.ops = &mtk_dip_v4l2_meta_out_ioctl_ops,
-+		.vb2_ops = &mtk_dip_vb2_meta_ops,
-+		.description = "Tuning data",
-+	},
-+	{
-+		.id = MTK_DIP_VIDEO_NODE_ID_NR_OUT,
-+		.name = "NR Input",
-+		.cap = V4L2_CAP_VIDEO_OUTPUT_MPLANE | V4L2_CAP_STREAMING,
-+		.buf_type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE,
-+		.smem_alloc = 0,
-+		.flags = MEDIA_LNK_FL_DYNAMIC,
-+		.fmts = img3_fmts,
-+		.num_fmts = ARRAY_SIZE(img3_fmts),
-+		.default_fmt_idx = 1,
-+		.default_width = MTK_DIP_CAPTURE_MAX_WIDTH,
-+		.default_height = MTK_DIP_CAPTURE_MAX_HEIGHT,
-+		.dma_port = 1,
-+		.vb2_ops = &mtk_dip_vb2_video_ops,
-+		.frmsizeenum = &in_frmsizeenum,
-+		.ops = &mtk_dip_v4l2_video_out_ioctl_ops,
-+		.vb2_ops = &mtk_dip_vb2_video_ops,
-+		.description = "NR image source",
-+	},
-+	{
-+		.id = MTK_DIP_VIDEO_NODE_ID_SHADING_OUT,
-+		.name = "Shading",
-+		.cap = V4L2_CAP_VIDEO_OUTPUT_MPLANE | V4L2_CAP_STREAMING,
-+		.buf_type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE,
-+		.smem_alloc = 0,
-+		.flags = MEDIA_LNK_FL_DYNAMIC,
-+		.fmts = lcei_fmts,
-+		.num_fmts = ARRAY_SIZE(lcei_fmts),
-+		.default_fmt_idx = 0,
-+		.default_width = MTK_DIP_CAPTURE_MAX_WIDTH,
-+		.default_height = MTK_DIP_CAPTURE_MAX_HEIGHT,
-+		.dma_port = 2,
-+		.frmsizeenum = &in_frmsizeenum,
-+		.ops = &mtk_dip_v4l2_video_out_ioctl_ops,
-+		.vb2_ops = &mtk_dip_vb2_video_ops,
-+		.description = "Shading image source",
-+	},
-+	{
-+		.id = MTK_DIP_VIDEO_NODE_ID_MDP0_CAPTURE,
-+		.name = "MDP0",
-+		.cap = V4L2_CAP_VIDEO_CAPTURE_MPLANE | V4L2_CAP_STREAMING,
-+		.buf_type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE,
-+		.smem_alloc = 0,
-+		.supports_ctrls = true,
-+		.flags = MEDIA_LNK_FL_DYNAMIC,
-+		.fmts = mdp_fmts,
-+		.num_fmts = ARRAY_SIZE(mdp_fmts),
-+		.default_fmt_idx = 1,
-+		.default_width = MTK_DIP_CAPTURE_MAX_WIDTH,
-+		.default_height = MTK_DIP_CAPTURE_MAX_HEIGHT,
-+		.dma_port = 0,
-+		.frmsizeenum = &out_frmsizeenum,
-+		.ops = &mtk_dip_v4l2_video_cap_ioctl_ops,
-+		.vb2_ops = &mtk_dip_vb2_video_ops,
-+		.description = "Output quality enhanced image",
-+	},
-+	{
-+		.id = MTK_DIP_VIDEO_NODE_ID_MDP1_CAPTURE,
-+		.name = "MDP1",
-+		.cap = V4L2_CAP_VIDEO_CAPTURE_MPLANE | V4L2_CAP_STREAMING,
-+		.buf_type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE,
-+		.smem_alloc = 0,
-+		.flags = MEDIA_LNK_FL_DYNAMIC,
-+		.fmts = mdp_fmts,
-+		.num_fmts = ARRAY_SIZE(mdp_fmts),
-+		.default_fmt_idx = 1,
-+		.default_width = MTK_DIP_CAPTURE_MAX_WIDTH,
-+		.default_height = MTK_DIP_CAPTURE_MAX_HEIGHT,
-+		.dma_port = 0,
-+		.frmsizeenum = &out_frmsizeenum,
-+		.ops = &mtk_dip_v4l2_video_cap_ioctl_ops,
-+		.vb2_ops = &mtk_dip_vb2_video_ops,
-+		.description = "Output quality enhanced image",
-+
-+	},
-+	{
-+		.id = MTK_DIP_VIDEO_NODE_ID_IMG2_CAPTURE,
-+		.name = "IMG2",
-+		.cap = V4L2_CAP_VIDEO_CAPTURE_MPLANE | V4L2_CAP_STREAMING,
-+		.buf_type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE,
-+		.smem_alloc = 0,
-+		.flags = MEDIA_LNK_FL_DYNAMIC,
-+		.fmts = img2_fmts,
-+		.num_fmts = ARRAY_SIZE(img2_fmts),
-+		.default_fmt_idx = 0,
-+		.default_width = MTK_DIP_CAPTURE_MAX_WIDTH,
-+		.default_height = MTK_DIP_CAPTURE_MAX_WIDTH,
-+		.dma_port = 1,
-+		.frmsizeenum = &out_frmsizeenum,
-+		.ops = &mtk_dip_v4l2_video_cap_ioctl_ops,
-+		.vb2_ops = &mtk_dip_vb2_video_ops,
-+		.description = "Output quality enhanced image",
-+	},
-+	{
-+		.id = MTK_DIP_VIDEO_NODE_ID_IMG3_CAPTURE,
-+		.name = "IMG3",
-+		.cap = V4L2_CAP_VIDEO_CAPTURE_MPLANE | V4L2_CAP_STREAMING,
-+		.buf_type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE,
-+		.smem_alloc = 0,
-+		.flags = MEDIA_LNK_FL_DYNAMIC,
-+		.fmts = img3_fmts,
-+		.num_fmts = ARRAY_SIZE(img3_fmts),
-+		.default_fmt_idx = 1,
-+		.default_width = MTK_DIP_CAPTURE_MAX_WIDTH,
-+		.default_height = MTK_DIP_CAPTURE_MAX_WIDTH,
-+		.dma_port = 2,
-+		.frmsizeenum = &out_frmsizeenum,
-+		.ops = &mtk_dip_v4l2_video_cap_ioctl_ops,
-+		.vb2_ops = &mtk_dip_vb2_video_ops,
-+		.description = "Output quality enhanced image",
-+
-+	},
-+
-+};
-+
-+static const struct mtk_dip_pipe_desc
-+pipe_settings[MTK_DIP_PIPE_ID_TOTAL_NUM] = {
-+	{
-+		.name = "preview",
-+		.id = MTK_DIP_PIPE_ID_PREVIEW,
-+		.queue_descs = queues_setting,
-+		.total_queues = ARRAY_SIZE(queues_setting),
-+	},
-+	{
-+		.name = "capture",
-+		.id = MTK_DIP_PIPE_ID_CAPTURE,
-+		.queue_descs = queues_setting,
-+		.total_queues = ARRAY_SIZE(queues_setting),
-+
-+	},
-+	{
-+		.name = "reprocess",
-+		.id = MTK_DIP_PIPE_ID_REPROCESS,
-+		.queue_descs = queues_setting,
-+		.total_queues = ARRAY_SIZE(queues_setting),
-+	},
-+};
-+
-+static void mtk_dip_dev_media_unregister(struct mtk_dip_dev *dip_dev)
-+{
-+	media_device_unregister(&dip_dev->mdev);
-+	media_device_cleanup(&dip_dev->mdev);
-+}
-+
-+static int mtk_dip_dev_v4l2_init(struct mtk_dip_dev *dip_dev)
-+{
-+	struct media_device *media_dev = &dip_dev->mdev;
-+	struct v4l2_device *v4l2_dev = &dip_dev->v4l2_dev;
-+	int i;
-+	int ret;
-+
-+	ret = mtk_dip_dev_media_register(dip_dev->dev, media_dev);
-+	if (ret) {
-+		dev_err(dip_dev->dev,
-+			"%s: media device register failed(%d)\n",
-+			__func__, ret);
-+		return ret;
-+	}
-+
-+	v4l2_dev->mdev = media_dev;
-+	v4l2_dev->ctrl_handler = NULL;
-+
-+	ret = v4l2_device_register(dip_dev->dev, v4l2_dev);
-+	if (ret) {
-+		dev_err(dip_dev->dev,
-+			"%s: v4l2 device register failed(%d)\n",
-+			__func__, ret);
-+		goto err_release_media_device;
-+	}
-+
-+	for (i = 0; i < MTK_DIP_PIPE_ID_TOTAL_NUM; i++) {
-+		ret = mtk_dip_pipe_init(dip_dev, &dip_dev->dip_pipe[i],
-+					&pipe_settings[i]);
-+		if (ret) {
-+			dev_err(dip_dev->dev,
-+				"%s: Pipe id(%d) init failed(%d)\n",
-+				dip_dev->dip_pipe[i].desc->name,
-+				i, ret);
-+			goto err_release_pipe;
-+		}
-+	}
-+
-+	ret = v4l2_device_register_subdev_nodes(&dip_dev->v4l2_dev);
-+	if (ret) {
-+		dev_err(dip_dev->dev,
-+			"failed to register subdevs (%d)\n", ret);
-+		goto err_release_pipe;
-+	}
-+
-+	return 0;
-+
-+err_release_pipe:
-+	for (i--; i >= 0; i--)
-+		mtk_dip_pipe_release(&dip_dev->dip_pipe[i]);
-+
-+	v4l2_device_unregister(v4l2_dev);
-+
-+err_release_media_device:
-+	mtk_dip_dev_media_unregister(dip_dev);
-+
-+	return ret;
-+}
-+
-+void mtk_dip_dev_v4l2_release(struct mtk_dip_dev *dip_dev)
-+{
-+	int i;
-+
-+	for (i = 0; i < MTK_DIP_PIPE_ID_TOTAL_NUM; i++)
-+		mtk_dip_pipe_release(&dip_dev->dip_pipe[i]);
-+
-+	v4l2_device_unregister(&dip_dev->v4l2_dev);
-+	media_device_unregister(&dip_dev->mdev);
-+	media_device_cleanup(&dip_dev->mdev);
-+}
-+
-+static int mtk_dip_res_init(struct platform_device *pdev,
-+			    struct mtk_dip_dev *dip_dev)
-+{
-+	int ret;
-+
-+	dip_dev->mdp_pdev = mdp_get_plat_device(pdev);
-+	if (!dip_dev->mdp_pdev) {
-+		dev_err(dip_dev->dev,
-+			"%s: failed to get MDP device\n",
-+			__func__);
-+		return -EINVAL;
-+	}
-+
-+	dip_dev->mdpcb_wq =
-+		alloc_ordered_workqueue("%s",
-+					__WQ_LEGACY | WQ_MEM_RECLAIM |
-+					WQ_FREEZABLE,
-+					"mdp_callback");
-+	if (!dip_dev->mdpcb_wq) {
-+		dev_err(dip_dev->dev,
-+			"%s: unable to alloc mdpcb workqueue\n", __func__);
-+		ret = -ENOMEM;
-+		goto destroy_mdpcb_wq;
-+	}
-+
-+	dip_dev->composer_wq =
-+		alloc_ordered_workqueue("%s",
-+					__WQ_LEGACY | WQ_MEM_RECLAIM |
-+					WQ_FREEZABLE,
-+					"dip_composer");
-+	if (!dip_dev->composer_wq) {
-+		dev_err(dip_dev->dev,
-+			"%s: unable to alloc composer workqueue\n", __func__);
-+		ret = -ENOMEM;
-+		goto destroy_dip_composer_wq;
-+	}
-+
-+	dip_dev->mdp_wq =
-+		alloc_ordered_workqueue("%s",
-+					__WQ_LEGACY | WQ_MEM_RECLAIM |
-+					WQ_FREEZABLE,
-+					"dip_runner");
-+	if (!dip_dev->mdp_wq) {
-+		dev_err(dip_dev->dev,
-+			"%s: unable to alloc dip_runner\n", __func__);
-+		ret = -ENOMEM;
-+		goto destroy_dip_runner_wq;
-+	}
-+
-+	init_waitqueue_head(&dip_dev->flushing_waitq);
-+
-+	return 0;
-+
-+destroy_dip_runner_wq:
-+	destroy_workqueue(dip_dev->mdp_wq);
-+
-+destroy_dip_composer_wq:
-+	destroy_workqueue(dip_dev->composer_wq);
-+
-+destroy_mdpcb_wq:
-+	destroy_workqueue(dip_dev->mdpcb_wq);
-+
-+	return ret;
-+}
-+
-+static void mtk_dip_res_release(struct mtk_dip_dev *dip_dev)
-+{
-+	flush_workqueue(dip_dev->mdp_wq);
-+	destroy_workqueue(dip_dev->mdp_wq);
-+	dip_dev->mdp_wq = NULL;
-+
-+	flush_workqueue(dip_dev->mdpcb_wq);
-+	destroy_workqueue(dip_dev->mdpcb_wq);
-+	dip_dev->mdpcb_wq = NULL;
-+
-+	flush_workqueue(dip_dev->composer_wq);
-+	destroy_workqueue(dip_dev->composer_wq);
-+	dip_dev->composer_wq = NULL;
-+
-+	atomic_set(&dip_dev->num_composing, 0);
-+	atomic_set(&dip_dev->dip_enqueue_cnt, 0);
-+}
-+
-+static int mtk_dip_probe(struct platform_device *pdev)
-+{
-+	struct mtk_dip_dev *dip_dev;
-+	phandle rproc_phandle;
-+	int ret;
-+
-+	dip_dev = devm_kzalloc(&pdev->dev, sizeof(*dip_dev), GFP_KERNEL);
-+	if (!dip_dev)
-+		return -ENOMEM;
-+
-+	dip_dev->dev = &pdev->dev;
-+	dev_set_drvdata(&pdev->dev, dip_dev);
-+	dip_dev->dip_stream_cnt = 0;
-+	dip_dev->clks[0].id = "larb5";
-+	dip_dev->clks[1].id = "dip";
-+	dip_dev->num_clks = ARRAY_SIZE(dip_dev->clks);
-+	ret = devm_clk_bulk_get(&pdev->dev, dip_dev->num_clks, dip_dev->clks);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to get LARB5 and DIP clks:%d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	dip_dev->scp_pdev = scp_get_pdev(pdev);
-+	if (!dip_dev->scp_pdev) {
-+		dev_err(dip_dev->dev,
-+			"%s: failed to get scp device\n",
-+			__func__);
-+		return -EINVAL;
-+	}
-+
-+	if (of_property_read_u32(dip_dev->dev->of_node, "mediatek,scp",
-+				 &rproc_phandle)) {
-+		dev_err(dip_dev->dev,
-+			"%s: could not get scp device\n",
-+			__func__);
-+		return -EINVAL;
-+	}
-+
-+	dip_dev->rproc_handle = rproc_get_by_phandle(rproc_phandle);
-+	if (!dip_dev->rproc_handle) {
-+		dev_err(dip_dev->dev,
-+			"%s: could not get DIP's rproc_handle\n",
-+			__func__);
-+		return -EINVAL;
-+	}
-+
-+	atomic_set(&dip_dev->dip_enqueue_cnt, 0);
-+	atomic_set(&dip_dev->num_composing, 0);
-+	mutex_init(&dip_dev->hw_op_lock);
-+	/* Limited by the co-processor side's stack size */
-+	sema_init(&dip_dev->sem, DIP_COMPOSING_MAX_NUM);
-+
-+	ret = mtk_dip_hw_working_buf_pool_init(dip_dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "working buffer init failed(%d)\n", ret);
-+		return ret;
-+	}
-+
-+	ret = mtk_dip_dev_v4l2_init(dip_dev);
-+	if (ret) {
-+		mtk_dip_hw_working_buf_pool_release(dip_dev);
-+		dev_err(&pdev->dev, "v4l2 init failed(%d)\n", ret);
-+
-+		goto err_release_working_buf_pool;
-+	}
-+
-+	ret = mtk_dip_res_init(pdev, dip_dev);
-+	if (ret) {
-+		dev_err(dip_dev->dev,
-+			"%s: mtk_dip_res_init failed(%d)\n", __func__, ret);
-+
-+		ret = -EBUSY;
-+		goto err_release_deinit_v4l2;
-+	}
-+
-+	pm_runtime_set_autosuspend_delay(&pdev->dev, 1000 / 30 *
-+					 DIP_COMPOSING_MAX_NUM * 3 *
-+					 USEC_PER_MSEC);
-+	pm_runtime_use_autosuspend(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
-+	return 0;
-+
-+err_release_deinit_v4l2:
-+	mtk_dip_dev_v4l2_release(dip_dev);
-+err_release_working_buf_pool:
-+	mtk_dip_hw_working_buf_pool_release(dip_dev);
-+
-+	return ret;
-+}
-+
-+static int mtk_dip_remove(struct platform_device *pdev)
-+{
-+	struct mtk_dip_dev *dip_dev = dev_get_drvdata(&pdev->dev);
-+
-+	mtk_dip_res_release(dip_dev);
-+	pm_runtime_disable(&pdev->dev);
-+	mtk_dip_dev_v4l2_release(dip_dev);
-+	mtk_dip_hw_working_buf_pool_release(dip_dev);
-+	mutex_destroy(&dip_dev->hw_op_lock);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused mtk_dip_runtime_suspend(struct device *dev)
-+{
-+	struct mtk_dip_dev *dip_dev = dev_get_drvdata(dev);
-+
-+	rproc_shutdown(dip_dev->rproc_handle);
-+	clk_bulk_disable_unprepare(dip_dev->num_clks,
-+				   dip_dev->clks);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused mtk_dip_runtime_resume(struct device *dev)
-+{
-+	struct mtk_dip_dev *dip_dev = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = clk_bulk_prepare_enable(dip_dev->num_clks,
-+				      dip_dev->clks);
-+	if (ret) {
-+		dev_err(dip_dev->dev,
-+			"%s: failed to enable dip clks(%d)\n",
-+			__func__, ret);
-+		return ret;
-+	}
-+
-+	ret = rproc_boot(dip_dev->rproc_handle);
-+	if (ret) {
-+		dev_err(dev, "%s: FW load failed(rproc:%p):%d\n",
-+			__func__, dip_dev->rproc_handle,	ret);
-+		clk_bulk_disable_unprepare(dip_dev->num_clks,
-+					   dip_dev->clks);
-+
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused mtk_dip_pm_suspend(struct device *dev)
-+{
-+	struct mtk_dip_dev *dip_dev = dev_get_drvdata(dev);
-+	int ret, num;
-+
-+	if (pm_runtime_suspended(dev))
-+		return 0;
-+
-+	ret = wait_event_timeout
-+		(dip_dev->flushing_waitq,
-+		 !(num = atomic_read(&dip_dev->num_composing)),
-+		 msecs_to_jiffies(1000 / 30 * DIP_COMPOSING_MAX_NUM * 3));
-+	if (!ret && num) {
-+		dev_err(dev, "%s: flushing SCP job timeout, num(%d)\n",
-+			__func__, num);
-+
-+		return -EBUSY;
-+	}
-+
-+	ret = pm_runtime_force_suspend(dev);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused mtk_dip_pm_resume(struct device *dev)
-+{
-+	int ret;
-+
-+	if (pm_runtime_suspended(dev))
-+		return 0;
-+
-+	ret = pm_runtime_force_resume(dev);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops mtk_dip_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(mtk_dip_pm_suspend, mtk_dip_pm_resume)
-+	SET_RUNTIME_PM_OPS(mtk_dip_runtime_suspend, mtk_dip_runtime_resume,
-+			   NULL)
-+};
-+
-+static const struct of_device_id mtk_dip_of_match[] = {
-+	{ .compatible = "mediatek,mt8183-dip", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, mtk_dip_of_match);
-+
-+static struct platform_driver mtk_dip_driver = {
-+	.probe   = mtk_dip_probe,
-+	.remove  = mtk_dip_remove,
-+	.driver  = {
-+		.name = "mtk-cam-dip",
-+		.pm = &mtk_dip_pm_ops,
-+		.of_match_table = of_match_ptr(mtk_dip_of_match),
-+	}
-+};
-+
-+module_platform_driver(mtk_dip_driver);
-+
-+MODULE_AUTHOR("Frederic Chen <frederic.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Mediatek DIP driver");
-+
 -- 
 2.18.0
