@@ -1,121 +1,134 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [RFC 1/3] dt-bindings: dma: Add documentation for DMA domains
-Date: Mon, 9 Sep 2019 09:30:39 +0300
-Message-ID: <a452cd06-79ca-424d-b259-c8d60fc59772@ti.com>
-References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
- <20190906141816.24095-2-peter.ujfalusi@ti.com>
- <961d30ea-d707-1120-7ecf-f51c11c41891@ti.com>
- <20190908121058.GL2672@vkoul-mobl>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [V4, 1/2] media: dt-bindings: media: i2c: Add bindings for OV02A10
+Date: Mon, 9 Sep 2019 09:46:47 +0300
+Message-ID: <20190909064647.GM5475@paasikivi.fi.intel.com>
+References: <20190907092728.23897-1-dongchun.zhu@mediatek.com>
+ <20190907092728.23897-2-dongchun.zhu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190908121058.GL2672@vkoul-mobl>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: robh+dt@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190907092728.23897-2-dongchun.zhu@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dongchun.zhu@mediatek.com
+Cc: mark.rutland@arm.com, drinkcat@chromium.org, andriy.shevchenko@linux.intel.com, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, shengnan.wang@mediatek.com, tfiga@chromium.org, louis.kuo@mediatek.com, sj.huang@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, bingbu.cao@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Dongchun,
 
-
-On 08/09/2019 15.10, Vinod Koul wrote:
-> On 08-09-19, 10:47, Peter Ujfalusi wrote:
->>
->>
->> On 06/09/2019 17.18, Peter Ujfalusi wrote:
->>> On systems where multiple DMA controllers available, none Slave (for example
->>> memcpy operation) users can not be described in DT as there is no device
->>> involved from the DMA controller's point of view, DMA binding is not usable.
->>> However in these systems still a peripheral might need to be serviced by or
->>> it is better to serviced by specific DMA controller.
->>> When a memcpy is used to/from a memory mapped region for example a DMA in the
->>> same domain can perform better.
->>> For generic software modules doing mem 2 mem operations it also matter that
->>> they will get a channel from a controller which is faster in DDR to DDR mode
->>> rather then from the first controller happen to be loaded.
->>>
->>> This property is inherited, so it may be specified in a device node or in any
->>> of its parent nodes.
->>>
->>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>> ---
->>>  .../devicetree/bindings/dma/dma-domain.yaml   | 59 +++++++++++++++++++
->>>  1 file changed, 59 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/dma/dma-domain.yaml b/Documentation/devicetree/bindings/dma/dma-domain.yaml
->>> new file mode 100644
->>> index 000000000000..c2f182f30081
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/dma/dma-domain.yaml
->>> @@ -0,0 +1,59 @@
->>> +# SPDX-License-Identifier: GPL-2.0
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: DMA Domain Controller Definition
->>> +
->>> +maintainers:
->>> +  - Vinod Koul <vkoul@kernel.org>
->>> +
->>> +allOf:
->>> +  - $ref: "dma-controller.yaml#"
->>> +
->>> +description:
->>> +  On systems where multiple DMA controllers available, none Slave (for example
->>> +  memcpy operation) users can not be described in DT as there is no device
->>> +  involved from the DMA controller's point of view, DMA binding is not usable.
->>> +  However in these systems still a peripheral might need to be serviced by or
->>> +  it is better to serviced by specific DMA controller.
->>> +  When a memcpy is used to/from a memory mapped region for example a DMA in the
->>> +  same domain can perform better.
->>> +  For generic software modules doing mem 2 mem operations it also matter that
->>> +  they will get a channel from a controller which is faster in DDR to DDR mode
->>> +  rather then from the first controller happen to be loaded.
->>> +
->>> +  This property is inherited, so it may be specified in a device node or in any
->>> +  of its parent nodes.
->>> +
->>> +properties:
->>> +  $dma-domain-controller:
->>
->> or domain-dma-controller?
+On Sat, Sep 07, 2019 at 05:27:27PM +0800, dongchun.zhu@mediatek.com wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 > 
-> I feel dma-domain-controller sounds fine as we are defining domains for
-> dmaengine. Another thought which comes here is that why not extend this to
-> slave as well and define dma-domain-controller for them as use that for
-> filtering, that is what we really need along with slave id in case a
-> specific channel is to be used by a peripheral
+> This patch adds device tree bindings documentation for OV02A10 camera sensor.
 > 
-> Thoughts..?
+> Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
 
-I have thought about this, we should be able to drop the phandle to the
-dma controller from the slave binding just fine.
+Please remember to add acks you get.
 
-However we have the dma routers for the slave channels and there is no
-clear way to handle them.
-They are not needed for non slave channels as there is no trigger to
-route. In DRA7 for example we have an event router for EDMA and another
-one for sDMA. If a slave device is to be serviced by EDMA, the EDMA
-event router needs to be specified, for sDMA clients should use the sDMA
-event router.
-In DRA7 case we don't really have DMA controllers for domains, but we
-use the DMA which can service the peripheral better (sDMA is better to
-be used for UART, but can not be used for McASP for example)
+> ---
+>  .../devicetree/bindings/media/i2c/ov02a10.txt      | 54 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  7 +++
+>  2 files changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov02a10.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov02a10.txt b/Documentation/devicetree/bindings/media/i2c/ov02a10.txt
+> new file mode 100644
+> index 0000000..18acc4f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov02a10.txt
+> @@ -0,0 +1,54 @@
+> +* Omnivision OV02A10 MIPI CSI-2 sensor
+> +
+> +Required Properties:
+> +- compatible: shall be "ovti,ov02a10"
+> +- clocks: reference to the eclk input clock
+> +- clock-names: shall be "eclk"
+> +- dovdd-supply: Digital I/O voltage supply, 1.8 volts
+> +- avdd-supply: Analog voltage supply, 2.8 volts
+> +- dvdd-supply: Digital core voltage supply, 1.8 volts
+> +- powerdown-gpios: reference to the GPIO connected to the powerdown pin,
+> +		   if any. This is an active low signal to the OV02A10.
+> +- reset-gpios: reference to the GPIO connected to the reset pin, if any.
+> +	       This is an active high signal to the OV02A10.
+> +
+> +Optional Properties:
+> +- rotation: as defined in
+> +	    Documentation/devicetree/bindings/media/video-interfaces.txt,
+> +	    valid values are 0 (sensor mounted upright) and 180 (sensor
+> +	    mounted upside down).
 
-Then we have the other type of DMA router for daVinci/am33xx/am43xx
-where the crossbar is not for the whole EDMA controller like in DRA7,
-but we have small crossbars for some channels.
+This needs to be either mandatory or the default needs to be documented. I
+think it could be simply:
 
-Other vendors have their own dma router topology..
+	    Documentation/devicetree/bindings/media/video-interfaces.txt,
+	    valid values are 0 (sensor mounted upright; the default) and
+	    180 (sensor mounted upside down).
 
-Too many variables to handle the cases without gotchas, which would need
-heavy churn in the core or in drivers.
+> +
+> +The device node shall contain one 'port' child node with an
+> +'endpoint' subnode for its digital output video port,
+> +in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +&i2c4 {
+> +	ov02a10: camera-sensor@3d {
+> +		compatible = "ovti,ov02a10";
+> +		reg = <0x3d>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&camera_pins_cam1_mclk_on>;
+> +
+> +		clocks = <&topckgen CLK_TOP_MUX_CAMTG2>,
+> +			<&topckgen CLK_TOP_UNIVP_192M_D8>;
+> +		clock-names = "eclk", "freq_mux";
+> +		clock-frequency = <24000000>;
+> +
+> +		dovdd-supply = <&mt6358_vcamio_reg>;
+> +		avdd-supply = <&mt6358_vcama1_reg>;
+> +		dvdd-supply = <&mt6358_vcn18_reg>;
+> +		powerdown-gpios = <&pio 107 GPIO_ACTIVE_LOW>;
+> +		reset-gpios = <&pio 109 GPIO_ACTIVE_HIGH>;
+> +		rotation = <180>;
+> +
+> +		port {
+> +			/* MIPI CSI-2 bus endpoint */
+> +			ov02a10_core: endpoint {
+> +				remote-endpoint = <&ov02a10_0>;
+> +				link-frequencies = /bits/ 64 <390000000>;
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 783569e..41734fb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11816,6 +11816,13 @@ T:	git git://linuxtv.org/media_tree.git
+>  S:	Maintained
+>  F:	drivers/media/i2c/ov13858.c
+>  
+> +OMNIVISION OV02A10 SENSOR DRIVER
+> +M:	Dongchun Zhu <dongchun.zhu@mediatek.com>
+> +L:	linux-media@vger.kernel.org
+> +T:	git git://linuxtv.org/media_tree.git
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/media/i2c/ov02a10.txt
+> +
+>  OMNIVISION OV2680 SENSOR DRIVER
+>  M:	Rui Miguel Silva <rmfrfs@gmail.com>
+>  L:	linux-media@vger.kernel.org
 
-- Péter
+-- 
+Regards,
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Sakari Ailus
+sakari.ailus@linux.intel.com
