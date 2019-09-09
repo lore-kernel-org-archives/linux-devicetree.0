@@ -1,138 +1,60 @@
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
-Date: Mon, 9 Sep 2019 18:48:56 +0100
-Message-ID: <152384b8-c0a8-e6fe-9a1f-52caf00533de@lucaceresoli.net>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-3-luca@lucaceresoli.net>
- <20190901143101.humomdehy5ee73sk@vino>
- <aedad45b-16d6-d189-b045-329727440ca5@mleia.com> <20190909072232.GA990@kunai>
- <8af9a049-06b9-dbe8-827b-5134d20e9435@mleia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH 1/2] cpufreq: ti-cpufreq: Add support for AM3517
+Date: Mon, 9 Sep 2019 20:13:03 +0200
+Message-ID: <6081134F-AACD-412C-B36A-BF9463C9712B@goldelico.com>
+References: <20190909154502.19804-1-aford173@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8af9a049-06b9-dbe8-827b-5134d20e9435@mleia.com>
-Content-Language: en-US
+In-Reply-To: <20190909154502.19804-1-aford173@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>, Wolfram Sang <wsa@the-dreams.de>, jacopo mondi <jacopo@jmondi.org>, Peter Rosin <peda@axentia.se>
-Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>
+To: Adam Ford <aford173@gmail.com>
+Cc: linux-omap@vger.kernel.org, neolynx@gmail.com, letux-kernel@openphoenux.org, andreas@kemnade.info, tony@atomide.com, adam.ford@logicpd.com, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
+Hi Adam,
 
-On 09/09/19 16:10, Vladimir Zapolskiy wrote:
-> Hi Wolfram,
-> 
-> On 09/09/2019 10:22 AM, Wolfram Sang wrote:
->> Hi Vladimir,
->>
->>> I won't attend the LPC, however I would appreciate if you book some
->>
->> A pity. I would have liked to have you in the room. Let's see if we can
->> get enough input from you via mail here.
->>
-> 
-> if it might help, I'll attend the Embedded Recipes and ELCE conferences
-> this year.
-> 
->>> time to review my original / alternative implementation of the TI
->>> DS90Ux9xx I2C bridge device driver.
->>
->> We have only 45 minutes, this will not allow to review specific
->> implementations. I want to give an overview of existing implementations
->> with pros/cons...
->>
-> 
-> Sure! Any shared summary/opinions are greatly welcome.
-> 
->>> The reasons why my driver is better/more flexible/more functional are
->>> discussed earlier, please let me know, if you expect anything else
->>> from me to add, also I would be happy to get a summary of your offline
->>> discussion.
->>
->> ... and I'd appreciate support here from you, like your summary of the
->> back then discussion (from where I can dive deeper if needed).
->>
->> Also, with Luca's new series we discussed some scenarios which can
->> happen WRT to I2C address conflicts. Maybe you could comment on them,
->> too?
-> 
-> I do remember I've commented on the Luca's suggestion of using dynamic
-> I2C addresses from a pool (the introduced "i2c-alias-pool" property).
-> 
-> I have to scrutinize it in Luca's v2, but then it might happen that the
-> userspace won't know to which IC on the remote side it communicates to.
+> Am 09.09.2019 um 17:45 schrieb Adam Ford <aford173@gmail.com>:
+>=20
+> The AM3517 only lists 600MHz @ 1.2V, but the revister values for
 
-I think you suspect this because the assigned alias is
-non-deterministic, so you might end up in writing to the wrong alias.
-Well, this is not possible because the user is not supposed to know the
-alias at all. Let's say you have two identical eeproms on remote port 0,
-with physical addresses 0x50 and 0x51. Then, with my RFCv2 code, you'll
-access them with physical numbers, not the alias:
+a small typo...
 
-# i2cdetect -l
-i2c-0	i2c   	amba:camera-i2c@0      I2C adapter
-i2c-4	i2c   	i2c-0-atr-0            I2C adapter
-i2c-5	i2c   	i2c-0-atr-1            I2C adapter
-# hexdump /sys/bus/i2c/devices/4-0050/eeprom
-0000000 ffff ffff ffff ffff ffff ffff ffff ffff
-*
-0000100
-# hexdump /sys/bus/i2c/devices/4-0051/eeprom
-0000000 0001 0203 0405 0607 0809 0a0b 0c0d 0e0f
-*
-0000100
-#
+s/revister/register/
 
-Here i2c-0 is the "local" bus, i2c-4 and i2c-5 are the remote busses on
-ports 0 and 1. As you can see the eeproms are accessed using a name like
-"4-0050", meaning physical slave address 0x50 on bus 4. No alias is needed.
+> 0x4830A204 =3D 1b86 802f, it seems like am3517 might be a derivative
+> of the omap36 which has OPPs would be OPP50 (300 MHz) and OPP100
+> (600 MHz).
+>=20
+> This patch simply enable adds the am3517 to the compatible table
+> using the omap3630 structure instead of the 3430.
+>=20
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+>=20
+> diff --git a/drivers/cpufreq/ti-cpufreq.c =
+b/drivers/cpufreq/ti-cpufreq.c
+> index f2f58d689320..6b69fb1d6bdf 100644
+> --- a/drivers/cpufreq/ti-cpufreq.c
+> +++ b/drivers/cpufreq/ti-cpufreq.c
+> @@ -270,6 +270,7 @@ static int ti_cpufreq_setup_syscon_register(struct =
+ti_cpufreq_data *opp_data)
+>=20
+> static const struct of_device_id ti_cpufreq_of_match[] =3D {
+> 	{ .compatible =3D "ti,am33xx", .data =3D &am3x_soc_data, },
+> +	{ .compatible =3D "ti,am3517", .data =3D &omap36xx_soc_data, },
+> 	{ .compatible =3D "ti,am43", .data =3D &am4x_soc_data, },
+> 	{ .compatible =3D "ti,dra7", .data =3D &dra7_soc_data },
+> 	{ .compatible =3D "ti,omap34xx", .data =3D &omap34xx_soc_data, =
+},
+> --=20
+> 2.17.1
+>=20
 
-Should you want to know the alias, perhaps for debugging (it's the
-address you'll see on your logic analyzer), they are shown in the kernel
-log.
+Looks good to me.
 
-Does this reply to your concern?
+Should I include your two patches to my patch set (and resend)?
+Or should we keep them separated?
 
->> As I read the old thread, you have a hardcoded aliases using
->> "ti,i2c-bridge-maps". This means you can't have own DTSI files for e.g.
->> add-on modules, do I get this correctly?
->>
-> 
-> Basically hardcoding of aliases completely resolves the highlighted
-> above problem. Still it is possible to have own DTSI files for the FPD
-> link detachable PCBs, and this is an exceptionally important scenario,
-> however some limitations shall be applied:
-> * dt overlays for "local" derializer/deserializer ICs, it's a generic
->   and universal solution, it is successfully used in the field,
-> * only "compatible" PCBs are supposed to be connected (same set of I2C
->   devices/addresses on every such PCB), this is imperfect for sure,
-> * "ti,i2c-bridge-maps" list is excessive to cover "almost compatible"
->   (in the sense from above) PCBs, some of the missed alias matches
->   just won't instantiate a driver, this is of course also imperfect.
-> 
-> In general nothing critical should happen, if some I2C device on the
-> remote side is simply not probed in runtime, in opposite you can imagine
-> that writing for instance to another EEPROM of two on the remote side
-> could be harmful.
-> 
-> Any technically better solution to the two given approaches (from Luca
-> and from me) is more than appreciated. For non-dynamic/fixed local and
-> remote PCBs the fixed mapping is better, the dynamic case is covered
-> by the dt overlays, why not?
-> 
-> As a side note please do remember that the I2C bridging on Maxim GMSL
-> and TI DS90Ux9xx are different, the former one is a real mux, and the
-> latter one is not, I'm uncertain if it's reasonable to think of a
-> generalized solution which covers both IC series, so likely we
-> have to review the developed solutions for them separately instead
-> of trying to work out a combined one.
-> 
-> --
-> Best wishes,
-> Vladimir
-> 
-
-
--- 
-Luca
+BR and thanks,
+Nikolaus
