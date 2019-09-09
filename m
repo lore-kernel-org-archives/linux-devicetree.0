@@ -1,122 +1,65 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH 1/2] backlight: lm3630a: add an enable gpio for the HWEN
- pin
-Date: Mon, 9 Sep 2019 22:13:49 +0200
-Message-ID: <20190909221349.46ca5a1f@aktux>
-References: <20190908203704.30147-1-andreas@kemnade.info>
-        <20190908203704.30147-2-andreas@kemnade.info>
-        <20190909105729.w5552rtop7rhghy2@holly.lan>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 01/12] arm64: dts: renesas: r8a77995: draak: Fix backlight regulator name
+Date: Mon,  9 Sep 2019 11:40:41 -0400
+Message-ID: <20190909154052.30941-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190909105729.w5552rtop7rhghy2@holly.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: lee.jones@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 9 Sep 2019 11:57:29 +0100
-Daniel Thompson <daniel.thompson@linaro.org> wrote:
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> On Sun, Sep 08, 2019 at 10:37:03PM +0200, Andreas Kemnade wrote:
-> > For now just enable it in the probe function to allow i2c
-> > access and disable it on remove. Disabling also means resetting
-> > the register values to default.
-> > 
-> > Tested on Kobo Clara HD.
-> > 
-> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > ---
-> >  drivers/video/backlight/lm3630a_bl.c | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> > 
-> > diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-> > index b04b35d007a2..3b45a1733198 100644
-> > --- a/drivers/video/backlight/lm3630a_bl.c
-> > +++ b/drivers/video/backlight/lm3630a_bl.c
-> > @@ -12,6 +12,8 @@
-> >  #include <linux/uaccess.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/regmap.h>
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/gpio.h>
-> >  #include <linux/pwm.h>
-> >  #include <linux/platform_data/lm3630a_bl.h>
-> >  
-> > @@ -48,6 +50,7 @@ struct lm3630a_chip {
-> >  	struct lm3630a_platform_data *pdata;
-> >  	struct backlight_device *bleda;
-> >  	struct backlight_device *bledb;
-> > +	struct gpio_desc *enable_gpio;
-> >  	struct regmap *regmap;
-> >  	struct pwm_device *pwmd;
-> >  };
-> > @@ -506,6 +509,14 @@ static int lm3630a_probe(struct i2c_client *client,
-> >  		return -ENOMEM;
-> >  	pchip->dev = &client->dev;
-> >  
-> > +	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
-> > +						GPIOD_ASIS);  
-> 
-> Initializing GPIOD_ASIS doesn't look right to me.
-> 
-> If you initialize ASIS then the driver must configure the pin as an
-> output... far easier just to set GPIOD_OUT_HIGH during the get.
-> 
-> Note also that the call to this function should also be moved *below*
-> the calls parse the DT.
-> 
-oops, must have forgotten that, and had good luck here.
-> 
-> > +	if (IS_ERR(pchip->enable_gpio)) {
-> > +		rval = PTR_ERR(pchip->enable_gpio);
-> > +		return rval;
-> > +	}
-> > +
-> > +
-> >  	pchip->regmap = devm_regmap_init_i2c(client, &lm3630a_regmap);
-> >  	if (IS_ERR(pchip->regmap)) {
-> >  		rval = PTR_ERR(pchip->regmap);
-> > @@ -535,6 +546,10 @@ static int lm3630a_probe(struct i2c_client *client,
-> >  	}
-> >  	pchip->pdata = pdata;
-> >  
-> > +	if (pchip->enable_gpio) {
-> > +		gpiod_set_value_cansleep(pchip->enable_gpio, 1);  
-> 
-> Not needed, use GPIOD_OUT_HIGH instead.
-> 
-> 
-> > +		usleep_range(1000, 2000);  
-> 
-> Not needed, this sleep is already part of lm3630a_chip_init().
-> 
-you are right.
-> 
-> > +	}
-> >  	/* chip initialize */
-> >  	rval = lm3630a_chip_init(pchip);
-> >  	if (rval < 0) {
-> > @@ -586,6 +601,9 @@ static int lm3630a_remove(struct i2c_client *client)
-> >  	if (rval < 0)
-> >  		dev_err(pchip->dev, "i2c failed to access register\n");
-> >  
-> > +	if (pchip->enable_gpio)
-> > +		gpiod_set_value_cansleep(pchip->enable_gpio, 0);
-> > +  
-> 
-> Is this needed?
-> 
-> This is a remove path, not a power management path, and we have no idea
-> what the original status of the pin was anyway?
-> 
+[ Upstream commit 45f5d5a9e34d3fe4140a9a3b5f7ebe86c252440a ]
 
-Looking at Ishdn on page 5 of the datasheet, switching it off everytime
-possible seems not needed. We would need to call chip_init() everytime
-we enable the gpio or live with default values.
-Therefore I did decide to not put it into any power management path. But
-switching it on and not switching it off feels so unbalanced. 
+Currently there are two nodes named "regulator1" in the Draak DTS: a
+3.3V regulator for the eMMC and the LVDS decoder, and a 12V regulator
+for the backlight.  This causes the former to be overwritten by the
+latter.
 
-Regards,
-Andreas
+Fix this by renaming all regulators with numerical suffixes to use named
+suffixes, which are less likely to conflict.
+
+Fixes: 4fbd4158fe8967e9 ("arm64: dts: renesas: r8a77995: draak: Add backlight")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+index a7dc11e36fd9d..071f66d8719e7 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+@@ -97,7 +97,7 @@
+ 		reg = <0x0 0x48000000 0x0 0x18000000>;
+ 	};
+ 
+-	reg_1p8v: regulator0 {
++	reg_1p8v: regulator-1p8v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "fixed-1.8V";
+ 		regulator-min-microvolt = <1800000>;
+@@ -106,7 +106,7 @@
+ 		regulator-always-on;
+ 	};
+ 
+-	reg_3p3v: regulator1 {
++	reg_3p3v: regulator-3p3v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "fixed-3.3V";
+ 		regulator-min-microvolt = <3300000>;
+@@ -115,7 +115,7 @@
+ 		regulator-always-on;
+ 	};
+ 
+-	reg_12p0v: regulator1 {
++	reg_12p0v: regulator-12p0v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "D12.0V";
+ 		regulator-min-microvolt = <12000000>;
+-- 
+2.20.1
