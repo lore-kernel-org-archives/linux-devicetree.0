@@ -1,7 +1,7 @@
 From: Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 3/6] arm64: dts: meson-gxm-khadas-vim2: fix uart_A bluetooth node
-Date: Mon,  9 Sep 2019 19:01:24 +0400
-Message-ID: <1568041287-7805-4-git-send-email-christianshewitt@gmail.com>
+Subject: [PATCH 4/6] arm64: dts: meson: libretech-ac: update model description
+Date: Mon,  9 Sep 2019 19:01:25 +0400
+Message-ID: <1568041287-7805-5-git-send-email-christianshewitt@gmail.com>
 References: <1568041287-7805-1-git-send-email-christianshewitt@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1568041287-7805-1-git-send-email-christianshewitt@gmail.com>
@@ -10,26 +10,26 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin
 Cc: Chrisitian Hewitt <christianshewitt@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Fixes: 33344e2111a ("arm64: dts: meson-gxm-khadas-vim2: fix Bluetooth support")
+Shorten the model description to improve readability in some app GUIs
+that show the string.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-index 989d33a..d392062 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-@@ -409,6 +409,9 @@
- 	bluetooth {
- 		compatible = "brcm,bcm43438-bt";
- 		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
-+		max-speed = <2000000>;
-+		clocks = <&wifi32k>;
-+		clock-names = "lpo";
- 	};
- };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
+index 82b1c48..4d59494 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts
+@@ -14,7 +14,7 @@
+ / {
+ 	compatible = "libretech,aml-s805x-ac", "amlogic,s805x",
+ 		     "amlogic,meson-gxl";
+-	model = "Libre Computer Board AML-S805X-AC";
++	model = "Libre Computer AML-S805X-AC";
  
+ 	aliases {
+ 		serial0 = &uart_AO;
 -- 
 2.7.4
