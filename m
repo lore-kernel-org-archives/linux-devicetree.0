@@ -1,42 +1,64 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
-Date: Mon, 9 Sep 2019 09:35:43 -0700
-Message-ID: <20190909163543.GQ52127@atomide.com>
-References: <20190828150037.2640-1-aford173@gmail.com>
- <20190905230443.GA52127@atomide.com>
- <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
- <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
- <20190909134033.s26eiurpat3iekse@pali>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [Patch 10/13] media: am437x-vpfe: Remove print_fourcc helper
+Date: Mon, 09 Sep 2019 09:39:37 -0700
+Message-ID: <7d870b0119afa378dc68c710670b9b550ef5bdd4.camel@perches.com>
+References: <20190909162743.30114-1-bparrot@ti.com>
+         <20190909162743.30114-11-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190909134033.s26eiurpat3iekse@pali>
+In-Reply-To: <20190909162743.30114-11-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Cc: Adam Ford <aford173@gmail.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Adam Ford <adam.ford@logicpd.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Paul Walmsley <paul@pwsan.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
+To: Benoit Parrot <bparrot@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Pali Rohár <pali.rohar@gmail.com> [190909 13:41]:
-> On Monday 09 September 2019 08:37:09 Adam Ford wrote:
-> > I applied this on 5.3 and it is working.  I assume the same is true in for-next.
-
-Hmm I noticed I stopped getting RNG data after several rmmod modprobe
-cycles, or several hd /dev/random reads. Anybody else seeing that?
-
-> > Do you want to submit a formal patch?  I  can mark it as 'tested-by'
-> > This really helps speed up the startup sequence on boards with sshd
-> > because it delays for nearly 80 seconds waiting for entropy without
-> > the hwrng.
+On Mon, 2019-09-09 at 11:27 -0500, Benoit Parrot wrote:
+> print_fourcc helper function was used for debug log the
+> convert a pixel format code into its readable form for display
+> purposes. But since it used a single static buffer to perform
+> the conversion this might lead to display format issue when more
+> than one instance was invoked simultaneously.
 > 
-> Hi! When applying a patch, could you please disable this rng for n900?
-> 
-> In omap3-n900.dts for rng should be status = "disabled" (as Tony already
-> wrote), similarly like for aes.
+> It turns out that print_fourcc can be safely replace by using
+> "%4.4s" instead and casting the pointer to the fourcc code
+> into a (char *).
+[]
+> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+[]
+> @@ -221,20 +221,6 @@ static void pix_to_mbus(struct vpfe_device *vpfe,
+[]
+> @@ -700,8 +686,8 @@ static int vpfe_ccdc_set_pixel_format(struct vpfe_ccdc *ccdc, u32 pixfmt)
+>  {
+>  	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
+>  
+> -	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%s\n",
+> -		 __func__, ccdc->ccdc_cfg.if_type, print_fourcc(pixfmt));
+> +	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%4.4s\n",
+> +		 __func__, ccdc->ccdc_cfg.if_type, (char *)&pixfmt);
 
-Yeah I'll post a proper patch after -rc1.
 
-Regards,
+To avoid any possible defect in the content of pixfmt, it's
+probably better to use vsprintf extension "%4pE", &pixfmt
+see: Documentation/core-api/printk-formats.rst
 
-Tony
+	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%4pE\n",
+		 __func__, ccdc->ccdc_cfg.if_type, &pixfmt);
+
+>  
+>  	if (ccdc->ccdc_cfg.if_type == VPFE_RAW_BAYER) {
+>  		ccdc->ccdc_cfg.bayer.pix_fmt = CCDC_PIXFMT_RAW;
+> @@ -989,8 +975,8 @@ static int vpfe_config_ccdc_image_format(struct vpfe_device *vpfe)
+>  
+>  	vpfe_dbg(2, vpfe, "%s:\n", __func__);
+>  
+> -	vpfe_dbg(1, vpfe, "pixelformat: %s\n",
+> -		print_fourcc(vpfe->v_fmt.fmt.pix.pixelformat));
+> +	vpfe_dbg(1, vpfe, "pixelformat: %4.4s\n",
+> +		 (char *)&vpfe->v_fmt.fmt.pix.pixelformat);
+
+	vpfe_dbg(1, vpfe, "pixelformat: %4pE\n",
+		 &vpfe->v_fmt.fmt.pix.pixelformat);
+
+etc...
