@@ -1,79 +1,84 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
-Date: Mon, 9 Sep 2019 07:56:22 +0300
-Message-ID: <1fb71437-eaa2-99a7-885f-63ee769969aa@mleia.com>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-3-luca@lucaceresoli.net>
- <20190901143101.humomdehy5ee73sk@vino>
- <aedad45b-16d6-d189-b045-329727440ca5@mleia.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [RFC 3/3] dmaengine: Support for requesting channels preferring
+ DMA domain controller
+Date: Mon, 9 Sep 2019 08:56:50 +0300
+Message-ID: <0bd4d678-31be-bead-7591-0452b6fed5f2@ti.com>
+References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
+ <20190906141816.24095-4-peter.ujfalusi@ti.com>
+ <20190908121507.GN2672@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <aedad45b-16d6-d189-b045-329727440ca5@mleia.com>
+In-Reply-To: <20190908121507.GN2672@vkoul-mobl>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>, Luca Ceresoli <luca@lucaceresoli.net>, Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>
-Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: robh+dt@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Luca, Jacopo, Wolfram, Peter,
 
-On 09/08/2019 11:45 PM, Vladimir Zapolskiy wrote:
-> Hi Luca, Jacopo, Wolfram, Peter,
-> 
-> On 09/01/2019 05:31 PM, jacopo mondi wrote:
->> Hi Luca,
->>    thanks for keep pushing this series! I hope we can use part of this
->> for the (long time) on-going GMSL work...
+
+On 08/09/2019 15.15, Vinod Koul wrote:
+> On 06-09-19, 17:18, Peter Ujfalusi wrote:
+>> In case the channel is not requested via the slave API, use the
+>> of_find_dma_domain() to see if a system default DMA controller is
+>> specified.
 >>
->> I hope you will be patient enough to provide (another :) overview
->> of this work during the BoF Wolfram has organized at LPC for the next
->> week.
+>> Add new function which can be used by clients to request channels by mask
+>> from their DMA domain controller if specified.
 >>
->> In the meantime I would have some comments after having a read at the
->> series and trying to apply its concept to GMSL
+>> Client drivers can take advantage of the domain support by moving from
+>> dma_request_chan_by_mask() to dma_domain_request_chan_by_mask()
 >>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>  drivers/dma/dmaengine.c   | 17 ++++++++++++-----
+>>  include/linux/dmaengine.h |  9 ++++++---
+>>  2 files changed, 18 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+>> index 6baddf7dcbfd..087450eed68c 100644
+>> --- a/drivers/dma/dmaengine.c
+>> +++ b/drivers/dma/dmaengine.c
+>> @@ -640,6 +640,10 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
+>>  	struct dma_device *device, *_d;
+>>  	struct dma_chan *chan = NULL;
+>>  
+>> +	/* If np is not specified, get the default DMA domain controller */
+>> +	if (!np)
+>> +		np = of_find_dma_domain(NULL);
+>> +
+>>  	/* Find a channel */
+>>  	mutex_lock(&dma_list_mutex);
+>>  	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
+>> @@ -751,19 +755,22 @@ struct dma_chan *dma_request_slave_channel(struct device *dev,
+>>  EXPORT_SYMBOL_GPL(dma_request_slave_channel);
+>>  
+>>  /**
+>> - * dma_request_chan_by_mask - allocate a channel satisfying certain capabilities
+>> - * @mask: capabilities that the channel must satisfy
+>> + * dma_domain_request_chan_by_mask - allocate a channel by mask from DMA domain
+>> + * @dev:	pointer to client device structure
+>> + * @mask:	capabilities that the channel must satisfy
+>>   *
+>>   * Returns pointer to appropriate DMA channel on success or an error pointer.
+>>   */
+>> -struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
+>> +struct dma_chan *dma_domain_request_chan_by_mask(struct device *dev,
+>> +						 const dma_cap_mask_t *mask)
 > 
-> I won't attend the LPC, however I would appreciate if you book some
-> time to review my original / alternative implementation of the TI
-> DS90Ux9xx I2C bridge device driver.
-> 
-> For your convenience the links to the driver are given below:
-> * dt bindings: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#mead5ea226550b
-> * driver code: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#m2fe3664c5f884
-> * usage example: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#m56c146f5decdc
-> 
-> The reasons why my driver is better/more flexible/more functional are
-> discussed earlier, please let me know, if you expect anything else
-> from me to add, also I would be happy to get a summary of your offline
-> discussion.
+> should we really use dma_request_chan_by_mask() why not create a new api
+> dma_request_chan_by_domain() and use that, it falls back to
+> dma_request_chan_by_mask() if it doesnt find a valid domain!
 
-I forgot to repeat my main objection against Luca's approach, the TI
-DS90Ux9xx I2C bridge driver does not require to call i2c_add_adapter()
-or register a new mux/bus and then do run select/deselect in runtime to
-overcome the created handicap.
+So:
+struct dma_chan *dma_request_chan_by_domain(struct device *dev,
+					    const dma_cap_mask_t *mask);
 
-> The undeniable fact is that the device tree bindings in my I2C bridge
-> implementation can be improved further, thanks to Luca for the comments.
-> 
->> On Tue, Jul 23, 2019 at 10:37:19PM +0200, Luca Ceresoli wrote:
->>> An ATR is a device that looks similar to an i2c-mux: it has an I2C
->>> slave "upstream" port and N master "downstream" ports, and forwards
->>> transactions from upstream to the appropriate downstream port. But is
->>> is different in that the forwarded transaction has a different slave
->>> address. The address used on the upstream bus is called the "alias"
->>> and is (potentially) different from the physical slave address of the
->>> downstream chip.
->>>
->>> Add a helper file (just like i2c-mux.c for a mux or switch) to allow
->>> implementing ATR features in a device driver. The helper takes care or
->>> adapter creation/destruction and translates addresses at each transaction.
->>>
->>> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
->>>
-> 
+?
 
---
-Best wishes,
-Vladimir
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
