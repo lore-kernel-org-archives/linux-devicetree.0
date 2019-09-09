@@ -1,63 +1,84 @@
-From: Yinbo Zhu <yinbo.zhu@nxp.com>
-Subject: [PATCH v1] usb: dwc3: enable otg mode for dwc3 usb ip on layerscape
-Date: Mon,  9 Sep 2019 17:02:44 +0800
-Message-ID: <20190909090244.42543-1-yinbo.zhu@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: yinbo.zhu@nxp.com, xiaobo.xie@nxp.com, jiafei.pan@nxp.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] arm64: dts: renesas: Add /soc dma-ranges
+Date: Mon, 9 Sep 2019 11:05:36 +0200
+Message-ID: <CAMuHMdUWezNDVv+U=VeryssmSFm79zU-ptuKmMechcWBboV1=w@mail.gmail.com>
+References: <20190907161634.27378-1-marek.vasut@gmail.com>
+ <CAMuHMdXkExZXeXnxuKkMC0J4m56cZUmJpcq2JCXuMv3PBzA0Dg@mail.gmail.com>
+ <b77e6a66-be14-4f94-c116-788b8fa18b31@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b77e6a66-be14-4f94-c116-788b8fa18b31@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Wolfram Sang <wsa@the-dreams.de>
 List-Id: devicetree@vger.kernel.org
 
-layerscape otg function should be supported HNP SRP and ADP protocol
-accroing to rm doc, but dwc3 code not realize it and use id pin to
-detect who is host or device(0 is host 1 is device) this patch is to
-enable OTG mode on ls1028ardb ls1088ardb and ls1046ardb in dts
+Hi Marek,
 
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 2 +-
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+On Mon, Sep 9, 2019 at 10:42 AM Marek Vasut <marek.vasut@gmail.com> wrote:
+> On 9/9/19 10:19 AM, Geert Uytterhoeven wrote:
+> > On Sat, Sep 7, 2019 at 6:16 PM <marek.vasut@gmail.com> wrote:
+> >> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+> >>
+> >> Add dma-ranges property into /soc node to describe the DMA capabilities
+> >> of the bus. This is currently needed to translate PCI DMA ranges, which
+> >> are limited to 32bit addresses.
+> >>
+> >> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> >
+> > Thanks for your patch!
+> >
+> >> NOTE: This is needed for the following patches to work correctly:
+> >>       https://patchwork.ozlabs.org/patch/1144870/
+> >>       https://patchwork.ozlabs.org/patch/1144871/
+> >
+> > What happens with the above patches applied, and without this one?
+>
+> It triggers https://patchwork.kernel.org/patch/11087391/#22811745
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 7975519b4f56..5810d0400dbc 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -320,7 +320,7 @@
- 			compatible = "fsl,ls1028a-dwc3", "snps,dwc3";
- 			reg = <0x0 0x3110000 0x0 0x10000>;
- 			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
--			dr_mode = "host";
-+			dr_mode = "otg";
- 			snps,dis_rxdet_inp3_quirk;
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index b0ef08b090dd..ecce6151b9b0 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -582,7 +582,7 @@
- 			compatible = "snps,dwc3";
- 			reg = <0x0 0x3000000 0x0 0x10000>;
- 			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
--			dr_mode = "host";
-+			dr_mode = "otg";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
- 			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index dacd8cf03a7f..4b5413f7c90c 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -385,7 +385,7 @@
- 			compatible = "snps,dwc3";
- 			reg = <0x0 0x3110000 0x0 0x10000>;
- 			interrupts = <0 81 IRQ_TYPE_LEVEL_HIGH>;
--			dr_mode = "host";
-+			dr_mode = "otg";
- 			snps,quirk-frame-length-adjustment = <0x20>;
- 			snps,dis_rxdet_inp3_quirk;
- 			status = "disabled";
+Sure. But what does that mean?
+PCI devices just not working?
+Random memory corruption?
+System lockup?
+Anything else?
+
+> > As PCI/OF driver patches go in through different trees, is it safe to apply
+> > this patch now?
+> > Should they go in together?
+>
+> I didn't get any feedback on the other two patches, but this one here is
+> safe to go in either way.
+>
+> >>  arch/arm64/boot/dts/renesas/r8a7795.dtsi  | 1 +
+> >>  arch/arm64/boot/dts/renesas/r8a7796.dtsi  | 1 +
+> >>  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 +
+> >
+> > Do we need similar patches for the other R-Car Gen3 and RZ/G2 DTS files?
+> > What about R-Car Gen2 and RZ/G1?
+> I suspect we need such patches for any ARM64 machine with PCIe with this
+> 32bit limitation.
+
+What about R-Car Gen2 and RZ/G1, which are ARM32, with LPAE?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
