@@ -1,98 +1,59 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
-Date: Mon, 9 Sep 2019 18:10:44 +0300
-Message-ID: <8af9a049-06b9-dbe8-827b-5134d20e9435@mleia.com>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-3-luca@lucaceresoli.net>
- <20190901143101.humomdehy5ee73sk@vino>
- <aedad45b-16d6-d189-b045-329727440ca5@mleia.com> <20190909072232.GA990@kunai>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/3] soc: amazon: al-pos: Introduce Amazon's Annapurna
+ Labs POS driver
+Date: Mon, 9 Sep 2019 17:16:56 +0200
+Message-ID: <CAK8P3a1fbK-qoK+K1ZsWsU3rkxxZgZGaK8ywFAcM4va1GRn_FQ@mail.gmail.com>
+References: <1568020220-7758-1-git-send-email-talel@amazon.com>
+ <1568020220-7758-3-git-send-email-talel@amazon.com> <CAK8P3a3UF7xPV1U3eW6Jdu754P1bzG208UxD9KUxEm1JjZudww@mail.gmail.com>
+ <98f0028e-5653-3116-fdaa-1385ecdf0289@amazon.com> <CAK8P3a1NVGwYa1bw_vjBatd1xe-i875X1Vq1M+2G_Zxd2Oqusg@mail.gmail.com>
+ <8f7840c3-a682-04a5-18bf-ac7a723725b0@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190909072232.GA990@kunai>
-Content-Language: en-US
+In-Reply-To: <8f7840c3-a682-04a5-18bf-ac7a723725b0@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, jacopo mondi <jacopo@jmondi.org>, Luca Ceresoli <luca@lucaceresoli.net>, Peter Rosin <peda@axentia.se>
-Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>
+To: "Shenhar, Talel" <talel@amazon.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Thomas Gleixner <tglx@linutronix.de>, Patrick Venture <venture@google.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Maxime Ripard <mripard@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, paul.kocialkowski@bootlin.com, mjourdan@baylibre.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>David
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+On Mon, Sep 9, 2019 at 4:11 PM Shenhar, Talel <talel@amazon.com> wrote:
+> On 9/9/2019 4:41 PM, Arnd Bergmann wrote:
+>
+> In current implementation of v1, I am not doing any read barrier, Hence,
+> using the non-relaxed will add unneeded memory barrier.
+>
+> I have no strong objection moving to the non-relaxed version and have an
+> unneeded memory barrier, as this path is not "hot" one.
 
-On 09/09/2019 10:22 AM, Wolfram Sang wrote:
-> Hi Vladimir,
-> 
->> I won't attend the LPC, however I would appreciate if you book some
-> 
-> A pity. I would have liked to have you in the room. Let's see if we can
-> get enough input from you via mail here.
-> 
+Ok, then please add it.
 
-if it might help, I'll attend the Embedded Recipes and ELCE conferences
-this year.
+> Beside of avoiding the unneeded memory barrier, I would be happy to keep
+> common behavior for our drivers:
+>
+> e.g.
+>
+> https://github.com/torvalds/linux/blob/master/drivers/irqchip/irq-al-fic.c#L49
+>
+>
+> So what do you think we should go with? relaxed or non-relaxed?
 
->> time to review my original / alternative implementation of the TI
->> DS90Ux9xx I2C bridge device driver.
-> 
-> We have only 45 minutes, this will not allow to review specific
-> implementations. I want to give an overview of existing implementations
-> with pros/cons...
-> 
+The al_fic_set_trigger() function is clearly a slow-path and should use the
+non-relaxed functions. In case of al_fic_irq_handler(), the extra barrier
+might introduce a measurable overhead, but at the same time I'm
+not sure if that one is correct without the barrier:
 
-Sure! Any shared summary/opinions are greatly welcome.
+If you have an MSI-type interrupt for notifying a device driver of
+a DMA completion, there might not be any other barrier between
+the arrival of the MSI message and the CPU accessing the data.
+Depending on how strict the hardware implements MSI and how
+the IRQ is chained, this could lead to data corruption.
 
->> The reasons why my driver is better/more flexible/more functional are
->> discussed earlier, please let me know, if you expect anything else
->> from me to add, also I would be happy to get a summary of your offline
->> discussion.
-> 
-> ... and I'd appreciate support here from you, like your summary of the
-> back then discussion (from where I can dive deeper if needed).
-> 
-> Also, with Luca's new series we discussed some scenarios which can
-> happen WRT to I2C address conflicts. Maybe you could comment on them,
-> too?
+If the interrupt is only used for level or edge triggered interrupts,
+this is ok since you already need another register read in
+the driver before it can safely access a DMA buffer.
 
-I do remember I've commented on the Luca's suggestion of using dynamic
-I2C addresses from a pool (the introduced "i2c-alias-pool" property).
+In either case, if you can prove that it's safe to use the relaxed
+version here and you think that it may help, it would be good to
+add a comment explaining the reasoning.
 
-I have to scrutinize it in Luca's v2, but then it might happen that the
-userspace won't know to which IC on the remote side it communicates to.
-
-> As I read the old thread, you have a hardcoded aliases using
-> "ti,i2c-bridge-maps". This means you can't have own DTSI files for e.g.
-> add-on modules, do I get this correctly?
-> 
-
-Basically hardcoding of aliases completely resolves the highlighted
-above problem. Still it is possible to have own DTSI files for the FPD
-link detachable PCBs, and this is an exceptionally important scenario,
-however some limitations shall be applied:
-* dt overlays for "local" derializer/deserializer ICs, it's a generic
-  and universal solution, it is successfully used in the field,
-* only "compatible" PCBs are supposed to be connected (same set of I2C
-  devices/addresses on every such PCB), this is imperfect for sure,
-* "ti,i2c-bridge-maps" list is excessive to cover "almost compatible"
-  (in the sense from above) PCBs, some of the missed alias matches
-  just won't instantiate a driver, this is of course also imperfect.
-
-In general nothing critical should happen, if some I2C device on the
-remote side is simply not probed in runtime, in opposite you can imagine
-that writing for instance to another EEPROM of two on the remote side
-could be harmful.
-
-Any technically better solution to the two given approaches (from Luca
-and from me) is more than appreciated. For non-dynamic/fixed local and
-remote PCBs the fixed mapping is better, the dynamic case is covered
-by the dt overlays, why not?
-
-As a side note please do remember that the I2C bridging on Maxim GMSL
-and TI DS90Ux9xx are different, the former one is a real mux, and the
-latter one is not, I'm uncertain if it's reasonable to think of a
-generalized solution which covers both IC series, so likely we
-have to review the developed solutions for them separately instead
-of trying to work out a combined one.
-
---
-Best wishes,
-Vladimir
+       Arnd
