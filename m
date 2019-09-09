@@ -1,119 +1,64 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
-Date: Mon, 9 Sep 2019 15:40:33 +0200
-Message-ID: <20190909134033.s26eiurpat3iekse@pali>
-References: <20190828150037.2640-1-aford173@gmail.com>
- <20190905230443.GA52127@atomide.com>
- <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
- <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/3] soc: amazon: al-pos: Introduce Amazon's Annapurna
+ Labs POS driver
+Date: Mon, 9 Sep 2019 15:41:25 +0200
+Message-ID: <CAK8P3a1NVGwYa1bw_vjBatd1xe-i875X1Vq1M+2G_Zxd2Oqusg@mail.gmail.com>
+References: <1568020220-7758-1-git-send-email-talel@amazon.com>
+ <1568020220-7758-3-git-send-email-talel@amazon.com> <CAK8P3a3UF7xPV1U3eW6Jdu754P1bzG208UxD9KUxEm1JjZudww@mail.gmail.com>
+ <98f0028e-5653-3116-fdaa-1385ecdf0289@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
+In-Reply-To: <98f0028e-5653-3116-fdaa-1385ecdf0289@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Adam Ford <adam.ford@logicpd.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Paul Walmsley <paul@pwsan.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
+To: "Shenhar, Talel" <talel@amazon.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Thomas Gleixner <tglx@linutronix.de>, Patrick Venture <venture@google.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Maxime Ripard <mripard@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, paul.kocialkowski@bootlin.com, mjourdan@baylibre.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>David
 List-Id: devicetree@vger.kernel.org
 
-On Monday 09 September 2019 08:37:09 Adam Ford wrote:
-> On Mon, Sep 9, 2019 at 7:13 AM Adam Ford <aford173@gmail.com> wrote:
-> >
-> > On Thu, Sep 5, 2019 at 6:04 PM Tony Lindgren <tony@atomide.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > * Adam Ford <aford173@gmail.com> [190828 15:01]:
-> > > > The datasheet for the AM3517 shows the RNG is connected to L4.
-> > > > It shows the module address for the RNG is 0x480A0000, and it
-> > > > matches the omap2.dtsi description.  Since the driver can support
-> > > > omap2 and omap4, it seems reasonable to assume the omap3 would
-> > > > use the same core for the RNG.
-> > > >
-> > > > This RFC, mimics much of the omap2 hwmods on the OMAP3. It
-> > > > also adds the necessary clock for driving the RNG.  Unfortunately,
-> > > > it appears non-functional.  If anyone has any suggestions on how
-> > > > to finish the hwmod (or port it to the newer l4 device tree
-> > > > format), feedback is requested.
-> > >
-> > > Yup I'll take the bait :) The patch below seems to do the trick
-> > > for me on dm3730 based on translating your patch to probe with
-> > > ti-sysc.
-> > >
-> > > Not sure about 34xx, it seems we're missing rng_clk? Care
-> > > to give it a try and attempt simlar patches for 34xx and
-> > > 3517?
-> > >
-> > > At least I'm not needing the "ti,no-reset-on-init" property
-> > > that your patch has a comment for. Maybe that's needed on
-> > > some other omap3.
-> > >
-> > > Oh and this needs to default to status = "disabled" for
-> > > HS devices like n900 as it needs to use the omap3-rom-rng.
-> > >
-> > > Regards,
-> > >
-> > > Tony
-> > >
-> > > 8< -----------------------
-> > > diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-> > > --- a/arch/arm/boot/dts/omap36xx.dtsi
-> > > +++ b/arch/arm/boot/dts/omap36xx.dtsi
-> > > @@ -140,6 +140,29 @@
-> > >                         };
-> > >                 };
-> > >
-> > > +               rng_target: target-module@480a0000 {
-> > > +                       compatible = "ti,sysc-omap2", "ti,sysc";
-> > > +                       reg = <0x480a003c 0x4>,
-> > > +                             <0x480a0040 0x4>,
-> > > +                             <0x480a0044 0x4>;
-> > > +                       reg-names = "rev", "sysc", "syss";
-> > > +                       ti,sysc-mask = <(SYSC_OMAP2_AUTOIDLE)>;
-> > > +                       ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> > > +                                       <SYSC_IDLE_NO>;
-> > > +                       ti,syss-mask = <1>;
-> > > +                       clocks = <&rng_ick>;
-> > > +                       clock-names = "ick";
-> > > +                       #address-cells = <1>;
-> > > +                       #size-cells = <1>;
-> > > +                       ranges = <0 0x480a0000 0x2000>;
-> > > +
-> > > +                       rng: rng@0 {
-> > > +                               compatible = "ti,omap2-rng";
-> > > +                               reg = <0x0 0x2000>;
-> > > +                               interrupts = <52>;
-> > > +                       };
-> > > +               };
-> > > +
-> 
-> I applied this on 5.3 and it is working.  I assume the same is true in for-next.
-> 
-> Do you want to submit a formal patch?  I  can mark it as 'tested-by'
-> This really helps speed up the startup sequence on boards with sshd
-> because it delays for nearly 80 seconds waiting for entropy without
-> the hwrng.
+On Mon, Sep 9, 2019 at 1:13 PM Shenhar, Talel <talel@amazon.com> wrote:
+> On 9/9/2019 12:44 PM, Arnd Bergmann wrote:
+> > On Mon, Sep 9, 2019 at 11:14 AM Talel Shenhar <talel@amazon.com> wrote:
 
-Hi! When applying a patch, could you please disable this rng for n900?
+> >> +       writel_relaxed(0, pos->mmio_base + AL_POS_ERROR_LOG_1);
+> > Why do you require _relaxed() accessors here? Please add a comment
+> > explaining that, or use the regular readl()/writel().
+>
+> I don't think commenting is needed here as there is nothing special in
+> this type of access.
+>
+> I don't see this is common to comment the use of the _relaxed accessors.
 
-In omap3-n900.dts for rng should be status = "disabled" (as Tony already
-wrote), similarly like for aes.
+I usually mention it in driver reviews, but most authors revert back
+to the normal accessors when there is no difference.
 
-Thanks!
+> This driver is for SoC using arm64 cpu.
+>
+> If one uses the non-relaxed version of readl while running on arm64, he
+> shall cause read barrier, which is then doing dsm(ld).. This barrier is
+> not needed here, so we spare the use of the more heavy readl in favor of
+> the less "harmful" one.
+>
+> Let me know what you think.
 
-> adam
-> >
-> > Tony,
-> >
-> > Can you tell me what branch you're using?  I am not seeing the note
-> > below, so I am not exactly sure what version to base my testing.
-> >
-> > ada,
-> > >                 /*
-> > >                  * Note that the sysconfig register layout is a subset of the
-> > >                  * "ti,sysc-omap4" type register with just sidle and midle bits
+If the barrier causes no harm, just leave it in to keep the code more
+readable. Most developers don't need to know the difference between
+the two, so using the less common interface just makes the reader
+curious about why it was picked.
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+Avoiding the barrier can make a huge performance difference in a
+hot code path, but the downside is that it can behave in unexpected
+ways if the same code is run on a different CPU architecture that
+does not have the exact same rules about what _relaxed() means.
+
+In fact, replacing a 'readl()' with 'readl_relaxed() + rmb()' can lead
+to slower rather than faster code when the explicit barrier is heavier
+than the implied one (e.g. on x86), or readl_relaxed() does not skip
+the barrier.
+
+The general rule with kernel interfaces when you have two versions
+that both do what you want is to pick the one with the shorter name.
+See spin_lock()/spin_lock_irqsave(),  ioremap()/ioremap_nocache(),
+or ktime_get()/ktime_get_clocktai_ts64(). (yes, there are also
+exceptions)
+
+    Arnd
