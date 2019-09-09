@@ -1,35 +1,48 @@
-From: Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 5/6] dt-bindings: arm: amlogic: update libretech-cc compatible
-Date: Mon,  9 Sep 2019 19:01:26 +0400
-Message-ID: <1568041287-7805-6-git-send-email-christianshewitt@gmail.com>
-References: <1568041287-7805-1-git-send-email-christianshewitt@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/3] arm64: alpine: select AL_POS
+Date: Mon, 9 Sep 2019 17:08:50 +0200
+Message-ID: <CAK8P3a0RUHxcpyUJU5bpd8nqpm0Sqhy4aJaoh7K9jVn8zJC6aQ@mail.gmail.com>
+References: <1568020220-7758-1-git-send-email-talel@amazon.com>
+ <1568020220-7758-4-git-send-email-talel@amazon.com> <CAK8P3a0DEMeFWK+RuAdSLyDYduWWwj9DxP_Beipays-d_6ixnA@mail.gmail.com>
+ <ab512ced-d989-5c10-a550-2a4723d38e7e@amazon.com> <CAK8P3a34eKFXoAPOfkFN5+H4kxOhRjXgws_0wy+d-186LFxcTw@mail.gmail.com>
+ <0d36f94d-596f-0ec7-6951-b097b5ee0d2d@amazon.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568041287-7805-1-git-send-email-christianshewitt@gmail.com>
+In-Reply-To: <0d36f94d-596f-0ec7-6951-b097b5ee0d2d@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Chrisitian Hewitt <christianshewitt@gmail.com>
+To: "Shenhar, Talel" <talel@amazon.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Thomas Gleixner <tglx@linutronix.de>, Patrick Venture <venture@google.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Maxime Ripard <mripard@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, paul.kocialkowski@bootlin.com, mjourdan@baylibre.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>David
 List-Id: devicetree@vger.kernel.org
 
-Update the compatible for the Libre Computer aml-s905x-cc to be more
-descriptive using the format introduced with the aml-s805x-ac board.
+On Mon, Sep 9, 2019 at 3:59 PM Shenhar, Talel <talel@amazon.com> wrote:
+> On 9/9/2019 4:45 PM, Arnd Bergmann wrote:
+>
+> Its not that something will get broken. its error event detector for POS
+> events which allows seeing bad accesses to registers.
+>
+> What is the general rule of which configs to put under select and which
+> under defconfig?
+>
+> I was thinking that "general" SoC support is good under select - those
+> things that we always want.
 
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
----
- Documentation/devicetree/bindings/arm/amlogic.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I generally want as little as possible to be selected, basically only
+things that are required for linking the kernel and booting it without
+potentially destroying the hardware.
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
-index 325c6fd..b3c9dbb 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.yaml
-+++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
-@@ -95,7 +95,7 @@ properties:
-               - amlogic,p212
-               - hwacom,amazetv
-               - khadas,vim
--              - libretech,cc
-+              - libretech,aml-s905x-cc
-               - nexbox,a95x
-               - seirobotics,sei510
-           - const: amlogic,s905x
--- 
-2.7.4
+In particular, I want most drivers to be enabled as loadable modules
+if possible. When you have general-purpose distributions support
+your platform, there is no need to have this module built-in while
+running on a different chip, even if you always want to load the
+module when it's running on yours.
+
+> And specific features, e.g. RAID support or features that supported only
+> on specific HW shall go under defconfig.
+>
+> Similar, I see ARCH_LAYERSCAPE selecting EDAC_SUPPORT.
+
+I think this was done to avoid a link failure. It's also possible that this
+is a mistake and just did not get caught in review.
+
+       Arnd
