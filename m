@@ -1,7 +1,8 @@
 From: <frederic.chen@mediatek.com>
-Subject: [RFC PATCH V3 1/5] dt-bindings: mt8183: Added DIP dt-bindings
-Date: Tue, 10 Sep 2019 03:22:40 +0800
-Message-ID: <20190909192244.9367-2-frederic.chen@mediatek.com>
+Subject: [RFC PATCH V3 5/5] media: platform: mtk-mdp3: Add struct tuning_addr
+ and img_sw_buffer
+Date: Tue, 10 Sep 2019 03:22:44 +0800
+Message-ID: <20190909192244.9367-6-frederic.chen@mediatek.com>
 References: <20190909192244.9367-1-frederic.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,67 +24,59 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frederic Chen <frederic.chen@mediatek.com>
 
-This patch adds DT binding documentation for the Digital Image
-Processing (DIP) unit of camera ISP system on Mediatek's SoCs.
+We added a struct tuning_addr which contains a field "present"
+so that the driver can tell the firmware if we have user tuning
+dataor not.
 
-It depends on the SCP and MDP 3 patch as following:
-
-1. dt-bindings: Add a binding for Mediatek SCP
-   https://patchwork.kernel.org/patch/11027247/
-2. dt-binding: mt8183: Add Mediatek MDP3 dt-bindings
-   https://patchwork.kernel.org/patch/10945603/
+The strcut img_sw_buffer is also added. This struct has no cpu address
+field and uses a handle instead so that we don't pass a cpu address
+to co-processor.
 
 Signed-off-by: Frederic Chen <frederic.chen@mediatek.com>
 ---
- .../bindings/media/mediatek,mt8183-dip.txt    | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8183-dip.txt
+ drivers/media/platform/mtk-mdp3/mtk-img-ipi.h | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek,mt8183-dip.txt b/Documentation/devicetree/bindings/media/mediatek,mt8183-dip.txt
-new file mode 100644
-index 000000000000..3a0435513089
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/mediatek,mt8183-dip.txt
-@@ -0,0 +1,40 @@
-+* Mediatek Digital Image Processor (DIP)
+diff --git a/drivers/media/platform/mtk-mdp3/mtk-img-ipi.h b/drivers/media/platform/mtk-mdp3/mtk-img-ipi.h
+index 9fabe7e8b71d..f61e61faf636 100644
+--- a/drivers/media/platform/mtk-mdp3/mtk-img-ipi.h
++++ b/drivers/media/platform/mtk-mdp3/mtk-img-ipi.h
+@@ -38,6 +38,12 @@ struct img_addr {
+ 	u32	iova;	/* Used by IOMMU HW access */
+ } __attribute__ ((__packed__));
+ 
++struct tuning_addr {
++	u32	present;
++	u32	pa;	/* Used by CM4 access */
++	u32	iova;	/* Used by IOMMU HW access */
++} __attribute__ ((__packed__));
 +
-+Digital Image Processor (DIP) unit in Mediatek ISP system is responsible for
-+image content adjustment according to the tuning parameters. DIP can process
-+the image form memory buffer and output the processed image to multiple output
-+buffers. Furthermore, it can support demosaicing and noise reduction on the
-+images.
+ struct img_sw_addr {
+ 	u64	va;	/* Used by APMCU access */
+ 	u32	pa;	/* Used by CM4 access */
+@@ -105,16 +111,21 @@ struct img_ipi_frameparam {
+ 	u64		drv_data;
+ 	struct img_input	inputs[IMG_MAX_HW_INPUTS];
+ 	struct img_output	outputs[IMG_MAX_HW_OUTPUTS];
+-	struct img_addr		tuning_data;
++	struct tuning_addr	tuning_data;
+ 	struct img_addr		subfrm_data;
+ 	struct img_sw_addr	config_data;
+ 	struct img_sw_addr  self_data;
+ 	/* u8		pq_data[]; */
+ } __attribute__ ((__packed__));
+ 
++struct img_sw_buffer {
++	u64	handle;		/* Used by APMCU access */
++	u32	scp_addr;	/* Used by CM4 access */
++} __attribute__ ((__packed__));
 +
-+Required properties:
-+- compatible: "mediatek,mt8183-dip"
-+- reg: Physical base address and length of the function block register space
-+- interrupts: interrupt number to the cpu
-+- iommus: should point to the respective IOMMU block with master port as
-+  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-+  for details.
-+- mediatek,mdp3: should point to the respective mdp block. DIP hardware
-+  connects to MDP and we can get the processed image with both effect of the
-+  two blocks.
-+- mediatek,larb: must contain the local arbiters in the current SoCs, see
-+  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
-+  for details.
-+- mediatek,scp: should point to the scp node since the we use SCP
-+  coprocessor to control DIP hardware
-+- clocks: must contain the local arbiters 5 (LARB5) and DIP clock
-+- clock-names: must contain "larb5" and "dip"
-+
-+Example:
-+	dip: dip@15022000 {
-+		compatible = "mediatek,mt8183-dip";
-+		mediatek,larb = <&larb5>;
-+		mediatek,mdp3 = <&mdp_rdma0>;
-+		mediatek,scp = <&scp>;
-+		iommus = <&iommu M4U_PORT_CAM_IMGI>;
-+		reg = <0 0x15022000 0 0x6000>;
-+		interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&imgsys CLK_IMG_LARB5>,
-+			 <&imgsys CLK_IMG_DIP>;
-+		clock-names = "larb5",
-+			      "dip";
-+		};
+ struct img_ipi_param {
+ 	u8	usage;
+-	struct	img_sw_addr frm_param;
++	struct img_sw_buffer frm_param;
+ } __attribute__ ((__packed__));
+ 
+ struct img_frameparam {
 -- 
 2.18.0
