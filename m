@@ -1,50 +1,27 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [Patch 09/13] media: am437x-vpfe: fix function trace debug log
-Date: Mon, 09 Sep 2019 09:54:56 -0700
-Message-ID: <ec66e477095bcddb86ffcc7ca10d3e0bbe72f943.camel@perches.com>
-References: <20190909162743.30114-1-bparrot@ti.com>
-         <20190909162743.30114-10-bparrot@ti.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v3 2/2] net: phy: dp83867: Add SGMII mode type switching
+Date: Mon, 9 Sep 2019 09:56:08 -0700
+Message-ID: <2375a453-b14a-c583-2258-e395493d937e@gmail.com>
+References: <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+ <1568047940-14490-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190909162743.30114-10-bparrot@ti.com>
+In-Reply-To: <1568047940-14490-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>, davem@davemloft.net, robh+dt@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Trent Piepho <tpiepho@impinj.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-09-09 at 11:27 -0500, Benoit Parrot wrote:
-> checkpatch.pl nows reports several:
-> WARNING: Prefer using '"%s...", __func__' to using '<function name>',
-> this function's name, in a string
+On 9/9/19 9:52 AM, Vitaly Gaiduk wrote:
+> This patch adds ability to switch beetween two PHY SGMII modes.
+> Some hardware, for example, FPGA IP designs may use 6-wire mode
+> which enables differential SGMII clock to MAC.
 > 
-> So fix these for the whole driver.
+> Signed-off-by: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
 
-Most of these seem to be function tracing comments
-that should probably be removed instead.
-
-The generic kernel facility ftrace works well.
-
-> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-[]
-> @@ -466,7 +466,7 @@ static void vpfe_ccdc_config_ycbcr(struct vpfe_ccdc *ccdc)
->  	struct ccdc_params_ycbcr *params = &ccdc->ccdc_cfg.ycbcr;
->  	u32 syn_mode;
->  
-> -	vpfe_dbg(3, vpfe, "vpfe_ccdc_config_ycbcr:\n");
-> +	vpfe_dbg(3, vpfe, "%s:\n", __func__);
-
-Remove this instead
-
->  	/*
->  	 * first restore the CCDC registers to default values
->  	 * This is important since we assume default values to be set in
-> @@ -598,7 +598,7 @@ static void vpfe_ccdc_config_raw(struct vpfe_ccdc *ccdc)
->  	unsigned int syn_mode;
->  	unsigned int val;
->  
-> -	vpfe_dbg(3, vpfe, "vpfe_ccdc_config_raw:\n");
-> +	vpfe_dbg(3, vpfe, "%s:\n", __func__);
-
-here too, etc...
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
