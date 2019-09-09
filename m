@@ -1,37 +1,52 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v2 3/3] media: Add support for Cadence CSI2RX 2.1
-Date: Mon, 9 Sep 2019 12:41:55 +0300
-Message-ID: <20190909094155.GC843@valkosipuli.retiisi.org.uk>
-References: <20190905105601.27034-1-jank@cadence.com>
- <20190905105601.27034-4-jank@cadence.com>
- <20190906080119.GF1586@valkosipuli.retiisi.org.uk>
- <A67221D2-8F92-4168-83D0-6B1325CA4417@global.cadence.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/3] soc: amazon: al-pos: Introduce Amazon's Annapurna
+ Labs POS driver
+Date: Mon, 9 Sep 2019 11:44:13 +0200
+Message-ID: <CAK8P3a3UF7xPV1U3eW6Jdu754P1bzG208UxD9KUxEm1JjZudww@mail.gmail.com>
+References: <1568020220-7758-1-git-send-email-talel@amazon.com> <1568020220-7758-3-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <A67221D2-8F92-4168-83D0-6B1325CA4417@global.cadence.com>
+In-Reply-To: <1568020220-7758-3-git-send-email-talel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jan Kotas <jank@cadence.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Rafal Ciepiela <rafalc@cadence.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Talel Shenhar <talel@amazon.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Thomas Gleixner <tglx@linutronix.de>, Patrick Venture <venture@google.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Maxime Ripard <mripard@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, paul.kocialkowski@bootlin.com, mjourdan@baylibre.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>David
 List-Id: devicetree@vger.kernel.org
 
-Hi Jan,
+On Mon, Sep 9, 2019 at 11:14 AM Talel Shenhar <talel@amazon.com> wrote:
+>
+> The Amazon's Annapurna Labs SoCs includes Point Of Serialization error
+> logging unit that reports an error in case write error (e.g. attempt to
+> write to a read only register).
+> This patch introduces the support for this unit.
+>
+> Signed-off-by: Talel Shenhar <talel@amazon.com>
 
-On Mon, Sep 09, 2019 at 09:24:15AM +0000, Jan Kotas wrote:
-> >> @@ -439,6 +535,9 @@ static int csi2rx_probe(struct platform_device *pdev)
-> >> 	csi2rx->dev = &pdev->dev;
-> >> 	mutex_init(&csi2rx->lock);
-> >> 
-> >> +	of_id = of_match_node(csi2rx_of_table, pdev->dev.of_node);
-> >> +	csi2rx->vops = (struct csi2rx_vops *)of_id->data;
-> > 
-> > The cast isn't needed, is it?
-> 
-> It’s not, but doesn’t make it more readable?
+Looks ok overall, juts a few minor comments:
 
-If there's no need for it, please don't use explicit cast.
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Talel Shenhar");
+> +MODULE_DESCRIPTION("Amazon's Annapurna Labs POS driver");
 
--- 
-Sakari Ailus
+These usually go to the end of the file.
+
+> +       log1 = readl_relaxed(pos->mmio_base + AL_POS_ERROR_LOG_1);
+> +       if (!FIELD_GET(AL_POS_ERROR_LOG_1_VALID, log1))
+> +               return IRQ_NONE;
+> +
+> +       log0 = readl_relaxed(pos->mmio_base + AL_POS_ERROR_LOG_0);
+> +       writel_relaxed(0, pos->mmio_base + AL_POS_ERROR_LOG_1);
+
+Why do you require _relaxed() accessors here? Please add a comment
+explaining that, or use the regular readl()/writel().
+
+> +       resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       pos->mmio_base = devm_ioremap_resource(&pdev->dev, resource);
+
+This can be simplified to devm_platform_ioremap_resource().
+
+> +       pos->irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
+
+And this is usually written as platform_get_irq()
+
+       Arnd
