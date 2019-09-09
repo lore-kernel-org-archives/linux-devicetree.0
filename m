@@ -1,51 +1,20 @@
-Return-Path: <SRS0=qxAe=XA=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] dt-bindings: power: Add r8a774b1 SYSC power domain definitions
-Date: Thu,  5 Sep 2019 07:52:06 +0100
-Message-Id: <1567666326-27373-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=iPrc=XE=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.220.in.ua ([89.184.67.205]:45532 "EHLO smtp.220.in.ua"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727546AbfIIHQl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 9 Sep 2019 03:16:41 -0400
+From: Oleh Kravchenko <oleg@kaa.org.ua>
+Subject: v7 EL15203000
+Date: Mon,  9 Sep 2019 10:16:30 +0300
+Message-Id: <20190909071632.14392-1-oleg@kaa.org.ua>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds power domain indices for RZ/G2N(a.k.a r8a774b1) SoC.
+[PATCH v7 1/2] dt-bindings: Add docs for EL15203000
+[PATCH v7 2/2] leds: add LED driver for EL15203000 board
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- include/dt-bindings/power/r8a774b1-sysc.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 include/dt-bindings/power/r8a774b1-sysc.h
-
-diff --git a/include/dt-bindings/power/r8a774b1-sysc.h b/include/dt-bindings/power/r8a774b1-sysc.h
-new file mode 100644
-index 0000000..3737364
---- /dev/null
-+++ b/include/dt-bindings/power/r8a774b1-sysc.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (C) 2019 Renesas Electronics Corp.
-+ */
-+#ifndef __DT_BINDINGS_POWER_R8A774B1_SYSC_H__
-+#define __DT_BINDINGS_POWER_R8A774B1_SYSC_H__
-+
-+/*
-+ * These power domain indices match the numbers of the interrupt bits
-+ * representing the power areas in the various Interrupt Registers
-+ * (e.g. SYSCISR, Interrupt Status Register)
-+ */
-+
-+#define R8A774B1_PD_CA57_CPU0		 0
-+#define R8A774B1_PD_CA57_CPU1		 1
-+#define R8A774B1_PD_A3VP		 9
-+#define R8A774B1_PD_CA57_SCU		12
-+#define R8A774B1_PD_A3VC		14
-+#define R8A774B1_PD_3DG_A		17
-+#define R8A774B1_PD_3DG_B		18
-+#define R8A774B1_PD_A2VC1		26
-+
-+/* Always-on power area */
-+#define R8A774B1_PD_ALWAYS_ON		32
-+
-+#endif /* __DT_BINDINGS_POWER_R8A774B1_SYSC_H__ */
--- 
-2.7.4
+Fixed compilation error missing variable led.
+Compiled and checked on real device.
