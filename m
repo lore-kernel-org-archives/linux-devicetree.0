@@ -1,48 +1,87 @@
-From: Talel Shenhar <talel@amazon.com>
-Subject: [PATCH 1/3] dt-bindings: soc: al-pos: Amazon's Annapurna Labs POS
-Date: Mon, 9 Sep 2019 12:10:18 +0300
-Message-ID: <1568020220-7758-2-git-send-email-talel@amazon.com>
-References: <1568020220-7758-1-git-send-email-talel@amazon.com>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH] arm64: dts: renesas: Add /soc dma-ranges
+Date: Mon, 9 Sep 2019 11:12:55 +0200
+Message-ID: <3e7aebea-9394-8e87-2dbd-0b503fc52799@gmail.com>
+References: <20190907161634.27378-1-marek.vasut@gmail.com>
+ <CAMuHMdXkExZXeXnxuKkMC0J4m56cZUmJpcq2JCXuMv3PBzA0Dg@mail.gmail.com>
+ <b77e6a66-be14-4f94-c116-788b8fa18b31@gmail.com>
+ <CAMuHMdUWezNDVv+U=VeryssmSFm79zU-ptuKmMechcWBboV1=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568020220-7758-1-git-send-email-talel@amazon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, tglx@linutronix.de, arnd@arndb.de, venture@google.com, linus.walleij@linaro.org, olof@lixom.net, mripard@kernel.org, ssantosh@kernel.org, paul.kocialkowski@bootlin.com, mjourdan@baylibre.com, catalin.marinas@arm.com, will@kernel.org, talel@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, barakw@amazon.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAMuHMdUWezNDVv+U=VeryssmSFm79zU-ptuKmMechcWBboV1=w@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Wolfram Sang <wsa@the-dreams.de>
 List-Id: devicetree@vger.kernel.org
 
-Document Amazon's Annapurna Labs POS SoC binding.
+On 9/9/19 11:05 AM, Geert Uytterhoeven wrote:
+> Hi Marek,
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
----
- .../devicetree/bindings/soc/amazon/amazon,al-pos.txt   | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt b/Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
-new file mode 100644
-index 00000000..035cc571
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
-@@ -0,0 +1,18 @@
-+Amazon's Annapurna Labs POS
-+
-+POS node is defined to describe the Point Of Serialization (POS) logger
-+unit.
-+
-+Required properties:
-+- compatible:	Shall be "amazon,al-pos".
-+- reg:		POS logger resources.
-+- interrupts:	should contain the interrupt for pos error event.
-+
-+Example:
-+
-+al_pos {
-+	compatible = "amazon,al-pos";
-+	reg = <0x0 0xf0070084 0x0 0x00000008>;
-+	interrupt-parent = <&amazon_system_fabric>;
-+	interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
-+};
+> On Mon, Sep 9, 2019 at 10:42 AM Marek Vasut <marek.vasut@gmail.com> wrote:
+>> On 9/9/19 10:19 AM, Geert Uytterhoeven wrote:
+>>> On Sat, Sep 7, 2019 at 6:16 PM <marek.vasut@gmail.com> wrote:
+>>>> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+>>>>
+>>>> Add dma-ranges property into /soc node to describe the DMA capabilities
+>>>> of the bus. This is currently needed to translate PCI DMA ranges, which
+>>>> are limited to 32bit addresses.
+>>>>
+>>>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+>>>
+>>> Thanks for your patch!
+>>>
+>>>> NOTE: This is needed for the following patches to work correctly:
+>>>>       https://patchwork.ozlabs.org/patch/1144870/
+>>>>       https://patchwork.ozlabs.org/patch/1144871/
+>>>
+>>> What happens with the above patches applied, and without this one?
+>>
+>> It triggers https://patchwork.kernel.org/patch/11087391/#22811745
+> 
+> Sure. But what does that mean?
+> PCI devices just not working?
+> Random memory corruption?
+> System lockup?
+> Anything else?
+
+Instead of translating the PCI DMA range to 0x40000000-0xffffffff , the
+PCI code in the aforementioned patches defaults to maximum range, which
+prevents various devices from working correctly, as the buffers get
+allocated above the 32bit boundary.
+
+>>> As PCI/OF driver patches go in through different trees, is it safe to apply
+>>> this patch now?
+>>> Should they go in together?
+>>
+>> I didn't get any feedback on the other two patches, but this one here is
+>> safe to go in either way.
+>>
+>>>>  arch/arm64/boot/dts/renesas/r8a7795.dtsi  | 1 +
+>>>>  arch/arm64/boot/dts/renesas/r8a7796.dtsi  | 1 +
+>>>>  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 +
+>>>
+>>> Do we need similar patches for the other R-Car Gen3 and RZ/G2 DTS files?
+>>> What about R-Car Gen2 and RZ/G1?
+>> I suspect we need such patches for any ARM64 machine with PCIe with this
+>> 32bit limitation.
+> 
+> What about R-Car Gen2 and RZ/G1, which are ARM32, with LPAE?
+
+Presumably we need that too ?
+
 -- 
-2.7.4
+Best regards,
+Marek Vasut
