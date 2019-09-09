@@ -1,52 +1,35 @@
-From: Dong Aisheng <dongas86@gmail.com>
-Subject: Re: [PATCH v2 01/15] arm64: dts: imx8qxp: add fallback compatible
- string for scu pd
-Date: Mon, 9 Sep 2019 22:27:10 +0800
-Message-ID: <CAA+hA=TNJt00hqdajYy0jrzMU9+K6Xsu+3hSyouPXmhGAyYxtg@mail.gmail.com>
-References: <1563290089-11085-1-git-send-email-aisheng.dong@nxp.com>
- <1563290089-11085-2-git-send-email-aisheng.dong@nxp.com>
- <20190829102009.GA22728@optiplex>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190829102009.GA22728@optiplex>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oliver Graute <oliver.graute@gmail.com>
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+From: Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH 0/6] arm64: meson-gx: misc fixes and updates
+Date: Mon,  9 Sep 2019 19:01:21 +0400
+Message-ID: <1568041287-7805-1-git-send-email-christianshewitt@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Chrisitian Hewitt <christianshewitt@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Oliver,
+This patchset:
 
-On Thu, Aug 29, 2019 at 6:20 PM Oliver Graute <oliver.graute@gmail.com> wrote:
->
-> On 16/07/19, Dong Aisheng wrote:
-> > According to binding doc, add the fallback compatible string for
-> > scu pd.
->
-> This Patch series (v2) is running fine for some weeks on my iMX8QM Board.
->
-> So feel free to use my Tag:
-> Tested-by: Oliver Graute <oliver.graute@kococonnector.com>
->
-> Will there be an updated version of this Patch series which apply on
-> latest linux next?
+- Fixes bluetooth on Khadas VIM2
+- Fixes bluetooth on Khadas VIM
+- Fixes GPIO key dt on Khadas VIM
+- Updates model for AML-S805X-CC
+- Updates model/compatible for AML-S905X-CC
 
-Thanks for the test.
-I have a local version, will rebase to latest next and resend.
+Christian Hewitt (6):
+  arm64: dts: meson-gxl-s905x-khadas-vim: fix gpio-keys-polled node
+  arm64: dts: meson-gxl-s905x-khadas-vim: fix uart_A bluetooth node
+  arm64: dts: meson-gxm-khadas-vim2: fix uart_A bluetooth node
+  arm64: dts: meson: libretech-ac: update model description
+  dt-bindings: arm: amlogic: update libretech-cc compatible
+  arm64: dts: meson: libretech-cc: update model and compatible
 
-Regards
-Aisheng
+ Documentation/devicetree/bindings/arm/amlogic.yaml           | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dts | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts   | 7 ++++---
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 5 +++--
+ arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts        | 3 +++
+ 5 files changed, 12 insertions(+), 7 deletions(-)
 
->
-> Best Regards,
->
-> Oliver
+-- 
+2.7.4
