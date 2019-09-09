@@ -1,62 +1,139 @@
 From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 0/2] ethtool: implement Energy Detect Powerdown support via phy-tunable
-Date: Mon, 9 Sep 2019 16:12:49 +0300
-Message-ID: <20190909131251.3634-1-alexandru.ardelean@analog.com>
+Subject: [PATCH v3 2/2] net: phy: adin: implement Energy Detect Powerdown mode via phy-tunable
+Date: Mon, 9 Sep 2019 16:12:51 +0300
+Message-ID: <20190909131251.3634-3-alexandru.ardelean@analog.com>
+References: <20190909131251.3634-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190909131251.3634-1-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-This changeset proposes a new control for PHY tunable to control Energy
-Detect Power Down.
+This driver becomes the first user of the kernel's `ETHTOOL_PHY_EDPD`
+phy-tunable feature.
+EDPD is also enabled by default on PHY config_init, but can be disabled via
+the phy-tunable control.
 
-The `phy_tunable_id` has been named `ETHTOOL_PHY_EDPD` since it looks like
-this feature is common across other PHYs (like EEE), and defining
-`ETHTOOL_PHY_ENERGY_DETECT_POWER_DOWN` seems too long.
-    
-The way EDPD works, is that the RX block is put to a lower power mode,
-except for link-pulse detection circuits. The TX block is also put to low
-power mode, but the PHY wakes-up periodically to send link pulses, to avoid
-lock-ups in case the other side is also in EDPD mode.
-    
-Currently, there are 2 PHY drivers that look like they could use this new
-PHY tunable feature: the `adin` && `micrel` PHYs.
+When enabling EDPD, it's also a good idea (for the ADIN PHYs) to enable TX
+periodic pulses, so that in case the other PHY is also on EDPD mode, there
+is no lock-up situation where both sides are waiting for the other to
+transmit.
 
-This series updates only the `adin` PHY driver to support this new feature,
-as this chip has been tested. A change for `micrel` can be proposed after a
-discussion of the PHY-tunable API is resolved.
+Via the phy-tunable control, TX pulses can be disabled if specifying 0
+`tx-interval` via ethtool.
 
-Alexandru Ardelean (2):
-  ethtool: implement Energy Detect Powerdown support via phy-tunable
-  net: phy: adin: implement Energy Detect Powerdown mode via phy-tunable
+The ADIN PHY supports only fixed 1 second intervals; they cannot be
+configured. That is why the acceptable values are 1,
+ETHTOOL_PHY_EDPD_DFLT_TX_INTERVAL and ETHTOOL_PHY_EDPD_NO_TX (which
+disables TX pulses).
 
- drivers/net/phy/adin.c       | 61 ++++++++++++++++++++++++++++++++++++
- include/uapi/linux/ethtool.h | 19 +++++++++++
- net/core/ethtool.c           |  6 ++++
- 3 files changed, 86 insertions(+)
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/net/phy/adin.c | 61 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
---
-
-Changelog v2 -> v3:
-* implement Andrew's review comments:
-  1. for patch `ethtool: implement Energy Detect Powerdown support via
-     phy-tunable`
-     - ETHTOOL_PHY_EDPD_DFLT_TX_INTERVAL == 0xffff
-     - ETHTOOL_PHY_EDPD_NO_TX            == 0xfffe
-     - added comment in include/uapi/linux/ethtool.h
-  2. for patch `net: phy: adin: implement Energy Detect Powerdown mode via
-     phy-tunable`
-     - added comments about interval & units for the ADIN PHY
-     - in `adin_set_edpd()`: add a switch statement of all the valid values
-     - in `adin_get_edpd()`: return `ETHTOOL_PHY_EDPD_DFLT_TX_INTERVAL`
-       since the PHY only supports a single TX-interval value (1 second)
-
-Changelog v1 -> v2:
-* initial series was made up of 2 sub-series: 1 for kernel & 1 for ethtool
-  in userspace; v2 contains only the kernel series
+diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
+index 4dec83df048d..5f5f73a58122 100644
+--- a/drivers/net/phy/adin.c
++++ b/drivers/net/phy/adin.c
+@@ -26,6 +26,11 @@
  
+ #define ADIN1300_RX_ERR_CNT			0x0014
+ 
++#define ADIN1300_PHY_CTRL_STATUS2		0x0015
++#define   ADIN1300_NRG_PD_EN			BIT(3)
++#define   ADIN1300_NRG_PD_TX_EN			BIT(2)
++#define   ADIN1300_NRG_PD_STATUS		BIT(1)
++
+ #define ADIN1300_PHY_CTRL2			0x0016
+ #define   ADIN1300_DOWNSPEED_AN_100_EN		BIT(11)
+ #define   ADIN1300_DOWNSPEED_AN_10_EN		BIT(10)
+@@ -328,12 +333,62 @@ static int adin_set_downshift(struct phy_device *phydev, u8 cnt)
+ 			    ADIN1300_DOWNSPEEDS_EN);
+ }
+ 
++static int adin_get_edpd(struct phy_device *phydev, u16 *tx_interval)
++{
++	int val;
++
++	val = phy_read(phydev, ADIN1300_PHY_CTRL_STATUS2);
++	if (val < 0)
++		return val;
++
++	if (ADIN1300_NRG_PD_EN & val) {
++		if (val & ADIN1300_NRG_PD_TX_EN)
++			/* default is 1 second */
++			*tx_interval = ETHTOOL_PHY_EDPD_DFLT_TX_INTERVAL;
++		else
++			*tx_interval = ETHTOOL_PHY_EDPD_NO_TX;
++	} else {
++		*tx_interval = ETHTOOL_PHY_EDPD_DISABLE;
++	}
++
++	return 0;
++}
++
++static int adin_set_edpd(struct phy_device *phydev, u16 tx_interval)
++{
++	u16 val;
++
++	if (tx_interval == ETHTOOL_PHY_EDPD_DISABLE)
++		return phy_clear_bits(phydev, ADIN1300_PHY_CTRL_STATUS2,
++				(ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN));
++
++	val = ADIN1300_NRG_PD_EN;
++
++	switch (tx_interval) {
++	case 1: /* second */
++		/* fallthrough */
++	case ETHTOOL_PHY_EDPD_DFLT_TX_INTERVAL:
++		val |= ADIN1300_NRG_PD_TX_EN;
++		/* fallthrough */
++	case ETHTOOL_PHY_EDPD_NO_TX:
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return phy_modify(phydev, ADIN1300_PHY_CTRL_STATUS2,
++			  (ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN),
++			  val);
++}
++
+ static int adin_get_tunable(struct phy_device *phydev,
+ 			    struct ethtool_tunable *tuna, void *data)
+ {
+ 	switch (tuna->id) {
+ 	case ETHTOOL_PHY_DOWNSHIFT:
+ 		return adin_get_downshift(phydev, data);
++	case ETHTOOL_PHY_EDPD:
++		return adin_get_edpd(phydev, data);
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+@@ -345,6 +400,8 @@ static int adin_set_tunable(struct phy_device *phydev,
+ 	switch (tuna->id) {
+ 	case ETHTOOL_PHY_DOWNSHIFT:
+ 		return adin_set_downshift(phydev, *(const u8 *)data);
++	case ETHTOOL_PHY_EDPD:
++		return adin_set_edpd(phydev, *(const u16 *)data);
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+@@ -368,6 +425,10 @@ static int adin_config_init(struct phy_device *phydev)
+ 	if (rc < 0)
+ 		return rc;
+ 
++	rc = adin_set_edpd(phydev, 1);
++	if (rc < 0)
++		return rc;
++
+ 	phydev_dbg(phydev, "PHY is using mode '%s'\n",
+ 		   phy_modes(phydev->interface));
+ 
+-- 
 2.20.1
