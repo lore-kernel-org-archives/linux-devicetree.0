@@ -1,7 +1,7 @@
 From: Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH 6/6] arm64: dts: meson: libretech-cc: update model and compatible
-Date: Mon,  9 Sep 2019 19:01:27 +0400
-Message-ID: <1568041287-7805-7-git-send-email-christianshewitt@gmail.com>
+Subject: [PATCH 5/6] dt-bindings: arm: amlogic: update libretech-cc compatible
+Date: Mon,  9 Sep 2019 19:01:26 +0400
+Message-ID: <1568041287-7805-6-git-send-email-christianshewitt@gmail.com>
 References: <1568041287-7805-1-git-send-email-christianshewitt@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1568041287-7805-1-git-send-email-christianshewitt@gmail.com>
@@ -10,30 +10,26 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin
 Cc: Chrisitian Hewitt <christianshewitt@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Shorten the model description to improve readability in some app GUIs
-that show the string. Update compatible to be more descriptive, using
-the format of the LaFrite board in meson-gxl-s805x-libretech-ac.dts.
+Update the compatible for the Libre Computer aml-s905x-cc to be more
+descriptive using the format introduced with the aml-s805x-ac board.
 
 Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-index 4b8ce73..e8348b2 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-@@ -12,8 +12,9 @@
- #include "meson-gxl-s905x.dtsi"
- 
- / {
--	compatible = "libretech,cc", "amlogic,s905x", "amlogic,meson-gxl";
--	model = "Libre Computer Board AML-S905X-CC";
-+	compatible = "libretech,aml-s905x-cc", "amlogic,s905x",
-+		     "amlogic,meson-gxl";
-+	model = "Libre Computer AML-S905X-CC";
- 
- 	aliases {
- 		serial0 = &uart_AO;
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+index 325c6fd..b3c9dbb 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.yaml
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -95,7 +95,7 @@ properties:
+               - amlogic,p212
+               - hwacom,amazetv
+               - khadas,vim
+-              - libretech,cc
++              - libretech,aml-s905x-cc
+               - nexbox,a95x
+               - seirobotics,sei510
+           - const: amlogic,s905x
 -- 
 2.7.4
