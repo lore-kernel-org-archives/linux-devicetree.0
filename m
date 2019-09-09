@@ -1,99 +1,52 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 2/2] net: phy: dp83867: Add SGMII mode type switching
-Date: Mon, 9 Sep 2019 07:23:16 -0700
-Message-ID: <51cf6e69-14ad-394e-0998-6032d239b717@gmail.com>
-References: <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
- <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [PATCH v2 01/15] arm64: dts: imx8qxp: add fallback compatible
+ string for scu pd
+Date: Mon, 9 Sep 2019 22:27:10 +0800
+Message-ID: <CAA+hA=TNJt00hqdajYy0jrzMU9+K6Xsu+3hSyouPXmhGAyYxtg@mail.gmail.com>
+References: <1563290089-11085-1-git-send-email-aisheng.dong@nxp.com>
+ <1563290089-11085-2-git-send-email-aisheng.dong@nxp.com>
+ <20190829102009.GA22728@optiplex>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>, davem@davemloft.net, robh+dt@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Trent Piepho <tpiepho@impinj.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190829102009.GA22728@optiplex>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oliver Graute <oliver.graute@gmail.com>
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Oliver,
 
+On Thu, Aug 29, 2019 at 6:20 PM Oliver Graute <oliver.graute@gmail.com> wrote:
+>
+> On 16/07/19, Dong Aisheng wrote:
+> > According to binding doc, add the fallback compatible string for
+> > scu pd.
+>
+> This Patch series (v2) is running fine for some weeks on my iMX8QM Board.
+>
+> So feel free to use my Tag:
+> Tested-by: Oliver Graute <oliver.graute@kococonnector.com>
+>
+> Will there be an updated version of this Patch series which apply on
+> latest linux next?
 
-On 9/9/2019 4:02 AM, Vitaly Gaiduk wrote:
-> This patch adds ability to switch beetween two PHY SGMII modes.
-> Some hardware, for example, FPGA IP designs may use 6-wire mode
-> which enables differential SGMII clock to MAC.
-> 
-> Signed-off-by: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
-> ---
-> Changes in v2:
-> - changed variable sgmii_type name to sgmii_ref_clk_en
-> 
->  drivers/net/phy/dp83867.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-> index 1f1ecee..cd6260e 100644
-> --- a/drivers/net/phy/dp83867.c
-> +++ b/drivers/net/phy/dp83867.c
-> @@ -37,6 +37,7 @@
->  #define DP83867_STRAP_STS2	0x006f
->  #define DP83867_RGMIIDCTL	0x0086
->  #define DP83867_IO_MUX_CFG	0x0170
-> +#define DP83867_SGMIICTL	0x00D3
->  #define DP83867_10M_SGMII_CFG   0x016F
->  #define DP83867_10M_SGMII_RATE_ADAPT_MASK BIT(7)
-> 
-> @@ -61,6 +62,9 @@
->  #define DP83867_RGMII_TX_CLK_DELAY_EN		BIT(1)
->  #define DP83867_RGMII_RX_CLK_DELAY_EN		BIT(0)
-> 
-> +/* SGMIICTL bits */
-> +#define DP83867_SGMII_TYPE		BIT(14)
-> +
->  /* STRAP_STS1 bits */
->  #define DP83867_STRAP_STS1_RESERVED		BIT(11)
-> 
-> @@ -109,6 +113,7 @@ struct dp83867_private {
->  	bool rxctrl_strap_quirk;
->  	bool set_clk_output;
->  	u32 clk_output_sel;
-> +	bool sgmii_ref_clk_en;
->  };
-> 
->  static int dp83867_ack_interrupt(struct phy_device *phydev)
-> @@ -197,6 +202,9 @@ static int dp83867_of_init(struct phy_device *phydev)
->  	dp83867->rxctrl_strap_quirk = of_property_read_bool(of_node,
->  					"ti,dp83867-rxctrl-strap-quirk");
-> 
-> +	dp83867->sgmii_ref_clk_en = of_property_read_bool(of_node,
-> +					"ti,sgmii-ref-clock-output-enable");
-> +
->  	/* Existing behavior was to use default pin strapping delay in rgmii
->  	 * mode, but rgmii should have meant no delay.  Warn existing users.
->  	 */
-> @@ -389,6 +397,14 @@ static int dp83867_config_init(struct phy_device *phydev)
-> 
->  		if (ret)
->  			return ret;
-> +
-> +		/* SGMII type is set to 4-wire mode by default */
-> +		if (dp83867->sgmii_ref_clk_en) {
-> +			/* Switch on 6-wire mode */
-> +			val = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL);
-> +			val |= DP83867_SGMII_TYPE;
-> +			phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL, val);
-> +		}
+Thanks for the test.
+I have a local version, will rebase to latest next and resend.
 
-Is there a case where the value could be retained across a power
-on/reset cycle and you would want to make sure you do write the intended
-"wire mode" here? What I am suggesting is just changing this into a:
+Regards
+Aisheng
 
-	val =  phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL);
-	if (dp83867->sgmii_ref_clk_en)
-		val |= DP83867_SGMII_TYPE;
-	else
-		val &= ~DP83867_SGMII_TYPE;
-	phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL, val);
-	
-Other than that, LGTM
--- 
-Florian
+>
+> Best Regards,
+>
+> Oliver
