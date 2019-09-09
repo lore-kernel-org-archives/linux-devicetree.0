@@ -1,42 +1,25 @@
 From: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
-Subject: [PATCH v2 1/2] net: phy: dp83867: Add documentation for SGMII mode type
-Date: Mon,  9 Sep 2019 14:02:23 +0300
-Message-ID: <1568026945-3857-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
-References: <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
- <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+Subject: Re: [PATCH 1/2] net: phy: dp83867: Add documentation for SGMII mode
+ type
+Date: Mon, 9 Sep 2019 14:07:12 +0300
+Message-ID: <e7b52007-c35e-c00f-81f1-b836e68b77bd@cloudbear.ru>
+References: <20190907153919.GC21922@lunn.ch>
+ <1567700761-14195-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+ <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
+ <2894361567896439@iva5-be053096037b.qloud-c.yandex.net>
+ <20190908085417.GA28580@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+In-Reply-To: <20190908085417.GA28580@lunn.ch>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net, robh+dt@kernel.org, f.fainelli@gmail.com
-Cc: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Trent Piepho <tpiepho@impinj.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Trent Piepho <tpiepho@impinj.com>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation of ti,sgmii-ref-clock-output-enable
-which can be used to select SGMII mode type (4 or 6-wire).
+I've done required changes. Sorry for HTML in previous mail I sent it 
+from mobile app which has not disabling HTML.
 
-Signed-off-by: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
----
-Changes in v2:
-- renamed ti,sgmii-type to ti,sgmii-ref-clock-output-enable
-  and extended description
-
- Documentation/devicetree/bindings/net/ti,dp83867.txt | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/net/ti,dp83867.txt b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-index db6aa3f..c98c682 100644
---- a/Documentation/devicetree/bindings/net/ti,dp83867.txt
-+++ b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-@@ -37,6 +37,10 @@ Optional property:
- 			      for applicable values.  The CLK_OUT pin can also
- 			      be disabled by this property.  When omitted, the
- 			      PHY's default will be left as is.
-+	- ti,sgmii-ref-clock-output-enable - This denotes the fact which
-+				    SGMII configuration is used (4 or 6-wire modes).
-+				    Some MACs work with differential SGMII clock.
-+				    See data manual for details.
-
- Note: ti,min-output-impedance and ti,max-output-impedance are mutually
-       exclusive. When both properties are present ti,max-output-impedance
---
-2.7.4
+Vitaly.
