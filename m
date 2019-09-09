@@ -1,78 +1,31 @@
-Return-Path: <SRS0=Molx=W5=onstation.org=masneyb@kernel.org>
-Date: Mon, 2 Sep 2019 17:29:38 -0400
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH v5 4/5] interconnect: qcom: Add QCS404 interconnect
- provider driver
-Message-ID: <20190902212938.GA5080@onstation.org>
-References: <20190723142339.27772-1-georgi.djakov@linaro.org>
- <20190723142339.27772-5-georgi.djakov@linaro.org>
- <20190825204155.GA6879@onstation.org>
+Return-Path: <SRS0=WogO=XE=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190825204155.GA6879@onstation.org>
-To: Georgi Djakov <georgi.djakov@linaro.org>, bjorn.andersson@linaro.org
-Cc: robh+dt@kernel.org, agross@kernel.org, vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <1567675844-19247-1-git-send-email-biju.das@bp.renesas.com> <1567675844-19247-2-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1567675844-19247-2-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 9 Sep 2019 14:19:43 +0200
+Message-ID: <CAMuHMdUTMi4R3Qno+QvpxVMP64_ScV+uF0A13XXpOGCCR0c0zQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: arm: Document RZ/G2N SoC DT bindings
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Sun, Aug 25, 2019 at 04:41:55PM -0400, Brian Masney wrote:
-> Hi Georgi and Bjorn,
-> 
-> I'm finishing up a msm8974 interconnect driver and I used qcs404 as a
-> starting point. I have a question below.
-> 
-> On Tue, Jul 23, 2019 at 05:23:38PM +0300, Georgi Djakov wrote:
-> > From: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > 
-> > Add driver for the interconnect buses found in Qualcomm QCS404-based
-> > platforms. The topology consists of three NoCs that are controlled by
-> > a remote processor. This remote processor collects the aggregated
-> > bandwidth for each master-slave pairs.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> > ---
-> 
-> [snip]
-> 
-> > +enum {
-> > +       QCS404_MASTER_AMPSS_M0 = 1,
-> 
-> [snip]
-> 
-> > +#define DEFINE_QNODE(_name, _id, _buswidth, _mas_rpm_id, _slv_rpm_id,	\
-> > +		     ...)						\
-> > +		static struct qcom_icc_node _name = {			\
-> > +		.name = #_name,						\
-> > +		.id = _id,						\
-> > +		.buswidth = _buswidth,					\
-> > +		.mas_rpm_id = _mas_rpm_id,				\
-> > +		.slv_rpm_id = _slv_rpm_id,				\
-> > +		.num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),	\
-> > +		.links = { __VA_ARGS__ },				\
-> > +	}
-> > +
-> > +DEFINE_QNODE(mas_apps_proc, QCS404_MASTER_AMPSS_M0, 8, 0, -1, QCS404_SLAVE_EBI_CH0, QCS404_BIMC_SNOC_SLV);
-> 
-> [snip]
-> 
-> > +static struct qcom_icc_node *qcs404_bimc_nodes[] = {
-> > +	[MASTER_AMPSS_M0] = &mas_apps_proc,
-> 
-> Should the id in DEFINE_QNODE() above be MASTER_AMPSS_M0 instead of
-> QCS404_MASTER_AMPSS_M0?
-> 
-> of_icc_xlate_onecell() looks up the id by the array index
-> MASTER_AMPSS_M0 (1), however qnoc_probe() passes the id that's
-> in struct qcom_icc_node to icc_node_create(), which is
-> QCS404_MASTER_AMPSS_M0 (0). They have different values and I'm unsure
-> why we can't just use the ids that are in qcom,qcs404.h and drop the
-> enum above.
+On Thu, Sep 5, 2019 at 11:37 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add device tree bindings documentation for Renesas RZ/G2N (r8a774b1) SoC.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-I dug through the interconnect code some more and I now see why these
-separate IDs are needed.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.5.
 
-I posted a work in progress msm8974 interconnect driver:
-https://lore.kernel.org/lkml/20190902211925.27169-1-masneyb@onstation.org/T/#t
+Gr{oetje,eeting}s,
 
-Brian
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
