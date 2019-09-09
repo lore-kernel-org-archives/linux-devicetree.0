@@ -1,59 +1,204 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/3] soc: amazon: al-pos: Introduce Amazon's Annapurna
- Labs POS driver
-Date: Mon, 9 Sep 2019 17:16:56 +0200
-Message-ID: <CAK8P3a1fbK-qoK+K1ZsWsU3rkxxZgZGaK8ywFAcM4va1GRn_FQ@mail.gmail.com>
-References: <1568020220-7758-1-git-send-email-talel@amazon.com>
- <1568020220-7758-3-git-send-email-talel@amazon.com> <CAK8P3a3UF7xPV1U3eW6Jdu754P1bzG208UxD9KUxEm1JjZudww@mail.gmail.com>
- <98f0028e-5653-3116-fdaa-1385ecdf0289@amazon.com> <CAK8P3a1NVGwYa1bw_vjBatd1xe-i875X1Vq1M+2G_Zxd2Oqusg@mail.gmail.com>
- <8f7840c3-a682-04a5-18bf-ac7a723725b0@amazon.com>
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the
+ ARM SMC/HVC mailbox
+Date: Mon, 9 Sep 2019 16:42:08 +0100
+Message-ID: <20190909164208.6605054e@donnerap.cambridge.arm.com>
+References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
+        <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8f7840c3-a682-04a5-18bf-ac7a723725b0@amazon.com>
+In-Reply-To: <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Shenhar, Talel" <talel@amazon.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Thomas Gleixner <tglx@linutronix.de>, Patrick Venture <venture@google.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Maxime Ripard <mripard@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, paul.kocialkowski@bootlin.com, mjourdan@baylibre.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>David
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 4:11 PM Shenhar, Talel <talel@amazon.com> wrote:
-> On 9/9/2019 4:41 PM, Arnd Bergmann wrote:
->
-> In current implementation of v1, I am not doing any read barrier, Hence,
-> using the non-relaxed will add unneeded memory barrier.
->
-> I have no strong objection moving to the non-relaxed version and have an
-> unneeded memory barrier, as this path is not "hot" one.
+On Wed, 28 Aug 2019 03:02:58 +0000
+Peng Fan <peng.fan@nxp.com> wrote:
 
-Ok, then please add it.
+Hi,
 
-> Beside of avoiding the unneeded memory barrier, I would be happy to keep
-> common behavior for our drivers:
->
-> e.g.
->
-> https://github.com/torvalds/linux/blob/master/drivers/irqchip/irq-al-fic.c#L49
->
->
-> So what do you think we should go with? relaxed or non-relaxed?
+sorry for the late reply, eventually managed to have a closer look on this.
 
-The al_fic_set_trigger() function is clearly a slow-path and should use the
-non-relaxed functions. In case of al_fic_irq_handler(), the extra barrier
-might introduce a measurable overhead, but at the same time I'm
-not sure if that one is correct without the barrier:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
+> actions in software layers running in the EL2 or EL3 exception levels.
+> The term "ARM" here relates to the SMC instruction as part of the ARM
+> instruction set, not as a standard endorsed by ARM Ltd.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  .../devicetree/bindings/mailbox/arm-smc.yaml       | 125 +++++++++++++++++++++
+>  1 file changed, 125 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> new file mode 100644
+> index 000000000000..f8eb28d5e307
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> @@ -0,0 +1,125 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARM SMC Mailbox Interface
+> +
+> +maintainers:
+> +  - Peng Fan <peng.fan@nxp.com>
+> +
+> +description: |
+> +  This mailbox uses the ARM smc (secure monitor call) and hvc (hypervisor
+> +  call) instruction to trigger a mailbox-connected activity in firmware,
+> +  executing on the very same core as the caller. By nature this operation
+> +  is synchronous and this mailbox provides no way for asynchronous messages
+> +  to be delivered the other way round, from firmware to the OS, but
+> +  asynchronous notification could also be supported. However the value of
+> +  r0/w0/x0 the firmware returns after the smc call is delivered as a received
+> +  message to the mailbox framework, so a synchronous communication can be
+> +  established, for a asynchronous notification, no value will be returned.
+> +  The exact meaning of both the action the mailbox triggers as well as the
+> +  return value is defined by their users and is not subject to this binding.
+> +
+> +  One use case of this mailbox is the SCMI interface, which uses shared memory
+> +  to transfer commands and parameters, and a mailbox to trigger a function
+> +  call. This allows SoCs without a separate management processor (or when
+> +  such a processor is not available or used) to use this standardized
+> +  interface anyway.
+> +
+> +  This binding describes no hardware, but establishes a firmware interface.
+> +  Upon receiving an SMC using one of the described SMC function identifiers,
+> +  the firmware is expected to trigger some mailbox connected functionality.
+> +  The communication follows the ARM SMC calling convention.
+> +  Firmware expects an SMC function identifier in r0 or w0. The supported
+> +  identifiers are passed from consumers, or listed in the the arm,func-ids
+> +  properties as described below. The firmware can return one value in
+> +  the first SMC result register, it is expected to be an error value,
+> +  which shall be propagated to the mailbox client.
+> +
+> +  Any core which supports the SMC or HVC instruction can be used, as long as
+> +  a firmware component running in EL3 or EL2 is handling these calls.
+> +
+> +properties:
+> +  compatible:
+> +    const: arm,smc-mbox
+> +
+> +  "#mbox-cells":
+> +    const: 1
+> +
+> +  arm,num-chans:
+> +    description: The number of channels supported.
+> +    items:
+> +      minimum: 1
+> +      maximum: 4096 # Should be enough?
 
-If you have an MSI-type interrupt for notifying a device driver of
-a DMA completion, there might not be any other barrier between
-the arrival of the MSI message and the CPU accessing the data.
-Depending on how strict the hardware implements MSI and how
-the IRQ is chained, this could lead to data corruption.
+This maximum sounds rather arbitrary. Why do we need one? In the driver this just allocates more memory, so why not just impose no artificial limit at all?
 
-If the interrupt is only used for level or edge triggered interrupts,
-this is ok since you already need another register read in
-the driver before it can safely access a DMA buffer.
+Actually, do we need this property at all? Can't we just rely on the size of arm,func-ids to determine this (using of_property_count_elems_of_size() in the driver)? Having both sounds redundant and brings up the question what to do if they don't match.
 
-In either case, if you can prove that it's safe to use the relaxed
-version here and you think that it may help, it would be good to
-add a comment explaining the reasoning.
+> +
+> +  method:
+> +    - enum:
+> +        - smc
+> +        - hvc
+> +
+> +  transports:
+> +    - enum:
+> +        - mem
+> +        - reg
 
-       Arnd
+Shouldn't there be a description on what both mean, exactly?
+For instance I would expect a list of registers to be shown for the "reg" case, and be it by referring to the ARM SMCCC.
+
+Also looking at the driver this brings up more questions:
+- Which memory does mem refer to? If this is really the means of transport, it should be referenced in this *controller* node and populated by the driver. Looking at the example below and the driver code, it actually isn't used that way, instead the memory is used and controlled by the mailbox *client*.
+- What is the actual difference between the two transports? For "mem" we just populate the registers with 0, for "reg" we use the data. Couldn't this be left to the client?
+
+There are more points which makes me think this property is actually redundant, see my comments on patch 2/2.
+
+> +
+> +  arm,func-ids:
+> +    description: |
+> +      An array of 32-bit values specifying the function IDs used by each
+> +      mailbox channel. Those function IDs follow the ARM SMC calling
+> +      convention standard [1].
+> +
+> +      There is one identifier per channel and the number of supported
+> +      channels is determined by the length of this array.
+
+I think this makes it obvious that arm,num-chans is not needed.
+
+Also this somewhat contradicts the driver implementation, which allows the array to be shorter, marking this as UINT_MAX and later on using the first data item as a function identifier. This is somewhat surprising and not documented (unless I missed something).
+
+So I would suggest:
+- We drop the transports property, and always put the client provided data in the registers, according to the SMCCC. Document this here.
+  A client not needing those could always puts zeros (or garbage) in there, the respective firmware would just ignore the registers.
+- We drop "arm,num-chans", as this is just redundant with the length of the func-ids array.
+- We don't impose an arbitrary limit on the number of channels. From the firmware point of view this is just different function IDs, from Linux' point of view just the size of the memory used. Both don't need to be limited artificially IMHO.
+- We mark arm,func-ids as required, as this needs to be fixed, allocated number.
+
+For the question of "always one channel per controller" vs. "allow multiple channels per controller": I don't really have a strong opinion, but lean towards allowing multiple channels. This would allow to group functions belonging together, separating them from totally distinct controller uses (think virtual GPIO vs. SCMI).
+And it would still allow the special case of multiple single-channel controllers to be naturally specified.
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    minItems: 0
+> +    maxItems: 4096   # Should be enough?
+> +
+> +required:
+> +  - compatible
+> +  - "#mbox-cells"
+> +  - arm,num-chans
+> +  - transports
+> +  - method
+
+According to the above description arm,func-ids would also be required?
+
+Cheers,
+Andre.
+
+> +
+> +examples:
+> +  - |
+> +    sram@910000 {
+> +      compatible = "mmio-sram";
+> +      reg = <0x0 0x93f000 0x0 0x1000>;
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      ranges = <0 0x0 0x93f000 0x1000>;
+> +
+> +      cpu_scp_lpri: scp-shmem@0 {
+> +        compatible = "arm,scmi-shmem";
+> +        reg = <0x0 0x200>;
+> +      };
+> +
+> +      cpu_scp_hpri: scp-shmem@200 {
+> +        compatible = "arm,scmi-shmem";
+> +        reg = <0x200 0x200>;
+> +      };
+> +    };
+> +
+> +    firmware {
+> +      smc_mbox: mailbox {
+> +        #mbox-cells = <1>;
+> +        compatible = "arm,smc-mbox";
+> +        method = "smc";
+> +        arm,num-chans = <0x2>;
+> +        transports = "mem";
+> +        /* Optional */
+> +        arm,func-ids = <0xc20000fe>, <0xc20000ff>;
+> +      };
+> +
+> +      scmi {
+> +        compatible = "arm,scmi";
+> +        mboxes = <&smc_mbox 0>, <&smc_mbox 1>;
+> +        mbox-names = "tx", "rx";
+> +        shmem = <&cpu_scp_lpri>, <&cpu_scp_hpri>;
+> +      };
+> +    };
+> +
+> +...
