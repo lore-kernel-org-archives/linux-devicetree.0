@@ -1,229 +1,43 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH 2/4] ARM: dts: replace opp-v1 tables by opp-v2 for
- omap34xx and omap36xx
-Date: Mon, 9 Sep 2019 08:43:13 -0500
-Message-ID: <CAHCN7xJU2oW3QggNtcY0qTMTH058EJxKZBC6tRign=kX2Jtg2g@mail.gmail.com>
-References: <cover.1567878413.git.hns@goldelico.com> <784d0d08ee585fc436f15de4edb58b394d0f4452.1567878413.git.hns@goldelico.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/3] arm64: alpine: select AL_POS
+Date: Mon, 9 Sep 2019 15:45:18 +0200
+Message-ID: <CAK8P3a34eKFXoAPOfkFN5+H4kxOhRjXgws_0wy+d-186LFxcTw@mail.gmail.com>
+References: <1568020220-7758-1-git-send-email-talel@amazon.com>
+ <1568020220-7758-4-git-send-email-talel@amazon.com> <CAK8P3a0DEMeFWK+RuAdSLyDYduWWwj9DxP_Beipays-d_6ixnA@mail.gmail.com>
+ <ab512ced-d989-5c10-a550-2a4723d38e7e@amazon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <784d0d08ee585fc436f15de4edb58b394d0f4452.1567878413.git.hns@goldelico.com>
+In-Reply-To: <ab512ced-d989-5c10-a550-2a4723d38e7e@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Roger Quadros <rogerq@ti.com>, Teresa Remmet <t.remmet@phytec.de>, Linux-OMAP <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com, arm-soc <linux-arm-kernel@lists.infradead.org>
+To: "Shenhar, Talel" <talel@amazon.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Thomas Gleixner <tglx@linutronix.de>, Patrick Venture <venture@google.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Maxime Ripard <mripard@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, paul.kocialkowski@bootlin.com, mjourdan@baylibre.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>David
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 7, 2019 at 12:47 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+On Mon, Sep 9, 2019 at 12:17 PM Shenhar, Talel <talel@amazon.com> wrote:
+> On 9/9/2019 12:40 PM, Arnd Bergmann wrote:
+> > On Mon, Sep 9, 2019 at 11:14 AM Talel Shenhar <talel@amazon.com> wrote:
+> >> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> >> index 4778c77..bd86b15 100644
+> >> --- a/arch/arm64/Kconfig.platforms
+> >> +++ b/arch/arm64/Kconfig.platforms
+> >> @@ -25,6 +25,7 @@ config ARCH_SUNXI
+> >>   config ARCH_ALPINE
+> >>          bool "Annapurna Labs Alpine platform"
+> >>          select ALPINE_MSI if PCI
+> >> +       select AL_POS
+> >>          help
+> >>            This enables support for the Annapurna Labs Alpine
+> >>            Soc family.
+> > Generally I think this kind of thing should go into the defconfig
+> > rather than being hard-selected. There might be users that
+> > want to not enable the driver.
 >
-> In addition, move omap3 from whitelist to blacklist in cpufreq-dt-platdev
-> in the same patch, because doing either first breaks operation and
-> may make trouble in bisect.
->
-> We also can remove opp-v1 table for omap3-n950-n9 since it is now
-> automatically detected.
->
-> We also fix a wrong OPP4 voltage for omap3430 which must be
-> 0.6V + 54*12.5mV = 1275mV. Otherwise the twl4030 driver will reject
-> this OPP.
->
-thank you for your work on this.  I tested it on a a Logit PD DM3730
-Torpedo + Wireless kit, and appears to operate normally, but i have
-not tested it at temperature.
+> The reason for selecting it is because this is a driver that we will
+> always want for ARCH_ALPINE.
 
-Tested-by: Adam Ford <aford173@gmail.com>
+Can you put the exact requirement (other than "we want this")
+in the changelog text then? It's still not clear to me what breaks
+without this driver.
 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Acked-by: Tony Lindgren <tony@atomide.com>
-> ---
->  arch/arm/boot/dts/omap3-n950-n9.dtsi |  7 ---
->  arch/arm/boot/dts/omap34xx.dtsi      | 65 ++++++++++++++++++++++++----
->  arch/arm/boot/dts/omap36xx.dtsi      | 53 +++++++++++++++++++----
->  drivers/cpufreq/cpufreq-dt-platdev.c |  2 +-
->  4 files changed, 102 insertions(+), 25 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> index 5441e9ffdbb4..e98b0c615f19 100644
-> --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> @@ -11,13 +11,6 @@
->         cpus {
->                 cpu@0 {
->                         cpu0-supply = <&vcc>;
-> -                       operating-points = <
-> -                               /* kHz    uV */
-> -                               300000  1012500
-> -                               600000  1200000
-> -                               800000  1325000
-> -                               1000000 1375000
-> -                       >;
->                 };
->         };
->
-> diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
-> index f572a477f74c..91154829f86a 100644
-> --- a/arch/arm/boot/dts/omap34xx.dtsi
-> +++ b/arch/arm/boot/dts/omap34xx.dtsi
-> @@ -16,19 +16,66 @@
->  / {
->         cpus {
->                 cpu: cpu@0 {
-> -                       /* OMAP343x/OMAP35xx variants OPP1-5 */
-> -                       operating-points = <
-> -                               /* kHz    uV */
-> -                               125000   975000
-> -                               250000  1075000
-> -                               500000  1200000
-> -                               550000  1270000
-> -                               600000  1350000
-> -                       >;
-> +                       /* OMAP343x/OMAP35xx variants OPP1-6 */
-> +                       operating-points-v2 = <&cpu0_opp_table>;
-> +
->                         clock-latency = <300000>; /* From legacy driver */
->                 };
->         };
->
-> +       /* see Documentation/devicetree/bindings/opp/opp.txt */
-> +       cpu0_opp_table: opp-table {
-> +               compatible = "operating-points-v2-ti-cpu";
-> +               syscon = <&scm_conf>;
-> +
-> +               opp1-125000000 {
-> +                       opp-hz = /bits/ 64 <125000000>;
-> +                       /*
-> +                        * we currently only select the max voltage from table
-> +                        * Table 3-3 of the omap3530 Data sheet (SPRS507F).
-> +                        * Format is: <target min max>
-> +                        */
-> +                       opp-microvolt = <975000 975000 975000>;
-> +                       /*
-> +                        * first value is silicon revision bit mask
-> +                        * second one 720MHz Device Identification bit mask
-> +                        */
-> +                       opp-supported-hw = <0xffffffff 3>;
-> +               };
-> +
-> +               opp2-250000000 {
-> +                       opp-hz = /bits/ 64 <250000000>;
-> +                       opp-microvolt = <1075000 1075000 1075000>;
-> +                       opp-supported-hw = <0xffffffff 3>;
-> +                       opp-suspend;
-> +               };
-> +
-> +               opp3-500000000 {
-> +                       opp-hz = /bits/ 64 <500000000>;
-> +                       opp-microvolt = <1200000 1200000 1200000>;
-> +                       opp-supported-hw = <0xffffffff 3>;
-> +               };
-> +
-> +               opp4-550000000 {
-> +                       opp-hz = /bits/ 64 <550000000>;
-> +                       opp-microvolt = <1275000 1275000 1275000>;
-> +                       opp-supported-hw = <0xffffffff 3>;
-> +               };
-> +
-> +               opp5-600000000 {
-> +                       opp-hz = /bits/ 64 <600000000>;
-> +                       opp-microvolt = <1350000 1350000 1350000>;
-> +                       opp-supported-hw = <0xffffffff 3>;
-> +               };
-> +
-> +               opp6-720000000 {
-> +                       opp-hz = /bits/ 64 <720000000>;
-> +                       opp-microvolt = <1350000 1350000 1350000>;
-> +                       /* only high-speed grade omap3530 devices */
-> +                       opp-supported-hw = <0xffffffff 2>;
-> +               };
-> +       };
-> +
->         ocp@68000000 {
->                 omap3_pmx_core2: pinmux@480025d8 {
->                         compatible = "ti,omap3-padconf", "pinctrl-single";
-> diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-> index 6fb23ada1f64..44f25b0eb45b 100644
-> --- a/arch/arm/boot/dts/omap36xx.dtsi
-> +++ b/arch/arm/boot/dts/omap36xx.dtsi
-> @@ -19,15 +19,52 @@
->         };
->
->         cpus {
-> -               /* OMAP3630/OMAP37xx 'standard device' variants OPP50 to OPP130 */
-> +               /* OMAP3630/OMAP37xx variants OPP50 to OPP130 and OPP1G */
->                 cpu: cpu@0 {
-> -                       operating-points = <
-> -                               /* kHz    uV */
-> -                               300000  1012500
-> -                               600000  1200000
-> -                               800000  1325000
-> -                       >;
-> -                       clock-latency = <300000>; /* From legacy driver */
-> +                       operating-points-v2 = <&cpu0_opp_table>;
-> +
-> +                       clock-latency = <300000>; /* From omap-cpufreq driver */
-> +               };
-> +       };
-> +
-> +       /* see Documentation/devicetree/bindings/opp/opp.txt */
-> +       cpu0_opp_table: opp-table {
-> +               compatible = "operating-points-v2-ti-cpu";
-> +               syscon = <&scm_conf>;
-> +
-> +               opp50-300000000 {
-> +                       opp-hz = /bits/ 64 <300000000>;
-> +                       /*
-> +                        * we currently only select the max voltage from table
-> +                        * Table 4-19 of the DM3730 Data sheet (SPRS685B)
-> +                        * Format is: <target min max>
-> +                        */
-> +                       opp-microvolt = <1012500 1012500 1012500>;
-> +                       /*
-> +                        * first value is silicon revision bit mask
-> +                        * second one is "speed binned" bit mask
-> +                        */
-> +                       opp-supported-hw = <0xffffffff 3>;
-> +                       opp-suspend;
-> +               };
-> +
-> +               opp100-600000000 {
-> +                       opp-hz = /bits/ 64 <600000000>;
-> +                       opp-microvolt = <1200000 1200000 1200000>;
-> +                       opp-supported-hw = <0xffffffff 3>;
-> +               };
-> +
-> +               opp130-800000000 {
-> +                       opp-hz = /bits/ 64 <800000000>;
-> +                       opp-microvolt = <1325000 1325000 1325000>;
-> +                       opp-supported-hw = <0xffffffff 3>;
-> +               };
-> +
-> +               opp1g-1000000000 {
-> +                       opp-hz = /bits/ 64 <1000000000>;
-> +                       opp-microvolt = <1375000 1375000 1375000>;
-> +                       /* only on am/dm37x with speed-binned bit set */
-> +                       opp-supported-hw = <0xffffffff 2>;
->                 };
->         };
->
-> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-> index 03dc4244ab00..68b7fc4225f8 100644
-> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
-> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-> @@ -86,7 +86,6 @@ static const struct of_device_id whitelist[] __initconst = {
->         { .compatible = "st-ericsson,u9540", },
->
->         { .compatible = "ti,omap2", },
-> -       { .compatible = "ti,omap3", },
->         { .compatible = "ti,omap4", },
->         { .compatible = "ti,omap5", },
->
-> @@ -132,6 +131,7 @@ static const struct of_device_id blacklist[] __initconst = {
->         { .compatible = "ti,am33xx", },
->         { .compatible = "ti,am43", },
->         { .compatible = "ti,dra7", },
-> +       { .compatible = "ti,omap3", },
->
->         { }
->  };
-> --
-> 2.19.1
->
+        Arnd
