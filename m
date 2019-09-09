@@ -1,74 +1,62 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [Patch 10/13] media: am437x-vpfe: Remove print_fourcc helper
-Date: Mon, 9 Sep 2019 12:12:15 -0500
-Message-ID: <20190909171215.2cyiulubzxcjqmf7@ti.com>
+Subject: Re: [Patch 09/13] media: am437x-vpfe: fix function trace debug log
+Date: Mon, 9 Sep 2019 12:14:57 -0500
+Message-ID: <20190909171457.louslicqvyv4vpde@ti.com>
 References: <20190909162743.30114-1-bparrot@ti.com>
- <20190909162743.30114-11-bparrot@ti.com>
- <7d870b0119afa378dc68c710670b9b550ef5bdd4.camel@perches.com>
+ <20190909162743.30114-10-bparrot@ti.com>
+ <ec66e477095bcddb86ffcc7ca10d3e0bbe72f943.camel@perches.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <7d870b0119afa378dc68c710670b9b550ef5bdd4.camel@perches.com>
+In-Reply-To: <ec66e477095bcddb86ffcc7ca10d3e0bbe72f943.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Joe Perches <joe@perches.com>
 Cc: Hans Verkuil <hverkuil@xs4all.nl>, Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Joe Perches <joe@perches.com> wrote on Mon [2019-Sep-09 09:39:37 -0700]:
+Joe Perches <joe@perches.com> wrote on Mon [2019-Sep-09 09:54:56 -0700]:
 > On Mon, 2019-09-09 at 11:27 -0500, Benoit Parrot wrote:
-> > print_fourcc helper function was used for debug log the
-> > convert a pixel format code into its readable form for display
-> > purposes. But since it used a single static buffer to perform
-> > the conversion this might lead to display format issue when more
-> > than one instance was invoked simultaneously.
+> > checkpatch.pl nows reports several:
+> > WARNING: Prefer using '"%s...", __func__' to using '<function name>',
+> > this function's name, in a string
 > > 
-> > It turns out that print_fourcc can be safely replace by using
-> > "%4.4s" instead and casting the pointer to the fourcc code
-> > into a (char *).
-> []
-> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-> []
-> > @@ -221,20 +221,6 @@ static void pix_to_mbus(struct vpfe_device *vpfe,
-> []
-> > @@ -700,8 +686,8 @@ static int vpfe_ccdc_set_pixel_format(struct vpfe_ccdc *ccdc, u32 pixfmt)
-> >  {
-> >  	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
-> >  
-> > -	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%s\n",
-> > -		 __func__, ccdc->ccdc_cfg.if_type, print_fourcc(pixfmt));
-> > +	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%4.4s\n",
-> > +		 __func__, ccdc->ccdc_cfg.if_type, (char *)&pixfmt);
+> > So fix these for the whole driver.
 > 
+> Most of these seem to be function tracing comments
+> that should probably be removed instead.
 > 
-> To avoid any possible defect in the content of pixfmt, it's
-> probably better to use vsprintf extension "%4pE", &pixfmt
-> see: Documentation/core-api/printk-formats.rst
-> 
-> 	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%4pE\n",
-> 		 __func__, ccdc->ccdc_cfg.if_type, &pixfmt);
-> 
+> The generic kernel facility ftrace works well.
 
-Thanks Joe, I was not aware of this feature.
-I'll update this patch.
+Yeah you are probably right, I should just remove them.
+My own laziness prevented me earlier... it's always easier to just enable
+debug dynamically in the driver then trying to remember how to use ftrace :)
+I obviously don't use often enough.
 
 Benoit
 
-> >  
-> >  	if (ccdc->ccdc_cfg.if_type == VPFE_RAW_BAYER) {
-> >  		ccdc->ccdc_cfg.bayer.pix_fmt = CCDC_PIXFMT_RAW;
-> > @@ -989,8 +975,8 @@ static int vpfe_config_ccdc_image_format(struct vpfe_device *vpfe)
-> >  
-> >  	vpfe_dbg(2, vpfe, "%s:\n", __func__);
-> >  
-> > -	vpfe_dbg(1, vpfe, "pixelformat: %s\n",
-> > -		print_fourcc(vpfe->v_fmt.fmt.pix.pixelformat));
-> > +	vpfe_dbg(1, vpfe, "pixelformat: %4.4s\n",
-> > +		 (char *)&vpfe->v_fmt.fmt.pix.pixelformat);
 > 
-> 	vpfe_dbg(1, vpfe, "pixelformat: %4pE\n",
-> 		 &vpfe->v_fmt.fmt.pix.pixelformat);
+> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+> []
+> > @@ -466,7 +466,7 @@ static void vpfe_ccdc_config_ycbcr(struct vpfe_ccdc *ccdc)
+> >  	struct ccdc_params_ycbcr *params = &ccdc->ccdc_cfg.ycbcr;
+> >  	u32 syn_mode;
+> >  
+> > -	vpfe_dbg(3, vpfe, "vpfe_ccdc_config_ycbcr:\n");
+> > +	vpfe_dbg(3, vpfe, "%s:\n", __func__);
 > 
-> etc...
+> Remove this instead
+> 
+> >  	/*
+> >  	 * first restore the CCDC registers to default values
+> >  	 * This is important since we assume default values to be set in
+> > @@ -598,7 +598,7 @@ static void vpfe_ccdc_config_raw(struct vpfe_ccdc *ccdc)
+> >  	unsigned int syn_mode;
+> >  	unsigned int val;
+> >  
+> > -	vpfe_dbg(3, vpfe, "vpfe_ccdc_config_raw:\n");
+> > +	vpfe_dbg(3, vpfe, "%s:\n", __func__);
+> 
+> here too, etc...
 > 
 > 
