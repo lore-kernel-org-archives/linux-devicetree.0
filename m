@@ -1,98 +1,87 @@
-From: Will Deacon <will@kernel.org>
-Subject: Re: [PATCH 1/2] iommu: Implement of_iommu_get_resv_regions()
-Date: Mon, 9 Sep 2019 15:04:16 +0100
-Message-ID: <20190909140415.axszldhakgqifibg@willie-the-truck>
-References: <20190829111407.17191-1-thierry.reding@gmail.com>
- <20190829111407.17191-2-thierry.reding@gmail.com>
- <0b7e050a-cec6-6ce7-9ed6-2146eabb2fe8@arm.com>
- <20190902150056.GD1445@ulmo>
+From: "Shenhar, Talel" <talel@amazon.com>
+Subject: Re: [PATCH 2/3] soc: amazon: al-pos: Introduce Amazon's Annapurna
+ Labs POS driver
+Date: Mon, 9 Sep 2019 17:11:05 +0300
+Message-ID: <8f7840c3-a682-04a5-18bf-ac7a723725b0@amazon.com>
+References: <1568020220-7758-1-git-send-email-talel@amazon.com>
+ <1568020220-7758-3-git-send-email-talel@amazon.com>
+ <CAK8P3a3UF7xPV1U3eW6Jdu754P1bzG208UxD9KUxEm1JjZudww@mail.gmail.com>
+ <98f0028e-5653-3116-fdaa-1385ecdf0289@amazon.com>
+ <CAK8P3a1NVGwYa1bw_vjBatd1xe-i875X1Vq1M+2G_Zxd2Oqusg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190902150056.GD1445@ulmo>
+In-Reply-To: <CAK8P3a1NVGwYa1bw_vjBatd1xe-i875X1Vq1M+2G_Zxd2Oqusg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Thomas Gleixner <tglx@linutronix.de>, Patrick Venture <venture@google.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Maxime Ripard <mripard@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, paul.kocialkowski@bootlin.com, mjourdan@baylibre.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>Dav
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 05:00:56PM +0200, Thierry Reding wrote:
-> On Mon, Sep 02, 2019 at 02:54:23PM +0100, Robin Murphy wrote:
-> > On 29/08/2019 12:14, Thierry Reding wrote:
-> > > From: Thierry Reding <treding@nvidia.com>
-> > > 
-> > > This is an implementation that IOMMU drivers can use to obtain reserved
-> > > memory regions from a device tree node. It uses the reserved-memory DT
-> > > bindings to find the regions associated with a given device. These
-> > > regions will be used to create 1:1 mappings in the IOMMU domain that
-> > > the devices will be attached to.
-> > > 
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Frank Rowand <frowand.list@gmail.com>
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > > ---
-> > >   drivers/iommu/of_iommu.c | 39 +++++++++++++++++++++++++++++++++++++++
-> > >   include/linux/of_iommu.h |  8 ++++++++
-> > >   2 files changed, 47 insertions(+)
-> > > 
-> > > diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> > > index 614a93aa5305..0d47f626b854 100644
-> > > --- a/drivers/iommu/of_iommu.c
-> > > +++ b/drivers/iommu/of_iommu.c
-> > > @@ -9,6 +9,7 @@
-> > >   #include <linux/iommu.h>
-> > >   #include <linux/limits.h>
-> > >   #include <linux/of.h>
-> > > +#include <linux/of_address.h>
-> > >   #include <linux/of_iommu.h>
-> > >   #include <linux/of_pci.h>
-> > >   #include <linux/slab.h>
-> > > @@ -225,3 +226,41 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
-> > >   	return ops;
-> > >   }
-> > > +
-> > > +/**
-> > > + * of_iommu_get_resv_regions - reserved region driver helper for device tree
-> > > + * @dev: device for which to get reserved regions
-> > > + * @list: reserved region list
-> > > + *
-> > > + * IOMMU drivers can use this to implement their .get_resv_regions() callback
-> > > + * for memory regions attached to a device tree node. See the reserved-memory
-> > > + * device tree bindings on how to use these:
-> > > + *
-> > > + *   Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> > > + */
-> > > +void of_iommu_get_resv_regions(struct device *dev, struct list_head *list)
-> > > +{
-> > > +	struct of_phandle_iterator it;
-> > > +	int err;
-> > > +
-> > > +	of_for_each_phandle(&it, err, dev->of_node, "memory-region", NULL, 0) {
-> > > +		struct iommu_resv_region *region;
-> > > +		struct resource res;
-> > > +
-> > > +		err = of_address_to_resource(it.node, 0, &res);
-> > > +		if (err < 0) {
-> > > +			dev_err(dev, "failed to parse memory region %pOF: %d\n",
-> > > +				it.node, err);
-> > > +			continue;
-> > > +		}
-> > 
-> > What if the device node has memory regions for other purposes, like private
-> > CMA carveouts? We wouldn't want to force mappings of those (and in the very
-> > worst case doing so could even render them unusable).
-> 
-> I suppose we could come up with additional properties to mark such
-> memory regions and skip them here.
 
-I think we need /something/ like that, both so that we can identify these
-memory regions as requiring an identity mapping in the SMMU but also so
-that we can place additional requirements on them, such as being 64k-aligned
-and mandating properties of the mapping, such as cacheability based on the
-device coherency.
+On 9/9/2019 4:41 PM, Arnd Bergmann wrote:
+> On Mon, Sep 9, 2019 at 1:13 PM Shenhar, Talel <talel@amazon.com> wrote:
+>> On 9/9/2019 12:44 PM, Arnd Bergmann wrote:
+>>> On Mon, Sep 9, 2019 at 11:14 AM Talel Shenhar <talel@amazon.com> wrote:
+>>>> +       writel_relaxed(0, pos->mmio_base + AL_POS_ERROR_LOG_1);
+>>> Why do you require _relaxed() accessors here? Please add a comment
+>>> explaining that, or use the regular readl()/writel().
+>> I don't think commenting is needed here as there is nothing special in
+>> this type of access.
+>>
+>> I don't see this is common to comment the use of the _relaxed accessors.
+> I usually mention it in driver reviews, but most authors revert back
+> to the normal accessors when there is no difference.
+>
+>> This driver is for SoC using arm64 cpu.
+>>
+>> If one uses the non-relaxed version of readl while running on arm64, he
+>> shall cause read barrier, which is then doing dsm(ld).. This barrier is
+>> not needed here, so we spare the use of the more heavy readl in favor of
+>> the less "harmful" one.
+>>
+>> Let me know what you think.
+> If the barrier causes no harm, just leave it in to keep the code more
+> readable. Most developers don't need to know the difference between
+> the two, so using the less common interface just makes the reader
+> curious about why it was picked.
+>
+> Avoiding the barrier can make a huge performance difference in a
+> hot code path, but the downside is that it can behave in unexpected
+> ways if the same code is run on a different CPU architecture that
+> does not have the exact same rules about what _relaxed() means.
+>
+> In fact, replacing a 'readl()' with 'readl_relaxed() + rmb()' can lead
+> to slower rather than faster code when the explicit barrier is heavier
+> than the implied one (e.g. on x86), or readl_relaxed() does not skip
+> the barrier.
+>
+> The general rule with kernel interfaces when you have two versions
+> that both do what you want is to pick the one with the shorter name.
+> See spin_lock()/spin_lock_irqsave(),  ioremap()/ioremap_nocache(),
+> or ktime_get()/ktime_get_clocktai_ts64(). (yes, there are also
+> exceptions)
+>
+>      Arnd
 
-I defer to the devicetree folks as to whether this should be an additional
-property, or a phandle or whatever.
 
-Will
+Thanks for the detailed response.
+
+
+In current implementation of v1, I am not doing any read barrier, Hence, 
+using the non-relaxed will add unneeded memory barrier.
+
+I have no strong objection moving to the non-relaxed version and have an 
+unneeded memory barrier, as this path is not "hot" one.
+
+
+Beside of avoiding the unneeded memory barrier, I would be happy to keep 
+common behavior for our drivers:
+
+e.g.
+
+https://github.com/torvalds/linux/blob/master/drivers/irqchip/irq-al-fic.c#L49
+
+
+So what do you think we should go with? relaxed or non-relaxed?
