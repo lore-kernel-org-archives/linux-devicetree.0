@@ -1,49 +1,70 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH 2/2] dt-bindings: backlight: lm3630a: add enable_gpios
-Date: Mon, 9 Sep 2019 11:59:42 +0100
-Message-ID: <20190909105942.pxwz6rtjg3cxlcnf@holly.lan>
-References: <20190908203704.30147-1-andreas@kemnade.info>
- <20190908203704.30147-3-andreas@kemnade.info>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH] irqchip/atmel-aic5: add support for sam9x60 irqchip
+Date: Mon, 9 Sep 2019 14:00:35 +0300
+Message-ID: <1568026835-6646-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190908203704.30147-3-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: lee.jones@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
+To: tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>, Claudiu Beznea <claudiu.beznea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 08, 2019 at 10:37:04PM +0200, Andreas Kemnade wrote:
-> add enable-gpios to describe HWEN pin
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+From: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
 
-Looks like patches are in the wrong order. Changes to bindings must
-appear in patchsets *before* the Linux implementation of the bindings.
+Add support for SAM9X60 irqchip.
 
+Signed-off-by: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
+[claudiu.beznea@microchip.com: update aic5_irq_fixups[], update
+ documentation]
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ .../devicetree/bindings/interrupt-controller/atmel,aic.txt     |  7 +++++--
+ drivers/irqchip/irq-atmel-aic5.c                               | 10 ++++++++++
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-> ---
->  .../devicetree/bindings/leds/backlight/lm3630a-backlight.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> index dc129d9a329e..a9656d72b668 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> @@ -29,6 +29,10 @@ properties:
->    '#size-cells':
->      const: 0
->  
-> +  enable-gpios:
-> +    description: GPIO to use to enable/disable the backlight (HWEN pin).
-> +    maxItems: 1
-> +
->  required:
->    - compatible
->    - reg
-
-Please add enable-gpios to one of the examples.
-
-
-Daniel.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+index f4c5d34c4111..7079d44bf3ba 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+@@ -1,8 +1,11 @@
+ * Advanced Interrupt Controller (AIC)
+ 
+ Required properties:
+-- compatible: Should be "atmel,<chip>-aic"
+-  <chip> can be "at91rm9200", "sama5d2", "sama5d3" or "sama5d4"
++- compatible: Should be:
++    - "atmel,<chip>-aic" where  <chip> can be "at91rm9200", "sama5d2",
++      "sama5d3" or "sama5d4"
++    - "microchip,<chip>-aic" where <chip> can be "sam9x60"
++
+ - interrupt-controller: Identifies the node as an interrupt controller.
+ - #interrupt-cells: The number of cells to define the interrupts. It should be 3.
+   The first cell is the IRQ number (aka "Peripheral IDentifier" on datasheet).
+diff --git a/drivers/irqchip/irq-atmel-aic5.c b/drivers/irqchip/irq-atmel-aic5.c
+index 6acad2ea0fb3..29333497ba10 100644
+--- a/drivers/irqchip/irq-atmel-aic5.c
++++ b/drivers/irqchip/irq-atmel-aic5.c
+@@ -313,6 +313,7 @@ static void __init sama5d3_aic_irq_fixup(void)
+ static const struct of_device_id aic5_irq_fixups[] __initconst = {
+ 	{ .compatible = "atmel,sama5d3", .data = sama5d3_aic_irq_fixup },
+ 	{ .compatible = "atmel,sama5d4", .data = sama5d3_aic_irq_fixup },
++	{ .compatible = "microchip,sam9x60", .data = sama5d3_aic_irq_fixup },
+ 	{ /* sentinel */ },
+ };
+ 
+@@ -390,3 +391,12 @@ static int __init sama5d4_aic5_of_init(struct device_node *node,
+ 	return aic5_of_init(node, parent, NR_SAMA5D4_IRQS);
+ }
+ IRQCHIP_DECLARE(sama5d4_aic5, "atmel,sama5d4-aic", sama5d4_aic5_of_init);
++
++#define NR_SAM9X60_IRQS		50
++
++static int __init sam9x60_aic5_of_init(struct device_node *node,
++				       struct device_node *parent)
++{
++	return aic5_of_init(node, parent, NR_SAM9X60_IRQS);
++}
++IRQCHIP_DECLARE(sam9x60_aic5, "microchip,sam9x60-aic", sam9x60_aic5_of_init);
+-- 
+2.7.4
