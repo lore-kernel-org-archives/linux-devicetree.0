@@ -1,7 +1,7 @@
 From: <frederic.chen@mediatek.com>
-Subject: [RFC PATCH V3 3/5] media: platform: Add Mediatek DIP driver KConfig
-Date: Tue, 10 Sep 2019 03:22:42 +0800
-Message-ID: <20190909192244.9367-4-frederic.chen@mediatek.com>
+Subject: [RFC PATCH V3 2/5] dts: arm64: mt8183: Add DIP nodes
+Date: Tue, 10 Sep 2019 03:22:41 +0800
+Message-ID: <20190909192244.9367-3-frederic.chen@mediatek.com>
 References: <20190909192244.9367-1-frederic.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,54 +23,43 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frederic Chen <frederic.chen@mediatek.com>
 
-This patch adds KConfig for Mediatek Digital Image Processing
-driver(DIP). DIP is embedded in Mediatek SoCs. It provides
-image format conversion, resizing, and rotation function.
+This patch adds nodes for Digital Image Processing (DIP). DIP is
+embedded in Mediatek SoCs and works with the co-processor to
+adjust image content according to tuning input data. It also
+provides image format conversion, resizing, and rotation
+features.
 
 Signed-off-by: Frederic Chen <frederic.chen@mediatek.com>
 ---
- drivers/media/platform/Kconfig         |  2 ++
- drivers/media/platform/mtk-isp/Kconfig | 19 +++++++++++++++++++
- 2 files changed, 21 insertions(+)
- create mode 100644 drivers/media/platform/mtk-isp/Kconfig
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 0c725d4dcf80..b8501e1b134f 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -32,6 +32,8 @@ source "drivers/media/platform/davinci/Kconfig"
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 0f2646c9eb65..d7b0fb8230f0 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -513,6 +513,22 @@
+ 			#clock-cells = <1>;
+ 		};
  
- source "drivers/media/platform/omap/Kconfig"
- 
-+source "drivers/media/platform/mtk-isp/Kconfig"
++		dip: dip@15022000 {
++			compatible = "mediatek,mt8183-dip";
++			mediatek,larb = <&larb5>;
++			mediatek,mdp3 = <&mdp_rdma0>;
++			mediatek,scp = <&scp>;
++			iommus = <&iommu M4U_PORT_CAM_IMGI>;
++			reg = <0 0x15022000 0 0x6000>;
++			interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_LOW>;
++			clocks =
++					<&imgsys CLK_IMG_LARB5>,
++					<&imgsys CLK_IMG_DIP>;
++			clock-names =
++					"larb5",
++					"dip";
++		};
 +
- config VIDEO_ASPEED
- 	tristate "Aspeed AST2400 and AST2500 Video Engine driver"
- 	depends on VIDEO_V4L2
-diff --git a/drivers/media/platform/mtk-isp/Kconfig b/drivers/media/platform/mtk-isp/Kconfig
-new file mode 100644
-index 000000000000..a4267db70c24
---- /dev/null
-+++ b/drivers/media/platform/mtk-isp/Kconfig
-@@ -0,0 +1,19 @@
-+config VIDEO_MEDIATEK_ISP_DIP
-+	bool "Mediatek Digital Image Processing function"
-+	select VIDEO_V4L2_SUBDEV_API
-+	select VIDEOBUF2_DMA_CONTIG
-+	select VIDEOBUF2_CORE
-+	select VIDEOBUF2_V4L2
-+	select VIDEOBUF2_MEMOPS
-+	select MEDIA_CONTROLLER
-+
-+	default n
-+	help
-+	    Support the basic Digital Image Processing (DIP) driver.
-+
-+	    DIP driver provides image format conversion, resizing,
-+	    and rotation function through the low power hardware.
-+	    DIP also supports multiple output feature. It can
-+	    generate two or more output image with different effect
-+	    based on a single input image at the same time.
-+
+ 		vdecsys: syscon@16000000 {
+ 			compatible = "mediatek,mt8183-vdecsys", "syscon";
+ 			reg = <0 0x16000000 0 0x1000>;
 -- 
 2.18.0
