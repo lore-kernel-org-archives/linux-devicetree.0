@@ -1,53 +1,47 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: Re: [PATCH v2 4/4] arm64: dts: add support for A1 based Amlogic AD401
-Date: Tue, 10 Sep 2019 00:12:32 +0800
-Message-ID: <b8350c34-1fcc-76b8-6722-1e3309089c04@amlogic.com>
-References: <1567667251-33466-1-git-send-email-jianxin.pan@amlogic.com>
- <1567667251-33466-5-git-send-email-jianxin.pan@amlogic.com>
- <CAFBinCBSmW4y-Dz7EkJMV8HOU4k6Z0G-K6T77XnVrHyubaSsdg@mail.gmail.com>
- <be032a85-b60d-f7f0-8404-b27784d809df@amlogic.com>
- <CAFBinCD7gFzOsmZCB8T1KJKVsgL7WMhoEkj3dRzyqwAnjC0CNA@mail.gmail.com>
- <1jv9u1ya3o.fsf@starbuckisacylon.baylibre.com>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: [Patch 00/13] media: am437x-vpfe: overdue maintenance
+Date: Mon, 9 Sep 2019 11:27:30 -0500
+Message-ID: <20190909162743.30114-1-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1jv9u1ya3o.fsf@starbuckisacylon.baylibre.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Tao Zeng <tao.zeng@amlogic.com>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jerome,
+This patch series is a collection of patches we have been carrying for a
+while.
 
-On 2019/9/9 19:36, Jerome Brunet wrote:
-> 
-> On Sat 07 Sep 2019 at 17:02, Martin Blumenstingl wrote:
-> 
->> Hi Jianxin,
->>
->> On Fri, Sep 6, 2019 at 7:58 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
->> [...]
->>>> also I'm a bit surprised to see no busses (like aobus, cbus, periphs, ...) here
->>>> aren't there any busses defined in the A1 SoC implementation or are
->>>> were you planning to add them later?
->>> Unlike previous series,there is no Cortex-M3 AO CPU in A1, and there is no AO/EE power domain.
->>> Most of the registers are on the apb_32b bus.  aobus, cbus and periphs are not used in A1.
->> OK, thank you for the explanation
->> since you're going to re-send the patch anyways: can you please
->> include the apb_32b bus?
-> 
-> unless there is an 64 bits apb bus as well, I suppose 'apb' would be enough ?
->
-There is no 64bits apb bus in A1, only apb32. 
-Unlike the previous series, For A1 and C1, we can not get bus information for each register from the memmap and datesheet.
-Do we need to add bus description for them too? If yes, I can add 'apb' .  
->> all other upstream Amlogic .dts are using the bus definitions, so that
->> will make A1 consistent with the other SoCs
->>
->>
->> Martin
-> 
-> .
-> 
+A few patches do fix actual bug and v4l2-compliance errors/warnings.
+Other are drivers re-work to simplify/clarify the code for easier
+maintenance.
+
+We also include the SPDX Licensing update which seemed to have been
+missed by the global script thus far.
+
+Benoit Parrot (12):
+  media: am437x-vpfe: Fix missing first line
+  media: am437x-vpfe: Rework ISR routine for clarity
+  media: am437x-vpfe: Wait for end of frame before tear-down
+  media: am437x-vpfe: Streamlined vb2 buffer cleanup
+  media: am437x-vpfe: Setting STD to current value is not an error
+  media: am437x-vpfe: Use a per instance format array instead of a
+    static one
+  media: am437x-vpfe: Maintain a reference to the current vpfe_fmt
+  media: am437x-vpfe: fix function trace debug log
+  media: am437x-vpfe: Remove print_fourcc helper
+  media: am437x-vpfe: TRY_FMT ioctl is not really trying anything
+  media: am437x-vpfe: Remove per bus width static data
+  media: am437x-vpfe: Switch to SPDX Licensing
+
+Dave Gerlach (1):
+  media: am437x-vpfe: Fix suspend path to always handle pinctrl config
+
+ drivers/media/platform/am437x/am437x-vpfe.c   | 906 ++++++++----------
+ drivers/media/platform/am437x/am437x-vpfe.h   |  44 +-
+ .../media/platform/am437x/am437x-vpfe_regs.h  |  10 +-
+ 3 files changed, 438 insertions(+), 522 deletions(-)
+
+-- 
+2.17.1
