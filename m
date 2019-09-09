@@ -1,46 +1,91 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: Re: [PATCH v2 4/4] arm64: dts: add support for A1 based Amlogic AD401
-Date: Mon, 9 Sep 2019 20:04:27 +0800
-Message-ID: <a82336e2-44df-5682-1c86-daf8a8448d30@amlogic.com>
-References: <1567667251-33466-1-git-send-email-jianxin.pan@amlogic.com>
- <1567667251-33466-5-git-send-email-jianxin.pan@amlogic.com>
- <CAFBinCBSmW4y-Dz7EkJMV8HOU4k6Z0G-K6T77XnVrHyubaSsdg@mail.gmail.com>
- <be032a85-b60d-f7f0-8404-b27784d809df@amlogic.com>
- <CAFBinCD7gFzOsmZCB8T1KJKVsgL7WMhoEkj3dRzyqwAnjC0CNA@mail.gmail.com>
+From: Adam Ford <aford173@gmail.com>
+Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
+Date: Mon, 9 Sep 2019 07:13:29 -0500
+Message-ID: <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
+References: <20190828150037.2640-1-aford173@gmail.com> <20190905230443.GA52127@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCD7gFzOsmZCB8T1KJKVsgL7WMhoEkj3dRzyqwAnjC0CNA@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190905230443.GA52127@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Tao Zeng <tao.zeng@amlogic.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Linux-OMAP <linux-omap@vger.kernel.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Tero Kristo <t-kristo@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Adam Ford <adam.ford@logicpd.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Paul Walmsley <paul@pwsan.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+On Thu, Sep 5, 2019 at 6:04 PM Tony Lindgren <tony@atomide.com> wrote:
+>
+> Hi,
+>
+> * Adam Ford <aford173@gmail.com> [190828 15:01]:
+> > The datasheet for the AM3517 shows the RNG is connected to L4.
+> > It shows the module address for the RNG is 0x480A0000, and it
+> > matches the omap2.dtsi description.  Since the driver can support
+> > omap2 and omap4, it seems reasonable to assume the omap3 would
+> > use the same core for the RNG.
+> >
+> > This RFC, mimics much of the omap2 hwmods on the OMAP3. It
+> > also adds the necessary clock for driving the RNG.  Unfortunately,
+> > it appears non-functional.  If anyone has any suggestions on how
+> > to finish the hwmod (or port it to the newer l4 device tree
+> > format), feedback is requested.
+>
+> Yup I'll take the bait :) The patch below seems to do the trick
+> for me on dm3730 based on translating your patch to probe with
+> ti-sysc.
+>
+> Not sure about 34xx, it seems we're missing rng_clk? Care
+> to give it a try and attempt simlar patches for 34xx and
+> 3517?
+>
+> At least I'm not needing the "ti,no-reset-on-init" property
+> that your patch has a comment for. Maybe that's needed on
+> some other omap3.
+>
+> Oh and this needs to default to status = "disabled" for
+> HS devices like n900 as it needs to use the omap3-rom-rng.
+>
+> Regards,
+>
+> Tony
+>
+> 8< -----------------------
+> diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
+> --- a/arch/arm/boot/dts/omap36xx.dtsi
+> +++ b/arch/arm/boot/dts/omap36xx.dtsi
+> @@ -140,6 +140,29 @@
+>                         };
+>                 };
+>
+> +               rng_target: target-module@480a0000 {
+> +                       compatible = "ti,sysc-omap2", "ti,sysc";
+> +                       reg = <0x480a003c 0x4>,
+> +                             <0x480a0040 0x4>,
+> +                             <0x480a0044 0x4>;
+> +                       reg-names = "rev", "sysc", "syss";
+> +                       ti,sysc-mask = <(SYSC_OMAP2_AUTOIDLE)>;
+> +                       ti,sysc-sidle = <SYSC_IDLE_FORCE>,
+> +                                       <SYSC_IDLE_NO>;
+> +                       ti,syss-mask = <1>;
+> +                       clocks = <&rng_ick>;
+> +                       clock-names = "ick";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       ranges = <0 0x480a0000 0x2000>;
+> +
+> +                       rng: rng@0 {
+> +                               compatible = "ti,omap2-rng";
+> +                               reg = <0x0 0x2000>;
+> +                               interrupts = <52>;
+> +                       };
+> +               };
+> +
 
-On 2019/9/7 23:02, Martin Blumenstingl wrote:
-> Hi Jianxin,
-> 
-> On Fri, Sep 6, 2019 at 7:58 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
-> [...]
->>> also I'm a bit surprised to see no busses (like aobus, cbus, periphs, ...) here
->>> aren't there any busses defined in the A1 SoC implementation or are
->>> were you planning to add them later?
->> Unlike previous series,there is no Cortex-M3 AO CPU in A1, and there is no AO/EE power domain.
->> Most of the registers are on the apb_32b bus.  aobus, cbus and periphs are not used in A1.
-> OK, thank you for the explanation
-> since you're going to re-send the patch anyways: can you please
-> include the apb_32b bus?
-> all other upstream Amlogic .dts are using the bus definitions, so that
-> will make A1 consistent with the other SoCs
-In A1 (and the later C1), BUS is not mentioned in the memmap and register spec.
-Registers are organized and grouped by functions, and we can not find information about buses from the SoC document.
-Maybe it's better to remove bus definitions for these chips.
-> 
-> 
-> Martin
-> 
-> .
-> 
+Tony,
+
+Can you tell me what branch you're using?  I am not seeing the note
+below, so I am not exactly sure what version to base my testing.
+
+ada,
+>                 /*
+>                  * Note that the sysconfig register layout is a subset of the
+>                  * "ti,sysc-omap4" type register with just sidle and midle bits
