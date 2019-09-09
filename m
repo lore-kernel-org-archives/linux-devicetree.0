@@ -1,264 +1,254 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/9] crypto: Add Allwinner sun8i-ce Crypto Engine
-Date: Mon, 9 Sep 2019 15:19:06 +0200
-Message-ID: <20190909131906.GA12882@Red>
-References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
- <20190906184551.17858-3-clabbe.montjoie@gmail.com>
- <20190907081951.v2huvhm44jfprfop@flea>
- <20190907190408.GE2628@Red>
- <20190909113837.vrnqdfgzhsiymfpm@flea>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] dt-bindings: arm: samsung: Convert Samsung Exynos IOMMU
+ H/W, System MMU to dt-schema
+Date: Mon, 9 Sep 2019 15:18:59 +0200
+Message-ID: <CAJKOXPf9zBSPnQgm0tVA_6N+mgR7xiCskf8JUOmQMG8C+jF8pA@mail.gmail.com>
+References: <CGME20190909124206eucas1p13e4ffd50a3bbc6f390cb63f11034c34c@eucas1p1.samsung.com>
+ <20190909124147.17510-1-m.falkowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBTVC3HVQKGQECWT5RUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190909113837.vrnqdfgzhsiymfpm@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190909124147.17510-1-m.falkowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maciej Falkowski <m.falkowski@samsung.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, mark.rutland@arm.com, Marek Szyprowski <m.szyprowski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 01:38:37PM +0200, Maxime Ripard wrote:
-> On Sat, Sep 07, 2019 at 09:04:08PM +0200, Corentin Labbe wrote:
-> > > Also, I'm not sure what is the point of having the clocks names be
-> > > parameters there as well. It's constant across all the compatibles,
-> > > the only thing that isn't is the number of clocks and the module clock
-> > > rate. It's what you should have in there.
-> >
-> > Since the datasheet give some max frequency, I think I will add a
-> > max_freq and add a check to verify if the clock is in the right
-> > range
-> 
-> It's a bit pointless. What are you going to do if it's not correct?
-> What are you trying to fix / report with this?
+On Mon, 9 Sep 2019 at 14:42, Maciej Falkowski <m.falkowski@samsung.com> wrote:
+>
+> Convert Samsung Exynos IOMMU H/W, System Memory Management Unit
+> to newer dt-schema format.
+>
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
 
-I thinked to print a warning.
-If someone want to play with overclocking for example, the driver should said that probably some result could be invalid.
+Hi Maciej,
 
-> 
-> > > > +		}
-> > > > +};
-> > > > +
-> > > > +static const struct ce_variant ce_h5_variant = {
-> > > > +	.alg_cipher = { CE_ID_NOTSUPP, CE_ALG_AES, CE_ALG_DES, CE_ALG_3DES,
-> > > > +		CE_ID_NOTSUPP,
-> > > > +	},
-> > > > +	.op_mode = { CE_ID_NOTSUPP, CE_OP_ECB, CE_OP_CBC
-> > > > +	},
-> > > > +	.intreg = CE_ISR,
-> > > > +	.maxflow = 4,
-> > > > +	.ce_clks = {
-> > > > +		{ "ahb", 200000000 },
-> > > > +		{ "mod", 300000000 },
-> > > > +		}
-> > > > +};
-> > > > +
-> > > > +static const struct ce_variant ce_h6_variant = {
-> > > > +	.alg_cipher = { CE_ID_NOTSUPP, CE_ALG_AES, CE_ALG_DES, CE_ALG_3DES,
-> > > > +		CE_ALG_RAES,
-> > > > +	},
-> > > > +	.op_mode = { CE_ID_NOTSUPP, CE_OP_ECB, CE_OP_CBC
-> > > > +	},
-> > > > +	.model = CE_v2,
-> > >
-> > > Can't that be derived from the version register and / or the
-> > > compatible? This seems to be redundant with each.
-> >
-> > I could use the compatible, but I want to avoid a string comparison
-> > on each request.
-> 
-> Well, this is specifically what this structure is for then, right? So
-> instead of having the model, just add the information that you want
-> there.
-> 
+Thanks for the patch. Few comments below.
 
-ok, I will change to a "bool all_size_in_bytes"
+> ---
+>  .../bindings/iommu/samsung,sysmmu.txt         |  67 ------------
+>  .../bindings/iommu/samsung,sysmmu.yaml        | 102 ++++++++++++++++++
+>  2 files changed, 102 insertions(+), 67 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
+>  create mode 100644 Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
+> deleted file mode 100644
+> index 525ec82615a6..000000000000
+> --- a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
+> +++ /dev/null
+> @@ -1,67 +0,0 @@
+> -Samsung Exynos IOMMU H/W, System MMU (System Memory Management Unit)
+> -
+> -Samsung's Exynos architecture contains System MMUs that enables scattered
+> -physical memory chunks visible as a contiguous region to DMA-capable peripheral
+> -devices like MFC, FIMC, FIMD, GScaler, FIMC-IS and so forth.
+> -
+> -System MMU is an IOMMU and supports identical translation table format to
+> -ARMv7 translation tables with minimum set of page properties including access
+> -permissions, shareability and security protection. In addition, System MMU has
+> -another capabilities like L2 TLB or block-fetch buffers to minimize translation
+> -latency.
+> -
+> -System MMUs are in many to one relation with peripheral devices, i.e. single
+> -peripheral device might have multiple System MMUs (usually one for each bus
+> -master), but one System MMU can handle transactions from only one peripheral
+> -device. The relation between a System MMU and the peripheral device needs to be
+> -defined in device node of the peripheral device.
+> -
+> -MFC in all Exynos SoCs and FIMD, M2M Scalers and G2D in Exynos5420 has 2 System
+> -MMUs.
+> -* MFC has one System MMU on its left and right bus.
+> -* FIMD in Exynos5420 has one System MMU for window 0 and 4, the other system MMU
+> -  for window 1, 2 and 3.
+> -* M2M Scalers and G2D in Exynos5420 has one System MMU on the read channel and
+> -  the other System MMU on the write channel.
+> -
+> -For information on assigning System MMU controller to its peripheral devices,
+> -see generic IOMMU bindings.
+> -
+> -Required properties:
+> -- compatible: Should be "samsung,exynos-sysmmu"
+> -- reg: A tuple of base address and size of System MMU registers.
+> -- #iommu-cells: Should be <0>.
+> -- interrupts: An interrupt specifier for interrupt signal of System MMU,
+> -             according to the format defined by a particular interrupt
+> -             controller.
+> -- clock-names: Should be "sysmmu" or a pair of "aclk" and "pclk" to gate
+> -              SYSMMU core clocks.
+> -              Optional "master" if the clock to the System MMU is gated by
+> -              another gate clock other core  (usually main gate clock
+> -              of peripheral device this SYSMMU belongs to).
+> -- clocks: Phandles for respective clocks described by clock-names.
+> -- power-domains: Required if the System MMU is needed to gate its power.
+> -         Please refer to the following document:
+> -         Documentation/devicetree/bindings/power/pd-samsung.txt
+> -
+> -Examples:
+> -       gsc_0: gsc@13e00000 {
+> -               compatible = "samsung,exynos5-gsc";
+> -               reg = <0x13e00000 0x1000>;
+> -               interrupts = <0 85 0>;
+> -               power-domains = <&pd_gsc>;
+> -               clocks = <&clock CLK_GSCL0>;
+> -               clock-names = "gscl";
+> -               iommus = <&sysmmu_gsc0>;
+> -       };
+> -
+> -       sysmmu_gsc0: sysmmu@13e80000 {
+> -               compatible = "samsung,exynos-sysmmu";
+> -               reg = <0x13E80000 0x1000>;
+> -               interrupt-parent = <&combiner>;
+> -               interrupts = <2 0>;
+> -               clock-names = "sysmmu", "master";
+> -               clocks = <&clock CLK_SMMU_GSCL0>, <&clock CLK_GSCL0>;
+> -               power-domains = <&pd_gsc>;
+> -               #iommu-cells = <0>;
+> -       };
+> diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
+> new file mode 100644
+> index 000000000000..6c40dfb86899
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
+> @@ -0,0 +1,102 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iommu/samsung,sysmmu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung Exynos IOMMU H/W, System MMU (System Memory Management Unit)
+> +
+> +maintainers:
+> +  - Marek Szyprowski <m.szyprowski@samsung.com>
+> +
+> +description: |+
+> +  Samsung's Exynos architecture contains System MMUs that enables scattered
+> +  physical memory chunks visible as a contiguous region to DMA-capable peripheral
+> +  devices like MFC, FIMC, FIMD, GScaler, FIMC-IS and so forth.
+> +
+> +  System MMU is an IOMMU and supports identical translation table format to
+> +  ARMv7 translation tables with minimum set of page properties including access
+> +  permissions, shareability and security protection. In addition, System MMU has
+> +  another capabilities like L2 TLB or block-fetch buffers to minimize translation
+> +  latency.
+> +
+> +  System MMUs are in many to one relation with peripheral devices, i.e. single
+> +  peripheral device might have multiple System MMUs (usually one for each bus
+> +  master), but one System MMU can handle transactions from only one peripheral
+> +  device. The relation between a System MMU and the peripheral device needs to be
+> +  defined in device node of the peripheral device.
+> +
+> +  MFC in all Exynos SoCs and FIMD, M2M Scalers and G2D in Exynos5420 has 2 System
+> +  MMUs.
+> +  * MFC has one System MMU on its left and right bus.
+> +  * FIMD in Exynos5420 has one System MMU for window 0 and 4, the other system MMU
+> +    for window 1, 2 and 3.
+> +  * M2M Scalers and G2D in Exynos5420 has one System MMU on the read channel and
+> +    the other System MMU on the write channel.
+> +
+> +  For information on assigning System MMU controller to its peripheral devices,
+> +  see generic IOMMU bindings.
+> +
+> +properties:
+> +  compatible:
+> +    const: samsung,exynos-sysmmu
 
-> > > > +int sun8i_ce_get_engine_number(struct sun8i_ce_dev *ce)
-> > > > +{
-> > > > +	return atomic_inc_return(&ce->flow) % ce->variant->maxflow;
-> > > > +}
-> > >
-> > > I'm not sure what this is supposed to be doing, but that mod there
-> > > seems pretty dangerous.
-> > >
-> > > ...
-> >
-> > This mod do a round robin on each channel.
-> > I dont see why it is dangerous.
-> 
-> Well, you're using the atomic API here which is most commonly used for
-> refcounting, while you're using a mod.
-> 
-> Plus, while the increment is atomic, the modulo isn't, so you can end
-> up in a case where you would be preempted between the
-> atomic_inc_return and the mod, which is dangerous.
-> 
-> Again, I'm not sure what this function is doing (which is also a
-> problem in itself). I guess you should just make it clearer what it
-> does, and then we can discuss it properly.
+Add empty line between properties. Makes it easier to read.
 
-Each request need to be assigned to a channel.
-Each channel are identified by a number from 1 to 4.
+> +  reg:
+> +    description: A tuple of base address and size of System MMU registers.
 
-So this function return the channel to use, 1 then 2 then 3 then 4 then 1...
-Note that this is uncritical. If, due to anything, two request are assigned to the same channel, nothing will break.
+Description not needed.
 
-> 
-> > > > +			err = clk_set_rate(ce->ceclks[i], ce->variant->ce_clks[i].freq);
-> > > > +			if (err)
-> > > > +				dev_err(&pdev->dev, "Fail to set %s clk speed to %lu\n",
-> > > > +					ce->variant->ce_clks[i].name,
-> > > > +					ce->variant->ce_clks[i].freq);
-> > > > +		} else {
-> > > > +			dev_info(&pdev->dev, "%s run at %lu\n",
-> > > > +				 ce->variant->ce_clks[i].name, cr);
-> > >
-> > > Ditto.
-> > >
-> > > > +		}
-> > > > +		err = clk_prepare_enable(ce->ceclks[i]);
-> > >
-> > > Do you really need this right now though?
-> >
-> > Not sure to understand, why I shouldnt do it now ?
-> > Does it is related to your pm_runtime remark below ?
-> >
-> > My feeling was to submit the driver without PM and convert it after.
-> 
-> runtime_pm would be pretty cheap to add though judging by what you're
-> doing there.
-> 
+> +    maxItems: 1
+> +  interrupts:
+> +    description: |
+> +      An interrupt specifier for interrupt signal of System MMU,
+> +      according to the format defined by a particular interrupt
+> +      controller.
 
-I will try to add runtime_pm
+Description not needed.
 
-> > > > +		if (err) {
-> > > > +			dev_err(&pdev->dev, "Cannot prepare_enable %s\n",
-> > > > +				ce->variant->ce_clks[i].name);
-> > > > +			return err;
-> > > > +		}
-> > > > +	}
-> > > > +
-> > > > +	/* Get Non Secure IRQ */
-> > > > +	irq = platform_get_irq(pdev, 0);
-> > > > +	if (irq < 0) {
-> > > > +		dev_err(ce->dev, "Cannot get NS IRQ\n");
-> > > > +		return irq;
-> > > > +	}
-> > > > +
-> > > > +	err = devm_request_irq(&pdev->dev, irq, ce_irq_handler, 0,
-> > > > +			       "sun8i-ce-ns", ce);
-> > > > +	if (err < 0) {
-> > > > +		dev_err(ce->dev, "Cannot request NS IRQ\n");
-> > > > +		return err;
-> > > > +	}
-> > > > +
-> > > > +	ce->reset = devm_reset_control_get_optional(&pdev->dev, "ahb");
-> > > > +	if (IS_ERR(ce->reset)) {
-> > > > +		if (PTR_ERR(ce->reset) == -EPROBE_DEFER)
-> > > > +			return PTR_ERR(ce->reset);
-> > > > +		dev_info(&pdev->dev, "No reset control found\n");
-> > >
-> > > It's not optional though.
-> >
-> > I dont understand why.
-> 
-> On all the SoCs, you need that reset line to be deasserted, otherwise
-> the IP (and therefore the driver) will be non-functional. It's not an
-> option to run without it.
+> +  clocks:
+> +    description: Phandles for respective clocks described by clock-names.
 
-Currently all the SoC have a reset, but nothing prevent a new SoC with CE without reset.
-Anyway, I will made the reset mandatory for the moment.
+Description not needed but I think number of elements is.
 
-> 
-> > > > +		ce->reset = NULL;
-> > > > +	}
-> > > > +
-> > > > +	err = reset_control_deassert(ce->reset);
-> > > > +	if (err) {
-> > > > +		dev_err(&pdev->dev, "Cannot deassert reset control\n");
-> > > > +		goto error_clk;
-> > > > +	}
-> > >
-> > > Again, you don't really need this at this moment. Using runtime_pm
-> > > would make more sense.
-> > >
-> > > > +	v = readl(ce->base + CE_CTR);
-> > > > +	v >>= 16;
-> > > > +	v &= 0x07;
-> > >
-> > > This should be in a define
-> > >
-> >
-> > Will fix.
-> >
-> > > > +	dev_info(&pdev->dev, "CE_NS Die ID %x\n", v);
-> > >
-> > > And if that really makes sense to print it, the error message should
-> > > be made less cryptic.
-> > >
-> >
-> > Will fix.
-> >
-> > > > +
-> > > > +	ce->dev = &pdev->dev;
-> > > > +	platform_set_drvdata(pdev, ce);
-> > > > +
-> > > > +	mutex_init(&ce->mlock);
-> > > > +
-> > > > +	ce->chanlist = devm_kcalloc(ce->dev, ce->variant->maxflow,
-> > > > +				    sizeof(struct sun8i_ce_flow), GFP_KERNEL);
-> > > > +	if (!ce->chanlist) {
-> > > > +		err = -ENOMEM;
-> > > > +		goto error_flow;
-> > > > +	}
-> > > > +
-> > > > +	for (i = 0; i < ce->variant->maxflow; i++) {
-> > > > +		init_completion(&ce->chanlist[i].complete);
-> > > > +		mutex_init(&ce->chanlist[i].lock);
-> > > > +
-> > > > +		ce->chanlist[i].engine = crypto_engine_alloc_init(ce->dev, true);
-> > > > +		if (!ce->chanlist[i].engine) {
-> > > > +			dev_err(ce->dev, "Cannot allocate engine\n");
-> > > > +			i--;
-> > > > +			goto error_engine;
-> > > > +		}
-> > > > +		err = crypto_engine_start(ce->chanlist[i].engine);
-> > > > +		if (err) {
-> > > > +			dev_err(ce->dev, "Cannot start engine\n");
-> > > > +			goto error_engine;
-> > > > +		}
-> > > > +		ce->chanlist[i].tl = dma_alloc_coherent(ce->dev,
-> > > > +							sizeof(struct ce_task),
-> > > > +							&ce->chanlist[i].t_phy,
-> > > > +							GFP_KERNEL);
-> > > > +		if (!ce->chanlist[i].tl) {
-> > > > +			dev_err(ce->dev, "Cannot get DMA memory for task %d\n",
-> > > > +				i);
-> > > > +			err = -ENOMEM;
-> > > > +			goto error_engine;
-> > > > +		}
-> > > > +	}
-> > >
-> > > All this initialization should be done before calling
-> > > request_irq. You're using some of those fields in your handler.
-> >
-> > No interrupt could fire, since algorithms are still not registred.
-> 
-> That's not true. Spurious interrupts are a thing, the engine could
-> have been left in a weird state by the bootloader / kexec / reboot
-> with some pending interrupts, etc.
-> 
-> You have registered that handler already, you should expect it to be
-> called at any point in time.
-> 
+> +  clock-names:
+> +    description: |
+> +      Should be "sysmmu" or a pair of "aclk" and "pclk" to gate
+> +      SYSMMU core clocks.
+> +      Optional "master" if the clock to the System MMU is gated by
+> +      another gate clock other core  (usually main gate clock
+> +      of peripheral device this SYSMMU belongs to).
+> +    minItems: 1
+> +    maxItems: 2
 
-Ok will fix.
+Based on the description this can be up to three clocks.
 
-Thanks for your review.
+Please declare the exact items within each combination (so either
+sysmmu or aclk+pclk, plus optional master?). If this does not depend
+on compatible, then oneOf could work. Then number of items could be
+removed.
+
+> +  "#iommu-cells":
+> +    const: 0
+> +    description: Should be <0>.
+
+Description not needed.
+
+> +  power-domains:
+
+$ref: /schemas/types.yaml#/definitions/phandle
+
+> +    description: |
+> +      Required if the System MMU is needed to gate its power.
+> +      Please refer to the following document:
+> +      Documentation/devicetree/bindings/power/pd-samsung.txt
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - "#iommu-cells"
+> +
+> +examples:
+> +  - |
+> +    gsc_0: gsc@13e00000 {
+> +      compatible = "samsung,exynos5-gsc";
+> +      reg = <0x13e00000 0x1000>;
+> +      interrupts = <0 85 0>;
+> +      power-domains = <&pd_gsc>;
+> +      clocks = <&clock 0>; //CLK_GSCL0
+
+Missing space after //
+
+> +      clock-names = "gscl";
+> +      iommus = <&sysmmu_gsc0>;
+> +    };
+> +  - |
+
+This is one example, not two.
+
+Best regards,
+Krzysztof
+
+> +    sysmmu_gsc0: sysmmu@13e80000 {
+> +      compatible = "samsung,exynos-sysmmu";
+> +      reg = <0x13E80000 0x1000>;
+> +      interrupt-parent = <&combiner>;
+> +      interrupts = <2 0>;
+> +      clock-names = "sysmmu", "master";
+> +      clocks = <&clock 0>, // CLK_SMMU_GSCL0
+> +               <&clock 0>; // CLK_GSCL0
+> +      power-domains = <&pd_gsc>;
+> +      #iommu-cells = <0>;
+> +    };
+> +
+> --
+> 2.17.1
+>
