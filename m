@@ -1,33 +1,99 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v3] gpio/mpc8xxx: change irq handler from chained to normal
-Date: Mon, 9 Sep 2019 11:14:45 -0300
-Message-ID: <CAOMZO5AG2xmnDbjmysTbiHpF1W0yERFFwYAa98+YFH7cGSPE6w@mail.gmail.com>
-References: <20190909021214.25646-1-hui.song_1@nxp.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 2/2] net: phy: dp83867: Add SGMII mode type switching
+Date: Mon, 9 Sep 2019 07:23:16 -0700
+Message-ID: <51cf6e69-14ad-394e-0998-6032d239b717@gmail.com>
+References: <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
+ <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190909021214.25646-1-hui.song_1@nxp.com>
+In-Reply-To: <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hui Song <hui.song_1@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+To: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>, davem@davemloft.net, robh+dt@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Trent Piepho <tpiepho@impinj.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Song,
 
-On Mon, Sep 9, 2019 at 11:12 AM Hui Song <hui.song_1@nxp.com> wrote:
 
->  static void mpc8xxx_irq_unmask(struct irq_data *d)
-> @@ -409,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
->         if (devtype->gpio_dir_in_init)
->                 devtype->gpio_dir_in_init(gc);
->
-> -       irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
-> -                                        mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-> +       ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-> +               IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
-> +       if (ret) {
-> +               pr_err("%s: failed to request_irq(%d), ret = %d\n",
+On 9/9/2019 4:02 AM, Vitaly Gaiduk wrote:
+> This patch adds ability to switch beetween two PHY SGMII modes.
+> Some hardware, for example, FPGA IP designs may use 6-wire mode
+> which enables differential SGMII clock to MAC.
+> 
+> Signed-off-by: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
+> ---
+> Changes in v2:
+> - changed variable sgmii_type name to sgmii_ref_clk_en
+> 
+>  drivers/net/phy/dp83867.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+> index 1f1ecee..cd6260e 100644
+> --- a/drivers/net/phy/dp83867.c
+> +++ b/drivers/net/phy/dp83867.c
+> @@ -37,6 +37,7 @@
+>  #define DP83867_STRAP_STS2	0x006f
+>  #define DP83867_RGMIIDCTL	0x0086
+>  #define DP83867_IO_MUX_CFG	0x0170
+> +#define DP83867_SGMIICTL	0x00D3
+>  #define DP83867_10M_SGMII_CFG   0x016F
+>  #define DP83867_10M_SGMII_RATE_ADAPT_MASK BIT(7)
+> 
+> @@ -61,6 +62,9 @@
+>  #define DP83867_RGMII_TX_CLK_DELAY_EN		BIT(1)
+>  #define DP83867_RGMII_RX_CLK_DELAY_EN		BIT(0)
+> 
+> +/* SGMIICTL bits */
+> +#define DP83867_SGMII_TYPE		BIT(14)
+> +
+>  /* STRAP_STS1 bits */
+>  #define DP83867_STRAP_STS1_RESERVED		BIT(11)
+> 
+> @@ -109,6 +113,7 @@ struct dp83867_private {
+>  	bool rxctrl_strap_quirk;
+>  	bool set_clk_output;
+>  	u32 clk_output_sel;
+> +	bool sgmii_ref_clk_en;
+>  };
+> 
+>  static int dp83867_ack_interrupt(struct phy_device *phydev)
+> @@ -197,6 +202,9 @@ static int dp83867_of_init(struct phy_device *phydev)
+>  	dp83867->rxctrl_strap_quirk = of_property_read_bool(of_node,
+>  					"ti,dp83867-rxctrl-strap-quirk");
+> 
+> +	dp83867->sgmii_ref_clk_en = of_property_read_bool(of_node,
+> +					"ti,sgmii-ref-clock-output-enable");
+> +
+>  	/* Existing behavior was to use default pin strapping delay in rgmii
+>  	 * mode, but rgmii should have meant no delay.  Warn existing users.
+>  	 */
+> @@ -389,6 +397,14 @@ static int dp83867_config_init(struct phy_device *phydev)
+> 
+>  		if (ret)
+>  			return ret;
+> +
+> +		/* SGMII type is set to 4-wire mode by default */
+> +		if (dp83867->sgmii_ref_clk_en) {
+> +			/* Switch on 6-wire mode */
+> +			val = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL);
+> +			val |= DP83867_SGMII_TYPE;
+> +			phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL, val);
+> +		}
 
-In drivers, it is preferred to use dev_err() instead of pr_err().
+Is there a case where the value could be retained across a power
+on/reset cycle and you would want to make sure you do write the intended
+"wire mode" here? What I am suggesting is just changing this into a:
 
-Please swicth for dev_err().
+	val =  phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL);
+	if (dp83867->sgmii_ref_clk_en)
+		val |= DP83867_SGMII_TYPE;
+	else
+		val &= ~DP83867_SGMII_TYPE;
+	phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL, val);
+	
+Other than that, LGTM
+-- 
+Florian
