@@ -1,35 +1,56 @@
-From: Talel Shenhar <talel@amazon.com>
-Subject: [PATCH 3/3] arm64: alpine: select AL_POS
-Date: Mon, 9 Sep 2019 12:10:20 +0300
-Message-ID: <1568020220-7758-4-git-send-email-talel@amazon.com>
-References: <1568020220-7758-1-git-send-email-talel@amazon.com>
+From: Jan Kotas <jank@cadence.com>
+Subject: Re: [PATCH v2 3/3] media: Add support for Cadence CSI2RX 2.1
+Date: Mon, 9 Sep 2019 09:24:15 +0000
+Message-ID: <A67221D2-8F92-4168-83D0-6B1325CA4417@global.cadence.com>
+References: <20190905105601.27034-1-jank@cadence.com>
+ <20190905105601.27034-4-jank@cadence.com>
+ <20190906080119.GF1586@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568020220-7758-1-git-send-email-talel@amazon.com>
+In-Reply-To: <20190906080119.GF1586@valkosipuli.retiisi.org.uk>
+Content-Language: en-US
+Content-ID: <FDDB38729AB88942B13EA992868E3718@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, tglx@linutronix.de, arnd@arndb.de, venture@google.com, linus.walleij@linaro.org, olof@lixom.net, mripard@kernel.org, ssantosh@kernel.org, paul.kocialkowski@bootlin.com, mjourdan@baylibre.com, catalin.marinas@arm.com, will@kernel.org, talel@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, barakw@amazon.com
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Jan Kotas <jank@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Rafal Ciepiela <rafalc@cadence.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Amazon's Annapurna Labs SoCs uses al-pos driver, enable it.
-
-Signed-off-by: Talel Shenhar <talel@amazon.com>
----
- arch/arm64/Kconfig.platforms | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 4778c77..bd86b15 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -25,6 +25,7 @@ config ARCH_SUNXI
- config ARCH_ALPINE
- 	bool "Annapurna Labs Alpine platform"
- 	select ALPINE_MSI if PCI
-+	select AL_POS
- 	help
- 	  This enables support for the Annapurna Labs Alpine
- 	  Soc family.
--- 
-2.7.4
+SGVsbG8gU2FrYXJpLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCj4gT24gNiBTZXAgMjAx
+OSwgYXQgMTA6MDEsIFNha2FyaSBBaWx1cyA8c2FrYXJpLmFpbHVzQGlraS5maT4gd3JvdGU6DQo+
+IA0KPiBIaSBKYW4sDQo+IA0KPiBPbiBUaHUsIFNlcCAwNSwgMjAxOSBhdCAxMTo1NjowMUFNICsw
+MTAwLCBKYW4gS290YXMgd3JvdGU6DQo+PiBUaGlzIHBhdGNoIGFkZHMgc3VwcG9ydCBmb3IgQ1NJ
+MlJYIHYyLjEgdmVyc2lvbiBvZiB0aGUgY29udHJvbGxlci4NCj4+IA0KPj4gU2lnbmVkLW9mZi1i
+eTogSmFuIEtvdGFzIDxqYW5rQGNhZGVuY2UuY29tPg0KPj4gLS0tDQo+PiBkcml2ZXJzL21lZGlh
+L3BsYXRmb3JtL2NhZGVuY2UvY2Rucy1jc2kycnguYyB8IDEzOSArKysrKysrKysrKysrKysrKysr
+KysrLS0tLS0NCj4+IDEgZmlsZSBjaGFuZ2VkLCAxMTYgaW5zZXJ0aW9ucygrKSwgMjMgZGVsZXRp
+b25zKC0pDQo+PiANCj4+IHN0cnVjdCBjc2kycnhfcHJpdiB7DQo+PiAJc3RydWN0IGRldmljZQkJ
+CSpkZXY7DQo+PiAJdW5zaWduZWQgaW50CQkJY291bnQ7DQo+PiBAQCAtNjksNiArODEsNyBAQCBz
+dHJ1Y3QgY3NpMnJ4X3ByaXYgew0KPj4gCXN0cnVjdCBjbGsJCQkqcF9jbGs7DQo+PiAJc3RydWN0
+IGNsawkJCSpwaXhlbF9jbGtbQ1NJMlJYX1NUUkVBTVNfTUFYXTsNCj4+IAlzdHJ1Y3QgcGh5CQkJ
+KmRwaHk7DQo+PiArCXN0cnVjdCBjc2kycnhfdm9wcwkJKnZvcHM7DQo+IA0KPiBjb25zdD8NCg0K
+SeKAmWxsIGFkZCBpdCwgdGhhbmtzLg0KDQo+PiANCj4+IAl1OAkJCQlsYW5lc1tDU0kyUlhfTEFO
+RVNfTUFYXTsNCj4+IAl1OAkJCQludW1fbGFuZXM7DQo+PiBAQCAtOTIsNiArMTA1LDMyIEBAIHN0
+cnVjdCBjc2kycnhfcHJpdiAqdjRsMl9zdWJkZXZfdG9fY3NpMnJ4KHN0cnVjdCB2NGwyX3N1YmRl
+diAqc3ViZGV2KQ0KPj4gCXJldHVybiBjb250YWluZXJfb2Yoc3ViZGV2LCBzdHJ1Y3QgY3NpMnJ4
+X3ByaXYsIHN1YmRldik7DQo+PiB9DQo+PiANCj4+ICtzdGF0aWMgdm9pZCBjc2kycnhfZ2V0X2Rl
+dl9jZmcoc3RydWN0IGNzaTJyeF9wcml2ICpjc2kycngpDQo+PiArew0KPj4gKwl1MzIgZGV2X2Nm
+ZzsNCj4+ICsNCj4+ICsJY2xrX3ByZXBhcmVfZW5hYmxlKGNzaTJyeC0+cF9jbGspOw0KPj4gKwlk
+ZXZfY2ZnID0gcmVhZGwoY3NpMnJ4LT5iYXNlICsgQ1NJMlJYX0RFVklDRV9DRkdfUkVHKTsNCj4+
+ICsJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGNzaTJyeC0+cF9jbGspOw0KPj4gKw0KPj4gKwljc2ky
+cngtPm1heF9sYW5lcyA9IGRldl9jZmcgJiA3Ow0KPj4gKwljc2kycngtPm1heF9zdHJlYW1zID0g
+KGRldl9jZmcgPj4gNCkgJiA3Ow0KPj4gKwljc2kycngtPmhhc19pbnRlcm5hbF9kcGh5ID0gZGV2
+X2NmZyAmIEJJVCgzKSA/IHRydWUgOiBmYWxzZTsNCj4gDQo+IENvdWxkIHlvdSBzcGVsbCBvdXQg
+dGhlc2UgYSBsaXR0bGUsIGJ5IGFkZGluZyAjZGVmaW5lcyBmb3IgdGhlIHJlZ2lzdGVyDQo+IGJp
+dHM/IFNhbWUgYmVsb3cuDQoNCkkgdHJpZWQgdG8ga2VlcCBpbXBhY3Qgb24gdGhlIG9yaWdpbmFs
+IGNvZGUgdG8gdGhlIG1pbmltdW0sIA0KYnV0IHlvdeKAmXJlIHJpZ2h0LiBJdOKAmXMgYSBnb29k
+IG9wcG9ydHVuaXR5IGZvciBhIGNsZWFudXAuIA0KDQo+PiANCj4+IEBAIC00MzksNiArNTM1LDkg
+QEAgc3RhdGljIGludCBjc2kycnhfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikN
+Cj4+IAljc2kycngtPmRldiA9ICZwZGV2LT5kZXY7DQo+PiAJbXV0ZXhfaW5pdCgmY3NpMnJ4LT5s
+b2NrKTsNCj4+IA0KPj4gKwlvZl9pZCA9IG9mX21hdGNoX25vZGUoY3NpMnJ4X29mX3RhYmxlLCBw
+ZGV2LT5kZXYub2Zfbm9kZSk7DQo+PiArCWNzaTJyeC0+dm9wcyA9IChzdHJ1Y3QgY3NpMnJ4X3Zv
+cHMgKilvZl9pZC0+ZGF0YTsNCj4gDQo+IFRoZSBjYXN0IGlzbid0IG5lZWRlZCwgaXMgaXQ/DQoN
+Ckl04oCZcyBub3QsIGJ1dCBkb2VzbuKAmXQgbWFrZSBpdCBtb3JlIHJlYWRhYmxlPw0KDQo+IC0t
+IA0KPiBLaW5kIHJlZ2FyZHMsDQo+IA0KPiBTYWthcmkgQWlsdXMNCg0KUmVnYXJkcywNCkphbg0K
+DQo=
