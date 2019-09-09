@@ -1,40 +1,48 @@
 From: Talel Shenhar <talel@amazon.com>
-Subject: [PATCH 0/3] Amazon's Annapurna Labs POS Driver
-Date: Mon, 9 Sep 2019 12:10:17 +0300
-Message-ID: <1568020220-7758-1-git-send-email-talel@amazon.com>
+Subject: [PATCH 1/3] dt-bindings: soc: al-pos: Amazon's Annapurna Labs POS
+Date: Mon, 9 Sep 2019 12:10:18 +0300
+Message-ID: <1568020220-7758-2-git-send-email-talel@amazon.com>
+References: <1568020220-7758-1-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1568020220-7758-1-git-send-email-talel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, tglx@linutronix.de, arnd@arndb.de, venture@google.com, linus.walleij@linaro.org, olof@lixom.net, mripard@kernel.org, ssantosh@kernel.org, paul.kocialkowski@bootlin.com, mjourdan@baylibre.com, catalin.marinas@arm.com, will@kernel.org, talel@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, barakw@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-The Amazon's Annapurna Labs SoCs includes Point Of Serialization error
-logging unit that reports an error in case of write error (e.g. attempt to
-write to a read only register).
+Document Amazon's Annapurna Labs POS SoC binding.
 
-This patch series introduces the support for this unit.
-
-
-Talel Shenhar (3):
-  dt-bindings: soc: al-pos: Amazon's Annapurna Labs POS
-  soc: amazon: al-pos: Introduce Amazon's Annapurna Labs POS driver
-  arm64: alpine: select AL_POS
-
- .../bindings/soc/amazon/amazon,al-pos.txt          |  18 +++
- MAINTAINERS                                        |   6 +
- arch/arm64/Kconfig.platforms                       |   1 +
- drivers/soc/Kconfig                                |   1 +
- drivers/soc/Makefile                               |   1 +
- drivers/soc/amazon/Kconfig                         |   5 +
- drivers/soc/amazon/Makefile                        |   1 +
- drivers/soc/amazon/al_pos.c                        | 129 +++++++++++++++++++++
- 8 files changed, 162 insertions(+)
+Signed-off-by: Talel Shenhar <talel@amazon.com>
+---
+ .../devicetree/bindings/soc/amazon/amazon,al-pos.txt   | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
- create mode 100644 drivers/soc/amazon/Kconfig
- create mode 100644 drivers/soc/amazon/Makefile
- create mode 100644 drivers/soc/amazon/al_pos.c
 
+diff --git a/Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt b/Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
+new file mode 100644
+index 00000000..035cc571
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
+@@ -0,0 +1,18 @@
++Amazon's Annapurna Labs POS
++
++POS node is defined to describe the Point Of Serialization (POS) logger
++unit.
++
++Required properties:
++- compatible:	Shall be "amazon,al-pos".
++- reg:		POS logger resources.
++- interrupts:	should contain the interrupt for pos error event.
++
++Example:
++
++al_pos {
++	compatible = "amazon,al-pos";
++	reg = <0x0 0xf0070084 0x0 0x00000008>;
++	interrupt-parent = <&amazon_system_fabric>;
++	interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
++};
 -- 
 2.7.4
