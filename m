@@ -1,87 +1,228 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH] arm64: dts: renesas: Add /soc dma-ranges
-Date: Mon, 9 Sep 2019 11:12:55 +0200
-Message-ID: <3e7aebea-9394-8e87-2dbd-0b503fc52799@gmail.com>
-References: <20190907161634.27378-1-marek.vasut@gmail.com>
- <CAMuHMdXkExZXeXnxuKkMC0J4m56cZUmJpcq2JCXuMv3PBzA0Dg@mail.gmail.com>
- <b77e6a66-be14-4f94-c116-788b8fa18b31@gmail.com>
- <CAMuHMdUWezNDVv+U=VeryssmSFm79zU-ptuKmMechcWBboV1=w@mail.gmail.com>
+From: Talel Shenhar <talel@amazon.com>
+Subject: [PATCH 2/3] soc: amazon: al-pos: Introduce Amazon's Annapurna Labs POS driver
+Date: Mon, 9 Sep 2019 12:10:19 +0300
+Message-ID: <1568020220-7758-3-git-send-email-talel@amazon.com>
+References: <1568020220-7758-1-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMuHMdUWezNDVv+U=VeryssmSFm79zU-ptuKmMechcWBboV1=w@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Wolfram Sang <wsa@the-dreams.de>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1568020220-7758-1-git-send-email-talel@amazon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, tglx@linutronix.de, arnd@arndb.de, venture@google.com, linus.walleij@linaro.org, olof@lixom.net, mripard@kernel.org, ssantosh@kernel.org, paul.kocialkowski@bootlin.com, mjourdan@baylibre.com, catalin.marinas@arm.com, will@kernel.org, talel@amazon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, barakw@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-On 9/9/19 11:05 AM, Geert Uytterhoeven wrote:
-> Hi Marek,
+The Amazon's Annapurna Labs SoCs includes Point Of Serialization error
+logging unit that reports an error in case write error (e.g. attempt to
+write to a read only register).
+This patch introduces the support for this unit.
 
-Hi,
+Signed-off-by: Talel Shenhar <talel@amazon.com>
+---
+ MAINTAINERS                 |   6 +++
+ drivers/soc/Kconfig         |   1 +
+ drivers/soc/Makefile        |   1 +
+ drivers/soc/amazon/Kconfig  |   5 ++
+ drivers/soc/amazon/Makefile |   1 +
+ drivers/soc/amazon/al_pos.c | 129 ++++++++++++++++++++++++++++++++++++++++++++
+ 6 files changed, 143 insertions(+)
+ create mode 100644 drivers/soc/amazon/Kconfig
+ create mode 100644 drivers/soc/amazon/Makefile
+ create mode 100644 drivers/soc/amazon/al_pos.c
 
-> On Mon, Sep 9, 2019 at 10:42 AM Marek Vasut <marek.vasut@gmail.com> wrote:
->> On 9/9/19 10:19 AM, Geert Uytterhoeven wrote:
->>> On Sat, Sep 7, 2019 at 6:16 PM <marek.vasut@gmail.com> wrote:
->>>> From: Marek Vasut <marek.vasut+renesas@gmail.com>
->>>>
->>>> Add dma-ranges property into /soc node to describe the DMA capabilities
->>>> of the bus. This is currently needed to translate PCI DMA ranges, which
->>>> are limited to 32bit addresses.
->>>>
->>>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
->>>
->>> Thanks for your patch!
->>>
->>>> NOTE: This is needed for the following patches to work correctly:
->>>>       https://patchwork.ozlabs.org/patch/1144870/
->>>>       https://patchwork.ozlabs.org/patch/1144871/
->>>
->>> What happens with the above patches applied, and without this one?
->>
->> It triggers https://patchwork.kernel.org/patch/11087391/#22811745
-> 
-> Sure. But what does that mean?
-> PCI devices just not working?
-> Random memory corruption?
-> System lockup?
-> Anything else?
-
-Instead of translating the PCI DMA range to 0x40000000-0xffffffff , the
-PCI code in the aforementioned patches defaults to maximum range, which
-prevents various devices from working correctly, as the buffers get
-allocated above the 32bit boundary.
-
->>> As PCI/OF driver patches go in through different trees, is it safe to apply
->>> this patch now?
->>> Should they go in together?
->>
->> I didn't get any feedback on the other two patches, but this one here is
->> safe to go in either way.
->>
->>>>  arch/arm64/boot/dts/renesas/r8a7795.dtsi  | 1 +
->>>>  arch/arm64/boot/dts/renesas/r8a7796.dtsi  | 1 +
->>>>  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 +
->>>
->>> Do we need similar patches for the other R-Car Gen3 and RZ/G2 DTS files?
->>> What about R-Car Gen2 and RZ/G1?
->> I suspect we need such patches for any ARM64 machine with PCIe with this
->> 32bit limitation.
-> 
-> What about R-Car Gen2 and RZ/G1, which are ARM32, with LPAE?
-
-Presumably we need that too ?
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e7a47b5..627af40 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -751,6 +751,12 @@ F:	drivers/tty/serial/altera_jtaguart.c
+ F:	include/linux/altera_uart.h
+ F:	include/linux/altera_jtaguart.h
+ 
++AMAZON ANNAPURNA LABS POS
++M:	Talel Shenhar <talel@amazon.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
++F:	drivers/soc/amazon/al_pos.c
++
+ AMAZON ANNAPURNA LABS THERMAL MMIO DRIVER
+ M:	Talel Shenhar <talel@amazon.com>
+ S:	Maintained
+diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+index 833e04a..913a6b1 100644
+--- a/drivers/soc/Kconfig
++++ b/drivers/soc/Kconfig
+@@ -2,6 +2,7 @@
+ menu "SOC (System On Chip) specific Drivers"
+ 
+ source "drivers/soc/actions/Kconfig"
++source "drivers/soc/amazon/Kconfig"
+ source "drivers/soc/amlogic/Kconfig"
+ source "drivers/soc/aspeed/Kconfig"
+ source "drivers/soc/atmel/Kconfig"
+diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+index 2ec3550..c1c5c64 100644
+--- a/drivers/soc/Makefile
++++ b/drivers/soc/Makefile
+@@ -6,6 +6,7 @@
+ obj-$(CONFIG_ARCH_ACTIONS)	+= actions/
+ obj-$(CONFIG_SOC_ASPEED)	+= aspeed/
+ obj-$(CONFIG_ARCH_AT91)		+= atmel/
++obj-y				+= amazon/
+ obj-y				+= bcm/
+ obj-$(CONFIG_ARCH_DOVE)		+= dove/
+ obj-$(CONFIG_MACH_DOVE)		+= dove/
+diff --git a/drivers/soc/amazon/Kconfig b/drivers/soc/amazon/Kconfig
+new file mode 100644
+index 00000000..fdd4cdd
+--- /dev/null
++++ b/drivers/soc/amazon/Kconfig
+@@ -0,0 +1,5 @@
++config AL_POS
++	bool "Amazon's Annapurna Labs POS driver"
++	depends on ARCH_ALPINE || COMPILE_TEST
++	help
++	  Include support for the SoC POS error capability.
+diff --git a/drivers/soc/amazon/Makefile b/drivers/soc/amazon/Makefile
+new file mode 100644
+index 00000000..a31441a
+--- /dev/null
++++ b/drivers/soc/amazon/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_AL_POS) += al_pos.o
+diff --git a/drivers/soc/amazon/al_pos.c b/drivers/soc/amazon/al_pos.c
+new file mode 100644
+index 00000000..6d0bdff
+--- /dev/null
++++ b/drivers/soc/amazon/al_pos.c
+@@ -0,0 +1,129 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++ */
++#include <linux/bitfield.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Talel Shenhar");
++MODULE_DESCRIPTION("Amazon's Annapurna Labs POS driver");
++
++/* Registers Offset */
++#define AL_POS_ERROR_LOG_1	0x0
++#define AL_POS_ERROR_LOG_0	0x4
++
++/* Registers Fields */
++#define AL_POS_ERROR_LOG_1_VALID	GENMASK(31, 31)
++#define AL_POS_ERROR_LOG_1_BRESP	GENMASK(18, 17)
++#define AL_POS_ERROR_LOG_1_REQUEST_ID	GENMASK(16, 8)
++#define AL_POS_ERROR_LOG_1_ADDR_HIGH	GENMASK(7, 0)
++
++#define AL_POS_ERROR_LOG_0_ADDR_LOW	GENMASK(31, 0)
++
++static int al_pos_panic;
++module_param(al_pos_panic, int, 0);
++MODULE_PARM_DESC(al_pos_panic, "Defines if POS error is causing panic()");
++
++struct al_pos {
++	struct platform_device *pdev;
++	void __iomem *mmio_base;
++	int irq;
++};
++
++static irqreturn_t al_pos_irq_handler(int irq, void *info)
++{
++	struct platform_device *pdev = info;
++	struct al_pos *pos = platform_get_drvdata(pdev);
++	u32 log1;
++	u32 log0;
++	u64 addr;
++	u16 request_id;
++	u8 bresp;
++
++	log1 = readl_relaxed(pos->mmio_base + AL_POS_ERROR_LOG_1);
++	if (!FIELD_GET(AL_POS_ERROR_LOG_1_VALID, log1))
++		return IRQ_NONE;
++
++	log0 = readl_relaxed(pos->mmio_base + AL_POS_ERROR_LOG_0);
++	writel_relaxed(0, pos->mmio_base + AL_POS_ERROR_LOG_1);
++
++	addr = FIELD_GET(AL_POS_ERROR_LOG_0_ADDR_LOW, log0);
++	addr |= (FIELD_GET(AL_POS_ERROR_LOG_1_ADDR_HIGH, log1) << 32);
++	request_id = FIELD_GET(AL_POS_ERROR_LOG_1_REQUEST_ID, log1);
++	bresp = FIELD_GET(AL_POS_ERROR_LOG_1_BRESP, log1);
++
++	dev_err(&pdev->dev, "addr=0x%llx request_id=0x%x bresp=0x%x\n",
++		addr, request_id, bresp);
++
++	if (al_pos_panic)
++		panic("POS");
++
++	return IRQ_HANDLED;
++}
++
++static int al_pos_probe(struct platform_device *pdev)
++{
++	struct al_pos *pos;
++	struct resource *resource;
++	int ret;
++
++	pos = devm_kzalloc(&pdev->dev, sizeof(*pos), GFP_KERNEL);
++	if (!pos)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, pos);
++	pos->pdev = pdev;
++
++	resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	pos->mmio_base = devm_ioremap_resource(&pdev->dev, resource);
++	if (IS_ERR(pos->mmio_base)) {
++		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
++			PTR_ERR(pos->mmio_base));
++		return PTR_ERR(pos->mmio_base);
++	}
++
++	pos->irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
++	if (pos->irq <= 0) {
++		dev_err(&pdev->dev, "fail to parse and map irq\n");
++		return -EINVAL;
++	}
++
++	ret = devm_request_irq(&pdev->dev,
++			       pos->irq,
++			       al_pos_irq_handler,
++			       0,
++			       pdev->name,
++			       pdev);
++	if (ret != 0) {
++		dev_err(&pdev->dev,
++			"failed to register to irq %d (%d)\n",
++			pos->irq, ret);
++		return ret;
++	}
++
++	dev_info(&pdev->dev, "successfully loaded\n");
++
++	return 0;
++}
++
++static const struct of_device_id al_pos_of_match[] = {
++	{ .compatible = "amazon,al-pos", },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, al_pos_of_match);
++
++static struct platform_driver al_pos_driver = {
++	.probe = al_pos_probe,
++	.driver = {
++		.name = "al-pos",
++		.of_match_table = al_pos_of_match,
++	},
++};
++
++module_platform_driver(al_pos_driver);
 -- 
-Best regards,
-Marek Vasut
+2.7.4
