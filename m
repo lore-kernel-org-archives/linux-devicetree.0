@@ -1,47 +1,65 @@
-From: Jan Kotas <jank@cadence.com>
-Subject: Re: [PATCH v2 2/3] media: Add lane checks for Cadence CSI2RX
-Date: Mon, 9 Sep 2019 08:12:54 +0000
-Message-ID: <6F0DAE9B-BD7F-44D6-8D5B-92B3B3099CF2@global.cadence.com>
-References: <20190905105601.27034-1-jank@cadence.com>
- <20190905105601.27034-3-jank@cadence.com>
- <20190906075413.GE1586@valkosipuli.retiisi.org.uk>
- <1D1666FD-CFC6-4DE1-8A2E-1809D1BDEAAB@global.cadence.com>
- <20190909075153.GA843@valkosipuli.retiisi.org.uk>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] arm64: dts: renesas: Add /soc dma-ranges
+Date: Mon, 9 Sep 2019 10:19:21 +0200
+Message-ID: <CAMuHMdXkExZXeXnxuKkMC0J4m56cZUmJpcq2JCXuMv3PBzA0Dg@mail.gmail.com>
+References: <20190907161634.27378-1-marek.vasut@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190909075153.GA843@valkosipuli.retiisi.org.uk>
-Content-Language: en-US
-Content-ID: <AFF097342181FD47A71D32FD1616FEFE@namprd07.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Jan Kotas <jank@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>, "mchehab@kernel.org" <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rafal Ciepiela <rafalc@cadence.com>, linux-media <linux-media@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190907161634.27378-1-marek.vasut@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gT24gOSBTZXAgMjAxOSwgYXQgMDk6NTEsIFNha2FyaSBBaWx1cyA8c2FrYXJpLmFpbHVz
-QGlraS5maT4gd3JvdGU6DQo+IA0KPiANCj4gT24gTW9uLCBTZXAgMDksIDIwMTkgYXQgMDc6NDE6
-MjFBTSArMDAwMCwgSmFuIEtvdGFzIHdyb3RlOg0KPj4gDQo+PiANCj4+IEhlbGxvIFNha2FyaSwN
-Cj4+IA0KPj4gVGhhbmtzIGZvciB5b3VyIHJlcGx5Lg0KPj4+IE9uIDYgU2VwIDIwMTksIGF0IDA5
-OjU0LCBTYWthcmkgQWlsdXMgPHNha2FyaS5haWx1c0Bpa2kuZmk+IHdyb3RlOg0KPj4+IA0KPj4+
-IEhpIEphbiwNCj4+PiANCj4+PiBUaGFua3MgZm9yIHRoZSBwYXRjaHNldC4NCj4+PiANCj4+PiBP
-biBUaHUsIFNlcCAwNSwgMjAxOSBhdCAxMTo1NjowMEFNICswMTAwLCBKYW4gS290YXMgd3JvdGU6
-DQo+Pj4+IC8qDQo+Pj4+ICogRHJpdmVyIGZvciBDYWRlbmNlIE1JUEktQ1NJMiBSWCBDb250cm9s
-bGVyIHYxLjMNCj4+Pj4gKg0KPj4+PiAtICogQ29weXJpZ2h0IChDKSAyMDE3IENhZGVuY2UgRGVz
-aWduIFN5c3RlbXMgSW5jLg0KPj4+PiArICogQ29weXJpZ2h0IChDKSAyMDE3LTIwMTkgQ2FkZW5j
-ZSBEZXNpZ24gU3lzdGVtcyBJbmMuDQo+Pj4+ICovDQo+Pj4+IA0KPj4+PiArCWZvciAoaSA9IDA7
-IGkgPCBjc2kycngtPm51bV9sYW5lczsgaSsrKSB7DQo+Pj4+ICsJCWlmIChjc2kycngtPmxhbmVz
-W2ldIDwgMSkgew0KPj4+IA0KPj4+IERvIHlvdSBuZWVkIHRoaXM/IHY0bDJfZndub2RlX3BhcnNl
-X2VuZHBvaW50KCkgYWxyZWFkeSBoYXMgYSBtb3JlIHRob3JvdWdoDQo+Pj4gY2hlY2sgZm9yIHRo
-ZSBsYW5lIG51bWJlcnMuDQo+PiANCj4+IEkgbG9va2VkIGF0IHRoZSBzb3VyY2UgY29kZSBvZiB2
-NGwyX2Z3bm9kZV9lbmRwb2ludF9wYXJzZV9jc2kyX2J1cw0KPj4gYW5kIHRoaXMgcGFydGljdWxh
-ciBjYXNlIGRvZXNu4oCZdCBzZWVtIHRvIGJlIGNoZWNrZWQuDQo+IA0KPiBOb3Qgc3BlY2lmaWNh
-bGx5LCBzaW5jZSAwIGlzIGEgdmFsaWQgbGFuZSBudW1iZXIuDQo+IA0KPiBIb3dldmVyLCB0aGUg
-ZHJpdmVyIG9ubHkgYXBwZWFycyB0byBiZSB1c2luZyB0aGUgaW5mb3JtYXRpb24gb24gaG93IG1h
-bnkNCj4gbGFuZXMgdGhlcmUgYXJlLiBJZiB0aGUgaGFyZHdhcmUgZG9lc24ndCBzdXBwb3J0IGxh
-bmUgcm91dGluZywgdGhlbiB0aGlzIGlzDQo+IGFsbCB5b3UgbmVlZC4gT3RoZXJ3aXNlIGFkZGl0
-aW9uYWwgY2hlY2tzIHNob3VsZCBiZSBhZGRlZCBpbiBjYXNlIHRoZXJlIGFyZQ0KPiBsaW1pdGF0
-aW9ucyBob3cgdGhlIGxhbmVzIGNhbiBiZSByb3V0ZWQuDQoNClRoZSBDU0kyUlggdjEuMyBkb2Vz
-IHN1cHBvcnQgdGhhdCAoQ1NJMlJYX1NUQVRJQ19DRkdfUkVHKQ0KYW5kIGFzc3VtZXMgdGhlIGZp
-cnN0IGRhdGEgbGFuZSBoYXMgbnVtYmVyIDEuDQoNClJlZ3JhZHMsDQpKYW4NCg0KPiAtLSANCj4g
-U2FrYXJpIEFpbHVzDQoNCg==
+Hi Marek,
+
+On Sat, Sep 7, 2019 at 6:16 PM <marek.vasut@gmail.com> wrote:
+> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+>
+> Add dma-ranges property into /soc node to describe the DMA capabilities
+> of the bus. This is currently needed to translate PCI DMA ranges, which
+> are limited to 32bit addresses.
+>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+
+Thanks for your patch!
+
+> NOTE: This is needed for the following patches to work correctly:
+>       https://patchwork.ozlabs.org/patch/1144870/
+>       https://patchwork.ozlabs.org/patch/1144871/
+
+What happens with the above patches applied, and without this one?
+
+As PCI/OF driver patches go in through different trees, is it safe to apply
+this patch now?
+Should they go in together?
+
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi  | 1 +
+>  arch/arm64/boot/dts/renesas/r8a7796.dtsi  | 1 +
+>  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 +
+
+Do we need similar patches for the other R-Car Gen3 and RZ/G2 DTS files?
+What about R-Car Gen2 and RZ/G1?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
