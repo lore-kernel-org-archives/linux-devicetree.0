@@ -1,82 +1,114 @@
-From: "Ramuthevar,Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v3 3/3] mtd: spi-nor: cadence-quadspi: disable the auto-poll for Intel LGM
-Date: Mon,  9 Sep 2019 18:47:33 +0800
-Message-ID: <20190909104733.14273-4-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20190909104733.14273-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH 1/2] backlight: lm3630a: add an enable gpio for the HWEN
+ pin
+Date: Mon, 9 Sep 2019 11:57:29 +0100
+Message-ID: <20190909105729.w5552rtop7rhghy2@holly.lan>
+References: <20190908203704.30147-1-andreas@kemnade.info>
+ <20190908203704.30147-2-andreas@kemnade.info>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190909104733.14273-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <20190908203704.30147-2-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, richard@nod.at, jwboyer@gmail.com, boris.brezillon@free-electrons.com, cyrille.pitchen@atmel.com, david.oberhollenzer@sigma-star.at, miquel.raynal@bootlin.com, tudor.ambarus@gmail.com, vigneshr@ti.com, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: lee.jones@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+On Sun, Sep 08, 2019 at 10:37:03PM +0200, Andreas Kemnade wrote:
+> For now just enable it in the probe function to allow i2c
+> access and disable it on remove. Disabling also means resetting
+> the register values to default.
+> 
+> Tested on Kobo Clara HD.
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+>  drivers/video/backlight/lm3630a_bl.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+> index b04b35d007a2..3b45a1733198 100644
+> --- a/drivers/video/backlight/lm3630a_bl.c
+> +++ b/drivers/video/backlight/lm3630a_bl.c
+> @@ -12,6 +12,8 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/regmap.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/gpio.h>
+>  #include <linux/pwm.h>
+>  #include <linux/platform_data/lm3630a_bl.h>
+>  
+> @@ -48,6 +50,7 @@ struct lm3630a_chip {
+>  	struct lm3630a_platform_data *pdata;
+>  	struct backlight_device *bleda;
+>  	struct backlight_device *bledb;
+> +	struct gpio_desc *enable_gpio;
+>  	struct regmap *regmap;
+>  	struct pwm_device *pwmd;
+>  };
+> @@ -506,6 +509,14 @@ static int lm3630a_probe(struct i2c_client *client,
+>  		return -ENOMEM;
+>  	pchip->dev = &client->dev;
+>  
+> +	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
+> +						GPIOD_ASIS);
 
-On Intel's Lightning Mountain(LGM) SoC QSPI controller do not auto-poll.
-This patch introduces to properly disable the auto-polling feature to
-improve the performance of cadence-quadspi.
+Initializing GPIOD_ASIS doesn't look right to me.
 
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
----
- drivers/mtd/spi-nor/cadence-quadspi.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+If you initialize ASIS then the driver must configure the pin as an
+output... far easier just to set GPIOD_OUT_HIGH during the get.
 
-diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
-index 73b9fbd1508a..60998eaad1cc 100644
---- a/drivers/mtd/spi-nor/cadence-quadspi.c
-+++ b/drivers/mtd/spi-nor/cadence-quadspi.c
-@@ -135,6 +135,8 @@ struct cqspi_driver_platdata {
- #define CQSPI_REG_RD_INSTR_TYPE_DATA_MASK	0x3
- #define CQSPI_REG_RD_INSTR_DUMMY_MASK		0x1F
- 
-+#define CQSPI_REG_WR_COMPLETION_CTRL		0x38
-+#define CQSPI_REG_WR_COMPLETION_DISABLE_AUTO_POLL	BIT(14)
- #define CQSPI_REG_WR_INSTR			0x08
- #define CQSPI_REG_WR_INSTR_OPCODE_LSB		0
- #define CQSPI_REG_WR_INSTR_TYPE_ADDR_LSB	12
-@@ -471,6 +473,18 @@ static int cqspi_command_write_addr(struct spi_nor *nor,
- 	return cqspi_exec_flash_cmd(cqspi, reg);
- }
- 
-+static int cqspi_disable_auto_poll(struct cqspi_st *cqspi)
-+{
-+	void __iomem *reg_base = cqspi->iobase;
-+	unsigned int reg;
-+
-+	reg = readl(reg_base + CQSPI_REG_WR_COMPLETION_CTRL);
-+	reg |= CQSPI_REG_WR_COMPLETION_DISABLE_AUTO_POLL;
-+	writel(reg, reg_base + CQSPI_REG_WR_COMPLETION_CTRL);
-+
-+	return 0;
-+}
-+
- static int cqspi_read_setup(struct spi_nor *nor)
- {
- 	struct cqspi_flash_pdata *f_pdata = nor->priv;
-@@ -508,6 +522,11 @@ static int cqspi_read_setup(struct spi_nor *nor)
- 	reg &= ~CQSPI_REG_SIZE_ADDRESS_MASK;
- 	reg |= (nor->addr_width - 1);
- 	writel(reg, reg_base + CQSPI_REG_SIZE);
-+
-+	/* Disable auto-polling */
-+	if (!f_pdata->use_direct_mode)
-+		cqspi_disable_auto_poll(cqspi);
-+
- 	return 0;
- }
- 
-@@ -627,6 +646,11 @@ static int cqspi_write_setup(struct spi_nor *nor)
- 	reg &= ~CQSPI_REG_SIZE_ADDRESS_MASK;
- 	reg |= (nor->addr_width - 1);
- 	writel(reg, reg_base + CQSPI_REG_SIZE);
-+
-+	/* Disable auto-polling */
-+	if (!f_pdata->use_direct_mode)
-+		cqspi_disable_auto_poll(cqspi);
-+
- 	return 0;
- }
- 
--- 
-2.11.0
+Note also that the call to this function should also be moved *below*
+the calls parse the DT.
+
+
+> +	if (IS_ERR(pchip->enable_gpio)) {
+> +		rval = PTR_ERR(pchip->enable_gpio);
+> +		return rval;
+> +	}
+> +
+> +
+>  	pchip->regmap = devm_regmap_init_i2c(client, &lm3630a_regmap);
+>  	if (IS_ERR(pchip->regmap)) {
+>  		rval = PTR_ERR(pchip->regmap);
+> @@ -535,6 +546,10 @@ static int lm3630a_probe(struct i2c_client *client,
+>  	}
+>  	pchip->pdata = pdata;
+>  
+> +	if (pchip->enable_gpio) {
+> +		gpiod_set_value_cansleep(pchip->enable_gpio, 1);
+
+Not needed, use GPIOD_OUT_HIGH instead.
+
+
+> +		usleep_range(1000, 2000);
+
+Not needed, this sleep is already part of lm3630a_chip_init().
+
+
+> +	}
+>  	/* chip initialize */
+>  	rval = lm3630a_chip_init(pchip);
+>  	if (rval < 0) {
+> @@ -586,6 +601,9 @@ static int lm3630a_remove(struct i2c_client *client)
+>  	if (rval < 0)
+>  		dev_err(pchip->dev, "i2c failed to access register\n");
+>  
+> +	if (pchip->enable_gpio)
+> +		gpiod_set_value_cansleep(pchip->enable_gpio, 0);
+> +
+
+Is this needed?
+
+This is a remove path, not a power management path, and we have no idea
+what the original status of the pin was anyway?
+
+
+>  	if (pchip->irq) {
+>  		free_irq(pchip->irq, pchip);
+>  		flush_workqueue(pchip->irqthread);
+> -- 
+> 2.20.1
+> 
