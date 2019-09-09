@@ -1,38 +1,50 @@
-From: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
-Subject: [PATCH v3 1/2] net: phy: dp83867: Add documentation for SGMII mode type
-Date: Mon,  9 Sep 2019 19:52:19 +0300
-Message-ID: <1568047940-14490-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
-References: <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
- <1568047940-14490-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [Patch 09/13] media: am437x-vpfe: fix function trace debug log
+Date: Mon, 09 Sep 2019 09:54:56 -0700
+Message-ID: <ec66e477095bcddb86ffcc7ca10d3e0bbe72f943.camel@perches.com>
+References: <20190909162743.30114-1-bparrot@ti.com>
+         <20190909162743.30114-10-bparrot@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568047940-14490-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+In-Reply-To: <20190909162743.30114-10-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net, robh+dt@kernel.org, f.fainelli@gmail.com
-Cc: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>, Mark Rutland <mark.rutland@arm.com>, Trent Piepho <tpiepho@impinj.com>, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation of ti,sgmii-ref-clock-output-enable
-which can be used to select SGMII mode type (4 or 6-wire).
+On Mon, 2019-09-09 at 11:27 -0500, Benoit Parrot wrote:
+> checkpatch.pl nows reports several:
+> WARNING: Prefer using '"%s...", __func__' to using '<function name>',
+> this function's name, in a string
+> 
+> So fix these for the whole driver.
 
-Signed-off-by: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
----
- Documentation/devicetree/bindings/net/ti,dp83867.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Most of these seem to be function tracing comments
+that should probably be removed instead.
 
-diff --git a/Documentation/devicetree/bindings/net/ti,dp83867.txt b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-index db6aa3f..c98c682 100644
---- a/Documentation/devicetree/bindings/net/ti,dp83867.txt
-+++ b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-@@ -37,6 +37,10 @@ Optional property:
- 			      for applicable values.  The CLK_OUT pin can also
- 			      be disabled by this property.  When omitted, the
- 			      PHY's default will be left as is.
-+	- ti,sgmii-ref-clock-output-enable - This denotes the fact which
-+				    SGMII configuration is used (4 or 6-wire modes).
-+				    Some MACs work with differential SGMII clock.
-+				    See data manual for details.
- 
- Note: ti,min-output-impedance and ti,max-output-impedance are mutually
-       exclusive. When both properties are present ti,max-output-impedance
--- 
-2.7.4
+The generic kernel facility ftrace works well.
+
+> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+[]
+> @@ -466,7 +466,7 @@ static void vpfe_ccdc_config_ycbcr(struct vpfe_ccdc *ccdc)
+>  	struct ccdc_params_ycbcr *params = &ccdc->ccdc_cfg.ycbcr;
+>  	u32 syn_mode;
+>  
+> -	vpfe_dbg(3, vpfe, "vpfe_ccdc_config_ycbcr:\n");
+> +	vpfe_dbg(3, vpfe, "%s:\n", __func__);
+
+Remove this instead
+
+>  	/*
+>  	 * first restore the CCDC registers to default values
+>  	 * This is important since we assume default values to be set in
+> @@ -598,7 +598,7 @@ static void vpfe_ccdc_config_raw(struct vpfe_ccdc *ccdc)
+>  	unsigned int syn_mode;
+>  	unsigned int val;
+>  
+> -	vpfe_dbg(3, vpfe, "vpfe_ccdc_config_raw:\n");
+> +	vpfe_dbg(3, vpfe, "%s:\n", __func__);
+
+here too, etc...
