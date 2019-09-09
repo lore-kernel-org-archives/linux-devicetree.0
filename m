@@ -1,70 +1,81 @@
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH] irqchip/atmel-aic5: add support for sam9x60 irqchip
-Date: Mon, 9 Sep 2019 14:00:35 +0300
-Message-ID: <1568026835-6646-1-git-send-email-claudiu.beznea@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
+Subject: [PATCH v2 2/2] net: phy: dp83867: Add SGMII mode type switching
+Date: Mon,  9 Sep 2019 14:02:22 +0300
+Message-ID: <1568026945-3857-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+References: <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>, Claudiu Beznea <claudiu.beznea@microchip.com>
+To: davem@davemloft.net, robh+dt@kernel.org, f.fainelli@gmail.com
+Cc: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, Trent Piepho <tpiepho@impinj.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
+This patch adds ability to switch beetween two PHY SGMII modes.
+Some hardware, for example, FPGA IP designs may use 6-wire mode
+which enables differential SGMII clock to MAC.
 
-Add support for SAM9X60 irqchip.
-
-Signed-off-by: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
-[claudiu.beznea@microchip.com: update aic5_irq_fixups[], update
- documentation]
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Signed-off-by: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
 ---
- .../devicetree/bindings/interrupt-controller/atmel,aic.txt     |  7 +++++--
- drivers/irqchip/irq-atmel-aic5.c                               | 10 ++++++++++
- 2 files changed, 15 insertions(+), 2 deletions(-)
+Changes in v2:
+- changed variable sgmii_type name to sgmii_ref_clk_en
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
-index f4c5d34c4111..7079d44bf3ba 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
-@@ -1,8 +1,11 @@
- * Advanced Interrupt Controller (AIC)
- 
- Required properties:
--- compatible: Should be "atmel,<chip>-aic"
--  <chip> can be "at91rm9200", "sama5d2", "sama5d3" or "sama5d4"
-+- compatible: Should be:
-+    - "atmel,<chip>-aic" where  <chip> can be "at91rm9200", "sama5d2",
-+      "sama5d3" or "sama5d4"
-+    - "microchip,<chip>-aic" where <chip> can be "sam9x60"
+ drivers/net/phy/dp83867.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+index 1f1ecee..cd6260e 100644
+--- a/drivers/net/phy/dp83867.c
++++ b/drivers/net/phy/dp83867.c
+@@ -37,6 +37,7 @@
+ #define DP83867_STRAP_STS2	0x006f
+ #define DP83867_RGMIIDCTL	0x0086
+ #define DP83867_IO_MUX_CFG	0x0170
++#define DP83867_SGMIICTL	0x00D3
+ #define DP83867_10M_SGMII_CFG   0x016F
+ #define DP83867_10M_SGMII_RATE_ADAPT_MASK BIT(7)
+
+@@ -61,6 +62,9 @@
+ #define DP83867_RGMII_TX_CLK_DELAY_EN		BIT(1)
+ #define DP83867_RGMII_RX_CLK_DELAY_EN		BIT(0)
+
++/* SGMIICTL bits */
++#define DP83867_SGMII_TYPE		BIT(14)
 +
- - interrupt-controller: Identifies the node as an interrupt controller.
- - #interrupt-cells: The number of cells to define the interrupts. It should be 3.
-   The first cell is the IRQ number (aka "Peripheral IDentifier" on datasheet).
-diff --git a/drivers/irqchip/irq-atmel-aic5.c b/drivers/irqchip/irq-atmel-aic5.c
-index 6acad2ea0fb3..29333497ba10 100644
---- a/drivers/irqchip/irq-atmel-aic5.c
-+++ b/drivers/irqchip/irq-atmel-aic5.c
-@@ -313,6 +313,7 @@ static void __init sama5d3_aic_irq_fixup(void)
- static const struct of_device_id aic5_irq_fixups[] __initconst = {
- 	{ .compatible = "atmel,sama5d3", .data = sama5d3_aic_irq_fixup },
- 	{ .compatible = "atmel,sama5d4", .data = sama5d3_aic_irq_fixup },
-+	{ .compatible = "microchip,sam9x60", .data = sama5d3_aic_irq_fixup },
- 	{ /* sentinel */ },
+ /* STRAP_STS1 bits */
+ #define DP83867_STRAP_STS1_RESERVED		BIT(11)
+
+@@ -109,6 +113,7 @@ struct dp83867_private {
+ 	bool rxctrl_strap_quirk;
+ 	bool set_clk_output;
+ 	u32 clk_output_sel;
++	bool sgmii_ref_clk_en;
  };
- 
-@@ -390,3 +391,12 @@ static int __init sama5d4_aic5_of_init(struct device_node *node,
- 	return aic5_of_init(node, parent, NR_SAMA5D4_IRQS);
- }
- IRQCHIP_DECLARE(sama5d4_aic5, "atmel,sama5d4-aic", sama5d4_aic5_of_init);
+
+ static int dp83867_ack_interrupt(struct phy_device *phydev)
+@@ -197,6 +202,9 @@ static int dp83867_of_init(struct phy_device *phydev)
+ 	dp83867->rxctrl_strap_quirk = of_property_read_bool(of_node,
+ 					"ti,dp83867-rxctrl-strap-quirk");
+
++	dp83867->sgmii_ref_clk_en = of_property_read_bool(of_node,
++					"ti,sgmii-ref-clock-output-enable");
 +
-+#define NR_SAM9X60_IRQS		50
+ 	/* Existing behavior was to use default pin strapping delay in rgmii
+ 	 * mode, but rgmii should have meant no delay.  Warn existing users.
+ 	 */
+@@ -389,6 +397,14 @@ static int dp83867_config_init(struct phy_device *phydev)
+
+ 		if (ret)
+ 			return ret;
 +
-+static int __init sam9x60_aic5_of_init(struct device_node *node,
-+				       struct device_node *parent)
-+{
-+	return aic5_of_init(node, parent, NR_SAM9X60_IRQS);
-+}
-+IRQCHIP_DECLARE(sam9x60_aic5, "microchip,sam9x60-aic", sam9x60_aic5_of_init);
--- 
++		/* SGMII type is set to 4-wire mode by default */
++		if (dp83867->sgmii_ref_clk_en) {
++			/* Switch on 6-wire mode */
++			val = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL);
++			val |= DP83867_SGMII_TYPE;
++			phy_write_mmd(phydev, DP83867_DEVADDR, DP83867_SGMIICTL, val);
++		}
+ 	}
+
+ 	/* Enable Interrupt output INT_OE in CFG3 register */
+--
 2.7.4
