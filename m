@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 01/13] media: am437x-vpfe: Fix suspend path to always handle pinctrl config
-Date: Mon, 9 Sep 2019 11:27:31 -0500
-Message-ID: <20190909162743.30114-2-bparrot@ti.com>
+Subject: [Patch 02/13] media: am437x-vpfe: Fix missing first line
+Date: Mon, 9 Sep 2019 11:27:32 -0500
+Message-ID: <20190909162743.30114-3-bparrot@ti.com>
 References: <20190909162743.30114-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,91 +9,36 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190909162743.30114-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Benoit Parrot <bparrot@ti.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Dave Gerlach <d-gerlach@ti.com>
+Previous generation of this driver were hard coded to handle
+encoder/decoder were the first line never contains any data and
+was therefore always skipped, however when dealing with actual
+camera sensor the first line is always present.
 
-Currently if vpfe is not active then it returns immediately in the
-suspend and resume handlers. Change this so that it always performs the
-pinctrl config so that we can still get proper sleep state configuration
-on the pins even if we do not need to worry about fully saving and
-restoring context.
-
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/am437x/am437x-vpfe.c | 44 ++++++++++-----------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ drivers/media/platform/am437x/am437x-vpfe.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index 2b42ba1f5949..ab959d61f9c9 100644
+index ab959d61f9c9..0ecb75bf5abd 100644
 --- a/drivers/media/platform/am437x/am437x-vpfe.c
 +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -2653,22 +2653,22 @@ static int vpfe_suspend(struct device *dev)
- 	struct vpfe_device *vpfe = dev_get_drvdata(dev);
- 	struct vpfe_ccdc *ccdc = &vpfe->ccdc;
- 
--	/* if streaming has not started we don't care */
--	if (!vb2_start_streaming_called(&vpfe->buffer_queue))
--		return 0;
-+	/* only do full suspend if streaming has started */
-+	if (vb2_start_streaming_called(&vpfe->buffer_queue)) {
- 
--	pm_runtime_get_sync(dev);
--	vpfe_config_enable(ccdc, 1);
-+		pm_runtime_get_sync(dev);
-+		vpfe_config_enable(ccdc, 1);
- 
--	/* Save VPFE context */
--	vpfe_save_context(ccdc);
-+		/* Save VPFE context */
-+		vpfe_save_context(ccdc);
- 
--	/* Disable CCDC */
--	vpfe_pcr_enable(ccdc, 0);
--	vpfe_config_enable(ccdc, 0);
-+		/* Disable CCDC */
-+		vpfe_pcr_enable(ccdc, 0);
-+		vpfe_config_enable(ccdc, 0);
- 
--	/* Disable both master and slave clock */
--	pm_runtime_put_sync(dev);
-+		/* Disable both master and slave clock */
-+		pm_runtime_put_sync(dev);
-+	}
- 
- 	/* Select sleep pin state */
- 	pinctrl_pm_select_sleep_state(dev);
-@@ -2710,19 +2710,19 @@ static int vpfe_resume(struct device *dev)
- 	struct vpfe_device *vpfe = dev_get_drvdata(dev);
- 	struct vpfe_ccdc *ccdc = &vpfe->ccdc;
- 
--	/* if streaming has not started we don't care */
--	if (!vb2_start_streaming_called(&vpfe->buffer_queue))
--		return 0;
-+	/* only do full resume if streaming has started */
-+	if (vb2_start_streaming_called(&vpfe->buffer_queue)) {
- 
--	/* Enable both master and slave clock */
--	pm_runtime_get_sync(dev);
--	vpfe_config_enable(ccdc, 1);
-+		/* Enable both master and slave clock */
-+		pm_runtime_get_sync(dev);
-+		vpfe_config_enable(ccdc, 1);
- 
--	/* Restore VPFE context */
--	vpfe_restore_context(ccdc);
-+		/* Restore VPFE context */
-+		vpfe_restore_context(ccdc);
- 
--	vpfe_config_enable(ccdc, 0);
--	pm_runtime_put_sync(dev);
-+		vpfe_config_enable(ccdc, 0);
-+		pm_runtime_put_sync(dev);
-+	}
- 
- 	/* Select default pin state */
- 	pinctrl_pm_select_default_state(dev);
+@@ -345,13 +345,9 @@ static void vpfe_ccdc_setwin(struct vpfe_ccdc *ccdc,
+ 	if (frm_fmt == CCDC_FRMFMT_INTERLACED) {
+ 		vert_nr_lines = (image_win->height >> 1) - 1;
+ 		vert_start >>= 1;
+-		/* Since first line doesn't have any data */
+-		vert_start += 1;
+ 		/* configure VDINT0 */
+ 		val = (vert_start << VPFE_VDINT_VDINT0_SHIFT);
+ 	} else {
+-		/* Since first line doesn't have any data */
+-		vert_start += 1;
+ 		vert_nr_lines = image_win->height - 1;
+ 		/*
+ 		 * configure VDINT0 and VDINT1. VDINT1 will be at half
 -- 
 2.17.1
