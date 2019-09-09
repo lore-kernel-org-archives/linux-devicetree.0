@@ -1,471 +1,107 @@
-Return-Path: <SRS0=ZGg2=XH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.220.in.ua ([89.184.67.205]:57440 "EHLO smtp.220.in.ua"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727069AbfILWL3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 12 Sep 2019 18:11:29 -0400
-From: Oleh Kravchenko <oleg@kaa.org.ua>
-Subject: [PATCH v8 2/2] leds: add LED driver for EL15203000 board
-Date: Fri, 13 Sep 2019 01:11:15 +0300
-Message-Id: <20190912221115.23595-3-oleg@kaa.org.ua>
-In-Reply-To: <20190912221115.23595-1-oleg@kaa.org.ua>
-References: <20190912221115.23595-1-oleg@kaa.org.ua>
+Return-Path: <SRS0=WogO=XE=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz
-Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+References: <1567666360-28035-1-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1567666360-28035-1-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 9 Sep 2019 19:25:40 +0200
+Message-ID: <CAMuHMdU=-CGPw4FF3o7YwEZzd7EA07RNKLSP0gmty8bTQzm6DA@mail.gmail.com>
+Subject: Re: [PATCH] clk: renesas: Add r8a774b1 CPG Core Clock Definitions
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds a LED class driver for the LEDs found on
-the Crane Merchandising System EL15203000 LEDs board
-(aka RED LEDs board).
+Hi Biju,
 
-Signed-off-by: Oleh Kravchenko <oleg@kaa.org.ua>
----
- .../testing/sysfs-class-led-driver-el15203000 |  32 ++
- drivers/leds/Kconfig                          |  13 +
- drivers/leds/Makefile                         |   1 +
- drivers/leds/leds-el15203000.c                | 357 ++++++++++++++++++
- 4 files changed, 403 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-led-driver-el15203000
- create mode 100644 drivers/leds/leds-el15203000.c
+On Thu, Sep 5, 2019 at 9:00 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> Add all RZ/G2N Clock Pulse Generator Core Clock Outputs, as listed in
+> Table 8.2d ("List of Clocks [RZ/G2N]") of the RZ/G2N Hardware User's
+> Manual.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-diff --git a/Documentation/ABI/testing/sysfs-class-led-driver-el15203000 b/Documentation/ABI/testing/sysfs-class-led-driver-el15203000
-new file mode 100644
-index 000000000000..5e9cbf49da59
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-led-driver-el15203000
-@@ -0,0 +1,32 @@
-+What:		/sys/class/leds/<led>/hw_pattern
-+Date:		September 2019
-+KernelVersion:	5.5
-+Description:
-+		Specify a hardware pattern for the EL15203000 LED.
-+		The LEDs board supports only predefined patterns by firmware
-+		for specific LEDs.
-+
-+		Breathing mode for Screen frame light tube:
-+		"0 4000 1 4000"
-+
-+		Cascade mode for Pipe LED:
-+		"1 800 2 800 4 800 8 800 16 800"
-+
-+		Inverted cascade mode for Pipe LED:
-+		"30 800 29 800 27 800 23 800 15 800"
-+
-+		Bounce mode for Pipe LED:
-+		"1 800 2 800 4 800 8 800 16 800 16 800 8 800 4 800 2 800 1 800"
-+
-+		Inverted bounce mode for Pipe LED:
-+		"30 800 29 800 27 800 23 800 15 800 15 800 23 800 27 800 29 800 30 800"
-+
-+What:		/sys/class/leds/<led>/repeat
-+Date:		September 2019
-+KernelVersion:	5.5
-+Description:
-+		EL15203000 supports only indefinitely patterns,
-+		so this file should always store -1.
-+
-+		For more info, please see:
-+		Documentation/ABI/testing/sysfs-class-led-trigger-pattern
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 1988de1d64c0..6e7703fd03d0 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -132,6 +132,19 @@ config LEDS_CR0014114
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called leds-cr0014114.
- 
-+config LEDS_EL15203000
-+	tristate "LED Support for Crane EL15203000"
-+	depends on LEDS_CLASS
-+	depends on SPI
-+	depends on OF
-+	help
-+	  This option enables support for EL15203000 LED Board
-+	  (aka RED LED board) which is widely used in coffee vending
-+	  machines produced by Crane Merchandising Systems.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called leds-el15203000.
-+
- config LEDS_LM3530
- 	tristate "LCD Backlight driver for LM3530"
- 	depends on LEDS_CLASS
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 41fb073a39c1..2da39e896ce8 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -89,6 +89,7 @@ obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
- # LED SPI Drivers
- obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
- obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
-+obj-$(CONFIG_LEDS_EL15203000)		+= leds-el15203000.o
- 
- # LED Userspace Drivers
- obj-$(CONFIG_LEDS_USER)			+= uleds.o
-diff --git a/drivers/leds/leds-el15203000.c b/drivers/leds/leds-el15203000.c
-new file mode 100644
-index 000000000000..298b13e4807a
---- /dev/null
-+++ b/drivers/leds/leds-el15203000.c
-@@ -0,0 +1,357 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2019 Crane Merchandising Systems. All rights reserved.
-+// Copyright (C) 2019 Oleh Kravchenko <oleg@kaa.org.ua>
-+
-+#include <linux/delay.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/spi/spi.h>
-+
-+/*
-+ * EL15203000 SPI protocol description:
-+ * +-----+---------+
-+ * | LED | COMMAND |
-+ * +-----+---------+
-+ * |  1  |    1    |
-+ * +-----+---------+
-+ * (*) LEDs MCU board expects 20 msec delay per byte.
-+ *
-+ * LEDs:
-+ * +----------+--------------+-------------------------------------------+
-+ * |    ID    |     NAME     |         DESCRIPTION                       |
-+ * +----------+--------------+-------------------------------------------+
-+ * | 'P' 0x50 |     Pipe     | Consists from 5 LEDs, controlled by board |
-+ * +----------+--------------+-------------------------------------------+
-+ * | 'S' 0x53 | Screen frame | Light tube around the screen              |
-+ * +----------+--------------+-------------------------------------------+
-+ * | 'V' 0x56 | Vending area | Highlights a cup of coffee                |
-+ * +----------+--------------+-------------------------------------------+
-+ *
-+ * COMMAND:
-+ * +----------+-----------------+--------------+--------------+
-+ * |  VALUES  |       PIPE      | SCREEN FRAME | VENDING AREA |
-+ * +----------+-----------------+--------------+--------------+
-+ * | '0' 0x30 |                      Off                      |
-+ * +----------+-----------------------------------------------+
-+ * | '1' 0x31 |                      On                       |
-+ * +----------+-----------------+--------------+--------------+
-+ * | '2' 0x32 |     Cascade     |   Breathing  |
-+ * +----------+-----------------+--------------+
-+ * | '3' 0x33 | Inverse cascade |
-+ * +----------+-----------------+
-+ * | '4' 0x34 |     Bounce      |
-+ * +----------+-----------------+
-+ * | '5' 0x35 | Inverse bounce  |
-+ * +----------+-----------------+
-+ */
-+
-+/* EL15203000 default settings */
-+#define EL_FW_DELAY_USEC	20000ul
-+#define EL_PATTERN_DELAY_MSEC	800u
-+#define EL_PATTERN_LEN		10u
-+#define EL_PATTERN_HALF_LEN	(EL_PATTERN_LEN / 2)
-+
-+enum el15203000_command {
-+	/* for all LEDs */
-+	EL_OFF			= '0',
-+	EL_ON			= '1',
-+
-+	/* for Screen LED */
-+	EL_SCREEN_BREATHING	= '2',
-+
-+	/* for Pipe LED */
-+	EL_PIPE_CASCADE		= '2',
-+	EL_PIPE_INV_CASCADE	= '3',
-+	EL_PIPE_BOUNCE		= '4',
-+	EL_PIPE_INV_BOUNCE	= '5',
-+};
-+
-+struct el15203000_led {
-+	struct el15203000	*priv;
-+	struct led_classdev	ldev;
-+	u32			reg;
-+};
-+
-+struct el15203000 {
-+	struct device		*dev;
-+	struct mutex		lock;
-+	struct spi_device	*spi;
-+	unsigned long		delay;
-+	size_t			count;
-+	struct el15203000_led	leds[];
-+};
-+
-+static int el15203000_cmd(struct el15203000_led *led, u8 brightness)
-+{
-+	int		ret;
-+	u8		cmd[2];
-+	size_t		i;
-+
-+	mutex_lock(&led->priv->lock);
-+
-+	dev_dbg(led->priv->dev, "Set brightness of 0x%02x(%c) to 0x%02x(%c)",
-+		led->reg, led->reg, brightness, brightness);
-+
-+	/* to avoid SPI mistiming with firmware we should wait some time */
-+	if (time_after(led->priv->delay, jiffies)) {
-+		dev_dbg(led->priv->dev, "Wait %luus to sync",
-+			EL_FW_DELAY_USEC);
-+
-+		usleep_range(EL_FW_DELAY_USEC,
-+			     EL_FW_DELAY_USEC + 1);
-+	}
-+
-+	cmd[0] = led->reg;
-+	cmd[1] = brightness;
-+
-+	for (i = 0; i < ARRAY_SIZE(cmd); i++) {
-+		if (i)
-+			usleep_range(EL_FW_DELAY_USEC,
-+				     EL_FW_DELAY_USEC + 1);
-+
-+		ret = spi_write(led->priv->spi, &cmd[i], sizeof(cmd[i]));
-+		if (ret) {
-+			dev_err(led->priv->dev,
-+				"spi_write() error %d", ret);
-+			break;
-+		}
-+	}
-+
-+	led->priv->delay = jiffies + usecs_to_jiffies(EL_FW_DELAY_USEC);
-+
-+	mutex_unlock(&led->priv->lock);
-+
-+	return ret;
-+}
-+
-+static int el15203000_set_blocking(struct led_classdev *ldev,
-+				   enum led_brightness brightness)
-+{
-+	struct el15203000_led *led = container_of(ldev,
-+						  struct el15203000_led,
-+						  ldev);
-+
-+	return el15203000_cmd(led, brightness == LED_OFF ? EL_OFF : EL_ON);
-+}
-+
-+static int el15203000_pattern_set_S(struct led_classdev *ldev,
-+				    struct led_pattern *pattern,
-+				    u32 len, int repeat)
-+{
-+	struct el15203000_led *led = container_of(ldev,
-+						  struct el15203000_led,
-+						  ldev);
-+
-+	if (repeat > 0 || len != 2 ||
-+	    pattern[0].delta_t != 4000 || pattern[0].brightness != 0 ||
-+	    pattern[1].delta_t != 4000 || pattern[1].brightness != 1)
-+		return -EINVAL;
-+
-+	dev_dbg(led->priv->dev, "Breathing mode for 0x%02x(%c)",
-+		led->reg, led->reg);
-+
-+	return el15203000_cmd(led, EL_SCREEN_BREATHING);
-+}
-+
-+static bool is_cascade(const struct led_pattern *pattern, u32 len,
-+		       bool inv, bool right)
-+{
-+	int val, t;
-+	u32 i;
-+
-+	if (len != EL_PATTERN_HALF_LEN)
-+		return false;
-+
-+	val = right ? BIT(4) : BIT(0);
-+
-+	for (i = 0; i < len; i++) {
-+		t = inv ? ~val & GENMASK(4, 0) : val;
-+
-+		if (pattern[i].delta_t != EL_PATTERN_DELAY_MSEC ||
-+		    pattern[i].brightness != t)
-+			return false;
-+
-+		val = right ? val >> 1 : val << 1;
-+	}
-+
-+	return true;
-+}
-+
-+static bool is_bounce(const struct led_pattern *pattern, u32 len, bool inv)
-+{
-+	if (len != EL_PATTERN_LEN)
-+		return false;
-+
-+	return is_cascade(pattern, EL_PATTERN_HALF_LEN, inv, false) &&
-+	       is_cascade(pattern + EL_PATTERN_HALF_LEN,
-+			  EL_PATTERN_HALF_LEN, inv, true);
-+}
-+
-+static int el15203000_pattern_set_P(struct led_classdev *ldev,
-+				    struct led_pattern *pattern,
-+				    u32 len, int repeat)
-+{
-+	u8			cmd;
-+	struct el15203000_led	*led = container_of(ldev,
-+						    struct el15203000_led,
-+						    ldev);
-+
-+	if (repeat > 0)
-+		return -EINVAL;
-+
-+	if (is_cascade(pattern, len, false, false)) {
-+		dev_dbg(led->priv->dev, "Cascade mode for 0x%02x(%c)",
-+			led->reg, led->reg);
-+
-+		cmd = EL_PIPE_CASCADE;
-+	} else if (is_cascade(pattern, len, true, false)) {
-+		dev_dbg(led->priv->dev, "Inverse cascade mode for 0x%02x(%c)",
-+			led->reg, led->reg);
-+
-+		cmd = EL_PIPE_INV_CASCADE;
-+	} else if (is_bounce(pattern, len, false)) {
-+		dev_dbg(led->priv->dev, "Bounce mode for 0x%02x(%c)",
-+			led->reg, led->reg);
-+
-+		cmd = EL_PIPE_BOUNCE;
-+	} else if (is_bounce(pattern, len, true)) {
-+		dev_dbg(led->priv->dev, "Inverse bounce mode for 0x%02x(%c)",
-+			led->reg, led->reg);
-+
-+		cmd = EL_PIPE_INV_BOUNCE;
-+	} else {
-+		dev_err(led->priv->dev, "Invalid hw_pattern for 0x%02x(%c)!",
-+			led->reg, led->reg);
-+
-+		return -EINVAL;
-+	}
-+
-+	return el15203000_cmd(led, cmd);
-+}
-+
-+static int el15203000_pattern_clear(struct led_classdev *ldev)
-+{
-+	struct el15203000_led	*led = container_of(ldev,
-+						    struct el15203000_led,
-+						    ldev);
-+
-+	return el15203000_cmd(led, EL_OFF);
-+}
-+
-+static int el15203000_probe_dt(struct el15203000 *priv)
-+{
-+	struct el15203000_led	*led = priv->leds;
-+	struct fwnode_handle	*child;
-+	int			ret;
-+
-+	device_for_each_child_node(priv->dev, child) {
-+		struct led_init_data init_data = {};
-+
-+		ret = fwnode_property_read_u32(child, "reg", &led->reg);
-+		if (ret) {
-+			dev_err(priv->dev, "LED without ID number");
-+			fwnode_handle_put(child);
-+
-+			break;
-+		}
-+
-+		if (led->reg > U8_MAX) {
-+			dev_err(priv->dev, "LED value %d is invalid", led->reg);
-+			fwnode_handle_put(child);
-+
-+			return -EINVAL;
-+		}
-+
-+		fwnode_property_read_string(child, "linux,default-trigger",
-+					    &led->ldev.default_trigger);
-+
-+		led->priv			  = priv;
-+		led->ldev.max_brightness	  = LED_ON;
-+		led->ldev.brightness_set_blocking = el15203000_set_blocking;
-+
-+		if (led->reg == 'S') {
-+			led->ldev.pattern_set	= el15203000_pattern_set_S;
-+			led->ldev.pattern_clear	= el15203000_pattern_clear;
-+		} else if (led->reg == 'P') {
-+			led->ldev.pattern_set	= el15203000_pattern_set_P;
-+			led->ldev.pattern_clear	= el15203000_pattern_clear;
-+		}
-+
-+		init_data.fwnode = child;
-+		ret = devm_led_classdev_register_ext(priv->dev, &led->ldev,
-+						     &init_data);
-+		if (ret) {
-+			dev_err(priv->dev,
-+				"failed to register LED device %s, err %d",
-+				led->ldev.name, ret);
-+			fwnode_handle_put(child);
-+
-+			break;
-+		}
-+
-+		led++;
-+	}
-+
-+	return ret;
-+}
-+
-+static int el15203000_probe(struct spi_device *spi)
-+{
-+	struct el15203000	*priv;
-+	size_t			count;
-+
-+	count = device_get_child_node_count(&spi->dev);
-+	if (!count) {
-+		dev_err(&spi->dev, "LEDs are not defined in device tree!");
-+		return -ENODEV;
-+	}
-+
-+	priv = devm_kzalloc(&spi->dev, struct_size(priv, leds, count),
-+			    GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	mutex_init(&priv->lock);
-+	priv->count	= count;
-+	priv->dev	= &spi->dev;
-+	priv->spi	= spi;
-+	priv->delay	= jiffies -
-+			  usecs_to_jiffies(EL_FW_DELAY_USEC);
-+
-+	spi_set_drvdata(spi, priv);
-+
-+	return el15203000_probe_dt(priv);
-+}
-+
-+static int el15203000_remove(struct spi_device *spi)
-+{
-+	struct el15203000 *priv = spi_get_drvdata(spi);
-+
-+	mutex_destroy(&priv->lock);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id el15203000_dt_ids[] = {
-+	{ .compatible = "crane,el15203000", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, el15203000_dt_ids);
-+
-+static struct spi_driver el15203000_driver = {
-+	.probe		= el15203000_probe,
-+	.remove		= el15203000_remove,
-+	.driver = {
-+		.name		= KBUILD_MODNAME,
-+		.of_match_table	= el15203000_dt_ids,
-+	},
-+};
-+
-+module_spi_driver(el15203000_driver);
-+
-+MODULE_AUTHOR("Oleh Kravchenko <oleg@kaa.org.ua>");
-+MODULE_DESCRIPTION("el15203000 LED driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("spi:el15203000");
--- 
-2.21.0
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+One comment below...
+
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/r8a774b1-cpg-mssr.h
+> @@ -0,0 +1,57 @@
+> +/* SPDX-License-Identifier: GPL-2.0
+> + *
+> + * Copyright (C) 2019 Renesas Electronics Corp.
+> + */
+> +#ifndef __DT_BINDINGS_CLOCK_R8A774B1_CPG_MSSR_H__
+> +#define __DT_BINDINGS_CLOCK_R8A774B1_CPG_MSSR_H__
+> +
+> +#include <dt-bindings/clock/renesas-cpg-mssr.h>
+> +
+> +/* r8a774b1 CPG Core Clocks */
+> +#define R8A774B1_CLK_Z                 0
+> +#define R8A774B1_CLK_ZG                        1
+> +#define R8A774B1_CLK_ZTR               2
+> +#define R8A774B1_CLK_ZTRD2             3
+> +#define R8A774B1_CLK_ZT                        4
+> +#define R8A774B1_CLK_ZX                        5
+> +#define R8A774B1_CLK_S0D1              6
+> +#define R8A774B1_CLK_S0D2              7
+> +#define R8A774B1_CLK_S0D3              8
+> +#define R8A774B1_CLK_S0D4              9
+> +#define R8A774B1_CLK_S0D6              10
+> +#define R8A774B1_CLK_S0D8              11
+> +#define R8A774B1_CLK_S0D12             12
+> +#define R8A774B1_CLK_S1D2              13
+> +#define R8A774B1_CLK_S1D4              14
+> +#define R8A774B1_CLK_S2D1              15
+> +#define R8A774B1_CLK_S2D2              16
+> +#define R8A774B1_CLK_S2D4              17
+> +#define R8A774B1_CLK_S3D1              18
+> +#define R8A774B1_CLK_S3D2              19
+> +#define R8A774B1_CLK_S3D4              20
+> +#define R8A774B1_CLK_LB                        21
+> +#define R8A774B1_CLK_CL                        22
+> +#define R8A774B1_CLK_ZB3               23
+> +#define R8A774B1_CLK_ZB3D2             24
+> +#define R8A774B1_CLK_CR                        25
+> +#define R8A774B1_CLK_DDR               26
+> +#define R8A774B1_CLK_SD0H              27
+> +#define R8A774B1_CLK_SD0               28
+> +#define R8A774B1_CLK_SD1H              29
+> +#define R8A774B1_CLK_SD1               30
+> +#define R8A774B1_CLK_SD2H              31
+> +#define R8A774B1_CLK_SD2               32
+> +#define R8A774B1_CLK_SD3H              33
+> +#define R8A774B1_CLK_SD3               34
+> +#define R8A774B1_CLK_RPC               35
+> +#define R8A774B1_CLK_RPCD2             36
+> +#define R8A774B1_CLK_MSO               37
+> +#define R8A774B1_CLK_HDMI              38
+> +#define R8A774B1_CLK_CSI0              39
+> +#define R8A774B1_CLK_CP                        40
+> +#define R8A774B1_CLK_CPEX              41
+> +#define R8A774B1_CLK_R                 42
+> +#define R8A774B1_CLK_OSC               43
+> +#define R8A774B1_CLK_CANFD             44
+
+The only thing I can comment on is the location of the CANFD clock.
+For RZ/G2M and RZ/G2E, the clock was added to the end of the list,
+as it wasn't listed in the Hardware User's Manual.
+In the mean time, Rev. 0.80 of the Hardware User's Manual was released,
+which does include the CANFD clock.
+
+If no one objects against this location, for consistency with other
+RZ/G2 SoCs, i.e. will queue it in renesas-devel for v5.5, on a branch to
+be shared by the clock driver and the DTS user.
+
+> +
+> +#endif /* __DT_BINDINGS_CLOCK_R8A774B1_CPG_MSSR_H__ */
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
