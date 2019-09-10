@@ -1,7 +1,7 @@
 From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH v3 4/5] arm64: Add support for arch_memremap_ro()
-Date: Tue, 10 Sep 2019 09:09:02 -0700
-Message-ID: <20190910160903.65694-5-swboyd@chromium.org>
+Subject: [PATCH v3 2/5] soc: qcom: cmd-db: Migrate to devm_memremap_reserved_mem()
+Date: Tue, 10 Sep 2019 09:09:00 -0700
+Message-ID: <20190910160903.65694-3-swboyd@chromium.org>
 References: <20190910160903.65694-1-swboyd@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,9 +12,8 @@ To: Dan Williams <dan.j.williams@intel.com>
 Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Pass in PAGE_KERNEL_RO to the underlying IO mapping mechanism to get a
-read-only mapping for the MEMREMAP_RO type of memory mappings that
-memremap() supports.
+This gets rid of some duplicate code, and also makes the reserved memory
+region show up as 'cmd-db' memory in /proc/iomem.
 
 Cc: Evan Green <evgreen@chromium.org>
 Cc: Rob Herring <robh+dt@kernel.org>
@@ -24,23 +23,36 @@ Cc: Will Deacon <will.deacon@arm.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- arch/arm64/include/asm/io.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/soc/qcom/cmd-db.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
-index 7ed92626949d..c623e75d9152 100644
---- a/arch/arm64/include/asm/io.h
-+++ b/arch/arm64/include/asm/io.h
-@@ -172,6 +172,7 @@ extern void __iomem *ioremap_cache(phys_addr_t phys_addr, size_t size);
- #define ioremap_nocache(addr, size)	__ioremap((addr), (size), __pgprot(PROT_DEVICE_nGnRE))
- #define ioremap_wc(addr, size)		__ioremap((addr), (size), __pgprot(PROT_NORMAL_NC))
- #define ioremap_wt(addr, size)		__ioremap((addr), (size), __pgprot(PROT_DEVICE_nGnRE))
-+#define arch_memremap_ro(addr, size)	__ioremap((addr), (size), PAGE_KERNEL_RO)
- #define iounmap				__iounmap
+diff --git a/drivers/soc/qcom/cmd-db.c b/drivers/soc/qcom/cmd-db.c
+index f6c3d17b05c7..10a34d26b753 100644
+--- a/drivers/soc/qcom/cmd-db.c
++++ b/drivers/soc/qcom/cmd-db.c
+@@ -238,18 +238,11 @@ EXPORT_SYMBOL(cmd_db_read_slave_id);
  
- /*
+ static int cmd_db_dev_probe(struct platform_device *pdev)
+ {
+-	struct reserved_mem *rmem;
+ 	int ret = 0;
+ 
+-	rmem = of_reserved_mem_lookup(pdev->dev.of_node);
+-	if (!rmem) {
+-		dev_err(&pdev->dev, "failed to acquire memory region\n");
+-		return -EINVAL;
+-	}
+-
+-	cmd_db_header = memremap(rmem->base, rmem->size, MEMREMAP_WB);
+-	if (!cmd_db_header) {
+-		ret = -ENOMEM;
++	cmd_db_header = devm_memremap_reserved_mem(&pdev->dev, MEMREMAP_WB);
++	if (IS_ERR(cmd_db_header)) {
++		ret = PTR_ERR(cmd_db_header);
+ 		cmd_db_header = NULL;
+ 		return ret;
+ 	}
 -- 
 Sent by a computer through tubes
