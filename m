@@ -1,58 +1,60 @@
-From: "Shenhar, Talel" <talel@amazon.com>
-Subject: Re: [PATCH 3/3] arm64: alpine: select AL_POS
-Date: Tue, 10 Sep 2019 09:17:11 +0300
-Message-ID: <a616c903-6d3e-cf84-8afb-ade48d5ca68f@amazon.com>
-References: <1568020220-7758-1-git-send-email-talel@amazon.com>
- <1568020220-7758-4-git-send-email-talel@amazon.com>
- <CAK8P3a0DEMeFWK+RuAdSLyDYduWWwj9DxP_Beipays-d_6ixnA@mail.gmail.com>
- <ab512ced-d989-5c10-a550-2a4723d38e7e@amazon.com>
- <CAK8P3a34eKFXoAPOfkFN5+H4kxOhRjXgws_0wy+d-186LFxcTw@mail.gmail.com>
- <0d36f94d-596f-0ec7-6951-b097b5ee0d2d@amazon.com>
- <CAK8P3a0RUHxcpyUJU5bpd8nqpm0Sqhy4aJaoh7K9jVn8zJC6aQ@mail.gmail.com>
+From: Philippe Schenker <philippe.schenker@toradex.com>
+Subject: [PATCH v2 0/3] Add new binding regulator-fixed-clock to
+ regulator-fixed
+Date: Tue, 10 Sep 2019 06:21:13 +0000
+Message-ID: <20190910062103.39641-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a0RUHxcpyUJU5bpd8nqpm0Sqhy4aJaoh7K9jVn8zJC6aQ@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, David Miller <davem@davemloft.net>, gregkh <gregkh@linuxfoundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Thomas Gleixner <tglx@linutronix.de>, Patrick Venture <venture@google.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Maxime Ripard <mripard@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, paul.kocialkowski@bootlin.com, mjourdan@baylibre.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>Dav
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Max Krummenacher <max.krummenacher@toradex.com>, Rob Herring <robh+dt@kernel.org>, Stefan Agner <stefan.agner@toradex.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Mark Rutland <mark.rutland@arm.com>, Luka Pivk <luka.pivk@toradex.com>, Philippe Schenker <philippe.schenker@toradex.com>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
 
-On 9/9/2019 6:08 PM, Arnd Bergmann wrote:
-> On Mon, Sep 9, 2019 at 3:59 PM Shenhar, Talel <talel@amazon.com> wrote:
->> On 9/9/2019 4:45 PM, Arnd Bergmann wrote:
->>
->> Its not that something will get broken. its error event detector for POS
->> events which allows seeing bad accesses to registers.
->>
->> What is the general rule of which configs to put under select and which
->> under defconfig?
->>
->> I was thinking that "general" SoC support is good under select - those
->> things that we always want.
-> I generally want as little as possible to be selected, basically only
-> things that are required for linking the kernel and booting it without
-> potentially destroying the hardware.
->
-> In particular, I want most drivers to be enabled as loadable modules
-> if possible. When you have general-purpose distributions support
-> your platform, there is no need to have this module built-in while
-> running on a different chip, even if you always want to load the
-> module when it's running on yours.
->
->> And specific features, e.g. RAID support or features that supported only
->> on specific HW shall go under defconfig.
->>
->> Similar, I see ARCH_LAYERSCAPE selecting EDAC_SUPPORT.
-> I think this was done to avoid a link failure. It's also possible that this
-> is a mistake and just did not get caught in review.
->
->         Arnd
+Our hardware has a FET that is switching power rail of the ethernet PHY
+on and off. This switching enable signal is a clock from the SoC.
+
+There is no possibility in regulator subsystem to have this hardware
+reflected in software.
+
+I already discussed with Mark Brown about possible solutions and he
+suggested to create at least a new compatible. [1]
+This discussion includes also a better explanation of our circuit as
+well as schematics. So please refer to that link if you have questions
+about that.
+
+In this first attempt I created a new binding "regulator-fixed-clock"
+that can take a clock from devicetree. This is a simple addition to
+regulator-fixed. If the binding regulator-fixed-clock is given, the
+clock is simply enabled on regulator enable and disabled on regulator
+disable.
+To be able to have multiple consumers a counter variable is also given
+that tells how many consumers need power from this regulator.
+
+Best regards,
+Philippe
+
+[1] https://lkml.org/lkml/2019/8/7/78
 
 
-I see.
+Changes in v2:
+- return priv->clk_enable_counter > 0 directly.
+- Change select: to if:
+- Change items: to enum:
+- Defined how many clocks should be given
 
-Will remove this from v2.
+Philippe Schenker (3):
+  regulator: fixed: add possibility to enable by clock
+  ARM: dts: imx6ull-colibri: add phy-supply and respective regulator
+  dt-bindings: regulator: add regulator-fixed-clock binding
+
+ .../bindings/regulator/fixed-regulator.yaml   | 19 ++++-
+ arch/arm/boot/dts/imx6ull-colibri.dtsi        | 12 +++
+ drivers/regulator/fixed.c                     | 83 ++++++++++++++++++-
+ 3 files changed, 110 insertions(+), 4 deletions(-)
+
+--=20
+2.23.0
