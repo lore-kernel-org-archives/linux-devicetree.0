@@ -1,97 +1,104 @@
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
-Date: Tue, 10 Sep 2019 18:40:26 +0100
-Message-ID: <2f883643-6af3-4e34-cf2b-f65fed9392a1@lucaceresoli.net>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-3-luca@lucaceresoli.net>
- <20190901143101.humomdehy5ee73sk@vino>
- <aedad45b-16d6-d189-b045-329727440ca5@mleia.com>
- <1fb71437-eaa2-99a7-885f-63ee769969aa@mleia.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [V2, 2/2] media: i2c: Add more sensor modes for ov8856 camera
+ sensor
+Date: Tue, 10 Sep 2019 20:44:50 +0300
+Message-ID: <20190910174450.GJ2680@smile.fi.intel.com>
+References: <20190910130446.26413-1-dongchun.zhu@mediatek.com>
+ <20190910130446.26413-3-dongchun.zhu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1fb71437-eaa2-99a7-885f-63ee769969aa@mleia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vz@mleia.com>, jacopo mondi <jacopo@jmondi.org>, Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>
-Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190910130446.26413-3-dongchun.zhu@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dongchun.zhu@mediatek.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, drinkcat@chromium.org, srv_heupstream@mediatek.com, shengnan.wang@mediatek.com, tfiga@chromium.org, louis.kuo@mediatek.com, sj.huang@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, sakari.ailus@linux.intel.com, matthias.bgg@gmail.com, bingbu.cao@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
-
-On 09/09/19 05:56, Vladimir Zapolskiy wrote:
-> Hi Luca, Jacopo, Wolfram, Peter,
+On Tue, Sep 10, 2019 at 09:04:46PM +0800, dongchun.zhu@mediatek.com wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 > 
-> On 09/08/2019 11:45 PM, Vladimir Zapolskiy wrote:
->> Hi Luca, Jacopo, Wolfram, Peter,
->>
->> On 09/01/2019 05:31 PM, jacopo mondi wrote:
->>> Hi Luca,
->>>    thanks for keep pushing this series! I hope we can use part of this
->>> for the (long time) on-going GMSL work...
->>>
->>> I hope you will be patient enough to provide (another :) overview
->>> of this work during the BoF Wolfram has organized at LPC for the next
->>> week.
->>>
->>> In the meantime I would have some comments after having a read at the
->>> series and trying to apply its concept to GMSL
->>>
->>
->> I won't attend the LPC, however I would appreciate if you book some
->> time to review my original / alternative implementation of the TI
->> DS90Ux9xx I2C bridge device driver.
->>
->> For your convenience the links to the driver are given below:
->> * dt bindings: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#mead5ea226550b
->> * driver code: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#m2fe3664c5f884
->> * usage example: https://lore.kernel.org/lkml/20181012060314.GU4939@dell/T/#m56c146f5decdc
->>
->> The reasons why my driver is better/more flexible/more functional are
->> discussed earlier, please let me know, if you expect anything else
->> from me to add, also I would be happy to get a summary of your offline
->> discussion.
-> 
-> I forgot to repeat my main objection against Luca's approach, the TI
-> DS90Ux9xx I2C bridge driver does not require to call i2c_add_adapter()
-> or register a new mux/bus and then do run select/deselect in runtime to
-> overcome the created handicap.
+> This patch mainly adds two more sensor modes for OV8856 CMOS image sensor.
+> That is, the resolution of 1632*1224 and 3264*2448, corresponding to the bayer order of BGGR.
+> The sensor revision also differs in some OTP register.
 
-Whether the ser/deser drivers should or not instantiate an adapter
-depends on whether the child I2C bus is a separate bus or it's "the same
-bus" as the parent bus. Which in turn is not obvious, and depends on how
-you look at it.
+> +static int __ov8856_power_on(struct ov8856 *ov8856)
+> +{
+> +	struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(ov8856->xvclk);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "failed to enable xvclk\n");
+> +		return ret;
+> +	}
+> +
+> +	gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
+> +
+> +	ret = regulator_bulk_enable(OV8856_NUM_SUPPLIES, ov8856->supplies);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "failed to enable regulators\n");
+> +		goto disable_clk;
+> +	}
+> +
+> +	gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_HIGH);
+> +
 
-On one hand, the child bus looks like it is the same as the parent bus
-because transactions on the child bus also happen on the parent bus (bus
-not the other way around).
+> +	usleep_range(1400, 1500);
 
-On the other hand the child bus also looks like a separate bus because
-it is electrically separated from the parent bus, it can have a
-different speed, and devices on one child bus cannot talk with devices
-on another child bus under the same ser/deser.
+This should be commented why this is needed and from where the requirement
+comes from. Also, not, that 100us, which is only ~7%, is small margin.
+Recommended one is ~20%.
 
-The way you modeled it has the advantage of not requiring a runtime
-rewriting of slave addresses. Thas's what I implemented in
-i2c_atr_map_msgs(), I don't love the fact that it happens at every
-iteration, but its runtime cost is negligible compared to I2C speeds. On
-the other hand I'm not sure how your approach would work if you have an
-i2c bridge behind another i2c bridge (see the "ATR behind another ATR"
-case mentioned by Peter).
+> +
+> +	return 0;
+> +
+> +disable_clk:
+> +	clk_disable_unprepare(ov8856->xvclk);
+> +
+> +	return ret;
+> +}
 
-By contrast, adding an adapter for each child bus has its advantages. I
-didn't have to write code to instantiate the devices, letting the i2c
-core do it. Also, as child busses show up as real busses it's possible
-to instantiate devices from userspace just like any standard i2c bus with:
+> +	ov8856->is_1B_revision = (val == OV8856_1B_MODULE) ? 1 : 0;
 
-  echo eeprom 0x50 > /sys/bus/i2c/devices/i2c-4/new_device
+!! will give same result without using ternary operator.
 
-and devices will be assigned an alias and be usable normally.
+> +	ov8856->xvclk = devm_clk_get(&client->dev, "xvclk");
+> +	if (IS_ERR(ov8856->xvclk)) {
+> +		dev_err(&client->dev, "failed to get xvclk\n");
+> +		return -EINVAL;
+> +	}
 
-Finally, there is no need to call select()/deselect() in runtime. Those
-callbacks are optional, and I'm probably removing them in a future
-iteration as I'm more and more convinced they are not needed at all.
+Previously it was optional.
+How did it work before and why it's not optional?
+
+> +	ov8856->n_shutdn_gpio = devm_gpiod_get(&client->dev, "reset",
+> +					       GPIOD_OUT_LOW);
+> +	if (IS_ERR(ov8856->n_shutdn_gpio)) {
+> +		dev_err(&client->dev, "failed to get reset-gpios\n");
+> +		return -EINVAL;
+> +	}
+
+Ditto.
+
+> +static const struct of_device_id ov8856_of_match[] = {
+> +	{ .compatible = "ovti,ov8856" },
+
+> +	{},
+
+No comma needed for terminator line.
+
+> +};
 
 -- 
-Luca
+With Best Regards,
+Andy Shevchenko
