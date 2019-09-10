@@ -1,7 +1,7 @@
 From: Thara Gopinath <thara.gopinath@linaro.org>
-Subject: [PATCH v2 2/5] soc: qcom: rpmhpd: Introduce function to retrieve power domain performance state count
-Date: Tue, 10 Sep 2019 13:14:33 -0400
-Message-ID: <1568135676-9328-3-git-send-email-thara.gopinath@linaro.org>
+Subject: [PATCH 4/5] thermal: Add generic power domain warming device driver.
+Date: Tue, 10 Sep 2019 13:14:35 -0400
+Message-ID: <1568135676-9328-5-git-send-email-thara.gopinath@linaro.org>
 References: <1568135676-9328-1-git-send-email-thara.gopinath@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1568135676-9328-1-git-send-email-thara.gopinath@linaro.org>
@@ -10,44 +10,243 @@ To: edubezval@gmail.com, rui.zhang@intel.com, ulf.hansson@linaro.org, daniel.lez
 Cc: amit.kucheria@verdurent.com, mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Populate .get_performace_state_count in genpd ops to retrieve the count
-of performance states supported by a rpmh power domain.
+Resources modeled as power domains in linux kenrel
+can  be used to warm the SoC(eg. mx power domain on sdm845).
+To support this feature, introduce a generic power domain
+warming device driver that can be plugged into the thermal framework
+(The thermal framework itself requires further modifiction to
+support a warming device in place of a cooling device.
+Those extensions are not introduced in this patch series).
 
 Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 ---
 v1->v2:
-	- Changes ti incorporate the new format of
-	get_performance_state_count.
+	- Make power domain based warming device driver a generic
+	driver in the thermal framework. v1 implemented this as a
+	Qualcomm specific driver.
+	- Rename certain variables as per review suggestions on the
+	mailing list.
 
- drivers/soc/qcom/rpmhpd.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/thermal/Kconfig              |  11 +++
+ drivers/thermal/Makefile             |   2 +
+ drivers/thermal/pwr_domain_warming.c | 174 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 187 insertions(+)
+ create mode 100644 drivers/thermal/pwr_domain_warming.c
 
-diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-index 5741ec3..9d37534 100644
---- a/drivers/soc/qcom/rpmhpd.c
-+++ b/drivers/soc/qcom/rpmhpd.c
-@@ -285,6 +285,13 @@ static unsigned int rpmhpd_get_performance_state(struct generic_pm_domain *genpd
- 	return dev_pm_opp_get_level(opp);
- }
+diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+index 9966364..eeb6018 100644
+--- a/drivers/thermal/Kconfig
++++ b/drivers/thermal/Kconfig
+@@ -187,6 +187,17 @@ config DEVFREQ_THERMAL
  
-+static int rpmhpd_performance_states_count(struct generic_pm_domain *domain)
-+{
-+	struct rpmhpd *pd = domain_to_rpmhpd(domain);
+ 	  If you want this support, you should say Y here.
+ 
++config PWR_DOMAIN_WARMING_THERMAL
++	bool "Power Domain based warming device"
++	depends on PM_GENERIC_DOMAINS
++	depends on PM_GENERIC_DOMAINS_OF
++	help
++	  This implements the generic power domain based warming
++	  mechanism through increasing the performance state of
++	  a power domain.
 +
-+	return pd->level_count;
++	  If you want this support, you should say Y here.
++
+ config THERMAL_EMULATION
+ 	bool "Thermal emulation mode support"
+ 	help
+diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+index 74a37c7..382c64a 100644
+--- a/drivers/thermal/Makefile
++++ b/drivers/thermal/Makefile
+@@ -27,6 +27,8 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
+ # devfreq cooling
+ thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
+ 
++thermal_sys-$(CONFIG_PWR_DOMAIN_WARMING_THERMAL)	+= pwr_domain_warming.o
++
+ # platform thermal drivers
+ obj-y				+= broadcom/
+ obj-$(CONFIG_THERMAL_MMIO)		+= thermal_mmio.o
+diff --git a/drivers/thermal/pwr_domain_warming.c b/drivers/thermal/pwr_domain_warming.c
+new file mode 100644
+index 0000000..3dd792b
+--- /dev/null
++++ b/drivers/thermal/pwr_domain_warming.c
+@@ -0,0 +1,174 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2019, Linaro Ltd
++ */
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/module.h>
++#include <linux/pm_domain.h>
++#include <linux/pm_runtime.h>
++#include <linux/thermal.h>
++
++struct pd_warming_device {
++	struct thermal_cooling_device *cdev;
++	struct device *dev;
++	int max_state;
++	int cur_state;
++	bool runtime_resumed;
++};
++
++static const struct of_device_id pd_wdev_match_table[] = {
++	{ .compatible = "thermal-power-domain-wdev", .data = NULL },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, pd_wdev_match_table);
++
++static int pd_wdev_get_max_state(struct thermal_cooling_device *cdev,
++				 unsigned long *state)
++{
++	struct pd_warming_device *pd_wdev = cdev->devdata;
++
++	*state = pd_wdev->max_state;
++	return 0;
 +}
 +
- static int rpmhpd_update_level_mapping(struct rpmhpd *rpmhpd)
- {
- 	int i;
-@@ -373,6 +380,8 @@ static int rpmhpd_probe(struct platform_device *pdev)
- 		rpmhpds[i]->pd.power_on = rpmhpd_power_on;
- 		rpmhpds[i]->pd.set_performance_state = rpmhpd_set_performance_state;
- 		rpmhpds[i]->pd.opp_to_performance_state = rpmhpd_get_performance_state;
-+		rpmhpds[i]->pd.get_performance_state_count =
-+					rpmhpd_performance_states_count;
- 		pm_genpd_init(&rpmhpds[i]->pd, NULL, true);
- 
- 		data->domains[i] = &rpmhpds[i]->pd;
++static int pd_wdev_get_cur_state(struct thermal_cooling_device *cdev,
++				 unsigned long *state)
++{
++	struct pd_warming_device *pd_wdev = cdev->devdata;
++
++	*state = dev_pm_genpd_get_performance_state(pd_wdev->dev);
++
++	return 0;
++}
++
++static int pd_wdev_set_cur_state(struct thermal_cooling_device *cdev,
++				 unsigned long state)
++{
++	struct pd_warming_device *pd_wdev = cdev->devdata;
++	struct device *dev = pd_wdev->dev;
++	int ret;
++
++	ret = dev_pm_genpd_set_performance_state(dev, state);
++
++	if (ret)
++		return ret;
++
++	if (state && !pd_wdev->runtime_resumed) {
++		ret = pm_runtime_get_sync(dev);
++		pd_wdev->runtime_resumed = true;
++	} else if (!state && pd_wdev->runtime_resumed) {
++		ret = pm_runtime_put(dev);
++		pd_wdev->runtime_resumed = false;
++	}
++
++	return ret;
++}
++
++static struct thermal_cooling_device_ops pd_warming_device_ops = {
++	.get_max_state = pd_wdev_get_max_state,
++	.get_cur_state = pd_wdev_get_cur_state,
++	.set_cur_state = pd_wdev_set_cur_state,
++};
++
++static int pd_wdev_create(struct device *dev, const char *name)
++{
++	struct pd_warming_device *pd_wdev;
++	int state_count;
++
++	pd_wdev = devm_kzalloc(dev, sizeof(*pd_wdev), GFP_KERNEL);
++	if (!pd_wdev)
++		return -ENOMEM;
++
++	state_count = dev_pm_genpd_performance_state_count(dev);
++	if (state_count < 0)
++		return state_count;
++
++	pd_wdev->dev = dev;
++	pd_wdev->max_state = state_count - 1;
++	pd_wdev->runtime_resumed = false;
++
++	pm_runtime_enable(dev);
++
++	pd_wdev->cdev = thermal_of_cooling_device_register
++					(dev->of_node, name,
++					 pd_wdev,
++					 &pd_warming_device_ops);
++	if (IS_ERR(pd_wdev->cdev)) {
++		dev_err(dev, "unable to register %s cooling device\n", name);
++		pm_runtime_disable(dev);
++
++		return PTR_ERR(pd_wdev->cdev);
++	}
++
++	return 0;
++}
++
++static int pd_wdev_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev, *pd_dev;
++	const char *pd_name;
++	int id, count, ret = 0;
++
++	count = of_count_phandle_with_args(dev->of_node, "power-domains",
++					   "#power-domain-cells");
++
++	if (count > 1) {
++		for (id = 0; id < count; id++) {
++			ret = of_property_read_string_index
++					(dev->of_node, "power-domain-names",
++					 id, &pd_name);
++			if (ret) {
++				dev_err(dev, "Error reading the power domain name %d\n", ret);
++				continue;
++			}
++
++			pd_dev = dev_pm_domain_attach_by_id(dev, id);
++			if (IS_ERR(pd_dev)) {
++				dev_err(dev, "Error attaching power domain %s %ld\n", pd_name, PTR_ERR(pd_dev));
++				continue;
++			}
++
++			ret = pd_wdev_create(pd_dev, pd_name);
++			if (ret) {
++				dev_err(dev, "Error building cooling device %s %d\n", pd_name, ret);
++				dev_pm_domain_detach(pd_dev, false);
++				continue;
++			}
++		}
++	} else if (count == 1) {
++		ret = of_property_read_string_index(dev->of_node,
++						    "power-domain-names",
++						    0, &pd_name);
++		if (ret) {
++			dev_err(dev, "Error reading the power domain name %d\n", ret);
++			goto exit;
++		}
++
++		ret = pd_wdev_create(dev, pd_name);
++		if (ret) {
++			dev_err(dev, "Error building cooling device %s %d\n", pd_name, ret);
++			goto exit;
++		}
++	} else	{
++		ret = -EINVAL;
++	}
++
++exit:
++	return ret;
++}
++
++static struct platform_driver pd_wdev_driver = {
++	.driver = {
++		.name = "qcom-rpmhpd-cdev",
++		.of_match_table = pd_wdev_match_table,
++	},
++	.probe = pd_wdev_probe,
++};
++module_platform_driver(pd_wdev_driver);
++
++MODULE_DESCRIPTION("Qualcomm RPMHPD cooling device driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.1.4
