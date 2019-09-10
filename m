@@ -1,11 +1,11 @@
 From: Gabriel Francisco <frc.gabriel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH v7 0/7] qcom: add OCMEM support
-Date: Tue, 10 Sep 2019 20:13:39 +0200
-Message-ID: <d3eb4c40-67ad-c318-84be-f701b8ae6abe@gmail.com>
+Date: Tue, 10 Sep 2019 20:15:48 +0200
+Message-ID: <2dd1a9db-a321-953d-8a46-23b4a8975570@gmail.com>
 References: <20190823121637.5861-1-masneyb@onstation.org>
  <20190901214045.GA14321@onstation.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1158952219=="
+Content-Type: multipart/mixed; boundary="===============1346193309=="
 Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 In-Reply-To: <20190901214045.GA14321-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
 Content-Language: en-US
@@ -23,17 +23,17 @@ Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA
 List-Id: devicetree@vger.kernel.org
 
 This is a multi-part message in MIME format.
---===============1158952219==
+--===============1346193309==
 Content-Type: multipart/alternative;
- boundary="------------E9414BE935F490A0BC8CA132"
+ boundary="------------7F6CA8B8CC8B88CF290782BB"
 Content-Language: en-US
 
 This is a multi-part message in MIME format.
---------------E9414BE935F490A0BC8CA132
+--------------7F6CA8B8CC8B88CF290782BB
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 
-Tested-by: Gabriel Francisco <frc.gabrielgmail.com>
+Tested-by: Gabriel Francisco <frc.gabriel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
 On 9/1/19 11:40 PM, Brian Masney wrote:
 > Hi Rob C / Sean P,
@@ -56,7 +56,7 @@ On 9/1/19 11:40 PM, Brian Masney wrote:
 > Brian
 >
 
---------------E9414BE935F490A0BC8CA132
+--------------7F6CA8B8CC8B88CF290782BB
 Content-Type: text/html; charset=utf-8
 Content-Transfer-Encoding: 7bit
 
@@ -65,7 +65,7 @@ Content-Transfer-Encoding: 7bit
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   </head>
   <body text="#000000" bgcolor="#FFFFFF">
-    <pre class="content"><span class="tested-by">Tested-by: Gabriel Francisco &lt;frc.gabrielgmail.com&gt;</span></pre>
+    <pre class="content"><span class="tested-by">Tested-by: Gabriel Francisco <a class="moz-txt-link-rfc2396E" href="mailto:frc.gabriel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org">&lt;frc.gabriel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org&gt;</a></span></pre>
     <div class="moz-cite-prefix">On 9/1/19 11:40 PM, Brian Masney wrote:<br>
     </div>
     <blockquote type="cite"
@@ -99,9 +99,9 @@ Brian
   </body>
 </html>
 
---------------E9414BE935F490A0BC8CA132--
+--------------7F6CA8B8CC8B88CF290782BB--
 
---===============1158952219==
+--===============1346193309==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -111,4 +111,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5v
 IG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5v
 
---===============1158952219==--
+--===============1346193309==--
