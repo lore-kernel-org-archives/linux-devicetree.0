@@ -1,56 +1,86 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v6 01/12] tools lib traceevent: Convert remaining %p[fF]
- users to %p[sS]
-Date: Tue, 10 Sep 2019 11:42:06 -0700
-Message-ID: <c458e734f5777561138b87228384808398547762.camel@perches.com>
-References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
-         <20190910084707.18380-2-sakari.ailus@linux.intel.com>
-         <20190910071837.2e9110f8@oasis.local.home>
-         <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
-         <20190910142621.0bec208d@oasis.local.home>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
+Date: Tue, 10 Sep 2019 19:46:53 +0100
+Message-ID: <20190910184653.GB5581@kunai>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-3-luca@lucaceresoli.net>
+ <20190901143101.humomdehy5ee73sk@vino>
+ <20bac324-c4d3-270c-5175-0a7f261fd760@lucaceresoli.net>
+ <51dede3c-545b-b66a-5e89-9e889d784eb9@axentia.se>
+ <2d770b36-9521-820d-726a-bc9b52048ef8@lucaceresoli.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8P1HSweYDcXXzwPJ"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190910142621.0bec208d@oasis.local.home>
+Content-Disposition: inline
+In-Reply-To: <2d770b36-9521-820d-726a-bc9b52048ef8@lucaceresoli.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
+To: Luca Ceresoli <luca@lucaceresoli.net>
+Cc: Peter Rosin <peda@axentia.se>, jacopo mondi <jacopo@jmondi.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Vladimir Zapolskiy <vz@mleia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-09-10 at 14:26 -0400, Steven Rostedt wrote:
-> On Tue, 10 Sep 2019 10:18:44 -0700
-> Joe Perches <joe@perches.com> wrote:
-> 
-> > > It's not just for the lastest kernel. We must maintain backward
-> > > compatibility here too. If there use to be a usage of this, then we
-> > > must keep it until the kernels are no longer used (perhaps 7 years?)  
-> > 
-> > That argues for not using "%pfw" at all for some number of years.
-> > 
-> > Perhaps the '%pfw' should be '%pnfw' for 'name' and 'fwnode'
->
->   -ENOCOMPREHENSION
 
-Perhaps you were not copied on the whole series.
+--8P1HSweYDcXXzwPJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-https://lore.kernel.org/lkml/20190910084707.18380-1-sakari.ailus@linux.intel.com/
 
-As I understand it, Sakair Ailus is proposing to
-obsolete the current vsprintf "%p[Ff]" extension
-and replace the usage with a new "%pfw" extension
-which would emit the name of a pointer to "struct fwnode {}".
+> I still have to examine in depth all of the problems in the i2c-mux
+> documented in Documentation/i2c/i2c-topology (thanks for having written
+> those docs!), but at first sight it looks like the ATR is not going to
+> introduce big problems because of how it works.
 
-https://lore.kernel.org/lkml/20190910084707.18380-10-sakari.ailus@linux.intel.com/
+Assuming we are using the previously discussed NEEDS_ATR flag for the adapter
+instead of the attach/detach callbacks:
 
-If reusing "%pf<foo>" is a problem, then instead
-it might be reasonable to have a new "%pn<foo>" for
-that use instead.
+Can't we then simply understand an ATR as a generic 1:1 mapping device
+which can be setup when registering an adapter?
 
-btw:
+When we add an adapter using i2c_add_adapter, we have:
 
-Is there kernel version information available in
-trace output files?
 
-If so, it might be reasonable to change the tooling
-there instead.
+              .-----.  Slave X @ 0x10
+  .-----.     |     |   |
+  | CPU |--A--| ATR |---+---- B
+  `-----'     |     |
+              `-----'
+
+When we use i2c_add_mux_adapter, we have:
+
+
+                                Slave X @ 0x10
+              .-----.   .-----.   |
+  .-----.     |     |---| ATR |---+---- B
+  | CPU |--A--| MUX |   '-----'
+  `-----'     |     |   .-----.
+              |     |---| ATR |---+---- C
+              `-----'   '-----'   |
+                                 Slave Y @ 0x10
+
+
+That way we could keep the topology handling solely to the mux-core.
+
+Am I overlooking something?
+
+
+--8P1HSweYDcXXzwPJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1375gACgkQFA3kzBSg
+KbYJow/+JCThTpeS2XICmf9Q3MrO1dOKBMlUgPruJRw4irTMMkrMProjr3EhIYCw
+7LuYkhW8Pessu8F9PbIJ9iU6IDb2UC5+Ao16IdbWYauY/Ij3ayhXsUd3ECl19lo4
+SjbUynLbxbch6xzw4nitl1Vg8pxH1eVHA+3wi60O2eGBr2WHTouAMHa5YI6a6fw6
+5MkxCxS4A08Ss0TUKZhJvl+7WttM5uigTmTsaI8FQLS0T+Z5rlxQIQR0CMP3ZyOR
+1Fc/sndLvWOK5lRk/+v76LC7lFYEXa9ePLqql9IqP00u0qTO+wE+l3t51R5oTjpj
+poXtKqLcjtfyue7efqfYm+rQDu39I9lEguZsp8OivuYQlCkWzRu/IRYSxQSsBmbd
+37XvMAHedHMQy4PIhzRSq9MtprK6RcMgFvUxf3fr/05WW+P2udby4gluEI3ba4lo
+MydbdFgf3rJfLkJ0TjC3GplUjDbffGmQ/uLvcwyxC1i3FCsQrK10NsUScZPg/oM9
+KJjwa06l9ua0MrwDMq1s/3eqcWXCV9kyaIu1bE9CT6hLmJd7yacadcFRo5WqgVK1
+qGBofVZbgsIrerqrYcKdXGS9vFCbsEZP6NQ2JpKHbiEITBy9Cqi1g2Jjo82byCqE
+BtyGllOLEvVIpm8938c9epfklbGk+ZIlWVJciamn1gG89j3bI/4=
+=3L8E
+-----END PGP SIGNATURE-----
+
+--8P1HSweYDcXXzwPJ--
