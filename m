@@ -1,80 +1,51 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH 1/2] backlight: lm3630a: add an enable gpio for the HWEN
- pin
-Date: Tue, 10 Sep 2019 21:06:48 +0200
-Message-ID: <20190910210648.3594912d@kemnade.info>
-References: <20190908203704.30147-1-andreas@kemnade.info>
-        <20190908203704.30147-2-andreas@kemnade.info>
-        <20190909105729.w5552rtop7rhghy2@holly.lan>
-        <20190909221349.46ca5a1f@aktux>
-        <20190910102156.vmprsjebmlphkv34@holly.lan>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v6 01/12] tools lib traceevent: Convert remaining %p[fF]
+ users to %p[sS]
+Date: Tue, 10 Sep 2019 12:44:03 -0700
+Message-ID: <c90c33b421c0fa0db5182d0f58c6ba6e86cf1622.camel@perches.com>
+References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
+         <20190910084707.18380-2-sakari.ailus@linux.intel.com>
+         <20190910071837.2e9110f8@oasis.local.home>
+         <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
+         <20190910142621.0bec208d@oasis.local.home>
+         <c458e734f5777561138b87228384808398547762.camel@perches.com>
+         <20190910150303.5a0d3904@oasis.local.home>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/d51yUFk84RybqHzz4cluJyL"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190910102156.vmprsjebmlphkv34@holly.lan>
+In-Reply-To: <20190910150303.5a0d3904@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: lee.jones@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/d51yUFk84RybqHzz4cluJyL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, 2019-09-10 at 15:03 -0400, Steven Rostedt wrote:
+> On Tue, 10 Sep 2019 11:42:06 -0700
+[]
+> > btw:
+> > 
+> > Is there kernel version information available in
+> > trace output files?
+> 
+> Not really. This is just a library that parses the trace event formats,
+> there's not kernel versions passed in, but we do use variations in
+> formats and such to determine what is supported.
+> 
+> > If so, it might be reasonable to change the tooling
+> > there instead.
+> > 
+> 
+> Actually, I think we could just look to see if "%pfw" is used and fall
+> to that, otherwise consider it an older kernel and do it the original
+> way.
 
-On Tue, 10 Sep 2019 11:21:56 +0100
-Daniel Thompson <daniel.thompson@linaro.org> wrote:
+Well, if you think that works, OK great.
 
-[...]
-> > > Is this needed?
-> > >=20
-> > > This is a remove path, not a power management path, and we have no id=
-ea
-> > > what the original status of the pin was anyway?
-> > >  =20
-> >=20
-> > Looking at Ishdn on page 5 of the datasheet, switching it off everytime
-> > possible seems not needed. We would need to call chip_init() everytime
-> > we enable the gpio or live with default values.
-> > Therefore I did decide to not put it into any power management path.
-> > But switching it on and not switching it off feels so unbalanced.  =20
->=20
-> Either the power consumed by the controller when strings aren't lit up
-> matters, in which case the driver should implement proper power
-> management or it doesn't matter and changing the pin state isn't needed.
->=20
-> I'm happy with either of the above but this looks like a third way,
-> where eager users could hack in a bit of extra power management by
-> forcing drivers to unbind.=20
->=20
-I think I will take the simple way. I am quite sure that the power
-consumption with HWEN on and leds off does not matter. If someone
-later comes up and finds out that I misread the datasheet, things
-are prepared to be improved.
-At least the hardware can be properly described in the devicetree.
+But could that work?
+How would an individual trace record know if
+another trace record used %pfw?
 
-Regards,
-Andreas
-
---Sig_/d51yUFk84RybqHzz4cluJyL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl139EoACgkQl4jFM1s/
-ye+ZZA//WKkB+xioM4V6ShKpqapJ3LzkVD0RhoEhoiY/5NgLwkF1m/w/6Z0LmHB/
-8nvWJXJpxmTtIUzFqn265zYZWJwsYCV5EmlEHKy/Bv/XKENCeqGubixw4POqkbgw
-APKbSabSXoGtlhuhQjFXOc6FbBBB5ynt6f7nliuY9xYbN+rUTBWEgRrdJ4ktdQn8
-4sGtQv7jy41ogrZho1aUgpe7HAfuixlEUJlW9v2/i3a2n25uWCKMAt49nTns0xXv
-r4psgXQZs9pommPsaR799afcnFnWoHP7qW7kKsm9rSI5tq4hvJjEwbYCagpA9Rf8
-fXOn2PIGMAg0L2Grxmggp6HC5qaKMnntUBiIj26yljvce0F8bH4xyb5rRTrOEasP
-PSR1Y/FxzC6AyD8ZbeEIZEjqRcpz7Y5+c5cnrgROBpfxHv3rjOXYR9bZkkKQ7unV
-HnHdPFHESb/p0jvj2cOFyoUFQkeTtbpIfeCoX11T2rPBmIq1RJUD6UsLTe2DRlC6
-ex4vqW3RvQqTv5XIcUezPHUMVvmlUMyrx0XQyAVUGcnGYwxVBSLm1hMElaivuAM8
-gzbfNAwuTgl1xNseaGH7nu/UoUAKk4vEYEncT4YHWLoFJ9HjlyKmZNuM/4j1z+sd
-R2t/co/S1lpJCYvEOChmcwtxSa8pVn14iysG+32Pk++AX7CoqCM=
-=SLZS
------END PGP SIGNATURE-----
-
---Sig_/d51yUFk84RybqHzz4cluJyL--
+Perhaps not reusing %pf, marking it reserved
+for a period of years, and using another unused
+prefix %p<type> like %pnfw may be simpler.
