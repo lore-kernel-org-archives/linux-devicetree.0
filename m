@@ -1,64 +1,78 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH 2/7] clocksource: change timer registration macros
-Date: Tue, 10 Sep 2019 14:57:23 +0000
-Message-ID: <b0ff3339-4016-0979-d971-9d30e05e1db3@microchip.com>
-References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
- <1568123236-767-3-git-send-email-claudiu.beznea@microchip.com>
- <86k1agryu2.wl-maz@kernel.org>
+From: Luca Ceresoli <luca@lucaceresoli.net>
+Subject: Re: [RFC,v2 3/6] media: dt-bindings: add DS90UB954-Q1 video
+ deserializer
+Date: Tue, 10 Sep 2019 16:02:43 +0100
+Message-ID: <c977123c-3f4d-a3b1-f329-fa69dbc20040@lucaceresoli.net>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-4-luca@lucaceresoli.net>
+ <20190910094327.GG5781@paasikivi.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <86k1agryu2.wl-maz@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190910094327.GG5781@paasikivi.fi.intel.com>
 Content-Language: en-US
-Content-ID: <5CC15C8274802D449C3F3BE5E146EC8D@namprd11.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: maz@kernel.org
-Cc: tmaimon77@gmail.com, linus.walleij@linaro.org, nsekhar@ti.com, guoren@kernel.org, linux-stm32@st-md-mailman.stormreply.com, heiko@sntech.de, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, khilman@baylibre.com, Ludovic.Desroches@microchip.com, linux-imx@nxp.com, u.kleine-koenig@pengutronix.de, uclinux-h8-devel@lists.sourceforge.jp, s.hauer@pengutronix.de, linux-unisoc@lists.infradead.org, khalasa@piap.pl, tglx@linutronix.de, sbranden@broadcom.com, linux-kernel@vger.kernel.org, ralf@linux-mips.org, paul.burton@mips.com, kernel@pengutronix.de, mark.rutland@arm.com, alexandre.belloni@bootlin.com, jhogan@kernel.org, palmer@sifive.com, eric@anholt.net, thierry.reding@gmail.com, manivannan.sadhasivam@linaro.org, ysato@users.sourceforge.jp, zhang.lyra@gmail.com, daniel.lezcano@linaro.org, jonathanh@nvidia.com, bgolaszewski@baylibre.com, kgene@kernel.orga
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, Vladimir Zapolskiy <vz@mleia.com>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sakari,
 
-
-On 10.09.2019 17:49, Marc Zyngier wrote:
-> External E-Mail
+On 10/09/19 10:43, Sakari Ailus wrote:
+> Hi Luca,
 > 
+> On Tue, Jul 23, 2019 at 10:37:20PM +0200, Luca Ceresoli wrote:
 > 
-> [crazy Cc list, not sure it'll go anywhere]
-
-It is what get_maintainer.pl script returned to.
-
+> ...
 > 
-> On Tue, 10 Sep 2019 14:47:11 +0100,
-> Claudiu Beznea <claudiu.beznea@microchip.com> wrote:
->>
->> Change timer registration macros (TIMER_OF_DECLARE() and
->> CLOCKSOURCE_OF_DECLARE()) by adding a new argument. This new argument
->> is a pointer to an object of type struct timer_of and is used in
->> timer_probe(). Based on the flags filled in the struct timer_of object
->> the probing process will parse different DT bindings. Later on the
->> drivers will use the result of this parsing. Even at the moment only
->> few drivers are using this functionality there are other that could
->> be converted to use it.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+>> +Device node example
+>> +-------------------
+>> +
+>> +&i2c0 {
+>> +	deser: deser@3d {
+>> +		compatible = "ti,ds90ub954-q1";
+>> +		reg-names = "main", "rxport0", "rxport1", "ser0", "ser1";
+>> +		reg       = <0x3d>,  <0x40>,    <0x41>,   <0x44>, <0x45>;
+>> +		clocks = <&clk_25M>;
+>> +		interrupt-parent = <&gic>;
+>> +		interrupts = <3 1 IRQ_TYPE_LEVEL_HIGH>;
+>> +		reset-gpios = <&gpio_ctl 4 GPIO_ACTIVE_LOW>;
+>> +
+>> +		i2c-alias-pool = /bits/ 16 <0x4a 0x4b 0x4c 0x4d 0x4e 0x4f>;
+>> +
+>> +		gpio-controller;
+>> +		#gpio-cells = <3>; /* rxport, remote gpio num, flags */
+>> +
+>> +		ports {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +
+>> +			port@0 {
+>> +				reg = <0>;
+>> +				ds90ub954_fpd3_in0: endpoint {
+>> +					remote-endpoint = <&sensor_0_out>;
+>> +				};
+>> +			};
+>> +
+>> +			port@1 {
+>> +				reg = <1>;
+>> +				ds90ub954_fpd3_in1: endpoint {
+>> +					remote-endpoint = <&sensor_1_out>;
+>> +				};
+>> +			};
+>> +
+>> +			port@2 {
+>> +				reg = <2>;
+>> +				ds90ub954_mipi_out0: endpoint {
+>> +					data-lanes = <1 2 3 4>;
+>> +					/* Actually a REFCLK multiplier */
+>> +					data-rate = <1600000000>;
 > 
-> Why don't you introduce a new registration macro that does what you
-> want instead of creating this unnecessary churn all over the place?
->
+> What is data-rate used for? Is it documented somewhere? Could you use
+> link-frequencies property instead? It's defined in video-interfaces.txt.
 
-I though it would be good to keep only one interface for all drivers.
-I'll keep in mind your proposal for next version.
+Right, it should be link-frequencies. Thanks for pointing out.
 
-Thank you,
-Claudiu Beznea
- 
-> 	M.
-> 
+-- 
+Luca
