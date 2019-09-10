@@ -1,62 +1,102 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v4 2/6] dt-bindings: samsung: Update the CHIP ID binding
- documentation
-Date: Tue, 10 Sep 2019 14:36:14 +0200
-Message-ID: <20190910123618.27985-3-s.nawrocki@samsung.com>
-References: <20190910123618.27985-1-s.nawrocki@samsung.com>
-        <CGME20190910123637eucas1p26d2051f9bdd1bdf4510f1908ea98f641@eucas1p2.samsung.com>
-Content-Type: text/plain; charset="utf-8"
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v2 1/2] dt-binding: hwrng: add NPCM RNG documentation
+Date: Tue, 10 Sep 2019 13:42:50 +0100
+Message-ID: <20190910124250.2i5muqjt5c35kvgb@holly.lan>
+References: <20190909123840.154745-1-tmaimon77@gmail.com>
+ <20190909123840.154745-2-tmaimon77@gmail.com>
+ <20190910102505.vgyomi575ldrk2lq@holly.lan>
+ <CAP6Zq1igPJ5PvaA2YaC-=ngQOnatt4PFJj-QzaJCueDf6KA19A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190910123618.27985-1-s.nawrocki@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <CAP6Zq1igPJ5PvaA2YaC-=ngQOnatt4PFJj-QzaJCueDf6KA19A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: krzk@kernel.org, vireshk@kernel.org
-Cc: robh+dt@kernel.org, kgene@kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: mpm@selenic.com, herbert@gondor.apana.org.au, Arnd Bergmann <arnd@arndb.de>, Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Avi Fishman <avifishman70@gmail.com>, Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, sumit.garg@linaro.org, jens.wiklander@linaro.org, vkoul@kernel.org, Thomas Gleixner <tglx@linutronix.de>, Joel Stanley <joel@jms.id.au>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation of a new optional "samsung,asv-bin"
-property in the chipid device node and documents requirement of
-"syscon" compatible string.  These additions are needed to support
-Exynos ASV (Adaptive Supply Voltage) feature.
+On Tue, Sep 10, 2019 at 02:55:44PM +0300, Tomer Maimon wrote:
+> Hi Daniel,
+> 
+> Sorry but I have probably miss it, thanks a lot for your comment
+> 
+> On Tue, 10 Sep 2019 at 13:25, Daniel Thompson <daniel.thompson@linaro.org>
+> wrote:
+> 
+> > On Mon, Sep 09, 2019 at 03:38:39PM +0300, Tomer Maimon wrote:
+> > > Added device tree binding documentation for Nuvoton BMC
+> > > NPCM Random Number Generator (RNG).
+> > >
+> > > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> > > ---
+> > >  .../bindings/rng/nuvoton,npcm-rng.txt           | 17 +++++++++++++++++
+> > >  1 file changed, 17 insertions(+)
+> > >  create mode 100644
+> > Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> > b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> > > new file mode 100644
+> > > index 000000000000..a697b4425fb3
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> > > @@ -0,0 +1,17 @@
+> > > +NPCM SoC Random Number Generator
+> > > +
+> > > +Required properties:
+> > > +- compatible  : "nuvoton,npcm750-rng" for the NPCM7XX BMC.
+> > > +- reg         : Specifies physical base address and size of the
+> > registers.
+> > > +
+> > > +Optional property:
+> > > +- quality : estimated number of bits of true entropy per 1024 bits
+> > > +                     read from the rng.
+> > > +                     If this property is not defined, it defaults to
+> > 1000.
+> >
+> > There are pending unreplied review comments about this property (my own
+> > as it happens):
+> > https://patchwork.kernel.org/patch/11119371/
+> >
+> > No, there isn't different SoCs.
+> we had checked the quality of the hwrng and the results we got are set as
+> default.
+> we been asked from one of our client to have a dynamic quality, they will
+> like to be more strict when using the hwrng.
+> is it problematic to add it?
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
-Changes since v3:
- - none
+It's a slightly grey area but in general the role of devicetree is to
+describe the hardware. This parameter is not doing that.
 
-Changes since v2:
- - corrected patch summary line prefix, the patch moved in the
-   sequence
+If you view the quality assessment of this RNG to be a user preference
+it is better set the quality to zero which is what the vast majority of
+hwrng devices do. When the driver sets the quality to zero then the
+kernel does not stir the entropy pool automatically... instead it
+relies on the userspace rngd to do that. If the user wants the kernel
+to stir the pool automatically then the quality can be set using the
+default_quality kernel parameter.
 
-Changes since v1 (RFC):
- - new patch
----
- .../devicetree/bindings/arm/samsung/exynos-chipid.txt  | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-index 85c5dfd4a720..be3657e6c00c 100644
---- a/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-+++ b/Documentation/devicetree/bindings/arm/samsung/exynos-chipid.txt
-@@ -1,12 +1,18 @@
--SAMSUNG Exynos SoCs Chipid driver.
-+SAMSUNG Exynos SoC series CHIPID subsystem
+Daniel.
 
- Required properties:
--- compatible : Should at least contain "samsung,exynos4210-chipid".
-+- compatible : Should at least contain "samsung,exynos4210-chipid", "syscon".
-
- - reg: offset and length of the register set
-
-+Optional properties:
-+ - samsung,asv-bin : Adaptive Supply Voltage bin selection. This can be used
-+   to determine the ASV bin of an SoC if respective information is missing
-+   in the CHIPID registers or in the OTP memory. Possible values: 0...3.
-+
- Example:
- 	chipid@10000000 {
- 		compatible = "samsung,exynos4210-chipid";
- 		reg = <0x10000000 0x100>;
-+		samsung,asv-bin = <2>;
- 	};
---
-2.17.1
+> 
+> Having a controllable quality implies that the numeric quality of the
+> peripheral changes when it is stamped out on different SoCs (otherwise
+> the driver can confidently set the quality without needing any hint
+> from the DT). Is that really true here?
+> 
+> 
+> > Daniel.
+> >
+> > > +
+> > > +Example:
+> > > +
+> > > +rng: rng@f000b000 {
+> > > +     compatible = "nuvoton,npcm750-rng";
+> > > +     reg = <0xf000b000 0x8>;
+> > > +};
+> > > --
+> > > 2.18.0
+> > >
+> >
