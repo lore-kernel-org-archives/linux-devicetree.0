@@ -1,68 +1,55 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v2 06/14] dmaengine: ti: Add cppi5 header for UDMA
-Date: Tue, 10 Sep 2019 10:06:58 +0300
-Message-ID: <8486fbb1-9d2c-9230-6205-85d58b93697c@ti.com>
-References: <20190730093450.12664-1-peter.ujfalusi@ti.com>
- <20190730093450.12664-7-peter.ujfalusi@ti.com>
- <20190908142528.GP2672@vkoul-mobl>
- <8699f999-7834-a083-2c7b-3ea909b1e011@ti.com>
+From: Frank Wunderlich <frank-w@public-files.de>
+Subject: [PATCH v7 4/7] rtc: mt6397: add compatible for mt6323
+Date: Tue, 10 Sep 2019 09:04:43 +0200
+Message-ID: <20190910070446.639-5-frank-w@public-files.de>
+References: <20190910070446.639-1-frank-w@public-files.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8699f999-7834-a083-2c7b-3ea909b1e011@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Vinod Koul <vkoul@kernel.org>
-Cc: robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com, j-keerthy@ti.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190910070446.639-1-frank-w@public-files.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-mediatek@lists.infradead.org
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, linux-pm@vger.kernel.org, Frank Wunderlich <frank-w@public-files.de>, Josef Friedl <josef.friedl@speed.at>, linux-kernel@vger.kernel.org, Tianping Fang <tianping.fang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+From: Josef Friedl <josef.friedl@speed.at>
 
+use mt6397 rtc driver also for mt6323 but with different
+base/size see "mfd: mt6323: add mt6323 rtc+pwrc"
 
-On 09/09/2019 13:59, Peter Ujfalusi wrote:
-> 
-> 
-> On 08/09/2019 17.25, Vinod Koul wrote:
->> On 30-07-19, 12:34, Peter Ujfalusi wrote:
->>
->>> +/**
->>> + * Descriptor header, present in all types of descriptors
->>> + */
->>> +struct cppi5_desc_hdr_t {
->>> +	u32 pkt_info0;	/* Packet info word 0 (n/a in Buffer desc) */
->>> +	u32 pkt_info1;	/* Packet info word 1 (n/a in Buffer desc) */
->>> +	u32 pkt_info2;	/* Packet info word 2 Buffer reclamation info */
->>> +	u32 src_dst_tag; /* Packet info word 3 (n/a in Buffer desc) */
->>
->> Can we move these comments to kernel-doc style please
-> 
-> Sure, I'll move all struct and enums.
-> 
->>> +/**
->>> + * cppi5_desc_get_type - get descriptor type
->>> + * @desc_hdr: packet descriptor/TR header
->>> + *
->>> + * Returns descriptor type:
->>> + * CPPI5_INFO0_DESC_TYPE_VAL_HOST
->>> + * CPPI5_INFO0_DESC_TYPE_VAL_MONO
->>> + * CPPI5_INFO0_DESC_TYPE_VAL_TR
->>> + */
->>> +static inline u32 cppi5_desc_get_type(struct cppi5_desc_hdr_t *desc_hdr)
->>> +{
->>> +	WARN_ON(!desc_hdr);
->>
->> why WARN_ON and not return error!
-> 
-> these helpers were intended to be as simple as possible.
-> I can go through with all of the WARN_ONs and replace them with if()
-> pr_warn() and either just return or return with 0.
-> 
-> Would that be acceptable?
-> 
+Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+changes since v6: none
+changes since v5: none
+changes since v4: none
+changes since v3: moved (was part 5)
+changes since v2: splitted this from v2.3 suggested-by Alexandre Belloni
+---
+ drivers/rtc/rtc-mt6397.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-This should never happens in working system unless there is buggy code.
-I think It can be just removed
-
+diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+index 9370b7fc9f81..21cd9cc8b4c7 100644
+--- a/drivers/rtc/rtc-mt6397.c
++++ b/drivers/rtc/rtc-mt6397.c
+@@ -325,6 +325,7 @@ static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
+ 			mt6397_rtc_resume);
+ 
+ static const struct of_device_id mt6397_rtc_of_match[] = {
++	{ .compatible = "mediatek,mt6323-rtc", },
+ 	{ .compatible = "mediatek,mt6397-rtc", },
+ 	{ }
+ };
 -- 
-Best regards,
-grygorii
+2.17.1
