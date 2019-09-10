@@ -1,13 +1,11 @@
 From: Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v7 4/7] rtc: mt6397: add compatible for mt6323
-Date: Tue, 10 Sep 2019 09:04:43 +0200
-Message-ID: <20190910070446.639-5-frank-w@public-files.de>
-References: <20190910070446.639-1-frank-w@public-files.de>
+Subject: [PATCH v7 0/7] implement poweroff for mt6323 / bpi-r2
+Date: Tue, 10 Sep 2019 09:04:39 +0200
+Message-ID: <20190910070446.639-1-frank-w@public-files.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190910070446.639-1-frank-w@public-files.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,35 +19,51 @@ To: linux-mediatek@lists.infradead.org
 Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, linux-pm@vger.kernel.org, Frank Wunderlich <frank-w@public-files.de>, Josef Friedl <josef.friedl@speed.at>, linux-kernel@vger.kernel.org, Tianping Fang <tianping.fang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Josef Friedl <josef.friedl@speed.at>
-
-use mt6397 rtc driver also for mt6323 but with different
-base/size see "mfd: mt6323: add mt6323 rtc+pwrc"
-
-Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
-changes since v6: none
-changes since v5: none
-changes since v4: none
-changes since v3: moved (was part 5)
-changes since v2: splitted this from v2.3 suggested-by Alexandre Belloni
----
- drivers/rtc/rtc-mt6397.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-index 9370b7fc9f81..21cd9cc8b4c7 100644
---- a/drivers/rtc/rtc-mt6397.c
-+++ b/drivers/rtc/rtc-mt6397.c
-@@ -325,6 +325,7 @@ static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
- 			mt6397_rtc_resume);
- 
- static const struct of_device_id mt6397_rtc_of_match[] = {
-+	{ .compatible = "mediatek,mt6323-rtc", },
- 	{ .compatible = "mediatek,mt6397-rtc", },
- 	{ }
- };
--- 
-2.17.1
+bWFpbmxpbmUtZHJpdmVyIGRvZXMgbm90IHN1cHBvcnQgbXQ2MzIzCgp0aGlzIHNlcmllcyBtYWtl
+cyBzb21lIGNsZWFudXAgdG8gbXQ2Mzk3LXJ0Yy1kcml2ZXIsIGFkZHMgbXQ2MzIzIGFuZAppbXBs
+ZW1lbnQgcG93ZXItY29udHJvbGxlciBvbiBpdC4KCnRlc3RlZCBvbiBiYW5hbmFwaS1yMgoKT3Jp
+Z2luYWwgUGF0Y2ggZnJvbSBKb3NlZiBGcmllZGwKCmNoYW5nZXMgc2luY2UgdjY6CgktIHJlYmFz
+ZWQgb24gNS4zLXJjOAoJLSBwb3N0IG9ubHkgNyBQYXRjaGVzIGJlY2F1c2UgNiBhcmUgYWxyZWFk
+eSBhcHBsaWVkIHRvIG5leHQKCS0gdXBkYXRlIGNvcHlyaWdodCBpbiAibW92ZSBzb21lIGNvbW1v
+biBkZWZpbml0aW9ucyBpbnRvIHJ0Yy5oIgpjaGFuZ2VzIHNpbmNlIHY1OgoJLSBzcGxpdHRlZCBw
+YXJ0IDEgdG8gc2VwYXJhdGUgY2hhbmdlcyBhbmQgYWRkaXRpb25zIG5vdCByZWxhdGVkIHRvIHB3
+cmMKCS0gbW92ZSBtZmQvbXQ2Mzk3L2NvcmUuaCBmcm9tIHY0LjggaW4gc2VwYXJhdGUgcGF0Y2gg
+ImFkZCBtdXRleCBpbmNsdWRlIgoJLSBjaGFuZ2VkIHJlY2lwaWVudHMgKG1vdmVkIGZyb20gVG8g
+dG8gQ2MsIHJlbW92ZWQgY29tbWl0dGVycykKY2hhbmdlcyBzaW5jZSB2NDoKCS0gcmVsYXRpdmUg
+cGF0aCBpbiBwYXJ0IDErMgoJLSBkcm9wIGNoYW5nZSBvZiBjb3B5cmlnaHQteWVhciBpbiBwYXJ0
+IDUKY2hhbmdlcyBzaW5jZSB2MzoKCS0gbW92ZWQgU09CIGluIDIvMTAgYW5kIDkvMTAKCS0gbW92
+ZWQgcGFydCA1IHRvIDYgdG8gYmUgbmVhciBkcml2ZXItY2hhbmdlCgktIGNoYW5nZWhpc3Rvcnkg
+b2YgcGF0Y2hlcyBiZWxvdyAtLS0KY2hhbmdlcyBzaW5jZSB2MjoKCS0gU3BsaXR0ZWQgc29tZSBw
+YXJ0cyBhbmQgcmViYXNlZCBvbiA1LjMtcmMyOgoKCXYyLjEgZHQtYmluZGluZ3M6IGFkZCBwb3dl
+cmNvbnRyb2xsZXIg4oCTIHRyeSB0byBtYWtlIGJldHRlciBzdWJqZWN0Cgl2Mi4yIHNlcGFyYXRl
+IHJ0Yy1tdDYzOTcudHh0IChzdWdnZXN0ZWQgYnkgQWxleGFuZHJlIEJlbGxvbmkpCgkgICAgIGFk
+ZCBtaXNzaW5nIGNvbW1pdC1tZXNzYWdlIChzdWdnZXN0ZWQgYnkgTWF0dGhpYXMgQnJ1Z2dlcikK
+CXYyLjMgZml4IGFsbG9jIGFmdGVyIElSUSAoc3VnZ2VzdGVkIGJ5IEFsZXhhbmRyZSBCZWxsb25p
+KQoJICAgICBuZXcgY29tcGF0aWJsZSAoc3BsaXR0aW5nIHN1Z2dlc3RlZCBieSBBbGV4YW5kcmUg
+QmVsbG9uaSkKCSAgICAgbmVlZGVkIGR1ZSB0byBkaWZmZXJlbnQgcnRjLWJhc2Uvc2l6ZSBzZWUg
+IzcKCXYyLjQgc2ltcGxpZmljYXRpb25zIChEZWZpbmUtcmVzLW1hY3JvcykKCSAgICAgYWRkIG10
+NjMyMyBydGMrcHdyYwoJdjIuNSBhZGQgcG93ZXJvZmYtZHJpdmVyIChubyBjaGFuZ2UpCgl2Mi42
+IE1BSU5UQUlORVJTIChubyBjaGFuZ2UpCgl2Mi43IERUUy1DaGFuZ2VzIChubyBjaGFuZ2UpCgpK
+b3NlZiBGcmllZGwgKDcpOgogIGR0LWJpbmRpbmdzOiBydGM6IG1lZGlhdGVrOiBhZGQgbWlzc2lu
+ZyBtdDYzOTcgcnRjCiAgcnRjOiBtdDYzOTc6IG1vdmUgc29tZSBjb21tb24gZGVmaW5pdGlvbnMg
+aW50byBydGMuaAogIHJ0YzogbXQ2Mzk3OiBpbXByb3ZlbWVudHMgb2YgcnRjIGRyaXZlcgogIHJ0
+YzogbXQ2Mzk3OiBhZGQgY29tcGF0aWJsZSBmb3IgbXQ2MzIzCiAgcG93ZXI6IHJlc2V0OiBhZGQg
+ZHJpdmVyIGZvciBtdDYzMjMgcG93ZXJvZmYKICBNQUlOVEFJTkVSUzogYWRkIE1lZGlhdGVrIHNo
+dXRkb3duIGRyaXZlcnMKICBhcm06IGR0czogbXQ2MzIzOiBhZGQga2V5cywgcG93ZXItY29udHJv
+bGxlciwgcnRjIGFuZCBjb2RlYwoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0Yy9ydGMtbXQ2
+Mzk3LnR4dCAgICB8ICAyOSArKysrKwogTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHwgICA3ICsrCiBhcmNoL2FybS9ib290L2R0cy9tdDYzMjMuZHRzaSAgICAg
+ICAgICAgICAgICAgfCAgMjcgKysrKysKIGRyaXZlcnMvcG93ZXIvcmVzZXQvS2NvbmZpZyAgICAg
+ICAgICAgICAgICAgICB8ICAxMCArKwogZHJpdmVycy9wb3dlci9yZXNldC9NYWtlZmlsZSAgICAg
+ICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvcG93ZXIvcmVzZXQvbXQ2MzIzLXBvd2Vyb2Zm
+LmMgICAgICAgICB8ICA5NyArKysrKysrKysrKysrKysrCiBkcml2ZXJzL3J0Yy9ydGMtbXQ2Mzk3
+LmMgICAgICAgICAgICAgICAgICAgICAgfCAxMDcgKysrKy0tLS0tLS0tLS0tLS0tCiBpbmNsdWRl
+L2xpbnV4L21mZC9tdDYzOTcvcnRjLmggICAgICAgICAgICAgICAgfCAgNzEgKysrKysrKysrKysr
+CiA4IGZpbGVzIGNoYW5nZWQsIDI2MyBpbnNlcnRpb25zKCspLCA4NiBkZWxldGlvbnMoLSkKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcnRjL3J0
+Yy1tdDYzOTcudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wb3dlci9yZXNldC9tdDYz
+MjMtcG93ZXJvZmYuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvbWZkL210NjM5
+Ny9ydGMuaAoKLS0gCjIuMTcuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
