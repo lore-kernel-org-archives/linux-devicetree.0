@@ -1,7 +1,7 @@
 From: Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v7 3/7] rtc: mt6397: improvements of rtc driver
-Date: Tue, 10 Sep 2019 09:04:42 +0200
-Message-ID: <20190910070446.639-4-frank-w@public-files.de>
+Subject: [PATCH v7 6/7] MAINTAINERS: add Mediatek shutdown drivers
+Date: Tue, 10 Sep 2019 09:04:45 +0200
+Message-ID: <20190910070446.639-7-frank-w@public-files.de>
 References: <20190910070446.639-1-frank-w@public-files.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,128 +23,38 @@ List-Id: devicetree@vger.kernel.org
 
 From: Josef Friedl <josef.friedl@speed.at>
 
-- use regmap_read_poll_timeout to drop while-loop
-- use devm-api to drop remove-callback
+add Section in MAINTAINERS file for poweroff driver
 
-Suggested-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Josef Friedl <josef.friedl@speed.at>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
 changes since v6: none
 changes since v5: none
 changes since v4: none
-changes since v3: none
-changes since v2:
-- fix allocation after irq-request
-- compatible for mt6323 in separate commit => part 5
+changes since v3: moved SOB
+changes since v2: none (=v2 part 6)
 ---
- drivers/rtc/rtc-mt6397.c | 51 +++++++++++++++-------------------------
- 1 file changed, 19 insertions(+), 32 deletions(-)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-index c08ee5edf865..9370b7fc9f81 100644
---- a/drivers/rtc/rtc-mt6397.c
-+++ b/drivers/rtc/rtc-mt6397.c
-@@ -4,16 +4,19 @@
- * Author: Tianping.Fang <tianping.fang@mediatek.com>
- */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e7a47b5210fd..46d13e845740 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10149,6 +10149,13 @@ S:	Maintained
+ F:	drivers/net/dsa/mt7530.*
+ F:	net/dsa/tag_mtk.c
  
--#include <linux/delay.h>
--#include <linux/init.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/mfd/mt6397/core.h>
- #include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/rtc.h>
- #include <linux/mfd/mt6397/rtc.h>
-+#include <linux/mod_devicetable.h>
- 
- static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
- {
--	unsigned long timeout = jiffies + HZ;
- 	int ret;
- 	u32 data;
- 
-@@ -21,19 +24,13 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
- 	if (ret < 0)
- 		return ret;
- 
--	while (1) {
--		ret = regmap_read(rtc->regmap, rtc->addr_base + RTC_BBPU,
--				  &data);
--		if (ret < 0)
--			break;
--		if (!(data & RTC_BBPU_CBUSY))
--			break;
--		if (time_after(jiffies, timeout)) {
--			ret = -ETIMEDOUT;
--			break;
--		}
--		cpu_relax();
--	}
-+	ret = regmap_read_poll_timeout(rtc->regmap,
-+					rtc->addr_base + RTC_BBPU, data,
-+					!(data & RTC_BBPU_CBUSY),
-+					MTK_RTC_POLL_DELAY_US,
-+					MTK_RTC_POLL_TIMEOUT);
-+	if (ret < 0)
-+		dev_err(rtc->dev, "failed to write WRTGE: %d\n", ret);
- 
- 	return ret;
- }
-@@ -266,19 +263,19 @@ static int mtk_rtc_probe(struct platform_device *pdev)
- 		return rtc->irq;
- 
- 	rtc->regmap = mt6397_chip->regmap;
--	rtc->dev = &pdev->dev;
- 	mutex_init(&rtc->lock);
- 
- 	platform_set_drvdata(pdev, rtc);
- 
--	rtc->rtc_dev = devm_rtc_allocate_device(rtc->dev);
-+	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
- 	if (IS_ERR(rtc->rtc_dev))
- 		return PTR_ERR(rtc->rtc_dev);
- 
--	ret = request_threaded_irq(rtc->irq, NULL,
--				   mtk_rtc_irq_handler_thread,
--				   IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
--				   "mt6397-rtc", rtc);
-+	ret = devm_request_threaded_irq(&pdev->dev, rtc->irq, NULL,
-+					mtk_rtc_irq_handler_thread,
-+					IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
-+					"mt6397-rtc", rtc);
++MEDIATEK BOARD LEVEL SHUTDOWN DRIVERS
++M:	Sean Wang <sean.wang@mediatek.com>
++L:	linux-pm@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/power/reset/mt6323-poweroff.txt
++F:	drivers/power/reset/mt6323-poweroff.c
 +
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
- 			rtc->irq, ret);
-@@ -302,15 +299,6 @@ static int mtk_rtc_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--static int mtk_rtc_remove(struct platform_device *pdev)
--{
--	struct mt6397_rtc *rtc = platform_get_drvdata(pdev);
--
--	free_irq(rtc->irq, rtc);
--
--	return 0;
--}
--
- #ifdef CONFIG_PM_SLEEP
- static int mt6397_rtc_suspend(struct device *dev)
- {
-@@ -349,7 +337,6 @@ static struct platform_driver mtk_rtc_driver = {
- 		.pm = &mt6397_pm_ops,
- 	},
- 	.probe	= mtk_rtc_probe,
--	.remove = mtk_rtc_remove,
- };
- 
- module_platform_driver(mtk_rtc_driver);
+ MEDIATEK JPEG DRIVER
+ M:	Rick Chang <rick.chang@mediatek.com>
+ M:	Bin Liu <bin.liu@mediatek.com>
 -- 
 2.17.1
