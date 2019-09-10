@@ -1,59 +1,73 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 0/4] gpio: API boundary cleanups
-Date: Tue, 10 Sep 2019 10:59:51 +0200
-Message-ID: <CAMuHMdWpDOSpz3Mak7Vd=CY7r_kxPUx3A0CMqC-VY6TXtD9cqg@mail.gmail.com>
-References: <20190906084539.21838-1-geert+renesas@glider.be> <CAMpxmJVrQ92+ULRrzyN52LwEcdPTuK7OZssZjUcRPRSTBQ=fwg@mail.gmail.com>
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: [PATCH v7 2/7] nfc: pn532_uart: Add NXP PN532 to devicetree docs
+Date: Tue, 10 Sep 2019 11:32:53 +0200
+Message-ID: <20190910093256.1920-1-poeschel@lemonage.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMpxmJVrQ92+ULRrzyN52LwEcdPTuK7OZssZjUcRPRSTBQ=fwg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-gpio <linux-gpio@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "GitAuthor: Lars Poeschel" <poeschel@lemonage.de>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bartosz,
+Add a simple binding doc for the pn532.
 
-On Tue, Sep 10, 2019 at 10:51 AM Bartosz Golaszewski
-<bgolaszewski@baylibre.com> wrote:
-> pt., 6 wrz 2019 o 10:45 Geert Uytterhoeven <geert+renesas@glider.be> napisał(a):
-> > This patch series contains various API boundary cleanups for gpiolib:
-> >   - The first two patches make two functions private,
-> >   - The last two patches switch the remaining gpiolib exported functions
-> >     from EXPORT_SYMBOL() to EXPORT_SYMBOL_GPL().
-> >
-> > After this there is only a single GPIO driver function exported with
-> > EXPORT_SYMBOL();
-> >
-> >     drivers/gpio/gpio-htc-egpio.c:EXPORT_SYMBOL(htc_egpio_get_wakeup_irq);
-> >
-> > I believe this symbol was never used upstream, and may be a relic of the
-> > original out-of-tree code the htc-egpio was based on.  I don't know if
-> > there (still) exist out-of-tree users of the symbol.
-> >
-> > Thanks for your comments!
->
-> All looks good to me. Are you fine with this being picked up after the
-> v5.4 merge window?
+Cc: Johan Hovold <johan@kernel.org>
+Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+---
+Changes in v6:
+- Rebased the patch series on v5.3-rc5
+- Picked up Rob's Reviewed-By
 
-Sure, whatever suits you best.
+Changes in v4:
+- Add documentation about reg property in case of i2c
 
-Thanks!
+Changes in v3:
+- seperate binding doc instead of entry in trivial-devices.txt
 
-> > Geert Uytterhoeven (4):
-> >   gpio: of: Make of_get_named_gpiod_flags() private
-> >   gpio: of: Make of_gpio_simple_xlate() private
-> >   gpio: of: Switch to EXPORT_SYMBOL_GPL()
-> >   gpio: devres: Switch to EXPORT_SYMBOL_GPL()
+ .../devicetree/bindings/nfc/pn532.txt         | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nfc/pn532.txt
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/nfc/pn532.txt b/Documentation/devicetree/bindings/nfc/pn532.txt
+new file mode 100644
+index 000000000000..d5aaa588073d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nfc/pn532.txt
+@@ -0,0 +1,33 @@
++NXP PN532 NFC Chip
++
++Required properties:
++- compatible: Should be
++    - "nxp,pn532" Place a node with this inside the devicetree node of the bus
++                  where the NFC chip is connected to.
++                  Currently the kernel has phy bindings for uart and i2c.
++    - "nxp,pn532-i2c" (DEPRECATED) only works for the i2c binding.
++    - "nxp,pn533-i2c" (DEPRECATED) only works for the i2c binding.
++
++Required properties if connected on i2c:
++- reg: for the i2c bus address. This is fixed at 0x48 for the PN532.
++
++Example uart:
++
++uart4: serial@49042000 {
++        compatible = "ti,omap3-uart";
++
++        pn532: nfc {
++                compatible = "nxp,pn532";
++        };
++};
++
++Example i2c:
++
++i2c1: i2c@0 {
++        compatible = "ti,omap3-i2c";
++
++        pn532: nfc {
++                compatible = "nxp,pn532";
++                reg = <0x48>;
++        };
++};
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.23.0
