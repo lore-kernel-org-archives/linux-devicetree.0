@@ -1,36 +1,68 @@
-From: Ashish Kumar <Ashish.Kumar@nxp.com>
-Subject: [PATCH] arm64: dts: ls208x: Remove non-compatible driver device from qspi node
-Date: Tue, 10 Sep 2019 17:50:55 +0530
-Message-ID: <1568118055-9740-5-git-send-email-Ashish.Kumar@nxp.com>
-References: <1568118055-9740-1-git-send-email-Ashish.Kumar@nxp.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v4 0/6] Exynos Adaptive Supply Voltage support
+Date: Tue, 10 Sep 2019 14:36:12 +0200
+Message-ID: <20190910123618.27985-1-s.nawrocki@samsung.com>
+References: <CGME20190910123632eucas1p2cf941da5f74b892288dd5a92ff9fa9fb@eucas1p2.samsung.com>
+Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568118055-9740-1-git-send-email-Ashish.Kumar@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ashish Kumar <Ashish.Kumar@nxp.com>, Kuldeep Singh <kuldeep.singh@nxp.com>
+To: krzk@kernel.org, vireshk@kernel.org
+Cc: robh+dt@kernel.org, kgene@kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Since device properties are different, so remove fsl, ls1021a-qspi.
-ls1021a-qspi is to be used only for Big-endian verion of QSPI controller
+This is fourth iteration of my patch series adding ASV (Adaptive Supply 
+Voltage) support for Exynos SoCs. The previous one can be found at:
+https://lkml.org/lkml/2019/8/13/808
 
-Signed-off-by: Kuldeep Singh <kuldeep.singh@nxp.com>
-Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Major change since v3 is a conversion to use dev_pm_opp_adjust_voltage(),
+rather than removing and adding an OPP again. Hence the series now 
+depends on patch [1].
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index 64101c9..8e42ac9 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -619,7 +619,7 @@
- 
- 		qspi: spi@20c0000 {
- 			status = "disabled";
--			compatible = "fsl,ls2080a-qspi", "fsl,ls1021a-qspi";
-+			compatible = "fsl,ls2080a-qspi";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0x0 0x20c0000 0x0 0x10000>,
+I have included here a patch to address review comments
+"opp: Handle target/min/max voltage in dev_pm_opp_adjust_voltage()",
+which could be squashed with patch [1].
+
+The CHIPID patches are dropped from the series as they have already 
+been merged.
+
+The patch set is based on for-next branch, 
+git://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git
+
+Tested on Odroid XU3, XU3 Lite, XU4.
+
+One of the things on TODO list is support for the Adaptive Body Bias.
+This would require modifications on the cpufreq driver side in order 
+to support multiple voltage regulators as well as changes in the OPP 
+framework to support adding OPPs with multiple voltages.
+
+[1] "[v4, 6/8] PM / OPP: Support adjusting OPP voltages at runtime"
+    https://lore.kernel.org/linux-arm-kernel/1565703113-31479-7-git-send-email-andrew-sh.cheng@mediatek.com
+
+Sylwester Nawrocki (6):
+  opp: Handle target/min/max voltage in dev_pm_opp_adjust_voltage()
+  dt-bindings: samsung: Update the CHIP ID binding documentation
+  soc: samsung: Add Exynos Adaptive Supply Voltage driver
+  ARM: EXYNOS: Enable exynos-asv driver for ARCH_EXYNOS
+  ARM: dts: Add "syscon" compatible string to chipid node
+  ARM: dts: Add samsung,asv-bin property for odroidxu3-lite
+
+ .../bindings/arm/samsung/exynos-chipid.txt    |  10 +-
+ arch/arm/boot/dts/exynos5.dtsi                |   4 +-
+ .../boot/dts/exynos5422-odroidxu3-lite.dts    |   4 +
+ arch/arm/mach-exynos/Kconfig                  |   1 +
+ drivers/opp/core.c                            |  10 +-
+ drivers/soc/samsung/Kconfig                   |  10 +
+ drivers/soc/samsung/Makefile                  |   3 +
+ drivers/soc/samsung/exynos-asv.c              | 179 ++++++
+ drivers/soc/samsung/exynos-asv.h              |  82 +++
+ drivers/soc/samsung/exynos5422-asv.c          | 509 ++++++++++++++++++
+ drivers/soc/samsung/exynos5422-asv.h          |  25 +
+ include/linux/pm_opp.h                        |   3 +-
+ 12 files changed, 833 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/soc/samsung/exynos-asv.c
+ create mode 100644 drivers/soc/samsung/exynos-asv.h
+ create mode 100644 drivers/soc/samsung/exynos5422-asv.c
+ create mode 100644 drivers/soc/samsung/exynos5422-asv.h
+
 -- 
-2.7.4
+2.17.1
