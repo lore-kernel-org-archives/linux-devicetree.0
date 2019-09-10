@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v6 04/12] device property: Move fwnode_get_parent() up
-Date: Tue, 10 Sep 2019 11:46:59 +0300
-Message-ID: <20190910084707.18380-5-sakari.ailus@linux.intel.com>
+Subject: [PATCH v6 03/12] software node: Make argument to to_software_node const
+Date: Tue, 10 Sep 2019 11:46:58 +0300
+Message-ID: <20190910084707.18380-4-sakari.ailus@linux.intel.com>
 References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,58 +12,47 @@ To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
-Move fwnode_get_parent() above fwnode_get_next_parent(), making the order
-the same as in the header file.
+to_software_node() does not need to modify the fwnode_handle it operates
+on; therefore make it const. This allows passing a const fwnode_handle to
+to_software_node().
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
- drivers/base/property.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ drivers/base/swnode.c    | 4 ++--
+ include/linux/property.h | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 81bd01ed40427..3d9dffbe96378 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -556,6 +556,19 @@ int device_add_properties(struct device *dev,
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index a7cb41812cfda..951e7efd47c23 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -71,9 +71,9 @@ software_node_to_swnode(const struct software_node *node)
+ 	return swnode;
  }
- EXPORT_SYMBOL_GPL(device_add_properties);
  
-+/**
-+ * fwnode_get_parent - Return parent firwmare node
-+ * @fwnode: Firmware whose parent is retrieved
-+ *
-+ * Return parent firmware node of the given node if possible or %NULL if no
-+ * parent was available.
-+ */
-+struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
-+{
-+	return fwnode_call_ptr_op(fwnode, get_parent);
-+}
-+EXPORT_SYMBOL_GPL(fwnode_get_parent);
-+
- /**
-  * fwnode_get_next_parent - Iterate to the node's parent
-  * @fwnode: Firmware whose parent is retrieved
-@@ -577,19 +590,6 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
+-const struct software_node *to_software_node(struct fwnode_handle *fwnode)
++const struct software_node *to_software_node(const struct fwnode_handle *fwnode)
+ {
+-	struct swnode *swnode = to_swnode(fwnode);
++	const struct swnode *swnode = to_swnode(fwnode);
+ 
+ 	return swnode ? swnode->node : NULL;
  }
- EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 5a910ad795910..421c76e53708d 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -418,7 +418,8 @@ struct software_node {
+ };
  
--/**
-- * fwnode_get_parent - Return parent firwmare node
-- * @fwnode: Firmware whose parent is retrieved
-- *
-- * Return parent firmware node of the given node if possible or %NULL if no
-- * parent was available.
-- */
--struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode)
--{
--	return fwnode_call_ptr_op(fwnode, get_parent);
--}
--EXPORT_SYMBOL_GPL(fwnode_get_parent);
--
- /**
-  * fwnode_get_next_child_node - Return the next child node handle for a node
-  * @fwnode: Firmware node to find the next child node for.
+ bool is_software_node(const struct fwnode_handle *fwnode);
+-const struct software_node *to_software_node(struct fwnode_handle *fwnode);
++const struct software_node *
++to_software_node(const struct fwnode_handle *fwnode);
+ struct fwnode_handle *software_node_fwnode(const struct software_node *node);
+ 
+ int software_node_register_nodes(const struct software_node *nodes);
 -- 
 2.20.1
