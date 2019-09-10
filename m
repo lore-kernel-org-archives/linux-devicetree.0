@@ -1,157 +1,80 @@
-From: Pragnesh Patel <pragnesh.patel@sifive.com>
-Subject: [PATCH] spi: dt-bindings: Convert spi-sifive binding to json-schema
-Date: Tue, 10 Sep 2019 12:32:51 +0530
-Message-ID: <1568098996-4180-1-git-send-email-pragnesh.patel@sifive.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: palmer@sifive.com, paul.walmsley@sifive.com
-Cc: Pragnesh Patel <pragnesh.patel@sifive.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Frank Wunderlich <frank-w@public-files.de>
+Subject: [PATCH v7 1/7] dt-bindings: rtc: mediatek: add missing mt6397 rtc
+Date: Tue, 10 Sep 2019 09:04:40 +0200
+Message-ID: <20190910070446.639-2-frank-w@public-files.de>
+References: <20190910070446.639-1-frank-w@public-files.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190910070446.639-1-frank-w@public-files.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-mediatek@lists.infradead.org
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, linux-pm@vger.kernel.org, Frank Wunderlich <frank-w@public-files.de>, Josef Friedl <josef.friedl@speed.at>, linux-kernel@vger.kernel.org, Tianping Fang <tianping.fang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Convert the spi-sifive binding to DT schema format.
+From: Josef Friedl <josef.friedl@speed.at>
 
-Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
+add missing devicetree-binding document for mt6397 rtc
+in later patch driver is extended with mt6323 chip
+
+Suggested-By: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Josef Friedl <josef.friedl@speed.at>
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/spi/spi-sifive.txt         | 37 ----------
- .../devicetree/bindings/spi/spi-sifive.yaml        | 86 ++++++++++++++++++++++
- 2 files changed, 86 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.txt
- create mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.yaml
+changes since v6: none
+changes since v5: none
+changes since v4: use relative path
+changes since v3: moved SOB
+changes since v2: splitted rtc-mt6397.txt from first patch
+---
+ .../devicetree/bindings/rtc/rtc-mt6397.txt    | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-sifive.txt b/Documentation/devicetree/bindings/spi/spi-sifive.txt
-deleted file mode 100644
-index 3f5c6e4..0000000
---- a/Documentation/devicetree/bindings/spi/spi-sifive.txt
-+++ /dev/null
-@@ -1,37 +0,0 @@
--SiFive SPI controller Device Tree Bindings
--------------------------------------------
--
--Required properties:
--- compatible		: Should be "sifive,<chip>-spi" and "sifive,spi<version>".
--			  Supported compatible strings are:
--			  "sifive,fu540-c000-spi" for the SiFive SPI v0 as integrated
--			  onto the SiFive FU540 chip, and "sifive,spi0" for the SiFive
--			  SPI v0 IP block with no chip integration tweaks.
--			  Please refer to sifive-blocks-ip-versioning.txt for details
--- reg			: Physical base address and size of SPI registers map
--			  A second (optional) range can indicate memory mapped flash
--- interrupts		: Must contain one entry
--- interrupt-parent	: Must be core interrupt controller
--- clocks		: Must reference the frequency given to the controller
--- #address-cells	: Must be '1', indicating which CS to use
--- #size-cells		: Must be '0'
--
--Optional properties:
--- sifive,fifo-depth		: Depth of hardware queues; defaults to 8
--- sifive,max-bits-per-word	: Maximum bits per word; defaults to 8
--
--SPI RTL that corresponds to the IP block version numbers can be found here:
--https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/spi
--
--Example:
--	spi: spi@10040000 {
--		compatible = "sifive,fu540-c000-spi", "sifive,spi0";
--		reg = <0x0 0x10040000 0x0 0x1000 0x0 0x20000000 0x0 0x10000000>;
--		interrupt-parent = <&plic>;
--		interrupts = <51>;
--		clocks = <&tlclk>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--		sifive,fifo-depth = <8>;
--		sifive,max-bits-per-word = <8>;
--	};
-diff --git a/Documentation/devicetree/bindings/spi/spi-sifive.yaml b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
 new file mode 100644
-index 0000000..368f5d5
+index 000000000000..55a0c8874c03
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
-@@ -0,0 +1,86 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/spi-sifive.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/Documentation/devicetree/bindings/rtc/rtc-mt6397.txt
+@@ -0,0 +1,29 @@
++Device-Tree bindings for MediaTek PMIC based RTC
 +
-+title: SiFive SPI controller
++MediaTek PMIC based RTC is an independent function of MediaTek PMIC that works
++as a type of multi-function device (MFD). The RTC can be configured and set up
++with PMIC wrapper bus which is a common resource shared with the other
++functions found on the same PMIC.
 +
-+maintainers:
-+  - Pragnesh Patel <pragnesh.patel@sifive.com>
-+  - Paul Walmsley  <paul.walmsley@sifive.com>
-+  - Palmer Dabbelt <palmer@sifive.com>
++For MediaTek PMIC MFD bindings, see:
++../mfd/mt6397.txt
 +
-+allOf:
-+  - $ref: "spi-controller.yaml#"
++For MediaTek PMIC wrapper bus bindings, see:
++../soc/mediatek/pwrap.txt
 +
-+properties:
-+  compatible:
-+    items:
-+      - const: sifive,fu540-c000-spi
-+      - const: sifive,spi0
++Required properties:
++- compatible: Should be one of follows
++       "mediatek,mt6323-rtc": for MT6323 PMIC
++       "mediatek,mt6397-rtc": for MT6397 PMIC
 +
-+    description:
-+      Should be "sifive,<chip>-spi" and "sifive,spi<version>".
-+      Supported compatible strings are -
-+      "sifive,fu540-c000-spi" for the SiFive SPI v0 as integrated
-+      onto the SiFive FU540 chip, and "sifive,spi0" for the SiFive
-+      SPI v0 IP block with no chip integration tweaks.
-+      Please refer to sifive-blocks-ip-versioning.txt for details
++Example:
 +
-+      SPI RTL that corresponds to the IP block version numbers can be found here -
-+      https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/spi
++       pmic {
++               compatible = "mediatek,mt6323";
 +
-+  reg:
-+    maxItems: 1
++               ...
 +
-+    description:
-+      Physical base address and size of SPI registers map
-+      A second (optional) range can indicate memory mapped flash
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+    description:
-+      Must reference the frequency given to the controller
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+  sifive,fifo-depth:
-+    description:
-+      Depth of hardware queues; defaults to 8
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+
-+  sifive,max-bits-per-word:
-+    description:
-+      Maximum bits per word; defaults to 8
-+    $ref: "/schemas/types.yaml#/definitions/uint32"
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+examples:
-+  - |
-+    spi: spi@10040000 {
-+      compatible = "sifive,fu540-c000-spi", "sifive,spi0";
-+      reg = <0x0 0x10040000 0x0 0x1000 0x0 0x20000000 0x0 0x10000000>;
-+      interrupt-parent = <&plic>;
-+      interrupts = <51>;
-+      clocks = <&tlclk>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      sifive,fifo-depth = <8>;
-+      sifive,max-bits-per-word = <8>;
-+    };
-+
-+...
++               rtc {
++                       compatible = "mediatek,mt6323-rtc";
++               };
++       };
 -- 
-2.7.4
+2.17.1
