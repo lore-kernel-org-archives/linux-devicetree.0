@@ -1,7 +1,7 @@
 From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH v3 1/5] reserved_mem: Add a devm_memremap_reserved_mem() API
-Date: Tue, 10 Sep 2019 09:08:59 -0700
-Message-ID: <20190910160903.65694-2-swboyd@chromium.org>
+Subject: [PATCH v3 4/5] arm64: Add support for arch_memremap_ro()
+Date: Tue, 10 Sep 2019 09:09:02 -0700
+Message-ID: <20190910160903.65694-5-swboyd@chromium.org>
 References: <20190910160903.65694-1-swboyd@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,12 +9,12 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190910160903.65694-1-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Dan Williams <dan.j.williams@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-We have a few drivers that need to get a reserved memory region, request
-the region, and map the reserved memory with memremap(). Add an API to
-do this all in one function call.
+Pass in PAGE_KERNEL_RO to the underlying IO mapping mechanism to get a
+read-only mapping for the MEMREMAP_RO type of memory mappings that
+memremap() supports.
 
 Cc: Evan Green <evgreen@chromium.org>
 Cc: Rob Herring <robh+dt@kernel.org>
@@ -24,96 +24,23 @@ Cc: Will Deacon <will.deacon@arm.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- drivers/of/of_reserved_mem.c    | 45 +++++++++++++++++++++++++++++++++
- include/linux/of_reserved_mem.h |  6 +++++
- 2 files changed, 51 insertions(+)
+ arch/arm64/include/asm/io.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index 7989703b883c..b3899a2c74c4 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -12,6 +12,7 @@
- #define pr_fmt(fmt)	"OF: reserved mem: " fmt
+diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
+index 7ed92626949d..c623e75d9152 100644
+--- a/arch/arm64/include/asm/io.h
++++ b/arch/arm64/include/asm/io.h
+@@ -172,6 +172,7 @@ extern void __iomem *ioremap_cache(phys_addr_t phys_addr, size_t size);
+ #define ioremap_nocache(addr, size)	__ioremap((addr), (size), __pgprot(PROT_DEVICE_nGnRE))
+ #define ioremap_wc(addr, size)		__ioremap((addr), (size), __pgprot(PROT_NORMAL_NC))
+ #define ioremap_wt(addr, size)		__ioremap((addr), (size), __pgprot(PROT_DEVICE_nGnRE))
++#define arch_memremap_ro(addr, size)	__ioremap((addr), (size), PAGE_KERNEL_RO)
+ #define iounmap				__iounmap
  
- #include <linux/err.h>
-+#include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_fdt.h>
- #include <linux/of_platform.h>
-@@ -410,3 +411,47 @@ struct reserved_mem *of_reserved_mem_lookup(struct device_node *np)
- 	return NULL;
- }
- EXPORT_SYMBOL_GPL(of_reserved_mem_lookup);
-+
-+/**
-+ * devm_memremap_reserved_mem() - acquire reserved_mem from a device node,
-+ *                                request and memremap it
-+ * @dev: device with node pointer of the desired reserved-memory region
-+ * @flags: flags to pass to memremap()
-+ *
-+ * This function allows drivers to acquire a reference to the reserved_mem
-+ * struct based on the device's device_node handle, request it and then
-+ * memremap() it.
-+ *
-+ * Returns: A remapped reserved memory region, or an error pointer on failure.
-+ */
-+void *devm_memremap_reserved_mem(struct device *dev, unsigned long flags)
-+{
-+	void *dest_ptr;
-+	struct reserved_mem *rmem;
-+	struct resource *res;
-+	const char *name;
-+
-+	rmem = of_reserved_mem_lookup(dev->of_node);
-+	if (!rmem) {
-+		dev_err(dev, "failed to acquire memory region\n");
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	name = rmem->name ? : dev_name(dev);
-+
-+	res = devm_request_mem_region(dev, rmem->base, rmem->size, name);
-+	if (!res) {
-+		dev_err(dev, "can't request region for reserved memory\n");
-+		return ERR_PTR(-EBUSY);
-+	}
-+
-+	dest_ptr = devm_memremap(dev, rmem->base, rmem->size, flags);
-+	if (!dest_ptr) {
-+		dev_err(dev, "memremap failed for reserved memory\n");
-+		devm_release_mem_region(dev, rmem->base, rmem->size);
-+		dest_ptr = ERR_PTR(-ENOMEM);
-+	}
-+
-+	return dest_ptr;
-+}
-+EXPORT_SYMBOL_GPL(devm_memremap_reserved_mem);
-diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
-index 60f541912ccf..a36be60ef67c 100644
---- a/include/linux/of_reserved_mem.h
-+++ b/include/linux/of_reserved_mem.h
-@@ -39,6 +39,7 @@ void fdt_init_reserved_mem(void);
- void fdt_reserved_mem_save_node(unsigned long node, const char *uname,
- 			       phys_addr_t base, phys_addr_t size);
- struct reserved_mem *of_reserved_mem_lookup(struct device_node *np);
-+void *devm_memremap_reserved_mem(struct device *dev, unsigned long flags);
- #else
- static inline int of_reserved_mem_device_init_by_idx(struct device *dev,
- 					struct device_node *np, int idx)
-@@ -54,6 +55,11 @@ static inline struct reserved_mem *of_reserved_mem_lookup(struct device_node *np
- {
- 	return NULL;
- }
-+static inline void *devm_memremap_reserved_mem(struct device *dev,
-+					       unsigned long flags)
-+{
-+	return NULL;
-+}
- #endif
- 
- /**
+ /*
 -- 
 Sent by a computer through tubes
