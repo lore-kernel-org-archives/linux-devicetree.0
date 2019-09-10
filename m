@@ -1,58 +1,34 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: RE: [EXT] Re: [v3,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some
- properties
-Date: Tue, 10 Sep 2019 01:41:39 +0000
-Message-ID: <DB7PR04MB4490B81B55B223555181D1808FB60@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190903061853.19793-1-biwen.li@nxp.com>
- <2374870a-a728-b046-9ec6-bd7773411f50@flowbird.group>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: jassisinghbrar@gmail.com
+Subject: [PATCH v2 0/2] Add support for AXI DMA controller on Milbeaut series
+Date: Mon,  9 Sep 2019 20:43:06 -0500
+Message-ID: <20190910014306.5318-1-jassisinghbrar@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2374870a-a728-b046-9ec6-bd7773411f50@flowbird.group>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Martin Fuzzey' <martin.fuzzey@flowbird.group>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Leo Li <leoyang.li@nxp.com>
-Cc: "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Martin Fuzzey <mfuzzey@parkeon.com>
+To: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: vkoul@kernel.org, robh+dt@kernel.org, masami.hiramatsu@linaro.org, orito.takao@socionext.com, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-PiANCj4gT24gMDMvMDkvMjAxOSAwODoxOCwgQml3ZW4gTGkgd3JvdGU6DQo+ID4gZGlmZiAtLWdp
-dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ydGMvcGNmODUzNjMudHh0DQo+
-ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcnRjL3BjZjg1MzYzLnR4dA0K
-PiA+IGluZGV4IDk0YWRjMWNmOTNkOS4uNTg4ZjY4OGIzMGQxIDEwMDY0NA0KPiA+IC0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ydGMvcGNmODUzNjMudHh0DQo+ID4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3J0Yy9wY2Y4NTM2My50eHQNCj4g
-PiBAQCAtOCwxMCArOCwzOSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAgT3B0aW9uYWwg
-cHJvcGVydGllczoNCj4gPiAgIC0gaW50ZXJydXB0czogSVJRIGxpbmUgZm9yIHRoZSBSVEMgKG5v
-dCBpbXBsZW1lbnRlZCkuDQo+ID4NCj4gPiArLSBpbnRlcnJ1cHQtb3V0cHV0LXBpbjogVGhlIGlu
-dGVycnVwdCBvdXRwdXQgcGluIG11c3QgYmUNCj4gPiArICAiSU5UQSIgb3IgIklOVEIiLCBkZWZh
-dWx0IHZhbHVlIGlzICJJTlRBIg0KPiA+ICsNCj4gDQo+IA0KPiBUaGUgaGFyZHdhcmUgaGFzIDIg
-aW50ZXJydXB0IHBpbnMgd2hpY2ggY2FuIGJlIG1hcHBlZCB0byB2YXJpb3VzIGludGVycnVwdA0K
-PiBzb3VyY2VzIChhbGFybTEsIGFsYXJtMiwgcGVyaW9kaWMsIC4uLikNCj4gDQo+IEN1cnJlbnRs
-eSB0aGUgZHJpdmVyIG9ubHkgc3VwcG9ydHMgYWxhcm0xLg0KPiANCj4gSXQgaXMgZXZlbiBwb3Nz
-aWJsZSB0byB1c2UgYm90aCBwaW5zIGZvciB0aGUgc2FtZSBpbnRlcnJ1cHQgKGVnIGlmIElOVEEg
-d2VyZQ0KPiB3aXJlZCB0byB0aGUgU29DLCBJTlRCIHRvIGEgUE1JQyBhbmQgYm90aCB1c2VkIGZv
-ciBhbGFybS4uLikNCj4gDQo+IA0KPiBTbyBtYXliZSBpdCB3b3VsZCBiZSBiZXR0ZXIgdG8gaGF2
-ZQ0KPiANCj4gYWxhcm0xLWludGVycnVwdC1vdXRwdXQtcGluOiBUaGUgaW50ZXJydXB0IG91dHB1
-dCBwaW4gdXNlZCBmb3IgdGhlIGFsYXJtDQo+IGZ1bmN0aW9uLiBNdXN0IGJlICJJTlRBIiwgIklO
-VEIiIG9yICJCT1RIIg0KSSB3aWxsIGZpeCBpdCBpbiB2NC4NCj4gDQo+IFRoZW4sIGlmIGFuZCB3
-aGVuIG90aGVyIHR5cGVzIG9mIGludGVycnVwdHMgYXJlIHN1cHBvcnRlZCBieSB0aGUgZHJpdmVy
-IG5ldw0KPiBwcm9wZXJ0aWVzIGNvdWxkIGJlIGFkZGVkIGZvciB0aGVtLg0KPiANCj4gDQo+IA0K
-PiA+ICstIHF1YXJ0ei1sb2FkLWZlbXRvZmFyYWRzOiBUaGUgaW50ZXJuYWwgY2FwYWNpdG9yIHRv
-IHNlbGVjdCBmb3IgdGhlIHF1YXJ0ejoNCj4gPiArICAgICBQQ0Y4NTI2M19RVUFSVFpDQVBfN3BG
-ICAgICAgICAgIFswXQ0KPiA+ICsgICAgIFBDRjg1MjYzX1FVQVJUWkNBUF82cEYgICAgICAgICAg
-WzFdDQo+ID4gKyAgICAgUENGODUyNjNfUVVBUlRaQ0FQXzEycDVwRiAgICAgICBbMl0gREVGQVVM
-VA0KPiA+ICsNCj4gDQo+IA0KPiBUaGUgc3RhbmRhcmQgRFQgcHJvcGVydHkgInF1YXJ0ei1sb2Fk
-LWZlbXRvZmFyYWRzIiB0YWtlcyB0aGUgcmVhbCBwaHlzaWNhbA0KPiB2YWx1ZSBpbiBmZW10byBG
-YXJhZHMgaWUgdmFsdWVzIHNob3VsZCBiZSA3MDAwLCA2MDAwLCAxMjUwMCB3aXRob3V0DQo+IGRl
-ZmluZXMuDQoNCk9rLCBJIHdpbGwgcmVtb3ZlIHRoZXNlIGRlZmluZXMgaW4gdjQuDQo+IA0KPiAN
-Cj4gPiArLSBueHAscXVhcnR6LWRyaXZlLXN0cmVuZ3RoOiBEcml2ZSBzdHJlbmd0aCBmb3IgdGhl
-IHF1YXJ0ejoNCj4gPiArICAgICBQQ0Y4NTI2M19RVUFSVFpEUklWRV8xMDBrbyAgICAgIFswXSBE
-RUZBVUxUDQo+ID4gKyAgICAgUENGODUyNjNfUVVBUlRaRFJJVkVfNjBrbyAgICAgICBbMV0NCj4g
-PiArICAgICBQQ0Y4NTI2M19RVUFSVFpEUklWRV81MDBrbyAgICAgIFsyXQ0KPiA+ICsNCj4gDQo+
-IA0KPiBOb3Qgc3VyZSBhYm91dCB0aGlzLg0KPiANCj4gV291bGRuJ3QgaXQgYmUgYmV0dGVyIHRv
-IGVpdGhlciB1c2UgYSByZWFsIGltcGVkZW5jZSB2YWx1ZSBpbiBvaG1zIChsaWtlIGxvYWQNCj4g
-cHJvcGVydHkgYWJvdmUsIGV2ZW4gdGhvdWdoIGl0IGlzIGEgdmVuZG9yIHNwZWNpZmljIHZhbHVl
-KSByYXRoZXIgdGhhbiBhDQo+IGRlZmluZSwgb3IgZGVmaW5lcyBmb3IgIkxvdywgTWVkaXVtLCBI
-aWdoIj8NCk9rLCBJIHdpbGwgcmVwbGFjZSBkZWZpbmVzIHdpdGggYSByZWFsIGltcGVkZW5jZSB2
-YWx1ZSBpbiB2NC4NCj4gDQo+IA0KPiBNYXJ0aW4NCj4gDQoNCg==
+From: Jassi Brar <jaswinder.singh@linaro.org>
+
+The following series adds AXI DMA (XDMAC) controller support on Milbeaut series.
+This controller is capable of only Mem<->MEM transfers. Number of channels is
+configurable {2,4,8}
+
+Changes Since v1:
+  # Spelling mistake fix
+
+Jassi Brar (2):
+  dt-bindings: milbeaut-m10v-xdmac: Add Socionext Milbeaut XDMAC
+    bindings
+  dmaengine: milbeaut-xdmac: Add XDMAC driver for Milbeaut platforms
+
+ .../bindings/dma/milbeaut-m10v-xdmac.txt      |  24 +
+ drivers/dma/Kconfig                           |  10 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/milbeaut-xdmac.c                  | 426 ++++++++++++++++++
+ 4 files changed, 461 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-xdmac.txt
+ create mode 100644 drivers/dma/milbeaut-xdmac.c
+
+-- 
+2.17.1
