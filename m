@@ -1,43 +1,36 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v6 01/12] tools lib traceevent: Convert remaining %p[fF]
- users to %p[sS]
-Date: Tue, 10 Sep 2019 10:18:44 -0700
-Message-ID: <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
-References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
-         <20190910084707.18380-2-sakari.ailus@linux.intel.com>
-         <20190910071837.2e9110f8@oasis.local.home>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [V2, 1/2] media: dt-bindings: media: i2c: Add bindings for ov8856
+Date: Tue, 10 Sep 2019 20:37:43 +0300
+Message-ID: <20190910173743.GI2680@smile.fi.intel.com>
+References: <20190910130446.26413-1-dongchun.zhu@mediatek.com>
+ <20190910130446.26413-2-dongchun.zhu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190910071837.2e9110f8@oasis.local.home>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steven Rostedt <rostedt@goodmis.org>, Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190910130446.26413-2-dongchun.zhu@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dongchun.zhu@mediatek.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, drinkcat@chromium.org, srv_heupstream@mediatek.com, shengnan.wang@mediatek.com, tfiga@chromium.org, louis.kuo@mediatek.com, sj.huang@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, sakari.ailus@linux.intel.com, matthias.bgg@gmail.com, bingbu.cao@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-09-10 at 07:18 -0400, Steven Rostedt wrote:
-> On Tue, 10 Sep 2019 11:46:56 +0300
-> Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+On Tue, Sep 10, 2019 at 09:04:45PM +0800, dongchun.zhu@mediatek.com wrote:
+> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 > 
-> > There are no in-kernel %p[fF] users left. Convert the traceevent tool,
-> > too, to align with the kernel.
-[]
-> > diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-[]
-> > @@ -4335,8 +4335,6 @@ static struct tep_print_arg *make_bprint_args(char *fmt, void *data, int size, s
-> >  					switch (*ptr) {
-> >  					case 's':
-> >  					case 'S':
-> > -					case 'f':
-> > -					case 'F':
-> 
-> This file is used to parse output from older kernels, so remove this hunk.
-> 
-> It's not just for the lastest kernel. We must maintain backward
-> compatibility here too. If there use to be a usage of this, then we
-> must keep it until the kernels are no longer used (perhaps 7 years?)
+> This patch adds device tree bindings documentation for the ov8856 CMOS
+> image sensor.
 
-That argues for not using "%pfw" at all for some number of years.
+New bindings in YAML, please.
 
-Perhaps the '%pfw' should be '%pnfw' for 'name' and 'fwnode'
+-- 
+With Best Regards,
+Andy Shevchenko
