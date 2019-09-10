@@ -1,7 +1,7 @@
 From: Robert Beckett <bob.beckett@collabora.com>
-Subject: [PATCH 5/7] dt-bindings: mv88e6xxx: add ability to set queue scheduling
-Date: Tue, 10 Sep 2019 16:41:51 +0100
-Message-ID: <20190910154238.9155-6-bob.beckett@collabora.com>
+Subject: [PATCH 7/7] dt-bindings: mv88e6xxx: add egress rate limiting
+Date: Tue, 10 Sep 2019 16:41:53 +0100
+Message-ID: <20190910154238.9155-8-bob.beckett@collabora.com>
 References: <20190910154238.9155-1-bob.beckett@collabora.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20190910154238.9155-1-bob.beckett@collabora.com>
@@ -10,61 +10,63 @@ To: netdev@vger.kernel.org
 Cc: Robert Beckett <bob.beckett@collabora.com>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document port queue scheduling settings.
-Add definitions for specific valid values.
+Document port egress rate limiting settings.
+Add defines for specifying egress rate limiting mode.
 
 Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
 ---
- .../devicetree/bindings/net/dsa/marvell.txt     | 12 ++++++++++++
- include/dt-bindings/net/dsa-mv88e6xxx.h         | 17 +++++++++++++++++
- 2 files changed, 29 insertions(+)
- create mode 100644 include/dt-bindings/net/dsa-mv88e6xxx.h
+ .../devicetree/bindings/net/dsa/marvell.txt   | 22 +++++++++++++++++++
+ include/dt-bindings/net/dsa-mv88e6xxx.h       |  5 +++++
+ 2 files changed, 27 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/net/dsa/marvell.txt b/Documentation/devicetree/bindings/net/dsa/marvell.txt
-index e097c3c52eac..7de90929c3c9 100644
+index 7de90929c3c9..d33c1958f420 100644
 --- a/Documentation/devicetree/bindings/net/dsa/marvell.txt
 +++ b/Documentation/devicetree/bindings/net/dsa/marvell.txt
-@@ -50,6 +50,18 @@ Optional properties:
- Optional properties for ports:
- - defqpri=<n>		: Enforced default queue priority for the given port.
- 			  Valid range is 0..3
-+- schedule=<n>		: Set ports scheduling mode. Valid values are:
-+			  MV88E6XXX_PORT_SCHED_ROUND_ROBIN - All output queues
-+			  use a weighter round robin scheme.
-+			  MV88E6XXX_PORT_SCHED_STRICT_3 - Output queue 3 uses
-+			  a strict scheme, where any packets in queue 3 will be
-+			  egressed first, followed by weighted round robin for
-+			  the other ports.
-+			  MV88E6XXX_PORT_SCHED_STRICT_3_2 - Output queue's 2
-+			  and 3 use strict, other use weighted round robin.
-+			  MV88E6XXX_PORT_SCHED_STRICT_ALL - All queues use
-+			  strict priority, where queues drain in descending
-+			  queue number order.
+@@ -62,6 +62,28 @@ Optional properties for ports:
+ 			  MV88E6XXX_PORT_SCHED_STRICT_ALL - All queues use
+ 			  strict priority, where queues drain in descending
+ 			  queue number order.
++- egress-limit-mode=<n>	: Set port egress rate limiting mode. Valid values are:
++			  MV88E6XXX_PORT_EGRESS_COUNT_MODE_FRAMES - Count layer
++			  2 frames (assumed to be 64kb).
++			  MV88E6XXX_PORT_EGRESS_COUNT_MODE_L1 - Count all layer
++			  1 bits
++			  MV88E6XXX_PORT_EGRESS_COUNT_MODE_L2 - Count all layer
++			  2 bits
++			  MV88E6XXX_PORT_EGRESS_COUNT_MODE_L3 - Count all layer
++			  3 bits
++			  Must also specify egress-limit-count.
++- egress-limit-count=<n>: Set port egress rate limiting count. If
++			  egress-limit-mode is FRAMES, this specifies the
++			  maximum number of ethernet frames to allow to egress
++			  from this port per second, otherwise it is number of
++			  bits as counted based on the mode allowed to egress
++			  from this port per second.
++			  The HW has limitations which the driver adheres to:
++			  between 64 Kbps to 1 Mbps in 16 Kbps increments
++			  between 1 Mbps to 100 Mbps in 1Mbps increments
++			  between 100 Mbps to 1 Gbps in 10 Mbps increments.
++			  Other values will be rounded down the previous
++			  increment.
  
  Example:
  
 diff --git a/include/dt-bindings/net/dsa-mv88e6xxx.h b/include/dt-bindings/net/dsa-mv88e6xxx.h
-new file mode 100644
-index 000000000000..3f62003841ce
---- /dev/null
+index 3f62003841ce..33ecd94f5e22 100644
+--- a/include/dt-bindings/net/dsa-mv88e6xxx.h
 +++ b/include/dt-bindings/net/dsa-mv88e6xxx.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Device Tree constants for Marvell 88E6xxx Switch Port Registers
-+ *
-+ * Copyright (c) 2019, Collabora Ltd.
-+ * Copyright (c) 2019, General Electric Company
-+ */
+@@ -9,6 +9,11 @@
+ #ifndef _DT_BINDINGS_MV88E6XXX_H
+ #define _DT_BINDINGS_MV88E6XXX_H
+ 
++#define MV88E6XXX_PORT_EGRESS_COUNT_MODE_FRAMES	0
++#define MV88E6XXX_PORT_EGRESS_COUNT_MODE_L1	1
++#define MV88E6XXX_PORT_EGRESS_COUNT_MODE_L2	2
++#define MV88E6XXX_PORT_EGRESS_COUNT_MODE_L3	3
 +
-+#ifndef _DT_BINDINGS_MV88E6XXX_H
-+#define _DT_BINDINGS_MV88E6XXX_H
-+
-+#define MV88E6XXX_PORT_SCHED_ROUND_ROBIN	0
-+#define MV88E6XXX_PORT_SCHED_STRICT_3		1
-+#define MV88E6XXX_PORT_SCHED_STRICT_3_2		2
-+#define MV88E6XXX_PORT_SCHED_STRICT_ALL		3
-+
-+#endif /* _DT_BINDINGS_MV88E6XXX_H */
+ #define MV88E6XXX_PORT_SCHED_ROUND_ROBIN	0
+ #define MV88E6XXX_PORT_SCHED_STRICT_3		1
+ #define MV88E6XXX_PORT_SCHED_STRICT_3_2		2
 -- 
 2.18.0
