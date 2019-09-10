@@ -1,172 +1,91 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [Patch 00/13] media: am437x-vpfe: overdue maintenance
-Date: Tue, 10 Sep 2019 11:20:48 -0500
-Message-ID: <20190910162048.wrxy7tjlmf3k6axm@ti.com>
-References: <20190909162743.30114-1-bparrot@ti.com>
- <5b73285c-5d05-1799-06fc-f4ab84cb9a1d@xs4all.nl>
+From: Adam Ford <aford173@gmail.com>
+Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
+Date: Tue, 10 Sep 2019 11:21:34 -0500
+Message-ID: <CAHCN7xLaGQMM67VC-2_G8XC7UuG4c+TbbYb4z=ibJwZsQF4YVw@mail.gmail.com>
+References: <20190828150037.2640-1-aford173@gmail.com>
+ <20190905230443.GA52127@atomide.com>
+ <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
+ <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
+ <20190909134033.s26eiurpat3iekse@pali> <20190909163543.GQ52127@atomide.com>
+ <CAHCN7x+t-OVRE7pVM4V87_YMWpgO+_Vashfn1s5msoqC5eiwTg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5b73285c-5d05-1799-06fc-f4ab84cb9a1d@xs4all.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAHCN7x+t-OVRE7pVM4V87_YMWpgO+_Vashfn1s5msoqC5eiwTg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hans Verkuil <hverkuil@xs4all.nl> wrote on Tue [2019-Sep-10 12:42:51 +0200]:
-> Hi Benoit,
-> 
-> On 9/9/19 6:27 PM, Benoit Parrot wrote:
-> > This patch series is a collection of patches we have been carrying for a
-> > while.
-> > 
-> > A few patches do fix actual bug and v4l2-compliance errors/warnings.
-> > Other are drivers re-work to simplify/clarify the code for easier
-> > maintenance.
-> 
-> Can you post the output of the latest version of v4l2-compliance? Use
-> the '-s' option so streaming is tested as well.
-> 
-> Thanks!
-> 
-> 	Hans
-
-As already discussed, I'll paste the result here and I'll make sure to
-include it in the next revision.
-
-./v4l2-compliance_5b168dc84739 -d 0 -s   
-v4l2-compliance SHA: 5b168dc8473911227890526bad26553d9e8ff81b, 32 bits
-
-Compliance test for vpfe device /dev/video0:
-
-Driver Info:
-	Driver name      : vpfe
-	Card type        : TI AM437x VPFE
-	Bus info         : platform:vpfe 48326000.vpfe
-	Driver v ersion   : 5.3.0
-	Capabilities     : 0x85200001
-		Video Capture
-		Read/Write
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x05200001
-		Video Capture
-		Read/Write
-		Streaming
-		Extended Pix Format
-
-Required ioctls:
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second /dev/video0 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 1 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls (Input 0):
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-	test VIDIOC_QUERYCTRL: OK
-	test VIDIOC_G/S_CTRL: OK
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 3 Private Controls: 0
-
-Format ioctls (Input 0):
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-		fail: v4l2-test-formats.cpp(1419): node->frmsizes_count[pixfmt] > 1
-	test Cropping: FAIL
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls (Input 0):
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls (Input 0):
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK (Not Supported)
-
-Test input 0:
-
-Streaming ioctls:
-	test read/write: OK
-	test blocking wait: OK
-	test MMAP (no poll): OK                           
-	test MMAP (select): OK                            
-	test MMAP (epoll): OK                             
-	test USERPTR (no poll): OK (Not Supported)
-	test USERPTR (select): OK (Not Supported)
-	test DMABUF: Cannot test, specify --expbuf-device
-
-Total for vpfe device /dev/video0: 51, Succeeded: 50, Failed: 1, Warnings: 0
-
-Benoit
-
-> 
-> > 
-> > We also include the SPDX Licensing update which seemed to have been
-> > missed by the global script thus far.
-> > 
-> > Benoit Parrot (12):
-> >   media: am437x-vpfe: Fix missing first line
-> >   media: am437x-vpfe: Rework ISR routine for clarity
-> >   media: am437x-vpfe: Wait for end of frame before tear-down
-> >   media: am437x-vpfe: Streamlined vb2 buffer cleanup
-> >   media: am437x-vpfe: Setting STD to current value is not an error
-> >   media: am437x-vpfe: Use a per instance format array instead of a
-> >     static one
-> >   media: am437x-vpfe: Maintain a reference to the current vpfe_fmt
-> >   media: am437x-vpfe: fix function trace debug log
-> >   media: am437x-vpfe: Remove print_fourcc helper
-> >   media: am437x-vpfe: TRY_FMT ioctl is not really trying anything
-> >   media: am437x-vpfe: Remove per bus width static data
-> >   media: am437x-vpfe: Switch to SPDX Licensing
-> > 
-> > Dave Gerlach (1):
-> >   media: am437x-vpfe: Fix suspend path to always handle pinctrl config
-> > 
-> >  drivers/media/platform/am437x/am437x-vpfe.c   | 906 ++++++++----------
-> >  drivers/media/platform/am437x/am437x-vpfe.h   |  44 +-
-> >  .../media/platform/am437x/am437x-vpfe_regs.h  |  10 +-
-> >  3 files changed, 438 insertions(+), 522 deletions(-)
-> > 
-> 
+T24gVHVlLCBTZXAgMTAsIDIwMTkgYXQgMTA6NDggQU0gQWRhbSBGb3JkIDxhZm9yZDE3M0BnbWFp
+bC5jb20+IHdyb3RlOgo+Cj4gT24gTW9uLCBTZXAgOSwgMjAxOSBhdCAxMTozNSBBTSBUb255IExp
+bmRncmVuIDx0b255QGF0b21pZGUuY29tPiB3cm90ZToKPiA+Cj4gPiAqIFBhbGkgUm9ow6FyIDxw
+YWxpLnJvaGFyQGdtYWlsLmNvbT4gWzE5MDkwOSAxMzo0MV06Cj4gPiA+IE9uIE1vbmRheSAwOSBT
+ZXB0ZW1iZXIgMjAxOSAwODozNzowOSBBZGFtIEZvcmQgd3JvdGU6Cj4gPiA+ID4gSSBhcHBsaWVk
+IHRoaXMgb24gNS4zIGFuZCBpdCBpcyB3b3JraW5nLiAgSSBhc3N1bWUgdGhlIHNhbWUgaXMgdHJ1
+ZSBpbiBmb3ItbmV4dC4KPiA+Cj4gPiBIbW0gSSBub3RpY2VkIEkgc3RvcHBlZCBnZXR0aW5nIFJO
+RyBkYXRhIGFmdGVyIHNldmVyYWwgcm1tb2QgbW9kcHJvYmUKPiA+IGN5Y2xlcywgb3Igc2V2ZXJh
+bCBoZCAvZGV2L3JhbmRvbSByZWFkcy4gQW55Ym9keSBlbHNlIHNlZWluZyB0aGF0Pwo+ID4KPiA+
+ID4gPiBEbyB5b3Ugd2FudCB0byBzdWJtaXQgYSBmb3JtYWwgcGF0Y2g/ICBJICBjYW4gbWFyayBp
+dCBhcyAndGVzdGVkLWJ5Jwo+ID4gPiA+IFRoaXMgcmVhbGx5IGhlbHBzIHNwZWVkIHVwIHRoZSBz
+dGFydHVwIHNlcXVlbmNlIG9uIGJvYXJkcyB3aXRoIHNzaGQKPiA+ID4gPiBiZWNhdXNlIGl0IGRl
+bGF5cyBmb3IgbmVhcmx5IDgwIHNlY29uZHMgd2FpdGluZyBmb3IgZW50cm9weSB3aXRob3V0Cj4g
+PiA+ID4gdGhlIGh3cm5nLgo+ID4gPgo+ID4gPiBIaSEgV2hlbiBhcHBseWluZyBhIHBhdGNoLCBj
+b3VsZCB5b3UgcGxlYXNlIGRpc2FibGUgdGhpcyBybmcgZm9yIG45MDA/Cj4gPiA+Cj4gPiA+IElu
+IG9tYXAzLW45MDAuZHRzIGZvciBybmcgc2hvdWxkIGJlIHN0YXR1cyA9ICJkaXNhYmxlZCIgKGFz
+IFRvbnkgYWxyZWFkeQo+ID4gPiB3cm90ZSksIHNpbWlsYXJseSBsaWtlIGZvciBhZXMuCj4gPgo+
+ID4gWWVhaCBJJ2xsIHBvc3QgYSBwcm9wZXIgcGF0Y2ggYWZ0ZXIgLXJjMS4KPgo+IEZZSSwKPgo+
+IEJ5IHB1dHRpbmcgeW91ciBub2RlIGludG8gb21hcDM0eHguZHRzaSBhbmQgb21hcDM2eHguZHRz
+aSBhbG9uZyB3aXRoCj4gdGhlIGZvbGxvd2luZywgSSBjYW4gZ2V0IHRoZSBSTkcgdG8gd29yayBv
+biBhbiBPTUFQMzUzMCBhbmQgYSBETTM3MzAuCj4KPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9i
+b290L2R0cy9vbWFwMzR4eC1vbWFwMzZ4eC1jbG9ja3MuZHRzaQo+IGIvYXJjaC9hcm0vYm9vdC9k
+dHMvb21hcDM0eHgtb21hcDM2eHgtY2xvY2tzLmR0c2kKPiBpbmRleCA1ZTlkMWFmY2Q0MjIuLjcz
+ZjM1MWU2ZDEzMiAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9vbWFwMzR4eC1vbWFw
+MzZ4eC1jbG9ja3MuZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzNHh4LW9tYXAz
+Nnh4LWNsb2Nrcy5kdHNpCj4gQEAgLTI1OSw3ICsyNTksNyBAQAo+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICA8JmkyYzFfaWNrPiwgPCZ1YXJ0Ml9pY2s+LCA8JnVhcnQxX2ljaz4sIDwmZ3B0MTFf
+aWNrPiwKPiAgICAgICAgICAgICAgICAgICAgICAgICAgPCZncHQxMF9pY2s+LCA8Jm1jYnNwNV9p
+Y2s+LCA8Jm1jYnNwMV9pY2s+LAo+ICAgICAgICAgICAgICAgICAgICAgICAgICA8Jm9tYXBjdHJs
+X2ljaz4sIDwmYWVzMl9pY2s+LCA8JnNoYTEyX2ljaz4sIDwmaWNyX2ljaz4sCj4gLSAgICAgICAg
+ICAgICAgICAgICAgICAgIDwmZGVzMl9pY2s+LCA8Jm1zcHJvX2ljaz4sIDwmbWFpbGJveGVzX2lj
+az4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgIDwmZGVzMl9pY2s+LCA8Jm1zcHJvX2ljaz4s
+IDwmbWFpbGJveGVzX2ljaz4sCj4gPCZybmdfaWNrPiwKPiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgPCZtc3Byb19mY2s+Owo+ICAgICAgICAgfTsKPiAgfTsKPgo+IEkgdHJpZWQgZG9pbmcgdGhl
+IHNhbWUgZm9yIGFtMzUxNywgYnV0IGl0IGRvZXNuJ3QgYXBwZWFyIHRvIHdvcmsuICBJbgo+IGZh
+Y3QsIHRoZSBib2FyZCBoYW5ncyBhdCBib290IHdpdGggbm8gc3BsYXQsIHNvIEkgYXNzdW1lIHRo
+YXQgc29tZQo+IGNsb2NrIGlzbid0IHJ1bm5pbmcgYW5kIGNhdXNpbmcgYSBoYW5nLiAgRmlndXJl
+IDQtNTAgaW4gdGhlIEFNMzUxNyBUUk0KPiBzaG93cyB0aGUgc2VjdXJpdHlfbDRfaWNsazIsIHNv
+IEkgd29uZGVyIGlmIHRoZSBIVyBtb2RzIGZvciBBRVMsIFNIQSwKPiBldGMgYXJlIGRvaW5nIHNv
+bWV0aGluZyB0byBlbmFibGUgdGhpcyBjbG9jay4gIFRob3NlIEhXbW9kcyBhcmUKPiBkaXNhYmxl
+ZCBvbiBBTTM1MTcuICBJIHRyaWVkIHR1cm5pbmcgb24gdGhlIGh3bW9kcyBmb3IgdGhlbSBiZWZv
+cmUKPiB3aXRob3V0IHN1Y2Nlc3MsIGJ1dCBJJ2xsIHRyeSBpdCBhZ2Fpbi4KCkFjY29yZGluZyB0
+byBhIG5vdGUgaW4gb21hcF9od21vZF8zeHh4X2RhdGEuYywKCi8qCiAqIEFwcGFyZW50bHkgdGhl
+IFNIQS9NRDUgYW5kIEFFUyBhY2NlbGVyYXRvciBJUCBibG9ja3MgYXJlCiAqIG9ubHkgcHJlc2Vu
+dCBvbiBzb21lIEFNMzV4eCBjaGlwcywgYW5kIG5vIG9uZSBrbm93cyB3aGljaAogKiBvbmVzLiAg
+U2VlCiAqIGh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5lbC9tc2cyMTU0NjYu
+aHRtbCBTbwogKiBpZiB5b3UgbmVlZCB0aGVzZSBJUCBibG9ja3Mgb24gYW4gQU0zNXh4LCB0cnkg
+dW5jb21tZW50aW5nCiAqIHRoZSBmb2xsb3dpbmcgbGluZXMuCiAqLwoKSSBkZWNpZGVkIHRvIHVu
+Y29tbWVudCB0aGUgaHdtb2QgZW50cmllcywgYW5kIEkgZ290IHRoZSBmb2xsb3dpbmc6CgpbICAg
+IDAuMjYzMjIyXSBvbWFwX2h3bW9kOiBzaGFtOiBfd2FpdF90YXJnZXRfcmVhZHkgZmFpbGVkOiAt
+MTYKWyAgICAwLjI2MzI0OF0gb21hcF9od21vZDogc2hhbTogY2Fubm90IGJlIGVuYWJsZWQgZm9y
+IHJlc2V0ICgzKQpbICAgIDAuMjY1ODM3XSBvbWFwX2h3bW9kOiBhZXM6IF93YWl0X3RhcmdldF9y
+ZWFkeSBmYWlsZWQ6IC0xNgpbICAgIDAuMjY1ODUxXSBvbWFwX2h3bW9kOiBhZXM6IGNhbm5vdCBi
+ZSBlbmFibGVkIGZvciByZXNldCAoMykKWyAgICA2LjIwODg2Nl0gb21hcF9od21vZDogc2hhbTog
+X3dhaXRfdGFyZ2V0X3JlYWR5IGZhaWxlZDogLTE2ClsgICAgNi4yODc3MzJdIG9tYXBfaHdtb2Q6
+IGFlczogX3dhaXRfdGFyZ2V0X3JlYWR5IGZhaWxlZDogLTE2CgpCYXNlZCBvbiB0aGlzLCBJIHdv
+bmRlciBpZiB0aGUgc2hhbSBhbmQgYWVzIG1vZHVsZXMgYXJlIG5vdCBwcmVzZW50LgpJZiB0aGlz
+IGlzIHRoZSBjYXNlLCBpdCBtaWdodCBleHBsYWluIHdoeSBJIGNhbm5vdCB1c2UgdGhlIHJuZyBl
+aXRoZXIuCgphZGFtCj4KPiBhZGFtCj4gPgo+ID4gUmVnYXJkcywKPiA+Cj4gPiBUb255CgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
+bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
+Cg==
