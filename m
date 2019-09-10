@@ -1,292 +1,207 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [V1,
- 2/2] media: i2c: Add more sensor mode for ov8856 camera sensor
-Date: Tue, 10 Sep 2019 22:23:39 +0900
-Message-ID: <CAAFQd5BUmTpVoZdZ1pLvD5fi4V0nLNokv+0GmbjZvjFQiVUSag@mail.gmail.com>
-References: <20190808092215.5608-1-dongchun.zhu@mediatek.com>
- <20190808092215.5608-3-dongchun.zhu@mediatek.com>
- <20190823100126.GB33937@chromium.org>
- <1568021243.21623.250.camel@mhfsdcap03>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH 0/7] add support for clocksource/clockevent DT selection
+Date: Tue, 10 Sep 2019 16:47:09 +0300
+Message-ID: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1568021243.21623.250.camel@mhfsdcap03>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dongchun Zhu <dongchun.zhu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, srv_heupstream <srv_heupstream@mediatek.com>, shengnan.wang@mediatek.com, Louis Kuo <louis.kuo@mediatek.com>, Sj Huang <sj.huang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Cao Bing Bu <bingbu.cao@intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>,
- Joerg Roedel <joro@8bytes.org>, " <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, nsekhar@ti.com, bgolaszewski@baylibre.com, monstr@monstr.eu, john@phrozen.org, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, lftan@altera.com, tglx@linutronix.de, vgupta@synopsys.com, marc.zyngier@arm.com, patrice.chotard@st.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, eric@anholt.net, wahrenst@gmx.net, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org, shc_work@mail.ru, kgene@kernel.org, krzk@kernel.org, ysato@users.sourceforge.jp, liviu.dudau@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org, linux-snps-arc@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, linux-rpi-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, uclinux-h8-devel@lists.sourceforge.jp, linux-amlogic@lists.infradead.org, openbmc@lists.ozlabs.org, linux-oxnas@groups.io, linux-arm-msm@vger.kernel.org, linux-unisoc@lists.infradead.org, linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org, Claudiu Beznea <claudiu.beznea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dongchun,
+Hi,
 
-On Mon, Sep 9, 2019 at 6:27 PM Dongchun Zhu <dongchun.zhu@mediatek.com> wrote:
->
-> Hi Tomasz,
->
-> On Fri, 2019-08-23 at 19:01 +0900, Tomasz Figa wrote:
-> > Hi Dongchun,
-> >
-> > On Thu, Aug 08, 2019 at 05:22:15PM +0800, dongchun.zhu@mediatek.com wrote:
-[snip]
-> > > +
-> > >  /* vertical-timings from sensor */
-> > >  #define OV8856_REG_VTS                     0x380e
-> > >  #define OV8856_VTS_MAX                     0x7fff
-> > > @@ -64,6 +80,14 @@
-> > >
-> > >  #define to_ov8856(_sd)                     container_of(_sd, struct ov8856, sd)
-> > >
-> > > +static const char * const ov8856_supply_names[] = {
-> > > +   "dovdd",        /* Digital I/O power */
-> > > +   "avdd",         /* Analog power */
-> > > +   "dvdd",         /* Digital core power */
-> > > +};
-> > > +
-> > > +#define OV8856_NUM_SUPPLIES ARRAY_SIZE(ov8856_supply_names)
-> > > +
-> > >  enum {
-> > >     OV8856_LINK_FREQ_720MBPS,
-> > >     OV8856_LINK_FREQ_360MBPS,
-> > > @@ -316,6 +340,208 @@ static const struct ov8856_reg mode_3280x2464_regs[] = {
-> > >     {0x5e00, 0x00}
-> > >  };
-> > >
-> > > +static const struct ov8856_reg mode_3264x2448_regs[] = {
-[snip]
-> > > +};
-> > > +
-> >
-> > It would be better if we could find the differences between the two arrays
-> > and handle them incrementally.
-> >
->
-> This approach is not recommended.
->
+This series adds support to permit the selection of clocksource/clockevent
+via DT.
 
-Not recommended by whom? :) I myself recommend that approach.
+In [1] I proposed a solution other than the one in this series, with parsing DT
+bindings and at probe time and passing it to timer specific probe function.
+Looking forward though the clocksource/clockevent drivers implementation and
+taking into account the response at [2] I sticked the implementation to
+timer-of specific library.
 
-I'm sorry, but I'm going to NACK this patch (including the
-chromeos-4.19 tree), unless there is a very good technical reason not
-to do it the way I'm suggesting. The other drivers do it that way and
-I see no reason why this one should be an exception.
+The implementation in this series is using timer-of specific library to parse
+the DT bindings related to timers functions: clocksource or clockevent.
 
-> For these two arrays, sensor input clock frequencies (19.2MHz, 24MHz)
-> are different, corresponding to different PLL register setting.
->
-> Besides, there are also some differences in image resolution and
-> hts/vts, including 0x3614 register that reflecting sensor revision.
->
+With this implementation a timer's driver registers for probing an array of
+objects of type struct timer_of. In flags member of struct timer_of object it
+has to be passed the following new flags (related to how the driver will behave)
+as follows:
+- TIMER_OF_TYPE_CS: timer could work only as clocksource at a time
+- TIMER_OF_TYPE_CE: timer could work only as clockevent at a time
+- TIMER_OF_TYPE_CE_AND_CE: timer could work at a time as both, clocksource and
+clockevent.
 
-What would be the reason preventing us from handling that in driver code?
+The timer registration macro (for probing) now gets a new argument which should
+be an array of struct timer_of objects:
 
-Note that I do _not_ mean just taking addresses and values that are
-different and putting them to a separate array. What I'm asking for is
-to handle the differences in a programmatic way - with dedicated code
-in the driver setting appropriate registers.
+TIMER_OF_DECLARE(name, compat, handler, to)
+CLOCKSOURCE_OF_DECLARE(name, compat, handler, to)
 
-[snip]
+In case driver could work to feed only the clocksource subsystem or only the
+clockevent subsystem the struct timer_of array passed to TIMER_OF_DECLARE()/
+CLOCKSOURCE_OF_DECLARE() should contain 2 entries: one to be filled if probed
+timer works as clocksource device, one to be filled if probed timer works as
+clockevent device.
 
-> > > +           fmt->code = MEDIA_BUS_FMT_SBGGR10_1X10;
-> > > +   else
-> > > +           fmt->code = MEDIA_BUS_FMT_SGRBG10_1X10;
-> > > +
-> > >     fmt->field = V4L2_FIELD_NONE;
-> > >  }
-> > >
-> > > @@ -850,6 +1333,17 @@ static int ov8856_start_streaming(struct ov8856 *ov8856)
-> > >             return ret;
-> > >     }
-> > >
-> > > +   /* update R3614 for 1B module */
-> >
-> > What's R3614?
-> >
->
-> R3614 is the register 0x3614, which reflects the sensor revision.
-> For instance, it would be 0x20 for 1B module, while 0x60 for 2A module.
->
+For such a case, the minimal format of struct timer_of array is as follows:
+struct timer_of to[] = {
+	{ .flags = TIMER_OF_TYPE_CS }
+	{ .flags = TIMER_OF_TYPE_CE }
+	{ /* sentinel. */
+};
 
-My point is - this comment doesn't mean anything for a person reading
-it. The code below is actually more meaningful - you can see that the
-clock settings register is written with a value for 1B.
+If timer could work as both, clocksource and clockevent at the same time,
+the struct timer_of array should look as follows:
+struct timer_of to[] = {
+	{ .flags = TIMER_OF_TYPE_CE_AND_CS }
+	{ /* sentinel. */
+};
 
-> > > +   if (ov8856->is_1B_module) {
-> > > +           ret = ov8856_write_reg(ov8856, OV8856_CLK_REG,
-> > > +                                  OV8856_REG_VALUE_08BIT,
-> > > +                                  OV8856_CLK_REG_1B_VAL);
+And in device tree there should be added chosen bindings as follows:
 
-Please define this value according to what it means, not a fixed
-constant for 1B sensor revision.
+chosen {
+	linux,clocksource {
+		timer = <&timer1>
+	};
+	
+	linux,clockevent {
+		timer = <&timer2>;
+	}
+};
 
-> > > +           if (ret) {
-> > > +                   dev_err(&client->dev, "failed to set R3614");
-> > > +                   return ret;
-> > > +           }
-> > > +   }
-> > > +
-> > >     ret = __v4l2_ctrl_handler_setup(ov8856->sd.ctrl_handler);
-> > >     if (ret)
-> > >             return ret;
-> > > @@ -882,6 +1376,8 @@ static int ov8856_set_stream(struct v4l2_subdev *sd, int enable)
-> > >     if (ov8856->streaming == enable)
-> > >             return 0;
-> > >
-> > > +   dev_dbg(&client->dev, "hardware version: (%d)\n", ov8856->is_1B_module);
-> > > +
-> > >     mutex_lock(&ov8856->mutex);
-> > >     if (enable) {
-> > >             ret = pm_runtime_get_sync(&client->dev);
-> > > @@ -908,6 +1404,54 @@ static int ov8856_set_stream(struct v4l2_subdev *sd, int enable)
-> > >     return ret;
-> > >  }
-> > >
-> > > +/* Calculate the delay in us by clock rate and clock cycles */
-> > > +static inline u32 ov8856_cal_delay(u32 cycles)
-> > > +{
-> > > +   return DIV_ROUND_UP(cycles, OV8856_XVCLK_FREQ / 1000 / 1000);
-> > > +}
-> > > +
-> > > +static int __ov8856_power_on(struct ov8856 *ov8856)
-> > > +{
-> > > +   int ret;
-> > > +   u32 delay_us;
-> > > +   struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
-> > > +
-> > > +   ret = clk_prepare_enable(ov8856->xvclk);
-> > > +   if (ret < 0) {
-> > > +           dev_err(&client->dev, "Failed to enable xvclk\n");
-> > > +           return ret;
-> > > +   }
-> > > +
-> > > +   gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-> >
-> > According to my datasheet, this sensor doesn't have a reset pin. The one I
-> > can see there is XSHUTDN, which I would call "n_shutdn" here.
-> >
->
-> I would rename this pin in next release.
-> BTW, how do you define "n_shutdn" or "shuutdn"?
-> If GPIO is actively high, then "n_shutdn"?
->
+timer1: t1@123 {
+	compatible = "timerx-compatible";
+	/* the rest of DT bindings here */
+};
 
-If the GPIO is active-high (means shutdown on high) then it's just
-"shutdn_gpio". However, the datasheet says it's active-low (means
-shutdown on low), so that should be "n_shutdn_gpio".
+timer2: t1@234 {
+	compatible = "timerx-compatible";
+	/* the rest of DT bindings here */
+};
 
-> > > +
-> > > +   ret = regulator_bulk_enable(OV8856_NUM_SUPPLIES, ov8856->supplies);
-> > > +   if (ret < 0) {
-> > > +           dev_err(&client->dev, "Failed to enable regulators\n");
-> > > +           goto disable_clk;
-> > > +   }
-> > > +
-> > > +   gpiod_set_value_cansleep(ov8856->reset_gpio, 0);
-> >
-> > According to the datasheet, XSHUTDN should be 0 for shutdown and 1 for
-> > running. Why is it the other way around here?
-> >
->
-> For GPIO, the definition of bit field of flags defined in DT seems
-> reversed.
-> This would be fixed in next release.
->
-> > > +
-> > > +   /* 8192 cycles prior to first SCCB transaction */
-> > > +   delay_us = ov8856_cal_delay(8192);
-> >
-> > If we pass a constant to the function and the function itself only uses
-> > constants inside, could we just define a constant delay instead?
-> >
->
-> This calculation refers to powering up sequence in datasheet.
-> Did you mean using usleep_range() directly?
+At probing time (timer_probe()), timer_of_init() will check the DT bindings
+and try to match with one of the entries in struct timer_of array passed at
+probe. The used entry will be considered used if the timers' device_node 
+pointer is set. If no matching b/w DT and what has been passed for probe
+via struct timer_of array then probe should fail.
 
-My point is, we can just
+The patches in this series are organized as follows:
+1/7 - avoid calling timer_of_init() for every CPU since it should not be needed
+2/7 - changes timer registration macro by adding a new argument (pointer to
+      struct timer_of)
+3/7 - use BIT() macro
+4/7 - add clocksource/clockevent selection documentation [3]
+5/7 - implement support described above
+6/7 - remove an unnecessary line
+7/7 - implement this support for integrator-ap timer
 
-#define OV8856_SCCB_INIT_DELAY_US    (8192 * [...])
+I implemented this support for timer published at [4].
 
-[...]
+Thank you,
+Claudiu Beznea
 
-usleep_range(OV8856_SCCB_INIT_DELAY_US, OV8856_SCCB_INIT_DELAY_US + 200);
+[1] https://lore.kernel.org/lkml/34574b0f-7d09-eb92-ea62-4199c293b0e7@microchip.com/
+[2] https://lore.kernel.org/lkml/1ebaa306-8a7f-fd58-56e0-a61b767357f7@linaro.org/
+[3] https://lore.kernel.org/lkml/20171213185313.20017-1-alexandre.belloni@free-electrons.com/
+[4] https://lore.kernel.org/lkml/1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com/
 
->
-> > > +   usleep_range(delay_us  * 2, delay_us * 4);
-> >
-> > Normally one one just give some small delta here, like +/- 100 us.
-> >
->
-> Fixed in next release.
->
-> > > +
-> > > +   return 0;
-> > > +
-> > > +disable_clk:
-> > > +   clk_disable_unprepare(ov8856->xvclk);
-> > > +
-> > > +   return ret;
-> > > +}
-> > > +
-> > > +static void __ov8856_power_off(struct ov8856 *ov8856)
-> > > +{
-> > > +   clk_disable_unprepare(ov8856->xvclk);
-> > > +   gpiod_set_value_cansleep(ov8856->reset_gpio, 1);
-> > > +
-> > > +   regulator_bulk_disable(OV8856_NUM_SUPPLIES, ov8856->supplies);
-> > > +}
-> > > +
-> > >  static int __maybe_unused ov8856_suspend(struct device *dev)
-> > >  {
-> > >     struct i2c_client *client = to_i2c_client(dev);
-> > > @@ -915,8 +1459,8 @@ static int __maybe_unused ov8856_suspend(struct device *dev)
-> > >     struct ov8856 *ov8856 = to_ov8856(sd);
-> > >
-> > >     mutex_lock(&ov8856->mutex);
-> > > -   if (ov8856->streaming)
-> > > -           ov8856_stop_streaming(ov8856);
-> > > +
-> > > +   __ov8856_power_off(ov8856);
-> >
-> > This change is incorrect because it will power off even if the device was
-> > already powered off, causing reference count mismatch. The original code
-> > was okay.
-> >
->
-> Then do we need to power off sensor per power off sequence?
-> I thought this function would be called by pm_runtime_put when power
-> count is 0.
->
+Alexandre Belloni (2):
+  dt-bindings: chosen: Add clocksource and clockevent selection
+  clocksource/drivers/integrator-ap: parse the chosen node
 
-This is the system suspend callback, not runtime suspend callback.
-It's only called when the system goes to sleep.
+Claudiu Beznea (5):
+  clocksource/drivers/c-sky: request timer_of_init only for probing CPU
+  clocksource: change timer registration macros
+  clocksource/timer_of: use BIT() macro
+  clocksource/drivers/timer-of: add support support for timer's
+    functionalities
+  drivers/clocksource/timer-of: keep declaration on one line
 
-> > >
-> > >     mutex_unlock(&ov8856->mutex);
-> > >
-> > > @@ -1089,6 +1633,20 @@ static int ov8856_identify_module(struct ov8856 *ov8856)
-> > >             return -ENXIO;
-> > >     }
-> > >
-> > > +   /* set R3614 to distinguish harward versions */
-> >
-> > hardware
-> >
->
-> Sorry for the typo.
-> Fixed in next release.
->
+ Documentation/devicetree/bindings/chosen.txt |  20 +++++
+ arch/arm/kernel/smp_twd.c                    |  10 ++-
+ arch/arm/mach-davinci/time.c                 |   2 +-
+ arch/microblaze/kernel/timer.c               |   2 +-
+ arch/mips/ralink/cevt-rt3352.c               |   2 +-
+ arch/nios2/kernel/time.c                     |   2 +-
+ drivers/clocksource/Kconfig                  |   1 +
+ drivers/clocksource/arc_timer.c              |   6 +-
+ drivers/clocksource/arm_arch_timer.c         |   6 +-
+ drivers/clocksource/arm_global_timer.c       |   2 +-
+ drivers/clocksource/armv7m_systick.c         |   2 +-
+ drivers/clocksource/asm9260_timer.c          |   2 +-
+ drivers/clocksource/bcm2835_timer.c          |   2 +-
+ drivers/clocksource/bcm_kona_timer.c         |   4 +-
+ drivers/clocksource/clksrc-dbx500-prcmu.c    |   2 +-
+ drivers/clocksource/clksrc_st_lpc.c          |   2 +-
+ drivers/clocksource/clps711x-timer.c         |   2 +-
+ drivers/clocksource/dw_apb_timer_of.c        |   9 ++-
+ drivers/clocksource/exynos_mct.c             |   4 +-
+ drivers/clocksource/h8300_timer16.c          |   2 +-
+ drivers/clocksource/h8300_timer8.c           |   2 +-
+ drivers/clocksource/h8300_tpu.c              |   2 +-
+ drivers/clocksource/jcore-pit.c              |   2 +-
+ drivers/clocksource/mips-gic-timer.c         |   2 +-
+ drivers/clocksource/mps2-timer.c             |   2 +-
+ drivers/clocksource/mxs_timer.c              |   2 +-
+ drivers/clocksource/nomadik-mtu.c            |   2 +-
+ drivers/clocksource/renesas-ostm.c           |   2 +-
+ drivers/clocksource/samsung_pwm_timer.c      |  12 ++-
+ drivers/clocksource/timer-armada-370-xp.c    |   6 +-
+ drivers/clocksource/timer-atcpit100.c        |  74 +++++++++---------
+ drivers/clocksource/timer-atlas7.c           |   3 +-
+ drivers/clocksource/timer-atmel-pit.c        |   2 +-
+ drivers/clocksource/timer-atmel-st.c         |   2 +-
+ drivers/clocksource/timer-atmel-tcb.c        |   2 +-
+ drivers/clocksource/timer-cadence-ttc.c      |   2 +-
+ drivers/clocksource/timer-davinci.c          |   3 +-
+ drivers/clocksource/timer-digicolor.c        |   2 +-
+ drivers/clocksource/timer-efm32.c            |   4 +-
+ drivers/clocksource/timer-fsl-ftm.c          |   2 +-
+ drivers/clocksource/timer-fttmr010.c         |  10 +--
+ drivers/clocksource/timer-gx6605s.c          |  58 +++++++-------
+ drivers/clocksource/timer-imx-gpt.c          |  24 +++---
+ drivers/clocksource/timer-imx-sysctr.c       |  61 +++++++--------
+ drivers/clocksource/timer-imx-tpm.c          |  69 ++++++++---------
+ drivers/clocksource/timer-integrator-ap.c    |  21 +++++-
+ drivers/clocksource/timer-ixp4xx.c           |   2 +-
+ drivers/clocksource/timer-keystone.c         |   2 +-
+ drivers/clocksource/timer-lpc32xx.c          |   2 +-
+ drivers/clocksource/timer-mediatek.c         | 108 +++++++++++++++------------
+ drivers/clocksource/timer-meson6.c           |   2 +-
+ drivers/clocksource/timer-milbeaut.c         |  59 ++++++++-------
+ drivers/clocksource/timer-mp-csky.c          |  52 ++++++-------
+ drivers/clocksource/timer-npcm7xx.c          |  87 +++++++++++----------
+ drivers/clocksource/timer-nps.c              |   6 +-
+ drivers/clocksource/timer-of.c               |  91 +++++++++++++++++++++-
+ drivers/clocksource/timer-of.h               |  36 +++++++--
+ drivers/clocksource/timer-orion.c            |   2 +-
+ drivers/clocksource/timer-owl.c              |   6 +-
+ drivers/clocksource/timer-oxnas-rps.c        |   4 +-
+ drivers/clocksource/timer-pistachio.c        |   2 +-
+ drivers/clocksource/timer-prima2.c           |   2 +-
+ drivers/clocksource/timer-probe.c            |  17 ++++-
+ drivers/clocksource/timer-pxa.c              |   2 +-
+ drivers/clocksource/timer-qcom.c             |   4 +-
+ drivers/clocksource/timer-rda.c              |  66 ++++++++--------
+ drivers/clocksource/timer-riscv.c            |   2 +-
+ drivers/clocksource/timer-rockchip.c         |   4 +-
+ drivers/clocksource/timer-sp804.c            |   4 +-
+ drivers/clocksource/timer-sprd.c             |  75 +++++++++----------
+ drivers/clocksource/timer-stm32.c            |  39 +++++-----
+ drivers/clocksource/timer-sun4i.c            |  78 +++++++++----------
+ drivers/clocksource/timer-sun5i.c            |   4 +-
+ drivers/clocksource/timer-tango-xtal.c       |   2 +-
+ drivers/clocksource/timer-tegra.c            |  31 ++++----
+ drivers/clocksource/timer-ti-32k.c           |   2 +-
+ drivers/clocksource/timer-u300.c             |   2 +-
+ drivers/clocksource/timer-versatile.c        |   4 +-
+ drivers/clocksource/timer-vf-pit.c           |   2 +-
+ drivers/clocksource/timer-vt8500.c           |   2 +-
+ drivers/clocksource/timer-zevio.c            |   2 +-
+ include/linux/clocksource.h                  |  30 +++++++-
+ 82 files changed, 748 insertions(+), 544 deletions(-)
 
-Also a similar comment for R3614, as above. It doesn't have any
-meaning to someone without the datasheet in front of them. Please just
-remove it.
-
-Best regards,
-Tomasz
+-- 
+2.7.4
