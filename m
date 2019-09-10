@@ -1,51 +1,49 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v6 01/12] tools lib traceevent: Convert remaining %p[fF]
- users to %p[sS]
-Date: Tue, 10 Sep 2019 12:44:03 -0700
-Message-ID: <c90c33b421c0fa0db5182d0f58c6ba6e86cf1622.camel@perches.com>
-References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
-         <20190910084707.18380-2-sakari.ailus@linux.intel.com>
-         <20190910071837.2e9110f8@oasis.local.home>
-         <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
-         <20190910142621.0bec208d@oasis.local.home>
-         <c458e734f5777561138b87228384808398547762.camel@perches.com>
-         <20190910150303.5a0d3904@oasis.local.home>
+From: Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH 3/7] dt-bindings: mv88e6xxx: add ability to set default
+ queue priorities per port
+Date: Tue, 10 Sep 2019 21:46:34 +0100
+Message-ID: <CA+h21hpS9YYDwv0JzmA5BBSanV+w2jvyZdtFqYt=GL+hEc=ufA@mail.gmail.com>
+References: <20190910154238.9155-1-bob.beckett@collabora.com>
+ <20190910154238.9155-4-bob.beckett@collabora.com> <23101286-4da2-2a53-e7cd-71ead263bbaa@gmail.com>
+ <20190910124952.GG32337@t480s.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190910150303.5a0d3904@oasis.local.home>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190910124952.GG32337@t480s.localdomain>
+Sender: netdev-owner@vger.kernel.org
+To: Vivien Didelot <vivien.didelot@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Robert Beckett <bob.beckett@collabora.com>, netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>, Ido Schimmel <idosch@mellanox.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-09-10 at 15:03 -0400, Steven Rostedt wrote:
-> On Tue, 10 Sep 2019 11:42:06 -0700
-[]
-> > btw:
-> > 
-> > Is there kernel version information available in
-> > trace output files?
-> 
-> Not really. This is just a library that parses the trace event formats,
-> there's not kernel versions passed in, but we do use variations in
-> formats and such to determine what is supported.
-> 
-> > If so, it might be reasonable to change the tooling
-> > there instead.
-> > 
-> 
-> Actually, I think we could just look to see if "%pfw" is used and fall
-> to that, otherwise consider it an older kernel and do it the original
-> way.
+Hi guys,
 
-Well, if you think that works, OK great.
+On 10/09/2019, Vivien Didelot <vivien.didelot@gmail.com> wrote:
+> Hi Robert,
+>
+> On Tue, 10 Sep 2019 09:42:24 -0700, Florian Fainelli <f.fainelli@gmail.com>
+> wrote:
+>> This is a vendor specific driver/property,
+>> marvell,default-queue-priority (which be cheapskate on words) would be
+>> more readable. But still, I have some more fundamental issues with the
+>> general approach, see my response in the cover letter.
+>
+> As Florian said, the DT is unlikely to welcome vendor specific nodes for
+> configuration which may be generic through standard network userspace
+> tools.
+>
+>
+> Thanks,
+>
+> 	Vivien
+>
 
-But could that work?
-How would an individual trace record know if
-another trace record used %pfw?
+While I do agree that the DT bindings are a big no-no for QoS
+settings, the topic is interesting.
+What is the user space knob for configuring port-default priority (say
+RX queue)?
+Something like this maybe? (a very forced "matchall" with rxnfc)
+ethtool --config-nfc eth0 flow-type ether src 00:00:00:00:00:00 m
+00:00:00:00:00:00 action 5
 
-Perhaps not reusing %pf, marking it reserved
-for a period of years, and using another unused
-prefix %p<type> like %pnfw may be simpler.
+Regards,
+-Vladimir
