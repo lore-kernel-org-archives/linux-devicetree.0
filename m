@@ -1,63 +1,33 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH] reset: uniphier-glue: Add Pro5 USB3 support
-Date: Tue, 10 Sep 2019 10:55:27 +0900
-Message-ID: <1568080527-1767-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH] arm64: dts: imx8mn: Add "fsl,imx8mq-src" as src's fallback compatible
+Date: Tue, 10 Sep 2019 10:39:19 -0400
+Message-ID: <1568126359-2887-1-git-send-email-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Pro5 SoC has same scheme of USB3 reset as Pro4, so the data for Pro5 is
-equivalent to Pro4.
+i.MX8MN can reuse i.MX8MQ's src driver, add "fsl,imx8mq-src" as
+src's fallback compatible to enable it.
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- Documentation/devicetree/bindings/reset/uniphier-reset.txt | 5 +++--
- drivers/reset/reset-uniphier-glue.c                        | 4 ++++
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-index ea00517..e320a8c 100644
---- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-+++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
-@@ -130,6 +130,7 @@ this layer. These clocks and resets should be described in each property.
- Required properties:
- - compatible: Should be
-     "socionext,uniphier-pro4-usb3-reset" - for Pro4 SoC USB3
-+    "socionext,uniphier-pro5-usb3-reset" - for Pro5 SoC USB3
-     "socionext,uniphier-pxs2-usb3-reset" - for PXs2 SoC USB3
-     "socionext,uniphier-ld20-usb3-reset" - for LD20 SoC USB3
-     "socionext,uniphier-pxs3-usb3-reset" - for PXs3 SoC USB3
-@@ -141,12 +142,12 @@ Required properties:
- - clocks: A list of phandles to the clock gate for the glue layer.
- 	According to the clock-names, appropriate clocks are required.
- - clock-names: Should contain
--    "gio", "link" - for Pro4 SoC
-+    "gio", "link" - for Pro4 and Pro5 SoCs
-     "link"        - for others
- - resets: A list of phandles to the reset control for the glue layer.
- 	According to the reset-names, appropriate resets are required.
- - reset-names: Should contain
--    "gio", "link" - for Pro4 SoC
-+    "gio", "link" - for Pro4 and Pro5 SoCs
-     "link"        - for others
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+index 785f4c4..d94db95 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+@@ -371,7 +371,7 @@
+ 			};
  
- Example:
-diff --git a/drivers/reset/reset-uniphier-glue.c b/drivers/reset/reset-uniphier-glue.c
-index a45923f..2b188b3bb 100644
---- a/drivers/reset/reset-uniphier-glue.c
-+++ b/drivers/reset/reset-uniphier-glue.c
-@@ -141,6 +141,10 @@ static const struct of_device_id uniphier_glue_reset_match[] = {
- 		.data = &uniphier_pro4_data,
- 	},
- 	{
-+		.compatible = "socionext,uniphier-pro5-usb3-reset",
-+		.data = &uniphier_pro4_data,
-+	},
-+	{
- 		.compatible = "socionext,uniphier-pxs2-usb3-reset",
- 		.data = &uniphier_pxs2_data,
- 	},
+ 			src: reset-controller@30390000 {
+-				compatible = "fsl,imx8mn-src", "syscon";
++				compatible = "fsl,imx8mn-src", "fsl,imx8mq-src", "syscon";
+ 				reg = <0x30390000 0x10000>;
+ 				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+ 				#reset-cells = <1>;
 -- 
 2.7.4
