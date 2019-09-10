@@ -1,67 +1,50 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v2 2/2] backlight: lm3630a: add an enable gpio for the HWEN pin
-Date: Tue, 10 Sep 2019 23:29:09 +0200
-Message-ID: <20190910212909.18095-3-andreas@kemnade.info>
-References: <20190910212909.18095-1-andreas@kemnade.info>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 7/7] clocksource/drivers/integrator-ap: parse the chosen
+ node
+Date: Wed, 11 Sep 2019 00:48:33 +0100
+Message-ID: <CACRpkdYsCFUNAtarTQmaA2a3-HZjiVjxQ-Wr-7wJp9xrtQRKCg@mail.gmail.com>
+References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
+ <1568123236-767-8-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190910212909.18095-1-andreas@kemnade.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Andreas Kemnade <andreas@kemnade.info>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1568123236-767-8-git-send-email-claudiu.beznea@microchip.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: Tomer Maimon <tmaimon77@gmail.com>, "Nori, Sekhar" <nsekhar@ti.com>, guoren@kernel.org, linux-stm32@st-md-mailman.stormreply.com, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Kevin Hilman <khilman@baylibre.com>, Ludovic Desroches <ludovic.desroches@microchip.com>, NXP Linux Team <linux-imx@nxp.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, "moderated list:H8/300 ARCHITECTURE" <uclinux-h8-devel@lists.sourceforge.jp>, Marc Zyngier <marc.zyngier@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-unisoc@lists.infradead.org, Krzysztof Halasa <khalasa@piap.pl>, Thomas Gleixner <tglx@linutronix.de>, Scott Branden <sbranden@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ralf Baechle <ral>
 List-Id: devicetree@vger.kernel.org
 
-For now just enable it in the probe function to allow i2c
-access. Disabling also means resetting the register values
-to default and according to the datasheet does not give
-power savings
+On Tue, Sep 10, 2019 at 2:50 PM Claudiu Beznea
+<claudiu.beznea@microchip.com> wrote:
+> From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>
+> The driver currently uses aliases to know whether the timer is the
+> clocksource or the clockevent.
 
-Tested on Kobo Clara HD.
+OK maybe that wasn't the most elegant solution.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-changes in v2:
-- simplification
-- correct gpio direction initialisation
+> Add the /chosen/linux,clocksource and
+> /chosen/linux,clockevent parsing while keeping backward compatibility.
 
- drivers/video/backlight/lm3630a_bl.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+This is not how I would solve this today.
 
-diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-index 8f84f3684f04..9d0639d4202d 100644
---- a/drivers/video/backlight/lm3630a_bl.c
-+++ b/drivers/video/backlight/lm3630a_bl.c
-@@ -12,6 +12,8 @@
- #include <linux/uaccess.h>
- #include <linux/interrupt.h>
- #include <linux/regmap.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio.h>
- #include <linux/pwm.h>
- #include <linux/platform_data/lm3630a_bl.h>
- 
-@@ -48,6 +50,7 @@ struct lm3630a_chip {
- 	struct lm3630a_platform_data *pdata;
- 	struct backlight_device *bleda;
- 	struct backlight_device *bledb;
-+	struct gpio_desc *enable_gpio;
- 	struct regmap *regmap;
- 	struct pwm_device *pwmd;
- };
-@@ -535,6 +538,13 @@ static int lm3630a_probe(struct i2c_client *client,
- 	}
- 	pchip->pdata = pdata;
- 
-+	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
-+						GPIOD_OUT_HIGH);
-+	if (IS_ERR(pchip->enable_gpio)) {
-+		rval = PTR_ERR(pchip->enable_gpio);
-+		return rval;
-+	}
-+
- 	/* chip initialize */
- 	rval = lm3630a_chip_init(pchip);
- 	if (rval < 0) {
--- 
-2.20.1
+I would simply remove/comment out the IRQ from the timer
+that cannot be used for clockevent from the device tree
+(apparently it doesn't work anyway), and make the code only
+pick a timer with a valid interrupt assigned as clock event,
+while a timer without interrupt can be used for clock source.
+
+This has the upside of not needing any special aliases or
+chosen things.
+
+Yours,
+Linus Walleij
