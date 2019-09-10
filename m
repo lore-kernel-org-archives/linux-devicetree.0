@@ -1,120 +1,63 @@
-From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
-Subject: [PATCHv4] MIPS: JZ4780: DTS: Add I2C nodes
-Date: Tue, 10 Sep 2019 08:46:52 +0200
-Message-ID: <20190910064652.GA135775@deutnet.info>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] reset: uniphier-glue: Add Pro5 USB3 support
+Date: Tue, 10 Sep 2019 09:48:15 +0200
+Message-ID: <1568101695.3062.1.camel@pengutronix.de>
+References: <1568080527-1767-1-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <1568080527-1767-1-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, agriveaux@deutnet.info
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the devicetree nodes for the I2C core of the JZ4780 SoC, disabled
-by default.
+Hi Kunihiko,
 
-Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
----
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 86 ++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
+On Tue, 2019-09-10 at 10:55 +0900, Kunihiko Hayashi wrote:
+> Pro5 SoC has same scheme of USB3 reset as Pro4, so the data for Pro5 is
+> equivalent to Pro4.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index b03cdec56de9..a76ecd69bfd0 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -239,6 +239,92 @@
- 		status = "disabled";
- 	};
- 
-+	i2c0: i2c@10050000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reg = <0x10050000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <60>;
-+
-+		clocks = <&cgu JZ4780_CLK_SMB0>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c0_data>;
-+
-+		status = "disabled";
-+	};
-+
-+	i2c1: i2c@10051000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10051000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <59>;
-+
-+		clocks = <&cgu JZ4780_CLK_SMB1>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c1_data>;
-+
-+		status = "disabled";
-+	};
-+
-+	i2c2: i2c@10052000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10052000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <58>;
-+
-+		clocks = <&cgu JZ4780_CLK_SMB2>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c2_data>;
-+
-+		status = "disabled";
-+	};
-+
-+	i2c3: i2c@10053000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10053000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <57>;
-+
-+		clocks = <&cgu JZ4780_CLK_SMB3>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c3_data>;
-+
-+		status = "disabled";
-+	};
-+
-+	i2c4: i2c@10054000 {
-+		compatible = "ingenic,jz4780-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x10054000 0x1000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <56>;
-+
-+		clocks = <&cgu JZ4780_CLK_SMB4>;
-+		clock-frequency = <100000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pins_i2c4_data>;
-+
-+		status = "disabled";
-+	};
-+
- 	watchdog: watchdog@10002000 {
- 		compatible = "ingenic,jz4780-watchdog";
- 		reg = <0x10002000 0x10>;
--- 
-2.20.1
+If it is exactly the same, you could keep using the same compatible:
+
+> ---
+>  Documentation/devicetree/bindings/reset/uniphier-reset.txt | 5 +++--
+>  drivers/reset/reset-uniphier-glue.c                        | 4 ++++
+>  2 files changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> index ea00517..e320a8c 100644
+> --- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> +++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> @@ -130,6 +130,7 @@ this layer. These clocks and resets should be described in each property.
+>  Required properties:
+>  - compatible: Should be
+>      "socionext,uniphier-pro4-usb3-reset" - for Pro4 SoC USB3
+> +    "socionext,uniphier-pro5-usb3-reset" - for Pro5 SoC USB3
+
++    "socionext,uniphier-pro5-usb3-reset", "socionext,uniphier-pro4-usb3-reset" - for Pro5 SoC USB3
+
+[...]
+> diff --git a/drivers/reset/reset-uniphier-glue.c b/drivers/reset/reset-uniphier-glue.c
+> index a45923f..2b188b3bb 100644
+> --- a/drivers/reset/reset-uniphier-glue.c
+> +++ b/drivers/reset/reset-uniphier-glue.c
+> @@ -141,6 +141,10 @@ static const struct of_device_id uniphier_glue_reset_match[] = {
+>  		.data = &uniphier_pro4_data,
+>  	},
+>  	{
+> +		.compatible = "socionext,uniphier-pro5-usb3-reset",
+> +		.data = &uniphier_pro4_data,
+> +	},
+> +	{
+>  		.compatible = "socionext,uniphier-pxs2-usb3-reset",
+>  		.data = &uniphier_pxs2_data,
+>  	},
+
+And this change would not be necessary.
+
+regards
+Philipp
