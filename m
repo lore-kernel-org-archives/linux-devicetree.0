@@ -1,86 +1,32 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
-Date: Tue, 10 Sep 2019 19:46:53 +0100
-Message-ID: <20190910184653.GB5581@kunai>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-3-luca@lucaceresoli.net>
- <20190901143101.humomdehy5ee73sk@vino>
- <20bac324-c4d3-270c-5175-0a7f261fd760@lucaceresoli.net>
- <51dede3c-545b-b66a-5e89-9e889d784eb9@axentia.se>
- <2d770b36-9521-820d-726a-bc9b52048ef8@lucaceresoli.net>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
+ max-speed
+Date: Tue, 10 Sep 2019 20:50:33 +0200
+Message-ID: <20190910185033.GD9761@lunn.ch>
+References: <20190910155507.491230-1-tinywrkb@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="8P1HSweYDcXXzwPJ"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2d770b36-9521-820d-726a-bc9b52048ef8@lucaceresoli.net>
+In-Reply-To: <20190910155507.491230-1-tinywrkb@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Ceresoli <luca@lucaceresoli.net>
-Cc: Peter Rosin <peda@axentia.se>, jacopo mondi <jacopo@jmondi.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Vladimir Zapolskiy <vz@mleia.com>
+To: tinywrkb <tinywrkb@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Sep 10, 2019 at 06:55:07PM +0300, tinywrkb wrote:
+> Cubox-i Solo/DualLite carrier board has 100Mb/s magnetics while the
+> Atheros AR8035 PHY on the MicroSoM v1.3 CPU module is a 1GbE PHY device.
+> 
+> Since commit 5502b218e001 ("net: phy: use phy_resolve_aneg_linkmode in
+> genphy_read_status") ethernet is broken on Cubox-i Solo/DualLite devices.
 
---8P1HSweYDcXXzwPJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Tinywrkb
 
+You emailed lots of people, but missed the PHY maintainers :-(
 
-> I still have to examine in depth all of the problems in the i2c-mux
-> documented in Documentation/i2c/i2c-topology (thanks for having written
-> those docs!), but at first sight it looks like the ATR is not going to
-> introduce big problems because of how it works.
+Are you sure this is the patch which broken it? Did you do a git
+bisect.
 
-Assuming we are using the previously discussed NEEDS_ATR flag for the adapter
-instead of the attach/detach callbacks:
-
-Can't we then simply understand an ATR as a generic 1:1 mapping device
-which can be setup when registering an adapter?
-
-When we add an adapter using i2c_add_adapter, we have:
-
-
-              .-----.  Slave X @ 0x10
-  .-----.     |     |   |
-  | CPU |--A--| ATR |---+---- B
-  `-----'     |     |
-              `-----'
-
-When we use i2c_add_mux_adapter, we have:
-
-
-                                Slave X @ 0x10
-              .-----.   .-----.   |
-  .-----.     |     |---| ATR |---+---- B
-  | CPU |--A--| MUX |   '-----'
-  `-----'     |     |   .-----.
-              |     |---| ATR |---+---- C
-              `-----'   '-----'   |
-                                 Slave Y @ 0x10
-
-
-That way we could keep the topology handling solely to the mux-core.
-
-Am I overlooking something?
-
-
---8P1HSweYDcXXzwPJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1375gACgkQFA3kzBSg
-KbYJow/+JCThTpeS2XICmf9Q3MrO1dOKBMlUgPruJRw4irTMMkrMProjr3EhIYCw
-7LuYkhW8Pessu8F9PbIJ9iU6IDb2UC5+Ao16IdbWYauY/Ij3ayhXsUd3ECl19lo4
-SjbUynLbxbch6xzw4nitl1Vg8pxH1eVHA+3wi60O2eGBr2WHTouAMHa5YI6a6fw6
-5MkxCxS4A08Ss0TUKZhJvl+7WttM5uigTmTsaI8FQLS0T+Z5rlxQIQR0CMP3ZyOR
-1Fc/sndLvWOK5lRk/+v76LC7lFYEXa9ePLqql9IqP00u0qTO+wE+l3t51R5oTjpj
-poXtKqLcjtfyue7efqfYm+rQDu39I9lEguZsp8OivuYQlCkWzRu/IRYSxQSsBmbd
-37XvMAHedHMQy4PIhzRSq9MtprK6RcMgFvUxf3fr/05WW+P2udby4gluEI3ba4lo
-MydbdFgf3rJfLkJ0TjC3GplUjDbffGmQ/uLvcwyxC1i3FCsQrK10NsUScZPg/oM9
-KJjwa06l9ua0MrwDMq1s/3eqcWXCV9kyaIu1bE9CT6hLmJd7yacadcFRo5WqgVK1
-qGBofVZbgsIrerqrYcKdXGS9vFCbsEZP6NQ2JpKHbiEITBy9Cqi1g2Jjo82byCqE
-BtyGllOLEvVIpm8938c9epfklbGk+ZIlWVJciamn1gG89j3bI/4=
-=3L8E
------END PGP SIGNATURE-----
-
---8P1HSweYDcXXzwPJ--
+Thanks
+	Andrew
