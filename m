@@ -1,7 +1,7 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 1/3] dt-bindings: dma: Add documentation for DMA domains
-Date: Tue, 10 Sep 2019 14:50:35 +0300
-Message-ID: <20190910115037.23539-2-peter.ujfalusi@ti.com>
+Subject: [PATCH 2/3] dmaengine: of_dma: Function to look up the DMA domain of a client
+Date: Tue, 10 Sep 2019 14:50:36 +0300
+Message-ID: <20190910115037.23539-3-peter.ujfalusi@ti.com>
 References: <20190910115037.23539-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,120 +13,96 @@ To: vkoul@kernel.org, robh+dt@kernel.org
 Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On systems where multiple DMA controllers available, non Slave (for example
-memcpy operation) users can not be described in DT as there is no device
-involved from the DMA controller's point of view, DMA binding is not usable.
-However in these systems still a peripheral might need to be serviced by or
-it is better to serviced by specific DMA controller.
-When a memcpy is used to/from a memory mapped region for example a DMA in the
-same domain can perform better.
-For generic software modules doing mem 2 mem operations it also matter that
-they will get a channel from a controller which is faster in DDR to DDR mode
-rather then from the first controller happen to be loaded.
+Find the DMA domain controller of the client device by iterating up in
+device tree looking for the closest 'dma-domain-controller' property.
 
-This property is inherited, so it may be specified in a device node or in any
-of its parent nodes.
+If the client's node is not provided then check the DT root for the
+controller.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- .../devicetree/bindings/dma/dma-domain.yaml   | 88 +++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
+ drivers/dma/of-dma.c   | 42 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_dma.h |  7 +++++++
+ 2 files changed, 49 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/dma-domain.yaml b/Documentation/devicetree/bindings/dma/dma-domain.yaml
-new file mode 100644
-index 000000000000..da59bb129c58
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/dma-domain.yaml
-@@ -0,0 +1,88 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/dma/dma-controller.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+index c2d779daa4b5..b4bff47006b0 100644
+--- a/drivers/dma/of-dma.c
++++ b/drivers/dma/of-dma.c
+@@ -18,6 +18,48 @@
+ static LIST_HEAD(of_dma_list);
+ static DEFINE_MUTEX(of_dma_lock);
+ 
++/**
++ * of_find_dma_domain - Get the domain DMA controller
++ * @np:		device node of the client device
++ *
++ * Look up the DMA controller of the domain the client device is part of.
++ * Finds the dma-domain controller the client device belongs to. It is used when
++ * requesting non slave channels (like channel for memcpy) to make sure that the
++ * channel can be request from a DMA controller which can service the given
++ * domain best.
++ *
++ * Returns the device_node pointer of the DMA controller or succes or NULL on
++ * error.
++ */
++struct device_node *of_find_dma_domain(struct device_node *np)
++{
++	struct device_node *dma_domain = NULL;
++	phandle dma_phandle;
 +
-+title: DMA Domain Controller Definition
++	/*
++	 * If no device_node is provided look at the root level for system
++	 * default DMA controller for modules.
++	 */
++	if (!np)
++		np = of_root;
 +
-+maintainers:
-+  - Vinod Koul <vkoul@kernel.org>
++	if (!np || !of_node_get(np))
++		return NULL;
 +
-+allOf:
-+  - $ref: "dma-controller.yaml#"
++	do {
++		if (of_property_read_u32(np, "dma-domain-controller",
++					 &dma_phandle)) {
++			np = of_get_next_parent(np);
++		} else {
++			dma_domain = of_find_node_by_phandle(dma_phandle);
++			of_node_put(np);
++		}
++	} while (!dma_domain && np);
 +
-+description:
-+  On systems where multiple DMA controllers available, none Slave (for example
-+  memcpy operation) users can not be described in DT as there is no device
-+  involved from the DMA controller's point of view, DMA binding is not usable.
-+  However in these systems still a peripheral might need to be serviced by or
-+  it is better to serviced by specific DMA controller.
-+  When a memcpy is used to/from a memory mapped region for example a DMA in the
-+  same domain can perform better.
-+  For generic software modules doing mem 2 mem operations it also matter that
-+  they will get a channel from a controller which is faster in DDR to DDR mode
-+  rather then from the first controller happen to be loaded.
++	return dma_domain;
++}
++EXPORT_SYMBOL_GPL(of_find_dma_domain);
 +
-+  This property is inherited, so it may be specified in a device node or in any
-+  of its parent nodes.
+ /**
+  * of_dma_find_controller - Get a DMA controller in DT DMA helpers list
+  * @dma_spec:	pointer to DMA specifier as found in the device tree
+diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+index fd706cdf255c..6eab0a8d3335 100644
+--- a/include/linux/of_dma.h
++++ b/include/linux/of_dma.h
+@@ -32,6 +32,8 @@ struct of_dma_filter_info {
+ };
+ 
+ #ifdef CONFIG_DMA_OF
++extern struct device_node *of_find_dma_domain(struct device_node *np);
 +
-+properties:
-+  $dma-domain-controller:
-+    $ref: /schemas/types.yaml#definitions/phandle
-+    description:
-+      phande to the DMA controller node which should be used for the device or
-+      domain.
+ extern int of_dma_controller_register(struct device_node *np,
+ 		struct dma_chan *(*of_dma_xlate)
+ 		(struct of_phandle_args *, struct of_dma *),
+@@ -52,6 +54,11 @@ extern struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec
+ 		struct of_dma *ofdma);
+ 
+ #else
++static inline struct device_node *of_find_dma_domain(struct device_node *np)
++{
++	return NULL;
++}
 +
-+examples:
-+  - |
-+    / {
-+        model = "Texas Instruments K3 AM654 SoC";
-+        compatible = "ti,am654";
-+        interrupt-parent = <&gic500>;
-+        /* For modules without device, DDR to DDR is faster on main UDMAP */
-+        dma-domain-controller = <&main_udmap>;
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+        ...
-+    };
-+
-+    &cbass_main {
-+        /* For modules within MAIN domain, use main UDMAP */
-+        dma-domain-controller = <&main_udmap>;
-+
-+        cbass_main_navss: interconnect0 {
-+            ...
-+            main_udmap: dma-controller@31150000 {
-+                compatible = "ti,am654-navss-main-udmap";
-+                ...
-+            };
-+        };
-+    };
-+
-+    &cbass_mcu {
-+        /* For modules within MCU domain, use mcu UDMAP */
-+        dma-domain-controller = <&mcu_udmap>;
-+
-+        cbass_mcu_navss: interconnect1 {
-+            ...
-+            mcu_udmap: dma-controller@285c0000 {
-+                compatible = "ti,am654-navss-mcu-udmap";
-+                ...
-+            };
-+        };
-+
-+        fss: fss@47000000 {
-+            compatible = "simple-bus";
-+            #address-cells = <2>;
-+            #size-cells = <2>;
-+            ranges;
-+
-+            ospi0: spi@47040000 {
-+                compatible = "ti,am654-ospi", "cdns,qspi-nor";
-+                ...
-+                /* memcpy channel will be request from mcu_udmap */
-+            };
-+        };
-+    };
-+...
+ static inline int of_dma_controller_register(struct device_node *np,
+ 		struct dma_chan *(*of_dma_xlate)
+ 		(struct of_phandle_args *, struct of_dma *),
 -- 
 Peter
 
