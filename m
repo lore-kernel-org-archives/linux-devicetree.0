@@ -1,76 +1,80 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 4/7] dt-bindings: chosen: Add clocksource and clockevent
- selection
-Date: Tue, 10 Sep 2019 17:10:55 +0200
-Message-ID: <20190910151055.GX21254@piout.net>
-References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
- <1568123236-767-5-git-send-email-claudiu.beznea@microchip.com>
- <20190910143231.GB14966@e107533-lin.cambridge.arm.com>
- <ab43b209-78fa-0cab-b8ea-acd4c550e689@microchip.com>
- <20190910150826.GA18308@e107533-lin.cambridge.arm.com>
+Subject: Re: [PATCH] irqchip/atmel-aic5: add support for sam9x60 irqchip
+Date: Tue, 10 Sep 2019 17:15:13 +0200
+Message-ID: <20190910151513.GY21254@piout.net>
+References: <1568026835-6646-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190910150826.GA18308@e107533-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: tmaimon77@gmail.com, linus.walleij@linaro.org, nsekhar@ti.com, guoren@kernel.org, linux-stm32@st-md-mailman.stormreply.com, heiko@sntech.de, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, khilman@baylibre.com, Ludovic.Desroches@microchip.com, linux-imx@nxp.com, u.kleine-koenig@pengutronix.de, uclinux-h8-devel@lists.sourceforge.jp, marc.zyngier@arm.com, s.hauer@pengutronix.de, linux-unisoc@lists.infradead.org, khalasa@piap.pl, tglx@linutronix.de, sbranden@broadcom.com, linux-kernel@vger.kernel.org, ralf@linux-mips.org, paul.burton@mips.com, kernel@pengutronix.de, Claudiu.Beznea@microchip.com, mark.rutland@arm.com, jhogan@kernel.org, palmer@sifive.com, eric@anholt.net, thierry.reding@gmail.com, manivannan.sadhasivam@linaro.org, ysato@users.sourceforge.jp, zhang.lyra@gmail.com, daniel.lezcano@linaro.org, jonathanh@nvidia.com, bgolaszewski@baylibre.com
+In-Reply-To: <1568026835-6646-1-git-send-email-claudiu.beznea@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, ludovic.desroches@microchip.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2019 16:08:26+0100, Sudeep Holla wrote:
-> On Tue, Sep 10, 2019 at 02:51:50PM +0000, Claudiu.Beznea@microchip.com wrote:
-> > 
-> > 
-> > On 10.09.2019 17:32, Sudeep Holla wrote:
-> > > External E-Mail
-> > > 
-> > > 
-> > > On Tue, Sep 10, 2019 at 04:47:13PM +0300, Claudiu Beznea wrote:
-> > >> From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > >>
-> > >> Some timer drivers may behave either as clocksource or clockevent
-> > >> or both. Until now, in case of platforms with multiple hardware
-> > >> resources of the same type, the drivers were chosing the first
-> > >> registered hardware resource as clocksource/clockevent and the
-> > >> next one as clockevent/clocksource. Other were using different
-> > >> compatibles (one for each functionality, although its about the
-> > >> same hardware). Add DT bindings to be able to choose the
-> > >> functionality of a timer.
-> > >>
-> > > 
-> > > Is the piece of hardware not capable of serving as both clocksource
-> > > and clockevent or is it just the platform choice ?
-> > 
-> > In my case, the hardware is not capable of serving at the same time
-> > a clocksource device and a clockevent device.
-> > 
-> > First, I published v1 for a hardware device having this behavior at
-> > [1] requesting 1st probed hardware device to work as clocksource and
-> > the 2nd one to work as clockevent. The discussion at [1] ended up with
-> > the idea of having a mechanism to specify which hardware device behaves
-> > as clocksource and which one behaves as clockevent.
-> >
+On 09/09/2019 14:00:35+0300, Claudiu Beznea wrote:
+> From: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
 > 
-> In that case, why can't we identify capability that with the compatibles
-> for this timer IP ?
+> Add support for SAM9X60 irqchip.
 > 
-> IOW, I don't like the proposal as it's hardware limitation.
-> 
+> Signed-off-by: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
+> [claudiu.beznea@microchip.com: update aic5_irq_fixups[], update
+>  documentation]
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-To be clear, bot timers are exactly the same but can't be clocksource
-and clockevent at the same time. Why would we have different compatibles
-for the exact same IP?
-
+> ---
+>  .../devicetree/bindings/interrupt-controller/atmel,aic.txt     |  7 +++++--
+>  drivers/irqchip/irq-atmel-aic5.c                               | 10 ++++++++++
+>  2 files changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+> index f4c5d34c4111..7079d44bf3ba 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
+> @@ -1,8 +1,11 @@
+>  * Advanced Interrupt Controller (AIC)
+>  
+>  Required properties:
+> -- compatible: Should be "atmel,<chip>-aic"
+> -  <chip> can be "at91rm9200", "sama5d2", "sama5d3" or "sama5d4"
+> +- compatible: Should be:
+> +    - "atmel,<chip>-aic" where  <chip> can be "at91rm9200", "sama5d2",
+> +      "sama5d3" or "sama5d4"
+> +    - "microchip,<chip>-aic" where <chip> can be "sam9x60"
+> +
+>  - interrupt-controller: Identifies the node as an interrupt controller.
+>  - #interrupt-cells: The number of cells to define the interrupts. It should be 3.
+>    The first cell is the IRQ number (aka "Peripheral IDentifier" on datasheet).
+> diff --git a/drivers/irqchip/irq-atmel-aic5.c b/drivers/irqchip/irq-atmel-aic5.c
+> index 6acad2ea0fb3..29333497ba10 100644
+> --- a/drivers/irqchip/irq-atmel-aic5.c
+> +++ b/drivers/irqchip/irq-atmel-aic5.c
+> @@ -313,6 +313,7 @@ static void __init sama5d3_aic_irq_fixup(void)
+>  static const struct of_device_id aic5_irq_fixups[] __initconst = {
+>  	{ .compatible = "atmel,sama5d3", .data = sama5d3_aic_irq_fixup },
+>  	{ .compatible = "atmel,sama5d4", .data = sama5d3_aic_irq_fixup },
+> +	{ .compatible = "microchip,sam9x60", .data = sama5d3_aic_irq_fixup },
+>  	{ /* sentinel */ },
+>  };
+>  
+> @@ -390,3 +391,12 @@ static int __init sama5d4_aic5_of_init(struct device_node *node,
+>  	return aic5_of_init(node, parent, NR_SAMA5D4_IRQS);
+>  }
+>  IRQCHIP_DECLARE(sama5d4_aic5, "atmel,sama5d4-aic", sama5d4_aic5_of_init);
+> +
+> +#define NR_SAM9X60_IRQS		50
+> +
+> +static int __init sam9x60_aic5_of_init(struct device_node *node,
+> +				       struct device_node *parent)
+> +{
+> +	return aic5_of_init(node, parent, NR_SAM9X60_IRQS);
+> +}
+> +IRQCHIP_DECLARE(sam9x60_aic5, "microchip,sam9x60-aic", sam9x60_aic5_of_init);
+> -- 
+> 2.7.4
+> 
 
 -- 
 Alexandre Belloni, Bootlin
