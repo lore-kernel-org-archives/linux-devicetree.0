@@ -1,64 +1,43 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
-Date: Tue, 10 Sep 2019 18:16:30 +0100
-Message-ID: <20190910171629.GA5581@kunai>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-3-luca@lucaceresoli.net>
- <20190901143101.humomdehy5ee73sk@vino>
- <aedad45b-16d6-d189-b045-329727440ca5@mleia.com>
- <20190909072232.GA990@kunai>
- <8af9a049-06b9-dbe8-827b-5134d20e9435@mleia.com>
- <152384b8-c0a8-e6fe-9a1f-52caf00533de@lucaceresoli.net>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v6 01/12] tools lib traceevent: Convert remaining %p[fF]
+ users to %p[sS]
+Date: Tue, 10 Sep 2019 10:18:44 -0700
+Message-ID: <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
+References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
+         <20190910084707.18380-2-sakari.ailus@linux.intel.com>
+         <20190910071837.2e9110f8@oasis.local.home>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <152384b8-c0a8-e6fe-9a1f-52caf00533de@lucaceresoli.net>
+In-Reply-To: <20190910071837.2e9110f8@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luca Ceresoli <luca@lucaceresoli.net>
-Cc: Vladimir Zapolskiy <vz@mleia.com>, jacopo mondi <jacopo@jmondi.org>, Peter Rosin <peda@axentia.se>, linux-media@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>
+To: Steven Rostedt <rostedt@goodmis.org>, Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2019-09-10 at 07:18 -0400, Steven Rostedt wrote:
+> On Tue, 10 Sep 2019 11:46:56 +0300
+> Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+> 
+> > There are no in-kernel %p[fF] users left. Convert the traceevent tool,
+> > too, to align with the kernel.
+[]
+> > diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+[]
+> > @@ -4335,8 +4335,6 @@ static struct tep_print_arg *make_bprint_args(char *fmt, void *data, int size, s
+> >  					switch (*ptr) {
+> >  					case 's':
+> >  					case 'S':
+> > -					case 'f':
+> > -					case 'F':
+> 
+> This file is used to parse output from older kernels, so remove this hunk.
+> 
+> It's not just for the lastest kernel. We must maintain backward
+> compatibility here too. If there use to be a usage of this, then we
+> must keep it until the kernels are no longer used (perhaps 7 years?)
 
---GvXjxJ+pjyke8COw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That argues for not using "%pfw" at all for some number of years.
 
-
-> Here i2c-0 is the "local" bus, i2c-4 and i2c-5 are the remote busses on
-> ports 0 and 1. As you can see the eeproms are accessed using a name like
-> "4-0050", meaning physical slave address 0x50 on bus 4. No alias is neede=
-d.
->=20
-> Should you want to know the alias, perhaps for debugging (it's the
-> address you'll see on your logic analyzer), they are shown in the kernel
-> log.
-
-And to add to that: The aliases on i2c-0 will be marked busy and show up
-as used if you run i2cdetect. So, you'd need a force-flag if you'd want
-to access them from userspace.
-
-
---GvXjxJ+pjyke8COw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl132mkACgkQFA3kzBSg
-KbY7KA//dTGgRdQZxIRRuFmdxhZR6aCLbnLiEuCcMagiQ2aa/EP1vhN8qPrUaucL
-Jf+XXPeFbx9q1ycOa/tOuI7CZbK9jXKDfMPQtP/gTx3MuHzv4MlHgTIWpEm8YMfr
-CgblrDzIKZqaeR3PGdu7AD6gSWDorwh/Rq4tt8hxqVi+KMiXgQBjiQFb2F5h2g5z
-nKjONcRnItlAnieSUnnzYzEs5jtLTHfaioMpAyrVXVRBr1uvRsQAxqUvN7bV+ThA
-mwmJfUOCrNf6gk596ug3SrHow7rgZxaNds6kEqiSY7Kib9MEfvkUj8q9yfBz8wCk
-YB052AdefuREt64vShJtmgbSjj+wRvBNkTB+/fdZptFL6CxORGhw+GKgkQnssqyQ
-W0Arjte++VEG3jGMtCx7I4GxDOdp2FqjSnBHDW9u1piPYBZOaxMeknBLhrrxiyfa
-Vrr3ZRgKTdz+70h1lQsQ5udADUxq6DhhGfoouGDlvk1JP6aLMXUr7PSNpjpYpZ0V
-N4qx2eJMRLkYrcNbbyDe+GWwFp3b1j859nk0jmi5M2zDTkqVji11DBkb0p1zrT1j
-7pvW9Us/V2i1jCLBHED2CSSQIaBs8StDnkPFvbeezoCUDxDeBz7ePDXO2asDYu9+
-jWDqFrb/qOTkZZdhvcurGUF3lL1SEgLR6gvWutjx1B5hQTHTE8g=
-=vLj2
------END PGP SIGNATURE-----
-
---GvXjxJ+pjyke8COw--
+Perhaps the '%pfw' should be '%pnfw' for 'name' and 'fwnode'
