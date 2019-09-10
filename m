@@ -1,78 +1,246 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
-Date: Tue, 10 Sep 2019 10:48:29 -0500
-Message-ID: <CAHCN7x+t-OVRE7pVM4V87_YMWpgO+_Vashfn1s5msoqC5eiwTg@mail.gmail.com>
-References: <20190828150037.2640-1-aford173@gmail.com> <20190905230443.GA52127@atomide.com>
- <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
- <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
- <20190909134033.s26eiurpat3iekse@pali> <20190909163543.GQ52127@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Maciej Falkowski <m.falkowski@samsung.com>
+Subject: [PATCH v2] dt-bindings: arm: samsung: Convert Samsung Exynos IOMMU
+ H/W, System MMU to dt-schema
+Date: Tue, 10 Sep 2019 17:52:07 +0200
+Message-ID: <20190910155207.6569-1-m.falkowski@samsung.com>
+References: <CAJKOXPf9zBSPnQgm0tVA_6N+mgR7xiCskf8JUOmQMG8C+jF8pA@mail.gmail.com>
+        <CGME20190910155240eucas1p26b343fd58e0f7b7fbe8dae06fe565de7@eucas1p2.samsung.com>
+Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190909163543.GQ52127@atomide.com>
+In-Reply-To: <CAJKOXPf9zBSPnQgm0tVA_6N+mgR7xiCskf8JUOmQMG8C+jF8pA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Adam Ford <adam.ford@logicpd.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Paul Walmsley <paul@pwsan.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: krzk@kernel.org, robh+dt@kernel.org, m.falkowski@samsung.com, mark.rutland@arm.com, m.szyprowski@samsung.com, a.hajda@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 11:35 AM Tony Lindgren <tony@atomide.com> wrote:
->
-> * Pali Roh=C3=A1r <pali.rohar@gmail.com> [190909 13:41]:
-> > On Monday 09 September 2019 08:37:09 Adam Ford wrote:
-> > > I applied this on 5.3 and it is working.  I assume the same is true i=
-n for-next.
->
-> Hmm I noticed I stopped getting RNG data after several rmmod modprobe
-> cycles, or several hd /dev/random reads. Anybody else seeing that?
->
-> > > Do you want to submit a formal patch?  I  can mark it as 'tested-by'
-> > > This really helps speed up the startup sequence on boards with sshd
-> > > because it delays for nearly 80 seconds waiting for entropy without
-> > > the hwrng.
-> >
-> > Hi! When applying a patch, could you please disable this rng for n900?
-> >
-> > In omap3-n900.dts for rng should be status =3D "disabled" (as Tony alre=
-ady
-> > wrote), similarly like for aes.
->
-> Yeah I'll post a proper patch after -rc1.
+Convert Samsung Exynos IOMMU H/W, System Memory Management Unit
+to newer dt-schema format.
 
-FYI,
+Update clock description.
 
-By putting your node into omap34xx.dtsi and omap36xx.dtsi along with
-the following, I can get the RNG to work on an OMAP3530 and a DM3730.
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+---
+Hi Krzysztof, 
 
+Thank you for feedback. 
 
-diff --git a/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
-b/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
-index 5e9d1afcd422..73f351e6d132 100644
---- a/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/omap34xx-omap36xx-clocks.dtsi
-@@ -259,7 +259,7 @@
-                         <&i2c1_ick>, <&uart2_ick>, <&uart1_ick>, <&gpt11_i=
-ck>,
-                         <&gpt10_ick>, <&mcbsp5_ick>, <&mcbsp1_ick>,
-                         <&omapctrl_ick>, <&aes2_ick>, <&sha12_ick>, <&icr_=
-ick>,
--                        <&des2_ick>, <&mspro_ick>, <&mailboxes_ick>,
-+                        <&des2_ick>, <&mspro_ick>, <&mailboxes_ick>,
-<&rng_ick>,
-                         <&mspro_fck>;
-        };
- };
+New changes:
+- style fixes including missing empty lines,
+deletion of unneeded descriptions
 
-I tried doing the same for am3517, but it doesn't appear to work.  In
-fact, the board hangs at boot with no splat, so I assume that some
-clock isn't running and causing a hang.  Figure 4-50 in the AM3517 TRM
-shows the security_l4_iclk2, so I wonder if the HW mods for AES, SHA,
-etc are doing something to enable this clock.  Those HWmods are
-disabled on AM3517.  I tried turning on the hwmods for them before
-without success, but I'll try it again.
+- fix mistake where one example was split 
+into two separete ones.
 
-adam
->
-> Regards,
->
-> Tony
+There are some updates with clock description. I have spoken with
+Marek Szyprowski and the right setup for clocks seems to be two pairs: 
+"sysmmu" with optional "master" or a pair of "aclk" + "pclk".
+
+The option: "aclk" + "pclk" + "master" was never used in any 
+of device bindings and there are none compilation problems with that.
+
+In so, clock-names are rewritten to handle this version
+and maximal clock number is set to two.
+
+Best regards,
+Maciej Falkowski
+---
+ .../bindings/iommu/samsung,sysmmu.txt         |  67 -----------
+ .../bindings/iommu/samsung,sysmmu.yaml        | 112 ++++++++++++++++++
+ 2 files changed, 112 insertions(+), 67 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
+ create mode 100644 Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
+
+diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
+deleted file mode 100644
+index 525ec82615a6..000000000000
+--- a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
++++ /dev/null
+@@ -1,67 +0,0 @@
+-Samsung Exynos IOMMU H/W, System MMU (System Memory Management Unit)
+-
+-Samsung's Exynos architecture contains System MMUs that enables scattered
+-physical memory chunks visible as a contiguous region to DMA-capable peripheral
+-devices like MFC, FIMC, FIMD, GScaler, FIMC-IS and so forth.
+-
+-System MMU is an IOMMU and supports identical translation table format to
+-ARMv7 translation tables with minimum set of page properties including access
+-permissions, shareability and security protection. In addition, System MMU has
+-another capabilities like L2 TLB or block-fetch buffers to minimize translation
+-latency.
+-
+-System MMUs are in many to one relation with peripheral devices, i.e. single
+-peripheral device might have multiple System MMUs (usually one for each bus
+-master), but one System MMU can handle transactions from only one peripheral
+-device. The relation between a System MMU and the peripheral device needs to be
+-defined in device node of the peripheral device.
+-
+-MFC in all Exynos SoCs and FIMD, M2M Scalers and G2D in Exynos5420 has 2 System
+-MMUs.
+-* MFC has one System MMU on its left and right bus.
+-* FIMD in Exynos5420 has one System MMU for window 0 and 4, the other system MMU
+-  for window 1, 2 and 3.
+-* M2M Scalers and G2D in Exynos5420 has one System MMU on the read channel and
+-  the other System MMU on the write channel.
+-
+-For information on assigning System MMU controller to its peripheral devices,
+-see generic IOMMU bindings.
+-
+-Required properties:
+-- compatible: Should be "samsung,exynos-sysmmu"
+-- reg: A tuple of base address and size of System MMU registers.
+-- #iommu-cells: Should be <0>.
+-- interrupts: An interrupt specifier for interrupt signal of System MMU,
+-	      according to the format defined by a particular interrupt
+-	      controller.
+-- clock-names: Should be "sysmmu" or a pair of "aclk" and "pclk" to gate
+-	       SYSMMU core clocks.
+-	       Optional "master" if the clock to the System MMU is gated by
+-	       another gate clock other core  (usually main gate clock
+-	       of peripheral device this SYSMMU belongs to).
+-- clocks: Phandles for respective clocks described by clock-names.
+-- power-domains: Required if the System MMU is needed to gate its power.
+-	  Please refer to the following document:
+-	  Documentation/devicetree/bindings/power/pd-samsung.txt
+-
+-Examples:
+-	gsc_0: gsc@13e00000 {
+-		compatible = "samsung,exynos5-gsc";
+-		reg = <0x13e00000 0x1000>;
+-		interrupts = <0 85 0>;
+-		power-domains = <&pd_gsc>;
+-		clocks = <&clock CLK_GSCL0>;
+-		clock-names = "gscl";
+-		iommus = <&sysmmu_gsc0>;
+-	};
+-
+-	sysmmu_gsc0: sysmmu@13e80000 {
+-		compatible = "samsung,exynos-sysmmu";
+-		reg = <0x13E80000 0x1000>;
+-		interrupt-parent = <&combiner>;
+-		interrupts = <2 0>;
+-		clock-names = "sysmmu", "master";
+-		clocks = <&clock CLK_SMMU_GSCL0>, <&clock CLK_GSCL0>;
+-		power-domains = <&pd_gsc>;
+-		#iommu-cells = <0>;
+-	};
+diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
+new file mode 100644
+index 000000000000..85d1a251f2ff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
+@@ -0,0 +1,112 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iommu/samsung,sysmmu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung Exynos IOMMU H/W, System MMU (System Memory Management Unit)
++
++maintainers:
++  - Marek Szyprowski <m.szyprowski@samsung.com>
++
++description: |+
++  Samsung's Exynos architecture contains System MMUs that enables scattered
++  physical memory chunks visible as a contiguous region to DMA-capable peripheral
++  devices like MFC, FIMC, FIMD, GScaler, FIMC-IS and so forth.
++
++  System MMU is an IOMMU and supports identical translation table format to
++  ARMv7 translation tables with minimum set of page properties including access
++  permissions, shareability and security protection. In addition, System MMU has
++  another capabilities like L2 TLB or block-fetch buffers to minimize translation
++  latency.
++
++  System MMUs are in many to one relation with peripheral devices, i.e. single
++  peripheral device might have multiple System MMUs (usually one for each bus
++  master), but one System MMU can handle transactions from only one peripheral
++  device. The relation between a System MMU and the peripheral device needs to be
++  defined in device node of the peripheral device.
++
++  MFC in all Exynos SoCs and FIMD, M2M Scalers and G2D in Exynos5420 has 2 System
++  MMUs.
++  * MFC has one System MMU on its left and right bus.
++  * FIMD in Exynos5420 has one System MMU for window 0 and 4, the other system MMU
++    for window 1, 2 and 3.
++  * M2M Scalers and G2D in Exynos5420 has one System MMU on the read channel and
++    the other System MMU on the write channel.
++
++  For information on assigning System MMU controller to its peripheral devices,
++  see generic IOMMU bindings.
++
++properties:
++  compatible:
++    const: samsung,exynos-sysmmu
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description: |
++      An interrupt specifier for interrupt signal of System MMU,
++      according to the format defined by a particular interrupt
++      controller.
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    oneOf:
++      - contains:
++          enum:
++            - sysmmu
++            - master
++      - contains:
++          enum:
++            - aclk
++            - pclk
++    description: |
++      Should be "sysmmu" with optional "master"
++      or a pair "aclk" with "pclk".
++
++  "#iommu-cells":
++    const: 0
++
++  power-domains:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      Required if the System MMU is needed to gate its power.
++      Please refer to the following document:
++      Documentation/devicetree/bindings/power/pd-samsung.txt
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - "#iommu-cells"
++
++examples:
++  - |
++    gsc_0: gsc@13e00000 {
++      compatible = "samsung,exynos5-gsc";
++      reg = <0x13e00000 0x1000>;
++      interrupts = <0 85 0>;
++      power-domains = <&pd_gsc>;
++      clocks = <&clock 0>; // CLK_GSCL0
++      clock-names = "gscl";
++      iommus = <&sysmmu_gsc0>;
++    };
++
++    sysmmu_gsc0: sysmmu@13e80000 {
++      compatible = "samsung,exynos-sysmmu";
++      reg = <0x13E80000 0x1000>;
++      interrupt-parent = <&combiner>;
++      interrupts = <2 0>;
++      clock-names = "sysmmu", "master";
++      clocks = <&clock 0>, // CLK_SMMU_GSCL0
++               <&clock 0>; // CLK_GSCL0
++      power-domains = <&pd_gsc>;
++      #iommu-cells = <0>;
++    };
++
+-- 
+2.17.1
