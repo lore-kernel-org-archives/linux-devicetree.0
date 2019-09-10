@@ -1,246 +1,80 @@
-From: Maciej Falkowski <m.falkowski@samsung.com>
-Subject: [PATCH v2] dt-bindings: arm: samsung: Convert Samsung Exynos IOMMU
- H/W, System MMU to dt-schema
-Date: Tue, 10 Sep 2019 17:52:07 +0200
-Message-ID: <20190910155207.6569-1-m.falkowski@samsung.com>
-References: <CAJKOXPf9zBSPnQgm0tVA_6N+mgR7xiCskf8JUOmQMG8C+jF8pA@mail.gmail.com>
-        <CGME20190910155240eucas1p26b343fd58e0f7b7fbe8dae06fe565de7@eucas1p2.samsung.com>
-Content-Type: text/plain; charset="utf-8"
+From: tinywrkb <tinywrkb@gmail.com>
+Subject: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s max-speed
+Date: Tue, 10 Sep 2019 18:55:07 +0300
+Message-ID: <20190910155507.491230-1-tinywrkb@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPf9zBSPnQgm0tVA_6N+mgR7xiCskf8JUOmQMG8C+jF8pA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: krzk@kernel.org, robh+dt@kernel.org, m.falkowski@samsung.com, mark.rutland@arm.com, m.szyprowski@samsung.com, a.hajda@samsung.com
+Cc: tinywrkb@gmail.com, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX
+        / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert Samsung Exynos IOMMU H/W, System Memory Management Unit
-to newer dt-schema format.
+Cubox-i Solo/DualLite carrier board has 100Mb/s magnetics while the
+Atheros AR8035 PHY on the MicroSoM v1.3 CPU module is a 1GbE PHY device.
 
-Update clock description.
+Since commit 5502b218e001 ("net: phy: use phy_resolve_aneg_linkmode in
+genphy_read_status") ethernet is broken on Cubox-i Solo/DualLite devices.
 
-Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+This adds a phy node to the MicroSoM DTS and a 100Mb/s max-speed limit
+to the Cubox-i Solo/DualLite carrier DTS.
+
+Signed-off-by: tinywrkb <tinywrkb@gmail.com>
 ---
-Hi Krzysztof, 
+This patch fixes ethernet on my Cubox-i2-300-D which is limited to 100Mb/s,
+afaik due to the carrier board  magnetics, and was since commit 5502b218e001
+("net: phy: use phy_resolve_aneg_linkmode in genphy_read_status")
 
-Thank you for feedback. 
+The AR8035 PHY on the CPU module reports to the driver as 1GbE capable
+via MII_BSMR's BMSR_ESTATEN status bit, the auto-negotiation sets the
+speed at 1GbE while the carrier board can't support it.
+Same behavior with the generic phy_device and the at803x drivers.
 
-New changes:
-- style fixes including missing empty lines,
-deletion of unneeded descriptions
+While the PHY is on the CPU module board I added the max-speed limit to
+the cubox-i carrier DTS as I suspect that if the Solo or DualLite v1.3
+MicroSoM will be connected to a 1GbE capable carrier board then it would
+work correctly with 1GbE.
 
-- fix mistake where one example was split 
-into two separete ones.
+I can confirm that this commit doesn't break networking on the my
+Cubox-i4Pro Quad (i4P-300-D) with it's 1GbE capable carrier board, and
+was tested separately with the generic phy_device and at803x drivers.
 
-There are some updates with clock description. I have spoken with
-Marek Szyprowski and the right setup for clocks seems to be two pairs: 
-"sysmmu" with optional "master" or a pair of "aclk" + "pclk".
+ arch/arm/boot/dts/imx6dl-cubox-i.dts  | 4 ++++
+ arch/arm/boot/dts/imx6qdl-sr-som.dtsi | 9 +++++++++
+ 2 files changed, 13 insertions(+)
 
-The option: "aclk" + "pclk" + "master" was never used in any 
-of device bindings and there are none compilation problems with that.
-
-In so, clock-names are rewritten to handle this version
-and maximal clock number is set to two.
-
-Best regards,
-Maciej Falkowski
----
- .../bindings/iommu/samsung,sysmmu.txt         |  67 -----------
- .../bindings/iommu/samsung,sysmmu.yaml        | 112 ++++++++++++++++++
- 2 files changed, 112 insertions(+), 67 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
- create mode 100644 Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
-
-diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
-deleted file mode 100644
-index 525ec82615a6..000000000000
---- a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
-+++ /dev/null
-@@ -1,67 +0,0 @@
--Samsung Exynos IOMMU H/W, System MMU (System Memory Management Unit)
--
--Samsung's Exynos architecture contains System MMUs that enables scattered
--physical memory chunks visible as a contiguous region to DMA-capable peripheral
--devices like MFC, FIMC, FIMD, GScaler, FIMC-IS and so forth.
--
--System MMU is an IOMMU and supports identical translation table format to
--ARMv7 translation tables with minimum set of page properties including access
--permissions, shareability and security protection. In addition, System MMU has
--another capabilities like L2 TLB or block-fetch buffers to minimize translation
--latency.
--
--System MMUs are in many to one relation with peripheral devices, i.e. single
--peripheral device might have multiple System MMUs (usually one for each bus
--master), but one System MMU can handle transactions from only one peripheral
--device. The relation between a System MMU and the peripheral device needs to be
--defined in device node of the peripheral device.
--
--MFC in all Exynos SoCs and FIMD, M2M Scalers and G2D in Exynos5420 has 2 System
--MMUs.
--* MFC has one System MMU on its left and right bus.
--* FIMD in Exynos5420 has one System MMU for window 0 and 4, the other system MMU
--  for window 1, 2 and 3.
--* M2M Scalers and G2D in Exynos5420 has one System MMU on the read channel and
--  the other System MMU on the write channel.
--
--For information on assigning System MMU controller to its peripheral devices,
--see generic IOMMU bindings.
--
--Required properties:
--- compatible: Should be "samsung,exynos-sysmmu"
--- reg: A tuple of base address and size of System MMU registers.
--- #iommu-cells: Should be <0>.
--- interrupts: An interrupt specifier for interrupt signal of System MMU,
--	      according to the format defined by a particular interrupt
--	      controller.
--- clock-names: Should be "sysmmu" or a pair of "aclk" and "pclk" to gate
--	       SYSMMU core clocks.
--	       Optional "master" if the clock to the System MMU is gated by
--	       another gate clock other core  (usually main gate clock
--	       of peripheral device this SYSMMU belongs to).
--- clocks: Phandles for respective clocks described by clock-names.
--- power-domains: Required if the System MMU is needed to gate its power.
--	  Please refer to the following document:
--	  Documentation/devicetree/bindings/power/pd-samsung.txt
--
--Examples:
--	gsc_0: gsc@13e00000 {
--		compatible = "samsung,exynos5-gsc";
--		reg = <0x13e00000 0x1000>;
--		interrupts = <0 85 0>;
--		power-domains = <&pd_gsc>;
--		clocks = <&clock CLK_GSCL0>;
--		clock-names = "gscl";
--		iommus = <&sysmmu_gsc0>;
--	};
--
--	sysmmu_gsc0: sysmmu@13e80000 {
--		compatible = "samsung,exynos-sysmmu";
--		reg = <0x13E80000 0x1000>;
--		interrupt-parent = <&combiner>;
--		interrupts = <2 0>;
--		clock-names = "sysmmu", "master";
--		clocks = <&clock CLK_SMMU_GSCL0>, <&clock CLK_GSCL0>;
--		power-domains = <&pd_gsc>;
--		#iommu-cells = <0>;
--	};
-diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
-new file mode 100644
-index 000000000000..85d1a251f2ff
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
-@@ -0,0 +1,112 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iommu/samsung,sysmmu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/imx6dl-cubox-i.dts b/arch/arm/boot/dts/imx6dl-cubox-i.dts
+index 2b1b3e193f53..cfc82513c78c 100644
+--- a/arch/arm/boot/dts/imx6dl-cubox-i.dts
++++ b/arch/arm/boot/dts/imx6dl-cubox-i.dts
+@@ -49,3 +49,7 @@
+ 	model = "SolidRun Cubox-i Solo/DualLite";
+ 	compatible = "solidrun,cubox-i/dl", "fsl,imx6dl";
+ };
 +
-+title: Samsung Exynos IOMMU H/W, System MMU (System Memory Management Unit)
-+
-+maintainers:
-+  - Marek Szyprowski <m.szyprowski@samsung.com>
-+
-+description: |+
-+  Samsung's Exynos architecture contains System MMUs that enables scattered
-+  physical memory chunks visible as a contiguous region to DMA-capable peripheral
-+  devices like MFC, FIMC, FIMD, GScaler, FIMC-IS and so forth.
-+
-+  System MMU is an IOMMU and supports identical translation table format to
-+  ARMv7 translation tables with minimum set of page properties including access
-+  permissions, shareability and security protection. In addition, System MMU has
-+  another capabilities like L2 TLB or block-fetch buffers to minimize translation
-+  latency.
-+
-+  System MMUs are in many to one relation with peripheral devices, i.e. single
-+  peripheral device might have multiple System MMUs (usually one for each bus
-+  master), but one System MMU can handle transactions from only one peripheral
-+  device. The relation between a System MMU and the peripheral device needs to be
-+  defined in device node of the peripheral device.
-+
-+  MFC in all Exynos SoCs and FIMD, M2M Scalers and G2D in Exynos5420 has 2 System
-+  MMUs.
-+  * MFC has one System MMU on its left and right bus.
-+  * FIMD in Exynos5420 has one System MMU for window 0 and 4, the other system MMU
-+    for window 1, 2 and 3.
-+  * M2M Scalers and G2D in Exynos5420 has one System MMU on the read channel and
-+    the other System MMU on the write channel.
-+
-+  For information on assigning System MMU controller to its peripheral devices,
-+  see generic IOMMU bindings.
-+
-+properties:
-+  compatible:
-+    const: samsung,exynos-sysmmu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description: |
-+      An interrupt specifier for interrupt signal of System MMU,
-+      according to the format defined by a particular interrupt
-+      controller.
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 2
-+
-+  clock-names:
-+    oneOf:
-+      - contains:
-+          enum:
-+            - sysmmu
-+            - master
-+      - contains:
-+          enum:
-+            - aclk
-+            - pclk
-+    description: |
-+      Should be "sysmmu" with optional "master"
-+      or a pair "aclk" with "pclk".
-+
-+  "#iommu-cells":
-+    const: 0
-+
-+  power-domains:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: |
-+      Required if the System MMU is needed to gate its power.
-+      Please refer to the following document:
-+      Documentation/devicetree/bindings/power/pd-samsung.txt
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - "#iommu-cells"
-+
-+examples:
-+  - |
-+    gsc_0: gsc@13e00000 {
-+      compatible = "samsung,exynos5-gsc";
-+      reg = <0x13e00000 0x1000>;
-+      interrupts = <0 85 0>;
-+      power-domains = <&pd_gsc>;
-+      clocks = <&clock 0>; // CLK_GSCL0
-+      clock-names = "gscl";
-+      iommus = <&sysmmu_gsc0>;
-+    };
-+
-+    sysmmu_gsc0: sysmmu@13e80000 {
-+      compatible = "samsung,exynos-sysmmu";
-+      reg = <0x13E80000 0x1000>;
-+      interrupt-parent = <&combiner>;
-+      interrupts = <2 0>;
-+      clock-names = "sysmmu", "master";
-+      clocks = <&clock 0>, // CLK_SMMU_GSCL0
-+               <&clock 0>; // CLK_GSCL0
-+      power-domains = <&pd_gsc>;
-+      #iommu-cells = <0>;
-+    };
-+
++&ethphy {
++	max-speed = <100>;
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-sr-som.dtsi b/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
+index 6d7f6b9035bc..969bc96c3f99 100644
+--- a/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
+@@ -57,6 +57,15 @@
+ 	phy-reset-duration = <2>;
+ 	phy-reset-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
++	phy-handle = <&ethphy>;
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		ethphy: ethernet-phy@0 {
++			compatible = "ethernet-phy-ieee802.3-c22";
++			reg = <0>;
++		};
++	};
+ };
+ 
+ &iomuxc {
 -- 
-2.17.1
+2.23.0
