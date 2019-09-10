@@ -1,102 +1,172 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
- max-speed
-Date: Tue, 10 Sep 2019 19:17:48 +0300
-Message-ID: <20190910161748.dbvudrkx6i2avoha@sapphire.tkos.co.il>
-References: <20190910155507.491230-1-tinywrkb@gmail.com>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [Patch 00/13] media: am437x-vpfe: overdue maintenance
+Date: Tue, 10 Sep 2019 11:20:48 -0500
+Message-ID: <20190910162048.wrxy7tjlmf3k6axm@ti.com>
+References: <20190909162743.30114-1-bparrot@ti.com>
+ <5b73285c-5d05-1799-06fc-f4ab84cb9a1d@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190910155507.491230-1-tinywrkb@gmail.com>
+In-Reply-To: <5b73285c-5d05-1799-06fc-f4ab84cb9a1d@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tinywrkb <tinywrkb@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi tinywrkb,
-
-On Tue, Sep 10, 2019 at 06:55:07PM +0300, tinywrkb wrote:
-> Cubox-i Solo/DualLite carrier board has 100Mb/s magnetics while the
-> Atheros AR8035 PHY on the MicroSoM v1.3 CPU module is a 1GbE PHY device.
-
-According to the hardware designer, Rabeeh Khoury, there is not such 
-limitation in the Cubox-i carrier magnetics.
-
-> Since commit 5502b218e001 ("net: phy: use phy_resolve_aneg_linkmode in
-> genphy_read_status") ethernet is broken on Cubox-i Solo/DualLite devices.
-
-Does revert of 5502b218e001 fixes your issue?
-
-> This adds a phy node to the MicroSoM DTS and a 100Mb/s max-speed limit
-> to the Cubox-i Solo/DualLite carrier DTS.
+Hans Verkuil <hverkuil@xs4all.nl> wrote on Tue [2019-Sep-10 12:42:51 +0200]:
+> Hi Benoit,
 > 
-> Signed-off-by: tinywrkb <tinywrkb@gmail.com>
-
-You must use your real name in sign-off.
-
-> ---
-> This patch fixes ethernet on my Cubox-i2-300-D which is limited to 100Mb/s,
-> afaik due to the carrier board  magnetics, and was since commit 5502b218e001
-> ("net: phy: use phy_resolve_aneg_linkmode in genphy_read_status")
+> On 9/9/19 6:27 PM, Benoit Parrot wrote:
+> > This patch series is a collection of patches we have been carrying for a
+> > while.
+> > 
+> > A few patches do fix actual bug and v4l2-compliance errors/warnings.
+> > Other are drivers re-work to simplify/clarify the code for easier
+> > maintenance.
 > 
-> The AR8035 PHY on the CPU module reports to the driver as 1GbE capable
-> via MII_BSMR's BMSR_ESTATEN status bit, the auto-negotiation sets the
-> speed at 1GbE while the carrier board can't support it.
-> Same behavior with the generic phy_device and the at803x drivers.
+> Can you post the output of the latest version of v4l2-compliance? Use
+> the '-s' option so streaming is tested as well.
 > 
-> While the PHY is on the CPU module board I added the max-speed limit to
-> the cubox-i carrier DTS as I suspect that if the Solo or DualLite v1.3
-> MicroSoM will be connected to a 1GbE capable carrier board then it would
-> work correctly with 1GbE.
+> Thanks!
 > 
-> I can confirm that this commit doesn't break networking on the my
-> Cubox-i4Pro Quad (i4P-300-D) with it's 1GbE capable carrier board, and
-> was tested separately with the generic phy_device and at803x drivers.
+> 	Hans
+
+As already discussed, I'll paste the result here and I'll make sure to
+include it in the next revision.
+
+./v4l2-compliance_5b168dc84739 -d 0 -s   
+v4l2-compliance SHA: 5b168dc8473911227890526bad26553d9e8ff81b, 32 bits
+
+Compliance test for vpfe device /dev/video0:
+
+Driver Info:
+	Driver name      : vpfe
+	Card type        : TI AM437x VPFE
+	Bus info         : platform:vpfe 48326000.vpfe
+	Driver v ersion   : 5.3.0
+	Capabilities     : 0x85200001
+		Video Capture
+		Read/Write
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x05200001
+		Video Capture
+		Read/Write
+		Streaming
+		Extended Pix Format
+
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video0 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls (Input 0):
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 3 Private Controls: 0
+
+Format ioctls (Input 0):
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+		fail: v4l2-test-formats.cpp(1419): node->frmsizes_count[pixfmt] > 1
+	test Cropping: FAIL
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls (Input 0):
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls (Input 0):
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK (Not Supported)
+
+Test input 0:
+
+Streaming ioctls:
+	test read/write: OK
+	test blocking wait: OK
+	test MMAP (no poll): OK                           
+	test MMAP (select): OK                            
+	test MMAP (epoll): OK                             
+	test USERPTR (no poll): OK (Not Supported)
+	test USERPTR (select): OK (Not Supported)
+	test DMABUF: Cannot test, specify --expbuf-device
+
+Total for vpfe device /dev/video0: 51, Succeeded: 50, Failed: 1, Warnings: 0
+
+Benoit
+
 > 
->  arch/arm/boot/dts/imx6dl-cubox-i.dts  | 4 ++++
->  arch/arm/boot/dts/imx6qdl-sr-som.dtsi | 9 +++++++++
->  2 files changed, 13 insertions(+)
+> > 
+> > We also include the SPDX Licensing update which seemed to have been
+> > missed by the global script thus far.
+> > 
+> > Benoit Parrot (12):
+> >   media: am437x-vpfe: Fix missing first line
+> >   media: am437x-vpfe: Rework ISR routine for clarity
+> >   media: am437x-vpfe: Wait for end of frame before tear-down
+> >   media: am437x-vpfe: Streamlined vb2 buffer cleanup
+> >   media: am437x-vpfe: Setting STD to current value is not an error
+> >   media: am437x-vpfe: Use a per instance format array instead of a
+> >     static one
+> >   media: am437x-vpfe: Maintain a reference to the current vpfe_fmt
+> >   media: am437x-vpfe: fix function trace debug log
+> >   media: am437x-vpfe: Remove print_fourcc helper
+> >   media: am437x-vpfe: TRY_FMT ioctl is not really trying anything
+> >   media: am437x-vpfe: Remove per bus width static data
+> >   media: am437x-vpfe: Switch to SPDX Licensing
+> > 
+> > Dave Gerlach (1):
+> >   media: am437x-vpfe: Fix suspend path to always handle pinctrl config
+> > 
+> >  drivers/media/platform/am437x/am437x-vpfe.c   | 906 ++++++++----------
+> >  drivers/media/platform/am437x/am437x-vpfe.h   |  44 +-
+> >  .../media/platform/am437x/am437x-vpfe_regs.h  |  10 +-
+> >  3 files changed, 438 insertions(+), 522 deletions(-)
+> > 
 > 
-> diff --git a/arch/arm/boot/dts/imx6dl-cubox-i.dts b/arch/arm/boot/dts/imx6dl-cubox-i.dts
-> index 2b1b3e193f53..cfc82513c78c 100644
-> --- a/arch/arm/boot/dts/imx6dl-cubox-i.dts
-> +++ b/arch/arm/boot/dts/imx6dl-cubox-i.dts
-> @@ -49,3 +49,7 @@
->  	model = "SolidRun Cubox-i Solo/DualLite";
->  	compatible = "solidrun,cubox-i/dl", "fsl,imx6dl";
->  };
-> +
-> +&ethphy {
-> +	max-speed = <100>;
-> +};
-
-Where is the ethphy lable defined? Have you build tested this patch?
-
-> diff --git a/arch/arm/boot/dts/imx6qdl-sr-som.dtsi b/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
-> index 6d7f6b9035bc..969bc96c3f99 100644
-> --- a/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
-> @@ -57,6 +57,15 @@
->  	phy-reset-duration = <2>;
->  	phy-reset-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
->  	status = "okay";
-> +	phy-handle = <&ethphy>;
-> +	mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		ethphy: ethernet-phy@0 {
-> +			compatible = "ethernet-phy-ieee802.3-c22";
-> +			reg = <0>;
-> +		};
-> +	};
->  };
->  
->  &iomuxc {
-
-baruch
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
