@@ -1,63 +1,63 @@
 From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH] regulator: uniphier: Add Pro5 USB3 VBUS support
-Date: Tue, 10 Sep 2019 10:51:44 +0900
-Message-ID: <1568080304-1572-1-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: [PATCH] reset: uniphier-glue: Add Pro5 USB3 support
+Date: Tue, 10 Sep 2019 10:55:27 +0900
+Message-ID: <1568080527-1767-1-git-send-email-hayashi.kunihiko@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Pro5 SoC has same scheme of USB3 VBUS as Pro4, so the data for Pro5 is
+Pro5 SoC has same scheme of USB3 reset as Pro4, so the data for Pro5 is
 equivalent to Pro4.
 
 Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 ---
- Documentation/devicetree/bindings/regulator/uniphier-regulator.txt | 5 +++--
- drivers/regulator/uniphier-regulator.c                             | 4 ++++
+ Documentation/devicetree/bindings/reset/uniphier-reset.txt | 5 +++--
+ drivers/reset/reset-uniphier-glue.c                        | 4 ++++
  2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt b/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt
-index c9919f4..94fd38b 100644
---- a/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt
-@@ -13,6 +13,7 @@ this layer. These clocks and resets should be described in each property.
+diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+index ea00517..e320a8c 100644
+--- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
++++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+@@ -130,6 +130,7 @@ this layer. These clocks and resets should be described in each property.
  Required properties:
  - compatible: Should be
-     "socionext,uniphier-pro4-usb3-regulator" - for Pro4 SoC
-+    "socionext,uniphier-pro5-usb3-regulator" - for Pro5 SoC
-     "socionext,uniphier-pxs2-usb3-regulator" - for PXs2 SoC
-     "socionext,uniphier-ld20-usb3-regulator" - for LD20 SoC
-     "socionext,uniphier-pxs3-usb3-regulator" - for PXs3 SoC
-@@ -20,12 +21,12 @@ Required properties:
- - clocks: A list of phandles to the clock gate for USB3 glue layer.
+     "socionext,uniphier-pro4-usb3-reset" - for Pro4 SoC USB3
++    "socionext,uniphier-pro5-usb3-reset" - for Pro5 SoC USB3
+     "socionext,uniphier-pxs2-usb3-reset" - for PXs2 SoC USB3
+     "socionext,uniphier-ld20-usb3-reset" - for LD20 SoC USB3
+     "socionext,uniphier-pxs3-usb3-reset" - for PXs3 SoC USB3
+@@ -141,12 +142,12 @@ Required properties:
+ - clocks: A list of phandles to the clock gate for the glue layer.
  	According to the clock-names, appropriate clocks are required.
  - clock-names: Should contain
 -    "gio", "link" - for Pro4 SoC
 +    "gio", "link" - for Pro4 and Pro5 SoCs
      "link"        - for others
- - resets: A list of phandles to the reset control for USB3 glue layer.
+ - resets: A list of phandles to the reset control for the glue layer.
  	According to the reset-names, appropriate resets are required.
  - reset-names: Should contain
 -    "gio", "link" - for Pro4 SoC
 +    "gio", "link" - for Pro4 and Pro5 SoCs
      "link"        - for others
  
- See Documentation/devicetree/bindings/regulator/regulator.txt
-diff --git a/drivers/regulator/uniphier-regulator.c b/drivers/regulator/uniphier-regulator.c
-index 9026d5a..2311924 100644
---- a/drivers/regulator/uniphier-regulator.c
-+++ b/drivers/regulator/uniphier-regulator.c
-@@ -186,6 +186,10 @@ static const struct of_device_id uniphier_regulator_match[] = {
- 		.data = &uniphier_pro4_usb3_data,
+ Example:
+diff --git a/drivers/reset/reset-uniphier-glue.c b/drivers/reset/reset-uniphier-glue.c
+index a45923f..2b188b3bb 100644
+--- a/drivers/reset/reset-uniphier-glue.c
++++ b/drivers/reset/reset-uniphier-glue.c
+@@ -141,6 +141,10 @@ static const struct of_device_id uniphier_glue_reset_match[] = {
+ 		.data = &uniphier_pro4_data,
  	},
  	{
-+		.compatible = "socionext,uniphier-pro5-usb3-regulator",
-+		.data = &uniphier_pro4_usb3_data,
++		.compatible = "socionext,uniphier-pro5-usb3-reset",
++		.data = &uniphier_pro4_data,
 +	},
 +	{
- 		.compatible = "socionext,uniphier-pxs2-usb3-regulator",
- 		.data = &uniphier_pxs2_usb3_data,
+ 		.compatible = "socionext,uniphier-pxs2-usb3-reset",
+ 		.data = &uniphier_pxs2_data,
  	},
 -- 
 2.7.4
