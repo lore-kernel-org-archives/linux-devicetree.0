@@ -1,75 +1,46 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v6 01/12] tools lib traceevent: Convert remaining %p[fF]
- users to %p[sS]
-Date: Tue, 10 Sep 2019 15:03:03 -0400
-Message-ID: <20190910150303.5a0d3904@oasis.local.home>
-References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
-        <20190910084707.18380-2-sakari.ailus@linux.intel.com>
-        <20190910071837.2e9110f8@oasis.local.home>
-        <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
-        <20190910142621.0bec208d@oasis.local.home>
-        <c458e734f5777561138b87228384808398547762.camel@perches.com>
+From: Talel Shenhar <talel@amazon.com>
+Subject: [PATCH v2 0/3] Amazon's Annapurna Labs POS Driver
+Date: Tue, 10 Sep 2019 22:05:07 +0300
+Message-ID: <1568142310-17622-1-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c458e734f5777561138b87228384808398547762.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
+To: robh+dt@kernel.org, marc.zyngier@arm.com, tglx@linutronix.de, jason@lakedaemon.net, mark.rutland@arm.com, nicolas.ferre@microchip.com, mchehab+samsung@kernel.org, shawn.lin@rock-chips.com, gregkh@linuxfoundation.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, talel@amazon.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 10 Sep 2019 11:42:06 -0700
-Joe Perches <joe@perches.com> wrote:
+The Amazon's Annapurna Labs SoCs includes Point Of Serialization error
+logging unit that reports an error in case of write error (e.g. attempt to
+write to a read only register).
 
-> On Tue, 2019-09-10 at 14:26 -0400, Steven Rostedt wrote:
-> > On Tue, 10 Sep 2019 10:18:44 -0700
-> > Joe Perches <joe@perches.com> wrote:
-> >   
-> > > > It's not just for the lastest kernel. We must maintain backward
-> > > > compatibility here too. If there use to be a usage of this, then we
-> > > > must keep it until the kernels are no longer used (perhaps 7 years?)    
-> > > 
-> > > That argues for not using "%pfw" at all for some number of years.
-> > > 
-> > > Perhaps the '%pfw' should be '%pnfw' for 'name' and 'fwnode'  
-> >
-> >   -ENOCOMPREHENSION  
-> 
-> Perhaps you were not copied on the whole series.
-> 
-> https://lore.kernel.org/lkml/20190910084707.18380-1-sakari.ailus@linux.intel.com/
+This patch series introduces the support for this unit.
 
-Thanks for the link.
+Changes since v1: =================
+- move MODULE_ to the end of the file
+- simplified resource remapping devm_platform_ioremap_resource()
+- use platform_get_irq() instead of irq_of_parse_and_map()
+- removed the use of _relaxed accessor in favor to the regular ones
+- removed driver selected based on arch
+- added casting to u64 before left shifting (reported by kbuild test robot)
 
-> 
-> As I understand it, Sakair Ailus is proposing to
-> obsolete the current vsprintf "%p[Ff]" extension
-> and replace the usage with a new "%pfw" extension
-> which would emit the name of a pointer to "struct fwnode {}".
-> 
-> https://lore.kernel.org/lkml/20190910084707.18380-10-sakari.ailus@linux.intel.com/
-> 
-> If reusing "%pf<foo>" is a problem, then instead
-> it might be reasonable to have a new "%pn<foo>" for
-> that use instead.
-> 
-> btw:
-> 
-> Is there kernel version information available in
-> trace output files?
 
-Not really. This is just a library that parses the trace event formats,
-there's not kernel versions passed in, but we do use variations in
-formats and such to determine what is supported.
+Talel Shenhar (3):
+  dt-bindings: soc: al-pos: Amazon's Annapurna Labs POS
+  soc: amazon: al-pos: Introduce Amazon's Annapurna Labs POS driver
+  soc: amazon: al-pos: cast to u64 before left shifting
 
-> 
-> If so, it might be reasonable to change the tooling
-> there instead.
-> 
+ .../bindings/soc/amazon/amazon,al-pos.txt          |  18 +++
+ MAINTAINERS                                        |   7 ++
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/amazon/Kconfig                         |   5 +
+ drivers/soc/amazon/Makefile                        |   1 +
+ drivers/soc/amazon/al_pos.c                        | 127 +++++++++++++++++++++
+ 7 files changed, 160 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
+ create mode 100644 drivers/soc/amazon/Kconfig
+ create mode 100644 drivers/soc/amazon/Makefile
+ create mode 100644 drivers/soc/amazon/al_pos.c
 
-Actually, I think we could just look to see if "%pfw" is used and fall
-to that, otherwise consider it an older kernel and do it the original
-way.
-
--- Steve
+-- 
+2.7.4
