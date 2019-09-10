@@ -1,7 +1,7 @@
 From: Talel Shenhar <talel@amazon.com>
-Subject: [PATCH v2 1/3] dt-bindings: soc: al-pos: Amazon's Annapurna Labs POS
-Date: Tue, 10 Sep 2019 22:05:08 +0300
-Message-ID: <1568142310-17622-2-git-send-email-talel@amazon.com>
+Subject: [PATCH v2 3/3] soc: amazon: al-pos: cast to u64 before left shifting
+Date: Tue, 10 Sep 2019 22:05:10 +0300
+Message-ID: <1568142310-17622-4-git-send-email-talel@amazon.com>
 References: <1568142310-17622-1-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -11,37 +11,26 @@ Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, marc.zyngier@arm.com, tglx@linutronix.de, jason@lakedaemon.net, mark.rutland@arm.com, nicolas.ferre@microchip.com, mchehab+samsung@kernel.org, shawn.lin@rock-chips.com, gregkh@linuxfoundation.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, talel@amazon.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document Amazon's Annapurna Labs POS SoC binding.
+Fix wrap around for pos errors on addresses above 32 bit.
 
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Talel Shenhar <talel@amazon.com>
 ---
- .../devicetree/bindings/soc/amazon/amazon,al-pos.txt   | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
+ drivers/soc/amazon/al_pos.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt b/Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
-new file mode 100644
-index 00000000..035cc571
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
-@@ -0,0 +1,18 @@
-+Amazon's Annapurna Labs POS
-+
-+POS node is defined to describe the Point Of Serialization (POS) logger
-+unit.
-+
-+Required properties:
-+- compatible:	Shall be "amazon,al-pos".
-+- reg:		POS logger resources.
-+- interrupts:	should contain the interrupt for pos error event.
-+
-+Example:
-+
-+al_pos {
-+	compatible = "amazon,al-pos";
-+	reg = <0x0 0xf0070084 0x0 0x00000008>;
-+	interrupt-parent = <&amazon_system_fabric>;
-+	interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
-+};
+diff --git a/drivers/soc/amazon/al_pos.c b/drivers/soc/amazon/al_pos.c
+index a865111..e95e1fc 100644
+--- a/drivers/soc/amazon/al_pos.c
++++ b/drivers/soc/amazon/al_pos.c
+@@ -49,7 +49,7 @@ static irqreturn_t al_pos_irq_handler(int irq, void *info)
+ 	writel(0, pos->mmio_base + AL_POS_ERROR_LOG_1);
+ 
+ 	addr = FIELD_GET(AL_POS_ERROR_LOG_0_ADDR_LOW, log0);
+-	addr |= (FIELD_GET(AL_POS_ERROR_LOG_1_ADDR_HIGH, log1) << 32);
++	addr |= (((u64)FIELD_GET(AL_POS_ERROR_LOG_1_ADDR_HIGH, log1)) << 32);
+ 	request_id = FIELD_GET(AL_POS_ERROR_LOG_1_REQUEST_ID, log1);
+ 	bresp = FIELD_GET(AL_POS_ERROR_LOG_1_BRESP, log1);
+ 
 -- 
 2.7.4
