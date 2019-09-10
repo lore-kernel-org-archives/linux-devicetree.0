@@ -1,97 +1,132 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: RE: [EXT] Re: [v3,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some
- properties
-Date: Tue, 10 Sep 2019 10:21:32 +0000
-Message-ID: <DB7PR04MB4490F16B6EB5BBE4FE2472218FB60@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190903061853.19793-1-biwen.li@nxp.com>
- <2374870a-a728-b046-9ec6-bd7773411f50@flowbird.group>
- <20190903173604.GA18177@bogus>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH 1/2] backlight: lm3630a: add an enable gpio for the HWEN
+ pin
+Date: Tue, 10 Sep 2019 11:21:56 +0100
+Message-ID: <20190910102156.vmprsjebmlphkv34@holly.lan>
+References: <20190908203704.30147-1-andreas@kemnade.info>
+ <20190908203704.30147-2-andreas@kemnade.info>
+ <20190909105729.w5552rtop7rhghy2@holly.lan>
+ <20190909221349.46ca5a1f@aktux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190903173604.GA18177@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190909221349.46ca5a1f@aktux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Rob Herring' <robh@kernel.org>, Martin Fuzzey <martin.fuzzey@flowbird.group>
-Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Leo Li <leoyang.li@nxp.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Martin Fuzzey <mfuzzey@parkeon.com>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: lee.jones@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-> Caution: EXT Email
->=20
-> On Tue, Sep 03, 2019 at 11:37:01AM +0200, Martin Fuzzey wrote:
-> > On 03/09/2019 08:18, Biwen Li wrote:
-> > > diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> > > b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> > > index 94adc1cf93d9..588f688b30d1 100644
-> > > --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> > > +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> > > @@ -8,10 +8,39 @@ Required properties:
-> > >   Optional properties:
-> > >   - interrupts: IRQ line for the RTC (not implemented).
-> > > +- interrupt-output-pin: The interrupt output pin must be
-> > > +  "INTA" or "INTB", default value is "INTA"
+On Mon, Sep 09, 2019 at 10:13:49PM +0200, Andreas Kemnade wrote:
+> On Mon, 9 Sep 2019 11:57:29 +0100
+> Daniel Thompson <daniel.thompson@linaro.org> wrote:
+> 
+> > On Sun, Sep 08, 2019 at 10:37:03PM +0200, Andreas Kemnade wrote:
+> > > For now just enable it in the probe function to allow i2c
+> > > access and disable it on remove. Disabling also means resetting
+> > > the register values to default.
+> > > 
+> > > Tested on Kobo Clara HD.
+> > > 
+> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > > ---
+> > >  drivers/video/backlight/lm3630a_bl.c | 18 ++++++++++++++++++
+> > >  1 file changed, 18 insertions(+)
+> > > 
+> > > diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+> > > index b04b35d007a2..3b45a1733198 100644
+> > > --- a/drivers/video/backlight/lm3630a_bl.c
+> > > +++ b/drivers/video/backlight/lm3630a_bl.c
+> > > @@ -12,6 +12,8 @@
+> > >  #include <linux/uaccess.h>
+> > >  #include <linux/interrupt.h>
+> > >  #include <linux/regmap.h>
+> > > +#include <linux/gpio/consumer.h>
+> > > +#include <linux/gpio.h>
+> > >  #include <linux/pwm.h>
+> > >  #include <linux/platform_data/lm3630a_bl.h>
+> > >  
+> > > @@ -48,6 +50,7 @@ struct lm3630a_chip {
+> > >  	struct lm3630a_platform_data *pdata;
+> > >  	struct backlight_device *bleda;
+> > >  	struct backlight_device *bledb;
+> > > +	struct gpio_desc *enable_gpio;
+> > >  	struct regmap *regmap;
+> > >  	struct pwm_device *pwmd;
+> > >  };
+> > > @@ -506,6 +509,14 @@ static int lm3630a_probe(struct i2c_client *client,
+> > >  		return -ENOMEM;
+> > >  	pchip->dev = &client->dev;
+> > >  
+> > > +	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
+> > > +						GPIOD_ASIS);  
+> > 
+> > Initializing GPIOD_ASIS doesn't look right to me.
+> > 
+> > If you initialize ASIS then the driver must configure the pin as an
+> > output... far easier just to set GPIOD_OUT_HIGH during the get.
+> > 
+> > Note also that the call to this function should also be moved *below*
+> > the calls parse the DT.
+> > 
+> oops, must have forgotten that, and had good luck here.
+> > 
+> > > +	if (IS_ERR(pchip->enable_gpio)) {
+> > > +		rval = PTR_ERR(pchip->enable_gpio);
+> > > +		return rval;
+> > > +	}
 > > > +
-> >
-> >
-> > The hardware has 2 interrupt pins which can be mapped to various
-> > interrupt sources (alarm1, alarm2, periodic, ...)
-> >
-> > Currently the driver only supports alarm1.
-> >
-> > It is even possible to use both pins for the same interrupt (eg if
-> > INTA were wired to the SoC, INTB to a PMIC and both used for alarm...)
-> >
-> >
-> > So maybe it would be better to have
-> >
-> > alarm1-interrupt-output-pin: The interrupt output pin used for the
-> > alarm function. Must be "INTA", "INTB" or "BOTH"
->=20
-> That's a property per source. 2 properties possible sources (either a mas=
-k or list)
-> would be my preference.
->=20
-> Also, whatever you end up with needs a vendor prefix.
->=20
-> >
-> > Then, if and when other types of interrupts are supported by the
-> > driver new properties could be added for them.
-> >
-> >
-> >
-> > > +- quartz-load-femtofarads: The internal capacitor to select for the =
-quartz:
-> > > +   PCF85263_QUARTZCAP_7pF          [0]
-> > > +   PCF85263_QUARTZCAP_6pF          [1]
-> > > +   PCF85263_QUARTZCAP_12p5pF       [2] DEFAULT
 > > > +
-> >
-> >
-> > The standard DT property "quartz-load-femtofarads" takes the real
-> > physical value in femto Farads ie values should be 7000, 6000, 12500 wi=
-thout
-> defines.
->=20
-> I believe I said this on the last version.
-Yes, I will fix it in v4.
->=20
-> >
-> >
-> > > +- nxp,quartz-drive-strength: Drive strength for the quartz:
-> > > +   PCF85263_QUARTZDRIVE_100ko      [0] DEFAULT
-> > > +   PCF85263_QUARTZDRIVE_60ko       [1]
-> > > +   PCF85263_QUARTZDRIVE_500ko      [2]
-> > > +
-> >
-> >
-> > Not sure about this.
-> >
-> > Wouldn't it be better to either use a real impedence value in ohms
-> > (like load property above, even though it is a vendor specific value)
-> > rather than a define, or defines for "Low, Medium, High"?
-> >
-> >
-> > Martin
-> >
-> >
+> > >  	pchip->regmap = devm_regmap_init_i2c(client, &lm3630a_regmap);
+> > >  	if (IS_ERR(pchip->regmap)) {
+> > >  		rval = PTR_ERR(pchip->regmap);
+> > > @@ -535,6 +546,10 @@ static int lm3630a_probe(struct i2c_client *client,
+> > >  	}
+> > >  	pchip->pdata = pdata;
+> > >  
+> > > +	if (pchip->enable_gpio) {
+> > > +		gpiod_set_value_cansleep(pchip->enable_gpio, 1);  
+> > 
+> > Not needed, use GPIOD_OUT_HIGH instead.
+> > 
+> > 
+> > > +		usleep_range(1000, 2000);  
+> > 
+> > Not needed, this sleep is already part of lm3630a_chip_init().
+> > 
+> you are right.
+> > 
+> > > +	}
+> > >  	/* chip initialize */
+> > >  	rval = lm3630a_chip_init(pchip);
+> > >  	if (rval < 0) {
+> > > @@ -586,6 +601,9 @@ static int lm3630a_remove(struct i2c_client *client)
+> > >  	if (rval < 0)
+> > >  		dev_err(pchip->dev, "i2c failed to access register\n");
+> > >  
+> > > +	if (pchip->enable_gpio)
+> > > +		gpiod_set_value_cansleep(pchip->enable_gpio, 0);
+> > > +  
+> > 
+> > Is this needed?
+> > 
+> > This is a remove path, not a power management path, and we have no idea
+> > what the original status of the pin was anyway?
+> > 
+> 
+> Looking at Ishdn on page 5 of the datasheet, switching it off everytime
+> possible seems not needed. We would need to call chip_init() everytime
+> we enable the gpio or live with default values.
+> Therefore I did decide to not put it into any power management path.
+> But switching it on and not switching it off feels so unbalanced. 
+
+Either the power consumed by the controller when strings aren't lit up
+matters, in which case the driver should implement proper power
+management or it doesn't matter and changing the pin state isn't needed.
+
+I'm happy with either of the above but this looks like a third way,
+where eager users could hack in a bit of extra power management by
+forcing drivers to unbind. 
+
+
+Daniel.
