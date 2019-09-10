@@ -1,125 +1,86 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 3/3] dmaengine: Support for requesting channels preferring DMA domain controller
-Date: Tue, 10 Sep 2019 14:50:37 +0300
-Message-ID: <20190910115037.23539-4-peter.ujfalusi@ti.com>
-References: <20190910115037.23539-1-peter.ujfalusi@ti.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH] reset: uniphier-glue: Add Pro5 USB3 support
+Date: Tue, 10 Sep 2019 20:56:40 +0900
+Message-ID: <20190910205640.6ABD.4A936039@socionext.com>
+References: <1568080527-1767-1-git-send-email-hayashi.kunihiko@socionext.com> <1568101695.3062.1.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190910115037.23539-1-peter.ujfalusi@ti.com>
+In-Reply-To: <1568101695.3062.1.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vkoul@kernel.org, robh+dt@kernel.org
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-In case the channel is not requested via the slave API, use the
-of_find_dma_domain() to see if a system default DMA controller is
-specified.
+Hi Philipp,
 
-Add new function which can be used by clients to request channels by mask
-from their DMA domain controller if specified.
+On Tue, 10 Sep 2019 09:48:15 +0200 <p.zabel@pengutronix.de> wrote:
 
-Client drivers can take advantage of the domain support by moving from
-dma_request_chan_by_mask() to dma_request_chan_by_domain()
+> Hi Kunihiko,
+> 
+> On Tue, 2019-09-10 at 10:55 +0900, Kunihiko Hayashi wrote:
+> > Pro5 SoC has same scheme of USB3 reset as Pro4, so the data for Pro5 is
+> > equivalent to Pro4.
+> > 
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> 
+> If it is exactly the same, you could keep using the same compatible:
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+This driver is derived from reset-simple, so the method to control reset
+in the glue block is the same for each SoC.
+
+And both Pro4 and Pro5 need same parent clock and reset, so the data for
+these SoCs refer same parent clock names and parent reset names.
+
+However, since the glue block itself can be different, I think that
+compatible string should be distinguished for each SoC.
+
+For example, "pxs2-usb3-reset", "ld20-usb3-reset" and "pxs3-usb-reset"
+in this driver are distinguished for the same reason.
+
+Thank you,
+
+> 
+> > ---
+> >  Documentation/devicetree/bindings/reset/uniphier-reset.txt | 5 +++--
+> >  drivers/reset/reset-uniphier-glue.c                        | 4 ++++
+> >  2 files changed, 7 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> > index ea00517..e320a8c 100644
+> > --- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> > +++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> > @@ -130,6 +130,7 @@ this layer. These clocks and resets should be described in each property.
+> >  Required properties:
+> >  - compatible: Should be
+> >      "socionext,uniphier-pro4-usb3-reset" - for Pro4 SoC USB3
+> > +    "socionext,uniphier-pro5-usb3-reset" - for Pro5 SoC USB3
+> 
+> +    "socionext,uniphier-pro5-usb3-reset", "socionext,uniphier-pro4-usb3-reset" - for Pro5 SoC USB3
+> 
+> [...]
+> > diff --git a/drivers/reset/reset-uniphier-glue.c b/drivers/reset/reset-uniphier-glue.c
+> > index a45923f..2b188b3bb 100644
+> > --- a/drivers/reset/reset-uniphier-glue.c
+> > +++ b/drivers/reset/reset-uniphier-glue.c
+> > @@ -141,6 +141,10 @@ static const struct of_device_id uniphier_glue_reset_match[] = {
+> >  		.data = &uniphier_pro4_data,
+> >  	},
+> >  	{
+> > +		.compatible = "socionext,uniphier-pro5-usb3-reset",
+> > +		.data = &uniphier_pro4_data,
+> > +	},
+> > +	{
+> >  		.compatible = "socionext,uniphier-pxs2-usb3-reset",
+> >  		.data = &uniphier_pxs2_data,
+> >  	},
+> 
+> And this change would not be necessary.
+> 
+> regards
+> Philipp
+
 ---
- drivers/dma/dmaengine.c   | 21 ++++++++++++++++-----
- include/linux/dmaengine.h |  9 ++++++---
- 2 files changed, 22 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
-index 03ac4b96117c..1bae3ff24da0 100644
---- a/drivers/dma/dmaengine.c
-+++ b/drivers/dma/dmaengine.c
-@@ -640,6 +640,10 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
- 	struct dma_device *device, *_d;
- 	struct dma_chan *chan = NULL;
- 
-+	/* If np is not specified, get the default DMA domain controller */
-+	if (!np)
-+		np = of_find_dma_domain(NULL);
-+
- 	/* Find a channel */
- 	mutex_lock(&dma_list_mutex);
- 	list_for_each_entry_safe(device, _d, &dma_device_list, global_node) {
-@@ -751,19 +755,26 @@ struct dma_chan *dma_request_slave_channel(struct device *dev,
- EXPORT_SYMBOL_GPL(dma_request_slave_channel);
- 
- /**
-- * dma_request_chan_by_mask - allocate a channel satisfying certain capabilities
-- * @mask: capabilities that the channel must satisfy
-+ * dma_request_chan_by_domain - allocate a channel by mask from DMA domain
-+ * @dev:	pointer to client device structure
-+ * @mask:	capabilities that the channel must satisfy
-  *
-  * Returns pointer to appropriate DMA channel on success or an error pointer.
-  */
--struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
-+struct dma_chan *dma_request_chan_by_domain(struct device *dev,
-+					    const dma_cap_mask_t *mask)
- {
- 	struct dma_chan *chan;
- 
- 	if (!mask)
- 		return ERR_PTR(-ENODEV);
- 
--	chan = __dma_request_channel(mask, NULL, NULL, NULL);
-+	if (dev)
-+		chan = __dma_request_channel(mask, NULL, NULL,
-+					     of_find_dma_domain(dev->of_node));
-+	else
-+		chan = __dma_request_channel(mask, NULL, NULL, NULL);
-+
- 	if (!chan) {
- 		mutex_lock(&dma_list_mutex);
- 		if (list_empty(&dma_device_list))
-@@ -775,7 +786,7 @@ struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
- 
- 	return chan;
- }
--EXPORT_SYMBOL_GPL(dma_request_chan_by_mask);
-+EXPORT_SYMBOL_GPL(dma_request_chan_by_domain);
- 
- void dma_release_channel(struct dma_chan *chan)
- {
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 8fcdee1c0cf9..de5c52810443 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -1307,7 +1307,8 @@ struct dma_chan *__dma_request_channel(const dma_cap_mask_t *mask,
- struct dma_chan *dma_request_slave_channel(struct device *dev, const char *name);
- 
- struct dma_chan *dma_request_chan(struct device *dev, const char *name);
--struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask);
-+struct dma_chan *dma_request_chan_by_domain(struct device *dev,
-+					    const dma_cap_mask_t *mask);
- 
- void dma_release_channel(struct dma_chan *chan);
- int dma_get_slave_caps(struct dma_chan *chan, struct dma_slave_caps *caps);
-@@ -1344,8 +1345,8 @@ static inline struct dma_chan *dma_request_chan(struct device *dev,
- {
- 	return ERR_PTR(-ENODEV);
- }
--static inline struct dma_chan *dma_request_chan_by_mask(
--						const dma_cap_mask_t *mask)
-+static inline struct dma_chan *dma_request_chan_by_domain(struct device *dev,
-+			const dma_cap_mask_t *mask)
- {
- 	return ERR_PTR(-ENODEV);
- }
-@@ -1406,6 +1407,8 @@ struct dma_chan *dma_get_any_slave_channel(struct dma_device *device);
- 	__dma_request_channel(&(mask), x, y, NULL)
- #define dma_request_slave_channel_compat(mask, x, y, dev, name) \
- 	__dma_request_slave_channel_compat(&(mask), x, y, dev, name)
-+#define dma_request_chan_by_mask(mask) \
-+	dma_request_chan_by_domain(NULL, mask)
- 
- static inline struct dma_chan
- *__dma_request_slave_channel_compat(const dma_cap_mask_t *mask,
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Best Regards,
+Kunihiko Hayashi
