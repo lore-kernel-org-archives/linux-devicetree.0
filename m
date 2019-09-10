@@ -1,190 +1,68 @@
-From: Frank Wunderlich <frank-w@public-files.de>
-Subject: [PATCH v7 2/7] rtc: mt6397: move some common definitions into rtc.h
-Date: Tue, 10 Sep 2019 09:04:41 +0200
-Message-ID: <20190910070446.639-3-frank-w@public-files.de>
-References: <20190910070446.639-1-frank-w@public-files.de>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v2 06/14] dmaengine: ti: Add cppi5 header for UDMA
+Date: Tue, 10 Sep 2019 10:06:58 +0300
+Message-ID: <8486fbb1-9d2c-9230-6205-85d58b93697c@ti.com>
+References: <20190730093450.12664-1-peter.ujfalusi@ti.com>
+ <20190730093450.12664-7-peter.ujfalusi@ti.com>
+ <20190908142528.GP2672@vkoul-mobl>
+ <8699f999-7834-a083-2c7b-3ea909b1e011@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190910070446.639-1-frank-w@public-files.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-mediatek@lists.infradead.org
-Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Sean Wang <sean.wang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, linux-pm@vger.kernel.org, Frank Wunderlich <frank-w@public-files.de>, Josef Friedl <josef.friedl@speed.at>, linux-kernel@vger.kernel.org, Tianping Fang <tianping.fang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Eddie Huang <eddie.huang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8699f999-7834-a083-2c7b-3ea909b1e011@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Vinod Koul <vkoul@kernel.org>
+Cc: robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org, dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com, j-keerthy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-From: Josef Friedl <josef.friedl@speed.at>
 
-move code to separate header-file to reuse definitions later
-in poweroff-driver (drivers/power/reset/mt6323-poweroff.c)
 
-Suggested-by: Frank Wunderlich <frank-w@public-files.de>
-Signed-off-by: Josef Friedl <josef.friedl@speed.at>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
----
-changes since v6: updated copyright
-changes since v5: none
-changes since v4: none
-changes since v3: none
-changes since v2: add missing commit-message
----
- drivers/rtc/rtc-mt6397.c       | 55 +-------------------------
- include/linux/mfd/mt6397/rtc.h | 71 ++++++++++++++++++++++++++++++++++
- 2 files changed, 72 insertions(+), 54 deletions(-)
- create mode 100644 include/linux/mfd/mt6397/rtc.h
+On 09/09/2019 13:59, Peter Ujfalusi wrote:
+> 
+> 
+> On 08/09/2019 17.25, Vinod Koul wrote:
+>> On 30-07-19, 12:34, Peter Ujfalusi wrote:
+>>
+>>> +/**
+>>> + * Descriptor header, present in all types of descriptors
+>>> + */
+>>> +struct cppi5_desc_hdr_t {
+>>> +	u32 pkt_info0;	/* Packet info word 0 (n/a in Buffer desc) */
+>>> +	u32 pkt_info1;	/* Packet info word 1 (n/a in Buffer desc) */
+>>> +	u32 pkt_info2;	/* Packet info word 2 Buffer reclamation info */
+>>> +	u32 src_dst_tag; /* Packet info word 3 (n/a in Buffer desc) */
+>>
+>> Can we move these comments to kernel-doc style please
+> 
+> Sure, I'll move all struct and enums.
+> 
+>>> +/**
+>>> + * cppi5_desc_get_type - get descriptor type
+>>> + * @desc_hdr: packet descriptor/TR header
+>>> + *
+>>> + * Returns descriptor type:
+>>> + * CPPI5_INFO0_DESC_TYPE_VAL_HOST
+>>> + * CPPI5_INFO0_DESC_TYPE_VAL_MONO
+>>> + * CPPI5_INFO0_DESC_TYPE_VAL_TR
+>>> + */
+>>> +static inline u32 cppi5_desc_get_type(struct cppi5_desc_hdr_t *desc_hdr)
+>>> +{
+>>> +	WARN_ON(!desc_hdr);
+>>
+>> why WARN_ON and not return error!
+> 
+> these helpers were intended to be as simple as possible.
+> I can go through with all of the WARN_ONs and replace them with if()
+> pr_warn() and either just return or return with 0.
+> 
+> Would that be acceptable?
+> 
 
-diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-index b46ed4dc7015..c08ee5edf865 100644
---- a/drivers/rtc/rtc-mt6397.c
-+++ b/drivers/rtc/rtc-mt6397.c
-@@ -9,60 +9,7 @@
- #include <linux/module.h>
- #include <linux/regmap.h>
- #include <linux/rtc.h>
--#include <linux/irqdomain.h>
--#include <linux/platform_device.h>
--#include <linux/of_address.h>
--#include <linux/of_irq.h>
--#include <linux/io.h>
--#include <linux/mfd/mt6397/core.h>
--
--#define RTC_BBPU		0x0000
--#define RTC_BBPU_CBUSY		BIT(6)
--
--#define RTC_WRTGR		0x003c
--
--#define RTC_IRQ_STA		0x0002
--#define RTC_IRQ_STA_AL		BIT(0)
--#define RTC_IRQ_STA_LP		BIT(3)
--
--#define RTC_IRQ_EN		0x0004
--#define RTC_IRQ_EN_AL		BIT(0)
--#define RTC_IRQ_EN_ONESHOT	BIT(2)
--#define RTC_IRQ_EN_LP		BIT(3)
--#define RTC_IRQ_EN_ONESHOT_AL	(RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
--
--#define RTC_AL_MASK		0x0008
--#define RTC_AL_MASK_DOW		BIT(4)
--
--#define RTC_TC_SEC		0x000a
--/* Min, Hour, Dom... register offset to RTC_TC_SEC */
--#define RTC_OFFSET_SEC		0
--#define RTC_OFFSET_MIN		1
--#define RTC_OFFSET_HOUR		2
--#define RTC_OFFSET_DOM		3
--#define RTC_OFFSET_DOW		4
--#define RTC_OFFSET_MTH		5
--#define RTC_OFFSET_YEAR		6
--#define RTC_OFFSET_COUNT	7
--
--#define RTC_AL_SEC		0x0018
--
--#define RTC_PDN2		0x002e
--#define RTC_PDN2_PWRON_ALARM	BIT(4)
--
--#define RTC_MIN_YEAR		1968
--#define RTC_BASE_YEAR		1900
--#define RTC_NUM_YEARS		128
--#define RTC_MIN_YEAR_OFFSET	(RTC_MIN_YEAR - RTC_BASE_YEAR)
--
--struct mt6397_rtc {
--	struct device		*dev;
--	struct rtc_device	*rtc_dev;
--	struct mutex		lock;
--	struct regmap		*regmap;
--	int			irq;
--	u32			addr_base;
--};
-+#include <linux/mfd/mt6397/rtc.h>
- 
- static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
- {
-diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
-new file mode 100644
-index 000000000000..f84b9163c0ee
---- /dev/null
-+++ b/include/linux/mfd/mt6397/rtc.h
-@@ -0,0 +1,71 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2014-2019 MediaTek Inc.
-+ *
-+ * Author: Tianping.Fang <tianping.fang@mediatek.com>
-+ *        Sean Wang <sean.wang@mediatek.com>
-+ */
-+
-+#ifndef _LINUX_MFD_MT6397_RTC_H_
-+#define _LINUX_MFD_MT6397_RTC_H_
-+
-+#include <linux/jiffies.h>
-+#include <linux/mutex.h>
-+#include <linux/regmap.h>
-+#include <linux/rtc.h>
-+
-+#define RTC_BBPU               0x0000
-+#define RTC_BBPU_CBUSY         BIT(6)
-+#define RTC_BBPU_KEY            (0x43 << 8)
-+
-+#define RTC_WRTGR              0x003c
-+
-+#define RTC_IRQ_STA            0x0002
-+#define RTC_IRQ_STA_AL         BIT(0)
-+#define RTC_IRQ_STA_LP         BIT(3)
-+
-+#define RTC_IRQ_EN             0x0004
-+#define RTC_IRQ_EN_AL          BIT(0)
-+#define RTC_IRQ_EN_ONESHOT     BIT(2)
-+#define RTC_IRQ_EN_LP          BIT(3)
-+#define RTC_IRQ_EN_ONESHOT_AL  (RTC_IRQ_EN_ONESHOT | RTC_IRQ_EN_AL)
-+
-+#define RTC_AL_MASK            0x0008
-+#define RTC_AL_MASK_DOW                BIT(4)
-+
-+#define RTC_TC_SEC             0x000a
-+/* Min, Hour, Dom... register offset to RTC_TC_SEC */
-+#define RTC_OFFSET_SEC         0
-+#define RTC_OFFSET_MIN         1
-+#define RTC_OFFSET_HOUR                2
-+#define RTC_OFFSET_DOM         3
-+#define RTC_OFFSET_DOW         4
-+#define RTC_OFFSET_MTH         5
-+#define RTC_OFFSET_YEAR                6
-+#define RTC_OFFSET_COUNT       7
-+
-+#define RTC_AL_SEC             0x0018
-+
-+#define RTC_PDN2               0x002e
-+#define RTC_PDN2_PWRON_ALARM   BIT(4)
-+
-+#define RTC_MIN_YEAR           1968
-+#define RTC_BASE_YEAR          1900
-+#define RTC_NUM_YEARS          128
-+#define RTC_MIN_YEAR_OFFSET    (RTC_MIN_YEAR - RTC_BASE_YEAR)
-+
-+#define MTK_RTC_POLL_DELAY_US  10
-+#define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
-+
-+struct mt6397_rtc {
-+	struct device           *dev;
-+	struct rtc_device       *rtc_dev;
-+
-+	/* Protect register access from multiple tasks */
-+	struct mutex            lock;
-+	struct regmap           *regmap;
-+	int                     irq;
-+	u32                     addr_base;
-+};
-+
-+#endif /* _LINUX_MFD_MT6397_RTC_H_ */
+This should never happens in working system unless there is buggy code.
+I think It can be just removed
+
 -- 
-2.17.1
+Best regards,
+grygorii
