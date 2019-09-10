@@ -1,111 +1,102 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: uniphier: Add Pro5 USB3 VBUS support" to the
- regulator tree
-Date: Tue, 10 Sep 2019 11:06:59 +0100 (BST)
-Message-ID: <20190910100659.E825CD02D5A@fitzroy.sirena.org.uk>
-References: <1568080304-1572-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v6 11/12] lib/vsprintf: Add %pfw conversion specifier
+ for printing fwnode names
+Date: Tue, 10 Sep 2019 03:21:26 -0700
+Message-ID: <ef57a3fc72b548b7daf9257aacc596d57004199d.camel@perches.com>
+References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
+         <20190910084707.18380-12-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1568080304-1572-1-git-send-email-hayashi.kunihiko@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Jassi Brar <jaswinder.singh@linaro.org>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190910084707.18380-12-sakari.ailus@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Tue, 2019-09-10 at 11:47 +0300, Sakari Ailus wrote:
+> Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
+> support printing full path of the node, including its name ("f") and only
+> the node's name ("P") in the printk family of functions. The two flags
+> have equivalent functionality to existing %pOF with the same two modifiers
+> ("f" and "P") on OF based systems. The ability to do the same on ACPI
+> based systems is added by this patch.
 
-   regulator: uniphier: Add Pro5 USB3 VBUS support
+checkpatch comment below:
+   A. 
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+[]
+> @@ -418,6 +418,30 @@ Examples::
+>  
+>  Passed by reference.
+>  
+> +Fwnode handles
+> +--------------
+> +
+> +::
+> +
+> +	%pfw[fP]
+> +
+> +For printing information on fwnode handles. The default is to print the full
+> +node name, including the path. The modifiers are functionally equivalent to
+> +%pOF above.
+> +
+> +	- f - full name of the node, including the path
+> +	- P - the name of the node including an address (if there is one)
+> +
+> +Examples (ACPI)::
+> +
+> +	%pfwf	\_SB.PCI0.CIO2.port@1.endpoint@0	- Full node name
+> +	%pfwP	endpoint@0				- Node name
+> +
+> +Examples (OF)::
+> +
+> +	%pfwf	/ocp@68000000/i2c@48072000/camera@10/port/endpoint - Full name
+> +	%pfwP	endpoint				- Node name
+[]
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+[]
+> @@ -5988,14 +5988,17 @@ sub process {
+>  		        for (my $count = $linenr; $count <= $lc; $count++) {
+>  				my $specifier;
+>  				my $extension;
+> +				my $qualifier;
+>  				my $bad_specifier = "";
+>  				my $fmt = get_quoted_string($lines[$count - 1], raw_line($count, 0));
+>  				$fmt =~ s/%%//g;
+>  
+> -				while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
+> +				while ($fmt =~ /(\%[\*\d\.]*p(\w)(\w?))/g) {
 
-has been applied to the regulator tree at
+This is not generic enough to allow all possible qualifiers
+to be captured.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+This should be something like:
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+			while ($fmt =~ /(\%[\*\d\.]*p(\w)(\w*))/g) {
+	
+>  					$specifier = $1;
+>  					$extension = $2;
+> -					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxt]/) {
+> +					$qualifier = $3;
+> +					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
+> +					    ($extension eq "f" && $qualifier ne "w")) {
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+And this should likely test
+					    (defined $qualifier &&
+					     $extension eq 'f' && $qualifier =~ /^w/))
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+>  						$bad_specifier = $specifier;
+>  						last;
+>  					}
 
-Thanks,
-Mark
+And here the 'f' isn't really a bad $specifier,
+it does not have the correct 'w' $extension.
 
->From 3ba5368dc4e5947cb70287754960776c471eb23d Mon Sep 17 00:00:00 2001
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Date: Tue, 10 Sep 2019 10:51:44 +0900
-Subject: [PATCH] regulator: uniphier: Add Pro5 USB3 VBUS support
-
-Pro5 SoC has same scheme of USB3 VBUS as Pro4, so the data for Pro5 is
-equivalent to Pro4.
-
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Link: https://lore.kernel.org/r/1568080304-1572-1-git-send-email-hayashi.kunihiko@socionext.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/regulator/uniphier-regulator.txt     | 5 +++--
- drivers/regulator/uniphier-regulator.c                       | 4 ++++
- 2 files changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt b/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt
-index c9919f4b92d2..94fd38b0d163 100644
---- a/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/uniphier-regulator.txt
-@@ -13,6 +13,7 @@ this layer. These clocks and resets should be described in each property.
- Required properties:
- - compatible: Should be
-     "socionext,uniphier-pro4-usb3-regulator" - for Pro4 SoC
-+    "socionext,uniphier-pro5-usb3-regulator" - for Pro5 SoC
-     "socionext,uniphier-pxs2-usb3-regulator" - for PXs2 SoC
-     "socionext,uniphier-ld20-usb3-regulator" - for LD20 SoC
-     "socionext,uniphier-pxs3-usb3-regulator" - for PXs3 SoC
-@@ -20,12 +21,12 @@ Required properties:
- - clocks: A list of phandles to the clock gate for USB3 glue layer.
- 	According to the clock-names, appropriate clocks are required.
- - clock-names: Should contain
--    "gio", "link" - for Pro4 SoC
-+    "gio", "link" - for Pro4 and Pro5 SoCs
-     "link"        - for others
- - resets: A list of phandles to the reset control for USB3 glue layer.
- 	According to the reset-names, appropriate resets are required.
- - reset-names: Should contain
--    "gio", "link" - for Pro4 SoC
-+    "gio", "link" - for Pro4 and Pro5 SoCs
-     "link"        - for others
- 
- See Documentation/devicetree/bindings/regulator/regulator.txt
-diff --git a/drivers/regulator/uniphier-regulator.c b/drivers/regulator/uniphier-regulator.c
-index 9026d5a3e964..2311924c3103 100644
---- a/drivers/regulator/uniphier-regulator.c
-+++ b/drivers/regulator/uniphier-regulator.c
-@@ -185,6 +185,10 @@ static const struct of_device_id uniphier_regulator_match[] = {
- 		.compatible = "socionext,uniphier-pro4-usb3-regulator",
- 		.data = &uniphier_pro4_usb3_data,
- 	},
-+	{
-+		.compatible = "socionext,uniphier-pro5-usb3-regulator",
-+		.data = &uniphier_pro4_usb3_data,
-+	},
- 	{
- 		.compatible = "socionext,uniphier-pxs2-usb3-regulator",
- 		.data = &uniphier_pxs2_usb3_data,
--- 
-2.20.1
+The valid extensions may change in the future and
+this code isn't particularly manageable, so I
+think the $specifier/$extension pair should likely
+have some additional testing after validating
+the $specifier.
