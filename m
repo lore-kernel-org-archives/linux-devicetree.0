@@ -1,70 +1,27 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH 4/7] dt-bindings: chosen: Add clocksource and clockevent
- selection
-Date: Tue, 10 Sep 2019 14:51:50 +0000
-Message-ID: <ab43b209-78fa-0cab-b8ea-acd4c550e689@microchip.com>
-References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
- <1568123236-767-5-git-send-email-claudiu.beznea@microchip.com>
- <20190910143231.GB14966@e107533-lin.cambridge.arm.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 08/11] dt-bindings: mediatek: bindings for MT6779 clk
+Date: Tue, 10 Sep 2019 07:53:09 -0700
+Message-ID: <20190910145310.2C48421479@mail.kernel.org>
+References: <1566206502-4347-1-git-send-email-mars.cheng@mediatek.com> <1566206502-4347-9-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190910143231.GB14966@e107533-lin.cambridge.arm.com>
-Content-Language: en-US
-Content-ID: <51C9C1F64856FD429E7E3EB16F23D5E7@namprd11.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: sudeep.holla@arm.com
-Cc: tmaimon77@gmail.com, linus.walleij@linaro.org, nsekhar@ti.com, guoren@kernel.org, linux-stm32@st-md-mailman.stormreply.com, heiko@sntech.de, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, khilman@baylibre.com, Ludovic.Desroches@microchip.com, linux-imx@nxp.com, u.kleine-koenig@pengutronix.de, uclinux-h8-devel@lists.sourceforge.jp, marc.zyngier@arm.com, s.hauer@pengutronix.de, linux-unisoc@lists.infradead.org, khalasa@piap.pl, tglx@linutronix.de, sbranden@broadcom.com, linux-kernel@vger.kernel.org, ralf@linux-mips.org, paul.burton@mips.com, kernel@pengutronix.de, mark.rutland@arm.com, alexandre.belloni@bootlin.com, jhogan@kernel.org, palmer@sifive.com, eric@anholt.net, thierry.reding@gmail.com, manivannan.sadhasivam@linaro.org, ysato@users.sourceforge.jp, zhang.lyra@gmail.com, daniel.lezcano@linaro.org, jonathanh@nvidia.com, bgolaszewski@baylibre.co
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1566206502-4347-9-git-send-email-mars.cheng@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Mars Cheng <mars.cheng@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh@kernel.org>, Sean Wang <sean.wang@kernel.org>
+Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, mtk01761 <wendell.lin@mediatek.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Mars Cheng (2019-08-19 02:21:39)
+> From: mtk01761 <wendell.lin@mediatek.com>
+>=20
+> This patch adds the binding documentation for
+> apmixedsys, audiosys, camsys, imgsys, ipesys,
+> infracfg, mfgcfg, mmsys, topckgen, vdecsys,
+> and vencsys for Mediatek MT6779.
+>=20
+> Signed-off-by: mtk01761 <wendell.lin@mediatek.com>
+> ---
 
-
-On 10.09.2019 17:32, Sudeep Holla wrote:
-> External E-Mail
-> 
-> 
-> On Tue, Sep 10, 2019 at 04:47:13PM +0300, Claudiu Beznea wrote:
->> From: Alexandre Belloni <alexandre.belloni@bootlin.com>
->>
->> Some timer drivers may behave either as clocksource or clockevent
->> or both. Until now, in case of platforms with multiple hardware
->> resources of the same type, the drivers were chosing the first
->> registered hardware resource as clocksource/clockevent and the
->> next one as clockevent/clocksource. Other were using different
->> compatibles (one for each functionality, although its about the
->> same hardware). Add DT bindings to be able to choose the
->> functionality of a timer.
->>
-> 
-> Is the piece of hardware not capable of serving as both clocksource
-> and clockevent or is it just the platform choice ?
-
-In my case, the hardware is not capable of serving at the same time
-a clocksource device and a clockevent device.
-
-First, I published v1 for a hardware device having this behavior at
-[1] requesting 1st probed hardware device to work as clocksource and
-the 2nd one to work as clockevent. The discussion at [1] ended up with
-the idea of having a mechanism to specify which hardware device behaves
-as clocksource and which one behaves as clockevent.
-
-Thank you,
-Claudiu Beznea
-
-[1] https://lore.kernel.org/lkml/1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com/
-
-> 
-> --
-> Regards,
-> Sudeep
-> 
-> 
+Applied to clk-next
