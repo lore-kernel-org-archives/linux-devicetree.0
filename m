@@ -1,76 +1,48 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH v3 1/2] ethtool: implement Energy Detect Powerdown support
- via phy-tunable
-Date: Tue, 10 Sep 2019 12:07:53 +0000
-Message-ID: <98aef502750727f94fb0603f3bf5e4634eaa0561.camel@analog.com>
-References: <20190909131251.3634-1-alexandru.ardelean@analog.com>
-         <20190909131251.3634-2-alexandru.ardelean@analog.com>
-         <20190910080014.GC24779@unicorn.suse.cz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Ashish Kumar <Ashish.Kumar@nxp.com>
+Subject: [PATCH] arm64: dts: ls1046a: Add QSPI node for ls1046afrwy
+Date: Tue, 10 Sep 2019 17:50:52 +0530
+Message-ID: <1568118055-9740-2-git-send-email-Ashish.Kumar@nxp.com>
+References: <1568118055-9740-1-git-send-email-Ashish.Kumar@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190910080014.GC24779@unicorn.suse.cz>
-Content-Language: en-US
-Content-ID: <186FD882CC375343BB98BC5D9718F1D9@namprd03.prod.outlook.com>
+In-Reply-To: <1568118055-9740-1-git-send-email-Ashish.Kumar@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "mkubecek@suse.cz" <mkubecek@suse.cz>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Cc: "andrew@lunn.ch" <andrew@lunn.ch>, "davem@davemloft.net" <davem@davemloft.net>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ashish Kumar <Ashish.Kumar@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA5LTEwIGF0IDEwOjAwICswMjAwLCBNaWNoYWwgS3ViZWNlayB3cm90ZToN
-Cj4gW0V4dGVybmFsXQ0KPiANCj4gT24gTW9uLCBTZXAgMDksIDIwMTkgYXQgMDQ6MTI6NTBQTSAr
-MDMwMCwgQWxleGFuZHJ1IEFyZGVsZWFuIHdyb3RlOg0KPiA+IFRoZSBgcGh5X3R1bmFibGVfaWRg
-IGhhcyBiZWVuIG5hbWVkIGBFVEhUT09MX1BIWV9FRFBEYCBzaW5jZSBpdCBsb29rcyBsaWtlDQo+
-ID4gdGhpcyBmZWF0dXJlIGlzIGNvbW1vbiBhY3Jvc3Mgb3RoZXIgUEhZcyAobGlrZSBFRUUpLCBh
-bmQgZGVmaW5pbmcNCj4gPiBgRVRIVE9PTF9QSFlfRU5FUkdZX0RFVEVDVF9QT1dFUl9ET1dOYCBz
-ZWVtcyB0b28gbG9uZy4NCj4gPiANCj4gPiBUaGUgd2F5IEVEUEQgd29ya3MsIGlzIHRoYXQgdGhl
-IFJYIGJsb2NrIGlzIHB1dCB0byBhIGxvd2VyIHBvd2VyIG1vZGUsDQo+ID4gZXhjZXB0IGZvciBs
-aW5rLXB1bHNlIGRldGVjdGlvbiBjaXJjdWl0cy4gVGhlIFRYIGJsb2NrIGlzIGFsc28gcHV0IHRv
-IGxvdw0KPiA+IHBvd2VyIG1vZGUsIGJ1dCB0aGUgUEhZIHdha2VzLXVwIHBlcmlvZGljYWxseSB0
-byBzZW5kIGxpbmsgcHVsc2VzLCB0byBhdm9pZA0KPiA+IGxvY2stdXBzIGluIGNhc2UgdGhlIG90
-aGVyIHNpZGUgaXMgYWxzbyBpbiBFRFBEIG1vZGUuDQo+ID4gDQo+ID4gQ3VycmVudGx5LCB0aGVy
-ZSBhcmUgMiBQSFkgZHJpdmVycyB0aGF0IGxvb2sgbGlrZSB0aGV5IGNvdWxkIHVzZSB0aGlzIG5l
-dw0KPiA+IFBIWSB0dW5hYmxlIGZlYXR1cmU6IHRoZSBgYWRpbmAgJiYgYG1pY3JlbGAgUEhZcy4N
-Cj4gPiANCj4gPiBUaGUgQURJTidzIGRhdGFzaGVldCBtZW50aW9ucyB0aGF0IFRYIHB1bHNlcyBh
-cmUgYXQgaW50ZXJ2YWxzIG9mIDEgc2Vjb25kDQo+ID4gZGVmYXVsdCBlYWNoLCBhbmQgdGhleSBj
-YW4gYmUgZGlzYWJsZWQuIEZvciB0aGUgTWljcmVsIEtTWjkwMzEgUEhZLCB0aGUNCj4gPiBkYXRh
-c2hlZXQgZG9lcyBub3QgbWVudGlvbiB3aGV0aGVyIHRoZXkgY2FuIGJlIGRpc2FibGVkLCBidXQg
-bWVudGlvbnMgdGhhdA0KPiA+IHRoZXkgY2FuIG1vZGlmaWVkLg0KPiA+IA0KPiA+IFRoZSB3YXkg
-dGhpcyBjaGFuZ2UgaXMgc3RydWN0dXJlZCwgaXMgc2ltaWxhciB0byB0aGUgUEhZIHR1bmFibGUg
-ZG93bnNoaWZ0DQo+ID4gY29udHJvbDoNCj4gPiAqIGEgYEVUSFRPT0xfUEhZX0VEUERfREZMVF9U
-WF9JTlRFUlZBTGAgdmFsdWUgaXMgZXhwb3NlZCB0byBjb3ZlciBhIGRlZmF1bHQNCj4gPiAgIFRY
-IGludGVydmFsOyBzb21lIFBIWXMgY291bGQgc3BlY2lmeSBhIGNlcnRhaW4gdmFsdWUgdGhhdCBt
-YWtlcyBzZW5zZQ0KPiA+ICogYEVUSFRPT0xfUEhZX0VEUERfTk9fVFhgIHdvdWxkIGRpc2FibGUg
-VFggd2hlbiBFRFBEIGlzIGVuYWJsZWQNCj4gPiAqIGBFVEhUT09MX1BIWV9FRFBEX0RJU0FCTEVg
-IHdpbGwgZGlzYWJsZSBFRFBEDQo+ID4gDQo+ID4gVGhpcyBzaG91bGQgYWxsb3cgUEhZcyB0bzoN
-Cj4gPiAqIGVuYWJsZSBFRFBEIGFuZCBub3QgZW5hYmxlIFRYIHB1bHNlcyAoaW50ZXJ2YWwgd291
-bGQgYmUgMCkNCj4gPiAqIGVuYWJsZSBFRFBEIGFuZCBjb25maWd1cmUgVFggcHVsc2UgaW50ZXJ2
-YWw7IG5vdGUgdGhhdCBUWCBpbnRlcnZhbCB1bml0cw0KPiA+ICAgd291bGQgYmUgUEhZIHNwZWNp
-ZmljOyB3ZSBjb3VsZCBjb25zaWRlciBgc2Vjb25kc2AgYXMgdW5pdHMsIGJ1dCBpdCBjb3VsZA0K
-PiA+ICAgaGFwcGVuIHRoYXQgc29tZSBQSFlzIHdvdWxkIGJlIHByZWZlciBtaWxsaXNlY29uZHMg
-YXMgYSB1bml0Ow0KPiA+ICAgYSBtYXhpbXVtIG9mIDY1NTMzIHVuaXRzIHNob3VsZCBiZSBzdWZm
-aWNpZW50DQo+IA0KPiBTb3JyeSBmb3IgbWlzc2luZyB0aGUgZGlzY3Vzc2lvbiBvbiBwcmV2aW91
-cyB2ZXJzaW9uIGJ1dCBJIGRvbid0IHJlYWxseQ0KPiBsaWtlIHRoZSBpZGVhIG9mIGxlYXZpbmcg
-dGhlIGNob2ljZSBvZiB1bml0cyB0byBQSFkuIEJvdGggZm9yIG1hbnVhbA0KPiBzZXR0aW5nIGFu
-ZCBzeXN0ZW0gY29uZmlndXJhdGlvbiwgaXQgd291bGQgYmUgSU1ITyBtdWNoIG1vcmUgY29udmVu
-aWVudA0KPiB0byBoYXZlIHRoZSBpbnRlcnByZXRhdGlvbiB1bml2ZXJzYWwgZm9yIGFsbCBOSUNz
-Lg0KPiANCg0KSSB3YXMgYWxzbyBhIGJpdCB1bmNlcnRhaW4vdW5kZWNpZGVkIGhlcmUgYWJvdXQg
-bGV0dGluZyBQSFlzIGRlY2lkZSB1bml0cy4NCkFuZCBJIGFsc28gd2Fzbid0IHN1cmUgd2hhdCB0
-byBwcm9wb3NlLg0KTm90IHByb3Bvc2luZyBhIHVuaXQgbm93LCB3b3VsZCBoYXZlIGFsbG93ZWQg
-dXMgdG8gZGVjaWRlIGxhdGVyIGJhc2VkIG9uIHdoYXQgUEhZcyBpbXBsZW1lbnQgKGdlbmVyYWxs
-eSkgaW4gdGhlIGZ1dHVyZS4NCkkga25vdyB0aGF0IG1heSBtYWtlIG1lIGxvb2sgYSBiaXQgbGF6
-eSBbZm9yIG5vdCBwcm9wb3NpbmcgdW5pdHMgaW4gZXRodG9vbF0sIGJ1dCB0YmggaXQncyBtb3Jl
-IG9mIGxhY2stb2YtZXhwZXJpZW5jZQ0Kd2l0aCBldGh0b29sIChvciB0aGVzZSBBUElzKSBldm9s
-dmUgb3ZlciB0aW1lLg0KDQo+IFNlY29uZHMgYXMgdW5pdHMgc2VlbSB0b28gY29hcnNlIGFuZCBt
-YXhpbXVtIG9mIH4xOCBob3VycyB3YXkgdG9vIGJpZy4NCj4gTWlsbGlzZWNvbmRzIHdvdWxkIGJl
-IG1vcmUgcHJhY3RpY2FsIGZyb20gZ3JhbnVsYXJpdHkgcG9pbnQgb2YgdmlldywNCj4gd291bGQg
-bWF4aW11bSBvZiB+NjUgc2Vjb25kcyBiZSBzdWZmaWNpZW50Pw0KDQpJIHRoaW5rIDY1IHNlY29u
-ZHMgaXMgbW9yZSB0aGFuIGVub3VnaC4NCkkgZmVlbCB0aGF0LCBpZiB5b3UgcGx1Zy1pbiBhbiBl
-dGggY2FibGUgYW5kIGRvbid0IGhhdmUgYSBsaW5rIGluIGEgbWludXRlLCB0aGVuIGl0J3Mgbm90
-IGdyZWF0IChubyBtYXR0ZXIgaG93IG11Y2ggb2YgYQ0KcG93ZXItc2F2ZXIgeW91IGFyZSkuDQoN
-CkFjdHVhbGx5LCB2b2ljaW5nIG91dCB0aGVzZSB1bml0cyBtYWtlcyBpdCBzaW1wbGVyIGZvciBh
-IGRlY2lzaW9uIHRvIGdvIGluIGZhdm9yIGZvciBtaWxsaXNlY29uZHMuDQpTbzogdGhhbmsgeW91
-IDopDQoNCkFsZXgNCg0KPiANCj4gTWljaGFsIEt1YmVjZWsNCj4gDQo+ID4gKiBkaXNhYmxlIEVE
-UEQNCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRy
-dS5hcmRlbGVhbkBhbmFsb2cuY29tPg0K
+This board has a single 64MB mt25qu512a flash.
+QUAD I/O read and single I/O write is tested.
+
+Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
+index 3595be0..c95d1ca 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
+@@ -112,6 +112,21 @@
+ 
+ };
+ 
++&qspi {
++	status = "okay";
++
++	qflash0: mt25qu512a@0 {
++		compatible = "micron,mt25qu512a", "jedec,spi-nor";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		m25p,fast-read;
++		spi-max-frequency = <50000000>;
++		spi-rx-bus-width = <4>;
++		spi-tx-bus-width = <4>;
++		reg = <0>;
++	};
++};
++
+ #include "fsl-ls1046-post.dtsi"
+ 
+ &fman0 {
+-- 
+2.7.4
