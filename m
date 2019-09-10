@@ -1,82 +1,49 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH] irqchip/atmel-aic5: add support for sam9x60 irqchip
-Date: Tue, 10 Sep 2019 17:15:13 +0200
-Message-ID: <20190910151513.GY21254@piout.net>
-References: <1568026835-6646-1-git-send-email-claudiu.beznea@microchip.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: [PATCH 1/3] gpio: syscon: Add support for a custom get operation
+Date: Tue, 10 Sep 2019 17:28:53 +0200
+Message-ID: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1568026835-6646-1-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, ludovic.desroches@microchip.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
+To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/2019 14:00:35+0300, Claudiu Beznea wrote:
-> From: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
-> 
-> Add support for SAM9X60 irqchip.
-> 
-> Signed-off-by: Sandeep Sheriker Mallikarjun <sandeepsheriker.mallikarjun@microchip.com>
-> [claudiu.beznea@microchip.com: update aic5_irq_fixups[], update
->  documentation]
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Some drivers might need a custom get operation to match custom
+behavior implemented in the set operation.
 
-> ---
->  .../devicetree/bindings/interrupt-controller/atmel,aic.txt     |  7 +++++--
->  drivers/irqchip/irq-atmel-aic5.c                               | 10 ++++++++++
->  2 files changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
-> index f4c5d34c4111..7079d44bf3ba 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/atmel,aic.txt
-> @@ -1,8 +1,11 @@
->  * Advanced Interrupt Controller (AIC)
->  
->  Required properties:
-> -- compatible: Should be "atmel,<chip>-aic"
-> -  <chip> can be "at91rm9200", "sama5d2", "sama5d3" or "sama5d4"
-> +- compatible: Should be:
-> +    - "atmel,<chip>-aic" where  <chip> can be "at91rm9200", "sama5d2",
-> +      "sama5d3" or "sama5d4"
-> +    - "microchip,<chip>-aic" where <chip> can be "sam9x60"
-> +
->  - interrupt-controller: Identifies the node as an interrupt controller.
->  - #interrupt-cells: The number of cells to define the interrupts. It should be 3.
->    The first cell is the IRQ number (aka "Peripheral IDentifier" on datasheet).
-> diff --git a/drivers/irqchip/irq-atmel-aic5.c b/drivers/irqchip/irq-atmel-aic5.c
-> index 6acad2ea0fb3..29333497ba10 100644
-> --- a/drivers/irqchip/irq-atmel-aic5.c
-> +++ b/drivers/irqchip/irq-atmel-aic5.c
-> @@ -313,6 +313,7 @@ static void __init sama5d3_aic_irq_fixup(void)
->  static const struct of_device_id aic5_irq_fixups[] __initconst = {
->  	{ .compatible = "atmel,sama5d3", .data = sama5d3_aic_irq_fixup },
->  	{ .compatible = "atmel,sama5d4", .data = sama5d3_aic_irq_fixup },
-> +	{ .compatible = "microchip,sam9x60", .data = sama5d3_aic_irq_fixup },
->  	{ /* sentinel */ },
->  };
->  
-> @@ -390,3 +391,12 @@ static int __init sama5d4_aic5_of_init(struct device_node *node,
->  	return aic5_of_init(node, parent, NR_SAMA5D4_IRQS);
->  }
->  IRQCHIP_DECLARE(sama5d4_aic5, "atmel,sama5d4-aic", sama5d4_aic5_of_init);
-> +
-> +#define NR_SAM9X60_IRQS		50
-> +
-> +static int __init sam9x60_aic5_of_init(struct device_node *node,
-> +				       struct device_node *parent)
-> +{
-> +	return aic5_of_init(node, parent, NR_SAM9X60_IRQS);
-> +}
-> +IRQCHIP_DECLARE(sam9x60_aic5, "microchip,sam9x60-aic", sam9x60_aic5_of_init);
-> -- 
-> 2.7.4
-> 
+Add plumbing for supporting that.
 
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+---
+ drivers/gpio/gpio-syscon.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+index 31f332074d7d..05c537ed73f1 100644
+--- a/drivers/gpio/gpio-syscon.c
++++ b/drivers/gpio/gpio-syscon.c
+@@ -43,8 +43,9 @@ struct syscon_gpio_data {
+ 	unsigned int	bit_count;
+ 	unsigned int	dat_bit_offset;
+ 	unsigned int	dir_bit_offset;
+-	void		(*set)(struct gpio_chip *chip,
+-			       unsigned offset, int value);
++	int		(*get)(struct gpio_chip *chip, unsigned offset);
++	void		(*set)(struct gpio_chip *chip, unsigned offset,
++			       int value);
+ };
+ 
+ struct syscon_gpio_priv {
+@@ -252,7 +253,7 @@ static int syscon_gpio_probe(struct platform_device *pdev)
+ 	priv->chip.label = dev_name(dev);
+ 	priv->chip.base = -1;
+ 	priv->chip.ngpio = priv->data->bit_count;
+-	priv->chip.get = syscon_gpio_get;
++	priv->chip.get = priv->data->get ? : syscon_gpio_get;
+ 	if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
+ 		priv->chip.direction_input = syscon_gpio_dir_in;
+ 	if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.23.0
