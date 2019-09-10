@@ -1,36 +1,60 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v10 01/15] clk: tegra20/30: Add custom EMC clock implementation
-Date: Tue, 10 Sep 2019 03:33:04 -0700
-Message-ID: <20190910103305.B4E1B20872@mail.kernel.org>
-References: <20190811210043.20122-1-digetx@gmail.com> <20190811210043.20122-2-digetx@gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [Patch 00/13] media: am437x-vpfe: overdue maintenance
+Date: Tue, 10 Sep 2019 12:42:51 +0200
+Message-ID: <5b73285c-5d05-1799-06fc-f4ab84cb9a1d@xs4all.nl>
+References: <20190909162743.30114-1-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190811210043.20122-2-digetx@gmail.com>
+In-Reply-To: <20190909162743.30114-1-bparrot@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Osipenko <digetx@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Joseph Lo <josephl@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Dmitry Osipenko (2019-08-11 14:00:29)
-> A proper External Memory Controller clock rounding and parent selection
-> functionality is required by the EMC drivers, it is not available using
-> the generic clock implementation because only the Memory Controller driver
-> is aware of what clock rates are actually available for a particular
-> device. EMC drivers will have to register a Tegra-specific CLK-API
-> callback which will perform rounding of a requested rate. EMC clock users
-> won't be able to request EMC clock by getting -EPROBE_DEFER until EMC
-> driver is probed and the callback is set up.
->=20
-> The functionality is somewhat similar to the clk-emc.c which serves
-> Tegra124+ SoCs. The later HW generations support more parent clock sources
-> and the HW configuration / integration with the EMC drivers differs a tad
-> from the older gens, hence it's not really worth to try to squash
-> everything into a single source file.
->=20
-> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
+Hi Benoit,
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+On 9/9/19 6:27 PM, Benoit Parrot wrote:
+> This patch series is a collection of patches we have been carrying for a
+> while.
+> 
+> A few patches do fix actual bug and v4l2-compliance errors/warnings.
+> Other are drivers re-work to simplify/clarify the code for easier
+> maintenance.
+
+Can you post the output of the latest version of v4l2-compliance? Use
+the '-s' option so streaming is tested as well.
+
+Thanks!
+
+	Hans
+
+> 
+> We also include the SPDX Licensing update which seemed to have been
+> missed by the global script thus far.
+> 
+> Benoit Parrot (12):
+>   media: am437x-vpfe: Fix missing first line
+>   media: am437x-vpfe: Rework ISR routine for clarity
+>   media: am437x-vpfe: Wait for end of frame before tear-down
+>   media: am437x-vpfe: Streamlined vb2 buffer cleanup
+>   media: am437x-vpfe: Setting STD to current value is not an error
+>   media: am437x-vpfe: Use a per instance format array instead of a
+>     static one
+>   media: am437x-vpfe: Maintain a reference to the current vpfe_fmt
+>   media: am437x-vpfe: fix function trace debug log
+>   media: am437x-vpfe: Remove print_fourcc helper
+>   media: am437x-vpfe: TRY_FMT ioctl is not really trying anything
+>   media: am437x-vpfe: Remove per bus width static data
+>   media: am437x-vpfe: Switch to SPDX Licensing
+> 
+> Dave Gerlach (1):
+>   media: am437x-vpfe: Fix suspend path to always handle pinctrl config
+> 
+>  drivers/media/platform/am437x/am437x-vpfe.c   | 906 ++++++++----------
+>  drivers/media/platform/am437x/am437x-vpfe.h   |  44 +-
+>  .../media/platform/am437x/am437x-vpfe_regs.h  |  10 +-
+>  3 files changed, 438 insertions(+), 522 deletions(-)
+> 
