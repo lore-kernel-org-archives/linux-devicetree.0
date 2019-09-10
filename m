@@ -1,104 +1,114 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [V2, 2/2] media: i2c: Add more sensor modes for ov8856 camera
- sensor
-Date: Tue, 10 Sep 2019 20:44:50 +0300
-Message-ID: <20190910174450.GJ2680@smile.fi.intel.com>
-References: <20190910130446.26413-1-dongchun.zhu@mediatek.com>
- <20190910130446.26413-3-dongchun.zhu@mediatek.com>
+From: Gabriel Francisco <frc.gabriel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 0/7] qcom: add OCMEM support
+Date: Tue, 10 Sep 2019 20:13:39 +0200
+Message-ID: <d3eb4c40-67ad-c318-84be-f701b8ae6abe@gmail.com>
+References: <20190823121637.5861-1-masneyb@onstation.org>
+ <20190901214045.GA14321@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190910130446.26413-3-dongchun.zhu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dongchun.zhu@mediatek.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, drinkcat@chromium.org, srv_heupstream@mediatek.com, shengnan.wang@mediatek.com, tfiga@chromium.org, louis.kuo@mediatek.com, sj.huang@mediatek.com, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, sakari.ailus@linux.intel.com, matthias.bgg@gmail.com, bingbu.cao@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1158952219=="
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20190901214045.GA14321-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jonathan-eSc4qw6YbEQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 09:04:46PM +0800, dongchun.zhu@mediatek.com wrote:
-> From: Dongchun Zhu <dongchun.zhu@mediatek.com>
-> 
-> This patch mainly adds two more sensor modes for OV8856 CMOS image sensor.
-> That is, the resolution of 1632*1224 and 3264*2448, corresponding to the bayer order of BGGR.
-> The sensor revision also differs in some OTP register.
+This is a multi-part message in MIME format.
+--===============1158952219==
+Content-Type: multipart/alternative;
+ boundary="------------E9414BE935F490A0BC8CA132"
+Content-Language: en-US
 
-> +static int __ov8856_power_on(struct ov8856 *ov8856)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&ov8856->sd);
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(ov8856->xvclk);
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "failed to enable xvclk\n");
-> +		return ret;
-> +	}
-> +
-> +	gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_LOW);
-> +
-> +	ret = regulator_bulk_enable(OV8856_NUM_SUPPLIES, ov8856->supplies);
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "failed to enable regulators\n");
-> +		goto disable_clk;
-> +	}
-> +
-> +	gpiod_set_value_cansleep(ov8856->n_shutdn_gpio, GPIOD_OUT_HIGH);
-> +
+This is a multi-part message in MIME format.
+--------------E9414BE935F490A0BC8CA132
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-> +	usleep_range(1400, 1500);
+Tested-by: Gabriel Francisco <frc.gabrielgmail.com>
 
-This should be commented why this is needed and from where the requirement
-comes from. Also, not, that 100us, which is only ~7%, is small margin.
-Recommended one is ~20%.
+On 9/1/19 11:40 PM, Brian Masney wrote:
+> Hi Rob C / Sean P,
+>
+> On Fri, Aug 23, 2019 at 05:16:30AM -0700, Brian Masney wrote:
+>> This patch series adds support for Qualcomm's On Chip MEMory (OCMEM)
+>> that is needed in order to support some a3xx and a4xx-based GPUs
+>> upstream. This is based on Rob Clark's patch series that he submitted
+>> in October 2015 and I am resubmitting updated patches with his
+>> permission. See the individual patches for the changelog.
+> I talked to Bjorn in person at the Embedded Linux Conference over a
+> week ago about this series. He thinks that this series should go through
+> your tree. I assume it's too late for the upcoming merge window, which
+> is fine. I just want to make sure that this series gets picked up for
+> the following merge window.
+>
+> I just sent out a fix for a compiler error on MIPS as a separate patch:
+> https://lore.kernel.org/lkml/20190901213037.25889-1-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org/
+>
+> Brian
+>
 
-> +
-> +	return 0;
-> +
-> +disable_clk:
-> +	clk_disable_unprepare(ov8856->xvclk);
-> +
-> +	return ret;
-> +}
+--------------E9414BE935F490A0BC8CA132
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-> +	ov8856->is_1B_revision = (val == OV8856_1B_MODULE) ? 1 : 0;
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <pre class="content"><span class="tested-by">Tested-by: Gabriel Francisco &lt;frc.gabrielgmail.com&gt;</span></pre>
+    <div class="moz-cite-prefix">On 9/1/19 11:40 PM, Brian Masney wrote:<br>
+    </div>
+    <blockquote type="cite"
+      cite="mid:%3C20190901214045.GA14321-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org%3E">
+      <pre class="moz-quote-pre" wrap="">Hi Rob C / Sean P,
 
-!! will give same result without using ternary operator.
+On Fri, Aug 23, 2019 at 05:16:30AM -0700, Brian Masney wrote:
+</pre>
+      <blockquote type="cite">
+        <pre class="moz-quote-pre" wrap="">This patch series adds support for Qualcomm's On Chip MEMory (OCMEM)
+that is needed in order to support some a3xx and a4xx-based GPUs
+upstream. This is based on Rob Clark's patch series that he submitted
+in October 2015 and I am resubmitting updated patches with his
+permission. See the individual patches for the changelog.
+</pre>
+      </blockquote>
+      <pre class="moz-quote-pre" wrap="">
+I talked to Bjorn in person at the Embedded Linux Conference over a
+week ago about this series. He thinks that this series should go through
+your tree. I assume it's too late for the upcoming merge window, which
+is fine. I just want to make sure that this series gets picked up for
+the following merge window.
 
-> +	ov8856->xvclk = devm_clk_get(&client->dev, "xvclk");
-> +	if (IS_ERR(ov8856->xvclk)) {
-> +		dev_err(&client->dev, "failed to get xvclk\n");
-> +		return -EINVAL;
-> +	}
+I just sent out a fix for a compiler error on MIPS as a separate patch:
+<a class="moz-txt-link-freetext" href="https://lore.kernel.org/lkml/20190901213037.25889-1-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org/">https://lore.kernel.org/lkml/20190901213037.25889-1-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org/</a>
 
-Previously it was optional.
-How did it work before and why it's not optional?
+Brian
 
-> +	ov8856->n_shutdn_gpio = devm_gpiod_get(&client->dev, "reset",
-> +					       GPIOD_OUT_LOW);
-> +	if (IS_ERR(ov8856->n_shutdn_gpio)) {
-> +		dev_err(&client->dev, "failed to get reset-gpios\n");
-> +		return -EINVAL;
-> +	}
+</pre>
+    </blockquote>
+  </body>
+</html>
 
-Ditto.
+--------------E9414BE935F490A0BC8CA132--
 
-> +static const struct of_device_id ov8856_of_match[] = {
-> +	{ .compatible = "ovti,ov8856" },
+--===============1158952219==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
-> +	{},
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5v
+IG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5v
 
-No comma needed for terminator line.
-
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
+--===============1158952219==--
