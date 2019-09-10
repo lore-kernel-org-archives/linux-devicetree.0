@@ -1,80 +1,37 @@
-From: tinywrkb <tinywrkb@gmail.com>
-Subject: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s max-speed
-Date: Tue, 10 Sep 2019 18:55:07 +0300
-Message-ID: <20190910155507.491230-1-tinywrkb@gmail.com>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH 0/7] add support for clocksource/clockevent DT selection
+Date: Tue, 10 Sep 2019 09:05:30 -0700
+Message-ID: <CALAqxLWLStTqGx5DAvUKOYupdgK-doOxRF5Z_Us=L5vnFaa=7w@mail.gmail.com>
+References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: tinywrkb@gmail.com, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX
-        / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: tmaimon77@gmail.com, Linus Walleij <linus.walleij@linaro.org>, nsekhar@ti.com, guoren@kernel.org, linux-stm32@st-md-mailman.stormreply.com, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, linux-samsung-soc@vger.kernel.org, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Kevin Hilman <khilman@baylibre.com>, ludovic.desroches@microchip.com, linux-imx@nxp.com, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, uclinux-h8-devel@lists.sourceforge.jp, Marc Zyngier <marc.zyngier@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-unisoc@lists.infradead.org, =?UTF-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>, Thomas Gleixner <tglx@linutronix.de>, sbranden@broadcom.com, lkml <linux-kernel@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, kernel@pengutronix.de, Mark Rutland <mark.rutland@arm.co>
 List-Id: devicetree@vger.kernel.org
 
-Cubox-i Solo/DualLite carrier board has 100Mb/s magnetics while the
-Atheros AR8035 PHY on the MicroSoM v1.3 CPU module is a 1GbE PHY device.
+On Tue, Sep 10, 2019 at 6:47 AM Claudiu Beznea
+<claudiu.beznea@microchip.com> wrote:
+>
+> This series adds support to permit the selection of clocksource/clockevent
+> via DT.
 
-Since commit 5502b218e001 ("net: phy: use phy_resolve_aneg_linkmode in
-genphy_read_status") ethernet is broken on Cubox-i Solo/DualLite devices.
+Sorry about this, but could you try to include more of a rational for
+*why* this would be useful in your cover-letter/commit messages?
 
-This adds a phy node to the MicroSoM DTS and a 100Mb/s max-speed limit
-to the Cubox-i Solo/DualLite carrier DTS.
+I'm not sure I understand the limitation that requires such an option
+to be added to the dts.
 
-Signed-off-by: tinywrkb <tinywrkb@gmail.com>
----
-This patch fixes ethernet on my Cubox-i2-300-D which is limited to 100Mb/s,
-afaik due to the carrier board  magnetics, and was since commit 5502b218e001
-("net: phy: use phy_resolve_aneg_linkmode in genphy_read_status")
-
-The AR8035 PHY on the CPU module reports to the driver as 1GbE capable
-via MII_BSMR's BMSR_ESTATEN status bit, the auto-negotiation sets the
-speed at 1GbE while the carrier board can't support it.
-Same behavior with the generic phy_device and the at803x drivers.
-
-While the PHY is on the CPU module board I added the max-speed limit to
-the cubox-i carrier DTS as I suspect that if the Solo or DualLite v1.3
-MicroSoM will be connected to a 1GbE capable carrier board then it would
-work correctly with 1GbE.
-
-I can confirm that this commit doesn't break networking on the my
-Cubox-i4Pro Quad (i4P-300-D) with it's 1GbE capable carrier board, and
-was tested separately with the generic phy_device and at803x drivers.
-
- arch/arm/boot/dts/imx6dl-cubox-i.dts  | 4 ++++
- arch/arm/boot/dts/imx6qdl-sr-som.dtsi | 9 +++++++++
- 2 files changed, 13 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6dl-cubox-i.dts b/arch/arm/boot/dts/imx6dl-cubox-i.dts
-index 2b1b3e193f53..cfc82513c78c 100644
---- a/arch/arm/boot/dts/imx6dl-cubox-i.dts
-+++ b/arch/arm/boot/dts/imx6dl-cubox-i.dts
-@@ -49,3 +49,7 @@
- 	model = "SolidRun Cubox-i Solo/DualLite";
- 	compatible = "solidrun,cubox-i/dl", "fsl,imx6dl";
- };
-+
-+&ethphy {
-+	max-speed = <100>;
-+};
-diff --git a/arch/arm/boot/dts/imx6qdl-sr-som.dtsi b/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
-index 6d7f6b9035bc..969bc96c3f99 100644
---- a/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sr-som.dtsi
-@@ -57,6 +57,15 @@
- 	phy-reset-duration = <2>;
- 	phy-reset-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
- 	status = "okay";
-+	phy-handle = <&ethphy>;
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		ethphy: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+		};
-+	};
- };
- 
- &iomuxc {
--- 
-2.23.0
+thanks
+-john
