@@ -1,73 +1,45 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
-Date: Tue, 10 Sep 2019 18:39:06 +0200
-Message-ID: <20190910163906.ypyeaido6h4nurvv@pali>
-References: <20190828150037.2640-1-aford173@gmail.com>
- <20190905230443.GA52127@atomide.com>
- <CAHCN7xL0fbr=Sv+b=0AuGB1PPhAAFdAFLEd_iBM+ZMTkUw5sHQ@mail.gmail.com>
- <CAHCN7xL-Gfxe0qF5w7BUsHnyhcNNpmCnchdKErnmiqggXfsLWw@mail.gmail.com>
- <20190909134033.s26eiurpat3iekse@pali>
- <20190909163543.GQ52127@atomide.com>
- <CAHCN7x+t-OVRE7pVM4V87_YMWpgO+_Vashfn1s5msoqC5eiwTg@mail.gmail.com>
- <CAHCN7xLaGQMM67VC-2_G8XC7UuG4c+TbbYb4z=ibJwZsQF4YVw@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 3/7] dt-bindings: mv88e6xxx: add ability to set default
+ queue priorities per port
+Date: Tue, 10 Sep 2019 09:42:24 -0700
+Message-ID: <23101286-4da2-2a53-e7cd-71ead263bbaa@gmail.com>
+References: <20190910154238.9155-1-bob.beckett@collabora.com>
+ <20190910154238.9155-4-bob.beckett@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="v7pe77r44rvnt7o5"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHCN7xLaGQMM67VC-2_G8XC7UuG4c+TbbYb4z=ibJwZsQF4YVw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Adam Ford <adam.ford@logicpd.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Paul Walmsley <paul@pwsan.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190910154238.9155-4-bob.beckett@collabora.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Robert Beckett <bob.beckett@collabora.com>, netdev@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>, Ido Schimmel <idosch@mellanox.com>
 List-Id: devicetree@vger.kernel.org
 
+On 9/10/19 8:41 AM, Robert Beckett wrote:
+> Document a new setting for Marvell switch chips to set the default queue
+> priorities per port.
+> 
+> Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
+> ---
+>  Documentation/devicetree/bindings/net/dsa/marvell.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/dsa/marvell.txt b/Documentation/devicetree/bindings/net/dsa/marvell.txt
+> index 6f9538974bb9..e097c3c52eac 100644
+> --- a/Documentation/devicetree/bindings/net/dsa/marvell.txt
+> +++ b/Documentation/devicetree/bindings/net/dsa/marvell.txt
+> @@ -47,6 +47,10 @@ Optional properties:
+>  			  bus. The node must contains a compatible string of
+>  			  "marvell,mv88e6xxx-mdio-external"
+>  
+> +Optional properties for ports:
+> +- defqpri=<n>		: Enforced default queue priority for the given port.
+> +			  Valid range is 0..3
 
---v7pe77r44rvnt7o5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tuesday 10 September 2019 11:21:34 Adam Ford wrote:
-> According to a note in omap_hwmod_3xxx_data.c,
->=20
-> /*
->  * Apparently the SHA/MD5 and AES accelerator IP blocks are
->  * only present on some AM35xx chips, and no one knows which
->  * ones.  See
->  * http://www.spinics.net/lists/arm-kernel/msg215466.html So
->  * if you need these IP blocks on an AM35xx, try uncommenting
->  * the following lines.
->  */
->=20
-> I decided to uncomment the hwmod entries, and I got the following:
->=20
-> [    0.263222] omap_hwmod: sham: _wait_target_ready failed: -16
-> [    0.263248] omap_hwmod: sham: cannot be enabled for reset (3)
-> [    0.265837] omap_hwmod: aes: _wait_target_ready failed: -16
-> [    0.265851] omap_hwmod: aes: cannot be enabled for reset (3)
-> [    6.208866] omap_hwmod: sham: _wait_target_ready failed: -16
-> [    6.287732] omap_hwmod: aes: _wait_target_ready failed: -16
-
-Hi! Same errors I got in qemu-n900, but not on real N900. So I guess
-those errors means that IP blocks are not present.
-
-> Based on this, I wonder if the sham and aes modules are not present.
-> If this is the case, it might explain why I cannot use the rng either.
-
-Probably this is the reason, you do not have crypto/rng HW engine.
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---v7pe77r44rvnt7o5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXXfRqAAKCRCL8Mk9A+RD
-UvMwAKC5PytcObjM5hlbkUO3+dfjWZwPBQCffPh8UWUkmuzDbXQs1ybxGZqap80=
-=Gd7N
------END PGP SIGNATURE-----
-
---v7pe77r44rvnt7o5--
+This is a vendor specific driver/property,
+marvell,default-queue-priority (which be cheapskate on words) would be
+more readable. But still, I have some more fundamental issues with the
+general approach, see my response in the cover letter.
+-- 
+Florian
