@@ -1,102 +1,97 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v6 11/12] lib/vsprintf: Add %pfw conversion specifier
- for printing fwnode names
-Date: Tue, 10 Sep 2019 03:21:26 -0700
-Message-ID: <ef57a3fc72b548b7daf9257aacc596d57004199d.camel@perches.com>
-References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
-         <20190910084707.18380-12-sakari.ailus@linux.intel.com>
+From: Biwen Li <biwen.li@nxp.com>
+Subject: RE: [EXT] Re: [v3,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some
+ properties
+Date: Tue, 10 Sep 2019 10:21:32 +0000
+Message-ID: <DB7PR04MB4490F16B6EB5BBE4FE2472218FB60@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190903061853.19793-1-biwen.li@nxp.com>
+ <2374870a-a728-b046-9ec6-bd7773411f50@flowbird.group>
+ <20190903173604.GA18177@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190910084707.18380-12-sakari.ailus@linux.intel.com>
+In-Reply-To: <20190903173604.GA18177@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: 'Rob Herring' <robh@kernel.org>, Martin Fuzzey <martin.fuzzey@flowbird.group>
+Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Leo Li <leoyang.li@nxp.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Martin Fuzzey <mfuzzey@parkeon.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-09-10 at 11:47 +0300, Sakari Ailus wrote:
-> Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
-> support printing full path of the node, including its name ("f") and only
-> the node's name ("P") in the printk family of functions. The two flags
-> have equivalent functionality to existing %pOF with the same two modifiers
-> ("f" and "P") on OF based systems. The ability to do the same on ACPI
-> based systems is added by this patch.
-
-checkpatch comment below:
-   A. 
-> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-[]
-> @@ -418,6 +418,30 @@ Examples::
->  
->  Passed by reference.
->  
-> +Fwnode handles
-> +--------------
-> +
-> +::
-> +
-> +	%pfw[fP]
-> +
-> +For printing information on fwnode handles. The default is to print the full
-> +node name, including the path. The modifiers are functionally equivalent to
-> +%pOF above.
-> +
-> +	- f - full name of the node, including the path
-> +	- P - the name of the node including an address (if there is one)
-> +
-> +Examples (ACPI)::
-> +
-> +	%pfwf	\_SB.PCI0.CIO2.port@1.endpoint@0	- Full node name
-> +	%pfwP	endpoint@0				- Node name
-> +
-> +Examples (OF)::
-> +
-> +	%pfwf	/ocp@68000000/i2c@48072000/camera@10/port/endpoint - Full name
-> +	%pfwP	endpoint				- Node name
-[]
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-[]
-> @@ -5988,14 +5988,17 @@ sub process {
->  		        for (my $count = $linenr; $count <= $lc; $count++) {
->  				my $specifier;
->  				my $extension;
-> +				my $qualifier;
->  				my $bad_specifier = "";
->  				my $fmt = get_quoted_string($lines[$count - 1], raw_line($count, 0));
->  				$fmt =~ s/%%//g;
->  
-> -				while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
-> +				while ($fmt =~ /(\%[\*\d\.]*p(\w)(\w?))/g) {
-
-This is not generic enough to allow all possible qualifiers
-to be captured.
-
-This should be something like:
-
-			while ($fmt =~ /(\%[\*\d\.]*p(\w)(\w*))/g) {
-	
->  					$specifier = $1;
->  					$extension = $2;
-> -					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxt]/) {
-> +					$qualifier = $3;
-> +					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
-> +					    ($extension eq "f" && $qualifier ne "w")) {
-
-
-And this should likely test
-					    (defined $qualifier &&
-					     $extension eq 'f' && $qualifier =~ /^w/))
-
->  						$bad_specifier = $specifier;
->  						last;
->  					}
-
-And here the 'f' isn't really a bad $specifier,
-it does not have the correct 'w' $extension.
-
-The valid extensions may change in the future and
-this code isn't particularly manageable, so I
-think the $specifier/$extension pair should likely
-have some additional testing after validating
-the $specifier.
+> Caution: EXT Email
+>=20
+> On Tue, Sep 03, 2019 at 11:37:01AM +0200, Martin Fuzzey wrote:
+> > On 03/09/2019 08:18, Biwen Li wrote:
+> > > diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > > b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > > index 94adc1cf93d9..588f688b30d1 100644
+> > > --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > > +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> > > @@ -8,10 +8,39 @@ Required properties:
+> > >   Optional properties:
+> > >   - interrupts: IRQ line for the RTC (not implemented).
+> > > +- interrupt-output-pin: The interrupt output pin must be
+> > > +  "INTA" or "INTB", default value is "INTA"
+> > > +
+> >
+> >
+> > The hardware has 2 interrupt pins which can be mapped to various
+> > interrupt sources (alarm1, alarm2, periodic, ...)
+> >
+> > Currently the driver only supports alarm1.
+> >
+> > It is even possible to use both pins for the same interrupt (eg if
+> > INTA were wired to the SoC, INTB to a PMIC and both used for alarm...)
+> >
+> >
+> > So maybe it would be better to have
+> >
+> > alarm1-interrupt-output-pin: The interrupt output pin used for the
+> > alarm function. Must be "INTA", "INTB" or "BOTH"
+>=20
+> That's a property per source. 2 properties possible sources (either a mas=
+k or list)
+> would be my preference.
+>=20
+> Also, whatever you end up with needs a vendor prefix.
+>=20
+> >
+> > Then, if and when other types of interrupts are supported by the
+> > driver new properties could be added for them.
+> >
+> >
+> >
+> > > +- quartz-load-femtofarads: The internal capacitor to select for the =
+quartz:
+> > > +   PCF85263_QUARTZCAP_7pF          [0]
+> > > +   PCF85263_QUARTZCAP_6pF          [1]
+> > > +   PCF85263_QUARTZCAP_12p5pF       [2] DEFAULT
+> > > +
+> >
+> >
+> > The standard DT property "quartz-load-femtofarads" takes the real
+> > physical value in femto Farads ie values should be 7000, 6000, 12500 wi=
+thout
+> defines.
+>=20
+> I believe I said this on the last version.
+Yes, I will fix it in v4.
+>=20
+> >
+> >
+> > > +- nxp,quartz-drive-strength: Drive strength for the quartz:
+> > > +   PCF85263_QUARTZDRIVE_100ko      [0] DEFAULT
+> > > +   PCF85263_QUARTZDRIVE_60ko       [1]
+> > > +   PCF85263_QUARTZDRIVE_500ko      [2]
+> > > +
+> >
+> >
+> > Not sure about this.
+> >
+> > Wouldn't it be better to either use a real impedence value in ohms
+> > (like load property above, even though it is a vendor specific value)
+> > rather than a define, or defines for "Low, Medium, High"?
+> >
+> >
+> > Martin
+> >
+> >
