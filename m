@@ -1,65 +1,77 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 5/5] ARM: dts: ls1021a-tsn: Use the DSPI controller in
- poll mode
-Date: Wed, 11 Sep 2019 09:00:03 +0200
-Message-ID: <CAMuHMdU0nu2z9o-McSw0tXNsJDX-1rk2fvnqW37M6OeEpL770w@mail.gmail.com>
-References: <20190822211514.19288-1-olteanv@gmail.com> <20190822211514.19288-6-olteanv@gmail.com>
- <CA+h21hqWGDCfTg813W1WaXFnRsMdE30WnaXw5TJvpkSp0-w5JA@mail.gmail.com>
- <20190827180502.GF23391@sirena.co.uk> <CA+h21hr3qmTG1LyWsEp+hZZW2NJFtg9Dh1k6SXVDd+A_YSQjjw@mail.gmail.com>
- <20190827181318.GG23391@sirena.co.uk> <CA+h21hqMVdsUjBdtiHKtKGpyvuaOf25tc4h-GdDEBQqa3EB7tw@mail.gmail.com>
- <20190911063350.GB17142@dragon>
+From: <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH 7/7] clocksource/drivers/integrator-ap: parse the chosen
+ node
+Date: Wed, 11 Sep 2019 07:14:11 +0000
+Message-ID: <9c46343e-504e-fbd9-45aa-a67416109e36@microchip.com>
+References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
+ <1568123236-767-8-git-send-email-claudiu.beznea@microchip.com>
+ <CACRpkdYsCFUNAtarTQmaA2a3-HZjiVjxQ-Wr-7wJp9xrtQRKCg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190911063350.GB17142@dragon>
-Sender: netdev-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>, linux-spi <linux-spi@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdYsCFUNAtarTQmaA2a3-HZjiVjxQ-Wr-7wJp9xrtQRKCg@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <561EB454363D5F43AF07179372AB2643@namprd11.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: linus.walleij@linaro.org
+Cc: tmaimon77@gmail.com, nsekhar@ti.com, guoren@kernel.org, linux-stm32@st-md-mailman.stormreply.com, heiko@sntech.de, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, khilman@baylibre.com, Ludovic.Desroches@microchip.com, linux-imx@nxp.com, u.kleine-koenig@pengutronix.de, uclinux-h8-devel@lists.sourceforge.jp, marc.zyngier@arm.com, s.hauer@pengutronix.de, linux-unisoc@lists.infradead.org, khalasa@piap.pl, tglx@linutronix.de, sbranden@broadcom.com, linux-kernel@vger.kernel.org, ralf@linux-mips.org, paul.burton@mips.com, kernel@pengutronix.de, mark.rutland@arm.com, alexandre.belloni@bootlin.com, jhogan@kernel.org, palmer@sifive.com, eric@anholt.net, thierry.reding@gmail.com, manivannan.sadhasivam@linaro.org, ysato@users.sourceforge.jp, zhang.lyra@gmail.com, daniel.lezcano@linaro.org, jonathanh@nvidia.com, bgolaszewski@baylibre.com, kgene@kernel.orgalex
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 8:34 AM Shawn Guo <shawnguo@kernel.org> wrote:
-> On Tue, Aug 27, 2019 at 09:16:39PM +0300, Vladimir Oltean wrote:
-> > On Tue, 27 Aug 2019 at 21:13, Mark Brown <broonie@kernel.org> wrote:
-> > > On Tue, Aug 27, 2019 at 09:06:14PM +0300, Vladimir Oltean wrote:
-> > > > On Tue, 27 Aug 2019 at 21:05, Mark Brown <broonie@kernel.org> wrote:
-> > > > > On Mon, Aug 26, 2019 at 04:10:51PM +0300, Vladimir Oltean wrote:
-> > >
-> > > > > > I noticed you skipped applying this patch, and I'm not sure that Shawn
-> > > > > > will review it/take it.
-> > > > > > Do you have a better suggestion how I can achieve putting the DSPI
-> > > > > > driver in poll mode for this board? A Kconfig option maybe?
-> > >
-> > > > > DT changes go through the relevant platform trees, not the
-> > > > > subsystem trees, so it's not something I'd expect to apply.
-> > >
-> > > > But at least is it something that you expect to see done through a
-> > > > device tree change?
-> > >
-> > > Well, it's not ideal - if it performs better all the time the
-> > > driver should probably just do it unconditionally.  If there's
-> > > some threashold where it tends to perform better then the driver
-> > > should check for that but IIRC it sounds like the interrupt just
-> > > isn't at all helpful here.
-> >
-> > I can't seem to find any situation where it performs worse. Hence my
-> > question on whether it's a better idea to condition this behavior on a
-> > Kconfig option rather than a DT blob which may or may not be in sync.
->
-> DT is a description of hardware not condition for software behavior,
-> where module parameter is usually used for.
 
-+1
 
-DT says the interrupt line is wired.
-The driver should know if it should make use of the interrupt, or not.
+On 11.09.2019 02:48, Linus Walleij wrote:
+> External E-Mail
+> 
+> 
+> On Tue, Sep 10, 2019 at 2:50 PM Claudiu Beznea
+> <claudiu.beznea@microchip.com> wrote:
+>> From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>>
+>> The driver currently uses aliases to know whether the timer is the
+>> clocksource or the clockevent.
+> 
+> OK maybe that wasn't the most elegant solution.
+> 
+>> Add the /chosen/linux,clocksource and
+>> /chosen/linux,clockevent parsing while keeping backward compatibility.
+> 
+> This is not how I would solve this today.
+> 
+> I would simply remove/comment out the IRQ from the timer
+> that cannot be used for clockevent from the device tree
+> (apparently it doesn't work anyway), and make the code only
+> pick a timer with a valid interrupt assigned as clock event,
+> while a timer without interrupt can be used for clock source.
+This could also be used but it will not be compatible with old device
+trees. There are different ideas implemented in timer drivers with regards
+to this issue. Some of them are registering 1st timer to work as
+clocksource/clockevent and the 2nd one to work as clockevent/clocksource.
+Some are using different compatibles, one for clocksource, one for
+clockevent although these compatible seems to be for the same hardware type
+(I can point drivers/clocksource/timer-sprd.c).
 
-Gr{oetje,eeting}s,
+The idea with this series was, at it has been proposed in [1] to have one
+single mechanism for this kind of situations.
 
-                        Geert
+Thank you,
+Claudiu Beznea
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+[1]
+https://lore.kernel.org/lkml/2f831f1b-c87d-48bd-cf02-2ebb334b964c@linaro.org/
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> This has the upside of not needing any special aliases or
+> chosen things.
+> 
+> Yours,
+> Linus Walleij
+> 
