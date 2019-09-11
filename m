@@ -1,47 +1,46 @@
-From: Luhua Xu <luhua.xu@mediatek.com>
-Subject: [PATCH 1/3] dt-bindings: spi: update bindings for MT6765 SoC
-Date: Wed, 11 Sep 2019 05:55:29 -0400
-Message-ID: <1568195731-3239-2-git-send-email-luhua.xu@mediatek.com>
-References: <1568195731-3239-1-git-send-email-luhua.xu@mediatek.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI
+ config register
+Date: Wed, 11 Sep 2019 10:59:16 +0100
+Message-ID: <CACRpkdaReFzjb_hcDbQwqMX+whzscLpeZpJPHKqOo+9tANzemA@mail.gmail.com>
+References: <20190829181203.2660-1-ilina@codeaurora.org> <20190829181203.2660-6-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1568195731-3239-1-git-send-email-luhua.xu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, "luhua.xu" <luhua.xu@mediatek.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190829181203.2660-6-ilina@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: Stephen Boyd <swboyd@chromium.org>, Evan Green <evgreen@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, mkshah@codeaurora.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "luhua.xu" <luhua.xu@mediatek.com>
+On Thu, Aug 29, 2019 at 8:47 PM Lina Iyer <ilina@codeaurora.org> wrote:
 
-Add a DT binding documentation for the MT6765 soc.
+> +- qcom,scm-spi-cfg:
+> +       Usage: optional
+> +       Value type: <bool>
+> +       Definition: Specifies if the SPI configuration registers have to be
+> +                   written from the firmware.
+> +
+>  Example:
+>
+>         pdc: interrupt-controller@b220000 {
+>                 compatible = "qcom,sdm845-pdc";
+> -               reg = <0xb220000 0x30000>;
+> +               reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
+>                 qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
+>                 #interrupt-cells = <2>;
+>                 interrupt-parent = <&intc>;
+>                 interrupt-controller;
+> +               qcom,scm-spi-cfg;
 
-Signed-off-by: luhua.xu <luhua.xu@mediatek.com>
----
- Documentation/devicetree/bindings/spi/spi-mt65xx.txt | 1 +
- 1 file changed, 1 insertion(+)
+You can probably drop this bool if you just give names to the registers.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-index c0f6c8e..3a8079e 100644
---- a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-@@ -5,6 +5,7 @@ Required properties:
-     - mediatek,mt2701-spi: for mt2701 platforms
-     - mediatek,mt2712-spi: for mt2712 platforms
-     - mediatek,mt6589-spi: for mt6589 platforms
-+    - mediatek,mt6765-spi: for mt6765 platforms
-     - mediatek,mt7622-spi: for mt7622 platforms
-     - "mediatek,mt7629-spi", "mediatek,mt7622-spi": for mt7629 platforms
-     - mediatek,mt8135-spi: for mt8135 platforms
--- 
-2.6.4
+Like
+reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
+reg-names = "gic", "pdc";
+
+Then jus check explicitly for a "pdc" register and in that case
+initialize the PDC.
+
+Yours,
+Linus Walleij
