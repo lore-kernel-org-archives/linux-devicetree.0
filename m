@@ -1,130 +1,56 @@
-From: Piotr Sroka <piotrs@cadence.com>
-Subject: Re: [v5 2/2] dt-bindings: mtd: Add Cadence NAND controller driver
-Date: Wed, 11 Sep 2019 16:04:24 +0100
-Message-ID: <20190911150422.GA4973@global.cadence.com>
-References: <20190725145804.8886-1-piotrs@cadence.com>
- <20190725145955.13951-1-piotrs@cadence.com>
- <20190830114638.33dc4eb2@xps13>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI
+ config register
+Date: Wed, 11 Sep 2019 09:19:48 -0600
+Message-ID: <20190911151847.GA30053@codeaurora.org>
+References: <20190829181203.2660-1-ilina@codeaurora.org>
+ <20190829181203.2660-6-ilina@codeaurora.org>
+ <CACRpkdaReFzjb_hcDbQwqMX+whzscLpeZpJPHKqOo+9tANzemA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190830114638.33dc4eb2@xps13>
+In-Reply-To: <CACRpkdaReFzjb_hcDbQwqMX+whzscLpeZpJPHKqOo+9tANzemA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <bbrezillon@kernel.org>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, BrianNorris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Boyd <swboyd@chromium.org>, Evan Green <evgreen@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, mkshah@codeaurora.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel
-
-The 08/30/2019 11:46, Miquel Raynal wrote:
->EXTERNAL MAIL
+On Wed, Sep 11 2019 at 04:05 -0600, Linus Walleij wrote:
+>On Thu, Aug 29, 2019 at 8:47 PM Lina Iyer <ilina@codeaurora.org> wrote:
 >
->
->Hi Piotr,
->
->Piotr Sroka <piotrs@cadence.com> wrote on Thu, 25 Jul 2019 15:59:55
->+0100:
->
->> Document the bindings used by Cadence NAND controller driver
+>> +- qcom,scm-spi-cfg:
+>> +       Usage: optional
+>> +       Value type: <bool>
+>> +       Definition: Specifies if the SPI configuration registers have to be
+>> +                   written from the firmware.
+>> +
+>>  Example:
 >>
->> Signed-off-by: Piotr Sroka <piotrs@cadence.com>
->> ---
->> Changes for v5:
->> - replace "_" by "-" in all properties
->> - change compatible name from cdns,hpnfc to cdns,hp-nfc
->> Changes for v4:
->> - add commit message
->> Changes for v3:
->> - add unit suffix for board_delay
->> - move child description to proper place
->> - remove prefix cadence_ for reg and sdma fields
->> Changes for v2:
->> - remove chip dependends parameters from dts bindings
->> - add names for register ranges in dts bindings
->> - add generic bindings to describe NAND chip representation
->> ---
->>  .../bindings/mtd/cadence-nand-controller.txt       | 50 ++++++++++++++++++++++
->>  1 file changed, 50 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
->> new file mode 100644
->> index 000000000000..423547a3f993
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
->> @@ -0,0 +1,50 @@
->> +* Cadence NAND controller
->> +
->> +Required properties:
->> +  - compatible : "cdns,hp-nfc"
->> +  - reg : Contains two entries, each of which is a tuple consisting of a
->> +	  physical address and length. The first entry is the address and
->> +	  length of the controller register set. The second entry is the
->> +	  address and length of the Slave DMA data port.
->> +  - reg-names: should contain "reg" and "sdma"
->> +  - interrupts : The interrupt number.
->> +  - clocks: phandle of the controller core clock (nf_clk).
->> +
->> +Optional properties:
->> +  - dmas: shall reference DMA channel associated to the NAND controller
->> +  - cdns,board-delay-ps : Estimated Board delay. The value includes the total
->> +    round trip delay for the signals and is used for deciding on values
->> +    associated with data read capture. The example formula for SDR mode is
->> +    the following:
->> +    board delay = RE#PAD delay + PCB trace to device + PCB trace from device
->> +    + DQ PAD delay
->> +
->> +Child nodes represent the available NAND chips.
->> +
->> +Required properties of NAND chips:
->> +  - reg: shall contain the native Chip Select ids from 0 to max supported by
->> +    the cadence nand flash controller
->> +
->> +
->> +See Documentation/devicetree/bindings/mtd/nand.txt for more details on
->> +generic bindings.
->> +
->> +Example:
->> +
->> +nand_controller: nand-controller @60000000 {
->> +	  compatible = "cdns,hp-nfc";
->> +	  reg = <0x60000000 0x10000>, <0x80000000 0x10000>;
->> +	  reg-names = "reg", "sdma";
->> +	  clocks = <&nf_clk>;
->> +	  cdns,board-delay-ps = <4830>;
+>>         pdc: interrupt-controller@b220000 {
+>>                 compatible = "qcom,sdm845-pdc";
+>> -               reg = <0xb220000 0x30000>;
+>> +               reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
+>>                 qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
+>>                 #interrupt-cells = <2>;
+>>                 interrupt-parent = <&intc>;
+>>                 interrupt-controller;
+>> +               qcom,scm-spi-cfg;
 >
->Are you sure you want to export this to the user? Not sure it is easily
->understandable and tunable... I'm not against but I would have troubles
->tuning it myself, unless using the documented value. Maybe you should
->explain more how to derive it?
-I need to export this parameter somehow. The default value may not be
-valid for other platforms. 
-This value depends on platform, and may be different on different SoCs. 
-So I think the DTS is the best place to put such configuration
-parameter.
+>You can probably drop this bool if you just give names to the registers.
+>
+>Like
+>reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
+>reg-names = "gic", "pdc";
+>
+>Then jus check explicitly for a "pdc" register and in that case
+>initialize the PDC.
+>
+Well the address remains the same. The bool defines how to access that
+register address - from linux or from the firmware using SCM calls. But
+I get your point, I could have different register namess - pdc-linux or
+pdc-scm and request by name. I can then use that to determine the mode
+for accessing the register.
 
->
->The rest looks fine, let's see if Rob agrees. Maybe he will request a
->yaml schema; in this case you can check sunxi NAND bindings which
->already have been converted.
->
->> +	  interrupts = <2 0>;
->> +	  nand@0 {
->> +	      reg = <0>;
->> +	      label = "nand-1";
->> +	  };
->> +	  nand@1 {
->> +	      reg = <1>;
->> +	      label = "nand-2";
->> +	  };
->> +
->> +};
->
->Thanks,
->Miquèl
-
-
-Thanks
-Piotr 
+Thanks,
+Lina
