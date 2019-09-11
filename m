@@ -1,145 +1,77 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the
- ARM SMC/HVC mailbox
-Date: Wed, 11 Sep 2019 12:42:55 +0100
-Message-ID: <20190911124255.45e44be3@donnerap.cambridge.arm.com>
-References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
-        <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
-        <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
-        <AM0PR04MB4481785CABB44A8C71CFB8D788BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-        <CABb+yY2TREpO7+TFcGgsgQrkmMWwFAgtuJ4GnLPPQ+GEBuh07w@mail.gmail.com>
-        <AM0PR04MB448161C632722DF10989008088BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-        <CABb+yY2SrMF8e1iLyLqb-rJyBx4ajA0hZ6D=LFtuMNtXYjgccA@mail.gmail.com>
-        <AM0PR04MB448133D1F4C887A82C679CEB88BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-        <CABb+yY2t-oz6KqvCTsOJZqcMAUaR9Cbj014m7dCFXSBAMCojww@mail.gmail.com>
-        <20190909143230.48b1143f@donnerap.cambridge.arm.com>
-        <CABb+yY3kfLbdSSdQtZUu9HU1YbXSpbQWW85m0sieR7bJJYBaFA@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [V2, 2/2] media: i2c: Add more sensor modes for ov8856 camera
+ sensor
+Date: Wed, 11 Sep 2019 14:43:00 +0300
+Message-ID: <20190911114300.GI5781@paasikivi.fi.intel.com>
+References: <20190910130446.26413-1-dongchun.zhu@mediatek.com>
+ <20190910130446.26413-3-dongchun.zhu@mediatek.com>
+ <CAAFQd5Ar39TeFJbprQuMwCBVgjsuap1iQviz2dbf5Yw6OU1ZWA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY3kfLbdSSdQtZUu9HU1YbXSpbQWW85m0sieR7bJJYBaFA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5Ar39TeFJbprQuMwCBVgjsuap1iQviz2dbf5Yw6OU1ZWA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Nicolas Boichat <drinkcat@chromium.org>, andriy.shevchenko@linux.intel.com, srv_heupstream <srv_heupstream@mediatek.com>, devicetree@vger.kernel.org, shengnan.wang@mediatek.com, Louis Kuo <louis.kuo@mediatek.com>, Sj Huang <sj.huang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Dongchun Zhu <dongchun.zhu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Cao Bing Bu <bingbu.cao@intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>,
+ Joerg Roedel <joro@8bytes.org>, " <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 10 Sep 2019 21:36:35 -0500
-Jassi Brar <jassisinghbrar@gmail.com> wrote:
+Hi Tomasz,
 
-Hi,
-
-> On Mon, Sep 9, 2019 at 8:32 AM Andre Przywara <andre.przywara@arm.com> wrote:
+On Wed, Sep 11, 2019 at 07:12:02PM +0900, Tomasz Figa wrote:
+> Hi Sakari,
+> 
+> On Tue, Sep 10, 2019 at 10:05 PM <dongchun.zhu@mediatek.com> wrote:
 > >
-> > On Fri, 30 Aug 2019 03:12:29 -0500
-> > Jassi Brar <jassisinghbrar@gmail.com> wrote:
+> > From: Dongchun Zhu <dongchun.zhu@mediatek.com>
 > >
-> > Hi,
-> >  
-> > > On Fri, Aug 30, 2019 at 3:07 AM Peng Fan <peng.fan@nxp.com> wrote:  
-> > > >  
-> > > > > Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
-> > > > > SMC/HVC mailbox
-> > > > >
-> > > > > On Fri, Aug 30, 2019 at 2:37 AM Peng Fan <peng.fan@nxp.com> wrote:  
-> > > > > >
-> > > > > > Hi Jassi,
-> > > > > >  
-> > > > > > > Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc
-> > > > > > > for the ARM SMC/HVC mailbox
-> > > > > > >
-> > > > > > > On Fri, Aug 30, 2019 at 1:28 AM Peng Fan <peng.fan@nxp.com> wrote:
-> > > > > > >  
-> > > > > > > > > > +examples:
-> > > > > > > > > > +  - |
-> > > > > > > > > > +    sram@910000 {
-> > > > > > > > > > +      compatible = "mmio-sram";
-> > > > > > > > > > +      reg = <0x0 0x93f000 0x0 0x1000>;
-> > > > > > > > > > +      #address-cells = <1>;
-> > > > > > > > > > +      #size-cells = <1>;
-> > > > > > > > > > +      ranges = <0 0x0 0x93f000 0x1000>;
-> > > > > > > > > > +
-> > > > > > > > > > +      cpu_scp_lpri: scp-shmem@0 {
-> > > > > > > > > > +        compatible = "arm,scmi-shmem";
-> > > > > > > > > > +        reg = <0x0 0x200>;
-> > > > > > > > > > +      };
-> > > > > > > > > > +
-> > > > > > > > > > +      cpu_scp_hpri: scp-shmem@200 {
-> > > > > > > > > > +        compatible = "arm,scmi-shmem";
-> > > > > > > > > > +        reg = <0x200 0x200>;
-> > > > > > > > > > +      };
-> > > > > > > > > > +    };
-> > > > > > > > > > +
-> > > > > > > > > > +    firmware {
-> > > > > > > > > > +      smc_mbox: mailbox {
-> > > > > > > > > > +        #mbox-cells = <1>;
-> > > > > > > > > > +        compatible = "arm,smc-mbox";
-> > > > > > > > > > +        method = "smc";
-> > > > > > > > > > +        arm,num-chans = <0x2>;
-> > > > > > > > > > +        transports = "mem";
-> > > > > > > > > > +        /* Optional */
-> > > > > > > > > > +        arm,func-ids = <0xc20000fe>, <0xc20000ff>;
-> > > > > > > > > >  
-> > > > > > > > > SMC/HVC is synchronously(block) running in "secure mode", i.e,
-> > > > > > > > > there can only be one instance running platform wide. Right?  
-> > > > > > > >
-> > > > > > > > I think there could be channel for TEE, and channel for Linux.
-> > > > > > > > For virtualization case, there could be dedicated channel for each VM.
-> > > > > > > >  
-> > > > > > > I am talking from Linux pov. Functions 0xfe and 0xff above, can't
-> > > > > > > both be active at the same time, right?  
-> > > > > >
-> > > > > > If I get your point correctly,
-> > > > > > On UP, both could not be active. On SMP, tx/rx could be both active,
-> > > > > > anyway this depends on secure firmware and Linux firmware design.
-> > > > > >
-> > > > > > Do you have any suggestions about arm,func-ids here?
-> > > > > >  
-> > > > > I was thinking if this is just an instruction, why can't each channel be
-> > > > > represented as a controller, i.e, have exactly one func-id per controller node.
-> > > > > Define as many controllers as you need channels ?  
-> > > >
-> > > > I am ok, this could make driver code simpler. Something as below?
-> > > >
-> > > >     smc_tx_mbox: tx_mbox {
-> > > >       #mbox-cells = <0>;
-> > > >       compatible = "arm,smc-mbox";
-> > > >       method = "smc";
-> > > >       transports = "mem";
-> > > >       arm,func-id = <0xc20000fe>;
-> > > >     };
-> > > >
-> > > >     smc_rx_mbox: rx_mbox {
-> > > >       #mbox-cells = <0>;
-> > > >       compatible = "arm,smc-mbox";
-> > > >       method = "smc";
-> > > >       transports = "mem";
-> > > >       arm,func-id = <0xc20000ff>;
-> > > >     };
-> > > >
-> > > >     firmware {
-> > > >       scmi {
-> > > >         compatible = "arm,scmi";
-> > > >         mboxes = <&smc_tx_mbox>, <&smc_rx_mbox 1>;
-> > > >         mbox-names = "tx", "rx";
-> > > >         shmem = <&cpu_scp_lpri>, <&cpu_scp_hpri>;
-> > > >       };
-> > > >     };
-> > > >  
-> > > Yes, the channel part is good.
-> > > But I am not convinced by the need to have SCMI specific "transport" mode.  
+> > This patch mainly adds two more sensor modes for OV8856 CMOS image sensor.
+> > That is, the resolution of 1632*1224 and 3264*2448, corresponding to the bayer order of BGGR.
+> > The sensor revision also differs in some OTP register.
 > >
-> > Why would this be SCMI specific and what is the problem with having this property?
-> > By the very nature of the SMC/HVC call you would expect to also pass parameters in registers.
-> > However this limits the amount of data you can push, so the option of reverting to a
-> > memory based payload sounds very reasonable.
-> >  
-> Of course, it is very legit to pass data via mem and many platforms do
-> that. But as you note in your next post, the 'transport' doesn't seem
-> necessary doing what it does in the driver.
+> > Signed-off-by: Dongchun Zhu <dongchun.zhu@mediatek.com>
+> > ---
+> >  drivers/media/i2c/ov8856.c | 654 +++++++++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 639 insertions(+), 15 deletions(-)
+> >
+> 
+> What do you think about the approach taken by this patch?
+> 
+> My understanding is that the register arrays being added by it can be
+> only used with 24MHz input clock, while the existing ones are for
+> 19.2MHz. That means that this patch makes the driver expose completely
+> different modes (resolutions, mbus formats) depending on the input
+> clock. Are we okay with this?
 
-Yes, indeed. I didn't realise that until looking more deeply into the driver later.
-So I think we are on the same page regarding this: the *controller* driver and its binding does not need to know about the transport, that's something between the mailbox client and the firmware implementation.
+These register list based drivers only support a tiny subset of
+configurations a sensor can support, and the number of those configurations
+may be amended over time.
 
-Cheers,
-Andre.
+I don't see a problem in choosing a different set of available
+configurations based on the external clock frequency; that may, after all,
+cause that some of the configurations, at a particular frame rate, are not
+even achievable --- albeit this is perhaps unlikely in this case.
+
+In practice, it's often the case that the sensor vendor provides these
+configurations and the vendor may provide different configurations
+(including output resolutions etc.) to different parties. So it may well be
+the submitter of the patch would also not have access to similar
+configurations (output size, cropping etc.) that now exist in the driver.
+
+I'll review the patch itself soonish.
+
+-- 
+Regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
