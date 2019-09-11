@@ -1,59 +1,79 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v3] dt-bindings: arm: samsung: Convert Samsung Exynos
- IOMMU H/W, System MMU to dt-schema
-Date: Wed, 11 Sep 2019 13:57:00 +0200
-Message-ID: <d7e938e8-d42e-be22-ce76-561159064180@samsung.com>
-References: <CGME20190911110500eucas1p2e1304a19e2e75ee43d80fcdc3b871237@eucas1p2.samsung.com>
-        <CAJKOXPeojuk1UrYo9Wakaaq4VJt3Ts22Vi-V5xzwAXoFU5+tcA@mail.gmail.com>
-        <20190911110446.32058-1-m.falkowski@samsung.com>
-        <CAJKOXPeZ2usT+bx23n-hXxsLsbZqr-0JEtyagK8sfsLaFiaH5w@mail.gmail.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH 1/6] dt-bindings: pci: amlogic,meson-pcie: Add G12A
+ bindings
+Date: Wed, 11 Sep 2019 13:22:50 +0100
+Message-ID: <20190911122250.GT9720@e119886-lin.cambridge.arm.com>
+References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
+ <1567950178-4466-2-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPeZ2usT+bx23n-hXxsLsbZqr-0JEtyagK8sfsLaFiaH5w@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1567950178-4466-2-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Maciej Falkowski <m.falkowski@samsung.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, mark.rutland@arm.com, Andrzej Hajda <a.hajda@samsung.com>
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: khilman@baylibre.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, yue.wang@Amlogic.com, kishon@ti.com, devicetree@vger.kernel.org, repk@triplefau.lt, maz@kernel.org, linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzyszotf,
+On Sun, Sep 08, 2019 at 01:42:53PM +0000, Neil Armstrong wrote:
+> Add PCIE bindings for the Amlogic G12A SoC, the support is the same
+> but the PHY is shared with USB3 to control the differential lines.
+> 
+> Thus this adds a phy phandle to control the PHY, and sets invalid
+> MIPI clock as optional for G12A.
 
-On 2019-09-11 13:36, Krzysztof Kozlowski wrote:
-> On Wed, 11 Sep 2019 at 13:05, Maciej Falkowski <m.falkowski@samsung.com> wrote:
->> Convert Samsung Exynos IOMMU H/W, System Memory Management Unit
->> to newer dt-schema format.
->>
->> Update clock description.
->>
->> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
->> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
->> ---
->> Hi Krzysztof,
->>
->> Thank you for feedback.
->>
->> v3:
->>
->> - remove obsolete interrupts description and
->> set its maxItems to one. There are some incompatible
->> files which will be fixed with another patch.
-> Driver stopped supporting two IRQ lines in commit
-> 7222e8db2d506197ee183de0f9b76b3ad97e8c18 (iommu/exynos: Fix build
-> errors). The second IRQ line in Exynos3250 DTS seems to be ignored.
->
-> The patch now looks good to me:
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> However for some reasons you did not CC the IOMMU maintainers. Please
-> use scripts/get_maintainer.pl to get the list of folks to CC.
+Perhaps reword to "Thus this adds a phy phandle to control the PHY,
+and only requires a MIPI clock for AXG SoC Family".
 
-Frankly I don't see any reason to spam IOMMU ml or maintainer with this 
-discussion about dt-binding conversion. This patch will be merged via dt 
-tree if I got it right.
+Thanks,
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Andrew Murray
+
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt   | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> index efa2c8b9b85a..84fdc422792e 100644
+> --- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> @@ -9,13 +9,16 @@ Additional properties are described here:
+>  
+>  Required properties:
+>  - compatible:
+> -	should contain "amlogic,axg-pcie" to identify the core.
+> +	should contain :
+> +	- "amlogic,axg-pcie" for AXG SoC Family
+> +	- "amlogic,g12a-pcie" for G12A SoC Family
+> +	to identify the core.
+>  - reg:
+>  	should contain the configuration address space.
+>  - reg-names: Must be
+>  	- "elbi"	External local bus interface registers
+>  	- "cfg"		Meson specific registers
+> -	- "phy"		Meson PCIE PHY registers
+> +	- "phy"		Meson PCIE PHY registers for AXG SoC Family
+>  	- "config"	PCIe configuration space
+>  - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+>  - clocks: Must contain an entry for each entry in clock-names.
+> @@ -23,12 +26,13 @@ Required properties:
+>  	- "pclk"       PCIe GEN 100M PLL clock
+>  	- "port"       PCIe_x(A or B) RC clock gate
+>  	- "general"    PCIe Phy clock
+> -	- "mipi"       PCIe_x(A or B) 100M ref clock gate
+> +	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
+>  - resets: phandle to the reset lines.
+>  - reset-names: must contain "phy" "port" and "apb"
+> -       - "phy"         Share PHY reset
+> +       - "phy"         Share PHY reset for AXG SoC Family
+>         - "port"        Port A or B reset
+>         - "apb"         Share APB reset
+> +- phys: should contain a phandle to the shared phy for G12A SoC Family
+>  - device_type:
+>  	should be "pci". As specified in designware-pcie.txt
+>  
+> -- 
+> 2.17.1
+> 
