@@ -1,215 +1,53 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH v3 1/8] cpufreq: ti-cpufreq: add support for omap34xx and omap36xx
-Date: Wed, 11 Sep 2019 14:05:31 -0500
-Message-ID: <CAHCN7x+rK3aoLN7bKOn69JDsfJX69VSJBTuSRe78_YidmbOzEA@mail.gmail.com>
-References: <cover.1568224032.git.hns@goldelico.com> <9254e741d1b43d824f0697ec54fe9c132903e244.1568224033.git.hns@goldelico.com>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH v2 2/2] backlight: lm3630a: add an enable gpio for the
+ HWEN pin
+Date: Wed, 11 Sep 2019 22:25:13 +0200
+Message-ID: <20190911222513.489b5235@aktux>
+References: <20190910212909.18095-1-andreas@kemnade.info>
+        <20190910212909.18095-3-andreas@kemnade.info>
+        <20190911102533.not4ta3xwgm6bhjo@holly.lan>
+        <a3f10318-11f4-3b78-47e5-d9add8a46791@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9254e741d1b43d824f0697ec54fe9c132903e244.1568224033.git.hns@goldelico.com>
+In-Reply-To: <a3f10318-11f4-3b78-47e5-d9add8a46791@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Roger Quadros <rogerq@ti.com>, Teresa Remmet <t.remmet@phytec.de>, devicetree <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, linux-pm@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@pyra-handheld.com, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, arm-soc <linux-arm-kernel@lists.infrade>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, lee.jones@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 12:47 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> This adds code and tables to read the silicon revision and
-> eFuse (speed binned / 720 MHz grade) bits for selecting
-> opp-v2 table entries.
->
-> Since these bits are not always part of the syscon register
-> range (like for am33xx, am43, dra7), we add code to directly
-> read the register values using ioremap() if syscon access fails.
->
-> The format of the opp-supported-hw entries is that it has
-> two 32 bit bitfields. E.g.:
->
->         opp-supported-hw = <0xffffffff 3>
->
-> The first value is matched against the bit position of the
-> silicon revision which is (see TRM)
->
-> omap34xx:
-> BIT(0)  ES1.0
-> BIT(1)  ES2.0
-> BIT(2)  ES2.1
-> BIT(3)  ES3.0
-> BIT(4)  ES3.1
-> BIT(7)  ES3.1.2
->
-> omap36xx:
-> BIT(0)  ES1.0
-> BIT(1)  ES1.1
-> BIT(2)  ES1.2
->
-> The second value is matched against the speed grade eFuse:
->
-> BIT(0)  no high speed OPP
-> BIT(1)  high speed OPP
->
-> This means for the example above that it is always enabled
-> while e.g.
->
->         opp-supported-hw = <0x1 2>
->
-> enables the OPP only for ES1.0 BIT(0) and if the high speed
-> eFuse is set BIT(1).
->
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Reviewed-by: Tony Lindgren <tony@atomide.com>
+On Wed, 11 Sep 2019 13:48:36 -0500
+Dan Murphy <dmurphy@ti.com> wrote:
 
-For the entire series, I tested on the Logic PD devices:
-DM3730 Torpedo, OMAP3530 SOM-LV, DM3730 SOM-LV and AM3517-EVM
 
-Tested-by: Adam Ford <aford173@gmail.com>
+> >> @@ -535,6 +538,13 @@ static int lm3630a_probe(struct i2c_client *clien=
+t,
+> >>   	}
+> >>   	pchip->pdata =3D pdata;
+> >>  =20
+> >> +	pchip->enable_gpio =3D devm_gpiod_get_optional(&client->dev, "enable=
+",
+> >> +						GPIOD_OUT_HIGH);
+> >> +	if (IS_ERR(pchip->enable_gpio)) {
+> >> +		rval =3D PTR_ERR(pchip->enable_gpio);
+> >> +		return rval; =20
+>=20
+> the enable gpio is optional so if it fails you log the error and move on
+>
+well, if the gpio is not there, then it returns NULL.
+It might return e.g. -EDEFER. So I need to check for errors here.
+=20
+> Also on driver removal did you want to set the GPIO to low to disable=20
+> the device to save power?
+>=20
+page 5 of the datasheet says:
 
-> ---
->  drivers/cpufreq/ti-cpufreq.c | 91 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 89 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
-> index 2ad1ae17932d..f2f58d689320 100644
-> --- a/drivers/cpufreq/ti-cpufreq.c
-> +++ b/drivers/cpufreq/ti-cpufreq.c
-> @@ -31,6 +31,11 @@
->  #define DRA7_EFUSE_OD_MPU_OPP                  BIT(1)
->  #define DRA7_EFUSE_HIGH_MPU_OPP                        BIT(2)
->
-> +#define OMAP3_CONTROL_DEVICE_STATUS            0x4800244C
-> +#define OMAP3_CONTROL_IDCODE                   0x4830A204
-> +#define OMAP34xx_ProdID_SKUID                  0x4830A20C
-> +#define OMAP3_SYSCON_BASE      (0x48000000 + 0x2000 + 0x270)
-> +
->  #define VERSION_COUNT                          2
->
->  struct ti_cpufreq_data;
-> @@ -84,6 +89,13 @@ static unsigned long dra7_efuse_xlate(struct ti_cpufreq_data *opp_data,
->         return calculated_efuse;
->  }
->
-> +static unsigned long omap3_efuse_xlate(struct ti_cpufreq_data *opp_data,
-> +                                     unsigned long efuse)
-> +{
-> +       /* OPP enable bit ("Speed Binned") */
-> +       return BIT(efuse);
-> +}
-> +
->  static struct ti_cpufreq_soc_data am3x_soc_data = {
->         .efuse_xlate = amx3_efuse_xlate,
->         .efuse_fallback = AM33XX_800M_ARM_MPU_MAX_FREQ,
-> @@ -111,6 +123,56 @@ static struct ti_cpufreq_soc_data dra7_soc_data = {
->         .multi_regulator = true,
->  };
->
-> +/*
-> + * OMAP35x TRM (SPRUF98K):
-> + *  CONTROL_IDCODE (0x4830 A204) describes Silicon revisions.
-> + *  Control OMAP Status Register 15:0 (Address 0x4800 244C)
-> + *    to separate between omap3503, omap3515, omap3525, omap3530
-> + *    and feature presence.
-> + *    There are encodings for versions limited to 400/266MHz
-> + *    but we ignore.
-> + *    Not clear if this also holds for omap34xx.
-> + *  some eFuse values e.g. CONTROL_FUSE_OPP1_VDD1
-> + *    are stored in the SYSCON register range
-> + *  Register 0x4830A20C [ProdID.SKUID] [0:3]
-> + *    0x0 for normal 600/430MHz device.
-> + *    0x8 for 720/520MHz device.
-> + *    Not clear what omap34xx value is.
-> + */
-> +
-> +static struct ti_cpufreq_soc_data omap34xx_soc_data = {
-> +       .efuse_xlate = omap3_efuse_xlate,
-> +       .efuse_offset = OMAP34xx_ProdID_SKUID - OMAP3_SYSCON_BASE,
-> +       .efuse_shift = 3,
-> +       .efuse_mask = BIT(3),
-> +       .rev_offset = OMAP3_CONTROL_IDCODE - OMAP3_SYSCON_BASE,
-> +       .multi_regulator = false,
-> +};
-> +
-> +/*
-> + * AM/DM37x TRM (SPRUGN4M)
-> + *  CONTROL_IDCODE (0x4830 A204) describes Silicon revisions.
-> + *  Control Device Status Register 15:0 (Address 0x4800 244C)
-> + *    to separate between am3703, am3715, dm3725, dm3730
-> + *    and feature presence.
-> + *   Speed Binned = Bit 9
-> + *     0 800/600 MHz
-> + *     1 1000/800 MHz
-> + *  some eFuse values e.g. CONTROL_FUSE_OPP 1G_VDD1
-> + *    are stored in the SYSCON register range.
-> + *  There is no 0x4830A20C [ProdID.SKUID] register (exists but
-> + *    seems to always read as 0).
-> + */
-> +
-> +static struct ti_cpufreq_soc_data omap36xx_soc_data = {
-> +       .efuse_xlate = omap3_efuse_xlate,
-> +       .efuse_offset = OMAP3_CONTROL_DEVICE_STATUS - OMAP3_SYSCON_BASE,
-> +       .efuse_shift = 9,
-> +       .efuse_mask = BIT(9),
-> +       .rev_offset = OMAP3_CONTROL_IDCODE - OMAP3_SYSCON_BASE,
-> +       .multi_regulator = false,
-> +};
-> +
->  /**
->   * ti_cpufreq_get_efuse() - Parse and return efuse value present on SoC
->   * @opp_data: pointer to ti_cpufreq_data context
-> @@ -127,7 +189,17 @@ static int ti_cpufreq_get_efuse(struct ti_cpufreq_data *opp_data,
->
->         ret = regmap_read(opp_data->syscon, opp_data->soc_data->efuse_offset,
->                           &efuse);
-> -       if (ret) {
-> +       if (ret == -EIO) {
-> +               /* not a syscon register! */
-> +               void __iomem *regs = ioremap(OMAP3_SYSCON_BASE +
-> +                               opp_data->soc_data->efuse_offset, 4);
-> +
-> +               if (!regs)
-> +                       return -ENOMEM;
-> +               efuse = readl(regs);
-> +               iounmap(regs);
-> +               }
-> +       else if (ret) {
->                 dev_err(dev,
->                         "Failed to read the efuse value from syscon: %d\n",
->                         ret);
-> @@ -158,7 +230,17 @@ static int ti_cpufreq_get_rev(struct ti_cpufreq_data *opp_data,
->
->         ret = regmap_read(opp_data->syscon, opp_data->soc_data->rev_offset,
->                           &revision);
-> -       if (ret) {
-> +       if (ret == -EIO) {
-> +               /* not a syscon register! */
-> +               void __iomem *regs = ioremap(OMAP3_SYSCON_BASE +
-> +                               opp_data->soc_data->rev_offset, 4);
-> +
-> +               if (!regs)
-> +                       return -ENOMEM;
-> +               revision = readl(regs);
-> +               iounmap(regs);
-> +               }
-> +       else if (ret) {
->                 dev_err(dev,
->                         "Failed to read the revision number from syscon: %d\n",
->                         ret);
-> @@ -190,6 +272,11 @@ static const struct of_device_id ti_cpufreq_of_match[] = {
->         { .compatible = "ti,am33xx", .data = &am3x_soc_data, },
->         { .compatible = "ti,am43", .data = &am4x_soc_data, },
->         { .compatible = "ti,dra7", .data = &dra7_soc_data },
-> +       { .compatible = "ti,omap34xx", .data = &omap34xx_soc_data, },
-> +       { .compatible = "ti,omap36xx", .data = &omap36xx_soc_data, },
-> +       /* legacy */
-> +       { .compatible = "ti,omap3430", .data = &omap34xx_soc_data, },
-> +       { .compatible = "ti,omap3630", .data = &omap36xx_soc_data, },
->         {},
->  };
->
-> --
-> 2.19.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Ishdn =3D Typ. 1=C2=B5A max. 4=C2=B5A.
+For HWEN=3DVin, I2c shutdown  (I guess this means outputs powered off)
+ond for HWEN=3DGND.
+
+So are we really saving something here?
+
+Regards,
+Andreas
