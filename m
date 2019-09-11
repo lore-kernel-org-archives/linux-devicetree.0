@@ -1,48 +1,145 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3] dt-bindings: arm: samsung: Convert Samsung Exynos
- IOMMU H/W, System MMU to dt-schema
-Date: Wed, 11 Sep 2019 13:36:29 +0200
-Message-ID: <CAJKOXPeZ2usT+bx23n-hXxsLsbZqr-0JEtyagK8sfsLaFiaH5w@mail.gmail.com>
-References: <CGME20190911110500eucas1p2e1304a19e2e75ee43d80fcdc3b871237@eucas1p2.samsung.com>
- <CAJKOXPeojuk1UrYo9Wakaaq4VJt3Ts22Vi-V5xzwAXoFU5+tcA@mail.gmail.com> <20190911110446.32058-1-m.falkowski@samsung.com>
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the
+ ARM SMC/HVC mailbox
+Date: Wed, 11 Sep 2019 12:42:55 +0100
+Message-ID: <20190911124255.45e44be3@donnerap.cambridge.arm.com>
+References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
+        <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
+        <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
+        <AM0PR04MB4481785CABB44A8C71CFB8D788BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+        <CABb+yY2TREpO7+TFcGgsgQrkmMWwFAgtuJ4GnLPPQ+GEBuh07w@mail.gmail.com>
+        <AM0PR04MB448161C632722DF10989008088BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+        <CABb+yY2SrMF8e1iLyLqb-rJyBx4ajA0hZ6D=LFtuMNtXYjgccA@mail.gmail.com>
+        <AM0PR04MB448133D1F4C887A82C679CEB88BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+        <CABb+yY2t-oz6KqvCTsOJZqcMAUaR9Cbj014m7dCFXSBAMCojww@mail.gmail.com>
+        <20190909143230.48b1143f@donnerap.cambridge.arm.com>
+        <CABb+yY3kfLbdSSdQtZUu9HU1YbXSpbQWW85m0sieR7bJJYBaFA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190911110446.32058-1-m.falkowski@samsung.com>
+In-Reply-To: <CABb+yY3kfLbdSSdQtZUu9HU1YbXSpbQWW85m0sieR7bJJYBaFA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Falkowski <m.falkowski@samsung.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, mark.rutland@arm.com, Marek Szyprowski <m.szyprowski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Sep 2019 at 13:05, Maciej Falkowski <m.falkowski@samsung.com> wrote:
->
-> Convert Samsung Exynos IOMMU H/W, System Memory Management Unit
-> to newer dt-schema format.
->
-> Update clock description.
->
-> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
-> Hi Krzysztof,
->
-> Thank you for feedback.
->
-> v3:
->
-> - remove obsolete interrupts description and
-> set its maxItems to one. There are some incompatible
-> files which will be fixed with another patch.
+On Tue, 10 Sep 2019 21:36:35 -0500
+Jassi Brar <jassisinghbrar@gmail.com> wrote:
 
-Driver stopped supporting two IRQ lines in commit
-7222e8db2d506197ee183de0f9b76b3ad97e8c18 (iommu/exynos: Fix build
-errors). The second IRQ line in Exynos3250 DTS seems to be ignored.
+Hi,
 
-The patch now looks good to me:
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+> On Mon, Sep 9, 2019 at 8:32 AM Andre Przywara <andre.przywara@arm.com> wrote:
+> >
+> > On Fri, 30 Aug 2019 03:12:29 -0500
+> > Jassi Brar <jassisinghbrar@gmail.com> wrote:
+> >
+> > Hi,
+> >  
+> > > On Fri, Aug 30, 2019 at 3:07 AM Peng Fan <peng.fan@nxp.com> wrote:  
+> > > >  
+> > > > > Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
+> > > > > SMC/HVC mailbox
+> > > > >
+> > > > > On Fri, Aug 30, 2019 at 2:37 AM Peng Fan <peng.fan@nxp.com> wrote:  
+> > > > > >
+> > > > > > Hi Jassi,
+> > > > > >  
+> > > > > > > Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc
+> > > > > > > for the ARM SMC/HVC mailbox
+> > > > > > >
+> > > > > > > On Fri, Aug 30, 2019 at 1:28 AM Peng Fan <peng.fan@nxp.com> wrote:
+> > > > > > >  
+> > > > > > > > > > +examples:
+> > > > > > > > > > +  - |
+> > > > > > > > > > +    sram@910000 {
+> > > > > > > > > > +      compatible = "mmio-sram";
+> > > > > > > > > > +      reg = <0x0 0x93f000 0x0 0x1000>;
+> > > > > > > > > > +      #address-cells = <1>;
+> > > > > > > > > > +      #size-cells = <1>;
+> > > > > > > > > > +      ranges = <0 0x0 0x93f000 0x1000>;
+> > > > > > > > > > +
+> > > > > > > > > > +      cpu_scp_lpri: scp-shmem@0 {
+> > > > > > > > > > +        compatible = "arm,scmi-shmem";
+> > > > > > > > > > +        reg = <0x0 0x200>;
+> > > > > > > > > > +      };
+> > > > > > > > > > +
+> > > > > > > > > > +      cpu_scp_hpri: scp-shmem@200 {
+> > > > > > > > > > +        compatible = "arm,scmi-shmem";
+> > > > > > > > > > +        reg = <0x200 0x200>;
+> > > > > > > > > > +      };
+> > > > > > > > > > +    };
+> > > > > > > > > > +
+> > > > > > > > > > +    firmware {
+> > > > > > > > > > +      smc_mbox: mailbox {
+> > > > > > > > > > +        #mbox-cells = <1>;
+> > > > > > > > > > +        compatible = "arm,smc-mbox";
+> > > > > > > > > > +        method = "smc";
+> > > > > > > > > > +        arm,num-chans = <0x2>;
+> > > > > > > > > > +        transports = "mem";
+> > > > > > > > > > +        /* Optional */
+> > > > > > > > > > +        arm,func-ids = <0xc20000fe>, <0xc20000ff>;
+> > > > > > > > > >  
+> > > > > > > > > SMC/HVC is synchronously(block) running in "secure mode", i.e,
+> > > > > > > > > there can only be one instance running platform wide. Right?  
+> > > > > > > >
+> > > > > > > > I think there could be channel for TEE, and channel for Linux.
+> > > > > > > > For virtualization case, there could be dedicated channel for each VM.
+> > > > > > > >  
+> > > > > > > I am talking from Linux pov. Functions 0xfe and 0xff above, can't
+> > > > > > > both be active at the same time, right?  
+> > > > > >
+> > > > > > If I get your point correctly,
+> > > > > > On UP, both could not be active. On SMP, tx/rx could be both active,
+> > > > > > anyway this depends on secure firmware and Linux firmware design.
+> > > > > >
+> > > > > > Do you have any suggestions about arm,func-ids here?
+> > > > > >  
+> > > > > I was thinking if this is just an instruction, why can't each channel be
+> > > > > represented as a controller, i.e, have exactly one func-id per controller node.
+> > > > > Define as many controllers as you need channels ?  
+> > > >
+> > > > I am ok, this could make driver code simpler. Something as below?
+> > > >
+> > > >     smc_tx_mbox: tx_mbox {
+> > > >       #mbox-cells = <0>;
+> > > >       compatible = "arm,smc-mbox";
+> > > >       method = "smc";
+> > > >       transports = "mem";
+> > > >       arm,func-id = <0xc20000fe>;
+> > > >     };
+> > > >
+> > > >     smc_rx_mbox: rx_mbox {
+> > > >       #mbox-cells = <0>;
+> > > >       compatible = "arm,smc-mbox";
+> > > >       method = "smc";
+> > > >       transports = "mem";
+> > > >       arm,func-id = <0xc20000ff>;
+> > > >     };
+> > > >
+> > > >     firmware {
+> > > >       scmi {
+> > > >         compatible = "arm,scmi";
+> > > >         mboxes = <&smc_tx_mbox>, <&smc_rx_mbox 1>;
+> > > >         mbox-names = "tx", "rx";
+> > > >         shmem = <&cpu_scp_lpri>, <&cpu_scp_hpri>;
+> > > >       };
+> > > >     };
+> > > >  
+> > > Yes, the channel part is good.
+> > > But I am not convinced by the need to have SCMI specific "transport" mode.  
+> >
+> > Why would this be SCMI specific and what is the problem with having this property?
+> > By the very nature of the SMC/HVC call you would expect to also pass parameters in registers.
+> > However this limits the amount of data you can push, so the option of reverting to a
+> > memory based payload sounds very reasonable.
+> >  
+> Of course, it is very legit to pass data via mem and many platforms do
+> that. But as you note in your next post, the 'transport' doesn't seem
+> necessary doing what it does in the driver.
 
-However for some reasons you did not CC the IOMMU maintainers. Please
-use scripts/get_maintainer.pl to get the list of folks to CC.
+Yes, indeed. I didn't realise that until looking more deeply into the driver later.
+So I think we are on the same page regarding this: the *controller* driver and its binding does not need to know about the transport, that's something between the mailbox client and the firmware implementation.
 
-Best regards,
-Krzysztof
+Cheers,
+Andre.
