@@ -1,79 +1,65 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH 0/7] add support for clocksource/clockevent DT selection
-Date: Wed, 11 Sep 2019 06:52:36 +0000
-Message-ID: <cb451591-88ad-f1b3-b654-cea86ae11cac@microchip.com>
-References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
- <CALAqxLWLStTqGx5DAvUKOYupdgK-doOxRF5Z_Us=L5vnFaa=7w@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 5/5] ARM: dts: ls1021a-tsn: Use the DSPI controller in
+ poll mode
+Date: Wed, 11 Sep 2019 09:00:03 +0200
+Message-ID: <CAMuHMdU0nu2z9o-McSw0tXNsJDX-1rk2fvnqW37M6OeEpL770w@mail.gmail.com>
+References: <20190822211514.19288-1-olteanv@gmail.com> <20190822211514.19288-6-olteanv@gmail.com>
+ <CA+h21hqWGDCfTg813W1WaXFnRsMdE30WnaXw5TJvpkSp0-w5JA@mail.gmail.com>
+ <20190827180502.GF23391@sirena.co.uk> <CA+h21hr3qmTG1LyWsEp+hZZW2NJFtg9Dh1k6SXVDd+A_YSQjjw@mail.gmail.com>
+ <20190827181318.GG23391@sirena.co.uk> <CA+h21hqMVdsUjBdtiHKtKGpyvuaOf25tc4h-GdDEBQqa3EB7tw@mail.gmail.com>
+ <20190911063350.GB17142@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CALAqxLWLStTqGx5DAvUKOYupdgK-doOxRF5Z_Us=L5vnFaa=7w@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <C5F237E5FF12BA4F89A78E016541450F@namprd11.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: john.stultz@linaro.org
-Cc: tmaimon77@gmail.com, linus.walleij@linaro.org, nsekhar@ti.com, guoren@kernel.org, linux-stm32@st-md-mailman.stormreply.com, heiko@sntech.de, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, khilman@baylibre.com, Ludovic.Desroches@microchip.com, linux-imx@nxp.com, u.kleine-koenig@pengutronix.de, uclinux-h8-devel@lists.sourceforge.jp, marc.zyngier@arm.com, s.hauer@pengutronix.de, linux-unisoc@lists.infradead.org, khalasa@piap.pl, tglx@linutronix.de, sbranden@broadcom.com, linux-kernel@vger.kernel.org, ralf@linux-mips.org, paul.burton@mips.com, kernel@pengutronix.de, mark.rutland@arm.com, alexandre.belloni@bootlin.com, jhogan@kernel.org, palmer@sifive.com, eric@anholt.net, thierry.reding@gmail.com, manivannan.sadhasivam@linaro.org, ysato@users.sourceforge.jp, zhang.lyra@gmail.com, daniel.lezcano@linaro.org, jonathanh@nvidia.com, bgolaszewski@baylibre.co
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190911063350.GB17142@dragon>
+Sender: netdev-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>, linux-spi <linux-spi@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Sep 11, 2019 at 8:34 AM Shawn Guo <shawnguo@kernel.org> wrote:
+> On Tue, Aug 27, 2019 at 09:16:39PM +0300, Vladimir Oltean wrote:
+> > On Tue, 27 Aug 2019 at 21:13, Mark Brown <broonie@kernel.org> wrote:
+> > > On Tue, Aug 27, 2019 at 09:06:14PM +0300, Vladimir Oltean wrote:
+> > > > On Tue, 27 Aug 2019 at 21:05, Mark Brown <broonie@kernel.org> wrote:
+> > > > > On Mon, Aug 26, 2019 at 04:10:51PM +0300, Vladimir Oltean wrote:
+> > >
+> > > > > > I noticed you skipped applying this patch, and I'm not sure that Shawn
+> > > > > > will review it/take it.
+> > > > > > Do you have a better suggestion how I can achieve putting the DSPI
+> > > > > > driver in poll mode for this board? A Kconfig option maybe?
+> > >
+> > > > > DT changes go through the relevant platform trees, not the
+> > > > > subsystem trees, so it's not something I'd expect to apply.
+> > >
+> > > > But at least is it something that you expect to see done through a
+> > > > device tree change?
+> > >
+> > > Well, it's not ideal - if it performs better all the time the
+> > > driver should probably just do it unconditionally.  If there's
+> > > some threashold where it tends to perform better then the driver
+> > > should check for that but IIRC it sounds like the interrupt just
+> > > isn't at all helpful here.
+> >
+> > I can't seem to find any situation where it performs worse. Hence my
+> > question on whether it's a better idea to condition this behavior on a
+> > Kconfig option rather than a DT blob which may or may not be in sync.
+>
+> DT is a description of hardware not condition for software behavior,
+> where module parameter is usually used for.
 
++1
 
-On 10.09.2019 19:05, John Stultz wrote:
-> External E-Mail
-> 
-> 
-> On Tue, Sep 10, 2019 at 6:47 AM Claudiu Beznea
-> <claudiu.beznea@microchip.com> wrote:
->>
->> This series adds support to permit the selection of clocksource/clockevent
->> via DT.
-> 
-> Sorry about this, but could you try to include more of a rational for
-> *why* this would be useful in your cover-letter/commit messages?
-> 
+DT says the interrupt line is wired.
+The driver should know if it should make use of the interrupt, or not.
 
-Sorry for not being to clear in the cover letter.
+Gr{oetje,eeting}s,
 
-The case I am trying to solve here is as follows:
-The timer hardware for which I publish a driver at [1] cannot work at the
-same time as a clocksource and clockevent. On some of our platforms we have
-more than one such a timer. So we could use one hardware resource as
-clocksource and one as clockevent but not one for both.
-Due to this, I proposed in the driver at [1] to have 1st probed hardware to
-work as clocksource and the 2nd one to work as clockevent.
-There are also other timer drivers that uses this approach. While working
-on this series I noticed that there are others that are using even
-different compatibles (although it looks to be related to the same hardware).
+                        Geert
 
-Due to this Daniel proposed to have an unified mechanism for this scenario,
-see [2], (something like what I proposed in this series), such that to have
-a determinism b/w the function that the hardware resources would behave
-(either clocksource or clockevent or both).
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-The description I gave in cover letter was not the best one. Because,
-actually, at this time, the clocksource/clockevent of the system would not
-be the one pointed by DT bindings, these DT bindings would chose only the
-function that a timer would have. Because if more than one
-clocksource/clockevent would be registered in a system the rating field of
-struct clocksource/struct clockevent would be the one that would decide the
-chosen clocksource/clockevent.
-
-[1]
-https://lore.kernel.org/lkml/1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com/
-[2]
-https://lore.kernel.org/lkml/2f831f1b-c87d-48bd-cf02-2ebb334b964c@linaro.org/
-
-> I'm not sure I understand the limitation that requires such an option
-> to be added to the dts.
-> 
-> thanks
-> -john
-> 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
