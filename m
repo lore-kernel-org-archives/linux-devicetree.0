@@ -1,200 +1,175 @@
-From: <Eugen.Hristev@microchip.com>
-Subject: [PATCH v5 6/9] i2c: at91: add support for advanced digital filtering
-Date: Wed, 11 Sep 2019 08:24:31 +0000
-Message-ID: <1568189911-31641-7-git-send-email-eugen.hristev@microchip.com>
-References: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v2 2/2] hwrng: npcm: add NPCM RNG driver
+Date: Wed, 11 Sep 2019 09:29:20 +0100
+Message-ID: <20190911082920.4vxw7om5aqcfrxmy@holly.lan>
+References: <20190909123840.154745-3-tmaimon77@gmail.com>
+ <20190909123840.154745-1-tmaimon77@gmail.com>
+ <OFDC101E51.54765CB8-ON00258471.006F34B7-00258471.0072BCA7@notes.na.collabserv.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <OFDC101E51.54765CB8-ON00258471.006F34B7-00258471.0072BCA7@notes.na.collabserv.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, peda@axentia.se, mark.rutland@arm.com, Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com, robh+dt@kernel.org
-Cc: Eugen.Hristev@microchip.com, Nicolas.Ferre@microchip.com
+To: Milton Miller II <miltonm@us.ibm.com>
+Cc: Tomer Maimon <tmaimon77@gmail.com>, mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com, yuenn@google.com, benjaminfair@google.com, sumit.garg@linaro.org, jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de, joel@jms.id.au, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+On Tue, Sep 10, 2019 at 08:53:13PM +0000, Milton Miller II wrote:
+> On September 9, 2019 around 7:40AM in somet timezone, Tomer Maimon wrote:
+> >+#define NPCM_RNG_TIMEOUT_USEC	20000
+> >+#define NPCM_RNG_POLL_USEC	1000
+> 
+> ...
+> 
+> >+static int npcm_rng_init(struct hwrng *rng)
+> >+{
+> >+	struct npcm_rng *priv = to_npcm_rng(rng);
+> >+	u32 val;
+> >+
+> >+	val = readl(priv->base + NPCM_RNGCS_REG);
+> >+	val |= NPCM_RNG_ENABLE;
+> >+	writel(val, priv->base + NPCM_RNGCS_REG);
+> >+
+> >+	return 0;
+> >+}
+> >+
+> >+static void npcm_rng_cleanup(struct hwrng *rng)
+> >+{
+> >+	struct npcm_rng *priv = to_npcm_rng(rng);
+> >+	u32 val;
+> >+
+> >+	val = readl(priv->base + NPCM_RNGCS_REG);
+> >+	val &= ~NPCM_RNG_ENABLE;
+> >+	writel(val, priv->base + NPCM_RNGCS_REG);
+> >+}
+> >+
+> >+static int npcm_rng_read(struct hwrng *rng, void *buf, size_t max,
+> >bool wait)
+> >+{
+> >+	struct npcm_rng *priv = to_npcm_rng(rng);
+> >+	int retval = 0;
+> >+	int ready;
+> >+
+> >+	pm_runtime_get_sync((struct device *)priv->rng.priv);
+> >+
+> >+	while (max >= sizeof(u32)) {
+> >+		ready = readl(priv->base + NPCM_RNGCS_REG) &
+> >+			NPCM_RNG_DATA_VALID;
+> >+		if (!ready) {
+> >+			if (wait) {
+> >+				if (readl_poll_timeout(priv->base + NPCM_RNGCS_REG,
+> >+						       ready,
+> >+						       ready & NPCM_RNG_DATA_VALID,
+> >+						       NPCM_RNG_POLL_USEC,
+> >+						       NPCM_RNG_TIMEOUT_USEC))
+> >+					break;
+> >+			} else {
+> >+				break;
+> 
+> This break is too far from the condition and deeply nested to follow.
+> 
+> And looking further, readl_poll_timeout will read and check the condition before
+> calling usleep, so the the initial readl and check is redundant
+> 
+> Rearrange to make wait determine if you call readl_poll_timeout or 
+> readl / compare / break.
+> 
+> >+			}
+> >+		}
+> >+
+> >+		*(u32 *)buf = readl(priv->base + NPCM_RNGD_REG);
+> >+		retval += sizeof(u32);
+> >+		buf += sizeof(u32);
+> >+		max -= sizeof(u32);
+> >+	}
+> >+
+> >+	pm_runtime_mark_last_busy((struct device *)priv->rng.priv);
+> >+	pm_runtime_put_sync_autosuspend((struct device *)priv->rng.priv);
+> >+
+> >+	return retval || !wait ? retval : -EIO;
+> >+}
+> >+
+> >+static int npcm_rng_probe(struct platform_device *pdev)
+> >+{
+> >+	struct npcm_rng *priv;
+> >+	struct resource *res;
+> >+	bool pm_dis = false;
+> >+	u32 quality;
+> >+	int ret;
+> >+
+> >+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> >+	if (!priv)
+> >+		return -ENOMEM;
+> >+
+> >+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >+	priv->base = devm_ioremap_resource(&pdev->dev, res);
+> >+	if (IS_ERR(priv->base))
+> >+		return PTR_ERR(priv->base);
+> >+
+> >+	priv->rng.name = pdev->name;
+> >+#ifndef CONFIG_PM
+> >+	pm_dis = true;
+> >+	priv->rng.init = npcm_rng_init;
+> >+	priv->rng.cleanup = npcm_rng_cleanup;
+> >+#endif
+> 
+> if you move this down you can use one if (ENABLED_CONFIG_PM) {}
+> 
+> >+	priv->rng.read = npcm_rng_read;
+> >+	priv->rng.priv = (unsigned long)&pdev->dev;
+> >+	if (of_property_read_u32(pdev->dev.of_node, "quality", &quality))
+> >+		priv->rng.quality = 1000;
+> >+	else
+> >+		priv->rng.quality = quality;
+> >+
+> >+	writel(NPCM_RNG_M1ROSEL, priv->base + NPCM_RNGMODE_REG);
+> >+	if (pm_dis)
+> >+		writel(NPCM_RNG_CLK_SET_25MHZ, priv->base + NPCM_RNGCS_REG);
+> >+	else
+> >+		writel(NPCM_RNG_CLK_SET_25MHZ | NPCM_RNG_ENABLE,
+> >+		       priv->base + NPCM_RNGCS_REG);
+> 
+> wait ... if we know the whole value here, why read/modify/write the value
+> in the init and cleanup hook?   Save the io read and write the known value
+>  ... define the value to be written for clarity between enable/disable if
+> needed
+> 
+> 
+> 
+> >+
+> >+	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
+> >+	if (ret) {
+> >+		dev_err(&pdev->dev, "Failed to register rng device: %d\n",
+> >+			ret);
+> 
+> need to disable if CONFIG_PM ?
+> 
+> >+		return ret;
+> >+	}
+> >+
+> >+	dev_set_drvdata(&pdev->dev, priv);
+> 
+> This should probably be before the register.
+> 
+> >+	pm_runtime_set_autosuspend_delay(&pdev->dev, 100);
+> 
+> So every 100ms power off, and if userspace does a read we
+> will poll every 1ms for upto 20ms.
+> 
+> If userspace says try once a second with -ENODELAY so no wait,
+> it never gets data.
 
-Add new platform data support for advanced digital filtering for i2c.
-The sama5d2 and sam9x60 support this feature.
-This digital filter allows the user to configure the maximum
-width of the spikes that can be filtered.
+I didn't follow this.
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- drivers/i2c/busses/i2c-at91-core.c   |  9 +++++++++
- drivers/i2c/busses/i2c-at91-master.c | 30 +++++++++++++++++++++++++++---
- drivers/i2c/busses/i2c-at91.h        |  5 +++++
- 3 files changed, 41 insertions(+), 3 deletions(-)
+In the time before the device is suspended it should have generated
+data and this can be sent to the userspace. Providing the suspend delay
+is longer than the buffer size of the hardware then there won't
+necessarily be performance problems because the device is "full" when
+it is suspended.
 
-diff --git a/drivers/i2c/busses/i2c-at91-core.c b/drivers/i2c/busses/i2c-at=
-91-core.c
-index e96360f..1f4ee7e 100644
---- a/drivers/i2c/busses/i2c-at91-core.c
-+++ b/drivers/i2c/busses/i2c-at91-core.c
-@@ -69,6 +69,7 @@ static struct at91_twi_pdata at91rm9200_config =3D {
- 	.has_alt_cmd =3D false,
- 	.has_hold_field =3D false,
- 	.has_dig_filtr =3D false,
-+	.has_adv_dig_filtr =3D false,
- };
-=20
- static struct at91_twi_pdata at91sam9261_config =3D {
-@@ -78,6 +79,7 @@ static struct at91_twi_pdata at91sam9261_config =3D {
- 	.has_alt_cmd =3D false,
- 	.has_hold_field =3D false,
- 	.has_dig_filtr =3D false,
-+	.has_adv_dig_filtr =3D false,
- };
-=20
- static struct at91_twi_pdata at91sam9260_config =3D {
-@@ -87,6 +89,7 @@ static struct at91_twi_pdata at91sam9260_config =3D {
- 	.has_alt_cmd =3D false,
- 	.has_hold_field =3D false,
- 	.has_dig_filtr =3D false,
-+	.has_adv_dig_filtr =3D false,
- };
-=20
- static struct at91_twi_pdata at91sam9g20_config =3D {
-@@ -96,6 +99,7 @@ static struct at91_twi_pdata at91sam9g20_config =3D {
- 	.has_alt_cmd =3D false,
- 	.has_hold_field =3D false,
- 	.has_dig_filtr =3D false,
-+	.has_adv_dig_filtr =3D false,
- };
-=20
- static struct at91_twi_pdata at91sam9g10_config =3D {
-@@ -105,6 +109,7 @@ static struct at91_twi_pdata at91sam9g10_config =3D {
- 	.has_alt_cmd =3D false,
- 	.has_hold_field =3D false,
- 	.has_dig_filtr =3D false,
-+	.has_adv_dig_filtr =3D false,
- };
-=20
- static const struct platform_device_id at91_twi_devtypes[] =3D {
-@@ -136,6 +141,7 @@ static struct at91_twi_pdata at91sam9x5_config =3D {
- 	.has_alt_cmd =3D false,
- 	.has_hold_field =3D false,
- 	.has_dig_filtr =3D false,
-+	.has_adv_dig_filtr =3D false,
- };
-=20
- static struct at91_twi_pdata sama5d4_config =3D {
-@@ -145,6 +151,7 @@ static struct at91_twi_pdata sama5d4_config =3D {
- 	.has_alt_cmd =3D false,
- 	.has_hold_field =3D true,
- 	.has_dig_filtr =3D true,
-+	.has_adv_dig_filtr =3D false,
- };
-=20
- static struct at91_twi_pdata sama5d2_config =3D {
-@@ -154,6 +161,7 @@ static struct at91_twi_pdata sama5d2_config =3D {
- 	.has_alt_cmd =3D true,
- 	.has_hold_field =3D true,
- 	.has_dig_filtr =3D true,
-+	.has_adv_dig_filtr =3D true,
- };
-=20
- static struct at91_twi_pdata sam9x60_config =3D {
-@@ -163,6 +171,7 @@ static struct at91_twi_pdata sam9x60_config =3D {
- 	.has_alt_cmd =3D true,
- 	.has_hold_field =3D true,
- 	.has_dig_filtr =3D true,
-+	.has_adv_dig_filtr =3D true,
- };
-=20
- static const struct of_device_id atmel_twi_dt_ids[] =3D {
-diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-=
-at91-master.c
-index df80557..273bd8b 100644
---- a/drivers/i2c/busses/i2c-at91-master.c
-+++ b/drivers/i2c/busses/i2c-at91-master.c
-@@ -43,6 +43,12 @@ void at91_init_twi_bus_master(struct at91_twi_dev *dev)
- 	/* enable digital filter */
- 	if (pdata->has_dig_filtr && dev->enable_dig_filt)
- 		at91_twi_write(dev, AT91_TWI_FILTR, AT91_TWI_FILTR_FILT);
-+
-+	/* enable advanced digital filter */
-+	if (pdata->has_adv_dig_filtr && dev->enable_dig_filt)
-+		at91_twi_write(dev, AT91_TWI_FILTR, AT91_TWI_FILTR_FILT |
-+			       (AT91_TWI_FILTR_THRES(dev->filter_width) &
-+				AT91_TWI_FILTR_THRES_MASK));
- }
-=20
- /*
-@@ -51,7 +57,7 @@ void at91_init_twi_bus_master(struct at91_twi_dev *dev)
-  */
- static void at91_calc_twi_clock(struct at91_twi_dev *dev)
- {
--	int ckdiv, cdiv, div, hold =3D 0;
-+	int ckdiv, cdiv, div, hold =3D 0, filter_width =3D 0;
- 	struct at91_twi_pdata *pdata =3D dev->pdata;
- 	int offset =3D pdata->clk_offset;
- 	int max_ckdiv =3D pdata->clk_max_div;
-@@ -90,11 +96,29 @@ static void at91_calc_twi_clock(struct at91_twi_dev *de=
-v)
- 		}
- 	}
-=20
-+	if (pdata->has_adv_dig_filtr) {
-+		/*
-+		 * filter width =3D 0 to AT91_TWI_FILTR_THRES_MAX
-+		 * peripheral clocks
-+		 */
-+		filter_width =3D DIV_ROUND_UP(t->digital_filter_width_ns
-+				* (clk_get_rate(dev->clk) / 1000), 1000000);
-+		if (filter_width > AT91_TWI_FILTR_THRES_MAX) {
-+			dev_warn(dev->dev,
-+				"Filter threshold set to its maximum value (%d instead of %d)\n",
-+				AT91_TWI_FILTR_THRES_MAX, filter_width);
-+			filter_width =3D AT91_TWI_FILTR_THRES_MAX;
-+		}
-+	}
-+
- 	dev->twi_cwgr_reg =3D (ckdiv << 16) | (cdiv << 8) | cdiv
- 			    | AT91_TWI_CWGR_HOLD(hold);
-=20
--	dev_dbg(dev->dev, "cdiv %d ckdiv %d hold %d (%d ns)\n",
--		cdiv, ckdiv, hold, t->sda_hold_ns);
-+	dev->filter_width =3D filter_width;
-+
-+	dev_dbg(dev->dev, "cdiv %d ckdiv %d hold %d (%d ns), filter_width %d (%d =
-ns)\n",
-+		cdiv, ckdiv, hold, t->sda_hold_ns, filter_width,
-+		t->digital_filter_width_ns);
- }
-=20
- static void at91_twi_dma_cleanup(struct at91_twi_dev *dev)
-diff --git a/drivers/i2c/busses/i2c-at91.h b/drivers/i2c/busses/i2c-at91.h
-index c75447e..d7cf01e3 100644
---- a/drivers/i2c/busses/i2c-at91.h
-+++ b/drivers/i2c/busses/i2c-at91.h
-@@ -86,6 +86,9 @@
-=20
- #define AT91_TWI_FILTR		0x0044
- #define AT91_TWI_FILTR_FILT	BIT(0)
-+#define AT91_TWI_FILTR_THRES(v)		((v) << 8)
-+#define AT91_TWI_FILTR_THRES_MAX	7
-+#define AT91_TWI_FILTR_THRES_MASK	GENMASK(10, 8)
-=20
- #define	AT91_TWI_FMR		0x0050	/* FIFO Mode Register */
- #define	AT91_TWI_FMR_TXRDYM(mode)	(((mode) & 0x3) << 0)
-@@ -112,6 +115,7 @@ struct at91_twi_pdata {
- 	bool has_alt_cmd;
- 	bool has_hold_field;
- 	bool has_dig_filtr;
-+	bool has_adv_dig_filtr;
- 	struct at_dma_slave dma_slave;
- };
-=20
-@@ -150,6 +154,7 @@ struct at91_twi_dev {
- 	struct i2c_client *slave;
- #endif
- 	bool enable_dig_filt;
-+	u32 filter_width;
- };
-=20
- unsigned at91_twi_read(struct at91_twi_dev *dev, unsigned reg);
---=20
-2.7.4
+Of course if the hardware loses state when it is suspended then the
+driver would need extra code on the PM paths to preserve the data...
+
+
+Daniel.
