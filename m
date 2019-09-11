@@ -1,67 +1,129 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: Re: [PATCH v2 4/4] arm64: dts: add support for A1 based Amlogic AD401
-Date: Wed, 11 Sep 2019 15:37:02 +0800
-Message-ID: <09d7f5cc-9063-28f4-b68f-79f21fca500b@amlogic.com>
-References: <1567667251-33466-1-git-send-email-jianxin.pan@amlogic.com>
- <1567667251-33466-5-git-send-email-jianxin.pan@amlogic.com>
- <CAFBinCBSmW4y-Dz7EkJMV8HOU4k6Z0G-K6T77XnVrHyubaSsdg@mail.gmail.com>
- <be032a85-b60d-f7f0-8404-b27784d809df@amlogic.com>
- <CAFBinCD7gFzOsmZCB8T1KJKVsgL7WMhoEkj3dRzyqwAnjC0CNA@mail.gmail.com>
- <a82336e2-44df-5682-1c86-daf8a8448d30@amlogic.com>
- <CAFBinCAJG4=M3BSXfREGU+iadMPkc7=yt3AdcqA1KAhQx6Wh9w@mail.gmail.com>
+From: Bin Meng <bmeng.cn@gmail.com>
+Subject: Re: [PATCH] clk: sifive: Fix ethernet regression on HiFive
+	Unleashed
+Date: Wed, 11 Sep 2019 15:43:37 +0800
+Message-ID: <CAEUhbmWkPou+nbBi4VMz1dRnxFgeWYq3rRWuYwetPsho1NC=SA@mail.gmail.com>
+References: <20190908093551.27679-1-marcus@mc.pp.se>
+ <CAEUhbmVmg+AQKW9VoDeLu06jgwk+DcsgJ7A9DoONESV8n=ssBA@mail.gmail.com>
+ <yf98sqzeyno.fsf@mc.pp.se>
+ <CAEUhbmW0i-JQh9zBxbM=8GuTQ5dHH2coA+H_fGeDpGipx5egtQ@mail.gmail.com>
+ <yf98sqzj585.fsf@mc.pp.se>
+ <CAEUhbmURUFfk6Hg_si-bAKQzDmEt_rJ+jUPy-4HB0=q_hZzUBQ@mail.gmail.com>
+ <yf9v9u2j12y.fsf@mc.pp.se>
+ <CAEUhbmXTe2pLpuUT8aOFT9ZytVC0RgDB=wQzHtQvj=tAghL7Ug@mail.gmail.com>
+ <yf9a7bdxkee.fsf@mc.pp.se>
+ <CAEUhbmXOcVTF3A6ttTNtvL5wUQrU_4jon0jPkJPcy4_HfKEGAw@mail.gmail.com>
+ <yf9ftl487wk.fsf@mc.pp.se>
+ <CAEUhbmWkvW98q6b6DJR+NkW0eo0ZHXXcvPG9knyTe_8AJE9hpw@mail.gmail.com>
+ <CAAhSdy1iqctvnQj977Yjrss8MYMN_hYMCuJyhTDkW9rYnt-hAQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCAJG4=M3BSXfREGU+iadMPkc7=yt3AdcqA1KAhQx6Wh9w@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Tao Zeng <tao.zeng@amlogic.com>
+Content-Transfer-Encoding: base64
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <CAAhSdy1iqctvnQj977Yjrss8MYMN_hYMCuJyhTDkW9rYnt-hAQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.denx.de/options/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot/>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <https://lists.denx.de/listinfo/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Errors-To: u-boot-bounces@lists.denx.de
+Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
+To: Anup Patel <anup@brainfault.org>, devicetree <devicetree@vger.kernel.org>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Marcus Comstedt <marcus@mc.pp.se>
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
-
-On 2019/9/10 1:24, Martin Blumenstingl wrote:
-> Hi Jianxin,
-> 
-> On Mon, Sep 9, 2019 at 2:03 PM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
->>
->> Hi Martin,
->>
->> On 2019/9/7 23:02, Martin Blumenstingl wrote:
->>> Hi Jianxin,
->>>
->>> On Fri, Sep 6, 2019 at 7:58 AM Jianxin Pan <jianxin.pan@amlogic.com> wrote:
->>> [...]
->>>>> also I'm a bit surprised to see no busses (like aobus, cbus, periphs, ...) here
->>>>> aren't there any busses defined in the A1 SoC implementation or are
->>>>> were you planning to add them later?
->>>> Unlike previous series,there is no Cortex-M3 AO CPU in A1, and there is no AO/EE power domain.
->>>> Most of the registers are on the apb_32b bus.  aobus, cbus and periphs are not used in A1.
->>> OK, thank you for the explanation
->>> since you're going to re-send the patch anyways: can you please
->>> include the apb_32b bus?
->>> all other upstream Amlogic .dts are using the bus definitions, so that
->>> will make A1 consistent with the other SoCs
->> In A1 (and the later C1), BUS is not mentioned in the memmap and register spec.
->> Registers are organized and grouped by functions, and we can not find information about buses from the SoC document.
-> do you know why the busses are not part of the documentation?
-> 
->> Maybe it's better to remove bus definitions for these chips.
-> my understanding is that devicetree describes the hardware
-> so if there's a bus in hardware (that we know about) then we should
-> describe it in devicetree
-> 
-> personally I think busses also make the .dts easier to read:
-> instead of a huge .dts with all nodes on one level it's split into
-> multiple smaller sub-nodes - thus making it easier to keep track of
-> "where am I in this file".
-> 
-OK, I will add the bus description for A1.
-Thank you for your suggestion.
-> 
-> Martin
-> 
-> .
-> 
+K2RldmljZXRyZWUKCk9uIFdlZCwgU2VwIDExLCAyMDE5IGF0IDI6MjUgUE0gQW51cCBQYXRlbCA8
+YW51cEBicmFpbmZhdWx0Lm9yZz4gd3JvdGU6Cj4KPiBPbiBXZWQsIFNlcCAxMSwgMjAxOSBhdCA3
+OjI4IEFNIEJpbiBNZW5nIDxibWVuZy5jbkBnbWFpbC5jb20+IHdyb3RlOgo+ID4KPiA+IEhpIE1h
+cmN1cywKPiA+Cj4gPiBPbiBUdWUsIFNlcCAxMCwgMjAxOSBhdCAxMTo1MyBQTSBNYXJjdXMgQ29t
+c3RlZHQgPG1hcmN1c0BtYy5wcC5zZT4gd3JvdGU6Cj4gPiA+Cj4gPiA+Cj4gPiA+IEhpIEJpbiwK
+PiA+ID4KPiA+ID4gQmluIE1lbmcgPGJtZW5nLmNuQGdtYWlsLmNvbT4gd3JpdGVzOgo+ID4gPgo+
+ID4gPiA+IFNvIDQuMTQgZGVmaW5pdGVseSB3YXMgYW4gb3V0LW9mLXRyZWUga2VybmVsCj4gPiA+
+Cj4gPiA+IEV2ZXJ5dGhpbmcgYmVmb3JlIDUuMiB3YXMgb3V0LW9mLXRyZWUuCj4gPiA+Cj4gPiA+
+Cj4gPiA+ID4gTm8gb25lIGNhbiBndWFyYW50ZWUgYW4gb3V0LW9mLXRyZWUgaW1wbGVtZW50YXRp
+b24gd2lsbCBiZQo+ID4gPiA+IGtlZXBpbmcgY29tcGF0aWJsZSBhZnRlciBpdCdzIGFjY2VwdGVk
+IGluLXRyZWUuCj4gPiA+Cj4gPiA+IFJldmlld2Vycy9tYWludGFpbmVycyBjYW4gZ3VhcmFudGVl
+IGNvbXBhdGliaWxpdHkgd2l0aCBleGlzdGluZwo+ID4gPiBoYXJkd2FyZSBhbmQgRFQgYnkgbm90
+IGluc3Rpc3Rpbmcgb24gYnJlYWtpbmcgY2hhbmdlcy4KPiA+ID4KPiA+ID4gSXQncyBub3QgcmVh
+bGx5IGFib3V0IGtlZXBpbmcgaW4tdHJlZSBhbmQgb3V0LW9mLXRyZWUgY29tcGF0aWJsZSB3aXRo
+Cj4gPiA+IGVhY2ggb3RoZXIsIGJ1dCBhYm91dCBrZWVwaW5nIGJvdGggb2YgdGhlbSBjb21wYXRp
+YmxlIHdpdGggdGhlIGFjdHVhbAo+ID4gPiBoYXJkd2FyZSBhbmQgRFQgb2YgdGhlIHN5c3RlbSB0
+aGUgT1MgaXMgc3VwcG9zZWQgdG8gcnVuIG9uLgo+ID4gPgo+ID4KPiA+IFBlciBteSB1bmRlcnN0
+YW5kaW5nIGtlcm5lbCByZXZpZXdlcnMvbWFpbnRhaW5lcnMgd2FudCB0byBoYXZlIGEgY2xlYW4K
+PiA+IGltcGxlbWVudGF0aW9uIGZyb20gdGhlIHN0YXJ0LiBUaGF0J3Mgd2h5IGl0J3MgYmVpbmcg
+ZG9uZSB0aGlzIHdheS4KPiA+Cj4gPiA+Cj4gPiA+ID4gUmV2aWV3ZXJzL21haW50YWluZXJzCj4g
+PiA+ID4gbWF5IGhhdmUgZGlmZmVyZW50IHZpZXcgZnJvbSB0aGUgYXV0aG9yIG9uIHdoYXQncyB0
+aGUgYmVzdAo+ID4gPgo+ID4gPiBBIHJldmlld2VyL21haW50YWluZXIgY291bGQgZm9yIGV4YW1w
+bGUgaGF2ZSB0aGUgdmlldyB0aGF0IGEgY2VydGFpbgo+ID4gPiByZWdpc3RlciBpbiBhIHBpZWNl
+IG9mIGhhcmR3YXJlIHNob3VsZCByZWFsbHkgYmUgdHdvIHJlZ2lzdGVycyB3aXRoCj4gPiA+IHRo
+ZSBiaXRzIGRpdmlkZWQgYmV0d2VlbiB0aGVtIGJhc2VkIG9uIHNvbWUgbG9naWNhbCBwYXJ0aXRp
+b25pbmcuICBBbmQKPiA+ID4gdGhleSBtaWdodCBiZSByaWdodC4gIEJ1dCB0aGUgaGFyZHdhcmUg
+aXMgd2hhdCBpdCBpcywgYW5kIGlmIHRoZXkKPiA+ID4gaW5zaXN0IHRoYXQgdGhlIGRyaXZlciBh
+Y2Nlc3MgdHdvIGRpZmZlcmVudCByZWdpc3RlcnMgdGhlIGRyaXZlciB3aWxsCj4gPiA+IG5vdCB3
+b3JrIHRoZSBoYXJkd2FyZS4gIFlvdSdsbCBoYXZlIGEgbmljZSBkcml2ZXIgdGhhdCB3b3JrcyBv
+bgo+ID4gPiBub3RoaW5nIChhdCBsZWFzdCB1bnRpbCB0aGUgdmVuZG9yIG1ha2VzIGEgbmV3IHNw
+aW4gb2YgdGhlIGhhcmR3YXJlCj4gPiA+IHdpdGggdGhlIHR3byByZWdpc3RlcnMpLgo+ID4KPiA+
+IFRoZSBvcmlnaW5hbCBoYXJkd2FyZSB2ZW5kb3IncyBEVCBtYXkgYmUgd3JpdHRlbiBpbiBhIHdh
+eSB0aGF0Cj4gPiB2aW9sYXRlcyB0aGUgRFQgc3BlY3MuIEhlbmNlIEkgYmVsaWV2ZSBpdCdzIHJl
+YWxseSBoYXJkIHRvIGtlZXAgdGhlCj4gPiBjb21wYXJhYmlsaXR5IGZvciBib3RoLgo+ID4KPiA+
+IEZvciB0aGlzIHNwZWNpZmljIEZVNTQwIGV0aGVybmV0LCB3aGF0IHlvdSBkaWQgaW4gdGhpcyBw
+YXRjaCBkb2VzIG5vdAo+ID4gY29tcGxldGVseSBicmluZyBiYWNrIHRoZSBjb21wYXRpYmlsaXR5
+LiBUaGluZ3Mgd2VyZSBjaGFuZ2VkIGEgbG90IGluCj4gPiB0aGUgdXBzdHJlYW0ga2VybmVsLgo+
+ID4KPiA+IEZvciBleGFtcGxlLCB0aGUgVS1Cb290IEdFTSBHWEwtTUdNVCBkcml2ZXIgd2FzIG5l
+ZWRlZCB0byB3b3JrIHdpdGggU2lGaXZlJ3MgRFQKPiA+IGh0dHBzOi8vbGlzdHMuZGVueC5kZS9w
+aXBlcm1haWwvdS1ib290LzIwMTktTWF5LzM2OTU3Ny5odG1sCj4gPgo+ID4gQnV0IGxhdGVyLCBp
+dCB3YXMgZHJvcHBlZCBkdWUgdG8ga2VybmVsIG1haW5saW5lIERUCj4gPiByZXZpZXdlcnMvbWFp
+bnRhaW5lcnMgdGhvdWdodCBpdCB3YXMgYSBtaXN1c2Ugb2YgY2xvY2sgbm9kZSBhbmQgdGhlCj4g
+PiBHWEwtTUdNVCBtb2R1bGUgc2hvdWxkIGJlIHBhcnQgb2YgdGhlIEdFTSBzcGVjLgo+ID4gaHR0
+cHM6Ly9saXN0cy5kZW54LmRlL3BpcGVybWFpbC91LWJvb3QvMjAxOS1KdW5lLzM3MzMwNi5odG1s
+Cj4gPgo+ID4gPgo+ID4gPiBNeSBvcGluaW9uIGlzIHRoYXQgdGhlIERUIHNob3VsZCBiZSB0cmVh
+dGVkIHRoZSBzYW1lIHdheS4gIEl0IGlzIHBhcnQKPiA+ID4gb2YgdGhlIGhhcmR3YXJlIChzb3J0
+IG9mIHRoZSAibWV0YWRhdGEiIGZvciB0aGUgaGFyZHdhcmUpLiAgU3VyZSB5b3UKPiA+ID4gY2Fu
+IGhhdmUgc29tZSBpZGVhIG9mIGhvdyB0aGluZ3MgY291bGQgYmUgZXhwcmVzc2VkIGJldHRlciBh
+bmQgYWRkCj4gPiA+IHN1cHBvcnQgZm9yIHRoYXQsIGJ1dCB5b3UgbmVlZCB0byBhbHNvIGtlZXAg
+Y29tcGF0IHdpdGggdGhlIGFjdHVhbAo+ID4gPiBoYXJkd2FyZSBwbGF0Zm9ybSB0aGF0IHRoZSBk
+cml2ZXIgaXMgdGhlcmUgdG8gaW50ZXJmYWNlIGFnYWluc3QsCj4gPiA+IG90aGVyd2lzZSB0aGUg
+ZHJpdmVyIHdvbid0IHdvcmsuCj4gPiA+Cj4gPgo+ID4gV2hpbGUgSSBhZ3JlZSB3aXRoIHlvdSB0
+byBzb21lIGV4dGVudCB0aGF0LCB0aGF0J3Mgbm93IGhvdyB0aGluZ3MgYXJlCj4gPiBkb25lIHdp
+dGggY3VycmVudCBrZXJuZWwgcHJhY3RpY2UuCj4KPiBTb3JyeSBmb3IgdGhlIHNsb3cgcmVzcG9u
+c2UuLi4KPgo+IFRoZSBEVCBiaW5kaW5ncyBmb3IgbW9zdCBvZiB0aGUgTGludXggZHJpdmVycyBh
+Y2NlcHRlZCB1cHN0cmVhbSBoYXZlCj4gY2hhbmdlZCBpbiBhIGJhY2t3YXJkIGluLWNvbXBhdGli
+bGUgd2F5IGZvciBTaUZpdmUgVW5sZWFzaGVkLiBUaGUKPiBMaW51eCBjbG9jayBkcml2ZXIgaW1w
+bGVtZW50YXRpb24gYWxzbyBjaGFuZ2VkIHF1aXRlIGEgYml0Lgo+Cj4gTW9zdCBvZiB0aGUgcmVj
+ZW50IFUtQm9vdCBjaGFuZ2VzIGZvciBTaUZpdmUgVW5sZWFzaGVkIHdlcmUgdG8gc3luYy11cAo+
+IERUIGJpbmRpbmdzIGZvbGxvd2VkIGJ5IFUtQm9vdCBkcml2ZXJzIHdpdGggU2lGaXZlIFVubGVh
+c2hlZCBkcml2ZXJzCj4gYWNjZXB0ZWQgaW4gTGludXguIFRoZSBidWlsdC1pbiBEVEIgcGFzc2Vk
+IGJ5IEZTQkwgdG8gT3BlblNCSSArIFUtQm9vdAo+IGlzIHRvdGFsbHkgb3V0LW9mLWRhdGUuIEdv
+aW5nIGZvcndhcmQgU2lGaXZlIGZvbGtzIHdpbGwgdXNlIHVwc3RyZWFtZWQgTGludXgKPiBEVCBi
+aW5kaW5ncyBmb3IgbmV3ZXIgcGxhdGZvcm1zIHNvIGl0IG1hZGUgc2Vuc2UgdG8gdXBkYXRlIFUt
+Qm9vdCBkcml2ZXJzLgo+Cj4gVGhlIHJvb3Qgb2YgdGhlIHByb2JsZW0gaXMgZGVsYXkgaW4gZnJl
+ZXppbmcgRFQgYmluZGluZ3MgYnkgU09DIHZlbmRvcnMuCj4KPiBJIHRoaW5rIHRoZSBTT0MgdmVu
+ZG9ycyBzaG91bGQgZ2V0IERUIGJpbmRpbmdzIHJldmlld2VkIHZlcnkgZWFybHkgYmVmb3JlCgpU
+aGUgcXVlc3Rpb24gaXMgd2hlbiB3ZSBjYW4gY2FsbCB0aGF0ICJ2ZXJ5IGVhcmx5Ij8gTm9ybWFs
+bHkgU29DCnZlbmRvcnMgd2lsbCBzaGlwIHRoZWlyIG93biBzb2Z0d2FyZSBzdGFjayAoYm9vdGxv
+YWRlcnMsIGtlcm5lbHMsIGR0YikKb24gdGhlaXIgZXZhbHVhdGlvbiBib2FyZCBhbmQgcHJvdmlk
+ZWQgZm9ya2VkIGdpdCByZXBvcyBvZiB0aGVzZQpzb2Z0d2FyZSBmb3IgdGhlaXIgY3VzdG9tZXJz
+LCBha2EgU0RLLiBJZiB3ZSBleHBlY3QgYnJpbmdpbmcgRFQKYmluZGluZ3MgaW4gYSB2ZXJ5IGVh
+cmx5IHBoYXNlIHRvIGZpeCBzdWNoIGNvbXBhdGliaWxpdHkgcHJvYmxlbSwgdGhhdAptZWFucyBT
+b0MgdmVuZG9ycyBjYW5ub3Qgc2hpcCB0aGVpciBTREsgdG8gdGhlaXIgY3VzdG9tZXJzIGJlZm9y
+ZQpldmVyeSBEVCBiaW5kaW5ncyB1c2VkIGluIHRoZWlyIFNvQyBnZXQgcmV2aWV3ZWQgYW5kIGFw
+cHJvdmVkLiBUaGF0CnNvdW5kcyB1bnJlYWxpc3RpYy4KCj4gc2VuZGluZyBwYXRjaGVzIHRvIExp
+bnV4IG9yIFUtQm9vdC4gVGhlIExpbnV4IGtlcm5lbCBpcyBzdGlsbCBhIGNlbnRyYWwgcGxhY2UK
+PiBmb3IgYWxsIERUIGJpbmRpbmdzIGRvY3VtZW50YXRpb24gYWNyb3NzIGFyY2hpdGVjdHVyZXMu
+Cj4KPiBNYXkgYmUgdGhpbmdzIHdvdWxkIGJlIGRpZmZlcmVudCBpZiBEVCBiaW5kaW5ncyBkb2N1
+bWVudGF0aW9uIHdhcwo+IG1haW50YWluZWQgYXMgc2VwYXJhdGUgcHJvamVjdCA/Pz8KCkkgdmFn
+dWVseSByZW1lbWJlciBhIHNpbWlsYXIgcHJvcG9zYWwgd2FzIG9uY2UgZGlzY3Vzc2VkIGluIHRo
+ZSBMS01MLgpJZiB3ZSBtYW5hZ2UgdG8gZ28gd2l0aCB0aGF0IGRpcmVjdGlvbiwgSSB0aGluayB3
+ZSBzaG91bGQgYWxzbyByZXF1ZXN0CmFsbCBEVFMgZmlsZXMgdG8gYmUgZHVhbCBsaWNlbnNlZCB3
+aXRoIG9uZSBCU0Qtc3R5bGUgcGVybWlzc2l2ZQpsaWNlbnNlIG1vZGVsIGZvciBvdGhlciBwcm9q
+ZWN0cyB0byB1c2UuCgo+IEZvciBub3csIHdlIGNhbiBpbnNpc3QgU09DIHZlbmRvcnMgdG8gZ2V0
+IERUIGJpbmRpbmdzIHJldmlld2VkL2Zyb296ZW4KPiBpbiBMS01MIGJlZm9yZSBzZW5kaW5nIFUt
+Qm9vdCBkcml2ZXIgcGF0Y2hlcy4gU3VnZ2VzdGlvbnMgPz8KPgoKU28gVS1Cb290IHVwc3RyZWFt
+IGRyaXZlcnMgYWx3YXlzIHdvcmsgd2l0aCB1cHN0cmVhbSBEVCBpbiBMaW51eAprZXJuZWwuIFNv
+dW5kcyBnb29kIHRvIG1lLiBCdXQgYWdhaW4gdGhpcyBkb2VzIG5vdCBoZWxwIHdpdGggdGhlCm91
+dC1vZi10cmVlIFUtQm9vdCBmb3JrIHByb3ZpZGVkIGJ5IHRoZSBTb0MgdmVuZG9yIHRvIHRoZWly
+IGN1c3RvbWVycwouLi4KClJlZ2FyZHMsCkJpbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpVLUJvb3QgbWFpbGluZyBsaXN0ClUtQm9vdEBsaXN0cy5kZW54
+LmRlCmh0dHBzOi8vbGlzdHMuZGVueC5kZS9saXN0aW5mby91LWJvb3QK
