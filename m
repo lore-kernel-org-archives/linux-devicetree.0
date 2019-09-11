@@ -1,15 +1,14 @@
-From: Frederic Chen <frederic.chen@mediatek.com>
-Subject: Re: [RFC PATCH V3 4/5] platform: mtk-isp: Add Mediatek DIP driver
-Date: Thu, 12 Sep 2019 01:41:11 +0800
-Message-ID: <1568223671.19171.12.camel@mtksdccf07>
-References: <20190909192244.9367-1-frederic.chen@mediatek.com>
- <20190909192244.9367-5-frederic.chen@mediatek.com>
- <CAAFQd5DEn_N26M7B4X7fKHVA=XBtWJN=Y4VF7D9B=TkgXf_i+Q@mail.gmail.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v3 1/8] cpufreq: ti-cpufreq: add support for omap34xx and
+ omap36xx
+Date: Wed, 11 Sep 2019 19:47:07 +0200
+Message-ID: <9254e741d1b43d824f0697ec54fe9c132903e244.1568224033.git.hns@goldelico.com>
+References: <cover.1568224032.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAAFQd5DEn_N26M7B4X7fKHVA=XBtWJN=Y4VF7D9B=TkgXf_i+Q@mail.gmail.com>
+In-Reply-To: <cover.1568224032.git.hns@goldelico.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,156 +18,194 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <tfiga@chromium.org>
-Cc: Shik Chen <shik@chromium.org>, devicetree@vger.kernel.org, Sean Cheng =?UTF-8?Q?=28=E9=84=AD=E6=98=87=E5=BC=98=29?= <Sean.Cheng@mediatek.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Rynn Wu =?UTF-8?Q?=28=E5=90=B3=E8=82=B2=E6=81=A9=29?= <Rynn.Wu@mediatek.com>, Christie Yu =?UTF-8?Q?=28=E6=B8=B8=E9=9B=85=E6=83=A0=29?= <christie.yu@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Allan Yang =?UTF-8?Q?=28=E6=A5=8A=E6=99=BA=E9=88=9E=29?= <Allan.Yang@mediatek.com>, Holmes Chiou =?UTF-8?Q?=28=E9=82=B1=E6=8C=BA=29?= <holmes.chiou@mediatek.com>, suleiman@chromium.org, Jerry-ch Chen <Jerry-ch.Chen@mediatek.com>, Jungo Lin =?UTF-8?Q?=28=E6=9E=97=E6=98=8E=E4=BF=8A=29?= <jungo.lin@mediatek.com>, Sj Huang <sj.huang@mediatek.com>, yuzhao@chromium.org, Hans Verkuil <hans.verkuil@cisco.com>, zwisler@chromium.org, Matthias Brugger <matthias.bgg@gmail.c>
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Andr=C3=A9=20Roth?= <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Roger Quadros <rogerq@ti.com>, Teresa Remmet <t.remmet@phytec.de>, "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pyra-handheld.com, letux-kernel@openphoenux.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+This adds code and tables to read the silicon revision and
+eFuse (speed binned / 720 MHz grade) bits for selecting
+opp-v2 table entries.
 
-I appreciate your helpful comments.
+Since these bits are not always part of the syscon register
+range (like for am33xx, am43, dra7), we add code to directly
+read the register values using ioremap() if syscon access fails.
 
+The format of the opp-supported-hw entries is that it has
+two 32 bit bitfields. E.g.:
 
-On Tue, 2019-09-10 at 13:04 +0900, Tomasz Figa wrote:
-> Hi Frederic,
-> 
-> On Tue, Sep 10, 2019 at 4:23 AM <frederic.chen@mediatek.com> wrote:
-> >
-> > From: Frederic Chen <frederic.chen@mediatek.com>
-> >
-> > This patch adds the driver of Digital Image Processing (DIP)
-> > unit in Mediatek ISP system, providing image format
-> > conversion, resizing, and rotation features.
-> >
-> > The mtk-isp directory will contain drivers for multiple IP
-> > blocks found in Mediatek ISP system. It will include ISP
-> > Pass 1 driver(CAM), sensor interface driver, DIP driver and
-> > face detection driver.
-> >
-> > Signed-off-by: Frederic Chen <frederic.chen@mediatek.com>
-> > ---
-> >  drivers/media/platform/mtk-isp/Makefile       |    7 +
-> >  .../media/platform/mtk-isp/isp_50/Makefile    |    7 +
-> >  .../platform/mtk-isp/isp_50/dip/Makefile      |   18 +
-> >  .../platform/mtk-isp/isp_50/dip/mtk_dip-dev.c |  650 +++++
-> >  .../platform/mtk-isp/isp_50/dip/mtk_dip-dev.h |  566 +++++
-> >  .../platform/mtk-isp/isp_50/dip/mtk_dip-hw.h  |  156 ++
-> >  .../platform/mtk-isp/isp_50/dip/mtk_dip-sys.c |  521 ++++
-> >  .../mtk-isp/isp_50/dip/mtk_dip-v4l2.c         | 2255 +++++++++++++++++
-> >  8 files changed, 4180 insertions(+)
-> >  create mode 100644 drivers/media/platform/mtk-isp/Makefile
-> >  create mode 100644 drivers/media/platform/mtk-isp/isp_50/Makefile
-> >  create mode 100644 drivers/media/platform/mtk-isp/isp_50/dip/Makefile
-> >  create mode 100644 drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-dev.c
-> >  create mode 100644 drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-dev.h
-> >  create mode 100644 drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-hw.h
-> >  create mode 100644 drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-sys.c
-> >  create mode 100644 drivers/media/platform/mtk-isp/isp_50/dip/mtk_dip-v4l2.c
-> >
-> 
-> Thanks for sending v3!
-> 
-> I'm going to do a full review a bit later, but please check one
-> comment about power handling below.
-> 
-> Other than that one comment, from a quick look, I think we only have a
-> number of style issues left. Thanks for the hard work!
-> 
-> [snip]
-> > +static void dip_runner_func(struct work_struct *work)
-> > +{
-> > +       struct mtk_dip_request *req = mtk_dip_hw_mdp_work_to_req(work);
-> > +       struct mtk_dip_dev *dip_dev = req->dip_pipe->dip_dev;
-> > +       struct img_config *config_data =
-> > +               (struct img_config *)req->working_buf->config_data.vaddr;
-> > +
-> > +       /*
-> > +        * Call MDP/GCE API to do HW excecution
-> > +        * Pass the framejob to MDP driver
-> > +        */
-> > +       pm_runtime_get_sync(dip_dev->dev);
-> > +       mdp_cmdq_sendtask(dip_dev->mdp_pdev, config_data,
-> > +                         &req->img_fparam.frameparam, NULL, false,
-> > +                         dip_mdp_cb_func, req);
-> > +}
-> [snip]
-> > +static void dip_composer_workfunc(struct work_struct *work)
-> > +{
-> > +       struct mtk_dip_request *req = mtk_dip_hw_fw_work_to_req(work);
-> > +       struct mtk_dip_dev *dip_dev = req->dip_pipe->dip_dev;
-> > +       struct img_ipi_param ipi_param;
-> > +       struct mtk_dip_hw_subframe *buf;
-> > +       int ret;
-> > +
-> > +       down(&dip_dev->sem);
-> > +
-> > +       buf = mtk_dip_hw_working_buf_alloc(req->dip_pipe->dip_dev);
-> > +       if (!buf) {
-> > +               dev_err(req->dip_pipe->dip_dev->dev,
-> > +                       "%s:%s:req(%p): no free working buffer available\n",
-> > +                       __func__, req->dip_pipe->desc->name, req);
-> > +       }
-> > +
-> > +       req->working_buf = buf;
-> > +       mtk_dip_wbuf_to_ipi_img_addr(&req->img_fparam.frameparam.subfrm_data,
-> > +                                    &buf->buffer);
-> > +       memset(buf->buffer.vaddr, 0, DIP_SUB_FRM_SZ);
-> > +       mtk_dip_wbuf_to_ipi_img_sw_addr(&req->img_fparam.frameparam.config_data,
-> > +                                       &buf->config_data);
-> > +       memset(buf->config_data.vaddr, 0, DIP_COMP_SZ);
-> > +
-> > +       if (!req->img_fparam.frameparam.tuning_data.present) {
-> > +               /*
-> > +                * When user enqueued without tuning buffer,
-> > +                * it would use driver internal buffer.
-> > +                */
-> > +               dev_dbg(dip_dev->dev,
-> > +                       "%s: frame_no(%d) has no tuning_data\n",
-> > +                       __func__, req->img_fparam.frameparam.frame_no);
-> > +
-> > +               mtk_dip_wbuf_to_ipi_tuning_addr
-> > +                               (&req->img_fparam.frameparam.tuning_data,
-> > +                                &buf->tuning_buf);
-> > +               memset(buf->tuning_buf.vaddr, 0, DIP_TUNING_SZ);
-> > +       }
-> > +
-> > +       mtk_dip_wbuf_to_ipi_img_sw_addr(&req->img_fparam.frameparam.self_data,
-> > +                                       &buf->frameparam);
-> > +       memcpy(buf->frameparam.vaddr, &req->img_fparam.frameparam,
-> > +              sizeof(req->img_fparam.frameparam));
-> > +       ipi_param.usage = IMG_IPI_FRAME;
-> > +       ipi_param.frm_param.handle = req->id;
-> > +       ipi_param.frm_param.scp_addr = (u32)buf->frameparam.scp_daddr;
-> > +
-> > +       mutex_lock(&dip_dev->hw_op_lock);
-> > +       atomic_inc(&dip_dev->num_composing);
-> > +       ret = scp_ipi_send(dip_dev->scp_pdev, SCP_IPI_DIP, &ipi_param,
-> > +                          sizeof(ipi_param), 0);
-> 
-> We're not holding the pm_runtime enable count here
-> (pm_runtime_get_sync() wasn't called), so rproc_shutdown() might have
-> been called. Wouldn't that affect the ability for this IPI to run?
-> 
-> We had a related discussion with Jerry on the FD series and I think
-> the conclusion is:
-> a) if there is any state that needs to be preserved between jobs, that
-> would be cleared by rproc_shutdown() then we need to call
-> rproc_boot/shutdown() when we start/stop streaming.
-> b) it there is no such state, we can keep them inside runtime PM
-> callbacks, but we need to call pm_runtime_get_sync() before sending an
-> IPI and pm_runtime_mark_last_busy() + pm_runtime_put_autosuspend()
-> after the SCP signals completion. In this case the runtime PM
-> autosuspend delay should be set to around 2-3 times the delay needed
-> for rproc_shutdown() + rproc_boot() to complete.
+	opp-supported-hw = <0xffffffff 3>
 
-Since each IMG_IPI_FRAME command is stateless, I would like to
-use pm_runtime_get_sync()/ pm_runtime_mark_last_busy()/
-pm_runtime_put_autosuspend() to fix this issue (solution b).
+The first value is matched against the bit position of the
+silicon revision which is (see TRM)
 
-> 
-> Best regards,
-> Tomasz
+omap34xx:
+BIT(0)	ES1.0
+BIT(1)	ES2.0
+BIT(2)	ES2.1
+BIT(3)	ES3.0
+BIT(4)	ES3.1
+BIT(7)	ES3.1.2
 
+omap36xx:
+BIT(0)	ES1.0
+BIT(1)	ES1.1
+BIT(2)	ES1.2
 
-Sincerely,
+The second value is matched against the speed grade eFuse:
 
-Frederic Chen
+BIT(0)	no high speed OPP
+BIT(1)	high speed OPP
+
+This means for the example above that it is always enabled
+while e.g.
+
+	opp-supported-hw = <0x1 2>
+
+enables the OPP only for ES1.0 BIT(0) and if the high speed
+eFuse is set BIT(1).
+
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Reviewed-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/cpufreq/ti-cpufreq.c | 91 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 89 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
+index 2ad1ae17932d..f2f58d689320 100644
+--- a/drivers/cpufreq/ti-cpufreq.c
++++ b/drivers/cpufreq/ti-cpufreq.c
+@@ -31,6 +31,11 @@
+ #define DRA7_EFUSE_OD_MPU_OPP			BIT(1)
+ #define DRA7_EFUSE_HIGH_MPU_OPP			BIT(2)
+ 
++#define OMAP3_CONTROL_DEVICE_STATUS		0x4800244C
++#define OMAP3_CONTROL_IDCODE			0x4830A204
++#define OMAP34xx_ProdID_SKUID			0x4830A20C
++#define OMAP3_SYSCON_BASE	(0x48000000 + 0x2000 + 0x270)
++
+ #define VERSION_COUNT				2
+ 
+ struct ti_cpufreq_data;
+@@ -84,6 +89,13 @@ static unsigned long dra7_efuse_xlate(struct ti_cpufreq_data *opp_data,
+ 	return calculated_efuse;
+ }
+ 
++static unsigned long omap3_efuse_xlate(struct ti_cpufreq_data *opp_data,
++				      unsigned long efuse)
++{
++	/* OPP enable bit ("Speed Binned") */
++	return BIT(efuse);
++}
++
+ static struct ti_cpufreq_soc_data am3x_soc_data = {
+ 	.efuse_xlate = amx3_efuse_xlate,
+ 	.efuse_fallback = AM33XX_800M_ARM_MPU_MAX_FREQ,
+@@ -111,6 +123,56 @@ static struct ti_cpufreq_soc_data dra7_soc_data = {
+ 	.multi_regulator = true,
+ };
+ 
++/*
++ * OMAP35x TRM (SPRUF98K):
++ *  CONTROL_IDCODE (0x4830 A204) describes Silicon revisions.
++ *  Control OMAP Status Register 15:0 (Address 0x4800 244C)
++ *    to separate between omap3503, omap3515, omap3525, omap3530
++ *    and feature presence.
++ *    There are encodings for versions limited to 400/266MHz
++ *    but we ignore.
++ *    Not clear if this also holds for omap34xx.
++ *  some eFuse values e.g. CONTROL_FUSE_OPP1_VDD1
++ *    are stored in the SYSCON register range
++ *  Register 0x4830A20C [ProdID.SKUID] [0:3]
++ *    0x0 for normal 600/430MHz device.
++ *    0x8 for 720/520MHz device.
++ *    Not clear what omap34xx value is.
++ */
++
++static struct ti_cpufreq_soc_data omap34xx_soc_data = {
++	.efuse_xlate = omap3_efuse_xlate,
++	.efuse_offset = OMAP34xx_ProdID_SKUID - OMAP3_SYSCON_BASE,
++	.efuse_shift = 3,
++	.efuse_mask = BIT(3),
++	.rev_offset = OMAP3_CONTROL_IDCODE - OMAP3_SYSCON_BASE,
++	.multi_regulator = false,
++};
++
++/*
++ * AM/DM37x TRM (SPRUGN4M)
++ *  CONTROL_IDCODE (0x4830 A204) describes Silicon revisions.
++ *  Control Device Status Register 15:0 (Address 0x4800 244C)
++ *    to separate between am3703, am3715, dm3725, dm3730
++ *    and feature presence.
++ *   Speed Binned = Bit 9
++ *     0 800/600 MHz
++ *     1 1000/800 MHz
++ *  some eFuse values e.g. CONTROL_FUSE_OPP 1G_VDD1
++ *    are stored in the SYSCON register range.
++ *  There is no 0x4830A20C [ProdID.SKUID] register (exists but
++ *    seems to always read as 0).
++ */
++
++static struct ti_cpufreq_soc_data omap36xx_soc_data = {
++	.efuse_xlate = omap3_efuse_xlate,
++	.efuse_offset = OMAP3_CONTROL_DEVICE_STATUS - OMAP3_SYSCON_BASE,
++	.efuse_shift = 9,
++	.efuse_mask = BIT(9),
++	.rev_offset = OMAP3_CONTROL_IDCODE - OMAP3_SYSCON_BASE,
++	.multi_regulator = false,
++};
++
+ /**
+  * ti_cpufreq_get_efuse() - Parse and return efuse value present on SoC
+  * @opp_data: pointer to ti_cpufreq_data context
+@@ -127,7 +189,17 @@ static int ti_cpufreq_get_efuse(struct ti_cpufreq_data *opp_data,
+ 
+ 	ret = regmap_read(opp_data->syscon, opp_data->soc_data->efuse_offset,
+ 			  &efuse);
+-	if (ret) {
++	if (ret == -EIO) {
++		/* not a syscon register! */
++		void __iomem *regs = ioremap(OMAP3_SYSCON_BASE +
++				opp_data->soc_data->efuse_offset, 4);
++
++		if (!regs)
++			return -ENOMEM;
++		efuse = readl(regs);
++		iounmap(regs);
++		}
++	else if (ret) {
+ 		dev_err(dev,
+ 			"Failed to read the efuse value from syscon: %d\n",
+ 			ret);
+@@ -158,7 +230,17 @@ static int ti_cpufreq_get_rev(struct ti_cpufreq_data *opp_data,
+ 
+ 	ret = regmap_read(opp_data->syscon, opp_data->soc_data->rev_offset,
+ 			  &revision);
+-	if (ret) {
++	if (ret == -EIO) {
++		/* not a syscon register! */
++		void __iomem *regs = ioremap(OMAP3_SYSCON_BASE +
++				opp_data->soc_data->rev_offset, 4);
++
++		if (!regs)
++			return -ENOMEM;
++		revision = readl(regs);
++		iounmap(regs);
++		}
++	else if (ret) {
+ 		dev_err(dev,
+ 			"Failed to read the revision number from syscon: %d\n",
+ 			ret);
+@@ -190,6 +272,11 @@ static const struct of_device_id ti_cpufreq_of_match[] = {
+ 	{ .compatible = "ti,am33xx", .data = &am3x_soc_data, },
+ 	{ .compatible = "ti,am43", .data = &am4x_soc_data, },
+ 	{ .compatible = "ti,dra7", .data = &dra7_soc_data },
++	{ .compatible = "ti,omap34xx", .data = &omap34xx_soc_data, },
++	{ .compatible = "ti,omap36xx", .data = &omap36xx_soc_data, },
++	/* legacy */
++	{ .compatible = "ti,omap3430", .data = &omap34xx_soc_data, },
++	{ .compatible = "ti,omap3630", .data = &omap36xx_soc_data, },
+ 	{},
+ };
+ 
+-- 
+2.19.1
