@@ -1,50 +1,44 @@
-From: =?utf-8?B?SmFtZXMgVGFpW+aItOW/l+WzsF0=?= <james.tai@realtek.com>
-Subject: RE: [PATCH] ARM: dts: realtek: Add support for Realtek RTD16XX evaluation board
-Date: Wed, 11 Sep 2019 08:06:17 +0000
-Message-ID: <43B123F21A8CFE44A9641C099E4196FFCF8DA278@RTITMBSVM04.realtek.com.tw>
-References: <20190905080835.1376-1-james.tai@realtek.com>
- <CAK8P3a3L7mzR+FUMgG75_hrp4HQm4vJR3hsUO_BkQp_247OLsA@mail.gmail.com>
+From: <Eugen.Hristev@microchip.com>
+Subject: [PATCH v5 1/9] dt-bindings: i2c: at91: add new compatible
+Date: Wed, 11 Sep 2019 08:24:17 +0000
+Message-ID: <1568189911-31641-2-git-send-email-eugen.hristev@microchip.com>
+References: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3L7mzR+FUMgG75_hrp4HQm4vJR3hsUO_BkQp_247OLsA@mail.gmail.com>
-Content-Language: zh-TW
+In-Reply-To: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, "jamestai.sky@gmail.com" <jamestai.sky@gmail.com>
-Cc: DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?B?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>, Phinex Hung <phinex@realtek.com>
+To: wsa@the-dreams.de, peda@axentia.se, mark.rutland@arm.com, Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com, robh+dt@kernel.org
+Cc: Eugen.Hristev@microchip.com, Nicolas.Ferre@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIXSBBUk06IGR0czogcmVhbHRlazogQWRkIHN1cHBvcnQgZm9y
-IFJlYWx0ZWsgUlREMTZYWA0KPiBldmFsdWF0aW9uIGJvYXJkDQo+IA0KPiBPbiBUaHUsIFNlcCA1
-LCAyMDE5IGF0IDEwOjEwIEFNIDxqYW1lc3RhaS5za3lAZ21haWwuY29tPiB3cm90ZToNCj4gDQo+
-ID4gKw0KPiA+ICsvIHsNCj4gPiArICAgICAgIG1vZGVsPSAiUmVhbHRlayBNam9sbmlyIEV2YWx1
-YXRpb24gQm9hcmQiOw0KPiA+ICsgICAgICAgbW9kZWxfaGV4PSA8MHgwMDAwMDY1Mz47DQo+IA0K
-PiBUaGUgJ21vZGVfaGV4JyBwcm9wZXJ0eSBpcyByYXRoZXIgdW51c3VhbCwgcGxlYXNlIGRyb3Ag
-dGhhdCBmb3Igbm93Lg0KDQpJIHdpbGwgcmVtb3ZlIHRoZSAnbW9kZV9oZXgnIHByb3BlcnR5IGlu
-IG5ldyB2ZXJzaW9uIHBhdGNoLg0KDQo+IA0KPiA+ICsgICAgICAgY2hvc2VuIHsNCj4gPiArICAg
-ICAgICAgICAgICAgYm9vdGFyZ3MgPSAiY29uc29sZT10dHlTMCwxMTUyMDAgZWFybHljb24iOw0K
-PiA+ICsgICAgICAgfTsNCj4gPiArDQo+ID4gKyAgICAgICBtZW1vcnlAMCB7DQo+ID4gKyAgICAg
-ICAgICAgICAgIGRldmljZV90eXBlID0gIm1lbW9yeSI7DQo+ID4gKyAgICAgICAgICAgICAgIHJl
-ZyA9IDwweDAgMHgwIDB4MCAweDgwMDAwMDAwPjsNCj4gPiArICAgICAgIH07DQo+ID4gKw0KPiA+
-ICsgICAgICAgdWFydDA6IHNlcmlhbDBAOTgwMDc4MDAgew0KPiA+ICsgICAgICAgICAgICAgICBj
-b21wYXRpYmxlID0gInNucHMsZHctYXBiLXVhcnQiOw0KPiA+ICsgICAgICAgICAgICAgICByZWcg
-PSA8MHgwIDB4OTgwMDc4MDAgMHgwIDB4NDAwPiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICA8MHgwIDB4OTgwMDcwMDAgMHgwIDB4MTAwPjsNCj4gPiArICAgICAgICAgICAgICAgcmVnLXNo
-aWZ0ID0gPDI+Ow0KPiA+ICsgICAgICAgICAgICAgICByZWctaW8td2lkdGggPSA8ND47DQo+ID4g
-KyAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MCA2OCA0PjsNCj4gPiArICAgICAgICAgICAg
-ICAgY2xvY2stZnJlcXVlbmN5ID0gPDI3MDAwMDAwPjsNCj4gPiArICAgICAgICAgICAgICAgc3Rh
-dHVzID0gIm9rYXkiOw0KPiA+ICsgICAgICAgfTsNCj4gDQo+IFRoaXMgbG9va3MgbGlrZSBhbiBv
-bi1jaGlwIHVhcnQuIFBsZWFzZSBtb3ZlIHRoYXQgaW50byBydGQxNnh4LmR0c2kgaW5zdGVhZCwg
-YW5kDQo+IGp1c3QgbWFyayBpdCBhcyAnc3RhdHVzPSJkaXNhYmxlZCInIHRoZXJlIGlmIHRoZXJl
-IGFyZSBtdWx0aXBsZSB1YXJ0cyAoYW5kIGFkZCB0aGUNCj4gb3RoZXIgb25lcyBhcyB3ZWxsKSwg
-dGhlbiBlbmFibGUgaXQgZm9yIHRoZSBib2FyZCBoZXJlLg0KDQpZZXMuIEl0IGlzIG9uLWNoaXAg
-dWFydC4NCkkgd2lsbCBtb3ZlIHVhcnQwIGludG8gJ3J0ZDE2eHguZHRzaScgYW5kIG1hcmsgaXQg
-YXMgJ3N0YXR1cz0iZGlzYWJsZWQiICcuDQoNCj4gVGhlcmUgc2hvdWxkIGFsc28gYmUgYW4gJ2Fs
-aWFzZXMnLiBZb3Ugbm9ybWFsbHkgYWxzbyB3YW50IHRvIGFkZA0KDQpJIHdpbGwgYWRkIGFsaWFz
-ZXMgaW4gbmV3IHZlcnNpb24gcGF0Y2guDQoNCj4gYWxpYXNlcyB7DQo+ICAgICAgICAgc2VyaWFs
-MCA9ICZ1YXJ0MDsNCj4gfTsNCj4gDQo+IGNob3NlbiB7DQo+ICAgICAgICBzdGRvdXQtcGF0aD0g
-InNlcmlhbDA6MTE1MjAwbjgiDQo+IH07DQo+IA0KPiBpbiB0aGUgYm9hcmQgZmlsZSB0byBtYWtl
-IGVhcmx5Y29uIHdvcmsgcmlnaHQuDQoNCk9LLCBJIHVuZGVyc3RhbmQuDQoNCj4gICAgICAgQXJu
-ZA0KPiANCj4gLS0tLS0tUGxlYXNlIGNvbnNpZGVyIHRoZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJp
-bnRpbmcgdGhpcyBlLW1haWwuDQo=
+From: Eugen Hristev <eugen.hristev@microchip.com>
+
+Add compatible for new Microchip SoC, sam9x60
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+---
+ Documentation/devicetree/bindings/i2c/i2c-at91.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-at91.txt b/Documenta=
+tion/devicetree/bindings/i2c/i2c-at91.txt
+index b7cec17..2210f43 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-at91.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
+@@ -3,7 +3,8 @@ I2C for Atmel platforms
+ Required properties :
+ - compatible : Must be "atmel,at91rm9200-i2c", "atmel,at91sam9261-i2c",
+      "atmel,at91sam9260-i2c", "atmel,at91sam9g20-i2c", "atmel,at91sam9g10-=
+i2c",
+-     "atmel,at91sam9x5-i2c", "atmel,sama5d4-i2c" or "atmel,sama5d2-i2c"
++     "atmel,at91sam9x5-i2c", "atmel,sama5d4-i2c", "atmel,sama5d2-i2c" or
++     "microchip,sam9x60-i2c"
+ - reg: physical base address of the controller and length of memory mapped
+      region.
+ - interrupts: interrupt number to the cpu.
+--=20
+2.7.4
