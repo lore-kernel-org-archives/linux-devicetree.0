@@ -1,92 +1,27 @@
-From: Hui Song <hui.song_1@nxp.com>
-Subject: [PATCH] gpio/mpc8xxx: change irq handler from chained to normal
-Date: Wed, 11 Sep 2019 17:45:44 +0800
-Message-ID: <20190911094544.15893-1-hui.song_1@nxp.com>
+From: Luhua Xu <luhua.xu@mediatek.com>
+Subject: [PATCH 0/3] MT6765 spi support
+Date: Wed, 11 Sep 2019 05:55:28 -0400
+Message-ID: <1568195731-3239-1-git-send-email-luhua.xu@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Song Hui <hui.song_1@nxp.com>
+To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, wsd_upstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+These patch series add Mediatek mt6765 spi support, and add spi DMA
+large PA support on some platforms. 
 
-More than one gpio controllers can share one interrupt, change the
-driver to request shared irq.
 
-Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
-Changes in v4:
-	- convert 'pr_err' to 'dev_err'.
-Changes in v3:
-	- update the patch description.
-Changes in v2:
-	- delete the compatible of ls1088a.
- drivers/gpio/gpio-mpc8xxx.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+luhua.xu (3):
+  dt-bindings: spi: update bindings for MT6765 SoC
+  spi: mediatek: add spi support for mt6765 IC
+  spi: mediatek: support large PA
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 16a47de..e16591b 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -22,6 +22,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/interrupt.h>
- 
- #define MPC8XXX_GPIO_PINS	32
- 
-@@ -127,10 +128,9 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 		return -ENXIO;
- }
- 
--static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-+static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
- {
--	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
- 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
- 	unsigned int mask;
- 
-@@ -139,8 +139,8 @@ static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
- 	if (mask)
- 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
- 						     32 - ffs(mask)));
--	if (chip->irq_eoi)
--		chip->irq_eoi(&desc->irq_data);
-+
-+	return IRQ_HANDLED;
- }
- 
- static void mpc8xxx_irq_unmask(struct irq_data *d)
-@@ -388,7 +388,7 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 
- 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
- 	if (ret) {
--		pr_err("%pOF: GPIO chip registration failed with status %d\n",
-+		dev_err("%pOF: GPIO chip registration failed with status %d\n",
- 		       np, ret);
- 		goto err;
- 	}
-@@ -409,8 +409,14 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	if (devtype->gpio_dir_in_init)
- 		devtype->gpio_dir_in_init(gc);
- 
--	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
--					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-+	ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-+		IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade", mpc8xxx_gc);
-+	if (ret) {
-+		dev_err("%s: failed to request_irq(%d), ret = %d\n",
-+				np->full_name, mpc8xxx_gc->irqn, ret);
-+		goto err;
-+	}
-+
- 	return 0;
- err:
- 	iounmap(mpc8xxx_gc->regs);
--- 
-2.9.5
+ .../devicetree/bindings/spi/spi-mt65xx.txt    |  1 +
+ drivers/spi/spi-mt65xx.c                      | 53 +++++++++++++++++--
+ 2 files changed, 49 insertions(+), 5 deletions(-)
+
+--
+2.18.0
