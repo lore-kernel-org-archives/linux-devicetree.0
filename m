@@ -1,7 +1,7 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v3 10/15] arm64: dts: msm8998: thermal: Add interrupt support
-Date: Wed, 11 Sep 2019 12:46:27 +0530
-Message-ID: <9ebdef6e64db5840d69d9b2f66c5ecda274bbc0b.1568185732.git.amit.kucheria@linaro.org>
+Subject: [PATCH v3 07/15] dt-bindings: thermal: tsens: Convert over to a yaml schema
+Date: Wed, 11 Sep 2019 12:46:24 +0530
+Message-ID: <933f033298cbd7726a6c0b4b3b6cc7adc81784ba.1568185732.git.amit.kucheria@linaro.org>
 References: <cover.1568185732.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1568185732.git.amit.kucheria@linaro.org>
@@ -9,250 +9,274 @@ In-Reply-To: <cover.1568185732.git.amit.kucheria@linaro.org>
 References: <cover.1568185732.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org, masneyb@onstation.org, swboyd@chromium.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>
-Cc: devicetree@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Register upper-lower interrupts for each of the two tsens controllers.
+Document interrupt support in the tsens driver by converting over to a
+YAML schema.
 
+Suggested-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 82 ++++++++++++++-------------
- 1 file changed, 42 insertions(+), 40 deletions(-)
+ .../bindings/thermal/qcom-tsens.txt           |  55 ------
+ .../bindings/thermal/qcom-tsens.yaml          | 174 ++++++++++++++++++
+ MAINTAINERS                                   |   1 +
+ 3 files changed, 175 insertions(+), 55 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+ create mode 100644 Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index c13ed7aeb1e0..1e2f77b38f2c 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -440,8 +440,8 @@
- 
- 	thermal-zones {
- 		cpu0-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 1>;
- 
-@@ -461,8 +461,8 @@
- 		};
- 
- 		cpu1-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 2>;
- 
-@@ -482,8 +482,8 @@
- 		};
- 
- 		cpu2-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 3>;
- 
-@@ -503,8 +503,8 @@
- 		};
- 
- 		cpu3-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 4>;
- 
-@@ -524,8 +524,8 @@
- 		};
- 
- 		cpu4-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 7>;
- 
-@@ -545,8 +545,8 @@
- 		};
- 
- 		cpu5-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 8>;
- 
-@@ -566,8 +566,8 @@
- 		};
- 
- 		cpu6-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 9>;
- 
-@@ -587,8 +587,8 @@
- 		};
- 
- 		cpu7-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 10>;
- 
-@@ -608,8 +608,8 @@
- 		};
- 
- 		gpu-thermal-bottom {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 12>;
- 
-@@ -623,8 +623,8 @@
- 		};
- 
- 		gpu-thermal-top {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 13>;
- 
-@@ -638,8 +638,8 @@
- 		};
- 
- 		clust0-mhm-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 5>;
- 
-@@ -653,8 +653,8 @@
- 		};
- 
- 		clust1-mhm-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 6>;
- 
-@@ -668,8 +668,8 @@
- 		};
- 
- 		cluster1-l2-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens0 11>;
- 
-@@ -683,8 +683,8 @@
- 		};
- 
- 		modem-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 1>;
- 
-@@ -698,8 +698,8 @@
- 		};
- 
- 		mem-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 2>;
- 
-@@ -713,8 +713,8 @@
- 		};
- 
- 		wlan-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 3>;
- 
-@@ -728,8 +728,8 @@
- 		};
- 
- 		q6-dsp-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 4>;
- 
-@@ -743,8 +743,8 @@
- 		};
- 
- 		camera-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 5>;
- 
-@@ -758,8 +758,8 @@
- 		};
- 
- 		multimedia-thermal {
--			polling-delay-passive = <250>;
--			polling-delay = <1000>;
-+			polling-delay-passive = <0>;
-+			polling-delay = <0>;
- 
- 			thermal-sensors = <&tsens1 6>;
- 
-@@ -845,8 +845,9 @@
- 			compatible = "qcom,msm8998-tsens", "qcom,tsens-v2";
- 			reg = <0x10ab000 0x1000>, /* TM */
- 			      <0x10aa000 0x1000>; /* SROT */
+diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt b/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+deleted file mode 100644
+index 673cc1831ee9..000000000000
+--- a/Documentation/devicetree/bindings/thermal/qcom-tsens.txt
++++ /dev/null
+@@ -1,55 +0,0 @@
+-* QCOM SoC Temperature Sensor (TSENS)
 -
- 			#qcom,sensors = <14>;
-+			interrupts = <GIC_SPI 458 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "uplow";
- 			#thermal-sensor-cells = <1>;
- 		};
- 
-@@ -854,8 +855,9 @@
- 			compatible = "qcom,msm8998-tsens", "qcom,tsens-v2";
- 			reg = <0x10ae000 0x1000>, /* TM */
- 			      <0x10ad000 0x1000>; /* SROT */
+-Required properties:
+-- compatible:
+-  Must be one of the following:
+-    - "qcom,msm8916-tsens" (MSM8916)
+-    - "qcom,msm8974-tsens" (MSM8974)
+-    - "qcom,msm8996-tsens" (MSM8996)
+-    - "qcom,qcs404-tsens", "qcom,tsens-v1" (QCS404)
+-    - "qcom,msm8998-tsens", "qcom,tsens-v2" (MSM8998)
+-    - "qcom,sdm845-tsens", "qcom,tsens-v2" (SDM845)
+-  The generic "qcom,tsens-v2" property must be used as a fallback for any SoC
+-  with version 2 of the TSENS IP. MSM8996 is the only exception because the
+-  generic property did not exist when support was added.
+-  Similarly, the generic "qcom,tsens-v1" property must be used as a fallback for
+-  any SoC with version 1 of the TSENS IP.
 -
- 			#qcom,sensors = <8>;
-+			interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "uplow";
- 			#thermal-sensor-cells = <1>;
- 		};
+-- reg: Address range of the thermal registers.
+-  New platforms containing v2.x.y of the TSENS IP must specify the SROT and TM
+-  register spaces separately, with order being TM before SROT.
+-  See Example 2, below.
+-
+-- #thermal-sensor-cells : Should be 1. See ./thermal.txt for a description.
+-- #qcom,sensors: Number of sensors in tsens block
+-- Refer to Documentation/devicetree/bindings/nvmem/nvmem.txt to know how to specify
+-nvmem cells
+-
+-Example 1 (legacy support before a fallback tsens-v2 property was introduced):
+-tsens: thermal-sensor@900000 {
+-		compatible = "qcom,msm8916-tsens";
+-		reg = <0x4a8000 0x2000>;
+-		nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
+-		nvmem-cell-names = "caldata", "calsel";
+-		#thermal-sensor-cells = <1>;
+-	};
+-
+-Example 2 (for any platform containing v2 of the TSENS IP):
+-tsens0: thermal-sensor@c263000 {
+-		compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+-		reg = <0xc263000 0x1ff>, /* TM */
+-			<0xc222000 0x1ff>; /* SROT */
+-		#qcom,sensors = <13>;
+-		#thermal-sensor-cells = <1>;
+-	};
+-
+-Example 3 (for any platform containing v1 of the TSENS IP):
+-tsens: thermal-sensor@4a9000 {
+-		compatible = "qcom,qcs404-tsens", "qcom,tsens-v1";
+-		reg = <0x004a9000 0x1000>, /* TM */
+-		      <0x004a8000 0x1000>; /* SROT */
+-		nvmem-cells = <&tsens_caldata>;
+-		nvmem-cell-names = "calib";
+-		#qcom,sensors = <10>;
+-		#thermal-sensor-cells = <1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+new file mode 100644
+index 000000000000..6784766fe58f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+@@ -0,0 +1,174 @@
++# SPDX-License-Identifier: (GPL-2.0 OR MIT)
++# Copyright 2019 Linaro Ltd.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/qcom-tsens.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: QCOM SoC Temperature Sensor (TSENS)
++
++maintainers:
++  - Amit Kucheria <amit.kucheria@linaro.org>
++
++description: |
++  QCOM SoCs have TSENS IP to allow temperature measurement. There are currently
++  three distinct major versions of the IP that is supported by a single driver.
++  The IP versions are named v0.1, v1 and v2 in the driver, where v0.1 captures
++  everything before v1 when there was no versioning information.
++
++properties:
++  compatible:
++    oneOf:
++      - description: v0.1 of TSENS
++        items:
++          - enum:
++              - qcom,msm8916-tsens
++              - qcom,msm8974-tsens
++          - const: qcom,tsens-v0_1
++
++      - description: v1 of TSENS
++        items:
++          - enum:
++              - qcom,qcs404-tsens
++          - const: qcom,tsens-v1
++
++      - description: v2 of TSENS
++        items:
++          - enum:
++              - qcom,msm8996-tsens
++              - qcom,msm8998-tsens
++              - qcom,sdm845-tsens
++          - const: qcom,tsens-v2
++
++  reg:
++    maxItems: 2
++    items:
++      - description: TM registers
++      - description: SROT registers
++
++  nvmem-cells:
++    minItems: 1
++    maxItems: 2
++    description:
++      Reference to an nvmem node for the calibration data
++
++  nvmem-cells-names:
++    items:
++      - enum:
++        - caldata
++        - calsel
++
++  "#qcom,sensors":
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 1
++      - maximum: 16
++    description:
++      Number of sensors enabled on this platform
++
++  "#thermal-sensor-cells":
++    const: 1
++    description:
++      Number of cells required to uniquely identify the thermal sensors. Since
++      we have multiple sensors this is set to 1
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,msm8916-tsens
++              - qcom,msm8974-tsens
++              - qcom,qcs404-tsens
++              - qcom,tsens-v0_1
++              - qcom,tsens-v1
++    then:
++      properties:
++        interrupts:
++          minItems: 1
++          maxItems: 1
++          items:
++            - description: Combined interrupt if upper or lower threshold crossed
++        interrupt-names:
++          minItems: 1
++          maxItems: 1
++          items:
++            - const: uplow
++
++    else:
++      properties:
++        interrupts:
++          minItems: 2
++          maxItems: 2
++          items:
++            - description: Combined interrupt if upper or lower threshold crossed
++            - description: Interrupt if critical threshold crossed
++        interrupt-names:
++          minItems: 2
++          maxItems: 2
++          items:
++            - const: uplow
++            - const: critical
++
++required:
++  - compatible
++  - reg
++  - "#qcom,sensors"
++  - interrupts
++  - interrupt-names
++  - "#thermal-sensor-cells"
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    // Example 1 (legacy: for pre v1 IP):
++    tsens1: thermal-sensor@900000 {
++           compatible = "qcom,msm8916-tsens", "qcom,tsens-v0_1";
++           reg = <0x4a9000 0x1000>, /* TM */
++                 <0x4a8000 0x1000>; /* SROT */
++
++           nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
++           nvmem-cell-names = "caldata", "calsel";
++
++           interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
++           interrupt-names = "uplow";
++
++           #qcom,sensors = <5>;
++           #thermal-sensor-cells = <1>;
++    };
++
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    // Example 2 (for any platform containing v1 of the TSENS IP):
++    tsens2: thermal-sensor@4a9000 {
++          compatible = "qcom,qcs404-tsens", "qcom,tsens-v1";
++          reg = <0x004a9000 0x1000>, /* TM */
++                <0x004a8000 0x1000>; /* SROT */
++
++          nvmem-cells = <&tsens_caldata>;
++          nvmem-cell-names = "calib";
++
++          interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
++          interrupt-names = "uplow";
++
++          #qcom,sensors = <10>;
++          #thermal-sensor-cells = <1>;
++    };
++
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    // Example 3 (for any platform containing v2 of the TSENS IP):
++    tsens3: thermal-sensor@c263000 {
++           compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
++           reg = <0xc263000 0x1ff>,
++                 <0xc222000 0x1ff>;
++
++           interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
++                        <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
++           interrupt-names = "uplow", "critical";
++
++           #qcom,sensors = <13>;
++           #thermal-sensor-cells = <1>;
++    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e7a47b5210fd..ff757a4a060c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13360,6 +13360,7 @@ L:	linux-pm@vger.kernel.org
+ L:	linux-arm-msm@vger.kernel.org
+ S:	Maintained
+ F:	drivers/thermal/qcom/
++F:	Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
  
+ QUALCOMM VENUS VIDEO ACCELERATOR DRIVER
+ M:	Stanimir Varbanov <stanimir.varbanov@linaro.org>
 -- 
 2.17.1
