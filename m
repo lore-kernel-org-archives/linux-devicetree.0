@@ -1,36 +1,168 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 2/2] arm64: dts: imx8mn: Use "fsl,imx8mm-ocotp" as ocotp's fallback compatible
-Date: Wed, 11 Sep 2019 10:24:47 -0400
-Message-ID: <1568211887-19318-2-git-send-email-Anson.Huang@nxp.com>
-References: <1568211887-19318-1-git-send-email-Anson.Huang@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568211887-19318-1-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, daniel.lezcano@linaro.org, ping.bai@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Date: Wed, 11 Sep 2019 02:27:26 +0000
+Message-ID: <AM0PR04MB44816D2E34BC89FAE9C4429188B10@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
+ <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
+ <CABb+yY2tRjazjaogpM7irqgTD+PdwsfqCxk5hP-_czrET3V5xQ@mail.gmail.com>
+ <AM0PR04MB4481785CABB44A8C71CFB8D788BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CABb+yY2TREpO7+TFcGgsgQrkmMWwFAgtuJ4GnLPPQ+GEBuh07w@mail.gmail.com>
+ <AM0PR04MB448161C632722DF10989008088BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CABb+yY2SrMF8e1iLyLqb-rJyBx4ajA0hZ6D=LFtuMNtXYjgccA@mail.gmail.com>
+ <AM0PR04MB448133D1F4C887A82C679CEB88BD0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CABb+yY2t-oz6KqvCTsOJZqcMAUaR9Cbj014m7dCFXSBAMCojww@mail.gmail.com>
+ <20190909143230.48b1143f@donnerap.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190909143230.48b1143f@donnerap.cambridge.arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andre Przywara <andre.przywara@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Use "fsl,imx8mm-ocotp" as i.MX8MN ocotp's fallback compatible instead
-of "fsl,imx7d-ocotp" to support SoC UID read, as i.MX8MN reuses
-i.MX8MM's SoC ID driver.
+> Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
+> SMC/HVC mailbox
+> 
+> On Fri, 30 Aug 2019 03:12:29 -0500
+> Jassi Brar <jassisinghbrar@gmail.com> wrote:
+> 
+> Hi,
+> 
+> > On Fri, Aug 30, 2019 at 3:07 AM Peng Fan <peng.fan@nxp.com> wrote:
+> > >
+> > > > Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc
+> > > > for the ARM SMC/HVC mailbox
+> > > >
+> > > > On Fri, Aug 30, 2019 at 2:37 AM Peng Fan <peng.fan@nxp.com> wrote:
+> > > > >
+> > > > > Hi Jassi,
+> > > > >
+> > > > > > Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding
+> > > > > > doc for the ARM SMC/HVC mailbox
+> > > > > >
+> > > > > > On Fri, Aug 30, 2019 at 1:28 AM Peng Fan <peng.fan@nxp.com>
+> wrote:
+> > > > > >
+> > > > > > > > > +examples:
+> > > > > > > > > +  - |
+> > > > > > > > > +    sram@910000 {
+> > > > > > > > > +      compatible = "mmio-sram";
+> > > > > > > > > +      reg = <0x0 0x93f000 0x0 0x1000>;
+> > > > > > > > > +      #address-cells = <1>;
+> > > > > > > > > +      #size-cells = <1>;
+> > > > > > > > > +      ranges = <0 0x0 0x93f000 0x1000>;
+> > > > > > > > > +
+> > > > > > > > > +      cpu_scp_lpri: scp-shmem@0 {
+> > > > > > > > > +        compatible = "arm,scmi-shmem";
+> > > > > > > > > +        reg = <0x0 0x200>;
+> > > > > > > > > +      };
+> > > > > > > > > +
+> > > > > > > > > +      cpu_scp_hpri: scp-shmem@200 {
+> > > > > > > > > +        compatible = "arm,scmi-shmem";
+> > > > > > > > > +        reg = <0x200 0x200>;
+> > > > > > > > > +      };
+> > > > > > > > > +    };
+> > > > > > > > > +
+> > > > > > > > > +    firmware {
+> > > > > > > > > +      smc_mbox: mailbox {
+> > > > > > > > > +        #mbox-cells = <1>;
+> > > > > > > > > +        compatible = "arm,smc-mbox";
+> > > > > > > > > +        method = "smc";
+> > > > > > > > > +        arm,num-chans = <0x2>;
+> > > > > > > > > +        transports = "mem";
+> > > > > > > > > +        /* Optional */
+> > > > > > > > > +        arm,func-ids = <0xc20000fe>, <0xc20000ff>;
+> > > > > > > > >
+> > > > > > > > SMC/HVC is synchronously(block) running in "secure mode",
+> > > > > > > > i.e, there can only be one instance running platform wide. Right?
+> > > > > > >
+> > > > > > > I think there could be channel for TEE, and channel for Linux.
+> > > > > > > For virtualization case, there could be dedicated channel for each
+> VM.
+> > > > > > >
+> > > > > > I am talking from Linux pov. Functions 0xfe and 0xff above,
+> > > > > > can't both be active at the same time, right?
+> > > > >
+> > > > > If I get your point correctly,
+> > > > > On UP, both could not be active. On SMP, tx/rx could be both
+> > > > > active, anyway this depends on secure firmware and Linux firmware
+> design.
+> > > > >
+> > > > > Do you have any suggestions about arm,func-ids here?
+> > > > >
+> > > > I was thinking if this is just an instruction, why can't each
+> > > > channel be represented as a controller, i.e, have exactly one func-id per
+> controller node.
+> > > > Define as many controllers as you need channels ?
+> > >
+> > > I am ok, this could make driver code simpler. Something as below?
+> > >
+> > >     smc_tx_mbox: tx_mbox {
+> > >       #mbox-cells = <0>;
+> > >       compatible = "arm,smc-mbox";
+> > >       method = "smc";
+> > >       transports = "mem";
+> > >       arm,func-id = <0xc20000fe>;
+> > >     };
+> > >
+> > >     smc_rx_mbox: rx_mbox {
+> > >       #mbox-cells = <0>;
+> > >       compatible = "arm,smc-mbox";
+> > >       method = "smc";
+> > >       transports = "mem";
+> > >       arm,func-id = <0xc20000ff>;
+> > >     };
+> > >
+> > >     firmware {
+> > >       scmi {
+> > >         compatible = "arm,scmi";
+> > >         mboxes = <&smc_tx_mbox>, <&smc_rx_mbox 1>;
+> > >         mbox-names = "tx", "rx";
+> > >         shmem = <&cpu_scp_lpri>, <&cpu_scp_hpri>;
+> > >       };
+> > >     };
+> > >
+> > Yes, the channel part is good.
+> > But I am not convinced by the need to have SCMI specific "transport" mode.
+> 
+> Why would this be SCMI specific and what is the problem with having this
+> property?
+> By the very nature of the SMC/HVC call you would expect to also pass
+> parameters in registers. However this limits the amount of data you can push,
+> so the option of reverting to a memory based payload sounds very
+> reasonable.
+> On the other hand *just* using memory complicates things, in case you have a
+> very simple protocol. You would need a memory region shared between
+> firmware and OS, which is not always easily possible on every platform. Also
+> this doesn't scale easily with multiple mailboxes and channels. Passing
+> parameters via registers is also naturally consistent, as there would be no
+> races and no need for synchronisation with other cores or other users of the
+> mailbox.
+> 
+> So I clearly see the benefit of specifying *both* ways of payload transport.
+> Given that this driver should be protocol agnostic, it makes a lot of sense to
+> introduce both methods *now*, so in the future users can just use the register
+> method, without extending the binding in a incompatible way later (earlier
+> kernels would have the driver, but wouldn't know how to deal with this
+> parameter).
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mn.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Andre, thanks for your explanation.
+Jassi, are you ok that this property "transport" is kept in V6?
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-index e4efe8d..6cb6c9c 100644
---- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
-@@ -337,7 +337,7 @@
- 			};
- 
- 			ocotp: ocotp-ctrl@30350000 {
--				compatible = "fsl,imx8mn-ocotp", "fsl,imx7d-ocotp", "syscon";
-+				compatible = "fsl,imx8mn-ocotp", "fsl,imx8mm-ocotp", "syscon";
- 				reg = <0x30350000 0x10000>;
- 				clocks = <&clk IMX8MN_CLK_OCOTP_ROOT>;
- 				#address-cells = <1>;
--- 
-2.7.4
+Thanks,
+Peng.
+> 
+> Cheers,
+> Andre.
