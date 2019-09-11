@@ -1,78 +1,73 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 4/7] dt-bindings: chosen: Add clocksource and clockevent
- selection
-Date: Wed, 11 Sep 2019 01:03:03 +0100
-Message-ID: <CACRpkda4mmpbPWa2nD93CvD6HWzcTUDzyyLdQxC2gNB7XiJF3w@mail.gmail.com>
-References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
- <1568123236-767-5-git-send-email-claudiu.beznea@microchip.com>
- <20190910143231.GB14966@e107533-lin.cambridge.arm.com>
- <ab43b209-78fa-0cab-b8ea-acd4c550e689@microchip.com>
- <20190910150826.GA18308@e107533-lin.cambridge.arm.com>
- <20190910151055.GX21254@piout.net>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: opos6ul/opos6uldev: rework device tree
+ to support i.MX6ULL
+Date: Wed, 11 Sep 2019 10:11:29 +0800
+Message-ID: <20190911021127.GB13923@dragon>
+References: <20190724120623.2385-1-sebastien.szymanski@armadeus.com>
+ <194bd606-e4bf-d8fd-ece2-cbec1f5e025f@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190910151055.GX21254@piout.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Tomer Maimon <tmaimon77@gmail.com>, "Nori, Sekhar" <nsekhar@ti.com>, guoren@kernel.org, linux-stm32@st-md-mailman.stormreply.com, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Kevin Hilman <khilman@baylibre.com>, Ludovic Desroches <Ludovic.Desroches@microchip.com>, NXP Linux Team <linux-imx@nxp.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, "moderated list:H8/300 ARCHITECTURE" <uclinux-h8-devel@lists.sourceforge.jp>, Marc Zyngier <marc.zyngier@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-unisoc@lists.infradead.org, Krzysztof Halasa <khalasa@piap.pl>, Thomas Gleixner <tglx@linutronix.de>, Scott Branden <sbranden@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ralf Baechle <ral>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <194bd606-e4bf-d8fd-ece2-cbec1f5e025f@armadeus.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski@armadeus.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 4:11 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
-> On 10/09/2019 16:08:26+0100, Sudeep Holla wrote:
-> > On Tue, Sep 10, 2019 at 02:51:50PM +0000, Claudiu.Beznea@microchip.com wrote:
+On Tue, Sep 03, 2019 at 09:38:11AM +0200, S=E9bastien Szymanski wrote:
+> Hello,
+> =
 
-> > In that case, why can't we identify capability that with the compatibles
-> > for this timer IP ?
-> >
-> > IOW, I don't like the proposal as it's hardware limitation.
->
-> To be clear, bot timers are exactly the same but can't be clocksource
-> and clockevent at the same time. Why would we have different compatibles
-> for the exact same IP?
+> On 7/24/19 2:06 PM, S=E9bastien Szymanski wrote:
+> > Rework the device trees of the OPOS6UL and OPOS6ULDev boards to support
+> > the OPOS6UL SoM with an i.MX6ULL SoC.  The device trees are now as
+> > following:
+> > =
 
-In that case why not just pick the first one you find as clocksource
-and the second one as clock event? As they all come to the
-same timer of init function two simple local state variables can
-solve that:
+> > - imx6ul-imx6ull-opos6ul.dtsi
+> >   common for both i.MX6UL and i.MX6ULL OPOS6UL SoM.
+> > - imx6ul-opos6ul.dtsi
+> >   for i.MX6UL OPOS6UL SoM. It includes imx6ul.dtsi and
+> >   imx6ul-imx6ull-opos6ul.dtsi.
+> > - imx6ull-opos6ul.dtsi
+> >   for i.MX6ULL OPOS6UL SoM. It includes imx6ull.dtsi and
+> >   imx6ul-imx6ull-opos6ul.dtsi.
+> > =
 
-static bool registered_clocksource;
-static bool registered_clockevent;
+> > - imx6ul-imx6ull-opos6uldev.dtsi
+> >   OPOS6ULDev base device tree.
+> > - imx6ul-opos6uldev.dts
+> >   OPOS6ULDev board with an i.MX6UL OPOS6UL SoM. It includes
+> >   imx6ul-opos6ul.dtsi and imx6ul-imx6ull-opos6uldevdtsi.
+> > - imx6ull-opos6uldev.dts
+> >   OPOS6ULDev board with an i.MX6ULL OPOS6UL SoM. It includes
+> >   imx6ull-opos6ul.dtsi and imx6ul-imx6ull-opos6uldevdtsi.
+> > =
 
-probe(timer) {
-   if (!registered_clocksource) {
-       register_clocksource(timer);
-       registrered_clocksource = true;
-       return;
-   }
-   if (!registered_clockevent) {
-       register_clockevent(timer);
-       registered_clockevent = true;
-       return;
-   }
-   pr_info("surplus timer %p\n", timer);
-}
+> > Signed-off-by: S=E9bastien Szymanski <sebastien.szymanski@armadeus.com>
+> > ---
+> > =
 
-Clocksource and clockevent are natural singletons so there is
-no need to handle more than one of each in a driver for identical
-hardware.
+> > Changes for v2:
+> > - explain the file hierarchy in the commit log
+> > - use MIT license instead of X11
+> > - Change compatible properties to "armadeus,imx6{ul,ull}-opos6ul" and
+> >   "armadeus,imx6{ul,ull}-opos6uldev" to follow the bindings of the
+> >   Armadeus boards already supported.
+> =
 
-With the Integrator AP timer there is a real reason to select one over
-the other but as I replied to that patch it is pretty easy to just identify
-which block has this limitation by simply commenting out the IRQ
-line for it from the device tree.
+> gentle ping...
 
-Maybe there is something about this I don't understand.
+I missed the patches.  Sorry about that.  Just applied both.
 
-Yours,
-Linus Walleij
+Shawn
