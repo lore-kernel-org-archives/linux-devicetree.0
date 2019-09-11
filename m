@@ -1,246 +1,107 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v3 2/8] ARM: dts: omap34xx & omap36xx: replace opp-v1 tables by opp-v2 for
-Date: Wed, 11 Sep 2019 19:47:08 +0200
-Message-ID: <5b3cebcc745d20bcbf06e548f8e5665e083b5474.1568224033.git.hns@goldelico.com>
-References: <cover.1568224032.git.hns@goldelico.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/9] dt-bindings: crypto: Add DT bindings
+ documentation for sun8i-ce Crypto Engine
+Date: Wed, 11 Sep 2019 20:31:58 +0200
+Message-ID: <20190911183158.GA8264@Red>
+References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
+ <20190906184551.17858-4-clabbe.montjoie@gmail.com>
+ <20190907040116.lib532o2eqt4qnvv@flea>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1568224032.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Andr=C3=A9=20Roth?= <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Roger Quadros <rogerq@ti.com>, Teresa Remmet <t.remmet@phytec.de>, "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBIX34TVQKGQENIFIXBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190907040116.lib532o2eqt4qnvv@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-With the driver installed, we can change the opp-v1 table format
-to opp-v2.
+On Sat, Sep 07, 2019 at 07:01:16AM +0300, Maxime Ripard wrote:
+> On Fri, Sep 06, 2019 at 08:45:45PM +0200, Corentin Labbe wrote:
+> > This patch adds documentation for Device-Tree bindings for the
+> > Crypto Engine cryptographic accelerator driver.
+> >
+> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  .../bindings/crypto/allwinner,sun8i-ce.yaml   | 84 +++++++++++++++++++
+> >  1 file changed, 84 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
+[...]
+> > +else:
+> > +  clocks:
+> > +    items:
+> > +      - description: Bus clock
+> > +      - description: Module clock
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: ahb
+> > +      - const: mod
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> > +  reset-names:
+> > +    const: ahb
+> 
+> This prevents the usage of the additionalProperties property, which
+> you should really use.
+> 
+> What you can do instead is moving the clocks and clock-names
+> description under properties, with a minItems of 2 and a maxItems of
+> 3. Then you can restrict the length of that property to either 2 or 3
+> depending on the case here.
+> 
 
-In addition, move omap3 from whitelist to blacklist in cpufreq-dt-platdev
-in the same patch, because doing either first breaks operation and
-may make trouble in bisect.
+Hello
 
-We also can remove opp-v1 table for omap3-n950-n9 since its 1GHz
-capability is now automatically detected.
+I fail to do this.
+I do the following (keeped only clock stuff)
+properties:
 
-We also fix a wrong OPP4 voltage for omap3430 which must be
-0.6V + 54*12.5mV = 1275mV. Otherwise the twl4030 driver will reject
-this OPP.
+  clocks:
+    items:
+      - description: Bus clock
+      - description: Module clock
+      - description: MBus clock
 
-Note: the high speed OPPs that were not available in the opp-v1 tables
-are tagged "turbo-mode;" which means they are not automatically
-activated by the govenors or cpu-freq.
+  clock-names:
+    items:
+      - const: ahb
+      - const: mod
+      - const: mbus
 
-To enable you have to write
+if:
+  properties:
+    compatible:
+      items:
+        const: allwinner,sun50i-h6-crypto
+then:
+  properties:
+      clocks:
+        minItems: 3
+        maxItems: 3
+      clock-names:
+        minItems: 3
+        maxItems: 3
+else:
+  properties:
+      clocks:
+        minItems: 2
+        maxItems: 2
+      clock-names:
+        minItems: 2
+        maxItems: 2
 
-echo 1 >/sys/devices/system/cpu/cpufreq/boost
+With this, the dtb_check keep complain that a64 have two short clocks.
 
-Note: to hard disable an OPP in a board.dts file use e.g.
-
-&cpu0_opp_table: {
-	/delete-node/ opp1g-1000000000;	/* do not use */
-};
-
-or alternatively:
-
-&cpu0_opp_table: {
-	opp1g-1000000000 {
-		status = "disabled";	/* do not use */
-	};
-};
-
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/omap3-n950-n9.dtsi |  7 ---
- arch/arm/boot/dts/omap34xx.dtsi      | 66 ++++++++++++++++++++++++----
- arch/arm/boot/dts/omap36xx.dtsi      | 54 +++++++++++++++++++----
- drivers/cpufreq/cpufreq-dt-platdev.c |  2 +-
- 4 files changed, 104 insertions(+), 25 deletions(-)
-
-diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-index 5441e9ffdbb4..e98b0c615f19 100644
---- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-+++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-@@ -11,13 +11,6 @@
- 	cpus {
- 		cpu@0 {
- 			cpu0-supply = <&vcc>;
--			operating-points = <
--				/* kHz    uV */
--				300000  1012500
--				600000  1200000
--				800000  1325000
--				1000000	1375000
--			>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
-index f572a477f74c..1d2737c0ba27 100644
---- a/arch/arm/boot/dts/omap34xx.dtsi
-+++ b/arch/arm/boot/dts/omap34xx.dtsi
-@@ -16,19 +16,67 @@
- / {
- 	cpus {
- 		cpu: cpu@0 {
--			/* OMAP343x/OMAP35xx variants OPP1-5 */
--			operating-points = <
--				/* kHz    uV */
--				125000   975000
--				250000  1075000
--				500000  1200000
--				550000  1270000
--				600000  1350000
--			>;
-+			/* OMAP343x/OMAP35xx variants OPP1-6 */
-+			operating-points-v2 = <&cpu0_opp_table>;
-+
- 			clock-latency = <300000>; /* From legacy driver */
- 		};
- 	};
- 
-+	/* see Documentation/devicetree/bindings/opp/opp.txt */
-+	cpu0_opp_table: opp-table {
-+		compatible = "operating-points-v2-ti-cpu";
-+		syscon = <&scm_conf>;
-+
-+		opp1-125000000 {
-+			opp-hz = /bits/ 64 <125000000>;
-+			/*
-+			 * we currently only select the max voltage from table
-+			 * Table 3-3 of the omap3530 Data sheet (SPRS507F).
-+			 * Format is: <target min max>
-+			 */
-+			opp-microvolt = <975000 975000 975000>;
-+			/*
-+			 * first value is silicon revision bit mask
-+			 * second one 720MHz Device Identification bit mask
-+			 */
-+			opp-supported-hw = <0xffffffff 3>;
-+		};
-+
-+		opp2-250000000 {
-+			opp-hz = /bits/ 64 <250000000>;
-+			opp-microvolt = <1075000 1075000 1075000>;
-+			opp-supported-hw = <0xffffffff 3>;
-+			opp-suspend;
-+		};
-+
-+		opp3-500000000 {
-+			opp-hz = /bits/ 64 <500000000>;
-+			opp-microvolt = <1200000 1200000 1200000>;
-+			opp-supported-hw = <0xffffffff 3>;
-+		};
-+
-+		opp4-550000000 {
-+			opp-hz = /bits/ 64 <550000000>;
-+			opp-microvolt = <1275000 1275000 1275000>;
-+			opp-supported-hw = <0xffffffff 3>;
-+		};
-+
-+		opp5-600000000 {
-+			opp-hz = /bits/ 64 <600000000>;
-+			opp-microvolt = <1350000 1350000 1350000>;
-+			opp-supported-hw = <0xffffffff 3>;
-+		};
-+
-+		opp6-720000000 {
-+			opp-hz = /bits/ 64 <720000000>;
-+			opp-microvolt = <1350000 1350000 1350000>;
-+			/* only high-speed grade omap3530 devices */
-+			opp-supported-hw = <0xffffffff 2>;
-+			turbo-mode;
-+		};
-+	};
-+
- 	ocp@68000000 {
- 		omap3_pmx_core2: pinmux@480025d8 {
- 			compatible = "ti,omap3-padconf", "pinctrl-single";
-diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-index 6fb23ada1f64..cb5bd0969124 100644
---- a/arch/arm/boot/dts/omap36xx.dtsi
-+++ b/arch/arm/boot/dts/omap36xx.dtsi
-@@ -19,15 +19,53 @@
- 	};
- 
- 	cpus {
--		/* OMAP3630/OMAP37xx 'standard device' variants OPP50 to OPP130 */
-+		/* OMAP3630/OMAP37xx variants OPP50 to OPP130 and OPP1G */
- 		cpu: cpu@0 {
--			operating-points = <
--				/* kHz    uV */
--				300000  1012500
--				600000  1200000
--				800000  1325000
--			>;
--			clock-latency = <300000>; /* From legacy driver */
-+			operating-points-v2 = <&cpu0_opp_table>;
-+
-+			clock-latency = <300000>; /* From omap-cpufreq driver */
-+		};
-+	};
-+
-+	/* see Documentation/devicetree/bindings/opp/opp.txt */
-+	cpu0_opp_table: opp-table {
-+		compatible = "operating-points-v2-ti-cpu";
-+		syscon = <&scm_conf>;
-+
-+		opp50-300000000 {
-+			opp-hz = /bits/ 64 <300000000>;
-+			/*
-+			 * we currently only select the max voltage from table
-+			 * Table 4-19 of the DM3730 Data sheet (SPRS685B)
-+			 * Format is: <target min max>
-+			 */
-+			opp-microvolt = <1012500 1012500 1012500>;
-+			/*
-+			 * first value is silicon revision bit mask
-+			 * second one is "speed binned" bit mask
-+			 */
-+			opp-supported-hw = <0xffffffff 3>;
-+			opp-suspend;
-+		};
-+
-+		opp100-600000000 {
-+			opp-hz = /bits/ 64 <600000000>;
-+			opp-microvolt = <1200000 1200000 1200000>;
-+			opp-supported-hw = <0xffffffff 3>;
-+		};
-+
-+		opp130-800000000 {
-+			opp-hz = /bits/ 64 <800000000>;
-+			opp-microvolt = <1325000 1325000 1325000>;
-+			opp-supported-hw = <0xffffffff 3>;
-+		};
-+
-+		opp1g-1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			opp-microvolt = <1375000 1375000 1375000>;
-+			/* only on am/dm37x with speed-binned bit set */
-+			opp-supported-hw = <0xffffffff 2>;
-+			turbo-mode;
- 		};
- 	};
- 
-diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index 03dc4244ab00..68b7fc4225f8 100644
---- a/drivers/cpufreq/cpufreq-dt-platdev.c
-+++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-@@ -86,7 +86,6 @@ static const struct of_device_id whitelist[] __initconst = {
- 	{ .compatible = "st-ericsson,u9540", },
- 
- 	{ .compatible = "ti,omap2", },
--	{ .compatible = "ti,omap3", },
- 	{ .compatible = "ti,omap4", },
- 	{ .compatible = "ti,omap5", },
- 
-@@ -132,6 +131,7 @@ static const struct of_device_id blacklist[] __initconst = {
- 	{ .compatible = "ti,am33xx", },
- 	{ .compatible = "ti,am43", },
- 	{ .compatible = "ti,dra7", },
-+	{ .compatible = "ti,omap3", },
- 
- 	{ }
- };
--- 
-2.19.1
+Regards
