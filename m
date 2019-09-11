@@ -1,96 +1,61 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/6] dt-bindings: pci: amlogic,meson-pcie: Add G12A
- bindings
-Date: Wed, 11 Sep 2019 14:30:43 +0200
-Message-ID: <62994535-1617-9f71-4059-b8c4da8ecbd1@baylibre.com>
-References: <1567950178-4466-1-git-send-email-narmstrong@baylibre.com>
- <1567950178-4466-2-git-send-email-narmstrong@baylibre.com>
- <20190911122250.GT9720@e119886-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190911122250.GT9720@e119886-lin.cambridge.arm.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Murray <andrew.murray@arm.com>
-Cc: devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, khilman@baylibre.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, repk@triplefau.lt, maz@kernel.org, bhelgaas@google.com, linux-amlogic@lists.infradead.org, yue.wang@Amlogic.com, linux-arm-kernel@lists.infradead.org
+From: Maciej Falkowski <m.falkowski@samsung.com>
+Subject: [PATCH] dt-bindings: arm: samsung: Exynos 3250: iommu: remove
+ obsolete IRQ lines
+Date: Wed, 11 Sep 2019 15:33:10 +0200
+Message-ID: <20190911133310.8365-1-m.falkowski@samsung.com>
+References: <CAJKOXPeojuk1UrYo9Wakaaq4VJt3Ts22Vi-V5xzwAXoFU5+tcA@mail.gmail.com>
+        <CGME20190911133317eucas1p27f0312f5cd3e3c988399f65b07150e42@eucas1p2.samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPeojuk1UrYo9Wakaaq4VJt3Ts22Vi-V5xzwAXoFU5+tcA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: krzk@kernel.org, robh+dt@kernel.org, m.falkowski@samsung.com, mark.rutland@arm.com, joro@8bytes.org, m.szyprowski@samsung.com, a.hajda@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+In commit 7222e8db2d506197ee183de0f9b76b3ad97e8c18 (iommu/exynos: Fix build
+errors) Exynos3250 iommu driver stopped supporting two IRQ lines.
+The second IRQ line in DTS is ignored and is not needed.
 
-On 11/09/2019 14:22, Andrew Murray wrote:
-> On Sun, Sep 08, 2019 at 01:42:53PM +0000, Neil Armstrong wrote:
->> Add PCIE bindings for the Amlogic G12A SoC, the support is the same
->> but the PHY is shared with USB3 to control the differential lines.
->>
->> Thus this adds a phy phandle to control the PHY, and sets invalid
->> MIPI clock as optional for G12A.
-> 
-> Perhaps reword to "Thus this adds a phy phandle to control the PHY,
-> and only requires a MIPI clock for AXG SoC Family".
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ arch/arm/boot/dts/exynos3250.dtsi | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Sure, thanks,
-Neil
-
-> 
-> Thanks,
-> 
-> Andrew Murray
-> 
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt   | 12 ++++++++----
->>  1 file changed, 8 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
->> index efa2c8b9b85a..84fdc422792e 100644
->> --- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
->> @@ -9,13 +9,16 @@ Additional properties are described here:
->>  
->>  Required properties:
->>  - compatible:
->> -	should contain "amlogic,axg-pcie" to identify the core.
->> +	should contain :
->> +	- "amlogic,axg-pcie" for AXG SoC Family
->> +	- "amlogic,g12a-pcie" for G12A SoC Family
->> +	to identify the core.
->>  - reg:
->>  	should contain the configuration address space.
->>  - reg-names: Must be
->>  	- "elbi"	External local bus interface registers
->>  	- "cfg"		Meson specific registers
->> -	- "phy"		Meson PCIE PHY registers
->> +	- "phy"		Meson PCIE PHY registers for AXG SoC Family
->>  	- "config"	PCIe configuration space
->>  - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
->>  - clocks: Must contain an entry for each entry in clock-names.
->> @@ -23,12 +26,13 @@ Required properties:
->>  	- "pclk"       PCIe GEN 100M PLL clock
->>  	- "port"       PCIe_x(A or B) RC clock gate
->>  	- "general"    PCIe Phy clock
->> -	- "mipi"       PCIe_x(A or B) 100M ref clock gate
->> +	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
->>  - resets: phandle to the reset lines.
->>  - reset-names: must contain "phy" "port" and "apb"
->> -       - "phy"         Share PHY reset
->> +       - "phy"         Share PHY reset for AXG SoC Family
->>         - "port"        Port A or B reset
->>         - "apb"         Share APB reset
->> +- phys: should contain a phandle to the shared phy for G12A SoC Family
->>  - device_type:
->>  	should be "pci". As specified in designware-pcie.txt
->>  
->> -- 
->> 2.17.1
->>
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index 784818490376..190d9160a5d1 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -314,8 +314,7 @@
+ 		sysmmu_jpeg: sysmmu@11a60000 {
+ 			compatible = "samsung,exynos-sysmmu";
+ 			reg = <0x11a60000 0x1000>;
+-			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "sysmmu", "master";
+ 			clocks = <&cmu CLK_SMMUJPEG>, <&cmu CLK_JPEG>;
+ 			power-domains = <&pd_cam>;
+@@ -355,8 +354,7 @@
+ 		sysmmu_fimd0: sysmmu@11e20000 {
+ 			compatible = "samsung,exynos-sysmmu";
+ 			reg = <0x11e20000 0x1000>;
+-			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "sysmmu", "master";
+ 			clocks = <&cmu CLK_SMMUFIMD0>, <&cmu CLK_FIMD0>;
+ 			power-domains = <&pd_lcd0>;
+@@ -507,8 +505,7 @@
+ 		sysmmu_mfc: sysmmu@13620000 {
+ 			compatible = "samsung,exynos-sysmmu";
+ 			reg = <0x13620000 0x1000>;
+-			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "sysmmu", "master";
+ 			clocks = <&cmu CLK_SMMUMFC_L>, <&cmu CLK_MFC>;
+ 			power-domains = <&pd_mfc>;
+-- 
+2.17.1
