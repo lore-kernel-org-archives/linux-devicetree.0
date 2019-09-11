@@ -1,29 +1,54 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 1/5] dt-bindings: gpio: aspeed: Update documentation
- with ast2600 controllers
-Date: Wed, 11 Sep 2019 11:03:59 +0100
-Message-ID: <CACRpkdY1Rk6vPihZkpKC9hya9ixQcqg9PG9rEpM3kSY0kxwsjg@mail.gmail.com>
-References: <20190906062547.13264-1-rashmica.g@gmail.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: backlight: lm3630a: add enable_gpios
+Date: Wed, 11 Sep 2019 11:08:51 +0100
+Message-ID: <20190911100851.f4rnldghtmly26oo@holly.lan>
+References: <20190910212909.18095-1-andreas@kemnade.info>
+ <20190910212909.18095-2-andreas@kemnade.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190906062547.13264-1-rashmica.g@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190910212909.18095-2-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rashmica Gupta <rashmica.g@gmail.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/ASPEED MACHINE SUPPORT" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/ASPEED MACHINE SUPPORT" <linux-aspeed@lists.ozlabs.org>, open list <linux-kernel@vger.kernel.org>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: lee.jones@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 6, 2019 at 7:25 AM Rashmica Gupta <rashmica.g@gmail.com> wrote:
+On Tue, Sep 10, 2019 at 11:29:08PM +0200, Andreas Kemnade wrote:
+> add enable-gpios to describe HWEN pin
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 
-> The ast2600 is a new generation of SoC from ASPEED. Similarly to the
-> ast2400 and ast2500, it has a GPIO controller for it's 3.3V GPIO pins.
-> Additionally, it has a GPIO controller for 36 1.8V GPIO pins.  We use
-> the ngpio property to differentiate between these controllers.
->
-> Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-The changes are uncontroversial (uses just standard GPIO
-ngpios and adds a compatible) so patch applied.
-
-Yours,
-Linus Walleij
+> ---
+> changes in v2: add example
+>  .../bindings/leds/backlight/lm3630a-backlight.yaml           | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+> index dc129d9a329e..1fa83feffe16 100644
+> --- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+> +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+> @@ -29,6 +29,10 @@ properties:
+>    '#size-cells':
+>      const: 0
+>  
+> +  enable-gpios:
+> +    description: GPIO to use to enable/disable the backlight (HWEN pin).
+> +    maxItems: 1
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -92,6 +96,7 @@ examples:
+>      i2c {
+>          #address-cells = <1>;
+>          #size-cells = <0>;
+> +        enable-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
+>  
+>          led-controller@38 {
+>                  compatible = "ti,lm3630a";
+> -- 
+> 2.20.1
+> 
