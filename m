@@ -1,103 +1,57 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH 4/7] dt-bindings: chosen: Add clocksource and clockevent
- selection
-Date: Wed, 11 Sep 2019 07:18:07 +0000
-Message-ID: <a2aca46a-8eb9-d8a8-de42-9850a8a8f44c@microchip.com>
-References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
- <1568123236-767-5-git-send-email-claudiu.beznea@microchip.com>
- <20190910143231.GB14966@e107533-lin.cambridge.arm.com>
- <ab43b209-78fa-0cab-b8ea-acd4c550e689@microchip.com>
- <20190910150826.GA18308@e107533-lin.cambridge.arm.com>
- <20190910151055.GX21254@piout.net>
- <CACRpkda4mmpbPWa2nD93CvD6HWzcTUDzyyLdQxC2gNB7XiJF3w@mail.gmail.com>
+From: =?utf-8?B?SmFtZXMgVGFpW+aItOW/l+WzsF0=?= <james.tai@realtek.com>
+Subject: RE: [PATCH] dt-bindings: arm: Convert Realtek board/soc bindings to
+ json-schema
+Date: Wed, 11 Sep 2019 07:19:06 +0000
+Message-ID: <43B123F21A8CFE44A9641C099E4196FFCF8DA124@RTITMBSVM04.realtek.com.tw>
+References: <20190905081721.1548-1-james.tai@realtek.com>
+ <CAL_JsqKGX1n-jsi0xtG8_Q=1LAhT=ufe0y2ZNBNoE3fR10K_xQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkda4mmpbPWa2nD93CvD6HWzcTUDzyyLdQxC2gNB7XiJF3w@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <91BD4C01564D5B4796147CA97CB4AEED@namprd11.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: linus.walleij@linaro.org, alexandre.belloni@bootlin.com
-Cc: tmaimon77@gmail.com, nsekhar@ti.com, guoren@kernel.org, linux-stm32@st-md-mailman.stormreply.com, heiko@sntech.de, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, khilman@baylibre.com, Ludovic.Desroches@microchip.com, linux-imx@nxp.com, u.kleine-koenig@pengutronix.de, uclinux-h8-devel@lists.sourceforge.jp, marc.zyngier@arm.com, s.hauer@pengutronix.de, linux-unisoc@lists.infradead.org, khalasa@piap.pl, tglx@linutronix.de, sbranden@broadcom.com, linux-kernel@vger.kernel.org, ralf@linux-mips.org, paul.burton@mips.com, kernel@pengutronix.de, mark.rutland@arm.com, jhogan@kernel.org, palmer@sifive.com, eric@anholt.net, thierry.reding@gmail.com, manivannan.sadhasivam@linaro.org, ysato@users.sourceforge.jp, zhang.lyra@gmail.com, daniel.lezcano@linaro.org, jonathanh@nvidia.com, bgolaszewski@baylibre.com, kgene@kernel.org, alexandre.torgue@st.com, linux-arm-
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqKGX1n-jsi0xtG8_Q=1LAhT=ufe0y2ZNBNoE3fR10K_xQ@mail.gmail.com>
+Content-Language: zh-TW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, "jamestai.sky@gmail.com" <jamestai.sky@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?utf-8?B?Q1lfSHVhbmdb6buD6Ymm5pmPXQ==?= <cy.huang@realtek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Phinex Hung <phinex@realtek.com>, =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, "moderated
+ list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+> Subject: Re: [PATCH] dt-bindings: arm: Convert Realtek board/soc bindings to
+> json-schema
+> 
+> On Thu, Sep 5, 2019 at 9:19 AM <jamestai.sky@gmail.com> wrote:
+> >
+> > From: "james.tai" <james.tai@realtek.com>
+> >
+> > Convert Realtek SoC bindings to DT schema format using json-schema.
+> >
+> > Signed-off-by: james.tai <james.tai@realtek.com>
+> > ---
+> >  .../devicetree/bindings/arm/realtek.txt       | 22 -------------------
+> >  .../devicetree/bindings/arm/realtek.yaml      | 17 ++++++++++++++
+> >  2 files changed, 17 insertions(+), 22 deletions(-)  delete mode
+> > 100644 Documentation/devicetree/bindings/arm/realtek.txt
+> >  create mode 100644
+> Documentation/devicetree/bindings/arm/realtek.yaml
+> 
+> I've already submitted a patch for this that's *still* waiting on Andreas to apply
+> or comment on the licensing.
 
+Thanks for your reply.
 
-On 11.09.2019 03:03, Linus Walleij wrote:
-> External E-Mail
+> Also, your patch isn't valid schema. Please check with 'make
+> dt_binding_check'.
 > 
-> 
-> On Tue, Sep 10, 2019 at 4:11 PM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
->> On 10/09/2019 16:08:26+0100, Sudeep Holla wrote:
->>> On Tue, Sep 10, 2019 at 02:51:50PM +0000, Claudiu.Beznea@microchip.com wrote:
-> 
->>> In that case, why can't we identify capability that with the compatibles
->>> for this timer IP ?
->>>
->>> IOW, I don't like the proposal as it's hardware limitation.
->>
->> To be clear, bot timers are exactly the same but can't be clocksource
->> and clockevent at the same time. Why would we have different compatibles
->> for the exact same IP?
-> 
-> In that case why not just pick the first one you find as clocksource
-> and the second one as clock event? As they all come to the
-> same timer of init function two simple local state variables can
-> solve that:
-> 
-> static bool registered_clocksource;
-> static bool registered_clockevent;
-> 
-> probe(timer) {
->    if (!registered_clocksource) {
->        register_clocksource(timer);
->        registrered_clocksource = true;
->        return;
->    }
->    if (!registered_clockevent) {
->        register_clockevent(timer);
->        registered_clockevent = true;
->        return;
->    }
->    pr_info("surplus timer %p\n", timer);
-> }
-> 
+I will check with 'make dt_binding_check'. 
+Thanks!
 
-That was also my proposal for the driver I'm sending this series for (see
-[1]) but it has been proposed to implement a mechanism similar to this one
-in this series (see [2] and [3]).
-
-Thank you,
-Claudiu Beznea
-
-[1]
-https://lore.kernel.org/lkml/1552580772-8499-1-git-send-email-claudiu.beznea@microchip.com/
-[2]
-https://lore.kernel.org/lkml/a738fce5-1108-34d7-d255-dfcb86f51c56@linaro.org/
-[3]
-https://lore.kernel.org/lkml/2f831f1b-c87d-48bd-cf02-2ebb334b964c@linaro.org/
-
-> Clocksource and clockevent are natural singletons so there is
-> no need to handle more than one of each in a driver for identical
-> hardware.
-> 
-> With the Integrator AP timer there is a real reason to select one over
-> the other but as I replied to that patch it is pretty easy to just identify
-> which block has this limitation by simply commenting out the IRQ
-> line for it from the device tree.
-> 
-> Maybe there is something about this I don't understand.
-> 
-> Yours,
-> Linus Walleij
-> 
+> ------Please consider the environment before printing this e-mail.
