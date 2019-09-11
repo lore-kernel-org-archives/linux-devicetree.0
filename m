@@ -1,169 +1,210 @@
-Return-Path: <SRS0=Gdro=XF=gmail.com=tmaimon77@kernel.org>
+Return-Path: <SRS0=xE6g=XG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:47686 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727581AbfIKTt7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Sep 2019 15:49:59 -0400
+Subject: Re: [PATCH v7 2/2] leds: add LED driver for EL15203000 board
+References: <20190909071632.14392-1-oleg@kaa.org.ua>
+ <20190909071632.14392-3-oleg@kaa.org.ua>
+From: Dan Murphy <dmurphy@ti.com>
+Message-ID: <7a6fbf7c-56d4-e8af-c2f2-0a22f987f724@ti.com>
+Date: Wed, 11 Sep 2019 14:49:52 -0500
 MIME-Version: 1.0
-References: <20190909123840.154745-1-tmaimon77@gmail.com> <20190909123840.154745-2-tmaimon77@gmail.com>
- <20190910102505.vgyomi575ldrk2lq@holly.lan>
-In-Reply-To: <20190910102505.vgyomi575ldrk2lq@holly.lan>
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Tue, 10 Sep 2019 14:55:44 +0300
-Message-ID: <CAP6Zq1igPJ5PvaA2YaC-=ngQOnatt4PFJj-QzaJCueDf6KA19A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-binding: hwrng: add NPCM RNG documentation
-Content-Type: multipart/alternative; boundary="0000000000002a7a3805923175cd"
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: mpm@selenic.com, herbert@gondor.apana.org.au, Arnd Bergmann <arnd@arndb.de>, Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Avi Fishman <avifishman70@gmail.com>, Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, sumit.garg@linaro.org, jens.wiklander@linaro.org, vkoul@kernel.org, Thomas Gleixner <tglx@linutronix.de>, Joel Stanley <joel@jms.id.au>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+In-Reply-To: <20190909071632.14392-3-oleg@kaa.org.ua>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Sender: devicetree-owner@vger.kernel.org
+To: Oleh Kravchenko <oleg@kaa.org.ua>, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz
 List-ID: <devicetree@vger.kernel.org>
 
---0000000000002a7a3805923175cd
-Content-Type: text/plain; charset="UTF-8"
+Oleh
 
-Hi Daniel,
+On 9/9/19 2:16 AM, Oleh Kravchenko wrote:
+> This patch adds a LED class driver for the LEDs found on
+> the Crane Merchandising System EL15203000 LEDs board
+> (aka RED LEDs board).
+> Signed-off-by: Oleh Kravchenko <oleg@kaa.org.ua>
+> ---
+>   .../testing/sysfs-class-led-driver-el15203000 |  32 ++
+>   drivers/leds/Kconfig                          |  13 +
+>   drivers/leds/Makefile                         |   1 +
+>   drivers/leds/leds-el15203000.c                | 356 ++++++++++++++++++
+>   4 files changed, 402 insertions(+)
+>   create mode 100644 Documentation/ABI/testing/sysfs-class-led-driver-el15203000
+>   create mode 100644 drivers/leds/leds-el15203000.c
 
-Sorry but I have probably miss it, thanks a lot for your comment
+[...]
 
-On Tue, 10 Sep 2019 at 13:25, Daniel Thompson <daniel.thompson@linaro.org>
-wrote:
+> +
+> +static int el15203000_pattern_set_P(struct led_classdev *ldev,
+> +				    struct led_pattern *pattern,
+> +				    u32 len, int repeat)
+> +{
+> +	struct el15203000_led	*led = container_of(ldev,
+> +						    struct el15203000_led,
+> +						    ldev);
+> +
+> +	if (repeat > 0)
+> +		return -EINVAL;
+> +
+> +	if (is_cascade(pattern, len, false, false)) {
+> +		dev_dbg(led->priv->dev, "Cascade mode for 0x%02x(%c)",
+> +			led->reg, led->reg);
+> +
+> +		return el15203000_cmd(led, EL_PIPE_CASCADE);
+> +	} else if (is_cascade(pattern, len, true, false)) {
+> +		dev_dbg(led->priv->dev, "Inverse cascade mode for 0x%02x(%c)",
+> +			led->reg, led->reg);
+> +
+> +		return el15203000_cmd(led, EL_PIPE_INV_CASCADE);
+> +	} else if (is_bounce(pattern, len, false)) {
+> +		dev_dbg(led->priv->dev, "Bounce mode for 0x%02x(%c)",
+> +			led->reg, led->reg);
+> +
+> +		return el15203000_cmd(led, EL_PIPE_BOUNCE);
+> +	} else if (is_bounce(pattern, len, true)) {
+> +		dev_dbg(led->priv->dev, "Inverse bounce mode for 0x%02x(%c)",
+> +			led->reg, led->reg);
+> +
+> +		return el15203000_cmd(led, EL_PIPE_INV_BOUNCE);
+> +	}
+> +
 
-> On Mon, Sep 09, 2019 at 03:38:39PM +0300, Tomer Maimon wrote:
-> > Added device tree binding documentation for Nuvoton BMC
-> > NPCM Random Number Generator (RNG).
-> >
-> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> > ---
-> >  .../bindings/rng/nuvoton,npcm-rng.txt           | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> >  create mode 100644
-> Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
-> b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
-> > new file mode 100644
-> > index 000000000000..a697b4425fb3
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
-> > @@ -0,0 +1,17 @@
-> > +NPCM SoC Random Number Generator
-> > +
-> > +Required properties:
-> > +- compatible  : "nuvoton,npcm750-rng" for the NPCM7XX BMC.
-> > +- reg         : Specifies physical base address and size of the
-> registers.
-> > +
-> > +Optional property:
-> > +- quality : estimated number of bits of true entropy per 1024 bits
-> > +                     read from the rng.
-> > +                     If this property is not defined, it defaults to
-> 1000.
->
-> There are pending unreplied review comments about this property (my own
-> as it happens):
-> https://patchwork.kernel.org/patch/11119371/
->
-> No, there isn't different SoCs.
-we had checked the quality of the hwrng and the results we got are set as
-default.
-we been asked from one of our client to have a dynamic quality, they will
-like to be more strict when using the hwrng.
-is it problematic to add it?
+nitpicking a bit not a blocker just some clean up
 
-Having a controllable quality implies that the numeric quality of the
-peripheral changes when it is stamped out on different SoCs (otherwise
-the driver can confidently set the quality without needing any hint
-from the DT). Is that really true here?
+maybe remove the dev_dbg statements and just set a local variable to the 
+pipe cmd
+
+if (is_cascade(pattern, len, false, false))
+
+     pipe_cmd = EL_PIPE_CASCADE;
+
+else if (is_cascade(pattern, len, true, false))
+
+     pipe_cmd = EL_PIPE_INV_CASCADE;
+
+else
+
+     return -EINVAL;
 
 
-> Daniel.
->
-> > +
-> > +Example:
-> > +
-> > +rng: rng@f000b000 {
-> > +     compatible = "nuvoton,npcm750-rng";
-> > +     reg = <0xf000b000 0x8>;
-> > +};
-> > --
-> > 2.18.0
-> >
->
+return el15203000_cmd(led, pipe_cmd0:
 
---0000000000002a7a3805923175cd
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> +	return -EINVAL;
+> +}
+> +
+> +static int el15203000_pattern_clear(struct led_classdev *ldev)
+> +{
+> +	struct el15203000_led	*led = container_of(ldev,
+> +						    struct el15203000_led,
+> +						    ldev);
+> +
+> +	return el15203000_cmd(led, EL_OFF);
+> +}
+> +
+> +static int el15203000_probe_dt(struct el15203000 *priv)
+> +{
+> +	struct el15203000_led	*led = priv->leds;
+> +	struct fwnode_handle	*child;
+> +	int			ret;
+> +
+> +	device_for_each_child_node(priv->dev, child) {
+> +		struct led_init_data	init_data = {};
+> +
+> +		ret = fwnode_property_read_u32(child, "reg", &led->reg);
+> +		if (ret) {
+> +			dev_err(priv->dev, "LED without ID number");
+> +			fwnode_handle_put(child);
+> +
+> +			return ret;
+> +		}
+> +
+> +		if (led->reg > U8_MAX) {
+> +			dev_err(priv->dev, "LED value %d is invalid", led->reg);
+> +			fwnode_handle_put(child);
+> +
+> +			return -EINVAL;
+> +		}
+> +
+> +		fwnode_property_read_string(child, "linux,default-trigger",
+> +					    &led->ldev.default_trigger);
+> +
+> +		led->priv			  = priv;
+> +		led->ldev.max_brightness	  = LED_ON;
+> +		led->ldev.brightness_set_blocking = el15203000_set_blocking;
+> +
+> +		if (led->reg == 'S') {
+> +			led->ldev.pattern_set	= el15203000_pattern_set_S;
+> +			led->ldev.pattern_clear	= el15203000_pattern_clear;
+> +		} else if (led->reg == 'P') {
+> +			led->ldev.pattern_set	= el15203000_pattern_set_P;
+> +			led->ldev.pattern_clear	= el15203000_pattern_clear;
+> +		}
+> +
+> +		init_data.fwnode = child;
+> +		ret = devm_led_classdev_register_ext(priv->dev, &led->ldev,
+> +						     &init_data);
+> +		if (ret) {
+> +			dev_err(priv->dev,
+> +				"failed to register LED device %s, err %d",
+> +				led->ldev.name, ret);
+> +			fwnode_handle_put(child);
+> +
+> +			return ret;
+> +		}
+> +
+> +		led++;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int el15203000_probe(struct spi_device *spi)
+> +{
+> +	struct el15203000	*priv;
+> +	size_t			count;
+> +	int			ret;
+> +
+> +	count = device_get_child_node_count(&spi->dev);
+> +	if (!count) {
+> +		dev_err(&spi->dev, "LEDs are not defined in device tree!");
+> +		return -ENODEV;
+> +	}
+> +
+> +	priv = devm_kzalloc(&spi->dev, struct_size(priv, leds, count),
+> +			    GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&priv->lock);
+> +	priv->count	= count;
+> +	priv->dev	= &spi->dev;
+> +	priv->spi	= spi;
+> +	priv->delay	= jiffies -
+> +			  usecs_to_jiffies(EL_FW_DELAY_USEC);
+> +
+> +	ret = el15203000_probe_dt(priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	spi_set_drvdata(spi, priv);
+> +
+> +	return 0;
 
-<div dir=3D"ltr"><div dir=3D"ltr">Hi Daniel,<div><br></div><div>Sorry but I=
- have probably miss it, thanks a lot for your comment</div></div><br><div c=
-lass=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail_attr">On Tue, 10 Sep 2=
-019 at 13:25, Daniel Thompson &lt;<a href=3D"mailto:daniel.thompson@linaro.=
-org">daniel.thompson@linaro.org</a>&gt; wrote:<br></div><blockquote class=
-=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
-b(204,204,204);padding-left:1ex">On Mon, Sep 09, 2019 at 03:38:39PM +0300, =
-Tomer Maimon wrote:<br>
-&gt; Added device tree binding documentation for Nuvoton BMC<br>
-&gt; NPCM Random Number Generator (RNG).<br>
-&gt; <br>
-&gt; Signed-off-by: Tomer Maimon &lt;<a href=3D"mailto:tmaimon77@gmail.com"=
- target=3D"_blank">tmaimon77@gmail.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 .../bindings/rng/nuvoton,npcm-rng.txt=C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0| 17 +++++++++++++++++<br>
-&gt;=C2=A0 1 file changed, 17 insertions(+)<br>
-&gt;=C2=A0 create mode 100644 Documentation/devicetree/bindings/rng/nuvoton=
-,npcm-rng.txt<br>
-&gt; <br>
-&gt; diff --git a/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.tx=
-t b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt<br>
-&gt; new file mode 100644<br>
-&gt; index 000000000000..a697b4425fb3<br>
-&gt; --- /dev/null<br>
-&gt; +++ b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt<br>
-&gt; @@ -0,0 +1,17 @@<br>
-&gt; +NPCM SoC Random Number Generator<br>
-&gt; +<br>
-&gt; +Required properties:<br>
-&gt; +- compatible=C2=A0 : &quot;nuvoton,npcm750-rng&quot; for the NPCM7XX =
-BMC.<br>
-&gt; +- reg=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0: Specifies physical base addr=
-ess and size of the registers.<br>
-&gt; +<br>
-&gt; +Optional property:<br>
-&gt; +- quality : estimated number of bits of true entropy per 1024 bits<br=
->
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0read from the rng.<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0If this property is not defined, it defaults to 1000.<br>
-<br>
-There are pending unreplied review comments about this property (my own<br>
-as it happens):<br>
-<a href=3D"https://patchwork.kernel.org/patch/11119371/" rel=3D"noreferrer"=
- target=3D"_blank">https://patchwork.kernel.org/patch/11119371/</a><br>
-<br></blockquote><div>No, there isn&#39;t different SoCs.</div><div>we had =
-checked the quality of the hwrng and the results we got are set as default.=
-</div><div>we been asked from one of our client to have a dynamic quality, =
-they will like to be more strict when using the hwrng.</div><div>is it prob=
-lematic to add it?</div><pre class=3D"gmail-content" style=3D"box-sizing:bo=
-rder-box;overflow:auto;font-family:Menlo,Monaco,Consolas,&quot;Courier New&=
-quot;,monospace;font-size:13px;padding:9.5px;margin-top:0px;margin-bottom:1=
-0px;line-height:14.3px;color:rgb(51,51,51);word-break:break-all;border:0px;=
-border-radius:0px">Having a controllable quality implies that the numeric q=
-uality of the
-peripheral changes when it is stamped out on different SoCs (otherwise
-the driver can confidently set the quality without needing any hint
-from the DT). Is that really true here?=C2=A0</pre><blockquote class=3D"gma=
-il_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,2=
-04,204);padding-left:1ex">
-<br>
-Daniel.<br>
-<br>
-&gt; +<br>
-&gt; +Example:<br>
-&gt; +<br>
-&gt; +rng: rng@f000b000 {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0compatible =3D &quot;nuvoton,npcm750-rng&quot;;<b=
-r>
-&gt; +=C2=A0 =C2=A0 =C2=A0reg =3D &lt;0xf000b000 0x8&gt;;<br>
-&gt; +};<br>
-&gt; -- <br>
-&gt; 2.18.0<br>
-&gt; <br>
-</blockquote></div></div>
+Another nitpick again just some clean up.
 
---0000000000002a7a3805923175cd--
+Set spi_set_drvdata before you call the probe_dt then return on 
+el15203000_probe_dt this will allow you to eliminate the local ret variable.
+
+so it would look like this:
+
+spi_set_drvdata(spi, priv);
+
+return el15203000_probe_dt(priv);
+
+Otherwise
+
+Reviewed-by: Dan Murphy <dmurphy@ti.com>
+
+<snip>
