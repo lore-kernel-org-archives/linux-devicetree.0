@@ -1,77 +1,73 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH 7/7] clocksource/drivers/integrator-ap: parse the chosen
- node
-Date: Wed, 11 Sep 2019 07:14:11 +0000
-Message-ID: <9c46343e-504e-fbd9-45aa-a67416109e36@microchip.com>
-References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
- <1568123236-767-8-git-send-email-claudiu.beznea@microchip.com>
- <CACRpkdYsCFUNAtarTQmaA2a3-HZjiVjxQ-Wr-7wJp9xrtQRKCg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdYsCFUNAtarTQmaA2a3-HZjiVjxQ-Wr-7wJp9xrtQRKCg@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <561EB454363D5F43AF07179372AB2643@namprd11.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: linus.walleij@linaro.org
-Cc: tmaimon77@gmail.com, nsekhar@ti.com, guoren@kernel.org, linux-stm32@st-md-mailman.stormreply.com, heiko@sntech.de, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, khilman@baylibre.com, Ludovic.Desroches@microchip.com, linux-imx@nxp.com, u.kleine-koenig@pengutronix.de, uclinux-h8-devel@lists.sourceforge.jp, marc.zyngier@arm.com, s.hauer@pengutronix.de, linux-unisoc@lists.infradead.org, khalasa@piap.pl, tglx@linutronix.de, sbranden@broadcom.com, linux-kernel@vger.kernel.org, ralf@linux-mips.org, paul.burton@mips.com, kernel@pengutronix.de, mark.rutland@arm.com, alexandre.belloni@bootlin.com, jhogan@kernel.org, palmer@sifive.com, eric@anholt.net, thierry.reding@gmail.com, manivannan.sadhasivam@linaro.org, ysato@users.sourceforge.jp, zhang.lyra@gmail.com, daniel.lezcano@linaro.org, jonathanh@nvidia.com, bgolaszewski@baylibre.com, kgene@kernel.orgalex
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: [PATCH v3 00/15] thermal: qcom: tsens: Add interrupt support
+Date: Wed, 11 Sep 2019 12:46:17 +0530
+Message-ID: <cover.1568185732.git.amit.kucheria@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org, masneyb@onstation.org, swboyd@chromium.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Changes since v2:
+- Addressed Stephen's review comment
+- Moved the dt-bindings to yaml (This throws up some new warnings in various QCOM
+devicetrees. I'll send out a separate series to fix them up)
+- Collected reviews and acks
+- Added the dt-bindings to MAINTAINERS
 
+Changes since v1:
+- Collected reviews and acks
+- Addressed Stephen's review comments (hopefully I got them all).
+- Completely removed critical interrupt infrastructure from this series.
+  Will post that separately.
+- Fixed a bug in sign-extension of temperature.
+- Fixed DT bindings to use the name of the interrupt e.g. "uplow" and use
+  platform_get_irq_byname().
 
-On 11.09.2019 02:48, Linus Walleij wrote:
-> External E-Mail
-> 
-> 
-> On Tue, Sep 10, 2019 at 2:50 PM Claudiu Beznea
-> <claudiu.beznea@microchip.com> wrote:
->> From: Alexandre Belloni <alexandre.belloni@bootlin.com>
->>
->> The driver currently uses aliases to know whether the timer is the
->> clocksource or the clockevent.
-> 
-> OK maybe that wasn't the most elegant solution.
-> 
->> Add the /chosen/linux,clocksource and
->> /chosen/linux,clockevent parsing while keeping backward compatibility.
-> 
-> This is not how I would solve this today.
-> 
-> I would simply remove/comment out the IRQ from the timer
-> that cannot be used for clockevent from the device tree
-> (apparently it doesn't work anyway), and make the code only
-> pick a timer with a valid interrupt assigned as clock event,
-> while a timer without interrupt can be used for clock source.
-This could also be used but it will not be compatible with old device
-trees. There are different ideas implemented in timer drivers with regards
-to this issue. Some of them are registering 1st timer to work as
-clocksource/clockevent and the 2nd one to work as clockevent/clocksource.
-Some are using different compatibles, one for clocksource, one for
-clockevent although these compatible seems to be for the same hardware type
-(I can point drivers/clocksource/timer-sprd.c).
+Add interrupt support to TSENS. The first 6 patches are general fixes and
+cleanups to the driver before interrupt support is introduced.
 
-The idea with this series was, at it has been proposed in [1] to have one
-single mechanism for this kind of situations.
+This series has been developed against qcs404 and sdm845 and then tested on
+msm8916 and msm8974 (Thanks Brian). Testing on msm8998 would be appreciated since I don't
+have hardware handy.
 
-Thank you,
-Claudiu Beznea
+Amit Kucheria (15):
+  drivers: thermal: tsens: Get rid of id field in tsens_sensor
+  drivers: thermal: tsens: Simplify code flow in tsens_probe
+  drivers: thermal: tsens: Add __func__ identifier to debug statements
+  drivers: thermal: tsens: Add debugfs support
+  arm: dts: msm8974: thermal: Add thermal zones for each sensor
+  arm64: dts: msm8916: thermal: Fixup HW ids for cpu sensors
+  dt-bindings: thermal: tsens: Convert over to a yaml schema
+  arm64: dts: sdm845: thermal: Add interrupt support
+  arm64: dts: msm8996: thermal: Add interrupt support
+  arm64: dts: msm8998: thermal: Add interrupt support
+  arm64: dts: qcs404: thermal: Add interrupt support
+  arm: dts: msm8974: thermal: Add interrupt support
+  arm64: dts: msm8916: thermal: Add interrupt support
+  drivers: thermal: tsens: Create function to return sign-extended
+    temperature
+  drivers: thermal: tsens: Add interrupt support
 
-[1]
-https://lore.kernel.org/lkml/2f831f1b-c87d-48bd-cf02-2ebb334b964c@linaro.org/
+ .../bindings/thermal/qcom-tsens.txt           |  55 --
+ .../bindings/thermal/qcom-tsens.yaml          | 174 ++++++
+ MAINTAINERS                                   |   1 +
+ arch/arm/boot/dts/qcom-msm8974.dtsi           | 108 +++-
+ arch/arm64/boot/dts/qcom/msm8916.dtsi         |  26 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |  60 +-
+ arch/arm64/boot/dts/qcom/msm8998.dtsi         |  82 +--
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |  42 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  88 +--
+ drivers/thermal/qcom/tsens-8960.c             |   4 +-
+ drivers/thermal/qcom/tsens-common.c           | 529 ++++++++++++++++--
+ drivers/thermal/qcom/tsens-v0_1.c             |  11 +
+ drivers/thermal/qcom/tsens-v1.c               |  29 +
+ drivers/thermal/qcom/tsens-v2.c               |  13 +
+ drivers/thermal/qcom/tsens.c                  |  58 +-
+ drivers/thermal/qcom/tsens.h                  | 286 ++++++++--
+ 16 files changed, 1254 insertions(+), 312 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+ create mode 100644 Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
 
-> 
-> This has the upside of not needing any special aliases or
-> chosen things.
-> 
-> Yours,
-> Linus Walleij
-> 
+-- 
+2.17.1
