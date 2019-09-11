@@ -1,422 +1,166 @@
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-Subject: [PATCH 2/2] ASoC: fsl_mqs: Add MQS component driver
-Date: Wed, 11 Sep 2019 10:42:39 -0400
-Message-ID: <08524f143c18521680b724ab98375828fc18ab2b.1568169346.git.shengjiu.wang@nxp.com>
-References: <cff8bff1e8d3334fa308ddfcec266a5284e3c858.1568169346.git.shengjiu.wang@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cff8bff1e8d3334fa308ddfcec266a5284e3c858.1568169346.git.shengjiu.wang@nxp.com>
-In-Reply-To: <cff8bff1e8d3334fa308ddfcec266a5284e3c858.1568169346.git.shengjiu.wang@nxp.com>
-References: <cff8bff1e8d3334fa308ddfcec266a5284e3c858.1568169346.git.shengjiu.wang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Date: Tue, 10 Sep 2019 21:44:11 -0500
+Message-ID: <CABb+yY2rppSOgqMy+R294d94xwi5UPR55Eo-WB8KA6m11nG3iQ@mail.gmail.com>
+References: <1567004515-3567-1-git-send-email-peng.fan@nxp.com>
+ <1567004515-3567-2-git-send-email-peng.fan@nxp.com>
+ <20190909164208.6605054e@donnerap.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190909164208.6605054e@donnerap.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peng Fan <peng.fan@nxp.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-MQS (medium quality sound), is used to generate medium quality
-audio via a standard digital output pin. It can be used to
-connect stereo speakers or headphones simply via power amplifier
-stages without an additional DAC chip. It only accepts 2-channel,
-LSB-valid 16bit, MSB shift-out first, frame sync asserting with
-the first bit of the frame, data shifted with the posedge of
-bit clock, 44.1 kHz or 48 kHz signals from SAI1 in left justified
-format; and it provides the SNR target as no more than 20dB for
-the signals below 10 kHz. The signals above 10 kHz will have
-worse THD+N values.
+On Mon, Sep 9, 2019 at 10:42 AM Andre Przywara <andre.przywara@arm.com> wrote:
+>
+> On Wed, 28 Aug 2019 03:02:58 +0000
+> Peng Fan <peng.fan@nxp.com> wrote:
+>
+> Hi,
+>
+> sorry for the late reply, eventually managed to have a closer look on this.
+>
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
+> > actions in software layers running in the EL2 or EL3 exception levels.
+> > The term "ARM" here relates to the SMC instruction as part of the ARM
+> > instruction set, not as a standard endorsed by ARM Ltd.
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >  .../devicetree/bindings/mailbox/arm-smc.yaml       | 125 +++++++++++++++++++++
+> >  1 file changed, 125 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> > new file mode 100644
+> > index 000000000000..f8eb28d5e307
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> > @@ -0,0 +1,125 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: ARM SMC Mailbox Interface
+> > +
+> > +maintainers:
+> > +  - Peng Fan <peng.fan@nxp.com>
+> > +
+> > +description: |
+> > +  This mailbox uses the ARM smc (secure monitor call) and hvc (hypervisor
+> > +  call) instruction to trigger a mailbox-connected activity in firmware,
+> > +  executing on the very same core as the caller. By nature this operation
+> > +  is synchronous and this mailbox provides no way for asynchronous messages
+> > +  to be delivered the other way round, from firmware to the OS, but
+> > +  asynchronous notification could also be supported. However the value of
+> > +  r0/w0/x0 the firmware returns after the smc call is delivered as a received
+> > +  message to the mailbox framework, so a synchronous communication can be
+> > +  established, for a asynchronous notification, no value will be returned.
+> > +  The exact meaning of both the action the mailbox triggers as well as the
+> > +  return value is defined by their users and is not subject to this binding.
+> > +
+> > +  One use case of this mailbox is the SCMI interface, which uses shared memory
+> > +  to transfer commands and parameters, and a mailbox to trigger a function
+> > +  call. This allows SoCs without a separate management processor (or when
+> > +  such a processor is not available or used) to use this standardized
+> > +  interface anyway.
+> > +
+> > +  This binding describes no hardware, but establishes a firmware interface.
+> > +  Upon receiving an SMC using one of the described SMC function identifiers,
+> > +  the firmware is expected to trigger some mailbox connected functionality.
+> > +  The communication follows the ARM SMC calling convention.
+> > +  Firmware expects an SMC function identifier in r0 or w0. The supported
+> > +  identifiers are passed from consumers, or listed in the the arm,func-ids
+> > +  properties as described below. The firmware can return one value in
+> > +  the first SMC result register, it is expected to be an error value,
+> > +  which shall be propagated to the mailbox client.
+> > +
+> > +  Any core which supports the SMC or HVC instruction can be used, as long as
+> > +  a firmware component running in EL3 or EL2 is handling these calls.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: arm,smc-mbox
+> > +
+> > +  "#mbox-cells":
+> > +    const: 1
+> > +
+> > +  arm,num-chans:
+> > +    description: The number of channels supported.
+> > +    items:
+> > +      minimum: 1
+> > +      maximum: 4096 # Should be enough?
+>
+> This maximum sounds rather arbitrary. Why do we need one? In the driver this just allocates more memory, so why not just impose no artificial limit at all?
+>
+This will be gone, once the driver is converted to 1channel per controller.
 
-MQS provides only simple audio reproduction. No internal pop,
-click or distortion artifact reduction methods are provided.
+> Actually, do we need this property at all? Can't we just rely on the size of arm,func-ids to determine this (using of_property_count_elems_of_size() in the driver)? Having both sounds redundant and brings up the question what to do if they don't match.
+>
 
-The MQS receives the audio data from the SAI1 Tx section.
+> > +
+> > +  method:
+> > +    - enum:
+> > +        - smc
+> > +        - hvc
+> > +
+> > +  transports:
+> > +    - enum:
+> > +        - mem
+> > +        - reg
+>
+> Shouldn't there be a description on what both mean, exactly?
+> For instance I would expect a list of registers to be shown for the "reg" case, and be it by referring to the ARM SMCCC.
+>
+> Also looking at the driver this brings up more questions:
+> - Which memory does mem refer to? If this is really the means of transport, it should be referenced in this *controller* node and populated by the driver. Looking at the example below and the driver code, it actually isn't used that way, instead the memory is used and controlled by the mailbox *client*.
+> - What is the actual difference between the two transports? For "mem" we just populate the registers with 0, for "reg" we use the data. Couldn't this be left to the client?
+>
+> There are more points which makes me think this property is actually redundant, see my comments on patch 2/2.
+>
+> > +
+> > +  arm,func-ids:
+> > +    description: |
+> > +      An array of 32-bit values specifying the function IDs used by each
+> > +      mailbox channel. Those function IDs follow the ARM SMC calling
+> > +      convention standard [1].
+> > +
+> > +      There is one identifier per channel and the number of supported
+> > +      channels is determined by the length of this array.
+>
+> I think this makes it obvious that arm,num-chans is not needed.
+>
+> Also this somewhat contradicts the driver implementation, which allows the array to be shorter, marking this as UINT_MAX and later on using the first data item as a function identifier. This is somewhat surprising and not documented (unless I missed something).
+>
+> So I would suggest:
+> - We drop the transports property, and always put the client provided data in the registers, according to the SMCCC. Document this here.
+>   A client not needing those could always puts zeros (or garbage) in there, the respective firmware would just ignore the registers.
+> - We drop "arm,num-chans", as this is just redundant with the length of the func-ids array.
+> - We don't impose an arbitrary limit on the number of channels. From the firmware point of view this is just different function IDs, from Linux' point of view just the size of the memory used. Both don't need to be limited artificially IMHO.
+>
+Sounds like we are in sync.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/Kconfig   |  10 ++
- sound/soc/fsl/Makefile  |   2 +
- sound/soc/fsl/fsl_mqs.c | 336 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 348 insertions(+)
- create mode 100644 sound/soc/fsl/fsl_mqs.c
+> - We mark arm,func-ids as required, as this needs to be fixed, allocated number.
+>
+I still think func-id can be done without. A client can always pass
+the value as it knows what it expects. But I can live with it being
+optional.
 
-diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-index aa99c008a925..65e8cd4be930 100644
---- a/sound/soc/fsl/Kconfig
-+++ b/sound/soc/fsl/Kconfig
-@@ -25,6 +25,16 @@ config SND_SOC_FSL_SAI
- 	  This option is only useful for out-of-tree drivers since
- 	  in-tree drivers select it automatically.
- 
-+config SND_SOC_FSL_MQS
-+	tristate "Medium Quality Sound (MQS) module support"
-+	depends on SND_SOC_FSL_SAI
-+	select REGMAP_MMIO
-+	help
-+	  Say Y if you want to add Medium Quality Sound (MQS)
-+	  support for the Freescale CPUs.
-+	  This option is only useful for out-of-tree drivers since
-+	  in-tree drivers select it automatically.
-+
- config SND_SOC_FSL_AUDMIX
- 	tristate "Audio Mixer (AUDMIX) module support"
- 	select REGMAP_MMIO
-diff --git a/sound/soc/fsl/Makefile b/sound/soc/fsl/Makefile
-index c0dd04422fe9..8cde88c72d93 100644
---- a/sound/soc/fsl/Makefile
-+++ b/sound/soc/fsl/Makefile
-@@ -23,6 +23,7 @@ snd-soc-fsl-esai-objs := fsl_esai.o
- snd-soc-fsl-micfil-objs := fsl_micfil.o
- snd-soc-fsl-utils-objs := fsl_utils.o
- snd-soc-fsl-dma-objs := fsl_dma.o
-+snd-soc-fsl-mqs-objs := fsl_mqs.o
- 
- obj-$(CONFIG_SND_SOC_FSL_AUDMIX) += snd-soc-fsl-audmix.o
- obj-$(CONFIG_SND_SOC_FSL_ASOC_CARD) += snd-soc-fsl-asoc-card.o
-@@ -33,6 +34,7 @@ obj-$(CONFIG_SND_SOC_FSL_SPDIF) += snd-soc-fsl-spdif.o
- obj-$(CONFIG_SND_SOC_FSL_ESAI) += snd-soc-fsl-esai.o
- obj-$(CONFIG_SND_SOC_FSL_MICFIL) += snd-soc-fsl-micfil.o
- obj-$(CONFIG_SND_SOC_FSL_UTILS) += snd-soc-fsl-utils.o
-+obj-$(CONFIG_SND_SOC_FSL_MQS) += snd-soc-fsl-mqs.o
- obj-$(CONFIG_SND_SOC_POWERPC_DMA) += snd-soc-fsl-dma.o
- 
- # MPC5200 Platform Support
-diff --git a/sound/soc/fsl/fsl_mqs.c b/sound/soc/fsl/fsl_mqs.c
-new file mode 100644
-index 000000000000..d164f5da3460
---- /dev/null
-+++ b/sound/soc/fsl/fsl_mqs.c
-@@ -0,0 +1,336 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ALSA SoC IMX MQS driver
-+ *
-+ * Copyright (C) 2014-2019 Freescale Semiconductor, Inc.
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/moduleparam.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/of.h>
-+#include <linux/pm.h>
-+#include <linux/slab.h>
-+#include <sound/soc.h>
-+#include <sound/pcm.h>
-+#include <sound/initval.h>
-+
-+#define REG_MQS_CTRL		0x00
-+
-+#define MQS_EN_MASK			(0x1 << 28)
-+#define MQS_EN_SHIFT			(28)
-+#define MQS_SW_RST_MASK			(0x1 << 24)
-+#define MQS_SW_RST_SHIFT		(24)
-+#define MQS_OVERSAMPLE_MASK		(0x1 << 20)
-+#define MQS_OVERSAMPLE_SHIFT		(20)
-+#define MQS_CLK_DIV_MASK		(0xFF << 0)
-+#define MQS_CLK_DIV_SHIFT		(0)
-+
-+/* codec private data */
-+struct fsl_mqs {
-+	struct regmap *regmap;
-+	struct clk *mclk;
-+	struct clk *ipg;
-+
-+	unsigned int reg_iomuxc_gpr2;
-+	unsigned int reg_mqs_ctrl;
-+	bool use_gpr;
-+};
-+
-+#define FSL_MQS_RATES	(SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_48000)
-+#define FSL_MQS_FORMATS	SNDRV_PCM_FMTBIT_S16_LE
-+
-+static int fsl_mqs_hw_params(struct snd_pcm_substream *substream,
-+			     struct snd_pcm_hw_params *params,
-+			     struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_component *component = dai->component;
-+	struct fsl_mqs *mqs_priv = snd_soc_component_get_drvdata(component);
-+	unsigned long mclk_rate;
-+	int div, res;
-+	int bclk, lrclk;
-+
-+	mclk_rate = clk_get_rate(mqs_priv->mclk);
-+	bclk = snd_soc_params_to_bclk(params);
-+	lrclk = params_rate(params);
-+
-+	/*
-+	 * mclk_rate / (oversample(32,64) * FS * 2 * divider ) = repeat_rate;
-+	 * if repeat_rate is 8, mqs can achieve better quality.
-+	 * oversample rate is fix to 32 currently.
-+	 */
-+	div = mclk_rate / (32 * lrclk * 2 * 8);
-+	res = mclk_rate % (32 * lrclk * 2 * 8);
-+
-+	if (res == 0 && div > 0 && div <= 256) {
-+		if (mqs_priv->use_gpr) {
-+			regmap_update_bits(mqs_priv->regmap, IOMUXC_GPR2,
-+					   IMX6SX_GPR2_MQS_CLK_DIV_MASK,
-+					   (div - 1) << IMX6SX_GPR2_MQS_CLK_DIV_SHIFT);
-+			regmap_update_bits(mqs_priv->regmap, IOMUXC_GPR2,
-+					   IMX6SX_GPR2_MQS_OVERSAMPLE_MASK, 0);
-+		} else {
-+			regmap_update_bits(mqs_priv->regmap, REG_MQS_CTRL,
-+					   MQS_CLK_DIV_MASK,
-+					   (div - 1) << MQS_CLK_DIV_SHIFT);
-+			regmap_update_bits(mqs_priv->regmap, REG_MQS_CTRL,
-+					   MQS_OVERSAMPLE_MASK, 0);
-+		}
-+	} else {
-+		dev_err(component->dev, "can't get proper divider\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static int fsl_mqs_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
-+{
-+	/* Only LEFT_J & SLAVE mode is supported. */
-+	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-+	case SND_SOC_DAIFMT_LEFT_J:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
-+	case SND_SOC_DAIFMT_NB_NF:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+	case SND_SOC_DAIFMT_CBS_CFS:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int fsl_mqs_startup(struct snd_pcm_substream *substream,
-+			   struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_component *component = dai->component;
-+	struct fsl_mqs *mqs_priv = snd_soc_component_get_drvdata(component);
-+
-+	if (mqs_priv->use_gpr)
-+		regmap_update_bits(mqs_priv->regmap, IOMUXC_GPR2,
-+				   IMX6SX_GPR2_MQS_EN_MASK,
-+				   1 << IMX6SX_GPR2_MQS_EN_SHIFT);
-+	else
-+		regmap_update_bits(mqs_priv->regmap, REG_MQS_CTRL,
-+				   MQS_EN_MASK,
-+				   1 << MQS_EN_SHIFT);
-+	return 0;
-+}
-+
-+static void fsl_mqs_shutdown(struct snd_pcm_substream *substream,
-+			     struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_component *component = dai->component;
-+	struct fsl_mqs *mqs_priv = snd_soc_component_get_drvdata(component);
-+
-+	if (mqs_priv->use_gpr)
-+		regmap_update_bits(mqs_priv->regmap, IOMUXC_GPR2,
-+				   IMX6SX_GPR2_MQS_EN_MASK, 0);
-+	else
-+		regmap_update_bits(mqs_priv->regmap, REG_MQS_CTRL,
-+				   MQS_EN_MASK, 0);
-+}
-+
-+const static struct snd_soc_component_driver soc_codec_fsl_mqs = {
-+	.idle_bias_on = 1,
-+	.non_legacy_dai_naming	= 1,
-+};
-+
-+static const struct snd_soc_dai_ops fsl_mqs_dai_ops = {
-+	.startup = fsl_mqs_startup,
-+	.shutdown = fsl_mqs_shutdown,
-+	.hw_params = fsl_mqs_hw_params,
-+	.set_fmt = fsl_mqs_set_dai_fmt,
-+};
-+
-+static struct snd_soc_dai_driver fsl_mqs_dai = {
-+	.name		= "fsl-mqs-dai",
-+	.playback	= {
-+		.stream_name	= "Playback",
-+		.channels_min	= 2,
-+		.channels_max	= 2,
-+		.rates		= FSL_MQS_RATES,
-+		.formats	= FSL_MQS_FORMATS,
-+	},
-+	.ops = &fsl_mqs_dai_ops,
-+};
-+
-+static const struct regmap_config fsl_mqs_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.max_register = REG_MQS_CTRL,
-+	.cache_type = REGCACHE_NONE,
-+};
-+
-+static int fsl_mqs_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *gpr_np = 0;
-+	struct fsl_mqs *mqs_priv;
-+	struct resource *res;
-+	void __iomem *regs;
-+	int ret = 0;
-+
-+	mqs_priv = devm_kzalloc(&pdev->dev, sizeof(*mqs_priv), GFP_KERNEL);
-+	if (!mqs_priv)
-+		return -ENOMEM;
-+
-+	/* On i.MX6sx the MQS control register is in GPR domain
-+	 * But in i.MX8QM/i.MX8QXP the control register is moved
-+	 * to its own domain.
-+	 */
-+	if (of_device_is_compatible(np, "fsl,imx8qm-mqs"))
-+		mqs_priv->use_gpr = false;
-+	else
-+		mqs_priv->use_gpr = true;
-+
-+	if (mqs_priv->use_gpr) {
-+		gpr_np = of_parse_phandle(np, "gpr", 0);
-+		if (IS_ERR(gpr_np)) {
-+			dev_err(&pdev->dev, "failed to get gpr node by phandle\n");
-+			ret = PTR_ERR(gpr_np);
-+			goto out;
-+		}
-+
-+		mqs_priv->regmap = syscon_node_to_regmap(gpr_np);
-+		if (IS_ERR(mqs_priv->regmap)) {
-+			dev_err(&pdev->dev, "failed to get gpr regmap\n");
-+			ret = PTR_ERR(mqs_priv->regmap);
-+			goto out;
-+		}
-+	} else {
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+		regs = devm_ioremap_resource(&pdev->dev, res);
-+		if (IS_ERR(regs))
-+			return PTR_ERR(regs);
-+
-+		mqs_priv->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
-+							     "core",
-+							     regs,
-+							     &fsl_mqs_regmap_config);
-+		if (IS_ERR(mqs_priv->regmap)) {
-+			dev_err(&pdev->dev, "failed to init regmap: %ld\n",
-+				PTR_ERR(mqs_priv->regmap));
-+			return PTR_ERR(mqs_priv->regmap);
-+		}
-+
-+		mqs_priv->ipg = devm_clk_get(&pdev->dev, "core");
-+		if (IS_ERR(mqs_priv->ipg)) {
-+			dev_err(&pdev->dev, "failed to get the clock: %ld\n",
-+				PTR_ERR(mqs_priv->ipg));
-+			goto out;
-+		}
-+	}
-+
-+	mqs_priv->mclk = devm_clk_get(&pdev->dev, "mclk");
-+	if (IS_ERR(mqs_priv->mclk)) {
-+		dev_err(&pdev->dev, "failed to get the clock: %ld\n",
-+			PTR_ERR(mqs_priv->mclk));
-+		goto out;
-+	}
-+
-+	dev_set_drvdata(&pdev->dev, mqs_priv);
-+	pm_runtime_enable(&pdev->dev);
-+
-+	return devm_snd_soc_register_component(&pdev->dev, &soc_codec_fsl_mqs,
-+			&fsl_mqs_dai, 1);
-+out:
-+	if (!IS_ERR(gpr_np))
-+		of_node_put(gpr_np);
-+
-+	return ret;
-+}
-+
-+static int fsl_mqs_remove(struct platform_device *pdev)
-+{
-+	pm_runtime_disable(&pdev->dev);
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM
-+static int fsl_mqs_runtime_resume(struct device *dev)
-+{
-+	struct fsl_mqs *mqs_priv = dev_get_drvdata(dev);
-+
-+	if (mqs_priv->ipg)
-+		clk_prepare_enable(mqs_priv->ipg);
-+
-+	if (mqs_priv->mclk)
-+		clk_prepare_enable(mqs_priv->mclk);
-+
-+	if (mqs_priv->use_gpr)
-+		regmap_write(mqs_priv->regmap, IOMUXC_GPR2,
-+			     mqs_priv->reg_iomuxc_gpr2);
-+	else
-+		regmap_write(mqs_priv->regmap, REG_MQS_CTRL,
-+			     mqs_priv->reg_mqs_ctrl);
-+	return 0;
-+}
-+
-+static int fsl_mqs_runtime_suspend(struct device *dev)
-+{
-+	struct fsl_mqs *mqs_priv = dev_get_drvdata(dev);
-+
-+	if (mqs_priv->use_gpr)
-+		regmap_read(mqs_priv->regmap, IOMUXC_GPR2,
-+			    &mqs_priv->reg_iomuxc_gpr2);
-+	else
-+		regmap_read(mqs_priv->regmap, REG_MQS_CTRL,
-+			    &mqs_priv->reg_mqs_ctrl);
-+
-+	if (mqs_priv->mclk)
-+		clk_disable_unprepare(mqs_priv->mclk);
-+
-+	if (mqs_priv->ipg)
-+		clk_disable_unprepare(mqs_priv->ipg);
-+
-+	return 0;
-+}
-+#endif
-+
-+static const struct dev_pm_ops fsl_mqs_pm_ops = {
-+	SET_RUNTIME_PM_OPS(fsl_mqs_runtime_suspend,
-+			   fsl_mqs_runtime_resume,
-+			   NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
-+};
-+
-+static const struct of_device_id fsl_mqs_dt_ids[] = {
-+	{ .compatible = "fsl,imx8qm-mqs", },
-+	{ .compatible = "fsl,imx6sx-mqs", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, fsl_mqs_dt_ids);
-+
-+static struct platform_driver fsl_mqs_driver = {
-+	.probe		= fsl_mqs_probe,
-+	.remove		= fsl_mqs_remove,
-+	.driver		= {
-+		.name	= "fsl-mqs",
-+		.of_match_table = fsl_mqs_dt_ids,
-+		.pm = &fsl_mqs_pm_ops,
-+	},
-+};
-+
-+module_platform_driver(fsl_mqs_driver);
-+
-+MODULE_AUTHOR("Shengjiu Wang <Shengjiu.Wang@nxp.com>");
-+MODULE_DESCRIPTION("MQS codec driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform: fsl-mqs");
--- 
-2.21.0
+cheers!
