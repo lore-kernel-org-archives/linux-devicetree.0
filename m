@@ -1,66 +1,83 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: backlight: lm3630a: add enable_gpios
-Date: Wed, 11 Sep 2019 13:44:01 -0500
-Message-ID: <3d8237d0-4e36-3787-6050-b0e75f2fa8c3@ti.com>
-References: <20190910212909.18095-1-andreas@kemnade.info>
- <20190910212909.18095-2-andreas@kemnade.info>
- <20190911100851.f4rnldghtmly26oo@holly.lan>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 3/7] usb: mtu3: support ip-sleep wakeup for MT8183
+Date: Wed, 11 Sep 2019 11:44:53 -0700
+Message-ID: <20190911184453.GA2628@roeck-us.net>
+References: <1567150854-30033-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1567150854-30033-4-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190911100851.f4rnldghtmly26oo@holly.lan>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1567150854-30033-4-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>, Andreas Kemnade <andreas@kemnade.info>
-Cc: lee.jones@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Andreas
+On Fri, Aug 30, 2019 at 03:40:50PM +0800, Chunfeng Yun wrote:
+> Support USB wakeup by ip-sleep mode for MT8183, it's similar to
+> MT8173
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+> v3: changes micros define
+> 
+> v2: no changes
+> ---
+>  drivers/usb/mtu3/mtu3_host.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/mtu3/mtu3_host.c b/drivers/usb/mtu3/mtu3_host.c
+> index c871b94f3e6f..4f8208885ebd 100644
+> --- a/drivers/usb/mtu3/mtu3_host.c
+> +++ b/drivers/usb/mtu3/mtu3_host.c
+> @@ -18,6 +18,12 @@
+>  #include "mtu3.h"
+>  #include "mtu3_dr.h"
+>  
+> +/* mt8183 etc */
+> +#define PERI_WK_CTRL0	0x20
+> +#define WC0_IS_C(x)	(((x) & 0xf) << 28)  /* cycle debounce */
+> +#define WC0_IS_P	BIT(12)	/* polarity */
+> +#define WC0_IS_EN	BIT(6)
+> +
 
-On 9/11/19 5:08 AM, Daniel Thompson wrote:
-> On Tue, Sep 10, 2019 at 11:29:08PM +0200, Andreas Kemnade wrote:
->> add enable-gpios to describe HWEN pin
->>
->> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
->
->> ---
->> changes in v2: add example
->>   .../bindings/leds/backlight/lm3630a-backlight.yaml           | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
->> index dc129d9a329e..1fa83feffe16 100644
->> --- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
->> +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
->> @@ -29,6 +29,10 @@ properties:
->>     '#size-cells':
->>       const: 0
->>   
->> +  enable-gpios:
->> +    description: GPIO to use to enable/disable the backlight (HWEN pin).
->> +    maxItems: 1
->> +
->>   required:
->>     - compatible
->>     - reg
->> @@ -92,6 +96,7 @@ examples:
->>       i2c {
->>           #address-cells = <1>;
->>           #size-cells = <0>;
->> +        enable-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
+For 64-bit builds, this results in:
 
-This is in the wrong place.  This is implying that the gpio is for the 
-i2c parent
+drivers/usb/mtu3/mtu3_host.c: In function ‘ssusb_wakeup_ip_sleep_set’:
+./include/linux/bits.h:6:19: warning:
+	conversion from ‘long unsigned int’ to ‘u32’ {aka ‘unsigned int’}
+	changes value from ‘18446744073441120320’ to ‘4026536000’ [-Woverflow]
 
-This needs to go under the led-controller node below
+since WC0_IS_C() is sign extended to 64 bit and then truncated.
 
-Dan
+Observed with gcc 7.4.0 and 8.3.0.
 
->>   
->>           led-controller@38 {
->>                   compatible = "ti,lm3630a";
->> -- 
->> 2.20.1
->>
+Guenter
+
+>  /* mt8173 etc */
+>  #define PERI_WK_CTRL1	0x4
+>  #define WC1_IS_C(x)	(((x) & 0xf) << 26)  /* cycle debounce */
+> @@ -30,7 +36,8 @@
+>  #define SSC_SPM_INT_EN		BIT(1)
+>  
+>  enum ssusb_uwk_vers {
+> -	SSUSB_UWK_V1 = 1,
+> +	SSUSB_UWK_V0 = 0,
+> +	SSUSB_UWK_V1,
+>  	SSUSB_UWK_V2,
+>  };
+>  
+> @@ -43,6 +50,11 @@ static void ssusb_wakeup_ip_sleep_set(struct ssusb_mtk *ssusb, bool enable)
+>  	u32 reg, msk, val;
+>  
+>  	switch (ssusb->uwk_vers) {
+> +	case SSUSB_UWK_V0:
+> +		reg = ssusb->uwk_reg_base + PERI_WK_CTRL0;
+> +		msk = WC0_IS_EN | WC0_IS_C(0xf) | WC0_IS_P;
+> +		val = enable ? (WC0_IS_EN | WC0_IS_C(0x8)) : 0;
+> +		break;
+>  	case SSUSB_UWK_V1:
+>  		reg = ssusb->uwk_reg_base + PERI_WK_CTRL1;
+>  		msk = WC1_IS_EN | WC1_IS_C(0xf) | WC1_IS_P;
