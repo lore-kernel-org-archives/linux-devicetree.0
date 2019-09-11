@@ -1,46 +1,62 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI
- config register
-Date: Wed, 11 Sep 2019 10:59:16 +0100
-Message-ID: <CACRpkdaReFzjb_hcDbQwqMX+whzscLpeZpJPHKqOo+9tANzemA@mail.gmail.com>
-References: <20190829181203.2660-1-ilina@codeaurora.org> <20190829181203.2660-6-ilina@codeaurora.org>
+From: Luhua Xu <luhua.xu@mediatek.com>
+Subject: [PATCH 2/3] spi: mediatek: add spi support for mt6765 IC
+Date: Wed, 11 Sep 2019 05:55:30 -0400
+Message-ID: <1568195731-3239-3-git-send-email-luhua.xu@mediatek.com>
+References: <1568195731-3239-1-git-send-email-luhua.xu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829181203.2660-6-ilina@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: Stephen Boyd <swboyd@chromium.org>, Evan Green <evgreen@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, mkshah@codeaurora.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1568195731-3239-1-git-send-email-luhua.xu@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, "luhua.xu" <luhua.xu@mediatek.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 8:47 PM Lina Iyer <ilina@codeaurora.org> wrote:
+From: "luhua.xu" <luhua.xu@mediatek.com>
 
-> +- qcom,scm-spi-cfg:
-> +       Usage: optional
-> +       Value type: <bool>
-> +       Definition: Specifies if the SPI configuration registers have to be
-> +                   written from the firmware.
-> +
->  Example:
->
->         pdc: interrupt-controller@b220000 {
->                 compatible = "qcom,sdm845-pdc";
-> -               reg = <0xb220000 0x30000>;
-> +               reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
->                 qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
->                 #interrupt-cells = <2>;
->                 interrupt-parent = <&intc>;
->                 interrupt-controller;
-> +               qcom,scm-spi-cfg;
+This patch add spi support for mt6765 IC.
 
-You can probably drop this bool if you just give names to the registers.
+Signed-off-by: luhua.xu <luhua.xu@mediatek.com>
+---
+ drivers/spi/spi-mt65xx.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Like
-reg = <0xb220000 0x30000>, <0x179900f0 0x60>;
-reg-names = "gic", "pdc";
-
-Then jus check explicitly for a "pdc" register and in that case
-initialize the PDC.
-
-Yours,
-Linus Walleij
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 45d8a70..3c73b71 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -102,6 +102,12 @@ static const struct mtk_spi_compatible mt2712_compat = {
+ 	.must_tx = true,
+ };
+ 
++static const struct mtk_spi_compatible mt6765_compat = {
++	.need_pad_sel = true,
++	.must_tx = true,
++	.enhance_timing = true,
++};
++
+ static const struct mtk_spi_compatible mt7622_compat = {
+ 	.must_tx = true,
+ 	.enhance_timing = true,
+@@ -137,6 +143,9 @@ static const struct of_device_id mtk_spi_of_match[] = {
+ 	{ .compatible = "mediatek,mt6589-spi",
+ 		.data = (void *)&mtk_common_compat,
+ 	},
++	{ .compatible = "mediatek,mt6765-spi",
++		.data = (void *)&mt6765_compat,
++	},
+ 	{ .compatible = "mediatek,mt7622-spi",
+ 		.data = (void *)&mt7622_compat,
+ 	},
+-- 
+2.6.4
