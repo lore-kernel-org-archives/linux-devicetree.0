@@ -1,43 +1,28 @@
-Return-Path: <SRS0=w3Ry=XA=amlogic.com=Jianxin.Pan@kernel.org>
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH v2 1/4] soc: amlogic: meson-gx-socinfo: Add A1 and A113L IDs
-Date: Thu, 5 Sep 2019 03:07:27 -0400
-Message-ID: <1567667251-33466-2-git-send-email-jianxin.pan@amlogic.com>
-In-Reply-To: <1567667251-33466-1-git-send-email-jianxin.pan@amlogic.com>
-References: <1567667251-33466-1-git-send-email-jianxin.pan@amlogic.com>
+Return-Path: <SRS0=xE6g=XG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from host15-232-177-94.static.arubacloud.fr ([94.177.232.15]:45020
+        "EHLO mail.qeaudio.ml" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1727329AbfIKJhB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Sep 2019 05:37:01 -0400
+Subject: September Inquiry 2019
+From: Julian Smith <juliansmith@126.com>
+Reply-To: julian.smith@list.ru
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
-Cc: Jianxin Pan <jianxin.pan@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Tao Zeng <tao.zeng@amlogic.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Message-Id: <20190911092235.2C871624B9@mail.qeaudio.ml>
+Date: Wed, 11 Sep 2019 05:22:35 -0400 (EDT)
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add the SoC IDs for the A113L Amlogic A1 SoC.
+Hi,friend,
 
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/soc/amlogic/meson-gx-socinfo.c | 2 ++
- 1 file changed, 2 insertions(+)
+This is Julian Smith and i am purchasing manager from E-cloth Co.,LTD in the UK.
+We are glad to know about your company from the web and we are interested in your products.
+Could you kindly send us your Latest catalog and price list for our trial order.
 
-diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
-index 6d0d04f..3c86d8d 100644
---- a/drivers/soc/amlogic/meson-gx-socinfo.c
-+++ b/drivers/soc/amlogic/meson-gx-socinfo.c
-@@ -40,6 +40,7 @@ static const struct meson_gx_soc_id {
- 	{ "G12A", 0x28 },
- 	{ "G12B", 0x29 },
- 	{ "SM1", 0x2b },
-+	{ "A1", 0x2c },
- };
- 
- static const struct meson_gx_package_id {
-@@ -68,6 +69,7 @@ static const struct meson_gx_package_id {
- 	{ "S922X", 0x29, 0x40, 0xf0 },
- 	{ "A311D", 0x29, 0x10, 0xf0 },
- 	{ "S905X3", 0x2b, 0x5, 0xf },
-+	{ "A113L", 0x2c, 0x0, 0xf8 },
- };
- 
- static inline unsigned int socinfo_to_major(u32 socinfo)
--- 
-2.7.4
+Thanks and Best Regards,
+
+Ms Julian Smith
+Purchasing Manager
+E-cloth Co.,LTD
