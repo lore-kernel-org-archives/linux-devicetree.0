@@ -1,14 +1,16 @@
-From: Gilles Doffe <gilles.doffe@savoirfairelinux.com>
-Subject: Re: [PATCH v2] arm: dts: imx6qdl: add gpio expander pca9535
-Date: Thu, 12 Sep 2019 06:01:54 -0400 (EDT)
-Message-ID: <978100557.7721358.1568282514403.JavaMail.zimbra@savoirfairelinux.com>
-References: <20190719104615.5329-1-gilles.doffe@savoirfairelinux.com>
- <20190722075341.e4ve45rneusiogtk@pengutronix.de>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH RFC] gpio: define gpio-init nodes to initialize pins
+ similar to hogs
+Date: Thu, 12 Sep 2019 12:06:55 +0200
+Message-ID: <20190912100655.jucqrh2jaf6vgwm2@pengutronix.de>
+References: <20190909105919.30418-1-u.kleine-koenig@pengutronix.de>
+ <CACRpkdZTzYtxjmiEnbvSn0-WQtxADLrxJGb_Q83gtRFhcShRiQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190722075341.e4ve45rneusiogtk@pengutronix.de>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZTzYtxjmiEnbvSn0-WQtxADLrxJGb_Q83gtRFhcShRiQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,50 +20,118 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: mark rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, shawnguo <shawnguo@kernel.org>, s hauer <s.hauer@pengutronix.de>, rennes <rennes@savoirfairelinux.com>, linux-kernel <linux-kernel@vger.kernel.org>, robh+dt <robh+dt@kernel.org>, linux-imx <linux-imx@nxp.com>, kernel <kernel@pengutronix.de>, =?utf-8?Q?J=C3=A9rome?= Oufella <jerome.oufella@savoirfairelinux.com>, festevam <festevam@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyY28sCgpUaGFua3MgZm9yIHlvdXIgcmVwbHkgYW5kIHNvcnJ5IGFib3V0IHRoZSBkZWxh
-eS4KCi0tLS0tIExlIDIyIEp1aWwgMTksIMOgIDk6NTMsIE1hcmNvIEZlbHNjaCBtLmZlbHNjaEBw
-ZW5ndXRyb25peC5kZSBhIMOpY3JpdCA6Cgo+IEhpIEdpbGxlcywKPiAKPiBjYW4geW91IGFkYXB0
-IHRoZSBwYXRjaCB0aXRsZSwgSSBhc3N1bWVkIHRoYXQgdGhlIGJhc2UgZHRzaSBpcyBhZGRpbmcg
-YQo+IGdwaW8tZXhwYW5kZXIgd2hpY2ggbWFrZXMgbm8gc2Vuc2UuCgpNeSBmaXJzdCBpbnRlbnQg
-d2FzIHRvIGFkZCB0aGUgZ3Bpby1leHBhbmRlciBwY2E5NTM1IGludG8gdGhlIGlteDZxLXJleC1w
-cm8uZHRzIGFuZCBpbiBhIGZ1dHVyZSBpbXg2cXAtcmV4LXVsdHJhLmR0cwpIb3dldmVyIEkgbm90
-aWNlZCB0aGF0IHRoZSBzZ3RsNTAwMCB3YXMgYWxyZWFkeSBpbiB0aGUgZHRzaS4KSXQgaXMgbWF5
-YmUgZHVlIHRvIHRoZSBmYWN0IHRoYXQgbGlrZSB0aGUgcGNhOTUzNSwgdGhlIHNndGw1MDAwIGlz
-IHByZXNlbnQgb24gdGhlIGJhc2Vib2FyZCBub3Qgb24gdGhlIFNPTS4KVGh1cyBJIGd1ZXNzIHRo
-YXQgYmFzZWJvYXJkIHN0dWZmIGNvbW1vbiB0byBhbGwgcmV4IFNPTSBzaG91bGQgYmUgaW4gaW14
-NnFkbC1yZXguZHRzaSBhbmQgbm90IGluIHRoZSBkdHMuCkRvZXMtaXQgc2VlbSBjb3JyZWN0IHRv
-IHlvdSA/Cgo+IAo+IE9uIDE5LTA3LTE5IDEyOjQ2LCBHaWxsZXMgRE9GRkUgd3JvdGU6Cj4+IFRo
-ZSBwY2E5NTM1IGdwaW8gZXhwYW5kZXIgaXMgcHJlc2VudCBvbiB0aGUgUmV4IGJhc2Vib2FyZCwg
-YnV0IG1pc3NpbmcKPj4gZnJvbSB0aGUgZHRzaS4KPj4gCj4+IEFkZCB0aGUgbmV3IGdwaW8gY29u
-dHJvbGxlciBhbmQgdGhlIGFzc29jaWF0ZWQgaW50ZXJydXB0IGxpbmUKPj4gTVg2UURMX1BBRF9O
-QU5ERl9DUzNfX0dQSU82X0lPMTYuCj4+IAo+PiBTaWduZWQtb2ZmLWJ5OiBHaWxsZXMgRE9GRkUg
-PGdpbGxlcy5kb2ZmZUBzYXZvaXJmYWlyZWxpbnV4LmNvbT4KPj4gLS0tCj4gCj4gSGF2aW5nIGEg
-Y2hhbmdlbG9nIHdvdWxkIGJlIG5pY2UgdG9vLgo+IAo+PiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14
-NnFkbC1yZXguZHRzaSB8IDE5ICsrKysrKysrKysrKysrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2Vk
-LCAxOSBpbnNlcnRpb25zKCspCj4+IAo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnFkbC1yZXguZHRzaQo+PiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtcmV4LmR0c2kK
-Pj4gaW5kZXggOTdmMTY1OTE0NGVhLi5iNTE3ZWZiMjJmY2IgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gv
-YXJtL2Jvb3QvZHRzL2lteDZxZGwtcmV4LmR0c2kKPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NnFkbC1yZXguZHRzaQo+PiBAQCAtMTM2LDYgKzEzNiwxOSBAQAo+PiAgCQljb21wYXRpYmxl
-ID0gImF0bWVsLDI0YzAyIjsKPj4gIAkJcmVnID0gPDB4NTc+Owo+PiAgCX07Cj4+ICsKPj4gKwlw
-Y2E5NTM1OiBncGlvOEAyNyB7Cj4+ICsJCWNvbXBhdGlibGUgPSAibnhwLHBjYTk1MzUiOwo+PiAr
-CQlyZWcgPSA8MHgyNz47Cj4gCj4gVGhlIGkyYyBkZXZpY2VzIGFyZSBvcmRlcmQgYnkgdGhlaXIg
-aTJjLWFkZHJlc3NlcyBzdGFydGluZyBmcm9tIHRoZQo+IGxvd2VzdC4KPgoKQWNrLgoKPj4gKwkJ
-Z3Bpby1jb250cm9sbGVyOwo+PiArCQkjZ3Bpby1jZWxscyA9IDwyPjsKPj4gKwkJcGluY3RybC1u
-YW1lcyA9ICJkZWZhdWx0IjsKPj4gKwkJcGluY3RybC0wID0gPCZwaW5jdHJsX3BjYTk1MzU+Owo+
-PiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvNj47Cj4+ICsJCWludGVycnVwdHMgPSA8MTYg
-SVJRX1RZUEVfTEVWRUxfTE9XPjsKPj4gKwkJaW50ZXJydXB0LWNvbnRyb2xsZXI7Cj4+ICsJCSNp
-bnRlcnJ1cHQtY2VsbHMgPSA8Mj47Cj4+ICsJfTsKPj4gIH07Cj4+ICAKPj4gICZpMmMzIHsKPj4g
-QEAgLTIzNyw2ICsyNTAsMTIgQEAKPj4gIAkJCT47Cj4+ICAJCX07Cj4+ICAKPj4gKwkJcGluY3Ry
-bF9wY2E5NTM1OiBwY2E5NTM1IHsKPj4gKwkJCWZzbCxwaW5zID0gPAo+PiArCQkJCU1YNlFETF9Q
-QURfTkFOREZfQ1MzX19HUElPNl9JTzE2CTB4MDAwMTcwNTkKPiAKPiBUaGUgcGlubXV4IGJlbG93
-IGRvbid0IHVzZSB0aGUgbGVhZGluZyB6ZXJvJ3MgaWYgeW91IGFyZSB0aGUgZmlyc3QgSQo+IHdv
-dWxkIGRyb3AgdGhhdC4KPiAKPiBSZWdhcmRzLAo+ICBNYXJjbwo+CgpBY2suCgpSZWdhcmRzLApH
-aWxsZXMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+On Thu, Sep 12, 2019 at 10:05:23AM +0100, Linus Walleij wrote:
+> On Mon, Sep 9, 2019 at 11:59 AM Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> =
+
+> > Sometimes it is handy to be able to easily define a "safe" state for a
+> > GPIO. This might for example be used to ensure that an ethernet phy is
+> > properly reset during startup or just that all pins have a defined state
+> > to minimize leakage current. As such a pin must be requestable (and
+> > changable) by a device driver, a gpio-hog cannot be used.
+> >
+> > So define a GPIO initializer with a syntax identical to a GPIO hog just
+> > using "gpio-init" as identifier instead of "gpio-hog".
+> >
+> > The usage I have in mind (and also implemented in a custom patch stack
+> > on top of barebox already) is targeting the bootloader and not
+> > necessarily Linux as such an boot-up initialisation should be done as
+> > early as possible.
+> >
+> > Not-yet-signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.=
+de>
+> > ---
+> > Hello,
+> >
+> > maybe it also makes sense to use "gpio-safe"? Maybe it (then) makes
+> > sense to reset the gpio in the indicated state after it is released?
+> >
+> > Also it might be beneficial to make the wording more explicit in the
+> > description and for example tell that only one of gpio-hog and gpio-init
+> > must be provided.
+> =
+
+> It's no secret that I am in favor of this approach, as I like consistency
+> with the hogs.
+> =
+
+> The DT people have been against, as they prefer something like an
+> initial array of values akin to gpio-names IIRC. But this is a good
+> time for them to speak up.
+
+To be fair, I added them to Cc:. For the new readers: The diff I
+suggested looks as follows (probably whitespace broken as I cut-n-pasted):
+
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentat=
+ion/devicetree/bindings/gpio/gpio.txt
+> index a8895d339bfe..5b7883f5520f 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -182,13 +182,16 @@ gpio-controller@00000000 {
+>                 "poweroff", "reset";
+>  }
+> =
+
+> -The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechan=
+ism
+> -providing automatic GPIO request and configuration as part of the
+> -gpio-controller's driver probe function.
+> +The GPIO chip may contain GPIO hog and init definitions. GPIO hogging is=
+ a
+> +mechanism providing automatic GPIO request and configuration as part of =
+the
+> +gpio-controller's driver probe function. An GPIO initializer is similar =
+but
+> +doesn't prevent later requesting and reconfiguration.
+> =
+
+>  Each GPIO hog definition is represented as a child node of the GPIO cont=
+roller.
+>  Required properties:
+>  - gpio-hog:   A property specifying that this child node represents a GP=
+IO hog.
+> +- gpio-init:  A property specifying that this child node represents a GP=
+IO
+> +              initializer.
+>  - gpios:      Store the GPIO information (id, flags, ...) for each GPIO =
+to
+>                affect. Shall contain an integer multiple of the number of=
+ cells
+>                specified in its parent node (GPIO controller node).
+
+How would this alternate approach look like? Something like:
+
+	gpio-controler@123450 {
+		compatible =3D "..";
+		gpio-controller;
+		#gpio-cells =3D <2>;
+
+		init =3D "", "output-high", "", "input", "", "", "output-low";
+	};
+
+? Compared to the solution I suggested (and hogs) this differs as you cannot
+pass flags like GPIO_ACTIVE_LOW.
+
+(Sidenode: As
+
+	mygpio {
+		gpio-hog;
+		gpios =3D <5 GPIO_ACTIVE_LOW>;
+		output-low;
+	};
+
+makes AFAIK the output high it would be less surprising if the binding
+supported "output-active" and "output-inactive".)
+
+Best regards
+Uwe
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
