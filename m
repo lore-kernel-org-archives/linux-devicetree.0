@@ -1,54 +1,40 @@
 From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH v4 0/4] arm64: Add basic support for Amlogic A1 SoC Family
-Date: Thu, 12 Sep 2019 04:19:26 -0400
-Message-ID: <1568276370-54181-1-git-send-email-jianxin.pan@amlogic.com>
+Subject: [PATCH v4 2/4] dt-bindings: arm: amlogic: add A1 bindings
+Date: Thu, 12 Sep 2019 04:19:28 -0400
+Message-ID: <1568276370-54181-3-git-send-email-jianxin.pan@amlogic.com>
+References: <1568276370-54181-1-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1568276370-54181-1-git-send-email-jianxin.pan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
 Cc: Jianxin Pan <jianxin.pan@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Tao Zeng <tao.zeng@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
+Add bindings for the new Amlogic A1 SoC family.
+
 A1 is an application processor designed for smart audio and IoT applications,
-with Dual core ARM Cortex-A35 CPU. Unlike the previous GXL and G12 series,
-there is no Cortex-M3 AO CPU in it.
+with dual core Cortex-A35.
 
-This serial add basic support for the Amlogic A1 based Amlogic AD401 board:
-which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
-Timer, UART. It's capable of booting up into the serial console.
+Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/amlogic.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-The pclk for uart_AO_B need to be fixed once A1 clock driver is merged.
-In this version, it rely on bootloader to enable the pclk gate
-
-Changes since v3 at [2]:
- - remove 0x in bus
-
-Changes since v2 at [1]:
- - add bus in dts according Martin's suggestion
- - remove useless comment line
-
-Changes since v1 at [0]:
- - fix coding style
- - collect Reviewed-by
-
-[0] https://lore.kernel.org/linux-amlogic/1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com
-[1] https://lore.kernel.org/linux-amlogic/1567667251-33466-1-git-send-email-jianxin.pan@amlogic.com
-[2] https://lore.kernel.org/linux-amlogic/1568216290-84219-1-git-send-email-jianxin.pan@amlogic.com
-Jianxin Pan (4):
-  soc: amlogic: meson-gx-socinfo: Add A1 and A113L IDs
-  dt-bindings: arm: amlogic: add A1 bindings
-  dt-bindings: arm: amlogic: add Amlogic AD401 bindings
-  arm64: dts: add support for A1 based Amlogic AD401
-
- Documentation/devicetree/bindings/arm/amlogic.yaml |   6 +
- arch/arm64/boot/dts/amlogic/Makefile               |   1 +
- arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts     |  30 +++++
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi          | 130 +++++++++++++++++++++
- drivers/soc/amlogic/meson-gx-socinfo.c             |   2 +
- 5 files changed, 169 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
+index 99015ce..0ef45ac 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.yaml
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -156,4 +156,8 @@ properties:
+               - seirobotics,sei610
+               - khadas,vim3l
+           - const: amlogic,sm1
++
++      - description: Boards with the Amlogic Meson A1 A113L SoC
++        items:
++          - const: amlogic,a1
+ ...
 -- 
 2.7.4
