@@ -1,79 +1,75 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v3 2/2] backlight: lm3630a: add an enable gpio for the
- HWEN pin
-Date: Thu, 12 Sep 2019 06:40:24 -0500
-Message-ID: <4b3407bb-d171-6a70-8252-573a4afbd056@ti.com>
-References: <20190911172106.12843-1-andreas@kemnade.info>
- <20190911172106.12843-3-andreas@kemnade.info>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [PATCHv5 01/10] dt-bindings: omap: add new binding for PRM instances
+Date: Thu, 12 Sep 2019 14:39:07 +0300
+Message-ID: <20190912113916.20093-2-t-kristo@ti.com>
+References: <20190912113916.20093-1-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190911172106.12843-3-andreas@kemnade.info>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>, lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190912113916.20093-1-t-kristo@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-omap@vger.kernel.org, ssantosh@kernel.org, p.zabel@pengutronix.de, robh+dt@kernel.org, tony@atomide.com, s-anna@ti.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Andreas
+Add new binding for OMAP PRM (Power and Reset Manager) instances. Each
+of these will act as a power domain controller and potentially as a reset
+provider.
 
-On 9/11/19 12:21 PM, Andreas Kemnade wrote:
-> For now just enable it in the probe function to allow i2c
-> access. Disabling also means resetting the register values
-> to default and according to the datasheet does not give
-> power savings.
->
-> Tested on Kobo Clara HD.
->
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
-> changes in v2:
-> - simplification
-> - correct gpio direction initialisation
->
-> changes in v3:
-> - removed legacy include
->
->   drivers/video/backlight/lm3630a_bl.c | 9 +++++++++
->   1 file changed, 9 insertions(+)
->
-> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-> index 8f84f3684f04..d9e67b9b2571 100644
-> --- a/drivers/video/backlight/lm3630a_bl.c
-> +++ b/drivers/video/backlight/lm3630a_bl.c
-> @@ -12,6 +12,7 @@
->   #include <linux/uaccess.h>
->   #include <linux/interrupt.h>
->   #include <linux/regmap.h>
-> +#include <linux/gpio/consumer.h>
->   #include <linux/pwm.h>
->   #include <linux/platform_data/lm3630a_bl.h>
->   
-> @@ -48,6 +49,7 @@ struct lm3630a_chip {
->   	struct lm3630a_platform_data *pdata;
->   	struct backlight_device *bleda;
->   	struct backlight_device *bledb;
-> +	struct gpio_desc *enable_gpio;
->   	struct regmap *regmap;
->   	struct pwm_device *pwmd;
->   };
-> @@ -535,6 +537,13 @@ static int lm3630a_probe(struct i2c_client *client,
->   	}
->   	pchip->pdata = pdata;
->   
-> +	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
-> +						GPIOD_OUT_HIGH);
-> +	if (IS_ERR(pchip->enable_gpio)) {
-> +		rval = PTR_ERR(pchip->enable_gpio);
-> +		return rval;
-> +	}
-> +
->   	/* chip initialize */
->   	rval = lm3630a_chip_init(pchip);
->   	if (rval < 0) {
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+---
+v5: - dropped the clocks property as the dependency towards clocks was
+      removed
+    - changed the name of the node to be power-controller
 
-Thanks for the explanation
+ .../devicetree/bindings/arm/omap/prm-inst.txt | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/prm-inst.txt
 
-It looks good to me
+diff --git a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+new file mode 100644
+index 000000000000..942f7aac3b00
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+@@ -0,0 +1,27 @@
++OMAP PRM instance bindings
++
++Power and Reset Manager is an IP block on OMAP family of devices which
++handle the power domains and their current state, and provide reset
++handling for the domains and/or separate IP blocks under the power domain
++hierarchy.
++
++Required properties:
++- compatible:	Must be one of:
++		"ti,am3-prm-inst"
++		"ti,am4-prm-inst"
++		"ti,omap4-prm-inst"
++		"ti,omap5-prm-inst"
++		"ti,dra7-prm-inst"
++- reg:		Contains PRM instance register address range
++		(base address and length)
++
++Optional properties:
++- #reset-cells:	Should be 1 if the PRM instance in question supports resets.
++
++Example:
++
++prm_dsp2: power-controller@1b00 {
++	compatible = "ti,dra7-prm-inst";
++	reg = <0x1b00 0x40>;
++	#reset-cells = <1>;
++};
+-- 
+2.17.1
 
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
