@@ -1,8 +1,7 @@
 From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH V3 07/15] arm64: dts: imx8: switch to two cell scu clock
- binding
-Date: Thu, 12 Sep 2019 23:30:44 +0800
-Message-ID: <1568302252-28066-8-git-send-email-aisheng.dong@nxp.com>
+Subject: [PATCH V3 08/15] arm64: dts: imx8: switch to new lpcg clock binding
+Date: Thu, 12 Sep 2019 23:30:45 +0800
+Message-ID: <1568302252-28066-9-git-send-email-aisheng.dong@nxp.com>
 References: <1568302252-28066-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,387 +21,455 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, dongas86@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, oliver.graute@gmail.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-switch to two cell scu clock binding
+switch to new lpcg clock binding
 
 Tested-by: Oliver Graute <oliver.graute@kococonnector.com>
 Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
 ChangeLog:
 v2->v3:
- * no changes except rebase
+ * use new clock-indices IDs
 v1->v2:
- * split from lpcg binding changes
+ * split scu clock changes
 ---
- arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi | 24 +++++-----
- arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi | 20 ++++----
- arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi | 64 +++++++++++++++----------
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi      | 10 ++--
- 4 files changed, 67 insertions(+), 51 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi    | 46 ++++++++++++----------
+ arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi    | 44 ++++++++++-----------
+ arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi    | 13 +++---
+ arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi |  4 --
+ arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi |  4 --
+ arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi |  4 --
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |  1 +
+ 7 files changed, 56 insertions(+), 60 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
-index 39dfdcb..63ad3a8 100644
+index 63ad3a8..8e1077f 100644
 --- a/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8-ss-adma.dtsi
-@@ -116,7 +116,7 @@ adma_subsys: bus@59000000 {
+@@ -19,13 +19,8 @@ adma_subsys: bus@59000000 {
+ 		clock-output-names = "dma_ipg_clk";
+ 	};
+ 
+-	/* LPCG clocks */
+-	adma_lpcg: clock-controller@59000000 {
+-		reg = <0x59000000 0x2000000>;
+-		#clock-cells = <1>;
+-	};
+-
+ 	dsp_lpcg: clock-controller@59580000 {
++		compatible = "fsl,imx8qxp-lpcg";
+ 		reg = <0x59580000 0x10000>;
+ 		#clock-cells = <1>;
+ 		clocks = <&dma_ipg_clk>,
+@@ -40,6 +35,7 @@ adma_subsys: bus@59000000 {
+ 	};
+ 
+ 	dsp_ram_lpcg: clock-controller@59590000 {
++		compatible = "fsl,imx8qxp-lpcg";
+ 		reg = <0x59590000 0x10000>;
+ 		#clock-cells = <1>;
+ 		clocks = <&dma_ipg_clk>;
+@@ -51,9 +47,9 @@ adma_subsys: bus@59000000 {
+ 	adma_dsp: dsp@596e8000 {
+ 		compatible = "fsl,imx8qxp-dsp";
+ 		reg = <0x596e8000 0x88000>;
+-		clocks = <&adma_lpcg IMX_ADMA_LPCG_DSP_IPG_CLK>,
+-			<&adma_lpcg IMX_ADMA_LPCG_OCRAM_IPG_CLK>,
+-			<&adma_lpcg IMX_ADMA_LPCG_DSP_CORE_CLK>;
++		clocks = <&dsp_lpcg IMX_LPCG_CLK_5>,
++			 <&dsp_ram_lpcg IMX_LPCG_CLK_4>,
++			 <&dsp_lpcg IMX_LPCG_CLK_7>;
+ 		clock-names = "ipg", "ocram", "core";
+ 		power-domains = <&pd IMX_SC_R_MU_13A>,
+ 			<&pd IMX_SC_R_MU_13B>,
+@@ -73,8 +69,8 @@ adma_subsys: bus@59000000 {
+ 		reg = <0x5a060000 0x1000>;
+ 		interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gic>;
+-		clocks = <&adma_lpcg IMX_ADMA_LPCG_UART0_IPG_CLK>,
+-			 <&adma_lpcg IMX_ADMA_LPCG_UART0_BAUD_CLK>;
++		clocks = <&uart0_lpcg IMX_LPCG_CLK_4>,
++			 <&uart0_lpcg IMX_LPCG_CLK_0>;
+ 		clock-names = "ipg", "baud";
+ 		power-domains = <&pd IMX_SC_R_UART_0>;
+ 		status = "disabled";
+@@ -84,8 +80,8 @@ adma_subsys: bus@59000000 {
+ 		reg = <0x5a070000 0x1000>;
+ 		interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gic>;
+-		clocks = <&adma_lpcg IMX_ADMA_LPCG_UART1_IPG_CLK>,
+-			 <&adma_lpcg IMX_ADMA_LPCG_UART1_BAUD_CLK>;
++		clocks = <&uart1_lpcg IMX_LPCG_CLK_4>,
++			 <&uart1_lpcg IMX_LPCG_CLK_0>;
+ 		clock-names = "ipg", "baud";
+ 		power-domains = <&pd IMX_SC_R_UART_1>;
+ 		status = "disabled";
+@@ -95,8 +91,8 @@ adma_subsys: bus@59000000 {
+ 		reg = <0x5a080000 0x1000>;
+ 		interrupts = <GIC_SPI 227 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gic>;
+-		clocks = <&adma_lpcg IMX_ADMA_LPCG_UART2_IPG_CLK>,
+-			 <&adma_lpcg IMX_ADMA_LPCG_UART2_BAUD_CLK>;
++		clocks = <&uart2_lpcg IMX_LPCG_CLK_4>,
++			 <&uart2_lpcg IMX_LPCG_CLK_0>;
+ 		clock-names = "ipg", "baud";
+ 		power-domains = <&pd IMX_SC_R_UART_2>;
+ 		status = "disabled";
+@@ -106,14 +102,15 @@ adma_subsys: bus@59000000 {
+ 		reg = <0x5a090000 0x1000>;
+ 		interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-parent = <&gic>;
+-		clocks = <&adma_lpcg IMX_ADMA_LPCG_UART3_IPG_CLK>,
+-			 <&adma_lpcg IMX_ADMA_LPCG_UART3_BAUD_CLK>;
++		clocks = <&uart3_lpcg IMX_LPCG_CLK_4>,
++			 <&uart3_lpcg IMX_LPCG_CLK_0>;
+ 		clock-names = "ipg", "baud";
+ 		power-domains = <&pd IMX_SC_R_UART_3>;
+ 		status = "disabled";
+ 	};
+ 
  	uart0_lpcg: clock-controller@5a460000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5a460000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_ADMA_UART0_CLK>,
-+		clocks = <&clk IMX_SC_R_UART_0 IMX_SC_PM_CLK_PER>,
- 			 <&dma_ipg_clk>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
- 		clock-output-names = "uart0_lpcg_baud_clk",
-@@ -127,7 +127,7 @@ adma_subsys: bus@59000000 {
+ 		clocks = <&clk IMX_SC_R_UART_0 IMX_SC_PM_CLK_PER>,
+@@ -125,6 +122,7 @@ adma_subsys: bus@59000000 {
+ 	};
+ 
  	uart1_lpcg: clock-controller@5a470000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5a470000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_ADMA_UART1_CLK>,
-+		clocks = <&clk IMX_SC_R_UART_1 IMX_SC_PM_CLK_PER>,
- 			 <&dma_ipg_clk>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
- 		clock-output-names = "uart1_lpcg_baud_clk",
-@@ -138,7 +138,7 @@ adma_subsys: bus@59000000 {
+ 		clocks = <&clk IMX_SC_R_UART_1 IMX_SC_PM_CLK_PER>,
+@@ -136,6 +134,7 @@ adma_subsys: bus@59000000 {
+ 	};
+ 
  	uart2_lpcg: clock-controller@5a480000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5a480000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_ADMA_UART2_CLK>,
-+		clocks = <&clk IMX_SC_R_UART_2 IMX_SC_PM_CLK_PER>,
- 			 <&dma_ipg_clk>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
- 		clock-output-names = "uart2_lpcg_baud_clk",
-@@ -149,7 +149,7 @@ adma_subsys: bus@59000000 {
+ 		clocks = <&clk IMX_SC_R_UART_2 IMX_SC_PM_CLK_PER>,
+@@ -147,6 +146,7 @@ adma_subsys: bus@59000000 {
+ 	};
+ 
  	uart3_lpcg: clock-controller@5a490000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5a490000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_ADMA_UART3_CLK>,
-+		clocks = <&clk IMX_SC_R_UART_3 IMX_SC_PM_CLK_PER>,
- 			 <&dma_ipg_clk>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
- 		clock-output-names = "uart3_lpcg_baud_clk",
-@@ -163,7 +163,7 @@ adma_subsys: bus@59000000 {
+ 		clocks = <&clk IMX_SC_R_UART_3 IMX_SC_PM_CLK_PER>,
+@@ -161,7 +161,7 @@ adma_subsys: bus@59000000 {
+ 		reg = <0x5a800000 0x4000>;
+ 		interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
  		interrupt-parent = <&gic>;
- 		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C0_CLK>;
+-		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C0_CLK>;
++		clocks = <&i2c0_lpcg IMX_LPCG_CLK_0>;
  		clock-names = "per";
--		assigned-clocks = <&clk IMX_ADMA_I2C0_CLK>;
-+		assigned-clocks = <&clk IMX_SC_R_I2C_0 IMX_SC_PM_CLK_PER>;
+ 		assigned-clocks = <&clk IMX_SC_R_I2C_0 IMX_SC_PM_CLK_PER>;
  		assigned-clock-rates = <24000000>;
- 		power-domains = <&pd IMX_SC_R_I2C_0>;
- 		status = "disabled";
-@@ -175,7 +175,7 @@ adma_subsys: bus@59000000 {
+@@ -173,7 +173,7 @@ adma_subsys: bus@59000000 {
+ 		reg = <0x5a810000 0x4000>;
+ 		interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
  		interrupt-parent = <&gic>;
- 		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C1_CLK>;
+-		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C1_CLK>;
++		clocks = <&i2c1_lpcg IMX_LPCG_CLK_0>;
  		clock-names = "per";
--		assigned-clocks = <&clk IMX_ADMA_I2C1_CLK>;
-+		assigned-clocks = <&clk IMX_SC_R_I2C_1 IMX_SC_PM_CLK_PER>;
+ 		assigned-clocks = <&clk IMX_SC_R_I2C_1 IMX_SC_PM_CLK_PER>;
  		assigned-clock-rates = <24000000>;
- 		power-domains = <&pd IMX_SC_R_I2C_1>;
- 		status = "disabled";
-@@ -187,7 +187,7 @@ adma_subsys: bus@59000000 {
+@@ -185,7 +185,7 @@ adma_subsys: bus@59000000 {
+ 		reg = <0x5a820000 0x4000>;
+ 		interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
  		interrupt-parent = <&gic>;
- 		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C2_CLK>;
+-		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C2_CLK>;
++		clocks = <&i2c2_lpcg IMX_LPCG_CLK_0>;
  		clock-names = "per";
--		assigned-clocks = <&clk IMX_ADMA_I2C2_CLK>;
-+		assigned-clocks = <&clk IMX_SC_R_I2C_2 IMX_SC_PM_CLK_PER>;
+ 		assigned-clocks = <&clk IMX_SC_R_I2C_2 IMX_SC_PM_CLK_PER>;
  		assigned-clock-rates = <24000000>;
- 		power-domains = <&pd IMX_SC_R_I2C_2>;
- 		status = "disabled";
-@@ -199,7 +199,7 @@ adma_subsys: bus@59000000 {
+@@ -197,7 +197,7 @@ adma_subsys: bus@59000000 {
+ 		reg = <0x5a830000 0x4000>;
+ 		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
  		interrupt-parent = <&gic>;
- 		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C3_CLK>;
+-		clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C3_CLK>;
++		clocks = <&i2c3_lpcg IMX_LPCG_CLK_0>;
  		clock-names = "per";
--		assigned-clocks = <&clk IMX_ADMA_I2C3_CLK>;
-+		assigned-clocks = <&clk IMX_SC_R_I2C_3 IMX_SC_PM_CLK_PER>;
+ 		assigned-clocks = <&clk IMX_SC_R_I2C_3 IMX_SC_PM_CLK_PER>;
  		assigned-clock-rates = <24000000>;
- 		power-domains = <&pd IMX_SC_R_I2C_3>;
- 		status = "disabled";
-@@ -208,7 +208,7 @@ adma_subsys: bus@59000000 {
+@@ -206,6 +206,7 @@ adma_subsys: bus@59000000 {
+ 	};
+ 
  	i2c0_lpcg: clock-controller@5ac00000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5ac00000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_ADMA_I2C0_CLK>,
-+		clocks = <&clk IMX_SC_R_I2C_0 IMX_SC_PM_CLK_PER>,
- 			 <&dma_ipg_clk>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
- 		clock-output-names = "i2c0_lpcg_clk",
-@@ -219,7 +219,7 @@ adma_subsys: bus@59000000 {
+ 		clocks = <&clk IMX_SC_R_I2C_0 IMX_SC_PM_CLK_PER>,
+@@ -217,6 +218,7 @@ adma_subsys: bus@59000000 {
+ 	};
+ 
  	i2c1_lpcg: clock-controller@5ac10000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5ac10000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_ADMA_I2C1_CLK>,
-+		clocks = <&clk IMX_SC_R_I2C_1 IMX_SC_PM_CLK_PER>,
- 			 <&dma_ipg_clk>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
- 		clock-output-names = "i2c1_lpcg_clk",
-@@ -230,7 +230,7 @@ adma_subsys: bus@59000000 {
+ 		clocks = <&clk IMX_SC_R_I2C_1 IMX_SC_PM_CLK_PER>,
+@@ -228,6 +230,7 @@ adma_subsys: bus@59000000 {
+ 	};
+ 
  	i2c2_lpcg: clock-controller@5ac20000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5ac20000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_ADMA_I2C2_CLK>,
-+		clocks = <&clk IMX_SC_R_I2C_2 IMX_SC_PM_CLK_PER>,
- 			 <&dma_ipg_clk>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
- 		clock-output-names = "i2c2_lpcg_clk",
-@@ -241,7 +241,7 @@ adma_subsys: bus@59000000 {
+ 		clocks = <&clk IMX_SC_R_I2C_2 IMX_SC_PM_CLK_PER>,
+@@ -239,6 +242,7 @@ adma_subsys: bus@59000000 {
+ 	};
+ 
  	i2c3_lpcg: clock-controller@5ac30000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5ac30000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_ADMA_I2C3_CLK>,
-+		clocks = <&clk IMX_SC_R_I2C_3 IMX_SC_PM_CLK_PER>,
- 			 <&dma_ipg_clk>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
- 		clock-output-names = "i2c3_lpcg_clk",
+ 		clocks = <&clk IMX_SC_R_I2C_3 IMX_SC_PM_CLK_PER>,
 diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
-index 0a0e479..60f0cda 100644
+index 60f0cda..f3de10f 100644
 --- a/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi
-@@ -41,7 +41,7 @@ conn_subsys: bus@5b000000 {
- 			 <&conn_lpcg IMX_CONN_LPCG_SDHC0_PER_CLK>,
- 			 <&conn_lpcg IMX_CONN_LPCG_SDHC0_HCLK>;
+@@ -37,9 +37,9 @@ conn_subsys: bus@5b000000 {
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
+ 		reg = <0x5b010000 0x10000>;
+-		clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC0_IPG_CLK>,
+-			 <&conn_lpcg IMX_CONN_LPCG_SDHC0_PER_CLK>,
+-			 <&conn_lpcg IMX_CONN_LPCG_SDHC0_HCLK>;
++		clocks = <&sdhc0_lpcg IMX_LPCG_CLK_4>,
++			 <&sdhc0_lpcg IMX_LPCG_CLK_0>,
++			 <&sdhc0_lpcg IMX_LPCG_CLK_5>;
  		clock-names = "ipg", "per", "ahb";
--		assigned-clocks = <&clk IMX_CONN_SDHC0_CLK>;
-+		assigned-clocks = <&clk IMX_SC_R_SDHC_0 IMX_SC_PM_CLK_PER>;
+ 		assigned-clocks = <&clk IMX_SC_R_SDHC_0 IMX_SC_PM_CLK_PER>;
  		assigned-clock-rates = <200000000>;
- 		power-domains = <&pd IMX_SC_R_SDHC_0>;
- 		status = "disabled";
-@@ -55,7 +55,7 @@ conn_subsys: bus@5b000000 {
- 			 <&conn_lpcg IMX_CONN_LPCG_SDHC1_PER_CLK>,
- 			 <&conn_lpcg IMX_CONN_LPCG_SDHC1_HCLK>;
+@@ -51,9 +51,9 @@ conn_subsys: bus@5b000000 {
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
+ 		reg = <0x5b020000 0x10000>;
+-		clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC1_IPG_CLK>,
+-			 <&conn_lpcg IMX_CONN_LPCG_SDHC1_PER_CLK>,
+-			 <&conn_lpcg IMX_CONN_LPCG_SDHC1_HCLK>;
++		clocks = <&sdhc1_lpcg IMX_LPCG_CLK_4>,
++			 <&sdhc1_lpcg IMX_LPCG_CLK_0>,
++			 <&sdhc1_lpcg IMX_LPCG_CLK_5>;
  		clock-names = "ipg", "per", "ahb";
--		assigned-clocks = <&clk IMX_CONN_SDHC1_CLK>;
-+		assigned-clocks = <&clk IMX_SC_R_SDHC_1 IMX_SC_PM_CLK_PER>;
+ 		assigned-clocks = <&clk IMX_SC_R_SDHC_1 IMX_SC_PM_CLK_PER>;
  		assigned-clock-rates = <200000000>;
- 		power-domains = <&pd IMX_SC_R_SDHC_1>;
- 		fsl,tuning-start-tap = <20>;
-@@ -71,7 +71,7 @@ conn_subsys: bus@5b000000 {
- 			 <&conn_lpcg IMX_CONN_LPCG_SDHC2_PER_CLK>,
- 			 <&conn_lpcg IMX_CONN_LPCG_SDHC2_HCLK>;
+@@ -67,9 +67,9 @@ conn_subsys: bus@5b000000 {
+ 		interrupt-parent = <&gic>;
+ 		interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_HIGH>;
+ 		reg = <0x5b030000 0x10000>;
+-		clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC2_IPG_CLK>,
+-			 <&conn_lpcg IMX_CONN_LPCG_SDHC2_PER_CLK>,
+-			 <&conn_lpcg IMX_CONN_LPCG_SDHC2_HCLK>;
++		clocks = <&sdhc2_lpcg IMX_LPCG_CLK_4>,
++			 <&sdhc2_lpcg IMX_LPCG_CLK_0>,
++			 <&sdhc2_lpcg IMX_LPCG_CLK_5>;
  		clock-names = "ipg", "per", "ahb";
--		assigned-clocks = <&clk IMX_CONN_SDHC2_CLK>;
-+		assigned-clocks = <&clk IMX_SC_R_SDHC_2 IMX_SC_PM_CLK_PER>;
+ 		assigned-clocks = <&clk IMX_SC_R_SDHC_2 IMX_SC_PM_CLK_PER>;
  		assigned-clock-rates = <200000000>;
- 		power-domains = <&pd IMX_SC_R_SDHC_2>;
- 		status = "disabled";
-@@ -120,7 +120,7 @@ conn_subsys: bus@5b000000 {
+@@ -83,10 +83,10 @@ conn_subsys: bus@5b000000 {
+ 			     <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 259 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&conn_lpcg IMX_CONN_LPCG_ENET0_IPG_CLK>,
+-			 <&conn_lpcg IMX_CONN_LPCG_ENET0_AHB_CLK>,
+-			 <&conn_lpcg IMX_CONN_LPCG_ENET0_TX_CLK>,
+-			 <&conn_lpcg IMX_CONN_LPCG_ENET0_ROOT_CLK>;
++		clocks = <&enet0_lpcg IMX_LPCG_CLK_4>,
++			 <&enet0_lpcg IMX_LPCG_CLK_2>,
++			 <&enet0_lpcg IMX_LPCG_CLK_1>,
++			 <&enet0_lpcg IMX_LPCG_CLK_0>;
+ 		clock-names = "ipg", "ahb", "enet_clk_ref", "ptp";
+ 		fsl,num-tx-queues=<3>;
+ 		fsl,num-rx-queues=<3>;
+@@ -100,10 +100,10 @@ conn_subsys: bus@5b000000 {
+ 				<GIC_SPI 260 IRQ_TYPE_LEVEL_HIGH>,
+ 				<GIC_SPI 261 IRQ_TYPE_LEVEL_HIGH>,
+ 				<GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&conn_lpcg IMX_CONN_LPCG_ENET1_IPG_CLK>,
+-			 <&conn_lpcg IMX_CONN_LPCG_ENET1_AHB_CLK>,
+-			 <&conn_lpcg IMX_CONN_LPCG_ENET1_TX_CLK>,
+-			 <&conn_lpcg IMX_CONN_LPCG_ENET1_ROOT_CLK>;
++		clocks = <&enet1_lpcg IMX_LPCG_CLK_4>,
++			 <&enet1_lpcg IMX_LPCG_CLK_2>,
++			 <&enet1_lpcg IMX_LPCG_CLK_1>,
++			 <&enet1_lpcg IMX_LPCG_CLK_0>;
+ 		clock-names = "ipg", "ahb", "enet_clk_ref", "ptp";
+ 		fsl,num-tx-queues=<3>;
+ 		fsl,num-rx-queues=<3>;
+@@ -112,12 +112,8 @@ conn_subsys: bus@5b000000 {
+ 	};
+ 
+ 	/* LPCG clocks */
+-	conn_lpcg: clock-controller-legacy@5b200000 {
+-		reg = <0x5b200000 0xb0000>;
+-		#clock-cells = <1>;
+-	};
+-
  	sdhc0_lpcg: clock-controller@5b200000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5b200000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_CONN_SDHC0_CLK>,
-+		clocks = <&clk IMX_SC_R_SDHC_0 IMX_SC_PM_CLK_PER>,
- 			 <&conn_ipg_clk>, <&conn_axi_clk>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>,
- 				<IMX_LPCG_CLK_5>;
-@@ -133,7 +133,7 @@ conn_subsys: bus@5b000000 {
+ 		clocks = <&clk IMX_SC_R_SDHC_0 IMX_SC_PM_CLK_PER>,
+@@ -131,6 +127,7 @@ conn_subsys: bus@5b000000 {
+ 	};
+ 
  	sdhc1_lpcg: clock-controller@5b210000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5b210000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_CONN_SDHC1_CLK>,
-+		clocks = <&clk IMX_SC_R_SDHC_1 IMX_SC_PM_CLK_PER>,
- 			 <&conn_ipg_clk>, <&conn_axi_clk>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>,
- 				<IMX_LPCG_CLK_5>;
-@@ -146,7 +146,7 @@ conn_subsys: bus@5b000000 {
+ 		clocks = <&clk IMX_SC_R_SDHC_1 IMX_SC_PM_CLK_PER>,
+@@ -144,6 +141,7 @@ conn_subsys: bus@5b000000 {
+ 	};
+ 
  	sdhc2_lpcg: clock-controller@5b220000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5b220000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_CONN_SDHC2_CLK>,
-+		clocks = <&clk IMX_SC_R_SDHC_2 IMX_SC_PM_CLK_PER>,
- 			 <&conn_ipg_clk>, <&conn_axi_clk>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>,
- 				<IMX_LPCG_CLK_5>;
-@@ -159,8 +159,8 @@ conn_subsys: bus@5b000000 {
+ 		clocks = <&clk IMX_SC_R_SDHC_2 IMX_SC_PM_CLK_PER>,
+@@ -157,6 +155,7 @@ conn_subsys: bus@5b000000 {
+ 	};
+ 
  	enet0_lpcg: clock-controller@5b230000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5b230000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_CONN_ENET0_ROOT_CLK>,
--			 <&clk IMX_CONN_ENET0_ROOT_CLK>,
-+		clocks = <&clk IMX_SC_R_ENET_0 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_ENET_0 IMX_SC_PM_CLK_PER>,
- 			 <&conn_axi_clk>, <&conn_ipg_clk>, <&conn_ipg_clk>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
- 				<IMX_LPCG_CLK_2>, <IMX_LPCG_CLK_4>,
-@@ -176,8 +176,8 @@ conn_subsys: bus@5b000000 {
+ 		clocks = <&clk IMX_SC_R_ENET_0 IMX_SC_PM_CLK_PER>,
+@@ -174,6 +173,7 @@ conn_subsys: bus@5b000000 {
+ 	};
+ 
  	enet1_lpcg: clock-controller@5b240000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5b240000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_CONN_ENET1_ROOT_CLK>,
--			 <&clk IMX_CONN_ENET1_ROOT_CLK>,
-+		clocks = <&clk IMX_SC_R_ENET_1 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_ENET_1 IMX_SC_PM_CLK_PER>,
- 			 <&conn_axi_clk>, <&conn_ipg_clk>, <&conn_ipg_clk>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
- 				<IMX_LPCG_CLK_2>, <IMX_LPCG_CLK_4>,
+ 		clocks = <&clk IMX_SC_R_ENET_1 IMX_SC_PM_CLK_PER>,
 diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
-index ff29e7f..2ffb9ee 100644
+index 2ffb9ee..b90808b 100644
 --- a/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
-@@ -156,9 +156,11 @@ lsio_subsys: bus@5d000000 {
+@@ -148,12 +148,8 @@ lsio_subsys: bus@5d000000 {
+ 	};
+ 
+ 	/* LPCG clocks */
+-	lsio_lpcg: clock-controller-legacy@5d400000 {
+-		reg = <0x5d400000 0x400000>;
+-		#clock-cells = <1>;
+-	};
+-
  	pwm0_lpcg: clock-controller@5d400000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5d400000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_LSIO_PWM0_CLK>, <&clk IMX_LSIO_PWM0_CLK>,
--			 <&clk IMX_LSIO_PWM0_CLK>, <&lsio_bus_clk>,
--			 <&clk IMX_LSIO_PWM0_CLK>;
-+		clocks = <&clk IMX_SC_R_PWM_0 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_0 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_0 IMX_SC_PM_CLK_PER>,
-+			 <&lsio_bus_clk>,
-+			 <&clk IMX_SC_R_PWM_0 IMX_SC_PM_CLK_PER>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
- 				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
- 				<IMX_LPCG_CLK_6>;
-@@ -173,9 +175,11 @@ lsio_subsys: bus@5d000000 {
+ 		clocks = <&clk IMX_SC_R_PWM_0 IMX_SC_PM_CLK_PER>,
+@@ -173,6 +169,7 @@ lsio_subsys: bus@5d000000 {
+ 	};
+ 
  	pwm1_lpcg: clock-controller@5d410000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5d410000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_LSIO_PWM1_CLK>, <&clk IMX_LSIO_PWM1_CLK>,
--			 <&clk IMX_LSIO_PWM1_CLK>, <&lsio_bus_clk>,
--			 <&clk IMX_LSIO_PWM1_CLK>;
-+		clocks = <&clk IMX_SC_R_PWM_1 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_1 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_1 IMX_SC_PM_CLK_PER>,
-+			 <&lsio_bus_clk>,
-+			 <&clk IMX_SC_R_PWM_1 IMX_SC_PM_CLK_PER>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
- 				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
- 				<IMX_LPCG_CLK_6>;
-@@ -190,9 +194,11 @@ lsio_subsys: bus@5d000000 {
+ 		clocks = <&clk IMX_SC_R_PWM_1 IMX_SC_PM_CLK_PER>,
+@@ -192,6 +189,7 @@ lsio_subsys: bus@5d000000 {
+ 	};
+ 
  	pwm2_lpcg: clock-controller@5d420000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5d420000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_LSIO_PWM2_CLK>, <&clk IMX_LSIO_PWM2_CLK>,
--			 <&clk IMX_LSIO_PWM2_CLK>, <&lsio_bus_clk>,
--			 <&clk IMX_LSIO_PWM2_CLK>;
-+		clocks = <&clk IMX_SC_R_PWM_2 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_2 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_2 IMX_SC_PM_CLK_PER>,
-+			 <&lsio_bus_clk>,
-+			 <&clk IMX_SC_R_PWM_2 IMX_SC_PM_CLK_PER>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
- 				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
- 				<IMX_LPCG_CLK_6>;
-@@ -207,9 +213,11 @@ lsio_subsys: bus@5d000000 {
+ 		clocks = <&clk IMX_SC_R_PWM_2 IMX_SC_PM_CLK_PER>,
+@@ -211,6 +209,7 @@ lsio_subsys: bus@5d000000 {
+ 	};
+ 
  	pwm3_lpcg: clock-controller@5d430000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5d430000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_LSIO_PWM3_CLK>, <&clk IMX_LSIO_PWM3_CLK>,
--			 <&clk IMX_LSIO_PWM3_CLK>, <&lsio_bus_clk>,
--			 <&clk IMX_LSIO_PWM3_CLK>;
-+		clocks = <&clk IMX_SC_R_PWM_3 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_3 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_3 IMX_SC_PM_CLK_PER>,
-+			 <&lsio_bus_clk>,
-+			 <&clk IMX_SC_R_PWM_3 IMX_SC_PM_CLK_PER>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
- 				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
- 				<IMX_LPCG_CLK_6>;
-@@ -224,9 +232,11 @@ lsio_subsys: bus@5d000000 {
+ 		clocks = <&clk IMX_SC_R_PWM_3 IMX_SC_PM_CLK_PER>,
+@@ -230,6 +229,7 @@ lsio_subsys: bus@5d000000 {
+ 	};
+ 
  	pwm4_lpcg: clock-controller@5d440000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5d440000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_LSIO_PWM4_CLK>, <&clk IMX_LSIO_PWM4_CLK>,
--			 <&clk IMX_LSIO_PWM4_CLK>, <&lsio_bus_clk>,
--			 <&clk IMX_LSIO_PWM4_CLK>;
-+		clocks = <&clk IMX_SC_R_PWM_4 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_4 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_4 IMX_SC_PM_CLK_PER>,
-+			 <&lsio_bus_clk>,
-+			 <&clk IMX_SC_R_PWM_4 IMX_SC_PM_CLK_PER>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
- 				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
- 				<IMX_LPCG_CLK_6>;
-@@ -241,9 +251,11 @@ lsio_subsys: bus@5d000000 {
+ 		clocks = <&clk IMX_SC_R_PWM_4 IMX_SC_PM_CLK_PER>,
+@@ -249,6 +249,7 @@ lsio_subsys: bus@5d000000 {
+ 	};
+ 
  	pwm5_lpcg: clock-controller@5d450000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5d450000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_LSIO_PWM5_CLK>, <&clk IMX_LSIO_PWM5_CLK>,
--			 <&clk IMX_LSIO_PWM5_CLK>, <&lsio_bus_clk>,
--			 <&clk IMX_LSIO_PWM5_CLK>;
-+		clocks = <&clk IMX_SC_R_PWM_5 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_5 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_5 IMX_SC_PM_CLK_PER>,
-+			 <&lsio_bus_clk>,
-+			 <&clk IMX_SC_R_PWM_5 IMX_SC_PM_CLK_PER>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
- 				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
- 				<IMX_LPCG_CLK_6>;
-@@ -258,9 +270,11 @@ lsio_subsys: bus@5d000000 {
+ 		clocks = <&clk IMX_SC_R_PWM_5 IMX_SC_PM_CLK_PER>,
+@@ -268,6 +269,7 @@ lsio_subsys: bus@5d000000 {
+ 	};
+ 
  	pwm6_lpcg: clock-controller@5d460000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5d460000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_LSIO_PWM6_CLK>, <&clk IMX_LSIO_PWM6_CLK>,
--			 <&clk IMX_LSIO_PWM6_CLK>, <&lsio_bus_clk>,
--			 <&clk IMX_LSIO_PWM6_CLK>;
-+		clocks = <&clk IMX_SC_R_PWM_6 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_6 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_6 IMX_SC_PM_CLK_PER>,
-+			 <&lsio_bus_clk>,
-+			 <&clk IMX_SC_R_PWM_6 IMX_SC_PM_CLK_PER>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
- 				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
- 				<IMX_LPCG_CLK_6>;
-@@ -275,9 +289,11 @@ lsio_subsys: bus@5d000000 {
+ 		clocks = <&clk IMX_SC_R_PWM_6 IMX_SC_PM_CLK_PER>,
+@@ -287,6 +289,7 @@ lsio_subsys: bus@5d000000 {
+ 	};
+ 
  	pwm7_lpcg: clock-controller@5d470000 {
++		compatible = "fsl,imx8qxp-lpcg";
  		reg = <0x5d470000 0x10000>;
  		#clock-cells = <1>;
--		clocks = <&clk IMX_LSIO_PWM7_CLK>, <&clk IMX_LSIO_PWM7_CLK>,
--			 <&clk IMX_LSIO_PWM7_CLK>, <&lsio_bus_clk>,
--			 <&clk IMX_LSIO_PWM7_CLK>;
-+		clocks = <&clk IMX_SC_R_PWM_7 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_7 IMX_SC_PM_CLK_PER>,
-+			 <&clk IMX_SC_R_PWM_7 IMX_SC_PM_CLK_PER>,
-+			 <&lsio_bus_clk>,
-+			 <&clk IMX_SC_R_PWM_7 IMX_SC_PM_CLK_PER>;
- 		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
- 				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
- 				<IMX_LPCG_CLK_6>;
+ 		clocks = <&clk IMX_SC_R_PWM_7 IMX_SC_PM_CLK_PER>,
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi
+index 5809324..c80303d 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp-ss-adma.dtsi
+@@ -4,10 +4,6 @@
+  *	Dong Aisheng <aisheng.dong@nxp.com>
+  */
+ 
+-&adma_lpcg {
+-	compatible = "fsl,imx8qxp-lpcg-adma";
+-};
+-
+ &adma_lpuart0 {
+ 	compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi
+index ea0cd51..8dd22bd 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp-ss-conn.dtsi
+@@ -4,10 +4,6 @@
+  *	Dong Aisheng <aisheng.dong@nxp.com>
+  */
+ 
+-&conn_lpcg {
+-	compatible = "fsl,imx8qxp-lpcg-conn";
+-};
+-
+ &usdhc1 {
+ 	compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi
+index b02ae5d..1c3d117 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp-ss-lsio.dtsi
+@@ -59,7 +59,3 @@
+ &lsio_mu13 {
+ 	compatible = "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
+ };
+-
+-&lsio_lpcg {
+-	compatible = "fsl,imx8qxp-lpcg-lsio";
+-};
 diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index e9f9466..15c1ce9 100644
+index 15c1ce9..e3963d0 100644
 --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
 +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -46,7 +46,7 @@
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&A35_L2>;
--			clocks = <&clk IMX_A35_CLK>;
-+			clocks = <&clk IMX_SC_R_A35 IMX_SC_PM_CLK_CPU>;
- 			operating-points-v2 = <&a35_opp_table>;
- 			#cooling-cells = <2>;
- 		};
-@@ -57,7 +57,7 @@
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
- 			next-level-cache = <&A35_L2>;
--			clocks = <&clk IMX_A35_CLK>;
-+			clocks = <&clk IMX_SC_R_A35 IMX_SC_PM_CLK_CPU>;
- 			operating-points-v2 = <&a35_opp_table>;
- 			#cooling-cells = <2>;
- 		};
-@@ -68,7 +68,7 @@
- 			reg = <0x0 0x2>;
- 			enable-method = "psci";
- 			next-level-cache = <&A35_L2>;
--			clocks = <&clk IMX_A35_CLK>;
-+			clocks = <&clk IMX_SC_R_A35 IMX_SC_PM_CLK_CPU>;
- 			operating-points-v2 = <&a35_opp_table>;
- 			#cooling-cells = <2>;
- 		};
-@@ -79,7 +79,7 @@
- 			reg = <0x0 0x3>;
- 			enable-method = "psci";
- 			next-level-cache = <&A35_L2>;
--			clocks = <&clk IMX_A35_CLK>;
-+			clocks = <&clk IMX_SC_R_A35 IMX_SC_PM_CLK_CPU>;
- 			operating-points-v2 = <&a35_opp_table>;
- 			#cooling-cells = <2>;
- 		};
-@@ -159,7 +159,7 @@
+@@ -6,6 +6,7 @@
+  */
  
- 		clk: clock-controller {
- 			compatible = "fsl,imx8qxp-clk";
--			#clock-cells = <1>;
-+			#clock-cells = <2>;
- 			clocks = <&xtal32k &xtal24m>;
- 			clock-names = "xtal_32KHz", "xtal_24Mhz";
- 		};
+ #include <dt-bindings/clock/imx8-clock.h>
++#include <dt-bindings/clock/imx8-lpcg.h>
+ #include <dt-bindings/firmware/imx/rsrc.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
 -- 
 2.7.4
