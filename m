@@ -1,72 +1,64 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH 1/2] venus: use on-chip interconnect API
-Date: Thu, 12 Sep 2019 18:11:55 +0300
-Message-ID: <345e7450-b3af-92c5-4e83-bccaf0a98a0b@linaro.org>
-References: <20190814084701.25455-1-stanimir.varbanov@linaro.org>
- <20190814084701.25455-2-stanimir.varbanov@linaro.org>
- <cc85f55c-3d21-c3b2-6848-e48513263e39@linaro.org>
- <20190904042203.GC3081@tuxbook-pro>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Maciej Falkowski <m.falkowski@samsung.com>
+Subject: [PATCH v2] ARM: dts: exynos: remove obsolete IRQ lines
+Date: Thu, 12 Sep 2019 17:17:56 +0200
+Message-ID: <20190912151756.27173-1-m.falkowski@samsung.com>
+References: <20190911133310.8365-1-m.falkowski@samsung.com>
+        <CGME20190912151829eucas1p216ca28e56f62e7f484c46ce30581200a@eucas1p2.samsung.com>
+Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190904042203.GC3081@tuxbook-pro>
-Content-Language: en-US
+In-Reply-To: <20190911133310.8365-1-m.falkowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Vikash Garodia <vgarodia@codeaurora.org>, Andy Gross <agross@kernel.org>, Aniket Masule <amasule@codeaurora.org>, Linux PM list <linux-pm@vger.kernel.org>
+To: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, krzk@kernel.org, a.hajda@samsung.com, m.szyprowski@samsung.com, m.falkowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+In commit 7222e8db2d506197ee183de0f9b76b3ad97e8c18 (iommu/exynos: Fix build
+errors) Exynos3250 iommu driver stopped supporting two IRQ lines.
+The second IRQ line in DTS is ignored and is not needed.
 
-On 9/4/19 07:22, Bjorn Andersson wrote:
-> On Tue 20 Aug 02:34 PDT 2019, Georgi Djakov wrote:
-> 
->> Hi Stan,
->>
->> On 8/14/19 11:47, Stanimir Varbanov wrote:
->>> This aims to add a requests for bandwidth scaling depending
->>> on the resolution and framerate (macroblocks per second). The
->>> exact value ff the requested bandwidth is get from a
->>
->> s/ff/of/
->>
->>> pre-calculated tables for encoder and decoder.
->>>
->>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->>> ---
->>>  drivers/media/platform/qcom/venus/core.c    | 34 +++++++++++
->>>  drivers/media/platform/qcom/venus/core.h    | 14 +++++
->>>  drivers/media/platform/qcom/venus/helpers.c | 67 ++++++++++++++++++++-
->>>  3 files changed, 114 insertions(+), 1 deletion(-)
->>
->> It looks like venus can be built-in, so how about the case when venus is
->> built-in and the interconnect provider is a module? Maybe add a dependency in
->> Kconfig to depend on INTERCONNECT || !INTERCONNECT?
->>
-> 
-> I've been struggling down this road for remoteproc et al for a long
-> time, I strongly suggest that you make the INTERCONNECT config bool, to
-> ensure that we don't see this problem for every client.
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+v2: 
+- change commit message to proper version
+- add proper recipients
+---
+ arch/arm/boot/dts/exynos3250.dtsi | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Thanks for the comment. Well, i was expecting that we will have to make it bool
-one day. Viresh actually already sent a patch [1]. Maybe you can add an Ack?
-
-> 
-> The interconnect framework should hide the fact that the provider is
-> module.
-> 
-
-Correct.
-
-> 
-> But with this in place is there actually a dependency? Won't the include
-> file provide stubs in the case of !INTERCONNECT?
-
-There are stubs, so we are fine.
-
-Thanks,
-Georgi
-
-[1]
-https://lore.kernel.org/linux-pm/b789cce388dd1f2906492f307dea6780c398bc6a.1567065991.git.viresh.kumar@linaro.org/
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index 784818490376..190d9160a5d1 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -314,8 +314,7 @@
+ 		sysmmu_jpeg: sysmmu@11a60000 {
+ 			compatible = "samsung,exynos-sysmmu";
+ 			reg = <0x11a60000 0x1000>;
+-			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "sysmmu", "master";
+ 			clocks = <&cmu CLK_SMMUJPEG>, <&cmu CLK_JPEG>;
+ 			power-domains = <&pd_cam>;
+@@ -355,8 +354,7 @@
+ 		sysmmu_fimd0: sysmmu@11e20000 {
+ 			compatible = "samsung,exynos-sysmmu";
+ 			reg = <0x11e20000 0x1000>;
+-			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "sysmmu", "master";
+ 			clocks = <&cmu CLK_SMMUFIMD0>, <&cmu CLK_FIMD0>;
+ 			power-domains = <&pd_lcd0>;
+@@ -507,8 +505,7 @@
+ 		sysmmu_mfc: sysmmu@13620000 {
+ 			compatible = "samsung,exynos-sysmmu";
+ 			reg = <0x13620000 0x1000>;
+-			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "sysmmu", "master";
+ 			clocks = <&cmu CLK_SMMUMFC_L>, <&cmu CLK_MFC>;
+ 			power-domains = <&pd_mfc>;
+-- 
+2.17.1
