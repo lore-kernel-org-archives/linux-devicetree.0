@@ -1,43 +1,48 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 0/6] media: i2c: ov2659: maintenance series
-Date: Thu, 12 Sep 2019 08:00:01 -0500
-Message-ID: <20190912130007.4469-1-bparrot@ti.com>
+Subject: [Patch 5/6] media: i2c: ov2659: Fix missing 720p register config
+Date: Thu, 12 Sep 2019 08:00:06 -0500
+Message-ID: <20190912130007.4469-6-bparrot@ti.com>
+References: <20190912130007.4469-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190912130007.4469-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>
 Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series is a collection of patches we have been carrying for a
-while.
+The initial registers sequence is only loaded at probe
+time. Afterward only the resolution and format specific
+register are modified. Care must be taken to make sure
+registers modified by one resolution setting are reverted
+back when another resolution is programmed.
 
-It includes a few sensor register fixes which would cause visual
-artifacts at lower resolution and also at 720p.
+This was not done properly for the 720p case.
 
-Also on some board the 'powerdown' is not tied to always on so we add
-support for an optional powerdown gpio.
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+---
+ drivers/media/i2c/ov2659.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Since these camera are removable on some board we alos need the driver
-to actually fail when there is no hardware present so the driver is
-actually removed.
-
-Finally, we update the licensing statement to use SPDX licensing.
-
-Benoit Parrot (6):
-  media: i2c: ov2659: Fix for image wrap-around in lower resolution
-  media: i2c: ov2659: Fix sensor detection to actually fail when device
-    is not present
-  media: dt-bindings: ov2659: add powerdown-gpios optional property
-  media: i2c: ov2659: Add optional powerdown gpio handling
-  media: i2c: ov2659: Fix missing 720p register config
-  media: i2c: ov2659: Switch to SPDX Licensing
-
- .../devicetree/bindings/media/i2c/ov2659.txt  |  6 +++
- drivers/media/i2c/Kconfig                     |  2 +-
- drivers/media/i2c/ov2659.c                    | 40 +++++++++++--------
- 3 files changed, 30 insertions(+), 18 deletions(-)
-
+diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+index c64f73bef336..fbe624457fbc 100644
+--- a/drivers/media/i2c/ov2659.c
++++ b/drivers/media/i2c/ov2659.c
+@@ -423,10 +423,14 @@ static struct sensor_register ov2659_720p[] = {
+ 	{ REG_TIMING_YINC, 0x11 },
+ 	{ REG_TIMING_VERT_FORMAT, 0x80 },
+ 	{ REG_TIMING_HORIZ_FORMAT, 0x00 },
++	{ 0x370a, 0x12 },
+ 	{ 0x3a03, 0xe8 },
+ 	{ 0x3a09, 0x6f },
+ 	{ 0x3a0b, 0x5d },
+ 	{ 0x3a15, 0x9a },
++	{ REG_VFIFO_READ_START_H, 0x00 },
++	{ REG_VFIFO_READ_START_L, 0x80 },
++	{ REG_ISP_CTRL02, 0x00 },
+ 	{ REG_NULL, 0x00 },
+ };
+ 
 -- 
 2.17.1
