@@ -1,111 +1,39 @@
-From: Maciej Falkowski <m.falkowski@samsung.com>
-Subject: [PATCH] dt-bindings: gpu: Convert Samsung Image Rotator to
- dt-schema
-Date: Thu, 12 Sep 2019 12:20:08 +0200
-Message-ID: <20190912102008.14292-1-m.falkowski@samsung.com>
-References: <CGME20190912102021eucas1p1b61b8bbdf809075c2c4f54d7e9312f98@eucas1p1.samsung.com>
-Content-Type: text/plain; charset="utf-8"
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Subject: [PATCH] arm64: dts: renesas: r8a77970: Fix PWM3
+Date: Thu, 12 Sep 2019 11:31:43 +0100
+Message-ID: <20190912103143.985-1-kieran.bingham+renesas@ideasonboard.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, m.szyprowski@samsung.com, a.hajda@samsung.com
-Cc: iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Maciej Falkowski <m.falkowski@samsung.com>
+To: linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert@glider.be>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert Samsung Image Rotator to newer dt-schema format.
+The pwm3 was incorrectly added with a compatible reference to the
+renesas,pwm-r8a7790 (H2) due to a single characther ommision.
 
-Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Fix the compatible string.
+
+Fixes: de625477c632 ("arm64: dts: renesas: r8a779{7|8}0: add PWM support")
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 ---
- .../bindings/gpu/samsung-rotator.txt          | 28 ------------
- .../bindings/gpu/samsung-rotator.yaml         | 45 +++++++++++++++++++
- 2 files changed, 45 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt b/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
-deleted file mode 100644
-index 3aca2578da0b..000000000000
---- a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--* Samsung Image Rotator
--
--Required properties:
--  - compatible : value should be one of the following:
--	* "samsung,s5pv210-rotator" for Rotator IP in S5PV210
--	* "samsung,exynos4210-rotator" for Rotator IP in Exynos4210
--	* "samsung,exynos4212-rotator" for Rotator IP in Exynos4212/4412
--	* "samsung,exynos5250-rotator" for Rotator IP in Exynos5250
--
--  - reg : Physical base address of the IP registers and length of memory
--	  mapped region.
--
--  - interrupts : Interrupt specifier for rotator interrupt, according to format
--		 specific to interrupt parent.
--
--  - clocks : Clock specifier for rotator clock, according to generic clock
--	     bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
--
--  - clock-names : Names of clocks. For exynos rotator, it should be "rotator".
--
--Example:
--	rotator@12810000 {
--		compatible = "samsung,exynos4210-rotator";
--		reg = <0x12810000 0x1000>;
--		interrupts = <0 83 0>;
--		clocks = <&clock 278>;
--		clock-names = "rotator";
--	};
-diff --git a/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml b/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
-new file mode 100644
-index 000000000000..6927cfc1aefc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpu/samsung-rotator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung Image Rotator
-+
-+maintainers:
-+  - Inki Dae <inki.dae@samsung.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - "samsung,s5pv210-rotator"    # for Rotator IP in S5PV210
-+      - "samsung,exynos4210-rotator" # for Rotator IP in Exynos4210
-+      - "samsung,exynos4212-rotator" # for Rotator IP in Exynos4212/4412
-+      - "samsung,exynos5250-rotator" # for Rotator IP in Exynos5250
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    description: |
-+      Clock specifier for rotator clock according to generic clock
-+      bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+    - const: rotator
-+    maxItems: 1
-+
-+examples:
-+  - |
-+    rotator@12810000 {
-+        compatible = "samsung,exynos4210-rotator";
-+        reg = <0x12810000 0x1000>;
-+        interrupts = <0 83 0>;
-+        clocks = <&clock 278>;
-+        clock-names = "rotator";
-+    };
-+
+diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+index 2c4ab70e2a39..74c2c0024e45 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+@@ -652,7 +652,7 @@
+ 		};
+ 
+ 		pwm3: pwm@e6e33000 {
+-			compatible = "renesas,pwm-r8a7790", "renesas,pwm-rcar";
++			compatible = "renesas,pwm-r8a77970", "renesas,pwm-rcar";
+ 			reg = <0 0xe6e33000 0 8>;
+ 			#pwm-cells = <2>;
+ 			clocks = <&cpg CPG_MOD 523>;
 -- 
-2.17.1
+2.20.1
