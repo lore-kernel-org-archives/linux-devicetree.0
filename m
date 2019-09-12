@@ -1,79 +1,37 @@
-From: Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in handle_vmptrld
-Date: Thu, 12 Sep 2019 18:49:26 +0200
-Message-ID: <5218e70e-8a80-7c5f-277b-01d9ab70692a@redhat.com>
-References: <000000000000a9d4f705924cff7a@google.com>
- <87lfutei1j.fsf@vitty.brq.redhat.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [RFC 3/3] dmaengine: Support for requesting channels preferring
+ DMA domain controller
+Date: Thu, 12 Sep 2019 22:19:41 +0530
+Message-ID: <20190912164941.GC4392@vkoul-mobl>
+References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
+ <20190906141816.24095-4-peter.ujfalusi@ti.com>
+ <20190908121507.GN2672@vkoul-mobl>
+ <0bd4d678-31be-bead-7591-0452b6fed5f2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87lfutei1j.fsf@vitty.brq.redhat.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <0bd4d678-31be-bead-7591-0452b6fed5f2@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc: bp@alien8.de, carlo@caione.org, catalin.marinas@arm.com, devicetree@vger.kernel.org, hpa@zytor.com, jmattson@google.com, joro@8bytes.org, khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, narmstrong@baylibre.com, rkrcmar@redhat.com, robh+dt@kernel.org, sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com, tglx@linutronix.de, wanpengli@tencent.com, will.deacon@arm.com, x86@kernel.org, syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com>, Dmitry Vyukov <dvyukov@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, USB list <linux-usb@vger.kernel.org>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: robh+dt@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[tl;dr: there could be a /dev/usb bug only affecting KASAN
-configurations, jump to the end to skip the analysis and get to the bug
-details]
+On 09-09-19, 08:56, Peter Ujfalusi wrote:
 
-On 12/09/19 15:54, Vitaly Kuznetsov wrote:
-> Hm, the bisection seems bogus but the stack points us to the following
-> piece of code:
+> >> -struct dma_chan *dma_request_chan_by_mask(const dma_cap_mask_t *mask)
+> >> +struct dma_chan *dma_domain_request_chan_by_mask(struct device *dev,
+> >> +						 const dma_cap_mask_t *mask)
+> > 
+> > should we really use dma_request_chan_by_mask() why not create a new api
+> > dma_request_chan_by_domain() and use that, it falls back to
+> > dma_request_chan_by_mask() if it doesnt find a valid domain!
 > 
->  4776)              if (kvm_vcpu_map(vcpu, gpa_to_gfn(vmptr), &map)) {
-> <skip>
->  4783)                      return nested_vmx_failValid(vcpu,
->  4784)                              VMXERR_VMPTRLD_INCORRECT_VMCS_REVISION_ID);
->  4785)              }
->  4786) 
->  4787)              new_vmcs12 = map.hva;
->  4788) 
-> *4789)              if (new_vmcs12->hdr.revision_id != VMCS12_REVISION ||
->  4790)                  (new_vmcs12->hdr.shadow_vmcs &&
->  4791)                   !nested_cpu_has_vmx_shadow_vmcs(vcpu))) {
-> 
-> the reported problem seems to be on VMCS12 region access but it's part
-> of guest memory and we successfuly managed to map it. We're definitely
-> within 1-page range. Maybe KASAN is just wrong here?
+> So:
+> struct dma_chan *dma_request_chan_by_domain(struct device *dev,
+> 					    const dma_cap_mask_t *mask);
 
-Here is the relevant part of the syzkaller repro:
+Yeah that looks better to me :)
 
-syz_kvm_setup_cpu$x86(r1, 0xffffffffffffffff,
-&(0x7f0000000000/0x18000)=nil, 0x0, 0x133, 0x0, 0x0, 0xff7d)
-r3 = syz_open_dev$usb(&(0x7f0000000080)='/dev/bus/usb/00#/00#\x00',
-0x40000fffffd, 0x200800000000042)
-mmap$IORING_OFF_SQES(&(0x7f0000007000/0x2000)=nil, 0x2000, 0x4, 0x13,
-r3, 0x10000000)
-syz_kvm_setup_cpu$x86(0xffffffffffffffff, r2,
-&(0x7f0000000000/0x18000)=nil, 0x0, 0xfefd, 0x40, 0x0, 0xfffffffffffffdd4)
-ioctl$KVM_RUN(r2, 0xae80, 0x0)
-
-The mmap$IORING_OFF_SQES is just a normal mmap from a device, which
-replaces the previous mapping for guest memory and in particular
-0x7f0000007000 which is the VMCS (from the C reproducer: "#define
-ADDR_VAR_VMCS 0x7000").
-
-The previous mapping is freed with do_munmap and then repopulated in
-usbdev_mmap with remap_pfn_range.  In KVM this means that kvm_vcpu_map
-goes through hva_to_pfn_remapped, which correctly calls get_page via
-kvm_get_pfn.  (Note that although drivers/usb/core/devio.c's usbdev_mmap
-sets VM_IO *after* calling remap_pfn_range, remap_pfn_range itself
-helpfully sets it before calling remap_p4d_range.  And anyway KVM is
-looking at vma->vm_flags under mmap_sem, which is held during mmap).
-
-So, KVM should be doing the right thing.  Now, the error is:
-
-> Read of size 4 at addr ffff888091e10000 by task syz-executor758/10006
-> The buggy address belongs to the object at ffff888091e109c0 
-> The buggy address is located 2496 bytes to the left of
->  8192-byte region [ffff888091e109c0, ffff888091e129c0) 
-
-And given the use of remap_pfn_range in devusb_mmap, the simplest
-explanation could be that USB expects kmalloc-8k to return 8k-aligned
-values, but this is not true anymore with KASAN.  CCing Dmitry, Greg and
-linux-usb.
-
-Paolo
+-- 
+~Vinod
