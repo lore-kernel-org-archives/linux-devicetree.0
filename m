@@ -1,77 +1,39 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: Re: [PATCH] dts: arm64: imx8mq: Enable gpu passive throttling
-Date: Wed, 11 Sep 2019 19:42:10 -0700
-Message-ID: <20190912024210.GA13270@bogon.m.sigxcpu.org>
-References: <cf1b114bcc6ef26e032c352b8c885aaf5f3594d0.1568254197.git.agx@sigxcpu.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH 1/2] ARM: dts: imx7d: Correct speed grading fuse settings
+Date: Thu, 12 Sep 2019 10:56:31 +0800
+Message-ID: <1568256992-31707-1-git-send-email-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cf1b114bcc6ef26e032c352b8c885aaf5f3594d0.1568254197.git.agx@sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, Andrey Smirnov <andrew.smirnov@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Wed, Sep 11, 2019 at 07:14:25PM -0700, Guido Günther wrote:
-> Temperature and hysteresis were picked after the CPU.
+The 800MHz opp speed grading fuse mask should be 0xd instead
+of 0xf according to fuse map definition:
 
-I pulled that one from the wrong branch so please disregard. I've
-sent out a v2.
-Cheers,
- -- Guido
+SPEED_GRADING[1:0]	MHz
+	00		800
+	01		500
+	10		1000
+	11		1200
 
-> 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index 564045927485..fda636085bb3 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -235,12 +235,26 @@
->  			thermal-sensors = <&tmu 1>;
->  
->  			trips {
-> +				gpu-alert {
-> +					temperature = <80000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
->  				gpu-crit {
->  					temperature = <90000>;
->  					hysteresis = <2000>;
->  					type = "critical";
->  				};
->  			};
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip = <&gpu_alert>;
-> +					cooling-device =
-> +						<&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +				};
-> +			};
->  		};
->  
->  		vpu-thermal {
-> @@ -1006,6 +1020,7 @@
->  			         <&clk IMX8MQ_CLK_GPU_AXI>,
->  			         <&clk IMX8MQ_CLK_GPU_AHB>;
->  			clock-names = "core", "shader", "bus", "reg";
-> +			#cooling-cells = <2>;
->  			assigned-clocks = <&clk IMX8MQ_CLK_GPU_CORE_SRC>,
->  			                  <&clk IMX8MQ_CLK_GPU_SHADER_SRC>,
->  			                  <&clk IMX8MQ_CLK_GPU_AXI>,
-> -- 
-> 2.23.0.rc1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx7d.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+index 9c8dd32..0083272 100644
+--- a/arch/arm/boot/dts/imx7d.dtsi
++++ b/arch/arm/boot/dts/imx7d.dtsi
+@@ -43,7 +43,7 @@
+ 			opp-hz = /bits/ 64 <792000000>;
+ 			opp-microvolt = <1000000>;
+ 			clock-latency-ns = <150000>;
+-			opp-supported-hw = <0xf>, <0xf>;
++			opp-supported-hw = <0xd>, <0xf>;
+ 		};
+ 
+ 		opp-996000000 {
+-- 
+2.7.4
