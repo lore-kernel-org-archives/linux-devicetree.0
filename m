@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 5/6] media: i2c: ov2659: Fix missing 720p register config
-Date: Thu, 12 Sep 2019 08:00:06 -0500
-Message-ID: <20190912130007.4469-6-bparrot@ti.com>
+Subject: [Patch 3/6] media: dt-bindings: ov2659: add powerdown-gpios optional property
+Date: Thu, 12 Sep 2019 08:00:04 -0500
+Message-ID: <20190912130007.4469-4-bparrot@ti.com>
 References: <20190912130007.4469-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,37 +12,37 @@ To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.co
 Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The initial registers sequence is only loaded at probe
-time. Afterward only the resolution and format specific
-register are modified. Care must be taken to make sure
-registers modified by one resolution setting are reverted
-back when another resolution is programmed.
-
-This was not done properly for the 720p case.
+Add powerdown-gpios to the list of optional properties for the OV2659
+camera sensor.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/i2c/ov2659.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/media/i2c/ov2659.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index c64f73bef336..fbe624457fbc 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -423,10 +423,14 @@ static struct sensor_register ov2659_720p[] = {
- 	{ REG_TIMING_YINC, 0x11 },
- 	{ REG_TIMING_VERT_FORMAT, 0x80 },
- 	{ REG_TIMING_HORIZ_FORMAT, 0x00 },
-+	{ 0x370a, 0x12 },
- 	{ 0x3a03, 0xe8 },
- 	{ 0x3a09, 0x6f },
- 	{ 0x3a0b, 0x5d },
- 	{ 0x3a15, 0x9a },
-+	{ REG_VFIFO_READ_START_H, 0x00 },
-+	{ REG_VFIFO_READ_START_L, 0x80 },
-+	{ REG_ISP_CTRL02, 0x00 },
- 	{ REG_NULL, 0x00 },
- };
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov2659.txt b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
+index cabc7d827dfb..f55204cce0cd 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ov2659.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
+@@ -12,6 +12,10 @@ Required Properties:
+ - clock-names: should be "xvclk".
+ - link-frequencies: target pixel clock frequency.
  
++Optional Properties:
++- powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
++  Active is low.
++
+ For further reading on port node refer to
+ Documentation/devicetree/bindings/media/video-interfaces.txt.
+ 
+@@ -27,6 +31,8 @@ Example:
+ 			clocks = <&clk_ov2659 0>;
+ 			clock-names = "xvclk";
+ 
++			powerdown-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
++
+ 			port {
+ 				ov2659_0: endpoint {
+ 					remote-endpoint = <&vpfe_ep>;
 -- 
 2.17.1
