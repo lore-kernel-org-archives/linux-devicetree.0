@@ -1,61 +1,41 @@
-From: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-Subject: RE: [PATCH v3 08/11] PCI: layerscape: Modify the MSIX to the doorbell
- mode
-Date: Thu, 12 Sep 2019 11:24:03 +0000
-Message-ID: <DM6PR12MB40100CC1C0E64040652C3BFBDAB00@DM6PR12MB4010.namprd12.prod.outlook.com>
-References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
- <20190902031716.43195-9-xiaowei.bao@nxp.com>
- <20190902120147.GH9720@e119886-lin.cambridge.arm.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [PATCHv5 00/10] soc: ti: add OMAP PRM driver (for reset)
+Date: Thu, 12 Sep 2019 14:39:06 +0300
+Message-ID: <20190912113916.20093-1-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190902120147.GH9720@e119886-lin.cambridge.arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Murray <andrew.murray@arm.com>, Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "minghuan.Lian@nxp.com" <minghuan.Lian@nxp.com>, "mingkai.hu@nxp.com" <mingkai.hu@nxp.com>, "roy.zang@nxp.com" <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <Gustavo.Pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-omap@vger.kernel.org, ssantosh@kernel.org, p.zabel@pengutronix.de, robh+dt@kernel.org, tony@atomide.com, s-anna@ti.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNClNvcnJ5IGZvciB0aGUgZGVsYXkgSSB3YXMgaW4gcGFyZW50YWwgbGVhdmUgYW5kIEkn
-bSBzdGlsbCB0cnlpbmcgbm90IHRvIA0KZHJvd24gaW4gdGhlIG1haWxpbmcgbGlzdCBlbWFpbHMu
-Li4g8J+Yig0KDQpPbiBNb24sIFNlcCAyLCAyMDE5IGF0IDEzOjE6NDcsIEFuZHJldyBNdXJyYXkg
-PGFuZHJldy5tdXJyYXlAYXJtLmNvbT4gDQp3cm90ZToNCg0KPiBPbiBNb24sIFNlcCAwMiwgMjAx
-OSBhdCAxMToxNzoxM0FNICswODAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiBkd19wY2llX2Vw
-X3JhaXNlX21zaXhfaXJxIHdhcyBuZXZlciBjYWxsZWQgaW4gdGhlIGV4aXNpdG5nIGRyaXZlcg0K
-PiA+IGJlZm9yZSwgYmVjYXVzZSB0aGUgbHMxMDQ2YSBwbGF0Zm9ybSBkb24ndCBzdXBwb3J0IHRo
-ZSBNU0lYIGZlYXR1cmUNCj4gPiBhbmQgbXNpeF9jYXBhYmxlIHdhcyBhbHdheXMgc2V0IHRvIGZh
-bHNlLg0KPiA+IE5vdyB0aGF0IGFkZCB0aGUgbHMxMDg4YSBwbGF0Zm9ybSB3aXRoIE1TSVggc3Vw
-cG9ydCwgYnV0IHRoZSBleGlzdGluZw0KPiA+IGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnEgZG9l
-c24ndCB3b3JrLCBzbyB1c2UgdGhlIGRvb3JiZWxsIG1ldGhvZCB0bw0KPiA+IHN1cHBvcnQgdGhl
-IE1TSVggZmVhdHVyZS4NCg0KSHVtLi4uIHRoZSBpbXBsZW1lbnRhdGlvbiBvZiBtc2l4IGltcGxl
-bWVudGF0aW9uIGRpZCB3b3JrIG9uIG15IHVzZSBjYXNlLCANCmhvd2V2ZXIsIGF0IHRoZSB0aW1l
-IHRoZSBzZXR1cCB1c2VkIGZvciBkZXZlbG9waW5nIGFuZCB0ZXN0aW5nIHRoZSANCmltcGxlbWVu
-dGF0aW9uIG9ubHkgaGFkIG9uZSBQRiAoYnkgZGVmYXVsdCAwKS4gUGVyaGFwcyB0aGlzIGNvdWxk
-IHdhcyBpcyANCmNhdXNpbmcgdGhlIGRpZmZlcmVudCBiZWhhdmlvciBiZXR3ZWVuIG91ciBzZXR1
-cHMuDQoNCllvdSBoYXZlIG1vcmUgdGhhbiBvbmUgUEYsIHJpZ2h0Pw0KDQpJZiBJIHJlbWVtYmVy
-IGNvcnJlY3RseSwgbXNpeCBmZWF0dXJlIHN1cHBvcnQgZW50ZXJlZCBvbiBrZXJuZWwgNC4xOSAN
-CnZlcnNpb24gYW5kIGl0IHdvcmtlZCBxdWl0ZSB3ZWxsIGF0IHRoZSB0aW1lLCBidXQgSSBkaWRu
-J3QgdGVzdCBzaW5jZSANCnRoZXJlIChJJ3ZlIHRvIG1hbmFnZSB0aW1lIHRvIGJlIGFibGUgdG8g
-cmV0ZXN0IGl0IGFnYWluKSwgSSdtIGRpZG4ndCANCnNlZW4gYW55IHBhdGNoIHRoYXQgY291bGQg
-aW50ZXJmZXJlIHdpdGggdGhpcy4NCg0KUmVnYXJkcywNCkd1c3Rhdm8NCg0KDQo+ID4gDQo+ID4g
-U2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+IA0KPiBS
-ZXZpZXdlZC1ieTogQW5kcmV3IE11cnJheSA8YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiANCj4g
-PiAtLS0NCj4gPiB2MjogDQo+ID4gIC0gTm8gY2hhbmdlDQo+ID4gdjM6DQo+ID4gIC0gTW9kaWZ5
-IHRoZSBjb21taXQgbWVzc2FnZSBtYWtlIGl0IGNsZWFybHkuDQo+ID4gDQo+ID4gIGRyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMgfCAzICsrLQ0KPiA+ICAxIGZp
-bGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gDQo+ID4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMg
-Yi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gaW5k
-ZXggMWUwNzI4Ny4uNWYwY2I5OSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9s
-bGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gKysrIGIvZHJpdmVycy9wY2kvY29udHJv
-bGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYw0KPiA+IEBAIC03OSw3ICs3OSw4IEBAIHN0YXRp
-YyBpbnQgbHNfcGNpZV9lcF9yYWlzZV9pcnEoc3RydWN0IGR3X3BjaWVfZXAgKmVwLCB1OCBmdW5j
-X25vLA0KPiA+ICAJY2FzZSBQQ0lfRVBDX0lSUV9NU0k6DQo+ID4gIAkJcmV0dXJuIGR3X3BjaWVf
-ZXBfcmFpc2VfbXNpX2lycShlcCwgZnVuY19ubywgaW50ZXJydXB0X251bSk7DQo+ID4gIAljYXNl
-IFBDSV9FUENfSVJRX01TSVg6DQo+ID4gLQkJcmV0dXJuIGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9p
-cnEoZXAsIGZ1bmNfbm8sIGludGVycnVwdF9udW0pOw0KPiA+ICsJCXJldHVybiBkd19wY2llX2Vw
-X3JhaXNlX21zaXhfaXJxX2Rvb3JiZWxsKGVwLCBmdW5jX25vLA0KPiA+ICsJCQkJCQkJICBpbnRl
-cnJ1cHRfbnVtKTsNCj4gPiAgCWRlZmF1bHQ6DQo+ID4gIAkJZGV2X2VycihwY2ktPmRldiwgIlVO
-S05PV04gSVJRIHR5cGVcbiIpOw0KPiA+ICAJCXJldHVybiAtRUlOVkFMOw0KPiA+IC0tIA0KPiA+
-IDIuOS41DQo+ID4gDQoNCg0K
+Hi,
+
+V5 of the series, re-sent the whole series as one patch was dropped.
+Changes compared to v3/v4:
+
+- removed dependency towards clock driver (patch #5 was completely
+  dropped compared to v3/v4)
+- dropped clocks property from dt binding
+- re-added the pdata patch which was accidentally dropped out (it has
+  dependency towards this series.)
+
+The new implementation (without clock driver dependency) relies on the
+bus driver to sequence events properly, otherwise some timeouts will
+occur either at clock driver or reset driver end.
+
+-Tero
+
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
