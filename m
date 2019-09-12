@@ -1,44 +1,46 @@
-From: Andriy Shevchenko <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v1 0/2] pinctrl: Add new pinctrl/GPIO driver
-Date: Thu, 12 Sep 2019 16:58:06 +0300
-Message-ID: <20190912135806.GA2680@smile.fi.intel.com>
-References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
- <CACRpkdb7bPo7oH9w5OhAsOoQXx=MWjJELd5JvBt3R1sPdMjnpw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 4/7] dt-bindings: chosen: Add clocksource and clockevent
+ selection
+Date: Thu, 12 Sep 2019 15:18:49 +0100
+Message-ID: <CACRpkda1T_5D697wphrEGEsbj3zBfTaOOLN0T5zS1xfT949cjA@mail.gmail.com>
+References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
+ <1568123236-767-5-git-send-email-claudiu.beznea@microchip.com>
+ <20190910143231.GB14966@e107533-lin.cambridge.arm.com>
+ <ab43b209-78fa-0cab-b8ea-acd4c550e689@microchip.com>
+ <20190910150826.GA18308@e107533-lin.cambridge.arm.com>
+ <20190910151055.GX21254@piout.net>
+ <CACRpkda4mmpbPWa2nD93CvD6HWzcTUDzyyLdQxC2gNB7XiJF3w@mail.gmail.com>
+ <a2aca46a-8eb9-d8a8-de42-9850a8a8f44c@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdb7bPo7oH9w5OhAsOoQXx=MWjJELd5JvBt3R1sPdMjnpw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rahul Tanwar <rahul.tanwar@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, qi-ming.wu@intel.com, yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com, Mathias Nyman <mathias.nyman@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <a2aca46a-8eb9-d8a8-de42-9850a8a8f44c@microchip.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Claudiu Beznea <Claudiu.Beznea@microchip.com>
+Cc: Tomer Maimon <tmaimon77@gmail.com>, "Nori, Sekhar" <nsekhar@ti.com>, guoren@kernel.org, linux-stm32@st-md-mailman.stormreply.com, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Kevin Hilman <khilman@baylibre.com>, Ludovic Desroches <Ludovic.Desroches@microchip.com>, NXP Linux Team <linux-imx@nxp.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, "moderated list:H8/300 ARCHITECTURE" <uclinux-h8-devel@lists.sourceforge.jp>, Marc Zyngier <marc.zyngier@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-unisoc@lists.infradead.org, Krzysztof Halasa <khalasa@piap.pl>, Thomas Gleixner <tglx@linutronix.de>, Scott Branden <sbranden@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ralf Baechle <ral>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 11:11:32AM +0100, Linus Walleij wrote:
-> Hi Rahul,
-> 
-> thanks for your patches!
-> 
-> On Thu, Sep 12, 2019 at 8:59 AM Rahul Tanwar
-> <rahul.tanwar@linux.intel.com> wrote:
-> 
-> > This series is to add pinctrl & GPIO controller driver for a new SoC.
-> > Patch 1 adds pinmux & GPIO controller driver.
-> > Patch 2 adds the dt bindings document & include file.
-> >
-> > Patches are against Linux 5.3-rc5 at below Git tree:
-> > git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-> 
-> OK nice, I think you need to include Mika Westerberg on this review
-> as well, because I think he likes to stay on top of all things intel
-> in pin control. (Also included two other Intel folks in Finland who usually
-> take an interest in these things.)
+On Wed, Sep 11, 2019 at 8:18 AM <Claudiu.Beznea@microchip.com> wrote:
+> [Me]
+> > In that case why not just pick the first one you find as clocksource
+> > and the second one as clock event?
 
-Linus,
-nevertheless I guess you may give your comments WRT device tree use
-(bindings, helpers, etc) along with some basics, (like devm_*()
-[ab]use I just noticed).
+> That was also my proposal for the driver I'm sending this series for (see
+> [1]) but it has been proposed to implement a mechanism similar to this one
+> in this series (see [2] and [3]).
 
--- 
-With Best Regards,
-Andy Shevchenko
+OK I am not going to challenge the clock source maintainers on this,
+so if that is what they want then that is what they should get.
+It's fine to convert the Integrator driver too!
+
+Yours,
+Linus Walleij
