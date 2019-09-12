@@ -1,47 +1,47 @@
-From: Dilip Kota <eswara.kota@linux.intel.com>
-Subject: Re: [PATCH v3 2/2] dwc: PCI: intel: Intel PCIe RC controller driver
-Date: Thu, 12 Sep 2019 15:01:16 +0800
-Message-ID: <fb258f36-1733-da02-bae3-6062163ba607@linux.intel.com>
-References: <cover.1567585181.git.eswara.kota@linux.intel.com>
- <35316bac59d3bc681e76d33e0345f4ef950c4414.1567585181.git.eswara.kota@linux.intel.com>
- <20190905104517.GX9720@e119886-lin.cambridge.arm.com>
- <20190905114016.GF2680@smile.fi.intel.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v1 1/2] iommu: pass cell_count = -1 to
+ of_for_each_phandle with cells_name
+Date: Thu, 12 Sep 2019 09:43:53 +0200
+Message-ID: <20190912074353.wqohpfydjxueqade@pengutronix.de>
+References: <20190824132846.8589-1-u.kleine-koenig@pengutronix.de>
+ <20190903125210.GB11530@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190905114016.GF2680@smile.fi.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190903125210.GB11530@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@intel.com>, Andrew Murray <andrew.murray@arm.com>
-Cc: jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com, robh@kernel.org, martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org, hch@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+To: Joerg Roedel <joro@8bytes.org>
+Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, kernel@pengutronix.de, Matthias Brugger <matthias.bgg@gmail.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+On Tue, Sep 03, 2019 at 02:52:10PM +0200, Joerg Roedel wrote:
+> On Sat, Aug 24, 2019 at 03:28:45PM +0200, Uwe Kleine-König wrote:
+> > Currently of_for_each_phandle ignores the cell_count parameter when a
+> > cells_name is given. I intend to change that and let the iterator fall
+> > back to a non-negative cell_count if the cells_name property is missing
+> > in the referenced node.
+> > 
+> > To not change how existing of_for_each_phandle's users iterate, fix them
+> > to pass cell_count = -1 when also cells_name is given which yields the
+> > expected behaviour with and without my change.
+> > 
+> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > ---
+> >  drivers/iommu/arm-smmu.c     | 2 +-
+> >  drivers/iommu/mtk_iommu_v1.c | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> Acked-by: Joerg Roedel <jroedel@suse.de>
 
-On 9/5/2019 7:40 PM, Andy Shevchenko wrote:
-> On Thu, Sep 05, 2019 at 11:45:18AM +0100, Andrew Murray wrote:
->> On Wed, Sep 04, 2019 at 06:10:31PM +0800, Dilip Kota wrote:
->>> Add support to PCIe RC controller on Intel Universal
->>> Gateway SoC. PCIe controller is based of Synopsys
->>> Designware pci core.
->>> +config PCIE_INTEL_AXI
-> I think that name here is too generic. Classical x86 seems not using this.
+Does this ack mean that Rob is expected to apply this together with
+patch 2?
 
-This PCIe driver is for the Intel Gateway SoCs. So how about naming it is as
-"pcie-intel-gw"; pcie-intel-gw.c and Kconfig as PCIE_INTEL_GW.
+Best regards
+Uwe
 
-Andrew Murray is ok with this naming, please let me know your view.
-
->
->>> +        bool "Intel AHB/AXI PCIe host controller support"
->>> +        depends on PCI_MSI
->>> +        depends on PCI
->>> +        depends on OF
->>> +        select PCIE_DW_HOST
->>> +        help
->>> +          Say 'Y' here to enable support for Intel AHB/AXI PCIe Host
->>> +	  controller driver.
->>> +	  The Intel PCIe controller is based on the Synopsys Designware
->>> +	  pcie core and therefore uses the Designware core functions to
->>> +	  implement the driver.
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
