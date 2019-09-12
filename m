@@ -1,53 +1,155 @@
-Return-Path: <SRS0=UWh6=XB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:39075 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393354AbfIFNml (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Sep 2019 09:42:41 -0400
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v4 2/9] dt-bindings: display, renesas,du: Document cmms property
-Date: Fri,  6 Sep 2019 15:43:34 +0200
-Message-Id: <20190906134341.9879-3-jacopo+renesas@jmondi.org>
-In-Reply-To: <20190906134341.9879-1-jacopo+renesas@jmondi.org>
-References: <20190906134341.9879-1-jacopo+renesas@jmondi.org>
+Return-Path: <SRS0=ZGg2=XH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relay11.mail.gandi.net ([217.70.178.231]:58153 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728382AbfILQfM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 12 Sep 2019 12:35:12 -0400
+Date: Thu, 12 Sep 2019 18:36:40 +0200
+From: Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v2 01/10] media: dt-bindings: Document 'location' property
+Message-ID: <20190912163640.gacucembu63nudku@uno.localdomain>
+References: <20190827092339.8858-1-jacopo@jmondi.org>
+ <20190827092339.8858-2-jacopo@jmondi.org>
+ <20190827122126.GQ5054@pendragon.ideasonboard.com>
+ <20190912095120.4a592631@coco.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ygzrvf6kbmbtj5sc"
+Content-Disposition: inline
+In-Reply-To: <20190912095120.4a592631@coco.lan>
 Sender: devicetree-owner@vger.kernel.org
-To: laurent.pinchart@ideasonboard.com, kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org, horms@verge.net.au, uli@fpond.eu, VenkataRajesh.Kalakodima@in.bosch.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, tfiga@google.com, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Document the newly added 'cmms' property which accepts a list of phandle
-and channel index pairs that point to the CMM units available for each
-Display Unit output video channel.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+--ygzrvf6kbmbtj5sc
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
-index c97dfacad281..1773b0a2f54f 100644
---- a/Documentation/devicetree/bindings/display/renesas,du.txt
-+++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-@@ -45,6 +45,10 @@ Required Properties:
-     instance that serves the DU channel, and the channel index identifies the
-     LIF instance in that VSP.
+Hi Mauro,
 
-+  - renesas,cmms: A list of phandles to the CMM instances present in the SoC,
-+    one for each available DU channel. The property shall not be specified for
-+    SoCs that do not provide any CMM (such as V3M and V3H).
-+
- Required nodes:
+On Thu, Sep 12, 2019 at 09:51:47AM -0300, Mauro Carvalho Chehab wrote:
+> Em Tue, 27 Aug 2019 15:21:26 +0300
+> Laurent Pinchart <laurent.pinchart@ideasonboard.com> escreveu:
+>
+> > Hi Jacopo,
+> >
+> > Thank you for the patch.
+> >
+> > On Tue, Aug 27, 2019 at 11:23:27AM +0200, Jacopo Mondi wrote:
+> > > Add the 'location' device property, used to specify the camera device
+> > > mounting position. The property is particularly meaningful for mobile
+> > > devices with a well defined usage orientation.
+> > >
+> > > Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
+> > > ---
+> > >  .../devicetree/bindings/media/video-interfaces.txt     | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > > index f884ada0bffc..865f4142f432 100644
+> > > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > > @@ -89,6 +89,16 @@ Optional properties
+> > >    but a number of degrees counter clockwise. Typical values are 0 and 180
+> > >    (upside down).
+> > >
+> > > +- location: The camera sensor mounting location, expressed as a position
+> > > +  relative to the usage orientation of the device the sensor is installed on.
+> >
+> > DT bindings being ABIs, we need to be precise and thorough there. One
+> > particular point that bothers me is that the property is named location,
+> > and its description refers to camera sensor mounting location.
+>
+> Yeah, "location" doesn't sound a good name for me neither.
+>
 
- The connections to the DU output video ports are modeled using the OF graph
-@@ -91,6 +95,7 @@ Example: R8A7795 (R-Car H3) ES2.0 DU
- 			 <&cpg CPG_MOD 721>;
- 		clock-names = "du.0", "du.1", "du.2", "du.3";
- 		vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
-+		renesas,cmms = <&cmm0 &cmm1 &cmm2 &cmm3>;
+I think Laurent referred to the fact that as we changed the property
+name to 'location' it is not a good idea to refer to 'camera sensor'
+as it could refer to flash leds too (and potentially other devices).
 
- 		ports {
- 			#address-cells = <1>;
---
-2.23.0
+In v3 I have
+s/camera sensor/device
+s/device/system
+
+How would you name the property?
+
+> >
+> > I see two options to fix this. One of them is to rename the property to
+> > camera-location, but that would limit its future usage for other types
+> > of devices. The other one is to document the property as applying to a
+> > "device" instead of a "camera sensor", and add one sentence stating that
+> > this property is valid for camera sensors only.
+> >
+> > This will require finding another name for the device that the device is
+> > mounted on though, as using device twice would be very confusing.
+> >
+> > > +  Possible values are:
+> > > +  0 - Front. The image sensor is mounted on the front facing side of the device.
+> > > +  For mobile devices such as smartphones, tablets and laptops the front side is
+> > > +  the user facing side of the device.
+> > > +  1 - Back. The image sensor is mounted on the back side of the device, which is
+> > > +  defined as the opposite side of the front facing one.
+> > > +  2 - External. The image sensor is connected to the device by extension cables,
+> > > +  and can be freely moved, regardless of the device position.
+>
+> Hmm...
+>
+> Besides the point that Laurent and Rob already commented, just those 3 options
+> doesn't seem good enough. I was reading a public article yesterday about a new
+> device (Samsung Galaxy Fold[1]) with comes with 6 cameras, being 3 at back,
+> 1 at front, when the device is opened, and 1 camera that could be either at the
+> back or at the front, depending if the device is opened or not.
+>
+
+Pavel linked a similar device in a previous reply:
+https://www.samsung.com/global/galaxy/galaxy-a80/
+
+I understand the above options might not get enough in future, but
+right now they cover the 99,9% of devices in the market, and those
+phones are far from being mainline supported I presume.
+
+> Btw, on a device with multiple cameras at the same side, it would
+> make sense to also be able to uniquely identify the location of each
+> sensor somehow.
+>
+
+I think the location property should not identify devices, but just
+report where they are installed. Does having two cameras reporting the
+same mounting location bother you?
+
+
+> There are also some other new devices with a front motorized slider camera
+> that sits hidden inside the phone, until when someone uses it.
+>
+
+So it's an HIDDEN_FRONT_CAMERA ? :)
+
+Thanks
+   j
+
+
+> Thanks,
+> Mauro
+
+--ygzrvf6kbmbtj5sc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl16dBgACgkQcjQGjxah
+Vjx9ixAAr4KSp2m0hEzIyNtcMrjjiEZaRADD4azwXYMQrm4v6ZCr56vlZff6i37z
+MoqJ/QNxf3cKMkiBgfTIfmP2GryFVGzhu2CpOJ0T33FcTuJ7x5JBZaGKNCfy5kZs
+4ODxynf9BZkWAPwT5/f2KybvbwO+8OD4PC09eAOEqOpsxwS75nWzjJ+aKzeT2WaG
+XM4aUP5zDKTXDhRYCzpW6gABHKv4+DFqDtyz3S2K8oYceGaIISiG0xY9k7HYkg3/
+VyD0cYAoPIq1+OFRI4i/XzMSRuAOIjX1bq1KrMXJ7QeBEFF21eknhy20ZiyRymjA
+fenVjSDGRYNs+me1K5X3wF7KOa5yeYQGZ/WL6y4fTx0C2o+pLZI6qDTGSs4ps8QN
+qQ8Nqxo/GmE4jcA1CWntZ1WxEE01fBSIEZjzKhAgrh//jQ127aovSBdVLngFrbhl
+RU0hi8gpIWRE1r7lQJAYeIm35ftkOA69uCmvldK1aark2cOKWRN3UuBZd4H9EJXU
+xuk9626CYOzNWiEoUbioXsMVDp69MbB6NBF2Ukqy3UmZXvi1m1Sh3WMHDMZY2Jel
+NraE5ll86JGX+aYunB/br5R2kDSx7JB2jl6QMVWZ/afiKzmsYFYN0+1OW6B67x/O
+raZCNVroouTwqpHoEzC4tRwKndIByTBzSlmcoydSjJ7A0fY1UOI=
+=A7Hw
+-----END PGP SIGNATURE-----
+
+--ygzrvf6kbmbtj5sc--
