@@ -1,215 +1,124 @@
-From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH V3 14/15] arm64: dts: imx: add imx8qm mek support
-Date: Thu, 12 Sep 2019 23:30:51 +0800
-Message-ID: <1568302252-28066-15-git-send-email-aisheng.dong@nxp.com>
-References: <1568302252-28066-1-git-send-email-aisheng.dong@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1568302252-28066-1-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, dongas86@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, oliver.graute@gmail.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, Mark Rutland <mark.rutland@arm.com>, shawnguo@kernel.org
+From: Maciej Falkowski <m.falkowski@samsung.com>
+Subject: [PATCH v2] dt-bindings: gpu: Convert Samsung Image Rotator to
+ dt-schema
+Date: Thu, 12 Sep 2019 18:15:38 +0200
+Message-ID: <20190912161538.4321-1-m.falkowski@samsung.com>
+References: <20190912093315.5744-1-m.falkowski@samsung.com>
+        <CGME20190912161550eucas1p2bdc813d46f337f3717bdbfd33bae8d4a@eucas1p2.samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190912093315.5744-1-m.falkowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, krzk@kernel.org, a.hajda@samsung.com, m.szyprowski@samsung.com, m.falkowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-The i.MX8QuadMax is a Dual (2x) Cortex-A72 and Quad (4x) Cortex-A53
-proccessor with powerful graphic and multimedia features.
-This patch adds i.MX8QuadMax MEK board support.
+Convert Samsung Image Rotator to newer dt-schema format.
 
-Note that MX8QM needs a special workaround for TLB flush due to a SoC
-errata, otherwise there may be random crash if enable both clusters of
-A72 and A53. As the errata workaround is still not in mainline, so we
-disable A72 cluster first for MX8QM MEK.
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Tested-by: Oliver Graute <oliver.graute@kococonnector.com>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
-ChangeLog:
-v2->v3:
- * no changes
-v1->v2:
- * copyright update to 2019, minor node name change
+v2:
+- add required properties
+- add proper commit recipients
 ---
- arch/arm64/boot/dts/freescale/Makefile       |   1 +
- arch/arm64/boot/dts/freescale/imx8qm-mek.dts | 144 +++++++++++++++++++++++++++
- 2 files changed, 145 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-mek.dts
+ .../bindings/gpu/samsung-rotator.txt          | 28 ----------
+ .../bindings/gpu/samsung-rotator.yaml         | 52 +++++++++++++++++++
+ 2 files changed, 52 insertions(+), 28 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.txt
+ create mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 93fce8f..4a58c0c 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -30,5 +30,6 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mq-nitrogen.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-pico-pi.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-rmb3.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-zii-ultra-zest.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx8qm-mek.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-ai_ml.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm-mek.dts b/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt b/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
+deleted file mode 100644
+index 3aca2578da0b..000000000000
+--- a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-* Samsung Image Rotator
+-
+-Required properties:
+-  - compatible : value should be one of the following:
+-	* "samsung,s5pv210-rotator" for Rotator IP in S5PV210
+-	* "samsung,exynos4210-rotator" for Rotator IP in Exynos4210
+-	* "samsung,exynos4212-rotator" for Rotator IP in Exynos4212/4412
+-	* "samsung,exynos5250-rotator" for Rotator IP in Exynos5250
+-
+-  - reg : Physical base address of the IP registers and length of memory
+-	  mapped region.
+-
+-  - interrupts : Interrupt specifier for rotator interrupt, according to format
+-		 specific to interrupt parent.
+-
+-  - clocks : Clock specifier for rotator clock, according to generic clock
+-	     bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
+-
+-  - clock-names : Names of clocks. For exynos rotator, it should be "rotator".
+-
+-Example:
+-	rotator@12810000 {
+-		compatible = "samsung,exynos4210-rotator";
+-		reg = <0x12810000 0x1000>;
+-		interrupts = <0 83 0>;
+-		clocks = <&clock 278>;
+-		clock-names = "rotator";
+-	};
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml b/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
 new file mode 100644
-index 0000000..ce9d3f0
+index 000000000000..96afafe98388
 --- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8qm-mek.dts
-@@ -0,0 +1,144 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2018-2019 NXP
-+ *	Dong Aisheng <aisheng.dong@nxp.com>
-+ */
++++ b/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
+@@ -0,0 +1,52 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpu/samsung-rotator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+/dts-v1/;
++title: Samsung Image Rotator
 +
-+#include "imx8qm.dtsi"
++maintainers:
++  - Inki Dae <inki.dae@samsung.com>
 +
-+/ {
-+	model = "Freescale i.MX8QM MEK";
-+	compatible = "fsl,imx8qm-mek", "fsl,imx8qm";
++properties:
++  compatible:
++    enum:
++      - "samsung,s5pv210-rotator"    # for Rotator IP in S5PV210
++      - "samsung,exynos4210-rotator" # for Rotator IP in Exynos4210
++      - "samsung,exynos4212-rotator" # for Rotator IP in Exynos4212/4412
++      - "samsung,exynos5250-rotator" # for Rotator IP in Exynos5250
++  reg:
++    maxItems: 1
 +
-+	chosen {
-+		stdout-path = &lpuart0;
-+	};
++  interrupts:
++    maxItems: 1
 +
-+	cpus {
-+		/delete-node/ cpu-map;
-+		/delete-node/ cpu@100;
-+		/delete-node/ cpu@101;
-+	};
++  clocks:
++    description: |
++      Clock specifier for rotator clock according to generic clock
++      bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
++    maxItems: 1
 +
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x00000000 0x80000000 0 0x40000000>;
-+	};
++  clock-names:
++    items:
++    - const: rotator
++    maxItems: 1
 +
-+	reg_usdhc2_vmmc: usdhc2-vmmc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "SD1_SPWR";
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		gpio = <&lsio_gpio4 19 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+};
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
 +
-+&lpuart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart0>;
-+	status = "okay";
-+};
++examples:
++  - |
++    rotator@12810000 {
++        compatible = "samsung,exynos4210-rotator";
++        reg = <0x12810000 0x1000>;
++        interrupts = <0 83 0>;
++        clocks = <&clock 278>;
++        clock-names = "rotator";
++    };
 +
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1>;
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ethphy0>;
-+	fsl,magic-packet;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <0>;
-+		};
-+
-+		ethphy1: ethernet-phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <1>;
-+		};
-+	};
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	bus-width = <8>;
-+	no-sd;
-+	no-sdio;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	bus-width = <4>;
-+	vmmc-supply = <&reg_usdhc2_vmmc>;
-+	cd-gpios = <&lsio_gpio4 22 GPIO_ACTIVE_LOW>;
-+	wp-gpios = <&lsio_gpio4 21 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_fec1: fec1grp {
-+		fsl,pins = <
-+			IMX8QM_ENET0_MDC_CONN_ENET0_MDC				0x06000020
-+			IMX8QM_ENET0_MDIO_CONN_ENET0_MDIO			0x06000020
-+			IMX8QM_ENET0_RGMII_TX_CTL_CONN_ENET0_RGMII_TX_CTL	0x06000020
-+			IMX8QM_ENET0_RGMII_TXC_CONN_ENET0_RGMII_TXC		0x06000020
-+			IMX8QM_ENET0_RGMII_TXD0_CONN_ENET0_RGMII_TXD0		0x06000020
-+			IMX8QM_ENET0_RGMII_TXD1_CONN_ENET0_RGMII_TXD1		0x06000020
-+			IMX8QM_ENET0_RGMII_TXD2_CONN_ENET0_RGMII_TXD2		0x06000020
-+			IMX8QM_ENET0_RGMII_TXD3_CONN_ENET0_RGMII_TXD3		0x06000020
-+			IMX8QM_ENET0_RGMII_RXC_CONN_ENET0_RGMII_RXC		0x06000020
-+			IMX8QM_ENET0_RGMII_RX_CTL_CONN_ENET0_RGMII_RX_CTL	0x06000020
-+			IMX8QM_ENET0_RGMII_RXD0_CONN_ENET0_RGMII_RXD0		0x06000020
-+			IMX8QM_ENET0_RGMII_RXD1_CONN_ENET0_RGMII_RXD1		0x06000020
-+			IMX8QM_ENET0_RGMII_RXD2_CONN_ENET0_RGMII_RXD2		0x06000020
-+			IMX8QM_ENET0_RGMII_RXD3_CONN_ENET0_RGMII_RXD3		0x06000020
-+		>;
-+	};
-+
-+	pinctrl_lpuart0: lpuart0grp {
-+		fsl,pins = <
-+			IMX8QM_UART0_RX_DMA_UART0_RX				0x06000020
-+			IMX8QM_UART0_TX_DMA_UART0_TX				0x06000020
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			IMX8QM_EMMC0_CLK_CONN_EMMC0_CLK				0x06000041
-+			IMX8QM_EMMC0_CMD_CONN_EMMC0_CMD				0x00000021
-+			IMX8QM_EMMC0_DATA0_CONN_EMMC0_DATA0			0x00000021
-+			IMX8QM_EMMC0_DATA1_CONN_EMMC0_DATA1			0x00000021
-+			IMX8QM_EMMC0_DATA2_CONN_EMMC0_DATA2			0x00000021
-+			IMX8QM_EMMC0_DATA3_CONN_EMMC0_DATA3			0x00000021
-+			IMX8QM_EMMC0_DATA4_CONN_EMMC0_DATA4			0x00000021
-+			IMX8QM_EMMC0_DATA5_CONN_EMMC0_DATA5			0x00000021
-+			IMX8QM_EMMC0_DATA6_CONN_EMMC0_DATA6			0x00000021
-+			IMX8QM_EMMC0_DATA7_CONN_EMMC0_DATA7			0x00000021
-+			IMX8QM_EMMC0_STROBE_CONN_EMMC0_STROBE			0x00000041
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			IMX8QM_USDHC1_CLK_CONN_USDHC1_CLK			0x06000041
-+			IMX8QM_USDHC1_CMD_CONN_USDHC1_CMD			0x00000021
-+			IMX8QM_USDHC1_DATA0_CONN_USDHC1_DATA0			0x00000021
-+			IMX8QM_USDHC1_DATA1_CONN_USDHC1_DATA1			0x00000021
-+			IMX8QM_USDHC1_DATA2_CONN_USDHC1_DATA2			0x00000021
-+			IMX8QM_USDHC1_DATA3_CONN_USDHC1_DATA3			0x00000021
-+			IMX8QM_USDHC1_VSELECT_CONN_USDHC1_VSELECT		0x00000021
-+		>;
-+	};
-+};
 -- 
-2.7.4
+2.17.1
