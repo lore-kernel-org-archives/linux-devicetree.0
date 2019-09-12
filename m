@@ -1,36 +1,43 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [RFC 1/2] mmc: sdhci-msm: Add support for bus bandwidth voting
-Date: Thu, 12 Sep 2019 15:56:08 +0300
-Message-ID: <616c7a8c-a1cf-2043-4ea4-f452ee90f083@linaro.org>
-References: <1567774037-2344-1-git-send-email-ppvk@codeaurora.org>
- <1567774037-2344-2-git-send-email-ppvk@codeaurora.org>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: [Patch 0/6] media: i2c: ov2659: maintenance series
+Date: Thu, 12 Sep 2019 08:00:01 -0500
+Message-ID: <20190912130007.4469-1-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567774037-2344-2-git-send-email-ppvk@codeaurora.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pradeep P V K <ppvk@codeaurora.org>, adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org
-Cc: asutoshd@codeaurora.org, vbadigan@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, rampraka@codeaurora.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Andy Gross <agross@kernel.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pradeep,
+This patch series is a collection of patches we have been carrying for a
+while.
 
-Thanks for the patch!
+It includes a few sensor register fixes which would cause visual
+artifacts at lower resolution and also at 720p.
 
-On 9/6/19 15:47, Pradeep P V K wrote:
-> Vote for the MSM bus bandwidth required by SDHC driver
-> based on the clock frequency and bus width of the card.
-> Otherwise,the system clocks may run at minimum clock speed
-> and thus affecting the performance.
-> 
-> This change is based on Georgi Djakov [RFC]
-> (https://lkml.org/lkml/2018/10/11/499)
+Also on some board the 'powerdown' is not tied to always on so we add
+support for an optional powerdown gpio.
 
-I am just wondering whether do we really need to predefine the bandwidth values
-in DT? Can't we use the computations from the above patch or is there any
-problem with that approach?
+Since these camera are removable on some board we alos need the driver
+to actually fail when there is no hardware present so the driver is
+actually removed.
 
-Thanks,
-Georgi
+Finally, we update the licensing statement to use SPDX licensing.
+
+Benoit Parrot (6):
+  media: i2c: ov2659: Fix for image wrap-around in lower resolution
+  media: i2c: ov2659: Fix sensor detection to actually fail when device
+    is not present
+  media: dt-bindings: ov2659: add powerdown-gpios optional property
+  media: i2c: ov2659: Add optional powerdown gpio handling
+  media: i2c: ov2659: Fix missing 720p register config
+  media: i2c: ov2659: Switch to SPDX Licensing
+
+ .../devicetree/bindings/media/i2c/ov2659.txt  |  6 +++
+ drivers/media/i2c/Kconfig                     |  2 +-
+ drivers/media/i2c/ov2659.c                    | 40 +++++++++++--------
+ 3 files changed, 30 insertions(+), 18 deletions(-)
+
+-- 
+2.17.1
