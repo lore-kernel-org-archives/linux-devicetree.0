@@ -1,8 +1,7 @@
 From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH V3 02/15] arm64: dts: imx8qxp: move scu pd node before scu
- clock node
-Date: Thu, 12 Sep 2019 23:30:39 +0800
-Message-ID: <1568302252-28066-3-git-send-email-aisheng.dong@nxp.com>
+Subject: [PATCH V3 04/15] arm64: dts: imx8: add lsio lpcg clocks
+Date: Thu, 12 Sep 2019 23:30:41 +0800
+Message-ID: <1568302252-28066-5-git-send-email-aisheng.dong@nxp.com>
 References: <1568302252-28066-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,8 +21,7 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, dongas86@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, oliver.graute@gmail.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, Mark Rutland <mark.rutland@arm.com>, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SCU clock depends on SCU Power domain. So let's move scu pd node
-before scu clock to make it probe earlier.
+Add lsio lpcg clocks
 
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -35,38 +33,195 @@ Tested-by: Oliver Graute <oliver.graute@kococonnector.com>
 Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
 ChangeLog:
- v2: new patch
+v2->v3:
+ * update to use clock-indices property instead of bit-offset property
+v1->v2:
+ * Use old SCU clock binding temporarily to avoid build warning due to SCU
+   clock cell will be changed to 2.
+ * add power domain property
 ---
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi | 155 +++++++++++++++++++++++-
+ 1 file changed, 154 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-index d851341..ced62ee 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -152,6 +152,11 @@
- 			  &lsio_mu1 1 3
- 			  &lsio_mu1 3 3>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
+index 00eaadb..ff29e7f 100644
+--- a/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
+@@ -4,12 +4,28 @@
+  *	Dong Aisheng <aisheng.dong@nxp.com>
+  */
  
-+		pd: imx8qx-pd {
-+			compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-pd";
-+			#power-domain-cells = <1>;
-+		};
++#include <dt-bindings/firmware/imx/rsrc.h>
 +
- 		clk: clock-controller {
- 			compatible = "fsl,imx8qxp-clk";
- 			#clock-cells = <1>;
-@@ -169,11 +174,6 @@
- 			#size-cells = <1>;
- 		};
+ lsio_subsys: bus@5d000000 {
+ 	compatible = "simple-bus";
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 	ranges = <0x5d000000 0x0 0x5d000000 0x1000000>;
  
--		pd: imx8qx-pd {
--			compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-pd";
--			#power-domain-cells = <1>;
--		};
--
- 		rtc: rtc {
- 			compatible = "fsl,imx8qxp-sc-rtc";
- 		};
++	lsio_mem_clk: clock-lsio-mem {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <200000000>;
++		clock-output-names = "lsio_mem_clk";
++	};
++
++	lsio_bus_clk: clock-lsio-bus {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <100000000>;
++		clock-output-names = "lsio_bus_clk";
++	};
++
+ 	lsio_gpio0: gpio@5d080000 {
+ 		reg = <0x5d080000 0x10000>;
+ 		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
+@@ -131,8 +147,145 @@ lsio_subsys: bus@5d000000 {
+ 		power-domains = <&pd IMX_SC_R_MU_13A>;
+ 	};
+ 
+-	lsio_lpcg: clock-controller@5d400000 {
++	/* LPCG clocks */
++	lsio_lpcg: clock-controller-legacy@5d400000 {
+ 		reg = <0x5d400000 0x400000>;
+ 		#clock-cells = <1>;
+ 	};
++
++	pwm0_lpcg: clock-controller@5d400000 {
++		reg = <0x5d400000 0x10000>;
++		#clock-cells = <1>;
++		clocks = <&clk IMX_LSIO_PWM0_CLK>, <&clk IMX_LSIO_PWM0_CLK>,
++			 <&clk IMX_LSIO_PWM0_CLK>, <&lsio_bus_clk>,
++			 <&clk IMX_LSIO_PWM0_CLK>;
++		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
++				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
++				<IMX_LPCG_CLK_6>;
++		clock-output-names = "pwm0_lpcg_ipg_clk",
++				     "pwm0_lpcg_ipg_hf_clk",
++				     "pwm0_lpcg_ipg_s_clk",
++				     "pwm0_lpcg_ipg_slv_clk",
++				     "pwm0_lpcg_ipg_mstr_clk";
++		power-domains = <&pd IMX_SC_R_PWM_0>;
++	};
++
++	pwm1_lpcg: clock-controller@5d410000 {
++		reg = <0x5d410000 0x10000>;
++		#clock-cells = <1>;
++		clocks = <&clk IMX_LSIO_PWM1_CLK>, <&clk IMX_LSIO_PWM1_CLK>,
++			 <&clk IMX_LSIO_PWM1_CLK>, <&lsio_bus_clk>,
++			 <&clk IMX_LSIO_PWM1_CLK>;
++		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
++				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
++				<IMX_LPCG_CLK_6>;
++		clock-output-names = "pwm1_lpcg_ipg_clk",
++				     "pwm1_lpcg_ipg_hf_clk",
++				     "pwm1_lpcg_ipg_s_clk",
++				     "pwm1_lpcg_ipg_slv_clk",
++				     "pwm1_lpcg_ipg_mstr_clk";
++		power-domains = <&pd IMX_SC_R_PWM_1>;
++	};
++
++	pwm2_lpcg: clock-controller@5d420000 {
++		reg = <0x5d420000 0x10000>;
++		#clock-cells = <1>;
++		clocks = <&clk IMX_LSIO_PWM2_CLK>, <&clk IMX_LSIO_PWM2_CLK>,
++			 <&clk IMX_LSIO_PWM2_CLK>, <&lsio_bus_clk>,
++			 <&clk IMX_LSIO_PWM2_CLK>;
++		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
++				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
++				<IMX_LPCG_CLK_6>;
++		clock-output-names = "pwm2_lpcg_ipg_clk",
++				     "pwm2_lpcg_ipg_hf_clk",
++				     "pwm2_lpcg_ipg_s_clk",
++				     "pwm2_lpcg_ipg_slv_clk",
++				     "pwm2_lpcg_ipg_mstr_clk";
++		power-domains = <&pd IMX_SC_R_PWM_2>;
++	};
++
++	pwm3_lpcg: clock-controller@5d430000 {
++		reg = <0x5d430000 0x10000>;
++		#clock-cells = <1>;
++		clocks = <&clk IMX_LSIO_PWM3_CLK>, <&clk IMX_LSIO_PWM3_CLK>,
++			 <&clk IMX_LSIO_PWM3_CLK>, <&lsio_bus_clk>,
++			 <&clk IMX_LSIO_PWM3_CLK>;
++		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
++				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
++				<IMX_LPCG_CLK_6>;
++		clock-output-names = "pwm3_lpcg_ipg_clk",
++				     "pwm3_lpcg_ipg_hf_clk",
++				     "pwm3_lpcg_ipg_s_clk",
++				     "pwm3_lpcg_ipg_slv_clk",
++				     "pwm3_lpcg_ipg_mstr_clk";
++		power-domains = <&pd IMX_SC_R_PWM_3>;
++	};
++
++	pwm4_lpcg: clock-controller@5d440000 {
++		reg = <0x5d440000 0x10000>;
++		#clock-cells = <1>;
++		clocks = <&clk IMX_LSIO_PWM4_CLK>, <&clk IMX_LSIO_PWM4_CLK>,
++			 <&clk IMX_LSIO_PWM4_CLK>, <&lsio_bus_clk>,
++			 <&clk IMX_LSIO_PWM4_CLK>;
++		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
++				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
++				<IMX_LPCG_CLK_6>;
++		clock-output-names = "pwm4_lpcg_ipg_clk",
++				     "pwm4_lpcg_ipg_hf_clk",
++				     "pwm4_lpcg_ipg_s_clk",
++				     "pwm4_lpcg_ipg_slv_clk",
++				     "pwm4_lpcg_ipg_mstr_clk";
++		power-domains = <&pd IMX_SC_R_PWM_4>;
++	};
++
++	pwm5_lpcg: clock-controller@5d450000 {
++		reg = <0x5d450000 0x10000>;
++		#clock-cells = <1>;
++		clocks = <&clk IMX_LSIO_PWM5_CLK>, <&clk IMX_LSIO_PWM5_CLK>,
++			 <&clk IMX_LSIO_PWM5_CLK>, <&lsio_bus_clk>,
++			 <&clk IMX_LSIO_PWM5_CLK>;
++		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
++				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
++				<IMX_LPCG_CLK_6>;
++		clock-output-names = "pwm5_lpcg_ipg_clk",
++				     "pwm5_lpcg_ipg_hf_clk",
++				     "pwm5_lpcg_ipg_s_clk",
++				     "pwm5_lpcg_ipg_slv_clk",
++				     "pwm5_lpcg_ipg_mstr_clk";
++		power-domains = <&pd IMX_SC_R_PWM_5>;
++	};
++
++	pwm6_lpcg: clock-controller@5d460000 {
++		reg = <0x5d460000 0x10000>;
++		#clock-cells = <1>;
++		clocks = <&clk IMX_LSIO_PWM6_CLK>, <&clk IMX_LSIO_PWM6_CLK>,
++			 <&clk IMX_LSIO_PWM6_CLK>, <&lsio_bus_clk>,
++			 <&clk IMX_LSIO_PWM6_CLK>;
++		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
++				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
++				<IMX_LPCG_CLK_6>;
++		clock-output-names = "pwm6_lpcg_ipg_clk",
++				     "pwm6_lpcg_ipg_hf_clk",
++				     "pwm6_lpcg_ipg_s_clk",
++				     "pwm6_lpcg_ipg_slv_clk",
++				     "pwm6_lpcg_ipg_mstr_clk";
++		power-domains = <&pd IMX_SC_R_PWM_6>;
++	};
++
++	pwm7_lpcg: clock-controller@5d470000 {
++		reg = <0x5d470000 0x10000>;
++		#clock-cells = <1>;
++		clocks = <&clk IMX_LSIO_PWM7_CLK>, <&clk IMX_LSIO_PWM7_CLK>,
++			 <&clk IMX_LSIO_PWM7_CLK>, <&lsio_bus_clk>,
++			 <&clk IMX_LSIO_PWM7_CLK>;
++		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_1>,
++				<IMX_LPCG_CLK_4>, <IMX_LPCG_CLK_5>,
++				<IMX_LPCG_CLK_6>;
++		clock-output-names = "pwm7_lpcg_ipg_clk",
++				     "pwm7_lpcg_ipg_hf_clk",
++				     "pwm7_lpcg_ipg_s_clk",
++				     "pwm7_lpcg_ipg_slv_clk",
++				     "pwm7_lpcg_ipg_mstr_clk";
++		power-domains = <&pd IMX_SC_R_PWM_7>;
++	};
+ };
 -- 
 2.7.4
