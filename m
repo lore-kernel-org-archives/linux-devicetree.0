@@ -1,52 +1,41 @@
 From: Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v3 0/2] hwrng: npcm: add NPCM RNG driver support
-Date: Thu, 12 Sep 2019 12:01:47 +0300
-Message-ID: <20190912090149.7521-1-tmaimon77@gmail.com>
+Subject: [PATCH v3 1/2] dt-binding: hwrng: add NPCM RNG documentation
+Date: Thu, 12 Sep 2019 12:01:48 +0300
+Message-ID: <20190912090149.7521-2-tmaimon77@gmail.com>
+References: <20190912090149.7521-1-tmaimon77@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190912090149.7521-1-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com, yuenn@google.com, benjaminfair@google.com, sumit.garg@linaro.org, jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de, joel@jms.id.au
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds Random Number Generator (RNG) support 
-for the Nuvoton NPCM Baseboard Management Controller (BMC).
+Added device tree binding documentation for Nuvoton BMC
+NPCM Random Number Generator (RNG).
 
-The RNG driver we use power consumption when the RNG 
-is not required.
-
-The NPCM RNG driver tested on NPCM750 evaluation board.
-
-Addressed comments from:.
- - Daniel Thompson: https://lkml.org/lkml/2019/9/10/352
- - Milton Miller II : https://lkml.org/lkml/2019/9/10/847
- - Daniel Thompson: https://lkml.org/lkml/2019/9/10/294
-
-Changes since version 2:
- - Rearrange wait parameter in npcm_rng_read function.
- - Calling pm_runtime_enable function before hwrng_register function 
-   called to enable the hwrng before add_early_randomness called.
- - Remove quality dt-binding parameter in the driver and documentation.
- - Disable CONFIG_PM if devm_hwrng_register failed.
- - Remove owner setting in the driver struct.
-
-Changes since version 1:
- - Define timout in real-world units.
- - Using readl_poll_timeout in rng_read function.
- - Honor wait parameter in rng_read function.
- - Using local variable instead of #ifndef.
- - Remove probe print.
-
-Tomer Maimon (2):
-  dt-binding: hwrng: add NPCM RNG documentation
-  hwrng: npcm: add NPCM RNG driver
-
- .../bindings/rng/nuvoton,npcm-rng.txt         |  12 ++
- drivers/char/hw_random/Kconfig                |  13 ++
- drivers/char/hw_random/Makefile               |   1 +
- drivers/char/hw_random/npcm-rng.c             | 186 ++++++++++++++++++
- 4 files changed, 212 insertions(+)
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+---
+ .../devicetree/bindings/rng/nuvoton,npcm-rng.txt     | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
- create mode 100644 drivers/char/hw_random/npcm-rng.c
 
+diff --git a/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+new file mode 100644
+index 000000000000..65c04172fc8c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+@@ -0,0 +1,12 @@
++NPCM SoC Random Number Generator
++
++Required properties:
++- compatible  : "nuvoton,npcm750-rng" for the NPCM7XX BMC.
++- reg         : Specifies physical base address and size of the registers.
++
++Example:
++
++rng: rng@f000b000 {
++	compatible = "nuvoton,npcm750-rng";
++	reg = <0xf000b000 0x8>;
++};
 -- 
 2.18.0
