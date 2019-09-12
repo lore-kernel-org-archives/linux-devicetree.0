@@ -1,65 +1,129 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [GIT PULL 1/2] arm64: dts: exynos: Pull for v5.4
-Date: Thu, 12 Sep 2019 11:35:52 +0200
-Message-ID: <CAJKOXPcF_NVeyR7cRnq-6obi39MocA0aRGUn_9aExjBy0VXkWw@mail.gmail.com>
-References: <20190911183632.4317-1-krzk@kernel.org> <CAK8P3a2pBV+fh0rHitZ30Zz61QNRLfNSD-nhnzq4ZtxSh66F1Q@mail.gmail.com>
- <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH 3/9] dt-bindings: crypto: Add DT bindings documentation
+ for sun8i-ce Crypto Engine
+Date: Thu, 12 Sep 2019 11:37:37 +0200
+Message-ID: <20190912093737.s6iu63sdncij2qib@localhost.localdomain>
+References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
+ <20190906184551.17858-4-clabbe.montjoie@gmail.com>
+ <20190907040116.lib532o2eqt4qnvv@flea>
+ <20190911183158.GA8264@Red>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7d2ddx4b3xu2lr3y"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190911183158.GA8264@Red>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>, SoC Team <soc@kernel.org>, Kukjin Kim <kgene@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: davem@davemloft.net, herbert@gondor.apana.org.au, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 12 Sep 2019 at 08:32, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Wed, 11 Sep 2019 at 23:07, Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Wed, Sep 11, 2019 at 8:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > Unfortunately the patches were applied right after closing the linux-next.
-> >
-> > Hi Krzysztof,
-> >
-> > I took a look at these and am not convinced this is right:
-> >
-> > > 1. Fix boot of Exynos7 due to wrong address/size of memory node,
-> >
-> > The current state is clearly broken and a fix is needed, but
-> > I'm not sure this is the right fix. Why do you have 32-bit physical
-> > addressing on a 64-bit chip? I looked at commit ef72171b3621
-> > that introduced it, and it seems it would be better to just
-> > revert back to 64-bit addresses.
->
-> We discussed with Marek Szyprowski that either we can go back to
-> 64-bit addressing or stick to 32. There are not known boards with more
-> than 4 GB of RAM so from this point of view the choice was irrelevant.
-> At the end of discussion I mentioned to stick with other arm64 boards
-> (although not all), so revert to have 64 bit address... but Marek
-> chosen differently. Since you ask, let's go back with revert.
->
-> >
-> > > 2. Move GPU under /soc node,
-> >
-> > No problem
-> >
-> > > 3. Minor cleanup of #address-cells.
-> >
-> > IIRC, an interrupt-controller is required to have a #address-cells
-> > property, even if that is normally zero. I don't remember the
-> > details, but the gic binding lists it as mandatory, and I think
-> > the PCI interrupt-map relies on it. I would just drop this patch.
->
-> Indeed, binding requires both address and size cells. I'll drop it.
 
-Short update: no, address-cells are not required by bindings. They are
-optional. In case of lack of them, the parent address-cells will be
-used so effectively this patch was changing it from 0 to 1. Anyway
-this was not expressed in commit msg so I'll drop it.
+--7d2ddx4b3xu2lr3y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+Hi Corentin,
+
+On Wed, Sep 11, 2019 at 08:31:58PM +0200, Corentin Labbe wrote:
+> On Sat, Sep 07, 2019 at 07:01:16AM +0300, Maxime Ripard wrote:
+> > On Fri, Sep 06, 2019 at 08:45:45PM +0200, Corentin Labbe wrote:
+> > > This patch adds documentation for Device-Tree bindings for the
+> > > Crypto Engine cryptographic accelerator driver.
+> > >
+> > > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> > > ---
+> > >  .../bindings/crypto/allwinner,sun8i-ce.yaml   | 84 +++++++++++++++++=
+++
+> > >  1 file changed, 84 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/crypto/allwinne=
+r,sun8i-ce.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun8i=
+-ce.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
+> [...]
+> > > +else:
+> > > +  clocks:
+> > > +    items:
+> > > +      - description: Bus clock
+> > > +      - description: Module clock
+> > > +
+> > > +  clock-names:
+> > > +    items:
+> > > +      - const: ahb
+> > > +      - const: mod
+> > > +
+> > > +  resets:
+> > > +    maxItems: 1
+> > > +
+> > > +  reset-names:
+> > > +    const: ahb
+> >=20
+> > This prevents the usage of the additionalProperties property, which
+> > you should really use.
+> >=20
+> > What you can do instead is moving the clocks and clock-names
+> > description under properties, with a minItems of 2 and a maxItems of
+> > 3. Then you can restrict the length of that property to either 2 or 3
+> > depending on the case here.
+> >=20
+>=20
+> Hello
+>=20
+> I fail to do this.
+> I do the following (keeped only clock stuff)
+> properties:
+>=20
+>   clocks:
+>     items:
+>       - description: Bus clock
+>       - description: Module clock
+>       - description: MBus clock
+
+Add minItems: 2  and maxItems: 3 at the same level than items
+
+>=20
+>   clock-names:
+>     items:
+>       - const: ahb
+>       - const: mod
+>       - const: mbus
+
+And here as well
+
+Something I missed earlier though was that we've tried to unify as
+much as possible the ahb / apb / axi clocks around the bus name, it
+would be great if you could do it.
+
+>=20
+> if:
+>   properties:
+>     compatible:
+>       items:
+>         const: allwinner,sun50i-h6-crypto
+> then:
+>   properties:
+>       clocks:
+>         minItems: 3
+>         maxItems: 3
+>       clock-names:
+>         minItems: 3
+>         maxItems: 3
+
+You don't need to duplicate the min and maxItems here
+
+Maxime
+
+--7d2ddx4b3xu2lr3y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXXoR4QAKCRDj7w1vZxhR
+xd/rAQDRrO6PXFXddEGmbg33Hyw8TjZtRKONBAAN5nSryJdLjQD+O0kVALWGEe1h
+DMUgNDC+mm3ZrNDIOzQMdWgSgsA4aA0=
+=g4h8
+-----END PGP SIGNATURE-----
+
+--7d2ddx4b3xu2lr3y--
