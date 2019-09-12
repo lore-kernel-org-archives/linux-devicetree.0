@@ -1,303 +1,72 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 4/5] thermal: Add generic power domain warming device driver.
-Date: Thu, 12 Sep 2019 17:04:01 +0200
-Message-ID: <CAPDyKFpzeF6Adu9qBTFazTzbe=rv90x1UjKqC2LvCDpoXBJfVQ@mail.gmail.com>
-References: <1568135676-9328-1-git-send-email-thara.gopinath@linaro.org> <1568135676-9328-5-git-send-email-thara.gopinath@linaro.org>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH 1/2] venus: use on-chip interconnect API
+Date: Thu, 12 Sep 2019 18:11:55 +0300
+Message-ID: <345e7450-b3af-92c5-4e83-bccaf0a98a0b@linaro.org>
+References: <20190814084701.25455-1-stanimir.varbanov@linaro.org>
+ <20190814084701.25455-2-stanimir.varbanov@linaro.org>
+ <cc85f55c-3d21-c3b2-6848-e48513263e39@linaro.org>
+ <20190904042203.GC3081@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568135676-9328-5-git-send-email-thara.gopinath@linaro.org>
+In-Reply-To: <20190904042203.GC3081@tuxbook-pro>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thara Gopinath <thara.gopinath@linaro.org>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, agross@kernel.org, amit.kucheria@verdurent.com, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Vikash Garodia <vgarodia@codeaurora.org>, Andy Gross <agross@kernel.org>, Aniket Masule <amasule@codeaurora.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 10 Sep 2019 at 19:14, Thara Gopinath <thara.gopinath@linaro.org> wrote:
->
-> Resources modeled as power domains in linux kenrel
-> can  be used to warm the SoC(eg. mx power domain on sdm845).
-> To support this feature, introduce a generic power domain
-> warming device driver that can be plugged into the thermal framework
-> (The thermal framework itself requires further modifiction to
-> support a warming device in place of a cooling device.
-> Those extensions are not introduced in this patch series).
->
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
-> v1->v2:
->         - Make power domain based warming device driver a generic
->         driver in the thermal framework. v1 implemented this as a
->         Qualcomm specific driver.
->         - Rename certain variables as per review suggestions on the
->         mailing list.
->
->  drivers/thermal/Kconfig              |  11 +++
->  drivers/thermal/Makefile             |   2 +
->  drivers/thermal/pwr_domain_warming.c | 174 +++++++++++++++++++++++++++++++++++
->  3 files changed, 187 insertions(+)
->  create mode 100644 drivers/thermal/pwr_domain_warming.c
->
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 9966364..eeb6018 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -187,6 +187,17 @@ config DEVFREQ_THERMAL
->
->           If you want this support, you should say Y here.
->
-> +config PWR_DOMAIN_WARMING_THERMAL
-> +       bool "Power Domain based warming device"
-> +       depends on PM_GENERIC_DOMAINS
-> +       depends on PM_GENERIC_DOMAINS_OF
+Hi Bjorn,
 
-PM_GENERIC_DOMAINS_OF can't be set unless PM_GENERIC_DOMAINS is set too.
+On 9/4/19 07:22, Bjorn Andersson wrote:
+> On Tue 20 Aug 02:34 PDT 2019, Georgi Djakov wrote:
+> 
+>> Hi Stan,
+>>
+>> On 8/14/19 11:47, Stanimir Varbanov wrote:
+>>> This aims to add a requests for bandwidth scaling depending
+>>> on the resolution and framerate (macroblocks per second). The
+>>> exact value ff the requested bandwidth is get from a
+>>
+>> s/ff/of/
+>>
+>>> pre-calculated tables for encoder and decoder.
+>>>
+>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>>> ---
+>>>  drivers/media/platform/qcom/venus/core.c    | 34 +++++++++++
+>>>  drivers/media/platform/qcom/venus/core.h    | 14 +++++
+>>>  drivers/media/platform/qcom/venus/helpers.c | 67 ++++++++++++++++++++-
+>>>  3 files changed, 114 insertions(+), 1 deletion(-)
+>>
+>> It looks like venus can be built-in, so how about the case when venus is
+>> built-in and the interconnect provider is a module? Maybe add a dependency in
+>> Kconfig to depend on INTERCONNECT || !INTERCONNECT?
+>>
+> 
+> I've been struggling down this road for remoteproc et al for a long
+> time, I strongly suggest that you make the INTERCONNECT config bool, to
+> ensure that we don't see this problem for every client.
 
-So I assume it's sufficient to depend on PM_GENERIC_DOMAINS_OF?
+Thanks for the comment. Well, i was expecting that we will have to make it bool
+one day. Viresh actually already sent a patch [1]. Maybe you can add an Ack?
 
-> +       help
-> +         This implements the generic power domain based warming
-> +         mechanism through increasing the performance state of
-> +         a power domain.
-> +
-> +         If you want this support, you should say Y here.
-> +
->  config THERMAL_EMULATION
->         bool "Thermal emulation mode support"
->         help
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 74a37c7..382c64a 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -27,6 +27,8 @@ thermal_sys-$(CONFIG_CLOCK_THERMAL)   += clock_cooling.o
->  # devfreq cooling
->  thermal_sys-$(CONFIG_DEVFREQ_THERMAL) += devfreq_cooling.o
->
-> +thermal_sys-$(CONFIG_PWR_DOMAIN_WARMING_THERMAL)       += pwr_domain_warming.o
-> +
->  # platform thermal drivers
->  obj-y                          += broadcom/
->  obj-$(CONFIG_THERMAL_MMIO)             += thermal_mmio.o
-> diff --git a/drivers/thermal/pwr_domain_warming.c b/drivers/thermal/pwr_domain_warming.c
-> new file mode 100644
-> index 0000000..3dd792b
-> --- /dev/null
-> +++ b/drivers/thermal/pwr_domain_warming.c
-> @@ -0,0 +1,174 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, Linaro Ltd
-> + */
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/thermal.h>
-> +
-> +struct pd_warming_device {
-> +       struct thermal_cooling_device *cdev;
-> +       struct device *dev;
-> +       int max_state;
-> +       int cur_state;
-> +       bool runtime_resumed;
-> +};
-> +
-> +static const struct of_device_id pd_wdev_match_table[] = {
-> +       { .compatible = "thermal-power-domain-wdev", .data = NULL },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, pd_wdev_match_table);
-> +
-> +static int pd_wdev_get_max_state(struct thermal_cooling_device *cdev,
-> +                                unsigned long *state)
-> +{
-> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> +
-> +       *state = pd_wdev->max_state;
-> +       return 0;
-> +}
-> +
-> +static int pd_wdev_get_cur_state(struct thermal_cooling_device *cdev,
-> +                                unsigned long *state)
-> +{
-> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> +
-> +       *state = dev_pm_genpd_get_performance_state(pd_wdev->dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static int pd_wdev_set_cur_state(struct thermal_cooling_device *cdev,
-> +                                unsigned long state)
-> +{
-> +       struct pd_warming_device *pd_wdev = cdev->devdata;
-> +       struct device *dev = pd_wdev->dev;
-> +       int ret;
-> +
-> +       ret = dev_pm_genpd_set_performance_state(dev, state);
-> +
-> +       if (ret)
-> +               return ret;
-> +
-> +       if (state && !pd_wdev->runtime_resumed) {
-> +               ret = pm_runtime_get_sync(dev);
-> +               pd_wdev->runtime_resumed = true;
-> +       } else if (!state && pd_wdev->runtime_resumed) {
-> +               ret = pm_runtime_put(dev);
-> +               pd_wdev->runtime_resumed = false;
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static struct thermal_cooling_device_ops pd_warming_device_ops = {
-> +       .get_max_state = pd_wdev_get_max_state,
-> +       .get_cur_state = pd_wdev_get_cur_state,
-> +       .set_cur_state = pd_wdev_set_cur_state,
-> +};
-> +
-> +static int pd_wdev_create(struct device *dev, const char *name)
-> +{
-> +       struct pd_warming_device *pd_wdev;
-> +       int state_count;
-> +
-> +       pd_wdev = devm_kzalloc(dev, sizeof(*pd_wdev), GFP_KERNEL);
-> +       if (!pd_wdev)
-> +               return -ENOMEM;
-> +
-> +       state_count = dev_pm_genpd_performance_state_count(dev);
-> +       if (state_count < 0)
-> +               return state_count;
-> +
-> +       pd_wdev->dev = dev;
-> +       pd_wdev->max_state = state_count - 1;
-> +       pd_wdev->runtime_resumed = false;
-> +
-> +       pm_runtime_enable(dev);
-> +
-> +       pd_wdev->cdev = thermal_of_cooling_device_register
-> +                                       (dev->of_node, name,
-> +                                        pd_wdev,
-> +                                        &pd_warming_device_ops);
-> +       if (IS_ERR(pd_wdev->cdev)) {
-> +               dev_err(dev, "unable to register %s cooling device\n", name);
-> +               pm_runtime_disable(dev);
-> +
-> +               return PTR_ERR(pd_wdev->cdev);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int pd_wdev_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev, *pd_dev;
-> +       const char *pd_name;
-> +       int id, count, ret = 0;
-> +
-> +       count = of_count_phandle_with_args(dev->of_node, "power-domains",
-> +                                          "#power-domain-cells");
+> 
+> The interconnect framework should hide the fact that the provider is
+> module.
+> 
 
-Perhaps this should be converted to genpd OF helper function instead,
-that allows the caller to know how many power-domains there are
-specified for a device node.
+Correct.
 
-> +
-> +       if (count > 1) {
-> +               for (id = 0; id < count; id++) {
-> +                       ret = of_property_read_string_index
-> +                                       (dev->of_node, "power-domain-names",
-> +                                        id, &pd_name);
-> +                       if (ret) {
-> +                               dev_err(dev, "Error reading the power domain name %d\n", ret);
-> +                               continue;
-> +                       }
+> 
+> But with this in place is there actually a dependency? Won't the include
+> file provide stubs in the case of !INTERCONNECT?
 
-It looks a bit awkward that you want to re-use the power-domain-names
-as the name for the cooling (warming) device. This isn't really what
-we use the "*-names" bindings for in general, I think.
+There are stubs, so we are fine.
 
-Anyway, if you want a name corresponding to the actual attached PM
-domain, perhaps re-using "->name" from the struct generic_pm_domain is
-better. We can add a genpd helper for that, no problem. Of course it
-also means that you must call dev_pm_domain_attach_by_id() first, to
-attach the device and then get the name of the genpd, but that should
-be fine.
+Thanks,
+Georgi
 
-> +
-> +                       pd_dev = dev_pm_domain_attach_by_id(dev, id);
-> +                       if (IS_ERR(pd_dev)) {
-> +                               dev_err(dev, "Error attaching power domain %s %ld\n", pd_name, PTR_ERR(pd_dev));
-> +                               continue;
-> +                       }
-> +
-> +                       ret = pd_wdev_create(pd_dev, pd_name);
-> +                       if (ret) {
-> +                               dev_err(dev, "Error building cooling device %s %d\n", pd_name, ret);
-> +                               dev_pm_domain_detach(pd_dev, false);
-> +                               continue;
-> +                       }
-
-I am wondering about the use case of having multiple PM domains
-attached to the cooling (warming) device. Is that really needed?
-Perhaps you can elaborate on that a bit?
-
-> +               }
-> +       } else if (count == 1) {
-> +               ret = of_property_read_string_index(dev->of_node,
-> +                                                   "power-domain-names",
-> +                                                   0, &pd_name);
-> +               if (ret) {
-> +                       dev_err(dev, "Error reading the power domain name %d\n", ret);
-> +                       goto exit;
-> +               }
-
-According to my comment above, perhaps we simply don't have to use the
-"power-domain-names" binding at all.
-
-Also, I don't think this is really safe, as there is no guarantee that
-there is PM domain attached to the device, just because you found the
-DT property "power-domain-names".
-
-Probably better to check pm_domain pointer for the device.
-
-> +
-> +               ret = pd_wdev_create(dev, pd_name);
-> +               if (ret) {
-> +                       dev_err(dev, "Error building cooling device %s %d\n", pd_name, ret);
-> +                       goto exit;
-> +               }
-> +       } else  {
-> +               ret = -EINVAL;
-> +       }
-> +
-> +exit:
-> +       return ret;
-> +}
-> +
-> +static struct platform_driver pd_wdev_driver = {
-> +       .driver = {
-> +               .name = "qcom-rpmhpd-cdev",
-
-Probably rename to a more generic name (leftover from earlier version I assume).
-
-> +               .of_match_table = pd_wdev_match_table,
-> +       },
-> +       .probe = pd_wdev_probe,
-> +};
-> +module_platform_driver(pd_wdev_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm RPMHPD cooling device driver");
-
-Ditto.
-
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.1.4
->
-
-Kind regards
-Uffe
+[1]
+https://lore.kernel.org/linux-pm/b789cce388dd1f2906492f307dea6780c398bc6a.1567065991.git.viresh.kumar@linaro.org/
