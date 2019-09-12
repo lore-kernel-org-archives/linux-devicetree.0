@@ -1,83 +1,67 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v3 2/2] backlight: lm3630a: add an enable gpio for the
- HWEN pin
-Date: Thu, 12 Sep 2019 10:38:23 +0100
-Message-ID: <20190912093823.h5ahzutlp4evwg6l@holly.lan>
-References: <20190911172106.12843-1-andreas@kemnade.info>
- <20190911172106.12843-3-andreas@kemnade.info>
+From: Gilles Doffe <gilles.doffe@savoirfairelinux.com>
+Subject: Re: [PATCH v2] arm: dts: imx6qdl: add gpio expander pca9535
+Date: Thu, 12 Sep 2019 06:01:54 -0400 (EDT)
+Message-ID: <978100557.7721358.1568282514403.JavaMail.zimbra@savoirfairelinux.com>
+References: <20190719104615.5329-1-gilles.doffe@savoirfairelinux.com>
+ <20190722075341.e4ve45rneusiogtk@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190911172106.12843-3-andreas@kemnade.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: lee.jones@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190722075341.e4ve45rneusiogtk@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: mark rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, shawnguo <shawnguo@kernel.org>, s hauer <s.hauer@pengutronix.de>, rennes <rennes@savoirfairelinux.com>, linux-kernel <linux-kernel@vger.kernel.org>, robh+dt <robh+dt@kernel.org>, linux-imx <linux-imx@nxp.com>, kernel <kernel@pengutronix.de>, =?utf-8?Q?J=C3=A9rome?= Oufella <jerome.oufella@savoirfairelinux.com>, festevam <festevam@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 07:21:06PM +0200, Andreas Kemnade wrote:
-> For now just enable it in the probe function to allow i2c
-> access. Disabling also means resetting the register values
-> to default and according to the datasheet does not give
-> power savings.
-> 
-> Tested on Kobo Clara HD.
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-
-Make sure Dan is happy w.r.t. his review comments but if this driver is
-unchanged when you spin v4 (for the DT changes) then feel free to add:
-
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-
-
-Daniel.
-
-> ---
-> changes in v2:
-> - simplification
-> - correct gpio direction initialisation
-> 
-> changes in v3:
-> - removed legacy include
-> 
->  drivers/video/backlight/lm3630a_bl.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
-> index 8f84f3684f04..d9e67b9b2571 100644
-> --- a/drivers/video/backlight/lm3630a_bl.c
-> +++ b/drivers/video/backlight/lm3630a_bl.c
-> @@ -12,6 +12,7 @@
->  #include <linux/uaccess.h>
->  #include <linux/interrupt.h>
->  #include <linux/regmap.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/pwm.h>
->  #include <linux/platform_data/lm3630a_bl.h>
->  
-> @@ -48,6 +49,7 @@ struct lm3630a_chip {
->  	struct lm3630a_platform_data *pdata;
->  	struct backlight_device *bleda;
->  	struct backlight_device *bledb;
-> +	struct gpio_desc *enable_gpio;
->  	struct regmap *regmap;
->  	struct pwm_device *pwmd;
->  };
-> @@ -535,6 +537,13 @@ static int lm3630a_probe(struct i2c_client *client,
->  	}
->  	pchip->pdata = pdata;
->  
-> +	pchip->enable_gpio = devm_gpiod_get_optional(&client->dev, "enable",
-> +						GPIOD_OUT_HIGH);
-> +	if (IS_ERR(pchip->enable_gpio)) {
-> +		rval = PTR_ERR(pchip->enable_gpio);
-> +		return rval;
-> +	}
-> +
->  	/* chip initialize */
->  	rval = lm3630a_chip_init(pchip);
->  	if (rval < 0) {
-> -- 
-> 2.20.1
-> 
+SGkgTWFyY28sCgpUaGFua3MgZm9yIHlvdXIgcmVwbHkgYW5kIHNvcnJ5IGFib3V0IHRoZSBkZWxh
+eS4KCi0tLS0tIExlIDIyIEp1aWwgMTksIMOgIDk6NTMsIE1hcmNvIEZlbHNjaCBtLmZlbHNjaEBw
+ZW5ndXRyb25peC5kZSBhIMOpY3JpdCA6Cgo+IEhpIEdpbGxlcywKPiAKPiBjYW4geW91IGFkYXB0
+IHRoZSBwYXRjaCB0aXRsZSwgSSBhc3N1bWVkIHRoYXQgdGhlIGJhc2UgZHRzaSBpcyBhZGRpbmcg
+YQo+IGdwaW8tZXhwYW5kZXIgd2hpY2ggbWFrZXMgbm8gc2Vuc2UuCgpNeSBmaXJzdCBpbnRlbnQg
+d2FzIHRvIGFkZCB0aGUgZ3Bpby1leHBhbmRlciBwY2E5NTM1IGludG8gdGhlIGlteDZxLXJleC1w
+cm8uZHRzIGFuZCBpbiBhIGZ1dHVyZSBpbXg2cXAtcmV4LXVsdHJhLmR0cwpIb3dldmVyIEkgbm90
+aWNlZCB0aGF0IHRoZSBzZ3RsNTAwMCB3YXMgYWxyZWFkeSBpbiB0aGUgZHRzaS4KSXQgaXMgbWF5
+YmUgZHVlIHRvIHRoZSBmYWN0IHRoYXQgbGlrZSB0aGUgcGNhOTUzNSwgdGhlIHNndGw1MDAwIGlz
+IHByZXNlbnQgb24gdGhlIGJhc2Vib2FyZCBub3Qgb24gdGhlIFNPTS4KVGh1cyBJIGd1ZXNzIHRo
+YXQgYmFzZWJvYXJkIHN0dWZmIGNvbW1vbiB0byBhbGwgcmV4IFNPTSBzaG91bGQgYmUgaW4gaW14
+NnFkbC1yZXguZHRzaSBhbmQgbm90IGluIHRoZSBkdHMuCkRvZXMtaXQgc2VlbSBjb3JyZWN0IHRv
+IHlvdSA/Cgo+IAo+IE9uIDE5LTA3LTE5IDEyOjQ2LCBHaWxsZXMgRE9GRkUgd3JvdGU6Cj4+IFRo
+ZSBwY2E5NTM1IGdwaW8gZXhwYW5kZXIgaXMgcHJlc2VudCBvbiB0aGUgUmV4IGJhc2Vib2FyZCwg
+YnV0IG1pc3NpbmcKPj4gZnJvbSB0aGUgZHRzaS4KPj4gCj4+IEFkZCB0aGUgbmV3IGdwaW8gY29u
+dHJvbGxlciBhbmQgdGhlIGFzc29jaWF0ZWQgaW50ZXJydXB0IGxpbmUKPj4gTVg2UURMX1BBRF9O
+QU5ERl9DUzNfX0dQSU82X0lPMTYuCj4+IAo+PiBTaWduZWQtb2ZmLWJ5OiBHaWxsZXMgRE9GRkUg
+PGdpbGxlcy5kb2ZmZUBzYXZvaXJmYWlyZWxpbnV4LmNvbT4KPj4gLS0tCj4gCj4gSGF2aW5nIGEg
+Y2hhbmdlbG9nIHdvdWxkIGJlIG5pY2UgdG9vLgo+IAo+PiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14
+NnFkbC1yZXguZHRzaSB8IDE5ICsrKysrKysrKysrKysrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2Vk
+LCAxOSBpbnNlcnRpb25zKCspCj4+IAo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
+aW14NnFkbC1yZXguZHRzaQo+PiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtcmV4LmR0c2kK
+Pj4gaW5kZXggOTdmMTY1OTE0NGVhLi5iNTE3ZWZiMjJmY2IgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gv
+YXJtL2Jvb3QvZHRzL2lteDZxZGwtcmV4LmR0c2kKPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
+aW14NnFkbC1yZXguZHRzaQo+PiBAQCAtMTM2LDYgKzEzNiwxOSBAQAo+PiAgCQljb21wYXRpYmxl
+ID0gImF0bWVsLDI0YzAyIjsKPj4gIAkJcmVnID0gPDB4NTc+Owo+PiAgCX07Cj4+ICsKPj4gKwlw
+Y2E5NTM1OiBncGlvOEAyNyB7Cj4+ICsJCWNvbXBhdGlibGUgPSAibnhwLHBjYTk1MzUiOwo+PiAr
+CQlyZWcgPSA8MHgyNz47Cj4gCj4gVGhlIGkyYyBkZXZpY2VzIGFyZSBvcmRlcmQgYnkgdGhlaXIg
+aTJjLWFkZHJlc3NlcyBzdGFydGluZyBmcm9tIHRoZQo+IGxvd2VzdC4KPgoKQWNrLgoKPj4gKwkJ
+Z3Bpby1jb250cm9sbGVyOwo+PiArCQkjZ3Bpby1jZWxscyA9IDwyPjsKPj4gKwkJcGluY3RybC1u
+YW1lcyA9ICJkZWZhdWx0IjsKPj4gKwkJcGluY3RybC0wID0gPCZwaW5jdHJsX3BjYTk1MzU+Owo+
+PiArCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvNj47Cj4+ICsJCWludGVycnVwdHMgPSA8MTYg
+SVJRX1RZUEVfTEVWRUxfTE9XPjsKPj4gKwkJaW50ZXJydXB0LWNvbnRyb2xsZXI7Cj4+ICsJCSNp
+bnRlcnJ1cHQtY2VsbHMgPSA8Mj47Cj4+ICsJfTsKPj4gIH07Cj4+ICAKPj4gICZpMmMzIHsKPj4g
+QEAgLTIzNyw2ICsyNTAsMTIgQEAKPj4gIAkJCT47Cj4+ICAJCX07Cj4+ICAKPj4gKwkJcGluY3Ry
+bF9wY2E5NTM1OiBwY2E5NTM1IHsKPj4gKwkJCWZzbCxwaW5zID0gPAo+PiArCQkJCU1YNlFETF9Q
+QURfTkFOREZfQ1MzX19HUElPNl9JTzE2CTB4MDAwMTcwNTkKPiAKPiBUaGUgcGlubXV4IGJlbG93
+IGRvbid0IHVzZSB0aGUgbGVhZGluZyB6ZXJvJ3MgaWYgeW91IGFyZSB0aGUgZmlyc3QgSQo+IHdv
+dWxkIGRyb3AgdGhhdC4KPiAKPiBSZWdhcmRzLAo+ICBNYXJjbwo+CgpBY2suCgpSZWdhcmRzLApH
+aWxsZXMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LWFybS1rZXJuZWwK
