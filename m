@@ -1,102 +1,95 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v3 11/11] misc: pci_endpoint_test: Add LS1088a in
- pci_device_id table
-Date: Thu, 12 Sep 2019 13:59:40 +0100
-Message-ID: <20190912125939.GE9720@e119886-lin.cambridge.arm.com>
-References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
- <20190902031716.43195-12-xiaowei.bao@nxp.com>
- <20190902125454.GK9720@e119886-lin.cambridge.arm.com>
- <AM5PR04MB3299D598229952C13C492B48F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
+From: Jonathan Chocron <jonnyc@amazon.com>
+Subject: [PATCH v6 0/7] Amazon's Annapurna Labs DT-based PCIe host controller driver
+Date: Thu, 12 Sep 2019 16:00:38 +0300
+Message-ID: <20190912130042.14597-1-jonnyc@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AM5PR04MB3299D598229952C13C492B48F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>, helgaas@kernel.org
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.o>
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: andrew.murray@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonnyc@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 01:52:30AM +0000, Xiaowei Bao wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Andrew Murray <andrew.murray@arm.com>
-> > Sent: 2019年9月2日 20:55
-> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Cc: robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo
-> > Li <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h.
-> > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
-> > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
-> > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org;
-> > arnd@arndb.de; gregkh@linuxfoundation.org; Z.q. Hou
-> > <zhiqiang.hou@nxp.com>
-> > Subject: Re: [PATCH v3 11/11] misc: pci_endpoint_test: Add LS1088a in
-> > pci_device_id table
-> > 
-> > On Mon, Sep 02, 2019 at 11:17:16AM +0800, Xiaowei Bao wrote:
-> > > Add LS1088a in pci_device_id table so that pci-epf-test can be used
-> > > for testing PCIe EP in LS1088a.
-> > >
-> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > ---
-> > > v2:
-> > >  - No change.
-> > > v3:
-> > >  - No change.
-> > >
-> > >  drivers/misc/pci_endpoint_test.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/misc/pci_endpoint_test.c
-> > > b/drivers/misc/pci_endpoint_test.c
-> > > index 6e208a0..d531951 100644
-> > > --- a/drivers/misc/pci_endpoint_test.c
-> > > +++ b/drivers/misc/pci_endpoint_test.c
-> > > @@ -793,6 +793,7 @@ static const struct pci_device_id
-> > pci_endpoint_test_tbl[] = {
-> > >  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
-> > >  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
-> > >  	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
-> > > +	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x80c0) },
-> > 
-> > The Freescale PCI devices are the only devices in this table that don't have a
-> > define for their device ID. I think a define should be created for both of the
-> > device IDs above.
-> 
-> OK, but I only define in this file, I am not sure this can define in include/linux/pci_ids.h
-> file 
+This series adds support for Amazon's Annapurna Labs DT-based PCIe host
+controller driver.
+Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patches.
 
-This file seems a little inconsistent...
+Changes since v5:
+- Modified commit subject of PATCH 6/7
+- Removed timestamps from commit message of PATCH 4/7
+- Modified ACS quirk according to Bjorn's comments
 
- - Two of the TI device IDs are defined in pci_ids.h and only used in pci_endpoint_test.c
- - One of the TI device IDs are defined in pci_endpoint_test.c and only used there
- - The Freescale device ID is hardcoded and only used in pci_endpoint_test.c
+Changes since v4:
+- Moved the HEADER_TYPE validations to after pp->ops->host_init() and
+  ep->ops->ep_init()
+- Changed to dw_pcie_rd_own_conf() instead of dw_pcie_readb_dbi() for
+  reading the HEADER_TYPE
+- Used existing quirk_blacklist_vpd() instead of quirk_al_vpd_release()
+- Added a newline in ACS quirk comment
 
-The header in pci_ids.h has a comment suggestion definitions are only added where used
-in multiple files - yet I don't think this holds true.
+Changes since v3:
+- Removed PATCH 8/8 since the usage of the PCI flags will be discussed
+  in the upcoming LPC
+- Align commit subject with the folder convention
+- Added explanation regarding ECAM "overload" mechanism
+- Switched to read/write{_relaxed} APIs
+- Modified a dev_err to dev_dbg
+- Removed unnecessary variable
+- Removed driver details from dt-binding description
+- Changed to SoC specific compatibles
+- Fixed typo in a commit message
+- Added comment regarding MSI in the MSI-X quirk
 
-Bjorn - do you have a suggestion?
+Changes since v2:
+- Added al_pcie_controller_readl/writel() wrappers
+- Reorganized local vars in several functions according to reverse
+  tree structure
+- Removed unnecessary check of ret value
+- Changed return type of al_pcie_config_prepare() from int to void
+- Removed check if link is up from probe() [done internally in
+  dw_pcie_rd/wr_conf()]
 
-Thanks,
+Changes since v1:
+- Added comment regarding 0x0031 being used as a dev_id for non root-port devices as well
+- Fixed different message/comment/print wordings
+- Added panic stacktrace to commit message of MSI-x quirk patch
+- Changed to pci_warn() instead of dev_warn()
+- Added unit_address after node_name in dt-binding
+- Updated Kconfig help description
+- Used GENMASK and FIELD_PREP/GET where appropriate
+- Removed leftover field from struct al_pcie and moved all ptrs to
+  the beginning
+- Re-wrapped function definitions and invocations to use fewer lines
+- Change %p to %px in dbg prints in rd/wr_conf() functions
+- Removed validation that the port is configured to RC mode (as this is
+  added generically in PATCH 7/8)
+- Removed unnecessary variable initializations
+- Switched to %pR for printing resources
 
-Andrew Murray
 
-> 
-> Thanks 
-> Xiaowei
-> 
-> > 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > >  	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, NULL) },
-> > >  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
-> > >  	  .driver_data = (kernel_ulong_t)&am654_data
-> > > --
-> > > 2.9.5
-> > >
+Ali Saidi (1):
+  PCI: Add ACS quirk for Amazon Annapurna Labs root ports
+
+Jonathan Chocron (6):
+  PCI: Add Amazon's Annapurna Labs vendor ID
+  PCI/VPD: Prevent VPD access for Amazon's Annapurna Labs Root Port
+  PCI: Add quirk to disable MSI-X support for Amazon's Annapurna Labs
+    Root Port
+  dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
+  PCI: dwc: al: Add Amazon Annapurna Labs PCIe controller driver
+  PCI: dwc: Add validation that PCIe core is set to correct mode
+
+ .../devicetree/bindings/pci/pcie-al.txt       |  46 +++
+ MAINTAINERS                                   |   3 +-
+ drivers/pci/controller/dwc/Kconfig            |  12 +
+ drivers/pci/controller/dwc/pcie-al.c          | 365 ++++++++++++++++++
+ .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
+ .../pci/controller/dwc/pcie-designware-host.c |  16 +
+ drivers/pci/quirks.c                          |  38 ++
+ drivers/pci/vpd.c                             |   6 +
+ include/linux/pci_ids.h                       |   2 +
+ 9 files changed, 495 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
+
+-- 
+2.17.1
