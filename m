@@ -1,128 +1,97 @@
-From: Liviu Dudau <liviu.dudau@arm.com>
-Subject: Re: [v5 2/2] drm/arm/mali-dp: Add display QoS interface
- configuration for Mali DP500
-Date: Thu, 12 Sep 2019 15:47:05 +0100
-Message-ID: <20190912144705.h2qmyobpayxmu2zd@e110455-lin.cambridge.arm.com>
-References: <20190910075913.17650-1-wen.he_1@nxp.com>
- <20190910075913.17650-2-wen.he_1@nxp.com>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH v3 1/2] dt-bindings: backlight: lm3630a: add
+ enable_gpios
+Date: Thu, 12 Sep 2019 16:58:08 +0200
+Message-ID: <20190912165808.3c38b7a2@kemnade.info>
+References: <20190911172106.12843-1-andreas@kemnade.info>
+        <20190911172106.12843-2-andreas@kemnade.info>
+        <ff410d6c-e1e8-7c96-e8f7-0a0deb816f6a@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/p=GURwKtHNf6YhQ_WKbnjoL"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190910075913.17650-2-wen.he_1@nxp.com>
+In-Reply-To: <ff410d6c-e1e8-7c96-e8f7-0a0deb816f6a@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wen He <wen.he_1@nxp.com>
-Cc: linux-devel@linux.nxdi.nxp.com, Brian Starkey <brian.starkey@arm.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leoyang.li@nxp.com
+To: Dan Murphy <dmurphy@ti.com>
+Cc: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 03:59:13PM +0800, Wen He wrote:
-> Configure the display Quality of service (QoS) levels priority if the
-> optional property node "arm,malidp-aqros-value" is defined in DTS file.
-> 
-> QoS signaling using AQROS and AWQOS AXI interface signals, the AQROS is
-> driven from the "RQOS" register, so needed to program the RQOS register
-> to avoid the high resolutions flicker issue on the LS1028A platform.
-> 
-> Signed-off-by: Wen He <wen.he_1@nxp.com>
+--Sig_/p=GURwKtHNf6YhQ_WKbnjoL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+On Thu, 12 Sep 2019 06:39:50 -0500
+Dan Murphy <dmurphy@ti.com> wrote:
 
-Thanks for the patch! I will pull this into the malidp code and push it to
-drm-misc-next in the following days.
+> Andreas
+>=20
+> On 9/11/19 12:21 PM, Andreas Kemnade wrote:
+> > add enable-gpios to describe HWEN pin
+> >
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > ---
+> > changes in v2: added example
+> > changes in v3: added Acked-by
+> >   .../bindings/leds/backlight/lm3630a-backlight.yaml           | 5 +++++
+> >   1 file changed, 5 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-b=
+acklight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-ba=
+cklight.yaml
+> > index dc129d9a329e..1fa83feffe16 100644
+> > --- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backligh=
+t.yaml
+> > +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backligh=
+t.yaml
+> > @@ -29,6 +29,10 @@ properties:
+> >     '#size-cells':
+> >       const: 0
+> >  =20
+> > +  enable-gpios:
+> > +    description: GPIO to use to enable/disable the backlight (HWEN pin=
+).
+> > +    maxItems: 1
+> > +
+> >   required:
+> >     - compatible
+> >     - reg
+> > @@ -92,6 +96,7 @@ examples:
+> >       i2c {
+> >           #address-cells =3D <1>;
+> >           #size-cells =3D <0>;
+> > +        enable-gpios =3D <&gpio2 5 GPIO_ACTIVE_HIGH>;
+> >  =20
+> >           led-controller@38 {
+> >                   compatible =3D "ti,lm3630a"; =20
+>=20
+> Looks good to me
+>=20
+well, the enable-gpios is still at the same place as in v2. This was sent
+before your comments to v2 have been arrived.
 
-Best regards,
-Liviu
+Regards,
+Andreas
 
-> ---
->  drivers/gpu/drm/arm/malidp_drv.c  |  6 ++++++
->  drivers/gpu/drm/arm/malidp_hw.c   |  9 +++++++++
->  drivers/gpu/drm/arm/malidp_hw.h   |  3 +++
->  drivers/gpu/drm/arm/malidp_regs.h | 10 ++++++++++
->  4 files changed, 28 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/arm/malidp_drv.c b/drivers/gpu/drm/arm/malidp_drv.c
-> index 333b88a5efb0..8a76315aaa0f 100644
-> --- a/drivers/gpu/drm/arm/malidp_drv.c
-> +++ b/drivers/gpu/drm/arm/malidp_drv.c
-> @@ -817,6 +817,12 @@ static int malidp_bind(struct device *dev)
->  
->  	malidp->core_id = version;
->  
-> +	ret = of_property_read_u32(dev->of_node,
-> +					"arm,malidp-arqos-value",
-> +					&hwdev->arqos_value);
-> +	if (ret)
-> +		hwdev->arqos_value = 0x0;
-> +
->  	/* set the number of lines used for output of RGB data */
->  	ret = of_property_read_u8_array(dev->of_node,
->  					"arm,malidp-output-port-lines",
-> diff --git a/drivers/gpu/drm/arm/malidp_hw.c b/drivers/gpu/drm/arm/malidp_hw.c
-> index bd8265f02e0b..ca570b135478 100644
-> --- a/drivers/gpu/drm/arm/malidp_hw.c
-> +++ b/drivers/gpu/drm/arm/malidp_hw.c
-> @@ -379,6 +379,15 @@ static void malidp500_modeset(struct malidp_hw_device *hwdev, struct videomode *
->  		malidp_hw_setbits(hwdev, MALIDP_DISP_FUNC_ILACED, MALIDP_DE_DISPLAY_FUNC);
->  	else
->  		malidp_hw_clearbits(hwdev, MALIDP_DISP_FUNC_ILACED, MALIDP_DE_DISPLAY_FUNC);
-> +
-> +	/*
-> +	 * Program the RQoS register to avoid high resolutions flicker
-> +	 * issue on the LS1028A.
-> +	 */
-> +	if (hwdev->arqos_value) {
-> +		val = hwdev->arqos_value;
-> +		malidp_hw_setbits(hwdev, val, MALIDP500_RQOS_QUALITY);
-> +	}
->  }
->  
->  int malidp_format_get_bpp(u32 fmt)
-> diff --git a/drivers/gpu/drm/arm/malidp_hw.h b/drivers/gpu/drm/arm/malidp_hw.h
-> index 968a65eed371..e4c36bc90bda 100644
-> --- a/drivers/gpu/drm/arm/malidp_hw.h
-> +++ b/drivers/gpu/drm/arm/malidp_hw.h
-> @@ -251,6 +251,9 @@ struct malidp_hw_device {
->  
->  	/* size of memory used for rotating layers, up to two banks available */
->  	u32 rotation_memory[2];
-> +
-> +	/* priority level of RQOS register used for driven the ARQOS signal */
-> +	u32 arqos_value;
->  };
->  
->  static inline u32 malidp_hw_read(struct malidp_hw_device *hwdev, u32 reg)
-> diff --git a/drivers/gpu/drm/arm/malidp_regs.h b/drivers/gpu/drm/arm/malidp_regs.h
-> index 993031542fa1..514c50dcb74d 100644
-> --- a/drivers/gpu/drm/arm/malidp_regs.h
-> +++ b/drivers/gpu/drm/arm/malidp_regs.h
-> @@ -210,6 +210,16 @@
->  #define MALIDP500_CONFIG_VALID		0x00f00
->  #define MALIDP500_CONFIG_ID		0x00fd4
->  
-> +/*
-> + * The quality of service (QoS) register on the DP500. RQOS register values
-> + * are driven by the ARQOS signal, using AXI transacations, dependent on the
-> + * FIFO input level.
-> + * The RQOS register can also set QoS levels for:
-> + *    - RED_ARQOS   @ A 4-bit signal value for close to underflow conditions
-> + *    - GREEN_ARQOS @ A 4-bit signal value for normal conditions
-> + */
-> +#define MALIDP500_RQOS_QUALITY          0x00500
-> +
->  /* register offsets and bits specific to DP550/DP650 */
->  #define MALIDP550_ADDR_SPACE_SIZE	0x10000
->  #define MALIDP550_DE_CONTROL		0x00010
-> -- 
-> 2.17.1
-> 
+--Sig_/p=GURwKtHNf6YhQ_WKbnjoL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl16XQAACgkQl4jFM1s/
+ye8SEw/+IjRu/Eq+1Wkt7PlbCz3K+lHCVv+BKCe5EZrbK5rIIs6Xy/HaIH+R4aEX
+JNyDe6TkjAreOLuSSFoZcE3CLA7lzhi5NGVGXfpdvNSFkJfvMGL0y8AJmhcbsQUf
+4tMGEJVpF7WiUiwNynxGWKxRU1Q/++kBzcFiC0eFnewx4/0kELVCVwx+uLJQkm84
+OInsI/5n+9huEmB/I2SUr5Wa0luaMDWH2XzKYvLSzM1x1L8yMFPbwrqSuU+c83mR
+hEad0DRscDJhca01BZTiRpyf5HSRnPPwS8Q7YuWXDTY5VIs6QJNbdB2NfooYFnFb
+bKLXfSkGBfB5mNfJq0nEP7F6RumBJ5W68gokNF0uQxy8kfR9Qz9INZjOzNIphI3z
+jWvIraehnGd/1Qsu7046bj+seQIj7OjXVgsqvl2GvgYH8g9sM69sDJWvWEkXAH+8
+Y8ltoMngNcW9BMf01FPpaY/LcprUPA1ylOISy6orWbFoEczKKySovOvrBOscNXTG
+wUaz7yPeRzgJwHMfUQpw6r0TjWo424U3gqDQN38SCfiKhoo3GoInfRBemdU/Vh9E
+vjHdTKyCx3xeWiy8a4o4lVa/YGNz3dvnZSdShMu+hxD5cpcL+iHl2kMEMVMHwDit
+hjS3YcYEbtQHEtlQ88Zwv0wJmgQJ9SOExUTd8dPtJra05qtfdL0=
+=1gCA
+-----END PGP SIGNATURE-----
+
+--Sig_/p=GURwKtHNf6YhQ_WKbnjoL--
