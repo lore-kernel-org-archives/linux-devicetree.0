@@ -1,116 +1,90 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH 5/6] media: sun4i: Add H3 deinterlace driver
-Date: Thu, 12 Sep 2019 22:43:28 +0200
-Message-ID: <4613446.95M5L3lKvs@jernej-laptop>
-References: <20190912175132.411-1-jernej.skrabec@siol.net> <20190912175132.411-6-jernej.skrabec@siol.net> <20190912202647.wfcjur7yxhlelvd6@localhost.localdomain>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+Subject: Re: [PATCH 3/6] ARM: dts: sunxi: h3/h5: Add MBUS controller node
+Date: Thu, 12 Sep 2019 22:46:58 +0200
+Message-ID: <5193854.KWMFve8tAi@jernej-laptop>
+References: <20190912175132.411-1-jernej.skrabec@siol.net> <1679881.yZ8pMUtPNZ@jernej-laptop> <20190912203427.ajbmtm5djctpkz6p@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDQNBWPU7YERB4635LVQKGQE3FHPZ4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190912202647.wfcjur7yxhlelvd6-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190912203427.ajbmtm5djctpkz6p@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <mripard@kernel.org>
+Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Dne =C4=8Detrtek, 12. september 2019 ob 22:26:47 CEST je Maxime Ripard napi=
-sal(a):
-> Hi,
->=20
-> On Thu, Sep 12, 2019 at 07:51:31PM +0200, Jernej Skrabec wrote:
-> > +	dev->regmap =3D devm_regmap_init_mmio(dev->dev, dev->base,
-> > +					   =20
-&deinterlace_regmap_config);
-> > +	if (IS_ERR(dev->regmap)) {
-> > +		dev_err(dev->dev, "Couldn't create deinterlace=20
-regmap\n");
-> > +
-> > +		return PTR_ERR(dev->regmap);
-> > +	}
-> > +
-> > +	ret =3D clk_prepare_enable(dev->bus_clk);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to enable bus clock\n");
-> > +
-> > +		return ret;
-> > +	}
->=20
-> Do you need to keep the bus clock enabled all the time? Usually, for
-> the SoCs that have a reset line, you only need it to read / write to
-> the registers, not to have the controller actually running.
->=20
-> If you don't, then regmap_init_mmio_clk will take care of that for
-> you.
+Dne četrtek, 12. september 2019 ob 22:34:27 CEST je Maxime Ripard napisal(a):
+> On Thu, Sep 12, 2019 at 10:28:37PM +0200, Jernej Škrabec wrote:
+> > Dne četrtek, 12. september 2019 ob 22:20:57 CEST je Maxime Ripard 
+napisal(a):
+> > > Hi,
+> > > 
+> > > On Thu, Sep 12, 2019 at 07:51:29PM +0200, Jernej Skrabec wrote:
+> > > > Both, H3 and H5, contain MBUS, which is the bus used by DMA devices to
+> > > > access system memory.
+> > > > 
+> > > > MBUS controller is responsible for arbitration between channels based
+> > > > on set priority and can do some other things as well, like report
+> > > > bandwidth used. It also maps RAM region to different address than CPU.
+> > > > 
+> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > ---
+> > > > 
+> > > >  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 9 +++++++++
+> > > >  1 file changed, 9 insertions(+)
+> > > > 
+> > > > diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> > > > b/arch/arm/boot/dts/sunxi-h3-h5.dtsi index eba190b3f9de..ef1d03812636
+> > > > 100644
+> > > > --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> > > > +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> > > > @@ -109,6 +109,7 @@
+> > > > 
+> > > >  		compatible = "simple-bus";
+> > > >  		#address-cells = <1>;
+> > > >  		#size-cells = <1>;
+> > > > 
+> > > > +		dma-ranges;
+> > > > 
+> > > >  		ranges;
+> > > >  		
+> > > >  		display_clocks: clock@1000000 {
+> > > > 
+> > > > @@ -538,6 +539,14 @@
+> > > > 
+> > > >  			};
+> > > >  		
+> > > >  		};
+> > > > 
+> > > > +		mbus: dram-controller@1c62000 {
+> > > > +			compatible = "allwinner,sun8i-h3-mbus";
+> > > > +			reg = <0x01c62000 0x1000>;
+> > > > +			clocks = <&ccu 113>;
+> > > > +			dma-ranges = <0x00000000 0x40000000
+> > 
+> > 0xc0000000>;
+> > 
+> > > > +			#interconnect-cells = <1>;
+> > > > +		};
+> > > > +
+> > > 
+> > > If that's easy enough to access, can you also add the references in
+> > > the devices that are already there? (CSI and DE comes to my mind, but
+> > > there might be others).
+> > 
+> > Strangely, DE2 doesn't use this offset. That was tested on OrangePi
+> > Plus2E,
+> > which has 2 GiB of RAM and subtracting this offset causes corrupted image.
+> 
+> Ok, weird. But if it was tested then fine by me :)
+> 
+> > But I can add this properties to CSI too. However, wouldn't that need CSI
+> > DT binding expansion with those properties? othetwise DT check will fail.
+> Oh right, we definitely need to update the binding indeed. The code
+> should be able to cope with both cases already.
 
-I'll test that.
-
->=20
-> > +	clk_set_rate(dev->mod_clk, 300000000);
-> > +
-> > +	ret =3D clk_prepare_enable(dev->mod_clk);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to enable mod clock\n");
-> > +
-> > +		goto err_bus_clk;
-> > +	}
-> > +
-> > +	ret =3D clk_prepare_enable(dev->ram_clk);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to enable ram clock\n");
-> > +
-> > +		goto err_mod_clk;
-> > +	}
-> > +
-> > +	ret =3D reset_control_reset(dev->rstc);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to apply reset\n");
-> > +
-> > +		goto err_ram_clk;
-> > +	}
->=20
-> This could be moved to a runtime_pm hook, with get_sync called in the
-> open. That way you won't leave the device powered on if it's unused.
-
-Ok.
-
->=20
-> > +struct deinterlace_dev {
-> > +	struct v4l2_device	v4l2_dev;
-> > +	struct video_device	vfd;
-> > +	struct device		*dev;
-> > +	struct v4l2_m2m_dev	*m2m_dev;
-> > +
-> > +	/* Device file mutex */
-> > +	struct mutex		dev_mutex;
-> > +
-> > +	void __iomem		*base;
-> > +	struct regmap		*regmap;
->=20
-> Do you need to store the base address in that structure if you're
-> using the regmap?
-
-Probably not. I'll remove it in v2.
+I guess it's better to handle that with another patch series then? Changing 
+CSI bindings doesn't fit here.
 
 Best regards,
 Jernej
-
->=20
-> Maxime
-
-
-
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/4613446.95M5L3lKvs%40jernej-laptop.
