@@ -1,7 +1,7 @@
 From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH V3 09/15] arm64: dts: imx8qm: add lsio ss support
-Date: Thu, 12 Sep 2019 23:30:46 +0800
-Message-ID: <1568302252-28066-10-git-send-email-aisheng.dong@nxp.com>
+Subject: [PATCH V3 10/15] arm64: dts: imx8qm: add conn ss support
+Date: Thu, 12 Sep 2019 23:30:47 +0800
+Message-ID: <1568302252-28066-11-git-send-email-aisheng.dong@nxp.com>
 References: <1568302252-28066-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,9 +21,10 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, dongas86@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, oliver.graute@gmail.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, Mark Rutland <mark.rutland@arm.com>, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The LSIO SS of MX8QM is exactly the same as MX8QXP. So we can fully
-reuse the exist LSIO SS dtsi. Add <soc>-ss-lsio.dtsi with compatible
-string updated according to imx8-ss-lsio.dtsi.
+The CONN SS of MX8QM is mostly the same as MX8QXP except it has one more
+USB HSIC module support. So we can fully reuse the exist CONN SS dtsi.
+Add <soc>-ss-conn.dtsi with compatible string updated according to
+imx8-ss-conn.dtsi.
 
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
@@ -40,76 +41,36 @@ v2->v3:
 v1->v2:
  * change to the new two cell scu clk binding
 ---
- arch/arm64/boot/dts/freescale/imx8qm-ss-lsio.dtsi | 61 +++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-ss-lsio.dtsi
+ arch/arm64/boot/dts/freescale/imx8qm-ss-conn.dtsi | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-ss-conn.dtsi
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm-ss-lsio.dtsi b/arch/arm64/boot/dts/freescale/imx8qm-ss-lsio.dtsi
+diff --git a/arch/arm64/boot/dts/freescale/imx8qm-ss-conn.dtsi b/arch/arm64/boot/dts/freescale/imx8qm-ss-conn.dtsi
 new file mode 100644
-index 0000000..6fe3906
+index 0000000..00ae820
 --- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8qm-ss-lsio.dtsi
-@@ -0,0 +1,61 @@
++++ b/arch/arm64/boot/dts/freescale/imx8qm-ss-conn.dtsi
+@@ -0,0 +1,21 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
 + * Copyright 2019 NXP
 + *	Dong Aisheng <aisheng.dong@nxp.com>
 + */
 +
-+&lsio_gpio0 {
-+	compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
++&fec1 {
++	compatible = "fsl,imx8qm-fec", "fsl,imx6sx-fec";
 +};
 +
-+&lsio_gpio1 {
-+	compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
++&fec2 {
++	compatible = "fsl,imx8qm-fec", "fsl,imx6sx-fec";
 +};
 +
-+&lsio_gpio2 {
-+	compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
++&usdhc1 {
++	compatible = "fsl,imx8qm-usdhc", "fsl,imx7d-usdhc";
 +};
 +
-+&lsio_gpio3 {
-+	compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
-+};
-+
-+&lsio_gpio4 {
-+	compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
-+};
-+
-+&lsio_gpio5 {
-+	compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
-+};
-+
-+&lsio_gpio6 {
-+	compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
-+};
-+
-+&lsio_gpio7 {
-+	compatible = "fsl,imx8qm-gpio", "fsl,imx35-gpio";
-+};
-+
-+&lsio_mu0 {
-+	compatible = "fsl,imx8qm-mu", "fsl,imx6sx-mu";
-+};
-+
-+&lsio_mu1 {
-+	compatible = "fsl,imx8qm-mu", "fsl,imx6sx-mu";
-+};
-+
-+&lsio_mu2 {
-+	compatible = "fsl,imx8qm-mu", "fsl,imx6sx-mu";
-+};
-+
-+&lsio_mu3 {
-+	compatible = "fsl,imx8qm-mu", "fsl,imx6sx-mu";
-+};
-+
-+&lsio_mu4 {
-+	compatible = "fsl,imx8qm-mu", "fsl,imx6sx-mu";
-+};
-+
-+&lsio_mu13 {
-+	compatible = "fsl,imx8qm-mu", "fsl,imx6sx-mu";
++&usdhc2 {
++	compatible = "fsl,imx8qm-usdhc", "fsl,imx7d-usdhc";
 +};
 -- 
 2.7.4
