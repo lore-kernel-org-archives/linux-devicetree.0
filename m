@@ -1,54 +1,67 @@
-From: "Shenhar, Talel" <talel@amazon.com>
-Subject: Re: [UNVERIFIED SENDER] Re: [PATCH v2 3/3] soc: amazon: al-pos: cast
- to u64 before left shifting
-Date: Thu, 12 Sep 2019 09:51:09 +0300
-Message-ID: <57d36339-d1e6-ac60-1ec2-4fb6bebf6d2f@amazon.com>
-References: <1568142310-17622-1-git-send-email-talel@amazon.com>
- <1568142310-17622-4-git-send-email-talel@amazon.com>
- <86blvqsyq0.wl-maz@kernel.org>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [GIT PULL 1/2] arm64: dts: exynos: Pull for v5.4
+Date: Thu, 12 Sep 2019 08:56:05 +0200
+Message-ID: <39cac04f-684f-ffa5-a5ba-d1734fa00477@samsung.com>
+References: <20190911183632.4317-1-krzk@kernel.org>
+        <CAK8P3a2pBV+fh0rHitZ30Zz61QNRLfNSD-nhnzq4ZtxSh66F1Q@mail.gmail.com>
+        <CGME20190912063304epcas2p43dce48bd815124121c65ea47fd2dfc26@epcas2p4.samsung.com>
+        <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <86blvqsyq0.wl-maz@kernel.org>
+In-Reply-To: <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <maz@kernel.org>
-Cc: robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, mark.rutland@arm.com, nicolas.ferre@microchip.com, mchehab+samsung@kernel.org, shawn.lin@rock-chips.com, gregkh@linuxfoundation.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>, SoC Team <soc@kernel.org>, Kukjin Kim <kgene@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi
 
-On 9/11/2019 5:18 PM, Marc Zyngier wrote:
-> On Tue, 10 Sep 2019 20:05:10 +0100,
-> Talel Shenhar <talel@amazon.com> wrote:
->> Fix wrap around for pos errors on addresses above 32 bit.
+On 2019-09-12 08:32, Krzysztof Kozlowski wrote:
+> On Wed, 11 Sep 2019 at 23:07, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Wed, Sep 11, 2019 at 8:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>> Hi,
+>>>
+>>> Unfortunately the patches were applied right after closing the linux-next.
+>> Hi Krzysztof,
 >>
->> Reported-by: kbuild test robot <lkp@intel.com>
->> Signed-off-by: Talel Shenhar <talel@amazon.com>
->> ---
->>   drivers/soc/amazon/al_pos.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
+>> I took a look at these and am not convinced this is right:
 >>
->> diff --git a/drivers/soc/amazon/al_pos.c b/drivers/soc/amazon/al_pos.c
->> index a865111..e95e1fc 100644
->> --- a/drivers/soc/amazon/al_pos.c
->> +++ b/drivers/soc/amazon/al_pos.c
->> @@ -49,7 +49,7 @@ static irqreturn_t al_pos_irq_handler(int irq, void *info)
->>   	writel(0, pos->mmio_base + AL_POS_ERROR_LOG_1);
->>   
->>   	addr = FIELD_GET(AL_POS_ERROR_LOG_0_ADDR_LOW, log0);
->> -	addr |= (FIELD_GET(AL_POS_ERROR_LOG_1_ADDR_HIGH, log1) << 32);
->> +	addr |= (((u64)FIELD_GET(AL_POS_ERROR_LOG_1_ADDR_HIGH, log1)) << 32);
->>   	request_id = FIELD_GET(AL_POS_ERROR_LOG_1_REQUEST_ID, log1);
->>   	bresp = FIELD_GET(AL_POS_ERROR_LOG_1_BRESP, log1);
->>   
->> -- 
->> 2.7.4
+>>> 1. Fix boot of Exynos7 due to wrong address/size of memory node,
+>> The current state is clearly broken and a fix is needed, but
+>> I'm not sure this is the right fix. Why do you have 32-bit physical
+>> addressing on a 64-bit chip? I looked at commit ef72171b3621
+>> that introduced it, and it seems it would be better to just
+>> revert back to 64-bit addresses.
+> We discussed with Marek Szyprowski that either we can go back to
+> 64-bit addressing or stick to 32. There are not known boards with more
+> than 4 GB of RAM so from this point of view the choice was irrelevant.
+> At the end of discussion I mentioned to stick with other arm64 boards
+> (although not all), so revert to have 64 bit address... but Marek
+> chosen differently. Since you ask, let's go back with revert.
+
+I decided to go with 32bit version to make the fix smaller and easier to 
+backport. If you select revert, make sure that it is applied after 
+moving gpu node under /soc, otherwise the gpu node will have incorrect 
+(32bit) reg property. Also add the gpu related patch as an (optional?) 
+prerequisite for it.
+
+>> 2. Move GPU under /soc node,
+>> No problem
 >>
-> This fix should be squashed into the previous patch.
-Sure, Shall be part of v3.
->
-> Thanks,
->
-> 	M.
->
+>>> 3. Minor cleanup of #address-cells.
+>> IIRC, an interrupt-controller is required to have a #address-cells
+>> property, even if that is normally zero. I don't remember the
+>> details, but the gic binding lists it as mandatory, and I think
+>> the PCI interrupt-map relies on it. I would just drop this patch.
+> Indeed, binding requires both address and size cells. I'll drop it.
+
+Ookay, I wasn't aware of that.
+
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
