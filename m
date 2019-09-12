@@ -1,47 +1,68 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: [PATCH 3/3] ARM: dts: at91: sama5d2: set the sdmmc gclk frequency
-Date: Thu, 12 Sep 2019 22:09:08 +0200
-Message-ID: <20190912200908.31318-3-ludovic.desroches@microchip.com>
-References: <20190912200908.31318-1-ludovic.desroches@microchip.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv5 10/10] ARM: OMAP2+: pdata-quirks: add PRM data for reset
+ support
+Date: Thu, 12 Sep 2019 23:09:21 +0300
+Message-ID: <4103d986-20fa-0dce-df6b-b0955ceabd74@ti.com>
+References: <20190912113916.20093-1-t-kristo@ti.com>
+ <20190912113916.20093-11-t-kristo@ti.com>
+ <20190912170953.GT52127@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190912200908.31318-1-ludovic.desroches@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc: ulf.hansson@linaro.org, nicolas.ferre@microchip.com, ludovic.desroches@microchip.com, adrian.hunter@intel.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, claudiu.beznea@microchip.com
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190912170953.GT52127@atomide.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, robh+dt@kernel.org, p.zabel@pengutronix.de, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Set the frequency of the generated clock used by sdmmc devices in order
-to not rely on the configuration done by previous components.
+On 12/09/2019 20:09, Tony Lindgren wrote:
+> * Tero Kristo <t-kristo@ti.com> [190912 11:40]:
+>> @@ -565,6 +566,12 @@ void omap_pcs_legacy_init(int irq, void (*rearm)(void))
+>>   	pcs_pdata.rearm = rearm;
+>>   }
+>>   
+>> +static struct ti_prm_platform_data ti_prm_pdata = {
+>> +	.clkdm_deny_idle = clkdm_deny_idle,
+>> +	.clkdm_allow_idle = clkdm_allow_idle,
+>> +	.clkdm_lookup = clkdm_lookup,
+>> +};
+>> +
+>>   /*
+>>    * GPIOs for TWL are initialized by the I2C bus and need custom
+>>    * handing until DSS has device tree bindings.
+>> @@ -664,6 +671,11 @@ static struct of_dev_auxdata omap_auxdata_lookup[] = {
+>>   	/* Common auxdata */
+>>   	OF_DEV_AUXDATA("ti,sysc", 0, NULL, &ti_sysc_pdata),
+>>   	OF_DEV_AUXDATA("pinctrl-single", 0, NULL, &pcs_pdata),
+>> +	OF_DEV_AUXDATA("ti,omap4-prm-inst", 0, NULL, &ti_prm_pdata),
+>> +	OF_DEV_AUXDATA("ti,omap5-prm-inst", 0, NULL, &ti_prm_pdata),
+>> +	OF_DEV_AUXDATA("ti,dra7-prm-inst", 0, NULL, &ti_prm_pdata),
+>> +	OF_DEV_AUXDATA("ti,am3-prm-inst", 0, NULL, &ti_prm_pdata),
+>> +	OF_DEV_AUXDATA("ti,am4-prm-inst", 0, NULL, &ti_prm_pdata),
+>>   	{ /* sentinel */ },
+>>   };
+> 
+> Hmm I think I already commented on this.. Just one entry please:
+> 
+> 	OF_DEV_AUXDATA("ti,omap-prm-inst", 0, NULL, &ti_prm_pdata),
+> 
+> As the auxdata is the same for all of them. Note that all the
+> dts files need to have also the generic compatible
+> "ti,omap-prm-inst" after the SoC specific one.
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
----
- arch/arm/boot/dts/sama5d2.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+Ok that should be fine, sorry for missing it out. I can update this in 
+the next rev, just need to update the dt binding also.
 
-diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-index 2e2c1a7b1d1d..8d79ff75e3cd 100644
---- a/arch/arm/boot/dts/sama5d2.dtsi
-+++ b/arch/arm/boot/dts/sama5d2.dtsi
-@@ -300,6 +300,8 @@
- 			interrupts = <31 IRQ_TYPE_LEVEL_HIGH 0>;
- 			clocks = <&pmc PMC_TYPE_PERIPHERAL 31>, <&pmc PMC_TYPE_GCK 31>, <&pmc PMC_TYPE_CORE PMC_MAIN>;
- 			clock-names = "hclock", "multclk", "baseclk";
-+			assigned-clocks = <&pmc PMC_TYPE_GCK 31>;
-+			assigned-clock-rates = <480000000>;
- 			status = "disabled";
- 		};
- 
-@@ -309,6 +311,8 @@
- 			interrupts = <32 IRQ_TYPE_LEVEL_HIGH 0>;
- 			clocks = <&pmc PMC_TYPE_PERIPHERAL 32>, <&pmc PMC_TYPE_GCK 32>, <&pmc PMC_TYPE_CORE PMC_MAIN>;
- 			clock-names = "hclock", "multclk", "baseclk";
-+			assigned-clocks = <&pmc PMC_TYPE_GCK 32>;
-+			assigned-clock-rates = <480000000>;
- 			status = "disabled";
- 		};
- 
--- 
-2.23.0
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
