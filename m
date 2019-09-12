@@ -1,139 +1,104 @@
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v4 2/2] net: phy: adin: implement Energy Detect Powerdown mode via phy-tunable
-Date: Thu, 12 Sep 2019 19:28:12 +0300
-Message-ID: <20190912162812.402-3-alexandru.ardelean@analog.com>
-References: <20190912162812.402-1-alexandru.ardelean@analog.com>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in handle_vmptrld
+Date: Thu, 12 Sep 2019 15:54:48 +0200
+Message-ID: <87lfutei1j.fsf@vitty.brq.redhat.com>
+References: <000000000000a9d4f705924cff7a@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190912162812.402-1-alexandru.ardelean@analog.com>
+In-Reply-To: <000000000000a9d4f705924cff7a@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch, mkubecek@suse.cz, Alexandru Ardelean <alexandru.ardelean@analog.com>
+To: kvm@vger.kernel.org
+Cc: bp@alien8.de, carlo@caione.org, catalin.marinas@arm.com, devicetree@vger.kernel.org, hpa@zytor.com, jmattson@google.com, joro@8bytes.org, khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, narmstrong@baylibre.com, pbonzini@redhat.com, rkrcmar@redhat.com, robh+dt@kernel.org, sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com, tglx@linutronix.de, wanpengli@tencent.com, will.deacon@arm.com, x86@kernel.org, syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This driver becomes the first user of the kernel's `ETHTOOL_PHY_EDPD`
-phy-tunable feature.
-EDPD is also enabled by default on PHY config_init, but can be disabled via
-the phy-tunable control.
+syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com> writes:
 
-When enabling EDPD, it's also a good idea (for the ADIN PHYs) to enable TX
-periodic pulses, so that in case the other PHY is also on EDPD mode, there
-is no lock-up situation where both sides are waiting for the other to
-transmit.
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    1e3778cb Merge tag 'scsi-fixes' of git://git.kernel.org/pu..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15bdfc5e600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=b89bb446a3faaba4
+> dashboard link: https://syzkaller.appspot.com/bug?extid=46f1dd7dbbe2bfb98b10
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1709421a600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=168fc4b2600000
+>
+> The bug was bisected to:
+>
+> commit a87f854ddcf7ff7e044d72db0aa6da82f26d69a6
+> Author: Neil Armstrong <narmstrong@baylibre.com>
+> Date:   Wed Oct 11 15:39:40 2017 +0000
+>
+>      ARM64: dts: meson-gx: remove unnecessary uart compatible
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17e78a6e600000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=14178a6e600000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10178a6e600000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com
+> Fixes: a87f854ddcf7 ("ARM64: dts: meson-gx: remove unnecessary uart  
+> compatible")
+>
+> L1TF CPU bug present and SMT on, data leak possible. See CVE-2018-3646 and  
+> https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/l1tf.html for  
+> details.
+> ==================================================================
+> BUG: KASAN: slab-out-of-bounds in handle_vmptrld  
+> arch/x86/kvm/vmx/nested.c:4789 [inline]
+> BUG: KASAN: slab-out-of-bounds in handle_vmptrld+0x777/0x800  
+> arch/x86/kvm/vmx/nested.c:4749
+> Read of size 4 at addr ffff888091e10000 by task syz-executor758/10006
+>
+> CPU: 1 PID: 10006 Comm: syz-executor758 Not tainted 5.3.0-rc7+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>   print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+>   __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+>   kasan_report+0x12/0x17 mm/kasan/common.c:618
+>   __asan_report_load_n_noabort+0xf/0x20 mm/kasan/generic_report.c:142
+>   handle_vmptrld arch/x86/kvm/vmx/nested.c:4789 [inline]
+>   handle_vmptrld+0x777/0x800 arch/x86/kvm/vmx/nested.c:4749
+>   vmx_handle_exit+0x299/0x15e0 arch/x86/kvm/vmx/vmx.c:5886
+>   vcpu_enter_guest+0x1087/0x5e90 arch/x86/kvm/x86.c:8088
+>   vcpu_run arch/x86/kvm/x86.c:8152 [inline]
+>   kvm_arch_vcpu_ioctl_run+0x464/0x1750 arch/x86/kvm/x86.c:8360
+>   kvm_vcpu_ioctl+0x4dc/0xfd0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2765
+>   vfs_ioctl fs/ioctl.c:46 [inline]
+>   file_ioctl fs/ioctl.c:509 [inline]
+>   do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
+>   ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+>   __do_sys_ioctl fs/ioctl.c:720 [inline]
+>   __se_sys_ioctl fs/ioctl.c:718 [inline]
+>   __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+>   do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Via the phy-tunable control, TX pulses can be disabled if specifying 0
-`tx-interval` via ethtool.
+Hm, the bisection seems bogus but the stack points us to the following
+piece of code:
 
-The ADIN PHY supports only fixed 1 second intervals; they cannot be
-configured. That is why the acceptable values are 1,
-ETHTOOL_PHY_EDPD_DFLT_TX_MSECS and ETHTOOL_PHY_EDPD_NO_TX (which disables
-TX pulses).
+ 4776)              if (kvm_vcpu_map(vcpu, gpa_to_gfn(vmptr), &map)) {
+<skip>
+ 4783)                      return nested_vmx_failValid(vcpu,
+ 4784)                              VMXERR_VMPTRLD_INCORRECT_VMCS_REVISION_ID);
+ 4785)              }
+ 4786) 
+ 4787)              new_vmcs12 = map.hva;
+ 4788) 
+*4789)              if (new_vmcs12->hdr.revision_id != VMCS12_REVISION ||
+ 4790)                  (new_vmcs12->hdr.shadow_vmcs &&
+ 4791)                   !nested_cpu_has_vmx_shadow_vmcs(vcpu))) {
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/net/phy/adin.c | 61 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
+the reported problem seems to be on VMCS12 region access but it's part
+of guest memory and we successfuly managed to map it. We're definitely
+within 1-page range. Maybe KASAN is just wrong here?
 
-diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index 4dec83df048d..9afeee67675b 100644
---- a/drivers/net/phy/adin.c
-+++ b/drivers/net/phy/adin.c
-@@ -26,6 +26,11 @@
- 
- #define ADIN1300_RX_ERR_CNT			0x0014
- 
-+#define ADIN1300_PHY_CTRL_STATUS2		0x0015
-+#define   ADIN1300_NRG_PD_EN			BIT(3)
-+#define   ADIN1300_NRG_PD_TX_EN			BIT(2)
-+#define   ADIN1300_NRG_PD_STATUS		BIT(1)
-+
- #define ADIN1300_PHY_CTRL2			0x0016
- #define   ADIN1300_DOWNSPEED_AN_100_EN		BIT(11)
- #define   ADIN1300_DOWNSPEED_AN_10_EN		BIT(10)
-@@ -328,12 +333,62 @@ static int adin_set_downshift(struct phy_device *phydev, u8 cnt)
- 			    ADIN1300_DOWNSPEEDS_EN);
- }
- 
-+static int adin_get_edpd(struct phy_device *phydev, u16 *tx_interval)
-+{
-+	int val;
-+
-+	val = phy_read(phydev, ADIN1300_PHY_CTRL_STATUS2);
-+	if (val < 0)
-+		return val;
-+
-+	if (ADIN1300_NRG_PD_EN & val) {
-+		if (val & ADIN1300_NRG_PD_TX_EN)
-+			/* default is 1 second */
-+			*tx_interval = ETHTOOL_PHY_EDPD_DFLT_TX_MSECS;
-+		else
-+			*tx_interval = ETHTOOL_PHY_EDPD_NO_TX;
-+	} else {
-+		*tx_interval = ETHTOOL_PHY_EDPD_DISABLE;
-+	}
-+
-+	return 0;
-+}
-+
-+static int adin_set_edpd(struct phy_device *phydev, u16 tx_interval)
-+{
-+	u16 val;
-+
-+	if (tx_interval == ETHTOOL_PHY_EDPD_DISABLE)
-+		return phy_clear_bits(phydev, ADIN1300_PHY_CTRL_STATUS2,
-+				(ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN));
-+
-+	val = ADIN1300_NRG_PD_EN;
-+
-+	switch (tx_interval) {
-+	case 1000: /* 1 second */
-+		/* fallthrough */
-+	case ETHTOOL_PHY_EDPD_DFLT_TX_MSECS:
-+		val |= ADIN1300_NRG_PD_TX_EN;
-+		/* fallthrough */
-+	case ETHTOOL_PHY_EDPD_NO_TX:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return phy_modify(phydev, ADIN1300_PHY_CTRL_STATUS2,
-+			  (ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN),
-+			  val);
-+}
-+
- static int adin_get_tunable(struct phy_device *phydev,
- 			    struct ethtool_tunable *tuna, void *data)
- {
- 	switch (tuna->id) {
- 	case ETHTOOL_PHY_DOWNSHIFT:
- 		return adin_get_downshift(phydev, data);
-+	case ETHTOOL_PHY_EDPD:
-+		return adin_get_edpd(phydev, data);
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-@@ -345,6 +400,8 @@ static int adin_set_tunable(struct phy_device *phydev,
- 	switch (tuna->id) {
- 	case ETHTOOL_PHY_DOWNSHIFT:
- 		return adin_set_downshift(phydev, *(const u8 *)data);
-+	case ETHTOOL_PHY_EDPD:
-+		return adin_set_edpd(phydev, *(const u16 *)data);
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-@@ -368,6 +425,10 @@ static int adin_config_init(struct phy_device *phydev)
- 	if (rc < 0)
- 		return rc;
- 
-+	rc = adin_set_edpd(phydev, 1);
-+	if (rc < 0)
-+		return rc;
-+
- 	phydev_dbg(phydev, "PHY is using mode '%s'\n",
- 		   phy_modes(phydev->interface));
- 
 -- 
-2.20.1
+Vitaly
