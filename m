@@ -1,70 +1,140 @@
-From: Jonathan Chocron <jonnyc@amazon.com>
-Subject: [PATCH v6 2/7] PCI: Add ACS quirk for Amazon Annapurna Labs root ports
-Date: Thu, 12 Sep 2019 16:00:40 +0300
-Message-ID: <20190912130042.14597-3-jonnyc@amazon.com>
-References: <20190912130042.14597-1-jonnyc@amazon.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v3 10/11] arm64: dts: layerscape: Add PCIe EP node for
+ ls1088a
+Date: Thu, 12 Sep 2019 14:01:59 +0100
+Message-ID: <20190912130159.GF9720@e119886-lin.cambridge.arm.com>
+References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+ <20190902031716.43195-11-xiaowei.bao@nxp.com>
+ <20190902130628.GL9720@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB329926C6F424C4BE1CE9B787F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190912130042.14597-1-jonnyc@amazon.com>
+Content-Disposition: inline
+In-Reply-To: <AM5PR04MB329926C6F424C4BE1CE9B787F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: andrew.murray@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonnyc@amazon.com
+To: Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.o>
 List-Id: devicetree@vger.kernel.org
 
-From: Ali Saidi <alisaidi@amazon.com>
+On Tue, Sep 03, 2019 at 02:01:32AM +0000, Xiaowei Bao wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Andrew Murray <andrew.murray@arm.com>
+> > Sent: 2019年9月2日 21:06
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo
+> > Li <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h.
+> > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+> > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org;
+> > arnd@arndb.de; gregkh@linuxfoundation.org; Z.q. Hou
+> > <zhiqiang.hou@nxp.com>
+> > Subject: Re: [PATCH v3 10/11] arm64: dts: layerscape: Add PCIe EP node for
+> > ls1088a
+> > 
+> > On Mon, Sep 02, 2019 at 11:17:15AM +0800, Xiaowei Bao wrote:
+> > > Add PCIe EP node for ls1088a to support EP mode.
+> > >
+> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > ---
+> > > v2:
+> > >  - Remove the pf-offset proparty.
+> > > v3:
+> > >  - No change.
+> > >
+> > >  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 31
+> > ++++++++++++++++++++++++++
+> > >  1 file changed, 31 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > index c676d07..da246ab 100644
+> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > @@ -483,6 +483,17 @@
+> > >  			status = "disabled";
+> > >  		};
+> > >
+> > > +		pcie_ep@3400000 {
+> > > +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
+> > 
+> > Here you specify a fallback "fsl,ls-pcie-ep" that is removed by this series.
+> > 
+> > Besides that, this looks OK.
+> 
+> As explained, the "fsl,ls-pcie-ep" is needed, due to the u-boot will fixup the status
+> property base on this compatible, I think we reserve this compatible is helpfully,
+> if delate this compatible, I have to modify the code of bootloader.
 
-The Amazon's Annapurna Labs root ports don't advertise an ACS
-capability, but they don't allow peer-to-peer transactions and do
-validate bus numbers through the SMMU. Additionally, it's not possible
-for one RP to pass traffic to another RP.
+I assume you mean that u-boot fixes up "fsl,ls-pcie-ep" *only* for ls1046a
+devices?
 
-Signed-off-by: Ali Saidi <alisaidi@amazon.com>
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/quirks.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Thanks,
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index ded60757a573..2e983f2a0ee9 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4418,6 +4418,24 @@ static int pci_quirk_qcom_rp_acs(struct pci_dev *dev, u16 acs_flags)
- 	return ret;
- }
- 
-+static int pci_quirk_al_acs(struct pci_dev *dev, u16 acs_flags)
-+{
-+	if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
-+		return -ENOTTY;
-+
-+	/*
-+	 * Amazon's Annapurna Labs root ports don't include an ACS capability,
-+	 * but do include ACS-like functionality. The hardware doesn't support
-+	 * peer-to-peer transactions via the root port and each has a unique
-+	 * segment number.
-+	 *
-+	 * Additionally, the root ports cannot send traffic to each other.
-+	 */
-+	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
-+
-+	return acs_flags ? 0 : 1;
-+}
-+
- /*
-  * Sunrise Point PCH root ports implement ACS, but unfortunately as shown in
-  * the datasheet (Intel 100 Series Chipset Family PCH Datasheet, Vol. 2,
-@@ -4611,6 +4629,8 @@ static const struct pci_dev_acs_enabled {
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
-+	/* Amazon Annapurna Labs */
-+	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
- 	{ 0 }
- };
- 
--- 
-2.17.1
+Andrew Murray
+
+> 
+> Thanks 
+> XIaowei
+> 
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > +			reg = <0x00 0x03400000 0x0 0x00100000
+> > > +			       0x20 0x00000000 0x8 0x00000000>;
+> > > +			reg-names = "regs", "addr_space";
+> > > +			num-ib-windows = <24>;
+> > > +			num-ob-windows = <128>;
+> > > +			max-functions = /bits/ 8 <2>;
+> > > +			status = "disabled";
+> > > +		};
+> > > +
+> > >  		pcie@3500000 {
+> > >  			compatible = "fsl,ls1088a-pcie";
+> > >  			reg = <0x00 0x03500000 0x0 0x00100000   /* controller
+> > registers */
+> > > @@ -508,6 +519,16 @@
+> > >  			status = "disabled";
+> > >  		};
+> > >
+> > > +		pcie_ep@3500000 {
+> > > +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
+> > > +			reg = <0x00 0x03500000 0x0 0x00100000
+> > > +			       0x28 0x00000000 0x8 0x00000000>;
+> > > +			reg-names = "regs", "addr_space";
+> > > +			num-ib-windows = <6>;
+> > > +			num-ob-windows = <8>;
+> > > +			status = "disabled";
+> > > +		};
+> > > +
+> > >  		pcie@3600000 {
+> > >  			compatible = "fsl,ls1088a-pcie";
+> > >  			reg = <0x00 0x03600000 0x0 0x00100000   /* controller
+> > registers */
+> > > @@ -533,6 +554,16 @@
+> > >  			status = "disabled";
+> > >  		};
+> > >
+> > > +		pcie_ep@3600000 {
+> > > +			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
+> > > +			reg = <0x00 0x03600000 0x0 0x00100000
+> > > +			       0x30 0x00000000 0x8 0x00000000>;
+> > > +			reg-names = "regs", "addr_space";
+> > > +			num-ib-windows = <6>;
+> > > +			num-ob-windows = <8>;
+> > > +			status = "disabled";
+> > > +		};
+> > > +
+> > >  		smmu: iommu@5000000 {
+> > >  			compatible = "arm,mmu-500";
+> > >  			reg = <0 0x5000000 0 0x800000>;
+> > > --
+> > > 2.9.5
+> > >
