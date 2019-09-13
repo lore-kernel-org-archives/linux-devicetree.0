@@ -1,54 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 2/2] of: Let of_for_each_phandle fallback to
- non-negative cell_count
-Date: Fri, 13 Sep 2019 16:58:09 -0500
-Message-ID: <20190913215809.GA11833@bogus>
-References: <20190824132846.8589-1-u.kleine-koenig@pengutronix.de>
- <20190824132846.8589-2-u.kleine-koenig@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH RFC v2 06/14] dt-bindings/interrupt-controller: pdc: add SPI config register
+Date: Fri, 13 Sep 2019 15:59:14 -0600
+Message-ID: <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
+References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190824132846.8589-2-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>
+To: swboyd@chromium.org, evgreen@chromium.org, maz@kernel.org, linus.walleij@linaro.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 24 Aug 2019 15:28:46 +0200, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=          wrote:
-> Referencing device tree nodes from a property allows to pass arguments.
-> This is for example used for referencing gpios. This looks as follows:
-> 
-> 	gpio_ctrl: gpio-controller {
-> 		#gpio-cells = <2>
-> 		...
-> 	}
-> 
-> 	someothernode {
-> 		gpios = <&gpio_ctrl 5 0 &gpio_ctrl 3 0>;
-> 		...
-> 	}
-> 
-> To know the number of arguments this must be either fixed, or the
-> referenced node is checked for a $cells_name (here: "#gpio-cells")
-> property and with this information the start of the second reference can
-> be determined.
-> 
-> Currently regulators are referenced with no additional arguments. To
-> allow some optional arguments without having to change all referenced
-> nodes this change introduces a way to specify a default cell_count. So
-> when a phandle is parsed we check for the $cells_name property and use
-> it as before if present. If it is not present we fall back to
-> cells_count if non-negative and only fail if cells_count is smaller than
-> zero.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/of/base.c | 25 +++++++++++++++++--------
->  1 file changed, 17 insertions(+), 8 deletions(-)
-> 
+In addition to configuring the PDC, additional registers that interface
+the GIC have to be configured to match the GPIO type. The registers on
+some QCOM SoCs are access restricted, while on other SoCs are not. They
+SoCs with access restriction to these SPI registers need to be written
+from the firmware using the SCM interface. Add a flag to indicate if the
+register is to be written using SCM interface.
 
-Applied both patches, thanks.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
+ .../devicetree/bindings/interrupt-controller/qcom,pdc.txt   | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-Rob
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+index 8e0797c..e329f8d 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+@@ -24,6 +24,9 @@ Properties:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+ 	Definition: Specifies the base physical address for PDC hardware.
++		    Optionally, specify the PDC's GIC interface registers that
++		    need to be configured for wakeup capable GPIOs routed to
++		    the PDC.
+ 
+ - interrupt-cells:
+ 	Usage: required
+@@ -50,15 +53,23 @@ Properties:
+ 		    The second element is the GIC hwirq number for the PDC port.
+ 		    The third element is the number of interrupts in sequence.
+ 
++- qcom,scm-spi-cfg:
++	Usage: optional
++	Value type: <bool>
++	Definition: Specifies if the SPI configuration registers have to be
++		    written from the firmware. Sometimes the PDC interface
++		    register to the GIC can only be written from the firmware.
++
+ Example:
+ 
+ 	pdc: interrupt-controller@b220000 {
+ 		compatible = "qcom,sdm845-pdc";
+-		reg = <0xb220000 0x30000>;
++		reg = <0 0x0b220000 0 0x30000>, <0 0x179900f0 0 0x60>;
+ 		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
+ 		#interrupt-cells = <2>;
+ 		interrupt-parent = <&intc>;
+ 		interrupt-controller;
++		qcom,scm-spi-cfg;
+ 	};
+ 
+ DT binding of a device that wants to use the GIC SPI 514 as a wakeup
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
