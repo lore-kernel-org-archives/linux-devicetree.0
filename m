@@ -1,48 +1,29 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RFC v2 05/14] of: irq: document properties for wakeup interrupt parent
-Date: Fri, 13 Sep 2019 15:59:13 -0600
-Message-ID: <1568411962-1022-6-git-send-email-ilina@codeaurora.org>
-References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] bus: qcom: fix spelling mistake "ambigous" -> "ambiguous"
+Date: Fri, 13 Sep 2019 17:01:38 -0500
+Message-ID: <20190913220138.GA17592@bogus>
+References: <20190911153947.10203-1-colin.king@canonical.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20190911153947.10203-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: swboyd@chromium.org, evgreen@chromium.org, maz@kernel.org, linus.walleij@linaro.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
+To: Colin King <colin.king@canonical.com>
+Cc: Andy Gross <agross@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some interrupt controllers in a SoC, are always powered on and have a
-select interrupts routed to them, so that they can wakeup the SoC from
-suspend. Add wakeup-parent DT property to refer to these interrupt
-controllers.
+On Wed, 11 Sep 2019 16:39:47 +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake on the documentation. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  Documentation/devicetree/bindings/bus/qcom,ebi2.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/interrupt-controller/interrupts.txt | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Applied, thanks.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-index 8a3c408..c10e310 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-@@ -108,3 +108,16 @@ commonly used:
- 			sensitivity = <7>;
- 		};
- 	};
-+
-+3) Interrupt wakeup parent
-+--------------------------
-+
-+Some interrupt controllers in a SoC, are always powered on and have a select
-+interrupts routed to them, so that they can wakeup the SoC from suspend. These
-+interrupt controllers do not fall into the category of a parent interrupt
-+controller and can be specified by the "wakeup-parent" property and contain a
-+single phandle referring to the wakeup capable interrupt controller.
-+
-+   Example:
-+	wakeup-parent = <&pdc_intc>;
-+
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Rob
