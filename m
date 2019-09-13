@@ -1,58 +1,38 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: backlight: lm3630a: add enable_gpios
-Date: Fri, 13 Sep 2019 09:06:51 -0500
-Message-ID: <b6d9fa2c-c23b-7310-e192-cff6185a72b1@ti.com>
-References: <20190912213257.24147-1-andreas@kemnade.info>
- <20190912213257.24147-2-andreas@kemnade.info>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 1/3] ARM: dts: stm32: Enable VREFBUF on stm32mp157a-dk1
+Date: Fri, 13 Sep 2019 16:34:38 +0200
+Message-ID: <1568385280-2633-2-git-send-email-fabrice.gasnier@st.com>
+References: <1568385280-2633-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190912213257.24147-2-andreas@kemnade.info>
-Content-Language: en-US
+In-Reply-To: <1568385280-2633-1-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>, lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
+To: alexandre.torgue@st.com
+Cc: robh+dt@kernel.org, mcoquelin.stm32@gmail.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, fabrice.gasnier@st.com
 List-Id: devicetree@vger.kernel.org
 
-Andreas
+Enable VREFBUF as ADC/DAC uses it on stm32mp157a-dk1 board.
 
-On 9/12/19 4:32 PM, Andreas Kemnade wrote:
-> add enable-gpios to describe HWEN pin
->
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ arch/arm/boot/dts/stm32mp157a-dk1.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
-
-
-> ---
-> changes in v2: added example
-> changes in v3: added Acked-by
-> changes in v4: moved enable-gpios to the right position
->    in the example
->   .../bindings/leds/backlight/lm3630a-backlight.yaml           | 5 +++++
->   1 file changed, 5 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> index dc129d9a329e..c8470628fe02 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> +++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> @@ -29,6 +29,10 @@ properties:
->     '#size-cells':
->       const: 0
->   
-> +  enable-gpios:
-> +    description: GPIO to use to enable/disable the backlight (HWEN pin).
-> +    maxItems: 1
-> +
->   required:
->     - compatible
->     - reg
-> @@ -96,6 +100,7 @@ examples:
->           led-controller@38 {
->                   compatible = "ti,lm3630a";
->                   reg = <0x38>;
-> +                enable-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
->   
->                   #address-cells = <1>;
->                   #size-cells = <0>;
+diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+index 0615d1c..ebd9f33 100644
+--- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
++++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+@@ -449,3 +449,10 @@
+ 	pinctrl-0 = <&uart4_pins_a>;
+ 	status = "okay";
+ };
++
++&vrefbuf {
++	regulator-min-microvolt = <2500000>;
++	regulator-max-microvolt = <2500000>;
++	vdda-supply = <&vdd>;
++	status = "okay";
++};
+-- 
+2.7.4
