@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 5/5] irqchip/irq-bcm7038-l1: Support brcm,int-fwd-mask
-Date: Fri, 13 Sep 2019 12:15:42 -0700
-Message-ID: <20190913191542.9908-6-f.fainelli@gmail.com>
+Subject: [PATCH v2 4/5] dt-bindings: Document brcm,int-fwd-mask property for bcm7038-l1-intc
+Date: Fri, 13 Sep 2019 12:15:41 -0700
+Message-ID: <20190913191542.9908-5-f.fainelli@gmail.com>
 References: <20190913191542.9908-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190913191542.9908-1-f.fainelli@gmail.com>
@@ -12,63 +12,29 @@ Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de
         ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On some specific chips like 7211 we need to leave some interrupts
-untouched/forwarded to the VPU which is another agent in the system
-making use of that interrupt controller hardware (goes to both ARM GIC
-and VPU L1 interrupt controller). Make that possible by using the
-existing brcm,int-fwd-mask property.
+Indicate that the brcm,int-fwd-mask property is optional and can be
+optionaly set on platforms which require to leave specific interrupts
+untouched from Linux and retain the firmware configuration.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/irqchip/irq-bcm7038-l1.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ .../bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt    | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index 0673a44bbdc2..811a34201dd4 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -44,6 +44,7 @@ struct bcm7038_l1_chip {
- 	struct list_head	list;
- 	u32			wake_mask[MAX_WORDS];
- #endif
-+	u32			irq_fwd_mask[MAX_WORDS];
- 	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
- };
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+index 4eb043270f5b..31d31af408c5 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+@@ -36,6 +36,10 @@ Optional properties:
+ - brcm,irq-can-wake: If present, this means the L1 controller can be used as a
+   wakeup source for system suspend/resume.
  
-@@ -265,6 +266,7 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
- 	resource_size_t sz;
- 	struct bcm7038_l1_cpu *cpu;
- 	unsigned int i, n_words, parent_irq;
-+	int ret;
- 
- 	if (of_address_to_resource(dn, idx, &res))
- 		return -EINVAL;
-@@ -278,6 +280,14 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
- 	else if (intc->n_words != n_words)
- 		return -EINVAL;
- 
-+	ret = of_property_read_u32_array(dn , "brcm,int-fwd-mask",
-+					 intc->irq_fwd_mask, n_words);
-+	if (ret != 0 && ret != -EINVAL) {
-+		/* property exists but has the wrong number of words */
-+		pr_err("invalid brcm,int-fwd-mask property\n");
-+		return -EINVAL;
-+	}
++- brcm,int-fwd-mask: if present, a bit mask to indicate which interrupts
++  have already been configured by the firmware and should be left untouched.
++  This should have one 32-bit word per status/set/clear/mask group.
 +
- 	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
- 					GFP_KERNEL);
- 	if (!cpu)
-@@ -288,8 +298,9 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
- 		return -ENOMEM;
- 
- 	for (i = 0; i < n_words; i++) {
--		l1_writel(0xffffffff, cpu->map_base + reg_mask_set(intc, i));
--		cpu->mask_cache[i] = 0xffffffff;
-+		l1_writel(0xffffffff & ~intc->irq_fwd_mask[i],
-+			  cpu->map_base + reg_mask_set(intc, i));
-+		cpu->mask_cache[i] = 0xffffffff & ~intc->irq_fwd_mask[i];
- 	}
- 
- 	parent_irq = irq_of_parse_and_map(dn, idx);
+ If multiple reg ranges and interrupt-parent entries are present on an SMP
+ system, the driver will allow IRQ SMP affinity to be set up through the
+ /proc/irq/ interface.  In the simplest possible configuration, only one
 -- 
 2.17.1
