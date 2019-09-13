@@ -1,68 +1,26 @@
-From: James Byrne <james.byrne@origamienergy.com>
-Subject: [PATCH] dt-bindings: net: Correct the documentation of KSZ9021 skew values
-Date: Fri, 13 Sep 2019 16:46:35 +0000
-Message-ID: <0102016d2b84f180-bd396cb9-16cf-4472-b718-7a4d2d8d8017-000000@eu-west-1.amazonses.com>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, James Byrne <james.byrne@origamienergy.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH 1/2] i2c: Aspeed: Add AST2600 compatible
+Date: Fri, 13 Sep 2019 09:47:36 -0700
+Message-ID: <20190913164736.GA52781@google.com>
+References: <1568392510-866-1-git-send-email-eajames@linux.ibm.com>
+ <1568392510-866-2-git-send-email-eajames@linux.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1568392510-866-2-git-send-email-eajames@linux.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie James <eajames@linux.ibm.com>
+Cc: linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, joel@jms.id.au, andrew@aj.id.au, robh+dt@kernel.org, mark.rutland@arm.com, benh@kernel.crashing.org
 List-Id: devicetree@vger.kernel.org
 
-The documentation of skew values for the KSZ9021 PHY was misleading
-because the driver implementation followed the erroneous information
-given in the original KSZ9021 datasheet before it was corrected in
-revision 1.2 (Feb 2014). It is probably too late to correct the driver
-now because of the many existing device trees, so instead this just
-corrects the documentation to explain that what you actually get is not
-what you might think when looking at the device tree.
+On Fri, Sep 13, 2019 at 11:35:09AM -0500, Eddie James wrote:
+> The driver default behavior works with the AST2600. We need a new
+> compatible though to make sure the driver doesn't enable AST2400 or
+> AST2500 behavior.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 
-Signed-off-by: James Byrne <james.byrne@origamienergy.com>
----
- .../bindings/net/micrel-ksz90x1.txt           | 32 +++++++++++++++++--
- 1 file changed, 30 insertions(+), 2 deletions(-)
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
 
-diff --git a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-index 5100358177c9..b921731cd970 100644
---- a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-+++ b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-@@ -12,8 +12,36 @@ and therefore may overwrite them.
- KSZ9021:
- 
-   All skew control options are specified in picoseconds. The minimum
--  value is 0, the maximum value is 3000, and it is incremented by 200ps
--  steps.
-+  value is 0, the maximum value is 3000, and it can be specified in 200ps
-+  steps, *but* these values are in not fact what you get because this chip's
-+  skew values actually increase in 120ps steps, starting from -840ps. The
-+  incorrect values came from an error in the original KSZ9021 datasheet
-+  before it was corrected in revision 1.2 (Feb 2014), but it is too late to
-+  change the driver now because of the many existing device trees that have
-+  been created using values that go up in increments of 200.
-+
-+  The following table shows the actual skew delay you will get for each of the
-+  possible devicetree values, and the number that will be programmed into the
-+  corresponding pad skew register:
-+
-+  Device Tree Value	Delay	Pad Skew Register Value
-+  -----------------------------------------------------
-+	0   		-840ps		0000
-+	200 		-720ps		0001
-+	400 		-600ps		0010
-+	600 		-480ps		0011
-+	800 		-360ps		0100
-+	1000		-240ps		0101
-+	1200		-120ps		0110
-+	1400		   0ps		0111
-+	1600		 120ps		1000
-+	1800		 240ps		1001
-+	2000		 360ps		1010
-+	2200		 480ps		1011
-+	2400		 600ps		1100
-+	2600		 720ps		1101
-+	2800		 840ps		1110
-+	3000		 960ps		1111
- 
-   Optional properties:
- 
--- 
-2.17.1
+Thanks!
