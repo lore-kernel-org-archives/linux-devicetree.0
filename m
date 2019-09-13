@@ -1,64 +1,24 @@
-From: Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in handle_vmptrld
-Date: Fri, 13 Sep 2019 18:14:26 +0200
-Message-ID: <1a8a6449-2740-b0a3-805a-47466e0d71c6@redhat.com>
-References: <Pine.LNX.4.44L0.1909131129390.1466-100000@iolanthe.rowland.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH 0/2] i2c: Aspeed: Add AST2600 compatible string
+Date: Fri, 13 Sep 2019 11:35:08 -0500
+Message-ID: <1568392510-866-1-git-send-email-eajames@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.44L0.1909131129390.1466-100000@iolanthe.rowland.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org, bp@alien8.de, carlo@caione.org, catalin.marinas@arm.com, devicetree@vger.kernel.org, hpa@zytor.com, jmattson@google.com, joro@8bytes.org, khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, narmstrong@baylibre.com, rkrcmar@redhat.com, robh+dt@kernel.org, sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com, tglx@linutronix.de, wanpengli@tencent.com, will.deacon@arm.com, x86@kernel.org, syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com>, Dmitry Vyukov <dvyukov@google.com>, USB list <linux-usb@vger.kernel.org>
+To: linux-aspeed@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, brendanhiggins@google.com, joel@jms.id.au, andrew@aj.id.au, robh+dt@kernel.org, mark.rutland@arm.com, benh@kernel.crashing.org, Eddie James <eajames@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 13/09/19 17:36, Alan Stern wrote:
-> On Fri, 13 Sep 2019, Paolo Bonzini wrote:
-> 
->> On 13/09/19 15:02, Greg Kroah-Hartman wrote:
->>> Look at linux-next, we "should" have fixed up hcd_buffer_alloc() now to
->>> not need this type of thing.  If we got it wrong, please let us know and
->>> then yes, a fix like this would be most appreciated :)
->>
->> I still see
->>
->> 	/* some USB hosts just use PIO */
->> 	if (!hcd_uses_dma(hcd)) {
->> 		*dma = ~(dma_addr_t) 0;
->> 		return kmalloc(size, mem_flags);
->> 	}
->>
->> in linux-next's hcd_buffer_alloc and also in usb.git's usb-next branch.
->>  I also see the same
->>
->> 	if (remap_pfn_range(vma, vma->vm_start,
->> 			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
->> 			size, vma->vm_page_prot) < 0) {
->> 		...
->> 	}
->>
->> in usbdev_mmap.  Of course it's possible that I'm looking at the wrong
->> branch, or just being dense.
-> 
-> Have you seen
-> 
-> 	https://marc.info/?l=linux-usb&m=156758511218419&w=2
-> 
-> ?  It certainly is relevant, although Greg hasn't replied to it.
+Update the Aspeed I2C driver with the AST2600 compatible string. The default
+driver behavior works fine with the AST2600. A new compatible string is needed
+to avoid the AST2400 and AST2500 behavior.
 
-It helps but it's not a full fix, since the address would fail
-is_vmalloc_addr.  On top of that, hcd_buffer_alloc and hcd_buffer_free
-need to switch from kmalloc to vmalloc.
+Eddie James (2):
+  i2c: Aspeed: Add AST2600 compatible
+  dt-bindings: i2c: Aspeed: Add AST2600 compatible
 
-> Also, just warning about a non-page-aligned allocation doesn't really 
-> help.  It would be better to fix the misbehaving allocator.
+ Documentation/devicetree/bindings/i2c/i2c-aspeed.txt | 3 ++-
+ drivers/i2c/busses/i2c-aspeed.c                      | 4 ++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-Of course.  The above patch does not fix the issue, it should just allow
-for an easier reproduction not involving KVM.  More long term, it points
-out where the contracts mismatch (i.e. between hcd_buffer_alloc and
-usb_alloc_coherent), and more selfishly whose bug it is when syzkaller
-complains. :)
-
-Paolo
+-- 
+1.8.3.1
