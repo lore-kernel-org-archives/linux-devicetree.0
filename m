@@ -1,262 +1,59 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v3 2/2] hwrng: npcm: add NPCM RNG driver
-Date: Fri, 13 Sep 2019 10:28:05 +0100
-Message-ID: <20190913092805.4bemarnbh6jo3lxh@holly.lan>
-References: <20190912090149.7521-1-tmaimon77@gmail.com>
- <20190912090149.7521-3-tmaimon77@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: gpu: Convert Samsung Image Rotator to dt-schema
+Date: Fri, 13 Sep 2019 11:29:49 +0200
+Message-ID: <CAJKOXPdSQJ4CR_0BQjudx1NdaC0E_rU8ZDtFVSB9XwcTbxSdUg@mail.gmail.com>
+References: <20190912093315.5744-1-m.falkowski@samsung.com>
+ <CGME20190912161550eucas1p2bdc813d46f337f3717bdbfd33bae8d4a@eucas1p2.samsung.com>
+ <20190912161538.4321-1-m.falkowski@samsung.com> <20190913062945.GA10283@pi3> <e082996a-743d-807a-38c0-dee65b490771@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190912090149.7521-3-tmaimon77@gmail.com>
+In-Reply-To: <e082996a-743d-807a-38c0-dee65b490771@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com, yuenn@google.com, benjaminfair@google.com, sumit.garg@linaro.org, jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, openbmc@lists.ozlabs.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Maciej Falkowski <m.falkowski@samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, Andrzej Hajda <a.hajda@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 12:01:49PM +0300, Tomer Maimon wrote:
-> Add Nuvoton NPCM BMC Random Number Generator(RNG) driver.
-> 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+On Fri, 13 Sep 2019 at 11:15, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+>
+> Hi Krzysztof,
+>
+> On 9/13/19 8:29 AM, Krzysztof Kozlowski wrote:
+> > On Thu, Sep 12, 2019 at 06:15:38PM +0200, Maciej Falkowski wrote:
+> >> Convert Samsung Image Rotator to newer dt-schema format.
+> >>
+> >> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> >> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Just to make it clear, Marek's signed-off should appear for one of
+> > conditions:
+> >   - he contributed some source code to your patch,
+> >   - he took your patch, rebased, send by himself (not a case here, I
+> >     think),
+> >   - he contributed significant ideas, although for this there is a
+> >     "Co-developed-by" tag.
+> >
+> > If someone made just review - add Reviewed-by. If someone suggested the
+> > patch - add Suggested-by.
+>
+> My signed-off here was added to mark that this patch is allowed to be
+> submitted to the public mailing list, as I have required company
+> permissions for such activity. It is not that uncommon that a given
+> patch has more than one signed-off and still the main author has the
+> first signed-off tag.
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Thanks for explanations. If I understand correctly, your SoB appears
+because some internal Samsung rules. That is not what SoB is meant
+for:
+https://elixir.bootlin.com/linux/v5.3-rc8/source/Documentation/process/submitting-patches.rst#L431
+If you do not contributed to the patch, did not touch it (e.g.
+rebasing) and you are not sending it, then your SoB should not be
+there. It looks like the same madness with Kyungmin Park long time
+ago:
+https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git/commit/?h=for-next&id=6c6cf64b16438eac6da9a90412a82316ad196e7c
+Every patch was marked with SoB even though he was not involved at all
+in the process.
 
-Note, you are welcome to preseve this if you have to respin and
-change directory based on Vinod's feedback...
+That's not what kernel's SoB is for.
 
-
-> ---
->  drivers/char/hw_random/Kconfig    |  13 +++
->  drivers/char/hw_random/Makefile   |   1 +
->  drivers/char/hw_random/npcm-rng.c | 186 ++++++++++++++++++++++++++++++
->  3 files changed, 200 insertions(+)
->  create mode 100644 drivers/char/hw_random/npcm-rng.c
-> 
-> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-> index 59f25286befe..87a1c30e7958 100644
-> --- a/drivers/char/hw_random/Kconfig
-> +++ b/drivers/char/hw_random/Kconfig
-> @@ -440,6 +440,19 @@ config HW_RANDOM_OPTEE
->  
->  	  If unsure, say Y.
->  
-> +config HW_RANDOM_NPCM
-> +	tristate "NPCM Random Number Generator support"
-> +	depends on ARCH_NPCM || COMPILE_TEST
-> +	default HW_RANDOM
-> +	help
-> + 	  This driver provides support for the Random Number
-> +	  Generator hardware available in Nuvoton NPCM SoCs.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called npcm-rng.
-> +
-> + 	  If unsure, say Y.
-> +
->  endif # HW_RANDOM
->  
->  config UML_RANDOM
-> diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
-> index 7c9ef4a7667f..17b6d4e6d591 100644
-> --- a/drivers/char/hw_random/Makefile
-> +++ b/drivers/char/hw_random/Makefile
-> @@ -39,3 +39,4 @@ obj-$(CONFIG_HW_RANDOM_MTK)	+= mtk-rng.o
->  obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
->  obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
->  obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
-> +obj-$(CONFIG_HW_RANDOM_NPCM) += npcm-rng.o
-> diff --git a/drivers/char/hw_random/npcm-rng.c b/drivers/char/hw_random/npcm-rng.c
-> new file mode 100644
-> index 000000000000..b7c8c7e13a49
-> --- /dev/null
-> +++ b/drivers/char/hw_random/npcm-rng.c
-> @@ -0,0 +1,186 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2019 Nuvoton Technology corporation.
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/init.h>
-> +#include <linux/random.h>
-> +#include <linux/err.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/hw_random.h>
-> +#include <linux/delay.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/pm_runtime.h>
-> +
-> +#define NPCM_RNGCS_REG		0x00	/* Control and status register */
-> +#define NPCM_RNGD_REG		0x04	/* Data register */
-> +#define NPCM_RNGMODE_REG	0x08	/* Mode register */
-> +
-> +#define NPCM_RNG_CLK_SET_25MHZ	GENMASK(4, 3) /* 20-25 MHz */
-> +#define NPCM_RNG_DATA_VALID	BIT(1)
-> +#define NPCM_RNG_ENABLE		BIT(0)
-> +#define NPCM_RNG_M1ROSEL	BIT(1)
-> +
-> +#define NPCM_RNG_TIMEOUT_USEC	20000
-> +#define NPCM_RNG_POLL_USEC	1000
-> +
-> +#define to_npcm_rng(p)	container_of(p, struct npcm_rng, rng)
-> +
-> +struct npcm_rng {
-> +	void __iomem *base;
-> +	struct hwrng rng;
-> +};
-> +
-> +static int npcm_rng_init(struct hwrng *rng)
-> +{
-> +	struct npcm_rng *priv = to_npcm_rng(rng);
-> +
-> +	writel(NPCM_RNG_CLK_SET_25MHZ | NPCM_RNG_ENABLE,
-> +	       priv->base + NPCM_RNGCS_REG);
-> +
-> +	return 0;
-> +}
-> +
-> +static void npcm_rng_cleanup(struct hwrng *rng)
-> +{
-> +	struct npcm_rng *priv = to_npcm_rng(rng);
-> +
-> +	writel(NPCM_RNG_CLK_SET_25MHZ, priv->base + NPCM_RNGCS_REG);
-> +}
-> +
-> +static int npcm_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-> +{
-> +	struct npcm_rng *priv = to_npcm_rng(rng);
-> +	int retval = 0;
-> +	int ready;
-> +
-> +	pm_runtime_get_sync((struct device *)priv->rng.priv);
-> +
-> +	while (max >= sizeof(u32)) {
-> +		if (wait) {
-> +			if (readl_poll_timeout(priv->base + NPCM_RNGCS_REG,
-> +					       ready,
-> +					       ready & NPCM_RNG_DATA_VALID,
-> +					       NPCM_RNG_POLL_USEC,
-> +					       NPCM_RNG_TIMEOUT_USEC))
-> +				break;
-> +		} else {
-> +			if ((readl(priv->base + NPCM_RNGCS_REG) &
-> +			    NPCM_RNG_DATA_VALID) == 0)
-> +				break;
-> +		}
-> +
-> +		*(u32 *)buf = readl(priv->base + NPCM_RNGD_REG);
-> +		retval += sizeof(u32);
-> +		buf += sizeof(u32);
-> +		max -= sizeof(u32);
-> +	}
-> +
-> +	pm_runtime_mark_last_busy((struct device *)priv->rng.priv);
-> +	pm_runtime_put_sync_autosuspend((struct device *)priv->rng.priv);
-> +
-> +	return retval || !wait ? retval : -EIO;
-> +}
-> +
-> +static int npcm_rng_probe(struct platform_device *pdev)
-> +{
-> +	struct npcm_rng *priv;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	priv->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(priv->base))
-> +		return PTR_ERR(priv->base);
-> +
-> +	dev_set_drvdata(&pdev->dev, priv);
-> +	pm_runtime_set_autosuspend_delay(&pdev->dev, 100);
-> +	pm_runtime_use_autosuspend(&pdev->dev);
-> +	pm_runtime_enable(&pdev->dev);
-> +
-> +#ifndef CONFIG_PM
-> +	priv->rng.init = npcm_rng_init;
-> +	priv->rng.cleanup = npcm_rng_cleanup;
-> +#endif
-> +	priv->rng.name = pdev->name;
-> +	priv->rng.read = npcm_rng_read;
-> +	priv->rng.priv = (unsigned long)&pdev->dev;
-> +	priv->rng.quality = 1000;
-> +
-> +	writel(NPCM_RNG_M1ROSEL, priv->base + NPCM_RNGMODE_REG);
-> +
-> +	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to register rng device: %d\n",
-> +			ret);
-> +		pm_runtime_disable(&pdev->dev);
-> +		pm_runtime_set_suspended(&pdev->dev);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int npcm_rng_remove(struct platform_device *pdev)
-> +{
-> +	struct npcm_rng *priv = platform_get_drvdata(pdev);
-> +
-> +	devm_hwrng_unregister(&pdev->dev, &priv->rng);
-> +	pm_runtime_disable(&pdev->dev);
-> +	pm_runtime_set_suspended(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM
-> +static int npcm_rng_runtime_suspend(struct device *dev)
-> +{
-> +	struct npcm_rng *priv = dev_get_drvdata(dev);
-> +
-> +	npcm_rng_cleanup(&priv->rng);
-> +
-> +	return 0;
-> +}
-> +
-> +static int npcm_rng_runtime_resume(struct device *dev)
-> +{
-> +	struct npcm_rng *priv = dev_get_drvdata(dev);
-> +
-> +	return npcm_rng_init(&priv->rng);
-> +}
-> +#endif
-> +
-> +static const struct dev_pm_ops npcm_rng_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(npcm_rng_runtime_suspend,
-> +			   npcm_rng_runtime_resume, NULL)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
-> +};
-> +
-> +static const struct of_device_id rng_dt_id[] = {
-> +	{ .compatible = "nuvoton,npcm750-rng",  },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, rng_dt_id);
-> +
-> +static struct platform_driver npcm_rng_driver = {
-> +	.driver = {
-> +		.name		= "npcm-rng",
-> +		.pm		= &npcm_rng_pm_ops,
-> +		.of_match_table = of_match_ptr(rng_dt_id),
-> +	},
-> +	.probe		= npcm_rng_probe,
-> +	.remove		= npcm_rng_remove,
-> +};
-> +
-> +module_platform_driver(npcm_rng_driver);
-> +
-> +MODULE_DESCRIPTION("Nuvoton NPCM Random Number Generator Driver");
-> +MODULE_AUTHOR("Tomer Maimon <tomer.maimon@nuvoton.com>");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.18.0
-> 
+Best regards,
+Krzysztof
