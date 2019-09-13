@@ -1,147 +1,91 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 01/12] ARM: dts: imx7d: cl-som-imx7 imx7d-sbc-imx7: move
- USB
-Date: Fri, 13 Sep 2019 11:31:46 +0800
-Message-ID: <20190913033145.GG17142@dragon>
-References: <20190826153800.35400-1-git@andred.net>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: KASAN: slab-out-of-bounds Read in handle_vmptrld
+Date: Fri, 13 Sep 2019 05:46:14 +0100
+Message-ID: <20190913044614.GA120223@kroah.com>
+References: <000000000000a9d4f705924cff7a@google.com>
+ <87lfutei1j.fsf@vitty.brq.redhat.com>
+ <5218e70e-8a80-7c5f-277b-01d9ab70692a@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190826153800.35400-1-git@andred.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Igor Grinberg <grinberg@compulab.co.il>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Ilya Ledvich <ilya@compulab.co.il>, NXP Linux Team <linux-imx@nxp.com>
+In-Reply-To: <5218e70e-8a80-7c5f-277b-01d9ab70692a@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org, bp@alien8.de, carlo@caione.org, catalin.marinas@arm.com, devicetree@vger.kernel.org, hpa@zytor.com, jmattson@google.com, joro@8bytes.org, khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, narmstrong@baylibre.com, rkrcmar@redhat.com, robh+dt@kernel.org, sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com, tglx@linutronix.de, wanpengli@tencent.com, will.deacon@arm.com, x86@kernel.org, syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com>, Dmitry Vyukov <dvyukov@google.com>, USB list <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 04:37:49PM +0100, Andr=E9 Draszik wrote:
-> Whether and which USB port is enabled and how they
-> are powered is a function of the carrier board, not
-> of the SoM. Different carrier boards can have different
-> ports enabled / wired up, and power them differently;
-> so this should really move into the respective DTS.
-> =
+On Thu, Sep 12, 2019 at 06:49:26PM +0200, Paolo Bonzini wrote:
+> [tl;dr: there could be a /dev/usb bug only affecting KASAN
+> configurations, jump to the end to skip the analysis and get to the bug
+> details]
+> 
+> On 12/09/19 15:54, Vitaly Kuznetsov wrote:
+> > Hm, the bisection seems bogus but the stack points us to the following
+> > piece of code:
+> > 
+> >  4776)              if (kvm_vcpu_map(vcpu, gpa_to_gfn(vmptr), &map)) {
+> > <skip>
+> >  4783)                      return nested_vmx_failValid(vcpu,
+> >  4784)                              VMXERR_VMPTRLD_INCORRECT_VMCS_REVISION_ID);
+> >  4785)              }
+> >  4786) 
+> >  4787)              new_vmcs12 = map.hva;
+> >  4788) 
+> > *4789)              if (new_vmcs12->hdr.revision_id != VMCS12_REVISION ||
+> >  4790)                  (new_vmcs12->hdr.shadow_vmcs &&
+> >  4791)                   !nested_cpu_has_vmx_shadow_vmcs(vcpu))) {
+> > 
+> > the reported problem seems to be on VMCS12 region access but it's part
+> > of guest memory and we successfuly managed to map it. We're definitely
+> > within 1-page range. Maybe KASAN is just wrong here?
+> 
+> Here is the relevant part of the syzkaller repro:
+> 
+> syz_kvm_setup_cpu$x86(r1, 0xffffffffffffffff,
+> &(0x7f0000000000/0x18000)=nil, 0x0, 0x133, 0x0, 0x0, 0xff7d)
+> r3 = syz_open_dev$usb(&(0x7f0000000080)='/dev/bus/usb/00#/00#\x00',
+> 0x40000fffffd, 0x200800000000042)
+> mmap$IORING_OFF_SQES(&(0x7f0000007000/0x2000)=nil, 0x2000, 0x4, 0x13,
+> r3, 0x10000000)
+> syz_kvm_setup_cpu$x86(0xffffffffffffffff, r2,
+> &(0x7f0000000000/0x18000)=nil, 0x0, 0xfefd, 0x40, 0x0, 0xfffffffffffffdd4)
+> ioctl$KVM_RUN(r2, 0xae80, 0x0)
+> 
+> The mmap$IORING_OFF_SQES is just a normal mmap from a device, which
+> replaces the previous mapping for guest memory and in particular
+> 0x7f0000007000 which is the VMCS (from the C reproducer: "#define
+> ADDR_VAR_VMCS 0x7000").
+> 
+> The previous mapping is freed with do_munmap and then repopulated in
+> usbdev_mmap with remap_pfn_range.  In KVM this means that kvm_vcpu_map
+> goes through hva_to_pfn_remapped, which correctly calls get_page via
+> kvm_get_pfn.  (Note that although drivers/usb/core/devio.c's usbdev_mmap
+> sets VM_IO *after* calling remap_pfn_range, remap_pfn_range itself
+> helpfully sets it before calling remap_p4d_range.  And anyway KVM is
+> looking at vma->vm_flags under mmap_sem, which is held during mmap).
+> 
+> So, KVM should be doing the right thing.  Now, the error is:
+> 
+> > Read of size 4 at addr ffff888091e10000 by task syz-executor758/10006
+> > The buggy address belongs to the object at ffff888091e109c0 
+> > The buggy address is located 2496 bytes to the left of
+> >  8192-byte region [ffff888091e109c0, ffff888091e129c0) 
+> 
+> And given the use of remap_pfn_range in devusb_mmap, the simplest
+> explanation could be that USB expects kmalloc-8k to return 8k-aligned
+> values, but this is not true anymore with KASAN.  CCing Dmitry, Greg and
+> linux-usb.
 
-> Do so and update the USB power supply to reflect
-> the actual situation on the sbc-imx7 carrier board.
-> =
+USB drivers expect kmalloc to return DMA-able memory.  I don't know
+about specific alignment issues, that should only an issue for the host
+controller being used here, which you do not say in the above list.
 
-> Signed-off-by: Andr=E9 Draszik <git@andred.net>
-> Cc: Ilya Ledvich <ilya@compulab.co.il>
-> Cc: Igor Grinberg <grinberg@compulab.co.il>
+We have had some reports that usbdev_mmap() does not do the "correct
+thing" for all host controllers, but a lot of the DMA work that is in
+linux-next for 5.4-rc1 should have helped resolve those issues.  What
+tree are you seeing these bug reports happening from?
 
-Ilya, Igor, can you have a look at the series?
+thanks,
 
-Shawn
-
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: NXP Linux Team <linux-imx@nxp.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> ---
->  arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 24 ------------------------
->  arch/arm/boot/dts/imx7d-sbc-imx7.dts    | 13 +++++++++++++
->  2 files changed, 13 insertions(+), 24 deletions(-)
-> =
-
-> diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/=
-imx7d-cl-som-imx7.dts
-> index 62d5e9a4a781..6f7e85cf0c28 100644
-> --- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-> +++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
-> @@ -22,15 +22,6 @@
->  		device_type =3D "memory";
->  		reg =3D <0x80000000 0x10000000>; /* 256 MB - minimal configuration */
->  	};
-> -
-> -	reg_usb_otg1_vbus: regulator-vbus {
-> -		compatible =3D "regulator-fixed";
-> -		regulator-name =3D "usb_otg1_vbus";
-> -		regulator-min-microvolt =3D <5000000>;
-> -		regulator-max-microvolt =3D <5000000>;
-> -		gpio =3D <&gpio1 5 GPIO_ACTIVE_HIGH>;
-> -		enable-active-high;
-> -	};
->  };
->  =
-
->  &cpu0 {
-> @@ -193,13 +184,6 @@
->  	status =3D "okay";
->  };
->  =
-
-> -&usbotg1 {
-> -	pinctrl-names =3D "default";
-> -	pinctrl-0 =3D <&pinctrl_usbotg1>;
-> -	vbus-supply =3D <&reg_usb_otg1_vbus>;
-> -	status =3D "okay";
-> -};
-> -
->  &usdhc3 {
->  	pinctrl-names =3D "default";
->  	pinctrl-0 =3D <&pinctrl_usdhc3>;
-> @@ -278,11 +262,3 @@
->  		>;
->  	};
->  };
-> -
-> -&iomuxc_lpsr {
-> -	pinctrl_usbotg1: usbotg1grp {
-> -		fsl,pins =3D <
-> -			MX7D_PAD_LPSR_GPIO1_IO05__GPIO1_IO5	0x14 /* OTG PWREN */
-> -		>;
-> -	};
-> -};
-> diff --git a/arch/arm/boot/dts/imx7d-sbc-imx7.dts b/arch/arm/boot/dts/imx=
-7d-sbc-imx7.dts
-> index f8a868552707..aab646903de3 100644
-> --- a/arch/arm/boot/dts/imx7d-sbc-imx7.dts
-> +++ b/arch/arm/boot/dts/imx7d-sbc-imx7.dts
-> @@ -15,6 +15,14 @@
->  / {
->  	model =3D "CompuLab SBC-iMX7";
->  	compatible =3D "compulab,sbc-imx7", "compulab,cl-som-imx7", "fsl,imx7d";
-> +
-> +	reg_usb_vbus: regulator-usb-vbus {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "usb_vbus";
-> +		regulator-min-microvolt =3D <5000000>;
-> +		regulator-max-microvolt =3D <5000000>;
-> +		regulator-always-on;
-> +	};
->  };
->  =
-
->  &usdhc1 {
-> @@ -26,6 +34,11 @@
->  	status =3D "okay";
->  };
->  =
-
-> +&&usbotg1 {
-> +	vbus-supply =3D <&reg_usb_vbus>;
-> +	status =3D "okay";
-> +};
-> +
->  &iomuxc {
->  	pinctrl_usdhc1: usdhc1grp {
->  		fsl,pins =3D <
-> -- =
-
-> 2.23.0.rc1
-> =
+greg k-h
