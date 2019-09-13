@@ -1,54 +1,84 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: KASAN: slab-out-of-bounds Read in handle_vmptrld
-Date: Fri, 13 Sep 2019 11:36:30 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1909131129390.1466-100000@iolanthe.rowland.org>
-References: <6a0ec3a2-2a52-f67a-6140-e0a60874538a@redhat.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+From: Adam Ford <aford173@gmail.com>
+Subject: [RFC v2 2/2] ARM: omap3: Consolidate thermal references to common omap3
+Date: Fri, 13 Sep 2019 10:37:14 -0500
+Message-ID: <20190913153714.30980-2-aford173@gmail.com>
+References: <20190913153714.30980-1-aford173@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6a0ec3a2-2a52-f67a-6140-e0a60874538a@redhat.com>
+In-Reply-To: <20190913153714.30980-1-aford173@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org, bp@alien8.de, carlo@caione.org, catalin.marinas@arm.com, devicetree@vger.kernel.org, hpa@zytor.com, jmattson@google.com, joro@8bytes.org, khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, narmstrong@baylibre.com, rkrcmar@redhat.com, robh+dt@kernel.org, sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com, tglx@linutronix.de, wanpengli@tencent.com, will.deacon@arm.com, x86@kernel.org, syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com>, Dmitry Vyukov <dvyukov@google.com>, USB
+To: linux-omap@vger.kernel.org
+Cc: adam.ford@logicpd.com, nm@ti.com, hns@goldelico.com, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Sep 2019, Paolo Bonzini wrote:
+Because the omap34xx, omap36xx and am3517 SoC's have the same
+thermal junction limits, there is no need to duplicate the entry
+multiple times.
 
-> On 13/09/19 15:02, Greg Kroah-Hartman wrote:
-> > Look at linux-next, we "should" have fixed up hcd_buffer_alloc() now to
-> > not need this type of thing.  If we got it wrong, please let us know and
-> > then yes, a fix like this would be most appreciated :)
-> 
-> I still see
-> 
-> 	/* some USB hosts just use PIO */
-> 	if (!hcd_uses_dma(hcd)) {
-> 		*dma = ~(dma_addr_t) 0;
-> 		return kmalloc(size, mem_flags);
-> 	}
-> 
-> in linux-next's hcd_buffer_alloc and also in usb.git's usb-next branch.
->  I also see the same
-> 
-> 	if (remap_pfn_range(vma, vma->vm_start,
-> 			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
-> 			size, vma->vm_page_prot) < 0) {
-> 		...
-> 	}
-> 
-> in usbdev_mmap.  Of course it's possible that I'm looking at the wrong
-> branch, or just being dense.
+This patch removes the thermal references from omap36xx and
+omap34xx and pushes it into the common omap3.dtsi file with
+the added benefit of enabling the thermal info on the AM3517.
 
-Have you seen
+Signed-off-by: Adam Ford <aford173@gmail.com>
+---
+V2:	Add node name for cpu and add cooling-cells entry
 
-	https://marc.info/?l=linux-usb&m=156758511218419&w=2
-
-?  It certainly is relevant, although Greg hasn't replied to it.
-
-There have been other messages on the mailing list about this issue,
-but I haven't tried to keep track of them.
-
-Also, just warning about a non-page-aligned allocation doesn't really 
-help.  It would be better to fix the misbehaving allocator.
-
-Alan Stern
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index 4043ecb38016..84704eb3b604 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -32,7 +32,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu@0 {
++		cpu: cpu@0 {
+ 			compatible = "arm,cortex-a8";
+ 			device_type = "cpu";
+ 			reg = <0x0>;
+@@ -41,9 +41,14 @@
+ 			clock-names = "cpu";
+ 
+ 			clock-latency = <300000>; /* From omap-cpufreq driver */
++			#cooling-cells = <2>;
+ 		};
+ 	};
+ 
++	thermal_zones: thermal-zones {
++		#include "omap3-cpu-thermal.dtsi"
++	};
++
+ 	pmu@54000000 {
+ 		compatible = "arm,cortex-a8-pmu";
+ 		reg = <0x54000000 0x800000>;
+diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
+index f572a477f74c..b80378d6e5c1 100644
+--- a/arch/arm/boot/dts/omap34xx.dtsi
++++ b/arch/arm/boot/dts/omap34xx.dtsi
+@@ -101,10 +101,6 @@
+ 			};
+ 		};
+ 	};
+-
+-	thermal_zones: thermal-zones {
+-		#include "omap3-cpu-thermal.dtsi"
+-	};
+ };
+ 
+ &ssi {
+diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
+index 6fb23ada1f64..ff2dca63a04e 100644
+--- a/arch/arm/boot/dts/omap36xx.dtsi
++++ b/arch/arm/boot/dts/omap36xx.dtsi
+@@ -140,10 +140,6 @@
+ 			};
+ 		};
+ 	};
+-
+-	thermal_zones: thermal-zones {
+-		#include "omap3-cpu-thermal.dtsi"
+-	};
+ };
+ 
+ /* OMAP3630 needs dss_96m_fck for VENC */
+-- 
+2.17.1
