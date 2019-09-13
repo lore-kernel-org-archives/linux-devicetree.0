@@ -1,42 +1,30 @@
-Return-Path: <SRS0=lNVK=W5=linux.intel.com=sakari.ailus@kernel.org>
-Date: Mon, 2 Sep 2019 10:29:24 +0300
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v3 05/10] device property: Add a function to obtain a
- node's prefix
-Message-ID: <20190902072924.GI5475@paasikivi.fi.intel.com>
-References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
- <20190829101043.24963-6-sakari.ailus@linux.intel.com>
- <20190830124657.GE2680@smile.fi.intel.com>
+Return-Path: <SRS0=ihK2=XI=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39828 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390169AbfIMNly (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Sep 2019 09:41:54 -0400
+Subject: Re: [PATCH v8 2/2] leds: add LED driver for EL15203000 board
+References: <20190912221115.23595-1-oleg@kaa.org.ua>
+ <20190912221115.23595-3-oleg@kaa.org.ua>
+From: Dan Murphy <dmurphy@ti.com>
+Message-ID: <ffae7af2-29f7-0d49-a77d-63c1ad3d27b3@ti.com>
+Date: Fri, 13 Sep 2019 08:42:15 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830124657.GE2680@smile.fi.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+In-Reply-To: <20190912221115.23595-3-oleg@kaa.org.ua>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Sender: devicetree-owner@vger.kernel.org
+To: Oleh Kravchenko <oleg@kaa.org.ua>, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Andy,
+Oleh
 
-On Fri, Aug 30, 2019 at 03:46:57PM +0300, Andy Shevchenko wrote:
-> On Thu, Aug 29, 2019 at 01:10:38PM +0300, Sakari Ailus wrote:
-> > The prefix is used for printing purpose before a node, and it also works
-> > as a separator between two nodes.
-> 
-> > +	/* Is this the root node? */
-> > +	parent = fwnode_get_parent(fwnode);
-> > +	if (!parent)
-> > +		return "";
-> > +
-> > +	/* Is this 2nd node from the root? */
-> > +	parent = fwnode_get_next_parent(parent);
-> > +	if (!parent)
-> 
-> Can we theoretically have a case when we got parent != NULL and thus taken
-> reference, while the 2nd one is NULL and we leak reference here (and in all
-> similar places)?
+On 9/12/19 5:11 PM, Oleh Kravchenko wrote:
+> This patch adds a LED class driver for the LEDs found on
+> the Crane Merchandising System EL15203000 LEDs board
+> (aka RED LEDs board).
+>
+> Signed-off-by: Oleh Kravchenko <oleg@kaa.org.ua>
 
-fwnode_get_next_parent() releases that reference unconditionally.
-
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Reviewed-by: Dan Murphy <dmurphy@ti.com>
