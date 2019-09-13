@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 2/6] dt-bindings: Document brcm,irq-can-wake for brcm,bcm7038-l1-intc.txt
-Date: Fri, 13 Sep 2019 12:10:22 -0700
-Message-ID: <20190913191026.8801-3-f.fainelli@gmail.com>
+Subject: [PATCH 5/6] irqchip/irq-bcm7038-l1: Support brcm,int-fwd-mask
+Date: Fri, 13 Sep 2019 12:10:25 -0700
+Message-ID: <20190913191026.8801-6-f.fainelli@gmail.com>
 References: <20190913191026.8801-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190913191026.8801-1-f.fainelli@gmail.com>
@@ -12,30 +12,63 @@ Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de
         ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The BCM7038 L1 interrupt controller can be used as a wake-up interrupt
-controller on MIPS and ARM-based systems, document the brcm,irq-can-wake
-which has been "standardized" across Broadcom interrupt controllers.
+On some specific chips like 7211 we need to leave some interrupts
+untouched/forwarded to the VPU which is another agent in the system
+making use of that interrupt controller hardware (goes to both ARM GIC
+and VPU L1 interrupt controller). Make that possible by using the
+existing brcm,int-fwd-mask property.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- .../bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt   | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/irqchip/irq-bcm7038-l1.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
-index 2117d4ac1ae5..4eb043270f5b 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
-@@ -31,6 +31,11 @@ Required properties:
- - interrupts: specifies the interrupt line(s) in the interrupt-parent controller
-   node; valid values depend on the type of parent interrupt controller
+diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+index 0ad473249f16..5e8f0fbc5f20 100644
+--- a/drivers/irqchip/irq-bcm7038-l1.c
++++ b/drivers/irqchip/irq-bcm7038-l1.c
+@@ -44,6 +44,7 @@ struct bcm7038_l1_chip {
+ 	struct list_head	list;
+ 	u32			wake_mask[MAX_WORDS];
+ #endif
++	u32			irq_fwd_mask[MAX_WORDS];
+ 	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
+ };
  
-+Optional properties:
+@@ -265,6 +266,7 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+ 	resource_size_t sz;
+ 	struct bcm7038_l1_cpu *cpu;
+ 	unsigned int i, n_words, parent_irq;
++	int ret;
+ 
+ 	if (of_address_to_resource(dn, idx, &res))
+ 		return -EINVAL;
+@@ -278,6 +280,14 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+ 	else if (intc->n_words != n_words)
+ 		return -EINVAL;
+ 
++	ret = of_property_read_u32_array(dn , "brcm,int-fwd-mask",
++					 intc->irq_fwd_mask, n_words);
++	if (ret != 0 && ret != -EINVAL) {
++		/* property exists but has the wrong number of words */
++		pr_err("invalid brcm,int-fwd-mask property\n");
++		return -EINVAL;
++	}
 +
-+- brcm,irq-can-wake: If present, this means the L1 controller can be used as a
-+  wakeup source for system suspend/resume.
-+
- If multiple reg ranges and interrupt-parent entries are present on an SMP
- system, the driver will allow IRQ SMP affinity to be set up through the
- /proc/irq/ interface.  In the simplest possible configuration, only one
+ 	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
+ 					GFP_KERNEL);
+ 	if (!cpu)
+@@ -288,8 +298,9 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < n_words; i++) {
+-		l1_writel(0xffffffff, cpu->map_base + reg_mask_set(intc, i));
+-		cpu->mask_cache[i] = 0xffffffff;
++		l1_writel(0xffffffff & ~intc->irq_fwd_mask[i],
++			  cpu->map_base + reg_mask_set(intc, i));
++		cpu->mask_cache[i] = 0xffffffff & ~intc->irq_fwd_mask[i];
+ 	}
+ 
+ 	parent_irq = irq_of_parse_and_map(dn, idx);
 -- 
 2.17.1
