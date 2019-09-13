@@ -1,89 +1,35 @@
-Return-Path: <SRS0=Klmi=W7=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH RESEND v7 0/3] Add USB3.0 and TI HD3SS3220 driver support
-Date: Wed,  4 Sep 2019 09:15:38 +0100
-Message-Id: <1567584941-13690-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=ihK2=XI=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56604 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388524AbfIMNgB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 13 Sep 2019 09:36:01 -0400
+Subject: Re: v7 EL15203000
+References: <20190912221115.23595-1-oleg@kaa.org.ua>
+From: Dan Murphy <dmurphy@ti.com>
+Message-ID: <3ea2514d-1e9a-8cf0-0ff4-a4430e46cbdb@ti.com>
+Date: Fri, 13 Sep 2019 08:36:18 -0500
+MIME-Version: 1.0
+In-Reply-To: <20190912221115.23595-1-oleg@kaa.org.ua>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Sender: devicetree-owner@vger.kernel.org
+To: Oleh Kravchenko <oleg@kaa.org.ua>, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz
 List-ID: <devicetree@vger.kernel.org>
 
-This series adds USB 3.0 support for the CAT874 platform, including a
-new driver for the TI HD3SS3220 USB Type-C DRP port controller.
+Oleh
 
-Patch4-7 on the v7 series been accepted and is in linux-rc tree.
-Resending patch 1-3 of v7 series, since the dependency patches [1], [2],[3],[4]
-is accpted for usb-next.
+On 9/12/19 5:11 PM, Oleh Kravchenko wrote:
+> [PATCH v8 1/2] dt-bindings: Add docs for EL15203000
+> [PATCH v8 2/2] leds: add LED driver for EL15203000 board
 
-This patchset is based on usb-next tree.
+$subject of cover letter should be v8
 
-[1] commit 451d15a1731c7db9d4868 ("dt-binding: usb: add usb-role-switch property")
-[2] commit 977607653cdd06a2c4d1d ("usb: roles: Introduce stubs for the exiting functions in role.h")
-[3] commit 44493062abc38e5895e0c ("device connection: Add fwnode_connection_find_match()")
-[4] commit a31f01777bc54a0a9d576 ("usb: roles: Add fwnode_usb_role_switch_get() function")
+Dan
 
-V7-->V7 RESEND
-  * No change
-    (https://patchwork.kernel.org/patch/10969911/)
-V6-->V7
-  * Rebased on the below patch series
-    (https://patchwork.kernel.org/project/linux-usb/list/?series=124223)
-  * Updted the hd3ss3220 binding documentation
-    -> Removed Rob's reviewed by tag, since there is a rework.
-    -> Incorporated Sergie and Shimoda-San's review comment.
-     (https://patchwork.kernel.org/patch/10944629/)
-  * Rebased hd3ss3220 driver based on the new API
-    --> Removed Heikki's review comment, since there is a rework
-    (https://patchwork.kernel.org/patch/10942499/)
-  * Incorporated shimoda-san's review comments for renesas usb3 binding
-    (https://patchwork.kernel.org/patch/10944631/)
-  * Incorporated shimoda-san's review comments for renesas usb3 driver
-    (https://patchwork.kernel.org/patch/10944643/)
-V5-->V6
-  * Updated bindings patch by using usb-role-switch property
-  * Used graph api's to get role switch supported by the usb-c-connector
-V4-->V5
-  * Incorporated Heikki's review comment.
-    (https://patchwork.kernel.org/patch/10902531/)
-  * Patch 1 is a dependency patch to make the compilation successful.
-    (https://patchwork.kernel.org/patch/10909971/)
-  * Patch 2 is also dependency patch to make the compilation successful.
-    Rebased on top of Patch1 and fixed Heikki's review comments
-    (https://patchwork.kernel.org/patch/10882555/)
-  * Incorporated Shimoda-San's review comment.
-    (https://patchwork.kernel.org/patch/10902535/)
-V3-->V4
-  * Incorporated Chunfeng Yun's review comment
-    (https://patchwork.kernel.org/project/linux-usb/list/?submitter=133171)
-  * Used fwnode API's to get roleswitch handle
-
-V2-->V3
-  * Used the new API to usb_role_switch by node to find the remote endpoint
-    (https://patchwork.kernel.org/patch/10882555/)
-  * Added renesas,usb-role-switch property
-  * Incorporated shimoda-san's review comment
-    (https://patchwork.kernel.org/patch/10852507/)
-
-V1-->V2
-  * Use USB role class instead of extcon to receive connect and disconnect
-    events and also for the dual role switch.
-  * Dropped patch 6
-  * Squashed patch 8 and patch 9
-  * https://patchwork.kernel.org/cover/10840641/
-
-
-Biju Das (3):
-  dt-bindings: usb: hd3ss3220 device tree binding document
-  usb: typec: driver for TI HD3SS3220 USB Type-C DRP port controller
-  dt-bindings: usb: renesas_usb3: Document usb role switch support
-
- .../devicetree/bindings/usb/renesas,usb3-peri.txt  |  23 ++
- .../devicetree/bindings/usb/ti,hd3ss3220.txt       |  38 +++
- drivers/usb/typec/Kconfig                          |  10 +
- drivers/usb/typec/Makefile                         |   1 +
- drivers/usb/typec/hd3ss3220.c                      | 259 +++++++++++++++++++++
- 5 files changed, 331 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
- create mode 100644 drivers/usb/typec/hd3ss3220.c
-
--- 
-2.7.4
+> Changes what was made:
+> - removed odd spaces;
+> - use only one return in el15203000_pattern_set_P();
+> - reduce returns in el15203000_probe_dt();
+> - remove ret variable from el15203000_probe().
+>
