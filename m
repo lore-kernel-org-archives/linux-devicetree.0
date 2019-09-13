@@ -1,173 +1,39 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 1/5] irqchip/irq-bcm7038-l1: Add PM support
-Date: Fri, 13 Sep 2019 12:15:38 -0700
-Message-ID: <20190913191542.9908-2-f.fainelli@gmail.com>
+Subject: [PATCH v2 3/5] irqchip/irq-bcm7038-l1: Enable parent IRQ if necessary
+Date: Fri, 13 Sep 2019 12:15:40 -0700
+Message-ID: <20190913191542.9908-4-f.fainelli@gmail.com>
 References: <20190913191542.9908-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190913191542.9908-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Justin Chen <justinpopo6@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:BROADCOM BMIPS MIPS
         ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Justin Chen <justinpopo6@gmail.com>
+If the 'brcm,irq-can-wake' property is specified, make sure we also
+enable the corresponding parent interrupt we are attached to.
 
-The current l1 controller does not mask any interrupts when dropping
-into suspend. This mean we can receive unexpected wake up sources.
-Modified MIPS l1 controller to mask the all non-wake interrupts before
-dropping into suspend.
-
-Signed-off-by: Justin Chen <justinpopo6@gmail.com>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/irqchip/irq-bcm7038-l1.c | 98 ++++++++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+ drivers/irqchip/irq-bcm7038-l1.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index fc75c61233aa..f5e4ff5251ab 100644
+index f5e4ff5251ab..0673a44bbdc2 100644
 --- a/drivers/irqchip/irq-bcm7038-l1.c
 +++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -27,6 +27,7 @@
- #include <linux/types.h>
- #include <linux/irqchip.h>
- #include <linux/irqchip/chained_irq.h>
-+#include <linux/syscore_ops.h>
- 
- #define IRQS_PER_WORD		32
- #define REG_BYTES_PER_IRQ_WORD	(sizeof(u32) * 4)
-@@ -39,6 +40,10 @@ struct bcm7038_l1_chip {
- 	unsigned int		n_words;
- 	struct irq_domain	*domain;
- 	struct bcm7038_l1_cpu	*cpus[NR_CPUS];
-+#ifdef CONFIG_PM_SLEEP
-+	struct list_head	list;
-+	u32			wake_mask[MAX_WORDS];
-+#endif
- 	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
- };
- 
-@@ -47,6 +52,17 @@ struct bcm7038_l1_cpu {
- 	u32			mask_cache[0];
- };
- 
-+/*
-+ * We keep a list of bcm7038_l1_chip used for suspend/resume. This hack is
-+ * used because the struct chip_type suspend/resume hooks are not called
-+ * unless chip_type is hooked onto a generic_chip. Since this driver does
-+ * not use generic_chip, we need to manually hook our resume/suspend to
-+ * syscore_ops.
-+ */
-+#ifdef CONFIG_PM_SLEEP
-+static LIST_HEAD(bcm7038_l1_intcs_list);
-+#endif
-+
- /*
-  * STATUS/MASK_STATUS/MASK_SET/MASK_CLEAR are packed one right after another:
-  *
-@@ -287,6 +303,77 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int bcm7038_l1_suspend(void)
-+{
-+	struct bcm7038_l1_chip *intc;
-+	unsigned long flags;
-+	int boot_cpu, word;
-+
-+	/* Wakeup interrupt should only come from the boot cpu */
-+	boot_cpu = cpu_logical_map(smp_processor_id());
-+
-+	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
-+		raw_spin_lock_irqsave(&intc->lock, flags);
-+		for (word = 0; word < intc->n_words; word++) {
-+			l1_writel(~intc->wake_mask[word],
-+				intc->cpus[boot_cpu]->map_base +
-+				reg_mask_set(intc, word));
-+			l1_writel(intc->wake_mask[word],
-+				intc->cpus[boot_cpu]->map_base +
-+				reg_mask_clr(intc, word));
-+		}
-+		raw_spin_unlock_irqrestore(&intc->lock, flags);
-+	}
-+
-+	return 0;
-+}
-+
-+static void bcm7038_l1_resume(void)
-+{
-+	struct bcm7038_l1_chip *intc;
-+	unsigned long flags;
-+	int boot_cpu, word;
-+
-+	boot_cpu = cpu_logical_map(smp_processor_id());
-+
-+	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
-+		raw_spin_lock_irqsave(&intc->lock, flags);
-+		for (word = 0; word < intc->n_words; word++) {
-+			l1_writel(intc->cpus[boot_cpu]->mask_cache[word],
-+				intc->cpus[boot_cpu]->map_base +
-+				reg_mask_set(intc, word));
-+			l1_writel(~intc->cpus[boot_cpu]->mask_cache[word],
-+				intc->cpus[boot_cpu]->map_base +
-+				reg_mask_clr(intc, word));
-+		}
-+		raw_spin_unlock_irqrestore(&intc->lock, flags);
-+	}
-+}
-+
-+static struct syscore_ops bcm7038_l1_syscore_ops = {
-+	.suspend	= bcm7038_l1_suspend,
-+	.resume		= bcm7038_l1_resume,
-+};
-+
-+static int bcm7038_l1_set_wake(struct irq_data *d, unsigned int on)
-+{
-+	struct bcm7038_l1_chip *intc = irq_data_get_irq_chip_data(d);
-+	unsigned long flags;
-+	u32 word = d->hwirq / IRQS_PER_WORD;
-+	u32 mask = BIT(d->hwirq % IRQS_PER_WORD);
-+
-+	raw_spin_lock_irqsave(&intc->lock, flags);
-+	if (on)
-+		intc->wake_mask[word] |= mask;
-+	else
-+		intc->wake_mask[word] &= ~mask;
-+	raw_spin_unlock_irqrestore(&intc->lock, flags);
-+
-+	return 0;
-+}
-+#endif
-+
- static struct irq_chip bcm7038_l1_irq_chip = {
- 	.name			= "bcm7038-l1",
- 	.irq_mask		= bcm7038_l1_mask,
-@@ -295,6 +382,9 @@ static struct irq_chip bcm7038_l1_irq_chip = {
- #ifdef CONFIG_SMP
- 	.irq_cpu_offline	= bcm7038_l1_cpu_offline,
- #endif
-+#ifdef CONFIG_PM_SLEEP
-+	.irq_set_wake		= bcm7038_l1_set_wake,
-+#endif
- };
- 
- static int bcm7038_l1_map(struct irq_domain *d, unsigned int virq,
-@@ -340,6 +430,14 @@ int __init bcm7038_l1_of_init(struct device_node *dn,
- 		goto out_unmap;
+@@ -297,6 +297,10 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+ 		pr_err("failed to map parent interrupt %d\n", parent_irq);
+ 		return -EINVAL;
  	}
- 
-+#ifdef CONFIG_PM_SLEEP
-+	/* Add bcm7038_l1_chip into a list */
-+	INIT_LIST_HEAD(&intc->list);
-+	list_add_tail(&intc->list, &bcm7038_l1_intcs_list);
 +
-+	register_syscore_ops(&bcm7038_l1_syscore_ops);
-+#endif
++	if (of_property_read_bool(dn, "brcm,irq-can-wake"))
++		enable_irq_wake(parent_irq);
 +
- 	pr_info("registered BCM7038 L1 intc (%pOF, IRQs: %d)\n",
- 		dn, IRQS_PER_WORD * intc->n_words);
+ 	irq_set_chained_handler_and_data(parent_irq, bcm7038_l1_irq_handle,
+ 					 intc);
  
 -- 
 2.17.1
