@@ -1,47 +1,60 @@
-From: Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in handle_vmptrld
-Date: Fri, 13 Sep 2019 17:01:22 +0200
-Message-ID: <6a0ec3a2-2a52-f67a-6140-e0a60874538a@redhat.com>
-References: <000000000000a9d4f705924cff7a@google.com>
- <87lfutei1j.fsf@vitty.brq.redhat.com>
- <5218e70e-8a80-7c5f-277b-01d9ab70692a@redhat.com>
- <20190913044614.GA120223@kroah.com>
- <db02a285-ad1d-6094-6359-ba80e6d3f2e0@redhat.com>
- <20190913130226.GB403359@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Adam Ford <aford173@gmail.com>
+Subject: [RFC 1/2] ARM: dts: omap3: Add cpu trips and cooling map for omap3 family
+Date: Fri, 13 Sep 2019 10:04:08 -0500
+Message-ID: <20190913150410.27391-1-aford173@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190913130226.GB403359@kroah.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org, bp@alien8.de, carlo@caione.org, catalin.marinas@arm.com, devicetree@vger.kernel.org, hpa@zytor.com, jmattson@google.com, joro@8bytes.org, khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, narmstrong@baylibre.com, rkrcmar@redhat.com, robh+dt@kernel.org, sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com, tglx@linutronix.de, wanpengli@tencent.com, will.deacon@arm.com, x86@kernel.org, syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com>, Dmitry Vyukov <dvyukov@google.com>, USB list <linux-usb@vger.kernel.org>
+To: linux-omap@vger.kernel.org
+Cc: adam.ford@logicpd.com, nm@ti.com, hns@goldelico.com, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/09/19 15:02, Greg Kroah-Hartman wrote:
-> Look at linux-next, we "should" have fixed up hcd_buffer_alloc() now to
-> not need this type of thing.  If we got it wrong, please let us know and
-> then yes, a fix like this would be most appreciated :)
+The OMAP3530, AM3517 and DM3730 all show thresholds of 90C and 105C
+depending on commercial or industrial temperature ratings.  This
+patch expands the thermal information to the limits of 90 and 105
+for alert and critical.
 
-I still see
+For boards who never use industrial temperatures, these can be
+changed on their respective device trees with something like:
 
-	/* some USB hosts just use PIO */
-	if (!hcd_uses_dma(hcd)) {
-		*dma = ~(dma_addr_t) 0;
-		return kmalloc(size, mem_flags);
-	}
+&cpu_alert0 {
+	temperature = <85000>; /* millicelsius */
+};
 
-in linux-next's hcd_buffer_alloc and also in usb.git's usb-next branch.
- I also see the same
+&cpu_crit {
+	temperature = <90000>; /* millicelsius */
+};
 
-	if (remap_pfn_range(vma, vma->vm_start,
-			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
-			size, vma->vm_page_prot) < 0) {
-		...
-	}
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-in usbdev_mmap.  Of course it's possible that I'm looking at the wrong
-branch, or just being dense.
-
-Paolo
+diff --git a/arch/arm/boot/dts/omap3-cpu-thermal.dtsi b/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
+index 235ecfd61e2d..11452590ea85 100644
+--- a/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
++++ b/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
+@@ -17,4 +17,25 @@ cpu_thermal: cpu_thermal {
+ 
+ 			/* sensor       ID */
+ 	thermal-sensors = <&bandgap     0>;
++
++	cpu_trips: trips {
++		cpu_alert0: cpu_alert {
++			temperature = <90000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "passive";
++		};
++		cpu_crit: cpu_crit {
++			temperature = <105000>; /* millicelsius */
++			hysteresis = <2000>; /* millicelsius */
++			type = "critical";
++		};
++	};
++
++	cpu_cooling_maps: cooling-maps {
++		map0 {
++			trip = <&cpu_alert0>;
++			cooling-device =
++				<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++		};
++	};
+ };
+-- 
+2.17.1
