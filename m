@@ -1,87 +1,35 @@
-From: Palmer Dabbelt <palmer@sifive.com>
-Subject: Re: [PATCH] riscv: dts: Add DT support for SiFive FU540 PWM driver
-Date: Fri, 13 Sep 2019 14:20:53 -0700 (PDT)
-Message-ID: <mhng-c8b87e96-987e-4577-acc2-1e22c9b81b10@palmer-si-x1e>
-References: <CAJ2_jOGO-isv52rnwRusV7jtyCY_JWYWAj9opN3Zg6ZbZr-8-w@mail.gmail.com>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in handle_vmptrld
+Date: Fri, 13 Sep 2019 23:39:03 +0200
+Message-ID: <a85cee75-99f9-7de3-6e5c-86f9bb41bca5@redhat.com>
+References: <000000000000a9d4f705924cff7a@google.com>
+ <87lfutei1j.fsf@vitty.brq.redhat.com>
+ <5218e70e-8a80-7c5f-277b-01d9ab70692a@redhat.com>
+ <20190913044614.GA120223@kroah.com>
+ <db02a285-ad1d-6094-6359-ba80e6d3f2e0@redhat.com>
+ <20190913130226.GB403359@kroah.com>
+ <6a0ec3a2-2a52-f67a-6140-e0a60874538a@redhat.com>
+ <462660f4-1537-cece-b55f-0ceba0269eb8@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJ2_jOGO-isv52rnwRusV7jtyCY_JWYWAj9opN3Zg6ZbZr-8-w@mail.gmail.com>
+In-Reply-To: <462660f4-1537-cece-b55f-0ceba0269eb8@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: yash.shah@sifive.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, bmeng.cn@gmail.com, sagar.kadam@sifive.com, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>
+To: Robin Murphy <robin.murphy@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: mark.rutland@arm.com, x86@kernel.org, wanpengli@tencent.com, kvm@vger.kernel.org, narmstrong@baylibre.com, catalin.marinas@arm.com, will.deacon@arm.com, hpa@zytor.com, khilman@baylibre.com, joro@8bytes.org, rkrcmar@redhat.com, mingo@redhat.com, Dmitry Vyukov <dvyukov@google.com>, syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com>, devicetree@vger.kernel.org, syzkaller-bugs@googlegroups.com, robh+dt@kernel.org, bp@alien8.de, linux-amlogic@lists.infradead.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, jmattson@google.com, USB list <linux-usb@vger.kernel.org>, linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com, carlo@caione.org, Vitaly Kuznetsov <vkuznets@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 10 Sep 2019 02:52:07 PDT (-0700), yash.shah@sifive.com wrote:
-> Hi,
->
-> Any comments on this patch?
+On 13/09/19 17:32, Robin Murphy wrote:
+> Oh, that bit of usbdev_mmap() is already known to be pretty much totally
+> bogus for various reasons - there have been a few threads about it, of
+> which I think [1] is both the most recent and the most informative.
+> There was another patch[2], but that might have stalled (and might need
+> reworking with additional hcd_uses_dma() checks anyway).
 
-I don't see "sifive,pwm0" in the DT bindings documentation, and it doesn't 
-match our standard way of doing these things (which would have at least 
-"sifive,fu540-c000-pwm").
+Neither is enough, see my reply to Alan.  Memory from kmalloc just
+*cannot* be passed down to remap_pfn_range, dma_mmap_coherent or
+anything like that.  It's a simple alignment issue.
 
->
-> - Yash
->
-> On Wed, Aug 21, 2019 at 2:53 PM Yash Shah <yash.shah@sifive.com> wrote:
->>
->> Add the PWM DT node in SiFive FU540 soc-specific DT file.
->> Enable the PWM nodes in HiFive Unleashed board-specific DT file.
->>
->> Signed-off-by: Yash Shah <yash.shah@sifive.com>
->> ---
->>  arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 19 +++++++++++++++++++
->>  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++++++
->>  2 files changed, 27 insertions(+)
->>
->> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
->> index 42b5ec2..bb422db 100644
->> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
->> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
->> @@ -230,6 +230,25 @@
->>                         #size-cells = <0>;
->>                         status = "disabled";
->>                 };
->> +               pwm0: pwm@10020000 {
->> +                       compatible = "sifive,pwm0";
->> +                       reg = <0x0 0x10020000 0x0 0x1000>;
->> +                       interrupt-parent = <&plic0>;
->> +                       interrupts = <42 43 44 45>;
->> +                       clocks = <&prci PRCI_CLK_TLCLK>;
->> +                       #pwm-cells = <3>;
->> +                       status = "disabled";
->> +               };
->> +               pwm1: pwm@10021000 {
->> +                       compatible = "sifive,pwm0";
->> +                       reg = <0x0 0x10021000 0x0 0x1000>;
->> +                       interrupt-parent = <&plic0>;
->> +                       interrupts = <46 47 48 49>;
->> +                       reg-names = "control";
->> +                       clocks = <&prci PRCI_CLK_TLCLK>;
->> +                       #pwm-cells = <3>;
->> +                       status = "disabled";
->> +               };
->>
->>         };
->>  };
->> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
->> index 93d68cb..104d334 100644
->> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
->> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
->> @@ -85,3 +85,11 @@
->>                 reg = <0>;
->>         };
->>  };
->> +
->> +&pwm0 {
->> +       status = "okay";
->> +};
->> +
->> +&pwm1 {
->> +       status = "okay";
->> +};
->> --
->> 1.9.1
->>
+Paolo
