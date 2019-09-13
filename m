@@ -1,49 +1,50 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH 5/6] media: sun4i: Add H3 deinterlace driver
-Date: Fri, 13 Sep 2019 11:11:47 +0200
-Message-ID: <20190913091147.42nsldzxwzfjoiak@localhost.localdomain>
-References: <20190912175132.411-1-jernej.skrabec@siol.net>
- <20190912175132.411-6-jernej.skrabec@siol.net>
- <20190912202647.wfcjur7yxhlelvd6@localhost.localdomain>
- <4613446.95M5L3lKvs@jernej-laptop>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v2] dt-bindings: gpu: Convert Samsung Image Rotator to
+ dt-schema
+Date: Fri, 13 Sep 2019 11:15:38 +0200
+Message-ID: <e082996a-743d-807a-38c0-dee65b490771@samsung.com>
+References: <20190912093315.5744-1-m.falkowski@samsung.com>
+        <CGME20190912161550eucas1p2bdc813d46f337f3717bdbfd33bae8d4a@eucas1p2.samsung.com>
+        <20190912161538.4321-1-m.falkowski@samsung.com> <20190913062945.GA10283@pi3>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="42vjgwlldb7pcwy6"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4613446.95M5L3lKvs@jernej-laptop>
+In-Reply-To: <20190913062945.GA10283@pi3>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
+To: Krzysztof Kozlowski <krzk@kernel.org>, Maciej Falkowski <m.falkowski@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, a.hajda@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Krzysztof,
 
---42vjgwlldb7pcwy6
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 9/13/19 8:29 AM, Krzysztof Kozlowski wrote:
+> On Thu, Sep 12, 2019 at 06:15:38PM +0200, Maciej Falkowski wrote:
+>> Convert Samsung Image Rotator to newer dt-schema format.
+>>
+>> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Just to make it clear, Marek's signed-off should appear for one of
+> conditions:
+>   - he contributed some source code to your patch,
+>   - he took your patch, rebased, send by himself (not a case here, I
+>     think),
+>   - he contributed significant ideas, although for this there is a
+>     "Co-developed-by" tag.
+>
+> If someone made just review - add Reviewed-by. If someone suggested the
+> patch - add Suggested-by.
 
-Hi,
+My signed-off here was added to mark that this patch is allowed to be 
+submitted to the public mailing list, as I have required company 
+permissions for such activity. It is not that uncommon that a given 
+patch has more than one signed-off and still the main author has the 
+first signed-off tag.
 
-On Thu, Sep 12, 2019 at 10:43:28PM +0200, Jernej =C5=A0krabec wrote:
-> Dne =C4=8Detrtek, 12. september 2019 ob 22:26:47 CEST je Maxime Ripard na=
-pisal(a):
-> > > +	clk_set_rate(dev->mod_clk, 300000000);
+ > ...
 
-I just realized I missed this too. If you really need the rate to be
-fixed, and if the controller cannot operate properly at any other
-frequency, you probably want to use clk_set_rate_exclusive there.
-
-Maxime
---42vjgwlldb7pcwy6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXXtdUwAKCRDj7w1vZxhR
-xZY3AQDJluLkTUto07z1kgxJ+9CJnbEOdksi1vAG8DSbW/o52wEAyBtJ8MHD4t8T
-GgYWgCtcAKeCFH1IT/6EICEM21kyTQw=
-=aoHD
------END PGP SIGNATURE-----
-
---42vjgwlldb7pcwy6--
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
