@@ -1,7 +1,7 @@
 From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH RFC v2 06/14] dt-bindings/interrupt-controller: pdc: add SPI config register
-Date: Fri, 13 Sep 2019 15:59:14 -0600
-Message-ID: <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
+Subject: [PATCH RFC v2 05/14] of: irq: document properties for wakeup interrupt parent
+Date: Fri, 13 Sep 2019 15:59:13 -0600
+Message-ID: <1568411962-1022-6-git-send-email-ilina@codeaurora.org>
 References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
@@ -10,58 +10,39 @@ To: swboyd@chromium.org, evgreen@chromium.org, maz@kernel.org, linus.walleij@lin
 Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In addition to configuring the PDC, additional registers that interface
-the GIC have to be configured to match the GPIO type. The registers on
-some QCOM SoCs are access restricted, while on other SoCs are not. They
-SoCs with access restriction to these SPI registers need to be written
-from the firmware using the SCM interface. Add a flag to indicate if the
-register is to be written using SCM interface.
+Some interrupt controllers in a SoC, are always powered on and have a
+select interrupts routed to them, so that they can wakeup the SoC from
+suspend. Add wakeup-parent DT property to refer to these interrupt
+controllers.
 
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/interrupt-controller/qcom,pdc.txt   | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/interrupt-controller/interrupts.txt | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-index 8e0797c..e329f8d 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-@@ -24,6 +24,9 @@ Properties:
- 	Usage: required
- 	Value type: <prop-encoded-array>
- 	Definition: Specifies the base physical address for PDC hardware.
-+		    Optionally, specify the PDC's GIC interface registers that
-+		    need to be configured for wakeup capable GPIOs routed to
-+		    the PDC.
- 
- - interrupt-cells:
- 	Usage: required
-@@ -50,15 +53,23 @@ Properties:
- 		    The second element is the GIC hwirq number for the PDC port.
- 		    The third element is the number of interrupts in sequence.
- 
-+- qcom,scm-spi-cfg:
-+	Usage: optional
-+	Value type: <bool>
-+	Definition: Specifies if the SPI configuration registers have to be
-+		    written from the firmware. Sometimes the PDC interface
-+		    register to the GIC can only be written from the firmware.
-+
- Example:
- 
- 	pdc: interrupt-controller@b220000 {
- 		compatible = "qcom,sdm845-pdc";
--		reg = <0xb220000 0x30000>;
-+		reg = <0 0x0b220000 0 0x30000>, <0 0x179900f0 0 0x60>;
- 		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
- 		#interrupt-cells = <2>;
- 		interrupt-parent = <&intc>;
- 		interrupt-controller;
-+		qcom,scm-spi-cfg;
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+index 8a3c408..c10e310 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+@@ -108,3 +108,16 @@ commonly used:
+ 			sensitivity = <7>;
+ 		};
  	};
- 
- DT binding of a device that wants to use the GIC SPI 514 as a wakeup
++
++3) Interrupt wakeup parent
++--------------------------
++
++Some interrupt controllers in a SoC, are always powered on and have a select
++interrupts routed to them, so that they can wakeup the SoC from suspend. These
++interrupt controllers do not fall into the category of a parent interrupt
++controller and can be specified by the "wakeup-parent" property and contain a
++single phandle referring to the wakeup capable interrupt controller.
++
++   Example:
++	wakeup-parent = <&pdc_intc>;
++
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
