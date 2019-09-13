@@ -1,173 +1,41 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 1/6] irqchip/irq-bcm7038-l1: Add PM support
-Date: Fri, 13 Sep 2019 12:10:21 -0700
-Message-ID: <20190913191026.8801-2-f.fainelli@gmail.com>
+Subject: [PATCH 2/6] dt-bindings: Document brcm,irq-can-wake for brcm,bcm7038-l1-intc.txt
+Date: Fri, 13 Sep 2019 12:10:22 -0700
+Message-ID: <20190913191026.8801-3-f.fainelli@gmail.com>
 References: <20190913191026.8801-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190913191026.8801-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Justin Chen <justinpopo6@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:BROADCOM BMIPS MIPS
         ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Justin Chen <justinpopo6@gmail.com>
+The BCM7038 L1 interrupt controller can be used as a wake-up interrupt
+controller on MIPS and ARM-based systems, document the brcm,irq-can-wake
+which has been "standardized" across Broadcom interrupt controllers.
 
-The current l1 controller does not mask any interrupts when dropping
-into suspend. This mean we can receive unexpected wake up sources.
-Modified MIPS l1 controller to mask the all non-wake interrupts before
-dropping into suspend.
-
-Signed-off-by: Justin Chen <justinpopo6@gmail.com>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/irqchip/irq-bcm7038-l1.c | 98 ++++++++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+ .../bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt   | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index fc75c61233aa..c7e37eefec6d 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -27,6 +27,7 @@
- #include <linux/types.h>
- #include <linux/irqchip.h>
- #include <linux/irqchip/chained_irq.h>
-+#include <linux/syscore_ops.h>
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+index 2117d4ac1ae5..4eb043270f5b 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+@@ -31,6 +31,11 @@ Required properties:
+ - interrupts: specifies the interrupt line(s) in the interrupt-parent controller
+   node; valid values depend on the type of parent interrupt controller
  
- #define IRQS_PER_WORD		32
- #define REG_BYTES_PER_IRQ_WORD	(sizeof(u32) * 4)
-@@ -39,6 +40,10 @@ struct bcm7038_l1_chip {
- 	unsigned int		n_words;
- 	struct irq_domain	*domain;
- 	struct bcm7038_l1_cpu	*cpus[NR_CPUS];
-+#ifdef CONFIG_PM_SLEEP
-+	struct list_head	list;
-+	u32			wake_mask[MAX_WORDS];
-+#endif
- 	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
- };
- 
-@@ -47,6 +52,17 @@ struct bcm7038_l1_cpu {
- 	u32			mask_cache[0];
- };
- 
-+/*
-+ * We keep a list of bcm7038_l1_chip used for suspend/resume. This hack is
-+ * used because the struct chip_type suspend/resume hooks are not called
-+ * unless chip_type is hooked onto a generic_chip. Since this driver does
-+ * not use generic_chip, we need to manually hook our resume/suspend to
-+ * syscore_ops.
-+ */
-+#ifdef CONFIG_PM_SLEEP
-+static LIST_HEAD(bcm7038_l1_intcs_list);
-+#endif
++Optional properties:
 +
- /*
-  * STATUS/MASK_STATUS/MASK_SET/MASK_CLEAR are packed one right after another:
-  *
-@@ -287,6 +303,77 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int bcm7038_l1_suspend(void)
-+{
-+	struct bcm7038_l1_chip *intc;
-+	unsigned long flags;
-+	int boot_cpu, word;
++- brcm,irq-can-wake: If present, this means the L1 controller can be used as a
++  wakeup source for system suspend/resume.
 +
-+	/* Wakeup interrupt should only come from the boot cpu */
-+	boot_cpu = cpu_logical_map(smp_processor_id());
-+
-+	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
-+		raw_spin_lock_irqsave(&intc->lock, flags);
-+		for (word = 0; word < intc->n_words; word++) {
-+			l1_writel(~intc->wake_mask[word],
-+				intc->cpus[boot_cpu]->map_base +
-+				reg_mask_set(intc, word));
-+			l1_writel(intc->wake_mask[word],
-+				intc->cpus[boot_cpu]->map_base +
-+				reg_mask_clr(intc, word));
-+		}
-+		raw_spin_unlock_irqrestore(&intc->lock, flags);
-+	}
-+
-+	return 0;
-+}
-+
-+static void bcm7038_l1_resume(void)
-+{
-+	struct bcm7038_l1_chip *intc;
-+	unsigned long flags;
-+	int boot_cpu, word;
-+
-+	boot_cpu = cpu_logical_map(smp_processor_id());
-+
-+	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
-+		raw_spin_lock_irqsave(&intc->lock, flags);
-+		for (word = 0; word < intc->n_words; word++) {
-+			l1_writel(intc->cpus[boot_cpu]->mask_cache[word],
-+				intc->cpus[boot_cpu]->map_base +
-+				reg_mask_set(intc, word));
-+			l1_writel(~intc->cpus[boot_cpu]->mask_cache[word],
-+				intc->cpus[boot_cpu]->map_base +
-+				reg_mask_clr(intc, word));
-+		}
-+		raw_spin_unlock_irqrestore(&intc->lock, flags);
-+	}
-+}
-+
-+static struct syscore_ops bcm7038_l1_syscore_ops = {
-+	.suspend	= bcm7038_l1_suspend,
-+	.resume		= bcm7038_l1_resume,
-+};
-+
-+static int bcm7038_l1_set_wake(struct irq_data *d, unsigned int on)
-+{
-+	struct bcm7038_l1_chip *intc = irq_data_get_irq_chip_data(d);
-+	unsigned long flags;
-+	u32 word = d->hwirq / IRQS_PER_WORD;
-+	u32 mask = BIT(d->hwirq % IRQS_PER_WORD);
-+
-+	raw_spin_lock_irqsave(&intc->lock, flags);
-+	if (on)
-+		intc->wake_mask[word] |= mask;
-+	else
-+		intc->wake_mask[word] &= ~mask;
-+	raw_spin_unlock_irqrestore(&intc->lock, flags);
-+
-+	return 0;
-+}
-+#endif
-+
- static struct irq_chip bcm7038_l1_irq_chip = {
- 	.name			= "bcm7038-l1",
- 	.irq_mask		= bcm7038_l1_mask,
-@@ -295,6 +382,9 @@ static struct irq_chip bcm7038_l1_irq_chip = {
- #ifdef CONFIG_SMP
- 	.irq_cpu_offline	= bcm7038_l1_cpu_offline,
- #endif
-+#if CONFIG_PM_SLEEP
-+	.irq_set_wake		= bcm7038_l1_set_wake,
-+#endif
- };
- 
- static int bcm7038_l1_map(struct irq_domain *d, unsigned int virq,
-@@ -340,6 +430,14 @@ int __init bcm7038_l1_of_init(struct device_node *dn,
- 		goto out_unmap;
- 	}
- 
-+#ifdef CONFIG_PM_SLEEP
-+	/* Add bcm7038_l1_chip into a list */
-+	INIT_LIST_HEAD(&intc->list);
-+	list_add_tail(&intc->list, &bcm7038_l1_intcs_list);
-+
-+	register_syscore_ops(&bcm7038_l1_syscore_ops);
-+#endif
-+
- 	pr_info("registered BCM7038 L1 intc (%pOF, IRQs: %d)\n",
- 		dn, IRQS_PER_WORD * intc->n_words);
- 
+ If multiple reg ranges and interrupt-parent entries are present on an SMP
+ system, the driver will allow IRQ SMP affinity to be set up through the
+ /proc/irq/ interface.  In the simplest possible configuration, only one
 -- 
 2.17.1
