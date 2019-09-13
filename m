@@ -1,163 +1,46 @@
-From: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-Subject: [PATCH V2 01/12] remoteproc: qcom: Add PRNG proxy clock
-Date: Fri, 13 Sep 2019 17:26:00 +0530
-Message-ID: <1568375771-22933-2-git-send-email-gokulsri@codeaurora.org>
-References: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org, david.brown@linaro.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com, robh+dt@kernel.org, sricharan@codeaurora.org, nprakash@codeaurora.org
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: arm: renesas: Convert 'renesas,
+ prr' to json-schema
+Date: Fri, 13 Sep 2019 13:02:08 +0100
+Message-ID: <CAL_JsqLN66LK3=4K9dLtHWd=nOAJ7ofKH6TKp058gqOV32rj8g@mail.gmail.com>
+References: <20190908120528.9392-1-horms+renesas@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190908120528.9392-1-horms+renesas@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yoshihiro Kaneko <ykaneko0929@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-PRNG clock is needed by the secure PIL, support for the same
-is added in subsequent patches.
+On Sun, Sep 8, 2019 at 11:14 PM Simon Horman <horms+renesas@verge.net.au> wrote:
+>
+> Convert Renesas Product Register bindings documentation to json-schema.
+>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> ---
+> Based on v5.3-rc1
+> Tested using:
+>   make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/renesas,prr.yaml
+>
+> v2
+> * Use simple enum for compat values
+> * Drop "" from compat values
+> * Only supply 'maxItems' property to 'reg'
+> ---
+>  .../devicetree/bindings/arm/renesas,prr.txt        | 20 -------------
+>  .../devicetree/bindings/arm/renesas,prr.yaml       | 35 ++++++++++++++++++++++
+>  2 files changed, 35 insertions(+), 20 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/renesas,prr.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/renesas,prr.yaml
 
-Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_wcss.c | 63 +++++++++++++++++++++++++++----------
- 1 file changed, 46 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index 0821c94..dc2bae4 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -88,18 +88,6 @@ enum {
- 	WCSS_QCS404,
- };
- 
--struct wcss_data {
--	const char *firmware_name;
--	int crash_reason_smem;
--	u8 version;
--	bool aon_reset_required;
--	const char *ssr_name;
--	const char *sysmon_name;
--	int ssctl_id;
--	const struct rproc_ops *ops;
--	bool requires_force_stop;
--};
--
- struct q6v5_wcss {
- 	struct device *dev;
- 
-@@ -124,6 +112,7 @@ struct q6v5_wcss {
- 	struct clk *qdsp6ss_xo_cbcr;
- 	struct clk *qdsp6ss_core_gfmux;
- 	struct clk *wcss_bcr_cbcr;
-+	struct clk *prng_clk;
- 	struct regulator *cx_supply;
- 
- 	struct qcom_rproc_glink glink_subdev;
-@@ -146,6 +135,20 @@ struct q6v5_wcss {
- 	bool requires_force_stop;
- };
- 
-+struct wcss_data {
-+	int (*init_clock)(struct q6v5_wcss *wcss);
-+	int (*init_regulator)(struct q6v5_wcss *wcss);
-+	const char *firmware_name;
-+	int crash_reason_smem;
-+	u8 version;
-+	bool aon_reset_required;
-+	const char *ssr_name;
-+	const char *sysmon_name;
-+	int ssctl_id;
-+	const struct rproc_ops *ops;
-+	bool requires_force_stop;
-+};
-+
- static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
- {
- 	int ret;
-@@ -235,6 +238,12 @@ static int q6v5_wcss_start(struct rproc *rproc)
- 	struct q6v5_wcss *wcss = rproc->priv;
- 	int ret;
- 
-+	ret = clk_prepare_enable(wcss->prng_clk);
-+	if (ret) {
-+		dev_err(wcss->dev, "prng clock enable failed\n");
-+		return ret;
-+	}
-+
- 	qcom_q6v5_prepare(&wcss->q6v5);
- 
- 	/* Release Q6 and WCSS reset */
-@@ -703,6 +712,7 @@ static int q6v5_wcss_stop(struct rproc *rproc)
- 			return ret;
- 	}
- 
-+	clk_disable_unprepare(wcss->prng_clk);
- 	qcom_q6v5_unprepare(&wcss->q6v5);
- 
- 	return 0;
-@@ -858,7 +868,21 @@ static int q6v5_alloc_memory_region(struct q6v5_wcss *wcss)
- 	return 0;
- }
- 
--static int q6v5_wcss_init_clock(struct q6v5_wcss *wcss)
-+static int ipq8074_init_clock(struct q6v5_wcss *wcss)
-+{
-+	int ret;
-+
-+	wcss->prng_clk = devm_clk_get(wcss->dev, "prng");
-+	if (IS_ERR(wcss->prng_clk)) {
-+		ret = PTR_ERR(wcss->prng_clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(wcss->dev, "Failed to get prng clock\n");
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+static int qcs404_init_clock(struct q6v5_wcss *wcss)
- {
- 	int ret;
- 
-@@ -973,7 +997,7 @@ static int q6v5_wcss_init_clock(struct q6v5_wcss *wcss)
- 	return 0;
- }
- 
--static int q6v5_wcss_init_regulator(struct q6v5_wcss *wcss)
-+static int qcs404_init_regulator(struct q6v5_wcss *wcss)
- {
- 	wcss->cx_supply = devm_regulator_get(wcss->dev, "cx");
- 	if (IS_ERR(wcss->cx_supply))
-@@ -1017,12 +1041,14 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
--	if (wcss->version == WCSS_QCS404) {
--		ret = q6v5_wcss_init_clock(wcss);
-+	if (desc->init_clock) {
-+		ret = desc->init_clock(wcss);
- 		if (ret)
- 			goto free_rproc;
-+	}
- 
--		ret = q6v5_wcss_init_regulator(wcss);
-+	if (desc->init_regulator) {
-+		ret = desc->init_regulator(wcss);
- 		if (ret)
- 			goto free_rproc;
- 	}
-@@ -1067,6 +1093,7 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
- }
- 
- static const struct wcss_data wcss_ipq8074_res_init = {
-+	.init_clock = ipq8074_init_clock,
- 	.firmware_name = "IPQ8074/q6_fw.mdt",
- 	.crash_reason_smem = 421,
- 	.aon_reset_required = true,
-@@ -1075,6 +1102,8 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
- };
- 
- static const struct wcss_data wcss_qcs404_res_init = {
-+	.init_clock = qcs404_init_clock,
-+	.init_regulator = qcs404_init_regulator,
- 	.crash_reason_smem = 421,
- 	.firmware_name = "wcnss.mdt",
- 	.version = WCSS_QCS404,
--- 
-1.9.1
+Reviewed-by: Rob Herring <robh@kernel.org>
