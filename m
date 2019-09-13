@@ -1,59 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: net: dwmac: document 'mac-mode' property
-Date: Fri, 13 Sep 2019 15:36:13 +0100
-Message-ID: <5d7ba95d.1c69fb81.dabe4.8057@mx.google.com>
-References: <20190906130256.10321-1-alexandru.ardelean@analog.com>
- <20190906130256.10321-2-alexandru.ardelean@analog.com>
+Subject: Re: [PATCH 4/4] DTS: bindings: omap: update bindings documentation
+Date: Fri, 13 Sep 2019 15:36:17 +0100
+Message-ID: <5d7ba962.1c69fb81.eabe3.44bf@mx.google.com>
+References: <cover.1567878413.git.hns@goldelico.com> <35e4f219af5f8bff48e89ece7541f4e4ae6f27a0.1567878413.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190906130256.10321-2-alexandru.ardelean@analog.com>
+In-Reply-To: <35e4f219af5f8bff48e89ece7541f4e4ae6f27a0.1567878413.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, peppe.cavallaro@st.com, alexandre.torgue@st.com, --cc=andrew@lunn.ch
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Andr=C3=A9=20Roth?= <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Roger Quadros <rogerq@ti.com>, Teresa Remmet <t.remmet@phytec.de>, "H. Nikolaus Schaller" <hns@goldelico.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 04:02:56PM +0300, Alexandru Ardelean wrote:
-> This change documents the 'mac-mode' property that was introduced in the
-> 'stmmac' driver to support passive mode converters that can sit in-between
-> the MAC & PHY.
+On Sat,  7 Sep 2019 19:46:53 +0200, "H. Nikolaus Schaller" wrote:
+> * clarify that we now need either "ti,omap3430" or "ti,omap3630" or "ti,am3517" for omap3 chips
+> * clarify that "ti,omap3" has no default
+> * clarify that AM33x is not an "ti,omap3"
+> * clarify that the list of boards is incomplete
+> * remove some "ti,am33xx", "ti,omap3"
+> * add some missing "ti,omap4"
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Acked-by: Tony Lindgren <tony@atomide.com>
 > ---
->  Documentation/devicetree/bindings/net/snps,dwmac.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  .../devicetree/bindings/arm/omap/omap.txt     | 30 +++++++++++--------
+>  1 file changed, 17 insertions(+), 13 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-> index c78be15704b9..ebe4537a7cce 100644
-> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-> @@ -112,6 +112,14 @@ properties:
->    reset-names:
->      const: stmmaceth
->  
-> +  mac-mode:
-> +    maxItems: 1
 
-Is this an array because {min,max}Items is for arrays? It should be 
-defined as a string with possible values.
-
-As this property is the same as another, you can do this:
-
-$ref: ethernet-controller.yaml#/properties/phy-connection-type
-
-Unless only a small subset of those values are valid here, then you may 
-want to list them here.
-
-> +    description:
-> +      The property is identical to 'phy-mode', and assumes that there is mode
-> +      converter in-between the MAC & PHY (e.g. GMII-to-RGMII). This converter
-> +      can be passive (no SW requirement), and requires that the MAC operate
-> +      in a different mode than the PHY in order to function.
-> +
->    snps,axi-config:
->      $ref: /schemas/types.yaml#definitions/phandle
->      description:
-> -- 
-> 2.20.1
-> 
+Acked-by: Rob Herring <robh@kernel.org>
