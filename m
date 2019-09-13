@@ -1,49 +1,141 @@
-From: "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH v3 2/2] dwc: PCI: intel: Intel PCIe RC controller driver
-Date: Fri, 13 Sep 2019 13:12:03 +0300
-Message-ID: <20190913101203.GE2680@smile.fi.intel.com>
-References: <20190906112044.GF9720@e119886-lin.cambridge.arm.com>
- <959a5f9b-2646-96e3-6a0f-0af1051ae1cb@linux.intel.com>
- <20190909083117.GH9720@e119886-lin.cambridge.arm.com>
- <22857835-1f98-b251-c94b-16b4b0a6dba2@linux.intel.com>
- <20190911103058.GP9720@e119886-lin.cambridge.arm.com>
- <aefd143c-66d2-b303-d992-a55f75a91b2e@linux.intel.com>
- <20190912082517.GA9720@e119886-lin.cambridge.arm.com>
- <cd73e351-5633-bfa8-a4dc-77357d917a0b@linux.intel.com>
- <DM6PR12MB4010AEA876F20E25FFFE06BDDAB00@DM6PR12MB4010.namprd12.prod.outlook.com>
- <b7a1b955-4c3e-6ffe-ec6a-04afe33e70cd@linux.intel.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [RFC 1/3] dt-bindings: dma: Add documentation for DMA domains
+Date: Fri, 13 Sep 2019 16:06:54 +0530
+Message-ID: <20190913103654.GE4392@vkoul-mobl>
+References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
+ <20190906141816.24095-2-peter.ujfalusi@ti.com>
+ <961d30ea-d707-1120-7ecf-f51c11c41891@ti.com>
+ <20190908121058.GL2672@vkoul-mobl>
+ <a452cd06-79ca-424d-b259-c8d60fc59772@ti.com>
+ <20190912170312.GD4392@vkoul-mobl>
+ <1992ccdd-78b3-f248-3d4d-76b5e6d4cb37@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b7a1b955-4c3e-6ffe-ec6a-04afe33e70cd@linux.intel.com>
+In-Reply-To: <1992ccdd-78b3-f248-3d4d-76b5e6d4cb37@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dilip Kota <eswara.kota@linux.intel.com>
-Cc: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, Andrew Murray <andrew.murray@arm.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "robh@kernel.org" <robh@kernel.org>, "martin.blumenstingl@googlemail.com" <martin.blumenstingl@googlemail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "hch@infradead.org" <hch@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>, "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>, "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: robh+dt@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 05:20:26PM +0800, Dilip Kota wrote:
-> On 9/12/2019 6:49 PM, Gustavo Pimentel wrote:
-> > On Thu, Sep 12, 2019 at 10:23:31, Dilip Kota
-> > <eswara.kota@linux.intel.com> wrote:
-
-> > Hi, I just return from parental leave, therefore I still trying to get
-> > the pace in mailing list discussion.
-> > 
-> > However your suggestion looks good, I agree that can go into DesignWare
-> > driver to be available to all.
-> Thanks Gustavo for the confirmation, i will add it in the next patch version
-> > 
-> > Just a small request, please do in general:
-> > s/designware/DesignWare
+On 13-09-19, 10:21, Peter Ujfalusi wrote:
 > 
-> Sorry, i didnt understand this.
+> 
+> On 12/09/2019 20.03, Vinod Koul wrote:
+> > On 09-09-19, 09:30, Peter Ujfalusi wrote:
+> > 
+> >>>> or domain-dma-controller?
+> >>>
+> >>> I feel dma-domain-controller sounds fine as we are defining domains for
+> >>> dmaengine. Another thought which comes here is that why not extend this to
+> >>> slave as well and define dma-domain-controller for them as use that for
+> >>> filtering, that is what we really need along with slave id in case a
+> >>> specific channel is to be used by a peripheral
+> >>>
+> >>> Thoughts..?
+> >>
+> >> I have thought about this, we should be able to drop the phandle to the
+> >> dma controller from the slave binding just fine.
+> >>
+> >> However we have the dma routers for the slave channels and there is no
+> >> clear way to handle them.
+> >> They are not needed for non slave channels as there is no trigger to
+> >> route. In DRA7 for example we have an event router for EDMA and another
+> >> one for sDMA. If a slave device is to be serviced by EDMA, the EDMA
+> >> event router needs to be specified, for sDMA clients should use the sDMA
+> >> event router.
+> > 
+> > So you have dma, xbar and client? And you need to use a specfic xbar,
+> > did i get that right?
+> 
+> At the end yes.
 
-It means the reviewer asks you to name DesignWare in this form,
-i.o.w. designware -> DesignWare.
+:)
 
-`man 1 sed` gives you more about it :-)
+> EDMA have dedicated crossbar
+> sDMA have dedicated crossbar
+
+So the domain mapping should point to crossbar.
+
+> Slave devices must use the crossbar to request channel from the DMA
+> controllers. Non slave request are directed to the controllers directly
+> (no DT binding).
+
+The clients for these are different right, if so slave clients will
+point to domain xbar and non slave will point to domain controller (to
+make everyone use domains). Non domain get any channel ... (fallback as
+well)
+
+
+> At minimum we would need a new property for DMA routers.
+> dma-domain-router perhaps which is pointing to the xbar.
+
+Precisely!
+
+> A slave channel request would first look for dma-domain-router, if it is
+> there, the request goes via that.
+> If not then look for dma-domain-controller and use it for the request.
+> The DMA binding can drop the phandle to the xbar/dma.
+> Request for not slave channel would only look for dma-domain-controller.
+>
+> 
+> But...
+> 
+> - If we have one dedicated memcpy DMA and one for slave usage.
+> In top we declare dma-domain-controller = <&m2m_dma>;
+> 
+> Then you have  a slave client somewhere
+> client1: peripheral@42 {
+> 	dma-domain-controller = <&slave_dma>;
+> 	dmas = <6>, <7>;
+> 	dma-names = "tx", "rx";
+> };
+> 
+> This is fine I guess. But what would we do if the driver for client1
+> needs additional memcpy channel? By the definition of the binding the
+> non slave channel should be taken from the closest dma-domain-controller
+> which is not what we want. We want the channel from m2m_dma.
+
+I would not envision same controller needs both memcpy or slave
+channels. If so, that should be represented as something like dma-names
+and represent two sets of dmas one for domain1 and another for domain2.
+
+I would generalize it and not call it memcpy/slave but just domains and
+have a controller use multiple domains (if we have a super controller
+which can do that :D)
+
+client1: peripheral@42 {
+        dma-domain-names = "memcpy", "slave";
+        dma-domains = <&mem_dma>, <&slave_dma>;
+        ...
+};
+
+
+> 
+> And no, we can not start looking for the dma-domain-controller starting
+> from the root as in most cases the dma-domain-controller closer to the
+> client is what we really want and not the globally best controller.
+> 
+> - How to handle the transition?
+>
+> If neither dma-domain-controller/router is found, assume that the first
+> argument in the binding is a phandle to the dma/router?
+> We need to carry the support for what we have today for a long time. The
+> kernel must boot with old DT blob.
+> 
+> - Will it make things cleaner? Atm it is pretty easy to see which
+> controller/router is used for which device.
+> 
+> - Also to note that the EDMA and sDMA bindings are different, so we can
+> not just swap dma-domain-controller/router underneath, we also need to
+> modify the client's dmas line as well.
+> 
+> - Péter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
 -- 
-With Best Regards,
-Andy Shevchenko
+~Vinod
