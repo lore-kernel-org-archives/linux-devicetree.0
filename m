@@ -1,110 +1,51 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: gpio: Add binding document for xylon
- logicvc-gpio
-Date: Fri, 13 Sep 2019 15:36:29 +0100
-Message-ID: <5d7ba96d.1c69fb81.59623.6c9f@mx.google.com>
-References: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
- <20190910152855.111588-2-paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH 1/3] dt-bindings: dma: Add documentation for DMA domains
+Date: Fri, 13 Sep 2019 15:36:28 +0100
+Message-ID: <5d7ba96c.1c69fb81.ee467.32b9@mx.google.com>
+References: <20190910115037.23539-1-peter.ujfalusi@ti.com>
+ <20190910115037.23539-2-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190910152855.111588-2-paul.kocialkowski@bootlin.com>
+In-Reply-To: <20190910115037.23539-2-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 05:28:54PM +0200, Paul Kocialkowski wrote:
-> The Xylon LogiCVC display controller exports some GPIOs, which are
-> exposed as a dedicated driver.
+On Tue, Sep 10, 2019 at 02:50:35PM +0300, Peter Ujfalusi wrote:
+> On systems where multiple DMA controllers available, non Slave (for example
+> memcpy operation) users can not be described in DT as there is no device
+> involved from the DMA controller's point of view, DMA binding is not usable.
+> However in these systems still a peripheral might need to be serviced by or
+> it is better to serviced by specific DMA controller.
+> When a memcpy is used to/from a memory mapped region for example a DMA in the
+> same domain can perform better.
+> For generic software modules doing mem 2 mem operations it also matter that
+> they will get a channel from a controller which is faster in DDR to DDR mode
+> rather then from the first controller happen to be loaded.
 > 
-> This introduces the associated device-tree bindings documentation.
+> This property is inherited, so it may be specified in a device node or in any
+> of its parent nodes.
+
+If a device needs mem2mem dma, I think we should just use the existing 
+dma binding. The provider will need a way to define cell values which 
+mean mem2mem.
+
+For generic s/w, it should be able to query the dma speed or get a 
+preferred one IMO. It's not a DT problem.
+
+We measure memcpy speeds at boot time to select the fastest 
+implementation for a chip, why not do that for mem2mem DMA?
+
 > 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 > ---
->  .../bindings/gpio/xylon,logicvc-gpio.txt      | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.txt
+>  .../devicetree/bindings/dma/dma-domain.yaml   | 88 +++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
 
-Please consider using the new DT schema format.
+Note that you have several errors in your schema. Run 'make dt_bindings_check'.
 
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.txt b/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.txt
-> new file mode 100644
-> index 000000000000..4835659cb90b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.txt
-> @@ -0,0 +1,48 @@
-> +Xylon LogiCVC GPIO controller
-> +
-> +The Xylon LogiCVC is a display controller that contains a number of GPIO pins,
-> +meant to be used for controlling display-related signals.
-> +
-> +In practice, the GPIOs can be used for any purpose they might be needed for.
-> +
-> +The controller exposes GPIOs from the display and power control registers,
-> +which are mapped by the driver as follows:
-> +- GPIO[4:0] (display control) mapped to index 0-4
-> +- EN_BLIGHT (power control) mapped to index 5
-> +- EN_VDD (power control) mapped to index 6
-> +- EN_VEE (power control) mapped to index 7
-> +- V_EN (power control) mapped to index 8
-> +
-> +The driver was implemented and tested for version 3.02.a of the controller,
-> +but should be compatible with version 4 as well.
-> +
-> +Required properties:
-> +- compatible: Should contain "xylon,logicvc-3.02.a-gpio".
-> +- gpio-controller: Marks the device node as a gpio controller.
-> +- #gpio-cells: Should be 2. The first cell is the pin number and
-> +  the second cell is used to specify the gpio polarity:
-> +    0 = Active high,
-> +    1 = Active low.
-
-No need to define these standard flags again here.
-
-> +- gpio,syscon-dev: Syscon phandle representing the logicvc instance.
-
-Don't need this. It's the parent.
-
-> +
-> +Example:
-> +
-> +	logicvc: logicvc@43c00000 {
-> +		compatible = "syscon", "simple-mfd";
-
-This device needs a device specific compatible. These 2 alone are not 
-desired.
-
-Please define everything that's in the chip as much as you can. 
-
-> +		reg = <0x43c00000 0x6000>;
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		logicvc_gpio: display-gpio@40 {
-
-Use standard node names: gpio@40
-
-You may not even need a child node here. It depends on what other child 
-nodes you have and whether they have their own DT resources.
-
-> +			compatible = "xylon,logicvc-3.02.a-gpio";
-> +			reg = <0x40 0x40>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio,syscon-dev = <&logicvc>;
-> +		};
-> +	};
-> +
-> +Note: the device-tree node should either be declared as a child of the logicvc
-> +syscon node or the syscon node should be precised with the gpio,syscon-dev
-> +property. Both are shown in the example above.
-
-Why? Just pick one and a child node is the preference.
-
-> -- 
-> 2.23.0
-> 
+Rob
