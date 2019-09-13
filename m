@@ -1,46 +1,33 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: arm: renesas: Convert 'renesas,
- prr' to json-schema
-Date: Fri, 13 Sep 2019 13:02:08 +0100
-Message-ID: <CAL_JsqLN66LK3=4K9dLtHWd=nOAJ7ofKH6TKp058gqOV32rj8g@mail.gmail.com>
-References: <20190908120528.9392-1-horms+renesas@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190908120528.9392-1-horms+renesas@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yoshihiro Kaneko <ykaneko0929@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+From: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+Subject: [PATCH V2 08/12] dt-bindings: mailbox: qom: Add ipq8074 APPS compatible
+Date: Fri, 13 Sep 2019 17:26:07 +0530
+Message-ID: <1568375771-22933-9-git-send-email-gokulsri@codeaurora.org>
+References: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org, david.brown@linaro.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com, robh+dt@kernel.org, sricharan@codeaurora.org, nprakash@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 8, 2019 at 11:14 PM Simon Horman <horms+renesas@verge.net.au> wrote:
->
-> Convert Renesas Product Register bindings documentation to json-schema.
->
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
-> Based on v5.3-rc1
-> Tested using:
->   make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/renesas,prr.yaml
->
-> v2
-> * Use simple enum for compat values
-> * Drop "" from compat values
-> * Only supply 'maxItems' property to 'reg'
-> ---
->  .../devicetree/bindings/arm/renesas,prr.txt        | 20 -------------
->  .../devicetree/bindings/arm/renesas,prr.yaml       | 35 ++++++++++++++++++++++
->  2 files changed, 35 insertions(+), 20 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/renesas,prr.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/renesas,prr.yaml
+Add mailbox support required in IPQ8074 SoCs.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+---
+ Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+index 1232fc9..389c6ce 100644
+--- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
++++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+@@ -13,6 +13,7 @@ platforms.
+ 		    "qcom,msm8998-apcs-hmss-global"
+ 		    "qcom,qcs404-apcs-apps-global"
+ 		    "qcom,sdm845-apss-shared"
++		    "qcom,ipq8074-apcs-apps-global"
+ 
+ - reg:
+ 	Usage: required
+-- 
+1.9.1
