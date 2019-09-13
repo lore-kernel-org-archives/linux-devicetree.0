@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 3/5] irqchip/irq-bcm7038-l1: Enable parent IRQ if necessary
-Date: Fri, 13 Sep 2019 12:15:40 -0700
-Message-ID: <20190913191542.9908-4-f.fainelli@gmail.com>
+Subject: [PATCH v2 2/5] dt-bindings: Document brcm,irq-can-wake for brcm,bcm7038-l1-intc.txt
+Date: Fri, 13 Sep 2019 12:15:39 -0700
+Message-ID: <20190913191542.9908-3-f.fainelli@gmail.com>
 References: <20190913191542.9908-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190913191542.9908-1-f.fainelli@gmail.com>
@@ -12,28 +12,30 @@ Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de
         ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-If the 'brcm,irq-can-wake' property is specified, make sure we also
-enable the corresponding parent interrupt we are attached to.
+The BCM7038 L1 interrupt controller can be used as a wake-up interrupt
+controller on MIPS and ARM-based systems, document the brcm,irq-can-wake
+which has been "standardized" across Broadcom interrupt controllers.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/irqchip/irq-bcm7038-l1.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt   | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index f5e4ff5251ab..0673a44bbdc2 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -297,6 +297,10 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
- 		pr_err("failed to map parent interrupt %d\n", parent_irq);
- 		return -EINVAL;
- 	}
-+
-+	if (of_property_read_bool(dn, "brcm,irq-can-wake"))
-+		enable_irq_wake(parent_irq);
-+
- 	irq_set_chained_handler_and_data(parent_irq, bcm7038_l1_irq_handle,
- 					 intc);
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+index 2117d4ac1ae5..4eb043270f5b 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+@@ -31,6 +31,11 @@ Required properties:
+ - interrupts: specifies the interrupt line(s) in the interrupt-parent controller
+   node; valid values depend on the type of parent interrupt controller
  
++Optional properties:
++
++- brcm,irq-can-wake: If present, this means the L1 controller can be used as a
++  wakeup source for system suspend/resume.
++
+ If multiple reg ranges and interrupt-parent entries are present on an SMP
+ system, the driver will allow IRQ SMP affinity to be set up through the
+ /proc/irq/ interface.  In the simplest possible configuration, only one
 -- 
 2.17.1
