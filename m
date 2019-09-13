@@ -1,59 +1,36 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI
- config register
-Date: Fri, 13 Sep 2019 13:53:26 -0600
-Message-ID: <20190913195326.GA3293@codeaurora.org>
-References: <20190829181203.2660-1-ilina@codeaurora.org>
- <20190829181203.2660-6-ilina@codeaurora.org>
- <5d6d1b72.1c69fb81.ee88.efcf@mx.google.com>
- <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com>
- <20190903170722.GA31716@codeaurora.org>
- <5d71a247.1c69fb81.2146f.7ed2@mx.google.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+Subject: Re: [PATCH 5/6] media: sun4i: Add H3 deinterlace driver
+Date: Fri, 13 Sep 2019 22:06:15 +0200
+Message-ID: <6033065.vD0Azduf8t@jernej-laptop>
+References: <20190912175132.411-1-jernej.skrabec@siol.net> <4613446.95M5L3lKvs@jernej-laptop> <20190913091147.42nsldzxwzfjoiak@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5d71a247.1c69fb81.2146f.7ed2@mx.google.com>
+In-Reply-To: <20190913091147.42nsldzxwzfjoiak@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Rob Herring <robh@kernel.org>, evgreen@chromium.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, maz@kernel.org
+To: Maxime Ripard <mripard@kernel.org>
+Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Sorry, I couldn't get to this earlier.
+Hi!
 
-On Thu, Sep 05 2019 at 18:03 -0600, Stephen Boyd wrote:
->Quoting Lina Iyer (2019-09-03 10:07:22)
->> On Mon, Sep 02 2019 at 07:58 -0600, Marc Zyngier wrote:
->> >On 02/09/2019 14:38, Rob Herring wrote:
->> >> On Thu, Aug 29, 2019 at 12:11:54PM -0600, Lina Iyer wrote:
->> These are not GIC registers but located on the PDC interface to the GIC.
->> They may or may not be secure access controlled, depending on the SoC.
->>
->
->It looks like it falls under this "mailbox" device which is really the
->catch all bucket for bits with no home besides they're related to the
->apps CPUs/subsystem.
->
-Thanks for pointing to this.
->	apss_shared: mailbox@17990000 {
->		compatible = "qcom,sdm845-apss-shared";
->		reg = <0 0x17990000 0 0x1000>;
-But this doesn't seem correct. The registers in this page are all not
-mailbox door bell registers. We should restrict the space allocated to
-the mbox to 0xC or something, definitely, not the whole page. They all
-cannot be treated as a mailbox registers.
->		#mbox-cells = <1>;
->	};
->
->Can you point to this node with a phandle and then parse the reg
->property out of it to use in the scm readl/writel APIs? Maybe it can be
->a two cell property with <&apps_shared 0xf0> to indicate the offset to
->the registers to read/write? In non-secure mode presumably we need to
->also write these registers? Good news is that there's a regmap for this
->driver already, so maybe that can be acquired from the pdc driver.
->
-The register space collection seems to be mix of different types of
-application processor registers that should probably not be grouped up
-under one subsystem. A single regmap doesn't seem correct either.
+Dne petek, 13. september 2019 ob 11:11:47 CEST je Maxime Ripard napisal(a):
+> Hi,
+> 
+> On Thu, Sep 12, 2019 at 10:43:28PM +0200, Jernej Škrabec wrote:
+> > Dne četrtek, 12. september 2019 ob 22:26:47 CEST je Maxime Ripard 
+napisal(a):
+> > > > +	clk_set_rate(dev->mod_clk, 300000000);
+> 
+> I just realized I missed this too. If you really need the rate to be
+> fixed, and if the controller cannot operate properly at any other
+> frequency, you probably want to use clk_set_rate_exclusive there.
 
--- Lina
+I don't think that's needed. Parents of deinterlace clock are pll-periph0 and 
+pll-periph1 which both have fixed clock and thus deinterlace clock will never 
+be changed. I just set it to same frequency as it is set in BSP driver. I 
+think it works with 600 MHz too, but that's overkill.
+
+Best regards,
+Jernej 
