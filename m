@@ -1,51 +1,161 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: dma: Add documentation for DMA domains
-Date: Fri, 13 Sep 2019 15:36:28 +0100
-Message-ID: <5d7ba96c.1c69fb81.ee467.32b9@mx.google.com>
-References: <20190910115037.23539-1-peter.ujfalusi@ti.com>
- <20190910115037.23539-2-peter.ujfalusi@ti.com>
+Subject: Re: [PATCH] dt-bindings: timer: Convert Exynos MCT bindings to
+ json-schema
+Date: Fri, 13 Sep 2019 15:36:23 +0100
+Message-ID: <5d7ba967.1c69fb81.64b1c.ab06@mx.google.com>
+References: <20190909162537.27635-1-krzk@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190910115037.23539-2-peter.ujfalusi@ti.com>
+In-Reply-To: <20190909162537.27635-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 02:50:35PM +0300, Peter Ujfalusi wrote:
-> On systems where multiple DMA controllers available, non Slave (for example
-> memcpy operation) users can not be described in DT as there is no device
-> involved from the DMA controller's point of view, DMA binding is not usable.
-> However in these systems still a peripheral might need to be serviced by or
-> it is better to serviced by specific DMA controller.
-> When a memcpy is used to/from a memory mapped region for example a DMA in the
-> same domain can perform better.
-> For generic software modules doing mem 2 mem operations it also matter that
-> they will get a channel from a controller which is faster in DDR to DDR mode
-> rather then from the first controller happen to be loaded.
+On Mon, Sep 09, 2019 at 06:25:37PM +0200, Krzysztof Kozlowski wrote:
+> Convert Samsung Exynos Soc Multi Core Timer bindings to DT schema format
+> using json-schema.
 > 
-> This property is inherited, so it may be specified in a device node or in any
-> of its parent nodes.
-
-If a device needs mem2mem dma, I think we should just use the existing 
-dma binding. The provider will need a way to define cell values which 
-mean mem2mem.
-
-For generic s/w, it should be able to query the dma speed or get a 
-preferred one IMO. It's not a DT problem.
-
-We measure memcpy speeds at boot time to select the fastest 
-implementation for a chip, why not do that for mem2mem DMA?
-
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  .../devicetree/bindings/dma/dma-domain.yaml   | 88 +++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
+>  .../bindings/timer/samsung,exynos4210-mct.txt |  88 --------------
+>  .../timer/samsung,exynos4210-mct.yaml         | 115 ++++++++++++++++++
+>  2 files changed, 115 insertions(+), 88 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
 
-Note that you have several errors in your schema. Run 'make dt_bindings_check'.
 
-Rob
+> diff --git a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
+> new file mode 100644
+> index 000000000000..b96d2877955f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
+> @@ -0,0 +1,115 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/timer/samsung,exynos4210-mct.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung Exynos SoC Multi Core Timer (MCT)
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzk@kernel.org>
+> +
+> +description: |+
+> +  The Samsung's Multi Core Timer (MCT) module includes two main blocks, the
+> +  global timer and CPU local timers. The global timer is a 64-bit free running
+> +  up-counter and can generate 4 interrupts when the counter reaches one of the
+> +  four preset counter values. The CPU local timers are 32-bit free running
+> +  down-counters and generate an interrupt when the counter expires. There is
+> +  one CPU local timer instantiated in MCT for every CPU in the system.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - samsung,exynos4210-mct
+> +      - samsung,exynos4412-mct
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: |
+> +      Interrupts should be put in specific order. This is, the local timer
+> +      interrupts should be specified after the four global timer interrupts
+> +      have been specified:
+> +      0: Global Timer Interrupt 0
+> +      1: Global Timer Interrupt 1
+> +      2: Global Timer Interrupt 2
+> +      3: Global Timer Interrupt 3
+> +      4: Local Timer Interrupt 0
+> +      5: Local Timer Interrupt 1
+> +      6: ..
+> +      7: ..
+> +      i: Local Timer Interrupt n
+> +      For MCT block that uses a per-processor interrupt for local timers, such
+> +      as ones compatible with "samsung,exynos4412-mct", only one local timer
+> +      interrupt might be specified, meaning that all local timers use the same
+> +      per processor interrupt.
+> +    minItems: 5               # 4 Global + 1 local
+> +    maxItems: 20              # 4 Global + 16 local
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    // In this example, the IP contains two local timers, using separate
+> +    // interrupts, so two local timer interrupts have been specified,
+> +    // in addition to four global timer interrupts.
+> +      mct@10050000 {
+
+Can we clean this up and use 'timer' here.
+
+> +        compatible = "samsung,exynos4210-mct";
+> +        reg = <0x10050000 0x800>;
+> +        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
+> +                     <0 42 0>, <0 48 0>;
+> +      };
+> +
+> +  - |
+> +    // In this example, the timer interrupts are connected to two separate
+> +    // interrupt controllers. Hence, an interrupt-map is created to map
+> +    // the interrupts to the respective interrupt controllers.
+> +
+> +    mct@101c0000 {
+> +      compatible = "samsung,exynos4210-mct";
+> +      reg = <0x101C0000 0x800>;
+> +      interrupt-parent = <&mct_map>;
+> +      interrupts = <0>, <1>, <2>, <3>, <4>, <5>;
+> +
+> +      mct_map: mct-map {
+
+This needs to be documented.
+
+Note, I don't really see any reason this needs to be a child node.
+
+> +        #interrupt-cells = <1>;
+> +        #address-cells = <0>;
+> +        #size-cells = <0>;
+> +        interrupt-map = <0 &gic 0 57 0>,
+> +                        <1 &gic 0 69 0>,
+> +                        <2 &combiner 12 6>,
+> +                        <3 &combiner 12 7>,
+> +                        <4 &gic 0 42 0>,
+> +                        <5 &gic 0 48 0>;
+> +      };
+> +    };
+> +
+> +  - |
+> +    // In this example, the IP contains four local timers, but using
+> +    // a per-processor interrupt to handle them. Only one first local
+> +    // interrupt is specified.
+> +
+> +    mct@10050000 {
+> +      compatible = "samsung,exynos4412-mct";
+> +      reg = <0x10050000 0x800>;
+> +
+> +      interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
+> +                   <0 42 0>;
+> +    };
+> +
+> +  - |
+> +    // In this example, the IP contains four local timers, but using
+> +    // a per-processor interrupt to handle them. All the local timer
+> +    // interrupts are specified.
+> +
+> +    mct@10050000 {
+> +      compatible = "samsung,exynos4412-mct";
+> +      reg = <0x10050000 0x800>;
+> +
+> +      interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
+> +                   <0 42 0>, <0 42 0>, <0 42 0>, <0 42 0>;
+> +    };
+> -- 
+> 2.17.1
+> 
