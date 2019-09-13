@@ -1,118 +1,60 @@
-From: Ezequiel Garcia <ezequiel@collabora.com>
-Subject: Re: [PATCH 1/4] MMC: Ingenic: Adjust the macro definition name.
-Date: Fri, 13 Sep 2019 16:32:52 +0100
-Message-ID: <e9ef3a9093e8572eb3be2aa654dd30069c493a4b.camel@collabora.com>
-References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
-         <1567669089-88693-2-git-send-email-zhouyanjie@zoho.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in handle_vmptrld
+Date: Fri, 13 Sep 2019 16:32:48 +0100
+Message-ID: <462660f4-1537-cece-b55f-0ceba0269eb8@arm.com>
+References: <000000000000a9d4f705924cff7a@google.com>
+ <87lfutei1j.fsf@vitty.brq.redhat.com>
+ <5218e70e-8a80-7c5f-277b-01d9ab70692a@redhat.com>
+ <20190913044614.GA120223@kroah.com>
+ <db02a285-ad1d-6094-6359-ba80e6d3f2e0@redhat.com>
+ <20190913130226.GB403359@kroah.com>
+ <6a0ec3a2-2a52-f67a-6140-e0a60874538a@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567669089-88693-2-git-send-email-zhouyanjie@zoho.com>
+In-Reply-To: <6a0ec3a2-2a52-f67a-6140-e0a60874538a@redhat.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhou Yanjie <zhouyanjie@zoho.com>, linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, paul.burton@mips.com, linus.walleij@linaro.org, paul@crapouillou.net, malat@debian.org, yuehaibing@huawei.com, robh+dt@kernel.org, mark.rutland@arm.com, syq@debian.org, jiaxun.yang@flygoat.com
+To: Paolo Bonzini <pbonzini@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: mark.rutland@arm.com, x86@kernel.org, wanpengli@tencent.com, kvm@vger.kernel.org, narmstrong@baylibre.com, catalin.marinas@arm.com, will.deacon@arm.com, hpa@zytor.com, khilman@baylibre.com, joro@8bytes.org, rkrcmar@redhat.com, mingo@redhat.com, Dmitry Vyukov <dvyukov@google.com>, syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com>, devicetree@vger.kernel.org, syzkaller-bugs@googlegroups.com, robh+dt@kernel.org, bp@alien8.de, linux-amlogic@lists.infradead.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, jmattson@google.com, USB list <linux-usb@vger.kernel.org>, linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com, carlo@caione.org, Vitaly Kuznetsov <vkuznets@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhou,
-
-Thanks for your interest in this driver, I'm glad
-so see it's more used.
-
-On Thu, 2019-09-05 at 15:38 +0800, Zhou Yanjie wrote:
-> Adjust the macro definition name to match the corresponding
-> register name in the datasheet.
+On 13/09/2019 16:01, Paolo Bonzini wrote:
+> On 13/09/19 15:02, Greg Kroah-Hartman wrote:
+>> Look at linux-next, we "should" have fixed up hcd_buffer_alloc() now to
+>> not need this type of thing.  If we got it wrong, please let us know and
+>> then yes, a fix like this would be most appreciated :)
 > 
-
-It's not really an issue to have slighlt different
-names on the macros. They are currently sufficiently
-descriptive, and I don't think it's deserves a patch.
-
-Thanks,
-Ezequiel
-
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-> ---
->  drivers/mmc/host/jz4740_mmc.c | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
+> I still see
 > 
-> diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
-> index ffdbfaa..1b1fcb7 100644
-> --- a/drivers/mmc/host/jz4740_mmc.c
-> +++ b/drivers/mmc/host/jz4740_mmc.c
-> @@ -28,7 +28,7 @@
->  #include <asm/mach-jz4740/dma.h>
->  
->  #define JZ_REG_MMC_STRPCL	0x00
-> -#define JZ_REG_MMC_STATUS	0x04
-> +#define JZ_REG_MMC_STAT		0x04
->  #define JZ_REG_MMC_CLKRT	0x08
->  #define JZ_REG_MMC_CMDAT	0x0C
->  #define JZ_REG_MMC_RESTO	0x10
-> @@ -40,7 +40,7 @@
->  #define JZ_REG_MMC_IREG		0x28
->  #define JZ_REG_MMC_CMD		0x2C
->  #define JZ_REG_MMC_ARG		0x30
-> -#define JZ_REG_MMC_RESP_FIFO	0x34
-> +#define JZ_REG_MMC_RES		0x34
->  #define JZ_REG_MMC_RXFIFO	0x38
->  #define JZ_REG_MMC_TXFIFO	0x3C
->  #define JZ_REG_MMC_DMAC		0x44
-> @@ -391,7 +391,7 @@ static void jz4740_mmc_clock_disable(struct jz4740_mmc_host *host)
->  
->  	writew(JZ_MMC_STRPCL_CLOCK_STOP, host->base + JZ_REG_MMC_STRPCL);
->  	do {
-> -		status = readl(host->base + JZ_REG_MMC_STATUS);
-> +		status = readl(host->base + JZ_REG_MMC_STAT);
->  	} while (status & JZ_MMC_STATUS_CLK_EN && --timeout);
->  }
->  
-> @@ -403,7 +403,7 @@ static void jz4740_mmc_reset(struct jz4740_mmc_host *host)
->  	writew(JZ_MMC_STRPCL_RESET, host->base + JZ_REG_MMC_STRPCL);
->  	udelay(10);
->  	do {
-> -		status = readl(host->base + JZ_REG_MMC_STATUS);
-> +		status = readl(host->base + JZ_REG_MMC_STAT);
->  	} while (status & JZ_MMC_STATUS_IS_RESETTING && --timeout);
->  }
->  
-> @@ -446,7 +446,7 @@ static void jz4740_mmc_transfer_check_state(struct jz4740_mmc_host *host,
->  {
->  	int status;
->  
-> -	status = readl(host->base + JZ_REG_MMC_STATUS);
-> +	status = readl(host->base + JZ_REG_MMC_STAT);
->  	if (status & JZ_MMC_STATUS_WRITE_ERROR_MASK) {
->  		if (status & (JZ_MMC_STATUS_TIMEOUT_WRITE)) {
->  			host->req->cmd->error = -ETIMEDOUT;
-> @@ -580,10 +580,10 @@ static bool jz4740_mmc_read_data(struct jz4740_mmc_host *host,
->  	/* For whatever reason there is sometime one word more in the fifo then
->  	 * requested */
->  	timeout = 1000;
-> -	status = readl(host->base + JZ_REG_MMC_STATUS);
-> +	status = readl(host->base + JZ_REG_MMC_STAT);
->  	while (!(status & JZ_MMC_STATUS_DATA_FIFO_EMPTY) && --timeout) {
->  		d = readl(fifo_addr);
-> -		status = readl(host->base + JZ_REG_MMC_STATUS);
-> +		status = readl(host->base + JZ_REG_MMC_STAT);
->  	}
->  
->  	return false;
-> @@ -614,7 +614,7 @@ static void jz4740_mmc_read_response(struct jz4740_mmc_host *host,
->  {
->  	int i;
->  	uint16_t tmp;
-> -	void __iomem *fifo_addr = host->base + JZ_REG_MMC_RESP_FIFO;
-> +	void __iomem *fifo_addr = host->base + JZ_REG_MMC_RES;
->  
->  	if (cmd->flags & MMC_RSP_136) {
->  		tmp = readw(fifo_addr);
-> @@ -797,7 +797,7 @@ static irqreturn_t jz_mmc_irq(int irq, void *devid)
->  	struct mmc_command *cmd = host->cmd;
->  	uint32_t irq_reg, status, tmp;
->  
-> -	status = readl(host->base + JZ_REG_MMC_STATUS);
-> +	status = readl(host->base + JZ_REG_MMC_STAT);
->  	irq_reg = jz4740_mmc_read_irq_reg(host);
->  
->  	tmp = irq_reg;
+> 	/* some USB hosts just use PIO */
+> 	if (!hcd_uses_dma(hcd)) {
+> 		*dma = ~(dma_addr_t) 0;
+> 		return kmalloc(size, mem_flags);
+> 	}
+> 
+> in linux-next's hcd_buffer_alloc and also in usb.git's usb-next branch.
+>   I also see the same
+> 
+> 	if (remap_pfn_range(vma, vma->vm_start,
+> 			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
+> 			size, vma->vm_page_prot) < 0) {
+> 		...
+> 	}
+> 
+> in usbdev_mmap.  Of course it's possible that I'm looking at the wrong
+> branch, or just being dense.
+
+Oh, that bit of usbdev_mmap() is already known to be pretty much totally 
+bogus for various reasons - there have been a few threads about it, of 
+which I think [1] is both the most recent and the most informative. 
+There was another patch[2], but that might have stalled (and might need 
+reworking with additional hcd_uses_dma() checks anyway).
+
+Robin.
+
+[1] 
+https://lore.kernel.org/linux-arm-kernel/20190808084636.GB15080@priv-mua.localdomain/
+[2] 
+https://lore.kernel.org/linux-usb/20190801220134.3295-1-gavinli@thegavinli.com/
