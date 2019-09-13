@@ -1,74 +1,173 @@
-From: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-Subject: Re: [PATCH] arm64: dts: mt8183: Add node for the Mali GPU
-Date: Fri, 13 Sep 2019 14:17:29 -0400
-Message-ID: <20190913181729.GB3115@kevin>
-References: <20190905081546.42716-1-drinkcat@chromium.org>
- <CAL_JsqJCO2G90TTT9Mpy4kjVKQyXWw4aXEEnbRp_SE8X=EGc5g@mail.gmail.com>
- <CANMq1KCTPdFhJG1SLf-i+-557Yx-1WLzWCHu3tT_5Q2BF+JgdQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2B/JsCI69OhZNC5r"
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH 1/6] irqchip/irq-bcm7038-l1: Add PM support
+Date: Fri, 13 Sep 2019 12:10:21 -0700
+Message-ID: <20190913191026.8801-2-f.fainelli@gmail.com>
+References: <20190913191026.8801-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CANMq1KCTPdFhJG1SLf-i+-557Yx-1WLzWCHu3tT_5Q2BF+JgdQ@mail.gmail.com>
+In-Reply-To: <20190913191026.8801-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Boichat <drinkcat@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nick Fan <nick.fan@mediatek.com>, Boris Brezillon <boris.brezillon@collabora.com>
+To: linux-kernel@vger.kernel.org
+Cc: Justin Chen <justinpopo6@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:BROADCOM BMIPS MIPS
+        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Justin Chen <justinpopo6@gmail.com>
 
---2B/JsCI69OhZNC5r
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The current l1 controller does not mask any interrupts when dropping
+into suspend. This mean we can receive unexpected wake up sources.
+Modified MIPS l1 controller to mask the all non-wake interrupts before
+dropping into suspend.
 
-> > > The binding we use with out-of-tree Mali drivers includes more
-> > > clocks, I assume this would be required eventually if we have an
-> > > in-tree driver:
-> >
-> > We have an in-tree driver...
->=20
-> Right but AFAICT it does not support Bifrost GPU (yet?).
-
-By the time MT8183 shows up in more concrete devices, it will, certainly
-in kernel-space and likely in userspace as well. At present, the DDK can
-be modified to run on top of the in-tree Mali drivers, i.e. "Bifrost on
-mainline linux-next (+ page table/compatible patches), with blob
-userspace".
-
-While the open userspace isn't ready here quite yet, I would definitely
-encourage upstream kernel for ChromeOS, since then there's no need to
-maintain the out-of-tree GPU driver.
-
+Signed-off-by: Justin Chen <justinpopo6@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
+ drivers/irqchip/irq-bcm7038-l1.c | 98 ++++++++++++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
 
-More immediately, per Rob's review, it's important that the bindings
-accepted upstream work with the in-tree Bifrost driver. Conceptually,
-once Mesa supports Bifrost, if I install Debian on a MT8183 board,
-everything should just work. I shouldn't need MT-specific changes / need
-to change names for the DT. Regardless of which kernel driver you end up
-using, minimally sharing the DT is good for everyone :-)
-
--Alyssa
-
---2B/JsCI69OhZNC5r
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEQ17gm7CvANAdqvY4/v5QWgr1WA0FAl173TQACgkQ/v5QWgr1
-WA2KFBAAnQIHm2aIeWt2mYq9onM7XNfSCCxZzYCsLXaE1LiylCZdcDanV4VaF+B3
-f+jIbfoeoHcnqlhNYRNiI93L0dl3YdmKHBJsPkxNg+ziQu/alZQbsYFNB07LBsuk
-2dxKissYufkSfdcc4UFEBDYq6LQlLF0XmXr5G7oNazC29e73h6Jpn8lrIlKrKo+v
-5SE/KJs7ua1sfKkj6As8LOh2VFqCv+NZ7XPjI+qUQDoSfXgoO2DTsLu79lhInxRr
-pdC8YKeypMlEGRuDgXt9Ee1zi0lk0OroJ+9uELf1G67V/JlpSOOI1go00HhC4Tll
-I8LeczfwD2ujVnJ1kpENyQAmqEY/b6lNPIQJm0MvLFh59Hk9hjl8j1WlH9+yKMNH
-rcZK1/SYeo97URXmKbfYFiwnRLXsX3p7wXjC6vtiw0xa7AcgdsfU+su4uUp8uq3V
-6xCVdnowzNVjYBt8OZbOV5QWXTp0peb9VRIdCjHnrtgb55eYoQDV7Mh69Q5oG8MB
-GZoD72p8ks3LI9BrTJ2QFjEsbWYj9XpvXI7AGL7YcR99QyF9hmgQF0h8Xnwz4nwD
-8oYGMbECAYUT7gVNHCU9lbFkmvsgMCSTvLfMNO5nwarwgF5y8LsQITo9Bf2tLyQ/
-nu3S6fy0qmIcLnwbiMG7urG8a81EtGUNJb8JBd4SLmKQAkA4NWo=
-=H0a9
------END PGP SIGNATURE-----
-
---2B/JsCI69OhZNC5r--
+diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+index fc75c61233aa..c7e37eefec6d 100644
+--- a/drivers/irqchip/irq-bcm7038-l1.c
++++ b/drivers/irqchip/irq-bcm7038-l1.c
+@@ -27,6 +27,7 @@
+ #include <linux/types.h>
+ #include <linux/irqchip.h>
+ #include <linux/irqchip/chained_irq.h>
++#include <linux/syscore_ops.h>
+ 
+ #define IRQS_PER_WORD		32
+ #define REG_BYTES_PER_IRQ_WORD	(sizeof(u32) * 4)
+@@ -39,6 +40,10 @@ struct bcm7038_l1_chip {
+ 	unsigned int		n_words;
+ 	struct irq_domain	*domain;
+ 	struct bcm7038_l1_cpu	*cpus[NR_CPUS];
++#ifdef CONFIG_PM_SLEEP
++	struct list_head	list;
++	u32			wake_mask[MAX_WORDS];
++#endif
+ 	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
+ };
+ 
+@@ -47,6 +52,17 @@ struct bcm7038_l1_cpu {
+ 	u32			mask_cache[0];
+ };
+ 
++/*
++ * We keep a list of bcm7038_l1_chip used for suspend/resume. This hack is
++ * used because the struct chip_type suspend/resume hooks are not called
++ * unless chip_type is hooked onto a generic_chip. Since this driver does
++ * not use generic_chip, we need to manually hook our resume/suspend to
++ * syscore_ops.
++ */
++#ifdef CONFIG_PM_SLEEP
++static LIST_HEAD(bcm7038_l1_intcs_list);
++#endif
++
+ /*
+  * STATUS/MASK_STATUS/MASK_SET/MASK_CLEAR are packed one right after another:
+  *
+@@ -287,6 +303,77 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
++static int bcm7038_l1_suspend(void)
++{
++	struct bcm7038_l1_chip *intc;
++	unsigned long flags;
++	int boot_cpu, word;
++
++	/* Wakeup interrupt should only come from the boot cpu */
++	boot_cpu = cpu_logical_map(smp_processor_id());
++
++	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
++		raw_spin_lock_irqsave(&intc->lock, flags);
++		for (word = 0; word < intc->n_words; word++) {
++			l1_writel(~intc->wake_mask[word],
++				intc->cpus[boot_cpu]->map_base +
++				reg_mask_set(intc, word));
++			l1_writel(intc->wake_mask[word],
++				intc->cpus[boot_cpu]->map_base +
++				reg_mask_clr(intc, word));
++		}
++		raw_spin_unlock_irqrestore(&intc->lock, flags);
++	}
++
++	return 0;
++}
++
++static void bcm7038_l1_resume(void)
++{
++	struct bcm7038_l1_chip *intc;
++	unsigned long flags;
++	int boot_cpu, word;
++
++	boot_cpu = cpu_logical_map(smp_processor_id());
++
++	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
++		raw_spin_lock_irqsave(&intc->lock, flags);
++		for (word = 0; word < intc->n_words; word++) {
++			l1_writel(intc->cpus[boot_cpu]->mask_cache[word],
++				intc->cpus[boot_cpu]->map_base +
++				reg_mask_set(intc, word));
++			l1_writel(~intc->cpus[boot_cpu]->mask_cache[word],
++				intc->cpus[boot_cpu]->map_base +
++				reg_mask_clr(intc, word));
++		}
++		raw_spin_unlock_irqrestore(&intc->lock, flags);
++	}
++}
++
++static struct syscore_ops bcm7038_l1_syscore_ops = {
++	.suspend	= bcm7038_l1_suspend,
++	.resume		= bcm7038_l1_resume,
++};
++
++static int bcm7038_l1_set_wake(struct irq_data *d, unsigned int on)
++{
++	struct bcm7038_l1_chip *intc = irq_data_get_irq_chip_data(d);
++	unsigned long flags;
++	u32 word = d->hwirq / IRQS_PER_WORD;
++	u32 mask = BIT(d->hwirq % IRQS_PER_WORD);
++
++	raw_spin_lock_irqsave(&intc->lock, flags);
++	if (on)
++		intc->wake_mask[word] |= mask;
++	else
++		intc->wake_mask[word] &= ~mask;
++	raw_spin_unlock_irqrestore(&intc->lock, flags);
++
++	return 0;
++}
++#endif
++
+ static struct irq_chip bcm7038_l1_irq_chip = {
+ 	.name			= "bcm7038-l1",
+ 	.irq_mask		= bcm7038_l1_mask,
+@@ -295,6 +382,9 @@ static struct irq_chip bcm7038_l1_irq_chip = {
+ #ifdef CONFIG_SMP
+ 	.irq_cpu_offline	= bcm7038_l1_cpu_offline,
+ #endif
++#if CONFIG_PM_SLEEP
++	.irq_set_wake		= bcm7038_l1_set_wake,
++#endif
+ };
+ 
+ static int bcm7038_l1_map(struct irq_domain *d, unsigned int virq,
+@@ -340,6 +430,14 @@ int __init bcm7038_l1_of_init(struct device_node *dn,
+ 		goto out_unmap;
+ 	}
+ 
++#ifdef CONFIG_PM_SLEEP
++	/* Add bcm7038_l1_chip into a list */
++	INIT_LIST_HEAD(&intc->list);
++	list_add_tail(&intc->list, &bcm7038_l1_intcs_list);
++
++	register_syscore_ops(&bcm7038_l1_syscore_ops);
++#endif
++
+ 	pr_info("registered BCM7038 L1 intc (%pOF, IRQs: %d)\n",
+ 		dn, IRQS_PER_WORD * intc->n_words);
+ 
+-- 
+2.17.1
