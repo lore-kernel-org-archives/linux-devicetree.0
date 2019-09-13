@@ -1,34 +1,56 @@
-From: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-Subject: [PATCH V2 07/12] clk: qcom: Add WCSSAON reset
-Date: Fri, 13 Sep 2019 17:26:06 +0530
-Message-ID: <1568375771-22933-8-git-send-email-gokulsri@codeaurora.org>
-References: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH 9/9] sunxi_defconfig: add new crypto options
+Date: Fri, 13 Sep 2019 14:10:56 +0200
+Message-ID: <20190913121056.h2iotti6dzpsp6lx@localhost.localdomain>
+References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
+ <20190906184551.17858-10-clabbe.montjoie@gmail.com>
+ <20190907040353.hrz7gmqgzpfpo4xj@flea>
+ <20190913081555.GA22538@Red>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ffgt2cjw56vmabzb"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20190913081555.GA22538@Red>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org, david.brown@linaro.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com, robh+dt@kernel.org, sricharan@codeaurora.org, nprakash@codeaurora.org
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: davem@davemloft.net, herbert@gondor.apana.org.au, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Add WCSSAON reset required for Q6v5 on IPQ8074 SoC.
 
-Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
----
- drivers/clk/qcom/gcc-ipq8074.c | 1 +
- 1 file changed, 1 insertion(+)
+--ffgt2cjw56vmabzb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/clk/qcom/gcc-ipq8074.c b/drivers/clk/qcom/gcc-ipq8074.c
-index 39ade58..06092f8 100644
---- a/drivers/clk/qcom/gcc-ipq8074.c
-+++ b/drivers/clk/qcom/gcc-ipq8074.c
-@@ -4685,6 +4685,7 @@ enum {
- 	[GCC_PCIE1_AXI_SLAVE_ARES] = { 0x76040, 4 },
- 	[GCC_PCIE1_AHB_ARES] = { 0x76040, 5 },
- 	[GCC_PCIE1_AXI_MASTER_STICKY_ARES] = { 0x76040, 6 },
-+	[GCC_WCSSAON_RESET] = { 0x59010, 0 },
- };
- 
- static const struct of_device_id gcc_ipq8074_match_table[] = {
--- 
-1.9.1
+On Fri, Sep 13, 2019 at 10:15:55AM +0200, Corentin Labbe wrote:
+> On Sat, Sep 07, 2019 at 07:03:53AM +0300, Maxime Ripard wrote:
+> > On Fri, Sep 06, 2019 at 08:45:51PM +0200, Corentin Labbe wrote:
+> > > This patch adds the new allwinner crypto configs to sunxi_defconfig
+> > >
+> > > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> > > ---
+> > >  arch/arm/configs/sunxi_defconfig | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> >=20
+> > Can you also enable it in arm64's defconfig as a module?
+> >=20
+>
+> Does you prefer adding a Kconfig "DEFAULT m if ARCH_SUNXI" which
+> permit to not touch any defconfig ?
+
+It's not the preferred solution, unfortunately
+
+Maxime
+--ffgt2cjw56vmabzb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXXuHUAAKCRDj7w1vZxhR
+xVj6AQCte0LxsckHRmuiUFmI2uusqYR7WoJJUQuHpsZznP2FkQEArHYCXAXLwf4v
+eUq+1BJhz/6J08UKnz6F1MN145U+fA4=
+=du6r
+-----END PGP SIGNATURE-----
+
+--ffgt2cjw56vmabzb--
