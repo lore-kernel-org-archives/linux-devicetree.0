@@ -1,134 +1,47 @@
-From: Piotr Sroka <piotrs@cadence.com>
-Subject: Re: [v5 2/2] dt-bindings: mtd: Add Cadence NAND controller driver
-Date: Fri, 13 Sep 2019 15:41:22 +0100
-Message-ID: <20190913144121.GB11985@global.cadence.com>
-References: <20190725145804.8886-1-piotrs@cadence.com>
- <20190725145955.13951-1-piotrs@cadence.com>
- <20190830114638.33dc4eb2@xps13>
- <20190911150422.GA4973@global.cadence.com>
- <20190913144903.0323a23a@xps13>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in handle_vmptrld
+Date: Fri, 13 Sep 2019 17:01:22 +0200
+Message-ID: <6a0ec3a2-2a52-f67a-6140-e0a60874538a@redhat.com>
+References: <000000000000a9d4f705924cff7a@google.com>
+ <87lfutei1j.fsf@vitty.brq.redhat.com>
+ <5218e70e-8a80-7c5f-277b-01d9ab70692a@redhat.com>
+ <20190913044614.GA120223@kroah.com>
+ <db02a285-ad1d-6094-6359-ba80e6d3f2e0@redhat.com>
+ <20190913130226.GB403359@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190913144903.0323a23a@xps13>
+In-Reply-To: <20190913130226.GB403359@kroah.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <bbrezillon@kernel.org>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, BrianNorris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org, bp@alien8.de, carlo@caione.org, catalin.marinas@arm.com, devicetree@vger.kernel.org, hpa@zytor.com, jmattson@google.com, joro@8bytes.org, khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, narmstrong@baylibre.com, rkrcmar@redhat.com, robh+dt@kernel.org, sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com, tglx@linutronix.de, wanpengli@tencent.com, will.deacon@arm.com, x86@kernel.org, syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com>, Dmitry Vyukov <dvyukov@google.com>, USB list <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The 09/13/2019 14:49, Miquel Raynal wrote:
->EXTERNAL MAIL
->
->
->Hi Piotr,
->
->Piotr Sroka <piotrs@cadence.com> wrote on Wed, 11 Sep 2019 16:04:24
->+0100:
->
->> Hi Miquel
->>
->> The 08/30/2019 11:46, Miquel Raynal wrote:
->> >EXTERNAL MAIL
->> >
->> >
->> >Hi Piotr,
->> >
->> >Piotr Sroka <piotrs@cadence.com> wrote on Thu, 25 Jul 2019 15:59:55
->> >+0100:
->> >
->> >> Document the bindings used by Cadence NAND controller driver
->> >>
->> >> Signed-off-by: Piotr Sroka <piotrs@cadence.com>
->> >> ---
->> >> Changes for v5:
->> >> - replace "_" by "-" in all properties
->> >> - change compatible name from cdns,hpnfc to cdns,hp-nfc
->> >> Changes for v4:
->> >> - add commit message
->> >> Changes for v3:
->> >> - add unit suffix for board_delay
->> >> - move child description to proper place
->> >> - remove prefix cadence_ for reg and sdma fields
->> >> Changes for v2:
->> >> - remove chip dependends parameters from dts bindings
->> >> - add names for register ranges in dts bindings
->> >> - add generic bindings to describe NAND chip representation
->> >> ---
->> >>  .../bindings/mtd/cadence-nand-controller.txt       | 50 ++++++++++++++++++++++
->> >>  1 file changed, 50 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
->> >> new file mode 100644
->> >> index 000000000000..423547a3f993
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
->> >> @@ -0,0 +1,50 @@
->> >> +* Cadence NAND controller
->> >> +
->> >> +Required properties:
->> >> +  - compatible : "cdns,hp-nfc"
->> >> +  - reg : Contains two entries, each of which is a tuple consisting of a
->> >> +	  physical address and length. The first entry is the address and
->> >> +	  length of the controller register set. The second entry is the
->> >> +	  address and length of the Slave DMA data port.
->> >> +  - reg-names: should contain "reg" and "sdma"
->> >> +  - interrupts : The interrupt number.
->> >> +  - clocks: phandle of the controller core clock (nf_clk).
->> >> +
->> >> +Optional properties:
->> >> +  - dmas: shall reference DMA channel associated to the NAND controller
->> >> +  - cdns,board-delay-ps : Estimated Board delay. The value includes the total
->> >> +    round trip delay for the signals and is used for deciding on values
->> >> +    associated with data read capture. The example formula for SDR mode is
->> >> +    the following:
->> >> +    board delay = RE#PAD delay + PCB trace to device + PCB trace from device
->> >> +    + DQ PAD delay
->> >> +
->> >> +Child nodes represent the available NAND chips.
->> >> +
->> >> +Required properties of NAND chips:
->> >> +  - reg: shall contain the native Chip Select ids from 0 to max supported by
->> >> +    the cadence nand flash controller
->> >> +
->> >> +
->> >> +See Documentation/devicetree/bindings/mtd/nand.txt for more details on
->> >> +generic bindings.
->> >> +
->> >> +Example:
->> >> +
->> >> +nand_controller: nand-controller @60000000 {
->> >> +	  compatible = "cdns,hp-nfc";
->> >> +	  reg = <0x60000000 0x10000>, <0x80000000 0x10000>;
->> >> +	  reg-names = "reg", "sdma";
->> >> +	  clocks = <&nf_clk>;
->> >> +	  cdns,board-delay-ps = <4830>;
->> >
->> >Are you sure you want to export this to the user? Not sure it is easily
->> >understandable and tunable... I'm not against but I would have troubles
->> >tuning it myself, unless using the documented value. Maybe you should
->> >explain more how to derive it?
->> I need to export this parameter somehow. The default value may not be
->> valid for other platforms. This value depends on platform, and may be different on different SoCs. So I think the DTS is the best place to put such configuration
->> parameter.
->
->What about a different compatible if it depends on the SoC?
-I considered it but this dealy consists of PADs delay and PCB trace
-delay. PAD delays are SoC dependent. Unfortunatelly PCB delay not.
-What can I do I can split it on two delays, PAD_delay and trace_delay.
-Then handle PAD_delay by compatible and trace_delay by dts. But I am not
-sure whether it changes anythig. Still a delay need to passed by dts.
->
->This way you can retrieve a different driver data structure and avoid
->the pain for the user.
+On 13/09/19 15:02, Greg Kroah-Hartman wrote:
+> Look at linux-next, we "should" have fixed up hcd_buffer_alloc() now to
+> not need this type of thing.  If we got it wrong, please let us know and
+> then yes, a fix like this would be most appreciated :)
 
->
->Thanks,
->Miquèl
+I still see
 
+	/* some USB hosts just use PIO */
+	if (!hcd_uses_dma(hcd)) {
+		*dma = ~(dma_addr_t) 0;
+		return kmalloc(size, mem_flags);
+	}
 
-Thanks
-Piotr
-  
+in linux-next's hcd_buffer_alloc and also in usb.git's usb-next branch.
+ I also see the same
+
+	if (remap_pfn_range(vma, vma->vm_start,
+			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
+			size, vma->vm_page_prot) < 0) {
+		...
+	}
+
+in usbdev_mmap.  Of course it's possible that I'm looking at the wrong
+branch, or just being dense.
+
+Paolo
