@@ -1,154 +1,66 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 12/18] dt-bindings: mips: Add loongson cpus & boards
-Date: Fri, 13 Sep 2019 15:36:06 +0100
-Message-ID: <5d7ba957.1c69fb81.a8a33.834a@mx.google.com>
-References: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
- <20190830043232.20191-7-jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH 1/3] dt-bindings: edac: al-mc-edac: Amazon's Annapurna
+ Labs Memory Controller EDAC
+Date: Fri, 13 Sep 2019 15:36:07 +0100
+Message-ID: <5d7ba958.1c69fb81.d998a.6602@mx.google.com>
+References: <1567603943-25316-1-git-send-email-talel@amazon.com>
+ <1567603943-25316-2-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190830043232.20191-7-jiaxun.yang@flygoat.com>
+In-Reply-To: <1567603943-25316-2-git-send-email-talel@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-mips@vger.kernel.org, chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org
+To: Talel Shenhar <talel@amazon.com>
+Cc: bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org, linux-edac@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, barakw@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 12:32:26PM +0800, Jiaxun Yang wrote:
-> Prepare for later dts.
+On Wed, Sep 04, 2019 at 04:32:21PM +0300, Talel Shenhar wrote:
+> Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> Signed-off-by: Talel Shenhar <talel@amazon.com>
 > ---
->  .../bindings/mips/loongson/cpus.yaml          | 38 +++++++++++
->  .../bindings/mips/loongson/devices.yaml       | 64 +++++++++++++++++++
->  2 files changed, 102 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/loongson/cpus.yaml
->  create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
+>  .../devicetree/bindings/edac/amazon,al-mc-edac.txt | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/mips/loongson/cpus.yaml b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
+> diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.txt b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.txt
 > new file mode 100644
-> index 000000000000..dc6dd5114d5e
+> index 0000000..9a3803f
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/loongson/cpus.yaml
-> @@ -0,0 +1,38 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mips/loongson/cpus.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.txt
+> @@ -0,0 +1,24 @@
+> +Amazon's Annapurna Labs Memory Controller EDAC
 > +
-> +title: Loongson CPUs bindings
+> +EDAC node is defined to describe on-chip error detection and correction for
+> +Amazon's Annapurna Labs Memory Controller.
 > +
-> +maintainers:
-> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +Required properties:
+> +- compatible:	Shall be "amazon,al-mc-edac".
+> +- reg:		DDR controller resource.
 > +
-> +description: |+
-> +  The device tree allows to describe the layout of CPUs in a system through
-> +  the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
-> +  defining properties for every cpu.
+> +Optional:
+> +- interrupt-names:	may include "ue", for uncorrectable errors,
+> +			and/or "ce", for correctable errors.
+> +- interrupts:		should contain the interrupts associated with the
+> +			interrupts names.
 > +
-> +  Bindings for CPU nodes follow the Devicetree Specification, available from:
+> +Example:
 > +
-> +  https://www.devicetree.org/specifications/
-> +
-> +properties:
-> +  reg:
-> +    maxItems: 1
-> +    description: |
-> +      Physical ID of a CPU, Can be read from CP0 EBase.CPUNum.
-> +
-> +  compatible:
-> +    enum:
-> +      - loongson,gs464
-> +      - loongson,gs464e
-> +      - loongson,gs264
-> +      - loongson,gs464v
-> +
-> +required:
-> +  - device_type
-> +  - reg
-> +  - compatible
-> +...
-> diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-> new file mode 100644
-> index 000000000000..aa6c42013d2c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mips/loongson/devices.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Loongson based Platforms Device Tree Bindings
-> +
-> +maintainers:
-> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +al_mc_edac {
 
-Add a blank line here.
+edac@f0080000
 
-> +description: |
-> +  Devices with a Loongson CPU shall have the following properties.
-> +
-> +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    oneOf:
-> +
-> +      - description: Loongson 3A1000 + RS780E 1Way
-> +        items:
-> +          - const: loongson,ls3a1000-780e-1way
+With that,
 
-This is a board or a chip? Normally we have a board compatible followed 
-by a SoC compatible.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-What's the difference between 1-way, 2-way, 4-way? Maybe there's another 
-way to describe that. 
-
-> +
-> +      - description: Loongson 3A1000 + RS780E 2Way
-> +        items:
-> +          - const: loongson,ls3a1000-780e-2way
-> +
-> +      - description: Loongson 3A1000 + RS780E 4Way
-> +        items:
-> +          - const: loongson,ls3a1000-780e-4way
-> +
-> +      - description: Loongson 3B1000/1500 + RS780E 1Way
-> +        items:
-> +          - const: loongson,ls3b-780e-1way
-> +
-> +      - description: Loongson 3B1000/1500 + RS780E 2Way
-> +        items:
-> +          - const: loongson,ls3b-780e-2way
-> +
-> +      - description: Loongson 3A2000 + RS780E 1Way
-> +        items:
-> +          - const: loongson,ls3a2000-780e-1way
-> +
-> +      - description: Loongson 3A2000 + RS780E 2Way
-> +        items:
-> +          - const: loongson,ls3a2000-780e-2way
-> +
-> +      - description: Loongson 3A2000 + RS780E 4Way
-> +        items:
-> +          - const: loongson,ls3a2000-780e-4way
-> +
-> +      - description: Loongson 3A3000 + RS780E 1Way
-> +        items:
-> +          - const: loongson,ls3a3000-780e-1way
-> +
-> +      - description: Loongson 3A3000 + RS780E 2Way
-> +        items:
-> +          - const: loongson,ls3a3000-780e-2way
-> +
-> +      - description: Loongson 3A3000 + RS780E 4Way
-> +        items:
-> +          - const: loongson,ls3a3000-780e-4way
-> +
-> +...
+> +	compatible = "amazon,al-mc-edac";
+> +	reg = <0x0 0xf0080000 0x0 0x00010000>;
+> +	interrupt-parent = <&amazon_al_system_fabric>;
+> +	interrupt-names = "ue";
+> +	interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+> +};
 > -- 
-> 2.22.0
+> 2.7.4
 > 
