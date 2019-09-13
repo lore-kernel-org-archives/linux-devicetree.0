@@ -1,118 +1,113 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [v5 2/2] dt-bindings: mtd: Add Cadence NAND controller driver
-Date: Fri, 13 Sep 2019 14:49:03 +0200
-Message-ID: <20190913144903.0323a23a@xps13>
-References: <20190725145804.8886-1-piotrs@cadence.com>
-        <20190725145955.13951-1-piotrs@cadence.com>
-        <20190830114638.33dc4eb2@xps13>
-        <20190911150422.GA4973@global.cadence.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [Patch 01/13] media: am437x-vpfe: Fix suspend path to always
+ handle pinctrl config
+Date: Fri, 13 Sep 2019 14:59:28 +0200
+Message-ID: <9250638e-52a4-c7bc-e969-763d45528780@xs4all.nl>
+References: <20190909162743.30114-1-bparrot@ti.com>
+ <20190909162743.30114-2-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190911150422.GA4973@global.cadence.com>
+In-Reply-To: <20190909162743.30114-2-bparrot@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Piotr Sroka <piotrs@cadence.com>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <bbrezillon@kernel.org>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, BrianNorris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Piotr,
-
-Piotr Sroka <piotrs@cadence.com> wrote on Wed, 11 Sep 2019 16:04:24
-+0100:
-
-> Hi Miquel
+On 9/9/19 6:27 PM, Benoit Parrot wrote:
+> From: Dave Gerlach <d-gerlach@ti.com>
 > 
-> The 08/30/2019 11:46, Miquel Raynal wrote:
-> >EXTERNAL MAIL
-> >
-> >
-> >Hi Piotr,
-> >
-> >Piotr Sroka <piotrs@cadence.com> wrote on Thu, 25 Jul 2019 15:59:55
-> >+0100:
-> >  
-> >> Document the bindings used by Cadence NAND controller driver
-> >>
-> >> Signed-off-by: Piotr Sroka <piotrs@cadence.com>
-> >> ---
-> >> Changes for v5:
-> >> - replace "_" by "-" in all properties
-> >> - change compatible name from cdns,hpnfc to cdns,hp-nfc
-> >> Changes for v4:
-> >> - add commit message
-> >> Changes for v3:
-> >> - add unit suffix for board_delay
-> >> - move child description to proper place
-> >> - remove prefix cadence_ for reg and sdma fields
-> >> Changes for v2:
-> >> - remove chip dependends parameters from dts bindings
-> >> - add names for register ranges in dts bindings
-> >> - add generic bindings to describe NAND chip representation
-> >> ---
-> >>  .../bindings/mtd/cadence-nand-controller.txt       | 50 ++++++++++++++++++++++
-> >>  1 file changed, 50 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
-> >> new file mode 100644
-> >> index 000000000000..423547a3f993
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
-> >> @@ -0,0 +1,50 @@
-> >> +* Cadence NAND controller
-> >> +
-> >> +Required properties:
-> >> +  - compatible : "cdns,hp-nfc"
-> >> +  - reg : Contains two entries, each of which is a tuple consisting of a
-> >> +	  physical address and length. The first entry is the address and
-> >> +	  length of the controller register set. The second entry is the
-> >> +	  address and length of the Slave DMA data port.
-> >> +  - reg-names: should contain "reg" and "sdma"
-> >> +  - interrupts : The interrupt number.
-> >> +  - clocks: phandle of the controller core clock (nf_clk).
-> >> +
-> >> +Optional properties:
-> >> +  - dmas: shall reference DMA channel associated to the NAND controller
-> >> +  - cdns,board-delay-ps : Estimated Board delay. The value includes the total
-> >> +    round trip delay for the signals and is used for deciding on values
-> >> +    associated with data read capture. The example formula for SDR mode is
-> >> +    the following:
-> >> +    board delay = RE#PAD delay + PCB trace to device + PCB trace from device
-> >> +    + DQ PAD delay
-> >> +
-> >> +Child nodes represent the available NAND chips.
-> >> +
-> >> +Required properties of NAND chips:
-> >> +  - reg: shall contain the native Chip Select ids from 0 to max supported by
-> >> +    the cadence nand flash controller
-> >> +
-> >> +
-> >> +See Documentation/devicetree/bindings/mtd/nand.txt for more details on
-> >> +generic bindings.
-> >> +
-> >> +Example:
-> >> +
-> >> +nand_controller: nand-controller @60000000 {
-> >> +	  compatible = "cdns,hp-nfc";
-> >> +	  reg = <0x60000000 0x10000>, <0x80000000 0x10000>;
-> >> +	  reg-names = "reg", "sdma";
-> >> +	  clocks = <&nf_clk>;
-> >> +	  cdns,board-delay-ps = <4830>;  
-> >
-> >Are you sure you want to export this to the user? Not sure it is easily
-> >understandable and tunable... I'm not against but I would have troubles
-> >tuning it myself, unless using the documented value. Maybe you should
-> >explain more how to derive it?  
-> I need to export this parameter somehow. The default value may not be
-> valid for other platforms. This value depends on platform, and may be different on different SoCs. So I think the DTS is the best place to put such configuration
-> parameter.
+> Currently if vpfe is not active then it returns immediately in the
+> suspend and resume handlers. Change this so that it always performs the
+> pinctrl config so that we can still get proper sleep state configuration
+> on the pins even if we do not need to worry about fully saving and
+> restoring context.
+> 
+> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> ---
+>  drivers/media/platform/am437x/am437x-vpfe.c | 44 ++++++++++-----------
+>  1 file changed, 22 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+> index 2b42ba1f5949..ab959d61f9c9 100644
+> --- a/drivers/media/platform/am437x/am437x-vpfe.c
+> +++ b/drivers/media/platform/am437x/am437x-vpfe.c
+> @@ -2653,22 +2653,22 @@ static int vpfe_suspend(struct device *dev)
+>  	struct vpfe_device *vpfe = dev_get_drvdata(dev);
+>  	struct vpfe_ccdc *ccdc = &vpfe->ccdc;
+>  
+> -	/* if streaming has not started we don't care */
+> -	if (!vb2_start_streaming_called(&vpfe->buffer_queue))
+> -		return 0;
+> +	/* only do full suspend if streaming has started */
+> +	if (vb2_start_streaming_called(&vpfe->buffer_queue)) {
+>  
 
-What about a different compatible if it depends on the SoC?
+It's a bit ugly to start a block with an empty line. Can you remove it?
 
-This way you can retrieve a different driver data structure and avoid
-the pain for the user.
+> -	pm_runtime_get_sync(dev);
+> -	vpfe_config_enable(ccdc, 1);
+> +		pm_runtime_get_sync(dev);
+> +		vpfe_config_enable(ccdc, 1);
+>  
+> -	/* Save VPFE context */
+> -	vpfe_save_context(ccdc);
+> +		/* Save VPFE context */
+> +		vpfe_save_context(ccdc);
+>  
+> -	/* Disable CCDC */
+> -	vpfe_pcr_enable(ccdc, 0);
+> -	vpfe_config_enable(ccdc, 0);
+> +		/* Disable CCDC */
+> +		vpfe_pcr_enable(ccdc, 0);
+> +		vpfe_config_enable(ccdc, 0);
+>  
+> -	/* Disable both master and slave clock */
+> -	pm_runtime_put_sync(dev);
+> +		/* Disable both master and slave clock */
+> +		pm_runtime_put_sync(dev);
+> +	}
+>  
+>  	/* Select sleep pin state */
+>  	pinctrl_pm_select_sleep_state(dev);
+> @@ -2710,19 +2710,19 @@ static int vpfe_resume(struct device *dev)
+>  	struct vpfe_device *vpfe = dev_get_drvdata(dev);
+>  	struct vpfe_ccdc *ccdc = &vpfe->ccdc;
+>  
+> -	/* if streaming has not started we don't care */
+> -	if (!vb2_start_streaming_called(&vpfe->buffer_queue))
+> -		return 0;
+> +	/* only do full resume if streaming has started */
+> +	if (vb2_start_streaming_called(&vpfe->buffer_queue)) {
+>  
 
+Ditto.
 
-Thanks,
-Miquèl
+> -	/* Enable both master and slave clock */
+> -	pm_runtime_get_sync(dev);
+> -	vpfe_config_enable(ccdc, 1);
+> +		/* Enable both master and slave clock */
+> +		pm_runtime_get_sync(dev);
+> +		vpfe_config_enable(ccdc, 1);
+>  
+> -	/* Restore VPFE context */
+> -	vpfe_restore_context(ccdc);
+> +		/* Restore VPFE context */
+> +		vpfe_restore_context(ccdc);
+>  
+> -	vpfe_config_enable(ccdc, 0);
+> -	pm_runtime_put_sync(dev);
+> +		vpfe_config_enable(ccdc, 0);
+> +		pm_runtime_put_sync(dev);
+> +	}
+>  
+>  	/* Select default pin state */
+>  	pinctrl_pm_select_default_state(dev);
+> 
+
+Regards,
+
+	Hans
