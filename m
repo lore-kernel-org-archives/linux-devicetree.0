@@ -1,134 +1,64 @@
-From: Zhou Yanjie <zhouyanjie@zoho.com>
-Subject: Re: [PATCH 1/4] MMC: Ingenic: Adjust the macro definition name.
-Date: Fri, 13 Sep 2019 23:59:11 +0800
-Message-ID: <5D7BBCCF.2010600@zoho.com>
-References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
- <1567669089-88693-2-git-send-email-zhouyanjie@zoho.com>
- <e9ef3a9093e8572eb3be2aa654dd30069c493a4b.camel@collabora.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in handle_vmptrld
+Date: Fri, 13 Sep 2019 18:14:26 +0200
+Message-ID: <1a8a6449-2740-b0a3-805a-47466e0d71c6@redhat.com>
+References: <Pine.LNX.4.44L0.1909131129390.1466-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e9ef3a9093e8572eb3be2aa654dd30069c493a4b.camel@collabora.com>
+In-Reply-To: <Pine.LNX.4.44L0.1909131129390.1466-100000@iolanthe.rowland.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@collabora.com>, linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, ulf.hansson@linaro.org, paul.burton@mips.com, linus.walleij@linaro.org, paul@crapouillou.net, malat@debian.org, yuehaibing@huawei.com, robh+dt@kernel.org, mark.rutland@arm.com, syq@debian.org, jiaxun.yang@flygoat.com
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org, bp@alien8.de, carlo@caione.org, catalin.marinas@arm.com, devicetree@vger.kernel.org, hpa@zytor.com, jmattson@google.com, joro@8bytes.org, khilman@baylibre.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, narmstrong@baylibre.com, rkrcmar@redhat.com, robh+dt@kernel.org, sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com, tglx@linutronix.de, wanpengli@tencent.com, will.deacon@arm.com, x86@kernel.org, syzbot <syzbot+46f1dd7dbbe2bfb98b10@syzkaller.appspotmail.com>, Dmitry Vyukov <dvyukov@google.com>, USB list <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ezequiel,
-
-On 2019=E5=B9=B409=E6=9C=8813=E6=97=A5 23:32, Ezequiel Garcia wrote:
-> Hi Zhou,
->
-> Thanks for your interest in this driver, I'm glad
-> so see it's more used.
->
-> On Thu, 2019-09-05 at 15:38 +0800, Zhou Yanjie wrote:
->> Adjust the macro definition name to match the corresponding
->> register name in the datasheet.
+On 13/09/19 17:36, Alan Stern wrote:
+> On Fri, 13 Sep 2019, Paolo Bonzini wrote:
+> 
+>> On 13/09/19 15:02, Greg Kroah-Hartman wrote:
+>>> Look at linux-next, we "should" have fixed up hcd_buffer_alloc() now to
+>>> not need this type of thing.  If we got it wrong, please let us know and
+>>> then yes, a fix like this would be most appreciated :)
 >>
-> It's not really an issue to have slighlt different
-> names on the macros. They are currently sufficiently
-> descriptive, and I don't think it's deserves a patch.
-Thanks for your advice, I'll drop this in v2. Do you have any suggestions
-for the other three patches?
-
-Best regards!
->
-> Thanks,
-> Ezequiel
->
->> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->> ---
->>   drivers/mmc/host/jz4740_mmc.c | 18 +++++++++---------
->>   1 file changed, 9 insertions(+), 9 deletions(-)
+>> I still see
 >>
->> diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc=
-.c
->> index ffdbfaa..1b1fcb7 100644
->> --- a/drivers/mmc/host/jz4740_mmc.c
->> +++ b/drivers/mmc/host/jz4740_mmc.c
->> @@ -28,7 +28,7 @@
->>   #include <asm/mach-jz4740/dma.h>
->>  =20
->>   #define JZ_REG_MMC_STRPCL=090x00
->> -#define JZ_REG_MMC_STATUS=090x04
->> +#define JZ_REG_MMC_STAT=09=090x04
->>   #define JZ_REG_MMC_CLKRT=090x08
->>   #define JZ_REG_MMC_CMDAT=090x0C
->>   #define JZ_REG_MMC_RESTO=090x10
->> @@ -40,7 +40,7 @@
->>   #define JZ_REG_MMC_IREG=09=090x28
->>   #define JZ_REG_MMC_CMD=09=090x2C
->>   #define JZ_REG_MMC_ARG=09=090x30
->> -#define JZ_REG_MMC_RESP_FIFO=090x34
->> +#define JZ_REG_MMC_RES=09=090x34
->>   #define JZ_REG_MMC_RXFIFO=090x38
->>   #define JZ_REG_MMC_TXFIFO=090x3C
->>   #define JZ_REG_MMC_DMAC=09=090x44
->> @@ -391,7 +391,7 @@ static void jz4740_mmc_clock_disable(struct jz4740_m=
-mc_host *host)
->>  =20
->>   =09writew(JZ_MMC_STRPCL_CLOCK_STOP, host->base + JZ_REG_MMC_STRPCL);
->>   =09do {
->> -=09=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
->> +=09=09status =3D readl(host->base + JZ_REG_MMC_STAT);
->>   =09} while (status & JZ_MMC_STATUS_CLK_EN && --timeout);
->>   }
->>  =20
->> @@ -403,7 +403,7 @@ static void jz4740_mmc_reset(struct jz4740_mmc_host =
-*host)
->>   =09writew(JZ_MMC_STRPCL_RESET, host->base + JZ_REG_MMC_STRPCL);
->>   =09udelay(10);
->>   =09do {
->> -=09=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
->> +=09=09status =3D readl(host->base + JZ_REG_MMC_STAT);
->>   =09} while (status & JZ_MMC_STATUS_IS_RESETTING && --timeout);
->>   }
->>  =20
->> @@ -446,7 +446,7 @@ static void jz4740_mmc_transfer_check_state(struct j=
-z4740_mmc_host *host,
->>   {
->>   =09int status;
->>  =20
->> -=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
->> +=09status =3D readl(host->base + JZ_REG_MMC_STAT);
->>   =09if (status & JZ_MMC_STATUS_WRITE_ERROR_MASK) {
->>   =09=09if (status & (JZ_MMC_STATUS_TIMEOUT_WRITE)) {
->>   =09=09=09host->req->cmd->error =3D -ETIMEDOUT;
->> @@ -580,10 +580,10 @@ static bool jz4740_mmc_read_data(struct jz4740_mmc=
-_host *host,
->>   =09/* For whatever reason there is sometime one word more in the fifo =
-then
->>   =09 * requested */
->>   =09timeout =3D 1000;
->> -=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
->> +=09status =3D readl(host->base + JZ_REG_MMC_STAT);
->>   =09while (!(status & JZ_MMC_STATUS_DATA_FIFO_EMPTY) && --timeout) {
->>   =09=09d =3D readl(fifo_addr);
->> -=09=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
->> +=09=09status =3D readl(host->base + JZ_REG_MMC_STAT);
->>   =09}
->>  =20
->>   =09return false;
->> @@ -614,7 +614,7 @@ static void jz4740_mmc_read_response(struct jz4740_m=
-mc_host *host,
->>   {
->>   =09int i;
->>   =09uint16_t tmp;
->> -=09void __iomem *fifo_addr =3D host->base + JZ_REG_MMC_RESP_FIFO;
->> +=09void __iomem *fifo_addr =3D host->base + JZ_REG_MMC_RES;
->>  =20
->>   =09if (cmd->flags & MMC_RSP_136) {
->>   =09=09tmp =3D readw(fifo_addr);
->> @@ -797,7 +797,7 @@ static irqreturn_t jz_mmc_irq(int irq, void *devid)
->>   =09struct mmc_command *cmd =3D host->cmd;
->>   =09uint32_t irq_reg, status, tmp;
->>  =20
->> -=09status =3D readl(host->base + JZ_REG_MMC_STATUS);
->> +=09status =3D readl(host->base + JZ_REG_MMC_STAT);
->>   =09irq_reg =3D jz4740_mmc_read_irq_reg(host);
->>  =20
->>   =09tmp =3D irq_reg;
->
->
+>> 	/* some USB hosts just use PIO */
+>> 	if (!hcd_uses_dma(hcd)) {
+>> 		*dma = ~(dma_addr_t) 0;
+>> 		return kmalloc(size, mem_flags);
+>> 	}
+>>
+>> in linux-next's hcd_buffer_alloc and also in usb.git's usb-next branch.
+>>  I also see the same
+>>
+>> 	if (remap_pfn_range(vma, vma->vm_start,
+>> 			virt_to_phys(usbm->mem) >> PAGE_SHIFT,
+>> 			size, vma->vm_page_prot) < 0) {
+>> 		...
+>> 	}
+>>
+>> in usbdev_mmap.  Of course it's possible that I'm looking at the wrong
+>> branch, or just being dense.
+> 
+> Have you seen
+> 
+> 	https://marc.info/?l=linux-usb&m=156758511218419&w=2
+> 
+> ?  It certainly is relevant, although Greg hasn't replied to it.
+
+It helps but it's not a full fix, since the address would fail
+is_vmalloc_addr.  On top of that, hcd_buffer_alloc and hcd_buffer_free
+need to switch from kmalloc to vmalloc.
+
+> Also, just warning about a non-page-aligned allocation doesn't really 
+> help.  It would be better to fix the misbehaving allocator.
+
+Of course.  The above patch does not fix the issue, it should just allow
+for an easier reproduction not involving KVM.  More long term, it points
+out where the contracts mismatch (i.e. between hcd_buffer_alloc and
+usb_alloc_coherent), and more selfishly whose bug it is when syzkaller
+complains. :)
+
+Paolo
