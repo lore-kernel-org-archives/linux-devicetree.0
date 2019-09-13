@@ -1,430 +1,262 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v4 2/6] thermal: amlogic: Add thermal driver to support
- G12 SoCs
-Date: Fri, 13 Sep 2019 14:51:38 +0530
-Message-ID: <CAHLCerM-RJze_f49yucCcB1nnyLXo5f=aBob0_rQfa+jauOz+A@mail.gmail.com>
-References: <20190821222421.30242-1-glaroque@baylibre.com> <20190821222421.30242-3-glaroque@baylibre.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v3 2/2] hwrng: npcm: add NPCM RNG driver
+Date: Fri, 13 Sep 2019 10:28:05 +0100
+Message-ID: <20190913092805.4bemarnbh6jo3lxh@holly.lan>
+References: <20190912090149.7521-1-tmaimon77@gmail.com>
+ <20190912090149.7521-3-tmaimon77@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821222421.30242-3-glaroque@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20190912090149.7521-3-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume La Roque <glaroque@baylibre.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com, yuenn@google.com, benjaminfair@google.com, sumit.garg@linaro.org, jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 3:54 AM Guillaume La Roque
-<glaroque@baylibre.com> wrote:
->
-> Amlogic G12A and G12B SoCs integrate two thermal sensors
-> with the same design.
-> One is located close to the DDR controller and the other one is
-> located close to the PLLs (between the CPU and GPU).
+On Thu, Sep 12, 2019 at 12:01:49PM +0300, Tomer Maimon wrote:
+> Add Nuvoton NPCM BMC Random Number Generator(RNG) driver.
+> 
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 
-Merge into one paragraph?
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-> The calibration data for each of the thermal sensors instance is
-> stored in a different location within the AO region.
->
-> Implement reading the temperature from each thermal sensor.
->
-> The IP block has more functionality, which may be added to this driver
-> in the future:
-> - chip reset when the temperature exceeds a configurable threshold
-> - up to four interrupts when the temperature has risen above a
-> configurable threshold
-> - up to four interrupts when the temperature has fallen below a
-> configurable threshold
->
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Note, you are welcome to preseve this if you have to respin and
+change directory based on Vinod's feedback...
+
+
 > ---
->  drivers/thermal/Kconfig           |  11 +
->  drivers/thermal/Makefile          |   1 +
->  drivers/thermal/amlogic_thermal.c | 335 ++++++++++++++++++++++++++++++
->  3 files changed, 347 insertions(+)
->  create mode 100644 drivers/thermal/amlogic_thermal.c
->
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 9966364a6deb..0f31bb4bc372 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -348,6 +348,17 @@ config MTK_THERMAL
->           Enable this option if you want to have support for thermal management
->           controller present in Mediatek SoCs
->
-> +config AMLOGIC_THERMAL
-> +       tristate "Amlogic Thermal Support"
-> +       default ARCH_MESON
-> +       depends on OF && ARCH_MESON
-> +       help
-> +         If you say yes here you get support for Amlogic Thermal
-> +         for G12 SoC Family.
+>  drivers/char/hw_random/Kconfig    |  13 +++
+>  drivers/char/hw_random/Makefile   |   1 +
+>  drivers/char/hw_random/npcm-rng.c | 186 ++++++++++++++++++++++++++++++
+>  3 files changed, 200 insertions(+)
+>  create mode 100644 drivers/char/hw_random/npcm-rng.c
+> 
+> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+> index 59f25286befe..87a1c30e7958 100644
+> --- a/drivers/char/hw_random/Kconfig
+> +++ b/drivers/char/hw_random/Kconfig
+> @@ -440,6 +440,19 @@ config HW_RANDOM_OPTEE
+>  
+>  	  If unsure, say Y.
+>  
+> +config HW_RANDOM_NPCM
+> +	tristate "NPCM Random Number Generator support"
+> +	depends on ARCH_NPCM || COMPILE_TEST
+> +	default HW_RANDOM
+> +	help
+> + 	  This driver provides support for the Random Number
+> +	  Generator hardware available in Nuvoton NPCM SoCs.
 > +
-> +         This driver can also be built as a module. If so, the module will
-> +         be called amlogic_thermal.
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called npcm-rng.
 > +
->  menu "Intel thermal drivers"
->  depends on X86 || X86_INTEL_QUARK || COMPILE_TEST
->  source "drivers/thermal/intel/Kconfig"
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 74a37c7f847a..baeb70bf0568 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -54,3 +54,4 @@ obj-$(CONFIG_MTK_THERMAL)     += mtk_thermal.o
->  obj-$(CONFIG_GENERIC_ADC_THERMAL)      += thermal-generic-adc.o
->  obj-$(CONFIG_ZX2967_THERMAL)   += zx2967_thermal.o
->  obj-$(CONFIG_UNIPHIER_THERMAL) += uniphier_thermal.o
-> +obj-$(CONFIG_AMLOGIC_THERMAL)     += amlogic_thermal.o
-> diff --git a/drivers/thermal/amlogic_thermal.c b/drivers/thermal/amlogic_thermal.c
+> + 	  If unsure, say Y.
+> +
+>  endif # HW_RANDOM
+>  
+>  config UML_RANDOM
+> diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
+> index 7c9ef4a7667f..17b6d4e6d591 100644
+> --- a/drivers/char/hw_random/Makefile
+> +++ b/drivers/char/hw_random/Makefile
+> @@ -39,3 +39,4 @@ obj-$(CONFIG_HW_RANDOM_MTK)	+= mtk-rng.o
+>  obj-$(CONFIG_HW_RANDOM_S390) += s390-trng.o
+>  obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
+>  obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
+> +obj-$(CONFIG_HW_RANDOM_NPCM) += npcm-rng.o
+> diff --git a/drivers/char/hw_random/npcm-rng.c b/drivers/char/hw_random/npcm-rng.c
 > new file mode 100644
-> index 000000000000..173d808048d2
+> index 000000000000..b7c8c7e13a49
 > --- /dev/null
-> +++ b/drivers/thermal/amlogic_thermal.c
-> @@ -0,0 +1,335 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Amlogic Thermal Sensor Driver
-> + *
-> + * Copyright (C) 2017 Huan Biao <huan.biao@amlogic.com>
-> + * Copyright (C) 2019 Guillaume La Roque <glaroque@baylibre.com>
-> + *
-> + * Register value to celsius temperature formulas:
-> + *     Read_Val            m * U
-> + * U = ---------, Uptat = ---------
-> + *     2^16              1 + n * U
-> + *
-> + * Temperature = A * ( Uptat + u_efuse / 2^16 )- B
-> + *
-> + *  A B m n : calibration parameters
-> + *  u_efuse : fused calibration value, it's a signed 16 bits value
-> + */
+> +++ b/drivers/char/hw_random/npcm-rng.c
+> @@ -0,0 +1,186 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2019 Nuvoton Technology corporation.
 > +
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/io.h>
-> +#include <linux/mfd/syscon.h>
+> +#include <linux/kernel.h>
 > +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/init.h>
+> +#include <linux/random.h>
+> +#include <linux/err.h>
 > +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/thermal.h>
+> +#include <linux/hw_random.h>
+> +#include <linux/delay.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/pm_runtime.h>
 > +
-> +#include "thermal_core.h"
+> +#define NPCM_RNGCS_REG		0x00	/* Control and status register */
+> +#define NPCM_RNGD_REG		0x04	/* Data register */
+> +#define NPCM_RNGMODE_REG	0x08	/* Mode register */
 > +
-> +#define TSENSOR_CFG_REG1                       0x4
-> +       #define TSENSOR_CFG_REG1_RSET_VBG       BIT(12)
-> +       #define TSENSOR_CFG_REG1_RSET_ADC       BIT(11)
-> +       #define TSENSOR_CFG_REG1_VCM_EN         BIT(10)
-> +       #define TSENSOR_CFG_REG1_VBG_EN         BIT(9)
-> +       #define TSENSOR_CFG_REG1_OUT_CTL        BIT(6)
-> +       #define TSENSOR_CFG_REG1_FILTER_EN      BIT(5)
-> +       #define TSENSOR_CFG_REG1_DEM_EN         BIT(3)
-> +       #define TSENSOR_CFG_REG1_CH_SEL         GENMASK(1, 0)
-> +       #define TSENSOR_CFG_REG1_ENABLE         \
-> +               (TSENSOR_CFG_REG1_FILTER_EN |   \
-> +                TSENSOR_CFG_REG1_VCM_EN |      \
-> +                TSENSOR_CFG_REG1_VBG_EN |      \
-> +                TSENSOR_CFG_REG1_DEM_EN |      \
-> +                TSENSOR_CFG_REG1_CH_SEL)
+> +#define NPCM_RNG_CLK_SET_25MHZ	GENMASK(4, 3) /* 20-25 MHz */
+> +#define NPCM_RNG_DATA_VALID	BIT(1)
+> +#define NPCM_RNG_ENABLE		BIT(0)
+> +#define NPCM_RNG_M1ROSEL	BIT(1)
 > +
-> +#define TSENSOR_STAT0                  0x40
+> +#define NPCM_RNG_TIMEOUT_USEC	20000
+> +#define NPCM_RNG_POLL_USEC	1000
 > +
-> +#define TSENSOR_STAT9                  0x64
+> +#define to_npcm_rng(p)	container_of(p, struct npcm_rng, rng)
 > +
-> +#define TSENSOR_READ_TEMP_MASK         GENMASK(15, 0)
-> +#define TSENSOR_TEMP_MASK              GENMASK(11, 0)
-> +
-> +#define TSENSOR_TRIM_SIGN_MASK         BIT(15)
-> +#define TSENSOR_TRIM_TEMP_MASK         GENMASK(14, 0)
-> +#define TSENSOR_TRIM_VERSION_MASK      GENMASK(31, 24)
-> +
-> +#define TSENSOR_TRIM_VERSION(_version) \
-> +       FIELD_GET(TSENSOR_TRIM_VERSION_MASK, _version)
-> +
-> +#define TSENSOR_TRIM_CALIB_VALID_MASK  (GENMASK(3, 2) | BIT(7))
-> +
-> +#define TSENSOR_CALIB_OFFSET   1
-> +#define TSENSOR_CALIB_SHIFT    4
-> +
-> +/**
-> + * struct amlogic_thermal_soc_calib_data
-> + * @A, B, m, n: calibration parameters
-> + * This structure is required for configuration of amlogic thermal driver.
-> + */
-> +struct amlogic_thermal_soc_calib_data {
-> +       int A;
-> +       int B;
-> +       int m;
-> +       int n;
+> +struct npcm_rng {
+> +	void __iomem *base;
+> +	struct hwrng rng;
 > +};
 > +
-> +/**
-> + * struct amlogic_thermal_data
-> + * @u_efuse_off: register offset to read fused calibration value
-> + * @soc: calibration parameters structure pointer
-
-This doesn't match the member below.
-
-> + * @regmap_config: regmap config for the device
-> + * This structure is required for configuration of amlogic thermal driver.
-> + */
-> +struct amlogic_thermal_data {
-> +       int u_efuse_off;
-> +       const struct amlogic_thermal_soc_calib_data *calibration_parameters;
-> +       const struct regmap_config *regmap_config;
-> +};
-> +
-> +struct amlogic_thermal {
-> +       struct platform_device *pdev;
-> +       const struct amlogic_thermal_data *data;
-> +       struct regmap *regmap;
-> +       struct regmap *sec_ao_map;
-> +       struct clk *clk;
-> +       struct thermal_zone_device *tzd;
-> +       u32 trim_info;
-> +};
-> +
-> +/*
-> + * Calculate a temperature value from a temperature code.
-> + * The unit of the temperature is degree milliCelsius.
-> + */
-> +static int amlogic_thermal_code_to_millicelsius(struct amlogic_thermal *pdata,
-> +                                               int temp_code)
+> +static int npcm_rng_init(struct hwrng *rng)
 > +{
-> +       const struct amlogic_thermal_soc_calib_data *param =
-> +                                       pdata->data->calibration_parameters;
-> +       int temp;
-> +       s64 factor, Uptat, uefuse;
+> +	struct npcm_rng *priv = to_npcm_rng(rng);
 > +
-> +       uefuse = pdata->trim_info & TSENSOR_TRIM_SIGN_MASK ?
-> +                            ~(pdata->trim_info & TSENSOR_TRIM_TEMP_MASK) + 1 :
-> +                            (pdata->trim_info & TSENSOR_TRIM_TEMP_MASK);
+> +	writel(NPCM_RNG_CLK_SET_25MHZ | NPCM_RNG_ENABLE,
+> +	       priv->base + NPCM_RNGCS_REG);
 > +
-> +       factor = param->n * temp_code;
-> +       factor = div_s64(factor, 100);
-> +
-> +       Uptat = temp_code * param->m;
-> +       Uptat = div_s64(Uptat, 100);
-> +       Uptat = Uptat * BIT(16);
-> +       Uptat = div_s64(Uptat, BIT(16) + factor);
-> +
-> +       temp = (Uptat + uefuse) * param->A;
-> +       temp = div_s64(temp, BIT(16));
-> +       temp = (temp - param->B) * 100;
-> +
-> +       return temp;
+> +	return 0;
 > +}
 > +
-> +static int amlogic_thermal_initialize(struct amlogic_thermal *pdata)
+> +static void npcm_rng_cleanup(struct hwrng *rng)
 > +{
-> +       int ret = 0;
-> +       int ver;
+> +	struct npcm_rng *priv = to_npcm_rng(rng);
 > +
-> +       regmap_read(pdata->sec_ao_map, pdata->data->u_efuse_off,
-> +                   &pdata->trim_info);
-> +
-> +       ver = TSENSOR_TRIM_VERSION(pdata->trim_info);
-> +
-> +       if ((ver & TSENSOR_TRIM_CALIB_VALID_MASK) == 0) {
-> +               ret = -EINVAL;
-> +               dev_err(&pdata->pdev->dev,
-> +                       "tsensor thermal calibration not supported: 0x%x!\n",
-> +                       ver);
-> +       }
-> +
-> +       return ret;
+> +	writel(NPCM_RNG_CLK_SET_25MHZ, priv->base + NPCM_RNGCS_REG);
 > +}
 > +
-> +static int amlogic_thermal_enable(struct amlogic_thermal *data)
+> +static int npcm_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
 > +{
-> +       int ret;
+> +	struct npcm_rng *priv = to_npcm_rng(rng);
+> +	int retval = 0;
+> +	int ready;
 > +
-> +       ret = clk_prepare_enable(data->clk);
-> +       if (ret)
-> +               return ret;
+> +	pm_runtime_get_sync((struct device *)priv->rng.priv);
 > +
-> +       regmap_update_bits(data->regmap, TSENSOR_CFG_REG1,
-> +                          TSENSOR_CFG_REG1_ENABLE, TSENSOR_CFG_REG1_ENABLE);
+> +	while (max >= sizeof(u32)) {
+> +		if (wait) {
+> +			if (readl_poll_timeout(priv->base + NPCM_RNGCS_REG,
+> +					       ready,
+> +					       ready & NPCM_RNG_DATA_VALID,
+> +					       NPCM_RNG_POLL_USEC,
+> +					       NPCM_RNG_TIMEOUT_USEC))
+> +				break;
+> +		} else {
+> +			if ((readl(priv->base + NPCM_RNGCS_REG) &
+> +			    NPCM_RNG_DATA_VALID) == 0)
+> +				break;
+> +		}
 > +
-> +       return 0;
+> +		*(u32 *)buf = readl(priv->base + NPCM_RNGD_REG);
+> +		retval += sizeof(u32);
+> +		buf += sizeof(u32);
+> +		max -= sizeof(u32);
+> +	}
+> +
+> +	pm_runtime_mark_last_busy((struct device *)priv->rng.priv);
+> +	pm_runtime_put_sync_autosuspend((struct device *)priv->rng.priv);
+> +
+> +	return retval || !wait ? retval : -EIO;
 > +}
 > +
-> +static int amlogic_thermal_disable(struct amlogic_thermal *data)
+> +static int npcm_rng_probe(struct platform_device *pdev)
 > +{
-> +       regmap_update_bits(data->regmap, TSENSOR_CFG_REG1,
-> +                          TSENSOR_CFG_REG1_ENABLE, 0);
-> +       clk_disable_unprepare(data->clk);
+> +	struct npcm_rng *priv;
+> +	struct resource *res;
+> +	int ret;
 > +
-> +       return 0;
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	priv->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	dev_set_drvdata(&pdev->dev, priv);
+> +	pm_runtime_set_autosuspend_delay(&pdev->dev, 100);
+> +	pm_runtime_use_autosuspend(&pdev->dev);
+> +	pm_runtime_enable(&pdev->dev);
+> +
+> +#ifndef CONFIG_PM
+> +	priv->rng.init = npcm_rng_init;
+> +	priv->rng.cleanup = npcm_rng_cleanup;
+> +#endif
+> +	priv->rng.name = pdev->name;
+> +	priv->rng.read = npcm_rng_read;
+> +	priv->rng.priv = (unsigned long)&pdev->dev;
+> +	priv->rng.quality = 1000;
+> +
+> +	writel(NPCM_RNG_M1ROSEL, priv->base + NPCM_RNGMODE_REG);
+> +
+> +	ret = devm_hwrng_register(&pdev->dev, &priv->rng);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to register rng device: %d\n",
+> +			ret);
+> +		pm_runtime_disable(&pdev->dev);
+> +		pm_runtime_set_suspended(&pdev->dev);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
 > +}
 > +
-> +static int amlogic_thermal_get_temp(void *data, int *temp)
+> +static int npcm_rng_remove(struct platform_device *pdev)
 > +{
-> +       unsigned int tval;
-> +       struct amlogic_thermal *pdata = data;
+> +	struct npcm_rng *priv = platform_get_drvdata(pdev);
 > +
-> +       if (!data)
-> +               return -EINVAL;
+> +	devm_hwrng_unregister(&pdev->dev, &priv->rng);
+> +	pm_runtime_disable(&pdev->dev);
+> +	pm_runtime_set_suspended(&pdev->dev);
 > +
-> +       regmap_read(pdata->regmap, TSENSOR_STAT0, &tval);
-> +       *temp =
-> +          amlogic_thermal_code_to_millicelsius(pdata,
-> +                                               tval & TSENSOR_READ_TEMP_MASK);
-> +
-> +       return 0;
+> +	return 0;
 > +}
 > +
-> +static const struct thermal_zone_of_device_ops amlogic_thermal_ops = {
-> +       .get_temp       = amlogic_thermal_get_temp,
+> +#ifdef CONFIG_PM
+> +static int npcm_rng_runtime_suspend(struct device *dev)
+> +{
+> +	struct npcm_rng *priv = dev_get_drvdata(dev);
+> +
+> +	npcm_rng_cleanup(&priv->rng);
+> +
+> +	return 0;
+> +}
+> +
+> +static int npcm_rng_runtime_resume(struct device *dev)
+> +{
+> +	struct npcm_rng *priv = dev_get_drvdata(dev);
+> +
+> +	return npcm_rng_init(&priv->rng);
+> +}
+> +#endif
+> +
+> +static const struct dev_pm_ops npcm_rng_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(npcm_rng_runtime_suspend,
+> +			   npcm_rng_runtime_resume, NULL)
+> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> +				pm_runtime_force_resume)
 > +};
 > +
-> +static const struct regmap_config amlogic_thermal_regmap_config_g12a = {
-> +       .reg_bits = 8,
-> +       .val_bits = 32,
-> +       .reg_stride = 4,
-> +       .max_register = TSENSOR_STAT9,
+> +static const struct of_device_id rng_dt_id[] = {
+> +	{ .compatible = "nuvoton,npcm750-rng",  },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, rng_dt_id);
+> +
+> +static struct platform_driver npcm_rng_driver = {
+> +	.driver = {
+> +		.name		= "npcm-rng",
+> +		.pm		= &npcm_rng_pm_ops,
+> +		.of_match_table = of_match_ptr(rng_dt_id),
+> +	},
+> +	.probe		= npcm_rng_probe,
+> +	.remove		= npcm_rng_remove,
 > +};
 > +
-> +static const struct amlogic_thermal_soc_calib_data amlogic_thermal_g12a = {
-> +       .A = 9411,
-> +       .B = 3159,
-> +       .m = 424,
-> +       .n = 324,
-> +};
+> +module_platform_driver(npcm_rng_driver);
 > +
-> +static const struct amlogic_thermal_data amlogic_thermal_g12a_cpu_param = {
-> +       .u_efuse_off = 0x128,
-> +       .calibration_parameters = &amlogic_thermal_g12a,
-> +       .regmap_config = &amlogic_thermal_regmap_config_g12a,
-> +};
-> +
-> +static const struct amlogic_thermal_data amlogic_thermal_g12a_ddr_param = {
-> +       .u_efuse_off = 0xf0,
-> +       .calibration_parameters = &amlogic_thermal_g12a,
-> +       .regmap_config = &amlogic_thermal_regmap_config_g12a,
-> +};
-> +
-> +static const struct of_device_id of_amlogic_thermal_match[] = {
-> +       {
-> +               .compatible = "amlogic,g12a-ddr-thermal",
-> +               .data = &amlogic_thermal_g12a_ddr_param,
-> +       },
-> +       {
-> +               .compatible = "amlogic,g12a-cpu-thermal",
-> +               .data = &amlogic_thermal_g12a_cpu_param,
-> +       },
-> +       { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, of_amlogic_thermal_match);
-> +
-> +static int amlogic_thermal_probe(struct platform_device *pdev)
-> +{
-> +       struct amlogic_thermal *pdata;
-> +       struct device *dev = &pdev->dev;
-> +       struct resource *res;
-> +       void __iomem *base;
-> +       int ret;
-> +
-> +       pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> +       if (!pdata)
-> +               return -ENOMEM;
-> +
-> +       pdata->data = of_device_get_match_data(dev);
-> +       pdata->pdev = pdev;
-> +       platform_set_drvdata(pdev, pdata);
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-
-Use devm_platform_ioremap_resource instead.
-
-> +       base = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(base)) {
-> +               dev_err(dev, "failed to get io address\n");
-> +               return PTR_ERR(base);
-> +       }
-> +
-> +       pdata->regmap = devm_regmap_init_mmio(dev, base,
-> +                                             pdata->data->regmap_config);
-> +       if (IS_ERR(pdata->regmap))
-> +               return PTR_ERR(pdata->regmap);
-> +
-> +       pdata->clk = devm_clk_get(dev, NULL);
-> +       if (IS_ERR(pdata->clk)) {
-> +               if (PTR_ERR(pdata->clk) != -EPROBE_DEFER)
-> +                       dev_err(dev, "failed to get clock\n");
-> +               return PTR_ERR(pdata->clk);
-> +       }
-> +
-> +       pdata->sec_ao_map = syscon_regmap_lookup_by_phandle
-> +               (pdev->dev.of_node, "amlogic,ao-secure");
-> +       if (IS_ERR(pdata->sec_ao_map)) {
-> +               dev_err(dev, "syscon regmap lookup failed.\n");
-> +               return PTR_ERR(pdata->sec_ao_map);
-> +       }
-> +
-> +       pdata->tzd = devm_thermal_zone_of_sensor_register(&pdev->dev,
-> +                                                         0,
-> +                                                         pdata,
-> +                                                         &amlogic_thermal_ops);
-> +       if (IS_ERR(pdata->tzd)) {
-> +               ret = PTR_ERR(pdata->tzd);
-> +               dev_err(dev, "Failed to register tsensor: %d\n", ret);
-> +               return PTR_ERR(pdata->tzd);
-
-return ret;
-
-> +       }
-> +
-> +       ret = amlogic_thermal_initialize(pdata);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = amlogic_thermal_enable(pdata);
-> +
-> +       return ret;
-> +}
-> +
-> +static int amlogic_thermal_remove(struct platform_device *pdev)
-> +{
-> +       struct amlogic_thermal *data = platform_get_drvdata(pdev);
-> +
-> +       return amlogic_thermal_disable(data);
-> +}
-> +
-> +static int __maybe_unused amlogic_thermal_suspend(struct device *dev)
-> +{
-> +       struct amlogic_thermal *data = dev_get_drvdata(dev);
-> +
-> +       return amlogic_thermal_disable(data);
-> +}
-> +
-> +static int __maybe_unused amlogic_thermal_resume(struct device *dev)
-> +{
-> +       struct amlogic_thermal *data = dev_get_drvdata(dev);
-> +
-> +       return amlogic_thermal_enable(data);
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(amlogic_thermal_pm_ops,
-> +                        amlogic_thermal_suspend, amlogic_thermal_resume);
-> +
-> +static struct platform_driver amlogic_thermal_driver = {
-> +       .driver = {
-> +               .name           = "amlogic_thermal",
-> +               .pm             = &amlogic_thermal_pm_ops,
-> +               .of_match_table = of_amlogic_thermal_match,
-> +       },
-> +       .probe  = amlogic_thermal_probe,
-> +       .remove = amlogic_thermal_remove,
-> +};
-> +
-> +module_platform_driver(amlogic_thermal_driver);
-> +
-> +MODULE_AUTHOR("Guillaume La Roque <glaroque@baylibre.com>");
-> +MODULE_DESCRIPTION("Amlogic thermal driver");
+> +MODULE_DESCRIPTION("Nuvoton NPCM Random Number Generator Driver");
+> +MODULE_AUTHOR("Tomer Maimon <tomer.maimon@nuvoton.com>");
 > +MODULE_LICENSE("GPL v2");
-> --
-> 2.17.1
->
+> -- 
+> 2.18.0
+> 
