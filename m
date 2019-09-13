@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 4/6] dt-bindings: Document brcm,int-fwd-mask property for bcm7038-l1-intc
-Date: Fri, 13 Sep 2019 12:10:24 -0700
-Message-ID: <20190913191026.8801-5-f.fainelli@gmail.com>
+Subject: [PATCH 6/6] fixup! irqchip/irq-bcm7038-l1: Add PM support
+Date: Fri, 13 Sep 2019 12:10:26 -0700
+Message-ID: <20190913191026.8801-7-f.fainelli@gmail.com>
 References: <20190913191026.8801-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190913191026.8801-1-f.fainelli@gmail.com>
@@ -12,29 +12,22 @@ Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de
         ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Indicate that the brcm,int-fwd-mask property is optional and can be
-optionaly set on platforms which require to leave specific interrupts
-untouched from Linux and retain the firmware configuration.
-
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- .../bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt    | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/irqchip/irq-bcm7038-l1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
-index 4eb043270f5b..31d31af408c5 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
-@@ -36,6 +36,10 @@ Optional properties:
- - brcm,irq-can-wake: If present, this means the L1 controller can be used as a
-   wakeup source for system suspend/resume.
- 
-+- brcm,int-fwd-mask: if present, a bit mask to indicate which interrupts
-+  have already been configured by the firmware and should be left untouched.
-+  This should have one 32-bit word per status/set/clear/mask group.
-+
- If multiple reg ranges and interrupt-parent entries are present on an SMP
- system, the driver will allow IRQ SMP affinity to be set up through the
- /proc/irq/ interface.  In the simplest possible configuration, only one
+diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+index 5e8f0fbc5f20..811a34201dd4 100644
+--- a/drivers/irqchip/irq-bcm7038-l1.c
++++ b/drivers/irqchip/irq-bcm7038-l1.c
+@@ -397,7 +397,7 @@ static struct irq_chip bcm7038_l1_irq_chip = {
+ #ifdef CONFIG_SMP
+ 	.irq_cpu_offline	= bcm7038_l1_cpu_offline,
+ #endif
+-#if CONFIG_PM_SLEEP
++#ifdef CONFIG_PM_SLEEP
+ 	.irq_set_wake		= bcm7038_l1_set_wake,
+ #endif
+ };
 -- 
 2.17.1
