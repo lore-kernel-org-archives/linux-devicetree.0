@@ -1,146 +1,92 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: memory-controllers: Convert Samsung Exynos
- SROM bindings to json-schema
-Date: Fri, 13 Sep 2019 15:36:14 +0100
-Message-ID: <5d7ba95e.1c69fb81.bba41.66c2@mx.google.com>
-References: <20190907144442.16788-1-krzk@kernel.org>
+Subject: Re: [RFC 2/2] dt-bindings: mmc: sdhci-msm: Add Bus BW vote supported
+ strings
+Date: Fri, 13 Sep 2019 15:36:11 +0100
+Message-ID: <5d7ba95c.1c69fb81.edf8e.6556@mx.google.com>
+References: <1567774037-2344-1-git-send-email-ppvk@codeaurora.org>
+ <1567774037-2344-3-git-send-email-ppvk@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190907144442.16788-1-krzk@kernel.org>
+In-Reply-To: <1567774037-2344-3-git-send-email-ppvk@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pradeep P V K <ppvk@codeaurora.org>
+Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, asutoshd@codeaurora.org, vbadigan@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, rampraka@codeaurora.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 04:44:42PM +0200, Krzysztof Kozlowski wrote:
-> Convert Samsung Exynos SROM controller bindings to DT schema format
-> using json-schema.
+On Fri, Sep 06, 2019 at 06:17:17PM +0530, Pradeep P V K wrote:
+> Add Bus bandwidth voting supported strings for qcom-sdhci controller.
+
+What is bus bandwidth voting?
+
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
 > ---
->  .../memory-controllers/exynos-srom.txt        |  79 ----------
->  .../memory-controllers/exynos-srom.yaml       | 136 ++++++++++++++++++
->  2 files changed, 136 insertions(+), 79 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos-srom.txt
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos-srom.yaml
+>  .../devicetree/bindings/mmc/sdhci-msm.txt          | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> index da4edb1..8255d92 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> @@ -39,6 +39,25 @@ Required properties:
+>  	"cal"	- reference clock for RCLK delay calibration (optional)
+>  	"sleep"	- sleep clock for RCLK delay calibration (optional)
+>  
+> +Optional Properties:
+> +* Following bus parameters are required for bus bw voting:
+> +- interconnects: Pairs of phandles and interconnect provider specifier
+> +		 to denote the edge source and destination ports of
+> +		 the interconnect path. Please refer to
+> +		 Documentation/devicetree/bindings/interconnect/
+> +		 for more details.
+> +- interconnect-names: List of interconnect path name strings sorted in the same
+> +		order as the interconnects property. Consumers drivers will use
+> +		interconnect-names to match interconnect paths with interconnect
+> +		specifiers. Please refer to Documentation/devicetree/bindings/
+> +		interconnect/ for more details.
 
+How many? What are the strings?
 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos-srom.yaml b/Documentation/devicetree/bindings/memory-controllers/exynos-srom.yaml
-> new file mode 100644
-> index 000000000000..9573bcfd68bf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos-srom.yaml
-> @@ -0,0 +1,136 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/memory-controllers/exynos-srom.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung Exynos SoC SROM Controller driver
-> +
-> +maintainers:
-> +  - Krzysztof Kozlowski <krzk@kernel.org>
-> +
-> +description: |+
-> +  The SROM controller can be used to attach external peripherals. In this case
-> +  extra properties, describing the bus behind it, should be specified.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: samsung,exynos4210-srom
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    const: 2
-> +
-> +  "#size-cells":
-> +    const: 1
-> +
-> +  ranges:
-> +    description: |
-> +      Reflects the memory layout with four integer values per bank. Format:
-> +      <bank-number> 0 <parent address of bank> <size>
-> +
-> +patternProperties:
-> +  "^.*@[0-9]+,[0-9]+$":
+> +- qcom,msm-bus,name: string describing the bus path
+> +- qcom,msm-bus,num-cases: number of configurations in which sdhc can operate in
+> +- qcom,msm-bus,num-paths: number of paths to vote for
+> +- qcom,msm-bus,vectors-KBps: Takes a tuple <ib ab>, <ib ab> (2 tuples for 2
 
-How many chip selects? Can be a single digit?
+ib and ab are what? Didn't we just add interconnect bindings for 
+expressing bandwidth?
 
-Also, these should be hex values.
+> +				num-paths) The number of these entries *must*
+> +				be same as num-cases.
 
-> +    type: object
-> +    description:
-> +      The actual device nodes should be added as subnodes to the SROMc node.
-> +      These subnodes, in addition to regular device specification, should
-> +      contain the following properties, describing configuration
-> +      of the relevant SROM bank.
-> +
-> +    properties:
-> +      reg:
-> +        description:
-> +          Bank number, base address (relative to start of the bank) and size
-> +          of the memory mapped for the device. Note that base address will be
-> +          typically 0 as this is the start of the bank.
-> +        maxItems: 1
-> +
-> +      reg-io-width:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32
-> +          - enum: [1, 2]
-> +        description:
-> +          Data width in bytes (1 or 2). If omitted, default of 1 is used.
-> +
-> +      samsung,srom-page-mode:
-> +        description:
-> +          If page mode is set, 4 data page mode will be configured,
-> +          else normal (1 data) page mode will be set.
-> +        type: boolean
-> +
-> +      samsung,srom-timing:
-> +        allOf:
-> +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +          - items:
-> +              minItems: 6
-> +              maxItems: 6
-> +        description: |
-> +          Array of 6 integers, specifying bank timings in the following order:
-> +          Tacp, Tcah, Tcoh, Tacc, Tcos, Tacs.
-> +          Each value is specified in cycles and has the following meaning
-> +          and valid range:
-> +          Tacp: Page mode access cycle at Page mode (0 - 15)
-> +          Tcah: Address holding time after CSn (0 - 15)
-> +          Tcoh: Chip selection hold on OEn (0 - 15)
-> +          Tacc: Access cycle (0 - 31, the actual time is N + 1)
-> +          Tcos: Chip selection set-up before OEn (0 - 15)
-> +          Tacs: Address set-up before CSn (0 - 15)
-> +
-> +    required:
-> +      - reg
-> +      - samsung,srom-timing
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +allOf:
-> +  - if:
-> +      anyOf:
-> +        - required: [ "#address-cells" ]
-> +        - required: [ ranges ]
-> +        - required: [ "#size-cells" ]
-> +    then:
-> +      required:
-> +        - "#address-cells"
-> +        - ranges
-> +        - "#size-cells"
+Are all these properties SDHCI specific or can we expect to get these 
+for *all* the QCom blocks?
 
-I don't think this is necessary as the core schema should take care of 
-it. This can also be expressed using 'dependencies'. 
-
-Rob
+> +
+>  Example:
+>  
+>  	sdhc_1: sdhci@f9824900 {
+> @@ -56,6 +75,19 @@ Example:
+>  
+>  		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
+>  		clock-names = "core", "iface";
+> +		interconnects = <&qnoc 50 &qnoc 512>,
+> +				<&qnoc 1 &qnoc 544>;
+> +		interconnect-names = "sdhc-ddr","cpu-sdhc";
+> +		qcom,msm-bus,name = "sdhc1";
+> +		qcom,msm-bus,num-cases = <3>;
+> +		qcom,msm-bus,num-paths = <2>;
+> +		qcom,msm-bus,vectors-KBps =
+> +		/* No Vote */
+> +		<0 0>, <0 0>,
+> +		/* 50 MB/s */
+> +		<130718 200000>, <133320 133320>,
+> +		/* 200 MB/s */
+> +		<1338562 4096000>, <1338562 4096000>;
+>  	};
+>  
+>  	sdhc_2: sdhci@f98a4900 {
+> -- 
+> 1.9.1
+> 
