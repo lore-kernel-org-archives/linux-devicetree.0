@@ -1,116 +1,165 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v6 4/7] PCI: Add quirk to disable MSI-X support for
- Amazon's Annapurna Labs Root Port
-Date: Fri, 13 Sep 2019 12:28:41 +0100
-Message-ID: <20190913112841.GA8153@e121166-lin.cambridge.arm.com>
-References: <20190912130042.14597-1-jonnyc@amazon.com>
- <20190912130042.14597-5-jonnyc@amazon.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: [PATCH v6 0/3] coresight: etm4x: save/restore ETMv4 context across
+ CPU low power states
+Date: Fri, 13 Sep 2019 12:53:09 +0100
+Message-ID: <20190913115312.12943-1-andrew.murray@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190912130042.14597-5-jonnyc@amazon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Chocron <jonnyc@amazon.com>, bhelgaas@google.com
-Cc: jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, mark.rutland@arm.com, andrew.murray@arm.com, dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com, barakw@amazon.com, talel@amazon.com, hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Al.Grant@arm.com, coresight@lists.linaro.org, Leo Yan <leo.yan@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, Mike Leach <mike.leach@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 04:00:42PM +0300, Jonathan Chocron wrote:
-> The Root Port (identified by [1c36:0031]) doesn't support MSI-X. On some
-> platforms it is configured to not advertise the capability at all, while
-> on others it (mistakenly) does. This causes a panic during
-> initialization by the pcieport driver, since it tries to configure the
-> MSI-X capability. Specifically, when trying to access the MSI-X table
-> a "non-existing addr" exception occurs.
-> 
-> Example stacktrace snippet:
-> 
->   SError Interrupt on CPU2, code 0xbf000000 -- SError
->   CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-14847-ge76f1d4a1828-dirty #33
->   Hardware name: Annapurna Labs Alpine V3 EVP (DT)
->   pstate: 80000005 (Nzcv daif -PAN -UAO)
->   pc : __pci_enable_msix_range+0x4e4/0x608
->   lr : __pci_enable_msix_range+0x498/0x608
->   sp : ffffff80117db700
->   x29: ffffff80117db700 x28: 0000000000000001
->   x27: 0000000000000001 x26: 0000000000000000
->   x25: ffffffd3e9d8c0b0 x24: 0000000000000000
->   x23: 0000000000000000 x22: 0000000000000000
->   x21: 0000000000000001 x20: 0000000000000000
->   x19: ffffffd3e9d8c000 x18: ffffffffffffffff
->   x17: 0000000000000000 x16: 0000000000000000
->   x15: ffffff80116496c8 x14: ffffffd3e9844503
->   x13: ffffffd3e9844502 x12: 0000000000000038
->   x11: ffffffffffffff00 x10: 0000000000000040
->   x9 : ffffff801165e270 x8 : ffffff801165e268
->   x7 : 0000000000000002 x6 : 00000000000000b2
->   x5 : ffffffd3e9d8c2c0 x4 : 0000000000000000
->   x3 : 0000000000000000 x2 : 0000000000000000
->   x1 : 0000000000000000 x0 : ffffffd3e9844680
->   Kernel panic - not syncing: Asynchronous SError Interrupt
->   CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc1-Jonny-14847-ge76f1d4a1828-dirty #33
->   Hardware name: Annapurna Labs Alpine V3 EVP (DT)
->   Call trace:
->    dump_backtrace+0x0/0x140
->    show_stack+0x14/0x20
->    dump_stack+0xa8/0xcc
->    panic+0x140/0x334
->    nmi_panic+0x6c/0x70
->    arm64_serror_panic+0x74/0x88
->    __pte_error+0x0/0x28
->    el1_error+0x84/0xf8
->    __pci_enable_msix_range+0x4e4/0x608
->    pci_alloc_irq_vectors_affinity+0xdc/0x150
->    pcie_port_device_register+0x2b8/0x4e0
->    pcie_portdrv_probe+0x34/0xf0
-> 
-> Notice that this quirk also disables MSI (which may work, but hasn't
-> been tested nor has a current use case), since currently there is no
-> standard way to disable only MSI-X.
-> 
-> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-> ---
->  drivers/pci/quirks.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+Some hardware will ignore bit TRCPDCR.PU which is used to signal
+to hardware that power should not be removed from the trace unit.
+Let's mitigate against this by conditionally saving and restoring
+the trace unit state when the CPU enters low power states.
 
-I will prepare this series for upstream but I would like to have Bjorn's
-ACK before pushing it out since you updated this patch following his
-review.
+This patchset introduces a firmware property named
+'arm,coresight-loses-context-with-cpu' - when this is present the
+hardware state will be conditionally saved and restored.
 
-Thanks,
-Lorenzo
+A module parameter 'pm_save_enable' is also introduced which can
+be configured to override the firmware property. This parameter
+also provides a means to save/restore state when external agents
+are used.
 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 2e983f2a0ee9..c1077e806291 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -2977,6 +2977,24 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0x10a1,
->  			quirk_msi_intx_disable_qca_bug);
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, 0xe091,
->  			quirk_msi_intx_disable_qca_bug);
-> +
-> +/*
-> + * Amazon's Annapurna Labs 1c36:0031 Root Ports don't support MSI-X, so it
-> + * should be disabled on platforms where the device (mistakenly) advertises it.
-> + *
-> + * Notice that this quirk also disables MSI (which may work, but hasn't been
-> + * tested), since currently there is no standard way to disable only MSI-X.
-> + *
-> + * The 0031 device id is reused for other non Root Port device types,
-> + * therefore the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
-> + */
-> +static void quirk_al_msi_disable(struct pci_dev *dev)
-> +{
-> +	dev->no_msi = 1;
-> +	pci_warn(dev, "Disabling MSI/MSI-X\n");
-> +}
-> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
-> +			      PCI_CLASS_BRIDGE_PCI, 8, quirk_al_msi_disable);
->  #endif /* CONFIG_PCI_MSI */
->  
->  /*
-> -- 
-> 2.17.1
-> 
+The hardware state is only ever saved and restored when a coresight
+session is present.
+
+Changes since v5:
+
+ - Fix indentation, comment style and add implicit fallthrough comment
+
+ - Use NOTIFY_* for all return values in pm notifier callback
+
+ - Rename PARAM_PM_SAVE_EXTERNAL to PARAM_PM_SAVE_ALWAYS
+
+ - Update module parameter description
+
+ - Add comment to explain why we keep power on
+
+ - Rebased onto coresight/next c165d8947bc4 ("eeprom: Deprecate the legacy eeprom driver")
+
+Changes since v4:
+
+ - Rename fwnode property to "arm,coresight-loses-context-with-cpu" as this
+   doesn't imply a software policy
+
+ - Update the device tree binding document to indicate that this property
+   isn't specific to ETMs - also provide a longer description more generic
+   description with an example of why it might be used
+
+ - Set the module parameter at probe based on the value determined by firmware.
+   The user can still override the firmware via the kernel command line, this
+   has the effect of hiding the PARAM_PM_SAVE_FIRMWARE option from the user -
+   though we still internally use it to allow us to determine if the user has
+   set the parameter.
+
+ - Remove unnecessary call to smp_processor_id
+
+ - Move etm4_needs_save_restore helper to coresight.c and rename
+
+ - Rebased onto coresight/next a04d8683f577 ("...ity of etm4_os_unlock comment")
+
+ - Drop Reviewed-By from Suzuki on "coresight: etm4x: save/restore st..." patch
+   as content changed too much
+
+ - Add module option to that keeps clocks/power enabled at probe and saves
+   state when external or self-hosted is in use.
+
+Changes since v3:
+
+ - Only save/restore when self-hosted is being used and detect this
+   without relying on the coresight registers (which may not be
+   available)
+
+ - Only allocate memory for etmv4_save_state at probe time when
+   configuration indicates it may be used
+
+ - Set pm_save_enable param to 0444 such that it is static after
+   boot
+
+ - Save/restore TRCPDCR
+
+ - Add missing comments to struct etm4_drvdata documentation
+
+ - Rebased onto coresight/next (8f1f9857)
+
+Changes since v2:
+
+ - Move the PM notifier block from drvdata to file static
+
+ - Add section names to document references
+
+ - Add additional information to commit messages
+
+ - Remove trcdvcvr and trcdvcmr from saved state and add a comment to
+   describe why
+
+ - Ensure TRCPDCR_PU is set after restore and add a comment to explain
+   why we bother toggling TRCPDCR_PU on save/restore
+
+ - Reword the pm_save_enable options and add comments
+
+ - Miscellaneous style changes
+
+ - Move device tree binding documentation to its own patch
+
+Changes since v1:
+
+ - Rebased onto coresight/next
+
+ - Correcly pass bit number rather than BIT macro to coresight_timeout
+
+ - Abort saving state if a timeout occurs
+
+ - Fix completely broken pm_notify handling and unregister handler on error
+
+ - Use state_needs_restore to ensure state is restored only once
+
+ - Add module parameter description to existing boot_enable parameter
+   and use module_param instead of module_param_named
+
+ - Add firmware bindings for coresight-needs-save-restore
+
+ - Rename 'disable_pm_save' to 'pm_save_enable' which allows for
+   disabled, enabled or firmware
+
+ - Update comment on etm4_os_lock, it incorrectly indicated that
+   the code unlocks the trace registers
+
+ - Add comments to explain use of OS lock during save/restore
+
+ - Fix incorrect error description whilst waiting for PM stable
+
+ - Add WARN_ON_ONCE when cpu isn't as expected during save/restore
+
+ - Various updates to commit messages
+
+
+Andrew Murray (3):
+  coresight: etm4x: save/restore state across CPU low power states
+  dt-bindings: arm: coresight: Add support for
+    coresight-loses-context-with-cpu
+  coresight: etm4x: save/restore state for external agents
+
+ .../devicetree/bindings/arm/coresight.txt     |   9 +
+ drivers/hwtracing/coresight/coresight-etm4x.c | 351 +++++++++++++++++-
+ drivers/hwtracing/coresight/coresight-etm4x.h |  64 ++++
+ drivers/hwtracing/coresight/coresight.c       |   8 +-
+ include/linux/coresight.h                     |  13 +
+ 5 files changed, 443 insertions(+), 2 deletions(-)
+
+-- 
+2.21.0
