@@ -1,98 +1,134 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: ddr: Add bindings for Samsung LPDDR3
- memories
-Date: Fri, 13 Sep 2019 15:36:10 +0100
-Message-ID: <5d7ba95a.1c69fb81.bfd81.77ba@mx.google.com>
-References: <CGME20190906101407eucas1p15eb0df53374b27497b4793eab24becf6@eucas1p1.samsung.com>
- <20190906101344.3535-1-l.luba@partner.samsung.com>
- <20190906101344.3535-4-l.luba@partner.samsung.com>
- <CAJKOXPfoYxTVvt_bMQOs1=BkHzUuW_WvL9zn0jTGS6LLpv=fhQ@mail.gmail.com>
- <52963d0d-cf48-7085-5581-a94c6e15e0bd@partner.samsung.com>
- <CAJKOXPfEcURr_bLRaAdjWT3cb7mcuKTk8rmn7OTO=xtvjvJ=jQ@mail.gmail.com>
+From: Piotr Sroka <piotrs@cadence.com>
+Subject: Re: [v5 2/2] dt-bindings: mtd: Add Cadence NAND controller driver
+Date: Fri, 13 Sep 2019 15:41:22 +0100
+Message-ID: <20190913144121.GB11985@global.cadence.com>
+References: <20190725145804.8886-1-piotrs@cadence.com>
+ <20190725145955.13951-1-piotrs@cadence.com>
+ <20190830114638.33dc4eb2@xps13>
+ <20190911150422.GA4973@global.cadence.com>
+ <20190913144903.0323a23a@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAJKOXPfEcURr_bLRaAdjWT3cb7mcuKTk8rmn7OTO=xtvjvJ=jQ@mail.gmail.com>
+In-Reply-To: <20190913144903.0323a23a@xps13>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, willy.mh.wolff.ml@gmail.com
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <bbrezillon@kernel.org>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, BrianNorris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Kazuhiro Kasai <kasai.kazuhiro@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 01:50:26PM +0200, Krzysztof Kozlowski wrote:
-> On Fri, 6 Sep 2019 at 13:39, Lukasz Luba <l.luba@partner.samsung.com> wrote:
-> >
-> > Hi Krzysztof,
-> >
-> > On 9/6/19 12:56 PM, Krzysztof Kozlowski wrote:
-> > > On Fri, 6 Sep 2019 at 12:14, Lukasz Luba <l.luba@partner.samsung.com> wrote:
-> > >>
-> > >> Add description of bindings for Samsung k3qf2f20db LPDDR3 memory.
-> > >> Minor fixes in the old documentation.
-> > >>
-> > >> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> > >> ---
-> > >>   .../devicetree/bindings/ddr/lpddr3.txt        | 29 +++++++++++++++++--
-> > >>   1 file changed, 27 insertions(+), 2 deletions(-)
-> > >>
-> > >> diff --git a/Documentation/devicetree/bindings/ddr/lpddr3.txt b/Documentation/devicetree/bindings/ddr/lpddr3.txt
-> > >> index 3b2485b84b3f..de0905239767 100644
-> > >> --- a/Documentation/devicetree/bindings/ddr/lpddr3.txt
-> > >> +++ b/Documentation/devicetree/bindings/ddr/lpddr3.txt
-> > >> @@ -40,10 +40,34 @@ Child nodes:
-> > >>     a given speed-bin. Please see Documentation/devicetree/
-> > >>     bindings/ddr/lpddr3-timings.txt for more information on "lpddr3-timings"
-> > >>
-> > >> +Samsung K3QF2F20DB LPDDR3 memory
-> > >> +------------------------------------------------------------
-> > >> +
-> > >> +This binding uses the LPDDR3 binding (described above)
-> > >> +
-> > >> +Required properties:
-> > >> +- compatible:  Should be:
-> > >> +               "samsung,K3QF2F20DB"
-> > >> +               followed by "jedec,lpddr3"
-> > >> +- density  : <u32> representing density in Mb (Mega bits)
-> > >> +- io-width : <u32> representing bus width. Possible value 32
-> > >> +- #address-cells: Must be set to 1
-> > >> +- #size-cells: Must be set to 0
-> > >
-> > > If you decided to repeat all properties again, then it deserves its
-> > > own bindings file. However I though about simpler solution - just
-> > > document compatible. Exactly the same as AT24 or AT25 EEPROM bindings.
-> > > There is not much benefit from copying all these properties.
-> > OK, I see. I will add only 'compatible' and skip the rest then.
-> > So the lpddr3.txt file will get this addition:
-> >
-> > +Samsung K3QF2F20DB LPDDR3 memory
-> > +------------------------------------------------------------
-> > +
-> > +This binding uses the LPDDR3 binding (described above)
-> > +
-> > +Required properties:
-> > +- compatible:  Should be:
-> > +               "samsung,K3QF2F20DB"
-> > +               followed by "jedec,lpddr3"
-> > +
-> > +Optional properties:
-> > +
-> > +The optional properties are the same as in the LPDDR3 generic bindings and
-> > +values should be taken from the data-sheet. Detailed bindings are described
-> > +above.
-> > +
-> > +Child nodes:
-> > +
-> > +Detailed bindings are described in LPDDR3 generic bindings described above.
-> > +
-> >
-> > Is it OK?
-> 
-> To me it is still a lot of text just for one compatible and I can
-> image more of such entries for other memories... However I do not mind
-> and anyway, YAML will simplify it. If you're in doubt, wait for Rob's
-> reply as this is his part.
+The 09/13/2019 14:49, Miquel Raynal wrote:
+>EXTERNAL MAIL
+>
+>
+>Hi Piotr,
+>
+>Piotr Sroka <piotrs@cadence.com> wrote on Wed, 11 Sep 2019 16:04:24
+>+0100:
+>
+>> Hi Miquel
+>>
+>> The 08/30/2019 11:46, Miquel Raynal wrote:
+>> >EXTERNAL MAIL
+>> >
+>> >
+>> >Hi Piotr,
+>> >
+>> >Piotr Sroka <piotrs@cadence.com> wrote on Thu, 25 Jul 2019 15:59:55
+>> >+0100:
+>> >
+>> >> Document the bindings used by Cadence NAND controller driver
+>> >>
+>> >> Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+>> >> ---
+>> >> Changes for v5:
+>> >> - replace "_" by "-" in all properties
+>> >> - change compatible name from cdns,hpnfc to cdns,hp-nfc
+>> >> Changes for v4:
+>> >> - add commit message
+>> >> Changes for v3:
+>> >> - add unit suffix for board_delay
+>> >> - move child description to proper place
+>> >> - remove prefix cadence_ for reg and sdma fields
+>> >> Changes for v2:
+>> >> - remove chip dependends parameters from dts bindings
+>> >> - add names for register ranges in dts bindings
+>> >> - add generic bindings to describe NAND chip representation
+>> >> ---
+>> >>  .../bindings/mtd/cadence-nand-controller.txt       | 50 ++++++++++++++++++++++
+>> >>  1 file changed, 50 insertions(+)
+>> >>  create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+>> >> new file mode 100644
+>> >> index 000000000000..423547a3f993
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+>> >> @@ -0,0 +1,50 @@
+>> >> +* Cadence NAND controller
+>> >> +
+>> >> +Required properties:
+>> >> +  - compatible : "cdns,hp-nfc"
+>> >> +  - reg : Contains two entries, each of which is a tuple consisting of a
+>> >> +	  physical address and length. The first entry is the address and
+>> >> +	  length of the controller register set. The second entry is the
+>> >> +	  address and length of the Slave DMA data port.
+>> >> +  - reg-names: should contain "reg" and "sdma"
+>> >> +  - interrupts : The interrupt number.
+>> >> +  - clocks: phandle of the controller core clock (nf_clk).
+>> >> +
+>> >> +Optional properties:
+>> >> +  - dmas: shall reference DMA channel associated to the NAND controller
+>> >> +  - cdns,board-delay-ps : Estimated Board delay. The value includes the total
+>> >> +    round trip delay for the signals and is used for deciding on values
+>> >> +    associated with data read capture. The example formula for SDR mode is
+>> >> +    the following:
+>> >> +    board delay = RE#PAD delay + PCB trace to device + PCB trace from device
+>> >> +    + DQ PAD delay
+>> >> +
+>> >> +Child nodes represent the available NAND chips.
+>> >> +
+>> >> +Required properties of NAND chips:
+>> >> +  - reg: shall contain the native Chip Select ids from 0 to max supported by
+>> >> +    the cadence nand flash controller
+>> >> +
+>> >> +
+>> >> +See Documentation/devicetree/bindings/mtd/nand.txt for more details on
+>> >> +generic bindings.
+>> >> +
+>> >> +Example:
+>> >> +
+>> >> +nand_controller: nand-controller @60000000 {
+>> >> +	  compatible = "cdns,hp-nfc";
+>> >> +	  reg = <0x60000000 0x10000>, <0x80000000 0x10000>;
+>> >> +	  reg-names = "reg", "sdma";
+>> >> +	  clocks = <&nf_clk>;
+>> >> +	  cdns,board-delay-ps = <4830>;
+>> >
+>> >Are you sure you want to export this to the user? Not sure it is easily
+>> >understandable and tunable... I'm not against but I would have troubles
+>> >tuning it myself, unless using the documented value. Maybe you should
+>> >explain more how to derive it?
+>> I need to export this parameter somehow. The default value may not be
+>> valid for other platforms. This value depends on platform, and may be different on different SoCs. So I think the DTS is the best place to put such configuration
+>> parameter.
+>
+>What about a different compatible if it depends on the SoC?
+I considered it but this dealy consists of PADs delay and PCB trace
+delay. PAD delays are SoC dependent. Unfortunatelly PCB delay not.
+What can I do I can split it on two delays, PAD_delay and trace_delay.
+Then handle PAD_delay by compatible and trace_delay by dts. But I am not
+sure whether it changes anythig. Still a delay need to passed by dts.
+>
+>This way you can retrieve a different driver data structure and avoid
+>the pain for the user.
 
-We can't have multiple (top-level) schema in one file, so better to add 
-in where the existing compatible strings are.
+>
+>Thanks,
+>Miquèl
 
-Rob
+
+Thanks
+Piotr
+  
