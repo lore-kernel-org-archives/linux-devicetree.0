@@ -1,164 +1,163 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: [PATCH v6 3/3] coresight: etm4x: save/restore state for external
- agents
-Date: Fri, 13 Sep 2019 12:53:12 +0100
-Message-ID: <20190913115312.12943-4-andrew.murray@arm.com>
-References: <20190913115312.12943-1-andrew.murray@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190913115312.12943-1-andrew.murray@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Al.Grant@arm.com, coresight@lists.linaro.org, Leo Yan <leo.yan@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, Mike Leach <mike.leach@linaro.org>
+From: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+Subject: [PATCH V2 01/12] remoteproc: qcom: Add PRNG proxy clock
+Date: Fri, 13 Sep 2019 17:26:00 +0530
+Message-ID: <1568375771-22933-2-git-send-email-gokulsri@codeaurora.org>
+References: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org, david.brown@linaro.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com, robh+dt@kernel.org, sricharan@codeaurora.org, nprakash@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Some hardware will ignore bit TRCPDCR.PU which is used to signal
-to hardware that power should not be removed from the trace unit. Much like
-self-hosted debug, we should also save/restore the trace unit state when
-it is in use by external agents.
+PRNG clock is needed by the secure PIL, support for the same
+is added in subsequent patches.
 
-We wish to avoid saving the hardware state when coresight isn't in use
-to reduce PM latency - However as external trace/debug is designed to be
-unintrusive to the CPU, the only way of determining that an external agent is
-present is to read the claim tags (TRCCLAIMCLR). Unfortunately this register
-needs power and clocking - something it won't have when coresight isn't in use.
-We also don't want to temporarily enable it due to the latency and PM context.
-
-Let's compromise by adding a module parameter that will keep the trace unit
-powered and clocked, thus allowing us to only save/restore state when external
-trace (or self-hosted) is in use. Though please note that this doesn't allow
-for tracing from boot on hardware that needs save/restore as the CPU may idle
-prior to the ETMv4 driver starting and adding PM hooks to save/restore.
-
-Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
 ---
- drivers/hwtracing/coresight/coresight-etm4x.c | 39 +++++++++++++++++--
- drivers/hwtracing/coresight/coresight.c       |  2 +-
- include/linux/coresight.h                     |  7 ++++
- 3 files changed, 43 insertions(+), 5 deletions(-)
+ drivers/remoteproc/qcom_q6v5_wcss.c | 63 +++++++++++++++++++++++++++----------
+ 1 file changed, 46 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 4cecabdd051b..3cb9ba9a6ddd 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -42,11 +42,12 @@ MODULE_PARM_DESC(boot_enable, "Enable tracing on boot");
- #define PARAM_PM_SAVE_FIRMWARE	  0 /* save self-hosted state as per firmware */
- #define PARAM_PM_SAVE_NEVER	  1 /* never save any state */
- #define PARAM_PM_SAVE_SELF_HOSTED 2 /* save self-hosted state only */
-+#define PARAM_PM_SAVE_ALWAYS	  3 /* save all state (keeps power on) */
+diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
+index 0821c94..dc2bae4 100644
+--- a/drivers/remoteproc/qcom_q6v5_wcss.c
++++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+@@ -88,18 +88,6 @@ enum {
+ 	WCSS_QCS404,
+ };
  
- static int pm_save_enable = PARAM_PM_SAVE_FIRMWARE;
- module_param(pm_save_enable, int, 0444);
- MODULE_PARM_DESC(pm_save_enable,
--	"Save/restore state on power down: 1 = never, 2 = self-hosted");
-+	"Save/restore state on power down: 1 = never, 2 = self-hosted, 3 = self-hosted/external (keeps power on)");
+-struct wcss_data {
+-	const char *firmware_name;
+-	int crash_reason_smem;
+-	u8 version;
+-	bool aon_reset_required;
+-	const char *ssr_name;
+-	const char *sysmon_name;
+-	int ssctl_id;
+-	const struct rproc_ops *ops;
+-	bool requires_force_stop;
+-};
+-
+ struct q6v5_wcss {
+ 	struct device *dev;
  
- /* The number of ETMv4 currently registered */
- static int etm4_count;
-@@ -1331,6 +1332,23 @@ static void etm4_cpu_restore(struct etmv4_drvdata *drvdata)
- 	CS_LOCK(drvdata->base);
- }
+@@ -124,6 +112,7 @@ struct q6v5_wcss {
+ 	struct clk *qdsp6ss_xo_cbcr;
+ 	struct clk *qdsp6ss_core_gfmux;
+ 	struct clk *wcss_bcr_cbcr;
++	struct clk *prng_clk;
+ 	struct regulator *cx_supply;
  
-+static bool etm4_coresight_in_use(struct etmv4_drvdata *drvdata)
-+{
-+	/* Self-hosted session in progress? */
-+	if (local_read(&drvdata->mode))
-+		return true;
+ 	struct qcom_rproc_glink glink_subdev;
+@@ -146,6 +135,20 @@ struct q6v5_wcss {
+ 	bool requires_force_stop;
+ };
+ 
++struct wcss_data {
++	int (*init_clock)(struct q6v5_wcss *wcss);
++	int (*init_regulator)(struct q6v5_wcss *wcss);
++	const char *firmware_name;
++	int crash_reason_smem;
++	u8 version;
++	bool aon_reset_required;
++	const char *ssr_name;
++	const char *sysmon_name;
++	int ssctl_id;
++	const struct rproc_ops *ops;
++	bool requires_force_stop;
++};
 +
-+	/*
-+	 * External agents can be detected through claim tags however we
-+	 * only read these tags if the trace unit is powered.
-+	 */
-+	if (drvdata->csdev && pm_runtime_active(drvdata->csdev->dev.parent))
-+		if (coresight_is_claimed_any(drvdata->base))
-+			return true;
-+
-+	return false;
-+}
-+
- static int etm4_cpu_pm_notify(struct notifier_block *nb, unsigned long cmd,
- 			      void *v)
+ static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
  {
-@@ -1350,8 +1368,8 @@ static int etm4_cpu_pm_notify(struct notifier_block *nb, unsigned long cmd,
+ 	int ret;
+@@ -235,6 +238,12 @@ static int q6v5_wcss_start(struct rproc *rproc)
+ 	struct q6v5_wcss *wcss = rproc->priv;
+ 	int ret;
  
- 	switch (cmd) {
- 	case CPU_PM_ENTER:
--		/* save the state if self-hosted coresight is in use */
--		if (local_read(&drvdata->mode))
-+		/* Save the state if coresight is in use */
-+		if (etm4_coresight_in_use(drvdata))
- 			if (etm4_cpu_save(drvdata))
- 				return NOTIFY_BAD;
- 		break;
-@@ -1488,7 +1506,20 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
- 		goto err_arch_supported;
++	ret = clk_prepare_enable(wcss->prng_clk);
++	if (ret) {
++		dev_err(wcss->dev, "prng clock enable failed\n");
++		return ret;
++	}
++
+ 	qcom_q6v5_prepare(&wcss->q6v5);
+ 
+ 	/* Release Q6 and WCSS reset */
+@@ -703,6 +712,7 @@ static int q6v5_wcss_stop(struct rproc *rproc)
+ 			return ret;
  	}
  
--	pm_runtime_put(&adev->dev);
-+	/*
-+	 * We may wish to save the hardware state when coresight is in use so
-+	 * that we can recover from lost context during PM events. However as
-+	 * external trace/debug is designed to be unintrusive to the CPU, the
-+	 * only way of determining that an external agent is present is to read
-+	 * the claim tags (TRCCLAIMCLR). Unfortunately this register needs power
-+	 * and clocking - something it won't have when coresight isn't in use.
-+	 * Therefore we provide a module parameter that keeps the trace unit
-+	 * powered and clocked, thus allowing us to only save/restore state
-+	 * when external trace (or self-hosted) is in use.
-+	 */
-+	if (pm_save_enable != PARAM_PM_SAVE_ALWAYS)
-+		pm_runtime_put(&adev->dev);
-+
- 	dev_info(&drvdata->csdev->dev, "CPU%d: ETM v%d.%d initialized\n",
- 		 drvdata->cpu, drvdata->arch >> 4, drvdata->arch & 0xf);
++	clk_disable_unprepare(wcss->prng_clk);
+ 	qcom_q6v5_unprepare(&wcss->q6v5);
  
-diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-index c2a48a4e73ea..66ea69b0470b 100644
---- a/drivers/hwtracing/coresight/coresight.c
-+++ b/drivers/hwtracing/coresight/coresight.c
-@@ -140,7 +140,7 @@ static inline bool coresight_is_claimed_self_hosted(void __iomem *base)
- 	return coresight_read_claim_tags(base) == CORESIGHT_CLAIM_SELF_HOSTED;
+ 	return 0;
+@@ -858,7 +868,21 @@ static int q6v5_alloc_memory_region(struct q6v5_wcss *wcss)
+ 	return 0;
  }
  
--static inline bool coresight_is_claimed_any(void __iomem *base)
-+bool coresight_is_claimed_any(void __iomem *base)
- {
- 	return coresight_read_claim_tags(base) != 0;
- }
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 44e552de419c..65bfd2cb0283 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -286,6 +286,8 @@ extern void coresight_disclaim_device_unlocked(void __iomem *base);
- extern char *coresight_alloc_device_name(struct coresight_dev_list *devs,
- 					 struct device *dev);
- 
-+extern bool coresight_is_claimed_any(void __iomem *base);
-+
- extern bool coresight_loses_context_with_cpu(struct device *dev);
- #else
- static inline struct coresight_device *
-@@ -309,6 +311,11 @@ static inline int coresight_claim_device(void __iomem *base)
- static inline void coresight_disclaim_device(void __iomem *base) {}
- static inline void coresight_disclaim_device_unlocked(void __iomem *base) {}
- 
-+static inline bool coresight_is_claimed_any(void __iomem *base)
+-static int q6v5_wcss_init_clock(struct q6v5_wcss *wcss)
++static int ipq8074_init_clock(struct q6v5_wcss *wcss)
 +{
-+	return false;
++	int ret;
++
++	wcss->prng_clk = devm_clk_get(wcss->dev, "prng");
++	if (IS_ERR(wcss->prng_clk)) {
++		ret = PTR_ERR(wcss->prng_clk);
++		if (ret != -EPROBE_DEFER)
++			dev_err(wcss->dev, "Failed to get prng clock\n");
++		return ret;
++	}
++	return 0;
 +}
 +
- static inline bool coresight_loses_context_with_cpu(struct device *dev)
++static int qcs404_init_clock(struct q6v5_wcss *wcss)
  {
- 	return false;
+ 	int ret;
+ 
+@@ -973,7 +997,7 @@ static int q6v5_wcss_init_clock(struct q6v5_wcss *wcss)
+ 	return 0;
+ }
+ 
+-static int q6v5_wcss_init_regulator(struct q6v5_wcss *wcss)
++static int qcs404_init_regulator(struct q6v5_wcss *wcss)
+ {
+ 	wcss->cx_supply = devm_regulator_get(wcss->dev, "cx");
+ 	if (IS_ERR(wcss->cx_supply))
+@@ -1017,12 +1041,14 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto free_rproc;
+ 
+-	if (wcss->version == WCSS_QCS404) {
+-		ret = q6v5_wcss_init_clock(wcss);
++	if (desc->init_clock) {
++		ret = desc->init_clock(wcss);
+ 		if (ret)
+ 			goto free_rproc;
++	}
+ 
+-		ret = q6v5_wcss_init_regulator(wcss);
++	if (desc->init_regulator) {
++		ret = desc->init_regulator(wcss);
+ 		if (ret)
+ 			goto free_rproc;
+ 	}
+@@ -1067,6 +1093,7 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct wcss_data wcss_ipq8074_res_init = {
++	.init_clock = ipq8074_init_clock,
+ 	.firmware_name = "IPQ8074/q6_fw.mdt",
+ 	.crash_reason_smem = 421,
+ 	.aon_reset_required = true,
+@@ -1075,6 +1102,8 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
+ };
+ 
+ static const struct wcss_data wcss_qcs404_res_init = {
++	.init_clock = qcs404_init_clock,
++	.init_regulator = qcs404_init_regulator,
+ 	.crash_reason_smem = 421,
+ 	.firmware_name = "wcnss.mdt",
+ 	.version = WCSS_QCS404,
 -- 
-2.21.0
+1.9.1
