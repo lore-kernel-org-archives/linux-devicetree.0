@@ -1,141 +1,94 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [RFC 1/3] dt-bindings: dma: Add documentation for DMA domains
-Date: Fri, 13 Sep 2019 16:06:54 +0530
-Message-ID: <20190913103654.GE4392@vkoul-mobl>
-References: <20190906141816.24095-1-peter.ujfalusi@ti.com>
- <20190906141816.24095-2-peter.ujfalusi@ti.com>
- <961d30ea-d707-1120-7ecf-f51c11c41891@ti.com>
- <20190908121058.GL2672@vkoul-mobl>
- <a452cd06-79ca-424d-b259-c8d60fc59772@ti.com>
- <20190912170312.GD4392@vkoul-mobl>
- <1992ccdd-78b3-f248-3d4d-76b5e6d4cb37@ti.com>
+From: Amit Kucheria <amit.kucheria@verdurent.com>
+Subject: Re: [PATCH v4 1/6] dt-bindings: thermal: Add DT bindings
+ documentation for Amlogic Thermal
+Date: Fri, 13 Sep 2019 16:11:41 +0530
+Message-ID: <CAHLCerONjCa4Az7+d_0Qn8X36oOxXEMps++5MnBRdH5QE+aS=g@mail.gmail.com>
+References: <20190821222421.30242-1-glaroque@baylibre.com> <20190821222421.30242-2-glaroque@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1992ccdd-78b3-f248-3d4d-76b5e6d4cb37@ti.com>
+In-Reply-To: <20190821222421.30242-2-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: robh+dt@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
+To: Guillaume La Roque <glaroque@baylibre.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 13-09-19, 10:21, Peter Ujfalusi wrote:
-> 
-> 
-> On 12/09/2019 20.03, Vinod Koul wrote:
-> > On 09-09-19, 09:30, Peter Ujfalusi wrote:
-> > 
-> >>>> or domain-dma-controller?
-> >>>
-> >>> I feel dma-domain-controller sounds fine as we are defining domains for
-> >>> dmaengine. Another thought which comes here is that why not extend this to
-> >>> slave as well and define dma-domain-controller for them as use that for
-> >>> filtering, that is what we really need along with slave id in case a
-> >>> specific channel is to be used by a peripheral
-> >>>
-> >>> Thoughts..?
-> >>
-> >> I have thought about this, we should be able to drop the phandle to the
-> >> dma controller from the slave binding just fine.
-> >>
-> >> However we have the dma routers for the slave channels and there is no
-> >> clear way to handle them.
-> >> They are not needed for non slave channels as there is no trigger to
-> >> route. In DRA7 for example we have an event router for EDMA and another
-> >> one for sDMA. If a slave device is to be serviced by EDMA, the EDMA
-> >> event router needs to be specified, for sDMA clients should use the sDMA
-> >> event router.
-> > 
-> > So you have dma, xbar and client? And you need to use a specfic xbar,
-> > did i get that right?
-> 
-> At the end yes.
-
-:)
-
-> EDMA have dedicated crossbar
-> sDMA have dedicated crossbar
-
-So the domain mapping should point to crossbar.
-
-> Slave devices must use the crossbar to request channel from the DMA
-> controllers. Non slave request are directed to the controllers directly
-> (no DT binding).
-
-The clients for these are different right, if so slave clients will
-point to domain xbar and non slave will point to domain controller (to
-make everyone use domains). Non domain get any channel ... (fallback as
-well)
-
-
-> At minimum we would need a new property for DMA routers.
-> dma-domain-router perhaps which is pointing to the xbar.
-
-Precisely!
-
-> A slave channel request would first look for dma-domain-router, if it is
-> there, the request goes via that.
-> If not then look for dma-domain-controller and use it for the request.
-> The DMA binding can drop the phandle to the xbar/dma.
-> Request for not slave channel would only look for dma-domain-controller.
+On Thu, Aug 22, 2019 at 3:54 AM Guillaume La Roque
+<glaroque@baylibre.com> wrote:
 >
-> 
-> But...
-> 
-> - If we have one dedicated memcpy DMA and one for slave usage.
-> In top we declare dma-domain-controller = <&m2m_dma>;
-> 
-> Then you have  a slave client somewhere
-> client1: peripheral@42 {
-> 	dma-domain-controller = <&slave_dma>;
-> 	dmas = <6>, <7>;
-> 	dma-names = "tx", "rx";
-> };
-> 
-> This is fine I guess. But what would we do if the driver for client1
-> needs additional memcpy channel? By the definition of the binding the
-> non slave channel should be taken from the closest dma-domain-controller
-> which is not what we want. We want the channel from m2m_dma.
+> Adding the devicetree binding documentation for the Amlogic temperature
+> sensor found in the Amlogic Meson G12 SoCs.
+> the G12A  and G12B SoCs are supported.
 
-I would not envision same controller needs both memcpy or slave
-channels. If so, that should be represented as something like dma-names
-and represent two sets of dmas one for domain1 and another for domain2.
+Merge the two sentences into a single one?
 
-I would generalize it and not call it memcpy/slave but just domains and
-have a controller use multiple domains (if we have a super controller
-which can do that :D)
-
-client1: peripheral@42 {
-        dma-domain-names = "memcpy", "slave";
-        dma-domains = <&mem_dma>, <&slave_dma>;
-        ...
-};
-
-
-> 
-> And no, we can not start looking for the dma-domain-controller starting
-> from the root as in most cases the dma-domain-controller closer to the
-> client is what we really want and not the globally best controller.
-> 
-> - How to handle the transition?
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/thermal/amlogic,thermal.yaml     | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
 >
-> If neither dma-domain-controller/router is found, assume that the first
-> argument in the binding is a phandle to the dma/router?
-> We need to carry the support for what we have today for a long time. The
-> kernel must boot with old DT blob.
-> 
-> - Will it make things cleaner? Atm it is pretty easy to see which
-> controller/router is used for which device.
-> 
-> - Also to note that the EDMA and sDMA bindings are different, so we can
-> not just swap dma-domain-controller/router underneath, we also need to
-> modify the client's dmas line as well.
-> 
-> - Péter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
--- 
-~Vinod
+> diff --git a/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+> new file mode 100644
+> index 000000000000..f761681e4c0d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+> @@ -0,0 +1,54 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/amlogic,thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic Thermal
+> +
+> +maintainers:
+> +  - Guillaume La Roque <glaroque@baylibre.com>
+> +
+> +description: Binding for Amlogic Thermal
+> +
+> +properties:
+> +  compatible:
+> +      items:
+> +        - enum:
+> +            - amlogic,g12a-cpu-thermal
+> +            - amlogic,g12a-ddr-thermal
+> +        - const: amlogic,g12a-thermal
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  amlogic,ao-secure:
+> +    description: phandle to the ao-secure syscon
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> +
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - amlogic,ao-secure
+> +
+> +examples:
+> +  - |
+> +        cpu_temp: temperature-sensor@ff634800 {
+> +                compatible = "amlogic,g12a-cpu-thermal",
+> +                             "amlogic,g12a-thermal";
+> +                reg = <0xff634800 0x50>;
+> +                interrupts = <0x0 0x24 0x0>;
+> +                clocks = <&clk 164>;
+> +                #thermal-sensor-cells = <0>;
+> +                amlogic,ao-secure = <&sec_AO>;
+> +        };
+> +...
+> --
+> 2.17.1
+>
