@@ -1,21 +1,22 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 08/12] dt-bindings: mailbox: qom: Add ipq8074 APPS compatible
-Date: Fri, 13 Sep 2019 16:48:57 -0500
-Message-ID: <5d7c0ec9.1c69fb81.a7d47.78c1@mx.google.com>
-References: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org> <1568375771-22933-9-git-send-email-gokulsri@codeaurora.org>
+Subject: Re: [PATCH V2 10/12] dt-bindings: firmware: qcom: Add compatible for IPQ8074 SoC
+Date: Fri, 13 Sep 2019 16:48:58 -0500
+Message-ID: <5d7c0ecb.1c69fb81.74810.a358@mx.google.com>
+References: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org> <1568375771-22933-11-git-send-email-gokulsri@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568375771-22933-9-git-send-email-gokulsri@codeaurora.org>
+In-Reply-To: <1568375771-22933-11-git-send-email-gokulsri@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Cc: gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org, david.brown@linaro.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com, robh+dt@kernel.org, sricharan@codeaurora.org, nprakash@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Sep 2019 17:26:07 +0530, Gokul Sriram Palanisamy wrote:
-> Add mailbox support required in IPQ8074 SoCs.
+On Fri, 13 Sep 2019 17:26:09 +0530, Gokul Sriram Palanisamy wrote:
+> Add compatible for IPQ8074 support.
+> This does not need clocks for scm calls.
 > 
 > Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
 > Signed-off-by: Sricharan R <sricharan@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt | 1 +
+>  Documentation/devicetree/bindings/firmware/qcom,scm.txt | 1 +
 >  1 file changed, 1 insertion(+)
 > 
 
