@@ -1,142 +1,120 @@
-From: Gilles Doffe <gilles.doffe@savoirfairelinux.com>
-Subject: Re: [PATCH v2] arm: dts: imx6qdl: add gpio expander pca9535
-Date: Fri, 13 Sep 2019 04:38:39 -0400 (EDT)
-Message-ID: <415531537.7768114.1568363919015.JavaMail.zimbra@savoirfairelinux.com>
-References: <20190719104615.5329-1-gilles.doffe@savoirfairelinux.com> <20190722075341.e4ve45rneusiogtk@pengutronix.de> <978100557.7721358.1568282514403.JavaMail.zimbra@savoirfairelinux.com> <20190912101240.ml5jmdei5rvzesap@pengutronix.de>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] dt-bindings: arm: renesas: Convert 'renesas,prr' to
+ json-schema
+Date: Fri, 13 Sep 2019 10:59:16 +0200
+Message-ID: <20190913085915.jlsvhgmkmunsjxsy@verge.net.au>
+References: <20190908120528.9392-1-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190912101240.ml5jmdei5rvzesap@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, mark rutland <mark.rutland@arm.com>, festevam <festevam@gmail.com>, s hauer <s.hauer@pengutronix.de>, rennes <rennes@savoirfairelinux.com>, robh+dt <robh+dt@kernel.org>, linux-imx <linux-imx@nxp.com>, kernel <kernel@pengutronix.de>, =?utf-8?Q?J=C3=A9rome?= Oufella <jerome.oufella@savoirfairelinux.com>, shawnguo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190908120528.9392-1-horms+renesas@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yoshihiro Kaneko <ykaneko0929@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marco,
+On Sun, Sep 08, 2019 at 01:05:28PM +0100, Simon Horman wrote:
+> Convert Renesas Product Register bindings documentation to json-schema.
+> 
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-Ack for all, v3 incoming.
+Apologies Geert,
 
-Thank you,
-Gilles
+this patch was supposed to be addressed to you rather than myself.
 
------ Le 12 Sep 19, à 12:12, Marco Felsch m.felsch@pengutronix.de a écrit :
-
-> Hi Gilles,
+> ---
+> Based on v5.3-rc1
+> Tested using:
+>   make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/renesas,prr.yaml
 > 
-> On 19-09-12 06:01, Gilles Doffe wrote:
->> Hi Marco,
->> 
->> Thanks for your reply and sorry about the delay.
+> v2
+> * Use simple enum for compat values
+> * Drop "" from compat values
+> * Only supply 'maxItems' property to 'reg'
+> ---
+>  .../devicetree/bindings/arm/renesas,prr.txt        | 20 -------------
+>  .../devicetree/bindings/arm/renesas,prr.yaml       | 35 ++++++++++++++++++++++
+>  2 files changed, 35 insertions(+), 20 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/renesas,prr.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/renesas,prr.yaml
 > 
-> No worries ;)
+> diff --git a/Documentation/devicetree/bindings/arm/renesas,prr.txt b/Documentation/devicetree/bindings/arm/renesas,prr.txt
+> deleted file mode 100644
+> index 08e482e953ca..000000000000
+> --- a/Documentation/devicetree/bindings/arm/renesas,prr.txt
+> +++ /dev/null
+> @@ -1,20 +0,0 @@
+> -Renesas Product Register
+> -
+> -Most Renesas ARM SoCs have a Product Register or Boundary Scan ID Register that
+> -allows to retrieve SoC product and revision information.  If present, a device
+> -node for this register should be added.
+> -
+> -Required properties:
+> -  - compatible: Must be one of:
+> -    "renesas,prr"
+> -    "renesas,bsid"
+> -  - reg: Base address and length of the register block.
+> -
+> -
+> -Examples
+> ---------
+> -
+> -	prr: chipid@ff000044 {
+> -		compatible = "renesas,prr";
+> -		reg = <0 0xff000044 0 4>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/arm/renesas,prr.yaml b/Documentation/devicetree/bindings/arm/renesas,prr.yaml
+> new file mode 100644
+> index 000000000000..7f8d17f33983
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/renesas,prr.yaml
+> @@ -0,0 +1,35 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/renesas,prr.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas Product Register
+> +
+> +maintainers:
+> +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> +  - Magnus Damm <magnus.damm@gmail.com>
+> +
+> +description: |
+> +  Most Renesas ARM SoCs have a Product Register or Boundary Scan ID
+> +  Register that allows to retrieve SoC product and revision information.
+> +  If present, a device node for this register should be added.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - renesas,prr
+> +      - renesas,bsid
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    prr: chipid@ff000044 {
+> +        compatible = "renesas,prr";
+> +        reg = <0 0xff000044 0 4>;
+> +    };
+> -- 
+> 2.11.0
 > 
->> ----- Le 22 Juil 19, à 9:53, Marco Felsch m.felsch@pengutronix.de a écrit :
->> 
->> > Hi Gilles,
->> > 
->> > can you adapt the patch title, I assumed that the base dtsi is adding a
->> > gpio-expander which makes no sense.
->> 
->> My first intent was to add the gpio-expander pca9535 into the imx6q-rex-pro.dts
->> and in a future imx6qp-rex-ultra.dts
->> However I noticed that the sgtl5000 was already in the dtsi.
->> It is maybe due to the fact that like the pca9535, the sgtl5000 is present on
->> the baseboard not on the SOM.
->> Thus I guess that baseboard stuff common to all rex SOM should be in
->> imx6qdl-rex.dtsi and not in the dts.
->> Does-it seem correct to you ?
-> 
-> Yes this is correct what Shawn and I mean is that you should adapt the
-> commit title. Shawn already give you an example.
-> 
->> > 
->> > On 19-07-19 12:46, Gilles DOFFE wrote:
->> >> The pca9535 gpio expander is present on the Rex baseboard, but missing
->> >> from the dtsi.
->> >> 
->> >> Add the new gpio controller and the associated interrupt line
->> >> MX6QDL_PAD_NANDF_CS3__GPIO6_IO16.
->> >> 
->> >> Signed-off-by: Gilles DOFFE <gilles.doffe@savoirfairelinux.com>
->> >> ---
->> > 
->> > Having a changelog would be nice too.
->> > 
->> >>  arch/arm/boot/dts/imx6qdl-rex.dtsi | 19 +++++++++++++++++++
->> >>  1 file changed, 19 insertions(+)
->> >> 
->> >> diff --git a/arch/arm/boot/dts/imx6qdl-rex.dtsi
->> >> b/arch/arm/boot/dts/imx6qdl-rex.dtsi
->> >> index 97f1659144ea..b517efb22fcb 100644
->> >> --- a/arch/arm/boot/dts/imx6qdl-rex.dtsi
->> >> +++ b/arch/arm/boot/dts/imx6qdl-rex.dtsi
->> >> @@ -136,6 +136,19 @@
->> >>  		compatible = "atmel,24c02";
->> >>  		reg = <0x57>;
->> >>  	};
->> >> +
->> >> +	pca9535: gpio8@27 {
->> >> +		compatible = "nxp,pca9535";
->> >> +		reg = <0x27>;
->> > 
->> > The i2c devices are orderd by their i2c-addresses starting from the
->> > lowest.
->> >
->> 
->> Ack.
->> 
->> >> +		gpio-controller;
->> >> +		#gpio-cells = <2>;
->> >> +		pinctrl-names = "default";
->> >> +		pinctrl-0 = <&pinctrl_pca9535>;
->> >> +		interrupt-parent = <&gpio6>;
->> >> +		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
->> >> +		interrupt-controller;
->> >> +		#interrupt-cells = <2>;
-> 
-> As you pointed out above this device isn't available on the
-> imx6dl-rex-basic? You should add: 'status = "disabled";' if this is the
-> case.
-> 
-> Regards,
->  Marco
-> 
->> >> +	};
->> >>  };
->> >>  
->> >>  &i2c3 {
->> >> @@ -237,6 +250,12 @@
->> >>  			>;
->> >>  		};
->> >>  
->> >> +		pinctrl_pca9535: pca9535 {
->> >> +			fsl,pins = <
->> >> +				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x00017059
->> > 
->> > The pinmux below don't use the leading zero's if you are the first I
->> > would drop that.
->> > 
->> > Regards,
->> >  Marco
->> >
->> 
->> Ack.
->> 
->> Regards,
->> Gilles
->> 
-> 
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
--- 
-Gilles DOFFE 
-Senior Product Engineering Consultant | Rennes, Fr 
-Bureau 
-[ tel:+33972468980 | (+33) 9 72 46 89 80 ] p. : 601 
-Cellulaire 
-[ tel:+33660025866 | (+33) 6 60 02 58 66 ]
