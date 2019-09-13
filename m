@@ -1,53 +1,69 @@
-From: Gareth Williams <gareth.williams.jx@renesas.com>
-Subject: [PATCH 1/3] dt: spi: Add Renesas RZ/N1 binding documentation
-Date: Fri, 13 Sep 2019 13:11:58 +0100
-Message-ID: <1568376720-7402-2-git-send-email-gareth.williams.jx@renesas.com>
-References: <1568376720-7402-1-git-send-email-gareth.williams.jx@renesas.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568376720-7402-1-git-send-email-gareth.williams.jx@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gareth Williams <gareth.williams.jx@renesas.com>
+From: Oliver Graute <oliver.graute@gmail.com>
+Subject: Re: [PATCH V3 00/15] arm64: dts: imx8: architecture improvement and
+ adding imx8qm support
+Date: Fri, 13 Sep 2019 14:16:08 +0200
+Message-ID: <20190913121608.GD16292@optiplex>
+References: <1568302252-28066-1-git-send-email-aisheng.dong@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1568302252-28066-1-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dong Aisheng <aisheng.dong@nxp.com>
+Cc: devicetree@vger.kernel.org, dongas86@gmail.com, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Phil Edworthy <phil.edworthy@renesas.com>
+On 12/09/19, Dong Aisheng wrote:
+> IMX SCU based platforms (e.g. MX8QM/MX8QXP) are comprised of a number of SS
+> (Subsystems), those SS may be shared between different SoCs while most of them
+> can be reused like Devices Resources, Clocks, Power domains and etc.
+> 
+> This patch series aims to improve the MX8 architecture to comply with the HW
+> design to save a lot of duplicated codes and benefits us a better
+> maintainability and scalability in the future.
+> 
+> This patch series depends on another clk new binding series:
+> https://patchwork.kernel.org/cover/11046287/
 
-The Renesas RZ/N1 SPI Controller is based on the Synopsys DW SSI, but has
-additional registers for software CS control and DMA. This patch does not
-address the changes required for DMA support, it simply adds the compatible
-string. The CS functionality is not very useful and also not needed as
-Linux can use gpios for the CS signals.
+Thx for your update of this patch series. I'am running into the issue
+that my linux next-20190904 unfortunately is not booting with it on my
+imx8QM board. Kernel is just stuck during boot see below.
 
-Add a compatible string to handle any unforeseen issues that may arise, and
-pave the way for DMA support.
+I applied your v5 of your clock binding patches series and applied this
+series in v3. Your former two patch series worked well with next-20190716.
 
-Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
-Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
----
-Note: All the other manufacturers detail their compatible strings in
-snps,dw-apb-ssi.txt. I think it makes sense for rzn1 to be in it's own file
-due to the changes made to the peripheral for DMA support.
----
- Documentation/devicetree/bindings/spi/renesas,rzn1-spi.txt | 11 +++++++++++
- 1 file changed, 11 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/renesas,rzn1-spi.txt
+The last messages from the kernel are:
 
-diff --git a/Documentation/devicetree/bindings/spi/renesas,rzn1-spi.txt b/Documentation/devicetree/bindings/spi/renesas,rzn1-spi.txt
-new file mode 100644
-index 0000000..fb1a672
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/renesas,rzn1-spi.txt
-@@ -0,0 +1,11 @@
-+Renesas RZ/N1 SPI Controller
-+
-+This controller is based on the Synopsys DW Synchronous Serial Interface and
-+inherits all properties defined in snps,dw-apb-ssi.txt except for the
-+compatible property.
-+
-+Required properties:
-+- compatible : The device specific string followed by the generic RZ/N1 string.
-+   Therefore it must be one of:
-+   "renesas,r9a06g032-spi", "renesas,rzn1-spi"
-+   "renesas,r9a06g033-spi", "renesas,rzn1-spi"
--- 
-2.7.4
+[    1.019208] imx-scu scu: mbox_request_channel_byname() could not locate channel named "gip3"
+[    1.027316] imx-scu scu: failed to request mbox chan gip3, ret -22
+[    1.033480] imx-scu scu: failed to enable general irq channel: -22
+[    1.039646] imx-scu scu: NXP i.MX SCU Initialized
+[    1.047414] a35_clk: failed to get clock rate -22
+[    1.058682]  lcd0-pwm0: failed to power up resource 188 ret -22
+[    1.064314] imx-scu-clk: probe of pwm_clk failed with error -22
+[    1.070538]  lcd0: failed to power up resource 187 ret -22
+[    1.075690] imx-scu-clk: probe of lcd_clk failed with error -22
+[    1.085965] mipi_csi0_core_clk: failed to attached the power domain -2
+[    1.092359] mipi_csi0_esc_clk: failed to attached the power domain -2
+[    1.098777] mipi_csi0_i2c0_clk: failed to attached the power domain -2
+[    1.105278] mipi_csi0_pwm0_clk: failed to attached the power domain -2
+[    1.115744] imx8qm-pinctrl scu:pinctrl: initialized IMX pinctrl driver
+[    1.123923] gpio-mxc 5d080000.gpio: IRQ index 1 not found
+[    1.130276] gpio-mxc 5d090000.gpio: IRQ index 1 not found
+
+I see similar messages also with your older working patches, only the
+last two lines are new errors.
+
+Best regards,
+
+Oliver
