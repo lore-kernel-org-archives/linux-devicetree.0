@@ -1,121 +1,93 @@
-From: Maciej Falkowski <m.falkowski@samsung.com>
-Subject: [PATCH] dt-bindings: gpu: Convert Samsung Image Scaler to dt-schema
-Date: Fri, 13 Sep 2019 11:41:23 +0200
-Message-ID: <20190913094123.23169-1-m.falkowski@samsung.com>
-References: <CGME20190913094136eucas1p1fd424b5f5a6f0a97b31af54e55fe28c1@eucas1p1.samsung.com>
-Content-Type: text/plain; charset="utf-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, krzk@kernel.org, a.hajda@samsung.com, m.szyprowski@samsung.com, m.falkowski@samsung.com
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: mediatek: add spi support for mt6765 IC" to the spi tree
+Date: Fri, 13 Sep 2019 10:42:21 +0100 (BST)
+Message-ID: <20190913094221.9D215D01164@fitzroy.sirena.org.uk>
+References: <1568195731-3239-3-git-send-email-luhua.xu@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1568195731-3239-3-git-send-email-luhua.xu@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "luhua.xu" <luhua.xu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Convert Samsung Image Scaler to newer dt-schema format.
+The patch
 
-Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+   spi: mediatek: add spi support for mt6765 IC
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 2c231e0ab638519759c9a7203ecced0aa457c6c3 Mon Sep 17 00:00:00 2001
+From: "luhua.xu" <luhua.xu@mediatek.com>
+Date: Wed, 11 Sep 2019 05:55:30 -0400
+Subject: [PATCH] spi: mediatek: add spi support for mt6765 IC
+
+This patch add spi support for mt6765 IC.
+
+Signed-off-by: luhua.xu <luhua.xu@mediatek.com>
+Link: https://lore.kernel.org/r/1568195731-3239-3-git-send-email-luhua.xu@mediatek.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../bindings/gpu/samsung-scaler.txt           | 27 ---------
- .../bindings/gpu/samsung-scaler.yaml          | 57 +++++++++++++++++++
- 2 files changed, 57 insertions(+), 27 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+ drivers/spi/spi-mt65xx.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt b/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
-deleted file mode 100644
-index 9c3d98105dfd..000000000000
---- a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--* Samsung Exynos Image Scaler
--
--Required properties:
--  - compatible : value should be one of the following:
--	(a) "samsung,exynos5420-scaler" for Scaler IP in Exynos5420
--	(b) "samsung,exynos5433-scaler" for Scaler IP in Exynos5433
--
--  - reg : Physical base address of the IP registers and length of memory
--	  mapped region.
--
--  - interrupts : Interrupt specifier for scaler interrupt, according to format
--		 specific to interrupt parent.
--
--  - clocks : Clock specifier for scaler clock, according to generic clock
--	     bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
--
--  - clock-names : Names of clocks. For exynos scaler, it should be "mscl"
--		  on 5420 and "pclk", "aclk" and "aclk_xiu" on 5433.
--
--Example:
--	scaler@12800000 {
--		compatible = "samsung,exynos5420-scaler";
--		reg = <0x12800000 0x1294>;
--		interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&clock CLK_MSCL0>;
--		clock-names = "mscl";
--	};
-diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
-new file mode 100644
-index 000000000000..ee2caab22977
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
-@@ -0,0 +1,57 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpu/samsung-scaler.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 1f5f716016a2..c70911e2a6e1 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -102,6 +102,12 @@ static const struct mtk_spi_compatible mt2712_compat = {
+ 	.must_tx = true,
+ };
+ 
++static const struct mtk_spi_compatible mt6765_compat = {
++	.need_pad_sel = true,
++	.must_tx = true,
++	.enhance_timing = true,
++};
 +
-+title: Samsung Exynos SoC Image Scaler
-+
-+maintainers:
-+  - Inki Dae <inki.dae@samsung.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - "samsung,exynos5420-scaler"
-+      - "samsung,exynos5433-scaler"
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 3
-+
-+  clock-names:
-+    oneOf:
-+      - items:
-+          - const: mscl
-+      - items:
-+          - const: pclk
-+          - const: aclk
-+          - const: aclk_xiu
-+    description: |
-+      For exynos scaler it should be:
-+      - "mscl" on Exynos5420
-+      - "pclk", "aclk", "aclk_xiu" on Exynos5433
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    scaler@12800000 {
-+        compatible = "samsung,exynos5420-scaler";
-+        reg = <0x12800000 0x1294>;
-+        interrupts = <0 220 4>; // IRQ_TYPE_LEVEL_HIGH
-+        clocks = <&clock 0>; // CLK_MSCL0
-+        clock-names = "mscl";
-+    };
-+
+ static const struct mtk_spi_compatible mt7622_compat = {
+ 	.must_tx = true,
+ 	.enhance_timing = true,
+@@ -137,6 +143,9 @@ static const struct of_device_id mtk_spi_of_match[] = {
+ 	{ .compatible = "mediatek,mt6589-spi",
+ 		.data = (void *)&mtk_common_compat,
+ 	},
++	{ .compatible = "mediatek,mt6765-spi",
++		.data = (void *)&mt6765_compat,
++	},
+ 	{ .compatible = "mediatek,mt7622-spi",
+ 		.data = (void *)&mt7622_compat,
+ 	},
 -- 
-2.17.1
+2.20.1
