@@ -1,69 +1,76 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: [RFC 2/2] ARM: omap3: Consolidate thermal references to common omap3
-Date: Fri, 13 Sep 2019 10:04:09 -0500
-Message-ID: <20190913150410.27391-2-aford173@gmail.com>
-References: <20190913150410.27391-1-aford173@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190913150410.27391-1-aford173@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: adam.ford@logicpd.com, nm@ti.com, hns@goldelico.com, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] arm64: dts: renesas: Add /soc dma-ranges
+Date: Fri, 13 Sep 2019 16:14:24 +0100
+Message-ID: <CAL_JsqL47dQT-P78j4Ph61fsgA45Ha0AJjDajiMk52yFj++s+g@mail.gmail.com>
+References: <20190907161634.27378-1-marek.vasut@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190907161634.27378-1-marek.vasut@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marek.vasut@gmail.com>
+Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Because the omap34xx, omap36xx and am3517 SoC's have the same
-thermal junction limits, there is no need to duplicate the entry
-multiple times.
+On Sat, Sep 7, 2019 at 5:16 PM <marek.vasut@gmail.com> wrote:
+>
+> From: Marek Vasut <marek.vasut+renesas@gmail.com>
+>
+> Add dma-ranges property into /soc node to describe the DMA capabilities
+> of the bus. This is currently needed to translate PCI DMA ranges, which
+> are limited to 32bit addresses.
 
-This patch removes the thermal references from omap36xx and
-omap34xx and pushes it into the common omap3.dtsi file with
-the added benefit of enabling the thermal info on the AM3517.
+FYI, I've started working on this problem and issues around
+dma-ranges/dma_mask. Hopefully I'll get some patches out next week.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-renesas-soc@vger.kernel.org
+> To: linux-arm-kernel@lists.infradead.org
+> ---
+> NOTE: This is needed for the following patches to work correctly:
+>       https://patchwork.ozlabs.org/patch/1144870/
+>       https://patchwork.ozlabs.org/patch/1144871/
 
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index 4043ecb38016..db9cafddbe69 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -44,6 +44,10 @@
- 		};
- 	};
- 
-+	thermal_zones: thermal-zones {
-+		#include "omap3-cpu-thermal.dtsi"
-+	};
-+
- 	pmu@54000000 {
- 		compatible = "arm,cortex-a8-pmu";
- 		reg = <0x54000000 0x800000>;
-diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
-index f572a477f74c..b80378d6e5c1 100644
---- a/arch/arm/boot/dts/omap34xx.dtsi
-+++ b/arch/arm/boot/dts/omap34xx.dtsi
-@@ -101,10 +101,6 @@
- 			};
- 		};
- 	};
--
--	thermal_zones: thermal-zones {
--		#include "omap3-cpu-thermal.dtsi"
--	};
- };
- 
- &ssi {
-diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-index 6fb23ada1f64..ff2dca63a04e 100644
---- a/arch/arm/boot/dts/omap36xx.dtsi
-+++ b/arch/arm/boot/dts/omap36xx.dtsi
-@@ -140,10 +140,6 @@
- 			};
- 		};
- 	};
--
--	thermal_zones: thermal-zones {
--		#include "omap3-cpu-thermal.dtsi"
--	};
- };
- 
- /* OMAP3630 needs dss_96m_fck for VENC */
--- 
-2.17.1
+First I'm seeing those... Well, I do have v7 from 2+ years ago...
+
+Not sure if these take into account the new dma_bus_mask, but that
+should simplify solving the issue.
+
+> ---
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi  | 1 +
+>  arch/arm64/boot/dts/renesas/r8a7796.dtsi  | 1 +
+>  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 +
+>  3 files changed, 3 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> index 95deff66eeb6..2102140a6723 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> @@ -330,6 +330,7 @@
+>                 #address-cells = <2>;
+>                 #size-cells = <2>;
+>                 ranges;
+> +               dma-ranges = <0 0x40000000 0 0x40000000 0 0xc0000000>;
+
+Is the limitation in the bus or the PCI bridge or both? The commit
+message sounds like it's the PCI bridge in which case this is wrong
+(or incomplete). 'dma-ranges' should be on the bus node where the
+restriction/translation exists. For PCI devices, that's the PCI bridge
+node. So a 32-bit only PCI bridge should have a dma-ranges size of
+4GB. If the SoC bus has more restrictions, then that should be in the
+PCI bridge parent assuming that restriction also applies to other
+devices.
+
+Rob
