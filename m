@@ -1,37 +1,60 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 9/9] sunxi_defconfig: add new crypto options
-Date: Fri, 13 Sep 2019 10:15:55 +0200
-Message-ID: <20190913081555.GA22538@Red>
-References: <20190906184551.17858-1-clabbe.montjoie@gmail.com>
- <20190906184551.17858-10-clabbe.montjoie@gmail.com>
- <20190907040353.hrz7gmqgzpfpo4xj@flea>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v1 0/2] pinctrl: Add new pinctrl/GPIO driver
+Date: Fri, 13 Sep 2019 11:18:07 +0300
+Message-ID: <20190913081807.GB27291@lahna.fi.intel.com>
+References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
+ <CACRpkdb7bPo7oH9w5OhAsOoQXx=MWjJELd5JvBt3R1sPdMjnpw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBP5A5XVQKGQEYSABW3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190907040353.hrz7gmqgzpfpo4xj@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CACRpkdb7bPo7oH9w5OhAsOoQXx=MWjJELd5JvBt3R1sPdMjnpw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rahul Tanwar <rahul.tanwar@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Andriy Shevchenko <andriy.shevchenko@intel.com>, qi-ming.wu@intel.com, yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com, Mathias Nyman <mathias.nyman@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 07, 2019 at 07:03:53AM +0300, Maxime Ripard wrote:
-> On Fri, Sep 06, 2019 at 08:45:51PM +0200, Corentin Labbe wrote:
-> > This patch adds the new allwinner crypto configs to sunxi_defconfig
+On Thu, Sep 12, 2019 at 11:11:32AM +0100, Linus Walleij wrote:
+> Hi Rahul,
+> 
+> thanks for your patches!
+> 
+> On Thu, Sep 12, 2019 at 8:59 AM Rahul Tanwar
+> <rahul.tanwar@linux.intel.com> wrote:
+> 
+> > This series is to add pinctrl & GPIO controller driver for a new SoC.
+> > Patch 1 adds pinmux & GPIO controller driver.
+> > Patch 2 adds the dt bindings document & include file.
 > >
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  arch/arm/configs/sunxi_defconfig | 2 ++
-> >  1 file changed, 2 insertions(+)
+> > Patches are against Linux 5.3-rc5 at below Git tree:
+> > git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
 > 
-> Can you also enable it in arm64's defconfig as a module?
-> 
+> OK nice, I think you need to include Mika Westerberg on this review
+> as well, because I think he likes to stay on top of all things intel
+> in pin control. (Also included two other Intel folks in Finland who usually
+> take an interest in these things.)
 
-Does you prefer adding a Kconfig "DEFAULT m if ARCH_SUNXI" which permit to not touch any defconfig ?
+Thanks Linus for looping me in.
+
+Even if this is not directly based on the stuff we have under
+drivers/pinctrl/intel/*, I have a couple of comments. I don't have this
+patch series in my inbox so I'm commenting here.
+
+Since the driver name is equilibrium I suggest you to name
+intel_pinctrl_driver and the like (probe, remove) to follow that
+convention to avoid confusing this with the Intel pinctrl drivers under
+drivers/pinctrl/intel/*.
+
+Maybe use eqbr prefix so then intel_pinctrl_driver becomes
+eqbr_pinctrl_driver and so on. Also all the structures like
+intel_pinctrl_drv_data should be changed accordingly.
+
+Ditto for:
+
+MODULE_DESCRIPTION("Intel Pinctrl Driver for LGM SoC");
+
+I think better would be:
+
+MODULE_DESCRIPTION("Pinctrl Driver for LGM SoC (Equilibrium)");
+
+Anyway you get the idea :)
