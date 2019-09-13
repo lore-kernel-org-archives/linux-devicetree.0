@@ -1,146 +1,87 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH v3 6/8] ARM: dts: omap36xx: using OPP1G needs to control
- the abb_ldo
-Date: Fri, 13 Sep 2019 16:13:49 -0500
-Message-ID: <CAHCN7x+RTSHg7jKys=Jv6Urz0PsHNTM8EnFT1dwAZOtsjxpEAw@mail.gmail.com>
-References: <cover.1568224032.git.hns@goldelico.com> <59a0f6267c75859c25665548db2e8a9c4229d3b4.1568224033.git.hns@goldelico.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: [PATCH] riscv: dts: Add DT support for SiFive FU540 PWM driver
+Date: Fri, 13 Sep 2019 14:20:53 -0700 (PDT)
+Message-ID: <mhng-c8b87e96-987e-4577-acc2-1e22c9b81b10@palmer-si-x1e>
+References: <CAJ2_jOGO-isv52rnwRusV7jtyCY_JWYWAj9opN3Zg6ZbZr-8-w@mail.gmail.com>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <59a0f6267c75859c25665548db2e8a9c4229d3b4.1568224033.git.hns@goldelico.com>
+In-Reply-To: <CAJ2_jOGO-isv52rnwRusV7jtyCY_JWYWAj9opN3Zg6ZbZr-8-w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Roger Quadros <rogerq@ti.com>, Teresa Remmet <t.remmet@phytec.de>, Linux-OMAP <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com, arm-soc <linux-arm-kernel@lists.infradead.org>
+To: yash.shah@sifive.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, bmeng.cn@gmail.com, sagar.kadam@sifive.com, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 12:47 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
+On Tue, 10 Sep 2019 02:52:07 PDT (-0700), yash.shah@sifive.com wrote:
+> Hi,
 >
-> See DM3730,DM275 data sheet (SPRS685B) footnote (6) in Table 4-19
-> which says that ABB must be switched to FBB mode when using the
-> OPP1G.
->
-> The LOD definition abb_mpu_iva already exists so that we need
-> to add plumbing for vbb-supply = <&abb_mpu_iva>
-> and define two voltage vectors for each OPP so that the abb LDO
-> is also updated by the ti-cpufreq driver.
->
-> We also must switch the ti_cpufreq_soc_data to multi_regulator.
->
-> Note: reading out the abb reglator voltage to verify that
-> it does do transitions can be done by
->
-> cat /sys/devices/platform/68000000.ocp/483072f0.regulator-abb-mpu/regulator/regulator.*/microvolts
->
-> Likewise, read the twl4030 provided VDD voltage by
->
-> cat /sys/devices/platform/68000000.ocp/48070000.i2c/i2c-0/0-0048/48070000.i2c:twl@48:regulator-vdd1/regulator/regulator.*/microvolts
->
-> Note: to check if the ABB FBB is enabled/disabled, check
-> registers
->
-> PRM_LDO_ABB_CTRL 0x483072F4 bit 3:0 1=bypass 5=FBB
-> PRM_LDO_ABB_SETUP 0x483072F0 0x00=bypass 0x11=FBB
->
-> e.g.
->
-> /dev/mem opened.
-> Memory mapped at address 0xb6fe4000.
-> Value at address 0x483072F4 (0xb6fe42f4): 0x3205
-> /dev/mem opened.
-> Memory mapped at address 0xb6f89000.
-> Value at address 0x483072F4 (0xb6f892f4): 0x3201
->
-> Note: omap34xx and am3517 have/need no comparable LDO
-> or mechanism.
->
-> Suggested-by: Adam Ford <aford173@gmail.com>
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  arch/arm/boot/dts/omap36xx.dtsi | 21 ++++++++++++++++-----
->  drivers/cpufreq/ti-cpufreq.c    |  2 +-
->  2 files changed, 17 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-> index cb5bd0969124..4bb4f534afe2 100644
-> --- a/arch/arm/boot/dts/omap36xx.dtsi
-> +++ b/arch/arm/boot/dts/omap36xx.dtsi
-> @@ -23,6 +23,7 @@
->                 cpu: cpu@0 {
->                         operating-points-v2 = <&cpu0_opp_table>;
->
-> +                       vbb-supply = <&abb_mpu_iva>;
->                         clock-latency = <300000>; /* From omap-cpufreq driver */
->                 };
->         };
-> @@ -37,9 +38,11 @@
->                         /*
->                          * we currently only select the max voltage from table
->                          * Table 4-19 of the DM3730 Data sheet (SPRS685B)
-> -                        * Format is: <target min max>
-> +                        * Format is:   cpu0-supply:    <target min max>
-> +                        *              vbb-supply:     <target min max>
->                          */
-> -                       opp-microvolt = <1012500 1012500 1012500>;
-> +                       opp-microvolt = <1012500 1012500 1012500>,
-> +                                        <1012500 1012500 1012500>;
->                         /*
->                          * first value is silicon revision bit mask
->                          * second one is "speed binned" bit mask
-> @@ -50,25 +53,33 @@
->
->                 opp100-600000000 {
->                         opp-hz = /bits/ 64 <600000000>;
-> -                       opp-microvolt = <1200000 1200000 1200000>;
-> +                       opp-microvolt = <1200000 1200000 1200000>,
-> +                                        <1200000 1200000 1200000>;
->                         opp-supported-hw = <0xffffffff 3>;
->                 };
->
->                 opp130-800000000 {
->                         opp-hz = /bits/ 64 <800000000>;
-> -                       opp-microvolt = <1325000 1325000 1325000>;
-> +                       opp-microvolt = <1325000 1325000 1325000>,
-> +                                        <1325000 1325000 1325000>;
->                         opp-supported-hw = <0xffffffff 3>;
->                 };
->
->                 opp1g-1000000000 {
->                         opp-hz = /bits/ 64 <1000000000>;
-> -                       opp-microvolt = <1375000 1375000 1375000>;
-> +                       opp-microvolt = <1375000 1375000 1375000>,
-> +                                        <1375000 1375000 1375000>;
->                         /* only on am/dm37x with speed-binned bit set */
->                         opp-supported-hw = <0xffffffff 2>;
->                         turbo-mode;
+> Any comments on this patch?
 
-If / when the thermal changes I submitted get approved, would you
-entertain dropping this turbo-mode flag so it's enabled by default?
+I don't see "sifive,pwm0" in the DT bindings documentation, and it doesn't 
+match our standard way of doing these things (which would have at least 
+"sifive,fu540-c000-pwm").
 
-adam
->                 };
->         };
 >
-> +       opp_supply_mpu_iva: opp_supply {
-> +               compatible = "ti,omap-opp-supply";
-> +               ti,absolute-max-voltage-uv = <1375000>;
-> +       };
-> +
->         ocp@68000000 {
->                 uart4: serial@49042000 {
->                         compatible = "ti,omap3-uart";
-> diff --git a/drivers/cpufreq/ti-cpufreq.c b/drivers/cpufreq/ti-cpufreq.c
-> index 1a3073a3093e..f4704f9033e0 100644
-> --- a/drivers/cpufreq/ti-cpufreq.c
-> +++ b/drivers/cpufreq/ti-cpufreq.c
-> @@ -174,7 +174,7 @@ static struct ti_cpufreq_soc_data omap36xx_soc_data = {
->         .efuse_shift = 9,
->         .efuse_mask = BIT(9),
->         .rev_offset = OMAP3_CONTROL_IDCODE - OMAP3_SYSCON_BASE,
-> -       .multi_regulator = false,
-> +       .multi_regulator = true,
->  };
+> - Yash
 >
->  /**
-> --
-> 2.19.1
->
+> On Wed, Aug 21, 2019 at 2:53 PM Yash Shah <yash.shah@sifive.com> wrote:
+>>
+>> Add the PWM DT node in SiFive FU540 soc-specific DT file.
+>> Enable the PWM nodes in HiFive Unleashed board-specific DT file.
+>>
+>> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+>> ---
+>>  arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 19 +++++++++++++++++++
+>>  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++++++
+>>  2 files changed, 27 insertions(+)
+>>
+>> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+>> index 42b5ec2..bb422db 100644
+>> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+>> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+>> @@ -230,6 +230,25 @@
+>>                         #size-cells = <0>;
+>>                         status = "disabled";
+>>                 };
+>> +               pwm0: pwm@10020000 {
+>> +                       compatible = "sifive,pwm0";
+>> +                       reg = <0x0 0x10020000 0x0 0x1000>;
+>> +                       interrupt-parent = <&plic0>;
+>> +                       interrupts = <42 43 44 45>;
+>> +                       clocks = <&prci PRCI_CLK_TLCLK>;
+>> +                       #pwm-cells = <3>;
+>> +                       status = "disabled";
+>> +               };
+>> +               pwm1: pwm@10021000 {
+>> +                       compatible = "sifive,pwm0";
+>> +                       reg = <0x0 0x10021000 0x0 0x1000>;
+>> +                       interrupt-parent = <&plic0>;
+>> +                       interrupts = <46 47 48 49>;
+>> +                       reg-names = "control";
+>> +                       clocks = <&prci PRCI_CLK_TLCLK>;
+>> +                       #pwm-cells = <3>;
+>> +                       status = "disabled";
+>> +               };
+>>
+>>         };
+>>  };
+>> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+>> index 93d68cb..104d334 100644
+>> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+>> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+>> @@ -85,3 +85,11 @@
+>>                 reg = <0>;
+>>         };
+>>  };
+>> +
+>> +&pwm0 {
+>> +       status = "okay";
+>> +};
+>> +
+>> +&pwm1 {
+>> +       status = "okay";
+>> +};
+>> --
+>> 1.9.1
+>>
