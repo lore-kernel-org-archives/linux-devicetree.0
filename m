@@ -1,240 +1,123 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 6/6] hwrng: omap3-rom - Use runtime PM instead of custom functions
-Date: Fri, 13 Sep 2019 15:09:22 -0700
-Message-ID: <20190913220922.29501-7-tony@atomide.com>
-References: <20190913220922.29501-1-tony@atomide.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH V2 05/13] clk: bcm2835: Add BCM2711_CLOCK_EMMC2 support
+Date: Fri, 13 Sep 2019 16:02:19 -0700
+Message-ID: <e75d8d6e-8f63-09b7-2489-dc87bc9dcd98@gmail.com>
+References: <1565713248-4906-1-git-send-email-wahrenst@gmx.net>
+ <1565713248-4906-6-git-send-email-wahrenst@gmx.net>
+ <d89bbc4b-b6bc-0d4e-86d1-6be11876ce00@gmail.com> <87o8zp1h4u.fsf@anholt.net>
+ <097c31de-4b11-92a8-af22-c34d6317359c@gmx.net>
+ <218baa70-9849-63db-4989-c6d658b11c6d@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190913220922.29501-1-tony@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <218baa70-9849-63db-4989-c6d658b11c6d@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, Eric Anholt <eric@anholt.net>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Nowadays we have runtime PM, and we can use it with autosuspend_timeout
-to idle things automatically. This allows us to get rid of the custom
-PM implementation.
+On 9/13/19 12:13 AM, Matthias Brugger wrote:
+> 
+> 
+> On 13/09/2019 03:20, Stefan Wahren wrote:
+>> Am 12.09.19 um 20:52 schrieb Eric Anholt:
+>>> Matthias Brugger <matthias.bgg@gmail.com> writes:
+>>>
+>>>> On 13/08/2019 18:20, Stefan Wahren wrote:
+>>>>> The new BCM2711 supports an additional clock for the emmc2 block.
+>>>>> So add a new compatible and register this clock only for BCM2711.
+>>>>>
+>>>>> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+>>>>> Reviewed-by: Matthias Brugger <mbrugger@suse.com>
+>>>>> Acked-by: Eric Anholt <eric@anholt.net>
+>>>>> ---
+>>>>>  drivers/clk/bcm/clk-bcm2835.c | 20 +++++++++++++++++++-
+>>>>>  1 file changed, 19 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+>>>>> index 21cd952..fdf672a 100644
+>>>>> --- a/drivers/clk/bcm/clk-bcm2835.c
+>>>>> +++ b/drivers/clk/bcm/clk-bcm2835.c
+>>>>> @@ -114,6 +114,8 @@
+>>>>>  #define CM_AVEODIV		0x1bc
+>>>>>  #define CM_EMMCCTL		0x1c0
+>>>>>  #define CM_EMMCDIV		0x1c4
+>>>>> +#define CM_EMMC2CTL		0x1d0
+>>>>> +#define CM_EMMC2DIV		0x1d4
+>>>>>
+>>>>>  /* General bits for the CM_*CTL regs */
+>>>>>  # define CM_ENABLE			BIT(4)
+>>>>> @@ -290,7 +292,8 @@
+>>>>>  #define BCM2835_MAX_FB_RATE	1750000000u
+>>>>>
+>>>>>  #define SOC_BCM2835		BIT(0)
+>>>>> -#define SOC_ALL			(SOC_BCM2835)
+>>>>> +#define SOC_BCM2711		BIT(1)
+>>>>> +#define SOC_ALL			(SOC_BCM2835 | SOC_BCM2711)
+>>>>>
+>>>>>  /*
+>>>>>   * Names of clocks used within the driver that need to be replaced
+>>>>> @@ -2003,6 +2006,16 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+>>>>>  		.frac_bits = 8,
+>>>>>  		.tcnt_mux = 39),
+>>>>>
+>>>>> +	/* EMMC2 clock (only available for BCM2711) */
+>>>>> +	[BCM2711_CLOCK_EMMC2]	= REGISTER_PER_CLK(
+>>>>> +		SOC_BCM2711,
+>>>>> +		.name = "emmc2",
+>>>>> +		.ctl_reg = CM_EMMC2CTL,
+>>>>> +		.div_reg = CM_EMMC2DIV,
+>>>>> +		.int_bits = 4,
+>>>>> +		.frac_bits = 8,
+>>>>> +		.tcnt_mux = 42),
+>>>>> +
+>>>>>  	/* General purpose (GPIO) clocks */
+>>>>>  	[BCM2835_CLOCK_GP0]	= REGISTER_PER_CLK(
+>>>>>  		SOC_ALL,
+>>>>> @@ -2238,8 +2251,13 @@ static const struct cprman_plat_data cprman_bcm2835_plat_data = {
+>>>>>  	.soc = SOC_BCM2835,
+>>>>>  };
+>>>>>
+>>>>> +static const struct cprman_plat_data cprman_bcm2711_plat_data = {
+>>>>> +	.soc = SOC_BCM2711,
+>>>>> +};
+>>>>> +
+>>>>>  static const struct of_device_id bcm2835_clk_of_match[] = {
+>>>>>  	{ .compatible = "brcm,bcm2835-cprman", .data = &cprman_bcm2835_plat_data },
+>>>>> +	{ .compatible = "brcm,bcm2711-cprman", .data = &cprman_bcm2711_plat_data },
+>>>> Because the RPi4 FW uses bcm2838-cprman as compatible, we will need to add this
+>>>> here as well.
+>>> Upstream has not committed to backwards compat with Pi's firmware.  That
+>>> makes the ABI requirement we get held to for upstream's DT absurd, but
+>>> that's the state of things.
+>>
+>> We also learned from past, that's not possible to keep things downstream
+>> compatible. As soon as a binding is not accepted, this wont work
+>> anymore. A lot of the downstream stuff is hacky.
+>>
+>> For example yesterday, i learned that the thermal node is broken
+>> (register is part of ring oscillator block). So do we really want to be
+>> compatible with a hack? I would say: No
+>>
+> 
+> There is always the possibility to fix this in the FW, which in many cases will
+> be trivial.
 
-We enable clocks and init RNG in runtime_resume, and reset RNG and
-disable clocks in runtime_suspend. And then omap3_rom_rng_read()
-becomes very simple and we don't need the old functions for
-omap3_rom_rng_idle() and omap3_rom_rng_get_random().
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/char/hw_random/omap3-rom-rng.c | 127 +++++++++++++++----------
- 1 file changed, 77 insertions(+), 50 deletions(-)
-
-diff --git a/drivers/char/hw_random/omap3-rom-rng.c b/drivers/char/hw_random/omap3-rom-rng.c
---- a/drivers/char/hw_random/omap3-rom-rng.c
-+++ b/drivers/char/hw_random/omap3-rom-rng.c
-@@ -23,73 +23,83 @@
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
- 
- #define RNG_RESET			0x01
- #define RNG_GEN_PRNG_HW_INIT		0x02
- #define RNG_GEN_HW			0x08
- 
--/* param1: ptr, param2: count, param3: flag */
--static u32 (*omap3_rom_rng_call)(u32, u32, u32);
--
- struct omap_rom_rng {
- 	struct clk *clk;
- 	struct device *dev;
- 	struct hwrng ops;
-+	u32 (*rom_rng_call)(u32 ptr, u32 count, u32 flag);
- };
- 
--static struct delayed_work idle_work;
--static int rng_idle;
--static struct clk *rng_clk;
--
--static void omap3_rom_rng_idle(struct work_struct *work)
-+static int omap3_rom_rng_read(struct hwrng *rng, void *data, size_t max, bool w)
- {
-+	struct omap_rom_rng *ddata;
-+	u32 ptr;
- 	int r;
- 
--	r = omap3_rom_rng_call(0, 0, RNG_RESET);
--	if (r != 0) {
--		pr_err("reset failed: %d\n", r);
--		return;
-+	ddata = (struct omap_rom_rng *)rng->priv;
-+
-+	r = pm_runtime_get_sync(ddata->dev);
-+	if (r < 0) {
-+		pm_runtime_put_noidle(ddata->dev);
-+
-+		return r;
- 	}
--	clk_disable(rng_clk);
--	rng_idle = 1;
-+
-+	ptr = virt_to_phys(data);
-+	r = ddata->rom_rng_call(ptr, 4, RNG_GEN_HW);
-+	if (r != 0)
-+		r = -EINVAL;
-+	else
-+		r = 4;
-+
-+	pm_runtime_mark_last_busy(ddata->dev);
-+	pm_runtime_put_autosuspend(ddata->dev);
-+
-+	return r;
- }
- 
--static int omap3_rom_rng_get_random(void *buf, unsigned int count)
-+static int omap_rom_rng_runtime_suspend(struct device *dev)
- {
--	u32 r;
--	u32 ptr;
-+	struct omap_rom_rng *ddata;
-+	int r;
- 
--	cancel_delayed_work_sync(&idle_work);
--	if (rng_idle) {
--		r = clk_enable(rng_clk);
--		if (r)
--			return r;
--
--		r = omap3_rom_rng_call(0, 0, RNG_GEN_PRNG_HW_INIT);
--		if (r != 0) {
--			clk_disable(rng_clk);
--			pr_err("HW init failed: %d\n", r);
--			return -EIO;
--		}
--		rng_idle = 0;
--	}
-+	ddata = dev_get_drvdata(dev);
- 
--	ptr = virt_to_phys(buf);
--	r = omap3_rom_rng_call(ptr, count, RNG_GEN_HW);
--	schedule_delayed_work(&idle_work, msecs_to_jiffies(500));
-+	r = ddata->rom_rng_call(0, 0, RNG_RESET);
- 	if (r != 0)
--		return -EINVAL;
-+		pr_err("reset failed: %d\n", r);
-+
-+	clk_disable(ddata->clk);
-+
- 	return 0;
- }
- 
--static int omap3_rom_rng_read(struct hwrng *rng, void *data, size_t max, bool w)
-+static int omap_rom_rng_runtime_resume(struct device *dev)
- {
-+	struct omap_rom_rng *ddata;
- 	int r;
- 
--	r = omap3_rom_rng_get_random(data, 4);
-+	ddata = dev_get_drvdata(dev);
-+
-+	r = clk_enable(ddata->clk);
- 	if (r < 0)
- 		return r;
--	return 4;
-+
-+	r = ddata->rom_rng_call(0, 0, RNG_GEN_PRNG_HW_INIT);
-+	if (r != 0) {
-+		clk_disable(ddata->clk);
-+		dev_err(ddata->dev, "HW init failed: %d\n", r);
-+
-+		return -EIO;
-+	}
-+
-+	return 0;
- }
- 
- static int omap3_rom_rng_probe(struct platform_device *pdev)
-@@ -113,19 +123,17 @@ static int omap3_rom_rng_probe(struct platform_device *pdev)
- 	}
- 	dev_set_drvdata(ddata->dev, ddata);
- 
--	omap3_rom_rng_call = pdev->dev.platform_data;
--	if (!omap3_rom_rng_call) {
-+	ddata->rom_rng_call = pdev->dev.platform_data;
-+	if (!ddata->rom_rng_call) {
- 		dev_err(ddata->dev, "rom_rng_call is NULL\n");
- 		return -EINVAL;
- 	}
- 
--	INIT_DELAYED_WORK(&idle_work, omap3_rom_rng_idle);
- 	ddata->clk = devm_clk_get(ddata->dev, "ick");
- 	if (IS_ERR(ddata->clk)) {
- 		dev_err(ddata->dev, "unable to get RNG clock\n");
- 		return PTR_ERR(ddata->clk);
- 	}
--	rng_clk = ddata->clk;
- 
- 	ret = clk_prepare(ddata->clk);
- 	if (ret < 0) {
-@@ -133,15 +141,27 @@ static int omap3_rom_rng_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	/* Leave the RNG in reset state. */
--	ret = clk_enable(ddata->clk);
--	if (ret)
--		goto err_unprepare;
--	omap3_rom_rng_idle(0);
-+	pm_runtime_set_autosuspend_delay(&pdev->dev, 500);
-+	pm_runtime_use_autosuspend(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+	ret = pm_runtime_get_sync(&pdev->dev);
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&pdev->dev);
-+		goto err_disable;
- 
--	return hwrng_register(&ddata->ops);
-+		return ret;
-+	}
- 
--err_unprepare:
-+	pm_runtime_mark_last_busy(&pdev->dev);
-+	pm_runtime_put_autosuspend(&pdev->dev);
-+
-+	ret = hwrng_register(&ddata->ops);
-+	if (!ret)
-+		return 0;
-+
-+err_disable:
-+	pm_runtime_dont_use_autosuspend(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
- 	clk_unprepare(ddata->clk);
- 
- 	return ret;
-@@ -152,8 +172,9 @@ static int omap3_rom_rng_remove(struct platform_device *pdev)
- 	struct omap_rom_rng *ddata;
- 
- 	ddata = dev_get_drvdata(&pdev->dev);
--	cancel_delayed_work_sync(&idle_work);
- 	hwrng_unregister(&ddata->ops);
-+	pm_runtime_dont_use_autosuspend(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
- 	clk_unprepare(ddata->clk);
- 
- 	return 0;
-@@ -165,10 +186,16 @@ static const struct of_device_id omap_rom_rng_match[] = {
- };
- MODULE_DEVICE_TABLE(of, omap_rom_rng_match);
- 
-+static const struct dev_pm_ops omap_rom_rng_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(omap_rom_rng_runtime_suspend,
-+				omap_rom_rng_runtime_resume)
-+};
-+
- static struct platform_driver omap3_rom_rng_driver = {
- 	.driver = {
- 		.name		= "omap3-rom-rng",
- 		.of_match_table = omap_rom_rng_match,
-+		.pm = &omap_rom_rng_pm_ops,
- 	},
- 	.probe		= omap3_rom_rng_probe,
- 	.remove		= omap3_rom_rng_remove,
+In many cases, the firmware can certainly be changed to support both
+downstream and upstream properties, as long as the layout is not
+fundamentally incompatible obviously. If this is just a game of
+compatible strings, both can be provided and it should not cause any
+issues as long as you are not mixing downstream and upstream drivers for
+the same purpose.
 -- 
-2.23.0
+Florian
