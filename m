@@ -1,128 +1,187 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH 5/6] media: sun4i: Add H3 deinterlace driver
-Date: Sat, 14 Sep 2019 08:42:22 +0200
-Message-ID: <3227980.eWD6USAIP4@jernej-laptop>
-References: <20190912175132.411-1-jernej.skrabec@siol.net> <20190912175132.411-6-jernej.skrabec@siol.net> <20190912202647.wfcjur7yxhlelvd6@localhost.localdomain>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [RFC v2 1/2] ARM: dts: omap3: Add cpu trips and cooling map for omap3 family
+Date: Sat, 14 Sep 2019 11:20:29 +0200
+Message-ID: <B710D701-6311-4344-BF4E-F39157BBF2BD@goldelico.com>
+References: <20190913153714.30980-1-aford173@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBUMX6LVQKGQEESRQIWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190912202647.wfcjur7yxhlelvd6-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190913153714.30980-1-aford173@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Adam Ford <aford173@gmail.com>
+Cc: Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, Nishanth Menon <nm@ti.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grazvydas Ignotas <notasas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
 
-Dne =C4=8Detrtek, 12. september 2019 ob 22:26:47 CEST je Maxime Ripard napi=
-sal(a):
-> Hi,
+> Am 13.09.2019 um 17:37 schrieb Adam Ford <aford173@gmail.com>:
 >=20
-> On Thu, Sep 12, 2019 at 07:51:31PM +0200, Jernej Skrabec wrote:
-> > +	dev->regmap =3D devm_regmap_init_mmio(dev->dev, dev->base,
-> > +					   =20
-&deinterlace_regmap_config);
-> > +	if (IS_ERR(dev->regmap)) {
-> > +		dev_err(dev->dev, "Couldn't create deinterlace=20
-regmap\n");
-> > +
-> > +		return PTR_ERR(dev->regmap);
-> > +	}
-> > +
-> > +	ret =3D clk_prepare_enable(dev->bus_clk);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to enable bus clock\n");
-> > +
-> > +		return ret;
-> > +	}
+> The OMAP3530, AM3517 and DM3730 all show thresholds of 90C and 105C
+> depending on commercial or industrial temperature ratings.  This
+> patch expands the thermal information to the limits of 90 and 105
+> for alert and critical.
 >=20
-> Do you need to keep the bus clock enabled all the time? Usually, for
-> the SoCs that have a reset line, you only need it to read / write to
-> the registers, not to have the controller actually running.
+> For boards who never use industrial temperatures, these can be
+> changed on their respective device trees with something like:
 >=20
-> If you don't, then regmap_init_mmio_clk will take care of that for
-> you.
+> &cpu_alert0 {
+> 	temperature =3D <85000>; /* millicelsius */
+> };
 >=20
-> > +	clk_set_rate(dev->mod_clk, 300000000);
-> > +
-> > +	ret =3D clk_prepare_enable(dev->mod_clk);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to enable mod clock\n");
-> > +
-> > +		goto err_bus_clk;
-> > +	}
-> > +
-> > +	ret =3D clk_prepare_enable(dev->ram_clk);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to enable ram clock\n");
-> > +
-> > +		goto err_mod_clk;
-> > +	}
-> > +
-> > +	ret =3D reset_control_reset(dev->rstc);
-> > +	if (ret) {
-> > +		dev_err(dev->dev, "Failed to apply reset\n");
-> > +
-> > +		goto err_ram_clk;
-> > +	}
+> &cpu_crit {
+> 	temperature =3D <90000>; /* millicelsius */
+> };
 >=20
-> This could be moved to a runtime_pm hook, with get_sync called in the
-> open. That way you won't leave the device powered on if it's unused.
-
-Currently I'm looking at sun4i_csi.c as an example of runtime ops, but it=
-=20
-seems a bit wrong to have suspend and resume function marked with=20
-__maybe_unused because they are the only functions which enable needed cloc=
-ks.
-If CONFIG_PM is not enabled, then this driver simply won't work, because=20
-clocks will never get enabled. I guess I can implement runtime pm ops in th=
-e=20
-same way and add additional handling when CONFIG_PM is not enabled, right?
-
-BTW, which callback is get_sync? I don't see it in dev_pm_ops. I suppose I=
-=20
-need only runtime_suspend and runtime_resume.
-
-Off topic: sun6i_csi.c includes linux/pm_runtime.h but it doesn't have any =
-kind=20
-of power management as far as I can see.
-
-Best regards,
-Jernej
-
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> ---
+> V2:  Change the CPU reference to &cpu instead of &cpu0
 >=20
-> > +struct deinterlace_dev {
-> > +	struct v4l2_device	v4l2_dev;
-> > +	struct video_device	vfd;
-> > +	struct device		*dev;
-> > +	struct v4l2_m2m_dev	*m2m_dev;
-> > +
-> > +	/* Device file mutex */
-> > +	struct mutex		dev_mutex;
-> > +
-> > +	void __iomem		*base;
-> > +	struct regmap		*regmap;
+> diff --git a/arch/arm/boot/dts/omap3-cpu-thermal.dtsi =
+b/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
+> index 235ecfd61e2d..dfbd0cb0b00b 100644
+> --- a/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
+> +++ b/arch/arm/boot/dts/omap3-cpu-thermal.dtsi
+> @@ -17,4 +17,25 @@ cpu_thermal: cpu_thermal {
 >=20
-> Do you need to store the base address in that structure if you're
-> using the regmap?
+> 			/* sensor       ID */
+> 	thermal-sensors =3D <&bandgap     0>;
+> +
+> +	cpu_trips: trips {
+> +		cpu_alert0: cpu_alert {
+> +			temperature =3D <90000>; /* millicelsius */
+> +			hysteresis =3D <2000>; /* millicelsius */
+> +			type =3D "passive";
+> +		};
+> +		cpu_crit: cpu_crit {
+> +			temperature =3D <105000>; /* millicelsius */
+> +			hysteresis =3D <2000>; /* millicelsius */
+> +			type =3D "critical";
+> +		};
+> +	};
+> +
+> +	cpu_cooling_maps: cooling-maps {
+> +		map0 {
+> +			trip =3D <&cpu_alert0>;
+> +			cooling-device =3D
+> +				<&cpu THERMAL_NO_LIMIT =
+THERMAL_NO_LIMIT>;
+> +		};
+> +	};
+> };
+> --=20
+> 2.17.1
 >=20
-> Maxime
 
+Here is my test log (GTA04A5 with DM3730CBP100).
+"high-load" script is driving the NEON to full power
+and would report calculation errors.
 
+There is no noise visible in the bandgap sensor data
+induced by power supply fluctuations (log shows system
+voltage while charging).
 
+root@letux:~# ./high-load -n2
+100% load stress test for 1 cores running ./neon_loop2
+Sat Sep 14 09:05:50 UTC 2019 65=C2=B0 4111mV 1000MHz
+Sat Sep 14 09:05:50 UTC 2019 67=C2=B0 4005mV 1000MHz
+Sat Sep 14 09:05:52 UTC 2019 68=C2=B0 4000mV 1000MHz
+Sat Sep 14 09:05:53 UTC 2019 68=C2=B0 4000mV 1000MHz
+Sat Sep 14 09:05:55 UTC 2019 72=C2=B0 3976mV 1000MHz
+Sat Sep 14 09:05:56 UTC 2019 72=C2=B0 4023mV 1000MHz
+Sat Sep 14 09:05:57 UTC 2019 72=C2=B0 3900mV 1000MHz
+Sat Sep 14 09:05:59 UTC 2019 73=C2=B0 4029mV 1000MHz
+Sat Sep 14 09:06:00 UTC 2019 73=C2=B0 3988mV 1000MHz
+Sat Sep 14 09:06:01 UTC 2019 73=C2=B0 4005mV 1000MHz
+Sat Sep 14 09:06:03 UTC 2019 73=C2=B0 4011mV 1000MHz
+Sat Sep 14 09:06:04 UTC 2019 73=C2=B0 4117mV 1000MHz
+Sat Sep 14 09:06:06 UTC 2019 73=C2=B0 4005mV 1000MHz
+Sat Sep 14 09:06:07 UTC 2019 75=C2=B0 3994mV 1000MHz
+Sat Sep 14 09:06:08 UTC 2019 75=C2=B0 3970mV 1000MHz
+Sat Sep 14 09:06:09 UTC 2019 75=C2=B0 4046mV 1000MHz
+Sat Sep 14 09:06:11 UTC 2019 75=C2=B0 4005mV 1000MHz
+Sat Sep 14 09:06:12 UTC 2019 75=C2=B0 4023mV 1000MHz
+Sat Sep 14 09:06:14 UTC 2019 75=C2=B0 3970mV 1000MHz
+Sat Sep 14 09:06:15 UTC 2019 75=C2=B0 4011mV 1000MHz
+Sat Sep 14 09:06:16 UTC 2019 77=C2=B0 4017mV 1000MHz
+Sat Sep 14 09:06:18 UTC 2019 77=C2=B0 3994mV 1000MHz
+Sat Sep 14 09:06:19 UTC 2019 77=C2=B0 3994mV 1000MHz
+Sat Sep 14 09:06:20 UTC 2019 77=C2=B0 3988mV 1000MHz
+Sat Sep 14 09:06:22 UTC 2019 77=C2=B0 4023mV 1000MHz
+Sat Sep 14 09:06:23 UTC 2019 77=C2=B0 4023mV 1000MHz
+Sat Sep 14 09:06:24 UTC 2019 78=C2=B0 4005mV 1000MHz
+Sat Sep 14 09:06:26 UTC 2019 78=C2=B0 4105mV 1000MHz
+Sat Sep 14 09:06:27 UTC 2019 78=C2=B0 4011mV 1000MHz
+Sat Sep 14 09:06:28 UTC 2019 78=C2=B0 3994mV 1000MHz
+Sat Sep 14 09:06:30 UTC 2019 78=C2=B0 4123mV 1000MHz
+...
+Sat Sep 14 09:09:57 UTC 2019 88=C2=B0 4082mV 1000MHz
+Sat Sep 14 09:09:59 UTC 2019 88=C2=B0 4164mV 1000MHz
+Sat Sep 14 09:10:00 UTC 2019 88=C2=B0 4058mV 1000MHz
+Sat Sep 14 09:10:01 UTC 2019 88=C2=B0 4058mV 1000MHz
+Sat Sep 14 09:10:03 UTC 2019 88=C2=B0 4082mV 1000MHz
+Sat Sep 14 09:10:04 UTC 2019 88=C2=B0 4058mV 1000MHz
+Sat Sep 14 09:10:06 UTC 2019 88=C2=B0 4146mV 1000MHz
+Sat Sep 14 09:10:07 UTC 2019 88=C2=B0 4041mV 1000MHz
+Sat Sep 14 09:10:08 UTC 2019 88=C2=B0 4035mV 1000MHz
+Sat Sep 14 09:10:10 UTC 2019 88=C2=B0 4052mV 1000MHz
+Sat Sep 14 09:10:11 UTC 2019 88=C2=B0 4087mV 1000MHz
+Sat Sep 14 09:10:12 UTC 2019 88=C2=B0 4152mV 1000MHz
+Sat Sep 14 09:10:14 UTC 2019 88=C2=B0 4070mV 1000MHz
+Sat Sep 14 09:10:15 UTC 2019 88=C2=B0 4064mV 1000MHz
+Sat Sep 14 09:10:17 UTC 2019 88=C2=B0 4170mV 1000MHz
+Sat Sep 14 09:10:18 UTC 2019 88=C2=B0 4058mV 1000MHz
+Sat Sep 14 09:10:19 UTC 2019 88=C2=B0 4187mV 1000MHz
+Sat Sep 14 09:10:21 UTC 2019 88=C2=B0 4093mV 1000MHz
+Sat Sep 14 09:10:22 UTC 2019 88=C2=B0 4087mV 1000MHz
+Sat Sep 14 09:10:23 UTC 2019 90=C2=B0 4070mV 1000MHz
+Sat Sep 14 09:10:25 UTC 2019 88=C2=B0 4123mV 800MHz
+Sat Sep 14 09:10:26 UTC 2019 88=C2=B0 4064mV 1000MHz
+Sat Sep 14 09:10:28 UTC 2019 90=C2=B0 4058mV 1000MHz
+Sat Sep 14 09:10:29 UTC 2019 88=C2=B0 4076mV 1000MHz
+Sat Sep 14 09:10:30 UTC 2019 88=C2=B0 4064mV 1000MHz
+Sat Sep 14 09:10:32 UTC 2019 88=C2=B0 4117mV 1000MHz
+Sat Sep 14 09:10:33 UTC 2019 88=C2=B0 4105mV 800MHz
+Sat Sep 14 09:10:34 UTC 2019 88=C2=B0 4070mV 1000MHz
+Sat Sep 14 09:10:36 UTC 2019 88=C2=B0 4076mV 1000MHz
+Sat Sep 14 09:10:37 UTC 2019 88=C2=B0 4087mV 1000MHz
+Sat Sep 14 09:10:39 UTC 2019 88=C2=B0 4017mV 1000MHz
+Sat Sep 14 09:10:40 UTC 2019 88=C2=B0 4093mV 1000MHz
+Sat Sep 14 09:10:41 UTC 2019 88=C2=B0 4058mV 800MHz
+Sat Sep 14 09:10:42 UTC 2019 88=C2=B0 4035mV 1000MHz
+Sat Sep 14 09:10:44 UTC 2019 90=C2=B0 4058mV 1000MHz
+Sat Sep 14 09:10:45 UTC 2019 88=C2=B0 4064mV 1000MHz
+Sat Sep 14 09:10:47 UTC 2019 88=C2=B0 4064mV 1000MHz
+Sat Sep 14 09:10:48 UTC 2019 88=C2=B0 4029mV 1000MHz
+Sat Sep 14 09:10:50 UTC 2019 90=C2=B0 4046mV 1000MHz
+^Ckill 4680
+root@letux:~# cpufreq-info=20
+cpufrequtils 008: cpufreq-info (C) Dominik Brodowski 2004-2009
+Report errors and bugs to cpufreq@vger.kernel.org, please.
+analyzing CPU 0:
+  driver: cpufreq-dt
+  CPUs which run at the same hardware frequency: 0
+  CPUs which need to have their frequency coordinated by software: 0
+  maximum transition latency: 300 us.
+  hardware limits: 300 MHz - 1000 MHz
+  available frequency steps: 300 MHz, 600 MHz, 800 MHz, 1000 MHz
+  available cpufreq governors: conservative, userspace, powersave, =
+ondemand, performance
+  current policy: frequency should be within 300 MHz and 1000 MHz.
+                  The governor "ondemand" may decide which speed to use
+                  within this range.
+  current CPU frequency is 600 MHz (asserted by call to hardware).
+  cpufreq stats: 300 MHz:22.81%, 600 MHz:2.50%, 800 MHz:2.10%, 1000 =
+MHz:72.59%  (1563)
+root@letux:~#=20
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/3227980.eWD6USAIP4%40jernej-laptop.
+So OPP is reduced if bandgap sensor reports >=3D 90=C2=B0C
+which almost immediately makes the temperature
+go down.
+
+No operational hickups were observed.
+
+Surface temperature of the PoP chip did rise to
+approx. 53=C2=B0C during this test.
+
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com> # on GTA04A5 with =
+dm3730cbp100
