@@ -1,43 +1,49 @@
-Return-Path: <SRS0=mp1p=XH=jmondi.org=jacopo@kernel.org>
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: [PATCH v3 03/11] dt-bindings: video-interfaces: Expand rotation description
-Date: Thu, 12 Sep 2019 22:10:47 +0200
-Message-Id: <20190912201055.13964-4-jacopo@jmondi.org>
-In-Reply-To: <20190912201055.13964-1-jacopo@jmondi.org>
-References: <20190912201055.13964-1-jacopo@jmondi.org>
+Return-Path: <SRS0=wJwZ=XJ=gmail.com=arndbergmann@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, tfiga@google.com, pavel@ucw.cz, Rob Herring <robh+dt@kernel.org>
-Cc: Jacopo Mondi <jacopo@jmondi.org>, "open list:MEDIA INPUT INFRASTRUCTURE V4L/DVB" <linux-media@vger.kernel.org>, devicetree@vger.kernel.org
+References: <20190905192412.23116-1-lee.jones@linaro.org> <5d71ef95.1c69fb81.6d090.085d@mx.google.com>
+ <20190906061448.GJ26880@dell> <20190906065018.GA1019@kunai>
+ <20190906075600.GL26880@dell> <20190906102355.GA3146@kunai>
+ <20190906105445.GO26880@dell> <20190906183139.GB19123@kunai>
+ <CAF6AEGsHOaR1dRf8xGH5sRa38=S+Y3NvNiAJ9DpMkddWoLBw8g@mail.gmail.com>
+ <20190913142821.GD1022@kunai> <20190913161345.GB8466@tuxbook-pro>
+In-Reply-To: <20190913161345.GB8466@tuxbook-pro>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Sat, 14 Sep 2019 21:13:28 +0200
+Message-ID: <CAK8P3a2+Foj4gxxetFQ5y1jUjc+HZDT1B3Utj9y2fJQMq83NrQ@mail.gmail.com>
+Subject: Re: [RESEND v3 1/1] i2c: qcom-geni: Disable DMA processing on the
+ Lenovo Yoga C630
+Content-Type: text/plain; charset="UTF-8"
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Clark <robdclark@gmail.com>, Lee Jones <lee.jones@linaro.org>, Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>, alokc@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Expand the 'rotation' property description to define the direction and
-orientation of the axis around which the device mounting rotation is
-expressed.
+On Fri, Sep 13, 2019 at 6:13 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Fri 13 Sep 07:28 PDT 2019, Wolfram Sang wrote:
+>
+> > On Sat, Sep 07, 2019 at 10:56:34AM -0700, Rob Clark wrote:
+> > > On Sat, Sep 7, 2019 at 9:17 AM Wolfram Sang <wsa@the-dreams.de> wrote:
+> > > >
+> > > >
+> > > > > Does this mean you plan to have this merged for v5.4?
+> > > >
+> > > > Only if the machine DTS is expected to land in 5.4. But Stephen said it
+> > > > is not in liunx-next yet?
+> > > >
+> > >
+> > > It appears to be in arm-soc for-next:
+> > >
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/log/?h=for-next
+> >
+> > Still not in linux-next. Please ping me or resend this patch once it
+> > hits linux-next.
+> >
+>
+> It seems linux-next is now pulling from the soc.git, rather than
+> arm-soc.git, but Arnd is still pushing patches to arm-soc.git.
 
-Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
----
- .../devicetree/bindings/media/video-interfaces.txt        | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+I'm still pushing identical contents to both, but plan to remove the old
+tree after the merge window.
 
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index e71b90a29d7a..8ab51e0bb63e 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -85,9 +85,11 @@ Optional properties
-
- - lens-focus: A phandle to the node of the focus lens controller.
-
--- rotation: The device, typically an image sensor, is not mounted upright,
--  but a number of degrees counter clockwise. Typical values are 0 and 180
--  (upside down).
-+- rotation: The device, typically an image sensor, mounting rotation expressed
-+  as counterclockwise rotation degrees along the axis perpendicular to
-+  the device mounting surface directed away from it. Typical values are
-+  0 degrees for upright mounted devices and 180 degrees for devices mounted
-+  upside down.
-
- - location: The device, typically an image sensor or a flash LED, mounting
-   location expressed as a position relative to the usage orientation of the
---
-2.23.0
+      Arnd
