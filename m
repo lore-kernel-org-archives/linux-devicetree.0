@@ -1,91 +1,128 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH v3 08/11] PCI: layerscape: Modify the MSIX to the doorbell
- mode
-Date: Sat, 14 Sep 2019 06:37:54 +0000
-Message-ID: <AM5PR04MB32994FAF102AD4F760792808F5B20@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
- <20190902031716.43195-9-xiaowei.bao@nxp.com>
- <20190902120147.GH9720@e119886-lin.cambridge.arm.com>
- <DM6PR12MB40100CC1C0E64040652C3BFBDAB00@DM6PR12MB4010.namprd12.prod.outlook.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH 5/6] media: sun4i: Add H3 deinterlace driver
+Date: Sat, 14 Sep 2019 08:42:22 +0200
+Message-ID: <3227980.eWD6USAIP4@jernej-laptop>
+References: <20190912175132.411-1-jernej.skrabec@siol.net> <20190912175132.411-6-jernej.skrabec@siol.net> <20190912202647.wfcjur7yxhlelvd6@localhost.localdomain>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <DM6PR12MB40100CC1C0E64040652C3BFBDAB00@DM6PR12MB4010.namprd12.prod.outlook.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, Andrew Murray <andrew.murray@arm.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Roy Zang <roy.zang@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kishon@ti.com" <kishon@ti.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBUMX6LVQKGQEESRQIWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190912202647.wfcjur7yxhlelvd6-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogR3VzdGF2byBQaW1lbnRl
-bCA8R3VzdGF2by5QaW1lbnRlbEBzeW5vcHN5cy5jb20+DQo+IFNlbnQ6IDIwMTnlubQ55pyIMTLm
-l6UgMTk6MjQNCj4gVG86IEFuZHJldyBNdXJyYXkgPGFuZHJldy5tdXJyYXlAYXJtLmNvbT47IFhp
-YW93ZWkgQmFvDQo+IDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogcm9iaCtkdEBrZXJuZWwu
-b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgTGVvDQo+IExp
-IDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOyBsb3JlbnpvLnBpZXJhbGlzaUBh
-cm0uY29tOyBNLmguDQo+IExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IE1pbmdrYWkgSHUg
-PG1pbmdrYWkuaHVAbnhwLmNvbT47IFJveQ0KPiBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgamlu
-Z29vaGFuMUBnbWFpbC5jb207DQo+IGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tOyBsaW51
-eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGlu
-dXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsNCj4gYXJuZEBhcm5kYi5k
-ZTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IFoucS4gSG91DQo+IDx6aGlxaWFuZy5ob3VA
-bnhwLmNvbT4NCj4gU3ViamVjdDogUkU6IFtQQVRDSCB2MyAwOC8xMV0gUENJOiBsYXllcnNjYXBl
-OiBNb2RpZnkgdGhlIE1TSVggdG8gdGhlDQo+IGRvb3JiZWxsIG1vZGUNCj4gDQo+IEhpLA0KPiAN
-Cj4gU29ycnkgZm9yIHRoZSBkZWxheSBJIHdhcyBpbiBwYXJlbnRhbCBsZWF2ZSBhbmQgSSdtIHN0
-aWxsIHRyeWluZyBub3QgdG8gZHJvd24gaW4NCj4gdGhlIG1haWxpbmcgbGlzdCBlbWFpbHMuLi4g
-8J+Yig0KPiANCj4gT24gTW9uLCBTZXAgMiwgMjAxOSBhdCAxMzoxOjQ3LCBBbmRyZXcgTXVycmF5
-IDxhbmRyZXcubXVycmF5QGFybS5jb20+DQo+IHdyb3RlOg0KPiANCj4gPiBPbiBNb24sIFNlcCAw
-MiwgMjAxOSBhdCAxMToxNzoxM0FNICswODAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiA+IGR3
-X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnEgd2FzIG5ldmVyIGNhbGxlZCBpbiB0aGUgZXhpc2l0bmcg
-ZHJpdmVyDQo+ID4gPiBiZWZvcmUsIGJlY2F1c2UgdGhlIGxzMTA0NmEgcGxhdGZvcm0gZG9uJ3Qg
-c3VwcG9ydCB0aGUgTVNJWCBmZWF0dXJlDQo+ID4gPiBhbmQgbXNpeF9jYXBhYmxlIHdhcyBhbHdh
-eXMgc2V0IHRvIGZhbHNlLg0KPiA+ID4gTm93IHRoYXQgYWRkIHRoZSBsczEwODhhIHBsYXRmb3Jt
-IHdpdGggTVNJWCBzdXBwb3J0LCBidXQgdGhlDQo+ID4gPiBleGlzdGluZyBkd19wY2llX2VwX3Jh
-aXNlX21zaXhfaXJxIGRvZXNuJ3Qgd29yaywgc28gdXNlIHRoZSBkb29yYmVsbA0KPiA+ID4gbWV0
-aG9kIHRvIHN1cHBvcnQgdGhlIE1TSVggZmVhdHVyZS4NCj4gDQo+IEh1bS4uLiB0aGUgaW1wbGVt
-ZW50YXRpb24gb2YgbXNpeCBpbXBsZW1lbnRhdGlvbiBkaWQgd29yayBvbiBteSB1c2UgY2FzZSwN
-Cj4gaG93ZXZlciwgYXQgdGhlIHRpbWUgdGhlIHNldHVwIHVzZWQgZm9yIGRldmVsb3BpbmcgYW5k
-IHRlc3RpbmcgdGhlDQo+IGltcGxlbWVudGF0aW9uIG9ubHkgaGFkIG9uZSBQRiAoYnkgZGVmYXVs
-dCAwKS4gUGVyaGFwcyB0aGlzIGNvdWxkIHdhcyBpcw0KPiBjYXVzaW5nIHRoZSBkaWZmZXJlbnQg
-YmVoYXZpb3IgYmV0d2VlbiBvdXIgc2V0dXBzLg0KPiANCj4gWW91IGhhdmUgbW9yZSB0aGFuIG9u
-ZSBQRiwgcmlnaHQ/DQoNClllcywgSSBoYXZlIHR3byBQRnMuDQoNClRoYW5rcw0KWGlhb3dlaQ0K
-DQo+IA0KPiBJZiBJIHJlbWVtYmVyIGNvcnJlY3RseSwgbXNpeCBmZWF0dXJlIHN1cHBvcnQgZW50
-ZXJlZCBvbiBrZXJuZWwgNC4xOSB2ZXJzaW9uDQo+IGFuZCBpdCB3b3JrZWQgcXVpdGUgd2VsbCBh
-dCB0aGUgdGltZSwgYnV0IEkgZGlkbid0IHRlc3Qgc2luY2UgdGhlcmUgKEkndmUgdG8NCj4gbWFu
-YWdlIHRpbWUgdG8gYmUgYWJsZSB0byByZXRlc3QgaXQgYWdhaW4pLCBJJ20gZGlkbid0IHNlZW4g
-YW55IHBhdGNoIHRoYXQNCj4gY291bGQgaW50ZXJmZXJlIHdpdGggdGhpcy4NCj4gDQo+IFJlZ2Fy
-ZHMsDQo+IEd1c3Rhdm8NCj4gDQo+IA0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IFhpYW93
-ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiA+DQo+ID4gUmV2aWV3ZWQtYnk6IEFuZHJl
-dyBNdXJyYXkgPGFuZHJldy5tdXJyYXlAYXJtLmNvbT4NCj4gPg0KPiA+ID4gLS0tDQo+ID4gPiB2
-MjoNCj4gPiA+ICAtIE5vIGNoYW5nZQ0KPiA+ID4gdjM6DQo+ID4gPiAgLSBNb2RpZnkgdGhlIGNv
-bW1pdCBtZXNzYWdlIG1ha2UgaXQgY2xlYXJseS4NCj4gPiA+DQo+ID4gPiAgZHJpdmVycy9wY2kv
-Y29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUtZXAuYyB8IDMgKystDQo+ID4gPiAgMSBmaWxl
-IGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiA+ID4NCj4gPiA+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5j
-DQo+ID4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLWVwLmMN
-Cj4gPiA+IGluZGV4IDFlMDcyODcuLjVmMGNiOTkgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJz
-L3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gPiArKysgYi9kcml2
-ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jDQo+ID4gPiBAQCAtNzks
-NyArNzksOCBAQCBzdGF0aWMgaW50IGxzX3BjaWVfZXBfcmFpc2VfaXJxKHN0cnVjdCBkd19wY2ll
-X2VwDQo+ICplcCwgdTggZnVuY19ubywNCj4gPiA+ICAJY2FzZSBQQ0lfRVBDX0lSUV9NU0k6DQo+
-ID4gPiAgCQlyZXR1cm4gZHdfcGNpZV9lcF9yYWlzZV9tc2lfaXJxKGVwLCBmdW5jX25vLCBpbnRl
-cnJ1cHRfbnVtKTsNCj4gPiA+ICAJY2FzZSBQQ0lfRVBDX0lSUV9NU0lYOg0KPiA+ID4gLQkJcmV0
-dXJuIGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnEoZXAsIGZ1bmNfbm8sIGludGVycnVwdF9udW0p
-Ow0KPiA+ID4gKwkJcmV0dXJuIGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnFfZG9vcmJlbGwoZXAs
-IGZ1bmNfbm8sDQo+ID4gPiArCQkJCQkJCSAgaW50ZXJydXB0X251bSk7DQo+ID4gPiAgCWRlZmF1
-bHQ6DQo+ID4gPiAgCQlkZXZfZXJyKHBjaS0+ZGV2LCAiVU5LTk9XTiBJUlEgdHlwZVxuIik7DQo+
-ID4gPiAgCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiA+IC0tDQo+ID4gPiAyLjkuNQ0KPiA+ID4NCj4g
-DQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
-LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
-bS1rZXJuZWwK
+Hi!
+
+Dne =C4=8Detrtek, 12. september 2019 ob 22:26:47 CEST je Maxime Ripard napi=
+sal(a):
+> Hi,
+>=20
+> On Thu, Sep 12, 2019 at 07:51:31PM +0200, Jernej Skrabec wrote:
+> > +	dev->regmap =3D devm_regmap_init_mmio(dev->dev, dev->base,
+> > +					   =20
+&deinterlace_regmap_config);
+> > +	if (IS_ERR(dev->regmap)) {
+> > +		dev_err(dev->dev, "Couldn't create deinterlace=20
+regmap\n");
+> > +
+> > +		return PTR_ERR(dev->regmap);
+> > +	}
+> > +
+> > +	ret =3D clk_prepare_enable(dev->bus_clk);
+> > +	if (ret) {
+> > +		dev_err(dev->dev, "Failed to enable bus clock\n");
+> > +
+> > +		return ret;
+> > +	}
+>=20
+> Do you need to keep the bus clock enabled all the time? Usually, for
+> the SoCs that have a reset line, you only need it to read / write to
+> the registers, not to have the controller actually running.
+>=20
+> If you don't, then regmap_init_mmio_clk will take care of that for
+> you.
+>=20
+> > +	clk_set_rate(dev->mod_clk, 300000000);
+> > +
+> > +	ret =3D clk_prepare_enable(dev->mod_clk);
+> > +	if (ret) {
+> > +		dev_err(dev->dev, "Failed to enable mod clock\n");
+> > +
+> > +		goto err_bus_clk;
+> > +	}
+> > +
+> > +	ret =3D clk_prepare_enable(dev->ram_clk);
+> > +	if (ret) {
+> > +		dev_err(dev->dev, "Failed to enable ram clock\n");
+> > +
+> > +		goto err_mod_clk;
+> > +	}
+> > +
+> > +	ret =3D reset_control_reset(dev->rstc);
+> > +	if (ret) {
+> > +		dev_err(dev->dev, "Failed to apply reset\n");
+> > +
+> > +		goto err_ram_clk;
+> > +	}
+>=20
+> This could be moved to a runtime_pm hook, with get_sync called in the
+> open. That way you won't leave the device powered on if it's unused.
+
+Currently I'm looking at sun4i_csi.c as an example of runtime ops, but it=
+=20
+seems a bit wrong to have suspend and resume function marked with=20
+__maybe_unused because they are the only functions which enable needed cloc=
+ks.
+If CONFIG_PM is not enabled, then this driver simply won't work, because=20
+clocks will never get enabled. I guess I can implement runtime pm ops in th=
+e=20
+same way and add additional handling when CONFIG_PM is not enabled, right?
+
+BTW, which callback is get_sync? I don't see it in dev_pm_ops. I suppose I=
+=20
+need only runtime_suspend and runtime_resume.
+
+Off topic: sun6i_csi.c includes linux/pm_runtime.h but it doesn't have any =
+kind=20
+of power management as far as I can see.
+
+Best regards,
+Jernej
+
+>=20
+> > +struct deinterlace_dev {
+> > +	struct v4l2_device	v4l2_dev;
+> > +	struct video_device	vfd;
+> > +	struct device		*dev;
+> > +	struct v4l2_m2m_dev	*m2m_dev;
+> > +
+> > +	/* Device file mutex */
+> > +	struct mutex		dev_mutex;
+> > +
+> > +	void __iomem		*base;
+> > +	struct regmap		*regmap;
+>=20
+> Do you need to store the base address in that structure if you're
+> using the regmap?
+>=20
+> Maxime
+
+
+
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/3227980.eWD6USAIP4%40jernej-laptop.
