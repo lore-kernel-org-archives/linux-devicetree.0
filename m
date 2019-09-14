@@ -1,14 +1,11 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: ls1028a: fix a compatible issue
-Date: Sat, 14 Sep 2019 10:42:32 +0800
-Message-ID: <20190914024231.GB3425@dragon>
-References: <20190829073439.13069-1-andy.tang@nxp.com>
+From: Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH] arm64: dts: meson: Add capacity-dmips-mhz attributes to G12B
+Date: Sat, 14 Sep 2019 06:49:40 +0400
+Message-ID: <1568429380-3231-1-git-send-email-christianshewitt@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190829073439.13069-1-andy.tang@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,41 +15,85 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yuantian Tang <andy.tang@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, leoyang.li@nxp.com
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Frank Hartung <supervisedthinking@gmail.com>, Christian Hewitt <christianshewitt@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 03:34:39PM +0800, Yuantian Tang wrote:
-> The I2C multiplexer used on ls1028aqds is PCA9547, not PCA9847.
-> So correct it.
+From: Frank Hartung <supervisedthinking@gmail.com>
 
-Can elaborate the fix a little bit, saying what's the issue exactly 
-with using that incorrect compatible?
+From: Frank Hartung <supervisedthinking@gmail.com>
 
-> 
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+Meson G12B SoCs (S922X and A311D) are a big-little design where not all CPUs
+are equal; the A53s cores are weaker than the A72s.
 
-Do we need a fix tag?
+Include capacity-dmips-mhz properties to tell the OS there is a difference
+in processing capacity. The dmips values are based on similar submissions for
+other A53/A72 SoCs: HiSilicon 3660 [1] and Rockchip RK3399 [2].
 
-Shawn
+This change is particularly beneficial for use-cases like retro gaming where
+emulators often run on a single core. The OS now chooses an A72 core instead
+of an A53 core.
 
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> index 5e14e5a19744..f5da9e8b0d9d 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> @@ -107,7 +107,7 @@
->  	status = "okay";
->  
->  	i2c-mux@77 {
-> -		compatible = "nxp,pca9847";
-> +		compatible = "nxp,pca9547";
->  		reg = <0x77>;
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> -- 
-> 2.17.1
-> 
+[1] https://lore.kernel.org/patchwork/patch/862742/
+[2] https://patchwork.kernel.org/patch/10836577/
+
+Signed-off-by: Frank Hartung <supervisedthinking@gmail.com>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-g12b.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
+index 5628ccd..7f78d88 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
+@@ -49,6 +49,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
++			capacity-dmips-mhz = <592>;
+ 			next-level-cache = <&l2>;
+ 		};
+ 
+@@ -57,6 +58,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
++			capacity-dmips-mhz = <592>;
+ 			next-level-cache = <&l2>;
+ 		};
+ 
+@@ -65,6 +67,7 @@
+ 			compatible = "arm,cortex-a73";
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
++			capacity-dmips-mhz = <1024>;
+ 			next-level-cache = <&l2>;
+ 		};
+ 
+@@ -73,6 +76,7 @@
+ 			compatible = "arm,cortex-a73";
+ 			reg = <0x0 0x101>;
+ 			enable-method = "psci";
++			capacity-dmips-mhz = <1024>;
+ 			next-level-cache = <&l2>;
+ 		};
+ 
+@@ -81,6 +85,7 @@
+ 			compatible = "arm,cortex-a73";
+ 			reg = <0x0 0x102>;
+ 			enable-method = "psci";
++			capacity-dmips-mhz = <1024>;
+ 			next-level-cache = <&l2>;
+ 		};
+ 
+@@ -89,6 +94,7 @@
+ 			compatible = "arm,cortex-a73";
+ 			reg = <0x0 0x103>;
+ 			enable-method = "psci";
++			capacity-dmips-mhz = <1024>;
+ 			next-level-cache = <&l2>;
+ 		};
+ 
+-- 
+2.7.4
