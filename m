@@ -1,41 +1,103 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/6] Non-urgent fixes and improvments for omap3-rom-rng
-Date: Sat, 14 Sep 2019 10:59:13 -0700
-Message-ID: <20190914175913.GW52127@atomide.com>
-References: <20190913220922.29501-1-tony@atomide.com>
- <20190914130540.jvtxaame7pat7jph@earth.universe>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH v5 0/9] i2c: add support for filters
+Date: Sat, 14 Sep 2019 21:32:08 +0200
+Message-ID: <20190914193208.ranoecmdcstvbapl@sekiro>
+References: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190914130540.jvtxaame7pat7jph@earth.universe>
+In-Reply-To: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-crypto@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>, Adam Ford <aford173@gmail.com>, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org
+To: Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>
+Cc: "wsa@the-dreams.de" <wsa@the-dreams.de>, "peda@axentia.se" <peda@axentia.se>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Nicolas Ferre - M43238 <Nicolas.Ferre@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre@kernel.org> [190914 13:06]:
-> Hi,
+On Wed, Sep 11, 2019 at 10:24:14AM +0200, Eugen Hristev - M18282 wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
 > 
-> On Fri, Sep 13, 2019 at 03:09:16PM -0700, Tony Lindgren wrote:
-> > Here are fixes and improvments for omap3-rom-rng that's been broken for
-> > a while.
-> > 
-> > The first four patches get it working, and then the last two patches add
-> > support for runtime PM.
+> Hello,
 > 
-> Nice cleanups, the series is
+> This series adds support for analog and digital filters for i2c controllers
 > 
-> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> This series is based on the series:
+> [PATCH v2 0/9] i2c: at91: filters support for at91 SoCs
+> and later
+> [PATCH v4 0/9] i2c: add support for filters
+> and enhanced to add the bindings for all controllers plus an extra bindings
+> for the width of the spikes in nanoseconds (digital filters) and cut-off
+> frequency (analog filters)
 > 
-> Assuming you use clk_prepare_enable() in the runtime PM handler, I
-> suggest to add another patch and go all the way to managed resources:
-> devm_add_action() can be used for disabling runtime PM and
-> devm_hwrng_register() can be used to register the hwrng device.
+> First, bindings are created for
+> 'i2c-analog-filter'
+> 'i2c-digital-filter'
+> 'i2c-digital-filter-width-ns'
+> 'i2c-analog-filter-cutoff-frequency'
+> 
+> The support is added in the i2c core to retrieve filter width/cutoff frequency
+> and add it to the timings structure.
+> Next, the at91 driver is enhanced for supporting digital filter, advanced
+> digital filter (with selectable spike width) and the analog filter.
+> 
+> Finally the device tree for two boards are modified to make use of the
+> new properties.
+> 
+> This series is the result of the comments on the ML in the direction
+> requested: to make the bindings globally available for i2c drivers.
+> 
+> Changes in v5:
+> - renamed i2c-filter-width-ns to i2c-digital-filter-width-ns as this
+> is applicable only to digital filter
+> - created new binding i2c-digital-filter-width-ns for analog filters.
 
-Sure good idea. I'll post a patch for that when I post v2 of
-this set.
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
 
-Regards,
+for at91 stuff. You can keep it for the future if needed as long as
+changes mainly concerned the generic binding.
 
-Tony
+Regards
+
+Ludovic
+
+> 
+> Changes in v4:
+> - renamed i2c-ana-filter to i2c-analog-filter
+> - renamed i2c-dig-filter to i2c-digital-filter
+> 
+> Changes in v3:
+> - made bindings global for i2c controllers and modified accordingly
+> - gave up PADFCDF bit because it's a lack in datasheet
+> - the computation on the width of the spike is based on periph clock as it
+> is done for hold time.
+> 
+> Changes in v2:
+> - added device tree bindings and support for enable-ana-filt and
+> enable-dig-filt
+> - added the new properties to the DT for sama5d4_xplained/sama5d2_xplained
+> 
+> Eugen Hristev (9):
+>   dt-bindings: i2c: at91: add new compatible
+>   dt-bindings: i2c: add bindings for i2c analog and digital filter
+>   i2c: add support for filters optional properties
+>   i2c: at91: add new platform support for sam9x60
+>   i2c: at91: add support for digital filtering
+>   i2c: at91: add support for advanced digital filtering
+>   i2c: at91: add support for analog filtering
+>   ARM: dts: at91: sama5d2_xplained: add analog and digital filter for
+>     i2c
+>   ARM: dts: at91: sama5d4_xplained: add digital filter for i2c
+> 
+>  Documentation/devicetree/bindings/i2c/i2c-at91.txt |  3 +-
+>  Documentation/devicetree/bindings/i2c/i2c.txt      | 18 ++++++++
+>  arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  6 +++
+>  arch/arm/boot/dts/at91-sama5d4_xplained.dts        |  1 +
+>  drivers/i2c/busses/i2c-at91-core.c                 | 38 +++++++++++++++++
+>  drivers/i2c/busses/i2c-at91-master.c               | 49 ++++++++++++++++++++--
+>  drivers/i2c/busses/i2c-at91.h                      | 13 ++++++
+>  drivers/i2c/i2c-core-base.c                        |  6 +++
+>  include/linux/i2c.h                                |  6 +++
+>  9 files changed, 136 insertions(+), 4 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
