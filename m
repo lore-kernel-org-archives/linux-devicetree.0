@@ -1,49 +1,51 @@
-Return-Path: <SRS0=wJwZ=XJ=gmail.com=arndbergmann@kernel.org>
-MIME-Version: 1.0
-References: <20190905192412.23116-1-lee.jones@linaro.org> <5d71ef95.1c69fb81.6d090.085d@mx.google.com>
- <20190906061448.GJ26880@dell> <20190906065018.GA1019@kunai>
- <20190906075600.GL26880@dell> <20190906102355.GA3146@kunai>
- <20190906105445.GO26880@dell> <20190906183139.GB19123@kunai>
- <CAF6AEGsHOaR1dRf8xGH5sRa38=S+Y3NvNiAJ9DpMkddWoLBw8g@mail.gmail.com>
- <20190913142821.GD1022@kunai> <20190913161345.GB8466@tuxbook-pro>
-In-Reply-To: <20190913161345.GB8466@tuxbook-pro>
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Sat, 14 Sep 2019 21:13:28 +0200
-Message-ID: <CAK8P3a2+Foj4gxxetFQ5y1jUjc+HZDT1B3Utj9y2fJQMq83NrQ@mail.gmail.com>
+Return-Path: <SRS0=IIK2=XJ=linaro.org=lee.jones@kernel.org>
+Date: Sat, 14 Sep 2019 09:57:03 +0100
+From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [RESEND v3 1/1] i2c: qcom-geni: Disable DMA processing on the
  Lenovo Yoga C630
-Content-Type: text/plain; charset="UTF-8"
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Clark <robdclark@gmail.com>, Lee Jones <lee.jones@linaro.org>, Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>, alokc@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Message-ID: <20190914085703.GU26880@dell>
+References: <20190906061448.GJ26880@dell>
+ <20190906065018.GA1019@kunai>
+ <20190906075600.GL26880@dell>
+ <20190906102355.GA3146@kunai>
+ <20190906105445.GO26880@dell>
+ <20190906183139.GB19123@kunai>
+ <CAF6AEGsHOaR1dRf8xGH5sRa38=S+Y3NvNiAJ9DpMkddWoLBw8g@mail.gmail.com>
+ <20190913142821.GD1022@kunai>
+ <20190913161345.GB8466@tuxbook-pro>
+ <20190913161748.GF1022@kunai>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190913161748.GF1022@kunai>
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Rob Clark <robdclark@gmail.com>, Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>, alokc@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, vkoul@kernel.org, linux-i2c@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Sep 13, 2019 at 6:13 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Fri 13 Sep 07:28 PDT 2019, Wolfram Sang wrote:
->
-> > On Sat, Sep 07, 2019 at 10:56:34AM -0700, Rob Clark wrote:
-> > > On Sat, Sep 7, 2019 at 9:17 AM Wolfram Sang <wsa@the-dreams.de> wrote:
-> > > >
-> > > >
-> > > > > Does this mean you plan to have this merged for v5.4?
-> > > >
-> > > > Only if the machine DTS is expected to land in 5.4. But Stephen said it
-> > > > is not in liunx-next yet?
-> > > >
-> > >
-> > > It appears to be in arm-soc for-next:
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/log/?h=for-next
-> >
-> > Still not in linux-next. Please ping me or resend this patch once it
-> > hits linux-next.
-> >
->
-> It seems linux-next is now pulling from the soc.git, rather than
-> arm-soc.git, but Arnd is still pushing patches to arm-soc.git.
+On Fri, 13 Sep 2019, Wolfram Sang wrote:
 
-I'm still pushing identical contents to both, but plan to remove the old
-tree after the merge window.
+> 
+> > It seems linux-next is now pulling from the soc.git, rather than
+> > arm-soc.git, but Arnd is still pushing patches to arm-soc.git.
+> 
+> Can you ask them to fix this?
 
-      Arnd
+Linux next is on vacation for month.
+
+The last tag was next-20190904.
+
+> > Arnd says that the patch will be in v5.4 and I merged Arnd's tree and
+> > gave it a spin here and this patch makes it boot. So please merge this
+> > patch for v5.4 as well.
+> 
+> No worries, this is clearly a bugfix. So it will easily go in with the
+> same release as the DTS file.
+
+Thanks.  The DTS commit will go in for v5.4.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
