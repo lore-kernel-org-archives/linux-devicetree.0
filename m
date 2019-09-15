@@ -1,98 +1,62 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 7/7] hwrng: omap3-rom - Use devm hwrng and runtime PM
-Date: Sat, 14 Sep 2019 14:03:00 -0700
-Message-ID: <20190914210300.15836-8-tony@atomide.com>
-References: <20190914210300.15836-1-tony@atomide.com>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
+ max-speed
+Date: Sun, 15 Sep 2019 09:30:00 +0300
+Message-ID: <87muf6oyvr.fsf@tarshish>
+References: <20190910155507.491230-1-tinywrkb@gmail.com>
+ <20190910185033.GD9761@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190914210300.15836-1-tony@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Sebastian Reichel <sre@kernel.org>, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20190910185033.GD9761@lunn.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, tinywrkb <tinywrkb@gmail.com>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This allows us to simplify things more for probe and exit.
+Hi Andrew,
 
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Adam Ford <aford173@gmail.com>
-Cc: Pali Rohár <pali.rohar@gmail.com>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: Tero Kristo <t-kristo@ti.com>
-Suggested-by: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/char/hw_random/omap3-rom-rng.c | 42 ++++++++++----------------
- 1 file changed, 16 insertions(+), 26 deletions(-)
+On Tue, Sep 10 2019, Andrew Lunn wrote:
+> On Tue, Sep 10, 2019 at 06:55:07PM +0300, tinywrkb wrote:
+>> Cubox-i Solo/DualLite carrier board has 100Mb/s magnetics while the
+>> Atheros AR8035 PHY on the MicroSoM v1.3 CPU module is a 1GbE PHY device.
+>>
+>> Since commit 5502b218e001 ("net: phy: use phy_resolve_aneg_linkmode in
+>> genphy_read_status") ethernet is broken on Cubox-i Solo/DualLite devices.
+>
+> Hi Tinywrkb
+>
+> You emailed lots of people, but missed the PHY maintainers :-(
+>
+> Are you sure this is the patch which broken it? Did you do a git
+> bisect.
 
-diff --git a/drivers/char/hw_random/omap3-rom-rng.c b/drivers/char/hw_random/omap3-rom-rng.c
---- a/drivers/char/hw_random/omap3-rom-rng.c
-+++ b/drivers/char/hw_random/omap3-rom-rng.c
-@@ -100,6 +100,14 @@ static int omap_rom_rng_runtime_resume(struct device *dev)
- 	return 0;
- }
- 
-+static void omap_rom_rng_finish(void *data)
-+{
-+	struct omap_rom_rng *ddata = data;
-+
-+	pm_runtime_dont_use_autosuspend(ddata->dev);
-+	pm_runtime_disable(ddata->dev);
-+}
-+
- static int omap3_rom_rng_probe(struct platform_device *pdev)
- {
- 	struct omap_rom_rng *ddata;
-@@ -133,33 +141,16 @@ static int omap3_rom_rng_probe(struct platform_device *pdev)
- 		return PTR_ERR(ddata->clk);
- 	}
- 
--	pm_runtime_enable(ddata->dev);
--
--	ret = hwrng_register(&ddata->ops);
--	if (!ret)
--		goto err_disable;
--
--	pm_runtime_set_autosuspend_delay(ddata->dev, 500);
--	pm_runtime_use_autosuspend(ddata->dev);
--
--	return 0;
--
--err_disable:
--	pm_runtime_disable(ddata->dev);
--
--	return ret;
--}
--
--static int omap3_rom_rng_remove(struct platform_device *pdev)
--{
--	struct omap_rom_rng *ddata;
-+	pm_runtime_enable(&pdev->dev);
-+	pm_runtime_set_autosuspend_delay(&pdev->dev, 500);
-+	pm_runtime_use_autosuspend(&pdev->dev);
- 
--	ddata = dev_get_drvdata(&pdev->dev);
--	hwrng_unregister(&ddata->ops);
--	pm_runtime_dont_use_autosuspend(ddata->dev);
--	pm_runtime_disable(ddata->dev);
-+	ret = devm_add_action_or_reset(ddata->dev, omap_rom_rng_finish,
-+				       ddata);
-+	if (ret)
-+		return ret;
- 
--	return 0;
-+	return devm_hwrng_register(ddata->dev, &ddata->ops);
- }
- 
- static const struct of_device_id omap_rom_rng_match[] = {
-@@ -180,7 +171,6 @@ static struct platform_driver omap3_rom_rng_driver = {
- 		.pm = &omap_rom_rng_pm_ops,
- 	},
- 	.probe		= omap3_rom_rng_probe,
--	.remove		= omap3_rom_rng_remove,
- };
- 
- module_platform_driver(omap3_rom_rng_driver);
--- 
-2.23.0
+Tinywrkb confirmed to me in private communication that revert of
+5502b218e001 fixes Ethernet for him on effected system.
+
+He also referred me to an old Cubox-i spec that lists 10/100 Ethernet
+only for i.MX6 Solo/DualLite variants of Cubox-i. It turns out that
+there was a plan to use a different 10/100 PHY for Solo/DualLite
+SOMs. This plan never materialized. All SolidRun i.MX6 SOMs use the same
+AR8035 PHY that supports 1Gb.
+
+Commit 5502b218e001 might be triggering a hardware issue on the affected
+Cubox-i. I could not reproduce the issue here with Cubox-i and a Dual
+SOM variant running v5.3-rc8. I have no Solo/DualLite variant handy at
+the moment.
+
+baruch
+
+--
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
