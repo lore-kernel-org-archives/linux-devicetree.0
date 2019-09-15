@@ -1,7 +1,8 @@
 From: Louis Kuo <louis.kuo@mediatek.com>
-Subject: [RFC PATCH V4 4/4] dts: arm64: mt8183: Add sensor interface nodes
-Date: Sun, 15 Sep 2019 14:50:04 +0800
-Message-ID: <20190915065004.20257-5-louis.kuo@mediatek.com>
+Subject: [RFC PATCH V4 3/4] dt-bindings: mt8183: Add sensor interface
+ dt-bindings
+Date: Sun, 15 Sep 2019 14:50:03 +0800
+Message-ID: <20190915065004.20257-4-louis.kuo@mediatek.com>
 References: <20190915065004.20257-1-louis.kuo@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,24 +22,39 @@ To: hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, tfiga@chr
 Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, Rynn.Wu@mediatek.com, srv_heupstream@mediatek.com, Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, zwisler@chromium.org, louis.kuo@mediatek.com, christie.yu@mediatek.com, frederic.chen@mediatek.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add nodes for Mediatek's sensor interface device. Sensor interface module
-embedded in Mediatek SOCs, works as a HW camera interface controller
-intended for image and data transmission between cameras and host devices.
+This patch adds the DT binding documentation for the sensor interface
+module in Mediatek SoCs.
 
 Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ .../bindings/media/mediatek-seninf.txt        | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-seninf.txt
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 66aaa07f6cec..f1d081b99867 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -506,4 +506,18 @@
- 			#clock-cells = <1>;
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/media/mediatek-seninf.txt b/Documentation/devicetree/bindings/media/mediatek-seninf.txt
+new file mode 100644
+index 000000000000..bf2eb801cb47
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/mediatek-seninf.txt
+@@ -0,0 +1,30 @@
++* Mediatek seninf MIPI-CSI2 host driver
 +
++Seninf MIPI-CSI2 host driver is a HW camera interface controller. It support a widely adopted,
++simple, high-speed protocol primarily intended for point-to-point image and video
++transmission between cameras and host devices.
++
++Required properties:
++  - compatible: "mediatek,mt8183-seninf"
++  - reg: Must contain an entry for each entry in reg-names.
++  - reg-names: Must include the following entries:
++    "base_reg": seninf registers base
++    "rx_reg": Rx analog registers base
++  - interrupts: interrupt number to the cpu.
++  - clocks : clock name from clock manager
++  - clock-names: must be CLK_CAM_SENINF and CLK_TOP_MUX_SENINF.
++    It is the clocks of seninf
++
++Example:
 +	seninf: seninf@1a040000 {
 +		compatible = "mediatek,mt8183-seninf";
 +		reg = <0 0x1a040000 0 0x8000>,
@@ -49,9 +65,7 @@ index 66aaa07f6cec..f1d081b99867 100644
 +		clocks = <&camsys CLK_CAM_SENINF>,
 +			 <&topckgen CLK_TOP_MUX_SENINF>;
 +		clock-names = "CLK_CAM_SENINF", "CLK_TOP_MUX_SENINF";
-+		status = "disabled";
-+		};
-+	};
- };
++	}
++
 -- 
 2.18.0
