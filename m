@@ -1,67 +1,57 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v4 2/2] net: phy: adin: implement Energy Detect Powerdown
- mode via phy-tunable
-Date: Sun, 15 Sep 2019 08:11:44 -0700
-Message-ID: <53816513-436e-b33b-99cf-18fa98e468b1@gmail.com>
-References: <20190912162812.402-1-alexandru.ardelean@analog.com>
- <20190912162812.402-3-alexandru.ardelean@analog.com>
- <20190914152931.GK27922@lunn.ch>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 1/2] backlight: lm3630a: add an enable gpio for the HWEN
+ pin
+Date: Sun, 15 Sep 2019 18:52:04 +0200
+Message-ID: <20190915165204.GA4857@bug>
+References: <20190908203704.30147-1-andreas@kemnade.info>
+ <20190908203704.30147-2-andreas@kemnade.info>
+ <20190909105729.w5552rtop7rhghy2@holly.lan>
+ <20190909221349.46ca5a1f@aktux>
+ <20190910102156.vmprsjebmlphkv34@holly.lan>
+ <20190910210648.3594912d@kemnade.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190914152931.GK27922@lunn.ch>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190910210648.3594912d@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, hkallweit1@gmail.com, mkubecek@suse.cz
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>, lee.jones@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi!
+
+> > > > Is this needed?
+> > > > 
+> > > > This is a remove path, not a power management path, and we have no idea
+> > > > what the original status of the pin was anyway?
+> > > >   
+> > > 
+> > > Looking at Ishdn on page 5 of the datasheet, switching it off everytime
+> > > possible seems not needed. We would need to call chip_init() everytime
+> > > we enable the gpio or live with default values.
+> > > Therefore I did decide to not put it into any power management path.
+> > > But switching it on and not switching it off feels so unbalanced.   
+> > 
+> > Either the power consumed by the controller when strings aren't lit up
+> > matters, in which case the driver should implement proper power
+> > management or it doesn't matter and changing the pin state isn't needed.
+> > 
+> > I'm happy with either of the above but this looks like a third way,
+> > where eager users could hack in a bit of extra power management by
+> > forcing drivers to unbind. 
+> > 
+> I think I will take the simple way. I am quite sure that the power
+> consumption with HWEN on and leds off does not matter. If someone
+> later comes up and finds out that I misread the datasheet, things
+> are prepared to be improved.
+
+Dunno.. if the power consumption does not matter, why does the chip have the enable
+pin in the first place, and why do we bother supporting it? We could hardcode the
+pin to enabled as well..
+									Pavel
 
 
-On 9/14/2019 8:29 AM, Andrew Lunn wrote:
-> On Thu, Sep 12, 2019 at 07:28:12PM +0300, Alexandru Ardelean wrote:
-> 
->> +static int adin_set_edpd(struct phy_device *phydev, u16 tx_interval)
->> +{
->> +	u16 val;
->> +
->> +	if (tx_interval == ETHTOOL_PHY_EDPD_DISABLE)
->> +		return phy_clear_bits(phydev, ADIN1300_PHY_CTRL_STATUS2,
->> +				(ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN));
->> +
->> +	val = ADIN1300_NRG_PD_EN;
->> +
->> +	switch (tx_interval) {
->> +	case 1000: /* 1 second */
->> +		/* fallthrough */
->> +	case ETHTOOL_PHY_EDPD_DFLT_TX_MSECS:
->> +		val |= ADIN1300_NRG_PD_TX_EN;
->> +		/* fallthrough */
->> +	case ETHTOOL_PHY_EDPD_NO_TX:
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	return phy_modify(phydev, ADIN1300_PHY_CTRL_STATUS2,
->> +			  (ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN),
->> +			  val);
->> +}
->> +
-> 
->>  
->> +	rc = adin_set_edpd(phydev, 1);
->> +	if (rc < 0)
->> +		return rc;
-> 
-> Hi Alexandru
-> 
-> Shouldn't this be adin_set_edpd(phydev, 1000);
-
-That does sound like the intended use, or use
-ETHTOOL_PHY_EDPD_DFLT_TX_MSECS, with that fixed:
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-Florian
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
