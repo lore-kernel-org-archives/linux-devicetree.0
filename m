@@ -1,91 +1,56 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
- max-speed
-Date: Sun, 15 Sep 2019 15:58:44 +0100
-Message-ID: <20190915145844.GE25745@shell.armlinux.org.uk>
-References: <20190910155507.491230-1-tinywrkb@gmail.com>
- <20190910185033.GD9761@lunn.ch>
- <87muf6oyvr.fsf@tarshish>
- <20190915135652.GC3427@lunn.ch>
- <20190915140639.GC25745@shell.armlinux.org.uk>
- <20190915141552.GD25745@shell.armlinux.org.uk>
- <20190915144252.GA17261@lunn.ch>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v4 1/2] ethtool: implement Energy Detect Powerdown support
+ via phy-tunable
+Date: Sun, 15 Sep 2019 08:08:48 -0700
+Message-ID: <3d8855e9-4ca5-d17e-0a66-6c2e0f20fedb@gmail.com>
+References: <20190912162812.402-1-alexandru.ardelean@analog.com>
+ <20190912162812.402-2-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190915144252.GA17261@lunn.ch>
+In-Reply-To: <20190912162812.402-2-alexandru.ardelean@analog.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Baruch Siach <baruch@tkos.co.il>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, tinywrkb <tinywrkb@gmail.com>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Alexandru Ardelean <alexandru.ardelean@analog.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, hkallweit1@gmail.com, andrew@lunn.ch, mkubecek@suse.cz
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 04:42:52PM +0200, Andrew Lunn wrote:
-> > > OF: fdt: Machine model: SolidRun HummingBoard Solo/DualLite
-> > > ...
-> > > # ethtool eth0
-> > > Settings for eth0:
-> > >         Supported ports: [ TP MII ]
-> > >         Supported link modes:   10baseT/Half 10baseT/Full
-> > >                                 100baseT/Half 100baseT/Full
-> > >                                 1000baseT/Full
-> > >         Supported pause frame use: Symmetric
-> > >         Supports auto-negotiation: Yes
-> > >         Supported FEC modes: Not reported
-> > >         Advertised link modes:  10baseT/Half 10baseT/Full
-> > >                                 100baseT/Half 100baseT/Full
-> > >                                 1000baseT/Full
-> > >         Advertised pause frame use: Symmetric
-> > >         Advertised auto-negotiation: Yes
-> > >         Advertised FEC modes: Not reported
-> > >         Link partner advertised link modes:  10baseT/Half 10baseT/Full
-> > >                                              100baseT/Half 100baseT/Full
-> > >                                              1000baseT/Full
-> > >         Link partner advertised pause frame use: Symmetric
-> > >         Link partner advertised auto-negotiation: Yes
-> > >         Link partner advertised FEC modes: Not reported
-> > >         Speed: 1000Mb/s
-> > >         Duplex: Full
-> > >         Port: MII
-> > >         PHYAD: 0
-> > >         Transceiver: internal
-> > >         Auto-negotiation: on
-> > >         Supports Wake-on: d
-> > >         Wake-on: d
-> > >         Link detected: yes
+
+
+On 9/12/2019 9:28 AM, Alexandru Ardelean wrote:
+> The `phy_tunable_id` has been named `ETHTOOL_PHY_EDPD` since it looks like
+> this feature is common across other PHYs (like EEE), and defining
+> `ETHTOOL_PHY_ENERGY_DETECT_POWER_DOWN` seems too long.
 > 
-> > Note that the FEC does *not* support 1000baseT/Half.
+> The way EDPD works, is that the RX block is put to a lower power mode,
+> except for link-pulse detection circuits. The TX block is also put to low
+> power mode, but the PHY wakes-up periodically to send link pulses, to avoid
+> lock-ups in case the other side is also in EDPD mode.
 > 
-> Hi Russell
+> Currently, there are 2 PHY drivers that look like they could use this new
+> PHY tunable feature: the `adin` && `micrel` PHYs.
 > 
-> fec_main.c has code to mask it out. And it is not listed in the modes
-> you have above. So as you say, this all looks to be working.
+> The ADIN's datasheet mentions that TX pulses are at intervals of 1 second
+> default each, and they can be disabled. For the Micrel KSZ9031 PHY, the
+> datasheet does not mention whether they can be disabled, but mentions that
+> they can modified.
 > 
-> I'm wondering if there is an older variant of the hardware with
-> 100Mbps magnetics, and the boot loader is setting something in the
-> PHY? It could be we are now stomping over that?
+> The way this change is structured, is similar to the PHY tunable downshift
+> control:
+> * a `ETHTOOL_PHY_EDPD_DFLT_TX_MSECS` value is exposed to cover a default
+>   TX interval; some PHYs could specify a certain value that makes sense
+> * `ETHTOOL_PHY_EDPD_NO_TX` would disable TX when EDPD is enabled
+> * `ETHTOOL_PHY_EDPD_DISABLE` will disable EDPD
+> 
+> As noted by the `ETHTOOL_PHY_EDPD_DFLT_TX_MSECS` the interval unit is 1
+> millisecond, which should cover a reasonable range of intervals:
+>  - from 1 millisecond, which does not sound like much of a power-saver
+>  - to ~65 seconds which is quite a lot to wait for a link to come up when
+>    plugging a cable
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-Not according to Rabeeh, the SolidRun CTO:
-
-< rabeeh> all i.MX6 based machines from SolidRun are 1Gbps phys
-< rabeeh> i thought that we fixed that information, documentation wise;
-          but seems not
-
-Even the Carrier1 board that pre-dates Hummingboards had the AR8035
-with 1G magnetics.
-
-The schematics I have for the Cubox-i state that the RJ45 jack (which
-contains the magnetics) is to be "Gigabit".
-
-There was a 10/100M option for the microsom, which is selected by where
-a resistor pack is fitted, having the effect of configuring the AR8035
-differently.  I seem to recall the 10/100M option in the early days was
-to use a different Atheros PHY.
-
-However, I'm not aware of 10/100M option making it into production, and
-Rabeeh's comment (who was involved in the design) confirms that.
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Florian
