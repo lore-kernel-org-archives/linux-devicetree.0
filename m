@@ -1,163 +1,581 @@
-Return-Path: <SRS0=x5b/=W6=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V2 2/5] input: keyboard: imx_sc: Add i.MX system
- controller power key support
-Date: Tue, 3 Sep 2019 06:48:45 +0000
-Message-ID: 
- <DB3PR0402MB391602C6B425DD7EBFB9AF1DF5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
- <1567519424-32271-2-git-send-email-Anson.Huang@nxp.com>
- <6d8dd5df-02da-b4cd-e61d-a4a15d0bf0c8@pengutronix.de>
-In-Reply-To: <6d8dd5df-02da-b4cd-e61d-a4a15d0bf0c8@pengutronix.de>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <jic23@kernel.org>
+Date: Sun, 15 Sep 2019 12:07:50 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: iio: Add ltc2983 documentation
+Message-ID: <20190915120750.7a4d3bcd@archlinux>
+In-Reply-To: <20190912173046.GA22533@bogus>
+References: <20190909144550.164488-1-nuno.sa@analog.com>
+	<20190909144550.164488-2-nuno.sa@analog.com>
+	<20190912173046.GA22533@bogus>
 MIME-Version: 1.0
-To: Oleksij Rempel <o.rempel@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, "mripard@kernel.org" <mripard@kernel.org>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "dinguyen@kernel.org" <dinguyen@kernel.org>, "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>, "stefan@agner.ch" <stefan@agner.ch>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "yuehaibing@huawei.com" <yuehaibing@huawei.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "ronald@innovation.ch" <ronald@innovation.ch>, "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>, Jacky Bai <ping.bai@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+To: Rob Herring <robh@kernel.org>
+Cc: Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com
 List-ID: <devicetree@vger.kernel.org>
 
-SGksIE9sZWtzaWoNCg0KPiBPbiAwMy4wOS4xOSAxNjowMywgQW5zb24gSHVhbmcgd3JvdGU6DQo+
-ID4gaS5NWDhRWFAgaXMgYW4gQVJNdjggU29DIHdoaWNoIGhhcyBhIENvcnRleC1NNCBzeXN0ZW0g
-Y29udHJvbGxlcg0KPiA+IGluc2lkZSwgdGhlIHN5c3RlbSBjb250cm9sbGVyIGlzIGluIGNoYXJn
-ZSBvZiBjb250cm9sbGluZyBwb3dlciwgY2xvY2sNCj4gPiBhbmQgcG93ZXIga2V5IGV0Yy4uDQo+
-ID4NCj4gPiBBZGRzIGkuTVggc3lzdGVtIGNvbnRyb2xsZXIgcG93ZXIga2V5IGRyaXZlciBzdXBw
-b3J0LCBMaW51eCBrZXJuZWwgaGFzDQo+ID4gdG8gY29tbXVuaWNhdGUgd2l0aCBzeXN0ZW0gY29u
-dHJvbGxlciB2aWEgTVUgKG1lc3NhZ2UgdW5pdCkgSVBDIHRvIGdldA0KPiA+IHBvd2VyIGtleSdz
-IHN0YXR1cy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFu
-Z0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZXMgc2luY2UgVjE6DQo+ID4gCS0gcmVtb3Zl
-ICJ3YWtldXAtc291cmNlIiBwcm9wZXJ0eSBvcGVyYXRpb24sIHNjdSBwb3dlciBrZXkgdXNlcw0K
-PiBnZW5lcmljIHNjdSBpcnEsDQo+ID4gCSAgbm8gbmVlZCB0byBoYXZlIHRoaXMgcHJvcGVydHkg
-Zm9yIGRldmljZSB3YWtldXAgb3BlcmF0aW9uLg0KPiA+IC0tLQ0KPiA+ICAgZHJpdmVycy9pbnB1
-dC9rZXlib2FyZC9LY29uZmlnICAgICAgICAgfCAgIDcgKysNCj4gPiAgIGRyaXZlcnMvaW5wdXQv
-a2V5Ym9hcmQvTWFrZWZpbGUgICAgICAgIHwgICAxICsNCj4gPiAgIGRyaXZlcnMvaW5wdXQva2V5
-Ym9hcmQvaW14X3NjX3B3cmtleS5jIHwgMTY5DQo+ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKw0KPiA+ICAgMyBmaWxlcyBjaGFuZ2VkLCAxNzcgaW5zZXJ0aW9ucygrKQ0KPiA+ICAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvaW5wdXQva2V5Ym9hcmQvaW14X3NjX3B3cmtleS5j
-DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pbnB1dC9rZXlib2FyZC9LY29uZmlnDQo+
-ID4gYi9kcml2ZXJzL2lucHV0L2tleWJvYXJkL0tjb25maWcgaW5kZXggMmU2ZDI4OC4uM2FhZWI5
-YyAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2lucHV0L2tleWJvYXJkL0tjb25maWcNCj4gPiAr
-KysgYi9kcml2ZXJzL2lucHV0L2tleWJvYXJkL0tjb25maWcNCj4gPiBAQCAtNDY5LDYgKzQ2OSwx
-MyBAQCBjb25maWcgS0VZQk9BUkRfSU1YDQo+ID4gICAJICBUbyBjb21waWxlIHRoaXMgZHJpdmVy
-IGFzIGEgbW9kdWxlLCBjaG9vc2UgTSBoZXJlOiB0aGUNCj4gPiAgIAkgIG1vZHVsZSB3aWxsIGJl
-IGNhbGxlZCBpbXhfa2V5cGFkLg0KPiA+DQo+ID4gK2NvbmZpZyBLRVlCT0FSRF9JTVhfU0NfUFdS
-S0VZDQo+ID4gKwl0cmlzdGF0ZSAiSU1YIFNDVSBQb3dlciBLZXkgRHJpdmVyIg0KPiA+ICsJZGVw
-ZW5kcyBvbiBJTVhfU0NVDQo+ID4gKwloZWxwDQo+ID4gKwkgIFRoaXMgaXMgdGhlIHN5c3RlbSBj
-b250cm9sbGVyIHBvd2Vya2V5IGRyaXZlciBmb3IgTlhQIGkuTVggU29DcyB3aXRoDQo+ID4gKwkg
-IHN5c3RlbSBjb250cm9sbGVyIGluc2lkZS4NCj4gDQo+IFRoZSBLRVkgaXMgY29uZmlndXJhYmxl
-IG92ZXIgZGV2aWNldHJlZSwgd2h5IGlzIGl0IGNhbGxlZCBQV1JLRVk/IEl0IGxvb2tzIGZvcg0K
-PiBtZSBhcyBnZW5lcmljIFNDVSBrZXkgaGFuZGxlci4NCg0KV2UgYWx3YXlzIHVzZSBpdCBhcyBw
-b3dlciBrZXksIE5PVCBhIGdlbmVyaWMga2V5LCBhcyBpdCBoYXMgSFcgZnVuY3Rpb24gZGVzaWdu
-ZWQNCmZvciBwb3dlciBrZXkgcHVycG9zZS4gDQoNCj4gDQo+ID4gICBjb25maWcgS0VZQk9BUkRf
-TkVXVE9ODQo+ID4gICAJdHJpc3RhdGUgIk5ld3RvbiBrZXlib2FyZCINCj4gPiAgIAlzZWxlY3Qg
-U0VSSU8NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pbnB1dC9rZXlib2FyZC9NYWtlZmlsZQ0K
-PiA+IGIvZHJpdmVycy9pbnB1dC9rZXlib2FyZC9NYWtlZmlsZSBpbmRleCA5NTEwMzI1Li45ZWE1
-NTg1IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvaW5wdXQva2V5Ym9hcmQvTWFrZWZpbGUNCj4g
-PiArKysgYi9kcml2ZXJzL2lucHV0L2tleWJvYXJkL01ha2VmaWxlDQo+ID4gQEAgLTI5LDYgKzI5
-LDcgQEAgb2JqLSQoQ09ORklHX0tFWUJPQVJEX0hJTCkJCSs9IGhpbF9rYmQubw0KPiA+ICAgb2Jq
-LSQoQ09ORklHX0tFWUJPQVJEX0hJTF9PTEQpCQkrPSBoaWxrYmQubw0KPiA+ICAgb2JqLSQoQ09O
-RklHX0tFWUJPQVJEX0lQQVFfTUlDUk8pCSs9IGlwYXEtbWljcm8ta2V5cy5vDQo+ID4gICBvYmot
-JChDT05GSUdfS0VZQk9BUkRfSU1YKQkJKz0gaW14X2tleXBhZC5vDQo+ID4gK29iai0kKENPTkZJ
-R19LRVlCT0FSRF9JTVhfU0NfUFdSS0VZKQkrPSBpbXhfc2NfcHdya2V5Lm8NCj4gPiAgIG9iai0k
-KENPTkZJR19LRVlCT0FSRF9IUDZYWCkJCSs9IGpvcm5hZGE2ODBfa2JkLm8NCj4gPiAgIG9iai0k
-KENPTkZJR19LRVlCT0FSRF9IUDdYWCkJCSs9IGpvcm5hZGE3MjBfa2JkLm8NCj4gPiAgIG9iai0k
-KENPTkZJR19LRVlCT0FSRF9MS0tCRCkJCSs9IGxra2JkLm8NCj4gPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9pbnB1dC9rZXlib2FyZC9pbXhfc2NfcHdya2V5LmMNCj4gPiBiL2RyaXZlcnMvaW5wdXQv
-a2V5Ym9hcmQvaW14X3NjX3B3cmtleS5jDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBp
-bmRleCAwMDAwMDAwLi41M2FhOWE0DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2RyaXZl
-cnMvaW5wdXQva2V5Ym9hcmQvaW14X3NjX3B3cmtleS5jDQo+ID4gQEAgLTAsMCArMSwxNjkgQEAN
-Cj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gPiArLyoNCj4gPiAr
-ICogQ29weXJpZ2h0IDIwMTkgTlhQLg0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxs
-aW51eC9kZXZpY2UuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2Vyci5oPg0KPiA+ICsjaW5jbHVk
-ZSA8bGludXgvZmlybXdhcmUvaW14L3NjaS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvaW5pdC5o
-Pg0KPiA+ICsjaW5jbHVkZSA8bGludXgvaW5wdXQuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L2lu
-dGVycnVwdC5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvamlmZmllcy5oPg0KPiA+ICsjaW5jbHVk
-ZSA8bGludXgva2VybmVsLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAr
-I2luY2x1ZGUgPGxpbnV4L29mLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+
-DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gPiArDQo+ID4gKyNk
-ZWZpbmUgREVCT1VOQ0VfVElNRQkxMDANCj4gPiArI2RlZmluZSBSRVBFQVRfSU5URVJWQUwJNjAN
-Cj4gPiArDQo+ID4gKyNkZWZpbmUgU0NfSVJRX0JVVFRPTgkJMQ0KPiA+ICsjZGVmaW5lIFNDX0lS
-UV9HUk9VUF9XQUtFCTMNCj4gPiArI2RlZmluZSBJTVhfU0NfTUlTQ19GVU5DX0dFVF9CVVRUT05f
-U1RBVFVTCTE4DQo+ID4gKw0KPiA+ICtzdHJ1Y3QgaW14X3B3cmtleV9kcnZfZGF0YSB7DQo+ID4g
-KwlpbnQga2V5Y29kZTsNCj4gPiArCWJvb2wga2V5c3RhdGU7ICAvKiAxOiBwcmVzc2VkLCAwOiBy
-ZWxlYXNlICovDQo+ID4gKwlib29sIGRlbGF5X2NoZWNrOw0KPiA+ICsJc3RydWN0IGRlbGF5ZWRf
-d29yayBjaGVja193b3JrOw0KPiA+ICsJc3RydWN0IGlucHV0X2RldiAqaW5wdXQ7DQo+ID4gK307
-DQo+ID4gKw0KPiA+ICtzdHJ1Y3QgaW14X3NjX21zZ19wd3JrZXkgew0KPiA+ICsJc3RydWN0IGlt
-eF9zY19ycGNfbXNnIGhkcjsNCj4gPiArCXU4IHN0YXRlOw0KPiA+ICt9Ow0KPiA+ICtzdGF0aWMg
-c3RydWN0IGlteF9wd3JrZXlfZHJ2X2RhdGEgKnBkYXRhOw0KPiANCj4gV2h5IGlzIGl0IGdsb2Jh
-bCBzdHJ1Y3Q/IEl0IHNlZW1zIHRvIGJlIGZsZXhpYmxlIGNvbmZpZ3VyYWJsZSBvdmVyIGRldmlj
-ZXRyZWUuDQo+IFNvIEkgd291bGQgYXNzdW1lIGl0IHNob3VsZCBiZSBhYmxlIHRvIGhhbmRsZSBt
-b3JlIHRoZW4gb25lIGJ1dHRvbi4gUGxlYXNlDQo+IHJlbW92ZSBnbG9iYWwgdmFyaWFibGVzLCBt
-YWtlIGl0IGFsbG9jYXRhYmxlIHBlciBPRiBub2RlLg0KDQpUaGVyZSBpcyBPTkxZIG9uZSBidXR0
-b24gYXZhaWxhYmxlIGZvciBTQyBrZXksIGJ1dCB5ZXMsIEkgdGhpbmsgSSBjYW4gbWFrZSB0aGUg
-c3RydWN0dXJlDQpwcml2YXRlIGFuZCBnZXQgYWxsIG5lY2Vzc2FyeSBkYXRhIGZyb20gdGhlIHN0
-cnVjdHVyZSB1c2luZyBjb250YWluZXJfb2YuDQoNCj4gDQo+IFBsZWFzZSB1c2UgZGlmZmVyZW50
-IG5hbWUgInBkYXRhIiBpcyB1c3VhbGx5IHVzZWQgYXMgcGxhdGZvcm0gZGF0YS4gUGxlYXNlLA0K
-PiB1c2UgInByaXYiLg0KDQpPSy4NCg0KPiANCj4gPiArc3RhdGljIHN0cnVjdCBpbXhfc2NfaXBj
-ICpwd3JrZXlfaXBjX2hhbmRsZTsNCj4gDQo+IHNhbWUgYXMgYmVmb3JlLCBubyBnbG9iYWwgdmFy
-aWFibGVzLg0KDQpXaWxsIG1vdmUgaXQgaW50byBwcml2YXRlIHBsYXRmb3JtIGRhdGEgc3RydWN0
-dXJlLg0KDQo+IA0KPiA+ICsNCj4gPiArc3RhdGljIGludCBpbXhfc2NfcHdya2V5X25vdGlmeShz
-dHJ1Y3Qgbm90aWZpZXJfYmxvY2sgKm5iLA0KPiA+ICsJCQkJdW5zaWduZWQgbG9uZyBldmVudCwg
-dm9pZCAqZ3JvdXApIHsNCj4gPiArCWlmICgoZXZlbnQgJiBTQ19JUlFfQlVUVE9OKSAmJiAoKih1
-OCAqKWdyb3VwID09DQo+IFNDX0lSUV9HUk9VUF9XQUtFKQ0KPiA+ICsJICAgICYmICFwZGF0YS0+
-ZGVsYXlfY2hlY2spIHsNCj4gPiArCQlwZGF0YS0+ZGVsYXlfY2hlY2sgPSAxOw0KPiA+ICsJCXNj
-aGVkdWxlX2RlbGF5ZWRfd29yaygmcGRhdGEtPmNoZWNrX3dvcmssDQo+ID4gKwkJCQkgICAgICBt
-c2Vjc190b19qaWZmaWVzKFJFUEVBVF9JTlRFUlZBTCkpOw0KPiA+ICsJfQ0KPiA+ICsNCj4gPiAr
-CXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgdm9pZCBpbXhfc2NfY2hlY2tf
-Zm9yX2V2ZW50cyhzdHJ1Y3Qgd29ya19zdHJ1Y3QgKndvcmspIHsNCj4gPiArCXN0cnVjdCBpbnB1
-dF9kZXYgKmlucHV0ID0gcGRhdGEtPmlucHV0Ow0KPiA+ICsJc3RydWN0IGlteF9zY19tc2dfcHdy
-a2V5IG1zZzsNCj4gPiArCXN0cnVjdCBpbXhfc2NfcnBjX21zZyAqaGRyID0gJm1zZy5oZHI7DQo+
-ID4gKwlib29sIHN0YXRlOw0KPiA+ICsNCj4gPiArCWhkci0+dmVyID0gSU1YX1NDX1JQQ19WRVJT
-SU9OOw0KPiA+ICsJaGRyLT5zdmMgPSBJTVhfU0NfUlBDX1NWQ19NSVNDOw0KPiA+ICsJaGRyLT5m
-dW5jID0gSU1YX1NDX01JU0NfRlVOQ19HRVRfQlVUVE9OX1NUQVRVUzsNCj4gPiArCWhkci0+c2l6
-ZSA9IDE7DQo+ID4gKw0KPiA+ICsJLyoNCj4gPiArCSAqIEN1cnJlbnQgU0NVIGZpcm13YXJlIGRv
-ZXMgTk9UIGhhdmUgcmV0dXJuIHZhbHVlIGZvcg0KPiA+ICsJICogdGhpcyBBUEksIHRoYXQgbWVh
-bnMgaXQgaXMgYWx3YXlzIHN1Y2Nlc3NmdWwuDQo+ID4gKwkgKi8NCj4gDQo+IEl0IGlzIG5vdCB0
-cnVlIGZvciB0aGUga2VybmVsIHBhcnQ6DQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3Rl
-Y3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmVsaXhpci4NCj4gYm9vdGxpbi5j
-b20lMkZsaW51eCUyRmxhdGVzdCUyRnNvdXJjZSUyRmRyaXZlcnMlMkZmaXJtd2FyZSUyRmlteCUy
-Rg0KPiBpbXgtDQo+IHNjdS5jJTIzTDE1NyZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5zb24uaHVhbmcl
-NDBueHAuY29tJTdDN2E1ZWQzDQo+IGVmM2IyNTQxZTYxYmU4MDhkNzMwMzgxMGE5JTdDNjg2ZWEx
-ZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MNCj4gMCU3QzAlN0M2MzcwMzA4ODk2Njk0ODkx
-NDEmYW1wO3NkYXRhPWQzdXc2eDZXQ1BlYXZKdTNRWWY5bzljeHgNCj4gUng0bUphcjA0ZlFGTEY5
-RWhFJTNEJmFtcDtyZXNlcnZlZD0wDQo+IA0KPiBpbXhfc2N1X2NhbGxfcnBjKCkgbWF5IGZhaWwg
-aW4gZGlmZmVyZW50IHdheXMgYW5kIHByb3ZpZGUgcHJvcGVyIGVycm9yIHZhbHVlLg0KPiBQbGVh
-c2UgdXNlIGl0Lg0KDQpUaGVyZSBhcmUgYWJvdXQgMyBBUElzIGFyZSBzcGVjaWFsLCB0aGlzIEFQ
-SSBpcyBvbmUgb2YgdGhlbSwgdGhpcyBBUEkgaGFzIG5vIHJldHVybiB2YWx1ZQ0KZnJvbSBTQ1Ug
-RlcgQVBJLCBidXQgaXQgaGFzIHJlc3BvbnNlIGRhdGEgZnJvbSBpdCwgc28gdGhhdCBtZWFucyBp
-ZiB3ZSBzZXQgdGhlIHJlc3BvbnNlDQp0byBmYWxzZSwgdGhlIHN0YWNrIHdpbGwgYmUgZnJlZSBh
-bmQgbWFpbGJveCB3aWxsIGhhdmUgTlVMTCBwb2ludGVyIGlzc3VlIHdoZW4gcmVzcG9uc2UgDQpk
-YXRhIHBhc3NlZCBmcm9tIFNDVSBGVy4gSWYgd2Ugc2V0IHRoZSByZXNwb25zZSB0byB0cnVlLCBh
-cyB0aGUgU0NVIEZXIGhhcyBubyByZXR1cm4gdmFsdWUsDQp0aGUgcmV0dXJuIHZhbHVlIHdpbGwg
-YmUgdGhlIG1zZy0+ZnVuYyB3aGljaCB3aWxsIGJlIGFscmVhZHkgZmFpbGVkLCB0aGF0IGlzIHdo
-eSB3ZSBoYXZlIHRvIHNraXANCnRoZSByZXR1cm4gdmFsdWUgY2hlY2suIFRoaXMgaXMgb25lIHJl
-c3RyaWN0aW9uL2J1ZyBvZiBTQ1UgRlcsIHdlIHdpbGwgbm90aWZ5IFNDVSBGVyBvd25lciB0bw0K
-Zml4L2ltcHJvdmUuDQoNCg0KPiANCj4gPiArCWlteF9zY3VfY2FsbF9ycGMocHdya2V5X2lwY19o
-YW5kbGUsICZtc2csIHRydWUpOyA+ICsJc3RhdGUgPQ0KPiBtc2cuc3RhdGU7DQo+IA0KPiB0aGUg
-Y29udmVyc2F0aW9uIHU4IHRvIGJvb2wgc2hvdWxkIGJlIGRvbmUgaGVyZS4NCg0KT0suDQoNCj4g
-DQo+ID4gKw0KPiA+ICsJaWYgKCFzdGF0ZSAmJiAhcGRhdGEtPmtleXN0YXRlKQ0KPiA+ICsJCXN0
-YXRlID0gdHJ1ZTsNCj4gPiArDQo+ID4gKwlpZiAoc3RhdGUgXiBwZGF0YS0+a2V5c3RhdGUpIHsN
-Cj4gPiArCQlwbV93YWtldXBfZXZlbnQoaW5wdXQtPmRldi5wYXJlbnQsIDApOw0KPiA+ICsJCXBk
-YXRhLT5rZXlzdGF0ZSA9ICEhc3RhdGU7DQo+IA0KPiAJCXRoZSBzdGF0ZSBpcyBhbHJlYWR5IGJv
-b2wuIFdoeSBkbyB5b3UgbmVlZCBleHRyYQ0KPiBjb252ZXJzYXRpb25zPw0KDQpXaWxsIHJlbW92
-ZSBpdC4NCg0KPiANCj4gPiArCQlpbnB1dF9ldmVudChpbnB1dCwgRVZfS0VZLCBwZGF0YS0+a2V5
-Y29kZSwgISFzdGF0ZSk7DQo+IA0KPiBzYW1lIGhlcmUuDQoNCldpbGwgcmVtb3ZlIGl0Lg0KDQo+
-IA0KPiA+ICsJCWlucHV0X3N5bmMoaW5wdXQpOw0KPiA+ICsJCWlmICghc3RhdGUpDQo+ID4gKwkJ
-CXBkYXRhLT5kZWxheV9jaGVjayA9IDA7DQo+ID4gKwkJcG1fcmVsYXgocGRhdGEtPmlucHV0LT5k
-ZXYucGFyZW50KTsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlpZiAoc3RhdGUpDQo+ID4gKwkJc2No
-ZWR1bGVfZGVsYXllZF93b3JrKCZwZGF0YS0+Y2hlY2tfd29yaywNCj4gPiArCQkJCSAgICAgIG1z
-ZWNzX3RvX2ppZmZpZXMoREVCT1VOQ0VfVElNRSkpOyB9DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3Ry
-dWN0IG5vdGlmaWVyX2Jsb2NrIGlteF9zY19wd3JrZXlfbm90aWZpZXIgPSB7DQo+ID4gKwkubm90
-aWZpZXJfY2FsbCA9IGlteF9zY19wd3JrZXlfbm90aWZ5LCB9Ow0KPiA+ICsNCj4gPiArc3RhdGlj
-IGludCBpbXhfc2NfcHdya2V5X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpIHsN
-Cj4gPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBwZGV2LT5kZXYub2Zfbm9kZTsNCj4gPiAr
-CXN0cnVjdCBpbnB1dF9kZXYgKmlucHV0Ow0KPiA+ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwly
-ZXQgPSBpbXhfc2N1X2dldF9oYW5kbGUoJnB3cmtleV9pcGNfaGFuZGxlKTsNCj4gPiArCWlmIChy
-ZXQpDQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiArDQo+ID4gKwlwZGF0YSA9IGRldm1fa3phbGxv
-YygmcGRldi0+ZGV2LCBzaXplb2YoKnBkYXRhKSwgR0ZQX0tFUk5FTCk7DQo+ID4gKwlpZiAoIXBk
-YXRhKQ0KPiA+ICsJCXJldHVybiAtRU5PTUVNOw0KPiA+ICsNCj4gPiArCWlmIChvZl9wcm9wZXJ0
-eV9yZWFkX3UzMihucCwgImxpbnV4LGtleWNvZGUiLCAmcGRhdGEtPmtleWNvZGUpID4gKw0KPiAJ
-CXBkYXRhLT5rZXljb2RlID0gS0VZX1BPV0VSOw0KPiANCj4gQWNjb3JkaW5nIGJpbmRpbmcgZG9j
-dW1lbnRhdGlvbiwgbGludXgsa2V5Y29kZSBpcyByZXF1ZXJlZCBwYXJhbWV0ZXIsIGluDQo+IHRo
-aXMgY2FzZSB5b3Ugc2hvdWxkIGZhaWwgaWYgaXQgaXMgbm90IHNldC4NCg0KQWdyZWVkLCB3aWxs
-IGFkZCBpdCBpbiBWMy4NCg0KVGhhbmtzLA0KQW5zb24uDQo=
+On Fri, 13 Sep 2019 15:36:21 +0100
+Rob Herring <robh@kernel.org> wrote:
+
+> On Mon, Sep 09, 2019 at 04:45:50PM +0200, Nuno S=C3=A1 wrote:
+> > Document the LTC2983 temperature sensor devicetree bindings.
+> >=20
+> > Signed-off-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+> > ---
+> >  .../bindings/iio/temperature/adi,ltc2983.yaml | 442 ++++++++++++++++++
+> >  MAINTAINERS                                   |   1 +
+> >  2 files changed, 443 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/temperature/a=
+di,ltc2983.yaml
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/iio/temperature/adi,ltc2=
+983.yaml b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.ya=
+ml
+> > new file mode 100644
+> > index 000000000000..2b468b3ed177
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
+> > @@ -0,0 +1,442 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iio/temperature/adi,ltc2983.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Analog Devices LTC2983 Multi-sensor Temperature system
+> > +
+> > +maintainers:
+> > +  - Nuno S=C3=A1 <nuno.sa@analog.com>
+> > +
+> > +description: |
+> > +  Analog Devices LTC2983 Multi-Sensor Digital Temperature Measurement =
+System
+> > +  https://www.analog.com/media/en/technical-documentation/data-sheets/=
+2983fc.pdf
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - adi,ltc2983
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  adi,temperature-celcius:
+> > +    description:
+> > +      If this property is present, the temperature is reported in Cels=
+ius.
+> > +    type: boolean
+> > +    maxItems: 1 =20
+>=20
+> It's a boolean, not an array so 'maxItems' doesn't make sense.
+>=20
+> Running 'make dt_binding_check' should tell you this. You may need to=20
+> update dt-schema install though.
+>=20
+> > +
+> > +  adi,mux-delay-config:
+> > +    description:
+> > +      The LTC2983 performs 2 or 3 internal conversion cycles per tempe=
+rature result.
+> > +      Each conversion cycle is performed with different excitation and=
+ input multiplexer
+> > +      configurations. Prior to each conversion, these excitation circu=
+its and input
+> > +      switch configurations are changed and an internal 1ms delay ensu=
+res settling prior
+> > +      to the conversion cycle in most cases. An extra delay can be con=
+figured using this
+> > +      property. The value written here is multiplied by 100us.
+
+Make this adi,mux-delay-config-us and state it is rounded to nearest 100us.
+
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > +      - maximum: 255
+> > +        maxItems: 1 =20
+>=20
+> Drop this.
+>=20
+> > +
+> > +  adi,filter-notch-freq:
+> > +    description:
+> > +      Set's the default setting of the digital filter. The default is =
+simultaneous
+> > +      50/60Hz rejection.
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > +      - enum: [0, 1, 2]
+> > +    maxItems: 1 =20
+>=20
+> Drop this.
+>=20
+> > +
+> > +  '#address-cells':
+> > +    const: 1
+> > +
+> > +  '#size-cells':
+> > +    const: 0
+> > +
+> > +patternProperties:
+> > +  "^thermocouple@([1-9]|1[0-9]|20)$":
+> > +    type: object
+> > +    description: Represents a thermocouple sensor which is connected t=
+o one of the device channels. =20
+>=20
+> Wrap lines at 80 char.
+>=20
+> > +
+> > +    properties:
+> > +      reg:
+> > +        description: |
+> > +          The channel number. It can be connected to one of the 20 cha=
+nnels of the device.
+> > +          Note that, for differential thermocouples, the minimum is 2.
+> > +        minimum: 1
+> > +        maximum: 20
+> > +        maxItems: 1 =20
+>=20
+> Drop this and pretty much everywhere else that is never an array.
+>=20
+> > +
+> > +      adi,sensor-type:
+> > +        description: |
+> > +           Identifies the type of thermocouple connected to the device.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint32
+> > +          - enum: [1 2 3 4 5 6 7 8] =20
+>=20
+> Missing commas which may not even parse. Maybe be consistent with=20
+> elsewhere and use minimum and maximum.
+>=20
+> > +        maxItems: 1
+> > +
+> > +      adi,sensor-config:
+> > +        description: |
+> > +          Raw value which set's the sensor configuration. Look at tabl=
+e 14 of the
+> > +          datasheet for how to set this value for thermocouples.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint32
+> > +          - minimum: 1
+> > +          - maximun: 15
+> > +        maxItems: 1
+> > +
+> > +      adi,cold-junction-handle:
+> > +        description: |
+> > +          Phandle which points to a sensor object responsible for meas=
+uring the
+> > +          thermocouple cold junction temperature.
+> > +        $ref: "/schemas/types.yaml#/definitions/phandle"
+> > +        maxItems: 1
+> > +
+> > +      adi,custom-sensor:
+> > +        description: |
+> > +          This is a table, where each entry should be a pair of voltag=
+e(mv)-temperature(K).
+> > +          The entries must be given in nv and uK so that, the original=
+ values must be
+> > +          multiplied by 1000000. For more details look at table 69 and=
+ 70.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/int64-array
+> > +        minItems: 6
+> > +        maxItems: 128
+> > +    required:
+> > +      - reg
+> > +      - adi,sensor-type
+> > +
+> > +patternProperties:
+> > +  "^diode@([1-9]|1[0-9]|20)$":
+> > +    type: object
+> > +    description: Represents a diode sensor which is connected to one o=
+f the device channels.
+> > +
+> > +    properties:
+> > +      reg:
+> > +        description:
+> > +          The channel number. It can be connected to one of the 20 cha=
+nnels of the device.
+> > +          Note that, for differential diodes, the minimum is 2.
+> > +        minimum: 1
+> > +        maximum: 20
+> > +        maxItems: 1
+> > +
+> > +      adi,sensor-type:
+> > +        description: |
+> > +          Identifies the sensor as a diode.
+> > +        const: 28
+> > +        maxItems: 1
+> > +
+> > +      adi,sensor-config:
+> > +        description: |
+> > +          Raw value which set's the sensor configuration. Look at tabl=
+e 17 of the
+> > +          datasheet for how to set this value for diodes.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint32
+> > +          - enum: [0 1 2 3 4 5 6 7]
+> > +        maxItems: 1
+> > +
+> > +      adi,excitation-current:
+> > +        description: |
+> > +          This property controls the magnitude of the excitation curre=
+nt applied
+> > +          to the diode. Look at table 19 of the datasheet for more inf=
+o.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint32
+> > +          - enum: [0 1 2 3]
+> > +        maxItems: 1
+> > +
+> > +      adi,ideal-factor-value:
+> > +        description: |
+> > +          This property sets the diode ideality factor. The real value=
+ must be
+> > +          multiplied by 1000000 to remove the fractional part. For mor=
+e information
+> > +          look at table 20 of the datasheet.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint32
+> > +        maxItems: 1
+> > +
+> > +    required:
+> > +      - reg
+> > +      - adi,sensor-type
+> > +
+> > +patternProperties:
+> > +  "^rtd@([2-9]|1[0-9]|20)$":
+> > +    type: object
+> > +    description: Represents a rtd sensor which is connected to one of =
+the device channels.
+> > +
+> > +    properties:
+> > +      reg:
+> > +        description: |
+> > +          The channel number. It can be connected to one of the 20 cha=
+nnels of the device.
+> > +        minimum: 2
+> > +        maximum: 20
+> > +        maxItems: 1 =20
+>=20
+> As this is pretty much the same for all child nodes, make a pattern that=
+=20
+> matches all child nodes and put this there rather than duplicating it.=20
+> Then you only need 'minimum: 2' in the cases needing that.
+>=20
+> > +
+> > +      adi,sensor-type:
+> > +        description: |
+> > +          Identifies the type of RTD connected to the device.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint32
+> > +          - enum: [10 11 12 13 14 15 16 17]
+> > +        maxItems: 1
+> > +
+> > +      adi,rsense-handle:
+> > +        description: |
+> > +          Phandle pointing to a rsense object associated with this RTD.
+> > +        $ref: "/schemas/types.yaml#/definitions/phandle"
+> > +        maxItems: 1
+> > +
+> > +      adi,sensor-config:
+> > +        description: |
+> > +          Raw value which set's the sensor configuration. Look at tabl=
+e 28 of the
+> > +          datasheet for how to set this value for RTD's.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint32
+> > +          - enum: [0 1 4 5 8 9 10 12 13 14]
+> > +        maxItems: 1
+> > +
+> > +      adi,excitation-current:
+> > +        description: |
+> > +          This property controls the magnitude of the excitation curre=
+nt applied
+> > +          to the RTD. Look at table 29 of the datasheet for more info.
+
+Any way we can make this real units?  Can list valid value here.
+
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint32
+> > +          - enum: [1 2 3 4 5 6 7 8]
+> > +        maxItems: 1
+> > +
+> > +      adi,rtd-curve:
+> > +        description: |
+> > +          This property set the RTD curve used and the corresponding C=
+allendar-Van
+> > +          Dusen constants. Look at table 30 of the datasheet.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint32
+> > +          - enum: [0 1 2 3]
+> > +        maxItems: 1
+> > +
+> > +      adi,custom-sensor:
+> > +        description: |
+> > +          This is a table, where each entry should be a pair of resist=
+ance(ohm)-temperature(K).
+> > +          The entries added here are in uohm and uK. For more details =
+values look at table 74 and 75.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint64-array
+> > +        minItems: 6
+> > +        maxItems: 128
+> > +    required:
+> > +      - reg
+> > +      - adi,sensor-type
+> > +      - adi,rsense-handle
+> > +
+> > +patternProperties:
+> > +  "^thermistor@([1-9]|1[0-9]|20)$":
+> > +    type: object
+> > +    description: Represents a thermistor sensor which is connected to =
+one of the device channels.
+> > +
+> > +    properties:
+> > +      reg:
+> > +        description: |
+> > +          The channel number. It can be connected to one of the 20 cha=
+nnels of the device.
+> > +          Note that, for differential thermistors, the minimum is 2.
+> > +        minimum: 1
+> > +        maximum: 20
+> > +        maxItems: 1
+> > +
+> > +      adi,sensor-type:
+> > +        description: |
+> > +          Identifies the type of thermistor connected to the device.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint32
+> > +          - enum: [19 20 21 22 23 24 25]
+> > +        maxItems: 1
+> > +
+> > +      adi,rsense-handle:
+> > +        description: |
+> > +          Phandle pointing to a rsense object associated with this the=
+rmistor.
+> > +        $ref: "/schemas/types.yaml#/definitions/phandle"
+> > +        maxItems: 1
+> > +
+> > +      adi,sensor-config:
+> > +        description: |
+> > +          Raw value which set's the sensor configuration. Look at tabl=
+e 52 of the
+> > +          datasheet for how to set this value for thermistors.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint32
+> > +          - enum: [0 1 2 4]
+> > +        maxItems: 1
+> > +
+> > +      adi,excitation-current:
+> > +        description: |
+> > +          This property controls the magnitude of the excitation curre=
+nt applied
+> > +          to the thermistor. Look at table 53 of the datasheet for mor=
+e info.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +          - enum: [1 2 3 4 5 6 7 8 9 10 11 12]
+> > +        maxItems: 1
+> > +
+> > +      adi,custom-sensor:
+> > +        description: |
+> > +          This is a table, where each entry should be a pair of resist=
+ance(ohm)-temperature(K).
+> > +          The entries added here are in uohm and uK only for custom th=
+ermistors.
+> > +          For more details look at table 78 and 79.
+> > +          Steinhart-Hart coefficients are also supported and can be pr=
+ogrammed into the
+> > +          device memory using this property. For Steinhart sensors, th=
+is table has a constant
+> > +          size of 6 entries (defining the coefficients) and the values=
+ are given in the raw format.
+> > +          Look at table 82 for more information.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint64-array
+> > +        minItems: 6
+> > +        maxItems: 128
+> > +    required:
+> > +      - reg
+> > +      - adi,sensor-type
+> > +      - adi,rsense-handle
+> > +
+> > +patternProperties:
+> > +  "^adc@([1-9]|1[0-9]|20)$":
+> > +    type: object
+> > +    description: Represents a channel which is being used as a direct =
+adc.
+> > +
+> > +    properties:
+> > +      reg:
+> > +        description: |
+> > +          The channel number. It can be connected to one of the 20 cha=
+nnels of the device.
+> > +          Note that, for differential adc's, the minimum is 2.
+> > +        minimum: 1
+> > +        maximum: 20
+> > +        maxItems: 1
+> > +
+> > +      adi,sensor-type:
+> > +        description: |
+> > +          Identifies the sensor as a direct adc.
+> > +        const: 30
+> > +        maxItems: 1
+> > +
+> > +      adi,single-ended:
+> > +        description: |
+> > +          Boolean property which set's the adc as single-ended.
+> > +        type: boolean
+> > +
+> > +    required:
+> > +      - reg
+> > +      - adi,sensor-type
+> > +
+> > +patternProperties:
+> > +  "^rsense@([2-9]|1[0-9]|20)$":
+> > +    type: object
+> > +    description: |
+> > +      Represents a rsense which is connected to one of the device chan=
+nels.
+> > +      Rsense are used by thermistors and RTD's.
+> > +
+> > +    properties:
+> > +      reg:
+> > +        description: |
+> > +          The channel number. It can be connected to one of the 20 cha=
+nnels of the device.
+> > +        minimum: 2
+> > +        maximum: 20
+> > +        maxItems: 1
+> > +
+> > +      adi,sensor-type:
+> > +        description: |
+> > +          Identifies the sensor as a rsense.
+> > +        const: 29
+> > +        maxItems: 1
+> > +
+> > +      adi,rsense-val-micro-ohms:
+> > +        description: |
+> > +          Sets the value of the sense resistor. Look at table 20 of th=
+e datasheet
+> > +          for information.
+> > +        allOf:
+> > +          - $ref: /schemas/types.yaml#/definitions/uint64
+> > +        maxItems: 1
+> > +
+> > +    required:
+> > +      - reg
+> > +      - adi,sensor-type
+> > +      - adi, rsense-val
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +    spi0 {
+> > +        #address-cells =3D <1>;
+> > +        #size-cells =3D <0>;
+> > +
+> > +        sensor_ltc2983: ltc2983@0 {
+> > +                compatible =3D "adi,ltc2983";
+> > +                reg =3D <0>;
+> > +
+> > +                #address-cells =3D <1>;
+> > +                #size-cells =3D <0>;
+> > +
+> > +                adi,temperature-celcius;
+> > +                interrupts =3D <20 IRQ_TYPE_EDGE_RISING>;
+> > +                interrupt-parent =3D <&gpio>;
+> > +
+> > +                thermocouple@18 {
+> > +                        reg =3D <18>;
+> > +                        adi,sensor-type =3D <8>; //Type B
+> > +                        adi,sensor-config =3D <1>; //Differential, ope=
+n-circuit current
+> > +                        adi,cold-junction-handle =3D <&diode5>;
+> > +                };
+> > +
+> > +                diode5: diode@5 {
+> > +                        reg =3D <5>;
+> > +                        adi,sensor-type =3D <28>;
+> > +                };
+> > +
+> > +                rsense2: rsense@2 {
+> > +                        reg =3D <2>;
+> > +                        adi,sensor-type =3D <29>;
+> > +                        adi,rsense-val-micro-ohms =3D /bits/ 64 <12000=
+00000>; //1.2Kohms
+> > +                };
+> > +
+> > +                rtd@14 {
+> > +                        reg =3D <14>;
+> > +                        adi,sensor-type =3D <15>; //PT1000
+> > +                        /*2-wire, internal gnd, no current rotation*/
+> > +                        adi,sensor-config =3D <1>;
+> > +                        adi,excitation-current =3D <7>; //500uA
+> > +                        adi,rsense-handle =3D <&rsense2>;
+> > +                };
+> > +
+> > +                adc@10 {
+> > +                        reg =3D <10>;
+> > +                        adi,sensor-type =3D <30>;
+> > +                        adi,single-ended;
+> > +                };
+> > +
+> > +                thermistor@12 {
+> > +                        reg =3D <12>;
+> > +                        adi,sensor-type =3D <26>; //Steinhart
+> > +                        adi,rsense-handle =3D <&rsense2>;
+> > +                        adi,custom-sensor =3D /bits/ 64 <0x00F371EC 0x=
+12345678
+> > +                                        0x2C0F8733 0x10018C66 0xA0FEAC=
+CD
+> > +                                        0x90021D99>; //6 entries
+> > +                };
+> > +
+> > +                thermocouple@20 {
+> > +                        reg =3D <20>;
+> > +                        adi,sensor-type =3D <9>; //custom thermocouple
+> > +                        adi,sensor-config =3D <8>; //single-ended
+> > +                        adi,custom-sensor =3D /bits/ 64
+> > +                                 <(-50220000) 0
+> > +                                  (-30200000) 99100000
+> > +                                  (-5300000) 135400000
+> > +                                  0 273150000
+> > +                                  40200000 361200000
+> > +                                  55300000 522100000
+> > +                                  88300000 720300000
+> > +                                  132200000 811200000
+> > +                                  188700000 922500000
+> > +                                  460400000 1000000000>; //10 pairs
+> > +               };
+> > +
+> > +        };
+> > +    };
+> > +...
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 14a256e785ca..f747a9dc27f5 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -9497,6 +9497,7 @@ W:	http://ez.analog.com/community/linux-device-dr=
+ivers
+> >  L:	linux-iio@vger.kernel.org
+> >  S:	Supported
+> >  F:	drivers/iio/temperature/ltc2983.c
+> > +F:	Documentation/devicetree/bindings/iio/temperature/adi,ltc2983.yaml
+> > =20
+> >  LTC4261 HARDWARE MONITOR DRIVER
+> >  M:	Guenter Roeck <linux@roeck-us.net>
+> > --=20
+> > 2.23.0
+> >  =20
+>=20
