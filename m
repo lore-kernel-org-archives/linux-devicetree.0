@@ -1,67 +1,139 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v6 01/12] tools lib traceevent: Convert remaining %p[fF]
- users to %p[sS]
-Date: Mon, 16 Sep 2019 10:37:55 -0400
-Message-ID: <20190916103755.4c19eda9@gandalf.local.home>
-References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
-        <20190910084707.18380-2-sakari.ailus@linux.intel.com>
-        <20190910071837.2e9110f8@oasis.local.home>
-        <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
-        <20190910142621.0bec208d@oasis.local.home>
-        <c458e734f5777561138b87228384808398547762.camel@perches.com>
-        <20190910150303.5a0d3904@oasis.local.home>
-        <c90c33b421c0fa0db5182d0f58c6ba6e86cf1622.camel@perches.com>
-        <20190916114158.GN5781@paasikivi.fi.intel.com>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [Patch 05/13] media: am437x-vpfe: Streamlined vb2 buffer cleanup
+Date: Mon, 16 Sep 2019 09:53:56 -0500
+Message-ID: <20190916145356.wddnnl3kk2awmbf4@ti.com>
+References: <20190909162743.30114-1-bparrot@ti.com>
+ <20190909162743.30114-6-bparrot@ti.com>
+ <CA+V-a8ub2rjkp0WyUDV8EKnvqR=jCbCdxGzeeNas2APyiJdsYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190916114158.GN5781@paasikivi.fi.intel.com>
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8ub2rjkp0WyUDV8EKnvqR=jCbCdxGzeeNas2APyiJdsYg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 16 Sep 2019 14:41:59 +0300
-Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
-
-> > Well, if you think that works, OK great.
-> > 
-> > But could that work?
-> > How would an individual trace record know if
-> > another trace record used %pfw?
-> > 
-> > Perhaps not reusing %pf, marking it reserved
-> > for a period of years, and using another unused
-> > prefix %p<type> like %pnfw may be simpler.  
+Lad, Prabhakar <prabhakar.csengg@gmail.com> wrote on Mon [2019-Sep-16 09:00:03 +0100]:
+> Hi Benoit,
 > 
-> %p[Ff]w does not exist (I grepped for it) in older kernels since v3.0. So
-> kernel support for %p[fF] and %pfw are mutually exclusive. If you're ok
-> with that, I could change the patch to check %pf isn't followed by 'w',
-> in order to support %pf on older kernels.
+> Thank you for the patch.
+> 
+> On Mon, Sep 9, 2019 at 5:26 PM Benoit Parrot <bparrot@ti.com> wrote:
+> >
+> > Returning queued vb2 buffers back to user space is a common
+> > task best handled by a helper function.
+> >
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/platform/am437x/am437x-vpfe.c | 54 ++++++++++-----------
+> >  1 file changed, 26 insertions(+), 28 deletions(-)
+> >
+> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+> > index 3a8ad9bdf283..52f7fc6e11dd 100644
+> > --- a/drivers/media/platform/am437x/am437x-vpfe.c
+> > +++ b/drivers/media/platform/am437x/am437x-vpfe.c
+> > @@ -1949,6 +1949,29 @@ static void vpfe_buffer_queue(struct vb2_buffer *vb)
+> >         spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
+> >  }
+> >
+> > +static void vpfe_return_all_buffers(struct vpfe_device *vpfe,
+> > +                                   enum vb2_buffer_state state)
+> > +{
+> > +       struct vpfe_cap_buffer *buf, *node;
+> > +       unsigned long flags;
+> > +
+> > +       spin_lock_irqsave(&vpfe->dma_queue_lock, flags);
+> > +       list_for_each_entry_safe(buf, node, &vpfe->dma_queue, list) {
+> > +               vb2_buffer_done(&buf->vb.vb2_buf, state);
+> > +               list_del(&buf->list);
+> > +       }
+> > +
+> > +       if (vpfe->cur_frm)
+> > +               vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf, state);
+> > +
+> > +       if (vpfe->next_frm && vpfe->next_frm != vpfe->cur_frm)
+> > +               vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf, state);
+> > +
+> > +       vpfe->cur_frm = NULL;
+> > +       vpfe->next_frm = NULL;
+> > +       spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
+> > +}
+> > +
+> >  /*
+> >   * vpfe_start_streaming : Starts the DMA engine for streaming
+> >   * @vb: ptr to vb2_buffer
+> > @@ -1957,7 +1980,6 @@ static void vpfe_buffer_queue(struct vb2_buffer *vb)
+> >  static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
+> >  {
+> >         struct vpfe_device *vpfe = vb2_get_drv_priv(vq);
+> > -       struct vpfe_cap_buffer *buf, *tmp;
+> >         struct vpfe_subdev_info *sdinfo;
+> >         unsigned long flags;
+> >         unsigned long addr;
+> > @@ -2003,11 +2025,8 @@ static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
+> >         return 0;
+> >
+> >  err:
+> > -       list_for_each_entry_safe(buf, tmp, &vpfe->dma_queue, list) {
+> > -               list_del(&buf->list);
+> > -               vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_QUEUED);
+> > -       }
+> > -
+> > +       vpfe_return_all_buffers(vpfe, VB2_BUF_STATE_QUEUED);
+> > +       vpfe_pcr_enable(&vpfe->ccdc, 0);
+> 
+> please create a seperate patch for the above change.
 
-I think that's what I suggested to do.
+You mean a separate patch just for the vpfe_pcr_enable() call?
+
+Benoit
 
 > 
-> Although that still does not address using older tooling on newer kernels
-> with support for %pfw.
-
-That should be fine. I don't think it will crash those tools, they will
-just give out wrong information, and if people complain, we can try to
-get them to use the newer version of those tools ;-) (hopefully they
-don't complain to Linus).
-
+> Cheers,
+> --Prabhakar Lad
 > 
-> If you think that's an issue, I'll opt for another extension than %pfw,
-> which I chose originally since it's memorable --- fw for fwnode (names,
-> paths, and probably more in the future).
-> 
-
-I'm fine with the switch, as long as newer tools know how to handle it.
-
-Make sure we also add a comment in the Linux kernel code that states
-that older kernels use to have 'f' and 'F' and that new tools look for
-'fw' to denote that this isn't an older kernel. This way, people will
-hopefully not add another 'fX' pointer name.
-
--- Steve
+> >         return ret;
+> >  }
+> >
+> > @@ -2022,7 +2041,6 @@ static void vpfe_stop_streaming(struct vb2_queue *vq)
+> >  {
+> >         struct vpfe_device *vpfe = vb2_get_drv_priv(vq);
+> >         struct vpfe_subdev_info *sdinfo;
+> > -       unsigned long flags;
+> >         int ret;
+> >
+> >         vpfe_pcr_enable(&vpfe->ccdc, 0);
+> > @@ -2040,27 +2058,7 @@ static void vpfe_stop_streaming(struct vb2_queue *vq)
+> >                 vpfe_dbg(1, vpfe, "stream off failed in subdev\n");
+> >
+> >         /* release all active buffers */
+> > -       spin_lock_irqsave(&vpfe->dma_queue_lock, flags);
+> > -       if (vpfe->cur_frm == vpfe->next_frm) {
+> > -               vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf,
+> > -                               VB2_BUF_STATE_ERROR);
+> > -       } else {
+> > -               if (vpfe->cur_frm != NULL)
+> > -                       vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf,
+> > -                                       VB2_BUF_STATE_ERROR);
+> > -               if (vpfe->next_frm != NULL)
+> > -                       vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf,
+> > -                                       VB2_BUF_STATE_ERROR);
+> > -       }
+> > -
+> > -       while (!list_empty(&vpfe->dma_queue)) {
+> > -               vpfe->next_frm = list_entry(vpfe->dma_queue.next,
+> > -                                               struct vpfe_cap_buffer, list);
+> > -               list_del(&vpfe->next_frm->list);
+> > -               vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf,
+> > -                               VB2_BUF_STATE_ERROR);
+> > -       }
+> > -       spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
+> > +       vpfe_return_all_buffers(vpfe, VB2_BUF_STATE_ERROR);
+> >  }
+> >
+> >  static int vpfe_g_pixelaspect(struct file *file, void *priv,
+> > --
+> > 2.17.1
+> >
