@@ -1,42 +1,61 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v5 2/2] net: phy: adin: implement Energy Detect Powerdown
- mode via phy-tunable
-Date: Mon, 16 Sep 2019 13:57:26 +0200
-Message-ID: <20190916115726.GA5552@lunn.ch>
-References: <20190916073526.24711-1-alexandru.ardelean@analog.com>
- <20190916073526.24711-3-alexandru.ardelean@analog.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 00/11] ARM: dts: qcom: msm8974: add support for external
+ display
+Date: Mon, 16 Sep 2019 14:02:04 +0200
+Message-ID: <53f18b9f-ad23-563c-dc18-be71f3ec2c49@samsung.com>
+References: <CGME20190815004916epcas3p4d8a62e215eff5e227721d3449e6bfbd3@epcas3p4.samsung.com>
+ <20190815004854.19860-1-masneyb@onstation.org>
+ <2da29e80-73fb-8620-532e-0b5f54b00841@samsung.com>
+ <20190916090150.GA349@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190916073526.24711-3-alexandru.ardelean@analog.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, hkallweit1@gmail.com, mkubecek@suse.cz
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190916090150.GA349@onstation.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brian Masney <masneyb@onstation.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jernej.skrabec@siol.net, narmstrong@baylibre.com, airlied@linux.ie, linux-kernel@vger.kernel.org, jonas@kwiboo.se, agross@kernel.org, dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com, linux-arm-msm@vger.kernel.org, enric.balletbo@collabora.com, freedreno@lists.freedesktop.org, sean@poorly.run, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 10:35:26AM +0300, Alexandru Ardelean wrote:
-> This driver becomes the first user of the kernel's `ETHTOOL_PHY_EDPD`
-> phy-tunable feature.
-> EDPD is also enabled by default on PHY config_init, but can be disabled via
-> the phy-tunable control.
-> 
-> When enabling EDPD, it's also a good idea (for the ADIN PHYs) to enable TX
-> periodic pulses, so that in case the other PHY is also on EDPD mode, there
-> is no lock-up situation where both sides are waiting for the other to
-> transmit.
-> 
-> Via the phy-tunable control, TX pulses can be disabled if specifying 0
-> `tx-interval` via ethtool.
-> 
-> The ADIN PHY supports only fixed 1 second intervals; they cannot be
-> configured. That is why the acceptable values are 1,
-> ETHTOOL_PHY_EDPD_DFLT_TX_MSECS and ETHTOOL_PHY_EDPD_NO_TX (which disables
-> TX pulses).
-> 
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+T24gMTYuMDkuMjAxOSAxMTowMSwgQnJpYW4gTWFzbmV5IHdyb3RlOgo+IEhpIEFuZHJ6ZWosCj4K
+PiBPbiBNb24sIFNlcCAxNiwgMjAxOSBhdCAxMDoxMzo1OEFNICswMjAwLCBBbmRyemVqIEhhamRh
+IHdyb3RlOgo+PiBIaSBCcmlhbiwKPj4KPj4gT24gMTUuMDguMjAxOSAwMjo0OCwgQnJpYW4gTWFz
+bmV5IHdyb3RlOgo+Pj4gVGhpcyBwYXRjaCBzZXJpZXMgYmVnaW5zIHRvIGFkZCBzdXBwb3J0IGZv
+ciB0aGUgZXh0ZXJuYWwgZGlzcGxheSBvdmVyCj4+PiBIRE1JIHRoYXQgaXMgc3VwcG9ydGVkIG9u
+IG1zbTg5NzQgU29Dcy4gSSdtIHRlc3RpbmcgdGhpcyBzZXJpZXMgb24gdGhlCj4+PiBOZXh1cyA1
+LCBhbmQgSSdtIGFibGUgdG8gY29tbXVuaWNhdGUgd2l0aCB0aGUgSERNSSBicmlkZ2UgdmlhIHRo
+ZQo+Pj4gYW5hbG9naXgtYW54Nzh4eCBkcml2ZXIsIGhvd2V2ZXIgdGhlIGV4dGVybmFsIGRpc3Bs
+YXkgaXMgbm90IHdvcmtpbmcKPj4+IHlldC4KPj4+Cj4+PiBXaGVuIEkgcGx1ZyBpbiB0aGUgSERN
+SSBjYWJsZSwgdGhlIG1vbml0b3IgZGV0ZWN0cyB0aGF0IGEgZGV2aWNlIGlzCj4+PiBob29rZWQg
+dXAsIGJ1dCBub3RoaW5nIGlzIHNob3duIG9uIHRoZSBleHRlcm5hbCBtb25pdG9yLiBUaGUgaG90
+IHBsdWcKPj4+IGRldGVjdCBHUElPIChocGQtZ3Bpb3MpIG9uIHRoZSBhbmFsb2dpeC1hbng3OHh4
+IGJyaWRnZSBhbmQgTVNNIEhETUkKPj4+IGRyaXZlcnMgZG8gbm90IGNoYW5nZSBzdGF0ZSB3aGVu
+IHRoZSBzbGltcG9ydCBhZGFwdGVyIG9yIEhETUkgY2FibGUgaXMKPj4+IHBsdWdnZWQgaW4gb3Ig
+cmVtb3ZlZC4gSSB3b25kZXIgaWYgYSByZWd1bGF0b3IgaXMgbm90IGVuYWJsZWQgc29tZXdoZXJl
+Pwo+Pj4gSSBoYXZlIGEgY29tbWVudCBpbiBwYXRjaCAxMCByZWdhcmRpbmcgJ2hwZC1nZHNjLXN1
+cHBseScgdGhhdCBtYXkKPj4+IHBvdGVudGlhbGx5IGJlIGFuIGlzc3VlLgo+Pj4KPj4+IEknbSBz
+dGlsbCBkaWdnaW5nIGluIG9uIHRoaXMsIGhvd2V2ZXIgSSdkIGFwcHJlY2lhdGUgYW55IGZlZWRi
+YWNrIGlmCj4+PiBhbnlvbmUgaGFzIHRpbWUuIE1vc3Qgb2YgdGhlc2UgcGF0Y2hlcyBhcmUgcmVh
+ZHkgbm93LCBzbyBJIG1hcmtlZCB0aGUKPj4+IG9uZXMgdGhhdCBhcmVuJ3QgcmVhZHkgd2l0aCAn
+UEFUQ0ggUkZDJy4KPj4+Cj4+PiBJJ20gdXNpbmcgYW4gQW5hbG9naXggU2VtaWNvbmR1Y3RvciBT
+UDYwMDEgU2xpbVBvcnQgTWljcm8tVVNCIHRvIDRLIEhETUkKPj4+IEFkYXB0ZXIgdG8gY29ubmVj
+dCBteSBwaG9uZSB0byBhbiBleHRlcm5hbCBkaXNwbGF5IHZpYSBhIHN0YW5kYXJkIEhETUkKPj4+
+IGNhYmxlLiBUaGlzIHdvcmtzIGp1c3QgZmluZSB3aXRoIHRoZSBkb3duc3RyZWFtIE1TTSBrZXJu
+ZWwgdXNpbmcKPj4+IEFuZHJvaWQuCj4+Cj4+IFRoaXMgcGF0Y2hzZXQgcmlza3MgdG8gYmUgZm9y
+Z290dGVuLiBUbyBhdm9pZCBpdCwgYXQgbGVhc3QgcGFydGlhbGx5LCBJCj4+IGNhbiBtZXJnZSBw
+YXRjaGVzIDEtNSwgaXMgaXQgT0sgZm9yIHlvdT8KPiBUaGF0IHdvdWxkIGJlIGdyZWF0IGlmIHlv
+dSBjb3VsZCBkbyB0aGF0LgoKCkkgaGF2ZSBxdWV1ZWQgMS00IHRvIGRybS1taXNjLW5leHQuIDV0
+aCBwYXRjaCByZXF1aXJlcyBzb21lIGRpc2N1c3Npb24uCgoKUmVnYXJkcwoKQW5kcnplagoKCj4K
+PiBUaGFua3MsCj4KPiBCcmlhbgo+Cj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbA==
