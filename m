@@ -1,28 +1,124 @@
-Return-Path: <SRS0=xE6g=XG=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from host15-232-177-94.static.arubacloud.fr ([94.177.232.15]:45020
-        "EHLO mail.qeaudio.ml" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
-        with ESMTP id S1727329AbfIKJhB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 11 Sep 2019 05:37:01 -0400
-Subject: September Inquiry 2019
-From: Julian Smith <juliansmith@126.com>
-Reply-To: julian.smith@list.ru
+Return-Path: <SRS0=jINe=XL=verge.net.au=horms@kernel.org>
+Date: Mon, 16 Sep 2019 09:54:54 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dt-bindings: hspi: Convert bindings to json-schema
+Message-ID: <20190916075454.ab7cg5icp72sa6qx@verge.net.au>
+References: <20190913122151.20264-1-horms+renesas@verge.net.au>
+ <CAL_JsqKEym4i74AuTFvawBaB0_zBeh5KcBOY_OFheUV1oF4yEg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Message-Id: <20190911092235.2C871624B9@mail.qeaudio.ml>
-Date: Wed, 11 Sep 2019 05:22:35 -0400 (EDT)
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKEym4i74AuTFvawBaB0_zBeh5KcBOY_OFheUV1oF4yEg@mail.gmail.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Kaneko <ykaneko0929@gmail.com>, linux-spi <linux-spi@vger.kernel.org>, devicetree@vger.kernel.org, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,friend,
+On Fri, Sep 13, 2019 at 03:22:10PM -0500, Rob Herring wrote:
+> On Fri, Sep 13, 2019 at 7:22 AM Simon Horman <horms+renesas@verge.net.au> wrote:
+> >
+> > Convert Renesas HSPI bindings documentation to json-schema.
+> > Also name bindings documentation file according to the compat string
+> > being documented.
+> >
+> > As a side effect of this change all currently supported/used compat
+> > strings are listed while no while card compat string is documented.
+> > This, in my opinion, is desirable as only supported hardware should
+> > be documented.
+> >
+> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-This is Julian Smith and i am purchasing manager from E-cloth Co.,LTD in the UK.
-We are glad to know about your company from the web and we are interested in your products.
-Could you kindly send us your Latest catalog and price list for our trial order.
+Hi Rob,
 
-Thanks and Best Regards,
+thanks for your review. I have sent v2 which I believe addresses
+the issues you have raised.
 
-Ms Julian Smith
-Purchasing Manager
-E-cloth Co.,LTD
+> > ---
+> > Based on v5.3-rc1
+> > Tested using:
+> >   make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/renesas,hspi.yaml
+> > ---
+> >  .../devicetree/bindings/spi/renesas,hspi.yaml      | 54 ++++++++++++++++++++++
+> >  Documentation/devicetree/bindings/spi/sh-hspi.txt  | 26 -----------
+> >  2 files changed, 54 insertions(+), 26 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/spi/renesas,hspi.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/spi/sh-hspi.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/spi/renesas,hspi.yaml b/Documentation/devicetree/bindings/spi/renesas,hspi.yaml
+> > new file mode 100644
+> > index 000000000000..94a64a33daf4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/spi/renesas,hspi.yaml
+> > @@ -0,0 +1,54 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/spi/renesas,hspi.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Renesas HSPI
+> > +
+> > +maintainers:
+> > +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Add:
+> 
+> allOf:
+>   - $ref: spi-controller.yaml#
+> 
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - enum:
+> > +        - renesas,hspi-r8a7778 # R-Car M1A
+> > +        - renesas,hspi-r8a7779 # R-Car H1
+> > +      - const: renesas,hspi
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> 
+> > +  '#address-cells':
+> > +    const: 1
+> > +
+> > +  '#size-cells':
+> > +    const: 0
+> 
+> And then these 2 can be dropped.
+> 
+> > +
+> > +  # Pinctrl properties might be needed, too.
+> > +  # See Documentation/devicetree/bindings/pinctrl/renesas,*.
+> 
+> If only a single state, you don't. For multiple states, we need to
+> document the names.
+> 
+> If not present, then they get added automagically so that
+> 'additionalProperties: false' works. But you can't use that here as
+> you'll have child nodes.
+> 
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - '#address-cells'
+> > +  - '#size-cells'
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/irq.h>
+> > +
+> > +    hspi0: spi@fffc7000 {
+> > +        compatible = "renesas,hspi-r8a7778", "renesas,hspi";
+> > +        reg = <0xfffc7000 0x18>;
+> > +        interrupt-parent = <&gic>;
+> > +        interrupts = <0 63 IRQ_TYPE_LEVEL_HIGH>;
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +    };
+> > +
+> 
