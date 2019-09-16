@@ -1,38 +1,28 @@
-From: James Byrne <james.byrne@origamienergy.com>
-Subject: Re: [PATCH] dt-bindings: net: Correct the documentation of KSZ9021
- skew values
-Date: Mon, 16 Sep 2019 17:40:35 +0000
-Message-ID: <0102016d3b297538-fcca5199-6ad1-4625-b11c-3ad3919a0c48-000000@eu-west-1.amazonses.com>
-References: <0102016d2b84f180-bd396cb9-16cf-4472-b718-7a4d2d8d8017-000000@eu-west-1.amazonses.com>
- <20190916.161455.1015414751228915954.davem@davemloft.net>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 2/7] dt-bindings: mmc: Add Actions Semi SD/MMC/SDIO
+ controller binding
+Date: Mon, 16 Sep 2019 13:00:39 -0500
+Message-ID: <CAL_JsqJP6JiZTV=DwuSQLLEv9dMST82Xkrb5AnqREjR5hk5=7Q@mail.gmail.com>
+References: <20190916154546.24982-1-manivannan.sadhasivam@linaro.org> <20190916154546.24982-3-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190916.161455.1015414751228915954.davem@davemloft.net>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190916154546.24982-3-manivannan.sadhasivam@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Stephen Boyd <sboyd@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Thomas Liau <thomas.liau@actions-semi.com>, linux-actions@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16/09/2019 15:14, David Miller wrote:
-> From: James Byrne <james.byrne@origamienergy.com>
-> Date: Fri, 13 Sep 2019 16:46:35 +0000
-> 
->> The documentation of skew values for the KSZ9021 PHY was misleading
->> because the driver implementation followed the erroneous information
->> given in the original KSZ9021 datasheet before it was corrected in
->> revision 1.2 (Feb 2014). It is probably too late to correct the driver
->> now because of the many existing device trees, so instead this just
->> corrects the documentation to explain that what you actually get is not
->> what you might think when looking at the device tree.
->>
->> Signed-off-by: James Byrne <james.byrne@origamienergy.com>
-> 
-> What tree should this go into?
+On Mon, Sep 16, 2019 at 10:46 AM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> Add devicetree YAML binding for Actions Semi Owl SoC's SD/MMC/SDIO
+> controller.
+>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  .../devicetree/bindings/mmc/owl-mmc.yaml      | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/owl-mmc.yaml
 
-I believe this should go into the 'net' tree, but please let me know if 
-I have submitted this patch incorrectly in some way.
-
-James
+Reviewed-by: Rob Herring <robh@kernel.org>
