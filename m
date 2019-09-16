@@ -1,63 +1,38 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v1 0/2] spi: cadence-qspi: Add cadence-qspi support for
- Intel LGM SoC
-Date: Mon, 16 Sep 2019 22:20:47 +0530
-Message-ID: <c4555df5-89d5-e8a6-bed4-887c23ac4f0f@ti.com>
-References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+From: James Byrne <james.byrne@origamienergy.com>
+Subject: Re: [PATCH] dt-bindings: net: Correct the documentation of KSZ9021
+ skew values
+Date: Mon, 16 Sep 2019 17:40:35 +0000
+Message-ID: <0102016d3b297538-fcca5199-6ad1-4625-b11c-3ad3919a0c48-000000@eu-west-1.amazonses.com>
+References: <0102016d2b84f180-bd396cb9-16cf-4472-b718-7a4d2d8d8017-000000@eu-west-1.amazonses.com>
+ <20190916.161455.1015414751228915954.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190916.161455.1015414751228915954.davem@davemloft.net>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>, broonie@kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 16/09/19 1:08 PM, Ramuthevar,Vadivel MuruganX wrote:
-> patch 1: Add YAML for cadence-qspi devicetree cdocumentation.
-> patch 2: cadence-qspi controller driver to support QSPI-NAND flash
-> using existing spi-nand framework with legacy spi protocol.
-
-Nope, you cannot have two drivers for the same IP (i.e Cadence QSPI)
-just to support to different types of SPI memories. This is the reason
-why spi_mem_ops was introduced.
-
-Please rewrite this driver over to use spi_mem_ops (instead of using
-generic SPI xfers) so that same driver supports both SPI-NOR and
-SPI-NAND flashes. Once that's done drivers/mtd/spi-nor/cadence-quadspi.c
-can be deleted.
-
-There are few existing examples of spi_mem_ops users in drivers/spi/
-(git grep spi_mem_ops) and materials here on how to write such a driver:
-
-[1]
-https://bootlin.com/blog/spi-mem-bringing-some-consistency-to-the-spi-memory-ecosystem/
-[2] https://www.youtube.com/watch?v=PkWbuLM_gmU
-
+On 16/09/2019 15:14, David Miller wrote:
+> From: James Byrne <james.byrne@origamienergy.com>
+> Date: Fri, 13 Sep 2019 16:46:35 +0000
 > 
-> Ramuthevar Vadivel Murugan (2):
->   dt-bindings: spi: Add support for cadence-qspi IP Intel LGM SoC
->   spi: cadence-qspi: Add QSPI support for Intel LGM SoC
+>> The documentation of skew values for the KSZ9021 PHY was misleading
+>> because the driver implementation followed the erroneous information
+>> given in the original KSZ9021 datasheet before it was corrected in
+>> revision 1.2 (Feb 2014). It is probably too late to correct the driver
+>> now because of the many existing device trees, so instead this just
+>> corrects the documentation to explain that what you actually get is not
+>> what you might think when looking at the device tree.
+>>
+>> Signed-off-by: James Byrne <james.byrne@origamienergy.com>
 > 
->  .../devicetree/bindings/spi/cadence,qspi-nand.yaml |  84 +++
->  drivers/spi/Kconfig                                |   9 +
->  drivers/spi/Makefile                               |   1 +
->  drivers/spi/spi-cadence-qspi-apb.c                 | 644 +++++++++++++++++++++
->  drivers/spi/spi-cadence-qspi-apb.h                 | 174 ++++++
->  drivers/spi/spi-cadence-qspi.c                     | 461 +++++++++++++++
->  drivers/spi/spi-cadence-qspi.h                     |  73 +++
->  7 files changed, 1446 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
->  create mode 100644 drivers/spi/spi-cadence-qspi-apb.c
->  create mode 100644 drivers/spi/spi-cadence-qspi-apb.h
->  create mode 100644 drivers/spi/spi-cadence-qspi.c
->  create mode 100644 drivers/spi/spi-cadence-qspi.h
-> 
+> What tree should this go into?
 
--- 
-Regards
-Vignesh
+I believe this should go into the 'net' tree, but please let me know if 
+I have submitted this patch incorrectly in some way.
+
+James
