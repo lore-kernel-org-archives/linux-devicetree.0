@@ -1,94 +1,74 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 05/11] drm/bridge: analogix-anx78xx: correct value of
- TX_P0
-Date: Mon, 16 Sep 2019 13:49:07 +0300
-Message-ID: <20190916104907.GB4734@pendragon.ideasonboard.com>
-References: <20190815004854.19860-1-masneyb@onstation.org>
- <CGME20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97@epcas3p1.samsung.com>
- <20190815004854.19860-6-masneyb@onstation.org>
- <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
- <20190916103614.GA1644@onstation.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190916103614.GA1644@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org, narmstrong@baylibre.com, robdclark@gmail.com, sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, jonas@kwiboo.se, jernej.skrabec@siol.net, linus.walleij@linaro.org, enric.balletbo@collabora.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, freedreno@lists.freedesktop.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Letux-kernel] [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to make display work again
+Date: Mon, 16 Sep 2019 12:59:19 +0200
+Message-ID: <ED6A6797-D1F9-473B-ABFF-B6951A924BC1@goldelico.com>
+References: <cover.1562597164.git.hns@goldelico.com> <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com> <20190724194259.GA25847@bogus> <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com> <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com> <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com> <20190831084852.5e726cfa@aktux>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190831084852.5e726cfa@aktux>
+Sender: stable-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+ping.
 
-On Mon, Sep 16, 2019 at 06:36:14AM -0400, Brian Masney wrote:
-> On Mon, Sep 16, 2019 at 12:02:09PM +0200, Andrzej Hajda wrote:
-> > On 15.08.2019 02:48, Brian Masney wrote:
-> > > When attempting to configure this driver on a Nexus 5 phone (msm8974),
-> > > setting up the dummy i2c bus for TX_P0 would fail due to an -EBUSY
-> > > error. The downstream MSM kernel sources [1] shows that the proper value
-> > > for TX_P0 is 0x78, not 0x70, so correct the value to allow device
-> > > probing to succeed.
-> > >
-> > > [1] https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/drivers/video/slimport/slimport_tx_reg.h
-> > >
-> > > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > > ---
-> > >  drivers/gpu/drm/bridge/analogix-anx78xx.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> > > index 25e063bcecbc..bc511fc605c9 100644
-> > > --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> > > +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> > > @@ -6,7 +6,7 @@
-> > >  #ifndef __ANX78xx_H
-> > >  #define __ANX78xx_H
-> > >  
-> > > -#define TX_P0				0x70
-> > > +#define TX_P0				0x78
-> > 
-> > 
-> > This bothers me little. There are no upstream users, grepping android
-> > sources suggests that both values can be used [1][2]  (grep for "#define
-> > TX_P0"), moreover there is code suggesting both values can be valid [3].
-> > 
-> > Could you verify datasheet which i2c slave addresses are valid for this
-> > chip, if both I guess this patch should be reworked.
-> > 
-> > 
-> > [1]:
-> > https://android.googlesource.com/kernel/msm/+/android-msm-flo-3.4-jb-mr2/drivers/misc/slimport_anx7808/slimport_tx_reg.h
-> > 
-> > [2]:
-> > https://github.com/AndroidGX/SimpleGX-MM-6.0_H815_20d/blob/master/drivers/video/slimport/anx7812/slimport7812_tx_reg.h
-> > 
-> > [3]:
-> > https://github.com/commaai/android_kernel_leeco_msm8996/blob/master/drivers/video/msm/mdss/dp/slimport_custom_declare.h#L73
-> 
-> This address is 0x78 on my Nexus 5. Given [3] above it looks like we
-> need to support both addresses. What do you think about moving these
-> addresses into device tree?
+Device omap3-gta04 is neither working with v5.3 nor linux-next quite a =
+while and we need a solution.
 
-Assuming that the device supports different addresses (I can't validate
-that as I don't have access to the datasheet), and different addresses
-need to be used on different systems, then the address to be used needs
-to be provided by the firmware (DT in this case). Two options are
-possible, either specifying the address explicitly in the device's DT
-node, or specifying free addresses (in the form of a white list or black
-list) and allocating an address from that pool. The latter has been
-discussed in a BoF at the Linux Plumbers Conference last week,
-https://linuxplumbersconf.org/event/4/contributions/542/.
+> Am 31.08.2019 um 08:48 schrieb Andreas Kemnade <andreas@kemnade.info>:
+>=20
+> Hi,
+>=20
+> On Mon, 5 Aug 2019 12:29:19 +0200
+> Linus Walleij <linus.walleij@linaro.org> wrote:
+>=20
+>> On Fri, Jul 26, 2019 at 12:43 AM Rob Herring <robh@kernel.org> wrote:
+>>> On Thu, Jul 25, 2019 at 12:23 AM H. Nikolaus Schaller =
+<hns@goldelico.com> wrote: =20
+>>=20
+>>>> I tried to convince Linus that this is the right way but he =
+convinced
+>>>> me that a fix that handles all cases does not exist.
+>>>>=20
+>>>> There seem to be embedded devices with older DTB (potentially in =
+ROM)
+>>>> which provide a plain 0 value for a gpios definition. And either =
+with
+>>>> or without spi-cs-high.
+>>>>=20
+>>>> Since "0" is the same as "GPIO_ACTIVE_HIGH", the absence of
+>>>> spi-cs-high was and must be interpreted as active low for these
+>>>> devices. This leads to the inversion logic in code.
+>>>>=20
+>>>> AFAIR it boils down to the question if gpiolib and the bindings
+>>>> should still support such legacy devices with out-of tree DTB,
+>>>> but force in-tree DTS to add the legacy spi-cs-high property.
+>>>>=20
+>>>> Or if we should fix the 2 or 3 cases of in-tree legacy cases
+>>>> and potentially break out-of tree DTBs. =20
+>>>=20
+>>> If it is small number of platforms, then the kernel could handle =
+those
+>>> cases explicitly as needed.
+>>>=20
+>>>> IMHO it is more general to keep the out-of-tree DTBs working
+>>>> and "fix" what we can control (in-tree DTS). =20
 
-> The downstream and upstream kernel sources divide these addresses by two
-> to get the i2c address. Here's the code in upstream:
-> 
-> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L1353
-> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L41
-> 
-> I'm not sure why the actual i2c address isn't used in this code.
-
--- 
-Regards,
-
-Laurent Pinchart
+>>>=20
+>>> If we do this, then we need to not call spi-cs-high legacy because
+>>> we're stuck with it forever. =20
+>>=20
+>> I agree. The background on it is here:
+>> https://lkml.org/lkml/2019/4/2/4
+>>=20
+>> Not using the negatively defined (i.e. if it is no there, the line is
+>> by default active low) spi-cs-high would break
+>> PowerPC, who were AFAICT using this to ship devices.
+>>=20
+> is this thing now just waiting for someone to do a s/legacy//?
+>=20
+> Regards,
+> Andreas
