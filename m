@@ -1,16 +1,17 @@
 From: gokulsri@codeaurora.org
-Subject: Re: [PATCH V2 06/12] dt-bindings: clock: qcom: Add reset for WCSSAON
-Date: Mon, 16 Sep 2019 17:19:28 +0530
-Message-ID: <2648db96dbddadfce7c915a4877930ab@codeaurora.org>
+Subject: Re: [PATCH V2 08/12] dt-bindings: mailbox: qom: Add ipq8074 APPS
+ compatible
+Date: Mon, 16 Sep 2019 17:22:36 +0530
+Message-ID: <d65db92f678c11e270c7c3c64de19163@codeaurora.org>
 References: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org>
- <1568375771-22933-7-git-send-email-gokulsri@codeaurora.org>
- <5d7c0ec8.1c69fb81.e5ca8.949d@mx.google.com>
+ <1568375771-22933-9-git-send-email-gokulsri@codeaurora.org>
+ <5d7c0ec9.1c69fb81.a7d47.78c1@mx.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d7c0ec8.1c69fb81.e5ca8.949d@mx.google.com>
+In-Reply-To: <5d7c0ec9.1c69fb81.a7d47.78c1@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
 Cc: sboyd@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org, david.brown@linaro.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com, robh+dt@kernel.org, sricharan@codeaurora.org, nprakash@codeaurora.org
@@ -19,14 +20,14 @@ List-Id: devicetree@vger.kernel.org
 Hi Rob,
 
 On 2019-09-14 03:18, Rob Herring wrote:
-> On Fri, 13 Sep 2019 17:26:05 +0530, Gokul Sriram Palanisamy wrote:
->> Add binding for WCSSAON reset required for Q6v5 reset on IPQ8074 SoC.
+> On Fri, 13 Sep 2019 17:26:07 +0530, Gokul Sriram Palanisamy wrote:
+>> Add mailbox support required in IPQ8074 SoCs.
 >> 
 >> Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
 >> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
 >> ---
->>  include/dt-bindings/clock/qcom,gcc-ipq8074.h | 1 +
+>>  Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt | 
+>> 1 +
 >>  1 file changed, 1 insertion(+)
 >> 
 > 
