@@ -1,71 +1,37 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 05/11] drm/bridge: analogix-anx78xx: correct value of
- TX_P0
-Date: Mon, 16 Sep 2019 12:02:09 +0200
-Message-ID: <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
-References: <20190815004854.19860-1-masneyb@onstation.org>
-        <CGME20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97@epcas3p1.samsung.com>
-        <20190815004854.19860-6-masneyb@onstation.org>
-Mime-Version: 1.0
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v2 0/3] Exynos5 DMC minor fixes
+Date: Mon, 16 Sep 2019 12:07:01 +0200
+Message-ID: <20190916100704.26692-1-l.luba@partner.samsung.com>
+References: <CGME20190916100716eucas1p213ef29ba8bd288dfc6b5f05138c9a558@eucas1p2.samsung.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190815004854.19860-6-masneyb@onstation.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>, bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org, narmstrong@baylibre.com, robdclark@gmail.com, sean@poorly.run
-Cc: airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@siol.net, linus.walleij@linaro.org, enric.balletbo@collabora.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, freedreno@lists.freedesktop.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, willy.mh.wolff.ml@gmail.com, Lukasz Luba <l.luba@partner.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 15.08.2019 02:48, Brian Masney wrote:
-> When attempting to configure this driver on a Nexus 5 phone (msm8974),
-> setting up the dummy i2c bus for TX_P0 would fail due to an -EBUSY
-> error. The downstream MSM kernel sources [1] shows that the proper value
-> for TX_P0 is 0x78, not 0x70, so correct the value to allow device
-> probing to succeed.
->
-> [1] https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/drivers/video/slimport/slimport_tx_reg.h
->
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  drivers/gpu/drm/bridge/analogix-anx78xx.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> index 25e063bcecbc..bc511fc605c9 100644
-> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> @@ -6,7 +6,7 @@
->  #ifndef __ANX78xx_H
->  #define __ANX78xx_H
->  
-> -#define TX_P0				0x70
-> +#define TX_P0				0x78
+Hi all,
 
+This is a follow up patch set for the Exynos5 Dynamic Memory Controller
+driver v13 [1]. The patches are based on Krzysztof's 'for-next' branch [2].
+There are a few minor fixes captured during static analysis and a new
+binding for 'samsung,K3QF2F20DB' LPDDR3 memory.
 
-This bothers me little. There are no upstream users, grepping android
-sources suggests that both values can be used [1][2]  (grep for "#define
-TX_P0"), moreover there is code suggesting both values can be valid [3].
+Regards,
+Lukasz Luba
 
-Could you verify datasheet which i2c slave addresses are valid for this
-chip, if both I guess this patch should be reworked.
+[1] https://lkml.org/lkml/2019/8/21/283
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git/log/?h=for-next
 
+Lukasz Luba (3):
+  memory: Exynos5422: minor fixes in DMC
+  ARM: dts: exynos: fix too long line in memory device
+  dt-bindings: ddr: Add bindings for Samsung LPDDR3 memories
 
-[1]:
-https://android.googlesource.com/kernel/msm/+/android-msm-flo-3.4-jb-mr2/drivers/misc/slimport_anx7808/slimport_tx_reg.h
+ Documentation/devicetree/bindings/ddr/lpddr3.txt | 9 ++++++---
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi    | 3 ++-
+ drivers/memory/samsung/exynos5422-dmc.c          | 4 ++--
+ 3 files changed, 10 insertions(+), 6 deletions(-)
 
-[2]:
-https://github.com/AndroidGX/SimpleGX-MM-6.0_H815_20d/blob/master/drivers/video/slimport/anx7812/slimport7812_tx_reg.h
-
-[3]:
-https://github.com/commaai/android_kernel_leeco_msm8996/blob/master/drivers/video/msm/mdss/dp/slimport_custom_declare.h#L73
-
-
-Regards
-
-Andrzej
-
-
->  #define TX_P1				0x7a
->  #define TX_P2				0x72
->  
+-- 
+2.17.1
