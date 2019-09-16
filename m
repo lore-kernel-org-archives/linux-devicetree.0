@@ -1,83 +1,97 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 1/3] dt-bindings: dma: Add documentation for DMA domains
-Date: Mon, 16 Sep 2019 14:21:50 +0300
-Message-ID: <82254a3e-12fe-14d8-d49a-6627dd1d3559@ti.com>
-References: <20190910115037.23539-1-peter.ujfalusi@ti.com>
- <20190910115037.23539-2-peter.ujfalusi@ti.com>
- <5d7ba96c.1c69fb81.ee467.32b9@mx.google.com>
+From: Oliver Graute <oliver.graute@gmail.com>
+Subject: Re: [PATCH V3 00/15] arm64: dts: imx8: architecture improvement and
+ adding imx8qm support
+Date: Mon, 16 Sep 2019 13:22:28 +0200
+Message-ID: <20190916112228.GE16292@optiplex>
+References: <1568302252-28066-1-git-send-email-aisheng.dong@nxp.com>
+ <20190913121608.GD16292@optiplex>
+ <AM0PR04MB42117BD6A60E4FEA1456954080B30@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d7ba96c.1c69fb81.ee467.32b9@mx.google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB42117BD6A60E4FEA1456954080B30@AM0PR04MB4211.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Aisheng Dong <aisheng.dong@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 13/09/2019 17.36, Rob Herring wrote:
-> On Tue, Sep 10, 2019 at 02:50:35PM +0300, Peter Ujfalusi wrote:
->> On systems where multiple DMA controllers available, non Slave (for example
->> memcpy operation) users can not be described in DT as there is no device
->> involved from the DMA controller's point of view, DMA binding is not usable.
->> However in these systems still a peripheral might need to be serviced by or
->> it is better to serviced by specific DMA controller.
->> When a memcpy is used to/from a memory mapped region for example a DMA in the
->> same domain can perform better.
->> For generic software modules doing mem 2 mem operations it also matter that
->> they will get a channel from a controller which is faster in DDR to DDR mode
->> rather then from the first controller happen to be loaded.
->>
->> This property is inherited, so it may be specified in a device node or in any
->> of its parent nodes.
+On 13/09/19, Aisheng Dong wrote:
+> > From: Oliver Graute <oliver.graute@gmail.com>
+> > Sent: Friday, September 13, 2019 8:16 PM
+> > 
+> > On 12/09/19, Dong Aisheng wrote:
+> > > IMX SCU based platforms (e.g. MX8QM/MX8QXP) are comprised of a
+> > number
+> > > of SS (Subsystems), those SS may be shared between different SoCs
+> > > while most of them can be reused like Devices Resources, Clocks, Power
+> > domains and etc.
+> > >
+> > > This patch series aims to improve the MX8 architecture to comply with
+> > > the HW design to save a lot of duplicated codes and benefits us a
+> > > better maintainability and scalability in the future.
+> > >
+> > > This patch series depends on another clk new binding series:
+> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpatc
+> > >
+> > hwork.kernel.org%2Fcover%2F11046287%2F&amp;data=02%7C01%7Caishen
+> > g.dong
+> > > %40nxp.com%7C2dffe4b2a0734c5a031408d738447876%7C686ea1d3bc2b
+> > 4c6fa92cd9
+> > >
+> > 9c5c301635%7C0%7C1%7C637039739035971290&amp;sdata=JsAy8vUkkCp
+> > n5HYh79oC
+> > > vekH3SJAICg7VQnLMP01O3c%3D&amp;reserved=0
+> > 
+> > Thx for your update of this patch series. I'am running into the issue that my
+> > linux next-20190904 unfortunately is not booting with it on my imx8QM
+> > board. Kernel is just stuck during boot see below.
+> > 
+> > I applied your v5 of your clock binding patches series and applied this series in
+> > v3. Your former two patch series worked well with next-20190716.
+> > 
+> > The last messages from the kernel are:
+> > 
+> > [    1.019208] imx-scu scu: mbox_request_channel_byname() could not
+> > locate channel named "gip3"
+> > [    1.027316] imx-scu scu: failed to request mbox chan gip3, ret -22
+> > [    1.033480] imx-scu scu: failed to enable general irq channel: -22
+> > [    1.039646] imx-scu scu: NXP i.MX SCU Initialized
+> > [    1.047414] a35_clk: failed to get clock rate -22
+> > [    1.058682]  lcd0-pwm0: failed to power up resource 188 ret -22
+> > [    1.064314] imx-scu-clk: probe of pwm_clk failed with error -22
+> > [    1.070538]  lcd0: failed to power up resource 187 ret -22
+> > [    1.075690] imx-scu-clk: probe of lcd_clk failed with error -22
+> > [    1.085965] mipi_csi0_core_clk: failed to attached the power domain -2
+> > [    1.092359] mipi_csi0_esc_clk: failed to attached the power domain -2
+> > [    1.098777] mipi_csi0_i2c0_clk: failed to attached the power domain -2
+> > [    1.105278] mipi_csi0_pwm0_clk: failed to attached the power domain -2
+> > [    1.115744] imx8qm-pinctrl scu:pinctrl: initialized IMX pinctrl driver
+> > [    1.123923] gpio-mxc 5d080000.gpio: IRQ index 1 not found
+> > [    1.130276] gpio-mxc 5d090000.gpio: IRQ index 1 not found
+> > 
+> > I see similar messages also with your older working patches, only the last two
+> > lines are new errors.
+> > 
 > 
-> If a device needs mem2mem dma, I think we should just use the existing 
-> dma binding. The provider will need a way to define cell values which 
-> mean mem2mem.
-
-But isn't it going to be an abuse of the binding? Each DMA controller
-would hack this in different ways, probably using out of range DMA
-request/trigger number or if they have direction in the binding or some
-other parameter would be set to something invalid...
-
-> For generic s/w, it should be able to query the dma speed or get a 
-> preferred one IMO. It's not a DT problem.
+> Those warnings are because we are still missing some domains added into the
+> pd driver support, it does not block the booting.
 > 
-> We measure memcpy speeds at boot time to select the fastest 
-> implementation for a chip, why not do that for mem2mem DMA?
+> But I did miss to send another power domain patch to avoid gate of console domain
+> which may result in the console hang.
 
-It would make an impact on boot time since the tests would need to be
-done with a large enough copy to be able to see clearly which one is faster.
+Thx. This patch indeed solved my problem. So now its booting with
+next-20190904 and your patch series.
 
-Also we should be able to handle different probing orders:
-client1 should have mem2mem channel from dma2.
+Best regards,
 
-- dma1 probes
-- client1 probes and asks for a mem2mem channel
-- dma2 probes
-
-Here client1 should deffer until dma2 is probed.
-
-Probably the property should be dma-mem2mem-domain to be more precise on
-it's purpose and avoid confusion?
-
-> 
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  .../devicetree/bindings/dma/dma-domain.yaml   | 88 +++++++++++++++++++
->>  1 file changed, 88 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
-> 
-> Note that you have several errors in your schema. Run 'make dt_bindings_check'.
-
-That does not do anything on my system, but git dt-doc-validate running
-via https://github.com/robherring/yaml-bindings.git.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Oliver
