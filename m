@@ -1,77 +1,41 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH 05/11] drm/bridge: analogix-anx78xx: correct value of
- TX_P0
-Date: Mon, 16 Sep 2019 06:36:14 -0400
-Message-ID: <20190916103614.GA1644@onstation.org>
-References: <20190815004854.19860-1-masneyb@onstation.org>
- <CGME20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97@epcas3p1.samsung.com>
- <20190815004854.19860-6-masneyb@onstation.org>
- <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Biwen Li <biwen.li@nxp.com>
+Subject: [2/3] arm: dts: ls1021a: fix that FlexTimer cannot wakeup system in deep sleep
+Date: Mon, 16 Sep 2019 18:25:55 +0800
+Message-ID: <20190916102556.16655-2-biwen.li@nxp.com>
+References: <20190916102556.16655-1-biwen.li@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
+In-Reply-To: <20190916102556.16655-1-biwen.li@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org, narmstrong@baylibre.com, robdclark@gmail.com, sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@siol.net, linus.walleij@linaro.org, enric.balletbo@collabora.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, freedreno@lists.freedesktop.org
+To: leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 12:02:09PM +0200, Andrzej Hajda wrote:
-> On 15.08.2019 02:48, Brian Masney wrote:
-> > When attempting to configure this driver on a Nexus 5 phone (msm8974),
-> > setting up the dummy i2c bus for TX_P0 would fail due to an -EBUSY
-> > error. The downstream MSM kernel sources [1] shows that the proper value
-> > for TX_P0 is 0x78, not 0x70, so correct the value to allow device
-> > probing to succeed.
-> >
-> > [1] https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/drivers/video/slimport/slimport_tx_reg.h
-> >
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > ---
-> >  drivers/gpu/drm/bridge/analogix-anx78xx.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> > index 25e063bcecbc..bc511fc605c9 100644
-> > --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> > +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> > @@ -6,7 +6,7 @@
-> >  #ifndef __ANX78xx_H
-> >  #define __ANX78xx_H
-> >  
-> > -#define TX_P0				0x70
-> > +#define TX_P0				0x78
-> 
-> 
-> This bothers me little. There are no upstream users, grepping android
-> sources suggests that both values can be used [1][2]  (grep for "#define
-> TX_P0"), moreover there is code suggesting both values can be valid [3].
-> 
-> Could you verify datasheet which i2c slave addresses are valid for this
-> chip, if both I guess this patch should be reworked.
-> 
-> 
-> [1]:
-> https://android.googlesource.com/kernel/msm/+/android-msm-flo-3.4-jb-mr2/drivers/misc/slimport_anx7808/slimport_tx_reg.h
-> 
-> [2]:
-> https://github.com/AndroidGX/SimpleGX-MM-6.0_H815_20d/blob/master/drivers/video/slimport/anx7812/slimport7812_tx_reg.h
-> 
-> [3]:
-> https://github.com/commaai/android_kernel_leeco_msm8996/blob/master/drivers/video/msm/mdss/dp/slimport_custom_declare.h#L73
+The patch fix a bug that FlexTimer cannot
+wakeup system in deep sleep.
 
-This address is 0x78 on my Nexus 5. Given [3] above it looks like we
-need to support both addresses. What do you think about moving these
-addresses into device tree?
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+ arch/arm/boot/dts/ls1021a.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The downstream and upstream kernel sources divide these addresses by two
-to get the i2c address. Here's the code in upstream:
-
-https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L1353
-https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L41
-
-I'm not sure why the actual i2c address isn't used in this code.
-
-Brian
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index e3973b611c3a..377bb4717584 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -1000,12 +1000,13 @@
+ 			compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
+ 			reg = <0x0 0x1ee2140 0x0 0x8>;
+ 			#fsl,rcpm-wakeup-cells = <2>;
++			fsl,rcpm-scfg = <&scfg 0x0 0x51c>; /* SCFG_SPARECR8 */
+ 		};
+ 
+ 		ftm_alarm0: timer0@29d0000 {
+ 			compatible = "fsl,ls1021a-ftm-alarm";
+ 			reg = <0x0 0x29d0000 0x0 0x10000>;
+-			fsl,rcpm-wakeup = <&rcpm 0x0 0x20000000>;
++			fsl,rcpm-wakeup = <&rcpm 0x0 0x30000000>; /* FlexTimer1 and OCRAM1 are not powerdown during LPM20(sleep) */
+ 			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+ 			big-endian;
+ 		};
+-- 
+2.17.1
