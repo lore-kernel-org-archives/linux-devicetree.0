@@ -1,206 +1,130 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v3 12/14] drm/mediatek: Add pm runtime support for ovl
- and rdma
-Date: Mon, 16 Sep 2019 15:55:40 +0800
-Message-ID: <1568620540.7280.1.camel@mtksdaap41>
-References: <1567503456-24725-1-git-send-email-yong.wu@mediatek.com>
-         <1567503456-24725-13-git-send-email-yong.wu@mediatek.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Subject: Re: [Patch 05/13] media: am437x-vpfe: Streamlined vb2 buffer cleanup
+Date: Mon, 16 Sep 2019 09:00:03 +0100
+Message-ID: <CA+V-a8ub2rjkp0WyUDV8EKnvqR=jCbCdxGzeeNas2APyiJdsYg@mail.gmail.com>
+References: <20190909162743.30114-1-bparrot@ti.com> <20190909162743.30114-6-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1567503456-24725-13-git-send-email-yong.wu@mediatek.com>
+In-Reply-To: <20190909162743.30114-6-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, youlin.pei@mediatek.com, devicetree@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>, cui.zhang@mediatek.com, srv_heupstream@mediatek.com, chao.hao@mediatek.com, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>, iommu@lists.linux-foundation.org, Matthias Kaehlcke <mka@chromium.org>, linux-mediatek@lists.infradead.org, Yongqiang Niu <yongqiang.niu@mediatek.com>, ming-fan.chen@mediatek.com, anan.sun@mediatek.com, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Benoit,
 
-Hi, Yong:
+Thank you for the patch.
 
-On Tue, 2019-09-03 at 17:37 +0800, Yong Wu wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> Display use the dispsys device to call pm_rumtime_get_sync before.
-> This patch add pm_runtime_xx with ovl and rdma device which has linked
-> with larb0, then it will enable the correpsonding larb0 clock
-> automatically by the device link.
-
-This patch should be applied before "drm/mediatek: Get rid of
-mtk_smi_larb_get/put". If before that patch, this patch is a preparation
-of that patch. If after that patch, this patch is a bug fix of that
-patch. Why let bug happen?
-
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+On Mon, Sep 9, 2019 at 5:26 PM Benoit Parrot <bparrot@ti.com> wrote:
+>
+> Returning queued vb2 buffers back to user space is a common
+> task best handled by a helper function.
+>
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
 > ---
->  drivers/gpu/drm/mediatek/mtk_disp_ovl.c     |  5 +++++
->  drivers/gpu/drm/mediatek/mtk_disp_rdma.c    |  5 +++++
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c     | 18 ++++++++++++++++--
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c |  9 +++++++++
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |  1 +
->  5 files changed, 36 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> index c4f07c2..51958cf 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> @@ -9,6 +9,7 @@
->  #include <linux/of_device.h>
->  #include <linux/of_irq.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
->  
->  #include "mtk_drm_crtc.h"
->  #include "mtk_drm_ddp_comp.h"
-> @@ -300,6 +301,8 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	pm_runtime_enable(dev);
-> +
->  	ret = component_add(dev, &mtk_disp_ovl_component_ops);
->  	if (ret)
->  		dev_err(dev, "Failed to add component: %d\n", ret);
-
-This error should do some error handling to undo pm_runtime_enable().
-
-> @@ -311,6 +314,8 @@ static int mtk_disp_ovl_remove(struct platform_device *pdev)
->  {
->  	component_del(&pdev->dev, &mtk_disp_ovl_component_ops);
->  
-> +	pm_runtime_disable(&pdev->dev);
-> +
->  	return 0;
+>  drivers/media/platform/am437x/am437x-vpfe.c | 54 ++++++++++-----------
+>  1 file changed, 26 insertions(+), 28 deletions(-)
+>
+> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+> index 3a8ad9bdf283..52f7fc6e11dd 100644
+> --- a/drivers/media/platform/am437x/am437x-vpfe.c
+> +++ b/drivers/media/platform/am437x/am437x-vpfe.c
+> @@ -1949,6 +1949,29 @@ static void vpfe_buffer_queue(struct vb2_buffer *vb)
+>         spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
 >  }
->  
-> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-> index 9a6f0a2..15e5c3a 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-> @@ -9,6 +9,7 @@
->  #include <linux/of_device.h>
->  #include <linux/of_irq.h>
->  #include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
->  
->  #include "mtk_drm_crtc.h"
->  #include "mtk_drm_ddp_comp.h"
-> @@ -306,6 +307,8 @@ static int mtk_disp_rdma_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, priv);
->  
-> +	pm_runtime_enable(dev);
+>
+> +static void vpfe_return_all_buffers(struct vpfe_device *vpfe,
+> +                                   enum vb2_buffer_state state)
+> +{
+> +       struct vpfe_cap_buffer *buf, *node;
+> +       unsigned long flags;
 > +
->  	ret = component_add(dev, &mtk_disp_rdma_component_ops);
->  	if (ret)
->  		dev_err(dev, "Failed to add component: %d\n", ret);
-
-Ditto.
-
-> @@ -317,6 +320,8 @@ static int mtk_disp_rdma_remove(struct platform_device *pdev)
+> +       spin_lock_irqsave(&vpfe->dma_queue_lock, flags);
+> +       list_for_each_entry_safe(buf, node, &vpfe->dma_queue, list) {
+> +               vb2_buffer_done(&buf->vb.vb2_buf, state);
+> +               list_del(&buf->list);
+> +       }
+> +
+> +       if (vpfe->cur_frm)
+> +               vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf, state);
+> +
+> +       if (vpfe->next_frm && vpfe->next_frm != vpfe->cur_frm)
+> +               vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf, state);
+> +
+> +       vpfe->cur_frm = NULL;
+> +       vpfe->next_frm = NULL;
+> +       spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
+> +}
+> +
+>  /*
+>   * vpfe_start_streaming : Starts the DMA engine for streaming
+>   * @vb: ptr to vb2_buffer
+> @@ -1957,7 +1980,6 @@ static void vpfe_buffer_queue(struct vb2_buffer *vb)
+>  static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
 >  {
->  	component_del(&pdev->dev, &mtk_disp_rdma_component_ops);
->  
-> +	pm_runtime_disable(&pdev->dev);
-> +
->  	return 0;
+>         struct vpfe_device *vpfe = vb2_get_drv_priv(vq);
+> -       struct vpfe_cap_buffer *buf, *tmp;
+>         struct vpfe_subdev_info *sdinfo;
+>         unsigned long flags;
+>         unsigned long addr;
+> @@ -2003,11 +2025,8 @@ static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
+>         return 0;
+>
+>  err:
+> -       list_for_each_entry_safe(buf, tmp, &vpfe->dma_queue, list) {
+> -               list_del(&buf->list);
+> -               vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_QUEUED);
+> -       }
+> -
+> +       vpfe_return_all_buffers(vpfe, VB2_BUF_STATE_QUEUED);
+> +       vpfe_pcr_enable(&vpfe->ccdc, 0);
+
+please create a seperate patch for the above change.
+
+Cheers,
+--Prabhakar Lad
+
+>         return ret;
 >  }
->  
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> index c1e891e..daf002e 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> @@ -358,13 +358,21 @@ static void mtk_drm_crtc_atomic_enable(struct drm_crtc *crtc,
->  				       struct drm_crtc_state *old_state)
+>
+> @@ -2022,7 +2041,6 @@ static void vpfe_stop_streaming(struct vb2_queue *vq)
 >  {
->  	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
-> +	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
->  	int ret;
->  
->  	DRM_DEBUG_DRIVER("%s %d\n", __func__, crtc->base.id);
->  
-> +	ret = pm_runtime_get_sync(comp->dev);
-> +	if (ret < 0)
-> +		DRM_DEV_ERROR(comp->dev, "Failed to enable power domain: %d\n",
-> +			      ret);
-> +
->  	ret = mtk_crtc_ddp_hw_init(mtk_crtc);
-> -	if (ret)
-> +	if (ret) {
-> +		pm_runtime_put(comp->dev);
->  		return;
-> +	}
->  
->  	drm_crtc_vblank_on(crtc);
->  	mtk_crtc->enabled = true;
-> @@ -374,7 +382,8 @@ static void mtk_drm_crtc_atomic_disable(struct drm_crtc *crtc,
->  					struct drm_crtc_state *old_state)
->  {
->  	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
-> -	int i;
-> +	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
-> +	int i, ret;
->  
->  	DRM_DEBUG_DRIVER("%s %d\n", __func__, crtc->base.id);
->  	if (!mtk_crtc->enabled)
-> @@ -398,6 +407,11 @@ static void mtk_drm_crtc_atomic_disable(struct drm_crtc *crtc,
->  	mtk_crtc_ddp_hw_fini(mtk_crtc);
->  
->  	mtk_crtc->enabled = false;
-> +
-> +	ret = pm_runtime_put(comp->dev);
-> +	if (ret < 0)
-> +		DRM_DEV_ERROR(comp->dev, "Failed to disable power domain: %d\n",
-> +			      ret);
+>         struct vpfe_device *vpfe = vb2_get_drv_priv(vq);
+>         struct vpfe_subdev_info *sdinfo;
+> -       unsigned long flags;
+>         int ret;
+>
+>         vpfe_pcr_enable(&vpfe->ccdc, 0);
+> @@ -2040,27 +2058,7 @@ static void vpfe_stop_streaming(struct vb2_queue *vq)
+>                 vpfe_dbg(1, vpfe, "stream off failed in subdev\n");
+>
+>         /* release all active buffers */
+> -       spin_lock_irqsave(&vpfe->dma_queue_lock, flags);
+> -       if (vpfe->cur_frm == vpfe->next_frm) {
+> -               vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf,
+> -                               VB2_BUF_STATE_ERROR);
+> -       } else {
+> -               if (vpfe->cur_frm != NULL)
+> -                       vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf,
+> -                                       VB2_BUF_STATE_ERROR);
+> -               if (vpfe->next_frm != NULL)
+> -                       vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf,
+> -                                       VB2_BUF_STATE_ERROR);
+> -       }
+> -
+> -       while (!list_empty(&vpfe->dma_queue)) {
+> -               vpfe->next_frm = list_entry(vpfe->dma_queue.next,
+> -                                               struct vpfe_cap_buffer, list);
+> -               list_del(&vpfe->next_frm->list);
+> -               vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf,
+> -                               VB2_BUF_STATE_ERROR);
+> -       }
+> -       spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
+> +       vpfe_return_all_buffers(vpfe, VB2_BUF_STATE_ERROR);
 >  }
->  
->  static void mtk_drm_crtc_atomic_begin(struct drm_crtc *crtc,
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> index 7dc8496..c45e1f0 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> @@ -256,6 +256,8 @@ int mtk_ddp_comp_init(struct device *dev, struct device_node *node,
->  		      struct mtk_ddp_comp *comp, enum mtk_ddp_comp_id comp_id,
->  		      const struct mtk_ddp_comp_funcs *funcs)
->  {
-> +	struct platform_device *comp_pdev;
-> +
->  	if (comp_id < 0 || comp_id >= DDP_COMPONENT_ID_MAX)
->  		return -EINVAL;
->  
-> @@ -282,6 +284,13 @@ int mtk_ddp_comp_init(struct device *dev, struct device_node *node,
->  	if (IS_ERR(comp->clk))
->  		return PTR_ERR(comp->clk);
->  
-> +	comp_pdev = of_find_device_by_node(node);
-> +	if (!comp_pdev) {
-> +		dev_err(dev, "Waiting for device %s\n", node->full_name);
-> +		return -EPROBE_DEFER;
-> +	}
-> +	comp->dev = &comp_pdev->dev;
-
-This should be
-
-	comp->dev = dev;
-
-Regards,
-CK
-
-> +
->  	return 0;
->  }
->  
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> index 108de60..d1838a8 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> @@ -83,6 +83,7 @@ struct mtk_ddp_comp {
->  	struct clk *clk;
->  	void __iomem *regs;
->  	int irq;
-> +	struct device *dev;
->  	enum mtk_ddp_comp_id id;
->  	const struct mtk_ddp_comp_funcs *funcs;
->  };
+>
+>  static int vpfe_g_pixelaspect(struct file *file, void *priv,
+> --
+> 2.17.1
+>
