@@ -1,32 +1,75 @@
-From: Markus Kueffner <kueffner.markus@gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: imx6qdl-udoo: Add Pincfgs for OTG
-Date: Mon, 16 Sep 2019 13:06:04 +0000
-Message-ID: <20190916130604.GA3140@ubuntu-buildhost>
-References: <20190411065440.GB26817@dragon>
- <1555161577-1533-1-git-send-email-kueffner.markus@gmail.com>
- <20190415091150.GB18917@X250.skyworth_vap>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: pci: amlogic,meson-pcie: Add G12A
+ bindings
+Date: Mon, 16 Sep 2019 14:46:43 +0100
+Message-ID: <20190916134643.GT9720@e119886-lin.cambridge.arm.com>
+References: <20190916125022.10754-1-narmstrong@baylibre.com>
+ <20190916125022.10754-2-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190415091150.GB18917@X250.skyworth_vap>
+In-Reply-To: <20190916125022.10754-2-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: khilman@baylibre.com, lorenzo.pieralisi@arm.com, kishon@ti.com, bhelgaas@google.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, yue.wang@Amlogic.com, maz@kernel.org, repk@triplefau.lt, nick@khadas.com, gouwa@khadas.com, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:11:51PM +0800, Shawn Guo wrote:
-> On Sat, Apr 13, 2019 at 03:19:36PM +0200, Markus Kueffner wrote:
-> > Add Pincfgs to enable the i.MX6's OTG feature for UDOO
-> > 
-> > Signed-off-by: Markus Kueffner <kueffner.markus@gmail.com>
+On Mon, Sep 16, 2019 at 02:50:17PM +0200, Neil Armstrong wrote:
+> Add PCIE bindings for the Amlogic G12A SoC, the support is the same
+> but the PHY is shared with USB3 to control the differential lines.
 > 
-> Applied, thanks.
+> Thus this adds a phy phandle to control the PHY, and only requires the
+> MIPI clock for the Amlogic AXG SoC Family.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
 
-Hello, 
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-I was wondering when this might get merged into a release. 
-Is there anything else I need to fix?
-
-Best Regards, 
-Markus
+>  .../devicetree/bindings/pci/amlogic,meson-pcie.txt   | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> index efa2c8b9b85a..84fdc422792e 100644
+> --- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+> @@ -9,13 +9,16 @@ Additional properties are described here:
+>  
+>  Required properties:
+>  - compatible:
+> -	should contain "amlogic,axg-pcie" to identify the core.
+> +	should contain :
+> +	- "amlogic,axg-pcie" for AXG SoC Family
+> +	- "amlogic,g12a-pcie" for G12A SoC Family
+> +	to identify the core.
+>  - reg:
+>  	should contain the configuration address space.
+>  - reg-names: Must be
+>  	- "elbi"	External local bus interface registers
+>  	- "cfg"		Meson specific registers
+> -	- "phy"		Meson PCIE PHY registers
+> +	- "phy"		Meson PCIE PHY registers for AXG SoC Family
+>  	- "config"	PCIe configuration space
+>  - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+>  - clocks: Must contain an entry for each entry in clock-names.
+> @@ -23,12 +26,13 @@ Required properties:
+>  	- "pclk"       PCIe GEN 100M PLL clock
+>  	- "port"       PCIe_x(A or B) RC clock gate
+>  	- "general"    PCIe Phy clock
+> -	- "mipi"       PCIe_x(A or B) 100M ref clock gate
+> +	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
+>  - resets: phandle to the reset lines.
+>  - reset-names: must contain "phy" "port" and "apb"
+> -       - "phy"         Share PHY reset
+> +       - "phy"         Share PHY reset for AXG SoC Family
+>         - "port"        Port A or B reset
+>         - "apb"         Share APB reset
+> +- phys: should contain a phandle to the shared phy for G12A SoC Family
+>  - device_type:
+>  	should be "pci". As specified in designware-pcie.txt
+>  
+> -- 
+> 2.22.0
+> 
