@@ -1,67 +1,101 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v3 3/7] usb: mtu3: support ip-sleep wakeup for MT8183
-Date: Mon, 16 Sep 2019 13:45:47 +0800
-Message-ID: <1568612747.7317.72.camel@mhfsdcap03>
-References: <1567150854-30033-1-git-send-email-chunfeng.yun@mediatek.com>
- <1567150854-30033-4-git-send-email-chunfeng.yun@mediatek.com>
- <20190911184453.GA2628@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190911184453.GA2628@roeck-us.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Hui Song <hui.song_1@nxp.com>
+Subject: [PATCH v5] gpio/mpc8xxx: change irq handler from chained to normal
+Date: Mon, 16 Sep 2019 13:58:17 +0800
+Message-ID: <20190916055817.43425-1-hui.song_1@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Song Hui <hui.song_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA5LTExIGF0IDExOjQ0IC0wNzAwLCBHdWVudGVyIFJvZWNrIHdyb3RlOgo+
-IE9uIEZyaSwgQXVnIDMwLCAyMDE5IGF0IDAzOjQwOjUwUE0gKzA4MDAsIENodW5mZW5nIFl1biB3
-cm90ZToKPiA+IFN1cHBvcnQgVVNCIHdha2V1cCBieSBpcC1zbGVlcCBtb2RlIGZvciBNVDgxODMs
-IGl0J3Mgc2ltaWxhciB0bwo+ID4gTVQ4MTczCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IENodW5m
-ZW5nIFl1biA8Y2h1bmZlbmcueXVuQG1lZGlhdGVrLmNvbT4KPiA+IC0tLQo+ID4gdjM6IGNoYW5n
-ZXMgbWljcm9zIGRlZmluZQo+ID4gCj4gPiB2Mjogbm8gY2hhbmdlcwo+ID4gLS0tCj4gPiAgZHJp
-dmVycy91c2IvbXR1My9tdHUzX2hvc3QuYyB8IDE0ICsrKysrKysrKysrKystCj4gPiAgMSBmaWxl
-IGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiA+IAo+ID4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvdXNiL210dTMvbXR1M19ob3N0LmMgYi9kcml2ZXJzL3VzYi9tdHUzL210
-dTNfaG9zdC5jCj4gPiBpbmRleCBjODcxYjk0ZjNlNmYuLjRmODIwODg4NWViZCAxMDA2NDQKPiA+
-IC0tLSBhL2RyaXZlcnMvdXNiL210dTMvbXR1M19ob3N0LmMKPiA+ICsrKyBiL2RyaXZlcnMvdXNi
-L210dTMvbXR1M19ob3N0LmMKPiA+IEBAIC0xOCw2ICsxOCwxMiBAQAo+ID4gICNpbmNsdWRlICJt
-dHUzLmgiCj4gPiAgI2luY2x1ZGUgIm10dTNfZHIuaCIKPiA+ICAKPiA+ICsvKiBtdDgxODMgZXRj
-ICovCj4gPiArI2RlZmluZSBQRVJJX1dLX0NUUkwwCTB4MjAKPiA+ICsjZGVmaW5lIFdDMF9JU19D
-KHgpCSgoKHgpICYgMHhmKSA8PCAyOCkgIC8qIGN5Y2xlIGRlYm91bmNlICovCj4gPiArI2RlZmlu
-ZSBXQzBfSVNfUAlCSVQoMTIpCS8qIHBvbGFyaXR5ICovCj4gPiArI2RlZmluZSBXQzBfSVNfRU4J
-QklUKDYpCj4gPiArCj4gCj4gRm9yIDY0LWJpdCBidWlsZHMsIHRoaXMgcmVzdWx0cyBpbjoKPiAK
-PiBkcml2ZXJzL3VzYi9tdHUzL210dTNfaG9zdC5jOiBJbiBmdW5jdGlvbiDigJhzc3VzYl93YWtl
-dXBfaXBfc2xlZXBfc2V04oCZOgo+IC4vaW5jbHVkZS9saW51eC9iaXRzLmg6NjoxOTogd2Fybmlu
-ZzoKPiAJY29udmVyc2lvbiBmcm9tIOKAmGxvbmcgdW5zaWduZWQgaW504oCZIHRvIOKAmHUzMuKA
-mSB7YWthIOKAmHVuc2lnbmVkIGludOKAmX0KPiAJY2hhbmdlcyB2YWx1ZSBmcm9tIOKAmDE4NDQ2
-NzQ0MDczNDQxMTIwMzIw4oCZIHRvIOKAmDQwMjY1MzYwMDDigJkgWy1Xb3ZlcmZsb3ddCj4gCj4g
-c2luY2UgV0MwX0lTX0MoKSBpcyBzaWduIGV4dGVuZGVkIHRvIDY0IGJpdCBhbmQgdGhlbiB0cnVu
-Y2F0ZWQuCkdvdCBpdCwgdGhhbmtzIGEgbG90Cgo+IAo+IE9ic2VydmVkIHdpdGggZ2NjIDcuNC4w
-IGFuZCA4LjMuMC4KPiAKPiBHdWVudGVyCj4gCj4gPiAgLyogbXQ4MTczIGV0YyAqLwo+ID4gICNk
-ZWZpbmUgUEVSSV9XS19DVFJMMQkweDQKPiA+ICAjZGVmaW5lIFdDMV9JU19DKHgpCSgoKHgpICYg
-MHhmKSA8PCAyNikgIC8qIGN5Y2xlIGRlYm91bmNlICovCj4gPiBAQCAtMzAsNyArMzYsOCBAQAo+
-ID4gICNkZWZpbmUgU1NDX1NQTV9JTlRfRU4JCUJJVCgxKQo+ID4gIAo+ID4gIGVudW0gc3N1c2Jf
-dXdrX3ZlcnMgewo+ID4gLQlTU1VTQl9VV0tfVjEgPSAxLAo+ID4gKwlTU1VTQl9VV0tfVjAgPSAw
-LAo+ID4gKwlTU1VTQl9VV0tfVjEsCj4gPiAgCVNTVVNCX1VXS19WMiwKPiA+ICB9Owo+ID4gIAo+
-ID4gQEAgLTQzLDYgKzUwLDExIEBAIHN0YXRpYyB2b2lkIHNzdXNiX3dha2V1cF9pcF9zbGVlcF9z
-ZXQoc3RydWN0IHNzdXNiX210ayAqc3N1c2IsIGJvb2wgZW5hYmxlKQo+ID4gIAl1MzIgcmVnLCBt
-c2ssIHZhbDsKPiA+ICAKPiA+ICAJc3dpdGNoIChzc3VzYi0+dXdrX3ZlcnMpIHsKPiA+ICsJY2Fz
-ZSBTU1VTQl9VV0tfVjA6Cj4gPiArCQlyZWcgPSBzc3VzYi0+dXdrX3JlZ19iYXNlICsgUEVSSV9X
-S19DVFJMMDsKPiA+ICsJCW1zayA9IFdDMF9JU19FTiB8IFdDMF9JU19DKDB4ZikgfCBXQzBfSVNf
-UDsKPiA+ICsJCXZhbCA9IGVuYWJsZSA/IChXQzBfSVNfRU4gfCBXQzBfSVNfQygweDgpKSA6IDA7
-Cj4gPiArCQlicmVhazsKPiA+ICAJY2FzZSBTU1VTQl9VV0tfVjE6Cj4gPiAgCQlyZWcgPSBzc3Vz
-Yi0+dXdrX3JlZ19iYXNlICsgUEVSSV9XS19DVFJMMTsKPiA+ICAJCW1zayA9IFdDMV9JU19FTiB8
-IFdDMV9JU19DKDB4ZikgfCBXQzFfSVNfUDsKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+From: Song Hui <hui.song_1@nxp.com>
+
+More than one gpio controllers can share one interrupt, change the
+driver to request shared irq.
+
+Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+Changes in v5:
+	- add traverse every bit function.
+Changes in v4:
+	- convert 'pr_err' to 'dev_err'.
+Changes in v3:
+	- update the patch description.
+Changes in v2:
+	- delete the compatible of ls1088a.
+ drivers/gpio/gpio-mpc8xxx.c | 30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 16a47de..3a06ca9 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -22,6 +22,7 @@
+ #include <linux/irq.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/bitops.h>
++#include <linux/interrupt.h>
+ 
+ #define MPC8XXX_GPIO_PINS	32
+ 
+@@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+ 		return -ENXIO;
+ }
+ 
+-static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
++static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
+ {
+-	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
+-	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
+ 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
+ 	unsigned int mask;
++	int i;
+ 
+ 	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
+ 		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
+-	if (mask)
++	for_each_set_bit(i, &mask, 32)
+ 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
+-						     32 - ffs(mask)));
+-	if (chip->irq_eoi)
+-		chip->irq_eoi(&desc->irq_data);
++						     31 - i));
++
++	return IRQ_HANDLED;
+ }
+ 
+ static void mpc8xxx_irq_unmask(struct irq_data *d)
+@@ -388,8 +389,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 
+ 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
+ 	if (ret) {
+-		pr_err("%pOF: GPIO chip registration failed with status %d\n",
+-		       np, ret);
++		dev_err(&pdev->dev, "%pOF: GPIO chip registration failed with status %d\n",
++			np, ret);
+ 		goto err;
+ 	}
+ 
+@@ -409,8 +410,15 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 	if (devtype->gpio_dir_in_init)
+ 		devtype->gpio_dir_in_init(gc);
+ 
+-	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+-					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
++	ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
++			  IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
++			  mpc8xxx_gc);
++	if (ret) {
++		dev_err(&pdev->dev, "%s: failed to request_irq(%d), ret = %d\n",
++			np->full_name, mpc8xxx_gc->irqn, ret);
++		goto err;
++	}
++
+ 	return 0;
+ err:
+ 	iounmap(mpc8xxx_gc->regs);
+-- 
+2.9.5
