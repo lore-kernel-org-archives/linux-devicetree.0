@@ -1,98 +1,83 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: Re: [PATCH] riscv: dts: Add DT support for SiFive FU540 PWM driver
-Date: Mon, 16 Sep 2019 16:48:40 +0530
-Message-ID: <CAJ2_jOHJ5zuxDc6gsFiZou+-yVg=pr+uSHGJB8VPT1O-Bu3idg@mail.gmail.com>
-References: <CAJ2_jOGO-isv52rnwRusV7jtyCY_JWYWAj9opN3Zg6ZbZr-8-w@mail.gmail.com>
- <mhng-c8b87e96-987e-4577-acc2-1e22c9b81b10@palmer-si-x1e>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 1/3] dt-bindings: dma: Add documentation for DMA domains
+Date: Mon, 16 Sep 2019 14:21:50 +0300
+Message-ID: <82254a3e-12fe-14d8-d49a-6627dd1d3559@ti.com>
+References: <20190910115037.23539-1-peter.ujfalusi@ti.com>
+ <20190910115037.23539-2-peter.ujfalusi@ti.com>
+ <5d7ba96c.1c69fb81.ee467.32b9@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <mhng-c8b87e96-987e-4577-acc2-1e22c9b81b10@palmer-si-x1e>
+In-Reply-To: <5d7ba96c.1c69fb81.ee467.32b9@mx.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Palmer Dabbelt <palmer@sifive.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Bin Meng <bmeng.cn@gmail.com>, Sagar Kadam <sagar.kadam@sifive.com>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Sachin Ghadi <sachin.ghadi@sifive.com>
+To: Rob Herring <robh@kernel.org>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 14, 2019 at 2:50 AM Palmer Dabbelt <palmer@sifive.com> wrote:
->
-> On Tue, 10 Sep 2019 02:52:07 PDT (-0700), yash.shah@sifive.com wrote:
-> > Hi,
-> >
-> > Any comments on this patch?
->
-> I don't see "sifive,pwm0" in the DT bindings documentation, and it doesn't
-> match our standard way of doing these things (which would have at least
-> "sifive,fu540-c000-pwm").
 
-"sifive,pwm0" is present in the DT bindings documentation at
-Documentation/devicetree/bindings/pwm/pwm-sifive.txt
-Yes, I agree that this patch is missing "sifive,fu540-c000-pwm". I
-will add it along with "sifive,pwm0" and repost as version 2.
 
-Thanks for your comment.
+On 13/09/2019 17.36, Rob Herring wrote:
+> On Tue, Sep 10, 2019 at 02:50:35PM +0300, Peter Ujfalusi wrote:
+>> On systems where multiple DMA controllers available, non Slave (for example
+>> memcpy operation) users can not be described in DT as there is no device
+>> involved from the DMA controller's point of view, DMA binding is not usable.
+>> However in these systems still a peripheral might need to be serviced by or
+>> it is better to serviced by specific DMA controller.
+>> When a memcpy is used to/from a memory mapped region for example a DMA in the
+>> same domain can perform better.
+>> For generic software modules doing mem 2 mem operations it also matter that
+>> they will get a channel from a controller which is faster in DDR to DDR mode
+>> rather then from the first controller happen to be loaded.
+>>
+>> This property is inherited, so it may be specified in a device node or in any
+>> of its parent nodes.
+> 
+> If a device needs mem2mem dma, I think we should just use the existing 
+> dma binding. The provider will need a way to define cell values which 
+> mean mem2mem.
 
-- Yash
->
-> >
-> > - Yash
-> >
-> > On Wed, Aug 21, 2019 at 2:53 PM Yash Shah <yash.shah@sifive.com> wrote:
-> >>
-> >> Add the PWM DT node in SiFive FU540 soc-specific DT file.
-> >> Enable the PWM nodes in HiFive Unleashed board-specific DT file.
-> >>
-> >> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> >> ---
-> >>  arch/riscv/boot/dts/sifive/fu540-c000.dtsi          | 19 +++++++++++++++++++
-> >>  arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  8 ++++++++
-> >>  2 files changed, 27 insertions(+)
-> >>
-> >> diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> >> index 42b5ec2..bb422db 100644
-> >> --- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> >> +++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-> >> @@ -230,6 +230,25 @@
-> >>                         #size-cells = <0>;
-> >>                         status = "disabled";
-> >>                 };
-> >> +               pwm0: pwm@10020000 {
-> >> +                       compatible = "sifive,pwm0";
-> >> +                       reg = <0x0 0x10020000 0x0 0x1000>;
-> >> +                       interrupt-parent = <&plic0>;
-> >> +                       interrupts = <42 43 44 45>;
-> >> +                       clocks = <&prci PRCI_CLK_TLCLK>;
-> >> +                       #pwm-cells = <3>;
-> >> +                       status = "disabled";
-> >> +               };
-> >> +               pwm1: pwm@10021000 {
-> >> +                       compatible = "sifive,pwm0";
-> >> +                       reg = <0x0 0x10021000 0x0 0x1000>;
-> >> +                       interrupt-parent = <&plic0>;
-> >> +                       interrupts = <46 47 48 49>;
-> >> +                       reg-names = "control";
-> >> +                       clocks = <&prci PRCI_CLK_TLCLK>;
-> >> +                       #pwm-cells = <3>;
-> >> +                       status = "disabled";
-> >> +               };
-> >>
-> >>         };
-> >>  };
-> >> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> >> index 93d68cb..104d334 100644
-> >> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> >> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> >> @@ -85,3 +85,11 @@
-> >>                 reg = <0>;
-> >>         };
-> >>  };
-> >> +
-> >> +&pwm0 {
-> >> +       status = "okay";
-> >> +};
-> >> +
-> >> +&pwm1 {
-> >> +       status = "okay";
-> >> +};
-> >> --
-> >> 1.9.1
-> >>
+But isn't it going to be an abuse of the binding? Each DMA controller
+would hack this in different ways, probably using out of range DMA
+request/trigger number or if they have direction in the binding or some
+other parameter would be set to something invalid...
+
+> For generic s/w, it should be able to query the dma speed or get a 
+> preferred one IMO. It's not a DT problem.
+> 
+> We measure memcpy speeds at boot time to select the fastest 
+> implementation for a chip, why not do that for mem2mem DMA?
+
+It would make an impact on boot time since the tests would need to be
+done with a large enough copy to be able to see clearly which one is faster.
+
+Also we should be able to handle different probing orders:
+client1 should have mem2mem channel from dma2.
+
+- dma1 probes
+- client1 probes and asks for a mem2mem channel
+- dma2 probes
+
+Here client1 should deffer until dma2 is probed.
+
+Probably the property should be dma-mem2mem-domain to be more precise on
+it's purpose and avoid confusion?
+
+> 
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>  .../devicetree/bindings/dma/dma-domain.yaml   | 88 +++++++++++++++++++
+>>  1 file changed, 88 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
+> 
+> Note that you have several errors in your schema. Run 'make dt_bindings_check'.
+
+That does not do anything on my system, but git dt-doc-validate running
+via https://github.com/robherring/yaml-bindings.git.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
