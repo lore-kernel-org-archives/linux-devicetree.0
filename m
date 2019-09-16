@@ -1,114 +1,94 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: RE: [1/3] soc: fsl: fix that flextimer cannot wakeup system in deep
- sleep on LS1021A
-Date: Mon, 16 Sep 2019 10:48:44 +0000
-Message-ID: <DB7PR04MB4490BF979AE65793A9C34E728F8C0@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190916102556.16655-1-biwen.li@nxp.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 05/11] drm/bridge: analogix-anx78xx: correct value of
+ TX_P0
+Date: Mon, 16 Sep 2019 13:49:07 +0300
+Message-ID: <20190916104907.GB4734@pendragon.ideasonboard.com>
+References: <20190815004854.19860-1-masneyb@onstation.org>
+ <CGME20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97@epcas3p1.samsung.com>
+ <20190815004854.19860-6-masneyb@onstation.org>
+ <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
+ <20190916103614.GA1644@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190916102556.16655-1-biwen.li@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190916103614.GA1644@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Biwen Li <biwen.li@nxp.com>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Brian Masney <masneyb@onstation.org>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org, narmstrong@baylibre.com, robdclark@gmail.com, sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, jonas@kwiboo.se, jernej.skrabec@siol.net, linus.walleij@linaro.org, enric.balletbo@collabora.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, freedreno@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-	the linux patch depended by RCPM driver,FlexTimer driver and FlexTimer dts=
-, need apply these patches as follows:
+Hi Brian,
 
-	1. RCPM driver:
+On Mon, Sep 16, 2019 at 06:36:14AM -0400, Brian Masney wrote:
+> On Mon, Sep 16, 2019 at 12:02:09PM +0200, Andrzej Hajda wrote:
+> > On 15.08.2019 02:48, Brian Masney wrote:
+> > > When attempting to configure this driver on a Nexus 5 phone (msm8974),
+> > > setting up the dummy i2c bus for TX_P0 would fail due to an -EBUSY
+> > > error. The downstream MSM kernel sources [1] shows that the proper value
+> > > for TX_P0 is 0x78, not 0x70, so correct the value to allow device
+> > > probing to succeed.
+> > >
+> > > [1] https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/drivers/video/slimport/slimport_tx_reg.h
+> > >
+> > > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > > ---
+> > >  drivers/gpu/drm/bridge/analogix-anx78xx.h | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> > > index 25e063bcecbc..bc511fc605c9 100644
+> > > --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> > > +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> > > @@ -6,7 +6,7 @@
+> > >  #ifndef __ANX78xx_H
+> > >  #define __ANX78xx_H
+> > >  
+> > > -#define TX_P0				0x70
+> > > +#define TX_P0				0x78
+> > 
+> > 
+> > This bothers me little. There are no upstream users, grepping android
+> > sources suggests that both values can be used [1][2]  (grep for "#define
+> > TX_P0"), moreover there is code suggesting both values can be valid [3].
+> > 
+> > Could you verify datasheet which i2c slave addresses are valid for this
+> > chip, if both I guess this patch should be reworked.
+> > 
+> > 
+> > [1]:
+> > https://android.googlesource.com/kernel/msm/+/android-msm-flo-3.4-jb-mr2/drivers/misc/slimport_anx7808/slimport_tx_reg.h
+> > 
+> > [2]:
+> > https://github.com/AndroidGX/SimpleGX-MM-6.0_H815_20d/blob/master/drivers/video/slimport/anx7812/slimport7812_tx_reg.h
+> > 
+> > [3]:
+> > https://github.com/commaai/android_kernel_leeco_msm8996/blob/master/drivers/video/msm/mdss/dp/slimport_custom_declare.h#L73
+> 
+> This address is 0x78 on my Nexus 5. Given [3] above it looks like we
+> need to support both addresses. What do you think about moving these
+> addresses into device tree?
 
-	https://patchwork.kernel.org/series/162731/mbox/ (https://patchwork.kernel=
-.org/patch/11105279/)
+Assuming that the device supports different addresses (I can't validate
+that as I don't have access to the datasheet), and different addresses
+need to be used on different systems, then the address to be used needs
+to be provided by the firmware (DT in this case). Two options are
+possible, either specifying the address explicitly in the device's DT
+node, or specifying free addresses (in the form of a white list or black
+list) and allocating an address from that pool. The latter has been
+discussed in a BoF at the Linux Plumbers Conference last week,
+https://linuxplumbersconf.org/event/4/contributions/542/.
 
-	2. FlexTimer dts:
+> The downstream and upstream kernel sources divide these addresses by two
+> to get the i2c address. Here's the code in upstream:
+> 
+> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L1353
+> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L41
+> 
+> I'm not sure why the actual i2c address isn't used in this code.
 
-	https://lore.kernel.org/patchwork/series/405653/mbox/ (https://lore.kernel=
-.org/patchwork/patch/1112493/)
+-- 
+Regards,
 
-	3. FlexTimer driver:
-
-	https://patchwork.ozlabs.org/series/124718/mbox/ (https://patchwork.ozlabs=
-.org/patch/1145999/)
-
-	https://patchwork.ozlabs.org/series/126942/mbox/ (https://patchwork.ozlabs=
-.org/patch/1152085/)
-
-	4. Adjust drivers/soc/fsl/Makefile:
-
-remove the line 'obj-y +=3D ftm_alarm.o' in drivers/soc/fsl/Makefile to res=
-olve a compilation error=20
-> Why:
->     - Cannot write register RCPM_IPPDEXPCR1 on LS1021A,
->       Register RCPM_IPPDEXPCR1's default value is zero.
->       So the register value that reading from register
->       RCPM_IPPDEXPCR1 is always zero.
->=20
-> How:
->     - Save register RCPM_IPPDEXPCR1's value to
->       register SCFG_SPARECR8.(uboot's psci also
->       need reading value from the register SCFG_SPARECR8
->       to set register RCPM_IPPDEXPCR1)
->=20
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
->  drivers/soc/fsl/rcpm.c | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->=20
-> diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c index
-> 82c0ad5e663e..2bf37d38efe5 100644
-> --- a/drivers/soc/fsl/rcpm.c
-> +++ b/drivers/soc/fsl/rcpm.c
-> @@ -13,6 +13,8 @@
->  #include <linux/slab.h>
->  #include <linux/suspend.h>
->  #include <linux/kernel.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
->=20
->  #define RCPM_WAKEUP_CELL_MAX_SIZE	7
->=20
-> @@ -63,6 +65,33 @@ static int rcpm_pm_prepare(struct device *dev)
->  					tmp |=3D value[i + 1];
->  					iowrite32be(tmp, rcpm->ippdexpcr_base + i * 4);
->  				}
-> +				#ifdef CONFIG_SOC_LS1021A
-> +				/* Workaround: There is a bug of register ippdexpcr1,
-> +				 * cannot write it but can read it.Tt's default value is zero,
-> +				 * then read it will always returns zero.
-> +				 * So save ippdexpcr1's value to register SCFG_SPARECR8.
-> +				 * And the value of ippdexpcr1 will be read from
-> SCFG_SPARECR8.
-> +				 */
-> +				{
-> +					struct regmap * rcpm_scfg_regmap =3D NULL;
-> +					u32 reg_offset[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
-> +					u32 reg_value =3D 0;
-> +
-> +					rcpm_scfg_regmap =3D
-> syscon_regmap_lookup_by_phandle(np, "fsl,rcpm-scfg");
-> +					if (rcpm_scfg_regmap) {
-> +						if (of_property_read_u32_array(dev->of_node,
-> +						    "fsl,rcpm-scfg", reg_offset,
-> rcpm->wakeup_cells + 1)) {
-> +							rcpm_scfg_regmap =3D NULL;
-> +							continue;
-> +						}
-> +						regmap_read(rcpm_scfg_regmap, reg_offset[i + 1],
-> &reg_value);
-> +						/* Write value to register SCFG_SPARECR8 */
-> +						regmap_write(rcpm_scfg_regmap, reg_offset[i +
-> 1], tmp | reg_value);
-> +					}
-> +				}
-> +				#endif
-> +
-> +
->  			}
->  		}
->  	} while (ws =3D wakeup_source_get_next(ws));
-> --
-> 2.17.1
+Laurent Pinchart
