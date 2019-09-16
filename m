@@ -1,65 +1,52 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv2 0/7] Non-urgent fixes and improvments for omap3-rom-rng
-Date: Mon, 16 Sep 2019 09:47:03 +0300
-Message-ID: <364b98db-2b0a-6317-178e-910397b32ffb@ti.com>
-References: <20190914210300.15836-1-tony@atomide.com>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH 2/2] dt-bindings: net: dwmac: document 'mac-mode' property
+Date: Mon, 16 Sep 2019 06:49:36 +0000
+Message-ID: <b5065fcfaaf8bcb7bc532a8eb9f54949da838965.camel@analog.com>
+References: <20190906130256.10321-1-alexandru.ardelean@analog.com>
+         <20190906130256.10321-2-alexandru.ardelean@analog.com>
+         <5d7ba95d.1c69fb81.dabe4.8057@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190914210300.15836-1-tony@atomide.com>
+In-Reply-To: <5d7ba95d.1c69fb81.dabe4.8057@mx.google.com>
 Content-Language: en-US
+Content-ID: <5B14A9DFE43F1A419C06705452BBAA03@namprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>, Adam Ford <aford173@gmail.com>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org
+To: "robh@kernel.org" <robh@kernel.org>
+Cc: "alexandre.torgue@st.com" <alexandre.torgue@st.com>, "--cc=andrew@lunn.ch" <--cc=andrew@lunn.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>, "davem@davemloft.net" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On 15/09/2019 00:02, Tony Lindgren wrote:
-> Hi all,
-> 
-> Here are fixes and improvments for omap3-rom-rng that's been broken for
-> a while.
-> 
-> The first four patches get it working, and then the last two patches add
-> support for runtime PM.
-> 
-> I did not add Sebastian's acks from v1 set as many of the patches
-> changed. Please review again :)
-
-Series looks fine to me also, don't have possibility to test omap3 ROM 
-RNG though (don't have HW for this.) For the whole series:
-
-Reviewed-by: Tero Kristo <t-kristo@ti.com>
-
-
-
-> Regards,
-> 
-> Tony
-> 
-> Changes since v1:
-> - Use clk_prepare_enable() as pointed out by Sebastian
-> - Simplify runtime PM changes patch
-> - Add a new patch for devm changes as suggested by Sebastian
-> 
-> 
-> Tony Lindgren (7):
->    ARM: OMAP2+: Check omap3-rom-rng for GP device instead of HS device
->    hwrng: omap3-rom - Fix missing clock by probing with device tree
->    hwrng: omap3-rom - Call clk_disable_unprepare() on exit only if not
->      idled
->    hwrng: omap3-rom - Initialize default quality to get data
->    hwrng: omap3-rom - Update to use standard driver data
->    hwrng: omap3-rom - Use runtime PM instead of custom functions
->    hwrng: omap3-rom - Use devm hwrng and runtime PM
-> 
->   .../devicetree/bindings/rng/omap3_rom_rng.txt |  27 +++
->   arch/arm/boot/dts/omap3-n900.dts              |   6 +
->   arch/arm/mach-omap2/pdata-quirks.c            |  14 +-
->   drivers/char/hw_random/omap3-rom-rng.c        | 168 +++++++++++-------
->   4 files changed, 139 insertions(+), 76 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/rng/omap3_rom_rng.txt
-> 
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+T24gRnJpLCAyMDE5LTA5LTEzIGF0IDE1OjM2ICswMTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+W0V4dGVybmFsXQ0KPiANCj4gT24gRnJpLCBTZXAgMDYsIDIwMTkgYXQgMDQ6MDI6NTZQTSArMDMw
+MCwgQWxleGFuZHJ1IEFyZGVsZWFuIHdyb3RlOg0KPiA+IFRoaXMgY2hhbmdlIGRvY3VtZW50cyB0
+aGUgJ21hYy1tb2RlJyBwcm9wZXJ0eSB0aGF0IHdhcyBpbnRyb2R1Y2VkIGluIHRoZQ0KPiA+ICdz
+dG1tYWMnIGRyaXZlciB0byBzdXBwb3J0IHBhc3NpdmUgbW9kZSBjb252ZXJ0ZXJzIHRoYXQgY2Fu
+IHNpdCBpbi1iZXR3ZWVuDQo+ID4gdGhlIE1BQyAmIFBIWS4NCj4gPiANCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0K
+PiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3NucHMs
+ZHdtYWMueWFtbCB8IDggKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9u
+cygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbmV0L3NucHMsZHdtYWMueWFtbA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL25ldC9zbnBzLGR3bWFjLnlhbWwNCj4gPiBpbmRleCBjNzhiZTE1NzA0YjkuLmVi
+ZTQ1MzdhN2NjZSAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbmV0L3NucHMsZHdtYWMueWFtbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9uZXQvc25wcyxkd21hYy55YW1sDQo+ID4gQEAgLTExMiw2ICsxMTIsMTQg
+QEAgcHJvcGVydGllczoNCj4gPiAgICByZXNldC1uYW1lczoNCj4gPiAgICAgIGNvbnN0OiBzdG1t
+YWNldGgNCj4gPiAgDQo+ID4gKyAgbWFjLW1vZGU6DQo+ID4gKyAgICBtYXhJdGVtczogMQ0KPiAN
+Cj4gSXMgdGhpcyBhbiBhcnJheSBiZWNhdXNlIHttaW4sbWF4fUl0ZW1zIGlzIGZvciBhcnJheXM/
+IEl0IHNob3VsZCBiZSANCj4gZGVmaW5lZCBhcyBhIHN0cmluZyB3aXRoIHBvc3NpYmxlIHZhbHVl
+cy4NCj4gDQo+IEFzIHRoaXMgcHJvcGVydHkgaXMgdGhlIHNhbWUgYXMgYW5vdGhlciwgeW91IGNh
+biBkbyB0aGlzOg0KPiANCj4gJHJlZjogZXRoZXJuZXQtY29udHJvbGxlci55YW1sIy9wcm9wZXJ0
+aWVzL3BoeS1jb25uZWN0aW9uLXR5cGUNCj4gDQo+IFVubGVzcyBvbmx5IGEgc21hbGwgc3Vic2V0
+IG9mIHRob3NlIHZhbHVlcyBhcmUgdmFsaWQgaGVyZSwgdGhlbiB5b3UgbWF5IA0KPiB3YW50IHRv
+IGxpc3QgdGhlbSBoZXJlLg0KPiANCg0KQWNrLg0KVGhhbmsgeW91Lg0KDQpXaWxsIGludmVzdGln
+YXRlIGFuZCByZS1zcGluLg0KDQoNCj4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICBU
+aGUgcHJvcGVydHkgaXMgaWRlbnRpY2FsIHRvICdwaHktbW9kZScsIGFuZCBhc3N1bWVzIHRoYXQg
+dGhlcmUgaXMgbW9kZQ0KPiA+ICsgICAgICBjb252ZXJ0ZXIgaW4tYmV0d2VlbiB0aGUgTUFDICYg
+UEhZIChlLmcuIEdNSUktdG8tUkdNSUkpLiBUaGlzIGNvbnZlcnRlcg0KPiA+ICsgICAgICBjYW4g
+YmUgcGFzc2l2ZSAobm8gU1cgcmVxdWlyZW1lbnQpLCBhbmQgcmVxdWlyZXMgdGhhdCB0aGUgTUFD
+IG9wZXJhdGUNCj4gPiArICAgICAgaW4gYSBkaWZmZXJlbnQgbW9kZSB0aGFuIHRoZSBQSFkgaW4g
+b3JkZXIgdG8gZnVuY3Rpb24uDQo+ID4gKw0KPiA+ICAgIHNucHMsYXhpLWNvbmZpZzoNCj4gPiAg
+ICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjZGVmaW5pdGlvbnMvcGhhbmRsZQ0KPiA+ICAg
+ICAgZGVzY3JpcHRpb246DQo+ID4gLS0gDQo+ID4gMi4yMC4xDQo+ID4gDQo=
