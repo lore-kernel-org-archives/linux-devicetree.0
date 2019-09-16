@@ -1,41 +1,76 @@
 From: Biwen Li <biwen.li@nxp.com>
-Subject: [2/3] arm: dts: ls1021a: fix that FlexTimer cannot wakeup system in deep sleep
-Date: Mon, 16 Sep 2019 18:25:55 +0800
-Message-ID: <20190916102556.16655-2-biwen.li@nxp.com>
-References: <20190916102556.16655-1-biwen.li@nxp.com>
+Subject: [1/3] soc: fsl: fix that flextimer cannot wakeup system in deep sleep on LS1021A
+Date: Mon, 16 Sep 2019 18:25:54 +0800
+Message-ID: <20190916102556.16655-1-biwen.li@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190916102556.16655-1-biwen.li@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch fix a bug that FlexTimer cannot
-wakeup system in deep sleep.
+Why:
+    - Cannot write register RCPM_IPPDEXPCR1 on LS1021A,
+      Register RCPM_IPPDEXPCR1's default value is zero.
+      So the register value that reading from register
+      RCPM_IPPDEXPCR1 is always zero.
+
+How:
+    - Save register RCPM_IPPDEXPCR1's value to
+      register SCFG_SPARECR8.(uboot's psci also
+      need reading value from the register SCFG_SPARECR8
+      to set register RCPM_IPPDEXPCR1)
 
 Signed-off-by: Biwen Li <biwen.li@nxp.com>
 ---
- arch/arm/boot/dts/ls1021a.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/soc/fsl/rcpm.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index e3973b611c3a..377bb4717584 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -1000,12 +1000,13 @@
- 			compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
- 			reg = <0x0 0x1ee2140 0x0 0x8>;
- 			#fsl,rcpm-wakeup-cells = <2>;
-+			fsl,rcpm-scfg = <&scfg 0x0 0x51c>; /* SCFG_SPARECR8 */
- 		};
+diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
+index 82c0ad5e663e..2bf37d38efe5 100644
+--- a/drivers/soc/fsl/rcpm.c
++++ b/drivers/soc/fsl/rcpm.c
+@@ -13,6 +13,8 @@
+ #include <linux/slab.h>
+ #include <linux/suspend.h>
+ #include <linux/kernel.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
  
- 		ftm_alarm0: timer0@29d0000 {
- 			compatible = "fsl,ls1021a-ftm-alarm";
- 			reg = <0x0 0x29d0000 0x0 0x10000>;
--			fsl,rcpm-wakeup = <&rcpm 0x0 0x20000000>;
-+			fsl,rcpm-wakeup = <&rcpm 0x0 0x30000000>; /* FlexTimer1 and OCRAM1 are not powerdown during LPM20(sleep) */
- 			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
- 			big-endian;
- 		};
+ #define RCPM_WAKEUP_CELL_MAX_SIZE	7
+ 
+@@ -63,6 +65,33 @@ static int rcpm_pm_prepare(struct device *dev)
+ 					tmp |= value[i + 1];
+ 					iowrite32be(tmp, rcpm->ippdexpcr_base + i * 4);
+ 				}
++				#ifdef CONFIG_SOC_LS1021A
++				/* Workaround: There is a bug of register ippdexpcr1,
++				 * cannot write it but can read it.Tt's default value is zero,
++				 * then read it will always returns zero.
++				 * So save ippdexpcr1's value to register SCFG_SPARECR8.
++				 * And the value of ippdexpcr1 will be read from SCFG_SPARECR8.
++				 */
++				{
++					struct regmap * rcpm_scfg_regmap = NULL;
++					u32 reg_offset[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
++					u32 reg_value = 0;
++
++					rcpm_scfg_regmap = syscon_regmap_lookup_by_phandle(np, "fsl,rcpm-scfg");
++					if (rcpm_scfg_regmap) {
++						if (of_property_read_u32_array(dev->of_node,
++						    "fsl,rcpm-scfg", reg_offset, rcpm->wakeup_cells + 1)) {
++							rcpm_scfg_regmap = NULL;
++							continue;
++						}
++						regmap_read(rcpm_scfg_regmap, reg_offset[i + 1], &reg_value);
++						/* Write value to register SCFG_SPARECR8 */
++						regmap_write(rcpm_scfg_regmap, reg_offset[i + 1], tmp | reg_value);
++					}
++				}
++				#endif
++
++
+ 			}
+ 		}
+ 	} while (ws = wakeup_source_get_next(ws));
 -- 
 2.17.1
