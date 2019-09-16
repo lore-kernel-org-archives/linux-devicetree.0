@@ -1,107 +1,71 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH 3/3] dt-bindings: ddr: Add bindings for Samsung LPDDR3
- memories
-Date: Mon, 16 Sep 2019 11:49:53 +0200
-Message-ID: <a06caf21-b2a9-919f-6e73-69122fee5f66@partner.samsung.com>
-References: <CGME20190906101407eucas1p15eb0df53374b27497b4793eab24becf6@eucas1p1.samsung.com>
-        <20190906101344.3535-1-l.luba@partner.samsung.com>
-        <20190906101344.3535-4-l.luba@partner.samsung.com>
-        <CAJKOXPfoYxTVvt_bMQOs1=BkHzUuW_WvL9zn0jTGS6LLpv=fhQ@mail.gmail.com>
-        <52963d0d-cf48-7085-5581-a94c6e15e0bd@partner.samsung.com>
-        <CAJKOXPfEcURr_bLRaAdjWT3cb7mcuKTk8rmn7OTO=xtvjvJ=jQ@mail.gmail.com>
-        <5d7ba95a.1c69fb81.bfd81.77ba@mx.google.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 05/11] drm/bridge: analogix-anx78xx: correct value of
+ TX_P0
+Date: Mon, 16 Sep 2019 12:02:09 +0200
+Message-ID: <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
+References: <20190815004854.19860-1-masneyb@onstation.org>
+        <CGME20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97@epcas3p1.samsung.com>
+        <20190815004854.19860-6-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d7ba95a.1c69fb81.bfd81.77ba@mx.google.com>
+In-Reply-To: <20190815004854.19860-6-masneyb@onstation.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, willy.mh.wolff.ml@gmail.com
+To: Brian Masney <masneyb@onstation.org>, bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org, narmstrong@baylibre.com, robdclark@gmail.com, sean@poorly.run
+Cc: airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@siol.net, linus.walleij@linaro.org, enric.balletbo@collabora.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, freedreno@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 15.08.2019 02:48, Brian Masney wrote:
+> When attempting to configure this driver on a Nexus 5 phone (msm8974),
+> setting up the dummy i2c bus for TX_P0 would fail due to an -EBUSY
+> error. The downstream MSM kernel sources [1] shows that the proper value
+> for TX_P0 is 0x78, not 0x70, so correct the value to allow device
+> probing to succeed.
+>
+> [1] https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/drivers/video/slimport/slimport_tx_reg.h
+>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+>  drivers/gpu/drm/bridge/analogix-anx78xx.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> index 25e063bcecbc..bc511fc605c9 100644
+> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> @@ -6,7 +6,7 @@
+>  #ifndef __ANX78xx_H
+>  #define __ANX78xx_H
+>  
+> -#define TX_P0				0x70
+> +#define TX_P0				0x78
 
-On 9/13/19 4:36 PM, Rob Herring wrote:
-> On Fri, Sep 06, 2019 at 01:50:26PM +0200, Krzysztof Kozlowski wrote:
->> On Fri, 6 Sep 2019 at 13:39, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>>
->>> Hi Krzysztof,
->>>
->>> On 9/6/19 12:56 PM, Krzysztof Kozlowski wrote:
->>>> On Fri, 6 Sep 2019 at 12:14, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>>>>
->>>>> Add description of bindings for Samsung k3qf2f20db LPDDR3 memory.
->>>>> Minor fixes in the old documentation.
->>>>>
->>>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->>>>> ---
->>>>>    .../devicetree/bindings/ddr/lpddr3.txt        | 29 +++++++++++++++++--
->>>>>    1 file changed, 27 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/ddr/lpddr3.txt b/Documentation/devicetree/bindings/ddr/lpddr3.txt
->>>>> index 3b2485b84b3f..de0905239767 100644
->>>>> --- a/Documentation/devicetree/bindings/ddr/lpddr3.txt
->>>>> +++ b/Documentation/devicetree/bindings/ddr/lpddr3.txt
->>>>> @@ -40,10 +40,34 @@ Child nodes:
->>>>>      a given speed-bin. Please see Documentation/devicetree/
->>>>>      bindings/ddr/lpddr3-timings.txt for more information on "lpddr3-timings"
->>>>>
->>>>> +Samsung K3QF2F20DB LPDDR3 memory
->>>>> +------------------------------------------------------------
->>>>> +
->>>>> +This binding uses the LPDDR3 binding (described above)
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible:  Should be:
->>>>> +               "samsung,K3QF2F20DB"
->>>>> +               followed by "jedec,lpddr3"
->>>>> +- density  : <u32> representing density in Mb (Mega bits)
->>>>> +- io-width : <u32> representing bus width. Possible value 32
->>>>> +- #address-cells: Must be set to 1
->>>>> +- #size-cells: Must be set to 0
->>>>
->>>> If you decided to repeat all properties again, then it deserves its
->>>> own bindings file. However I though about simpler solution - just
->>>> document compatible. Exactly the same as AT24 or AT25 EEPROM bindings.
->>>> There is not much benefit from copying all these properties.
->>> OK, I see. I will add only 'compatible' and skip the rest then.
->>> So the lpddr3.txt file will get this addition:
->>>
->>> +Samsung K3QF2F20DB LPDDR3 memory
->>> +------------------------------------------------------------
->>> +
->>> +This binding uses the LPDDR3 binding (described above)
->>> +
->>> +Required properties:
->>> +- compatible:  Should be:
->>> +               "samsung,K3QF2F20DB"
->>> +               followed by "jedec,lpddr3"
->>> +
->>> +Optional properties:
->>> +
->>> +The optional properties are the same as in the LPDDR3 generic bindings and
->>> +values should be taken from the data-sheet. Detailed bindings are described
->>> +above.
->>> +
->>> +Child nodes:
->>> +
->>> +Detailed bindings are described in LPDDR3 generic bindings described above.
->>> +
->>>
->>> Is it OK?
->>
->> To me it is still a lot of text just for one compatible and I can
->> image more of such entries for other memories... However I do not mind
->> and anyway, YAML will simplify it. If you're in doubt, wait for Rob's
->> reply as this is his part.
-> 
-> We can't have multiple (top-level) schema in one file, so better to add
-> in where the existing compatible strings are.
 
-Thank you for your comment. I will add the needed string into existing
-compatible then.
+This bothers me little. There are no upstream users, grepping android
+sources suggests that both values can be used [1][2]  (grep for "#define
+TX_P0"), moreover there is code suggesting both values can be valid [3].
 
-Regards,
-Lukasz
+Could you verify datasheet which i2c slave addresses are valid for this
+chip, if both I guess this patch should be reworked.
+
+
+[1]:
+https://android.googlesource.com/kernel/msm/+/android-msm-flo-3.4-jb-mr2/drivers/misc/slimport_anx7808/slimport_tx_reg.h
+
+[2]:
+https://github.com/AndroidGX/SimpleGX-MM-6.0_H815_20d/blob/master/drivers/video/slimport/anx7812/slimport7812_tx_reg.h
+
+[3]:
+https://github.com/commaai/android_kernel_leeco_msm8996/blob/master/drivers/video/msm/mdss/dp/slimport_custom_declare.h#L73
+
+
+Regards
+
+Andrzej
+
+
+>  #define TX_P1				0x7a
+>  #define TX_P2				0x72
+>  
