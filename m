@@ -1,101 +1,47 @@
-From: Hui Song <hui.song_1@nxp.com>
-Subject: [PATCH v5] gpio/mpc8xxx: change irq handler from chained to normal
-Date: Mon, 16 Sep 2019 13:58:17 +0800
-Message-ID: <20190916055817.43425-1-hui.song_1@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Song Hui <hui.song_1@nxp.com>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH v4 2/2] net: phy: adin: implement Energy Detect Powerdown
+ mode via phy-tunable
+Date: Mon, 16 Sep 2019 06:44:23 +0000
+Message-ID: <d19897f450cc22a629e0c408b72fbc702ca8fe8c.camel@analog.com>
+References: <20190912162812.402-1-alexandru.ardelean@analog.com>
+         <20190912162812.402-3-alexandru.ardelean@analog.com>
+         <20190914152931.GK27922@lunn.ch>
+         <53816513-436e-b33b-99cf-18fa98e468b1@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <53816513-436e-b33b-99cf-18fa98e468b1@gmail.com>
+Content-Language: en-US
+Content-ID: <F3CA00B51D26304BA3FD7223515506E0@namprd03.prod.outlook.com>
+Sender: netdev-owner@vger.kernel.org
+To: "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "andrew@lunn.ch" <andrew@lunn.ch>
+Cc: "mkubecek@suse.cz" <mkubecek@suse.cz>, "davem@davemloft.net" <davem@davemloft.net>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
-
-More than one gpio controllers can share one interrupt, change the
-driver to request shared irq.
-
-Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
-Changes in v5:
-	- add traverse every bit function.
-Changes in v4:
-	- convert 'pr_err' to 'dev_err'.
-Changes in v3:
-	- update the patch description.
-Changes in v2:
-	- delete the compatible of ls1088a.
- drivers/gpio/gpio-mpc8xxx.c | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 16a47de..3a06ca9 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -22,6 +22,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/interrupt.h>
- 
- #define MPC8XXX_GPIO_PINS	32
- 
-@@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 		return -ENXIO;
- }
- 
--static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-+static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
- {
--	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
- 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
- 	unsigned int mask;
-+	int i;
- 
- 	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
- 		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
--	if (mask)
-+	for_each_set_bit(i, &mask, 32)
- 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
--						     32 - ffs(mask)));
--	if (chip->irq_eoi)
--		chip->irq_eoi(&desc->irq_data);
-+						     31 - i));
-+
-+	return IRQ_HANDLED;
- }
- 
- static void mpc8xxx_irq_unmask(struct irq_data *d)
-@@ -388,8 +389,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 
- 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
- 	if (ret) {
--		pr_err("%pOF: GPIO chip registration failed with status %d\n",
--		       np, ret);
-+		dev_err(&pdev->dev, "%pOF: GPIO chip registration failed with status %d\n",
-+			np, ret);
- 		goto err;
- 	}
- 
-@@ -409,8 +410,15 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	if (devtype->gpio_dir_in_init)
- 		devtype->gpio_dir_in_init(gc);
- 
--	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
--					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-+	ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-+			  IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
-+			  mpc8xxx_gc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s: failed to request_irq(%d), ret = %d\n",
-+			np->full_name, mpc8xxx_gc->irqn, ret);
-+		goto err;
-+	}
-+
- 	return 0;
- err:
- 	iounmap(mpc8xxx_gc->regs);
--- 
-2.9.5
+T24gU3VuLCAyMDE5LTA5LTE1IGF0IDA4OjExIC0wNzAwLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3Rl
+Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiANCj4gDQo+IE9uIDkvMTQvMjAxOSA4OjI5IEFNLCBBbmRy
+ZXcgTHVubiB3cm90ZToNCj4gPiBPbiBUaHUsIFNlcCAxMiwgMjAxOSBhdCAwNzoyODoxMlBNICsw
+MzAwLCBBbGV4YW5kcnUgQXJkZWxlYW4gd3JvdGU6DQo+ID4gDQo+ID4gPiArc3RhdGljIGludCBh
+ZGluX3NldF9lZHBkKHN0cnVjdCBwaHlfZGV2aWNlICpwaHlkZXYsIHUxNiB0eF9pbnRlcnZhbCkN
+Cj4gPiA+ICt7DQo+ID4gPiArCXUxNiB2YWw7DQo+ID4gPiArDQo+ID4gPiArCWlmICh0eF9pbnRl
+cnZhbCA9PSBFVEhUT09MX1BIWV9FRFBEX0RJU0FCTEUpDQo+ID4gPiArCQlyZXR1cm4gcGh5X2Ns
+ZWFyX2JpdHMocGh5ZGV2LCBBRElOMTMwMF9QSFlfQ1RSTF9TVEFUVVMyLA0KPiA+ID4gKwkJCQko
+QURJTjEzMDBfTlJHX1BEX0VOIHwgQURJTjEzMDBfTlJHX1BEX1RYX0VOKSk7DQo+ID4gPiArDQo+
+ID4gPiArCXZhbCA9IEFESU4xMzAwX05SR19QRF9FTjsNCj4gPiA+ICsNCj4gPiA+ICsJc3dpdGNo
+ICh0eF9pbnRlcnZhbCkgew0KPiA+ID4gKwljYXNlIDEwMDA6IC8qIDEgc2Vjb25kICovDQo+ID4g
+PiArCQkvKiBmYWxsdGhyb3VnaCAqLw0KPiA+ID4gKwljYXNlIEVUSFRPT0xfUEhZX0VEUERfREZM
+VF9UWF9NU0VDUzoNCj4gPiA+ICsJCXZhbCB8PSBBRElOMTMwMF9OUkdfUERfVFhfRU47DQo+ID4g
+PiArCQkvKiBmYWxsdGhyb3VnaCAqLw0KPiA+ID4gKwljYXNlIEVUSFRPT0xfUEhZX0VEUERfTk9f
+VFg6DQo+ID4gPiArCQlicmVhazsNCj4gPiA+ICsJZGVmYXVsdDoNCj4gPiA+ICsJCXJldHVybiAt
+RUlOVkFMOw0KPiA+ID4gKwl9DQo+ID4gPiArDQo+ID4gPiArCXJldHVybiBwaHlfbW9kaWZ5KHBo
+eWRldiwgQURJTjEzMDBfUEhZX0NUUkxfU1RBVFVTMiwNCj4gPiA+ICsJCQkgIChBRElOMTMwMF9O
+UkdfUERfRU4gfCBBRElOMTMwMF9OUkdfUERfVFhfRU4pLA0KPiA+ID4gKwkJCSAgdmFsKTsNCj4g
+PiA+ICt9DQo+ID4gPiArDQo+ID4gPiAgDQo+ID4gPiArCXJjID0gYWRpbl9zZXRfZWRwZChwaHlk
+ZXYsIDEpOw0KPiA+ID4gKwlpZiAocmMgPCAwKQ0KPiA+ID4gKwkJcmV0dXJuIHJjOw0KPiA+IA0K
+PiA+IEhpIEFsZXhhbmRydQ0KPiA+IA0KPiA+IFNob3VsZG4ndCB0aGlzIGJlIGFkaW5fc2V0X2Vk
+cGQocGh5ZGV2LCAxMDAwKTsNCj4gDQo+IFRoYXQgZG9lcyBzb3VuZCBsaWtlIHRoZSBpbnRlbmRl
+ZCB1c2UsIG9yIHVzZQ0KPiBFVEhUT09MX1BIWV9FRFBEX0RGTFRfVFhfTVNFQ1MsIHdpdGggdGhh
+dCBmaXhlZDoNCg0KQWNrLg0KDQpNYW55IHRoYW5rcyBmb3IgY2F0Y2hpbmcgdGhpcy4NCkkgbWlz
+c2VkIGl0IHdoZW4gcmUtc3Bpbm5pbmcuDQoNCj4gDQo+IFJldmlld2VkLWJ5OiBGbG9yaWFuIEZh
+aW5lbGxpIDxmLmZhaW5lbGxpQGdtYWlsLmNvbT4NCg==
