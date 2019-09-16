@@ -1,52 +1,180 @@
-From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Subject: Re: [PATCH 2/2] dt-bindings: net: dwmac: document 'mac-mode' property
-Date: Mon, 16 Sep 2019 06:49:36 +0000
-Message-ID: <b5065fcfaaf8bcb7bc532a8eb9f54949da838965.camel@analog.com>
-References: <20190906130256.10321-1-alexandru.ardelean@analog.com>
-         <20190906130256.10321-2-alexandru.ardelean@analog.com>
-         <5d7ba95d.1c69fb81.dabe4.8057@mx.google.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [Patch V9 3/8] phy: tegra: xusb: Add vbus override support on
+ Tegra210
+Date: Mon, 16 Sep 2019 15:11:05 +0800
+Message-ID: <1568617865.7317.74.camel@mhfsdcap03>
+References: <1568354873-24073-1-git-send-email-nkristam@nvidia.com>
+         <1568354873-24073-4-git-send-email-nkristam@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d7ba95d.1c69fb81.dabe4.8057@mx.google.com>
-Content-Language: en-US
-Content-ID: <5B14A9DFE43F1A419C06705452BBAA03@namprd03.prod.outlook.com>
+In-Reply-To: <1568354873-24073-4-git-send-email-nkristam@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh@kernel.org" <robh@kernel.org>
-Cc: "alexandre.torgue@st.com" <alexandre.torgue@st.com>, "--cc=andrew@lunn.ch" <--cc=andrew@lunn.ch>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>, "davem@davemloft.net" <davem@davemloft.net>
+To: Nagarjuna Kristam <nkristam@nvidia.com>
+Cc: balbi@kernel.org, gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE5LTA5LTEzIGF0IDE1OjM2ICswMTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-W0V4dGVybmFsXQ0KPiANCj4gT24gRnJpLCBTZXAgMDYsIDIwMTkgYXQgMDQ6MDI6NTZQTSArMDMw
-MCwgQWxleGFuZHJ1IEFyZGVsZWFuIHdyb3RlOg0KPiA+IFRoaXMgY2hhbmdlIGRvY3VtZW50cyB0
-aGUgJ21hYy1tb2RlJyBwcm9wZXJ0eSB0aGF0IHdhcyBpbnRyb2R1Y2VkIGluIHRoZQ0KPiA+ICdz
-dG1tYWMnIGRyaXZlciB0byBzdXBwb3J0IHBhc3NpdmUgbW9kZSBjb252ZXJ0ZXJzIHRoYXQgY2Fu
-IHNpdCBpbi1iZXR3ZWVuDQo+ID4gdGhlIE1BQyAmIFBIWS4NCj4gPiANCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPg0K
-PiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3NucHMs
-ZHdtYWMueWFtbCB8IDggKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9u
-cygrKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbmV0L3NucHMsZHdtYWMueWFtbA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL25ldC9zbnBzLGR3bWFjLnlhbWwNCj4gPiBpbmRleCBjNzhiZTE1NzA0YjkuLmVi
-ZTQ1MzdhN2NjZSAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbmV0L3NucHMsZHdtYWMueWFtbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9uZXQvc25wcyxkd21hYy55YW1sDQo+ID4gQEAgLTExMiw2ICsxMTIsMTQg
-QEAgcHJvcGVydGllczoNCj4gPiAgICByZXNldC1uYW1lczoNCj4gPiAgICAgIGNvbnN0OiBzdG1t
-YWNldGgNCj4gPiAgDQo+ID4gKyAgbWFjLW1vZGU6DQo+ID4gKyAgICBtYXhJdGVtczogMQ0KPiAN
-Cj4gSXMgdGhpcyBhbiBhcnJheSBiZWNhdXNlIHttaW4sbWF4fUl0ZW1zIGlzIGZvciBhcnJheXM/
-IEl0IHNob3VsZCBiZSANCj4gZGVmaW5lZCBhcyBhIHN0cmluZyB3aXRoIHBvc3NpYmxlIHZhbHVl
-cy4NCj4gDQo+IEFzIHRoaXMgcHJvcGVydHkgaXMgdGhlIHNhbWUgYXMgYW5vdGhlciwgeW91IGNh
-biBkbyB0aGlzOg0KPiANCj4gJHJlZjogZXRoZXJuZXQtY29udHJvbGxlci55YW1sIy9wcm9wZXJ0
-aWVzL3BoeS1jb25uZWN0aW9uLXR5cGUNCj4gDQo+IFVubGVzcyBvbmx5IGEgc21hbGwgc3Vic2V0
-IG9mIHRob3NlIHZhbHVlcyBhcmUgdmFsaWQgaGVyZSwgdGhlbiB5b3UgbWF5IA0KPiB3YW50IHRv
-IGxpc3QgdGhlbSBoZXJlLg0KPiANCg0KQWNrLg0KVGhhbmsgeW91Lg0KDQpXaWxsIGludmVzdGln
-YXRlIGFuZCByZS1zcGluLg0KDQoNCj4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICBU
-aGUgcHJvcGVydHkgaXMgaWRlbnRpY2FsIHRvICdwaHktbW9kZScsIGFuZCBhc3N1bWVzIHRoYXQg
-dGhlcmUgaXMgbW9kZQ0KPiA+ICsgICAgICBjb252ZXJ0ZXIgaW4tYmV0d2VlbiB0aGUgTUFDICYg
-UEhZIChlLmcuIEdNSUktdG8tUkdNSUkpLiBUaGlzIGNvbnZlcnRlcg0KPiA+ICsgICAgICBjYW4g
-YmUgcGFzc2l2ZSAobm8gU1cgcmVxdWlyZW1lbnQpLCBhbmQgcmVxdWlyZXMgdGhhdCB0aGUgTUFD
-IG9wZXJhdGUNCj4gPiArICAgICAgaW4gYSBkaWZmZXJlbnQgbW9kZSB0aGFuIHRoZSBQSFkgaW4g
-b3JkZXIgdG8gZnVuY3Rpb24uDQo+ID4gKw0KPiA+ICAgIHNucHMsYXhpLWNvbmZpZzoNCj4gPiAg
-ICAgICRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjZGVmaW5pdGlvbnMvcGhhbmRsZQ0KPiA+ICAg
-ICAgZGVzY3JpcHRpb246DQo+ID4gLS0gDQo+ID4gMi4yMC4xDQo+ID4gDQo=
+On Fri, 2019-09-13 at 11:37 +0530, Nagarjuna Kristam wrote:
+> Tegra XUSB device control driver needs to control vbus override
+> during its operations, add API for the support.
+> 
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  drivers/phy/tegra/xusb-tegra210.c | 57 +++++++++++++++++++++++++++++++++++++++
+>  drivers/phy/tegra/xusb.c          | 22 +++++++++++++++
+>  drivers/phy/tegra/xusb.h          |  2 ++
+>  include/linux/phy/tegra/xusb.h    |  4 ++-
+>  4 files changed, 84 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
+> index 8c31f03..9e6f14b 100644
+> --- a/drivers/phy/tegra/xusb-tegra210.c
+> +++ b/drivers/phy/tegra/xusb-tegra210.c
+> @@ -65,6 +65,10 @@
+>  #define XUSB_PADCTL_USB3_PAD_MUX_PCIE_IDDQ_DISABLE(x) (1 << (1 + (x)))
+>  #define XUSB_PADCTL_USB3_PAD_MUX_SATA_IDDQ_DISABLE(x) (1 << (8 + (x)))
+>  
+> +#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL0(x) (0x080 + (x) * 0x40)
+> +#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIP (1 << 18)
+> +#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIN (1 << 22)
+> +
+>  #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(x) (0x084 + (x) * 0x40)
+>  #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT 7
+>  #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK 0x3
+> @@ -227,6 +231,12 @@
+>  #define XUSB_PADCTL_UPHY_USB3_PADX_ECTL6(x) (0xa74 + (x) * 0x40)
+>  #define XUSB_PADCTL_UPHY_USB3_PAD_ECTL6_RX_EQ_CTRL_H_VAL 0xfcf01368
+>  
+> +#define XUSB_PADCTL_USB2_VBUS_ID 0xc60
+> +#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON (1 << 14)
+> +#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT 18
+> +#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_MASK 0xf
+> +#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_FLOATING 8
+> +
+>  struct tegra210_xusb_fuse_calibration {
+>  	u32 hs_curr_level[4];
+>  	u32 hs_term_range_adj;
+> @@ -2016,6 +2026,51 @@ static const struct tegra_xusb_port_ops tegra210_usb3_port_ops = {
+>  	.map = tegra210_usb3_port_map,
+>  };
+>  
+> +static int tegra210_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
+> +					      bool status)
+> +{
+> +	u32 value;
+> +
+> +	dev_dbg(padctl->dev, "%s vbus override\n", status ? "set" : "clear");
+> +
+> +	value = padctl_readl(padctl, XUSB_PADCTL_USB2_VBUS_ID);
+> +
+> +	if (status) {
+> +		value |= XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON;
+> +		value &= ~(XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_MASK <<
+> +			   XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT);
+> +		value |= XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_FLOATING <<
+> +			 XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT;
+> +	} else
+> +		value &= ~XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON;
+Nit: use braces in else branch
+
+> +
+> +	padctl_writel(padctl, value, XUSB_PADCTL_USB2_VBUS_ID);
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra210_utmi_port_reset(struct phy *phy)
+> +{
+> +	struct tegra_xusb_padctl *padctl;
+> +	struct tegra_xusb_lane *lane;
+> +	u32 value;
+> +
+> +	lane = phy_get_drvdata(phy);
+> +	padctl = lane->pad->padctl;
+> +
+> +	value = padctl_readl(padctl,
+> +		     XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL0(lane->index));
+> +
+> +	if ((value & XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIP) ||
+> +	    (value & XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIN)) {
+> +		tegra210_xusb_padctl_vbus_override(padctl, false);
+> +		tegra210_xusb_padctl_vbus_override(padctl, true);
+> +		return 1;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int
+>  tegra210_xusb_read_fuse_calibration(struct tegra210_xusb_fuse_calibration *fuse)
+>  {
+> @@ -2078,6 +2133,8 @@ static const struct tegra_xusb_padctl_ops tegra210_xusb_padctl_ops = {
+>  	.remove = tegra210_xusb_padctl_remove,
+>  	.usb3_set_lfps_detect = tegra210_usb3_set_lfps_detect,
+>  	.hsic_set_idle = tegra210_hsic_set_idle,
+> +	.vbus_override = tegra210_xusb_padctl_vbus_override,
+> +	.utmi_port_reset = tegra210_utmi_port_reset,
+>  };
+>  
+>  static const char * const tegra210_xusb_padctl_supply_names[] = {
+> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+> index b4b217e..bf4b008 100644
+> --- a/drivers/phy/tegra/xusb.c
+> +++ b/drivers/phy/tegra/xusb.c
+> @@ -1121,6 +1121,28 @@ int tegra_xusb_padctl_usb3_set_lfps_detect(struct tegra_xusb_padctl *padctl,
+>  }
+>  EXPORT_SYMBOL_GPL(tegra_xusb_padctl_usb3_set_lfps_detect);
+>  
+> +int tegra_xusb_padctl_set_vbus_override(struct tegra_xusb_padctl *padctl,
+> +							bool val)
+> +{
+> +	if (padctl->soc->ops->vbus_override)
+> +		return padctl->soc->ops->vbus_override(padctl, val);
+> +
+> +	return -ENOTSUPP;
+> +}
+> +EXPORT_SYMBOL_GPL(tegra_xusb_padctl_set_vbus_override);
+> +
+> +int tegra_phy_xusb_utmi_port_reset(struct phy *phy)
+> +{
+> +	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
+> +	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
+> +
+> +	if (padctl->soc->ops->utmi_port_reset)
+> +		return padctl->soc->ops->utmi_port_reset(phy);
+> +
+> +	return -ENOTSUPP;
+> +}
+> +EXPORT_SYMBOL_GPL(tegra_phy_xusb_utmi_port_reset);
+> +
+>  MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
+>  MODULE_DESCRIPTION("Tegra XUSB Pad Controller driver");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
+> index bd91832..da94fcc 100644
+> --- a/drivers/phy/tegra/xusb.h
+> +++ b/drivers/phy/tegra/xusb.h
+> @@ -373,6 +373,8 @@ struct tegra_xusb_padctl_ops {
+>  			     unsigned int index, bool idle);
+>  	int (*usb3_set_lfps_detect)(struct tegra_xusb_padctl *padctl,
+>  				    unsigned int index, bool enable);
+> +	int (*vbus_override)(struct tegra_xusb_padctl *padctl, bool set);
+> +	int (*utmi_port_reset)(struct phy *phy);
+>  };
+>  
+>  struct tegra_xusb_padctl_soc {
+> diff --git a/include/linux/phy/tegra/xusb.h b/include/linux/phy/tegra/xusb.h
+> index ee59562..1235865 100644
+> --- a/include/linux/phy/tegra/xusb.h
+> +++ b/include/linux/phy/tegra/xusb.h
+> @@ -18,5 +18,7 @@ int tegra_xusb_padctl_hsic_set_idle(struct tegra_xusb_padctl *padctl,
+>  				    unsigned int port, bool idle);
+>  int tegra_xusb_padctl_usb3_set_lfps_detect(struct tegra_xusb_padctl *padctl,
+>  					   unsigned int port, bool enable);
+> -
+> +int tegra_xusb_padctl_set_vbus_override(struct tegra_xusb_padctl *padctl,
+> +					bool val);
+> +int tegra_phy_xusb_utmi_port_reset(struct phy *phy);
+>  #endif /* PHY_TEGRA_XUSB_H */
