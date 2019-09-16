@@ -1,114 +1,67 @@
-From: Piotr Sroka <piotrs@cadence.com>
-Subject: [v6 2/2] dt-bindings: mtd: Add Cadence NAND controller driver
-Date: Mon, 16 Sep 2019 13:46:34 +0100
-Message-ID: <20190916124715.29941-1-piotrs@cadence.com>
-References: <20190916124342.24114-1-piotrs@cadence.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 1/6] dt-bindings: pci: amlogic,meson-pcie: Add G12A bindings
+Date: Mon, 16 Sep 2019 14:50:17 +0200
+Message-ID: <20190916125022.10754-2-narmstrong@baylibre.com>
+References: <20190916125022.10754-1-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190916124342.24114-1-piotrs@cadence.com>
+In-Reply-To: <20190916125022.10754-1-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Piotr Sroka <piotrs@cadence.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: khilman@baylibre.com, lorenzo.pieralisi@arm.com, kishon@ti.com, bhelgaas@google.com, andrew.murray@arm.com, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, yue.wang@Amlogic.com, maz@kernel.org, repk@triplefau.lt, nick@khadas.com, gouwa@khadas.com, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the bindings used by Cadence NAND controller driver
+Add PCIE bindings for the Amlogic G12A SoC, the support is the same
+but the PHY is shared with USB3 to control the differential lines.
 
-Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+Thus this adds a phy phandle to control the PHY, and only requires the
+MIPI clock for the Amlogic AXG SoC Family.
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-Changes for v6:
-- add documentation for address-cells and size-cells
-- remove not needed space
-- put myself as maintainer of the Cadence nand driver bindings
-Changes for v5:
-- replace "_" by "-" in all properties
-- change compatible name from cdns,hpnfc to cdns,hp-nfc
-Changes for v4:
-- add commit message
-Changes for v3:
-- add unit suffix for board_delay 
-- move child description to proper place
-- remove prefix cadence_ for reg and sdma fields
-Changes for v2:
-- remove chip dependends parameters from dts bindings
-- add names for register ranges in dts bindings
-- add generic bindings to describe NAND chip representation
----
- .../bindings/mtd/cadence-nand-controller.txt       | 53 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+ .../devicetree/bindings/pci/amlogic,meson-pcie.txt   | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
-new file mode 100644
-index 000000000000..f3893c4d3c6a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
-@@ -0,0 +1,53 @@
-+* Cadence NAND controller
-+
-+Required properties:
-+  - compatible : "cdns,hp-nfc"
-+  - reg : Contains two entries, each of which is a tuple consisting of a
-+	  physical address and length. The first entry is the address and
-+	  length of the controller register set. The second entry is the
-+	  address and length of the Slave DMA data port.
-+  - reg-names: should contain "reg" and "sdma"
-+  - #address-cells: should be 1. The cell encodes the chip select connection.
-+  - #size-cells : should be 0.
-+  - interrupts : The interrupt number.
-+  - clocks: phandle of the controller core clock (nf_clk).
-+
-+Optional properties:
-+  - dmas: shall reference DMA channel associated to the NAND controller
-+  - cdns,board-delay-ps : Estimated Board delay. The value includes the total
-+    round trip delay for the signals and is used for deciding on values
-+    associated with data read capture. The example formula for SDR mode is
-+    the following:
-+    board delay = RE#PAD delay + PCB trace to device + PCB trace from device
-+    + DQ PAD delay
-+
-+Child nodes represent the available NAND chips.
-+
-+Required properties of NAND chips:
-+  - reg: shall contain the native Chip Select ids from 0 to max supported by
-+    the cadence nand flash controller
-+
-+See Documentation/devicetree/bindings/mtd/nand.txt for more details on
-+generic bindings.
-+
-+Example:
-+
-+nand_controller: nand-controller@60000000 {
-+	  compatible = "cdns,hp-nfc";
-+	  #address-cells = <1>;
-+	  #size-cells = <0>;
-+	  reg = <0x60000000 0x10000>, <0x80000000 0x10000>;
-+	  reg-names = "reg", "sdma";
-+	  clocks = <&nf_clk>;
-+	  cdns,board-delay-ps = <4830>;
-+	  interrupts = <2 0>;
-+	  nand@0 {
-+	      reg = <0>;
-+	      label = "nand-1";
-+	  };
-+	  nand@1 {
-+	      reg = <1>;
-+	      label = "nand-2";
-+	  };
-+
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 16e16445b88b..94d78f4e29ba 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3584,6 +3584,7 @@ M:	Piotr Sroka <piotrs@cadence.com>
- L:	linux-mtd@lists.infradead.org
- S:	Maintained
- F:	drivers/mtd/nand/raw/cadence-nand-controller.c
-+F:	Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+index efa2c8b9b85a..84fdc422792e 100644
+--- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+@@ -9,13 +9,16 @@ Additional properties are described here:
  
- CADET FM/AM RADIO RECEIVER DRIVER
- M:	Hans Verkuil <hverkuil@xs4all.nl>
+ Required properties:
+ - compatible:
+-	should contain "amlogic,axg-pcie" to identify the core.
++	should contain :
++	- "amlogic,axg-pcie" for AXG SoC Family
++	- "amlogic,g12a-pcie" for G12A SoC Family
++	to identify the core.
+ - reg:
+ 	should contain the configuration address space.
+ - reg-names: Must be
+ 	- "elbi"	External local bus interface registers
+ 	- "cfg"		Meson specific registers
+-	- "phy"		Meson PCIE PHY registers
++	- "phy"		Meson PCIE PHY registers for AXG SoC Family
+ 	- "config"	PCIe configuration space
+ - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
+ - clocks: Must contain an entry for each entry in clock-names.
+@@ -23,12 +26,13 @@ Required properties:
+ 	- "pclk"       PCIe GEN 100M PLL clock
+ 	- "port"       PCIe_x(A or B) RC clock gate
+ 	- "general"    PCIe Phy clock
+-	- "mipi"       PCIe_x(A or B) 100M ref clock gate
++	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
+ - resets: phandle to the reset lines.
+ - reset-names: must contain "phy" "port" and "apb"
+-       - "phy"         Share PHY reset
++       - "phy"         Share PHY reset for AXG SoC Family
+        - "port"        Port A or B reset
+        - "apb"         Share APB reset
++- phys: should contain a phandle to the shared phy for G12A SoC Family
+ - device_type:
+ 	should be "pci". As specified in designware-pcie.txt
+ 
 -- 
-2.15.0
+2.22.0
