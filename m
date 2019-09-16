@@ -1,148 +1,111 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [RFC PATCH V4 1/4] media: platform: mtk-isp: Add Mediatek
- sensor interface driver
-Date: Mon, 16 Sep 2019 09:28:41 +0800
-Message-ID: <1568597321.26177.9.camel@mtksdaap41>
-References: <20190915065004.20257-1-louis.kuo@mediatek.com>
- <20190915065004.20257-2-louis.kuo@mediatek.com>
+From: Wen He <wen.he_1@nxp.com>
+Subject: RE: [EXT] Re: [v5 2/2] drm/arm/mali-dp: Add display QoS interface
+ configuration for Mali DP500
+Date: Mon, 16 Sep 2019 02:12:50 +0000
+Message-ID: <DB7PR04MB5195E253B39B539B2AC60BEAE28C0@DB7PR04MB5195.eurprd04.prod.outlook.com>
+References: <20190910075913.17650-1-wen.he_1@nxp.com>
+ <20190910075913.17650-2-wen.he_1@nxp.com>
+ <20190912144705.h2qmyobpayxmu2zd@e110455-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190915065004.20257-2-louis.kuo@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Louis Kuo <louis.kuo@mediatek.com>
-Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, Jerry-ch.Chen@mediatek.com, tfiga@chromium.org, keiichiw@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, hans.verkuil@cisco.com, zwisler@chromium.org, frederic.chen@mediatek.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190912144705.h2qmyobpayxmu2zd@e110455-lin.cambridge.arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liviu Dudau <liviu.dudau@arm.com>
+Cc: "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>, Brian Starkey <brian.starkey@arm.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2019-09-15 at 14:50 +0800, Louis Kuo wrote:
-> This patch adds Mediat:ek's sensor interface driver. Sensor interface
-> driver
-> is a MIPI-CSI2 host driver, namely, a HW camera interface controller.
-> It support a widely adopted, simple, high-speed protocol primarily
-> intended
-> for point-to-point image and video transmission between cameras and host
-> devices.
-
-Please properly wrap the commit text and fix typo.
-
-
-> 
-> The mtk-isp directory will contain drivers for multiple IP blocks found in
-> Mediatek ISP system. It will include ISP Pass 1 driver, sensor interface
-> driver, DIP driver and face detection driver.
-> 
-> Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
-> ---
->  drivers/media/platform/Makefile               |    2 +
->  drivers/media/platform/mtk-isp/Makefile       |    3 +
->  .../media/platform/mtk-isp/isp_50/Makefile    |    5 +
->  .../platform/mtk-isp/isp_50/seninf/Makefile   |    6 +
->  .../mtk-isp/isp_50/seninf/mtk_seninf.c        | 1011 +++++++++++++++++
->  .../mtk-isp/isp_50/seninf/mtk_seninf_def.h    |   59 +
->  .../mtk-isp/isp_50/seninf/mtk_seninf_reg.h    |  853 ++++++++++++++
->  7 files changed, 1939 insertions(+)
->  create mode 100644 drivers/media/platform/mtk-isp/Makefile
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/Makefile
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/Makefile
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/mtk_seninf.c
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/mtk_seninf_def.h
->  create mode 100644 drivers/media/platform/mtk-isp/isp_50/seninf/mtk_seninf_reg.h
-> 
-> diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-> index 7cbbd925124c..b0f4543f2f86 100644
-> --- a/drivers/media/platform/Makefile
-> +++ b/drivers/media/platform/Makefile
-> @@ -73,6 +73,8 @@ obj-$(CONFIG_VIDEO_ROCKCHIP_RGA)	+= rockchip/rga/
->  
->  obj-y	+= omap/
->  
-> +obj-y	+= mtk-isp/
-> +
->  obj-$(CONFIG_VIDEO_AM437X_VPFE)		+= am437x/
->  
->  obj-$(CONFIG_VIDEO_XILINX)		+= xilinx/
-> diff --git a/drivers/media/platform/mtk-isp/Makefile b/drivers/media/platform/mtk-isp/Makefile
-> new file mode 100644
-> index 000000000000..c17fb3fc3340
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +obj-y += isp_50/
-> diff --git a/drivers/media/platform/mtk-isp/isp_50/Makefile b/drivers/media/platform/mtk-isp/isp_50/Makefile
-> new file mode 100644
-> index 000000000000..8b4a792328e5
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/isp_50/Makefile
-> @@ -0,0 +1,5 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +ifeq ($(CONFIG_MTK_SENINF),y)
-> +obj-y += seninf/
-> +endif
-
-
-Please use 'obj-$(CONFIG_MTK_SENINF) += seninf/' instead.
-In fact, as Sakari mention in previous review, you should just remove
-the check.
-
-You should address all comments in previous run, otherwise what's the
-point for resend and the review?
-
-
-> diff --git a/drivers/media/platform/mtk-isp/isp_50/seninf/Makefile b/drivers/media/platform/mtk-isp/isp_50/seninf/Makefile
-> new file mode 100644
-> index 000000000000..bf193feb0ce9
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/isp_50/seninf/Makefile
-> @@ -0,0 +1,6 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +MODULE		= mtk_seninf
-> +LIB_FILES	= mtk_seninf
-> +
-> +obj-$(CONFIG_MTK_SENINF) += mtk_seninf.o
-> diff --git a/drivers/media/platform/mtk-isp/isp_50/seninf/mtk_seninf.c b/drivers/media/platform/mtk-isp/isp_50/seninf/mtk_seninf.c
-> new file mode 100644
-> index 000000000000..3253510cf7fd
-> --- /dev/null
-> +++ b/drivers/media/platform/mtk-isp/isp_50/seninf/mtk_seninf.c
-> @@ -0,0 +1,1011 @@
-> +// SPDX-License-Identifier: GPL-2.0
-
-
-<...>
-
-> +
-> +static struct platform_driver seninf_pdrv = {
-> +	.driver	= {
-> +		.name	= "seninf",
-> +		.pm  = &runtime_pm_ops,
-> +		.of_match_table = of_match_ptr(mtk_seninf_of_match),
-> +	},
-> +	.probe	= seninf_probe,
-> +	.remove	= seninf_remove,
-> +};
-> +
-> +module_platform_driver(seninf_pdrv);
-> +
-> +MODULE_DESCRIPTION("MTK seninf driver");
-> +MODULE_AUTHOR("Louis Kuo <louis.kuo@mediatek.com>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("MTK:mtk_seninf");
-
-You don't need MODULE_* since this can't be built as module now.
-
-However, I think this should be able to build as module.
-
-Joe.C
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGl2aXUgRHVkYXUgPGxp
+dml1LmR1ZGF1QGFybS5jb20+DQo+IFNlbnQ6IDIwMTnlubQ55pyIMTLml6UgMjI6NDcNCj4gVG86
+IFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LWRldmVsQGxpbnV4Lm54ZGku
+bnhwLmNvbTsgQnJpYW4gU3RhcmtleSA8YnJpYW4uc3RhcmtleUBhcm0uY29tPjsNCj4gRGF2aWQg
+QWlybGllIDxhaXJsaWVkQGxpbnV4LmllPjsgRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNo
+PjsgUm9iIEhlcnJpbmcNCj4gPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZCA8bWFy
+ay5ydXRsYW5kQGFybS5jb20+Ow0KPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOyBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
+ZzsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+DQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBbdjUg
+Mi8yXSBkcm0vYXJtL21hbGktZHA6IEFkZCBkaXNwbGF5IFFvUyBpbnRlcmZhY2UNCj4gY29uZmln
+dXJhdGlvbiBmb3IgTWFsaSBEUDUwMA0KPiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBP
+biBUdWUsIFNlcCAxMCwgMjAxOSBhdCAwMzo1OToxM1BNICswODAwLCBXZW4gSGUgd3JvdGU6DQo+
+ID4gQ29uZmlndXJlIHRoZSBkaXNwbGF5IFF1YWxpdHkgb2Ygc2VydmljZSAoUW9TKSBsZXZlbHMg
+cHJpb3JpdHkgaWYgdGhlDQo+ID4gb3B0aW9uYWwgcHJvcGVydHkgbm9kZSAiYXJtLG1hbGlkcC1h
+cXJvcy12YWx1ZSIgaXMgZGVmaW5lZCBpbiBEVFMgZmlsZS4NCj4gPg0KPiA+IFFvUyBzaWduYWxp
+bmcgdXNpbmcgQVFST1MgYW5kIEFXUU9TIEFYSSBpbnRlcmZhY2Ugc2lnbmFscywgdGhlIEFRUk9T
+DQo+ID4gaXMgZHJpdmVuIGZyb20gdGhlICJSUU9TIiByZWdpc3Rlciwgc28gbmVlZGVkIHRvIHBy
+b2dyYW0gdGhlIFJRT1MNCj4gPiByZWdpc3RlciB0byBhdm9pZCB0aGUgaGlnaCByZXNvbHV0aW9u
+cyBmbGlja2VyIGlzc3VlIG9uIHRoZSBMUzEwMjhBIHBsYXRmb3JtLg0KPiA+DQo+ID4gU2lnbmVk
+LW9mZi1ieTogV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPiANCj4gQWNrZWQtYnk6IExpdml1
+IER1ZGF1IDxsaXZpdS5kdWRhdUBhcm0uY29tPg0KPiANCj4gVGhhbmtzIGZvciB0aGUgcGF0Y2gh
+IEkgd2lsbCBwdWxsIHRoaXMgaW50byB0aGUgbWFsaWRwIGNvZGUgYW5kIHB1c2ggaXQgdG8NCj4g
+ZHJtLW1pc2MtbmV4dCBpbiB0aGUgZm9sbG93aW5nIGRheXMuDQoNClRoYW5rIHlvdSwgTGl2aXUu
+DQoNCkJlc3QgUmVnYXJkcywNCldlbg0KPiANCj4gQmVzdCByZWdhcmRzLA0KPiBMaXZpdQ0KPiAN
+Cj4gPiAtLS0NCj4gPiAgZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfZHJ2LmMgIHwgIDYgKysr
+KysrDQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX2h3LmMgICB8ICA5ICsrKysrKysr
+Kw0KPiA+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9ody5oICAgfCAgMyArKysNCj4gPiAg
+ZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfcmVncy5oIHwgMTAgKysrKysrKysrKw0KPiA+ICA0
+IGZpbGVzIGNoYW5nZWQsIDI4IGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9kcnYuYw0KPiA+IGIvZHJpdmVycy9ncHUvZHJtL2Fy
+bS9tYWxpZHBfZHJ2LmMNCj4gPiBpbmRleCAzMzNiODhhNWVmYjAuLjhhNzYzMTVhYWEwZiAxMDA2
+NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9kcnYuYw0KPiA+ICsrKyBi
+L2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX2Rydi5jDQo+ID4gQEAgLTgxNyw2ICs4MTcsMTIg
+QEAgc3RhdGljIGludCBtYWxpZHBfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4NCj4gPiAg
+ICAgICBtYWxpZHAtPmNvcmVfaWQgPSB2ZXJzaW9uOw0KPiA+DQo+ID4gKyAgICAgcmV0ID0gb2Zf
+cHJvcGVydHlfcmVhZF91MzIoZGV2LT5vZl9ub2RlLA0KPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgImFybSxtYWxpZHAtYXJxb3MtdmFsdWUiLA0KPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJmh3ZGV2LT5hcnFvc192YWx1ZSk7DQo+ID4g
+KyAgICAgaWYgKHJldCkNCj4gPiArICAgICAgICAgICAgIGh3ZGV2LT5hcnFvc192YWx1ZSA9IDB4
+MDsNCj4gPiArDQo+ID4gICAgICAgLyogc2V0IHRoZSBudW1iZXIgb2YgbGluZXMgdXNlZCBmb3Ig
+b3V0cHV0IG9mIFJHQiBkYXRhICovDQo+ID4gICAgICAgcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91
+OF9hcnJheShkZXYtPm9mX25vZGUsDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAiYXJtLG1hbGlkcC1vdXRwdXQtcG9ydC1saW5lcyIsDQo+ID4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX2h3LmMNCj4gPiBiL2RyaXZlcnMvZ3B1L2RybS9h
+cm0vbWFsaWRwX2h3LmMgaW5kZXggYmQ4MjY1ZjAyZTBiLi5jYTU3MGIxMzU0NzgNCj4gPiAxMDA2
+NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9ody5jDQo+ID4gKysrIGIv
+ZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfaHcuYw0KPiA+IEBAIC0zNzksNiArMzc5LDE1IEBA
+IHN0YXRpYyB2b2lkIG1hbGlkcDUwMF9tb2Rlc2V0KHN0cnVjdA0KPiBtYWxpZHBfaHdfZGV2aWNl
+ICpod2Rldiwgc3RydWN0IHZpZGVvbW9kZSAqDQo+ID4gICAgICAgICAgICAgICBtYWxpZHBfaHdf
+c2V0Yml0cyhod2RldiwgTUFMSURQX0RJU1BfRlVOQ19JTEFDRUQsDQo+IE1BTElEUF9ERV9ESVNQ
+TEFZX0ZVTkMpOw0KPiA+ICAgICAgIGVsc2UNCj4gPiAgICAgICAgICAgICAgIG1hbGlkcF9od19j
+bGVhcmJpdHMoaHdkZXYsIE1BTElEUF9ESVNQX0ZVTkNfSUxBQ0VELA0KPiA+IE1BTElEUF9ERV9E
+SVNQTEFZX0ZVTkMpOw0KPiA+ICsNCj4gPiArICAgICAvKg0KPiA+ICsgICAgICAqIFByb2dyYW0g
+dGhlIFJRb1MgcmVnaXN0ZXIgdG8gYXZvaWQgaGlnaCByZXNvbHV0aW9ucyBmbGlja2VyDQo+ID4g
+KyAgICAgICogaXNzdWUgb24gdGhlIExTMTAyOEEuDQo+ID4gKyAgICAgICovDQo+ID4gKyAgICAg
+aWYgKGh3ZGV2LT5hcnFvc192YWx1ZSkgew0KPiA+ICsgICAgICAgICAgICAgdmFsID0gaHdkZXYt
+PmFycW9zX3ZhbHVlOw0KPiA+ICsgICAgICAgICAgICAgbWFsaWRwX2h3X3NldGJpdHMoaHdkZXYs
+IHZhbCwNCj4gTUFMSURQNTAwX1JRT1NfUVVBTElUWSk7DQo+ID4gKyAgICAgfQ0KPiA+ICB9DQo+
+ID4NCj4gPiAgaW50IG1hbGlkcF9mb3JtYXRfZ2V0X2JwcCh1MzIgZm10KQ0KPiA+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL21hbGlkcF9ody5oDQo+ID4gYi9kcml2ZXJzL2dwdS9k
+cm0vYXJtL21hbGlkcF9ody5oIGluZGV4IDk2OGE2NWVlZDM3MS4uZTRjMzZiYzkwYmRhDQo+ID4g
+MTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfaHcuaA0KPiA+ICsr
+KyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX2h3LmgNCj4gPiBAQCAtMjUxLDYgKzI1MSw5
+IEBAIHN0cnVjdCBtYWxpZHBfaHdfZGV2aWNlIHsNCj4gPg0KPiA+ICAgICAgIC8qIHNpemUgb2Yg
+bWVtb3J5IHVzZWQgZm9yIHJvdGF0aW5nIGxheWVycywgdXAgdG8gdHdvIGJhbmtzIGF2YWlsYWJs
+ZQ0KPiAqLw0KPiA+ICAgICAgIHUzMiByb3RhdGlvbl9tZW1vcnlbMl07DQo+ID4gKw0KPiA+ICsg
+ICAgIC8qIHByaW9yaXR5IGxldmVsIG9mIFJRT1MgcmVnaXN0ZXIgdXNlZCBmb3IgZHJpdmVuIHRo
+ZSBBUlFPUyBzaWduYWwgKi8NCj4gPiArICAgICB1MzIgYXJxb3NfdmFsdWU7DQo+ID4gIH07DQo+
+ID4NCj4gPiAgc3RhdGljIGlubGluZSB1MzIgbWFsaWRwX2h3X3JlYWQoc3RydWN0IG1hbGlkcF9o
+d19kZXZpY2UgKmh3ZGV2LCB1MzINCj4gPiByZWcpIGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
+cm0vYXJtL21hbGlkcF9yZWdzLmgNCj4gPiBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX3Jl
+Z3MuaA0KPiA+IGluZGV4IDk5MzAzMTU0MmZhMS4uNTE0YzUwZGNiNzRkIDEwMDY0NA0KPiA+IC0t
+LSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX3JlZ3MuaA0KPiA+ICsrKyBiL2RyaXZlcnMv
+Z3B1L2RybS9hcm0vbWFsaWRwX3JlZ3MuaA0KPiA+IEBAIC0yMTAsNiArMjEwLDE2IEBADQo+ID4g
+ICNkZWZpbmUgTUFMSURQNTAwX0NPTkZJR19WQUxJRCAgICAgICAgICAgICAgIDB4MDBmMDANCj4g
+PiAgI2RlZmluZSBNQUxJRFA1MDBfQ09ORklHX0lEICAgICAgICAgIDB4MDBmZDQNCj4gPg0KPiA+
+ICsvKg0KPiA+ICsgKiBUaGUgcXVhbGl0eSBvZiBzZXJ2aWNlIChRb1MpIHJlZ2lzdGVyIG9uIHRo
+ZSBEUDUwMC4gUlFPUyByZWdpc3Rlcg0KPiA+ICt2YWx1ZXMNCj4gPiArICogYXJlIGRyaXZlbiBi
+eSB0aGUgQVJRT1Mgc2lnbmFsLCB1c2luZyBBWEkgdHJhbnNhY2F0aW9ucywgZGVwZW5kZW50DQo+
+ID4gK29uIHRoZQ0KPiA+ICsgKiBGSUZPIGlucHV0IGxldmVsLg0KPiA+ICsgKiBUaGUgUlFPUyBy
+ZWdpc3RlciBjYW4gYWxzbyBzZXQgUW9TIGxldmVscyBmb3I6DQo+ID4gKyAqICAgIC0gUkVEX0FS
+UU9TICAgQCBBIDQtYml0IHNpZ25hbCB2YWx1ZSBmb3IgY2xvc2UgdG8gdW5kZXJmbG93DQo+IGNv
+bmRpdGlvbnMNCj4gPiArICogICAgLSBHUkVFTl9BUlFPUyBAIEEgNC1iaXQgc2lnbmFsIHZhbHVl
+IGZvciBub3JtYWwgY29uZGl0aW9ucw0KPiA+ICsgKi8NCj4gPiArI2RlZmluZSBNQUxJRFA1MDBf
+UlFPU19RVUFMSVRZICAgICAgICAgIDB4MDA1MDANCj4gPiArDQo+ID4gIC8qIHJlZ2lzdGVyIG9m
+ZnNldHMgYW5kIGJpdHMgc3BlY2lmaWMgdG8gRFA1NTAvRFA2NTAgKi8NCj4gPiAgI2RlZmluZSBN
+QUxJRFA1NTBfQUREUl9TUEFDRV9TSVpFICAgIDB4MTAwMDANCj4gPiAgI2RlZmluZSBNQUxJRFA1
+NTBfREVfQ09OVFJPTCAgICAgICAgIDB4MDAwMTANCj4gPiAtLQ0KPiA+IDIuMTcuMQ0KPiA+DQo+
+IA0KPiAtLQ0KPiA9PT09PT09PT09PT09PT09PT09PQ0KPiB8IEkgd291bGQgbGlrZSB0byB8DQo+
+IHwgZml4IHRoZSB3b3JsZCwgIHwNCj4gfCBidXQgdGhleSdyZSBub3QgfA0KPiB8IGdpdmluZyBt
+ZSB0aGUgICB8DQo+ICBcIHNvdXJjZSBjb2RlISAgLw0KPiAgIC0tLS0tLS0tLS0tLS0tLQ0KPiAg
+ICAgwq9cXyjjg4QpXy/Crw0K
