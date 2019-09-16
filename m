@@ -1,55 +1,85 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: [3/3] Documentation: dt: binding: fsl: Add 'fsl,rcpm-scfg' property
-Date: Mon, 16 Sep 2019 18:25:56 +0800
-Message-ID: <20190916102556.16655-3-biwen.li@nxp.com>
-References: <20190916102556.16655-1-biwen.li@nxp.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH 05/11] drm/bridge: analogix-anx78xx: correct value of
+ TX_P0
+Date: Mon, 16 Sep 2019 12:36:19 +0200
+Message-ID: <98199a9b-f7e0-ef95-62d7-401273457692@collabora.com>
+References: <20190815004854.19860-1-masneyb@onstation.org>
+ <CGME20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97@epcas3p1.samsung.com>
+ <20190815004854.19860-6-masneyb@onstation.org>
+ <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190916102556.16655-1-biwen.li@nxp.com>
+In-Reply-To: <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
+To: Andrzej Hajda <a.hajda@samsung.com>, Brian Masney <masneyb@onstation.org>, bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org, narmstrong@baylibre.com, robdclark@gmail.com, sean@poorly.run
+Cc: airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@siol.net, linus.walleij@linaro.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, freedreno@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-The 'fsl,rcpm-scfg' property is used to fix a bug
-that FlexTimer cannot wakeup system in deep sleep on LS1021A
+Hi Andrzej and Brian
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
- .../devicetree/bindings/soc/fsl/rcpm.txt          | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+On 16/9/19 12:02, Andrzej Hajda wrote:
+> On 15.08.2019 02:48, Brian Masney wrote:
+>> When attempting to configure this driver on a Nexus 5 phone (msm8974),
+>> setting up the dummy i2c bus for TX_P0 would fail due to an -EBUSY
+>> error. The downstream MSM kernel sources [1] shows that the proper value
+>> for TX_P0 is 0x78, not 0x70, so correct the value to allow device
+>> probing to succeed.
+>>
+>> [1] https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/drivers/video/slimport/slimport_tx_reg.h
+>>
+>> Signed-off-by: Brian Masney <masneyb@onstation.org>
+>> ---
+>>  drivers/gpu/drm/bridge/analogix-anx78xx.h | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+>> index 25e063bcecbc..bc511fc605c9 100644
+>> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
+>> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+>> @@ -6,7 +6,7 @@
+>>  #ifndef __ANX78xx_H
+>>  #define __ANX78xx_H
+>>  
+>> -#define TX_P0				0x70
+>> +#define TX_P0				0x78
+> 
+> 
+> This bothers me little. There are no upstream users, grepping android
+> sources suggests that both values can be used [1][2]  (grep for "#define
+> TX_P0"), moreover there is code suggesting both values can be valid [3].
+> 
+> Could you verify datasheet which i2c slave addresses are valid for this
+> chip, if both I guess this patch should be reworked.
+> 
 
-diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-index 5a33619d881d..31e22f092b51 100644
---- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-+++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-@@ -34,6 +34,12 @@ Chassis Version		Example Chips
- Optional properties:
-  - little-endian : RCPM register block is Little Endian. Without it RCPM
-    will be Big Endian (default case).
-+ - fsl,rcpm-scfg : Must add the property for SoC LS1021A,
-+   Must include n + 1 entries (n = #fsl,rcpm-wakeup-cells, such as:
-+   #fsl,rcpm-wakeup-cells equal to 2, then must include 2 + 1 entries).
-+   The first entry must be a link to the SCFG device node.
-+   The non-first entry must be offset of registers of SCFG.
-+   (Currently only support SoC LS1021A)
- 
- Example:
- The RCPM node for T4240:
-@@ -43,6 +49,15 @@ The RCPM node for T4240:
- 		#fsl,rcpm-wakeup-cells = <2>;
- 	};
- 
-+The RCPM node for LS1021A:
-+	rcpm: rcpm@1ee2140 {
-+		compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+		reg = <0x0 0x1ee2140 0x0 0x8>;
-+		#fsl,rcpm-wakeup-cells = <2>;
-+		fsl,rcpm-scfg = <&scfg 0x0 0x51c>; /* SCFG_SPARECR8 */
-+	};
-+
-+
- * Freescale RCPM Wakeup Source Device Tree Bindings
- -------------------------------------------
- Required fsl,rcpm-wakeup property should be added to a device node if the device
--- 
-2.17.1
+On my case the valid i2c slave address is 0x70 (from datasheet, very sorry I
+can't share it) and the bridge used is an ANX7814, it could be that ANX7808 or
+ANX7812 have different slave addresses?
+
+Regards,
+ Enric
+
+> 
+> [1]:
+> https://android.googlesource.com/kernel/msm/+/android-msm-flo-3.4-jb-mr2/drivers/misc/slimport_anx7808/slimport_tx_reg.h
+> 
+> [2]:
+> https://github.com/AndroidGX/SimpleGX-MM-6.0_H815_20d/blob/master/drivers/video/slimport/anx7812/slimport7812_tx_reg.h
+> 
+> [3]:
+> https://github.com/commaai/android_kernel_leeco_msm8996/blob/master/drivers/video/msm/mdss/dp/slimport_custom_declare.h#L73
+> 
+> 
+> Regards
+> 
+> Andrzej
+> 
+> 
+>>  #define TX_P1				0x7a
+>>  #define TX_P2				0x72
+>>  
+> 
+> 
