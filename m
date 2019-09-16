@@ -1,61 +1,121 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 00/11] ARM: dts: qcom: msm8974: add support for external
- display
-Date: Mon, 16 Sep 2019 14:02:04 +0200
-Message-ID: <53f18b9f-ad23-563c-dc18-be71f3ec2c49@samsung.com>
-References: <CGME20190815004916epcas3p4d8a62e215eff5e227721d3449e6bfbd3@epcas3p4.samsung.com>
- <20190815004854.19860-1-masneyb@onstation.org>
- <2da29e80-73fb-8620-532e-0b5f54b00841@samsung.com>
- <20190916090150.GA349@onstation.org>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH 05/11] drm/bridge: analogix-anx78xx: correct value of
+ TX_P0
+Date: Mon, 16 Sep 2019 08:02:28 -0400
+Message-ID: <20190916120228.GA3045@onstation.org>
+References: <20190815004854.19860-1-masneyb@onstation.org>
+ <CGME20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97@epcas3p1.samsung.com>
+ <20190815004854.19860-6-masneyb@onstation.org>
+ <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
+ <20190916103614.GA1644@onstation.org>
+ <20190916104907.GB4734@pendragon.ideasonboard.com>
+ <3ec4f0bc-f3c5-aebf-8213-bc4f80915902@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190916090150.GA349@onstation.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brian Masney <masneyb@onstation.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jernej.skrabec@siol.net, narmstrong@baylibre.com, airlied@linux.ie, linux-kernel@vger.kernel.org, jonas@kwiboo.se, agross@kernel.org, dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com, linux-arm-msm@vger.kernel.org, enric.balletbo@collabora.com, freedreno@lists.freedesktop.org, sean@poorly.run, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3ec4f0bc-f3c5-aebf-8213-bc4f80915902@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Andrzej Hajda <a.hajda@samsung.com>, bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org, narmstrong@baylibre.com, robdclark@gmail.com, sean@poorly.run, airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com, jonas@kwiboo.se, jernej.skrabec@siol.net, linus.walleij@linaro.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, freedreno@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTYuMDkuMjAxOSAxMTowMSwgQnJpYW4gTWFzbmV5IHdyb3RlOgo+IEhpIEFuZHJ6ZWosCj4K
-PiBPbiBNb24sIFNlcCAxNiwgMjAxOSBhdCAxMDoxMzo1OEFNICswMjAwLCBBbmRyemVqIEhhamRh
-IHdyb3RlOgo+PiBIaSBCcmlhbiwKPj4KPj4gT24gMTUuMDguMjAxOSAwMjo0OCwgQnJpYW4gTWFz
-bmV5IHdyb3RlOgo+Pj4gVGhpcyBwYXRjaCBzZXJpZXMgYmVnaW5zIHRvIGFkZCBzdXBwb3J0IGZv
-ciB0aGUgZXh0ZXJuYWwgZGlzcGxheSBvdmVyCj4+PiBIRE1JIHRoYXQgaXMgc3VwcG9ydGVkIG9u
-IG1zbTg5NzQgU29Dcy4gSSdtIHRlc3RpbmcgdGhpcyBzZXJpZXMgb24gdGhlCj4+PiBOZXh1cyA1
-LCBhbmQgSSdtIGFibGUgdG8gY29tbXVuaWNhdGUgd2l0aCB0aGUgSERNSSBicmlkZ2UgdmlhIHRo
-ZQo+Pj4gYW5hbG9naXgtYW54Nzh4eCBkcml2ZXIsIGhvd2V2ZXIgdGhlIGV4dGVybmFsIGRpc3Bs
-YXkgaXMgbm90IHdvcmtpbmcKPj4+IHlldC4KPj4+Cj4+PiBXaGVuIEkgcGx1ZyBpbiB0aGUgSERN
-SSBjYWJsZSwgdGhlIG1vbml0b3IgZGV0ZWN0cyB0aGF0IGEgZGV2aWNlIGlzCj4+PiBob29rZWQg
-dXAsIGJ1dCBub3RoaW5nIGlzIHNob3duIG9uIHRoZSBleHRlcm5hbCBtb25pdG9yLiBUaGUgaG90
-IHBsdWcKPj4+IGRldGVjdCBHUElPIChocGQtZ3Bpb3MpIG9uIHRoZSBhbmFsb2dpeC1hbng3OHh4
-IGJyaWRnZSBhbmQgTVNNIEhETUkKPj4+IGRyaXZlcnMgZG8gbm90IGNoYW5nZSBzdGF0ZSB3aGVu
-IHRoZSBzbGltcG9ydCBhZGFwdGVyIG9yIEhETUkgY2FibGUgaXMKPj4+IHBsdWdnZWQgaW4gb3Ig
-cmVtb3ZlZC4gSSB3b25kZXIgaWYgYSByZWd1bGF0b3IgaXMgbm90IGVuYWJsZWQgc29tZXdoZXJl
-Pwo+Pj4gSSBoYXZlIGEgY29tbWVudCBpbiBwYXRjaCAxMCByZWdhcmRpbmcgJ2hwZC1nZHNjLXN1
-cHBseScgdGhhdCBtYXkKPj4+IHBvdGVudGlhbGx5IGJlIGFuIGlzc3VlLgo+Pj4KPj4+IEknbSBz
-dGlsbCBkaWdnaW5nIGluIG9uIHRoaXMsIGhvd2V2ZXIgSSdkIGFwcHJlY2lhdGUgYW55IGZlZWRi
-YWNrIGlmCj4+PiBhbnlvbmUgaGFzIHRpbWUuIE1vc3Qgb2YgdGhlc2UgcGF0Y2hlcyBhcmUgcmVh
-ZHkgbm93LCBzbyBJIG1hcmtlZCB0aGUKPj4+IG9uZXMgdGhhdCBhcmVuJ3QgcmVhZHkgd2l0aCAn
-UEFUQ0ggUkZDJy4KPj4+Cj4+PiBJJ20gdXNpbmcgYW4gQW5hbG9naXggU2VtaWNvbmR1Y3RvciBT
-UDYwMDEgU2xpbVBvcnQgTWljcm8tVVNCIHRvIDRLIEhETUkKPj4+IEFkYXB0ZXIgdG8gY29ubmVj
-dCBteSBwaG9uZSB0byBhbiBleHRlcm5hbCBkaXNwbGF5IHZpYSBhIHN0YW5kYXJkIEhETUkKPj4+
-IGNhYmxlLiBUaGlzIHdvcmtzIGp1c3QgZmluZSB3aXRoIHRoZSBkb3duc3RyZWFtIE1TTSBrZXJu
-ZWwgdXNpbmcKPj4+IEFuZHJvaWQuCj4+Cj4+IFRoaXMgcGF0Y2hzZXQgcmlza3MgdG8gYmUgZm9y
-Z290dGVuLiBUbyBhdm9pZCBpdCwgYXQgbGVhc3QgcGFydGlhbGx5LCBJCj4+IGNhbiBtZXJnZSBw
-YXRjaGVzIDEtNSwgaXMgaXQgT0sgZm9yIHlvdT8KPiBUaGF0IHdvdWxkIGJlIGdyZWF0IGlmIHlv
-dSBjb3VsZCBkbyB0aGF0LgoKCkkgaGF2ZSBxdWV1ZWQgMS00IHRvIGRybS1taXNjLW5leHQuIDV0
-aCBwYXRjaCByZXF1aXJlcyBzb21lIGRpc2N1c3Npb24uCgoKUmVnYXJkcwoKQW5kcnplagoKCj4K
-PiBUaGFua3MsCj4KPiBCcmlhbgo+Cj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbA==
+On Mon, Sep 16, 2019 at 01:32:58PM +0200, Enric Balletbo i Serra wrote:
+> Hi,
+> 
+> On 16/9/19 12:49, Laurent Pinchart wrote:
+> > Hi Brian,
+> > 
+> > On Mon, Sep 16, 2019 at 06:36:14AM -0400, Brian Masney wrote:
+> >> On Mon, Sep 16, 2019 at 12:02:09PM +0200, Andrzej Hajda wrote:
+> >>> On 15.08.2019 02:48, Brian Masney wrote:
+> >>>> When attempting to configure this driver on a Nexus 5 phone (msm8974),
+> >>>> setting up the dummy i2c bus for TX_P0 would fail due to an -EBUSY
+> >>>> error. The downstream MSM kernel sources [1] shows that the proper value
+> >>>> for TX_P0 is 0x78, not 0x70, so correct the value to allow device
+> >>>> probing to succeed.
+> >>>>
+> >>>> [1] https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/drivers/video/slimport/slimport_tx_reg.h
+> >>>>
+> >>>> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> >>>> ---
+> >>>>  drivers/gpu/drm/bridge/analogix-anx78xx.h | 2 +-
+> >>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> >>>> index 25e063bcecbc..bc511fc605c9 100644
+> >>>> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> >>>> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> >>>> @@ -6,7 +6,7 @@
+> >>>>  #ifndef __ANX78xx_H
+> >>>>  #define __ANX78xx_H
+> >>>>  
+> >>>> -#define TX_P0				0x70
+> >>>> +#define TX_P0				0x78
+> >>>
+> >>>
+> >>> This bothers me little. There are no upstream users, grepping android
+> >>> sources suggests that both values can be used [1][2]  (grep for "#define
+> >>> TX_P0"), moreover there is code suggesting both values can be valid [3].
+> >>>
+> >>> Could you verify datasheet which i2c slave addresses are valid for this
+> >>> chip, if both I guess this patch should be reworked.
+> >>>
+> >>>
+> >>> [1]:
+> >>> https://android.googlesource.com/kernel/msm/+/android-msm-flo-3.4-jb-mr2/drivers/misc/slimport_anx7808/slimport_tx_reg.h
+> >>>
+> >>> [2]:
+> >>> https://github.com/AndroidGX/SimpleGX-MM-6.0_H815_20d/blob/master/drivers/video/slimport/anx7812/slimport7812_tx_reg.h
+> >>>
+> >>> [3]:
+> >>> https://github.com/commaai/android_kernel_leeco_msm8996/blob/master/drivers/video/msm/mdss/dp/slimport_custom_declare.h#L73
+> >>
+> >> This address is 0x78 on my Nexus 5. Given [3] above it looks like we
+> >> need to support both addresses. What do you think about moving these
+> >> addresses into device tree?
+> > 
+> > Assuming that the device supports different addresses (I can't validate
+> > that as I don't have access to the datasheet), and different addresses
+> > need to be used on different systems, then the address to be used needs
+> > to be provided by the firmware (DT in this case). Two options are
+> > possible, either specifying the address explicitly in the device's DT
+> > node, or specifying free addresses (in the form of a white list or black
+> > list) and allocating an address from that pool. The latter has been
+> > discussed in a BoF at the Linux Plumbers Conference last week,
+> > https://linuxplumbersconf.org/event/4/contributions/542/.
+> > 
+> >> The downstream and upstream kernel sources divide these addresses by two
+> >> to get the i2c address. Here's the code in upstream:
+> >>
+> >> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L1353
+> >> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L41
+> >>
+> >> I'm not sure why the actual i2c address isn't used in this code.
+> > 
+> 
+> The ANX7802/12/14/16 has a slave I2C bus that provides the interface to access
+> or control the chip from the AP. The I2C slave addresses used to control the
+> ANX7802/12/14/16 are 70h, 72h, 7Ah, 7Eh and 80h. Every address allows you to
+> access to different registers of the chip and AFAICS is not configurable.
+> 
+> I don't think these addresses should be configured via DT but for the driver itself.
+> 
+> My wild guess is that the ANX7808 has different addresses, but I don't have the
+> datasheet of this version.
+
+I'm able to communicate with the 7808 on my Nexus 5 using the 0x78
+address. Given that the addresses appear to be fixed per model, maybe it
+makes sense to drop the address #defines and add the addresses to the
+data pointer in the driver's of_match_table like so:
+
+static const struct of_device_id anx78xx_match_table[] = {
+        { .compatible = "analogix,anx7808", .data = PTR_TO_7808_ADDRS },
+        { .compatible = "analogix,anx7812", .data = PTR_TO_781X_ADDRS },
+        { .compatible = "analogix,anx7814", .data = PTR_TO_781X_ADDRS },
+        { .compatible = "analogix,anx7818", .data = PTR_TO_781X_ADDRS },
+        { /* sentinel */ },
+};
+
+Brian
