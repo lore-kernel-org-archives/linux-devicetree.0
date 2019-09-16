@@ -1,60 +1,137 @@
-Return-Path: <SRS0=UWh6=XB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from forward105p.mail.yandex.net ([77.88.28.108]:55189 "EHLO
-        forward105p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388655AbfIFO3P (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 6 Sep 2019 10:29:15 -0400
-Date: Fri, 6 Sep 2019 17:29:09 +0300
-From: "<Vitaly Gaiduk>" <vitaly.gaiduk@cloudbear.ru>
-Subject: Re: [PATCH 1/2] net: phy: dp83867: Add documentation for SGMII mode
- type
-Message-ID: <20190906142909.GA16695@asus-X750JA>
-References: <1567700761-14195-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
- <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
- <1567703176.6344.4.camel@impinj.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567703176.6344.4.camel@impinj.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Trent Piepho <tpiepho@impinj.com>
-Cc: davem@davemloft.net, f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Return-Path: <SRS0=g8kN=XL=vergenet.net=horms@kernel.org>
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH v2] dt-bindings: hspi: Convert bindings to json-schema
+Date: Mon, 16 Sep 2019 09:53:52 +0200
+Message-Id: <20190916075352.32108-1-horms+renesas@verge.net.au>
+To: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Kaneko <ykaneko0929@gmail.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-Oh, sorry for delayed reply.
-This value means chosen sgmii type mode and can be 0 or 1 only.
-Idea with phy-mode adds some work with dts because this field
-is placed in mac node usually. Maybe just use "sgmii-clk" boolean 
-instead of my?
+Convert Renesas HSPI bindings documentation to json-schema.
+Also name bindings documentation file according to the compat string
+being documented.
 
-P.S. It's my first experience with LKML so I'm apologize in advance
-if something is wrong with CC field or other.
+As a side effect of this change all currently supported/used compat
+strings are listed while no while card compat string is documented.
+This, in my opinion, is desirable as only supported hardware should
+be documented.
 
-On Thu, Sep 05, 2019 at 05:06:17PM +0000, Trent Piepho wrote:
-> On Thu, 2019-09-05 at 19:26 +0300, Vitaly Gaiduk wrote:
-> > Add documentation of ti,sgmii-type which can be used to select
-> > SGMII mode type (4 or 6-wire).
-> > 
-> > Signed-off-by: Vitaly Gaiduk <vitaly.gaiduk@cloudbear.ru>
-> > ---
-> >  Documentation/devicetree/bindings/net/ti,dp83867.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/ti,dp83867.txt b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-> > index db6aa3f2215b..18e7fd52897f 100644
-> > --- a/Documentation/devicetree/bindings/net/ti,dp83867.txt
-> > +++ b/Documentation/devicetree/bindings/net/ti,dp83867.txt
-> > @@ -37,6 +37,7 @@ Optional property:
-> >  			      for applicable values.  The CLK_OUT pin can also
-> >  			      be disabled by this property.  When omitted, the
-> >  			      PHY's default will be left as is.
-> > +	- ti,sgmii-type - This denotes the fact which SGMII mode is used (4 or 6-wire).
-> 
-> Really should explain what kind of value it is and what the values
-> mean.  I.e., should this be ti,sgimii-type = <4> to select 4 wire?
-> 
-> Maybe a boolean, "sgmii-clock", to indicate the presence of sgmii rx
-> clock lines, would make more sense?
-> 
-> I also wonder if phy-mode = "sgmii-clk" or "sgmii-6wire", vs the
-> existing phy-mode = "sgmii", might also be a better way to describe
-> this instead of a new property.
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+Based on v5.3-rc1
+Tested using:
+  ARCH=arm make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/renesas,hspi.yaml
+
+v2
+- reference spi-controller.yaml# and thus do not document
+  #address-cells and #size-cells properties.
+  These properties are still listed as required.
+- Drop comment regarding pinctrl properties.
+  These are not needed as only one state, "default", is supported
+- Document clocks and power-domains properties.
+  The clocks property is required. Add these properties to the example.
+- Drop unnecessary interrupt-parent property from example.
+---
+ .../devicetree/bindings/spi/renesas,hspi.yaml      | 57 ++++++++++++++++++++++
+ Documentation/devicetree/bindings/spi/sh-hspi.txt  | 26 ----------
+ 2 files changed, 57 insertions(+), 26 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/renesas,hspi.yaml
+ delete mode 100644 Documentation/devicetree/bindings/spi/sh-hspi.txt
+
+diff --git a/Documentation/devicetree/bindings/spi/renesas,hspi.yaml b/Documentation/devicetree/bindings/spi/renesas,hspi.yaml
+new file mode 100644
+index 000000000000..c429cf4bea5b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/renesas,hspi.yaml
+@@ -0,0 +1,57 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/renesas,hspi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas HSPI
++
++maintainers:
++  - Geert Uytterhoeven <geert+renesas@glider.be>
++
++allOf:
++  - $ref: spi-controller.yaml#
++
++properties:
++  compatible:
++    items:
++      - enum:
++        - renesas,hspi-r8a7778 # R-Car M1A
++        - renesas,hspi-r8a7779 # R-Car H1
++      - const: renesas,hspi
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - '#address-cells'
++  - '#size-cells'
++
++examples:
++  - |
++    #include <dt-bindings/clock/r8a7778-clock.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    hspi0: spi@fffc7000 {
++        compatible = "renesas,hspi-r8a7778", "renesas,hspi";
++        reg = <0xfffc7000 0x18>;
++        interrupts = <0 63 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&mstp0_clks R8A7778_CLK_HSPI>;
++        power-domains = <&cpg_clocks>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++    };
++
+diff --git a/Documentation/devicetree/bindings/spi/sh-hspi.txt b/Documentation/devicetree/bindings/spi/sh-hspi.txt
+deleted file mode 100644
+index b9d1e4d11a77..000000000000
+--- a/Documentation/devicetree/bindings/spi/sh-hspi.txt
++++ /dev/null
+@@ -1,26 +0,0 @@
+-Renesas HSPI.
+-
+-Required properties:
+-- compatible       : "renesas,hspi-<soctype>", "renesas,hspi" as fallback.
+-		     Examples with soctypes are:
+-		       - "renesas,hspi-r8a7778" (R-Car M1)
+-		       - "renesas,hspi-r8a7779" (R-Car H1)
+-- reg              : Offset and length of the register set for the device
+-- interrupts       : Interrupt specifier
+-- #address-cells   : Must be <1>
+-- #size-cells      : Must be <0>
+-
+-Pinctrl properties might be needed, too.  See
+-Documentation/devicetree/bindings/pinctrl/renesas,*.
+-
+-Example:
+-
+-	hspi0: spi@fffc7000 {
+-		compatible = "renesas,hspi-r8a7778", "renesas,hspi";
+-		reg = <0xfffc7000 0x18>;
+-		interrupt-parent = <&gic>;
+-		interrupts = <0 63 IRQ_TYPE_LEVEL_HIGH>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-	};
+-
+-- 
+2.11.0
