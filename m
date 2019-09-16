@@ -1,35 +1,29 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V4 4/5] arm64: dts: imx8qxp-mek: Enable scu key
-Date: Mon, 16 Sep 2019 10:52:52 +0800
-Message-ID: <1568602373-14164-4-git-send-email-Anson.Huang@nxp.com>
-References: <1568602373-14164-1-git-send-email-Anson.Huang@nxp.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 1/2] ARM: dts: imx7d: Correct speed grading fuse settings
+Date: Mon, 16 Sep 2019 02:55:15 +0000
+Message-ID: <DB3PR0402MB3916411027B6F28179010327F58C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1568256992-31707-1-git-send-email-Anson.Huang@nxp.com>
+ <VI1PR04MB7023E48B04999733859F7158EEB00@VI1PR04MB7023.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568602373-14164-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <VI1PR04MB7023E48B04999733859F7158EEB00@VI1PR04MB7023.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com, will@kernel.org, dmitry.torokhov@gmail.com, aisheng.dong@nxp.com, ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com, olof@lixom.net, mripard@kernel.org, arnd@arndb.de, jagan@amarulasolutions.com, dinguyen@kernel.org, bjorn.andersson@linaro.org, marcin.juszkiewicz@linaro.org, andriy.shevchenko@linux.intel.com, yuehaibing@huawei.com, cw00.choi@samsung.com, enric.balletbo@collabora.com, m.felsch@pengutronix.de, ping.bai@nxp.com, ronald@innovation.ch, stefan@agner.ch, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@
-Cc: Linux-imx@nxp.com
+To: Leonard Crestez <leonard.crestez@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable scu key for i.MX8QXP MEK board.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No changes.
----
- arch/arm64/boot/dts/freescale/imx8qxp-mek.dts | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-index 1946805..88dd9132 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-@@ -234,3 +234,7 @@
- &adma_dsp {
- 	status = "okay";
- };
-+
-+&scu_key {
-+	status = "okay";
-+};
--- 
-2.7.4
+SGksIExlb25hcmQNCg0KPiBPbiAyMDE5LTA5LTEyIDU6NTcgQU0sIEFuc29uIEh1YW5nIHdyb3Rl
+Og0KPiA+IFRoZSA4MDBNSHogb3BwIHNwZWVkIGdyYWRpbmcgZnVzZSBtYXNrIHNob3VsZCBiZSAw
+eGQgaW5zdGVhZCBvZiAweGYNCj4gPiBhY2NvcmRpbmcgdG8gZnVzZSBtYXAgZGVmaW5pdGlvbjoN
+Cj4gPg0KPiA+IFNQRUVEX0dSQURJTkdbMTowXQlNSHoNCj4gPiAJMDAJCTgwMA0KPiA+IAkwMQkJ
+NTAwDQo+ID4gCTEwCQkxMDAwDQo+ID4gCTExCQkxMjAwDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5
+OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gDQo+IFJldmlld2VkLWJ5OiBM
+ZW9uYXJkIENyZXN0ZXogPGxlb25hcmQuY3Jlc3RlekBueHAuY29tPg0KPiANCj4gQXJlIHlvdSBn
+b2luZyB0byBhZGQgdGhlIDUwMG1oeiBPUFAgYXMgd2VsbD8NCg0KU28gZmFyIG5vLCBhcyBkYXRh
+c2hlZXQgZG9lcyBOT1QgbGlzdCA1MDBNSHogYXMgT1BQLCB0aGlzIHBhdGNoIGlzIGp1c3QgdG8g
+bWFrZSBzdXJlDQp0aGUgc3BlZWQgZ3JhZGluZyBtYXNrIHNldHRpbmdzIG1hdGNoZXMgdGhlIGZ1
+c2VtYXAgZmlsZSwgTk9UIHN1cmUgaWYgNTAwTUh6IHdpbGwgYmUgc3VwcG9ydGVkDQpvZmZpY2lh
+bGx5Lg0KDQpBbnNvbg0K
