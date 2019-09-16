@@ -1,65 +1,305 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] dts: arm64: imx8mq: Enable gpu passive throttling
-Date: Mon, 16 Sep 2019 16:33:37 +0200
-Message-ID: <60da82b157be87d7a1050da47ace80adf2b638f3.camel@pengutronix.de>
-References: <cover.1568255903.git.agx@sigxcpu.org>
-         <0ab2ee7de9c2e24f6de860ffcbcdfc25b72c2c61.1568255903.git.agx@sigxcpu.org>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v3 09/11] PCI: layerscape: Add EP mode support for
+ ls1088a and ls2088a
+Date: Mon, 16 Sep 2019 15:37:47 +0100
+Message-ID: <20190916143746.GU9720@e119886-lin.cambridge.arm.com>
+References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
+ <20190902031716.43195-10-xiaowei.bao@nxp.com>
+ <20190902124603.GJ9720@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB329970AE2C1812E88B9DE5A2F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <20190912124943.GD9720@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB3299CE219E17931066E1DA3CF5B20@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0ab2ee7de9c2e24f6de860ffcbcdfc25b72c2c61.1568255903.git.agx@sigxcpu.org>
+Content-Disposition: inline
+In-Reply-To: <AM5PR04MB3299CE219E17931066E1DA3CF5B20@AM5PR04MB3299.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Russell King <linux+etnaviv@armlinux.org.uk>, Christian Gmeiner <christian.gmeiner@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel
+To: Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.o>
 List-Id: devicetree@vger.kernel.org
 
-On Mi, 2019-09-11 at 19:40 -0700, Guido Günther wrote:
-> Temperature and hysteresis were picked after the CPU.
+On Sat, Sep 14, 2019 at 04:10:22AM +0000, Xiaowei Bao wrote:
 > 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index 4fdd60f2c51e..5023a0e5068d 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -235,12 +235,26 @@
->  			thermal-sensors = <&tmu 1>;
->  
->  			trips {
-> +				gpu_alert: gpu-alert {
-> +					temperature = <80000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
->  				gpu-crit {
->  					temperature = <90000>;
->  					hysteresis = <2000>;
->  					type = "critical";
->  				};
->  			};
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip = <&gpu_alert>;
-> +					cooling-device =
-> +						<&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +				};
-> +			};
->  		};
->  
->  		vpu-thermal {
-> @@ -912,6 +926,7 @@
->  			         <&clk IMX8MQ_CLK_GPU_AXI>,
->  			         <&clk IMX8MQ_CLK_GPU_AHB>;
->  			clock-names = "core", "shader", "bus", "reg";
-> +			#cooling-cells = <2>;
->  			assigned-clocks = <&clk IMX8MQ_CLK_GPU_CORE_SRC>,
->  			                  <&clk IMX8MQ_CLK_GPU_SHADER_SRC>,
->  			                  <&clk IMX8MQ_CLK_GPU_AXI>,
+> > -----Original Message-----
+> > From: Andrew Murray <andrew.murray@arm.com>
+> > Sent: 2019年9月12日 20:50
+> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Cc: robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo
+> > Li <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h.
+> > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+> > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org;
+> > arnd@arndb.de; gregkh@linuxfoundation.org; Z.q. Hou
+> > <zhiqiang.hou@nxp.com>
+> > Subject: Re: [PATCH v3 09/11] PCI: layerscape: Add EP mode support for
+> > ls1088a and ls2088a
+> > 
+> > On Tue, Sep 03, 2019 at 01:47:36AM +0000, Xiaowei Bao wrote:
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Andrew Murray <andrew.murray@arm.com>
+> > > > Sent: 2019年9月2日 20:46
+> > > > To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > > Cc: robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org;
+> > > > Leo Li <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com;
+> > M.h.
+> > > > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> > > > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+> > > > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+> > > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org;
+> > > > arnd@arndb.de; gregkh@linuxfoundation.org; Z.q. Hou
+> > > > <zhiqiang.hou@nxp.com>
+> > > > Subject: Re: [PATCH v3 09/11] PCI: layerscape: Add EP mode support
+> > > > for ls1088a and ls2088a
+> > > >
+> > > > On Mon, Sep 02, 2019 at 11:17:14AM +0800, Xiaowei Bao wrote:
+> > > > > Add PCIe EP mode support for ls1088a and ls2088a, there are some
+> > > > > difference between LS1 and LS2 platform, so refactor the code of
+> > > > > the EP driver.
+> > > > >
+> > > > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> > > > > ---
+> > > > > v2:
+> > > > >  - This is a new patch for supporting the ls1088a and ls2088a platform.
+> > > > > v3:
+> > > > >  - Adjust the some struct assignment order in probe function.
+> > > > >
+> > > > >  drivers/pci/controller/dwc/pci-layerscape-ep.c | 72
+> > > > > +++++++++++++++++++-------
+> > > > >  1 file changed, 53 insertions(+), 19 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > > > b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > > > index 5f0cb99..723bbe5 100644
+> > > > > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > > > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> > > > > @@ -20,27 +20,29 @@
+> > > > >
+> > > > >  #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
+> > > > >
+> > > > > -struct ls_pcie_ep {
+> > > > > -	struct dw_pcie		*pci;
+> > > > > -	struct pci_epc_features	*ls_epc;
+> > > > > +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> > > > > +
+> > > > > +struct ls_pcie_ep_drvdata {
+> > > > > +	u32				func_offset;
+> > > > > +	const struct dw_pcie_ep_ops	*ops;
+> > > > > +	const struct dw_pcie_ops	*dw_pcie_ops;
+> > > > >  };
+> > > > >
+> > > > > -#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> > > > > +struct ls_pcie_ep {
+> > > > > +	struct dw_pcie			*pci;
+> > > > > +	struct pci_epc_features		*ls_epc;
+> > > > > +	const struct ls_pcie_ep_drvdata *drvdata; };
+> > > > >
+> > > > >  static int ls_pcie_establish_link(struct dw_pcie *pci)  {
+> > > > >  	return 0;
+> > > > >  }
+> > > > >
+> > > > > -static const struct dw_pcie_ops ls_pcie_ep_ops = {
+> > > > > +static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
+> > > > >  	.start_link = ls_pcie_establish_link,  };
+> > > > >
+> > > > > -static const struct of_device_id ls_pcie_ep_of_match[] = {
+> > > > > -	{ .compatible = "fsl,ls-pcie-ep",},
+> > > > > -	{ },
+> > > > > -};
+> > > > > -
+> > > > >  static const struct pci_epc_features*
+> > > > > ls_pcie_ep_get_features(struct dw_pcie_ep *ep)  { @@ -87,10 +89,39
+> > > > > @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> > > > >  	}
+> > > > >  }
+> > > > >
+> > > > > -static const struct dw_pcie_ep_ops pcie_ep_ops = {
+> > > > > +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep
+> > *ep,
+> > > > > +						u8 func_no)
+> > > > > +{
+> > > > > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> > > > > +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
+> > > > > +
+> > > > > +	WARN_ON(func_no && !pcie->drvdata->func_offset);
+> > > > > +	return pcie->drvdata->func_offset * func_no; }
+> > > > > +
+> > > > > +static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
+> > > > >  	.ep_init = ls_pcie_ep_init,
+> > > > >  	.raise_irq = ls_pcie_ep_raise_irq,
+> > > > >  	.get_features = ls_pcie_ep_get_features,
+> > > > > +	.func_conf_select = ls_pcie_ep_func_conf_select, };
+> > > > > +
+> > > > > +static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
+> > > > > +	.ops = &ls_pcie_ep_ops,
+> > > > > +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
+> > > > > +
+> > > > > +static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
+> > > > > +	.func_offset = 0x20000,
+> > > > > +	.ops = &ls_pcie_ep_ops,
+> > > > > +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
+> > > > > +
+> > > > > +static const struct of_device_id ls_pcie_ep_of_match[] = {
+> > > > > +	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
+> > > > > +	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
+> > > > > +	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
+> > > > > +	{ },
+> > > >
+> > > > This removes support for "fsl,ls-pcie-ep" - was that intentional? If
+> > > > you do plan to drop it please make sure you explain why in the
+> > > > commit message. See also my comments in your dt-binding patch.
+> > >
+> > > In fact, the u-boot will fixup the status property to 'status =
+> > > enabled' in PCI node of the DTS base on "fsl,ls-pcie-ep" compatible,
+> > > so "fsl,ls-pcie-ep" is used, I used this compatible before, because
+> > > the driver only support the LS1046a, but this time, I add the LS1088a
+> > > and LS2088a support, and these two boards have some difference form
+> > LS1046a, so I changed the compatible. I am not sure whether need to add
+> > "fsl,ls-pcie-ep"
+> > > in there, could you give some advice, thanks a lot.
+> > 
+> > It sounds like "fsl,ls-pcie-ep" can be a fallback for "fsl,ls1046a-pcie-ep".
+> 
+> This is not a fallback, the compatible "fsl,ls1046a-pcie-ep" is used by bootloader,
+> the bootloader will modify the status property, the bootloader code get the
+> PCI_HEADER_TYPE(0xe) of config space to decide enable which node(EP or RC)
+> status property. At the beginning, we plan to use one compatible "fsl,ls1046a-pcie-ep"
+> support all NXP's platform, but actually, due to the difference of each platform,
+> it is difficult.
+
+I've looked at the U-Boot source [1] and device trees, I think I understand
+what happens here.
+
+The DT describes disabled nodes for both fsl,lsXXXXX-pcie and
+fsl,lxXXXXX-pcie-ep. U-Boot looks at the nodes and compares with the actual PCI
+config space to determine the current hardware configuration type. It will
+then *enable* either the RC or EP.
+
+However U-Boot currently only looks for a compatible string with "fsl,ls-pcie"
+or "fsl,ls-pcie-ep". This is why the DT needs to describe a PCI node as both
+"fsl,lsXXXXX-pcie-ep" and "fsl,ls-pcie" - the first for kernel and the second
+for the U-Boot. (The second is no longer needed by the kernel driver as you
+are now using the more specific names).
+
+Looking again at your bindings patch...
+
+diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+index e20ceaa..762ae41 100644
+--- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
++++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+@@ -22,7 +22,9 @@  Required properties:
+         "fsl,ls1043a-pcie"
+         "fsl,ls1012a-pcie"
+   EP mode:
+-	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
++	"fsl,ls1046a-pcie-ep" "fsl,ls-pcie-ep"
++	"fsl,ls1088a-pcie-ep" "fsl,ls-pcie-ep"
++	"fsl,ls2088a-pcie-ep" "fsl,ls-pcie-ep"
+
+... the "fsl,ls-pcie-ep" is added *only* to the EP mode.
+
+But doesn't U-Boot need "fsl,ls-pcie-ep" added to each of the RC modes as
+well, to ensure they are set to enabled before booting the kernel?
+
+Rob - Do we document compatible names like this that are used in the DT
+but not used by the kernel?
+
+In any case, prior to this series it would have been possible to use a
+ls1046a device with a DT that has only string "fsl,ls-pcie-ep" - now that
+doesn't work. If this is of concern then &ls1_ep_drvdata should also be
+used for fsl,ls-pcie-ep.
+
+Thanks,
+
+Andrew Murray
+
+[1] https://gitlab.denx.de/u-boot/u-boot/blob/master/drivers/pci/pcie_layerscape_fixup.c
+
+> 
+> > 
+> > I'm assuming that if someone used "fsl,ls1046a-pcie-ep" on ls1088a or
+> > ls2088a hardware it would still work, but without the multiple PF support.
+> > 
+> 
+> I think the EP driver will not work if use current code, due to the current driver
+> need driver data. 
+> 
+> > I.e. if "fsl,ls-pcie-ep" is given, treat it as ls1046a.
+> 
+> 
+> 
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > >
+> > > Thanks
+> > > Xiaowei
+> > >
+> > > >
+> > > > Thanks,
+> > > >
+> > > > Andrew Murray
+> > > >
+> > > > >  };
+> > > > >
+> > > > >  static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie, @@
+> > > > > -103,7
+> > > > > +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep
+> > > > > +*pcie,
+> > > > >  	int ret;
+> > > > >
+> > > > >  	ep = &pci->ep;
+> > > > > -	ep->ops = &pcie_ep_ops;
+> > > > > +	ep->ops = pcie->drvdata->ops;
+> > > > >
+> > > > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > > > "addr_space");
+> > > > >  	if (!res)
+> > > > > @@ -142,20 +173,23 @@ static int __init ls_pcie_ep_probe(struct
+> > > > platform_device *pdev)
+> > > > >  	if (!ls_epc)
+> > > > >  		return -ENOMEM;
+> > > > >
+> > > > > -	dbi_base = platform_get_resource_byname(pdev,
+> > IORESOURCE_MEM,
+> > > > "regs");
+> > > > > -	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> > > > > -	if (IS_ERR(pci->dbi_base))
+> > > > > -		return PTR_ERR(pci->dbi_base);
+> > > > > +	pcie->drvdata = of_device_get_match_data(dev);
+> > > > >
+> > > > > -	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> > > > >  	pci->dev = dev;
+> > > > > -	pci->ops = &ls_pcie_ep_ops;
+> > > > > -	pcie->pci = pci;
+> > > > > +	pci->ops = pcie->drvdata->dw_pcie_ops;
+> > > > >
+> > > > >  	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
+> > > > >
+> > > > > +	pcie->pci = pci;
+> > > > >  	pcie->ls_epc = ls_epc;
+> > > > >
+> > > > > +	dbi_base = platform_get_resource_byname(pdev,
+> > IORESOURCE_MEM,
+> > > > "regs");
+> > > > > +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> > > > > +	if (IS_ERR(pci->dbi_base))
+> > > > > +		return PTR_ERR(pci->dbi_base);
+> > > > > +
+> > > > > +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> > > > > +
+> > > > >  	platform_set_drvdata(pdev, pcie);
+> > > > >
+> > > > >  	ret = ls_add_pcie_ep(pcie, pdev);
+> > > > > --
+> > > > > 2.9.5
+> > > > >
