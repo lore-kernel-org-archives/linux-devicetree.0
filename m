@@ -1,68 +1,66 @@
-From: Dilip Kota <eswara.kota@linux.intel.com>
-Subject: Re: [PATCH v3 2/2] dwc: PCI: intel: Intel PCIe RC controller driver
-Date: Mon, 16 Sep 2019 11:03:39 +0800
-Message-ID: <52ef93fd-d705-4163-d194-a1b749b2e7df@linux.intel.com>
-References: <20190906112044.GF9720@e119886-lin.cambridge.arm.com>
- <959a5f9b-2646-96e3-6a0f-0af1051ae1cb@linux.intel.com>
- <20190909083117.GH9720@e119886-lin.cambridge.arm.com>
- <22857835-1f98-b251-c94b-16b4b0a6dba2@linux.intel.com>
- <20190911103058.GP9720@e119886-lin.cambridge.arm.com>
- <aefd143c-66d2-b303-d992-a55f75a91b2e@linux.intel.com>
- <20190912082517.GA9720@e119886-lin.cambridge.arm.com>
- <cd73e351-5633-bfa8-a4dc-77357d917a0b@linux.intel.com>
- <DM6PR12MB4010AEA876F20E25FFFE06BDDAB00@DM6PR12MB4010.namprd12.prod.outlook.com>
- <b7a1b955-4c3e-6ffe-ec6a-04afe33e70cd@linux.intel.com>
- <20190913101203.GE2680@smile.fi.intel.com>
+From: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Subject: Re: [RFC PATCH V4 3/4] dt-bindings: mt8183: Add sensor interface
+ dt-bindings
+Date: Mon, 16 Sep 2019 13:33:22 +0800
+Message-ID: <1568612002.14078.1.camel@mtksdaap41>
+References: <20190915065004.20257-1-louis.kuo@mediatek.com>
+ <20190915065004.20257-4-louis.kuo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190913101203.GE2680@smile.fi.intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
-Cc: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, Andrew Murray <andrew.murray@arm.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "robh@kernel.org" <robh@kernel.org>, "martin.blumenstingl@googlemail.com" <martin.blumenstingl@googlemail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "hch@infradead.org" <hch@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>, "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>, "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190915065004.20257-4-louis.kuo@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Louis Kuo <louis.kuo@mediatek.com>
+Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, Jerry-ch.Chen@mediatek.com, tfiga@chromium.org, keiichiw@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, hans.verkuil@cisco.com, zwisler@chromium.org, frederic.chen@mediatek.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, 2019-09-15 at 14:50 +0800, Louis Kuo wrote:
+> This patch adds the DT binding documentation for the sensor interface
+> module in Mediatek SoCs.
+> 
+> Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
+> ---
+>  .../bindings/media/mediatek-seninf.txt        | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-seninf.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/mediatek-seninf.txt b/Documentation/devicetree/bindings/media/mediatek-seninf.txt
+> new file mode 100644
+> index 000000000000..bf2eb801cb47
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek-seninf.txt
+> @@ -0,0 +1,30 @@
+> +* Mediatek seninf MIPI-CSI2 host driver
+> +
+> +Seninf MIPI-CSI2 host driver is a HW camera interface controller. It support a widely adopted,
+> +simple, high-speed protocol primarily intended for point-to-point image and video
+> +transmission between cameras and host devices.
+> +
+> +Required properties:
+> +  - compatible: "mediatek,mt8183-seninf"
+> +  - reg: Must contain an entry for each entry in reg-names.
+> +  - reg-names: Must include the following entries:
+> +    "base_reg": seninf registers base
+> +    "rx_reg": Rx analog registers base
 
-On 9/13/2019 6:12 PM, andriy.shevchenko@intel.com wrote:
-> On Fri, Sep 13, 2019 at 05:20:26PM +0800, Dilip Kota wrote:
->> On 9/12/2019 6:49 PM, Gustavo Pimentel wrote:
->>> On Thu, Sep 12, 2019 at 10:23:31, Dilip Kota
->>> <eswara.kota@linux.intel.com> wrote:
->>> Hi, I just return from parental leave, therefore I still trying to get
->>> the pace in mailing list discussion.
->>>
->>> However your suggestion looks good, I agree that can go into DesignWare
->>> driver to be available to all.
->> Thanks Gustavo for the confirmation, i will add it in the next patch version
->>> Just a small request, please do in general:
->>> s/designware/DesignWare
->> Sorry, i didnt understand this.
-> It means the reviewer asks you to name DesignWare in this form,
-> i.o.w. designware -> DesignWare.
->
-> `man 1 sed` gives you more about it :-)
-Thanks Andy for clarifying it.
-Could you please also comment let me know your opinion on the driver 
-naming. Below is the mail snippet.
+Everyone here is a reg. Adding _reg prefix for everyone looks redundant.
+Same for clock-names.
 
-======
- >>> Add support to PCIe RC controller on Intel Universal
- >>> Gateway SoC. PCIe controller is based of Synopsys
- >>> Designware pci core.
- >>> +config PCIE_INTEL_AXI
- > [Andy]: I think that name here is too generic. Classical x86 seems 
-not using this.
 
-[Dilip Kota]:
-This PCIe driver is for the Intel Gateway SoCs. So how about naming it is as
-"pcie-intel-gw"; pcie-intel-gw.c and Kconfig as PCIE_INTEL_GW.
+> +  - interrupts: interrupt number to the cpu.
+> +  - clocks : clock name from clock manager
+> +  - clock-names: must be CLK_CAM_SENINF and CLK_TOP_MUX_SENINF.
+> +    It is the clocks of seninf
+> +
 
-Andrew Murray is ok with this naming, please let me know your view.
-=======
 
-Regards,
-Dilip
-
->
+Joe.C
