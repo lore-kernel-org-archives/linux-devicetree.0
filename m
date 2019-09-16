@@ -1,70 +1,114 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [RFCv4 0/7] interconnect: Add imx support via devfreq
-Date: Mon, 16 Sep 2019 12:34:45 +0000
-Message-ID: <VI1PR04MB702373BE28E4404C7F2CE75FEE8C0@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1566570260.git.leonard.crestez@nxp.com>
+From: Piotr Sroka <piotrs@cadence.com>
+Subject: [v6 2/2] dt-bindings: mtd: Add Cadence NAND controller driver
+Date: Mon, 16 Sep 2019 13:46:34 +0100
+Message-ID: <20190916124715.29941-1-piotrs@cadence.com>
+References: <20190916124342.24114-1-piotrs@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>, Saravana Kannan <saravanak@google.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190916124342.24114-1-piotrs@cadence.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Piotr Sroka <piotrs@cadence.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23.08.2019 17:37, Leonard Crestez wrote:
-> This series add imx support for interconnect via devfreq: the ICC
-> framework is used to aggregate requests from devices and then those are
-> converted to DEV_PM_QOS_MIN_FREQUENCY requests for devfreq.
->  
-> Since there is no single devicetree node that can represent the "interconnect"
-> new API is added to allow individual devfreq nodes to act as parsing proxies
-> all mapping to a single soc-level icc provider. This is still RFC
-> because of this
+Document the bindings used by Cadence NAND controller driver
 
-Any comments? I made a lot of changes relative to previous versions, 
-most of them solely to avoid adding a virtual node in DT bindings.
+Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes for v6:
+- add documentation for address-cells and size-cells
+- remove not needed space
+- put myself as maintainer of the Cadence nand driver bindings
+Changes for v5:
+- replace "_" by "-" in all properties
+- change compatible name from cdns,hpnfc to cdns,hp-nfc
+Changes for v4:
+- add commit message
+Changes for v3:
+- add unit suffix for board_delay 
+- move child description to proper place
+- remove prefix cadence_ for reg and sdma fields
+Changes for v2:
+- remove chip dependends parameters from dts bindings
+- add names for register ranges in dts bindings
+- add generic bindings to describe NAND chip representation
+---
+ .../bindings/mtd/cadence-nand-controller.txt       | 53 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
 
-The only current interconnect provider implementation is for qcom and it 
-uses a firmware node as the provider node (with #interconnect-cells). 
-However there is no obvious equivalent of that for imx and many other SOCs.
-
-On imx there are multiple pieces of scalable fabric which can be defined 
-in DT as devfreq devices and it sort of makes sense to add 
-#interconnect-cells to those. However when it comes to describing the 
-SOC interconnect graph it's much more convenient to have a single 
-per-SOC platform driver.
-
-My solution is to add an "icc_proxy" API so that a single platform-level 
-interconnect provider can be referenced through multiple DT nodes. Does 
-this make sense?
-
-The implementation is not very pretty, the interconnect platform devices 
-ends up enumerating the entire devicetree in order to find proxies.
-
-Right now the interconnect API use a relatively standard split between 
-consumer and "provider" but I think it might make sense to have a 
-separate abstractions for "graph" and "midnode". A "midnode" could act 
-as a DT proxy if there is no single representation of the "interconnect" 
-and it could support custom scaling for itself (with the default being 
-scaling kbps into MIN_FREQ).
-
-There are also other options:
-  * Pick one "main" bus and bless it as the "interconnect provider". I 
-want to represent buses as devfreq devices so I would have to call from 
-devfreq to ICC for registration somehow.
-  * Maybe the "no virtual device" rule could be relaxed for the 
-interconnect subsystem?
-
---
-Regards,
-Leonard
+diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+new file mode 100644
+index 000000000000..f3893c4d3c6a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+@@ -0,0 +1,53 @@
++* Cadence NAND controller
++
++Required properties:
++  - compatible : "cdns,hp-nfc"
++  - reg : Contains two entries, each of which is a tuple consisting of a
++	  physical address and length. The first entry is the address and
++	  length of the controller register set. The second entry is the
++	  address and length of the Slave DMA data port.
++  - reg-names: should contain "reg" and "sdma"
++  - #address-cells: should be 1. The cell encodes the chip select connection.
++  - #size-cells : should be 0.
++  - interrupts : The interrupt number.
++  - clocks: phandle of the controller core clock (nf_clk).
++
++Optional properties:
++  - dmas: shall reference DMA channel associated to the NAND controller
++  - cdns,board-delay-ps : Estimated Board delay. The value includes the total
++    round trip delay for the signals and is used for deciding on values
++    associated with data read capture. The example formula for SDR mode is
++    the following:
++    board delay = RE#PAD delay + PCB trace to device + PCB trace from device
++    + DQ PAD delay
++
++Child nodes represent the available NAND chips.
++
++Required properties of NAND chips:
++  - reg: shall contain the native Chip Select ids from 0 to max supported by
++    the cadence nand flash controller
++
++See Documentation/devicetree/bindings/mtd/nand.txt for more details on
++generic bindings.
++
++Example:
++
++nand_controller: nand-controller@60000000 {
++	  compatible = "cdns,hp-nfc";
++	  #address-cells = <1>;
++	  #size-cells = <0>;
++	  reg = <0x60000000 0x10000>, <0x80000000 0x10000>;
++	  reg-names = "reg", "sdma";
++	  clocks = <&nf_clk>;
++	  cdns,board-delay-ps = <4830>;
++	  interrupts = <2 0>;
++	  nand@0 {
++	      reg = <0>;
++	      label = "nand-1";
++	  };
++	  nand@1 {
++	      reg = <1>;
++	      label = "nand-2";
++	  };
++
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 16e16445b88b..94d78f4e29ba 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3584,6 +3584,7 @@ M:	Piotr Sroka <piotrs@cadence.com>
+ L:	linux-mtd@lists.infradead.org
+ S:	Maintained
+ F:	drivers/mtd/nand/raw/cadence-nand-controller.c
++F:	Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+ 
+ CADET FM/AM RADIO RECEIVER DRIVER
+ M:	Hans Verkuil <hverkuil@xs4all.nl>
+-- 
+2.15.0
