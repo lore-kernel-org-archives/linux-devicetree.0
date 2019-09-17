@@ -1,167 +1,39 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: sound: Convert Samsung I2S controller
- to dt-schema
-Date: Tue, 17 Sep 2019 08:05:38 -0500
-Message-ID: <CAL_JsqJmjUR63i_hKUuZwDu42rebwABHu62bQoxTRRJu5yObEA@mail.gmail.com>
-References: <CGME20190917120517eucas1p1188d244fac2d10d7990363ff25ffb70d@eucas1p1.samsung.com>
- <20190917111413.22711-1-m.falkowski@samsung.com> <20190917120452.28135-1-m.falkowski@samsung.com>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH] dt-bindings: net: dwmac: fix 'mac-mode' type
+Date: Tue, 17 Sep 2019 13:24:27 +0000
+Message-ID: <ecb8d9183ebe666c92480dd37ddc21709dd14f76.camel@analog.com>
+References: <20190917103052.13456-1-alexandru.ardelean@analog.com>
+         <20190917124132.GG20778@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190917120452.28135-1-m.falkowski@samsung.com>
+In-Reply-To: <20190917124132.GG20778@lunn.ch>
+Content-Language: en-US
+Content-ID: <F5020DEEC3875546A466CEB1E350F39D@namprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Falkowski <m.falkowski@samsung.com>
-Cc: Linux-ALSA <alsa-devel@alsa-project.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: "andrew@lunn.ch" <andrew@lunn.ch>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "alexandre.torgue@st.com" <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 7:05 AM Maciej Falkowski
-<m.falkowski@samsung.com> wrote:
->
-> Convert Samsung I2S controller to newer dt-schema format.
->
-> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
-> v2:
-> - Added missing Signed-off-by certificate
-> ---
->  .../devicetree/bindings/sound/samsung-i2s.txt |  84 -------------
->  .../bindings/sound/samsung-i2s.yaml           | 119 ++++++++++++++++++
->  2 files changed, 119 insertions(+), 84 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-
-> diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.yaml b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-> new file mode 100644
-> index 000000000000..59dc76035cb4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-> @@ -0,0 +1,119 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/samsung-i2s.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung SoC I2S controller
-> +
-> +maintainers:
-> +  - Krzysztof Kozlowski <krzk@kernel.org>
-> +  - Sangbeom Kim <sbkim73@samsung.com>
-> +  - Sylwester Nawrocki <s.nawrocki@samsung.com>
-> +
-> +properties:
-> +  compatible:
-> +    description: |
-> +      samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
-> +
-> +      samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
-> +      secondary fifo, s/w reset control and internal mux for root clk src.
-> +
-> +      samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
-> +      playback, stereo channel capture, secondary fifo using internal
-> +      or external dma, s/w reset control, internal mux for root clk src
-> +      and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
-> +      is to allow transfer of multiple channel audio data on single data line.
-> +
-> +      samsung,exynos7-i2s: with all the available features of exynos5 i2s.
-> +
-> +      exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
-> +      with only external dma and more no.of root clk sampling frequencies.
-> +
-> +      samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
-> +      stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
-> +      slightly modified bit offsets.
-> +    enum:
-> +      - "samsung,s3c6410-i2s"
-> +      - "samsung,s5pv210-i2s"
-> +      - "samsung,exynos5420-i2s"
-> +      - "samsung,exynos7-i2s"
-> +      - "samsung,exynos7-i2s1"
-
-No need for quotes here.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    description: list of DMA controller phandle and DMA request line ordered pairs.
-
-How many?
-
-> +
-> +  dma-names:
-> +    description: |
-> +      identifier string for each DMA request line in the dmas property.
-> +      These strings correspond 1:1 with the ordered pairs in dmas.
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 3
-> +
-> +  clock-names:
-> +    oneOf:
-> +      - items:
-> +          - const: iis
-> +      - items:
-> +          - const: iis
-> +          - const: i2s_opclk0
-> +      - items:
-> +          - const: iis
-> +          - const: i2s_opclk0
-> +          - const: i2s_opclk1
-> +    description: |
-> +      "iis" is the i2s bus clock.
-> +      For i2s1 and i2s2 - "iis", "i2s_opclk0"
-> +      For i2s0 - "iis", "i2s_opclk0", "i2s_opclk1"
-> +
-> +  "#clock-cells":
-> +    const: 1
-> +
-> +  samsung,idma-addr:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Internal DMA register base address of the audio
-> +      sub system(used in secondary sound source).
-> +
-> +  pinctrl-0:
-> +    description: Should specify pin control groups used for this controller.
-> +
-> +  pinctrl-names:
-> +    const: default
-> +
-> +  "#sound-dai-cells":
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - dmas
-> +  - dma-names
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    i2s0: i2s@3830000 {
-> +        compatible = "samsung,s5pv210-i2s";
-> +        reg = <0x03830000 0x100>;
-> +        dmas = <&pdma0 10
-> +                &pdma0 9
-> +                &pdma0 8>;
-> +        dma-names = "tx", "rx", "tx-sec";
-> +        clocks = <&clock_audss 0>, // EXYNOS_I2S_BUS
-> +                <&clock_audss 0>, // EXYNOS_I2S_BUS
-> +                <&clock_audss 0>; // EXYNOS_SCLK_I2S
-> +        clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
-> +        #clock-cells = <1>;
-> +        samsung,idma-addr = <0x03000000>;
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&i2s0_bus>;
-> +        #sound-dai-cells = <1>;
-> +    };
-> +
-> --
-> 2.17.1
->
+T24gVHVlLCAyMDE5LTA5LTE3IGF0IDE0OjQxICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
+W0V4dGVybmFsXQ0KPiANCj4gT24gVHVlLCBTZXAgMTcsIDIwMTkgYXQgMDE6MzA6NTJQTSArMDMw
+MCwgQWxleGFuZHJ1IEFyZGVsZWFuIHdyb3RlOg0KPiA+IFRoZSAnbWFjLW1vZGUnIHByb3BlcnR5
+IGlzIHNpbWlsYXIgdG8gJ3BoeS1tb2RlJyBhbmQgJ3BoeS1jb25uZWN0aW9uLXR5cGUnLA0KPiA+
+IHdoaWNoIGFyZSBlbnVtcyBvZiBtb2RlIHN0cmluZ3MuDQo+ID4gDQo+ID4gVGhlICdkd21hYycg
+ZHJpdmVyIHN1cHBvcnRzIGFsbW9zdCBhbGwgbW9kZXMgZGVjbGFyZWQgaW4gdGhlICdwaHktbW9k
+ZScNCj4gPiBlbnVtIChleGNlcHQgZm9yIDEgb3IgMikuIEJ1dCBpbiBnZW5lcmFsLCB0aGVyZSBt
+YXkgYmUgYSBjYXNlIHdoZXJlDQo+ID4gJ21hYy1tb2RlJyBiZWNvbWVzIG1vcmUgZ2VuZXJpYyBh
+bmQgaXMgbW92ZWQgYXMgcGFydCBvZiBwaHlsaWIgb3IgbmV0ZGV2Lg0KPiA+IA0KPiA+IEluIGFu
+eSBjYXNlLCB0aGUgJ21hYy1tb2RlJyBmaWVsZCBzaG91bGQgYmUgbWFkZSBhbiBlbnVtLCBhbmQg
+aXQgYWxzbyBtYWtlcw0KPiA+IHNlbnNlIHRvIGp1c3QgcmVmZXJlbmNlIHRoZSAncGh5LWNvbm5l
+Y3Rpb24tdHlwZScgZnJvbQ0KPiA+ICdldGhlcm5ldC1jb250cm9sbGVyLnlhbWwnLiBUaGF0IHdp
+bGwgYWxzbyBtYWtlIGl0IG1vcmUgZnV0dXJlLXByb29mIGZvciBuZXcNCj4gPiBtb2Rlcy4NCj4g
+PiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRl
+bGVhbkBhbmFsb2cuY29tPg0KPiANCj4gSGkgQWxleGFuZHJ1DQo+IA0KPiBBZGRpbmcgYSBGaXhl
+czogdGFnIHdvdWxkIGJlIGdvb2QuIEp1c3QgcmVwbHkgaW4gdGhpcyB0aHJlYWQsIGFuZA0KPiBw
+YXRjaHdvcmsgd2lsbCBkbyBtYWdpYyB0byBhcHBlbmQgaXQgdG8gdGhlIHBhdGNoLg0KPiANCg0K
+T29wcy4gR29vZCBwb2ludC4NClRoYW5rcyBmb3IgdGhlIHRpcC4NCg0KTGV0J3Mgc2VlIGlmIFJv
+YiBhZ3JlZXMgYXMgd2VsbC4NCg0KRml4ZXM6IDljMTVkMzU5N2M2MiAoImR0LWJpbmRpbmdzOiBu
+ZXQ6IGR3bWFjOiBkb2N1bWVudCAnbWFjLW1vZGUnIHByb3BlcnR5IikNCg0KPiBSZXZpZXdlZC1i
+eTogQW5kcmV3IEx1bm4gPGFuZHJld0BsdW5uLmNoPg0KPiANCj4gICAgIEFuZHJldw0K
