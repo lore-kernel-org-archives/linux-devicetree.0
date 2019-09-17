@@ -1,7 +1,7 @@
 From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 3/5] regulator: da9062: add voltage selection gpio support
-Date: Tue, 17 Sep 2019 14:42:44 +0200
-Message-ID: <20190917124246.11732-4-m.felsch@pengutronix.de>
+Subject: [PATCH 5/5] regulator: da9062: add gpio based regulator dis-/enable support
+Date: Tue, 17 Sep 2019 14:42:46 +0200
+Message-ID: <20190917124246.11732-6-m.felsch@pengutronix.de>
 References: <20190917124246.11732-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,421 +12,245 @@ To: support.opensource@diasemi.com, lee.jones@linaro.org, robh+dt@kernel.org, lg
 Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The DA9062/1 devices can switch their regulator voltages between
-voltage-A (active) and voltage-B (suspend) settings. Switching the
-voltages can be controlled by ther internal state-machine or by a gpio
-input signal and can be configured for each individual regulator. This
-commit adds the gpio-based voltage switching support.
+Each regulator can be enabeld/disabled by the internal pmic state
+machine or by a gpio input signal. Typically the OTP configures the
+regulators to be enabled/disabled on a specific sequence number which is
+most the time fine. Sometimes we need to reconfigure that due to a PCB
+bug. This patch adds the support to disable/enable the regulator based
+on a gpio input signal.
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/regulator/da9062-regulator.c | 149 +++++++++++++++++++++++++++
- 1 file changed, 149 insertions(+)
+ drivers/regulator/da9062-regulator.c | 84 +++++++++++++++++++++++++++-
+ 1 file changed, 82 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
-index 9b2ca472f70c..9d6eb7625948 100644
+index 9d6eb7625948..1fd15c6c654f 100644
 --- a/drivers/regulator/da9062-regulator.c
 +++ b/drivers/regulator/da9062-regulator.c
-@@ -7,6 +7,7 @@
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/err.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/slab.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-@@ -15,6 +16,7 @@
- #include <linux/regulator/machine.h>
- #include <linux/regulator/of_regulator.h>
- #include <linux/mfd/da9062/core.h>
-+#include <linux/mfd/da9062/gpio.h>
- #include <linux/mfd/da9062/registers.h>
- 
- /* Regulator IDs */
-@@ -50,6 +52,7 @@ struct da9062_regulator_info {
- 	struct reg_field sleep;
+@@ -53,6 +53,7 @@ struct da9062_regulator_info {
  	struct reg_field suspend_sleep;
  	unsigned int suspend_vsel_reg;
-+	struct reg_field vsel_gpi;
+ 	struct reg_field vsel_gpi;
++	struct reg_field ena_gpi;
  	/* Event detection bit */
  	struct reg_field oc_event;
  };
-@@ -65,6 +68,7 @@ struct da9062_regulator {
- 	struct regmap_field			*suspend;
+@@ -69,6 +70,7 @@ struct da9062_regulator {
  	struct regmap_field			*sleep;
  	struct regmap_field			*suspend_sleep;
-+	struct regmap_field			*vsel_gpi;
+ 	struct regmap_field			*vsel_gpi;
++	struct regmap_field			*ena_gpi;
  };
  
  /* Encapsulates all information for the regulators driver */
-@@ -351,6 +355,65 @@ static const struct regulator_ops da9062_ldo_ops = {
- 	.set_suspend_mode	= da9062_ldo_set_suspend_mode,
- };
+@@ -398,7 +400,10 @@ static int da9062_config_gpi(struct device_node *np,
+ 		goto free;
+ 	}
  
-+static int da9062_config_gpi(struct device_node *np,
-+			     const struct regulator_desc *desc,
-+			     struct regulator_config *cfg, const char *gpi_id)
-+{
-+	struct da9062_regulator *regl = cfg->driver_data;
-+	struct gpio_desc *gpi;
-+	unsigned int nr;
-+	int ret;
-+	char *prop, *label;
+-	ret = regmap_field_write(regl->vsel_gpi, nr);
++	if (!strncmp(gpi_id, "ena", 3))
++		ret = regmap_field_write(regl->ena_gpi, nr);
++	else
++		ret = regmap_field_write(regl->vsel_gpi, nr);
+ 
+ free:
+ 	kfree(prop);
+@@ -411,7 +416,13 @@ static int da9062_parse_dt(struct device_node *np,
+ 			   const struct regulator_desc *desc,
+ 			   struct regulator_config *cfg)
+ {
+-	return da9062_config_gpi(np, desc, cfg, "vsel");
++	int error;
 +
-+	prop = kasprintf(GFP_KERNEL, "dlg,%s-sense-gpios", gpi_id);
-+	if (!prop)
-+		return -ENOMEM;
-+	label = kasprintf(GFP_KERNEL, "%s-%s-gpi", desc->name, gpi_id);
-+	if (!label) {
-+		ret = -ENOMEM;
-+		goto free;
-+	}
++	error = da9062_config_gpi(np, desc, cfg, "vsel");
++	if (error)
++		return error;
 +
-+	/*
-+	 * We only must ensure that the gpio device is probed before the
-+	 * regulator driver so no need to store the reference global. Luckily
-+	 * devm_* releases the gpio upon a unbound action.
-+	 */
-+	gpi = devm_gpiod_get_from_of_node(cfg->dev, np, prop, 0, GPIOD_IN |
-+					  GPIOD_FLAGS_BIT_NONEXCLUSIVE, label);
-+	if (IS_ERR(gpi)) {
-+		ret = PTR_ERR(gpi);
-+		goto free;
-+	}
-+
-+	if (!gpi) {
-+		ret = 0;
-+		goto free;
-+	}
-+
-+	/* We need the local number */
-+	nr = da9062_gpio_get_hwgpio(gpi);
-+	if (nr < 1 || nr > 3) {
-+		ret = -EINVAL;
-+		goto free;
-+	}
-+
-+	ret = regmap_field_write(regl->vsel_gpi, nr);
-+
-+free:
-+	kfree(prop);
-+	kfree(label);
-+
-+	return ret;
-+}
-+
-+static int da9062_parse_dt(struct device_node *np,
-+			   const struct regulator_desc *desc,
-+			   struct regulator_config *cfg)
-+{
-+	return da9062_config_gpi(np, desc, cfg, "vsel");
-+}
-+
++	return da9062_config_gpi(np, desc, cfg, "ena");
+ }
+ 
  /* DA9061 Regulator information */
- static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 	{
-@@ -358,6 +421,7 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 		.desc.name = "DA9061 BUCK1",
- 		.desc.of_match = of_match_ptr("buck1"),
- 		.desc.regulators_node = of_match_ptr("regulators"),
-+		.desc.of_parse_cb = da9062_parse_dt,
- 		.desc.ops = &da9062_buck_ops,
- 		.desc.min_uV = (300) * 1000,
- 		.desc.uV_step = (10) * 1000,
-@@ -388,12 +452,17 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_BUCK1_CONF_MASK) - 1,
+@@ -456,6 +467,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
+ 			__builtin_ffs((int)DA9062AA_VBUCK1_GPI_MASK) - 1,
  			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_BUCK1_CONF_MASK) - 1),
-+		.vsel_gpi = REG_FIELD(DA9062AA_BUCK1_CONT,
-+			__builtin_ffs((int)DA9062AA_VBUCK1_GPI_MASK) - 1,
+ 			__builtin_clz(DA9062AA_VBUCK1_GPI_MASK) - 1),
++		.ena_gpi = REG_FIELD(DA9062AA_BUCK1_CONT,
++			__builtin_ffs((int)DA9062AA_BUCK1_GPI_MASK) - 1,
 +			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_VBUCK1_GPI_MASK) - 1),
++			__builtin_clz(DA9062AA_BUCK1_GPI_MASK) - 1),
  	},
  	{
  		.desc.id = DA9061_ID_BUCK2,
- 		.desc.name = "DA9061 BUCK2",
- 		.desc.of_match = of_match_ptr("buck2"),
- 		.desc.regulators_node = of_match_ptr("regulators"),
-+		.desc.of_parse_cb = da9062_parse_dt,
- 		.desc.ops = &da9062_buck_ops,
- 		.desc.min_uV = (800) * 1000,
- 		.desc.uV_step = (20) * 1000,
-@@ -424,12 +493,17 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_BUCK3_CONF_MASK) - 1,
+@@ -497,6 +512,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
+ 			__builtin_ffs((int)DA9062AA_VBUCK3_GPI_MASK) - 1,
  			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_BUCK3_CONF_MASK) - 1),
-+		.vsel_gpi = REG_FIELD(DA9062AA_BUCK3_CONT,
-+			__builtin_ffs((int)DA9062AA_VBUCK3_GPI_MASK) - 1,
+ 			__builtin_clz(DA9062AA_VBUCK3_GPI_MASK) - 1),
++		.ena_gpi = REG_FIELD(DA9062AA_BUCK3_CONT,
++			__builtin_ffs((int)DA9062AA_BUCK3_GPI_MASK) - 1,
 +			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_VBUCK3_GPI_MASK) - 1),
++			__builtin_clz(DA9062AA_BUCK3_GPI_MASK) - 1),
  	},
  	{
  		.desc.id = DA9061_ID_BUCK3,
- 		.desc.name = "DA9061 BUCK3",
- 		.desc.of_match = of_match_ptr("buck3"),
- 		.desc.regulators_node = of_match_ptr("regulators"),
-+		.desc.of_parse_cb = da9062_parse_dt,
- 		.desc.ops = &da9062_buck_ops,
- 		.desc.min_uV = (530) * 1000,
- 		.desc.uV_step = (10) * 1000,
-@@ -460,12 +534,17 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_BUCK4_CONF_MASK) - 1,
+@@ -538,6 +557,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
+ 			__builtin_ffs((int)DA9062AA_VBUCK4_GPI_MASK) - 1,
  			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_BUCK4_CONF_MASK) - 1),
-+		.vsel_gpi = REG_FIELD(DA9062AA_BUCK4_CONT,
-+			__builtin_ffs((int)DA9062AA_VBUCK4_GPI_MASK) - 1,
+ 			__builtin_clz(DA9062AA_VBUCK4_GPI_MASK) - 1),
++		.ena_gpi = REG_FIELD(DA9062AA_BUCK4_CONT,
++			__builtin_ffs((int)DA9062AA_BUCK4_GPI_MASK) - 1,
 +			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_VBUCK4_GPI_MASK) - 1),
++			__builtin_clz(DA9062AA_BUCK4_GPI_MASK) - 1),
  	},
  	{
  		.desc.id = DA9061_ID_LDO1,
- 		.desc.name = "DA9061 LDO1",
- 		.desc.of_match = of_match_ptr("ldo1"),
- 		.desc.regulators_node = of_match_ptr("regulators"),
-+		.desc.of_parse_cb = da9062_parse_dt,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
-@@ -489,6 +568,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_LDO1_CONF_MASK) - 1,
+@@ -572,6 +595,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
+ 			__builtin_ffs((int)DA9062AA_VLDO1_GPI_MASK) - 1,
  			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_LDO1_CONF_MASK) - 1),
-+		.vsel_gpi = REG_FIELD(DA9062AA_LDO1_CONT,
-+			__builtin_ffs((int)DA9062AA_VLDO1_GPI_MASK) - 1,
+ 			__builtin_clz(DA9062AA_VLDO1_GPI_MASK) - 1),
++		.ena_gpi = REG_FIELD(DA9062AA_LDO1_CONT,
++			__builtin_ffs((int)DA9062AA_LDO1_GPI_MASK) - 1,
 +			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_VLDO1_GPI_MASK) - 1),
++			__builtin_clz(DA9062AA_LDO1_GPI_MASK) - 1),
  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
  			__builtin_ffs((int)DA9062AA_LDO1_ILIM_MASK) - 1,
  			sizeof(unsigned int) * 8 -
-@@ -499,6 +582,7 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 		.desc.name = "DA9061 LDO2",
- 		.desc.of_match = of_match_ptr("ldo2"),
- 		.desc.regulators_node = of_match_ptr("regulators"),
-+		.desc.of_parse_cb = da9062_parse_dt,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
-@@ -522,6 +606,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_LDO2_CONF_MASK) - 1,
+@@ -610,6 +637,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
+ 			__builtin_ffs((int)DA9062AA_VLDO2_GPI_MASK) - 1,
  			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_LDO2_CONF_MASK) - 1),
-+		.vsel_gpi = REG_FIELD(DA9062AA_LDO2_CONT,
-+			__builtin_ffs((int)DA9062AA_VLDO2_GPI_MASK) - 1,
+ 			__builtin_clz(DA9062AA_VLDO2_GPI_MASK) - 1),
++		.ena_gpi = REG_FIELD(DA9062AA_LDO2_CONT,
++			__builtin_ffs((int)DA9062AA_LDO2_GPI_MASK) - 1,
 +			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_VLDO2_GPI_MASK) - 1),
++			__builtin_clz(DA9062AA_LDO2_GPI_MASK) - 1),
  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
  			__builtin_ffs((int)DA9062AA_LDO2_ILIM_MASK) - 1,
  			sizeof(unsigned int) * 8 -
-@@ -532,6 +620,7 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 		.desc.name = "DA9061 LDO3",
- 		.desc.of_match = of_match_ptr("ldo3"),
- 		.desc.regulators_node = of_match_ptr("regulators"),
-+		.desc.of_parse_cb = da9062_parse_dt,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
-@@ -555,6 +644,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_LDO3_CONF_MASK) - 1,
+@@ -648,6 +679,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
+ 			__builtin_ffs((int)DA9062AA_VLDO3_GPI_MASK) - 1,
  			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_LDO3_CONF_MASK) - 1),
-+		.vsel_gpi = REG_FIELD(DA9062AA_LDO3_CONT,
-+			__builtin_ffs((int)DA9062AA_VLDO3_GPI_MASK) - 1,
+ 			__builtin_clz(DA9062AA_VLDO3_GPI_MASK) - 1),
++		.ena_gpi = REG_FIELD(DA9062AA_LDO3_CONT,
++			__builtin_ffs((int)DA9062AA_LDO3_GPI_MASK) - 1,
 +			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_VLDO3_GPI_MASK) - 1),
++			__builtin_clz(DA9062AA_LDO3_GPI_MASK) - 1),
  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
  			__builtin_ffs((int)DA9062AA_LDO3_ILIM_MASK) - 1,
  			sizeof(unsigned int) * 8 -
-@@ -565,6 +658,7 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 		.desc.name = "DA9061 LDO4",
- 		.desc.of_match = of_match_ptr("ldo4"),
- 		.desc.regulators_node = of_match_ptr("regulators"),
-+		.desc.of_parse_cb = da9062_parse_dt,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
-@@ -588,6 +682,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_LDO4_CONF_MASK) - 1,
+@@ -686,6 +721,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
+ 			__builtin_ffs((int)DA9062AA_VLDO4_GPI_MASK) - 1,
  			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_LDO4_CONF_MASK) - 1),
-+		.vsel_gpi = REG_FIELD(DA9062AA_LDO4_CONT,
-+			__builtin_ffs((int)DA9062AA_VLDO4_GPI_MASK) - 1,
+ 			__builtin_clz(DA9062AA_VLDO4_GPI_MASK) - 1),
++		.ena_gpi = REG_FIELD(DA9062AA_LDO4_CONT,
++			__builtin_ffs((int)DA9062AA_LDO4_GPI_MASK) - 1,
 +			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_VLDO4_GPI_MASK) - 1),
++			__builtin_clz(DA9062AA_LDO4_GPI_MASK) - 1),
  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
  			__builtin_ffs((int)DA9062AA_LDO4_ILIM_MASK) - 1,
  			sizeof(unsigned int) * 8 -
-@@ -602,6 +700,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.name = "DA9062 BUCK1",
- 		.desc.of_match = of_match_ptr("buck1"),
- 		.desc.regulators_node = of_match_ptr("regulators"),
-+		.desc.of_parse_cb = da9062_parse_dt,
- 		.desc.ops = &da9062_buck_ops,
- 		.desc.min_uV = (300) * 1000,
- 		.desc.uV_step = (10) * 1000,
-@@ -632,12 +731,17 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_BUCK1_CONF_MASK) - 1,
+@@ -735,6 +774,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
+ 			__builtin_ffs((int)DA9062AA_VBUCK1_GPI_MASK) - 1,
  			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_BUCK1_CONF_MASK) - 1),
-+		.vsel_gpi = REG_FIELD(DA9062AA_BUCK1_CONT,
-+			__builtin_ffs((int)DA9062AA_VBUCK1_GPI_MASK) - 1,
+ 			__builtin_clz(DA9062AA_VBUCK1_GPI_MASK) - 1),
++		.ena_gpi = REG_FIELD(DA9062AA_BUCK1_CONT,
++			__builtin_ffs((int)DA9062AA_BUCK1_GPI_MASK) - 1,
 +			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_VBUCK1_GPI_MASK) - 1),
++			__builtin_clz(DA9062AA_BUCK1_GPI_MASK) - 1),
  	},
  	{
  		.desc.id = DA9062_ID_BUCK2,
- 		.desc.name = "DA9062 BUCK2",
- 		.desc.of_match = of_match_ptr("buck2"),
- 		.desc.regulators_node = of_match_ptr("regulators"),
-+		.desc.of_parse_cb = da9062_parse_dt,
- 		.desc.ops = &da9062_buck_ops,
- 		.desc.min_uV = (300) * 1000,
- 		.desc.uV_step = (10) * 1000,
-@@ -668,12 +772,17 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_BUCK2_CONF_MASK) - 1,
+@@ -776,6 +819,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
+ 			__builtin_ffs((int)DA9062AA_VBUCK2_GPI_MASK) - 1,
  			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_BUCK2_CONF_MASK) - 1),
-+		.vsel_gpi = REG_FIELD(DA9062AA_BUCK2_CONT,
-+			__builtin_ffs((int)DA9062AA_VBUCK2_GPI_MASK) - 1,
+ 			__builtin_clz(DA9062AA_VBUCK2_GPI_MASK) - 1),
++		.ena_gpi = REG_FIELD(DA9062AA_BUCK2_CONT,
++			__builtin_ffs((int)DA9062AA_BUCK2_GPI_MASK) - 1,
 +			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_VBUCK2_GPI_MASK) - 1),
++			__builtin_clz(DA9062AA_BUCK2_GPI_MASK) - 1),
  	},
  	{
  		.desc.id = DA9062_ID_BUCK3,
- 		.desc.name = "DA9062 BUCK3",
- 		.desc.of_match = of_match_ptr("buck3"),
- 		.desc.regulators_node = of_match_ptr("regulators"),
-+		.desc.of_parse_cb = da9062_parse_dt,
- 		.desc.ops = &da9062_buck_ops,
- 		.desc.min_uV = (800) * 1000,
- 		.desc.uV_step = (20) * 1000,
-@@ -704,12 +813,17 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_BUCK3_CONF_MASK) - 1,
+@@ -817,6 +864,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
+ 			__builtin_ffs((int)DA9062AA_VBUCK3_GPI_MASK) - 1,
  			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_BUCK3_CONF_MASK) - 1),
-+		.vsel_gpi = REG_FIELD(DA9062AA_BUCK3_CONT,
-+			__builtin_ffs((int)DA9062AA_VBUCK3_GPI_MASK) - 1,
+ 			__builtin_clz(DA9062AA_VBUCK3_GPI_MASK) - 1),
++		.ena_gpi = REG_FIELD(DA9062AA_BUCK3_CONT,
++			__builtin_ffs((int)DA9062AA_BUCK3_GPI_MASK) - 1,
 +			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_VBUCK3_GPI_MASK) - 1),
++			__builtin_clz(DA9062AA_BUCK3_GPI_MASK) - 1),
  	},
  	{
  		.desc.id = DA9062_ID_BUCK4,
- 		.desc.name = "DA9062 BUCK4",
- 		.desc.of_match = of_match_ptr("buck4"),
- 		.desc.regulators_node = of_match_ptr("regulators"),
-+		.desc.of_parse_cb = da9062_parse_dt,
- 		.desc.ops = &da9062_buck_ops,
- 		.desc.min_uV = (530) * 1000,
- 		.desc.uV_step = (10) * 1000,
-@@ -740,12 +854,17 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_BUCK4_CONF_MASK) - 1,
+@@ -858,6 +909,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
+ 			__builtin_ffs((int)DA9062AA_VBUCK4_GPI_MASK) - 1,
  			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_BUCK4_CONF_MASK) - 1),
-+		.vsel_gpi = REG_FIELD(DA9062AA_BUCK4_CONT,
-+			__builtin_ffs((int)DA9062AA_VBUCK4_GPI_MASK) - 1,
+ 			__builtin_clz(DA9062AA_VBUCK4_GPI_MASK) - 1),
++		.ena_gpi = REG_FIELD(DA9062AA_BUCK4_CONT,
++			__builtin_ffs((int)DA9062AA_BUCK4_GPI_MASK) - 1,
 +			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_VBUCK4_GPI_MASK) - 1),
++			__builtin_clz(DA9062AA_BUCK4_GPI_MASK) - 1),
  	},
  	{
  		.desc.id = DA9062_ID_LDO1,
- 		.desc.name = "DA9062 LDO1",
- 		.desc.of_match = of_match_ptr("ldo1"),
- 		.desc.regulators_node = of_match_ptr("regulators"),
-+		.desc.of_parse_cb = da9062_parse_dt,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
-@@ -769,6 +888,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_LDO1_CONF_MASK) - 1,
+@@ -892,6 +947,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
+ 			__builtin_ffs((int)DA9062AA_VLDO1_GPI_MASK) - 1,
  			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_LDO1_CONF_MASK) - 1),
-+		.vsel_gpi = REG_FIELD(DA9062AA_LDO1_CONT,
-+			__builtin_ffs((int)DA9062AA_VLDO1_GPI_MASK) - 1,
+ 			__builtin_clz(DA9062AA_VLDO1_GPI_MASK) - 1),
++		.ena_gpi = REG_FIELD(DA9062AA_LDO1_CONT,
++			__builtin_ffs((int)DA9062AA_LDO1_GPI_MASK) - 1,
 +			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_VLDO1_GPI_MASK) - 1),
++			__builtin_clz(DA9062AA_LDO1_GPI_MASK) - 1),
  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
  			__builtin_ffs((int)DA9062AA_LDO1_ILIM_MASK) - 1,
  			sizeof(unsigned int) * 8 -
-@@ -779,6 +902,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.name = "DA9062 LDO2",
- 		.desc.of_match = of_match_ptr("ldo2"),
- 		.desc.regulators_node = of_match_ptr("regulators"),
-+		.desc.of_parse_cb = da9062_parse_dt,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
-@@ -802,6 +926,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_LDO2_CONF_MASK) - 1,
+@@ -930,6 +989,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
+ 			__builtin_ffs((int)DA9062AA_VLDO2_GPI_MASK) - 1,
  			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_LDO2_CONF_MASK) - 1),
-+		.vsel_gpi = REG_FIELD(DA9062AA_LDO2_CONT,
-+			__builtin_ffs((int)DA9062AA_VLDO2_GPI_MASK) - 1,
+ 			__builtin_clz(DA9062AA_VLDO2_GPI_MASK) - 1),
++		.ena_gpi = REG_FIELD(DA9062AA_LDO2_CONT,
++			__builtin_ffs((int)DA9062AA_LDO2_GPI_MASK) - 1,
 +			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_VLDO2_GPI_MASK) - 1),
++			__builtin_clz(DA9062AA_LDO2_GPI_MASK) - 1),
  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
  			__builtin_ffs((int)DA9062AA_LDO2_ILIM_MASK) - 1,
  			sizeof(unsigned int) * 8 -
-@@ -812,6 +940,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.name = "DA9062 LDO3",
- 		.desc.of_match = of_match_ptr("ldo3"),
- 		.desc.regulators_node = of_match_ptr("regulators"),
-+		.desc.of_parse_cb = da9062_parse_dt,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
-@@ -835,6 +964,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_LDO3_CONF_MASK) - 1,
+@@ -968,6 +1031,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
+ 			__builtin_ffs((int)DA9062AA_VLDO3_GPI_MASK) - 1,
  			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_LDO3_CONF_MASK) - 1),
-+		.vsel_gpi = REG_FIELD(DA9062AA_LDO3_CONT,
-+			__builtin_ffs((int)DA9062AA_VLDO3_GPI_MASK) - 1,
+ 			__builtin_clz(DA9062AA_VLDO3_GPI_MASK) - 1),
++		.ena_gpi = REG_FIELD(DA9062AA_LDO3_CONT,
++			__builtin_ffs((int)DA9062AA_LDO3_GPI_MASK) - 1,
 +			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_VLDO3_GPI_MASK) - 1),
++			__builtin_clz(DA9062AA_LDO3_GPI_MASK) - 1),
  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
  			__builtin_ffs((int)DA9062AA_LDO3_ILIM_MASK) - 1,
  			sizeof(unsigned int) * 8 -
-@@ -845,6 +978,7 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 		.desc.name = "DA9062 LDO4",
- 		.desc.of_match = of_match_ptr("ldo4"),
- 		.desc.regulators_node = of_match_ptr("regulators"),
-+		.desc.of_parse_cb = da9062_parse_dt,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
-@@ -868,6 +1002,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_LDO4_CONF_MASK) - 1,
+@@ -1006,6 +1073,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
+ 			__builtin_ffs((int)DA9062AA_VLDO4_GPI_MASK) - 1,
  			sizeof(unsigned int) * 8 -
- 			__builtin_clz(DA9062AA_LDO4_CONF_MASK) - 1),
-+		.vsel_gpi = REG_FIELD(DA9062AA_LDO4_CONT,
-+			__builtin_ffs((int)DA9062AA_VLDO4_GPI_MASK) - 1,
+ 			__builtin_clz(DA9062AA_VLDO4_GPI_MASK) - 1),
++		.ena_gpi = REG_FIELD(DA9062AA_LDO4_CONT,
++			__builtin_ffs((int)DA9062AA_LDO4_GPI_MASK) - 1,
 +			sizeof(unsigned int) * 8 -
-+			__builtin_clz(DA9062AA_VLDO4_GPI_MASK) - 1),
++			__builtin_clz(DA9062AA_LDO4_GPI_MASK) - 1),
  		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
  			__builtin_ffs((int)DA9062AA_LDO4_ILIM_MASK) - 1,
  			sizeof(unsigned int) * 8 -
-@@ -988,6 +1126,15 @@ static int da9062_regulator_probe(struct platform_device *pdev)
- 				return PTR_ERR(regl->suspend_sleep);
+@@ -1135,6 +1206,15 @@ static int da9062_regulator_probe(struct platform_device *pdev)
+ 				return PTR_ERR(regl->vsel_gpi);
  		}
  
-+		if (regl->info->vsel_gpi.reg) {
-+			regl->vsel_gpi = devm_regmap_field_alloc(
++		if (regl->info->ena_gpi.reg) {
++			regl->ena_gpi = devm_regmap_field_alloc(
 +					&pdev->dev,
 +					chip->regmap,
-+					regl->info->vsel_gpi);
-+			if (IS_ERR(regl->vsel_gpi))
-+				return PTR_ERR(regl->vsel_gpi);
++					regl->info->ena_gpi);
++			if (IS_ERR(regl->ena_gpi))
++				return PTR_ERR(regl->ena_gpi);
 +		}
 +
  		/* Register regulator */
  		memset(&config, 0, sizeof(config));
  		config.dev = chip->dev;
-@@ -997,6 +1144,8 @@ static int da9062_regulator_probe(struct platform_device *pdev)
- 		regl->rdev = devm_regulator_register(&pdev->dev, &regl->desc,
- 						     &config);
- 		if (IS_ERR(regl->rdev)) {
-+			if (PTR_ERR(regl->rdev) == -EPROBE_DEFER)
-+				return -EPROBE_DEFER;
- 			dev_err(&pdev->dev,
- 				"Failed to register %s regulator\n",
- 				regl->desc.name);
 -- 
 2.20.1
