@@ -1,62 +1,43 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: regulator: add regulator-fixed-clock binding
-Date: Tue, 17 Sep 2019 15:13:39 -0500
-Message-ID: <CAL_JsqLyawEariYuaHJ+Lyt1DhJe9fdAE88ANrhHAokWJhUOdw@mail.gmail.com>
-References: <20190910062103.39641-1-philippe.schenker@toradex.com> <20190910062103.39641-4-philippe.schenker@toradex.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFCv4 3/7] dt-bindings: devfreq: imx: Describe interconnect
+ properties
+Date: Tue, 17 Sep 2019 15:19:56 -0500
+Message-ID: <20190917201956.GA10780@bogus>
+References: <cover.1566570260.git.leonard.crestez@nxp.com>
+ <3f27038292c09c8bf07a086eac759132c100aedb.1566570260.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190910062103.39641-4-philippe.schenker@toradex.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <philippe.schenker@toradex.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Liam Girdwood <lgirdwood@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Max Krummenacher <max.krummenacher@toradex.com>, Stefan Agner <stefan.agner@toradex.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Mark Rutland <mark.rutland@arm.com>, Luka Pivk <luka.pivk@toradex.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <3f27038292c09c8bf07a086eac759132c100aedb.1566570260.git.leonard.crestez@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>, linux-arm-kernel@lists.infradead.org, Saravana Kannan <saravanak@google.com>, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, kernel@pengutronix.de, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 1:21 AM Philippe Schenker
-<philippe.schenker@toradex.com> wrote:
->
-> This adds the documentation to the compatible regulator-fixed-clock.
-> This binding is a special binding of regulator-fixed and adds the
-> ability to add a clock to regulator-fixed, so the regulator can be
-> enabled and disabled with that clock. If the special compatible
-> regulator-fixed-clock is used it is mandatory to supply a clock.
->
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
->
+On Fri, Aug 23, 2019 at 05:36:56PM +0300, Leonard Crestez wrote:
+> The interconnect-node-id property is parsed by the imx interconnect
+> driver to find nodes on which frequencies can be adjusted.
+> 
+> Add #interconnect-cells so that device drivers can request paths from
+> bus nodes instead of requiring a separate "virtual" node to represent
+> the interconnect itself.
+> 
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 > ---
->
-> Changes in v2:
-> - Change select: to if:
-> - Change items: to enum:
-> - Defined how many clocks should be given
->
->  .../bindings/regulator/fixed-regulator.yaml   | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-> index a650b457085d..a78150c47aa2 100644
-> --- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-> +++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-> @@ -19,9 +19,19 @@ description:
->  allOf:
->    - $ref: "regulator.yaml#"
->
-> +if:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: regulator-fixed-clock
-> +  required:
-> +    - clocks
-> +
->  properties:
->    compatible:
-> -    const: regulator-fixed
-> +    enum:
-> +      - const: regulator-fixed
-> +      - const: regulator-fixed-clock
+>  Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml | 5 +++++
+>  Documentation/devicetree/bindings/devfreq/imx.yaml      | 5 +++++
+>  2 files changed, 10 insertions(+)
 
-'make dt_binding_check' is failing. You need to drop 'const: '. Please
-send a patch to fix this.
+Please combine this with the other series for devfreq support.
 
 Rob
