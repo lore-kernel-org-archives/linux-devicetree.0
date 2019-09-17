@@ -1,35 +1,46 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: net: dwmac: fix 'mac-mode' type
-Date: Tue, 17 Sep 2019 08:53:14 -0500
-Message-ID: <CAL_JsqJ8fE4xH0DdtextdJ-+DftC2jDGg6GHbDJ+viCnhO2faw@mail.gmail.com>
-References: <20190917103052.13456-1-alexandru.ardelean@analog.com>
+From: Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH] ath10k: Fix HOST capability QMI incompatibility
+Date: Tue, 17 Sep 2019 14:03:41 +0000 (UTC)
+Message-ID: <20190917140342.D11AF61576@smtp.codeaurora.org>
+References: <20190725063108.15790-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190917103052.13456-1-alexandru.ardelean@analog.com>
+In-Reply-To: <20190725063108.15790-1-bjorn.andersson@linaro.org>
 Sender: netdev-owner@vger.kernel.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Miller <davem@davemloft.net>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ath10k@lists.infradead.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 2:31 AM Alexandru Ardelean
-<alexandru.ardelean@analog.com> wrote:
->
-> The 'mac-mode' property is similar to 'phy-mode' and 'phy-connection-type',
-> which are enums of mode strings.
->
-> The 'dwmac' driver supports almost all modes declared in the 'phy-mode'
-> enum (except for 1 or 2). But in general, there may be a case where
-> 'mac-mode' becomes more generic and is moved as part of phylib or netdev.
->
-> In any case, the 'mac-mode' field should be made an enum, and it also makes
-> sense to just reference the 'phy-connection-type' from
-> 'ethernet-controller.yaml'. That will also make it more future-proof for new
-> modes.
->
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  Documentation/devicetree/bindings/net/snps,dwmac.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> The introduction of 768ec4c012ac ("ath10k: update HOST capability QMI
+> message") served the purpose of supporting the new and extended HOST
+> capability QMI message.
+> 
+> But while the new message adds a slew of optional members it changes the
+> data type of the "daemon_support" member, which means that older
+> versions of the firmware will fail to decode the incoming request
+> message.
+> 
+> There is no way to detect this breakage from Linux and there's no way to
+> recover from sending the wrong message (i.e. we can't just try one
+> format and then fallback to the other), so a quirk is introduced in
+> DeviceTree to indicate to the driver that the firmware requires the 8bit
+> version of this message.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 768ec4c012ac ("ath10k: update HOST capability qmi message")
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+
+Patch applied to ath-next branch of ath.git, thanks.
+
+7165ef890a4c ath10k: Fix HOST capability QMI incompatibility
+
+-- 
+https://patchwork.kernel.org/patch/11058005/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
