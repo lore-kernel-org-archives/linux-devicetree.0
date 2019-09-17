@@ -1,123 +1,86 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v1 2/2] of: Let of_for_each_phandle fallback to
- non-negative cell_count
-Date: Tue, 17 Sep 2019 14:52:31 +0200
-Message-ID: <CAMuHMdXk5uSk-v4vYVR1YO46gQd0mRYy5eEM6wOHqgkRTfyn-g@mail.gmail.com>
-References: <20190824132846.8589-1-u.kleine-koenig@pengutronix.de>
- <20190824132846.8589-2-u.kleine-koenig@pengutronix.de> <20190913215809.GA11833@bogus>
- <CAMuHMdV+pwoAA0zH_vQf2nKqzrgHP8rcMStyJbnuu2qviFC_qg@mail.gmail.com>
- <20190917101303.t5otztdus7y3ayau@pengutronix.de> <489c90fb-a135-4fd8-ecb9-46404bd3c234@axentia.se>
- <20190917122530.3xy7sut3xdvzlomj@pengutronix.de>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
+ max-speed
+Date: Tue, 17 Sep 2019 14:54:34 +0200
+Message-ID: <20190917125434.GH20778@lunn.ch>
+References: <20190910155507.491230-1-tinywrkb@gmail.com>
+ <20190910185033.GD9761@lunn.ch>
+ <87muf6oyvr.fsf@tarshish>
+ <20190915135652.GC3427@lunn.ch>
+ <20190917124101.GA1200564@arch-dsk-01>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190917122530.3xy7sut3xdvzlomj@pengutronix.de>
+Content-Disposition: inline
+In-Reply-To: <20190917124101.GA1200564@arch-dsk-01>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Peter Rosin <peda@axentia.se>, Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, Frank Rowand <frowand.list@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+To: tinywrkb <tinywrkb@gmail.com>
+Cc: Baruch Siach <baruch@tkos.co.il>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe,
+On Tue, Sep 17, 2019 at 03:41:01PM +0300, tinywrkb wrote:
+> On Sun, Sep 15, 2019 at 03:56:52PM +0200, Andrew Lunn wrote:
+> > > Tinywrkb confirmed to me in private communication that revert of
+> > > 5502b218e001 fixes Ethernet for him on effected system.
+> > > 
+> > > He also referred me to an old Cubox-i spec that lists 10/100 Ethernet
+> > > only for i.MX6 Solo/DualLite variants of Cubox-i. It turns out that
+> > > there was a plan to use a different 10/100 PHY for Solo/DualLite
+> > > SOMs. This plan never materialized. All SolidRun i.MX6 SOMs use the same
+> > > AR8035 PHY that supports 1Gb.
+> > > 
+> > > Commit 5502b218e001 might be triggering a hardware issue on the affected
+> > > Cubox-i. I could not reproduce the issue here with Cubox-i and a Dual
+> > > SOM variant running v5.3-rc8. I have no Solo/DualLite variant handy at
+> > > the moment.
+> > 
+> > Could somebody with an affected device show us the output of ethtool
+> > with and without 5502b218e001. Does one show 1G has been negotiated,
+> > and the other 100Mbps? If this is true, how does it get 100Mbps
+> > without that patch? We are missing a piece of the puzzle.
+> > 
+> > 	Andrew
+> 
+> linux-test-5.1rc1-a2703de70942-without_bad_commit
+> 
+> Settings for eth0:
+> 	Supported ports: [ TP MII ]
+> 	Supported link modes:   10baseT/Half 10baseT/Full
+> 	                        100baseT/Half 100baseT/Full
+> 	                        1000baseT/Full
 
-On Tue, Sep 17, 2019 at 2:25 PM Uwe Kleine-König
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Tue, Sep 17, 2019 at 11:25:46AM +0000, Peter Rosin wrote:
-> > On 2019-09-17 12:13, Uwe Kleine-König wrote:
-> > > On Tue, Sep 17, 2019 at 11:40:25AM +0200, Geert Uytterhoeven wrote:
-> > >> On Fri, Sep 13, 2019 at 11:58 PM Rob Herring <robh@kernel.org> wrote:
-> > >>> On Sat, 24 Aug 2019 15:28:46 +0200, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=          wrote:
-> > >>>> Referencing device tree nodes from a property allows to pass arguments.
-> > >>>> This is for example used for referencing gpios. This looks as follows:
-> > >>>>
-> > >>>>       gpio_ctrl: gpio-controller {
-> > >>>>               #gpio-cells = <2>
-> > >>>>               ...
-> > >>>>       }
-> > >>>>
-> > >>>>       someothernode {
-> > >>>>               gpios = <&gpio_ctrl 5 0 &gpio_ctrl 3 0>;
-> > >>>>               ...
-> > >>>>       }
-> > >>>>
-> > >>>> To know the number of arguments this must be either fixed, or the
-> > >>>> referenced node is checked for a $cells_name (here: "#gpio-cells")
-> > >>>> property and with this information the start of the second reference can
-> > >>>> be determined.
-> > >>>>
-> > >>>> Currently regulators are referenced with no additional arguments. To
-> > >>>> allow some optional arguments without having to change all referenced
-> > >>>> nodes this change introduces a way to specify a default cell_count. So
-> > >>>> when a phandle is parsed we check for the $cells_name property and use
-> > >>>> it as before if present. If it is not present we fall back to
-> > >>>> cells_count if non-negative and only fail if cells_count is smaller than
-> > >>>> zero.
-> > >>>>
-> > >>>> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > >>
-> > >> This is now commit e42ee61017f58cd9 ("of: Let of_for_each_phandle fallback
-> > >> to non-negative cell_count") in robh/for-next, which causes a lock-up when
-> > >> booting a shmobile_defconfig kernel on r8a7791/koelsch:
-> > >>
-> > >> rcu: INFO: rcu_sched self-detected stall on CPU
+So this means the local device says it can do 1000Mbps.
 
-> Oh yeah, you're right. I'm a bit disappointed that I didn't spot this
-> myself :-|
->
-> Untested patch to fix this problem:
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 2f25d2dfecfa..26f7a21d7187 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1284,6 +1284,13 @@ int of_phandle_iterator_init(struct of_phandle_iterator *it,
->         const __be32 *list;
->         int size;
->
-> +       /*
-> +        * one of cell_count or cells_name must be provided to determine the
-> +        * argument length.
-> +        */
-> +       if (cell_count < 0 && !cells_name)
-> +               return -EINVAL;
-> +
->         memset(it, 0, sizeof(*it));
->
->         list = of_get_property(np, list_name, &size);
-> @@ -1765,6 +1772,18 @@ int of_count_phandle_with_args(const struct device_node *np, const char *list_na
->         struct of_phandle_iterator it;
->         int rc, cur_index = 0;
->
-> +       /* If cells_name is NULL we assume an cell_count of 0 */
 
-a cell count
+> 	Supported pause frame use: Symmetric
+> 	Supports auto-negotiation: Yes
+> 	Supported FEC modes: Not reported
+> 	Advertised link modes:  10baseT/Half 10baseT/Full
+> 	                        100baseT/Half 100baseT/Full
+> 	                        1000baseT/Full
 
-> +       if (cells_name == NULL) {
-> +               const __be32 *list;
-> +               int size;
-> +
-> +               list = of_get_property(np, list_name, &size);
-> +               if (!list)
-> +                       return -ENOENT;
-> +
-> +               return size / sizeof(*list);
-> +       }
-> +
->         rc = of_phandle_iterator_init(&it, np, list_name, cells_name, -1);
->         if (rc)
->                 return rc;
+The link peer can also do 1000Mbps.
 
-Thanks, that fixes the boot for me!
 
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 	Advertised pause frame use: Symmetric
+> 	Advertised auto-negotiation: Yes
+> 	Advertised FEC modes: Not reported
+> 	Link partner advertised link modes:  10baseT/Half 10baseT/Full
+> 	                                     100baseT/Half 100baseT/Full
+> 	                                     1000baseT/Full
+> 	Link partner advertised pause frame use: Symmetric
+> 	Link partner advertised auto-negotiation: Yes
+> 	Link partner advertised FEC modes: Not reported
+> 	Speed: 100Mb/s
 
-Gr{oetje,eeting}s,
+Yet they have decided to do 100Mbps. 
 
-                        Geert
+We need to understand Why? The generic PHY driver would not do this on
+its own. So i'm thinking something has poked a PHY register with some
+value, and this patch is causing it to be over written.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Please can you use mii-tool -v -v to dump the PHY registers in each
+case.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks
+	Andrew
