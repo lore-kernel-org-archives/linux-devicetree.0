@@ -1,8 +1,7 @@
 From: Qianggui Song <qianggui.song@amlogic.com>
-Subject: [PATCH 1/3] pinctrl: add compatible for Amlogic Meson A1 pin
- controller
-Date: Tue, 17 Sep 2019 14:07:20 +0800
-Message-ID: <1568700442-18540-2-git-send-email-qianggui.song@amlogic.com>
+Subject: [PATCH 3/3] arm64: dts: meson: a1: add pinctrl controller support
+Date: Tue, 17 Sep 2019 14:07:22 +0800
+Message-ID: <1568700442-18540-4-git-send-email-qianggui.song@amlogic.com>
 References: <1568700442-18540-1-git-send-email-qianggui.song@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,108 +21,50 @@ To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
 Cc: Qianggui Song <qianggui.song@amlogic.com>, Mark Rutland <mark.rutland@arm.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Xingyu Chen <xingyu.chen@amlogic.com>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add new compatible name for Amlogic's Meson-A1 pin controller
-add a dt-binding header file which document the detail pin names.
+add peripheral pinctrl controller to a1 soc
 
 Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
 Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
 Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
 ---
- .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |  1 +
- include/dt-bindings/gpio/meson-a1-gpio.h           | 73 ++++++++++++++++++++++
- 2 files changed, 74 insertions(+)
- create mode 100644 include/dt-bindings/gpio/meson-a1-gpio.h
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-index 10dc4f7..0aff1f2 100644
---- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-@@ -15,6 +15,7 @@ Required properties for the root node:
- 		      "amlogic,meson-axg-aobus-pinctrl"
- 		      "amlogic,meson-g12a-periphs-pinctrl"
- 		      "amlogic,meson-g12a-aobus-pinctrl"
-+		      "amlogic,meson-a1-periphs-pinctrl"
-  - reg: address and size of registers controlling irq functionality
+diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+index 7210ad0..0965259 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+@@ -5,6 +5,7 @@
  
- === GPIO sub-nodes ===
-diff --git a/include/dt-bindings/gpio/meson-a1-gpio.h b/include/dt-bindings/gpio/meson-a1-gpio.h
-new file mode 100644
-index 0000000..40e57a5
---- /dev/null
-+++ b/include/dt-bindings/gpio/meson-a1-gpio.h
-@@ -0,0 +1,73 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-+/*
-+ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-+ * Author: Qianggui Song <qianggui.song@amlogic.com>
-+ */
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/gpio/meson-a1-gpio.h>
+ 
+ / {
+ 	compatible = "amlogic,a1";
+@@ -74,6 +75,23 @@
+ 			#size-cells = <2>;
+ 			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x1000000>;
+ 
++			periphs_pinctrl: pinctrl@0400 {
++				compatible = "amlogic,meson-a1-periphs-pinctrl";
++				#address-cells = <2>;
++				#size-cells = <2>;
++				ranges;
 +
-+#ifndef _DT_BINDINGS_MESON_A1_GPIO_H
-+#define _DT_BINDINGS_MESON_A1_GPIO_H
++				gpio: bank@0400 {
++					reg = <0x0 0x0400 0x0 0x003c>,
++					      <0x0 0x0480 0x0 0x0118>;
++					reg-names = "mux", "gpio";
++					gpio-controller;
++					#gpio-cells = <2>;
++					gpio-ranges = <&periphs_pinctrl 0 0 62>;
++				};
 +
-+#define GPIOP_0		0
-+#define GPIOP_1		1
-+#define GPIOP_2		2
-+#define GPIOP_3		3
-+#define GPIOP_4		4
-+#define GPIOP_5		5
-+#define GPIOP_6		6
-+#define GPIOP_7		7
-+#define GPIOP_8		8
-+#define GPIOP_9		9
-+#define GPIOP_10	10
-+#define GPIOP_11	11
-+#define GPIOP_12	12
-+#define GPIOB_0		13
-+#define GPIOB_1		14
-+#define GPIOB_2		15
-+#define GPIOB_3		16
-+#define GPIOB_4		17
-+#define GPIOB_5		18
-+#define GPIOB_6		19
-+#define GPIOX_0		20
-+#define GPIOX_1		21
-+#define GPIOX_2		22
-+#define GPIOX_3		23
-+#define GPIOX_4		24
-+#define GPIOX_5		25
-+#define GPIOX_6		26
-+#define GPIOX_7		27
-+#define GPIOX_8		28
-+#define GPIOX_9		29
-+#define GPIOX_10	30
-+#define GPIOX_11	31
-+#define GPIOX_12	32
-+#define GPIOX_13	33
-+#define GPIOX_14	34
-+#define GPIOX_15	35
-+#define GPIOX_16	36
-+#define GPIOF_0		37
-+#define GPIOF_1		38
-+#define GPIOF_2		39
-+#define GPIOF_3		40
-+#define GPIOF_4		41
-+#define GPIOF_5		42
-+#define GPIOF_6		43
-+#define GPIOF_7		44
-+#define GPIOF_8		45
-+#define GPIOF_9		46
-+#define GPIOF_10	47
-+#define GPIOF_11	48
-+#define GPIOF_12	49
-+#define GPIOA_0		50
-+#define GPIOA_1		51
-+#define GPIOA_2		52
-+#define GPIOA_3		53
-+#define GPIOA_4		54
-+#define GPIOA_5		55
-+#define GPIOA_6		56
-+#define GPIOA_7		57
-+#define GPIOA_8		58
-+#define GPIOA_9		59
-+#define GPIOA_10	60
-+#define GPIOA_11	61
++			};
 +
-+#endif /* _DT_BINDINGS_MESON_A1_GPIO_H */
+ 			uart_AO: serial@1c00 {
+ 				compatible = "amlogic,meson-gx-uart",
+ 					     "amlogic,meson-ao-uart";
 -- 
 1.9.1
