@@ -1,135 +1,48 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [v4,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
-Date: Mon, 16 Sep 2019 20:13:06 -0500
-Message-ID: <CAL_JsqL=37HL3BnxZTxJXQTBaKoFs1_=vt4hfLqkxXkWedmPYA@mail.gmail.com>
-References: <20190910104247.13142-1-biwen.li@nxp.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH v6 1/3] PM: wakeup: Add routine to help fetch wakeup
+ source object.
+Date: Tue, 17 Sep 2019 02:33:41 +0000
+Message-ID: <DB8PR04MB682662CA68F9F21F6DB82F72F18F0@DB8PR04MB6826.eurprd04.prod.outlook.com>
+References: <20190821031537.46824-1-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190910104247.13142-1-biwen.li@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Biwen Li <biwen.li@nxp.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Yang-Leo Li <leoyang.li@nxp.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Martin Fuzzey <mfuzzey@parkeon.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190821031537.46824-1-ran.wang_1@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>
+Cc: Biwen Li <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ran Wang <ran.wang_1@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 5:53 AM Biwen Li <biwen.li@nxp.com> wrote:
->
-> Add some properties for pcf85263/pcf85363 as follows:
->   - nxp,rtc-interrupt-type: integer type
->   - nxp,rtc-interrupt-output-pin: string type
->   - quartz-load-femtofarads: integer type
->   - nxp,quartz-drive-strength: integer type
->   - nxp,quartz-low-jitter: bool type
->   - wakeup-source: bool type
->
-> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+Hi Rafael,
+
+On Wednesday, August 21, 2019 11:16, Ran Wang wrote:
+> 
+> Some user might want to go through all registered wakeup sources and doing
+> things accordingly. For example, SoC PM driver might need to do HW
+> programming to prevent powering down specific IP which wakeup source
+> depending on. So add this API to help walk through all registered wakeup source
+> objects on that list and return them one by one.
+> 
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 > ---
-> Change in v4:
->         - Drop robust defines in include/dt-bindings/rtc/pcf85363.h
->         - Add nxp,rtc-interrupt-type property
->         - Replace interrupt-output-pin with nxp,rtc-interrupt-output-pin
->
-> Change in v3:
->         - None
->
-> Change in v2:
->         - Replace properties name
->           quartz-load-capacitance -> quartz-load-femtofarads
->           quartz-drive-strength -> nxp,quartz-drive-strength
->           quartz-low-jitter -> nxp,quartz-low-jitter
->         - Replace drive strength name
->           PCF85263_QUARTZDRIVE_NORMAL -> PCF85263_QUARTZDRIVE_100ko
->           PCF85263_QUARTZDRIVE_LOW -> PCF85263_QUARTZDRIVE_60ko
->           PCF85263_QUARTZDRIVE_HIGH -> PCF85263_QUARTZDRIVE_500ko
->         - Set default interrupt-output-pin as "INTA"
->
->  .../devicetree/bindings/rtc/pcf85363.txt      | 44 ++++++++++++++++++-
->  include/dt-bindings/rtc/pcf85363.h            | 14 ++++++
->  2 files changed, 57 insertions(+), 1 deletion(-)
->  create mode 100644 include/dt-bindings/rtc/pcf85363.h
->
-> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> index 94adc1cf93d9..fc1579463657 100644
-> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> @@ -8,10 +8,52 @@ Required properties:
->  Optional properties:
->  - interrupts: IRQ line for the RTC (not implemented).
->
-> +- nxp,rtc-interrupt-type: integer property, represent the interrupt's
-> +  type. Valid values are
-> +  INT_PIE(periodic interrupt enable),
-> +  INT_OIE(offset correction interrupt enable),
-> +  INT_A1IE(alarm1 interrupt enable),
-> +  INT_A2IE(alarm2 interrupt enable),
-> +  INT_TSRIE(timestamp register interrupt enable)
-> +  INT_BSIE(battery switch interrupt enable),
-> +  INT_WDIE(WatchDog interrupt enable,and
-> +  compose these values such as: INT_A1IE | INT_A2IE,
-> +  but currently only support INT_A1IE, default value is INT_A1IE.
-> +  The property and property nxp,rtc-interrupt-output-pin
-> +  work together to generate some interrupts on some pins.
-> +
-> +- nxp,rtc-interrupt-output-pin: The interrupt output pin must be
-> +  "INTA" or "INTB", default value is "INTA". The property and property
-> +  nxp,rtc-interrupt-type work together to generate some interrupts on
-> +  some pins.
-> +
-> +- quartz-load-femtofarads: The internal capacitor to select for the quartz,
-> +  expressed in femto Farad (fF). Valid values are 6000, 7000 and 12500.
-> +  Default value is 12500fF.
-> +
-> +- nxp,quartz-drive-strength: Drive strength for the quartz,
-> +  expressed in kilo ohms (kOhm) Valid values are 60, 100 and 500.
-> +  Default value is 100kOhm.
+> Change in v6:
+> 	- Add wakeup_source_get_star() and wakeup_source_get_stop() to
+> aligned
+> 	with wakeup_sources_stats_seq_start/nex/stop.
 
-This needs a unit as defined in property-units.txt.
+How about this version, could you please give any comment? Thanks.
 
-> +
-> +- nxp,quartz-low-jitter: Boolean property, if present enables low jitter mode
-> +  which reduces jitter at the cost of increased power consumption.
-> +
-> +- wakeup-source: Boolean property, Please refer to
-> +  Documentation/devicetree/bindings/power/wakeup-source.txt
-> +
->  Example:
->
->  pcf85363: pcf85363@51 {
->         compatible = "nxp,pcf85363";
->         reg = <0x51>;
-> -};
->
-> +       interrupt-parent = <&gpio1>;
-> +       interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
-> +
-> +       wakeup-source;
-> +       nxp,rtc-interrupt-output-pin = "INTA";
-> +       nxp,rtc-interrupt-type = <INT_A1IE>;
-> +       quartz-load-femtofarads = <12500>;
-> +       nxp,quartz-drive-strength = <60>;
-> +       nxp,quartz-low-jitter;
-> +};
-> diff --git a/include/dt-bindings/rtc/pcf85363.h b/include/dt-bindings/rtc/pcf85363.h
-> new file mode 100644
-> index 000000000000..6340bf2da8f5
-> --- /dev/null
-> +++ b/include/dt-bindings/rtc/pcf85363.h
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _DT_BINDINGS_RTC_PCF85363_H
-> +#define _DT_BINDINGS_RTC_PCF85363_H
-> +
-> +/* Interrupt type */
-> +#define INT_WDIE       (1 << 0)
-> +#define INT_BSIE       (1 << 1)
-> +#define INT_TSRIE      (1 << 2)
-> +#define INT_A2IE       (1 << 3)
-> +#define INT_A1IE       (1 << 4)
-> +#define INT_OIE                (1 << 5)
-> +#define INT_PIE                (1 << 6)
-> +
-> +#endif /* _DT_BINDINGS_RTC_PCF85363_H */
-> --
-> 2.17.1
->
+Regards,
+Ran 
+
+<snip>
