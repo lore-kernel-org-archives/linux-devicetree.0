@@ -1,16 +1,16 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 2/3] dt-bindings: arm: coresight: Add support for
- coresight-loses-context-with-cpu
-Date: Tue, 17 Sep 2019 12:44:48 -0500
-Message-ID: <20190917174448.GA22479@bogus>
-References: <20190913115312.12943-1-andrew.murray@arm.com>
- <20190913115312.12943-3-andrew.murray@arm.com>
+Subject: Re: [PATCHv5 01/10] dt-bindings: omap: add new binding for PRM
+ instances
+Date: Tue, 17 Sep 2019 12:48:17 -0500
+Message-ID: <20190917174817.GA27938@bogus>
+References: <20190912113916.20093-1-t-kristo@ti.com>
+ <20190912113916.20093-2-t-kristo@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190913115312.12943-3-andrew.murray@arm.com>
+In-Reply-To: <20190912113916.20093-2-t-kristo@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,24 +20,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Murray <andrew.murray@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Al.Grant@arm.com, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, coresight@lists.linaro.org, Leo Yan <leo.yan@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, Mike Leach <mike.leach@linaro.org>
+To: Tero Kristo <t-kristo@ti.com>
+Cc: devicetree@vger.kernel.org, tony@atomide.com, robh+dt@kernel.org, p.zabel@pengutronix.de, ssantosh@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Sep 2019 12:53:11 +0100, Andrew Murray wrote:
-> Some coresight components, because of choices made during hardware
-> integration, require their state to be saved and restored across CPU low
-> power states.
+On Thu, 12 Sep 2019 14:39:07 +0300, Tero Kristo wrote:
+> Add new binding for OMAP PRM (Power and Reset Manager) instances. Each
+> of these will act as a power domain controller and potentially as a reset
+> provider.
 > 
-> The software has no reliable method of detecting when save/restore is
-> required thus let's add a binding to inform the kernel.
-> 
-> Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
 > ---
->  Documentation/devicetree/bindings/arm/coresight.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> v5: - dropped the clocks property as the dependency towards clocks was
+>       removed
+>     - changed the name of the node to be power-controller
+> 
+>  .../devicetree/bindings/arm/omap/prm-inst.txt | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/omap/prm-inst.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
