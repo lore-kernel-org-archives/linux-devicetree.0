@@ -1,36 +1,37 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v4 1/7] clk: actions: Fix factor clk struct member access
-Date: Tue, 17 Sep 2019 13:01:40 -0700
-Message-ID: <20190917200141.B9313214AF@mail.kernel.org>
-References: <20190916154546.24982-1-manivannan.sadhasivam@linaro.org> <20190916154546.24982-2-manivannan.sadhasivam@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] dt-bindings: gpu: Convert Samsung Image Rotator to
+  dt-schema
+Date: Tue, 17 Sep 2019 15:08:16 -0500
+Message-ID: <20190917200816.GA10224@bogus>
+References: <20190913062945.GA10283@pi3>
+ <CGME20190917103758eucas1p10793e499209137630681186a10a4b7bd@eucas1p1.samsung.com>
+ <20190917103727.14997-1-m.falkowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190916154546.24982-2-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20190917103727.14997-1-m.falkowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: afaerber@suse.de, robh+dt@kernel.org, ulf.hansson@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, thomas.liau@actions-semi.com, linux-actions@lists.infradead.org, linus.walleij@linaro.org, linux-clk@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, krzk@kernel.org, a.hajda@samsung.com, m.szyprowski@samsung.com, m.falkowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Manivannan Sadhasivam (2019-09-16 08:45:40)
-> Since the helper "owl_factor_helper_round_rate" is shared between factor
-> and composite clocks, using the factor clk specific helper function
-> like "hw_to_owl_factor" to access its members will create issues when
-> called from composite clk specific code. Hence, pass the "factor_hw"
-> struct pointer directly instead of fetching it using factor clk specific
-> helpers.
->=20
-> This issue has been observed when a composite clock like "sd0_clk" tried
-> to call "owl_factor_helper_round_rate" resulting in pointer dereferencing
-> error.
->=20
-> While we are at it, let's rename the "clk_val_best" function to
-> "owl_clk_val_best" since this is an owl SoCs specific helper.
->=20
-> Fixes: 4bb78fc9744a ("clk: actions: Add factor clock support")
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+On Tue, 17 Sep 2019 12:37:27 +0200, Maciej Falkowski wrote:
+> Convert Samsung Image Rotator to newer dt-schema format.
+> 
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
+> v3:
+> - remove unneded comments and descriptions
+> - remove unneded maxItems field from clock-names property
+> ---
+>  .../bindings/gpu/samsung-rotator.txt          | 28 -----------
+>  .../bindings/gpu/samsung-rotator.yaml         | 48 +++++++++++++++++++
+>  2 files changed, 48 insertions(+), 28 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
+> 
 
-Applied to clk-next
+Applied, thanks.
+
+Rob
