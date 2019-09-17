@@ -1,120 +1,41 @@
-From: Maciej Falkowski <m.falkowski@samsung.com>
-Subject: [PATCH v3] dt-bindings: gpu: Convert Samsung Image Rotator to
- dt-schema
-Date: Tue, 17 Sep 2019 12:37:27 +0200
-Message-ID: <20190917103727.14997-1-m.falkowski@samsung.com>
-References: <20190913062945.GA10283@pi3>
-        <CGME20190917103758eucas1p10793e499209137630681186a10a4b7bd@eucas1p1.samsung.com>
-Content-Type: text/plain; charset="utf-8"
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: Re: [PATCH v7 2/7] nfc: pn532_uart: Add NXP PN532 to devicetree docs
+Date: Tue, 17 Sep 2019 12:53:19 +0200
+Message-ID: <20190917105319.GA18936@lem-wkst-02.lemonage>
+References: <20190910093256.1920-1-poeschel@lemonage.de>
+ <20190913203221.GA19194@bogus>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190913062945.GA10283@pi3>
+Content-Disposition: inline
+In-Reply-To: <20190913203221.GA19194@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, krzk@kernel.org, a.hajda@samsung.com, m.szyprowski@samsung.com, m.falkowski@samsung.com
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert Samsung Image Rotator to newer dt-schema format.
+On Fri, Sep 13, 2019 at 03:32:21PM -0500, Rob Herring wrote:
+> On Tue, Sep 10, 2019 at 11:32:53AM +0200, Lars Poeschel wrote:
+> > Add a simple binding doc for the pn532.
+> > 
+> > Cc: Johan Hovold <johan@kernel.org>
+> > Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+> > ---
+> > Changes in v6:
+> > - Rebased the patch series on v5.3-rc5
+> > - Picked up Rob's Reviewed-By
+> 
+> And dropped in v7?
 
-Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
-v3:
-- remove unneded comments and descriptions
-- remove unneded maxItems field from clock-names property
----
- .../bindings/gpu/samsung-rotator.txt          | 28 -----------
- .../bindings/gpu/samsung-rotator.yaml         | 48 +++++++++++++++++++
- 2 files changed, 48 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
+I am very sorry, I somehow lost it. :(
+I will re-pick up it in v8.
 
-diff --git a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt b/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
-deleted file mode 100644
-index 3aca2578da0b..000000000000
---- a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
-+++ /dev/null
-@@ -1,28 +0,0 @@
--* Samsung Image Rotator
--
--Required properties:
--  - compatible : value should be one of the following:
--	* "samsung,s5pv210-rotator" for Rotator IP in S5PV210
--	* "samsung,exynos4210-rotator" for Rotator IP in Exynos4210
--	* "samsung,exynos4212-rotator" for Rotator IP in Exynos4212/4412
--	* "samsung,exynos5250-rotator" for Rotator IP in Exynos5250
--
--  - reg : Physical base address of the IP registers and length of memory
--	  mapped region.
--
--  - interrupts : Interrupt specifier for rotator interrupt, according to format
--		 specific to interrupt parent.
--
--  - clocks : Clock specifier for rotator clock, according to generic clock
--	     bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
--
--  - clock-names : Names of clocks. For exynos rotator, it should be "rotator".
--
--Example:
--	rotator@12810000 {
--		compatible = "samsung,exynos4210-rotator";
--		reg = <0x12810000 0x1000>;
--		interrupts = <0 83 0>;
--		clocks = <&clock 278>;
--		clock-names = "rotator";
--	};
-diff --git a/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml b/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
-new file mode 100644
-index 000000000000..45ce562435fa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpu/samsung-rotator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung SoC Image Rotator
-+
-+maintainers:
-+  - Inki Dae <inki.dae@samsung.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - "samsung,s5pv210-rotator"
-+      - "samsung,exynos4210-rotator"
-+      - "samsung,exynos4212-rotator"
-+      - "samsung,exynos5250-rotator"
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+    - const: rotator
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    rotator@12810000 {
-+        compatible = "samsung,exynos4210-rotator";
-+        reg = <0x12810000 0x1000>;
-+        interrupts = <0 83 0>;
-+        clocks = <&clock 278>;
-+        clock-names = "rotator";
-+    };
-+
--- 
-2.17.1
+> > Changes in v4:
+> > - Add documentation about reg property in case of i2c
+> > 
+> > Changes in v3:
+> > - seperate binding doc instead of entry in trivial-devices.txt
+> > 
+> >  .../devicetree/bindings/nfc/pn532.txt         | 33 +++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/nfc/pn532.txt
