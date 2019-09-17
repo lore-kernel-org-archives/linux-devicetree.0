@@ -1,36 +1,44 @@
-From: Green Wan <green.wan@sifive.com>
-Subject: [PATCH 2/3] riscv: dts: add support for PDMA device of HiFive Unleashed Rev A00
-Date: Tue, 17 Sep 2019 14:23:45 +0800
-Message-ID: <20190917062350.825-1-green.wan@sifive.com>
+From: gokulsri@codeaurora.org
+Subject: Re: [PATCH V2 10/12] dt-bindings: firmware: qcom: Add compatible for
+ IPQ8074 SoC
+Date: Tue, 17 Sep 2019 12:37:55 +0530
+Message-ID: <1472f76e742d576fa5d6c6cad7b40605@codeaurora.org>
+References: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org>
+ <1568375771-22933-11-git-send-email-gokulsri@codeaurora.org>
+ <5d7c0ecb.1c69fb81.74810.a358@mx.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5d7c0ecb.1c69fb81.74810.a358@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-hackers@sifive.com, Green Wan <green.wan@sifive.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Yash Shah <yash.shah@sifive.com>, Bin Meng <bmeng.cn@gmail.com>, Sagar Kadam <sagar.kadam@sifive.com>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: sboyd@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org, david.brown@linaro.org, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com, robh+dt@kernel.org, sricharan@codeaurora.org, nprakash@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Add PDMA support to (arch/riscv/boot/dts/sifive/fu540-c000.dtsi)
+Hi Rob,
 
-Signed-off-by: Green Wan <green.wan@sifive.com>
----
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+On 2019-09-14 03:18, Rob Herring wrote:
+> On Fri, 13 Sep 2019 17:26:09 +0530, Gokul Sriram Palanisamy wrote:
+>> Add compatible for IPQ8074 support.
+>> This does not need clocks for scm calls.
+>> 
+>> Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> ---
+>>  Documentation/devicetree/bindings/firmware/qcom,scm.txt | 1 +
+>>  1 file changed, 1 insertion(+)
+>> 
+> 
+> Please add Acked-by/Reviewed-by tags when posting new versions. 
+> However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+> 
+> If a tag was not added on purpose, please state why and what changed.
 
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index 42b5ec223100..d3030d7fb45c 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -164,6 +164,13 @@
- 			clocks = <&prci PRCI_CLK_TLCLK>;
- 			status = "disabled";
- 		};
-+		dma: dma@3000000 {
-+			compatible = "sifive,fu540-c000-pdma";
-+			reg = <0x0 0x3000000 0x0 0x8000>;
-+			interrupt-parent = <&plic0>;
-+			interrupts = <23 24 25 26 27 28 29 30>;
-+			#dma-cells = <1>;
-+		};
- 		uart1: serial@10011000 {
- 			compatible = "sifive,fu540-c000-uart", "sifive,uart0";
- 			reg = <0x0 0x10011000 0x0 0x1000>;
--- 
-2.17.1
+  Sorry, missed it. Will add it.
+
+Regards,
+  Gokul
