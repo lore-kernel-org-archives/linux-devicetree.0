@@ -1,52 +1,49 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: [PATCH 3/3] ARM: logicpd-torpedo-37xx-devkit-28: Reference new DRM panel
-Date: Tue, 17 Sep 2019 11:12:13 -0500
-Message-ID: <20190917161214.2913-3-aford173@gmail.com>
-References: <20190917161214.2913-1-aford173@gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH V2 12/12] arm64: dts: qcom: Enable Q6v5 WCSS for ipq8074 SoC
+Date: Tue, 17 Sep 2019 09:15:56 -0700
+Message-ID: <20190917161557.164C320665@mail.kernel.org>
+References: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org> <1568375771-22933-13-git-send-email-gokulsri@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190917161214.2913-1-aford173@gmail.com>
+In-Reply-To: <1568375771-22933-13-git-send-email-gokulsri@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: linux-omap@vger.kernel.org, adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: agross@kernel.org, bjorn.andersson@linaro.org, david.brown@linaro.org, devicetree@vger.kernel.org, gokulsri@codeaurora.org, jassisinghbrar@gmail.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, nprakash@codeaurora.org, ohad@wizery.com, robh+dt@kernel.org, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-With the removal of the panel-dpi from the omap drivers, the
-LCD no longer works.  This patch points the device tree to
-a newly created panel named "logicpd,type28"
+Quoting Gokul Sriram Palanisamy (2019-09-13 04:56:11)
+> diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/=
+qcom/ipq8074.dtsi
+> index 6a61a63..0ea026e 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+> @@ -431,6 +485,78 @@
+>                                       "axi_m_sticky";
+>                         status =3D "disabled";
+>                 };
+> +
+> +               apcs: syscon@b111000 {
+> +                       compatible =3D "syscon";
+> +                       reg =3D <0x0b111000 0x1000>;
+> +               };
+> +
+> +               tcsr_q6: syscon@1945000 {
+> +                       compatible =3D "syscon";
+> +                       reg =3D <0x01945000 0xe000>;
+> +               };
+> +
+> +               tcsr_mutex_regs: syscon@193d000 {
+> +                       compatible =3D "syscon";
+> +                       reg =3D <0x01905000 0x8000>;
+> +               };
+> +
+> +               apcs_glb: mailbox@b111000 {
 
-Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
+This is the same as the syscon above. What's going on?
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-
-diff --git a/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts b/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
-index 07ac99b9cda6..00c426bd51a0 100644
---- a/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
-+++ b/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
-@@ -11,22 +11,8 @@
- #include "logicpd-torpedo-37xx-devkit.dts"
- 
- &lcd0 {
--
-+	/* This isn't the exact LCD, but the timings meet spec */
-+	/* To make it work, set CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=4 */
-+	compatible = "logicpd,type28";
- 	label = "28";
--
--	panel-timing {
--		clock-frequency = <9000000>;
--		hactive = <480>;
--		vactive = <272>;
--		hfront-porch = <3>;
--		hback-porch = <2>;
--		hsync-len = <42>;
--		vback-porch = <3>;
--		vfront-porch = <2>;
--		vsync-len = <11>;
--		hsync-active = <1>;
--		vsync-active = <1>;
--		de-active = <1>;
--		pixelclk-active = <0>;
--	};
- };
--- 
-2.17.1
+> +                       compatible =3D "qcom,ipq8074-apcs-apps-global";
+> +                       reg =3D <0x0b111000 0x1000>;
+> +
+> +                       #mbox-cells =3D <1>;
+> +               };
