@@ -1,145 +1,120 @@
-From: Qianggui Song <qianggui.song@amlogic.com>
-Subject: Re: [PATCH 1/3] pinctrl: add compatible for Amlogic Meson A1 pin
- controller
-Date: Tue, 17 Sep 2019 18:29:23 +0800
-Message-ID: <3a4bdcbf-883a-cf31-6af1-a692a10cb9a5@amlogic.com>
-References: <1568700442-18540-1-git-send-email-qianggui.song@amlogic.com>
- <1568700442-18540-2-git-send-email-qianggui.song@amlogic.com>
- <131cf06f-2530-4524-9f86-3c07641bb460@baylibre.com>
-Mime-Version: 1.0
+From: Maciej Falkowski <m.falkowski@samsung.com>
+Subject: [PATCH v3] dt-bindings: gpu: Convert Samsung Image Rotator to
+ dt-schema
+Date: Tue, 17 Sep 2019 12:37:27 +0200
+Message-ID: <20190917103727.14997-1-m.falkowski@samsung.com>
+References: <20190913062945.GA10283@pi3>
+        <CGME20190917103758eucas1p10793e499209137630681186a10a4b7bd@eucas1p1.samsung.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <131cf06f-2530-4524-9f86-3c07641bb460@baylibre.com>
-Content-Language: en-US
+In-Reply-To: <20190913062945.GA10283@pi3>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
-Cc: Xingyu Chen <xingyu.chen@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh+dt@kernel.org>, Hanjie Lin <hanjie.lin@amlogic.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com, krzk@kernel.org, a.hajda@samsung.com, m.szyprowski@samsung.com, m.falkowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi, Neil
-	Thanks for your review
+Convert Samsung Image Rotator to newer dt-schema format.
 
-On 2019/9/17 15:18, Neil Armstrong wrote:
-> Hi,
-> 
-> On 17/09/2019 08:07, Qianggui Song wrote:
->> Add new compatible name for Amlogic's Meson-A1 pin controller
->> add a dt-binding header file which document the detail pin names.
-> 
-> Please add in the commit log that A1 doesn't need the DS bank reg,
-> so when we will convert these bindings to yaml we will be aware of it.
-> 
-OK, will add it in the next patch
->>
->> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
->> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
->> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
->> ---
->>  .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |  1 +
->>  include/dt-bindings/gpio/meson-a1-gpio.h           | 73 ++++++++++++++++++++++
->>  2 files changed, 74 insertions(+)
->>  create mode 100644 include/dt-bindings/gpio/meson-a1-gpio.h
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
->> index 10dc4f7..0aff1f2 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
->> +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
->> @@ -15,6 +15,7 @@ Required properties for the root node:
->>  		      "amlogic,meson-axg-aobus-pinctrl"
->>  		      "amlogic,meson-g12a-periphs-pinctrl"
->>  		      "amlogic,meson-g12a-aobus-pinctrl"
->> +		      "amlogic,meson-a1-periphs-pinctrl"
->>   - reg: address and size of registers controlling irq functionality
->>  
->>  === GPIO sub-nodes ===
->> diff --git a/include/dt-bindings/gpio/meson-a1-gpio.h b/include/dt-bindings/gpio/meson-a1-gpio.h
->> new file mode 100644
->> index 0000000..40e57a5
->> --- /dev/null
->> +++ b/include/dt-bindings/gpio/meson-a1-gpio.h
->> @@ -0,0 +1,73 @@
->> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
->> +/*
->> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
->> + * Author: Qianggui Song <qianggui.song@amlogic.com>
->> + */
->> +
->> +#ifndef _DT_BINDINGS_MESON_A1_GPIO_H
->> +#define _DT_BINDINGS_MESON_A1_GPIO_H
->> +
->> +#define GPIOP_0		0
->> +#define GPIOP_1		1
->> +#define GPIOP_2		2
->> +#define GPIOP_3		3
->> +#define GPIOP_4		4
->> +#define GPIOP_5		5
->> +#define GPIOP_6		6
->> +#define GPIOP_7		7
->> +#define GPIOP_8		8
->> +#define GPIOP_9		9
->> +#define GPIOP_10	10
->> +#define GPIOP_11	11
->> +#define GPIOP_12	12
->> +#define GPIOB_0		13
->> +#define GPIOB_1		14
->> +#define GPIOB_2		15
->> +#define GPIOB_3		16
->> +#define GPIOB_4		17
->> +#define GPIOB_5		18
->> +#define GPIOB_6		19
->> +#define GPIOX_0		20
->> +#define GPIOX_1		21
->> +#define GPIOX_2		22
->> +#define GPIOX_3		23
->> +#define GPIOX_4		24
->> +#define GPIOX_5		25
->> +#define GPIOX_6		26
->> +#define GPIOX_7		27
->> +#define GPIOX_8		28
->> +#define GPIOX_9		29
->> +#define GPIOX_10	30
->> +#define GPIOX_11	31
->> +#define GPIOX_12	32
->> +#define GPIOX_13	33
->> +#define GPIOX_14	34
->> +#define GPIOX_15	35
->> +#define GPIOX_16	36
->> +#define GPIOF_0		37
->> +#define GPIOF_1		38
->> +#define GPIOF_2		39
->> +#define GPIOF_3		40
->> +#define GPIOF_4		41
->> +#define GPIOF_5		42
->> +#define GPIOF_6		43
->> +#define GPIOF_7		44
->> +#define GPIOF_8		45
->> +#define GPIOF_9		46
->> +#define GPIOF_10	47
->> +#define GPIOF_11	48
->> +#define GPIOF_12	49
->> +#define GPIOA_0		50
->> +#define GPIOA_1		51
->> +#define GPIOA_2		52
->> +#define GPIOA_3		53
->> +#define GPIOA_4		54
->> +#define GPIOA_5		55
->> +#define GPIOA_6		56
->> +#define GPIOA_7		57
->> +#define GPIOA_8		58
->> +#define GPIOA_9		59
->> +#define GPIOA_10	60
->> +#define GPIOA_11	61
->> +
->> +#endif /* _DT_BINDINGS_MESON_A1_GPIO_H */
->>
-> 
-> 
-> With that fixed,
-> 
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> 
-> Neil
-> 
-> .
-> 
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+v3:
+- remove unneded comments and descriptions
+- remove unneded maxItems field from clock-names property
+---
+ .../bindings/gpu/samsung-rotator.txt          | 28 -----------
+ .../bindings/gpu/samsung-rotator.yaml         | 48 +++++++++++++++++++
+ 2 files changed, 48 insertions(+), 28 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.txt
+ create mode 100644 Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
+
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt b/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
+deleted file mode 100644
+index 3aca2578da0b..000000000000
+--- a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-* Samsung Image Rotator
+-
+-Required properties:
+-  - compatible : value should be one of the following:
+-	* "samsung,s5pv210-rotator" for Rotator IP in S5PV210
+-	* "samsung,exynos4210-rotator" for Rotator IP in Exynos4210
+-	* "samsung,exynos4212-rotator" for Rotator IP in Exynos4212/4412
+-	* "samsung,exynos5250-rotator" for Rotator IP in Exynos5250
+-
+-  - reg : Physical base address of the IP registers and length of memory
+-	  mapped region.
+-
+-  - interrupts : Interrupt specifier for rotator interrupt, according to format
+-		 specific to interrupt parent.
+-
+-  - clocks : Clock specifier for rotator clock, according to generic clock
+-	     bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
+-
+-  - clock-names : Names of clocks. For exynos rotator, it should be "rotator".
+-
+-Example:
+-	rotator@12810000 {
+-		compatible = "samsung,exynos4210-rotator";
+-		reg = <0x12810000 0x1000>;
+-		interrupts = <0 83 0>;
+-		clocks = <&clock 278>;
+-		clock-names = "rotator";
+-	};
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml b/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
+new file mode 100644
+index 000000000000..45ce562435fa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpu/samsung-rotator.yaml
+@@ -0,0 +1,48 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpu/samsung-rotator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung SoC Image Rotator
++
++maintainers:
++  - Inki Dae <inki.dae@samsung.com>
++
++properties:
++  compatible:
++    enum:
++      - "samsung,s5pv210-rotator"
++      - "samsung,exynos4210-rotator"
++      - "samsung,exynos4212-rotator"
++      - "samsung,exynos5250-rotator"
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++    - const: rotator
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    rotator@12810000 {
++        compatible = "samsung,exynos4210-rotator";
++        reg = <0x12810000 0x1000>;
++        interrupts = <0 83 0>;
++        clocks = <&clock 278>;
++        clock-names = "rotator";
++    };
++
+-- 
+2.17.1
