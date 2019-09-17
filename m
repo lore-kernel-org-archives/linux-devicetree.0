@@ -1,188 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] dt-bindings: arm: samsung: Convert Samsung Exynos
- IOMMU H/W, System MMU to dt-schema
-Date: Tue, 17 Sep 2019 14:21:13 -0500
-Message-ID: <20190917192113.GA26604@bogus>
-References: <CAJKOXPeojuk1UrYo9Wakaaq4VJt3Ts22Vi-V5xzwAXoFU5+tcA@mail.gmail.com>
- <CGME20190911110500eucas1p2e1304a19e2e75ee43d80fcdc3b871237@eucas1p2.samsung.com>
- <20190911110446.32058-1-m.falkowski@samsung.com>
+Subject: Re: [PATCH v3 5/8] cpufreq: ti-cpufreq: omap36xx use "cpu0","vbb" if
+ run in multi_regulator mode
+Date: Tue, 17 Sep 2019 14:22:47 -0500
+Message-ID: <20190917192247.GA7233@bogus>
+References: <cover.1568224032.git.hns@goldelico.com>
+ <1c803be8060fb99b7d92e2f5cde3c0e1962fbe2b.1568224033.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190911110446.32058-1-m.falkowski@samsung.com>
+In-Reply-To: <1c803be8060fb99b7d92e2f5cde3c0e1962fbe2b.1568224033.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Falkowski <m.falkowski@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, krzk@kernel.org, mark.rutland@arm.com, m.szyprowski@samsung.com, a.hajda@samsung.com
+Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Adam Ford <aford173@gmail.com>, =?iso-8859-1?Q?Andr=E9?= Roth <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Roger Quadros <rogerq@ti.com>, Teresa Remmet <t.remmet@phytec.de>, "H. Nikolaus Schaller" <hns@goldelico.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 01:04:46PM +0200, Maciej Falkowski wrote:
-> Convert Samsung Exynos IOMMU H/W, System Memory Management Unit
-> to newer dt-schema format.
+On Wed, 11 Sep 2019 19:47:11 +0200, "H. Nikolaus Schaller" wrote:
+> In preparation for using the multi_regulator capability of
+> this driver for handling the ABB LDO for OPP1G of the omap36xx
+> we have to take care that the (legacy) vdd-supply name is
+> cpu0-supply = <&vcc>;
 > 
-> Update clock description.
+> To do this we add another field to the SoC description table which
+> optionally can specify a list of regulator names.
 > 
-> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> For omap36xx we define "cpu0-supply" and "vbb-supply".
+> 
+> The default remains "vdd-supply" and "vbb-supply".
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > ---
-> Hi Krzysztof,
+>  .../devicetree/bindings/cpufreq/ti-cpufreq.txt       |  6 +++++-
+>  drivers/cpufreq/ti-cpufreq.c                         | 12 ++++++++++--
+>  2 files changed, 15 insertions(+), 3 deletions(-)
 > 
-> Thank you for feedback.
-> 
-> v3:
-> 
-> - remove obsolete interrupts description and
-> set its maxItems to one. There are some incompatible
-> files which will be fixed with another patch.
-> 
-> - clock-names pattern is changed to your more precise 
-> version. I also added option "pclk" + "aclk" as some
-> bindings are also using it.
-> 
-> Best regards,
-> Maciej Falkowski
-> ---
->  .../bindings/iommu/samsung,sysmmu.txt         |  67 -----------
->  .../bindings/iommu/samsung,sysmmu.yaml        | 112 ++++++++++++++++++
->  2 files changed, 112 insertions(+), 67 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
->  create mode 100644 Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
 
-
-> diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
-> new file mode 100644
-> index 000000000000..a8141d6c326a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.yaml
-> @@ -0,0 +1,112 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iommu/samsung,sysmmu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung Exynos IOMMU H/W, System MMU (System Memory Management Unit)
-> +
-> +maintainers:
-> +  - Marek Szyprowski <m.szyprowski@samsung.com>
-> +
-> +description: |+
-> +  Samsung's Exynos architecture contains System MMUs that enables scattered
-> +  physical memory chunks visible as a contiguous region to DMA-capable peripheral
-> +  devices like MFC, FIMC, FIMD, GScaler, FIMC-IS and so forth.
-> +
-> +  System MMU is an IOMMU and supports identical translation table format to
-> +  ARMv7 translation tables with minimum set of page properties including access
-> +  permissions, shareability and security protection. In addition, System MMU has
-> +  another capabilities like L2 TLB or block-fetch buffers to minimize translation
-> +  latency.
-> +
-> +  System MMUs are in many to one relation with peripheral devices, i.e. single
-> +  peripheral device might have multiple System MMUs (usually one for each bus
-> +  master), but one System MMU can handle transactions from only one peripheral
-> +  device. The relation between a System MMU and the peripheral device needs to be
-> +  defined in device node of the peripheral device.
-> +
-> +  MFC in all Exynos SoCs and FIMD, M2M Scalers and G2D in Exynos5420 has 2 System
-> +  MMUs.
-> +  * MFC has one System MMU on its left and right bus.
-> +  * FIMD in Exynos5420 has one System MMU for window 0 and 4, the other system MMU
-> +    for window 1, 2 and 3.
-> +  * M2M Scalers and G2D in Exynos5420 has one System MMU on the read channel and
-> +    the other System MMU on the write channel.
-> +
-> +  For information on assigning System MMU controller to its peripheral devices,
-> +  see generic IOMMU bindings.
-> +
-> +properties:
-> +  compatible:
-> +    const: samsung,exynos-sysmmu
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    oneOf:
-> +      - items:
-> +        - const: sysmmu
-> +      - items:
-> +        - const: sysmmu
-> +        - const: master
-> +      - items:
-> +        - const: aclk
-> +        - const: pclk
-> +      - items:
-> +        - const: pclk
-> +        - const: aclk
-
-Sigh. I'd prefer you fix the order in whichever case is less common.
-
-> +    description: |
-> +      Should be "sysmmu" with optional "master"
-> +      or a pair "aclk" with "pclk".
-
-No need to describe what the schema already says.
-
-> +
-> +  "#iommu-cells":
-> +    const: 0
-> +
-> +  power-domains:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-
-No need to define common property types.
-
-Just 'maxItems: 1' is enough.
-
-> +    description: |
-> +      Required if the System MMU is needed to gate its power.
-> +      Please refer to the following document:
-> +      Documentation/devicetree/bindings/power/pd-samsung.txt
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - "#iommu-cells"
-> +
-> +examples:
-> +  - |
-> +    gsc_0: gsc@13e00000 {
-> +      compatible = "samsung,exynos5-gsc";
-> +      reg = <0x13e00000 0x1000>;
-> +      interrupts = <0 85 0>;
-> +      power-domains = <&pd_gsc>;
-> +      clocks = <&clock 0>; // CLK_GSCL0
-> +      clock-names = "gscl";
-> +      iommus = <&sysmmu_gsc0>;
-> +    };
-> +
-> +    sysmmu_gsc0: sysmmu@13e80000 {
-
-This should be:
-
-iommu@...
-
-> +      compatible = "samsung,exynos-sysmmu";
-> +      reg = <0x13E80000 0x1000>;
-> +      interrupt-parent = <&combiner>;
-> +      interrupts = <2 0>;
-> +      clock-names = "sysmmu", "master";
-> +      clocks = <&clock 0>, // CLK_SMMU_GSCL0
-> +               <&clock 0>; // CLK_GSCL0
-> +      power-domains = <&pd_gsc>;
-> +      #iommu-cells = <0>;
-> +    };
-> +
-> -- 
-> 2.17.1
-> 
+Acked-by: Rob Herring <robh@kernel.org>
