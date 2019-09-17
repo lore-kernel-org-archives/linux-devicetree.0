@@ -1,58 +1,77 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v1 2/2] spi: cadence-qspi: Add QSPI support for Intel LGM
- SoC
-Date: Tue, 17 Sep 2019 16:36:50 +0100
-Message-ID: <20190917153650.GF3524@sirena.co.uk>
-References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190916073843.39618-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190916113255.GA4352@sirena.co.uk>
- <466b41c1-3d65-0bf4-6db7-d3b3e06b107b@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ryJZkp9/svQ58syV"
+From: Adam Ford <aford173@gmail.com>
+Subject: [PATCH 1/3] drm/panel: simple: Add Logic PD Type 28 display support
+Date: Tue, 17 Sep 2019 11:12:11 -0500
+Message-ID: <20190917161214.2913-1-aford173@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <466b41c1-3d65-0bf4-6db7-d3b3e06b107b@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Ramuthevar, Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+To: dri-devel@lists.freedesktop.org
+Cc: linux-omap@vger.kernel.org, adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Previously, there was an omap panel-dpi driver that would
+read generic timings from the device tree and set the display
+timing accordingly.  This driver was removed so the screen
+no longer functions.  This patch modifies the panel-simple
+file to setup the timings to the same values previously used.
 
---ryJZkp9/svQ58syV
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
 
-On Tue, Sep 17, 2019 at 10:11:28AM +0800, Ramuthevar, Vadivel MuruganX wrot=
-e:
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-> *=A0=A0=A0 spi-cadence.c* in *drivers/spi/*, which supports very old lega=
-cy
-> cadence-spi based devices(normal)
-> *=A0=A0=A0 cadence-quadspi.c(drivers/mtd/spi-nor/)* : specific support to=
- SPI-NOR
-> flash with new spi-nor layer.
-> =A0=A0=A0 all the API's in this driver purely on spi-nor specific, so cou=
-ldn't=A0
-> proceed to adapt.
-
-Are these completely separate IPs or are they just different versions of
-the same IP?
-
---ryJZkp9/svQ58syV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2A/ZEACgkQJNaLcl1U
-h9CyIgf8CTzBHfnl6ab2KtgUkLdtcsjko33jDsWaIjRogAUFSRsdNX6r7vpmaPBO
-qfrx0rskry+jdBRHt5EYiTmvUIsxLeDzXz0WLtSawdjxG/mG1zKdM8sSk50eNdES
-8Abj/5z0s6xNx6gpE0Rb7X2Z/peg0msPqIaJDGrVUWEATB+qih7K/vMJUzvQ4snS
-zX+/SOl1PTFJl65fLm7H1DNurJTaokNrV1TNdSpzavnIWu2zaMfkPSTc8x+qIMOr
-M8ApiHjcmr8Fjdf4UrHA1msXxn98rQvemS9KBYgzWE3TgnTCg0/NfJs65W6WYAor
-XZljVmIteJ/4/Pk0nxzlmCgWd6UeoA==
-=v5W8
------END PGP SIGNATURE-----
-
---ryJZkp9/svQ58syV--
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 5a93c4edf1e4..c86c30f3a8a1 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1900,6 +1900,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+ 	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+ };
+ 
++static const struct drm_display_mode logicpd_type_28_mode = {
++	.clock = 9000,
++	.hdisplay = 480,
++	.hsync_start = 480 + 3,
++	.hsync_end = 480 + 3 + 42,
++	.htotal = 480 + 3 + 42 + 2,
++
++	.vdisplay = 272,
++	.vsync_start = 272 + 2,
++	.vsync_end = 272 + 2 + 11,
++	.vtotal = 272 + 2 + 11 + 3,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
++};
++
++static const struct panel_desc logicpd_type_28 = {
++	.modes = &logicpd_type_28_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 105,
++		.height = 67,
++	},
++	.delay = {
++		.prepare = 200,
++		.enable = 200,
++		.unprepare = 200,
++		.disable = 200,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
++		     DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
++};
++
+ static const struct panel_desc mitsubishi_aa070mc01 = {
+ 	.modes = &mitsubishi_aa070mc01_mode,
+ 	.num_modes = 1,
+@@ -2948,6 +2982,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "lg,lp129qe",
+ 		.data = &lg_lp129qe,
++	}, {
++		.compatible = "logicpd,type28",
++		.data = &logicpd_type_28,
+ 	}, {
+ 		.compatible = "mitsubishi,aa070mc01-ca1",
+ 		.data = &mitsubishi_aa070mc01,
+-- 
+2.17.1
