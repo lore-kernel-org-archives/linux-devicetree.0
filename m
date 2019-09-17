@@ -1,8 +1,8 @@
 From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
 Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
  max-speed
-Date: Tue, 17 Sep 2019 16:17:07 +0100
-Message-ID: <20190917151707.GV25745@shell.armlinux.org.uk>
+Date: Tue, 17 Sep 2019 16:30:27 +0100
+Message-ID: <20190917153027.GW25745@shell.armlinux.org.uk>
 References: <20190910155507.491230-1-tinywrkb@gmail.com>
  <20190910185033.GD9761@lunn.ch>
  <87muf6oyvr.fsf@tarshish>
@@ -11,164 +11,212 @@ References: <20190910155507.491230-1-tinywrkb@gmail.com>
  <20190917125434.GH20778@lunn.ch>
  <20190917133253.GA1210141@arch-dsk-01>
  <20190917133942.GR25745@shell.armlinux.org.uk>
+ <20190917151707.GV25745@shell.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190917133942.GR25745@shell.armlinux.org.uk>
+In-Reply-To: <20190917151707.GV25745@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 To: tinywrkb <tinywrkb@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Baruch Siach <baruch@tkos.co.il>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Baruch Siach <baruch@tkos.co.il>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 02:39:43PM +0100, Russell King - ARM Linux admin wrote:
-> On Tue, Sep 17, 2019 at 04:32:53PM +0300, tinywrkb wrote:
-> > On Tue, Sep 17, 2019 at 02:54:34PM +0200, Andrew Lunn wrote:
-> > > On Tue, Sep 17, 2019 at 03:41:01PM +0300, tinywrkb wrote:
-> > > > On Sun, Sep 15, 2019 at 03:56:52PM +0200, Andrew Lunn wrote:
-> > > > > > Tinywrkb confirmed to me in private communication that revert of
-> > > > > > 5502b218e001 fixes Ethernet for him on effected system.
+On Tue, Sep 17, 2019 at 04:17:07PM +0100, Russell King - ARM Linux admin wrote:
+> On Tue, Sep 17, 2019 at 02:39:43PM +0100, Russell King - ARM Linux admin wrote:
+> > On Tue, Sep 17, 2019 at 04:32:53PM +0300, tinywrkb wrote:
+> > > On Tue, Sep 17, 2019 at 02:54:34PM +0200, Andrew Lunn wrote:
+> > > > On Tue, Sep 17, 2019 at 03:41:01PM +0300, tinywrkb wrote:
+> > > > > On Sun, Sep 15, 2019 at 03:56:52PM +0200, Andrew Lunn wrote:
+> > > > > > > Tinywrkb confirmed to me in private communication that revert of
+> > > > > > > 5502b218e001 fixes Ethernet for him on effected system.
+> > > > > > > 
+> > > > > > > He also referred me to an old Cubox-i spec that lists 10/100 Ethernet
+> > > > > > > only for i.MX6 Solo/DualLite variants of Cubox-i. It turns out that
+> > > > > > > there was a plan to use a different 10/100 PHY for Solo/DualLite
+> > > > > > > SOMs. This plan never materialized. All SolidRun i.MX6 SOMs use the same
+> > > > > > > AR8035 PHY that supports 1Gb.
+> > > > > > > 
+> > > > > > > Commit 5502b218e001 might be triggering a hardware issue on the affected
+> > > > > > > Cubox-i. I could not reproduce the issue here with Cubox-i and a Dual
+> > > > > > > SOM variant running v5.3-rc8. I have no Solo/DualLite variant handy at
+> > > > > > > the moment.
 > > > > > > 
-> > > > > > He also referred me to an old Cubox-i spec that lists 10/100 Ethernet
-> > > > > > only for i.MX6 Solo/DualLite variants of Cubox-i. It turns out that
-> > > > > > there was a plan to use a different 10/100 PHY for Solo/DualLite
-> > > > > > SOMs. This plan never materialized. All SolidRun i.MX6 SOMs use the same
-> > > > > > AR8035 PHY that supports 1Gb.
+> > > > > > Could somebody with an affected device show us the output of ethtool
+> > > > > > with and without 5502b218e001. Does one show 1G has been negotiated,
+> > > > > > and the other 100Mbps? If this is true, how does it get 100Mbps
+> > > > > > without that patch? We are missing a piece of the puzzle.
 > > > > > > 
-> > > > > > Commit 5502b218e001 might be triggering a hardware issue on the affected
-> > > > > > Cubox-i. I could not reproduce the issue here with Cubox-i and a Dual
-> > > > > > SOM variant running v5.3-rc8. I have no Solo/DualLite variant handy at
-> > > > > > the moment.
+> > > > > > 	Andrew
 > > > > > 
-> > > > > Could somebody with an affected device show us the output of ethtool
-> > > > > with and without 5502b218e001. Does one show 1G has been negotiated,
-> > > > > and the other 100Mbps? If this is true, how does it get 100Mbps
-> > > > > without that patch? We are missing a piece of the puzzle.
+> > > > > linux-test-5.1rc1-a2703de70942-without_bad_commit
 > > > > > 
-> > > > > 	Andrew
+> > > > > Settings for eth0:
+> > > > > 	Supported ports: [ TP MII ]
+> > > > > 	Supported link modes:   10baseT/Half 10baseT/Full
+> > > > > 	                        100baseT/Half 100baseT/Full
+> > > > > 	                        1000baseT/Full
 > > > > 
-> > > > linux-test-5.1rc1-a2703de70942-without_bad_commit
+> > > > So this means the local device says it can do 1000Mbps.
 > > > > 
-> > > > Settings for eth0:
-> > > > 	Supported ports: [ TP MII ]
-> > > > 	Supported link modes:   10baseT/Half 10baseT/Full
-> > > > 	                        100baseT/Half 100baseT/Full
-> > > > 	                        1000baseT/Full
+> > > > 
+> > > > > 	Supported pause frame use: Symmetric
+> > > > > 	Supports auto-negotiation: Yes
+> > > > > 	Supported FEC modes: Not reported
+> > > > > 	Advertised link modes:  10baseT/Half 10baseT/Full
+> > > > > 	                        100baseT/Half 100baseT/Full
+> > > > > 	                        1000baseT/Full
+> > > > 
+> > > > The link peer can also do 1000Mbps.
+> > > > 
+> > > > 
+> > > > > 	Advertised pause frame use: Symmetric
+> > > > > 	Advertised auto-negotiation: Yes
+> > > > > 	Advertised FEC modes: Not reported
+> > > > > 	Link partner advertised link modes:  10baseT/Half 10baseT/Full
+> > > > > 	                                     100baseT/Half 100baseT/Full
+> > > > > 	                                     1000baseT/Full
+> > > > > 	Link partner advertised pause frame use: Symmetric
+> > > > > 	Link partner advertised auto-negotiation: Yes
+> > > > > 	Link partner advertised FEC modes: Not reported
+> > > > > 	Speed: 100Mb/s
+> > > > 
+> > > > Yet they have decided to do 100Mbps. 
+> > > > 
+> > > > We need to understand Why? The generic PHY driver would not do this on
+> > > > its own. So i'm thinking something has poked a PHY register with some
+> > > > value, and this patch is causing it to be over written.
+> > > > 
+> > > > Please can you use mii-tool -v -v to dump the PHY registers in each
+> > > > case.
+> > > > 
+> > > > Thanks
+> > > > 	Andrew
 > > > 
-> > > So this means the local device says it can do 1000Mbps.
+> > > Here's the output of # mii-tool -v -v eth0 
 > > > 
+> > > * linux-test-5.1rc1-a2703de70942-without_bad_commit
 > > > 
-> > > > 	Supported pause frame use: Symmetric
-> > > > 	Supports auto-negotiation: Yes
-> > > > 	Supported FEC modes: Not reported
-> > > > 	Advertised link modes:  10baseT/Half 10baseT/Full
-> > > > 	                        100baseT/Half 100baseT/Full
-> > > > 	                        1000baseT/Full
-> > > 
-> > > The link peer can also do 1000Mbps.
-> > > 
-> > > 
-> > > > 	Advertised pause frame use: Symmetric
-> > > > 	Advertised auto-negotiation: Yes
-> > > > 	Advertised FEC modes: Not reported
-> > > > 	Link partner advertised link modes:  10baseT/Half 10baseT/Full
-> > > > 	                                     100baseT/Half 100baseT/Full
-> > > > 	                                     1000baseT/Full
-> > > > 	Link partner advertised pause frame use: Symmetric
-> > > > 	Link partner advertised auto-negotiation: Yes
-> > > > 	Link partner advertised FEC modes: Not reported
-> > > > 	Speed: 100Mb/s
-> > > 
-> > > Yet they have decided to do 100Mbps. 
-> > > 
-> > > We need to understand Why? The generic PHY driver would not do this on
-> > > its own. So i'm thinking something has poked a PHY register with some
-> > > value, and this patch is causing it to be over written.
-> > > 
-> > > Please can you use mii-tool -v -v to dump the PHY registers in each
-> > > case.
-> > > 
-> > > Thanks
-> > > 	Andrew
+> > > Using SIOCGMIIPHY=0x8947
+> > > eth0: negotiated 100baseTx-FD flow-control, link ok
+> > >   registers for MII PHY 0:
+> > >     3100 796d 004d d072 15e1 c5e1 000f 0000
+> > >     0000 0000 0800 0000 0000 0000 0000 a000
+> > >     0000 0000 0000 f420 082c 0000 04e8 0000
+> > >     3200 3000 0000 063d 0000 0000 0000 0000
+> > >   product info: vendor 00:13:74, model 7 rev 2
+> > >   basic mode:   autonegotiation enabled
+> > >   basic status: autonegotiation complete, link ok
+> > >   capabilities: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
+> > >   advertising:  100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+> > >   link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
 > > 
-> > Here's the output of # mii-tool -v -v eth0 
+> > This is *not* advertising 1000baseT modes (register 9).
 > > 
-> > * linux-test-5.1rc1-a2703de70942-without_bad_commit
+> > > 
+> > > 
+> > > * linux-test-5.1rc1-5502b218e001-with_bad_commit
+> > > 
+> > > Using SIOCGMIIPHY=0x8947
+> > > eth0: negotiated 100baseTx-FD flow-control, link ok
+> > >   registers for MII PHY 0:
+> > >     3100 796d 004d d072 15e1 c5e1 000d 0000
+> > >     0000 0000 0800 0000 0000 0000 0000 a000
+> > >     0000 0000 0000 0000 082c 0000 04e8 0000
+> > >     3200 3000 0000 063d 0000 0000 0000 0000
+> > >   product info: vendor 00:13:74, model 7 rev 2
+> > >   basic mode:   autonegotiation enabled
+> > >   basic status: autonegotiation complete, link ok
+> > >   capabilities: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
+> > >   advertising:  100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+> > >   link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
 > > 
-> > Using SIOCGMIIPHY=0x8947
-> > eth0: negotiated 100baseTx-FD flow-control, link ok
-> >   registers for MII PHY 0:
-> >     3100 796d 004d d072 15e1 c5e1 000f 0000
-> >     0000 0000 0800 0000 0000 0000 0000 a000
-> >     0000 0000 0000 f420 082c 0000 04e8 0000
-> >     3200 3000 0000 063d 0000 0000 0000 0000
-> >   product info: vendor 00:13:74, model 7 rev 2
-> >   basic mode:   autonegotiation enabled
-> >   basic status: autonegotiation complete, link ok
-> >   capabilities: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
-> >   advertising:  100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-> >   link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+> > Neither is this.
+> > 
+> > However, the kernel and phylib _thinks_ that it is.  My guess is
+> > something has rewritten the PHY registers from userspace, rather
+> > than using ethtool to change the advertisment.  The MAC is still
+> > trying to operate at 1000Mbps (since that is what phylib resolved)
+> > yet the link might be actually operating at 100Mbps - but for that
+> > to happen, we should've seen the link go down and up again.
+> > 
+> > Odd.
 > 
-> This is *not* advertising 1000baseT modes (register 9).
+> For reference, here I see:
 > 
-> > 
-> > 
-> > * linux-test-5.1rc1-5502b218e001-with_bad_commit
-> > 
-> > Using SIOCGMIIPHY=0x8947
-> > eth0: negotiated 100baseTx-FD flow-control, link ok
-> >   registers for MII PHY 0:
-> >     3100 796d 004d d072 15e1 c5e1 000d 0000
-> >     0000 0000 0800 0000 0000 0000 0000 a000
-> >     0000 0000 0000 0000 082c 0000 04e8 0000
-> >     3200 3000 0000 063d 0000 0000 0000 0000
-> >   product info: vendor 00:13:74, model 7 rev 2
-> >   basic mode:   autonegotiation enabled
-> >   basic status: autonegotiation complete, link ok
-> >   capabilities: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
-> >   advertising:  100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-> >   link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+> Using SIOCGMIIPHY=0x8947
+> eth0: negotiated 1000baseT-FD flow-control, link ok
+>   registers for MII PHY 0:
+>     3100 796d 004d d072 15e1 c1e1 000d 0000
+>     0000 0200 3800 0000 0000 0000 0000 a000
+>     0000 0000 0000 0000 082c 0000 04e8 0000
+>     3200 3000 0000 060e 0000 0000 0000 0000
+>   product info: vendor 00:13:74, model 7 rev 2
+>   basic mode:   autonegotiation enabled
+>   basic status: autonegotiation complete, link ok
+>   capabilities: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
+>   advertising:  1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+>   link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
 > 
-> Neither is this.
+> Note that userspace writing to register 9 (1G settings) will update
+> the physical PHY's advertisment for 1G speeds, but the kernel's idea
+> will not be updated, so things will become de-sync'd, and the kernel
+> _will_ incorrectly determine the speed.
 > 
-> However, the kernel and phylib _thinks_ that it is.  My guess is
-> something has rewritten the PHY registers from userspace, rather
-> than using ethtool to change the advertisment.  The MAC is still
-> trying to operate at 1000Mbps (since that is what phylib resolved)
-> yet the link might be actually operating at 100Mbps - but for that
-> to happen, we should've seen the link go down and up again.
+> So, are you using mii-tool or mii-diag to change the negotiation
+> settings, rather than using ethtool?
 > 
-> Odd.
+> This is likely the case, as prior to 5502b218e001, we used to read
+> the advertisment registers afresh each time we evaluate the resulting
+> link mode.  After 5502b218e001, we use the advertisment mask cached
+> in phydev->advertising, which, looking at phy_mii_ioctl(), will not
+> be updated if register 9 is written.
 
-For reference, here I see:
+Please try this patch - I haven't written a commit message for it yet,
+it's just to prove the above point.
 
-Using SIOCGMIIPHY=0x8947
-eth0: negotiated 1000baseT-FD flow-control, link ok
-  registers for MII PHY 0:
-    3100 796d 004d d072 15e1 c1e1 000d 0000
-    0000 0200 3800 0000 0000 0000 0000 a000
-    0000 0000 0000 0000 082c 0000 04e8 0000
-    3200 3000 0000 060e 0000 0000 0000 0000
-  product info: vendor 00:13:74, model 7 rev 2
-  basic mode:   autonegotiation enabled
-  basic status: autonegotiation complete, link ok
-  capabilities: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
-  advertising:  1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-  link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
+Thanks.
 
-Note that userspace writing to register 9 (1G settings) will update
-the physical PHY's advertisment for 1G speeds, but the kernel's idea
-will not be updated, so things will become de-sync'd, and the kernel
-_will_ incorrectly determine the speed.
+ drivers/net/phy/phy.c | 5 +++++
+ include/linux/mii.h   | 9 +++++++++
+ 2 files changed, 14 insertions(+)
 
-So, are you using mii-tool or mii-diag to change the negotiation
-settings, rather than using ethtool?
-
-This is likely the case, as prior to 5502b218e001, we used to read
-the advertisment registers afresh each time we evaluate the resulting
-link mode.  After 5502b218e001, we use the advertisment mask cached
-in phydev->advertising, which, looking at phy_mii_ioctl(), will not
-be updated if register 9 is written.
+diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+index 7af390d8bbdb..068a08a50064 100644
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -458,6 +458,11 @@ int phy_mii_ioctl(struct phy_device *phydev, struct ifreq *ifr, int cmd)
+ 							   val);
+ 				change_autoneg = true;
+ 				break;
++			case MII_CTRL1000:
++				mii_ctrl1000_mod_linkmode_adv_t(phydev->advertising,
++							        val);
++				change_autoneg = true;
++				break;
+ 			default:
+ 				/* do nothing */
+ 				break;
+diff --git a/include/linux/mii.h b/include/linux/mii.h
+index 5cd824c1c0ca..1249d32dbd63 100644
+--- a/include/linux/mii.h
++++ b/include/linux/mii.h
+@@ -455,6 +455,15 @@ static inline void mii_lpa_mod_linkmode_lpa_t(unsigned long *lp_advertising,
+ 			 lp_advertising, lpa & LPA_LPACK);
+ }
+ 
++static inline void mii_ctrl1000_mod_linkmode_adv_t(unsigned long *advertising,
++						   u32 ctrl1000)
++{
++	linkmode_mod_bit(ETHTOOL_LINK_MODE_1000baseT_Half_BIT, advertising,
++			 ctrl1000 & ADVERTISE_1000HALF);
++	linkmode_mod_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT, advertising,
++			 ctrl1000 & ADVERTISE_1000FULL);
++}
++
+ /**
+  * linkmode_adv_to_lcl_adv_t
+  * @advertising:pointer to linkmode advertising
 
 -- 
 RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
