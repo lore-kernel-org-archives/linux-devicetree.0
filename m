@@ -1,430 +1,135 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH V2 2/2] ASoC: fsl_mqs: Add MQS component driver
-Date: Mon, 16 Sep 2019 17:07:25 -0700
-Message-ID: <20190917000725.GF12789@Asurada-Nvidia.nvidia.com>
-References: <65e1f035aea2951aacda54aa3a751bc244f72f6a.1568367274.git.shengjiu.wang@nxp.com>
- <74dfc73a92d2df4213225abe7d2a3db82672fe0f.1568367274.git.shengjiu.wang@nxp.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [v4,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
+Date: Mon, 16 Sep 2019 20:13:06 -0500
+Message-ID: <CAL_JsqL=37HL3BnxZTxJXQTBaKoFs1_=vt4hfLqkxXkWedmPYA@mail.gmail.com>
+References: <20190910104247.13142-1-biwen.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <74dfc73a92d2df4213225abe7d2a3db82672fe0f.1568367274.git.shengjiu.wang@nxp.com>
+In-Reply-To: <20190910104247.13142-1-biwen.li@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc: timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+To: Biwen Li <biwen.li@nxp.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Yang-Leo Li <leoyang.li@nxp.com>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <linux-rtc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Martin Fuzzey <mfuzzey@parkeon.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 05:42:14PM +0800, Shengjiu Wang wrote:
-> MQS (medium quality sound), is used to generate medium quality
-> audio via a standard digital output pin. It can be used to
-> connect stereo speakers or headphones simply via power amplifier
-> stages without an additional DAC chip. It only accepts 2-channel,
-> LSB-valid 16bit, MSB shift-out first, frame sync asserting with
-> the first bit of the frame, data shifted with the posedge of
-> bit clock, 44.1 kHz or 48 kHz signals from SAI1 in left justified
-> format; and it provides the SNR target as no more than 20dB for
-> the signals below 10 kHz. The signals above 10 kHz will have
-> worse THD+N values.
-> 
-> MQS provides only simple audio reproduction. No internal pop,
-> click or distortion artifact reduction methods are provided.
-> 
-> The MQS receives the audio data from the SAI1 Tx section.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-
+On Tue, Sep 10, 2019 at 5:53 AM Biwen Li <biwen.li@nxp.com> wrote:
+>
+> Add some properties for pcf85263/pcf85363 as follows:
+>   - nxp,rtc-interrupt-type: integer type
+>   - nxp,rtc-interrupt-output-pin: string type
+>   - quartz-load-femtofarads: integer type
+>   - nxp,quartz-drive-strength: integer type
+>   - nxp,quartz-low-jitter: bool type
+>   - wakeup-source: bool type
+>
+> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
 > ---
-> Changes in v2
-> - use devm_platform_ioremap_resource
-> 
->  sound/soc/fsl/Kconfig   |  10 ++
->  sound/soc/fsl/Makefile  |   2 +
->  sound/soc/fsl/fsl_mqs.c | 333 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 345 insertions(+)
->  create mode 100644 sound/soc/fsl/fsl_mqs.c
-> 
-> diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-> index aa99c008a925..65e8cd4be930 100644
-> --- a/sound/soc/fsl/Kconfig
-> +++ b/sound/soc/fsl/Kconfig
-> @@ -25,6 +25,16 @@ config SND_SOC_FSL_SAI
->  	  This option is only useful for out-of-tree drivers since
->  	  in-tree drivers select it automatically.
->  
-> +config SND_SOC_FSL_MQS
-> +	tristate "Medium Quality Sound (MQS) module support"
-> +	depends on SND_SOC_FSL_SAI
-> +	select REGMAP_MMIO
-> +	help
-> +	  Say Y if you want to add Medium Quality Sound (MQS)
-> +	  support for the Freescale CPUs.
-> +	  This option is only useful for out-of-tree drivers since
-> +	  in-tree drivers select it automatically.
+> Change in v4:
+>         - Drop robust defines in include/dt-bindings/rtc/pcf85363.h
+>         - Add nxp,rtc-interrupt-type property
+>         - Replace interrupt-output-pin with nxp,rtc-interrupt-output-pin
+>
+> Change in v3:
+>         - None
+>
+> Change in v2:
+>         - Replace properties name
+>           quartz-load-capacitance -> quartz-load-femtofarads
+>           quartz-drive-strength -> nxp,quartz-drive-strength
+>           quartz-low-jitter -> nxp,quartz-low-jitter
+>         - Replace drive strength name
+>           PCF85263_QUARTZDRIVE_NORMAL -> PCF85263_QUARTZDRIVE_100ko
+>           PCF85263_QUARTZDRIVE_LOW -> PCF85263_QUARTZDRIVE_60ko
+>           PCF85263_QUARTZDRIVE_HIGH -> PCF85263_QUARTZDRIVE_500ko
+>         - Set default interrupt-output-pin as "INTA"
+>
+>  .../devicetree/bindings/rtc/pcf85363.txt      | 44 ++++++++++++++++++-
+>  include/dt-bindings/rtc/pcf85363.h            | 14 ++++++
+>  2 files changed, 57 insertions(+), 1 deletion(-)
+>  create mode 100644 include/dt-bindings/rtc/pcf85363.h
+>
+> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> index 94adc1cf93d9..fc1579463657 100644
+> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> @@ -8,10 +8,52 @@ Required properties:
+>  Optional properties:
+>  - interrupts: IRQ line for the RTC (not implemented).
+>
+> +- nxp,rtc-interrupt-type: integer property, represent the interrupt's
+> +  type. Valid values are
+> +  INT_PIE(periodic interrupt enable),
+> +  INT_OIE(offset correction interrupt enable),
+> +  INT_A1IE(alarm1 interrupt enable),
+> +  INT_A2IE(alarm2 interrupt enable),
+> +  INT_TSRIE(timestamp register interrupt enable)
+> +  INT_BSIE(battery switch interrupt enable),
+> +  INT_WDIE(WatchDog interrupt enable,and
+> +  compose these values such as: INT_A1IE | INT_A2IE,
+> +  but currently only support INT_A1IE, default value is INT_A1IE.
+> +  The property and property nxp,rtc-interrupt-output-pin
+> +  work together to generate some interrupts on some pins.
 > +
->  config SND_SOC_FSL_AUDMIX
->  	tristate "Audio Mixer (AUDMIX) module support"
->  	select REGMAP_MMIO
-> diff --git a/sound/soc/fsl/Makefile b/sound/soc/fsl/Makefile
-> index c0dd04422fe9..8cde88c72d93 100644
-> --- a/sound/soc/fsl/Makefile
-> +++ b/sound/soc/fsl/Makefile
-> @@ -23,6 +23,7 @@ snd-soc-fsl-esai-objs := fsl_esai.o
->  snd-soc-fsl-micfil-objs := fsl_micfil.o
->  snd-soc-fsl-utils-objs := fsl_utils.o
->  snd-soc-fsl-dma-objs := fsl_dma.o
-> +snd-soc-fsl-mqs-objs := fsl_mqs.o
->  
->  obj-$(CONFIG_SND_SOC_FSL_AUDMIX) += snd-soc-fsl-audmix.o
->  obj-$(CONFIG_SND_SOC_FSL_ASOC_CARD) += snd-soc-fsl-asoc-card.o
-> @@ -33,6 +34,7 @@ obj-$(CONFIG_SND_SOC_FSL_SPDIF) += snd-soc-fsl-spdif.o
->  obj-$(CONFIG_SND_SOC_FSL_ESAI) += snd-soc-fsl-esai.o
->  obj-$(CONFIG_SND_SOC_FSL_MICFIL) += snd-soc-fsl-micfil.o
->  obj-$(CONFIG_SND_SOC_FSL_UTILS) += snd-soc-fsl-utils.o
-> +obj-$(CONFIG_SND_SOC_FSL_MQS) += snd-soc-fsl-mqs.o
->  obj-$(CONFIG_SND_SOC_POWERPC_DMA) += snd-soc-fsl-dma.o
->  
->  # MPC5200 Platform Support
-> diff --git a/sound/soc/fsl/fsl_mqs.c b/sound/soc/fsl/fsl_mqs.c
+> +- nxp,rtc-interrupt-output-pin: The interrupt output pin must be
+> +  "INTA" or "INTB", default value is "INTA". The property and property
+> +  nxp,rtc-interrupt-type work together to generate some interrupts on
+> +  some pins.
+> +
+> +- quartz-load-femtofarads: The internal capacitor to select for the quartz,
+> +  expressed in femto Farad (fF). Valid values are 6000, 7000 and 12500.
+> +  Default value is 12500fF.
+> +
+> +- nxp,quartz-drive-strength: Drive strength for the quartz,
+> +  expressed in kilo ohms (kOhm) Valid values are 60, 100 and 500.
+> +  Default value is 100kOhm.
+
+This needs a unit as defined in property-units.txt.
+
+> +
+> +- nxp,quartz-low-jitter: Boolean property, if present enables low jitter mode
+> +  which reduces jitter at the cost of increased power consumption.
+> +
+> +- wakeup-source: Boolean property, Please refer to
+> +  Documentation/devicetree/bindings/power/wakeup-source.txt
+> +
+>  Example:
+>
+>  pcf85363: pcf85363@51 {
+>         compatible = "nxp,pcf85363";
+>         reg = <0x51>;
+> -};
+>
+> +       interrupt-parent = <&gpio1>;
+> +       interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +       wakeup-source;
+> +       nxp,rtc-interrupt-output-pin = "INTA";
+> +       nxp,rtc-interrupt-type = <INT_A1IE>;
+> +       quartz-load-femtofarads = <12500>;
+> +       nxp,quartz-drive-strength = <60>;
+> +       nxp,quartz-low-jitter;
+> +};
+> diff --git a/include/dt-bindings/rtc/pcf85363.h b/include/dt-bindings/rtc/pcf85363.h
 > new file mode 100644
-> index 000000000000..c1619a553514
+> index 000000000000..6340bf2da8f5
 > --- /dev/null
-> +++ b/sound/soc/fsl/fsl_mqs.c
-> @@ -0,0 +1,333 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// ALSA SoC IMX MQS driver
-> +//
-> +// Copyright (C) 2014-2015 Freescale Semiconductor, Inc.
-> +// Copyright 2019 NXP
+> +++ b/include/dt-bindings/rtc/pcf85363.h
+> @@ -0,0 +1,14 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _DT_BINDINGS_RTC_PCF85363_H
+> +#define _DT_BINDINGS_RTC_PCF85363_H
 > +
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/of.h>
-> +#include <linux/pm.h>
-> +#include <linux/slab.h>
-> +#include <sound/soc.h>
-> +#include <sound/pcm.h>
-> +#include <sound/initval.h>
+> +/* Interrupt type */
+> +#define INT_WDIE       (1 << 0)
+> +#define INT_BSIE       (1 << 1)
+> +#define INT_TSRIE      (1 << 2)
+> +#define INT_A2IE       (1 << 3)
+> +#define INT_A1IE       (1 << 4)
+> +#define INT_OIE                (1 << 5)
+> +#define INT_PIE                (1 << 6)
 > +
-> +#define REG_MQS_CTRL		0x00
-> +
-> +#define MQS_EN_MASK			(0x1 << 28)
-> +#define MQS_EN_SHIFT			(28)
-> +#define MQS_SW_RST_MASK			(0x1 << 24)
-> +#define MQS_SW_RST_SHIFT		(24)
-> +#define MQS_OVERSAMPLE_MASK		(0x1 << 20)
-> +#define MQS_OVERSAMPLE_SHIFT		(20)
-> +#define MQS_CLK_DIV_MASK		(0xFF << 0)
-> +#define MQS_CLK_DIV_SHIFT		(0)
-> +
-> +/* codec private data */
-> +struct fsl_mqs {
-> +	struct regmap *regmap;
-> +	struct clk *mclk;
-> +	struct clk *ipg;
-> +
-> +	unsigned int reg_iomuxc_gpr2;
-> +	unsigned int reg_mqs_ctrl;
-> +	bool use_gpr;
-> +};
-> +
-> +#define FSL_MQS_RATES	(SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_48000)
-> +#define FSL_MQS_FORMATS	SNDRV_PCM_FMTBIT_S16_LE
-> +
-> +static int fsl_mqs_hw_params(struct snd_pcm_substream *substream,
-> +			     struct snd_pcm_hw_params *params,
-> +			     struct snd_soc_dai *dai)
-> +{
-> +	struct snd_soc_component *component = dai->component;
-> +	struct fsl_mqs *mqs_priv = snd_soc_component_get_drvdata(component);
-> +	unsigned long mclk_rate;
-> +	int div, res;
-> +	int bclk, lrclk;
-> +
-> +	mclk_rate = clk_get_rate(mqs_priv->mclk);
-> +	bclk = snd_soc_params_to_bclk(params);
-> +	lrclk = params_rate(params);
-> +
-> +	/*
-> +	 * mclk_rate / (oversample(32,64) * FS * 2 * divider ) = repeat_rate;
-> +	 * if repeat_rate is 8, mqs can achieve better quality.
-> +	 * oversample rate is fix to 32 currently.
-> +	 */
-> +	div = mclk_rate / (32 * lrclk * 2 * 8);
-> +	res = mclk_rate % (32 * lrclk * 2 * 8);
-> +
-> +	if (res == 0 && div > 0 && div <= 256) {
-> +		if (mqs_priv->use_gpr) {
-> +			regmap_update_bits(mqs_priv->regmap, IOMUXC_GPR2,
-> +					   IMX6SX_GPR2_MQS_CLK_DIV_MASK,
-> +					   (div - 1) << IMX6SX_GPR2_MQS_CLK_DIV_SHIFT);
-> +			regmap_update_bits(mqs_priv->regmap, IOMUXC_GPR2,
-> +					   IMX6SX_GPR2_MQS_OVERSAMPLE_MASK, 0);
-> +		} else {
-> +			regmap_update_bits(mqs_priv->regmap, REG_MQS_CTRL,
-> +					   MQS_CLK_DIV_MASK,
-> +					   (div - 1) << MQS_CLK_DIV_SHIFT);
-> +			regmap_update_bits(mqs_priv->regmap, REG_MQS_CTRL,
-> +					   MQS_OVERSAMPLE_MASK, 0);
-> +		}
-> +	} else {
-> +		dev_err(component->dev, "can't get proper divider\n");
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int fsl_mqs_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
-> +{
-> +	/* Only LEFT_J & SLAVE mode is supported. */
-> +	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-> +	case SND_SOC_DAIFMT_LEFT_J:
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
-> +	case SND_SOC_DAIFMT_NB_NF:
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-> +	case SND_SOC_DAIFMT_CBS_CFS:
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int fsl_mqs_startup(struct snd_pcm_substream *substream,
-> +			   struct snd_soc_dai *dai)
-> +{
-> +	struct snd_soc_component *component = dai->component;
-> +	struct fsl_mqs *mqs_priv = snd_soc_component_get_drvdata(component);
-> +
-> +	if (mqs_priv->use_gpr)
-> +		regmap_update_bits(mqs_priv->regmap, IOMUXC_GPR2,
-> +				   IMX6SX_GPR2_MQS_EN_MASK,
-> +				   1 << IMX6SX_GPR2_MQS_EN_SHIFT);
-> +	else
-> +		regmap_update_bits(mqs_priv->regmap, REG_MQS_CTRL,
-> +				   MQS_EN_MASK,
-> +				   1 << MQS_EN_SHIFT);
-> +	return 0;
-> +}
-> +
-> +static void fsl_mqs_shutdown(struct snd_pcm_substream *substream,
-> +			     struct snd_soc_dai *dai)
-> +{
-> +	struct snd_soc_component *component = dai->component;
-> +	struct fsl_mqs *mqs_priv = snd_soc_component_get_drvdata(component);
-> +
-> +	if (mqs_priv->use_gpr)
-> +		regmap_update_bits(mqs_priv->regmap, IOMUXC_GPR2,
-> +				   IMX6SX_GPR2_MQS_EN_MASK, 0);
-> +	else
-> +		regmap_update_bits(mqs_priv->regmap, REG_MQS_CTRL,
-> +				   MQS_EN_MASK, 0);
-> +}
-> +
-> +const static struct snd_soc_component_driver soc_codec_fsl_mqs = {
-> +	.idle_bias_on = 1,
-> +	.non_legacy_dai_naming	= 1,
-> +};
-> +
-> +static const struct snd_soc_dai_ops fsl_mqs_dai_ops = {
-> +	.startup = fsl_mqs_startup,
-> +	.shutdown = fsl_mqs_shutdown,
-> +	.hw_params = fsl_mqs_hw_params,
-> +	.set_fmt = fsl_mqs_set_dai_fmt,
-> +};
-> +
-> +static struct snd_soc_dai_driver fsl_mqs_dai = {
-> +	.name		= "fsl-mqs-dai",
-> +	.playback	= {
-> +		.stream_name	= "Playback",
-> +		.channels_min	= 2,
-> +		.channels_max	= 2,
-> +		.rates		= FSL_MQS_RATES,
-> +		.formats	= FSL_MQS_FORMATS,
-> +	},
-> +	.ops = &fsl_mqs_dai_ops,
-> +};
-> +
-> +static const struct regmap_config fsl_mqs_regmap_config = {
-> +	.reg_bits = 32,
-> +	.reg_stride = 4,
-> +	.val_bits = 32,
-> +	.max_register = REG_MQS_CTRL,
-> +	.cache_type = REGCACHE_NONE,
-> +};
-> +
-> +static int fsl_mqs_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct device_node *gpr_np = 0;
-> +	struct fsl_mqs *mqs_priv;
-> +	void __iomem *regs;
-> +	int ret = 0;
-> +
-> +	mqs_priv = devm_kzalloc(&pdev->dev, sizeof(*mqs_priv), GFP_KERNEL);
-> +	if (!mqs_priv)
-> +		return -ENOMEM;
-> +
-> +	/* On i.MX6sx the MQS control register is in GPR domain
-> +	 * But in i.MX8QM/i.MX8QXP the control register is moved
-> +	 * to its own domain.
-> +	 */
-> +	if (of_device_is_compatible(np, "fsl,imx8qm-mqs"))
-> +		mqs_priv->use_gpr = false;
-> +	else
-> +		mqs_priv->use_gpr = true;
-> +
-> +	if (mqs_priv->use_gpr) {
-> +		gpr_np = of_parse_phandle(np, "gpr", 0);
-> +		if (IS_ERR(gpr_np)) {
-> +			dev_err(&pdev->dev, "failed to get gpr node by phandle\n");
-> +			ret = PTR_ERR(gpr_np);
-> +			goto out;
-> +		}
-> +
-> +		mqs_priv->regmap = syscon_node_to_regmap(gpr_np);
-> +		if (IS_ERR(mqs_priv->regmap)) {
-> +			dev_err(&pdev->dev, "failed to get gpr regmap\n");
-> +			ret = PTR_ERR(mqs_priv->regmap);
-> +			goto out;
-> +		}
-> +	} else {
-> +		regs = devm_platform_ioremap_resource(pdev, 0);
-> +		if (IS_ERR(regs))
-> +			return PTR_ERR(regs);
-> +
-> +		mqs_priv->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
-> +							     "core",
-> +							     regs,
-> +							     &fsl_mqs_regmap_config);
-> +		if (IS_ERR(mqs_priv->regmap)) {
-> +			dev_err(&pdev->dev, "failed to init regmap: %ld\n",
-> +				PTR_ERR(mqs_priv->regmap));
-> +			return PTR_ERR(mqs_priv->regmap);
-> +		}
-> +
-> +		mqs_priv->ipg = devm_clk_get(&pdev->dev, "core");
-> +		if (IS_ERR(mqs_priv->ipg)) {
-> +			dev_err(&pdev->dev, "failed to get the clock: %ld\n",
-> +				PTR_ERR(mqs_priv->ipg));
-> +			goto out;
-> +		}
-> +	}
-> +
-> +	mqs_priv->mclk = devm_clk_get(&pdev->dev, "mclk");
-> +	if (IS_ERR(mqs_priv->mclk)) {
-> +		dev_err(&pdev->dev, "failed to get the clock: %ld\n",
-> +			PTR_ERR(mqs_priv->mclk));
-> +		goto out;
-> +	}
-> +
-> +	dev_set_drvdata(&pdev->dev, mqs_priv);
-> +	pm_runtime_enable(&pdev->dev);
-> +
-> +	return devm_snd_soc_register_component(&pdev->dev, &soc_codec_fsl_mqs,
-> +			&fsl_mqs_dai, 1);
-> +out:
-> +	if (!IS_ERR(gpr_np))
-> +		of_node_put(gpr_np);
-> +
-> +	return ret;
-> +}
-> +
-> +static int fsl_mqs_remove(struct platform_device *pdev)
-> +{
-> +	pm_runtime_disable(&pdev->dev);
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM
-> +static int fsl_mqs_runtime_resume(struct device *dev)
-> +{
-> +	struct fsl_mqs *mqs_priv = dev_get_drvdata(dev);
-> +
-> +	if (mqs_priv->ipg)
-> +		clk_prepare_enable(mqs_priv->ipg);
-> +
-> +	if (mqs_priv->mclk)
-> +		clk_prepare_enable(mqs_priv->mclk);
-> +
-> +	if (mqs_priv->use_gpr)
-> +		regmap_write(mqs_priv->regmap, IOMUXC_GPR2,
-> +			     mqs_priv->reg_iomuxc_gpr2);
-> +	else
-> +		regmap_write(mqs_priv->regmap, REG_MQS_CTRL,
-> +			     mqs_priv->reg_mqs_ctrl);
-> +	return 0;
-> +}
-> +
-> +static int fsl_mqs_runtime_suspend(struct device *dev)
-> +{
-> +	struct fsl_mqs *mqs_priv = dev_get_drvdata(dev);
-> +
-> +	if (mqs_priv->use_gpr)
-> +		regmap_read(mqs_priv->regmap, IOMUXC_GPR2,
-> +			    &mqs_priv->reg_iomuxc_gpr2);
-> +	else
-> +		regmap_read(mqs_priv->regmap, REG_MQS_CTRL,
-> +			    &mqs_priv->reg_mqs_ctrl);
-> +
-> +	if (mqs_priv->mclk)
-> +		clk_disable_unprepare(mqs_priv->mclk);
-> +
-> +	if (mqs_priv->ipg)
-> +		clk_disable_unprepare(mqs_priv->ipg);
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
-> +static const struct dev_pm_ops fsl_mqs_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(fsl_mqs_runtime_suspend,
-> +			   fsl_mqs_runtime_resume,
-> +			   NULL)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
-> +};
-> +
-> +static const struct of_device_id fsl_mqs_dt_ids[] = {
-> +	{ .compatible = "fsl,imx8qm-mqs", },
-> +	{ .compatible = "fsl,imx6sx-mqs", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, fsl_mqs_dt_ids);
-> +
-> +static struct platform_driver fsl_mqs_driver = {
-> +	.probe		= fsl_mqs_probe,
-> +	.remove		= fsl_mqs_remove,
-> +	.driver		= {
-> +		.name	= "fsl-mqs",
-> +		.of_match_table = fsl_mqs_dt_ids,
-> +		.pm = &fsl_mqs_pm_ops,
-> +	},
-> +};
-> +
-> +module_platform_driver(fsl_mqs_driver);
-> +
-> +MODULE_AUTHOR("Shengjiu Wang <Shengjiu.Wang@nxp.com>");
-> +MODULE_DESCRIPTION("MQS codec driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform: fsl-mqs");
-> -- 
-> 2.21.0
-> 
+> +#endif /* _DT_BINDINGS_RTC_PCF85363_H */
+> --
+> 2.17.1
+>
