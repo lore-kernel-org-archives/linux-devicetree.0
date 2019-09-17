@@ -1,43 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFCv4 3/7] dt-bindings: devfreq: imx: Describe interconnect
- properties
-Date: Tue, 17 Sep 2019 15:19:56 -0500
-Message-ID: <20190917201956.GA10780@bogus>
-References: <cover.1566570260.git.leonard.crestez@nxp.com>
- <3f27038292c09c8bf07a086eac759132c100aedb.1566570260.git.leonard.crestez@nxp.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
+ for LGM SDXC PHY
+Date: Tue, 17 Sep 2019 15:24:10 -0500
+Message-ID: <20190917202410.GA6574@bogus>
+References: <20190904062719.37462-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3f27038292c09c8bf07a086eac759132c100aedb.1566570260.git.leonard.crestez@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Artur =?utf-8?B?xZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>, linux-arm-kernel@lists.infradead.org, Saravana Kannan <saravanak@google.com>, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, kernel@pengutronix.de, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, devicetree@vger.kernel.org, linux-imx@nxp.com
+In-Reply-To: <20190904062719.37462-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc: kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 05:36:56PM +0300, Leonard Crestez wrote:
-> The interconnect-node-id property is parsed by the imx interconnect
-> driver to find nodes on which frequencies can be adjusted.
+On Wed, Sep 04, 2019 at 02:27:18PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > 
-> Add #interconnect-cells so that device drivers can request paths from
-> bus nodes instead of requiring a separate "virtual" node to represent
-> the interconnect itself.
+> Add a YAML schema to use the host controller driver with the
+> SDXC PHY on Intel's Lightning Mountain SoC.
+
+Same issues on this one as emmc phy.
+
 > 
-> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > ---
->  Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml | 5 +++++
->  Documentation/devicetree/bindings/devfreq/imx.yaml      | 5 +++++
->  2 files changed, 10 insertions(+)
-
-Please combine this with the other series for devfreq support.
-
-Rob
+>  changes in v3:
+>    - Rob's review comments addressed and updated the patch
+>    - merged syscon and sdxc yaml file as single file after discussion
+> 
+>  changes in v2:
+>    - As per Rob's review comment syscon node entry added instead of reference
+>    - splitted two patches one for syscon and another for sdxc phy
+> ---
+>  .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 69 ++++++++++++++++++++++
+>  1 file changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
