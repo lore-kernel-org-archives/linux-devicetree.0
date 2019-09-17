@@ -1,99 +1,36 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [v4,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
-Date: Tue, 17 Sep 2019 10:45:04 +0200
-Message-ID: <20190917084504.GD21254@piout.net>
-References: <20190910104247.13142-1-biwen.li@nxp.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 11/13] dt-bindings: document PX30 usb2phy General Register Files
+Date: Tue, 17 Sep 2019 10:26:57 +0200
+Message-ID: <20190917082659.25549-11-heiko@sntech.de>
+References: <20190917082659.25549-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190910104247.13142-1-biwen.li@nxp.com>
+In-Reply-To: <20190917082659.25549-1-heiko@sntech.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Biwen Li <biwen.li@nxp.com>
-Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com, linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Martin Fuzzey <mfuzzey@parkeon.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-rockchip@lists.infradead.org, christoph.muellner@theobroma-systems.com, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2019 18:42:46+0800, Biwen Li wrote:
-> Add some properties for pcf85263/pcf85363 as follows:
->   - nxp,rtc-interrupt-type: integer type
->   - nxp,rtc-interrupt-output-pin: string type
->   - quartz-load-femtofarads: integer type
->   - nxp,quartz-drive-strength: integer type
->   - nxp,quartz-low-jitter: bool type
->   - wakeup-source: bool type
-> 
-> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
-> Change in v4:
-> 	- Drop robust defines in include/dt-bindings/rtc/pcf85363.h
-> 	- Add nxp,rtc-interrupt-type property
-> 	- Replace interrupt-output-pin with nxp,rtc-interrupt-output-pin
-> 
-> Change in v3:
-> 	- None
-> 
-> Change in v2:
-> 	- Replace properties name
-> 	  quartz-load-capacitance -> quartz-load-femtofarads
-> 	  quartz-drive-strength -> nxp,quartz-drive-strength
-> 	  quartz-low-jitter -> nxp,quartz-low-jitter
-> 	- Replace drive strength name
-> 	  PCF85263_QUARTZDRIVE_NORMAL -> PCF85263_QUARTZDRIVE_100ko
-> 	  PCF85263_QUARTZDRIVE_LOW -> PCF85263_QUARTZDRIVE_60ko
-> 	  PCF85263_QUARTZDRIVE_HIGH -> PCF85263_QUARTZDRIVE_500ko
-> 	- Set default interrupt-output-pin as "INTA"
-> 
->  .../devicetree/bindings/rtc/pcf85363.txt      | 44 ++++++++++++++++++-
->  include/dt-bindings/rtc/pcf85363.h            | 14 ++++++
->  2 files changed, 57 insertions(+), 1 deletion(-)
->  create mode 100644 include/dt-bindings/rtc/pcf85363.h
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> index 94adc1cf93d9..fc1579463657 100644
-> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> @@ -8,10 +8,52 @@ Required properties:
->  Optional properties:
->  - interrupts: IRQ line for the RTC (not implemented).
->  
-> +- nxp,rtc-interrupt-type: integer property, represent the interrupt's
-> +  type. Valid values are
-> +  INT_PIE(periodic interrupt enable),
-> +  INT_OIE(offset correction interrupt enable),
-> +  INT_A1IE(alarm1 interrupt enable),
-> +  INT_A2IE(alarm2 interrupt enable),
-> +  INT_TSRIE(timestamp register interrupt enable)
-> +  INT_BSIE(battery switch interrupt enable),
-> +  INT_WDIE(WatchDog interrupt enable,and
-> +  compose these values such as: INT_A1IE | INT_A2IE,
-> +  but currently only support INT_A1IE, default value is INT_A1IE.
-> +  The property and property nxp,rtc-interrupt-output-pin
-> +  work together to generate some interrupts on some pins.
-> +
-> +- nxp,rtc-interrupt-output-pin: The interrupt output pin must be
-> +  "INTA" or "INTB", default value is "INTA". The property and property
-> +  nxp,rtc-interrupt-type work together to generate some interrupts on
-> +  some pins.
-> +
+One of the separate General Register Files contains the registers for
+controlling the usb2phy, so add the necessary binding compatible for it.
 
-This binding still doesn't work because there may be any combination of
-interrupts on any of the two pins that this binding doesn't allow.
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ Documentation/devicetree/bindings/soc/rockchip/grf.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +- quartz-load-femtofarads: The internal capacitor to select for the quartz,
-> +  expressed in femto Farad (fF). Valid values are 6000, 7000 and 12500.
-> +  Default value is 12500fF.
-> +
-> +- nxp,quartz-drive-strength: Drive strength for the quartz,
-> +  expressed in kilo ohms (kOhm) Valid values are 60, 100 and 500.
-> +  Default value is 100kOhm.
-> +
-
-It makes more sense to have quartz-drive-strength-ohms as a generic
-property.
-
-
+diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.txt b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
+index 46e27cd69f18..d7debec26ba4 100644
+--- a/Documentation/devicetree/bindings/soc/rockchip/grf.txt
++++ b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
+@@ -30,6 +30,7 @@ Required Properties:
+ - compatible: SGRF should be one of the following
+    - "rockchip,rk3288-sgrf", "syscon": for rk3288
+ - compatible: USB2PHYGRF should be one of the followings
++   - "rockchip,px30-usb2phy-grf", "syscon": for px30
+    - "rockchip,rk3328-usb2phy-grf", "syscon": for rk3328
+ - compatible: USBGRF should be one of the following
+    - "rockchip,rv1108-usbgrf", "syscon": for rv1108
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.20.1
