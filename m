@@ -1,53 +1,244 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] ASoC: dt-bindings: Convert Allwinner A23 analog
- codec to a schema
-Date: Tue, 17 Sep 2019 14:02:14 -0500
-Message-ID: <20190917190214.GA8947@bogus>
-References: <20190906151221.3148-1-mripard@kernel.org>
- <20190906151221.3148-2-mripard@kernel.org>
+Subject: Re: [PATCH v3 07/15] dt-bindings: thermal: tsens: Convert over to a
+ yaml schema
+Date: Tue, 17 Sep 2019 14:06:19 -0500
+Message-ID: <20190917190619.GA9311@bogus>
+References: <cover.1568185732.git.amit.kucheria@linaro.org>
+ <933f033298cbd7726a6c0b4b3b6cc7adc81784ba.1568185732.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190906151221.3148-2-mripard@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <933f033298cbd7726a6c0b4b3b6cc7adc81784ba.1568185732.git.amit.kucheria@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org, masneyb@onstation.org, swboyd@chromium.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  6 Sep 2019 18:12:21 +0300, Maxime Ripard wrote:
-> From: Maxime Ripard <maxime.ripard@bootlin.com>
+On Wed, Sep 11, 2019 at 12:46:24PM +0530, Amit Kucheria wrote:
+> Document interrupt support in the tsens driver by converting over to a
+> YAML schema.
 > 
-> The Allwinner A23 SoC and later have an embedded audio codec that uses a
-> separate controller to drive its analog part, which is supported in Linux,
-> with a matching Device Tree binding.
-> 
-> Now that we have the DT validation in place, let's convert the device tree
-> bindings for that controller over to a YAML schemas.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> 
+> Suggested-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 > ---
-> 
-> Changes from v2:
->   - Use an enum instead of a oneOf for the compatibles
-> 
-> Changes from v1:
->   - Fix subject prefix
-> ---
->  .../allwinner,sun8i-a23-codec-analog.yaml     | 38 +++++++++++++++++++
->  .../bindings/sound/sun8i-codec-analog.txt     | 17 ---------
->  2 files changed, 38 insertions(+), 17 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/allwinner,sun8i-a23-codec-analog.yaml
->  delete mode 100644 Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
-> 
+>  .../bindings/thermal/qcom-tsens.txt           |  55 ------
+>  .../bindings/thermal/qcom-tsens.yaml          | 174 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  3 files changed, 175 insertions(+), 55 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+>  create mode 100644 Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> new file mode 100644
+> index 000000000000..6784766fe58f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> @@ -0,0 +1,174 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> +# Copyright 2019 Linaro Ltd.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/qcom-tsens.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: QCOM SoC Temperature Sensor (TSENS)
+> +
+> +maintainers:
+> +  - Amit Kucheria <amit.kucheria@linaro.org>
+> +
+> +description: |
+> +  QCOM SoCs have TSENS IP to allow temperature measurement. There are currently
+> +  three distinct major versions of the IP that is supported by a single driver.
+> +  The IP versions are named v0.1, v1 and v2 in the driver, where v0.1 captures
+> +  everything before v1 when there was no versioning information.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - description: v0.1 of TSENS
+> +        items:
+> +          - enum:
+> +              - qcom,msm8916-tsens
+> +              - qcom,msm8974-tsens
+> +          - const: qcom,tsens-v0_1
+> +
+> +      - description: v1 of TSENS
+> +        items:
+> +          - enum:
+> +              - qcom,qcs404-tsens
+> +          - const: qcom,tsens-v1
+> +
+> +      - description: v2 of TSENS
+> +        items:
+> +          - enum:
+> +              - qcom,msm8996-tsens
+> +              - qcom,msm8998-tsens
+> +              - qcom,sdm845-tsens
+> +          - const: qcom,tsens-v2
+> +
+> +  reg:
+> +    maxItems: 2
+> +    items:
+> +      - description: TM registers
+> +      - description: SROT registers
+> +
+> +  nvmem-cells:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description:
+> +      Reference to an nvmem node for the calibration data
+> +
+> +  nvmem-cells-names:
+
+This is going to require 2 items, so you need an explicit minItems and 
+maxItems.
+
+> +    items:
+> +      - enum:
+> +        - caldata
+> +        - calsel
+> +
+> +  "#qcom,sensors":
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 1
+> +      - maximum: 16
+> +    description:
+> +      Number of sensors enabled on this platform
+> +
+> +  "#thermal-sensor-cells":
+> +    const: 1
+> +    description:
+> +      Number of cells required to uniquely identify the thermal sensors. Since
+> +      we have multiple sensors this is set to 1
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,msm8916-tsens
+> +              - qcom,msm8974-tsens
+> +              - qcom,qcs404-tsens
+> +              - qcom,tsens-v0_1
+> +              - qcom,tsens-v1
+> +    then:
+> +      properties:
+> +        interrupts:
+
+> +          minItems: 1
+> +          maxItems: 1
+
+These can be implicit.
+
+> +          items:
+> +            - description: Combined interrupt if upper or lower threshold crossed
+> +        interrupt-names:
+> +          minItems: 1
+> +          maxItems: 1
+
+ditto.
+
+> +          items:
+> +            - const: uplow
+> +
+> +    else:
+> +      properties:
+> +        interrupts:
+> +          minItems: 2
+> +          maxItems: 2
+
+ditto.
+
+> +          items:
+> +            - description: Combined interrupt if upper or lower threshold crossed
+> +            - description: Interrupt if critical threshold crossed
+> +        interrupt-names:
+> +          minItems: 2
+> +          maxItems: 2
+
+ditto.
+
+> +          items:
+> +            - const: uplow
+> +            - const: critical
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#qcom,sensors"
+> +  - interrupts
+> +  - interrupt-names
+> +  - "#thermal-sensor-cells"
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    // Example 1 (legacy: for pre v1 IP):
+> +    tsens1: thermal-sensor@900000 {
+> +           compatible = "qcom,msm8916-tsens", "qcom,tsens-v0_1";
+> +           reg = <0x4a9000 0x1000>, /* TM */
+> +                 <0x4a8000 0x1000>; /* SROT */
+> +
+> +           nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
+> +           nvmem-cell-names = "caldata", "calsel";
+> +
+> +           interrupts = <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
+> +           interrupt-names = "uplow";
+> +
+> +           #qcom,sensors = <5>;
+> +           #thermal-sensor-cells = <1>;
+> +    };
+> +
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    // Example 2 (for any platform containing v1 of the TSENS IP):
+> +    tsens2: thermal-sensor@4a9000 {
+> +          compatible = "qcom,qcs404-tsens", "qcom,tsens-v1";
+> +          reg = <0x004a9000 0x1000>, /* TM */
+> +                <0x004a8000 0x1000>; /* SROT */
+> +
+> +          nvmem-cells = <&tsens_caldata>;
+> +          nvmem-cell-names = "calib";
+> +
+> +          interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>;
+> +          interrupt-names = "uplow";
+> +
+> +          #qcom,sensors = <10>;
+> +          #thermal-sensor-cells = <1>;
+> +    };
+> +
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    // Example 3 (for any platform containing v2 of the TSENS IP):
+> +    tsens3: thermal-sensor@c263000 {
+> +           compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+> +           reg = <0xc263000 0x1ff>,
+> +                 <0xc222000 0x1ff>;
+> +
+> +           interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
+> +                        <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
+> +           interrupt-names = "uplow", "critical";
+> +
+> +           #qcom,sensors = <13>;
+> +           #thermal-sensor-cells = <1>;
+> +    };
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e7a47b5210fd..ff757a4a060c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13360,6 +13360,7 @@ L:	linux-pm@vger.kernel.org
+>  L:	linux-arm-msm@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/thermal/qcom/
+> +F:	Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+>  
+>  QUALCOMM VENUS VIDEO ACCELERATOR DRIVER
+>  M:	Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> -- 
+> 2.17.1
+> 
