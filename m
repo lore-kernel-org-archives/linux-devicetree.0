@@ -1,33 +1,36 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v3 0/8] OMAP3: convert opp-v1 to opp-v2 and read speed binned / 720MHz grade bits
-Date: Tue, 17 Sep 2019 16:35:22 +0200
-Message-ID: <DAF6ACB4-AD7E-4528-9F4B-C54104B5E260@goldelico.com>
-References: <cover.1568224032.git.hns@goldelico.com> <20190916162816.GF52127@atomide.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RESEND V5 1/5] dt-bindings: fsl: scu: add scu key binding
+Date: Tue, 17 Sep 2019 09:37:16 -0500
+Message-ID: <20190917143716.GA23562@bogus>
+References: <1568689939-8871-1-git-send-email-Anson.Huang@nxp.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190916162816.GF52127@atomide.com>
+Content-Disposition: inline
+In-Reply-To: <1568689939-8871-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Roger Quadros <rogerq@ti.com>, Teresa Remmet <t.remmet@phytec.de>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, linux-arm-kernel@lists.infradead.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com, will@kernel.org, dmitry.torokhov@gmail.com, aisheng.dong@nxp.com, ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com, leonard.crestez@nxp.com, daniel.baluta@nxp.com, olof@lixom.net, mripard@kernel.org, arnd@arndb.de, jagan@amarulasolutions.com, dinguyen@kernel.org, bjorn.andersson@linaro.org, marcin.juszkiewicz@linaro.org, andriy.shevchenko@linux.intel.com, yuehaibing@huawei.com, cw00.choi@samsung.com, enric.balletbo@collabora.com, m.felsch@pengutronix.de, ping.bai@nxp.com, ronald@innovation.ch, stefan@agner.ch, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
-
-> Am 16.09.2019 um 18:28 schrieb Tony Lindgren <tony@atomide.com>:
+On Tue, 17 Sep 2019 11:12:15 +0800, Anson Huang wrote:
+> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+> system controller, the system controller is in charge of system
+> power, clock and scu key event etc. management, Linux kernel has
+> to communicate with system controller via MU (message unit) IPC
+> to get scu key event, add binding doc for i.MX system controller
+> key driver.
 > 
-> * H. Nikolaus Schaller <hns@goldelico.com> [190911 17:48]:
->> CHANGES V3:
->> * make omap36xx control the abb-ldo and properly switch mode
->>  (suggested by Adam Ford <aford173@gmail.com>)
->> * add a note about enabling the turbo-mode OPPs
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No changes.
+> ---
+>  .../devicetree/bindings/arm/freescale/fsl,scu.txt          | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> Looks good to me, when applying, please provide a
-> minimal immutable branch maybe against v5.3 or v5.4-rc1,
-> that I can also merge in if needed for the dts changes.
 
-Should I resend a v4 with your Acked-By added?
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-BR and thanks,
-Nikolaus
+If a tag was not added on purpose, please state why and what changed.
