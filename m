@@ -1,37 +1,55 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 5/8] cpufreq: ti-cpufreq: omap36xx use "cpu0","vbb" if
- run in multi_regulator mode
-Date: Tue, 17 Sep 2019 14:22:47 -0500
-Message-ID: <20190917192247.GA7233@bogus>
-References: <cover.1568224032.git.hns@goldelico.com>
- <1c803be8060fb99b7d92e2f5cde3c0e1962fbe2b.1568224033.git.hns@goldelico.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v6 0/3] coresight: etm4x: save/restore ETMv4 context
+ across CPU low power states
+Date: Tue, 17 Sep 2019 13:37:10 -0600
+Message-ID: <CANLsYkzhB3OBpLTAR54p771OSLxj+NYF8_kE=aMp7SkdNzaxwA@mail.gmail.com>
+References: <20190913115312.12943-1-andrew.murray@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1c803be8060fb99b7d92e2f5cde3c0e1962fbe2b.1568224033.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Adam Ford <aford173@gmail.com>, =?iso-8859-1?Q?Andr=E9?= Roth <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Roger Quadros <rogerq@ti.com>, Teresa Remmet <t.remmet@phytec.de>, "H. Nikolaus Schaller" <hns@goldelico.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190913115312.12943-1-andrew.murray@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Murray <andrew.murray@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Al Grant <Al.Grant@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Coresight ML <coresight@lists.linaro.org>, Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mike Leach <mike.leach@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Sep 2019 19:47:11 +0200, "H. Nikolaus Schaller" wrote:
-> In preparation for using the multi_regulator capability of
-> this driver for handling the ABB LDO for OPP1G of the omap36xx
-> we have to take care that the (legacy) vdd-supply name is
-> cpu0-supply = <&vcc>;
-> 
-> To do this we add another field to the SoC description table which
-> optionally can specify a list of regulator names.
-> 
-> For omap36xx we define "cpu0-supply" and "vbb-supply".
-> 
-> The default remains "vdd-supply" and "vbb-supply".
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> ---
->  .../devicetree/bindings/cpufreq/ti-cpufreq.txt       |  6 +++++-
->  drivers/cpufreq/ti-cpufreq.c                         | 12 ++++++++++--
->  2 files changed, 15 insertions(+), 3 deletions(-)
-> 
+Hi Andrew,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On Fri, 13 Sep 2019 at 05:53, Andrew Murray <andrew.murray@arm.com> wrote:
+
+[...]
+
+>
+> Andrew Murray (3):
+>   coresight: etm4x: save/restore state across CPU low power states
+>   dt-bindings: arm: coresight: Add support for
+>     coresight-loses-context-with-cpu
+
+I have picked-up patches 1 and 2.  As per the conversation we had in
+Cambridge where we kept finding ways to break things when dealing with
+an external agent, I have not applied the 3 patch.
+
+Thanks,
+Mathieu
+
+>   coresight: etm4x: save/restore state for external agents
+>
+>  .../devicetree/bindings/arm/coresight.txt     |   9 +
+>  drivers/hwtracing/coresight/coresight-etm4x.c | 351 +++++++++++++++++-
+>  drivers/hwtracing/coresight/coresight-etm4x.h |  64 ++++
+>  drivers/hwtracing/coresight/coresight.c       |   8 +-
+>  include/linux/coresight.h                     |  13 +
+>  5 files changed, 443 insertions(+), 2 deletions(-)
+>
+> --
+> 2.21.0
+>
