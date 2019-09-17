@@ -1,33 +1,34 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: sound: Convert Samsung SMDK audio complex
-Date: Tue, 17 Sep 2019 09:15:16 -0500
-Message-ID: <CAL_JsqLwkVQ6VFYtUfOErA8vG2qnE+nquo_m5s0zLRqgn+bJLg@mail.gmail.com>
-References: <CGME20190917120634eucas1p20addfc4e369468561714f3c44d3d8bf5@eucas1p2.samsung.com>
- <20190917111413.22711-1-m.falkowski@samsung.com> <20190917120627.28357-1-m.falkowski@samsung.com>
+Subject: Re: [PATCH] dt-bindings: arm: rockchip: fix Theobroma-System board bindings
+Date: Tue, 17 Sep 2019 09:16:49 -0500
+Message-ID: <CAL_Jsq+OkHMEzx3goQoUt9xvfuGLbu4v7VD5y6wqrNYp96-z7g@mail.gmail.com>
+References: <20190917083453.25744-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190917120627.28357-1-m.falkowski@samsung.com>
+In-Reply-To: <20190917083453.25744-1-heiko@sntech.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Falkowski <m.falkowski@samsung.com>
-Cc: Linux-ALSA <alsa-devel@alsa-project.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Christoph Muellner <christoph.muellner@theobroma-systems.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 7:06 AM Maciej Falkowski
-<m.falkowski@samsung.com> wrote:
+On Tue, Sep 17, 2019 at 3:35 AM Heiko Stuebner <heiko@sntech.de> wrote:
 >
-> Convert Samsung SMDK audio complex to newer dt-schema format.
+> The naming convention for the existing Theobroma boards is
+> soc-q7module-baseboard, so rk3399-puma-haikou and the in-kernel
+> devicetrees also follow that scheme.
 >
-> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> For some reason in the binding a wrong or outdated naming slipped
+> in which does not match the used devicetrees and makes the dt-schema
+> complain now.
+>
+> Fix this by using the names used in the wild by actual boards.
+
+Perhaps a Fixes tag.
+
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 > ---
-> v2:
-> - Added missing Signed-off-by certificate
-> ---
->  .../bindings/sound/samsung,smdk-wm8994.txt    | 14 -------
->  .../bindings/sound/samsung,smdk-wm8994.yaml   | 38 +++++++++++++++++++
->  2 files changed, 38 insertions(+), 14 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.yaml
+>  Documentation/devicetree/bindings/arm/rockchip.yaml | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
