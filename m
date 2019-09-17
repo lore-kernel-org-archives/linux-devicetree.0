@@ -1,141 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
- for LGM eMMC PHY
-Date: Tue, 17 Sep 2019 09:23:37 -0500
-Message-ID: <20190917142337.GA27151@bogus>
-References: <20190904055344.25512-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-Mime-Version: 1.0
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Letux-kernel] [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to make display work again
+Date: Tue, 17 Sep 2019 16:26:15 +0200
+Message-ID: <1624298A-C51B-418A-96C3-EA09367A010D@goldelico.com>
+References: <cover.1562597164.git.hns@goldelico.com> <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com> <20190724194259.GA25847@bogus> <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com> <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com> <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com> <20190831084852.5e726cfa@aktux> <ED6A6797-D1F9-473B-ABFF-B6951A924BC1@goldelico.com> <CACRpkdZQgPVvB=78vOFsHe5n45Vwe4N6JJOcm1_vz5FbAw9CYA@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190904055344.25512-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <CACRpkdZQgPVvB=78vOFsHe5n45Vwe4N6JJOcm1_vz5FbAw9CYA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc: kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 01:53:43PM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> Add a YAML schema to use the host controller driver with the
-> eMMC PHY on Intel's Lightning Mountain SoC.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
-> changes in v5:
->   - earlier Review-by tag given by Rob
->   - rework done with syscon parent node.
-> 
-> changes in v4:
->   - As per Rob's review: validate 5.2 and 5.3
->   - drop unrelated items.
-> 
-> changes in v3:
->   - resolve 'make dt_binding_check' warnings
-> 
-> changes in v2:
->   As per Rob Herring review comments, the following updates
->  - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
->  - filename is the compatible string plus .yaml
->  - LGM: Lightning Mountain
->  - update maintainer
->  - add intel,syscon under property list
->  - keep one example instead of two
-> ---
->  .../bindings/phy/intel,lgm-emmc-phy.yaml           | 69 ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-> new file mode 100644
-> index 000000000000..8f6ac8b3da42
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
-> +
-> +maintainers:
-> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> +
-> +description: Bindings for eMMC PHY on Intel's Lightning Mountain SoC, syscon
-> +  node is used to reference the base address of eMMC phy registers.
-> +
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: intel,lgm-syscon
+Hi Lunus,
 
-This, plus...
+> Am 17.09.2019 um 00:52 schrieb Linus Walleij =
+<linus.walleij@linaro.org>:
+>=20
+> On Mon, Sep 16, 2019 at 12:59 PM H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>=20
+>> ping.
+>>=20
+>> Device omap3-gta04 is neither working with v5.3 nor linux-next quite =
+a while and we need a solution.
+>=20
+> Can't we just apply the last part of the patch in this thread:
+>=20
+> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi
+> b/arch/arm/boot/dts/omap3-gta04.dtsi
+> index 9a9a29fe88ec..47bab8e1040e 100644
+> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
+> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+> @@ -124,6 +124,7 @@
+>                        spi-max-frequency =3D <100000>;
+>                        spi-cpol;
+>                        spi-cpha;
+> +                       spi-cs-high;
+>=20
+>                        backlight=3D <&backlight>;
+>                        label =3D "lcd";
+>=20
+>=20
+> Surely this fixes the problem?
 
-> +
-> +    reg:
-> +      maxItems: 1
-> +
-> +  required:
-> +    - compatible
-> +    - reg
-> +
-> +properties:
-> +  "#phy-cells":
-> +    const: 0
-> +
-> +  compatible:
-> +    contains:
-> +      const: intel,lgm-emmc-phy
+yes, it is a workaround, but appears to violate some policies.
+E.g. the spi-cs-high; is undocumented but DT bindings maintainer
+seems to be against documenting it as I had proposed in my
+other patch.
 
-...this should not pass validation as they contradict each other.
+Rather he seems to have proposed a white-list in the driver code.
+So that the legacy mode is only becoming active for those systems
+which really need the legacy mode instead of everyone.
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    maxItems: 1
-> +
-> +required:
-> +  - "#phy-cells"
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +    sysconf: chiptop@e0200000 {
-> +      compatible = "intel,lgm-syscon";
-> +      reg = <0xe0200000 0x100>;
+Then, we do not need this patch for GTA04.
 
-I'm still waiting for a complete description of what all is in this 
-block.
+So its up to you to decide which way to go. We are happy with
+any one that makes mainline work again asap...
 
-> +
-> +      emmc-phy: emmc-phy {
-> +        compatible = "intel,lgm-emmc-phy";
-> +        reg = <0x00a8 0x4>,
-> +              <0x00ac 0x4>,
-> +              <0x00b0 0x4>,
-> +              <0x00b4 0x4>;
-
-Looks contiguous and can be a single entry:
-
-<0xa8 0x10>
-
-> +        clocks = <&emmc>;
-> +        clock-names = "emmcclk";
-> +        #phy-cells = <0>;
-> +      };
-> +    };
-> +...
-> -- 
-> 2.11.0
-> 
+BR and thanks,
+Nikolaus
