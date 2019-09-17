@@ -1,54 +1,33 @@
-From: Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH] ath10k: Fix HOST capability QMI incompatibility
-Date: Tue, 17 Sep 2019 14:03:41 +0000 (UTC)
-Message-ID: <20190917140342.7A30661570@smtp.codeaurora.org>
-References: <20190725063108.15790-1-bjorn.andersson@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: sound: Convert Samsung SMDK audio complex
+Date: Tue, 17 Sep 2019 09:15:16 -0500
+Message-ID: <CAL_JsqLwkVQ6VFYtUfOErA8vG2qnE+nquo_m5s0zLRqgn+bJLg@mail.gmail.com>
+References: <CGME20190917120634eucas1p20addfc4e369468561714f3c44d3d8bf5@eucas1p2.samsung.com>
+ <20190917111413.22711-1-m.falkowski@samsung.com> <20190917120627.28357-1-m.falkowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190725063108.15790-1-bjorn.andersson@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/ath10k>,
- <mailto:ath10k-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/ath10k/>
-List-Post: <mailto:ath10k@lists.infradead.org>
-List-Help: <mailto:ath10k-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/ath10k>,
- <mailto:ath10k-request@lists.infradead.org?subject=subscribe>
-Sender: "ath10k" <ath10k-bounces@lists.infradead.org>
-Errors-To: ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, ath10k@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190917120627.28357-1-m.falkowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maciej Falkowski <m.falkowski@samsung.com>
+Cc: Linux-ALSA <alsa-devel@alsa-project.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
+On Tue, Sep 17, 2019 at 7:06 AM Maciej Falkowski
+<m.falkowski@samsung.com> wrote:
+>
+> Convert Samsung SMDK audio complex to newer dt-schema format.
+>
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> v2:
+> - Added missing Signed-off-by certificate
+> ---
+>  .../bindings/sound/samsung,smdk-wm8994.txt    | 14 -------
+>  .../bindings/sound/samsung,smdk-wm8994.yaml   | 38 +++++++++++++++++++
+>  2 files changed, 38 insertions(+), 14 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.yaml
 
-> The introduction of 768ec4c012ac ("ath10k: update HOST capability QMI
-> message") served the purpose of supporting the new and extended HOST
-> capability QMI message.
-> 
-> But while the new message adds a slew of optional members it changes the
-> data type of the "daemon_support" member, which means that older
-> versions of the firmware will fail to decode the incoming request
-> message.
-> 
-> There is no way to detect this breakage from Linux and there's no way to
-> recover from sending the wrong message (i.e. we can't just try one
-> format and then fallback to the other), so a quirk is introduced in
-> DeviceTree to indicate to the driver that the firmware requires the 8bit
-> version of this message.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 768ec4c012ac ("ath10k: update HOST capability qmi message")
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-
-Patch applied to ath-next branch of ath.git, thanks.
-
-7165ef890a4c ath10k: Fix HOST capability QMI incompatibility
-
--- 
-https://patchwork.kernel.org/patch/11058005/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Reviewed-by: Rob Herring <robh@kernel.org>
