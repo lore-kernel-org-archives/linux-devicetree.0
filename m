@@ -1,136 +1,68 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/3] pinctrl: add compatible for Amlogic Meson A1 pin
- controller
-Date: Tue, 17 Sep 2019 09:18:37 +0200
-Message-ID: <131cf06f-2530-4524-9f86-3c07641bb460@baylibre.com>
-References: <1568700442-18540-1-git-send-email-qianggui.song@amlogic.com>
- <1568700442-18540-2-git-send-email-qianggui.song@amlogic.com>
+From: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+Subject: Re: [PATCH 2/2] dt-bindings: net: dwmac: document 'mac-mode' property
+Date: Tue, 17 Sep 2019 07:21:54 +0000
+Message-ID: <dd3877616b2dee81cf35cfc9f53bbbb47335a357.camel@analog.com>
+References: <20190906130256.10321-1-alexandru.ardelean@analog.com>
+         <20190906130256.10321-2-alexandru.ardelean@analog.com>
+         <5d7ba95d.1c69fb81.dabe4.8057@mx.google.com>
+         <b5065fcfaaf8bcb7bc532a8eb9f54949da838965.camel@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568700442-18540-2-git-send-email-qianggui.song@amlogic.com>
+In-Reply-To: <b5065fcfaaf8bcb7bc532a8eb9f54949da838965.camel@analog.com>
 Content-Language: en-US
+Content-ID: <EE6442B622A669409D675BBBF5ABEFA5@namprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Qianggui Song <qianggui.song@amlogic.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
-Cc: Xingyu Chen <xingyu.chen@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh+dt@kernel.org>, Hanjie Lin <hanjie.lin@amlogic.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: "robh@kernel.org" <robh@kernel.org>
+Cc: "andrew@lunn.ch" <andrew@lunn.ch>, "davem@davemloft.net" <davem@davemloft.net>, "alexandre.torgue@st.com" <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 17/09/2019 08:07, Qianggui Song wrote:
-> Add new compatible name for Amlogic's Meson-A1 pin controller
-> add a dt-binding header file which document the detail pin names.
-
-Please add in the commit log that A1 doesn't need the DS bank reg,
-so when we will convert these bindings to yaml we will be aware of it.
-
-> 
-> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
-> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> ---
->  .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |  1 +
->  include/dt-bindings/gpio/meson-a1-gpio.h           | 73 ++++++++++++++++++++++
->  2 files changed, 74 insertions(+)
->  create mode 100644 include/dt-bindings/gpio/meson-a1-gpio.h
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-> index 10dc4f7..0aff1f2 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-> @@ -15,6 +15,7 @@ Required properties for the root node:
->  		      "amlogic,meson-axg-aobus-pinctrl"
->  		      "amlogic,meson-g12a-periphs-pinctrl"
->  		      "amlogic,meson-g12a-aobus-pinctrl"
-> +		      "amlogic,meson-a1-periphs-pinctrl"
->   - reg: address and size of registers controlling irq functionality
->  
->  === GPIO sub-nodes ===
-> diff --git a/include/dt-bindings/gpio/meson-a1-gpio.h b/include/dt-bindings/gpio/meson-a1-gpio.h
-> new file mode 100644
-> index 0000000..40e57a5
-> --- /dev/null
-> +++ b/include/dt-bindings/gpio/meson-a1-gpio.h
-> @@ -0,0 +1,73 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + * Author: Qianggui Song <qianggui.song@amlogic.com>
-> + */
-> +
-> +#ifndef _DT_BINDINGS_MESON_A1_GPIO_H
-> +#define _DT_BINDINGS_MESON_A1_GPIO_H
-> +
-> +#define GPIOP_0		0
-> +#define GPIOP_1		1
-> +#define GPIOP_2		2
-> +#define GPIOP_3		3
-> +#define GPIOP_4		4
-> +#define GPIOP_5		5
-> +#define GPIOP_6		6
-> +#define GPIOP_7		7
-> +#define GPIOP_8		8
-> +#define GPIOP_9		9
-> +#define GPIOP_10	10
-> +#define GPIOP_11	11
-> +#define GPIOP_12	12
-> +#define GPIOB_0		13
-> +#define GPIOB_1		14
-> +#define GPIOB_2		15
-> +#define GPIOB_3		16
-> +#define GPIOB_4		17
-> +#define GPIOB_5		18
-> +#define GPIOB_6		19
-> +#define GPIOX_0		20
-> +#define GPIOX_1		21
-> +#define GPIOX_2		22
-> +#define GPIOX_3		23
-> +#define GPIOX_4		24
-> +#define GPIOX_5		25
-> +#define GPIOX_6		26
-> +#define GPIOX_7		27
-> +#define GPIOX_8		28
-> +#define GPIOX_9		29
-> +#define GPIOX_10	30
-> +#define GPIOX_11	31
-> +#define GPIOX_12	32
-> +#define GPIOX_13	33
-> +#define GPIOX_14	34
-> +#define GPIOX_15	35
-> +#define GPIOX_16	36
-> +#define GPIOF_0		37
-> +#define GPIOF_1		38
-> +#define GPIOF_2		39
-> +#define GPIOF_3		40
-> +#define GPIOF_4		41
-> +#define GPIOF_5		42
-> +#define GPIOF_6		43
-> +#define GPIOF_7		44
-> +#define GPIOF_8		45
-> +#define GPIOF_9		46
-> +#define GPIOF_10	47
-> +#define GPIOF_11	48
-> +#define GPIOF_12	49
-> +#define GPIOA_0		50
-> +#define GPIOA_1		51
-> +#define GPIOA_2		52
-> +#define GPIOA_3		53
-> +#define GPIOA_4		54
-> +#define GPIOA_5		55
-> +#define GPIOA_6		56
-> +#define GPIOA_7		57
-> +#define GPIOA_8		58
-> +#define GPIOA_9		59
-> +#define GPIOA_10	60
-> +#define GPIOA_11	61
-> +
-> +#endif /* _DT_BINDINGS_MESON_A1_GPIO_H */
-> 
-
-
-With that fixed,
-
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-
-Neil
+T24gTW9uLCAyMDE5LTA5LTE2IGF0IDEyOjQ5ICswMzAwLCBBbGV4YW5kcnUgQXJkZWxlYW4gd3Jv
+dGU6DQo+IE9uIEZyaSwgMjAxOS0wOS0xMyBhdCAxNTozNiArMDEwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6DQo+ID4gW0V4dGVybmFsXQ0KPiA+IA0KPiA+IE9uIEZyaSwgU2VwIDA2LCAyMDE5IGF0IDA0
+OjAyOjU2UE0gKzAzMDAsIEFsZXhhbmRydSBBcmRlbGVhbiB3cm90ZToNCj4gPiA+IFRoaXMgY2hh
+bmdlIGRvY3VtZW50cyB0aGUgJ21hYy1tb2RlJyBwcm9wZXJ0eSB0aGF0IHdhcyBpbnRyb2R1Y2Vk
+IGluDQo+ID4gPiB0aGUNCj4gPiA+ICdzdG1tYWMnIGRyaXZlciB0byBzdXBwb3J0IHBhc3NpdmUg
+bW9kZSBjb252ZXJ0ZXJzIHRoYXQgY2FuIHNpdCBpbi0NCj4gPiA+IGJldHdlZW4NCj4gPiA+IHRo
+ZSBNQUMgJiBQSFkuDQo+ID4gPiANCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRydSBBcmRl
+bGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+ID4gPiAtLS0NCj4gPiA+ICBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3NucHMsZHdtYWMueWFtbCB8IDgg
+KysrKysrKysNCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspDQo+ID4gPiAN
+Cj4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0
+L3NucHMsZHdtYWMueWFtbA0KPiA+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbmV0L3NucHMsZHdtYWMueWFtbA0KPiA+ID4gaW5kZXggYzc4YmUxNTcwNGI5Li5lYmU0NTM3
+YTdjY2UgMTAwNjQ0DQo+ID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbmV0L3NucHMsZHdtYWMueWFtbA0KPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL25ldC9zbnBzLGR3bWFjLnlhbWwNCj4gPiA+IEBAIC0xMTIsNiArMTEyLDE0
+IEBAIHByb3BlcnRpZXM6DQo+ID4gPiAgICByZXNldC1uYW1lczoNCj4gPiA+ICAgICAgY29uc3Q6
+IHN0bW1hY2V0aA0KPiA+ID4gIA0KPiA+ID4gKyAgbWFjLW1vZGU6DQo+ID4gPiArICAgIG1heEl0
+ZW1zOiAxDQo+ID4gDQo+ID4gSXMgdGhpcyBhbiBhcnJheSBiZWNhdXNlIHttaW4sbWF4fUl0ZW1z
+IGlzIGZvciBhcnJheXM/IEl0IHNob3VsZCBiZSANCj4gPiBkZWZpbmVkIGFzIGEgc3RyaW5nIHdp
+dGggcG9zc2libGUgdmFsdWVzLg0KPiA+IA0KPiA+IEFzIHRoaXMgcHJvcGVydHkgaXMgdGhlIHNh
+bWUgYXMgYW5vdGhlciwgeW91IGNhbiBkbyB0aGlzOg0KPiA+IA0KPiA+ICRyZWY6IGV0aGVybmV0
+LWNvbnRyb2xsZXIueWFtbCMvcHJvcGVydGllcy9waHktY29ubmVjdGlvbi10eXBlDQo+ID4gDQo+
+ID4gVW5sZXNzIG9ubHkgYSBzbWFsbCBzdWJzZXQgb2YgdGhvc2UgdmFsdWVzIGFyZSB2YWxpZCBo
+ZXJlLCB0aGVuIHlvdQ0KPiA+IG1heSANCj4gPiB3YW50IHRvIGxpc3QgdGhlbSBoZXJlLg0KPiA+
+IA0KPiANCj4gQWNrLg0KPiBUaGFuayB5b3UuDQo+IA0KPiBXaWxsIGludmVzdGlnYXRlIGFuZCBy
+ZS1zcGluLg0KDQpMb29raW5nIGF0ICckcmVmOiBldGhlcm5ldC1jb250cm9sbGVyLnlhbWwjL3By
+b3BlcnRpZXMvcGh5LWNvbm5lY3Rpb24tdHlwZScNCml0IGxvb2tzIGxpa2UgJ21hYy1tb2RlJyBj
+b3VsZCBjb3ZlciBhbG1vc3QgYWxsICdwaHktY29ubmVjdGlvbi10eXBlJw0KZXhjZXB0IGZvciBh
+IGZldyAoMSBvciAyKS4gVGhlICdkd21hYycgZHJpdmVyIGlzIHByZXR0eSBjb21wbGV4L2JpZy4N
+Cg0KVGhlcmUgd2FzIGEgbm90ZSB0aGF0IEFuZHJldyBtYWRlIG9uIGEgcHJldmlvdXMgY2hhbmdl
+LCB0aGF0IHdlIGNvdWxkIGhhdmUNCmEgJ21hYy1tb2RlJyAoc2ltaWxhciB0byAncGh5LW1vZGUn
+KSBhbmQgdGhhdCBjb3VsZCBiZWNvbWUgZ2VuZXJpYyAoZWl0aGVyDQppbiBwaHlsaWIgb3IgbWF5
+YmUgc29tZXdoZXJlIGVsc2UgaW4gbmV0ZGV2KS4NCg0KSW4gYW55IGNhc2UsIHRoZSBjb25jbHVz
+aW9uIFtmcm9tIG15IHNpZGVdIHdvdWxkIGJlIHRoYXQNCickcmVmOiBldGhlcm5ldC1jb250cm9s
+bGVyLnlhbWwjL3Byb3BlcnRpZXMvcGh5LWNvbm5lY3Rpb24tdHlwZScNCmNvdWxkIHdvcmssIGFu
+ZCBiZSBzdWZmaWNpZW50bHkgZnV0dXJlLXByb29mLg0KDQpUaGFua3MNCkFsZXgNCg0KPiANCj4g
+DQo+ID4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ID4gKyAgICAgIFRoZSBwcm9wZXJ0eSBpcyBp
+ZGVudGljYWwgdG8gJ3BoeS1tb2RlJywgYW5kIGFzc3VtZXMgdGhhdA0KPiA+ID4gdGhlcmUgaXMg
+bW9kZQ0KPiA+ID4gKyAgICAgIGNvbnZlcnRlciBpbi1iZXR3ZWVuIHRoZSBNQUMgJiBQSFkgKGUu
+Zy4gR01JSS10by1SR01JSSkuIFRoaXMNCj4gPiA+IGNvbnZlcnRlcg0KPiA+ID4gKyAgICAgIGNh
+biBiZSBwYXNzaXZlIChubyBTVyByZXF1aXJlbWVudCksIGFuZCByZXF1aXJlcyB0aGF0IHRoZSBN
+QUMNCj4gPiA+IG9wZXJhdGUNCj4gPiA+ICsgICAgICBpbiBhIGRpZmZlcmVudCBtb2RlIHRoYW4g
+dGhlIFBIWSBpbiBvcmRlciB0byBmdW5jdGlvbi4NCj4gPiA+ICsNCj4gPiA+ICAgIHNucHMsYXhp
+LWNvbmZpZzoNCj4gPiA+ICAgICAgJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCNkZWZpbml0aW9u
+cy9waGFuZGxlDQo+ID4gPiAgICAgIGRlc2NyaXB0aW9uOg0KPiA+ID4gLS0gDQo+ID4gPiAyLjIw
+LjENCj4gPiA+IA0K
