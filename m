@@ -1,16 +1,24 @@
 From: Kalle Valo <kvalo@codeaurora.org>
 Subject: Re: [PATCH] ath10k: Fix HOST capability QMI incompatibility
 Date: Tue, 17 Sep 2019 14:03:41 +0000 (UTC)
-Message-ID: <20190917140342.D11AF61576@smtp.codeaurora.org>
+Message-ID: <20190917140342.7A30661570@smtp.codeaurora.org>
 References: <20190725063108.15790-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190725063108.15790-1-bjorn.andersson@linaro.org>
-Sender: netdev-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/ath10k>,
+ <mailto:ath10k-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/ath10k/>
+List-Post: <mailto:ath10k@lists.infradead.org>
+List-Help: <mailto:ath10k-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/ath10k>,
+ <mailto:ath10k-request@lists.infradead.org?subject=subscribe>
+Sender: "ath10k" <ath10k-bounces@lists.infradead.org>
+Errors-To: ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org
 To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-wireless@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ath10k@lists.infradead.org, stable@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, ath10k@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
 Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
