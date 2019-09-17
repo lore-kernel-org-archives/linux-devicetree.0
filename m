@@ -1,32 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 04/11] dt-bindings: phy-mtk-tphy: add a new reference
- clock
-Date: Tue, 17 Sep 2019 15:28:05 -0500
-Message-ID: <20190917202805.GA13405@bogus>
-References: <1567149298-29366-1-git-send-email-chunfeng.yun@mediatek.com>
- <1567149298-29366-4-git-send-email-chunfeng.yun@mediatek.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 2/8] clk: Warn if clk_init_data is not zero initialized
+Date: Tue, 17 Sep 2019 13:38:53 -0700
+Message-ID: <20190917203854.8CF702054F@mail.kernel.org>
+References: <20190916161447.32715-1-manivannan.sadhasivam@linaro.org> <20190916161447.32715-3-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1567149298-29366-4-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <20190916161447.32715-3-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: mturquette@baylibre.com, robh+dt@kernel.org
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, haitao.suo@bitmain.com, darren.tsao@bitmain.com, fisher.cheng@bitmain.com, alec.lin@bitmain.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 30 Aug 2019 15:14:51 +0800, Chunfeng Yun wrote:
-> Usually the digital and analog phys use the same reference clock,
-> but on some platforms, they are separated, so add another optional
-> clock to support it.
-> In order to keep the clock names consistent with PHY IP's, use
-> the da_ref for analog phy and ref clock for digital phy.
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Quoting Manivannan Sadhasivam (2019-09-16 09:14:41)
+> The new implementation for determining parent map uses multiple ways
+> to pass parent info. The order in which it gets processed depends on
+> the first available member. Hence, it is necessary to zero init the
+> clk_init_data struct so that the expected member gets processed correctly.
+> So, add a warning if multiple clk_init_data members are available during
+> clk registration.
+>=20
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
-> v2: fix typo of analog and needed
-> ---
->  Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
+>  drivers/clk/clk.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index c0990703ce54..7d6d6984c979 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -3497,6 +3497,14 @@ static int clk_core_populate_parent_map(struct clk=
+_core *core)
+>         if (!num_parents)
+>                 return 0;
+> =20
+> +       /*
+> +        * Check for non-zero initialized clk_init_data struct. This is
+> +        * required because, we only require one of the (parent_names/
+> +        * parent_data/parent_hws) to be set at a time. Otherwise, the
+> +        * current code would use first available member.
+> +        */
+> +       WARN_ON((parent_names && parent_data) || (parent_names && parent_=
+hws));
+> +
 
-Acked-by: Rob Herring <robh@kernel.org>
+This will warn for many drivers because they set clk_init_data on the
+stack and assign parent_names but let junk from the stack be assigned to
+parent_data. The code uses parent_names first and then looks for
+parent_data or parent_hws because of this fact of life that we've never
+required clk_init_data to be initialized to all zero.
+
+>         /*
+>          * Avoid unnecessary string look-ups of clk_core's possible paren=
+ts by
+>          * having a cache of names/clk_hw pointers to clk_core pointers.
