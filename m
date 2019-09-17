@@ -1,49 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/6] dt-bindings: samsung: Update the CHIP ID binding
- documentation
-Date: Tue, 17 Sep 2019 13:13:22 -0500
-Message-ID: <20190917181322.GA683@bogus>
-References: <20190910123618.27985-1-s.nawrocki@samsung.com>
- <CGME20190910123637eucas1p26d2051f9bdd1bdf4510f1908ea98f641@eucas1p2.samsung.com>
- <20190910123618.27985-3-s.nawrocki@samsung.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: backlight: lm3630a: add enable_gpios
+Date: Tue, 17 Sep 2019 13:14:45 -0500
+Message-ID: <20190917181445.GA2875@bogus>
+References: <20190912213257.24147-1-andreas@kemnade.info>
+ <20190912213257.24147-2-andreas@kemnade.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190910123618.27985-3-s.nawrocki@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, vireshk@kernel.org, b.zolnierkie@samsung.com, linux-kernel@vger.kernel.org, krzk@kernel.org, robh+dt@kernel.org, kgene@kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+In-Reply-To: <20190912213257.24147-2-andreas@kemnade.info>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 10 Sep 2019 14:36:14 +0200, Sylwester Nawrocki wrote:
-> This patch adds documentation of a new optional "samsung,asv-bin"
-> property in the chipid device node and documents requirement of
-> "syscon" compatible string.  These additions are needed to support
-> Exynos ASV (Adaptive Supply Voltage) feature.
+On Thu, 12 Sep 2019 23:32:56 +0200, Andreas Kemnade wrote:
+> add enable-gpios to describe HWEN pin
 > 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 > ---
-> Changes since v3:
->  - none
-> 
-> Changes since v2:
->  - corrected patch summary line prefix, the patch moved in the
->    sequence
-> 
-> Changes since v1 (RFC):
->  - new patch
-> ---
->  .../devicetree/bindings/arm/samsung/exynos-chipid.txt  | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+> changes in v2: added example
+> changes in v3: added Acked-by
+> changes in v4: moved enable-gpios to the right position
+>   in the example
+>  .../bindings/leds/backlight/lm3630a-backlight.yaml           | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
