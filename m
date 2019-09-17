@@ -1,86 +1,167 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
- max-speed
-Date: Tue, 17 Sep 2019 14:54:34 +0200
-Message-ID: <20190917125434.GH20778@lunn.ch>
-References: <20190910155507.491230-1-tinywrkb@gmail.com>
- <20190910185033.GD9761@lunn.ch>
- <87muf6oyvr.fsf@tarshish>
- <20190915135652.GC3427@lunn.ch>
- <20190917124101.GA1200564@arch-dsk-01>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: sound: Convert Samsung I2S controller
+ to dt-schema
+Date: Tue, 17 Sep 2019 08:05:38 -0500
+Message-ID: <CAL_JsqJmjUR63i_hKUuZwDu42rebwABHu62bQoxTRRJu5yObEA@mail.gmail.com>
+References: <CGME20190917120517eucas1p1188d244fac2d10d7990363ff25ffb70d@eucas1p1.samsung.com>
+ <20190917111413.22711-1-m.falkowski@samsung.com> <20190917120452.28135-1-m.falkowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190917124101.GA1200564@arch-dsk-01>
+In-Reply-To: <20190917120452.28135-1-m.falkowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tinywrkb <tinywrkb@gmail.com>
-Cc: Baruch Siach <baruch@tkos.co.il>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Maciej Falkowski <m.falkowski@samsung.com>
+Cc: Linux-ALSA <alsa-devel@alsa-project.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 03:41:01PM +0300, tinywrkb wrote:
-> On Sun, Sep 15, 2019 at 03:56:52PM +0200, Andrew Lunn wrote:
-> > > Tinywrkb confirmed to me in private communication that revert of
-> > > 5502b218e001 fixes Ethernet for him on effected system.
-> > > 
-> > > He also referred me to an old Cubox-i spec that lists 10/100 Ethernet
-> > > only for i.MX6 Solo/DualLite variants of Cubox-i. It turns out that
-> > > there was a plan to use a different 10/100 PHY for Solo/DualLite
-> > > SOMs. This plan never materialized. All SolidRun i.MX6 SOMs use the same
-> > > AR8035 PHY that supports 1Gb.
-> > > 
-> > > Commit 5502b218e001 might be triggering a hardware issue on the affected
-> > > Cubox-i. I could not reproduce the issue here with Cubox-i and a Dual
-> > > SOM variant running v5.3-rc8. I have no Solo/DualLite variant handy at
-> > > the moment.
-> > 
-> > Could somebody with an affected device show us the output of ethtool
-> > with and without 5502b218e001. Does one show 1G has been negotiated,
-> > and the other 100Mbps? If this is true, how does it get 100Mbps
-> > without that patch? We are missing a piece of the puzzle.
-> > 
-> > 	Andrew
-> 
-> linux-test-5.1rc1-a2703de70942-without_bad_commit
-> 
-> Settings for eth0:
-> 	Supported ports: [ TP MII ]
-> 	Supported link modes:   10baseT/Half 10baseT/Full
-> 	                        100baseT/Half 100baseT/Full
-> 	                        1000baseT/Full
+On Tue, Sep 17, 2019 at 7:05 AM Maciej Falkowski
+<m.falkowski@samsung.com> wrote:
+>
+> Convert Samsung I2S controller to newer dt-schema format.
+>
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> v2:
+> - Added missing Signed-off-by certificate
+> ---
+>  .../devicetree/bindings/sound/samsung-i2s.txt |  84 -------------
+>  .../bindings/sound/samsung-i2s.yaml           | 119 ++++++++++++++++++
+>  2 files changed, 119 insertions(+), 84 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.yaml
 
-So this means the local device says it can do 1000Mbps.
+> diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.yaml b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
+> new file mode 100644
+> index 000000000000..59dc76035cb4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
+> @@ -0,0 +1,119 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/samsung-i2s.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung SoC I2S controller
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzk@kernel.org>
+> +  - Sangbeom Kim <sbkim73@samsung.com>
+> +  - Sylwester Nawrocki <s.nawrocki@samsung.com>
+> +
+> +properties:
+> +  compatible:
+> +    description: |
+> +      samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
+> +
+> +      samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
+> +      secondary fifo, s/w reset control and internal mux for root clk src.
+> +
+> +      samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
+> +      playback, stereo channel capture, secondary fifo using internal
+> +      or external dma, s/w reset control, internal mux for root clk src
+> +      and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
+> +      is to allow transfer of multiple channel audio data on single data line.
+> +
+> +      samsung,exynos7-i2s: with all the available features of exynos5 i2s.
+> +
+> +      exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
+> +      with only external dma and more no.of root clk sampling frequencies.
+> +
+> +      samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
+> +      stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
+> +      slightly modified bit offsets.
+> +    enum:
+> +      - "samsung,s3c6410-i2s"
+> +      - "samsung,s5pv210-i2s"
+> +      - "samsung,exynos5420-i2s"
+> +      - "samsung,exynos7-i2s"
+> +      - "samsung,exynos7-i2s1"
 
+No need for quotes here.
 
-> 	Supported pause frame use: Symmetric
-> 	Supports auto-negotiation: Yes
-> 	Supported FEC modes: Not reported
-> 	Advertised link modes:  10baseT/Half 10baseT/Full
-> 	                        100baseT/Half 100baseT/Full
-> 	                        1000baseT/Full
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  dmas:
+> +    description: list of DMA controller phandle and DMA request line ordered pairs.
 
-The link peer can also do 1000Mbps.
+How many?
 
-
-> 	Advertised pause frame use: Symmetric
-> 	Advertised auto-negotiation: Yes
-> 	Advertised FEC modes: Not reported
-> 	Link partner advertised link modes:  10baseT/Half 10baseT/Full
-> 	                                     100baseT/Half 100baseT/Full
-> 	                                     1000baseT/Full
-> 	Link partner advertised pause frame use: Symmetric
-> 	Link partner advertised auto-negotiation: Yes
-> 	Link partner advertised FEC modes: Not reported
-> 	Speed: 100Mb/s
-
-Yet they have decided to do 100Mbps. 
-
-We need to understand Why? The generic PHY driver would not do this on
-its own. So i'm thinking something has poked a PHY register with some
-value, and this patch is causing it to be over written.
-
-Please can you use mii-tool -v -v to dump the PHY registers in each
-case.
-
-Thanks
-	Andrew
+> +
+> +  dma-names:
+> +    description: |
+> +      identifier string for each DMA request line in the dmas property.
+> +      These strings correspond 1:1 with the ordered pairs in dmas.
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 3
+> +
+> +  clock-names:
+> +    oneOf:
+> +      - items:
+> +          - const: iis
+> +      - items:
+> +          - const: iis
+> +          - const: i2s_opclk0
+> +      - items:
+> +          - const: iis
+> +          - const: i2s_opclk0
+> +          - const: i2s_opclk1
+> +    description: |
+> +      "iis" is the i2s bus clock.
+> +      For i2s1 and i2s2 - "iis", "i2s_opclk0"
+> +      For i2s0 - "iis", "i2s_opclk0", "i2s_opclk1"
+> +
+> +  "#clock-cells":
+> +    const: 1
+> +
+> +  samsung,idma-addr:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Internal DMA register base address of the audio
+> +      sub system(used in secondary sound source).
+> +
+> +  pinctrl-0:
+> +    description: Should specify pin control groups used for this controller.
+> +
+> +  pinctrl-names:
+> +    const: default
+> +
+> +  "#sound-dai-cells":
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - dmas
+> +  - dma-names
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    i2s0: i2s@3830000 {
+> +        compatible = "samsung,s5pv210-i2s";
+> +        reg = <0x03830000 0x100>;
+> +        dmas = <&pdma0 10
+> +                &pdma0 9
+> +                &pdma0 8>;
+> +        dma-names = "tx", "rx", "tx-sec";
+> +        clocks = <&clock_audss 0>, // EXYNOS_I2S_BUS
+> +                <&clock_audss 0>, // EXYNOS_I2S_BUS
+> +                <&clock_audss 0>; // EXYNOS_SCLK_I2S
+> +        clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
+> +        #clock-cells = <1>;
+> +        samsung,idma-addr = <0x03000000>;
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&i2s0_bus>;
+> +        #sound-dai-cells = <1>;
+> +    };
+> +
+> --
+> 2.17.1
+>
