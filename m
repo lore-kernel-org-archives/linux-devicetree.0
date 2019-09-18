@@ -1,53 +1,73 @@
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] dt-bindings: net: remove un-implemented property
-Date: Wed, 18 Sep 2019 14:14:47 +0300
-Message-ID: <20190918111447.3084-1-alexandru.ardelean@analog.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [RFC PATCH V4 2/4] media: platform: Add Mediatek sensor
+ interface driver KConfig
+Date: Wed, 18 Sep 2019 11:16:35 +0300
+Message-ID: <20190918081634.GD5525@valkosipuli.retiisi.org.uk>
+References: <20190915065004.20257-1-louis.kuo@mediatek.com>
+ <20190915065004.20257-3-louis.kuo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: davem@davemloft.net, robh+dt@kernel.org, Alexandru Ardelean <alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190915065004.20257-3-louis.kuo@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Louis Kuo <louis.kuo@mediatek.com>
+Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, Jerry-ch.Chen@mediatek.com, tfiga@chromium.org, keiichiw@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, hans.verkuil@cisco.com, zwisler@chromium.org, frederic.chen@mediatek.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The `adi,disable-energy-detect` property was implemented in an initial
-version of the `adin` driver series, but after a review it was discarded in
-favor of implementing the ETHTOOL_PHY_EDPD phy-tunable option.
+On Sun, Sep 15, 2019 at 02:50:02PM +0800, Louis Kuo wrote:
+> This patch adds KConfig for sensor interface driver. Sensor interface
+> driver
+> is a MIPI-CSI2 host driver, namely, a HW camera interface controller.
+> It support a widely adopted, simple, high-speed protocol primarily
+> intended
+> for point-to-point image and video transmission between cameras and host
+> devices.
+> 
+> Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
+> ---
+>  drivers/media/platform/mtk-isp/Kconfig | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 drivers/media/platform/mtk-isp/Kconfig
+> 
+> diff --git a/drivers/media/platform/mtk-isp/Kconfig b/drivers/media/platform/mtk-isp/Kconfig
+> new file mode 100644
+> index 000000000000..bc7fd01808b3
+> --- /dev/null
+> +++ b/drivers/media/platform/mtk-isp/Kconfig
+> @@ -0,0 +1,17 @@
+> +config MTK_SENINF
+> +	bool "Mediatek mipi csi2 driver"
 
-With the ETHTOOL_PHY_EDPD control, it's possible to disable/enable
-Energy-Detect-Power-Down for the `adin` PHY, so this device-tree is not
-needed.
+Would there be issues in building this as a module?
 
-Fixes: 767078132ff9 ("dt-bindings: net: add bindings for ADIN PHY driver")
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- Documentation/devicetree/bindings/net/adi,adin.yaml | 7 -------
- 1 file changed, 7 deletions(-)
+> +	depends on VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
+> +	depends on MEDIA_CAMERA_SUPPORT
+> +	select V4L2_FWNODE
+> +
+> +	default n
+> +	help
+> +	    This driver provides a mipi-csi2 host driver used as a
+> +	    interface to connect camera with Mediatek's
+> +	    MT8183 SOCs. It is able to handle multiple cameras
+> +	    at the same time.
+> +
+> +	    Choose y if you want to use Mediatek SoCs to create image
+> +	    capture application such as video recording and still image
+> +	    capture.
+> +
+> -- 
+> 2.18.0
+> 
 
-diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
-index 69375cb28e92..d95cc691a65f 100644
---- a/Documentation/devicetree/bindings/net/adi,adin.yaml
-+++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
-@@ -36,12 +36,6 @@ properties:
-     enum: [ 4, 8, 12, 16, 20, 24 ]
-     default: 8
- 
--  adi,disable-energy-detect:
--    description: |
--      Disables Energy Detect Powerdown Mode (default disabled, i.e energy detect
--      is enabled if this property is unspecified)
--    type: boolean
--
- examples:
-   - |
-     ethernet {
-@@ -68,6 +62,5 @@ examples:
-             reg = <1>;
- 
-             adi,fifo-depth-bits = <16>;
--            adi,disable-energy-detect;
-         };
-     };
 -- 
-2.20.1
+Sakari Ailus
