@@ -1,133 +1,41 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: sound: Convert Samsung I2S controller
- to dt-schema
-Date: Wed, 18 Sep 2019 08:49:33 -0500
-Message-ID: <CAL_JsqJ=QWk07y=h7dHFiRrKuE7NGoUr50bu3kiOC+YU8qS9jg@mail.gmail.com>
-References: <CGME20190917120517eucas1p1188d244fac2d10d7990363ff25ffb70d@eucas1p1.samsung.com>
- <20190917111413.22711-1-m.falkowski@samsung.com> <20190917120452.28135-1-m.falkowski@samsung.com>
- <CAL_JsqJmjUR63i_hKUuZwDu42rebwABHu62bQoxTRRJu5yObEA@mail.gmail.com> <40f56f61-a1db-a1a2-262e-1f4c771481e1@samsung.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH V6 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Date: Wed, 18 Sep 2019 13:51:47 +0000
+Message-ID: <AM0PR04MB4481DB4590FF3DB941C88BBC888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
+ <1568626884-5189-2-git-send-email-peng.fan@nxp.com>
+ <20190917183115.3e40180f@donnerap.cambridge.arm.com>
+ <CABb+yY2CP1i9fZMoPua=-mLCUpYrcO28xF5UXDeRD2XTYe7mEg@mail.gmail.com>
+ <AM0PR04MB44811AE46803D10FD8A5B8B0888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <CABb+yY09pPqM-47zNFVGMNM9wrDF9iiVuqKTXrEd4-PdOxBPrQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <40f56f61-a1db-a1a2-262e-1f4c771481e1@samsung.com>
+In-Reply-To: <CABb+yY09pPqM-47zNFVGMNM9wrDF9iiVuqKTXrEd4-PdOxBPrQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Falkowski <m.falkowski@samsung.com>
-Cc: Linux-ALSA <alsa-devel@alsa-project.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Andre Przywara <andre.przywara@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 5:08 AM Maciej Falkowski
-<m.falkowski@samsung.com> wrote:
->
->
-> On 9/17/19 3:05 PM, Rob Herring wrote:
->
-> > On Tue, Sep 17, 2019 at 7:05 AM Maciej Falkowski
-> > <m.falkowski@samsung.com> wrote:
-> >> Convert Samsung I2S controller to newer dt-schema format.
-> >>
-> >> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-> >> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> >> ---
-> >> v2:
-> >> - Added missing Signed-off-by certificate
-> >> ---
-> >>   .../devicetree/bindings/sound/samsung-i2s.txt |  84 -------------
-> >>   .../bindings/sound/samsung-i2s.yaml           | 119 ++++++++++++++++++
-> >>   2 files changed, 119 insertions(+), 84 deletions(-)
-> >>   delete mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
-> >>   create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-> >> diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.yaml b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-> >> new file mode 100644
-> >> index 000000000000..59dc76035cb4
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-> >> @@ -0,0 +1,119 @@
-> >> +# SPDX-License-Identifier: GPL-2.0
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/sound/samsung-i2s.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Samsung SoC I2S controller
-> >> +
-> >> +maintainers:
-> >> +  - Krzysztof Kozlowski <krzk@kernel.org>
-> >> +  - Sangbeom Kim <sbkim73@samsung.com>
-> >> +  - Sylwester Nawrocki <s.nawrocki@samsung.com>
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    description: |
-> >> +      samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
-> >> +
-> >> +      samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
-> >> +      secondary fifo, s/w reset control and internal mux for root clk src.
-> >> +
-> >> +      samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
-> >> +      playback, stereo channel capture, secondary fifo using internal
-> >> +      or external dma, s/w reset control, internal mux for root clk src
-> >> +      and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
-> >> +      is to allow transfer of multiple channel audio data on single data line.
-> >> +
-> >> +      samsung,exynos7-i2s: with all the available features of exynos5 i2s.
-> >> +
-> >> +      exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
-> >> +      with only external dma and more no.of root clk sampling frequencies.
-> >> +
-> >> +      samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
-> >> +      stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
-> >> +      slightly modified bit offsets.
-> >> +    enum:
-> >> +      - "samsung,s3c6410-i2s"
-> >> +      - "samsung,s5pv210-i2s"
-> >> +      - "samsung,exynos5420-i2s"
-> >> +      - "samsung,exynos7-i2s"
-> >> +      - "samsung,exynos7-i2s1"
-> > No need for quotes here.
-> >
-> >> +
-> >> +  reg:
-> >> +    maxItems: 1
-> >> +
-> >> +  dmas:
-> >> +    description: list of DMA controller phandle and DMA request line ordered pairs.
-> > How many?
->
-> Hi Rob,
->
-> I have one problem with determining size of dmas.
->
-> It seems that there are only two options for dmas: tx, rx or tx, rx, tx-sec.
->
-> It looks like minItems should be two and maxItems should be three.
->
-> However, some of bindings have different definition of dmas.
->
-> When there is:
->
->          dmas = <&pdma0 10
->                  &pdma0 9
->                  &pdma0 8>;
->
-> the number of Items for dmas is one,
->
-> when there is:
->
->          dmas = <&pdma0 10>,
->                       <&pdma0 9>,
->                       <&pdma0 8>;
->
-> the number of Items is three.
->
-> Both of these are equal from perspective of dtc,
->
-> however from schema point of view, they have different size.
->
->
-> What is a proper solution to this kind of problem?
-
-The solution is writing things in the latter form. I have a script to
-convert a bunch of these. I need to coordinate doing that at the end
-of a merge window.
-
-Rob
+PiBTdWJqZWN0OiBSZTogW1BBVENIIFY2IDEvMl0gZHQtYmluZGluZ3M6IG1haWxib3g6IGFkZCBi
+aW5kaW5nIGRvYyBmb3IgdGhlDQo+IEFSTSBTTUMvSFZDIG1haWxib3gNCj4gDQo+IE9uIFdlZCwg
+U2VwIDE4LCAyMDE5IGF0IDM6NTMgQU0gUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+IHdyb3Rl
+Og0KPiANCj4gPiA+ID4NCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKyAgIiNtYm94LWNlbGxzIjoN
+Cj4gPiA+ID4gPiArICAgIGNvbnN0OiAxDQo+ID4gPiA+DQo+ID4gPiA+IFdoeSBpcyB0aGlzICIx
+Ij8gV2hhdCBpcyB0aGlzIG51bWJlciB1c2VkIGZvcj8gSXQgdXNlZCB0byBiZSB0aGUNCj4gPiA+
+ID4gY2hhbm5lbCBJRCwNCj4gPiA+IGJ1dCBzaW5jZSB5b3UgYXJlIGRlc2NyaWJpbmcgYSBzaW5n
+bGUgY2hhbm5lbCBjb250cm9sbGVyIG9ubHksIHRoaXMNCj4gPiA+IHNob3VsZCBiZSAwIG5vdy4N
+Cj4gPiA+ID4NCj4gPiA+IFllcy4gSSBvdmVybG9va2VkIGl0IGFuZCBhY3R1YWxseSBxdWV1ZWQg
+dGhlIHBhdGNoIGZvciBwdWxsIHJlcXVlc3QuDQo+ID4NCj4gPiBJbiBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbWFpbGJveC9tYWlsYm94LnR4dA0KPiA+ICNtYm94LWNlbGxzOiBN
+dXN0IGJlIGF0IGxlYXN0IDEuDQo+ID4NCj4gPiBTbyBJIHVzZSAxIGhlcmUsIDAgbm90IHdvcmsu
+IEJlY2F1c2Ugb2ZfbWJveF9pbmRleF94bGF0ZSBleHBlY3QgYXQgbGVhc3QgMQ0KPiBoZXJlLg0K
+PiA+IFNvIEkgbmVlZCBtb2RpZnkgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21h
+aWxib3gvbWFpbGJveC50eHQNCj4gPiBhbmQgYWRkIHhsYXRlIGZvciBzbWMgbWFpbGJveD8NCj4g
+Pg0KPiBObywgeW91IGp1c3QgY2FuIG5vdCB1c2UgdGhlIGdlbmVyaWMgeGxhdGUoKSBwcm92aWRl
+ZCBieSB0aGUgYXBpLg0KPiBQbGVhc2UgaW1wbGVtZW50IHlvdXIgb3duIHhsYXRlKCkgdGhhdCBy
+ZXF1aXJlcyBubyBhcmd1bWVudC4NCg0Kb2suIFdpbGwgYWRkIHhsYXRlLg0KDQpUaGFua3MsDQpQ
+ZW5nLg0KDQo+IA0KPiBDaGVlcnMhDQo=
