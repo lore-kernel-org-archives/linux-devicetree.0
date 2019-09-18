@@ -1,100 +1,41 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v7 05/13] device property: Add functions for accessing node's parents
-Date: Wed, 18 Sep 2019 16:34:11 +0300
-Message-ID: <20190918133419.7969-6-sakari.ailus@linux.intel.com>
-References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH V6 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Date: Wed, 18 Sep 2019 08:34:41 -0500
+Message-ID: <CABb+yY09pPqM-47zNFVGMNM9wrDF9iiVuqKTXrEd4-PdOxBPrQ@mail.gmail.com>
+References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
+ <1568626884-5189-2-git-send-email-peng.fan@nxp.com> <20190917183115.3e40180f@donnerap.cambridge.arm.com>
+ <CABb+yY2CP1i9fZMoPua=-mLCUpYrcO28xF5UXDeRD2XTYe7mEg@mail.gmail.com> <AM0PR04MB44811AE46803D10FD8A5B8B0888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
+In-Reply-To: <AM0PR04MB44811AE46803D10FD8A5B8B0888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Andre Przywara <andre.przywara@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add two convenience functions for accessing node's parents:
+On Wed, Sep 18, 2019 at 3:53 AM Peng Fan <peng.fan@nxp.com> wrote:
 
-fwnode_count_parents() returns the number of parent nodes a given node
-has. fwnode_get_nth_parent() returns node's parent at a given distance
-from the node itself.
+> > >
+> > > > +
+> > > > +  "#mbox-cells":
+> > > > +    const: 1
+> > >
+> > > Why is this "1"? What is this number used for? It used to be the channel ID,
+> > but since you are describing a single channel controller only, this should be 0
+> > now.
+> > >
+> > Yes. I overlooked it and actually queued the patch for pull request.
+>
+> In Documentation/devicetree/bindings/mailbox/mailbox.txt
+> #mbox-cells: Must be at least 1.
+>
+> So I use 1 here, 0 not work. Because of_mbox_index_xlate expect at least 1 here.
+> So I need modify Documentation/devicetree/bindings/mailbox/mailbox.txt
+> and add xlate for smc mailbox?
+>
+No, you just can not use the generic xlate() provided by the api.
+Please implement your own xlate() that requires no argument.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/base/property.c  | 46 ++++++++++++++++++++++++++++++++++++++++
- include/linux/property.h |  3 +++
- 2 files changed, 49 insertions(+)
-
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 3d9dffbe96378..f2e555e68b56a 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -590,6 +590,52 @@ struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
- }
- EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
- 
-+/**
-+ * fwnode_count_parents - Return the number of parents a node has
-+ * @fwnode: The node the parents of which are to be counted
-+ *
-+ * Returns the number of parents a node has.
-+ */
-+unsigned int fwnode_count_parents(const struct fwnode_handle *fwnode)
-+{
-+	struct fwnode_handle *__fwnode;
-+	unsigned int count;
-+
-+	__fwnode = fwnode_get_parent(fwnode);
-+
-+	for (count = 0; __fwnode; count++)
-+		__fwnode = fwnode_get_next_parent(__fwnode);
-+
-+	return count;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_count_parents);
-+
-+/**
-+ * fwnode_get_nth_parent - Return an nth parent of a node
-+ * @fwnode: The node the parent of which is requested
-+ * @depth: Distance of the parent from the node
-+ *
-+ * Returns the nth parent of a node. If there is no parent at the requested
-+ * @depth, %NULL is returned. If @depth is 0, the functionality is equivalent to
-+ * fwnode_handle_get(). For @depth == 1, it is fwnode_get_parent() and so on.
-+ *
-+ * The caller is responsible for calling fwnode_handle_put() for the returned
-+ * node.
-+ */
-+struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwnode,
-+					    unsigned int depth)
-+{
-+	unsigned int i;
-+
-+	fwnode_handle_get(fwnode);
-+
-+	for (i = 0; i < depth && fwnode; i++)
-+		fwnode = fwnode_get_next_parent(fwnode);
-+
-+	return fwnode;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_get_nth_parent);
-+
- /**
-  * fwnode_get_next_child_node - Return the next child node handle for a node
-  * @fwnode: Firmware node to find the next child node for.
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 421c76e53708d..5450e7ec219ac 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -83,6 +83,9 @@ struct fwnode_handle *fwnode_find_reference(const struct fwnode_handle *fwnode,
- struct fwnode_handle *fwnode_get_parent(const struct fwnode_handle *fwnode);
- struct fwnode_handle *fwnode_get_next_parent(
- 	struct fwnode_handle *fwnode);
-+unsigned int fwnode_count_parents(const struct fwnode_handle *fwn);
-+struct fwnode_handle *fwnode_get_nth_parent(struct fwnode_handle *fwn,
-+					    unsigned int depth);
- struct fwnode_handle *fwnode_get_next_child_node(
- 	const struct fwnode_handle *fwnode, struct fwnode_handle *child);
- struct fwnode_handle *fwnode_get_next_available_child_node(
--- 
-2.20.1
+Cheers!
