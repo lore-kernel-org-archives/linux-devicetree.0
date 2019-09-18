@@ -1,110 +1,156 @@
-From: Neal Liu <neal.liu@mediatek.com>
-Subject: Re: [PATCH v4 2/3] dt-bindings: rng: add bindings for MediaTek
- ARMv8 SoCs
-Date: Wed, 18 Sep 2019 09:44:14 +0800
-Message-ID: <1568771054.21700.7.camel@mtkswgap22>
-References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
-         <1561361052-13072-3-git-send-email-neal.liu@mediatek.com>
-         <20190722171320.GA9806@bogus> <1563848465.31451.4.camel@mtkswgap22>
-         <CAL_Jsq+SRhd=-5O2G_CMfJX9Z188kvA05MQOXaU1J8iExwUixQ@mail.gmail.com>
+From: "Ramuthevar, Vadivel MuruganX"
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
+ for LGM eMMC PHY
+Date: Wed, 18 Sep 2019 10:23:40 +0800
+Message-ID: <9cdc49bc-61af-5b36-6ef1-67d1f1977730@linux.intel.com>
+References: <20190904055344.25512-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190917142337.GA27151@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+SRhd=-5O2G_CMfJX9Z188kvA05MQOXaU1J8iExwUixQ@mail.gmail.com>
+In-Reply-To: <20190917142337.GA27151@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, wsd_upstream <wsd_upstream@mediatek.com>, Sean Wang <sean.wang@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= <Crystal.Guo@mediatek.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, Matt Mackall <mpm@selenic.com>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Neal Liu <neal.liu@mediatek.com>
+Cc: kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-07-23 at 22:35 +0800, Rob Herring wrote:
-> On Mon, Jul 22, 2019 at 8:21 PM Neal Liu <neal.liu@mediatek.com> wrote:
-> >
-> 
-> Please don't top post to lists.
-> 
-> > Dear Rob,
-> >         You can check my driver for detail:
-> >         http://patchwork.kernel.org/patch/11012475/ or patchset 3/3
-> 
-> I could, or you could just answer my question.
-> 
-> >
-> >         This driver is registered as hardware random number generator, and
-> > combines with rng-core.
-> >         We want to add one rng hw based on the dts. Is this proper or do you
-> > have other suggestion to meet this requirement?
-> 
-> It depends. There doesn't appear to be any resource configuration, so
-> why does it need to be in DT. DT is not the only way instantiate
-> drivers.
-> 
-> Rob
-> 
+Hi Rob,
 
-We would like to consult more about this patch.
-We cannot figure out what method should be used instead of DT.
-The interface to access firmware is "smc" and firmware function only
-exists on certain platforms.
-Some DT has similar way, like:
-http://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts#L470
+Thank you for the review comments.
 
-	firmware {
-		optee {
-			compatible = "linaro,optee-tz";
-			method = "smc";
-		};
-	};
+On 17/9/2019 10:23 PM, Rob Herring wrote:
+> On Wed, Sep 04, 2019 at 01:53:43PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> Add a YAML schema to use the host controller driver with the
+>> eMMC PHY on Intel's Lightning Mountain SoC.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>> changes in v5:
+>>    - earlier Review-by tag given by Rob
+>>    - rework done with syscon parent node.
+>>
+>> changes in v4:
+>>    - As per Rob's review: validate 5.2 and 5.3
+>>    - drop unrelated items.
+>>
+>> changes in v3:
+>>    - resolve 'make dt_binding_check' warnings
+>>
+>> changes in v2:
+>>    As per Rob Herring review comments, the following updates
+>>   - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
+>>   - filename is the compatible string plus .yaml
+>>   - LGM: Lightning Mountain
+>>   - update maintainer
+>>   - add intel,syscon under property list
+>>   - keep one example instead of two
+>> ---
+>>   .../bindings/phy/intel,lgm-emmc-phy.yaml           | 69 ++++++++++++++++++++++
+>>   1 file changed, 69 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+>> new file mode 100644
+>> index 000000000000..8f6ac8b3da42
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+>> @@ -0,0 +1,69 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
+>> +
+>> +maintainers:
+>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> +
+>> +description: Bindings for eMMC PHY on Intel's Lightning Mountain SoC, syscon
+>> +  node is used to reference the base address of eMMC phy registers.
+>> +
+>> +select:
+>> +  properties:
+>> +    compatible:
+>> +      contains:
+>> +        const: intel,lgm-syscon
+> This, plus...
 
-Is there any way to instantiate driver on certain platforms without DT?
-Could you give us some examples?
-Thanks
+you mean, need to add two compatible here-itself look like below
 
-> >
-> >         Thanks
-> >
-> >
-> > On Tue, 2019-07-23 at 01:13 +0800, Rob Herring wrote:
-> > > On Mon, Jun 24, 2019 at 03:24:11PM +0800, Neal Liu wrote:
-> > > > Document the binding used by the MediaTek ARMv8 SoCs random
-> > > > number generator with TrustZone enabled.
-> > > >
-> > > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
-> > > > ---
-> > > >  .../devicetree/bindings/rng/mtk-sec-rng.txt        |   10 ++++++++++
-> > > >  1 file changed, 10 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> > > > new file mode 100644
-> > > > index 0000000..c04ce15
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
-> > > > @@ -0,0 +1,10 @@
-> > > > +MediaTek random number generator with TrustZone enabled
-> > > > +
-> > > > +Required properties:
-> > > > +- compatible : Should be "mediatek,mtk-sec-rng"
-> > >
-> > > What's the interface to access this?
-> > >
-> > > A node with a 'compatible' and nothing else is a sign of something that
-> > > a parent device should instantiate and doesn't need to be in DT. IOW,
-> > > what do complete bindings for firmware functions look like?
-> > >
-> > > > +
-> > > > +Example:
-> > > > +
-> > > > +hwrng: hwrng {
-> > > > +   compatible = "mediatek,mtk-sec-rng";
-> > > > +}
-> > > > --
-> > > > 1.7.9.5
-> > > >
-> > >
-> > > _______________________________________________
-> > > Linux-mediatek mailing list
-> > > Linux-mediatek@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
-> >
-> >
+const: intel,lgm-syscon
+const: intel,lgm-emmc-phy
+
+Is it right?
+
+>> +
+>> +    reg:
+>> +      maxItems: 1
+>> +
+>> +  required:
+>> +    - compatible
+>> +    - reg
+>> +
+>> +properties:
+>> +  "#phy-cells":
+>> +    const: 0
+>> +
+>> +  compatible:
+>> +    contains:
+>> +      const: intel,lgm-emmc-phy
+> ...this should not pass validation as they contradict each other.
+when  I do "make dt_binding_check" didn't throw an error,  let me double 
+confirm once clarified first comment.
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  clock-names:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - "#phy-cells"
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - clock-names
+>> +
+>> +examples:
+>> +  - |
+>> +    sysconf: chiptop@e0200000 {
+>> +      compatible = "intel,lgm-syscon";
+>> +      reg = <0xe0200000 0x100>;
+> I'm still waiting for a complete description of what all is in this
+> block.
+Agree!, I will  add it.
+>> +
+>> +      emmc-phy: emmc-phy {
+>> +        compatible = "intel,lgm-emmc-phy";
+>> +        reg = <0x00a8 0x4>,
+>> +              <0x00ac 0x4>,
+>> +              <0x00b0 0x4>,
+>> +              <0x00b4 0x4>;
+> Looks contiguous and can be a single entry:
+>
+> <0xa8 0x10>
+Agreed, will fix it.
+
+Best Regards
+Vadivel
+>> +        clocks = <&emmc>;
+>> +        clock-names = "emmcclk";
+>> +        #phy-cells = <0>;
+>> +      };
+>> +    };
+>> +...
+>> -- 
+>> 2.11.0
+>>
