@@ -1,119 +1,341 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 2/3] dt-bindings: reset: add bindings for the Meson-A1 SoC
- Reset Controller
-Date: Wed, 18 Sep 2019 14:39:02 +0200
-Message-ID: <d99786ec-7635-67e5-3e47-738ce131b634@baylibre.com>
-References: <1568808746-1153-1-git-send-email-xingyu.chen@amlogic.com>
- <1568808746-1153-3-git-send-email-xingyu.chen@amlogic.com>
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Subject: RE: [PATCH 1/5] regulator: da9062: fix suspend_enable/disable
+ preparation
+Date: Wed, 18 Sep 2019 12:41:25 +0000
+Message-ID: <AM5PR1001MB0994E4B24181AEFCA0C26CF2808E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <20190917124246.11732-1-m.felsch@pengutronix.de>
+ <20190917124246.11732-2-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568808746-1153-3-git-send-email-xingyu.chen@amlogic.com>
+In-Reply-To: <20190917124246.11732-2-m.felsch@pengutronix.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xingyu Chen <xingyu.chen@amlogic.com>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Marco Felsch <m.felsch@pengutronix.de>, Support Opensource <Support.Opensource@diasemi.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>
+Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 17 September 2019 13:43, Marco Felsch wrote:
 
-On 18/09/2019 14:12, Xingyu Chen wrote:
-> Add DT bindings for the Meson-A1 SoC Reset Controller include file,
-> and also slightly update documentation.
-> 
-> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+> Currently the suspend reg_field maps to the pmic voltage selection bits
+> and is used during suspend_enabe/disable() and during get_mode(). This
+> seems to be wrong for both use cases.
+
+Hi Marco,
+
+I'd be very surprised if what was in place was wrong as I know Stephen test=
+ed
+this driver thoroughly over its lifetime. Regardless, I'll need some time t=
+o review
+your proposed updates to make sure this aligns with our expectation of oper=
+ation.
+
+>=20
+> Use case one (suspend_enabe/disable):
+> Those callbacks are used to mark a regulator device as enabled/disabled
+> during suspend. Marking the regulator enabled during suspend is done by
+> the LDOx_CONF/BUCKx_CONF bit within the LDOx_CONT/BUCKx_CONT
+> registers.
+> Setting this bit tells the DA9062 PMIC state machine to keep the
+> regulator on in POWERDOWN mode and switch to suspend voltage.
+>=20
+> Use case two (get_mode):
+> The get_mode callback is used to retrieve the active mode state. Since
+> the regulator-setting-A is used for the active state and
+> regulator-setting-B for the suspend state there is no need to check
+> which regulator setting is active.
+>=20
+> Fixes: 4068e5182ada ("regulator: da9062: DA9062 regulator driver")
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 > ---
->  .../bindings/reset/amlogic,meson-reset.txt         |  4 +-
-
-The reset bindings has been moved to yaml, either rebase on linux-next or wait for v5.4-rc1 :
-https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next/+/refs/tags/next-20190917/Documentation/devicetree/bindings/reset/amlogic%2Cmeson-reset.yaml
-
-Neil
-
->  include/dt-bindings/reset/amlogic,meson-a1-reset.h | 59 ++++++++++++++++++++++
->  2 files changed, 61 insertions(+), 2 deletions(-)
->  create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
-> index 28ef6c2..011151a 100644
-> --- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
-> +++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
-> @@ -5,8 +5,8 @@ Please also refer to reset.txt in this directory for common reset
->  controller binding usage.
->  
->  Required properties:
-> -- compatible: Should be "amlogic,meson8b-reset", "amlogic,meson-gxbb-reset" or
-> -	"amlogic,meson-axg-reset".
-> +- compatible: Should be "amlogic,meson8b-reset", "amlogic,meson-gxbb-reset",
-> +	"amlogic,meson-axg-reset" or "amlogic,meson-a1-reset".
->  - reg: should contain the register address base
->  - #reset-cells: 1, see below
->  
-> diff --git a/include/dt-bindings/reset/amlogic,meson-a1-reset.h b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
-> new file mode 100644
-> index 00000000..8d76a47
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
-> @@ -0,0 +1,59 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> + *
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + * Author: Xingyu Chen <xingyu.chen@amlogic.com>
-> + *
-> + */
-> +
-> +#ifndef _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
-> +#define _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
-> +
-> +/* RESET0 */
-> +#define RESET_AM2AXI_VAD		1
-> +#define RESET_PSRAM			4
-> +#define RESET_PAD_CTRL			5
-> +#define RESET_TEMP_SENSOR		7
-> +#define RESET_AM2AXI_DEV		8
-> +#define RESET_SPICC_A			10
-> +#define RESET_MSR_CLK			11
-> +#define RESET_AUDIO			12
-> +#define RESET_ANALOG_CTRL		13
-> +#define RESET_SAR_ADC			14
-> +#define RESET_AUDIO_VAD			15
-> +#define RESET_CEC			16
-> +#define RESET_PWM_EF			17
-> +#define RESET_PWM_CD			18
-> +#define RESET_PWM_AB			19
-> +#define RESET_IR_CTRL			21
-> +#define RESET_I2C_S_A			22
-> +#define RESET_I2C_M_D			24
-> +#define RESET_I2C_M_C			25
-> +#define RESET_I2C_M_B			26
-> +#define RESET_I2C_M_A			27
-> +#define RESET_I2C_PROD_AHB		28
-> +#define RESET_I2C_PROD			29
-> +
-> +/* RESET1 */
-> +#define RESET_ACODEC			32
-> +#define RESET_DMA			33
-> +#define RESET_SD_EMMC_A			34
-> +#define RESET_USBCTRL			36
-> +#define RESET_USBPHY			38
-> +#define RESET_RSA			42
-> +#define RESET_DMC			43
-> +#define RESET_IRQ_CTRL			45
-> +#define RESET_NIC_VAD			47
-> +#define RESET_NIC_AXI			48
-> +#define RESET_RAMA			49
-> +#define RESET_RAMB			50
-> +#define RESET_ROM			53
-> +#define RESET_SPIFC			54
-> +#define RESET_GIC			55
-> +#define RESET_UART_C			56
-> +#define RESET_UART_B			57
-> +#define RESET_UART_A			58
-> +#define RESET_OSC_RING			59
-> +
-> +/* RESET2 Reserved */
-> +
-> +#endif
-> 
+>  drivers/regulator/da9062-regulator.c | 118 +++++++++++----------------
+>  1 file changed, 47 insertions(+), 71 deletions(-)
+>=20
+> diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9=
+062-
+> regulator.c
+> index 2ffc64622451..9b2ca472f70c 100644
+> --- a/drivers/regulator/da9062-regulator.c
+> +++ b/drivers/regulator/da9062-regulator.c
+> @@ -136,7 +136,6 @@ static int da9062_buck_set_mode(struct regulator_dev
+> *rdev, unsigned mode)
+>  static unsigned da9062_buck_get_mode(struct regulator_dev *rdev)
+>  {
+>  	struct da9062_regulator *regl =3D rdev_get_drvdata(rdev);
+> -	struct regmap_field *field;
+>  	unsigned int val, mode =3D 0;
+>  	int ret;
+>=20
+> @@ -158,18 +157,7 @@ static unsigned da9062_buck_get_mode(struct
+> regulator_dev *rdev)
+>  		return REGULATOR_MODE_NORMAL;
+>  	}
+>=20
+> -	/* Detect current regulator state */
+> -	ret =3D regmap_field_read(regl->suspend, &val);
+> -	if (ret < 0)
+> -		return 0;
+> -
+> -	/* Read regulator mode from proper register, depending on state */
+> -	if (val)
+> -		field =3D regl->suspend_sleep;
+> -	else
+> -		field =3D regl->sleep;
+> -
+> -	ret =3D regmap_field_read(field, &val);
+> +	ret =3D regmap_field_read(regl->sleep, &val);
+>  	if (ret < 0)
+>  		return 0;
+>=20
+> @@ -208,21 +196,9 @@ static int da9062_ldo_set_mode(struct regulator_dev
+> *rdev, unsigned mode)
+>  static unsigned da9062_ldo_get_mode(struct regulator_dev *rdev)
+>  {
+>  	struct da9062_regulator *regl =3D rdev_get_drvdata(rdev);
+> -	struct regmap_field *field;
+>  	int ret, val;
+>=20
+> -	/* Detect current regulator state */
+> -	ret =3D regmap_field_read(regl->suspend, &val);
+> -	if (ret < 0)
+> -		return 0;
+> -
+> -	/* Read regulator mode from proper register, depending on state */
+> -	if (val)
+> -		field =3D regl->suspend_sleep;
+> -	else
+> -		field =3D regl->sleep;
+> -
+> -	ret =3D regmap_field_read(field, &val);
+> +	ret =3D regmap_field_read(regl->sleep, &val);
+>  	if (ret < 0)
+>  		return 0;
+>=20
+> @@ -408,10 +384,10 @@ static const struct da9062_regulator_info
+> local_da9061_regulator_info[] =3D {
+>  			__builtin_ffs((int)DA9062AA_BUCK1_MODE_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+>  			__builtin_clz((DA9062AA_BUCK1_MODE_MASK)) - 1),
+> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
+> -			__builtin_ffs((int)DA9062AA_VBUCK1_SEL_MASK) - 1,
+> +		.suspend =3D REG_FIELD(DA9062AA_BUCK1_CONT,
+> +			__builtin_ffs((int)DA9062AA_BUCK1_CONF_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> -			__builtin_clz((DA9062AA_VBUCK1_SEL_MASK)) - 1),
+> +			__builtin_clz(DA9062AA_BUCK1_CONF_MASK) - 1),
+>  	},
+>  	{
+>  		.desc.id =3D DA9061_ID_BUCK2,
+> @@ -444,10 +420,10 @@ static const struct da9062_regulator_info
+> local_da9061_regulator_info[] =3D {
+>  			__builtin_ffs((int)DA9062AA_BUCK3_MODE_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+>  			__builtin_clz((DA9062AA_BUCK3_MODE_MASK)) - 1),
+> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
+> -			__builtin_ffs((int)DA9062AA_VBUCK3_SEL_MASK) - 1,
+> +		.suspend =3D REG_FIELD(DA9062AA_BUCK3_CONT,
+> +			__builtin_ffs((int)DA9062AA_BUCK3_CONF_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> -			__builtin_clz((DA9062AA_VBUCK3_SEL_MASK)) - 1),
+> +			__builtin_clz(DA9062AA_BUCK3_CONF_MASK) - 1),
+>  	},
+>  	{
+>  		.desc.id =3D DA9061_ID_BUCK3,
+> @@ -480,10 +456,10 @@ static const struct da9062_regulator_info
+> local_da9061_regulator_info[] =3D {
+>  			__builtin_ffs((int)DA9062AA_BUCK4_MODE_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+>  			__builtin_clz((DA9062AA_BUCK4_MODE_MASK)) - 1),
+> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
+> -			__builtin_ffs((int)DA9062AA_VBUCK4_SEL_MASK) - 1,
+> +		.suspend =3D REG_FIELD(DA9062AA_BUCK4_CONT,
+> +			__builtin_ffs((int)DA9062AA_BUCK4_CONF_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> -			__builtin_clz((DA9062AA_VBUCK4_SEL_MASK)) - 1),
+> +			__builtin_clz(DA9062AA_BUCK4_CONF_MASK) - 1),
+>  	},
+>  	{
+>  		.desc.id =3D DA9061_ID_LDO1,
+> @@ -509,10 +485,10 @@ static const struct da9062_regulator_info
+> local_da9061_regulator_info[] =3D {
+>  			sizeof(unsigned int) * 8 -
+>  			__builtin_clz((DA9062AA_LDO1_SL_B_MASK)) - 1),
+>  		.suspend_vsel_reg =3D DA9062AA_VLDO1_B,
+> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
+> -			__builtin_ffs((int)DA9062AA_VLDO1_SEL_MASK) - 1,
+> +		.suspend =3D REG_FIELD(DA9062AA_LDO1_CONT,
+> +			__builtin_ffs((int)DA9062AA_LDO1_CONF_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> -			__builtin_clz((DA9062AA_VLDO1_SEL_MASK)) - 1),
+> +			__builtin_clz(DA9062AA_LDO1_CONF_MASK) - 1),
+>  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
+>  			__builtin_ffs((int)DA9062AA_LDO1_ILIM_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> @@ -542,10 +518,10 @@ static const struct da9062_regulator_info
+> local_da9061_regulator_info[] =3D {
+>  			sizeof(unsigned int) * 8 -
+>  			__builtin_clz((DA9062AA_LDO2_SL_B_MASK)) - 1),
+>  		.suspend_vsel_reg =3D DA9062AA_VLDO2_B,
+> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
+> -			__builtin_ffs((int)DA9062AA_VLDO2_SEL_MASK) - 1,
+> +		.suspend =3D REG_FIELD(DA9062AA_LDO2_CONT,
+> +			__builtin_ffs((int)DA9062AA_LDO2_CONF_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> -			__builtin_clz((DA9062AA_VLDO2_SEL_MASK)) - 1),
+> +			__builtin_clz(DA9062AA_LDO2_CONF_MASK) - 1),
+>  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
+>  			__builtin_ffs((int)DA9062AA_LDO2_ILIM_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> @@ -575,10 +551,10 @@ static const struct da9062_regulator_info
+> local_da9061_regulator_info[] =3D {
+>  			sizeof(unsigned int) * 8 -
+>  			__builtin_clz((DA9062AA_LDO3_SL_B_MASK)) - 1),
+>  		.suspend_vsel_reg =3D DA9062AA_VLDO3_B,
+> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
+> -			__builtin_ffs((int)DA9062AA_VLDO3_SEL_MASK) - 1,
+> +		.suspend =3D REG_FIELD(DA9062AA_LDO3_CONT,
+> +			__builtin_ffs((int)DA9062AA_LDO3_CONF_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> -			__builtin_clz((DA9062AA_VLDO3_SEL_MASK)) - 1),
+> +			__builtin_clz(DA9062AA_LDO3_CONF_MASK) - 1),
+>  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
+>  			__builtin_ffs((int)DA9062AA_LDO3_ILIM_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> @@ -608,10 +584,10 @@ static const struct da9062_regulator_info
+> local_da9061_regulator_info[] =3D {
+>  			sizeof(unsigned int) * 8 -
+>  			__builtin_clz((DA9062AA_LDO4_SL_B_MASK)) - 1),
+>  		.suspend_vsel_reg =3D DA9062AA_VLDO4_B,
+> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
+> -			__builtin_ffs((int)DA9062AA_VLDO4_SEL_MASK) - 1,
+> +		.suspend =3D REG_FIELD(DA9062AA_LDO4_CONT,
+> +			__builtin_ffs((int)DA9062AA_LDO4_CONF_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> -			__builtin_clz((DA9062AA_VLDO4_SEL_MASK)) - 1),
+> +			__builtin_clz(DA9062AA_LDO4_CONF_MASK) - 1),
+>  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
+>  			__builtin_ffs((int)DA9062AA_LDO4_ILIM_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> @@ -652,10 +628,10 @@ static const struct da9062_regulator_info
+> local_da9062_regulator_info[] =3D {
+>  			__builtin_ffs((int)DA9062AA_BUCK1_MODE_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+>  			__builtin_clz((DA9062AA_BUCK1_MODE_MASK)) - 1),
+> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
+> -			__builtin_ffs((int)DA9062AA_VBUCK1_SEL_MASK) - 1,
+> +		.suspend =3D REG_FIELD(DA9062AA_BUCK1_CONT,
+> +			__builtin_ffs((int)DA9062AA_BUCK1_CONF_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> -			__builtin_clz((DA9062AA_VBUCK1_SEL_MASK)) - 1),
+> +			__builtin_clz(DA9062AA_BUCK1_CONF_MASK) - 1),
+>  	},
+>  	{
+>  		.desc.id =3D DA9062_ID_BUCK2,
+> @@ -688,10 +664,10 @@ static const struct da9062_regulator_info
+> local_da9062_regulator_info[] =3D {
+>  			__builtin_ffs((int)DA9062AA_BUCK2_MODE_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+>  			__builtin_clz((DA9062AA_BUCK2_MODE_MASK)) - 1),
+> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
+> -			__builtin_ffs((int)DA9062AA_VBUCK2_SEL_MASK) - 1,
+> +		.suspend =3D REG_FIELD(DA9062AA_BUCK2_CONT,
+> +			__builtin_ffs((int)DA9062AA_BUCK2_CONF_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> -			__builtin_clz((DA9062AA_VBUCK2_SEL_MASK)) - 1),
+> +			__builtin_clz(DA9062AA_BUCK2_CONF_MASK) - 1),
+>  	},
+>  	{
+>  		.desc.id =3D DA9062_ID_BUCK3,
+> @@ -724,10 +700,10 @@ static const struct da9062_regulator_info
+> local_da9062_regulator_info[] =3D {
+>  			__builtin_ffs((int)DA9062AA_BUCK3_MODE_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+>  			__builtin_clz((DA9062AA_BUCK3_MODE_MASK)) - 1),
+> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
+> -			__builtin_ffs((int)DA9062AA_VBUCK3_SEL_MASK) - 1,
+> +		.suspend =3D REG_FIELD(DA9062AA_BUCK3_CONT,
+> +			__builtin_ffs((int)DA9062AA_BUCK3_CONF_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> -			__builtin_clz((DA9062AA_VBUCK3_SEL_MASK)) - 1),
+> +			__builtin_clz(DA9062AA_BUCK3_CONF_MASK) - 1),
+>  	},
+>  	{
+>  		.desc.id =3D DA9062_ID_BUCK4,
+> @@ -760,10 +736,10 @@ static const struct da9062_regulator_info
+> local_da9062_regulator_info[] =3D {
+>  			__builtin_ffs((int)DA9062AA_BUCK4_MODE_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+>  			__builtin_clz((DA9062AA_BUCK4_MODE_MASK)) - 1),
+> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
+> -			__builtin_ffs((int)DA9062AA_VBUCK4_SEL_MASK) - 1,
+> +		.suspend =3D REG_FIELD(DA9062AA_BUCK4_CONT,
+> +			__builtin_ffs((int)DA9062AA_BUCK4_CONF_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> -			__builtin_clz((DA9062AA_VBUCK4_SEL_MASK)) - 1),
+> +			__builtin_clz(DA9062AA_BUCK4_CONF_MASK) - 1),
+>  	},
+>  	{
+>  		.desc.id =3D DA9062_ID_LDO1,
+> @@ -789,10 +765,10 @@ static const struct da9062_regulator_info
+> local_da9062_regulator_info[] =3D {
+>  			sizeof(unsigned int) * 8 -
+>  			__builtin_clz((DA9062AA_LDO1_SL_B_MASK)) - 1),
+>  		.suspend_vsel_reg =3D DA9062AA_VLDO1_B,
+> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
+> -			__builtin_ffs((int)DA9062AA_VLDO1_SEL_MASK) - 1,
+> +		.suspend =3D REG_FIELD(DA9062AA_LDO1_CONT,
+> +			__builtin_ffs((int)DA9062AA_LDO1_CONF_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> -			__builtin_clz((DA9062AA_VLDO1_SEL_MASK)) - 1),
+> +			__builtin_clz(DA9062AA_LDO1_CONF_MASK) - 1),
+>  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
+>  			__builtin_ffs((int)DA9062AA_LDO1_ILIM_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> @@ -822,10 +798,10 @@ static const struct da9062_regulator_info
+> local_da9062_regulator_info[] =3D {
+>  			sizeof(unsigned int) * 8 -
+>  			__builtin_clz((DA9062AA_LDO2_SL_B_MASK)) - 1),
+>  		.suspend_vsel_reg =3D DA9062AA_VLDO2_B,
+> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
+> -			__builtin_ffs((int)DA9062AA_VLDO2_SEL_MASK) - 1,
+> +		.suspend =3D REG_FIELD(DA9062AA_LDO2_CONT,
+> +			__builtin_ffs((int)DA9062AA_LDO2_CONF_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> -			__builtin_clz((DA9062AA_VLDO2_SEL_MASK)) - 1),
+> +			__builtin_clz(DA9062AA_LDO2_CONF_MASK) - 1),
+>  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
+>  			__builtin_ffs((int)DA9062AA_LDO2_ILIM_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> @@ -855,10 +831,10 @@ static const struct da9062_regulator_info
+> local_da9062_regulator_info[] =3D {
+>  			sizeof(unsigned int) * 8 -
+>  			__builtin_clz((DA9062AA_LDO3_SL_B_MASK)) - 1),
+>  		.suspend_vsel_reg =3D DA9062AA_VLDO3_B,
+> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
+> -			__builtin_ffs((int)DA9062AA_VLDO3_SEL_MASK) - 1,
+> +		.suspend =3D REG_FIELD(DA9062AA_LDO3_CONT,
+> +			__builtin_ffs((int)DA9062AA_LDO3_CONF_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> -			__builtin_clz((DA9062AA_VLDO3_SEL_MASK)) - 1),
+> +			__builtin_clz(DA9062AA_LDO3_CONF_MASK) - 1),
+>  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
+>  			__builtin_ffs((int)DA9062AA_LDO3_ILIM_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> @@ -888,10 +864,10 @@ static const struct da9062_regulator_info
+> local_da9062_regulator_info[] =3D {
+>  			sizeof(unsigned int) * 8 -
+>  			__builtin_clz((DA9062AA_LDO4_SL_B_MASK)) - 1),
+>  		.suspend_vsel_reg =3D DA9062AA_VLDO4_B,
+> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
+> -			__builtin_ffs((int)DA9062AA_VLDO4_SEL_MASK) - 1,
+> +		.suspend =3D REG_FIELD(DA9062AA_LDO4_CONT,
+> +			__builtin_ffs((int)DA9062AA_LDO4_CONF_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> -			__builtin_clz((DA9062AA_VLDO4_SEL_MASK)) - 1),
+> +			__builtin_clz(DA9062AA_LDO4_CONF_MASK) - 1),
+>  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
+>  			__builtin_ffs((int)DA9062AA_LDO4_ILIM_MASK) - 1,
+>  			sizeof(unsigned int) * 8 -
+> --
+> 2.20.1
