@@ -1,41 +1,151 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH V6 1/2] dt-bindings: mailbox: add binding doc for the ARM
- SMC/HVC mailbox
-Date: Wed, 18 Sep 2019 08:34:41 -0500
-Message-ID: <CABb+yY09pPqM-47zNFVGMNM9wrDF9iiVuqKTXrEd4-PdOxBPrQ@mail.gmail.com>
-References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
- <1568626884-5189-2-git-send-email-peng.fan@nxp.com> <20190917183115.3e40180f@donnerap.cambridge.arm.com>
- <CABb+yY2CP1i9fZMoPua=-mLCUpYrcO28xF5UXDeRD2XTYe7mEg@mail.gmail.com> <AM0PR04MB44811AE46803D10FD8A5B8B0888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v7 00/13] Device property improvements, add %pfw format specifier
+Date: Wed, 18 Sep 2019 16:34:06 +0300
+Message-ID: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM0PR04MB44811AE46803D10FD8A5B8B0888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Andre Przywara <andre.przywara@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 3:53 AM Peng Fan <peng.fan@nxp.com> wrote:
+Hi all,
 
-> > >
-> > > > +
-> > > > +  "#mbox-cells":
-> > > > +    const: 1
-> > >
-> > > Why is this "1"? What is this number used for? It used to be the channel ID,
-> > but since you are describing a single channel controller only, this should be 0
-> > now.
-> > >
-> > Yes. I overlooked it and actually queued the patch for pull request.
->
-> In Documentation/devicetree/bindings/mailbox/mailbox.txt
-> #mbox-cells: Must be at least 1.
->
-> So I use 1 here, 0 not work. Because of_mbox_index_xlate expect at least 1 here.
-> So I need modify Documentation/devicetree/bindings/mailbox/mailbox.txt
-> and add xlate for smc mailbox?
->
-No, you just can not use the generic xlate() provided by the api.
-Please implement your own xlate() that requires no argument.
+This set adds functionality into the device property API (counting a
+node's parents as well as obtaining its name) in order to support printing
+fwnode names using a new conversion specifier "%pfw". The names that are
+produced are equivalent to its OF counterpart "%pOF" on OF systems for the
+two supported modifiers ("f" and "P").
 
-Cheers!
+Printing a node's name is something that's been available on OF for a long
+time and if something is converted to device property API (such as the
+V4L2 fwnode framework) it always got removed of a nice feature that was
+sometimes essential in debugging. With this set, that no longer is the
+case.
+
+Note: the set now depends on 2d44d165e939 ("scsi: lpfc: Convert existing
+%pf users to %ps") that is expected from the linux-scsi tree. It is 
+
+since v6:
+
+- Added a patch for a warning note on re-using obsolete %pf oand %pF
+  extensions.
+
+- Rework %pfw validatition in checkpatch.pl according to Joe's comments.
+
+- Unwrap a line wrapped by a previous versions in get_bprint_format().
+
+- Handle %pf and %pF modifiers again in make_bprint_args() in case they're
+  no followed by 'w'.
+
+since v5:
+
+- Added a patch to convert %pf to %ps in tools/lib/traceevent.c (first in
+  the set).
+
+- Fix ReST syntax in Documentation/core-api/printk-formats.rst.
+
+- Fix returning root swnode name in patch "device property: Add
+  fwnode_get_name for returning the name of a node". Use to_swnode()
+  directly as well in the same patch.
+
+- Tests: take root node name into account, use direct indices and remove
+  the comma from the guardian entry.
+
+- Add a comment on how fwnode_full_name_string() enumerates the nodes.
+
+- Fix error string in fwnode_string().
+
+- Move 'f' + default case as last in the switch in fwnode_string().
+
+- Fix %pfw validation in checkpatch.pl.
+
+since v4:
+
+- Improved documentation for fwnode_get_nth_parent().
+
+- Removed comma from the guardian entry in fwnode_pointer() testcase.
+
+since v3:
+
+- Remove underscores in argument name of fwnode_count_parents().
+
+- Re-introduce "%pO?" error string.
+
+- Unwrap a call to string() in fwnode_string().
+
+- Removed a useless Depends-on: on a patch that was merged long ago.
+
+- Unwrap a Fixes: line.
+
+- Added a patch to move fwnode_get_parent() up to make the review of the
+  following patch easier.
+
+since v2:
+
+- Better comments in acpi_fwnode_get_name_prefix().
+
+- Added swnode implementation.
+
+- Fixed swnode refcounting in get_parent() ("swnode: Get reference to
+  parent swnode in get_parent op")
+
+- Make argument to to_software_node() const (a new patch)
+
+- Factored out confusingly named kobject_string() that had a single
+  caller.
+
+- Cleaner fwnode_count_parents() implementation (as discussed in review).
+
+- Made fwnode_count_parents() argument const.
+
+- Added tests (last patch in the set).
+
+since v1:
+
+- Add patch to remove support for %pf and %pF (depends on another patch
+  removing all use of %pf and %pF) (now 4th patch)
+
+- Fix kerneldoc argument documentation for fwnode_get_name (2nd patch)
+
+- Align kerneldoc style with the rest of drivers/base/property.c (no extra
+  newline after function name)
+
+- Make checkpatch.pl complain about "%pf" not followed by "w" (6th patch)
+
+- WARN_ONCE() on use of invalid conversion specifiers ("%pf" not followed
+  by "w")
+
+Sakari Ailus (13):
+  tools lib traceevent: Convert remaining %p[fF] users to %p[sS]
+  software node: Get reference to parent swnode in get_parent op
+  software node: Make argument to to_software_node const
+  device property: Move fwnode_get_parent() up
+  device property: Add functions for accessing node's parents
+  device property: Add fwnode_get_name for returning the name of a node
+  device property: Add a function to obtain a node's prefix
+  lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
+  lib/vsprintf: Add a note on re-using %pf or %pF
+  lib/vsprintf: Make use of fwnode API to obtain node names and
+    separators
+  lib/vsprintf: OF nodes are first and foremost, struct device_nodes
+  lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
+  lib/test_printf: Add tests for %pfw printk modifier
+
+ Documentation/core-api/printk-formats.rst     | 34 +++++--
+ drivers/acpi/property.c                       | 48 ++++++++++
+ drivers/base/property.c                       | 83 +++++++++++++++--
+ drivers/base/swnode.c                         | 43 ++++++++-
+ drivers/of/property.c                         | 16 ++++
+ include/linux/fwnode.h                        |  4 +
+ include/linux/property.h                      |  8 +-
+ lib/test_printf.c                             | 32 +++++++
+ lib/vsprintf.c                                | 91 ++++++++++++-------
+ scripts/checkpatch.pl                         |  9 +-
+ .../Documentation/libtraceevent-func_apis.txt | 10 +-
+ tools/lib/traceevent/event-parse.c            | 18 +++-
+ 12 files changed, 328 insertions(+), 68 deletions(-)
+
+-- 
+2.20.1
