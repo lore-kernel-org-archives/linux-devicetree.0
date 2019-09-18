@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v7 02/13] software node: Get reference to parent swnode in get_parent op
-Date: Wed, 18 Sep 2019 16:34:08 +0300
-Message-ID: <20190918133419.7969-3-sakari.ailus@linux.intel.com>
+Subject: [PATCH v7 10/13] lib/vsprintf: Make use of fwnode API to obtain node names and separators
+Date: Wed, 18 Sep 2019 16:34:16 +0300
+Message-ID: <20190918133419.7969-11-sakari.ailus@linux.intel.com>
 References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,33 +12,96 @@ To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
-The software_node_get_parent() returned a pointer to the parent swnode,
-but did not take a reference to it, leading the caller to put a reference
-that was not taken. Take that reference now.
+Instead of implementing our own means of discovering parent nodes, node
+names or counting how many parents a node has, use the newly added
+functions in the fwnode API to obtain that information.
 
-Fixes: 59abd83672f7 ("drivers: base: Introducing software nodes to the firmware node framework")
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- drivers/base/swnode.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ lib/vsprintf.c | 39 +++++++++++++++++----------------------
+ 1 file changed, 17 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index e7b3aa3bd55ad..a7cb41812cfda 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -520,7 +520,10 @@ software_node_get_parent(const struct fwnode_handle *fwnode)
- {
- 	struct swnode *swnode = to_swnode(fwnode);
- 
--	return swnode ? (swnode->parent ? &swnode->parent->fwnode : NULL) : NULL;
-+	if (!swnode || !swnode->parent)
-+		return NULL;
-+
-+	return fwnode_handle_get(&swnode->parent->fwnode);
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index df59818537b52..1195a11d99ba2 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -38,6 +38,7 @@
+ #include <net/addrconf.h>
+ #include <linux/siphash.h>
+ #include <linux/compiler.h>
++#include <linux/property.h>
+ #ifdef CONFIG_BLOCK
+ #include <linux/blkdev.h>
+ #endif
+@@ -1863,32 +1864,25 @@ char *flags_string(char *buf, char *end, void *flags_ptr,
+ 	return format_flags(buf, end, flags, names);
  }
  
- static struct fwnode_handle *
+-static const char *device_node_name_for_depth(const struct device_node *np, int depth)
+-{
+-	for ( ; np && depth; depth--)
+-		np = np->parent;
+-
+-	return kbasename(np->full_name);
+-}
+-
+ static noinline_for_stack
+-char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
++char *fwnode_full_name_string(struct fwnode_handle *fwnode, char *buf,
++			      char *end)
+ {
+ 	int depth;
+-	const struct device_node *parent = np->parent;
+ 
+-	/* special case for root node */
+-	if (!parent)
+-		return string_nocheck(buf, end, "/", default_str_spec);
++	/* Loop starting from the root node to the current node. */
++	for (depth = fwnode_count_parents(fwnode); depth >= 0; depth--) {
++		struct fwnode_handle *__fwnode =
++			fwnode_get_nth_parent(fwnode, depth);
+ 
+-	for (depth = 0; parent->parent; depth++)
+-		parent = parent->parent;
+-
+-	for ( ; depth >= 0; depth--) {
+-		buf = string_nocheck(buf, end, "/", default_str_spec);
+-		buf = string(buf, end, device_node_name_for_depth(np, depth),
++		buf = string(buf, end, fwnode_get_name_prefix(__fwnode),
++			     default_str_spec);
++		buf = string(buf, end, fwnode_get_name(__fwnode),
+ 			     default_str_spec);
++
++		fwnode_handle_put(__fwnode);
+ 	}
++
+ 	return buf;
+ }
+ 
+@@ -1933,10 +1927,11 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+ 
+ 		switch (*fmt) {
+ 		case 'f':	/* full_name */
+-			buf = device_node_gen_full_name(dn, buf, end);
++			buf = fwnode_full_name_string(of_fwnode_handle(dn), buf,
++						      end);
+ 			break;
+ 		case 'n':	/* name */
+-			p = kbasename(of_node_full_name(dn));
++			p = fwnode_get_name(of_fwnode_handle(dn));
+ 			precision = str_spec.precision;
+ 			str_spec.precision = strchrnul(p, '@') - p;
+ 			buf = string(buf, end, p, str_spec);
+@@ -1946,7 +1941,7 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+ 			buf = number(buf, end, (unsigned int)dn->phandle, num_spec);
+ 			break;
+ 		case 'P':	/* path-spec */
+-			p = kbasename(of_node_full_name(dn));
++			p = fwnode_get_name(of_fwnode_handle(dn));
+ 			if (!p[1])
+ 				p = "/";
+ 			buf = string(buf, end, p, str_spec);
 -- 
 2.20.1
