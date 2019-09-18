@@ -1,61 +1,156 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: dma: ti-edma: Document
- dma-channel-mask for EDMA
-Date: Wed, 18 Sep 2019 08:29:31 -0500
-Message-ID: <20190918132931.GA14832@bogus>
-References: <20190910114559.22810-1-peter.ujfalusi@ti.com>
- <20190910114559.22810-3-peter.ujfalusi@ti.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH V6 2/2] mailbox: introduce ARM SMC based mailbox
+Date: Wed, 18 Sep 2019 08:31:57 -0500
+Message-ID: <CABb+yY2G8s9gV8Pu+f__8-bubjCJsVQrQikbVMZXmpTwSMBxiQ@mail.gmail.com>
+References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
+ <1568626884-5189-3-git-send-email-peng.fan@nxp.com> <20190917183856.2342beed@donnerap.cambridge.arm.com>
+ <AM0PR04MB44813D62FF7E6762BB17460E888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20190918110037.4edefb2f@donnerap.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190910114559.22810-3-peter.ujfalusi@ti.com>
+In-Reply-To: <20190918110037.4edefb2f@donnerap.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 02:45:58PM +0300, Peter Ujfalusi wrote:
-> Similarly to paRAM slots, channels can be used by other cores.
-> 
-> The common dma-channel-mask property can be used for specifying the
-> available channels.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  Documentation/devicetree/bindings/dma/ti-edma.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> index 4bbc94d829c8..3c7736246354 100644
-> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
-> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> @@ -42,6 +42,9 @@ Optional properties:
->  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
->  		the driver, they are allocated to be used by for example the
->  		DSP. See example.
-> +- dma-channel-mask: Mask of usable channels, see
-> +		Documentation/devicetree/bindings/dma/dma-common.yaml
-> +
+On Wed, Sep 18, 2019 at 5:00 AM Andre Przywara <andre.przywara@arm.com> wrote:
 
-What's the size? 2 cells?
+> >
+> > >
+> > > > + };
+> > > > +};
+> > >
+> > > If this is the data structure that this mailbox controller uses, I would expect
+> > > this to be documented somewhere, or even exported.
+> >
+> > Export this structure in include/linux/mailbox/smc-mailbox.h?
+>
+> For instance, even though I am not sure this is really desired or helpful, since we expect a generic mailbox client (the SCPI or SCMI driver) to deal with that mailbox.
+>
+> But at least the expected format should be documented, which could just be in writing, not necessarily in code.
+>
+Yes, the packet format is specified by the controller and defined in
+some header for clients to include. Other platforms do that already.
 
->  
->  ------------------------------------------------------------------------------
->  eDMA3 Transfer Controller
-> @@ -91,6 +94,9 @@ edma: edma@49000000 {
->  	ti,edma-memcpy-channels = <20 21>;
->  	/* The following PaRAM slots are reserved: 35-44 and 100-109 */
->  	ti,edma-reserved-slot-ranges = <35 10>, <100 10>;
-> +	/* The following channels are reserved: 35-44 */
-> +	dma-channel-mask = <0xffffffff>, /* Channel 0-31 */
-> +			   <0xffffe007>; /* Channel 32-63 */
->  };
->  
->  edma_tptc0: tptc@49800000 {
-> -- 
-> Peter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+
+
+> > > > +
+> > > > +typedef unsigned long (smc_mbox_fn)(unsigned int, unsigned long,
+> > > > +                             unsigned long, unsigned long,
+> > > > +                             unsigned long, unsigned long,
+> > > > +                             unsigned long);
+> > > > +static smc_mbox_fn *invoke_smc_mbox_fn;
+> > > > +
+> > > > +static int arm_smc_send_data(struct mbox_chan *link, void *data) {
+> > > > + struct arm_smc_chan_data *chan_data = link->con_priv;
+> > > > + struct arm_smccc_mbox_cmd *cmd = data;
+> > > > + unsigned long ret;
+> > > > + u32 function_id;
+> > > > +
+> > > > + function_id = chan_data->function_id;
+> > > > + if (!function_id)
+> > > > +         function_id = cmd->function_id;
+> > > > +
+> > > > + if (function_id & BIT(30)) {
+> > >
+> > >     if (ARM_SMCCC_IS_64(function_id)) {
+> >
+> > ok
+> >
+> > >
+> > > > +         ret = invoke_smc_mbox_fn(function_id, cmd->args_smccc64[0],
+> > > > +                                  cmd->args_smccc64[1],
+> > > > +                                  cmd->args_smccc64[2],
+> > > > +                                  cmd->args_smccc64[3],
+> > > > +                                  cmd->args_smccc64[4],
+> > > > +                                  cmd->args_smccc64[5]);
+> > > > + } else {
+> > > > +         ret = invoke_smc_mbox_fn(function_id, cmd->args_smccc32[0],
+> > > > +                                  cmd->args_smccc32[1],
+> > > > +                                  cmd->args_smccc32[2],
+> > > > +                                  cmd->args_smccc32[3],
+> > > > +                                  cmd->args_smccc32[4],
+> > > > +                                  cmd->args_smccc32[5]);
+> > > > + }
+> > > > +
+> > > > + mbox_chan_received_data(link, (void *)ret);
+> > > > +
+> > > > + return 0;
+> > > > +}
+> > > > +
+> > > > +static unsigned long __invoke_fn_hvc(unsigned int function_id,
+> > > > +                              unsigned long arg0, unsigned long arg1,
+> > > > +                              unsigned long arg2, unsigned long arg3,
+> > > > +                              unsigned long arg4, unsigned long arg5) {
+> > > > + struct arm_smccc_res res;
+> > > > +
+> > > > + arm_smccc_hvc(function_id, arg0, arg1, arg2, arg3, arg4,
+> > > > +               arg5, 0, &res);
+> > > > + return res.a0;
+> > > > +}
+> > > > +
+> > > > +static unsigned long __invoke_fn_smc(unsigned int function_id,
+> > > > +                              unsigned long arg0, unsigned long arg1,
+> > > > +                              unsigned long arg2, unsigned long arg3,
+> > > > +                              unsigned long arg4, unsigned long arg5) {
+> > > > + struct arm_smccc_res res;
+> > > > +
+> > > > + arm_smccc_smc(function_id, arg0, arg1, arg2, arg3, arg4,
+> > > > +               arg5, 0, &res);
+> > > > + return res.a0;
+> > > > +}
+> > > > +
+> > > > +static const struct mbox_chan_ops arm_smc_mbox_chan_ops = {
+> > > > + .send_data      = arm_smc_send_data,
+> > > > +};
+> > > > +
+> > > > +static int arm_smc_mbox_probe(struct platform_device *pdev) {
+> > > > + struct device *dev = &pdev->dev;
+> > > > + struct mbox_controller *mbox;
+> > > > + struct arm_smc_chan_data *chan_data;
+> > > > + int ret;
+> > > > + u32 function_id = 0;
+> > > > +
+> > > > + if (of_device_is_compatible(dev->of_node, "arm,smc-mbox"))
+> > > > +         invoke_smc_mbox_fn = __invoke_fn_smc;
+> > > > + else
+> > > > +         invoke_smc_mbox_fn = __invoke_fn_hvc;
+> > > > +
+> > > > + mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
+> > > > + if (!mbox)
+> > > > +         return -ENOMEM;
+> > > > +
+> > > > + mbox->num_chans = 1;
+> > > > + mbox->chans = devm_kzalloc(dev, sizeof(*mbox->chans), GFP_KERNEL);
+> > > > + if (!mbox->chans)
+> > > > +         return -ENOMEM;
+> > > > +
+> > > > + chan_data = devm_kzalloc(dev, sizeof(*chan_data), GFP_KERNEL);
+> > > > + if (!chan_data)
+> > > > +         return -ENOMEM;
+> > > > +
+> > > > + of_property_read_u32(dev->of_node, "arm,func-id", &function_id);
+> > > > + chan_data->function_id = function_id;
+> > > > +
+> > > > + mbox->chans->con_priv = chan_data;
+> > > > +
+> > > > + mbox->txdone_poll = false;
+> > > > + mbox->txdone_irq = false;
+> > >
+> > > Don't we need to provide something to confirm reception to the client? In our
+> > > case we can set this as soon as the smc/hvc returns.
+> >
+> > As smc/hvc returns, it means the transfer is over and receive is done.
+>
+> I understand that, but was wondering if the Linux mailbox framework knows about that? In my older version I was calling mbox_chan_received_data() after the smc call returned.
+>
+The code already does that at the end of  send_data
+
+> Also there is mbox_chan_txdone() with which a controller driver can signal TX completion explicitly.
+>
+No. Controller can use that only if it has specified txdone_irq, which
+is not the case here.
+
+Thanks
