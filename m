@@ -1,73 +1,65 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: dma: ti-edma: Document
- dma-channel-mask for EDMA
-Date: Wed, 18 Sep 2019 17:06:02 +0300
-Message-ID: <8949605b-34e8-cec1-818c-838291b72622@ti.com>
-References: <20190910114559.22810-1-peter.ujfalusi@ti.com>
- <20190910114559.22810-3-peter.ujfalusi@ti.com> <20190918132931.GA14832@bogus>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH V6 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Date: Wed, 18 Sep 2019 09:19:46 -0500
+Message-ID: <CABb+yY3drgYHk2_SZMgGhgSisB7wMVKFSx8VVabCcXkGByvgwg@mail.gmail.com>
+References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
+ <1568626884-5189-2-git-send-email-peng.fan@nxp.com> <20190917183115.3e40180f@donnerap.cambridge.arm.com>
+ <CABb+yY2CP1i9fZMoPua=-mLCUpYrcO28xF5UXDeRD2XTYe7mEg@mail.gmail.com> <20190918104347.285bd7ad@donnerap.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190918132931.GA14832@bogus>
-Content-Language: en-US
+In-Reply-To: <20190918104347.285bd7ad@donnerap.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Sep 18, 2019 at 4:44 AM Andre Przywara <andre.przywara@arm.com> wro=
+te:
+
+>
+> > which needs 9 arguments to work. The fact that the fist argument is
+> > always going to be same on a platform is just the way we use this
+> > instruction.
+> >
+> > > We should be as strict as possible to avoid any security issues.
+> > >
+> > Any example of such a security issue?
+>
+> Someone finds a way to trick some mailbox client to send a crafted messag=
+e to the mailbox.
+>
+What if someone finds a way to trick the block layer to erase 'sda' ?
+ That is called "bug in the code".
+It does happen in every subsystem but we don't stop implementing new
+features .... we write flexible code and then fix any bug.
 
 
-On 18/09/2019 16.29, Rob Herring wrote:
-> On Tue, Sep 10, 2019 at 02:45:58PM +0300, Peter Ujfalusi wrote:
->> Similarly to paRAM slots, channels can be used by other cores.
->>
->> The common dma-channel-mask property can be used for specifying the
->> available channels.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  Documentation/devicetree/bindings/dma/ti-edma.txt | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
->> index 4bbc94d829c8..3c7736246354 100644
->> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
->> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
->> @@ -42,6 +42,9 @@ Optional properties:
->>  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
->>  		the driver, they are allocated to be used by for example the
->>  		DSP. See example.
->> +- dma-channel-mask: Mask of usable channels, see
->> +		Documentation/devicetree/bindings/dma/dma-common.yaml
->> +
-> 
-> What's the size? 2 cells?
+> Do you have any example of a use case where the mailbox client needs to p=
+rovide the function ID?
+>
+FSL_SIP_SCMI_1/2 ?
+But that is not the main point, which is to be consistent (not
+ignoring first argument because someone may find a bug to exploit) and
+flexible.
 
-Depending on the EDMA, some have 32, some have 64 channels. I'll update
-the patch to reflect this.
 
->>  
->>  ------------------------------------------------------------------------------
->>  eDMA3 Transfer Controller
->> @@ -91,6 +94,9 @@ edma: edma@49000000 {
->>  	ti,edma-memcpy-channels = <20 21>;
->>  	/* The following PaRAM slots are reserved: 35-44 and 100-109 */
->>  	ti,edma-reserved-slot-ranges = <35 10>, <100 10>;
->> +	/* The following channels are reserved: 35-44 */
->> +	dma-channel-mask = <0xffffffff>, /* Channel 0-31 */
->> +			   <0xffffe007>; /* Channel 32-63 */
->>  };
->>  
->>  edma_tptc0: tptc@49800000 {
->> -- 
->> Peter
->>
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->>
+> > > The firmware certainly knows the function ID it implements. The firmw=
+are controls the DT. So it is straight-forward to put the ID into the DT. T=
+he firmware could even do this at boot time, dynamically, before passing on=
+ the DT to the non-secure world (bootloader or kernel).
+> > >
+> > > What would be the use case of this functionality?
+> > >
+> > At least for flexibility and consistency.
+>
+> I appreciate the flexibility idea, but when creating an interface, especi=
+ally a generic one to any kind of firmware, you should be as strict as poss=
+ible, to avoid clashes in the future.
+>
+I really don't see how there can be clashes with more complete and
+flexible implementation.
 
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks.
