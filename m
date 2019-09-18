@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v7 08/13] lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
-Date: Wed, 18 Sep 2019 16:34:14 +0300
-Message-ID: <20190918133419.7969-9-sakari.ailus@linux.intel.com>
+Subject: [PATCH v7 13/13] lib/test_printf: Add tests for %pfw printk modifier
+Date: Wed, 18 Sep 2019 16:34:19 +0300
+Message-ID: <20190918133419.7969-14-sakari.ailus@linux.intel.com>
 References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,91 +12,70 @@ To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
-%pS and %ps are now the preferred conversion specifiers to print function
-names. The functionality is equivalent; remove the old, deprecated %pF
-and %pf support.
+Add a test for the %pfw printk modifier using software nodes.
 
-Depends-on: commit 2d44d165e939 ("scsi: lpfc: Convert existing %pf users to %ps")
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- Documentation/core-api/printk-formats.rst | 10 ----------
- lib/vsprintf.c                            |  8 ++------
- scripts/checkpatch.pl                     |  1 -
- 3 files changed, 2 insertions(+), 17 deletions(-)
+ lib/test_printf.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-index c6224d039bcbe..922a29eb70e6c 100644
---- a/Documentation/core-api/printk-formats.rst
-+++ b/Documentation/core-api/printk-formats.rst
-@@ -86,8 +86,6 @@ Symbols/Function Pointers
+diff --git a/lib/test_printf.c b/lib/test_printf.c
+index 944eb50f38625..bb6a7d334084b 100644
+--- a/lib/test_printf.c
++++ b/lib/test_printf.c
+@@ -22,6 +22,8 @@
+ #include <linux/gfp.h>
+ #include <linux/mm.h>
  
- 	%pS	versatile_init+0x0/0x110
- 	%ps	versatile_init
--	%pF	versatile_init+0x0/0x110
--	%pf	versatile_init
- 	%pSR	versatile_init+0x9/0x110
- 		(with __builtin_extract_return_addr() translation)
- 	%pB	prev_fn_of_versatile_init+0x88/0x88
-@@ -97,14 +95,6 @@ The ``S`` and ``s`` specifiers are used for printing a pointer in symbolic
- format. They result in the symbol name with (S) or without (s)
- offsets. If KALLSYMS are disabled then the symbol address is printed instead.
++#include <linux/property.h>
++
+ #include "../tools/testing/selftests/kselftest_module.h"
  
--Note, that the ``F`` and ``f`` specifiers are identical to ``S`` (``s``)
--and thus deprecated. We have ``F`` and ``f`` because on ia64, ppc64 and
--parisc64 function pointers are indirect and, in fact, are function
--descriptors, which require additional dereferencing before we can lookup
--the symbol. As of now, ``S`` and ``s`` perform dereferencing on those
--platforms (when needed), so ``F`` and ``f`` exist for compatibility
--reasons only.
--
- The ``B`` specifier results in the symbol name with offsets and should be
- used when printing stack backtraces. The specifier takes into
- consideration the effect of compiler optimisations which may occur
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index b0967cf17137d..b00b57f9f911f 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -909,7 +909,7 @@ char *symbol_string(char *buf, char *end, void *ptr,
- #ifdef CONFIG_KALLSYMS
- 	if (*fmt == 'B')
- 		sprint_backtrace(sym, value);
--	else if (*fmt != 'f' && *fmt != 's')
-+	else if (*fmt != 's')
- 		sprint_symbol(sym, value);
- 	else
- 		sprint_symbol_no_offset(sym, value);
-@@ -2007,9 +2007,7 @@ static char *kobject_string(char *buf, char *end, void *ptr,
-  *
-  * - 'S' For symbolic direct pointers (or function descriptors) with offset
-  * - 's' For symbolic direct pointers (or function descriptors) without offset
-- * - 'F' Same as 'S'
-- * - 'f' Same as 's'
-- * - '[FfSs]R' as above with __builtin_extract_return_addr() translation
-+ * - '[Ss]R' as above with __builtin_extract_return_addr() translation
-  * - 'B' For backtraced symbolic direct pointers with offset
-  * - 'R' For decoded struct resource, e.g., [mem 0x0-0x1f 64bit pref]
-  * - 'r' For raw struct resource, e.g., [mem 0x0-0x1f flags 0x201]
-@@ -2112,8 +2110,6 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
- 	      struct printf_spec spec)
+ #define BUF_SIZE 256
+@@ -588,6 +590,35 @@ flags(void)
+ 	kfree(cmp_buffer);
+ }
+ 
++static void __init fwnode_pointer(void)
++{
++	const struct software_node softnodes[] = {
++		{ .name = "first", },
++		{ .name = "second", .parent = &softnodes[0], },
++		{ .name = "third", .parent = &softnodes[1], },
++		{ NULL /* Guardian */ }
++	};
++	const char * const full_name = "first/second/third";
++	const char * const full_name_second = "first/second";
++	const char * const second_name = "second";
++	const char * const third_name = "third";
++	int rval;
++
++	rval = software_node_register_nodes(softnodes);
++	if (rval) {
++		pr_warn("cannot register softnodes; rval %d\n", rval);
++		return;
++	}
++
++	test(full_name_second, "%pfw", software_node_fwnode(&softnodes[1]));
++	test(full_name, "%pfw", software_node_fwnode(&softnodes[2]));
++	test(full_name, "%pfwf", software_node_fwnode(&softnodes[2]));
++	test(second_name, "%pfwP", software_node_fwnode(&softnodes[1]));
++	test(third_name, "%pfwP", software_node_fwnode(&softnodes[2]));
++
++	software_node_unregister_nodes(softnodes);
++}
++
+ static void __init
+ test_pointer(void)
  {
- 	switch (*fmt) {
--	case 'F':
--	case 'f':
- 	case 'S':
- 	case 's':
- 		ptr = dereference_symbol_descriptor(ptr);
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 93a7edfe0f059..a60c241112cd4 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -6012,7 +6012,6 @@ sub process {
- 					my $ext_type = "Invalid";
- 					my $use = "";
- 					if ($bad_specifier =~ /p[Ff]/) {
--						$ext_type = "Deprecated";
- 						$use = " - use %pS instead";
- 						$use =~ s/pS/ps/ if ($bad_specifier =~ /pf/);
- 					}
+@@ -610,6 +641,7 @@ test_pointer(void)
+ 	bitmap();
+ 	netdev_features();
+ 	flags();
++	fwnode_pointer();
+ }
+ 
+ static void __init selftest(void)
 -- 
 2.20.1
