@@ -1,341 +1,202 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: RE: [PATCH 1/5] regulator: da9062: fix suspend_enable/disable
- preparation
-Date: Wed, 18 Sep 2019 12:41:25 +0000
-Message-ID: <AM5PR1001MB0994E4B24181AEFCA0C26CF2808E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-References: <20190917124246.11732-1-m.felsch@pengutronix.de>
- <20190917124246.11732-2-m.felsch@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 07/11] dt-bindings: arm: samsung: Convert Exynos PMU
+ bindings to json-schema
+Date: Wed, 18 Sep 2019 07:43:06 -0500
+Message-ID: <20190918124306.GB318@bogus>
+References: <20190907092007.9946-1-krzk@kernel.org>
+ <20190907092007.9946-7-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190917124246.11732-2-m.felsch@pengutronix.de>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190907092007.9946-7-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>, Support Opensource <Support.Opensource@diasemi.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>
-Cc: "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 17 September 2019 13:43, Marco Felsch wrote:
-
-> Currently the suspend reg_field maps to the pmic voltage selection bits
-> and is used during suspend_enabe/disable() and during get_mode(). This
-> seems to be wrong for both use cases.
-
-Hi Marco,
-
-I'd be very surprised if what was in place was wrong as I know Stephen test=
-ed
-this driver thoroughly over its lifetime. Regardless, I'll need some time t=
-o review
-your proposed updates to make sure this aligns with our expectation of oper=
-ation.
-
->=20
-> Use case one (suspend_enabe/disable):
-> Those callbacks are used to mark a regulator device as enabled/disabled
-> during suspend. Marking the regulator enabled during suspend is done by
-> the LDOx_CONF/BUCKx_CONF bit within the LDOx_CONT/BUCKx_CONT
-> registers.
-> Setting this bit tells the DA9062 PMIC state machine to keep the
-> regulator on in POWERDOWN mode and switch to suspend voltage.
->=20
-> Use case two (get_mode):
-> The get_mode callback is used to retrieve the active mode state. Since
-> the regulator-setting-A is used for the active state and
-> regulator-setting-B for the suspend state there is no need to check
-> which regulator setting is active.
->=20
-> Fixes: 4068e5182ada ("regulator: da9062: DA9062 regulator driver")
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+On Sat, Sep 07, 2019 at 11:20:03AM +0200, Krzysztof Kozlowski wrote:
+> Convert Samsung Exynos Power Management Unit (PMU) bindings to DT schema
+> format using json-schema.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
 > ---
->  drivers/regulator/da9062-regulator.c | 118 +++++++++++----------------
->  1 file changed, 47 insertions(+), 71 deletions(-)
->=20
-> diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9=
-062-
-> regulator.c
-> index 2ffc64622451..9b2ca472f70c 100644
-> --- a/drivers/regulator/da9062-regulator.c
-> +++ b/drivers/regulator/da9062-regulator.c
-> @@ -136,7 +136,6 @@ static int da9062_buck_set_mode(struct regulator_dev
-> *rdev, unsigned mode)
->  static unsigned da9062_buck_get_mode(struct regulator_dev *rdev)
->  {
->  	struct da9062_regulator *regl =3D rdev_get_drvdata(rdev);
-> -	struct regmap_field *field;
->  	unsigned int val, mode =3D 0;
->  	int ret;
->=20
-> @@ -158,18 +157,7 @@ static unsigned da9062_buck_get_mode(struct
-> regulator_dev *rdev)
->  		return REGULATOR_MODE_NORMAL;
->  	}
->=20
-> -	/* Detect current regulator state */
-> -	ret =3D regmap_field_read(regl->suspend, &val);
-> -	if (ret < 0)
-> -		return 0;
+> 
+> Changes since v1:
+> 1. Fix clock-names to match all elements against schema (any number of
+>    any clkoutN values).
+>    This currently fails:
+>        properties:clock-names:items: {'enum': ['clkout0', 'clkout1', 'clkout2',
+>        'clkout3', 'clkout4', 'clkout5', 'clkout6', 'clkout7', 'clkout8',
+>        'clkout9', 'clkout10', 'clkout11', 'clkout12', 'clkout13', 'clkout14',
+>        'clkout15', 'clkout16']} is not of type 'array
+> 
+> 2. Add syscon reboot and poweroff nodes.
+> ---
+>  .../devicetree/bindings/arm/samsung/pmu.txt   |  72 -----------
+>  .../devicetree/bindings/arm/samsung/pmu.yaml  | 117 ++++++++++++++++++
+>  2 files changed, 117 insertions(+), 72 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> deleted file mode 100644
+> index 433bfd7593ac..000000000000
+> --- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> +++ /dev/null
+> @@ -1,72 +0,0 @@
+> -SAMSUNG Exynos SoC series PMU Registers
 > -
-> -	/* Read regulator mode from proper register, depending on state */
-> -	if (val)
-> -		field =3D regl->suspend_sleep;
-> -	else
-> -		field =3D regl->sleep;
+> -Properties:
+> - - compatible : should contain two values. First value must be one from following list:
+> -		   - "samsung,exynos3250-pmu" - for Exynos3250 SoC,
+> -		   - "samsung,exynos4210-pmu" - for Exynos4210 SoC,
+> -		   - "samsung,exynos4412-pmu" - for Exynos4412 SoC,
+> -		   - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
+> -		   - "samsung,exynos5260-pmu" - for Exynos5260 SoC.
+> -		   - "samsung,exynos5410-pmu" - for Exynos5410 SoC,
+> -		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
+> -		   - "samsung,exynos5433-pmu" - for Exynos5433 SoC.
+> -		   - "samsung,exynos7-pmu" - for Exynos7 SoC.
+> -		second value must be always "syscon".
 > -
-> -	ret =3D regmap_field_read(field, &val);
-> +	ret =3D regmap_field_read(regl->sleep, &val);
->  	if (ret < 0)
->  		return 0;
->=20
-> @@ -208,21 +196,9 @@ static int da9062_ldo_set_mode(struct regulator_dev
-> *rdev, unsigned mode)
->  static unsigned da9062_ldo_get_mode(struct regulator_dev *rdev)
->  {
->  	struct da9062_regulator *regl =3D rdev_get_drvdata(rdev);
-> -	struct regmap_field *field;
->  	int ret, val;
->=20
-> -	/* Detect current regulator state */
-> -	ret =3D regmap_field_read(regl->suspend, &val);
-> -	if (ret < 0)
-> -		return 0;
+> - - reg : offset and length of the register set.
 > -
-> -	/* Read regulator mode from proper register, depending on state */
-> -	if (val)
-> -		field =3D regl->suspend_sleep;
-> -	else
-> -		field =3D regl->sleep;
+> - - #clock-cells : must be <1>, since PMU requires once cell as clock specifier.
+> -		The single specifier cell is used as index to list of clocks
+> -		provided by PMU, which is currently:
+> -			0 : SoC clock output (CLKOUT pin)
 > -
-> -	ret =3D regmap_field_read(field, &val);
-> +	ret =3D regmap_field_read(regl->sleep, &val);
->  	if (ret < 0)
->  		return 0;
->=20
-> @@ -408,10 +384,10 @@ static const struct da9062_regulator_info
-> local_da9061_regulator_info[] =3D {
->  			__builtin_ffs((int)DA9062AA_BUCK1_MODE_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
->  			__builtin_clz((DA9062AA_BUCK1_MODE_MASK)) - 1),
-> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
-> -			__builtin_ffs((int)DA9062AA_VBUCK1_SEL_MASK) - 1,
-> +		.suspend =3D REG_FIELD(DA9062AA_BUCK1_CONT,
-> +			__builtin_ffs((int)DA9062AA_BUCK1_CONF_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> -			__builtin_clz((DA9062AA_VBUCK1_SEL_MASK)) - 1),
-> +			__builtin_clz(DA9062AA_BUCK1_CONF_MASK) - 1),
->  	},
->  	{
->  		.desc.id =3D DA9061_ID_BUCK2,
-> @@ -444,10 +420,10 @@ static const struct da9062_regulator_info
-> local_da9061_regulator_info[] =3D {
->  			__builtin_ffs((int)DA9062AA_BUCK3_MODE_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
->  			__builtin_clz((DA9062AA_BUCK3_MODE_MASK)) - 1),
-> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
-> -			__builtin_ffs((int)DA9062AA_VBUCK3_SEL_MASK) - 1,
-> +		.suspend =3D REG_FIELD(DA9062AA_BUCK3_CONT,
-> +			__builtin_ffs((int)DA9062AA_BUCK3_CONF_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> -			__builtin_clz((DA9062AA_VBUCK3_SEL_MASK)) - 1),
-> +			__builtin_clz(DA9062AA_BUCK3_CONF_MASK) - 1),
->  	},
->  	{
->  		.desc.id =3D DA9061_ID_BUCK3,
-> @@ -480,10 +456,10 @@ static const struct da9062_regulator_info
-> local_da9061_regulator_info[] =3D {
->  			__builtin_ffs((int)DA9062AA_BUCK4_MODE_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
->  			__builtin_clz((DA9062AA_BUCK4_MODE_MASK)) - 1),
-> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
-> -			__builtin_ffs((int)DA9062AA_VBUCK4_SEL_MASK) - 1,
-> +		.suspend =3D REG_FIELD(DA9062AA_BUCK4_CONT,
-> +			__builtin_ffs((int)DA9062AA_BUCK4_CONF_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> -			__builtin_clz((DA9062AA_VBUCK4_SEL_MASK)) - 1),
-> +			__builtin_clz(DA9062AA_BUCK4_CONF_MASK) - 1),
->  	},
->  	{
->  		.desc.id =3D DA9061_ID_LDO1,
-> @@ -509,10 +485,10 @@ static const struct da9062_regulator_info
-> local_da9061_regulator_info[] =3D {
->  			sizeof(unsigned int) * 8 -
->  			__builtin_clz((DA9062AA_LDO1_SL_B_MASK)) - 1),
->  		.suspend_vsel_reg =3D DA9062AA_VLDO1_B,
-> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
-> -			__builtin_ffs((int)DA9062AA_VLDO1_SEL_MASK) - 1,
-> +		.suspend =3D REG_FIELD(DA9062AA_LDO1_CONT,
-> +			__builtin_ffs((int)DA9062AA_LDO1_CONF_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> -			__builtin_clz((DA9062AA_VLDO1_SEL_MASK)) - 1),
-> +			__builtin_clz(DA9062AA_LDO1_CONF_MASK) - 1),
->  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
->  			__builtin_ffs((int)DA9062AA_LDO1_ILIM_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> @@ -542,10 +518,10 @@ static const struct da9062_regulator_info
-> local_da9061_regulator_info[] =3D {
->  			sizeof(unsigned int) * 8 -
->  			__builtin_clz((DA9062AA_LDO2_SL_B_MASK)) - 1),
->  		.suspend_vsel_reg =3D DA9062AA_VLDO2_B,
-> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
-> -			__builtin_ffs((int)DA9062AA_VLDO2_SEL_MASK) - 1,
-> +		.suspend =3D REG_FIELD(DA9062AA_LDO2_CONT,
-> +			__builtin_ffs((int)DA9062AA_LDO2_CONF_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> -			__builtin_clz((DA9062AA_VLDO2_SEL_MASK)) - 1),
-> +			__builtin_clz(DA9062AA_LDO2_CONF_MASK) - 1),
->  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
->  			__builtin_ffs((int)DA9062AA_LDO2_ILIM_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> @@ -575,10 +551,10 @@ static const struct da9062_regulator_info
-> local_da9061_regulator_info[] =3D {
->  			sizeof(unsigned int) * 8 -
->  			__builtin_clz((DA9062AA_LDO3_SL_B_MASK)) - 1),
->  		.suspend_vsel_reg =3D DA9062AA_VLDO3_B,
-> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
-> -			__builtin_ffs((int)DA9062AA_VLDO3_SEL_MASK) - 1,
-> +		.suspend =3D REG_FIELD(DA9062AA_LDO3_CONT,
-> +			__builtin_ffs((int)DA9062AA_LDO3_CONF_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> -			__builtin_clz((DA9062AA_VLDO3_SEL_MASK)) - 1),
-> +			__builtin_clz(DA9062AA_LDO3_CONF_MASK) - 1),
->  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
->  			__builtin_ffs((int)DA9062AA_LDO3_ILIM_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> @@ -608,10 +584,10 @@ static const struct da9062_regulator_info
-> local_da9061_regulator_info[] =3D {
->  			sizeof(unsigned int) * 8 -
->  			__builtin_clz((DA9062AA_LDO4_SL_B_MASK)) - 1),
->  		.suspend_vsel_reg =3D DA9062AA_VLDO4_B,
-> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
-> -			__builtin_ffs((int)DA9062AA_VLDO4_SEL_MASK) - 1,
-> +		.suspend =3D REG_FIELD(DA9062AA_LDO4_CONT,
-> +			__builtin_ffs((int)DA9062AA_LDO4_CONF_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> -			__builtin_clz((DA9062AA_VLDO4_SEL_MASK)) - 1),
-> +			__builtin_clz(DA9062AA_LDO4_CONF_MASK) - 1),
->  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
->  			__builtin_ffs((int)DA9062AA_LDO4_ILIM_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> @@ -652,10 +628,10 @@ static const struct da9062_regulator_info
-> local_da9062_regulator_info[] =3D {
->  			__builtin_ffs((int)DA9062AA_BUCK1_MODE_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
->  			__builtin_clz((DA9062AA_BUCK1_MODE_MASK)) - 1),
-> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
-> -			__builtin_ffs((int)DA9062AA_VBUCK1_SEL_MASK) - 1,
-> +		.suspend =3D REG_FIELD(DA9062AA_BUCK1_CONT,
-> +			__builtin_ffs((int)DA9062AA_BUCK1_CONF_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> -			__builtin_clz((DA9062AA_VBUCK1_SEL_MASK)) - 1),
-> +			__builtin_clz(DA9062AA_BUCK1_CONF_MASK) - 1),
->  	},
->  	{
->  		.desc.id =3D DA9062_ID_BUCK2,
-> @@ -688,10 +664,10 @@ static const struct da9062_regulator_info
-> local_da9062_regulator_info[] =3D {
->  			__builtin_ffs((int)DA9062AA_BUCK2_MODE_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
->  			__builtin_clz((DA9062AA_BUCK2_MODE_MASK)) - 1),
-> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
-> -			__builtin_ffs((int)DA9062AA_VBUCK2_SEL_MASK) - 1,
-> +		.suspend =3D REG_FIELD(DA9062AA_BUCK2_CONT,
-> +			__builtin_ffs((int)DA9062AA_BUCK2_CONF_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> -			__builtin_clz((DA9062AA_VBUCK2_SEL_MASK)) - 1),
-> +			__builtin_clz(DA9062AA_BUCK2_CONF_MASK) - 1),
->  	},
->  	{
->  		.desc.id =3D DA9062_ID_BUCK3,
-> @@ -724,10 +700,10 @@ static const struct da9062_regulator_info
-> local_da9062_regulator_info[] =3D {
->  			__builtin_ffs((int)DA9062AA_BUCK3_MODE_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
->  			__builtin_clz((DA9062AA_BUCK3_MODE_MASK)) - 1),
-> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
-> -			__builtin_ffs((int)DA9062AA_VBUCK3_SEL_MASK) - 1,
-> +		.suspend =3D REG_FIELD(DA9062AA_BUCK3_CONT,
-> +			__builtin_ffs((int)DA9062AA_BUCK3_CONF_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> -			__builtin_clz((DA9062AA_VBUCK3_SEL_MASK)) - 1),
-> +			__builtin_clz(DA9062AA_BUCK3_CONF_MASK) - 1),
->  	},
->  	{
->  		.desc.id =3D DA9062_ID_BUCK4,
-> @@ -760,10 +736,10 @@ static const struct da9062_regulator_info
-> local_da9062_regulator_info[] =3D {
->  			__builtin_ffs((int)DA9062AA_BUCK4_MODE_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
->  			__builtin_clz((DA9062AA_BUCK4_MODE_MASK)) - 1),
-> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
-> -			__builtin_ffs((int)DA9062AA_VBUCK4_SEL_MASK) - 1,
-> +		.suspend =3D REG_FIELD(DA9062AA_BUCK4_CONT,
-> +			__builtin_ffs((int)DA9062AA_BUCK4_CONF_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> -			__builtin_clz((DA9062AA_VBUCK4_SEL_MASK)) - 1),
-> +			__builtin_clz(DA9062AA_BUCK4_CONF_MASK) - 1),
->  	},
->  	{
->  		.desc.id =3D DA9062_ID_LDO1,
-> @@ -789,10 +765,10 @@ static const struct da9062_regulator_info
-> local_da9062_regulator_info[] =3D {
->  			sizeof(unsigned int) * 8 -
->  			__builtin_clz((DA9062AA_LDO1_SL_B_MASK)) - 1),
->  		.suspend_vsel_reg =3D DA9062AA_VLDO1_B,
-> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
-> -			__builtin_ffs((int)DA9062AA_VLDO1_SEL_MASK) - 1,
-> +		.suspend =3D REG_FIELD(DA9062AA_LDO1_CONT,
-> +			__builtin_ffs((int)DA9062AA_LDO1_CONF_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> -			__builtin_clz((DA9062AA_VLDO1_SEL_MASK)) - 1),
-> +			__builtin_clz(DA9062AA_LDO1_CONF_MASK) - 1),
->  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
->  			__builtin_ffs((int)DA9062AA_LDO1_ILIM_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> @@ -822,10 +798,10 @@ static const struct da9062_regulator_info
-> local_da9062_regulator_info[] =3D {
->  			sizeof(unsigned int) * 8 -
->  			__builtin_clz((DA9062AA_LDO2_SL_B_MASK)) - 1),
->  		.suspend_vsel_reg =3D DA9062AA_VLDO2_B,
-> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
-> -			__builtin_ffs((int)DA9062AA_VLDO2_SEL_MASK) - 1,
-> +		.suspend =3D REG_FIELD(DA9062AA_LDO2_CONT,
-> +			__builtin_ffs((int)DA9062AA_LDO2_CONF_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> -			__builtin_clz((DA9062AA_VLDO2_SEL_MASK)) - 1),
-> +			__builtin_clz(DA9062AA_LDO2_CONF_MASK) - 1),
->  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
->  			__builtin_ffs((int)DA9062AA_LDO2_ILIM_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> @@ -855,10 +831,10 @@ static const struct da9062_regulator_info
-> local_da9062_regulator_info[] =3D {
->  			sizeof(unsigned int) * 8 -
->  			__builtin_clz((DA9062AA_LDO3_SL_B_MASK)) - 1),
->  		.suspend_vsel_reg =3D DA9062AA_VLDO3_B,
-> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
-> -			__builtin_ffs((int)DA9062AA_VLDO3_SEL_MASK) - 1,
-> +		.suspend =3D REG_FIELD(DA9062AA_LDO3_CONT,
-> +			__builtin_ffs((int)DA9062AA_LDO3_CONF_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> -			__builtin_clz((DA9062AA_VLDO3_SEL_MASK)) - 1),
-> +			__builtin_clz(DA9062AA_LDO3_CONF_MASK) - 1),
->  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
->  			__builtin_ffs((int)DA9062AA_LDO3_ILIM_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> @@ -888,10 +864,10 @@ static const struct da9062_regulator_info
-> local_da9062_regulator_info[] =3D {
->  			sizeof(unsigned int) * 8 -
->  			__builtin_clz((DA9062AA_LDO4_SL_B_MASK)) - 1),
->  		.suspend_vsel_reg =3D DA9062AA_VLDO4_B,
-> -		.suspend =3D REG_FIELD(DA9062AA_DVC_1,
-> -			__builtin_ffs((int)DA9062AA_VLDO4_SEL_MASK) - 1,
-> +		.suspend =3D REG_FIELD(DA9062AA_LDO4_CONT,
-> +			__builtin_ffs((int)DA9062AA_LDO4_CONF_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> -			__builtin_clz((DA9062AA_VLDO4_SEL_MASK)) - 1),
-> +			__builtin_clz(DA9062AA_LDO4_CONF_MASK) - 1),
->  		.oc_event =3D REG_FIELD(DA9062AA_STATUS_D,
->  			__builtin_ffs((int)DA9062AA_LDO4_ILIM_MASK) - 1,
->  			sizeof(unsigned int) * 8 -
-> --
-> 2.20.1
+> - - clock-names : list of clock names for particular CLKOUT mux inputs in
+> -		following format:
+> -			"clkoutN", where N is a decimal number corresponding to
+> -			CLKOUT mux control bits value for given input, e.g.
+> -				"clkout0", "clkout7", "clkout15".
+> -
+> - - clocks : list of phandles and specifiers to all input clocks listed in
+> -		clock-names property.
+> -
+> -Optional properties:
+> -
+> -Some PMUs are capable of behaving as an interrupt controller (mostly
+> -to wake up a suspended PMU). In which case, they can have the
+> -following properties:
+> -
+> -- interrupt-controller: indicate that said PMU is an interrupt controller
+> -
+> -- #interrupt-cells: must be identical to the that of the parent interrupt
+> -  controller.
+> -
+> -
+> -Optional nodes:
+> -
+> -- nodes defining the restart and poweroff syscon children
+> -
+> -
+> -Example :
+> -pmu_system_controller: system-controller@10040000 {
+> -	compatible = "samsung,exynos5250-pmu", "syscon";
+> -	reg = <0x10040000 0x5000>;
+> -	interrupt-controller;
+> -	#interrupt-cells = <3>;
+> -	interrupt-parent = <&gic>;
+> -	#clock-cells = <1>;
+> -	clock-names = "clkout0", "clkout1", "clkout2", "clkout3",
+> -			"clkout4", "clkout8", "clkout9";
+> -	clocks = <&clock CLK_OUT_DMC>, <&clock CLK_OUT_TOP>,
+> -		<&clock CLK_OUT_LEFTBUS>, <&clock CLK_OUT_RIGHTBUS>,
+> -		<&clock CLK_OUT_CPU>, <&clock CLK_XXTI>,
+> -		<&clock CLK_XUSBXTI>;
+> -};
+> -
+> -Example of clock consumer :
+> -
+> -usb3503: usb3503@8 {
+> -	/* ... */
+> -	clock-names = "refclk";
+> -	clocks = <&pmu_system_controller 0>;
+> -	/* ... */
+> -};
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> new file mode 100644
+> index 000000000000..a5a02f8237fb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> @@ -0,0 +1,117 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/samsung/pmu.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung Exynos SoC series Power Management Unit (PMU)
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzk@kernel.org>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - samsung,exynos3250-pmu
+> +          - samsung,exynos4210-pmu
+> +          - samsung,exynos4412-pmu
+> +          - samsung,exynos5250-pmu
+> +          - samsung,exynos5260-pmu
+> +          - samsung,exynos5410-pmu
+> +          - samsung,exynos5420-pmu
+> +          - samsung,exynos5433-pmu
+> +          - samsung,exynos7-pmu
+> +      - const: syscon
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +  clock-names:
+> +    description:
+> +      List of clock names for particular CLKOUT mux inputs
+> +    minItems: 1
+> +    maxItems: 32
+> +    items:
+> +      enum:
+> +        - clkout0
+> +        - clkout1
+
+Looking at this again, instead of enum, we can just do:
+
+pattern: '^clkout([0-9]|[12][0-9]|3[0-1])$'
+
+> +        - clkout2
+> +        - clkout3
+> +        - clkout4
+> +        - clkout5
+> +        - clkout6
+> +        - clkout7
+> +        - clkout8
+> +        - clkout9
+> +        - clkout10
+> +        - clkout11
+> +        - clkout12
+> +        - clkout13
+> +        - clkout14
+> +        - clkout15
+> +        - clkout16
+> +        - clkout17
+> +        - clkout18
+> +        - clkout19
+> +        - clkout20
+> +        - clkout21
+> +        - clkout22
+> +        - clkout23
+> +        - clkout24
+> +        - clkout25
+> +        - clkout26
+> +        - clkout27
+> +        - clkout28
+> +        - clkout29
+> +        - clkout30
+> +        - clkout31
