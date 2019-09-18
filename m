@@ -1,32 +1,32 @@
-From: Pragnesh Patel <pragnesh.patel@sifive.com>
-Subject: [PATCH] media: dt-bindings: Fix building error for dt_binding_check
-Date: Wed, 18 Sep 2019 17:31:00 +0530
-Message-ID: <1568808060-17516-1-git-send-email-pragnesh.patel@sifive.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: net: remove un-implemented property
+Date: Wed, 18 Sep 2019 07:07:57 -0500
+Message-ID: <CAL_JsqLFUnafJkuc1XDMKd-j2SPR2=SpcDXbEOC7tW=hT9pxjA@mail.gmail.com>
+References: <20190918111447.3084-1-alexandru.ardelean@analog.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190918111447.3084-1-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mripard@kernel.org
-Cc: Pragnesh Patel <pragnesh.patel@sifive.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-$id doesn't match the actual filename, so update the $id
+On Wed, Sep 18, 2019 at 3:15 AM Alexandru Ardelean
+<alexandru.ardelean@analog.com> wrote:
+>
+> The `adi,disable-energy-detect` property was implemented in an initial
+> version of the `adin` driver series, but after a review it was discarded in
+> favor of implementing the ETHTOOL_PHY_EDPD phy-tunable option.
+>
+> With the ETHTOOL_PHY_EDPD control, it's possible to disable/enable
+> Energy-Detect-Power-Down for the `adin` PHY, so this device-tree is not
+> needed.
+>
+> Fixes: 767078132ff9 ("dt-bindings: net: add bindings for ADIN PHY driver")
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  Documentation/devicetree/bindings/net/adi,adin.yaml | 7 -------
+>  1 file changed, 7 deletions(-)
 
-Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
----
- Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-index 27f38ee..5dd1cf49 100644
---- a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-+++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/arm/allwinner,sun4i-a10-csi.yaml#
-+$id: http://devicetree.org/schemas/media/allwinner,sun4i-a10-csi.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
--- 
-2.7.4
+Reviewed-by: Rob Herring <robh@kernel.org>
