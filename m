@@ -1,107 +1,93 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] of: restore old handling of cells_name=NULL in of_*_phandle_with_args()
-Date: Wed, 18 Sep 2019 15:09:06 -0500
-Message-ID: <CAL_JsqJuJrOj+D4xkGACC1=zaB5OUkt=SNzCOiOiTVtM9E9z+A@mail.gmail.com>
-References: <20190918063837.8196-1-u.kleine-koenig@pengutronix.de>
- <b00ca30f-2c06-7722-96b2-123d15751cb6@axentia.se> <20190918084748.hnjkiq7wc5b35wjh@pengutronix.de>
+Subject: Re: [PATCH] of: Add of_get_memory_prop()
+Date: Wed, 18 Sep 2019 15:13:04 -0500
+Message-ID: <CAL_JsqJ2WeW0JHSHZuvo9bbc7JSFBr_qCuOp97i=b6Q+OPY7Cg@mail.gmail.com>
+References: <20190918184656.7633-1-rananta@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190918084748.hnjkiq7wc5b35wjh@pengutronix.de>
+In-Reply-To: <20190918184656.7633-1-rananta@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Peter Rosin <peda@axentia.se>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Raghavendra Rao Ananta <rananta@codeaurora.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Trilok Soni <tsoni@codeaurora.org>, Android Kernel Team <kernel-team@android.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 3:47 AM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+On Wed, Sep 18, 2019 at 1:47 PM Raghavendra Rao Ananta
+<rananta@codeaurora.org> wrote:
 >
-> Before commit e42ee61017f5 ("of: Let of_for_each_phandle fallback to
-> non-negative cell_count") the iterator functions calling
-> of_for_each_phandle assumed a cell count of 0 if cells_name was NULL.
-> This corner case was missed when implementing the fallback logic in
-> e42ee61017f5 and resulted in an endless loop.
+> On some embedded systems, the '/memory' dt-property gets updated
+> by the bootloader (for example, the DDR configuration) and then
+> gets passed onto the kernel. The device drivers may have to read
+> the properties at runtime to make decisions. Hence, add
+> of_get_memory_prop() for the device drivers to query the requested
+
+Function name doesn't match. Device drivers don't need to access the FDT.
+
+> properties.
 >
-> Restore the old behaviour of of_count_phandle_with_args() and
-> of_parse_phandle_with_args() and add a check to
-> of_phandle_iterator_init() to prevent a similar failure as a safety
-> precaution. of_parse_phandle_with_args_map() doesn't need a similar fix
-> as cells_name isn't NULL there.
->
-> Affected drivers are:
->  - drivers/base/power/domain.c
->  - drivers/base/power/domain.c
->  - drivers/clk/ti/clk-dra7-atl.c
->  - drivers/hwmon/ibmpowernv.c
->  - drivers/i2c/muxes/i2c-demux-pinctrl.c
->  - drivers/iommu/mtk_iommu.c
->  - drivers/net/ethernet/freescale/fman/mac.c
->  - drivers/opp/of.c
->  - drivers/perf/arm_dsu_pmu.c
->  - drivers/regulator/of_regulator.c
->  - drivers/remoteproc/imx_rproc.c
->  - drivers/soc/rockchip/pm_domains.c
->  - sound/soc/fsl/imx-audmix.c
->  - sound/soc/fsl/imx-audmix.c
->  - sound/soc/meson/axg-card.c
->  - sound/soc/samsung/tm2_wm5110.c
->  - sound/soc/samsung/tm2_wm5110.c
->
-> Thanks to Geert Uytterhoeven for reporting the issue, Peter Rosin for
-> helping pinpoint the actual problem and the testers for confirming this
-> fix.
->
-> Fixes: e42ee61017f5 ("of: Let of_for_each_phandle fallback to non-negativ=
-e cell_count")
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
 > ---
->
-> On Wed, Sep 18, 2019 at 08:01:05AM +0000, Peter Rosin wrote:
-> > On 2019-09-18 08:38, Uwe Kleine-K=C3=B6nig wrote:
-> > >  EXPORT_SYMBOL(of_parse_phandle_with_args);
-> > >
-> > > @@ -1765,6 +1779,18 @@ int of_count_phandle_with_args(const struct de=
-vice_node *np, const char *list_na
-> > >     struct of_phandle_iterator it;
-> > >     int rc, cur_index =3D 0;
-> > >
-> > > +   /* If cells_name is NULL we assume a cell count of 0 */
-> > > +   if (cells_name =3D=3D NULL) {
-> >
-> > A couple of nits.
-> >
-> > I don't know if there are other considerations, but in the previous two
-> > hunks you use !cells_name instead of comparing explicitly with NULL.
-> > Personally, I find the shorter form more readable, and in the name of
-> > consistency bla bla...
->
-> Ack, changed to !cells_name here, too.
->
-> >
-> > Also, the comment explaining this NULL-check didn't really make sense
-> > to me until I realized that knowing the cell count to be zero makes
-> > counting trivial. Something along those lines should perhaps be in the
-> > comment?
->
-> You're right, I extended the comment a bit.
->
-> > But as I said, these are nits. Feel free to ignore.
->
-> I considered resending already anyhow as I fatfingerd my email address.
-> this is fixed now, too. Additionally I fixed a typo in one of the
-> comments.
->
-> Thanks for your feedback.
->
-> Best regards
-> Uwe
->
->  drivers/of/base.c | 35 +++++++++++++++++++++++++++++++++--
->  1 file changed, 33 insertions(+), 2 deletions(-)
+>  drivers/of/fdt.c       | 27 +++++++++++++++++++++++++++
+>  include/linux/of_fdt.h |  1 +
+>  2 files changed, 28 insertions(+)
 
-Can I get a proper patch please.
+We don't add kernel api's without users.
 
-Rob
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 223d617ecfe1..925cf2852433 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -79,6 +79,33 @@ void __init of_fdt_limit_memory(int limit)
+>         }
+>  }
+>
+> +/**
+> + * of_fdt_get_memory_prop - Return the requested property from the /memory node
+> + *
+> + * On match, returns a non-zero positive value which represents the property
+> + * value. Otherwise returns -ENOENT.
+> + */
+> +int of_fdt_get_memory_prop(const char *pname)
+> +{
+> +       int memory;
+> +       int len;
+> +       fdt32_t *prop = NULL;
+> +
+> +       if (!pname)
+> +               return -EINVAL;
+> +
+> +       memory = fdt_path_offset(initial_boot_params, "/memory");
+
+Memory nodes should have a unit-address, so this won't work frequently.
+
+> +       if (memory > 0)
+> +               prop = fdt_getprop_w(initial_boot_params, memory,
+> +                                 pname, &len);
+> +
+> +       if (!prop || len != sizeof(u32))
+> +               return -ENOENT;
+> +
+> +       return fdt32_to_cpu(*prop);
+> +}
+> +EXPORT_SYMBOL_GPL(of_fdt_get_memory_prop);
+> +
+>  static bool of_fdt_device_is_available(const void *blob, unsigned long node)
+>  {
+>         const char *status = fdt_getprop(blob, node, "status", NULL);
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index acf820e88952..537f29373358 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -38,6 +38,7 @@ extern char __dtb_end[];
+>  /* Other Prototypes */
+>  extern u64 of_flat_dt_translate_address(unsigned long node);
+>  extern void of_fdt_limit_memory(int limit);
+> +extern int of_fdt_get_memory_prop(const char *pname);
+>  #endif /* CONFIG_OF_FLATTREE */
+>
+>  #ifdef CONFIG_OF_EARLY_FLATTREE
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
