@@ -1,189 +1,126 @@
-From: Bin Meng <bmeng.cn@gmail.com>
-Subject: Re: [RFC 4/4] gpio: sifive: Add GPIO driver for SiFive SoCs
-Date: Wed, 18 Sep 2019 15:32:13 +0800
-Message-ID: <CAEUhbmWmWr+dDEqtfwO8U1nXOOzfJ_1L+omVZEU=cZbnWgJpDw@mail.gmail.com>
-References: <1539111085-25502-1-git-send-email-atish.patra@wdc.com>
- <1539111085-25502-5-git-send-email-atish.patra@wdc.com> <CACRpkdaoBwqQ4V5Hm9f_G5_jrdkvjT5anhBK1_HoFTj6=cba-Q@mail.gmail.com>
- <d8fe9a17-283c-e2ad-9e01-2754b35699b4@wdc.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v5] gpio/mpc8xxx: change irq handler from chained to normal
+Date: Wed, 18 Sep 2019 09:36:31 +0200
+Message-ID: <CAMpxmJU6-nSCK0bVdJq_U9pKsWyVEE8G2G74Yyg_o2kyqnXhjw@mail.gmail.com>
+References: <20190916055817.43425-1-hui.song_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d8fe9a17-283c-e2ad-9e01-2754b35699b4@wdc.com>
+In-Reply-To: <20190916055817.43425-1-hui.song_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Atish Patra <atish.patra@wdc.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, Palmer Dabbelt <palmer@sifive.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+To: Hui Song <hui.song_1@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-gpio <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+pon., 16 wrz 2019 o 08:08 Hui Song <hui.song_1@nxp.com> napisa=C5=82(a):
+>
+> From: Song Hui <hui.song_1@nxp.com>
+>
+> More than one gpio controllers can share one interrupt, change the
+> driver to request shared irq.
+>
+> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+> ---
+> Changes in v5:
+>         - add traverse every bit function.
+> Changes in v4:
+>         - convert 'pr_err' to 'dev_err'.
+> Changes in v3:
+>         - update the patch description.
+> Changes in v2:
+>         - delete the compatible of ls1088a.
+>  drivers/gpio/gpio-mpc8xxx.c | 30 +++++++++++++++++++-----------
+>  1 file changed, 19 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+> index 16a47de..3a06ca9 100644
+> --- a/drivers/gpio/gpio-mpc8xxx.c
+> +++ b/drivers/gpio/gpio-mpc8xxx.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/irq.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/bitops.h>
+> +#include <linux/interrupt.h>
+>
+>  #define MPC8XXX_GPIO_PINS      32
+>
+> @@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc=
+, unsigned offset)
+>                 return -ENXIO;
+>  }
+>
+> -static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
+> +static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
+>  {
+> -       struct mpc8xxx_gpio_chip *mpc8xxx_gc =3D irq_desc_get_handler_dat=
+a(desc);
+> -       struct irq_chip *chip =3D irq_desc_get_chip(desc);
+> +       struct mpc8xxx_gpio_chip *mpc8xxx_gc =3D (struct mpc8xxx_gpio_chi=
+p *)data;
 
-On Wed, Oct 17, 2018 at 9:01 AM Atish Patra <atish.patra@wdc.com> wrote:
->
-> On 10/10/18 5:35 AM, Linus Walleij wrote:
-> > Hi Atish,
-> >
-> > thanks for your patch!
-> >
-> > On Tue, Oct 9, 2018 at 8:51 PM Atish Patra <atish.patra@wdc.com> wrote:
-> >
-> >> From: "Wesley W. Terpstra" <wesley@sifive.com>
-> >>
-> >> Adds the GPIO driver for SiFive RISC-V SoCs.
-> >>
-> >> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-> >> [Atish: Various fixes and code cleanup]
-> >> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> >
-> > (...)
-> >
-> >> +config GPIO_SIFIVE
-> >> +       bool "SiFive GPIO support"
-> >> +       depends on OF_GPIO
-> >> +       select GPIOLIB_IRQCHIP
-> >
-> > I suggest to add
-> > select GPIO_GENERIC as per below.
-> >
-> > Maybe select REGMAP_MMIO as well.
->
-> ok.
->
-> >
-> >> +       help
-> >> +         Say yes here to support the GPIO device on SiFive SoCs.
-> >> +
-> >
-> >> +#include <linux/of_irq.h>
-> >> +#include <linux/irqchip/chained_irq.h>
-> >
-> > Do you need these two? I think <linux/gpio/driver.h>
-> > will bring them in for you.
-> >
->
-> driver.h only brings chained_irq.h. of_irq.h is still required. Right ?
->
-> >> +#include <linux/pinctrl/consumer.h>
-> >
-> > Are you using this?
->
-> My bad. Left over from the old code. I will remove it.
->
-> >
-> >> +struct sifive_gpio {
-> >> +       raw_spinlock_t          lock;
-> >> +       void __iomem            *base;
-> >> +       struct gpio_chip        gc;
-> >> +       unsigned long           enabled;
-> >
-> > Since max GPIO is 32 why not use an u32 for this?
-> >
->
-> Sure.
->
-> >> +       unsigned int            trigger[MAX_GPIO];
-> >> +       unsigned int            irq_parent[MAX_GPIO];
-> >> +       struct sifive_gpio      *self_ptr[MAX_GPIO];
-> >> +};
-> >> +
-> >> +static void sifive_assign_bit(void __iomem *ptr, unsigned int offset, int value)
-> >> +{
-> >> +       /*
-> >> +        * It's frustrating that we are not allowed to use the device atomics
-> >> +        * which are GUARANTEED to be supported by this device on RISC-V
-> >> +        */
-> >> +       u32 bit = BIT(offset), old = ioread32(ptr);
-> >> +
-> >> +       if (value)
-> >> +               iowrite32(old | bit, ptr);
-> >> +       else
-> >> +               iowrite32(old & ~bit, ptr);
-> >> +}
-> >
-> > This looks like a mask and set implementation, you are
-> > essentially reinventing regmap MMIO and the
-> > regmap_update_bits() call. Could you look into
-> > just using regmap MMIO in that case?
-> >
-> > If you need examples, look at gpio-mvebu.c that calls
-> > devm_regmap_init_mmio() for example.
-> >
->
-> That's really cool. Sorry, for not checking that earlier.
-> I am pretty new to this.
->
-> >> +static int sifive_direction_input(struct gpio_chip *gc, unsigned int offset)
-> >> +static int sifive_direction_output(struct gpio_chip *gc, unsigned int offset,
-> >> +static int sifive_get_direction(struct gpio_chip *gc, unsigned int offset)
-> >> +static int sifive_get_value(struct gpio_chip *gc, unsigned int offset)
-> >> +static void sifive_set_value(struct gpio_chip *gc, unsigned int offset,
-> >
-> > These functions look like a typical hardware that can use
-> >
-> > GPIOLIB_GENERIC and bgpio_init() to set up the accessors.
-> >
-> > See gpio-ftgpio010.c for an example.
-> >
-> > As a bonus you will get .get/.set_multiple implemented by
-> > the generic GPIO.
-> >
->
-> Great. This will reduce the driver a code by a big factor.
-> Thanks for the pointer.
->
->
-> >> +static void sifive_irq_enable(struct irq_data *d)
-> >> +static void sifive_irq_disable(struct irq_data *d)
-> > (...)
-> >> +static struct irq_chip sifive_irqchip = {
-> >> +       .name           = "sifive-gpio",
-> >> +       .irq_set_type   = sifive_irq_set_type,
-> >> +       .irq_mask       = sifive_irq_mask,
-> >> +       .irq_unmask     = sifive_irq_unmask,
-> >> +       .irq_enable     = sifive_irq_enable,
-> >> +       .irq_disable    = sifive_irq_disable,
-> >
-> > The handling of .irq_enable and .irq_disable has
-> > changed upstream. Please align with the new codebase
-> > as changed by Hans Verkuil:
-> >
-> > commit 461c1a7d4733d1dfd5c47b040cf32a5e7eefbc6c
-> > "gpiolib: override irq_enable/disable"
-> > commit 4e9439ddacea06f35acce4d374bf6bd0acf99bc8
-> > "gpiolib: add flag to indicate if the irq is disabled"
-> >
-> > You will need to rebase your work on the v4.20-rc1 once it is
-> > out. Right now the changes are on linux-next or my devel
-> > branch.
->
-> Will do.
->
-> >
-> >> +       ngpio = of_irq_count(node);
-> >> +       if (ngpio >= MAX_GPIO) {
-> >> +               dev_err(dev, "Too many GPIO interrupts (max=%d)\n", MAX_GPIO);
-> >> +               return -ENXIO;
-> >> +       }
-> > (...)
-> >> +       for (gpio = 0; gpio < ngpio; ++gpio) {
-> >> +               irq = platform_get_irq(pdev, gpio);
-> >> +               if (irq < 0) {
-> >> +                       dev_err(dev, "invalid IRQ\n");
-> >> +                       gpiochip_remove(&chip->gc);
-> >> +                       return -ENODEV;
-> >> +               }
-> >
-> > This is an hierarchical IRQ so it should use an hierarchical
-> > irqdomain.
-> >
-> > I am discussing with Thierry to make more generic irq domains
-> > for hierarchical IRQ GPIOs, until then you have to look at
-> > gpio-thunderx.c, gpio-uniphier.c or gpio-xgene-sb.c that all
-> > use hierarchical IRQs.
-> >
->
-> Thanks. I will convert them to hierarchical IRQ.
->
+There's no need to cast void pointers.
 
-When will this series get respun and upstreamed?
+>         struct gpio_chip *gc =3D &mpc8xxx_gc->gc;
+>         unsigned int mask;
+> +       int i;
+>
+>         mask =3D gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
+>                 & gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
+> -       if (mask)
+> +       for_each_set_bit(i, &mask, 32)
+>                 generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
+> -                                                    32 - ffs(mask)));
+> -       if (chip->irq_eoi)
+> -               chip->irq_eoi(&desc->irq_data);
+> +                                                    31 - i));
+> +
+> +       return IRQ_HANDLED;
+>  }
+>
+>  static void mpc8xxx_irq_unmask(struct irq_data *d)
+> @@ -388,8 +389,8 @@ static int mpc8xxx_probe(struct platform_device *pdev=
+)
+>
+>         ret =3D gpiochip_add_data(gc, mpc8xxx_gc);
+>         if (ret) {
+> -               pr_err("%pOF: GPIO chip registration failed with status %=
+d\n",
+> -                      np, ret);
+> +               dev_err(&pdev->dev, "%pOF: GPIO chip registration failed =
+with status %d\n",
+> +                       np, ret);
+>                 goto err;
+>         }
+>
+> @@ -409,8 +410,15 @@ static int mpc8xxx_probe(struct platform_device *pde=
+v)
+>         if (devtype->gpio_dir_in_init)
+>                 devtype->gpio_dir_in_init(gc);
+>
+> -       irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+> -                                        mpc8xxx_gpio_irq_cascade, mpc8xx=
+x_gc);
+> +       ret =3D request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
+> +                         IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
+> +                         mpc8xxx_gc);
 
-Regards,
-Bin
+You never free this irq. Maybe use devm_request_irq()?
+
+Bart
+
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "%s: failed to request_irq(%d), ret =
+=3D %d\n",
+> +                       np->full_name, mpc8xxx_gc->irqn, ret);
+> +               goto err;
+> +       }
+> +
+>         return 0;
+>  err:
+>         iounmap(mpc8xxx_gc->regs);
+> --
+> 2.9.5
+>
