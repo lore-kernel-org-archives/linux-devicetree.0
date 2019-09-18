@@ -1,85 +1,51 @@
 From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v2 3/3] clk: qcom: Add Global Clock controller (GCC)
- driver for SC7180
-Date: Wed, 18 Sep 2019 15:14:50 +0530
-Message-ID: <6a5b6bf6-a99a-e4aa-b9ac-fcc0fceab5bd@codeaurora.org>
-References: <20190819163748.18318-1-tdas@codeaurora.org>
- <20190819163748.18318-4-tdas@codeaurora.org>
- <20190821180200.1F7EF2082F@mail.kernel.org>
+Subject: [PATCH v3 0/3] Add Global Clock controller (GCC) driver for SC7180
+Date: Wed, 18 Sep 2019 15:20:15 +0530
+Message-ID: <20190918095018.17979-1-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190821180200.1F7EF2082F@mail.kernel.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
-Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>, robh+dt@kernel.org
+Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+[v3]
+  * Remove old documentation and fix comments for binding.
+  * Cleanup few CRITICAL clocks and add comments for the CRITICAL clocks.
+  * Add reference clocks for UFS & USB.
 
-Thanks for your review.
+[v2]
+ * Update the DFS macro for RCG to reflect the hw init similar to clock
+   name.
+ * Update the Documentation binding of GCC to YAML schemas.
+ * Add comments for CRITICAL clocks, remove PLL forward declarations and
+   unwanted comments/prints.
 
-On 8/21/2019 11:31 PM, Stephen Boyd wrote:
-> Quoting Taniya Das (2019-08-19 09:37:48)
->> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
->> index e1ff83cc361e..ebd4902afd9f 100644
->> --- a/drivers/clk/qcom/Kconfig
->> +++ b/drivers/clk/qcom/Kconfig
->> @@ -322,5 +331,4 @@ config KRAITCC
->>          help
->>            Support for the Krait CPU clocks on Qualcomm devices.
->>            Say Y if you want to support CPU frequency scaling.
->> -
->>   endif
-> 
-> Please remove this hunk
-> 
+[v1]
+  * Add driver support for Global Clock controller for SC7180 and also
+    update device tree bindings for the various clocks supported in the
+    clock controller.
 
-Would remove this.
+Taniya Das (3):
+  clk: qcom: rcg: update the DFS macro for RCG
+  dt-bindings: clk: qcom: Add YAML schemas for the GCC clock bindings
+  clk: qcom: Add Global Clock controller (GCC) driver for SC7180
 
->> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
->> new file mode 100644
->> index 000000000000..8718b675d609
->> --- /dev/null
->> +++ b/drivers/clk/qcom/gcc-sc7180.c
-> [...]
->> +       },
->> +};
->> +
->> +/* Camera Subsystem requires always ON. */
-> 
-> Yes, but why? This comment is useful unless it explains why.
-> 
-
-Next patch would take care.
-
->> +static struct clk_branch gcc_camera_ahb_clk = {
->> +       .halt_reg = 0xb008,
->> +       .halt_check = BRANCH_HALT,
->> +       .hwcg_reg = 0xb008,
->> +       .hwcg_bit = 1,
->> +       .clkr = {
->> +               .enable_reg = 0xb008,
->> +               .enable_mask = BIT(0),
->> +               .hw.init = &(struct clk_init_data){
->> +                       .name = "gcc_camera_ahb_clk",
->> +                       .flags = CLK_IS_CRITICAL,
->> +                       .ops = &clk_branch2_ops,
->> +               },
->> +       },
->> +};
->> +
->> +static struct clk_branch gcc_camera_hf_axi_clk = {
->> +       .halt_reg = 0xb020,
->> +       .halt_check = BRANCH_HALT,
->> +       .clkr = {
->> +               .enable_reg = 0xb020,
->> +               .enable_mask = BIT(0),
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+ .../devicetree/bindings/clock/qcom,gcc.txt    |   94 -
+ .../devicetree/bindings/clock/qcom,gcc.yaml   |  157 +
+ drivers/clk/qcom/Kconfig                      |    9 +
+ drivers/clk/qcom/Makefile                     |    1 +
+ drivers/clk/qcom/clk-rcg.h                    |    2 +-
+ drivers/clk/qcom/gcc-sc7180.c                 | 2515 +++++++++++++++++
+ drivers/clk/qcom/gcc-sdm845.c                 |   96 +-
+ include/dt-bindings/clock/qcom,gcc-sc7180.h   |  155 +
+ 8 files changed, 2886 insertions(+), 143 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+ create mode 100644 drivers/clk/qcom/gcc-sc7180.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-sc7180.h
 
 --
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
