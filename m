@@ -1,76 +1,178 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v6 11/12] lib/vsprintf: Add %pfw conversion specifier for
- printing fwnode names
-Date: Wed, 18 Sep 2019 16:11:07 +0300
-Message-ID: <20190918131107.GR5781@paasikivi.fi.intel.com>
-References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
- <20190910084707.18380-12-sakari.ailus@linux.intel.com>
- <ef57a3fc72b548b7daf9257aacc596d57004199d.camel@perches.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 07/11] dt-bindings: arm: samsung: Convert Exynos PMU
+ bindings to json-schema
+Date: Wed, 18 Sep 2019 15:17:40 +0200
+Message-ID: <20190918131740.GA668@pi3>
+References: <20190907092007.9946-1-krzk@kernel.org>
+ <20190907092007.9946-7-krzk@kernel.org>
+ <20190918124306.GB318@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <ef57a3fc72b548b7daf9257aacc596d57004199d.camel@perches.com>
+In-Reply-To: <20190918124306.GB318@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe,
+On Wed, Sep 18, 2019 at 07:43:06AM -0500, Rob Herring wrote:
+> On Sat, Sep 07, 2019 at 11:20:03AM +0200, Krzysztof Kozlowski wrote:
+> > Convert Samsung Exynos Power Management Unit (PMU) bindings to DT schema
+> > format using json-schema.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > 
+> > ---
+> > 
+> > Changes since v1:
+> > 1. Fix clock-names to match all elements against schema (any number of
+> >    any clkoutN values).
+> >    This currently fails:
+> >        properties:clock-names:items: {'enum': ['clkout0', 'clkout1', 'clkout2',
+> >        'clkout3', 'clkout4', 'clkout5', 'clkout6', 'clkout7', 'clkout8',
+> >        'clkout9', 'clkout10', 'clkout11', 'clkout12', 'clkout13', 'clkout14',
+> >        'clkout15', 'clkout16']} is not of type 'array
+> > 
+> > 2. Add syscon reboot and poweroff nodes.
+> > ---
+> >  .../devicetree/bindings/arm/samsung/pmu.txt   |  72 -----------
+> >  .../devicetree/bindings/arm/samsung/pmu.yaml  | 117 ++++++++++++++++++
+> >  2 files changed, 117 insertions(+), 72 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> > deleted file mode 100644
+> > index 433bfd7593ac..000000000000
+> > --- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> > +++ /dev/null
+> > @@ -1,72 +0,0 @@
+> > -SAMSUNG Exynos SoC series PMU Registers
+> > -
+> > -Properties:
+> > - - compatible : should contain two values. First value must be one from following list:
+> > -		   - "samsung,exynos3250-pmu" - for Exynos3250 SoC,
+> > -		   - "samsung,exynos4210-pmu" - for Exynos4210 SoC,
+> > -		   - "samsung,exynos4412-pmu" - for Exynos4412 SoC,
+> > -		   - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
+> > -		   - "samsung,exynos5260-pmu" - for Exynos5260 SoC.
+> > -		   - "samsung,exynos5410-pmu" - for Exynos5410 SoC,
+> > -		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
+> > -		   - "samsung,exynos5433-pmu" - for Exynos5433 SoC.
+> > -		   - "samsung,exynos7-pmu" - for Exynos7 SoC.
+> > -		second value must be always "syscon".
+> > -
+> > - - reg : offset and length of the register set.
+> > -
+> > - - #clock-cells : must be <1>, since PMU requires once cell as clock specifier.
+> > -		The single specifier cell is used as index to list of clocks
+> > -		provided by PMU, which is currently:
+> > -			0 : SoC clock output (CLKOUT pin)
+> > -
+> > - - clock-names : list of clock names for particular CLKOUT mux inputs in
+> > -		following format:
+> > -			"clkoutN", where N is a decimal number corresponding to
+> > -			CLKOUT mux control bits value for given input, e.g.
+> > -				"clkout0", "clkout7", "clkout15".
+> > -
+> > - - clocks : list of phandles and specifiers to all input clocks listed in
+> > -		clock-names property.
+> > -
+> > -Optional properties:
+> > -
+> > -Some PMUs are capable of behaving as an interrupt controller (mostly
+> > -to wake up a suspended PMU). In which case, they can have the
+> > -following properties:
+> > -
+> > -- interrupt-controller: indicate that said PMU is an interrupt controller
+> > -
+> > -- #interrupt-cells: must be identical to the that of the parent interrupt
+> > -  controller.
+> > -
+> > -
+> > -Optional nodes:
+> > -
+> > -- nodes defining the restart and poweroff syscon children
+> > -
+> > -
+> > -Example :
+> > -pmu_system_controller: system-controller@10040000 {
+> > -	compatible = "samsung,exynos5250-pmu", "syscon";
+> > -	reg = <0x10040000 0x5000>;
+> > -	interrupt-controller;
+> > -	#interrupt-cells = <3>;
+> > -	interrupt-parent = <&gic>;
+> > -	#clock-cells = <1>;
+> > -	clock-names = "clkout0", "clkout1", "clkout2", "clkout3",
+> > -			"clkout4", "clkout8", "clkout9";
+> > -	clocks = <&clock CLK_OUT_DMC>, <&clock CLK_OUT_TOP>,
+> > -		<&clock CLK_OUT_LEFTBUS>, <&clock CLK_OUT_RIGHTBUS>,
+> > -		<&clock CLK_OUT_CPU>, <&clock CLK_XXTI>,
+> > -		<&clock CLK_XUSBXTI>;
+> > -};
+> > -
+> > -Example of clock consumer :
+> > -
+> > -usb3503: usb3503@8 {
+> > -	/* ... */
+> > -	clock-names = "refclk";
+> > -	clocks = <&pmu_system_controller 0>;
+> > -	/* ... */
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> > new file mode 100644
+> > index 000000000000..a5a02f8237fb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> > @@ -0,0 +1,117 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/arm/samsung/pmu.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Samsung Exynos SoC series Power Management Unit (PMU)
+> > +
+> > +maintainers:
+> > +  - Krzysztof Kozlowski <krzk@kernel.org>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - enum:
+> > +          - samsung,exynos3250-pmu
+> > +          - samsung,exynos4210-pmu
+> > +          - samsung,exynos4412-pmu
+> > +          - samsung,exynos5250-pmu
+> > +          - samsung,exynos5260-pmu
+> > +          - samsung,exynos5410-pmu
+> > +          - samsung,exynos5420-pmu
+> > +          - samsung,exynos5433-pmu
+> > +          - samsung,exynos7-pmu
+> > +      - const: syscon
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  '#clock-cells':
+> > +    const: 1
+> > +
+> > +  clock-names:
+> > +    description:
+> > +      List of clock names for particular CLKOUT mux inputs
+> > +    minItems: 1
+> > +    maxItems: 32
+> > +    items:
+> > +      enum:
+> > +        - clkout0
+> > +        - clkout1
+> 
+> Looking at this again, instead of enum, we can just do:
+> 
+> pattern: '^clkout([0-9]|[12][0-9]|3[0-1])$'
 
-On Tue, Sep 10, 2019 at 03:21:26AM -0700, Joe Perches wrote:
-> > @@ -5988,14 +5988,17 @@ sub process {
-> >  		        for (my $count = $linenr; $count <= $lc; $count++) {
-> >  				my $specifier;
-> >  				my $extension;
-> > +				my $qualifier;
-> >  				my $bad_specifier = "";
-> >  				my $fmt = get_quoted_string($lines[$count - 1], raw_line($count, 0));
-> >  				$fmt =~ s/%%//g;
-> >  
-> > -				while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
-> > +				while ($fmt =~ /(\%[\*\d\.]*p(\w)(\w?))/g) {
-> 
-> This is not generic enough to allow all possible qualifiers
-> to be captured.
-> 
-> This should be something like:
-> 
-> 			while ($fmt =~ /(\%[\*\d\.]*p(\w)(\w*))/g) {
-> 	
-> >  					$specifier = $1;
-> >  					$extension = $2;
-> > -					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxt]/) {
-> > +					$qualifier = $3;
-> > +					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
-> > +					    ($extension eq "f" && $qualifier ne "w")) {
-> 
-> 
-> And this should likely test
-> 					    (defined $qualifier &&
-> 					     $extension eq 'f' && $qualifier =~ /^w/))
-> 
-> >  						$bad_specifier = $specifier;
-> >  						last;
-> >  					}
-> 
-> And here the 'f' isn't really a bad $specifier,
-> it does not have the correct 'w' $extension.
-> 
-> The valid extensions may change in the future and
-> this code isn't particularly manageable, so I
-> think the $specifier/$extension pair should likely
-> have some additional testing after validating
-> the $specifier.
+Indeed looks better.
 
-There are certainly possibilities of having qualifiers that aren't
-supported but extensions are also allowed to be followed by any other
-characters, so this is a bit grey area.
-
-I'll make the qualifier one or more letters for v7 as you suggested.
-
--- 
-Regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Best regards,
+Krzysztof
