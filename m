@@ -1,163 +1,119 @@
-From: Pragnesh Patel <pragnesh.patel@sifive.com>
-Subject: [PATCH v2] spi: dt-bindings: Convert spi-sifive binding to json-schema
-Date: Wed, 18 Sep 2019 16:38:39 +0530
-Message-ID: <1568804927-13565-1-git-send-email-pragnesh.patel@sifive.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: sound: Convert Samsung SMDK audio complex
+Date: Wed, 18 Sep 2019 13:15:19 +0200
+Message-ID: <CAJKOXPc=OXLY3ynUKGhVduuiSyzT_1Po19Hhwd6fGkbaar8GQQ@mail.gmail.com>
+References: <CGME20190917120634eucas1p20addfc4e369468561714f3c44d3d8bf5@eucas1p2.samsung.com>
+ <20190917111413.22711-1-m.falkowski@samsung.com> <20190917120627.28357-1-m.falkowski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190917120627.28357-1-m.falkowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: palmer@sifive.com, paul.walmsley@sifive.com
-Cc: Pragnesh Patel <pragnesh.patel@sifive.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Maciej Falkowski <m.falkowski@samsung.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, sbkim73@samsung.com, s.nawrocki@samsung.com, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert the spi-sifive binding to DT schema format.
+On Tue, 17 Sep 2019 at 14:06, Maciej Falkowski <m.falkowski@samsung.com> wrote:
+>
+> Convert Samsung SMDK audio complex to newer dt-schema format.
+>
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> v2:
+> - Added missing Signed-off-by certificate
 
-Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
----
+I understood you cannot certify that you have the rights to send the
+patch. Adding someone's else Signed-off-by does not solve the problem
+of lack of such permission. Marek could certify that but you cannot
+certify for him. Otherwise it really makes the process bogus - anyone
+can add Linus' SoB and say that Linus certified the rights to include
+this contribution.
 
-Changes in v2:
-- Remove address-cells and size-cells property
-- Added valid values for sifive,fifo-depth and sifive,max-bits-per-word
-  property
+In my understanding of Developer's Certificate of Origin 1.1, these
+patches do not meet the criteria and therefore should not be included
+from that point of view.
 
- .../devicetree/bindings/spi/spi-sifive.txt         | 37 ----------
- .../devicetree/bindings/spi/spi-sifive.yaml        | 86 ++++++++++++++++++++++
- 2 files changed, 86 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.txt
- create mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.yaml
+One minor comment further.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-sifive.txt b/Documentation/devicetree/bindings/spi/spi-sifive.txt
-deleted file mode 100644
-index 3f5c6e4..0000000
---- a/Documentation/devicetree/bindings/spi/spi-sifive.txt
-+++ /dev/null
-@@ -1,37 +0,0 @@
--SiFive SPI controller Device Tree Bindings
--------------------------------------------
--
--Required properties:
--- compatible		: Should be "sifive,<chip>-spi" and "sifive,spi<version>".
--			  Supported compatible strings are:
--			  "sifive,fu540-c000-spi" for the SiFive SPI v0 as integrated
--			  onto the SiFive FU540 chip, and "sifive,spi0" for the SiFive
--			  SPI v0 IP block with no chip integration tweaks.
--			  Please refer to sifive-blocks-ip-versioning.txt for details
--- reg			: Physical base address and size of SPI registers map
--			  A second (optional) range can indicate memory mapped flash
--- interrupts		: Must contain one entry
--- interrupt-parent	: Must be core interrupt controller
--- clocks		: Must reference the frequency given to the controller
--- #address-cells	: Must be '1', indicating which CS to use
--- #size-cells		: Must be '0'
--
--Optional properties:
--- sifive,fifo-depth		: Depth of hardware queues; defaults to 8
--- sifive,max-bits-per-word	: Maximum bits per word; defaults to 8
--
--SPI RTL that corresponds to the IP block version numbers can be found here:
--https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/spi
--
--Example:
--	spi: spi@10040000 {
--		compatible = "sifive,fu540-c000-spi", "sifive,spi0";
--		reg = <0x0 0x10040000 0x0 0x1000 0x0 0x20000000 0x0 0x10000000>;
--		interrupt-parent = <&plic>;
--		interrupts = <51>;
--		clocks = <&tlclk>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--		sifive,fifo-depth = <8>;
--		sifive,max-bits-per-word = <8>;
--	};
-diff --git a/Documentation/devicetree/bindings/spi/spi-sifive.yaml b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
-new file mode 100644
-index 0000000..140e435
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
-@@ -0,0 +1,86 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/spi-sifive.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: SiFive SPI controller
-+
-+maintainers:
-+  - Pragnesh Patel <pragnesh.patel@sifive.com>
-+  - Paul Walmsley  <paul.walmsley@sifive.com>
-+  - Palmer Dabbelt <palmer@sifive.com>
-+
-+allOf:
-+  - $ref: "spi-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: sifive,fu540-c000-spi
-+      - const: sifive,spi0
-+
-+    description:
-+      Should be "sifive,<chip>-spi" and "sifive,spi<version>".
-+      Supported compatible strings are -
-+      "sifive,fu540-c000-spi" for the SiFive SPI v0 as integrated
-+      onto the SiFive FU540 chip, and "sifive,spi0" for the SiFive
-+      SPI v0 IP block with no chip integration tweaks.
-+      Please refer to sifive-blocks-ip-versioning.txt for details
-+
-+      SPI RTL that corresponds to the IP block version numbers can be found here -
-+      https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/spi
-+
-+  reg:
-+    maxItems: 1
-+
-+    description:
-+      Physical base address and size of SPI registers map
-+      A second (optional) range can indicate memory mapped flash
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+    description:
-+      Must reference the frequency given to the controller
-+
-+  sifive,fifo-depth:
-+    description:
-+      Depth of hardware queues; defaults to 8
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - enum: [ 8 ]
-+      - default: 8
-+
-+  sifive,max-bits-per-word:
-+    description:
-+      Maximum bits per word; defaults to 8
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - enum: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
-+      - default: 8
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+examples:
-+  - |
-+    spi: spi@10040000 {
-+      compatible = "sifive,fu540-c000-spi", "sifive,spi0";
-+      reg = <0x0 0x10040000 0x0 0x1000 0x0 0x20000000 0x0 0x10000000>;
-+      interrupt-parent = <&plic>;
-+      interrupts = <51>;
-+      clocks = <&tlclk>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      sifive,fifo-depth = <8>;
-+      sifive,max-bits-per-word = <8>;
-+    };
-+
-+...
--- 
-2.7.4
+> ---
+>  .../bindings/sound/samsung,smdk-wm8994.txt    | 14 -------
+>  .../bindings/sound/samsung,smdk-wm8994.yaml   | 38 +++++++++++++++++++
+>  2 files changed, 38 insertions(+), 14 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.txt b/Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.txt
+> deleted file mode 100644
+> index 4686646fb122..000000000000
+> --- a/Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.txt
+> +++ /dev/null
+> @@ -1,14 +0,0 @@
+> -Samsung SMDK audio complex
+> -
+> -Required properties:
+> -- compatible : "samsung,smdk-wm8994"
+> -- samsung,i2s-controller: The phandle of the Samsung I2S0 controller
+> -- samsung,audio-codec: The phandle of the WM8994 audio codec
+> -Example:
+> -
+> -sound {
+> -               compatible = "samsung,smdk-wm8994";
+> -
+> -               samsung,i2s-controller = <&i2s0>;
+> -               samsung,audio-codec = <&wm8994>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.yaml b/Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.yaml
+> new file mode 100644
+> index 000000000000..a66c0dfdeb57
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.yaml
+> @@ -0,0 +1,38 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/samsung,smdk-wm8994.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung SoC SMDK audio complex
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzk@kernel.org>
+> +  - Sangbeom Kim <sbkim73@samsung.com>
+
+Unfortunately there was no mails coming from Sangbeom Kim so I think
+he is not active in maintaining these pieces. Let's skip this entry.
+
+Best regards,
+Krzysztof
+
+> +  - Sylwester Nawrocki <s.nawrocki@samsung.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: "samsung,smdk-wm8994"
+> +
+> +  samsung,i2s-controller:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: The phandle of the Samsung I2S0 controller
+> +
+> +  samsung,audio-codec:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: The phandle of the WM8994 audio codec
+> +
+> +required:
+> +  - compatible
+> +  - samsung,i2s-controller
+> +  - samsung,audio-codec
+> +
+> +examples:
+> +  - |
+> +    sound {
+> +        compatible = "samsung,smdk-wm8994";
+> +        samsung,i2s-controller = <&i2s0>;
+> +        samsung,audio-codec = <&wm8994>;
+> +    };
+> +
+> --
+> 2.17.1
+>
