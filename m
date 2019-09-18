@@ -1,49 +1,130 @@
-From: "Ramuthevar, Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: Re: [PATCH v1 2/2] spi: cadence-qspi: Add QSPI support for Intel LGM
- SoC
-Date: Wed, 18 Sep 2019 13:59:06 +0800
-Message-ID: <eeefa79b-0a3b-5d62-3a1b-c1e9dcb03aa7@linux.intel.com>
-References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190916073843.39618-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190916113255.GA4352@sirena.co.uk>
- <466b41c1-3d65-0bf4-6db7-d3b3e06b107b@linux.intel.com>
- <20190917153650.GF3524@sirena.co.uk>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: [PATCH] of: restore old handling of cells_name=NULL in of_*_phandle_with_args()
+Date: Wed, 18 Sep 2019 08:38:37 +0200
+Message-ID: <20190918063837.8196-1-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190917153650.GF3524@sirena.co.uk>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Peter Rosin <peda@axentia.se>, Marek Szyprowski <m.szyprowski@samsung.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+From: Uwe Kleine-KÃ¶nig <uwe@kleine-koenig.org>
 
-    Thank you for the review comments.
+Before commit e42ee61017f5 ("of: Let of_for_each_phandle fallback to
+non-negative cell_count") the iterator functions calling
+of_for_each_phandle assumed a cell count of 0 if cells_name was NULL.
+This corner case was missed when implementing the fallback logic in
+e42ee61017f5 and resulted in an endless loop.
 
-On 17/9/2019 11:36 PM, Mark Brown wrote:
-> On Tue, Sep 17, 2019 at 10:11:28AM +0800, Ramuthevar, Vadivel MuruganX wrote:
->
->> *    spi-cadence.c* in *drivers/spi/*, which supports very old legacy
->> cadence-spi based devices(normal)
->> *    cadence-quadspi.c(drivers/mtd/spi-nor/)* : specific support to SPI-NOR
->> flash with new spi-nor layer.
->>      all the API's in this driver purely on spi-nor specific, so couldn't
->> proceed to adapt.
-> Are these completely separate IPs or are they just different versions of
-> the same IP?
+Restore the old behaviour of of_count_phandle_with_args() and
+of_parse_phandle_with_args() and add a check to
+of_phandle_iterator_init() to prevent a similar failure as a safety
+precaution. of_parse_phandle_with_args_map() doesn't need a similar fix
+as cells_name isn't NULL there.
 
-These are same IPs , but different features Enabled/Disabled depends 
-upon the SoC vendors.
+Affected drivers are:
+ - drivers/base/power/domain.c
+ - drivers/base/power/domain.c
+ - drivers/clk/ti/clk-dra7-atl.c
+ - drivers/hwmon/ibmpowernv.c
+ - drivers/i2c/muxes/i2c-demux-pinctrl.c
+ - drivers/iommu/mtk_iommu.c
+ - drivers/net/ethernet/freescale/fman/mac.c
+ - drivers/opp/of.c
+ - drivers/perf/arm_dsu_pmu.c
+ - drivers/regulator/of_regulator.c
+ - drivers/remoteproc/imx_rproc.c
+ - drivers/soc/rockchip/pm_domains.c
+ - sound/soc/fsl/imx-audmix.c
+ - sound/soc/fsl/imx-audmix.c
+ - sound/soc/meson/axg-card.c
+ - sound/soc/samsung/tm2_wm5110.c
+ - sound/soc/samsung/tm2_wm5110.c
 
-for e.g: Intel LGM SoC uses the same IP, but without DMA and Direct 
-access controller.
+Thanks to Geert Uytterhoeven for reporting the issue, Peter Rosin for
+helping pinpoint the actual problem and the testers for confirming this
+fix.
 
-also dedicated support to flash devices.
+Fixes: e42ee61017f5 ("of: Let of_for_each_phandle fallback to non-negative cell_count")
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
+---
+Hello,
+
+compared to the untested patch I sent yesterday I also fixed
+of_parse_phandle_with_args which has three users that pass
+cells_name=NULL. (i.e. drivers/clk/ti/clk-dra7-atl.c,
+sound/soc/fsl/imx-audmix.c, sound/soc/samsung/tm2_wm5110.c) I didn't
+look closely, but maybe these could be converted to use of_parse_phandle
+as there are no arguments to be processed with no cells_name?!
 
 Best regards
+Uwe
 
-Vadivel
+ drivers/of/base.c | 30 ++++++++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 2f25d2dfecfa..25ee07c0a3cd 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1286,6 +1286,13 @@ int of_phandle_iterator_init(struct of_phandle_iterator *it,
+ 
+ 	memset(it, 0, sizeof(*it));
+ 
++	/*
++	 * one of cell_count or cells_name must be provided to determine the
++	 * argument length.
++	 */
++	if (cell_count < 0 && !cells_name)
++		return -EINVAL;
++
+ 	list = of_get_property(np, list_name, &size);
+ 	if (!list)
+ 		return -ENOENT;
+@@ -1512,10 +1519,17 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
+ 				const char *cells_name, int index,
+ 				struct of_phandle_args *out_args)
+ {
++	int cell_count = -1;
++
+ 	if (index < 0)
+ 		return -EINVAL;
+-	return __of_parse_phandle_with_args(np, list_name, cells_name, -1,
+-					    index, out_args);
++
++	/* If cells_name if NULL we assume a cell count of 0 */
++	if (!cells_name)
++		cell_count = 0;
++
++	return __of_parse_phandle_with_args(np, list_name, cells_name,
++					    cell_count, index, out_args);
+ }
+ EXPORT_SYMBOL(of_parse_phandle_with_args);
+ 
+@@ -1765,6 +1779,18 @@ int of_count_phandle_with_args(const struct device_node *np, const char *list_na
+ 	struct of_phandle_iterator it;
+ 	int rc, cur_index = 0;
+ 
++	/* If cells_name is NULL we assume a cell count of 0 */
++	if (cells_name == NULL) {
++		const __be32 *list;
++		int size;
++
++		list = of_get_property(np, list_name, &size);
++		if (!list)
++			return -ENOENT;
++
++		return size / sizeof(*list);
++	}
++
+ 	rc = of_phandle_iterator_init(&it, np, list_name, cells_name, -1);
+ 	if (rc)
+ 		return rc;
+-- 
+2.23.0
