@@ -1,170 +1,287 @@
 From: Peng Fan <peng.fan@nxp.com>
 Subject: RE: [PATCH V6 1/2] dt-bindings: mailbox: add binding doc for the ARM
  SMC/HVC mailbox
-Date: Wed, 18 Sep 2019 08:53:25 +0000
-Message-ID: <AM0PR04MB44811AE46803D10FD8A5B8B0888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Date: Wed, 18 Sep 2019 09:02:15 +0000
+Message-ID: <AM0PR04MB4481E07A2DD996703EE9FADD888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
 References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
- <1568626884-5189-2-git-send-email-peng.fan@nxp.com>
+        <1568626884-5189-2-git-send-email-peng.fan@nxp.com>
  <20190917183115.3e40180f@donnerap.cambridge.arm.com>
- <CABb+yY2CP1i9fZMoPua=-mLCUpYrcO28xF5UXDeRD2XTYe7mEg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY2CP1i9fZMoPua=-mLCUpYrcO28xF5UXDeRD2XTYe7mEg@mail.gmail.com>
+In-Reply-To: <20190917183115.3e40180f@donnerap.cambridge.arm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Andre Przywara <andre.przywara@arm.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFzc2ksDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWNiAxLzJdIGR0LWJpbmRpbmdzOiBt
-YWlsYm94OiBhZGQgYmluZGluZyBkb2MgZm9yIHRoZQ0KPiBBUk0gU01DL0hWQyBtYWlsYm94DQo+
-IA0KPiBPbiBUdWUsIFNlcCAxNywgMjAxOSBhdCAxMjozMSBQTSBBbmRyZSBQcnp5d2FyYQ0KPiA8
-YW5kcmUucHJ6eXdhcmFAYXJtLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBPbiBNb24sIDE2IFNlcCAy
-MDE5IDA5OjQ0OjM3ICswMDAwDQo+ID4gUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+IHdyb3Rl
-Og0KPiA+DQo+ID4gSGksDQo+ID4NCj4gPiA+IEZyb206IFBlbmcgRmFuIDxwZW5nLmZhbkBueHAu
-Y29tPg0KPiA+ID4NCj4gPiA+IFRoZSBBUk0gU01DL0hWQyBtYWlsYm94IGJpbmRpbmcgZGVzY3Jp
-YmVzIGEgZmlybXdhcmUgaW50ZXJmYWNlIHRvDQo+ID4gPiB0cmlnZ2VyIGFjdGlvbnMgaW4gc29m
-dHdhcmUgbGF5ZXJzIHJ1bm5pbmcgaW4gdGhlIEVMMiBvciBFTDMgZXhjZXB0aW9uDQo+IGxldmVs
-cy4NCj4gPiA+IFRoZSB0ZXJtICJBUk0iIGhlcmUgcmVsYXRlcyB0byB0aGUgU01DIGluc3RydWN0
-aW9uIGFzIHBhcnQgb2YgdGhlDQo+ID4gPiBBUk0gaW5zdHJ1Y3Rpb24gc2V0LCBub3QgYXMgYSBz
-dGFuZGFyZCBlbmRvcnNlZCBieSBBUk0gTHRkLg0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6
-IFBlbmcgRmFuIDxwZW5nLmZhbkBueHAuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiAgLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvbWFpbGJveC9hcm0tc21jLnlhbWwgICAgICAgfCA5Ng0KPiArKysrKysr
-KysrKysrKysrKysrKysrDQo+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDk2IGluc2VydGlvbnMoKykN
-Cj4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9tYWlsYm94L2FybS1zbWMueWFtbA0KPiA+ID4NCj4gPiA+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWFpbGJveC9hcm0tc21jLnlhbWwN
-Cj4gPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gvYXJtLXNt
-Yy55YW1sDQo+ID4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+ID4gaW5kZXggMDAwMDAwMDAw
-MDAwLi5iZjAxYmVjMDM1ZmMNCj4gPiA+IC0tLSAvZGV2L251bGwNCj4gPiA+ICsrKyBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tYWlsYm94L2FybS1zbWMueWFtbA0KPiA+ID4g
-QEAgLTAsMCArMSw5NiBAQA0KPiA+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwt
-Mi4wIE9SIEJTRC0yLUNsYXVzZSkgJVlBTUwgMS4yDQo+ID4gPiArLS0tDQo+ID4gPiArJGlkOg0K
-PiA+ID4gK2h0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3Vy
-bD1odHRwJTNBJTJGJTJGZGUNCj4gPiA+DQo+ICt2aWNldHJlZS5vcmclMkZzY2hlbWFzJTJGbWFp
-bGJveCUyRmFybS1zbWMueWFtbCUyMyZhbXA7ZGF0YT0wMiUNCj4gN0MwMQ0KPiA+ID4NCj4gKyU3
-Q3BlbmcuZmFuJTQwbnhwLmNvbSU3Q2Y4MDY1ZDI0ZGQ0NzQyMzhiYWYwMDhkNzNiZjhkYzdhJTdD
-Njg2DQo+IGVhMWQzDQo+ID4gPg0KPiArYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzEl
-N0M2MzcwNDM4MTIzNDI5MDMyNjAmYW1wO3NkDQo+IGF0YT12QzMNCj4gPiA+DQo+ICtTOGh2WUR4
-RGhOYklRb0M0NGhwTzVidzF5WVpkQnd1JTJCJTJGcDhtVjBoSSUzRCZhbXA7cmVzZXJ2DQo+IGVk
-PTANCj4gPiA+ICskc2NoZW1hOg0KPiA+ID4gK2h0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3Rl
-Y3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGZGUNCj4gPiA+DQo+ICt2aWNldHJl
-ZS5vcmclMkZtZXRhLXNjaGVtYXMlMkZjb3JlLnlhbWwlMjMmYW1wO2RhdGE9MDIlN0MwMSU3Qw0K
-PiBwZW5nLg0KPiA+ID4NCj4gK2ZhbiU0MG54cC5jb20lN0NmODA2NWQyNGRkNDc0MjM4YmFmMDA4
-ZDczYmY4ZGM3YSU3QzY4NmVhMWQzYmMyDQo+IGI0YzZmDQo+ID4gPg0KPiArYTkyY2Q5OWM1YzMw
-MTYzNSU3QzAlN0MxJTdDNjM3MDQzODEyMzQyOTAzMjYwJmFtcDtzZGF0YT1JREhkDQo+IHZmMU1n
-dzENCj4gPiA+ICtCUiUyQm80WEolMkJqUVMlMkJ4MXBTQnpBRG5XNDRCMmhaTHpLdyUzRCZhbXA7
-cmVzZXJ2ZWQ9MA0KPiA+ID4gKw0KPiA+ID4gK3RpdGxlOiBBUk0gU01DIE1haWxib3ggSW50ZXJm
-YWNlDQo+ID4gPiArDQo+ID4gPiArbWFpbnRhaW5lcnM6DQo+ID4gPiArICAtIFBlbmcgRmFuIDxw
-ZW5nLmZhbkBueHAuY29tPg0KPiA+ID4gKw0KPiA+ID4gK2Rlc2NyaXB0aW9uOiB8DQo+ID4gPiAr
-ICBUaGlzIG1haWxib3ggdXNlcyB0aGUgQVJNIHNtYyAoc2VjdXJlIG1vbml0b3IgY2FsbCkgYW5k
-IGh2Yw0KPiA+ID4gKyhoeXBlcnZpc29yDQo+ID4NCj4gPiBJIHRoaW5rICJvciIgaW5zdGVhZCBv
-ZiAiYW5kIiBpcyBsZXNzIGNvbmZ1c2luZy4NCj4gPg0KPiA+ID4gKyAgY2FsbCkgaW5zdHJ1Y3Rp
-b24gdG8gdHJpZ2dlciBhIG1haWxib3gtY29ubmVjdGVkIGFjdGl2aXR5IGluDQo+ID4gPiArIGZp
-cm13YXJlLCAgZXhlY3V0aW5nIG9uIHRoZSB2ZXJ5IHNhbWUgY29yZSBhcyB0aGUgY2FsbGVyLiBU
-aGUNCj4gPiA+ICsgdmFsdWUgb2YgcjAvdzAveDAgIHRoZSBmaXJtd2FyZSByZXR1cm5zIGFmdGVy
-IHRoZSBzbWMgY2FsbCBpcw0KPiA+ID4gKyBkZWxpdmVyZWQgYXMgYSByZWNlaXZlZCAgbWVzc2Fn
-ZSB0byB0aGUgbWFpbGJveCBmcmFtZXdvcmssIHNvDQo+ID4gPiArIHN5bmNocm9ub3VzIGNvbW11
-bmljYXRpb24gY2FuIGJlICBlc3RhYmxpc2hlZC4gVGhlIGV4YWN0IG1lYW5pbmcNCj4gPiA+ICsg
-b2YgdGhlIGFjdGlvbiB0aGUgbWFpbGJveCB0cmlnZ2VycyBhcyAgd2VsbCBhcyB0aGUgcmV0dXJu
-IHZhbHVlIGlzDQo+ID4gPiArIGRlZmluZWQgYnkgdGhlaXIgdXNlcnMgYW5kIGlzIG5vdCBzdWJq
-ZWN0ICB0byB0aGlzIGJpbmRpbmcuDQo+ID4gPiArDQo+ID4gPiArICBPbmUgdXNlIGNhc2Ugb2Yg
-dGhpcyBtYWlsYm94IGlzIHRoZSBTQ01JIGludGVyZmFjZSwgd2hpY2ggdXNlcw0KPiA+ID4gKyBz
-aGFyZWQNCj4gPg0KPiA+ICAgICAgT25lIGV4YW1wbGUgdXNlIGNhc2Ugb2YgdGhpcyBtYWlsYm94
-IC4uLg0KPiA+ICh0byBtYWtlIGl0IG1vcmUgb2J2aW91cyB0aGF0IGl0J3Mgbm90IHJlc3RyaWN0
-ZWQgdG8gdGhpcykNCj4gPg0KPiA+ID4gKyAgbWVtb3J5IHRvIHRyYW5zZmVyIGNvbW1hbmRzIGFu
-ZCBwYXJhbWV0ZXJzLCBhbmQgYSBtYWlsYm94IHRvDQo+ID4gPiArIHRyaWdnZXIgYSAgZnVuY3Rp
-b24gY2FsbC4gVGhpcyBhbGxvd3MgU29DcyB3aXRob3V0IGEgc2VwYXJhdGUNCj4gPiA+ICsgbWFu
-YWdlbWVudCBwcm9jZXNzb3IgIChvciB3aGVuIHN1Y2ggYSBwcm9jZXNzb3IgaXMgbm90IGF2YWls
-YWJsZQ0KPiA+ID4gKyBvciB1c2VkKSB0byB1c2UgdGhpcyAgc3RhbmRhcmRpemVkIGludGVyZmFj
-ZSBhbnl3YXkuDQo+ID4gPiArDQo+ID4gPiArICBUaGlzIGJpbmRpbmcgZGVzY3JpYmVzIG5vIGhh
-cmR3YXJlLCBidXQgZXN0YWJsaXNoZXMgYSBmaXJtd2FyZQ0KPiBpbnRlcmZhY2UuDQo+ID4gPiAr
-ICBVcG9uIHJlY2VpdmluZyBhbiBTTUMgdXNpbmcgb25lIG9mIHRoZSBkZXNjcmliZWQgU01DIGZ1
-bmN0aW9uDQo+ID4gPiArIGlkZW50aWZpZXJzLA0KPiA+DQo+ID4gICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAuLi4gdGhlIGRlc2NyaWJlZCBTTUMgZnVuY3Rpb24NCj4gPiBpZGVudGlmaWVy
-LA0KPiA+DQo+ID4gPiArICB0aGUgZmlybXdhcmUgaXMgZXhwZWN0ZWQgdG8gdHJpZ2dlciBzb21l
-IG1haWxib3ggY29ubmVjdGVkDQo+IGZ1bmN0aW9uYWxpdHkuDQo+ID4gPiArICBUaGUgY29tbXVu
-aWNhdGlvbiBmb2xsb3dzIHRoZSBBUk0gU01DIGNhbGxpbmcgY29udmVudGlvbi4NCj4gPiA+ICsg
-IEZpcm13YXJlIGV4cGVjdHMgYW4gU01DIGZ1bmN0aW9uIGlkZW50aWZpZXIgaW4gcjAgb3IgdzAu
-IFRoZQ0KPiA+ID4gKyBzdXBwb3J0ZWQgIGlkZW50aWZpZXJzIGFyZSBwYXNzZWQgZnJvbSBjb25z
-dW1lcnMsDQo+ID4NCj4gPiAgICAgIGlkZW50aWZpZXINCj4gPg0KPiA+ICJwYXNzZWQgZnJvbSBj
-b25zdW1lcnMiOiBIb3c/IFdoZXJlPw0KPiA+IEJ1dCBJIHdhbnQgdG8gcmVwZWF0OiBXZSBzaG91
-bGQgbm90IGFsbG93IHRoaXMuDQo+ID4gVGhpcyBpcyBhIGJpbmRpbmcgZm9yIGEgbWFpbGJveCBj
-b250cm9sbGVyIGRyaXZlciwgbm90IGEgZ2VuZXJpYyBmaXJtd2FyZQ0KPiBiYWNrZG9vci4NCj4g
-Pg0KPiBFeGFjdGx5LiBUaGUgbWFpbGJveCBjb250cm9sbGVyIGhlcmUgaXMgdGhlICBTTUMvSFZD
-IGluc3RydWN0aW9uLCB3aGljaA0KPiBuZWVkcyA5IGFyZ3VtZW50cyB0byB3b3JrLiBUaGUgZmFj
-dCB0aGF0IHRoZSBmaXN0IGFyZ3VtZW50IGlzIGFsd2F5cyBnb2luZyB0bw0KPiBiZSBzYW1lIG9u
-IGEgcGxhdGZvcm0gaXMganVzdCB0aGUgd2F5IHdlIHVzZSB0aGlzIGluc3RydWN0aW9uLg0KPiAN
-Cj4gPiBXZSBzaG91bGQgYmUgYXMgc3RyaWN0IGFzIHBvc3NpYmxlIHRvIGF2b2lkIGFueSBzZWN1
-cml0eSBpc3N1ZXMuDQo+ID4NCj4gQW55IGV4YW1wbGUgb2Ygc3VjaCBhIHNlY3VyaXR5IGlzc3Vl
-Pw0KPiANCj4gPiBUaGUgZmlybXdhcmUgY2VydGFpbmx5IGtub3dzIHRoZSBmdW5jdGlvbiBJRCBp
-dCBpbXBsZW1lbnRzLiBUaGUgZmlybXdhcmUNCj4gY29udHJvbHMgdGhlIERULiBTbyBpdCBpcyBz
-dHJhaWdodC1mb3J3YXJkIHRvIHB1dCB0aGUgSUQgaW50byB0aGUgRFQuIFRoZQ0KPiBmaXJtd2Fy
-ZSBjb3VsZCBldmVuIGRvIHRoaXMgYXQgYm9vdCB0aW1lLCBkeW5hbWljYWxseSwgYmVmb3JlIHBh
-c3Npbmcgb24gdGhlDQo+IERUIHRvIHRoZSBub24tc2VjdXJlIHdvcmxkIChib290bG9hZGVyIG9y
-IGtlcm5lbCkuDQo+ID4NCj4gPiBXaGF0IHdvdWxkIGJlIHRoZSB1c2UgY2FzZSBvZiB0aGlzIGZ1
-bmN0aW9uYWxpdHk/DQo+ID4NCj4gQXQgbGVhc3QgZm9yIGZsZXhpYmlsaXR5IGFuZCBjb25zaXN0
-ZW5jeS4NCj4gDQo+ID4gPiBvciBsaXN0ZWQgaW4gdGhlIHRoZSBhcm0sZnVuYy1pZHMNCj4gPg0K
-PiA+ICAgICAgICAgICAgICAgICAgICAgICAgYXJtLGZ1bmMtaWQNCj4gPg0KPiA+ID4gKyAgcHJv
-cGVydGllcyBhcyBkZXNjcmliZWQgYmVsb3cuIFRoZSBmaXJtd2FyZSBjYW4gcmV0dXJuIG9uZSB2
-YWx1ZQ0KPiA+ID4gKyBpbg0KPiA+DQo+ID4gICAgICBwcm9wZXJ0eQ0KPiA+DQo+ID4gPiArICB0
-aGUgZmlyc3QgU01DIHJlc3VsdCByZWdpc3RlciwgaXQgaXMgZXhwZWN0ZWQgdG8gYmUgYW4gZXJy
-b3INCj4gPiA+ICsgdmFsdWUsICB3aGljaCBzaGFsbCBiZSBwcm9wYWdhdGVkIHRvIHRoZSBtYWls
-Ym94IGNsaWVudC4NCj4gPiA+ICsNCj4gPiA+ICsgIEFueSBjb3JlIHdoaWNoIHN1cHBvcnRzIHRo
-ZSBTTUMgb3IgSFZDIGluc3RydWN0aW9uIGNhbiBiZSB1c2VkLA0KPiA+ID4gKyBhcyBsb25nICBh
-cyBhIGZpcm13YXJlIGNvbXBvbmVudCBydW5uaW5nIGluIEVMMyBvciBFTDIgaXMgaGFuZGxpbmcN
-Cj4gdGhlc2UgY2FsbHMuDQo+ID4gPiArDQo+ID4gPiArcHJvcGVydGllczoNCj4gPiA+ICsgIGNv
-bXBhdGlibGU6DQo+ID4gPiArICAgIG9uZU9mOg0KPiA+ID4gKyAgICAgIC0gZGVzY3JpcHRpb246
-DQo+ID4gPiArICAgICAgICAgIEZvciBpbXBsZW1lbnRhdGlvbnMgdXNpbmcgQVJNIFNNQyBpbnN0
-cnVjdGlvbi4NCj4gPiA+ICsgICAgICAgIGNvbnN0OiBhcm0sc21jLW1ib3gNCj4gPiA+ICsNCj4g
-PiA+ICsgICAgICAtIGRlc2NyaXB0aW9uOg0KPiA+ID4gKyAgICAgICAgICBGb3IgaW1wbGVtZW50
-YXRpb25zIHVzaW5nIEFSTSBIVkMgaW5zdHJ1Y3Rpb24uDQo+ID4gPiArICAgICAgICBjb25zdDog
-YXJtLGh2Yy1tYm94DQo+ID4NCj4gPiBJIGFtIG5vdCBwYXJ0aWN1bGFybHkgaGFwcHkgd2l0aCB0
-aGlzLCBidXQgd2VsbCAuLi4NCj4gPg0KPiA+ID4gKw0KPiA+ID4gKyAgIiNtYm94LWNlbGxzIjoN
-Cj4gPiA+ICsgICAgY29uc3Q6IDENCj4gPg0KPiA+IFdoeSBpcyB0aGlzICIxIj8gV2hhdCBpcyB0
-aGlzIG51bWJlciB1c2VkIGZvcj8gSXQgdXNlZCB0byBiZSB0aGUgY2hhbm5lbCBJRCwNCj4gYnV0
-IHNpbmNlIHlvdSBhcmUgZGVzY3JpYmluZyBhIHNpbmdsZSBjaGFubmVsIGNvbnRyb2xsZXIgb25s
-eSwgdGhpcyBzaG91bGQgYmUgMA0KPiBub3cuDQo+ID4NCj4gWWVzLiBJIG92ZXJsb29rZWQgaXQg
-YW5kIGFjdHVhbGx5IHF1ZXVlZCB0aGUgcGF0Y2ggZm9yIHB1bGwgcmVxdWVzdC4NCg0KSW4gRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21haWxib3gvbWFpbGJveC50eHQNCiNtYm94
-LWNlbGxzOiBNdXN0IGJlIGF0IGxlYXN0IDEuDQoNClNvIEkgdXNlIDEgaGVyZSwgMCBub3Qgd29y
-ay4gQmVjYXVzZSBvZl9tYm94X2luZGV4X3hsYXRlIGV4cGVjdCBhdCBsZWFzdCAxIGhlcmUuDQpT
-byBJIG5lZWQgbW9kaWZ5IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tYWlsYm94
-L21haWxib3gudHh0DQphbmQgYWRkIHhsYXRlIGZvciBzbWMgbWFpbGJveD8NCg0KVGhhbmtzLA0K
-UGVuZy4NCg0KPiBCdXQgSSB0aGluayB0aGUgYmluZGluZ3Mgc2hvdWxkIG5vdCBjYXJyeSBhICdm
-aXgnIHBhdGNoIGxhdGVyLiBBbHNvIEkgcmVhbGlzZSB0aGlzDQo+IHJldmlzaW9uIG9mIGJpbmRp
-bmcgaGFzbid0IGJlZW4gcmV2aWV3ZWQgYnkgUm9iLiBNYXliZSBJIHNob3VsZCBkcm9wIHRoZQ0K
-PiBwYXRjaCBmb3Igbm93Lg0KPiANCj4gPiA+ICsNCj4gPiA+ICsgIGFybSxmdW5jLWlkOg0KPiA+
-ID4gKyAgICBkZXNjcmlwdGlvbjogfA0KPiA+ID4gKyAgICAgIEFuIDMyLWJpdCB2YWx1ZSBzcGVj
-aWZ5aW5nIHRoZSBmdW5jdGlvbiBJRCB1c2VkIGJ5IHRoZSBtYWlsYm94Lg0KPiA+DQo+ID4gICAg
-ICAgICAgQSBzaW5nbGUgMzItYml0IHZhbHVlIC4uLg0KPiA+DQo+ID4gPiArICAgICAgVGhlIGZ1
-bmN0aW9uIElEIGZvbGxvdyB0aGUgQVJNIFNNQyBjYWxsaW5nIGNvbnZlbnRpb24gc3RhbmRhcmQN
-Cj4gWzFdLg0KPiA+DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgIGZvbGxvd3MNCj4gPg0K
-PiA+ID4gKyAgICAkcmVmOiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy91aW50MzIN
-Cj4gPiA+ICsNCj4gPiA+ICtyZXF1aXJlZDoNCj4gPiA+ICsgIC0gY29tcGF0aWJsZQ0KPiA+ID4g
-KyAgLSAiI21ib3gtY2VsbHMiDQo+ID4gPiArDQo+ID4gPiArZXhhbXBsZXM6DQo+ID4gPiArICAt
-IHwNCj4gPiA+ICsgICAgc3JhbUA5M2YwMDAgew0KPiA+ID4gKyAgICAgIGNvbXBhdGlibGUgPSAi
-bW1pby1zcmFtIjsNCj4gPiA+ICsgICAgICByZWcgPSA8MHgwIDB4OTNmMDAwIDB4MCAweDEwMDA+
-Ow0KPiA+ID4gKyAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ID4gKyAgICAgICNzaXpl
-LWNlbGxzID0gPDE+Ow0KPiA+ID4gKyAgICAgIHJhbmdlcyA9IDwweDAgMHg5M2YwMDAgMHgxMDAw
-PjsNCj4gPiA+ICsNCj4gPiA+ICsgICAgICBjcHVfc2NwX2xwcmk6IHNjcC1zaG1lbUAwIHsNCj4g
-PiA+ICsgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLHNjbWktc2htZW0iOw0KPiA+ID4gKyAgICAg
-ICAgcmVnID0gPDB4MCAweDIwMD47DQo+ID4gPiArICAgICAgfTsNCj4gPiA+ICsgICAgfTsNCj4g
-PiA+ICsNCj4gPiA+ICsgICAgc21jX3R4X21ib3g6IHR4X21ib3ggew0KPiA+ID4gKyAgICAgICNt
-Ym94LWNlbGxzID0gPDE+Ow0KPiA+DQo+ID4gQXMgbWVudGlvbmVkIGFib3ZlLCBzaG91bGQgYmUg
-MC4NCj4gPg0KPiA+ID4gKyAgICAgIGNvbXBhdGlibGUgPSAiYXJtLHNtYy1tYm94IjsNCj4gPiA+
-ICsgICAgICAvKiBvcHRpb25hbCAqLw0KPiA+DQo+ID4gRmlyc3Q6IGhhdmluZyAib3B0aW9uYWwi
-IGluIGEgc3BlY2lmaWMgZXhhbXBsZSBpcyBub3QgaGVscGZ1bCwganVzdCBjb25mdXNpbmcuDQo+
-ID4gU2Vjb25kOiBJdCBpcyBhY3R1YWxseSAqbm90KiBvcHRpb25hbCBpbiB0aGlzIGNhc2UsIGFz
-IHRoZXJlIGlzIG5vIG90aGVyIHdheSBvZg0KPiBwcm9wYWdhdGluZyB0aGUgZnVuY3Rpb24gSUQu
-IFRoZSBTQ01JIGRyaXZlciBhcyB0aGUgbWFpbGJveCBjbGllbnQgaGFzDQo+IGNlcnRhaW5seSBu
-byBjbHVlIGFib3V0IHRoaXMuDQo+ID4gSSB0aGluayBJIHNhaWQgdGhpcyBwcmV2aW91c2x5OiBS
-ZWx5aW5nIG9uIHRoZSBtYWlsYm94IGNsaWVudCB0byBwYXNzIHRoZQ0KPiBmdW5jdGlvbiBJRCBz
-b3VuZHMgYnJva2VuLCBhcyB0aGlzIGlzIGEgcHJvcGVydHkgb2YgdGhlIG1haWxib3ggY29udHJv
-bGxlciBkcml2ZXIuDQo+IFRoZSBtYWlsYm94IGNsaWVudCBkb2VzIG5vdCBjYXJlIGFib3V0IHRo
-aXMgbWFpbGJveCBjb21tdW5pY2F0aW9uIGRldGFpbCwgaXQNCj4ganVzdCB3YW50cyB0byB0cmln
-Z2VyIHRoZSBtYWlsYm94Lg0KPiA+DQo+IEFnYWluLCB0aGUgbWFpbGJveCBjb250cm9sbGVyIGhl
-cmUgaXMgdGhlIFNNQy9IVkMgX2luc3RydWN0aW9uXywgd2hpY2gNCj4gZG9lc24ndCBjYXJlIHdo
-YXQgdmFsdWUgdGhlIGZpcnN0IGFyZ3VtZW50IGNhcnJ5Lg0KPiANCj4gQ2hlZXJzIQ0K
+Hi Andre,
+
+> Subject: Re: [PATCH V6 1/2] dt-bindings: mailbox: add binding doc for the
+> ARM SMC/HVC mailbox
+>=20
+> On Mon, 16 Sep 2019 09:44:37 +0000
+> Peng Fan <peng.fan@nxp.com> wrote:
+>=20
+> Hi,
+>=20
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > The ARM SMC/HVC mailbox binding describes a firmware interface to
+> > trigger actions in software layers running in the EL2 or EL3 exception =
+levels.
+> > The term "ARM" here relates to the SMC instruction as part of the ARM
+> > instruction set, not as a standard endorsed by ARM Ltd.
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >  .../devicetree/bindings/mailbox/arm-smc.yaml       | 96
+> ++++++++++++++++++++++
+> >  1 file changed, 96 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> > b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> > new file mode 100644
+> > index 000000000000..bf01bec035fc
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> > @@ -0,0 +1,96 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause) %YAML 1.2
+> > +---
+> > +$id:
+> > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdev=
+i
+> >
+> +cetree.org%2Fschemas%2Fmailbox%2Farm-smc.yaml%23&amp;data=3D02%7
+> C01%7Cp
+> >
+> +eng.fan%40nxp.com%7Cff378bc3d622436c39ba08d73b94dfcc%7C686ea1d
+> 3bc2b4c
+> >
+> +6fa92cd99c5c301635%7C0%7C1%7C637043382928045369&amp;sdata=3Drnx
+> KdDGjPPd
+> > +8VBI5WmgnZ3jxIjL2hcRYzbljfFxDkA0%3D&amp;reserved=3D0
+> > +$schema:
+> > +https://eur01.safelinks.protection.outlook.com/?url=3Dhttp%3A%2F%2Fdev=
+i
+> >
+> +cetree.org%2Fmeta-schemas%2Fcore.yaml%23&amp;data=3D02%7C01%7Cpe
+> ng.fan%
+> >
+> +40nxp.com%7Cff378bc3d622436c39ba08d73b94dfcc%7C686ea1d3bc2b4c6
+> fa92cd9
+> >
+> +9c5c301635%7C0%7C1%7C637043382928045369&amp;sdata=3DR02nWzpp9
+> %2BrDYG9tA
+> > +ot4pdWb8tGGHet1MOjrD0dEjwA%3D&amp;reserved=3D0
+> > +
+> > +title: ARM SMC Mailbox Interface
+> > +
+> > +maintainers:
+> > +  - Peng Fan <peng.fan@nxp.com>
+> > +
+> > +description: |
+> > +  This mailbox uses the ARM smc (secure monitor call) and hvc
+> > +(hypervisor
+>=20
+> I think "or" instead of "and" is less confusing.
+
+ok
+
+>=20
+> > +  call) instruction to trigger a mailbox-connected activity in
+> > + firmware,  executing on the very same core as the caller. The value
+> > + of r0/w0/x0  the firmware returns after the smc call is delivered as
+> > + a received  message to the mailbox framework, so synchronous
+> > + communication can be  established. The exact meaning of the action
+> > + the mailbox triggers as  well as the return value is defined by
+> > + their users and is not subject  to this binding.
+> > +
+> > +  One use case of this mailbox is the SCMI interface, which uses
+> > + shared
+>=20
+>      One example use case of this mailbox ...
+> (to make it more obvious that it's not restricted to this)
+
+ok
+
+>=20
+> > +  memory to transfer commands and parameters, and a mailbox to
+> > + trigger a  function call. This allows SoCs without a separate
+> > + management processor  (or when such a processor is not available or
+> > + used) to use this  standardized interface anyway.
+> > +
+> > +  This binding describes no hardware, but establishes a firmware
+> interface.
+> > +  Upon receiving an SMC using one of the described SMC function
+> > + identifiers,
+>=20
+>                              ... the described SMC function identifier,
+
+ok
+
+>=20
+> > +  the firmware is expected to trigger some mailbox connected
+> functionality.
+> > +  The communication follows the ARM SMC calling convention.
+> > +  Firmware expects an SMC function identifier in r0 or w0. The
+> > + supported  identifiers are passed from consumers,
+>=20
+>      identifier
+
+ok
+
+>=20
+> "passed from consumers": How? Where?
+> But I want to repeat: We should not allow this. This is a binding for a m=
+ailbox
+> controller driver, not a generic firmware backdoor.
+
+As Jassi suggested the function identifier as an optional for mailbox drive=
+r.
+The driver should support function id passed from consumers.
+Currently there is no users for such case that passed from consumers,
+so I have no idea how.
+
+> We should be as strict as possible to avoid any security issues.
+> The firmware certainly knows the function ID it implements. The firmware
+> controls the DT. So it is straight-forward to put the ID into the DT. The
+> firmware could even do this at boot time, dynamically, before passing on =
+the
+> DT to the non-secure world (bootloader or kernel).
+>=20
+> What would be the use case of this functionality?
+>=20
+> > or listed in the the arm,func-ids
+>=20
+>                        arm,func-id
+
+ok
+>=20
+> > +  properties as described below. The firmware can return one value in
+>=20
+>      property
+ok
+>=20
+> > +  the first SMC result register, it is expected to be an error value,
+> > + which shall be propagated to the mailbox client.
+> > +
+> > +  Any core which supports the SMC or HVC instruction can be used, as
+> > + long  as a firmware component running in EL3 or EL2 is handling these
+> calls.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - description:
+> > +          For implementations using ARM SMC instruction.
+> > +        const: arm,smc-mbox
+> > +
+> > +      - description:
+> > +          For implementations using ARM HVC instruction.
+> > +        const: arm,hvc-mbox
+>=20
+> I am not particularly happy with this, but well ...
+>=20
+> > +
+> > +  "#mbox-cells":
+> > +    const: 1
+>=20
+> Why is this "1"? What is this number used for? It used to be the channel =
+ID,
+> but since you are describing a single channel controller only, this shoul=
+d be 0
+> now.
+
+Mailbox bindings requires it at least 1, as replied to Jassi in the other m=
+ail.
+
+>=20
+> > +
+> > +  arm,func-id:
+> > +    description: |
+> > +      An 32-bit value specifying the function ID used by the mailbox.
+>=20
+>          A single 32-bit value ...
+>=20
+> > +      The function ID follow the ARM SMC calling convention standard
+> [1].
+>=20
+>                          follows
+>=20
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +required:
+> > +  - compatible
+> > +  - "#mbox-cells"
+> > +
+> > +examples:
+> > +  - |
+> > +    sram@93f000 {
+> > +      compatible =3D "mmio-sram";
+> > +      reg =3D <0x0 0x93f000 0x0 0x1000>;
+> > +      #address-cells =3D <1>;
+> > +      #size-cells =3D <1>;
+> > +      ranges =3D <0x0 0x93f000 0x1000>;
+> > +
+> > +      cpu_scp_lpri: scp-shmem@0 {
+> > +        compatible =3D "arm,scmi-shmem";
+> > +        reg =3D <0x0 0x200>;
+> > +      };
+> > +    };
+> > +
+> > +    smc_tx_mbox: tx_mbox {
+> > +      #mbox-cells =3D <1>;
+>=20
+> As mentioned above, should be 0.
+>=20
+> > +      compatible =3D "arm,smc-mbox";
+> > +      /* optional */
+>=20
+> First: having "optional" in a specific example is not helpful, just confu=
+sing.
+> Second: It is actually *not* optional in this case, as there is no other =
+way of
+> propagating the function ID. The SCMI driver as the mailbox client has
+> certainly no clue about this.
+
+I'll drop "/*optinal*/" since it is required in the example.
+
+> I think I said this previously: Relying on the mailbox client to pass the=
+ function
+> ID sounds broken, as this is a property of the mailbox controller driver.=
+ The
+> mailbox client does not care about this mailbox communication detail, it =
+just
+> wants to trigger the mailbox.
+>=20
+> > +      arm,func-id =3D <0xc20000fe>;
+> > +    };
+> > +
+> > +    firmware {
+> > +      scmi {
+> > +        compatible =3D "arm,scmi";
+> > +        mboxes =3D <&smc_tx_mbox 0>;
+>=20
+> ... and here just <&smc_tx_mbox>; would suffice.
+
+Mailbox requires mbox-cells at least 1, it must have one arg.
+Otherwise of_mbox_index_xlate not work.
+
+Thanks,
+Peng.
+
+>=20
+> > +        mbox-names =3D "tx";
+> > +        shmem =3D <&cpu_scp_lpri>;
+> > +      };
+> > +    };
+> > +
+> > +...
+>=20
+> Cheers,
+> Andre.
