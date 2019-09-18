@@ -1,58 +1,78 @@
-From: Pragnesh Patel <pragnesh.patel@sifive.com>
-Subject: Re: [PATCH] regulator: dt-bindings: Fix building error for dt_binding_check
-Date: Wed, 18 Sep 2019 23:54:36 +0530
-Message-ID: <CAN8ut8LObxfEEQbhmncToG8u=Ec6rESLYHcriT5cu7RAHxbDqw@mail.gmail.com>
-References: <1568815340-30401-1-git-send-email-pragnesh.patel@sifive.com> <CAL_JsqJwsLkQGjjoS_RvBXjSq4irrVPEpwrwTv7wL732YHM4dg@mail.gmail.com>
+From: Raghavendra Rao Ananta <rananta@codeaurora.org>
+Subject: [PATCH] of: Add of_get_memory_prop()
+Date: Wed, 18 Sep 2019 11:46:56 -0700
+Message-ID: <20190918184656.7633-1-rananta@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJwsLkQGjjoS_RvBXjSq4irrVPEpwrwTv7wL732YHM4dg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: robh+dt@kernel.org, frowand.list@gmail.com
+Cc: tsoni@codeaurora.org, kernel-team@android.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Raghavendra Rao Ananta <rananta@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 7:58 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Wed, Sep 18, 2019 at 9:02 AM Pragnesh Patel
-> <pragnesh.patel@sifive.com> wrote:
-> >
->
-> The subject could be more specific rather than being one that applies
-> to any dt_binding_check breakage in regulators.
->
+On some embedded systems, the '/memory' dt-property gets updated
+by the bootloader (for example, the DDR configuration) and then
+gets passed onto the kernel. The device drivers may have to read
+the properties at runtime to make decisions. Hence, add
+of_get_memory_prop() for the device drivers to query the requested
+properties.
 
-Thanks for pointing me out, I will take care this in future patches.
+Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
+---
+ drivers/of/fdt.c       | 27 +++++++++++++++++++++++++++
+ include/linux/of_fdt.h |  1 +
+ 2 files changed, 28 insertions(+)
 
-> > Compatible property is not of type 'string' so replace enum
-> > with items.
-> >
-> > Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
-> > ---
-> >  Documentation/devicetree/bindings/regulator/fixed-regulator.yaml | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-> > index a78150c..8d4a7b2 100644
-> > --- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-> > +++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-> > @@ -29,7 +29,7 @@ if:
-> >
-> >  properties:
-> >    compatible:
-> > -    enum:
-> > +    items:
-> >        - const: regulator-fixed
-> >        - const: regulator-fixed-clock
->
-> This means you expect: compatible = "regulator-fixed", "regulator-fixed-clock";
->
-> Did you actually run 'dt_binding_check' because it should fail on the example?
->
-> I gave you exact change to make. Just remove 'const: ' on each entry.
-
-Thanks for correcting me, i rechecked "make dt_binding_check" and it's failed.
-I will send the patch again with the updated subject line.
-
->
-> Rob
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 223d617ecfe1..925cf2852433 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -79,6 +79,33 @@ void __init of_fdt_limit_memory(int limit)
+ 	}
+ }
+ 
++/**
++ * of_fdt_get_memory_prop - Return the requested property from the /memory node
++ *
++ * On match, returns a non-zero positive value which represents the property
++ * value. Otherwise returns -ENOENT.
++ */
++int of_fdt_get_memory_prop(const char *pname)
++{
++	int memory;
++	int len;
++	fdt32_t *prop = NULL;
++
++	if (!pname)
++		return -EINVAL;
++
++	memory = fdt_path_offset(initial_boot_params, "/memory");
++	if (memory > 0)
++		prop = fdt_getprop_w(initial_boot_params, memory,
++				  pname, &len);
++
++	if (!prop || len != sizeof(u32))
++		return -ENOENT;
++
++	return fdt32_to_cpu(*prop);
++}
++EXPORT_SYMBOL_GPL(of_fdt_get_memory_prop);
++
+ static bool of_fdt_device_is_available(const void *blob, unsigned long node)
+ {
+ 	const char *status = fdt_getprop(blob, node, "status", NULL);
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index acf820e88952..537f29373358 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -38,6 +38,7 @@ extern char __dtb_end[];
+ /* Other Prototypes */
+ extern u64 of_flat_dt_translate_address(unsigned long node);
+ extern void of_fdt_limit_memory(int limit);
++extern int of_fdt_get_memory_prop(const char *pname);
+ #endif /* CONFIG_OF_FLATTREE */
+ 
+ #ifdef CONFIG_OF_EARLY_FLATTREE
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
