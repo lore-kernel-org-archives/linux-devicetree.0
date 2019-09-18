@@ -1,107 +1,294 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
- max-speed
-Date: Tue, 17 Sep 2019 23:43:47 +0100
-Message-ID: <20190917224347.GD25745@shell.armlinux.org.uk>
-References: <20190910155507.491230-1-tinywrkb@gmail.com>
- <20190910185033.GD9761@lunn.ch>
- <87muf6oyvr.fsf@tarshish>
- <20190915135652.GC3427@lunn.ch>
- <20190917124101.GA1200564@arch-dsk-01>
- <20190917125434.GH20778@lunn.ch>
- <20190917133253.GA1210141@arch-dsk-01>
- <20190917223013.GC25745@shell.armlinux.org.uk>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH v2 02/19] MIPS: Loongson64: separate
+ loongson2ef/loongson64 code
+Date: Wed, 18 Sep 2019 08:38:03 +0800
+Message-ID: <18392e2d-b0a2-518f-ad22-34a4aada0014@flygoat.com>
+References: <20190905144316.12527-1-jiaxun.yang@flygoat.com>
+ <20190905144316.12527-3-jiaxun.yang@flygoat.com>
+ <20190910001248.few7zmxsrg72mdum@pburton-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190917223013.GC25745@shell.armlinux.org.uk>
+In-Reply-To: <20190910001248.few7zmxsrg72mdum@pburton-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tinywrkb <tinywrkb@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Baruch Siach <baruch@tkos.co.il>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: "chenhc@lemote.com" <chenhc@lemote.com>, Paul Burton <paul.burton@mips.com>
+Cc: "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "maz@kernel.org" <maz@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.co" <mark.rutland@arm.co>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 11:30:13PM +0100, Russell King - ARM Linux admin wrote:
-> On Tue, Sep 17, 2019 at 04:32:53PM +0300, tinywrkb wrote:
-> > Here's the output of # mii-tool -v -v eth0 
-> > 
-> > * linux-test-5.1rc1-a2703de70942-without_bad_commit
-> > 
-> > Using SIOCGMIIPHY=0x8947
-> > eth0: negotiated 100baseTx-FD flow-control, link ok
-> >   registers for MII PHY 0:
-> >     3100 796d 004d d072 15e1 c5e1 000f 0000
-> >     0000 0000 0800 0000 0000 0000 0000 a000
-> >     0000 0000 0000 f420 082c 0000 04e8 0000
-> >     3200 3000 0000 063d 0000 0000 0000 0000
-> 
-> I'll also mention some other discrepencies that I've just spotted in
-> this register set.
-> 
-> The BMSR is 0x796d.  Bit 2 is the link status, which is indicating
-> that link is up.  Bit 5 indicates negotiation complete, which it
-> claims it is.
-> 
-> The PHY has a second status register at 0x11 which gives real time
-> information.  That is 0x0000.  Bit 10 indicates link up, and is
-> indicating that the link is down.  Bit 11 is saying that the speed
-> and duplex is not resolved either.
-> 
-> So, there's contradictory information being reported by this PHY.
-> 
-> This brings up several questions:
-> 1. what is the _true_ state of the link?  Is the link up or down?
-> 
-> 2. what does the link partner think is the current link state and
->    results of negotiation?
-> 
-> 3. should we be reading the register at 0x11 to determine the
->    negotiation results and link state (maybe logically anding the
->    present state with the BMSR link state)?
-> 
-> 
-> Compare that to a correctly functioning AR8035 such as I have in my
-> cubox-i4 connected to a Netgear GS116 switch:
-> 
->    3100 796d 004d d072 15e1 c5e1 000d 2001
->    0000 0200 3c00 0000 0000 4007 b29a a000
->    0862 bc1c 0000 0000 082c 0000 07e8 0000
->    3200 3000 0000 063e 0000 0005 2d47 8100.
-> 
-> BMSR is again 0x796d.  The PHY specific status register this time
-> is 0xbc1c, which indicates 1G, full duplex, resolved, link up, no
-> smartspeed downgrade, tx/rx pause.
-> 
-> The register at 0x10 is a control register, which is strangely also
-> different between our two.  Apparently in your PHY configuration,
-> auto-MDI crossover mode is disabled, you are forced to MDI mode.
-> On hardware reset, this register contains 0x0862, as per my
-> example above, but yours is zero.
-> 
-> I don't think the difference in register 0x10 can be explained away
-> by operation of the smartspeed feature - so maybe my theory about
-> the advertisement registers being cleared by the PHY is wrong.  The
-> question is: how is 0x10 getting reset to zero in your setup?  Maybe
-> something has corrupted the configuration of the PHY in ways that
-> Linux doesn't know how to reprogram?
-> 
-> Have you tried power-cycling the cubox-i?
 
-Hopefully one last thing, which will explain why you may not be able
-to get an IP address even with some of these tweaks I've been getting
-you to try.  Do you have either none or both of these commits in your
-kernel?
+08:12, 2019年9月10日, Paul Burton <paul.burton@mips.com>:
 
-0672d22a1924 ("ARM: dts: imx: Fix the AR803X phy-mode")
-6d4cd041f0af ("net: phy: at803x: disable delay only for RGMII mode")
+    Hi Jiaxun & Huacai,
 
-I think you'll have the latter but not the former.  You will need the
-former if you have the latter.
+    On Thu, Sep 05, 2019 at 10:42:59PM +0800, Jiaxun Yang wrote:
 
-I think this thread is a good illustration why breaking existing DT
-compatibility - even for the sake of fixing a bug - is just bad news.
+          As later model of GSx64 family processors including
+        2-series-soc have
+          similar design with initial loongson3a while loongson2e/f
+        seems less
+          identical, we separate loongson2e/f support code out of
+        mach-loongson64
+          to make our life easier.
+
+          Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com
+        <mailto:jiaxun.yang@flygoat.com>>
+
+
+    I looked at applying the first 3 patches of this series to mips-next &
+    squashed in the relevant defconfig updates, then was looking at applying
+    Huacai's recent 3 patch series.
+
+Hi Paul,
+Thanks for your effort.
+Please let Huacai's patches go first.
+
+I'm going to make a delicated set for separate the code. Based on mips-next.
+
+    One issue is that they conflict, but beyond that it showed me that this
+    patch deletes kernel-entry-init.h entirely. Was that intentional? If so
+    it should be a separate patch & it needs an explanation.
+
+Yes, that's intentional, I'm going to explain them in sets later.
+
+    Please could the two of you make it clear what branch & commit your
+    patches are based upon? Ideally it should be the current head of the
+    mips-next branch.
+
+    Also Jiaxun, it's really hard to see whether this patch is making any
+    functional changes in addition to the duplication & renaming. I think it
+    would be much better to split this into a few steps across multiple
+    commits, something like this:
+
+    1) Copy the loongson64 directory to loongson2ef, and keep the copy as-is
+        *except* for the removal of the loongson2ef/loongon-3 subdirectory.
+        Delete loongson64/fuloong-2e & loongson64/lemote-2f.
+
+    2) Now clean up the loongson64 directory by moving files up from the
+        loongson-3 subdirectory.
+
+    3) Now clean up code, removing #ifdef's etc that no longer make sense.
+
+    Provide the -M & -C flags to git format-patch when generating your
+    patches. --find-copies-harder might help with the first step, if it's
+    practical to run.
+
+    That way each commit will be easier to review, and issues like the
+    deletion of kernel-entry-init.h will be easier to spot.
+
+Got it!
+--
+Jiaxun
+
+    For now I undid the whole thing. It's getting late in the cycle anyway,
+    so this will probably be v5.5 material.
+
+    Thanks,
+         Paul
+
+          ---
+           arch/mips/Kbuild.platforms | 1 +
+           arch/mips/Kconfig | 51 +++++--
+           arch/mips/include/asm/bootinfo.h | 1 -
+           .../mach-loongson2ef/cpu-feature-overrides.h | 45 +++++++
+           .../cs5536/cs5536.h | 0
+           .../cs5536/cs5536_mfgpt.h | 0
+           .../cs5536/cs5536_pci.h | 0
+           .../cs5536/cs5536_vsm.h | 0
+           .../loongson2ef.h} | 29 +---
+           .../machine.h | 6 -
+           .../mc146818rtc.h | 5 +-
+           .../mem.h | 6 +-
+           arch/mips/include/asm/mach-loongson2ef/pci.h | 43 ++++++
+           .../include/asm/mach-loongson2ef/spaces.h | 10 ++
+           .../mach-loongson64/cpu-feature-overrides.h | 8 +-
+           arch/mips/include/asm/mach-loongson64/irq.h | 7 +-
+           .../asm/mach-loongson64/kernel-entry-init.h | 74 ----------
+           .../include/asm/mach-loongson64/loongson64.h | 48 +++++++
+           .../mips/include/asm/mach-loongson64/mmzone.h | 16 ---
+           arch/mips/include/asm/mach-loongson64/pci.h | 41 +-----
+           .../include/asm/mach-loongson64/workarounds.h | 4 +-
+           arch/mips/loongson2ef/Kconfig | 93 +++++++++++++
+           arch/mips/loongson2ef/Makefile | 18 +++
+           arch/mips/loongson2ef/Platform | 32 +++++
+           .../common/Makefile | 0
+           .../common/bonito-irq.c | 2 +-
+           .../common/cmdline.c | 2 +-
+           .../common/cs5536/Makefile | 0
+           .../common/cs5536/cs5536_acc.c | 0
+           .../common/cs5536/cs5536_ehci.c | 0
+           .../common/cs5536/cs5536_ide.c | 0
+           .../common/cs5536/cs5536_isa.c | 0
+           .../common/cs5536/cs5536_mfgpt.c | 0
+           .../common/cs5536/cs5536_ohci.c | 0
+           .../common/cs5536/cs5536_pci.c | 0
+           .../common/early_printk.c | 2 +-
+           arch/mips/loongson2ef/common/env.c | 71 ++++++++++
+           .../{loongson64 => loongson2ef}/common/init.c | 7 +-
+           .../{loongson64 => loongson2ef}/common/irq.c | 2 +-
+           .../common/machtype.c | 3 +-
+           .../{loongson64 => loongson2ef}/common/mem.c | 40 +-----
+           .../{loongson64 => loongson2ef}/common/pci.c | 11 +-
+           .../common/platform.c | 0
+           .../{loongson64 => loongson2ef}/common/pm.c | 2 +-
+           .../common/reset.c | 23 +---
+           .../{loongson64 => loongson2ef}/common/rtc.c | 0
+           .../common/serial.c | 37 +----
+           .../common/setup.c | 2 +-
+           .../{loongson64 => loongson2ef}/common/time.c | 2 +-
+           .../common/uart_base.c | 10 +-
+           .../fuloong-2e/Makefile | 0
+           .../fuloong-2e/dma.c | 0
+           .../fuloong-2e/irq.c | 2 +-
+           .../fuloong-2e/reset.c | 2 +-
+           .../lemote-2f/Makefile | 0
+           .../lemote-2f/clock.c | 2 +-
+           .../lemote-2f/dma.c | 0
+           .../lemote-2f/ec_kb3310b.c | 0
+           .../lemote-2f/ec_kb3310b.h | 0
+           .../lemote-2f/irq.c | 2 +-
+           .../lemote-2f/machtype.c | 2 +-
+           .../lemote-2f/pm.c | 2 +-
+           .../lemote-2f/reset.c | 2 +-
+           arch/mips/loongson64/Kconfig | 126 +-----------------
+           arch/mips/loongson64/Makefile | 23 +---
+           arch/mips/loongson64/Platform | 26 +---
+           .../loongson64/{loongson-3 => }/acpi_init.c | 3 +-
+           .../loongson64/{loongson-3 => }/cop2-ex.c | 5 +-
+           arch/mips/loongson64/{loongson-3 => }/dma.c | 6 +-
+           arch/mips/loongson64/{common => }/env.c | 72 +++-------
+           arch/mips/loongson64/{loongson-3 => }/hpet.c | 0
+           arch/mips/loongson64/{loongson-3 => }/irq.c | 40 +++++-
+           arch/mips/loongson64/loongson-3/Makefile | 11 --
+           arch/mips/loongson64/{loongson-3 => }/numa.c | 4 +-
+           arch/mips/loongson64/pci.c | 45 +++++++
+           .../loongson64/{loongson-3 => }/platform.c | 0
+           arch/mips/loongson64/reset.c | 58 ++++++++
+           arch/mips/loongson64/setup.c | 91 +++++++++++++
+           arch/mips/loongson64/{loongson-3 => }/smp.c | 4 +-
+           arch/mips/loongson64/{loongson-3 => }/smp.h | 0
+           arch/mips/oprofile/op_model_loongson2.c | 2 +-
+           arch/mips/oprofile/op_model_loongson3.c | 2 +-
+           arch/mips/pci/Makefile | 2 +-
+           arch/mips/pci/fixup-fuloong2e.c | 2 +-
+           arch/mips/pci/fixup-lemote2f.c | 2 +-
+           arch/mips/pci/ops-loongson2.c | 2 +-
+           arch/mips/pci/ops-loongson3.c | 2 +-
+           drivers/cpufreq/loongson2_cpufreq.c | 2 +-
+           drivers/gpio/gpio-loongson.c | 2 +-
+           drivers/platform/mips/cpu_hwmon.c | 2 +-
+           90 files changed, 720 insertions(+), 582 deletions(-)
+           create mode 100644
+        arch/mips/include/asm/mach-loongson2ef/cpu-feature-overrides.h
+           rename arch/mips/include/asm/{mach-loongson64 =>
+        mach-loongson2ef}/cs5536/cs5536.h (100%)
+           rename arch/mips/include/asm/{mach-loongson64 =>
+        mach-loongson2ef}/cs5536/cs5536_mfgpt.h (100%)
+           rename arch/mips/include/asm/{mach-loongson64 =>
+        mach-loongson2ef}/cs5536/cs5536_pci.h (100%)
+           rename arch/mips/include/asm/{mach-loongson64 =>
+        mach-loongson2ef}/cs5536/cs5536_vsm.h (100%)
+           rename arch/mips/include/asm/{mach-loongson64/loongson.h =>
+        mach-loongson2ef/loongson2ef.h} (91%)
+           rename arch/mips/include/asm/{mach-loongson64 =>
+        mach-loongson2ef}/machine.h (80%)
+           rename arch/mips/include/asm/{mach-loongson64 =>
+        mach-loongson2ef}/mc146818rtc.h (80%)
+           rename arch/mips/include/asm/{mach-loongson64 =>
+        mach-loongson2ef}/mem.h (86%)
+           create mode 100644 arch/mips/include/asm/mach-loongson2ef/pci.h
+           create mode 100644
+        arch/mips/include/asm/mach-loongson2ef/spaces.h
+           delete mode 100644
+        arch/mips/include/asm/mach-loongson64/kernel-entry-init.h
+           create mode 100644
+        arch/mips/include/asm/mach-loongson64/loongson64.h
+           create mode 100644 arch/mips/loongson2ef/Kconfig
+           create mode 100644 arch/mips/loongson2ef/Makefile
+           create mode 100644 arch/mips/loongson2ef/Platform
+           rename arch/mips/{loongson64 => loongson2ef}/common/Makefile
+        (100%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/common/bonito-irq.c (97%)
+           rename arch/mips/{loongson64 => loongson2ef}/common/cmdline.c
+        (97%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/common/cs5536/Makefile (100%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/common/cs5536/cs5536_acc.c (100%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/common/cs5536/cs5536_ehci.c (100%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/common/cs5536/cs5536_ide.c (100%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/common/cs5536/cs5536_isa.c (100%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/common/cs5536/cs5536_mfgpt.c (100%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/common/cs5536/cs5536_ohci.c (100%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/common/cs5536/cs5536_pci.c (100%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/common/early_printk.c (97%)
+           create mode 100644 arch/mips/loongson2ef/common/env.c
+           rename arch/mips/{loongson64 => loongson2ef}/common/init.c (90%)
+           rename arch/mips/{loongson64 => loongson2ef}/common/irq.c (98%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/common/machtype.c (94%)
+           rename arch/mips/{loongson64 => loongson2ef}/common/mem.c (72%)
+           rename arch/mips/{loongson64 => loongson2ef}/common/pci.c (89%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/common/platform.c (100%)
+           rename arch/mips/{loongson64 => loongson2ef}/common/pm.c (99%)
+           rename arch/mips/{loongson64 => loongson2ef}/common/reset.c (77%)
+           rename arch/mips/{loongson64 => loongson2ef}/common/rtc.c (100%)
+           rename arch/mips/{loongson64 => loongson2ef}/common/serial.c
+        (63%)
+           rename arch/mips/{loongson64 => loongson2ef}/common/setup.c (97%)
+           rename arch/mips/{loongson64 => loongson2ef}/common/time.c (96%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/common/uart_base.c (77%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/fuloong-2e/Makefile (100%)
+           rename arch/mips/{loongson64 => loongson2ef}/fuloong-2e/dma.c
+        (100%)
+           rename arch/mips/{loongson64 => loongson2ef}/fuloong-2e/irq.c
+        (98%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/fuloong-2e/reset.c (93%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/lemote-2f/Makefile (100%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/lemote-2f/clock.c (98%)
+           rename arch/mips/{loongson64 => loongson2ef}/lemote-2f/dma.c
+        (100%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/lemote-2f/ec_kb3310b.c (100%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/lemote-2f/ec_kb3310b.h (100%)
+           rename arch/mips/{loongson64 => loongson2ef}/lemote-2f/irq.c
+        (99%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/lemote-2f/machtype.c (98%)
+           rename arch/mips/{loongson64 => loongson2ef}/lemote-2f/pm.c (99%)
+           rename arch/mips/{loongson64 =>
+        loongson2ef}/lemote-2f/reset.c (99%)
+           rename arch/mips/loongson64/{loongson-3 => }/acpi_init.c (99%)
+           rename arch/mips/loongson64/{loongson-3 => }/cop2-ex.c (88%)
+           rename arch/mips/loongson64/{loongson-3 => }/dma.c (82%)
+           rename arch/mips/loongson64/{common => }/env.c (79%)
+           rename arch/mips/loongson64/{loongson-3 => }/hpet.c (100%)
+           rename arch/mips/loongson64/{loongson-3 => }/irq.c (77%)
+           delete mode 100644 arch/mips/loongson64/loongson-3/Makefile
+           rename arch/mips/loongson64/{loongson-3 => }/numa.c (98%)
+           create mode 100644 arch/mips/loongson64/pci.c
+           rename arch/mips/loongson64/{loongson-3 => }/platform.c (100%)
+           create mode 100644 arch/mips/loongson64/reset.c
+           create mode 100644 arch/mips/loongson64/setup.c
+           rename arch/mips/loongson64/{loongson-3 => }/smp.c (99%)
+           rename arch/mips/loongson64/{loongson-3 => }/smp.h (100%)
+
+
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Jiaxun Yang
