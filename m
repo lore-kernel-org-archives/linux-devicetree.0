@@ -1,143 +1,355 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 8/8] dt-bindings: pwm: Convert Samsung PWM bindings to
- json-schema
-Date: Wed, 18 Sep 2019 19:31:41 +0200
-Message-ID: <20190918173141.4314-8-krzk@kernel.org>
-References: <20190918173141.4314-1-krzk@kernel.org>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH v2 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna
+ Labs Memory Controller EDAC
+Date: Wed, 18 Sep 2019 18:47:28 +0100
+Message-ID: <4f6cd17c-c56f-b9d2-d6e0-1711de415f47@arm.com>
+References: <1568529835-15319-1-git-send-email-talel@amazon.com>
+ <1568529835-15319-3-git-send-email-talel@amazon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190918173141.4314-1-krzk@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-riscv@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, linux-crypto@vger.kernel.org, linux-watchdog@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1568529835-15319-3-git-send-email-talel@amazon.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Talel Shenhar <talel@amazon.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com, barakw@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-Q29udmVydCBTYW1zdW5nIFBXTSAoUzNDLCBTNVAgYW5kIEV4eW5vcyBTb0NzKSBiaW5kaW5ncyB0
-byBEVCBzY2hlbWEKZm9ybWF0IHVzaW5nIGpzb24tc2NoZW1hLgoKU2lnbmVkLW9mZi1ieTogS3J6
-eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3JnPgoKLS0tCgpDaGFuZ2VzIHNpbmNlIHYx
-OgoxLiBJbmRlbnQgZXhhbXBsZSB3aXRoIGZvdXIgc3BhY2VzIChtb3JlIHJlYWRhYmxlKSwKMi4g
-Rml4IHNhbXN1bmcscHdtLW91dHB1dHMgYWZ0ZXIgcmV2aWV3LAozLiBSZW1vdmUgZG91YmxlLXF1
-b3RlcyBmcm9tIGNsb2NrIG5hbWVzLgotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9w
-d20tc2Ftc3VuZy50eHQgICB8ICA1MSAtLS0tLS0tLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3B3bS9wd20tc2Ftc3VuZy55YW1sICB8IDEwNyArKysrKysrKysrKysrKysrKysKIDIgZmlsZXMg
-Y2hhbmdlZCwgMTA3IGluc2VydGlvbnMoKyksIDUxIGRlbGV0aW9ucygtKQogZGVsZXRlIG1vZGUg
-MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vcHdtLXNhbXN1bmcu
-dHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3B3bS9wd20tc2Ftc3VuZy55YW1sCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3B3bS9wd20tc2Ftc3VuZy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvcHdtL3B3bS1zYW1zdW5nLnR4dApkZWxldGVkIGZpbGUgbW9kZSAxMDA2NDQK
-aW5kZXggNTUzOGRlOWMyMDA3Li4wMDAwMDAwMDAwMDAKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3B3bS9wd20tc2Ftc3VuZy50eHQKKysrIC9kZXYvbnVsbApAQCAtMSw1
-MSArMCwwIEBACi0qIFNhbXN1bmcgUFdNIHRpbWVycwotCi1TYW1zdW5nIFNvQ3MgY29udGFpbiBQ
-V00gdGltZXIgYmxvY2tzIHdoaWNoIGNhbiBiZSB1c2VkIGZvciBzeXN0ZW0gY2xvY2sgc291cmNl
-Ci1hbmQgY2xvY2sgZXZlbnQgdGltZXJzLCBhcyB3ZWxsIGFzIHRvIGRyaXZlIFNvQyBvdXRwdXRz
-IHdpdGggUFdNIHNpZ25hbC4gRWFjaAotUFdNIHRpbWVyIGJsb2NrIHByb3ZpZGVzIDUgUFdNIGNo
-YW5uZWxzIChub3QgYWxsIG9mIHRoZW0gY2FuIGRyaXZlIHBoeXNpY2FsCi1vdXRwdXRzIC0gc2Vl
-IFNvQyBhbmQgYm9hcmQgbWFudWFsKS4KLQotQmUgYXdhcmUgdGhhdCB0aGUgY2xvY2tzb3VyY2Ug
-ZHJpdmVyIHN1cHBvcnRzIG9ubHkgdW5pcHJvY2Vzc29yIHN5c3RlbXMuCi0KLVJlcXVpcmVkIHBy
-b3BlcnRpZXM6Ci0tIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgb25lIG9mIGZvbGxvd2luZzoKLSAg
-ICBzYW1zdW5nLHMzYzI0MTAtcHdtIC0gZm9yIDE2LWJpdCB0aW1lcnMgcHJlc2VudCBvbiBTM0My
-NHh4IFNvQ3MKLSAgICBzYW1zdW5nLHMzYzY0MDAtcHdtIC0gZm9yIDMyLWJpdCB0aW1lcnMgcHJl
-c2VudCBvbiBTM0M2NHh4IFNvQ3MKLSAgICBzYW1zdW5nLHM1cDY0NDAtcHdtIC0gZm9yIDMyLWJp
-dCB0aW1lcnMgcHJlc2VudCBvbiBTNVA2NHgwIFNvQ3MKLSAgICBzYW1zdW5nLHM1cGMxMDAtcHdt
-IC0gZm9yIDMyLWJpdCB0aW1lcnMgcHJlc2VudCBvbiBTNVBDMTAwLCBTNVBWMjEwLAotCQkJICBF
-eHlub3M0MjEwIHJldjAgU29DcwotICAgIHNhbXN1bmcsZXh5bm9zNDIxMC1wd20gLSBmb3IgMzIt
-Yml0IHRpbWVycyBwcmVzZW50IG9uIEV4eW5vczQyMTAsCi0gICAgICAgICAgICAgICAgICAgICAg
-ICAgIEV4eW5vczR4MTIsIEV4eW5vczUyNTAgYW5kIEV4eW5vczU0MjAgU29DcwotLSByZWc6IGJh
-c2UgYWRkcmVzcyBhbmQgc2l6ZSBvZiByZWdpc3RlciBhcmVhCi0tIGludGVycnVwdHM6IGxpc3Qg
-b2YgdGltZXIgaW50ZXJydXB0cyAob25lIGludGVycnVwdCBwZXIgdGltZXIsIHN0YXJ0aW5nIGF0
-Ci0gIHRpbWVyIDApCi0tIGNsb2NrLW5hbWVzOiBzaG91bGQgY29udGFpbiBhbGwgZm9sbG93aW5n
-IHJlcXVpcmVkIGNsb2NrIG5hbWVzOgotICAgIC0gInRpbWVycyIgLSBQV00gYmFzZSBjbG9jayB1
-c2VkIHRvIGdlbmVyYXRlIFBXTSBzaWduYWxzLAotICBhbmQgYW55IHN1YnNldCBvZiBmb2xsb3dp
-bmcgb3B0aW9uYWwgY2xvY2sgbmFtZXM6Ci0gICAgLSAicHdtLXRjbGswIiAtIGZpcnN0IGV4dGVy
-bmFsIFBXTSBjbG9jayBzb3VyY2UsCi0gICAgLSAicHdtLXRjbGsxIiAtIHNlY29uZCBleHRlcm5h
-bCBQV00gY2xvY2sgc291cmNlLgotICBOb3RlIHRoYXQgbm90IGFsbCBJUCB2YXJpYW50cyBhbGxv
-dyB1c2luZyBhbGwgZXh0ZXJuYWwgY2xvY2sgc291cmNlcy4KLSAgUmVmZXIgdG8gU29DIGRvY3Vt
-ZW50YXRpb24gdG8gbGVhcm4gd2hpY2ggY2xvY2sgc291cmNlIGNvbmZpZ3VyYXRpb25zCi0gIGFy
-ZSBhdmFpbGFibGUuCi0tIGNsb2Nrczogc2hvdWxkIGNvbnRhaW4gY2xvY2sgc3BlY2lmaWVycyBv
-ZiBhbGwgY2xvY2tzLCB3aGljaCBpbnB1dCBuYW1lcwotICBoYXZlIGJlZW4gc3BlY2lmaWVkIGlu
-IGNsb2NrLW5hbWVzIHByb3BlcnR5LCBpbiBzYW1lIG9yZGVyLgotLSAjcHdtLWNlbGxzOiBzaG91
-bGQgYmUgMy4gU2VlIHB3bS50eHQgaW4gdGhpcyBkaXJlY3RvcnkgZm9yIGEgZGVzY3JpcHRpb24g
-b2YKLSAgdGhlIGNlbGxzIGZvcm1hdC4gVGhlIG9ubHkgdGhpcmQgY2VsbCBmbGFnIHN1cHBvcnRl
-ZCBieSB0aGlzIGJpbmRpbmcgaXMKLSAgUFdNX1BPTEFSSVRZX0lOVkVSVEVELgotCi1PcHRpb25h
-bCBwcm9wZXJ0aWVzOgotLSBzYW1zdW5nLHB3bS1vdXRwdXRzOiBsaXN0IG9mIFBXTSBjaGFubmVs
-cyB1c2VkIGFzIFBXTSBvdXRwdXRzIG9uIHBhcnRpY3VsYXIKLSAgICBwbGF0Zm9ybSAtIGFuIGFy
-cmF5IG9mIHVwIHRvIDUgZWxlbWVudHMgYmVpbmcgaW5kaWNlcyBvZiBQV00gY2hhbm5lbHMKLSAg
-ICAoZnJvbSAwIHRvIDQpLCB0aGUgb3JkZXIgZG9lcyBub3QgbWF0dGVyLgotCi1FeGFtcGxlOgot
-CXB3bUA3ZjAwNjAwMCB7Ci0JCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxzM2M2NDAwLXB3bSI7Ci0J
-CXJlZyA9IDwweDdmMDA2MDAwIDB4MTAwMD47Ci0JCWludGVycnVwdC1wYXJlbnQgPSA8JnZpYzA+
-OwotCQlpbnRlcnJ1cHRzID0gPDIzPiwgPDI0PiwgPDI1PiwgPDI3PiwgPDI4PjsKLQkJY2xvY2tz
-ID0gPCZjbG9jayA2Nz47Ci0JCWNsb2NrLW5hbWVzID0gInRpbWVycyI7Ci0JCXNhbXN1bmcscHdt
-LW91dHB1dHMgPSA8MD4sIDwxPjsKLQkJI3B3bS1jZWxscyA9IDwzPjsKLQl9CmRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL3B3bS1zYW1zdW5nLnlhbWwg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL3B3bS1zYW1zdW5nLnlhbWwK
-bmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi4wNmQxMWZhYWJmZjYKLS0t
-IC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL3B3
-bS1zYW1zdW5nLnlhbWwKQEAgLTAsMCArMSwxMDcgQEAKKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZp
-ZXI6IEdQTC0yLjAKKyVZQU1MIDEuMgorLS0tCiskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9z
-Y2hlbWFzL3B3bS9wd20tc2Ftc3VuZy55YW1sIworJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUu
-b3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjCisKK3RpdGxlOiBTYW1zdW5nIFNvQyBQV00gdGlt
-ZXJzCisKK21haW50YWluZXJzOgorICAtIFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0Bn
-bWFpbC5jb20+CisgIC0gS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3JnPgorCitk
-ZXNjcmlwdGlvbjogfCsKKyAgU2Ftc3VuZyBTb0NzIGNvbnRhaW4gUFdNIHRpbWVyIGJsb2NrcyB3
-aGljaCBjYW4gYmUgdXNlZCBmb3Igc3lzdGVtIGNsb2NrIHNvdXJjZQorICBhbmQgY2xvY2sgZXZl
-bnQgdGltZXJzLCBhcyB3ZWxsIGFzIHRvIGRyaXZlIFNvQyBvdXRwdXRzIHdpdGggUFdNIHNpZ25h
-bC4gRWFjaAorICBQV00gdGltZXIgYmxvY2sgcHJvdmlkZXMgNSBQV00gY2hhbm5lbHMgKG5vdCBh
-bGwgb2YgdGhlbSBjYW4gZHJpdmUgcGh5c2ljYWwKKyAgb3V0cHV0cyAtIHNlZSBTb0MgYW5kIGJv
-YXJkIG1hbnVhbCkuCisKKyAgQmUgYXdhcmUgdGhhdCB0aGUgY2xvY2tzb3VyY2UgZHJpdmVyIHN1
-cHBvcnRzIG9ubHkgdW5pcHJvY2Vzc29yIHN5c3RlbXMuCisKK2FsbE9mOgorICAtICRyZWY6IHB3
-bS55YW1sIworCitwcm9wZXJ0aWVzOgorICBjb21wYXRpYmxlOgorICAgIGVudW06CisgICAgICAt
-IHNhbXN1bmcsczNjMjQxMC1wd20gICAgICAgICAgICAgIyAxNi1iaXQsIFMzQzI0eHgKKyAgICAg
-IC0gc2Ftc3VuZyxzM2M2NDAwLXB3bSAgICAgICAgICAgICAjIDMyLWJpdCwgUzNDNjR4eAorICAg
-ICAgLSBzYW1zdW5nLHM1cDY0NDAtcHdtICAgICAgICAgICAgICMgMzItYml0LCBTNVA2NHgwCisg
-ICAgICAtIHNhbXN1bmcsczVwYzEwMC1wd20gICAgICAgICAgICAgIyAzMi1iaXQsIFM1UEMxMDAs
-IFM1UFYyMTAsIEV4eW5vczQyMTAgcmV2MCBTb0NzCisgICAgICAtIHNhbXN1bmcsZXh5bm9zNDIx
-MC1wd20gICAgICAgICAgIyAzMi1iaXQsIEV4eW5vcworCisgIHJlZzoKKyAgICBtYXhJdGVtczog
-MQorCisgIGNsb2NrczoKKyAgICBtaW5JdGVtczogMQorICAgIG1heEl0ZW1zOiAzCisKKyAgY2xv
-Y2stbmFtZXM6CisgICAgZGVzY3JpcHRpb246IHwKKyAgICAgIFNob3VsZCBjb250YWluIGFsbCBm
-b2xsb3dpbmcgcmVxdWlyZWQgY2xvY2sgbmFtZXM6CisgICAgICAtICJ0aW1lcnMiIC0gUFdNIGJh
-c2UgY2xvY2sgdXNlZCB0byBnZW5lcmF0ZSBQV00gc2lnbmFscywKKyAgICAgIGFuZCBhbnkgc3Vi
-c2V0IG9mIGZvbGxvd2luZyBvcHRpb25hbCBjbG9jayBuYW1lczoKKyAgICAgIC0gInB3bS10Y2xr
-MCIgLSBmaXJzdCBleHRlcm5hbCBQV00gY2xvY2sgc291cmNlLAorICAgICAgLSAicHdtLXRjbGsx
-IiAtIHNlY29uZCBleHRlcm5hbCBQV00gY2xvY2sgc291cmNlLgorICAgICAgTm90ZSB0aGF0IG5v
-dCBhbGwgSVAgdmFyaWFudHMgYWxsb3cgdXNpbmcgYWxsIGV4dGVybmFsIGNsb2NrIHNvdXJjZXMu
-CisgICAgICBSZWZlciB0byBTb0MgZG9jdW1lbnRhdGlvbiB0byBsZWFybiB3aGljaCBjbG9jayBz
-b3VyY2UgY29uZmlndXJhdGlvbnMKKyAgICAgIGFyZSBhdmFpbGFibGUuCisgICAgb25lT2Y6Cisg
-ICAgICAtIGl0ZW1zOgorICAgICAgICAtIGNvbnN0OiB0aW1lcnMKKyAgICAgIC0gaXRlbXM6Cisg
-ICAgICAgIC0gY29uc3Q6IHRpbWVycworICAgICAgICAtIGNvbnN0OiBwd20tdGNsazAKKyAgICAg
-IC0gaXRlbXM6CisgICAgICAgIC0gY29uc3Q6IHRpbWVycworICAgICAgICAtIGNvbnN0OiBwd20t
-dGNsazEKKyAgICAgIC0gaXRlbXM6CisgICAgICAgIC0gY29uc3Q6IHRpbWVycworICAgICAgICAt
-IGNvbnN0OiBwd20tdGNsazAKKyAgICAgICAgLSBjb25zdDogcHdtLXRjbGsxCisKKyAgaW50ZXJy
-dXB0czoKKyAgICBkZXNjcmlwdGlvbjoKKyAgICAgIE9uZSBpbnRlcnJ1cHQgcGVyIHRpbWVyLCBz
-dGFydGluZyBhdCB0aW1lciAwLgorICAgIG1pbkl0ZW1zOiAxCisgICAgbWF4SXRlbXM6IDUKKwor
-ICAiI3B3bS1jZWxscyI6CisgICAgZGVzY3JpcHRpb246CisgICAgICBUaGUgb25seSB0aGlyZCBj
-ZWxsIGZsYWcgc3VwcG9ydGVkIGJ5IHRoaXMgYmluZGluZworICAgICAgaXMgUFdNX1BPTEFSSVRZ
-X0lOVkVSVEVELgorICAgIGNvbnN0OiAzCisKKyAgc2Ftc3VuZyxwd20tb3V0cHV0czoKKyAgICBk
-ZXNjcmlwdGlvbjoKKyAgICAgIEEgbGlzdCBvZiBQV00gY2hhbm5lbHMgdXNlZCBhcyBQV00gb3V0
-cHV0cyBvbiBwYXJ0aWN1bGFyIHBsYXRmb3JtLgorICAgICAgSXQgaXMgYW4gYXJyYXkgb2YgdXAg
-dG8gNSBlbGVtZW50cyBiZWluZyBpbmRpY2VzIG9mIFBXTSBjaGFubmVscworICAgICAgKGZyb20g
-MCB0byA0KSwgdGhlIG9yZGVyIGRvZXMgbm90IG1hdHRlci4KKyAgICBhbGxPZjoKKyAgICAgIC0g
-JHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvdWludDMyLWFycmF5CisgICAg
-ICAtIHVuaXF1ZUl0ZW1zOiB0cnVlCisgICAgICAtIGl0ZW1zOgorICAgICAgICAgIG1pbmltdW06
-IDAKKyAgICAgICAgICBtYXhpbXVtOiA0CisKK3JlcXVpcmVkOgorICAtIGNsb2NrcworICAtIGNs
-b2NrLW5hbWVzCisgIC0gY29tcGF0aWJsZQorICAtIGludGVycnVwdHMKKyAgLSAiI3B3bS1jZWxs
-cyIKKyAgLSByZWcKKworZXhhbXBsZXM6CisgIC0gfAorICAgIHB3bUA3ZjAwNjAwMCB7CisgICAg
-ICAgIGNvbXBhdGlibGUgPSAic2Ftc3VuZyxzM2M2NDAwLXB3bSI7CisgICAgICAgIHJlZyA9IDww
-eDdmMDA2MDAwIDB4MTAwMD47CisgICAgICAgIGludGVycnVwdC1wYXJlbnQgPSA8JnZpYzA+Owor
-ICAgICAgICBpbnRlcnJ1cHRzID0gPDIzPiwgPDI0PiwgPDI1PiwgPDI3PiwgPDI4PjsKKyAgICAg
-ICAgY2xvY2tzID0gPCZjbG9jayA2Nz47CisgICAgICAgIGNsb2NrLW5hbWVzID0gInRpbWVycyI7
-CisgICAgICAgIHNhbXN1bmcscHdtLW91dHB1dHMgPSA8MD4sIDwxPjsKKyAgICAgICAgI3B3bS1j
-ZWxscyA9IDwzPjsKKyAgICB9OwotLSAKMi4xNy4xCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWw=
+Hi Talel,
+
+On 15/09/2019 07:43, Talel Shenhar wrote:
+> The Amazon's Annapurna Labs Memory Controller EDAC supports ECC capability
+> for error detection and correction (Single bit error correction, Double
+> detection). This driver introduces EDAC driver for that capability.
+
+Is there any documentation for this memory controller?
+
+
+> diff --git a/drivers/edac/al_mc_edac.c b/drivers/edac/al_mc_edac.c
+> new file mode 100644
+> index 0000000..f9763d4
+> --- /dev/null
+> +++ b/drivers/edac/al_mc_edac.c
+> @@ -0,0 +1,382 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+> + */
+> +#include <linux/bitfield.h>
+
+#include <linux/bitops.h> for hweight_long()
+
+> +#include <linux/edac.h>
+> +#include <linux/of_irq.h>
+
+#include <linux/platform_device.h> for platform_get_resource()
+
+> +#include "edac_module.h"
+
+> +/* Registers Values */
+> +#define AL_MC_MSTR_DEV_CFG_X4	0
+> +#define AL_MC_MSTR_DEV_CFG_X8	1
+> +#define AL_MC_MSTR_DEV_CFG_X16	2
+> +#define AL_MC_MSTR_DEV_CFG_X32	3
+
+> +#define AL_MC_MSTR_RANKS_MAX 4
+
+Is this a fixed property of the memory controller, or is it a limit imposed from somewhere
+else. (Does it need to come from the DT?)
+
+
+> +#define AL_MC_MSTR_DATA_BUS_WIDTH_X64	0
+> +
+> +#define DRV_NAME "al_mc_edac"
+> +#define AL_MC_EDAC_MSG_MAX 256
+> +#define AL_MC_EDAC_MSG(message, buffer_size, type,			\
+> +		       rank, row, bg, bank, column, syn0, syn1, syn2)	\
+> +	snprintf(message, buffer_size,					\
+> +		 "%s rank=0x%x row=0x%x bg=0x%x bank=0x%x col=0x%x "	\
+> +		 "syn0: 0x%x syn1: 0x%x syn2: 0x%x",			\
+> +		 type == HW_EVENT_ERR_UNCORRECTED ? "UE" : "CE",	\
+> +		 rank, row, bg, bank, column, syn0, syn1, syn2)
+> +
+> +struct al_mc_edac {
+> +	void __iomem *mmio_base;
+> +	int irq_ce;
+> +	int irq_ue;
+> +};
+> +
+> +static int al_mc_edac_handle_ce(struct mem_ctl_info *mci)
+> +{
+> +	struct al_mc_edac *al_mc = mci->pvt_info;
+> +	u32 eccerrcnt;
+> +	u16 ce_count;
+> +	u32 ecccaddr0;
+> +	u32 ecccaddr1;
+> +	u32 ecccsyn0;
+> +	u32 ecccsyn1;
+> +	u32 ecccsyn2;
+> +	u8 rank;
+> +	u32 row;
+> +	u8 bg;
+> +	u8 bank;
+> +	u16 column;
+> +	char msg[AL_MC_EDAC_MSG_MAX];
+
+(Some of these could go on the same line, same with UE below)
+
+
+> +	eccerrcnt = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_ERR_COUNT);
+> +	ce_count = FIELD_GET(AL_MC_ECC_ERR_COUNT_CE, eccerrcnt);
+> +	if (!ce_count)
+> +		return 0;
+> +
+> +	ecccaddr0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_CE_ADDR0);
+> +	ecccaddr1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_CE_ADDR1);
+> +	ecccsyn0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND0);
+> +	ecccsyn1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND1);
+> +	ecccsyn2 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND2);
+> +
+> +	writel(AL_MC_ECC_CLEAR_CE_COUNT | AL_MC_ECC_CLEAR_CE_ERR,
+> +	       al_mc->mmio_base + AL_MC_ECC_CLEAR);
+> +
+> +	dev_dbg(mci->pdev, "eccuaddr0=0x%08x eccuaddr1=0x%08x\n",
+> +		ecccaddr0, ecccaddr1);
+> +
+> +	rank = FIELD_GET(AL_MC_ECC_CE_ADDR0_RANK, ecccaddr0);
+> +	row = FIELD_GET(AL_MC_ECC_CE_ADDR0_ROW, ecccaddr0);
+> +
+> +	bg = FIELD_GET(AL_MC_ECC_CE_ADDR1_BG, ecccaddr1);
+> +	bank = FIELD_GET(AL_MC_ECC_CE_ADDR1_BANK, ecccaddr1);
+> +	column = FIELD_GET(AL_MC_ECC_CE_ADDR1_COLUMN, ecccaddr1);
+> +
+> +	AL_MC_EDAC_MSG(msg, sizeof(msg), HW_EVENT_ERR_CORRECTED,
+> +		       rank, row, bg, bank, column,
+> +		       ecccsyn0, ecccsyn1, ecccsyn2);
+> +
+> +	edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci,
+> +			     ce_count, 0, 0, 0, 0, 0, -1, mci->ctl_name, msg);
+
+You used active_ranks as the layer size in al_mc_edac_probe(). Can't you supply the rank here?
+
+(If its not useful, why is it setup like this in al_mc_edac_probe()?)
+
+(applies to UE below too)
+
+
+> +
+> +	return ce_count;
+> +}
+> +
+> +static int al_mc_edac_handle_ue(struct mem_ctl_info *mci)
+> +{
+> +	struct al_mc_edac *al_mc = mci->pvt_info;
+> +	u32 eccerrcnt;
+> +	u16 ue_count;
+> +	u32 eccuaddr0;
+> +	u32 eccuaddr1;
+> +	u32 eccusyn0;
+> +	u32 eccusyn1;
+> +	u32 eccusyn2;
+> +	u8 rank;
+> +	u32 row;
+> +	u8 bg;
+> +	u8 bank;
+> +	u16 column;
+> +	char msg[AL_MC_EDAC_MSG_MAX];
+> +
+> +	eccerrcnt = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_ERR_COUNT);
+> +	ue_count = FIELD_GET(AL_MC_ECC_ERR_COUNT_UE, eccerrcnt);
+> +	if (!ue_count)
+> +		return 0;
+> +
+> +	eccuaddr0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_ADDR0);
+> +	eccuaddr1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_ADDR1);
+> +	eccusyn0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND0);
+> +	eccusyn1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND1);
+> +	eccusyn2 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND2);
+> +
+> +	writel(AL_MC_ECC_CLEAR_UE_COUNT | AL_MC_ECC_CLEAR_UE_ERR,
+> +	       al_mc->mmio_base + AL_MC_ECC_CLEAR);
+> +
+> +	dev_dbg(mci->pdev, "eccuaddr0=0x%08x eccuaddr1=0x%08x\n",
+> +		eccuaddr0, eccuaddr1);
+> +
+> +	rank = FIELD_GET(AL_MC_ECC_UE_ADDR0_RANK, eccuaddr0);
+> +	row = FIELD_GET(AL_MC_ECC_UE_ADDR0_ROW, eccuaddr0);
+> +
+> +	bg = FIELD_GET(AL_MC_ECC_UE_ADDR1_BG, eccuaddr1);
+> +	bank = FIELD_GET(AL_MC_ECC_UE_ADDR1_BANK, eccuaddr1);
+> +	column = FIELD_GET(AL_MC_ECC_UE_ADDR1_COLUMN, eccuaddr1);
+> +
+> +	AL_MC_EDAC_MSG(msg, sizeof(msg), HW_EVENT_ERR_UNCORRECTED,
+> +		       rank, row, bg, bank, column,
+> +		       eccusyn0, eccusyn1, eccusyn2);
+> +
+> +	edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci,
+> +			     ue_count, 0, 0, 0, 0, 0, -1, mci->ctl_name, msg);
+
+
+What happens when this code runs at the same time as the corrected error handler calling
+edac_mc_handler_error() with this same mci?
+
+This could happen on a second CPU, or on one cpu if the corrected handler is polled.
+
+edac_mc_handle_error() memset's the edac_raw_error_desc in mci, so it can't be called in
+parallel, or twice on the same cpu.
+
+I think you need an irqsave spinlock around the calls to edac_mc_handle_error().
+
+
+> +	return ue_count;
+> +}
+> +
+> +static void al_mc_edac_check(struct mem_ctl_info *mci)
+> +{
+> +	struct al_mc_edac *al_mc = mci->pvt_info;
+> +
+> +	if (al_mc->irq_ue <= 0)
+> +		al_mc_edac_handle_ue(mci);
+> +
+> +	if (al_mc->irq_ce <= 0)
+> +		al_mc_edac_handle_ce(mci);
+> +}
+> +
+> +static irqreturn_t al_mc_edac_irq_handler_ue(int irq, void *info)
+> +{
+> +	struct platform_device *pdev = info;
+> +	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
+> +	int ue_count;
+> +
+> +	ue_count = al_mc_edac_handle_ue(mci);
+> +	if (ue_count)
+> +		return IRQ_HANDLED;
+> +	else
+> +		return IRQ_NONE;
+> +}
+
+As you don't use ue_count, wouldn't this be clearer:
+
+| if (al_mc_edac_handle_ue(mci))
+| 	return IRQ_HANDLED;
+| return IRQ_NONE;
+
+?
+
+
+> +static int al_mc_edac_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *resource;
+> +	void __iomem *mmio_base;
+> +	unsigned int active_ranks;
+> +	struct edac_mc_layer layers[1];
+> +	struct mem_ctl_info *mci;
+> +	struct al_mc_edac *al_mc;
+> +	int ret;
+> +
+> +	resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+
+platform_get_resource() can fail, returning NULL.
+
+
+> +	mmio_base = devm_ioremap_resource(&pdev->dev, resource);
+> +	if (IS_ERR(mmio_base)) {
+> +		dev_err(&pdev->dev, "failed to ioremap memory (%ld)\n",
+> +			PTR_ERR(mmio_base));
+> +		return PTR_ERR(mmio_base);
+> +	}
+> +
+> +	active_ranks = al_mc_edac_get_active_ranks(mmio_base);
+> +	if (!active_ranks || active_ranks > AL_MC_MSTR_RANKS_MAX) {
+> +		dev_err(&pdev->dev,
+> +			"unsupported number of active ranks (%d)\n",
+> +			active_ranks);
+> +		return -ENODEV;
+> +	}
+> +
+> +	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
+> +	layers[0].size = active_ranks;
+> +	layers[0].is_virt_csrow = false;
+> +	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
+> +			    sizeof(struct al_mc_edac));
+> +	if (!mci)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, mci);
+> +	al_mc = mci->pvt_info;
+> +
+> +	al_mc->mmio_base = mmio_base;
+> +
+> +	al_mc->irq_ue = of_irq_get_byname(pdev->dev.of_node, "ue");
+> +	if (al_mc->irq_ue <= 0)
+> +		dev_dbg(&pdev->dev,
+> +			"no irq defined for ue - falling back to polling\n");
+> +
+> +	al_mc->irq_ce = of_irq_get_byname(pdev->dev.of_node, "ce");
+> +	if (al_mc->irq_ce <= 0)
+> +		dev_dbg(&pdev->dev,
+> +			"no irq defined for ce - falling back to polling\n");
+> +
+> +	if (al_mc->irq_ue <= 0 || al_mc->irq_ce <= 0)
+> +		edac_op_state = EDAC_OPSTATE_POLL;
+> +	else
+> +		edac_op_state = EDAC_OPSTATE_INT;
+> +
+> +	mci->edac_check = al_mc_edac_check;
+> +	mci->mtype_cap = MEM_FLAG_DDR3 | MEM_FLAG_DDR4;
+> +	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
+> +	mci->edac_cap = EDAC_FLAG_SECDED;
+> +	mci->mod_name = DRV_NAME;
+> +	mci->ctl_name = "al_mc";
+> +	mci->pdev = &pdev->dev;
+> +	mci->scrub_mode = al_mc_edac_get_scrub_mode(mmio_base);
+> +
+> +	ret = edac_mc_add_mc(mci);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev,
+> +			"fail to add memory controller device (%d)\n",
+> +			ret);
+> +		goto err_add_mc;
+> +	}
+> +
+> +	if (al_mc->irq_ue > 0) {
+> +		ret = devm_request_irq(&pdev->dev,
+> +				       al_mc->irq_ue,
+> +				       al_mc_edac_irq_handler_ue,
+
+> +				       0,
+
+As you know when your device has triggered the interrupt from the error counter, could
+these be IRQF_SHARED?
+
+
+> +				       pdev->name,
+> +				       pdev);
+
+> +}
+> +
+> +static int al_mc_edac_remove(struct platform_device *pdev)
+> +{
+> +	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
+> +
+> +	edac_mc_del_mc(&pdev->dev);
+> +	edac_mc_free(mci);
+
+What stops your interrupt firing here? You've free'd the memory it uses.
+
+I think you need to devm_free_irq() the interrupts before you free the memory.
+
+
+> +	return 0;
+> +}
+
+
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_AUTHOR("Talel Shenhar");
+> +MODULE_DESCRIPTION("Amazon's Annapurna Lab's Memory Controller EDAC Driver");
+
+(Kconfig says this is 'bool', so it can't be built as a module, having these is a bit odd)
+
+
+
+Thanks,
+
+James
