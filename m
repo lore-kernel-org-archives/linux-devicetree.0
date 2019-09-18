@@ -1,47 +1,59 @@
-From: Sam Shih <sam.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v8 08/11] arm64: dts: mt7622: add a property "num-pwms" for PWM
-Date: Wed, 18 Sep 2019 17:28:56 +0800
-Message-ID: <1568798939-16038-9-git-send-email-sam.shih@mediatek.com>
-References: <1568798939-16038-1-git-send-email-sam.shih@mediatek.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH V6 0/3] mmc: mmci: add busy detect for stm32 sdmmc variant
+Date: Wed, 18 Sep 2019 11:33:08 +0200
+Message-ID: <940e3ce8-1a4f-7e03-dfec-25330051ea5f@st.com>
+References: <20190905122112.29672-1-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1568798939-16038-1-git-send-email-sam.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sam Shih <sam.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190905122112.29672-1-ludovic.Barre@st.com>
+Content-Language: fr
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-
-This adds a property "num-pwms" for PWM controller.
-
-Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Sam Shih <sam.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/mediatek/mt7622.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index d1e13d340e26..9a043938881f 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -439,6 +439,7 @@
- 			 <&pericfg CLK_PERI_PWM6_PD>;
- 		clock-names = "top", "main", "pwm1", "pwm2", "pwm3", "pwm4",
- 			      "pwm5", "pwm6";
-+		num-pwms = <6>;
- 		status = "disabled";
- 	};
- 
--- 
-2.17.1
+aGkgVWxmCgpKdXN0IGEgImdlbnRsZW1hbiBwaW5nIiBhYm91dCB0aGlzIHNlcmllcyBhbmQKaHR0
+cHM6Ly9sa21sLm9yZy9sa21sLzIwMTkvOS80Lzc0NwoKUmVnYXJkcwpMdWRvCgpMZSA5LzUvMTkg
+w6AgMjoyMSBQTSwgTHVkb3ZpYyBCYXJyZSBhIMOpY3JpdMKgOgo+IEZyb206IEx1ZG92aWMgQmFy
+cmUgPGx1ZG92aWMuYmFycmVAc3QuY29tPgo+IAo+IFRoaXMgcGF0Y2ggc2VyaWVzIGFkZHMgYnVz
+eSBkZXRlY3QgZm9yIHN0bTMyIHNkbW1jIHZhcmlhbnQuCj4gU29tZSBhZGFwdGF0aW9ucyBhcmUg
+cmVxdWlyZWQ6Cj4gLU9uIHNkbW1jIHRoZSBkYXRhIHRpbWVyIGlzIHN0YXJ0ZWQgb24gZGF0YSB0
+cmFuc2ZlcnQKPiBhbmQgYnVzeSBzdGF0ZSwgc28gd2UgbXVzdCBhZGQgaGFyZHdhcmUgYnVzeSB0
+aW1lb3V0IHN1cHBvcnQuCj4gLUFkZCBidXN5X2NvbXBsZXRlIGNhbGxiYWNrIGF0IG1tY2lfaG9z
+dF9vcHMgdG8gYWxsb3cgdG8gZGVmaW5lCj4gYSBzcGVjaWZpYyBidXN5IGNvbXBsZXRpb24gYnkg
+dmFyaWFudC4KPiAtQWRkIHNkbW1jIGJ1c3lfY29tcGxldGUgY2FsbGJhY2suCj4gCj4gVjY6Cj4g
+LW1tY2lfc3RhcnRfY29tbWFuZDogc2V0IGRhdGF0aW1lciBvbmx5IG9uIHJzcF9idXN5IGZsYWcK
+PiAocmVtb3ZlIGhvc3QtPm1ycS0+ZGF0YSkuCj4gLW1vdmUgbWF4X2J1c3lfdGltZW91dCBpbiBz
+ZXRfaW9zIGNhbGxiYWNrLgo+IC10eXBvIGZpeDogZXJyX21zaywgY2xrcyBvbiBvbmUgbGluZXMu
+Cj4gCj4gVjU6Cj4gLVJlcGxhY2VzICFjbWQtPmRhdGEgdG8gIWhvc3QtPm1ycS0+ZGF0YSB0byBh
+dm9pZCBvdmVyd3JpdGUKPiAgIG9mIGRhdGF0aW1lciByZWdpc3RlciBieSB0aGUgZmlyc3QgY29t
+bWFuZCAoY21kMjMsIHdpdGhvdXQgZGF0YSkgb2YKPiAgIFNCQyByZXF1ZXN0Lgo+IAo+IFY0Ogo+
+IC1SZS13b3JrIHdpdGggYnVzeV9jb21wbGV0ZSBjYWxsYmFjawo+IC1JbiBzZXJpZXMsIG1vdmUg
+Im1tYzogbW1jaTogYWRkIGhhcmR3YXJlIGJ1c3kgdGltZW91dCBmZWF0dXJlIiBpbgo+IGZpcnN0
+IHRvIHNpbXBsaWZ5IGJ1c3lfY29tcGxldGUgcHJvdG90eXBlIHdpdGggZXJyX21zayBwYXJhbWV0
+ZXIuCj4gCj4gVjM6Cj4gLXJlYmFzZSBvbiBsYXRlc3QgbW1jIG5leHQKPiAtcmVwbGFjZSByZS1y
+ZWFkIGJ5IHN0YXR1cyBwYXJhbWV0ZXIuCj4gCj4gVjI6Cj4gLW1tY2lfY21kX2lycSBjbGVhbnVw
+IGluIHNlcGFyYXRlIHBhdGNoLgo+IC1zaW1wbGlmeSB0aGUgYnVzeV9kZXRlY3RfZmxhZyBleGNs
+dWRlCj4gLXJlcGxhY2Ugc2RtbWMgc3BlY2lmaWMgY29tbWVudCBpbgo+ICJtbWM6IG1tY2k6IGF2
+b2lkIGZha2UgYnVzeSBwb2xsaW5nIGluIG1tY2lfaXJxIgo+IHRvIGZvY3VzIG9uIGNvbW1vbiBi
+ZWhhdmlvcgo+IAo+IEx1ZG92aWMgQmFycmUgKDMpOgo+ICAgIG1tYzogbW1jaTogYWRkIGhhcmR3
+YXJlIGJ1c3kgdGltZW91dCBmZWF0dXJlCj4gICAgbW1jOiBtbWNpOiBhZGQgYnVzeV9jb21wbGV0
+ZSBjYWxsYmFjawo+ICAgIG1tYzogbW1jaTogc2RtbWM6IGFkZCBidXN5X2NvbXBsZXRlIGNhbGxi
+YWNrCj4gCj4gICBkcml2ZXJzL21tYy9ob3N0L21tY2kuYyAgICAgICAgICAgICB8IDE4MyArKysr
+KysrKysrKysrKysrKy0tLS0tLS0tLS0tCj4gICBkcml2ZXJzL21tYy9ob3N0L21tY2kuaCAgICAg
+ICAgICAgICB8ICAgNyArLQo+ICAgZHJpdmVycy9tbWMvaG9zdC9tbWNpX3N0bTMyX3NkbW1jLmMg
+fCAgMzggKysrKysrCj4gICAzIGZpbGVzIGNoYW5nZWQsIDE1NiBpbnNlcnRpb25zKCspLCA3MiBk
+ZWxldGlvbnMoLSkKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2xpbnV4LWFybS1rZXJuZWwK
