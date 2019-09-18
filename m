@@ -1,21 +1,14 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCH v3 09/11] PCI: layerscape: Add EP mode support for ls1088a
- and ls2088a
-Date: Wed, 18 Sep 2019 03:17:46 +0000
-Message-ID: <AM5PR04MB3299925D7528668B27B02EE3F58E0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
- <20190902031716.43195-10-xiaowei.bao@nxp.com>
- <20190902124603.GJ9720@e119886-lin.cambridge.arm.com>
- <AM5PR04MB329970AE2C1812E88B9DE5A2F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20190912124943.GD9720@e119886-lin.cambridge.arm.com>
- <AM5PR04MB3299CE219E17931066E1DA3CF5B20@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20190916143746.GU9720@e119886-lin.cambridge.arm.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 7/8] clk: Add common clock driver for BM1880 SoC
+Date: Tue, 17 Sep 2019 21:47:44 -0700
+Message-ID: <20190918044745.1FD7221848@mail.kernel.org>
+References: <20190916161447.32715-1-manivannan.sadhasivam@linaro.org>
+ <20190916161447.32715-8-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190916143746.GU9720@e119886-lin.cambridge.arm.com>
-Content-Language: en-US
+In-Reply-To: <20190916161447.32715-8-manivannan.sadhasivam@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,251 +18,1021 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Murray <andrew.murray@arm.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Roy Zang <roy.zang@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "Z.q. Hou" <zhiqiang.hou@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kishon@ti.com" <kishon@ti.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+To: mturquette@baylibre.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, darren.tsao@bitmain.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fisher.cheng@bitmain.com, alec.lin@bitmain.com, linux-clk@vger.kernel.org, haitao.suo@bitmain.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmV3IE11cnJheSA8
-YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiBTZW50OiAyMDE55bm0OeaciDE25pelIDIyOjM4DQo+
-IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9y
-Zw0KPiBDYzogcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25n
-dW9Aa2VybmVsLm9yZzsgTGVvDQo+IExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGku
-Y29tOyBsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tOyBNLmguDQo+IExpYW4gPG1pbmdodWFuLmxp
-YW5AbnhwLmNvbT47IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IFJveQ0KPiBaYW5n
-IDxyb3kuemFuZ0BueHAuY29tPjsgamluZ29vaGFuMUBnbWFpbC5jb207DQo+IGd1c3Rhdm8ucGlt
-ZW50ZWxAc3lub3BzeXMuY29tOyBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0
-cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3ps
-YWJzLm9yZzsNCj4gYXJuZEBhcm5kYi5kZTsgZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IFou
-cS4gSG91DQo+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2
-MyAwOS8xMV0gUENJOiBsYXllcnNjYXBlOiBBZGQgRVAgbW9kZSBzdXBwb3J0IGZvcg0KPiBsczEw
-ODhhIGFuZCBsczIwODhhDQo+IA0KPiBPbiBTYXQsIFNlcCAxNCwgMjAxOSBhdCAwNDoxMDoyMkFN
-ICswMDAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPg0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFs
-IE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogQW5kcmV3IE11cnJheSA8YW5kcmV3Lm11cnJheUBh
-cm0uY29tPg0KPiA+ID4gU2VudDogMjAxOeW5tDnmnIgxMuaXpSAyMDo1MA0KPiA+ID4gVG86IFhp
-YW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiA+ID4gQ2M6IHJvYmgrZHRAa2VybmVs
-Lm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+ID4gPiBM
-ZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IGtpc2hvbkB0aS5jb207IGxvcmVuem8ucGllcmFs
-aXNpQGFybS5jb207DQo+IE0uaC4NCj4gPiA+IExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47
-IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IFJveQ0KPiA+ID4gWmFuZyA8cm95Lnph
-bmdAbnhwLmNvbT47IGppbmdvb2hhbjFAZ21haWwuY29tOw0KPiA+ID4gZ3VzdGF2by5waW1lbnRl
-bEBzeW5vcHN5cy5jb207IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiBkZXZpY2V0
-cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXhwcGMtZGV2QGxpc3Rz
-Lm96bGFicy5vcmc7DQo+ID4gPiBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9u
-Lm9yZzsgWi5xLiBIb3UNCj4gPiA+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gPiA+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggdjMgMDkvMTFdIFBDSTogbGF5ZXJzY2FwZTogQWRkIEVQIG1vZGUgc3Vw
-cG9ydA0KPiA+ID4gZm9yIGxzMTA4OGEgYW5kIGxzMjA4OGENCj4gPiA+DQo+ID4gPiBPbiBUdWUs
-IFNlcCAwMywgMjAxOSBhdCAwMTo0NzozNkFNICswMDAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4g
-PiA+ID4NCj4gPiA+ID4NCj4gPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+
-ID4gPiA+IEZyb206IEFuZHJldyBNdXJyYXkgPGFuZHJldy5tdXJyYXlAYXJtLmNvbT4NCj4gPiA+
-ID4gPiBTZW50OiAyMDE55bm0OeaciDLml6UgMjA6NDYNCj4gPiA+ID4gPiBUbzogWGlhb3dlaSBC
-YW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+ID4gPiA+ID4gQ2M6IHJvYmgrZHRAa2VybmVsLm9y
-ZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+ID4gPiA+ID4gc2hhd25ndW9Aa2VybmVsLm9yZzsg
-TGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBraXNob25AdGkuY29tOw0KPiA+ID4gPiA+IGxv
-cmVuem8ucGllcmFsaXNpQGFybS5jb207DQo+ID4gPiBNLmguDQo+ID4gPiA+ID4gTGlhbiA8bWlu
-Z2h1YW4ubGlhbkBueHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsNCj4g
-PiA+ID4gPiBSb3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47IGppbmdvb2hhbjFAZ21haWwuY29t
-Ow0KPiA+ID4gPiA+IGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tOyBsaW51eC1wY2lAdmdl
-ci5rZXJuZWwub3JnOw0KPiA+ID4gPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gPiA+IGxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZzsNCj4gPiA+ID4gPiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9y
-ZzsgYXJuZEBhcm5kYi5kZTsNCj4gPiA+ID4gPiBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsg
-Wi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiA+ID4gPiA+IFN1YmplY3Q6IFJlOiBb
-UEFUQ0ggdjMgMDkvMTFdIFBDSTogbGF5ZXJzY2FwZTogQWRkIEVQIG1vZGUNCj4gPiA+ID4gPiBz
-dXBwb3J0IGZvciBsczEwODhhIGFuZCBsczIwODhhDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBPbiBN
-b24sIFNlcCAwMiwgMjAxOSBhdCAxMToxNzoxNEFNICswODAwLCBYaWFvd2VpIEJhbyB3cm90ZToN
-Cj4gPiA+ID4gPiA+IEFkZCBQQ0llIEVQIG1vZGUgc3VwcG9ydCBmb3IgbHMxMDg4YSBhbmQgbHMy
-MDg4YSwgdGhlcmUgYXJlDQo+ID4gPiA+ID4gPiBzb21lIGRpZmZlcmVuY2UgYmV0d2VlbiBMUzEg
-YW5kIExTMiBwbGF0Zm9ybSwgc28gcmVmYWN0b3IgdGhlDQo+ID4gPiA+ID4gPiBjb2RlIG9mIHRo
-ZSBFUCBkcml2ZXIuDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogWGlh
-b3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+ID4gPiA+ID4gPiAtLS0NCj4gPiA+ID4g
-PiA+IHYyOg0KPiA+ID4gPiA+ID4gIC0gVGhpcyBpcyBhIG5ldyBwYXRjaCBmb3Igc3VwcG9ydGlu
-ZyB0aGUgbHMxMDg4YSBhbmQgbHMyMDg4YQ0KPiBwbGF0Zm9ybS4NCj4gPiA+ID4gPiA+IHYzOg0K
-PiA+ID4gPiA+ID4gIC0gQWRqdXN0IHRoZSBzb21lIHN0cnVjdCBhc3NpZ25tZW50IG9yZGVyIGlu
-IHByb2JlIGZ1bmN0aW9uLg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICBkcml2ZXJzL3BjaS9j
-b250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5jIHwgNzINCj4gPiA+ID4gPiA+ICsrKysr
-KysrKysrKysrKysrKystLS0tLS0tDQo+ID4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDUzIGlu
-c2VydGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQ0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5j
-DQo+ID4gPiA+ID4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBl
-LWVwLmMNCj4gPiA+ID4gPiA+IGluZGV4IDVmMGNiOTkuLjcyM2JiZTUgMTAwNjQ0DQo+ID4gPiA+
-ID4gPiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS1lcC5j
-DQo+ID4gPiA+ID4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJz
-Y2FwZS1lcC5jDQo+ID4gPiA+ID4gPiBAQCAtMjAsMjcgKzIwLDI5IEBADQo+ID4gPiA+ID4gPg0K
-PiA+ID4gPiA+ID4gICNkZWZpbmUgUENJRV9EQkkyX09GRlNFVAkJMHgxMDAwCS8qIERCSTIgYmFz
-ZSBhZGRyZXNzKi8NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAtc3RydWN0IGxzX3BjaWVfZXAg
-ew0KPiA+ID4gPiA+ID4gLQlzdHJ1Y3QgZHdfcGNpZQkJKnBjaTsNCj4gPiA+ID4gPiA+IC0Jc3Ry
-dWN0IHBjaV9lcGNfZmVhdHVyZXMJKmxzX2VwYzsNCj4gPiA+ID4gPiA+ICsjZGVmaW5lIHRvX2xz
-X3BjaWVfZXAoeCkJZGV2X2dldF9kcnZkYXRhKCh4KS0+ZGV2KQ0KPiA+ID4gPiA+ID4gKw0KPiA+
-ID4gPiA+ID4gK3N0cnVjdCBsc19wY2llX2VwX2RydmRhdGEgew0KPiA+ID4gPiA+ID4gKwl1MzIJ
-CQkJZnVuY19vZmZzZXQ7DQo+ID4gPiA+ID4gPiArCWNvbnN0IHN0cnVjdCBkd19wY2llX2VwX29w
-cwkqb3BzOw0KPiA+ID4gPiA+ID4gKwljb25zdCBzdHJ1Y3QgZHdfcGNpZV9vcHMJKmR3X3BjaWVf
-b3BzOw0KPiA+ID4gPiA+ID4gIH07DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gLSNkZWZpbmUg
-dG9fbHNfcGNpZV9lcCh4KQlkZXZfZ2V0X2RydmRhdGEoKHgpLT5kZXYpDQo+ID4gPiA+ID4gPiAr
-c3RydWN0IGxzX3BjaWVfZXAgew0KPiA+ID4gPiA+ID4gKwlzdHJ1Y3QgZHdfcGNpZQkJCSpwY2k7
-DQo+ID4gPiA+ID4gPiArCXN0cnVjdCBwY2lfZXBjX2ZlYXR1cmVzCQkqbHNfZXBjOw0KPiA+ID4g
-PiA+ID4gKwljb25zdCBzdHJ1Y3QgbHNfcGNpZV9lcF9kcnZkYXRhICpkcnZkYXRhOyB9Ow0KPiA+
-ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICBzdGF0aWMgaW50IGxzX3BjaWVfZXN0YWJsaXNoX2xpbmso
-c3RydWN0IGR3X3BjaWUgKnBjaSkgIHsNCj4gPiA+ID4gPiA+ICAJcmV0dXJuIDA7DQo+ID4gPiA+
-ID4gPiAgfQ0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IC1zdGF0aWMgY29uc3Qgc3RydWN0IGR3
-X3BjaWVfb3BzIGxzX3BjaWVfZXBfb3BzID0gew0KPiA+ID4gPiA+ID4gK3N0YXRpYyBjb25zdCBz
-dHJ1Y3QgZHdfcGNpZV9vcHMgZHdfbHNfcGNpZV9lcF9vcHMgPSB7DQo+ID4gPiA+ID4gPiAgCS5z
-dGFydF9saW5rID0gbHNfcGNpZV9lc3RhYmxpc2hfbGluaywgIH07DQo+ID4gPiA+ID4gPg0KPiA+
-ID4gPiA+ID4gLXN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGxzX3BjaWVfZXBfb2Zf
-bWF0Y2hbXSA9IHsNCj4gPiA+ID4gPiA+IC0JeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMtcGNpZS1l
-cCIsfSwNCj4gPiA+ID4gPiA+IC0JeyB9LA0KPiA+ID4gPiA+ID4gLX07DQo+ID4gPiA+ID4gPiAt
-DQo+ID4gPiA+ID4gPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBwY2lfZXBjX2ZlYXR1cmVzKg0KPiA+
-ID4gPiA+ID4gbHNfcGNpZV9lcF9nZXRfZmVhdHVyZXMoc3RydWN0IGR3X3BjaWVfZXAgKmVwKSAg
-eyBAQCAtODcsMTANCj4gPiA+ID4gPiA+ICs4OSwzOSBAQCBzdGF0aWMgaW50IGxzX3BjaWVfZXBf
-cmFpc2VfaXJxKHN0cnVjdCBkd19wY2llX2VwICplcCwNCj4gdTggZnVuY19ubywNCj4gPiA+ID4g
-PiA+ICAJfQ0KPiA+ID4gPiA+ID4gIH0NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAtc3RhdGlj
-IGNvbnN0IHN0cnVjdCBkd19wY2llX2VwX29wcyBwY2llX2VwX29wcyA9IHsNCj4gPiA+ID4gPiA+
-ICtzdGF0aWMgdW5zaWduZWQgaW50IGxzX3BjaWVfZXBfZnVuY19jb25mX3NlbGVjdChzdHJ1Y3QN
-Cj4gPiA+ID4gPiA+ICtkd19wY2llX2VwDQo+ID4gPiAqZXAsDQo+ID4gPiA+ID4gPiArCQkJCQkJ
-dTggZnVuY19ubykNCj4gPiA+ID4gPiA+ICt7DQo+ID4gPiA+ID4gPiArCXN0cnVjdCBkd19wY2ll
-ICpwY2kgPSB0b19kd19wY2llX2Zyb21fZXAoZXApOw0KPiA+ID4gPiA+ID4gKwlzdHJ1Y3QgbHNf
-cGNpZV9lcCAqcGNpZSA9IHRvX2xzX3BjaWVfZXAocGNpKTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+
-ID4gPiA+ICsJV0FSTl9PTihmdW5jX25vICYmICFwY2llLT5kcnZkYXRhLT5mdW5jX29mZnNldCk7
-DQo+ID4gPiA+ID4gPiArCXJldHVybiBwY2llLT5kcnZkYXRhLT5mdW5jX29mZnNldCAqIGZ1bmNf
-bm87IH0NCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGR3
-X3BjaWVfZXBfb3BzIGxzX3BjaWVfZXBfb3BzID0gew0KPiA+ID4gPiA+ID4gIAkuZXBfaW5pdCA9
-IGxzX3BjaWVfZXBfaW5pdCwNCj4gPiA+ID4gPiA+ICAJLnJhaXNlX2lycSA9IGxzX3BjaWVfZXBf
-cmFpc2VfaXJxLA0KPiA+ID4gPiA+ID4gIAkuZ2V0X2ZlYXR1cmVzID0gbHNfcGNpZV9lcF9nZXRf
-ZmVhdHVyZXMsDQo+ID4gPiA+ID4gPiArCS5mdW5jX2NvbmZfc2VsZWN0ID0gbHNfcGNpZV9lcF9m
-dW5jX2NvbmZfc2VsZWN0LCB9Ow0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gK3N0YXRpYyBj
-b25zdCBzdHJ1Y3QgbHNfcGNpZV9lcF9kcnZkYXRhIGxzMV9lcF9kcnZkYXRhID0gew0KPiA+ID4g
-PiA+ID4gKwkub3BzID0gJmxzX3BjaWVfZXBfb3BzLA0KPiA+ID4gPiA+ID4gKwkuZHdfcGNpZV9v
-cHMgPSAmZHdfbHNfcGNpZV9lcF9vcHMsIH07DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiAr
-c3RhdGljIGNvbnN0IHN0cnVjdCBsc19wY2llX2VwX2RydmRhdGEgbHMyX2VwX2RydmRhdGEgPSB7
-DQo+ID4gPiA+ID4gPiArCS5mdW5jX29mZnNldCA9IDB4MjAwMDAsDQo+ID4gPiA+ID4gPiArCS5v
-cHMgPSAmbHNfcGNpZV9lcF9vcHMsDQo+ID4gPiA+ID4gPiArCS5kd19wY2llX29wcyA9ICZkd19s
-c19wY2llX2VwX29wcywgfTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICtzdGF0aWMgY29u
-c3Qgc3RydWN0IG9mX2RldmljZV9pZCBsc19wY2llX2VwX29mX21hdGNoW10gPSB7DQo+ID4gPiA+
-ID4gPiArCXsgLmNvbXBhdGlibGUgPSAiZnNsLGxzMTA0NmEtcGNpZS1lcCIsIC5kYXRhID0NCj4g
-JmxzMV9lcF9kcnZkYXRhIH0sDQo+ID4gPiA+ID4gPiArCXsgLmNvbXBhdGlibGUgPSAiZnNsLGxz
-MTA4OGEtcGNpZS1lcCIsIC5kYXRhID0NCj4gJmxzMl9lcF9kcnZkYXRhIH0sDQo+ID4gPiA+ID4g
-PiArCXsgLmNvbXBhdGlibGUgPSAiZnNsLGxzMjA4OGEtcGNpZS1lcCIsIC5kYXRhID0NCj4gJmxz
-Ml9lcF9kcnZkYXRhIH0sDQo+ID4gPiA+ID4gPiArCXsgfSwNCj4gPiA+ID4gPg0KPiA+ID4gPiA+
-IFRoaXMgcmVtb3ZlcyBzdXBwb3J0IGZvciAiZnNsLGxzLXBjaWUtZXAiIC0gd2FzIHRoYXQNCj4g
-PiA+ID4gPiBpbnRlbnRpb25hbD8gSWYgeW91IGRvIHBsYW4gdG8gZHJvcCBpdCBwbGVhc2UgbWFr
-ZSBzdXJlIHlvdQ0KPiA+ID4gPiA+IGV4cGxhaW4gd2h5IGluIHRoZSBjb21taXQgbWVzc2FnZS4g
-U2VlIGFsc28gbXkgY29tbWVudHMgaW4geW91cg0KPiBkdC1iaW5kaW5nIHBhdGNoLg0KPiA+ID4g
-Pg0KPiA+ID4gPiBJbiBmYWN0LCB0aGUgdS1ib290IHdpbGwgZml4dXAgdGhlIHN0YXR1cyBwcm9w
-ZXJ0eSB0byAnc3RhdHVzID0NCj4gPiA+ID4gZW5hYmxlZCcgaW4gUENJIG5vZGUgb2YgdGhlIERU
-UyBiYXNlIG9uICJmc2wsbHMtcGNpZS1lcCINCj4gPiA+ID4gY29tcGF0aWJsZSwgc28gImZzbCxs
-cy1wY2llLWVwIiBpcyB1c2VkLCBJIHVzZWQgdGhpcyBjb21wYXRpYmxlDQo+ID4gPiA+IGJlZm9y
-ZSwgYmVjYXVzZSB0aGUgZHJpdmVyIG9ubHkgc3VwcG9ydCB0aGUgTFMxMDQ2YSwgYnV0IHRoaXMN
-Cj4gPiA+ID4gdGltZSwgSSBhZGQgdGhlIExTMTA4OGEgYW5kIExTMjA4OGEgc3VwcG9ydCwgYW5k
-IHRoZXNlIHR3byBib2FyZHMNCj4gPiA+ID4gaGF2ZSBzb21lIGRpZmZlcmVuY2UgZm9ybQ0KPiA+
-ID4gTFMxMDQ2YSwgc28gSSBjaGFuZ2VkIHRoZSBjb21wYXRpYmxlLiBJIGFtIG5vdCBzdXJlIHdo
-ZXRoZXIgbmVlZCB0bw0KPiA+ID4gYWRkICJmc2wsbHMtcGNpZS1lcCINCj4gPiA+ID4gaW4gdGhl
-cmUsIGNvdWxkIHlvdSBnaXZlIHNvbWUgYWR2aWNlLCB0aGFua3MgYSBsb3QuDQo+ID4gPg0KPiA+
-ID4gSXQgc291bmRzIGxpa2UgImZzbCxscy1wY2llLWVwIiBjYW4gYmUgYSBmYWxsYmFjayBmb3Ig
-ImZzbCxsczEwNDZhLXBjaWUtZXAiLg0KPiA+DQo+ID4gVGhpcyBpcyBub3QgYSBmYWxsYmFjaywg
-dGhlIGNvbXBhdGlibGUgImZzbCxsczEwNDZhLXBjaWUtZXAiIGlzIHVzZWQNCj4gPiBieSBib290
-bG9hZGVyLCB0aGUgYm9vdGxvYWRlciB3aWxsIG1vZGlmeSB0aGUgc3RhdHVzIHByb3BlcnR5LCB0
-aGUNCj4gPiBib290bG9hZGVyIGNvZGUgZ2V0IHRoZQ0KPiA+IFBDSV9IRUFERVJfVFlQRSgweGUp
-IG9mIGNvbmZpZyBzcGFjZSB0byBkZWNpZGUgZW5hYmxlIHdoaWNoIG5vZGUoRVAgb3INCj4gPiBS
-Qykgc3RhdHVzIHByb3BlcnR5LiBBdCB0aGUgYmVnaW5uaW5nLCB3ZSBwbGFuIHRvIHVzZSBvbmUg
-Y29tcGF0aWJsZQ0KPiAiZnNsLGxzMTA0NmEtcGNpZS1lcCINCj4gPiBzdXBwb3J0IGFsbCBOWFAn
-cyBwbGF0Zm9ybSwgYnV0IGFjdHVhbGx5LCBkdWUgdG8gdGhlIGRpZmZlcmVuY2Ugb2YNCj4gPiBl
-YWNoIHBsYXRmb3JtLCBpdCBpcyBkaWZmaWN1bHQuDQo+IA0KPiBJJ3ZlIGxvb2tlZCBhdCB0aGUg
-VS1Cb290IHNvdXJjZSBbMV0gYW5kIGRldmljZSB0cmVlcywgSSB0aGluayBJIHVuZGVyc3RhbmQN
-Cj4gd2hhdCBoYXBwZW5zIGhlcmUuDQo+IA0KPiBUaGUgRFQgZGVzY3JpYmVzIGRpc2FibGVkIG5v
-ZGVzIGZvciBib3RoIGZzbCxsc1hYWFhYLXBjaWUgYW5kDQo+IGZzbCxseFhYWFhYLXBjaWUtZXAu
-IFUtQm9vdCBsb29rcyBhdCB0aGUgbm9kZXMgYW5kIGNvbXBhcmVzIHdpdGggdGhlIGFjdHVhbA0K
-PiBQQ0kgY29uZmlnIHNwYWNlIHRvIGRldGVybWluZSB0aGUgY3VycmVudCBoYXJkd2FyZSBjb25m
-aWd1cmF0aW9uIHR5cGUuIEl0IHdpbGwNCj4gdGhlbiAqZW5hYmxlKiBlaXRoZXIgdGhlIFJDIG9y
-IEVQLg0KDQpZZXMsIHlvdSBhcmUgY29ycmVjdC4NCg0KPiANCj4gSG93ZXZlciBVLUJvb3QgY3Vy
-cmVudGx5IG9ubHkgbG9va3MgZm9yIGEgY29tcGF0aWJsZSBzdHJpbmcgd2l0aCAiZnNsLGxzLXBj
-aWUiDQo+IG9yICJmc2wsbHMtcGNpZS1lcCIuIFRoaXMgaXMgd2h5IHRoZSBEVCBuZWVkcyB0byBk
-ZXNjcmliZSBhIFBDSSBub2RlIGFzIGJvdGgNCj4gImZzbCxsc1hYWFhYLXBjaWUtZXAiIGFuZCAi
-ZnNsLGxzLXBjaWUiIC0gdGhlIGZpcnN0IGZvciBrZXJuZWwgYW5kIHRoZSBzZWNvbmQgZm9yDQo+
-IHRoZSBVLUJvb3QuIChUaGUgc2Vjb25kIGlzIG5vIGxvbmdlciBuZWVkZWQgYnkgdGhlIGtlcm5l
-bCBkcml2ZXIgYXMgeW91IGFyZQ0KPiBub3cgdXNpbmcgdGhlIG1vcmUgc3BlY2lmaWMgbmFtZXMp
-Lg0KDQpUaGUgZmFjdCBpcyB0aGF0IHRoZSBjb21wYXRpYmxlICJmc2wsbHMtcGNpZS1lcCIgaXMg
-dXNlZCBmb3IgbWF0Y2ggdGhlIGRyaXZlciBhdCBmaXJzdCwNCmFuZCBjb21tdW5pdHkgb2Ygb3Bl
-bnNvdXJjZSBhZHZpY2UgcmVzZXJ2ZSB0aGUgY29tcGF0aWJsZSAiZnNsLGxzWFhYWFgtcGNpZS1l
-cCINCmZvciBvdGhlciBwbGF0Zm9ybXMsIGF0IHByZXNlbnQsIHRoZSBjb21wYXRpYmxlICJmc2ws
-bHMtcGNpZS1lcCIgaXMgYWxzbyB1c2VkIHRvIA0KbWF0Y2ggdGhlIGRyaXZlciwgYW5kICJmc2ws
-bHNYWFhYWC1wY2llLWVwIiB1c2VkIHRvIGRpZmZlcmVuY2UgdGhlIHBsYXRmb3JtcywgcGxlYXNl
-DQpyZWZlciB0byB0aGUgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpLWxheWVyc2NhcGUu
-YywgaXQgaXMgc2ltaWxhci4NCiANCg0KDQoNCj4gDQo+IExvb2tpbmcgYWdhaW4gYXQgeW91ciBi
-aW5kaW5ncyBwYXRjaC4uLg0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2kudHh0DQo+IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS50eHQNCj4gaW5kZXggZTIwY2Vh
-YS4uNzYyYWU0MSAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3BjaS9sYXllcnNjYXBlLXBjaS50eHQNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3BjaS9sYXllcnNjYXBlLXBjaS50eHQNCj4gQEAgLTIyLDcgKzIyLDkgQEAg
-IFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICAgICAgICAgICJmc2wsbHMxMDQzYS1wY2llIg0KPiAg
-ICAgICAgICAiZnNsLGxzMTAxMmEtcGNpZSINCj4gICAgRVAgbW9kZToNCj4gLQkiZnNsLGxzMTA0
-NmEtcGNpZS1lcCIsICJmc2wsbHMtcGNpZS1lcCINCj4gKwkiZnNsLGxzMTA0NmEtcGNpZS1lcCIg
-ImZzbCxscy1wY2llLWVwIg0KPiArCSJmc2wsbHMxMDg4YS1wY2llLWVwIiAiZnNsLGxzLXBjaWUt
-ZXAiDQo+ICsJImZzbCxsczIwODhhLXBjaWUtZXAiICJmc2wsbHMtcGNpZS1lcCINCj4gDQo+IC4u
-LiB0aGUgImZzbCxscy1wY2llLWVwIiBpcyBhZGRlZCAqb25seSogdG8gdGhlIEVQIG1vZGUuDQo+
-IA0KPiBCdXQgZG9lc24ndCBVLUJvb3QgbmVlZCAiZnNsLGxzLXBjaWUtZXAiIGFkZGVkIHRvIGVh
-Y2ggb2YgdGhlIFJDIG1vZGVzIGFzDQo+IHdlbGwsIHRvIGVuc3VyZSB0aGV5IGFyZSBzZXQgdG8g
-ZW5hYmxlZCBiZWZvcmUgYm9vdGluZyB0aGUga2VybmVsPw0KPiANCj4gUm9iIC0gRG8gd2UgZG9j
-dW1lbnQgY29tcGF0aWJsZSBuYW1lcyBsaWtlIHRoaXMgdGhhdCBhcmUgdXNlZCBpbiB0aGUgRFQg
-YnV0DQo+IG5vdCB1c2VkIGJ5IHRoZSBrZXJuZWw/DQo+IA0KPiBJbiBhbnkgY2FzZSwgcHJpb3Ig
-dG8gdGhpcyBzZXJpZXMgaXQgd291bGQgaGF2ZSBiZWVuIHBvc3NpYmxlIHRvIHVzZSBhIGxzMTA0
-NmENCj4gZGV2aWNlIHdpdGggYSBEVCB0aGF0IGhhcyBvbmx5IHN0cmluZyAiZnNsLGxzLXBjaWUt
-ZXAiIC0gbm93IHRoYXQgZG9lc24ndCB3b3JrLg0KPiBJZiB0aGlzIGlzIG9mIGNvbmNlcm4gdGhl
-biAmbHMxX2VwX2RydmRhdGEgc2hvdWxkIGFsc28gYmUgdXNlZCBmb3INCj4gZnNsLGxzLXBjaWUt
-ZXAuDQo+IA0KPiBUaGFua3MsDQo+IA0KPiBBbmRyZXcgTXVycmF5DQo+IA0KPiBbMV0NCj4gaHR0
-cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNB
-JTJGJTJGZ2l0bGFiLg0KPiBkZW54LmRlJTJGdS1ib290JTJGdS1ib290JTJGYmxvYiUyRm1hc3Rl
-ciUyRmRyaXZlcnMlMkZwY2klMkZwY2llX2wNCj4gYXllcnNjYXBlX2ZpeHVwLmMmYW1wO2RhdGE9
-MDIlN0MwMSU3Q3hpYW93ZWkuYmFvJTQwbnhwLmNvbSU3Q2NmMw0KPiAzYzFiNzZjYjc0ZjFjYjQx
-MzA4ZDczYWIzNzMzMCU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjMNCj4gNSU3QzAl
-N0MxJTdDNjM3MDQyNDE0NzQ5MzY4MTU1JmFtcDtzZGF0YT11VnZmZVQ4QW5PbFBTJTJCeUJaOQ0K
-PiBZNCUyQkhOSklBNk1QeDJzZldVQmlENzVJUlklM0QmYW1wO3Jlc2VydmVkPTANCj4gDQo+ID4N
-Cj4gPiA+DQo+ID4gPiBJJ20gYXNzdW1pbmcgdGhhdCBpZiBzb21lb25lIHVzZWQgImZzbCxsczEw
-NDZhLXBjaWUtZXAiIG9uIGxzMTA4OGENCj4gPiA+IG9yIGxzMjA4OGEgaGFyZHdhcmUgaXQgd291
-bGQgc3RpbGwgd29yaywgYnV0IHdpdGhvdXQgdGhlIG11bHRpcGxlIFBGDQo+IHN1cHBvcnQuDQo+
-ID4gPg0KPiA+DQo+ID4gSSB0aGluayB0aGUgRVAgZHJpdmVyIHdpbGwgbm90IHdvcmsgaWYgdXNl
-IGN1cnJlbnQgY29kZSwgZHVlIHRvIHRoZQ0KPiA+IGN1cnJlbnQgZHJpdmVyIG5lZWQgZHJpdmVy
-IGRhdGEuDQo+ID4NCj4gPiA+IEkuZS4gaWYgImZzbCxscy1wY2llLWVwIiBpcyBnaXZlbiwgdHJl
-YXQgaXQgYXMgbHMxMDQ2YS4NCj4gPg0KPiA+DQo+ID4NCj4gPiA+DQo+ID4gPiBUaGFua3MsDQo+
-ID4gPg0KPiA+ID4gQW5kcmV3IE11cnJheQ0KPiA+ID4NCj4gPiA+ID4NCj4gPiA+ID4gVGhhbmtz
-DQo+ID4gPiA+IFhpYW93ZWkNCj4gPiA+ID4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFRoYW5rcywN
-Cj4gPiA+ID4gPg0KPiA+ID4gPiA+IEFuZHJldyBNdXJyYXkNCj4gPiA+ID4gPg0KPiA+ID4gPiA+
-ID4gIH07DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gIHN0YXRpYyBpbnQgX19pbml0IGxzX2Fk
-ZF9wY2llX2VwKHN0cnVjdCBsc19wY2llX2VwICpwY2llLCBAQA0KPiA+ID4gPiA+ID4gLTEwMyw3
-DQo+ID4gPiA+ID4gPiArMTM0LDcgQEAgc3RhdGljIGludCBfX2luaXQgbHNfYWRkX3BjaWVfZXAo
-c3RydWN0IGxzX3BjaWVfZXANCj4gPiA+ID4gPiA+ICsqcGNpZSwNCj4gPiA+ID4gPiA+ICAJaW50
-IHJldDsNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAgCWVwID0gJnBjaS0+ZXA7DQo+ID4gPiA+
-ID4gPiAtCWVwLT5vcHMgPSAmcGNpZV9lcF9vcHM7DQo+ID4gPiA+ID4gPiArCWVwLT5vcHMgPSBw
-Y2llLT5kcnZkYXRhLT5vcHM7DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gIAlyZXMgPSBwbGF0
-Zm9ybV9nZXRfcmVzb3VyY2VfYnluYW1lKHBkZXYsDQo+IElPUkVTT1VSQ0VfTUVNLA0KPiA+ID4g
-PiA+ICJhZGRyX3NwYWNlIik7DQo+ID4gPiA+ID4gPiAgCWlmICghcmVzKQ0KPiA+ID4gPiA+ID4g
-QEAgLTE0MiwyMCArMTczLDIzIEBAIHN0YXRpYyBpbnQgX19pbml0DQo+ID4gPiA+ID4gPiBsc19w
-Y2llX2VwX3Byb2JlKHN0cnVjdA0KPiA+ID4gPiA+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4g
-PiA+ID4gPiA+ICAJaWYgKCFsc19lcGMpDQo+ID4gPiA+ID4gPiAgCQlyZXR1cm4gLUVOT01FTTsN
-Cj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAtCWRiaV9iYXNlID0gcGxhdGZvcm1fZ2V0X3Jlc291
-cmNlX2J5bmFtZShwZGV2LA0KPiA+ID4gSU9SRVNPVVJDRV9NRU0sDQo+ID4gPiA+ID4gInJlZ3Mi
-KTsNCj4gPiA+ID4gPiA+IC0JcGNpLT5kYmlfYmFzZSA9IGRldm1fcGNpX3JlbWFwX2NmZ19yZXNv
-dXJjZShkZXYsDQo+IGRiaV9iYXNlKTsNCj4gPiA+ID4gPiA+IC0JaWYgKElTX0VSUihwY2ktPmRi
-aV9iYXNlKSkNCj4gPiA+ID4gPiA+IC0JCXJldHVybiBQVFJfRVJSKHBjaS0+ZGJpX2Jhc2UpOw0K
-PiA+ID4gPiA+ID4gKwlwY2llLT5kcnZkYXRhID0gb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKGRl
-dik7DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gLQlwY2ktPmRiaV9iYXNlMiA9IHBjaS0+ZGJp
-X2Jhc2UgKyBQQ0lFX0RCSTJfT0ZGU0VUOw0KPiA+ID4gPiA+ID4gIAlwY2ktPmRldiA9IGRldjsN
-Cj4gPiA+ID4gPiA+IC0JcGNpLT5vcHMgPSAmbHNfcGNpZV9lcF9vcHM7DQo+ID4gPiA+ID4gPiAt
-CXBjaWUtPnBjaSA9IHBjaTsNCj4gPiA+ID4gPiA+ICsJcGNpLT5vcHMgPSBwY2llLT5kcnZkYXRh
-LT5kd19wY2llX29wczsNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAgCWxzX2VwYy0+YmFyX2Zp
-eGVkXzY0Yml0ID0gKDEgPDwgQkFSXzIpIHwgKDEgPDwgQkFSXzQpLA0KPiA+ID4gPiA+ID4NCj4g
-PiA+ID4gPiA+ICsJcGNpZS0+cGNpID0gcGNpOw0KPiA+ID4gPiA+ID4gIAlwY2llLT5sc19lcGMg
-PSBsc19lcGM7DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gKwlkYmlfYmFzZSA9IHBsYXRmb3Jt
-X2dldF9yZXNvdXJjZV9ieW5hbWUocGRldiwNCj4gPiA+IElPUkVTT1VSQ0VfTUVNLA0KPiA+ID4g
-PiA+ICJyZWdzIik7DQo+ID4gPiA+ID4gPiArCXBjaS0+ZGJpX2Jhc2UgPSBkZXZtX3BjaV9yZW1h
-cF9jZmdfcmVzb3VyY2UoZGV2LA0KPiBkYmlfYmFzZSk7DQo+ID4gPiA+ID4gPiArCWlmIChJU19F
-UlIocGNpLT5kYmlfYmFzZSkpDQo+ID4gPiA+ID4gPiArCQlyZXR1cm4gUFRSX0VSUihwY2ktPmRi
-aV9iYXNlKTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJcGNpLT5kYmlfYmFzZTIgPSBw
-Y2ktPmRiaV9iYXNlICsgUENJRV9EQkkyX09GRlNFVDsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4g
-PiA+ICAJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgcGNpZSk7DQo+ID4gPiA+ID4gPg0KPiA+
-ID4gPiA+ID4gIAlyZXQgPSBsc19hZGRfcGNpZV9lcChwY2llLCBwZGV2KTsNCj4gPiA+ID4gPiA+
-IC0tDQo+ID4gPiA+ID4gPiAyLjkuNQ0KPiA+ID4gPiA+ID4NCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Quoting Manivannan Sadhasivam (2019-09-16 09:14:46)
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index 801fa1cd0321..e70c64e43ff9 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -139,6 +139,13 @@ config COMMON_CLK_SI570
+>           This driver supports Silicon Labs 570/571/598/599 programmable
+>           clock generators.
+>  
+> +config COMMON_CLK_BM1880
+> +       bool "Clock driver for Bitmain BM1880 SoC"
+
+Can it be tristate?
+
+> +       depends on ARCH_BITMAIN || COMPILE_TEST
+> +       default ARCH_BITMAIN
+> +       help
+> +         This driver supports the clocks on Bitmain BM1880 SoC.
+> +
+>  config COMMON_CLK_CDCE706
+>         tristate "Clock driver for TI CDCE706 clock synthesizer"
+>         depends on I2C
+> diff --git a/drivers/clk/clk-bm1880.c b/drivers/clk/clk-bm1880.c
+> new file mode 100644
+> index 000000000000..3b10de929fd4
+> --- /dev/null
+> +++ b/drivers/clk/clk-bm1880.c
+> @@ -0,0 +1,966 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Bitmain BM1880 SoC clock driver
+> + *
+> + * Copyright (c) 2019 Linaro Ltd.
+> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#include <dt-bindings/clock/bm1880-clock.h>
+> +
+> +#define BM1880_CLK_MPLL_CTL    0x00
+> +#define BM1880_CLK_SPLL_CTL    0x04
+> +#define BM1880_CLK_FPLL_CTL    0x08
+> +#define BM1880_CLK_DDRPLL_CTL  0x0c
+> +
+> +#define BM1880_CLK_ENABLE0     0x00
+> +#define BM1880_CLK_ENABLE1     0x04
+> +#define BM1880_CLK_SELECT      0x20
+> +#define BM1880_CLK_DIV0                0x40
+> +#define BM1880_CLK_DIV1                0x44
+> +#define BM1880_CLK_DIV2                0x48
+> +#define BM1880_CLK_DIV3                0x4c
+> +#define BM1880_CLK_DIV4                0x50
+> +#define BM1880_CLK_DIV5                0x54
+> +#define BM1880_CLK_DIV6                0x58
+> +#define BM1880_CLK_DIV7                0x5c
+> +#define BM1880_CLK_DIV8                0x60
+> +#define BM1880_CLK_DIV9                0x64
+> +#define BM1880_CLK_DIV10       0x68
+> +#define BM1880_CLK_DIV11       0x6c
+> +#define BM1880_CLK_DIV12       0x70
+> +#define BM1880_CLK_DIV13       0x74
+> +#define BM1880_CLK_DIV14       0x78
+> +#define BM1880_CLK_DIV15       0x7c
+> +#define BM1880_CLK_DIV16       0x80
+> +#define BM1880_CLK_DIV17       0x84
+> +#define BM1880_CLK_DIV18       0x88
+> +#define BM1880_CLK_DIV19       0x8c
+> +#define BM1880_CLK_DIV20       0x90
+> +#define BM1880_CLK_DIV21       0x94
+> +#define BM1880_CLK_DIV22       0x98
+> +#define BM1880_CLK_DIV23       0x9c
+> +#define BM1880_CLK_DIV24       0xa0
+> +#define BM1880_CLK_DIV25       0xa4
+> +#define BM1880_CLK_DIV26       0xa8
+> +#define BM1880_CLK_DIV27       0xac
+> +#define BM1880_CLK_DIV28       0xb0
+> +
+> +#define to_bm1880_pll_clk(_hw) container_of(_hw, struct bm1880_pll_hw_clock, hw)
+> +#define to_bm1880_div_clk(_hw) container_of(_hw, struct bm1880_div_hw_clock, hw)
+> +
+> +static DEFINE_SPINLOCK(bm1880_clk_lock);
+> +
+> +struct bm1880_clock_data {
+> +       void __iomem *pll_base;
+> +       void __iomem *sys_base;
+> +       struct clk_hw_onecell_data *clk_data;
+
+Please call it hw_data or onecell_data instead so that the code doesn't
+read as clk_data->clk_data. Also, probably can just make it part of the
+same struct instead of a pointer inside so that it can all be allocated
+in one big chunk instead of in two.
+
+> +};
+> +
+> +struct bm1880_gate_clock {
+> +       unsigned int    id;
+> +       const char      *name;
+> +       const char      *parent;
+> +       u32             gate_reg;
+> +       s8              gate_shift;
+> +       unsigned long   flags;
+> +};
+> +
+> +struct bm1880_mux_clock {
+> +       unsigned int    id;
+> +       const char      *name;
+> +       const char      * const *parents;
+> +       s8              num_parents;
+> +       u32             reg;
+> +       s8              shift;
+> +       unsigned long   flags;
+> +};
+> +
+> +struct bm1880_div_clock {
+> +       unsigned int    id;
+> +       const char      *name;
+> +       u32             reg;
+> +       u8              shift;
+> +       u8              width;
+> +       u32             initval;
+> +       const struct clk_div_table *table;
+> +       unsigned long flags;
+> +};
+> +
+> +struct bm1880_div_hw_clock {
+> +       struct bm1880_div_clock div;
+> +       void __iomem *base;
+> +       spinlock_t *lock;
+> +       struct clk_hw hw;
+> +       struct clk_init_data init;
+> +};
+> +
+> +struct bm1880_composite_clock {
+> +       unsigned int    id;
+> +       const char      *name;
+> +       const char      *parent;
+> +       const char      * const *parents;
+> +       unsigned int    num_parents;
+> +       unsigned long   flags;
+> +
+> +       u32             gate_reg;
+> +       u32             mux_reg;
+> +       u32             div_reg;
+> +
+> +       s8              gate_shift;
+> +       s8              mux_shift;
+> +       s8              div_shift;
+> +       s8              div_width;
+> +       s16             div_initval;
+> +       const struct clk_div_table *table;
+> +};
+> +
+> +struct bm1880_pll_clock {
+> +       unsigned int    id;
+> +       const char      *name;
+> +       u32             reg;
+> +       unsigned long   flags;
+> +};
+> +
+> +struct bm1880_pll_hw_clock {
+> +       struct bm1880_pll_clock pll;
+> +       void __iomem *base;
+> +       struct clk_hw hw;
+> +       struct clk_init_data init;
+> +};
+> +
+> +static const struct clk_ops bm1880_pll_ops;
+> +static const struct clk_ops bm1880_clk_div_ops;
+> +
+> +#define GATE_DIV(_id, _name, _parent, _gate_reg, _gate_shift, _div_reg,        \
+> +                       _div_shift, _div_width, _div_initval, _table,   \
+> +                       _flags) {                                       \
+> +               .id = _id,                                              \
+> +               .parent = _parent,                                      \
+> +               .name = _name,                                          \
+> +               .gate_reg = _gate_reg,                                  \
+> +               .gate_shift = _gate_shift,                              \
+> +               .div_reg = _div_reg,                                    \
+> +               .div_shift = _div_shift,                                \
+> +               .div_width = _div_width,                                \
+> +               .div_initval = _div_initval,                            \
+> +               .table = _table,                                        \
+> +               .mux_shift = -1,                                        \
+> +               .flags = _flags,                                        \
+> +       }
+> +
+> +#define GATE_MUX(_id, _name, _parents, _gate_reg, _gate_shift,         \
+> +                       _mux_reg, _mux_shift, _flags) {                 \
+> +               .id = _id,                                              \
+> +               .parents = _parents,                                    \
+> +               .num_parents = ARRAY_SIZE(_parents),                    \
+> +               .name = _name,                                          \
+> +               .gate_reg = _gate_reg,                                  \
+> +               .gate_shift = _gate_shift,                              \
+> +               .div_shift = -1,                                        \
+> +               .mux_reg = _mux_reg,                                    \
+> +               .mux_shift = _mux_shift,                                \
+> +               .flags = _flags,                                        \
+> +       }
+> +
+> +#define CLK_PLL(_id, _name, _parent, _reg, _flags) {                   \
+> +               .pll.id = _id,                                          \
+> +               .pll.name = _name,                                      \
+> +               .pll.reg = _reg,                                        \
+> +               .hw.init = CLK_HW_INIT_PARENTS_DATA(_name, _parent,     \
+> +                                                   &bm1880_pll_ops,    \
+> +                                                   _flags),            \
+> +       }
+> +
+> +#define CLK_DIV(_id, _name, _parent, _reg, _shift, _width, _initval,   \
+> +                               _table, _flags) {                       \
+> +               .div.id = _id,                                          \
+> +               .div.name = _name,                                      \
+> +               .div.reg = _reg,                                        \
+> +               .div.shift = _shift,                                    \
+> +               .div.width = _width,                                    \
+> +               .div.initval = _initval,                                \
+> +               .div.table = _table,                                    \
+> +               .hw.init = CLK_HW_INIT_HW(_name, _parent,               \
+> +                                         &bm1880_clk_div_ops,          \
+> +                                         _flags),                      \
+> +       }
+> +
+> +static struct clk_parent_data bm1880_pll_parent[] = {
+> +       { .fw_name = "osc", .name = "osc" },
+> +};
+> +
+> +/*
+> + * All PLL clocks are marked as CRITICAL, hence they are very crucial
+> + * for the functioning of the SoC
+
+Please add more information besides crucial to function of the clk.
+Basically describe what the PLLs are clocking and why those child clks
+aren't enabled or marked as critical themselves. The usage of
+CLK_IS_CRITICAL is too liberal in this driver so this needs to be
+cleaned up. For example, clk_mpll shouldn't be marked critical, just the
+a53 CPU clk that can source from it should be marked critical because
+it's for the CPU running code. It's also odd that we would register gate
+clks or the a53 clks if we don't expect to ever turn those clks off. Can
+that be avoided so that we don't need to mark anything critical for this
+path?
+
+> + */
+> +static struct bm1880_pll_hw_clock bm1880_pll_clks[] = {
+> +       CLK_PLL(BM1880_CLK_MPLL, "clk_mpll", bm1880_pll_parent,
+> +               BM1880_CLK_MPLL_CTL, CLK_IS_CRITICAL),
+> +       CLK_PLL(BM1880_CLK_SPLL, "clk_spll", bm1880_pll_parent,
+> +               BM1880_CLK_SPLL_CTL, CLK_IS_CRITICAL),
+> +       CLK_PLL(BM1880_CLK_FPLL, "clk_fpll", bm1880_pll_parent,
+> +               BM1880_CLK_FPLL_CTL, CLK_IS_CRITICAL),
+> +       CLK_PLL(BM1880_CLK_DDRPLL, "clk_ddrpll", bm1880_pll_parent,
+> +               BM1880_CLK_DDRPLL_CTL, CLK_IS_CRITICAL),
+> +};
+> +
+> +/*
+> + * Clocks marked as CRITICAL are needed for the proper functioning
+> + * of the SoC.
+> + */
+> +static const struct bm1880_gate_clock bm1880_gate_clks[] = {
+> +       { BM1880_CLK_AHB_ROM, "clk_ahb_rom", "clk_mux_axi6",
+> +         BM1880_CLK_ENABLE0, 2, CLK_IS_CRITICAL },
+> +       { BM1880_CLK_AXI_SRAM, "clk_axi_sram", "clk_axi1",
+> +         BM1880_CLK_ENABLE0, 3, CLK_IS_CRITICAL },
+> +       { BM1880_CLK_DDR_AXI, "clk_ddr_axi", "clk_mux_axi6",
+> +         BM1880_CLK_ENABLE0, 4, CLK_IS_CRITICAL },
+> +       { BM1880_CLK_APB_EFUSE, "clk_apb_efuse", "clk_mux_axi6",
+> +         BM1880_CLK_ENABLE0, 6, CLK_IS_CRITICAL },
+> +       { BM1880_CLK_AXI5_EMMC, "clk_axi5_emmc", "clk_axi5",
+> +         BM1880_CLK_ENABLE0, 7, 0 },
+> +       { BM1880_CLK_AXI5_SD, "clk_axi5_sd", "clk_axi5",
+> +         BM1880_CLK_ENABLE0, 10, 0 },
+> +       { BM1880_CLK_AXI4_ETH0, "clk_axi4_eth0", "clk_axi4",
+> +         BM1880_CLK_ENABLE0, 14, 0 },
+> +       { BM1880_CLK_AXI4_ETH1, "clk_axi4_eth1", "clk_axi4",
+> +         BM1880_CLK_ENABLE0, 16, 0 },
+> +       { BM1880_CLK_AXI1_GDMA, "clk_axi1_gdma", "clk_axi1",
+> +         BM1880_CLK_ENABLE0, 17, 0 },
+> +       /* Don't gate GPIO clocks as it is not owned by the GPIO driver */
+> +       { BM1880_CLK_APB_GPIO, "clk_apb_gpio", "clk_mux_axi6",
+> +         BM1880_CLK_ENABLE0, 18, CLK_IGNORE_UNUSED },
+> +       { BM1880_CLK_APB_GPIO_INTR, "clk_apb_gpio_intr", "clk_mux_axi6",
+> +         BM1880_CLK_ENABLE0, 19, CLK_IGNORE_UNUSED },
+> +       { BM1880_CLK_AXI1_MINER, "clk_axi1_miner", "clk_axi1",
+> +         BM1880_CLK_ENABLE0, 21, 0 },
+> +       { BM1880_CLK_AHB_SF, "clk_ahb_sf", "clk_mux_axi6",
+> +         BM1880_CLK_ENABLE0, 22, 0 },
+> +       { BM1880_CLK_SDMA_AXI, "clk_sdma_axi", "clk_axi5",
+> +         BM1880_CLK_ENABLE0, 23, 0 },
+> +       { BM1880_CLK_APB_I2C, "clk_apb_i2c", "clk_mux_axi6",
+> +         BM1880_CLK_ENABLE0, 25, 0 },
+> +       { BM1880_CLK_APB_WDT, "clk_apb_wdt", "clk_mux_axi6",
+> +         BM1880_CLK_ENABLE0, 26, 0 },
+> +       { BM1880_CLK_APB_JPEG, "clk_apb_jpeg", "clk_axi6",
+> +         BM1880_CLK_ENABLE0, 27, 0 },
+> +       { BM1880_CLK_AXI5_NF, "clk_axi5_nf", "clk_axi5",
+> +         BM1880_CLK_ENABLE0, 29, 0 },
+> +       { BM1880_CLK_APB_NF, "clk_apb_nf", "clk_axi6",
+> +         BM1880_CLK_ENABLE0, 30, 0 },
+> +       { BM1880_CLK_APB_PWM, "clk_apb_pwm", "clk_mux_axi6",
+> +         BM1880_CLK_ENABLE1, 0, 0 },
+> +       { BM1880_CLK_RV, "clk_rv", "clk_mux_rv",
+> +         BM1880_CLK_ENABLE1, 1, 0 },
+> +       { BM1880_CLK_APB_SPI, "clk_apb_spi", "clk_mux_axi6",
+> +         BM1880_CLK_ENABLE1, 2, 0 },
+> +       { BM1880_CLK_UART_500M, "clk_uart_500m", "clk_div_uart_500m",
+> +         BM1880_CLK_ENABLE1, 4, 0 },
+> +       { BM1880_CLK_APB_UART, "clk_apb_uart", "clk_axi6",
+> +         BM1880_CLK_ENABLE1, 5, 0 },
+> +       { BM1880_CLK_APB_I2S, "clk_apb_i2s", "clk_axi6",
+> +         BM1880_CLK_ENABLE1, 6, 0 },
+> +       { BM1880_CLK_AXI4_USB, "clk_axi4_usb", "clk_axi4",
+> +         BM1880_CLK_ENABLE1, 7, 0 },
+> +       { BM1880_CLK_APB_USB, "clk_apb_usb", "clk_axi6",
+> +         BM1880_CLK_ENABLE1, 8, 0 },
+> +       { BM1880_CLK_12M_USB, "clk_12m_usb", "clk_div_12m_usb",
+> +         BM1880_CLK_ENABLE1, 11, 0 },
+> +       { BM1880_CLK_APB_VIDEO, "clk_apb_video", "clk_axi6",
+> +         BM1880_CLK_ENABLE1, 12, 0 },
+> +       { BM1880_CLK_APB_VPP, "clk_apb_vpp", "clk_axi6",
+> +         BM1880_CLK_ENABLE1, 15, 0 },
+> +       { BM1880_CLK_AXI6, "clk_axi6", "clk_mux_axi6",
+> +         BM1880_CLK_ENABLE1, 21, CLK_IS_CRITICAL },
+> +};
+> +
+> +static const char * const clk_a53_parents[] = { "clk_spll", "clk_mpll" };
+> +static const char * const clk_rv_parents[] = { "clk_div_1_rv", "clk_div_0_rv" };
+> +static const char * const clk_axi1_parents[] = { "clk_div_1_axi1", "clk_div_0_axi1" };
+> +static const char * const clk_axi6_parents[] = { "clk_div_1_axi6", "clk_div_0_axi6" };
+
+I sent some patches to make the basic clk types support the new way of
+specifying parents. Can you use those patches instead of listing all
+these strings?
+
+> +
+> +static const struct bm1880_mux_clock bm1880_mux_clks[] = {
+> +       { BM1880_CLK_MUX_RV, "clk_mux_rv", clk_rv_parents, 2,
+> +         BM1880_CLK_SELECT, 1, 0 },
+> +       { BM1880_CLK_MUX_AXI6, "clk_mux_axi6", clk_axi6_parents, 2,
+> +         BM1880_CLK_SELECT, 3, 0 },
+> +};
+> +
+> +static const struct clk_div_table bm1880_div_table_0[] = {
+> +       { 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 4 },
+> +       { 4, 5 }, { 5, 6 }, { 6, 7 }, { 7, 8 },
+> +       { 8, 9 }, { 9, 10 }, { 10, 11 }, { 11, 12 },
+> +       { 12, 13 }, { 13, 14 }, { 14, 15 }, { 15, 16 },
+> +       { 16, 17 }, { 17, 18 }, { 18, 19 }, { 19, 20 },
+> +       { 20, 21 }, { 21, 22 }, { 22, 23 }, { 23, 24 },
+> +       { 24, 25 }, { 25, 26 }, { 26, 27 }, { 27, 28 },
+> +       { 28, 29 }, { 29, 30 }, { 30, 31 }, { 31, 32 },
+> +       { 0, 0 }
+> +};
+> +
+> +static const struct clk_div_table bm1880_div_table_1[] = {
+> +       { 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 4 },
+> +       { 4, 5 }, { 5, 6 }, { 6, 7 }, { 7, 8 },
+> +       { 8, 9 }, { 9, 10 }, { 10, 11 }, { 11, 12 },
+> +       { 12, 13 }, { 13, 14 }, { 14, 15 }, { 15, 16 },
+> +       { 16, 17 }, { 17, 18 }, { 18, 19 }, { 19, 20 },
+> +       { 20, 21 }, { 21, 22 }, { 22, 23 }, { 23, 24 },
+> +       { 24, 25 }, { 25, 26 }, { 26, 27 }, { 27, 28 },
+> +       { 28, 29 }, { 29, 30 }, { 30, 31 }, { 31, 32 },
+> +       { 127, 128 }, { 0, 0 }
+> +};
+> +
+> +static const struct clk_div_table bm1880_div_table_2[] = {
+> +       { 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 4 },
+> +       { 4, 5 }, { 5, 6 }, { 6, 7 }, { 7, 8 },
+> +       { 8, 9 }, { 9, 10 }, { 10, 11 }, { 11, 12 },
+> +       { 12, 13 }, { 13, 14 }, { 14, 15 }, { 15, 16 },
+> +       { 16, 17 }, { 17, 18 }, { 18, 19 }, { 19, 20 },
+> +       { 20, 21 }, { 21, 22 }, { 22, 23 }, { 23, 24 },
+> +       { 24, 25 }, { 25, 26 }, { 26, 27 }, { 27, 28 },
+> +       { 28, 29 }, { 29, 30 }, { 30, 31 }, { 31, 32 },
+> +       { 127, 128 }, { 255, 256 }, { 0, 0 }
+> +};
+> +
+> +static const struct clk_div_table bm1880_div_table_3[] = {
+> +       { 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 4 },
+> +       { 4, 5 }, { 5, 6 }, { 6, 7 }, { 7, 8 },
+> +       { 8, 9 }, { 9, 10 }, { 10, 11 }, { 11, 12 },
+> +       { 12, 13 }, { 13, 14 }, { 14, 15 }, { 15, 16 },
+> +       { 16, 17 }, { 17, 18 }, { 18, 19 }, { 19, 20 },
+> +       { 20, 21 }, { 21, 22 }, { 22, 23 }, { 23, 24 },
+> +       { 24, 25 }, { 25, 26 }, { 26, 27 }, { 27, 28 },
+> +       { 28, 29 }, { 29, 30 }, { 30, 31 }, { 31, 32 },
+> +       { 127, 128 }, { 255, 256 }, { 511, 512 }, { 0, 0 }
+> +};
+> +
+> +static const struct clk_div_table bm1880_div_table_4[] = {
+> +       { 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 4 },
+> +       { 4, 5 }, { 5, 6 }, { 6, 7 }, { 7, 8 },
+> +       { 8, 9 }, { 9, 10 }, { 10, 11 }, { 11, 12 },
+> +       { 12, 13 }, { 13, 14 }, { 14, 15 }, { 15, 16 },
+> +       { 16, 17 }, { 17, 18 }, { 18, 19 }, { 19, 20 },
+> +       { 20, 21 }, { 21, 22 }, { 22, 23 }, { 23, 24 },
+> +       { 24, 25 }, { 25, 26 }, { 26, 27 }, { 27, 28 },
+> +       { 28, 29 }, { 29, 30 }, { 30, 31 }, { 31, 32 },
+> +       { 127, 128 }, { 255, 256 }, { 511, 512 }, { 65535, 65536 },
+> +       { 0, 0 }
+> +};
+> +
+> +/*
+> + * Clocks marked as CRITICAL are needed for the proper functioning
+> + * of the SoC.
+> + */
+> +static struct bm1880_div_hw_clock bm1880_div_clks[] = {
+> +       CLK_DIV(BM1880_CLK_DIV_0_RV, "clk_div_0_rv", &bm1880_pll_clks[1].hw,
+> +               BM1880_CLK_DIV12, 16, 5, 1, bm1880_div_table_0, 0),
+> +       CLK_DIV(BM1880_CLK_DIV_1_RV, "clk_div_1_rv", &bm1880_pll_clks[2].hw,
+> +               BM1880_CLK_DIV13, 16, 5, 1, bm1880_div_table_0, 0),
+> +       CLK_DIV(BM1880_CLK_DIV_UART_500M, "clk_div_uart_500m", &bm1880_pll_clks[2].hw,
+> +               BM1880_CLK_DIV15, 16, 7, 3, bm1880_div_table_1, 0),
+> +       CLK_DIV(BM1880_CLK_DIV_0_AXI1, "clk_div_0_axi1", &bm1880_pll_clks[0].hw,
+> +               BM1880_CLK_DIV21, 16, 5, 2, bm1880_div_table_0,
+> +               CLK_IS_CRITICAL),
+> +       CLK_DIV(BM1880_CLK_DIV_1_AXI1, "clk_div_1_axi1", &bm1880_pll_clks[2].hw,
+> +               BM1880_CLK_DIV22, 16, 5, 3, bm1880_div_table_0,
+> +               CLK_IS_CRITICAL),
+> +       CLK_DIV(BM1880_CLK_DIV_0_AXI6, "clk_div_0_axi6", &bm1880_pll_clks[2].hw,
+> +               BM1880_CLK_DIV27, 16, 5, 15, bm1880_div_table_0,
+> +               CLK_IS_CRITICAL),
+> +       CLK_DIV(BM1880_CLK_DIV_1_AXI6, "clk_div_1_axi6", &bm1880_pll_clks[0].hw,
+> +               BM1880_CLK_DIV28, 16, 5, 11, bm1880_div_table_0,
+> +               CLK_IS_CRITICAL),
+> +       CLK_DIV(BM1880_CLK_DIV_12M_USB, "clk_div_12m_usb", &bm1880_pll_clks[2].hw,
+> +               BM1880_CLK_DIV18, 16, 7, 125, bm1880_div_table_1, 0),
+> +};
+> +
+> +/*
+> + * Clocks marked as CRITICAL are all needed for the proper functioning
+> + * of the SoC.
+> + */
+> +static struct bm1880_composite_clock bm1880_composite_clks[] = {
+> +       GATE_MUX(BM1880_CLK_A53, "clk_a53", clk_a53_parents,
+> +                BM1880_CLK_ENABLE0, 0, BM1880_CLK_SELECT, 0,
+> +                CLK_IS_CRITICAL),
+> +       GATE_DIV(BM1880_CLK_50M_A53, "clk_50m_a53", "clk_fpll",
+> +                BM1880_CLK_ENABLE0, 1, BM1880_CLK_DIV0, 16, 5, 30,
+> +                bm1880_div_table_0, CLK_IS_CRITICAL),
+> +       GATE_DIV(BM1880_CLK_EFUSE, "clk_efuse", "clk_fpll",
+> +                BM1880_CLK_ENABLE0, 5, BM1880_CLK_DIV1, 16, 7, 60,
+> +                bm1880_div_table_1, 0),
+> +       GATE_DIV(BM1880_CLK_EMMC, "clk_emmc", "clk_fpll",
+> +                BM1880_CLK_ENABLE0, 8, BM1880_CLK_DIV2, 16, 5, 15,
+> +                bm1880_div_table_0, 0),
+> +       GATE_DIV(BM1880_CLK_100K_EMMC, "clk_100k_emmc", "clk_div_12m_usb",
+> +                BM1880_CLK_ENABLE0, 9, BM1880_CLK_DIV3, 16, 8, 120,
+> +                bm1880_div_table_2, 0),
+> +       GATE_DIV(BM1880_CLK_SD, "clk_sd", "clk_fpll",
+> +                BM1880_CLK_ENABLE0, 11, BM1880_CLK_DIV4, 16, 5, 15,
+> +                bm1880_div_table_0, 0),
+> +       GATE_DIV(BM1880_CLK_100K_SD, "clk_100k_sd", "clk_div_12m_usb",
+> +                BM1880_CLK_ENABLE0, 12, BM1880_CLK_DIV5, 16, 8, 120,
+> +                bm1880_div_table_2, 0),
+> +       GATE_DIV(BM1880_CLK_500M_ETH0, "clk_500m_eth0", "clk_fpll",
+> +                BM1880_CLK_ENABLE0, 13, BM1880_CLK_DIV6, 16, 5, 3,
+> +                bm1880_div_table_0, 0),
+> +       GATE_DIV(BM1880_CLK_500M_ETH1, "clk_500m_eth1", "clk_fpll",
+> +                BM1880_CLK_ENABLE0, 15, BM1880_CLK_DIV7, 16, 5, 3,
+> +                bm1880_div_table_0, 0),
+> +       /* Don't gate GPIO clocks as it is not owned by the GPIO driver */
+> +       GATE_DIV(BM1880_CLK_GPIO_DB, "clk_gpio_db", "clk_div_12m_usb",
+> +                BM1880_CLK_ENABLE0, 20, BM1880_CLK_DIV8, 16, 16, 120,
+> +                bm1880_div_table_4, CLK_IGNORE_UNUSED),
+> +       GATE_DIV(BM1880_CLK_SDMA_AUD, "clk_sdma_aud", "clk_fpll",
+> +                BM1880_CLK_ENABLE0, 24, BM1880_CLK_DIV9, 16, 7, 61,
+> +                bm1880_div_table_1, 0),
+> +       GATE_DIV(BM1880_CLK_JPEG_AXI, "clk_jpeg_axi", "clk_fpll",
+> +                BM1880_CLK_ENABLE0, 28, BM1880_CLK_DIV10, 16, 5, 4,
+> +                bm1880_div_table_0, 0),
+> +       GATE_DIV(BM1880_CLK_NF, "clk_nf", "clk_fpll",
+> +                BM1880_CLK_ENABLE0, 31, BM1880_CLK_DIV11, 16, 5, 30,
+> +                bm1880_div_table_0, 0),
+> +       GATE_DIV(BM1880_CLK_TPU_AXI, "clk_tpu_axi", "clk_spll",
+> +                BM1880_CLK_ENABLE1, 3, BM1880_CLK_DIV14, 16, 5, 1,
+> +                bm1880_div_table_0, 0),
+> +       GATE_DIV(BM1880_CLK_125M_USB, "clk_125m_usb", "clk_fpll",
+> +                BM1880_CLK_ENABLE1, 9, BM1880_CLK_DIV16, 16, 5, 12,
+> +                bm1880_div_table_0, 0),
+> +       GATE_DIV(BM1880_CLK_33K_USB, "clk_33k_usb", "clk_div_12m_usb",
+> +                BM1880_CLK_ENABLE1, 10, BM1880_CLK_DIV17, 16, 9, 363,
+> +                bm1880_div_table_3, 0),
+> +       GATE_DIV(BM1880_CLK_VIDEO_AXI, "clk_video_axi", "clk_fpll",
+> +                BM1880_CLK_ENABLE1, 13, BM1880_CLK_DIV19, 16, 5, 4,
+> +                bm1880_div_table_0, 0),
+> +       GATE_DIV(BM1880_CLK_VPP_AXI, "clk_vpp_axi", "clk_fpll",
+> +                BM1880_CLK_ENABLE1, 14, BM1880_CLK_DIV20, 16, 5, 4,
+> +                bm1880_div_table_0, 0),
+> +       GATE_MUX(BM1880_CLK_AXI1, "clk_axi1", clk_axi1_parents,
+> +                BM1880_CLK_ENABLE1, 15, BM1880_CLK_SELECT, 2,
+> +                CLK_IS_CRITICAL),
+> +       GATE_DIV(BM1880_CLK_AXI2, "clk_axi2", "clk_fpll",
+> +                BM1880_CLK_ENABLE1, 17, BM1880_CLK_DIV23, 16, 5, 3,
+> +                bm1880_div_table_0, CLK_IS_CRITICAL),
+> +       GATE_DIV(BM1880_CLK_AXI3, "clk_axi3", "clk_mux_rv",
+> +                BM1880_CLK_ENABLE1, 18, BM1880_CLK_DIV24, 16, 5, 2,
+> +                bm1880_div_table_0, CLK_IS_CRITICAL),
+> +       GATE_DIV(BM1880_CLK_AXI4, "clk_axi4", "clk_fpll",
+> +                BM1880_CLK_ENABLE1, 19, BM1880_CLK_DIV25, 16, 5, 6,
+> +                bm1880_div_table_0, CLK_IS_CRITICAL),
+> +       GATE_DIV(BM1880_CLK_AXI5, "clk_axi5", "clk_fpll",
+> +                BM1880_CLK_ENABLE1, 20, BM1880_CLK_DIV26, 16, 5, 15,
+> +                bm1880_div_table_0, CLK_IS_CRITICAL),
+> +};
+> +
+> +static unsigned long bm1880_pll_rate_calc(u32 regval, unsigned long parent_rate)
+> +{
+> +       u32 fbdiv, fref, refdiv;
+> +       u32 postdiv1, postdiv2;
+> +       unsigned long rate, numerator, denominator;
+> +
+> +       fbdiv = (regval >> 16) & 0xfff;
+> +       fref = parent_rate;
+> +       refdiv = regval & 0x1f;
+> +       postdiv1 = (regval >> 8) & 0x7;
+> +       postdiv2 = (regval >> 12) & 0x7;
+> +
+> +       numerator = parent_rate * fbdiv;
+> +       denominator = refdiv * postdiv1 * postdiv2;
+> +       do_div(numerator, denominator);
+> +       rate = numerator;
+> +
+> +       return rate;
+> +}
+> +
+> +static unsigned long bm1880_pll_recalc_rate(struct clk_hw *hw,
+> +                                           unsigned long parent_rate)
+> +{
+> +       struct bm1880_pll_hw_clock *pll_hw = to_bm1880_pll_clk(hw);
+> +       unsigned long rate;
+> +       u32 regval;
+> +
+> +       regval = readl(pll_hw->base + pll_hw->pll.reg);
+> +       rate = bm1880_pll_rate_calc(regval, parent_rate);
+> +
+> +       return rate;
+> +}
+> +
+> +static const struct clk_ops bm1880_pll_ops = {
+> +       .recalc_rate    = bm1880_pll_recalc_rate,
+> +};
+> +
+> +static struct clk_hw *bm1880_clk_register_pll(struct bm1880_pll_hw_clock *pll_clk,
+> +                                             void __iomem *sys_base)
+> +{
+> +       struct clk_hw *hw;
+> +       int err;
+> +
+> +       pll_clk->base = sys_base;
+> +       hw = &pll_clk->hw;
+> +
+> +       err = clk_hw_register(NULL, hw);
+> +       if (err)
+> +               return ERR_PTR(err);
+> +
+> +       return hw;
+> +}
+> +
+> +static void bm1880_clk_unregister_pll(struct clk_hw *hw)
+> +{
+> +       struct bm1880_pll_hw_clock *pll_hw = to_bm1880_pll_clk(hw);
+> +
+> +       clk_hw_unregister(hw);
+> +       kfree(pll_hw);
+> +}
+> +
+> +static int bm1880_clk_register_plls(struct bm1880_pll_hw_clock *clks,
+> +                            int num_clks, struct bm1880_clock_data *data)
+> +{
+> +       struct clk_hw *hw;
+> +       void __iomem *pll_base = data->pll_base;
+> +       int i;
+> +
+> +       for (i = 0; i < num_clks; i++) {
+> +               struct bm1880_pll_hw_clock *bm1880_clk = &clks[i];
+> +
+> +               hw = bm1880_clk_register_pll(bm1880_clk, pll_base);
+> +               if (IS_ERR(hw)) {
+> +                       pr_err("%s: failed to register clock %s\n",
+> +                              __func__, bm1880_clk->pll.name);
+> +                       goto err_clk;
+> +               }
+> +
+> +               data->clk_data->hws[clks[i].pll.id] = hw;
+> +       }
+> +
+> +       return 0;
+> +
+> +err_clk:
+> +       while (i--)
+> +               bm1880_clk_unregister_pll(data->clk_data->hws[clks[i].pll.id]);
+> +
+> +       return PTR_ERR(hw);
+> +}
+> +
+> +static int bm1880_clk_register_mux(const struct bm1880_mux_clock *clks,
+> +                           int num_clks, struct bm1880_clock_data *data)
+> +{
+> +       struct clk_hw *hw;
+> +       void __iomem *sys_base = data->sys_base;
+> +       int i;
+> +
+> +       for (i = 0; i < num_clks; i++) {
+> +               hw = clk_hw_register_mux(NULL, clks[i].name,
+> +                                        clks[i].parents,
+> +                                        clks[i].num_parents,
+> +                                        clks[i].flags,
+> +                                        sys_base + clks[i].reg,
+> +                                        clks[i].shift, 1, 0,
+> +                                        &bm1880_clk_lock);
+> +               if (IS_ERR(hw)) {
+> +                       pr_err("%s: failed to register clock %s\n",
+> +                              __func__, clks[i].name);
+> +                       goto err_clk;
+> +               }
+> +
+> +               data->clk_data->hws[clks[i].id] = hw;
+> +       }
+> +
+> +       return 0;
+> +
+> +err_clk:
+> +       while (i--)
+> +               clk_hw_unregister_mux(data->clk_data->hws[clks[i].id]);
+> +
+> +       return PTR_ERR(hw);
+> +}
+> +
+> +static unsigned long bm1880_clk_div_recalc_rate(struct clk_hw *hw,
+> +                                               unsigned long parent_rate)
+> +{
+> +       struct bm1880_div_hw_clock *div_hw = to_bm1880_div_clk(hw);
+> +       struct bm1880_div_clock *div = &div_hw->div;
+> +       void __iomem *reg_addr = div_hw->base + div->reg;
+> +       unsigned int val;
+> +       unsigned long rate;
+> +
+> +       if (!(readl(reg_addr) & BIT(3))) {
+> +               val = div->initval;
+> +       } else {
+> +               val = readl(reg_addr) >> div->shift;
+> +               val &= clk_div_mask(div->width);
+> +       }
+> +
+> +       rate = divider_recalc_rate(hw, parent_rate, val, div->table,
+> +                                  div->flags, div->width);
+> +
+> +       return rate;
+> +}
+> +
+> +static long bm1880_clk_div_round_rate(struct clk_hw *hw, unsigned long rate,
+> +                                     unsigned long *prate)
+> +{
+> +       struct bm1880_div_hw_clock *div_hw = to_bm1880_div_clk(hw);
+> +       struct bm1880_div_clock *div = &div_hw->div;
+> +       void __iomem *reg_addr = div_hw->base + div->reg;
+> +
+> +       if (div->flags & CLK_DIVIDER_READ_ONLY) {
+> +               u32 val;
+> +
+> +               val = readl(reg_addr) >> div->shift;
+> +               val &= clk_div_mask(div->width);
+> +
+> +               return divider_ro_round_rate(hw, rate, prate, div->table,
+> +                                            div->width, div->flags,
+> +                                            val);
+> +       }
+> +
+> +       return divider_round_rate(hw, rate, prate, div->table,
+> +                                 div->width, div->flags);
+> +}
+> +
+> +static int bm1880_clk_div_set_rate(struct clk_hw *hw, unsigned long rate,
+> +                                  unsigned long parent_rate)
+> +{
+> +       struct bm1880_div_hw_clock *div_hw = to_bm1880_div_clk(hw);
+> +       struct bm1880_div_clock *div = &div_hw->div;
+> +       void __iomem *reg_addr = div_hw->base + div->reg;
+> +       unsigned long flags = 0;
+> +       int value;
+> +       u32 val;
+> +
+> +       value = divider_get_val(rate, parent_rate, div->table,
+> +                               div->width, div_hw->div.flags);
+> +       if (value < 0)
+> +               return value;
+> +
+> +       if (div_hw->lock)
+> +               spin_lock_irqsave(div_hw->lock, flags);
+> +       else
+> +               __acquire(div_hw->lock);
+> +
+> +       if (div->flags & CLK_DIVIDER_HIWORD_MASK) {
+
+Is this used by your driver? As far as I can recall it was a
+rockchip/hisilicon specific thing that hasn't happened since.
+
+> +               val = clk_div_mask(div->width) << (div_hw->div.shift + 16);
+> +       } else {
+> +               val = readl(reg_addr);
+> +               val &= ~(clk_div_mask(div->width) << div_hw->div.shift);
+> +       }
+> +       val |= (u32)value << div->shift;
+> +       writel(val, reg_addr);
+> +
+> +       if (div_hw->lock)
+> +               spin_unlock_irqrestore(div_hw->lock, flags);
+> +       else
+> +               __release(div_hw->lock);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct clk_ops bm1880_clk_div_ops = {
+> +       .recalc_rate = bm1880_clk_div_recalc_rate,
+> +       .round_rate = bm1880_clk_div_round_rate,
+> +       .set_rate = bm1880_clk_div_set_rate,
+> +};
+> +
+> +static struct clk_hw *bm1880_clk_register_div(struct bm1880_div_hw_clock *div_clk,
+> +                                   void __iomem *sys_base)
+> +{
+> +       struct clk_hw *hw;
+> +       int err;
+> +
+> +       div_clk->div.flags = CLK_DIVIDER_ONE_BASED | CLK_DIVIDER_ALLOW_ZERO;
+> +       div_clk->base = sys_base;
+> +       div_clk->lock = &bm1880_clk_lock;
+> +
+> +       hw = &div_clk->hw;
+> +       err = clk_hw_register(NULL, hw);
+> +       if (err)
+> +               return ERR_PTR(err);
+> +
+> +       return hw;
+> +}
+> +
+> +static void bm1880_clk_unregister_div(struct clk_hw *hw)
+> +{
+> +       struct bm1880_div_hw_clock *div_hw = to_bm1880_div_clk(hw);
+> +
+> +       clk_hw_unregister(hw);
+> +       kfree(div_hw);
+> +}
+> +
+> +static int bm1880_clk_register_divs(struct bm1880_div_hw_clock *clks,
+> +                            int num_clks, struct bm1880_clock_data *data)
+> +{
+> +       struct clk_hw *hw;
+> +       void __iomem *sys_base = data->sys_base;
+> +       int i;
+> +
+> +       for (i = 0; i < num_clks; i++) {
+> +               struct bm1880_div_hw_clock *bm1880_clk = &clks[i];
+> +
+> +               hw = bm1880_clk_register_div(bm1880_clk, sys_base);
+> +               if (IS_ERR(hw)) {
+> +                       pr_err("%s: failed to register clock %s\n",
+> +                              __func__, bm1880_clk->div.name);
+> +                       goto err_clk;
+> +               }
+> +
+> +               data->clk_data->hws[clks[i].div.id] = hw;
+
+This line is overly complicated. Please use local variables.
+
+> +       }
+> +
+> +       return 0;
+> +
+> +err_clk:
+> +       while (i--)
+> +               bm1880_clk_unregister_div(data->clk_data->hws[clks[i].div.id]);
+> +
+> +       return PTR_ERR(hw);
+> +}
+> +
+> +static int bm1880_clk_register_gate(const struct bm1880_gate_clock *clks,
+> +                            int num_clks, struct bm1880_clock_data *data)
+> +{
+> +       struct clk_hw *hw;
+> +       void __iomem *sys_base = data->sys_base;
+> +       int i;
+> +
+> +       for (i = 0; i < num_clks; i++) {
+> +               hw = clk_hw_register_gate(NULL, clks[i].name,
+> +                                         clks[i].parent,
+> +                                         clks[i].flags,
+> +                                         sys_base + clks[i].gate_reg,
+> +                                         clks[i].gate_shift,
+> +                                       0,
+> +                                       &bm1880_clk_lock);
+
+Weird tabs here.
+
+> +               if (IS_ERR(hw)) {
+> +                       pr_err("%s: failed to register clock %s\n",
+> +                              __func__, clks[i].name);
+> +                       goto err_clk;
+> +               }
+> +
+> +               data->clk_data->hws[clks[i].id] = hw;
+> +       }
+> +
+> +       return 0;
+> +
+> +err_clk:
+> +       while (i--)
+> +               clk_hw_unregister_gate(data->clk_data->hws[clks[i].id]);
+> +
+> +       return PTR_ERR(hw);
+> +}
+> +
+> +static struct clk_hw *bm1880_clk_register_composite(struct bm1880_composite_clock *clks,
+> +                                         void __iomem *sys_base)
+> +{
+> +       struct clk_hw *hw;
+> +       struct clk_mux *mux = NULL;
+> +       struct clk_gate *gate = NULL;
+> +       struct bm1880_div_hw_clock *div_hws = NULL;
+> +       struct clk_hw *mux_hw = NULL, *gate_hw = NULL, *div_hw = NULL;
+> +       const struct clk_ops *mux_ops = NULL, *gate_ops = NULL, *div_ops = NULL;
+> +       const char * const *parent_names;
+> +       const char *parent;
+> +       int num_parents;
+> +       int ret;
+> +
+> +       if (clks->mux_shift >= 0) {
+> +               mux = kzalloc(sizeof(*mux), GFP_KERNEL);
+> +               if (!mux)
+> +                       return ERR_PTR(-ENOMEM);
+> +
+> +               mux->reg = sys_base + clks->mux_reg;
+> +               mux->mask = 1;
+> +               mux->shift = clks->mux_shift;
+> +               mux_hw = &mux->hw;
+> +               mux_ops = &clk_mux_ops;
+> +               mux->lock = &bm1880_clk_lock;
+> +
+> +               parent_names = clks->parents;
+> +               num_parents = clks->num_parents;
+> +       } else {
+> +               parent = clks->parent;
+> +               parent_names = &parent;
+> +               num_parents = 1;
+> +       }
+> +
+> +       if (clks->gate_shift >= 0) {
+> +               gate = kzalloc(sizeof(*gate), GFP_KERNEL);
+> +               if (!gate) {
+> +                       ret = -ENOMEM;
+> +                       goto err_out;
+> +               }
+> +
+> +               gate->reg = sys_base + clks->gate_reg;
+> +               gate->bit_idx = clks->gate_shift;
+> +               gate->lock = &bm1880_clk_lock;
+> +
+> +               gate_hw = &gate->hw;
+> +               gate_ops = &clk_gate_ops;
+> +       }
+> +
+> +       if (clks->div_shift >= 0) {
+> +               div_hws = kzalloc(sizeof(*div_hws), GFP_KERNEL);
+> +               if (!div_hws) {
+> +                       ret = -ENOMEM;
+> +                       goto err_out;
+> +               }
+> +
+> +               div_hws->base = sys_base;
+> +               div_hws->div.reg = clks->div_reg;
+> +               div_hws->div.shift = clks->div_shift;
+> +               div_hws->div.width = clks->div_width;
+> +               div_hws->div.table = clks->table;
+> +               div_hws->div.initval = clks->div_initval;
+> +               div_hws->lock = &bm1880_clk_lock;
+> +               div_hws->div.flags = CLK_DIVIDER_ONE_BASED |
+> +                                    CLK_DIVIDER_ALLOW_ZERO;
+> +
+> +               div_hw = &div_hws->hw;
+> +               div_ops = &bm1880_clk_div_ops;
+> +       }
+> +
+> +       hw = clk_hw_register_composite(NULL, clks->name, parent_names,
+> +                                      num_parents, mux_hw, mux_ops, div_hw,
+> +                                      div_ops, gate_hw, gate_ops,
+> +                                      clks->flags);
+> +
+
+All of these need to be removed on probe failure. Any plans to do so?
+
+> +       if (IS_ERR(hw)) {
+> +               ret = PTR_ERR(hw);
+> +               goto err_out;
+> +       }
+> +
+> +       return hw;
+> +
+> +err_out:
+> +       kfree(div_hws);
+> +       kfree(gate);
+> +       kfree(mux);
+> +
+> +       return ERR_PTR(ret);
+> +}
+> +
+> +static int bm1880_clk_register_composites(struct bm1880_composite_clock *clks,
+> +                                  int num_clks, struct bm1880_clock_data *data)
+> +{
+> +       struct clk_hw *hw;
+> +       void __iomem *sys_base = data->sys_base;
+> +       int i;
+> +
+> +       for (i = 0; i < num_clks; i++) {
+> +               struct bm1880_composite_clock *bm1880_clk = &clks[i];
+> +
+> +               hw = bm1880_clk_register_composite(bm1880_clk, sys_base);
+> +               if (IS_ERR(hw)) {
+> +                       pr_err("%s: failed to register clock %s\n",
+> +                              __func__, bm1880_clk->name);
+> +                       goto err_clk;
+> +               }
+> +
+> +               data->clk_data->hws[clks[i].id] = hw;
+> +       }
+> +
+> +       return 0;
+> +
+> +err_clk:
+> +       while (i--)
+> +               clk_hw_unregister_composite(data->clk_data->hws[clks[i].id]);
+> +
+> +       return PTR_ERR(hw);
+> +}
+> +
+> +static int bm1880_clk_probe(struct platform_device *pdev)
+> +{
+> +       struct bm1880_clock_data *clk_data;
+> +       void __iomem *pll_base, *sys_base;
+> +       struct device_node *np = pdev->dev.of_node;
+> +       struct device *dev = &pdev->dev;
+> +       struct resource *res;
+> +       struct clk_hw_onecell_data *clk_hw_data;
+> +       int num_clks, i;
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       pll_base = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(pll_base))
+> +               return PTR_ERR(pll_base);
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +       sys_base = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(sys_base))
+> +               return PTR_ERR(sys_base);
+> +
+> +       clk_data = devm_kzalloc(dev, sizeof(*clk_data), GFP_KERNEL);
+> +       if (!clk_data)
+> +               return -ENOMEM;
+> +
+> +       clk_data->pll_base = pll_base;
+> +       clk_data->sys_base = sys_base;
+> +
+> +       num_clks = ARRAY_SIZE(bm1880_pll_clks) +
+> +                  ARRAY_SIZE(bm1880_div_clks) +
+> +                  ARRAY_SIZE(bm1880_mux_clks) +
+> +                  ARRAY_SIZE(bm1880_composite_clks) +
+> +                  ARRAY_SIZE(bm1880_gate_clks);
+> +
+> +       clk_hw_data = devm_kzalloc(&pdev->dev, struct_size(clk_hw_data, hws,
+> +                                         num_clks), GFP_KERNEL);
+> +       if (!clk_hw_data)
+> +               return -ENOMEM;
+> +
+> +       clk_data->clk_data = clk_hw_data;
+> +
+> +       for (i = 0; i < num_clks; i++)
+> +               clk_data->clk_data->hws[i] = ERR_PTR(-ENOENT);
+> +
+> +       clk_data->clk_data->num = num_clks;
+> +
+> +       bm1880_clk_register_plls(bm1880_pll_clks,
+> +                                ARRAY_SIZE(bm1880_pll_clks),
+> +                                clk_data);
+> +
+> +       bm1880_clk_register_divs(bm1880_div_clks,
+> +                                ARRAY_SIZE(bm1880_div_clks),
+> +                                clk_data);
+> +
+> +       bm1880_clk_register_mux(bm1880_mux_clks,
+> +                               ARRAY_SIZE(bm1880_mux_clks),
+> +                               clk_data);
+> +
+> +       bm1880_clk_register_composites(bm1880_composite_clks,
+> +                                      ARRAY_SIZE(bm1880_composite_clks),
+> +                                      clk_data);
+> +
+> +       bm1880_clk_register_gate(bm1880_gate_clks,
+> +                                ARRAY_SIZE(bm1880_gate_clks),
+> +                                clk_data);
+> +
+> +       return of_clk_add_hw_provider(np, of_clk_hw_onecell_get,
+
+Can you use devm_of_clk_add_hw_provider()?
+
+> +                                     clk_data->clk_data);
+> +}
