@@ -1,26 +1,58 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: etnaviv: Add #cooling-cells
-Date: Wed, 18 Sep 2019 08:33:33 -0500
-Message-ID: <20190918133333.GA21684@bogus>
-References: <cover.1568255903.git.agx@sigxcpu.org>
- <6e9d761598b2361532146f43161fd05f3eee6545.1568255903.git.agx@sigxcpu.org>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v7 03/13] software node: Make argument to to_software_node const
+Date: Wed, 18 Sep 2019 16:34:09 +0300
+Message-ID: <20190918133419.7969-4-sakari.ailus@linux.intel.com>
+References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6e9d761598b2361532146f43161fd05f3eee6545.1568255903.git.agx@sigxcpu.org>
+In-Reply-To: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: "To : Lucas Stach" <l.stach@pengutronix.de>, Russell King <linux+etnaviv@armlinux.org.uk>, Christian Gmeiner <christian.gmeiner@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, "Angus Ainslie (Purism)" <angus@akkea.ca>, etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradea
+To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 11 Sep 2019 19:40:36 -0700, =?UTF-8?q?Guido=20G=C3=BCnther?= wrote:
-> Add #cooling-cells for when the gpu acts as a cooling device.
-> 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> ---
->  .../devicetree/bindings/display/etnaviv/etnaviv-drm.txt          | 1 +
->  1 file changed, 1 insertion(+)
-> 
+to_software_node() does not need to modify the fwnode_handle it operates
+on; therefore make it const. This allows passing a const fwnode_handle to
+to_software_node().
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/base/swnode.c    | 4 ++--
+ include/linux/property.h | 3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index a7cb41812cfda..951e7efd47c23 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -71,9 +71,9 @@ software_node_to_swnode(const struct software_node *node)
+ 	return swnode;
+ }
+ 
+-const struct software_node *to_software_node(struct fwnode_handle *fwnode)
++const struct software_node *to_software_node(const struct fwnode_handle *fwnode)
+ {
+-	struct swnode *swnode = to_swnode(fwnode);
++	const struct swnode *swnode = to_swnode(fwnode);
+ 
+ 	return swnode ? swnode->node : NULL;
+ }
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 5a910ad795910..421c76e53708d 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -418,7 +418,8 @@ struct software_node {
+ };
+ 
+ bool is_software_node(const struct fwnode_handle *fwnode);
+-const struct software_node *to_software_node(struct fwnode_handle *fwnode);
++const struct software_node *
++to_software_node(const struct fwnode_handle *fwnode);
+ struct fwnode_handle *software_node_fwnode(const struct software_node *node);
+ 
+ int software_node_register_nodes(const struct software_node *nodes);
+-- 
+2.20.1
