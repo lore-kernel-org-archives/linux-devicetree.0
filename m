@@ -1,112 +1,114 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 2/2] ptp: Add a ptp clock driver for IDT ClockMatrix.
-Date: Wed, 18 Sep 2019 23:18:03 +0200
-Message-ID: <20190918211803.GO9591@lunn.ch>
-References: <1568837198-27211-1-git-send-email-vincent.cheng.xh@renesas.com>
- <1568837198-27211-2-git-send-email-vincent.cheng.xh@renesas.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v4 1/9] dt-bindings: display: renesas,cmm: Add R-Car CMM
+ documentation
+Date: Thu, 19 Sep 2019 01:08:49 +0300
+Message-ID: <20190918220849.GA10104@pendragon.ideasonboard.com>
+References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
+ <20190906135436.10622-2-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1568837198-27211-2-git-send-email-vincent.cheng.xh@renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: vincent.cheng.xh@renesas.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, richardcochran@gmail.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190906135436.10622-2-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org, horms@verge.net.au, uli+renesas@fpond.eu, VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie, daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp, Harsha.ManjulaMallikarjun@in.bosch.com, linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 04:06:38PM -0400, vincent.cheng.xh@renesas.com wrote:
-> From: Vincent Cheng <vincent.cheng.xh@renesas.com>
+Hi Jacopo,
+
+Thank you for the patch.
+
+On Fri, Sep 06, 2019 at 03:54:28PM +0200, Jacopo Mondi wrote:
+> Add device tree bindings documentation for the Renesas R-Car Display
+> Unit Color Management Module.
 > 
-> The IDT ClockMatrix (TM) family includes integrated devices that provide
-> eight PLL channels.  Each PLL channel can be independently configured as a
-> frequency synthesizer, jitter attenuator, digitally controlled
-> oscillator (DCO), or a digital phase lock loop (DPLL).  Typically
-> these devices are used as timing references and clock sources for PTP
-> applications.  This patch adds support for the device.
+> CMM is the image enhancement module available on each R-Car DU video
+> channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
 > 
-> Co-developed-by: Richard Cochran <richardcochran@gmail.com>
-> Signed-off-by: Richard Cochran <richardcochran@gmail.com>
-> Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-Hi Vincent 
+With the small issues pointed out by Kieran and Rob fixed,
 
-> +static s32 idtcm_xfer(struct idtcm *idtcm,
-> +		      u8 regaddr,
-> +		      u8 *buf,
-> +		      u16 count,
-> +		      bool write)
-> +{
-> +	struct i2c_client *client = idtcm->client;
-> +	struct i2c_msg msg[2];
-> +	s32 cnt;
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  .../bindings/display/renesas,cmm.yaml         | 64 +++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/renesas,cmm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/renesas,cmm.yaml b/Documentation/devicetree/bindings/display/renesas,cmm.yaml
+> new file mode 100644
+> index 000000000000..9e5922689cd7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/renesas,cmm.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/renesas,cmm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	msg[0].addr = client->addr;
-> +	msg[0].flags = 0;
-> +	msg[0].len = 1;
-> +	msg[0].buf = &regaddr;
+> +title: Renesas R-Car Color Management Module (CMM)
 > +
-> +	msg[1].addr = client->addr;
-> +	msg[1].flags = write ? 0 : I2C_M_RD;
-> +	msg[1].len = count;
-> +	msg[1].buf = buf;
+> +maintainers:
+> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +  - Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> +  - Jacopo Mondi <jacopo+renesas@jmondi.org>
 > +
-> +	cnt = i2c_transfer(client->adapter, msg, 2);
+> +description: |+
+> +  Renesas R-Car color management module connected to R-Car DU video channels.
+> +  It provides image enhancement functions such as 1-D look-up tables (LUT),
+> +  3-D look-up tables (CMU), 1D-histogram generation (HGO), and color
+> +  space conversion (CSC).
 > +
-> +	if (cnt < 0) {
-> +		pr_err("i2c_transfer returned %d\n", cnt);
-
-dev_err(client->dev, "i2c_transfer returned %d\n", cnt);
-
-We then have an idea which device has a transfer error.
-
-Please try to not use pr_err() when you have some sort of device.
-
-
-> +static s32 idtcm_state_machine_reset(struct idtcm *idtcm)
-> +{
-> +	s32 err;
-> +	u8 byte = SM_RESET_CMD;
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - renesas,r8a7795-cmm
+> +        - renesas,r8a7796-cmm
+> +        - renesas,r8a77965-cmm
+> +        - renesas,r8a77990-cmm
+> +        - renesas,r8a77995-cmm
+> +      - enum:
+> +        - renesas,rcar-gen3-cmm
+> +        - renesas,rcar-gen2-cmm
+> +  reg:
+> +    maxItems: 1
 > +
-> +	err = idtcm_write(idtcm, RESET_CTRL, SM_RESET, &byte, sizeof(byte));
+> +  clocks:
+> +    maxItems: 1
 > +
-> +	if (!err) {
-> +		/* delay */
-> +		set_current_state(TASK_INTERRUPTIBLE);
-> +		schedule_timeout(_msecs_to_jiffies(POST_SM_RESET_DELAY_MS));
-
-Maybe use msleep_interruptable()? 
-
-> +	}
+> +  resets:
+> +    maxItems: 1
 > +
-> +	return err;
-> +}
+> +  power-domains:
+> +    maxItems: 1
 > +
-> +static s32 idtcm_load_firmware(struct idtcm *idtcm,
-> +			       struct device *dev)
-> +{
-> +	const struct firmware *fw;
-> +	struct idtcm_fwrc *rec;
-> +	u32 regaddr;
-> +	s32 err;
-> +	s32 len;
-> +	u8 val;
-> +	u8 loaddr;
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - resets
+> +  - power-domains
 > +
-> +	pr_info("requesting firmware '%s'\n", FW_FILENAME);
-
-dev_debug()
-
+> +additionalProperties: false
 > +
-> +	err = request_firmware(&fw, FW_FILENAME, dev);
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/r8a7796-cpg-mssr.h>
+> +    #include <dt-bindings/power/r8a7796-sysc.h>
 > +
-> +	if (err)
-> +		return err;
-> +
-> +	pr_info("firmware size %zu bytes\n", fw->size);
+> +    cmm0: cmm@fea40000 {
+> +         compatible = "renesas,r8a7796-cmm";
+> +         reg = <0 0xfea40000 0 0x1000>;
+> +         power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> +         clocks = <&cpg CPG_MOD 711>;
+> +         resets = <&cpg 711>;
+> +    };
 
-dev_debug()
+-- 
+Regards,
 
-Maybe look through all your pr_info and downgrade most of them to
-dev_debug()
-
-	Andrew
+Laurent Pinchart
