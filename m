@@ -1,75 +1,42 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v1 2/2] spi: cadence-qspi: Add QSPI support for Intel LGM
- SoC
-Date: Wed, 18 Sep 2019 13:08:48 +0100
-Message-ID: <20190918120846.GH2596@sirena.co.uk>
-References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190916073843.39618-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190916113255.GA4352@sirena.co.uk>
- <466b41c1-3d65-0bf4-6db7-d3b3e06b107b@linux.intel.com>
- <20190917153650.GF3524@sirena.co.uk>
- <eeefa79b-0a3b-5d62-3a1b-c1e9dcb03aa7@linux.intel.com>
+From: Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: [PATCH 0/3] reset: meson: add Meson-A1 SoC support
+Date: Wed, 18 Sep 2019 20:12:24 +0800
+Message-ID: <1568808746-1153-1-git-send-email-xingyu.chen@amlogic.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oPmsXEqKQNHCSXW7"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <eeefa79b-0a3b-5d62-3a1b-c1e9dcb03aa7@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Ramuthevar, Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree@vger.kernel.org, Hanjie Lin <hanjie.lin@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Xingyu Chen <xingyu.chen@amlogic.com>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+This patchset adds support for Meson-A1 SoC Reset Controller. A new struct
+meson_reset_param is introduced to describe the register differences between
+Meson-A1 and previous SoCs
 
---oPmsXEqKQNHCSXW7
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patchset is based on A1 DTBv4[1].
+[1] https://lore.kernel.org/linux-amlogic/1568276370-54181-1-git-send-email-jianxin.pan@amlogic.com
 
-On Wed, Sep 18, 2019 at 01:59:06PM +0800, Ramuthevar, Vadivel MuruganX wrot=
-e:
-> On 17/9/2019 11:36 PM, Mark Brown wrote:
-> > On Tue, Sep 17, 2019 at 10:11:28AM +0800, Ramuthevar, Vadivel MuruganX =
-wrote:
+Xingyu Chen (3):
+  arm64: dts: meson: add reset controller for Meson-A1 SoC
+  dt-bindings: reset: add bindings for the Meson-A1 SoC Reset Controller
+  reset: add support for the Meson-A1 SoC Reset Controller
 
-> > > *=A0=A0=A0 spi-cadence.c* in *drivers/spi/*, which supports very old =
-legacy
-> > > cadence-spi based devices(normal)
-> > > *=A0=A0=A0 cadence-quadspi.c(drivers/mtd/spi-nor/)* : specific suppor=
-t to SPI-NOR
-> > > flash with new spi-nor layer.
-> > >  =A0=A0=A0 all the API's in this driver purely on spi-nor specific, s=
-o couldn't
-> > > proceed to adapt.
+ .../bindings/reset/amlogic,meson-reset.txt         |  4 +-
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |  6 +++
+ drivers/reset/reset-meson.c                        | 35 ++++++++++---
+ include/dt-bindings/reset/amlogic,meson-a1-reset.h | 59 ++++++++++++++++++++++
+ 4 files changed, 95 insertions(+), 9 deletions(-)
+ create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
 
-> > Are these completely separate IPs or are they just different versions of
-> > the same IP?
-
-> These are same IPs , but different features Enabled/Disabled depends upon
-> the SoC vendors.
-
-> for e.g: Intel LGM SoC uses the same IP, but without DMA and Direct access
-> controller.
-
-> also dedicated support to flash devices.
-
-If it's different versions of the same IP then everything should be in
-one driver with the optional features enabled depending on what's in a
-given system.
-
---oPmsXEqKQNHCSXW7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2CHk0ACgkQJNaLcl1U
-h9Duggf/UlIeAX6UQNcW0YdFNuwqat0JWT+iz9wojEIWynEPLQj26Zh5zXSa6B4F
-tIJd1JvLU9o7A2VFxTUf2H3WZCYoWuHLXKIKWZfutmabb87KoPRI7B8QaOKy1bGe
-oJEsKY4AjDv+UnEZo6kNZN7+i7VzpHtBjjg/huoyvLhcVe16a5ScecMKNSA8paQj
-JusD7wK1Iub9V+h6Px1n+lb/y+AUc4VXFtzSb/sEgrVAzLBxkoTID5RDFTBRQK0P
-K/U30jwLyJjYxD6HBz0Dq8CBdXhg1FYUSURWo/tSSSb+8aSNO3yW2NNZ50BnHVSo
-NaPNX7zL7BebDSOMEYBZCGNv8XRFYQ==
-=b6Nh
------END PGP SIGNATURE-----
-
---oPmsXEqKQNHCSXW7--
+-- 
+2.7.4
