@@ -1,90 +1,151 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Convert Samsung SoC watchdog
- bindings to json-schema
-Date: Wed, 18 Sep 2019 13:26:29 +0200
-Message-ID: <CAJKOXPfsUw-+yRc=GF+t=1pE7D3dF_wpRUwZpmfLnRbDyEmKeQ@mail.gmail.com>
-References: <20190907144541.16949-1-krzk@kernel.org> <20190912170145.GA17889@bogus>
+Subject: Re: [RFC PATCH 2/2] dt-bindings: pwm: Convert Samsung PWM bindings to json-schema
+Date: Wed, 18 Sep 2019 13:53:56 +0200
+Message-ID: <CAJKOXPeGMZhCNkKa73gE42baJUim3QtQiV_fRm=j7xL9bb1nFw@mail.gmail.com>
+References: <20190909183436.9045-1-krzk@kernel.org> <20190909183436.9045-2-krzk@kernel.org>
+ <20190912175001.GA29884@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190912170145.GA17889@bogus>
+In-Reply-To: <20190912175001.GA29884@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maciej Falkowski <m.falkowski@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On Fri, 13 Sep 2019 at 16:36, Rob Herring <robh@kernel.org> wrote:
 >
-> On Sat, Sep 07, 2019 at 04:45:40PM +0200, Krzysztof Kozlowski wrote:
-> > Convert Samsung S3C/S5P/Exynos watchdog bindings to DT schema format
-> > using json-schema.
+> On Mon, Sep 09, 2019 at 08:34:36PM +0200, Krzysztof Kozlowski wrote:
+> > Convert Samsung PWM (S3C, S5P and Exynos SoCs) bindings to DT schema
+> > format using json-schema.
 > >
 > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > > ---
-> >  .../bindings/watchdog/samsung-wdt.txt         | 35 ----------
-> >  .../bindings/watchdog/samsung-wdt.yaml        | 69 +++++++++++++++++++
-> >  2 files changed, 69 insertions(+), 35 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-> >  create mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
+> >  .../devicetree/bindings/pwm/pwm-samsung.txt   |  51 --------
+> >  .../devicetree/bindings/pwm/pwm-samsung.yaml  | 111 ++++++++++++++++++
+> >  2 files changed, 111 insertions(+), 51 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.txt
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
 >
 >
-> > diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
 > > new file mode 100644
-> > index 000000000000..39f1ca3bc4db
+> > index 000000000000..90fb467bcdd5
 > > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> > @@ -0,0 +1,69 @@
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+> > @@ -0,0 +1,111 @@
 > > +# SPDX-License-Identifier: GPL-2.0
 > > +%YAML 1.2
 > > +---
-> > +$id: http://devicetree.org/schemas/watchdog/samsung-wdt.yaml#
+> > +$id: http://devicetree.org/schemas/pwm/pwm-samsung.yaml#
 > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > > +
-> > +title: Samsung SoC Watchdog Timer Controller
+> > +title: Samsung SoC PWM timers
 > > +
 > > +maintainers:
+> > +  - Thierry Reding <thierry.reding@gmail.com>
 > > +  - Krzysztof Kozlowski <krzk@kernel.org>
 > > +
 > > +description: |+
-> > +  The Samsung's Watchdog controller is used for resuming system operation
-> > +  after a preset amount of time during which the WDT reset event has not
-> > +  occurred.
+> > +  Samsung SoCs contain PWM timer blocks which can be used for system clock source
+> > +  and clock event timers, as well as to drive SoC outputs with PWM signal. Each
+> > +  PWM timer block provides 5 PWM channels (not all of them can drive physical
+> > +  outputs - see SoC and board manual).
+> > +
+> > +  Be aware that the clocksource driver supports only uniprocessor systems.
+> > +
+> > +allOf:
+> > +  - $ref: pwm.yaml#
 > > +
 > > +properties:
 > > +  compatible:
 > > +    enum:
-> > +      - samsung,s3c2410-wdt                   # for S3C2410
-> > +      - samsung,s3c6410-wdt                   # for S3C6410, S5PV210 and Exynos4
-> > +      - samsung,exynos5250-wdt                # for Exynos5250
-> > +      - samsung,exynos5420-wdt                # for Exynos5420
-> > +      - samsung,exynos7-wdt                   # for Exynos7
+> > +      - samsung,s3c2410-pwm             # 16-bit, S3C24xx
+> > +      - samsung,s3c6400-pwm             # 32-bit, S3C64xx
+> > +      - samsung,s5p6440-pwm             # 32-bit, S5P64x0
+> > +      - samsung,s5pc100-pwm             # 32-bit, S5PC100, S5PV210, Exynos4210 rev0 SoCs
+> > +      - samsung,exynos4210-pwm          # 32-bit, Exynos
 > > +
 > > +  reg:
 > > +    maxItems: 1
 > > +
+> > +  clocks:
+> > +    minItems: 1
+> > +    maxItems: 3
+> > +
+> > +  clock-names:
+> > +    description: |
+> > +      Should contain all following required clock names:
+> > +      - "timers" - PWM base clock used to generate PWM signals,
+> > +      and any subset of following optional clock names:
+> > +      - "pwm-tclk0" - first external PWM clock source,
+> > +      - "pwm-tclk1" - second external PWM clock source.
+> > +      Note that not all IP variants allow using all external clock sources.
+> > +      Refer to SoC documentation to learn which clock source configurations
+> > +      are available.
+> > +    oneOf:
+> > +      - items:
+> > +        - const: "timers"
+> > +      - items:
+> > +        - const: "timers"
+> > +        - const: "pwm-tclk0"
+> > +      - items:
+> > +        - const: "timers"
+> > +        - const: "pwm-tclk1"
+> > +      - items:
+> > +        - const: "timers"
+> > +        - const: "pwm-tclk0"
+> > +        - const: "pwm-tclk1"
+> > +
 > > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  samsung,syscon-phandle:
-> > +    $ref: '/schemas/types.yaml#/definitions/phandle'
 > > +    description:
-> > +      Phandle to the PMU system controller node (in case of Exynos5250
-> > +      and Exynos5420).
+> > +      One interrupt per timer, starting at timer 0.
+> > +    minItems: 1
+> > +    maxItems: 5
 > > +
-> > +  timeout-sec:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +  "#pwm-cells":
 > > +    description:
-> > +      Watchdog timeout in seconds.
+> > +      The only third cell flag supported by this binding
+> > +      is PWM_POLARITY_INVERTED.
+> > +    const: 3
+> > +
+> > +  samsung,pwm-outputs:
+> > +    description:
+> > +      A list of PWM channels used as PWM outputs on particular platform.
+> > +      It is an array of up to 5 elements being indices of PWM channels
+> > +      (from 0 to 4), the order does not matter.
+> > +    # TODO: Values should not repeat
 >
-> We need a common schema for this and the node name.
+> uniqueItems: true
+>
+> Though it looks like we have to enable that keyword. (As silently
+> ignoring unknown keywords (such as typos) is 'feature' of json-schema,
+> we explicitly list keywords we use.)
 
-Common schema in dt-schema or in Linux kernel bindings? If the latter,
-I can add it.
+This works fine.
 
-> Also note that anything with a unit suffix already has a type
-> definition, so we don't really need to define it again.
+>
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +      # FIXME: min/max limit of items does not work
+> > +      - items:
+> > +          minItems: 1
+> > +          maxItems: 5
+> > +      - items:
+> > +          minimum: 0
+> > +          maximum: 4
+>
+> I think you want:
+>
+> minItems: 1
+> maxItems: 2
+> items:
+>   minimum: 0
+>   maximum: 4
 
-Right.
+This not. However I figured out it is not needed. Since these are
+unique values from 0 to 4, then the size of array cannot be longer
+than 5 or shorter than 1.
 
 Best regards,
 Krzysztof
