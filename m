@@ -1,102 +1,48 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 08/11] dt-bindings: arm: samsung: Convert Exynos System
- Registers bindings to json-schema
-Date: Wed, 18 Sep 2019 15:07:38 +0200
-Message-ID: <CAJKOXPfFS5bA_OK4Zw_2e3T2MEuNETdcBMLMhGRHC-_UYvsLfA@mail.gmail.com>
-References: <20190907092007.9946-1-krzk@kernel.org> <20190907092007.9946-8-krzk@kernel.org>
- <20190918123654.GA318@bogus>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v6 01/12] tools lib traceevent: Convert remaining %p[fF]
+ users to %p[sS]
+Date: Wed, 18 Sep 2019 16:08:37 +0300
+Message-ID: <20190918130837.GQ5781@paasikivi.fi.intel.com>
+References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
+ <20190910084707.18380-2-sakari.ailus@linux.intel.com>
+ <20190910071837.2e9110f8@oasis.local.home>
+ <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
+ <20190910142621.0bec208d@oasis.local.home>
+ <c458e734f5777561138b87228384808398547762.camel@perches.com>
+ <20190910150303.5a0d3904@oasis.local.home>
+ <c90c33b421c0fa0db5182d0f58c6ba6e86cf1622.camel@perches.com>
+ <20190916114158.GN5781@paasikivi.fi.intel.com>
+ <20190916103755.4c19eda9@gandalf.local.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190918123654.GA318@bogus>
+Content-Disposition: inline
+In-Reply-To: <20190916103755.4c19eda9@gandalf.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Sep 2019 at 14:36, Rob Herring <robh@kernel.org> wrote:
->
-> On Sat, Sep 07, 2019 at 11:20:04AM +0200, Krzysztof Kozlowski wrote:
-> > Convert Samsung Exynos System Registers (SYSREG) bindings to DT schema
-> > format using json-schema.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
-> > ---
-> >
-> > Example somehow fails:
-> > Documentation/devicetree/bindings/arm/samsung/pmu.example.dt.yaml:
-> > system-controller@10040000: compatible:0: 'samsung,exynos5250-pmu' is
-> > not one of ['samsung,exynos4-sysreg', 'samsung,exynos5-sysreg']
-> >
-> > It seems that PMU schema is applied to sysreq nodes (and vice-versa).
-> > ---
-> >  .../bindings/arm/samsung/sysreg.txt           | 19 -----------
-> >  .../bindings/arm/samsung/sysreg.yaml          | 33 +++++++++++++++++++
-> >  2 files changed, 33 insertions(+), 19 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/sysreg.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> > deleted file mode 100644
-> > index 4fced6e9d5e4..000000000000
-> > --- a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> > +++ /dev/null
-> > @@ -1,19 +0,0 @@
-> > -SAMSUNG S5P/Exynos SoC series System Registers (SYSREG)
-> > -
-> > -Properties:
-> > - - compatible : should contain two values. First value must be one from following list:
-> > -             - "samsung,exynos4-sysreg" - for Exynos4 based SoCs,
-> > -             - "samsung,exynos5-sysreg" - for Exynos5 based SoCs.
-> > -             second value must be always "syscon".
-> > - - reg : offset and length of the register set.
-> > -
-> > -Example:
-> > -     syscon@10010000 {
-> > -             compatible = "samsung,exynos4-sysreg", "syscon";
-> > -             reg = <0x10010000 0x400>;
-> > -     };
-> > -
-> > -     syscon@10050000 {
-> > -             compatible = "samsung,exynos5-sysreg", "syscon";
-> > -             reg = <0x10050000 0x5000>;
-> > -     };
-> > diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.yaml b/Documentation/devicetree/bindings/arm/samsung/sysreg.yaml
-> > new file mode 100644
-> > index 000000000000..a3d44646e441
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/samsung/sysreg.yaml
-> > @@ -0,0 +1,33 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/arm/samsung/sysreg.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Samsung S5P/Exynos SoC series System Registers (SYSREG)
-> > +
-> > +maintainers:
-> > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +          - samsung,exynos4-sysreg
-> > +          - samsung,exynos5-sysreg
-> > +      - const: syscon
->
-> The problem is this will by default match any node with 'syscon'. You
-> have to add a custom 'select' entry. See the LVDS panel bindings for an
-> example.
->
-> I'd like to kill off 'syscon'...
+Hi Steven,
 
-I see that panels use empty {} match but some other examples use
-custom select. The panel approach in my case does not actually check
-whether last compatible is syscon. I'll go then with a separate select
-approach.
+On Mon, Sep 16, 2019 at 10:37:55AM -0400, Steven Rostedt wrote:
+> > If you think that's an issue, I'll opt for another extension than %pfw,
+> > which I chose originally since it's memorable --- fw for fwnode (names,
+> > paths, and probably more in the future).
+> > 
+> 
+> I'm fine with the switch, as long as newer tools know how to handle it.
+> 
+> Make sure we also add a comment in the Linux kernel code that states
+> that older kernels use to have 'f' and 'F' and that new tools look for
+> 'fw' to denote that this isn't an older kernel. This way, people will
+> hopefully not add another 'fX' pointer name.
 
-Best regards,
-Krzysztof
+Good point. I'll add a comment on this to make_bprint_args() in
+tools/lib/traceevent/event-parse.c as well as in vsprintf.c.
+
+-- 
+Regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
