@@ -1,33 +1,49 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH V6 2/2] mailbox: introduce ARM SMC based mailbox
-Date: Wed, 18 Sep 2019 09:22:54 -0500
-Message-ID: <CABb+yY3irsE0U-bex4G60Lwpewea6=pE1vSzi72Z+5DafmC8Xg@mail.gmail.com>
-References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
- <1568626884-5189-3-git-send-email-peng.fan@nxp.com> <20190917183856.2342beed@donnerap.cambridge.arm.com>
- <AM0PR04MB44813D62FF7E6762BB17460E888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20190918110037.4edefb2f@donnerap.cambridge.arm.com> <CABb+yY2G8s9gV8Pu+f__8-bubjCJsVQrQikbVMZXmpTwSMBxiQ@mail.gmail.com>
- <20190918145832.0bb72e16@donnerap.cambridge.arm.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] regulator: dt-bindings: Fix building error for dt_binding_check
+Date: Wed, 18 Sep 2019 09:27:53 -0500
+Message-ID: <CAL_JsqJwsLkQGjjoS_RvBXjSq4irrVPEpwrwTv7wL732YHM4dg@mail.gmail.com>
+References: <1568815340-30401-1-git-send-email-pragnesh.patel@sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190918145832.0bb72e16@donnerap.cambridge.arm.com>
+In-Reply-To: <1568815340-30401-1-git-send-email-pragnesh.patel@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Pragnesh Patel <pragnesh.patel@sifive.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 8:58 AM Andre Przywara <andre.przywara@arm.com> wrote:
+On Wed, Sep 18, 2019 at 9:02 AM Pragnesh Patel
+<pragnesh.patel@sifive.com> wrote:
 >
 
-> > > Also there is mbox_chan_txdone() with which a controller driver can signal TX completion explicitly.
-> > >
-> > No. Controller can use that only if it has specified txdone_irq, which
-> > is not the case here.
->
-> I see. So does the framework handle the case where both txdone_poll and txdone_irq are false?
->
-Of course. If there is no IRQ or POLL mechanism for controller to
-detect tx-done, the only way left is for client driver to know by some
-'ack' response (if any). The client should call mbox_client_txdone()
+The subject could be more specific rather than being one that applies
+to any dt_binding_check breakage in regulators.
 
-Thanks
+> Compatible property is not of type 'string' so replace enum
+> with items.
+>
+> Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
+> ---
+>  Documentation/devicetree/bindings/regulator/fixed-regulator.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+> index a78150c..8d4a7b2 100644
+> --- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+> +++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+> @@ -29,7 +29,7 @@ if:
+>
+>  properties:
+>    compatible:
+> -    enum:
+> +    items:
+>        - const: regulator-fixed
+>        - const: regulator-fixed-clock
+
+This means you expect: compatible = "regulator-fixed", "regulator-fixed-clock";
+
+Did you actually run 'dt_binding_check' because it should fail on the example?
+
+I gave you exact change to make. Just remove 'const: ' on each entry.
+
+Rob
