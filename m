@@ -1,16 +1,16 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [RFC PATCH V4 3/4] dt-bindings: mt8183: Add sensor interface
- dt-bindings
-Date: Wed, 18 Sep 2019 11:29:24 +0300
-Message-ID: <20190918082924.GE5525@valkosipuli.retiisi.org.uk>
-References: <20190915065004.20257-1-louis.kuo@mediatek.com>
- <20190915065004.20257-4-louis.kuo@mediatek.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v6 0/3] coresight: etm4x: save/restore ETMv4 context
+ across CPU low power states
+Date: Wed, 18 Sep 2019 09:36:01 +0100
+Message-ID: <20190918083601.GX9720@e119886-lin.cambridge.arm.com>
+References: <20190913115312.12943-1-andrew.murray@arm.com>
+ <CANLsYkzhB3OBpLTAR54p771OSLxj+NYF8_kE=aMp7SkdNzaxwA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190915065004.20257-4-louis.kuo@mediatek.com>
+In-Reply-To: <CANLsYkzhB3OBpLTAR54p771OSLxj+NYF8_kE=aMp7SkdNzaxwA@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,69 +20,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Louis Kuo <louis.kuo@mediatek.com>
-Cc: devicetree@vger.kernel.org, Sean.Cheng@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, christie.yu@mediatek.com, srv_heupstream@mediatek.com, Jerry-ch.Chen@mediatek.com, tfiga@chromium.org, keiichiw@chromium.org, jungo.lin@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, hans.verkuil@cisco.com, zwisler@chromium.org, frederic.chen@mediatek.com, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Al Grant <Al.Grant@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Coresight ML <coresight@lists.linaro.org>, Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mike Leach <mike.leach@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Louis,
-
-On Sun, Sep 15, 2019 at 02:50:03PM +0800, Louis Kuo wrote:
-> This patch adds the DT binding documentation for the sensor interface
-> module in Mediatek SoCs.
+On Tue, Sep 17, 2019 at 01:37:10PM -0600, Mathieu Poirier wrote:
+> Hi Andrew,
 > 
-> Signed-off-by: Louis Kuo <louis.kuo@mediatek.com>
-> ---
->  .../bindings/media/mediatek-seninf.txt        | 30 +++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/mediatek-seninf.txt
+> On Fri, 13 Sep 2019 at 05:53, Andrew Murray <andrew.murray@arm.com> wrote:
 > 
-> diff --git a/Documentation/devicetree/bindings/media/mediatek-seninf.txt b/Documentation/devicetree/bindings/media/mediatek-seninf.txt
-> new file mode 100644
-> index 000000000000..bf2eb801cb47
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/mediatek-seninf.txt
-> @@ -0,0 +1,30 @@
-> +* Mediatek seninf MIPI-CSI2 host driver
-> +
-> +Seninf MIPI-CSI2 host driver is a HW camera interface controller. It support a widely adopted,
-> +simple, high-speed protocol primarily intended for point-to-point image and video
-> +transmission between cameras and host devices.
+> [...]
+> 
+> >
+> > Andrew Murray (3):
+> >   coresight: etm4x: save/restore state across CPU low power states
+> >   dt-bindings: arm: coresight: Add support for
+> >     coresight-loses-context-with-cpu
+> 
+> I have picked-up patches 1 and 2.  As per the conversation we had in
+> Cambridge where we kept finding ways to break things when dealing with
+> an external agent, I have not applied the 3 patch.
 
-Please wrap so it fits to 80 chars per line.
+Thanks for the picking these up. No worries about patch 3.
 
-You'll also need to document the graph nodes needed. Which ports correspond
-to which interfaces on the device, for instance?
+Thanks,
 
-Please document which endpoint properties are required and whether there
-are any optional ones.
+Andrew Murray
 
-> +
-> +Required properties:
-> +  - compatible: "mediatek,mt8183-seninf"
-> +  - reg: Must contain an entry for each entry in reg-names.
-> +  - reg-names: Must include the following entries:
-> +    "base_reg": seninf registers base
-> +    "rx_reg": Rx analog registers base
-> +  - interrupts: interrupt number to the cpu.
-> +  - clocks : clock name from clock manager
-> +  - clock-names: must be CLK_CAM_SENINF and CLK_TOP_MUX_SENINF.
-> +    It is the clocks of seninf
-> +
-> +Example:
-> +	seninf: seninf@1a040000 {
-> +		compatible = "mediatek,mt8183-seninf";
-> +		reg = <0 0x1a040000 0 0x8000>,
-> +		      <0 0x11C80000 0 0x6000>;
-> +		reg-names = "base_reg", "rx_reg";
-> +		interrupts = <GIC_SPI 251 IRQ_TYPE_LEVEL_LOW>;
-> +		power-domains = <&scpsys MT8183_POWER_DOMAIN_CAM>;
-> +		clocks = <&camsys CLK_CAM_SENINF>,
-> +			 <&topckgen CLK_TOP_MUX_SENINF>;
-> +		clock-names = "CLK_CAM_SENINF", "CLK_TOP_MUX_SENINF";
-> +	}
-> +
-
--- 
-Regards,
-
-Sakari Ailus
+> 
+> Thanks,
+> Mathieu
+> 
+> >   coresight: etm4x: save/restore state for external agents
+> >
+> >  .../devicetree/bindings/arm/coresight.txt     |   9 +
+> >  drivers/hwtracing/coresight/coresight-etm4x.c | 351 +++++++++++++++++-
+> >  drivers/hwtracing/coresight/coresight-etm4x.h |  64 ++++
+> >  drivers/hwtracing/coresight/coresight.c       |   8 +-
+> >  include/linux/coresight.h                     |  13 +
+> >  5 files changed, 443 insertions(+), 2 deletions(-)
+> >
+> > --
+> > 2.21.0
+> >
