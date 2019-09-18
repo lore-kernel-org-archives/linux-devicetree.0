@@ -1,39 +1,65 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v1 3/9] ASoC: wm8994: Add support for setting MCLKn clock
- rate
-Date: Wed, 18 Sep 2019 13:51:57 +0000
-Message-ID: <20190918135157.GG10204@ediswmail.ad.cirrus.com>
-References: <20190918104634.15216-1-s.nawrocki@samsung.com>
- <CGME20190918104658eucas1p2c1f07d3e8b915d8c3a448b80d2af5df0@eucas1p2.samsung.com>
- <20190918104634.15216-4-s.nawrocki@samsung.com>
+From: "Shenhar, Talel" <talel@amazon.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: soc: al-pos: Amazon's Annapurna Labs
+ POS
+Date: Wed, 18 Sep 2019 16:44:11 +0300
+Message-ID: <6965161b-a51c-9e16-f6b8-6f33b40708ee@amazon.com>
+References: <1568142310-17622-1-git-send-email-talel@amazon.com>
+ <1568142310-17622-2-git-send-email-talel@amazon.com>
+ <20190918133248.GA16653@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190918104634.15216-4-s.nawrocki@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, broonie@kernel.org, lgirdwood@gmail.com, krzk@kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190918133248.GA16653@bogus>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: marc.zyngier@arm.com, tglx@linutronix.de, jason@lakedaemon.net, mark.rutland@arm.com, nicolas.ferre@microchip.com, mchehab+samsung@kernel.org, shawn.lin@rock-chips.com, gregkh@linuxfoundation.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 12:46:28PM +0200, Sylwester Nawrocki wrote:
-> Extend the set_sysclk() handler so we also set frequency of the MCLK1,
-> MCLK2 clocks through clk API when those clocks are specified in DT for
-> the device.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
+Tnx Rob for the review.
 
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Shall be part of v3.
 
-Thanks,
-Charles
+Waiting for responses from Arnd and James and will publish v3.
+
+On 9/18/2019 4:35 PM, Rob Herring wrote:
+> On Tue, Sep 10, 2019 at 10:05:08PM +0300, Talel Shenhar wrote:
+>> Document Amazon's Annapurna Labs POS SoC binding.
+>>
+>> Signed-off-by: Talel Shenhar <talel@amazon.com>
+>> ---
+>>   .../devicetree/bindings/soc/amazon/amazon,al-pos.txt   | 18 ++++++++++++++++++
+>>   1 file changed, 18 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
+> Please convert to DT schema.
+>
+>> diff --git a/Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt b/Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
+>> new file mode 100644
+>> index 00000000..035cc571
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
+>> @@ -0,0 +1,18 @@
+>> +Amazon's Annapurna Labs POS
+>> +
+>> +POS node is defined to describe the Point Of Serialization (POS) logger
+>> +unit.
+>> +
+>> +Required properties:
+>> +- compatible:	Shall be "amazon,al-pos".
+>> +- reg:		POS logger resources.
+>> +- interrupts:	should contain the interrupt for pos error event.
+>> +
+>> +Example:
+>> +
+>> +al_pos {
+> Needs a unit-address.
+>
+>> +	compatible = "amazon,al-pos";
+>> +	reg = <0x0 0xf0070084 0x0 0x00000008>;
+>> +	interrupt-parent = <&amazon_system_fabric>;
+>> +	interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
+>> +};
+>> -- 
+>> 2.7.4
+>>
