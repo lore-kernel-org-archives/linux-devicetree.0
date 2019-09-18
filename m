@@ -1,156 +1,116 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] dt-bindings: memory-controllers: Convert Samsung Exynos
- SROM bindings to json-schema
-Date: Wed, 18 Sep 2019 14:25:12 +0200
-Message-ID: <CAJKOXPeCH-hp40gnC4W5Fn8Z0OWqF74H4r1RQOJTCnu72wmrZQ@mail.gmail.com>
-References: <20190907144442.16788-1-krzk@kernel.org> <5d7ba95e.1c69fb81.bba41.66c2@mx.google.com>
+From: Piotr Sroka <piotrs@cadence.com>
+Subject: [v7 2/2] dt-bindings: mtd: Add Cadence NAND controller driver
+Date: Wed, 18 Sep 2019 13:31:45 +0100
+Message-ID: <20190918123223.31745-1-piotrs@cadence.com>
+References: <20190918122923.28737-1-piotrs@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d7ba95e.1c69fb81.bba41.66c2@mx.google.com>
+In-Reply-To: <20190918122923.28737-1-piotrs@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Piotr Sroka <piotrs@cadence.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Sep 2019 at 16:36, Rob Herring <robh@kernel.org> wrote:
->
-> On Sat, Sep 07, 2019 at 04:44:42PM +0200, Krzysztof Kozlowski wrote:
-> > Convert Samsung Exynos SROM controller bindings to DT schema format
-> > using json-schema.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  .../memory-controllers/exynos-srom.txt        |  79 ----------
-> >  .../memory-controllers/exynos-srom.yaml       | 136 ++++++++++++++++++
-> >  2 files changed, 136 insertions(+), 79 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos-srom.txt
-> >  create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos-srom.yaml
->
->
-> > diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos-srom.yaml b/Documentation/devicetree/bindings/memory-controllers/exynos-srom.yaml
-> > new file mode 100644
-> > index 000000000000..9573bcfd68bf
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/memory-controllers/exynos-srom.yaml
-> > @@ -0,0 +1,136 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/memory-controllers/exynos-srom.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Samsung Exynos SoC SROM Controller driver
-> > +
-> > +maintainers:
-> > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > +
-> > +description: |+
-> > +  The SROM controller can be used to attach external peripherals. In this case
-> > +  extra properties, describing the bus behind it, should be specified.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - const: samsung,exynos4210-srom
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  "#address-cells":
-> > +    const: 2
-> > +
-> > +  "#size-cells":
-> > +    const: 1
-> > +
-> > +  ranges:
-> > +    description: |
-> > +      Reflects the memory layout with four integer values per bank. Format:
-> > +      <bank-number> 0 <parent address of bank> <size>
-> > +
-> > +patternProperties:
-> > +  "^.*@[0-9]+,[0-9]+$":
->
-> How many chip selects? Can be a single digit?
+Document the bindings used by Cadence NAND controller driver
 
-Currently up to four banks, so I can limit the pattern.
+Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes for v7:
+- none
+Changes for v6:
+- add documentation for address-cells and size-cells
+- remove not needed space
+- put myself as maintainer of the Cadence nand driver bindings
+Changes for v5:
+- replace "_" by "-" in all properties
+- change compatible name from cdns,hpnfc to cdns,hp-nfc
+Changes for v4:
+- add commit message
+Changes for v3:
+- add unit suffix for board_delay 
+- move child description to proper place
+- remove prefix cadence_ for reg and sdma fields
+Changes for v2:
+- remove chip dependends parameters from dts bindings
+- add names for register ranges in dts bindings
+- add generic bindings to describe NAND chip representation
+---
+ .../bindings/mtd/cadence-nand-controller.txt       | 53 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
 
->
-> Also, these should be hex values.
-
-Sure.
-
->
-> > +    type: object
-> > +    description:
-> > +      The actual device nodes should be added as subnodes to the SROMc node.
-> > +      These subnodes, in addition to regular device specification, should
-> > +      contain the following properties, describing configuration
-> > +      of the relevant SROM bank.
-> > +
-> > +    properties:
-> > +      reg:
-> > +        description:
-> > +          Bank number, base address (relative to start of the bank) and size
-> > +          of the memory mapped for the device. Note that base address will be
-> > +          typically 0 as this is the start of the bank.
-> > +        maxItems: 1
-> > +
-> > +      reg-io-width:
-> > +        allOf:
-> > +          - $ref: /schemas/types.yaml#/definitions/uint32
-> > +          - enum: [1, 2]
-> > +        description:
-> > +          Data width in bytes (1 or 2). If omitted, default of 1 is used.
-> > +
-> > +      samsung,srom-page-mode:
-> > +        description:
-> > +          If page mode is set, 4 data page mode will be configured,
-> > +          else normal (1 data) page mode will be set.
-> > +        type: boolean
-> > +
-> > +      samsung,srom-timing:
-> > +        allOf:
-> > +          - $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +          - items:
-> > +              minItems: 6
-> > +              maxItems: 6
-> > +        description: |
-> > +          Array of 6 integers, specifying bank timings in the following order:
-> > +          Tacp, Tcah, Tcoh, Tacc, Tcos, Tacs.
-> > +          Each value is specified in cycles and has the following meaning
-> > +          and valid range:
-> > +          Tacp: Page mode access cycle at Page mode (0 - 15)
-> > +          Tcah: Address holding time after CSn (0 - 15)
-> > +          Tcoh: Chip selection hold on OEn (0 - 15)
-> > +          Tacc: Access cycle (0 - 31, the actual time is N + 1)
-> > +          Tcos: Chip selection set-up before OEn (0 - 15)
-> > +          Tacs: Address set-up before CSn (0 - 15)
-> > +
-> > +    required:
-> > +      - reg
-> > +      - samsung,srom-timing
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +allOf:
-> > +  - if:
-> > +      anyOf:
-> > +        - required: [ "#address-cells" ]
-> > +        - required: [ ranges ]
-> > +        - required: [ "#size-cells" ]
-> > +    then:
-> > +      required:
-> > +        - "#address-cells"
-> > +        - ranges
-> > +        - "#size-cells"
->
-> I don't think this is necessary as the core schema should take care of
-> it. This can also be expressed using 'dependencies'.
-
-I'll skip it then.
-
-Best regards,
-Krzysztof
+diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+new file mode 100644
+index 000000000000..f3893c4d3c6a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+@@ -0,0 +1,53 @@
++* Cadence NAND controller
++
++Required properties:
++  - compatible : "cdns,hp-nfc"
++  - reg : Contains two entries, each of which is a tuple consisting of a
++	  physical address and length. The first entry is the address and
++	  length of the controller register set. The second entry is the
++	  address and length of the Slave DMA data port.
++  - reg-names: should contain "reg" and "sdma"
++  - #address-cells: should be 1. The cell encodes the chip select connection.
++  - #size-cells : should be 0.
++  - interrupts : The interrupt number.
++  - clocks: phandle of the controller core clock (nf_clk).
++
++Optional properties:
++  - dmas: shall reference DMA channel associated to the NAND controller
++  - cdns,board-delay-ps : Estimated Board delay. The value includes the total
++    round trip delay for the signals and is used for deciding on values
++    associated with data read capture. The example formula for SDR mode is
++    the following:
++    board delay = RE#PAD delay + PCB trace to device + PCB trace from device
++    + DQ PAD delay
++
++Child nodes represent the available NAND chips.
++
++Required properties of NAND chips:
++  - reg: shall contain the native Chip Select ids from 0 to max supported by
++    the cadence nand flash controller
++
++See Documentation/devicetree/bindings/mtd/nand.txt for more details on
++generic bindings.
++
++Example:
++
++nand_controller: nand-controller@60000000 {
++	  compatible = "cdns,hp-nfc";
++	  #address-cells = <1>;
++	  #size-cells = <0>;
++	  reg = <0x60000000 0x10000>, <0x80000000 0x10000>;
++	  reg-names = "reg", "sdma";
++	  clocks = <&nf_clk>;
++	  cdns,board-delay-ps = <4830>;
++	  interrupts = <2 0>;
++	  nand@0 {
++	      reg = <0>;
++	      label = "nand-1";
++	  };
++	  nand@1 {
++	      reg = <1>;
++	      label = "nand-2";
++	  };
++
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 16e16445b88b..94d78f4e29ba 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3584,6 +3584,7 @@ M:	Piotr Sroka <piotrs@cadence.com>
+ L:	linux-mtd@lists.infradead.org
+ S:	Maintained
+ F:	drivers/mtd/nand/raw/cadence-nand-controller.c
++F:	Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+ 
+ CADET FM/AM RADIO RECEIVER DRIVER
+ M:	Hans Verkuil <hverkuil@xs4all.nl>
+-- 
+2.15.0
