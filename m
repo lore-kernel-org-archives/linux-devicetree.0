@@ -1,59 +1,105 @@
-From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [PATCH] arm64: dts: mt8183: Add node for the Mali GPU
-Date: Thu, 19 Sep 2019 06:16:48 +0800
-Message-ID: <CANMq1KD++==d0Mb6T2gKU1T7c_MaedswOYdxqEqEKKUL1bxgiw@mail.gmail.com>
-References: <20190905081546.42716-1-drinkcat@chromium.org> <CAL_JsqJCO2G90TTT9Mpy4kjVKQyXWw4aXEEnbRp_SE8X=EGc5g@mail.gmail.com>
- <CANMq1KCTPdFhJG1SLf-i+-557Yx-1WLzWCHu3tT_5Q2BF+JgdQ@mail.gmail.com> <20190913181729.GB3115@kevin>
+From: rananta@codeaurora.org
+Subject: Re: [PATCH] of: Add of_get_memory_prop()
+Date: Wed, 18 Sep 2019 15:32:14 -0700
+Message-ID: <19d727bbfce08e59294920ba8097be7a@codeaurora.org>
+References: <20190918184656.7633-1-rananta@codeaurora.org>
+ <CAL_JsqJ2WeW0JHSHZuvo9bbc7JSFBr_qCuOp97i=b6Q+OPY7Cg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190913181729.GB3115@kevin>
+In-Reply-To: <CAL_JsqJ2WeW0JHSHZuvo9bbc7JSFBr_qCuOp97i=b6Q+OPY7Cg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nick Fan <nick.fan@mediatek.com>, Boris Brezillon <boris.brezillon@collabora.com>, Douglas Anderson <dianders@chromium.org>, Dominik Behr <dbehr@chromium.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Trilok Soni <tsoni@codeaurora.org>, Android Kernel Team <kernel-team@android.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Rob and Alyssa.
-
-+Douglas Anderson +Dominik Behr who may be interested (if not already aware)
-
-On Sat, Sep 14, 2019 at 2:17 AM Alyssa Rosenzweig
-<alyssa.rosenzweig@collabora.com> wrote:
->
-> > > > The binding we use with out-of-tree Mali drivers includes more
-> > > > clocks, I assume this would be required eventually if we have an
-> > > > in-tree driver:
-> > >
-> > > We have an in-tree driver...
-> >
-> > Right but AFAICT it does not support Bifrost GPU (yet?).
->
-> By the time MT8183 shows up in more concrete devices, it will, certainly
-> in kernel-space and likely in userspace as well. At present, the DDK can
-> be modified to run on top of the in-tree Mali drivers, i.e. "Bifrost on
-> mainline linux-next (+ page table/compatible patches), with blob
-> userspace".
->
-> While the open userspace isn't ready here quite yet, I would definitely
-> encourage upstream kernel for ChromeOS, since then there's no need to
-> maintain the out-of-tree GPU driver.
-
-That's an interesting idea, I had no idea, thanks for the info!
-
-Would that work with midgard as well? We have released hardware with
-RK3288/3399, so it might be nice to experiment with these first.
-
->
-> ---
->
-> More immediately, per Rob's review, it's important that the bindings
-> accepted upstream work with the in-tree Bifrost driver. Conceptually,
-> once Mesa supports Bifrost, if I install Debian on a MT8183 board,
-> everything should just work. I shouldn't need MT-specific changes / need
-> to change names for the DT. Regardless of which kernel driver you end up
-> using, minimally sharing the DT is good for everyone :-)
-
-Yes. I'll try to dig further with MTK, but this may take some time.
-
->
-> -Alyssa
+On 2019-09-18 13:13, Rob Herring wrote:
+> On Wed, Sep 18, 2019 at 1:47 PM Raghavendra Rao Ananta
+> <rananta@codeaurora.org> wrote:
+>> 
+>> On some embedded systems, the '/memory' dt-property gets updated
+>> by the bootloader (for example, the DDR configuration) and then
+>> gets passed onto the kernel. The device drivers may have to read
+>> the properties at runtime to make decisions. Hence, add
+>> of_get_memory_prop() for the device drivers to query the requested
+> 
+> Function name doesn't match. Device drivers don't need to access the 
+> FDT.
+> 
+>> properties.
+>> 
+>> Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
+>> ---
+>>  drivers/of/fdt.c       | 27 +++++++++++++++++++++++++++
+>>  include/linux/of_fdt.h |  1 +
+>>  2 files changed, 28 insertions(+)
+> 
+> We don't add kernel api's without users.
+> 
+>> 
+>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>> index 223d617ecfe1..925cf2852433 100644
+>> --- a/drivers/of/fdt.c
+>> +++ b/drivers/of/fdt.c
+>> @@ -79,6 +79,33 @@ void __init of_fdt_limit_memory(int limit)
+>>         }
+>>  }
+>> 
+>> +/**
+>> + * of_fdt_get_memory_prop - Return the requested property from the 
+>> /memory node
+>> + *
+>> + * On match, returns a non-zero positive value which represents the 
+>> property
+>> + * value. Otherwise returns -ENOENT.
+>> + */
+>> +int of_fdt_get_memory_prop(const char *pname)
+>> +{
+>> +       int memory;
+>> +       int len;
+>> +       fdt32_t *prop = NULL;
+>> +
+>> +       if (!pname)
+>> +               return -EINVAL;
+>> +
+>> +       memory = fdt_path_offset(initial_boot_params, "/memory");
+> 
+> Memory nodes should have a unit-address, so this won't work frequently.
+Sorry, can you please elaborate more on this? What do you mean by 
+unit-address and working frequently?
+> 
+>> +       if (memory > 0)
+>> +               prop = fdt_getprop_w(initial_boot_params, memory,
+>> +                                 pname, &len);
+>> +
+>> +       if (!prop || len != sizeof(u32))
+>> +               return -ENOENT;
+>> +
+>> +       return fdt32_to_cpu(*prop);
+>> +}
+>> +EXPORT_SYMBOL_GPL(of_fdt_get_memory_prop);
+>> +
+>>  static bool of_fdt_device_is_available(const void *blob, unsigned 
+>> long node)
+>>  {
+>>         const char *status = fdt_getprop(blob, node, "status", NULL);
+>> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+>> index acf820e88952..537f29373358 100644
+>> --- a/include/linux/of_fdt.h
+>> +++ b/include/linux/of_fdt.h
+>> @@ -38,6 +38,7 @@ extern char __dtb_end[];
+>>  /* Other Prototypes */
+>>  extern u64 of_flat_dt_translate_address(unsigned long node);
+>>  extern void of_fdt_limit_memory(int limit);
+>> +extern int of_fdt_get_memory_prop(const char *pname);
+>>  #endif /* CONFIG_OF_FLATTREE */
+>> 
+>>  #ifdef CONFIG_OF_EARLY_FLATTREE
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
+- Raghavendra
