@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 04/13] media: am437x-vpfe: Wait for end of frame before tear-down
-Date: Thu, 19 Sep 2019 15:41:16 -0500
-Message-ID: <20190919204125.15254-5-bparrot@ti.com>
+Subject: [Patch v2 08/13] media: am437x-vpfe: Use a per instance format array instead of a static one
+Date: Thu, 19 Sep 2019 15:41:20 -0500
+Message-ID: <20190919204125.15254-9-bparrot@ti.com>
 References: <20190919204125.15254-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,156 +12,348 @@ To: Hans Verkuil <hverkuil@xs4all.nl>
 Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-We were originally attempting to stop all processing as soon
-as possible, but the in-progress DMA operation cannot be canceled.
-This led to the module being in a busy state and prevented proper
-power management functionality.
-
-The existing implementation would attempt to clean things up by waiting
-up to 50ms. However when receiving video frame at 15fps or lower,
-it meant an inter frame arrival rate of 66.6 ms or higher.
-In such cases upon tear down the following message could be seen:
-omap_hwmod: vpfe0: _wait_target_disable failed
-
-This patch fixes this issue by adding a stopping state where
-we would wait for the next Vsync before disabling the hardware.
+Using a statically defined format array would cause issue when
+multiple vpfe instance would be connected to sub-device of
+different capabilities. We need to use an instance based array
+instead to properly maintain a per port/instance format list.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/am437x/am437x-vpfe.c | 52 ++++++++++-----------
- drivers/media/platform/am437x/am437x-vpfe.h |  3 ++
- 2 files changed, 29 insertions(+), 26 deletions(-)
+ drivers/media/platform/am437x/am437x-vpfe.c | 110 ++++++++------------
+ drivers/media/platform/am437x/am437x-vpfe.h |  36 +++++++
+ 2 files changed, 77 insertions(+), 69 deletions(-)
 
 diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index 13bf4b32b40b..66df87d310a2 100644
+index 8b218f48428f..569618a52082 100644
 --- a/drivers/media/platform/am437x/am437x-vpfe.c
 +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -441,40 +441,25 @@ static void vpfe_ccdc_restore_defaults(struct vpfe_ccdc *ccdc)
+@@ -69,31 +69,7 @@ static const struct vpfe_standard vpfe_standards[] = {
+ 	{V4L2_STD_625_50, 720, 576, {54, 59}, 1},
+ };
  
- static int vpfe_ccdc_close(struct vpfe_ccdc *ccdc, struct device *dev)
+-struct bus_format {
+-	unsigned int width;
+-	unsigned int bpp;
+-};
+-
+-/*
+- * struct vpfe_fmt - VPFE media bus format information
+- * @code: V4L2 media bus format code
+- * @shifted: V4L2 media bus format code for the same pixel layout but
+- *	shifted to be 8 bits per pixel. =0 if format is not shiftable.
+- * @pixelformat: V4L2 pixel format FCC identifier
+- * @width: Bits per pixel (when transferred over a bus)
+- * @bpp: Bytes per pixel (when stored in memory)
+- * @supported: Indicates format supported by subdev
+- */
+-struct vpfe_fmt {
+-	u32 fourcc;
+-	u32 code;
+-	struct bus_format l;
+-	struct bus_format s;
+-	bool supported;
+-	u32 index;
+-};
+-
+-static struct vpfe_fmt formats[] = {
++static struct vpfe_fmt formats[VPFE_MAX_ACTIVE_FMT] = {
+ 	{
+ 		.fourcc		= V4L2_PIX_FMT_YUYV,
+ 		.code		= MEDIA_BUS_FMT_YUYV8_2X8,
+@@ -101,7 +77,6 @@ static struct vpfe_fmt formats[] = {
+ 		.l.bpp		= 4,
+ 		.s.width	= 8,
+ 		.s.bpp		= 2,
+-		.supported	= false,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_UYVY,
+ 		.code		= MEDIA_BUS_FMT_UYVY8_2X8,
+@@ -109,7 +84,6 @@ static struct vpfe_fmt formats[] = {
+ 		.l.bpp		= 4,
+ 		.s.width	= 8,
+ 		.s.bpp		= 2,
+-		.supported	= false,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_YVYU,
+ 		.code		= MEDIA_BUS_FMT_YVYU8_2X8,
+@@ -117,7 +91,6 @@ static struct vpfe_fmt formats[] = {
+ 		.l.bpp		= 4,
+ 		.s.width	= 8,
+ 		.s.bpp		= 2,
+-		.supported	= false,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_VYUY,
+ 		.code		= MEDIA_BUS_FMT_VYUY8_2X8,
+@@ -125,7 +98,6 @@ static struct vpfe_fmt formats[] = {
+ 		.l.bpp		= 4,
+ 		.s.width	= 8,
+ 		.s.bpp		= 2,
+-		.supported	= false,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SBGGR8,
+ 		.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
+@@ -133,7 +105,6 @@ static struct vpfe_fmt formats[] = {
+ 		.l.bpp		= 2,
+ 		.s.width	= 8,
+ 		.s.bpp		= 1,
+-		.supported	= false,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SGBRG8,
+ 		.code		= MEDIA_BUS_FMT_SGBRG8_1X8,
+@@ -141,7 +112,6 @@ static struct vpfe_fmt formats[] = {
+ 		.l.bpp		= 2,
+ 		.s.width	= 8,
+ 		.s.bpp		= 1,
+-		.supported	= false,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SGRBG8,
+ 		.code		= MEDIA_BUS_FMT_SGRBG8_1X8,
+@@ -149,7 +119,6 @@ static struct vpfe_fmt formats[] = {
+ 		.l.bpp		= 2,
+ 		.s.width	= 8,
+ 		.s.bpp		= 1,
+-		.supported	= false,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SRGGB8,
+ 		.code		= MEDIA_BUS_FMT_SRGGB8_1X8,
+@@ -157,7 +126,6 @@ static struct vpfe_fmt formats[] = {
+ 		.l.bpp		= 2,
+ 		.s.width	= 8,
+ 		.s.bpp		= 1,
+-		.supported	= false,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_RGB565,
+ 		.code		= MEDIA_BUS_FMT_RGB565_2X8_LE,
+@@ -165,7 +133,6 @@ static struct vpfe_fmt formats[] = {
+ 		.l.bpp		= 4,
+ 		.s.width	= 8,
+ 		.s.bpp		= 2,
+-		.supported	= false,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_RGB565X,
+ 		.code		= MEDIA_BUS_FMT_RGB565_2X8_BE,
+@@ -173,7 +140,6 @@ static struct vpfe_fmt formats[] = {
+ 		.l.bpp		= 4,
+ 		.s.width	= 8,
+ 		.s.bpp		= 2,
+-		.supported	= false,
+ 	},
+ };
+ 
+@@ -181,13 +147,14 @@ static int
+ __vpfe_get_format(struct vpfe_device *vpfe,
+ 		  struct v4l2_format *format, unsigned int *bpp);
+ 
+-static struct vpfe_fmt *find_format_by_code(unsigned int code)
++static struct vpfe_fmt *find_format_by_code(struct vpfe_device *vpfe,
++					    unsigned int code)
  {
--	int dma_cntl, i, pcr;
-+	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
-+	u32 dma_cntl, pcr;
+ 	struct vpfe_fmt *fmt;
+ 	unsigned int k;
  
--	/* If the CCDC module is still busy wait for it to be done */
--	for (i = 0; i < 10; i++) {
--		usleep_range(5000, 6000);
--		pcr = vpfe_reg_read(ccdc, VPFE_PCR);
--		if (!pcr)
--			break;
-+	pcr = vpfe_reg_read(ccdc, VPFE_PCR);
-+	if (pcr)
-+		vpfe_dbg(1, vpfe, "VPFE_PCR is still set (%x)", pcr);
- 
--		/* make sure it it is disabled */
--		vpfe_pcr_enable(ccdc, 0);
--	}
-+	dma_cntl = vpfe_reg_read(ccdc, VPFE_DMA_CNTL);
-+	if ((dma_cntl & VPFE_DMA_CNTL_OVERFLOW))
-+		vpfe_dbg(1, vpfe, "VPFE_DMA_CNTL_OVERFLOW is still set (%x)",
-+			 dma_cntl);
- 
- 	/* Disable CCDC by resetting all register to default POR values */
- 	vpfe_ccdc_restore_defaults(ccdc);
- 
--	/* if DMA_CNTL overflow bit is set. Clear it
--	 *  It appears to take a while for this to become quiescent ~20ms
--	 */
--	for (i = 0; i < 10; i++) {
--		dma_cntl = vpfe_reg_read(ccdc, VPFE_DMA_CNTL);
--		if (!(dma_cntl & VPFE_DMA_CNTL_OVERFLOW))
--			break;
--
--		/* Clear the overflow bit */
--		vpfe_reg_write(ccdc, dma_cntl, VPFE_DMA_CNTL);
--		usleep_range(5000, 6000);
--	}
--
- 	/* Disabled the module at the CONFIG level */
- 	vpfe_config_enable(ccdc, 0);
- 
- 	pm_runtime_put_sync(dev);
--
- 	return 0;
+-	for (k = 0; k < ARRAY_SIZE(formats); k++) {
+-		fmt = &formats[k];
++	for (k = 0; k < vpfe->num_active_fmt; k++) {
++		fmt = vpfe->active_fmt[k];
+ 		if (fmt->code == code)
+ 			return fmt;
+ 	}
+@@ -195,13 +162,14 @@ static struct vpfe_fmt *find_format_by_code(unsigned int code)
+ 	return NULL;
  }
  
-@@ -1303,6 +1288,9 @@ static void vpfe_handle_interlaced_irq(struct vpfe_device *vpfe,
- 			if (vpfe->cur_frm != vpfe->next_frm)
- 				vpfe_process_buffer_complete(vpfe);
- 
-+			if (vpfe->stopping)
-+				return;
-+
- 			/*
- 			 * based on whether the two fields are stored
- 			 * interleave or separately in memory,
-@@ -1341,7 +1329,7 @@ static irqreturn_t vpfe_isr(int irq, void *dev)
+-static struct vpfe_fmt *find_format_by_pix(unsigned int pixelformat)
++static struct vpfe_fmt *find_format_by_pix(struct vpfe_device *vpfe,
++					   unsigned int pixelformat)
  {
- 	struct vpfe_device *vpfe = (struct vpfe_device *)dev;
- 	enum v4l2_field field = vpfe->fmt.fmt.pix.field;
--	int intr_status;
-+	int intr_status, stopping = vpfe->stopping;
+ 	struct vpfe_fmt *fmt;
+ 	unsigned int k;
  
- 	intr_status = vpfe_reg_read(&vpfe->ccdc, VPFE_IRQ_STS);
+-	for (k = 0; k < ARRAY_SIZE(formats); k++) {
+-		fmt = &formats[k];
++	for (k = 0; k < vpfe->num_active_fmt; k++) {
++		fmt = vpfe->active_fmt[k];
+ 		if (fmt->fourcc == pixelformat)
+ 			return fmt;
+ 	}
+@@ -218,7 +186,7 @@ mbus_to_pix(struct vpfe_device *vpfe,
+ 	unsigned int bus_width = sdinfo->vpfe_param.bus_width;
+ 	struct vpfe_fmt *fmt;
  
-@@ -1352,9 +1340,13 @@ static irqreturn_t vpfe_isr(int irq, void *dev)
- 		} else {
- 			vpfe_handle_interlaced_irq(vpfe, field);
- 		}
-+		if (stopping) {
-+			vpfe->stopping = false;
-+			complete(&vpfe->capture_stop);
+-	fmt = find_format_by_code(mbus->code);
++	fmt = find_format_by_code(vpfe, mbus->code);
+ 	if (WARN_ON(fmt == NULL)) {
+ 		pr_err("Invalid mbus code set\n");
+ 		*bpp = 1;
+@@ -241,12 +209,12 @@ static void pix_to_mbus(struct vpfe_device *vpfe,
+ {
+ 	struct vpfe_fmt *fmt;
+ 
+-	fmt = find_format_by_pix(pix_fmt->pixelformat);
++	fmt = find_format_by_pix(vpfe, pix_fmt->pixelformat);
+ 	if (!fmt) {
+ 		/* default to first entry */
+ 		vpfe_dbg(3, vpfe, "Invalid pixel code: %x, default used instead\n",
+ 			pix_fmt->pixelformat);
+-		fmt = &formats[0];
++		fmt = vpfe->active_fmt[0];
+ 	}
+ 
+ 	memset(mbus_fmt, 0, sizeof(*mbus_fmt));
+@@ -1494,8 +1462,7 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
+ {
+ 	struct vpfe_device *vpfe = video_drvdata(file);
+ 	struct vpfe_subdev_info *sdinfo;
+-	struct vpfe_fmt *fmt = NULL;
+-	unsigned int k;
++	struct vpfe_fmt *fmt;
+ 
+ 	vpfe_dbg(2, vpfe, "vpfe_enum_format index:%d\n",
+ 		f->index);
+@@ -1504,17 +1471,10 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
+ 	if (!sdinfo->sd)
+ 		return -EINVAL;
+ 
+-	if (f->index > ARRAY_SIZE(formats))
++	if (f->index >= vpfe->num_active_fmt)
+ 		return -EINVAL;
+ 
+-	for (k = 0; k < ARRAY_SIZE(formats); k++) {
+-		if (formats[k].index == f->index) {
+-			fmt = &formats[k];
+-			break;
+-		}
+-	}
+-	if (!fmt)
+-		return -EINVAL;
++	fmt = vpfe->active_fmt[f->index];
+ 
+ 	f->pixelformat = fmt->fourcc;
+ 
+@@ -1593,7 +1553,7 @@ static int vpfe_enum_size(struct file *file, void  *priv,
+ 	vpfe_dbg(2, vpfe, "vpfe_enum_size\n");
+ 
+ 	/* check for valid format */
+-	fmt = find_format_by_pix(fsize->pixel_format);
++	fmt = find_format_by_pix(vpfe, fsize->pixel_format);
+ 	if (!fmt) {
+ 		vpfe_dbg(3, vpfe, "Invalid pixel code: %x, default used instead\n",
+ 			fsize->pixel_format);
+@@ -2281,8 +2241,10 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
+ 					       struct vpfe_device, v4l2_dev);
+ 	struct v4l2_subdev_mbus_code_enum mbus_code;
+ 	struct vpfe_subdev_info *sdinfo;
++	struct vpfe_fmt *fmt;
++	int ret = 0;
+ 	bool found = false;
+-	int i, j;
++	int i, j, k;
+ 
+ 	vpfe_dbg(1, vpfe, "vpfe_async_bound\n");
+ 
+@@ -2304,27 +2266,37 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
+ 
+ 	vpfe->video_dev.tvnorms |= sdinfo->inputs[0].std;
+ 
+-	/* setup the supported formats & indexes */
+-	for (j = 0, i = 0; ; ++j) {
+-		struct vpfe_fmt *fmt;
+-		int ret;
+-
++	vpfe->num_active_fmt = 0;
++	for (j = 0, i = 0; (ret != -EINVAL); ++j) {
+ 		memset(&mbus_code, 0, sizeof(mbus_code));
+ 		mbus_code.index = j;
+ 		mbus_code.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+ 		ret = v4l2_subdev_call(subdev, pad, enum_mbus_code,
+-			       NULL, &mbus_code);
++				       NULL, &mbus_code);
+ 		if (ret)
+-			break;
+-
+-		fmt = find_format_by_code(mbus_code.code);
+-		if (!fmt)
+ 			continue;
+ 
+-		fmt->supported = true;
+-		fmt->index = i++;
++		vpfe_dbg(3, vpfe,
++			 "subdev %s: code: %04x idx: %d\n",
++			 subdev->name, mbus_code.code, j);
++
++		for (k = 0; k < ARRAY_SIZE(formats); k++) {
++			fmt = &formats[k];
++			if (mbus_code.code != fmt->code)
++				continue;
++			vpfe->active_fmt[i] = fmt;
++			vpfe_dbg(3, vpfe,
++				 "matched fourcc: %4.4s code: %04x idx: %d\n",
++				 (char *)&fmt->fourcc, mbus_code.code, i);
++			vpfe->num_active_fmt = ++i;
 +		}
  	}
  
--	if (intr_status & VPFE_VDINT1) {
-+	if (intr_status & VPFE_VDINT1 && !stopping) {
- 		if (field == V4L2_FIELD_NONE &&
- 		    vpfe->cur_frm == vpfe->next_frm)
- 			vpfe_schedule_next_buffer(vpfe);
-@@ -1980,6 +1972,9 @@ static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
++	if (!i) {
++		vpfe_err(vpfe, "No suitable format reported by subdev %s\n",
++			 subdev->name);
++		return -EINVAL;
++	}
+ 	return 0;
+ }
  
- 	vpfe_attach_irq(vpfe);
- 
-+	vpfe->stopping = false;
-+	init_completion(&vpfe->capture_stop);
-+
- 	if (vpfe->ccdc.ccdc_cfg.if_type == VPFE_RAW_BAYER)
- 		vpfe_ccdc_config_raw(&vpfe->ccdc);
- 	else
-@@ -2032,6 +2027,11 @@ static void vpfe_stop_streaming(struct vb2_queue *vq)
- 
- 	vpfe_pcr_enable(&vpfe->ccdc, 0);
- 
-+	/* Wait for the last frame to be captured */
-+	vpfe->stopping = true;
-+	wait_for_completion_timeout(&vpfe->capture_stop,
-+				    msecs_to_jiffies(250));
-+
- 	vpfe_detach_irq(vpfe);
- 
- 	sdinfo = vpfe->current_subdev;
 diff --git a/drivers/media/platform/am437x/am437x-vpfe.h b/drivers/media/platform/am437x/am437x-vpfe.h
-index 4678285f34c6..2dde09780215 100644
+index 2dde09780215..79a6505c083d 100644
 --- a/drivers/media/platform/am437x/am437x-vpfe.h
 +++ b/drivers/media/platform/am437x/am437x-vpfe.h
-@@ -23,6 +23,7 @@
- 
- #include <linux/am437x-vpfe.h>
- #include <linux/clk.h>
-+#include <linux/completion.h>
- #include <linux/device.h>
- #include <linux/io.h>
- #include <linux/i2c.h>
-@@ -270,6 +271,8 @@ struct vpfe_device {
- 	 */
- 	u32 field_off;
- 	struct vpfe_ccdc ccdc;
-+	int stopping;
-+	struct completion capture_stop;
+@@ -215,6 +215,39 @@ struct vpfe_ccdc {
+ 	u32 ccdc_ctx[VPFE_REG_END / sizeof(u32)];
  };
  
- #endif	/* AM437X_VPFE_H */
++/*
++ * struct bus_format - VPFE bus format information
++ * width: Bits per pixel (when transferred over a bus)
++ * bpp: Bytes per pixel (when stored in memory)
++ */
++struct bus_format {
++	unsigned int width;
++	unsigned int bpp;
++};
++
++/*
++ * struct vpfe_fmt - VPFE media bus format information
++ * fourcc: V4L2 pixel format code
++ * code: V4L2 media bus format code
++ * l: 10 bit bus format info
++ * s: 8 bit bus format info
++ */
++struct vpfe_fmt {
++	u32 fourcc;
++	u32 code;
++	struct bus_format l;
++	struct bus_format s;
++};
++
++/*
++ * This value needs to be at least as large as the number of entry in
++ * formats[].
++ * When formats[] is modified make sure to adjust this value also.
++ * Expect compile time warnings if VPFE_MAX_ACTIVE_FMT is smaller then
++ * the number of elements in formats[].
++ */
++#define VPFE_MAX_ACTIVE_FMT	10
++
+ struct vpfe_device {
+ 	/* V4l2 specific parameters */
+ 	/* Identifies video device for this channel */
+@@ -252,6 +285,9 @@ struct vpfe_device {
+ 	struct v4l2_format fmt;
+ 	/* Used to store current bytes per pixel based on current format */
+ 	unsigned int bpp;
++	struct vpfe_fmt	*active_fmt[VPFE_MAX_ACTIVE_FMT];
++	unsigned int num_active_fmt;
++
+ 	/*
+ 	 * used when IMP is chained to store the crop window which
+ 	 * is different from the image window
 -- 
 2.17.1
