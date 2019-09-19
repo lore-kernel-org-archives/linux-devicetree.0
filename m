@@ -1,57 +1,87 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 0/4] spi: dw: Add basic runtime PM support
-Date: Thu, 19 Sep 2019 16:23:33 +0100
-Message-ID: <20190919152326.GP3642@sirena.co.uk>
-References: <1568793876-9009-1-git-send-email-gareth.williams.jx@renesas.com>
- <20190919133113.GK3642@sirena.co.uk>
- <TYAPR01MB292515FE4C74044CA53321C5DF890@TYAPR01MB2925.jpnprd01.prod.outlook.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: [PATCH 1/2] arm64: dts: ti: j721e-main: Add SDHCI nodes
+Date: Thu, 19 Sep 2019 21:02:41 +0530
+Message-ID: <20190919153242.29399-2-faiz_abbas@ti.com>
+References: <20190919153242.29399-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dzI2QqkSBOAresgT"
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <TYAPR01MB292515FE4C74044CA53321C5DF890@TYAPR01MB2925.jpnprd01.prod.outlook.com>
+In-Reply-To: <20190919153242.29399-1-faiz_abbas@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gareth Williams <gareth.williams.jx@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, nm@ti.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
+Add nodes for the 3 SDHCI instances present on TI's J721E device.
+instance 0 supports HS400 (8 bit bus widht, DDR, 400 MBps)
+while instances 1 and 2 support SDR104 (4 bit width, SDR, 100 MBps) as
+their highest speed modes. Currently, only High speed (50 MHz clock) has
+been enabled.
 
---dzI2QqkSBOAresgT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 50 +++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-On Thu, Sep 19, 2019 at 03:14:54PM +0000, Gareth Williams wrote:
-> On Wed, Sep 19, 2019 at 14:31:32AM +0100, Mark Brown wrote:
-
-> > Please use subject lines matching the style for the subsystem.  This makes it
-> > easier for people to identify relevant patches.  This isn't even consistent
-> > within the series :(
-
-> Sorry about that, I will correct the subject lines for V3.
-
-Don't worry about it unless you need to send a v3 for some other reason.
-
-> Is there a set convention for the subsystem I should follow in future?
-> Or should I follow the style of the individual files I work on?
-
-Following the style for the file/directory is generally a good guide,
-for SPI I tend to prefer spi: but I just moan about it rather than block
-anything for it (unless I do end up missing the patch in my inbox).
-
---dzI2QqkSBOAresgT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2DnW0ACgkQJNaLcl1U
-h9CozAf+KonuKSEWtCRvLPNHth5I6Dmv/rgmgnQLAcqXOvyYP4XKeVynEQWjP1VT
-fRBeU1NL7gDivqKMWGOTDW7t+h8jULzY2zdyLJcARZ/dTByWuGk7u31qcYPUpVlW
-wSiWGaAJm8d9vDeoj5dWwz9Ijg0VP7EmwQStss7hUjOTzFSOXV52mZuxOI2TQfXQ
-6fm1dqVJ0f85TWNHTBBeV70W445kutx7yrF/Ed614cuCff5+SoKevGlC88PdTPV2
-we5TlLr1J2/i4gISCWpWpbf6ddcjZrOaQZhoHQQfF4/3KvcWqmrgrr+wa+cTZWyI
-YeEM6rjUhOpH1U3ABtzoZv8mBEQ5Gg==
-=xyoB
------END PGP SIGNATURE-----
-
---dzI2QqkSBOAresgT--
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+index 199bc9a00b20..1650bbd10932 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+@@ -372,4 +372,54 @@
+ 		clocks = <&k3_clks 112 0>;
+ 		clock-names = "gpio";
+ 	};
++
++	main_sdhci0: sdhci@4f80000 {
++		compatible = "ti,j721e-sdhci-8bit";
++		reg = <0x0 0x4f80000 0x0 0x1000>, <0x0 0x4f88000 0x0 0x400>;
++		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++		power-domains = <&k3_pds 91 TI_SCI_PD_EXCLUSIVE>;
++		clock-names = "clk_xin", "clk_ahb";
++		clocks = <&k3_clks 91 1>, <&k3_clks 91 0>;
++		assigned-clocks = <&k3_clks 91 1>;
++		assigned-clock-parents = <&k3_clks 91 2>;
++		bus-width = <8>;
++		mmc-hs400-1_8v;
++		mmc-ddr-1_8v;
++		ti,otap-del-sel = <0x2>;
++		ti,trm-icp = <0x8>;
++		ti,strobe-sel = <0x77>;
++		dma-coherent;
++	};
++
++	main_sdhci1: sdhci@4fb0000 {
++		compatible = "ti,j721e-sdhci-4bit";
++		reg = <0x0 0x04fb0000 0x0 0x1000>, <0x0 0x4fb8000 0x0 0x400>;
++		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
++		power-domains = <&k3_pds 92 TI_SCI_PD_EXCLUSIVE>;
++		clock-names = "clk_xin", "clk_ahb";
++		clocks = <&k3_clks 92 0>, <&k3_clks 92 5>;
++		assigned-clocks = <&k3_clks 92 0>;
++		assigned-clock-parents = <&k3_clks 92 1>;
++		ti,otap-del-sel = <0x2>;
++		ti,trm-icp = <0x8>;
++		ti,clkbuf-sel = <0x7>;
++		dma-coherent;
++		no-1-8-v;
++	};
++
++	main_sdhci2: sdhci@4f98000 {
++		compatible = "ti,j721e-sdhci-4bit";
++		reg = <0x0 0x4f98000 0x0 0x1000>, <0x0 0x4f90000 0x0 0x400>;
++		interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++		power-domains = <&k3_pds 93 TI_SCI_PD_EXCLUSIVE>;
++		clock-names = "clk_xin", "clk_ahb";
++		clocks = <&k3_clks 93 0>, <&k3_clks 93 5>;
++		assigned-clocks = <&k3_clks 93 0>;
++		assigned-clock-parents = <&k3_clks 93 1>;
++		ti,otap-del-sel = <0x2>;
++		ti,trm-icp = <0x8>;
++		ti,clkbuf-sel = <0x7>;
++		dma-coherent;
++		no-1-8-v;
++	};
+ };
+-- 
+2.19.2
