@@ -1,135 +1,32 @@
-From: Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: Re: [PATCH 2/3] dt-bindings: reset: add bindings for the Meson-A1 SoC
- Reset Controller
-Date: Thu, 19 Sep 2019 10:34:48 +0800
-Message-ID: <b6d7ad13-1bb4-5aea-ed13-3d695e8218e1@amlogic.com>
-References: <1568808746-1153-1-git-send-email-xingyu.chen@amlogic.com>
- <1568808746-1153-3-git-send-email-xingyu.chen@amlogic.com>
- <d99786ec-7635-67e5-3e47-738ce131b634@baylibre.com>
+From: "S.j. Wang" <shengjiu.wang@nxp.com>
+Subject: RE: [PATCH V2 3/4] ASoC: pcm_dmaengine: Extract
+        snd_dmaengine_pcm_set_runtime_hwparams
+Date: Thu, 19 Sep 2019 02:58:20 +0000
+Message-ID: <VE1PR04MB64799DE6C384435C8AB1918DE3890@VE1PR04MB6479.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <d99786ec-7635-67e5-3e47-738ce131b634@baylibre.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org, Hanjie Lin <hanjie.lin@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "S.j. Wang" <shengjiu.wang@nxp.com>, "timur@kernel.org" <timur@kernel.org>, "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Neil
-Thanks for your review
+Hi
 
-On 2019/9/18 20:39, Neil Armstrong wrote:
-> Hi,
-> 
-> On 18/09/2019 14:12, Xingyu Chen wrote:
->> Add DT bindings for the Meson-A1 SoC Reset Controller include file,
->> and also slightly update documentation.
->>
->> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
->> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
->> ---
->>   .../bindings/reset/amlogic,meson-reset.txt         |  4 +-
-> 
-> The reset bindings has been moved to yaml, either rebase on linux-next or wait for v5.4-rc1 :
-> https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next/+/refs/tags/next-20190917/Documentation/devicetree/bindings/reset/amlogic%2Cmeson-reset.yaml
-> 
-> NeilI will fix it in next version.
-> 
->>   include/dt-bindings/reset/amlogic,meson-a1-reset.h | 59 ++++++++++++++++++++++
->>   2 files changed, 61 insertions(+), 2 deletions(-)
->>   create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
->>
->> diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
->> index 28ef6c2..011151a 100644
->> --- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
->> +++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
->> @@ -5,8 +5,8 @@ Please also refer to reset.txt in this directory for common reset
->>   controller binding usage.
->>   
->>   Required properties:
->> -- compatible: Should be "amlogic,meson8b-reset", "amlogic,meson-gxbb-reset" or
->> -	"amlogic,meson-axg-reset".
->> +- compatible: Should be "amlogic,meson8b-reset", "amlogic,meson-gxbb-reset",
->> +	"amlogic,meson-axg-reset" or "amlogic,meson-a1-reset".
->>   - reg: should contain the register address base
->>   - #reset-cells: 1, see below
->>   
->> diff --git a/include/dt-bindings/reset/amlogic,meson-a1-reset.h b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
->> new file mode 100644
->> index 00000000..8d76a47
->> --- /dev/null
->> +++ b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
->> @@ -0,0 +1,59 @@
->> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> + *
->> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
->> + * Author: Xingyu Chen <xingyu.chen@amlogic.com>
->> + *
->> + */
->> +
->> +#ifndef _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
->> +#define _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
->> +
->> +/* RESET0 */
->> +#define RESET_AM2AXI_VAD		1
->> +#define RESET_PSRAM			4
->> +#define RESET_PAD_CTRL			5
->> +#define RESET_TEMP_SENSOR		7
->> +#define RESET_AM2AXI_DEV		8
->> +#define RESET_SPICC_A			10
->> +#define RESET_MSR_CLK			11
->> +#define RESET_AUDIO			12
->> +#define RESET_ANALOG_CTRL		13
->> +#define RESET_SAR_ADC			14
->> +#define RESET_AUDIO_VAD			15
->> +#define RESET_CEC			16
->> +#define RESET_PWM_EF			17
->> +#define RESET_PWM_CD			18
->> +#define RESET_PWM_AB			19
->> +#define RESET_IR_CTRL			21
->> +#define RESET_I2C_S_A			22
->> +#define RESET_I2C_M_D			24
->> +#define RESET_I2C_M_C			25
->> +#define RESET_I2C_M_B			26
->> +#define RESET_I2C_M_A			27
->> +#define RESET_I2C_PROD_AHB		28
->> +#define RESET_I2C_PROD			29
->> +
->> +/* RESET1 */
->> +#define RESET_ACODEC			32
->> +#define RESET_DMA			33
->> +#define RESET_SD_EMMC_A			34
->> +#define RESET_USBCTRL			36
->> +#define RESET_USBPHY			38
->> +#define RESET_RSA			42
->> +#define RESET_DMC			43
->> +#define RESET_IRQ_CTRL			45
->> +#define RESET_NIC_VAD			47
->> +#define RESET_NIC_AXI			48
->> +#define RESET_RAMA			49
->> +#define RESET_RAMB			50
->> +#define RESET_ROM			53
->> +#define RESET_SPIFC			54
->> +#define RESET_GIC			55
->> +#define RESET_UART_C			56
->> +#define RESET_UART_B			57
->> +#define RESET_UART_A			58
->> +#define RESET_OSC_RING			59
->> +
->> +/* RESET2 Reserved */
->> +
->> +#endif
->>
-> 
-> .
-> 
+>=20
+> When set the runtime hardware parameters, we may need to query the
+> capability of DMA to complete the parameters.
+>=20
+> This patch is to Extract this operation from
+> dmaengine_pcm_set_runtime_hwparams function to a separate function
+> snd_dmaengine_pcm_set_runtime_hwparams, that other components
+> which need this feature can call this function.
+>=20
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> ---
+
+kbuild test robot report compile issue, will resend v3 after fixing.
+
+Best regards
+Wang shengjiu
