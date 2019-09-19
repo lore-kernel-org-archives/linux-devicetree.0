@@ -1,32 +1,80 @@
-From: "S.j. Wang" <shengjiu.wang@nxp.com>
-Subject: RE: [PATCH V2 3/4] ASoC: pcm_dmaengine: Extract
-        snd_dmaengine_pcm_set_runtime_hwparams
-Date: Thu, 19 Sep 2019 02:58:20 +0000
-Message-ID: <VE1PR04MB64799DE6C384435C8AB1918DE3890@VE1PR04MB6479.eurprd04.prod.outlook.com>
+From: Wen He <wen.he_1@nxp.com>
+Subject: RE: [EXT] Re: [v4 2/2] clk: ls1028a: Add clock driver for Display
+ output interface
+Date: Thu, 19 Sep 2019 03:53:33 +0000
+Message-ID: <DB7PR04MB519538CC79789CB6DF65B9B2E2890@DB7PR04MB5195.eurprd04.prod.outlook.com>
+References: <20190829105919.44363-1-wen.he_1@nxp.com>
+ <20190829105919.44363-2-wen.he_1@nxp.com>
+ <20190916202637.B5F542067B@mail.kernel.org>
+ <DB7PR04MB51953099D6331F4F844A45EFE28E0@DB7PR04MB5195.eurprd04.prod.outlook.com>
+ <20190918170051.2AEAF21848@mail.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190918170051.2AEAF21848@mail.kernel.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "S.j. Wang" <shengjiu.wang@nxp.com>, "timur@kernel.org" <timur@kernel.org>, "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>
+To: Stephen Boyd <sboyd@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Leo Li <leoyang.li@nxp.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
->=20
-> When set the runtime hardware parameters, we may need to query the
-> capability of DMA to complete the parameters.
->=20
-> This patch is to Extract this operation from
-> dmaengine_pcm_set_runtime_hwparams function to a separate function
-> snd_dmaengine_pcm_set_runtime_hwparams, that other components
-> which need this feature can call this function.
->=20
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
-
-kbuild test robot report compile issue, will resend v3 after fixing.
-
-Best regards
-Wang shengjiu
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3RlcGhlbiBCb3lkIDxz
+Ym95ZEBrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE55bm0OeaciDE55pelIDE6MDENCj4gVG86IGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1jbGtAdmdlci5rZXJuZWwub3JnOw0KPiBs
+aW51eC1kZXZlbEBsaW51eC5ueGRpLm54cC5jb207IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc7IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBNaWNoYWVsIFR1cnF1
+ZXR0ZSA8bXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb20+Ow0KPiBSb2IgSGVycmluZyA8cm9iaCtkdEBr
+ZXJuZWwub3JnPjsgV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPiBDYzogTGVvIExpIDxsZW95
+YW5nLmxpQG54cC5jb20+OyBsaXZpdS5kdWRhdUBhcm0uY29tDQo+IFN1YmplY3Q6IFJFOiBbRVhU
+XSBSZTogW3Y0IDIvMl0gY2xrOiBsczEwMjhhOiBBZGQgY2xvY2sgZHJpdmVyIGZvciBEaXNwbGF5
+IG91dHB1dA0KPiBpbnRlcmZhY2UNCj4gDQo+IA0KPiBRdW90aW5nIFdlbiBIZSAoMjAxOS0wOS0x
+OCAwMjoyMDoyNikNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9t
+OiBTdGVwaGVuIEJveWQgPHNib3lkQGtlcm5lbC5vcmc+IFF1b3RpbmcgV2VuIEhlICgyMDE5LTA4
+LTI5DQo+ID4gPiAwMzo1OToxOSkNCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2Ns
+ay1wbGxkaWcuYyBiL2RyaXZlcnMvY2xrL2Nsay1wbGxkaWcuYw0KPiA+ID4gPiBuZXcgZmlsZSBt
+b2RlIDEwMDY0NCBpbmRleCAwMDAwMDAwMDAwMDAuLmQzMjM5YmNmNTlkZQ0KPiA+ID4gPiAtLS0g
+L2Rldi9udWxsDQo+ID4gPiA+ICsrKyBiL2RyaXZlcnMvY2xrL2Nsay1wbGxkaWcuYw0KPiA+ID4g
+PiBAQCAtMCwwICsxLDI5OCBAQA0KPiBbLi4uXQ0KPiA+DQo+ID4gPg0KPiA+ID4gPiArDQo+ID4g
+PiA+ICsvKiBNYXhpbXVtIG9mIHRoZSBkaXZpZGVyICovDQo+ID4gPiA+ICsjZGVmaW5lIE1BWF9S
+RkRQSEkxICAgICAgICAgIDYzDQo+ID4gPiA+ICsNCj4gPiA+ID4gKy8qIEJlc3QgdmFsdWUgb2Yg
+bXVsdGlwbGljYXRpb24gZmFjdG9yIGRpdmlkZXIgKi8NCj4gPiA+ID4gKyNkZWZpbmUgUExMRElH
+X0RFRkFVTEVfTVVMVCAgICAgICAgIDQ0DQo+ID4gPiA+ICsNCj4gPiA+ID4gKy8qDQo+ID4gPiA+
+ICsgKiBDbG9jayBjb25maWd1cmF0aW9uIHJlbGF0aW9uc2hpcCBiZXR3ZWVuIHRoZSBQSEkxDQo+
+ID4gPiA+ICtmcmVxdWVuY3koZnBsbF9waGkpIGFuZA0KPiA+ID4gPiArICogdGhlIG91dHB1dCBm
+cmVxdWVuY3kgb2YgdGhlIFBMTCBpcyBkZXRlcm1pbmVkIGJ5IHRoZSBQTExEViwNCj4gPiA+ID4g
+K2FjY29yZGluZyB0bw0KPiA+ID4gPiArICogdGhlIGZvbGxvd2luZyBlcXVhdGlvbjoNCj4gPiA+
+ID4gKyAqIGZwbGxfcGhpID0gKHBsbF9yZWYgKiBtZmQpIC8gZGl2X3JmZHBoaTEgICovIHN0cnVj
+dA0KPiA+ID4gPiArcGxsZGlnX3BoaTFfcGFyYW0gew0KPiA+ID4gPiArICAgICAgIHVuc2lnbmVk
+IGxvbmcgcmF0ZTsNCj4gPiA+ID4gKyAgICAgICB1bnNpZ25lZCBpbnQgcmZkcGhpMTsNCj4gPiA+
+ID4gKyAgICAgICB1bnNpZ25lZCBpbnQgbWZkOw0KPiA+ID4gPiArfTsNCj4gPiA+ID4gKw0KPiA+
+ID4gPiArZW51bSBwbGxkaWdfcGhpMV9mcmVxX3JhbmdlIHsNCj4gPiA+ID4gKyAgICAgICBQSEkx
+X01JTiAgICAgICAgPSAyNzAwMDAwMFUsDQo+ID4gPiA+ICsgICAgICAgUEhJMV9NQVggICAgICAg
+ID0gNjAwMDAwMDAwVQ0KPiA+ID4gPiArfTsNCj4gPiA+DQo+ID4gPiBQbGVhc2UganVzdCBpbmxp
+bmUgdGhlc2UgdmFsdWVzIGluIHRoZSBvbmUgcGxhY2UgdGhleSdyZSB1c2VkLg0KPiA+ID4NCj4g
+PiA+ID4gKw0KPiA+ID4gPiArc3RydWN0IGNsa19wbGxkaWcgew0KPiA+ID4gPiArICAgICAgIHN0
+cnVjdCBjbGtfaHcgaHc7DQo+ID4gPiA+ICsgICAgICAgdm9pZCBfX2lvbWVtICpyZWdzOw0KPiA+
+ID4gPiArICAgICAgIHN0cnVjdCBkZXZpY2UgKmRldjsNCj4gPiA+DQo+ID4gPiBQbGVhc2UgcmVt
+b3ZlIHRoaXMsIGl0IGlzIHVudXNlZC4NCj4gPg0KPiA+IEl0IGlzIHVzZWQgZm9yIHByb2JlLg0K
+PiANCj4gVXNlIGEgbG9jYWwgdmFyaWFibGUgYW5kIGRvbid0IHN0b3JlIGl0IGF3YXkgZm9yZXZl
+ciBpbiB0aGUgc3RydWN0Lg0KPiANCg0KVW5kZXJzdGFuZCwgd2lsbCByZW1vdmUgaXQuDQoNCj4g
+PiA+DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICB2YWwgPSByZWFkbChkYXRhLT5yZWdzICsg
+UExMRElHX1JFR19QTExEVik7DQo+ID4gPiA+ICsgICAgICAgdmFsID0gcGhpMV9wYXJhbS5tZmQ7
+DQo+ID4gPiA+ICsgICAgICAgcmZkcGhpMSA9IHBoaTFfcGFyYW0ucmZkcGhpMTsNCj4gPiA+ID4g
+KyAgICAgICB2YWwgfD0gcmZkcGhpMTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIHdyaXRl
+bCh2YWwsIGRhdGEtPnJlZ3MgKyBQTExESUdfUkVHX1BMTERWKTsNCj4gPiA+ID4gKw0KPiA+ID4g
+PiArICAgICAgIC8qIGRlbGF5IDIwMHVzIG1ha2Ugc3VyZSB0aGF0IG9sZCBsb2NrIHN0YXRlIGlz
+IGNsZWFyZWQgKi8NCj4gPiA+ID4gKyAgICAgICB1ZGVsYXkoMjAwKTsNCj4gPiA+ID4gKw0KPiA+
+ID4gPiArICAgICAgIC8qIFdhaXQgdW50aWwgUExMIGlzIGxvY2tlZCBvciB0aW1lb3V0IChtYXhp
+bXVtIDEwMDAgdXNlY3MpICovDQo+ID4gPiA+ICsgICAgICAgcmV0ID0gcmVhZGxfcG9sbF90aW1l
+b3V0X2F0b21pYyhkYXRhLT5yZWdzICsNCj4gPiA+ID4gKyBQTExESUdfUkVHX1BMTFNSLA0KPiA+
+ID4gY29uZCwNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGNvbmQgJg0KPiBQTExESUdfTE9DS19NQVNLLA0KPiA+ID4gMCwNCj4gPiA+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFVTRUNfUEVSX01TRUMpOw0KPiA+ID4gPiAr
+DQo+ID4gPiA+ICsgICAgICAgcmV0dXJuIHJldDsNCj4gPiA+DQo+ID4gPiBKdXN0IHJldHVybiBy
+ZWFkbF9wb2xsX3RpbWVvdXRfYXRvbWljKC4uLikgaGVyZS4NCj4gPg0KPiA+IE1heWJlIHVzZSBi
+ZWxvdyBjb2RlIHdpbGwgdG8gYmVzdCBkZXNjcmliZXMuDQo+ID4NCj4gPiBJZiAocmV0KQ0KPiA+
+ICAgICAgICAgcmV0dXJuIC1FVElNRU9VVDsNCj4gPg0KPiA+IHJldHVybiAwOw0KPiANCj4gTm8s
+IGp1c3QgcmV0dXJuIHJlYWRsX3BvbGxfdGltZW91dF9hdG9taWMoKS4NCg0KVW5kZXJzdGFuZCwg
+SSB3aWxsIHNlbmQgbmV4dCB2ZXJzaW9uIHBhdGNoIGZvciB0aGlzLg0KDQpUaGFua3MgJiYgQmVz
+dCBSZWdhcmRzLA0KV2VuDQoNCg==
