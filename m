@@ -1,109 +1,39 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v1 2/9] mfd: wm8994: Add support for MCLKn clock control
-Date: Thu, 19 Sep 2019 09:59:24 +0200
-Message-ID: <20190919075924.GB13195@pi3>
-References: <20190918104634.15216-1-s.nawrocki@samsung.com>
- <CGME20190918104656eucas1p1d9cad1394b08d05a99151c4fbc9425ce@eucas1p1.samsung.com>
- <20190918104634.15216-3-s.nawrocki@samsung.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v7 00/13] Device property improvements, add %pfw format specifier
+Date: Thu, 19 Sep 2019 10:00:08 +0200
+Message-ID: <CAJZ5v0iHv=-t3qA3VBfC6ryPOmC8QW9pxwFvEw6SQQZ3CwsScw@mail.gmail.com>
+References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190918104634.15216-3-s.nawrocki@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, ckeepax@opensource.cirrus.com, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 12:46:27PM +0200, Sylwester Nawrocki wrote:
-> The WM1811/WM8994/WM8958 audio CODEC DT bindings specify two optional
-> clocks: "MCLK1", "MCLK2". Add code for getting those clocks in the MFD
-> part of the wm8994 driver so they can be further handled in the audio
-> CODEC part.
+On Wed, Sep 18, 2019 at 3:34 PM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+>
+> Hi all,
+>
+> This set adds functionality into the device property API (counting a
+> node's parents as well as obtaining its name) in order to support printing
+> fwnode names using a new conversion specifier "%pfw". The names that are
+> produced are equivalent to its OF counterpart "%pOF" on OF systems for the
+> two supported modifiers ("f" and "P").
+>
+> Printing a node's name is something that's been available on OF for a long
+> time and if something is converted to device property API (such as the
+> V4L2 fwnode framework) it always got removed of a nice feature that was
+> sometimes essential in debugging. With this set, that no longer is the
+> case.
+>
+> Note: the set now depends on 2d44d165e939 ("scsi: lpfc: Convert existing
+> %pf users to %ps") that is expected from the linux-scsi tree. It is
 
-I think these are needed only for the codec so how about getting them in
-codec's probe?
+OK, so I will be expecting a refresh of the series when the above
+commit appears in the mainline.
 
-Best regards,
-Krzysztof
-
-
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
->  drivers/mfd/wm8994-core.c       | 9 +++++++++
->  include/linux/mfd/wm8994/core.h | 9 +++++++++
->  2 files changed, 18 insertions(+)
-> 
-> diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
-> index 1e9fe7d92597..02c19a0bdeb0 100644
-> --- a/drivers/mfd/wm8994-core.c
-> +++ b/drivers/mfd/wm8994-core.c
-> @@ -7,6 +7,7 @@
->   * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
->   */
->  
-> +#include <linux/clk.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
-> @@ -333,6 +334,14 @@ static int wm8994_device_init(struct wm8994 *wm8994, int irq)
->  
->  	dev_set_drvdata(wm8994->dev, wm8994);
->  
-> +	wm8994->mclk[WM8994_MCLK1].id = "MCLK1";
-> +	wm8994->mclk[WM8994_MCLK2].id = "MCLK2";
-> +
-> +	ret = devm_clk_bulk_get_optional(wm8994->dev, ARRAY_SIZE(wm8994->mclk),
-> +					 wm8994->mclk);
-> +	if (ret != 0)
-> +		return ret;
-> +
->  	/* Add the on-chip regulators first for bootstrapping */
->  	ret = mfd_add_devices(wm8994->dev, 0,
->  			      wm8994_regulator_devs,
-> diff --git a/include/linux/mfd/wm8994/core.h b/include/linux/mfd/wm8994/core.h
-> index e8b093522ffd..320297a1b70c 100644
-> --- a/include/linux/mfd/wm8994/core.h
-> +++ b/include/linux/mfd/wm8994/core.h
-> @@ -10,12 +10,19 @@
->  #ifndef __MFD_WM8994_CORE_H__
->  #define __MFD_WM8994_CORE_H__
->  
-> +#include <linux/clk.h>
->  #include <linux/mutex.h>
->  #include <linux/interrupt.h>
->  #include <linux/regmap.h>
->  
->  #include <linux/mfd/wm8994/pdata.h>
->  
-> +enum {
-> +	WM8994_MCLK1,
-> +	WM8994_MCLK2,
-> +	WM8994_NUM_MCLK
-> +};
-> +
->  enum wm8994_type {
->  	WM8994 = 0,
->  	WM8958 = 1,
-> @@ -60,6 +67,8 @@ struct wm8994 {
->  	struct device *dev;
->  	struct regmap *regmap;
->  
-> +	struct clk_bulk_data mclk[WM8994_NUM_MCLK];
-> +
->  	bool ldo_ena_always_driven;
->  
->  	int gpio_base;
-> -- 
-> 2.17.1
-> 
+Cheers,
+Rafael
