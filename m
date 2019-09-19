@@ -1,193 +1,241 @@
-From: "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Subject: Re: [PATCH v1 1/2] pinctrl: Add pinmux & GPIO controller driver for
- new SoC
-Date: Thu, 19 Sep 2019 16:36:08 +0800
-Message-ID: <24ae4096-d8d6-fd28-ba2c-98a27f196e6c@linux.intel.com>
-References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
- <65898579e78b4b3bb5db9ddc884a818046c1eb4c.1568274587.git.rahul.tanwar@linux.intel.com>
- <20190912143000.GB2680@smile.fi.intel.com>
+From: "Shenhar, Talel" <talel@amazon.com>
+Subject: Re: [PATCH v2 2/2] EDAC: al-mc-edac: Introduce Amazon's Annapurna
+ Labs Memory Controller EDAC
+Date: Thu, 19 Sep 2019 11:36:06 +0300
+Message-ID: <fe52b9bb-6d3a-92be-b54a-c93003cc9b4b@amazon.com>
+References: <1568529835-15319-1-git-send-email-talel@amazon.com>
+ <1568529835-15319-3-git-send-email-talel@amazon.com>
+ <4f6cd17c-c56f-b9d2-d6e0-1711de415f47@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190912143000.GB2680@smile.fi.intel.com>
+In-Reply-To: <4f6cd17c-c56f-b9d2-d6e0-1711de415f47@arm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com, yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
+To: James Morse <james.morse@arm.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, nicolas.ferre@microchip.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com, barakw@amazon.com
 List-Id: devicetree@vger.kernel.org
 
+Thanks for the review.
 
-Hi Andy,
 
-Thanks for your comments. I agree & will address all your review concerns in
-v2 except below mentioned points where i need more clarification.
+On 9/18/2019 8:47 PM, James Morse wrote:
+> Hi Talel,
+>
+> On 15/09/2019 07:43, Talel Shenhar wrote:
+>> The Amazon's Annapurna Labs Memory Controller EDAC supports ECC capability
+>> for error detection and correction (Single bit error correction, Double
+>> detection). This driver introduces EDAC driver for that capability.
+> Is there any documentation for this memory controller?
+Unfortunately, we don't have public documentation for it.
+>
+>
+>> diff --git a/drivers/edac/al_mc_edac.c b/drivers/edac/al_mc_edac.c
+>> new file mode 100644
+>> index 0000000..f9763d4
+>> --- /dev/null
+>> +++ b/drivers/edac/al_mc_edac.c
+>> @@ -0,0 +1,382 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+>> + */
+>> +#include <linux/bitfield.h>
+> #include <linux/bitops.h> for hweight_long()
 
-On 12/9/2019 10:30 PM, Andy Shevchenko wrote:
->> +static const struct pin_config pin_cfg_type[] = {
->> +	{"intel,pullup",		PINCONF_TYPE_PULL_UP},
->> +	{"intel,pulldown",		PINCONF_TYPE_PULL_DOWN},
->> +	{"intel,drive-current",		PINCONF_TYPE_DRIVE_CURRENT},
->> +	{"intel,slew-rate",		PINCONF_TYPE_SLEW_RATE},
->> +	{"intel,open-drain",		PINCONF_TYPE_OPEN_DRAIN},
->> +	{"intel,output",		PINCONF_TYPE_OUTPUT},
+shall be part of v3.
+
+btw: do you use some tool to catch those missing includes?
+
+>
+>> +#include <linux/edac.h>
+>> +#include <linux/of_irq.h>
+> #include <linux/platform_device.h> for platform_get_resource()
+shall be part of v3.
+>
+>> +#include "edac_module.h"
+>> +/* Registers Values */
+>> +#define AL_MC_MSTR_DEV_CFG_X4	0
+>> +#define AL_MC_MSTR_DEV_CFG_X8	1
+>> +#define AL_MC_MSTR_DEV_CFG_X16	2
+>> +#define AL_MC_MSTR_DEV_CFG_X32	3
+>> +#define AL_MC_MSTR_RANKS_MAX 4
+> Is this a fixed property of the memory controller, or is it a limit imposed from somewhere
+> else. (Does it need to come from the DT?)
+
+Yes. this is a fixed behavior hence not part of dt.
+
+>
+>
+>> +#define AL_MC_MSTR_DATA_BUS_WIDTH_X64	0
+>> +
+>> +#define DRV_NAME "al_mc_edac"
+>> +#define AL_MC_EDAC_MSG_MAX 256
+>> +#define AL_MC_EDAC_MSG(message, buffer_size, type,			\
+>> +		       rank, row, bg, bank, column, syn0, syn1, syn2)	\
+>> +	snprintf(message, buffer_size,					\
+>> +		 "%s rank=0x%x row=0x%x bg=0x%x bank=0x%x col=0x%x "	\
+>> +		 "syn0: 0x%x syn1: 0x%x syn2: 0x%x",			\
+>> +		 type == HW_EVENT_ERR_UNCORRECTED ? "UE" : "CE",	\
+>> +		 rank, row, bg, bank, column, syn0, syn1, syn2)
+>> +
+>> +struct al_mc_edac {
+>> +	void __iomem *mmio_base;
+>> +	int irq_ce;
+>> +	int irq_ue;
 >> +};
-> Doesn't DT provide a generic naming scheme for these?
+>> +
+>> +static int al_mc_edac_handle_ce(struct mem_ctl_info *mci)
+>> +{
+>> +	struct al_mc_edac *al_mc = mci->pvt_info;
+>> +	u32 eccerrcnt;
+>> +	u16 ce_count;
+>> +	u32 ecccaddr0;
+>> +	u32 ecccaddr1;
+>> +	u32 ecccsyn0;
+>> +	u32 ecccsyn1;
+>> +	u32 ecccsyn2;
+>> +	u8 rank;
+>> +	u32 row;
+>> +	u8 bg;
+>> +	u8 bank;
+>> +	u16 column;
+>> +	char msg[AL_MC_EDAC_MSG_MAX];
+> (Some of these could go on the same line, same with UE below)
+Shall be part of v3
+> +
+> +	edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci,
+> +			     ce_count, 0, 0, 0, 0, 0, -1, mci->ctl_name, msg);
+> You used active_ranks as the layer size in al_mc_edac_probe(). Can't you supply the rank here?
+>
+> (If its not useful, why is it setup like this in al_mc_edac_probe()?)
 
-For pinctrl multiplexing/configuration nodes, DT does provide generic names
-for some properties but it does not seem to mandate it. It states that the
-content of pin mux/conf nodes is defined entirely by the binding of the pin
-controller device. There are many other examples of pinctrl drivers which use
-different prop names than generic ones. For e.g. Samsung. Our understanding
-is: if the node is generic i.e. handled by framework, then it should use
-generic name. But if the node is private to driver, then it is better to
-prefix it with driver name to avoid any conflicts.
->> +	virq = irq_find_mapping(desc->irq_domain, offset);
->> +	if (virq)
->> +		return virq;
->>
+Seems it can be removed from probe.
+
+Shall be part of v3.
+
+>
+>
+> +	u8 bank;
+> +	u16 column;
+> +	char msg[AL_MC_EDAC_MSG_MAX];
+> +
+> +	eccerrcnt = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_ERR_COUNT);
+> +	ue_count = FIELD_GET(AL_MC_ECC_ERR_COUNT_UE, eccerrcnt);
+> +	if (!ue_count)
+> +		return 0;
+> +
+> +	eccuaddr0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_ADDR0);
+> +	eccuaddr1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_ADDR1);
+> +	eccusyn0 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND0);
+> +	eccusyn1 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND1);
+> +	eccusyn2 = readl_relaxed(al_mc->mmio_base + AL_MC_ECC_UE_SYND2);
+> +
+> +	writel(AL_MC_ECC_CLEAR_UE_COUNT | AL_MC_ECC_CLEAR_UE_ERR,
+> +	       al_mc->mmio_base + AL_MC_ECC_CLEAR);
+> +
+> +	dev_dbg(mci->pdev, "eccuaddr0=0x%08x eccuaddr1=0x%08x\n",
+> +		eccuaddr0, eccuaddr1);
+> +
+> +	rank = FIELD_GET(AL_MC_ECC_UE_ADDR0_RANK, eccuaddr0);
+> +	row = FIELD_GET(AL_MC_ECC_UE_ADDR0_ROW, eccuaddr0);
+> +
+> +	bg = FIELD_GET(AL_MC_ECC_UE_ADDR1_BG, eccuaddr1);
+> +	bank = FIELD_GET(AL_MC_ECC_UE_ADDR1_BANK, eccuaddr1);
+> +	column = FIELD_GET(AL_MC_ECC_UE_ADDR1_COLUMN, eccuaddr1);
+> +
+> +	AL_MC_EDAC_MSG(msg, sizeof(msg), HW_EVENT_ERR_UNCORRECTED,
+> +		       rank, row, bg, bank, column,
+> +		       eccusyn0, eccusyn1, eccusyn2);
+> +
+> +	edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci,
+> +			     ue_count, 0, 0, 0, 0, 0, -1, mci->ctl_name, msg);
+>
+> What happens when this code runs at the same time as the corrected error handler calling
+> edac_mc_handler_error() with this same mci?
+>
+> This could happen on a second CPU, or on one cpu if the corrected handler is polled.
+>
+> edac_mc_handle_error() memset's the edac_raw_error_desc in mci, so it can't be called in
+> parallel, or twice on the same cpu.
+>
+> I think you need an irqsave spinlock around the calls to edac_mc_handle_error().
+
+shall add locks in v3.
+
+>
+>> +
+>> +static irqreturn_t al_mc_edac_irq_handler_ue(int irq, void *info)
+>> +{
+>> +	struct platform_device *pdev = info;
+>> +	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
+>> +	int ue_count;
+>> +
+>> +	ue_count = al_mc_edac_handle_ue(mci);
+>> +	if (ue_count)
+>> +		return IRQ_HANDLED;
 >> +	else
->> +		return irq_create_mapping(desc->irq_domain, offset);
-> Don't we have more clever helper for this? AFAIR something like this is done in
-> IRQ framework when you get a mapping from certain domain.
+>> +		return IRQ_NONE;
+>> +}
+> As you don't use ue_count, wouldn't this be clearer:
 >
-
-I guess, you mean irq_domain_add_simple(). This function does optionally map
-the IRQs but only statically assigned IRQs. We need dynamic gpio_to_irq
-mappings which is why the gpio_chip->to_irq() is optionally provided so the
-drivers requiring dynamic IRQ mappings can override this function.
-
-But i can definitely get rid of redundant irq_find_mapping() because
-irq_create_mapping() anyways invokes irq_find_mapping() first. I will remove
-irq_find_mapping() and just use irq_create_mapping() here.
->> +static void eqbr_irq_handler(struct irq_desc *desc)
->> +{
->> +	struct intel_gpio_desc *gc;
->> +	struct irq_chip *ic;
->> +	u32 pins, offset;
->> +	unsigned int virq;
->> +
->> +	gc = irq_desc_get_handler_data(desc);
->> +	ic = irq_desc_get_chip(desc);
->> +
->> +	chained_irq_enter(ic, desc);
->> +	pins = readl(gc->membase + GPIO_IRNCR);
->> +
->> +	for_each_set_bit(offset, (unsigned long *)&pins, gc->bank->nr_pins) {
->> +		virq = irq_linear_revmap(gc->irq_domain, offset);
->> +		if (!virq)
->> +			pr_err("gc[%s]:pin:%d irq not registered!\n",
->> +			       gc->name, offset);
-> dev_err() ? But Why is it needed? Shouldn't be registered as a spurious IRQ for
-> later debugging?
-
-IMHO, spurious IRQ can only be registered if none of the pins are valid.
-Please see below alternative way of handling it & let me know if this
-makes more sense.
-
-@@ -313,6 +313,7 @@ static void eqbr_irq_handler(struct irq_desc *desc)
-        struct irq_chip *ic;
-        u32 pins, offset;
-        unsigned int virq;
-+       int handled = 0;
-
-        gc = irq_desc_get_handler_data(desc);
-        ic = irq_desc_get_chip(desc);
-@@ -322,12 +323,16 @@ static void eqbr_irq_handler(struct irq_desc *desc)
-
-        for_each_set_bit(offset, (unsigned long *)&pins, gc->bank->nr_pins) {
-                virq = irq_linear_revmap(gc->irq_domain, offset);
--               if (!virq)
--                       pr_err("gc[%s]:pin:%d irq not registered!\n",
--                              gc->name, offset);
--               else
-+               if (virq) {
-                        generic_handle_irq(virq);
-+                       handled++;
-+               }
-        }
-+
-+       /* Spurious interrupt */
-+       if (handled == 0)
-+               handle_bad_irq(desc);
-+
-        chained_irq_exit(ic, desc);
- }
-
-
->> +static int add_config(struct intel_pinctrl_drv_data *drvdata,
->> +		      unsigned long **confs, unsigned int *nr_conf,
->> +		      unsigned long pinconf)
->> +{
->> +	unsigned long *configs;
->> +	struct device *dev = drvdata->dev;
->> +	unsigned int num_conf = *nr_conf + 1;
->> +
->> +	if (!(*nr_conf)) {
->> +		configs = devm_kcalloc(dev, 1, sizeof(pinconf), GFP_KERNEL);
->> +		if (!configs)
->> +			return -ENOMEM;
->> +	} else {
->> +		configs = devm_kmemdup(dev, *confs,
->> +				       num_conf * sizeof(pinconf), GFP_KERNEL);
->> +		if (!configs)
->> +			return -ENOMEM;
->> +		devm_kfree(dev, *confs);
-> This a red flag for using devm_*().
-> Either a sign of bad design or misplacement of devm_*().
-
-I can switch to non devm versions i.e. kmalloc/kfree for these buffer
-allocations. But this leaves me with a fundamental question. As i
-understand, devm*() variants are to allocate device specific resources
-so you don't have to worry about releasing those resources when device
-is unloaded. Does that mean that we should only use devm*() for resources
-which have a lifetime from driver load until the driver is unloaded ?
-For all other allocations which requires freeing up & reallocation during
-the operational state of driver, we should use non devm variants i.e.
-kmalloc/kfree ? If yes, then what's the purpose of devm_kfree() & other
-similar APIs ?
+> | if (al_mc_edac_handle_ue(mci))
+> | 	return IRQ_HANDLED;
+> | return IRQ_NONE;
 >
->> +	val = !!(readl(mem + REG_PUEN) & BIT(offset));
->> +	seq_printf(s, "PULL UP: %u\n", val);
->> +	val = !!(readl(mem + REG_PDEN) & BIT(offset));
->> +	seq_printf(s, "PULL DOWN: %u\n", val);
->> +	val = !!(readl(mem + REG_OD) & BIT(offset));
->> +	seq_printf(s, "OPEN DRAIN: %u\n", val);
->> +	val = get_drv_cur(mem, offset);
->> +	seq_printf(s, "DRIVE CURRENT: %u\n", val);
->> +	val = !!(readl(mem + REG_SRC) & BIT(offset));
->> +	seq_printf(s, "SLEW RATE: %u\n", val);
->> +	gpio = get_gpio_desc_via_bank(pctl, bank);
->> +	val = intel_eqbr_gpio_get_dir(&gpio->chip, offset);
->> +	seq_printf(s, "OUTPUT: %u\n", !val);
-> I think GPIO library does it for you.
-
-Sorry, could not figure out what you mean. Do you mean no need to override
-pinconf_ops->pin_config_dbg_show() ?
+> ?
+ack, shall add to v3
 >
->> +static int is_func_exist(struct intel_pmx_func *funcs, const char *name,
->> +			 unsigned int nr_funcs, unsigned int *idx)
+>> +static int al_mc_edac_probe(struct platform_device *pdev)
 >> +{
->> +	int i;
+>> +	struct resource *resource;
+>> +	void __iomem *mmio_base;
+>> +	unsigned int active_ranks;
+>> +	struct edac_mc_layer layers[1];
+>> +	struct mem_ctl_info *mci;
+>> +	struct al_mc_edac *al_mc;
+>> +	int ret;
 >> +
->> +	if (!funcs || !nr_funcs)
->> +		return 0;
+>> +	resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> platform_get_resource() can fail, returning NULL.
+ack, shall add to v3
+>
+>
+> +
+> +	if (al_mc->irq_ue > 0) {
+> +		ret = devm_request_irq(&pdev->dev,
+> +				       al_mc->irq_ue,
+> +				       al_mc_edac_irq_handler_ue,
+>> +				       0,
+> As you know when your device has triggered the interrupt from the error counter, could
+> these be IRQF_SHARED?
+ack, shall add to v3
+>
+>> +static int al_mc_edac_remove(struct platform_device *pdev)
+>> +{
+>> +	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
 >> +
->> +	for (i = 0; i < nr_funcs; i++) {
->> +		if (strcmp(funcs[i].name, name) == 0) {
->> +			*idx = i;
->> +			return 1;
->> +		}
->> +	}
->> +
->> +	return 0;
-> NIH match_string(). But I think pin control core does it for drivers.
+>> +	edac_mc_del_mc(&pdev->dev);
+>> +	edac_mc_free(mci);
+> What stops your interrupt firing here? You've free'd the memory it uses.
+>
+> I think you need to devm_free_irq() the interrupts before you free the memory.
+ack, shall add to v3
+>
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_AUTHOR("Talel Shenhar");
+>> +MODULE_DESCRIPTION("Amazon's Annapurna Lab's Memory Controller EDAC Driver");
+> (Kconfig says this is 'bool', so it can't be built as a module, having these is a bit odd)
 
-match_string() searches a string within a array of strings. Here, we are
-searching an array of structures, each struct having a unique string, to
-match that unique string & return index of containing structure. Could
-not find any helper for this purpose. Checked pin control core code as
-well but could not find any routine to use for this purpose.
+ack, shall add to v3
 
-Regards,
-Rahul
+while at it, shall consider changing to trisate so it can really be 
+build as a module as well.
+
+>
+>
+>
+> Thanks,
+>
+> James
