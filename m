@@ -1,117 +1,112 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: ddr: Add bindings for Samsung
- LPDDR3 memories
-Date: Thu, 19 Sep 2019 09:43:17 +0200
-Message-ID: <4e7b0a6d-491f-a764-f038-1aff5534320f@partner.samsung.com>
-References: <CGME20190916100719eucas1p206fe95982b774840b5d6e62ba9c42c79@eucas1p2.samsung.com>
-        <20190916100704.26692-1-l.luba@partner.samsung.com>
-        <20190916100704.26692-4-l.luba@partner.samsung.com>
-        <CAJKOXPcxG-mMKy5u-b0+xj_sOmrq5yq5-LYJx0Ds6_+yo_=JbA@mail.gmail.com>
-        <4a0d1d2c-cd1d-5df4-d4b1-f2dd1ef3bb72@partner.samsung.com>
-        <CAJKOXPfBueaf2UVik8x2L_D_PTxdkvRukuWL3xh_jDiLKtt7pQ@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v7 08/13] lib/vsprintf: Remove support for %pF and %pf in
+ favour of %pS and %ps
+Date: Thu, 19 Sep 2019 09:58:24 +0200
+Message-ID: <CAJZ5v0hhOowv93-7wApvetr10bO+geTX_giH_2kHWmsRGdWFFw@mail.gmail.com>
+References: <20190918133419.7969-1-sakari.ailus@linux.intel.com> <20190918133419.7969-9-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPfBueaf2UVik8x2L_D_PTxdkvRukuWL3xh_jDiLKtt7pQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190918133419.7969-9-sakari.ailus@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, willy.mh.wolff.ml@gmail.com
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Petr Mladek <pmladek@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Sep 18, 2019 at 3:34 PM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+>
+> %pS and %ps are now the preferred conversion specifiers to print function
+> names. The functionality is equivalent; remove the old, deprecated %pF
+> and %pf support.
+>
+> Depends-on: commit 2d44d165e939 ("scsi: lpfc: Convert existing %pf users to %ps")
 
+Where is this commit present?
 
-On 9/19/19 9:28 AM, Krzysztof Kozlowski wrote:
-> On Thu, 19 Sep 2019 at 08:49, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->> Hi Krzysztof,
->>
->> On 9/18/19 8:51 PM, Krzysztof Kozlowski wrote:
->>> On Mon, 16 Sep 2019 at 12:07, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>>>
->>>> Add compatible for Samsung k3qf2f20db LPDDR3 memory bindings.
->>>> Introduce minor fixes in the old documentation.
->>>>
->>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->>>> ---
->>>>    Documentation/devicetree/bindings/ddr/lpddr3.txt | 9 ++++++---
->>>>    1 file changed, 6 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/ddr/lpddr3.txt b/Documentation/devicetree/bindings/ddr/lpddr3.txt
->>>> index 3b2485b84b3f..49afe794daaa 100644
->>>> --- a/Documentation/devicetree/bindings/ddr/lpddr3.txt
->>>> +++ b/Documentation/devicetree/bindings/ddr/lpddr3.txt
->>>> @@ -1,7 +1,9 @@
->>>>    * LPDDR3 SDRAM memories compliant to JEDEC JESD209-3C
->>>>
->>>>    Required properties:
->>>> -- compatible : Should be  - "jedec,lpddr3"
->>>> +- compatible : should be one of the following:
->>>> +       Generic default - "jedec,lpddr3".
->>>
->>> The convention is first compatible, then description. I gave you the
->>> example to base on - at25. Why making it different?
->>
->> I have checked at25 that you pointed me to and also checked at24, which
->> has a bit longer "compatible" section.
->>
->> I found that there are many "jedec,spi-nor" compatible devices, which I
->> thought would be a better example for my "jedec,lpddr3".
->> For example, two configurations, where you have a single labels or dual
->> (with specific device)
->> arch/arm/boot/dts/imx6dl-rex-basic.dts:
->> compatible = "sst,sst25vf016b", "jedec,spi-nor";
->> arch/arm/boot/dts/imx6q-ba16.dtsi:
->> compatible = "jedec,spi-nor";
->>
->> The 'compatible' in documentation for the "jedec,spi-nor" is slightly
->> different (similar to at24).
->> Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
->> It has a long explanation, which is also OK. So I thought that it is
->> quite flexible what you put in there.
-> 
-> It is flexible but I see clear pattern in existing sources:
->    jedec,spi-nor.txt
->    compatible : May include a device-specific ..
->    ...
->    Supported chip names:
->      at25df321a
->      ...
-> 
->    at25.txt:
->    - compatible : Should be "<vendor>,<type>", and generic value "atmel,at25".
->      Example "<vendor>,<type>" values:
->        "anvo,anv32e61w"
->        "microchip,25lc040"
-> 
-> In these cases the doc says that "compatible should be" and then you
-> have the list of values. Your example says that the compatible should
-> be "Generic default" or "For Samsung 542x SoC"... :) The difference is
-> slight but putting the value first is a simple and elegant solution.
-> In your case one has to go to the end of sentence to find the most
-> important information - the compatible value.
-> 
->> I have also checked Cadance QSPI controller.
->> Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->> The controller might be built-in into different vendor SoC's
->> and the "compatible" is ready to reflect it in similar fashion but
->> with a short explanation in this section.
-> 
-> I see. I do not find this pattern as much readable as jedec-spi-nor or
-> at25 therefore I mentioned them as an example to base on ("Exactly the
-> same as AT24 or AT25 EEPROM bindings."). We can avoid also this entire
-> discussion with YAML (which also follows approach of at25 - value
-> first).
-> 
->> Therefore, what you see in the patch draw heavily on Cadence's qspi,
->> with a bit of inspiration from jedec,spi-nor usage.
->>
->> Should I change it to at25 "compatible" style and send next patch?
-> 
-> Yes, please. Or go to YAML and make entire discussion obsolete.
+Not in the mainline as of today.
 
-OK I will change it to at25 style.
-
-Regards,
-Lukasz
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  Documentation/core-api/printk-formats.rst | 10 ----------
+>  lib/vsprintf.c                            |  8 ++------
+>  scripts/checkpatch.pl                     |  1 -
+>  3 files changed, 2 insertions(+), 17 deletions(-)
+>
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> index c6224d039bcbe..922a29eb70e6c 100644
+> --- a/Documentation/core-api/printk-formats.rst
+> +++ b/Documentation/core-api/printk-formats.rst
+> @@ -86,8 +86,6 @@ Symbols/Function Pointers
+>
+>         %pS     versatile_init+0x0/0x110
+>         %ps     versatile_init
+> -       %pF     versatile_init+0x0/0x110
+> -       %pf     versatile_init
+>         %pSR    versatile_init+0x9/0x110
+>                 (with __builtin_extract_return_addr() translation)
+>         %pB     prev_fn_of_versatile_init+0x88/0x88
+> @@ -97,14 +95,6 @@ The ``S`` and ``s`` specifiers are used for printing a pointer in symbolic
+>  format. They result in the symbol name with (S) or without (s)
+>  offsets. If KALLSYMS are disabled then the symbol address is printed instead.
+>
+> -Note, that the ``F`` and ``f`` specifiers are identical to ``S`` (``s``)
+> -and thus deprecated. We have ``F`` and ``f`` because on ia64, ppc64 and
+> -parisc64 function pointers are indirect and, in fact, are function
+> -descriptors, which require additional dereferencing before we can lookup
+> -the symbol. As of now, ``S`` and ``s`` perform dereferencing on those
+> -platforms (when needed), so ``F`` and ``f`` exist for compatibility
+> -reasons only.
+> -
+>  The ``B`` specifier results in the symbol name with offsets and should be
+>  used when printing stack backtraces. The specifier takes into
+>  consideration the effect of compiler optimisations which may occur
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index b0967cf17137d..b00b57f9f911f 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -909,7 +909,7 @@ char *symbol_string(char *buf, char *end, void *ptr,
+>  #ifdef CONFIG_KALLSYMS
+>         if (*fmt == 'B')
+>                 sprint_backtrace(sym, value);
+> -       else if (*fmt != 'f' && *fmt != 's')
+> +       else if (*fmt != 's')
+>                 sprint_symbol(sym, value);
+>         else
+>                 sprint_symbol_no_offset(sym, value);
+> @@ -2007,9 +2007,7 @@ static char *kobject_string(char *buf, char *end, void *ptr,
+>   *
+>   * - 'S' For symbolic direct pointers (or function descriptors) with offset
+>   * - 's' For symbolic direct pointers (or function descriptors) without offset
+> - * - 'F' Same as 'S'
+> - * - 'f' Same as 's'
+> - * - '[FfSs]R' as above with __builtin_extract_return_addr() translation
+> + * - '[Ss]R' as above with __builtin_extract_return_addr() translation
+>   * - 'B' For backtraced symbolic direct pointers with offset
+>   * - 'R' For decoded struct resource, e.g., [mem 0x0-0x1f 64bit pref]
+>   * - 'r' For raw struct resource, e.g., [mem 0x0-0x1f flags 0x201]
+> @@ -2112,8 +2110,6 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>               struct printf_spec spec)
+>  {
+>         switch (*fmt) {
+> -       case 'F':
+> -       case 'f':
+>         case 'S':
+>         case 's':
+>                 ptr = dereference_symbol_descriptor(ptr);
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 93a7edfe0f059..a60c241112cd4 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -6012,7 +6012,6 @@ sub process {
+>                                         my $ext_type = "Invalid";
+>                                         my $use = "";
+>                                         if ($bad_specifier =~ /p[Ff]/) {
+> -                                               $ext_type = "Deprecated";
+>                                                 $use = " - use %pS instead";
+>                                                 $use =~ s/pS/ps/ if ($bad_specifier =~ /pf/);
+>                                         }
+> --
+> 2.20.1
+>
