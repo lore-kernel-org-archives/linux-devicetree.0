@@ -1,53 +1,40 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 2/3] arm64: dts: imx8mm: Use correct clock for usdhc's ipg clk
-Date: Thu, 19 Sep 2019 13:05:58 +0800
-Message-ID: <1568869559-28611-2-git-send-email-Anson.Huang@nxp.com>
-References: <1568869559-28611-1-git-send-email-Anson.Huang@nxp.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH 0/6] arm64: dts: rockchip: ROC-PC fixes
+Date: Thu, 19 Sep 2019 10:58:16 +0530
+Message-ID: <20190919052822.10403-1-jagan@amarulasolutions.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568869559-28611-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, daniel.lezcano@linaro.org, ping.bai@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, angus@akkea.ca, ccaione@baylibre.com, agx@sigxcpu.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: Heiko Stuebner <heiko@sntech.de>, Levin Du <djw@t-chip.com.cn>, Akash Gajjar <akash@openedev.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Da Xue <da@lessconfused.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On i.MX8MM, usdhc's ipg clock is from IMX8MM_CLK_IPG_ROOT,
-assign it explicitly instead of using IMX8MM_CLK_DUMMY.
+This series is trying to fix the Linux boot and other
+regulators stuff for ROC-RK3399-PC board.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+patch 1: attach pinctrl to pwm2 pin
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 7c4dcce..8aafad2 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -694,7 +694,7 @@
- 				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
- 				reg = <0x30b40000 0x10000>;
- 				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clk IMX8MM_CLK_DUMMY>,
-+				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
- 					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
- 					 <&clk IMX8MM_CLK_USDHC1_ROOT>;
- 				clock-names = "ipg", "ahb", "per";
-@@ -710,7 +710,7 @@
- 				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
- 				reg = <0x30b50000 0x10000>;
- 				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clk IMX8MM_CLK_DUMMY>,
-+				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
- 					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
- 					 <&clk IMX8MM_CLK_USDHC2_ROOT>;
- 				clock-names = "ipg", "ahb", "per";
-@@ -724,7 +724,7 @@
- 				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
- 				reg = <0x30b60000 0x10000>;
- 				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clk IMX8MM_CLK_DUMMY>,
-+				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
- 					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
- 					 <&clk IMX8MM_CLK_USDHC3_ROOT>;
- 				clock-names = "ipg", "ahb", "per";
+patch 2-4: libretech naming conventions
+
+patch 5-6: regulator renaming, input rails fixes
+
+Any inputs?
+Jagan.
+
+Jagan Teki (6):
+  arm64: dts: rockchip: Fix rk3399-roc-pc pwm2 pin
+  dt-bindings: arm: rockchip: Use libretech for roc-pc binding
+  arm64: dts: rockchip: Use libretech model, compatible for ROC-PC
+  arm64: dts: rockchip: Rename roc-pc with libretech notation
+  arm64: dts: rockchip: Rename vcc12v_sys into dc_12v for roc-rk3399-pc
+  arm64: dts: rockchip: Fix roc-rk3399-pc regulator input rails
+
+ .../devicetree/bindings/arm/rockchip.yaml     | 11 +++---
+ arch/arm64/boot/dts/rockchip/Makefile         |  2 +-
+ ...dts => rk3399-libretech-roc-rk3399-pc.dts} | 38 ++++++++++---------
+ 3 files changed, 27 insertions(+), 24 deletions(-)
+ rename arch/arm64/boot/dts/rockchip/{rk3399-roc-pc.dts => rk3399-libretech-roc-rk3399-pc.dts} (95%)
+
 -- 
-2.7.4
+2.18.0.321.gffc6fa0e3
