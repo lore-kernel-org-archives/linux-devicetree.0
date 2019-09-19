@@ -1,67 +1,34 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH v3 1/2] memory: samsung: exynos5422-dmc: Fix kfree() of
- devm-allocated memory and missing static
-Date: Thu, 19 Sep 2019 11:26:40 +0200
-Message-ID: <20190919092641.4407-2-l.luba@partner.samsung.com>
-References: <20190919092641.4407-1-l.luba@partner.samsung.com>
-        <CGME20190919092652eucas1p12dbf9ba9d60a0c89cb7de05ab61893be@eucas1p1.samsung.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 2/3] arm64: dts: imx8mm: Use correct clock for usdhc's ipg
+ clk
+Date: Thu, 19 Sep 2019 09:31:41 +0000
+Message-ID: <DB3PR0402MB3916B0DE9EBC0B0F6664CE34F5890@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1568869559-28611-1-git-send-email-Anson.Huang@nxp.com>
+ <1568869559-28611-2-git-send-email-Anson.Huang@nxp.com>
+ <c680d114-1c14-6bf8-226c-2fdd98350158@kontron.de>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190919092641.4407-1-l.luba@partner.samsung.com>
+In-Reply-To: <c680d114-1c14-6bf8-226c-2fdd98350158@kontron.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, willy.mh.wolff.ml@gmail.com, dan.carpenter@oracle.com, Lukasz Luba <l.luba@partner.samsung.com>
+To: Schrempf Frieder <frieder.schrempf@kontron.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Jacky Bai <ping.bai@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Jun Li <jun.li@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "angus@akkea.ca" <angus@akkea.ca>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "agx@sigxcpu.org" <agx@sigxcp>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix issues captured by static checkers: used kfree() and missing 'static'
-in the private function.
-
-Fixes Smatch warning:
-    drivers/memory/samsung/exynos5422-dmc.c:272
-        exynos5_init_freq_table() warn: passing devm_ allocated variable to kfree. 'dmc->opp'
-
-Fixes Sparse warning:
-    drivers/memory/samsung/exynos5422-dmc.c:736:1:
-        warning: symbol 'exynos5_dmc_align_init_freq' was not declared.
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- drivers/memory/samsung/exynos5422-dmc.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-index 8c2ec29a7d57..1b54fc8c912e 100644
---- a/drivers/memory/samsung/exynos5422-dmc.c
-+++ b/drivers/memory/samsung/exynos5422-dmc.c
-@@ -258,7 +258,7 @@ static int exynos5_init_freq_table(struct exynos5_dmc *dmc,
- 
- 		opp = dev_pm_opp_find_freq_floor(dmc->dev, &freq);
- 		if (IS_ERR(opp))
--			goto err_free_tables;
-+			goto err_opp;
- 
- 		dmc->opp[idx - i].freq_hz = freq;
- 		dmc->opp[idx - i].volt_uv = dev_pm_opp_get_voltage(opp);
-@@ -268,8 +268,6 @@ static int exynos5_init_freq_table(struct exynos5_dmc *dmc,
- 
- 	return 0;
- 
--err_free_tables:
--	kfree(dmc->opp);
- err_opp:
- 	dev_pm_opp_of_remove_table(dmc->dev);
- 
-@@ -732,7 +730,7 @@ static struct devfreq_dev_profile exynos5_dmc_df_profile = {
-  * statistics engine which supports only registered values. Thus, some alignment
-  * must be made.
-  */
--unsigned long
-+static unsigned long
- exynos5_dmc_align_init_freq(struct exynos5_dmc *dmc,
- 			    unsigned long bootloader_init_freq)
- {
--- 
-2.17.1
+SGksIFNjaHJlbXBmDQoNCj4gSGkgQW5zb24sDQo+IA0KPiBJIGhhdmUgYSBxdWVzdGlvbiwgdGhh
+dCBpcyBub3QgZGlyZWN0bHkgcmVsYXRlZCB0byB0aGlzIHBhdGNoLg0KPiBJIHNlZSB0aGF0IGZv
+ciB0aGUgdXNkaGMxIGFuZCB1c2RoYzMgbm9kZXMsIHRoZXJlIGlzIGFuICdhc3NpZ25lZC1jbG9j
+aycNCj4gYW5kICdhc3NpZ25lZC1jbG9jay1yYXRlcycgcHJvcGVydHkgYnV0IG5vdCBmb3IgdXNk
+aGMyLiBUaGUgc2FtZSBhcHBsaWVzIHRvDQo+IHRoZSBteDhtcSBhbmQgbXg4bW4gZHRzaSBmaWxl
+Lg0KPiANCj4gSXMgdGhlcmUgYW55IHJlYXNvbiBmb3IgdGhpcz8gSWYgbm90IGNhbiB5b3UgZml4
+IGl0Pw0KDQpUaGlzIHBhdGNoIHNlcmllcyBpcyBOT1QgcmVsYXRlZCB0byAnYXNzaWduZWQtY2xv
+Y2snIG9yICdhc3NpZ25lZC1jbG9jay1yYXRlcycNCnByb3BlcnR5LCBpdCBpcyBqdXN0IGZvciBj
+b3JyZWN0aW5nIGNsb2NrIHNvdXJjZSBhY2NvcmRpbmcgdG8gcmVmZXJlbmNlIG1hbnVhbCwNCnRo
+ZSAnaXBnJyBjbG9jayBpcyBmcm9tIHN5c3RlbSdzIElQR19ST09UIGNsb2NrIGFjY29yZGluZyB0
+byByZWZlcmVuY2UgbWFudWFsIENDTQ0KY2hhcHRlciwgdXNpbmcgRFVNTVkgY2xvY2sgaXMgTk9U
+IGEgZ29vZCBvcHRpb24sIHRoZSAnaXBnJyBjbG9jayBpcyBzdXBwb3NlZA0KdG8gYmUgdGhlIGNs
+b2NrIGZvciBhY2Nlc3NpbmcgcmVnaXN0ZXIsIGFuZCBpdCBzaG91bGQgTk9UIGJlIERVTU1ZIGlm
+IHdlIGtub3cNCndoYXQgZXhhY3RseSB0aGUgY2xvY2sgc291cmNlIGlzIHVzZWQuDQoNClRoYW5r
+cywNCkFuc29uDQoNCg0KDQo=
