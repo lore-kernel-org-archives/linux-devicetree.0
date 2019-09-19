@@ -1,68 +1,78 @@
-From: Jean-Philippe Brucker <jean-philippe-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/8] iommu/arm-smmu-v3: Add support for Substream IDs
-Date: Thu, 19 Sep 2019 17:01:39 +0200
-Message-ID: <20190919150139.GC1013538@lophozonia>
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: Re: [PATCH 5/8] iommu/arm-smmu-v3: Add second level of context
+ descriptor table
+Date: Thu, 19 Sep 2019 17:05:21 +0200
+Message-ID: <20190919150521.GD1013538@lophozonia>
 References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
-	<20190610184714.6786-5-jean-philippe.brucker@arm.com>
-	<af286d72-97d7-d106-40a8-edfcbe563c98@redhat.com>
+ <20190610184714.6786-6-jean-philippe.brucker@arm.com>
+ <3e69caf7-4e8a-4bce-7a89-51e21a0134b1@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <af286d72-97d7-d106-40a8-edfcbe563c98-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, robin.murphy-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <3e69caf7-4e8a-4bce-7a89-51e21a0134b1@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Auger Eric <eric.auger@redhat.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jacob.jun.pan@linux.intel.com, joro@8bytes.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, robin.murphy@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 05:31:53PM +0200, Auger Eric wrote:
-> Hi Jean,
-> 
-> On 6/10/19 8:47 PM, Jean-Philippe Brucker wrote:
-> >  	/*
-> > -	 * We don't need to issue any invalidation here, as we'll invalidate
-> > -	 * the STE when installing the new entry anyway.
-> > +	 * This function handles the following cases:
-> > +	 *
-> > +	 * (1) Install primary CD, for normal DMA traffic (SSID = 0).
-> > +	 * (2) Install a secondary CD, for SID+SSID traffic.
-> > +	 * (3) Update ASID of a CD. Atomically write the first 64 bits of the
-> > +	 *     CD, then invalidate the old entry and mappings.
-> Can you explain when (3) does occur?
+On Mon, Jul 08, 2019 at 05:13:05PM +0200, Auger Eric wrote:
+> >  #define STRTAB_STE_0_S1FMT		GENMASK_ULL(5, 4)
+> >  #define STRTAB_STE_0_S1FMT_LINEAR	0
+> > +#define STRTAB_STE_0_S1FMT_4K_L2	1
+> As you only use 64kB L2, I guess you can remove the 4K define?
 
-When sharing a process context with devices (SVA), we write in that
-context descriptor the ASID allocated by the arch ASID allocator for
-that process. But that ASID might already have been allocated locally by
-the SMMU driver for a private context. As there is a single ASID space
-per SMMU for both private and shared ASIDs, we reallocated the private
-ASID and update it here. See
-https://lore.kernel.org/linux-iommu/20180511190641.23008-25-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org/
+I prefer defining all values, but I suppose I can get rid of it.
 
-> > +	 * (4) Remove a secondary CD.
-> >  	 */
-> > -	val = arm_smmu_cpu_tcr_to_cd(cfg->cd.tcr) |
-> > +
-> > +	if (!cdptr)
+> > +	cfg->tables = devm_kzalloc(smmu->dev, sizeof(struct arm_smmu_cd_table) *
+> > +				   cfg->num_tables, GFP_KERNEL);
+> > +	if (!cfg->tables)
 > > +		return -ENOMEM;
-> Is that relevant? arm_smmu_get_cd_ptr() does not test ssid is within the
-> cfg->s1cdmax range and always return smthg != NULL AFAIU.
+> goto err_free_l1
+> > +
+> > +	ret = arm_smmu_alloc_cd_leaf_table(smmu, &cfg->tables[0], num_leaf_entries);
+> don't you want to do that only in linear case. In 2-level mode, I
+> understand arm_smmu_get_cd_ptr() will do the job.
 
-It might return NULL with patch 5/8, when we can't allocate a 2nd-level
-table. I can move the check over to that patch.
+OK, that might be better
 
-> > +	ret = arm_smmu_write_ctx_desc(smmu_domain, 0, &smmu_domain->s1_cfg.cd);
-> cfg.cd
+> 
+> > +	if (ret)
+> > +		goto err_free_l1;
+> > +
+> > +	if (cfg->l1ptr)
+> > +		arm_smmu_write_cd_l1_desc(cfg->l1ptr, &cfg->tables[0]);
+> that stuff could be removed as well?
 
-Right.
+Yes
+
+> By the way I can see that
+> arm_smmu_get_cd_ptr() does a arm_smmu_sync_cd after. wouldn't it be
+> needed here as well?
+
+No context table is reachable from a STE at this point, so we don't have
+to invalidate anything.
+
+> > @@ -1815,7 +1935,7 @@ static void arm_smmu_domain_free(struct iommu_domain *domain)
+> >  	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
+> >  		struct arm_smmu_s1_cfg *cfg = &smmu_domain->s1_cfg;
+> >  
+> > -		if (cfg->table.ptr) {
+> > +		if (cfg->tables) {
+> >  			arm_smmu_free_cd_tables(smmu_domain);
+> >  			arm_smmu_bitmap_free(smmu->asid_map, cfg->cd.asid);
+> I don't get why the arm_smmu_bitmap_free is dependent on cfg->tables.
+
+Simply because arm_smmu_bitmap_alloc() and arm_smmu_alloc_cd_tables()
+are both performed in arm_smmu_domain_finalise_s1(). A domain returned
+by arm_smmu_domain_alloc() is not fully initialized, it still needs to
+be finalized by arm_smmu_attach_dev(). So here we check whether the
+domain has been finalized or not. Zero being a valid ASID in this
+driver, we can't check whether cfg->cd.asid is valid, so we check
+cfg->tables instead.
+
+And I forgot to clear cfg->tables after failure of domain_finalise in
+this series, I'll need to fix it.
 
 Thanks,
 Jean
