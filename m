@@ -1,222 +1,161 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 5/7] media: i2c: ov2659: Add powerdown/reset gpio handling
-Date: Thu, 19 Sep 2019 15:39:53 -0500
-Message-ID: <20190919203955.15125-6-bparrot@ti.com>
-References: <20190919203955.15125-1-bparrot@ti.com>
+Subject: [Patch 00/13] media: am437x-vpfe: overdue maintenance
+Date: Thu, 19 Sep 2019 15:41:12 -0500
+Message-ID: <20190919204125.15254-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190919203955.15125-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Hans Verkuil <hverkuil@xs4all.nl>
 Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On some board it is possible that the sensor 'powerdown' and or 'reset'
-pin might be controlled by gpio instead of being tied.
+This patch series is a collection of patches we have been carrying for a
+while.
 
-To implement we add pm_runtime support which will handle the power
-up/down sequence.
+A few patches do fix actual bug and v4l2-compliance errors/warnings.
+Other are drivers re-work to simplify/clarify the code for easier
+maintenance.
 
-Now originally the driver assumed tat the sensor would always stay
-powered and there keep its register setting. We cannot assume that this
-anymore, so every time we "power up" we need to re-program the initial
-registers configuration first. This was previously done only at probe
-time.
+We also include the SPDX Licensing update which seemed to have been
+missed by the global script thus far.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
----
- drivers/media/i2c/Kconfig  |  2 +-
- drivers/media/i2c/ov2659.c | 88 +++++++++++++++++++++++++++++++++++++-
- 2 files changed, 88 insertions(+), 2 deletions(-)
+Changes since v1:
+- Address review comment from Joe, Hans and Prabhakar
+- Cleaned-up the function entry debug log
+- Split off the pcr change into its own patch
+- Rework/combine two patches but remove code churn
+- fix miscellaneous typos
 
-diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index 7eee1812bba3..315c1d8bdb7b 100644
---- a/drivers/media/i2c/Kconfig
-+++ b/drivers/media/i2c/Kconfig
-@@ -634,7 +634,7 @@ config VIDEO_OV2640
- config VIDEO_OV2659
- 	tristate "OmniVision OV2659 sensor support"
- 	depends on VIDEO_V4L2 && I2C
--	depends on MEDIA_CAMERA_SUPPORT
-+	depends on MEDIA_CAMERA_SUPPORT && GPIOLIB
- 	select V4L2_FWNODE
- 	help
- 	  This is a Video4Linux2 sensor driver for the OmniVision
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index f77320e8a60d..170f80a1a51f 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -22,9 +22,11 @@
- 
- #include <linux/clk.h>
- #include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/i2c.h>
- #include <linux/module.h>
- #include <linux/of_graph.h>
-+#include <linux/pm_runtime.h>
- 
- #include <media/i2c/ov2659.h>
- #include <media/v4l2-ctrls.h>
-@@ -218,6 +220,11 @@ struct ov2659 {
- 	struct sensor_register *format_ctrl_regs;
- 	struct ov2659_pll_ctrl pll;
- 	int streaming;
-+	/* used to control the sensor PWDN pin */
-+	struct gpio_desc *pwdn_gpio;
-+	/* used to control the sensor RESETB pin */
-+	struct gpio_desc *resetb_gpio;
-+	int on;
- };
- 
- static const struct sensor_register ov2659_init_regs[] = {
-@@ -1184,9 +1191,17 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
- 		/* Stop Streaming Sequence */
- 		ov2659_set_streaming(ov2659, 0);
- 		ov2659->streaming = on;
-+		pm_runtime_put(&client->dev);
- 		goto unlock;
- 	}
- 
-+	ret = pm_runtime_get_sync(&client->dev);
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(&client->dev);
-+		goto unlock;
-+	}
-+
-+	ov2659_init(sd, 0);
- 	ov2659_set_pixel_clock(ov2659);
- 	ov2659_set_frame_size(ov2659);
- 	ov2659_set_format(ov2659);
-@@ -1243,6 +1258,32 @@ static const char * const ov2659_test_pattern_menu[] = {
- 	"Vertical Color Bars",
- };
- 
-+static int ov2659_set_power(struct ov2659 *ov2659, int on)
-+{
-+	struct i2c_client *client = ov2659->client;
-+
-+	dev_dbg(&client->dev, "%s: on: %d\n", __func__, on);
-+
-+	if (on) {
-+		if (ov2659->pwdn_gpio)
-+			gpiod_direction_output(ov2659->pwdn_gpio, 0);
-+
-+		if (ov2659->resetb_gpio) {
-+			gpiod_set_value(ov2659->resetb_gpio, 1);
-+			usleep_range(500, 1000);
-+			gpiod_set_value(ov2659->resetb_gpio, 0);
-+			usleep_range(3000, 5000);
-+		}
-+	} else {
-+		if (ov2659->pwdn_gpio)
-+			gpiod_direction_output(ov2659->pwdn_gpio, 1);
-+	}
-+
-+	ov2659->on = on;
-+
-+	return 0;
-+}
-+
- /* -----------------------------------------------------------------------------
-  * V4L2 subdev internal operations
-  */
-@@ -1323,7 +1364,6 @@ static int ov2659_detect(struct v4l2_subdev *sd)
- 			ret = -ENODEV;
- 		} else {
- 			dev_info(&client->dev, "Found OV%04X sensor\n", id);
--			ret = ov2659_init(sd, 0);
- 		}
- 	}
- 
-@@ -1400,6 +1440,18 @@ static int ov2659_probe(struct i2c_client *client)
- 	    ov2659->xvclk_frequency > 27000000)
- 		return -EINVAL;
- 
-+	/* Optional gpio don't fail if not present */
-+	ov2659->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
-+						    GPIOD_OUT_LOW);
-+	if (IS_ERR(ov2659->pwdn_gpio))
-+		return PTR_ERR(ov2659->pwdn_gpio);
-+
-+	/* Optional gpio don't fail if not present */
-+	ov2659->resetb_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-+						      GPIOD_OUT_HIGH);
-+	if (IS_ERR(ov2659->resetb_gpio))
-+		return PTR_ERR(ov2659->resetb_gpio);
-+
- 	v4l2_ctrl_handler_init(&ov2659->ctrls, 2);
- 	ov2659->link_frequency =
- 			v4l2_ctrl_new_std(&ov2659->ctrls, &ov2659_ctrl_ops,
-@@ -1445,6 +1497,9 @@ static int ov2659_probe(struct i2c_client *client)
- 	ov2659->frame_size = &ov2659_framesizes[2];
- 	ov2659->format_ctrl_regs = ov2659_formats[0].format_ctrl_regs;
- 
-+	pm_runtime_enable(&client->dev);
-+	pm_runtime_get_sync(&client->dev);
-+
- 	ret = ov2659_detect(sd);
- 	if (ret < 0)
- 		goto error;
-@@ -1458,10 +1513,14 @@ static int ov2659_probe(struct i2c_client *client)
- 
- 	dev_info(&client->dev, "%s sensor driver registered !!\n", sd->name);
- 
-+	pm_runtime_put(&client->dev);
-+
- 	return 0;
- 
- error:
- 	v4l2_ctrl_handler_free(&ov2659->ctrls);
-+	pm_runtime_put(&client->dev);
-+	pm_runtime_disable(&client->dev);
- 	media_entity_cleanup(&sd->entity);
- 	mutex_destroy(&ov2659->lock);
- 	return ret;
-@@ -1477,9 +1536,35 @@ static int ov2659_remove(struct i2c_client *client)
- 	media_entity_cleanup(&sd->entity);
- 	mutex_destroy(&ov2659->lock);
- 
-+	pm_runtime_disable(&client->dev);
-+
- 	return 0;
- }
- 
-+static int ov2659_runtime_suspend(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct ov2659 *ov2659 = to_ov2659(sd);
-+
-+	ov2659_set_power(ov2659, 0);
-+
-+	return 0;
-+}
-+
-+static int ov2659_runtime_resume(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct ov2659 *ov2659 = to_ov2659(sd);
-+
-+	return ov2659_set_power(ov2659, 1);
-+}
-+
-+static const struct dev_pm_ops ov2659_pm_ops = {
-+	SET_RUNTIME_PM_OPS(ov2659_runtime_suspend, ov2659_runtime_resume, NULL)
-+};
-+
- static const struct i2c_device_id ov2659_id[] = {
- 	{ "ov2659", 0 },
- 	{ /* sentinel */ },
-@@ -1497,6 +1582,7 @@ MODULE_DEVICE_TABLE(of, ov2659_of_match);
- static struct i2c_driver ov2659_i2c_driver = {
- 	.driver = {
- 		.name	= DRIVER_NAME,
-+		.pm	= &ov2659_pm_ops,
- 		.of_match_table = of_match_ptr(ov2659_of_match),
- 	},
- 	.probe_new	= ov2659_probe,
+=============================
+
+v4l2-compliance SHA: 5b168dc8473911227890526bad26553d9e8ff81b, 32 bits
+
+Compliance test for vpfe device /dev/video0:
+
+Driver Info:
+	Driver name      : vpfe
+	Card type        : TI AM437x VPFE
+	Bus info         : platform:vpfe 48326000.vpfe
+	Driver version   : 5.3.0
+	Capabilities     : 0x85200001
+		Vide o Capture
+		Read/Write
+		Streaming
+		Extended Pix Format
+		D evice Capabilities
+	Device Caps      : 0x05200001
+		Video Capt ure
+		Read/Write
+		Streaming
+		Extended Pix Format
+
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video0 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls (Input 0):
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 3 Private Controls: 0
+
+Format ioctls (Input 0):
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+		fail: v4l2-test-formats.cpp(1419): node->frmsizes_count[pixfmt] > 1
+	test Cropping: FAIL
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls (Input 0):
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls (Input 0):
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK (Not Supported)
+
+Test input 0:
+
+Streaming ioctls:
+	test read/write: OK
+	test blocking wait: OK
+	test MMAP (no poll): OK                           
+	test MMAP (select): OK                            
+	test MMAP (epoll): OK                             
+	test USERPTR (no poll): OK (Not Supported)
+	test USERPTR (select): OK (Not Supported)
+	test DMABUF: Cannot test, specify --expbuf-device
+
+Total for vpfe device /dev/video0: 51, Succeeded: 50, Failed: 1, Warnings: 0
+dd
+============================
+
+Benoit Parrot (12):
+  media: am437x-vpfe: Fix missing first line
+  media: am437x-vpfe: Rework ISR routine for clarity
+  media: am437x-vpfe: Wait for end of frame before tear-down
+  media: am437x-vpfe: fix start streaming error path
+  media: am437x-vpfe: Streamlined vb2 buffer cleanup
+  media: am437x-vpfe: Setting STD to current value is not an error
+  media: am437x-vpfe: Use a per instance format array instead of a
+    static one
+  media: am437x-vpfe: fix function trace debug log
+  media: am437x-vpfe: Remove print_fourcc helper
+  media: am437x-vpfe: TRY_FMT ioctl is not really trying anything
+  media: am437x-vpfe: Remove per bus width static data
+  media: am437x-vpfe: Switch to SPDX Licensing
+
+Dave Gerlach (1):
+  media: am437x-vpfe: Fix suspend path to always handle pinctrl config
+
+ drivers/media/platform/am437x/am437x-vpfe.c   | 878 ++++++++----------
+ drivers/media/platform/am437x/am437x-vpfe.h   |  45 +-
+ .../media/platform/am437x/am437x-vpfe_regs.h  |  10 +-
+ 3 files changed, 406 insertions(+), 527 deletions(-)
+
 -- 
 2.17.1
