@@ -1,14 +1,16 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [PATCHv6 10/10] ARM: OMAP2+: pdata-quirks: add PRM data for reset
- support
-Date: Thu, 19 Sep 2019 15:32:58 +0300
-Message-ID: <20190919123258.23172-1-t-kristo@ti.com>
-References: <20190912170953.GT52127@atomide.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v1 2/9] mfd: wm8994: Add support for MCLKn clock control
+Date: Thu, 19 Sep 2019 14:48:56 +0200
+Message-ID: <420d3c8a-a31e-1edf-3112-b9800beace1e@samsung.com>
+References: <20190918104634.15216-1-s.nawrocki@samsung.com>
+ <CGME20190918104656eucas1p1d9cad1394b08d05a99151c4fbc9425ce@eucas1p1.samsung.com>
+ <20190918104634.15216-3-s.nawrocki@samsung.com> <20190919075924.GB13195@pi3>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190912170953.GT52127@atomide.com>
+In-Reply-To: <20190919075924.GB13195@pi3>
+Content-Language: en-GB
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,57 +20,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: ssantosh@kernel.org, p.zabel@pengutronix.de, tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, ckeepax@opensource.cirrus.com, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-The parent clockdomain for reset must be in force wakeup mode, otherwise
-the reset may never complete. Add pdata quirks for this purpose for PRM
-driver.
+On 9/19/19 09:59, Krzysztof Kozlowski wrote:
+> On Wed, Sep 18, 2019 at 12:46:27PM +0200, Sylwester Nawrocki wrote:
+>> The WM1811/WM8994/WM8958 audio CODEC DT bindings specify two optional
+>> clocks: "MCLK1", "MCLK2". Add code for getting those clocks in the MFD
+>> part of the wm8994 driver so they can be further handled in the audio
+>> CODEC part.
+>
+> I think these are needed only for the codec so how about getting them in
+> codec's probe?
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
-v6: replaced platform specific compatibles with a single common
-    compatible check
+The clocks are specified in the (I2C slave device) DT node which corresponds
+to the device as a whole and to which binds the MFD driver.  AFAICT those
+clocks are only needed by the CODEC sub-driver but in general such clocks
+could be used to provide device's system clock used by other functionalities 
+than audio.  We are doing something similar for other MFD drivers already
+and I would rather stick to one pattern. IMHO it's clearer to see what
+device the clocks belong to that way.
 
- arch/arm/mach-omap2/pdata-quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
-index 6c6f8fce854e..45ffa1204cd2 100644
---- a/arch/arm/mach-omap2/pdata-quirks.c
-+++ b/arch/arm/mach-omap2/pdata-quirks.c
-@@ -25,6 +25,7 @@
- #include <linux/platform_data/ti-sysc.h>
- #include <linux/platform_data/wkup_m3.h>
- #include <linux/platform_data/asoc-ti-mcbsp.h>
-+#include <linux/platform_data/ti-prm.h>
- 
- #include "clockdomain.h"
- #include "common.h"
-@@ -565,6 +566,12 @@ void omap_pcs_legacy_init(int irq, void (*rearm)(void))
- 	pcs_pdata.rearm = rearm;
- }
- 
-+static struct ti_prm_platform_data ti_prm_pdata = {
-+	.clkdm_deny_idle = clkdm_deny_idle,
-+	.clkdm_allow_idle = clkdm_allow_idle,
-+	.clkdm_lookup = clkdm_lookup,
-+};
-+
- /*
-  * GPIOs for TWL are initialized by the I2C bus and need custom
-  * handing until DSS has device tree bindings.
-@@ -664,6 +671,7 @@ static struct of_dev_auxdata omap_auxdata_lookup[] = {
- 	/* Common auxdata */
- 	OF_DEV_AUXDATA("ti,sysc", 0, NULL, &ti_sysc_pdata),
- 	OF_DEV_AUXDATA("pinctrl-single", 0, NULL, &pcs_pdata),
-+	OF_DEV_AUXDATA("ti,omap-prm-inst", 0, NULL, &ti_prm_pdata),
- 	{ /* sentinel */ },
- };
- 
 -- 
-2.17.1
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Regards,
+Sylwester
