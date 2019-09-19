@@ -1,80 +1,42 @@
-From: Wen He <wen.he_1@nxp.com>
-Subject: RE: [EXT] Re: [v4 2/2] clk: ls1028a: Add clock driver for Display
- output interface
-Date: Thu, 19 Sep 2019 03:53:33 +0000
-Message-ID: <DB7PR04MB519538CC79789CB6DF65B9B2E2890@DB7PR04MB5195.eurprd04.prod.outlook.com>
-References: <20190829105919.44363-1-wen.he_1@nxp.com>
- <20190829105919.44363-2-wen.he_1@nxp.com>
- <20190916202637.B5F542067B@mail.kernel.org>
- <DB7PR04MB51953099D6331F4F844A45EFE28E0@DB7PR04MB5195.eurprd04.prod.outlook.com>
- <20190918170051.2AEAF21848@mail.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH 1/3] arm64: dts: imx8mq: Use correct clock for usdhc's ipg clk
+Date: Thu, 19 Sep 2019 13:05:57 +0800
+Message-ID: <1568869559-28611-1-git-send-email-Anson.Huang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190918170051.2AEAF21848@mail.kernel.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-devel@linux.nxdi.nxp.com" <linux-devel@linux.nxdi.nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, leonard.crestez@nxp.com, daniel.lezcano@linaro.org, ping.bai@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com, l.stach@pengutronix.de, abel.vesa@nxp.com, andrew.smirnov@gmail.com, angus@akkea.ca, ccaione@baylibre.com, agx@sigxcpu.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3RlcGhlbiBCb3lkIDxz
-Ym95ZEBrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE55bm0OeaciDE55pelIDE6MDENCj4gVG86IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1jbGtAdmdlci5rZXJuZWwub3JnOw0KPiBs
-aW51eC1kZXZlbEBsaW51eC5ueGRpLm54cC5jb207IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmc7IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBNaWNoYWVsIFR1cnF1
-ZXR0ZSA8bXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb20+Ow0KPiBSb2IgSGVycmluZyA8cm9iaCtkdEBr
-ZXJuZWwub3JnPjsgV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPiBDYzogTGVvIExpIDxsZW95
-YW5nLmxpQG54cC5jb20+OyBsaXZpdS5kdWRhdUBhcm0uY29tDQo+IFN1YmplY3Q6IFJFOiBbRVhU
-XSBSZTogW3Y0IDIvMl0gY2xrOiBsczEwMjhhOiBBZGQgY2xvY2sgZHJpdmVyIGZvciBEaXNwbGF5
-IG91dHB1dA0KPiBpbnRlcmZhY2UNCj4gDQo+IA0KPiBRdW90aW5nIFdlbiBIZSAoMjAxOS0wOS0x
-OCAwMjoyMDoyNikNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9t
-OiBTdGVwaGVuIEJveWQgPHNib3lkQGtlcm5lbC5vcmc+IFF1b3RpbmcgV2VuIEhlICgyMDE5LTA4
-LTI5DQo+ID4gPiAwMzo1OToxOSkNCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2Ns
-ay1wbGxkaWcuYyBiL2RyaXZlcnMvY2xrL2Nsay1wbGxkaWcuYw0KPiA+ID4gPiBuZXcgZmlsZSBt
-b2RlIDEwMDY0NCBpbmRleCAwMDAwMDAwMDAwMDAuLmQzMjM5YmNmNTlkZQ0KPiA+ID4gPiAtLS0g
-L2Rldi9udWxsDQo+ID4gPiA+ICsrKyBiL2RyaXZlcnMvY2xrL2Nsay1wbGxkaWcuYw0KPiA+ID4g
-PiBAQCAtMCwwICsxLDI5OCBAQA0KPiBbLi4uXQ0KPiA+DQo+ID4gPg0KPiA+ID4gPiArDQo+ID4g
-PiA+ICsvKiBNYXhpbXVtIG9mIHRoZSBkaXZpZGVyICovDQo+ID4gPiA+ICsjZGVmaW5lIE1BWF9S
-RkRQSEkxICAgICAgICAgIDYzDQo+ID4gPiA+ICsNCj4gPiA+ID4gKy8qIEJlc3QgdmFsdWUgb2Yg
-bXVsdGlwbGljYXRpb24gZmFjdG9yIGRpdmlkZXIgKi8NCj4gPiA+ID4gKyNkZWZpbmUgUExMRElH
-X0RFRkFVTEVfTVVMVCAgICAgICAgIDQ0DQo+ID4gPiA+ICsNCj4gPiA+ID4gKy8qDQo+ID4gPiA+
-ICsgKiBDbG9jayBjb25maWd1cmF0aW9uIHJlbGF0aW9uc2hpcCBiZXR3ZWVuIHRoZSBQSEkxDQo+
-ID4gPiA+ICtmcmVxdWVuY3koZnBsbF9waGkpIGFuZA0KPiA+ID4gPiArICogdGhlIG91dHB1dCBm
-cmVxdWVuY3kgb2YgdGhlIFBMTCBpcyBkZXRlcm1pbmVkIGJ5IHRoZSBQTExEViwNCj4gPiA+ID4g
-K2FjY29yZGluZyB0bw0KPiA+ID4gPiArICogdGhlIGZvbGxvd2luZyBlcXVhdGlvbjoNCj4gPiA+
-ID4gKyAqIGZwbGxfcGhpID0gKHBsbF9yZWYgKiBtZmQpIC8gZGl2X3JmZHBoaTEgICovIHN0cnVj
-dA0KPiA+ID4gPiArcGxsZGlnX3BoaTFfcGFyYW0gew0KPiA+ID4gPiArICAgICAgIHVuc2lnbmVk
-IGxvbmcgcmF0ZTsNCj4gPiA+ID4gKyAgICAgICB1bnNpZ25lZCBpbnQgcmZkcGhpMTsNCj4gPiA+
-ID4gKyAgICAgICB1bnNpZ25lZCBpbnQgbWZkOw0KPiA+ID4gPiArfTsNCj4gPiA+ID4gKw0KPiA+
-ID4gPiArZW51bSBwbGxkaWdfcGhpMV9mcmVxX3JhbmdlIHsNCj4gPiA+ID4gKyAgICAgICBQSEkx
-X01JTiAgICAgICAgPSAyNzAwMDAwMFUsDQo+ID4gPiA+ICsgICAgICAgUEhJMV9NQVggICAgICAg
-ID0gNjAwMDAwMDAwVQ0KPiA+ID4gPiArfTsNCj4gPiA+DQo+ID4gPiBQbGVhc2UganVzdCBpbmxp
-bmUgdGhlc2UgdmFsdWVzIGluIHRoZSBvbmUgcGxhY2UgdGhleSdyZSB1c2VkLg0KPiA+ID4NCj4g
-PiA+ID4gKw0KPiA+ID4gPiArc3RydWN0IGNsa19wbGxkaWcgew0KPiA+ID4gPiArICAgICAgIHN0
-cnVjdCBjbGtfaHcgaHc7DQo+ID4gPiA+ICsgICAgICAgdm9pZCBfX2lvbWVtICpyZWdzOw0KPiA+
-ID4gPiArICAgICAgIHN0cnVjdCBkZXZpY2UgKmRldjsNCj4gPiA+DQo+ID4gPiBQbGVhc2UgcmVt
-b3ZlIHRoaXMsIGl0IGlzIHVudXNlZC4NCj4gPg0KPiA+IEl0IGlzIHVzZWQgZm9yIHByb2JlLg0K
-PiANCj4gVXNlIGEgbG9jYWwgdmFyaWFibGUgYW5kIGRvbid0IHN0b3JlIGl0IGF3YXkgZm9yZXZl
-ciBpbiB0aGUgc3RydWN0Lg0KPiANCg0KVW5kZXJzdGFuZCwgd2lsbCByZW1vdmUgaXQuDQoNCj4g
-PiA+DQo+ID4gPiA+ICsNCj4gPiA+ID4gKyAgICAgICB2YWwgPSByZWFkbChkYXRhLT5yZWdzICsg
-UExMRElHX1JFR19QTExEVik7DQo+ID4gPiA+ICsgICAgICAgdmFsID0gcGhpMV9wYXJhbS5tZmQ7
-DQo+ID4gPiA+ICsgICAgICAgcmZkcGhpMSA9IHBoaTFfcGFyYW0ucmZkcGhpMTsNCj4gPiA+ID4g
-KyAgICAgICB2YWwgfD0gcmZkcGhpMTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArICAgICAgIHdyaXRl
-bCh2YWwsIGRhdGEtPnJlZ3MgKyBQTExESUdfUkVHX1BMTERWKTsNCj4gPiA+ID4gKw0KPiA+ID4g
-PiArICAgICAgIC8qIGRlbGF5IDIwMHVzIG1ha2Ugc3VyZSB0aGF0IG9sZCBsb2NrIHN0YXRlIGlz
-IGNsZWFyZWQgKi8NCj4gPiA+ID4gKyAgICAgICB1ZGVsYXkoMjAwKTsNCj4gPiA+ID4gKw0KPiA+
-ID4gPiArICAgICAgIC8qIFdhaXQgdW50aWwgUExMIGlzIGxvY2tlZCBvciB0aW1lb3V0IChtYXhp
-bXVtIDEwMDAgdXNlY3MpICovDQo+ID4gPiA+ICsgICAgICAgcmV0ID0gcmVhZGxfcG9sbF90aW1l
-b3V0X2F0b21pYyhkYXRhLT5yZWdzICsNCj4gPiA+ID4gKyBQTExESUdfUkVHX1BMTFNSLA0KPiA+
-ID4gY29uZCwNCj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IGNvbmQgJg0KPiBQTExESUdfTE9DS19NQVNLLA0KPiA+ID4gMCwNCj4gPiA+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFVTRUNfUEVSX01TRUMpOw0KPiA+ID4gPiAr
-DQo+ID4gPiA+ICsgICAgICAgcmV0dXJuIHJldDsNCj4gPiA+DQo+ID4gPiBKdXN0IHJldHVybiBy
-ZWFkbF9wb2xsX3RpbWVvdXRfYXRvbWljKC4uLikgaGVyZS4NCj4gPg0KPiA+IE1heWJlIHVzZSBi
-ZWxvdyBjb2RlIHdpbGwgdG8gYmVzdCBkZXNjcmliZXMuDQo+ID4NCj4gPiBJZiAocmV0KQ0KPiA+
-ICAgICAgICAgcmV0dXJuIC1FVElNRU9VVDsNCj4gPg0KPiA+IHJldHVybiAwOw0KPiANCj4gTm8s
-IGp1c3QgcmV0dXJuIHJlYWRsX3BvbGxfdGltZW91dF9hdG9taWMoKS4NCg0KVW5kZXJzdGFuZCwg
-SSB3aWxsIHNlbmQgbmV4dCB2ZXJzaW9uIHBhdGNoIGZvciB0aGlzLg0KDQpUaGFua3MgJiYgQmVz
-dCBSZWdhcmRzLA0KV2VuDQoNCg==
+On i.MX8MQ, usdhc's ipg clock is from IMX8MQ_CLK_IPG_ROOT,
+assign it explicitly instead of using IMX8MQ_CLK_DUMMY.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index fd42bee..e2c95ad 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -850,7 +850,7 @@
+ 				             "fsl,imx7d-usdhc";
+ 				reg = <0x30b40000 0x10000>;
+ 				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk IMX8MQ_CLK_DUMMY>,
++				clocks = <&clk IMX8MQ_CLK_IPG_ROOT>,
+ 				         <&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
+ 				         <&clk IMX8MQ_CLK_USDHC1_ROOT>;
+ 				clock-names = "ipg", "ahb", "per";
+@@ -867,7 +867,7 @@
+ 				             "fsl,imx7d-usdhc";
+ 				reg = <0x30b50000 0x10000>;
+ 				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&clk IMX8MQ_CLK_DUMMY>,
++				clocks = <&clk IMX8MQ_CLK_IPG_ROOT>,
+ 				         <&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
+ 				         <&clk IMX8MQ_CLK_USDHC2_ROOT>;
+ 				clock-names = "ipg", "ahb", "per";
+-- 
+2.7.4
