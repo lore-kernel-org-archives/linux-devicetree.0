@@ -1,54 +1,77 @@
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-Subject: [PATCH V3 2/4] ASoC: fsl_asrc: update supported sample format
-Date: Thu, 19 Sep 2019 20:11:40 +0800
-Message-ID: <5811f393692a7668564fd4b9ef5708c1e3db8dc0.1568861098.git.shengjiu.wang@nxp.com>
-References: <cover.1568861098.git.shengjiu.wang@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1568861098.git.shengjiu.wang@nxp.com>
-In-Reply-To: <cover.1568861098.git.shengjiu.wang@nxp.com>
-References: <cover.1568861098.git.shengjiu.wang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de
+From: Tero Kristo <t-kristo@ti.com>
+Subject: [PATCHv6 01/10] dt-bindings: omap: add new binding for PRM instances
+Date: Thu, 19 Sep 2019 15:30:01 +0300
+Message-ID: <20190919123001.23081-1-t-kristo@ti.com>
+References: <20190917174817.GA27938@bogus>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190917174817.GA27938@bogus>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ssantosh@kernel.org, p.zabel@pengutronix.de, robh+dt@kernel.org, tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The ASRC support 24bit/16bit/8bit input width, which is
-data width, not slot width.
+Add new binding for OMAP PRM (Power and Reset Manager) instances. Each
+of these will act as a power domain controller and potentially as a reset
+provider.
 
-For the S20_3LE format, the data with is 20bit, slot width
-is 24bit, if we set ASRMCR1n.IWD to be 24bits, the result
-is the volume is lower than expected, it likes 24bit data
-right shift 4 bits
-
-So replace S20_3LE with S24_3LE in supported list and add S8
-format in TX supported list
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
 ---
- sound/soc/fsl/fsl_asrc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+v6: added common compatible as per request from Tony Lindgren. This is
+    to simplify the support code in patch #10 of the series slightly
 
-diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-index 4d3804a1ea55..584badf956d2 100644
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -624,7 +624,7 @@ static int fsl_asrc_dai_probe(struct snd_soc_dai *dai)
- 
- #define FSL_ASRC_FORMATS	(SNDRV_PCM_FMTBIT_S24_LE | \
- 				 SNDRV_PCM_FMTBIT_S16_LE | \
--				 SNDRV_PCM_FMTBIT_S20_3LE)
-+				 SNDRV_PCM_FMTBIT_S24_3LE)
- 
- static struct snd_soc_dai_driver fsl_asrc_dai = {
- 	.probe = fsl_asrc_dai_probe,
-@@ -635,7 +635,8 @@ static struct snd_soc_dai_driver fsl_asrc_dai = {
- 		.rate_min = 5512,
- 		.rate_max = 192000,
- 		.rates = SNDRV_PCM_RATE_KNOT,
--		.formats = FSL_ASRC_FORMATS,
-+		.formats = FSL_ASRC_FORMATS |
-+			   SNDRV_PCM_FMTBIT_S8,
- 	},
- 	.capture = {
- 		.stream_name = "ASRC-Capture",
+ .../devicetree/bindings/arm/omap/prm-inst.txt | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/omap/prm-inst.txt b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+new file mode 100644
+index 000000000000..31f8d8b44a51
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/omap/prm-inst.txt
+@@ -0,0 +1,30 @@
++OMAP PRM instance bindings
++
++Power and Reset Manager is an IP block on OMAP family of devices which
++handle the power domains and their current state, and provide reset
++handling for the domains and/or separate IP blocks under the power domain
++hierarchy.
++
++Required properties:
++- compatible:	Must contain one of the following:
++		"ti,am3-prm-inst"
++		"ti,am4-prm-inst"
++		"ti,omap4-prm-inst"
++		"ti,omap5-prm-inst"
++		"ti,dra7-prm-inst"
++		and additionally must contain:
++		"ti,omap-prm-inst"
++- reg:		Contains PRM instance register address range
++		(base address and length)
++
++Optional properties:
++- #reset-cells:	Should be 1 if the PRM instance in question supports resets.
++
++Example:
++
++prm_dsp2: prm@1b00 {
++	compatible = "ti,omap-prm-inst", "ti,dra7-prm-inst";
++	reg = <0x1b00 0x40>;
++	#reset-cells = <1>;
++	clocks = <&dsp2_clkctrl DRA7_DSP2_MMU0_DSP2_CLKCTRL 0>;
++};
 -- 
-2.21.0
+2.17.1
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
