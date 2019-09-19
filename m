@@ -1,82 +1,80 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: ddr: Add bindings for Samsung
- LPDDR3 memories
-Date: Thu, 19 Sep 2019 08:49:07 +0200
-Message-ID: <4a0d1d2c-cd1d-5df4-d4b1-f2dd1ef3bb72@partner.samsung.com>
-References: <CGME20190916100719eucas1p206fe95982b774840b5d6e62ba9c42c79@eucas1p2.samsung.com>
-        <20190916100704.26692-1-l.luba@partner.samsung.com>
-        <20190916100704.26692-4-l.luba@partner.samsung.com>
-        <CAJKOXPcxG-mMKy5u-b0+xj_sOmrq5yq5-LYJx0Ds6_+yo_=JbA@mail.gmail.com>
+From: Schrempf Frieder <frieder.schrempf@kontron.de>
+Subject: Re: [PATCH 2/3] arm64: dts: imx8mm: Use correct clock for usdhc's ipg
+ clk
+Date: Thu, 19 Sep 2019 07:17:44 +0000
+Message-ID: <c680d114-1c14-6bf8-226c-2fdd98350158__15071.1673124292$1568877507$gmane$org@kontron.de>
+References: <1568869559-28611-1-git-send-email-Anson.Huang@nxp.com>
+ <1568869559-28611-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPcxG-mMKy5u-b0+xj_sOmrq5yq5-LYJx0Ds6_+yo_=JbA@mail.gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1568869559-28611-2-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, kyungmin.park@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, willy.mh.wolff.ml@gmail.com
+Content-ID: <F14B5A1009A44548B13FE27527380192@snt-world.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <Anson.Huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "leonard.crestez@nxp.com" <leonard.crestez@nxp.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "ping.bai@nxp.com" <ping.bai@nxp.com>, "daniel.baluta@nxp.com" <daniel.baluta@nxp.com>, "jun.li@nxp.com" <jun.li@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "abel.vesa@nxp.com" <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "angus@akkea.ca" <angus@akkea.ca>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-
+Cc: "Linux-imx@nxp.com" <Linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Hi Anson,
 
-On 9/18/19 8:51 PM, Krzysztof Kozlowski wrote:
-> On Mon, 16 Sep 2019 at 12:07, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->>
->> Add compatible for Samsung k3qf2f20db LPDDR3 memory bindings.
->> Introduce minor fixes in the old documentation.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   Documentation/devicetree/bindings/ddr/lpddr3.txt | 9 ++++++---
->>   1 file changed, 6 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/ddr/lpddr3.txt b/Documentation/devicetree/bindings/ddr/lpddr3.txt
->> index 3b2485b84b3f..49afe794daaa 100644
->> --- a/Documentation/devicetree/bindings/ddr/lpddr3.txt
->> +++ b/Documentation/devicetree/bindings/ddr/lpddr3.txt
->> @@ -1,7 +1,9 @@
->>   * LPDDR3 SDRAM memories compliant to JEDEC JESD209-3C
->>
->>   Required properties:
->> -- compatible : Should be  - "jedec,lpddr3"
->> +- compatible : should be one of the following:
->> +       Generic default - "jedec,lpddr3".
+I have a question, that is not directly related to this patch.
+I see that for the usdhc1 and usdhc3 nodes, there is an 'assigned-clock' 
+and 'assigned-clock-rates' property but not for usdhc2. The same applies 
+to the mx8mq and mx8mn dtsi file.
+
+Is there any reason for this? If not can you fix it?
+
+Thanks,
+Frieder
+
+On 19.09.19 07:05, Anson Huang wrote:
+> On i.MX8MM, usdhc's ipg clock is from IMX8MM_CLK_IPG_ROOT,
+> assign it explicitly instead of using IMX8MM_CLK_DUMMY.
 > 
-> The convention is first compatible, then description. I gave you the
-> example to base on - at25. Why making it different?
-
-I have checked at25 that you pointed me to and also checked at24, which
-has a bit longer "compatible" section.
-
-I found that there are many "jedec,spi-nor" compatible devices, which I
-thought would be a better example for my "jedec,lpddr3".
-For example, two configurations, where you have a single labels or dual
-(with specific device)
-arch/arm/boot/dts/imx6dl-rex-basic.dts:
-compatible = "sst,sst25vf016b", "jedec,spi-nor";
-arch/arm/boot/dts/imx6q-ba16.dtsi:
-compatible = "jedec,spi-nor";
-
-The 'compatible' in documentation for the "jedec,spi-nor" is slightly
-different (similar to at24).
-Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-It has a long explanation, which is also OK. So I thought that it is
-quite flexible what you put in there.
-
-I have also checked Cadance QSPI controller.
-Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-The controller might be built-in into different vendor SoC's
-and the "compatible" is ready to reflect it in similar fashion but
-with a short explanation in this section.
-
-Therefore, what you see in the patch draw heavily on Cadence's qspi,
-with a bit of inspiration from jedec,spi-nor usage.
-
-Should I change it to at25 "compatible" style and send next patch?
-
-PS. Thank you for taking the other two patches. I will not respond in
-their threads to keep the traffic low.
-
-Regards,
-Lukasz
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>   arch/arm64/boot/dts/freescale/imx8mm.dtsi | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> index 7c4dcce..8aafad2 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
+> @@ -694,7 +694,7 @@
+>   				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
+>   				reg = <0x30b40000 0x10000>;
+>   				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clk IMX8MM_CLK_DUMMY>,
+> +				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
+>   					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
+>   					 <&clk IMX8MM_CLK_USDHC1_ROOT>;
+>   				clock-names = "ipg", "ahb", "per";
+> @@ -710,7 +710,7 @@
+>   				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
+>   				reg = <0x30b50000 0x10000>;
+>   				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clk IMX8MM_CLK_DUMMY>,
+> +				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
+>   					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
+>   					 <&clk IMX8MM_CLK_USDHC2_ROOT>;
+>   				clock-names = "ipg", "ahb", "per";
+> @@ -724,7 +724,7 @@
+>   				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
+>   				reg = <0x30b60000 0x10000>;
+>   				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
+> -				clocks = <&clk IMX8MM_CLK_DUMMY>,
+> +				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
+>   					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
+>   					 <&clk IMX8MM_CLK_USDHC3_ROOT>;
+>   				clock-names = "ipg", "ahb", "per";
+> 
