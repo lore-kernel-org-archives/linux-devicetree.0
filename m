@@ -1,134 +1,109 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC)
- driver for SC7180
-Date: Thu, 19 Sep 2019 16:38:19 +0530
-Message-ID: <74643831-1a58-e279-aca3-8753f5fcbe04@codeaurora.org>
-References: <20190918095018.17979-1-tdas@codeaurora.org>
- <20190918095018.17979-4-tdas@codeaurora.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v6 3/4] dt-bindings: ASoC: Add WSA881x bindings
+Date: Thu, 19 Sep 2019 12:22:44 +0100
+Message-ID: <f488e01f-7ce9-09dd-676d-a476e7b00b46@linaro.org>
+References: <20190829163514.11221-1-srinivas.kandagatla@linaro.org>
+ <20190829163514.11221-4-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190918095018.17979-4-tdas@codeaurora.org>
+In-Reply-To: <20190829163514.11221-4-srinivas.kandagatla@linaro.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
-Cc: David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
+Cc: spapothi@codeaurora.org, bgoswami@codeaurora.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[]..
+Hi Mark,
 
-> +static struct clk_rcg_dfs_data gcc_dfs_clocks[] = {
-> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s0_clk_src),
-> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s1_clk_src),
-> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s2_clk_src),
-> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s3_clk_src),
-> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s4_clk_src),
-> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s5_clk_src),
-> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s0_clk_src),
-> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s1_clk_src),
-> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s2_clk_src),
-> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s3_clk_src),
-> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s4_clk_src),
-> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s5_clk_src),
-> +};
-
-this fails to build..
-
-In file included from drivers/clk/qcom/gcc-sc7180.c:17:0:
-drivers/clk/qcom/gcc-sc7180.c:2429:17: error: ‘gcc_qupv3_wrap0_s0_clk_src_src’ undeclared here (not in a function)
-   DEFINE_RCG_DFS(gcc_qupv3_wrap0_s0_clk_src),
-                  ^
-drivers/clk/qcom/clk-rcg.h:171:12: note: in definition of macro ‘DEFINE_RCG_DFS’
-   { .rcg = &r##_src, .init = &r##_init }
-             ^
-drivers/clk/qcom/gcc-sc7180.c:2430:17: error: ‘gcc_qupv3_wrap0_s1_clk_src_src’ undeclared here (not in a function)
-   DEFINE_RCG_DFS(gcc_qupv3_wrap0_s1_clk_src),
-                  ^
-drivers/clk/qcom/clk-rcg.h:171:12: note: in definition of macro ‘DEFINE_RCG_DFS’
-   { .rcg = &r##_src, .init = &r##_init }
-             ^
-Perhaps you should drop _src here and in the clk_init_data names.
-
-> +
-> +static const struct regmap_config gcc_sc7180_regmap_config = {
-> +	.reg_bits = 32,
-> +	.reg_stride = 4,
-> +	.val_bits = 32,
-> +	.max_register = 0x18208c,
-> +	.fast_io = true,
-> +};
-> +
-> +static const struct qcom_cc_desc gcc_sc7180_desc = {
-> +	.config = &gcc_sc7180_regmap_config,
-> +	.clk_hws = gcc_sc7180_hws,
-> +	.num_clk_hws = ARRAY_SIZE(gcc_sc7180_hws),
-> +	.clks = gcc_sc7180_clocks,
-> +	.num_clks = ARRAY_SIZE(gcc_sc7180_clocks),
-> +	.resets = gcc_sc7180_resets,
-> +	.num_resets = ARRAY_SIZE(gcc_sc7180_resets),
-> +	.gdscs = gcc_sc7180_gdscs,
-> +	.num_gdscs = ARRAY_SIZE(gcc_sc7180_gdscs),
-> +};
-> +
-> +static const struct of_device_id gcc_sc7180_match_table[] = {
-> +	{ .compatible = "qcom,gcc-sc7180" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, gcc_sc7180_match_table);
-> +
-> +static int gcc_sc7180_probe(struct platform_device *pdev)
-> +{
-> +	struct regmap *regmap;
-> +	int ret;
-> +
-> +	regmap = qcom_cc_map(pdev, &gcc_sc7180_desc);
-> +	if (IS_ERR(regmap))
-> +		return PTR_ERR(regmap);
-> +
-> +	/*
-> +	 * Disable the GPLL0 active input to MM blocks, NPU
-> +	 * and GPU via MISC registers.
-> +	 */
-> +	regmap_update_bits(regmap, GCC_MMSS_MISC, 0x3, 0x3);
-> +	regmap_update_bits(regmap, GCC_NPU_MISC, 0x3, 0x3);
-> +	regmap_update_bits(regmap, GCC_GPU_MISC, 0x3, 0x3);
-> +
-> +	ret = qcom_cc_register_rcg_dfs(regmap, gcc_dfs_clocks,
-> +					ARRAY_SIZE(gcc_dfs_clocks));
-> +	if (ret)
-> +		return ret;
-> +
-> +	return qcom_cc_really_probe(pdev, &gcc_sc7180_desc, regmap);
-> +}
-> +
-> +static struct platform_driver gcc_sc7180_driver = {
-> +	.probe = gcc_sc7180_probe,
-> +	.driver = {
-> +		.name = "gcc-sc7180",
-> +		.of_match_table = gcc_sc7180_match_table,
-> +	},
-> +};
-> +
-> +static int __init gcc_sc7180_init(void)
-> +{
-> +	return platform_driver_register(&gcc_sc7180_driver);
-> +}
-> +subsys_initcall(gcc_sc7180_init);
-> +
-> +static void __exit gcc_sc7180_exit(void)
-> +{
-> +	platform_driver_unregister(&gcc_sc7180_driver);
-> +}
-> +module_exit(gcc_sc7180_exit);
-> +
-> +MODULE_DESCRIPTION("QTI GCC SC7180 Driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-> of the Code Aurora Forum, hosted by the  Linux Foundation.
+On 29/08/2019 17:35, Srinivas Kandagatla wrote:
+> This patch adds bindings for WSA8810/WSA8815 Class-D Smart Speaker
+> Amplifier. This Amplifier also has a simple thermal sensor for
+> over temperature and speaker protection.
 > 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Bindings for the codec have been Acked by Rob, SoundWire depended 
+patches are already applied for 5.4 and codec driver is Acked by Pierre.
+
+Do you want me to resend these two patches separately?
+
+
+thanks,
+srini
+
+> ---
+>   .../bindings/sound/qcom,wsa881x.yaml          | 62 +++++++++++++++++++
+>   1 file changed, 62 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+> new file mode 100644
+> index 000000000000..faa90966a33a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
+> @@ -0,0 +1,62 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/qcom,wsa881x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for Qualcomm WSA8810/WSA8815 Class-D Smart Speaker Amplifier
+> +
+> +maintainers:
+> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> +
+> +description: |
+> +  WSA8810 is a class-D smart speaker amplifier and WSA8815
+> +  is a high-output power class-D smart speaker amplifier.
+> +  Their primary operating mode uses a SoundWire digital audio
+> +  interface. This binding is for SoundWire interface.
+> +
+> +properties:
+> +  compatible:
+> +    const: sdw10217201000
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  powerdown-gpios:
+> +    description: GPIO spec for Powerdown/Shutdown line to use
+> +    maxItems: 1
+> +
+> +  '#thermal-sensor-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - powerdown-gpios
+> +  - "#thermal-sensor-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    soundwire@c2d0000 {
+> +        #address-cells = <2>;
+> +        #size-cells = <0>;
+> +        reg = <0x0c2d0000 0x2000>;
+> +
+> +        speaker@0,1 {
+> +            compatible = "sdw10217201000";
+> +            reg = <0 1>;
+> +            powerdown-gpios = <&wcdpinctrl 2 0>;
+> +            #thermal-sensor-cells = <0>;
+> +        };
+> +
+> +        speaker@0,2 {
+> +            compatible = "sdw10217201000";
+> +            reg = <0 2>;
+> +            powerdown-gpios = <&wcdpinctrl 2 0>;
+> +            #thermal-sensor-cells = <0>;
+> +        };
+> +    };
+> +
+> +...
+> 
