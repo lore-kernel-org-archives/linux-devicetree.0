@@ -1,75 +1,41 @@
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: Re: [PATCH 8/8] iommu/arm-smmu-v3: Add support for PCI PASID
-Date: Thu, 19 Sep 2019 17:10:02 +0200
-Message-ID: <20190919151002.GF1013538@lophozonia>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
- <20190610184714.6786-9-jean-philippe.brucker@arm.com>
- <b0e3d9a9-6085-b393-1982-3dd95bf5d100@redhat.com>
+From: Gareth Williams <gareth.williams.jx@renesas.com>
+Subject: RE: [PATCH v2 0/4] spi: dw: Add basic runtime PM support
+Date: Thu, 19 Sep 2019 15:14:54 +0000
+Message-ID: <TYAPR01MB292515FE4C74044CA53321C5DF890@TYAPR01MB2925.jpnprd01.prod.outlook.com>
+References: <1568793876-9009-1-git-send-email-gareth.williams.jx@renesas.com>
+ <20190919133113.GK3642@sirena.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b0e3d9a9-6085-b393-1982-3dd95bf5d100@redhat.com>
+In-Reply-To: <20190919133113.GK3642@sirena.co.uk>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Auger Eric <eric.auger@redhat.com>
-Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, will.deacon@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, jacob.jun.pan@linux.intel.com, joro@8bytes.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 08, 2019 at 09:58:16AM +0200, Auger Eric wrote:
-> > +	ret = pci_enable_pasid(pdev, features);
-> > +	if (!ret)
-> > +		master->ssid_bits = min_t(u8, ilog2(num_pasids),
-> > +					  master->smmu->ssid_bits);
-> I don't really get why this setting is conditional to the success of
-> pci_enabled_pasid and not num_pasids > 0.
+Hi Mark,
 
-num_pasids only contains the value of the PCIe PASID capability. If
-pci_enable_pasid() fails then we want to leave master->ssid_bits to 0 so
-that we report to users that SVA and AUXD aren't supported.
+On Wed, Sep 19, 2019 at 14:31:32AM +0100, Mark Brown wrote:
 
-> If it fails the ssid_bits is set to min(smmu->ssid_bits,
-> fwspec->num_pasid_bits) anyway.
->
-> > +	return ret;
-> > +}
-> > +
-> > +static void arm_smmu_disable_pasid(struct arm_smmu_master *master)
-> > +{
-> > +	struct pci_dev *pdev;
-> > +
-> > +	if (!dev_is_pci(master->dev))
-> > +		return;
-> > +
-> > +	pdev = to_pci_dev(master->dev);
-> > +
-> > +	if (!pdev->pasid_enabled)
-> > +		return;
-> > +
-> > +	pci_disable_pasid(pdev);
-> > +	master->ssid_bits = 0;
-> in case of a platform device you leave the ssid_bits to a value != 0. Is
-> that what you want?
+> On Wed, Sep 18, 2019 at 09:04:32AM +0100, Gareth Williams wrote:
+>=20
+> > Gareth Williams (1):
+> >   dt-bindings: snps,dw-apb-ssi: Add optional clock domain information
+> >
+> > Phil Edworthy (3):
+> >   dt: spi: Add Renesas RZ/N1 binding documentation
+>=20
+> Please use subject lines matching the style for the subsystem.  This make=
+s it
+> easier for people to identify relevant patches.  This isn't even consiste=
+nt
+> within the series :(
+Sorry about that, I will correct the subject lines for V3.
+Is there a set convention for the subsystem I should follow in future?
+Or should I follow the style of the individual files I work on?
 
-Yes, this is only for PCI devices, there is no standard way of disabling
-PASID in platform devices. We just take whatever the firmware gives us.
+Kind Regards,
 
-> > +}
-> > +
-> >  static void arm_smmu_detach_dev(struct arm_smmu_master *master)
-> >  {
-> >  	unsigned long flags;
-> > @@ -2413,6 +2456,9 @@ static int arm_smmu_add_device(struct device *dev)
-> >  
-> >  	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
-> >  
-> > +	/* Note that PASID must be enabled before, and disabled after ATS */
-> > +	arm_smmu_enable_pasid(master);
-> In case the call fails, don't you want to handle the error and reset the
-> ssid_bits?
-
-This function fails if the device doesn't support PASID, and we leave
-ssid_bits to 0. That said, I think it would be nicer to move the above
-line (that deals with fwspec) into arm_smmu_enable_pasid()
-
-Thanks,
-Jean
+Gareth
