@@ -1,41 +1,38 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH 3/3] arm64: dts: meson: a1: add secure power domain controller
-Date: Thu, 19 Sep 2019 08:11:04 -0400
-Message-ID: <1568895064-4116-4-git-send-email-jianxin.pan@amlogic.com>
-References: <1568895064-4116-1-git-send-email-jianxin.pan@amlogic.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+Subject: [PATCH V3 0/4] update supported sample format
+Date: Thu, 19 Sep 2019 20:11:38 +0800
+Message-ID: <cover.1568861098.git.shengjiu.wang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568895064-4116-1-git-send-email-jianxin.pan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
-Cc: Jianxin Pan <jianxin.pan@amlogic.com>, Zhiqiang Liang <zhiqiang.liang@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>
+To: timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de
 List-Id: devicetree@vger.kernel.org
 
-Enable power domain controller for Meson A1 SoC.
+This patch serial is to update the supported format for fsl_asrc
+and fix some format issue.
 
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-Signed-off-by: Zhiqiang Liang <zhiqiang.liang@amlogic.com>
----
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Shengjiu Wang (4):
+  ASoC: fsl_asrc: Use in(out)put_format instead of in(out)put_word_width
+  ASoC: fsl_asrc: update supported sample format
+  ASoC: pcm_dmaengine: Extract snd_dmaengine_pcm_refine_runtime_hwparams
+  ASoC: fsl_asrc: Fix error with S24_3LE format bitstream in i.MX8
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index 7210ad0..d689e5c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -93,6 +93,12 @@
- 				clock-names = "xtal", "pclk", "baud";
- 				status = "disabled";
- 			};
-+
-+			pwrc: power-controller {
-+				compatible = "amlogic,meson-a1-pwrc";
-+				#power-domain-cells = <1>;
-+				status = "okay";
-+			};
- 		};
- 
- 		gic: interrupt-controller@ff901000 {
+changes in v2
+- extract snd_dmaengine_pcm_set_runtime_hwparams in one
+  separate path.
+- 4th patch depends on 3rd patch
+
+changes in v3
+- Fix build report by kbuild test robot <lkp@intel.com>
+- change snd_dmaengine_pcm_set_runtime_hwparams to
+  snd_dmaengine_pcm_refine_runtime_hwparams
+
+ include/sound/dmaengine_pcm.h         |  5 ++
+ sound/core/pcm_dmaengine.c            | 83 +++++++++++++++++++++++++++
+ sound/soc/fsl/fsl_asrc.c              | 65 ++++++++++++++-------
+ sound/soc/fsl/fsl_asrc.h              |  7 ++-
+ sound/soc/fsl/fsl_asrc_dma.c          | 52 ++++++++++++++---
+ sound/soc/soc-generic-dmaengine-pcm.c | 62 +++-----------------
+ 6 files changed, 188 insertions(+), 86 deletions(-)
+
 -- 
-2.7.4
+2.21.0
