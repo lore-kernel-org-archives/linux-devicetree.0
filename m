@@ -1,53 +1,48 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 0/7] media: i2c: ov2659: maintenance series
-Date: Thu, 19 Sep 2019 15:39:48 -0500
-Message-ID: <20190919203955.15125-1-bparrot@ti.com>
+Subject: [Patch v2 6/7] media: i2c: ov2659: Fix missing 720p register config
+Date: Thu, 19 Sep 2019 15:39:54 -0500
+Message-ID: <20190919203955.15125-7-bparrot@ti.com>
+References: <20190919203955.15125-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190919203955.15125-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>
 Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series is a collection of patches we have been carrying for a
-while.
+The initial registers sequence is only loaded at probe
+time. Afterward only the resolution and format specific
+register are modified. Care must be taken to make sure
+registers modified by one resolution setting are reverted
+back when another resolution is programmed.
 
-It includes a few sensor register fixes which would cause visual
-artifacts at lower resolution and also at 720p.
+This was not done properly for the 720p case.
 
-Also on some board the 'powerdown' and /or 'reset' pins are not tied so
-we need to add support for optional gpios to handle these.
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+---
+ drivers/media/i2c/ov2659.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Since these camera are removable on some board we also need the driver
-to actually fail when there is no hardware present so the driver is
-actually removed.
-
-Finally, we update the licensing statement to use SPDX licensing.
-
-Changes since v1:
-- Addressed review comment from Prabhakar
-- Added support for reset-gpios
-- Rework the power setting to use pm_runtime instead of s_power
-  as based on discussion with Sakari it would be the prefered method
-- Added a patch to reduce the number explicit include files to the
-  minimum necessary instead of the previous kitchen sink approach
-
-Benoit Parrot (7):
-  media: i2c: ov2659: Fix for image wrap-around in lower resolution
-  media: i2c: ov2659: Fix sensor detection to actually fail when device
-    is not present
-  media: i2c: ov2659: Cleanup include file list
-  media: dt-bindings: ov2659: add powerdown/reset-gpios optional
-    property
-  media: i2c: ov2659: Add powerdown/reset gpio handling
-  media: i2c: ov2659: Fix missing 720p register config
-  media: i2c: ov2659: Switch to SPDX Licensing
-
- .../devicetree/bindings/media/i2c/ov2659.txt  |   9 ++
- drivers/media/i2c/Kconfig                     |   2 +-
- drivers/media/i2c/ov2659.c                    | 129 +++++++++++++-----
- 3 files changed, 107 insertions(+), 33 deletions(-)
-
+diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+index 170f80a1a51f..d4341204207d 100644
+--- a/drivers/media/i2c/ov2659.c
++++ b/drivers/media/i2c/ov2659.c
+@@ -412,10 +412,14 @@ static struct sensor_register ov2659_720p[] = {
+ 	{ REG_TIMING_YINC, 0x11 },
+ 	{ REG_TIMING_VERT_FORMAT, 0x80 },
+ 	{ REG_TIMING_HORIZ_FORMAT, 0x00 },
++	{ 0x370a, 0x12 },
+ 	{ 0x3a03, 0xe8 },
+ 	{ 0x3a09, 0x6f },
+ 	{ 0x3a0b, 0x5d },
+ 	{ 0x3a15, 0x9a },
++	{ REG_VFIFO_READ_START_H, 0x00 },
++	{ REG_VFIFO_READ_START_L, 0x80 },
++	{ REG_ISP_CTRL02, 0x00 },
+ 	{ REG_NULL, 0x00 },
+ };
+ 
 -- 
 2.17.1
