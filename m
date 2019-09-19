@@ -1,80 +1,62 @@
-From: Schrempf Frieder <frieder.schrempf@kontron.de>
-Subject: Re: [PATCH 2/3] arm64: dts: imx8mm: Use correct clock for usdhc's ipg
- clk
-Date: Thu, 19 Sep 2019 07:17:44 +0000
-Message-ID: <c680d114-1c14-6bf8-226c-2fdd98350158__15071.1673124292$1568877507$gmane$org@kontron.de>
-References: <1568869559-28611-1-git-send-email-Anson.Huang@nxp.com>
- <1568869559-28611-2-git-send-email-Anson.Huang@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1568869559-28611-2-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-ID: <F14B5A1009A44548B13FE27527380192@snt-world.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <Anson.Huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, "leonard.crestez@nxp.com" <leonard.crestez@nxp.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "ping.bai@nxp.com" <ping.bai@nxp.com>, "daniel.baluta@nxp.com" <daniel.baluta@nxp.com>, "jun.li@nxp.com" <jun.li@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "abel.vesa@nxp.com" <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "angus@akkea.ca" <angus@akkea.ca>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-
-Cc: "Linux-imx@nxp.com" <Linux-imx@nxp.com>
+From: Green Wan <green.wan@sifive.com>
+Subject: [PATCH v2 0/3] dmaengine: sf-pdma: Add platform dma driver
+Date: Thu, 19 Sep 2019 15:26:03 +0800
+Message-ID: <20190919072634.1885-1-green.wan@sifive.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: linux-hackers@sifive.com, Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
+Add PDMA driver support for SiFive HiFive Unleashed RevA00 board. Mainly follows
+DMAengine controller doc[1] to implement and take other DMA drivers as reference.
+Such as
 
-I have a question, that is not directly related to this patch.
-I see that for the usdhc1 and usdhc3 nodes, there is an 'assigned-clock' 
-and 'assigned-clock-rates' property but not for usdhc2. The same applies 
-to the mx8mq and mx8mn dtsi file.
+  - drivers/dma/fsl-edma.c
+  - drivers/dma/dw-edma/
+  - drivers/dma/pxa-dma.c
 
-Is there any reason for this? If not can you fix it?
+Using DMA test client[2] to test. Detailed datasheet is doc[3]. Driver supports:
 
-Thanks,
-Frieder
+ - 4 physical DMA channels, share same DONE and error interrupt handler. 
+ - Support MEM_TO_MEM
+ - Tested by DMA test client
+ - patches include DT Bindgins document and dts for fu450-c000 SoC. Separate dts
+   patch for easier review and apply to different branch or SoC platform.
+ - retry 1 time if DMA error occurs.
 
-On 19.09.19 07:05, Anson Huang wrote:
-> On i.MX8MM, usdhc's ipg clock is from IMX8MM_CLK_IPG_ROOT,
-> assign it explicitly instead of using IMX8MM_CLK_DUMMY.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->   arch/arm64/boot/dts/freescale/imx8mm.dtsi | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> index 7c4dcce..8aafad2 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> @@ -694,7 +694,7 @@
->   				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
->   				reg = <0x30b40000 0x10000>;
->   				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clk IMX8MM_CLK_DUMMY>,
-> +				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
->   					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
->   					 <&clk IMX8MM_CLK_USDHC1_ROOT>;
->   				clock-names = "ipg", "ahb", "per";
-> @@ -710,7 +710,7 @@
->   				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
->   				reg = <0x30b50000 0x10000>;
->   				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clk IMX8MM_CLK_DUMMY>,
-> +				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
->   					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
->   					 <&clk IMX8MM_CLK_USDHC2_ROOT>;
->   				clock-names = "ipg", "ahb", "per";
-> @@ -724,7 +724,7 @@
->   				compatible = "fsl,imx8mm-usdhc", "fsl,imx7d-usdhc";
->   				reg = <0x30b60000 0x10000>;
->   				interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-> -				clocks = <&clk IMX8MM_CLK_DUMMY>,
-> +				clocks = <&clk IMX8MM_CLK_IPG_ROOT>,
->   					 <&clk IMX8MM_CLK_NAND_USDHC_BUS>,
->   					 <&clk IMX8MM_CLK_USDHC3_ROOT>;
->   				clock-names = "ipg", "ahb", "per";
-> 
+[Reference Doc]
+ [1] ./Documentation/driver-api/dmaengine/provider.rst
+ [2] ./Documentation/driver-api/dmaengine/dmatest.rst
+ [3] https://static.dev.sifive.com/FU540-C000-v1.0.pdf 
+
+[Simple steps to test of DMA Test client]
+ $ echo 1 > /sys/module/dmatest/parameters/iterations
+ $ echo dma0chan0 > /sys/module/dmatest/parameters/channel
+ $ echo dma0chan1 > /sys/module/dmatest/parameters/channel
+ $ echo dma0chan2 > /sys/module/dmatest/parameters/channel
+ $ echo dma0chan3 > /sys/module/dmatest/parameters/channel
+ $ echo 1 > /sys/module/dmatest/parameters/run
+
+Green Wan (3):
+  dt-bindings: dmaengine: sf-pdma: add bindins for SiFive PDMA
+  riscv: dts: add support for PDMA device of HiFive Unleashed Rev A00
+  dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00
+
+ .../bindings/dma/sifive,fu540-c000-pdma.yaml  |  63 ++
+ MAINTAINERS                                   |   6 +
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi    |   7 +
+ drivers/dma/Kconfig                           |   2 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/sf-pdma/Kconfig                   |   6 +
+ drivers/dma/sf-pdma/Makefile                  |   1 +
+ drivers/dma/sf-pdma/sf-pdma.c                 | 623 ++++++++++++++++++
+ drivers/dma/sf-pdma/sf-pdma.h                 | 124 ++++
+ 9 files changed, 833 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+ create mode 100644 drivers/dma/sf-pdma/Kconfig
+ create mode 100644 drivers/dma/sf-pdma/Makefile
+ create mode 100644 drivers/dma/sf-pdma/sf-pdma.c
+ create mode 100644 drivers/dma/sf-pdma/sf-pdma.h
+
+-- 
+2.17.1
