@@ -1,105 +1,75 @@
 From: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Subject: Re: [PATCH 6/8] iommu/arm-smmu-v3: Support auxiliary domains
-Date: Thu, 19 Sep 2019 17:06:34 +0200
-Message-ID: <20190919150634.GE1013538@lophozonia>
+Subject: Re: [PATCH 8/8] iommu/arm-smmu-v3: Add support for PCI PASID
+Date: Thu, 19 Sep 2019 17:10:02 +0200
+Message-ID: <20190919151002.GF1013538@lophozonia>
 References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
- <20190610184714.6786-7-jean-philippe.brucker@arm.com>
- <20190626175959.ubxvb2qn4taclact@willie-the-truck>
+ <20190610184714.6786-9-jean-philippe.brucker@arm.com>
+ <b0e3d9a9-6085-b393-1982-3dd95bf5d100@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190626175959.ubxvb2qn4taclact@willie-the-truck>
+In-Reply-To: <b0e3d9a9-6085-b393-1982-3dd95bf5d100@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will@kernel.org>
-Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com, robin.murphy@arm.com, jacob.jun.pan@linux.intel.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, eric.auger@redhat.com
+To: Auger Eric <eric.auger@redhat.com>
+Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, will.deacon@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, jacob.jun.pan@linux.intel.com, joro@8bytes.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 26, 2019 at 06:59:59PM +0100, Will Deacon wrote:
-> > @@ -666,8 +668,14 @@ struct arm_smmu_domain {
-> >  
-> >  	struct iommu_domain		domain;
-> >  
-> > +	/* Unused in aux domains */
-> >  	struct list_head		devices;
-> >  	spinlock_t			devices_lock;
+On Mon, Jul 08, 2019 at 09:58:16AM +0200, Auger Eric wrote:
+> > +	ret = pci_enable_pasid(pdev, features);
+> > +	if (!ret)
+> > +		master->ssid_bits = min_t(u8, ilog2(num_pasids),
+> > +					  master->smmu->ssid_bits);
+> I don't really get why this setting is conditional to the success of
+> pci_enabled_pasid and not num_pasids > 0.
+
+num_pasids only contains the value of the PCIe PASID capability. If
+pci_enable_pasid() fails then we want to leave master->ssid_bits to 0 so
+that we report to users that SVA and AUXD aren't supported.
+
+> If it fails the ssid_bits is set to min(smmu->ssid_bits,
+> fwspec->num_pasid_bits) anyway.
+>
+> > +	return ret;
+> > +}
 > > +
-> > +	/* Auxiliary domain stuff */
-> > +	struct arm_smmu_domain		*parent;
-> > +	ioasid_t			ssid;
-> > +	unsigned long			aux_nr_devs;
-> 
-> Maybe use a union to avoid comments about what is used/unused?
-
-OK
-
-> > +static void arm_smmu_aux_detach_dev(struct iommu_domain *domain, struct device *dev)
+> > +static void arm_smmu_disable_pasid(struct arm_smmu_master *master)
 > > +{
-> > +	struct iommu_domain *parent_domain;
-> > +	struct arm_smmu_domain *parent_smmu_domain;
-> > +	struct arm_smmu_master *master = dev_to_master(dev);
-> > +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+> > +	struct pci_dev *pdev;
 > > +
-> > +	if (!arm_smmu_dev_feature_enabled(dev, IOMMU_DEV_FEAT_AUX))
+> > +	if (!dev_is_pci(master->dev))
 > > +		return;
 > > +
-> > +	parent_domain = iommu_get_domain_for_dev(dev);
-> > +	if (!parent_domain)
+> > +	pdev = to_pci_dev(master->dev);
+> > +
+> > +	if (!pdev->pasid_enabled)
 > > +		return;
-> > +	parent_smmu_domain = to_smmu_domain(parent_domain);
 > > +
-> > +	mutex_lock(&smmu_domain->init_mutex);
-> > +	if (!smmu_domain->aux_nr_devs)
-> > +		goto out_unlock;
+> > +	pci_disable_pasid(pdev);
+> > +	master->ssid_bits = 0;
+> in case of a platform device you leave the ssid_bits to a value != 0. Is
+> that what you want?
+
+Yes, this is only for PCI devices, there is no standard way of disabling
+PASID in platform devices. We just take whatever the firmware gives us.
+
+> > +}
 > > +
-> > +	if (!--smmu_domain->aux_nr_devs) {
-> > +		arm_smmu_write_ctx_desc(parent_smmu_domain, smmu_domain->ssid,
-> > +					NULL);
-> > +		/*
-> > +		 * TLB doesn't need invalidation since accesses from the device
-> > +		 * can't use this domain's ASID once the CD is clear.
-> > +		 *
-> > +		 * Sadly that doesn't apply to ATCs, which are PASID tagged.
-> > +		 * Invalidate all other devices as well, because even though
-> > +		 * they weren't 'officially' attached to the auxiliary domain,
-> > +		 * they could have formed ATC entries.
-> > +		 */
-> > +		arm_smmu_atc_inv_domain(smmu_domain, 0, 0);
-> 
-> I've been struggling to understand the locking here, since both
-> arm_smmu_write_ctx_desc and arm_smmu_atc_inv_domain take and release the
-> devices_lock for the domain. Is there not a problem with devices coming and
-> going in-between the two calls?
+> >  static void arm_smmu_detach_dev(struct arm_smmu_master *master)
+> >  {
+> >  	unsigned long flags;
+> > @@ -2413,6 +2456,9 @@ static int arm_smmu_add_device(struct device *dev)
+> >  
+> >  	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
+> >  
+> > +	/* Note that PASID must be enabled before, and disabled after ATS */
+> > +	arm_smmu_enable_pasid(master);
+> In case the call fails, don't you want to handle the error and reset the
+> ssid_bits?
 
-Yes, I need to think about this more. I bet there are plenty more issues
-like this. For example I don't think I currently prevent the parent
-domain from disappearing while auxiliary domains are attached.
-
-> >  static struct iommu_ops arm_smmu_ops = {
-> >  	.capable		= arm_smmu_capable,
-> >  	.domain_alloc		= arm_smmu_domain_alloc,
-> > @@ -2539,6 +2772,13 @@ static struct iommu_ops arm_smmu_ops = {
-> >  	.of_xlate		= arm_smmu_of_xlate,
-> >  	.get_resv_regions	= arm_smmu_get_resv_regions,
-> >  	.put_resv_regions	= arm_smmu_put_resv_regions,
-> > +	.dev_has_feat		= arm_smmu_dev_has_feature,
-> > +	.dev_feat_enabled	= arm_smmu_dev_feature_enabled,
-> > +	.dev_enable_feat	= arm_smmu_dev_enable_feature,
-> > +	.dev_disable_feat	= arm_smmu_dev_disable_feature,
-> 
-> Why can't we use the existing ->capable and ->dev_{get,set}_attr callbacks
-> for this?
-
-->capable isn't very useful because it applies to all SMMUs in the
-system. The existing ->{get,set}_attr callbacks apply to an
-iommu_domain. I think the main reason for doing it on endpoints was that
-it would be tedious to keep track of capabilities when attaching and
-detaching devices to a domain, especially for drivers that allow
-multiple IOMMUs per domain [1]. There were more discussions, and in the
-end we agreed on this API for device attributes [2].
+This function fails if the device doesn't support PASID, and we leave
+ssid_bits to 0. That said, I think it would be nicer to move the above
+line (that deals with fwspec) into arm_smmu_enable_pasid()
 
 Thanks,
 Jean
-
-[1] https://lore.kernel.org/lkml/aa1ff748-c2ec-acc0-f1d9-cdff2b131e58@linux.intel.com/
-[2] https://lore.kernel.org/linux-iommu/20181207102926.GM16835@8bytes.org/
