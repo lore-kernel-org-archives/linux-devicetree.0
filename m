@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 01/13] media: am437x-vpfe: Fix suspend path to always handle pinctrl config
-Date: Thu, 19 Sep 2019 15:41:13 -0500
-Message-ID: <20190919204125.15254-2-bparrot@ti.com>
+Subject: [Patch v2 07/13] media: am437x-vpfe: Setting STD to current value is not an error
+Date: Thu, 19 Sep 2019 15:41:19 -0500
+Message-ID: <20190919204125.15254-8-bparrot@ti.com>
 References: <20190919204125.15254-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,92 +9,32 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190919204125.15254-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Jyri Sarha <jsarha@ti.com>, Benoit Parrot <bparrot@ti.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Dave Gerlach <d-gerlach@ti.com>
+VIDIOC_S_STD should not return an error if the value is identical
+to the current one.
+This error was highlighted by the v4l2-compliance test.
 
-Currently if vpfe is not active then it returns immediately in the
-suspend and resume handlers. Change this so that it always performs the
-pinctrl config so that we can still get proper sleep state configuration
-on the pins even if we do not need to worry about fully saving and
-restoring context.
-
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/am437x/am437x-vpfe.c | 46 ++++++++++-----------
- 1 file changed, 22 insertions(+), 24 deletions(-)
+ drivers/media/platform/am437x/am437x-vpfe.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index 2b42ba1f5949..a3d22f90e64c 100644
+index 03415c179c85..8b218f48428f 100644
 --- a/drivers/media/platform/am437x/am437x-vpfe.c
 +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -2653,22 +2653,21 @@ static int vpfe_suspend(struct device *dev)
- 	struct vpfe_device *vpfe = dev_get_drvdata(dev);
- 	struct vpfe_ccdc *ccdc = &vpfe->ccdc;
+@@ -1822,6 +1822,10 @@ static int vpfe_s_std(struct file *file, void *priv, v4l2_std_id std_id)
+ 	if (!(sdinfo->inputs[0].capabilities & V4L2_IN_CAP_STD))
+ 		return -ENODATA;
  
--	/* if streaming has not started we don't care */
--	if (!vb2_start_streaming_called(&vpfe->buffer_queue))
--		return 0;
--
--	pm_runtime_get_sync(dev);
--	vpfe_config_enable(ccdc, 1);
-+	/* only do full suspend if streaming has started */
-+	if (vb2_start_streaming_called(&vpfe->buffer_queue)) {
-+		pm_runtime_get_sync(dev);
-+		vpfe_config_enable(ccdc, 1);
- 
--	/* Save VPFE context */
--	vpfe_save_context(ccdc);
-+		/* Save VPFE context */
-+		vpfe_save_context(ccdc);
- 
--	/* Disable CCDC */
--	vpfe_pcr_enable(ccdc, 0);
--	vpfe_config_enable(ccdc, 0);
-+		/* Disable CCDC */
-+		vpfe_pcr_enable(ccdc, 0);
-+		vpfe_config_enable(ccdc, 0);
- 
--	/* Disable both master and slave clock */
--	pm_runtime_put_sync(dev);
-+		/* Disable both master and slave clock */
-+		pm_runtime_put_sync(dev);
-+	}
- 
- 	/* Select sleep pin state */
- 	pinctrl_pm_select_sleep_state(dev);
-@@ -2710,19 +2709,18 @@ static int vpfe_resume(struct device *dev)
- 	struct vpfe_device *vpfe = dev_get_drvdata(dev);
- 	struct vpfe_ccdc *ccdc = &vpfe->ccdc;
- 
--	/* if streaming has not started we don't care */
--	if (!vb2_start_streaming_called(&vpfe->buffer_queue))
--		return 0;
--
--	/* Enable both master and slave clock */
--	pm_runtime_get_sync(dev);
--	vpfe_config_enable(ccdc, 1);
-+	/* only do full resume if streaming has started */
-+	if (vb2_start_streaming_called(&vpfe->buffer_queue)) {
-+		/* Enable both master and slave clock */
-+		pm_runtime_get_sync(dev);
-+		vpfe_config_enable(ccdc, 1);
- 
--	/* Restore VPFE context */
--	vpfe_restore_context(ccdc);
-+		/* Restore VPFE context */
-+		vpfe_restore_context(ccdc);
- 
--	vpfe_config_enable(ccdc, 0);
--	pm_runtime_put_sync(dev);
-+		vpfe_config_enable(ccdc, 0);
-+		pm_runtime_put_sync(dev);
-+	}
- 
- 	/* Select default pin state */
- 	pinctrl_pm_select_default_state(dev);
++	/* if trying to set the same std then nothing to do */
++	if (vpfe_standards[vpfe->std_index].std_id == std_id)
++		return 0;
++
+ 	/* If streaming is started, return error */
+ 	if (vb2_is_busy(&vpfe->buffer_queue)) {
+ 		vpfe_err(vpfe, "%s device busy\n", __func__);
 -- 
 2.17.1
