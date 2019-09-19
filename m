@@ -1,40 +1,60 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v3 08/11] phy: phy-mtk-tphy: make the ref clock optional
-Date: Thu, 19 Sep 2019 17:10:39 +0800
-Message-ID: <1568884242-22775-8-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v3 05/11] dt-bindings: phy-mtk-tphy: add the properties about
+ address mapping
+Date: Thu, 19 Sep 2019 17:10:36 +0800
+Message-ID: <1568884242-22775-5-git-send-email-chunfeng.yun@mediatek.com>
 References: <1568884242-22775-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1568884242-22775-1-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Sometimes the reference clock of USB3 PHY comes from oscillator
-directly, and no need refer to a fixed-clock in DTS anymore
-if make it optional.
+Add three required properties about the address mapping, including
+'#address-cells', '#size-cells' and 'ranges'
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-v2~3: no changes
----
- drivers/phy/mediatek/phy-mtk-tphy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v3: no changes
 
-diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
-index 4a2dc92f10f5..96c62e3a3300 100644
---- a/drivers/phy/mediatek/phy-mtk-tphy.c
-+++ b/drivers/phy/mediatek/phy-mtk-tphy.c
-@@ -1182,7 +1182,7 @@ static int mtk_tphy_probe(struct platform_device *pdev)
- 		if (tphy->u3phya_ref)
- 			continue;
+v2: add Reviewed-by Rob
+---
+ Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+index a859b0db4051..dd75b676b71d 100644
+--- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
++++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+@@ -14,6 +14,16 @@ Required properties (controller (parent) node):
+ 		  make use of "mediatek,generic-tphy-v1" on mt2701 instead and
+ 		  "mediatek,generic-tphy-v2" on mt2712 instead.
  
--		instance->ref_clk = devm_clk_get(&phy->dev, "ref");
-+		instance->ref_clk = devm_clk_get_optional(&phy->dev, "ref");
- 		if (IS_ERR(instance->ref_clk)) {
- 			dev_err(dev, "failed to get ref_clk(id-%d)\n", port);
- 			retval = PTR_ERR(instance->ref_clk);
++- #address-cells:	the number of cells used to represent physical
++		base addresses.
++- #size-cells:	the number of cells used to represent the size of an address.
++- ranges:	the address mapping relationship to the parent, defined with
++		- empty value: if optional 'reg' is used.
++		- non-empty value: if optional 'reg' is not used. should set
++			the child's base address to 0, the physical address
++			within parent's address space, and the length of
++			the address map.
++
+ Required nodes	: a sub-node is required for each port the controller
+ 		  provides. Address range information including the usual
+ 		  'reg' property is used inside these nodes to describe
 -- 
 2.23.0
