@@ -1,129 +1,54 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [PATCH V6 2/2] mailbox: introduce ARM SMC based mailbox
-Date: Thu, 19 Sep 2019 05:36:56 +0000
-Message-ID: <AM0PR04MB4481AC40243BFFF45CFD6E7988890@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
- <1568626884-5189-3-git-send-email-peng.fan@nxp.com>
- <20190917183856.2342beed@donnerap.cambridge.arm.com>
- <AM0PR04MB44813D62FF7E6762BB17460E888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
- <20190918110037.4edefb2f@donnerap.cambridge.arm.com>
- <CABb+yY2G8s9gV8Pu+f__8-bubjCJsVQrQikbVMZXmpTwSMBxiQ@mail.gmail.com>
+From: "Ramuthevar, Vadivel MuruganX"
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: Re: [PATCH v1 2/2] spi: cadence-qspi: Add QSPI support for Intel LGM
+ SoC
+Date: Thu, 19 Sep 2019 13:45:02 +0800
+Message-ID: <f31b82ff-478e-bf28-0898-96f5bdfacc61@linux.intel.com>
+References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190916073843.39618-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190916113255.GA4352@sirena.co.uk>
+ <466b41c1-3d65-0bf4-6db7-d3b3e06b107b@linux.intel.com>
+ <20190917153650.GF3524@sirena.co.uk>
+ <eeefa79b-0a3b-5d62-3a1b-c1e9dcb03aa7@linux.intel.com>
+ <20190918120846.GH2596@sirena.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY2G8s9gV8Pu+f__8-bubjCJsVQrQikbVMZXmpTwSMBxiQ@mail.gmail.com>
+In-Reply-To: <20190918120846.GH2596@sirena.co.uk>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Andre Przywara <andre.przywara@arm.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFzc2ksDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWNiAyLzJdIG1haWxib3g6IGludHJv
-ZHVjZSBBUk0gU01DIGJhc2VkIG1haWxib3gNCj4gDQo+IE9uIFdlZCwgU2VwIDE4LCAyMDE5IGF0
-IDU6MDAgQU0gQW5kcmUgUHJ6eXdhcmENCj4gPGFuZHJlLnByenl3YXJhQGFybS5jb20+IHdyb3Rl
-Og0KPiANCj4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+ID4gKyB9Ow0KPiA+ID4gPiA+ICt9Ow0KPiA+
-ID4gPg0KPiA+ID4gPiBJZiB0aGlzIGlzIHRoZSBkYXRhIHN0cnVjdHVyZSB0aGF0IHRoaXMgbWFp
-bGJveCBjb250cm9sbGVyIHVzZXMsIEkNCj4gPiA+ID4gd291bGQgZXhwZWN0IHRoaXMgdG8gYmUg
-ZG9jdW1lbnRlZCBzb21ld2hlcmUsIG9yIGV2ZW4gZXhwb3J0ZWQuDQo+ID4gPg0KPiA+ID4gRXhw
-b3J0IHRoaXMgc3RydWN0dXJlIGluIGluY2x1ZGUvbGludXgvbWFpbGJveC9zbWMtbWFpbGJveC5o
-Pw0KPiA+DQo+ID4gRm9yIGluc3RhbmNlLCBldmVuIHRob3VnaCBJIGFtIG5vdCBzdXJlIHRoaXMg
-aXMgcmVhbGx5IGRlc2lyZWQgb3IgaGVscGZ1bCwgc2luY2UNCj4gd2UgZXhwZWN0IGEgZ2VuZXJp
-YyBtYWlsYm94IGNsaWVudCAodGhlIFNDUEkgb3IgU0NNSSBkcml2ZXIpIHRvIGRlYWwgd2l0aCB0
-aGF0DQo+IG1haWxib3guDQo+ID4NCj4gPiBCdXQgYXQgbGVhc3QgdGhlIGV4cGVjdGVkIGZvcm1h
-dCBzaG91bGQgYmUgZG9jdW1lbnRlZCwgd2hpY2ggY291bGQganVzdCBiZQ0KPiBpbiB3cml0aW5n
-LCBub3QgbmVjZXNzYXJpbHkgaW4gY29kZS4NCj4gPg0KPiBZZXMsIHRoZSBwYWNrZXQgZm9ybWF0
-IGlzIHNwZWNpZmllZCBieSB0aGUgY29udHJvbGxlciBhbmQgZGVmaW5lZCBpbiBzb21lDQo+IGhl
-YWRlciBmb3IgY2xpZW50cyB0byBpbmNsdWRlLiBPdGhlciBwbGF0Zm9ybXMgZG8gdGhhdCBhbHJl
-YWR5Lg0KDQpTbyB5b3UgcHJlZmVyIGFkZCB0aGUgc3RydWN0dXJlIGluIGluY2x1ZGUvbGludXgv
-bWFpbGJveC9zbWMtbWFpbGJveC5oPw0KDQpUaGFua3MsDQpQZW5nLg0KDQo+IA0KPiANCj4gDQo+
-ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICt0eXBlZGVmIHVuc2lnbmVkIGxvbmcgKHNtY19tYm94X2Zu
-KSh1bnNpZ25lZCBpbnQsIHVuc2lnbmVkIGxvbmcsDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZywgdW5zaWduZWQgbG9uZywNCj4gPiA+ID4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBsb25nLCB1bnNpZ25lZCBsb25n
-LA0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcp
-OyBzdGF0aWMNCj4gc21jX21ib3hfZm4NCj4gPiA+ID4gPiArKmludm9rZV9zbWNfbWJveF9mbjsN
-Cj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gK3N0YXRpYyBpbnQgYXJtX3NtY19zZW5kX2RhdGEoc3Ry
-dWN0IG1ib3hfY2hhbiAqbGluaywgdm9pZA0KPiA+ID4gPiA+ICsqZGF0YSkgeyAgc3RydWN0IGFy
-bV9zbWNfY2hhbl9kYXRhICpjaGFuX2RhdGEgPSBsaW5rLT5jb25fcHJpdjsNCj4gPiA+ID4gPiAr
-c3RydWN0IGFybV9zbWNjY19tYm94X2NtZCAqY21kID0gZGF0YTsgIHVuc2lnbmVkIGxvbmcgcmV0
-Ow0KPiA+ID4gPiA+ICsgdTMyIGZ1bmN0aW9uX2lkOw0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiAr
-IGZ1bmN0aW9uX2lkID0gY2hhbl9kYXRhLT5mdW5jdGlvbl9pZDsgaWYgKCFmdW5jdGlvbl9pZCkN
-Cj4gPiA+ID4gPiArICAgICAgICAgZnVuY3Rpb25faWQgPSBjbWQtPmZ1bmN0aW9uX2lkOw0KPiA+
-ID4gPiA+ICsNCj4gPiA+ID4gPiArIGlmIChmdW5jdGlvbl9pZCAmIEJJVCgzMCkpIHsNCj4gPiA+
-ID4NCj4gPiA+ID4gICAgIGlmIChBUk1fU01DQ0NfSVNfNjQoZnVuY3Rpb25faWQpKSB7DQo+ID4g
-Pg0KPiA+ID4gb2sNCj4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+ID4gKyAgICAgICAgIHJldCA9IGlu
-dm9rZV9zbWNfbWJveF9mbihmdW5jdGlvbl9pZCwNCj4gY21kLT5hcmdzX3NtY2NjNjRbMF0sDQo+
-ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbWQtPmFyZ3Nfc21j
-Y2M2NFsxXSwNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNt
-ZC0+YXJnc19zbWNjYzY0WzJdLA0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgY21kLT5hcmdzX3NtY2NjNjRbM10sDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBjbWQtPmFyZ3Nfc21jY2M2NFs0XSwNCj4gPiA+ID4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNtZC0+YXJnc19zbWNjYzY0WzVdKTsgfQ0K
-PiBlbHNlDQo+ID4gPiA+ID4gKyB7DQo+ID4gPiA+ID4gKyAgICAgICAgIHJldCA9IGludm9rZV9z
-bWNfbWJveF9mbihmdW5jdGlvbl9pZCwNCj4gY21kLT5hcmdzX3NtY2NjMzJbMF0sDQo+ID4gPiA+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbWQtPmFyZ3Nfc21jY2MzMlsx
-XSwNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNtZC0+YXJn
-c19zbWNjYzMyWzJdLA0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgY21kLT5hcmdzX3NtY2NjMzJbM10sDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBjbWQtPmFyZ3Nfc21jY2MzMls0XSwNCj4gPiA+ID4gPiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIGNtZC0+YXJnc19zbWNjYzMyWzVdKTsgfQ0KPiA+ID4g
-PiA+ICsNCj4gPiA+ID4gPiArIG1ib3hfY2hhbl9yZWNlaXZlZF9kYXRhKGxpbmssICh2b2lkICop
-cmV0KTsNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKyByZXR1cm4gMDsNCj4gPiA+ID4gPiArfQ0K
-PiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArc3RhdGljIHVuc2lnbmVkIGxvbmcgX19pbnZva2VfZm5f
-aHZjKHVuc2lnbmVkIGludCBmdW5jdGlvbl9pZCwNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZyBhcmcwLCB1bnNpZ25lZA0KPiBsb25nIGFyZzEs
-DQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcg
-YXJnMiwgdW5zaWduZWQNCj4gbG9uZyBhcmczLA0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB1bnNpZ25lZCBsb25nIGFyZzQsIHVuc2lnbmVkDQo+IGxvbmcNCj4gPiA+
-ID4gPiArYXJnNSkgeyAgc3RydWN0IGFybV9zbWNjY19yZXMgcmVzOw0KPiA+ID4gPiA+ICsNCj4g
-PiA+ID4gPiArIGFybV9zbWNjY19odmMoZnVuY3Rpb25faWQsIGFyZzAsIGFyZzEsIGFyZzIsIGFy
-ZzMsIGFyZzQsDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIGFyZzUsIDAsICZyZXMpOw0KPiA+
-ID4gPiA+ICsgcmV0dXJuIHJlcy5hMDsNCj4gPiA+ID4gPiArfQ0KPiA+ID4gPiA+ICsNCj4gPiA+
-ID4gPiArc3RhdGljIHVuc2lnbmVkIGxvbmcgX19pbnZva2VfZm5fc21jKHVuc2lnbmVkIGludCBm
-dW5jdGlvbl9pZCwNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdW5z
-aWduZWQgbG9uZyBhcmcwLCB1bnNpZ25lZA0KPiBsb25nIGFyZzEsDQo+ID4gPiA+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcgYXJnMiwgdW5zaWduZWQNCj4g
-bG9uZyBhcmczLA0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1bnNp
-Z25lZCBsb25nIGFyZzQsIHVuc2lnbmVkDQo+IGxvbmcNCj4gPiA+ID4gPiArYXJnNSkgeyAgc3Ry
-dWN0IGFybV9zbWNjY19yZXMgcmVzOw0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArIGFybV9zbWNj
-Y19zbWMoZnVuY3Rpb25faWQsIGFyZzAsIGFyZzEsIGFyZzIsIGFyZzMsIGFyZzQsDQo+ID4gPiA+
-ID4gKyAgICAgICAgICAgICAgIGFyZzUsIDAsICZyZXMpOw0KPiA+ID4gPiA+ICsgcmV0dXJuIHJl
-cy5hMDsNCj4gPiA+ID4gPiArfQ0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArc3RhdGljIGNvbnN0
-IHN0cnVjdCBtYm94X2NoYW5fb3BzIGFybV9zbWNfbWJveF9jaGFuX29wcyA9IHsNCj4gPiA+ID4g
-PiArIC5zZW5kX2RhdGEgICAgICA9IGFybV9zbWNfc2VuZF9kYXRhLA0KPiA+ID4gPiA+ICt9Ow0K
-PiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArc3RhdGljIGludCBhcm1fc21jX21ib3hfcHJvYmUoc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikgew0KPiA+ID4gPiA+ICtzdHJ1Y3QgZGV2aWNlICpk
-ZXYgPSAmcGRldi0+ZGV2OyAgc3RydWN0IG1ib3hfY29udHJvbGxlciAqbWJveDsNCj4gPiA+ID4g
-PiArc3RydWN0IGFybV9zbWNfY2hhbl9kYXRhICpjaGFuX2RhdGE7ICBpbnQgcmV0Ow0KPiA+ID4g
-PiA+ICsgdTMyIGZ1bmN0aW9uX2lkID0gMDsNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKyBpZiAo
-b2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUoZGV2LT5vZl9ub2RlLCAiYXJtLHNtYy1tYm94IikpDQo+
-ID4gPiA+ID4gKyAgICAgICAgIGludm9rZV9zbWNfbWJveF9mbiA9IF9faW52b2tlX2ZuX3NtYzsg
-ZWxzZQ0KPiA+ID4gPiA+ICsgICAgICAgICBpbnZva2Vfc21jX21ib3hfZm4gPSBfX2ludm9rZV9m
-bl9odmM7DQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICsgbWJveCA9IGRldm1fa3phbGxvYyhkZXYs
-IHNpemVvZigqbWJveCksIEdGUF9LRVJORUwpOyBpZg0KPiA+ID4gPiA+ICsgKCFtYm94KQ0KPiA+
-ID4gPiA+ICsgICAgICAgICByZXR1cm4gLUVOT01FTTsNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4g
-KyBtYm94LT5udW1fY2hhbnMgPSAxOw0KPiA+ID4gPiA+ICsgbWJveC0+Y2hhbnMgPSBkZXZtX2t6
-YWxsb2MoZGV2LCBzaXplb2YoKm1ib3gtPmNoYW5zKSwNCj4gPiA+ID4gPiArIG1ib3gtPkdGUF9L
-RVJORUwpOw0KPiA+ID4gPiA+ICsgaWYgKCFtYm94LT5jaGFucykNCj4gPiA+ID4gPiArICAgICAg
-ICAgcmV0dXJuIC1FTk9NRU07DQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICsgY2hhbl9kYXRhID0g
-ZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpjaGFuX2RhdGEpLCBHRlBfS0VSTkVMKTsNCj4gPiA+
-ID4gPiArIGlmICghY2hhbl9kYXRhKQ0KPiA+ID4gPiA+ICsgICAgICAgICByZXR1cm4gLUVOT01F
-TTsNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKyBvZl9wcm9wZXJ0eV9yZWFkX3UzMihkZXYtPm9m
-X25vZGUsICJhcm0sZnVuYy1pZCIsDQo+ID4gPiA+ID4gKyAmZnVuY3Rpb25faWQpOyBjaGFuX2Rh
-dGEtPmZ1bmN0aW9uX2lkID0gZnVuY3Rpb25faWQ7DQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICsg
-bWJveC0+Y2hhbnMtPmNvbl9wcml2ID0gY2hhbl9kYXRhOw0KPiA+ID4gPiA+ICsNCj4gPiA+ID4g
-PiArIG1ib3gtPnR4ZG9uZV9wb2xsID0gZmFsc2U7DQo+ID4gPiA+ID4gKyBtYm94LT50eGRvbmVf
-aXJxID0gZmFsc2U7DQo+ID4gPiA+DQo+ID4gPiA+IERvbid0IHdlIG5lZWQgdG8gcHJvdmlkZSBz
-b21ldGhpbmcgdG8gY29uZmlybSByZWNlcHRpb24gdG8gdGhlDQo+ID4gPiA+IGNsaWVudD8gSW4g
-b3VyIGNhc2Ugd2UgY2FuIHNldCB0aGlzIGFzIHNvb24gYXMgdGhlIHNtYy9odmMgcmV0dXJucy4N
-Cj4gPiA+DQo+ID4gPiBBcyBzbWMvaHZjIHJldHVybnMsIGl0IG1lYW5zIHRoZSB0cmFuc2ZlciBp
-cyBvdmVyIGFuZCByZWNlaXZlIGlzIGRvbmUuDQo+ID4NCj4gPiBJIHVuZGVyc3RhbmQgdGhhdCwg
-YnV0IHdhcyB3b25kZXJpbmcgaWYgdGhlIExpbnV4IG1haWxib3ggZnJhbWV3b3JrIGtub3dzDQo+
-IGFib3V0IHRoYXQ/IEluIG15IG9sZGVyIHZlcnNpb24gSSB3YXMgY2FsbGluZyBtYm94X2NoYW5f
-cmVjZWl2ZWRfZGF0YSgpDQo+IGFmdGVyIHRoZSBzbWMgY2FsbCByZXR1cm5lZC4NCj4gPg0KPiBU
-aGUgY29kZSBhbHJlYWR5IGRvZXMgdGhhdCBhdCB0aGUgZW5kIG9mICBzZW5kX2RhdGENCj4gDQo+
-ID4gQWxzbyB0aGVyZSBpcyBtYm94X2NoYW5fdHhkb25lKCkgd2l0aCB3aGljaCBhIGNvbnRyb2xs
-ZXIgZHJpdmVyIGNhbiBzaWduYWwNCj4gVFggY29tcGxldGlvbiBleHBsaWNpdGx5Lg0KPiA+DQo+
-IE5vLiBDb250cm9sbGVyIGNhbiB1c2UgdGhhdCBvbmx5IGlmIGl0IGhhcyBzcGVjaWZpZWQgdHhk
-b25lX2lycSwgd2hpY2ggaXMgbm90IHRoZQ0KPiBjYXNlIGhlcmUuDQo+IA0KPiBUaGFua3MNCg==
+Hi Mark,
+
+    Thank you for the comments and queries.
+
+On 18/9/2019 8:08 PM, Mark Brown wrote:
+> On Wed, Sep 18, 2019 at 01:59:06PM +0800, Ramuthevar, Vadivel MuruganX wrote:
+>> On 17/9/2019 11:36 PM, Mark Brown wrote:
+>>> On Tue, Sep 17, 2019 at 10:11:28AM +0800, Ramuthevar, Vadivel MuruganX wrote:
+>>>> *    spi-cadence.c* in *drivers/spi/*, which supports very old legacy
+>>>> cadence-spi based devices(normal)
+>>>> *    cadence-quadspi.c(drivers/mtd/spi-nor/)* : specific support to SPI-NOR
+>>>> flash with new spi-nor layer.
+>>>>       all the API's in this driver purely on spi-nor specific, so couldn't
+>>>> proceed to adapt.
+>>> Are these completely separate IPs or are they just different versions of
+>>> the same IP?
+>> These are same IPs , but different features Enabled/Disabled depends upon
+>> the SoC vendors.
+>> for e.g: Intel LGM SoC uses the same IP, but without DMA and Direct access
+>> controller.
+>> also dedicated support to flash devices.
+> If it's different versions of the same IP then everything should be in
+> one driver with the optional features enabled depending on what's in a
+> given system.
+Agreed!, I am trying to adapt the driver/mtd/spi-nor/cadence-quadspi.c 
+and newly sent patches
+in a single driver file, also trying to use spi_mem_ops framework.
+
+With Best Regards
+Vadivel
