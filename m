@@ -1,37 +1,39 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v1 7/9] ASoC: samsung: arndale: Add support for WM1811
- CODEC
-Date: Thu, 19 Sep 2019 14:00:16 +0200
-Message-ID: <342d08ce-d14a-02b2-a590-13b28c8c5154@samsung.com>
-References: <20190918104634.15216-1-s.nawrocki@samsung.com>
- <CGME20190918104705eucas1p1c01dc05bff199188677915e2bb8f7472@eucas1p1.samsung.com>
- <20190918104634.15216-8-s.nawrocki@samsung.com>
- <20190918144553.GJ10204@ediswmail.ad.cirrus.com>
+From: Jianxin Pan <jianxin.pan@amlogic.com>
+Subject: [PATCH 0/3] arm64: meson: add support for A1 Power Domains
+Date: Thu, 19 Sep 2019 08:11:01 -0400
+Message-ID: <1568895064-4116-1-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190918144553.GJ10204@ediswmail.ad.cirrus.com>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, lgirdwood@gmail.com, krzk@kernel.org, robh+dt@kernel.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
+Cc: Jianxin Pan <jianxin.pan@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9/18/19 16:45, Charles Keepax wrote:
-> If your removing the of_match_ptr below I think the
-> __maybe_unused should be removed as well.
+This patchset introduces a "Secure Power Doamin Controller". In A1/C1, power
+controller registers such as PWRCTRL_FOCRSTN, PWRCTRL_PWR_OFF, PWRCTRL_MEM_PD
+and PWRCTRL_ISO_EN, are in the secure domain, and should be accessed from ATF
+by smc.
 
-Good point, I will remove the now unneeded __maybe_unused as well.
+This patchset is based on A1 DTB series at [0].
 
---
-Thanks,
-Sylwester
+[0]  https://lore.kernel.org/linux-amlogic/1568276370-54181-1-git-send-email-jianxin.pan@amlogic.com
+
+Jianxin Pan (3):
+  dt-bindings: power: add Amlogic secure power domains bindings
+  soc: amlogic: Add support for Secure power domains controller
+  arm64: dts: meson: a1: add secure power domain controller
+
+ .../bindings/power/amlogic,meson-sec-pwrc.yaml     |  32 ++++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          |   6 +
+ drivers/soc/amlogic/Kconfig                        |  13 ++
+ drivers/soc/amlogic/Makefile                       |   1 +
+ drivers/soc/amlogic/meson-secure-pwrc.c            | 182 +++++++++++++++++++++
+ include/dt-bindings/power/meson-a1-power.h         |  32 ++++
+ 6 files changed, 266 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
+ create mode 100644 drivers/soc/amlogic/meson-secure-pwrc.c
+ create mode 100644 include/dt-bindings/power/meson-a1-power.h
+
+-- 
+2.7.4
