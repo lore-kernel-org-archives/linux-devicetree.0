@@ -1,109 +1,100 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v6 3/4] dt-bindings: ASoC: Add WSA881x bindings
-Date: Thu, 19 Sep 2019 12:22:44 +0100
-Message-ID: <f488e01f-7ce9-09dd-676d-a476e7b00b46@linaro.org>
-References: <20190829163514.11221-1-srinivas.kandagatla@linaro.org>
- <20190829163514.11221-4-srinivas.kandagatla@linaro.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v1 4/9] ASoC: wm8994: Add support for MCLKn clock gating
+Date: Thu, 19 Sep 2019 13:58:35 +0200
+Message-ID: <717b3f94-1a24-a407-398f-6a476cf7ff69@samsung.com>
+References: <20190918104634.15216-1-s.nawrocki@samsung.com>
+ <CGME20190918104700eucas1p1ef0775632f5c7259fb54cab8efc96c50@eucas1p1.samsung.com>
+ <20190918104634.15216-5-s.nawrocki@samsung.com>
+ <20190918143157.GH10204@ediswmail.ad.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190829163514.11221-4-srinivas.kandagatla@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, vkoul@kernel.org
-Cc: spapothi@codeaurora.org, bgoswami@codeaurora.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190918143157.GH10204@ediswmail.ad.cirrus.com>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, lgirdwood@gmail.com, krzk@kernel.org, robh+dt@kernel.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On 9/18/19 16:31, Charles Keepax wrote:
+>> @@ -2315,6 +2396,8 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
+>>  
+>>  			active_dereference(component);
+>>  		}
+>> +		if (mclk)
+>> +			clk_disable_unprepare(mclk);
+>
+> I don't think this works in the case of changing active FLLs.
+> The driver looks like it allows changing the FLL configuration
+> whilst the FLL is already active in which case it you would have
+> two wm8994_set_fll calls enabling the FLL but only a single one
+> disabling it. Resulting in the FLL being off but the MCLK being
+> left enabled.
 
-On 29/08/2019 17:35, Srinivas Kandagatla wrote:
-> This patch adds bindings for WSA8810/WSA8815 Class-D Smart Speaker
-> Amplifier. This Amplifier also has a simple thermal sensor for
-> over temperature and speaker protection.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Indeed I missed this scenario, or rather assumed it won't be used.
+But since the driver allows reconfiguring active FLLs we should make
+sure such use case remains properly supported.
 
-Bindings for the codec have been Acked by Rob, SoundWire depended 
-patches are already applied for 5.4 and codec driver is Acked by Pierre.
+What I came up so far as a fix is reading current FLL refclk source and 
+if FLL was enabled with that source disabling refclk, before we change FLL 
+configuration to new one.  So we have clk_disable_unprepare(MCLK) more 
+closely following FLL enable bit changes.  I have tested it and it seems 
+to work - something like below. Do you think it makes sense?
 
-Do you want me to resend these two patches separately?
+-- 
+Regards,
+Sylwester
 
+---------8<----------
+diff --git a/sound/soc/codecs/wm8994.c b/sound/soc/codecs/wm8994.c
+index bf02e8908d5a..78a0835a095e 100644
+--- a/sound/soc/codecs/wm8994.c
++++ b/sound/soc/codecs/wm8994.c
+@@ -2277,6 +2277,31 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
+        snd_soc_component_update_bits(component, WM8994_FLL1_CONTROL_1 + reg_offset,
+                            WM8994_FLL1_ENA, 0);
+ 
++       /* Disable MCLK if needed before we possibly change to new clock parent */
++       if (was_enabled) {
++               reg = snd_soc_component_read32(component, WM8994_FLL1_CONTROL_5
++                                                       + reg_offset);
++               reg = ((reg & WM8994_FLL1_REFCLK_SRC_MASK)
++                       >> WM8994_FLL1_REFCLK_SRC_SHIFT) + 1;
++
++               switch (reg) {
++               case WM8994_FLL_SRC_MCLK1:
++                       mclk = control->mclk[WM8994_MCLK1].clk;
++                       break;
++               case WM8994_FLL_SRC_MCLK2:
++                       mclk = control->mclk[WM8994_MCLK2].clk;
++                       break;
++               default:
++                       mclk = NULL;
++               }
++
++               clk_disable_unprepare(mclk);
++       }
++
+        if (wm8994->fll_byp && src == WM8994_FLL_SRC_BCLK &&
+            freq_in == freq_out && freq_out) {
+                dev_dbg(component->dev, "Bypassing FLL%d\n", id + 1);
 
-thanks,
-srini
-
-> ---
->   .../bindings/sound/qcom,wsa881x.yaml          | 62 +++++++++++++++++++
->   1 file changed, 62 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-> new file mode 100644
-> index 000000000000..faa90966a33a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,wsa881x.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/qcom,wsa881x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for Qualcomm WSA8810/WSA8815 Class-D Smart Speaker Amplifier
-> +
-> +maintainers:
-> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> +
-> +description: |
-> +  WSA8810 is a class-D smart speaker amplifier and WSA8815
-> +  is a high-output power class-D smart speaker amplifier.
-> +  Their primary operating mode uses a SoundWire digital audio
-> +  interface. This binding is for SoundWire interface.
-> +
-> +properties:
-> +  compatible:
-> +    const: sdw10217201000
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  powerdown-gpios:
-> +    description: GPIO spec for Powerdown/Shutdown line to use
-> +    maxItems: 1
-> +
-> +  '#thermal-sensor-cells':
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - powerdown-gpios
-> +  - "#thermal-sensor-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    soundwire@c2d0000 {
-> +        #address-cells = <2>;
-> +        #size-cells = <0>;
-> +        reg = <0x0c2d0000 0x2000>;
-> +
-> +        speaker@0,1 {
-> +            compatible = "sdw10217201000";
-> +            reg = <0 1>;
-> +            powerdown-gpios = <&wcdpinctrl 2 0>;
-> +            #thermal-sensor-cells = <0>;
-> +        };
-> +
-> +        speaker@0,2 {
-> +            compatible = "sdw10217201000";
-> +            reg = <0 2>;
-> +            powerdown-gpios = <&wcdpinctrl 2 0>;
-> +            #thermal-sensor-cells = <0>;
-> +        };
-> +    };
-> +
-> +...
-> 
+@@ -2396,8 +2420,6 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
+ 
+                        active_dereference(component);
+                }
+-               if (mclk)
+-                       clk_disable_unprepare(mclk);
+        }
+ 
+ out:
+---------8<----------
