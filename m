@@ -1,50 +1,107 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 0/4] spi: dw: Add basic runtime PM support
-Date: Thu, 19 Sep 2019 14:31:13 +0100
-Message-ID: <20190919133113.GK3642@sirena.co.uk>
-References: <1568793876-9009-1-git-send-email-gareth.williams.jx@renesas.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] of: restore old handling of cells_name=NULL in
+  of_*_phandle_with_args()
+Date: Thu, 19 Sep 2019 08:32:42 -0500
+Message-ID: <20190919133242.GA27990@bogus>
+References: <20190918063837.8196-1-u.kleine-koenig@pengutronix.de>
+ <b00ca30f-2c06-7722-96b2-123d15751cb6@axentia.se>
+ <20190918084748.hnjkiq7wc5b35wjh@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tcC6YSqBgqqkz7Sb"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1568793876-9009-1-git-send-email-gareth.williams.jx@renesas.com>
+In-Reply-To: <20190918084748.hnjkiq7wc5b35wjh@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gareth Williams <gareth.williams.jx@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Peter Rosin <peda@axentia.se>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 18 Sep 2019 10:47:48 +0200, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=          wrote:
+> Before commit e42ee61017f5 ("of: Let of_for_each_phandle fallback to
+> non-negative cell_count") the iterator functions calling
+> of_for_each_phandle assumed a cell count of 0 if cells_name was NULL.
+> This corner case was missed when implementing the fallback logic in
+> e42ee61017f5 and resulted in an endless loop.
+> 
+> Restore the old behaviour of of_count_phandle_with_args() and
+> of_parse_phandle_with_args() and add a check to
+> of_phandle_iterator_init() to prevent a similar failure as a safety
+> precaution. of_parse_phandle_with_args_map() doesn't need a similar fix
+> as cells_name isn't NULL there.
+> 
+> Affected drivers are:
+>  - drivers/base/power/domain.c
+>  - drivers/base/power/domain.c
+>  - drivers/clk/ti/clk-dra7-atl.c
+>  - drivers/hwmon/ibmpowernv.c
+>  - drivers/i2c/muxes/i2c-demux-pinctrl.c
+>  - drivers/iommu/mtk_iommu.c
+>  - drivers/net/ethernet/freescale/fman/mac.c
+>  - drivers/opp/of.c
+>  - drivers/perf/arm_dsu_pmu.c
+>  - drivers/regulator/of_regulator.c
+>  - drivers/remoteproc/imx_rproc.c
+>  - drivers/soc/rockchip/pm_domains.c
+>  - sound/soc/fsl/imx-audmix.c
+>  - sound/soc/fsl/imx-audmix.c
+>  - sound/soc/meson/axg-card.c
+>  - sound/soc/samsung/tm2_wm5110.c
+>  - sound/soc/samsung/tm2_wm5110.c
+> 
+> Thanks to Geert Uytterhoeven for reporting the issue, Peter Rosin for
+> helping pinpoint the actual problem and the testers for confirming this
+> fix.
+> 
+> Fixes: e42ee61017f5 ("of: Let of_for_each_phandle fallback to non-negative cell_count")
+> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+> 
+> On Wed, Sep 18, 2019 at 08:01:05AM +0000, Peter Rosin wrote:
+> > On 2019-09-18 08:38, Uwe Kleine-König wrote:
+> > >  EXPORT_SYMBOL(of_parse_phandle_with_args);
+> > >  
+> > > @@ -1765,6 +1779,18 @@ int of_count_phandle_with_args(const struct device_node *np, const char *list_na
+> > >  	struct of_phandle_iterator it;
+> > >  	int rc, cur_index = 0;
+> > >  
+> > > +	/* If cells_name is NULL we assume a cell count of 0 */
+> > > +	if (cells_name == NULL) {
+> > 
+> > A couple of nits.
+> > 
+> > I don't know if there are other considerations, but in the previous two
+> > hunks you use !cells_name instead of comparing explicitly with NULL.
+> > Personally, I find the shorter form more readable, and in the name of
+> > consistency bla bla...
+> 
+> Ack, changed to !cells_name here, too.
+> 
+> > 
+> > Also, the comment explaining this NULL-check didn't really make sense
+> > to me until I realized that knowing the cell count to be zero makes
+> > counting trivial. Something along those lines should perhaps be in the
+> > comment?
+> 
+> You're right, I extended the comment a bit.
+>  
+> > But as I said, these are nits. Feel free to ignore.
+> 
+> I considered resending already anyhow as I fatfingerd my email address.
+> this is fixed now, too. Additionally I fixed a typo in one of the
+> comments.
+> 
+> Thanks for your feedback.
+> 
+> Best regards
+> Uwe
+> 
+>  drivers/of/base.c | 35 +++++++++++++++++++++++++++++++++--
+>  1 file changed, 33 insertions(+), 2 deletions(-)
+> 
 
---tcC6YSqBgqqkz7Sb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied, thanks.
 
-On Wed, Sep 18, 2019 at 09:04:32AM +0100, Gareth Williams wrote:
-
-> Gareth Williams (1):
->   dt-bindings: snps,dw-apb-ssi: Add optional clock domain information
->=20
-> Phil Edworthy (3):
->   dt: spi: Add Renesas RZ/N1 binding documentation
-
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.  This isn't
-even consistent within the series :(
-
---tcC6YSqBgqqkz7Sb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2DgyEACgkQJNaLcl1U
-h9CySAgAgDnSgZkYFNYM2rEOjD3mK2F8DU/d10qh1tJqQkX5Fo7DqE0mxuvcJfAM
-kdtdWxCG5DRh2q3iM2T7k20iU9tQOjiW3E0dL4W4pUSObgat68DxlTXe2ag/fntc
-VwC6D1+AIoNFnOXTYKYPt8Pp+NqBlgNxHByHW7KXxbbSDgslBZESYG9fLQBf+KJ/
-FrMgo8aRnez6Sv1adY2aCSGwZxK643tL5ZgVBdv3+KjObqdlSex4EbphqkEO8mVY
-eoGKz7X3EDv/IeJfHNoy3O3Y3w064iEnv8ioO6+XTKDiVkntQV1xxmDjnQs6fNy/
-A5PqKEMRpy36c5gNU3JP9C72+3PjxA==
-=73/l
------END PGP SIGNATURE-----
-
---tcC6YSqBgqqkz7Sb--
+Rob
