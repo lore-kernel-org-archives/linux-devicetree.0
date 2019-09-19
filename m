@@ -1,95 +1,129 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 6/6] arm64: dts: rockchip: Fix roc-rk3399-pc regulator input rails
-Date: Thu, 19 Sep 2019 10:58:22 +0530
-Message-ID: <20190919052822.10403-7-jagan@amarulasolutions.com>
-References: <20190919052822.10403-1-jagan@amarulasolutions.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH V6 2/2] mailbox: introduce ARM SMC based mailbox
+Date: Thu, 19 Sep 2019 05:36:56 +0000
+Message-ID: <AM0PR04MB4481AC40243BFFF45CFD6E7988890@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
+ <1568626884-5189-3-git-send-email-peng.fan@nxp.com>
+ <20190917183856.2342beed@donnerap.cambridge.arm.com>
+ <AM0PR04MB44813D62FF7E6762BB17460E888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20190918110037.4edefb2f@donnerap.cambridge.arm.com>
+ <CABb+yY2G8s9gV8Pu+f__8-bubjCJsVQrQikbVMZXmpTwSMBxiQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190919052822.10403-1-jagan@amarulasolutions.com>
+In-Reply-To: <CABb+yY2G8s9gV8Pu+f__8-bubjCJsVQrQikbVMZXmpTwSMBxiQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Levin Du <djw@t-chip.com.cn>, Akash Gajjar <akash@openedev.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Da Xue <da@lessconfused.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, Jagan Teki <jagan@amarulasolutions.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Andre Przywara <andre.przywara@arm.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Few, know rk808 pmic regulators VCC[1-4], VCC[6-7], VCC[9-11],
-VDD_LOG, VDD_GPU, VDD_CPU_B, VCC3V3_SYS are inputting with vcc_sys
-which is 5V power rail from dc_12v.
-
-So, replace the vin-supply of above mentioned regulators
-with vcc_sys as per the PMIC-RK808-D page of roc-rk3399-pc
-schematics.
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- .../rk3399-libretech-roc-rk3399-pc.dts        | 26 +++++++++----------
- 1 file changed, 13 insertions(+), 13 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-libretech-roc-rk3399-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-libretech-roc-rk3399-pc.dts
-index 51242ea5447d..1eddb2e00809 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-libretech-roc-rk3399-pc.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-libretech-roc-rk3399-pc.dts
-@@ -85,7 +85,7 @@
- 		regulator-boot-on;
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
--		vin-supply = <&dc_12v>;
-+		vin-supply = <&vcc_sys>;
- 	};
- 
- 	/* Actually 3 regulators (host0, 1, 2) controlled by the same gpio */
-@@ -129,7 +129,7 @@
- 		regulator-boot-on;
- 		regulator-min-microvolt = <800000>;
- 		regulator-max-microvolt = <1400000>;
--		vin-supply = <&vcc3v3_sys>;
-+		vin-supply = <&vcc_sys>;
- 	};
- };
- 
-@@ -202,16 +202,16 @@
- 		rockchip,system-power-controller;
- 		wakeup-source;
- 
--		vcc1-supply = <&vcc3v3_sys>;
--		vcc2-supply = <&vcc3v3_sys>;
--		vcc3-supply = <&vcc3v3_sys>;
--		vcc4-supply = <&vcc3v3_sys>;
--		vcc6-supply = <&vcc3v3_sys>;
--		vcc7-supply = <&vcc3v3_sys>;
-+		vcc1-supply = <&vcc_sys>;
-+		vcc2-supply = <&vcc_sys>;
-+		vcc3-supply = <&vcc_sys>;
-+		vcc4-supply = <&vcc_sys>;
-+		vcc6-supply = <&vcc_sys>;
-+		vcc7-supply = <&vcc_sys>;
- 		vcc8-supply = <&vcc3v3_sys>;
--		vcc9-supply = <&vcc3v3_sys>;
--		vcc10-supply = <&vcc3v3_sys>;
--		vcc11-supply = <&vcc3v3_sys>;
-+		vcc9-supply = <&vcc_sys>;
-+		vcc10-supply = <&vcc_sys>;
-+		vcc11-supply = <&vcc_sys>;
- 		vcc12-supply = <&vcc3v3_sys>;
- 		vddio-supply = <&vcc1v8_pmu>;
- 
-@@ -385,7 +385,7 @@
- 		regulator-ramp-delay = <1000>;
- 		regulator-always-on;
- 		regulator-boot-on;
--		vin-supply = <&vcc3v3_sys>;
-+		vin-supply = <&vcc_sys>;
- 
- 		regulator-state-mem {
- 			regulator-off-in-suspend;
-@@ -404,7 +404,7 @@
- 		regulator-ramp-delay = <1000>;
- 		regulator-always-on;
- 		regulator-boot-on;
--		vin-supply = <&vcc3v3_sys>;
-+		vin-supply = <&vcc_sys>;
- 
- 		regulator-state-mem {
- 			regulator-off-in-suspend;
--- 
-2.18.0.321.gffc6fa0e3
+SGkgSmFzc2ksDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWNiAyLzJdIG1haWxib3g6IGludHJv
+ZHVjZSBBUk0gU01DIGJhc2VkIG1haWxib3gNCj4gDQo+IE9uIFdlZCwgU2VwIDE4LCAyMDE5IGF0
+IDU6MDAgQU0gQW5kcmUgUHJ6eXdhcmENCj4gPGFuZHJlLnByenl3YXJhQGFybS5jb20+IHdyb3Rl
+Og0KPiANCj4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+ID4gKyB9Ow0KPiA+ID4gPiA+ICt9Ow0KPiA+
+ID4gPg0KPiA+ID4gPiBJZiB0aGlzIGlzIHRoZSBkYXRhIHN0cnVjdHVyZSB0aGF0IHRoaXMgbWFp
+bGJveCBjb250cm9sbGVyIHVzZXMsIEkNCj4gPiA+ID4gd291bGQgZXhwZWN0IHRoaXMgdG8gYmUg
+ZG9jdW1lbnRlZCBzb21ld2hlcmUsIG9yIGV2ZW4gZXhwb3J0ZWQuDQo+ID4gPg0KPiA+ID4gRXhw
+b3J0IHRoaXMgc3RydWN0dXJlIGluIGluY2x1ZGUvbGludXgvbWFpbGJveC9zbWMtbWFpbGJveC5o
+Pw0KPiA+DQo+ID4gRm9yIGluc3RhbmNlLCBldmVuIHRob3VnaCBJIGFtIG5vdCBzdXJlIHRoaXMg
+aXMgcmVhbGx5IGRlc2lyZWQgb3IgaGVscGZ1bCwgc2luY2UNCj4gd2UgZXhwZWN0IGEgZ2VuZXJp
+YyBtYWlsYm94IGNsaWVudCAodGhlIFNDUEkgb3IgU0NNSSBkcml2ZXIpIHRvIGRlYWwgd2l0aCB0
+aGF0DQo+IG1haWxib3guDQo+ID4NCj4gPiBCdXQgYXQgbGVhc3QgdGhlIGV4cGVjdGVkIGZvcm1h
+dCBzaG91bGQgYmUgZG9jdW1lbnRlZCwgd2hpY2ggY291bGQganVzdCBiZQ0KPiBpbiB3cml0aW5n
+LCBub3QgbmVjZXNzYXJpbHkgaW4gY29kZS4NCj4gPg0KPiBZZXMsIHRoZSBwYWNrZXQgZm9ybWF0
+IGlzIHNwZWNpZmllZCBieSB0aGUgY29udHJvbGxlciBhbmQgZGVmaW5lZCBpbiBzb21lDQo+IGhl
+YWRlciBmb3IgY2xpZW50cyB0byBpbmNsdWRlLiBPdGhlciBwbGF0Zm9ybXMgZG8gdGhhdCBhbHJl
+YWR5Lg0KDQpTbyB5b3UgcHJlZmVyIGFkZCB0aGUgc3RydWN0dXJlIGluIGluY2x1ZGUvbGludXgv
+bWFpbGJveC9zbWMtbWFpbGJveC5oPw0KDQpUaGFua3MsDQpQZW5nLg0KDQo+IA0KPiANCj4gDQo+
+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICt0eXBlZGVmIHVuc2lnbmVkIGxvbmcgKHNtY19tYm94X2Zu
+KSh1bnNpZ25lZCBpbnQsIHVuc2lnbmVkIGxvbmcsDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZywgdW5zaWduZWQgbG9uZywNCj4gPiA+ID4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBsb25nLCB1bnNpZ25lZCBsb25n
+LA0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcp
+OyBzdGF0aWMNCj4gc21jX21ib3hfZm4NCj4gPiA+ID4gPiArKmludm9rZV9zbWNfbWJveF9mbjsN
+Cj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gK3N0YXRpYyBpbnQgYXJtX3NtY19zZW5kX2RhdGEoc3Ry
+dWN0IG1ib3hfY2hhbiAqbGluaywgdm9pZA0KPiA+ID4gPiA+ICsqZGF0YSkgeyAgc3RydWN0IGFy
+bV9zbWNfY2hhbl9kYXRhICpjaGFuX2RhdGEgPSBsaW5rLT5jb25fcHJpdjsNCj4gPiA+ID4gPiAr
+c3RydWN0IGFybV9zbWNjY19tYm94X2NtZCAqY21kID0gZGF0YTsgIHVuc2lnbmVkIGxvbmcgcmV0
+Ow0KPiA+ID4gPiA+ICsgdTMyIGZ1bmN0aW9uX2lkOw0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiAr
+IGZ1bmN0aW9uX2lkID0gY2hhbl9kYXRhLT5mdW5jdGlvbl9pZDsgaWYgKCFmdW5jdGlvbl9pZCkN
+Cj4gPiA+ID4gPiArICAgICAgICAgZnVuY3Rpb25faWQgPSBjbWQtPmZ1bmN0aW9uX2lkOw0KPiA+
+ID4gPiA+ICsNCj4gPiA+ID4gPiArIGlmIChmdW5jdGlvbl9pZCAmIEJJVCgzMCkpIHsNCj4gPiA+
+ID4NCj4gPiA+ID4gICAgIGlmIChBUk1fU01DQ0NfSVNfNjQoZnVuY3Rpb25faWQpKSB7DQo+ID4g
+Pg0KPiA+ID4gb2sNCj4gPiA+DQo+ID4gPiA+DQo+ID4gPiA+ID4gKyAgICAgICAgIHJldCA9IGlu
+dm9rZV9zbWNfbWJveF9mbihmdW5jdGlvbl9pZCwNCj4gY21kLT5hcmdzX3NtY2NjNjRbMF0sDQo+
+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbWQtPmFyZ3Nfc21j
+Y2M2NFsxXSwNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNt
+ZC0+YXJnc19zbWNjYzY0WzJdLA0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgY21kLT5hcmdzX3NtY2NjNjRbM10sDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBjbWQtPmFyZ3Nfc21jY2M2NFs0XSwNCj4gPiA+ID4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNtZC0+YXJnc19zbWNjYzY0WzVdKTsgfQ0K
+PiBlbHNlDQo+ID4gPiA+ID4gKyB7DQo+ID4gPiA+ID4gKyAgICAgICAgIHJldCA9IGludm9rZV9z
+bWNfbWJveF9mbihmdW5jdGlvbl9pZCwNCj4gY21kLT5hcmdzX3NtY2NjMzJbMF0sDQo+ID4gPiA+
+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbWQtPmFyZ3Nfc21jY2MzMlsx
+XSwNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNtZC0+YXJn
+c19zbWNjYzMyWzJdLA0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgY21kLT5hcmdzX3NtY2NjMzJbM10sDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBjbWQtPmFyZ3Nfc21jY2MzMls0XSwNCj4gPiA+ID4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIGNtZC0+YXJnc19zbWNjYzMyWzVdKTsgfQ0KPiA+ID4g
+PiA+ICsNCj4gPiA+ID4gPiArIG1ib3hfY2hhbl9yZWNlaXZlZF9kYXRhKGxpbmssICh2b2lkICop
+cmV0KTsNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKyByZXR1cm4gMDsNCj4gPiA+ID4gPiArfQ0K
+PiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArc3RhdGljIHVuc2lnbmVkIGxvbmcgX19pbnZva2VfZm5f
+aHZjKHVuc2lnbmVkIGludCBmdW5jdGlvbl9pZCwNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZyBhcmcwLCB1bnNpZ25lZA0KPiBsb25nIGFyZzEs
+DQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcg
+YXJnMiwgdW5zaWduZWQNCj4gbG9uZyBhcmczLA0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB1bnNpZ25lZCBsb25nIGFyZzQsIHVuc2lnbmVkDQo+IGxvbmcNCj4gPiA+
+ID4gPiArYXJnNSkgeyAgc3RydWN0IGFybV9zbWNjY19yZXMgcmVzOw0KPiA+ID4gPiA+ICsNCj4g
+PiA+ID4gPiArIGFybV9zbWNjY19odmMoZnVuY3Rpb25faWQsIGFyZzAsIGFyZzEsIGFyZzIsIGFy
+ZzMsIGFyZzQsDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIGFyZzUsIDAsICZyZXMpOw0KPiA+
+ID4gPiA+ICsgcmV0dXJuIHJlcy5hMDsNCj4gPiA+ID4gPiArfQ0KPiA+ID4gPiA+ICsNCj4gPiA+
+ID4gPiArc3RhdGljIHVuc2lnbmVkIGxvbmcgX19pbnZva2VfZm5fc21jKHVuc2lnbmVkIGludCBm
+dW5jdGlvbl9pZCwNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdW5z
+aWduZWQgbG9uZyBhcmcwLCB1bnNpZ25lZA0KPiBsb25nIGFyZzEsDQo+ID4gPiA+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcgYXJnMiwgdW5zaWduZWQNCj4g
+bG9uZyBhcmczLA0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB1bnNp
+Z25lZCBsb25nIGFyZzQsIHVuc2lnbmVkDQo+IGxvbmcNCj4gPiA+ID4gPiArYXJnNSkgeyAgc3Ry
+dWN0IGFybV9zbWNjY19yZXMgcmVzOw0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArIGFybV9zbWNj
+Y19zbWMoZnVuY3Rpb25faWQsIGFyZzAsIGFyZzEsIGFyZzIsIGFyZzMsIGFyZzQsDQo+ID4gPiA+
+ID4gKyAgICAgICAgICAgICAgIGFyZzUsIDAsICZyZXMpOw0KPiA+ID4gPiA+ICsgcmV0dXJuIHJl
+cy5hMDsNCj4gPiA+ID4gPiArfQ0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArc3RhdGljIGNvbnN0
+IHN0cnVjdCBtYm94X2NoYW5fb3BzIGFybV9zbWNfbWJveF9jaGFuX29wcyA9IHsNCj4gPiA+ID4g
+PiArIC5zZW5kX2RhdGEgICAgICA9IGFybV9zbWNfc2VuZF9kYXRhLA0KPiA+ID4gPiA+ICt9Ow0K
+PiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArc3RhdGljIGludCBhcm1fc21jX21ib3hfcHJvYmUoc3Ry
+dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikgew0KPiA+ID4gPiA+ICtzdHJ1Y3QgZGV2aWNlICpk
+ZXYgPSAmcGRldi0+ZGV2OyAgc3RydWN0IG1ib3hfY29udHJvbGxlciAqbWJveDsNCj4gPiA+ID4g
+PiArc3RydWN0IGFybV9zbWNfY2hhbl9kYXRhICpjaGFuX2RhdGE7ICBpbnQgcmV0Ow0KPiA+ID4g
+PiA+ICsgdTMyIGZ1bmN0aW9uX2lkID0gMDsNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKyBpZiAo
+b2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUoZGV2LT5vZl9ub2RlLCAiYXJtLHNtYy1tYm94IikpDQo+
+ID4gPiA+ID4gKyAgICAgICAgIGludm9rZV9zbWNfbWJveF9mbiA9IF9faW52b2tlX2ZuX3NtYzsg
+ZWxzZQ0KPiA+ID4gPiA+ICsgICAgICAgICBpbnZva2Vfc21jX21ib3hfZm4gPSBfX2ludm9rZV9m
+bl9odmM7DQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICsgbWJveCA9IGRldm1fa3phbGxvYyhkZXYs
+IHNpemVvZigqbWJveCksIEdGUF9LRVJORUwpOyBpZg0KPiA+ID4gPiA+ICsgKCFtYm94KQ0KPiA+
+ID4gPiA+ICsgICAgICAgICByZXR1cm4gLUVOT01FTTsNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4g
+KyBtYm94LT5udW1fY2hhbnMgPSAxOw0KPiA+ID4gPiA+ICsgbWJveC0+Y2hhbnMgPSBkZXZtX2t6
+YWxsb2MoZGV2LCBzaXplb2YoKm1ib3gtPmNoYW5zKSwNCj4gPiA+ID4gPiArIG1ib3gtPkdGUF9L
+RVJORUwpOw0KPiA+ID4gPiA+ICsgaWYgKCFtYm94LT5jaGFucykNCj4gPiA+ID4gPiArICAgICAg
+ICAgcmV0dXJuIC1FTk9NRU07DQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICsgY2hhbl9kYXRhID0g
+ZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpjaGFuX2RhdGEpLCBHRlBfS0VSTkVMKTsNCj4gPiA+
+ID4gPiArIGlmICghY2hhbl9kYXRhKQ0KPiA+ID4gPiA+ICsgICAgICAgICByZXR1cm4gLUVOT01F
+TTsNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKyBvZl9wcm9wZXJ0eV9yZWFkX3UzMihkZXYtPm9m
+X25vZGUsICJhcm0sZnVuYy1pZCIsDQo+ID4gPiA+ID4gKyAmZnVuY3Rpb25faWQpOyBjaGFuX2Rh
+dGEtPmZ1bmN0aW9uX2lkID0gZnVuY3Rpb25faWQ7DQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICsg
+bWJveC0+Y2hhbnMtPmNvbl9wcml2ID0gY2hhbl9kYXRhOw0KPiA+ID4gPiA+ICsNCj4gPiA+ID4g
+PiArIG1ib3gtPnR4ZG9uZV9wb2xsID0gZmFsc2U7DQo+ID4gPiA+ID4gKyBtYm94LT50eGRvbmVf
+aXJxID0gZmFsc2U7DQo+ID4gPiA+DQo+ID4gPiA+IERvbid0IHdlIG5lZWQgdG8gcHJvdmlkZSBz
+b21ldGhpbmcgdG8gY29uZmlybSByZWNlcHRpb24gdG8gdGhlDQo+ID4gPiA+IGNsaWVudD8gSW4g
+b3VyIGNhc2Ugd2UgY2FuIHNldCB0aGlzIGFzIHNvb24gYXMgdGhlIHNtYy9odmMgcmV0dXJucy4N
+Cj4gPiA+DQo+ID4gPiBBcyBzbWMvaHZjIHJldHVybnMsIGl0IG1lYW5zIHRoZSB0cmFuc2ZlciBp
+cyBvdmVyIGFuZCByZWNlaXZlIGlzIGRvbmUuDQo+ID4NCj4gPiBJIHVuZGVyc3RhbmQgdGhhdCwg
+YnV0IHdhcyB3b25kZXJpbmcgaWYgdGhlIExpbnV4IG1haWxib3ggZnJhbWV3b3JrIGtub3dzDQo+
+IGFib3V0IHRoYXQ/IEluIG15IG9sZGVyIHZlcnNpb24gSSB3YXMgY2FsbGluZyBtYm94X2NoYW5f
+cmVjZWl2ZWRfZGF0YSgpDQo+IGFmdGVyIHRoZSBzbWMgY2FsbCByZXR1cm5lZC4NCj4gPg0KPiBU
+aGUgY29kZSBhbHJlYWR5IGRvZXMgdGhhdCBhdCB0aGUgZW5kIG9mICBzZW5kX2RhdGENCj4gDQo+
+ID4gQWxzbyB0aGVyZSBpcyBtYm94X2NoYW5fdHhkb25lKCkgd2l0aCB3aGljaCBhIGNvbnRyb2xs
+ZXIgZHJpdmVyIGNhbiBzaWduYWwNCj4gVFggY29tcGxldGlvbiBleHBsaWNpdGx5Lg0KPiA+DQo+
+IE5vLiBDb250cm9sbGVyIGNhbiB1c2UgdGhhdCBvbmx5IGlmIGl0IGhhcyBzcGVjaWZpZWQgdHhk
+b25lX2lycSwgd2hpY2ggaXMgbm90IHRoZQ0KPiBjYXNlIGhlcmUuDQo+IA0KPiBUaGFua3MNCg==
