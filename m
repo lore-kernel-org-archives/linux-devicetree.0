@@ -1,107 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] of: restore old handling of cells_name=NULL in
-  of_*_phandle_with_args()
-Date: Thu, 19 Sep 2019 08:32:42 -0500
-Message-ID: <20190919133242.GA27990@bogus>
-References: <20190918063837.8196-1-u.kleine-koenig@pengutronix.de>
- <b00ca30f-2c06-7722-96b2-123d15751cb6@axentia.se>
- <20190918084748.hnjkiq7wc5b35wjh@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH v2 resend] ARM: dts: exynos: remove obsolete IRQ lines
+Date: Thu, 19 Sep 2019 15:45:47 +0200
+Message-ID: <20190919134547.11671-1-m.szyprowski@samsung.com>
+References: <CAJKOXPcs5K46U9mF8evCpbEap_j0Sd5kUk-xiWjwyihAL7te=Q@mail.gmail.com>
+        <CGME20190919134622eucas1p1947abc201f86d414bd0b0635f2d91cfe@eucas1p1.samsung.com>
+Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190918084748.hnjkiq7wc5b35wjh@pengutronix.de>
+In-Reply-To: <CAJKOXPcs5K46U9mF8evCpbEap_j0Sd5kUk-xiWjwyihAL7te=Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Peter Rosin <peda@axentia.se>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Maciej Falkowski <m.falkowski@samsung.com>, krzk@kernel.org, mark.rutland@arm.com, robh@kernel.org, a.hajda@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Sep 2019 10:47:48 +0200, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=          wrote:
-> Before commit e42ee61017f5 ("of: Let of_for_each_phandle fallback to
-> non-negative cell_count") the iterator functions calling
-> of_for_each_phandle assumed a cell count of 0 if cells_name was NULL.
-> This corner case was missed when implementing the fallback logic in
-> e42ee61017f5 and resulted in an endless loop.
-> 
-> Restore the old behaviour of of_count_phandle_with_args() and
-> of_parse_phandle_with_args() and add a check to
-> of_phandle_iterator_init() to prevent a similar failure as a safety
-> precaution. of_parse_phandle_with_args_map() doesn't need a similar fix
-> as cells_name isn't NULL there.
-> 
-> Affected drivers are:
->  - drivers/base/power/domain.c
->  - drivers/base/power/domain.c
->  - drivers/clk/ti/clk-dra7-atl.c
->  - drivers/hwmon/ibmpowernv.c
->  - drivers/i2c/muxes/i2c-demux-pinctrl.c
->  - drivers/iommu/mtk_iommu.c
->  - drivers/net/ethernet/freescale/fman/mac.c
->  - drivers/opp/of.c
->  - drivers/perf/arm_dsu_pmu.c
->  - drivers/regulator/of_regulator.c
->  - drivers/remoteproc/imx_rproc.c
->  - drivers/soc/rockchip/pm_domains.c
->  - sound/soc/fsl/imx-audmix.c
->  - sound/soc/fsl/imx-audmix.c
->  - sound/soc/meson/axg-card.c
->  - sound/soc/samsung/tm2_wm5110.c
->  - sound/soc/samsung/tm2_wm5110.c
-> 
-> Thanks to Geert Uytterhoeven for reporting the issue, Peter Rosin for
-> helping pinpoint the actual problem and the testers for confirming this
-> fix.
-> 
-> Fixes: e42ee61017f5 ("of: Let of_for_each_phandle fallback to non-negative cell_count")
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
-> 
-> On Wed, Sep 18, 2019 at 08:01:05AM +0000, Peter Rosin wrote:
-> > On 2019-09-18 08:38, Uwe Kleine-König wrote:
-> > >  EXPORT_SYMBOL(of_parse_phandle_with_args);
-> > >  
-> > > @@ -1765,6 +1779,18 @@ int of_count_phandle_with_args(const struct device_node *np, const char *list_na
-> > >  	struct of_phandle_iterator it;
-> > >  	int rc, cur_index = 0;
-> > >  
-> > > +	/* If cells_name is NULL we assume a cell count of 0 */
-> > > +	if (cells_name == NULL) {
-> > 
-> > A couple of nits.
-> > 
-> > I don't know if there are other considerations, but in the previous two
-> > hunks you use !cells_name instead of comparing explicitly with NULL.
-> > Personally, I find the shorter form more readable, and in the name of
-> > consistency bla bla...
-> 
-> Ack, changed to !cells_name here, too.
-> 
-> > 
-> > Also, the comment explaining this NULL-check didn't really make sense
-> > to me until I realized that knowing the cell count to be zero makes
-> > counting trivial. Something along those lines should perhaps be in the
-> > comment?
-> 
-> You're right, I extended the comment a bit.
->  
-> > But as I said, these are nits. Feel free to ignore.
-> 
-> I considered resending already anyhow as I fatfingerd my email address.
-> this is fixed now, too. Additionally I fixed a typo in one of the
-> comments.
-> 
-> Thanks for your feedback.
-> 
-> Best regards
-> Uwe
-> 
->  drivers/of/base.c | 35 +++++++++++++++++++++++++++++++++--
->  1 file changed, 33 insertions(+), 2 deletions(-)
-> 
+From: Maciej Falkowski <m.falkowski@samsung.com>
 
-Applied, thanks.
+In commit 7222e8db2d50 ("iommu/exynos: Fix build errors") Exynos3250
+iommu driver stopped supporting two IRQ lines. The second IRQ line in DTS
+is ignored and is not needed.
 
-Rob
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ arch/arm/boot/dts/exynos3250.dtsi | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index 784818490376..190d9160a5d1 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -314,8 +314,7 @@
+ 		sysmmu_jpeg: sysmmu@11a60000 {
+ 			compatible = "samsung,exynos-sysmmu";
+ 			reg = <0x11a60000 0x1000>;
+-			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "sysmmu", "master";
+ 			clocks = <&cmu CLK_SMMUJPEG>, <&cmu CLK_JPEG>;
+ 			power-domains = <&pd_cam>;
+@@ -355,8 +354,7 @@
+ 		sysmmu_fimd0: sysmmu@11e20000 {
+ 			compatible = "samsung,exynos-sysmmu";
+ 			reg = <0x11e20000 0x1000>;
+-			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "sysmmu", "master";
+ 			clocks = <&cmu CLK_SMMUFIMD0>, <&cmu CLK_FIMD0>;
+ 			power-domains = <&pd_lcd0>;
+@@ -507,8 +505,7 @@
+ 		sysmmu_mfc: sysmmu@13620000 {
+ 			compatible = "samsung,exynos-sysmmu";
+ 			reg = <0x13620000 0x1000>;
+-			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-names = "sysmmu", "master";
+ 			clocks = <&cmu CLK_SMMUMFC_L>, <&cmu CLK_MFC>;
+ 			power-domains = <&pd_mfc>;
+-- 
+2.17.1
