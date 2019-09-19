@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 10/13] media: am437x-vpfe: Remove print_fourcc helper
-Date: Thu, 19 Sep 2019 15:41:22 -0500
-Message-ID: <20190919204125.15254-11-bparrot@ti.com>
+Subject: [Patch v2 09/13] media: am437x-vpfe: fix function trace debug log
+Date: Thu, 19 Sep 2019 15:41:21 -0500
+Message-ID: <20190919204125.15254-10-bparrot@ti.com>
 References: <20190919204125.15254-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,123 +12,291 @@ To: Hans Verkuil <hverkuil@xs4all.nl>
 Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-print_fourcc helper function was used for debug log to
-convert a pixel format code into its readable form for display
-purposes. But since it used a single static buffer to perform
-the conversion this might lead to display format issue when more
-than one instance was invoked simultaneously.
+checkpatch.pl nows reports several:
+WARNING: Prefer using '"%s...", __func__' to using '<function name>',
+this function's name, in a string.
 
-It turns out that print_fourcc can be safely replace by using
-"%4pE" instead and passing the pointer to the fourcc code.
+So fix these for the whole driver.
+At the same time remove the function entry trace log as those can be
+enabled using ftrace instead.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/am437x/am437x-vpfe.c | 42 +++++++--------------
- 1 file changed, 14 insertions(+), 28 deletions(-)
+ drivers/media/platform/am437x/am437x-vpfe.c | 72 ++++-----------------
+ 1 file changed, 13 insertions(+), 59 deletions(-)
 
 diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index 605a6bb7e6c2..ad46e037fe89 100644
+index 569618a52082..605a6bb7e6c2 100644
 --- a/drivers/media/platform/am437x/am437x-vpfe.c
 +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -221,20 +221,6 @@ static void pix_to_mbus(struct vpfe_device *vpfe,
- 	v4l2_fill_mbus_format(mbus_fmt, pix_fmt, fmt->code);
- }
+@@ -443,8 +443,8 @@ static int vpfe_ccdc_set_params(struct vpfe_ccdc *ccdc, void __user *params)
+ 	x = copy_from_user(&raw_params, params, sizeof(raw_params));
+ 	if (x) {
+ 		vpfe_dbg(1, vpfe,
+-			"vpfe_ccdc_set_params: error in copying ccdc params, %d\n",
+-			x);
++			 "%s: error in copying ccdc params, %d\n",
++			 __func__, x);
+ 		return -EFAULT;
+ 	}
  
--/*  Print Four-character-code (FOURCC) */
--static char *print_fourcc(u32 fmt)
--{
--	static char code[5];
--
--	code[0] = (unsigned char)(fmt & 0xff);
--	code[1] = (unsigned char)((fmt >> 8) & 0xff);
--	code[2] = (unsigned char)((fmt >> 16) & 0xff);
--	code[3] = (unsigned char)((fmt >> 24) & 0xff);
--	code[4] = '\0';
--
--	return code;
--}
--
- static int
- cmp_v4l2_format(const struct v4l2_format *lhs, const struct v4l2_format *rhs)
+@@ -462,11 +462,9 @@ static int vpfe_ccdc_set_params(struct vpfe_ccdc *ccdc, void __user *params)
+  */
+ static void vpfe_ccdc_config_ycbcr(struct vpfe_ccdc *ccdc)
  {
-@@ -696,8 +682,8 @@ static int vpfe_ccdc_set_pixel_format(struct vpfe_ccdc *ccdc, u32 pixfmt)
+-	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
+ 	struct ccdc_params_ycbcr *params = &ccdc->ccdc_cfg.ycbcr;
+ 	u32 syn_mode;
+ 
+-	vpfe_dbg(3, vpfe, "vpfe_ccdc_config_ycbcr:\n");
+ 	/*
+ 	 * first restore the CCDC registers to default values
+ 	 * This is important since we assume default values to be set in
+@@ -598,8 +596,6 @@ static void vpfe_ccdc_config_raw(struct vpfe_ccdc *ccdc)
+ 	unsigned int syn_mode;
+ 	unsigned int val;
+ 
+-	vpfe_dbg(3, vpfe, "vpfe_ccdc_config_raw:\n");
+-
+ 	/* Reset CCDC */
+ 	vpfe_ccdc_restore_defaults(ccdc);
+ 
+@@ -700,8 +696,8 @@ static int vpfe_ccdc_set_pixel_format(struct vpfe_ccdc *ccdc, u32 pixfmt)
  {
  	struct vpfe_device *vpfe = container_of(ccdc, struct vpfe_device, ccdc);
  
--	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%s\n",
--		 __func__, ccdc->ccdc_cfg.if_type, print_fourcc(pixfmt));
-+	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%4pE\n",
-+		 __func__, ccdc->ccdc_cfg.if_type, &pixfmt);
+-	vpfe_dbg(1, vpfe, "vpfe_ccdc_set_pixel_format: if_type: %d, pixfmt:%s\n",
+-		 ccdc->ccdc_cfg.if_type, print_fourcc(pixfmt));
++	vpfe_dbg(1, vpfe, "%s: if_type: %d, pixfmt:%s\n",
++		 __func__, ccdc->ccdc_cfg.if_type, print_fourcc(pixfmt));
  
  	if (ccdc->ccdc_cfg.if_type == VPFE_RAW_BAYER) {
  		ccdc->ccdc_cfg.bayer.pix_fmt = CCDC_PIXFMT_RAW;
-@@ -983,8 +969,8 @@ static int vpfe_config_ccdc_image_format(struct vpfe_device *vpfe)
+@@ -987,8 +983,6 @@ static int vpfe_config_ccdc_image_format(struct vpfe_device *vpfe)
  	enum ccdc_frmfmt frm_fmt = CCDC_FRMFMT_INTERLACED;
  	int ret = 0;
  
--	vpfe_dbg(1, vpfe, "pixelformat: %s\n",
--		print_fourcc(vpfe->fmt.fmt.pix.pixelformat));
-+	vpfe_dbg(1, vpfe, "pixelformat: %4pE\n",
-+		 &vpfe->fmt.fmt.pix.pixelformat);
+-	vpfe_dbg(2, vpfe, "vpfe_config_ccdc_image_format\n");
+-
+ 	vpfe_dbg(1, vpfe, "pixelformat: %s\n",
+ 		print_fourcc(vpfe->fmt.fmt.pix.pixelformat));
  
- 	if (vpfe_ccdc_set_pixel_format(&vpfe->ccdc,
- 			vpfe->fmt.fmt.pix.pixelformat) < 0) {
-@@ -1392,9 +1378,9 @@ static int __vpfe_get_format(struct vpfe_device *vpfe,
- 	format->type = vpfe->fmt.type;
+@@ -1354,8 +1348,6 @@ static int vpfe_querycap(struct file *file, void  *priv,
+ {
+ 	struct vpfe_device *vpfe = video_drvdata(file);
  
- 	vpfe_dbg(1, vpfe,
--		 "%s: size %dx%d (%s) bytesperline = %d, size = %d, bpp = %d\n",
-+		 "%s: size %dx%d (%4pE) bytesperline = %d, size = %d, bpp = %d\n",
- 		 __func__, format->fmt.pix.width, format->fmt.pix.height,
--		 print_fourcc(format->fmt.pix.pixelformat),
-+		 &format->fmt.pix.pixelformat,
- 		 format->fmt.pix.bytesperline, format->fmt.pix.sizeimage, *bpp);
- 
- 	return 0;
-@@ -1427,9 +1413,9 @@ static int __vpfe_set_format(struct vpfe_device *vpfe,
+-	vpfe_dbg(2, vpfe, "vpfe_querycap\n");
+-
+ 	strscpy(cap->driver, VPFE_MODULE_NAME, sizeof(cap->driver));
+ 	strscpy(cap->card, "TI AM437x VPFE", sizeof(cap->card));
+ 	snprintf(cap->bus_info, sizeof(cap->bus_info),
+@@ -1400,7 +1392,7 @@ static int __vpfe_get_format(struct vpfe_device *vpfe,
  	format->type = vpfe->fmt.type;
  
  	vpfe_dbg(1, vpfe,
 -		 "%s size %dx%d (%s) bytesperline = %d, size = %d, bpp = %d\n",
-+		 "%s: size %dx%d (%4pE) bytesperline = %d, size = %d, bpp = %d\n",
- 		 __func__,  format->fmt.pix.width, format->fmt.pix.height,
--		 print_fourcc(format->fmt.pix.pixelformat),
-+		 &format->fmt.pix.pixelformat,
++		 "%s: size %dx%d (%s) bytesperline = %d, size = %d, bpp = %d\n",
+ 		 __func__, format->fmt.pix.width, format->fmt.pix.height,
+ 		 print_fourcc(format->fmt.pix.pixelformat),
  		 format->fmt.pix.bytesperline, format->fmt.pix.sizeimage, *bpp);
+@@ -1416,8 +1408,6 @@ static int __vpfe_set_format(struct vpfe_device *vpfe,
+ 	struct v4l2_subdev_format fmt;
+ 	int ret;
+ 
+-	vpfe_dbg(2, vpfe, "__vpfe_set_format\n");
+-
+ 	sdinfo = vpfe->current_subdev;
+ 	if (!sdinfo->sd)
+ 		return -EINVAL;
+@@ -1450,8 +1440,6 @@ static int vpfe_g_fmt(struct file *file, void *priv,
+ {
+ 	struct vpfe_device *vpfe = video_drvdata(file);
+ 
+-	vpfe_dbg(2, vpfe, "vpfe_g_fmt\n");
+-
+ 	*fmt = vpfe->fmt;
  
  	return 0;
-@@ -1463,8 +1449,8 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
+@@ -1464,9 +1452,6 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
+ 	struct vpfe_subdev_info *sdinfo;
+ 	struct vpfe_fmt *fmt;
+ 
+-	vpfe_dbg(2, vpfe, "vpfe_enum_format index:%d\n",
+-		f->index);
+-
+ 	sdinfo = vpfe->current_subdev;
+ 	if (!sdinfo->sd)
+ 		return -EINVAL;
+@@ -1478,8 +1463,8 @@ static int vpfe_enum_fmt(struct file *file, void  *priv,
  
  	f->pixelformat = fmt->fourcc;
  
--	vpfe_dbg(1, vpfe, "%s: mbus index: %d code: %x pixelformat: %s\n",
--		 __func__, f->index, fmt->code, print_fourcc(fmt->fourcc));
-+	vpfe_dbg(1, vpfe, "%s: mbus index: %d code: %x pixelformat: %4pE\n",
-+		 __func__, f->index, fmt->code, &fmt->fourcc);
+-	vpfe_dbg(1, vpfe, "vpfe_enum_format: mbus index: %d code: %x pixelformat: %s\n",
+-		 f->index, fmt->code, print_fourcc(fmt->fourcc));
++	vpfe_dbg(1, vpfe, "%s: mbus index: %d code: %x pixelformat: %s\n",
++		 __func__, f->index, fmt->code, print_fourcc(fmt->fourcc));
  
  	return 0;
  }
-@@ -1571,8 +1557,8 @@ static int vpfe_enum_size(struct file *file, void  *priv,
+@@ -1490,8 +1475,6 @@ static int vpfe_try_fmt(struct file *file, void *priv,
+ 	struct vpfe_device *vpfe = video_drvdata(file);
+ 	unsigned int bpp;
+ 
+-	vpfe_dbg(2, vpfe, "vpfe_try_fmt\n");
+-
+ 	return __vpfe_get_format(vpfe, fmt, &bpp);
+ }
+ 
+@@ -1503,8 +1486,6 @@ static int vpfe_s_fmt(struct file *file, void *priv,
+ 	unsigned int bpp;
+ 	int ret;
+ 
+-	vpfe_dbg(2, vpfe, "vpfe_s_fmt\n");
+-
+ 	/* If streaming is started, return error */
+ 	if (vb2_is_busy(&vpfe->buffer_queue)) {
+ 		vpfe_err(vpfe, "%s device busy\n", __func__);
+@@ -1550,8 +1531,6 @@ static int vpfe_enum_size(struct file *file, void  *priv,
+ 	struct vpfe_fmt *fmt;
+ 	int ret;
+ 
+-	vpfe_dbg(2, vpfe, "vpfe_enum_size\n");
+-
+ 	/* check for valid format */
+ 	fmt = find_format_by_pix(vpfe, fsize->pixel_format);
+ 	if (!fmt) {
+@@ -1584,17 +1563,17 @@ static int vpfe_enum_size(struct file *file, void  *priv,
+ 	if (ret)
+ 		return -EINVAL;
+ 
+-	vpfe_dbg(1, vpfe, "vpfe_enum_size: index: %d code: %x W:[%d,%d] H:[%d,%d]\n",
+-		fse.index, fse.code, fse.min_width, fse.max_width,
+-		fse.min_height, fse.max_height);
++	vpfe_dbg(1, vpfe, "%s: index: %d code: %x W:[%d,%d] H:[%d,%d]\n",
++		 __func__, fse.index, fse.code, fse.min_width, fse.max_width,
++		 fse.min_height, fse.max_height);
+ 
+ 	fsize->type = V4L2_FRMSIZE_TYPE_DISCRETE;
  	fsize->discrete.width = fse.max_width;
  	fsize->discrete.height = fse.max_height;
  
--	vpfe_dbg(1, vpfe, "%s: index: %d pixformat: %4.4s size: %dx%d\n",
--		 __func__, fsize->index, (char *)&fsize->pixel_format,
-+	vpfe_dbg(1, vpfe, "%s: index: %d pixformat: %4pE size: %dx%d\n",
-+		 __func__, fsize->index, &fsize->pixel_format,
- 		 fsize->discrete.width, fsize->discrete.height);
+-	vpfe_dbg(1, vpfe, "vpfe_enum_size: index: %d pixformat: %s size: %dx%d\n",
+-		fsize->index, print_fourcc(fsize->pixel_format),
+-		fsize->discrete.width, fsize->discrete.height);
++	vpfe_dbg(1, vpfe, "%s: index: %d pixformat: %4.4s size: %dx%d\n",
++		 __func__, fsize->index, (char *)&fsize->pixel_format,
++		 fsize->discrete.width, fsize->discrete.height);
  
  	return 0;
-@@ -2242,8 +2228,8 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
- 				continue;
- 			vpfe->active_fmt[i] = fmt;
- 			vpfe_dbg(3, vpfe,
--				 "matched fourcc: %4.4s code: %04x idx: %d\n",
--				 (char *)&fmt->fourcc, mbus_code.code, i);
-+				 "matched fourcc: %4pE code: %04x idx: %d\n",
-+				 &fmt->fourcc, mbus_code.code, i);
- 			vpfe->num_active_fmt = ++i;
- 		}
- 	}
+ }
+@@ -1659,8 +1638,6 @@ static int vpfe_enum_input(struct file *file, void *priv,
+ 	struct vpfe_subdev_info *sdinfo;
+ 	int subdev, index;
+ 
+-	vpfe_dbg(2, vpfe, "vpfe_enum_input\n");
+-
+ 	if (vpfe_get_subdev_input_index(vpfe, &subdev, &index,
+ 					inp->index) < 0) {
+ 		vpfe_dbg(1, vpfe,
+@@ -1677,8 +1654,6 @@ static int vpfe_g_input(struct file *file, void *priv, unsigned int *index)
+ {
+ 	struct vpfe_device *vpfe = video_drvdata(file);
+ 
+-	vpfe_dbg(2, vpfe, "vpfe_g_input\n");
+-
+ 	return vpfe_get_app_input_index(vpfe, index);
+ }
+ 
+@@ -1691,8 +1666,6 @@ static int vpfe_set_input(struct vpfe_device *vpfe, unsigned int index)
+ 	u32 input, output;
+ 	int ret;
+ 
+-	vpfe_dbg(2, vpfe, "vpfe_set_input: index: %d\n", index);
+-
+ 	/* If streaming is started, return error */
+ 	if (vb2_is_busy(&vpfe->buffer_queue)) {
+ 		vpfe_err(vpfe, "%s device busy\n", __func__);
+@@ -1748,9 +1721,6 @@ static int vpfe_s_input(struct file *file, void *priv, unsigned int index)
+ {
+ 	struct vpfe_device *vpfe = video_drvdata(file);
+ 
+-	vpfe_dbg(2, vpfe,
+-		"vpfe_s_input: index: %d\n", index);
+-
+ 	return vpfe_set_input(vpfe, index);
+ }
+ 
+@@ -1759,8 +1729,6 @@ static int vpfe_querystd(struct file *file, void *priv, v4l2_std_id *std_id)
+ 	struct vpfe_device *vpfe = video_drvdata(file);
+ 	struct vpfe_subdev_info *sdinfo;
+ 
+-	vpfe_dbg(2, vpfe, "vpfe_querystd\n");
+-
+ 	sdinfo = vpfe->current_subdev;
+ 	if (!(sdinfo->inputs[0].capabilities & V4L2_IN_CAP_STD))
+ 		return -ENODATA;
+@@ -1776,8 +1744,6 @@ static int vpfe_s_std(struct file *file, void *priv, v4l2_std_id std_id)
+ 	struct vpfe_subdev_info *sdinfo;
+ 	int ret;
+ 
+-	vpfe_dbg(2, vpfe, "vpfe_s_std\n");
+-
+ 	sdinfo = vpfe->current_subdev;
+ 	if (!(sdinfo->inputs[0].capabilities & V4L2_IN_CAP_STD))
+ 		return -ENODATA;
+@@ -1809,8 +1775,6 @@ static int vpfe_g_std(struct file *file, void *priv, v4l2_std_id *std_id)
+ 	struct vpfe_device *vpfe = video_drvdata(file);
+ 	struct vpfe_subdev_info *sdinfo;
+ 
+-	vpfe_dbg(2, vpfe, "vpfe_g_std\n");
+-
+ 	sdinfo = vpfe->current_subdev;
+ 	if (sdinfo->inputs[0].capabilities != V4L2_IN_CAP_STD)
+ 		return -ENODATA;
+@@ -1828,8 +1792,6 @@ static void vpfe_calculate_offsets(struct vpfe_device *vpfe)
+ {
+ 	struct v4l2_rect image_win;
+ 
+-	vpfe_dbg(2, vpfe, "vpfe_calculate_offsets\n");
+-
+ 	vpfe_ccdc_get_image_window(&vpfe->ccdc, &image_win);
+ 	vpfe->field_off = image_win.height * image_win.width;
+ }
+@@ -2030,8 +1992,6 @@ static int vpfe_g_pixelaspect(struct file *file, void *priv,
+ {
+ 	struct vpfe_device *vpfe = video_drvdata(file);
+ 
+-	vpfe_dbg(2, vpfe, "vpfe_g_pixelaspect\n");
+-
+ 	if (type != V4L2_BUF_TYPE_VIDEO_CAPTURE ||
+ 	    vpfe->std_index >= ARRAY_SIZE(vpfe_standards))
+ 		return -EINVAL;
+@@ -2134,8 +2094,6 @@ static long vpfe_ioctl_default(struct file *file, void *priv,
+ 	struct vpfe_device *vpfe = video_drvdata(file);
+ 	int ret;
+ 
+-	vpfe_dbg(2, vpfe, "vpfe_ioctl_default\n");
+-
+ 	if (!valid_prio) {
+ 		vpfe_err(vpfe, "%s device busy\n", __func__);
+ 		return -EBUSY;
+@@ -2246,8 +2204,6 @@ vpfe_async_bound(struct v4l2_async_notifier *notifier,
+ 	bool found = false;
+ 	int i, j, k;
+ 
+-	vpfe_dbg(1, vpfe, "vpfe_async_bound\n");
+-
+ 	for (i = 0; i < ARRAY_SIZE(vpfe->cfg->asd); i++) {
+ 		if (vpfe->cfg->asd[i]->match.fwnode ==
+ 		    asd[i].match.fwnode) {
+@@ -2579,8 +2535,6 @@ static int vpfe_remove(struct platform_device *pdev)
+ {
+ 	struct vpfe_device *vpfe = platform_get_drvdata(pdev);
+ 
+-	vpfe_dbg(2, vpfe, "vpfe_remove\n");
+-
+ 	pm_runtime_disable(&pdev->dev);
+ 
+ 	v4l2_async_notifier_unregister(&vpfe->notifier);
 -- 
 2.17.1
