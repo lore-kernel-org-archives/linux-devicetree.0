@@ -1,40 +1,51 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 0/6] arm64: dts: rockchip: ROC-PC fixes
-Date: Thu, 19 Sep 2019 10:58:16 +0530
-Message-ID: <20190919052822.10403-1-jagan@amarulasolutions.com>
+Subject: [PATCH 1/6] arm64: dts: rockchip: Fix rk3399-roc-pc pwm2 pin
+Date: Thu, 19 Sep 2019 10:58:17 +0530
+Message-ID: <20190919052822.10403-2-jagan@amarulasolutions.com>
+References: <20190919052822.10403-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190919052822.10403-1-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Heiko Stuebner <heiko@sntech.de>, Levin Du <djw@t-chip.com.cn>, Akash Gajjar <akash@openedev.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: Da Xue <da@lessconfused.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-This series is trying to fix the Linux boot and other
-regulators stuff for ROC-RK3399-PC board.
+ROC-PC is not able to boot linux console if PWM2_d is
+unattached to any pinctrl logic.
 
-patch 1: attach pinctrl to pwm2 pin
+To be precise the linux boot hang with last logs as,
+...
+.....
+[    0.003367] Console: colour dummy device 80x25
+[    0.003788] printk: console [tty0] enabled
+[    0.004178] printk: bootconsole [uart8250] disabled
 
-patch 2-4: libretech naming conventions
+In ROC-PC the PWM2_d pin is connected to LOG_DVS_PWM of
+VDD_LOG. So, for normal working operations this needs to
+active and pull-down.
 
-patch 5-6: regulator renaming, input rails fixes
+This patch fix, by attaching pinctrl active and pull-down
+the pwm2.
 
-Any inputs?
-Jagan.
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Jagan Teki (6):
-  arm64: dts: rockchip: Fix rk3399-roc-pc pwm2 pin
-  dt-bindings: arm: rockchip: Use libretech for roc-pc binding
-  arm64: dts: rockchip: Use libretech model, compatible for ROC-PC
-  arm64: dts: rockchip: Rename roc-pc with libretech notation
-  arm64: dts: rockchip: Rename vcc12v_sys into dc_12v for roc-rk3399-pc
-  arm64: dts: rockchip: Fix roc-rk3399-pc regulator input rails
-
- .../devicetree/bindings/arm/rockchip.yaml     | 11 +++---
- arch/arm64/boot/dts/rockchip/Makefile         |  2 +-
- ...dts => rk3399-libretech-roc-rk3399-pc.dts} | 38 ++++++++++---------
- 3 files changed, 27 insertions(+), 24 deletions(-)
- rename arch/arm64/boot/dts/rockchip/{rk3399-roc-pc.dts => rk3399-libretech-roc-rk3399-pc.dts} (95%)
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+index 19f7732d728c..c53f3d571620 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+@@ -548,6 +548,8 @@
+ };
+ 
+ &pwm2 {
++	pinctrl-names = "active";
++	pinctrl-0 = <&pwm2_pin_pull_down>;
+ 	status = "okay";
+ };
+ 
 -- 
 2.18.0.321.gffc6fa0e3
