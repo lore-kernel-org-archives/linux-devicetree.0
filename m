@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 02/13] media: am437x-vpfe: Fix missing first line
-Date: Thu, 19 Sep 2019 15:41:14 -0500
-Message-ID: <20190919204125.15254-3-bparrot@ti.com>
+Subject: [Patch v2 12/13] media: am437x-vpfe: Remove per bus width static data
+Date: Thu, 19 Sep 2019 15:41:24 -0500
+Message-ID: <20190919204125.15254-13-bparrot@ti.com>
 References: <20190919204125.15254-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,37 +9,159 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190919204125.15254-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>, Jyri Sarha <jsarha@ti.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Previous generation of this driver were hard coded to handle
-encoder/decoder where the first line never contains any data and
-was therefore always skipped, however when dealing with actual
-camera sensors the first line is always present.
+The bus related static data included in the vpfe_fmt
+static table can be derived dynamically instead.
+This simplify the table and it's use.
+
+We instead replace the per bus data info with just
+the usual bit per pixel value for each supported
+pixel format.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
 ---
- drivers/media/platform/am437x/am437x-vpfe.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/media/platform/am437x/am437x-vpfe.c | 56 ++++++---------------
+ drivers/media/platform/am437x/am437x-vpfe.h | 16 +-----
+ 2 files changed, 16 insertions(+), 56 deletions(-)
 
 diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-index a3d22f90e64c..1521c072f3e3 100644
+index 47404d799029..6416b7955fb7 100644
 --- a/drivers/media/platform/am437x/am437x-vpfe.c
 +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-@@ -345,13 +345,9 @@ static void vpfe_ccdc_setwin(struct vpfe_ccdc *ccdc,
- 	if (frm_fmt == CCDC_FRMFMT_INTERLACED) {
- 		vert_nr_lines = (image_win->height >> 1) - 1;
- 		vert_start >>= 1;
--		/* Since first line doesn't have any data */
--		vert_start += 1;
- 		/* configure VDINT0 */
- 		val = (vert_start << VPFE_VDINT_VDINT0_SHIFT);
- 	} else {
--		/* Since first line doesn't have any data */
--		vert_start += 1;
- 		vert_nr_lines = image_win->height - 1;
- 		/*
- 		 * configure VDINT0 and VDINT1. VDINT1 will be at half
+@@ -73,73 +73,43 @@ static struct vpfe_fmt formats[VPFE_MAX_ACTIVE_FMT] = {
+ 	{
+ 		.fourcc		= V4L2_PIX_FMT_YUYV,
+ 		.code		= MEDIA_BUS_FMT_YUYV8_2X8,
+-		.l.width	= 10,
+-		.l.bpp		= 4,
+-		.s.width	= 8,
+-		.s.bpp		= 2,
++		.bitsperpixel	= 16,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_UYVY,
+ 		.code		= MEDIA_BUS_FMT_UYVY8_2X8,
+-		.l.width	= 10,
+-		.l.bpp		= 4,
+-		.s.width	= 8,
+-		.s.bpp		= 2,
++		.bitsperpixel	= 16,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_YVYU,
+ 		.code		= MEDIA_BUS_FMT_YVYU8_2X8,
+-		.l.width	= 10,
+-		.l.bpp		= 4,
+-		.s.width	= 8,
+-		.s.bpp		= 2,
++		.bitsperpixel	= 16,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_VYUY,
+ 		.code		= MEDIA_BUS_FMT_VYUY8_2X8,
+-		.l.width	= 10,
+-		.l.bpp		= 4,
+-		.s.width	= 8,
+-		.s.bpp		= 2,
++		.bitsperpixel	= 16,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SBGGR8,
+ 		.code		= MEDIA_BUS_FMT_SBGGR8_1X8,
+-		.l.width	= 10,
+-		.l.bpp		= 2,
+-		.s.width	= 8,
+-		.s.bpp		= 1,
++		.bitsperpixel	= 8,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SGBRG8,
+ 		.code		= MEDIA_BUS_FMT_SGBRG8_1X8,
+-		.l.width	= 10,
+-		.l.bpp		= 2,
+-		.s.width	= 8,
+-		.s.bpp		= 1,
++		.bitsperpixel	= 8,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SGRBG8,
+ 		.code		= MEDIA_BUS_FMT_SGRBG8_1X8,
+-		.l.width	= 10,
+-		.l.bpp		= 2,
+-		.s.width	= 8,
+-		.s.bpp		= 1,
++		.bitsperpixel	= 8,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_SRGGB8,
+ 		.code		= MEDIA_BUS_FMT_SRGGB8_1X8,
+-		.l.width	= 10,
+-		.l.bpp		= 2,
+-		.s.width	= 8,
+-		.s.bpp		= 1,
++		.bitsperpixel	= 8,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_RGB565,
+ 		.code		= MEDIA_BUS_FMT_RGB565_2X8_LE,
+-		.l.width	= 10,
+-		.l.bpp		= 4,
+-		.s.width	= 8,
+-		.s.bpp		= 2,
++		.bitsperpixel	= 16,
+ 	}, {
+ 		.fourcc		= V4L2_PIX_FMT_RGB565X,
+ 		.code		= MEDIA_BUS_FMT_RGB565_2X8_BE,
+-		.l.width	= 10,
+-		.l.bpp		= 4,
+-		.s.width	= 8,
+-		.s.bpp		= 2,
++		.bitsperpixel	= 16,
+ 	},
+ };
+ 
+@@ -184,9 +154,11 @@ static unsigned int __get_bytesperpixel(struct vpfe_device *vpfe,
+ {
+ 	struct vpfe_subdev_info *sdinfo = vpfe->current_subdev;
+ 	unsigned int bus_width = sdinfo->vpfe_param.bus_width;
+-	u32 bpp;
++	u32 bpp, bus_width_bytes, clocksperpixel;
+ 
+-	bpp = (bus_width == 10) ? fmt->l.bpp : fmt->s.bpp;
++	bus_width_bytes = ALIGN(bus_width, 8) >> 3;
++	clocksperpixel = DIV_ROUND_UP(fmt->bitsperpixel, bus_width);
++	bpp = clocksperpixel * bus_width_bytes;
+ 
+ 	return bpp;
+ }
+diff --git a/drivers/media/platform/am437x/am437x-vpfe.h b/drivers/media/platform/am437x/am437x-vpfe.h
+index aa5ddaec774c..7556cca308c2 100644
+--- a/drivers/media/platform/am437x/am437x-vpfe.h
++++ b/drivers/media/platform/am437x/am437x-vpfe.h
+@@ -215,28 +215,16 @@ struct vpfe_ccdc {
+ 	u32 ccdc_ctx[VPFE_REG_END / sizeof(u32)];
+ };
+ 
+-/*
+- * struct bus_format - VPFE bus format information
+- * width: Bits per pixel (when transferred over a bus)
+- * bpp: Bytes per pixel (when stored in memory)
+- */
+-struct bus_format {
+-	unsigned int width;
+-	unsigned int bpp;
+-};
+-
+ /*
+  * struct vpfe_fmt - VPFE media bus format information
+  * fourcc: V4L2 pixel format code
+  * code: V4L2 media bus format code
+- * l: 10 bit bus format info
+- * s: 8 bit bus format info
++ * bitsperpixel: Bits per pixel over the bus
+  */
+ struct vpfe_fmt {
+ 	u32 fourcc;
+ 	u32 code;
+-	struct bus_format l;
+-	struct bus_format s;
++	u32 bitsperpixel;
+ };
+ 
+ /*
 -- 
 2.17.1
