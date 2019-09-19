@@ -1,7 +1,7 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 2/6] dt-bindings: arm: rockchip: Use libretech for roc-pc binding
-Date: Thu, 19 Sep 2019 10:58:18 +0530
-Message-ID: <20190919052822.10403-3-jagan@amarulasolutions.com>
+Subject: [PATCH 3/6] arm64: dts: rockchip: Use libretech model, compatible for ROC-PC
+Date: Thu, 19 Sep 2019 10:58:19 +0530
+Message-ID: <20190919052822.10403-4-jagan@amarulasolutions.com>
 References: <20190919052822.10403-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -21,42 +21,30 @@ are part of design participation so-that the linux mainline
 code will expose outside world who are the makers of such
 hardware prototypes.
 
-So, update the dt-bindings of ROC-PC with libretch notation
-like other libretech computer boards does.
+So,
+- append the compatible to "libretech,roc-rk3399-pc" and
+- update the model to "Libre Computer Board ROC-RK3399-PC"
+  like other libretech computer boards does.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- Documentation/devicetree/bindings/arm/rockchip.yaml | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 110fcca1a94e..bb65a10e85ce 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -87,11 +87,6 @@ properties:
-           - const: firefly,roc-rk3328-cc
-           - const: rockchip,rk3328
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+index c53f3d571620..e09bcbdd92f5 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+@@ -9,8 +9,8 @@
+ #include "rk3399-opp.dtsi"
  
--      - description: Firefly ROC-RK3399-PC
--        items:
--          - const: firefly,roc-rk3399-pc
--          - const: rockchip,rk3399
--
-       - description: FriendlyElec NanoPi4 series boards
-         items:
-           - enum:
-@@ -364,6 +359,12 @@ properties:
-           - const: leez,p710
-           - const: rockchip,rk3399
+ / {
+-	model = "Firefly ROC-RK3399-PC Board";
+-	compatible = "firefly,roc-rk3399-pc", "rockchip,rk3399";
++	model = "Libre Computer Board ROC-RK3399-PC";
++	compatible = "libretech,roc-rk3399-pc", "firefly,roc-rk3399-pc", "rockchip,rk3399";
  
-+      - description: Libre Computer Board ROC-RK3399-PC
-+        items:
-+          - const: libretech,roc-rk3399-pc
-+          - const: firefly,roc-rk3399-pc
-+          - const: rockchip,rk3399
-+
-       - description: Mecer Xtreme Mini S6
-         items:
-           - const: mecer,xms6
+ 	chosen {
+ 		stdout-path = "serial2:1500000n8";
 -- 
 2.18.0.321.gffc6fa0e3
