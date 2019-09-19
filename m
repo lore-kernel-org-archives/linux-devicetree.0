@@ -1,44 +1,61 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: dmaengine: dma-common: Change
- dma-channel-mask to uint32-array
-Date: Thu, 19 Sep 2019 11:42:58 +0300
-Message-ID: <a1e4bf6a-ad7d-aa72-82c0-5cbb5af5bd0d@ti.com>
-References: <20190910114559.22810-1-peter.ujfalusi@ti.com>
- <20190910114559.22810-2-peter.ujfalusi@ti.com> <20190918132835.GA4527@bogus>
- <d76ffc38-8e68-656a-325b-37de9b01e015@ti.com>
- <CAL_JsqLJn4dmnjU=7kVgiosAU=o+fSJNH6578D92fGbdOR8Zfw@mail.gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v3 02/11] dt-bindings: phy-mtk-tphy: make the ref clock optional
+Date: Thu, 19 Sep 2019 17:10:33 +0800
+Message-ID: <1568884242-22775-2-git-send-email-chunfeng.yun@mediatek.com>
+References: <1568884242-22775-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLJn4dmnjU=7kVgiosAU=o+fSJNH6578D92fGbdOR8Zfw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1568884242-22775-1-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Vinod <vkoul@kernel.org>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Make the ref clock optional, then we no need refer to a fixed-clock
+in DTS anymore when the clock of USB3 PHY comes from oscillator
+directly
 
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+v3: add acked-by Rob
 
-On 18/09/2019 17.21, Rob Herring wrote:
->>>> +          - description: Mask of chnanels X-(X+31)
->>>
->>> Obviously, this was not validated with 'make dt_binding_check'.
->> make dt_bindings_check
->> make: *** No rule to make target 'dt_bindings_check'.  Stop.
-> 
-> Read Documentation/devicetree/writing-schema.md (or .rst in next).
-> 
-> Either your config doesn't have DTC enabled or you don't have
-> dt-schema installed.
+v2: no changes
+---
+ .../devicetree/bindings/phy/phy-mtk-tphy.txt        | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-I have reinstalled dt-schema and added $HOME/.local/bin to PATH and now
-'make dt_binding_check' is working and passing for dma-common.yaml.
-
-For some reason it did not validate the new dma-domain.yaml from another
-series, I guess it need to be added to some list?
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+index ce6abfbdfbe1..1f4a36dd80e0 100644
+--- a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
++++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+@@ -34,12 +34,6 @@ Optional properties (controller (parent) node):
+ 
+ Required properties (port (child) node):
+ - reg		: address and length of the register set for the port.
+-- clocks	: a list of phandle + clock-specifier pairs, one for each
+-		  entry in clock-names
+-- clock-names	: must contain
+-		  "ref": 48M reference clock for HighSpeed analog phy; and 26M
+-			reference clock for SuperSpeed analog phy, sometimes is
+-			24M, 25M or 27M, depended on platform.
+ - #phy-cells	: should be 1 (See second example)
+ 		  cell after port phandle is phy type from:
+ 			- PHY_TYPE_USB2
+@@ -48,6 +42,13 @@ Required properties (port (child) node):
+ 			- PHY_TYPE_SATA
+ 
+ Optional properties (PHY_TYPE_USB2 port (child) node):
++- clocks	: a list of phandle + clock-specifier pairs, one for each
++		  entry in clock-names
++- clock-names	: may contain
++		  "ref": 48M reference clock for HighSpeed anolog phy; and 26M
++			reference clock for SuperSpeed anolog phy, sometimes is
++			24M, 25M or 27M, depended on platform.
++
+ - mediatek,eye-src	: u32, the value of slew rate calibrate
+ - mediatek,eye-vrt	: u32, the selection of VRT reference voltage
+ - mediatek,eye-term	: u32, the selection of HS_TX TERM reference voltage
+-- 
+2.23.0
