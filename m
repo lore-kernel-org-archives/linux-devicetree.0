@@ -1,36 +1,52 @@
-From: Green Wan <green.wan@sifive.com>
-Subject: [PATCH v2 2/3] riscv: dts: add support for PDMA device of HiFive Unleashed Rev A00
-Date: Thu, 19 Sep 2019 15:28:59 +0800
-Message-ID: <20190919072903.2083-1-green.wan@sifive.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-hackers@sifive.com, Green Wan <green.wan@sifive.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Yash Shah <yash.shah@sifive.com>, Sagar Kadam <sagar.kadam@sifive.com>, Bin Meng <bmeng.cn@gmail.com>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v1 1/9] ASoC: wm8994: Do not register inapplicable
+ controls for WM1811
+Date: Thu, 19 Sep 2019 09:38:32 +0200
+Message-ID: <20190919073832.GA13195@pi3>
+References: <20190918104634.15216-1-s.nawrocki@samsung.com>
+ <CGME20190918104653eucas1p2e23ccbd05b3b780300adc9f4cb7a4c49@eucas1p2.samsung.com>
+ <20190918104634.15216-2-s.nawrocki@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190918104634.15216-2-s.nawrocki@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, ckeepax@opensource.cirrus.com, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Add PDMA support to (arch/riscv/boot/dts/sifive/fu540-c000.dtsi)
+On Wed, Sep 18, 2019 at 12:46:26PM +0200, Sylwester Nawrocki wrote:
+> In case of WM1811 device there are currently being registered controls
+> referring to registers not existing on that device.
+> It has been noticed when getting values of "AIF1ADC2 Volume", "AIF1DAC2
+> Volume" controls was failing during ALSA state restoring at boot time:
+>  "amixer: Mixer hw:0 load error: Device or resource busy"
+> 
+> Reading some registers through I2C was failing with EBUSY error and indeed
+> those registers were not available according to the datasheet.
+> 
+> To fix this controls not available on WM1811 are moved to a separate array
+> and registered only for WM8994 and WM8958.
+> 
+> There are some further differences between WM8994 and WM1811, e.g. registers
+> 603h, 604h, 605h, which are not covered in this patch.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  sound/soc/codecs/wm8994.c | 43 +++++++++++++++++++++++----------------
+>  1 file changed, 26 insertions(+), 17 deletions(-)
 
-Signed-off-by: Green Wan <green.wan@sifive.com>
----
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index 42b5ec223100..d3030d7fb45c 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -164,6 +164,13 @@
- 			clocks = <&prci PRCI_CLK_TLCLK>;
- 			status = "disabled";
- 		};
-+		dma: dma@3000000 {
-+			compatible = "sifive,fu540-c000-pdma";
-+			reg = <0x0 0x3000000 0x0 0x8000>;
-+			interrupt-parent = <&plic0>;
-+			interrupts = <23 24 25 26 27 28 29 30>;
-+			#dma-cells = <1>;
-+		};
- 		uart1: serial@10011000 {
- 			compatible = "sifive,fu540-c000-uart", "sifive,uart0";
- 			reg = <0x0 0x10011000 0x0 0x1000>;
--- 
-2.17.1
+Best regards,
+Krzysztof
