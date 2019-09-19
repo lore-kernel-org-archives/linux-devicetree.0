@@ -1,42 +1,134 @@
-From: Schrempf Frieder <frieder.schrempf@kontron.de>
-Subject: Re: [PATCH 2/3] arm64: dts: imx8mm: Use correct clock for usdhc's ipg
- clk
-Date: Thu, 19 Sep 2019 10:04:40 +0000
-Message-ID: <c1c08d49-3473-b4b1-4ed1-f30276ffbbf1@kontron.de>
-References: <1568869559-28611-1-git-send-email-Anson.Huang@nxp.com>
- <1568869559-28611-2-git-send-email-Anson.Huang@nxp.com>
- <c680d114-1c14-6bf8-226c-2fdd98350158@kontron.de>
- <DB3PR0402MB3916B0DE9EBC0B0F6664CE34F5890@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC)
+ driver for SC7180
+Date: Thu, 19 Sep 2019 16:38:19 +0530
+Message-ID: <74643831-1a58-e279-aca3-8753f5fcbe04@codeaurora.org>
+References: <20190918095018.17979-1-tdas@codeaurora.org>
+ <20190918095018.17979-4-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB3916B0DE9EBC0B0F6664CE34F5890@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <20190918095018.17979-4-tdas@codeaurora.org>
 Content-Language: en-US
-Content-ID: <2798A0465DE2B140910482FC94ED1272@snt-world.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Jacky Bai <ping.bai@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Jun Li <jun.li@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "angus@akkea.ca" <angus@akkea.ca>, "ccaione@baylibre.com" <ccaione@baylibre.com>, "agx@sigxcpu.org" <agx@sigxcpu.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Taniya Das <tdas@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
+Cc: David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5zb24sDQoNCk9uIDE5LjA5LjE5IDExOjMxLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gSGks
-IFNjaHJlbXBmDQo+IA0KPj4gSGkgQW5zb24sDQo+Pg0KPj4gSSBoYXZlIGEgcXVlc3Rpb24sIHRo
-YXQgaXMgbm90IGRpcmVjdGx5IHJlbGF0ZWQgdG8gdGhpcyBwYXRjaC4NCj4+IEkgc2VlIHRoYXQg
-Zm9yIHRoZSB1c2RoYzEgYW5kIHVzZGhjMyBub2RlcywgdGhlcmUgaXMgYW4gJ2Fzc2lnbmVkLWNs
-b2NrJw0KPj4gYW5kICdhc3NpZ25lZC1jbG9jay1yYXRlcycgcHJvcGVydHkgYnV0IG5vdCBmb3Ig
-dXNkaGMyLiBUaGUgc2FtZSBhcHBsaWVzIHRvDQo+PiB0aGUgbXg4bXEgYW5kIG14OG1uIGR0c2kg
-ZmlsZS4NCj4+DQo+PiBJcyB0aGVyZSBhbnkgcmVhc29uIGZvciB0aGlzPyBJZiBub3QgY2FuIHlv
-dSBmaXggaXQ/DQo+IA0KPiBUaGlzIHBhdGNoIHNlcmllcyBpcyBOT1QgcmVsYXRlZCB0byAnYXNz
-aWduZWQtY2xvY2snIG9yICdhc3NpZ25lZC1jbG9jay1yYXRlcycNCj4gcHJvcGVydHksDQoNClRo
-YXQncyBleGFjdGx5IHdoYXQgSSdtIHNheWluZy4gVG8gbm90IGNhdXNlIG1vcmUgY29uZnVzaW9u
-LCBJIGhhdmUgc2VudCANCmEgbWVzc2FnZSBpbiBhIG5ldyB0aHJlYWQ6IA0KaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LWFybS1rZXJuZWwvMjAxOS1TZXB0ZW1iZXIv
-NjgxNDI2Lmh0bWwNCg0KPiBpdCBpcyBqdXN0IGZvciBjb3JyZWN0aW5nIGNsb2NrIHNvdXJjZSBh
-Y2NvcmRpbmcgdG8gcmVmZXJlbmNlIG1hbnVhbCwNCj4gdGhlICdpcGcnIGNsb2NrIGlzIGZyb20g
-c3lzdGVtJ3MgSVBHX1JPT1QgY2xvY2sgYWNjb3JkaW5nIHRvIHJlZmVyZW5jZSBtYW51YWwgQ0NN
-DQo+IGNoYXB0ZXIsIHVzaW5nIERVTU1ZIGNsb2NrIGlzIE5PVCBhIGdvb2Qgb3B0aW9uLCB0aGUg
-J2lwZycgY2xvY2sgaXMgc3VwcG9zZWQNCj4gdG8gYmUgdGhlIGNsb2NrIGZvciBhY2Nlc3Npbmcg
-cmVnaXN0ZXIsIGFuZCBpdCBzaG91bGQgTk9UIGJlIERVTU1ZIGlmIHdlIGtub3cNCj4gd2hhdCBl
-eGFjdGx5IHRoZSBjbG9jayBzb3VyY2UgaXMgdXNlZC4NCg0KVGhhdCdzIHByb2JhYmx5IHJpZ2h0
-IGFuZCBJIGRpZG4ndCBtZWFuIHRvIHF1ZXN0aW9uIHRoZSBwYXRjaCBhdCBhbGwuDQoNClRoYW5r
-cywNCkZyaWVkZXI=
+[]..
+
+> +static struct clk_rcg_dfs_data gcc_dfs_clocks[] = {
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s0_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s1_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s2_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s3_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s4_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap0_s5_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s0_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s1_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s2_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s3_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s4_clk_src),
+> +	DEFINE_RCG_DFS(gcc_qupv3_wrap1_s5_clk_src),
+> +};
+
+this fails to build..
+
+In file included from drivers/clk/qcom/gcc-sc7180.c:17:0:
+drivers/clk/qcom/gcc-sc7180.c:2429:17: error: ‘gcc_qupv3_wrap0_s0_clk_src_src’ undeclared here (not in a function)
+   DEFINE_RCG_DFS(gcc_qupv3_wrap0_s0_clk_src),
+                  ^
+drivers/clk/qcom/clk-rcg.h:171:12: note: in definition of macro ‘DEFINE_RCG_DFS’
+   { .rcg = &r##_src, .init = &r##_init }
+             ^
+drivers/clk/qcom/gcc-sc7180.c:2430:17: error: ‘gcc_qupv3_wrap0_s1_clk_src_src’ undeclared here (not in a function)
+   DEFINE_RCG_DFS(gcc_qupv3_wrap0_s1_clk_src),
+                  ^
+drivers/clk/qcom/clk-rcg.h:171:12: note: in definition of macro ‘DEFINE_RCG_DFS’
+   { .rcg = &r##_src, .init = &r##_init }
+             ^
+Perhaps you should drop _src here and in the clk_init_data names.
+
+> +
+> +static const struct regmap_config gcc_sc7180_regmap_config = {
+> +	.reg_bits = 32,
+> +	.reg_stride = 4,
+> +	.val_bits = 32,
+> +	.max_register = 0x18208c,
+> +	.fast_io = true,
+> +};
+> +
+> +static const struct qcom_cc_desc gcc_sc7180_desc = {
+> +	.config = &gcc_sc7180_regmap_config,
+> +	.clk_hws = gcc_sc7180_hws,
+> +	.num_clk_hws = ARRAY_SIZE(gcc_sc7180_hws),
+> +	.clks = gcc_sc7180_clocks,
+> +	.num_clks = ARRAY_SIZE(gcc_sc7180_clocks),
+> +	.resets = gcc_sc7180_resets,
+> +	.num_resets = ARRAY_SIZE(gcc_sc7180_resets),
+> +	.gdscs = gcc_sc7180_gdscs,
+> +	.num_gdscs = ARRAY_SIZE(gcc_sc7180_gdscs),
+> +};
+> +
+> +static const struct of_device_id gcc_sc7180_match_table[] = {
+> +	{ .compatible = "qcom,gcc-sc7180" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, gcc_sc7180_match_table);
+> +
+> +static int gcc_sc7180_probe(struct platform_device *pdev)
+> +{
+> +	struct regmap *regmap;
+> +	int ret;
+> +
+> +	regmap = qcom_cc_map(pdev, &gcc_sc7180_desc);
+> +	if (IS_ERR(regmap))
+> +		return PTR_ERR(regmap);
+> +
+> +	/*
+> +	 * Disable the GPLL0 active input to MM blocks, NPU
+> +	 * and GPU via MISC registers.
+> +	 */
+> +	regmap_update_bits(regmap, GCC_MMSS_MISC, 0x3, 0x3);
+> +	regmap_update_bits(regmap, GCC_NPU_MISC, 0x3, 0x3);
+> +	regmap_update_bits(regmap, GCC_GPU_MISC, 0x3, 0x3);
+> +
+> +	ret = qcom_cc_register_rcg_dfs(regmap, gcc_dfs_clocks,
+> +					ARRAY_SIZE(gcc_dfs_clocks));
+> +	if (ret)
+> +		return ret;
+> +
+> +	return qcom_cc_really_probe(pdev, &gcc_sc7180_desc, regmap);
+> +}
+> +
+> +static struct platform_driver gcc_sc7180_driver = {
+> +	.probe = gcc_sc7180_probe,
+> +	.driver = {
+> +		.name = "gcc-sc7180",
+> +		.of_match_table = gcc_sc7180_match_table,
+> +	},
+> +};
+> +
+> +static int __init gcc_sc7180_init(void)
+> +{
+> +	return platform_driver_register(&gcc_sc7180_driver);
+> +}
+> +subsys_initcall(gcc_sc7180_init);
+> +
+> +static void __exit gcc_sc7180_exit(void)
+> +{
+> +	platform_driver_unregister(&gcc_sc7180_driver);
+> +}
+> +module_exit(gcc_sc7180_exit);
+> +
+> +MODULE_DESCRIPTION("QTI GCC SC7180 Driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
