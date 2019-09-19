@@ -1,58 +1,49 @@
-From: Vincent Cheng <vincent.cheng.xh@renesas.com>
-Subject: Re: [PATCH 2/2] ptp: Add a ptp clock driver for IDT ClockMatrix.
-Date: Thu, 19 Sep 2019 20:24:33 +0000
-Message-ID: <20190919202420.GA523@renesas.com>
-References: <1568837198-27211-1-git-send-email-vincent.cheng.xh@renesas.com>
- <1568837198-27211-2-git-send-email-vincent.cheng.xh@renesas.com>
- <20190918211803.GO9591@lunn.ch>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v2 1/7] media: i2c: ov2659: Fix for image wrap-around in lower resolution
+Date: Thu, 19 Sep 2019 15:39:49 -0500
+Message-ID: <20190919203955.15125-2-bparrot@ti.com>
+References: <20190919203955.15125-1-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190918211803.GO9591@lunn.ch>
-Content-Language: en-US
-Content-ID: <9E69184D96F5444C9E7334F3A28A364E@jpnprd01.prod.outlook.com>
+In-Reply-To: <20190919203955.15125-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "richardcochran@gmail.com" <richardcochran@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcmV3LA0KDQpPbiBXZWQsIFNlcCAxOCwgMjAxOSBhdCAwNToxODowM1BNIEVEVCwgQW5k
-cmV3IEx1bm4gd3JvdGU6DQo+T24gV2VkLCBTZXAgMTgsIDIwMTkgYXQgMDQ6MDY6MzhQTSAtMDQw
-MCwgdmluY2VudC5jaGVuZy54aEByZW5lc2FzLmNvbSB3cm90ZToNCj4NCj4+ICtzdGF0aWMgczMy
-IGlkdGNtX3hmZXIoc3RydWN0IGlkdGNtICppZHRjbSwNCj4+ICsJCSAgICAgIHU4IHJlZ2FkZHIs
-DQo+PiArCQkgICAgICB1OCAqYnVmLA0KPj4gKwkJICAgICAgdTE2IGNvdW50LA0KPj4gKwkJICAg
-ICAgYm9vbCB3cml0ZSkNCj4+ICt7DQo+PiArCXN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQgPSBp
-ZHRjbS0+Y2xpZW50Ow0KPj4gKwlzdHJ1Y3QgaTJjX21zZyBtc2dbMl07DQo+PiArCXMzMiBjbnQ7
-DQo+PiArDQo+PiArCW1zZ1swXS5hZGRyID0gY2xpZW50LT5hZGRyOw0KPj4gKwltc2dbMF0uZmxh
-Z3MgPSAwOw0KPj4gKwltc2dbMF0ubGVuID0gMTsNCj4+ICsJbXNnWzBdLmJ1ZiA9ICZyZWdhZGRy
-Ow0KPj4gKw0KPj4gKwltc2dbMV0uYWRkciA9IGNsaWVudC0+YWRkcjsNCj4+ICsJbXNnWzFdLmZs
-YWdzID0gd3JpdGUgPyAwIDogSTJDX01fUkQ7DQo+PiArCW1zZ1sxXS5sZW4gPSBjb3VudDsNCj4+
-ICsJbXNnWzFdLmJ1ZiA9IGJ1ZjsNCj4+ICsNCj4+ICsJY250ID0gaTJjX3RyYW5zZmVyKGNsaWVu
-dC0+YWRhcHRlciwgbXNnLCAyKTsNCj4+ICsNCj4+ICsJaWYgKGNudCA8IDApIHsNCj4+ICsJCXBy
-X2VycigiaTJjX3RyYW5zZmVyIHJldHVybmVkICVkXG4iLCBjbnQpOw0KPg0KPmRldl9lcnIoY2xp
-ZW50LT5kZXYsICJpMmNfdHJhbnNmZXIgcmV0dXJuZWQgJWRcbiIsIGNudCk7DQo+DQo+V2UgdGhl
-biBoYXZlIGFuIGlkZWEgd2hpY2ggZGV2aWNlIGhhcyBhIHRyYW5zZmVyIGVycm9yLg0KPg0KPlBs
-ZWFzZSB0cnkgdG8gbm90IHVzZSBwcl9lcnIoKSB3aGVuIHlvdSBoYXZlIHNvbWUgc29ydCBvZiBk
-ZXZpY2UuDQoNClN1cmUgdGhpbmcsIHdpbGwgcmVwbGFjZSBwcl9lcnIoKSB3aXRoIGRldl9lcnIo
-KS4NCg0KPj4gK3N0YXRpYyBzMzIgaWR0Y21fc3RhdGVfbWFjaGluZV9yZXNldChzdHJ1Y3QgaWR0
-Y20gKmlkdGNtKQ0KPj4gK3sNCj4+ICsJczMyIGVycjsNCj4+ICsJdTggYnl0ZSA9IFNNX1JFU0VU
-X0NNRDsNCj4+ICsNCj4+ICsJZXJyID0gaWR0Y21fd3JpdGUoaWR0Y20sIFJFU0VUX0NUUkwsIFNN
-X1JFU0VULCAmYnl0ZSwgc2l6ZW9mKGJ5dGUpKTsNCj4+ICsNCj4+ICsJaWYgKCFlcnIpIHsNCj4+
-ICsJCS8qIGRlbGF5ICovDQo+PiArCQlzZXRfY3VycmVudF9zdGF0ZShUQVNLX0lOVEVSUlVQVElC
-TEUpOw0KPj4gKwkJc2NoZWR1bGVfdGltZW91dChfbXNlY3NfdG9famlmZmllcyhQT1NUX1NNX1JF
-U0VUX0RFTEFZX01TKSk7DQo+DQo+TWF5YmUgdXNlIG1zbGVlcF9pbnRlcnJ1cHRhYmxlKCk/IA0K
-DQpZZXMsIHdpbGwgdHJ5IHVzaW5nIG1zbGVlcF9pbnRlcnJ1cHRhYmxlKCkgYW5kIHdpbGwgcmVw
-bGFjZSBpZiBpdCB3b3Jrcy4NCg0KPj4gK3N0YXRpYyBzMzIgaWR0Y21fbG9hZF9maXJtd2FyZShz
-dHJ1Y3QgaWR0Y20gKmlkdGNtLA0KPj4gKwkJCSAgICAgICBzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+
-PiArew0KPj4gKwljb25zdCBzdHJ1Y3QgZmlybXdhcmUgKmZ3Ow0KPj4gKwlzdHJ1Y3QgaWR0Y21f
-ZndyYyAqcmVjOw0KPj4gKwl1MzIgcmVnYWRkcjsNCj4+ICsJczMyIGVycjsNCj4+ICsJczMyIGxl
-bjsNCj4+ICsJdTggdmFsOw0KPj4gKwl1OCBsb2FkZHI7DQo+PiArDQo+PiArCXByX2luZm8oInJl
-cXVlc3RpbmcgZmlybXdhcmUgJyVzJ1xuIiwgRldfRklMRU5BTUUpOw0KPg0KPmRldl9kZWJ1Zygp
-DQoNClRoYW5rcywgd2lsbCBtYWtlIHRoZSBjaGFuZ2UuDQoNCj4+ICsNCj4+ICsJZXJyID0gcmVx
-dWVzdF9maXJtd2FyZSgmZncsIEZXX0ZJTEVOQU1FLCBkZXYpOw0KPj4gKw0KPj4gKwlpZiAoZXJy
-KQ0KPj4gKwkJcmV0dXJuIGVycjsNCj4+ICsNCj4+ICsJcHJfaW5mbygiZmlybXdhcmUgc2l6ZSAl
-enUgYnl0ZXNcbiIsIGZ3LT5zaXplKTsNCj4NCj5kZXZfZGVidWcoKQ0KPg0KPk1heWJlIGxvb2sg
-dGhyb3VnaCBhbGwgeW91ciBwcl9pbmZvIGFuZCBkb3duZ3JhZGUgbW9zdCBvZiB0aGVtIHRvDQo+
-ZGV2X2RlYnVnKCkNCg0KWWVzLCB3aWxsIGdvIHRocm91Z2ggYW5kIGRvd25ncmFkZSB0byBkZXZf
-ZGVidWcoKSBhY2NvcmRpbmdseS4NCg0KVGhhbmtzLA0KVmluY2VudA0K
+Based on recently found sensor configuration examples, it was
+discovered that when scaling and binning are used for the lower
+resolutions (i.e. 640x480, 320x240) the read offset has to be
+increased otherwise the image appears to be wrapped around.
+
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ drivers/media/i2c/ov2659.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+index f4ded0669ff9..17573257097d 100644
+--- a/drivers/media/i2c/ov2659.c
++++ b/drivers/media/i2c/ov2659.c
+@@ -661,7 +661,7 @@ static struct sensor_register ov2659_vga[] = {
+ 	{ REG_TIMING_HORIZ_FORMAT, 0x01 },
+ 	{ 0x370a, 0x52 },
+ 	{ REG_VFIFO_READ_START_H, 0x00 },
+-	{ REG_VFIFO_READ_START_L, 0x80 },
++	{ REG_VFIFO_READ_START_L, 0xa0 },
+ 	{ REG_ISP_CTRL02, 0x10 },
+ 	{ REG_NULL, 0x00 },
+ };
+@@ -709,7 +709,7 @@ static  struct sensor_register ov2659_qvga[] = {
+ 	{ REG_TIMING_HORIZ_FORMAT, 0x01 },
+ 	{ 0x370a, 0x52 },
+ 	{ REG_VFIFO_READ_START_H, 0x00 },
+-	{ REG_VFIFO_READ_START_L, 0x80 },
++	{ REG_VFIFO_READ_START_L, 0xa0 },
+ 	{ REG_ISP_CTRL02, 0x10 },
+ 	{ REG_NULL, 0x00 },
+ };
+-- 
+2.17.1
