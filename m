@@ -1,54 +1,41 @@
-From: "Ramuthevar, Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: Re: [PATCH v1 2/2] spi: cadence-qspi: Add QSPI support for Intel LGM
- SoC
-Date: Thu, 19 Sep 2019 13:45:02 +0800
-Message-ID: <f31b82ff-478e-bf28-0898-96f5bdfacc61@linux.intel.com>
-References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190916073843.39618-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190916113255.GA4352@sirena.co.uk>
- <466b41c1-3d65-0bf4-6db7-d3b3e06b107b@linux.intel.com>
- <20190917153650.GF3524@sirena.co.uk>
- <eeefa79b-0a3b-5d62-3a1b-c1e9dcb03aa7@linux.intel.com>
- <20190918120846.GH2596@sirena.co.uk>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2] of: restore old handling of cells_name=NULL in
+ of_*_phandle_with_args()
+Date: Thu, 19 Sep 2019 08:19:44 +0200
+Message-ID: <20190919061943.ga7jwdn4ednulvgs@pengutronix.de>
+References: <20190918063837.8196-1-u.kleine-koenig@pengutronix.de>
+ <b00ca30f-2c06-7722-96b2-123d15751cb6@axentia.se>
+ <20190918084748.hnjkiq7wc5b35wjh@pengutronix.de>
+ <CAL_JsqJuJrOj+D4xkGACC1=zaB5OUkt=SNzCOiOiTVtM9E9z+A@mail.gmail.com>
+ <20190918201954.2phyqxqhoj5jwklt@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190918120846.GH2596@sirena.co.uk>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190918201954.2phyqxqhoj5jwklt@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Frank Rowand <frowand.list@gmail.com>, Joerg Roedel <joro@8bytes.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Matthias Brugger <matthias.bgg@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>, Peter Rosin <peda@axentia.se>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Wed, Sep 18, 2019 at 10:19:54PM +0200, Uwe Kleine-König wrote:
+> On Wed, Sep 18, 2019 at 03:09:06PM -0500, Rob Herring wrote:
+> > Can I get a proper patch please.
+> 
+> I don't understand what is wrong with my patch. Can you please expand
+> what you are missing? I just tried to git-am it and the result looks
+> fine.
 
-    Thank you for the comments and queries.
+I see that the commit this patch is fixing isn't in Linus' tree yet. Do
+you want instead of this commit fixing the previous one a single good
+patch that replaces e42ee61017f5 ("of: Let of_for_each_phandle fallback
+to non-negative cell_count")?
 
-On 18/9/2019 8:08 PM, Mark Brown wrote:
-> On Wed, Sep 18, 2019 at 01:59:06PM +0800, Ramuthevar, Vadivel MuruganX wrote:
->> On 17/9/2019 11:36 PM, Mark Brown wrote:
->>> On Tue, Sep 17, 2019 at 10:11:28AM +0800, Ramuthevar, Vadivel MuruganX wrote:
->>>> *    spi-cadence.c* in *drivers/spi/*, which supports very old legacy
->>>> cadence-spi based devices(normal)
->>>> *    cadence-quadspi.c(drivers/mtd/spi-nor/)* : specific support to SPI-NOR
->>>> flash with new spi-nor layer.
->>>>       all the API's in this driver purely on spi-nor specific, so couldn't
->>>> proceed to adapt.
->>> Are these completely separate IPs or are they just different versions of
->>> the same IP?
->> These are same IPs , but different features Enabled/Disabled depends upon
->> the SoC vendors.
->> for e.g: Intel LGM SoC uses the same IP, but without DMA and Direct access
->> controller.
->> also dedicated support to flash devices.
-> If it's different versions of the same IP then everything should be in
-> one driver with the optional features enabled depending on what's in a
-> given system.
-Agreed!, I am trying to adapt the driver/mtd/spi-nor/cadence-quadspi.c 
-and newly sent patches
-in a single driver file, also trying to use spi_mem_ops framework.
+Best regards
+Uwe
 
-With Best Regards
-Vadivel
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
