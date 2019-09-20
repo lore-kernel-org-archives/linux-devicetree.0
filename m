@@ -1,48 +1,41 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: [PATCH v16 18/19] MAINTAINERS: add proc sysctl KUnit test to PROC
- SYSCTL section
-Date: Fri, 20 Sep 2019 16:19:22 -0700
-Message-ID: <20190920231923.141900-19-brendanhiggins@google.com>
-References: <20190920231923.141900-1-brendanhiggins@google.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v4 09/15] arm64: dts: msm8996: thermal: Add interrupt support
+Date: Fri, 20 Sep 2019 16:19:52 -0700
+Message-ID: <5d855e99.1c69fb81.1d457.733b@mx.google.com>
+References: <cover.1569015835.git.amit.kucheria@linaro.org> <f627e66c455f52b5662bef6526d7c72869808401.1569015835.git.amit.kucheria@linaro.org> <5d854c82.1c69fb81.66e1f.96ab@mx.google.com> <CAHLCerPqEK2sSGGtDj85DH+qCzgtWi4ainuQv8BgQ3-Dgi93BQ@mail.gmail.com> <5d854e1d.1c69fb81.4f771.9391@mx.google.com> <CAHLCerNqsf1j4vsOPjdav8+UtXtGP55k6_==jjg1QeZ1qCX1RA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190920231923.141900-1-brendanhiggins@google.com>
+In-Reply-To: <CAHLCerNqsf1j4vsOPjdav8+UtXtGP55k6_==jjg1QeZ1qCX1RA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, torvalds@linux-foundation.org, Brendan Higgins <brendanhiggins@google.com>, Iurii Zaikin <yzaikin@google.com>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Brian Masney <masneyb@onstation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add entry for the new proc sysctl KUnit test to the PROC SYSCTL section,
-and add Iurii as a maintainer.
+Quoting Amit Kucheria (2019-09-20 15:14:58)
+> On Fri, Sep 20, 2019 at 3:09 PM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Ok so the plan is to change DT and then change it back? That sounds
+> > quite bad so please fix the thermal core to not care about this before
+> > applying these changes so that we don't churn DT.
+>=20
+> Hi Stephen,
+>=20
+> Our emails crossed paths. I think we could just make the property
+> optional so that we can remove the property completely for drivers
+> that support interrupts. Comments?
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Cc: Iurii Zaikin <yzaikin@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+OK. This means that the delay properties become irrelevant once an
+interrupt is there? I guess that's OK. My concern is that we need to
+choose one or the other when it would be simpler to have both and
+fallback to the delays so that DT migration strategies are purely
+additive. It's not like the delays aren't calculated to be those numbers
+anymore. They're just not going to be used.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e3d0d184ae4e..6663d4accd36 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12983,12 +12983,14 @@ F:	Documentation/filesystems/proc.txt
- PROC SYSCTL
- M:	Luis Chamberlain <mcgrof@kernel.org>
- M:	Kees Cook <keescook@chromium.org>
-+M:	Iurii Zaikin <yzaikin@google.com>
- L:	linux-kernel@vger.kernel.org
- L:	linux-fsdevel@vger.kernel.org
- S:	Maintained
- F:	fs/proc/proc_sysctl.c
- F:	include/linux/sysctl.h
- F:	kernel/sysctl.c
-+F:	kernel/sysctl-test.c
- F:	tools/testing/selftests/sysctl/
- 
- PS3 NETWORK SUPPORT
--- 
-2.23.0.351.gc4317032e6-goog
+>=20
+> That is a bigger change to the bindings and I don't want to hold the
+> tsens interrupt support hostage to agreement on this.
+
+Alright. I admit I haven't looked into the details but is it hard for
+some reason to make it use interrupts before delays?
