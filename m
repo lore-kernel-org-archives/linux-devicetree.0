@@ -1,107 +1,49 @@
 From: Brendan Higgins <brendanhiggins@google.com>
-Subject: [PATCH v16 14/19] kunit: defconfig: add defconfigs for building KUnit
- tests
-Date: Fri, 20 Sep 2019 16:19:18 -0700
-Message-ID: <20190920231923.141900-15-brendanhiggins@google.com>
+Subject: [PATCH v16 16/19] MAINTAINERS: add entry for KUnit the unit testing framework
+Date: Fri, 20 Sep 2019 16:19:20 -0700
+Message-ID: <20190920231923.141900-17-brendanhiggins@google.com>
 References: <20190920231923.141900-1-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190920231923.141900-1-brendanhiggins@google.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: pmladek@suse.com, linux-doc@vger.kernel.org, amir73il@gmail.com, Brendan Higgins <brendanhiggins@google.com>, dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, khilman@baylibre.com, knut.omang@oracle.com, wfg@linux.intel.com, joel@jms.id.au, rientjes@google.com, jdike@addtoit.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, linux-um@lists.infradead.org, rostedt@goodmis.org, julia.lawall@lip6.fr, kunit-dev@googlegroups.com, richard@nod.at, torvalds@linux-foundation.org, rdunlap@infradead.org, linux-kernel@vger.kernel.org, mpe@ellerman.id.au, linux-fsdevel@vger.kernel.org, logang@deltatee.com
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, torvalds@linux-foundation.org, Brendan Higgins <brendanhiggins@google.com>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGRlZmNvbmZpZyBmb3IgVU1MIGFuZCBhIGZyYWdtZW50IHRoYXQgY2FuIGJlIHVzZWQgdG8g
-Y29uZmlndXJlIG90aGVyCmFyY2hpdGVjdHVyZXMgZm9yIGJ1aWxkaW5nIEtVbml0IHRlc3RzLiBB
-ZGQgb3B0aW9uIHRvIGt1bml0X3Rvb2wgdG8gdXNlCmEgZGVmY29uZmlnIHRvIGNyZWF0ZSB0aGUg
-a3VuaXRjb25maWcuCgpTaWduZWQtb2ZmLWJ5OiBCcmVuZGFuIEhpZ2dpbnMgPGJyZW5kYW5oaWdn
-aW5zQGdvb2dsZS5jb20+ClJldmlld2VkLWJ5OiBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBs
-aW51eGZvdW5kYXRpb24ub3JnPgpSZXZpZXdlZC1ieTogTG9nYW4gR3VudGhvcnBlIDxsb2dhbmdA
-ZGVsdGF0ZWUuY29tPgpSZXZpZXdlZC1ieTogU3RlcGhlbiBCb3lkIDxzYm95ZEBrZXJuZWwub3Jn
-PgotLS0KIGFyY2gvdW0vY29uZmlncy9rdW5pdF9kZWZjb25maWcgICAgICAgICAgICAgIHwgIDMg
-KysrCiB0b29scy90ZXN0aW5nL2t1bml0L2NvbmZpZ3MvYWxsX3Rlc3RzLmNvbmZpZyB8ICAzICsr
-KwogdG9vbHMvdGVzdGluZy9rdW5pdC9rdW5pdC5weSAgICAgICAgICAgICAgICAgfCAyOCArKysr
-KysrKysrKysrKysrKy0tLQogdG9vbHMvdGVzdGluZy9rdW5pdC9rdW5pdF9rZXJuZWwucHkgICAg
-ICAgICAgfCAgMyArKy0KIDQgZmlsZXMgY2hhbmdlZCwgMzIgaW5zZXJ0aW9ucygrKSwgNSBkZWxl
-dGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL3VtL2NvbmZpZ3Mva3VuaXRfZGVmY29u
-ZmlnCiBjcmVhdGUgbW9kZSAxMDA2NDQgdG9vbHMvdGVzdGluZy9rdW5pdC9jb25maWdzL2FsbF90
-ZXN0cy5jb25maWcKCmRpZmYgLS1naXQgYS9hcmNoL3VtL2NvbmZpZ3Mva3VuaXRfZGVmY29uZmln
-IGIvYXJjaC91bS9jb25maWdzL2t1bml0X2RlZmNvbmZpZwpuZXcgZmlsZSBtb2RlIDEwMDY0NApp
-bmRleCAwMDAwMDAwMDAwMDAuLjkyMzViN2Q0MmQzOAotLS0gL2Rldi9udWxsCisrKyBiL2FyY2gv
-dW0vY29uZmlncy9rdW5pdF9kZWZjb25maWcKQEAgLTAsMCArMSwzIEBACitDT05GSUdfS1VOSVQ9
-eQorQ09ORklHX0tVTklUX1RFU1Q9eQorQ09ORklHX0tVTklUX0VYQU1QTEVfVEVTVD15CmRpZmYg
-LS1naXQgYS90b29scy90ZXN0aW5nL2t1bml0L2NvbmZpZ3MvYWxsX3Rlc3RzLmNvbmZpZyBiL3Rv
-b2xzL3Rlc3Rpbmcva3VuaXQvY29uZmlncy9hbGxfdGVzdHMuY29uZmlnCm5ldyBmaWxlIG1vZGUg
-MTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uOTIzNWI3ZDQyZDM4Ci0tLSAvZGV2L251bGwKKysr
-IGIvdG9vbHMvdGVzdGluZy9rdW5pdC9jb25maWdzL2FsbF90ZXN0cy5jb25maWcKQEAgLTAsMCAr
-MSwzIEBACitDT05GSUdfS1VOSVQ9eQorQ09ORklHX0tVTklUX1RFU1Q9eQorQ09ORklHX0tVTklU
-X0VYQU1QTEVfVEVTVD15CmRpZmYgLS1naXQgYS90b29scy90ZXN0aW5nL2t1bml0L2t1bml0LnB5
-IGIvdG9vbHMvdGVzdGluZy9rdW5pdC9rdW5pdC5weQppbmRleCBkYTExYmQ2MmE0YjguLjA5NDRk
-ZWE1YzMyMSAxMDA3NTUKLS0tIGEvdG9vbHMvdGVzdGluZy9rdW5pdC9rdW5pdC5weQorKysgYi90
-b29scy90ZXN0aW5nL2t1bml0L2t1bml0LnB5CkBAIC0xMSw2ICsxMSw3IEBAIGltcG9ydCBhcmdw
-YXJzZQogaW1wb3J0IHN5cwogaW1wb3J0IG9zCiBpbXBvcnQgdGltZQoraW1wb3J0IHNodXRpbAog
-CiBmcm9tIGNvbGxlY3Rpb25zIGltcG9ydCBuYW1lZHR1cGxlCiBmcm9tIGVudW0gaW1wb3J0IEVu
-dW0sIGF1dG8KQEAgLTIxLDcgKzIyLDcgQEAgaW1wb3J0IGt1bml0X3BhcnNlcgogCiBLdW5pdFJl
-c3VsdCA9IG5hbWVkdHVwbGUoJ0t1bml0UmVzdWx0JywgWydzdGF0dXMnLCdyZXN1bHQnXSkKIAot
-S3VuaXRSZXF1ZXN0ID0gbmFtZWR0dXBsZSgnS3VuaXRSZXF1ZXN0JywgWydyYXdfb3V0cHV0Jywn
-dGltZW91dCcsICdqb2JzJywgJ2J1aWxkX2RpciddKQorS3VuaXRSZXF1ZXN0ID0gbmFtZWR0dXBs
-ZSgnS3VuaXRSZXF1ZXN0JywgWydyYXdfb3V0cHV0JywndGltZW91dCcsICdqb2JzJywgJ2J1aWxk
-X2RpcicsICdkZWZjb25maWcnXSkKIAogY2xhc3MgS3VuaXRTdGF0dXMoRW51bSk6CiAJU1VDQ0VT
-UyA9IGF1dG8oKQpAQCAtMjksOCArMzAsMTYgQEAgY2xhc3MgS3VuaXRTdGF0dXMoRW51bSk6CiAJ
-QlVJTERfRkFJTFVSRSA9IGF1dG8oKQogCVRFU1RfRkFJTFVSRSA9IGF1dG8oKQogCitkZWYgY3Jl
-YXRlX2RlZmF1bHRfa3VuaXRjb25maWcoKToKKwlpZiBub3Qgb3MucGF0aC5leGlzdHMoa3VuaXRf
-a2VybmVsLktVTklUQ09ORklHX1BBVEgpOgorCQlzaHV0aWwuY29weWZpbGUoJ2FyY2gvdW0vY29u
-Zmlncy9rdW5pdF9kZWZjb25maWcnLAorCQkJCWt1bml0X2tlcm5lbC5LVU5JVENPTkZJR19QQVRI
-KQorCiBkZWYgcnVuX3Rlc3RzKGxpbnV4OiBrdW5pdF9rZXJuZWwuTGludXhTb3VyY2VUcmVlLAog
-CSAgICAgIHJlcXVlc3Q6IEt1bml0UmVxdWVzdCkgLT4gS3VuaXRSZXN1bHQ6CisJaWYgcmVxdWVz
-dC5kZWZjb25maWc6CisJCWNyZWF0ZV9kZWZhdWx0X2t1bml0Y29uZmlnKCkKKwogCWNvbmZpZ19z
-dGFydCA9IHRpbWUudGltZSgpCiAJc3VjY2VzcyA9IGxpbnV4LmJ1aWxkX3JlY29uZmlnKHJlcXVl
-c3QuYnVpbGRfZGlyKQogCWNvbmZpZ19lbmQgPSB0aW1lLnRpbWUoKQpAQCAtNzIsNyArODEsNyBA
-QCBkZWYgcnVuX3Rlc3RzKGxpbnV4OiBrdW5pdF9rZXJuZWwuTGludXhTb3VyY2VUcmVlLAogCWVs
-c2U6CiAJCXJldHVybiBLdW5pdFJlc3VsdChLdW5pdFN0YXR1cy5TVUNDRVNTLCB0ZXN0X3Jlc3Vs
-dCkKIAotZGVmIG1haW4oYXJndiwgbGludXgpOgorZGVmIG1haW4oYXJndiwgbGludXg9Tm9uZSk6
-CiAJcGFyc2VyID0gYXJncGFyc2UuQXJndW1lbnRQYXJzZXIoCiAJCQlkZXNjcmlwdGlvbj0nSGVs
-cHMgd3JpdGluZyBhbmQgcnVubmluZyBLVW5pdCB0ZXN0cy4nKQogCXN1YnBhcnNlciA9IHBhcnNl
-ci5hZGRfc3VicGFyc2VycyhkZXN0PSdzdWJjb21tYW5kJykKQEAgLTk5LDEzICsxMDgsMjQgQEAg
-ZGVmIG1haW4oYXJndiwgbGludXgpOgogCQkJCSdkaXJlY3RvcnkuJywKIAkJCQl0eXBlPXN0ciwg
-ZGVmYXVsdD1Ob25lLCBtZXRhdmFyPSdidWlsZF9kaXInKQogCisJcnVuX3BhcnNlci5hZGRfYXJn
-dW1lbnQoJy0tZGVmY29uZmlnJywKKwkJCQloZWxwPSdVc2VzIGEgZGVmYXVsdCBrdW5pdGNvbmZp
-Zy4nLAorCQkJCWFjdGlvbj0nc3RvcmVfdHJ1ZScpCisKIAljbGlfYXJncyA9IHBhcnNlci5wYXJz
-ZV9hcmdzKGFyZ3YpCiAKIAlpZiBjbGlfYXJncy5zdWJjb21tYW5kID09ICdydW4nOgorCQlpZiBj
-bGlfYXJncy5kZWZjb25maWc6CisJCQljcmVhdGVfZGVmYXVsdF9rdW5pdGNvbmZpZygpCisKKwkJ
-aWYgbm90IGxpbnV4OgorCQkJbGludXggPSBrdW5pdF9rZXJuZWwuTGludXhTb3VyY2VUcmVlKCkK
-KwogCQlyZXF1ZXN0ID0gS3VuaXRSZXF1ZXN0KGNsaV9hcmdzLnJhd19vdXRwdXQsCiAJCQkJICAg
-ICAgIGNsaV9hcmdzLnRpbWVvdXQsCiAJCQkJICAgICAgIGNsaV9hcmdzLmpvYnMsCi0JCQkJICAg
-ICAgIGNsaV9hcmdzLmJ1aWxkX2RpcikKKwkJCQkgICAgICAgY2xpX2FyZ3MuYnVpbGRfZGlyLAor
-CQkJCSAgICAgICBjbGlfYXJncy5kZWZjb25maWcpCiAJCXJlc3VsdCA9IHJ1bl90ZXN0cyhsaW51
-eCwgcmVxdWVzdCkKIAkJaWYgcmVzdWx0LnN0YXR1cyAhPSBLdW5pdFN0YXR1cy5TVUNDRVNTOgog
-CQkJc3lzLmV4aXQoMSkKQEAgLTExMyw0ICsxMzMsNCBAQCBkZWYgbWFpbihhcmd2LCBsaW51eCk6
-CiAJCXBhcnNlci5wcmludF9oZWxwKCkKIAogaWYgX19uYW1lX18gPT0gJ19fbWFpbl9fJzoKLQlt
-YWluKHN5cy5hcmd2WzE6XSwga3VuaXRfa2VybmVsLkxpbnV4U291cmNlVHJlZSgpKQorCW1haW4o
-c3lzLmFyZ3ZbMTpdKQpkaWZmIC0tZ2l0IGEvdG9vbHMvdGVzdGluZy9rdW5pdC9rdW5pdF9rZXJu
-ZWwucHkgYi90b29scy90ZXN0aW5nL2t1bml0L2t1bml0X2tlcm5lbC5weQppbmRleCAwN2MwYWJm
-MmY0N2QuLmJmMzg3NjgzNTMzMSAxMDA2NDQKLS0tIGEvdG9vbHMvdGVzdGluZy9rdW5pdC9rdW5p
-dF9rZXJuZWwucHkKKysrIGIvdG9vbHMvdGVzdGluZy9rdW5pdC9rdW5pdF9rZXJuZWwucHkKQEAg
-LTE0LDYgKzE0LDcgQEAgaW1wb3J0IG9zCiBpbXBvcnQga3VuaXRfY29uZmlnCiAKIEtDT05GSUdf
-UEFUSCA9ICcuY29uZmlnJworS1VOSVRDT05GSUdfUEFUSCA9ICdrdW5pdGNvbmZpZycKIAogY2xh
-c3MgQ29uZmlnRXJyb3IoRXhjZXB0aW9uKToKIAkiIiJSZXByZXNlbnRzIGFuIGVycm9yIHRyeWlu
-ZyB0byBjb25maWd1cmUgdGhlIExpbnV4IGtlcm5lbC4iIiIKQEAgLTgxLDcgKzgyLDcgQEAgY2xh
-c3MgTGludXhTb3VyY2VUcmVlKG9iamVjdCk6CiAKIAlkZWYgX19pbml0X18oc2VsZik6CiAJCXNl
-bGYuX2tjb25maWcgPSBrdW5pdF9jb25maWcuS2NvbmZpZygpCi0JCXNlbGYuX2tjb25maWcucmVh
-ZF9mcm9tX2ZpbGUoJ2t1bml0Y29uZmlnJykKKwkJc2VsZi5fa2NvbmZpZy5yZWFkX2Zyb21fZmls
-ZShLVU5JVENPTkZJR19QQVRIKQogCQlzZWxmLl9vcHMgPSBMaW51eFNvdXJjZVRyZWVPcGVyYXRp
-b25zKCkKIAogCWRlZiBjbGVhbihzZWxmKToKLS0gCjIuMjMuMC4zNTEuZ2M0MzE3MDMyZTYtZ29v
-ZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Add myself as maintainer of KUnit, the Linux kernel's unit testing
+framework.
+
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+---
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a50e97a63bc8..e3d0d184ae4e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8802,6 +8802,17 @@ S:	Maintained
+ F:	tools/testing/selftests/
+ F:	Documentation/dev-tools/kselftest*
+ 
++KERNEL UNIT TESTING FRAMEWORK (KUnit)
++M:	Brendan Higgins <brendanhiggins@google.com>
++L:	linux-kselftest@vger.kernel.org
++L:	kunit-dev@googlegroups.com
++W:	https://google.github.io/kunit-docs/third_party/kernel/docs/
++S:	Maintained
++F:	Documentation/dev-tools/kunit/
++F:	include/kunit/
++F:	lib/kunit/
++F:	tools/testing/kunit/
++
+ KERNEL USERMODE HELPER
+ M:	Luis Chamberlain <mcgrof@kernel.org>
+ L:	linux-kernel@vger.kernel.org
+-- 
+2.23.0.351.gc4317032e6-goog
