@@ -1,57 +1,89 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [RFC PATCH] arm: dts: integratorap: Remove top level dma-ranges
-Date: Fri, 20 Sep 2019 10:36:22 -0500
-Message-ID: <20190920153622.14616-1-robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Convert Samsung SoC watchdog
+ bindings to json-schema
+Date: Fri, 20 Sep 2019 10:46:27 -0500
+Message-ID: <CAL_JsqLtQ4yYJJiUcBrje+6SKiaXTmF-Cej_=ykeWKO+9ytM4Q@mail.gmail.com>
+References: <20190907144541.16949-1-krzk@kernel.org> <20190912170145.GA17889@bogus>
+ <CAJKOXPfsUw-+yRc=GF+t=1pE7D3dF_wpRUwZpmfLnRbDyEmKeQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPfsUw-+yRc=GF+t=1pE7D3dF_wpRUwZpmfLnRbDyEmKeQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-'dma-ranges' at the top level doesn't make sense. 'dma-ranges' implies
-there is a parent bus node with '#address-cells' and '#size-cells' which
-is impossible here.
+On Wed, Sep 18, 2019 at 6:26 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Fri, 13 Sep 2019 at 16:36, Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Sat, Sep 07, 2019 at 04:45:40PM +0200, Krzysztof Kozlowski wrote:
+> > > Convert Samsung S3C/S5P/Exynos watchdog bindings to DT schema format
+> > > using json-schema.
+> > >
+> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > ---
+> > >  .../bindings/watchdog/samsung-wdt.txt         | 35 ----------
+> > >  .../bindings/watchdog/samsung-wdt.yaml        | 69 +++++++++++++++++++
+> > >  2 files changed, 69 insertions(+), 35 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
+> >
+> >
+> > > diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
+> > > new file mode 100644
+> > > index 000000000000..39f1ca3bc4db
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
+> > > @@ -0,0 +1,69 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/watchdog/samsung-wdt.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Samsung SoC Watchdog Timer Controller
+> > > +
+> > > +maintainers:
+> > > +  - Krzysztof Kozlowski <krzk@kernel.org>
+> > > +
+> > > +description: |+
+> > > +  The Samsung's Watchdog controller is used for resuming system operation
+> > > +  after a preset amount of time during which the WDT reset event has not
+> > > +  occurred.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    enum:
+> > > +      - samsung,s3c2410-wdt                   # for S3C2410
+> > > +      - samsung,s3c6410-wdt                   # for S3C6410, S5PV210 and Exynos4
+> > > +      - samsung,exynos5250-wdt                # for Exynos5250
+> > > +      - samsung,exynos5420-wdt                # for Exynos5420
+> > > +      - samsung,exynos7-wdt                   # for Exynos7
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  samsung,syscon-phandle:
+> > > +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> > > +    description:
+> > > +      Phandle to the PMU system controller node (in case of Exynos5250
+> > > +      and Exynos5420).
+> > > +
+> > > +  timeout-sec:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description:
+> > > +      Watchdog timeout in seconds.
+> >
+> > We need a common schema for this and the node name.
+>
+> Common schema in dt-schema or in Linux kernel bindings? If the latter,
+> I can add it.
 
-Likely this translation needs to be moved down to sub-nodes that need
-it.
+In the kernel is fine.
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-This probably worked due to bugs in dma-ranges address translations (or 
-lack of).
-
-AFAICT, only PCI needs dma-ranges. The TRM says inbound PCI addresses 
-are 1:1. So a translation from child address 0x80000000 to cpu address 
-0x0 seems wrong. The v3 PCI driver also fails to look at parent nodes 
-for dma-ranges.
-
- arch/arm/boot/dts/integratorap.dts | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/integratorap.dts b/arch/arm/boot/dts/integratorap.dts
-index 94d2ff9836d0..198d66181c50 100644
---- a/arch/arm/boot/dts/integratorap.dts
-+++ b/arch/arm/boot/dts/integratorap.dts
-@@ -9,7 +9,6 @@
- / {
- 	model = "ARM Integrator/AP";
- 	compatible = "arm,integrator-ap";
--	dma-ranges = <0x80000000 0x0 0x80000000>;
- 
- 	cpus {
- 		#address-cells = <1>;
--- 
-2.20.1
+Rob
