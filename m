@@ -1,44 +1,48 @@
-From: Stephen Boyd <sboyd@kernel.org>
+From: Brendan Higgins <brendanhiggins@google.com>
 Subject: Re: [PATCH v16 06/19] lib: enable building KUnit in lib/
-Date: Fri, 20 Sep 2019 16:35:59 -0700
-Message-ID: <20190920233600.48BBA20644@mail.kernel.org>
-References: <20190920231923.141900-1-brendanhiggins@google.com> <20190920231923.141900-7-brendanhiggins@google.com>
+Date: Fri, 20 Sep 2019 16:44:38 -0700
+Message-ID: <CAFd5g46pndA_gOD9i8M5e5fb8x4mSL9mcgMDujN7XufeFs8bmQ@mail.gmail.com>
+References: <20190920231923.141900-1-brendanhiggins@google.com>
+ <20190920231923.141900-7-brendanhiggins@google.com> <20190920233600.48BBA20644@mail.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190920231923.141900-7-brendanhiggins@google.com>
+In-Reply-To: <20190920233600.48BBA20644@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, torvalds@linux-foundation.org, Brendan Higgins <brendanhiggins@google.com>, Andrew Morton <akpm@linux-foundation.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brendan Higgins (2019-09-20 16:19:10)
-> KUnit is a new unit testing framework for the kernel and when used is
-> built into the kernel as a part of it. Add KUnit to the lib Kconfig and
-> Makefile to allow it to be actually built.
->=20
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> ---
->  lib/Kconfig.debug | 2 ++
->  lib/Makefile      | 2 ++
->  2 files changed, 4 insertions(+)
->=20
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 5960e2980a8a..5870fbe11e9b 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2144,4 +2144,6 @@ config IO_STRICT_DEVMEM
-> =20
->  source "arch/$(SRCARCH)/Kconfig.debug"
-> =20
-> +source "lib/kunit/Kconfig"
-> +
+On Fri, Sep 20, 2019 at 4:36 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Brendan Higgins (2019-09-20 16:19:10)
+> > KUnit is a new unit testing framework for the kernel and when used is
+> > built into the kernel as a part of it. Add KUnit to the lib Kconfig and
+> > Makefile to allow it to be actually built.
+> >
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> > Cc: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > ---
+> >  lib/Kconfig.debug | 2 ++
+> >  lib/Makefile      | 2 ++
+> >  2 files changed, 4 insertions(+)
+> >
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index 5960e2980a8a..5870fbe11e9b 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -2144,4 +2144,6 @@ config IO_STRICT_DEVMEM
+> >
+> >  source "arch/$(SRCARCH)/Kconfig.debug"
+> >
+> > +source "lib/kunit/Kconfig"
+> > +
+>
+> Perhaps this should go by the "Runtime Testing" part? Before or after.
 
-Perhaps this should go by the "Runtime Testing" part? Before or after.
+Yeah, that probably makes sense.
 
->  endmenu # Kernel hacking
+> >  endmenu # Kernel hacking
