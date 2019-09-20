@@ -1,249 +1,88 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [Patch v2 5/7] media: i2c: ov2659: Add powerdown/reset gpio
- handling
-Date: Fri, 20 Sep 2019 13:17:06 +0300
-Message-ID: <20190920101706.GX5781@paasikivi.fi.intel.com>
-References: <20190919203955.15125-1-bparrot@ti.com>
- <20190919203955.15125-6-bparrot@ti.com>
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
+ max-speed
+Date: Fri, 20 Sep 2019 11:36:22 +0100
+Message-ID: <20190920103622.GL25745@shell.armlinux.org.uk>
+References: <20190917133942.GR25745@shell.armlinux.org.uk>
+ <20190917151707.GV25745@shell.armlinux.org.uk>
+ <20190917153027.GW25745@shell.armlinux.org.uk>
+ <20190917163427.GA1475935@arch-dsk-01>
+ <20190917170419.GX25745@shell.armlinux.org.uk>
+ <20190917171913.GY25745@shell.armlinux.org.uk>
+ <20190917172658.GB9591@lunn.ch>
+ <20190917173728.GZ25745@shell.armlinux.org.uk>
+ <20190917181905.GA25745@shell.armlinux.org.uk>
+ <20190917183934.GJ20778@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190919203955.15125-6-bparrot@ti.com>
+In-Reply-To: <20190917183934.GJ20778@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Baruch Siach <baruch@tkos.co.il>, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, tinywrkb <tinywrkb@gmail.com>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
-
-Thanks for the update.
-
-On Thu, Sep 19, 2019 at 03:39:53PM -0500, Benoit Parrot wrote:
-> On some board it is possible that the sensor 'powerdown' and or 'reset'
-> pin might be controlled by gpio instead of being tied.
+On Tue, Sep 17, 2019 at 08:39:34PM +0200, Andrew Lunn wrote:
+> > > Well, the _correct_ driver needs to be used for the PHY specific
+> > > features to be properly controlled.  Using the generic driver
+> > > in this situation will not be guaranteed to work.
 > 
-> To implement we add pm_runtime support which will handle the power
-> up/down sequence.
+> I fully agree about the PHY driver. I'm expect this device is
+> violating c22 when it modifies the advertisement register itself. So
+> all bets are off for the genphy.
 > 
-> Now originally the driver assumed tat the sensor would always stay
-> powered and there keep its register setting. We cannot assume that this
-> anymore, so every time we "power up" we need to re-program the initial
-> registers configuration first. This was previously done only at probe
-> time.
+> > Well, this hasn't worked, but not for the obvious reason.  Register 0x14
+> > is documented as read/write.  Bits 15:6 are reserved, bit 5 is the
+> > smart speed enable, 4:2 configures the attempts, bit 1 sets the link
+> > stable condition, bit 0 is reserved.
+> > 
+> > Writing 0x80c results in the register reading back 0x82c.  Writing
+> > 0x800 results in the same.  Writing 0 reads back 0x2c.  Writing 0xffff
+> > seems to prevent packets being passed - and at that point I lost
+> > control so I couldn't see what the result was.
+> > 
+> > There is nothing in the data sheet which suggests that there is any
+> > gating of this register.  So it looks like we're stuck with smartspeed
+> > enabled.
+> > 
+> > So, I think there's only two remaining ways forward - to revert commit
+> > 5502b218e001 to restore the old behaviour, read back the advertisement
+> > from the PHY along with the rest of the status, as I've previously
+> > stated.  It means that phylib will modify phydev->advertising at
+> > random points, just as it modifies phydev->lp_advertising, so locking
+> > may become an issue.  The revert approach is probably best until we
+> > have something working along those lines.
 > 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  drivers/media/i2c/Kconfig  |  2 +-
->  drivers/media/i2c/ov2659.c | 88 +++++++++++++++++++++++++++++++++++++-
->  2 files changed, 88 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> index 7eee1812bba3..315c1d8bdb7b 100644
-> --- a/drivers/media/i2c/Kconfig
-> +++ b/drivers/media/i2c/Kconfig
-> @@ -634,7 +634,7 @@ config VIDEO_OV2640
->  config VIDEO_OV2659
->  	tristate "OmniVision OV2659 sensor support"
->  	depends on VIDEO_V4L2 && I2C
-> -	depends on MEDIA_CAMERA_SUPPORT
-> +	depends on MEDIA_CAMERA_SUPPORT && GPIOLIB
->  	select V4L2_FWNODE
->  	help
->  	  This is a Video4Linux2 sensor driver for the OmniVision
-> diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-> index f77320e8a60d..170f80a1a51f 100644
-> --- a/drivers/media/i2c/ov2659.c
-> +++ b/drivers/media/i2c/ov2659.c
-> @@ -22,9 +22,11 @@
->  
->  #include <linux/clk.h>
->  #include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/i2c.h>
->  #include <linux/module.h>
->  #include <linux/of_graph.h>
-> +#include <linux/pm_runtime.h>
->  
->  #include <media/i2c/ov2659.h>
->  #include <media/v4l2-ctrls.h>
-> @@ -218,6 +220,11 @@ struct ov2659 {
->  	struct sensor_register *format_ctrl_regs;
->  	struct ov2659_pll_ctrl pll;
->  	int streaming;
-> +	/* used to control the sensor PWDN pin */
-> +	struct gpio_desc *pwdn_gpio;
-> +	/* used to control the sensor RESETB pin */
-> +	struct gpio_desc *resetb_gpio;
-> +	int on;
->  };
->  
->  static const struct sensor_register ov2659_init_regs[] = {
-> @@ -1184,9 +1191,17 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
->  		/* Stop Streaming Sequence */
->  		ov2659_set_streaming(ov2659, 0);
->  		ov2659->streaming = on;
-> +		pm_runtime_put(&client->dev);
->  		goto unlock;
->  	}
->  
-> +	ret = pm_runtime_get_sync(&client->dev);
-> +	if (ret < 0) {
-> +		pm_runtime_put_noidle(&client->dev);
-> +		goto unlock;
-> +	}
-> +
-> +	ov2659_init(sd, 0);
->  	ov2659_set_pixel_clock(ov2659);
->  	ov2659_set_frame_size(ov2659);
->  	ov2659_set_format(ov2659);
-> @@ -1243,6 +1258,32 @@ static const char * const ov2659_test_pattern_menu[] = {
->  	"Vertical Color Bars",
->  };
->  
-> +static int ov2659_set_power(struct ov2659 *ov2659, int on)
-> +{
-> +	struct i2c_client *client = ov2659->client;
-> +
-> +	dev_dbg(&client->dev, "%s: on: %d\n", __func__, on);
-> +
-> +	if (on) {
-> +		if (ov2659->pwdn_gpio)
-> +			gpiod_direction_output(ov2659->pwdn_gpio, 0);
-> +
-> +		if (ov2659->resetb_gpio) {
-> +			gpiod_set_value(ov2659->resetb_gpio, 1);
-> +			usleep_range(500, 1000);
-> +			gpiod_set_value(ov2659->resetb_gpio, 0);
-> +			usleep_range(3000, 5000);
-> +		}
+> We have a couple of other PHYs which support downshift. We should see
+> if we can follow what they do. What is i think important is that
+> read_status return the correct speed. So we probably cannot use
+> genphy_read_status() as is. Maybe we should split genphy_read_status()
+> into two, so the register reading bit can be done unconditionally by
+> phy drivers for hardware which don't report link down when they
+> should?
 
-Please move the code to the runtime PM callbacks.
+I think we need to check how the downshift feature works on other PHYs
+and whether it is enabled there.
 
-> +	} else {
-> +		if (ov2659->pwdn_gpio)
-> +			gpiod_direction_output(ov2659->pwdn_gpio, 1);
+Looking at the Marvell 88e151x PHYs, they have the feature, but do not
+enable it by default.  If firmware has enabled the feature, phylib will
+incorrectly resolve the link speed based on just the advertisements.
 
-Gpiod API works with NULL GPIOs, too, so no need to check here.
+I think the safest way in the case of both PHYs to ascertain the real
+link speed is to read the Specific Status register - register 17 in
+both cases.  The top two bits indicate the negotiated speed resolution
+and bit 13 indicates the duplex.  Bit 11 indicates whether the
+resolution is valid.  This register layout seems to apply to both
+88e151x and AR8035.
 
-Isn't the direction supposed to be already output, so set_value would be
-more appropriate here, and above.
-
-> +	}
-> +
-> +	ov2659->on = on;
-> +
-> +	return 0;
-> +}
-> +
->  /* -----------------------------------------------------------------------------
->   * V4L2 subdev internal operations
->   */
-> @@ -1323,7 +1364,6 @@ static int ov2659_detect(struct v4l2_subdev *sd)
->  			ret = -ENODEV;
->  		} else {
->  			dev_info(&client->dev, "Found OV%04X sensor\n", id);
-> -			ret = ov2659_init(sd, 0);
->  		}
->  	}
->  
-> @@ -1400,6 +1440,18 @@ static int ov2659_probe(struct i2c_client *client)
->  	    ov2659->xvclk_frequency > 27000000)
->  		return -EINVAL;
->  
-> +	/* Optional gpio don't fail if not present */
-> +	ov2659->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
-> +						    GPIOD_OUT_LOW);
-> +	if (IS_ERR(ov2659->pwdn_gpio))
-> +		return PTR_ERR(ov2659->pwdn_gpio);
-> +
-> +	/* Optional gpio don't fail if not present */
-> +	ov2659->resetb_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-> +						      GPIOD_OUT_HIGH);
-> +	if (IS_ERR(ov2659->resetb_gpio))
-> +		return PTR_ERR(ov2659->resetb_gpio);
-> +
->  	v4l2_ctrl_handler_init(&ov2659->ctrls, 2);
->  	ov2659->link_frequency =
->  			v4l2_ctrl_new_std(&ov2659->ctrls, &ov2659_ctrl_ops,
-> @@ -1445,6 +1497,9 @@ static int ov2659_probe(struct i2c_client *client)
->  	ov2659->frame_size = &ov2659_framesizes[2];
->  	ov2659->format_ctrl_regs = ov2659_formats[0].format_ctrl_regs;
->  
-> +	pm_runtime_enable(&client->dev);
-> +	pm_runtime_get_sync(&client->dev);
-
-This makes the driver depend on runtime PM.
-
-See e.g. the smiapp driver for an example how to make it work without. It
-wasn't trivial. :I You won't need autosuspend.
-
-> +
->  	ret = ov2659_detect(sd);
->  	if (ret < 0)
->  		goto error;
-> @@ -1458,10 +1513,14 @@ static int ov2659_probe(struct i2c_client *client)
->  
->  	dev_info(&client->dev, "%s sensor driver registered !!\n", sd->name);
->  
-> +	pm_runtime_put(&client->dev);
-> +
->  	return 0;
->  
->  error:
->  	v4l2_ctrl_handler_free(&ov2659->ctrls);
-> +	pm_runtime_put(&client->dev);
-> +	pm_runtime_disable(&client->dev);
->  	media_entity_cleanup(&sd->entity);
->  	mutex_destroy(&ov2659->lock);
->  	return ret;
-> @@ -1477,9 +1536,35 @@ static int ov2659_remove(struct i2c_client *client)
->  	media_entity_cleanup(&sd->entity);
->  	mutex_destroy(&ov2659->lock);
->  
-> +	pm_runtime_disable(&client->dev);
-> +
->  	return 0;
->  }
->  
-> +static int ov2659_runtime_suspend(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> +	struct ov2659 *ov2659 = to_ov2659(sd);
-> +
-> +	ov2659_set_power(ov2659, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ov2659_runtime_resume(struct device *dev)
-> +{
-> +	struct i2c_client *client = to_i2c_client(dev);
-> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> +	struct ov2659 *ov2659 = to_ov2659(sd);
-> +
-> +	return ov2659_set_power(ov2659, 1);
-> +}
-> +
-> +static const struct dev_pm_ops ov2659_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(ov2659_runtime_suspend, ov2659_runtime_resume, NULL)
-> +};
-> +
->  static const struct i2c_device_id ov2659_id[] = {
->  	{ "ov2659", 0 },
->  	{ /* sentinel */ },
-> @@ -1497,6 +1582,7 @@ MODULE_DEVICE_TABLE(of, ov2659_of_match);
->  static struct i2c_driver ov2659_i2c_driver = {
->  	.driver = {
->  		.name	= DRIVER_NAME,
-> +		.pm	= &ov2659_pm_ops,
->  		.of_match_table = of_match_ptr(ov2659_of_match),
->  	},
->  	.probe_new	= ov2659_probe,
+The register also contains the pause mode resolution in terms of
+receive or transmit pause enabled, but this is not useful to phylib
+as that is not what phylib wants to know.  However, it probably makes
+sense for phylib to resolve the pause mode negotiation itself rather
+than having that logic in the MAC drivers.
 
 -- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
