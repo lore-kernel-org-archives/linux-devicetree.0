@@ -1,230 +1,267 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2] dt-bindings: crypto: samsung: Convert SSS and SlimSSS bindings to json-schema
-Date: Fri, 20 Sep 2019 18:36:35 +0200
-Message-ID: <20190920163635.9186-1-krzk@kernel.org>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [Patch v2 5/7] media: i2c: ov2659: Add powerdown/reset gpio
+ handling
+Date: Fri, 20 Sep 2019 11:55:29 -0500
+Message-ID: <20190920165529.it7urirm6epg4woq@ti.com>
+References: <20190919203955.15125-1-bparrot@ti.com>
+ <20190919203955.15125-6-bparrot@ti.com>
+ <20190920101706.GX5781@paasikivi.fi.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190920101706.GX5781@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>, Kamil Konieczny <k.konieczny@partner.samsung.com>, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Convert Samsung Exynos Security SubSystem (SSS) and SlimSSS hardware
-crypto accelerator bindings to DT schema format using json-schema.
+Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Fri [2019-Sep-20 13:17:06 +0300]:
+> Hi Benoit,
+> 
+> Thanks for the update.
+> 
+> On Thu, Sep 19, 2019 at 03:39:53PM -0500, Benoit Parrot wrote:
+> > On some board it is possible that the sensor 'powerdown' and or 'reset'
+> > pin might be controlled by gpio instead of being tied.
+> > 
+> > To implement we add pm_runtime support which will handle the power
+> > up/down sequence.
+> > 
+> > Now originally the driver assumed tat the sensor would always stay
+> > powered and there keep its register setting. We cannot assume that this
+> > anymore, so every time we "power up" we need to re-program the initial
+> > registers configuration first. This was previously done only at probe
+> > time.
+> > 
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/i2c/Kconfig  |  2 +-
+> >  drivers/media/i2c/ov2659.c | 88 +++++++++++++++++++++++++++++++++++++-
+> >  2 files changed, 88 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> > index 7eee1812bba3..315c1d8bdb7b 100644
+> > --- a/drivers/media/i2c/Kconfig
+> > +++ b/drivers/media/i2c/Kconfig
+> > @@ -634,7 +634,7 @@ config VIDEO_OV2640
+> >  config VIDEO_OV2659
+> >  	tristate "OmniVision OV2659 sensor support"
+> >  	depends on VIDEO_V4L2 && I2C
+> > -	depends on MEDIA_CAMERA_SUPPORT
+> > +	depends on MEDIA_CAMERA_SUPPORT && GPIOLIB
+> >  	select V4L2_FWNODE
+> >  	help
+> >  	  This is a Video4Linux2 sensor driver for the OmniVision
+> > diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+> > index f77320e8a60d..170f80a1a51f 100644
+> > --- a/drivers/media/i2c/ov2659.c
+> > +++ b/drivers/media/i2c/ov2659.c
+> > @@ -22,9 +22,11 @@
+> >  
+> >  #include <linux/clk.h>
+> >  #include <linux/delay.h>
+> > +#include <linux/gpio/consumer.h>
+> >  #include <linux/i2c.h>
+> >  #include <linux/module.h>
+> >  #include <linux/of_graph.h>
+> > +#include <linux/pm_runtime.h>
+> >  
+> >  #include <media/i2c/ov2659.h>
+> >  #include <media/v4l2-ctrls.h>
+> > @@ -218,6 +220,11 @@ struct ov2659 {
+> >  	struct sensor_register *format_ctrl_regs;
+> >  	struct ov2659_pll_ctrl pll;
+> >  	int streaming;
+> > +	/* used to control the sensor PWDN pin */
+> > +	struct gpio_desc *pwdn_gpio;
+> > +	/* used to control the sensor RESETB pin */
+> > +	struct gpio_desc *resetb_gpio;
+> > +	int on;
+> >  };
+> >  
+> >  static const struct sensor_register ov2659_init_regs[] = {
+> > @@ -1184,9 +1191,17 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
+> >  		/* Stop Streaming Sequence */
+> >  		ov2659_set_streaming(ov2659, 0);
+> >  		ov2659->streaming = on;
+> > +		pm_runtime_put(&client->dev);
+> >  		goto unlock;
+> >  	}
+> >  
+> > +	ret = pm_runtime_get_sync(&client->dev);
+> > +	if (ret < 0) {
+> > +		pm_runtime_put_noidle(&client->dev);
+> > +		goto unlock;
+> > +	}
+> > +
+> > +	ov2659_init(sd, 0);
+> >  	ov2659_set_pixel_clock(ov2659);
+> >  	ov2659_set_frame_size(ov2659);
+> >  	ov2659_set_format(ov2659);
+> > @@ -1243,6 +1258,32 @@ static const char * const ov2659_test_pattern_menu[] = {
+> >  	"Vertical Color Bars",
+> >  };
+> >  
+> > +static int ov2659_set_power(struct ov2659 *ov2659, int on)
+> > +{
+> > +	struct i2c_client *client = ov2659->client;
+> > +
+> > +	dev_dbg(&client->dev, "%s: on: %d\n", __func__, on);
+> > +
+> > +	if (on) {
+> > +		if (ov2659->pwdn_gpio)
+> > +			gpiod_direction_output(ov2659->pwdn_gpio, 0);
+> > +
+> > +		if (ov2659->resetb_gpio) {
+> > +			gpiod_set_value(ov2659->resetb_gpio, 1);
+> > +			usleep_range(500, 1000);
+> > +			gpiod_set_value(ov2659->resetb_gpio, 0);
+> > +			usleep_range(3000, 5000);
+> > +		}
+> 
+> Please move the code to the runtime PM callbacks.
+> 
+> > +	} else {
+> > +		if (ov2659->pwdn_gpio)
+> > +			gpiod_direction_output(ov2659->pwdn_gpio, 1);
+> 
+> Gpiod API works with NULL GPIOs, too, so no need to check here.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Didn't realize that. I'll check.
 
----
+> 
+> Isn't the direction supposed to be already output, so set_value would be
+> more appropriate here, and above.
 
-Rebased on linux-next due to conflicting change in MAINTAINERS file
-coming through arm-soc tree.
+Oh yeah the direction should already be set.
 
-Changes since v1:
-1. Add additionalProperties:false
----
- .../bindings/crypto/samsung-slimsss.txt       | 19 ------
- .../bindings/crypto/samsung-slimsss.yaml      | 47 +++++++++++++++
- .../bindings/crypto/samsung-sss.txt           | 32 ----------
- .../bindings/crypto/samsung-sss.yaml          | 58 +++++++++++++++++++
- MAINTAINERS                                   |  4 +-
- 5 files changed, 107 insertions(+), 53 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/crypto/samsung-slimsss.txt
- create mode 100644 Documentation/devicetree/bindings/crypto/samsung-slimsss.yaml
- delete mode 100644 Documentation/devicetree/bindings/crypto/samsung-sss.txt
- create mode 100644 Documentation/devicetree/bindings/crypto/samsung-sss.yaml
+> 
+> > +	}
+> > +
+> > +	ov2659->on = on;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  /* -----------------------------------------------------------------------------
+> >   * V4L2 subdev internal operations
+> >   */
+> > @@ -1323,7 +1364,6 @@ static int ov2659_detect(struct v4l2_subdev *sd)
+> >  			ret = -ENODEV;
+> >  		} else {
+> >  			dev_info(&client->dev, "Found OV%04X sensor\n", id);
+> > -			ret = ov2659_init(sd, 0);
+> >  		}
+> >  	}
+> >  
+> > @@ -1400,6 +1440,18 @@ static int ov2659_probe(struct i2c_client *client)
+> >  	    ov2659->xvclk_frequency > 27000000)
+> >  		return -EINVAL;
+> >  
+> > +	/* Optional gpio don't fail if not present */
+> > +	ov2659->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
+> > +						    GPIOD_OUT_LOW);
+> > +	if (IS_ERR(ov2659->pwdn_gpio))
+> > +		return PTR_ERR(ov2659->pwdn_gpio);
+> > +
+> > +	/* Optional gpio don't fail if not present */
+> > +	ov2659->resetb_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+> > +						      GPIOD_OUT_HIGH);
+> > +	if (IS_ERR(ov2659->resetb_gpio))
+> > +		return PTR_ERR(ov2659->resetb_gpio);
+> > +
+> >  	v4l2_ctrl_handler_init(&ov2659->ctrls, 2);
+> >  	ov2659->link_frequency =
+> >  			v4l2_ctrl_new_std(&ov2659->ctrls, &ov2659_ctrl_ops,
+> > @@ -1445,6 +1497,9 @@ static int ov2659_probe(struct i2c_client *client)
+> >  	ov2659->frame_size = &ov2659_framesizes[2];
+> >  	ov2659->format_ctrl_regs = ov2659_formats[0].format_ctrl_regs;
+> >  
+> > +	pm_runtime_enable(&client->dev);
+> > +	pm_runtime_get_sync(&client->dev);
+> 
+> This makes the driver depend on runtime PM.
 
-diff --git a/Documentation/devicetree/bindings/crypto/samsung-slimsss.txt b/Documentation/devicetree/bindings/crypto/samsung-slimsss.txt
-deleted file mode 100644
-index 7ec9a5a7727a..000000000000
---- a/Documentation/devicetree/bindings/crypto/samsung-slimsss.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--Samsung SoC SlimSSS (Slim Security SubSystem) module
--
--The SlimSSS module in Exynos5433 SoC supports the following:
---- Feeder (FeedCtrl)
---- Advanced Encryption Standard (AES) with ECB,CBC,CTR,XTS and (CBC/XTS)/CTS
---- SHA-1/SHA-256 and (SHA-1/SHA-256)/HMAC
--
--Required properties:
--
--- compatible : Should contain entry for slimSSS version:
--  - "samsung,exynos5433-slim-sss" for Exynos5433 SoC.
--- reg : Offset and length of the register set for the module
--- interrupts : interrupt specifiers of SlimSSS module interrupts (one feed
--		control interrupt).
--
--- clocks : list of clock phandle and specifier pairs for all clocks listed in
--		clock-names property.
--- clock-names : list of device clock input names; should contain "pclk" and
--		"aclk" for slim-sss in Exynos5433.
-diff --git a/Documentation/devicetree/bindings/crypto/samsung-slimsss.yaml b/Documentation/devicetree/bindings/crypto/samsung-slimsss.yaml
-new file mode 100644
-index 000000000000..04fe5dfa794a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/samsung-slimsss.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/crypto/samsung-slimsss.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung Exynos SoC SlimSSS (Slim Security SubSystem) module
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+  - Kamil Konieczny <k.konieczny@partner.samsung.com>
-+
-+description: |+
-+  The SlimSSS module in Exynos5433 SoC supports the following:
-+  -- Feeder (FeedCtrl)
-+  -- Advanced Encryption Standard (AES) with ECB,CBC,CTR,XTS and (CBC/XTS)/CTS
-+  -- SHA-1/SHA-256 and (SHA-1/SHA-256)/HMAC
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: samsung,exynos5433-slim-ss
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 2
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: pclk
-+      - const: aclk
-+
-+  interrupts:
-+    description: One feed control interrupt.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clock-names
-+  - clocks
-+  - interrupts
-+
-+additionalProperties: false
-diff --git a/Documentation/devicetree/bindings/crypto/samsung-sss.txt b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
-deleted file mode 100644
-index 7a5ca56683cc..000000000000
---- a/Documentation/devicetree/bindings/crypto/samsung-sss.txt
-+++ /dev/null
-@@ -1,32 +0,0 @@
--Samsung SoC SSS (Security SubSystem) module
--
--The SSS module in S5PV210 SoC supports the following:
---- Feeder (FeedCtrl)
---- Advanced Encryption Standard (AES)
---- Data Encryption Standard (DES)/3DES
---- Public Key Accelerator (PKA)
---- SHA-1/SHA-256/MD5/HMAC (SHA-1/SHA-256/MD5)/PRNG
---- PRNG: Pseudo Random Number Generator
--
--The SSS module in Exynos4 (Exynos4210) and
--Exynos5 (Exynos5420 and Exynos5250) SoCs
--supports the following also:
---- ARCFOUR (ARC4)
---- True Random Number Generator (TRNG)
---- Secure Key Manager
--
--Required properties:
--
--- compatible : Should contain entries for this and backward compatible
--  SSS versions:
--  - "samsung,s5pv210-secss" for S5PV210 SoC.
--  - "samsung,exynos4210-secss" for Exynos4210, Exynos4212, Exynos4412, Exynos5250,
--		Exynos5260 and Exynos5420 SoCs.
--- reg : Offset and length of the register set for the module
--- interrupts : interrupt specifiers of SSS module interrupts (one feed
--		control interrupt).
--
--- clocks : list of clock phandle and specifier pairs for all clocks  listed in
--		clock-names property.
--- clock-names : list of device clock input names; should contain one entry
--		"secss".
-diff --git a/Documentation/devicetree/bindings/crypto/samsung-sss.yaml b/Documentation/devicetree/bindings/crypto/samsung-sss.yaml
-new file mode 100644
-index 000000000000..cf1c47a81d7f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/samsung-sss.yaml
-@@ -0,0 +1,58 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/crypto/samsung-sss.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung Exynos SoC SSS (Security SubSystem) module
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+  - Kamil Konieczny <k.konieczny@partner.samsung.com>
-+
-+description: |+
-+  The SSS module in S5PV210 SoC supports the following:
-+  -- Feeder (FeedCtrl)
-+  -- Advanced Encryption Standard (AES)
-+  -- Data Encryption Standard (DES)/3DES
-+  -- Public Key Accelerator (PKA)
-+  -- SHA-1/SHA-256/MD5/HMAC (SHA-1/SHA-256/MD5)/PRNG
-+  -- PRNG: Pseudo Random Number Generator
-+
-+  The SSS module in Exynos4 (Exynos4210) and Exynos5 (Exynos5420 and Exynos5250)
-+  SoCs supports the following also:
-+  -- ARCFOUR (ARC4)
-+  -- True Random Number Generator (TRNG)
-+  -- Secure Key Manager
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - samsung,s5pv210-secss           # for S5PV210
-+          - samsung,exynos4210-secss        # for Exynos4210, Exynos4212,
-+                                            # Exynos4412, Exynos5250,
-+                                            # Exynos5260 and Exynos5420
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: secss
-+
-+  interrupts:
-+    description: One feed control interrupt.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clock-names
-+  - clocks
-+  - interrupts
-+
-+additionalProperties: false
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ee4e873c0f9a..331c40ae6a01 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14256,8 +14256,8 @@ M:	Kamil Konieczny <k.konieczny@partner.samsung.com>
- L:	linux-crypto@vger.kernel.org
- L:	linux-samsung-soc@vger.kernel.org
- S:	Maintained
--F:	Documentation/devicetree/bindings/crypto/samsung-slimsss.txt
--F:	Documentation/devicetree/bindings/crypto/samsung-sss.txt
-+F:	Documentation/devicetree/bindings/crypto/samsung-slimsss.yaml
-+F:	Documentation/devicetree/bindings/crypto/samsung-sss.yaml
- F:	drivers/crypto/s5p-sss.c
- 
- SAMSUNG S5P/EXYNOS4 SOC SERIES CAMERA SUBSYSTEM DRIVERS
--- 
-2.17.1
+Obviously.
+Why? Is that bad?
+
+> 
+> See e.g. the smiapp driver for an example how to make it work without. It
+> wasn't trivial. :I You won't need autosuspend.
+
+I took a look at that driver, but I don't get your reference to being able
+to work without runtime pm!
+That driver looks pretty similar to ov7740.c which I used as a reference
+for this.
+
+> 
+> > +
+> >  	ret = ov2659_detect(sd);
+> >  	if (ret < 0)
+> >  		goto error;
+> > @@ -1458,10 +1513,14 @@ static int ov2659_probe(struct i2c_client *client)
+> >  
+> >  	dev_info(&client->dev, "%s sensor driver registered !!\n", sd->name);
+> >  
+> > +	pm_runtime_put(&client->dev);
+> > +
+> >  	return 0;
+> >  
+> >  error:
+> >  	v4l2_ctrl_handler_free(&ov2659->ctrls);
+> > +	pm_runtime_put(&client->dev);
+> > +	pm_runtime_disable(&client->dev);
+> >  	media_entity_cleanup(&sd->entity);
+> >  	mutex_destroy(&ov2659->lock);
+> >  	return ret;
+> > @@ -1477,9 +1536,35 @@ static int ov2659_remove(struct i2c_client *client)
+> >  	media_entity_cleanup(&sd->entity);
+> >  	mutex_destroy(&ov2659->lock);
+> >  
+> > +	pm_runtime_disable(&client->dev);
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > +static int ov2659_runtime_suspend(struct device *dev)
+> > +{
+> > +	struct i2c_client *client = to_i2c_client(dev);
+> > +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> > +	struct ov2659 *ov2659 = to_ov2659(sd);
+> > +
+> > +	ov2659_set_power(ov2659, 0);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int ov2659_runtime_resume(struct device *dev)
+> > +{
+> > +	struct i2c_client *client = to_i2c_client(dev);
+> > +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> > +	struct ov2659 *ov2659 = to_ov2659(sd);
+> > +
+> > +	return ov2659_set_power(ov2659, 1);
+> > +}
+> > +
+> > +static const struct dev_pm_ops ov2659_pm_ops = {
+> > +	SET_RUNTIME_PM_OPS(ov2659_runtime_suspend, ov2659_runtime_resume, NULL)
+> > +};
+> > +
+> >  static const struct i2c_device_id ov2659_id[] = {
+> >  	{ "ov2659", 0 },
+> >  	{ /* sentinel */ },
+> > @@ -1497,6 +1582,7 @@ MODULE_DEVICE_TABLE(of, ov2659_of_match);
+> >  static struct i2c_driver ov2659_i2c_driver = {
+> >  	.driver = {
+> >  		.name	= DRIVER_NAME,
+> > +		.pm	= &ov2659_pm_ops,
+> >  		.of_match_table = of_match_ptr(ov2659_of_match),
+> >  	},
+> >  	.probe_new	= ov2659_probe,
+> 
+> -- 
+> Kind regards,
+> 
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
