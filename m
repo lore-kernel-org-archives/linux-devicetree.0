@@ -1,183 +1,301 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [Patch 00/13] media: am437x-vpfe: overdue maintenance
-Date: Fri, 20 Sep 2019 07:20:33 -0500
-Message-ID: <20190920122033.a34ltqrrw4c3pq2a@ti.com>
-References: <20190919204125.15254-1-bparrot@ti.com>
- <5fe1a8a8-6172-fefa-639d-42f5be783227@xs4all.nl>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3] dt-bindings: sound: Convert Samsung I2S controller to
+ dt-schema
+Date: Fri, 20 Sep 2019 14:26:16 +0200
+Message-ID: <20190920122616.GA26862@pi3>
+References: <CAL_JsqJ=QWk07y=h7dHFiRrKuE7NGoUr50bu3kiOC+YU8qS9jg@mail.gmail.com>
+ <CGME20190920115200eucas1p2253a3eb13373061ef8aa39131c98a319@eucas1p2.samsung.com>
+ <20190920113540.30687-1-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5fe1a8a8-6172-fefa-639d-42f5be783227@xs4all.nl>
+In-Reply-To: <20190920113540.30687-1-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, Maciej Falkowski <m.falkowski@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Andrzej Hajda <a.hajda@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hans Verkuil <hverkuil@xs4all.nl> wrote on Fri [2019-Sep-20 10:25:02 +0200]:
-> On 9/19/19 10:41 PM, Benoit Parrot wrote:
-> > This patch series is a collection of patches we have been carrying for a
-> > while.
-> > 
-> > A few patches do fix actual bug and v4l2-compliance errors/warnings.
-> > Other are drivers re-work to simplify/clarify the code for easier
-> > maintenance.
-> > 
-> > We also include the SPDX Licensing update which seemed to have been
-> > missed by the global script thus far.
-> > 
-> > Changes since v1:
-> > - Address review comment from Joe, Hans and Prabhakar
-> > - Cleaned-up the function entry debug log
-> > - Split off the pcr change into its own patch
-> > - Rework/combine two patches but remove code churn
-> > - fix miscellaneous typos
+On Fri, Sep 20, 2019 at 01:35:40PM +0200, Marek Szyprowski wrote:
+> From: Maciej Falkowski <m.falkowski@samsung.com>
 > 
-> Just to verify: this patch from v1 has been dropped in this v2, right?
+> Convert Samsung I2S controller to newer dt-schema format.
 > 
-> [Patch 08/13] media: am437x-vpfe: Maintain a reference to the current vpfe_fmt
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+> v3:
+> - Removed quotation marks from strings in compatible property
+> - Added min/max items to dmas property
+> - Removed unneeded description from dma-names property
+> - Added specific dma-names
+> - Added clock description
+> - Added include directive to examples to use clock macros directly
 
-Yes I dropped it.
+Guys, please stop attaching new versions of entire patchset to existing
+discussions with in-reply-to. Entire V2 was attached to V1. V3 is
+attached here. On some mail clients (GMail) this does not mark entire
+thread unread at it looks like someone just commented about something.
+Some other clients, e.g. mbsynsc with GMail, do not sync entire thread
+so new version looks like reply-to but attached to nothing (missing
+context). Not mentioning that you need additional effort on your side to
+copy+paste the in-reply-to ID.
 
-Weird I seems to have missed the v2 tag on the cover-letter...
-Sorry for the confusion.
+> ---
+>  .../devicetree/bindings/sound/samsung-i2s.txt |  84 -----------
+>  .../bindings/sound/samsung-i2s.yaml           | 135 ++++++++++++++++++
+>  2 files changed, 135 insertions(+), 84 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.txt b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
+> deleted file mode 100644
+> index a88cb00fa096..000000000000
+> --- a/Documentation/devicetree/bindings/sound/samsung-i2s.txt
+> +++ /dev/null
+> @@ -1,84 +0,0 @@
+> -* Samsung I2S controller
+> -
+> -Required SoC Specific Properties:
+> -
+> -- compatible : should be one of the following.
+> -   - samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
+> -   - samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
+> -     secondary fifo, s/w reset control and internal mux for root clk src.
+> -   - samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
+> -     playback, stereo channel capture, secondary fifo using internal
+> -     or external dma, s/w reset control, internal mux for root clk src
+> -     and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
+> -     is to allow transfer of multiple channel audio data on single data line.
+> -   - samsung,exynos7-i2s: with all the available features of exynos5 i2s,
+> -     exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
+> -     with only external dma and more no.of root clk sampling frequencies.
+> -   - samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
+> -     stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
+> -     slightly modified bit offsets.
+> -
+> -- reg: physical base address of the controller and length of memory mapped
+> -  region.
+> -- dmas: list of DMA controller phandle and DMA request line ordered pairs.
+> -- dma-names: identifier string for each DMA request line in the dmas property.
+> -  These strings correspond 1:1 with the ordered pairs in dmas.
+> -- clocks: Handle to iis clock and RCLK source clk.
+> -- clock-names:
+> -  i2s0 uses some base clocks from CMU and some are from audio subsystem internal
+> -  clock controller. The clock names for i2s0 should be "iis", "i2s_opclk0" and
+> -  "i2s_opclk1" as shown in the example below.
+> -  i2s1 and i2s2 uses clocks from CMU. The clock names for i2s1 and i2s2 should
+> -  be "iis" and "i2s_opclk0".
+> -  "iis" is the i2s bus clock and i2s_opclk0, i2s_opclk1 are sources of the root
+> -  clk. i2s0 has internal mux to select the source of root clk and i2s1 and i2s2
+> -  doesn't have any such mux.
 
-Benoit
+I think you still miss this description of clocks and Sylwester asked for it.
 
+> -- #clock-cells: should be 1, this property must be present if the I2S device
+> -  is a clock provider in terms of the common clock bindings, described in
+> -  ../clock/clock-bindings.txt.
+> -- clock-output-names (deprecated): from the common clock bindings, names of
+> -  the CDCLK I2S output clocks, suggested values are "i2s_cdclk0", "i2s_cdclk1",
+> -  "i2s_cdclk3" for the I2S0, I2S1, I2S2 devices respectively.
+
+You missed this. If you decide to remove deprecated properties, then
+make it in separate patach. You described this patch as pure conversion
+so I expect no logical/functional changes.
+
+> -
+> -There are following clocks available at the I2S device nodes:
+> - CLK_I2S_CDCLK    - the CDCLK (CODECLKO) gate clock,
+> - CLK_I2S_RCLK_PSR - the RCLK prescaler divider clock (corresponding to the
+> -		    IISPSR register),
+> - CLK_I2S_RCLK_SRC - the RCLKSRC mux clock (corresponding to RCLKSRC bit in
+> -		    IISMOD register).
+> -
+> -Refer to the SoC datasheet for availability of the above clocks.
+> -The CLK_I2S_RCLK_PSR and CLK_I2S_RCLK_SRC clocks are usually only available
+> -in the IIS Multi Audio Interface.
+> -
+> -Note: Old DTs may not have the #clock-cells property and then not use the I2S
+> -node as a clock supplier.
+> -
+> -Optional SoC Specific Properties:
+> -
+> -- samsung,idma-addr: Internal DMA register base address of the audio
+> -  sub system(used in secondary sound source).
+> -- pinctrl-0: Should specify pin control groups used for this controller.
+> -- pinctrl-names: Should contain only one value - "default".
+> -- #sound-dai-cells: should be 1.
+> -
+> -
+> -Example:
+> -
+> -i2s0: i2s@3830000 {
+> -	compatible = "samsung,s5pv210-i2s";
+> -	reg = <0x03830000 0x100>;
+> -	dmas = <&pdma0 10
+> -		&pdma0 9
+> -		&pdma0 8>;
+> -	dma-names = "tx", "rx", "tx-sec";
+> -	clocks = <&clock_audss EXYNOS_I2S_BUS>,
+> -		<&clock_audss EXYNOS_I2S_BUS>,
+> -		<&clock_audss EXYNOS_SCLK_I2S>;
+> -	clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
+> -	#clock-cells = <1>;
+> -	samsung,idma-addr = <0x03000000>;
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&i2s0_bus>;
+> -	#sound-dai-cells = <1>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.yaml b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
+> new file mode 100644
+> index 000000000000..20ae5da7f798
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
+> @@ -0,0 +1,135 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/samsung-i2s.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung SoC I2S controller
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzk@kernel.org>
+> +  - Sylwester Nawrocki <s.nawrocki@samsung.com>
+> +
+> +properties:
+> +  compatible:
+> +    description: |
+> +      samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
+> +
+> +      samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
+> +      secondary fifo, s/w reset control and internal mux for root clk src.
+> +
+> +      samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
+> +      playback, stereo channel capture, secondary fifo using internal
+> +      or external dma, s/w reset control, internal mux for root clk src
+> +      and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
+> +      is to allow transfer of multiple channel audio data on single data line.
+> +
+> +      samsung,exynos7-i2s: with all the available features of exynos5 i2s.
+> +      exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
+> +      with only external dma and more no.of root clk sampling frequencies.
+> +
+> +      samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
+> +      stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
+> +      slightly modified bit offsets.
+> +    enum:
+> +      - samsung,s3c6410-i2s
+> +      - samsung,s5pv210-i2s
+> +      - samsung,exynos5420-i2s
+> +      - samsung,exynos7-i2s
+> +      - samsung,exynos7-i2s1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  dmas:
+> +    minItems: 2
+> +    maxItems: 3
+> +
+> +  dma-names:
+> +    oneOf:
+> +      - items:
+> +          - const: tx
+> +          - const: rx
+> +      - items:
+> +          - const: tx
+> +          - const: rx
+> +          - const: tx-sec
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 3
+> +    description: |
+> +      There are following clocks available at the I2S device nodes:
+> +      CLK_I2S_CDCLK:
+> +      the CDCLK (CODECLKO) gate clock.
+> +
+> +      CLK_I2S_RCLK_PSR:
+> +      RCLK prescaler divider clock corresponding to the IISPSR register.
+> +
+> +      CLK_I2S_RCLK_SRC:
+> +      RCLKSRC mux clock corresponding to RCLKSRC bit in IISMOD register.
+> +
+> +  clock-names:
+> +    oneOf:
+> +      - items:
+> +          - const: iis
+> +      - items:
+> +          - const: iis
+> +          - const: i2s_opclk0
+> +      - items:
+> +          - const: iis
+> +          - const: i2s_opclk0
+> +          - const: i2s_opclk1
+> +    description: |
+> +      "iis" is the i2s bus clock.
+> +      For i2s1 and i2s2 - "iis", "i2s_opclk0"
+> +      For i2s0 - "iis", "i2s_opclk0", "i2s_opclk1"
+> +
+> +  "#clock-cells":
+> +    const: 1
+> +
+> +  samsung,idma-addr:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: |
+> +      Internal DMA register base address of the audio
+> +      sub system(used in secondary sound source).
+> +
+> +  pinctrl-0:
+> +    description: Should specify pin control groups used for this controller.
+> +
+> +  pinctrl-names:
+> +    const: default
+> +
+> +  "#sound-dai-cells":
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - dmas
+> +  - dma-names
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/exynos-audss-clk.h>
+
+Does it really work? When I tried, it was failing... If you look up at
+resulting DTS example it is wrong.
+
+Best regards,
+Krzysztof
+
+> +
+> +    i2s0: i2s@3830000 {
+> +        compatible = "samsung,s5pv210-i2s";
+> +        reg = <0x03830000 0x100>;
+> +        dmas = <&pdma0 10>,
+> +                <&pdma0 9>,
+> +                <&pdma0 8>;
+> +        dma-names = "tx", "rx", "tx-sec";
+> +        clocks = <&clock_audss EXYNOS_I2S_BUS>,
+> +                <&clock_audss EXYNOS_I2S_BUS>,
+> +                <&clock_audss EXYNOS_SCLK_I2S>;
+> +        clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
+> +        #clock-cells = <1>;
+> +        samsung,idma-addr = <0x03000000>;
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&i2s0_bus>;
+> +        #sound-dai-cells = <1>;
+> +    };
+> +
+> -- 
+> 2.17.1
 > 
-> Regards,
 > 
-> 	Hans
-> 
-> > 
-> > =============================
-> > 
-> > v4l2-compliance SHA: 5b168dc8473911227890526bad26553d9e8ff81b, 32 bits
-> > 
-> > Compliance test for vpfe device /dev/video0:
-> > 
-> > Driver Info:
-> > 	Driver name      : vpfe
-> > 	Card type        : TI AM437x VPFE
-> > 	Bus info         : platform:vpfe 48326000.vpfe
-> > 	Driver version   : 5.3.0
-> > 	Capabilities     : 0x85200001
-> > 		Vide o Capture
-> > 		Read/Write
-> > 		Streaming
-> > 		Extended Pix Format
-> > 		D evice Capabilities
-> > 	Device Caps      : 0x05200001
-> > 		Video Capt ure
-> > 		Read/Write
-> > 		Streaming
-> > 		Extended Pix Format
-> > 
-> > Required ioctls:
-> > 	test VIDIOC_QUERYCAP: OK
-> > 
-> > Allow for multiple opens:
-> > 	test second /dev/video0 open: OK
-> > 	test VIDIOC_QUERYCAP: OK
-> > 	test VIDIOC_G/S_PRIORITY: OK
-> > 	test for unlimited opens: OK
-> > 
-> > Debug ioctls:
-> > 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-> > 	test VIDIOC_LOG_STATUS: OK
-> > 
-> > Input ioctls:
-> > 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-> > 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> > 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-> > 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-> > 	test VIDIOC_G/S/ENUMINPUT: OK
-> > 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-> > 	Inputs: 1 Audio Inputs: 0 Tuners: 0
-> > 
-> > Output ioctls:
-> > 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-> > 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> > 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-> > 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-> > 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-> > 	Outputs: 0 Audio Outputs: 0 Modulators: 0
-> > 
-> > Input/Output configuration ioctls:
-> > 	test VIDIOC_ENUM/G/S/QUERY_STD: OK
-> > 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-> > 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-> > 	test VIDIOC_G/S_EDID: OK (Not Supported)
-> > 
-> > Control ioctls (Input 0):
-> > 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-> > 	test VIDIOC_QUERYCTRL: OK
-> > 	test VIDIOC_G/S_CTRL: OK
-> > 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-> > 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-> > 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> > 	Standard Controls: 3 Private Controls: 0
-> > 
-> > Format ioctls (Input 0):
-> > 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-> > 	test VIDIOC_G/S_PARM: OK
-> > 	test VIDIOC_G_FBUF: OK (Not Supported)
-> > 	test VIDIOC_G_FMT: OK
-> > 	test VIDIOC_TRY_FMT: OK
-> > 	test VIDIOC_S_FMT: OK
-> > 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> > 		fail: v4l2-test-formats.cpp(1419): node->frmsizes_count[pixfmt] > 1
-> > 	test Cropping: FAIL
-> > 	test Composing: OK (Not Supported)
-> > 	test Scaling: OK (Not Supported)
-> > 
-> > Codec ioctls (Input 0):
-> > 	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-> > 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-> > 	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> > 
-> > Buffer ioctls (Input 0):
-> > 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> > 	test VIDIOC_EXPBUF: OK
-> > 	test Requests: OK (Not Supported)
-> > 
-> > Test input 0:
-> > 
-> > Streaming ioctls:
-> > 	test read/write: OK
-> > 	test blocking wait: OK
-> > 	test MMAP (no poll): OK                           
-> > 	test MMAP (select): OK                            
-> > 	test MMAP (epoll): OK                             
-> > 	test USERPTR (no poll): OK (Not Supported)
-> > 	test USERPTR (select): OK (Not Supported)
-> > 	test DMABUF: Cannot test, specify --expbuf-device
-> > 
-> > Total for vpfe device /dev/video0: 51, Succeeded: 50, Failed: 1, Warnings: 0
-> > dd
-> > ============================
-> > 
-> > Benoit Parrot (12):
-> >   media: am437x-vpfe: Fix missing first line
-> >   media: am437x-vpfe: Rework ISR routine for clarity
-> >   media: am437x-vpfe: Wait for end of frame before tear-down
-> >   media: am437x-vpfe: fix start streaming error path
-> >   media: am437x-vpfe: Streamlined vb2 buffer cleanup
-> >   media: am437x-vpfe: Setting STD to current value is not an error
-> >   media: am437x-vpfe: Use a per instance format array instead of a
-> >     static one
-> >   media: am437x-vpfe: fix function trace debug log
-> >   media: am437x-vpfe: Remove print_fourcc helper
-> >   media: am437x-vpfe: TRY_FMT ioctl is not really trying anything
-> >   media: am437x-vpfe: Remove per bus width static data
-> >   media: am437x-vpfe: Switch to SPDX Licensing
-> > 
-> > Dave Gerlach (1):
-> >   media: am437x-vpfe: Fix suspend path to always handle pinctrl config
-> > 
-> >  drivers/media/platform/am437x/am437x-vpfe.c   | 878 ++++++++----------
-> >  drivers/media/platform/am437x/am437x-vpfe.h   |  45 +-
-> >  .../media/platform/am437x/am437x-vpfe_regs.h  |  10 +-
-> >  3 files changed, 406 insertions(+), 527 deletions(-)
-> > 
 > 
