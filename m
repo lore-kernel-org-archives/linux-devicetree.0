@@ -1,373 +1,271 @@
 From: Brendan Higgins <brendanhiggins@google.com>
-Subject: [PATCH v16 11/19] kunit: test: add the concept of assertions
-Date: Fri, 20 Sep 2019 16:19:15 -0700
-Message-ID: <20190920231923.141900-12-brendanhiggins@google.com>
+Subject: [PATCH v16 09/19] kunit: test: add support for test abort
+Date: Fri, 20 Sep 2019 16:19:13 -0700
+Message-ID: <20190920231923.141900-10-brendanhiggins@google.com>
 References: <20190920231923.141900-1-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <20190920231923.141900-1-brendanhiggins@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, torvalds@linux-foundation.org, Brendan Higgins <brendanhiggins@google.com>
+Cc: pmladek@suse.com, linux-doc@vger.kernel.org, amir73il@gmail.com, Brendan Higgins <brendanhiggins@google.com>, dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, khilman@baylibre.com, knut.omang@oracle.com, wfg@linux.intel.com, joel@jms.id.au, rientjes@google.com, jdike@addtoit.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, linux-um@lists.infradead.org, rostedt@goodmis.org, julia.lawall@lip6.fr, kunit-dev@googlegroups.com, richard@nod.at, torvalds@linux-foundation.org, rdunlap@infradead.org, linux-kernel@vger.kernel.org, mpe@ellerman.id.au, linux-fsdevel@vger.kernel.org, logang@deltatee.com
 List-Id: devicetree@vger.kernel.org
 
-Add support for assertions which are like expectations except the test
-terminates if the assertion is not satisfied.
-
-The idea with assertions is that you use them to state all the
-preconditions for your test. Logically speaking, these are the premises
-of the test case, so if a premise isn't true, there is no point in
-continuing the test case because there are no conclusions that can be
-drawn without the premises. Whereas, the expectation is the thing you
-are trying to prove. It is not used universally in x-unit style test
-frameworks, but I really like it as a convention.  You could still
-express the idea of a premise using the above idiom, but I think
-KUNIT_ASSERT_* states the intended idea perfectly.
-
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
----
- include/kunit/test.h           | 282 ++++++++++++++++++++++++++++++++-
- lib/kunit/string-stream-test.c |   2 +-
- lib/kunit/test-test.c          |   7 +-
- 3 files changed, 283 insertions(+), 8 deletions(-)
-
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index 3d554d7c1c79..8b7eb03d4971 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -87,8 +87,9 @@ struct kunit;
-  * @name:     the name of the test case.
-  *
-  * A test case is a function with the signature,
-- * ``void (*)(struct kunit *)`` that makes expectations (see
-- * KUNIT_EXPECT_TRUE()) about code under test. Each test case is associated
-+ * ``void (*)(struct kunit *)``
-+ * that makes expectations and assertions (see KUNIT_EXPECT_TRUE() and
-+ * KUNIT_ASSERT_TRUE()) about code under test. Each test case is associated
-  * with a &struct kunit_suite and will be run after the suite's init
-  * function and followed by the suite's exit function.
-  *
-@@ -1210,4 +1211,281 @@ do {									       \
- 						fmt,			       \
- 						##__VA_ARGS__)
- 
-+#define KUNIT_ASSERT_FAILURE(test, fmt, ...) \
-+	KUNIT_FAIL_ASSERTION(test, KUNIT_ASSERTION, fmt, ##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_ASSERT_TRUE() - Sets an assertion that @condition is true.
-+ * @test: The test context object.
-+ * @condition: an arbitrary boolean expression. The test fails and aborts when
-+ * this does not evaluate to true.
-+ *
-+ * This and assertions of the form `KUNIT_ASSERT_*` will cause the test case to
-+ * fail *and immediately abort* when the specified condition is not met. Unlike
-+ * an expectation failure, it will prevent the test case from continuing to run;
-+ * this is otherwise known as an *assertion failure*.
-+ */
-+#define KUNIT_ASSERT_TRUE(test, condition) \
-+	KUNIT_TRUE_ASSERTION(test, KUNIT_ASSERTION, condition)
-+
-+#define KUNIT_ASSERT_TRUE_MSG(test, condition, fmt, ...)		       \
-+	KUNIT_TRUE_MSG_ASSERTION(test,					       \
-+				 KUNIT_ASSERTION,			       \
-+				 condition,				       \
-+				 fmt,					       \
-+				 ##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_ASSERT_FALSE() - Sets an assertion that @condition is false.
-+ * @test: The test context object.
-+ * @condition: an arbitrary boolean expression.
-+ *
-+ * Sets an assertion that the value that @condition evaluates to is false. This
-+ * is the same as KUNIT_EXPECT_FALSE(), except it causes an assertion failure
-+ * (see KUNIT_ASSERT_TRUE()) when the assertion is not met.
-+ */
-+#define KUNIT_ASSERT_FALSE(test, condition) \
-+	KUNIT_FALSE_ASSERTION(test, KUNIT_ASSERTION, condition)
-+
-+#define KUNIT_ASSERT_FALSE_MSG(test, condition, fmt, ...)		       \
-+	KUNIT_FALSE_MSG_ASSERTION(test,					       \
-+				  KUNIT_ASSERTION,			       \
-+				  condition,				       \
-+				  fmt,					       \
-+				  ##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_ASSERT_EQ() - Sets an assertion that @left and @right are equal.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a primitive C type.
-+ * @right: an arbitrary expression that evaluates to a primitive C type.
-+ *
-+ * Sets an assertion that the values that @left and @right evaluate to are
-+ * equal. This is the same as KUNIT_EXPECT_EQ(), except it causes an assertion
-+ * failure (see KUNIT_ASSERT_TRUE()) when the assertion is not met.
-+ */
-+#define KUNIT_ASSERT_EQ(test, left, right) \
-+	KUNIT_BINARY_EQ_ASSERTION(test, KUNIT_ASSERTION, left, right)
-+
-+#define KUNIT_ASSERT_EQ_MSG(test, left, right, fmt, ...)		       \
-+	KUNIT_BINARY_EQ_MSG_ASSERTION(test,				       \
-+				      KUNIT_ASSERTION,			       \
-+				      left,				       \
-+				      right,				       \
-+				      fmt,				       \
-+				      ##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_ASSERT_PTR_EQ() - Asserts that pointers @left and @right are equal.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a pointer.
-+ * @right: an arbitrary expression that evaluates to a pointer.
-+ *
-+ * Sets an assertion that the values that @left and @right evaluate to are
-+ * equal. This is the same as KUNIT_EXPECT_EQ(), except it causes an assertion
-+ * failure (see KUNIT_ASSERT_TRUE()) when the assertion is not met.
-+ */
-+#define KUNIT_ASSERT_PTR_EQ(test, left, right) \
-+	KUNIT_BINARY_PTR_EQ_ASSERTION(test, KUNIT_ASSERTION, left, right)
-+
-+#define KUNIT_ASSERT_PTR_EQ_MSG(test, left, right, fmt, ...)		       \
-+	KUNIT_BINARY_PTR_EQ_MSG_ASSERTION(test,				       \
-+					  KUNIT_ASSERTION,		       \
-+					  left,				       \
-+					  right,			       \
-+					  fmt,				       \
-+					  ##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_ASSERT_NE() - An assertion that @left and @right are not equal.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a primitive C type.
-+ * @right: an arbitrary expression that evaluates to a primitive C type.
-+ *
-+ * Sets an assertion that the values that @left and @right evaluate to are not
-+ * equal. This is the same as KUNIT_EXPECT_NE(), except it causes an assertion
-+ * failure (see KUNIT_ASSERT_TRUE()) when the assertion is not met.
-+ */
-+#define KUNIT_ASSERT_NE(test, left, right) \
-+	KUNIT_BINARY_NE_ASSERTION(test, KUNIT_ASSERTION, left, right)
-+
-+#define KUNIT_ASSERT_NE_MSG(test, left, right, fmt, ...)		       \
-+	KUNIT_BINARY_NE_MSG_ASSERTION(test,				       \
-+				      KUNIT_ASSERTION,			       \
-+				      left,				       \
-+				      right,				       \
-+				      fmt,				       \
-+				      ##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_ASSERT_PTR_NE() - Asserts that pointers @left and @right are not equal.
-+ * KUNIT_ASSERT_PTR_EQ() - Asserts that pointers @left and @right are equal.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a pointer.
-+ * @right: an arbitrary expression that evaluates to a pointer.
-+ *
-+ * Sets an assertion that the values that @left and @right evaluate to are not
-+ * equal. This is the same as KUNIT_EXPECT_NE(), except it causes an assertion
-+ * failure (see KUNIT_ASSERT_TRUE()) when the assertion is not met.
-+ */
-+#define KUNIT_ASSERT_PTR_NE(test, left, right) \
-+	KUNIT_BINARY_PTR_NE_ASSERTION(test, KUNIT_ASSERTION, left, right)
-+
-+#define KUNIT_ASSERT_PTR_NE_MSG(test, left, right, fmt, ...)		       \
-+	KUNIT_BINARY_PTR_NE_MSG_ASSERTION(test,				       \
-+					  KUNIT_ASSERTION,		       \
-+					  left,				       \
-+					  right,			       \
-+					  fmt,				       \
-+					  ##__VA_ARGS__)
-+/**
-+ * KUNIT_ASSERT_LT() - An assertion that @left is less than @right.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a primitive C type.
-+ * @right: an arbitrary expression that evaluates to a primitive C type.
-+ *
-+ * Sets an assertion that the value that @left evaluates to is less than the
-+ * value that @right evaluates to. This is the same as KUNIT_EXPECT_LT(), except
-+ * it causes an assertion failure (see KUNIT_ASSERT_TRUE()) when the assertion
-+ * is not met.
-+ */
-+#define KUNIT_ASSERT_LT(test, left, right) \
-+	KUNIT_BINARY_LT_ASSERTION(test, KUNIT_ASSERTION, left, right)
-+
-+#define KUNIT_ASSERT_LT_MSG(test, left, right, fmt, ...)		       \
-+	KUNIT_BINARY_LT_MSG_ASSERTION(test,				       \
-+				      KUNIT_ASSERTION,			       \
-+				      left,				       \
-+				      right,				       \
-+				      fmt,				       \
-+				      ##__VA_ARGS__)
-+/**
-+ * KUNIT_ASSERT_LE() - An assertion that @left is less than or equal to @right.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a primitive C type.
-+ * @right: an arbitrary expression that evaluates to a primitive C type.
-+ *
-+ * Sets an assertion that the value that @left evaluates to is less than or
-+ * equal to the value that @right evaluates to. This is the same as
-+ * KUNIT_EXPECT_LE(), except it causes an assertion failure (see
-+ * KUNIT_ASSERT_TRUE()) when the assertion is not met.
-+ */
-+#define KUNIT_ASSERT_LE(test, left, right) \
-+	KUNIT_BINARY_LE_ASSERTION(test, KUNIT_ASSERTION, left, right)
-+
-+#define KUNIT_ASSERT_LE_MSG(test, left, right, fmt, ...)		       \
-+	KUNIT_BINARY_LE_MSG_ASSERTION(test,				       \
-+				      KUNIT_ASSERTION,			       \
-+				      left,				       \
-+				      right,				       \
-+				      fmt,				       \
-+				      ##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_ASSERT_GT() - An assertion that @left is greater than @right.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a primitive C type.
-+ * @right: an arbitrary expression that evaluates to a primitive C type.
-+ *
-+ * Sets an assertion that the value that @left evaluates to is greater than the
-+ * value that @right evaluates to. This is the same as KUNIT_EXPECT_GT(), except
-+ * it causes an assertion failure (see KUNIT_ASSERT_TRUE()) when the assertion
-+ * is not met.
-+ */
-+#define KUNIT_ASSERT_GT(test, left, right) \
-+	KUNIT_BINARY_GT_ASSERTION(test, KUNIT_ASSERTION, left, right)
-+
-+#define KUNIT_ASSERT_GT_MSG(test, left, right, fmt, ...)		       \
-+	KUNIT_BINARY_GT_MSG_ASSERTION(test,				       \
-+				      KUNIT_ASSERTION,			       \
-+				      left,				       \
-+				      right,				       \
-+				      fmt,				       \
-+				      ##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_ASSERT_GE() - Assertion that @left is greater than or equal to @right.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a primitive C type.
-+ * @right: an arbitrary expression that evaluates to a primitive C type.
-+ *
-+ * Sets an assertion that the value that @left evaluates to is greater than the
-+ * value that @right evaluates to. This is the same as KUNIT_EXPECT_GE(), except
-+ * it causes an assertion failure (see KUNIT_ASSERT_TRUE()) when the assertion
-+ * is not met.
-+ */
-+#define KUNIT_ASSERT_GE(test, left, right) \
-+	KUNIT_BINARY_GE_ASSERTION(test, KUNIT_ASSERTION, left, right)
-+
-+#define KUNIT_ASSERT_GE_MSG(test, left, right, fmt, ...)		       \
-+	KUNIT_BINARY_GE_MSG_ASSERTION(test,				       \
-+				      KUNIT_ASSERTION,			       \
-+				      left,				       \
-+				      right,				       \
-+				      fmt,				       \
-+				      ##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_ASSERT_STREQ() - An assertion that strings @left and @right are equal.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a null terminated string.
-+ * @right: an arbitrary expression that evaluates to a null terminated string.
-+ *
-+ * Sets an assertion that the values that @left and @right evaluate to are
-+ * equal. This is the same as KUNIT_EXPECT_STREQ(), except it causes an
-+ * assertion failure (see KUNIT_ASSERT_TRUE()) when the assertion is not met.
-+ */
-+#define KUNIT_ASSERT_STREQ(test, left, right) \
-+	KUNIT_BINARY_STR_EQ_ASSERTION(test, KUNIT_ASSERTION, left, right)
-+
-+#define KUNIT_ASSERT_STREQ_MSG(test, left, right, fmt, ...)		       \
-+	KUNIT_BINARY_STR_EQ_MSG_ASSERTION(test,				       \
-+					  KUNIT_ASSERTION,		       \
-+					  left,				       \
-+					  right,			       \
-+					  fmt,				       \
-+					  ##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_ASSERT_STRNEQ() - Expects that strings @left and @right are not equal.
-+ * @test: The test context object.
-+ * @left: an arbitrary expression that evaluates to a null terminated string.
-+ * @right: an arbitrary expression that evaluates to a null terminated string.
-+ *
-+ * Sets an expectation that the values that @left and @right evaluate to are
-+ * not equal. This is semantically equivalent to
-+ * KUNIT_ASSERT_TRUE(@test, strcmp((@left), (@right))). See KUNIT_ASSERT_TRUE()
-+ * for more information.
-+ */
-+#define KUNIT_ASSERT_STRNEQ(test, left, right) \
-+	KUNIT_BINARY_STR_NE_ASSERTION(test, KUNIT_ASSERTION, left, right)
-+
-+#define KUNIT_ASSERT_STRNEQ_MSG(test, left, right, fmt, ...)		       \
-+	KUNIT_BINARY_STR_NE_MSG_ASSERTION(test,				       \
-+					  KUNIT_ASSERTION,		       \
-+					  left,				       \
-+					  right,			       \
-+					  fmt,				       \
-+					  ##__VA_ARGS__)
-+
-+/**
-+ * KUNIT_ASSERT_NOT_ERR_OR_NULL() - Assertion that @ptr is not null and not err.
-+ * @test: The test context object.
-+ * @ptr: an arbitrary pointer.
-+ *
-+ * Sets an assertion that the value that @ptr evaluates to is not null and not
-+ * an errno stored in a pointer. This is the same as
-+ * KUNIT_EXPECT_NOT_ERR_OR_NULL(), except it causes an assertion failure (see
-+ * KUNIT_ASSERT_TRUE()) when the assertion is not met.
-+ */
-+#define KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr) \
-+	KUNIT_PTR_NOT_ERR_OR_NULL_ASSERTION(test, KUNIT_ASSERTION, ptr)
-+
-+#define KUNIT_ASSERT_NOT_ERR_OR_NULL_MSG(test, ptr, fmt, ...)		       \
-+	KUNIT_PTR_NOT_ERR_OR_NULL_MSG_ASSERTION(test,			       \
-+						KUNIT_ASSERTION,	       \
-+						ptr,			       \
-+						fmt,			       \
-+						##__VA_ARGS__)
-+
- #endif /* _KUNIT_TEST_H */
-diff --git a/lib/kunit/string-stream-test.c b/lib/kunit/string-stream-test.c
-index 75229e267c32..76cc05eb00ed 100644
---- a/lib/kunit/string-stream-test.c
-+++ b/lib/kunit/string-stream-test.c
-@@ -35,7 +35,7 @@ static void string_stream_test_get_string(struct kunit *test)
- 	string_stream_add(stream, " %s", "bar");
- 
- 	output = string_stream_get_string(stream);
--	KUNIT_EXPECT_STREQ(test, output, "Foo bar");
-+	KUNIT_ASSERT_STREQ(test, output, "Foo bar");
- }
- 
- static struct kunit_case string_stream_test_cases[] = {
-diff --git a/lib/kunit/test-test.c b/lib/kunit/test-test.c
-index 06d34d36b103..e0ab4bd546ea 100644
---- a/lib/kunit/test-test.c
-+++ b/lib/kunit/test-test.c
-@@ -78,16 +78,13 @@ static int kunit_try_catch_test_init(struct kunit *test)
- 	struct kunit_try_catch_test_context *ctx;
- 
- 	ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
--	if (!ctx)
--		return -ENOMEM;
--
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
- 	test->priv = ctx;
- 
- 	ctx->try_catch = kunit_kmalloc(test,
- 				       sizeof(*ctx->try_catch),
- 				       GFP_KERNEL);
--	if (!ctx->try_catch)
--		return -ENOMEM;
-+	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx->try_catch);
- 
- 	return 0;
- }
--- 
-2.23.0.351.gc4317032e6-goog
+QWRkIHN1cHBvcnQgZm9yIGFib3J0aW5nL2JhaWxpbmcgb3V0IG9mIHRlc3QgY2FzZXMsIHdoaWNo
+IGlzIG5lZWRlZCBmb3IKaW1wbGVtZW50aW5nIGFzc2VydGlvbnMuCgpBbiBhc3NlcnRpb24gaXMg
+bGlrZSBhbiBleHBlY3RhdGlvbiwgYnV0IGJhaWxzIG91dCBvZiB0aGUgdGVzdCBjYXNlCmVhcmx5
+IGlmIHRoZSBhc3NlcnRpb24gaXMgbm90IG1ldC4gVGhlIGlkZWEgd2l0aCBhc3NlcnRpb25zIGlz
+IHRoYXQgeW91CnVzZSB0aGVtIHRvIHN0YXRlIGFsbCB0aGUgcHJlY29uZGl0aW9ucyBmb3IgeW91
+ciB0ZXN0LiBMb2dpY2FsbHkKc3BlYWtpbmcsIHRoZXNlIGFyZSB0aGUgcHJlbWlzZXMgb2YgdGhl
+IHRlc3QgY2FzZSwgc28gaWYgYSBwcmVtaXNlIGlzbid0CnRydWUsIHRoZXJlIGlzIG5vIHBvaW50
+IGluIGNvbnRpbnVpbmcgdGhlIHRlc3QgY2FzZSBiZWNhdXNlIHRoZXJlIGFyZSBubwpjb25jbHVz
+aW9ucyB0aGF0IGNhbiBiZSBkcmF3biB3aXRob3V0IHRoZSBwcmVtaXNlcy4gV2hlcmVhcywgdGhl
+CmV4cGVjdGF0aW9uIGlzIHRoZSB0aGluZyB5b3UgYXJlIHRyeWluZyB0byBwcm92ZS4KClNpZ25l
+ZC1vZmYtYnk6IEJyZW5kYW4gSGlnZ2lucyA8YnJlbmRhbmhpZ2dpbnNAZ29vZ2xlLmNvbT4KUmV2
+aWV3ZWQtYnk6IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+
+ClJldmlld2VkLWJ5OiBMb2dhbiBHdW50aG9ycGUgPGxvZ2FuZ0BkZWx0YXRlZS5jb20+ClJldmll
+d2VkLWJ5OiBTdGVwaGVuIEJveWQgPHNib3lkQGtlcm5lbC5vcmc+Ci0tLQogaW5jbHVkZS9rdW5p
+dC90ZXN0LmggICAgICB8ICAgMiArCiBpbmNsdWRlL2t1bml0L3RyeS1jYXRjaC5oIHwgIDc1ICsr
+KysrKysrKysrKysrKysrKysrKwogbGliL2t1bml0L01ha2VmaWxlICAgICAgICB8ICAgMyArLQog
+bGliL2t1bml0L3Rlc3QuYyAgICAgICAgICB8IDEzNyArKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKystLS0tLQogbGliL2t1bml0L3RyeS1jYXRjaC5jICAgICB8IDExOCArKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKwogNSBmaWxlcyBjaGFuZ2VkLCAzMTkgaW5zZXJ0aW9ucygr
+KSwgMTYgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9rdW5pdC90cnkt
+Y2F0Y2guaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGxpYi9rdW5pdC90cnktY2F0Y2guYwoKZGlmZiAt
+LWdpdCBhL2luY2x1ZGUva3VuaXQvdGVzdC5oIGIvaW5jbHVkZS9rdW5pdC90ZXN0LmgKaW5kZXgg
+MzBhNjJkZTE2YmM5Li4zZDU1NGQ3YzFjNzkgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUva3VuaXQvdGVz
+dC5oCisrKyBiL2luY2x1ZGUva3VuaXQvdGVzdC5oCkBAIC0xMCw2ICsxMCw3IEBACiAjZGVmaW5l
+IF9LVU5JVF9URVNUX0gKIAogI2luY2x1ZGUgPGt1bml0L2Fzc2VydC5oPgorI2luY2x1ZGUgPGt1
+bml0L3RyeS1jYXRjaC5oPgogI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPgogI2luY2x1ZGUgPGxp
+bnV4L3NsYWIuaD4KICNpbmNsdWRlIDxsaW51eC90eXBlcy5oPgpAQCAtMTcyLDYgKzE3Myw3IEBA
+IHN0cnVjdCBrdW5pdCB7CiAKIAkvKiBwcml2YXRlOiBpbnRlcm5hbCB1c2Ugb25seS4gKi8KIAlj
+b25zdCBjaGFyICpuYW1lOyAvKiBSZWFkIG9ubHkgYWZ0ZXIgaW5pdGlhbGl6YXRpb24hICovCisJ
+c3RydWN0IGt1bml0X3RyeV9jYXRjaCB0cnlfY2F0Y2g7CiAJLyoKIAkgKiBzdWNjZXNzIHN0YXJ0
+cyBhcyB0cnVlLCBhbmQgbWF5IG9ubHkgYmUgc2V0IHRvIGZhbHNlIGR1cmluZyBhCiAJICogdGVz
+dCBjYXNlOyB0aHVzLCBpdCBpcyBzYWZlIHRvIHVwZGF0ZSB0aGlzIGFjcm9zcyBtdWx0aXBsZQpk
+aWZmIC0tZ2l0IGEvaW5jbHVkZS9rdW5pdC90cnktY2F0Y2guaCBiL2luY2x1ZGUva3VuaXQvdHJ5
+LWNhdGNoLmgKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi40MDRmMzM2
+Y2JkYzgKLS0tIC9kZXYvbnVsbAorKysgYi9pbmNsdWRlL2t1bml0L3RyeS1jYXRjaC5oCkBAIC0w
+LDAgKzEsNzUgQEAKKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wICovCisvKgor
+ICogQW4gQVBJIHRvIGFsbG93IGEgZnVuY3Rpb24sIHRoYXQgbWF5IGZhaWwsIHRvIGJlIGV4ZWN1
+dGVkLCBhbmQgcmVjb3ZlciBpbiBhCisgKiBjb250cm9sbGVkIG1hbm5lci4KKyAqCisgKiBDb3B5
+cmlnaHQgKEMpIDIwMTksIEdvb2dsZSBMTEMuCisgKiBBdXRob3I6IEJyZW5kYW4gSGlnZ2lucyA8
+YnJlbmRhbmhpZ2dpbnNAZ29vZ2xlLmNvbT4KKyAqLworCisjaWZuZGVmIF9LVU5JVF9UUllfQ0FU
+Q0hfSAorI2RlZmluZSBfS1VOSVRfVFJZX0NBVENIX0gKKworI2luY2x1ZGUgPGxpbnV4L3R5cGVz
+Lmg+CisKK3R5cGVkZWYgdm9pZCAoKmt1bml0X3RyeV9jYXRjaF9mdW5jX3QpKHZvaWQgKik7CisK
+K3N0cnVjdCBjb21wbGV0aW9uOworc3RydWN0IGt1bml0OworCisvKioKKyAqIHN0cnVjdCBrdW5p
+dF90cnlfY2F0Y2ggLSBwcm92aWRlcyBhIGdlbmVyaWMgd2F5IHRvIHJ1biBjb2RlIHdoaWNoIG1p
+Z2h0IGZhaWwuCisgKiBAdGVzdDogVGhlIHRlc3QgY2FzZSB0aGF0IGlzIGN1cnJlbnRseSBiZWlu
+ZyBleGVjdXRlZC4KKyAqIEB0cnlfY29tcGxldGlvbjogQ29tcGxldGlvbiB0aGF0IHRoZSBjb250
+cm9sIHRocmVhZCB3YWl0cyBvbiB3aGlsZSB0ZXN0IHJ1bnMuCisgKiBAdHJ5X3Jlc3VsdDogQ29u
+dGFpbnMgYW55IGVycm5vIG9idGFpbmVkIHdoaWxlIHJ1bm5pbmcgdGVzdCBjYXNlLgorICogQHRy
+eTogVGhlIGZ1bmN0aW9uLCB0aGUgdGVzdCBjYXNlLCB0byBhdHRlbXB0IHRvIHJ1bi4KKyAqIEBj
+YXRjaDogVGhlIGZ1bmN0aW9uIGNhbGxlZCBpZiBAdHJ5IGJhaWxzIG91dC4KKyAqIEBjb250ZXh0
+OiB1c2VkIHRvIHBhc3MgdXNlciBkYXRhIHRvIHRoZSB0cnkgYW5kIGNhdGNoIGZ1bmN0aW9ucy4K
+KyAqCisgKiBrdW5pdF90cnlfY2F0Y2ggcHJvdmlkZXMgYSBnZW5lcmljLCBhcmNoaXRlY3R1cmUg
+aW5kZXBlbmRlbnQgd2F5IHRvIGV4ZWN1dGUKKyAqIGFuIGFyYml0cmFyeSBmdW5jdGlvbiBvZiB0
+eXBlIGt1bml0X3RyeV9jYXRjaF9mdW5jX3Qgd2hpY2ggbWF5IGJhaWwgb3V0IGJ5CisgKiBjYWxs
+aW5nIGt1bml0X3RyeV9jYXRjaF90aHJvdygpLiBJZiBrdW5pdF90cnlfY2F0Y2hfdGhyb3coKSBp
+cyBjYWxsZWQsIEB0cnkKKyAqIGlzIHN0b3BwZWQgYXQgdGhlIHNpdGUgb2YgaW52b2NhdGlvbiBh
+bmQgQGNhdGNoIGlzIGNhbGxlZC4KKyAqCisgKiBzdHJ1Y3Qga3VuaXRfdHJ5X2NhdGNoIHByb3Zp
+ZGVzIGEgZ2VuZXJpYyBpbnRlcmZhY2UgZm9yIHRoZSBmdW5jdGlvbmFsaXR5CisgKiBuZWVkZWQg
+dG8gaW1wbGVtZW50IGt1bml0LT5hYm9ydCgpIHdoaWNoIGluIHR1cm4gaXMgbmVlZGVkIGZvciBp
+bXBsZW1lbnRpbmcKKyAqIGFzc2VydGlvbnMuIEFzc2VydGlvbnMgYWxsb3cgc3RhdGluZyBhIHBy
+ZWNvbmRpdGlvbiBmb3IgYSB0ZXN0IHNpbXBsaWZ5aW5nCisgKiBob3cgdGVzdCBjYXNlcyBhcmUg
+d3JpdHRlbiBhbmQgcHJlc2VudGVkLgorICoKKyAqIEFzc2VydGlvbnMgYXJlIGxpa2UgZXhwZWN0
+YXRpb25zLCBleGNlcHQgdGhleSBhYm9ydCAoY2FsbAorICoga3VuaXRfdHJ5X2NhdGNoX3Rocm93
+KCkpIHdoZW4gdGhlIHNwZWNpZmllZCBjb25kaXRpb24gaXMgbm90IG1ldC4gVGhpcyBpcworICog
+dXNlZnVsIHdoZW4geW91IGxvb2sgYXQgYSB0ZXN0IGNhc2UgYXMgYSBsb2dpY2FsIHN0YXRlbWVu
+dCBhYm91dCBzb21lIHBpZWNlCisgKiBvZiBjb2RlLCB3aGVyZSBhc3NlcnRpb25zIGFyZSB0aGUg
+cHJlbWlzZXMgZm9yIHRoZSB0ZXN0IGNhc2UsIGFuZCB0aGUKKyAqIGNvbmNsdXNpb24gaXMgYSBz
+ZXQgb2YgcHJlZGljYXRlcywgcmF0aGVyIGV4cGVjdGF0aW9ucywgdGhhdCBtdXN0IGFsbCBiZQor
+ICogdHJ1ZS4gSWYgeW91ciBwcmVtaXNlcyBhcmUgdmlvbGF0ZWQsIGl0IGRvZXMgbm90IG1ha2Vz
+IHNlbnNlIHRvIGNvbnRpbnVlLgorICovCitzdHJ1Y3Qga3VuaXRfdHJ5X2NhdGNoIHsKKwkvKiBw
+cml2YXRlOiBpbnRlcm5hbCB1c2Ugb25seS4gKi8KKwlzdHJ1Y3Qga3VuaXQgKnRlc3Q7CisJc3Ry
+dWN0IGNvbXBsZXRpb24gKnRyeV9jb21wbGV0aW9uOworCWludCB0cnlfcmVzdWx0OworCWt1bml0
+X3RyeV9jYXRjaF9mdW5jX3QgdHJ5OworCWt1bml0X3RyeV9jYXRjaF9mdW5jX3QgY2F0Y2g7CisJ
+dm9pZCAqY29udGV4dDsKK307CisKK3ZvaWQga3VuaXRfdHJ5X2NhdGNoX2luaXQoc3RydWN0IGt1
+bml0X3RyeV9jYXRjaCAqdHJ5X2NhdGNoLAorCQkJICBzdHJ1Y3Qga3VuaXQgKnRlc3QsCisJCQkg
+IGt1bml0X3RyeV9jYXRjaF9mdW5jX3QgdHJ5LAorCQkJICBrdW5pdF90cnlfY2F0Y2hfZnVuY190
+IGNhdGNoKTsKKwordm9pZCBrdW5pdF90cnlfY2F0Y2hfcnVuKHN0cnVjdCBrdW5pdF90cnlfY2F0
+Y2ggKnRyeV9jYXRjaCwgdm9pZCAqY29udGV4dCk7CisKK3ZvaWQgX19ub3JldHVybiBrdW5pdF90
+cnlfY2F0Y2hfdGhyb3coc3RydWN0IGt1bml0X3RyeV9jYXRjaCAqdHJ5X2NhdGNoKTsKKworc3Rh
+dGljIGlubGluZSBpbnQga3VuaXRfdHJ5X2NhdGNoX2dldF9yZXN1bHQoc3RydWN0IGt1bml0X3Ry
+eV9jYXRjaCAqdHJ5X2NhdGNoKQoreworCXJldHVybiB0cnlfY2F0Y2gtPnRyeV9yZXN1bHQ7Cit9
+CisKKy8qCisgKiBFeHBvc2VkIGZvciB0ZXN0aW5nIG9ubHkuCisgKi8KK3ZvaWQga3VuaXRfZ2Vu
+ZXJpY190cnlfY2F0Y2hfaW5pdChzdHJ1Y3Qga3VuaXRfdHJ5X2NhdGNoICp0cnlfY2F0Y2gpOwor
+CisjZW5kaWYgLyogX0tVTklUX1RSWV9DQVRDSF9IICovCmRpZmYgLS1naXQgYS9saWIva3VuaXQv
+TWFrZWZpbGUgYi9saWIva3VuaXQvTWFrZWZpbGUKaW5kZXggNGU0NjQ1MGJjYjNhLi5jOTE3NmM5
+YzU3OGMgMTAwNjQ0Ci0tLSBhL2xpYi9rdW5pdC9NYWtlZmlsZQorKysgYi9saWIva3VuaXQvTWFr
+ZWZpbGUKQEAgLTEsNiArMSw3IEBACiBvYmotJChDT05GSUdfS1VOSVQpICs9CQkJdGVzdC5vIFwK
+IAkJCQkJc3RyaW5nLXN0cmVhbS5vIFwKLQkJCQkJYXNzZXJ0Lm8KKwkJCQkJYXNzZXJ0Lm8gXAor
+CQkJCQl0cnktY2F0Y2gubwogCiBvYmotJChDT05GSUdfS1VOSVRfVEVTVCkgKz0JCXN0cmluZy1z
+dHJlYW0tdGVzdC5vCiAKZGlmZiAtLWdpdCBhL2xpYi9rdW5pdC90ZXN0LmMgYi9saWIva3VuaXQv
+dGVzdC5jCmluZGV4IDNjYmNlYjM0YjNiMy4uYjJjYTliOTRjMzUzIDEwMDY0NAotLS0gYS9saWIv
+a3VuaXQvdGVzdC5jCisrKyBiL2xpYi9rdW5pdC90ZXN0LmMKQEAgLTcsNyArNyw5IEBACiAgKi8K
+IAogI2luY2x1ZGUgPGt1bml0L3Rlc3QuaD4KKyNpbmNsdWRlIDxrdW5pdC90cnktY2F0Y2guaD4K
+ICNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4KKyNpbmNsdWRlIDxsaW51eC9zY2hlZC9kZWJ1Zy5o
+PgogCiBzdGF0aWMgdm9pZCBrdW5pdF9zZXRfZmFpbHVyZShzdHJ1Y3Qga3VuaXQgKnRlc3QpCiB7
+CkBAIC0xNjIsNiArMTY0LDE5IEBAIHN0YXRpYyB2b2lkIGt1bml0X2ZhaWwoc3RydWN0IGt1bml0
+ICp0ZXN0LCBzdHJ1Y3Qga3VuaXRfYXNzZXJ0ICphc3NlcnQpCiAJV0FSTl9PTihzdHJpbmdfc3Ry
+ZWFtX2Rlc3Ryb3koc3RyZWFtKSk7CiB9CiAKK3N0YXRpYyB2b2lkIF9fbm9yZXR1cm4ga3VuaXRf
+YWJvcnQoc3RydWN0IGt1bml0ICp0ZXN0KQoreworCWt1bml0X3RyeV9jYXRjaF90aHJvdygmdGVz
+dC0+dHJ5X2NhdGNoKTsgLyogRG9lcyBub3QgcmV0dXJuLiAqLworCisJLyoKKwkgKiBUaHJvdyBj
+b3VsZCBub3QgYWJvcnQgZnJvbSB0ZXN0LgorCSAqCisJICogWFhYOiB3ZSBzaG91bGQgbmV2ZXIg
+cmVhY2ggdGhpcyBsaW5lISBBcyBrdW5pdF90cnlfY2F0Y2hfdGhyb3cgaXMKKwkgKiBtYXJrZWQg
+X19ub3JldHVybi4KKwkgKi8KKwlXQVJOX09OQ0UodHJ1ZSwgIlRocm93IGNvdWxkIG5vdCBhYm9y
+dCBmcm9tIHRlc3QhXG4iKTsKK30KKwogdm9pZCBrdW5pdF9kb19hc3NlcnRpb24oc3RydWN0IGt1
+bml0ICp0ZXN0LAogCQkJc3RydWN0IGt1bml0X2Fzc2VydCAqYXNzZXJ0LAogCQkJYm9vbCBwYXNz
+LApAQCAtMTgwLDYgKzE5NSw5IEBAIHZvaWQga3VuaXRfZG9fYXNzZXJ0aW9uKHN0cnVjdCBrdW5p
+dCAqdGVzdCwKIAlrdW5pdF9mYWlsKHRlc3QsIGFzc2VydCk7CiAKIAl2YV9lbmQoYXJncyk7CisK
+KwlpZiAoYXNzZXJ0LT50eXBlID09IEtVTklUX0FTU0VSVElPTikKKwkJa3VuaXRfYWJvcnQodGVz
+dCk7CiB9CiAKIHZvaWQga3VuaXRfaW5pdF90ZXN0KHN0cnVjdCBrdW5pdCAqdGVzdCwgY29uc3Qg
+Y2hhciAqbmFtZSkKQEAgLTE5MSwzMyArMjA5LDEyMiBAQCB2b2lkIGt1bml0X2luaXRfdGVzdChz
+dHJ1Y3Qga3VuaXQgKnRlc3QsIGNvbnN0IGNoYXIgKm5hbWUpCiB9CiAKIC8qCi0gKiBQZXJmb3Jt
+cyBhbGwgbG9naWMgdG8gcnVuIGEgdGVzdCBjYXNlLgorICogSW5pdGlhbGl6ZXMgYW5kIHJ1bnMg
+dGVzdCBjYXNlLiBEb2VzIG5vdCBjbGVhbiB1cCBvciBkbyBwb3N0IHZhbGlkYXRpb25zLgogICov
+Ci1zdGF0aWMgdm9pZCBrdW5pdF9ydW5fY2FzZShzdHJ1Y3Qga3VuaXRfc3VpdGUgKnN1aXRlLAot
+CQkJICAgc3RydWN0IGt1bml0X2Nhc2UgKnRlc3RfY2FzZSkKK3N0YXRpYyB2b2lkIGt1bml0X3J1
+bl9jYXNlX2ludGVybmFsKHN0cnVjdCBrdW5pdCAqdGVzdCwKKwkJCQkgICAgc3RydWN0IGt1bml0
+X3N1aXRlICpzdWl0ZSwKKwkJCQkgICAgc3RydWN0IGt1bml0X2Nhc2UgKnRlc3RfY2FzZSkKIHsK
+LQlzdHJ1Y3Qga3VuaXQgdGVzdDsKLQotCWt1bml0X2luaXRfdGVzdCgmdGVzdCwgdGVzdF9jYXNl
+LT5uYW1lKTsKLQogCWlmIChzdWl0ZS0+aW5pdCkgewogCQlpbnQgcmV0OwogCi0JCXJldCA9IHN1
+aXRlLT5pbml0KCZ0ZXN0KTsKKwkJcmV0ID0gc3VpdGUtPmluaXQodGVzdCk7CiAJCWlmIChyZXQp
+IHsKLQkJCWt1bml0X2VycigmdGVzdCwgImZhaWxlZCB0byBpbml0aWFsaXplOiAlZFxuIiwgcmV0
+KTsKLQkJCWt1bml0X3NldF9mYWlsdXJlKCZ0ZXN0KTsKLQkJCXRlc3RfY2FzZS0+c3VjY2VzcyA9
+IHRlc3Quc3VjY2VzczsKKwkJCWt1bml0X2Vycih0ZXN0LCAiZmFpbGVkIHRvIGluaXRpYWxpemU6
+ICVkXG4iLCByZXQpOworCQkJa3VuaXRfc2V0X2ZhaWx1cmUodGVzdCk7CiAJCQlyZXR1cm47CiAJ
+CX0KIAl9CiAKLQl0ZXN0X2Nhc2UtPnJ1bl9jYXNlKCZ0ZXN0KTsKKwl0ZXN0X2Nhc2UtPnJ1bl9j
+YXNlKHRlc3QpOworfQogCitzdGF0aWMgdm9pZCBrdW5pdF9jYXNlX2ludGVybmFsX2NsZWFudXAo
+c3RydWN0IGt1bml0ICp0ZXN0KQoreworCWt1bml0X2NsZWFudXAodGVzdCk7Cit9CisKKy8qCisg
+KiBQZXJmb3JtcyBwb3N0IHZhbGlkYXRpb25zIGFuZCBjbGVhbnVwIGFmdGVyIGEgdGVzdCBjYXNl
+IHdhcyBydW4uCisgKiBYWFg6IFNob3VsZCBPTkxZIEJFIENBTExFRCBBRlRFUiBrdW5pdF9ydW5f
+Y2FzZV9pbnRlcm5hbCEKKyAqLworc3RhdGljIHZvaWQga3VuaXRfcnVuX2Nhc2VfY2xlYW51cChz
+dHJ1Y3Qga3VuaXQgKnRlc3QsCisJCQkJICAgc3RydWN0IGt1bml0X3N1aXRlICpzdWl0ZSkKK3sK
+IAlpZiAoc3VpdGUtPmV4aXQpCi0JCXN1aXRlLT5leGl0KCZ0ZXN0KTsKKwkJc3VpdGUtPmV4aXQo
+dGVzdCk7CisKKwlrdW5pdF9jYXNlX2ludGVybmFsX2NsZWFudXAodGVzdCk7Cit9CisKK3N0cnVj
+dCBrdW5pdF90cnlfY2F0Y2hfY29udGV4dCB7CisJc3RydWN0IGt1bml0ICp0ZXN0OworCXN0cnVj
+dCBrdW5pdF9zdWl0ZSAqc3VpdGU7CisJc3RydWN0IGt1bml0X2Nhc2UgKnRlc3RfY2FzZTsKK307
+CisKK3N0YXRpYyB2b2lkIGt1bml0X3RyeV9ydW5fY2FzZSh2b2lkICpkYXRhKQoreworCXN0cnVj
+dCBrdW5pdF90cnlfY2F0Y2hfY29udGV4dCAqY3R4ID0gZGF0YTsKKwlzdHJ1Y3Qga3VuaXQgKnRl
+c3QgPSBjdHgtPnRlc3Q7CisJc3RydWN0IGt1bml0X3N1aXRlICpzdWl0ZSA9IGN0eC0+c3VpdGU7
+CisJc3RydWN0IGt1bml0X2Nhc2UgKnRlc3RfY2FzZSA9IGN0eC0+dGVzdF9jYXNlOworCisJLyoK
+KwkgKiBrdW5pdF9ydW5fY2FzZV9pbnRlcm5hbCBtYXkgZW5jb3VudGVyIGEgZmF0YWwgZXJyb3I7
+IGlmIGl0IGRvZXMsCisJICogYWJvcnQgd2lsbCBiZSBjYWxsZWQsIHRoaXMgdGhyZWFkIHdpbGwg
+ZXhpdCwgYW5kIGZpbmFsbHkgdGhlIHBhcmVudAorCSAqIHRocmVhZCB3aWxsIHJlc3VtZSBjb250
+cm9sIGFuZCBoYW5kbGUgYW55IG5lY2Vzc2FyeSBjbGVhbiB1cC4KKwkgKi8KKwlrdW5pdF9ydW5f
+Y2FzZV9pbnRlcm5hbCh0ZXN0LCBzdWl0ZSwgdGVzdF9jYXNlKTsKKwkvKiBUaGlzIGxpbmUgbWF5
+IG5ldmVyIGJlIHJlYWNoZWQuICovCisJa3VuaXRfcnVuX2Nhc2VfY2xlYW51cCh0ZXN0LCBzdWl0
+ZSk7Cit9CisKK3N0YXRpYyB2b2lkIGt1bml0X2NhdGNoX3J1bl9jYXNlKHZvaWQgKmRhdGEpCit7
+CisJc3RydWN0IGt1bml0X3RyeV9jYXRjaF9jb250ZXh0ICpjdHggPSBkYXRhOworCXN0cnVjdCBr
+dW5pdCAqdGVzdCA9IGN0eC0+dGVzdDsKKwlzdHJ1Y3Qga3VuaXRfc3VpdGUgKnN1aXRlID0gY3R4
+LT5zdWl0ZTsKKwlpbnQgdHJ5X2V4aXRfY29kZSA9IGt1bml0X3RyeV9jYXRjaF9nZXRfcmVzdWx0
+KCZ0ZXN0LT50cnlfY2F0Y2gpOworCisJaWYgKHRyeV9leGl0X2NvZGUpIHsKKwkJa3VuaXRfc2V0
+X2ZhaWx1cmUodGVzdCk7CisJCS8qCisJCSAqIFRlc3QgY2FzZSBjb3VsZCBub3QgZmluaXNoLCB3
+ZSBoYXZlIG5vIGlkZWEgd2hhdCBzdGF0ZSBpdCBpcworCQkgKiBpbiwgc28gZG9uJ3QgZG8gY2xl
+YW4gdXAuCisJCSAqLworCQlpZiAodHJ5X2V4aXRfY29kZSA9PSAtRVRJTUVET1VUKSB7CisJCQlr
+dW5pdF9lcnIodGVzdCwgInRlc3QgY2FzZSB0aW1lZCBvdXRcbiIpOworCQkvKgorCQkgKiBVbmtu
+b3duIGludGVybmFsIGVycm9yIG9jY3VycmVkIHByZXZlbnRpbmcgdGVzdCBjYXNlIGZyb20KKwkJ
+ICogcnVubmluZywgc28gdGhlcmUgaXMgbm90aGluZyB0byBjbGVhbiB1cC4KKwkJICovCisJCX0g
+ZWxzZSB7CisJCQlrdW5pdF9lcnIodGVzdCwgImludGVybmFsIGVycm9yIG9jY3VycmVkIHByZXZl
+bnRpbmcgdGVzdCBjYXNlIGZyb20gcnVubmluZzogJWRcbiIsCisJCQkJICB0cnlfZXhpdF9jb2Rl
+KTsKKwkJfQorCQlyZXR1cm47CisJfQorCisJLyoKKwkgKiBUZXN0IGNhc2Ugd2FzIHJ1biwgYnV0
+IGFib3J0ZWQuIEl0IGlzIHRoZSB0ZXN0IGNhc2UncyBidXNpbmVzcyBhcyB0bworCSAqIHdoZXRo
+ZXIgaXQgZmFpbGVkIG9yIG5vdCwgd2UganVzdCBuZWVkIHRvIGNsZWFuIHVwLgorCSAqLworCWt1
+bml0X3J1bl9jYXNlX2NsZWFudXAodGVzdCwgc3VpdGUpOworfQorCisvKgorICogUGVyZm9ybXMg
+YWxsIGxvZ2ljIHRvIHJ1biBhIHRlc3QgY2FzZS4gSXQgYWxzbyBjYXRjaGVzIG1vc3QgZXJyb3Jz
+IHRoYXQKKyAqIG9jY3VyIGluIGEgdGVzdCBjYXNlIGFuZCByZXBvcnRzIHRoZW0gYXMgZmFpbHVy
+ZXMuCisgKi8KK3N0YXRpYyB2b2lkIGt1bml0X3J1bl9jYXNlX2NhdGNoX2Vycm9ycyhzdHJ1Y3Qg
+a3VuaXRfc3VpdGUgKnN1aXRlLAorCQkJCQlzdHJ1Y3Qga3VuaXRfY2FzZSAqdGVzdF9jYXNlKQor
+eworCXN0cnVjdCBrdW5pdF90cnlfY2F0Y2hfY29udGV4dCBjb250ZXh0OworCXN0cnVjdCBrdW5p
+dF90cnlfY2F0Y2ggKnRyeV9jYXRjaDsKKwlzdHJ1Y3Qga3VuaXQgdGVzdDsKKworCWt1bml0X2lu
+aXRfdGVzdCgmdGVzdCwgdGVzdF9jYXNlLT5uYW1lKTsKKwl0cnlfY2F0Y2ggPSAmdGVzdC50cnlf
+Y2F0Y2g7CiAKLQlrdW5pdF9jbGVhbnVwKCZ0ZXN0KTsKKwlrdW5pdF90cnlfY2F0Y2hfaW5pdCh0
+cnlfY2F0Y2gsCisJCQkgICAgICZ0ZXN0LAorCQkJICAgICBrdW5pdF90cnlfcnVuX2Nhc2UsCisJ
+CQkgICAgIGt1bml0X2NhdGNoX3J1bl9jYXNlKTsKKwljb250ZXh0LnRlc3QgPSAmdGVzdDsKKwlj
+b250ZXh0LnN1aXRlID0gc3VpdGU7CisJY29udGV4dC50ZXN0X2Nhc2UgPSB0ZXN0X2Nhc2U7CisJ
+a3VuaXRfdHJ5X2NhdGNoX3J1bih0cnlfY2F0Y2gsICZjb250ZXh0KTsKIAogCXRlc3RfY2FzZS0+
+c3VjY2VzcyA9IHRlc3Quc3VjY2VzczsKIH0KQEAgLTIzMCw3ICszMzcsNyBAQCBpbnQga3VuaXRf
+cnVuX3Rlc3RzKHN0cnVjdCBrdW5pdF9zdWl0ZSAqc3VpdGUpCiAJa3VuaXRfcHJpbnRfc3VidGVz
+dF9zdGFydChzdWl0ZSk7CiAKIAlmb3IgKHRlc3RfY2FzZSA9IHN1aXRlLT50ZXN0X2Nhc2VzOyB0
+ZXN0X2Nhc2UtPnJ1bl9jYXNlOyB0ZXN0X2Nhc2UrKykgewotCQlrdW5pdF9ydW5fY2FzZShzdWl0
+ZSwgdGVzdF9jYXNlKTsKKwkJa3VuaXRfcnVuX2Nhc2VfY2F0Y2hfZXJyb3JzKHN1aXRlLCB0ZXN0
+X2Nhc2UpOwogCQlrdW5pdF9wcmludF90ZXN0X2Nhc2Vfb2tfbm90X29rKHRlc3RfY2FzZSwgdGVz
+dF9jYXNlX2NvdW50KyspOwogCX0KIApkaWZmIC0tZ2l0IGEvbGliL2t1bml0L3RyeS1jYXRjaC5j
+IGIvbGliL2t1bml0L3RyeS1jYXRjaC5jCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAw
+MDAwMDAwMC4uNTU2ODY4MzllYjYxCi0tLSAvZGV2L251bGwKKysrIGIvbGliL2t1bml0L3RyeS1j
+YXRjaC5jCkBAIC0wLDAgKzEsMTE4IEBACisvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BM
+LTIuMAorLyoKKyAqIEFuIEFQSSB0byBhbGxvdyBhIGZ1bmN0aW9uLCB0aGF0IG1heSBmYWlsLCB0
+byBiZSBleGVjdXRlZCwgYW5kIHJlY292ZXIgaW4gYQorICogY29udHJvbGxlZCBtYW5uZXIuCisg
+KgorICogQ29weXJpZ2h0IChDKSAyMDE5LCBHb29nbGUgTExDLgorICogQXV0aG9yOiBCcmVuZGFu
+IEhpZ2dpbnMgPGJyZW5kYW5oaWdnaW5zQGdvb2dsZS5jb20+CisgKi8KKworI2luY2x1ZGUgPGt1
+bml0L3Rlc3QuaD4KKyNpbmNsdWRlIDxrdW5pdC90cnktY2F0Y2guaD4KKyNpbmNsdWRlIDxsaW51
+eC9jb21wbGV0aW9uLmg+CisjaW5jbHVkZSA8bGludXgva2VybmVsLmg+CisjaW5jbHVkZSA8bGlu
+dXgva3RocmVhZC5oPgorI2luY2x1ZGUgPGxpbnV4L3NjaGVkL3N5c2N0bC5oPgorCit2b2lkIF9f
+bm9yZXR1cm4ga3VuaXRfdHJ5X2NhdGNoX3Rocm93KHN0cnVjdCBrdW5pdF90cnlfY2F0Y2ggKnRy
+eV9jYXRjaCkKK3sKKwl0cnlfY2F0Y2gtPnRyeV9yZXN1bHQgPSAtRUZBVUxUOworCWNvbXBsZXRl
+X2FuZF9leGl0KHRyeV9jYXRjaC0+dHJ5X2NvbXBsZXRpb24sIC1FRkFVTFQpOworfQorCitzdGF0
+aWMgaW50IGt1bml0X2dlbmVyaWNfcnVuX3RocmVhZGZuX2FkYXB0ZXIodm9pZCAqZGF0YSkKK3sK
+KwlzdHJ1Y3Qga3VuaXRfdHJ5X2NhdGNoICp0cnlfY2F0Y2ggPSBkYXRhOworCisJdHJ5X2NhdGNo
+LT50cnkodHJ5X2NhdGNoLT5jb250ZXh0KTsKKworCWNvbXBsZXRlX2FuZF9leGl0KHRyeV9jYXRj
+aC0+dHJ5X2NvbXBsZXRpb24sIDApOworfQorCitzdGF0aWMgdW5zaWduZWQgbG9uZyBrdW5pdF90
+ZXN0X3RpbWVvdXQodm9pZCkKK3sKKwl1bnNpZ25lZCBsb25nIHRpbWVvdXRfbXNlY3M7CisKKwkv
+KgorCSAqIFRPRE8oYnJlbmRhbmhpZ2dpbnNAZ29vZ2xlLmNvbSk6IFdlIHNob3VsZCBwcm9iYWJs
+eSBoYXZlIHNvbWUgdHlwZSBvZgorCSAqIHZhcmlhYmxlIHRpbWVvdXQgaGVyZS4gVGhlIG9ubHkg
+cXVlc3Rpb24gaXMgd2hhdCB0aGF0IHRpbWVvdXQgdmFsdWUKKwkgKiBzaG91bGQgYmUuCisJICoK
+KwkgKiBUaGUgaW50ZW50aW9uIGhhcyBhbHdheXMgYmVlbiwgYXQgc29tZSBwb2ludCwgdG8gYmUg
+YWJsZSB0byBsYWJlbAorCSAqIHRlc3RzIHdpdGggc29tZSB0eXBlIG9mIHNpemUgYnVja2V0ICh1
+bml0L3NtYWxsLCBpbnRlZ3JhdGlvbi9tZWRpdW0sCisJICogbGFyZ2Uvc3lzdGVtL2VuZC10by1l
+bmQsIGV0YyksIHdoZXJlIGVhY2ggc2l6ZSBidWNrZXQgd291bGQgZ2V0IGEKKwkgKiBkZWZhdWx0
+IHRpbWVvdXQgdmFsdWUga2luZCBvZiBsaWtlIHdoYXQgQmF6ZWwgZG9lczoKKwkgKiBodHRwczov
+L2RvY3MuYmF6ZWwuYnVpbGQvdmVyc2lvbnMvbWFzdGVyL2JlL2NvbW1vbi1kZWZpbml0aW9ucy5o
+dG1sI3Rlc3Quc2l6ZQorCSAqIFRoZXJlIGlzIHN0aWxsIHNvbWUgZGViYXRlIHRvIGJlIGhhZCBv
+biBleGFjdGx5IGhvdyB3ZSBkbyB0aGlzLiAoRm9yCisJICogb25lLCB3ZSBwcm9iYWJseSB3YW50
+IHRvIGhhdmUgc29tZSBzb3J0IG9mIHRlc3QgcnVubmVyIGxldmVsCisJICogdGltZW91dC4pCisJ
+ICoKKwkgKiBGb3IgbW9yZSBiYWNrZ3JvdW5kIG9uIHRoaXMgdG9waWMsIHNlZToKKwkgKiBodHRw
+czovL21pa2UtYmxhbmQuY29tLzIwMTEvMTEvMDEvc21hbGwtbWVkaXVtLWxhcmdlLmh0bWwKKwkg
+Ki8KKwlpZiAoc3lzY3RsX2h1bmdfdGFza190aW1lb3V0X3NlY3MpIHsKKwkJLyoKKwkJICogSWYg
+c3lzY3RsX2h1bmdfdGFzayBpcyBhY3RpdmUsIGp1c3Qgc2V0IHRoZSB0aW1lb3V0IHRvIHNvbWUK
+KwkJICogdmFsdWUgbGVzcyB0aGFuIHRoYXQuCisJCSAqCisJCSAqIEluIHJlZ2FyZHMgdG8gdGhl
+IGFib3ZlIFRPRE8sIGlmIHdlIGRlY2lkZSBvbiB2YXJpYWJsZQorCQkgKiB0aW1lb3V0cywgdGhp
+cyBsb2dpYyB3aWxsIGxpa2VseSBuZWVkIHRvIGNoYW5nZS4KKwkJICovCisJCXRpbWVvdXRfbXNl
+Y3MgPSAoc3lzY3RsX2h1bmdfdGFza190aW1lb3V0X3NlY3MgLSAxKSAqCisJCQkJTVNFQ19QRVJf
+U0VDOworCX0gZWxzZSB7CisJCXRpbWVvdXRfbXNlY3MgPSAzMDAgKiBNU0VDX1BFUl9TRUM7IC8q
+IDUgbWluICovCisJfQorCisJcmV0dXJuIHRpbWVvdXRfbXNlY3M7Cit9CisKK3ZvaWQga3VuaXRf
+dHJ5X2NhdGNoX3J1bihzdHJ1Y3Qga3VuaXRfdHJ5X2NhdGNoICp0cnlfY2F0Y2gsIHZvaWQgKmNv
+bnRleHQpCit7CisJREVDTEFSRV9DT01QTEVUSU9OX09OU1RBQ0sodHJ5X2NvbXBsZXRpb24pOwor
+CXN0cnVjdCBrdW5pdCAqdGVzdCA9IHRyeV9jYXRjaC0+dGVzdDsKKwlzdHJ1Y3QgdGFza19zdHJ1
+Y3QgKnRhc2tfc3RydWN0OworCWludCBleGl0X2NvZGUsIHRpbWVfcmVtYWluaW5nOworCisJdHJ5
+X2NhdGNoLT5jb250ZXh0ID0gY29udGV4dDsKKwl0cnlfY2F0Y2gtPnRyeV9jb21wbGV0aW9uID0g
+JnRyeV9jb21wbGV0aW9uOworCXRyeV9jYXRjaC0+dHJ5X3Jlc3VsdCA9IDA7CisJdGFza19zdHJ1
+Y3QgPSBrdGhyZWFkX3J1bihrdW5pdF9nZW5lcmljX3J1bl90aHJlYWRmbl9hZGFwdGVyLAorCQkJ
+CSAgdHJ5X2NhdGNoLAorCQkJCSAgImt1bml0X3RyeV9jYXRjaF90aHJlYWQiKTsKKwlpZiAoSVNf
+RVJSKHRhc2tfc3RydWN0KSkgeworCQl0cnlfY2F0Y2gtPmNhdGNoKHRyeV9jYXRjaC0+Y29udGV4
+dCk7CisJCXJldHVybjsKKwl9CisKKwl0aW1lX3JlbWFpbmluZyA9IHdhaXRfZm9yX2NvbXBsZXRp
+b25fdGltZW91dCgmdHJ5X2NvbXBsZXRpb24sCisJCQkJCQkgICAgIGt1bml0X3Rlc3RfdGltZW91
+dCgpKTsKKwlpZiAodGltZV9yZW1haW5pbmcgPT0gMCkgeworCQlrdW5pdF9lcnIodGVzdCwgInRy
+eSB0aW1lZCBvdXRcbiIpOworCQl0cnlfY2F0Y2gtPnRyeV9yZXN1bHQgPSAtRVRJTUVET1VUOwor
+CX0KKworCWV4aXRfY29kZSA9IHRyeV9jYXRjaC0+dHJ5X3Jlc3VsdDsKKworCWlmICghZXhpdF9j
+b2RlKQorCQlyZXR1cm47CisKKwlpZiAoZXhpdF9jb2RlID09IC1FRkFVTFQpCisJCXRyeV9jYXRj
+aC0+dHJ5X3Jlc3VsdCA9IDA7CisJZWxzZSBpZiAoZXhpdF9jb2RlID09IC1FSU5UUikKKwkJa3Vu
+aXRfZXJyKHRlc3QsICJ3YWtlX3VwX3Byb2Nlc3MoKSB3YXMgbmV2ZXIgY2FsbGVkXG4iKTsKKwll
+bHNlIGlmIChleGl0X2NvZGUpCisJCWt1bml0X2Vycih0ZXN0LCAiVW5rbm93biBlcnJvcjogJWRc
+biIsIGV4aXRfY29kZSk7CisKKwl0cnlfY2F0Y2gtPmNhdGNoKHRyeV9jYXRjaC0+Y29udGV4dCk7
+Cit9CisKK3ZvaWQga3VuaXRfdHJ5X2NhdGNoX2luaXQoc3RydWN0IGt1bml0X3RyeV9jYXRjaCAq
+dHJ5X2NhdGNoLAorCQkJICBzdHJ1Y3Qga3VuaXQgKnRlc3QsCisJCQkgIGt1bml0X3RyeV9jYXRj
+aF9mdW5jX3QgdHJ5LAorCQkJICBrdW5pdF90cnlfY2F0Y2hfZnVuY190IGNhdGNoKQoreworCXRy
+eV9jYXRjaC0+dGVzdCA9IHRlc3Q7CisJdHJ5X2NhdGNoLT50cnkgPSB0cnk7CisJdHJ5X2NhdGNo
+LT5jYXRjaCA9IGNhdGNoOworfQotLSAKMi4yMy4wLjM1MS5nYzQzMTcwMzJlNi1nb29nCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
