@@ -1,142 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: iommu: Convert Arm SMMUv3 to DT schema
-Date: Fri, 20 Sep 2019 09:40:06 -0500
-Message-ID: <CAL_JsqJCZDb_C-fHm6KfDQAZ=Gek8pbJfBHMv=6xaf74-h9aYA@mail.gmail.com>
-References: <20190920134829.16432-1-robh@kernel.org> <20190920134829.16432-2-robh@kernel.org>
- <8e9f4a42-defa-8dfe-2547-174395ef8b5d@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Letux-kernel] [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to make display work again
+Date: Fri, 20 Sep 2019 16:54:18 +0200
+Message-ID: <633E7AD9-A909-4619-BBD7-8CFD965FDFF7@goldelico.com>
+References: <20190724194259.GA25847@bogus> <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com> <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com> <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com> <20190831084852.5e726cfa@aktux> <ED6A6797-D1F9-473B-ABFF-B6951A924BC1@goldelico.com> <CACRpkdZQgPVvB=78vOFsHe5n45Vwe4N6JJOcm1_vz5FbAw9CYA@mail.gmail.com> <1624298A-C51B-418A-96C3-EA09367A010D@goldelico.com> <CACRpkdZvpPOM1Ug-=GHf7Z-2VEbJz3Cuo7+0yDFuNm5ShXK8=Q@mail.gmail.com> <7DF102BC-C818-4D27-988F-150C7527E6CC@goldelico.com> <20190920142059.GO5610@atomide.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8e9f4a42-defa-8dfe-2547-174395ef8b5d@arm.com>
+In-Reply-To: <20190920142059.GO5610@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 9:17 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 20/09/2019 14:48, Rob Herring wrote:
-> > Convert the Arm SMMv3 binding to the DT schema format.
-> >
-> > Cc: Joerg Roedel <joro@8bytes.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Robin Murphy <Robin.Murphy@arm.com>
-> > Cc: iommu@lists.linux-foundation.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> >   .../devicetree/bindings/iommu/arm,smmu-v3.txt |  77 -------------
-> >   .../bindings/iommu/arm,smmu-v3.yaml           | 103 ++++++++++++++++++
-> >   2 files changed, 103 insertions(+), 77 deletions(-)
-> >   delete mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
-> >   create mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
 
-> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
-> > new file mode 100644
-> > index 000000000000..1c97bcfbf82b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
-> > @@ -0,0 +1,103 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iommu/arm,smmu-v3.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: ARM SMMUv3 Architecture Implementation
-> > +
-> > +maintainers:
-> > +  - Will Deacon <will@kernel.org>
-> > +  - Robin Murphy <Robin.Murphy@arm.com>
-> > +
-> > +description: |+
-> > +  The SMMUv3 architecture is a significant departure from previous
-> > +  revisions, replacing the MMIO register interface with in-memory command
-> > +  and event queues and adding support for the ATS and PRI components of
-> > +  the PCIe specification.
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    pattern: "^iommu@[0-9a-f]*"
-> > +  compatible:
-> > +    const: arm,smmu-v3
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    minItems: 1
-> > +    maxItems: 4
-> > +
-> > +  interrupt-names:
-> > +    oneOf:
-> > +      - const: combined
-> > +        description:
-> > +          The combined interrupt is optional, and should only be provided if the
-> > +          hardware supports just a single, combined interrupt line.
-> > +          If provided, then the combined interrupt will be used in preference to
-> > +          any others.
-> > +      - items:
-> > +          - const: eventq     # Event Queue not empty
-> > +          - const: priq       # PRI Queue not empty
-> > +          - const: cmdq-sync  # CMD_SYNC complete
-> > +          - const: gerror     # Global Error activated
-> > +      - items:
-> > +          - const: eventq
-> > +          - const: gerror
-> > +          - const: priq
-> > +      - items:
-> > +          - const: eventq
-> > +          - const: gerror
-> > +      - items:
-> > +          - const: eventq
-> > +          - const: priq
->
-> This looks a bit off - in the absence of MSIs, at least "gerror" and
-> "eventq" should be mandatory; "cmdq-sync" should probably also be from a
-> binding perspective, but Linux doesn't care about it. PRI is an optional
-> feature of the architecture, so that IRQ should always be optional. If
-> we do have MSIs, then technically the implementation is allowed to not
-> support wired IRQs at all, although in practice is likely to have at
-> least "gerror" to signal the double-fault condition of a GERROR MSI
-> write aborting.
+> Am 20.09.2019 um 16:20 schrieb Tony Lindgren <tony@atomide.com>:
+> 
+> * H. Nikolaus Schaller <hns@goldelico.com> [190920 09:19]:
+>>> Am 20.09.2019 um 10:55 schrieb Linus Walleij <linus.walleij@linaro.org>:
+>>> I suggest to go both way:
+>>> apply this oneliner and tag for stable so that GTA04 works
+>>> again.
+>>> 
+>>> Then for the next kernel think about a possible more abitious
+>>> whitelist solution and after adding that remove *all* "spi-cs-high"
+>>> flags from all device trees in the kernel after fixing them
+>>> all up.
+>> 
+>> Ok, that looks like a viable path.
+> 
+> Please repost the oneline so people can ack easily. At least
+> I've already lost track of this thread.
 
-Well, now I'm not sure where I came up with the last case, it can be
-dropped. These are the cases we have:
+It is all here:
 
-arch/arm64/boot/dts/arm/fvp-base-revc.dts:
-interrupt-names = "eventq", "priq", "cmdq-sync", "gerror";
-arch/arm64/boot/dts/hisilicon/hip07.dtsi:
-interrupt-names = "eventq", "gerror", "priq";
-arch/arm64/boot/dts/ti/k3-j721e-main.dtsi:
-interrupt-names = "eventq", "gerror";
+https://patchwork.kernel.org/patch/11035253/
 
-I'm fine if we leave warnings and expect dts files to be fixed.
-
-In an ideal world we'd have this with optional irq on the end:
-
-      - minItems: 3
-        maxItems: 4
-        items:
-          - const: eventq     # Event Queue not empty
-          - const: cmdq-sync  # CMD_SYNC complete
-          - const: gerror     # Global Error activated
-          - const: priq       # PRI Queue not empty
-
-
-A less invasive approach would be:
-
-      - items:
-          - const: eventq     # Event Queue not empty
-          - const: priq       # PRI Queue not empty
-          - const: cmdq-sync  # CMD_SYNC complete
-          - const: gerror     # Global Error activated
-      - minItems: 2
-        maxItems: 4
-        items:
-          - const: eventq
-          - const: gerror
-          - const: priq
-          - const: cmdq-sync
-
-Rob
+Best regards,
+Nikolaus
