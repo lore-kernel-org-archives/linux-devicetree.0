@@ -1,155 +1,154 @@
 From: Brendan Higgins <brendanhiggins@google.com>
-Subject: [PATCH v16 10/19] kunit: test: add tests for kunit test abort
-Date: Fri, 20 Sep 2019 16:19:14 -0700
-Message-ID: <20190920231923.141900-11-brendanhiggins@google.com>
+Subject: [PATCH v16 12/19] kunit: test: add tests for KUnit managed resources
+Date: Fri, 20 Sep 2019 16:19:16 -0700
+Message-ID: <20190920231923.141900-13-brendanhiggins@google.com>
 References: <20190920231923.141900-1-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <20190920231923.141900-1-brendanhiggins@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, torvalds@linux-foundation.org, Brendan Higgins <brendanhiggins@google.com>
+Cc: pmladek@suse.com, linux-doc@vger.kernel.org, amir73il@gmail.com, Brendan Higgins <brendanhiggins@google.com>, dri-devel@lists.freedesktop.org, Alexander.Levin@microsoft.com, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, khilman@baylibre.com, knut.omang@oracle.com, wfg@linux.intel.com, joel@jms.id.au, rientjes@google.com, jdike@addtoit.com, dan.carpenter@oracle.com, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, Tim.Bird@sony.com, Avinash Kondareddy <akndr41@gmail.com>, linux-um@lists.infradead.org, rostedt@goodmis.org, julia.lawall@lip6.fr, kunit-dev@googlegroups.com, richard@nod.at, torvalds@linux-foundation.org, rdunlap@infradead.org, linux-kernel@vger.kernel.org, mpe@ellerman.id.au, linux-fsdevel@vger.kernel.org, logang@deltatee.com
 List-Id: devicetree@vger.kernel.org
 
-Add KUnit tests for the KUnit test abort mechanism (see preceding
-commit). Add tests both for general try catch mechanism as well as
-non-architecture specific mechanism.
-
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
----
- lib/kunit/Makefile    |   3 +-
- lib/kunit/test-test.c | 106 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 108 insertions(+), 1 deletion(-)
- create mode 100644 lib/kunit/test-test.c
-
-diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
-index c9176c9c578c..769d9402b5d3 100644
---- a/lib/kunit/Makefile
-+++ b/lib/kunit/Makefile
-@@ -3,6 +3,7 @@ obj-$(CONFIG_KUNIT) +=			test.o \
- 					assert.o \
- 					try-catch.o
- 
--obj-$(CONFIG_KUNIT_TEST) +=		string-stream-test.o
-+obj-$(CONFIG_KUNIT_TEST) +=		test-test.o \
-+					string-stream-test.o
- 
- obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=	example-test.o
-diff --git a/lib/kunit/test-test.c b/lib/kunit/test-test.c
-new file mode 100644
-index 000000000000..06d34d36b103
---- /dev/null
-+++ b/lib/kunit/test-test.c
-@@ -0,0 +1,106 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * KUnit test for core test infrastructure.
-+ *
-+ * Copyright (C) 2019, Google LLC.
-+ * Author: Brendan Higgins <brendanhiggins@google.com>
-+ */
-+#include <kunit/test.h>
-+
-+struct kunit_try_catch_test_context {
-+	struct kunit_try_catch *try_catch;
-+	bool function_called;
-+};
-+
-+static void kunit_test_successful_try(void *data)
-+{
-+	struct kunit *test = data;
-+	struct kunit_try_catch_test_context *ctx = test->priv;
-+
-+	ctx->function_called = true;
-+}
-+
-+static void kunit_test_no_catch(void *data)
-+{
-+	struct kunit *test = data;
-+
-+	KUNIT_FAIL(test, "Catch should not be called\n");
-+}
-+
-+static void kunit_test_try_catch_successful_try_no_catch(struct kunit *test)
-+{
-+	struct kunit_try_catch_test_context *ctx = test->priv;
-+	struct kunit_try_catch *try_catch = ctx->try_catch;
-+
-+	kunit_try_catch_init(try_catch,
-+			     test,
-+			     kunit_test_successful_try,
-+			     kunit_test_no_catch);
-+	kunit_try_catch_run(try_catch, test);
-+
-+	KUNIT_EXPECT_TRUE(test, ctx->function_called);
-+}
-+
-+static void kunit_test_unsuccessful_try(void *data)
-+{
-+	struct kunit *test = data;
-+	struct kunit_try_catch_test_context *ctx = test->priv;
-+	struct kunit_try_catch *try_catch = ctx->try_catch;
-+
-+	kunit_try_catch_throw(try_catch);
-+	KUNIT_FAIL(test, "This line should never be reached\n");
-+}
-+
-+static void kunit_test_catch(void *data)
-+{
-+	struct kunit *test = data;
-+	struct kunit_try_catch_test_context *ctx = test->priv;
-+
-+	ctx->function_called = true;
-+}
-+
-+static void kunit_test_try_catch_unsuccessful_try_does_catch(struct kunit *test)
-+{
-+	struct kunit_try_catch_test_context *ctx = test->priv;
-+	struct kunit_try_catch *try_catch = ctx->try_catch;
-+
-+	kunit_try_catch_init(try_catch,
-+			     test,
-+			     kunit_test_unsuccessful_try,
-+			     kunit_test_catch);
-+	kunit_try_catch_run(try_catch, test);
-+
-+	KUNIT_EXPECT_TRUE(test, ctx->function_called);
-+}
-+
-+static int kunit_try_catch_test_init(struct kunit *test)
-+{
-+	struct kunit_try_catch_test_context *ctx;
-+
-+	ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	test->priv = ctx;
-+
-+	ctx->try_catch = kunit_kmalloc(test,
-+				       sizeof(*ctx->try_catch),
-+				       GFP_KERNEL);
-+	if (!ctx->try_catch)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
-+static struct kunit_case kunit_try_catch_test_cases[] = {
-+	KUNIT_CASE(kunit_test_try_catch_successful_try_no_catch),
-+	KUNIT_CASE(kunit_test_try_catch_unsuccessful_try_does_catch),
-+	{}
-+};
-+
-+static struct kunit_suite kunit_try_catch_test_suite = {
-+	.name = "kunit-try-catch-test",
-+	.init = kunit_try_catch_test_init,
-+	.test_cases = kunit_try_catch_test_cases,
-+};
-+kunit_test_suite(kunit_try_catch_test_suite);
--- 
-2.23.0.351.gc4317032e6-goog
+RnJvbTogQXZpbmFzaCBLb25kYXJlZGR5IDxha25kcjQxQGdtYWlsLmNvbT4KCkFkZCB1bml0IHRl
+c3RzIGZvciBLVW5pdCBtYW5hZ2VkIHJlc291cmNlcy4gS1VuaXQgbWFuYWdlZCByZXNvdXJjZXMK
+KHN0cnVjdCBrdW5pdF9yZXNvdXJjZSkgYXJlIHJlc291cmNlcyB0aGF0IGFyZSBhdXRvbWF0aWNh
+bGx5IGNsZWFuZWQgdXAKYXQgdGhlIGVuZCBvZiBhIEtVbml0IHRlc3QsIHNpbWlsYXIgdG8gdGhl
+IGNvbmNlcHQgb2YgZGV2bV8qIG1hbmFnZWQKcmVzb3VyY2VzLgoKU2lnbmVkLW9mZi1ieTogQXZp
+bmFzaCBLb25kYXJlZGR5IDxha25kcjQxQGdtYWlsLmNvbT4KU2lnbmVkLW9mZi1ieTogQnJlbmRh
+biBIaWdnaW5zIDxicmVuZGFuaGlnZ2luc0Bnb29nbGUuY29tPgpSZXZpZXdlZC1ieTogR3JlZyBL
+cm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4KUmV2aWV3ZWQtYnk6IExv
+Z2FuIEd1bnRob3JwZSA8bG9nYW5nQGRlbHRhdGVlLmNvbT4KUmV2aWV3ZWQtYnk6IFN0ZXBoZW4g
+Qm95ZCA8c2JveWRAa2VybmVsLm9yZz4KLS0tCiBsaWIva3VuaXQvdGVzdC10ZXN0LmMgfCAyMjgg
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdl
+ZCwgMjI4IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9saWIva3VuaXQvdGVzdC10ZXN0LmMg
+Yi9saWIva3VuaXQvdGVzdC10ZXN0LmMKaW5kZXggZTBhYjRiZDU0NmVhLi41ZWJlMDU5ZDE2ZTIg
+MTAwNjQ0Ci0tLSBhL2xpYi9rdW5pdC90ZXN0LXRlc3QuYworKysgYi9saWIva3VuaXQvdGVzdC10
+ZXN0LmMKQEAgLTEwMSwzICsxMDEsMjMxIEBAIHN0YXRpYyBzdHJ1Y3Qga3VuaXRfc3VpdGUga3Vu
+aXRfdHJ5X2NhdGNoX3Rlc3Rfc3VpdGUgPSB7CiAJLnRlc3RfY2FzZXMgPSBrdW5pdF90cnlfY2F0
+Y2hfdGVzdF9jYXNlcywKIH07CiBrdW5pdF90ZXN0X3N1aXRlKGt1bml0X3RyeV9jYXRjaF90ZXN0
+X3N1aXRlKTsKKworLyoKKyAqIENvbnRleHQgZm9yIHRlc3RpbmcgdGVzdCBtYW5hZ2VkIHJlc291
+cmNlcworICogaXNfcmVzb3VyY2VfaW5pdGlhbGl6ZWQgaXMgdXNlZCB0byB0ZXN0IGFyYml0cmFy
+eSByZXNvdXJjZXMKKyAqLworc3RydWN0IGt1bml0X3Rlc3RfcmVzb3VyY2VfY29udGV4dCB7CisJ
+c3RydWN0IGt1bml0IHRlc3Q7CisJYm9vbCBpc19yZXNvdXJjZV9pbml0aWFsaXplZDsKKwlpbnQg
+YWxsb2NhdGVfb3JkZXJbMl07CisJaW50IGZyZWVfb3JkZXJbMl07Cit9OworCitzdGF0aWMgaW50
+IGZha2VfcmVzb3VyY2VfaW5pdChzdHJ1Y3Qga3VuaXRfcmVzb3VyY2UgKnJlcywgdm9pZCAqY29u
+dGV4dCkKK3sKKwlzdHJ1Y3Qga3VuaXRfdGVzdF9yZXNvdXJjZV9jb250ZXh0ICpjdHggPSBjb250
+ZXh0OworCisJcmVzLT5hbGxvY2F0aW9uID0gJmN0eC0+aXNfcmVzb3VyY2VfaW5pdGlhbGl6ZWQ7
+CisJY3R4LT5pc19yZXNvdXJjZV9pbml0aWFsaXplZCA9IHRydWU7CisJcmV0dXJuIDA7Cit9CisK
+K3N0YXRpYyB2b2lkIGZha2VfcmVzb3VyY2VfZnJlZShzdHJ1Y3Qga3VuaXRfcmVzb3VyY2UgKnJl
+cykKK3sKKwlib29sICppc19yZXNvdXJjZV9pbml0aWFsaXplZCA9IHJlcy0+YWxsb2NhdGlvbjsK
+KworCSppc19yZXNvdXJjZV9pbml0aWFsaXplZCA9IGZhbHNlOworfQorCitzdGF0aWMgdm9pZCBr
+dW5pdF9yZXNvdXJjZV90ZXN0X2luaXRfcmVzb3VyY2VzKHN0cnVjdCBrdW5pdCAqdGVzdCkKK3sK
+KwlzdHJ1Y3Qga3VuaXRfdGVzdF9yZXNvdXJjZV9jb250ZXh0ICpjdHggPSB0ZXN0LT5wcml2Owor
+CisJa3VuaXRfaW5pdF90ZXN0KCZjdHgtPnRlc3QsICJ0ZXN0aW5nX3Rlc3RfaW5pdF90ZXN0Iik7
+CisKKwlLVU5JVF9FWFBFQ1RfVFJVRSh0ZXN0LCBsaXN0X2VtcHR5KCZjdHgtPnRlc3QucmVzb3Vy
+Y2VzKSk7Cit9CisKK3N0YXRpYyB2b2lkIGt1bml0X3Jlc291cmNlX3Rlc3RfYWxsb2NfcmVzb3Vy
+Y2Uoc3RydWN0IGt1bml0ICp0ZXN0KQoreworCXN0cnVjdCBrdW5pdF90ZXN0X3Jlc291cmNlX2Nv
+bnRleHQgKmN0eCA9IHRlc3QtPnByaXY7CisJc3RydWN0IGt1bml0X3Jlc291cmNlICpyZXM7CisJ
+a3VuaXRfcmVzb3VyY2VfZnJlZV90IGZyZWUgPSBmYWtlX3Jlc291cmNlX2ZyZWU7CisKKwlyZXMg
+PSBrdW5pdF9hbGxvY19hbmRfZ2V0X3Jlc291cmNlKCZjdHgtPnRlc3QsCisJCQkJCSAgIGZha2Vf
+cmVzb3VyY2VfaW5pdCwKKwkJCQkJICAgZmFrZV9yZXNvdXJjZV9mcmVlLAorCQkJCQkgICBHRlBf
+S0VSTkVMLAorCQkJCQkgICBjdHgpOworCisJS1VOSVRfQVNTRVJUX05PVF9FUlJfT1JfTlVMTCh0
+ZXN0LCByZXMpOworCUtVTklUX0VYUEVDVF9QVFJfRVEodGVzdCwKKwkJCSAgICAmY3R4LT5pc19y
+ZXNvdXJjZV9pbml0aWFsaXplZCwKKwkJCSAgICAoYm9vbCAqKSByZXMtPmFsbG9jYXRpb24pOwor
+CUtVTklUX0VYUEVDVF9UUlVFKHRlc3QsIGxpc3RfaXNfbGFzdCgmcmVzLT5ub2RlLCAmY3R4LT50
+ZXN0LnJlc291cmNlcykpOworCUtVTklUX0VYUEVDVF9QVFJfRVEodGVzdCwgZnJlZSwgcmVzLT5m
+cmVlKTsKK30KKworc3RhdGljIHZvaWQga3VuaXRfcmVzb3VyY2VfdGVzdF9kZXN0cm95X3Jlc291
+cmNlKHN0cnVjdCBrdW5pdCAqdGVzdCkKK3sKKwlzdHJ1Y3Qga3VuaXRfdGVzdF9yZXNvdXJjZV9j
+b250ZXh0ICpjdHggPSB0ZXN0LT5wcml2OworCXN0cnVjdCBrdW5pdF9yZXNvdXJjZSAqcmVzID0g
+a3VuaXRfYWxsb2NfYW5kX2dldF9yZXNvdXJjZSgKKwkJCSZjdHgtPnRlc3QsCisJCQlmYWtlX3Jl
+c291cmNlX2luaXQsCisJCQlmYWtlX3Jlc291cmNlX2ZyZWUsCisJCQlHRlBfS0VSTkVMLAorCQkJ
+Y3R4KTsKKworCUtVTklUX0FTU0VSVF9GQUxTRSh0ZXN0LAorCQkJICAga3VuaXRfcmVzb3VyY2Vf
+ZGVzdHJveSgmY3R4LT50ZXN0LAorCQkJCQkJICBrdW5pdF9yZXNvdXJjZV9pbnN0YW5jZV9tYXRj
+aCwKKwkJCQkJCSAgcmVzLT5mcmVlLAorCQkJCQkJICByZXMtPmFsbG9jYXRpb24pKTsKKworCUtV
+TklUX0VYUEVDVF9GQUxTRSh0ZXN0LCBjdHgtPmlzX3Jlc291cmNlX2luaXRpYWxpemVkKTsKKwlL
+VU5JVF9FWFBFQ1RfVFJVRSh0ZXN0LCBsaXN0X2VtcHR5KCZjdHgtPnRlc3QucmVzb3VyY2VzKSk7
+Cit9CisKK3N0YXRpYyB2b2lkIGt1bml0X3Jlc291cmNlX3Rlc3RfY2xlYW51cF9yZXNvdXJjZXMo
+c3RydWN0IGt1bml0ICp0ZXN0KQoreworCWludCBpOworCXN0cnVjdCBrdW5pdF90ZXN0X3Jlc291
+cmNlX2NvbnRleHQgKmN0eCA9IHRlc3QtPnByaXY7CisJc3RydWN0IGt1bml0X3Jlc291cmNlICpy
+ZXNvdXJjZXNbNV07CisKKwlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShyZXNvdXJjZXMpOyBp
+KyspIHsKKwkJcmVzb3VyY2VzW2ldID0ga3VuaXRfYWxsb2NfYW5kX2dldF9yZXNvdXJjZSgmY3R4
+LT50ZXN0LAorCQkJCQkJCSAgICBmYWtlX3Jlc291cmNlX2luaXQsCisJCQkJCQkJICAgIGZha2Vf
+cmVzb3VyY2VfZnJlZSwKKwkJCQkJCQkgICAgR0ZQX0tFUk5FTCwKKwkJCQkJCQkgICAgY3R4KTsK
+Kwl9CisKKwlrdW5pdF9jbGVhbnVwKCZjdHgtPnRlc3QpOworCisJS1VOSVRfRVhQRUNUX1RSVUUo
+dGVzdCwgbGlzdF9lbXB0eSgmY3R4LT50ZXN0LnJlc291cmNlcykpOworfQorCitzdGF0aWMgdm9p
+ZCBrdW5pdF9yZXNvdXJjZV90ZXN0X21hcmtfb3JkZXIoaW50IG9yZGVyX2FycmF5W10sCisJCQkJ
+CSAgIHNpemVfdCBvcmRlcl9zaXplLAorCQkJCQkgICBpbnQga2V5KQoreworCWludCBpOworCisJ
+Zm9yIChpID0gMDsgaSA8IG9yZGVyX3NpemUgJiYgb3JkZXJfYXJyYXlbaV07IGkrKykKKwkJOwor
+CisJb3JkZXJfYXJyYXlbaV0gPSBrZXk7Cit9CisKKyNkZWZpbmUgS1VOSVRfUkVTT1VSQ0VfVEVT
+VF9NQVJLX09SREVSKGN0eCwgb3JkZXJfZmllbGQsIGtleSkJCSAgICAgICBcCisJCWt1bml0X3Jl
+c291cmNlX3Rlc3RfbWFya19vcmRlcihjdHgtPm9yZGVyX2ZpZWxkLAkgICAgICAgXAorCQkJCQkg
+ICAgICAgQVJSQVlfU0laRShjdHgtPm9yZGVyX2ZpZWxkKSwgICBcCisJCQkJCSAgICAgICBrZXkp
+CisKK3N0YXRpYyBpbnQgZmFrZV9yZXNvdXJjZV8yX2luaXQoc3RydWN0IGt1bml0X3Jlc291cmNl
+ICpyZXMsIHZvaWQgKmNvbnRleHQpCit7CisJc3RydWN0IGt1bml0X3Rlc3RfcmVzb3VyY2VfY29u
+dGV4dCAqY3R4ID0gY29udGV4dDsKKworCUtVTklUX1JFU09VUkNFX1RFU1RfTUFSS19PUkRFUihj
+dHgsIGFsbG9jYXRlX29yZGVyLCAyKTsKKworCXJlcy0+YWxsb2NhdGlvbiA9IGN0eDsKKworCXJl
+dHVybiAwOworfQorCitzdGF0aWMgdm9pZCBmYWtlX3Jlc291cmNlXzJfZnJlZShzdHJ1Y3Qga3Vu
+aXRfcmVzb3VyY2UgKnJlcykKK3sKKwlzdHJ1Y3Qga3VuaXRfdGVzdF9yZXNvdXJjZV9jb250ZXh0
+ICpjdHggPSByZXMtPmFsbG9jYXRpb247CisKKwlLVU5JVF9SRVNPVVJDRV9URVNUX01BUktfT1JE
+RVIoY3R4LCBmcmVlX29yZGVyLCAyKTsKK30KKworc3RhdGljIGludCBmYWtlX3Jlc291cmNlXzFf
+aW5pdChzdHJ1Y3Qga3VuaXRfcmVzb3VyY2UgKnJlcywgdm9pZCAqY29udGV4dCkKK3sKKwlzdHJ1
+Y3Qga3VuaXRfdGVzdF9yZXNvdXJjZV9jb250ZXh0ICpjdHggPSBjb250ZXh0OworCisJa3VuaXRf
+YWxsb2NfYW5kX2dldF9yZXNvdXJjZSgmY3R4LT50ZXN0LAorCQkJCSAgICAgZmFrZV9yZXNvdXJj
+ZV8yX2luaXQsCisJCQkJICAgICBmYWtlX3Jlc291cmNlXzJfZnJlZSwKKwkJCQkgICAgIEdGUF9L
+RVJORUwsCisJCQkJICAgICBjdHgpOworCisJS1VOSVRfUkVTT1VSQ0VfVEVTVF9NQVJLX09SREVS
+KGN0eCwgYWxsb2NhdGVfb3JkZXIsIDEpOworCisJcmVzLT5hbGxvY2F0aW9uID0gY3R4OworCisJ
+cmV0dXJuIDA7Cit9CisKK3N0YXRpYyB2b2lkIGZha2VfcmVzb3VyY2VfMV9mcmVlKHN0cnVjdCBr
+dW5pdF9yZXNvdXJjZSAqcmVzKQoreworCXN0cnVjdCBrdW5pdF90ZXN0X3Jlc291cmNlX2NvbnRl
+eHQgKmN0eCA9IHJlcy0+YWxsb2NhdGlvbjsKKworCUtVTklUX1JFU09VUkNFX1RFU1RfTUFSS19P
+UkRFUihjdHgsIGZyZWVfb3JkZXIsIDEpOworfQorCisvKgorICogVE9ETyhicmVuZGFuaGlnZ2lu
+c0Bnb29nbGUuY29tKTogcmVwbGFjZSB0aGUgYXJyYXlzIHRoYXQga2VlcCB0cmFjayBvZiB0aGUK
+KyAqIG9yZGVyIG9mIGFsbG9jYXRpb24gYW5kIGZyZWVpbmcgd2l0aCBzdHJpY3QgbW9ja3MgdXNp
+bmcgdGhlIElOX1NFUVVFTkNFIG1hY3JvCisgKiB0byBhc3NlcnQgYWxsb2NhdGlvbiBhbmQgZnJl
+ZWluZyBvcmRlciB3aGVuIHRoZSBmZWF0dXJlIGJlY29tZXMgYXZhaWxhYmxlLgorICovCitzdGF0
+aWMgdm9pZCBrdW5pdF9yZXNvdXJjZV90ZXN0X3Byb3Blcl9mcmVlX29yZGVyaW5nKHN0cnVjdCBr
+dW5pdCAqdGVzdCkKK3sKKwlzdHJ1Y3Qga3VuaXRfdGVzdF9yZXNvdXJjZV9jb250ZXh0ICpjdHgg
+PSB0ZXN0LT5wcml2OworCisJLyogZmFrZV9yZXNvdXJjZV8xIGFsbG9jYXRlcyBhIGZha2VfcmVz
+b3VyY2VfMiBpbiBpdHMgaW5pdC4gKi8KKwlrdW5pdF9hbGxvY19hbmRfZ2V0X3Jlc291cmNlKCZj
+dHgtPnRlc3QsCisJCQkJICAgICBmYWtlX3Jlc291cmNlXzFfaW5pdCwKKwkJCQkgICAgIGZha2Vf
+cmVzb3VyY2VfMV9mcmVlLAorCQkJCSAgICAgR0ZQX0tFUk5FTCwKKwkJCQkgICAgIGN0eCk7CisK
+KwkvKgorCSAqIFNpbmNlIGZha2VfcmVzb3VyY2VfMl9pbml0IGNhbGxzIEtVTklUX1JFU09VUkNF
+X1RFU1RfTUFSS19PUkRFUgorCSAqIGJlZm9yZSByZXR1cm5pbmcgdG8gZmFrZV9yZXNvdXJjZV8x
+X2luaXQsIGl0IHNob3VsZCBiZSB0aGUgZmlyc3QgdG8KKwkgKiBwdXQgaXRzIGtleSBpbiB0aGUg
+YWxsb2NhdGVfb3JkZXIgYXJyYXkuCisJICovCisJS1VOSVRfRVhQRUNUX0VRKHRlc3QsIGN0eC0+
+YWxsb2NhdGVfb3JkZXJbMF0sIDIpOworCUtVTklUX0VYUEVDVF9FUSh0ZXN0LCBjdHgtPmFsbG9j
+YXRlX29yZGVyWzFdLCAxKTsKKworCWt1bml0X2NsZWFudXAoJmN0eC0+dGVzdCk7CisKKwkvKgor
+CSAqIEJlY2F1c2UgZmFrZV9yZXNvdXJjZV8yIGZpbmlzaGVzIGFsbG9jYXRpb24gYmVmb3JlIGZh
+a2VfcmVzb3VyY2VfMSwKKwkgKiBmYWtlX3Jlc291cmNlXzEgc2hvdWxkIGJlIGZyZWVkIGZpcnN0
+IHNpbmNlIGl0IGNvdWxkIGRlcGVuZCBvbgorCSAqIGZha2VfcmVzb3VyY2VfMi4KKwkgKi8KKwlL
+VU5JVF9FWFBFQ1RfRVEodGVzdCwgY3R4LT5mcmVlX29yZGVyWzBdLCAxKTsKKwlLVU5JVF9FWFBF
+Q1RfRVEodGVzdCwgY3R4LT5mcmVlX29yZGVyWzFdLCAyKTsKK30KKworc3RhdGljIGludCBrdW5p
+dF9yZXNvdXJjZV90ZXN0X2luaXQoc3RydWN0IGt1bml0ICp0ZXN0KQoreworCXN0cnVjdCBrdW5p
+dF90ZXN0X3Jlc291cmNlX2NvbnRleHQgKmN0eCA9CisJCQlremFsbG9jKHNpemVvZigqY3R4KSwg
+R0ZQX0tFUk5FTCk7CisKKwlLVU5JVF9BU1NFUlRfTk9UX0VSUl9PUl9OVUxMKHRlc3QsIGN0eCk7
+CisKKwl0ZXN0LT5wcml2ID0gY3R4OworCisJa3VuaXRfaW5pdF90ZXN0KCZjdHgtPnRlc3QsICJ0
+ZXN0X3Rlc3RfY29udGV4dCIpOworCisJcmV0dXJuIDA7Cit9CisKK3N0YXRpYyB2b2lkIGt1bml0
+X3Jlc291cmNlX3Rlc3RfZXhpdChzdHJ1Y3Qga3VuaXQgKnRlc3QpCit7CisJc3RydWN0IGt1bml0
+X3Rlc3RfcmVzb3VyY2VfY29udGV4dCAqY3R4ID0gdGVzdC0+cHJpdjsKKworCWt1bml0X2NsZWFu
+dXAoJmN0eC0+dGVzdCk7CisJa2ZyZWUoY3R4KTsKK30KKworc3RhdGljIHN0cnVjdCBrdW5pdF9j
+YXNlIGt1bml0X3Jlc291cmNlX3Rlc3RfY2FzZXNbXSA9IHsKKwlLVU5JVF9DQVNFKGt1bml0X3Jl
+c291cmNlX3Rlc3RfaW5pdF9yZXNvdXJjZXMpLAorCUtVTklUX0NBU0Uoa3VuaXRfcmVzb3VyY2Vf
+dGVzdF9hbGxvY19yZXNvdXJjZSksCisJS1VOSVRfQ0FTRShrdW5pdF9yZXNvdXJjZV90ZXN0X2Rl
+c3Ryb3lfcmVzb3VyY2UpLAorCUtVTklUX0NBU0Uoa3VuaXRfcmVzb3VyY2VfdGVzdF9jbGVhbnVw
+X3Jlc291cmNlcyksCisJS1VOSVRfQ0FTRShrdW5pdF9yZXNvdXJjZV90ZXN0X3Byb3Blcl9mcmVl
+X29yZGVyaW5nKSwKKwl7fQorfTsKKworc3RhdGljIHN0cnVjdCBrdW5pdF9zdWl0ZSBrdW5pdF9y
+ZXNvdXJjZV90ZXN0X3N1aXRlID0geworCS5uYW1lID0gImt1bml0LXJlc291cmNlLXRlc3QiLAor
+CS5pbml0ID0ga3VuaXRfcmVzb3VyY2VfdGVzdF9pbml0LAorCS5leGl0ID0ga3VuaXRfcmVzb3Vy
+Y2VfdGVzdF9leGl0LAorCS50ZXN0X2Nhc2VzID0ga3VuaXRfcmVzb3VyY2VfdGVzdF9jYXNlcywK
+K307CitrdW5pdF90ZXN0X3N1aXRlKGt1bml0X3Jlc291cmNlX3Rlc3Rfc3VpdGUpOwotLSAKMi4y
+My4wLjM1MS5nYzQzMTcwMzJlNi1nb29nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWw=
