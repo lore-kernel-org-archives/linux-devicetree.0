@@ -1,96 +1,53 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Convert Samsung SoC watchdog
- bindings to json-schema
-Date: Fri, 20 Sep 2019 18:00:43 +0200
-Message-ID: <20190920160043.GA3928@kozik-lap>
-References: <20190907144541.16949-1-krzk@kernel.org>
- <20190912170145.GA17889@bogus>
- <CAJKOXPfsUw-+yRc=GF+t=1pE7D3dF_wpRUwZpmfLnRbDyEmKeQ@mail.gmail.com>
- <CAL_JsqLtQ4yYJJiUcBrje+6SKiaXTmF-Cej_=ykeWKO+9ytM4Q@mail.gmail.com>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v2] DTS: ARM: gta04: introduce legacy spi-cs-high to make display work again
+Date: Fri, 20 Sep 2019 18:11:15 +0200
+Message-ID: <c031340840daba810bb2a612c35eea7fab307e56.1568995874.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLtQ4yYJJiUcBrje+6SKiaXTmF-Cej_=ykeWKO+9ytM4Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, broonie@kernel.org, linus.walleij@linaro.org
+Cc: stable@vger.kernel.org, linux-spi@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com, "H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 10:46:27AM -0500, Rob Herring wrote:
-> On Wed, Sep 18, 2019 at 6:26 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > On Fri, 13 Sep 2019 at 16:36, Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Sat, Sep 07, 2019 at 04:45:40PM +0200, Krzysztof Kozlowski wrote:
-> > > > Convert Samsung S3C/S5P/Exynos watchdog bindings to DT schema format
-> > > > using json-schema.
-> > > >
-> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > > ---
-> > > >  .../bindings/watchdog/samsung-wdt.txt         | 35 ----------
-> > > >  .../bindings/watchdog/samsung-wdt.yaml        | 69 +++++++++++++++++++
-> > > >  2 files changed, 69 insertions(+), 35 deletions(-)
-> > > >  delete mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-> > > >  create mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> > >
-> > >
-> > > > diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..39f1ca3bc4db
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> > > > @@ -0,0 +1,69 @@
-> > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/watchdog/samsung-wdt.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Samsung SoC Watchdog Timer Controller
-> > > > +
-> > > > +maintainers:
-> > > > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > > > +
-> > > > +description: |+
-> > > > +  The Samsung's Watchdog controller is used for resuming system operation
-> > > > +  after a preset amount of time during which the WDT reset event has not
-> > > > +  occurred.
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    enum:
-> > > > +      - samsung,s3c2410-wdt                   # for S3C2410
-> > > > +      - samsung,s3c6410-wdt                   # for S3C6410, S5PV210 and Exynos4
-> > > > +      - samsung,exynos5250-wdt                # for Exynos5250
-> > > > +      - samsung,exynos5420-wdt                # for Exynos5420
-> > > > +      - samsung,exynos7-wdt                   # for Exynos7
-> > > > +
-> > > > +  reg:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  interrupts:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  samsung,syscon-phandle:
-> > > > +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> > > > +    description:
-> > > > +      Phandle to the PMU system controller node (in case of Exynos5250
-> > > > +      and Exynos5420).
-> > > > +
-> > > > +  timeout-sec:
-> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > > +    description:
-> > > > +      Watchdog timeout in seconds.
-> > >
-> > > We need a common schema for this and the node name.
-> >
-> > Common schema in dt-schema or in Linux kernel bindings? If the latter,
-> > I can add it.
-> 
-> In the kernel is fine.
+commit 6953c57ab172 "gpio: of: Handle SPI chipselect legacy bindings"
 
-I'll add it in next version then.
+did introduce logic to centrally handle the legacy spi-cs-high property
+in combination with cs-gpios. This assumes that the polarity
+of the CS has to be inverted if spi-cs-high is missing, even
+and especially if non-legacy GPIO_ACTIVE_HIGH is specified.
 
-Best regards,
-Krzysztof
+The DTS for the GTA04 was orginally introduced under the assumption
+that there is no need for spi-cs-high if the gpio is defined with
+proper polarity GPIO_ACTIVE_HIGH.
+
+This was not a problem until gpiolib changed the interpretation of
+GPIO_ACTIVE_HIGH and missing spi-cs-high.
+
+The effect is that the missing spi-cs-high is now interpreted as CS being
+low (despite GPIO_ACTIVE_HIGH) which turns off the SPI interface when the
+panel is to be programmed by the panel driver.
+
+Therefore, we have to add the redundant and legacy spi-cs-high property
+to properly activate CS.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ arch/arm/boot/dts/omap3-gta04.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index b295f6fad2a5..954c216140ad 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -120,6 +120,7 @@
+ 			spi-max-frequency = <100000>;
+ 			spi-cpol;
+ 			spi-cpha;
++			spi-cs-high;
+ 
+ 			backlight= <&backlight>;
+ 			label = "lcd";
+-- 
+2.19.1
