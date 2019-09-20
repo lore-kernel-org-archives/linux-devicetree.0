@@ -1,120 +1,249 @@
-From: Pragnesh Patel <pragnesh.patel@sifive.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: dmaengine: sf-pdma: add bindins for
- SiFive PDMA
-Date: Fri, 20 Sep 2019 15:31:35 +0530
-Message-ID: <CAN8ut8Lfo3zm2mjoiH3o4FSTkHexagwUFT=V3MpgcE=arm5c4g@mail.gmail.com>
-References: <20190920090033.19438-1-green.wan@sifive.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [Patch v2 5/7] media: i2c: ov2659: Add powerdown/reset gpio
+ handling
+Date: Fri, 20 Sep 2019 13:17:06 +0300
+Message-ID: <20190920101706.GX5781@paasikivi.fi.intel.com>
+References: <20190919203955.15125-1-bparrot@ti.com>
+ <20190919203955.15125-6-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190920090033.19438-1-green.wan@sifive.com>
+Content-Disposition: inline
+In-Reply-To: <20190919203955.15125-6-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Green Wan <green.wan@sifive.com>
-Cc: linux-hackers@sifive.com, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 2:30 PM Green Wan <green.wan@sifive.com> wrote:
->
-> Add DT bindings document for Platform DMA(PDMA) driver of board,
-> HiFive Unleashed Rev A00.
->
-> Signed-off-by: Green Wan <green.wan@sifive.com>
+Hi Benoit,
+
+Thanks for the update.
+
+On Thu, Sep 19, 2019 at 03:39:53PM -0500, Benoit Parrot wrote:
+> On some board it is possible that the sensor 'powerdown' and or 'reset'
+> pin might be controlled by gpio instead of being tied.
+> 
+> To implement we add pm_runtime support which will handle the power
+> up/down sequence.
+> 
+> Now originally the driver assumed tat the sensor would always stay
+> powered and there keep its register setting. We cannot assume that this
+> anymore, so every time we "power up" we need to re-program the initial
+> registers configuration first. This was previously done only at probe
+> time.
+> 
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
 > ---
->  .../bindings/dma/sifive,fu540-c000-pdma.yaml  | 55 +++++++++++++++++++
->  MAINTAINERS                                   |  5 ++
->  2 files changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
->
-> diff --git a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> new file mode 100644
-> index 000000000000..3ed015f2b83a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
-> @@ -0,0 +1,55 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/dma/sifive,fu540-c000-pdma.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>  drivers/media/i2c/Kconfig  |  2 +-
+>  drivers/media/i2c/ov2659.c | 88 +++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 88 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> index 7eee1812bba3..315c1d8bdb7b 100644
+> --- a/drivers/media/i2c/Kconfig
+> +++ b/drivers/media/i2c/Kconfig
+> @@ -634,7 +634,7 @@ config VIDEO_OV2640
+>  config VIDEO_OV2659
+>  	tristate "OmniVision OV2659 sensor support"
+>  	depends on VIDEO_V4L2 && I2C
+> -	depends on MEDIA_CAMERA_SUPPORT
+> +	depends on MEDIA_CAMERA_SUPPORT && GPIOLIB
+>  	select V4L2_FWNODE
+>  	help
+>  	  This is a Video4Linux2 sensor driver for the OmniVision
+> diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+> index f77320e8a60d..170f80a1a51f 100644
+> --- a/drivers/media/i2c/ov2659.c
+> +++ b/drivers/media/i2c/ov2659.c
+> @@ -22,9 +22,11 @@
+>  
+>  #include <linux/clk.h>
+>  #include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+>  #include <linux/module.h>
+>  #include <linux/of_graph.h>
+> +#include <linux/pm_runtime.h>
+>  
+>  #include <media/i2c/ov2659.h>
+>  #include <media/v4l2-ctrls.h>
+> @@ -218,6 +220,11 @@ struct ov2659 {
+>  	struct sensor_register *format_ctrl_regs;
+>  	struct ov2659_pll_ctrl pll;
+>  	int streaming;
+> +	/* used to control the sensor PWDN pin */
+> +	struct gpio_desc *pwdn_gpio;
+> +	/* used to control the sensor RESETB pin */
+> +	struct gpio_desc *resetb_gpio;
+> +	int on;
+>  };
+>  
+>  static const struct sensor_register ov2659_init_regs[] = {
+> @@ -1184,9 +1191,17 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
+>  		/* Stop Streaming Sequence */
+>  		ov2659_set_streaming(ov2659, 0);
+>  		ov2659->streaming = on;
+> +		pm_runtime_put(&client->dev);
+>  		goto unlock;
+>  	}
+>  
+> +	ret = pm_runtime_get_sync(&client->dev);
+> +	if (ret < 0) {
+> +		pm_runtime_put_noidle(&client->dev);
+> +		goto unlock;
+> +	}
 > +
-> +title: SiFive Unleashed Rev C000 Platform DMA
+> +	ov2659_init(sd, 0);
+>  	ov2659_set_pixel_clock(ov2659);
+>  	ov2659_set_frame_size(ov2659);
+>  	ov2659_set_format(ov2659);
+> @@ -1243,6 +1258,32 @@ static const char * const ov2659_test_pattern_menu[] = {
+>  	"Vertical Color Bars",
+>  };
+>  
+> +static int ov2659_set_power(struct ov2659 *ov2659, int on)
+> +{
+> +	struct i2c_client *client = ov2659->client;
 > +
-> +maintainers:
-> +  - Green Wan <green.wan@sifive.com>
-> +  - Palmer Debbelt <palmer@sifive.com>
-> +  - Paul Walmsley <paul.walmsley@sifive.com>
+> +	dev_dbg(&client->dev, "%s: on: %d\n", __func__, on);
 > +
-> +description: |
-> +  Platform DMA is a DMA engine of SiFive Unleashed. It supports 4
-> +  channels. Each channel has 2 interrupts. One is for DMA done and
-> +  the other is for DME error.
+> +	if (on) {
+> +		if (ov2659->pwdn_gpio)
+> +			gpiod_direction_output(ov2659->pwdn_gpio, 0);
 > +
-> +  In different SoC, DMA could be attached to different IRQ line.
-> +  DT file need to be changed to meet the difference. For technical
-> +  doc,
-> +
-> +  https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: sifive,fu540-c000-pdma
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 8
-> +    maxItems: 8
+> +		if (ov2659->resetb_gpio) {
+> +			gpiod_set_value(ov2659->resetb_gpio, 1);
+> +			usleep_range(500, 1000);
+> +			gpiod_set_value(ov2659->resetb_gpio, 0);
+> +			usleep_range(3000, 5000);
+> +		}
 
-"make dt_binding_check" should give you the error that interrupts is too short.
+Please move the code to the runtime PM callbacks.
 
-When you say minItems: 8 then interrupts property should be like this:
-interrupts = <23>, <24>,  <25>,  <26>,  <27>,  <28>,  <29>,  <30>;
+> +	} else {
+> +		if (ov2659->pwdn_gpio)
+> +			gpiod_direction_output(ov2659->pwdn_gpio, 1);
 
-So,  remove the minItems: 8 and change maxItems: 1 for interrupts =
-<23 24 25 26 27 28 29 30>;
+Gpiod API works with NULL GPIOs, too, so no need to check here.
+
+Isn't the direction supposed to be already output, so set_value would be
+more appropriate here, and above.
+
+> +	}
+> +
+> +	ov2659->on = on;
+> +
+> +	return 0;
+> +}
+> +
+>  /* -----------------------------------------------------------------------------
+>   * V4L2 subdev internal operations
+>   */
+> @@ -1323,7 +1364,6 @@ static int ov2659_detect(struct v4l2_subdev *sd)
+>  			ret = -ENODEV;
+>  		} else {
+>  			dev_info(&client->dev, "Found OV%04X sensor\n", id);
+> -			ret = ov2659_init(sd, 0);
+>  		}
+>  	}
+>  
+> @@ -1400,6 +1440,18 @@ static int ov2659_probe(struct i2c_client *client)
+>  	    ov2659->xvclk_frequency > 27000000)
+>  		return -EINVAL;
+>  
+> +	/* Optional gpio don't fail if not present */
+> +	ov2659->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
+> +						    GPIOD_OUT_LOW);
+> +	if (IS_ERR(ov2659->pwdn_gpio))
+> +		return PTR_ERR(ov2659->pwdn_gpio);
+> +
+> +	/* Optional gpio don't fail if not present */
+> +	ov2659->resetb_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+> +						      GPIOD_OUT_HIGH);
+> +	if (IS_ERR(ov2659->resetb_gpio))
+> +		return PTR_ERR(ov2659->resetb_gpio);
+> +
+>  	v4l2_ctrl_handler_init(&ov2659->ctrls, 2);
+>  	ov2659->link_frequency =
+>  			v4l2_ctrl_new_std(&ov2659->ctrls, &ov2659_ctrl_ops,
+> @@ -1445,6 +1497,9 @@ static int ov2659_probe(struct i2c_client *client)
+>  	ov2659->frame_size = &ov2659_framesizes[2];
+>  	ov2659->format_ctrl_regs = ov2659_formats[0].format_ctrl_regs;
+>  
+> +	pm_runtime_enable(&client->dev);
+> +	pm_runtime_get_sync(&client->dev);
+
+This makes the driver depend on runtime PM.
+
+See e.g. the smiapp driver for an example how to make it work without. It
+wasn't trivial. :I You won't need autosuspend.
 
 > +
-> +  '#dma-cells':
-> +    const: 1
+>  	ret = ov2659_detect(sd);
+>  	if (ret < 0)
+>  		goto error;
+> @@ -1458,10 +1513,14 @@ static int ov2659_probe(struct i2c_client *client)
+>  
+>  	dev_info(&client->dev, "%s sensor driver registered !!\n", sd->name);
+>  
+> +	pm_runtime_put(&client->dev);
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - '#dma-cells'
+>  	return 0;
+>  
+>  error:
+>  	v4l2_ctrl_handler_free(&ov2659->ctrls);
+> +	pm_runtime_put(&client->dev);
+> +	pm_runtime_disable(&client->dev);
+>  	media_entity_cleanup(&sd->entity);
+>  	mutex_destroy(&ov2659->lock);
+>  	return ret;
+> @@ -1477,9 +1536,35 @@ static int ov2659_remove(struct i2c_client *client)
+>  	media_entity_cleanup(&sd->entity);
+>  	mutex_destroy(&ov2659->lock);
+>  
+> +	pm_runtime_disable(&client->dev);
 > +
-> +examples:
-> +  - |
-> +    dma@3000000 {
-> +      compatible = "sifive,fu540-c000-pdma";
-> +      reg = <0x0 0x3000000 0x0 0x8000>;
-> +      interrupts = <23 24 25 26 27 28 29 30>;
-> +      #dma-cells = <1>;
-> +    };
+>  	return 0;
+>  }
+>  
+> +static int ov2659_runtime_suspend(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct ov2659 *ov2659 = to_ov2659(sd);
 > +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 49f75d1b7b51..d0caa09a479e 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14591,6 +14591,11 @@ F:     drivers/media/usb/siano/
->  F:     drivers/media/usb/siano/
->  F:     drivers/media/mmc/siano/
->
-> +SIFIVE PDMA DRIVER
-> +M:     Green Wan <green.wan@sifive.com>
-> +S:     Maintained
-> +F:     Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+> +	ov2659_set_power(ov2659, 0);
 > +
->  SIFIVE DRIVERS
->  M:     Palmer Dabbelt <palmer@sifive.com>
->  M:     Paul Walmsley <paul.walmsley@sifive.com>
-> --
-> 2.17.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-hackers" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-hackers+unsubscribe@sifive.com.
-> To view this discussion on the web visit https://groups.google.com/a/sifive.com/d/msgid/linux-hackers/20190920090033.19438-1-green.wan%40sifive.com.
+> +	return 0;
+> +}
+> +
+> +static int ov2659_runtime_resume(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct ov2659 *ov2659 = to_ov2659(sd);
+> +
+> +	return ov2659_set_power(ov2659, 1);
+> +}
+> +
+> +static const struct dev_pm_ops ov2659_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(ov2659_runtime_suspend, ov2659_runtime_resume, NULL)
+> +};
+> +
+>  static const struct i2c_device_id ov2659_id[] = {
+>  	{ "ov2659", 0 },
+>  	{ /* sentinel */ },
+> @@ -1497,6 +1582,7 @@ MODULE_DEVICE_TABLE(of, ov2659_of_match);
+>  static struct i2c_driver ov2659_i2c_driver = {
+>  	.driver = {
+>  		.name	= DRIVER_NAME,
+> +		.pm	= &ov2659_pm_ops,
+>  		.of_match_table = of_match_ptr(ov2659_of_match),
+>  	},
+>  	.probe_new	= ov2659_probe,
+
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
