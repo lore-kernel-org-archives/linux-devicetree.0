@@ -1,89 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Convert Samsung SoC watchdog
- bindings to json-schema
-Date: Fri, 20 Sep 2019 10:46:27 -0500
-Message-ID: <CAL_JsqLtQ4yYJJiUcBrje+6SKiaXTmF-Cej_=ykeWKO+9ytM4Q@mail.gmail.com>
-References: <20190907144541.16949-1-krzk@kernel.org> <20190912170145.GA17889@bogus>
- <CAJKOXPfsUw-+yRc=GF+t=1pE7D3dF_wpRUwZpmfLnRbDyEmKeQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [Letux-kernel] [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to make display work again
+Date: Fri, 20 Sep 2019 17:50:06 +0200
+Message-ID: <96E62EC2-2A3E-4722-A9DE-3F320B0A98B0@goldelico.com>
+References: <20190724194259.GA25847@bogus> <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com> <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com> <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com> <20190831084852.5e726cfa@aktux> <ED6A6797-D1F9-473B-ABFF-B6951A924BC1@goldelico.com> <CACRpkdZQgPVvB=78vOFsHe5n45Vwe4N6JJOcm1_vz5FbAw9CYA@mail.gmail.com> <1624298A-C51B-418A-96C3-EA09367A010D@goldelico.com> <CACRpkdZvpPOM1Ug-=GHf7Z-2VEbJz3Cuo7+0yDFuNm5ShXK8=Q@mail.gmail.com> <7DF102BC-C818-4D27-988F-150C7527E6CC@goldelico.com> <20190920142059.GO5610@atomide.com> <633E7AD9-A909-4619-BBD7-8CFD965FDFF7@goldelico.com> <20190920172947.51c1fdec@aktux>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPfsUw-+yRc=GF+t=1pE7D3dF_wpRUwZpmfLnRbDyEmKeQ@mail.gmail.com>
+In-Reply-To: <20190920172947.51c1fdec@aktux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 6:26 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Fri, 13 Sep 2019 at 16:36, Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Sat, Sep 07, 2019 at 04:45:40PM +0200, Krzysztof Kozlowski wrote:
-> > > Convert Samsung S3C/S5P/Exynos watchdog bindings to DT schema format
-> > > using json-schema.
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > ---
-> > >  .../bindings/watchdog/samsung-wdt.txt         | 35 ----------
-> > >  .../bindings/watchdog/samsung-wdt.yaml        | 69 +++++++++++++++++++
-> > >  2 files changed, 69 insertions(+), 35 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> >
-> >
-> > > diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> > > new file mode 100644
-> > > index 000000000000..39f1ca3bc4db
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> > > @@ -0,0 +1,69 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/watchdog/samsung-wdt.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Samsung SoC Watchdog Timer Controller
-> > > +
-> > > +maintainers:
-> > > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > > +
-> > > +description: |+
-> > > +  The Samsung's Watchdog controller is used for resuming system operation
-> > > +  after a preset amount of time during which the WDT reset event has not
-> > > +  occurred.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - samsung,s3c2410-wdt                   # for S3C2410
-> > > +      - samsung,s3c6410-wdt                   # for S3C6410, S5PV210 and Exynos4
-> > > +      - samsung,exynos5250-wdt                # for Exynos5250
-> > > +      - samsung,exynos5420-wdt                # for Exynos5420
-> > > +      - samsung,exynos7-wdt                   # for Exynos7
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  samsung,syscon-phandle:
-> > > +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> > > +    description:
-> > > +      Phandle to the PMU system controller node (in case of Exynos5250
-> > > +      and Exynos5420).
-> > > +
-> > > +  timeout-sec:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description:
-> > > +      Watchdog timeout in seconds.
-> >
-> > We need a common schema for this and the node name.
->
-> Common schema in dt-schema or in Linux kernel bindings? If the latter,
-> I can add it.
 
-In the kernel is fine.
+> Am 20.09.2019 um 17:29 schrieb Andreas Kemnade <andreas@kemnade.info>:
+>=20
+> On Fri, 20 Sep 2019 16:54:18 +0200
+> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
+>=20
+>>> Am 20.09.2019 um 16:20 schrieb Tony Lindgren <tony@atomide.com>:
+>>>=20
+>>> * H. Nikolaus Schaller <hns@goldelico.com> [190920 09:19]: =20
+>>>>> Am 20.09.2019 um 10:55 schrieb Linus Walleij =
+<linus.walleij@linaro.org>:
+>>>>> I suggest to go both way:
+>>>>> apply this oneliner and tag for stable so that GTA04 works
+>>>>> again.
+>>>>>=20
+>>>>> Then for the next kernel think about a possible more abitious
+>>>>> whitelist solution and after adding that remove *all* =
+"spi-cs-high"
+>>>>> flags from all device trees in the kernel after fixing them
+>>>>> all up. =20
+>>>>=20
+>>>> Ok, that looks like a viable path. =20
+>>>=20
+>>> Please repost the oneline so people can ack easily. At least
+>>> I've already lost track of this thread. =20
+>>=20
+>> It is all here:
+>>=20
+>> https://patchwork.kernel.org/patch/11035253/
+>>=20
+> It is the full one (incl. documentation), not the oneline and does not
+> apply.
 
-Rob
+Looks as if it was sitting too long in the queue and linux-next has =
+changed
+the basis in the meantime, while v5.3 has not yet.
+
+Documentation/devicetree/bindings/spi/spi-bus.txt -> spi-controller.yaml
+
+So it should still apply for v5.3.1 and earlier and we need both =
+versions.
+One for stable and one for linux-next. I don't know how to handle such =
+cases.
+
+BR,
+Nikolaus
