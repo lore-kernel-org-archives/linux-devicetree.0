@@ -1,50 +1,142 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv5 00/10] soc: ti: add OMAP PRM driver (for reset)
-Date: Fri, 20 Sep 2019 07:28:49 -0700
-Message-ID: <20190920142849.GS5610@atomide.com>
-References: <20190912113916.20093-1-t-kristo@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: iommu: Convert Arm SMMUv3 to DT schema
+Date: Fri, 20 Sep 2019 09:40:06 -0500
+Message-ID: <CAL_JsqJCZDb_C-fHm6KfDQAZ=Gek8pbJfBHMv=6xaf74-h9aYA@mail.gmail.com>
+References: <20190920134829.16432-1-robh@kernel.org> <20190920134829.16432-2-robh@kernel.org>
+ <8e9f4a42-defa-8dfe-2547-174395ef8b5d@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190912113916.20093-1-t-kristo@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, robh+dt@kernel.org, p.zabel@pengutronix.de, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8e9f4a42-defa-8dfe-2547-174395ef8b5d@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo@ti.com> [190912 04:39]:
-> Hi,
-> 
-> V5 of the series, re-sent the whole series as one patch was dropped.
-> Changes compared to v3/v4:
-> 
-> - removed dependency towards clock driver (patch #5 was completely
->   dropped compared to v3/v4)
-> - dropped clocks property from dt binding
-> - re-added the pdata patch which was accidentally dropped out (it has
->   dependency towards this series.)
-> 
-> The new implementation (without clock driver dependency) relies on the
-> bus driver to sequence events properly, otherwise some timeouts will
-> occur either at clock driver or reset driver end.
+On Fri, Sep 20, 2019 at 9:17 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 20/09/2019 14:48, Rob Herring wrote:
+> > Convert the Arm SMMv3 binding to the DT schema format.
+> >
+> > Cc: Joerg Roedel <joro@8bytes.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Robin Murphy <Robin.Murphy@arm.com>
+> > Cc: iommu@lists.linux-foundation.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >   .../devicetree/bindings/iommu/arm,smmu-v3.txt |  77 -------------
+> >   .../bindings/iommu/arm,smmu-v3.yaml           | 103 ++++++++++++++++++
+> >   2 files changed, 103 insertions(+), 77 deletions(-)
+> >   delete mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu-v3.txt
+> >   create mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
 
-With the two updated patches seems like we're done with this
-series?
+> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
+> > new file mode 100644
+> > index 000000000000..1c97bcfbf82b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
+> > @@ -0,0 +1,103 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/iommu/arm,smmu-v3.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: ARM SMMUv3 Architecture Implementation
+> > +
+> > +maintainers:
+> > +  - Will Deacon <will@kernel.org>
+> > +  - Robin Murphy <Robin.Murphy@arm.com>
+> > +
+> > +description: |+
+> > +  The SMMUv3 architecture is a significant departure from previous
+> > +  revisions, replacing the MMIO register interface with in-memory command
+> > +  and event queues and adding support for the ATS and PRI components of
+> > +  the PCIe specification.
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: "^iommu@[0-9a-f]*"
+> > +  compatible:
+> > +    const: arm,smmu-v3
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    minItems: 1
+> > +    maxItems: 4
+> > +
+> > +  interrupt-names:
+> > +    oneOf:
+> > +      - const: combined
+> > +        description:
+> > +          The combined interrupt is optional, and should only be provided if the
+> > +          hardware supports just a single, combined interrupt line.
+> > +          If provided, then the combined interrupt will be used in preference to
+> > +          any others.
+> > +      - items:
+> > +          - const: eventq     # Event Queue not empty
+> > +          - const: priq       # PRI Queue not empty
+> > +          - const: cmdq-sync  # CMD_SYNC complete
+> > +          - const: gerror     # Global Error activated
+> > +      - items:
+> > +          - const: eventq
+> > +          - const: gerror
+> > +          - const: priq
+> > +      - items:
+> > +          - const: eventq
+> > +          - const: gerror
+> > +      - items:
+> > +          - const: eventq
+> > +          - const: priq
+>
+> This looks a bit off - in the absence of MSIs, at least "gerror" and
+> "eventq" should be mandatory; "cmdq-sync" should probably also be from a
+> binding perspective, but Linux doesn't care about it. PRI is an optional
+> feature of the architecture, so that IRQ should always be optional. If
+> we do have MSIs, then technically the implementation is allowed to not
+> support wired IRQs at all, although in practice is likely to have at
+> least "gerror" to signal the double-fault condition of a GERROR MSI
+> write aborting.
 
-If so, I suggest either Santosh or me sets up an immutable
-branch against v5.3 or v5.4-rc1 that we all can merge in.
-I will need it for the related dts changes at least.
+Well, now I'm not sure where I came up with the last case, it can be
+dropped. These are the cases we have:
 
-Regards,
+arch/arm64/boot/dts/arm/fvp-base-revc.dts:
+interrupt-names = "eventq", "priq", "cmdq-sync", "gerror";
+arch/arm64/boot/dts/hisilicon/hip07.dtsi:
+interrupt-names = "eventq", "gerror", "priq";
+arch/arm64/boot/dts/ti/k3-j721e-main.dtsi:
+interrupt-names = "eventq", "gerror";
 
-Tony
+I'm fine if we leave warnings and expect dts files to be fixed.
+
+In an ideal world we'd have this with optional irq on the end:
+
+      - minItems: 3
+        maxItems: 4
+        items:
+          - const: eventq     # Event Queue not empty
+          - const: cmdq-sync  # CMD_SYNC complete
+          - const: gerror     # Global Error activated
+          - const: priq       # PRI Queue not empty
+
+
+A less invasive approach would be:
+
+      - items:
+          - const: eventq     # Event Queue not empty
+          - const: priq       # PRI Queue not empty
+          - const: cmdq-sync  # CMD_SYNC complete
+          - const: gerror     # Global Error activated
+      - minItems: 2
+        maxItems: 4
+        items:
+          - const: eventq
+          - const: gerror
+          - const: priq
+          - const: cmdq-sync
+
+Rob
