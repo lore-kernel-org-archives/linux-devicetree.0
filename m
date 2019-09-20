@@ -1,173 +1,65 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [Patch 00/13] media: am437x-vpfe: overdue maintenance
-Date: Fri, 20 Sep 2019 10:25:02 +0200
-Message-ID: <5fe1a8a8-6172-fefa-639d-42f5be783227@xs4all.nl>
-References: <20190919204125.15254-1-bparrot@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Wen He <wen.he_1@nxp.com>
+Subject: [v2 1/2] arm64: dts: ls1028a: Update the clock providers for the Mali DP500
+Date: Fri, 20 Sep 2019 16:34:18 +0800
+Message-ID: <20190920083419.5092-1-wen.he_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190919204125.15254-1-bparrot@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-devel@linux.nxdi.nxp.com, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Wen He <wen.he_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9/19/19 10:41 PM, Benoit Parrot wrote:
-> This patch series is a collection of patches we have been carrying for a
-> while.
-> 
-> A few patches do fix actual bug and v4l2-compliance errors/warnings.
-> Other are drivers re-work to simplify/clarify the code for easier
-> maintenance.
-> 
-> We also include the SPDX Licensing update which seemed to have been
-> missed by the global script thus far.
-> 
-> Changes since v1:
-> - Address review comment from Joe, Hans and Prabhakar
-> - Cleaned-up the function entry debug log
-> - Split off the pcr change into its own patch
-> - Rework/combine two patches but remove code churn
-> - fix miscellaneous typos
+In order to maximise performance of the LCD Controller's 64-bit AXI
+bus, for any give speed bin of the device, the AXI master interface
+clock(ACLK) clock can be up to CPU_frequency/2, which is already
+capable of optimal performance. In general, ACLK is always expected
+to be equal to CPU_frequency/2. APB slave interface clock(PCLK) and
+Main processing clock(PCLK) both are tied to the same clock as ACLK.
 
-Just to verify: this patch from v1 has been dropped in this v2, right?
+This change followed the LS1028A Architecture Specification Manual.
 
-[Patch 08/13] media: am437x-vpfe: Maintain a reference to the current vpfe_fmt
+Signed-off-by: Wen He <wen.he_1@nxp.com>
+---
+change in v2:
+        - add details commit description for this change. 
+        - v1: Link: https://lore.kernel.org/patchwork/patch/1119145/
 
-Regards,
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 17 ++---------------
+ 1 file changed, 2 insertions(+), 15 deletions(-)
 
-	Hans
-
-> 
-> =============================
-> 
-> v4l2-compliance SHA: 5b168dc8473911227890526bad26553d9e8ff81b, 32 bits
-> 
-> Compliance test for vpfe device /dev/video0:
-> 
-> Driver Info:
-> 	Driver name      : vpfe
-> 	Card type        : TI AM437x VPFE
-> 	Bus info         : platform:vpfe 48326000.vpfe
-> 	Driver version   : 5.3.0
-> 	Capabilities     : 0x85200001
-> 		Vide o Capture
-> 		Read/Write
-> 		Streaming
-> 		Extended Pix Format
-> 		D evice Capabilities
-> 	Device Caps      : 0x05200001
-> 		Video Capt ure
-> 		Read/Write
-> 		Streaming
-> 		Extended Pix Format
-> 
-> Required ioctls:
-> 	test VIDIOC_QUERYCAP: OK
-> 
-> Allow for multiple opens:
-> 	test second /dev/video0 open: OK
-> 	test VIDIOC_QUERYCAP: OK
-> 	test VIDIOC_G/S_PRIORITY: OK
-> 	test for unlimited opens: OK
-> 
-> Debug ioctls:
-> 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-> 	test VIDIOC_LOG_STATUS: OK
-> 
-> Input ioctls:
-> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMINPUT: OK
-> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-> 	Inputs: 1 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
-> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
-> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK
-> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-> 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-> 	test VIDIOC_G/S_EDID: OK (Not Supported)
-> 
-> Control ioctls (Input 0):
-> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-> 	test VIDIOC_QUERYCTRL: OK
-> 	test VIDIOC_G/S_CTRL: OK
-> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> 	Standard Controls: 3 Private Controls: 0
-> 
-> Format ioctls (Input 0):
-> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-> 	test VIDIOC_G/S_PARM: OK
-> 	test VIDIOC_G_FBUF: OK (Not Supported)
-> 	test VIDIOC_G_FMT: OK
-> 	test VIDIOC_TRY_FMT: OK
-> 	test VIDIOC_S_FMT: OK
-> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-> 		fail: v4l2-test-formats.cpp(1419): node->frmsizes_count[pixfmt] > 1
-> 	test Cropping: FAIL
-> 	test Composing: OK (Not Supported)
-> 	test Scaling: OK (Not Supported)
-> 
-> Codec ioctls (Input 0):
-> 	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-> 	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-> 
-> Buffer ioctls (Input 0):
-> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-> 	test VIDIOC_EXPBUF: OK
-> 	test Requests: OK (Not Supported)
-> 
-> Test input 0:
-> 
-> Streaming ioctls:
-> 	test read/write: OK
-> 	test blocking wait: OK
-> 	test MMAP (no poll): OK                           
-> 	test MMAP (select): OK                            
-> 	test MMAP (epoll): OK                             
-> 	test USERPTR (no poll): OK (Not Supported)
-> 	test USERPTR (select): OK (Not Supported)
-> 	test DMABUF: Cannot test, specify --expbuf-device
-> 
-> Total for vpfe device /dev/video0: 51, Succeeded: 50, Failed: 1, Warnings: 0
-> dd
-> ============================
-> 
-> Benoit Parrot (12):
->   media: am437x-vpfe: Fix missing first line
->   media: am437x-vpfe: Rework ISR routine for clarity
->   media: am437x-vpfe: Wait for end of frame before tear-down
->   media: am437x-vpfe: fix start streaming error path
->   media: am437x-vpfe: Streamlined vb2 buffer cleanup
->   media: am437x-vpfe: Setting STD to current value is not an error
->   media: am437x-vpfe: Use a per instance format array instead of a
->     static one
->   media: am437x-vpfe: fix function trace debug log
->   media: am437x-vpfe: Remove print_fourcc helper
->   media: am437x-vpfe: TRY_FMT ioctl is not really trying anything
->   media: am437x-vpfe: Remove per bus width static data
->   media: am437x-vpfe: Switch to SPDX Licensing
-> 
-> Dave Gerlach (1):
->   media: am437x-vpfe: Fix suspend path to always handle pinctrl config
-> 
->  drivers/media/platform/am437x/am437x-vpfe.c   | 878 ++++++++----------
->  drivers/media/platform/am437x/am437x-vpfe.h   |  45 +-
->  .../media/platform/am437x/am437x-vpfe_regs.h  |  10 +-
->  3 files changed, 406 insertions(+), 527 deletions(-)
-> 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 72b9a75976a1..51fa8f57fdac 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -86,20 +86,6 @@
+ 		clocks = <&osc_27m>;
+ 	};
+ 
+-	aclk: clock-axi {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <650000000>;
+-		clock-output-names= "aclk";
+-	};
+-
+-	pclk: clock-apb {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <650000000>;
+-		clock-output-names= "pclk";
+-	};
+-
+ 	reboot {
+ 		compatible ="syscon-reboot";
+ 		regmap = <&dcfg>;
+@@ -679,7 +665,8 @@
+ 		interrupts = <0 222 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 223 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-names = "DE", "SE";
+-		clocks = <&dpclk 0>, <&aclk>, <&aclk>, <&pclk>;
++		clocks = <&dpclk 0>, <&clockgen 2 2>, <&clockgen 2 2>,
++			 <&clockgen 2 2>;
+ 		clock-names = "pxlclk", "mclk", "aclk", "pclk";
+ 		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
+ 		arm,malidp-arqos-value = <0xd000d000>;
+-- 
+2.17.1
