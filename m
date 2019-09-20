@@ -1,50 +1,44 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH 2/2] arm64: dts: exynos: split phandle in dmas property
-Date: Fri, 20 Sep 2019 14:14:31 +0200
-Message-ID: <20190920121431.31678-2-m.szyprowski@samsung.com>
-References: <CAL_JsqJ=QWk07y=h7dHFiRrKuE7NGoUr50bu3kiOC+YU8qS9jg@mail.gmail.com>
-        <20190920121431.31678-1-m.szyprowski@samsung.com>
-        <CGME20190920121526eucas1p2e2165c088519094752066db49aa8ae51@eucas1p2.samsung.com>
-Content-Type: text/plain; charset="utf-8"
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [Patch v2 10/13] media: am437x-vpfe: Remove print_fourcc helper
+Date: Fri, 20 Sep 2019 07:18:37 -0500
+Message-ID: <20190920121837.bnhmgnknh72m4ujw@ti.com>
+References: <20190919204125.15254-1-bparrot@ti.com>
+ <20190919204125.15254-11-bparrot@ti.com>
+ <455387f7-3211-c032-c6c0-a15100f123d1@xs4all.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190920121431.31678-1-m.szyprowski@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <455387f7-3211-c032-c6c0-a15100f123d1@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: Maciej Falkowski <m.falkowski@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Maciej Falkowski <m.falkowski@samsung.com>
+Hans Verkuil <hverkuil@xs4all.nl> wrote on Fri [2019-Sep-20 10:21:17 +0200]:
+> On 9/19/19 10:41 PM, Benoit Parrot wrote:
+> > print_fourcc helper function was used for debug log to
+> > convert a pixel format code into its readable form for display
+> > purposes. But since it used a single static buffer to perform
+> > the conversion this might lead to display format issue when more
+> > than one instance was invoked simultaneously.
+> > 
+> > It turns out that print_fourcc can be safely replace by using
+> > "%4pE" instead and passing the pointer to the fourcc code.
+> 
+> If this series is merged:
+> 
+> https://www.mail-archive.com/linux-media@vger.kernel.org/msg149985.html
+> 
+> then this patch needs to be rewritten. So I'll skip this patch for now.
 
-Change representation of phandle array as then
-dt-schema counts number of its items properly.
+Ok I'll monnitor the status of this patch and see if/when I'll rebase this
+one.
 
-Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- arch/arm64/boot/dts/exynos/exynos5433.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Benoit
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-index ba66ea906f60..ba1800c6aaf1 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -1452,7 +1452,7 @@
- 		i2s1: i2s@14d60000 {
- 			compatible = "samsung,exynos7-i2s";
- 			reg = <0x14d60000 0x100>;
--			dmas = <&pdma0 31 &pdma0 30>;
-+			dmas = <&pdma0 31>, <&pdma0 30>;
- 			dma-names = "tx", "rx";
- 			interrupts = <GIC_SPI 435 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cmu_peric CLK_PCLK_I2S1>,
-@@ -1811,7 +1811,7 @@
- 			i2s0: i2s@11440000 {
- 				compatible = "samsung,exynos7-i2s";
- 				reg = <0x11440000 0x100>;
--				dmas = <&adma 0 &adma 2>;
-+				dmas = <&adma 0>, <&adma 2>;
- 				dma-names = "tx", "rx";
- 				interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
- 				#address-cells = <1>;
--- 
-2.17.1
+> 
+> Regards,
+> 
+> 	Hans
+> 
