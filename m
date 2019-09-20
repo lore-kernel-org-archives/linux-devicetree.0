@@ -1,61 +1,197 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [Letux-kernel] [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to make display work again
-Date: Fri, 20 Sep 2019 17:50:06 +0200
-Message-ID: <96E62EC2-2A3E-4722-A9DE-3F320B0A98B0@goldelico.com>
-References: <20190724194259.GA25847@bogus> <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com> <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com> <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com> <20190831084852.5e726cfa@aktux> <ED6A6797-D1F9-473B-ABFF-B6951A924BC1@goldelico.com> <CACRpkdZQgPVvB=78vOFsHe5n45Vwe4N6JJOcm1_vz5FbAw9CYA@mail.gmail.com> <1624298A-C51B-418A-96C3-EA09367A010D@goldelico.com> <CACRpkdZvpPOM1Ug-=GHf7Z-2VEbJz3Cuo7+0yDFuNm5ShXK8=Q@mail.gmail.com> <7DF102BC-C818-4D27-988F-150C7527E6CC@goldelico.com> <20190920142059.GO5610@atomide.com> <633E7AD9-A909-4619-BBD7-8CFD965FDFF7@goldelico.com> <20190920172947.51c1fdec@aktux>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 8/8] dt-bindings: pwm: Convert Samsung PWM bindings to json-schema
+Date: Fri, 20 Sep 2019 10:50:50 -0500
+Message-ID: <CAL_Jsq+0ikCageBv3TSwx0tp=ZDkrFwpFVt2gJHWsFe2f-K2pA@mail.gmail.com>
+References: <20190918173141.4314-1-krzk@kernel.org> <20190918173141.4314-8-krzk@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190920172947.51c1fdec@aktux>
+In-Reply-To: <20190918173141.4314-8-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>, linux-tegra@vger.kernel.org, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@b>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Sep 18, 2019 at 12:32 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> Convert Samsung PWM (S3C, S5P and Exynos SoCs) bindings to DT schema
+> format using json-schema.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
+> ---
+>
+> Changes since v1:
+> 1. Indent example with four spaces (more readable),
+> 2. Fix samsung,pwm-outputs after review,
+> 3. Remove double-quotes from clock names.
+> ---
+>  .../devicetree/bindings/pwm/pwm-samsung.txt   |  51 ---------
+>  .../devicetree/bindings/pwm/pwm-samsung.yaml  | 107 ++++++++++++++++++
+>  2 files changed, 107 insertions(+), 51 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt b/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
+> deleted file mode 100644
+> index 5538de9c2007..000000000000
+> --- a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
+> +++ /dev/null
+> @@ -1,51 +0,0 @@
+> -* Samsung PWM timers
+> -
+> -Samsung SoCs contain PWM timer blocks which can be used for system clock source
+> -and clock event timers, as well as to drive SoC outputs with PWM signal. Each
+> -PWM timer block provides 5 PWM channels (not all of them can drive physical
+> -outputs - see SoC and board manual).
+> -
+> -Be aware that the clocksource driver supports only uniprocessor systems.
+> -
+> -Required properties:
+> -- compatible : should be one of following:
+> -    samsung,s3c2410-pwm - for 16-bit timers present on S3C24xx SoCs
+> -    samsung,s3c6400-pwm - for 32-bit timers present on S3C64xx SoCs
+> -    samsung,s5p6440-pwm - for 32-bit timers present on S5P64x0 SoCs
+> -    samsung,s5pc100-pwm - for 32-bit timers present on S5PC100, S5PV210,
+> -                         Exynos4210 rev0 SoCs
+> -    samsung,exynos4210-pwm - for 32-bit timers present on Exynos4210,
+> -                          Exynos4x12, Exynos5250 and Exynos5420 SoCs
+> -- reg: base address and size of register area
+> -- interrupts: list of timer interrupts (one interrupt per timer, starting at
+> -  timer 0)
+> -- clock-names: should contain all following required clock names:
+> -    - "timers" - PWM base clock used to generate PWM signals,
+> -  and any subset of following optional clock names:
+> -    - "pwm-tclk0" - first external PWM clock source,
+> -    - "pwm-tclk1" - second external PWM clock source.
+> -  Note that not all IP variants allow using all external clock sources.
+> -  Refer to SoC documentation to learn which clock source configurations
+> -  are available.
+> -- clocks: should contain clock specifiers of all clocks, which input names
+> -  have been specified in clock-names property, in same order.
+> -- #pwm-cells: should be 3. See pwm.txt in this directory for a description of
+> -  the cells format. The only third cell flag supported by this binding is
+> -  PWM_POLARITY_INVERTED.
+> -
+> -Optional properties:
+> -- samsung,pwm-outputs: list of PWM channels used as PWM outputs on particular
+> -    platform - an array of up to 5 elements being indices of PWM channels
+> -    (from 0 to 4), the order does not matter.
+> -
+> -Example:
+> -       pwm@7f006000 {
+> -               compatible = "samsung,s3c6400-pwm";
+> -               reg = <0x7f006000 0x1000>;
+> -               interrupt-parent = <&vic0>;
+> -               interrupts = <23>, <24>, <25>, <27>, <28>;
+> -               clocks = <&clock 67>;
+> -               clock-names = "timers";
+> -               samsung,pwm-outputs = <0>, <1>;
+> -               #pwm-cells = <3>;
+> -       }
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+> new file mode 100644
+> index 000000000000..06d11faabff6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
+> @@ -0,0 +1,107 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/pwm-samsung.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung SoC PWM timers
+> +
+> +maintainers:
+> +  - Thierry Reding <thierry.reding@gmail.com>
+> +  - Krzysztof Kozlowski <krzk@kernel.org>
+> +
+> +description: |+
+> +  Samsung SoCs contain PWM timer blocks which can be used for system clock source
+> +  and clock event timers, as well as to drive SoC outputs with PWM signal. Each
+> +  PWM timer block provides 5 PWM channels (not all of them can drive physical
+> +  outputs - see SoC and board manual).
+> +
+> +  Be aware that the clocksource driver supports only uniprocessor systems.
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - samsung,s3c2410-pwm             # 16-bit, S3C24xx
+> +      - samsung,s3c6400-pwm             # 32-bit, S3C64xx
+> +      - samsung,s5p6440-pwm             # 32-bit, S5P64x0
+> +      - samsung,s5pc100-pwm             # 32-bit, S5PC100, S5PV210, Exynos4210 rev0 SoCs
+> +      - samsung,exynos4210-pwm          # 32-bit, Exynos
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 3
+> +
+> +  clock-names:
+> +    description: |
+> +      Should contain all following required clock names:
+> +      - "timers" - PWM base clock used to generate PWM signals,
+> +      and any subset of following optional clock names:
+> +      - "pwm-tclk0" - first external PWM clock source,
+> +      - "pwm-tclk1" - second external PWM clock source.
+> +      Note that not all IP variants allow using all external clock sources.
+> +      Refer to SoC documentation to learn which clock source configurations
+> +      are available.
+> +    oneOf:
+> +      - items:
+> +        - const: timers
+> +      - items:
+> +        - const: timers
+> +        - const: pwm-tclk0
+> +      - items:
+> +        - const: timers
+> +        - const: pwm-tclk1
+> +      - items:
+> +        - const: timers
+> +        - const: pwm-tclk0
+> +        - const: pwm-tclk1
+> +
+> +  interrupts:
+> +    description:
+> +      One interrupt per timer, starting at timer 0.
+> +    minItems: 1
+> +    maxItems: 5
+> +
+> +  "#pwm-cells":
+> +    description:
+> +      The only third cell flag supported by this binding
+> +      is PWM_POLARITY_INVERTED.
+> +    const: 3
+> +
+> +  samsung,pwm-outputs:
+> +    description:
+> +      A list of PWM channels used as PWM outputs on particular platform.
+> +      It is an array of up to 5 elements being indices of PWM channels
+> +      (from 0 to 4), the order does not matter.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +      - uniqueItems: true
+> +      - items:
+> +          minimum: 0
+> +          maximum: 4
+> +
+> +required:
+> +  - clocks
+> +  - clock-names
+> +  - compatible
+> +  - interrupts
+> +  - "#pwm-cells"
+> +  - reg
 
-> Am 20.09.2019 um 17:29 schrieb Andreas Kemnade <andreas@kemnade.info>:
->=20
-> On Fri, 20 Sep 2019 16:54:18 +0200
-> "H. Nikolaus Schaller" <hns@goldelico.com> wrote:
->=20
->>> Am 20.09.2019 um 16:20 schrieb Tony Lindgren <tony@atomide.com>:
->>>=20
->>> * H. Nikolaus Schaller <hns@goldelico.com> [190920 09:19]: =20
->>>>> Am 20.09.2019 um 10:55 schrieb Linus Walleij =
-<linus.walleij@linaro.org>:
->>>>> I suggest to go both way:
->>>>> apply this oneliner and tag for stable so that GTA04 works
->>>>> again.
->>>>>=20
->>>>> Then for the next kernel think about a possible more abitious
->>>>> whitelist solution and after adding that remove *all* =
-"spi-cs-high"
->>>>> flags from all device trees in the kernel after fixing them
->>>>> all up. =20
->>>>=20
->>>> Ok, that looks like a viable path. =20
->>>=20
->>> Please repost the oneline so people can ack easily. At least
->>> I've already lost track of this thread. =20
->>=20
->> It is all here:
->>=20
->> https://patchwork.kernel.org/patch/11035253/
->>=20
-> It is the full one (incl. documentation), not the oneline and does not
-> apply.
+additionalProperties: false
 
-Looks as if it was sitting too long in the queue and linux-next has =
-changed
-the basis in the meantime, while v5.3 has not yet.
+should work here. And in the rng binding too.
 
-Documentation/devicetree/bindings/spi/spi-bus.txt -> spi-controller.yaml
-
-So it should still apply for v5.3.1 and earlier and we need both =
-versions.
-One for stable and one for linux-next. I don't know how to handle such =
-cases.
-
-BR,
-Nikolaus
+Rob
