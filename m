@@ -1,63 +1,106 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 5/6] ARM: dts: meson8: add the DDR clock controller
-Date: Sat, 21 Sep 2019 17:18:34 +0200
-Message-ID: <20190921151835.770263-6-martin.blumenstingl@googlemail.com>
-References: <20190921151835.770263-1-martin.blumenstingl@googlemail.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3 2/8] ARM: dts: exynos: Rename Multi Core Timer node to "timer"
+Date: Sat, 21 Sep 2019 19:01:46 +0200
+Message-ID: <20190921170152.5033-2-krzk@kernel.org>
+References: <20190921170152.5033-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190921151835.770263-1-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20190921170152.5033-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: narmstrong@baylibre.com, jbrunet@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sylwester Nawrocki <snawrocki@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the DDR clock controller and pass it's DDR_CLKID_DDR_PLL to the main
-(HHI) clock controller as "ddr_clk". The "ddr_clk" is used as one of the
-inputs for the audio clock muxes.
+The device node name should reflect generic class of a device so rename
+the Multi Core Timer node from "mct" to "timer".  This will be also in
+sync with upcoming DT schema.  No functional change.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/meson8.dtsi | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/exynos3250.dtsi | 2 +-
+ arch/arm/boot/dts/exynos4210.dtsi | 2 +-
+ arch/arm/boot/dts/exynos4412.dtsi | 2 +-
+ arch/arm/boot/dts/exynos5250.dtsi | 2 +-
+ arch/arm/boot/dts/exynos5260.dtsi | 2 +-
+ arch/arm/boot/dts/exynos54xx.dtsi | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index 4f59a4c8f036..257c1364864c 100644
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -3,6 +3,7 @@
-  * Copyright 2014 Carlo Caione <carlo@caione.org>
-  */
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index 784818490376..d122fb52d3d4 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -265,7 +265,7 @@
+ 					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
  
-+#include <dt-bindings/clock/meson8-ddr-clkc.h>
- #include <dt-bindings/clock/meson8b-clkc.h>
- #include <dt-bindings/gpio/meson8-gpio.h>
- #include <dt-bindings/reset/amlogic,meson8b-clkc-reset.h>
-@@ -195,6 +196,14 @@
- 		#size-cells = <1>;
- 		ranges = <0x0 0xc8000000 0x8000>;
+-		mct@10050000 {
++		timer@10050000 {
+ 			compatible = "samsung,exynos4210-mct";
+ 			reg = <0x10050000 0x800>;
+ 			interrupts = <GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH>,
+diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+index f220716239db..6d3f19562aab 100644
+--- a/arch/arm/boot/dts/exynos4210.dtsi
++++ b/arch/arm/boot/dts/exynos4210.dtsi
+@@ -106,7 +106,7 @@
+ 			arm,data-latency = <2 2 1>;
+ 		};
  
-+		ddr_clkc: clock-controller@400 {
-+			compatible = "amlogic,meson8-ddr-clkc";
-+			reg = <0x400 0x20>;
-+			clocks = <&xtal>;
-+			clock-names = "xtal";
-+			#clock-cells = <1>;
-+		};
-+
- 		dmcbus: bus@6000 {
- 			compatible = "simple-bus";
- 			reg = <0x6000 0x400>;
-@@ -455,8 +464,8 @@
- &hhi {
- 	clkc: clock-controller {
- 		compatible = "amlogic,meson8-clkc";
--		clocks = <&xtal>;
--		clock-names = "xtal";
-+		clocks = <&xtal>, <&ddr_clkc DDR_CLKID_DDR_PLL>;
-+		clock-names = "xtal", "ddr_pll";
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
- 	};
+-		mct: mct@10050000 {
++		mct: timer@10050000 {
+ 			compatible = "samsung,exynos4210-mct";
+ 			reg = <0x10050000 0x800>;
+ 			interrupt-parent = <&mct_map>;
+diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+index d20db2dfe8e2..8b6d5875c75d 100644
+--- a/arch/arm/boot/dts/exynos4412.dtsi
++++ b/arch/arm/boot/dts/exynos4412.dtsi
+@@ -243,7 +243,7 @@
+ 			clock-names = "aclk200", "aclk400_mcuisp";
+ 		};
+ 
+-		mct@10050000 {
++		timer@10050000 {
+ 			compatible = "samsung,exynos4412-mct";
+ 			reg = <0x10050000 0x800>;
+ 			interrupt-parent = <&mct_map>;
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index fc966c10cf49..7a01349317a3 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -233,7 +233,7 @@
+ 			power-domains = <&pd_mau>;
+ 		};
+ 
+-		mct@101c0000 {
++		timer@101c0000 {
+ 			compatible = "samsung,exynos4210-mct";
+ 			reg = <0x101C0000 0x800>;
+ 			interrupt-controller;
+diff --git a/arch/arm/boot/dts/exynos5260.dtsi b/arch/arm/boot/dts/exynos5260.dtsi
+index 3581b57fbbf7..b0811dbbb362 100644
+--- a/arch/arm/boot/dts/exynos5260.dtsi
++++ b/arch/arm/boot/dts/exynos5260.dtsi
+@@ -180,7 +180,7 @@
+ 			reg = <0x10000000 0x100>;
+ 		};
+ 
+-		mct: mct@100b0000 {
++		mct: timer@100b0000 {
+ 			compatible = "samsung,exynos4210-mct";
+ 			reg = <0x100B0000 0x1000>;
+ 			clocks = <&fin_pll>, <&clock_peri PERI_CLK_MCT>;
+diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
+index 9c3b63b7cac6..247d23872384 100644
+--- a/arch/arm/boot/dts/exynos54xx.dtsi
++++ b/arch/arm/boot/dts/exynos54xx.dtsi
+@@ -64,7 +64,7 @@
+ 			};
+ 		};
+ 
+-		mct: mct@101c0000 {
++		mct: timer@101c0000 {
+ 			compatible = "samsung,exynos4210-mct";
+ 			reg = <0x101c0000 0xb00>;
+ 			interrupt-parent = <&mct_map>;
 -- 
-2.23.0
+2.17.1
