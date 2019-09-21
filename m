@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 6/6] ARM: dts: meson8b: add the DDR clock controller
-Date: Sat, 21 Sep 2019 17:18:35 +0200
-Message-ID: <20190921151835.770263-7-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 5/6] ARM: dts: meson8: add the DDR clock controller
+Date: Sat, 21 Sep 2019 17:18:34 +0200
+Message-ID: <20190921151835.770263-6-martin.blumenstingl@googlemail.com>
 References: <20190921151835.770263-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -18,27 +18,27 @@ inputs for the audio clock muxes.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- arch/arm/boot/dts/meson8b.dtsi | 13 +++++++++++--
+ arch/arm/boot/dts/meson8.dtsi | 13 +++++++++++--
  1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 1934666ff60f..8ac8bdfaf58f 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -4,6 +4,7 @@
-  * Author: Carlo Caione <carlo@endlessm.com>
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index 4f59a4c8f036..257c1364864c 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -3,6 +3,7 @@
+  * Copyright 2014 Carlo Caione <carlo@caione.org>
   */
  
 +#include <dt-bindings/clock/meson8-ddr-clkc.h>
  #include <dt-bindings/clock/meson8b-clkc.h>
- #include <dt-bindings/gpio/meson8b-gpio.h>
- #include <dt-bindings/reset/amlogic,meson8b-reset.h>
-@@ -172,6 +173,14 @@
+ #include <dt-bindings/gpio/meson8-gpio.h>
+ #include <dt-bindings/reset/amlogic,meson8b-clkc-reset.h>
+@@ -195,6 +196,14 @@
  		#size-cells = <1>;
  		ranges = <0x0 0xc8000000 0x8000>;
  
 +		ddr_clkc: clock-controller@400 {
-+			compatible = "amlogic,meson8b-ddr-clkc";
++			compatible = "amlogic,meson8-ddr-clkc";
 +			reg = <0x400 0x20>;
 +			clocks = <&xtal>;
 +			clock-names = "xtal";
@@ -48,7 +48,7 @@ index 1934666ff60f..8ac8bdfaf58f 100644
  		dmcbus: bus@6000 {
  			compatible = "simple-bus";
  			reg = <0x6000 0x400>;
-@@ -434,8 +443,8 @@
+@@ -455,8 +464,8 @@
  &hhi {
  	clkc: clock-controller {
  		compatible = "amlogic,meson8-clkc";
