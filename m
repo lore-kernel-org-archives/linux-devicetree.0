@@ -1,107 +1,88 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 8/8] ARM: dts: exynos: Use defines for MCT interrupt GIC SPI/PPI specifier
-Date: Sat, 21 Sep 2019 19:01:52 +0200
-Message-ID: <20190921170152.5033-8-krzk@kernel.org>
-References: <20190921170152.5033-1-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190921170152.5033-1-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sylwester Nawrocki <snawrocki@kernel.org>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: Re: [PATCH] dt-bindings: net: dwmac: fix 'mac-mode' type
+Date: Sat, 21 Sep 2019 11:46:24 -0700
+Message-ID: <20190921114624.453e4b32@cakuba.netronome.com>
+References: <20190917103052.13456-1-alexandru.ardelean@analog.com>
+        <20190920181141.52cfee67@cakuba.netronome.com>
+        <f189cdbc-b399-7700-a39a-ba185df4af49@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <f189cdbc-b399-7700-a39a-ba185df4af49@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Alexandru Ardelean <alexandru.ardelean@analog.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, peppe.cavallaro@st.com, alexandre.torgue@st.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-Replace hard-coded number with appropriate define for GIC SPI or PPI
-specifier in interrupt.  This makes code easier to read.  No expected
-functionality change.
+On Fri, 20 Sep 2019 20:02:58 -0700, Florian Fainelli wrote:
+> On 9/20/2019 6:11 PM, Jakub Kicinski wrote:
+> > On Tue, 17 Sep 2019 13:30:52 +0300, Alexandru Ardelean wrote: =20
+> >> The 'mac-mode' property is similar to 'phy-mode' and 'phy-connection-t=
+ype',
+> >> which are enums of mode strings.
+> >>
+> >> The 'dwmac' driver supports almost all modes declared in the 'phy-mode'
+> >> enum (except for 1 or 2). But in general, there may be a case where
+> >> 'mac-mode' becomes more generic and is moved as part of phylib or netd=
+ev.
+> >>
+> >> In any case, the 'mac-mode' field should be made an enum, and it also =
+makes
+> >> sense to just reference the 'phy-connection-type' from
+> >> 'ethernet-controller.yaml'. That will also make it more future-proof f=
+or new
+> >> modes.
+> >>
+> >> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com> =20
+> >=20
+> > Applied, thank you!
+> >=20
+> > FWIW I had to add the Fixes tag by hand, either ozlabs patchwork or my
+> > git-pw doesn't have the automagic handling there, yet. =20
+>=20
+> AFAICT the ozlabs patchwork instance does not do it, but if you have
+> patchwork administrative rights (the jango administration panel I mean)
+> then it is simple to add the regular expression to the list of tags that
+> patchwork already recognized. Had tried getting that included by
+> default, but it also counted all of those tags and therefore was not
+> particularly fine grained:
+>=20
+> https://lists.ozlabs.org/pipermail/patchwork/2017-January/003910.html
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos4210.dtsi |  8 ++++----
- arch/arm/boot/dts/exynos4412.dtsi |  4 ++--
- arch/arm/boot/dts/exynos5250.dtsi |  4 ++--
- arch/arm/boot/dts/exynos54xx.dtsi | 16 ++++++++--------
- 4 files changed, 16 insertions(+), 16 deletions(-)
+Curious, it did seem to have counted the Fixes in the 'F' field on the
+web UI but git-pw didn't pull it down =F0=9F=A4=94
 
-diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-index 38c49ab8c733..650bee6355e4 100644
---- a/arch/arm/boot/dts/exynos4210.dtsi
-+++ b/arch/arm/boot/dts/exynos4210.dtsi
-@@ -116,12 +116,12 @@
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&mct>;
- 			interrupts = <0>, <1>, <2>, <3>, <4>, <5>;
--			interrupt-map = <0 &gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
--					<1 &gic 0 69 IRQ_TYPE_LEVEL_HIGH>,
-+			interrupt-map = <0 &gic GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+					<1 &gic GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
- 					<2 &combiner 12 6>,
- 					<3 &combiner 12 7>,
--					<4 &gic 0 42 IRQ_TYPE_LEVEL_HIGH>,
--					<5 &gic 0 48 IRQ_TYPE_LEVEL_HIGH>;
-+					<4 &gic GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-+					<5 &gic GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
- 		watchdog: watchdog@10060000 {
-diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-index 7e2dabefd53f..0810c14bf424 100644
---- a/arch/arm/boot/dts/exynos4412.dtsi
-+++ b/arch/arm/boot/dts/exynos4412.dtsi
-@@ -253,11 +253,11 @@
- 			#interrupt-cells = <1>;
- 			interrupt-parent = <&mct>;
- 			interrupts = <0>, <1>, <2>, <3>, <4>;
--			interrupt-map = <0 &gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
-+			interrupt-map = <0 &gic GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
- 					<1 &combiner 12 5>,
- 					<2 &combiner 12 6>,
- 					<3 &combiner 12 7>,
--					<4 &gic 1 12 IRQ_TYPE_LEVEL_HIGH>;
-+					<4 &gic GIC_PPI 12 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
- 		watchdog: watchdog@10060000 {
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index e0fcf3c2f537..61f22feefda9 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -247,8 +247,8 @@
- 					<1 &combiner 23 4>,
- 					<2 &combiner 25 2>,
- 					<3 &combiner 25 3>,
--					<4 &gic 0 120 IRQ_TYPE_LEVEL_HIGH>,
--					<5 &gic 0 121 IRQ_TYPE_LEVEL_HIGH>;
-+					<4 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+					<5 &gic GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
- 		pinctrl_0: pinctrl@11400000 {
-diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
-index a1c10a9a86f8..f52c7ce5d320 100644
---- a/arch/arm/boot/dts/exynos54xx.dtsi
-+++ b/arch/arm/boot/dts/exynos54xx.dtsi
-@@ -77,14 +77,14 @@
- 					<1 &combiner 23 4>,
- 					<2 &combiner 25 2>,
- 					<3 &combiner 25 3>,
--					<4 &gic 0 120 IRQ_TYPE_LEVEL_HIGH>,
--					<5 &gic 0 121 IRQ_TYPE_LEVEL_HIGH>,
--					<6 &gic 0 122 IRQ_TYPE_LEVEL_HIGH>,
--					<7 &gic 0 123 IRQ_TYPE_LEVEL_HIGH>,
--					<8 &gic 0 128 IRQ_TYPE_LEVEL_HIGH>,
--					<9 &gic 0 129 IRQ_TYPE_LEVEL_HIGH>,
--					<10 &gic 0 130 IRQ_TYPE_LEVEL_HIGH>,
--					<11 &gic 0 131 IRQ_TYPE_LEVEL_HIGH>;
-+					<4 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+					<5 &gic GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+					<6 &gic GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+					<7 &gic GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+					<8 &gic GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>,
-+					<9 &gic GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>,
-+					<10 &gic GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
-+					<11 &gic GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
- 		watchdog: watchdog@101d0000 {
--- 
-2.17.1
+linux$ git checkout 92974a1d006ad8b30d53047c70974c9e065eb7df
+Note: checking out '92974a1d006ad8b30d53047c70974c9e065eb7df'.
+[...]
+linux$ git pw patch apply 1163199 --signoff
+11:41 linux$ git show
+commit ac964661384b93ff3c9839c6d56f293195d54b4e (HEAD)
+Author: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Date:   Tue Sep 17 13:30:52 2019 +0300
+
+    dt-bindings: net: dwmac: fix 'mac-mode' type
+   =20
+    The 'mac-mode' property is similar to 'phy-mode' and 'phy-connection-ty=
+pe',
+    which are enums of mode strings.
+   =20
+    The 'dwmac' driver supports almost all modes declared in the 'phy-mode'
+    enum (except for 1 or 2). But in general, there may be a case where
+    'mac-mode' becomes more generic and is moved as part of phylib or netde=
+v.
+   =20
+    In any case, the 'mac-mode' field should be made an enum, and it also m=
+akes
+    sense to just reference the 'phy-connection-type' from
+    'ethernet-controller.yaml'. That will also make it more future-proof fo=
+r new
+    modes.
+   =20
+    Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+    Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+    Reviewed-by: Rob Herring <robh@kernel.org>
+    Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+
+11:41 linux$=20
