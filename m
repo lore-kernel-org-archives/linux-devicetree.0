@@ -1,88 +1,67 @@
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: Re: [PATCH] dt-bindings: net: dwmac: fix 'mac-mode' type
-Date: Sat, 21 Sep 2019 11:46:24 -0700
-Message-ID: <20190921114624.453e4b32@cakuba.netronome.com>
-References: <20190917103052.13456-1-alexandru.ardelean@analog.com>
-        <20190920181141.52cfee67@cakuba.netronome.com>
-        <f189cdbc-b399-7700-a39a-ba185df4af49@gmail.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 2/3] dt-bindings: Add Logic PD Type 28 display panel
+Date: Sat, 21 Sep 2019 21:07:08 +0200
+Message-ID: <20190921190708.GB32133@ravnborg.org>
+References: <20190917161214.2913-1-aford173@gmail.com>
+ <20190917161214.2913-2-aford173@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <f189cdbc-b399-7700-a39a-ba185df4af49@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Alexandru Ardelean <alexandru.ardelean@analog.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, robh+dt@kernel.org, peppe.cavallaro@st.com, alexandre.torgue@st.com, andrew@lunn.ch
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190917161214.2913-2-aford173@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Adam Ford <aford173@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org, adam.ford@logicpd.com, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 20 Sep 2019 20:02:58 -0700, Florian Fainelli wrote:
-> On 9/20/2019 6:11 PM, Jakub Kicinski wrote:
-> > On Tue, 17 Sep 2019 13:30:52 +0300, Alexandru Ardelean wrote: =20
-> >> The 'mac-mode' property is similar to 'phy-mode' and 'phy-connection-t=
-ype',
-> >> which are enums of mode strings.
-> >>
-> >> The 'dwmac' driver supports almost all modes declared in the 'phy-mode'
-> >> enum (except for 1 or 2). But in general, there may be a case where
-> >> 'mac-mode' becomes more generic and is moved as part of phylib or netd=
-ev.
-> >>
-> >> In any case, the 'mac-mode' field should be made an enum, and it also =
-makes
-> >> sense to just reference the 'phy-connection-type' from
-> >> 'ethernet-controller.yaml'. That will also make it more future-proof f=
-or new
-> >> modes.
-> >>
-> >> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com> =20
-> >=20
-> > Applied, thank you!
-> >=20
-> > FWIW I had to add the Fixes tag by hand, either ozlabs patchwork or my
-> > git-pw doesn't have the automagic handling there, yet. =20
->=20
-> AFAICT the ozlabs patchwork instance does not do it, but if you have
-> patchwork administrative rights (the jango administration panel I mean)
-> then it is simple to add the regular expression to the list of tags that
-> patchwork already recognized. Had tried getting that included by
-> default, but it also counted all of those tags and therefore was not
-> particularly fine grained:
->=20
-> https://lists.ozlabs.org/pipermail/patchwork/2017-January/003910.html
+Hi Adam.
 
-Curious, it did seem to have counted the Fixes in the 'F' field on the
-web UI but git-pw didn't pull it down =F0=9F=A4=94
+Good with even more panels.
+But for new bindings please use meta-schema (.yaml) format.
+This is what we use for new bindings as it allows better
+validation.
 
-linux$ git checkout 92974a1d006ad8b30d53047c70974c9e065eb7df
-Note: checking out '92974a1d006ad8b30d53047c70974c9e065eb7df'.
-[...]
-linux$ git pw patch apply 1163199 --signoff
-11:41 linux$ git show
-commit ac964661384b93ff3c9839c6d56f293195d54b4e (HEAD)
-Author: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Date:   Tue Sep 17 13:30:52 2019 +0300
+	Sam
 
-    dt-bindings: net: dwmac: fix 'mac-mode' type
-   =20
-    The 'mac-mode' property is similar to 'phy-mode' and 'phy-connection-ty=
-pe',
-    which are enums of mode strings.
-   =20
-    The 'dwmac' driver supports almost all modes declared in the 'phy-mode'
-    enum (except for 1 or 2). But in general, there may be a case where
-    'mac-mode' becomes more generic and is moved as part of phylib or netde=
-v.
-   =20
-    In any case, the 'mac-mode' field should be made an enum, and it also m=
-akes
-    sense to just reference the 'phy-connection-type' from
-    'ethernet-controller.yaml'. That will also make it more future-proof fo=
-r new
-    modes.
-   =20
-    Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-    Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-    Reviewed-by: Rob Herring <robh@kernel.org>
-    Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+On Tue, Sep 17, 2019 at 11:12:12AM -0500, Adam Ford wrote:
+> This patch adds documentation of device tree bindings for the WVGA panel
+> Logic PD Type 28 display.
+> 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/logicpd,type28.txt b/Documentation/devicetree/bindings/display/panel/logicpd,type28.txt
+> new file mode 100644
+> index 000000000000..829fc5210e06
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/logicpd,type28.txt
+> @@ -0,0 +1,26 @@
+> +Logic PD Type 28 4.3" WQVGA TFT LCD panel
+> +
+> +This binding is compatible with the simple-panel binding, which is specified
+> +in simple-panel.txt in this directory.
+> +
+> +Required properties:
+> +- compatible: should be "logicpd,type28"
+> +
+> +Optional properties:
+> +- power-supply: regulator to provide the supply voltage
+> +- enable-gpios: GPIO pin to enable or disable the panel
+> +- backlight: phandle of the backlight device attached to the panel
+Is it correct that these are optional for the descrivbed panel?
 
-11:41 linux$=20
+> +
+> +Optional nodes:
+> +- Video port for RGB input.
+> +
+> +Example:
+> +	lcd0: display {
+> +		compatible = "logicpd,type28";
+> +		enable-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;
+> +		port {
+> +			lcd_in: endpoint {
+> +				remote-endpoint = <&dpi_out>;
+> +			};
+> +		};
+> +	};
+> -- 
+> 2.17.1
