@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/6] dt-bindings: clock: add the Amlogic Meson8 DDR clock controller binding
-Date: Sat, 21 Sep 2019 17:18:30 +0200
-Message-ID: <20190921151835.770263-2-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 3/6] clk: meson: meson8b: use of_clk_hw_register to register the clocks
+Date: Sat, 21 Sep 2019 17:18:32 +0200
+Message-ID: <20190921151835.770263-4-martin.blumenstingl@googlemail.com>
 References: <20190921151835.770263-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,89 +12,27 @@ To: narmstrong@baylibre.com, jbrunet@baylibre.com, robh+dt@kernel.org, mark.rutl
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Amlogic Meson8, Meson8b and Meson8m2 SoCs have a DDR clock controller in
-the MMCBUS registers. There is no public documentation on this, but the
-GPL u-boot sources from the Amlogic BSP show that:
-- it uses the same XTAL input as the main clock controller
-- it contains a PLL which seems to be implemented just like the other
-  PLLs in this SoC
-- there is a power-of-two PLL post-divider
-
-Add the documentation and header file for this DDR clock controller.
+Switch from clk_hw_register to of_clk_hw_register so we can use
+clk_parent_data.fw_name. This will be used to get the "xtal", "ddr_pll"
+and possibly others from the .dtb.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- .../clock/amlogic,meson8-ddr-clkc.yaml        | 50 +++++++++++++++++++
- include/dt-bindings/clock/meson8-ddr-clkc.h   |  4 ++
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml
- create mode 100644 include/dt-bindings/clock/meson8-ddr-clkc.h
+ drivers/clk/meson/meson8b.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml
-new file mode 100644
-index 000000000000..bf3ca5888485
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/amlogic,meson8-ddr-clkc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Amlogic DDR Clock Controller Device Tree Bindings
-+
-+maintainers:
-+  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - amlogic,meson8-ddr-clkc
-+      - amlogic,meson8b-ddr-clkc
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: xtal
-+
-+  "#clock-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - "#clock-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    ddr_clkc: clock-controller@400 {
-+      compatible = "amlogic,meson8-ddr-clkc";
-+      reg = <0x400 0x20>;
-+      clocks = <&xtal>;
-+      clock-names = "xtal";
-+      #clock-cells = <1>;
-+    };
-+
-+...
-diff --git a/include/dt-bindings/clock/meson8-ddr-clkc.h b/include/dt-bindings/clock/meson8-ddr-clkc.h
-new file mode 100644
-index 000000000000..a8e0fa2987ab
---- /dev/null
-+++ b/include/dt-bindings/clock/meson8-ddr-clkc.h
-@@ -0,0 +1,4 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#define DDR_CLKID_DDR_PLL_DCO			0
-+#define DDR_CLKID_DDR_PLL			1
+diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+index 15ec14fde2a0..fefb4b7185d0 100644
+--- a/drivers/clk/meson/meson8b.c
++++ b/drivers/clk/meson/meson8b.c
+@@ -3696,7 +3696,7 @@ static void __init meson8b_clkc_init_common(struct device_node *np,
+ 		if (!clk_hw_onecell_data->hws[i])
+ 			continue;
+ 
+-		ret = clk_hw_register(NULL, clk_hw_onecell_data->hws[i]);
++		ret = of_clk_hw_register(np, clk_hw_onecell_data->hws[i]);
+ 		if (ret)
+ 			return;
+ 	}
 -- 
 2.23.0
