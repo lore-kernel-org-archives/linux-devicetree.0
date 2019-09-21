@@ -1,52 +1,100 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 0/6] add the DDR clock controller on Meson8 and Meson8b
-Date: Sat, 21 Sep 2019 17:18:29 +0200
-Message-ID: <20190921151835.770263-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/6] dt-bindings: clock: add the Amlogic Meson8 DDR clock controller binding
+Date: Sat, 21 Sep 2019 17:18:30 +0200
+Message-ID: <20190921151835.770263-2-martin.blumenstingl@googlemail.com>
+References: <20190921151835.770263-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190921151835.770263-1-martin.blumenstingl@googlemail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: narmstrong@baylibre.com, jbrunet@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Meson8 and Meson8b SoCs embed a DDR clock controller in their MMCBUS
-registers. This series:
-- adds support for this DDR clock controller (patches 0 and 1)
-- wires up the DDR PLL as input for two audio clocks (patches 2 and 3)
-- adds the DDR clock controller to meson8.dtsi and meson8b.dtsi
+Amlogic Meson8, Meson8b and Meson8m2 SoCs have a DDR clock controller in
+the MMCBUS registers. There is no public documentation on this, but the
+GPL u-boot sources from the Amlogic BSP show that:
+- it uses the same XTAL input as the main clock controller
+- it contains a PLL which seems to be implemented just like the other
+  PLLs in this SoC
+- there is a power-of-two PLL post-divider
 
-Special thanks go out to Alexandre Mergnat for switching the Amlogic
-clock drivers over to parent_hws and parent_data. That made this series
-a lot easier for me!
+Add the documentation and header file for this DDR clock controller.
 
-This series depends on my other series from [0]:
-"provide the XTAL clock via OF on Meson8/8b/8m2"
-
-
-[0] https://patchwork.kernel.org/cover/11155515/
-
-
-Martin Blumenstingl (6):
-  dt-bindings: clock: add the Amlogic Meson8 DDR clock controller
-    binding
-  clk: meson: add a driver for the Meson8/8b/8m2 DDR clock controller
-  clk: meson: meson8b: use of_clk_hw_register to register the clocks
-  clk: meson: meson8b: add the ddr_pll input for the audio clocks
-  ARM: dts: meson8: add the DDR clock controller
-  ARM: dts: meson8b: add the DDR clock controller
-
- .../clock/amlogic,meson8-ddr-clkc.yaml        |  50 ++++++
- arch/arm/boot/dts/meson8.dtsi                 |  13 +-
- arch/arm/boot/dts/meson8b.dtsi                |  13 +-
- drivers/clk/meson/Makefile                    |   2 +-
- drivers/clk/meson/meson8-ddr.c                | 153 ++++++++++++++++++
- drivers/clk/meson/meson8b.c                   |  36 ++---
- include/dt-bindings/clock/meson8-ddr-clkc.h   |   4 +
- 7 files changed, 245 insertions(+), 26 deletions(-)
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ .../clock/amlogic,meson8-ddr-clkc.yaml        | 50 +++++++++++++++++++
+ include/dt-bindings/clock/meson8-ddr-clkc.h   |  4 ++
+ 2 files changed, 54 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml
- create mode 100644 drivers/clk/meson/meson8-ddr.c
  create mode 100644 include/dt-bindings/clock/meson8-ddr-clkc.h
 
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml
+new file mode 100644
+index 000000000000..bf3ca5888485
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/amlogic,meson8-ddr-clkc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Amlogic DDR Clock Controller Device Tree Bindings
++
++maintainers:
++  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
++
++properties:
++  compatible:
++    enum:
++      - amlogic,meson8-ddr-clkc
++      - amlogic,meson8b-ddr-clkc
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: xtal
++
++  "#clock-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - "#clock-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    ddr_clkc: clock-controller@400 {
++      compatible = "amlogic,meson8-ddr-clkc";
++      reg = <0x400 0x20>;
++      clocks = <&xtal>;
++      clock-names = "xtal";
++      #clock-cells = <1>;
++    };
++
++...
+diff --git a/include/dt-bindings/clock/meson8-ddr-clkc.h b/include/dt-bindings/clock/meson8-ddr-clkc.h
+new file mode 100644
+index 000000000000..a8e0fa2987ab
+--- /dev/null
++++ b/include/dt-bindings/clock/meson8-ddr-clkc.h
+@@ -0,0 +1,4 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#define DDR_CLKID_DDR_PLL_DCO			0
++#define DDR_CLKID_DDR_PLL			1
 -- 
 2.23.0
