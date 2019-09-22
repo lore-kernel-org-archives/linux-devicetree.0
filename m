@@ -1,87 +1,48 @@
-From: Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v2 5/5] irqchip/irq-bcm7038-l1: Support
- brcm,int-fwd-mask
-Date: Sun, 22 Sep 2019 13:38:05 +0100
-Message-ID: <20190922133805.2cdf2d99@why>
-References: <20190913191542.9908-1-f.fainelli@gmail.com>
-        <20190913191542.9908-6-f.fainelli@gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH V2 1/5] dt-bindings: fsl: scu: add scu power key binding
+Date: Sun, 22 Sep 2019 18:13:47 +0200
+Message-ID: <20190922161347.GB1999@bug>
+References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190913191542.9908-6-f.fainelli@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:BROADCOM BMIPS MIPS
-        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, catalin.marinas@arm.com, will@kernel.org, dmitry.torokhov@gmail.com, aisheng.dong@nxp.com, ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com, daniel.baluta@nxp.com, leonard.crestez@nxp.com, mripard@kernel.org, olof@lixom.net, arnd@arndb.de, jagan@amarulasolutions.com, bjorn.andersson@linaro.org, dinguyen@kernel.org, marcin.juszkiewicz@linaro.org, stefan@agner.ch, gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com, yuehaibing@huawei.com, tglx@linutronix.de, ronald@innovation.ch, m.felsch@pengutronix.de, ping.bai@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Sep 2019 12:15:42 -0700
-Florian Fainelli <f.fainelli@gmail.com> wrote:
+Hi!
 
-> On some specific chips like 7211 we need to leave some interrupts
-> untouched/forwarded to the VPU which is another agent in the system
-> making use of that interrupt controller hardware (goes to both ARM GIC
-> and VPU L1 interrupt controller). Make that possible by using the
-> existing brcm,int-fwd-mask property.
+> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+> system controller, the system controller is in charge of system
+> power, clock and power key event etc. management, Linux kernel
+> has to communicate with system controller via MU (message unit)
+> IPC to get power key event, add binding doc for i.MX system
+> controller power key driver.
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/irqchip/irq-bcm7038-l1.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-> index 0673a44bbdc2..811a34201dd4 100644
-> --- a/drivers/irqchip/irq-bcm7038-l1.c
-> +++ b/drivers/irqchip/irq-bcm7038-l1.c
-> @@ -44,6 +44,7 @@ struct bcm7038_l1_chip {
->  	struct list_head	list;
->  	u32			wake_mask[MAX_WORDS];
->  #endif
-> +	u32			irq_fwd_mask[MAX_WORDS];
->  	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
->  };
->  
-> @@ -265,6 +266,7 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->  	resource_size_t sz;
->  	struct bcm7038_l1_cpu *cpu;
->  	unsigned int i, n_words, parent_irq;
-> +	int ret;
->  
->  	if (of_address_to_resource(dn, idx, &res))
->  		return -EINVAL;
-> @@ -278,6 +280,14 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->  	else if (intc->n_words != n_words)
->  		return -EINVAL;
->  
-> +	ret = of_property_read_u32_array(dn , "brcm,int-fwd-mask",
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-What is the exact meaning of "fwd"? Forward? FirmWare Dementia?
-
-> +					 intc->irq_fwd_mask, n_words);
-> +	if (ret != 0 && ret != -EINVAL) {
-> +		/* property exists but has the wrong number of words */
-> +		pr_err("invalid brcm,int-fwd-mask property\n");
-> +		return -EINVAL;
-> +	}
+> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+> @@ -157,6 +157,15 @@ Required properties:
+>  Optional properties:
+>  - timeout-sec: contains the watchdog timeout in seconds.
+>  
+> +Power key bindings based on SCU Message Protocol
+> +------------------------------------------------------------
 > +
->  	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
->  					GFP_KERNEL);
->  	if (!cpu)
-> @@ -288,8 +298,9 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->  		return -ENOMEM;
->  
->  	for (i = 0; i < n_words; i++) {
-> -		l1_writel(0xffffffff, cpu->map_base + reg_mask_set(intc, i));
-> -		cpu->mask_cache[i] = 0xffffffff;
-> +		l1_writel(0xffffffff & ~intc->irq_fwd_mask[i],
-> +			  cpu->map_base + reg_mask_set(intc, i));
-> +		cpu->mask_cache[i] = 0xffffffff & ~intc->irq_fwd_mask[i];
+> +Required properties:
+> +- compatible: should be:
+> +              "fsl,imx8qxp-sc-pwrkey"
+> +              followed by "fsl,imx-sc-pwrkey";
+> +- linux,keycodes: See Documentation/devicetree/bindings/input/keys.txt
 
-I seem to remember that (0xffffffff & whatever) == whatever, as long as
-'whatever' is a 32bit quantity. So what it this for?
+Actually there's no reason for having "linux,keycodes" property when it is always
+a power button.
 
-	M.
+Best regards,
+									Pavel
 -- 
-Without deviation from the norm, progress is not possible.
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
