@@ -1,173 +1,164 @@
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Subject: Re: [Patch v3 00/13] media: am437x-vpfe: overdue maintenance
-Date: Sun, 22 Sep 2019 19:08:34 +0100
-Message-ID: <CA+V-a8sUnhCaxr8EwBuY+-PBMtRcFWVx_33mtZcdqoRGEAwABQ@mail.gmail.com>
-References: <20190920170554.29666-1-bparrot@ti.com>
+From: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH v6 2/2] drm/bridge: Add NWL MIPI DSI host controller
+ support (fwd)
+Date: Sun, 22 Sep 2019 20:43:48 +0200 (CEST)
+Message-ID: <alpine.DEB.2.21.1909222042340.2575@hadrien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190920170554.29666-1-bparrot@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="8323329-348580464-1569177829=:2575"
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, =?ISO-8859-15?Q?Guido_G=FCnther?= <agx@sigxcpu.org>, dri-devel@lists.freedesktop.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sam Ravnborg <sam@ravnborg.org>, NXP Linux Team <linux-imx@nxp.com>, Robert Chiras <robert.chiras@nxp.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Jonas Karlman <jonas@kwiboo.se>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, Jernej Skrabec <jernej.skrabec@siol.net>, linux-kernel@vger.kernel.org, kbuild-all@01.org, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 6:03 PM Benoit Parrot <bparrot@ti.com> wrote:
->
-> This patch series is a collection of patches we have been carrying for a
-> while.
->
-> A few patches do fix actual bug and v4l2-compliance errors/warnings.
-> Other are drivers re-work to simplify/clarify the code for easier
-> maintenance.
->
-> We also include the SPDX Licensing update which seemed to have been
-> missed by the global script thus far.
->
-> Changes since v2:
-> - Rename VPFE_MAX_ACTIVE_FMT to VPFE_NUM_FORMATS and corrected the
->   comments
-> - Move the "Remove print_fourcc helper" patch to the end of the series
->   and rebase it on the pending v4l2_fourcc_conv macros patches
->
-> Changes since v1:
-> - Address review comment from Joe, Hans and Prabhakar
-> - Cleaned-up the function entry debug log
-> - Split off the pcr change into its own patch
-> - Rework/combine two patches but remove code churn
-> - fix miscellaneous typos
->
-> =============================
->
-> v4l2-compliance SHA: 5b168dc8473911227890526bad26553d9e8ff81b, 32 bits
->
-> Compliance test for vpfe device /dev/video0:
->
-> Driver Info:
->         Driver name      : vpfe
->         Card type        : TI AM437x VPFE
->         Bus info         : platform:vpfe 48326000.vpfe
->         Driver version   : 5.3.0
->         Capabilities     : 0x85200001
->                 Vide o Capture
->                 Read/Write
->                 Streaming
->                 Extended Pix Format
->                 D evice Capabilities
->         Device Caps      : 0x05200001
->                 Video Capt ure
->                 Read/Write
->                 Streaming
->                 Extended Pix Format
->
-> Required ioctls:
->         test VIDIOC_QUERYCAP: OK
->
-> Allow for multiple opens:
->         test second /dev/video0 open: OK
->         test VIDIOC_QUERYCAP: OK
->         test VIDIOC_G/S_PRIORITY: OK
->         test for unlimited opens: OK
->
-> Debug ioctls:
->         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->         test VIDIOC_LOG_STATUS: OK
->
-> Input ioctls:
->         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->         test VIDIOC_ENUMAUDIO: OK (Not Supported)
->         test VIDIOC_G/S/ENUMINPUT: OK
->         test VIDIOC_G/S_AUDIO: OK (Not Supported)
->         Inputs: 1 Audio Inputs: 0 Tuners: 0
->
-> Output ioctls:
->         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->         Outputs: 0 Audio Outputs: 0 Modulators: 0
->
-> Input/Output configuration ioctls:
->         test VIDIOC_ENUM/G/S/QUERY_STD: OK
->         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->         test VIDIOC_G/S_EDID: OK (Not Supported)
->
-> Control ioctls (Input 0):
->         test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
->         test VIDIOC_QUERYCTRL: OK
->         test VIDIOC_G/S_CTRL: OK
->         test VIDIOC_G/S/TRY_EXT_CTRLS: OK
->         test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
->         test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->         Standard Controls: 3 Private Controls: 0
->
-> Format ioctls (Input 0):
->         test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->         test VIDIOC_G/S_PARM: OK
->         test VIDIOC_G_FBUF: OK (Not Supported)
->         test VIDIOC_G_FMT: OK
->         test VIDIOC_TRY_FMT: OK
->         test VIDIOC_S_FMT: OK
->         test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->                 fail: v4l2-test-formats.cpp(1419): node->frmsizes_count[pixfmt] > 1
->         test Cropping: FAIL
->         test Composing: OK (Not Supported)
->         test Scaling: OK (Not Supported)
->
-> Codec ioctls (Input 0):
->         test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->         test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->         test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
->
-> Buffer ioctls (Input 0):
->         test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->         test VIDIOC_EXPBUF: OK
->         test Requests: OK (Not Supported)
->
-> Test input 0:
->
-> Streaming ioctls:
->         test read/write: OK
->         test blocking wait: OK
->         test MMAP (no poll): OK
->         test MMAP (select): OK
->         test MMAP (epoll): OK
->         test USERPTR (no poll): OK (Not Supported)
->         test USERPTR (select): OK (Not Supported)
->         test DMABUF: Cannot test, specify --expbuf-device
->
-> Total for vpfe device /dev/video0: 51, Succeeded: 50, Failed: 1, Warnings: 0
-> ============================
->
-> Benoit Parrot (12):
->   media: am437x-vpfe: Fix missing first line
->   media: am437x-vpfe: Rework ISR routine for clarity
->   media: am437x-vpfe: Wait for end of frame before tear-down
->   media: am437x-vpfe: fix start streaming error path
->   media: am437x-vpfe: Streamlined vb2 buffer cleanup
->   media: am437x-vpfe: Setting STD to current value is not an error
->   media: am437x-vpfe: Use a per instance format array instead of a
->     static one
->   media: am437x-vpfe: fix function trace debug log
->   media: am437x-vpfe: TRY_FMT ioctl is not really trying anything
->   media: am437x-vpfe: Remove per bus width static data
->   media: am437x-vpfe: Switch to SPDX Licensing
->   media: am437x-vpfe: Remove print_fourcc helper
->
-> Dave Gerlach (1):
->   media: am437x-vpfe: Fix suspend path to always handle pinctrl config
->
->  drivers/media/platform/am437x/am437x-vpfe.c   | 880 ++++++++----------
->  drivers/media/platform/am437x/am437x-vpfe.h   |  43 +-
->  .../media/platform/am437x/am437x-vpfe_regs.h  |  10 +-
->  3 files changed, 406 insertions(+), 527 deletions(-)
->
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+--8323329-348580464-1569177829=:2575
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 
-Cheers,
---Prabhakar Lad
+Hello,
+
+Color_format is unsigned, so it won't be less than 0 on line 272.
+
+julia
+
+---------- Forwarded message ----------
+Date: Mon, 23 Sep 2019 02:29:34 +0800
+From: kbuild test robot <lkp@intel.com>
+To: kbuild@01.org
+Cc: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH v6 2/2] drm/bridge: Add NWL MIPI DSI host controller support
+
+CC: kbuild-all@01.org
+In-Reply-To: <c0ac0b203fb65ae7efd1b9b54664b491ca2fb157.1569170717.git.agx@sigxcpu.org>
+References: <c0ac0b203fb65ae7efd1b9b54664b491ca2fb157.1569170717.git.agx@sigxcpu.org>
+TO: "Guido Günther" <agx@sigxcpu.org>
+CC:
+
+Hi "Guido,
+
+I love your patch! Perhaps something to improve:
+
+[auto build test WARNING on linus/master]
+[cannot apply to v5.3 next-20190920]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Guido-G-nther/drm-bridge-Add-NWL-MIPI-DSI-host-controller-support/20190923-005010
+:::::: branch date: 2 hours ago
+:::::: commit date: 2 hours ago
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+
+>> drivers/gpu/drm/bridge/nwl-dsi.c:272:5-17: WARNING: Unsigned expression compared with zero: color_format < 0
+
+# https://github.com/0day-ci/linux/commit/060069512cb50e3218b55005b6cc92b82e0a7856
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 060069512cb50e3218b55005b6cc92b82e0a7856
+vim +272 drivers/gpu/drm/bridge/nwl-dsi.c
+
+060069512cb50e Guido Günther 2019-09-22  245
+060069512cb50e Guido Günther 2019-09-22  246  static int nwl_dsi_config_dpi(struct nwl_dsi *dsi)
+060069512cb50e Guido Günther 2019-09-22  247  {
+060069512cb50e Guido Günther 2019-09-22  248  	u32 color_format, mode;
+060069512cb50e Guido Günther 2019-09-22  249  	bool burst_mode;
+060069512cb50e Guido Günther 2019-09-22  250  	int hfront_porch, hback_porch, vfront_porch, vback_porch;
+060069512cb50e Guido Günther 2019-09-22  251  	int hsync_len, vsync_len;
+060069512cb50e Guido Günther 2019-09-22  252
+060069512cb50e Guido Günther 2019-09-22  253  	hfront_porch = dsi->mode.hsync_start - dsi->mode.hdisplay;
+060069512cb50e Guido Günther 2019-09-22  254  	hsync_len = dsi->mode.hsync_end - dsi->mode.hsync_start;
+060069512cb50e Guido Günther 2019-09-22  255  	hback_porch = dsi->mode.htotal - dsi->mode.hsync_end;
+060069512cb50e Guido Günther 2019-09-22  256
+060069512cb50e Guido Günther 2019-09-22  257  	vfront_porch = dsi->mode.vsync_start - dsi->mode.vdisplay;
+060069512cb50e Guido Günther 2019-09-22  258  	vsync_len = dsi->mode.vsync_end - dsi->mode.vsync_start;
+060069512cb50e Guido Günther 2019-09-22  259  	vback_porch = dsi->mode.vtotal - dsi->mode.vsync_end;
+060069512cb50e Guido Günther 2019-09-22  260
+060069512cb50e Guido Günther 2019-09-22  261  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "hfront_porch = %d\n", hfront_porch);
+060069512cb50e Guido Günther 2019-09-22  262  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "hback_porch = %d\n", hback_porch);
+060069512cb50e Guido Günther 2019-09-22  263  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "hsync_len = %d\n", hsync_len);
+060069512cb50e Guido Günther 2019-09-22  264  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "hdisplay = %d\n", dsi->mode.hdisplay);
+060069512cb50e Guido Günther 2019-09-22  265  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "vfront_porch = %d\n", vfront_porch);
+060069512cb50e Guido Günther 2019-09-22  266  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "vback_porch = %d\n", vback_porch);
+060069512cb50e Guido Günther 2019-09-22  267  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "vsync_len = %d\n", vsync_len);
+060069512cb50e Guido Günther 2019-09-22  268  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "vactive = %d\n", dsi->mode.vdisplay);
+060069512cb50e Guido Günther 2019-09-22  269  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "clock = %d kHz\n", dsi->mode.clock);
+060069512cb50e Guido Günther 2019-09-22  270
+060069512cb50e Guido Günther 2019-09-22  271  	color_format = nwl_dsi_get_dpi_pixel_format(dsi->format);
+060069512cb50e Guido Günther 2019-09-22 @272  	if (color_format < 0) {
+060069512cb50e Guido Günther 2019-09-22  273  		DRM_DEV_ERROR(dsi->dev, "Invalid color format 0x%x\n",
+060069512cb50e Guido Günther 2019-09-22  274  			      dsi->format);
+060069512cb50e Guido Günther 2019-09-22  275  		return color_format;
+060069512cb50e Guido Günther 2019-09-22  276  	}
+060069512cb50e Guido Günther 2019-09-22  277  	DRM_DEV_DEBUG_DRIVER(dsi->dev, "pixel fmt = %d\n", dsi->format);
+060069512cb50e Guido Günther 2019-09-22  278
+060069512cb50e Guido Günther 2019-09-22  279  	nwl_dsi_write(dsi, NWL_DSI_INTERFACE_COLOR_CODING, NWL_DSI_DPI_24_BIT);
+060069512cb50e Guido Günther 2019-09-22  280  	nwl_dsi_write(dsi, NWL_DSI_PIXEL_FORMAT, color_format);
+060069512cb50e Guido Günther 2019-09-22  281  	/*
+060069512cb50e Guido Günther 2019-09-22  282  	 * Adjusting input polarity based on the video mode results in
+060069512cb50e Guido Günther 2019-09-22  283  	 * a black screen so always pick active low:
+060069512cb50e Guido Günther 2019-09-22  284  	 */
+060069512cb50e Guido Günther 2019-09-22  285  	nwl_dsi_write(dsi, NWL_DSI_VSYNC_POLARITY,
+060069512cb50e Guido Günther 2019-09-22  286  		      NWL_DSI_VSYNC_POLARITY_ACTIVE_LOW);
+060069512cb50e Guido Günther 2019-09-22  287  	nwl_dsi_write(dsi, NWL_DSI_HSYNC_POLARITY,
+060069512cb50e Guido Günther 2019-09-22  288  		      NWL_DSI_HSYNC_POLARITY_ACTIVE_LOW);
+060069512cb50e Guido Günther 2019-09-22  289
+060069512cb50e Guido Günther 2019-09-22  290  	burst_mode = (dsi->dsi_mode_flags & MIPI_DSI_MODE_VIDEO_BURST) &&
+060069512cb50e Guido Günther 2019-09-22  291  		     !(dsi->dsi_mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE);
+060069512cb50e Guido Günther 2019-09-22  292
+060069512cb50e Guido Günther 2019-09-22  293  	if (burst_mode) {
+060069512cb50e Guido Günther 2019-09-22  294  		nwl_dsi_write(dsi, NWL_DSI_VIDEO_MODE, NWL_DSI_VM_BURST_MODE);
+060069512cb50e Guido Günther 2019-09-22  295  		nwl_dsi_write(dsi, NWL_DSI_PIXEL_FIFO_SEND_LEVEL, 256);
+060069512cb50e Guido Günther 2019-09-22  296  	} else {
+060069512cb50e Guido Günther 2019-09-22  297  		mode = ((dsi->dsi_mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) ?
+060069512cb50e Guido Günther 2019-09-22  298  				NWL_DSI_VM_BURST_MODE_WITH_SYNC_PULSES :
+060069512cb50e Guido Günther 2019-09-22  299  				NWL_DSI_VM_NON_BURST_MODE_WITH_SYNC_EVENTS);
+060069512cb50e Guido Günther 2019-09-22  300  		nwl_dsi_write(dsi, NWL_DSI_VIDEO_MODE, mode);
+060069512cb50e Guido Günther 2019-09-22  301  		nwl_dsi_write(dsi, NWL_DSI_PIXEL_FIFO_SEND_LEVEL,
+060069512cb50e Guido Günther 2019-09-22  302  			      dsi->mode.hdisplay);
+060069512cb50e Guido Günther 2019-09-22  303  	}
+060069512cb50e Guido Günther 2019-09-22  304
+060069512cb50e Guido Günther 2019-09-22  305  	nwl_dsi_write(dsi, NWL_DSI_HFP, hfront_porch);
+060069512cb50e Guido Günther 2019-09-22  306  	nwl_dsi_write(dsi, NWL_DSI_HBP, hback_porch);
+060069512cb50e Guido Günther 2019-09-22  307  	nwl_dsi_write(dsi, NWL_DSI_HSA, hsync_len);
+060069512cb50e Guido Günther 2019-09-22  308
+060069512cb50e Guido Günther 2019-09-22  309  	nwl_dsi_write(dsi, NWL_DSI_ENABLE_MULT_PKTS, 0x0);
+060069512cb50e Guido Günther 2019-09-22  310  	nwl_dsi_write(dsi, NWL_DSI_BLLP_MODE, 0x1);
+060069512cb50e Guido Günther 2019-09-22  311  	nwl_dsi_write(dsi, NWL_DSI_USE_NULL_PKT_BLLP, 0x0);
+060069512cb50e Guido Günther 2019-09-22  312  	nwl_dsi_write(dsi, NWL_DSI_VC, 0x0);
+060069512cb50e Guido Günther 2019-09-22  313
+060069512cb50e Guido Günther 2019-09-22  314  	nwl_dsi_write(dsi, NWL_DSI_PIXEL_PAYLOAD_SIZE, dsi->mode.hdisplay);
+060069512cb50e Guido Günther 2019-09-22  315  	nwl_dsi_write(dsi, NWL_DSI_VACTIVE, dsi->mode.vdisplay - 1);
+060069512cb50e Guido Günther 2019-09-22  316  	nwl_dsi_write(dsi, NWL_DSI_VBP, vback_porch);
+060069512cb50e Guido Günther 2019-09-22  317  	nwl_dsi_write(dsi, NWL_DSI_VFP, vfront_porch);
+060069512cb50e Guido Günther 2019-09-22  318
+060069512cb50e Guido Günther 2019-09-22  319  	return 0;
+060069512cb50e Guido Günther 2019-09-22  320  }
+060069512cb50e Guido Günther 2019-09-22  321
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+--8323329-348580464-1569177829=:2575
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--8323329-348580464-1569177829=:2575--
