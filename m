@@ -1,56 +1,52 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 091/203] arm64: dts: qcom: qcs404-evb: Mark WCSS clocks protected
-Date: Sun, 22 Sep 2019 14:41:57 -0400
-Message-ID: <20190922184350.30563-91-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 092/203] ARM: dts: imx7-colibri: disable HS400
+Date: Sun, 22 Sep 2019 14:41:58 -0400
+Message-ID: <20190922184350.30563-92-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, Mark Brown <broonie@kernel.org>, Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Stefan Agner <stefan.agner@toradex.com>, Philippe Schenker <philippe.schenker@toradex.com>, Oleksandr Suvorov <oleksandr.suvorov@toradex.com>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Stefan Agner <stefan.agner@toradex.com>
 
-[ Upstream commit 54d895bea43c94f31304d59f82d755b7f4b59e7c ]
+[ Upstream commit a95fbda08ee20cd063ce5826e0df95a2c22ea8c5 ]
 
-'7d0c76bdf227 ("clk: qcom: Add WCSS gcc clock control for QCS404")'
-introduces two new clocks to gcc. These are not used before
-clk_disable_unused() and as such the clock framework tries to disable
-them.
+Force HS200 by masking bit 63 of the SDHCI capability register.
+The i.MX ESDHC driver uses SDHCI_QUIRK2_CAPS_BIT63_FOR_HS400. With
+that the stack checks bit 63 to descide whether HS400 is available.
+Using sdhci-caps-mask allows to mask bit 63. The stack then selects
+HS200 as operating mode.
 
-But on the EVB these registers are only accessible through TrustZone, so
-these clocks must be marked as "protected" to prevent the clock code
-from touching them.
+This prevents rare communication errors with minimal effect on
+performance:
+	sdhci-esdhc-imx 30b60000.usdhc: warning! HS400 strobe DLL
+		status REF not lock!
 
-Numerical values are used as the constants are not yet available in a
-common tree.
-
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Reported-by: Mark Brown <broonie@kernel.org>
-Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Stefan Agner <stefan.agner@toradex.com>
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Reviewed-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx7-colibri.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 11c0a7137823d..db6df76e97a1a 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -61,7 +61,9 @@
- 	protected-clocks = <GCC_BIMC_CDSP_CLK>,
- 			   <GCC_CDSP_CFG_AHB_CLK>,
- 			   <GCC_CDSP_BIMC_CLK_SRC>,
--			   <GCC_CDSP_TBU_CLK>;
-+			   <GCC_CDSP_TBU_CLK>,
-+			   <141>, /* GCC_WCSS_Q6_AHB_CLK */
-+			   <142>; /* GCC_WCSS_Q6_AXIM_CLK */
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
+index 895fbde4d4333..c1ed83131b495 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -323,6 +323,7 @@
+ 	vmmc-supply = <&reg_module_3v3>;
+ 	vqmmc-supply = <&reg_DCDC3>;
+ 	non-removable;
++	sdhci-caps-mask = <0x80000000 0x0>;
  };
  
- &pms405_spmi_regulators {
+ &iomuxc {
 -- 
 2.20.1
