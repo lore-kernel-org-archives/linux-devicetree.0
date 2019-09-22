@@ -1,124 +1,68 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 5/5] irqchip/irq-bcm7038-l1: Support brcm,int-fwd-mask
-Date: Sun, 22 Sep 2019 12:08:10 -0700
-Message-ID: <260e61b8-a083-743e-43fc-70b9ea644e0e@gmail.com>
-References: <20190913191542.9908-1-f.fainelli@gmail.com>
- <20190913191542.9908-6-f.fainelli@gmail.com> <20190922133805.2cdf2d99@why>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 67/89] ARM: dts: exynos: Mark LDO10 as always-on on Peach Pit/Pi Chromebooks
+Date: Sun, 22 Sep 2019 14:56:55 -0400
+Message-ID: <20190922185717.3412-67-sashal@kernel.org>
+References: <20190922185717.3412-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190922133805.2cdf2d99@why>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
+[ Upstream commit 5b0eeeaa37615df37a9a30929b73e9defe61ca84 ]
 
-On 9/22/2019 5:38 AM, Marc Zyngier wrote:
-> On Fri, 13 Sep 2019 12:15:42 -0700
-> Florian Fainelli <f.fainelli@gmail.com> wrote:
-> 
->> On some specific chips like 7211 we need to leave some interrupts
->> untouched/forwarded to the VPU which is another agent in the system
->> making use of that interrupt controller hardware (goes to both ARM GIC
->> and VPU L1 interrupt controller). Make that possible by using the
->> existing brcm,int-fwd-mask property.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->>  drivers/irqchip/irq-bcm7038-l1.c | 15 +++++++++++++--
->>  1 file changed, 13 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
->> index 0673a44bbdc2..811a34201dd4 100644
->> --- a/drivers/irqchip/irq-bcm7038-l1.c
->> +++ b/drivers/irqchip/irq-bcm7038-l1.c
->> @@ -44,6 +44,7 @@ struct bcm7038_l1_chip {
->>  	struct list_head	list;
->>  	u32			wake_mask[MAX_WORDS];
->>  #endif
->> +	u32			irq_fwd_mask[MAX_WORDS];
->>  	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
->>  };
->>  
->> @@ -265,6 +266,7 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->>  	resource_size_t sz;
->>  	struct bcm7038_l1_cpu *cpu;
->>  	unsigned int i, n_words, parent_irq;
->> +	int ret;
->>  
->>  	if (of_address_to_resource(dn, idx, &res))
->>  		return -EINVAL;
->> @@ -278,6 +280,14 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->>  	else if (intc->n_words != n_words)
->>  		return -EINVAL;
->>  
->> +	ret = of_property_read_u32_array(dn , "brcm,int-fwd-mask",
-> 
-> What is the exact meaning of "fwd"? Forward? FirmWare Dementia?
+Commit aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply
+for Peach boards") assigned LDO10 to Exynos Thermal Measurement Unit,
+but it turned out that it supplies also some other critical parts and
+board freezes/crashes when it is turned off.
 
-Here it is meant to be "forward", we have defined this property name
-before for irq-bcm7120-l2.c and felt like reusing the same name to avoid
-multiplying properties would be appropriate, see patch #4. If you prefer
-something named brcm,firmware-configured-mask, let me know.
+The mentioned commit made Exynos TMU a consumer of that regulator and in
+typical case Exynos TMU driver keeps it enabled from early boot. However
+there are such configurations (example is multi_v7_defconfig), in which
+some of the regulators are compiled as modules and are not available
+from early boot. In such case it may happen that LDO10 is turned off by
+regulator core, because it has no consumers yet (in this case consumer
+drivers cannot get it, because the supply regulators for it are not yet
+available). This in turn causes the board to crash. This patch restores
+'always-on' property for the LDO10 regulator.
 
-> 
->> +					 intc->irq_fwd_mask, n_words);
->> +	if (ret != 0 && ret != -EINVAL) {
->> +		/* property exists but has the wrong number of words */
->> +		pr_err("invalid brcm,int-fwd-mask property\n");
->> +		return -EINVAL;
->> +	}
->> +
->>  	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
->>  					GFP_KERNEL);
->>  	if (!cpu)
->> @@ -288,8 +298,9 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->>  		return -ENOMEM;
->>  
->>  	for (i = 0; i < n_words; i++) {
->> -		l1_writel(0xffffffff, cpu->map_base + reg_mask_set(intc, i));
->> -		cpu->mask_cache[i] = 0xffffffff;
->> +		l1_writel(0xffffffff & ~intc->irq_fwd_mask[i],
->> +			  cpu->map_base + reg_mask_set(intc, i));
->> +		cpu->mask_cache[i] = 0xffffffff & ~intc->irq_fwd_mask[i];
-> 
-> I seem to remember that (0xffffffff & whatever) == whatever, as long as
-> 'whatever' is a 32bit quantity. So what it this for?
+Fixes: aff138bf8e37 ("ARM: dts: exynos: Add TMU nodes regulator supply for Peach boards")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/exynos5420-peach-pit.dts | 1 +
+ arch/arm/boot/dts/exynos5800-peach-pi.dts  | 1 +
+ 2 files changed, 2 insertions(+)
 
-It is 0xffff_ffff & ~whatever here. In the absence of this property
-being specified, the data is all zeroed out, so we would have
-0xffff_ffff & 0xffff_ffff which is 0xffff_ffff. If this property is
-specified, we would have one more or bits set, and it would be e.g.:
-0x100 so we would have 0xffff_ffff & ~(0x100) = 0xffff_feff which is
-what we would want here to preserve whatever the firmware has already
-configured. In hindsight, it may be safer to make sure no one in Linux
-can actually map that interrupt, so we would need something like this in
-addition to what we already have in this patch:
-
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c
-b/drivers/irqchip/irq-bcm7038-l1.c
-index fc75c61233aa..558e74be0d60 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -300,6 +300,14 @@ static struct irq_chip bcm7038_l1_irq_chip = {
- static int bcm7038_l1_map(struct irq_domain *d, unsigned int virq,
-                          irq_hw_number_t hw_irq)
- {
-+       struct bcm7038_l1_chip *intc = d->host_data;
-+       int i;
-+
-+       for (i = 0; i < intc->n_words; i++) {
-+               if (intc->irq_fwd_mask[i] & BIT(hw_irq))
-+                       return -EINVAL;
-+       }
-+
-        irq_set_chip_and_handler(virq, &bcm7038_l1_irq_chip,
-handle_level_irq);
-        irq_set_chip_data(virq, d->host_data);
-        irqd_set_single_target(irq_desc_get_irq_data(irq_to_desc(virq)));
+diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+index c91eff8475a87..7ccee2cfe4812 100644
+--- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
++++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+@@ -426,6 +426,7 @@
+ 				regulator-name = "vdd_ldo10";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 				regulator-state-mem {
+ 					regulator-off-in-suspend;
+ 				};
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index daad5d425cf5c..0900b38f60b4f 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -426,6 +426,7 @@
+ 				regulator-name = "vdd_ldo10";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 				regulator-state-mem {
+ 					regulator-off-in-suspend;
+ 				};
 -- 
-Florian
+2.20.1
