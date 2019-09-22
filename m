@@ -1,69 +1,85 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 037/203] arm64: dts: imx8mq: Correct OPP table according to latest datasheet
-Date: Sun, 22 Sep 2019 14:41:03 -0400
-Message-ID: <20190922184350.30563-37-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.3 090/203] ARM: dts: imx7d: cl-som-imx7: make ethernet work again
+Date: Sun, 22 Sep 2019 14:41:56 -0400
+Message-ID: <20190922184350.30563-90-sashal@kernel.org>
 References: <20190922184350.30563-1-sashal@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Anson Huang <Anson.Huang@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Cc: =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>, Ilya Ledvich <ilya@compulab.co.il>, Igor Grinberg <grinberg@compulab.co.il>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sasha Levin <sashal@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: André Draszik <git@andred.net>
 
-[ Upstream commit 9eced3a2f224a62a233761e8af18c907c532e192 ]
+[ Upstream commit 9846a4524ac90b63496580b7ad50674b40d92a8f ]
 
-According to latest datasheet (Rev.1, 10/2018) from below links,
-in the consumer datasheet, 1.5GHz is mentioned as highest opp but
-depends on speed grading fuse, and in the industrial datasheet,
-1.3GHz is mentioned as highest opp but depends on speed grading
-fuse. 1.5GHz and 1.3GHz opp use same voltage, so no need for
-consumer part to support 1.3GHz opp, with same voltage, CPU should
-run at highest frequency in order to go into idle as quick as
-possible, this can save power.
+Recent changes to the atheros at803x driver caused
+ethernet to stop working on this board.
+In particular commit 6d4cd041f0af
+("net: phy: at803x: disable delay only for RGMII mode")
+and commit cd28d1d6e52e
+("net: phy: at803x: Disable phy delay for RGMII mode")
+fix the AR8031 driver to configure the phy's (RX/TX)
+delays as per the 'phy-mode' in the device tree.
 
-That means for consumer part, 1GHz/1.5GHz are supported, for
-industrial part, 800MHz/1.3GHz are supported, and then check the
-speed grading fuse to limit the highest CPU frequency further.
-Correct the market segment bits in opp table to make them work
-according to datasheets.
+This now prevents ethernet from working on this board.
 
-https://www.nxp.com/docs/en/data-sheet/IMX8MDQLQIEC.pdf
-https://www.nxp.com/docs/en/data-sheet/IMX8MDQLQCEC.pdf
+It used to work before those commits, because the
+AR8031 comes out of reset with RX delay enabled, and
+the at803x driver didn't touch the delay configuration
+at all when "rgmii" mode was selected, and because
+arch/arm/mach-imx/mach-imx7d.c:ar8031_phy_fixup()
+unconditionally enables TX delay.
 
-Fixes: 12629c5c3749 ("arm64: dts: imx8mq: Add cpu speed grading and all OPPs")
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
+Since above commits ar8031_phy_fixup() also has no
+effect anymore, and the end-result is that all delays
+are disabled in the phy, no ethernet.
+
+Update the device tree to restore functionality.
+
+Signed-off-by: André Draszik <git@andred.net>
+CC: Ilya Ledvich <ilya@compulab.co.il>
+CC: Igor Grinberg <grinberg@compulab.co.il>
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Shawn Guo <shawnguo@kernel.org>
+CC: Sascha Hauer <s.hauer@pengutronix.de>
+CC: Pengutronix Kernel Team <kernel@pengutronix.de>
+CC: Fabio Estevam <festevam@gmail.com>
+CC: NXP Linux Team <linux-imx@nxp.com>
+CC: devicetree@vger.kernel.org
+CC: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 52aae341d0da5..d1f4eb197af26 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -169,15 +169,14 @@
- 		opp-1300000000 {
- 			opp-hz = /bits/ 64 <1300000000>;
- 			opp-microvolt = <1000000>;
--			opp-supported-hw = <0xc>, <0x7>;
-+			opp-supported-hw = <0xc>, <0x4>;
- 			clock-latency-ns = <150000>;
- 		};
- 
- 		opp-1500000000 {
- 			opp-hz = /bits/ 64 <1500000000>;
- 			opp-microvolt = <1000000>;
--			/* Consumer only but rely on speed grading */
--			opp-supported-hw = <0x8>, <0x7>;
-+			opp-supported-hw = <0x8>, <0x3>;
- 			clock-latency-ns = <150000>;
- 		};
- 	};
+diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+index e61567437d73c..62d5e9a4a7818 100644
+--- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
++++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+@@ -44,7 +44,7 @@
+ 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
+ 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+ 	assigned-clock-rates = <0>, <100000000>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-handle = <&ethphy0>;
+ 	fsl,magic-packet;
+ 	status = "okay";
+@@ -70,7 +70,7 @@
+ 			  <&clks IMX7D_ENET2_TIME_ROOT_CLK>;
+ 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+ 	assigned-clock-rates = <0>, <100000000>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-handle = <&ethphy1>;
+ 	fsl,magic-packet;
+ 	status = "okay";
 -- 
 2.20.1
