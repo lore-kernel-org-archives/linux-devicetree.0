@@ -1,13 +1,13 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 67/89] ARM: dts: exynos: Mark LDO10 as always-on on Peach Pit/Pi Chromebooks
-Date: Sun, 22 Sep 2019 14:56:55 -0400
-Message-ID: <20190922185717.3412-67-sashal@kernel.org>
-References: <20190922185717.3412-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 099/128] ARM: dts: exynos: Mark LDO10 as always-on on Peach Pit/Pi Chromebooks
+Date: Sun, 22 Sep 2019 14:53:49 -0400
+Message-ID: <20190922185418.2158-99-sashal@kernel.org>
+References: <20190922185418.2158-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190922185717.3412-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190922185418.2158-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
@@ -41,10 +41,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 2 insertions(+)
 
 diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index c91eff8475a87..7ccee2cfe4812 100644
+index 57c2332bf2824..25bdc9d97a4df 100644
 --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
 +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -426,6 +426,7 @@
+@@ -437,6 +437,7 @@
  				regulator-name = "vdd_ldo10";
  				regulator-min-microvolt = <1800000>;
  				regulator-max-microvolt = <1800000>;
@@ -53,10 +53,10 @@ index c91eff8475a87..7ccee2cfe4812 100644
  					regulator-off-in-suspend;
  				};
 diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index daad5d425cf5c..0900b38f60b4f 100644
+index d80ab9085da19..7989631b39ccf 100644
 --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
 +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -426,6 +426,7 @@
+@@ -437,6 +437,7 @@
  				regulator-name = "vdd_ldo10";
  				regulator-min-microvolt = <1800000>;
  				regulator-max-microvolt = <1800000>;
