@@ -1,38 +1,58 @@
 From: Heiko Schocher <hs@denx.de>
-Subject: [PATCH 0/2] misc: add support for the cc1101 RF transceiver chip from TI
-Date: Sun, 22 Sep 2019 08:03:54 +0200
-Message-ID: <20190922060356.58763-1-hs@denx.de>
+Subject: [PATCH 1/2] misc: add cc1101 devicetree binding
+Date: Sun, 22 Sep 2019 08:03:55 +0200
+Message-ID: <20190922060356.58763-2-hs@denx.de>
+References: <20190922060356.58763-1-hs@denx.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190922060356.58763-1-hs@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Heiko Schocher <hs@denx.de>, Arnd Bergmann <arnd@arndb.de>, Derek Kiernan <derek.kiernan@xilinx.com>, Dragan Cvetic <dragan.cvetic@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Heiko Schocher <hs@denx.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This driver provides support for the Low-Power Sub-1 GHz RF
-Transceiver chip from Texas Instruments. It provides a
-simple message based protocol to set chip registers, send
-and receive packets to/from the chip.
+add devicetree binding for cc1101 misc driver.
 
+Signed-off-by: Heiko Schocher <hs@denx.de>
+---
 
-Heiko Schocher (2):
-  misc: add cc1101 devicetree binding
-  misc: add support for the cc1101 RF transceiver chip from TI
-
- .../devicetree/bindings/misc/cc1101.txt       |   27 +
- Documentation/misc-devices/cc1101.txt         |  446 ++++
- drivers/misc/Kconfig                          |   11 +
- drivers/misc/Makefile                         |    1 +
- drivers/misc/cc1101.c                         | 2004 +++++++++++++++++
- drivers/misc/cc1101.h                         |   89 +
- include/uapi/linux/cc1101_user.h              |  255 +++
- 7 files changed, 2833 insertions(+)
+ .../devicetree/bindings/misc/cc1101.txt       | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/misc/cc1101.txt
- create mode 100644 Documentation/misc-devices/cc1101.txt
- create mode 100644 drivers/misc/cc1101.c
- create mode 100644 drivers/misc/cc1101.h
- create mode 100644 include/uapi/linux/cc1101_user.h
 
+diff --git a/Documentation/devicetree/bindings/misc/cc1101.txt b/Documentation/devicetree/bindings/misc/cc1101.txt
+new file mode 100644
+index 0000000000000..afea6acf4a9c5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/cc1101.txt
+@@ -0,0 +1,27 @@
++driver cc1101 Low-Power Sub-1 GHz RF Transceiver chip from Texas
++Instruments.
++
++Requires node properties:
++- compatible : should be "ti,cc1101";
++- reg        : Chip select address of device, see:
++               Documentation/devicetree/bindings/spi/spi-bus.txt
++- gpios      : list of 2 gpios, first gpio is for GDO0 pin
++               second for GDO2 pin, see more:
++               Documentation/devicetree/bindings/gpio/gpio.txt
++
++Recommended properties:
++ - spi-max-frequency: Definition as per
++                Documentation/devicetree/bindings/spi/spi-bus.txt
++ - freq       : used spi frequency for communication with cc1101 chip
++
++example:
++
++&ecspi4 {
++        cc1101@0 {
++                compatible = "ti,cc1101";
++                spi-max-frequency = <10000000>;
++                reg = <0>;
++                freq = <5000000>;
++                gpios = <&gpio2 11 GPIO_ACTIVE_HIGH &gpio5 8 GPIO_ACTIVE_HIGH>;
++        };
++};
 -- 
 2.21.0
