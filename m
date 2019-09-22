@@ -1,84 +1,206 @@
-From: Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 3/3] arm64: dts: mark lx2160a esdhc controllers dma coherent
-Date: Sun, 22 Sep 2019 11:27:03 +0100
-Message-ID: <E1iBz55-0008Mj-CX@rmk-PC.armlinux.org.uk>
-References: <20190922102341.GO25745@shell.armlinux.org.uk>
+From: Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v2 1/5] irqchip/irq-bcm7038-l1: Add PM support
+Date: Sun, 22 Sep 2019 13:31:08 +0100
+Message-ID: <20190922133108.09211a17@why>
+References: <20190913191542.9908-1-f.fainelli@gmail.com>
+        <20190913191542.9908-2-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190922102341.GO25745@shell.armlinux.org.uk>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>, dann frazier <dann.frazier@canonical.com>, Will Deacon <will.deacon@arm.com>, Nicolin Chen <nicoleotsuka@gmail.com>, "Y.b. Lu" <yangbo.lu@nxp.com>, Christoph Hellwig <hch@lst.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190913191542.9908-2-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Justin Chen <justinpopo6@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:BROADCOM BMIPS MIPS
+        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The LX2160A esdhc controllers are setup by the driver to be DMA
-coherent, but without marking them as such in DT, Linux thinks they
-are not.  This can lead to random sporadic DMA errors, even to the
-extent of preventing boot, such as:
+On Fri, 13 Sep 2019 12:15:38 -0700
+Florian Fainelli <f.fainelli@gmail.com> wrote:
 
-mmc0: ADMA error
-mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00002202
-mmc0: sdhci: Blk size:  0x00000008 | Blk cnt:  0x00000001
-mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
-mmc0: sdhci: Present:   0x01f50008 | Host ctl: 0x00000038
-mmc0: sdhci: Power:     0x00000003 | Blk gap:  0x00000000
-mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x000040d8
-mmc0: sdhci: Timeout:   0x00000003 | Int stat: 0x00000001
-mmc0: sdhci: Int enab:  0x037f108f | Sig enab: 0x037f108b
-mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00002202
-mmc0: sdhci: Caps:      0x35fa0000 | Caps_1:   0x0000af00
-mmc0: sdhci: Cmd:       0x0000333a | Max curr: 0x00000000
-mmc0: sdhci: Resp[0]:   0x00000920 | Resp[1]:  0x001d8a33
-mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x3f400e00
-mmc0: sdhci: Host ctl2: 0x00000000
-mmc0: sdhci: ADMA Err:  0x00000009 | ADMA Ptr: 0x000000236d43820c
-mmc0: sdhci: ============================================
-mmc0: error -5 whilst initialising SD card
+> From: Justin Chen <justinpopo6@gmail.com>
+> 
+> The current l1 controller does not mask any interrupts when dropping
+> into suspend. This mean we can receive unexpected wake up sources.
+> Modified MIPS l1 controller to mask the all non-wake interrupts before
+> dropping into suspend.
+> 
+> Signed-off-by: Justin Chen <justinpopo6@gmail.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/irqchip/irq-bcm7038-l1.c | 98 ++++++++++++++++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+> 
+> diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+> index fc75c61233aa..f5e4ff5251ab 100644
+> --- a/drivers/irqchip/irq-bcm7038-l1.c
+> +++ b/drivers/irqchip/irq-bcm7038-l1.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/types.h>
+>  #include <linux/irqchip.h>
+>  #include <linux/irqchip/chained_irq.h>
+> +#include <linux/syscore_ops.h>
+>  
+>  #define IRQS_PER_WORD		32
+>  #define REG_BYTES_PER_IRQ_WORD	(sizeof(u32) * 4)
+> @@ -39,6 +40,10 @@ struct bcm7038_l1_chip {
+>  	unsigned int		n_words;
+>  	struct irq_domain	*domain;
+>  	struct bcm7038_l1_cpu	*cpus[NR_CPUS];
+> +#ifdef CONFIG_PM_SLEEP
+> +	struct list_head	list;
+> +	u32			wake_mask[MAX_WORDS];
+> +#endif
+>  	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
+>  };
+>  
+> @@ -47,6 +52,17 @@ struct bcm7038_l1_cpu {
+>  	u32			mask_cache[0];
+>  };
+>  
+> +/*
+> + * We keep a list of bcm7038_l1_chip used for suspend/resume. This hack is
+> + * used because the struct chip_type suspend/resume hooks are not called
+> + * unless chip_type is hooked onto a generic_chip. Since this driver does
+> + * not use generic_chip, we need to manually hook our resume/suspend to
+> + * syscore_ops.
+> + */
+> +#ifdef CONFIG_PM_SLEEP
+> +static LIST_HEAD(bcm7038_l1_intcs_list);
+> +#endif
 
-These are caused by the device's descriptor fetch hitting speculatively
-loaded CPU cache lines that the CPU does not see through the normal,
-non-cacheable DMA coherent mapping that it uses for non-coherent
-devices.
+nit: this could be moved down to be close to the rest of the PM_SLEEP
+ifdefery.
 
-DT and the device must agree wrt whether the device is DMA coherent or
-not.
+> +
+>  /*
+>   * STATUS/MASK_STATUS/MASK_SET/MASK_CLEAR are packed one right after another:
+>   *
+> @@ -287,6 +303,77 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_PM_SLEEP
+> +static int bcm7038_l1_suspend(void)
+> +{
+> +	struct bcm7038_l1_chip *intc;
+> +	unsigned long flags;
+> +	int boot_cpu, word;
+> +
+> +	/* Wakeup interrupt should only come from the boot cpu */
+> +	boot_cpu = cpu_logical_map(smp_processor_id());
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
----
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+What guarantees that you're actually running on the boot CPU at this
+point? If that's actually the case, why isn't cpu_logical_map(0) enough?
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-index 36b153e3da47..508af23edef0 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -593,6 +593,7 @@
- 			reg = <0x0 0x2140000 0x0 0x10000>;
- 			interrupts = <0 28 0x4>; /* Level high type */
- 			clocks = <&clockgen 4 1>;
-+			dma-coherent;
- 			voltage-ranges = <1800 1800 3300 3300>;
- 			sdhci,auto-cmd12;
- 			little-endian;
-@@ -605,6 +606,7 @@
- 			reg = <0x0 0x2150000 0x0 0x10000>;
- 			interrupts = <0 63 0x4>; /* Level high type */
- 			clocks = <&clockgen 4 1>;
-+			dma-coherent;
- 			voltage-ranges = <1800 1800 3300 3300>;
- 			sdhci,auto-cmd12;
- 			broken-cd;
+> +
+> +	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
+> +		raw_spin_lock_irqsave(&intc->lock, flags);
+
+And if this can only run on a single CPU, what's the purpose of this
+lock?
+
+> +		for (word = 0; word < intc->n_words; word++) {
+> +			l1_writel(~intc->wake_mask[word],
+> +				intc->cpus[boot_cpu]->map_base +
+> +				reg_mask_set(intc, word));
+> +			l1_writel(intc->wake_mask[word],
+> +				intc->cpus[boot_cpu]->map_base +
+> +				reg_mask_clr(intc, word));
+
+nit: Please don't split the write address across two lines, it makes it
+harder to read.
+
+> +		}
+> +		raw_spin_unlock_irqrestore(&intc->lock, flags);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void bcm7038_l1_resume(void)
+> +{
+> +	struct bcm7038_l1_chip *intc;
+> +	unsigned long flags;
+> +	int boot_cpu, word;
+> +
+> +	boot_cpu = cpu_logical_map(smp_processor_id());
+> +
+> +	list_for_each_entry(intc, &bcm7038_l1_intcs_list, list) {
+> +		raw_spin_lock_irqsave(&intc->lock, flags);
+> +		for (word = 0; word < intc->n_words; word++) {
+> +			l1_writel(intc->cpus[boot_cpu]->mask_cache[word],
+> +				intc->cpus[boot_cpu]->map_base +
+> +				reg_mask_set(intc, word));
+> +			l1_writel(~intc->cpus[boot_cpu]->mask_cache[word],
+> +				intc->cpus[boot_cpu]->map_base +
+> +				reg_mask_clr(intc, word));
+> +		}
+> +		raw_spin_unlock_irqrestore(&intc->lock, flags);
+> +	}
+> +}
+> +
+> +static struct syscore_ops bcm7038_l1_syscore_ops = {
+> +	.suspend	= bcm7038_l1_suspend,
+> +	.resume		= bcm7038_l1_resume,
+> +};
+> +
+> +static int bcm7038_l1_set_wake(struct irq_data *d, unsigned int on)
+> +{
+> +	struct bcm7038_l1_chip *intc = irq_data_get_irq_chip_data(d);
+> +	unsigned long flags;
+> +	u32 word = d->hwirq / IRQS_PER_WORD;
+> +	u32 mask = BIT(d->hwirq % IRQS_PER_WORD);
+> +
+> +	raw_spin_lock_irqsave(&intc->lock, flags);
+> +	if (on)
+> +		intc->wake_mask[word] |= mask;
+> +	else
+> +		intc->wake_mask[word] &= ~mask;
+> +	raw_spin_unlock_irqrestore(&intc->lock, flags);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+>  static struct irq_chip bcm7038_l1_irq_chip = {
+>  	.name			= "bcm7038-l1",
+>  	.irq_mask		= bcm7038_l1_mask,
+> @@ -295,6 +382,9 @@ static struct irq_chip bcm7038_l1_irq_chip = {
+>  #ifdef CONFIG_SMP
+>  	.irq_cpu_offline	= bcm7038_l1_cpu_offline,
+>  #endif
+> +#ifdef CONFIG_PM_SLEEP
+> +	.irq_set_wake		= bcm7038_l1_set_wake,
+> +#endif
+>  };
+>  
+>  static int bcm7038_l1_map(struct irq_domain *d, unsigned int virq,
+> @@ -340,6 +430,14 @@ int __init bcm7038_l1_of_init(struct device_node *dn,
+>  		goto out_unmap;
+>  	}
+>  
+> +#ifdef CONFIG_PM_SLEEP
+> +	/* Add bcm7038_l1_chip into a list */
+> +	INIT_LIST_HEAD(&intc->list);
+> +	list_add_tail(&intc->list, &bcm7038_l1_intcs_list);
+
+No locking to manipulate this list? Is that safe?
+
+> +
+> +	register_syscore_ops(&bcm7038_l1_syscore_ops);
+
+Do you really register the syscore_ops for each and every L1 irqchip?
+
+> +#endif
+> +
+>  	pr_info("registered BCM7038 L1 intc (%pOF, IRQs: %d)\n",
+>  		dn, IRQS_PER_WORD * intc->n_words);
+>  
+
+Thanks,
+
+	M.
 -- 
-2.7.4
+Without deviation from the norm, progress is not possible.
