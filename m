@@ -1,52 +1,41 @@
-From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
-Subject: [PATCH 4/4] MIPS: JZ4780: DTS: Add CPU nodes
-Date: Sun, 22 Sep 2019 22:13:05 +0200
-Message-ID: <d4f2225005f6d8a92eec05bb64e7fe937ead8ccc.1569181001.git.agriveaux@deutnet.info>
-References: <cover.1569181001.git.agriveaux@deutnet.info>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: Re: [PATCH  0/5] net: ethernet: stmmac: some fixes and optimization
+Date: Sun, 22 Sep 2019 15:12:57 -0700
+Message-ID: <20190922151257.51173d89@cakuba.netronome.com>
+References: <20190920053817.13754-1-christophe.roullier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1569181001.git.agriveaux@deutnet.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, agriveaux@deutnet.info
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190920053817.13754-1-christophe.roullier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Christophe Roullier <christophe.roullier@st.com>
+Cc: mark.rutland@arm.com, robh@kernel.org, alexandre.torgue@st.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, joabreu@synopsys.com, andrew@lunn.ch, mcoquelin.stm32@gmail.com, peppe.cavallaro@st.com, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The JZ4780 have 2 core, adding to DT.
+On Fri, 20 Sep 2019 07:38:12 +0200, Christophe Roullier wrote:
+> Some improvements (manage syscfg as optional clock, update slew rate of
+> ETH_MDIO pin, Enable gating of the MAC TX clock during TX low-power mode)
+> Fix warning build message when W=1
 
-Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
----
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+There seems to be some new features/cleanups (or improvements as
+you say) here. Could you explain the negative impact not applying 
+these changes will have? Patches 1 and 3 in particular.
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index f928329b034b..9c7346724f1f 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -7,6 +7,23 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4780";
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "ingenic,jz4780";
-+			device_type = "cpu";
-+			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			compatible = "ingenic,jz4780";
-+			device_type = "cpu";
-+			reg = <1>;
-+		};
-+	};
-+
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
--- 
-2.20.1
+net-next is now closed [1], and will reopen some time after the merge
+window is over. For now we are only expecting fixes for the net tree.
+
+Could you (a) provide stronger motivation these changes are fixes; or
+(b) separate the fixes from improvements?
+
+Thank you!
+
+[1] https://www.kernel.org/doc/html/latest/networking/netdev-FAQ.html
