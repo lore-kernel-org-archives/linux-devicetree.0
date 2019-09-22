@@ -1,58 +1,51 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: [PATCH 1/2] misc: add cc1101 devicetree binding
-Date: Sun, 22 Sep 2019 08:03:55 +0200
-Message-ID: <20190922060356.58763-2-hs@denx.de>
-References: <20190922060356.58763-1-hs@denx.de>
+From: "Shenhar, Talel" <talel@amazon.com>
+Subject: Re: [UNVERIFIED SENDER] Re: [UNVERIFIED SENDER] Re: [PATCH v2 2/3]
+ soc: amazon: al-pos: Introduce Amazon's Annapurna Labs POS driver
+Date: Sun, 22 Sep 2019 09:55:36 +0300
+Message-ID: <dde86fec-ca92-a2a9-2d63-42c33c8594b0@amazon.com>
+References: <1568142310-17622-1-git-send-email-talel@amazon.com>
+ <1568142310-17622-3-git-send-email-talel@amazon.com>
+ <86d0g6syva.wl-maz@kernel.org>
+ <3205f7ae-5568-c064-23ac-ea726246173b@amazon.com>
+ <865zlxsxtd.wl-maz@kernel.org>
+ <36f19b3f-46d3-f6d0-3681-71e3a9bb52ce@amazon.com>
+ <93e5ac72-13e1-4672-16f0-62ee6b8a8390@arm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190922060356.58763-1-hs@denx.de>
+In-Reply-To: <93e5ac72-13e1-4672-16f0-62ee6b8a8390@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Heiko Schocher <hs@denx.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: James Morse <james.morse@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, mark.rutland@arm.com, nicolas.ferre@microchip.com, mchehab+samsung@kernel.org, shawn.lin@rock-chips.com, gregkh@linuxfoundation.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-add devicetree binding for cc1101 misc driver.
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
----
+On 9/19/2019 5:42 PM, James Morse wrote:
+> Hi guys,
+>
+> On 12/09/2019 10:19, Shenhar, Talel wrote:
+>> On 9/12/2019 11:50 AM, Marc Zyngier wrote:
+>>> On Thu, 12 Sep 2019 07:50:03 +0100,
+>>> "Shenhar, Talel" <talel@amazon.com> wrote:
+>>>> On 9/11/2019 5:15 PM, Marc Zyngier wrote:
+>>>>> On Tue, 10 Sep 2019 20:05:09 +0100,
+>>>>> Talel Shenhar <talel@amazon.com> wrote:
+>>>>>
+>> James, will love your input from EDAC point of view, does it make sense to plug
+>> un-correctable only event to EDAC?
+> I think this device is an example of something like a "Fabric switch units" in
+> Documentation/driver-api/edac.rst. It makes sense that it should be described as a
+> 'device' to edac. You can then use the existing user-space tools to control/report/monitor
+> the values.
 
- .../devicetree/bindings/misc/cc1101.txt       | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/misc/cc1101.txt
+Thank you James,
 
-diff --git a/Documentation/devicetree/bindings/misc/cc1101.txt b/Documentation/devicetree/bindings/misc/cc1101.txt
-new file mode 100644
-index 0000000000000..afea6acf4a9c5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/cc1101.txt
-@@ -0,0 +1,27 @@
-+driver cc1101 Low-Power Sub-1 GHz RF Transceiver chip from Texas
-+Instruments.
-+
-+Requires node properties:
-+- compatible : should be "ti,cc1101";
-+- reg        : Chip select address of device, see:
-+               Documentation/devicetree/bindings/spi/spi-bus.txt
-+- gpios      : list of 2 gpios, first gpio is for GDO0 pin
-+               second for GDO2 pin, see more:
-+               Documentation/devicetree/bindings/gpio/gpio.txt
-+
-+Recommended properties:
-+ - spi-max-frequency: Definition as per
-+                Documentation/devicetree/bindings/spi/spi-bus.txt
-+ - freq       : used spi frequency for communication with cc1101 chip
-+
-+example:
-+
-+&ecspi4 {
-+        cc1101@0 {
-+                compatible = "ti,cc1101";
-+                spi-max-frequency = <10000000>;
-+                reg = <0>;
-+                freq = <5000000>;
-+                gpios = <&gpio2 11 GPIO_ACTIVE_HIGH &gpio5 8 GPIO_ACTIVE_HIGH>;
-+        };
-+};
--- 
-2.21.0
+Will port this logic to be edac device.
+
+>
+>
+> Thanks,
+>
+> James
