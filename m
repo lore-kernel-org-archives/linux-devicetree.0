@@ -1,46 +1,87 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 03/10] ASoC: wm8994: Add support for setting MCLK
- clock rate
-Date: Mon, 23 Sep 2019 12:09:57 +0200
-Message-ID: <20190923100957.GA4723@pi3>
-References: <20190920130218.32690-1-s.nawrocki@samsung.com>
- <CGME20190920130316eucas1p2de713006a13c62c0b895c2e33e0d14c7@eucas1p2.samsung.com>
- <20190920130218.32690-4-s.nawrocki@samsung.com>
- <7334ce45-f192-4421-aa3d-d142582153ef@samsung.com>
+From: Kurt Kanzenbach <kurt@linutronix.de>
+Subject: [PATCH v6 2/2] dt/bindings: Add bindings for Layerscape external irqs
+Date: Mon, 23 Sep 2019 12:15:13 +0200
+Message-ID: <20190923101513.32719-3-kurt@linutronix.de>
+References: <20190923101513.32719-1-kurt@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <7334ce45-f192-4421-aa3d-d142582153ef@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, ckeepax@opensource.cirrus.com, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190923101513.32719-1-kurt@linutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, Rasmus Villemoes <rasmus.villemoes@prevas.dk>, devicetree@vger.kernel.org, Kurt Kanzenbach <kurt@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 11:10:48AM +0200, Sylwester Nawrocki wrote:
-> On 9/20/19 15:02, Sylwester Nawrocki wrote:
-> > Extend the set_sysclk() handler so we also set frequency of the MCLK1,
-> > MCLK2 clocks through clk API when those clocks are specified in DT.
-> > 
-> > Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> > Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> Sorry, I squashed other patch to this one but forgot to remove above tags, 
-> not sure if those still stand as there was rather significant change in 
-> the patch. 
+From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
 
-It's good. For the record:
+This adds Device Tree binding documentation for the external interrupt
+lines with configurable polarity present on some Layerscape SOCs.
 
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+---
 
-Best regards,
-Krzysztof
+Changes since v5:
+
+ - Add #address-cells and #size-cells to parent
+ - Mention LS2088A and the ISC unit
+
+.../interrupt-controller/fsl,ls-extirq.txt    | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
+new file mode 100644
+index 000000000000..7b53f9cc8019
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
+@@ -0,0 +1,47 @@
++* Freescale Layerscape external IRQs
++
++Some Layerscape SOCs (LS1021A, LS1043A, LS1046A, LS2088A) support
++inverting the polarity of certain external interrupt lines.
++
++The device node must be a child of the node representing the
++Supplemental Configuration Unit (SCFG) or the Interrupt Sampling
++Control (ISC) Unit.
++
++Required properties:
++- compatible: should be "fsl,<soc-name>-extirq", e.g. "fsl,ls1021a-extirq".
++- interrupt-controller: Identifies the node as an interrupt controller
++- #interrupt-cells: Must be 2. The first element is the index of the
++  external interrupt line. The second element is the trigger type.
++- interrupt-parent: phandle of GIC.
++- reg: Specifies the Interrupt Polarity Control Register (INTPCR) in the SCFG.
++- fsl,extirq-map: Specifies the mapping to interrupt numbers in the parent
++  interrupt controller. Interrupts are mapped one-to-one to parent
++  interrupts.
++
++Optional properties:
++- fsl,bit-reverse: This boolean property should be set on the LS1021A
++  if the SCFGREVCR register has been set to all-ones (which is usually
++  the case), meaning that all reads and writes of SCFG registers are
++  implicitly bit-reversed. Other compatible platforms do not have such
++  a register.
++
++Example:
++	scfg: scfg@1570000 {
++		compatible = "fsl,ls1021a-scfg", "syscon";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		...
++		extirq: interrupt-controller {
++			compatible = "fsl,ls1021a-extirq";
++			#interrupt-cells = <2>;
++			interrupt-controller;
++			interrupt-parent = <&gic>;
++			reg = <0x1ac>;
++			fsl,extirq-map = <163 164 165 167 168 169>;
++			fsl,bit-reverse;
++		};
++	};
++
++
++	interrupts-extended = <&gic GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
++			      <&extirq 1 IRQ_TYPE_LEVEL_LOW>;
+-- 
+2.20.1
