@@ -1,84 +1,97 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V4 2/5] input: keyboard: imx_sc: Add i.MX system
- controller key support
-Date: Mon, 23 Sep 2019 02:43:04 +0000
-Message-ID: <DB3PR0402MB39164F6EB8141BA5CC4F26FCF5850@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1568602373-14164-1-git-send-email-Anson.Huang@nxp.com>
- <1568602373-14164-2-git-send-email-Anson.Huang@nxp.com>
- <20190916235330.GI237523@dtor-ws>
- <DB3PR0402MB3916859326C76BC9BC1F781CF58F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190922161432.GE1999@bug>
+From: Sam Shih <sam.shih@mediatek.com>
+Subject: Re: [PATCH v9 07/11] dt-bindings: pwm: pwm-mediatek: add a property
+ "num-pwms"
+Date: Mon, 23 Sep 2019 11:20:57 +0800
+Message-ID: <1569208857.4102.9.camel@mtksdccf07>
+References: <1568933351-8584-1-git-send-email-sam.shih@mediatek.com>
+         <1568933351-8584-8-git-send-email-sam.shih@mediatek.com>
+         <20190921002149.GB86019@mithrandir>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190922161432.GE1999@bug>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Jacky Bai <ping.bai@nxp.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, Peng Fan <peng.fan@nxp.com>, "stefan@agner.ch" <stefan@agner.ch>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, Leonard Crestez <leonard.crestez@nxp.com>, "will@kernel.org" <will@kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "yuehaibing@huawei.com" <yuehaibing@huawei.com>, "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "ronald@innovation.ch" <ronald@innovation.ch>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190921002149.GB86019@mithrandir>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <john@phrozen.org>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Pavel
-
-> Subject: Re: [PATCH V4 2/5] input: keyboard: imx_sc: Add i.MX system
-> controller key support
+On Sat, 2019-09-21 at 02:21 +0200, Thierry Reding wrote:
+> On Fri, Sep 20, 2019 at 06:49:07AM +0800, Sam Shih wrote:
+> > From: Ryder Lee <ryder.lee@mediatek.com>
+> > 
+> > This adds a property "num-pwms" in example so that we could
+> > specify the number of PWM channels via device tree.
+> > 
+> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > ---
+> > Changes since v6:
+> > Follow reviewers's comments:
+> > - The subject should indicate this is for Mediatek
+> > 
+> > Changes since v5:
+> > - Add an Acked-by tag
+> > - This file is original v4 patch 5/10
+> > (https://patchwork.kernel.org/patch/11102577/)
+> > 
+> > ---
+> >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> Hi!
+> You failed to address Rob's questions repeatedly and I agree with him
+> that you can just as easily derive the number of PWMs from the specific
+> compatible string. I won't be applying this and none of the patches that
+> depend on it.
 > 
-> > > > +	ret = imx_scu_call_rpc(priv->key_ipc_handle, &msg, true);
-> > > > +	if (ret) {
-> > > > +		dev_err(&input->dev, "read imx sc key failed, ret %d\n", ret);
-> > > > +		return;
-> > > > +	}
-> > > > +
-> > > > +	state = (bool)msg.state;
-> > > > +
-> > > > +	if (!state && !priv->keystate)
-> > > > +		state = true;
-> > >
-> > > This needs an explanation please.
-> >
-> > This is to handle the quick press of button, e.g., when button is
-> > pressed and released very quickly, when the delay work is scheduled,
-> > the button state read from SCU FW is actually a release state (0), the press
-> state is (1), so the quick press/release will be ignored.
-> >
-> > However, after double check and test, I think this should be handled
-> > by debounce time, if the button is pressed/release very quickly, the
-> > event should be ignored, I will remove it and reduce the debounce time to
-> 30mS, previous 100mS is too long, using 30mS as debounce time, I did NOT
-> see similar issue no matter how quick I press/release the button.
-> 
-> Are you sure this is expected behaviour?
-> 
-> AFAIK microswitches can bounce when the button is pressed and released,
-> but will not generate glitches when the button was not pressed, so even
-> short presses are real and should be propagated...
 
-Latest version of patch handle the quick press as below:
+Hi, 
 
-- When the button is pressed, the delayed work will be scheduled;
-- In the delayed work, the button state will be read, once the state is different as previous
-  state, it will be propagated;
-- If the state is a press state, another delayed work will be scheduled for handling release
-  event.
+Thanks for getting back to me.
 
-So there could be a small window of DEBOUNCE_TIME (30mS) between button press and the delayed
-work scheduled for reading the button state, if the button is released in less than 30ms, then the
-state read could be a release state which is same as previous state and it will be ignored.
+New pwm driver (patch 04/11 : "pwm: mediatek: allocate the clks array
+dynamically") can support different variants with different number of
+PWMs by the new property <num-pwms>
 
-Do you think in this case, we should also propagated the press event? If yes, then what about the
-release event? Although from what I tested, no matter how quick I press the button, the driver
-can always receive both the press and release event, as the 30mS is very short.
+For example:
+1. Use "num-pwms" = <2> and assign clocks pwm1, pwm2 for mt7622
+2. Use "num-pwms" = <6> and assign clocks pwm1, pwm2, pwm3, pwm4, pwm5,
+pwm6 for mt7622.
 
-Thanks,
-Anson 
+If we just as easily derive the number of PWMs from the specific
+compatible string in this document:
+
+   - "pwm1-6": the six per PWM clocks for mt7622
+   
+This looks like all "pwm1", "pwm2", "pwm3", "pwm4", "pwm5", "pwm6" is
+required property in DT, It doesn't make sense.
+   
+So we removed those descriptions and added  
+
+   - "pwm1-N": the PWM clocks for each channel 
+   
+   
+But the max number of clocks from the compatible string are still
+important information that should be provide in this document.
+
+
+What do you think of this?
+
+   - "pwm1-N": per PWM clocks for mt2712, the max number of PWM channels
+is 8
+
+   - "pwm1-N": per PWM clocks for mt7622, the max number of PWM channels
+is 6
+
+   - "pwm1-N": per PWM clocks for mt7623, the max number of PWM channels
+is 5
+
+   where N starting from 1 to the maximum number of PWM channels
+   - num-pwms: the number of PWM channels.
+
+   
+Thanks
+Best Regards
+Sam 
