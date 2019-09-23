@@ -1,14 +1,15 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: samsung: arndale: Add missing OF node dereferencing"
- to the asoc tree
-Date: Mon, 23 Sep 2019 22:22:59 +0100 (BST)
-Message-ID: <20190923212259.7F00DD02FE4@fitzroy.sirena.org.uk>
-References: <20190920130218.32690-3-s.nawrocki@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 3/3] arm64: dts: mark lx2160a esdhc controllers dma
+ coherent
+Date: Mon, 23 Sep 2019 23:26:33 +0200
+Message-ID: <CAPDyKFpQn+O-M60q-Tc4QOBM+WhFhmnkU6_-t5hnQcndLo==YA@mail.gmail.com>
+References: <20190922102341.GO25745@shell.armlinux.org.uk>
+ <E1iBz55-0008Mj-CX@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190920130218.32690-3-s.nawrocki@samsung.com>
+In-Reply-To: <E1iBz55-0008Mj-CX@rmk-PC.armlinux.org.uk>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,127 +19,82 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, ckeepax@opensource.cirrus.com, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, lgirdwood@gmail.com, Krzysztof Kozlowski <krzk@kernel.org>, robh+dt@kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+To: Russell King <rmk+kernel@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, dann frazier <dann.frazier@canonical.com>, Will Deacon <will.deacon@arm.com>, Li Yang <leoyang.li@nxp.com>, Nicolin Chen <nicoleotsuka@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Y.b. Lu" <yangbo.lu@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Sun, 22 Sep 2019 at 12:29, Russell King <rmk+kernel@armlinux.org.uk> wrote:
+>
+> The LX2160A esdhc controllers are setup by the driver to be DMA
+> coherent, but without marking them as such in DT, Linux thinks they
+> are not.  This can lead to random sporadic DMA errors, even to the
+> extent of preventing boot, such as:
+>
+> mmc0: ADMA error
+> mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+> mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00002202
+> mmc0: sdhci: Blk size:  0x00000008 | Blk cnt:  0x00000001
+> mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
+> mmc0: sdhci: Present:   0x01f50008 | Host ctl: 0x00000038
+> mmc0: sdhci: Power:     0x00000003 | Blk gap:  0x00000000
+> mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x000040d8
+> mmc0: sdhci: Timeout:   0x00000003 | Int stat: 0x00000001
+> mmc0: sdhci: Int enab:  0x037f108f | Sig enab: 0x037f108b
+> mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00002202
+> mmc0: sdhci: Caps:      0x35fa0000 | Caps_1:   0x0000af00
+> mmc0: sdhci: Cmd:       0x0000333a | Max curr: 0x00000000
+> mmc0: sdhci: Resp[0]:   0x00000920 | Resp[1]:  0x001d8a33
+> mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x3f400e00
+> mmc0: sdhci: Host ctl2: 0x00000000
+> mmc0: sdhci: ADMA Err:  0x00000009 | ADMA Ptr: 0x000000236d43820c
+> mmc0: sdhci: ============================================
+> mmc0: error -5 whilst initialising SD card
+>
+> These are caused by the device's descriptor fetch hitting speculatively
+> loaded CPU cache lines that the CPU does not see through the normal,
+> non-cacheable DMA coherent mapping that it uses for non-coherent
+> devices.
+>
+> DT and the device must agree wrt whether the device is DMA coherent or
+> not.
+>
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-   ASoC: samsung: arndale: Add missing OF node dereferencing
+As I am picking up patch1 and patch2 from this series, I can also help
+out and pick up this one, if that is okay by people?
 
-has been applied to the asoc tree at
+Kind regards
+Uffe
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From fb629fa2587d0c150792d87e3053664bfc8dc78c Mon Sep 17 00:00:00 2001
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Date: Fri, 20 Sep 2019 15:02:11 +0200
-Subject: [PATCH] ASoC: samsung: arndale: Add missing OF node dereferencing
-
-Ensure there is no OF node references kept when the driver
-is removed/unbound.
-
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Link: https://lore.kernel.org/r/20190920130218.32690-3-s.nawrocki@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/samsung/arndale_rt5631.c | 34 ++++++++++++++++++++++++++----
- 1 file changed, 30 insertions(+), 4 deletions(-)
-
-diff --git a/sound/soc/samsung/arndale_rt5631.c b/sound/soc/samsung/arndale_rt5631.c
-index c213913eb984..fd8c6642fb0d 100644
---- a/sound/soc/samsung/arndale_rt5631.c
-+++ b/sound/soc/samsung/arndale_rt5631.c
-@@ -5,6 +5,7 @@
- //  Author: Claude <claude@insginal.co.kr>
- 
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/clk.h>
- 
-@@ -74,6 +75,17 @@ static struct snd_soc_card arndale_rt5631 = {
- 	.num_links = ARRAY_SIZE(arndale_rt5631_dai),
- };
- 
-+static void arndale_put_of_nodes(struct snd_soc_card *card)
-+{
-+	struct snd_soc_dai_link *dai_link;
-+	int i;
-+
-+	for_each_card_prelinks(card, i, dai_link) {
-+		of_node_put(dai_link->cpus->of_node);
-+		of_node_put(dai_link->codecs->of_node);
-+	}
-+}
-+
- static int arndale_audio_probe(struct platform_device *pdev)
- {
- 	int n, ret;
-@@ -103,18 +115,31 @@ static int arndale_audio_probe(struct platform_device *pdev)
- 		if (!arndale_rt5631_dai[0].codecs->of_node) {
- 			dev_err(&pdev->dev,
- 			"Property 'samsung,audio-codec' missing or invalid\n");
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto err_put_of_nodes;
- 		}
- 	}
- 
- 	ret = devm_snd_soc_register_card(card->dev, card);
-+	if (ret) {
-+		dev_err(&pdev->dev, "snd_soc_register_card() failed: %d\n", ret);
-+		goto err_put_of_nodes;
-+	}
-+	return 0;
- 
--	if (ret)
--		dev_err(&pdev->dev, "snd_soc_register_card() failed:%d\n", ret);
--
-+err_put_of_nodes:
-+	arndale_put_of_nodes(card);
- 	return ret;
- }
- 
-+static int arndale_audio_remove(struct platform_device *pdev)
-+{
-+	struct snd_soc_card *card = platform_get_drvdata(pdev);
-+
-+	arndale_put_of_nodes(card);
-+	return 0;
-+}
-+
- static const struct of_device_id samsung_arndale_rt5631_of_match[] __maybe_unused = {
- 	{ .compatible = "samsung,arndale-rt5631", },
- 	{ .compatible = "samsung,arndale-alc5631", },
-@@ -129,6 +154,7 @@ static struct platform_driver arndale_audio_driver = {
- 		.of_match_table = of_match_ptr(samsung_arndale_rt5631_of_match),
- 	},
- 	.probe = arndale_audio_probe,
-+	.remove = arndale_audio_remove,
- };
- 
- module_platform_driver(arndale_audio_driver);
--- 
-2.20.1
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> index 36b153e3da47..508af23edef0 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> @@ -593,6 +593,7 @@
+>                         reg = <0x0 0x2140000 0x0 0x10000>;
+>                         interrupts = <0 28 0x4>; /* Level high type */
+>                         clocks = <&clockgen 4 1>;
+> +                       dma-coherent;
+>                         voltage-ranges = <1800 1800 3300 3300>;
+>                         sdhci,auto-cmd12;
+>                         little-endian;
+> @@ -605,6 +606,7 @@
+>                         reg = <0x0 0x2150000 0x0 0x10000>;
+>                         interrupts = <0 63 0x4>; /* Level high type */
+>                         clocks = <&clockgen 4 1>;
+> +                       dma-coherent;
+>                         voltage-ranges = <1800 1800 3300 3300>;
+>                         sdhci,auto-cmd12;
+>                         broken-cd;
+> --
+> 2.7.4
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
