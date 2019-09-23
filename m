@@ -1,59 +1,84 @@
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH 1/4] pwm: mxs: implement ->apply
-Date: Mon, 23 Sep 2019 11:04:39 +0200
-Message-ID: <a6407644-0b5b-ba46-9435-0d14be9066a5@rasmusvillemoes.dk>
-References: <20190923081348.6843-1-linux@rasmusvillemoes.dk>
- <20190923081348.6843-2-linux@rasmusvillemoes.dk>
- <20190923082459.huqpbz5eseonkscv@pengutronix.de>
+From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v17 07/19] kunit: test: add initial tests
+Date: Mon, 23 Sep 2019 02:05:02 -0700
+Message-ID: <CAFd5g44e9bdK8h5+U1MkqPNuf2k9vnu-iPFLTzGajEHPEcRpHQ@mail.gmail.com>
+References: <20190921001855.200947-1-brendanhiggins@google.com>
+ <20190921001855.200947-8-brendanhiggins@google.com>
+ <944ac47d-1411-9ebd-d0d4-a616c88c9c20@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190923082459.huqpbz5eseonkscv@pengutronix.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <944ac47d-1411-9ebd-d0d4-a616c88c9c20-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
+List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
+ <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
+Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
+To: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Amir Goldstein <amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Sasha Levin <Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, shuah <shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-nvdimm <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Knut Omang <knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, David Rientjes <rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jeff Dike <jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29Tb/PtFMR13I2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23/09/2019 10.24, Uwe Kleine-König wrote:
-> Hello Rasmus,
-> 
-> On Mon, Sep 23, 2019 at 10:13:45AM +0200, Rasmus Villemoes wrote:
->> In preparation for supporting setting the polarity, switch the driver
->> to support the ->apply method.
->>
-> 
-> Maybe it would be easier to review when converting from .config +
-> .enable + .disable to .apply in a single step. (Note this "maybe" is
-> honest, I'm not entirely sure.)
+On Sun, Sep 22, 2019 at 9:28 AM Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
+>
+> On 9/20/19 5:18 PM, Brendan Higgins wrote:
+> > Add a test for string stream along with a simpler example.
+> >
+> > Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> > Reviewed-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> > Reviewed-by: Logan Gunthorpe <logang-OTvnGxWRz7hWk0Htik3J/w@public.gmane.org>
+> > Reviewed-by: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> >  lib/kunit/Kconfig              | 25 ++++++++++
+> >  lib/kunit/Makefile             |  4 ++
+> >  lib/kunit/example-test.c       | 88 ++++++++++++++++++++++++++++++++++
+> >  lib/kunit/string-stream-test.c | 52 ++++++++++++++++++++
+> >  4 files changed, 169 insertions(+)
+> >  create mode 100644 lib/kunit/example-test.c
+> >  create mode 100644 lib/kunit/string-stream-test.c
+> >
+> > diff --git a/lib/kunit/Kconfig b/lib/kunit/Kconfig
+> > index 666b9cb67a74..3868c226cf31 100644
+> > --- a/lib/kunit/Kconfig
+> > +++ b/lib/kunit/Kconfig
+> > @@ -11,3 +11,28 @@ menuconfig KUNIT
+> >         special hardware when using UML. Can also be used on most other
+> >         architectures. For more information, please see
+> >         Documentation/dev-tools/kunit/.
+> > +
+> > +if KUNIT
+>
+> The 'if' above provides the dependency clause, so the 2 'depends on KUNIT'
+> below are not needed.  They are redundant.
 
-I tried to make .apply do exactly what the old sequence of calls from
-the core to the individual methods would do, and for that it seemed a
-little easier to keep the old methods around - but yes, I do need to be
-more careful than that to provide the atomicity guarantee that the
-legacy methods did not. It's also much easier to squash than to split,
-so for now I'll leave them separate - if somebody prefers them squashed,
-I'll do that.
+Thanks for catching that. I fixed it in the new revision I just sent out.
 
-> There is a bug: If the PWM is running at (say) period=100ms, duty=0ms
-> and we call
-> pwm_apply_state(pwm, { .enabled = false, duty=100000, period=1000000 });
-> the output might get high which it should not.
+> > +
+> > +config KUNIT_TEST
+> > +     bool "KUnit test for KUnit"
+> > +     depends on KUNIT
+> > +     help
+> > +       Enables the unit tests for the KUnit test framework. These tests test
+> > +       the KUnit test framework itself; the tests are both written using
+> > +       KUnit and test KUnit. This option should only be enabled for testing
+> > +       purposes by developers interested in testing that KUnit works as
+> > +       expected.
+> > +
+> > +config KUNIT_EXAMPLE_TEST
+> > +     bool "Example test for KUnit"
+> > +     depends on KUNIT
+> > +     help
+> > +       Enables an example unit test that illustrates some of the basic
+> > +       features of KUnit. This test only exists to help new users understand
+> > +       what KUnit is and how it is used. Please refer to the example test
+> > +       itself, lib/kunit/example-test.c, for more information. This option
+> > +       is intended for curious hackers who would like to understand how to
+> > +       use KUnit for kernel development.
+> > +
+> > +endif # KUNIT
 
-Ah, yes. So I suppose that if we're changing from enabled to disabled,
-we should simply disable it in the CTRL register before changing the
-duty/period.
-
-> Also there is a bug already in .config: You are not supposed to call
-> clk_get_rate if the clk might be off.
-
-Interesting, I didn't know that. So the prepare_enable logic needs to be
-moved before we start computing the period/duty cycles. Do you know why
-it has apparently worked so far? I would have thought such a rule would
-be enforced by the clock framework, or at least produced a warning.
-
-Thanks for the fast review. I'll wait a day or two to see if there are
-other comments before sending out a v2.
-
-Rasmus
+Cheers
