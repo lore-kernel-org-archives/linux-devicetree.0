@@ -1,143 +1,171 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v18 15/19] Documentation: kunit: add documentation for KUnit
-Date: Mon, 23 Sep 2019 11:06:19 -0700
-Message-ID: <CAFd5g45y-NWzbn8E8hUg=n4U5E+N6_4D8eCXhQ74Y0N4zqVW=w@mail.gmail.com>
-References: <20190923090249.127984-1-brendanhiggins@google.com>
- <20190923090249.127984-16-brendanhiggins@google.com> <d87eba35-ae09-0c53-bbbe-51ee9dc9531f@infradead.org>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH] dt-bindings: at24: convert the binding document to yaml
+Date: Mon, 23 Sep 2019 18:30:35 +0000
+Message-ID: <b3a3ca68-45ab-c60a-7f48-636b102b32c1@axentia.se>
+References: <20190923175211.2060-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d87eba35-ae09-0c53-bbbe-51ee9dc9531f@infradead.org>
+In-Reply-To: <20190923175211.2060-1-brgl@bgdev.pl>
+Content-Language: en-US
+Content-ID: <E00E7793A9A2EA438A195A08BFF17C56@eurprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>open list
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 8:48 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 9/23/19 2:02 AM, Brendan Higgins wrote:
-> > Add documentation for KUnit, the Linux kernel unit testing framework.
-> > - Add intro and usage guide for KUnit
-> > - Add API reference
-> >
-> > Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
-> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> > Cc: Jonathan Corbet <corbet@lwn.net>
-> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> > ---
-> >  Documentation/dev-tools/index.rst           |   1 +
-> >  Documentation/dev-tools/kunit/api/index.rst |  16 +
-> >  Documentation/dev-tools/kunit/api/test.rst  |  11 +
-> >  Documentation/dev-tools/kunit/faq.rst       |  62 +++
-> >  Documentation/dev-tools/kunit/index.rst     |  79 +++
-> >  Documentation/dev-tools/kunit/start.rst     | 180 ++++++
-> >  Documentation/dev-tools/kunit/usage.rst     | 576 ++++++++++++++++++++
-> >  7 files changed, 925 insertions(+)
-> >  create mode 100644 Documentation/dev-tools/kunit/api/index.rst
-> >  create mode 100644 Documentation/dev-tools/kunit/api/test.rst
-> >  create mode 100644 Documentation/dev-tools/kunit/faq.rst
-> >  create mode 100644 Documentation/dev-tools/kunit/index.rst
-> >  create mode 100644 Documentation/dev-tools/kunit/start.rst
-> >  create mode 100644 Documentation/dev-tools/kunit/usage.rst
->
->
-> > diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
-> > new file mode 100644
-> > index 000000000000..6dc229e46bb3
-> > --- /dev/null
-> > +++ b/Documentation/dev-tools/kunit/start.rst
-> > @@ -0,0 +1,180 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +===============
-> > +Getting Started
-> > +===============
-> > +
-> > +Installing dependencies
-> > +=======================
-> > +KUnit has the same dependencies as the Linux kernel. As long as you can build
-> > +the kernel, you can run KUnit.
-> > +
-> > +KUnit Wrapper
-> > +=============
-> > +Included with KUnit is a simple Python wrapper that helps format the output to
-> > +easily use and read KUnit output. It handles building and running the kernel, as
-> > +well as formatting the output.
-> > +
-> > +The wrapper can be run with:
-> > +
-> > +.. code-block:: bash
-> > +
-> > +   ./tools/testing/kunit/kunit.py run
-> > +
-> > +Creating a kunitconfig
-> > +======================
-> > +The Python script is a thin wrapper around Kbuild as such, it needs to be
->
->                                        around Kbuild. As such,
-
-Thanks for pointing this out.
-
->
-> > +configured with a ``kunitconfig`` file. This file essentially contains the
-> > +regular Kernel config, with the specific test targets as well.
-> > +
-> > +.. code-block:: bash
-> > +
-> > +     git clone -b master https://kunit.googlesource.com/kunitconfig $PATH_TO_KUNITCONFIG_REPO
-> > +     cd $PATH_TO_LINUX_REPO
-> > +     ln -s $PATH_TO_KUNIT_CONFIG_REPO/kunitconfig kunitconfig
-> > +
-> > +You may want to add kunitconfig to your local gitignore.
-> > +
-> > +Verifying KUnit Works
-> > +---------------------
-> > +
-> > +To make sure that everything is set up correctly, simply invoke the Python
-> > +wrapper from your kernel repo:
-> > +
-> > +.. code-block:: bash
-> > +
-> > +     ./tools/testing/kunit/kunit.py
-> > +
-> > +.. note::
-> > +   You may want to run ``make mrproper`` first.
->
-> I normally use O=builddir when building kernels.
-> Does this support using O=builddir ?
-
-Yep, it supports specifying a separate build directory.
-
-> > +
-> > +If everything worked correctly, you should see the following:
-> > +
-> > +.. code-block:: bash
-> > +
-> > +     Generating .config ...
-> > +     Building KUnit Kernel ...
-> > +     Starting KUnit Kernel ...
-> > +
-> > +followed by a list of tests that are run. All of them should be passing.
-> > +
-> > +.. note::
-> > +   Because it is building a lot of sources for the first time, the ``Building
-> > +   kunit kernel`` step may take a while.
-> > +
-> > +Writing your first test
-> > +=======================
->
-> [snip]
->
-> > diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-> > new file mode 100644
-> > index 000000000000..c6e69634e274
-> > --- /dev/null
-> > +++ b/Documentation/dev-tools/kunit/usage.rst
->
-> TBD...
-
-What did you mean by this comment?
-
-Cheers
+T24gMjAxOS0wOS0yMyAxOTo1MiwgQmFydG9zeiBHb2xhc3pld3NraSB3cm90ZToNCj4gRnJvbTog
+QmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbT4NCj4gDQo+IENv
+bnZlcnQgdGhlIGJpbmRpbmcgZG9jdW1lbnQgZm9yIGF0MjQgRUVQUk9NcyBmcm9tIHR4dCB0byB5
+YW1sLiBUaGUNCj4gY29tcGF0aWJsZSBwcm9wZXJ0eSB1c2VzIGEgcmVnZXggcGF0dGVybiB0byBh
+ZGRyZXNzIGFsbCB0aGUgcG9zc2libGUNCj4gY29tYmluYXRpb25zIG9mICJ2ZW5kb3IsbW9kZWwi
+IHN0cmluZ3MuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tpIDxiZ29s
+YXN6ZXdza2lAYmF5bGlicmUuY29tPg0KPiAtLS0NCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2VlcHJvbS9hdDI0LnR4dCAgICAgICB8ICA5MCArLS0tLS0tLS0tLS0tLS0NCj4gIC4uLi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2VlcHJvbS9hdDI0LnlhbWwgICAgICB8IDEwNyArKysrKysrKysrKysr
+KysrKysNCj4gIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8
+ICAgMiArLQ0KPiAgMyBmaWxlcyBjaGFuZ2VkLCAxMDkgaW5zZXJ0aW9ucygrKSwgOTAgZGVsZXRp
+b25zKC0pDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2VlcHJvbS9hdDI0LnlhbWwNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZWVwcm9tL2F0MjQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2VlcHJvbS9hdDI0LnR4dA0KPiBpbmRleCAyMmFlYWQ4NDRkMGYuLmM5
+NGFjYmI4Y2IwYyAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2VlcHJvbS9hdDI0LnR4dA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZWVwcm9tL2F0MjQudHh0DQo+IEBAIC0xLDg5ICsxIEBADQo+IC1FRVBST01zIChJMkMp
+DQo+IC0NCj4gLVJlcXVpcmVkIHByb3BlcnRpZXM6DQo+IC0NCj4gLSAgLSBjb21wYXRpYmxlOiBN
+dXN0IGJlIGEgIjxtYW51ZmFjdHVyZXI+LDxtb2RlbD4iIHBhaXIuIFRoZSBmb2xsb3dpbmcgPG1v
+ZGVsPg0KPiAtICAgICAgICAgICAgICAgIHZhbHVlcyBhcmUgc3VwcG9ydGVkIChhc3N1bWluZyAi
+YXRtZWwiIGFzIG1hbnVmYWN0dXJlcik6DQo+IC0NCj4gLSAgICAgICAgICAgICAgICAiYXRtZWws
+MjRjMDAiLA0KPiAtICAgICAgICAgICAgICAgICJhdG1lbCwyNGMwMSIsDQo+IC0gICAgICAgICAg
+ICAgICAgImF0bWVsLDI0Y3MwMSIsDQo+IC0gICAgICAgICAgICAgICAgImF0bWVsLDI0YzAyIiwN
+Cj4gLSAgICAgICAgICAgICAgICAiYXRtZWwsMjRjczAyIiwNCj4gLSAgICAgICAgICAgICAgICAi
+YXRtZWwsMjRtYWM0MDIiLA0KPiAtICAgICAgICAgICAgICAgICJhdG1lbCwyNG1hYzYwMiIsDQo+
+IC0gICAgICAgICAgICAgICAgImF0bWVsLHNwZCIsDQo+IC0gICAgICAgICAgICAgICAgImF0bWVs
+LDI0YzA0IiwNCj4gLSAgICAgICAgICAgICAgICAiYXRtZWwsMjRjczA0IiwNCj4gLSAgICAgICAg
+ICAgICAgICAiYXRtZWwsMjRjMDgiLA0KPiAtICAgICAgICAgICAgICAgICJhdG1lbCwyNGNzMDgi
+LA0KPiAtICAgICAgICAgICAgICAgICJhdG1lbCwyNGMxNiIsDQo+IC0gICAgICAgICAgICAgICAg
+ImF0bWVsLDI0Y3MxNiIsDQo+IC0gICAgICAgICAgICAgICAgImF0bWVsLDI0YzMyIiwNCj4gLSAg
+ICAgICAgICAgICAgICAiYXRtZWwsMjRjczMyIiwNCj4gLSAgICAgICAgICAgICAgICAiYXRtZWws
+MjRjNjQiLA0KPiAtICAgICAgICAgICAgICAgICJhdG1lbCwyNGNzNjQiLA0KPiAtICAgICAgICAg
+ICAgICAgICJhdG1lbCwyNGMxMjgiLA0KPiAtICAgICAgICAgICAgICAgICJhdG1lbCwyNGMyNTYi
+LA0KPiAtICAgICAgICAgICAgICAgICJhdG1lbCwyNGM1MTIiLA0KPiAtICAgICAgICAgICAgICAg
+ICJhdG1lbCwyNGMxMDI0IiwNCj4gLSAgICAgICAgICAgICAgICAiYXRtZWwsMjRjMjA0OCIsDQo+
+IC0NCj4gLSAgICAgICAgICAgICAgICBJZiA8bWFudWZhY3R1cmVyPiBpcyBub3QgImF0bWVsIiwg
+dGhlbiBhIGZhbGxiYWNrIG11c3QgYmUgdXNlZA0KPiAtICAgICAgICAgICAgICAgIHdpdGggdGhl
+IHNhbWUgPG1vZGVsPiBhbmQgImF0bWVsIiBhcyBtYW51ZmFjdHVyZXIuDQo+IC0NCj4gLSAgICAg
+ICAgICAgICAgICBFeGFtcGxlOg0KPiAtICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJs
+ZSA9ICJtaWNyb2NoaXAsMjRjMTI4IiwgImF0bWVsLDI0YzEyOCI7DQo+IC0NCj4gLSAgICAgICAg
+ICAgICAgICBTdXBwb3J0ZWQgbWFudWZhY3R1cmVycyBhcmU6DQo+IC0NCj4gLSAgICAgICAgICAg
+ICAgICAiY2F0YWx5c3QiLA0KPiAtICAgICAgICAgICAgICAgICJtaWNyb2NoaXAiLA0KPiAtICAg
+ICAgICAgICAgICAgICJueHAiLA0KPiAtICAgICAgICAgICAgICAgICJyYW10cm9uIiwNCj4gLSAg
+ICAgICAgICAgICAgICAicmVuZXNhcyIsDQo+IC0gICAgICAgICAgICAgICAgInJvaG0iLA0KPiAt
+ICAgICAgICAgICAgICAgICJzdCIsDQo+IC0NCj4gLSAgICAgICAgICAgICAgICBTb21lIHZlbmRv
+cnMgdXNlIGRpZmZlcmVudCBtb2RlbCBuYW1lcyBmb3IgY2hpcHMgd2hpY2ggYXJlIGp1c3QNCj4g
+LSAgICAgICAgICAgICAgICB2YXJpYW50cyBvZiB0aGUgYWJvdmUuIEtub3duIHN1Y2ggZXhjZXB0
+aW9ucyBhcmUgbGlzdGVkIGJlbG93Og0KPiAtDQo+IC0gICAgICAgICAgICAgICAgIm54cCxzZTk3
+YiIgLSB0aGUgZmFsbGJhY2sgaXMgImF0bWVsLDI0YzAyIiwNCj4gLSAgICAgICAgICAgICAgICAi
+cmVuZXNhcyxyMWV4MjQwMDIiIC0gdGhlIGZhbGxiYWNrIGlzICJhdG1lbCwyNGMwMiINCj4gLSAg
+ICAgICAgICAgICAgICAicmVuZXNhcyxyMWV4MjQwMTYiIC0gdGhlIGZhbGxiYWNrIGlzICJhdG1l
+bCwyNGMxNiINCj4gLSAgICAgICAgICAgICAgICAicmVuZXNhcyxyMWV4MjQxMjgiIC0gdGhlIGZh
+bGxiYWNrIGlzICJhdG1lbCwyNGMxMjgiDQo+IC0gICAgICAgICAgICAgICAgInJvaG0sYnIyNHQw
+MSIgLSB0aGUgZmFsbGJhY2sgaXMgImF0bWVsLDI0YzAxIg0KPiAtDQo+IC0gIC0gcmVnOiBUaGUg
+STJDIGFkZHJlc3Mgb2YgdGhlIEVFUFJPTS4NCj4gLQ0KPiAtT3B0aW9uYWwgcHJvcGVydGllczoN
+Cj4gLQ0KPiAtICAtIHBhZ2VzaXplOiBUaGUgbGVuZ3RoIG9mIHRoZSBwYWdlc2l6ZSBmb3Igd3Jp
+dGluZy4gUGxlYXNlIGNvbnN1bHQgdGhlDQo+IC0gICAgICAgICAgICAgIG1hbnVhbCBvZiB5b3Vy
+IGRldmljZSwgdGhhdCB2YWx1ZSB2YXJpZXMgYSBsb3QuIEEgd3JvbmcgdmFsdWUNCj4gLSAgICAg
+ICAgICAgICAgbWF5IHJlc3VsdCBpbiBkYXRhIGxvc3MhIElmIG5vdCBzcGVjaWZpZWQsIGEgc2Fm
+ZXR5IHZhbHVlIG9mDQo+IC0gICAgICAgICAgICAgICcxJyBpcyB1c2VkIHdoaWNoIHdpbGwgYmUg
+dmVyeSBzbG93Lg0KPiAtDQo+IC0gIC0gcmVhZC1vbmx5OiBUaGlzIHBhcmFtZXRlcmxlc3MgcHJv
+cGVydHkgZGlzYWJsZXMgd3JpdGVzIHRvIHRoZSBlZXByb20uDQo+IC0NCj4gLSAgLSBzaXplOiBU
+b3RhbCBlZXByb20gc2l6ZSBpbiBieXRlcy4NCj4gLQ0KPiAtICAtIG5vLXJlYWQtcm9sbG92ZXI6
+IFRoaXMgcGFyYW1ldGVybGVzcyBwcm9wZXJ0eSBpbmRpY2F0ZXMgdGhhdCB0aGUNCj4gLSAgICAg
+ICAgICAgICAgICAgICAgICBtdWx0aS1hZGRyZXNzIGVlcHJvbSBkb2VzIG5vdCBhdXRvbWF0aWNh
+bGx5IHJvbGwgb3Zlcg0KPiAtICAgICAgICAgICAgICAgICAgICAgIHJlYWRzIHRvIHRoZSBuZXh0
+IHNsYXZlIGFkZHJlc3MuIFBsZWFzZSBjb25zdWx0IHRoZQ0KPiAtICAgICAgICAgICAgICAgICAg
+ICAgIG1hbnVhbCBvZiB5b3VyIGRldmljZS4NCj4gLQ0KPiAtICAtIHdwLWdwaW9zOiBHUElPIHRv
+IHdoaWNoIHRoZSB3cml0ZS1wcm90ZWN0IHBpbiBvZiB0aGUgY2hpcCBpcyBjb25uZWN0ZWQuDQo+
+IC0NCj4gLSAgLSBhZGRyZXNzLXdpZHRoOiBudW1iZXIgb2YgYWRkcmVzcyBiaXRzIChvbmUgb2Yg
+OCwgMTYpLg0KPiAtDQo+IC0gIC0gbnVtLWFkZHJlc3NlczogdG90YWwgbnVtYmVyIG9mIGkyYyBz
+bGF2ZSBhZGRyZXNzZXMgdGhpcyBkZXZpY2UgdGFrZXMNCj4gLQ0KPiAtRXhhbXBsZToNCj4gLQ0K
+PiAtZWVwcm9tQDUyIHsNCj4gLQljb21wYXRpYmxlID0gImF0bWVsLDI0YzMyIjsNCj4gLQlyZWcg
+PSA8MHg1Mj47DQo+IC0JcGFnZXNpemUgPSA8MzI+Ow0KPiAtCXdwLWdwaW9zID0gPCZncGlvMSAz
+IDA+Ow0KPiAtCW51bS1hZGRyZXNzZXMgPSA8OD47DQo+IC19Ow0KPiArVGhpcyBmaWxlIGhhcyBi
+ZWVuIG1vdmVkIHRvIGF0MjQueWFtbC4NCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9lZXByb20vYXQyNC55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2VlcHJvbS9hdDI0LnlhbWwNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4g
+aW5kZXggMDAwMDAwMDAwMDAwLi4yOGM4YjA2OGM4YTENCj4gLS0tIC9kZXYvbnVsbA0KPiArKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZWVwcm9tL2F0MjQueWFtbA0KPiBA
+QCAtMCwwICsxLDEwNyBAQA0KPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0K
+PiArIyBDb3B5cmlnaHQgMjAxOSBCYXlMaWJyZSBTQVMNCj4gKyVZQU1MIDEuMg0KPiArLS0tDQo+
+ICskaWQ6ICJodHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9lZXByb20vYXQyNC55YW1sIyIN
+Cj4gKyRzY2hlbWE6ICJodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFt
+bCMiDQo+ICsNCj4gK3RpdGxlOiBJMkMgRUVQUk9NcyBjb21wYXRpYmxlIHdpdGggQXRtZWwncyBB
+VDI0DQo+ICsNCj4gK21haW50YWluZXJzOg0KPiArICAtIEJhcnRvc3ogR29sYXN6ZXdza2kgPGJn
+b2xhc3pld3NraUBiYXlsaWJyZS5jb20+DQo+ICsNCj4gK3Byb3BlcnRpZXM6DQo+ICsgIGNvbXBh
+dGlibGU6DQo+ICsgICAgYWRkaXRpb25hbEl0ZW1zOiB0cnVlDQo+ICsgICAgbWF4SXRlbXM6IDIN
+Cj4gKyAgICBwYXR0ZXJuOiAiXihhdG1lbHxjYXRhbHlzdHxtaWNyb2NoaXB8bnhwfHJhbXRyb258
+cmVuZXNhc3xyb2htfHN0KSwyNChjfGNzfG1hYylbMC05XSskIg0KPiArICAgIG9uZU9mOg0KPiAr
+ICAgICAgLSBjb25zdDogbnhwLHNlOTdiDQo+ICsgICAgICAtIGNvbnN0OiByZW5lc2FzLHIxZXgy
+NDAwMg0KPiArICAgICAgLSBjb25zdDogcmVuZXNhcyxyMWV4MjQwMTYNCj4gKyAgICAgIC0gY29u
+c3Q6IHJlbmVzYXMscjFleDI0MTI4DQo+ICsgICAgICAtIGNvbnN0OiByb2htLGJyMjR0MDENCj4g
+KyAgICBjb250YWluczoNCj4gKyAgICAgIGVudW06DQo+ICsgICAgICAgIC0gYXRtZWwsMjRjMDAN
+Cj4gKyAgICAgICAgLSBhdG1lbCwyNGMwMQ0KPiArICAgICAgICAtIGF0bWVsLDI0Y3MwMQ0KPiAr
+ICAgICAgICAtIGF0bWVsLDI0YzAyDQo+ICsgICAgICAgIC0gYXRtZWwsMjRjczAyDQo+ICsgICAg
+ICAgIC0gYXRtZWwsMjRtYWM0MDINCj4gKyAgICAgICAgLSBhdG1lbCwyNG1hYzYwMg0KPiArICAg
+ICAgICAtIGF0bWVsLHNwZA0KPiArICAgICAgICAtIGF0bWVsLDI0YzA0DQo+ICsgICAgICAgIC0g
+YXRtZWwsMjRjczA0DQo+ICsgICAgICAgIC0gYXRtZWwsMjRjMDgNCj4gKyAgICAgICAgLSBhdG1l
+bCwyNGNzMDgNCj4gKyAgICAgICAgLSBhdG1lbCwyNGMxNg0KPiArICAgICAgICAtIGF0bWVsLDI0
+Y3MxNg0KPiArICAgICAgICAtIGF0bWVsLDI0YzMyDQo+ICsgICAgICAgIC0gYXRtZWwsMjRjczMy
+DQo+ICsgICAgICAgIC0gYXRtZWwsMjRjNjQNCj4gKyAgICAgICAgLSBhdG1lbCwyNGNzNjQNCj4g
+KyAgICAgICAgLSBhdG1lbCwyNGMxMjgNCj4gKyAgICAgICAgLSBhdG1lbCwyNGMyNTYNCj4gKyAg
+ICAgICAgLSBhdG1lbCwyNGM1MTINCj4gKyAgICAgICAgLSBhdG1lbCwyNGMxMDI0DQo+ICsgICAg
+ICAgIC0gYXRtZWwsMjRjMjA0OA0KDQpUaGUgcHJldmlvdXMgYmluZGluZyBhbGxvd3MgbW9yZSBl
+LmcuDQoNCgljb21wYXRpYmxlID0gIm54cCxzcGQiLCAiYXRtZWwsc3BkIjsNCg0Kd2hpY2ggaXMg
+bm8gbG9uZ2VyIGFsbG93ZWQuIFRoYXQgbWlnaHQgYmUgYSBwcm9ibGVtPyBUaGUgcHJldmlvdXMg
+YmluZGluZw0KYWxzbyBhbGxvd3MgbGVzcyBlLmcuDQoNCgljb21wYXRpYmxlID0gImF0bWVsLDI0
+YzAwIiwgInJlbmVzYXMsMjRtYWM0MDIiOw0KDQp3aGljaCBvZiBjb3Vyc2UgaXMgbm9uc2Vuc2Ug
+YnV0IEFGQUlVIG5vdyBhbGxvd2VkLg0KDQpUaGUgbmV3IGZvcm1hbCBydWxlcyBhcmUgdGhlcmVm
+b3JlIG5vdCAicmlnaHQiLCBhbmQgaXQgbWlnaHQgYmUgaW1wb3NzaWJsZQ0KdG8gZXhwcmVzcyB0
+aGUgc3VidGxldGllcyBvZiB0aGlzIHdlaXJkIGJpbmRpbmcgd2l0aCB0aGUgY3VycmVudCBzcGVj
+IHNvDQp0aGVyZSBtaWdodCBiZSBsaXR0bGUgdG8gZG8gYWJvdXQgaXQ/IEJ1dCBlaXRoZXIgd2F5
+LCB0aGVzZSBpc3N1ZXMgYXJlIG5vdA0KbWVudGlvbmVkIG5laXRoZXIgaW4gdGhlIGJpbmRpbmcg
+bm9yIHRoZSBjb21taXQgbWVzc2FnZS4gU2hvdWxkIHRoZXkgYmUNCm1lbnRpb25lZD8NCg0KQ2hl
+ZXJzLA0KUGV0ZXINCg0KPiArDQo+ICsgIHJlZzoNCj4gKyAgICBkZXNjcmlwdGlvbjoNCj4gKyAg
+ICAgIFRoZSBJMkMgc2xhdmUgYWRkcmVzcyBvZiB0aGUgRUVQUk9NLg0KPiArICAgIG1heEl0ZW1z
+OiAxDQo+ICsNCj4gKyAgcGFnZXNpemU6DQo+ICsgICAgZGVzY3JpcHRpb246DQo+ICsgICAgICBU
+aGUgbGVuZ3RoIG9mIHRoZSBwYWdlc2l6ZSBmb3Igd3JpdGluZy4gUGxlYXNlIGNvbnN1bHQgdGhl
+DQo+ICsgICAgICBtYW51YWwgb2YgeW91ciBkZXZpY2UsIHRoYXQgdmFsdWUgdmFyaWVzIGEgbG90
+LiBBIHdyb25nIHZhbHVlDQo+ICsgICAgICBtYXkgcmVzdWx0IGluIGRhdGEgbG9zcyEgSWYgbm90
+IHNwZWNpZmllZCwgYSBzYWZldHkgdmFsdWUgb2YNCj4gKyAgICAgICcxJyBpcyB1c2VkIHdoaWNo
+IHdpbGwgYmUgdmVyeSBzbG93Lg0KPiArICAgIHR5cGU6IGludGVnZXINCj4gKw0KPiArICByZWFk
+LW9ubHk6DQo+ICsgICAgZGVzY3JpcHRpb246DQo+ICsgICAgICBUaGlzIHBhcmFtZXRlcmxlc3Mg
+cHJvcGVydHkgZGlzYWJsZXMgd3JpdGVzIHRvIHRoZSBlZXByb20uDQo+ICsgICAgdHlwZTogYm9v
+bGVhbg0KPiArDQo+ICsgIHNpemU6DQo+ICsgICAgZGVzY3JpcHRpb246DQo+ICsgICAgICBUb3Rh
+bCBlZXByb20gc2l6ZSBpbiBieXRlcy4NCj4gKyAgICB0eXBlOiBpbnRlZ2VyDQo+ICsNCj4gKyAg
+bm8tcmVhZC1yb2xsb3ZlcjoNCj4gKyAgICBkZXNjcmlwdGlvbjoNCj4gKyAgICAgIFRoaXMgcGFy
+YW1ldGVybGVzcyBwcm9wZXJ0eSBpbmRpY2F0ZXMgdGhhdCB0aGUgbXVsdGktYWRkcmVzcw0KPiAr
+ICAgICAgZWVwcm9tIGRvZXMgbm90IGF1dG9tYXRpY2FsbHkgcm9sbCBvdmVyIHJlYWRzIHRvIHRo
+ZSBuZXh0IHNsYXZlDQo+ICsgICAgICBhZGRyZXNzLiBQbGVhc2UgY29uc3VsdCB0aGUgbWFudWFs
+IG9mIHlvdXIgZGV2aWNlLg0KPiArICAgIHR5cGU6IGJvb2xlYW4NCj4gKw0KPiArICB3cC1ncGlv
+czoNCj4gKyAgICBkZXNjcmlwdGlvbjoNCj4gKyAgICAgIEdQSU8gdG8gd2hpY2ggdGhlIHdyaXRl
+LXByb3RlY3QgcGluIG9mIHRoZSBjaGlwIGlzIGNvbm5lY3RlZC4NCj4gKyAgICBtYXhJdGVtczog
+MQ0KPiArDQo+ICsgIGFkZHJlc3Mtd2lkdGg6DQo+ICsgICAgZGVzY3JpcHRpb246DQo+ICsgICAg
+ICBOdW1iZXIgb2YgYWRkcmVzcyBiaXRzIChvbmUgb2YgOCwgMTYpLg0KPiArICAgIHR5cGU6IGlu
+dGVnZXINCj4gKw0KPiArICBudW0tYWRkcmVzc2VzOg0KPiArICAgIGRlc2NyaXB0aW9uOg0KPiAr
+ICAgICAgVG90YWwgbnVtYmVyIG9mIGkyYyBzbGF2ZSBhZGRyZXNzZXMgdGhpcyBkZXZpY2UgdGFr
+ZXMuDQo+ICsgICAgdHlwZTogaW50ZWdlcg0KPiArDQo+ICtyZXF1aXJlZDoNCj4gKyAgLSBjb21w
+YXRpYmxlDQo+ICsgIC0gcmVnDQo+ICsNCj4gK2V4YW1wbGVzOg0KPiArICAtIHwNCj4gKyAgICBl
+ZXByb21ANTIgew0KPiArICAgICAgICBjb21wYXRpYmxlID0gIm1pY3JvY2hpcCwyNGMzMiIsICJh
+dG1lbCwyNGMzMiI7DQo+ICsgICAgICAgIHJlZyA9IDwweDUyPjsNCj4gKyAgICAgICAgcGFnZXNp
+emUgPSA8MzI+Ow0KPiArICAgICAgICB3cC1ncGlvcyA9IDwmZ3BpbzEgMyAwPjsNCj4gKyAgICAg
+ICAgbnVtLWFkZHJlc3NlcyA9IDw4PjsNCj4gKyAgICB9Ow0KPiBkaWZmIC0tZ2l0IGEvTUFJTlRB
+SU5FUlMgYi9NQUlOVEFJTkVSUw0KPiBpbmRleCBhNDAwYWYwNTAxYzkuLjNjN2NlZDY4Njk2NiAx
+MDA2NDQNCj4gLS0tIGEvTUFJTlRBSU5FUlMNCj4gKysrIGIvTUFJTlRBSU5FUlMNCj4gQEAgLTI2
+OTgsNyArMjY5OCw3IEBAIE06CUJhcnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pld3NraUBiYXls
+aWJyZS5jb20+DQo+ICBMOglsaW51eC1pMmNAdmdlci5rZXJuZWwub3JnDQo+ICBUOglnaXQgZ2l0
+Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2JyZ2wvbGludXguZ2l0
+DQo+ICBTOglNYWludGFpbmVkDQo+IC1GOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZWVwcm9tL2F0MjQudHh0DQo+ICtGOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZWVwcm9tL2F0MjQueWFtbA0KPiAgRjoJZHJpdmVycy9taXNjL2VlcHJvbS9hdDI0LmMNCj4g
+IA0KPiAgQVRBIE9WRVIgRVRIRVJORVQgKEFPRSkgRFJJVkVSDQo+IA0KDQo=
