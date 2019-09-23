@@ -1,55 +1,123 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [RFCv4 3/7] dt-bindings: devfreq: imx: Describe interconnect
- properties
-Date: Mon, 23 Sep 2019 17:42:46 +0000
-Message-ID: <VI1PR04MB70237046A8DF88936C7A83F8EE850@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1566570260.git.leonard.crestez@nxp.com>
- <3f27038292c09c8bf07a086eac759132c100aedb.1566570260.git.leonard.crestez@nxp.com>
- <20190917201956.GA10780@bogus>
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH] dt-bindings: iio: maxbotix,mb1232.yaml: transform to yaml
+Date: Mon, 23 Sep 2019 19:46:34 +0200
+Message-ID: <20190923174605.mhrbmdic3ynaw22o@arbad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Saravana Kannan <saravanak@google.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, jic23@kernel.org
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 17.09.2019 23:20, Rob Herring wrote:
-> On Fri, Aug 23, 2019 at 05:36:56PM +0300, Leonard Crestez wrote:
->> The interconnect-node-id property is parsed by the imx interconnect
->> driver to find nodes on which frequencies can be adjusted.
->>
->> Add #interconnect-cells so that device drivers can request paths from
->> bus nodes instead of requiring a separate "virtual" node to represent
->> the interconnect itself.
->>
->> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
->> ---
->>   Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml | 5 +++++
->>   Documentation/devicetree/bindings/devfreq/imx.yaml      | 5 +++++
->>   2 files changed, 10 insertions(+)
-> 
-> Please combine this with the other series for devfreq support.
+transform existing documentation of maxbotix,mb1232 ultrasonic ranger
+from text documentation format into yaml.
 
-I understand that having two series which add to the same bindings file 
-is odd but the devfreq and interconnect parts are independent to a very 
-large degree and devfreq can be useful on it's own.
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+---
+ .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
+ .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 56 ++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 29 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
 
-The only reason devfreq bindings are updated is to avoid adding a 
-"virtual" node for interconnect. Since DT is a big source of confusion 
-here can you read https://patchwork.kernel.org/cover/11111865/#22883457 
-and maybe offer some advice?
-
---
-Regards,
-Leonard
+diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+deleted file mode 100644
+index dd1058fbe9c3..000000000000
+--- a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
+-  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
+-  for ranging
+-
+-Required properties:
+- - compatible:		"maxbotix,mb1202",
+-			"maxbotix,mb1212",
+-			"maxbotix,mb1222",
+-			"maxbotix,mb1232",
+-			"maxbotix,mb1242",
+-			"maxbotix,mb7040" or
+-			"maxbotix,mb7137"
+-
+- - reg:			i2c address of the device, see also i2c/i2c.txt
+-
+-Optional properties:
+- - interrupts:		Interrupt used to announce the preceding reading
+-			request has finished and that data is available.
+-			If no interrupt is specified the device driver
+-			falls back to wait a fixed amount of time until
+-			data can be retrieved.
+-
+-Example:
+-proximity@70 {
+-	compatible = "maxbotix,mb1232";
+-	reg = <0x70>;
+-	interrupt-parent = <&gpio2>;
+-	interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+-};
+diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+new file mode 100644
+index 000000000000..8301a1ad2a47
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/proximity/maxbotix,mb1232.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MaxBotix I2CXL-MaxSonar ultrasonic distance sensor
++
++maintainers:
++  - Andreas Klinger <ak@it-klinger.de>
++
++description: |
++  MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
++  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
++  for ranging
++
++  Specifications about the devices can be found at:
++  https://www.maxbotix.com/documents/I2CXL-MaxSonar-EZ_Datasheet.pdf
++
++properties:
++  compatible:
++    enum:
++      - maxbotix,mb1202
++      - maxbotix,mb1212
++      - maxbotix,mb1222
++      - maxbotix,mb1232
++      - maxbotix,mb1242
++      - maxbotix,mb7040
++      - maxbotix,mb7137
++
++  reg:
++    description:
++      i2c address of the device, see also i2c/i2c.txt
++    maxItems: 1
++
++  interrupts:
++    description:
++      Interrupt used to announce the preceding reading request has finished
++      and that data is available.  If no interrupt is specified the device
++      driver falls back to wait a fixed amount of time until data can be
++      retrieved.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    proximity@70 {
++      compatible = "maxbotix,mb1232";
++      reg = <0x70>;
++      interrupt-parent = <&gpio2>;
++      interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
++    };
+-- 
+2.11.0
