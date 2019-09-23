@@ -1,124 +1,54 @@
-From: Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v2 5/5] irqchip/irq-bcm7038-l1: Support brcm,int-fwd-mask
-Date: Mon, 23 Sep 2019 09:52:41 +0100
-Message-ID: <fbc07e1e-8c72-8728-2acb-647db533e31b@kernel.org>
-References: <20190913191542.9908-1-f.fainelli@gmail.com>
- <20190913191542.9908-6-f.fainelli@gmail.com> <20190922133805.2cdf2d99@why>
- <260e61b8-a083-743e-43fc-70b9ea644e0e@gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 3/4] pwm: mxs: add support for inverse polarity
+Date: Mon, 23 Sep 2019 10:54:14 +0200
+Message-ID: <20190923085414.6d3gbby6gglpjsfe@pengutronix.de>
+References: <20190923081348.6843-1-linux@rasmusvillemoes.dk>
+ <20190923081348.6843-4-linux@rasmusvillemoes.dk>
+ <20190923082735.tzxyhvjlnztsxhsc@pengutronix.de>
+ <d2b29144-3de8-4561-3292-49db7e697aca@rasmusvillemoes.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <260e61b8-a083-743e-43fc-70b9ea644e0e@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <d2b29144-3de8-4561-3292-49db7e697aca@rasmusvillemoes.dk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>
+To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/09/2019 20:08, Florian Fainelli wrote:
+On Mon, Sep 23, 2019 at 10:45:56AM +0200, Rasmus Villemoes wrote:
+> On 23/09/2019 10.27, Uwe Kleine-König wrote:
+> > On Mon, Sep 23, 2019 at 10:13:47AM +0200, Rasmus Villemoes wrote:
+> >>
+> >>  
+> >> +	pol_bits = state->polarity == PWM_POLARITY_NORMAL ?
+> >> +		PERIOD_POLARITY_NORMAL : PERIOD_POLARITY_INVERSE;
+> >> +
+> >>  	writel(duty_cycles << 16,
+> >>  	       mxs->base + PWM_ACTIVE0 + pwm->hwpwm * 0x20);
+> >> -	writel(PERIOD_PERIOD(period_cycles) | PERIOD_POLARITY_NORMAL | PERIOD_CDIV(div),
+> >> +	writel(PERIOD_PERIOD(period_cycles) | pol_bits | PERIOD_CDIV(div),
+> > 
+> > When will this affect the output? Only on the next start of a period, or
+> > immediatly? Can it happen that this results in a mixed output (i.e. a
+> > period that has already the new duty cycle from the line above but not
+> > the new polarity (or period)?
 > 
-> 
-> On 9/22/2019 5:38 AM, Marc Zyngier wrote:
->> On Fri, 13 Sep 2019 12:15:42 -0700
->> Florian Fainelli <f.fainelli@gmail.com> wrote:
->>
->>> On some specific chips like 7211 we need to leave some interrupts
->>> untouched/forwarded to the VPU which is another agent in the system
->>> making use of that interrupt controller hardware (goes to both ARM GIC
->>> and VPU L1 interrupt controller). Make that possible by using the
->>> existing brcm,int-fwd-mask property.
->>>
->>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>> ---
->>>  drivers/irqchip/irq-bcm7038-l1.c | 15 +++++++++++++--
->>>  1 file changed, 13 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
->>> index 0673a44bbdc2..811a34201dd4 100644
->>> --- a/drivers/irqchip/irq-bcm7038-l1.c
->>> +++ b/drivers/irqchip/irq-bcm7038-l1.c
->>> @@ -44,6 +44,7 @@ struct bcm7038_l1_chip {
->>>  	struct list_head	list;
->>>  	u32			wake_mask[MAX_WORDS];
->>>  #endif
->>> +	u32			irq_fwd_mask[MAX_WORDS];
->>>  	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
->>>  };
->>>  
->>> @@ -265,6 +266,7 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->>>  	resource_size_t sz;
->>>  	struct bcm7038_l1_cpu *cpu;
->>>  	unsigned int i, n_words, parent_irq;
->>> +	int ret;
->>>  
->>>  	if (of_address_to_resource(dn, idx, &res))
->>>  		return -EINVAL;
->>> @@ -278,6 +280,14 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->>>  	else if (intc->n_words != n_words)
->>>  		return -EINVAL;
->>>  
->>> +	ret = of_property_read_u32_array(dn , "brcm,int-fwd-mask",
->>
->> What is the exact meaning of "fwd"? Forward? FirmWare Dementia?
-> 
-> Here it is meant to be "forward", we have defined this property name
-> before for irq-bcm7120-l2.c and felt like reusing the same name to avoid
-> multiplying properties would be appropriate, see patch #4. If you prefer
-> something named brcm,firmware-configured-mask, let me know.
+> The data sheet says "Also, when the user reprograms the channel in this
+> manner, the new register values will not take effect until the beginning
+> of a new output period. This eliminates the potential for output
+> glitches that could occur if the registers were updated while the
+> channel was enabled and in the middle of a cycle.". So I think this
+> should be ok. "this manner" refers to the registers being written in the
+> proper order (first ACTIVEn, then PERIODn).
 
-It's just a name, but I found it a bit confusing. Bah, never mind.
+OK. IMHO this is worth a code comment.
 
->>
->>> +					 intc->irq_fwd_mask, n_words);
->>> +	if (ret != 0 && ret != -EINVAL) {
->>> +		/* property exists but has the wrong number of words */
->>> +		pr_err("invalid brcm,int-fwd-mask property\n");
->>> +		return -EINVAL;
->>> +	}
->>> +
->>>  	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
->>>  					GFP_KERNEL);
->>>  	if (!cpu)
->>> @@ -288,8 +298,9 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->>>  		return -ENOMEM;
->>>  
->>>  	for (i = 0; i < n_words; i++) {
->>> -		l1_writel(0xffffffff, cpu->map_base + reg_mask_set(intc, i));
->>> -		cpu->mask_cache[i] = 0xffffffff;
->>> +		l1_writel(0xffffffff & ~intc->irq_fwd_mask[i],
->>> +			  cpu->map_base + reg_mask_set(intc, i));
->>> +		cpu->mask_cache[i] = 0xffffffff & ~intc->irq_fwd_mask[i];
->>
->> I seem to remember that (0xffffffff & whatever) == whatever, as long as
->> 'whatever' is a 32bit quantity. So what it this for?
-> 
-> It is 0xffff_ffff & ~whatever here.
+Best regards
+Uwe
 
-Which doesn't change anything.
-
-> In the absence of this property
-> being specified, the data is all zeroed out, so we would have
-> 0xffff_ffff & 0xffff_ffff which is 0xffff_ffff. If this property is
-> specified, we would have one more or bits set, and it would be e.g.:
-> 0x100 so we would have 0xffff_ffff & ~(0x100) = 0xffff_feff which is
-> what we would want here to preserve whatever the firmware has already
-> configured.
-
-OK, I must be stupid:
-
-#include <stdio.h>
-
-int main(int argc, char *argv[])
-{
-	unsigned int v = 0x100;
-	printf ("%x\n", ~v);
-}
-maz@filthy-habit$ ./x
-fffffeff
-
-You might as well OR it with zeroes, if you want.
-
-	M.
 -- 
-Jazz is not dead, it just smells funny...
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
