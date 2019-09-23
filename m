@@ -1,45 +1,46 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 08/10] ASoC: samsung: Rename Arndale card driver
-Date: Mon, 23 Sep 2019 11:17:46 +0200
-Message-ID: <20190923091746.GD4577@pi3>
-References: <20190920130218.32690-1-s.nawrocki@samsung.com>
- <CGME20190920130323eucas1p218c6822eca3869eb0d3b7380497bbca4@eucas1p2.samsung.com>
- <20190920130218.32690-9-s.nawrocki@samsung.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 1/4] pwm: mxs: implement ->apply
+Date: Mon, 23 Sep 2019 11:17:45 +0200
+Message-ID: <20190923091745.ehvz4zi2riyanmug@pengutronix.de>
+References: <20190923081348.6843-1-linux@rasmusvillemoes.dk>
+ <20190923081348.6843-2-linux@rasmusvillemoes.dk>
+ <20190923082459.huqpbz5eseonkscv@pengutronix.de>
+ <a6407644-0b5b-ba46-9435-0d14be9066a5@rasmusvillemoes.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190920130218.32690-9-s.nawrocki@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, ckeepax@opensource.cirrus.com, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+In-Reply-To: <a6407644-0b5b-ba46-9435-0d14be9066a5@rasmusvillemoes.dk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rasmus Villemoes <linux@rasmusvillemoes.dk>, Russell King <linux@armlinux.org.uk>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 03:02:17PM +0200, Sylwester Nawrocki wrote:
-> Rename arndale_rt5631.c to just arnddale.c as we support other CODECs
-> than RT5631.  While at it replace spaces in Kconfig with tabs.
+Hello,
+
+[expanded the recipents to include RMK and the clk list]
+
+On Mon, Sep 23, 2019 at 11:04:39AM +0200, Rasmus Villemoes wrote:
+> On 23/09/2019 10.24, Uwe Kleine-König wrote:
+> > Also there is a bug already in .config: You are not supposed to call
+> > clk_get_rate if the clk might be off.
 > 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
-> Changes since v1:
->  - new patch.
-> ---
->  sound/soc/samsung/Kconfig                         | 10 +++++-----
->  sound/soc/samsung/Makefile                        |  4 ++--
->  sound/soc/samsung/{arndale_rt5631.c => arndale.c} |  0
->  3 files changed, 7 insertions(+), 7 deletions(-)
->  rename sound/soc/samsung/{arndale_rt5631.c => arndale.c} (100%)
+> Interesting, I didn't know that. So the prepare_enable logic needs to be
+> moved before we start computing the period/duty cycles. Do you know why
+> it has apparently worked so far? I would have thought such a rule would
+> be enforced by the clock framework, or at least produced a warning.
 
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+FTR: This is documented in the kerneldoc code comment to clk_get_rate in
+include/linux/clk.h.
 
-Best regards,
-Krzysztof
+Assuming this is relevant, it might indeed make sense to add a
+WARN_ONCE for this.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
