@@ -1,57 +1,39 @@
-From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-Subject: [PATCH 5/5] arm64: dts: imx8mq: add DCSS node
-Date: Mon, 23 Sep 2019 17:13:19 +0300
-Message-ID: <1569248002-2485-6-git-send-email-laurentiu.palcu@nxp.com>
-References: <1569248002-2485-1-git-send-email-laurentiu.palcu@nxp.com>
+From: Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH v5 0/3] arm64: meson-g12b: Add support for the Ugoos AM6
+Date: Mon, 23 Sep 2019 18:13:53 +0400
+Message-ID: <1569248036-6729-1-git-send-email-christianshewitt@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569248002-2485-1-git-send-email-laurentiu.palcu@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>
-Cc: agx@sigxcpu.org, l.stach@pengutronix.de, Laurentiu Palcu <laurentiu.palcu@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Oleg Ivanov <balbes-150@yandex.ru>, Christian Hewitt <christianshewitt@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the node for iMX8MQ Display Controller Subsystem.
+This patchset adds support for the Ugoos AM6, an Android STB based on
+the Amlogic W400 reference design with the S922X chipset.
 
-Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+v2: correction of minor nits
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 52aae34..d4aa778 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -871,6 +871,31 @@
- 				interrupt-controller;
- 				#interrupt-cells = <1>;
- 			};
-+
-+			dcss: dcss@0x32e00000 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "nxp,imx8mq-dcss";
-+				reg = <0x32e00000 0x2D000>, <0x32e2f000 0x1000>;
-+				interrupts = <6>, <8>, <9>;
-+				interrupt-names = "ctx_ld", "ctxld_kick", "vblank";
-+				interrupt-parent = <&irqsteer>;
-+				clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>,
-+					 <&clk IMX8MQ_CLK_DISP_AXI_ROOT>,
-+					 <&clk IMX8MQ_CLK_DISP_RTRM_ROOT>,
-+					 <&clk IMX8MQ_VIDEO2_PLL_OUT>,
-+					 <&clk IMX8MQ_CLK_DISP_DTRC>;
-+				clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
-+				assigned-clocks = <&clk IMX8MQ_CLK_DISP_AXI>,
-+						  <&clk IMX8MQ_CLK_DISP_RTRM>,
-+						  <&clk IMX8MQ_VIDEO2_PLL1_REF_SEL>;
-+				assigned-clock-parents = <&clk IMX8MQ_SYS1_PLL_800M>,
-+							 <&clk IMX8MQ_SYS1_PLL_800M>,
-+							 <&clk IMX8MQ_CLK_27M>;
-+				assigned-clock-rates = <800000000>,
-+							   <400000000>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		gpu: gpu@38000000 {
+v3: address regulator and GPIO corrections from Neil Armstrong (using
+schematic excerpts from Ugoos) and related v2 comments from Martin
+Blumenstingle. Add acks on patches 1/2 from Rob Herring.
+
+v4: address nits from Martin except for the vcc_3v3 node as it's not
+known how to handle the vcc_3v3 regulator managed by ATF firmware, so
+it remains untouched/undeclared like other g12a/g12b/sm1 boards.
+
+v5: corrected some tabs v spaces issues introduced in v4.
+
+Christian Hewitt (3):
+  dt-bindings: Add vendor prefix for Ugoos
+  dt-bindings: arm: amlogic: Add support for the Ugoos AM6
+  arm64: dts: meson-g12b-ugoos-am6: add initial device-tree
+
+ Documentation/devicetree/bindings/arm/amlogic.yaml |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ .../boot/dts/amlogic/meson-g12b-ugoos-am6.dts      | 557 +++++++++++++++++++++
+ 4 files changed, 561 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
+
 -- 
 2.7.4
