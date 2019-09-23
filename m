@@ -1,107 +1,85 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v4 8/8] ARM: dts: exynos: Use defines for MCT interrupt GIC SPI/PPI specifier
-Date: Mon, 23 Sep 2019 18:14:11 +0200
-Message-ID: <20190923161411.9236-8-krzk@kernel.org>
-References: <20190923161411.9236-1-krzk@kernel.org>
+From: Yang Li <pku.leo@gmail.com>
+Subject: Re: [PATCH V2 1/2] usb: dwc3: Add node to update cache type setting
+Date: Mon, 23 Sep 2019 11:38:18 -0500
+Message-ID: <CADRPPNRHOda+ZfB25CeqReXBb-MrB1oAeTHF-3muXVExn+G+Dg@mail.gmail.com>
+References: <20190712064206.48249-1-ran.wang_1@nxp.com> <20190724204222.GA1234@bogus>
+ <DB8PR04MB6826B4479A5A67A66025E89CF1C10@DB8PR04MB6826.eurprd04.prod.outlook.com>
+ <CAL_JsqKd=+0kXyUJkTZezMfcv-SQznzefi_0J0VjdsXcP8qZ5w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190923161411.9236-1-krzk@kernel.org>
+In-Reply-To: <CAL_JsqKd=+0kXyUJkTZezMfcv-SQznzefi_0J0VjdsXcP8qZ5w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: Sylwester Nawrocki <snawrocki@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Ran Wang <ran.wang_1@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Replace hard-coded number with appropriate define for GIC SPI or PPI
-specifier in interrupt.  This makes code easier to read.  No expected
-functionality change.
+On Thu, Jul 25, 2019 at 4:56 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Jul 24, 2019 at 8:29 PM Ran Wang <ran.wang_1@nxp.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > On Thursday, July 25, 2019 04:42 Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Fri, Jul 12, 2019 at 02:42:05PM +0800, Ran Wang wrote:
+> > > > Some Layerscape paltforms (such as LS1088A, LS2088A, etc) encounter
+> > > > USB detect failues when adding dma-coherent to DWC3 node. This is
+> > > > because the HW default cache type configuration of those SoC are not
+> > > > right, need to be updated in DTS.
+> > > >
+> > > > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> > > > ---
+> > > > Change in v2:
+> > > >     - New file.
+> > > >
+> > > >  Documentation/devicetree/bindings/usb/dwc3.txt | 43
+> > > > ++++++++++++++++++++++++++
+> > > >  1 file changed, 43 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > > b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > > index 8e5265e..7bc1cef 100644
+> > > > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > > @@ -110,6 +110,43 @@ Optional properties:
+> > > >   - in addition all properties from usb-xhci.txt from the current directory are
+> > > >     supported as well
+> > > >
+> > > > +* Cache type nodes (optional)
+> > > > +
+> > > > +The Cache type node is used to tell how to configure cache type on 4
+> > > > +different transfer types: Data Read, Desc Read, Data Write and Desc
+> > > > +write. For each treasfer type, controller has a 4-bit register field
+> > > > +to enable different cache type. Quoted from DWC3 data book Table 6-5
+> > > Cache Type Bit Assignments:
+> > > > +----------------------------------------------------------------
+> > > > +MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
+> > > > +----------------------------------------------------------------
+> > > > +AHB      |Cacheable     |Bufferable   |Privilegge |Data
+> > > > +AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
+> > > > +AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
+> > > > +AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
+> > > > +Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
+> > > > +----------------------------------------------------------------
+> > > > +Note: The AHB, AXI3, AXI4, and PCIe busses use different names for
+> > > > +certain signals, which have the same meaning:
+> > > > +  Bufferable = Posted
+> > > > +  Cacheable = Modifiable = Snoop (negation of No Snoop)
+> > >
+> > > This should all be implied from the SoC specific compatible strings.
+> >
+> > Did you mean I could implement a soc driver which can be matched by compatible of 'fsl,ls1088a-dwc3' which will pass known bus type to DWC3 driver? If yes, how to pass?
+>
+> Yes. The DT match table can have data associated with that compatible
+> string. Beyond that, I'm not really familiar with the DWC3 driver.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos4210.dtsi |  8 ++++----
- arch/arm/boot/dts/exynos4412.dtsi |  4 ++--
- arch/arm/boot/dts/exynos5250.dtsi |  4 ++--
- arch/arm/boot/dts/exynos54xx.dtsi | 16 ++++++++--------
- 4 files changed, 16 insertions(+), 16 deletions(-)
+Hi Rob,
 
-diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-index 5fa33d43821e..aac3b7a20a37 100644
---- a/arch/arm/boot/dts/exynos4210.dtsi
-+++ b/arch/arm/boot/dts/exynos4210.dtsi
-@@ -111,12 +111,12 @@
- 			reg = <0x10050000 0x800>;
- 			clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MCT>;
- 			clock-names = "fin_pll", "mct";
--			interrupts-extended = <&gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
--					      <&gic 0 69 IRQ_TYPE_LEVEL_HIGH>,
-+			interrupts-extended = <&gic GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&gic GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
- 					      <&combiner 12 6>,
- 					      <&combiner 12 7>,
--					      <&gic 0 42 IRQ_TYPE_LEVEL_HIGH>,
--					      <&gic 0 48 IRQ_TYPE_LEVEL_HIGH>;
-+					      <&gic GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&gic GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
- 		watchdog: watchdog@10060000 {
-diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-index 9b5fb4e54d7c..96a5ef3a2864 100644
---- a/arch/arm/boot/dts/exynos4412.dtsi
-+++ b/arch/arm/boot/dts/exynos4412.dtsi
-@@ -248,11 +248,11 @@
- 			reg = <0x10050000 0x800>;
- 			clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MCT>;
- 			clock-names = "fin_pll", "mct";
--			interrupts-extended = <&gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
-+			interrupts-extended = <&gic GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
- 					      <&combiner 12 5>,
- 					      <&combiner 12 6>,
- 					      <&combiner 12 7>,
--					      <&gic 1 12 IRQ_TYPE_LEVEL_HIGH>;
-+					      <&gic GIC_PPI 12 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
- 		watchdog: watchdog@10060000 {
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index a549eafd2c64..f01e3156191d 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -242,8 +242,8 @@
- 					      <&combiner 23 4>,
- 					      <&combiner 25 2>,
- 					      <&combiner 25 3>,
--					      <&gic 0 120 IRQ_TYPE_LEVEL_HIGH>,
--					      <&gic 0 121 IRQ_TYPE_LEVEL_HIGH>;
-+					      <&gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&gic GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
- 		pinctrl_0: pinctrl@11400000 {
-diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
-index aca1b4831e38..06ae40a2f1e9 100644
---- a/arch/arm/boot/dts/exynos54xx.dtsi
-+++ b/arch/arm/boot/dts/exynos54xx.dtsi
-@@ -71,14 +71,14 @@
- 					      <&combiner 23 4>,
- 					      <&combiner 25 2>,
- 					      <&combiner 25 3>,
--					      <&gic 0 120 IRQ_TYPE_LEVEL_HIGH>,
--					      <&gic 0 121 IRQ_TYPE_LEVEL_HIGH>,
--					      <&gic 0 122 IRQ_TYPE_LEVEL_HIGH>,
--					      <&gic 0 123 IRQ_TYPE_LEVEL_HIGH>,
--					      <&gic 0 128 IRQ_TYPE_LEVEL_HIGH>,
--					      <&gic 0 129 IRQ_TYPE_LEVEL_HIGH>,
--					      <&gic 0 130 IRQ_TYPE_LEVEL_HIGH>,
--					      <&gic 0 131 IRQ_TYPE_LEVEL_HIGH>;
-+					      <&gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&gic GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&gic GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&gic GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&gic GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&gic GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&gic GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
-+					      <&gic GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
- 		watchdog: watchdog@101d0000 {
--- 
-2.17.1
+It looks like that the current dwc3 binding perfers to define general
+quirks in device tree properties instead of trying to rely on the
+compatible string to determine quirks.  In this case, can we keep
+following the existing preference instead of choosing the other way?
+
+Regards,
+Leo
