@@ -1,225 +1,57 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dt-bindings: at24: convert the binding document to yaml
-Date: Mon, 23 Sep 2019 15:38:35 -0500
-Message-ID: <CAL_JsqJ7w0rvzMLePgz-g+HERhuEJ3F9uDpKcwE241FpumZxfA@mail.gmail.com>
-References: <20190923175211.2060-1-brgl@bgdev.pl>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 0/6] add the DDR clock controller on Meson8 and Meson8b
+Date: Mon, 23 Sep 2019 22:49:37 +0200
+Message-ID: <CAFBinCAHD+D=a2mHeHMGq12MvoksHBr308jSrdcH+UYsUmwd8w@mail.gmail.com>
+References: <20190921151835.770263-1-martin.blumenstingl@googlemail.com> <1jsgons4wy.fsf@starbuckisacylon.baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190923175211.2060-1-brgl@bgdev.pl>
+In-Reply-To: <1jsgons4wy.fsf@starbuckisacylon.baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 12:52 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+Hi Jerome,
+
+On Mon, Sep 23, 2019 at 12:06 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
 >
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> On Sat 21 Sep 2019 at 17:18, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 >
-> Convert the binding document for at24 EEPROMs from txt to yaml. The
-> compatible property uses a regex pattern to address all the possible
-> combinations of "vendor,model" strings.
+> > Meson8 and Meson8b SoCs embed a DDR clock controller in their MMCBUS
+> > registers. This series:
+> > - adds support for this DDR clock controller (patches 0 and 1)
+> > - wires up the DDR PLL as input for two audio clocks (patches 2 and 3)
 >
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  .../devicetree/bindings/eeprom/at24.txt       |  90 +--------------
->  .../devicetree/bindings/eeprom/at24.yaml      | 107 ++++++++++++++++++
->  MAINTAINERS                                   |   2 +-
->  3 files changed, 109 insertions(+), 90 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/eeprom/at24.yaml
+> Have you been able to validate somehow that DDR rate calculated by CCF
+> is the actual rate that gets to the audio clocks ?
+no, I haven't been able to validate this (yet)
 
-[...]
+> While I understand the interest for completeness, I suspect the having
+> the DDR clock as an audio parent was just for debugging purpose. IOW,
+> I'm not sure if adding this parent is useful to an actual audio use
+> case. As far as audio would be concerned, I think we are better of
+> without this parent.
+there at least three other (potential) consumers of the ddr_pll clocks
+on the 32-bit SoCs:
+- CPU clock mux [0]
+- clk81 mux [1]
+- USB PHY [2]
 
-> diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> new file mode 100644
-> index 000000000000..28c8b068c8a1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
-> @@ -0,0 +1,107 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright 2019 BayLibre SAS
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/eeprom/at24.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: I2C EEPROMs compatible with Atmel's AT24
-> +
-> +maintainers:
-> +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> +
-> +properties:
-> +  compatible:
+I have not validated any of these either
 
-Did you run this thru 'make dt_bindings_check' and is dt-schema up to
-date? I don't think it will pass and if it does I want to fix that.
-
-> +    additionalItems: true
-
-We pretty much never allow this.
-
-> +    maxItems: 2
-
-This applies to arrays...
-
-> +    pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24(c|cs|mac)[0-9]+$"
-
-And this to strings which is non-sense. What you want is something like this:
-
-minItems: 1
-maxItems: 2
-items:
-  - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24(c|cs|mac)[0-9]+$"
-  - pattern: "^atmel,24(c|cs|mac)[0-9]+$"
-
-This would allow 'atmel' twice, but entries have to be unique already.
-It doesn't enforce the part numbers matching though. For that, you'd
-need either a bunch of these under a oneOf instead:
-
-items:
-  - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c00$"
-  - const: atmel,24c00
-
-Or just add this to the above with an 'allOf':
-
-items:
-  pattern: "(c00|c01|mac402|...)$"
-
-Note the lack of '-' under items. That means the schema applies to all entries.
-
-> +    oneOf:
-> +      - const: nxp,se97b
-> +      - const: renesas,r1ex24002
-> +      - const: renesas,r1ex24016
-> +      - const: renesas,r1ex24128
-> +      - const: rohm,br24t01
-
-For this part, you probably want:
-
-oneOf:
-  - items:
-      - const: nxp,se97b
-      - const: atmel,24c02
-  - items:
-      ...
-
-And for the spd cases...
-
-> +    contains:
-> +      enum:
-
-allOf:
-  - oneOf:
-      # all the above stuff
-  - contains:
-      enum:
-
-> +        - atmel,24c00
-> +        - atmel,24c01
-> +        - atmel,24cs01
-> +        - atmel,24c02
-> +        - atmel,24cs02
-> +        - atmel,24mac402
-> +        - atmel,24mac602
-> +        - atmel,spd
-> +        - atmel,24c04
-> +        - atmel,24cs04
-> +        - atmel,24c08
-> +        - atmel,24cs08
-> +        - atmel,24c16
-> +        - atmel,24cs16
-> +        - atmel,24c32
-> +        - atmel,24cs32
-> +        - atmel,24c64
-> +        - atmel,24cs64
-> +        - atmel,24c128
-> +        - atmel,24c256
-> +        - atmel,24c512
-> +        - atmel,24c1024
-> +        - atmel,24c2048
-> +
-> +  reg:
-> +    description:
-> +      The I2C slave address of the EEPROM.
-> +    maxItems: 1
-> +
-> +  pagesize:
-> +    description:
-> +      The length of the pagesize for writing. Please consult the
-> +      manual of your device, that value varies a lot. A wrong value
-> +      may result in data loss! If not specified, a safety value of
-> +      '1' is used which will be very slow.
-> +    type: integer
-
-Other than boolean, you need to reference a type in types.yaml.
-
-Does it really vary too much to list out possible values?
-
-> +
-> +  read-only:
-> +    description:
-> +      This parameterless property disables writes to the eeprom.
-> +    type: boolean
-> +
-> +  size:
-> +    description:
-> +      Total eeprom size in bytes.
-> +    type: integer
-> +
-> +  no-read-rollover:
-> +    description:
-> +      This parameterless property indicates that the multi-address
-> +      eeprom does not automatically roll over reads to the next slave
-> +      address. Please consult the manual of your device.
-> +    type: boolean
-> +
-> +  wp-gpios:
-> +    description:
-> +      GPIO to which the write-protect pin of the chip is connected.
-> +    maxItems: 1
-> +
-> +  address-width:
-> +    description:
-> +      Number of address bits (one of 8, 16).
-
-Sounds like a constraint...
-
-> +    type: integer
-> +
-> +  num-addresses:
-> +    description:
-> +      Total number of i2c slave addresses this device takes.
-
-2^32 addresses okay?
-
-> +    type: integer
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    eeprom@52 {
-> +        compatible = "microchip,24c32", "atmel,24c32";
-> +        reg = <0x52>;
-> +        pagesize = <32>;
-> +        wp-gpios = <&gpio1 3 0>;
-> +        num-addresses = <8>;
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a400af0501c9..3c7ced686966 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2698,7 +2698,7 @@ M:        Bartosz Golaszewski <bgolaszewski@baylibre.com>
->  L:     linux-i2c@vger.kernel.org
->  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
->  S:     Maintained
-> -F:     Documentation/devicetree/bindings/eeprom/at24.txt
-> +F:     Documentation/devicetree/bindings/eeprom/at24.yaml
->  F:     drivers/misc/eeprom/at24.c
+> > - adds the DDR clock controller to meson8.dtsi and meson8b.dtsi
+> >
 >
->  ATA OVER ETHERNET (AOE) DRIVER
-> --
-> 2.23.0
->
+> Could you please separate the driver and DT series in the future ? Those
+> take different paths and are meant for different maintainers.
+sure - so far Kevin has been doing a great job of still tracking these
+but I'm happy to split this into two patchsets
+
+
+Martin
+
+
+[0] https://github.com/endlessm/u-boot-meson/blob/345ee7eb02903f5ecb1173ffb2cd36666e44ebed/board/amlogic/m8b_m201_v1/firmware/timming.c#L441
+[1] https://github.com/endlessm/u-boot-meson/blob/345ee7eb02903f5ecb1173ffb2cd36666e44ebed/board/amlogic/m8b_m201_v1/firmware/timming.c#L452
+[2] https://github.com/endlessm/u-boot-meson/blob/f1ee03e3f7547d03e1478cc1fc967a9e5a121d92/arch/arm/cpu/aml_meson/m8/firmware/usb_boot/platform.c#L22
