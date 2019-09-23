@@ -1,12 +1,12 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 0/6] add the DDR clock controller on Meson8 and Meson8b
-Date: Mon, 23 Sep 2019 22:49:37 +0200
-Message-ID: <CAFBinCAHD+D=a2mHeHMGq12MvoksHBr308jSrdcH+UYsUmwd8w@mail.gmail.com>
-References: <20190921151835.770263-1-martin.blumenstingl@googlemail.com> <1jsgons4wy.fsf@starbuckisacylon.baylibre.com>
+Subject: Re: [PATCH 0/5] provide the XTAL clock via OF on Meson8/8b/8m2
+Date: Mon, 23 Sep 2019 22:56:28 +0200
+Message-ID: <CAFBinCA0NaCJEDfNEg+LRfW3wxfNFGbXmGS+z7D5792TsupVAA@mail.gmail.com>
+References: <20190921151223.768842-1-martin.blumenstingl@googlemail.com> <1jzhivs6n6.fsf@starbuckisacylon.baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1jsgons4wy.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1jzhivs6n6.fsf@starbuckisacylon.baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jerome Brunet <jbrunet@baylibre.com>
 Cc: Neil Armstrong <narmstrong@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
@@ -14,44 +14,55 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Jerome,
 
-On Mon, Sep 23, 2019 at 12:06 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+On Mon, Sep 23, 2019 at 11:29 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
 >
-> On Sat 21 Sep 2019 at 17:18, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+> On Sat 21 Sep 2019 at 17:12, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 >
-> > Meson8 and Meson8b SoCs embed a DDR clock controller in their MMCBUS
-> > registers. This series:
-> > - adds support for this DDR clock controller (patches 0 and 1)
-> > - wires up the DDR PLL as input for two audio clocks (patches 2 and 3)
->
-> Have you been able to validate somehow that DDR rate calculated by CCF
-> is the actual rate that gets to the audio clocks ?
-no, I haven't been able to validate this (yet)
-
-> While I understand the interest for completeness, I suspect the having
-> the DDR clock as an audio parent was just for debugging purpose. IOW,
-> I'm not sure if adding this parent is useful to an actual audio use
-> case. As far as audio would be concerned, I think we are better of
-> without this parent.
-there at least three other (potential) consumers of the ddr_pll clocks
-on the 32-bit SoCs:
-- CPU clock mux [0]
-- clk81 mux [1]
-- USB PHY [2]
-
-I have not validated any of these either
-
-> > - adds the DDR clock controller to meson8.dtsi and meson8b.dtsi
+> > So far the HHI clock controller has been providing the XTAL clock on
+> > Amlogic Meson8/Meson8b/Meson8m2 SoCs.
+> > This is not correct because the XTAL is actually a crystal on the
+> > boards and the SoC has a dedicated input for it.
 > >
+> > This updates the dt-bindings of the HHI clock controller and defines
+> > a fixed-clock in meson.dtsi (along with switching everything over to
+> > use this clock).
+> > The clock driver needs three updates to use this:
+> > - patch #2 uses clk_hw_set_parent in the CPU clock notifier. This drops
+> >   the explicit reference to CLKID_XTAL while at the same time making
+> >   the code much easier (thanks to Neil for providing this new method
+> >   as part of the G12A CPU clock bringup!)
+> > - patch #3 ensures that the clock driver doesn't rely on it's internal
+> >   XTAL clock while not losing support for older .dtbs that don't have
+> >   the XTAL clock input yet
+> > - with patch #4 the clock controller's own XTAL clock is not registered
+> >   anymore when a clock input is provided via OF
+> >
+> > This series is a functional no-op. It's main goal is to better represent
+> > how the actual hardware looks like.
 >
-> Could you please separate the driver and DT series in the future ? Those
-> take different paths and are meant for different maintainers.
-sure - so far Kevin has been doing a great job of still tracking these
-but I'm happy to split this into two patchsets
+> I'm a bit unsure about this series.
+>
+> On one hand, I totally agree with you ... having the xtal in DT is the
+> right way to do it ... when done from the start
+yep
+
+> On the other hand, things have been this way for years, they are working
+> and going for xtal in DT does not solve any pending issue. Doing this
+> means adding complexity in the driver to support both methods. It is
+> also quite a significant change in DT :/
+my two main motivations were:
+- keeping the 32-bit SoCs as similar as possible to the 64-bit ones in
+terms of "how are the [clock] drivers implemented"
+- with the DDR clock controller the .dts looked weird: &ddr_clkc took
+CLKID_XTAL from &clkc as input and &clkc took DDR_CLKID_DDR_PLL as
+input from &ddr_clkc
+
+RE complexity in the driver to support both:
+I still have a cleanup of the meson8b.c init code on my TODO-list
+because we're still supporting .dtbs without parent syscon
+my plan is to drop that code-path along with the newly added fallback
+for "skip CLKID_XTAL" (assuming this is accepted) together for v5.6 or
+v5.7
 
 
 Martin
-
-
-[0] https://github.com/endlessm/u-boot-meson/blob/345ee7eb02903f5ecb1173ffb2cd36666e44ebed/board/amlogic/m8b_m201_v1/firmware/timming.c#L441
-[1] https://github.com/endlessm/u-boot-meson/blob/345ee7eb02903f5ecb1173ffb2cd36666e44ebed/board/amlogic/m8b_m201_v1/firmware/timming.c#L452
-[2] https://github.com/endlessm/u-boot-meson/blob/f1ee03e3f7547d03e1478cc1fc967a9e5a121d92/arch/arm/cpu/aml_meson/m8/firmware/usb_boot/platform.c#L22
