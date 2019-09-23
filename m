@@ -1,69 +1,84 @@
-From: "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Subject: Re: [PATCH v1 0/2] pinctrl: Add new pinctrl/GPIO driver
-Date: Mon, 23 Sep 2019 11:37:22 +0800
-Message-ID: <639ea457-5c40-92ac-9696-14d615b3f43c@linux.intel.com>
-References: <cover.1568274587.git.rahul.tanwar@linux.intel.com>
- <CACRpkdb7bPo7oH9w5OhAsOoQXx=MWjJELd5JvBt3R1sPdMjnpw@mail.gmail.com>
- <20190913081807.GB27291@lahna.fi.intel.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH RFC 05/14] dt-bindings/interrupt-controller: pdc: add SPI
+ config register
+Date: Mon, 23 Sep 2019 11:41:20 +0530
+Message-ID: <6b6c357d7cccecd70e88852d7c487114@codeaurora.org>
+References: <20190829181203.2660-1-ilina@codeaurora.org>
+ <20190829181203.2660-6-ilina@codeaurora.org>
+ <5d6d1b72.1c69fb81.ee88.efcf@mx.google.com>
+ <102c9268-c4ce-6133-3b0a-67c2fcba1e7a@arm.com>
+ <20190903170722.GA31716@codeaurora.org>
+ <5d71a247.1c69fb81.2146f.7ed2@mx.google.com>
+ <20190913195326.GA3293@codeaurora.org>
+ <20190917215020.GA15853@codeaurora.org>
+ <5d8550aa.1c69fb81.39edc.83fc@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190913081807.GB27291@lahna.fi.intel.com>
-Content-Language: en-US
+In-Reply-To: <5d8550aa.1c69fb81.39edc.83fc@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Andriy Shevchenko <andriy.shevchenko@intel.com>, qi-ming.wu@intel.com, yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com, Mathias Nyman <mathias.nyman@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Lina Iyer <ilina@codeaurora.org>, Rob Herring <robh@kernel.org>, evgreen@chromium.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, maz@kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 2019-09-21 03:50, Stephen Boyd wrote:
+> Quoting Lina Iyer (2019-09-17 14:50:20)
+>> On Fri, Sep 13 2019 at 13:53 -0600, Lina Iyer wrote:
+>> >On Thu, Sep 05 2019 at 18:03 -0600, Stephen Boyd wrote:
+>> >>Quoting Lina Iyer (2019-09-03 10:07:22)
+>> >>>On Mon, Sep 02 2019 at 07:58 -0600, Marc Zyngier wrote:
+>> >>>>On 02/09/2019 14:38, Rob Herring wrote:
+>> >>>>> On Thu, Aug 29, 2019 at 12:11:54PM -0600, Lina Iyer wrote:
+>> >>>These are not GIC registers but located on the PDC interface to the GIC.
+>> >>>They may or may not be secure access controlled, depending on the SoC.
+>> >>>
+>> >>
+>> >>It looks like it falls under this "mailbox" device which is really the
+>> >>catch all bucket for bits with no home besides they're related to the
+>> >>apps CPUs/subsystem.
+>> >>
+>> >Thanks for pointing to this.
+>> >>      apss_shared: mailbox@17990000 {
+>> >>              compatible = "qcom,sdm845-apss-shared";
+>> >>              reg = <0 0x17990000 0 0x1000>;
+>> >But this doesn't seem correct. The registers in this page are all not
+>> >mailbox door bell registers. We should restrict the space allocated to
+>> >the mbox to 0xC or something, definitely, not the whole page. They all
+>> >cannot be treated as a mailbox registers.
+> 
+> Well the binding is already done and this is the compatible string for
+> this node and register region. Sounds like this node is a mailbox plus
+> some more stuff in the same page.
+> 
 
-Hi Mika,
+Bjorn already noticed ^^ during the
+original review. Hence the compatible
+was correctly named "apss-shared"
+instead of following the older bindings.
 
-On 13/9/2019 4:18 PM, Mika Westerberg wrote:
-> On Thu, Sep 12, 2019 at 11:11:32AM +0100, Linus Walleij wrote:
->> Hi Rahul,
->>
->> thanks for your patches!
->>
->> On Thu, Sep 12, 2019 at 8:59 AM Rahul Tanwar
->> <rahul.tanwar@linux.intel.com> wrote:
->>
->>> This series is to add pinctrl & GPIO controller driver for a new SoC.
->>> Patch 1 adds pinmux & GPIO controller driver.
->>> Patch 2 adds the dt bindings document & include file.
->>>
->>> Patches are against Linux 5.3-rc5 at below Git tree:
->>> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
->> OK nice, I think you need to include Mika Westerberg on this review
->> as well, because I think he likes to stay on top of all things intel
->> in pin control. (Also included two other Intel folks in Finland who usually
->> take an interest in these things.)
-> Thanks Linus for looping me in.
->
-> Even if this is not directly based on the stuff we have under
-> drivers/pinctrl/intel/*, I have a couple of comments. I don't have this
-> patch series in my inbox so I'm commenting here.
->
-> Since the driver name is equilibrium I suggest you to name
-> intel_pinctrl_driver and the like (probe, remove) to follow that
-> convention to avoid confusing this with the Intel pinctrl drivers under
-> drivers/pinctrl/intel/*.
->
-> Maybe use eqbr prefix so then intel_pinctrl_driver becomes
-> eqbr_pinctrl_driver and so on. Also all the structures like
-> intel_pinctrl_drv_data should be changed accordingly.
->
-> Ditto for:
->
-> MODULE_DESCRIPTION("Intel Pinctrl Driver for LGM SoC");
->
-> I think better would be:
->
-> MODULE_DESCRIPTION("Pinctrl Driver for LGM SoC (Equilibrium)");
->
-> Anyway you get the idea :)
+>> >>              #mbox-cells = <1>;
+>> >>      };
+>> >>
+>> >>Can you point to this node with a phandle and then parse the reg
+>> >>property out of it to use in the scm readl/writel APIs? Maybe it can be
+>> >>a two cell property with <&apps_shared 0xf0> to indicate the offset to
+>> >>the registers to read/write? In non-secure mode presumably we need to
+>> >>also write these registers? Good news is that there's a regmap for this
+>> >>driver already, so maybe that can be acquired from the pdc driver.
+>> >>
+>> >The register space collection seems to be mix of different types of
+>> >application processor registers that should probably not be grouped up
+>> >under one subsystem. A single regmap doesn't seem correct either.
+> 
+> Why isn't a single regmap correct? The PDC driver should be able to use
+> it to read/write into this register space. The lock on the regmap will
+> need to be changed to a raw lock though for RT. Otherwise it looks OK 
+> to
+> me.
 
-Yes, i understand your point. Will update in v2. Thanks.
-
-Regards,
-Rahul
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
