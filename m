@@ -1,14 +1,14 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [RFCv4 0/7] interconnect: Add imx support via devfreq
-Date: Mon, 23 Sep 2019 21:22:45 +0000
-Message-ID: <VI1PR04MB7023C5382635F6959EAF9330EE850@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1566570260.git.leonard.crestez@nxp.com>
- <4440b392-d968-4a54-2ea0-ffd5beba02d1@posteo.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: wm8994: Do not register inapplicable controls for
+ WM1811" to the asoc tree
+Date: Mon, 23 Sep 2019 22:22:58 +0100 (BST)
+Message-ID: <20190923212258.B13CDD02FDA@fitzroy.sirena.org.uk>
+References: <20190920130218.32690-2-s.nawrocki@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
+In-Reply-To: <20190920130218.32690-2-s.nawrocki@samsung.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,91 +18,177 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Kepplinger <martink@posteo.de>, Jacky Bai <ping.bai@nxp.com>, Anson Huang <anson.huang@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>, Peng Fan <peng.fan@nxp.com>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Alexandre Bailon <abailon@baylibre.com>, Saravana Kannan <saravanak@google.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, dl-linux-imx <linux-imx@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Aisheng Dong <aisheng.dong@nxp.com>, Stephen Boyd <sboyd@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Sha
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, ckeepax@opensource.cirrus.com, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, lgirdwood@gmail.com, Krzysztof Kozlowski <krzk@kernel.org>, robh+dt@kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 21.09.2019 09:07, Martin Kepplinger wrote:
-> On 23.08.19 16:36, Leonard Crestez wrote:
->> This series add imx support for interconnect via devfreq: the ICC
->> framework is used to aggregate requests from devices and then those are
->> converted to DEV_PM_QOS_MIN_FREQUENCY requests for devfreq.
->>
->> The devfreq parts are posted separately, this series only intersects in
->> devicetree.
->>
->> Since there is no single devicetree node that can represent the "interconnect"
->> new API is added to allow individual devfreq nodes to act as parsing proxies
->> all mapping to a single soc-level icc provider. This is still RFC
->> because this
->>
->> The rest of the changes are small and deal with review comments.
+The patch
 
-> on imx8mq, probe() fails:
-> 
-> [    1.082847] imx-ddrc-devfreq 3d400000.dram-controller: failed to init
-> firmware freq info: -19
-> [    1.091434] imx-ddrc-devfreq: probe of 3d400000.dram-controller
-> rejects match -19
-> 
-> in imx_ddrc_init_freq_info()'s check:
-> 
-> if (priv->freq_count <= 0 || priv->freq_count > IMX_DDRC_MAX_FREQ_COUNT)
-> 
-> That would indicate that I'm missing something in ATF? I'm pretty sure
-> I'm running your tree though.
+   ASoC: wm8994: Do not register inapplicable controls for WM1811
 
-What is your board and uboot version? I tested on imx8mq-evk (SOC Rev 
-B1) with NXP uboot. For example this uboot release works:
+has been applied to the asoc tree at
 
-https://source.codeaurora.org/external/imx/uboot-imx/log/?h=imx_v2019.04_4.19.35_1.0.0
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
-It is uboot which trains DDR for multiple frequencies and then passes 
-that info to ATF. I'm not sure about the steps required to enable this 
-for 3rd-party boards, should be same as for busfreq from NXP tree.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Getting this to work on a 3rd-party board would be interesting.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> Does anything come to your mind what I might be doing wrong? Am I
-> running your "correct" linux tree? Remember I'm on imx8mq, so I don't
-> exactly test this RFC of yours.
-> 
-> Also, how are your plans to rebase / update your ATF tree?
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-The ATF changes will show up in a future release of NXP ATF branch, when 
-that happens I will drop my branch. NXP ATF releases are on CAF:
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-     https://source.codeaurora.org/external/imx/imx-atf/
+Thanks,
+Mark
 
-> And since there's a lot in there: what additions are necessary for this
-> devfreq to work?
+>From ca2347190adb5e4eece73a2b16e96e651c46246b Mon Sep 17 00:00:00 2001
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Date: Fri, 20 Sep 2019 15:02:10 +0200
+Subject: [PATCH] ASoC: wm8994: Do not register inapplicable controls for
+ WM1811
 
-devfreq imx support here: https://patchwork.kernel.org/cover/11104113/
-Interconnect support also needs PM QoS support for devfreq:
+In case of WM1811 device there are currently being registered controls
+referring to registers not existing on that device.
+It has been noticed when getting values of "AIF1ADC2 Volume", "AIF1DAC2
+Volume" controls was failing during ALSA state restoring at boot time:
+ "amixer: Mixer hw:0 load error: Device or resource busy"
 
-     https://patchwork.kernel.org/cover/11157649/
+Reading some registers through I2C was failing with EBUSY error and
+indeed these registers were not available according to the datasheet.
 
-> Lastly, how do you test? Is /sys/class/devfreq supposted to get populated?
+To fix this controls not available on WM1811 are moved to a separate
+array and registered only for WM8994 and WM8958.
 
-Yes, and only the devfreq patches are required for that.
+There are some further differences between WM8994 and WM1811,
+e.g. registers 603h, 604h, 605h, which are not covered in this patch.
 
-# cat /sys/class/devfreq/devfreq0/available_frequencies
-25000000 100000000 800000000
-# cat /sys/class/devfreq/devfreq0/cur_freq
-800000000
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Link: https://lore.kernel.org/r/20190920130218.32690-2-s.nawrocki@samsung.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/wm8994.c | 43 +++++++++++++++++++++++----------------
+ 1 file changed, 26 insertions(+), 17 deletions(-)
 
-You should be able to control frequencies manually with the userspace 
-governor:
-# echo "userspace" > /sys/class/devfreq/devfreq0/governor
-# echo "25000000" > /sys/class/devfreq/devfreq0/userspace/set_freq
-
-This series allows devices to request guaranteed bandwidth for 
-themselves through the interconnect subsystem, without it DRAM freq will 
-still switch but you'll have problems like display corruption as it 
-turns on before freq goes up. You can check that probe worked by doing
-
-# cat /sys/kernel/debug/interconnect/interconnect_summary
-
---
-Regards,
-Leonard
+diff --git a/sound/soc/codecs/wm8994.c b/sound/soc/codecs/wm8994.c
+index c3d06e8bc54f..d5fb7f5dd551 100644
+--- a/sound/soc/codecs/wm8994.c
++++ b/sound/soc/codecs/wm8994.c
+@@ -533,13 +533,10 @@ static SOC_ENUM_SINGLE_DECL(dac_osr,
+ static SOC_ENUM_SINGLE_DECL(adc_osr,
+ 			    WM8994_OVERSAMPLING, 1, osr_text);
+ 
+-static const struct snd_kcontrol_new wm8994_snd_controls[] = {
++static const struct snd_kcontrol_new wm8994_common_snd_controls[] = {
+ SOC_DOUBLE_R_TLV("AIF1ADC1 Volume", WM8994_AIF1_ADC1_LEFT_VOLUME,
+ 		 WM8994_AIF1_ADC1_RIGHT_VOLUME,
+ 		 1, 119, 0, digital_tlv),
+-SOC_DOUBLE_R_TLV("AIF1ADC2 Volume", WM8994_AIF1_ADC2_LEFT_VOLUME,
+-		 WM8994_AIF1_ADC2_RIGHT_VOLUME,
+-		 1, 119, 0, digital_tlv),
+ SOC_DOUBLE_R_TLV("AIF2ADC Volume", WM8994_AIF2_ADC_LEFT_VOLUME,
+ 		 WM8994_AIF2_ADC_RIGHT_VOLUME,
+ 		 1, 119, 0, digital_tlv),
+@@ -556,8 +553,6 @@ SOC_ENUM("AIF2DACR Source", aif2dacr_src),
+ 
+ SOC_DOUBLE_R_TLV("AIF1DAC1 Volume", WM8994_AIF1_DAC1_LEFT_VOLUME,
+ 		 WM8994_AIF1_DAC1_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
+-SOC_DOUBLE_R_TLV("AIF1DAC2 Volume", WM8994_AIF1_DAC2_LEFT_VOLUME,
+-		 WM8994_AIF1_DAC2_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
+ SOC_DOUBLE_R_TLV("AIF2DAC Volume", WM8994_AIF2_DAC_LEFT_VOLUME,
+ 		 WM8994_AIF2_DAC_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
+ 
+@@ -565,17 +560,12 @@ SOC_SINGLE_TLV("AIF1 Boost Volume", WM8994_AIF1_CONTROL_2, 10, 3, 0, aif_tlv),
+ SOC_SINGLE_TLV("AIF2 Boost Volume", WM8994_AIF2_CONTROL_2, 10, 3, 0, aif_tlv),
+ 
+ SOC_SINGLE("AIF1DAC1 EQ Switch", WM8994_AIF1_DAC1_EQ_GAINS_1, 0, 1, 0),
+-SOC_SINGLE("AIF1DAC2 EQ Switch", WM8994_AIF1_DAC2_EQ_GAINS_1, 0, 1, 0),
+ SOC_SINGLE("AIF2 EQ Switch", WM8994_AIF2_EQ_GAINS_1, 0, 1, 0),
+ 
+ WM8994_DRC_SWITCH("AIF1DAC1 DRC Switch", WM8994_AIF1_DRC1_1, 2),
+ WM8994_DRC_SWITCH("AIF1ADC1L DRC Switch", WM8994_AIF1_DRC1_1, 1),
+ WM8994_DRC_SWITCH("AIF1ADC1R DRC Switch", WM8994_AIF1_DRC1_1, 0),
+ 
+-WM8994_DRC_SWITCH("AIF1DAC2 DRC Switch", WM8994_AIF1_DRC2_1, 2),
+-WM8994_DRC_SWITCH("AIF1ADC2L DRC Switch", WM8994_AIF1_DRC2_1, 1),
+-WM8994_DRC_SWITCH("AIF1ADC2R DRC Switch", WM8994_AIF1_DRC2_1, 0),
+-
+ WM8994_DRC_SWITCH("AIF2DAC DRC Switch", WM8994_AIF2_DRC_1, 2),
+ WM8994_DRC_SWITCH("AIF2ADCL DRC Switch", WM8994_AIF2_DRC_1, 1),
+ WM8994_DRC_SWITCH("AIF2ADCR DRC Switch", WM8994_AIF2_DRC_1, 0),
+@@ -594,9 +584,6 @@ SOC_SINGLE("Sidetone HPF Switch", WM8994_SIDETONE, 6, 1, 0),
+ SOC_ENUM("AIF1ADC1 HPF Mode", aif1adc1_hpf),
+ SOC_DOUBLE("AIF1ADC1 HPF Switch", WM8994_AIF1_ADC1_FILTERS, 12, 11, 1, 0),
+ 
+-SOC_ENUM("AIF1ADC2 HPF Mode", aif1adc2_hpf),
+-SOC_DOUBLE("AIF1ADC2 HPF Switch", WM8994_AIF1_ADC2_FILTERS, 12, 11, 1, 0),
+-
+ SOC_ENUM("AIF2ADC HPF Mode", aif2adc_hpf),
+ SOC_DOUBLE("AIF2ADC HPF Switch", WM8994_AIF2_ADC_FILTERS, 12, 11, 1, 0),
+ 
+@@ -637,6 +624,24 @@ SOC_SINGLE("AIF2DAC 3D Stereo Switch", WM8994_AIF2_DAC_FILTERS_2,
+ 	   8, 1, 0),
+ };
+ 
++/* Controls not available on WM1811 */
++static const struct snd_kcontrol_new wm8994_snd_controls[] = {
++SOC_DOUBLE_R_TLV("AIF1ADC2 Volume", WM8994_AIF1_ADC2_LEFT_VOLUME,
++		 WM8994_AIF1_ADC2_RIGHT_VOLUME,
++		 1, 119, 0, digital_tlv),
++SOC_DOUBLE_R_TLV("AIF1DAC2 Volume", WM8994_AIF1_DAC2_LEFT_VOLUME,
++		 WM8994_AIF1_DAC2_RIGHT_VOLUME, 1, 96, 0, digital_tlv),
++
++SOC_SINGLE("AIF1DAC2 EQ Switch", WM8994_AIF1_DAC2_EQ_GAINS_1, 0, 1, 0),
++
++WM8994_DRC_SWITCH("AIF1DAC2 DRC Switch", WM8994_AIF1_DRC2_1, 2),
++WM8994_DRC_SWITCH("AIF1ADC2L DRC Switch", WM8994_AIF1_DRC2_1, 1),
++WM8994_DRC_SWITCH("AIF1ADC2R DRC Switch", WM8994_AIF1_DRC2_1, 0),
++
++SOC_ENUM("AIF1ADC2 HPF Mode", aif1adc2_hpf),
++SOC_DOUBLE("AIF1ADC2 HPF Switch", WM8994_AIF1_ADC2_FILTERS, 12, 11, 1, 0),
++};
++
+ static const struct snd_kcontrol_new wm8994_eq_controls[] = {
+ SOC_SINGLE_TLV("AIF1DAC1 EQ1 Volume", WM8994_AIF1_DAC1_EQ_GAINS_1, 11, 31, 0,
+ 	       eq_tlv),
+@@ -4258,13 +4263,15 @@ static int wm8994_component_probe(struct snd_soc_component *component)
+ 	wm8994_handle_pdata(wm8994);
+ 
+ 	wm_hubs_add_analogue_controls(component);
+-	snd_soc_add_component_controls(component, wm8994_snd_controls,
+-			     ARRAY_SIZE(wm8994_snd_controls));
++	snd_soc_add_component_controls(component, wm8994_common_snd_controls,
++				       ARRAY_SIZE(wm8994_common_snd_controls));
+ 	snd_soc_dapm_new_controls(dapm, wm8994_dapm_widgets,
+ 				  ARRAY_SIZE(wm8994_dapm_widgets));
+ 
+ 	switch (control->type) {
+ 	case WM8994:
++		snd_soc_add_component_controls(component, wm8994_snd_controls,
++					       ARRAY_SIZE(wm8994_snd_controls));
+ 		snd_soc_dapm_new_controls(dapm, wm8994_specific_dapm_widgets,
+ 					  ARRAY_SIZE(wm8994_specific_dapm_widgets));
+ 		if (control->revision < 4) {
+@@ -4284,8 +4291,10 @@ static int wm8994_component_probe(struct snd_soc_component *component)
+ 		}
+ 		break;
+ 	case WM8958:
++		snd_soc_add_component_controls(component, wm8994_snd_controls,
++					       ARRAY_SIZE(wm8994_snd_controls));
+ 		snd_soc_add_component_controls(component, wm8958_snd_controls,
+-				     ARRAY_SIZE(wm8958_snd_controls));
++					       ARRAY_SIZE(wm8958_snd_controls));
+ 		snd_soc_dapm_new_controls(dapm, wm8958_dapm_widgets,
+ 					  ARRAY_SIZE(wm8958_dapm_widgets));
+ 		if (control->revision < 1) {
+-- 
+2.20.1
