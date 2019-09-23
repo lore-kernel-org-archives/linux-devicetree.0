@@ -1,167 +1,158 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 5/5] irqchip/irq-bcm7038-l1: Support brcm,int-fwd-mask
-Date: Mon, 23 Sep 2019 08:08:16 -0700
-Message-ID: <59d705bc-0fda-e6e3-9234-fba7158853a7@gmail.com>
-References: <20190913191542.9908-1-f.fainelli@gmail.com>
- <20190913191542.9908-6-f.fainelli@gmail.com> <20190922133805.2cdf2d99@why>
- <260e61b8-a083-743e-43fc-70b9ea644e0e@gmail.com>
- <fbc07e1e-8c72-8728-2acb-647db533e31b@kernel.org>
- <8b0f18ef-7b72-e6fd-9930-0f698ced270b@gmail.com>
- <7610ea17-de8a-d475-7a9e-8f314f5f34a3@kernel.org>
+From: Sam Shih <sam.shih@mediatek.com>
+Subject: Re: [PATCH v9 07/11] dt-bindings: pwm: pwm-mediatek: add a property
+ "num-pwms"
+Date: Mon, 23 Sep 2019 23:11:55 +0800
+Message-ID: <1569251515.4102.31.camel@mtksdccf07>
+References: <1568933351-8584-1-git-send-email-sam.shih@mediatek.com>
+         <1568933351-8584-8-git-send-email-sam.shih@mediatek.com>
+         <20190921002149.GB86019@mithrandir> <1569208857.4102.9.camel@mtksdccf07>
+         <20190923133626.GA4671@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7610ea17-de8a-d475-7a9e-8f314f5f34a3@kernel.org>
-Content-Language: en-US
+In-Reply-To: <20190923133626.GA4671@ulmo>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <maz@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, John Crispin <john@phrozen.org>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2019-09-23 at 15:36 +0200, Thierry Reding wrote:
+> On Mon, Sep 23, 2019 at 11:20:57AM +0800, Sam Shih wrote:
+> > On Sat, 2019-09-21 at 02:21 +0200, Thierry Reding wrote:
+> > > On Fri, Sep 20, 2019 at 06:49:07AM +0800, Sam Shih wrote:
+> > > > From: Ryder Lee <ryder.lee@mediatek.com>
+> > > > 
+> > > > This adds a property "num-pwms" in example so that we could
+> > > > specify the number of PWM channels via device tree.
+> > > > 
+> > > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> > > > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > > > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > > > ---
+> > > > Changes since v6:
+> > > > Follow reviewers's comments:
+> > > > - The subject should indicate this is for Mediatek
+> > > > 
+> > > > Changes since v5:
+> > > > - Add an Acked-by tag
+> > > > - This file is original v4 patch 5/10
+> > > > (https://patchwork.kernel.org/patch/11102577/)
+> > > > 
+> > > > ---
+> > > >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
+> > > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > > 
+> > > You failed to address Rob's questions repeatedly and I agree with him
+> > > that you can just as easily derive the number of PWMs from the specific
+> > > compatible string. I won't be applying this and none of the patches that
+> > > depend on it.
+> > > 
+> > 
+> > Hi, 
+> > 
+> > Thanks for getting back to me.
+> > 
+> > New pwm driver (patch 04/11 : "pwm: mediatek: allocate the clks array
+> > dynamically") can support different variants with different number of
+> > PWMs by the new property <num-pwms>
+> > 
+> > For example:
+> > 1. Use "num-pwms" = <2> and assign clocks pwm1, pwm2 for mt7622
+> > 2. Use "num-pwms" = <6> and assign clocks pwm1, pwm2, pwm3, pwm4, pwm5,
+> > pwm6 for mt7622.
+> > 
+> > If we just as easily derive the number of PWMs from the specific
+> > compatible string in this document:
+> > 
+> >    - "pwm1-6": the six per PWM clocks for mt7622
+> >    
+> > This looks like all "pwm1", "pwm2", "pwm3", "pwm4", "pwm5", "pwm6" is
+> > required property in DT, It doesn't make sense.
+> 
+> I don't understand. Why doesn't that make sense? If your hardware block
+> has 6 PWMs and each can be driven by its own clock, then you need to
+> provide references for each of those clocks, otherwise you won't be able
+> to use them.
+
+Thank you for your instruction,
+I will add all clock-names and clocks according to
+hardware blocks instead of value of <num-pwms> in DT.
+
+> >    
+> > So we removed those descriptions and added  
+> > 
+> >    - "pwm1-N": the PWM clocks for each channel 
+> >    
+> >    
+> > But the max number of clocks from the compatible string are still
+> > important information that should be provide in this document.
+> > 
+> > 
+> > What do you think of this?
+> > 
+> >    - "pwm1-N": per PWM clocks for mt2712, the max number of PWM channels
+> > is 8
+> > 
+> >    - "pwm1-N": per PWM clocks for mt7622, the max number of PWM channels
+> > is 6
+> > 
+> >    - "pwm1-N": per PWM clocks for mt7623, the max number of PWM channels
+> > is 5
+> 
+> That's what's in the bindings already, isn't it?
+> 
+> 	 - clocks: phandle and clock specifier of the PWM reference clock.
+> 	 - clock-names: must contain the following, except for MT7628 which
+> 			has no clocks
+> 	   - "top": the top clock generator
+> 	   - "main": clock used by the PWM core
+> 	   - "pwm1-8": the eight per PWM clocks for mt2712
+> 	   - "pwm1-6": the six per PWM clocks for mt7622
+> 	   - "pwm1-5": the five per PWM clocks for mt7623
+
+Yes, You are right, 
+I will keep original description and remove "pwm1-N" from this patch.
+	   - "top": the top clock generator
+	   - "main": clock used by the PWM core
+	   - "pwm1-8": the eight per PWM clocks for mt2712
+	   - "pwm1-6": the six per PWM clocks for mt7622
+	   - "pwm1-5": the five per PWM clocks for mt7623       
+
+Actually, MT7629 also use "mediatek,mt7622-pwm" as compatible string,
+but it's hardware only support one pwm, so I was wrongly stick by
+expecting "pwm1-N" in clock-names based on "num-pwms" in DT.
+(that we can assign num-pwms to 1 and only provide pwm1 as clock-names)
+
+Maybe added mt7629 description to this document can solve this simply.
+	   - "pwm1": the PWM1 clock for mt7629    
+
+> Note that the description of the "clocks" property isn't quite accurate.
+> It should be something like:
+> 
+> 	- clocks: One phandle and clock specifier for each entry in the
+> 	          "clock-names" property.
+> 
+> In the above you clearly describe which PWMs you have to specify for
+> each generation of the hardware block.
+
+Thanks for your advise, I will update this description
+	- clocks: One phandle and clock specifier for each entry in the
+	          "clock-names" property.
+
+> > 
+> >    where N starting from 1 to the maximum number of PWM channels
+> >    - num-pwms: the number of PWM channels.
+> 
+> That's redundant information. The specific number of PWMs in already
+> implied by the compatible string, so you don't need to duplicate that
+> information here.
+
+Okay, I will remove it.
 
 
-On 9/23/2019 7:57 AM, Marc Zyngier wrote:
-> On 23/09/2019 15:39, Florian Fainelli wrote:
->>
->>
->> On 9/23/2019 1:52 AM, Marc Zyngier wrote:
->>> On 22/09/2019 20:08, Florian Fainelli wrote:
->>>>
->>>>
->>>> On 9/22/2019 5:38 AM, Marc Zyngier wrote:
->>>>> On Fri, 13 Sep 2019 12:15:42 -0700
->>>>> Florian Fainelli <f.fainelli@gmail.com> wrote:
->>>>>
->>>>>> On some specific chips like 7211 we need to leave some interrupts
->>>>>> untouched/forwarded to the VPU which is another agent in the system
->>>>>> making use of that interrupt controller hardware (goes to both ARM GIC
->>>>>> and VPU L1 interrupt controller). Make that possible by using the
->>>>>> existing brcm,int-fwd-mask property.
->>>>>>
->>>>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>>>>> ---
->>>>>>  drivers/irqchip/irq-bcm7038-l1.c | 15 +++++++++++++--
->>>>>>  1 file changed, 13 insertions(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
->>>>>> index 0673a44bbdc2..811a34201dd4 100644
->>>>>> --- a/drivers/irqchip/irq-bcm7038-l1.c
->>>>>> +++ b/drivers/irqchip/irq-bcm7038-l1.c
->>>>>> @@ -44,6 +44,7 @@ struct bcm7038_l1_chip {
->>>>>>  	struct list_head	list;
->>>>>>  	u32			wake_mask[MAX_WORDS];
->>>>>>  #endif
->>>>>> +	u32			irq_fwd_mask[MAX_WORDS];
->>>>>>  	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
->>>>>>  };
->>>>>>  
->>>>>> @@ -265,6 +266,7 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->>>>>>  	resource_size_t sz;
->>>>>>  	struct bcm7038_l1_cpu *cpu;
->>>>>>  	unsigned int i, n_words, parent_irq;
->>>>>> +	int ret;
->>>>>>  
->>>>>>  	if (of_address_to_resource(dn, idx, &res))
->>>>>>  		return -EINVAL;
->>>>>> @@ -278,6 +280,14 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->>>>>>  	else if (intc->n_words != n_words)
->>>>>>  		return -EINVAL;
->>>>>>  
->>>>>> +	ret = of_property_read_u32_array(dn , "brcm,int-fwd-mask",
->>>>>
->>>>> What is the exact meaning of "fwd"? Forward? FirmWare Dementia?
->>>>
->>>> Here it is meant to be "forward", we have defined this property name
->>>> before for irq-bcm7120-l2.c and felt like reusing the same name to avoid
->>>> multiplying properties would be appropriate, see patch #4. If you prefer
->>>> something named brcm,firmware-configured-mask, let me know.
->>>
->>> It's just a name, but I found it a bit confusing. Bah, never mind.
->>>
->>>>>
->>>>>> +					 intc->irq_fwd_mask, n_words);
->>>>>> +	if (ret != 0 && ret != -EINVAL) {
->>>>>> +		/* property exists but has the wrong number of words */
->>>>>> +		pr_err("invalid brcm,int-fwd-mask property\n");
->>>>>> +		return -EINVAL;
->>>>>> +	}
->>>>>> +
->>>>>>  	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
->>>>>>  					GFP_KERNEL);
->>>>>>  	if (!cpu)
->>>>>> @@ -288,8 +298,9 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
->>>>>>  		return -ENOMEM;
->>>>>>  
->>>>>>  	for (i = 0; i < n_words; i++) {
->>>>>> -		l1_writel(0xffffffff, cpu->map_base + reg_mask_set(intc, i));
->>>>>> -		cpu->mask_cache[i] = 0xffffffff;
->>>>>> +		l1_writel(0xffffffff & ~intc->irq_fwd_mask[i],
->>>>>> +			  cpu->map_base + reg_mask_set(intc, i));
->>>>>> +		cpu->mask_cache[i] = 0xffffffff & ~intc->irq_fwd_mask[i];
->>>>>
->>>>> I seem to remember that (0xffffffff & whatever) == whatever, as long as
->>>>> 'whatever' is a 32bit quantity. So what it this for?
->>>>
->>>> It is 0xffff_ffff & ~whatever here.
->>>
->>> Which doesn't change anything.
->>>
->>>> In the absence of this property
->>>> being specified, the data is all zeroed out, so we would have
->>>> 0xffff_ffff & 0xffff_ffff which is 0xffff_ffff. If this property is
->>>> specified, we would have one more or bits set, and it would be e.g.:
->>>> 0x100 so we would have 0xffff_ffff & ~(0x100) = 0xffff_feff which is
->>>> what we would want here to preserve whatever the firmware has already
->>>> configured.
->>>
->>> OK, I must be stupid:
->>>
->>> #include <stdio.h>
->>>
->>> int main(int argc, char *argv[])
->>> {
->>> 	unsigned int v = 0x100;
->>> 	printf ("%x\n", ~v);
->>> }
->>> maz@filthy-habit$ ./x
->>> fffffeff
->>>
->>> You might as well OR it with zeroes, if you want.
->>
->> Not sure I understand your point here.
->>
->> We used to write 0xffff_ffff to both the hardware and the mask cache to
->> have all interrupts masked by default. Now we want to have some bits
->> optionally set to 0 (unmasked), based on the brcm,int-fwd-mask property,
->> which is what this patch achieves (or tries to). If we write, say
->> 0xffff_feff to the hardware, which has a Write Only register behavior,
->> then we also want to have the mask cache be set to the same value for
->> consistency if nothing else. Am I failing at doing what I just described
->> and also failing at see it?
-> 
-> You write this:
-> 
->>  	for (i = 0; i < n_words; i++) {
->> -		l1_writel(0xffffffff, cpu->map_base + reg_mask_set(intc, i));
->> -		cpu->mask_cache[i] = 0xffffffff;
->> +		l1_writel(0xffffffff & ~intc->irq_fwd_mask[i],
->> +			  cpu->map_base + reg_mask_set(intc, i));
->> +		cpu->mask_cache[i] = 0xffffffff & ~intc->irq_fwd_mask[i];
->>  	}
-> 
-> And I'm saying that this is strictly equivalent to:
-> 
->  	for (i = 0; i < n_words; i++) {
-> 		l1_writel(~intc->irq_fwd_mask[i],
-> 			  cpu->map_base + reg_mask_set(intc, i));
-> 		cpu->mask_cache[i] = ~intc->irq_fwd_mask[i];
->  	}
-> 
-> without this 0xffffffff that does exactly nothing (I'm pretty sure the
-> compiler drops it anyway).
 
-I understand quickly, you just need to repeat many times, thanks for
-bearing with me, this is indeed simpler and clearer.
--- 
-Florian
+Thanks,
+Best Regards,
+Sam 
