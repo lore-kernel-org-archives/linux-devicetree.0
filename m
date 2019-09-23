@@ -1,65 +1,114 @@
 From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-Subject: [PATCH 1/5] clk: imx8mq: Add VIDEO2_PLL clock
-Date: Mon, 23 Sep 2019 17:13:15 +0300
-Message-ID: <1569248002-2485-2-git-send-email-laurentiu.palcu@nxp.com>
+Subject: [PATCH 4/5] dt-bindings: display: imx: add bindings for DCSS
+Date: Mon, 23 Sep 2019 17:13:18 +0300
+Message-ID: <1569248002-2485-5-git-send-email-laurentiu.palcu@nxp.com>
 References: <1569248002-2485-1-git-send-email-laurentiu.palcu@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1569248002-2485-1-git-send-email-laurentiu.palcu@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>
-Cc: agx@sigxcpu.org, l.stach@pengutronix.de, Laurentiu Palcu <laurentiu.palcu@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>
+Cc: agx@sigxcpu.org, l.stach@pengutronix.de, Laurentiu Palcu <laurentiu.palcu@nxp.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This clock is needed by DCSS when high resolutions are used.
+Add bindings for iMX8MQ Display Controller Subsystem.
 
 Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-CC: Abel Vesa <abel.vesa@nxp.com>
 ---
- drivers/clk/imx/clk-imx8mq.c             | 4 ++++
- include/dt-bindings/clock/imx8mq-clock.h | 4 +++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ .../bindings/display/imx/nxp,imx8mq-dcss.yaml      | 86 ++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
 
-diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
-index d407a07..1855397 100644
---- a/drivers/clk/imx/clk-imx8mq.c
-+++ b/drivers/clk/imx/clk-imx8mq.c
-@@ -38,6 +38,7 @@ static const char * const sys1_pll_out_sels[] = {"sys1_pll1_ref_sel", };
- static const char * const sys2_pll_out_sels[] = {"sys1_pll1_ref_sel", "sys2_pll1_ref_sel", };
- static const char * const sys3_pll_out_sels[] = {"sys3_pll1_ref_sel", "sys2_pll1_ref_sel", };
- static const char * const dram_pll_out_sels[] = {"dram_pll1_ref_sel", };
-+static const char * const video2_pll_out_sels[] = {"video2_pll1_ref_sel", };
- 
- /* CCM ROOT */
- static const char * const imx8mq_a53_sels[] = {"osc_25m", "arm_pll_out", "sys2_pll_500m", "sys2_pll_1000m",
-@@ -311,6 +312,7 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
- 	clks[IMX8MQ_SYS2_PLL1_REF_SEL]	= imx_clk_mux("sys2_pll1_ref_sel", base + 0x3c, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
- 	clks[IMX8MQ_SYS3_PLL1_REF_SEL]	= imx_clk_mux("sys3_pll1_ref_sel", base + 0x48, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
- 	clks[IMX8MQ_DRAM_PLL1_REF_SEL]	= imx_clk_mux("dram_pll1_ref_sel", base + 0x60, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
-+	clks[IMX8MQ_VIDEO2_PLL1_REF_SEL] = imx_clk_mux("video2_pll1_ref_sel", base + 0x54, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
- 
- 	clks[IMX8MQ_ARM_PLL_REF_DIV]	= imx_clk_divider("arm_pll_ref_div", "arm_pll_ref_sel", base + 0x28, 5, 6);
- 	clks[IMX8MQ_GPU_PLL_REF_DIV]	= imx_clk_divider("gpu_pll_ref_div", "gpu_pll_ref_sel", base + 0x18, 5, 6);
-@@ -346,6 +348,8 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
- 	clks[IMX8MQ_SYS2_PLL_OUT] = imx_clk_sccg_pll("sys2_pll_out", sys2_pll_out_sels, ARRAY_SIZE(sys2_pll_out_sels), 0, 0, 1, base + 0x3c, CLK_IS_CRITICAL);
- 	clks[IMX8MQ_SYS3_PLL_OUT] = imx_clk_sccg_pll("sys3_pll_out", sys3_pll_out_sels, ARRAY_SIZE(sys3_pll_out_sels), 0, 0, 1, base + 0x48, CLK_IS_CRITICAL);
- 	clks[IMX8MQ_DRAM_PLL_OUT] = imx_clk_sccg_pll("dram_pll_out", dram_pll_out_sels, ARRAY_SIZE(dram_pll_out_sels), 0, 0, 0, base + 0x60, CLK_IS_CRITICAL);
-+	clks[IMX8MQ_VIDEO2_PLL_OUT] = imx_clk_sccg_pll("video2_pll_out", video2_pll_out_sels, ARRAY_SIZE(video2_pll_out_sels), 0, 0, 0, base + 0x54, 0);
+diff --git a/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+new file mode 100644
+index 00000000..eb6d0d81
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+@@ -0,0 +1,86 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 NXP
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/display/imx/nxp,imx8mq-dcss.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
- 	/* SYS PLL fixed output */
- 	clks[IMX8MQ_SYS1_PLL_40M] = imx_clk_fixed_factor("sys1_pll_40m", "sys1_pll_out", 1, 20);
- 	clks[IMX8MQ_SYS1_PLL_80M] = imx_clk_fixed_factor("sys1_pll_80m", "sys1_pll_out", 1, 10);
-diff --git a/include/dt-bindings/clock/imx8mq-clock.h b/include/dt-bindings/clock/imx8mq-clock.h
-index 6546367..35b9ed9 100644
---- a/include/dt-bindings/clock/imx8mq-clock.h
-+++ b/include/dt-bindings/clock/imx8mq-clock.h
-@@ -403,5 +403,7 @@
- #define IMX8MQ_CLK_SNVS_ROOT			264
- #define IMX8MQ_CLK_GIC				265
- 
--#define IMX8MQ_CLK_END				266
-+#define IMX8MQ_VIDEO2_PLL1_REF_SEL		266
++title: iMX8MQ Display Controller Subsystem (DCSS)
 +
-+#define IMX8MQ_CLK_END				267
- #endif /* __DT_BINDINGS_CLOCK_IMX8MQ_H */
++maintainers:
++  - Laurentiu Palcu <laurentiu.palcu@nxp.com>
++
++description:
++
++  The DCSS (display controller sub system) is used to source up to three
++  display buffers, compose them, and drive a display using HDMI 2.0a(with HDCP
++  2.2) or MIPI-DSI. The DCSS is intended to support up to 4kp60 displays. HDR10
++  image processing capabilities are included to provide a solution capable of
++  driving next generation high dynamic range displays.
++
++properties:
++  compatible:
++    const: nxp,imx8mq-dcss
++
++  reg:
++    maxItems: 2
++
++  interrupts:
++    maxItems: 3
++    items:
++      - description: Context loader completion and error interrupt
++      - description: DTG interrupt used to signal context loader trigger time
++      - description: DTG interrupt for Vblank
++
++  interrupt-names:
++    maxItems: 3
++    items:
++      - const: ctx_ld
++      - const: ctxld_kick
++      - const: vblank
++
++  clocks:
++    maxItems: 5
++    items:
++      - description: Display APB clock for all peripheral PIO access interfaces
++      - description: Display AXI clock needed by DPR, Scaler, RTRAM_CTRL
++      - description: RTRAM clock
++      - description: Pixel clock, can be driver either by HDMI phy clock or MIPI
++      - description: DTRC clock, needed by video decompressor
++
++  clock-names:
++    items:
++      - const: apb
++      - const: axi
++      - const: rtrm
++      - const: pix
++      - const: dtrc
++
++  port@0:
++    type: object
++    description: A port node pointing to a hdmi_in or mipi_in port node.
++
++examples:
++  - |
++    dcss: dcss@0x32e00000 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        compatible = "nxp,imx8mq-dcss";
++        reg = <0x32e00000 0x2D000>, <0x32e2f000 0x1000>;
++        interrupts = <6>, <8>, <9>;
++        interrupt-names = "ctx_ld", "ctxld_kick", "vblank";
++        interrupt-parent = <&irqsteer>;
++        clocks = <&clk 248>, <&clk 247>, <&clk 249>,
++                 <&clk 254>,<&clk 122>;
++        clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
++        assigned-clocks = <&clk 107>, <&clk 109>, <&clk 266>;
++        assigned-clock-parents = <&clk 78>, <&clk 78>, <&clk 3>;
++        assigned-clock-rates = <800000000>,
++                               <400000000>;
++        port@0 {
++            dcss_out: endpoint {
++                remote-endpoint = <&hdmi_in>;
++            };
++        };
++    };
++
 -- 
 2.7.4
