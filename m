@@ -1,70 +1,46 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 0/6] add the DDR clock controller on Meson8 and Meson8b
-Date: Mon, 23 Sep 2019 12:06:21 +0200
-Message-ID: <1jsgons4wy.fsf@starbuckisacylon.baylibre.com>
-References: <20190921151835.770263-1-martin.blumenstingl@googlemail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 03/10] ASoC: wm8994: Add support for setting MCLK
+ clock rate
+Date: Mon, 23 Sep 2019 12:09:57 +0200
+Message-ID: <20190923100957.GA4723@pi3>
+References: <20190920130218.32690-1-s.nawrocki@samsung.com>
+ <CGME20190920130316eucas1p2de713006a13c62c0b895c2e33e0d14c7@eucas1p2.samsung.com>
+ <20190920130218.32690-4-s.nawrocki@samsung.com>
+ <7334ce45-f192-4421-aa3d-d142582153ef@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190921151835.770263-1-martin.blumenstingl@googlemail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: narmstrong@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <7334ce45-f192-4421-aa3d-d142582153ef@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, ckeepax@opensource.cirrus.com, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat 21 Sep 2019 at 17:18, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+On Mon, Sep 23, 2019 at 11:10:48AM +0200, Sylwester Nawrocki wrote:
+> On 9/20/19 15:02, Sylwester Nawrocki wrote:
+> > Extend the set_sysclk() handler so we also set frequency of the MCLK1,
+> > MCLK2 clocks through clk API when those clocks are specified in DT.
+> > 
+> > Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> > Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> Sorry, I squashed other patch to this one but forgot to remove above tags, 
+> not sure if those still stand as there was rather significant change in 
+> the patch. 
 
-> Meson8 and Meson8b SoCs embed a DDR clock controller in their MMCBUS
-> registers. This series:
-> - adds support for this DDR clock controller (patches 0 and 1)
-> - wires up the DDR PLL as input for two audio clocks (patches 2 and 3)
+It's good. For the record:
 
-Have you been able to validate somehow that DDR rate calculated by CCF
-is the actual rate that gets to the audio clocks ?
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-While I understand the interest for completeness, I suspect the having
-the DDR clock as an audio parent was just for debugging purpose. IOW,
-I'm not sure if adding this parent is useful to an actual audio use
-case. As far as audio would be concerned, I think we are better of
-without this parent.
-
-> - adds the DDR clock controller to meson8.dtsi and meson8b.dtsi
->
-
-Could you please separate the driver and DT series in the future ? Those
-take different paths and are meant for different maintainers.
-
-> Special thanks go out to Alexandre Mergnat for switching the Amlogic
-> clock drivers over to parent_hws and parent_data. That made this series
-> a lot easier for me!
->
-> This series depends on my other series from [0]:
-> "provide the XTAL clock via OF on Meson8/8b/8m2"
->
->
-> [0] https://patchwork.kernel.org/cover/11155515/
->
->
-> Martin Blumenstingl (6):
->   dt-bindings: clock: add the Amlogic Meson8 DDR clock controller
->     binding
->   clk: meson: add a driver for the Meson8/8b/8m2 DDR clock controller
->   clk: meson: meson8b: use of_clk_hw_register to register the clocks
->   clk: meson: meson8b: add the ddr_pll input for the audio clocks
->   ARM: dts: meson8: add the DDR clock controller
->   ARM: dts: meson8b: add the DDR clock controller
->
->  .../clock/amlogic,meson8-ddr-clkc.yaml        |  50 ++++++
->  arch/arm/boot/dts/meson8.dtsi                 |  13 +-
->  arch/arm/boot/dts/meson8b.dtsi                |  13 +-
->  drivers/clk/meson/Makefile                    |   2 +-
->  drivers/clk/meson/meson8-ddr.c                | 153 ++++++++++++++++++
->  drivers/clk/meson/meson8b.c                   |  36 ++---
->  include/dt-bindings/clock/meson8-ddr-clkc.h   |   4 +
->  7 files changed, 245 insertions(+), 26 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,meson8-ddr-clkc.yaml
->  create mode 100644 drivers/clk/meson/meson8-ddr.c
->  create mode 100644 include/dt-bindings/clock/meson8-ddr-clkc.h
->
-> -- 
-> 2.23.0
+Best regards,
+Krzysztof
