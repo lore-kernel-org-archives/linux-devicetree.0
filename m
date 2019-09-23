@@ -1,44 +1,42 @@
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH 3/4] pwm: mxs: add support for inverse polarity
-Date: Mon, 23 Sep 2019 10:45:56 +0200
-Message-ID: <d2b29144-3de8-4561-3292-49db7e697aca@rasmusvillemoes.dk>
-References: <20190923081348.6843-1-linux@rasmusvillemoes.dk>
- <20190923081348.6843-4-linux@rasmusvillemoes.dk>
- <20190923082735.tzxyhvjlnztsxhsc@pengutronix.de>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v2 04/10] ASoC: wm8994: Add support for MCLKn clock gating
+Date: Mon, 23 Sep 2019 08:51:05 +0000
+Message-ID: <20190923085105.GN10204@ediswmail.ad.cirrus.com>
+References: <20190920130218.32690-1-s.nawrocki@samsung.com>
+ <CGME20190920130317eucas1p188d724710077d704f768798c6555c741@eucas1p1.samsung.com>
+ <20190920130218.32690-5-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190923082735.tzxyhvjlnztsxhsc@pengutronix.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190920130218.32690-5-s.nawrocki@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, broonie@kernel.org, lgirdwood@gmail.com, krzk@kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 23/09/2019 10.27, Uwe Kleine-König wrote:
-> On Mon, Sep 23, 2019 at 10:13:47AM +0200, Rasmus Villemoes wrote:
->>
->>  
->> +	pol_bits = state->polarity == PWM_POLARITY_NORMAL ?
->> +		PERIOD_POLARITY_NORMAL : PERIOD_POLARITY_INVERSE;
->> +
->>  	writel(duty_cycles << 16,
->>  	       mxs->base + PWM_ACTIVE0 + pwm->hwpwm * 0x20);
->> -	writel(PERIOD_PERIOD(period_cycles) | PERIOD_POLARITY_NORMAL | PERIOD_CDIV(div),
->> +	writel(PERIOD_PERIOD(period_cycles) | pol_bits | PERIOD_CDIV(div),
+On Fri, Sep 20, 2019 at 03:02:13PM +0200, Sylwester Nawrocki wrote:
+> As an intermediate step before covering the clocking subsystem
+> of the CODEC entirely by the clk API add handling of external CODEC's
+> master clocks in DAPM events when the AIFn clocks are sourced directly
+> from MCLKn; when FLLn are used we enable/disable respective MCLKn
+> before/after FLLn is enabled/disabled.
 > 
-> When will this affect the output? Only on the next start of a period, or
-> immediatly? Can it happen that this results in a mixed output (i.e. a
-> period that has already the new duty cycle from the line above but not
-> the new polarity (or period)?
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
 
-The data sheet says "Also, when the user reprograms the channel in this
-manner, the new register values will not take effect until the beginning
-of a new output period. This eliminates the potential for output
-glitches that could occur if the registers were updated while the
-channel was enabled and in the middle of a cycle.". So I think this
-should be ok. "this manner" refers to the registers being written in the
-proper order (first ACTIVEn, then PERIODn).
+Looks good to me:
 
-Rasmus
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+
+Thanks,
+Charles
