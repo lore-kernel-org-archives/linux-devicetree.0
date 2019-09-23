@@ -1,37 +1,77 @@
-From: Christian Hewitt <christianshewitt@gmail.com>
-Subject: [PATCH v4 0/3] arm64: meson-g12b: Add support for the Ugoos AM6
-Date: Mon, 23 Sep 2019 17:57:54 +0400
-Message-ID: <1569247077-5212-1-git-send-email-christianshewitt@gmail.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH 2/3] dt-bindings: gpio: Add binding document for xylon
+ logicvc-gpio
+Date: Mon, 23 Sep 2019 15:59:08 +0200
+Message-ID: <20190923135908.GC57525@aptenodytes>
+References: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
+ <20190910152855.111588-2-paul.kocialkowski@bootlin.com>
+ <CACRpkdYrTCnrW6-28+RhdMZ4cB5VcqG6T-5aABvvEgiZ3iri2Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Bu8it7iiRSEf40bY"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYrTCnrW6-28+RhdMZ4cB5VcqG6T-5aABvvEgiZ3iri2Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Oleg Ivanov <balbes-150@yandex.ru>, Christian Hewitt <christianshewitt@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for the Ugoos AM6, an Android STB based on
-the Amlogic W400 reference design with the S922X chipset.
 
-v2: correction of minor nits
+--Bu8it7iiRSEf40bY
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-v3: address regulator and GPIO corrections from Neil Armstrong (using
-schematic excerpts from Ugoos) and related v2 comments from Martin
-Blumenstingle. Add acks on patches 1/2 from Rob Herring.
+Hi,
 
-v4: address nits from Martin except for the vcc_3v3 node as it's not
-known how to handle the vcc_3v3 regulator managed by ATF firmware, so
-it remains untouched/undeclared like other g12a/g12b/sm1 boards.
+On Thu 12 Sep 19, 10:19, Linus Walleij wrote:
+> On Tue, Sep 10, 2019 at 4:29 PM Paul Kocialkowski
+> <paul.kocialkowski@bootlin.com> wrote:
+>=20
+> > The Xylon LogiCVC display controller exports some GPIOs, which are
+> > exposed as a dedicated driver.
+> >
+> > This introduces the associated device-tree bindings documentation.
+> >
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> (...)
+> > +The controller exposes GPIOs from the display and power control regist=
+ers,
+> > +which are mapped by the driver as follows:
+> > +- GPIO[4:0] (display control) mapped to index 0-4
+> > +- EN_BLIGHT (power control) mapped to index 5
+> > +- EN_VDD (power control) mapped to index 6
+> > +- EN_VEE (power control) mapped to index 7
+> > +- V_EN (power control) mapped to index 8
+>=20
+> This should be reflected in the gpio-line-names in the example
+> and in your device trees.
 
-Christian Hewitt (3):
-  dt-bindings: Add vendor prefix for Ugoos
-  dt-bindings: arm: amlogic: Add support for the Ugoos AM6
-  arm64: dts: meson-g12b-ugoos-am6: add initial device-tree
+Thanks, I didn't know about it until now!
 
- Documentation/devicetree/bindings/arm/amlogic.yaml |   1 +
- .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
- arch/arm64/boot/dts/amlogic/Makefile               |   1 +
- .../boot/dts/amlogic/meson-g12b-ugoos-am6.dts      | 557 +++++++++++++++++++++
- 4 files changed, 561 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dts
+Cheers,
 
--- 
-2.7.4
+Paul
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--Bu8it7iiRSEf40bY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2Iz6wACgkQ3cLmz3+f
+v9Ge/Qf/V4OjLLSvFC8UlTYdc4Kdoazi93MSGndrpRjnjx6zjgxVIN1iSUOtPUWk
+t9JqNHAsIKfhKfVZ3gOosU/q7hSNlAY/3U9F73VxErLqKhyrQRqJO9obel/eITE5
+/7ATIkhm+2Ejjn24oHZn9RaqJQhi0JT7IaYmwBGssq0ZYyF2IF+rxUFpDioj4iia
+j2Iog14fAHWjP9a4eeNz6rjf7M+RuTgfAQ4c/4r7xkp2t39s5puSYFU3EZ4mOuA+
+8OcqcqqF0fGY8mj3dBDe/U7IzpoT2Nk9e1Qj/Zy+PsIgZbUG06kJ5AgNjXGuADi0
+qzuNWl1mhPC3VNLXdPqTwLLP+MgE1Q==
+=h+JT
+-----END PGP SIGNATURE-----
+
+--Bu8it7iiRSEf40bY--
