@@ -1,54 +1,222 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 3/4] pwm: mxs: add support for inverse polarity
-Date: Mon, 23 Sep 2019 10:54:14 +0200
-Message-ID: <20190923085414.6d3gbby6gglpjsfe@pengutronix.de>
-References: <20190923081348.6843-1-linux@rasmusvillemoes.dk>
- <20190923081348.6843-4-linux@rasmusvillemoes.dk>
- <20190923082735.tzxyhvjlnztsxhsc@pengutronix.de>
- <d2b29144-3de8-4561-3292-49db7e697aca@rasmusvillemoes.dk>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v6 1/2] dt-bindings: display/bridge: Add binding for NWL
+ mipi dsi host controller
+Date: Mon, 23 Sep 2019 10:59:34 +0200
+Message-ID: <18619804-ffe8-f3a5-aa54-ab590b3a83c0@samsung.com>
+References: <cover.1569170717.git.agx@sigxcpu.org>
+        <CGME20190922164722epcas3p2c44bddf9e6fd86cae5ab72ca078296b8@epcas3p2.samsung.com>
+        <3bef8eb6a7dd32406e31c68f39ccde3accb58222.1569170717.git.agx@sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d2b29144-3de8-4561-3292-49db7e697aca@rasmusvillemoes.dk>
+In-Reply-To: <3bef8eb6a7dd32406e31c68f39ccde3accb58222.1569170717.git.agx@sigxcpu.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Neil Armstrong <narmstrong@baylibre.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@siol.net>, Lee Jones <lee.jones@linaro.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Chiras <robert.chiras@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 10:45:56AM +0200, Rasmus Villemoes wrote:
-> On 23/09/2019 10.27, Uwe Kleine-König wrote:
-> > On Mon, Sep 23, 2019 at 10:13:47AM +0200, Rasmus Villemoes wrote:
-> >>
-> >>  
-> >> +	pol_bits = state->polarity == PWM_POLARITY_NORMAL ?
-> >> +		PERIOD_POLARITY_NORMAL : PERIOD_POLARITY_INVERSE;
-> >> +
-> >>  	writel(duty_cycles << 16,
-> >>  	       mxs->base + PWM_ACTIVE0 + pwm->hwpwm * 0x20);
-> >> -	writel(PERIOD_PERIOD(period_cycles) | PERIOD_POLARITY_NORMAL | PERIOD_CDIV(div),
-> >> +	writel(PERIOD_PERIOD(period_cycles) | pol_bits | PERIOD_CDIV(div),
-> > 
-> > When will this affect the output? Only on the next start of a period, or
-> > immediatly? Can it happen that this results in a mixed output (i.e. a
-> > period that has already the new duty cycle from the line above but not
-> > the new polarity (or period)?
-> 
-> The data sheet says "Also, when the user reprograms the channel in this
-> manner, the new register values will not take effect until the beginning
-> of a new output period. This eliminates the potential for output
-> glitches that could occur if the registers were updated while the
-> channel was enabled and in the middle of a cycle.". So I think this
-> should be ok. "this manner" refers to the registers being written in the
-> proper order (first ACTIVEn, then PERIODn).
+On 22.09.2019 18:47, Guido GÃ¼nther wrote:
+> The Northwest Logic MIPI DSI IP core can be found in NXPs i.MX8 SoCs.
+>
+> Signed-off-by: Guido GÃ¼nther <agx@sigxcpu.org>
+> Tested-by: Robert Chiras <robert.chiras@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../bindings/display/bridge/nwl-dsi.yaml      | 176 ++++++++++++++++++
+>  1 file changed, 176 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> new file mode 100644
+> index 000000000000..31119c7885ff
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> @@ -0,0 +1,176 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: https://protect2.fireeye.com/url?k=7c9397fbdbbe3fd5.7c921cb4-87fc4542b5f41502&u=http://devicetree.org/schemas/display/bridge/nwl-dsi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Northwest Logic MIPI-DSI controller on i.MX SoCs
+> +
+> +maintainers:
+> +  - Guido GÃºnther <agx@sigxcpu.org>
+> +  - Robert Chiras <robert.chiras@nxp.com>
+> +
+> +description: |
+> +  NWL MIPI-DSI host controller found on i.MX8 platforms. This is a dsi bridge for
+> +  the SOCs NWL MIPI-DSI host controller.
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,imx8mq-nwl-dsi
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  clocks:
+> +    items:
+> +      - description: DSI core clock
+> +      - description: RX_ESC clock (used in escape mode)
+> +      - description: TX_ESC clock (used in escape mode)
+> +      - description: PHY_REF clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: core
+> +      - const: rx_esc
+> +      - const: tx_esc
+> +      - const: phy_ref
+> +
+> +  mux-controls:
+> +    description:
+> +      mux controller node to use for operating the input mux
+> +
+> +  phys:
+> +    maxItems: 1
+> +    description:
+> +      A phandle to the phy module representing the DPHY
+> +
+> +  phy-names:
+> +    items:
+> +      - const: dphy
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    items:
+> +      - description: dsi byte reset line
+> +      - description: dsi dpi reset line
+> +      - description: dsi esc reset line
+> +      - description: dsi pclk reset line
+> +
+> +  reset-names:
+> +    items:
+> +      - const: byte
+> +      - const: dpi
+> +      - const: esc
+> +      - const: pclk
+> +
+> +  ports:
+> +    type: object
+> +    description:
+> +      A node containing DSI input & output port nodes with endpoint
+> +      definitions as documented in
+> +      Documentation/devicetree/bindings/graph.txt.
+> +    properties:
+> +      port@0:
+> +        type: object
+> +        description:
+> +          Input port node to receive pixel data from the
+> +          display controller
+> +
+> +      port@1:
+> +        type: object
+> +        description:
+> +          DSI output port node to the panel or the next bridge
+> +          in the chain
+> +
+> +      '#address-cells':
+> +        const: 1
+> +
+> +      '#size-cells':
+> +        const: 0
+> +
+> +    required:
+> +      - '#address-cells'
+> +      - '#size-cells'
+> +      - port@0
+> +      - port@1
+> +
+> +    additionalProperties: false
+> +
+> +patternProperties:
+> +  "^panel@[0-9]+$":
+> +    type: object
+> +
+> +required:
+> +  - '#address-cells'
+> +  - '#size-cells'
+> +  - clock-names
+> +  - clocks
+> +  - compatible
+> +  - interrupts
+> +  - mux-controls
 
-OK. IMHO this is worth a code comment.
 
-Best regards
-Uwe
+As I understand mux is not a part of the device, so maybe would be safer
+to make it optional.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+Regards
+
+Andrzej
+
+
+> +  - phy-names
+> +  - phys
+> +  - ports
+> +  - reg
+> +  - reset-names
+> +  - resets
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> + - |
+> +
+> +   mipi_dsi: mipi_dsi@30a00000 {
+> +              #address-cells = <1>;
+> +              #size-cells = <0>;
+> +              compatible = "fsl,imx8mq-nwl-dsi";
+> +              reg = <0x30A00000 0x300>;
+> +              clocks = <&clk 163>, <&clk 244>, <&clk 245>, <&clk 164>;
+> +              clock-names = "core", "rx_esc", "tx_esc", "phy_ref";
+> +              interrupts = <0 34 4>;
+> +              mux-controls = <&mux 0>;
+> +              power-domains = <&pgc_mipi>;
+> +              resets = <&src 0>, <&src 1>, <&src 2>, <&src 3>;
+> +              reset-names = "byte", "dpi", "esc", "pclk";
+> +              phys = <&dphy>;
+> +              phy-names = "dphy";
+> +
+> +              panel@0 {
+> +                      compatible = "rocktech,jh057n00900";
+> +                      reg = <0>;
+> +                      port@0 {
+> +                           panel_in: endpoint {
+> +                                     remote-endpoint = <&mipi_dsi_out>;
+> +                           };
+> +                      };
+> +              };
+> +
+> +              ports {
+> +                    #address-cells = <1>;
+> +                    #size-cells = <0>;
+> +
+> +                    port@0 {
+> +                           reg = <0>;
+> +                           mipi_dsi_in: endpoint {
+> +                                        remote-endpoint = <&lcdif_mipi_dsi>;
+> +                           };
+> +                    };
+> +                    port@1 {
+> +                           reg = <1>;
+> +                           mipi_dsi_out: endpoint {
+> +                                         remote-endpoint = <&panel_in>;
+> +                           };
+> +                    };
+> +              };
+> +      };
