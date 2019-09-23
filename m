@@ -1,49 +1,45 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v3 3/3] MAINTAINERS: Add entry for IMX290 CMOS image
- sensor driver
-Date: Mon, 23 Sep 2019 12:07:52 +0300
-Message-ID: <20190923090752.GK5525@valkosipuli.retiisi.org.uk>
-References: <20190830091943.22646-1-manivannan.sadhasivam@linaro.org>
- <20190830091943.22646-4-manivannan.sadhasivam@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 04/10] ASoC: wm8994: Add support for MCLKn clock gating
+Date: Mon, 23 Sep 2019 11:09:24 +0200
+Message-ID: <20190923090924.GB4577@pi3>
+References: <20190920130218.32690-1-s.nawrocki@samsung.com>
+ <CGME20190920130317eucas1p188d724710077d704f768798c6555c741@eucas1p1.samsung.com>
+ <20190920130218.32690-5-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190830091943.22646-4-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, c.barrett@framos.com, a.brela@framos.com
+In-Reply-To: <20190920130218.32690-5-s.nawrocki@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, ckeepax@opensource.cirrus.com, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 02:49:43PM +0530, Manivannan Sadhasivam wrote:
-> Add MAINTAINERS entry for Sony IMX290 CMOS image sensor driver.
+On Fri, Sep 20, 2019 at 03:02:13PM +0200, Sylwester Nawrocki wrote:
+> As an intermediate step before covering the clocking subsystem
+> of the CODEC entirely by the clk API add handling of external CODEC's
+> master clocks in DAPM events when the AIFn clocks are sourced directly
+> from MCLKn; when FLLn are used we enable/disable respective MCLKn
+> before/after FLLn is enabled/disabled.
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 > ---
->  MAINTAINERS | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f7c84004187d..0ee261fca602 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14962,6 +14962,14 @@ S:	Maintained
->  F:	drivers/media/i2c/imx274.c
->  F:	Documentation/devicetree/bindings/media/i2c/imx274.txt
->  
-> +SONY IMX290 SENSOR DRIVER
-> +M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +L:	linux-media@vger.kernel.org
-> +T:	git git://linuxtv.org/media_tree.git
-> +S:	Maintained
-> +F:	drivers/media/i2c/imx290.c
-> +F:	Documentation/devicetree/bindings/media/i2c/imx290.txt
-> +
->  SONY IMX319 SENSOR DRIVER
->  M:	Bingbu Cao <bingbu.cao@intel.com>
->  L:	linux-media@vger.kernel.org
+> Changes since v1:
+>  - addressed review comments from Charles
+> ---
+>  sound/soc/codecs/wm8994.c | 108 ++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 104 insertions(+), 4 deletions(-)
 
-Please squash this change to the first patch.
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
--- 
-Sakari Ailus
+Best regards,
+Krzysztof
