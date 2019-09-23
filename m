@@ -1,147 +1,91 @@
-From: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH v18 15/19] Documentation: kunit: add documentation for
- KUnit
-Date: Mon, 23 Sep 2019 08:47:53 -0700
-Message-ID: <d87eba35-ae09-0c53-bbbe-51ee9dc9531f@infradead.org>
-References: <20190923090249.127984-1-brendanhiggins@google.com>
- <20190923090249.127984-16-brendanhiggins@google.com>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: [PATCH 3/3] arm64: dts: mark lx2160a esdhc controllers dma
+ coherent
+Date: Mon, 23 Sep 2019 11:00:07 -0500
+Message-ID: <CADRPPNT-hKbO_8Y0PKg-FLsJ_GKE2nbZob6BGagpATMyYPdNsw@mail.gmail.com>
+References: <20190922102341.GO25745@shell.armlinux.org.uk>
+ <E1iBz55-0008Mj-CX@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20190923090249.127984-16-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jpoimboe-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, mcgrof-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tytso-3s7WtUTddSA@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org
-Cc: pmladek-IBi9RG/b67k@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amir73il-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alexander.Levin-0li6OtcxBFHby3iVrkZq2A@public.gmane.org, linux-kselftest-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, knut.omang-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, Felix Guo <felixguoxiuping-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, rientjes-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jdike-OPE4K8JWMJJBDgjK7y7TUQ@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim.Bird-7U/KSKJipcs@public.gmane.org, linux-um-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, kunit-dev-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, daniel-/w4YWyX8dFk@public.gmane.org, mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org, linux-fsdevel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <E1iBz55-0008Mj-CX@rmk-PC.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <rmk+kernel@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dann frazier <dann.frazier@canonical.com>, Will Deacon <will.deacon@arm.com>, Nicolin Chen <nicoleotsuka@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Y.b. Lu" <yangbo.lu@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/23/19 2:02 AM, Brendan Higgins wrote:
-> Add documentation for KUnit, the Linux kernel unit testing framework.
-> - Add intro and usage guide for KUnit
-> - Add API reference
-> 
-> Signed-off-by: Felix Guo <felixguoxiuping-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>
-> Reviewed-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> Reviewed-by: Logan Gunthorpe <logang-OTvnGxWRz7hWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Sun, Sep 22, 2019 at 2:26 PM Russell King <rmk+kernel@armlinux.org.uk> wrote:
+>
+> The LX2160A esdhc controllers are setup by the driver to be DMA
+> coherent, but without marking them as such in DT, Linux thinks they
+> are not.  This can lead to random sporadic DMA errors, even to the
+> extent of preventing boot, such as:
+>
+> mmc0: ADMA error
+> mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+> mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00002202
+> mmc0: sdhci: Blk size:  0x00000008 | Blk cnt:  0x00000001
+> mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
+> mmc0: sdhci: Present:   0x01f50008 | Host ctl: 0x00000038
+> mmc0: sdhci: Power:     0x00000003 | Blk gap:  0x00000000
+> mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x000040d8
+> mmc0: sdhci: Timeout:   0x00000003 | Int stat: 0x00000001
+> mmc0: sdhci: Int enab:  0x037f108f | Sig enab: 0x037f108b
+> mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00002202
+> mmc0: sdhci: Caps:      0x35fa0000 | Caps_1:   0x0000af00
+> mmc0: sdhci: Cmd:       0x0000333a | Max curr: 0x00000000
+> mmc0: sdhci: Resp[0]:   0x00000920 | Resp[1]:  0x001d8a33
+> mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x3f400e00
+> mmc0: sdhci: Host ctl2: 0x00000000
+> mmc0: sdhci: ADMA Err:  0x00000009 | ADMA Ptr: 0x000000236d43820c
+> mmc0: sdhci: ============================================
+> mmc0: error -5 whilst initialising SD card
+>
+> These are caused by the device's descriptor fetch hitting speculatively
+> loaded CPU cache lines that the CPU does not see through the normal,
+> non-cacheable DMA coherent mapping that it uses for non-coherent
+> devices.
+>
+> DT and the device must agree wrt whether the device is DMA coherent or
+> not.
+>
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+
+Acked-by: Li Yang <leoyang.li@nxp.com>
+
 > ---
->  Documentation/dev-tools/index.rst           |   1 +
->  Documentation/dev-tools/kunit/api/index.rst |  16 +
->  Documentation/dev-tools/kunit/api/test.rst  |  11 +
->  Documentation/dev-tools/kunit/faq.rst       |  62 +++
->  Documentation/dev-tools/kunit/index.rst     |  79 +++
->  Documentation/dev-tools/kunit/start.rst     | 180 ++++++
->  Documentation/dev-tools/kunit/usage.rst     | 576 ++++++++++++++++++++
->  7 files changed, 925 insertions(+)
->  create mode 100644 Documentation/dev-tools/kunit/api/index.rst
->  create mode 100644 Documentation/dev-tools/kunit/api/test.rst
->  create mode 100644 Documentation/dev-tools/kunit/faq.rst
->  create mode 100644 Documentation/dev-tools/kunit/index.rst
->  create mode 100644 Documentation/dev-tools/kunit/start.rst
->  create mode 100644 Documentation/dev-tools/kunit/usage.rst
-
-
-> diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
-> new file mode 100644
-> index 000000000000..6dc229e46bb3
-> --- /dev/null
-> +++ b/Documentation/dev-tools/kunit/start.rst
-> @@ -0,0 +1,180 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +===============
-> +Getting Started
-> +===============
-> +
-> +Installing dependencies
-> +=======================
-> +KUnit has the same dependencies as the Linux kernel. As long as you can build
-> +the kernel, you can run KUnit.
-> +
-> +KUnit Wrapper
-> +=============
-> +Included with KUnit is a simple Python wrapper that helps format the output to
-> +easily use and read KUnit output. It handles building and running the kernel, as
-> +well as formatting the output.
-> +
-> +The wrapper can be run with:
-> +
-> +.. code-block:: bash
-> +
-> +   ./tools/testing/kunit/kunit.py run
-> +
-> +Creating a kunitconfig
-> +======================
-> +The Python script is a thin wrapper around Kbuild as such, it needs to be
-
-                                       around Kbuild. As such,
-
-> +configured with a ``kunitconfig`` file. This file essentially contains the
-> +regular Kernel config, with the specific test targets as well.
-> +
-> +.. code-block:: bash
-> +
-> +	git clone -b master https://kunit.googlesource.com/kunitconfig $PATH_TO_KUNITCONFIG_REPO
-> +	cd $PATH_TO_LINUX_REPO
-> +	ln -s $PATH_TO_KUNIT_CONFIG_REPO/kunitconfig kunitconfig
-> +
-> +You may want to add kunitconfig to your local gitignore.
-> +
-> +Verifying KUnit Works
-> +---------------------
-> +
-> +To make sure that everything is set up correctly, simply invoke the Python
-> +wrapper from your kernel repo:
-> +
-> +.. code-block:: bash
-> +
-> +	./tools/testing/kunit/kunit.py
-> +
-> +.. note::
-> +   You may want to run ``make mrproper`` first.
-
-I normally use O=builddir when building kernels.
-Does this support using O=builddir ?
-
-> +
-> +If everything worked correctly, you should see the following:
-> +
-> +.. code-block:: bash
-> +
-> +	Generating .config ...
-> +	Building KUnit Kernel ...
-> +	Starting KUnit Kernel ...
-> +
-> +followed by a list of tests that are run. All of them should be passing.
-> +
-> +.. note::
-> +   Because it is building a lot of sources for the first time, the ``Building
-> +   kunit kernel`` step may take a while.
-> +
-> +Writing your first test
-> +=======================
-
-[snip]
-
-> diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-> new file mode 100644
-> index 000000000000..c6e69634e274
-> --- /dev/null
-> +++ b/Documentation/dev-tools/kunit/usage.rst
-
-TBD...
-
-
--- 
-~Randy
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> index 36b153e3da47..508af23edef0 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> @@ -593,6 +593,7 @@
+>                         reg = <0x0 0x2140000 0x0 0x10000>;
+>                         interrupts = <0 28 0x4>; /* Level high type */
+>                         clocks = <&clockgen 4 1>;
+> +                       dma-coherent;
+>                         voltage-ranges = <1800 1800 3300 3300>;
+>                         sdhci,auto-cmd12;
+>                         little-endian;
+> @@ -605,6 +606,7 @@
+>                         reg = <0x0 0x2150000 0x0 0x10000>;
+>                         interrupts = <0 63 0x4>; /* Level high type */
+>                         clocks = <&clockgen 4 1>;
+> +                       dma-coherent;
+>                         voltage-ranges = <1800 1800 3300 3300>;
+>                         sdhci,auto-cmd12;
+>                         broken-cd;
+> --
+> 2.7.4
+>
