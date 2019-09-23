@@ -1,106 +1,229 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v6 2/2] drm/bridge: Add NWL MIPI DSI host controller
- support
-Date: Mon, 23 Sep 2019 06:52:35 +0800
-Message-ID: <201909230644.qfSKbNf9%lkp@intel.com>
-References: <c0ac0b203fb65ae7efd1b9b54664b491ca2fb157.1569170717.git.agx@sigxcpu.org>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [RFC, v3, 4/4] media: platform: mtk-mdp3: Add Mediatek MDP3 driver
+Date: Mon, 23 Sep 2019 09:58:40 +0800
+Message-ID: <1569203920.25491.9.camel@mtksdaap41>
+References: <20190911094013.5892-1-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <c0ac0b203fb65ae7efd1b9b54664b491ca2fb157.1569170717.git.agx@sigxcpu.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Sam Ravnborg <sam@ravnborg.org>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, dri-devel@lists.freedesktop.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Lee Jones <lee.jones@linaro.org>, NXP Linux Team <linux-imx@nxp.com>, Robert Chiras <robert.chiras@nxp.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Jonas Karlman <jonas@kwiboo.se>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Jernej Skrabec <jernej.skrabec@siol.net>, linux-kernel@vger.kernel.org, kbuild-all@01.org, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190911094013.5892-1-bibby.hsieh@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com, hans.verkuil@cisco.com, Ping-Hsun Wu <ping-hsun.wu@mediatek.com>, frederic.chen@mediatek.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, daoyuan huang <daoyuan.huang@mediatek.com>, holmes.chiou@mediatek.com, sj.huang@mediatek.com, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, Sean.Cheng@mediatek.com, srv_heupstream@mediatek.com, tfiga@chromium.org, christie.yu@mediatek.com, zwisler@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgIkd1aWRvLAoKSSBsb3ZlIHlvdXIgcGF0Y2ghIFBlcmhhcHMgc29tZXRoaW5nIHRvIGltcHJv
-dmU6CgpbYXV0byBidWlsZCB0ZXN0IFdBUk5JTkcgb24gbGludXMvbWFzdGVyXQpbY2Fubm90IGFw
-cGx5IHRvIHY1LjMgbmV4dC0yMDE5MDkyMF0KW2lmIHlvdXIgcGF0Y2ggaXMgYXBwbGllZCB0byB0
-aGUgd3JvbmcgZ2l0IHRyZWUsIHBsZWFzZSBkcm9wIHVzIGEgbm90ZSB0byBoZWxwCmltcHJvdmUg
-dGhlIHN5c3RlbS4gQlRXLCB3ZSBhbHNvIHN1Z2dlc3QgdG8gdXNlICctLWJhc2UnIG9wdGlvbiB0
-byBzcGVjaWZ5IHRoZQpiYXNlIHRyZWUgaW4gZ2l0IGZvcm1hdC1wYXRjaCwgcGxlYXNlIHNlZSBo
-dHRwczovL3N0YWNrb3ZlcmZsb3cuY29tL2EvMzc0MDY5ODJdCgp1cmw6ICAgIGh0dHBzOi8vZ2l0
-aHViLmNvbS8wZGF5LWNpL2xpbnV4L2NvbW1pdHMvR3VpZG8tRy1udGhlci9kcm0tYnJpZGdlLUFk
-ZC1OV0wtTUlQSS1EU0ktaG9zdC1jb250cm9sbGVyLXN1cHBvcnQvMjAxOTA5MjMtMDA1MDEwCgpJ
-ZiB5b3UgZml4IHRoZSBpc3N1ZSwga2luZGx5IGFkZCBmb2xsb3dpbmcgdGFnClJlcG9ydGVkLWJ5
-OiBrYnVpbGQgdGVzdCByb2JvdCA8bGtwQGludGVsLmNvbT4KCnNtYXRjaCB3YXJuaW5nczoKZHJp
-dmVycy9ncHUvZHJtL2JyaWRnZS9ud2wtZHNpLmM6MjcyIG53bF9kc2lfY29uZmlnX2RwaSgpIHdh
-cm46IHVuc2lnbmVkICdjb2xvcl9mb3JtYXQnIGlzIG5ldmVyIGxlc3MgdGhhbiB6ZXJvLgoKdmlt
-ICsvY29sb3JfZm9ybWF0ICsyNzIgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9ud2wtZHNpLmMKCiAg
-IDI0NQkKICAgMjQ2CXN0YXRpYyBpbnQgbndsX2RzaV9jb25maWdfZHBpKHN0cnVjdCBud2xfZHNp
-ICpkc2kpCiAgIDI0Nwl7CiAgIDI0OAkJdTMyIGNvbG9yX2Zvcm1hdCwgbW9kZTsKICAgMjQ5CQli
-b29sIGJ1cnN0X21vZGU7CiAgIDI1MAkJaW50IGhmcm9udF9wb3JjaCwgaGJhY2tfcG9yY2gsIHZm
-cm9udF9wb3JjaCwgdmJhY2tfcG9yY2g7CiAgIDI1MQkJaW50IGhzeW5jX2xlbiwgdnN5bmNfbGVu
-OwogICAyNTIJCiAgIDI1MwkJaGZyb250X3BvcmNoID0gZHNpLT5tb2RlLmhzeW5jX3N0YXJ0IC0g
-ZHNpLT5tb2RlLmhkaXNwbGF5OwogICAyNTQJCWhzeW5jX2xlbiA9IGRzaS0+bW9kZS5oc3luY19l
-bmQgLSBkc2ktPm1vZGUuaHN5bmNfc3RhcnQ7CiAgIDI1NQkJaGJhY2tfcG9yY2ggPSBkc2ktPm1v
-ZGUuaHRvdGFsIC0gZHNpLT5tb2RlLmhzeW5jX2VuZDsKICAgMjU2CQogICAyNTcJCXZmcm9udF9w
-b3JjaCA9IGRzaS0+bW9kZS52c3luY19zdGFydCAtIGRzaS0+bW9kZS52ZGlzcGxheTsKICAgMjU4
-CQl2c3luY19sZW4gPSBkc2ktPm1vZGUudnN5bmNfZW5kIC0gZHNpLT5tb2RlLnZzeW5jX3N0YXJ0
-OwogICAyNTkJCXZiYWNrX3BvcmNoID0gZHNpLT5tb2RlLnZ0b3RhbCAtIGRzaS0+bW9kZS52c3lu
-Y19lbmQ7CiAgIDI2MAkKICAgMjYxCQlEUk1fREVWX0RFQlVHX0RSSVZFUihkc2ktPmRldiwgImhm
-cm9udF9wb3JjaCA9ICVkXG4iLCBoZnJvbnRfcG9yY2gpOwogICAyNjIJCURSTV9ERVZfREVCVUdf
-RFJJVkVSKGRzaS0+ZGV2LCAiaGJhY2tfcG9yY2ggPSAlZFxuIiwgaGJhY2tfcG9yY2gpOwogICAy
-NjMJCURSTV9ERVZfREVCVUdfRFJJVkVSKGRzaS0+ZGV2LCAiaHN5bmNfbGVuID0gJWRcbiIsIGhz
-eW5jX2xlbik7CiAgIDI2NAkJRFJNX0RFVl9ERUJVR19EUklWRVIoZHNpLT5kZXYsICJoZGlzcGxh
-eSA9ICVkXG4iLCBkc2ktPm1vZGUuaGRpc3BsYXkpOwogICAyNjUJCURSTV9ERVZfREVCVUdfRFJJ
-VkVSKGRzaS0+ZGV2LCAidmZyb250X3BvcmNoID0gJWRcbiIsIHZmcm9udF9wb3JjaCk7CiAgIDI2
-NgkJRFJNX0RFVl9ERUJVR19EUklWRVIoZHNpLT5kZXYsICJ2YmFja19wb3JjaCA9ICVkXG4iLCB2
-YmFja19wb3JjaCk7CiAgIDI2NwkJRFJNX0RFVl9ERUJVR19EUklWRVIoZHNpLT5kZXYsICJ2c3lu
-Y19sZW4gPSAlZFxuIiwgdnN5bmNfbGVuKTsKICAgMjY4CQlEUk1fREVWX0RFQlVHX0RSSVZFUihk
-c2ktPmRldiwgInZhY3RpdmUgPSAlZFxuIiwgZHNpLT5tb2RlLnZkaXNwbGF5KTsKICAgMjY5CQlE
-Uk1fREVWX0RFQlVHX0RSSVZFUihkc2ktPmRldiwgImNsb2NrID0gJWQga0h6XG4iLCBkc2ktPm1v
-ZGUuY2xvY2spOwogICAyNzAJCiAgIDI3MQkJY29sb3JfZm9ybWF0ID0gbndsX2RzaV9nZXRfZHBp
-X3BpeGVsX2Zvcm1hdChkc2ktPmZvcm1hdCk7CiA+IDI3MgkJaWYgKGNvbG9yX2Zvcm1hdCA8IDAp
-IHsKICAgMjczCQkJRFJNX0RFVl9FUlJPUihkc2ktPmRldiwgIkludmFsaWQgY29sb3IgZm9ybWF0
-IDB4JXhcbiIsCiAgIDI3NAkJCQkgICAgICBkc2ktPmZvcm1hdCk7CiAgIDI3NQkJCXJldHVybiBj
-b2xvcl9mb3JtYXQ7CiAgIDI3NgkJfQogICAyNzcJCURSTV9ERVZfREVCVUdfRFJJVkVSKGRzaS0+
-ZGV2LCAicGl4ZWwgZm10ID0gJWRcbiIsIGRzaS0+Zm9ybWF0KTsKICAgMjc4CQogICAyNzkJCW53
-bF9kc2lfd3JpdGUoZHNpLCBOV0xfRFNJX0lOVEVSRkFDRV9DT0xPUl9DT0RJTkcsIE5XTF9EU0lf
-RFBJXzI0X0JJVCk7CiAgIDI4MAkJbndsX2RzaV93cml0ZShkc2ksIE5XTF9EU0lfUElYRUxfRk9S
-TUFULCBjb2xvcl9mb3JtYXQpOwogICAyODEJCS8qCiAgIDI4MgkJICogQWRqdXN0aW5nIGlucHV0
-IHBvbGFyaXR5IGJhc2VkIG9uIHRoZSB2aWRlbyBtb2RlIHJlc3VsdHMgaW4KICAgMjgzCQkgKiBh
-IGJsYWNrIHNjcmVlbiBzbyBhbHdheXMgcGljayBhY3RpdmUgbG93OgogICAyODQJCSAqLwogICAy
-ODUJCW53bF9kc2lfd3JpdGUoZHNpLCBOV0xfRFNJX1ZTWU5DX1BPTEFSSVRZLAogICAyODYJCQkg
-ICAgICBOV0xfRFNJX1ZTWU5DX1BPTEFSSVRZX0FDVElWRV9MT1cpOwogICAyODcJCW53bF9kc2lf
-d3JpdGUoZHNpLCBOV0xfRFNJX0hTWU5DX1BPTEFSSVRZLAogICAyODgJCQkgICAgICBOV0xfRFNJ
-X0hTWU5DX1BPTEFSSVRZX0FDVElWRV9MT1cpOwogICAyODkJCiAgIDI5MAkJYnVyc3RfbW9kZSA9
-IChkc2ktPmRzaV9tb2RlX2ZsYWdzICYgTUlQSV9EU0lfTU9ERV9WSURFT19CVVJTVCkgJiYKICAg
-MjkxCQkJICAgICAhKGRzaS0+ZHNpX21vZGVfZmxhZ3MgJiBNSVBJX0RTSV9NT0RFX1ZJREVPX1NZ
-TkNfUFVMU0UpOwogICAyOTIJCiAgIDI5MwkJaWYgKGJ1cnN0X21vZGUpIHsKICAgMjk0CQkJbnds
-X2RzaV93cml0ZShkc2ksIE5XTF9EU0lfVklERU9fTU9ERSwgTldMX0RTSV9WTV9CVVJTVF9NT0RF
-KTsKICAgMjk1CQkJbndsX2RzaV93cml0ZShkc2ksIE5XTF9EU0lfUElYRUxfRklGT19TRU5EX0xF
-VkVMLCAyNTYpOwogICAyOTYJCX0gZWxzZSB7CiAgIDI5NwkJCW1vZGUgPSAoKGRzaS0+ZHNpX21v
-ZGVfZmxhZ3MgJiBNSVBJX0RTSV9NT0RFX1ZJREVPX1NZTkNfUFVMU0UpID8KICAgMjk4CQkJCQlO
-V0xfRFNJX1ZNX0JVUlNUX01PREVfV0lUSF9TWU5DX1BVTFNFUyA6CiAgIDI5OQkJCQkJTldMX0RT
-SV9WTV9OT05fQlVSU1RfTU9ERV9XSVRIX1NZTkNfRVZFTlRTKTsKICAgMzAwCQkJbndsX2RzaV93
-cml0ZShkc2ksIE5XTF9EU0lfVklERU9fTU9ERSwgbW9kZSk7CiAgIDMwMQkJCW53bF9kc2lfd3Jp
-dGUoZHNpLCBOV0xfRFNJX1BJWEVMX0ZJRk9fU0VORF9MRVZFTCwKICAgMzAyCQkJCSAgICAgIGRz
-aS0+bW9kZS5oZGlzcGxheSk7CiAgIDMwMwkJfQogICAzMDQJCiAgIDMwNQkJbndsX2RzaV93cml0
-ZShkc2ksIE5XTF9EU0lfSEZQLCBoZnJvbnRfcG9yY2gpOwogICAzMDYJCW53bF9kc2lfd3JpdGUo
-ZHNpLCBOV0xfRFNJX0hCUCwgaGJhY2tfcG9yY2gpOwogICAzMDcJCW53bF9kc2lfd3JpdGUoZHNp
-LCBOV0xfRFNJX0hTQSwgaHN5bmNfbGVuKTsKICAgMzA4CQogICAzMDkJCW53bF9kc2lfd3JpdGUo
-ZHNpLCBOV0xfRFNJX0VOQUJMRV9NVUxUX1BLVFMsIDB4MCk7CiAgIDMxMAkJbndsX2RzaV93cml0
-ZShkc2ksIE5XTF9EU0lfQkxMUF9NT0RFLCAweDEpOwogICAzMTEJCW53bF9kc2lfd3JpdGUoZHNp
-LCBOV0xfRFNJX1VTRV9OVUxMX1BLVF9CTExQLCAweDApOwogICAzMTIJCW53bF9kc2lfd3JpdGUo
-ZHNpLCBOV0xfRFNJX1ZDLCAweDApOwogICAzMTMJCiAgIDMxNAkJbndsX2RzaV93cml0ZShkc2ks
-IE5XTF9EU0lfUElYRUxfUEFZTE9BRF9TSVpFLCBkc2ktPm1vZGUuaGRpc3BsYXkpOwogICAzMTUJ
-CW53bF9kc2lfd3JpdGUoZHNpLCBOV0xfRFNJX1ZBQ1RJVkUsIGRzaS0+bW9kZS52ZGlzcGxheSAt
-IDEpOwogICAzMTYJCW53bF9kc2lfd3JpdGUoZHNpLCBOV0xfRFNJX1ZCUCwgdmJhY2tfcG9yY2gp
-OwogICAzMTcJCW53bF9kc2lfd3JpdGUoZHNpLCBOV0xfRFNJX1ZGUCwgdmZyb250X3BvcmNoKTsK
-ICAgMzE4CQogICAzMTkJCXJldHVybiAwOwogICAzMjAJfQogICAzMjEJCgotLS0KMC1EQVkga2Vy
-bmVsIHRlc3QgaW5mcmFzdHJ1Y3R1cmUgICAgICAgICAgICAgICAgT3BlbiBTb3VyY2UgVGVjaG5v
-bG9neSBDZW50ZXIKaHR0cHM6Ly9saXN0cy4wMS5vcmcvcGlwZXJtYWlsL2tidWlsZC1hbGwgICAg
-ICAgICAgICAgICAgICAgSW50ZWwgQ29ycG9yYXRpb24KX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVs
+Hi, Bibby:
+
+On Wed, 2019-09-11 at 17:40 +0800, Bibby Hsieh wrote:
+> From: daoyuan huang <daoyuan.huang@mediatek.com>
+> 
+> This patch adds driver for Media Data Path 3 (MDP3).
+> Each modules' related operation control is sited in mtk-mdp3-comp.c
+> Each modules' register table is defined in file with "mdp_reg_"
+> and "mmsys_" prefix
+> GCE related API, operation control  sited in mtk-mdp3-cmdq.c
+> V4L2 m2m device functions are implemented in mtk-mdp3-m2m.c
+> Probe, power, suspend/resume, system level functions are defined in
+> mtk-mdp3-core.c
+> 
+> Signed-off-by: Ping-Hsun Wu <ping-hsun.wu@mediatek.com>
+> Signed-off-by: daoyuan huang <daoyuan.huang@mediatek.com>
+> ---
+
+[snip]
+
+> +
+> diff --git a/drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.c b/drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.c
+> new file mode 100644
+> index 000000000000..bd8f274fcaa9
+> --- /dev/null
+> +++ b/drivers/media/platform/mtk-mdp3/mtk-mdp3-cmdq.c
+> @@ -0,0 +1,504 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018 MediaTek Inc.
+> + * Author: Ping-Hsun Wu <ping-hsun.wu@mediatek.com>
+> + */
+> +
+> +#include <linux/platform_device.h>
+> +#include "mtk-mdp3-cmdq.h"
+> +#include "mtk-mdp3-comp.h"
+> +#include "mtk-mdp3-core.h"
+> +#include "mtk-mdp3-m2m.h"
+> +
+> +#include "mdp-platform.h"
+> +#include "mmsys_mutex.h"
+> +
+> +#define DISP_MUTEX_MDP_FIRST	(5)
+> +#define DISP_MUTEX_MDP_COUNT	(5)
+> +
+> +#define MDP_PATH_MAX_COMPS	IMG_MAX_COMPONENTS
+> +
+> +struct mdp_path {
+> +	struct mdp_dev		*mdp_dev;
+> +	struct mdp_comp_ctx	comps[MDP_PATH_MAX_COMPS];
+> +	u32			num_comps;
+> +	const struct img_config	*config;
+> +	const struct img_ipi_frameparam *param;
+> +	const struct v4l2_rect	*composes[IMG_MAX_HW_OUTPUTS];
+> +	struct v4l2_rect	bounds[IMG_MAX_HW_OUTPUTS];
+> +};
+> +
+> +#define has_op(ctx, op) \
+> +	(ctx->comp->ops && ctx->comp->ops->op)
+> +#define call_op(ctx, op, ...) \
+> +	(has_op(ctx, op) ? ctx->comp->ops->op(ctx, ##__VA_ARGS__) : 0)
+> +
+> +struct mdp_path_subfrm {
+> +	s32	mutex_id;
+> +	u32	mutex_mod;
+> +	s32	sofs[MDP_PATH_MAX_COMPS];
+> +	u32	num_sofs;
+> +};
+> +
+> +static bool is_output_disable(const struct img_compparam *param, u32 count)
+> +{
+> +	return (count < param->num_subfrms) ?
+> +		(param->frame.output_disable ||
+> +		param->subfrms[count].tile_disable) :
+> +		true;
+> +}
+> +
+> +static int mdp_path_subfrm_require(struct mdp_path_subfrm *subfrm,
+> +				   const struct mdp_path *path,
+> +				   struct mdp_cmd *cmd, u32 count)
+> +{
+> +	const struct img_config *config = path->config;
+> +	const struct mdp_comp_ctx *ctx;
+> +	phys_addr_t mm_mutex = path->mdp_dev->mm_mutex.reg_base;
+> +	s32 mutex_id = -1;
+> +	u32 mutex_sof = 0;
+> +	int mdp_color = 0;
+> +	int index;
+> +	u8 subsys_id = path->mdp_dev->mm_mutex.subsys_id;
+> +
+> +	/* Default value */
+> +	memset(subfrm, 0, sizeof(*subfrm));
+> +
+> +	for (index = 0; index < config->num_components; index++) {
+> +		ctx = &path->comps[index];
+> +		if (is_output_disable(ctx->param, count))
+> +			continue;
+> +		switch (ctx->comp->id) {
+> +		/**********************************************
+> +		 * Name            MSB LSB
+> +		 * DISP_MUTEX_MOD   23   0
+> +		 *
+> +		 * Specifies which modules are in this mutex.
+> +		 * Every bit denotes a module. Bit definition:
+> +		 *  2 mdp_rdma0
+> +		 *  4 mdp_rsz0
+> +		 *  5 mdp_rsz1
+> +		 *  6 mdp_tdshp
+> +		 *  7 mdp_wrot0
+> +		 *  8 mdp_wdma
+> +		 *  13 mdp_color
+> +		 *  23 mdp_aal
+> +		 *  24 mdp_ccorr
+> +		 **********************************************/
+> +		case MDP_AAL0:
+> +			subfrm->mutex_mod |= 1 << 23;
+> +			break;
+> +		case MDP_CCORR0:
+> +			subfrm->mutex_mod |= 1 << 24;
+> +			break;
+> +		case MDP_COLOR0:
+> +			if (mdp_color)
+> +				subfrm->mutex_mod |= 1 << 13;
+> +			break;
+> +		case MDP_WDMA:
+> +			subfrm->mutex_mod |= 1 << 8;
+> +			subfrm->sofs[subfrm->num_sofs++] = MDP_WDMA;
+> +			break;
+> +		case MDP_WROT0:
+> +			subfrm->mutex_mod |= 1 << 7;
+> +			subfrm->sofs[subfrm->num_sofs++] = MDP_WROT0;
+> +			break;
+> +		case MDP_TDSHP0:
+> +			subfrm->mutex_mod |= 1 << 6;
+> +			subfrm->sofs[subfrm->num_sofs++] = MDP_TDSHP0;
+> +			break;
+> +		case MDP_SCL1:
+> +			subfrm->mutex_mod |= 1 << 5;
+> +			subfrm->sofs[subfrm->num_sofs++] = MDP_SCL1;
+> +			break;
+> +		case MDP_SCL0:
+> +			subfrm->mutex_mod |= 1 << 4;
+> +			subfrm->sofs[subfrm->num_sofs++] = MDP_SCL0;
+> +			break;
+> +		case MDP_RDMA0:
+> +			mutex_id = DISP_MUTEX_MDP_FIRST + 1;
+> +			subfrm->mutex_mod |= 1 << 2;
+> +			subfrm->sofs[subfrm->num_sofs++] = MDP_RDMA0;
+> +			break;
+> +		case MDP_IMGI:
+> +			mutex_id = DISP_MUTEX_MDP_FIRST;
+> +			break;
+> +		case MDP_WPEI:
+> +			mutex_id = DISP_MUTEX_MDP_FIRST + 3;
+> +			break;
+> +		case MDP_WPEI2:
+> +			mutex_id = DISP_MUTEX_MDP_FIRST + 4;
+> +			break;
+> +		default:
+> +			break;
+> +		}
+> +	}
+> +
+> +	subfrm->mutex_id = mutex_id;
+> +	if (-1 == mutex_id) {
+> +		mdp_err("No mutex assigned");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (subfrm->mutex_mod) {
+> +		/* Set mutex modules */
+> +		MM_REG_WRITE(cmd, subsys_id, mm_mutex, MM_MUTEX_MOD,
+> +			     subfrm->mutex_mod, 0x07FFFFFF);
+> +		MM_REG_WRITE(cmd, subsys_id, mm_mutex, MM_MUTEX_SOF,
+> +			     mutex_sof, 0x00000007);
+> +	}
+
+In [1], mdp3 device has a pointer to mutex device, and you directly
+write mutex register in mdp3 driver.
+
+		mdp_rdma0: mdp_rdma0@14001000 {
+			compatible = "mediatek,mt8183-mdp-rdma",
+				     "mediatek,mt8183-mdp3";
+
+			mediatek,mm-mutex = <&mutex>;
+		};
+
+
+ 		mutex: mutex@14016000 {
+ 			compatible = "mediatek,mt8183-disp-mutex";
+ 			reg = <0 0x14016000 0 0x1000>;
+ 		};
+
+But mutex already has its own driver in mediatek drm driver [2]. This is
+not a good design. I would like all mutex device register is controlled
+in single driver. 
+
+[1] https://patchwork.kernel.org/patch/11140747/
+[2]
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/gpu/drm/mediatek/mtk_drm_ddp.c?h=v5.3#n429
+
+Regards,
+CK
+
+> +	return 0;
+> +}
