@@ -1,152 +1,225 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v18 15/19] Documentation: kunit: add documentation for
- KUnit
-Date: Mon, 23 Sep 2019 12:49:54 -0700
-Message-ID: <d7a61045-8fe6-a104-ece9-67b69c379425@infradead.org>
-References: <20190923090249.127984-1-brendanhiggins@google.com>
- <20190923090249.127984-16-brendanhiggins@google.com>
- <d87eba35-ae09-0c53-bbbe-51ee9dc9531f@infradead.org>
- <CAFd5g45y-NWzbn8E8hUg=n4U5E+N6_4D8eCXhQ74Y0N4zqVW=w@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: at24: convert the binding document to yaml
+Date: Mon, 23 Sep 2019 15:38:35 -0500
+Message-ID: <CAL_JsqJ7w0rvzMLePgz-g+HERhuEJ3F9uDpKcwE241FpumZxfA@mail.gmail.com>
+References: <20190923175211.2060-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFd5g45y-NWzbn8E8hUg=n4U5E+N6_4D8eCXhQ74Y0N4zqVW=w@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190923175211.2060-1-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, shuah <shuah@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:K
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9/23/19 11:06 AM, Brendan Higgins wrote:
-> On Mon, Sep 23, 2019 at 8:48 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> On 9/23/19 2:02 AM, Brendan Higgins wrote:
->>> Add documentation for KUnit, the Linux kernel unit testing framework.
->>> - Add intro and usage guide for KUnit
->>> - Add API reference
->>>
->>> Signed-off-by: Felix Guo <felixguoxiuping@gmail.com>
->>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->>> Cc: Jonathan Corbet <corbet@lwn.net>
->>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
->>> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->>> ---
->>>  Documentation/dev-tools/index.rst           |   1 +
->>>  Documentation/dev-tools/kunit/api/index.rst |  16 +
->>>  Documentation/dev-tools/kunit/api/test.rst  |  11 +
->>>  Documentation/dev-tools/kunit/faq.rst       |  62 +++
->>>  Documentation/dev-tools/kunit/index.rst     |  79 +++
->>>  Documentation/dev-tools/kunit/start.rst     | 180 ++++++
->>>  Documentation/dev-tools/kunit/usage.rst     | 576 ++++++++++++++++++++
->>>  7 files changed, 925 insertions(+)
->>>  create mode 100644 Documentation/dev-tools/kunit/api/index.rst
->>>  create mode 100644 Documentation/dev-tools/kunit/api/test.rst
->>>  create mode 100644 Documentation/dev-tools/kunit/faq.rst
->>>  create mode 100644 Documentation/dev-tools/kunit/index.rst
->>>  create mode 100644 Documentation/dev-tools/kunit/start.rst
->>>  create mode 100644 Documentation/dev-tools/kunit/usage.rst
->>
->>
->>> diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
->>> new file mode 100644
->>> index 000000000000..6dc229e46bb3
->>> --- /dev/null
->>> +++ b/Documentation/dev-tools/kunit/start.rst
->>> @@ -0,0 +1,180 @@
->>> +.. SPDX-License-Identifier: GPL-2.0
->>> +
->>> +===============
->>> +Getting Started
->>> +===============
->>> +
->>> +Installing dependencies
->>> +=======================
->>> +KUnit has the same dependencies as the Linux kernel. As long as you can build
->>> +the kernel, you can run KUnit.
->>> +
->>> +KUnit Wrapper
->>> +=============
->>> +Included with KUnit is a simple Python wrapper that helps format the output to
->>> +easily use and read KUnit output. It handles building and running the kernel, as
->>> +well as formatting the output.
->>> +
->>> +The wrapper can be run with:
->>> +
->>> +.. code-block:: bash
->>> +
->>> +   ./tools/testing/kunit/kunit.py run
->>> +
->>> +Creating a kunitconfig
->>> +======================
->>> +The Python script is a thin wrapper around Kbuild as such, it needs to be
->>
->>                                        around Kbuild. As such,
-> 
-> Thanks for pointing this out.
-> 
->>
->>> +configured with a ``kunitconfig`` file. This file essentially contains the
->>> +regular Kernel config, with the specific test targets as well.
->>> +
->>> +.. code-block:: bash
->>> +
->>> +     git clone -b master https://kunit.googlesource.com/kunitconfig $PATH_TO_KUNITCONFIG_REPO
->>> +     cd $PATH_TO_LINUX_REPO
->>> +     ln -s $PATH_TO_KUNIT_CONFIG_REPO/kunitconfig kunitconfig
->>> +
->>> +You may want to add kunitconfig to your local gitignore.
->>> +
->>> +Verifying KUnit Works
->>> +---------------------
->>> +
->>> +To make sure that everything is set up correctly, simply invoke the Python
->>> +wrapper from your kernel repo:
->>> +
->>> +.. code-block:: bash
->>> +
->>> +     ./tools/testing/kunit/kunit.py
->>> +
->>> +.. note::
->>> +   You may want to run ``make mrproper`` first.
->>
->> I normally use O=builddir when building kernels.
->> Does this support using O=builddir ?
-> 
-> Yep, it supports specifying a separate build directory.
-> 
->>> +
->>> +If everything worked correctly, you should see the following:
->>> +
->>> +.. code-block:: bash
->>> +
->>> +     Generating .config ...
->>> +     Building KUnit Kernel ...
->>> +     Starting KUnit Kernel ...
->>> +
->>> +followed by a list of tests that are run. All of them should be passing.
->>> +
->>> +.. note::
->>> +   Because it is building a lot of sources for the first time, the ``Building
->>> +   kunit kernel`` step may take a while.
->>> +
->>> +Writing your first test
->>> +=======================
->>
->> [snip]
->>
->>> diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
->>> new file mode 100644
->>> index 000000000000..c6e69634e274
->>> --- /dev/null
->>> +++ b/Documentation/dev-tools/kunit/usage.rst
->>
->> TBD...
-> 
-> What did you mean by this comment?
+On Mon, Sep 23, 2019 at 12:52 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Convert the binding document for at24 EEPROMs from txt to yaml. The
+> compatible property uses a regex pattern to address all the possible
+> combinations of "vendor,model" strings.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  .../devicetree/bindings/eeprom/at24.txt       |  90 +--------------
+>  .../devicetree/bindings/eeprom/at24.yaml      | 107 ++++++++++++++++++
+>  MAINTAINERS                                   |   2 +-
+>  3 files changed, 109 insertions(+), 90 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/eeprom/at24.yaml
 
-I plan to review usage.rst soon... (To Be Done :)
+[...]
 
--- 
-~Randy
+> diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
+> new file mode 100644
+> index 000000000000..28c8b068c8a1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
+> @@ -0,0 +1,107 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright 2019 BayLibre SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/eeprom/at24.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: I2C EEPROMs compatible with Atmel's AT24
+> +
+> +maintainers:
+> +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> +
+> +properties:
+> +  compatible:
+
+Did you run this thru 'make dt_bindings_check' and is dt-schema up to
+date? I don't think it will pass and if it does I want to fix that.
+
+> +    additionalItems: true
+
+We pretty much never allow this.
+
+> +    maxItems: 2
+
+This applies to arrays...
+
+> +    pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24(c|cs|mac)[0-9]+$"
+
+And this to strings which is non-sense. What you want is something like this:
+
+minItems: 1
+maxItems: 2
+items:
+  - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24(c|cs|mac)[0-9]+$"
+  - pattern: "^atmel,24(c|cs|mac)[0-9]+$"
+
+This would allow 'atmel' twice, but entries have to be unique already.
+It doesn't enforce the part numbers matching though. For that, you'd
+need either a bunch of these under a oneOf instead:
+
+items:
+  - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),24c00$"
+  - const: atmel,24c00
+
+Or just add this to the above with an 'allOf':
+
+items:
+  pattern: "(c00|c01|mac402|...)$"
+
+Note the lack of '-' under items. That means the schema applies to all entries.
+
+> +    oneOf:
+> +      - const: nxp,se97b
+> +      - const: renesas,r1ex24002
+> +      - const: renesas,r1ex24016
+> +      - const: renesas,r1ex24128
+> +      - const: rohm,br24t01
+
+For this part, you probably want:
+
+oneOf:
+  - items:
+      - const: nxp,se97b
+      - const: atmel,24c02
+  - items:
+      ...
+
+And for the spd cases...
+
+> +    contains:
+> +      enum:
+
+allOf:
+  - oneOf:
+      # all the above stuff
+  - contains:
+      enum:
+
+> +        - atmel,24c00
+> +        - atmel,24c01
+> +        - atmel,24cs01
+> +        - atmel,24c02
+> +        - atmel,24cs02
+> +        - atmel,24mac402
+> +        - atmel,24mac602
+> +        - atmel,spd
+> +        - atmel,24c04
+> +        - atmel,24cs04
+> +        - atmel,24c08
+> +        - atmel,24cs08
+> +        - atmel,24c16
+> +        - atmel,24cs16
+> +        - atmel,24c32
+> +        - atmel,24cs32
+> +        - atmel,24c64
+> +        - atmel,24cs64
+> +        - atmel,24c128
+> +        - atmel,24c256
+> +        - atmel,24c512
+> +        - atmel,24c1024
+> +        - atmel,24c2048
+> +
+> +  reg:
+> +    description:
+> +      The I2C slave address of the EEPROM.
+> +    maxItems: 1
+> +
+> +  pagesize:
+> +    description:
+> +      The length of the pagesize for writing. Please consult the
+> +      manual of your device, that value varies a lot. A wrong value
+> +      may result in data loss! If not specified, a safety value of
+> +      '1' is used which will be very slow.
+> +    type: integer
+
+Other than boolean, you need to reference a type in types.yaml.
+
+Does it really vary too much to list out possible values?
+
+> +
+> +  read-only:
+> +    description:
+> +      This parameterless property disables writes to the eeprom.
+> +    type: boolean
+> +
+> +  size:
+> +    description:
+> +      Total eeprom size in bytes.
+> +    type: integer
+> +
+> +  no-read-rollover:
+> +    description:
+> +      This parameterless property indicates that the multi-address
+> +      eeprom does not automatically roll over reads to the next slave
+> +      address. Please consult the manual of your device.
+> +    type: boolean
+> +
+> +  wp-gpios:
+> +    description:
+> +      GPIO to which the write-protect pin of the chip is connected.
+> +    maxItems: 1
+> +
+> +  address-width:
+> +    description:
+> +      Number of address bits (one of 8, 16).
+
+Sounds like a constraint...
+
+> +    type: integer
+> +
+> +  num-addresses:
+> +    description:
+> +      Total number of i2c slave addresses this device takes.
+
+2^32 addresses okay?
+
+> +    type: integer
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    eeprom@52 {
+> +        compatible = "microchip,24c32", "atmel,24c32";
+> +        reg = <0x52>;
+> +        pagesize = <32>;
+> +        wp-gpios = <&gpio1 3 0>;
+> +        num-addresses = <8>;
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a400af0501c9..3c7ced686966 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2698,7 +2698,7 @@ M:        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>  L:     linux-i2c@vger.kernel.org
+>  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+>  S:     Maintained
+> -F:     Documentation/devicetree/bindings/eeprom/at24.txt
+> +F:     Documentation/devicetree/bindings/eeprom/at24.yaml
+>  F:     drivers/misc/eeprom/at24.c
+>
+>  ATA OVER ETHERNET (AOE) DRIVER
+> --
+> 2.23.0
+>
