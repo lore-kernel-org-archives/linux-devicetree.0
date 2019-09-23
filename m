@@ -1,56 +1,37 @@
-From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: regulator: add regulator-fixed-clock
- binding
-Date: Mon, 23 Sep 2019 06:58:27 +0000
-Message-ID: <8301e3026d583d8d05eb1e73535b9a733b9b25fd.camel@toradex.com>
-References: <20190910062103.39641-1-philippe.schenker@toradex.com>
-         <20190910062103.39641-4-philippe.schenker@toradex.com>
-         <CAL_JsqLyawEariYuaHJ+Lyt1DhJe9fdAE88ANrhHAokWJhUOdw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [RFT v3 4/8] ARM: dts: exynos: Remove MCT subnode for interrupt
+ map on Exynos4210
+Date: Mon, 23 Sep 2019 09:13:17 +0200
+Message-ID: <20190923071317.GA4246@pi3>
+References: <20190921170152.5033-1-krzk@kernel.org>
+ <CGME20190921203810epcas3p39f3d9e3224d2c5ef61c1e18df2ab403d@epcas3p3.samsung.com>
+ <20190921170152.5033-4-krzk@kernel.org>
+ <c1d02aa3-b5f2-1c5b-0b7b-8749e7c0ce9a@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLyawEariYuaHJ+Lyt1DhJe9fdAE88ANrhHAokWJhUOdw@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <CE5D67FBDC8FD04E80074638E0D29A0E@eurprd05.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <c1d02aa3-b5f2-1c5b-0b7b-8749e7c0ce9a@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: Max Krummenacher <max.krummenacher@toradex.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Luka Pivk <luka.pivk@toradex.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "broonie@kernel.org" <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Stefan Agner <stefan.agner@toradex.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Sylwester Nawrocki <snawrocki@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA5LTE3IGF0IDE1OjEzIC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gVHVlLCBTZXAgMTAsIDIwMTkgYXQgMToyMSBBTSBQaGlsaXBwZSBTY2hlbmtlcg0KPiA8cGhp
-bGlwcGUuc2NoZW5rZXJAdG9yYWRleC5jb20+IHdyb3RlOg0KPiA+IFRoaXMgYWRkcyB0aGUgZG9j
-dW1lbnRhdGlvbiB0byB0aGUgY29tcGF0aWJsZSByZWd1bGF0b3ItZml4ZWQtY2xvY2suDQo+ID4g
-VGhpcyBiaW5kaW5nIGlzIGEgc3BlY2lhbCBiaW5kaW5nIG9mIHJlZ3VsYXRvci1maXhlZCBhbmQg
-YWRkcyB0aGUNCj4gPiBhYmlsaXR5IHRvIGFkZCBhIGNsb2NrIHRvIHJlZ3VsYXRvci1maXhlZCwg
-c28gdGhlIHJlZ3VsYXRvciBjYW4gYmUNCj4gPiBlbmFibGVkIGFuZCBkaXNhYmxlZCB3aXRoIHRo
-YXQgY2xvY2suIElmIHRoZSBzcGVjaWFsIGNvbXBhdGlibGUNCj4gPiByZWd1bGF0b3ItZml4ZWQt
-Y2xvY2sgaXMgdXNlZCBpdCBpcyBtYW5kYXRvcnkgdG8gc3VwcGx5IGEgY2xvY2suDQo+ID4gDQo+
-ID4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgU2NoZW5rZXIgPHBoaWxpcHBlLnNjaGVua2VyQHRv
-cmFkZXguY29tPg0KPiA+IA0KPiA+IC0tLQ0KPiA+IA0KPiA+IENoYW5nZXMgaW4gdjI6DQo+ID4g
-LSBDaGFuZ2Ugc2VsZWN0OiB0byBpZjoNCj4gPiAtIENoYW5nZSBpdGVtczogdG8gZW51bToNCj4g
-PiAtIERlZmluZWQgaG93IG1hbnkgY2xvY2tzIHNob3VsZCBiZSBnaXZlbg0KPiA+IA0KPiA+ICAu
-Li4vYmluZGluZ3MvcmVndWxhdG9yL2ZpeGVkLXJlZ3VsYXRvci55YW1sICAgfCAxOQ0KPiA+ICsr
-KysrKysrKysrKysrKysrKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKyks
-IDEgZGVsZXRpb24oLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9maXhlZC0NCj4gPiByZWd1bGF0b3IueWFtbCBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvZml4ZWQtDQo+ID4gcmVn
-dWxhdG9yLnlhbWwNCj4gPiBpbmRleCBhNjUwYjQ1NzA4NWQuLmE3ODE1MGM0N2FhMiAxMDA2NDQN
-Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL2Zp
-eGVkLQ0KPiA+IHJlZ3VsYXRvci55YW1sDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9maXhlZC0NCj4gPiByZWd1bGF0b3IueWFtbA0KPiA+IEBA
-IC0xOSw5ICsxOSwxOSBAQCBkZXNjcmlwdGlvbjoNCj4gPiAgYWxsT2Y6DQo+ID4gICAgLSAkcmVm
-OiAicmVndWxhdG9yLnlhbWwjIg0KPiA+IA0KPiA+ICtpZjoNCj4gPiArICBwcm9wZXJ0aWVzOg0K
-PiA+ICsgICAgY29tcGF0aWJsZToNCj4gPiArICAgICAgY29udGFpbnM6DQo+ID4gKyAgICAgICAg
-Y29uc3Q6IHJlZ3VsYXRvci1maXhlZC1jbG9jaw0KPiA+ICsgIHJlcXVpcmVkOg0KPiA+ICsgICAg
-LSBjbG9ja3MNCj4gPiArDQo+ID4gIHByb3BlcnRpZXM6DQo+ID4gICAgY29tcGF0aWJsZToNCj4g
-PiAtICAgIGNvbnN0OiByZWd1bGF0b3ItZml4ZWQNCj4gPiArICAgIGVudW06DQo+ID4gKyAgICAg
-IC0gY29uc3Q6IHJlZ3VsYXRvci1maXhlZA0KPiA+ICsgICAgICAtIGNvbnN0OiByZWd1bGF0b3It
-Zml4ZWQtY2xvY2sNCj4gDQo+ICdtYWtlIGR0X2JpbmRpbmdfY2hlY2snIGlzIGZhaWxpbmcuIFlv
-dSBuZWVkIHRvIGRyb3AgJ2NvbnN0OiAnLiBQbGVhc2UNCj4gc2VuZCBhIHBhdGNoIHRvIGZpeCB0
-aGlzLg0KPiANCj4gUm9iDQoNCkhpIFJvYiwgDQoNClRoYW5rcyBmb3IgcG9pbnRpbmcgdGhpcyBv
-dXQsIEkgd2Fzbid0IGF3YXJlIG9mIHRoYXQgYW5kIG9mICdtYWtlDQpkdF9iaW5kaW5nX2NoZWNr
-Jy4gSSB3YXMgc2VhcmNoaW5nIGZvciBpdCwgYnV0IG5vdCBmaW5kaW5nIHRoYXQgb25lLA0KdGhh
-bmtzIGZvciBtZW50aW9uaW5nIGl0LiBJIHdpbGwgaW1tZWRpYXRlbHkgcGF0Y2ggdGhhdCBhbmQg
-c2VuZCBpdA0KcmlnaHQgYXdheS4NCg0KUGhpbGlwcGUNCg==
+On Mon, Sep 23, 2019 at 08:56:46AM +0200, Marek Szyprowski wrote:
+> Hi Krzysztof,
+> 
+> On 21.09.2019 19:01, Krzysztof Kozlowski wrote:
+> > Multi Core Timer node has interrupts routed to two different parents -
+> > GIC and combiner.  This was modeled with a interrupt-map within a
+> > subnode but can be expressed in an easier and more common way, directly
+> > in the node itself.
+> 
+> Maybe we should simply use 'interrupts-extended' based approach and 
+> simplify mct node even more (get rid of interrupt-parent, interrupts, 
+> size/address cells)?
+
+Indeed, that looks like the tool for this job. Thanks for hint, I'll try
+it.
+
+Best regards,
+Krzysztof
