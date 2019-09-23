@@ -1,85 +1,137 @@
-From: Steven Price <steven.price@arm.com>
-Subject: Re: [PATCH] arm64: dts: mt8183: Add node for the Mali GPU
-Date: Mon, 23 Sep 2019 15:33:25 +0100
-Message-ID: <3dfa9e3c-9a78-90d1-68c9-7b64a3d734e4@arm.com>
-References: <20190905081546.42716-1-drinkcat@chromium.org>
- <CAL_JsqJCO2G90TTT9Mpy4kjVKQyXWw4aXEEnbRp_SE8X=EGc5g@mail.gmail.com>
- <CANMq1KCTPdFhJG1SLf-i+-557Yx-1WLzWCHu3tT_5Q2BF+JgdQ@mail.gmail.com>
- <20190913181729.GB3115@kevin>
- <CANMq1KD++==d0Mb6T2gKU1T7c_MaedswOYdxqEqEKKUL1bxgiw@mail.gmail.com>
- <20190919123243.GA3457@kevin>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 5/5] irqchip/irq-bcm7038-l1: Support brcm,int-fwd-mask
+Date: Mon, 23 Sep 2019 07:39:36 -0700
+Message-ID: <8b0f18ef-7b72-e6fd-9930-0f698ced270b@gmail.com>
+References: <20190913191542.9908-1-f.fainelli@gmail.com>
+ <20190913191542.9908-6-f.fainelli@gmail.com> <20190922133805.2cdf2d99@why>
+ <260e61b8-a083-743e-43fc-70b9ea644e0e@gmail.com>
+ <fbc07e1e-8c72-8728-2acb-647db533e31b@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190919123243.GA3457@kevin>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>, Nicolas Boichat <drinkcat@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dominik Behr <dbehr@chromium.org>, Douglas Anderson <dianders@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Boris Brezillon <boris.brezillon@collabora.com>, Matthias Brugger <matthias.bgg@gmail.com>, Nick Fan <nick.fan@mediatek.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <fbc07e1e-8c72-8728-2acb-647db533e31b@kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <maz@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/09/2019 13:32, Alyssa Rosenzweig wrote:
->>> By the time MT8183 shows up in more concrete devices, it will, certainly
->>> in kernel-space and likely in userspace as well. At present, the DDK can
->>> be modified to run on top of the in-tree Mali drivers, i.e. "Bifrost on
->>> mainline linux-next (+ page table/compatible patches), with blob
->>> userspace".
 
-Actually most(?) Bifrost GPUs support the "legacy" 'LPAE-ish' page table
-format. So the only kernel change *required* is adding the compatible
-string (and any SoC-specific quirks).
 
-The support for "blob-on-Panfrost" is currently an experimental internal
-investigation. So I can't make any promises about it ever being released
-publicly.
-
->>> While the open userspace isn't ready here quite yet, I would definitely
->>> encourage upstream kernel for ChromeOS, since then there's no need to
->>> maintain the out-of-tree GPU driver.
+On 9/23/2019 1:52 AM, Marc Zyngier wrote:
+> On 22/09/2019 20:08, Florian Fainelli wrote:
 >>
->> That's an interesting idea, I had no idea, thanks for the info!
 >>
->> Would that work with midgard as well? We have released hardware with
->> RK3288/3399, so it might be nice to experiment with these first.
-> 
-> Yes, the above would work with Midgard as well with no changes needed.
-> Ping Steven about thtat (CC'd).
-
-Indeed since it's the same kernel driver the same compatibility layer
-can be used to run Midgard DDK blob on Panfrost. Although given the
-progress that has already occurred with the Mesa Panfrost user space you
-might be able to simply switch to a completely open stack (available now).
-
-Again I'm afraid I'm not in a position to give any guarantees that my
-prototype blob-on-Panfrost work will actually be released or timescales
-of when. However since the current focus internally is on newer GPUs I'm
-less confident that there will be interest for Midgard DDK on Panfrost.
-
-Steve
-
->>> More immediately, per Rob's review, it's important that the bindings
->>> accepted upstream work with the in-tree Bifrost driver. Conceptually,
->>> once Mesa supports Bifrost, if I install Debian on a MT8183 board,
->>> everything should just work. I shouldn't need MT-specific changes / need
->>> to change names for the DT. Regardless of which kernel driver you end up
->>> using, minimally sharing the DT is good for everyone :-)
+>> On 9/22/2019 5:38 AM, Marc Zyngier wrote:
+>>> On Fri, 13 Sep 2019 12:15:42 -0700
+>>> Florian Fainelli <f.fainelli@gmail.com> wrote:
+>>>
+>>>> On some specific chips like 7211 we need to leave some interrupts
+>>>> untouched/forwarded to the VPU which is another agent in the system
+>>>> making use of that interrupt controller hardware (goes to both ARM GIC
+>>>> and VPU L1 interrupt controller). Make that possible by using the
+>>>> existing brcm,int-fwd-mask property.
+>>>>
+>>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>>>> ---
+>>>>  drivers/irqchip/irq-bcm7038-l1.c | 15 +++++++++++++--
+>>>>  1 file changed, 13 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
+>>>> index 0673a44bbdc2..811a34201dd4 100644
+>>>> --- a/drivers/irqchip/irq-bcm7038-l1.c
+>>>> +++ b/drivers/irqchip/irq-bcm7038-l1.c
+>>>> @@ -44,6 +44,7 @@ struct bcm7038_l1_chip {
+>>>>  	struct list_head	list;
+>>>>  	u32			wake_mask[MAX_WORDS];
+>>>>  #endif
+>>>> +	u32			irq_fwd_mask[MAX_WORDS];
+>>>>  	u8			affinity[MAX_WORDS * IRQS_PER_WORD];
+>>>>  };
+>>>>  
+>>>> @@ -265,6 +266,7 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+>>>>  	resource_size_t sz;
+>>>>  	struct bcm7038_l1_cpu *cpu;
+>>>>  	unsigned int i, n_words, parent_irq;
+>>>> +	int ret;
+>>>>  
+>>>>  	if (of_address_to_resource(dn, idx, &res))
+>>>>  		return -EINVAL;
+>>>> @@ -278,6 +280,14 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+>>>>  	else if (intc->n_words != n_words)
+>>>>  		return -EINVAL;
+>>>>  
+>>>> +	ret = of_property_read_u32_array(dn , "brcm,int-fwd-mask",
+>>>
+>>> What is the exact meaning of "fwd"? Forward? FirmWare Dementia?
 >>
->> Yes. I'll try to dig further with MTK, but this may take some time.
+>> Here it is meant to be "forward", we have defined this property name
+>> before for irq-bcm7120-l2.c and felt like reusing the same name to avoid
+>> multiplying properties would be appropriate, see patch #4. If you prefer
+>> something named brcm,firmware-configured-mask, let me know.
 > 
-> Thank you!
+> It's just a name, but I found it a bit confusing. Bah, never mind.
 > 
+>>>
+>>>> +					 intc->irq_fwd_mask, n_words);
+>>>> +	if (ret != 0 && ret != -EINVAL) {
+>>>> +		/* property exists but has the wrong number of words */
+>>>> +		pr_err("invalid brcm,int-fwd-mask property\n");
+>>>> +		return -EINVAL;
+>>>> +	}
+>>>> +
+>>>>  	cpu = intc->cpus[idx] = kzalloc(sizeof(*cpu) + n_words * sizeof(u32),
+>>>>  					GFP_KERNEL);
+>>>>  	if (!cpu)
+>>>> @@ -288,8 +298,9 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
+>>>>  		return -ENOMEM;
+>>>>  
+>>>>  	for (i = 0; i < n_words; i++) {
+>>>> -		l1_writel(0xffffffff, cpu->map_base + reg_mask_set(intc, i));
+>>>> -		cpu->mask_cache[i] = 0xffffffff;
+>>>> +		l1_writel(0xffffffff & ~intc->irq_fwd_mask[i],
+>>>> +			  cpu->map_base + reg_mask_set(intc, i));
+>>>> +		cpu->mask_cache[i] = 0xffffffff & ~intc->irq_fwd_mask[i];
+>>>
+>>> I seem to remember that (0xffffffff & whatever) == whatever, as long as
+>>> 'whatever' is a 32bit quantity. So what it this for?
+>>
+>> It is 0xffff_ffff & ~whatever here.
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Which doesn't change anything.
 > 
+>> In the absence of this property
+>> being specified, the data is all zeroed out, so we would have
+>> 0xffff_ffff & 0xffff_ffff which is 0xffff_ffff. If this property is
+>> specified, we would have one more or bits set, and it would be e.g.:
+>> 0x100 so we would have 0xffff_ffff & ~(0x100) = 0xffff_feff which is
+>> what we would want here to preserve whatever the firmware has already
+>> configured.
+> 
+> OK, I must be stupid:
+> 
+> #include <stdio.h>
+> 
+> int main(int argc, char *argv[])
+> {
+> 	unsigned int v = 0x100;
+> 	printf ("%x\n", ~v);
+> }
+> maz@filthy-habit$ ./x
+> fffffeff
+> 
+> You might as well OR it with zeroes, if you want.
+
+Not sure I understand your point here.
+
+We used to write 0xffff_ffff to both the hardware and the mask cache to
+have all interrupts masked by default. Now we want to have some bits
+optionally set to 0 (unmasked), based on the brcm,int-fwd-mask property,
+which is what this patch achieves (or tries to). If we write, say
+0xffff_feff to the hardware, which has a Write Only register behavior,
+then we also want to have the mask cache be set to the same value for
+consistency if nothing else. Am I failing at doing what I just described
+and also failing at see it?
+-- 
+Florian
