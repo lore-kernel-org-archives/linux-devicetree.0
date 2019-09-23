@@ -1,55 +1,70 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 4/5] clk: meson: meson8b: don't register the XTAL clock
- when provided via OF
-Date: Mon, 23 Sep 2019 22:57:19 +0200
-Message-ID: <CAFBinCDrN2Rvu6ry+voB5itU6X+ezCzT=ZkQ6Qz8rz_+1kCLCg@mail.gmail.com>
-References: <20190921151223.768842-1-martin.blumenstingl@googlemail.com>
- <20190921151223.768842-5-martin.blumenstingl@googlemail.com> <1jwodzs6ir.fsf@starbuckisacylon.baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFCv4 3/7] dt-bindings: devfreq: imx: Describe interconnect
+ properties
+Date: Mon, 23 Sep 2019 16:03:46 -0500
+Message-ID: <CAL_JsqLj9FdoSwt7HZwoX42GS9RJ6Zeze=bUZs-tia2oS+OzUA@mail.gmail.com>
+References: <cover.1566570260.git.leonard.crestez@nxp.com>
+ <3f27038292c09c8bf07a086eac759132c100aedb.1566570260.git.leonard.crestez@nxp.com>
+ <20190917201956.GA10780@bogus>
+ <VI1PR04MB70237046A8DF88936C7A83F8EE850@VI1PR04MB7023.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1jwodzs6ir.fsf@starbuckisacylon.baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <VI1PR04MB70237046A8DF88936C7A83F8EE850@VI1PR04MB7023.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Saravana Kannan <saravanak@google.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nx>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 11:31 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
+On Mon, Sep 23, 2019 at 12:42 PM Leonard Crestez
+<leonard.crestez@nxp.com> wrote:
 >
-> On Sat 21 Sep 2019 at 17:12, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+> On 17.09.2019 23:20, Rob Herring wrote:
+> > On Fri, Aug 23, 2019 at 05:36:56PM +0300, Leonard Crestez wrote:
+> >> The interconnect-node-id property is parsed by the imx interconnect
+> >> driver to find nodes on which frequencies can be adjusted.
+> >>
+> >> Add #interconnect-cells so that device drivers can request paths from
+> >> bus nodes instead of requiring a separate "virtual" node to represent
+> >> the interconnect itself.
+> >>
+> >> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> >> ---
+> >>   Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml | 5 +++++
+> >>   Documentation/devicetree/bindings/devfreq/imx.yaml      | 5 +++++
+> >>   2 files changed, 10 insertions(+)
+> >
+> > Please combine this with the other series for devfreq support.
 >
-> > The XTAL clock is an actual crystal on the PCB. Thus the meson8b clock
-> > driver should not register the XTAL clock - instead it should be
-> > provided via .dts and then passed to the clock controller.
-> >
-> > Skip the registration of the XTAL clock if a parent clock is provided
-> > via OF. Fall back to registering the XTAL clock if this is not the case
-> > to keep support for old .dtbs.
-> >
-> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > ---
-> >  drivers/clk/meson/meson8b.c | 12 +++++++++---
-> >  1 file changed, 9 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-> > index b785b67baf2b..15ec14fde2a0 100644
-> > --- a/drivers/clk/meson/meson8b.c
-> > +++ b/drivers/clk/meson/meson8b.c
-> > @@ -3682,10 +3682,16 @@ static void __init meson8b_clkc_init_common(struct device_node *np,
-> >               meson8b_clk_regmaps[i]->map = map;
-> >
-> >       /*
-> > -      * register all clks
-> > -      * CLKID_UNUSED = 0, so skip it and start with CLKID_XTAL = 1
-> > +      * always skip CLKID_UNUSED and also skip XTAL if the .dtb provides the
-> > +      * XTAL clock as input.
-> >        */
-> > -     for (i = CLKID_XTAL; i < CLK_NR_CLKS; i++) {
-> > +     if (of_clk_get_parent_count(np))
->
-> If we are going for this, I'd prefer if could explicity check for the
-> clock named "xtal" instead of just checking if DT has clocks.
-OK, I'll wait a few days and then fix this in v2
+> I understand that having two series which add to the same bindings file
+> is odd but the devfreq and interconnect parts are independent to a very
+> large degree and devfreq can be useful on it's own.
 
+To start with, I'm suspicious of any 'devfreq' binding because that's
+a Linux thing. I somewhat expect that the interconnect binding should
+replace the devfreq binding, but I haven't been able to investigate.
 
-Martin
+> The only reason devfreq bindings are updated is to avoid adding a
+> "virtual" node for interconnect. Since DT is a big source of confusion
+> here can you read https://patchwork.kernel.org/cover/11111865/#22883457
+> and maybe offer some advice?
+
+Design something that matches the structure of the h/w not how Linux
+drivers happen to be structured. I can't tell what that is without any
+context around adding a couple of properties. Nor do I have the time
+to dig into each SoC vendor's bus structure if it's even documented
+publicly.
+
+I also don't follow why you need 'interconnect-node-id' and if you do,
+it should be a common property.
+
+Rob
