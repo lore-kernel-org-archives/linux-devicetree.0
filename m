@@ -1,123 +1,56 @@
-From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH] dt-bindings: iio: maxbotix,mb1232.yaml: transform to yaml
-Date: Mon, 23 Sep 2019 19:46:34 +0200
-Message-ID: <20190923174605.mhrbmdic3ynaw22o@arbad>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv5 00/10] soc: ti: add OMAP PRM driver (for reset)
+Date: Mon, 23 Sep 2019 10:47:09 -0700
+Message-ID: <20190923174709.GY5610@atomide.com>
+References: <20190912113916.20093-1-t-kristo@ti.com>
+ <20190920142849.GS5610@atomide.com>
+ <13a77bd8-72bd-6a44-9141-d5492be82d82@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, jic23@kernel.org
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <13a77bd8-72bd-6a44-9141-d5492be82d82@oracle.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: santosh.shilimkar@oracle.com
+Cc: devicetree@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, robh+dt@kernel.org, p.zabel@pengutronix.de, ssantosh@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-transform existing documentation of maxbotix,mb1232 ultrasonic ranger
-from text documentation format into yaml.
+* santosh.shilimkar@oracle.com <santosh.shilimkar@oracle.com> [190920 19:20]:
+> On 9/20/19 7:28 AM, Tony Lindgren wrote:
+> > * Tero Kristo <t-kristo@ti.com> [190912 04:39]:
+> > > Hi,
+> > > 
+> > > V5 of the series, re-sent the whole series as one patch was dropped.
+> > > Changes compared to v3/v4:
+> > > 
+> > > - removed dependency towards clock driver (patch #5 was completely
+> > >    dropped compared to v3/v4)
+> > > - dropped clocks property from dt binding
+> > > - re-added the pdata patch which was accidentally dropped out (it has
+> > >    dependency towards this series.)
+> > > 
+> > > The new implementation (without clock driver dependency) relies on the
+> > > bus driver to sequence events properly, otherwise some timeouts will
+> > > occur either at clock driver or reset driver end.
+> > 
+> > With the two updated patches seems like we're done with this
+> > series?
+> > 
+> > If so, I suggest either Santosh or me sets up an immutable
+> > branch against v5.3 or v5.4-rc1 that we all can merge in.
+> > I will need it for the related dts changes at least.
+> > 
+> I will pick this up Tony and apply it once v5.4-rc1 is out.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
- .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 56 ++++++++++++++++++++++
- 2 files changed, 56 insertions(+), 29 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+OK thanks.
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-deleted file mode 100644
-index dd1058fbe9c3..000000000000
---- a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
--  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
--  for ranging
--
--Required properties:
-- - compatible:		"maxbotix,mb1202",
--			"maxbotix,mb1212",
--			"maxbotix,mb1222",
--			"maxbotix,mb1232",
--			"maxbotix,mb1242",
--			"maxbotix,mb7040" or
--			"maxbotix,mb7137"
--
-- - reg:			i2c address of the device, see also i2c/i2c.txt
--
--Optional properties:
-- - interrupts:		Interrupt used to announce the preceding reading
--			request has finished and that data is available.
--			If no interrupt is specified the device driver
--			falls back to wait a fixed amount of time until
--			data can be retrieved.
--
--Example:
--proximity@70 {
--	compatible = "maxbotix,mb1232";
--	reg = <0x70>;
--	interrupt-parent = <&gpio2>;
--	interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
--};
-diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-new file mode 100644
-index 000000000000..8301a1ad2a47
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/proximity/maxbotix,mb1232.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MaxBotix I2CXL-MaxSonar ultrasonic distance sensor
-+
-+maintainers:
-+  - Andreas Klinger <ak@it-klinger.de>
-+
-+description: |
-+  MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
-+  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
-+  for ranging
-+
-+  Specifications about the devices can be found at:
-+  https://www.maxbotix.com/documents/I2CXL-MaxSonar-EZ_Datasheet.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - maxbotix,mb1202
-+      - maxbotix,mb1212
-+      - maxbotix,mb1222
-+      - maxbotix,mb1232
-+      - maxbotix,mb1242
-+      - maxbotix,mb7040
-+      - maxbotix,mb7137
-+
-+  reg:
-+    description:
-+      i2c address of the device, see also i2c/i2c.txt
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      Interrupt used to announce the preceding reading request has finished
-+      and that data is available.  If no interrupt is specified the device
-+      driver falls back to wait a fixed amount of time until data can be
-+      retrieved.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    proximity@70 {
-+      compatible = "maxbotix,mb1232";
-+      reg = <0x70>;
-+      interrupt-parent = <&gpio2>;
-+      interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-+    };
--- 
-2.11.0
+Tony
