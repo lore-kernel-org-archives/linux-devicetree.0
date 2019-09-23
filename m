@@ -1,62 +1,31 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH 3/3] ARM: logicpd-torpedo-37xx-devkit-28: Reference new
- DRM panel
-Date: Mon, 23 Sep 2019 08:32:11 -0500
-Message-ID: <CAHCN7xKqiNxrR+DVDV_7pE0vmQAXQkhf-0RPS3GGgZU=81RC-A@mail.gmail.com>
-References: <20190917161214.2913-1-aford173@gmail.com>
- <20190917161214.2913-3-aford173@gmail.com>
- <20190921190941.GD32133@ravnborg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190921190941.GD32133@ravnborg.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH net-next] dt-bindings: net: ravb: Add support for r8a774b1 SoC
+Date: Mon, 23 Sep 2019 14:32:46 +0100
+Message-ID: <1569245566-9987-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "David S. Miller" <davem@davemloft.net>, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBTZXAgMjEsIDIwMTkgYXQgMjowOSBQTSBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9y
-Zy5vcmc+IHdyb3RlOgo+Cj4gSGkgQWRhbS4KPgo+IE9uIFR1ZSwgU2VwIDE3LCAyMDE5IGF0IDEx
-OjEyOjEzQU0gLTA1MDAsIEFkYW0gRm9yZCB3cm90ZToKPiA+IFdpdGggdGhlIHJlbW92YWwgb2Yg
-dGhlIHBhbmVsLWRwaSBmcm9tIHRoZSBvbWFwIGRyaXZlcnMsIHRoZQo+ID4gTENEIG5vIGxvbmdl
-ciB3b3Jrcy4gIFRoaXMgcGF0Y2ggcG9pbnRzIHRoZSBkZXZpY2UgdHJlZSB0bwo+ID4gYSBuZXds
-eSBjcmVhdGVkIHBhbmVsIG5hbWVkICJsb2dpY3BkLHR5cGUyOCIKPiA+Cj4gPiBGaXhlczogOGJm
-NGIxNjIxMTc4ICgiZHJtL29tYXA6IFJlbW92ZSBwYW5lbC1kcGkgZHJpdmVyIikKPiA+Cj4gPiBT
-aWduZWQtb2ZmLWJ5OiBBZGFtIEZvcmQgPGFmb3JkMTczQGdtYWlsLmNvbT4KPiBMb29rcyBnb29k
-Lgo+IE9uZSBuaXQgYmVsb3cuCj4KPiBXaXRoIHRoaXMgYWRkcmVzc2VkOgo+Cj4gQWNrZWQtYnk6
-IFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4KPgo+ICAgICAgICAgU2FtCj4gPgo+ID4g
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2xvZ2ljcGQtdG9ycGVkby0zN3h4LWRldmtp
-dC0yOC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9sb2dpY3BkLXRvcnBlZG8tMzd4eC1kZXZraXQt
-MjguZHRzCj4gPiBpbmRleCAwN2FjOTliOWNkYTYuLjAwYzQyNmJkNTFhMCAxMDA2NDQKPiA+IC0t
-LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2xvZ2ljcGQtdG9ycGVkby0zN3h4LWRldmtpdC0yOC5kdHMK
-PiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2xvZ2ljcGQtdG9ycGVkby0zN3h4LWRldmtpdC0y
-OC5kdHMKPiA+IEBAIC0xMSwyMiArMTEsOCBAQAo+ID4gICNpbmNsdWRlICJsb2dpY3BkLXRvcnBl
-ZG8tMzd4eC1kZXZraXQuZHRzIgo+ID4KPiA+ICAmbGNkMCB7Cj4gPiAtCj4gPiArICAgICAvKiBU
-aGlzIGlzbid0IHRoZSBleGFjdCBMQ0QsIGJ1dCB0aGUgdGltaW5ncyBtZWV0IHNwZWMgKi8KPiA+
-ICsgICAgIC8qIFRvIG1ha2UgaXQgd29yaywgc2V0IENPTkZJR19PTUFQMl9EU1NfTUlOX0ZDS19Q
-RVJfUENLPTQgKi8KPiA+ICsgICAgIGNvbXBhdGlibGUgPSAibG9naWNwZCx0eXBlMjgiOwo+ID4g
-ICAgICAgbGFiZWwgPSAiMjgiOwo+IFlvdSBsZWZ0IHRoaXMgcHJvcGVydHkgLSBidXQgdXMgaXQg
-ZG9jdW1lbnRlZCBhbmQgd2hhdCB1c2UgaGFzIGl0PwoKR29vZCBjYXRjaCwgSSdsbCByZW1vdmUg
-aXQgYW5kIHBvc3QgYSBWMiB0b2RheSBvbmNlIEkgY2FuIGZpZ3VyZSBvdXQKdGhlIHlhbWwgc3R1
-ZmYuCgphZGFtCj4KPiA+IC0KPiA+IC0gICAgIHBhbmVsLXRpbWluZyB7Cj4gPiAtICAgICAgICAg
-ICAgIGNsb2NrLWZyZXF1ZW5jeSA9IDw5MDAwMDAwPjsKPiA+IC0gICAgICAgICAgICAgaGFjdGl2
-ZSA9IDw0ODA+Owo+ID4gLSAgICAgICAgICAgICB2YWN0aXZlID0gPDI3Mj47Cj4gPiAtICAgICAg
-ICAgICAgIGhmcm9udC1wb3JjaCA9IDwzPjsKPiA+IC0gICAgICAgICAgICAgaGJhY2stcG9yY2gg
-PSA8Mj47Cj4gPiAtICAgICAgICAgICAgIGhzeW5jLWxlbiA9IDw0Mj47Cj4gPiAtICAgICAgICAg
-ICAgIHZiYWNrLXBvcmNoID0gPDM+Owo+ID4gLSAgICAgICAgICAgICB2ZnJvbnQtcG9yY2ggPSA8
-Mj47Cj4gPiAtICAgICAgICAgICAgIHZzeW5jLWxlbiA9IDwxMT47Cj4gPiAtICAgICAgICAgICAg
-IGhzeW5jLWFjdGl2ZSA9IDwxPjsKPiA+IC0gICAgICAgICAgICAgdnN5bmMtYWN0aXZlID0gPDE+
-Owo+ID4gLSAgICAgICAgICAgICBkZS1hY3RpdmUgPSA8MT47Cj4gPiAtICAgICAgICAgICAgIHBp
-eGVsY2xrLWFjdGl2ZSA9IDwwPjsKPiA+IC0gICAgIH07Cj4gPiAgfTsKPiA+IC0tCj4gPiAyLjE3
-LjEKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Document RZ/G2N (R8A774B1) SoC bindings.
+
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+---
+ Documentation/devicetree/bindings/net/renesas,ravb.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+index 7ad3621..5df4aa7 100644
+--- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
++++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+@@ -18,6 +18,7 @@ Required properties:
+ 		R-Car Gen2 and RZ/G1 devices.
+ 
+       - "renesas,etheravb-r8a774a1" for the R8A774A1 SoC.
++      - "renesas,etheravb-r8a774b1" for the R8A774B1 SoC.
+       - "renesas,etheravb-r8a774c0" for the R8A774C0 SoC.
+       - "renesas,etheravb-r8a7795" for the R8A7795 SoC.
+       - "renesas,etheravb-r8a7796" for the R8A7796 SoC.
+-- 
+2.7.4
