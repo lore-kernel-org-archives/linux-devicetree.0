@@ -1,22 +1,34 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: da9062: fix suspend_enable/disable preparation" to the regulator tree
-Date: Mon, 23 Sep 2019 22:23:04 +0100 (BST)
-Message-ID: <20190923212304.9E3C9D02FCA@fitzroy.sirena.org.uk>
-References: <20190917124246.11732-2-m.felsch@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190917124246.11732-2-m.felsch@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: broonie@kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, lee.jones@linaro.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.orgMark Brown <broonie@kernel.org>, robh+dt@kernel.org, stwiss.opensource@diasemi.com, support.opensource@diasemi.com
+Subject: Applied "ASoC: samsung: arndale: Add missing OF node dereferencing"
+ to the asoc tree
+Date: Mon, 23 Sep 2019 22:22:59 +0100 (BST)
+Message-ID: <20190923212259.7F00DD02FE4@fitzroy.sirena.org.uk>
+References: <20190920130218.32690-3-s.nawrocki@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190920130218.32690-3-s.nawrocki@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, ckeepax@opensource.cirrus.com, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, lgirdwood@gmail.com, Krzysztof Kozlowski <krzk@kernel.org>, robh+dt@kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   regulator: da9062: fix suspend_enable/disable preparation
+   ASoC: samsung: arndale: Add missing OF node dereferencing
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,301 +49,96 @@ to this mail.
 Thanks,
 Mark
 
->From a72865f057820ea9f57597915da4b651d65eb92f Mon Sep 17 00:00:00 2001
-From: Marco Felsch <m.felsch@pengutronix.de>
-Date: Tue, 17 Sep 2019 14:42:42 +0200
-Subject: [PATCH] regulator: da9062: fix suspend_enable/disable preparation
+>From fb629fa2587d0c150792d87e3053664bfc8dc78c Mon Sep 17 00:00:00 2001
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Date: Fri, 20 Sep 2019 15:02:11 +0200
+Subject: [PATCH] ASoC: samsung: arndale: Add missing OF node dereferencing
 
-Currently the suspend reg_field maps to the pmic voltage selection bits
-and is used during suspend_enabe/disable() and during get_mode(). This
-seems to be wrong for both use cases.
+Ensure there is no OF node references kept when the driver
+is removed/unbound.
 
-Use case one (suspend_enabe/disable):
-Those callbacks are used to mark a regulator device as enabled/disabled
-during suspend. Marking the regulator enabled during suspend is done by
-the LDOx_CONF/BUCKx_CONF bit within the LDOx_CONT/BUCKx_CONT registers.
-Setting this bit tells the DA9062 PMIC state machine to keep the
-regulator on in POWERDOWN mode and switch to suspend voltage.
-
-Use case two (get_mode):
-The get_mode callback is used to retrieve the active mode state. Since
-the regulator-setting-A is used for the active state and
-regulator-setting-B for the suspend state there is no need to check
-which regulator setting is active.
-
-Fixes: 4068e5182ada ("regulator: da9062: DA9062 regulator driver")
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Link: https://lore.kernel.org/r/20190917124246.11732-2-m.felsch@pengutronix.de
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Link: https://lore.kernel.org/r/20190920130218.32690-3-s.nawrocki@samsung.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/da9062-regulator.c | 118 +++++++++++----------------
- 1 file changed, 47 insertions(+), 71 deletions(-)
+ sound/soc/samsung/arndale_rt5631.c | 34 ++++++++++++++++++++++++++----
+ 1 file changed, 30 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
-index 56f3f72d7707..710e67081d53 100644
---- a/drivers/regulator/da9062-regulator.c
-+++ b/drivers/regulator/da9062-regulator.c
-@@ -136,7 +136,6 @@ static int da9062_buck_set_mode(struct regulator_dev *rdev, unsigned mode)
- static unsigned da9062_buck_get_mode(struct regulator_dev *rdev)
- {
- 	struct da9062_regulator *regl = rdev_get_drvdata(rdev);
--	struct regmap_field *field;
- 	unsigned int val, mode = 0;
- 	int ret;
+diff --git a/sound/soc/samsung/arndale_rt5631.c b/sound/soc/samsung/arndale_rt5631.c
+index c213913eb984..fd8c6642fb0d 100644
+--- a/sound/soc/samsung/arndale_rt5631.c
++++ b/sound/soc/samsung/arndale_rt5631.c
+@@ -5,6 +5,7 @@
+ //  Author: Claude <claude@insginal.co.kr>
  
-@@ -158,18 +157,7 @@ static unsigned da9062_buck_get_mode(struct regulator_dev *rdev)
- 		return REGULATOR_MODE_NORMAL;
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/clk.h>
+ 
+@@ -74,6 +75,17 @@ static struct snd_soc_card arndale_rt5631 = {
+ 	.num_links = ARRAY_SIZE(arndale_rt5631_dai),
+ };
+ 
++static void arndale_put_of_nodes(struct snd_soc_card *card)
++{
++	struct snd_soc_dai_link *dai_link;
++	int i;
++
++	for_each_card_prelinks(card, i, dai_link) {
++		of_node_put(dai_link->cpus->of_node);
++		of_node_put(dai_link->codecs->of_node);
++	}
++}
++
+ static int arndale_audio_probe(struct platform_device *pdev)
+ {
+ 	int n, ret;
+@@ -103,18 +115,31 @@ static int arndale_audio_probe(struct platform_device *pdev)
+ 		if (!arndale_rt5631_dai[0].codecs->of_node) {
+ 			dev_err(&pdev->dev,
+ 			"Property 'samsung,audio-codec' missing or invalid\n");
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto err_put_of_nodes;
+ 		}
  	}
  
--	/* Detect current regulator state */
--	ret = regmap_field_read(regl->suspend, &val);
--	if (ret < 0)
--		return 0;
--
--	/* Read regulator mode from proper register, depending on state */
--	if (val)
--		field = regl->suspend_sleep;
--	else
--		field = regl->sleep;
--
--	ret = regmap_field_read(field, &val);
-+	ret = regmap_field_read(regl->sleep, &val);
- 	if (ret < 0)
- 		return 0;
+ 	ret = devm_snd_soc_register_card(card->dev, card);
++	if (ret) {
++		dev_err(&pdev->dev, "snd_soc_register_card() failed: %d\n", ret);
++		goto err_put_of_nodes;
++	}
++	return 0;
  
-@@ -208,21 +196,9 @@ static int da9062_ldo_set_mode(struct regulator_dev *rdev, unsigned mode)
- static unsigned da9062_ldo_get_mode(struct regulator_dev *rdev)
- {
- 	struct da9062_regulator *regl = rdev_get_drvdata(rdev);
--	struct regmap_field *field;
- 	int ret, val;
- 
--	/* Detect current regulator state */
--	ret = regmap_field_read(regl->suspend, &val);
--	if (ret < 0)
--		return 0;
+-	if (ret)
+-		dev_err(&pdev->dev, "snd_soc_register_card() failed:%d\n", ret);
 -
--	/* Read regulator mode from proper register, depending on state */
--	if (val)
--		field = regl->suspend_sleep;
--	else
--		field = regl->sleep;
--
--	ret = regmap_field_read(field, &val);
-+	ret = regmap_field_read(regl->sleep, &val);
- 	if (ret < 0)
- 		return 0;
++err_put_of_nodes:
++	arndale_put_of_nodes(card);
+ 	return ret;
+ }
  
-@@ -408,10 +384,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_BUCK1_MODE_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_BUCK1_MODE_MASK)) - 1),
--		.suspend = REG_FIELD(DA9062AA_DVC_1,
--			__builtin_ffs((int)DA9062AA_VBUCK1_SEL_MASK) - 1,
-+		.suspend = REG_FIELD(DA9062AA_BUCK1_CONT,
-+			__builtin_ffs((int)DA9062AA_BUCK1_CONF_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_VBUCK1_SEL_MASK)) - 1),
-+			__builtin_clz(DA9062AA_BUCK1_CONF_MASK) - 1),
++static int arndale_audio_remove(struct platform_device *pdev)
++{
++	struct snd_soc_card *card = platform_get_drvdata(pdev);
++
++	arndale_put_of_nodes(card);
++	return 0;
++}
++
+ static const struct of_device_id samsung_arndale_rt5631_of_match[] __maybe_unused = {
+ 	{ .compatible = "samsung,arndale-rt5631", },
+ 	{ .compatible = "samsung,arndale-alc5631", },
+@@ -129,6 +154,7 @@ static struct platform_driver arndale_audio_driver = {
+ 		.of_match_table = of_match_ptr(samsung_arndale_rt5631_of_match),
  	},
- 	{
- 		.desc.id = DA9061_ID_BUCK2,
-@@ -444,10 +420,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_BUCK3_MODE_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_BUCK3_MODE_MASK)) - 1),
--		.suspend = REG_FIELD(DA9062AA_DVC_1,
--			__builtin_ffs((int)DA9062AA_VBUCK3_SEL_MASK) - 1,
-+		.suspend = REG_FIELD(DA9062AA_BUCK3_CONT,
-+			__builtin_ffs((int)DA9062AA_BUCK3_CONF_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_VBUCK3_SEL_MASK)) - 1),
-+			__builtin_clz(DA9062AA_BUCK3_CONF_MASK) - 1),
- 	},
- 	{
- 		.desc.id = DA9061_ID_BUCK3,
-@@ -480,10 +456,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_BUCK4_MODE_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_BUCK4_MODE_MASK)) - 1),
--		.suspend = REG_FIELD(DA9062AA_DVC_1,
--			__builtin_ffs((int)DA9062AA_VBUCK4_SEL_MASK) - 1,
-+		.suspend = REG_FIELD(DA9062AA_BUCK4_CONT,
-+			__builtin_ffs((int)DA9062AA_BUCK4_CONF_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_VBUCK4_SEL_MASK)) - 1),
-+			__builtin_clz(DA9062AA_BUCK4_CONF_MASK) - 1),
- 	},
- 	{
- 		.desc.id = DA9061_ID_LDO1,
-@@ -509,10 +485,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_LDO1_SL_B_MASK)) - 1),
- 		.suspend_vsel_reg = DA9062AA_VLDO1_B,
--		.suspend = REG_FIELD(DA9062AA_DVC_1,
--			__builtin_ffs((int)DA9062AA_VLDO1_SEL_MASK) - 1,
-+		.suspend = REG_FIELD(DA9062AA_LDO1_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO1_CONF_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_VLDO1_SEL_MASK)) - 1),
-+			__builtin_clz(DA9062AA_LDO1_CONF_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO1_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -542,10 +518,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_LDO2_SL_B_MASK)) - 1),
- 		.suspend_vsel_reg = DA9062AA_VLDO2_B,
--		.suspend = REG_FIELD(DA9062AA_DVC_1,
--			__builtin_ffs((int)DA9062AA_VLDO2_SEL_MASK) - 1,
-+		.suspend = REG_FIELD(DA9062AA_LDO2_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO2_CONF_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_VLDO2_SEL_MASK)) - 1),
-+			__builtin_clz(DA9062AA_LDO2_CONF_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO2_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -575,10 +551,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_LDO3_SL_B_MASK)) - 1),
- 		.suspend_vsel_reg = DA9062AA_VLDO3_B,
--		.suspend = REG_FIELD(DA9062AA_DVC_1,
--			__builtin_ffs((int)DA9062AA_VLDO3_SEL_MASK) - 1,
-+		.suspend = REG_FIELD(DA9062AA_LDO3_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO3_CONF_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_VLDO3_SEL_MASK)) - 1),
-+			__builtin_clz(DA9062AA_LDO3_CONF_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO3_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -608,10 +584,10 @@ static const struct da9062_regulator_info local_da9061_regulator_info[] = {
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_LDO4_SL_B_MASK)) - 1),
- 		.suspend_vsel_reg = DA9062AA_VLDO4_B,
--		.suspend = REG_FIELD(DA9062AA_DVC_1,
--			__builtin_ffs((int)DA9062AA_VLDO4_SEL_MASK) - 1,
-+		.suspend = REG_FIELD(DA9062AA_LDO4_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO4_CONF_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_VLDO4_SEL_MASK)) - 1),
-+			__builtin_clz(DA9062AA_LDO4_CONF_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO4_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -652,10 +628,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_BUCK1_MODE_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_BUCK1_MODE_MASK)) - 1),
--		.suspend = REG_FIELD(DA9062AA_DVC_1,
--			__builtin_ffs((int)DA9062AA_VBUCK1_SEL_MASK) - 1,
-+		.suspend = REG_FIELD(DA9062AA_BUCK1_CONT,
-+			__builtin_ffs((int)DA9062AA_BUCK1_CONF_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_VBUCK1_SEL_MASK)) - 1),
-+			__builtin_clz(DA9062AA_BUCK1_CONF_MASK) - 1),
- 	},
- 	{
- 		.desc.id = DA9062_ID_BUCK2,
-@@ -688,10 +664,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_BUCK2_MODE_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_BUCK2_MODE_MASK)) - 1),
--		.suspend = REG_FIELD(DA9062AA_DVC_1,
--			__builtin_ffs((int)DA9062AA_VBUCK2_SEL_MASK) - 1,
-+		.suspend = REG_FIELD(DA9062AA_BUCK2_CONT,
-+			__builtin_ffs((int)DA9062AA_BUCK2_CONF_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_VBUCK2_SEL_MASK)) - 1),
-+			__builtin_clz(DA9062AA_BUCK2_CONF_MASK) - 1),
- 	},
- 	{
- 		.desc.id = DA9062_ID_BUCK3,
-@@ -724,10 +700,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_BUCK3_MODE_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_BUCK3_MODE_MASK)) - 1),
--		.suspend = REG_FIELD(DA9062AA_DVC_1,
--			__builtin_ffs((int)DA9062AA_VBUCK3_SEL_MASK) - 1,
-+		.suspend = REG_FIELD(DA9062AA_BUCK3_CONT,
-+			__builtin_ffs((int)DA9062AA_BUCK3_CONF_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_VBUCK3_SEL_MASK)) - 1),
-+			__builtin_clz(DA9062AA_BUCK3_CONF_MASK) - 1),
- 	},
- 	{
- 		.desc.id = DA9062_ID_BUCK4,
-@@ -760,10 +736,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			__builtin_ffs((int)DA9062AA_BUCK4_MODE_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_BUCK4_MODE_MASK)) - 1),
--		.suspend = REG_FIELD(DA9062AA_DVC_1,
--			__builtin_ffs((int)DA9062AA_VBUCK4_SEL_MASK) - 1,
-+		.suspend = REG_FIELD(DA9062AA_BUCK4_CONT,
-+			__builtin_ffs((int)DA9062AA_BUCK4_CONF_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_VBUCK4_SEL_MASK)) - 1),
-+			__builtin_clz(DA9062AA_BUCK4_CONF_MASK) - 1),
- 	},
- 	{
- 		.desc.id = DA9062_ID_LDO1,
-@@ -789,10 +765,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_LDO1_SL_B_MASK)) - 1),
- 		.suspend_vsel_reg = DA9062AA_VLDO1_B,
--		.suspend = REG_FIELD(DA9062AA_DVC_1,
--			__builtin_ffs((int)DA9062AA_VLDO1_SEL_MASK) - 1,
-+		.suspend = REG_FIELD(DA9062AA_LDO1_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO1_CONF_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_VLDO1_SEL_MASK)) - 1),
-+			__builtin_clz(DA9062AA_LDO1_CONF_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO1_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -822,10 +798,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_LDO2_SL_B_MASK)) - 1),
- 		.suspend_vsel_reg = DA9062AA_VLDO2_B,
--		.suspend = REG_FIELD(DA9062AA_DVC_1,
--			__builtin_ffs((int)DA9062AA_VLDO2_SEL_MASK) - 1,
-+		.suspend = REG_FIELD(DA9062AA_LDO2_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO2_CONF_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_VLDO2_SEL_MASK)) - 1),
-+			__builtin_clz(DA9062AA_LDO2_CONF_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO2_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -855,10 +831,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_LDO3_SL_B_MASK)) - 1),
- 		.suspend_vsel_reg = DA9062AA_VLDO3_B,
--		.suspend = REG_FIELD(DA9062AA_DVC_1,
--			__builtin_ffs((int)DA9062AA_VLDO3_SEL_MASK) - 1,
-+		.suspend = REG_FIELD(DA9062AA_LDO3_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO3_CONF_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_VLDO3_SEL_MASK)) - 1),
-+			__builtin_clz(DA9062AA_LDO3_CONF_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO3_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -888,10 +864,10 @@ static const struct da9062_regulator_info local_da9062_regulator_info[] = {
- 			sizeof(unsigned int) * 8 -
- 			__builtin_clz((DA9062AA_LDO4_SL_B_MASK)) - 1),
- 		.suspend_vsel_reg = DA9062AA_VLDO4_B,
--		.suspend = REG_FIELD(DA9062AA_DVC_1,
--			__builtin_ffs((int)DA9062AA_VLDO4_SEL_MASK) - 1,
-+		.suspend = REG_FIELD(DA9062AA_LDO4_CONT,
-+			__builtin_ffs((int)DA9062AA_LDO4_CONF_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
--			__builtin_clz((DA9062AA_VLDO4_SEL_MASK)) - 1),
-+			__builtin_clz(DA9062AA_LDO4_CONF_MASK) - 1),
- 		.oc_event = REG_FIELD(DA9062AA_STATUS_D,
- 			__builtin_ffs((int)DA9062AA_LDO4_ILIM_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
+ 	.probe = arndale_audio_probe,
++	.remove = arndale_audio_remove,
+ };
+ 
+ module_platform_driver(arndale_audio_driver);
 -- 
 2.20.1
