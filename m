@@ -1,100 +1,39 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 3/3] arm64: dts: mark lx2160a esdhc controllers dma
- coherent
-Date: Mon, 23 Sep 2019 23:26:33 +0200
-Message-ID: <CAPDyKFpQn+O-M60q-Tc4QOBM+WhFhmnkU6_-t5hnQcndLo==YA@mail.gmail.com>
-References: <20190922102341.GO25745@shell.armlinux.org.uk>
- <E1iBz55-0008Mj-CX@rmk-PC.armlinux.org.uk>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v18 15/19] Documentation: kunit: add documentation for
+ KUnit
+Date: Mon, 23 Sep 2019 14:30:21 -0700
+Message-ID: <437bc2d1-f26b-0f04-324f-cbdca989e42c@infradead.org>
+References: <20190923090249.127984-1-brendanhiggins@google.com>
+ <20190923090249.127984-16-brendanhiggins@google.com>
+ <d87eba35-ae09-0c53-bbbe-51ee9dc9531f@infradead.org>
+ <CAFd5g45y-NWzbn8E8hUg=n4U5E+N6_4D8eCXhQ74Y0N4zqVW=w@mail.gmail.com>
+ <d7a61045-8fe6-a104-ece9-67b69c379425@infradead.org>
+ <d5dc04ab-9be5-b258-c302-29f8045d6aaa@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <E1iBz55-0008Mj-CX@rmk-PC.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King <rmk+kernel@armlinux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, dann frazier <dann.frazier@canonical.com>, Will Deacon <will.deacon@arm.com>, Li Yang <leoyang.li@nxp.com>, Nicolin Chen <nicoleotsuka@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Y.b. Lu" <yangbo.lu@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d5dc04ab-9be5-b258-c302-29f8045d6aaa@kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: shuah <shuah@kernel.org>, Brendan Higgins <brendanhiggins@google.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Greg KH <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Theodore Ts'o <tytso@mit.edu>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel@vger.kernel.org, linux-kbuild <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST FRAMEWORK
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 22 Sep 2019 at 12:29, Russell King <rmk+kernel@armlinux.org.uk> wrote:
->
-> The LX2160A esdhc controllers are setup by the driver to be DMA
-> coherent, but without marking them as such in DT, Linux thinks they
-> are not.  This can lead to random sporadic DMA errors, even to the
-> extent of preventing boot, such as:
->
-> mmc0: ADMA error
-> mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-> mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00002202
-> mmc0: sdhci: Blk size:  0x00000008 | Blk cnt:  0x00000001
-> mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
-> mmc0: sdhci: Present:   0x01f50008 | Host ctl: 0x00000038
-> mmc0: sdhci: Power:     0x00000003 | Blk gap:  0x00000000
-> mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x000040d8
-> mmc0: sdhci: Timeout:   0x00000003 | Int stat: 0x00000001
-> mmc0: sdhci: Int enab:  0x037f108f | Sig enab: 0x037f108b
-> mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00002202
-> mmc0: sdhci: Caps:      0x35fa0000 | Caps_1:   0x0000af00
-> mmc0: sdhci: Cmd:       0x0000333a | Max curr: 0x00000000
-> mmc0: sdhci: Resp[0]:   0x00000920 | Resp[1]:  0x001d8a33
-> mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x3f400e00
-> mmc0: sdhci: Host ctl2: 0x00000000
-> mmc0: sdhci: ADMA Err:  0x00000009 | ADMA Ptr: 0x000000236d43820c
-> mmc0: sdhci: ============================================
-> mmc0: error -5 whilst initialising SD card
->
-> These are caused by the device's descriptor fetch hitting speculatively
-> loaded CPU cache lines that the CPU does not see through the normal,
-> non-cacheable DMA coherent mapping that it uses for non-coherent
-> devices.
->
-> DT and the device must agree wrt whether the device is DMA coherent or
-> not.
->
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+On 9/23/19 2:18 PM, shuah wrote:
 
-As I am picking up patch1 and patch2 from this series, I can also help
-out and pick up this one, if that is okay by people?
+> I would like to apply the series very soon so it gets some soak time
+> after this move in linux-next and it can still make the rc1.
+> 
+> Since there changes can be addressed after rc1, I would like to not
+> require Brendan to do another version before I apply.
+> 
+> Hope you are okay with that Randy!
+> 
+> thanks,
+> -- Shuah
 
-Kind regards
-Uffe
+Sure, no problem, go for it .
 
-> ---
->  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> index 36b153e3da47..508af23edef0 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> @@ -593,6 +593,7 @@
->                         reg = <0x0 0x2140000 0x0 0x10000>;
->                         interrupts = <0 28 0x4>; /* Level high type */
->                         clocks = <&clockgen 4 1>;
-> +                       dma-coherent;
->                         voltage-ranges = <1800 1800 3300 3300>;
->                         sdhci,auto-cmd12;
->                         little-endian;
-> @@ -605,6 +606,7 @@
->                         reg = <0x0 0x2150000 0x0 0x10000>;
->                         interrupts = <0 63 0x4>; /* Level high type */
->                         clocks = <&clockgen 4 1>;
-> +                       dma-coherent;
->                         voltage-ranges = <1800 1800 3300 3300>;
->                         sdhci,auto-cmd12;
->                         broken-cd;
-> --
-> 2.7.4
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-- 
+~Randy
