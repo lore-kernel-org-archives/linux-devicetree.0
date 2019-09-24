@@ -1,150 +1,193 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v2] dt-bindings: gpu: Convert Samsung 2D Graphics
- Accelerator to dt-schema
-Date: Tue, 24 Sep 2019 15:46:14 +0200
-Message-ID: <20190924134614.13371-1-m.szyprowski@samsung.com>
-References: <CGME20190924134628eucas1p1586ca3285dac6b5d5cd1026ea78c436e@eucas1p1.samsung.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v2 00/14] dmaengine/soc: Add Texas Instruments UDMA
+ support
+Date: Tue, 24 Sep 2019 16:54:11 +0300
+Message-ID: <bcb3cf68-f3f6-51d4-bcae-b68fb441cd26@ti.com>
+References: <20190730093450.12664-1-peter.ujfalusi@ti.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190730093450.12664-1-peter.ujfalusi@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Inki Dae <inki.dae@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Maciej Falkowski <m.falkowski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
+Cc: dan.j.williams@intel.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, grygorii.strashko@ti.com, lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com, j-keerthy@ti.com
 List-Id: devicetree@vger.kernel.org
 
-From: Maciej Falkowski <m.falkowski@samsung.com>
+Hi,
 
-Convert Samsung 2D Graphics Accelerator to newer dt-schema format
+On 30/07/2019 12.34, Peter Ujfalusi wrote:
+> Changes since v1
+> (https://patchwork.kernel.org/project/linux-dmaengine/list/?series=114105&state=*)
+> - Added support for j721e
+> - Based on 5.3-rc2
+> - dropped ti_sci API patch for RM management as it is already upstream
+> - dropped dmadev_get_slave_channel() patch, using __dma_request_channel()
+> - Added Rob's Reviewed-by to ringacc DT binding document patch
+> - DT bindings changes:
+>  - linux,udma-mode is gone, I have a simple lookup table in the driver to flag
+>    TR channels.
+>  - Support for j721e
+> - Fix bug in of_node_put() handling in xlate function
 
-Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
-v2:
-- Added if-then statements for 'clocks' and 'clock-names'
-properties.
+I have addressed locally all the comments given for v2 so far. Is there
+anything else I need to change for v3?
 
-Best regards,
-Maciej Falkowski
----
- .../devicetree/bindings/gpu/samsung-g2d.txt   | 27 -------
- .../devicetree/bindings/gpu/samsung-g2d.yaml  | 76 +++++++++++++++++++
- 2 files changed, 76 insertions(+), 27 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.yaml
+Regards,
+- Péter
 
-diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
-deleted file mode 100644
-index 1e7959332dbc..000000000000
---- a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--* Samsung 2D Graphics Accelerator
--
--Required properties:
--  - compatible : value should be one among the following:
--	(a) "samsung,s5pv210-g2d" for G2D IP present in S5PV210 & Exynos4210 SoC
--	(b) "samsung,exynos4212-g2d" for G2D IP present in Exynos4x12 SoCs
--	(c) "samsung,exynos5250-g2d" for G2D IP present in Exynos5250 SoC
--
--  - reg : Physical base address of the IP registers and length of memory
--	  mapped region.
--
--  - interrupts : G2D interrupt number to the CPU.
--  - clocks : from common clock binding: handle to G2D clocks.
--  - clock-names : names of clocks listed in clocks property, in the same
--		  order, depending on SoC type:
--		  - for S5PV210 and Exynos4 based SoCs: "fimg2d" and
--		    "sclk_fimg2d"
--		  - for Exynos5250 SoC: "fimg2d".
--
--Example:
--	g2d@12800000 {
--		compatible = "samsung,s5pv210-g2d";
--		reg = <0x12800000 0x1000>;
--		interrupts = <0 89 0>;
--		clocks = <&clock 177>, <&clock 277>;
--		clock-names = "sclk_fimg2d", "fimg2d";
--	};
-diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.yaml b/Documentation/devicetree/bindings/gpu/samsung-g2d.yaml
-new file mode 100644
-index 000000000000..5e05e8ccc83f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.yaml
-@@ -0,0 +1,76 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpu/samsung-g2d.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung SoC 2D Graphics Accelerator
-+
-+maintainers:
-+  - Inki Dae <inki.dae@samsung.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - samsung,s5pv210-g2d    # in S5PV210 & Exynos4210 SoC
-+      - samsung,exynos4212-g2d # in Exynos4x12 SoCs
-+      - samsung,exynos5250-g2d
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: samsung,exynos5250-g2d
-+
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: fimg2d clock
-+        clock-names:
-+          items:
-+            - const: fimg2d
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - samsung,s5pv210-g2d
-+              - samsung,exynos4212-g2d
-+
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: sclk_fimg2d clock
-+            - description: fimg2d clock
-+        clock-names:
-+          items:
-+            - const: sclk_fimg2d
-+            - const: fimg2d
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    g2d@12800000 {
-+        compatible = "samsung,s5pv210-g2d";
-+        reg = <0x12800000 0x1000>;
-+        interrupts = <0 89 0>;
-+        clocks = <&clock 177>, <&clock 277>;
-+        clock-names = "sclk_fimg2d", "fimg2d";
-+    };
-+
--- 
-2.17.1
+> 
+> Changes since RFC (https://patchwork.kernel.org/cover/10612465/):
+> - Based on linux-next (20190506) which now have the ti_sci interrupt support
+> - The series can be applied and the UDMA via DMAengine API will be functional
+> - Included in the series: ti_sci Resource management API, cppi5 header and
+>   driver for the ring accelerator.
+> - The DMAengine core patches have been updated as per the review comments for
+>   earlier submittion.
+> - The DMAengine driver patch is artificially split up to 6 smaller patches
+> 
+> The k3-udma driver implements the Data Movement Architecture described in
+> AM65x TRM (http://www.ti.com/lit/pdf/spruid7) and
+> j721e TRM (http://www.ti.com/lit/pdf/spruil1)
+> 
+> This DMA architecture is a big departure from 'traditional' architecture where
+> we had either EDMA or sDMA as system DMA.
+> 
+> Packet DMAs were used as dedicated DMAs to service only networking (Kesytone2)
+> or USB (am335x) while other peripherals were serviced by EDMA.
+> 
+> In AM65x/j721e the UDMA (Unified DMA) is used for all data movment within the
+> SoC, tasked to service all peripherals (UART, McSPI, McASP, networking, etc). 
+> 
+> The NAVSS/UDMA is built around CPPI5 (Communications Port Programming Interface)
+> and it supports Packet mode (similar to CPPI4.1 in Keystone2 for networking) and
+> TR mode (similar to EDMA descriptor).
+> The data movement is done within a PSI-L fabric, peripherals (including the
+> UDMA-P) are not addressed by their I/O register as with traditional DMAs but
+> with their PSI-L thread ID.
+> 
+> In AM65x/j721e we have two main type of peripherals:
+> Legacy: McASP, McSPI, UART, etc.
+>  to provide connectivity they are serviced by PDMA (Peripheral DMA)
+>  PDMA threads are locked to service a given peripheral, for example PSI-L thread
+>  0x4400/0xc400 is to service McASP0 rx/tx.
+>  The PDMa configuration can be done via the UDMA Real Time Peer registers.
+> Native: Networking, security accelerator
+>  these peripherals have native support for PSI-L.
+> 
+> To be able to use the DMA the following generic steps need to be taken:
+> - configure a DMA channel (tchan for TX, rchan for RX)
+>  - channel mode: Packet or TR mode
+>  - for memcpy a tchan and rchan pair is used.
+>  - for packet mode RX we also need to configure a receive flow to configure the
+>    packet receiption
+> - the source and destination threads must be paired
+> - at minimum one pair of rings need to be configured:
+>  - tx: transfer ring and transfer completion ring
+>  - rx: free descriptor ring and receive ring
+> - two interrupts: UDMA-P channel interrupt and ring interrupt for tc_ring/r_ring
+>  - If the channel is in packet mode or configured to memcpy then we only need
+>    one interrupt from the ring, events from UDMAP is not used.
+> 
+> When the channel setup is completed we only interract with the rings:
+> - TX: push a descriptor to t_ring and wait for it to be pushed to the tc_ring by
+>   the UDMA-P
+> - RX: push a descriptor to the fd_ring and waith for UDMA-P to push it back to
+>   the r_ring.
+> 
+> Since we have FIFOs in the DMA fabric (UDMA-P, PSI-L and PDMA) which was not the
+> case in previous DMAs we need to report the amount of data held in these FIFOs
+> to clients (delay calculation for ALSA, UART FIFO flush support).
+> 
+> Metadata support:
+> DMAengine user driver was posted upstream based/tested on the v1 of the UDMA
+> series: https://lkml.org/lkml/2019/6/28/20
+> SA2UL is using the metadata DMAengine API.
+> 
+> Note on the last patch:
+> In Keystone2 the networking had dedicated DMA (packet DMA) which is not the case
+> anymore and the DMAengine API currently missing support for the features we
+> would need to support networking, things like
+> - support for receive descriptor 'classification'
+>  - we need to support several receive queues for a channel.
+>  - the queues are used for packet priority handling for example, but they can be
+>    used to have pools of descriptors for different sizes.
+> - out of order completion of descriptors on a channel
+>  - when we have several queues to handle different priority packets the
+>    descriptors will be completed 'out-of-order'
+> - NAPI type of operation (polling instead of interrupt driven transfer)
+>  - without this we can not sustain gigabit speeds and we need to support NAPI
+>  - not to limit this to networking, but other high performance operations
+> 
+> It is my intention to work on these to be able to remove the 'glue' layer and
+> switch to DMAengine API - or have an API aside of DMAengine to have generic way
+> to support networking, but given how controversial and not trivial these changes
+> are we need something to support networking.
+> 
+> The series (+DT patch to enabled UDMA/PDMA on AM65x) on top of 5.3-rc2 is
+> available:
+> https://github.com/omap-audio/linux-audio.git peter/udma/series_v2-5.3-rc2
+> 
+> Regards,
+> Peter
+> ---
+> Grygorii Strashko (3):
+>   bindings: soc: ti: add documentation for k3 ringacc
+>   soc: ti: k3: add navss ringacc driver
+>   dmaengine: ti: k3-udma: Add glue layer for non DMAengine users
+> 
+> Peter Ujfalusi (11):
+>   dmaengine: doc: Add sections for per descriptor metadata support
+>   dmaengine: Add metadata_ops for dma_async_tx_descriptor
+>   dmaengine: Add support for reporting DMA cached data amount
+>   dmaengine: ti: Add cppi5 header for UDMA
+>   dt-bindings: dma: ti: Add document for K3 UDMA
+>   dmaengine: ti: New driver for K3 UDMA - split#1: defines, structs, io
+>     func
+>   dmaengine: ti: New driver for K3 UDMA - split#2: probe/remove, xlate
+>     and filter_fn
+>   dmaengine: ti: New driver for K3 UDMA - split#3: alloc/free
+>     chan_resources
+>   dmaengine: ti: New driver for K3 UDMA - split#4: dma_device callbacks
+>     1
+>   dmaengine: ti: New driver for K3 UDMA - split#5: dma_device callbacks
+>     2
+>   dmaengine: ti: New driver for K3 UDMA - split#6: Kconfig and Makefile
+> 
+>  .../devicetree/bindings/dma/ti/k3-udma.txt    |  170 +
+>  .../devicetree/bindings/soc/ti/k3-ringacc.txt |   59 +
+>  Documentation/driver-api/dmaengine/client.rst |   75 +
+>  .../driver-api/dmaengine/provider.rst         |   46 +
+>  drivers/dma/dmaengine.c                       |   73 +
+>  drivers/dma/dmaengine.h                       |    8 +
+>  drivers/dma/ti/Kconfig                        |   22 +
+>  drivers/dma/ti/Makefile                       |    2 +
+>  drivers/dma/ti/k3-udma-glue.c                 | 1039 +++++
+>  drivers/dma/ti/k3-udma-private.c              |  124 +
+>  drivers/dma/ti/k3-udma.c                      | 3479 +++++++++++++++++
+>  drivers/dma/ti/k3-udma.h                      |  160 +
+>  drivers/soc/ti/Kconfig                        |   17 +
+>  drivers/soc/ti/Makefile                       |    1 +
+>  drivers/soc/ti/k3-ringacc.c                   | 1191 ++++++
+>  include/dt-bindings/dma/k3-udma.h             |   10 +
+>  include/linux/dma/k3-udma-glue.h              |  125 +
+>  include/linux/dma/ti-cppi5.h                  |  996 +++++
+>  include/linux/dmaengine.h                     |  110 +
+>  include/linux/soc/ti/k3-ringacc.h             |  262 ++
+>  20 files changed, 7969 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.txt
+>  create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+>  create mode 100644 drivers/dma/ti/k3-udma-glue.c
+>  create mode 100644 drivers/dma/ti/k3-udma-private.c
+>  create mode 100644 drivers/dma/ti/k3-udma.c
+>  create mode 100644 drivers/dma/ti/k3-udma.h
+>  create mode 100644 drivers/soc/ti/k3-ringacc.c
+>  create mode 100644 include/dt-bindings/dma/k3-udma.h
+>  create mode 100644 include/linux/dma/k3-udma-glue.h
+>  create mode 100644 include/linux/dma/ti-cppi5.h
+>  create mode 100644 include/linux/soc/ti/k3-ringacc.h
+> 
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
