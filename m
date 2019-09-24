@@ -1,61 +1,35 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: [v3,3/3] Documentation: dt: binding: fsl: Add 'fsl,ippdexpcr-alt-addr' property
-Date: Tue, 24 Sep 2019 10:45:48 +0800
-Message-ID: <20190924024548.4356-3-biwen.li@nxp.com>
-References: <20190924024548.4356-1-biwen.li@nxp.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH V8 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Date: Mon, 23 Sep 2019 20:00:53 -0700
+Message-ID: <d3a99c0c-dd5f-50e0-ae9f-21ffa1d116d9@gmail.com>
+References: <1569287538-10854-1-git-send-email-peng.fan@nxp.com>
+ <1569287538-10854-2-git-send-email-peng.fan@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190924024548.4356-1-biwen.li@nxp.com>
+In-Reply-To: <1569287538-10854-2-git-send-email-peng.fan@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, ran.wang_1@nxp.com
-Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
+To: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The 'fsl,ippdexpcr-alt-addr' property is used to handle an errata A-008646
-on LS1021A
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
-Change in v3:
-	- rename property name
-	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
 
-Change in v2:
-	- update desc of the property 'fsl,rcpm-scfg'
+On 9/23/2019 6:14 PM, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
+> actions in software layers running in the EL2 or EL3 exception levels.
+> The term "ARM" here relates to the SMC instruction as part of the ARM
+> instruction set, not as a standard endorsed by ARM Ltd.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
- Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-index 5a33619d881d..157dcf6da17c 100644
---- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-+++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-@@ -34,6 +34,11 @@ Chassis Version		Example Chips
- Optional properties:
-  - little-endian : RCPM register block is Little Endian. Without it RCPM
-    will be Big Endian (default case).
-+ - fsl,ippdexpcr-alt-addr : Must add the property for SoC LS1021A,
-+   Must include n + 1 entries (n = #fsl,rcpm-wakeup-cells, such as:
-+   #fsl,rcpm-wakeup-cells equal to 2, then must include 2 + 1 entries).
-+   The first entry must be a link to the SCFG device node.
-+   The non-first entry must be offset of registers of SCFG.
- 
- Example:
- The RCPM node for T4240:
-@@ -43,6 +48,15 @@ The RCPM node for T4240:
- 		#fsl,rcpm-wakeup-cells = <2>;
- 	};
- 
-+The RCPM node for LS1021A:
-+	rcpm: rcpm@1ee2140 {
-+		compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+		reg = <0x0 0x1ee2140 0x0 0x8>;
-+		#fsl,rcpm-wakeup-cells = <2>;
-+		fsl,ippdexpcr-alt-addr = <&scfg 0x0 0x51c>; /* SCFG_SPARECR8 */
-+	};
-+
-+
- * Freescale RCPM Wakeup Source Device Tree Bindings
- -------------------------------------------
- Required fsl,rcpm-wakeup property should be added to a device node if the device
+Thanks!
 -- 
-2.17.1
+Florian
