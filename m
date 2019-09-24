@@ -1,62 +1,45 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 0/8] media: i2c: ov2659: maintenance series
-Date: Tue, 24 Sep 2019 11:44:06 -0500
-Message-ID: <20190924164414.21897-1-bparrot@ti.com>
+Subject: [Patch v3 2/8] media: i2c: ov2659: Fix sensor detection to actually fail when device is not present
+Date: Tue, 24 Sep 2019 11:44:08 -0500
+Message-ID: <20190924164414.21897-3-bparrot@ti.com>
+References: <20190924164414.21897-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190924164414.21897-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series is a collection of patches we have been carrying for a
-while.
+Make sure that if the expected sensor device id register
+is not recognized properly the failure is propagated
+up so devices are not left partially initialized.
 
-It includes a few sensor register fixes which would cause visual
-artifacts at lower resolution and also at 720p.
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ drivers/media/i2c/ov2659.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Also on some board the 'powerdown' and /or 'reset' pins are not tied so
-we need to add support for optional gpios to handle these.
-
-Since these camera are removable on some board we also need the driver
-to actually fail when there is no hardware present so the driver is
-actually removed.
-
-Also added a patch to check and propagate errors on s_stream invocation.
-
-Finally, we update the licensing statement to use SPDX licensing.
-
-Changes since v2:
-- Addressed review comment from Sakari
-- Reworked the "media: i2c: ov2659: Add powerdown/reset gpio handling"
-  to use pm_runtime if it is available but not to make it depend on it.
-- Cleaned up the gpio related calls to remove the unnecessary NULL check
-
-Changes since v1:
-- Addressed review comment from Prabhakar
-- Added support for reset-gpios
-- Rework the power setting to use pm_runtime instead of s_power
-  as based on discussion with Sakari it would be the prefered method
-- Added a patch to reduce the number explicit include files to the
-  minimum necessary instead of the previous kitchen sink approach
-
-Benoit Parrot (8):
-  media: i2c: ov2659: Fix for image wrap-around in lower resolution
-  media: i2c: ov2659: Fix sensor detection to actually fail when device
-    is not present
-  media: i2c: ov2659: Cleanup include file list
-  media: i2c: ov2659: fix s_stream return value
-  media: dt-bindings: ov2659: add powerdown/reset-gpios optional
-    property
-  media: i2c: ov2659: Add powerdown/reset gpio handling
-  media: i2c: ov2659: Fix missing 720p register config
-  media: i2c: ov2659: Switch to SPDX Licensing
-
- .../devicetree/bindings/media/i2c/ov2659.txt  |   9 ++
- drivers/media/i2c/Kconfig                     |   2 +-
- drivers/media/i2c/ov2659.c                    | 135 +++++++++++++-----
- 3 files changed, 109 insertions(+), 37 deletions(-)
-
+diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+index 17573257097d..efbe6dc720e2 100644
+--- a/drivers/media/i2c/ov2659.c
++++ b/drivers/media/i2c/ov2659.c
+@@ -1330,11 +1330,12 @@ static int ov2659_detect(struct v4l2_subdev *sd)
+ 		unsigned short id;
+ 
+ 		id = OV265X_ID(pid, ver);
+-		if (id != OV2659_ID)
++		if (id != OV2659_ID) {
+ 			dev_err(&client->dev,
+ 				"Sensor detection failed (%04X, %d)\n",
+ 				id, ret);
+-		else {
++			ret = -ENODEV;
++		} else {
+ 			dev_info(&client->dev, "Found OV%04X sensor\n", id);
+ 			ret = ov2659_init(sd, 0);
+ 		}
 -- 
 2.17.1
