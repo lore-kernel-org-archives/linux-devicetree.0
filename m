@@ -1,271 +1,268 @@
-From: Oliver Graute <oliver.graute@gmail.com>
-Subject: [PATCHv6 2/2] ARM: dts: Add support for i.MX6 UltraLite DART Variscite Customboard
-Date: Tue, 24 Sep 2019 18:20:21 +0200
-Message-ID: <1569342022-15901-3-git-send-email-oliver.graute@gmail.com>
-References: <1569342022-15901-1-git-send-email-oliver.graute@gmail.com>
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Subject: Re: [PATCH 3/6] PCI: mobiveil: Add PCIe Gen4 EP driver for NXP
+ Layerscape SoCs
+Date: Tue, 24 Sep 2019 17:38:50 +0100
+Message-ID: <20190924163850.GY25745@shell.armlinux.org.uk>
+References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
+ <20190916021742.22844-4-xiaowei.bao@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569342022-15901-1-git-send-email-oliver.graute@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190916021742.22844-4-xiaowei.bao@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: oliver.graute@gmail.com, m.felsch@pengutronix.de, narmstrong@baylibre.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: Zhiqiang.Hou@nxp.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, Minghuan.Lian@nxp.com, andrew.murray@arm.com, mingkai.hu@nxp.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DeviceTree Source for the i.MX6 UltraLite DART NAND/WIFI
+On Mon, Sep 16, 2019 at 10:17:39AM +0800, Xiaowei Bao wrote:
+> This PCIe controller is based on the Mobiveil GPEX IP, it work in EP
+> mode if select this config opteration.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+>  MAINTAINERS                                        |   2 +
+>  drivers/pci/controller/mobiveil/Kconfig            |  17 ++-
+>  drivers/pci/controller/mobiveil/Makefile           |   1 +
+>  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 156 +++++++++++++++++++++
+>  4 files changed, 173 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b997056..0858b54 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12363,11 +12363,13 @@ F:	drivers/pci/controller/dwc/*layerscape*
+>  
+>  PCI DRIVER FOR NXP LAYERSCAPE GEN4 CONTROLLER
+>  M:	Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> +M:	Xiaowei Bao <xiaowei.bao@nxp.com>
+>  L:	linux-pci@vger.kernel.org
+>  L:	linux-arm-kernel@lists.infradead.org
+>  S:	Maintained
+>  F:	Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
+>  F:	drivers/pci/controller/mobibeil/pcie-layerscape-gen4.c
+> +F:	drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+>  
+>  PCI DRIVER FOR GENERIC OF HOSTS
+>  M:	Will Deacon <will@kernel.org>
+> diff --git a/drivers/pci/controller/mobiveil/Kconfig b/drivers/pci/controller/mobiveil/Kconfig
+> index 2054950..0696b6e 100644
+> --- a/drivers/pci/controller/mobiveil/Kconfig
+> +++ b/drivers/pci/controller/mobiveil/Kconfig
+> @@ -27,13 +27,24 @@ config PCIE_MOBIVEIL_PLAT
+>  	  for address translation and it is a PCIe Gen4 IP.
+>  
+>  config PCIE_LAYERSCAPE_GEN4
+> -	bool "Freescale Layerscape PCIe Gen4 controller"
+> +	bool "Freescale Layerscpe PCIe Gen4 controller in RC mode"
+>  	depends on PCI
+>  	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
+>  	depends on PCI_MSI_IRQ_DOMAIN
+>  	select PCIE_MOBIVEIL_HOST
+>  	help
+>  	  Say Y here if you want PCIe Gen4 controller support on
+> -	  Layerscape SoCs. The PCIe controller can work in RC or
+> -	  EP mode according to RCW[HOST_AGT_PEX] setting.
+> +	  Layerscape SoCs. And the PCIe controller work in RC mode
+> +	  by setting the RCW[HOST_AGT_PEX] to 0.
+> +
+> +config PCIE_LAYERSCAPE_GEN4_EP
+> +	bool "Freescale Layerscpe PCIe Gen4 controller in EP mode"
+> +	depends on PCI
+> +	depends on OF && (ARM64 || ARCH_LAYERSCAPE)
+> +	depends on PCI_ENDPOINT
+> +	select PCIE_MOBIVEIL_EP
+> +	help
+> +	  Say Y here if you want PCIe Gen4 controller support on
+> +	  Layerscape SoCs. And the PCIe controller work in EP mode
+> +	  by setting the RCW[HOST_AGT_PEX] to 1.
+>  endmenu
+> diff --git a/drivers/pci/controller/mobiveil/Makefile b/drivers/pci/controller/mobiveil/Makefile
+> index 686d41f..6f54856 100644
+> --- a/drivers/pci/controller/mobiveil/Makefile
+> +++ b/drivers/pci/controller/mobiveil/Makefile
+> @@ -4,3 +4,4 @@ obj-$(CONFIG_PCIE_MOBIVEIL_HOST) += pcie-mobiveil-host.o
+>  obj-$(CONFIG_PCIE_MOBIVEIL_EP) += pcie-mobiveil-ep.o
+>  obj-$(CONFIG_PCIE_MOBIVEIL_PLAT) += pcie-mobiveil-plat.o
+>  obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4) += pcie-layerscape-gen4.o
+> +obj-$(CONFIG_PCIE_LAYERSCAPE_GEN4_EP) += pcie-layerscape-gen4-ep.o
+> diff --git a/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> new file mode 100644
+> index 0000000..7bfec51
+> --- /dev/null
+> +++ b/drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
+> @@ -0,0 +1,156 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PCIe controller EP driver for Freescale Layerscape SoCs
+> + *
+> + * Copyright (C) 2019 NXP Semiconductor.
+> + *
+> + * Author: Xiaowei Bao <xiaowei.bao@nxp.com>
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_address.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/resource.h>
+> +
+> +#include "pcie-mobiveil.h"
+> +
+> +#define PCIE_LX2_BAR_NUM	4
+> +
+> +#define to_ls_pcie_g4_ep(x)	dev_get_drvdata((x)->dev)
+> +
+> +struct ls_pcie_g4_ep {
+> +	struct mobiveil_pcie		*mv_pci;
+> +};
+> +
+> +static const struct of_device_id ls_pcie_g4_ep_of_match[] = {
+> +	{ .compatible = "fsl,lx2160a-pcie-ep",},
+> +	{ },
+> +};
+> +
+> +static const struct pci_epc_features ls_pcie_g4_epc_features = {
+> +	.linkup_notifier = false,
+> +	.msi_capable = true,
+> +	.msix_capable = true,
+> +	.reserved_bar = (1 << BAR_4) | (1 << BAR_5),
 
-Signed-off-by: Oliver Graute <oliver.graute@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Marco Felsch <m.felsch@pengutronix.de>
----
-Changelog:
-v6:
- - added some muxing
- - added codec in sound node
- - added adc1 node
+			BIT(BAR_4) | BIT(BAR_5) ?
 
- arch/arm/boot/dts/Makefile                      |   1 +
- arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts | 221 ++++++++++++++++++++++++
- 2 files changed, 222 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
+> +};
+> +
+> +static const struct pci_epc_features*
+> +ls_pcie_g4_ep_get_features(struct mobiveil_pcie_ep *ep)
+> +{
+> +	return &ls_pcie_g4_epc_features;
+> +}
+> +
+> +static void ls_pcie_g4_ep_init(struct mobiveil_pcie_ep *ep)
+> +{
+> +	struct mobiveil_pcie *mv_pci = to_mobiveil_pcie_from_ep(ep);
+> +	int win_idx;
+> +	u8 bar;
+> +
+> +	ep->bar_num = PCIE_LX2_BAR_NUM;
+> +
+> +	for (bar = BAR_0; bar < ep->epc->max_functions * ep->bar_num; bar++)
+> +		mobiveil_pcie_ep_reset_bar(mv_pci, bar);
+> +
+> +	for (win_idx = 0; win_idx < ep->apio_wins; win_idx++)
+> +		mobiveil_pcie_disable_ob_win(mv_pci, win_idx);
+> +}
+> +
+> +static int ls_pcie_g4_ep_raise_irq(struct mobiveil_pcie_ep *ep, u8 func_no,
+> +				   enum pci_epc_irq_type type,
+> +				   u16 interrupt_num)
+> +{
+> +	struct mobiveil_pcie *mv_pci = to_mobiveil_pcie_from_ep(ep);
+> +
+> +	switch (type) {
+> +	case PCI_EPC_IRQ_LEGACY:
+> +		return mobiveil_pcie_ep_raise_legacy_irq(ep, func_no);
+> +	case PCI_EPC_IRQ_MSI:
+> +		return mobiveil_pcie_ep_raise_msi_irq(ep, func_no,
+> +						      interrupt_num);
+> +	case PCI_EPC_IRQ_MSIX:
+> +		return mobiveil_pcie_ep_raise_msix_irq(ep, func_no,
+> +						       interrupt_num);
+> +	default:
+> +		dev_err(&mv_pci->pdev->dev, "UNKNOWN IRQ type\n");
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct mobiveil_pcie_ep_ops pcie_ep_ops = {
+> +	.ep_init = ls_pcie_g4_ep_init,
+> +	.raise_irq = ls_pcie_g4_ep_raise_irq,
+> +	.get_features = ls_pcie_g4_ep_get_features,
+> +};
+> +
+> +static int __init ls_pcie_gen4_add_pcie_ep(struct ls_pcie_g4_ep *ls_ep,
+> +					   struct platform_device *pdev)
+> +{
+> +	struct mobiveil_pcie *mv_pci = ls_ep->mv_pci;
+> +	struct device *dev = &pdev->dev;
+> +	struct mobiveil_pcie_ep *ep;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	ep = &mv_pci->ep;
+> +	ep->ops = &pcie_ep_ops;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	ep->phys_base = res->start;
+> +	ep->addr_size = resource_size(res);
+> +
+> +	ret = mobiveil_pcie_ep_init(ep);
+> +	if (ret) {
+> +		dev_err(dev, "failed to initialize layerscape endpoint\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init ls_pcie_g4_ep_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct mobiveil_pcie *mv_pci;
+> +	struct ls_pcie_g4_ep *ls_ep;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	ls_ep = devm_kzalloc(dev, sizeof(*ls_ep), GFP_KERNEL);
+> +	if (!ls_ep)
+> +		return -ENOMEM;
+> +
+> +	mv_pci = devm_kzalloc(dev, sizeof(*mv_pci), GFP_KERNEL);
+> +	if (!mv_pci)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
+> +	mv_pci->csr_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
+> +	if (IS_ERR(mv_pci->csr_axi_slave_base))
+> +		return PTR_ERR(mv_pci->csr_axi_slave_base);
+> +
+> +	mv_pci->pdev = pdev;
+> +	ls_ep->mv_pci = mv_pci;
+> +
+> +	platform_set_drvdata(pdev, ls_ep);
+> +
+> +	ret = ls_pcie_gen4_add_pcie_ep(ls_ep, pdev);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct platform_driver ls_pcie_g4_ep_driver = {
+> +	.driver = {
+> +		.name = "layerscape-pcie-gen4-ep",
+> +		.of_match_table = ls_pcie_g4_ep_of_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +};
+> +builtin_platform_driver_probe(ls_pcie_g4_ep_driver, ls_pcie_g4_ep_probe);
+> -- 
+> 2.9.5
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a24a6a1..a2a69e4 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -579,6 +579,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-tx6ul-0010.dtb \
- 	imx6ul-tx6ul-0011.dtb \
- 	imx6ul-tx6ul-mainboard.dtb \
-+	imx6ul-var-6ulcustomboard.dtb \
- 	imx6ull-14x14-evk.dtb \
- 	imx6ull-colibri-eval-v3.dtb \
- 	imx6ull-colibri-wifi-eval-v3.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-new file mode 100644
-index 00000000..031d8d4
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
-@@ -0,0 +1,221 @@
-+// SPDX-License-Identifier: (GPL-2.0)
-+/*
-+ * Support for Variscite DART-6UL Module
-+ *
-+ * Copyright (C) 2015 Freescale Semiconductor, Inc.
-+ * Copyright (C) 2015-2016 Variscite Ltd. - http://www.variscite.com
-+ * Copyright (C) 2018-2019 Oliver Graute <oliver.graute@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include "imx6ul-imx6ull-var-dart-common.dtsi"
-+
-+/ {
-+	model = "Variscite i.MX6 UltraLite Carrier-board";
-+	compatible = "variscite,6ulcustomboard", "fsl,imx6ul";
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm1 0 20000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+		status = "okay";
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_keys>;
-+
-+		user {
-+			gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_BACK>;
-+			gpio-key,wakeup;
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_leds>;
-+
-+		d16-led {
-+			gpios = <&gpio4 20 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "wm8731audio";
-+		simple-audio-card,widgets =
-+			"Headphone", "Headphone Jack",
-+			"Line", "Line Jack",
-+			"Microphone", "Mic Jack";
-+		simple-audio-card,routing =
-+			"Headphone Jack", "RHPOUT",
-+			"Headphone Jack", "LHPOUT",
-+			"LLINEIN", "Line Jack",
-+			"RLINEIN", "Line Jack",
-+			"MICIN", "Mic Bias",
-+			"Mic Bias", "Mic Jack";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&codec_dai>;
-+		simple-audio-card,frame-master = <&codec_dai>;
-+
-+		cpu_dai: simple-audio-card,cpu {
-+				sound-dai = <&sai2>;
-+		};
-+
-+		codec_dai: simple-audio-card,codec {
-+			sound-dai = <&wm8731>;
-+			system-clock-frequency = <12288000>;
-+		};
-+	};
-+};
-+
-+&adc1 {
-+	vref-supply = <&reg_touch_3v3>;
-+	status = "okay";
-+};
-+
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	status = "okay";
-+};
-+
-+&can2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+	status = "okay";
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1>;
-+	status = "okay";
-+};
-+
-+&fec2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet2>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	clock_frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+
-+	wm8731: audio-codec@1a {
-+		compatible = "wlf,wm8731";
-+		reg = <0x1a>;
-+		#sound-dai-cells = <0>;
-+		clocks = <&clks IMX6UL_CLK_SAI2>;
-+		clock-names = "mclk";
-+	};
-+
-+	touchscreen@38 {
-+		compatible = "edt,edt-ft5x06";
-+		reg = <0x38>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <4 IRQ_TYPE_NONE>;
-+		touchscreen-size-x = <800>;
-+		touchscreen-size-y = <480>;
-+		touchscreen-inverted-x;
-+		touchscreen-inverted-y;
-+		wakeup-source;
-+	};
-+
-+	rtc@68 {
-+		compatible = "dallas,ds1337";
-+		reg = <0x68>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_rtc>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-+	};
-+};
-+
-+&lcdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lcdif>;
-+	display = <&display0>;
-+	status = "okay";
-+
-+	display0: display0 {
-+		bits-per-pixel = <16>;
-+		bus-width = <24>;
-+
-+		display-timings {
-+			native-mode = <&timing0>;
-+			timing0: timing0 {
-+				clock-frequency =<35000000>;
-+				hactive = <800>;
-+				vactive = <480>;
-+				hfront-porch = <40>;
-+				hback-porch = <40>;
-+				hsync-len = <48>;
-+				vback-porch = <29>;
-+				vfront-porch = <13>;
-+				vsync-len = <3>;
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+				de-active = <1>;
-+				pixelclk-active = <0>;
-+			};
-+		};
-+	};
-+};
-+
-+&pwm1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	disable-over-current;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	disable-over-current;
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_rtc: rtcgrp {
-+		fsl,pins = <
-+			MX6UL_PAD_SNVS_TAMPER7__GPIO5_IO07	0x1b0b0
-+		>;
-+	};
-+};
 -- 
-2.7.4
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
