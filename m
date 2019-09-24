@@ -1,50 +1,34 @@
-From: Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH 4/4] ARM: dts: aspeed: ast2600: Add SCU interrupt controllers
-Date: Tue, 24 Sep 2019 11:14:32 -0500
-Message-ID: <1569341672-27632-5-git-send-email-eajames@linux.ibm.com>
-References: <1569341672-27632-1-git-send-email-eajames@linux.ibm.com>
+From: Oliver Graute <oliver.graute@gmail.com>
+Subject: [PATCHv6 0/2] Variscite DART-6UL SoM support
+Date: Tue, 24 Sep 2019 18:20:19 +0200
+Message-ID: <1569342022-15901-1-git-send-email-oliver.graute@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569341672-27632-1-git-send-email-eajames@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, joel@jms.id.au, mark.rutland@arm.com, robh+dt@kernel.org, maz@kernel.org, jason@lakedaemon.net, tglx@linutronix.de, Eddie James <eajames@linux.ibm.com>
+To: shawnguo@kernel.org
+Cc: oliver.graute@gmail.com, m.felsch@pengutronix.de, narmstrong@baylibre.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add nodes for the interrupt controllers provided by the SCU.
+Need feedback to the following patches which adds support for a DART-6UL Board
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- arch/arm/boot/dts/aspeed-g6.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Need feedback if the division between customboard and SoM is done right
 
-diff --git a/arch/arm/boot/dts/aspeed-g6.dtsi b/arch/arm/boot/dts/aspeed-g6.dtsi
-index 3a1422f..d89f1e6 100644
---- a/arch/arm/boot/dts/aspeed-g6.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g6.dtsi
-@@ -159,6 +159,24 @@
- 					compatible = "aspeed,ast2600-smpmem";
- 					reg = <0x180 0x40>;
- 				};
-+
-+				scu_ic0: interrupt-controller@0 {
-+					#interrupt-cells = <1>;
-+					compatible = "aspeed,ast2600-scu-ic0";
-+					reg = <0x560 0x4>;
-+					interrupt-parent = <&gic>;
-+					interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+					interrupt-controller;
-+				};
-+
-+				scu_ic1: interrupt-controller@1 {
-+					#interrupt-cells = <1>;
-+					compatible = "aspeed,ast2600-scu-ic1";
-+					reg = <0x570 0x4>;
-+					interrupt-parent = <&gic>;
-+					interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+					interrupt-controller;
-+				};
- 			};
- 
- 			rng: hwrng@1e6e2524 {
+Need some feedback why ethernet RX is not working the right way. RX is deaf.
+
+Need feedback howto document propertys and compatible the right way
+
+
+Product Page: https://www.variscite.com/product/evaluation-kits/dart-6ul-kits
+
+Oliver Graute (2):
+  ARM: dts: imx6ul: Add Variscite DART-6UL SoM support
+  ARM: dts: Add support for i.MX6 UltraLite DART Variscite Customboard
+
+ arch/arm/boot/dts/Makefile                         |   1 +
+ .../boot/dts/imx6ul-imx6ull-var-dart-common.dtsi   | 445 +++++++++++++++++++++
+ arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts    | 196 +++++++++
+ 3 files changed, 642 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6ul-imx6ull-var-dart-common.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6ul-var-6ulcustomboard.dts
+
 -- 
-1.8.3.1
+2.7.4
