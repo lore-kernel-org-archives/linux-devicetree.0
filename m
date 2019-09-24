@@ -1,102 +1,32 @@
-From: Hongwei Zhang <hongweiz@ami.com>
-Subject: [v1, 1/1] gpio: dts: aspeed: Add SGPIO driver
-Date: Tue, 24 Sep 2019 15:07:01 -0400
-Message-ID: <1569352021-6383-1-git-send-email-hongweiz@ami.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v4 0/4] arm64: Add basic support for Amlogic A1 SoC Family
+Date: Tue, 24 Sep 2019 12:07:11 -0700
+Message-ID: <7hzhit5x9c.fsf@baylibre.com>
+References: <1568276370-54181-1-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1568276370-54181-1-git-send-email-jianxin.pan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Joel Stanley <joel@jms.id.au>
-Cc: Hongwei Zhang <hongweiz@ami.com>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Doug Anderson <armlinux@m.disordat.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Mike Rapoport <rppt@linux.ibm.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-amlogic@lists.infradead.org
+Cc: Jianxin Pan <jianxin.pan@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Tao Zeng <tao.zeng@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-Add SGPIO driver support for Aspeed AST2500 SoC.
+Jianxin Pan <jianxin.pan@amlogic.com> writes:
 
-Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
----
- arch/arm/Kconfig                 |  2 ++
- arch/arm/boot/dts/aspeed-g5.dtsi | 16 +++++++++++++++-
- drivers/gpio/Kconfig             |  8 ++++++++
- drivers/gpio/Makefile            |  1 +
- 4 files changed, 26 insertions(+), 1 deletion(-)
+> A1 is an application processor designed for smart audio and IoT applications,
+> with Dual core ARM Cortex-A35 CPU. Unlike the previous GXL and G12 series,
+> there is no Cortex-M3 AO CPU in it.
+>
+> This serial add basic support for the Amlogic A1 based Amlogic AD401 board:
+> which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
+> Timer, UART. It's capable of booting up into the serial console.
+>
+> The pclk for uart_AO_B need to be fixed once A1 clock driver is merged.
+> In this version, it rely on bootloader to enable the pclk gate
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 2436021..c9f08ab 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1460,6 +1460,8 @@ config ARCH_NR_GPIO
- 	default 416 if ARCH_SUNXI
- 	default 392 if ARCH_U8500
- 	default 352 if ARCH_VT8500
-+	default 312 if MACH_ASPEED_G5
-+	default 304 if MACH_ASPEED_G4
- 	default 288 if ARCH_ROCKCHIP
- 	default 264 if MACH_H4700
- 	default 0
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 00f05bd..85da7ea 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -311,7 +311,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				compatible = "aspeed,ast2500-gpio";
--				reg = <0x1e780000 0x1000>;
-+				reg = <0x1e780000 0x200>;
- 				interrupts = <20>;
- 				gpio-ranges = <&pinctrl 0 0 232>;
- 				clocks = <&syscon ASPEED_CLK_APB>;
-@@ -319,6 +319,20 @@
- 				#interrupt-cells = <2>;
- 			};
- 
-+			sgpio: sgpio@1e780200 {
-+				#gpio-cells = <2>;
-+				compatible = "aspeed,ast2500-sgpio";
-+				gpio-controller;
-+				interrupts = <40>;
-+				reg = <0x1e780200 0x0100>;
-+				clocks = <&syscon ASPEED_CLK_APB>;
-+				interrupt-controller;
-+				ngpios = <8>;
-+				bus-frequency = <12000000>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_sgpm_default>;
-+			};
-+
- 			rtc: rtc@1e781000 {
- 				compatible = "aspeed,ast2500-rtc";
- 				reg = <0x1e781000 0x18>;
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index bb13c26..e94f903 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -120,6 +120,14 @@ config GPIO_ASPEED
- 	help
- 	  Say Y here to support Aspeed AST2400 and AST2500 GPIO controllers.
- 
-+config SGPIO_ASPEED
-+	bool "Aspeed SGPIO support"
-+	depends on (ARCH_ASPEED || COMPILE_TEST) && OF_GPIO
-+	select GPIO_GENERIC
-+	select GPIOLIB_IRQCHIP
-+	help
-+	  Say Y here to support Aspeed AST2500 SGPIO functionality.
-+
- config GPIO_ATH79
- 	tristate "Atheros AR71XX/AR724X/AR913X GPIO support"
- 	default y if ATH79
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index a4e9117..bebbd82 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -32,6 +32,7 @@ obj-$(CONFIG_GPIO_AMD_FCH)		+= gpio-amd-fch.o
- obj-$(CONFIG_GPIO_AMDPT)		+= gpio-amdpt.o
- obj-$(CONFIG_GPIO_ARIZONA)		+= gpio-arizona.o
- obj-$(CONFIG_GPIO_ASPEED)		+= gpio-aspeed.o
-+obj-$(CONFIG_SGPIO_ASPEED)		+= sgpio-aspeed.o
- obj-$(CONFIG_GPIO_ATH79)		+= gpio-ath79.o
- obj-$(CONFIG_GPIO_BCM_KONA)		+= gpio-bcm-kona.o
- obj-$(CONFIG_GPIO_BD70528)		+= gpio-bd70528.o
--- 
-2.7.4
+Queued for v5.5,
+
+Thanks for the new SoC support,
+
+Kevin
