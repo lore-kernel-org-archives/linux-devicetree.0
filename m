@@ -1,51 +1,27 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 0/4] Rework secure-monitor driver
-Date: Tue, 24 Sep 2019 11:45:23 -0700
-Message-ID: <7hd0fp7cu4.fsf@baylibre.com>
-References: <20190731082339.20163-1-ccaione@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/5] dt-bindings: display: imx: add bindings for DCSS
+Date: Tue, 24 Sep 2019 13:53:28 -0500
+Message-ID: <CAL_JsqK1egTpkqsgVUMUiYzKvVJ=nWtJu+OeujJotRCD9ADsnw@mail.gmail.com>
+References: <1569248002-2485-1-git-send-email-laurentiu.palcu@nxp.com> <1569248002-2485-5-git-send-email-laurentiu.palcu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190731082339.20163-1-ccaione@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: srinivas.kandagatla@linaro.org, narmstrong@baylibre.com, robh+dt@kernel.org, tglx@linutronix.de, jbrunet@baylibre.com, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Carlo Caione <ccaione@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1569248002-2485-5-git-send-email-laurentiu.palcu@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Lucas Stach <l.stach@pengutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Carlo Caione <ccaione@baylibre.com> writes:
-
-> The secure-monitor driver is currently in really bad shape, not my 
-> proudest piece of code (thanks Jerome for pointing that out ;). I tried 
-> to rework it a bit to make it a bit more tolerable.
+On Mon, Sep 23, 2019 at 9:14 AM Laurentiu Palcu <laurentiu.palcu@nxp.com> wrote:
 >
-> I needed to change a bit the APIs and consequently adapt the only user 
-> we have, that is the nvmem/efuses driver. To not break bisectability I 
-> added one single commit to change both the drivers.
+> Add bindings for iMX8MQ Display Controller Subsystem.
 >
-> The remaining commits are cosmetic and DTS/docs fixes.
->
-> Changelog:
-> - Changed patches order to not break bisect
-> - Removed non-functional changes (PATCH 1/5) of the nvmem driver
-> - Fix gxbb/gxl DTS
->
-> Carlo Caione (4):
->   firmware: meson_sm: Mark chip struct as static const
->   nvmem: meson-efuse: bindings: Add secure-monitor phandle
->   arm64: dts: meson: Link nvmem and secure-monitor nodes
->   firmware: meson_sm: Rework driver as a proper platform driver
+> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> ---
+>  .../bindings/display/imx/nxp,imx8mq-dcss.yaml      | 86 ++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
 
-Queued for v5.5,
+Fails to build with 'make dt_binding_check':
 
-Thanks,
-
-Kevin
+https://patchwork.ozlabs.org/patch/1166073/
