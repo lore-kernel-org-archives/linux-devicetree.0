@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 3/8] media: i2c: ov2659: Cleanup include file list
-Date: Tue, 24 Sep 2019 11:44:09 -0500
-Message-ID: <20190924164414.21897-4-bparrot@ti.com>
+Subject: [Patch v3 1/8] media: i2c: ov2659: Fix for image wrap-around in lower resolution
+Date: Tue, 24 Sep 2019 11:44:07 -0500
+Message-ID: <20190924164414.21897-2-bparrot@ti.com>
 References: <20190924164414.21897-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,52 +9,41 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190924164414.21897-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Several of include files listed are not explicitly needed.
-If they are need then they are implicitly included.
-
-Reduce the list of includes to an easier to manage list.
+Based on recently found sensor configuration examples, it was
+discovered that when scaling and binning are used for the lower
+resolutions (i.e. 640x480, 320x240) the read offset has to be
+increased otherwise the image appears to be wrapped around.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
 ---
- drivers/media/i2c/ov2659.c | 14 --------------
- 1 file changed, 14 deletions(-)
+ drivers/media/i2c/ov2659.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index efbe6dc720e2..f77320e8a60d 100644
+index f4ded0669ff9..17573257097d 100644
 --- a/drivers/media/i2c/ov2659.c
 +++ b/drivers/media/i2c/ov2659.c
-@@ -22,29 +22,15 @@
- 
- #include <linux/clk.h>
- #include <linux/delay.h>
--#include <linux/err.h>
--#include <linux/init.h>
--#include <linux/interrupt.h>
--#include <linux/io.h>
- #include <linux/i2c.h>
--#include <linux/kernel.h>
--#include <linux/media.h>
- #include <linux/module.h>
--#include <linux/of.h>
- #include <linux/of_graph.h>
--#include <linux/slab.h>
--#include <linux/uaccess.h>
--#include <linux/videodev2.h>
- 
--#include <media/media-entity.h>
- #include <media/i2c/ov2659.h>
--#include <media/v4l2-common.h>
- #include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-event.h>
- #include <media/v4l2-fwnode.h>
- #include <media/v4l2-image-sizes.h>
--#include <media/v4l2-mediabus.h>
- #include <media/v4l2-subdev.h>
- 
- #define DRIVER_NAME "ov2659"
+@@ -661,7 +661,7 @@ static struct sensor_register ov2659_vga[] = {
+ 	{ REG_TIMING_HORIZ_FORMAT, 0x01 },
+ 	{ 0x370a, 0x52 },
+ 	{ REG_VFIFO_READ_START_H, 0x00 },
+-	{ REG_VFIFO_READ_START_L, 0x80 },
++	{ REG_VFIFO_READ_START_L, 0xa0 },
+ 	{ REG_ISP_CTRL02, 0x10 },
+ 	{ REG_NULL, 0x00 },
+ };
+@@ -709,7 +709,7 @@ static  struct sensor_register ov2659_qvga[] = {
+ 	{ REG_TIMING_HORIZ_FORMAT, 0x01 },
+ 	{ 0x370a, 0x52 },
+ 	{ REG_VFIFO_READ_START_H, 0x00 },
+-	{ REG_VFIFO_READ_START_L, 0x80 },
++	{ REG_VFIFO_READ_START_L, 0xa0 },
+ 	{ REG_ISP_CTRL02, 0x10 },
+ 	{ REG_NULL, 0x00 },
+ };
 -- 
 2.17.1
