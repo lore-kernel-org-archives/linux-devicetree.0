@@ -1,91 +1,75 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: riscv: Fix CPU schema errors
-Date: Tue, 24 Sep 2019 14:47:05 -0500
-Message-ID: <20190924194705.32240-1-robh@kernel.org>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH V4 4/4] ASoC: fsl_asrc: Fix error with S24_3LE format
+ bitstream in i.MX8
+Date: Tue, 24 Sep 2019 14:43:44 -0700
+Message-ID: <20190924214343.GA964@Asurada-Nvidia.nvidia.com>
+References: <cover.1569296075.git.shengjiu.wang@nxp.com>
+ <b93ce3dced55bbad8e0b4b7e700cf394b1ae1551.1569296075.git.shengjiu.wang@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <b93ce3dced55bbad8e0b4b7e700cf394b1ae1551.1569296075.git.shengjiu.wang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org
+To: Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc: timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de
 List-Id: devicetree@vger.kernel.org
 
-Fix the errors in the RiscV CPU DT schema:
+On Tue, Sep 24, 2019 at 06:52:35PM +0800, Shengjiu Wang wrote:
+> There is error "aplay: pcm_write:2023: write error: Input/output error"
+> on i.MX8QM/i.MX8QXP platform for S24_3LE format.
+> 
+> In i.MX8QM/i.MX8QXP, the DMA is EDMA, which don't support 24bit
+> sample, but we didn't add any constraint, that cause issues.
+> 
+> So we need to query the caps of dma, then update the hw parameters
+> according to the caps.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> ---
+>  sound/soc/fsl/fsl_asrc.c     |  4 +--
+>  sound/soc/fsl/fsl_asrc.h     |  3 ++
+>  sound/soc/fsl/fsl_asrc_dma.c | 59 +++++++++++++++++++++++++++++++-----
+>  3 files changed, 56 insertions(+), 10 deletions(-)
+> 
+> @@ -270,12 +268,17 @@ static int fsl_asrc_dma_hw_free(struct snd_pcm_substream *substream)
+>  
+>  static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
+>  {
+> +	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+>  	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+>  	struct snd_pcm_runtime *runtime = substream->runtime;
+>  	struct snd_soc_component *component = snd_soc_rtdcom_lookup(rtd, DRV_NAME);
+> +	struct snd_dmaengine_dai_dma_data *dma_data;
+>  	struct device *dev = component->dev;
+>  	struct fsl_asrc *asrc_priv = dev_get_drvdata(dev);
+>  	struct fsl_asrc_pair *pair;
+> +	struct dma_chan *tmp_chan = NULL;
+> +	u8 dir = tx ? OUT : IN;
+> +	int ret = 0;
+>  
+>  	pair = kzalloc(sizeof(struct fsl_asrc_pair), GFP_KERNEL);
 
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@1: 'timebase-frequency' is a required property
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible:0: 'riscv' is not one of ['sifive,rocket0', 'sifive,e5', 'sifive,e51', 'sifive,u54-mc', 'sifive,u54', 'sifive,u5']
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible: ['riscv'] is too short
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
+Sorry, I didn't catch it previously. We would need to release
+this memory also for all error-out paths, as the code doesn't
+have any error-out routine, prior to applying this change.
 
-Fixes: 4fd669a8c487 ("dt-bindings: riscv: convert cpu binding to json-schema")
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/riscv/cpus.yaml       | 25 ++++++++++---------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+>  	if (!pair)
+> @@ -285,11 +288,51 @@ static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
 
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-index c899111aa5e3..e7321688f7b9 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-+++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-@@ -12,15 +12,17 @@ maintainers:
- 
- properties:
-   compatible:
--    items:
--      - enum:
--          - sifive,rocket0
--          - sifive,e5
--          - sifive,e51
--          - sifive,u54-mc
--          - sifive,u54
--          - sifive,u5
--      - const: riscv
-+    oneOf:
-+      - items:
-+          - enum:
-+              - sifive,rocket0
-+              - sifive,e5
-+              - sifive,e51
-+              - sifive,u54-mc
-+              - sifive,u54
-+              - sifive,u5
-+          - const: riscv
-+      - const: riscv    # Simulator only
-     description:
-       Identifies that the hart uses the RISC-V instruction set
-       and identifies the type of the hart.
-@@ -51,8 +53,6 @@ properties:
-       https://riscv.org/specifications/
- 
-   timebase-frequency:
--    type: integer
--    minimum: 1
-     description:
-       Specifies the clock frequency of the system timer in Hz.
-       This value is common to all harts on a single system image.
-@@ -86,9 +86,9 @@ examples:
-     cpus {
-         #address-cells = <1>;
-         #size-cells = <0>;
--        timebase-frequency = <1000000>;
-         cpu@0 {
-                 clock-frequency = <0>;
-+                timebase-frequency = <1000000>;
-                 compatible = "sifive,rocket0", "riscv";
-                 device_type = "cpu";
-                 i-cache-block-size = <64>;
-@@ -104,6 +104,7 @@ examples:
-         };
-         cpu@1 {
-                 clock-frequency = <0>;
-+                timebase-frequency = <1000000>;
-                 compatible = "sifive,rocket0", "riscv";
-                 d-cache-block-size = <64>;
-                 d-cache-sets = <64>;
--- 
-2.20.1
+> +	/* Request a dummy pair, which will be released later.
+> +	 * Request pair function needs channel num as input, for this
+> +	 * dummy pair, we just request "1" channel temporary.
+> +	 */
+
+"temporary" => "temporarily"
+
+> +	ret = fsl_asrc_request_pair(1, pair);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to request asrc pair\n");
+> +		return ret;
+> +	}
+> +
+> +	/* Request a dummy dma channel, which will be release later. */
+
+"release" => "released"
