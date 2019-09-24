@@ -1,31 +1,59 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH V4 3/4] ASoC: pcm_dmaengine: Extract
- snd_dmaengine_pcm_refine_runtime_hwparams
-Date: Tue, 24 Sep 2019 14:51:35 -0700
-Message-ID: <20190924215135.GA2277@Asurada-Nvidia.nvidia.com>
-References: <cover.1569296075.git.shengjiu.wang@nxp.com>
- <4d9aab898650c68ea57c10067830dac884eb7439.1569296075.git.shengjiu.wang@nxp.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT
+ masters
+Date: Tue, 24 Sep 2019 16:59:20 -0500
+Message-ID: <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4d9aab898650c68ea57c10067830dac884eb7439.1569296075.git.shengjiu.wang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc: timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20190924181244.7159-1-nsaenzjulienne-l3A5Bk7waGM@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Nicolas Saenz Julienne <nsaenzjulienne-l3A5Bk7waGM@public.gmane.org>
+Cc: freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, etnaviv-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Wahren <wahrenst-hi6Y0CQ0nG0@public.gmane.org>, james.quinlan-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TaqPxH82wqD4g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 06:52:34PM +0800, Shengjiu Wang wrote:
-> When set the runtime hardware parameters, we may need to query
-> the capability of DMA to complete the parameters.
-> 
-> This patch is to Extract this operation from
-> dmaengine_pcm_set_runtime_hwparams function to a separate function
-> snd_dmaengine_pcm_refine_runtime_hwparams, that other components
-> which need this feature can call this function.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-
-Looks good to me.
-
-Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
+T24gVHVlLCBTZXAgMjQsIDIwMTkgYXQgMToxMiBQTSBOaWNvbGFzIFNhZW56IEp1bGllbm5lCjxu
+c2FlbnpqdWxpZW5uZUBzdXNlLmRlPiB3cm90ZToKPgo+IEhpIEFsbCwKPiB0aGlzIHNlcmllcyB0
+cmllcyB0byBhZGRyZXNzIG9uZSBvZiB0aGUgaXNzdWVzIGJsb2NraW5nIHVzIGZyb20KPiB1cHN0
+cmVhbWluZyBCcm9hZGNvbSdzIFNUQiBQQ0llIGNvbnRyb2xsZXJbMV0uIE5hbWVseSwgdGhlIGZh
+Y3QgdGhhdAo+IGRldmljZXMgbm90IHJlcHJlc2VudGVkIGluIERUIHdoaWNoIHNpdCBiZWhpbmQg
+YSBQQ0kgYnVzIGZhaWwgdG8gZ2V0IHRoZQo+IGJ1cycgRE1BIGFkZHJlc3NpbmcgY29uc3RyYWlu
+dHMuCj4KPiBUaGlzIGlzIGR1ZSB0byB0aGUgZmFjdCB0aGF0IG9mX2RtYV9jb25maWd1cmUoKSBh
+c3N1bWVzIGl0J3MgcmVjZWl2aW5nIGEKPiBEVCBub2RlIHJlcHJlc2VudGluZyB0aGUgZGV2aWNl
+IGJlaW5nIGNvbmZpZ3VyZWQsIGFzIG9wcG9zZWQgdG8gdGhlIFBDSWUKPiBicmlkZ2Ugbm9kZSB3
+ZSBjdXJyZW50bHkgcGFzcy4gVGhpcyBjYXVzZXMgdGhlIGNvZGUgdG8gZGlyZWN0bHkganVtcAo+
+IGludG8gUENJJ3MgcGFyZW50IG5vZGUgd2hlbiBjaGVja2luZyBmb3IgJ2RtYS1yYW5nZXMnIGFu
+ZCBtaXNzZXMKPiB3aGF0ZXZlciB3YXMgc2V0IHRoZXJlLgo+Cj4gVG8gYWRkcmVzcyB0aGlzIEkg
+Y3JlYXRlIGEgbmV3IEFQSSBpbiBPRiAtIGluc3BpcmVkIGZyb20gUm9iaW4gTXVycGh5cwo+IG9y
+aWdpbmFsIHByb3Bvc2FsWzJdIC0gd2hpY2ggYWNjZXB0cyBhIGJ1cyBEVCBub2RlIGFzIGl0J3Mg
+aW5wdXQgaW4KPiBvcmRlciB0byBjb25maWd1cmUgYSBkZXZpY2UncyBETUEgY29uc3RyYWludHMu
+IFRoZSBjaGFuZ2VzIGdvIGRlZXAgaW50bwo+IG9mL2FkZHJlc3MuYydzIGltcGxlbWVudGF0aW9u
+LCBhcyBhIGRldmljZSBiZWluZyBoYXZpbmcgYSBEVCBub2RlCj4gYXNzdW1wdGlvbiB3YXMgcHJl
+dHR5IHN0cm9uZy4KPgo+IE9uIHRvcCBvZiB0aGlzIHdvcmssIEkgYWxzbyBjbGVhbmVkIHVwIG9m
+X2RtYV9jb25maWd1cmUoKSByZW1vdmluZyBpdHMKPiByZWR1bmRhbnQgYXJndW1lbnRzIGFuZCBj
+cmVhdGluZyBhbiBhbHRlcm5hdGl2ZSBmdW5jdGlvbiBmb3IgdGhlIHNwZWNpYWwgY2FzZXMKPiBu
+b3QgYXBwbGljYWJsZSB0byBlaXRoZXIgdGhlIGFib3ZlIGNhc2Ugb3IgdGhlIGRlZmF1bHQgdXNh
+Z2UuCj4KPiBJTU8gdGhlIHJlc3VsdGluZyBmdW5jdGlvbnMgYXJlIG1vcmUgZXhwbGljaXQuIFRo
+ZXkgd2lsbCBwcm9iYWJseQo+IHN1cmZhY2Ugc29tZSBoYWNreSB1c2FnZXMgdGhhdCBjYW4gYmUg
+cHJvcGVybHkgZml4ZWQgYXMgSSBzaG93IHdpdGggdGhlCj4gRFQgZml4ZXMgb24gdGhlIExheWVy
+c2NhcGUgcGxhdGZvcm0uCj4KPiBUaGlzIHdhcyBhbHNvIHRlc3RlZCBvbiBhIFJhc3BiZXJyeSBQ
+aSA0IHdpdGggYSBjdXN0b20gUENJZSBkcml2ZXIgYW5kCj4gb24gYSBTZWF0dGxlIEFNRCBib2Fy
+ZC4KCkh1bW0sIEkndmUgYmVlbiB3b3JraW5nIG9uIHRoaXMgaXNzdWUgdG9vLiBMb29rcyBzaW1p
+bGFyIHRob3VnaCB5b3VycwpoYXMgYSBsb3QgbW9yZSBjaHVybiBhbmQgdGhlcmUncyBzb21lIG90
+aGVyIGJ1Z3MgSSd2ZSBmb3VuZC4KCkNhbiB5b3UgdGVzdCBvdXQgdGhpcyBicmFuY2hbMV0uIEkg
+ZG9uJ3QgaGF2ZSBhbnkgaC93IG5lZWRpbmcgdGhpcywKYnV0IHdyb3RlIGEgdW5pdHRlc3QgYW5k
+IHRlc3RlZCB3aXRoIG1vZGlmaWVkIFFFTVUuCgpSb2IKClsxXSBnaXQ6Ly9naXQua2VybmVsLm9y
+Zy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvcm9iaC9saW51eC5naXQgZG1hLW1hc2tzCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWls
+aW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubw==
