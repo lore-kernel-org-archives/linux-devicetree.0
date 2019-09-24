@@ -1,189 +1,193 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
-Date: Tue, 24 Sep 2019 16:12:22 -0700
-Message-ID: <20190924231223.9012C207FD@mail.kernel.org>
-References: <20190918095018.17979-1-tdas@codeaurora.org> <20190918095018.17979-4-tdas@codeaurora.org> <20190918213946.DC03521924@mail.kernel.org> <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH V3 09/10] interconnect: mediatek: Add mt8183 interconnect
+ provider driver
+Date: Tue, 24 Sep 2019 16:53:57 -0700
+Message-ID: <ff52d219-1621-37de-3b70-d10d95bf370f@linaro.org>
+References: <1566995328-15158-1-git-send-email-henryc.chen@mediatek.com>
+ <1566995328-15158-10-git-send-email-henryc.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org>
+In-Reply-To: <1566995328-15158-10-git-send-email-henryc.chen@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Taniya Das <tdas@codeaurora.org>, robh+dt@kernel.org
-Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Henry Chen <henryc.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Stephen Boyd <swboyd@chromium.org>, Ryan Case <ryandcase@chromium.org>
+Cc: Nicolas Boichat <drinkcat@google.com>, Fan Chen <fan.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2019-09-23 01:01:11)
-> Hi Stephen,
->=20
-> Thanks for your comments.
->=20
-> On 9/19/2019 3:09 AM, Stephen Boyd wrote:
-> > Quoting Taniya Das (2019-09-18 02:50:18)
-> >> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc71=
-80.c
-> >> new file mode 100644
-> >> index 000000000000..d47865d5408f
-> >> --- /dev/null
-> >> +++ b/drivers/clk/qcom/gcc-sc7180.c
-> >> @@ -0,0 +1,2515 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> >> + */
-> >> +
-> >> +#include <linux/err.h>
-> >> +#include <linux/kernel.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of.h>
-> >> +#include <linux/of_device.h>
-> >> +#include <linux/regmap.h>
-> >=20
-> > include clk-provider.h
-> >=20
->=20
-> will add this header.
-> Currently the <drivers/clk/qcom/clk-regmap.h> already includes it.
+Hi Henry,
 
-Yes but it should be included in any clk-provider drivers too.
+Please CC also the linux-pm@ list.
 
-> >> +
-> >> +/* Leave the clock ON for parent config_noc_clk to be kept enabled */
-> >> +static struct clk_branch gcc_disp_ahb_clk =3D {
-> >> +       .halt_reg =3D 0xb00c,
-> >> +       .halt_check =3D BRANCH_HALT,
-> >> +       .hwcg_reg =3D 0xb00c,
-> >> +       .hwcg_bit =3D 1,
-> >> +       .clkr =3D {
-> >> +               .enable_reg =3D 0xb00c,
-> >> +               .enable_mask =3D BIT(0),
-> >> +               .hw.init =3D &(struct clk_init_data){
-> >> +                       .name =3D "gcc_disp_ahb_clk",
-> >> +                       .flags =3D CLK_IS_CRITICAL,
-> >=20
-> > Does this assume the display is left enabled out of the bootloader? Why
-> > is this critical to system operation? Maybe it is really
-> > CLK_IGNORE_UNUSED?
-> >=20
->=20
-> This clock is not kept enabled by bootloader. But leaving this ON for=20
-> clients on config noc.
+On 8/28/19 05:28, Henry Chen wrote:
+> Introduce Mediatek MT8183 specific provider driver using the
+> interconnect framework.
+> 
+> Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+> ---
+>  drivers/interconnect/Kconfig            |   1 +
+>  drivers/interconnect/Makefile           |   1 +
+>  drivers/interconnect/mediatek/Kconfig   |  13 ++
+>  drivers/interconnect/mediatek/Makefile  |   3 +
+>  drivers/interconnect/mediatek/mtk-emi.c | 246 ++++++++++++++++++++++++++++++++
+>  5 files changed, 264 insertions(+)
+>  create mode 100644 drivers/interconnect/mediatek/Kconfig
+>  create mode 100644 drivers/interconnect/mediatek/Makefile
+>  create mode 100644 drivers/interconnect/mediatek/mtk-emi.c
+> 
+[..]
+> +
+> +#define MT8183_MAX_LINKS	6
 
-Please see below comment for the other critical clk with no parent.
+Looks like 1 is enough. Sorry for missing this in my earlier review.
 
->=20
-> >> +                       .ops =3D &clk_branch2_ops,
-> >> +               },
-> >> +       },
-> >> +};
-> >> +
-[...]
-> >> +static struct clk_branch gcc_ufs_phy_phy_aux_clk =3D {
-> >> +       .halt_reg =3D 0x77094,
-> >> +       .halt_check =3D BRANCH_HALT,
-> >> +       .hwcg_reg =3D 0x77094,
-> >> +       .hwcg_bit =3D 1,
-> >> +       .clkr =3D {
-> >> +               .enable_reg =3D 0x77094,
-> >> +               .enable_mask =3D BIT(0),
-> >> +               .hw.init =3D &(struct clk_init_data){
-> >> +                       .name =3D "gcc_ufs_phy_phy_aux_clk",
-> >> +                       .parent_data =3D &(const struct clk_parent_dat=
-a){
-> >> +                               .hw =3D &gcc_ufs_phy_phy_aux_clk_src.c=
-lkr.hw,
-> >> +                       },
-> >> +                       .num_parents =3D 1,
-> >> +                       .flags =3D CLK_SET_RATE_PARENT,
-> >> +                       .ops =3D &clk_branch2_ops,
-> >> +               },
-> >> +       },
-> >> +};
-> >> +
-> >> +static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk =3D {
-> >> +       .halt_reg =3D 0x7701c,
-> >> +       .halt_check =3D BRANCH_HALT_SKIP,
-> >=20
-> > Again, nobody has fixed the UFS driver to not need to do this halt skip
-> > check for these clks? It's been over a year.
-> >=20
->=20
-> The UFS_PHY_RX/TX clocks could be left enabled due to certain HW boot=20
-> configuration and thus during the late initcall of clk_disable there=20
-> could be warnings of "clock stuck ON" in the dmesg. That is the reason=20
-> also to use the BRANCH_HALT_SKIP flag.
+> +
+> +/**
+> + * struct mtk_icc_node - Mediatek specific interconnect nodes
+> + * @name: the node name used in debugfs
+> + * @ep: true if the node is an end point.
+> + * @id: a unique node identifier
+> + * @links: an array of nodes where we can go next while traversing
+> + * @num_links: the total number of @links
+> + * @buswidth: width of the interconnect between a node and the bus
+> + * @sum_avg: current sum aggregate value of all avg bw kBps requests
+> + * @max_peak: current max aggregate value of all peak bw kBps requests
+> + */
+> +struct mtk_icc_node {
+> +	unsigned char *name;
+> +	bool ep;
+> +	u16 id;
+> +	u16 links[MT8183_MAX_LINKS];
+> +	u16 num_links;
+> +	u16 buswidth;
+> +	u64 sum_avg;
+> +	u64 max_peak;
+> +};
+> +
+> +struct mtk_icc_desc {
+> +	struct mtk_icc_node **nodes;
+> +	size_t num_nodes;
+> +};
+> +
+> +#define DEFINE_MNODE(_name, _id, _buswidth, _ep, ...)	\
+> +		static struct mtk_icc_node _name = {			\
+> +		.name = #_name,						\
+> +		.id = _id,						\
+> +		.buswidth = _buswidth,					\
+> +		.ep = _ep,						\
+> +		.num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),	\
+> +}
+> +
+> +DEFINE_MNODE(ddr_emi, SLAVE_DDR_EMI, 1024, 1, 0);
+> +DEFINE_MNODE(mcusys, MASTER_MCUSYS, 256, 0, SLAVE_DDR_EMI);
+> +DEFINE_MNODE(gpu, MASTER_GPUSYS, 256, 0, SLAVE_DDR_EMI);
+> +DEFINE_MNODE(mmsys, MASTER_MMSYS, 256, 0, SLAVE_DDR_EMI);
+> +DEFINE_MNODE(mm_vpu, MASTER_MM_VPU, 128, 0, MASTER_MMSYS);
+> +DEFINE_MNODE(mm_disp, MASTER_MM_DISP, 128, 0, MASTER_MMSYS);
+> +DEFINE_MNODE(mm_vdec, MASTER_MM_VDEC, 128, 0, MASTER_MMSYS);
+> +DEFINE_MNODE(mm_venc, MASTER_MM_VENC, 128, 0, MASTER_MMSYS);
+> +DEFINE_MNODE(mm_cam, MASTER_MM_CAM, 128, 0, MASTER_MMSYS);
+> +DEFINE_MNODE(mm_img, MASTER_MM_IMG, 128, 0, MASTER_MMSYS);
+> +DEFINE_MNODE(mm_mdp, MASTER_MM_MDP, 128, 0, MASTER_MMSYS);
+> +
+[..]
 
-Oh that's bad. Why do the clks stay on when we try to turn them off?
+> +static int emi_icc_aggregate(struct icc_node *node, u32 avg_bw,
+> +			      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
+> +{
 
->=20
-> I would also check internally for the UFS driver fix you are referring he=
-re.
+The prototype of this function has changed meanwhile, so you might want to update.
 
-Sure. I keep asking but nothing is done :(
+[..]
+> +static int emi_icc_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +	const struct mtk_icc_desc *desc;
+> +	struct icc_node *node;
+> +	struct icc_onecell_data *data;
+> +	struct icc_provider *provider;
+> +	struct mtk_icc_node **mnodes;
+> +	size_t num_nodes, i, j;
+> +
+> +	desc = of_device_get_match_data(&pdev->dev);
+> +	if (!desc)
+> +		return -EINVAL;
+> +
+> +	mnodes = desc->nodes;
+> +	num_nodes = desc->num_nodes;
+> +
+> +	provider = devm_kzalloc(&pdev->dev, sizeof(*provider), GFP_KERNEL);
+> +	if (!provider)
+> +		return -ENOMEM;
+> +
+> +	data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	provider->dev = &pdev->dev;
+> +	provider->set = emi_icc_set;
+> +	provider->aggregate = emi_icc_aggregate;
+> +	provider->xlate = of_icc_xlate_onecell;
+> +	INIT_LIST_HEAD(&provider->nodes);
+> +	provider->data = data;
+> +
+> +	ret = icc_provider_add(provider);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "error adding interconnect provider\n");
+> +		return ret;
+> +	}
+> +
+> +	for (i = 0; i < num_nodes; i++) {
+> +		node = icc_node_create(mnodes[i]->id);
+> +		if (IS_ERR(node)) {
+> +			ret = PTR_ERR(node);
+> +			goto err;
+> +		}
+> +
+> +		node->name = mnodes[i]->name;
+> +		node->data = mnodes[i];
+> +		icc_node_add(node, provider);
+> +
+> +		dev_dbg(&pdev->dev, "registered node %s, num link: %d\n",
+> +			mnodes[i]->name, mnodes[i]->num_links);
+> +
+> +		/* populate links */
+> +		for (j = 0; j < mnodes[i]->num_links; j++)
+> +			icc_link_create(node, mnodes[i]->links[j]);
+> +
+> +		data->nodes[i] = node;
+> +	}
+> +	data->num_nodes = num_nodes;
+> +
+> +	platform_set_drvdata(pdev, provider);
+> +
+> +	return 0;
+> +err:
+> +	list_for_each_entry(node, &provider->nodes, node_list) {
+> +		icc_node_del(node);
+> +		icc_node_destroy(node->id);
+> +	}
+> +
+> +	icc_provider_del(provider);
 
->=20
-> >> +       .clkr =3D {
-> >> +               .enable_reg =3D 0x7701c,
-> >> +               .enable_mask =3D BIT(0),
-> >> +               .hw.init =3D &(struct clk_init_data){
-> >> +                       .name =3D "gcc_ufs_phy_rx_symbol_0_clk",
-> >> +                       .ops =3D &clk_branch2_ops,
-> >> +               },
-> >> +       },
-> >> +};
-> >> +
-[...]
-> >> +
-> >> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk =3D {
-> >> +       .halt_reg =3D 0xf058,
-> >> +       .halt_check =3D BRANCH_HALT_SKIP,
-> >=20
-> > Why does this need halt_skip?
->=20
-> This is required as the source is external PHY, so we want to not check=20
-> for HALT.
+You can just call emi_icc_remove() instead of the above.
 
-This doesn't really answer my question. If the source is an external phy
-then it should be listed as a clock in the DT binding and the parent
-should be specified here. Unless something doesn't work because of that?
+Thanks,
+Georgi
 
->=20
-> >=20
-> >> +       .clkr =3D {
-> >> +               .enable_reg =3D 0xf058,
-> >> +               .enable_mask =3D BIT(0),
-> >> +               .hw.init =3D &(struct clk_init_data){
-> >> +                       .name =3D "gcc_usb3_prim_phy_pipe_clk",
-> >> +                       .ops =3D &clk_branch2_ops,
-> >> +               },
-> >> +       },
-> >> +};
-> >> +
-> >> +static struct clk_branch gcc_usb_phy_cfg_ahb2phy_clk =3D {
-> >> +       .halt_reg =3D 0x6a004,
-> >> +       .halt_check =3D BRANCH_HALT,
-> >> +       .hwcg_reg =3D 0x6a004,
-> >> +       .hwcg_bit =3D 1,
-> >> +       .clkr =3D {
-> >> +               .enable_reg =3D 0x6a004,
-> >> +               .enable_mask =3D BIT(0),
-> >> +               .hw.init =3D &(struct clk_init_data){
-> >> +                       .name =3D "gcc_usb_phy_cfg_ahb2phy_clk",
-> >> +                       .ops =3D &clk_branch2_ops,
-> >> +               },
-> >> +       },
-> >> +};
-> >> +
-> >> +/* Leave the clock ON for parent config_noc_clk to be kept enabled */
-> >=20
-> > There's no parent though... So I guess this means it keeps it enabled
-> > implicitly in hardware?
-> >=20
->=20
-> These are not left enabled, but want to leave them enabled for clients=20
-> on config NOC.
-
-Sure. It just doesn't make sense to create clk structures and expose
-them in the kernel when we just want to turn the bits on and leave them
-on forever. Why not just do some register writes in probe for this
-driver? Doesn't that work just as well and use less memory?
+> +	return ret;
+> +}
+> +
+> +static int emi_icc_remove(struct platform_device *pdev)
+> +{
+> +	struct icc_provider *provider = platform_get_drvdata(pdev);
+> +	struct icc_node *n;
+> +
+> +	list_for_each_entry(n, &provider->nodes, node_list) {
+> +		icc_node_del(n);
+> +		icc_node_destroy(n->id);
+> +	}
+> +
+> +	return icc_provider_del(provider);
+> +}
