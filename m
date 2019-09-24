@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 2/8] media: i2c: ov2659: Fix sensor detection to actually fail when device is not present
-Date: Tue, 24 Sep 2019 11:44:08 -0500
-Message-ID: <20190924164414.21897-3-bparrot@ti.com>
+Subject: [Patch v3 5/8] media: dt-bindings: ov2659: add powerdown/reset-gpios optional property
+Date: Tue, 24 Sep 2019 11:44:11 -0500
+Message-ID: <20190924164414.21897-6-bparrot@ti.com>
 References: <20190924164414.21897-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,37 +9,43 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190924164414.21897-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>, Jyri Sarha <jsarha@ti.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Make sure that if the expected sensor device id register
-is not recognized properly the failure is propagated
-up so devices are not left partially initialized.
+Add powerdown-gpios and reset-gpios to the list of optional properties
+for the OV2659 camera sensor.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
 ---
- drivers/media/i2c/ov2659.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/media/i2c/ov2659.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 17573257097d..efbe6dc720e2 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -1330,11 +1330,12 @@ static int ov2659_detect(struct v4l2_subdev *sd)
- 		unsigned short id;
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov2659.txt b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
+index cabc7d827dfb..92989a619f29 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ov2659.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
+@@ -12,6 +12,12 @@ Required Properties:
+ - clock-names: should be "xvclk".
+ - link-frequencies: target pixel clock frequency.
  
- 		id = OV265X_ID(pid, ver);
--		if (id != OV2659_ID)
-+		if (id != OV2659_ID) {
- 			dev_err(&client->dev,
- 				"Sensor detection failed (%04X, %d)\n",
- 				id, ret);
--		else {
-+			ret = -ENODEV;
-+		} else {
- 			dev_info(&client->dev, "Found OV%04X sensor\n", id);
- 			ret = ov2659_init(sd, 0);
- 		}
++Optional Properties:
++- powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
++  Active high with internal pull down resistor.
++- reset-gpios: reference to the GPIO connected to the resetb pin, if any.
++  Active low with internal pull up resistor.
++
+ For further reading on port node refer to
+ Documentation/devicetree/bindings/media/video-interfaces.txt.
+ 
+@@ -27,6 +33,9 @@ Example:
+ 			clocks = <&clk_ov2659 0>;
+ 			clock-names = "xvclk";
+ 
++			powerdown-gpios = <&gpio6 14 GPIO_ACTIVE_HIGH>;
++			reset-gpios = <&gpio6 15 GPIO_ACTIVE_LOW>;
++
+ 			port {
+ 				ov2659_0: endpoint {
+ 					remote-endpoint = <&vpfe_ep>;
 -- 
 2.17.1
