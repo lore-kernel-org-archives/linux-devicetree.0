@@ -1,262 +1,176 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v8 7/9] dt: bindings: lp50xx: Introduce the lp50xx family
- of RGB drivers
-Date: Tue, 24 Sep 2019 09:52:39 -0500
-Message-ID: <5c1091b6-788e-79b2-a6ac-911401b58ed3@ti.com>
-References: <20190920174139.30079-1-dmurphy@ti.com>
- <20190920174139.30079-8-dmurphy@ti.com>
- <73a95bac-7433-5b06-5701-c742307aa004@gmail.com>
- <ba92d95a-9f2c-6b37-74d3-4e3a87ad28bf@ti.com>
- <6788e600-460a-7846-04d0-480268e674a1@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: display: Add xylon logicvc bindings documentation
+Date: Tue, 24 Sep 2019 09:58:42 -0500
+Message-ID: <CAL_JsqJLfAb0xhmBoX+GUcv5wsuHBOs8wZ=Hkw3x03kfsPgOqg@mail.gmail.com>
+References: <20190910153409.111901-1-paul.kocialkowski@bootlin.com>
+ <20190910153409.111901-2-paul.kocialkowski@bootlin.com> <20190913143510.GA9504@bogus>
+ <20190913155815.GA1554@aptenodytes> <CAL_Jsq+dzT1xrfBy2QQHLx9MUNukWWq5eXyOecVV8h0z5ziC8g@mail.gmail.com>
+ <20190923153311.GE57525@aptenodytes>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6788e600-460a-7846-04d0-480268e674a1@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190923153311.GE57525@aptenodytes>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, pavel@ucw.cz, Rob Herring <robh+dt@kernel.org>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 23, 2019 at 10:33 AM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
+>
+> Hi,
+>
+> On Fri 13 Sep 19, 20:16, Rob Herring wrote:
+> > On Fri, Sep 13, 2019 at 4:58 PM Paul Kocialkowski
+> > <paul.kocialkowski@bootlin.com> wrote:
+> > >
+> > > Hi Rob and thanks for the review!
+> > >
+> > > On Fri 13 Sep 19, 15:35, Rob Herring wrote:
+> > > > On Tue, Sep 10, 2019 at 05:34:08PM +0200, Paul Kocialkowski wrote:
+> > > > > The Xylon LogiCVC is a display controller implemented as programmable
+> > > > > logic in Xilinx FPGAs.
+> > > > >
+> > > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > > > ---
+> > > > >  .../bindings/display/xylon,logicvc.txt        | 188 ++++++++++++++++++
+> > > > >  1 file changed, 188 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/display/xylon,logicvc.txt
+> > > >
+> > > > Consider converting this to DT schema format. See
+> > > > Documentation/devicetree/writing-schema.rst (.md in 5.3).
+> > >
+> > > Oh right, that would certainly be much more future-proof!
+> > >
+> > > > > diff --git a/Documentation/devicetree/bindings/display/xylon,logicvc.txt b/Documentation/devicetree/bindings/display/xylon,logicvc.txt
+> > > > > new file mode 100644
+> > > > > index 000000000000..eb4b1553888a
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/display/xylon,logicvc.txt
+> > > > > @@ -0,0 +1,188 @@
+> > > > > +Xylon LogiCVC display controller
+> > > > > +
+> > > > > +The Xylon LogiCVC is a display controller that supports multiple layers.
+> > > > > +It is usually implemented as programmable logic and was optimized for use
+> > > > > +with Xilinx Zynq-7000 SoCs and Xilinx FPGAs.
+> > > > > +
+> > > > > +Because the controller is intended for use in a FPGA, most of the configuration
+> > > > > +of the controller takes place at logic configuration bitstream synthesis time.
+> > > > > +As a result, many of the device-tree bindings are meant to reflect the
+> > > > > +synthesis configuration. These do not allow configuring the controller
+> > > > > +differently than synthesis configuration.
+> > > > > +
+> > > > > +Layers are declared in the "layers" sub-node and have dedicated configuration.
+> > > > > +In version 3 of the controller, each layer has fixed memory offset and address
+> > > > > +starting from the video memory base address for its framebuffer. With version 4,
+> > > > > +framebuffers are configured with a direct memory address instead.
+> > > > > +
+> > > > > +Matching synthesis parameters are provided when applicable.
+> > > > > +
+> > > > > +Required properties:
+> > > > > +- compatible: Should be one of:
+> > > > > +  "xylon,logicvc-3.02.a-display"
+> > > > > +  "xylon,logicvc-4.01.a-display"
+> > > > > +- reg: Physical base address and size for the controller registers.
+> > > > > +- clocks: List of phandle and clock-specifier pairs, one for each entry
+> > > > > +  in 'clock-names'
+> > > > > +- clock-names: List of clock names that should at least contain:
+> > > > > +  - "vclk": The VCLK video clock input.
+> > > > > +- interrupts: The interrupt to use for VBLANK signaling.
+> > > > > +- xylon,display-interface: Display interface in use, should be one of:
+> > > > > +  - "lvds-4bits": 4-bit LVDS interface (C_DISPLAY_INTERFACE == 4).
+> > > > > +- xylon,display-colorspace: Display output colorspace in use, should be one of:
+> > > > > +  - "rgb": RGB colorspace (C_DISPLAY_COLOR_SPACE == 0).
+> > > > > +- xylon,display-depth: Display output depth in use (C_PIXEL_DATA_WIDTH).
+> > > > > +- xylon,row-stride: Fixed number of pixels in a framebuffer row (C_ROW_STRIDE).
+> > > > > +- xylon,layers-count: The number of available layers (C_NUM_OF_LAYERS).
+> > > >
+> > > > Presumably some of this is determined by the display attached. Isn't it
+> > > > safe to assume the IP was configured correctly for the intended display
+> > > > and you can just get this from the panel?
+> > >
+> > > Layers are what corresponds to DRM planes, which are not actually indicated
+> > > by the panel but are a charasteristic of the display controller. In our case,
+> > > this is directly selected at bitstream synthesis time for the controller.
+> > >
+> > > So I'm afraid there is no way we can auto-detect this from the driver.
+> >
+> > Sorry, I referring to the set of properties above. In particular,
+> > xylon,display-interface and xylon,display-colorspace, though I don't
+> > know if the latter is talking in memory format or on the wire format.
+>
+> Both of these are about the wire format, which is also "hardcoded" at synthesis
+> time with no way to be detected afterwards, as far as I know. Memory format is
+> described in the layer sub-nodes.
+
+You have to attach the controller to something at the other end of the
+wire. A panel is only going to support 1 or a few wire formats, so you
+do likely know because the panel knows. In the case that a panel
+supports multiple wire formats, we do have some standard properties
+there. See the LVDS panel binding.
+
+>
+> > Actually for xylon,layers-count, You should just count the child nodes
+> > of 'layers'.
+>
+> Oh that's a good point, thanks!
+>
+> > > > > +Optional properties:
+> > > > > +- memory-region: phandle to a node describing memory, as specified in:
+> > > > > +  Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> > > > > +- clock-names: List of clock names that can optionally contain:
+> > > > > +  - "vclk2": The VCLK2 doubled-rate video clock input.
+> > > > > +  - "lvdsclk": The LVDS clock.
+> > > > > +  - "lvdsclkn": The LVDS clock inverted.
+> > > >
+> > > > How are these really optional?
+> > >
+> > > Well, the controller currently only supports LVDS, but more interfaces may be
+> > > added later, so the lvdsclk clock will be optional when another interface
+> > > is used instead. Maybe I'm mistaken about how to categorize them though.
+> > >
+> > > My understanding is that the need for vclk2 and lvdsclkn depend on the target
+> > > FPGA family. I've developped the driver without the need for them, but the
+> > > datasheet states that they may be needed (but doesn't provide significant
+> > > details about their role though).
+> >
+> > Not sure what to tell you then. You'll see it becomes a bit messy to
+> > describe in schema. Ideally we define the exact number, order, and
+> > values possible (or sets of those).
+>
+> I'll try to do my best.
+>
+> > > > > +- xylon,syscon: Syscon phandle representing the logicvc instance.
+> > > > > +- xylon,dithering: Dithering module is enabled (C_XCOLOR).
+> > > > > +- xylon,background-layer: The last layer is used to display a black background
+> > > > > +  (C_USE_BACKGROUND). It must still be registered.
+> > > > > +- xylon,layers-configurable: Configuration of layers' size, position and offset
+> > > > > +  is enabled (C_USE_SIZE_POSITION).
+> > > >
+> > > > I would think this will effectively have to be enabled to make this
+> > > > usable with DRM. I'm not sure if a "standard" userspace would use any of
+> > > > the layers if all this is fixed.
+> > >
+> > > I was going with the same assumption, but drm_atomic_helper_check_plane_state
+> > > has a can_position parameter, which will check that the plane covers the
+> > > whole CRTC if set to false. So I guess it is somewhat expected that this can
+> > > be the case and some drivers (e.g. arm/hdlcd_crtc.c) also set this to false.
+> >
+> > Certainly atomic can fail on anything not supported. My question is
+> > more whether userspace has some minimum requirements. A cursor
+> > couldn't deal with can_position=false for example.
+>
+> Right, so I suppose that using an overlay plane as cursor wouldn't work
+> in this situation. Well, I haven't found any formal definition of what minimal
+> requirements are expected from overlay planes. I would expect userspace that
+> tries to use an overlay plane as a cursor to have a software fallback as soon
+> as something goes wrong. My feeling is that overlay planes are provided on a
+> "best-effort" basis, though contradiction is welcome here.
+
+For sure, there's always a software fallback. While we shouldn't let a
+specific OS's requirements dictate DT bindings, I just wonder if some
+of the configuration ends up always having to be set a certain way.
+Clearly, you could be writing the whole software stack and do a fixed
+configuration, but would you still be using DT at that point?
+
 Rob
-
-On 9/23/19 4:42 PM, Jacek Anaszewski wrote:
-> Dan,
->
-> On 9/23/19 5:28 PM, Dan Murphy wrote:
->> Jacek
->>
->> On 9/21/19 10:13 AM, Jacek Anaszewski wrote:
->>> Dan,
->>>
->>> On 9/20/19 7:41 PM, Dan Murphy wrote:
->>>> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024,
->>>> LP5018, LP5012 and LP5009 RGB LED device driver.  The
->>>> LP5036/30/24/18/12/9
->>>> can control RGB LEDs individually or as part of a control bank group.
->>>> These devices have the ability to adjust the mixing control for the RGB
->>>> LEDs to obtain different colors independent of the overall brightness of
->>>> the LED grouping.
->>>>
->>>> Datasheet:
->>>> http://www.ti.com/lit/ds/symlink/lp5012.pdf
->>>> http://www.ti.com/lit/ds/symlink/lp5024.pdf
->>>> http://www.ti.com/lit/ds/symlink/lp5036.pdf
->>>>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>> ---
->>>>    .../devicetree/bindings/leds/leds-lp50xx.txt  | 148 ++++++++++++++++++
->>>>    1 file changed, 148 insertions(+)
->>>>    create mode 100644
->>>> Documentation/devicetree/bindings/leds/leds-lp50xx.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
->>>> b/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
->>>> new file mode 100644
->>>> index 000000000000..9d05f43042e0
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
->>>> @@ -0,0 +1,148 @@
->>>> +* Texas Instruments - LP5009/12/18/24/30/36 RGB LED driver
->>>> +
->>>> +The LP50XX is multi-channel, I2C RGB LED Drivers that can group RGB
->>>> LEDs into
->>>> +a LED group or control them individually.
->>>> +
->>>> +The difference in these RGB LED drivers is the number of supported
->>>> RGB modules.
->>>> +
->>>> +Required parent properties:
->>>> +    - compatible:
->>>> +        "ti,lp5009"
->>>> +        "ti,lp5012"
->>>> +        "ti,lp5018"
->>>> +        "ti,lp5024"
->>>> +        "ti,lp5030"
->>>> +        "ti,lp5036"
->>>> +    - reg :  I2C slave address
->>>> +        lp5009/12 - 0x28
->>>> +        lp5018/24 - 0x28
->>>> +        lp5030/36 - 0x30
->>>> +    - #address-cells : 1
->>>> +    - #size-cells : 0
->>>> +
->>>> +Optional parent properties:
->>>> +    - enable-gpios : gpio pin to enable/disable the device.
->>>> +    - vled-supply : LED supply
->>>> +
->>>> +Required child properties:
->>>> +    - #address-cells : 1
->>>> +    - #size-cells : 0
->>>> +    - reg : This is the LED module number.
->>>> +    - color : see Documentation/devicetree/bindings/leds/common.txt
->>>> +    - function : see Documentation/devicetree/bindings/leds/common.txt
->>>> +
->>>> +Required child properties only is LED modules will be banked:
->>>> +    - ti,led-bank : This property denotes the LED module numbers
->>>> that will
->>>> +            be controlled as a single RGB cluster.  Each LED module
->>>> +            number will be controlled by a single LED class instance.
->>>> +            There can only be one instance of the ti,led-bank
->>>> +            property for each device node.
->>>> +
->>>> +Required grandchildren properties:
->>>> +    - reg : A single entry denoting the LED module that controls
->>>> +        the RGB cluster.
->>>> +    - color : see
->>>> Documentation/devicetree/bindings/leds/leds-multicolor.txt
->>>> +    - led-sources : see
->>>> Documentation/devicetree/bindings/leds/common.txt
->>>> +
->>>> +The LED outputs associated with the LED modules are defined in Table
->>>> 1 of the
->>>> +corresponding data sheets.
->>> We must enclose this information here.
->> That will make this doc pretty messy especially with the LP5036 entries.
->>
->> I would have to do ascii art to make it understandable and basically
->> there is not a delta in the lesser devices in the outputs
->>
->> I don't see value in reproducing this data sheet contents in the
->> dt-bindings.
-> IMO DT bindings should be self-contained. We cannot assume that
-> user will always have Internet access.
->
->> For example (LP5012) and then for the LP5036 multiply this by 3
->>
->> Table 1.
->>
->> Bank Number and LED Number Assignment
->> OUT NUMBER BANK NUMBER  RGB LED MODULE NUMBER
->> OUT0                    Bank A
->> OUT1                    Bank B                        LED0
->> OUT2                    Bank C
->>
->> OUT3                    Bank A
->> OUT4                    Bank B                        LED1
->> OUT5                    Bank C
->>
->> OUT6                    Bank A
->> OUT7                    Bank B                        LED2
->> OUT8                    Bank C
->>
->> OUT9 (LP5012 only) Bank A
->> OUT10 (LP5012 only) Bank B                  LED3
->> OUT11 (LP5012 only) Bank C
->
-> I'd say it is required. But let's wait for DT guys' opinion.
->
-Do you have an opinion on whether we need to publish in the DT the 
-output to module map?
-
-This is the last item I have to fix before submitting v9.
-
-Dan
-
-
->>>> +
->>>> +LP5009 - 2 Total RGB cluster LED outputs 0-1
->> This should be 3 total not 2
->>
->> Dan
->>
->>>> +LP5012 - 4 Total RGB cluster LED outputs 0-3
->>>> +LP5018 - 6 Total RGB cluster LED outputs 0-5
->>>> +LP5024 - 8 Total RGB cluster LED outputs 0-7
->>>> +LP5030 - 10 Total RGB cluster LED outputs 0-9
->>>> +LP5036 - 12 Total RGB cluster LED outputs 0-11
->>>> +
->>>> +Optional child properties:
->>>> +    - label : see Documentation/devicetree/bindings/leds/common.txt
->>>> +    - linux,default-trigger :
->>>> +       see Documentation/devicetree/bindings/leds/common.txt
->>>> +
->>>> +Examples:
->>>> +led-controller@29 {
->>>> +    #address-cells = <1>;
->>>> +    #size-cells = <0>;
->>>> +    compatible = "ti,lp5024";
->>>> +    reg = <0x29>;
->>>> +    enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
->>>> +    vled-supply = <&vmmcsd_fixed>;
->>>> +
->>>> +    multi-led@1 {
->>>> +        #address-cells = <1>;
->>>> +        #size-cells = <0>;
->>>> +        reg = <1>;
->>>> +        color = <LED_COLOR_ID_MULTI>;
->>>> +        function = LED_FUNCTION_STATUS;
->>>> +
->>>> +        led@3 {
->>>> +            reg = <3>;
->>>> +            color = <LED_COLOR_ID_RED>;
->>>> +        };
->>>> +
->>>> +        led@4 {
->>>> +            reg = <4>;
->>>> +            color = <LED_COLOR_ID_GREEN>;
->>>> +        };
->>>> +
->>>> +        led@5 {
->>>> +            reg = <5>;
->>>> +            color = <LED_COLOR_ID_BLUE>;
->>>> +        };
->>>> +    };
->>>> +
->>>> +    multi-led@2 {
->>>> +        #address-cells = <1>;
->>>> +        #size-cells = <0>;
->>>> +        reg = <2>;
->>>> +        color = <LED_COLOR_ID_MULTI>;
->>>> +        function = LED_FUNCTION_STANDBY;
->>>> +        ti,led-bank = <2 3 5>;
->>>> +
->>>> +        led@6 {
->>>> +            reg = <0x6>;
->>>> +            color = <LED_COLOR_ID_RED>;
->>>> +            led-sources = <6 9 15>;
->>>> +        };
->>>> +
->>>> +        led@7 {
->>>> +            reg = <0x7>;
->>>> +            color = <LED_COLOR_ID_GREEN>;
->>>> +            led-sources = <7 10 16>;
->>>> +        };
->>>> +
->>>> +        led@8 {
->>>> +            reg = <0x8>;
->>>> +            color = <LED_COLOR_ID_BLUE>;
->>>> +            led-sources = <8 11 17>;
->>>> +        };
->>>> +    };
->>>> +
->>>> +    multi-led@4 {
->>>> +        #address-cells = <1>;
->>>> +        #size-cells = <0>;
->>>> +        reg = <4>;
->>>> +        color = <LED_COLOR_ID_MULTI>;
->>>> +        function = LED_FUNCTION_ACTIVITY;
->>>> +
->>>> +        led@12 {
->>>> +            reg = <12>;
->>>> +            color = <LED_COLOR_ID_RED>;
->>>> +        };
->>>> +
->>>> +        led@13 {
->>>> +            reg = <13>;
->>>> +            color = <LED_COLOR_ID_GREEN>;
->>>> +        };
->>>> +
->>>> +        led@14 {
->>>> +            reg = <14>;
->>>> +            color = <LED_COLOR_ID_BLUE>;
->>>> +        };
->>>> +    };
->>>> +};
->>>> +
->>>> +For more product information please see the link below:
->>>> +http://www.ti.com/lit/ds/symlink/lp5012.pdf
->>>> +http://www.ti.com/lit/ds/symlink/lp5024.pdf
->>>> +http://www.ti.com/lit/ds/symlink/lp5036.pdf
->>>>
