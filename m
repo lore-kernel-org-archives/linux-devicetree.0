@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 5/8] media: dt-bindings: ov2659: add powerdown/reset-gpios optional property
-Date: Tue, 24 Sep 2019 11:44:11 -0500
-Message-ID: <20190924164414.21897-6-bparrot@ti.com>
+Subject: [Patch v3 7/8] media: i2c: ov2659: Fix missing 720p register config
+Date: Tue, 24 Sep 2019 11:44:13 -0500
+Message-ID: <20190924164414.21897-8-bparrot@ti.com>
 References: <20190924164414.21897-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,40 +12,37 @@ To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.co
 Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add powerdown-gpios and reset-gpios to the list of optional properties
-for the OV2659 camera sensor.
+The initial registers sequence is only loaded at probe
+time. Afterward only the resolution and format specific
+register are modified. Care must be taken to make sure
+registers modified by one resolution setting are reverted
+back when another resolution is programmed.
+
+This was not done properly for the 720p case.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- Documentation/devicetree/bindings/media/i2c/ov2659.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/media/i2c/ov2659.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov2659.txt b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
-index cabc7d827dfb..92989a619f29 100644
---- a/Documentation/devicetree/bindings/media/i2c/ov2659.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
-@@ -12,6 +12,12 @@ Required Properties:
- - clock-names: should be "xvclk".
- - link-frequencies: target pixel clock frequency.
+diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+index 0e026b810de5..23f161fd69bb 100644
+--- a/drivers/media/i2c/ov2659.c
++++ b/drivers/media/i2c/ov2659.c
+@@ -412,10 +412,14 @@ static struct sensor_register ov2659_720p[] = {
+ 	{ REG_TIMING_YINC, 0x11 },
+ 	{ REG_TIMING_VERT_FORMAT, 0x80 },
+ 	{ REG_TIMING_HORIZ_FORMAT, 0x00 },
++	{ 0x370a, 0x12 },
+ 	{ 0x3a03, 0xe8 },
+ 	{ 0x3a09, 0x6f },
+ 	{ 0x3a0b, 0x5d },
+ 	{ 0x3a15, 0x9a },
++	{ REG_VFIFO_READ_START_H, 0x00 },
++	{ REG_VFIFO_READ_START_L, 0x80 },
++	{ REG_ISP_CTRL02, 0x00 },
+ 	{ REG_NULL, 0x00 },
+ };
  
-+Optional Properties:
-+- powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
-+  Active high with internal pull down resistor.
-+- reset-gpios: reference to the GPIO connected to the resetb pin, if any.
-+  Active low with internal pull up resistor.
-+
- For further reading on port node refer to
- Documentation/devicetree/bindings/media/video-interfaces.txt.
- 
-@@ -27,6 +33,9 @@ Example:
- 			clocks = <&clk_ov2659 0>;
- 			clock-names = "xvclk";
- 
-+			powerdown-gpios = <&gpio6 14 GPIO_ACTIVE_HIGH>;
-+			reset-gpios = <&gpio6 15 GPIO_ACTIVE_LOW>;
-+
- 			port {
- 				ov2659_0: endpoint {
- 					remote-endpoint = <&vpfe_ep>;
 -- 
 2.17.1
