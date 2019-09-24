@@ -1,147 +1,97 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH 0/6] Add the Mobiveil EP and Layerscape Gen4 EP driver
- support
-Date: Tue, 24 Sep 2019 15:18:47 +0100
-Message-ID: <20190924141847.GW25745@shell.armlinux.org.uk>
-References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [RFCv4 3/7] dt-bindings: devfreq: imx: Describe interconnect
+ properties
+Date: Tue, 24 Sep 2019 14:39:27 +0000
+Message-ID: <VI1PR04MB7023FEED855FAA9707790B3AEE840@VI1PR04MB7023.eurprd04.prod.outlook.com>
+References: <cover.1566570260.git.leonard.crestez@nxp.com>
+ <3f27038292c09c8bf07a086eac759132c100aedb.1566570260.git.leonard.crestez@nxp.com>
+ <20190917201956.GA10780@bogus>
+ <VI1PR04MB70237046A8DF88936C7A83F8EE850@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <CAL_JsqLj9FdoSwt7HZwoX42GS9RJ6Zeze=bUZs-tia2oS+OzUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190916021742.22844-1-xiaowei.bao@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: Zhiqiang.Hou@nxp.com, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, Minghuan.Lian@nxp.com, andrew.murray@arm.com, mingkai.hu@nxp.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Saravana Kannan <saravanak@google.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 10:17:36AM +0800, Xiaowei Bao wrote:
-> This patch set are for adding Mobiveil EP driver and adding PCIe Gen4
-> EP driver of NXP Layerscape platform.
+On 24.09.2019 00:04, Rob Herring wrote:
+> On Mon, Sep 23, 2019 at 12:42 PM Leonard Crestez
+> <leonard.crestez@nxp.com> wrote:
+>>
+>> On 17.09.2019 23:20, Rob Herring wrote:
+>>> On Fri, Aug 23, 2019 at 05:36:56PM +0300, Leonard Crestez wrote:
+>>>> The interconnect-node-id property is parsed by the imx interconnect
+>>>> driver to find nodes on which frequencies can be adjusted.
+>>>>
+>>>> Add #interconnect-cells so that device drivers can request paths from
+>>>> bus nodes instead of requiring a separate "virtual" node to represent
+>>>> the interconnect itself.
+>>>>
+>>>> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml | 5 +++++
+>>>>    Documentation/devicetree/bindings/devfreq/imx.yaml      | 5 +++++
+>>>>    2 files changed, 10 insertions(+)
+>>>
+>>> Please combine this with the other series for devfreq support.
+>>
+>> I understand that having two series which add to the same bindings file
+>> is odd but the devfreq and interconnect parts are independent to a very
+>> large degree and devfreq can be useful on it's own.
 > 
-> This patch set depends on:
-> https://patchwork.kernel.org/project/linux-pci/list/?series=159139
+> To start with, I'm suspicious of any 'devfreq' binding because that's
+> a Linux thing. I somewhat expect that the interconnect binding should
+> replace the devfreq binding, but I haven't been able to investigate.
 > 
-> Xiaowei Bao (6):
->   PCI: mobiveil: Add the EP driver support
->   dt-bindings: Add DT binding for PCIE GEN4 EP of the layerscape
->   PCI: mobiveil: Add PCIe Gen4 EP driver for NXP Layerscape SoCs
->   PCI: mobiveil: Add workaround for unsupported request error
->   arm64: dts: lx2160a: Add PCIe EP node
->   misc: pci_endpoint_test: Add the layerscape PCIe GEN4 EP device
->     support
-> 
->  .../bindings/pci/layerscape-pcie-gen4.txt          |  28 +-
->  MAINTAINERS                                        |   3 +
->  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |  56 ++
->  drivers/misc/pci_endpoint_test.c                   |   2 +
->  drivers/pci/controller/mobiveil/Kconfig            |  22 +-
->  drivers/pci/controller/mobiveil/Makefile           |   2 +
->  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 169 ++++++
->  drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c | 568 +++++++++++++++++++++
->  drivers/pci/controller/mobiveil/pcie-mobiveil.c    |  99 +++-
->  drivers/pci/controller/mobiveil/pcie-mobiveil.h    |  72 +++
->  10 files changed, 1009 insertions(+), 12 deletions(-)
->  create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
->  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c
+> Design something that matches the structure of the h/w not how Linux
+> drivers happen to be structured. I can't tell what that is without any
+> context around adding a couple of properties. Nor do I have the time
+> to dig into each SoC vendor's bus structure if it's even documented
+> publicly.
 
-Hi,
+Device tree binding files are organized based on linux subsystems but 
+otherwise there's little particularly specific to "devfreq" in this new 
+binding.
 
-I've applied "PCI: mobiveil: Fix the CPU base address setup in inbound
-window" and your patch set to 5.3, which seems to be able to detect the
-PCIe card I have plugged in:
+An imx NIC or NOC is a physical component of a SOC which can run at a 
+variable clock speed. The device binding uses standard clk and opp 
+tables in meaningful ways so that first part is reasonable.
 
-layerscape-pcie-gen4 3800000.pcie: host bridge /soc/pcie@3800000 ranges:
-layerscape-pcie-gen4 3800000.pcie:   MEM 0xa040000000..0xa07fffffff -> 0x40000000
-layerscape-pcie-gen4 3800000.pcie: PCI host bridge to bus 0000:00
-pci_bus 0000:00: root bus resource [bus 00-ff]
-pci_bus 0000:00: root bus resource [mem 0xa040000000-0xa07fffffff] (bus address
-[0x40000000-0x7fffffff])
-pci 0000:00:00.0: [1957:8d90] type 01 class 0x060400
-pci 0000:00:00.0: enabling Extended Tags
-pci 0000:00:00.0: supports D1 D2
-pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot D3cold
-pci 0000:01:00.0: [15b3:6750] type 00 class 0x020000
-pci 0000:01:00.0: reg 0x10: [mem 0xa040000000-0xa0400fffff 64bit]
-pci 0000:01:00.0: reg 0x18: [mem 0xa040800000-0xa040ffffff 64bit pref]
-pci 0000:01:00.0: reg 0x30: [mem 0xa041000000-0xa0410fffff pref]
-pci 0000:00:00.0: up support 3 enabled 0
-pci 0000:00:00.0: dn support 1 enabled 0
-pci 0000:00:00.0: BAR 9: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
-pci 0000:00:00.0: BAR 8: assigned [mem 0xa040800000-0xa0409fffff]
-pci 0000:01:00.0: BAR 2: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
-pci 0000:01:00.0: BAR 0: assigned [mem 0xa040800000-0xa0408fffff 64bit]
-pci 0000:01:00.0: BAR 6: assigned [mem 0xa040900000-0xa0409fffff pref]
-pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-pci 0000:00:00.0:   bridge window [mem 0xa040800000-0xa0409fffff]
-pci 0000:00:00.0:   bridge window [mem 0xa040000000-0xa0407fffff 64bit pref]
-pci 0000:00:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pci 0000:01:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pcieport 0000:00:00.0: PCIe capabilities: 0x13
-pcieport 0000:00:00.0: init_service_irqs: -19
+I also want to implement an interconnect provider but an "interconnect" 
+is not a single device but rather a graph of discrete buses. Some options:
+* Add a custom virtual device, easy but not upstreamable.
+* Have a single icc provider device use the individual buses as 
+"proxies" for OF parting. Implemented in this series but not very pretty.
+* Pick the "main noc" as the single interconnect provider?
 
-However, a bit later in the kernel boot, I get:
+Alternatively the approach of defining the graph in the driver could be 
+dropped and everything could be described in DT (quite verbose). This 
+seems to be what Samsung is doing:
 
-SError Interrupt on CPU1, code 0xbf000002 -- SError
-CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
-Hardware name: SolidRun LX2160A COM express type 7 module (DT)
-pstate: 60400085 (nZCv daIf +PAN -UAO)
-pc : pci_generic_config_read+0xb0/0xc0
-lr : pci_generic_config_read+0x1c/0xc0
-sp : ffffff8010f9baf0
-x29: ffffff8010f9baf0 x28: ffffff8010d620a0
-x27: ffffff8010d79000 x26: ffffff8010d62000
-x25: ffffff8010cb06d4 x24: 0000000000000000
-x23: ffffff8010e499b8 x22: ffffff8010f9bbaf
-x21: 0000000000000000 x20: ffffffe2eda11800
-x19: ffffff8010f62158 x18: ffffff8010bdede0
-x17: ffffff8010bdede8 x16: ffffff8010b96970
-x15: ffffffffffffffff x14: ffffffffff000000
-x13: ffffffffffffffff x12: 0000000000000030
-x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
-x9 : 2dff716475687163 x8 : ffffffffffffffff
-x7 : fefefefefefefefe x6 : 0000000000000000
-x5 : 0000000000000000 x4 : ffffff8010f9bb6c
-x3 : 0000000000000001 x2 : 0000000000000003
-x1 : 0000000000000000 x0 : 0000000000000000
-Kernel panic - not syncing: Asynchronous SError Interrupt
-CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
-Hardware name: SolidRun LX2160A COM express type 7 module (DT)
-Call trace:
- dump_backtrace+0x0/0x120
- show_stack+0x14/0x1c
- dump_stack+0x9c/0xc0
- panic+0x148/0x34c
- print_tainted+0x0/0xa8
- arm64_serror_panic+0x74/0x80
- do_serror+0x8c/0x13c
- el1_error+0xbc/0x160
- pci_generic_config_read+0xb0/0xc0
- pci_bus_read_config_byte+0x64/0x90
- pci_read_config_byte+0x40/0x48
- pci_assign_irq+0x34/0xc8
- pci_device_probe+0x28/0x148
- really_probe+0x1c4/0x2d0
- driver_probe_device+0x58/0xfc
- device_driver_attach+0x68/0x70
- __driver_attach+0x94/0xdc
- bus_for_each_dev+0x50/0xa0
- driver_attach+0x20/0x28
- bus_add_driver+0x14c/0x200
- driver_register+0x6c/0x124
- __pci_register_driver+0x48/0x50
- mlx4_init+0x154/0x180
- do_one_initcall+0x30/0x250
- kernel_init_freeable+0x23c/0x32c
- kernel_init+0x10/0xfc
- ret_from_fork+0x10/0x18
-SMP: stopping secondary CPUs
-Kernel Offset: disabled
-CPU features: 0x0002,21006008
-Memory Limit: none
+https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=176291
 
-and there it dies.  Any ideas?
+It might even possible to use of_graph; this is complicated but the NICs 
+and NOCs do in fact have discrete ports with assignable properties.
 
-Thanks.
+ > I also don't follow why you need 'interconnect-node-id' and if you do,
+ > it should be a common property.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+The "interconnect-node-id" property in devicetree identifies nodes from 
+the interconnect graph; for example the DDRC node identifies itself as 
+IMX8MM_ICS_DRAM.
+
+--
+Regards,
+Leonard
