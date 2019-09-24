@@ -1,39 +1,40 @@
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v7 12/13] lib/vsprintf: Add %pfw conversion specifier for
- printing fwnode names
-Date: Tue, 24 Sep 2019 14:47:41 +0200
-Message-ID: <20190924124741.tuqks52bpwheqbwj@pathway.suse.cz>
-References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
- <20190918133419.7969-13-sakari.ailus@linux.intel.com>
+From: =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>
+Subject: [PATCH 1/3] hwmon: Fix HWMON_P_MIN_ALARM mask
+Date: Tue, 24 Sep 2019 14:49:43 +0200
+Message-ID: <20190924124945.491326-2-nuno.sa@analog.com>
+References: <20190924124945.491326-1-nuno.sa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190918133419.7969-13-sakari.ailus@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: rafael@kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190924124945.491326-1-nuno.sa@analog.com>
+Sender: stable-owner@vger.kernel.org
+To: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2019-09-18 16:34:18, Sakari Ailus wrote:
-> Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
-> support printing full path of the node, including its name ("f") and only
-> the node's name ("P") in the printk family of functions. The two flags
-> have equivalent functionality to existing %pOF with the same two modifiers
-> ("f" and "P") on OF based systems. The ability to do the same on ACPI
-> based systems is added by this patch.
-> 
-> On ACPI based systems the resulting strings look like
-> 
-> 	\_SB.PCI0.CIO2.port@1.endpoint@0
-> 
-> where the nodes are separated by a dot (".") and the first three are
-> ACPI device nodes and the latter two ACPI data nodes.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Both HWMON_P_MIN_ALARM and HWMON_P_MAX_ALARM were using
+BIT(hwmon_power_max_alarm).
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Fixes: aa7f29b07c870 ("hwmon: Add support for power min, lcrit, min_alarm and lcrit_alarm")
+CC: <stable@vger.kernel.org>
+Signed-off-by: Nuno Sá <nuno.sa@analog.com>
+---
+ include/linux/hwmon.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best Regards,
-Petr
+diff --git a/include/linux/hwmon.h b/include/linux/hwmon.h
+index 04c36b7a61dd..72579168189d 100644
+--- a/include/linux/hwmon.h
++++ b/include/linux/hwmon.h
+@@ -235,7 +235,7 @@ enum hwmon_power_attributes {
+ #define HWMON_P_LABEL			BIT(hwmon_power_label)
+ #define HWMON_P_ALARM			BIT(hwmon_power_alarm)
+ #define HWMON_P_CAP_ALARM		BIT(hwmon_power_cap_alarm)
+-#define HWMON_P_MIN_ALARM		BIT(hwmon_power_max_alarm)
++#define HWMON_P_MIN_ALARM		BIT(hwmon_power_min_alarm)
+ #define HWMON_P_MAX_ALARM		BIT(hwmon_power_max_alarm)
+ #define HWMON_P_LCRIT_ALARM		BIT(hwmon_power_lcrit_alarm)
+ #define HWMON_P_CRIT_ALARM		BIT(hwmon_power_crit_alarm)
+-- 
+2.23.0
