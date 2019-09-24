@@ -1,7 +1,7 @@
 From: Xia Jiang <xia.jiang@mediatek.com>
-Subject: [PATCH v3 1/5] media: dt-bindings: Add jpeg enc device tree node document
-Date: Tue, 24 Sep 2019 15:43:00 +0800
-Message-ID: <20190924074303.22713-2-xia.jiang@mediatek.com>
+Subject: [PATCH v3 2/5] arm: dts: Add jpeg enc device tree node
+Date: Tue, 24 Sep 2019 15:43:02 +0800
+Message-ID: <20190924074303.22713-3-xia.jiang@mediatek.com>
 References: <20190924074303.22713-1-xia.jiang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,7 +12,7 @@ To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Mauro Carvalho Chehab <mchehab+sams
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com, Xia Jiang <xia.jiang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Add jpeg enc device tree node document.
+Add jpeg enc device tree node.
 
 Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
 ---
@@ -20,41 +20,17 @@ v3: change compatible to SoC specific compatible
 
 v2: no changes
 ---
- .../bindings/media/mediatek-jpeg-encoder.txt  | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek-jpeg-encoder.txt
+ arch/arm/boot/dts/mt2701.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek-jpeg-encoder.txt b/Documentation/devicetree/bindings/media/mediatek-jpeg-encoder.txt
-new file mode 100644
-index 000000000000..fa8da699493b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/mediatek-jpeg-encoder.txt
-@@ -0,0 +1,37 @@
-+* MediaTek JPEG Encoder
-+
-+MediaTek JPEG Encoder is the JPEG encode hardware present in MediaTek SoCs
-+
-+Required properties:
-+- compatible : should be one of:
-+               "mediatek,mt2701-jpgenc"
-+               ...
-+               followed by "mediatek,mtk-jpgenc"
-+- reg : physical base address of the JPEG encoder registers and length of
-+  memory mapped region.
-+- interrupts : interrupt number to the interrupt controller.
-+- clocks: device clocks, see
-+  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
-+- clock-names: must contain "jpgenc". It is the clock of JPEG encoder.
-+- power-domains: a phandle to the power domain, see
-+  Documentation/devicetree/bindings/power/power_domain.txt for details.
-+- mediatek,larb: must contain the local arbiters in the current SoCs, see
-+  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
-+  for details.
-+- iommus: should point to the respective IOMMU block with master port as
-+  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
-+  for details.
-+
-+Example:
+diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+index 180377e56ef4..b9b370428f66 100644
+--- a/arch/arm/boot/dts/mt2701.dtsi
++++ b/arch/arm/boot/dts/mt2701.dtsi
+@@ -568,6 +568,19 @@
+ 			 <&iommu MT2701_M4U_PORT_JPGDEC_BSDMA>;
+ 	};
+ 
 +	jpegenc: jpegenc@1500a000 {
 +		compatible = "mediatek,mt2701-jpgenc",
 +			     "mediatek,mtk-jpgenc";
@@ -67,5 +43,9 @@ index 000000000000..fa8da699493b
 +		iommus = <&iommu MT2701_M4U_PORT_JPGENC_RDMA>,
 +			 <&iommu MT2701_M4U_PORT_JPGENC_BSDMA>;
 +	};
++
+ 	vdecsys: syscon@16000000 {
+ 		compatible = "mediatek,mt2701-vdecsys", "syscon";
+ 		reg = <0 0x16000000 0 0x1000>;
 -- 
 2.18.0
