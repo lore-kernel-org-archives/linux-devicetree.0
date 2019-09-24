@@ -1,47 +1,55 @@
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v7 09/13] lib/vsprintf: Add a note on re-using %pf or %pF
-Date: Tue, 24 Sep 2019 12:45:49 +0200
-Message-ID: <20190924104549.qiayzhr7zikja7sp@pathway.suse.cz>
-References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
- <20190918133419.7969-10-sakari.ailus@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+Subject: [PATCH V4 2/4] ASoC: fsl_asrc: update supported sample format
+Date: Tue, 24 Sep 2019 18:52:33 +0800
+Message-ID: <45a7c383f43cc1dd9d0934846447aee653278c03.1569296075.git.shengjiu.wang@nxp.com>
+References: <cover.1569296075.git.shengjiu.wang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190918133419.7969-10-sakari.ailus@linux.intel.com>
+In-Reply-To: <cover.1569296075.git.shengjiu.wang@nxp.com>
+In-Reply-To: <cover.1569296075.git.shengjiu.wang@nxp.com>
+References: <cover.1569296075.git.shengjiu.wang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: rafael@kernel.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+To: timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2019-09-18 16:34:15, Sakari Ailus wrote:
-> Add a note warning of re-use of obsolete %pf or %pF extensions.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> ---
->  lib/vsprintf.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index b00b57f9f911f..df59818537b52 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -2008,6 +2008,8 @@ static char *kobject_string(char *buf, char *end, void *ptr,
->   * - 'S' For symbolic direct pointers (or function descriptors) with offset
->   * - 's' For symbolic direct pointers (or function descriptors) without offset
->   * - '[Ss]R' as above with __builtin_extract_return_addr() translation
-> + * - '[Ff]' Obsolete an now unsupported extension for printing direct pointers
-> + *	    or function descriptors. Be careful when re-using %pf or %pF!
+The ASRC support 24bit/16bit/8bit input width, which is
+data width, not slot width.
 
-I am not a native speaker but the sentence is hard to parse to me.
-Also I miss the word 'symbolic'. IMHO, it described that the output
-was a symbol name.
+For the S20_3LE format, the data with is 20bit, slot width
+is 24bit, if we set ASRMCR1n.IWD to be 24bits, the result
+is the volume is lower than expected, it likes 24bit data
+right shift 4 bits
 
-What about something like?
+So replace S20_3LE with S24_3LE in supported list and add S8
+format in TX supported list
 
-  * - '[Ff]' %pf and %pF were obsoleted and later removed in favor of
-  *	    %ps and %pS. Be careful when re-using these specifiers.
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+---
+ sound/soc/fsl/fsl_asrc.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Best Regards,
-Petr
+diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+index 4d3804a1ea55..584badf956d2 100644
+--- a/sound/soc/fsl/fsl_asrc.c
++++ b/sound/soc/fsl/fsl_asrc.c
+@@ -624,7 +624,7 @@ static int fsl_asrc_dai_probe(struct snd_soc_dai *dai)
+ 
+ #define FSL_ASRC_FORMATS	(SNDRV_PCM_FMTBIT_S24_LE | \
+ 				 SNDRV_PCM_FMTBIT_S16_LE | \
+-				 SNDRV_PCM_FMTBIT_S20_3LE)
++				 SNDRV_PCM_FMTBIT_S24_3LE)
+ 
+ static struct snd_soc_dai_driver fsl_asrc_dai = {
+ 	.probe = fsl_asrc_dai_probe,
+@@ -635,7 +635,8 @@ static struct snd_soc_dai_driver fsl_asrc_dai = {
+ 		.rate_min = 5512,
+ 		.rate_max = 192000,
+ 		.rates = SNDRV_PCM_RATE_KNOT,
+-		.formats = FSL_ASRC_FORMATS,
++		.formats = FSL_ASRC_FORMATS |
++			   SNDRV_PCM_FMTBIT_S8,
+ 	},
+ 	.capture = {
+ 		.stream_name = "ASRC-Capture",
+-- 
+2.21.0
