@@ -1,97 +1,97 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [RFCv4 3/7] dt-bindings: devfreq: imx: Describe interconnect
- properties
-Date: Tue, 24 Sep 2019 14:39:27 +0000
-Message-ID: <VI1PR04MB7023FEED855FAA9707790B3AEE840@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1566570260.git.leonard.crestez@nxp.com>
- <3f27038292c09c8bf07a086eac759132c100aedb.1566570260.git.leonard.crestez@nxp.com>
- <20190917201956.GA10780@bogus>
- <VI1PR04MB70237046A8DF88936C7A83F8EE850@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <CAL_JsqLj9FdoSwt7HZwoX42GS9RJ6Zeze=bUZs-tia2oS+OzUA@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: dma: Add documentation for DMA domains
+Date: Tue, 24 Sep 2019 09:44:33 -0500
+Message-ID: <CAL_JsqLZ-fNvFcgTorat=TX9Fmexrw3o3iv=Z5hTb3GX6iKgxg@mail.gmail.com>
+References: <20190910115037.23539-1-peter.ujfalusi@ti.com> <20190910115037.23539-2-peter.ujfalusi@ti.com>
+ <5d7ba96c.1c69fb81.ee467.32b9@mx.google.com> <82254a3e-12fe-14d8-d49a-6627dd1d3559@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Saravana Kannan <saravanak@google.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <82254a3e-12fe-14d8-d49a-6627dd1d3559@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Vinod <vkoul@kernel.org>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 24.09.2019 00:04, Rob Herring wrote:
-> On Mon, Sep 23, 2019 at 12:42 PM Leonard Crestez
-> <leonard.crestez@nxp.com> wrote:
->>
->> On 17.09.2019 23:20, Rob Herring wrote:
->>> On Fri, Aug 23, 2019 at 05:36:56PM +0300, Leonard Crestez wrote:
->>>> The interconnect-node-id property is parsed by the imx interconnect
->>>> driver to find nodes on which frequencies can be adjusted.
->>>>
->>>> Add #interconnect-cells so that device drivers can request paths from
->>>> bus nodes instead of requiring a separate "virtual" node to represent
->>>> the interconnect itself.
->>>>
->>>> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
->>>> ---
->>>>    Documentation/devicetree/bindings/devfreq/imx-ddrc.yaml | 5 +++++
->>>>    Documentation/devicetree/bindings/devfreq/imx.yaml      | 5 +++++
->>>>    2 files changed, 10 insertions(+)
->>>
->>> Please combine this with the other series for devfreq support.
->>
->> I understand that having two series which add to the same bindings file
->> is odd but the devfreq and interconnect parts are independent to a very
->> large degree and devfreq can be useful on it's own.
-> 
-> To start with, I'm suspicious of any 'devfreq' binding because that's
-> a Linux thing. I somewhat expect that the interconnect binding should
-> replace the devfreq binding, but I haven't been able to investigate.
-> 
-> Design something that matches the structure of the h/w not how Linux
-> drivers happen to be structured. I can't tell what that is without any
-> context around adding a couple of properties. Nor do I have the time
-> to dig into each SoC vendor's bus structure if it's even documented
-> publicly.
+On Mon, Sep 16, 2019 at 6:21 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>
+>
+>
+> On 13/09/2019 17.36, Rob Herring wrote:
+> > On Tue, Sep 10, 2019 at 02:50:35PM +0300, Peter Ujfalusi wrote:
+> >> On systems where multiple DMA controllers available, non Slave (for example
+> >> memcpy operation) users can not be described in DT as there is no device
+> >> involved from the DMA controller's point of view, DMA binding is not usable.
+> >> However in these systems still a peripheral might need to be serviced by or
+> >> it is better to serviced by specific DMA controller.
+> >> When a memcpy is used to/from a memory mapped region for example a DMA in the
+> >> same domain can perform better.
+> >> For generic software modules doing mem 2 mem operations it also matter that
+> >> they will get a channel from a controller which is faster in DDR to DDR mode
+> >> rather then from the first controller happen to be loaded.
+> >>
+> >> This property is inherited, so it may be specified in a device node or in any
+> >> of its parent nodes.
+> >
+> > If a device needs mem2mem dma, I think we should just use the existing
+> > dma binding. The provider will need a way to define cell values which
+> > mean mem2mem.
+>
+> But isn't it going to be an abuse of the binding? Each DMA controller
+> would hack this in different ways, probably using out of range DMA
+> request/trigger number or if they have direction in the binding or some
+> other parameter would be set to something invalid...
 
-Device tree binding files are organized based on linux subsystems but 
-otherwise there's little particularly specific to "devfreq" in this new 
-binding.
+What's in the cells is defined by the provider which can define
+whatever they want. We do standardize that in some cases.
 
-An imx NIC or NOC is a physical component of a SOC which can run at a 
-variable clock speed. The device binding uses standard clk and opp 
-tables in meaningful ways so that first part is reasonable.
+I think we have some cases where we set the channel priority in the
+cells. What if someone wants to do that for mem2mem as well?
 
-I also want to implement an interconnect provider but an "interconnect" 
-is not a single device but rather a graph of discrete buses. Some options:
-* Add a custom virtual device, easy but not upstreamable.
-* Have a single icc provider device use the individual buses as 
-"proxies" for OF parting. Implemented in this series but not very pretty.
-* Pick the "main noc" as the single interconnect provider?
+> > For generic s/w, it should be able to query the dma speed or get a
+> > preferred one IMO. It's not a DT problem.
+> >
+> > We measure memcpy speeds at boot time to select the fastest
+> > implementation for a chip, why not do that for mem2mem DMA?
+>
+> It would make an impact on boot time since the tests would need to be
+> done with a large enough copy to be able to see clearly which one is faster.
 
-Alternatively the approach of defining the graph in the driver could be 
-dropped and everything could be described in DT (quite verbose). This 
-seems to be what Samsung is doing:
+Have you measured it? It could be done in parallel and may have little
+to no impact.
 
-https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=176291
+> Also we should be able to handle different probing orders:
+> client1 should have mem2mem channel from dma2.
+>
+> - dma1 probes
+> - client1 probes and asks for a mem2mem channel
+> - dma2 probes
+>
+> Here client1 should deffer until dma2 is probed.
 
-It might even possible to use of_graph; this is complicated but the NICs 
-and NOCs do in fact have discrete ports with assignable properties.
+Depending on the driver, don't make the decision in probe, but when
+you start using the driver. For example, serial drivers decide on DMA
+or no DMA in open().
 
- > I also don't follow why you need 'interconnect-node-id' and if you do,
- > it should be a common property.
+> Probably the property should be dma-mem2mem-domain to be more precise on
+> it's purpose and avoid confusion?
+>
+> >
+> >>
+> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> >> ---
+> >>  .../devicetree/bindings/dma/dma-domain.yaml   | 88 +++++++++++++++++++
+> >>  1 file changed, 88 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
+> >
+> > Note that you have several errors in your schema. Run 'make dt_bindings_check'.
+>
+> That does not do anything on my system, but git dt-doc-validate running
+> via https://github.com/robherring/yaml-bindings.git.
 
-The "interconnect-node-id" property in devicetree identifies nodes from 
-the interconnect graph; for example the DDRC node identifies itself as 
-IMX8MM_ICS_DRAM.
+It should do *something*... Do you have libyaml-dev installed?
 
---
-Regards,
-Leonard
+BTW, while I still mirror to that repo, use
+https://github.com/devicetree-org/dt-schema instead.
+
+Rob
