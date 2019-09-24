@@ -1,376 +1,81 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: Re: [v3,1/3] soc: fsl: handle RCPM errata A-008646 on SoC LS1021A
-Date: Tue, 24 Sep 2019 03:21:06 +0000
-Message-ID: <DB7PR04MB44900683D093367E995C6C048F840@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190924024548.4356-1-biwen.li@nxp.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [RFT v4 4/8] ARM: dts: exynos: Remove MCT subnode for interrupt
+ map on Exynos4210
+Date: Tue, 24 Sep 2019 08:57:54 +0200
+Message-ID: <e3c08a87-2650-3df8-01a6-05dff24af913@samsung.com>
+References: <20190923161411.9236-1-krzk@kernel.org>
+        <CGME20190923161444epcas3p280b21cfbb4448d55eb850de2d49a72d7@epcas3p2.samsung.com>
+        <20190923161411.9236-4-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/alternative;
- boundary="_000_DB7PR04MB44900683D093367E995C6C048F840DB7PR04MB4490eurp_"
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20190924024548.4356-1-biwen.li@nxp.com>
-Content-Language: zh-CN
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Ran Wang <ran.wang_1@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190923161411.9236-4-krzk@kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: Sylwester Nawrocki <snawrocki@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---_000_DB7PR04MB44900683D093367E995C6C048F840DB7PR04MB4490eurp_
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
 
-SGkgYWxsLA0KdGhlIGxpbnV4IHBhdGNoZXMgZGVwZW5kZWQgYnkgUkNQTSBkcml2ZXIsRmxleFRp
-bWVyIGRyaXZlciBhbmQgRmxleFRpbWVyIGR0cywgbmVlZCBhcHBseSB0aGVzZSBwYXRjaGVzIGFz
-IGZvbGxvd3M6DQoNCjEuIFJDUE0gZHJpdmVyOg0KDQpodHRwczovL3BhdGNod29yay5rZXJuZWwu
-b3JnL3Nlcmllcy8xNjI3MzEvbWJveC8oaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRj
-aC8xMTEwNTI3OS8pDQoNCjIuIEZsZXhUaW1lciBkdHM6DQoNCmh0dHBzOi8vbG9yZS5rZXJuZWwu
-b3JnL3BhdGNod29yay9zZXJpZXMvNDA1NjUzL21ib3gvKGh0dHBzOi8vbG9yZS5rZXJuZWwub3Jn
-L3BhdGNod29yay9wYXRjaC8xMTEyNDkzLykNCg0KMy4gRmxleFRpbWVyIGRyaXZlcjoNCg0KaHR0
-cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9zZXJpZXMvMTI0NzE4L21ib3gvKGh0dHBzOi8vcGF0
-Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvMTE0NTk5OS8pDQoNCmh0dHBzOi8vcGF0Y2h3b3JrLm96
-bGFicy5vcmcvc2VyaWVzLzEyNjk0Mi9tYm94LyhodHRwczovL3BhdGNod29yay5vemxhYnMub3Jn
-L3BhdGNoLzExNTIwODUvKQ0KDQo0LiBBZGp1c3QgZHJpdmVycy9zb2MvZnNsL01ha2VmaWxlOg0K
-DQpyZW1vdmUgdGhlIGxpbmUgJ29iai15ICs9IGZ0bV9hbGFybS5vJyBpbiBkcml2ZXJzL3NvYy9m
-c2wvTWFrZWZpbGUgdG8gcmVzb2x2ZSBhIGNvbXBpbGF0aW9uIGVycm9yDQoNCrvxyKEgT3V0bG9v
-ayBmb3IgQW5kcm9pZDxodHRwczovL2FrYS5tcy9naGVpMzY+DQoNCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fDQpGcm9tOiBCaXdlbiBMaSA8Yml3ZW4ubGlAbnhwLmNvbT4NClNlbnQ6
-IFR1ZXNkYXksIFNlcHRlbWJlciAyNCwgMjAxOSAxMDo0NTo0NiBBTQ0KVG86IExlbyBMaSA8bGVv
-eWFuZy5saUBueHAuY29tPjsgc2hhd25ndW9Aa2VybmVsLm9yZyA8c2hhd25ndW9Aa2VybmVsLm9y
-Zz47IHJvYmgrZHRAa2VybmVsLm9yZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgbWFyay5ydXRsYW5k
-QGFybS5jb20gPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgUmFuIFdhbmcgPHJhbi53YW5nXzFAbnhw
-LmNvbT4NCkNjOiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZyA8bGludXhwcGMtZGV2QGxp
-c3RzLm96bGFicy5vcmc+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcgPGxp
-bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmcgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBkZXZpY2V0cmVlQHZnZXIu
-a2VybmVsLm9yZyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBCaXdlbiBMaSA8Yml3ZW4u
-bGlAbnhwLmNvbT4NClN1YmplY3Q6IFt2MywxLzNdIHNvYzogZnNsOiBoYW5kbGUgUkNQTSBlcnJh
-dGEgQS0wMDg2NDYgb24gU29DIExTMTAyMUENCg0KRGVzY3JpcHRpb246DQogICAgICAgIC0gUmVh
-ZGluZyBjb25maWd1cmF0aW9uIHJlZ2lzdGVyIFJDUE1fSVBQREVYUENSMQ0KICAgICAgICAgIGFs
-d2F5cyByZXR1cm4gemVybw0KDQpXb3JrYXJvdW5kOg0KICAgICAgICAtIFNhdmUgcmVnaXN0ZXIg
-UkNQTV9JUFBERVhQQ1IxJ3MgdmFsdWUgdG8NCiAgICAgICAgICByZWdpc3RlciBTQ0ZHX1NQQVJF
-Q1I4Lih1Ym9vdCdzIHBzY2kgYWxzbw0KICAgICAgICAgIG5lZWQgcmVhZGluZyB2YWx1ZSBmcm9t
-IHRoZSByZWdpc3RlciBTQ0ZHX1NQQVJFQ1I4DQogICAgICAgICAgdG8gc2V0IHJlZ2lzdGVyIFJD
-UE1fSVBQREVYUENSMSkNCg0KSW1wYWN0Og0KICAgICAgICAtIEZsZXhUaW1lciBtb2R1bGUgd2ls
-bCBjYW5ub3Qgd2FrZXVwIHN5c3RlbSBpbg0KICAgICAgICAgIGRlZXAgc2xlZXAgb24gU29DIExT
-MTAyMUENCg0KU2lnbmVkLW9mZi1ieTogQml3ZW4gTGkgPGJpd2VuLmxpQG54cC5jb20+DQotLS0N
-CkNoYW5nZSBpbiB2MzoNCiAgICAgICAgLSB1cGRhdGUgY29tbWl0IG1lc3NhZ2UNCiAgICAgICAg
-LSByZW5hbWUgcHJvcGVydHkgbmFtZQ0KICAgICAgICAgIGZzbCxyY3BtLXNjZmcgLT4gZnNsLGlw
-cGRleHBjci1hbHQtYWRkcg0KDQpDaGFuZ2UgaW4gdjI6DQogICAgICAgIC0gZml4IHN0eXBlIHBy
-b2JsZW1zDQoNCiBkcml2ZXJzL3NvYy9mc2wvcmNwbS5jIHwgMjEgKysrKysrKysrKysrKysrKysr
-KysrDQogMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvc29jL2ZzbC9yY3BtLmMgYi9kcml2ZXJzL3NvYy9mc2wvcmNwbS5jDQppbmRleCA4MmMw
-YWQ1ZTY2M2UuLjdmNDJiMTdkM2YyOSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc29jL2ZzbC9yY3Bt
-LmMNCisrKyBiL2RyaXZlcnMvc29jL2ZzbC9yY3BtLmMNCkBAIC0xMyw2ICsxMyw4IEBADQogI2lu
-Y2x1ZGUgPGxpbnV4L3NsYWIuaD4NCiAjaW5jbHVkZSA8bGludXgvc3VzcGVuZC5oPg0KICNpbmNs
-dWRlIDxsaW51eC9rZXJuZWwuaD4NCisjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+DQorI2luY2x1
-ZGUgPGxpbnV4L21mZC9zeXNjb24uaD4NCg0KICNkZWZpbmUgUkNQTV9XQUtFVVBfQ0VMTF9NQVhf
-U0laRSAgICAgICA3DQoNCkBAIC0yOSw2ICszMSw5IEBAIHN0YXRpYyBpbnQgcmNwbV9wbV9wcmVw
-YXJlKHN0cnVjdCBkZXZpY2UgKmRldikNCiAgICAgICAgIHN0cnVjdCByY3BtICAgICAgICAgICAg
-ICpyY3BtOw0KICAgICAgICAgdTMyIHZhbHVlW1JDUE1fV0FLRVVQX0NFTExfTUFYX1NJWkUgKyAx
-XSwgdG1wOw0KICAgICAgICAgaW50IGksIHJldCwgaWR4Ow0KKyAgICAgICBzdHJ1Y3QgcmVnbWFw
-ICogc2NmZ19hZGRyX3JlZ21hcCA9IE5VTEw7DQorICAgICAgIHUzMiByZWdfb2Zmc2V0W1JDUE1f
-V0FLRVVQX0NFTExfTUFYX1NJWkUgKyAxXTsNCisgICAgICAgdTMyIHJlZ192YWx1ZSA9IDA7DQoN
-CiAgICAgICAgIHJjcG0gPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCiAgICAgICAgIGlmICghcmNw
-bSkNCkBAIC02Myw2ICs2OCwyMiBAQCBzdGF0aWMgaW50IHJjcG1fcG1fcHJlcGFyZShzdHJ1Y3Qg
-ZGV2aWNlICpkZXYpDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRt
-cCB8PSB2YWx1ZVtpICsgMV07DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIGlvd3JpdGUzMmJlKHRtcCwgcmNwbS0+aXBwZGV4cGNyX2Jhc2UgKyBpICogNCk7DQogICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9DQorICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIC8qIFdvcmthcm91bmQgb2YgZXJyYXRhIEEtMDA4NjQ2IG9uIFNvQyBMUzEwMjFBOiBU
-aGVyZSBpcyBhIGJ1ZyBvZg0KKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKiByZWdp
-c3RlciBpcHBkZXhwY3IxLiBSZWFkaW5nIGNvbmZpZ3VyYXRpb24gcmVnaXN0ZXIgUkNQTV9JUFBE
-RVhQQ1IxDQorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAqIGFsd2F5cyByZXR1cm4g
-emVyby4gU28gc2F2ZSBpcHBkZXhwY3IxJ3MgdmFsdWUgdG8gcmVnaXN0ZXIgU0NGR19TUEFSRUNS
-OC4NCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICogQW5kIHRoZSB2YWx1ZSBvZiBp
-cHBkZXhwY3IxIHdpbGwgYmUgcmVhZCBmcm9tIFNDRkdfU1BBUkVDUjguDQorICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAqLw0KKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBz
-Y2ZnX2FkZHJfcmVnbWFwID0gc3lzY29uX3JlZ21hcF9sb29rdXBfYnlfcGhhbmRsZShucCwgImZz
-bCxpcHBkZXhwY3ItYWx0LWFkZHIiKTsNCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-aWYgKHNjZmdfYWRkcl9yZWdtYXApIHsNCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBpZiAob2ZfcHJvcGVydHlfcmVhZF91MzJfYXJyYXkoZGV2LT5vZl9ub2RlLA0KKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiZnNsLGlwcGRleHBjci1h
-bHQtYWRkciIsIHJlZ19vZmZzZXQsIHJjcG0tPndha2V1cF9jZWxscyArIDEpKSB7DQorICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzY2ZnX2FkZHJfcmVnbWFw
-ID0gTlVMTDsNCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IGNvbnRpbnVlOw0KKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0NCisg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWdtYXBfcmVhZChzY2ZnX2Fk
-ZHJfcmVnbWFwLCByZWdfb2Zmc2V0W2kgKyAxXSwgJnJlZ192YWx1ZSk7DQorICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgLyogV3JpdGUgdmFsdWUgdG8gcmVnaXN0ZXIgU0NG
-R19TUEFSRUNSOCAqLw0KKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJl
-Z21hcF93cml0ZShzY2ZnX2FkZHJfcmVnbWFwLCByZWdfb2Zmc2V0W2kgKyAxXSwgdG1wIHwgcmVn
-X3ZhbHVlKTsNCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfQ0KICAgICAgICAgICAg
-ICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICAgfQ0KICAgICAgICAgfSB3aGlsZSAod3Mg
-PSB3YWtldXBfc291cmNlX2dldF9uZXh0KHdzKSk7DQotLQ0KMi4xNy4xDQoNCg==
-
---_000_DB7PR04MB44900683D093367E995C6C048F840DB7PR04MB4490eurp_
-Content-Type: text/html; charset="gb2312"
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dgb2312">
-<meta name=3D"Generator" content=3D"Microsoft Exchange Server">
-<!-- converted from text --><style><!-- .EmailQuote { margin-left: 1pt; pad=
-ding-left: 4pt; border-left: #800000 2px solid; } --></style>
-</head>
-<body>
-<div>
-<div dir=3D"auto" style=3D"direction:ltr; margin:0; padding:0; font-family:=
-sans-serif; font-size:11pt; color:black">
-Hi all,<br>
-</div>
-<div dir=3D"auto" style=3D"direction:ltr; margin:0; padding:0; font-family:=
-sans-serif; font-size:11pt; color:black">
-the linux patches depended by RCPM driver,FlexTimer driver and FlexTimer dt=
-s, need apply these patches as follows:<br>
-<br>
-</div>
-<div dir=3D"auto" style=3D"direction:ltr; margin:0; padding:0; font-family:=
-sans-serif; font-size:11pt; color:black">
-1. RCPM driver:<br>
-<br>
-</div>
-<div dir=3D"auto" style=3D"direction:ltr; margin:0; padding:0; font-family:=
-sans-serif; font-size:11pt; color:black">
-<a href=3D"https://patchwork.kernel.org/series/162731/mbox/(https://patchwo=
-rk.kernel.org/patch/11105279">https://patchwork.kernel.org/series/162731/mb=
-ox/(https://patchwork.kernel.org/patch/11105279</a>/)<br>
-<br>
-</div>
-<div dir=3D"auto" style=3D"direction:ltr; margin:0; padding:0; font-family:=
-sans-serif; font-size:11pt; color:black">
-2. FlexTimer dts:<br>
-<br>
-</div>
-<div dir=3D"auto" style=3D"direction:ltr; margin:0; padding:0; font-family:=
-sans-serif; font-size:11pt; color:black">
-<a href=3D"https://lore.kernel.org/patchwork/series/405653/mbox/(https://lo=
-re.kernel.org/patchwork/patch/1112493">https://lore.kernel.org/patchwork/se=
-ries/405653/mbox/(https://lore.kernel.org/patchwork/patch/1112493</a>/)<br>
-<br>
-</div>
-<div dir=3D"auto" style=3D"direction:ltr; margin:0; padding:0; font-family:=
-sans-serif; font-size:11pt; color:black">
-3. FlexTimer driver:<br>
-<br>
-</div>
-<div dir=3D"auto" style=3D"direction:ltr; margin:0; padding:0; font-family:=
-sans-serif; font-size:11pt; color:black">
-<a href=3D"https://patchwork.ozlabs.org/series/124718/mbox/(https://patchwo=
-rk.ozlabs.org/patch/1145999">https://patchwork.ozlabs.org/series/124718/mbo=
-x/(https://patchwork.ozlabs.org/patch/1145999</a>/)<br>
-<br>
-</div>
-<div dir=3D"auto" style=3D"direction:ltr; margin:0; padding:0; font-family:=
-sans-serif; font-size:11pt; color:black">
-<a href=3D"https://patchwork.ozlabs.org/series/126942/mbox/(https://patchwo=
-rk.ozlabs.org/patch/1152085">https://patchwork.ozlabs.org/series/126942/mbo=
-x/(https://patchwork.ozlabs.org/patch/1152085</a>/)<br>
-<br>
-</div>
-<div dir=3D"auto" style=3D"direction:ltr; margin:0; padding:0; font-family:=
-sans-serif; font-size:11pt; color:black">
-4. Adjust drivers/soc/fsl/Makefile:<br>
-<br>
-</div>
-<div dir=3D"auto" style=3D"direction:ltr; margin:0; padding:0; font-family:=
-sans-serif; font-size:11pt; color:black">
-remove the line 'obj-y &#43;=3D ftm_alarm.o' in drivers/soc/fsl/Makefile to=
- resolve a compilation error<br>
-<br>
-</div>
-<div dir=3D"auto" style=3D"direction:ltr; margin:0; padding:0; font-family:=
-sans-serif; font-size:11pt; color:black">
-<span id=3D"x_OutlookSignature">
-<div dir=3D"auto" style=3D"direction:ltr; margin:0; padding:0; font-family:=
-sans-serif; font-size:11pt; color:black">
-=BB=F1=C8=A1 <a href=3D"https://aka.ms/ghei36">Outlook for Android</a></div=
+On 23.09.2019 18:14, Krzysztof Kozlowski wrote:
+> Multi Core Timer node has interrupts routed to two different parents -
+> GIC and combiner.  This was modeled with a interrupt-map within a
+> subnode but can be expressed in an easier and more common way, directly
+> in the node itself.
 >
-</span><br>
-</div>
-<hr tabindex=3D"-1" style=3D"display:inline-block; width:98%">
-<div id=3D"x_divRplyFwdMsg" dir=3D"ltr"><font face=3D"Calibri, sans-serif" =
-color=3D"#000000" style=3D"font-size:11pt"><b>From:</b> Biwen Li &lt;biwen.=
-li@nxp.com&gt;<br>
-<b>Sent:</b> Tuesday, September 24, 2019 10:45:46 AM<br>
-<b>To:</b> Leo Li &lt;leoyang.li@nxp.com&gt;; shawnguo@kernel.org &lt;shawn=
-guo@kernel.org&gt;; robh&#43;dt@kernel.org &lt;robh&#43;dt@kernel.org&gt;; =
-mark.rutland@arm.com &lt;mark.rutland@arm.com&gt;; Ran Wang &lt;ran.wang_1@=
-nxp.com&gt;<br>
-<b>Cc:</b> linuxppc-dev@lists.ozlabs.org &lt;linuxppc-dev@lists.ozlabs.org&=
-gt;; linux-arm-kernel@lists.infradead.org &lt;linux-arm-kernel@lists.infrad=
-ead.org&gt;; linux-kernel@vger.kernel.org &lt;linux-kernel@vger.kernel.org&=
-gt;; devicetree@vger.kernel.org &lt;devicetree@vger.kernel.org&gt;;
- Biwen Li &lt;biwen.li@nxp.com&gt;<br>
-<b>Subject:</b> [v3,1/3] soc: fsl: handle RCPM errata A-008646 on SoC LS102=
-1A</font>
-<div>&nbsp;</div>
-</div>
-</div>
-<font size=3D"2"><span style=3D"font-size:11pt;">
-<div class=3D"PlainText">Description:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Reading configuration register=
- RCPM_IPPDEXPCR1<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; always return zero<b=
-r>
-<br>
-Workaround:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Save register RCPM_IPPDEXPCR1'=
-s value to<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; register SCFG_SPAREC=
-R8.(uboot's psci also<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; need reading value f=
-rom the register SCFG_SPARECR8<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; to set register RCPM=
-_IPPDEXPCR1)<br>
-<br>
-Impact:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - FlexTimer module will cannot w=
-akeup system in<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; deep sleep on SoC LS=
-1021A<br>
-<br>
-Signed-off-by: Biwen Li &lt;biwen.li@nxp.com&gt;<br>
----<br>
-Change in v3:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - update commit message<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - rename property name<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fsl,rcpm-scfg -&gt; =
-fsl,ippdexpcr-alt-addr<br>
-<br>
-Change in v2:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - fix stype problems<br>
-<br>
-&nbsp;drivers/soc/fsl/rcpm.c | 21 &#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&=
-#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;&#43;<br>
-&nbsp;1 file changed, 21 insertions(&#43;)<br>
-<br>
-diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c<br>
-index 82c0ad5e663e..7f42b17d3f29 100644<br>
---- a/drivers/soc/fsl/rcpm.c<br>
-&#43;&#43;&#43; b/drivers/soc/fsl/rcpm.c<br>
-@@ -13,6 &#43;13,8 @@<br>
-&nbsp;#include &lt;linux/slab.h&gt;<br>
-&nbsp;#include &lt;linux/suspend.h&gt;<br>
-&nbsp;#include &lt;linux/kernel.h&gt;<br>
-&#43;#include &lt;linux/regmap.h&gt;<br>
-&#43;#include &lt;linux/mfd/syscon.h&gt;<br>
-&nbsp;<br>
-&nbsp;#define RCPM_WAKEUP_CELL_MAX_SIZE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
- 7<br>
-&nbsp;<br>
-@@ -29,6 &#43;31,9 @@ static int rcpm_pm_prepare(struct device *dev)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; struct rcpm&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *rcpm;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; u32 value[RCPM_WAKEUP_CELL=
-_MAX_SIZE &#43; 1], tmp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int i, ret, idx;<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; struct regmap * scfg_addr_regmap =
-=3D NULL;<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; u32 reg_offset[RCPM_WAKEUP_CELL_M=
-AX_SIZE &#43; 1];<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; u32 reg_value =3D 0;<br>
-&nbsp;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rcpm =3D dev_get_drvdata(d=
-ev);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (!rcpm)<br>
-@@ -63,6 &#43;68,22 @@ static int rcpm_pm_prepare(struct device *dev)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp; tmp |=3D value[i &#43; 1];<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp; iowrite32be(tmp, rcpm-&gt;ippdexpcr_base &#43; i * 4);<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Workaround of errata A-008646 on SoC=
- LS1021A: There is a bug of<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * register ippdexpcr1. Reading co=
-nfiguration register RCPM_IPPDEXPCR1<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * always return zero. So save ipp=
-dexpcr1's value to register SCFG_SPARECR8.<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * And the value of ippdexpcr1 wil=
-l be read from SCFG_SPARECR8.<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; scfg_addr_regmap =3D syscon_regmap_look=
-up_by_phandle(np, &quot;fsl,ippdexpcr-alt-addr&quot;);<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (scfg_addr_regmap) {<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp; if (of_property_read_u32_array(dev-&gt;of_node,<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;fsl,ippdexpcr-alt-addr&quot;, reg_of=
-fset, rcpm-&gt;wakeup_cells &#43; 1)) {<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; scfg_addr_regmap =
-=3D NULL;<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; continue;<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp; }<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp; regmap_read(scfg_addr_regmap, reg_offset[i &#43; 1], &amp;reg_valu=
-e);<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp; /* Write value to register SCFG_SPARECR8 */<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp; regmap_write(scfg_addr_regmap, reg_offset[i &#43; 1], tmp | reg_va=
-lue);<br>
-&#43;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp; }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } while (ws =3D wakeup_sou=
-rce_get_next(ws));<br>
--- <br>
-2.17.1<br>
-<br>
-</div>
-</span></font>
-</body>
-</html>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
---_000_DB7PR04MB44900683D093367E995C6C048F840DB7PR04MB4490eurp_--
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+
+Works fine on Trats and Origen boards.
+
+> ---
+>
+> Not tested.
+>
+> Changes since v3:
+> 1. Use interrupts-extended instead of interrupts-map.
+> ---
+>   arch/arm/boot/dts/exynos4210.dtsi | 21 ++++++---------------
+>   1 file changed, 6 insertions(+), 15 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+> index 6d3f19562aab..5fa33d43821e 100644
+> --- a/arch/arm/boot/dts/exynos4210.dtsi
+> +++ b/arch/arm/boot/dts/exynos4210.dtsi
+> @@ -109,23 +109,14 @@
+>   		mct: timer@10050000 {
+>   			compatible = "samsung,exynos4210-mct";
+>   			reg = <0x10050000 0x800>;
+> -			interrupt-parent = <&mct_map>;
+> -			interrupts = <0>, <1>, <2>, <3>, <4>, <5>;
+>   			clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MCT>;
+>   			clock-names = "fin_pll", "mct";
+> -
+> -			mct_map: mct-map {
+> -				#interrupt-cells = <1>;
+> -				#address-cells = <0>;
+> -				#size-cells = <0>;
+> -				interrupt-map =
+> -					<0 &gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
+> -					<1 &gic 0 69 IRQ_TYPE_LEVEL_HIGH>,
+> -					<2 &combiner 12 6>,
+> -					<3 &combiner 12 7>,
+> -					<4 &gic 0 42 IRQ_TYPE_LEVEL_HIGH>,
+> -					<5 &gic 0 48 IRQ_TYPE_LEVEL_HIGH>;
+> -			};
+> +			interrupts-extended = <&gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
+> +					      <&gic 0 69 IRQ_TYPE_LEVEL_HIGH>,
+> +					      <&combiner 12 6>,
+> +					      <&combiner 12 7>,
+> +					      <&gic 0 42 IRQ_TYPE_LEVEL_HIGH>,
+> +					      <&gic 0 48 IRQ_TYPE_LEVEL_HIGH>;
+>   		};
+>   
+>   		watchdog: watchdog@10060000 {
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
