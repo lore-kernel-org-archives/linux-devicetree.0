@@ -1,88 +1,142 @@
-From: Leo Li <leoyang.li@nxp.com>
-Subject: RE: [PATCH 3/3] arm64: dts: mark lx2160a esdhc controllers dma
- coherent
-Date: Tue, 24 Sep 2019 03:41:05 +0000
-Message-ID: <AM0PR04MB66766AC0807A85B3E5428E028F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
-References: <20190922102341.GO25745@shell.armlinux.org.uk>
- <E1iBz55-0008Mj-CX@rmk-PC.armlinux.org.uk>
- <CAPDyKFpQn+O-M60q-Tc4QOBM+WhFhmnkU6_-t5hnQcndLo==YA@mail.gmail.com>
+From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Subject: Re: [PATCH V7 0/2] mailbox: arm: introduce smc triggered mailbox
+Date: Tue, 24 Sep 2019 06:15:58 +0100
+Message-ID: <30b20102-40d5-1446-1513-e64b47459db8@arm.com>
+References: <1569220514-27903-1-git-send-email-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPDyKFpQn+O-M60q-Tc4QOBM+WhFhmnkU6_-t5hnQcndLo==YA@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1569220514-27903-1-git-send-email-peng.fan@nxp.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Russell King <rmk+kernel@armlinux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, dann frazier <dann.frazier@canonical.com>, Will Deacon <will.deacon@arm.com>, Nicolin Chen <nicoleotsuka@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Y.b. Lu" <yangbo.lu@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+On 23/09/2019 07:36, Peng Fan wrote:
 
+Hi Peng,
 
-> -----Original Message-----
-> From: Ulf Hansson <ulf.hansson@linaro.org>
-> Sent: Monday, September 23, 2019 4:27 PM
-> To: Russell King <rmk+kernel@armlinux.org.uk>
-> Cc: Robin Murphy <robin.murphy@arm.com>; dann frazier
-> <dann.frazier@canonical.com>; Will Deacon <will.deacon@arm.com>;
-> Nicolin Chen <nicoleotsuka@gmail.com>; Y.b. Lu <yangbo.lu@nxp.com>;
-> Christoph Hellwig <hch@lst.de>; Mark Rutland <mark.rutland@arm.com>;
-> DTML <devicetree@vger.kernel.org>; Leo Li <leoyang.li@nxp.com>; Rob
-> Herring <robh+dt@kernel.org>; Shawn Guo <shawnguo@kernel.org>; Linux
-> ARM <linux-arm-kernel@lists.infradead.org>
-> Subject: Re: [PATCH 3/3] arm64: dts: mark lx2160a esdhc controllers dma
-> coherent
+thanks for the update!
+
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> On Sun, 22 Sep 2019 at 12:29, Russell King <rmk+kernel@armlinux.org.uk>
-> wrote:
-> >
-> > The LX2160A esdhc controllers are setup by the driver to be DMA
-> > coherent, but without marking them as such in DT, Linux thinks they
-> > are not.  This can lead to random sporadic DMA errors, even to the
-> > extent of preventing boot, such as:
-> >
-> > mmc0: ADMA error
-> > mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
-> > mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00002202
-> > mmc0: sdhci: Blk size:  0x00000008 | Blk cnt:  0x00000001
-> > mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
-> > mmc0: sdhci: Present:   0x01f50008 | Host ctl: 0x00000038
-> > mmc0: sdhci: Power:     0x00000003 | Blk gap:  0x00000000
-> > mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x000040d8
-> > mmc0: sdhci: Timeout:   0x00000003 | Int stat: 0x00000001
-> > mmc0: sdhci: Int enab:  0x037f108f | Sig enab: 0x037f108b
-> > mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00002202
-> > mmc0: sdhci: Caps:      0x35fa0000 | Caps_1:   0x0000af00
-> > mmc0: sdhci: Cmd:       0x0000333a | Max curr: 0x00000000
-> > mmc0: sdhci: Resp[0]:   0x00000920 | Resp[1]:  0x001d8a33
-> > mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x3f400e00
-> > mmc0: sdhci: Host ctl2: 0x00000000
-> > mmc0: sdhci: ADMA Err:  0x00000009 | ADMA Ptr: 0x000000236d43820c
-> > mmc0: sdhci: ============================================
-> > mmc0: error -5 whilst initialising SD card
-> >
-> > These are caused by the device's descriptor fetch hitting
-> > speculatively loaded CPU cache lines that the CPU does not see through
-> > the normal, non-cacheable DMA coherent mapping that it uses for
-> > non-coherent devices.
-> >
-> > DT and the device must agree wrt whether the device is DMA coherent or
-> > not.
-> >
-> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> V7:
+> Typo fix
+> #mbox-cells changed to 0
+> Add a new header file arm-smccc-mbox.h
+> Use ARM_SMCCC_IS_64
 > 
-> As I am picking up patch1 and patch2 from this series, I can also help out and
-> pick up this one, if that is okay by people?
+> Andre,
+>   The function_id is still kept in arm_smccc_mbox_cmd, because arm,func-id
+> property is optional, so clients could pass function_id to mbox driver.
 
-There is some concern recently from linux-next maintainer about this causing potential conflicts.  https://lkml.org/lkml/2019/9/15/225
+Well, to be honest, this is the main thing I am opposing:
 
-Regards,
-Leo
+It should *not* be optional.
+
+The controller driver DT node should *always* contain the function ID.
+The reasons for that I explained in the other emails to Jassi:
+We can't safely execute smc calls from the Linux kernel, unless we also
+comply with the SMCCC standard. So we should not leave the choice of the
+function ID to the mailbox client.
+Also this much better separates the mailbox controller driver from the
+client.
+
+So I think we should reach an agreement here.
+
+Cheers,
+Andre
+
+> V6:
+> Switch to per-channel a mbox controller
+> Drop arm,num-chans, transports, method
+> Add arm,hvc-mbox compatible
+> Fix smc/hvc args, drop client id and use correct type.
+> https://patchwork.kernel.org/cover/11146641/
+> 
+> V5:
+> yaml fix
+> https://patchwork.kernel.org/cover/11117741/
+> 
+> V4:
+> yaml fix for num-chans in patch 1/2.
+> https://patchwork.kernel.org/cover/11116521/
+> 
+> V3:
+> Drop interrupt
+> Introduce transports for mem/reg usage
+> Add chan-id for mem usage
+> Convert to yaml format
+> https://patchwork.kernel.org/cover/11043541/
+>  
+> V2:
+> This is a modified version from Andre Przywara's patch series
+> https://lore.kernel.org/patchwork/cover/812997/.
+> The modification are mostly:
+> Introduce arm,num-chans
+> Introduce arm_smccc_mbox_cmd
+> txdone_poll and txdone_irq are both set to false
+> arm,func-ids are kept, but as an optional property.
+> Rewords SCPI to SCMI, because I am trying SCMI over SMC, not SCPI.
+> Introduce interrupts notification.
+> 
+> [1] is a draft implementation of i.MX8MM SCMI ATF implementation that
+> use smc as mailbox, power/clk is included, but only part of clk has been
+> implemented to work with hardware, power domain only supports get name
+> for now.
+> 
+> The traditional Linux mailbox mechanism uses some kind of dedicated hardware
+> IP to signal a condition to some other processing unit, typically a dedicated
+> management processor.
+> This mailbox feature is used for instance by the SCMI protocol to signal a
+> request for some action to be taken by the management processor.
+> However some SoCs does not have a dedicated management core to provide
+> those services. In order to service TEE and to avoid linux shutdown
+> power and clock that used by TEE, need let firmware to handle power
+> and clock, the firmware here is ARM Trusted Firmware that could also
+> run SCMI service.
+> 
+> The existing SCMI implementation uses a rather flexible shared memory
+> region to communicate commands and their parameters, it still requires a
+> mailbox to actually trigger the action.
+> 
+> This patch series provides a Linux mailbox compatible service which uses
+> smc calls to invoke firmware code, for instance taking care of SCMI requests.
+> The actual requests are still communicated using the standard SCMI way of
+> shared memory regions, but a dedicated mailbox hardware IP can be replaced via
+> this new driver.
+> 
+> This simple driver uses the architected SMC calling convention to trigger
+> firmware services, also allows for using "HVC" calls to call into hypervisors
+> or firmware layers running in the EL2 exception level.
+> 
+> Patch 1 contains the device tree binding documentation, patch 2 introduces
+> the actual mailbox driver.
+> 
+> Please note that this driver just provides a generic mailbox mechanism,
+> It could support synchronous TX/RX, or synchronous TX with asynchronous
+> RX. And while providing SCMI services was the reason for this exercise,
+> this driver is in no way bound to this use case, but can be used generically
+> where the OS wants to signal a mailbox condition to firmware or a
+> hypervisor.
+> Also the driver is in no way meant to replace any existing firmware
+> interface, but actually to complement existing interfaces.
+> 
+> [1] https://github.com/MrVan/arm-trusted-firmware/tree/scmi
+> 
+> 
+> 
+> Peng Fan (2):
+>   dt-bindings: mailbox: add binding doc for the ARM SMC/HVC mailbox
+>   mailbox: introduce ARM SMC based mailbox
+> 
+>  .../devicetree/bindings/mailbox/arm-smc.yaml       |  95 ++++++++++++
+>  drivers/mailbox/Kconfig                            |   7 +
+>  drivers/mailbox/Makefile                           |   2 +
+>  drivers/mailbox/arm-smc-mailbox.c                  | 168 +++++++++++++++++++++
+>  4 files changed, 272 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+>  create mode 100644 drivers/mailbox/arm-smc-mailbox.c
+> 
