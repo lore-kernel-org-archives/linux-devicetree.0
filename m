@@ -1,14 +1,16 @@
-From: Yinbo Zhu <yinbo.zhu@nxp.com>
-Subject: RE: [PATCH v2] usb: dwc3: enable otg mode for dwc3 usb ip on
- layerscape
-Date: Tue, 24 Sep 2019 03:30:06 +0000
-Message-ID: <VI1PR04MB4158004466B191173A34B4C9E9840@VI1PR04MB4158.eurprd04.prod.outlook.com>
-References: <20190924032903.32775-1-yinbo.zhu@nxp.com>
+From: Leo Li <leoyang.li@nxp.com>
+Subject: RE: [PATCH 3/3] arm64: dts: mark lx2160a esdhc controllers dma
+ coherent
+Date: Tue, 24 Sep 2019 03:41:05 +0000
+Message-ID: <AM0PR04MB66766AC0807A85B3E5428E028F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
+References: <20190922102341.GO25745@shell.armlinux.org.uk>
+ <E1iBz55-0008Mj-CX@rmk-PC.armlinux.org.uk>
+ <CAPDyKFpQn+O-M60q-Tc4QOBM+WhFhmnkU6_-t5hnQcndLo==YA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190924032903.32775-1-yinbo.zhu@nxp.com>
+In-Reply-To: <CAPDyKFpQn+O-M60q-Tc4QOBM+WhFhmnkU6_-t5hnQcndLo==YA@mail.gmail.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -19,50 +21,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yinbo Zhu <yinbo.zhu@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Russell King <rmk+kernel@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, dann frazier <dann.frazier@canonical.com>, Will Deacon <will.deacon@arm.com>, Nicolin Chen <nicoleotsuka@gmail.com>, Rob Herring <robh+dt@kernel.org>, "Y.b. Lu" <yangbo.lu@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCkNoYW5nZSBpbiB2MjoNCgkJCQltb3ZlIHRoZSBvdGcgcHJvcGVydHkgZnJvbSBkdHNp
-IHRvIGR0cy4NCg0KUmVnYXJkcywNCllpbmJvIFpodS4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCkZyb206IFlpbmJvIFpodSA8eWluYm8uemh1QG54cC5jb20+IA0KU2VudDogMjAxOcTq
-OdTCMjTI1SAxMToyOQ0KVG86IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IExlbyBM
-aSA8bGVveWFuZy5saUBueHAuY29tPjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47
-IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+DQpDYzogWWluYm8gWmh1IDx5aW5i
-by56aHVAbnhwLmNvbT47IFhpYW9ibyBYaWUgPHhpYW9iby54aWVAbnhwLmNvbT47IEppYWZlaSBQ
-YW4gPGppYWZlaS5wYW5AbnhwLmNvbT47IFJhbiBXYW5nIDxyYW4ud2FuZ18xQG54cC5jb20+OyBs
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0OiBbUEFUQ0ggdjJd
-IHVzYjogZHdjMzogZW5hYmxlIG90ZyBtb2RlIGZvciBkd2MzIHVzYiBpcCBvbiBsYXllcnNjYXBl
-DQoNCmxheWVyc2NhcGUgb3RnIGZ1bmN0aW9uIHNob3VsZCBiZSBzdXBwb3J0ZWQgSE5QIFNSUCBh
-bmQgQURQIHByb3RvY29sIGFjY3JvaW5nIHRvIHJtIGRvYywgYnV0IGR3YzMgY29kZSBub3QgcmVh
-bGl6ZSBpdCBhbmQgdXNlIGlkIHBpbiB0byBkZXRlY3Qgd2hvIGlzIGhvc3Qgb3IgZGV2aWNlKDAg
-aXMgaG9zdCAxIGlzIGRldmljZSkgdGhpcyBwYXRjaCBpcyB0byBlbmFibGUgT1RHIG1vZGUgb24g
-bHMxMDI4YXJkYiBsczEwODhhcmRiIGFuZCBsczEwNDZhcmRiIGluIGR0cw0KDQpTaWduZWQtb2Zm
-LWJ5OiBZaW5ibyBaaHUgPHlpbmJvLnpodUBueHAuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290
-L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cyB8IDQgKysrKyAgYXJjaC9hcm02NC9i
-b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0NmEtcmRiLmR0cyB8IDQgKysrKyAgYXJjaC9hcm02
-NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA4OGEtcmRiLmR0cyB8IDEgKw0KIDMgZmlsZXMg
-Y2hhbmdlZCwgOSBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3Qv
-ZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9m
-cmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KaW5kZXggOWZiOTExMy4uMDc2Y2FjNiAxMDA2
-NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXJkYi5k
-dHMNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXJkYi5k
-dHMNCkBAIC0xNzEsMyArMTcxLDcgQEANCiAmc2F0YSB7DQogCXN0YXR1cyA9ICJva2F5IjsNCiB9
-Ow0KKw0KKyZ1c2IxIHsNCisJZHJfbW9kZSA9ICJvdGciOw0KK307DQpkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0NmEtcmRiLmR0cyBiL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLXJkYi5kdHMNCmluZGV4IDZhNjUxNGQu
-LjBjNzQyYmUgMTAwNjQ0DQotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
-bHMxMDQ2YS1yZGIuZHRzDQorKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
-bHMxMDQ2YS1yZGIuZHRzDQpAQCAtMTIyLDYgKzEyMiwxMCBAQA0KIAl9Ow0KIH07DQogDQorJnVz
-YjEgew0KKwlkcl9tb2RlID0gIm90ZyI7DQorfTsNCisNCiAjaW5jbHVkZSAiZnNsLWxzMTA0Ni1w
-b3N0LmR0c2kiDQogDQogJmZtYW4wIHsNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRz
-L2ZyZWVzY2FsZS9mc2wtbHMxMDg4YS1yZGIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
-c2NhbGUvZnNsLWxzMTA4OGEtcmRiLmR0cw0KaW5kZXggOGU5MjVkZi4uOTBiMTk4OSAxMDA2NDQN
-Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLXJkYi5kdHMN
-CisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLXJkYi5kdHMN
-CkBAIC05NSw1ICs5NSw2IEBADQogfTsNCiANCiAmdXNiMSB7DQorCWRyX21vZGUgPSAib3RnIjsN
-CiAJc3RhdHVzID0gIm9rYXkiOw0KIH07DQotLQ0KMi45LjUNCg0KX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+
+> -----Original Message-----
+> From: Ulf Hansson <ulf.hansson@linaro.org>
+> Sent: Monday, September 23, 2019 4:27 PM
+> To: Russell King <rmk+kernel@armlinux.org.uk>
+> Cc: Robin Murphy <robin.murphy@arm.com>; dann frazier
+> <dann.frazier@canonical.com>; Will Deacon <will.deacon@arm.com>;
+> Nicolin Chen <nicoleotsuka@gmail.com>; Y.b. Lu <yangbo.lu@nxp.com>;
+> Christoph Hellwig <hch@lst.de>; Mark Rutland <mark.rutland@arm.com>;
+> DTML <devicetree@vger.kernel.org>; Leo Li <leoyang.li@nxp.com>; Rob
+> Herring <robh+dt@kernel.org>; Shawn Guo <shawnguo@kernel.org>; Linux
+> ARM <linux-arm-kernel@lists.infradead.org>
+> Subject: Re: [PATCH 3/3] arm64: dts: mark lx2160a esdhc controllers dma
+> coherent
+> 
+> On Sun, 22 Sep 2019 at 12:29, Russell King <rmk+kernel@armlinux.org.uk>
+> wrote:
+> >
+> > The LX2160A esdhc controllers are setup by the driver to be DMA
+> > coherent, but without marking them as such in DT, Linux thinks they
+> > are not.  This can lead to random sporadic DMA errors, even to the
+> > extent of preventing boot, such as:
+> >
+> > mmc0: ADMA error
+> > mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+> > mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00002202
+> > mmc0: sdhci: Blk size:  0x00000008 | Blk cnt:  0x00000001
+> > mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
+> > mmc0: sdhci: Present:   0x01f50008 | Host ctl: 0x00000038
+> > mmc0: sdhci: Power:     0x00000003 | Blk gap:  0x00000000
+> > mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x000040d8
+> > mmc0: sdhci: Timeout:   0x00000003 | Int stat: 0x00000001
+> > mmc0: sdhci: Int enab:  0x037f108f | Sig enab: 0x037f108b
+> > mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00002202
+> > mmc0: sdhci: Caps:      0x35fa0000 | Caps_1:   0x0000af00
+> > mmc0: sdhci: Cmd:       0x0000333a | Max curr: 0x00000000
+> > mmc0: sdhci: Resp[0]:   0x00000920 | Resp[1]:  0x001d8a33
+> > mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x3f400e00
+> > mmc0: sdhci: Host ctl2: 0x00000000
+> > mmc0: sdhci: ADMA Err:  0x00000009 | ADMA Ptr: 0x000000236d43820c
+> > mmc0: sdhci: ============================================
+> > mmc0: error -5 whilst initialising SD card
+> >
+> > These are caused by the device's descriptor fetch hitting
+> > speculatively loaded CPU cache lines that the CPU does not see through
+> > the normal, non-cacheable DMA coherent mapping that it uses for
+> > non-coherent devices.
+> >
+> > DT and the device must agree wrt whether the device is DMA coherent or
+> > not.
+> >
+> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> 
+> As I am picking up patch1 and patch2 from this series, I can also help out and
+> pick up this one, if that is okay by people?
+
+There is some concern recently from linux-next maintainer about this causing potential conflicts.  https://lkml.org/lkml/2019/9/15/225
+
+Regards,
+Leo
