@@ -1,27 +1,30 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/5] dt-bindings: display: imx: add bindings for DCSS
-Date: Tue, 24 Sep 2019 13:53:28 -0500
-Message-ID: <CAL_JsqK1egTpkqsgVUMUiYzKvVJ=nWtJu+OeujJotRCD9ADsnw@mail.gmail.com>
-References: <1569248002-2485-1-git-send-email-laurentiu.palcu@nxp.com> <1569248002-2485-5-git-send-email-laurentiu.palcu@nxp.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH V2 2/3] dt-bindings: Add Logic PD Type 28 display panel
+Date: Tue, 24 Sep 2019 13:56:14 -0500
+Message-ID: <CAL_JsqJB54aTWNxh+FsEOBRFEWXBi6WZE3pzqo+LJWM781v-PQ@mail.gmail.com>
+References: <20190923134449.22326-1-aford173@gmail.com> <20190923134449.22326-2-aford173@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569248002-2485-5-git-send-email-laurentiu.palcu@nxp.com>
+In-Reply-To: <20190923134449.22326-2-aford173@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>, Lucas Stach <l.stach@pengutronix.de>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Adam Ford <aford173@gmail.com>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, linux-omap <linux-omap@vger.kernel.org>, adam.ford@logicpd.com, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 9:14 AM Laurentiu Palcu <laurentiu.palcu@nxp.com> wrote:
+On Mon, Sep 23, 2019 at 8:45 AM Adam Ford <aford173@gmail.com> wrote:
 >
-> Add bindings for iMX8MQ Display Controller Subsystem.
+> This patch adds documentation of device tree bindings for the WVGA panel
+> Logic PD Type 28 display.
 >
-> Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> Signed-off-by: Adam Ford <aford173@gmail.com>
 > ---
->  .../bindings/display/imx/nxp,imx8mq-dcss.yaml      | 86 ++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> V2:  Use YAML instead of TXT for binding
 
 Fails to build with 'make dt_binding_check':
 
-https://patchwork.ozlabs.org/patch/1166073/
+https://patchwork.ozlabs.org/patch/1166057/
+
+Looks like a tab character used perhaps.
+
+Rob
