@@ -1,62 +1,68 @@
 From: Yinbo Zhu <yinbo.zhu@nxp.com>
-Subject: [PATCH v2] usb: dwc3: enable otg mode for dwc3 usb ip on layerscape
-Date: Tue, 24 Sep 2019 11:29:03 +0800
-Message-ID: <20190924032903.32775-1-yinbo.zhu@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: yinbo.zhu@nxp.com, xiaobo.xie@nxp.com, jiafei.pan@nxp.com, Ran Wang <ran.wang_1@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: RE: [PATCH v2] usb: dwc3: enable otg mode for dwc3 usb ip on
+ layerscape
+Date: Tue, 24 Sep 2019 03:30:06 +0000
+Message-ID: <VI1PR04MB4158004466B191173A34B4C9E9840@VI1PR04MB4158.eurprd04.prod.outlook.com>
+References: <20190924032903.32775-1-yinbo.zhu@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190924032903.32775-1-yinbo.zhu@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Yinbo Zhu <yinbo.zhu@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-layerscape otg function should be supported HNP SRP and ADP protocol
-accroing to rm doc, but dwc3 code not realize it and use id pin to
-detect who is host or device(0 is host 1 is device) this patch is to
-enable OTG mode on ls1028ardb ls1088ardb and ls1046ardb in dts
-
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 4 ++++
- arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 4 ++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts | 1 +
- 3 files changed, 9 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-index 9fb9113..076cac6 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-@@ -171,3 +171,7 @@
- &sata {
- 	status = "okay";
- };
-+
-+&usb1 {
-+	dr_mode = "otg";
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-index 6a6514d..0c742be 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-@@ -122,6 +122,10 @@
- 	};
- };
- 
-+&usb1 {
-+	dr_mode = "otg";
-+};
-+
- #include "fsl-ls1046-post.dtsi"
- 
- &fman0 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-index 8e925df..90b1989 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-@@ -95,5 +95,6 @@
- };
- 
- &usb1 {
-+	dr_mode = "otg";
- 	status = "okay";
- };
--- 
-2.9.5
+SGksDQoNCkNoYW5nZSBpbiB2MjoNCgkJCQltb3ZlIHRoZSBvdGcgcHJvcGVydHkgZnJvbSBkdHNp
+IHRvIGR0cy4NCg0KUmVnYXJkcywNCllpbmJvIFpodS4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdl
+LS0tLS0NCkZyb206IFlpbmJvIFpodSA8eWluYm8uemh1QG54cC5jb20+IA0KU2VudDogMjAxOcTq
+OdTCMjTI1SAxMToyOQ0KVG86IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IExlbyBM
+aSA8bGVveWFuZy5saUBueHAuY29tPjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47
+IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+DQpDYzogWWluYm8gWmh1IDx5aW5i
+by56aHVAbnhwLmNvbT47IFhpYW9ibyBYaWUgPHhpYW9iby54aWVAbnhwLmNvbT47IEppYWZlaSBQ
+YW4gPGppYWZlaS5wYW5AbnhwLmNvbT47IFJhbiBXYW5nIDxyYW4ud2FuZ18xQG54cC5jb20+OyBs
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0OiBbUEFUQ0ggdjJd
+IHVzYjogZHdjMzogZW5hYmxlIG90ZyBtb2RlIGZvciBkd2MzIHVzYiBpcCBvbiBsYXllcnNjYXBl
+DQoNCmxheWVyc2NhcGUgb3RnIGZ1bmN0aW9uIHNob3VsZCBiZSBzdXBwb3J0ZWQgSE5QIFNSUCBh
+bmQgQURQIHByb3RvY29sIGFjY3JvaW5nIHRvIHJtIGRvYywgYnV0IGR3YzMgY29kZSBub3QgcmVh
+bGl6ZSBpdCBhbmQgdXNlIGlkIHBpbiB0byBkZXRlY3Qgd2hvIGlzIGhvc3Qgb3IgZGV2aWNlKDAg
+aXMgaG9zdCAxIGlzIGRldmljZSkgdGhpcyBwYXRjaCBpcyB0byBlbmFibGUgT1RHIG1vZGUgb24g
+bHMxMDI4YXJkYiBsczEwODhhcmRiIGFuZCBsczEwNDZhcmRiIGluIGR0cw0KDQpTaWduZWQtb2Zm
+LWJ5OiBZaW5ibyBaaHUgPHlpbmJvLnpodUBueHAuY29tPg0KLS0tDQogYXJjaC9hcm02NC9ib290
+L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cyB8IDQgKysrKyAgYXJjaC9hcm02NC9i
+b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0NmEtcmRiLmR0cyB8IDQgKysrKyAgYXJjaC9hcm02
+NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA4OGEtcmRiLmR0cyB8IDEgKw0KIDMgZmlsZXMg
+Y2hhbmdlZCwgOSBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3Qv
+ZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9m
+cmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KaW5kZXggOWZiOTExMy4uMDc2Y2FjNiAxMDA2
+NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXJkYi5k
+dHMNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXJkYi5k
+dHMNCkBAIC0xNzEsMyArMTcxLDcgQEANCiAmc2F0YSB7DQogCXN0YXR1cyA9ICJva2F5IjsNCiB9
+Ow0KKw0KKyZ1c2IxIHsNCisJZHJfbW9kZSA9ICJvdGciOw0KK307DQpkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA0NmEtcmRiLmR0cyBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLXJkYi5kdHMNCmluZGV4IDZhNjUxNGQu
+LjBjNzQyYmUgMTAwNjQ0DQotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
+bHMxMDQ2YS1yZGIuZHRzDQorKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
+bHMxMDQ2YS1yZGIuZHRzDQpAQCAtMTIyLDYgKzEyMiwxMCBAQA0KIAl9Ow0KIH07DQogDQorJnVz
+YjEgew0KKwlkcl9tb2RlID0gIm90ZyI7DQorfTsNCisNCiAjaW5jbHVkZSAiZnNsLWxzMTA0Ni1w
+b3N0LmR0c2kiDQogDQogJmZtYW4wIHsNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRz
+L2ZyZWVzY2FsZS9mc2wtbHMxMDg4YS1yZGIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
+c2NhbGUvZnNsLWxzMTA4OGEtcmRiLmR0cw0KaW5kZXggOGU5MjVkZi4uOTBiMTk4OSAxMDA2NDQN
+Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLXJkYi5kdHMN
+CisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLXJkYi5kdHMN
+CkBAIC05NSw1ICs5NSw2IEBADQogfTsNCiANCiAmdXNiMSB7DQorCWRyX21vZGUgPSAib3RnIjsN
+CiAJc3RhdHVzID0gIm9rYXkiOw0KIH07DQotLQ0KMi45LjUNCg0KX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
