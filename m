@@ -1,7 +1,7 @@
 From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v4 10/11] arm64: dts: layerscape: Add PCIe EP node for ls1088a
-Date: Tue, 24 Sep 2019 10:18:48 +0800
-Message-ID: <20190924021849.3185-11-xiaowei.bao@nxp.com>
+Subject: [PATCH v4 11/11] misc: pci_endpoint_test: Add LS1088a in pci_device_id table
+Date: Tue, 24 Sep 2019 10:18:49 +0800
+Message-ID: <20190924021849.3185-12-xiaowei.bao@nxp.com>
 References: <20190924021849.3185-1-xiaowei.bao@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190924021849.3185-1-xiaowei.bao@nxp.com>
@@ -10,75 +10,40 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nx
 Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add PCIe EP node for ls1088a to support EP mode.
+Add LS1088a in pci_device_id table so that pci-epf-test can be used
+for testing PCIe EP in LS1088a.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 ---
 v2:
- - Remove the pf-offset proparty.
+ - No change.
 v3:
  - No change.
 v4:
- - No change.
+ - Use a maco to define the LS1088a device ID.
  
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 31 ++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/misc/pci_endpoint_test.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index c676d07..da246ab 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -483,6 +483,17 @@
- 			status = "disabled";
- 		};
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 6e208a0..8c222a6 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -65,6 +65,7 @@
+ #define PCI_ENDPOINT_TEST_IRQ_NUMBER		0x28
  
-+		pcie_ep@3400000 {
-+			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-+			reg = <0x00 0x03400000 0x0 0x00100000
-+			       0x20 0x00000000 0x8 0x00000000>;
-+			reg-names = "regs", "addr_space";
-+			num-ib-windows = <24>;
-+			num-ob-windows = <128>;
-+			max-functions = /bits/ 8 <2>;
-+			status = "disabled";
-+		};
-+
- 		pcie@3500000 {
- 			compatible = "fsl,ls1088a-pcie";
- 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
-@@ -508,6 +519,16 @@
- 			status = "disabled";
- 		};
+ #define PCI_DEVICE_ID_TI_AM654			0xb00c
++#define PCI_DEVICE_ID_LS1088A			0x80c0
  
-+		pcie_ep@3500000 {
-+			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-+			reg = <0x00 0x03500000 0x0 0x00100000
-+			       0x28 0x00000000 0x8 0x00000000>;
-+			reg-names = "regs", "addr_space";
-+			num-ib-windows = <6>;
-+			num-ob-windows = <8>;
-+			status = "disabled";
-+		};
-+
- 		pcie@3600000 {
- 			compatible = "fsl,ls1088a-pcie";
- 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
-@@ -533,6 +554,16 @@
- 			status = "disabled";
- 		};
- 
-+		pcie_ep@3600000 {
-+			compatible = "fsl,ls1088a-pcie-ep","fsl,ls-pcie-ep";
-+			reg = <0x00 0x03600000 0x0 0x00100000
-+			       0x30 0x00000000 0x8 0x00000000>;
-+			reg-names = "regs", "addr_space";
-+			num-ib-windows = <6>;
-+			num-ob-windows = <8>;
-+			status = "disabled";
-+		};
-+
- 		smmu: iommu@5000000 {
- 			compatible = "arm,mmu-500";
- 			reg = <0 0x5000000 0 0x800000>;
+ #define is_am654_pci_dev(pdev)		\
+ 		((pdev)->device == PCI_DEVICE_ID_TI_AM654)
+@@ -793,6 +794,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, PCI_DEVICE_ID_LS1088A) },
+ 	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, NULL) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
+ 	  .driver_data = (kernel_ulong_t)&am654_data
 -- 
 2.9.5
