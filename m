@@ -1,55 +1,41 @@
 From: Shengjiu Wang <shengjiu.wang@nxp.com>
-Subject: [PATCH V4 2/4] ASoC: fsl_asrc: update supported sample format
-Date: Tue, 24 Sep 2019 18:52:33 +0800
-Message-ID: <45a7c383f43cc1dd9d0934846447aee653278c03.1569296075.git.shengjiu.wang@nxp.com>
-References: <cover.1569296075.git.shengjiu.wang@nxp.com>
+Subject: [PATCH V4 0/4] update supported sample format
+Date: Tue, 24 Sep 2019 18:52:31 +0800
+Message-ID: <cover.1569296075.git.shengjiu.wang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1569296075.git.shengjiu.wang@nxp.com>
-In-Reply-To: <cover.1569296075.git.shengjiu.wang@nxp.com>
-References: <cover.1569296075.git.shengjiu.wang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de
 List-Id: devicetree@vger.kernel.org
 
-The ASRC support 24bit/16bit/8bit input width, which is
-data width, not slot width.
+This patch serial is to update the supported format for fsl_asrc
+and fix some format issue.
 
-For the S20_3LE format, the data with is 20bit, slot width
-is 24bit, if we set ASRMCR1n.IWD to be 24bits, the result
-is the volume is lower than expected, it likes 24bit data
-right shift 4 bits
+Shengjiu Wang (4):
+  ASoC: fsl_asrc: Use in(out)put_format instead of in(out)put_word_width
+  ASoC: fsl_asrc: update supported sample format
+  ASoC: pcm_dmaengine: Extract snd_dmaengine_pcm_refine_runtime_hwparams
+  ASoC: fsl_asrc: Fix error with S24_3LE format bitstream in i.MX8
 
-So replace S20_3LE with S24_3LE in supported list and add S8
-format in TX supported list
+changes in v2
+- extract snd_dmaengine_pcm_set_runtime_hwparams in one
+  separate path.
+- 4th patch depends on 3rd patch
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
- sound/soc/fsl/fsl_asrc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+changes in v3
+- Fix build report by kbuild test robot <lkp@intel.com>
+- change snd_dmaengine_pcm_set_runtime_hwparams to
+  snd_dmaengine_pcm_refine_runtime_hwparams
 
-diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-index 4d3804a1ea55..584badf956d2 100644
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -624,7 +624,7 @@ static int fsl_asrc_dai_probe(struct snd_soc_dai *dai)
- 
- #define FSL_ASRC_FORMATS	(SNDRV_PCM_FMTBIT_S24_LE | \
- 				 SNDRV_PCM_FMTBIT_S16_LE | \
--				 SNDRV_PCM_FMTBIT_S20_3LE)
-+				 SNDRV_PCM_FMTBIT_S24_3LE)
- 
- static struct snd_soc_dai_driver fsl_asrc_dai = {
- 	.probe = fsl_asrc_dai_probe,
-@@ -635,7 +635,8 @@ static struct snd_soc_dai_driver fsl_asrc_dai = {
- 		.rate_min = 5512,
- 		.rate_max = 192000,
- 		.rates = SNDRV_PCM_RATE_KNOT,
--		.formats = FSL_ASRC_FORMATS,
-+		.formats = FSL_ASRC_FORMATS |
-+			   SNDRV_PCM_FMTBIT_S8,
- 	},
- 	.capture = {
- 		.stream_name = "ASRC-Capture",
+changes in v4
+- update according to Nicolin's comments.
+
+ include/sound/dmaengine_pcm.h         |  5 ++
+ sound/core/pcm_dmaengine.c            | 83 +++++++++++++++++++++++++++
+ sound/soc/fsl/fsl_asrc.c              | 65 ++++++++++++++-------
+ sound/soc/fsl/fsl_asrc.h              |  7 ++-
+ sound/soc/fsl/fsl_asrc_dma.c          | 59 ++++++++++++++++---
+ sound/soc/soc-generic-dmaengine-pcm.c | 61 ++------------------
+ 6 files changed, 193 insertions(+), 87 deletions(-)
+
 -- 
 2.21.0
