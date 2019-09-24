@@ -1,52 +1,37 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH v1 1/1] i2c: iproc: Add i2c repeated start capability
-Date: Tue, 24 Sep 2019 15:23:57 -0700
-Message-ID: <e00520d8-5367-83a5-9c17-d2d8b0c983c3@broadcom.com>
-References: <1565150941-27297-1-git-send-email-rayagonda.kokatanur@broadcom.com>
- <20190830125626.GC2870@ninjato>
- <3e70fa7e-de13-4edd-2e17-b7c56e91d220@broadcom.com>
- <20190831094940.GA1138@kunai>
- <540c4e2d-0dd5-5260-30b2-e1589b279d71@broadcom.com>
- <20190904213745.GG23608@ninjato>
- <5ab79d0e-eb54-8fe1-1ca3-e763a17c6426@broadcom.com>
- <20190924185757.GA1538@kunai>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: imx6qdl-udoo: Add Pincfgs for OTG
+Date: Tue, 24 Sep 2019 16:09:45 -0700
+Message-ID: <20190924230944.GA5271@X250>
+References: <20190411065440.GB26817@dragon>
+ <1555161577-1533-1-git-send-email-kueffner.markus@gmail.com>
+ <20190415091150.GB18917@X250.skyworth_vap>
+ <20190916130604.GA3140@ubuntu-buildhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190924185757.GA1538@kunai>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190916130604.GA3140@ubuntu-buildhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>, Lori Hikichi <lori.hikichi@broadcom.com>, Icarus Chau <icarus.chau@broadcom.com>, Shivaraj Shetty <sshetty1@broadcom.com>
+To: Markus Kueffner <kueffner.markus@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 9/24/19 11:57 AM, Wolfram Sang wrote:
+On Mon, Sep 16, 2019 at 01:06:04PM +0000, Markus Kueffner wrote:
+> On Mon, Apr 15, 2019 at 05:11:51PM +0800, Shawn Guo wrote:
+> > On Sat, Apr 13, 2019 at 03:19:36PM +0200, Markus Kueffner wrote:
+> > > Add Pincfgs to enable the i.MX6's OTG feature for UDOO
+> > > 
+> > > Signed-off-by: Markus Kueffner <kueffner.markus@gmail.com>
+> > 
+> > Applied, thanks.
 > 
->> In my opinion, it's probably better to continue to support master_xfer in
->> our driver (with obvious limitations), in order to allow i2ctransfer (or any
->> apps that use I2C RDWR) to continue to work.
->>
->> What do you think?
+> Hello, 
 > 
-> Yes, don't break it for users. We should have paid more attention to it
-> in the beginning. But, while not ideal, it is not such a big deal to
-> keep it like this.
-> 
-> Thanks for your investigations!
-> 
+> I was wondering when this might get merged into a release. 
+> Is there anything else I need to fix?
 
-Thanks, Wolfram.
+I'm sorry, Markus.  There was something wrong on my side, and the patch
+did not really get applied for 5.4. I just fixed it for the next
+release.  Sorry about that!
 
-Let's please continue with the review process on the current patch then?
-
-Note the patch was already internally reviewed by me.
-
-Please help to review it and let us know if there's any change that 
-needs to be made?
-
-Regards,
-
-Ray
+Shawn
