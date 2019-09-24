@@ -1,12 +1,10 @@
 From: Hongwei Zhang <hongweiz@ami.com>
-Subject: [v1, 0/1] gpio: dts: aspeed: Add SGPIO driver
-Date: Tue, 24 Sep 2019 15:02:20 -0400
-Message-ID: <1569351740-6285-2-git-send-email-hongweiz@ami.com>
-References: <1569351740-6285-1-git-send-email-hongweiz@ami.com>
+Subject: [v1, 1/1] gpio: dts: aspeed: Add SGPIO driver
+Date: Tue, 24 Sep 2019 15:07:01 -0400
+Message-ID: <1569352021-6383-1-git-send-email-hongweiz@ami.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569351740-6285-1-git-send-email-hongweiz@ami.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andrew Jeffery <andrew@aj.id.au>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Joel Stanley <joel@jms.id.au>
 Cc: Hongwei Zhang <hongweiz@ami.com>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Doug Anderson <armlinux@m.disordat.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Mike Rapoport <rppt@linux.ibm.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
