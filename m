@@ -1,85 +1,61 @@
 From: Biwen Li <biwen.li@nxp.com>
-Subject: [v3,1/3] soc: fsl: handle RCPM errata A-008646 on SoC LS1021A
-Date: Tue, 24 Sep 2019 10:45:46 +0800
-Message-ID: <20190924024548.4356-1-biwen.li@nxp.com>
+Subject: [v3,3/3] Documentation: dt: binding: fsl: Add 'fsl,ippdexpcr-alt-addr' property
+Date: Tue, 24 Sep 2019 10:45:48 +0800
+Message-ID: <20190924024548.4356-3-biwen.li@nxp.com>
+References: <20190924024548.4356-1-biwen.li@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190924024548.4356-1-biwen.li@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, ran.wang_1@nxp.com
 Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Description:
-	- Reading configuration register RCPM_IPPDEXPCR1
-	  always return zero
-
-Workaround:
-	- Save register RCPM_IPPDEXPCR1's value to
-	  register SCFG_SPARECR8.(uboot's psci also
-	  need reading value from the register SCFG_SPARECR8
-	  to set register RCPM_IPPDEXPCR1)
-
-Impact:
-	- FlexTimer module will cannot wakeup system in
-	  deep sleep on SoC LS1021A
+The 'fsl,ippdexpcr-alt-addr' property is used to handle an errata A-008646
+on LS1021A
 
 Signed-off-by: Biwen Li <biwen.li@nxp.com>
 ---
 Change in v3:
-	- update commit message
 	- rename property name
 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
 
 Change in v2:
-	- fix stype problems
+	- update desc of the property 'fsl,rcpm-scfg'
 
- drivers/soc/fsl/rcpm.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
-index 82c0ad5e663e..7f42b17d3f29 100644
---- a/drivers/soc/fsl/rcpm.c
-+++ b/drivers/soc/fsl/rcpm.c
-@@ -13,6 +13,8 @@
- #include <linux/slab.h>
- #include <linux/suspend.h>
- #include <linux/kernel.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
+diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+index 5a33619d881d..157dcf6da17c 100644
+--- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
++++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+@@ -34,6 +34,11 @@ Chassis Version		Example Chips
+ Optional properties:
+  - little-endian : RCPM register block is Little Endian. Without it RCPM
+    will be Big Endian (default case).
++ - fsl,ippdexpcr-alt-addr : Must add the property for SoC LS1021A,
++   Must include n + 1 entries (n = #fsl,rcpm-wakeup-cells, such as:
++   #fsl,rcpm-wakeup-cells equal to 2, then must include 2 + 1 entries).
++   The first entry must be a link to the SCFG device node.
++   The non-first entry must be offset of registers of SCFG.
  
- #define RCPM_WAKEUP_CELL_MAX_SIZE	7
+ Example:
+ The RCPM node for T4240:
+@@ -43,6 +48,15 @@ The RCPM node for T4240:
+ 		#fsl,rcpm-wakeup-cells = <2>;
+ 	};
  
-@@ -29,6 +31,9 @@ static int rcpm_pm_prepare(struct device *dev)
- 	struct rcpm		*rcpm;
- 	u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1], tmp;
- 	int i, ret, idx;
-+	struct regmap * scfg_addr_regmap = NULL;
-+	u32 reg_offset[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
-+	u32 reg_value = 0;
- 
- 	rcpm = dev_get_drvdata(dev);
- 	if (!rcpm)
-@@ -63,6 +68,22 @@ static int rcpm_pm_prepare(struct device *dev)
- 					tmp |= value[i + 1];
- 					iowrite32be(tmp, rcpm->ippdexpcr_base + i * 4);
- 				}
-+				/* Workaround of errata A-008646 on SoC LS1021A: There is a bug of
-+				 * register ippdexpcr1. Reading configuration register RCPM_IPPDEXPCR1
-+				 * always return zero. So save ippdexpcr1's value to register SCFG_SPARECR8.
-+				 * And the value of ippdexpcr1 will be read from SCFG_SPARECR8.
-+				 */
-+				scfg_addr_regmap = syscon_regmap_lookup_by_phandle(np, "fsl,ippdexpcr-alt-addr");
-+				if (scfg_addr_regmap) {
-+					if (of_property_read_u32_array(dev->of_node,
-+					    "fsl,ippdexpcr-alt-addr", reg_offset, rcpm->wakeup_cells + 1)) {
-+						scfg_addr_regmap = NULL;
-+						continue;
-+					}
-+					regmap_read(scfg_addr_regmap, reg_offset[i + 1], &reg_value);
-+					/* Write value to register SCFG_SPARECR8 */
-+					regmap_write(scfg_addr_regmap, reg_offset[i + 1], tmp | reg_value);
-+				}
- 			}
- 		}
- 	} while (ws = wakeup_source_get_next(ws));
++The RCPM node for LS1021A:
++	rcpm: rcpm@1ee2140 {
++		compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
++		reg = <0x0 0x1ee2140 0x0 0x8>;
++		#fsl,rcpm-wakeup-cells = <2>;
++		fsl,ippdexpcr-alt-addr = <&scfg 0x0 0x51c>; /* SCFG_SPARECR8 */
++	};
++
++
+ * Freescale RCPM Wakeup Source Device Tree Bindings
+ -------------------------------------------
+ Required fsl,rcpm-wakeup property should be added to a device node if the device
 -- 
 2.17.1
