@@ -1,41 +1,159 @@
 From: Shengjiu Wang <shengjiu.wang@nxp.com>
-Subject: [PATCH V4 0/4] update supported sample format
-Date: Tue, 24 Sep 2019 18:52:31 +0800
-Message-ID: <cover.1569296075.git.shengjiu.wang@nxp.com>
+Subject: [PATCH V4 4/4] ASoC: fsl_asrc: Fix error with S24_3LE format bitstream in i.MX8
+Date: Tue, 24 Sep 2019 18:52:35 +0800
+Message-ID: <b93ce3dced55bbad8e0b4b7e700cf394b1ae1551.1569296075.git.shengjiu.wang@nxp.com>
+References: <cover.1569296075.git.shengjiu.wang@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1569296075.git.shengjiu.wang@nxp.com>
+In-Reply-To: <cover.1569296075.git.shengjiu.wang@nxp.com>
+References: <cover.1569296075.git.shengjiu.wang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de
 List-Id: devicetree@vger.kernel.org
 
-This patch serial is to update the supported format for fsl_asrc
-and fix some format issue.
+There is error "aplay: pcm_write:2023: write error: Input/output error"
+on i.MX8QM/i.MX8QXP platform for S24_3LE format.
 
-Shengjiu Wang (4):
-  ASoC: fsl_asrc: Use in(out)put_format instead of in(out)put_word_width
-  ASoC: fsl_asrc: update supported sample format
-  ASoC: pcm_dmaengine: Extract snd_dmaengine_pcm_refine_runtime_hwparams
-  ASoC: fsl_asrc: Fix error with S24_3LE format bitstream in i.MX8
+In i.MX8QM/i.MX8QXP, the DMA is EDMA, which don't support 24bit
+sample, but we didn't add any constraint, that cause issues.
 
-changes in v2
-- extract snd_dmaengine_pcm_set_runtime_hwparams in one
-  separate path.
-- 4th patch depends on 3rd patch
+So we need to query the caps of dma, then update the hw parameters
+according to the caps.
 
-changes in v3
-- Fix build report by kbuild test robot <lkp@intel.com>
-- change snd_dmaengine_pcm_set_runtime_hwparams to
-  snd_dmaengine_pcm_refine_runtime_hwparams
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ sound/soc/fsl/fsl_asrc.c     |  4 +--
+ sound/soc/fsl/fsl_asrc.h     |  3 ++
+ sound/soc/fsl/fsl_asrc_dma.c | 59 +++++++++++++++++++++++++++++++-----
+ 3 files changed, 56 insertions(+), 10 deletions(-)
 
-changes in v4
-- update according to Nicolin's comments.
-
- include/sound/dmaengine_pcm.h         |  5 ++
- sound/core/pcm_dmaengine.c            | 83 +++++++++++++++++++++++++++
- sound/soc/fsl/fsl_asrc.c              | 65 ++++++++++++++-------
- sound/soc/fsl/fsl_asrc.h              |  7 ++-
- sound/soc/fsl/fsl_asrc_dma.c          | 59 ++++++++++++++++---
- sound/soc/soc-generic-dmaengine-pcm.c | 61 ++------------------
- 6 files changed, 193 insertions(+), 87 deletions(-)
-
+diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
+index 584badf956d2..0bf91a6f54b9 100644
+--- a/sound/soc/fsl/fsl_asrc.c
++++ b/sound/soc/fsl/fsl_asrc.c
+@@ -115,7 +115,7 @@ static void fsl_asrc_sel_proc(int inrate, int outrate,
+  * within range [ANCA, ANCA+ANCB-1], depends on the channels of pair A
+  * while pair A and pair C are comparatively independent.
+  */
+-static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
++int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
+ {
+ 	enum asrc_pair_index index = ASRC_INVALID_PAIR;
+ 	struct fsl_asrc *asrc_priv = pair->asrc_priv;
+@@ -158,7 +158,7 @@ static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
+  *
+  * It clears the resource from asrc_priv and releases the occupied channels.
+  */
+-static void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
++void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
+ {
+ 	struct fsl_asrc *asrc_priv = pair->asrc_priv;
+ 	enum asrc_pair_index index = pair->index;
+diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
+index 38af485bdd22..2b57e8c53728 100644
+--- a/sound/soc/fsl/fsl_asrc.h
++++ b/sound/soc/fsl/fsl_asrc.h
+@@ -462,4 +462,7 @@ struct fsl_asrc {
+ #define DRV_NAME "fsl-asrc-dai"
+ extern struct snd_soc_component_driver fsl_asrc_component;
+ struct dma_chan *fsl_asrc_get_dma_channel(struct fsl_asrc_pair *pair, bool dir);
++int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair);
++void fsl_asrc_release_pair(struct fsl_asrc_pair *pair);
++
+ #endif /* _FSL_ASRC_H */
+diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
+index 01052a0808b0..3b87badb8f00 100644
+--- a/sound/soc/fsl/fsl_asrc_dma.c
++++ b/sound/soc/fsl/fsl_asrc_dma.c
+@@ -16,13 +16,11 @@
+ 
+ #define FSL_ASRC_DMABUF_SIZE	(256 * 1024)
+ 
+-static const struct snd_pcm_hardware snd_imx_hardware = {
++static struct snd_pcm_hardware snd_imx_hardware = {
+ 	.info = SNDRV_PCM_INFO_INTERLEAVED |
+ 		SNDRV_PCM_INFO_BLOCK_TRANSFER |
+ 		SNDRV_PCM_INFO_MMAP |
+-		SNDRV_PCM_INFO_MMAP_VALID |
+-		SNDRV_PCM_INFO_PAUSE |
+-		SNDRV_PCM_INFO_RESUME,
++		SNDRV_PCM_INFO_MMAP_VALID,
+ 	.buffer_bytes_max = FSL_ASRC_DMABUF_SIZE,
+ 	.period_bytes_min = 128,
+ 	.period_bytes_max = 65535, /* Limited by SDMA engine */
+@@ -270,12 +268,17 @@ static int fsl_asrc_dma_hw_free(struct snd_pcm_substream *substream)
+ 
+ static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
+ {
++	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+ 	struct snd_soc_component *component = snd_soc_rtdcom_lookup(rtd, DRV_NAME);
++	struct snd_dmaengine_dai_dma_data *dma_data;
+ 	struct device *dev = component->dev;
+ 	struct fsl_asrc *asrc_priv = dev_get_drvdata(dev);
+ 	struct fsl_asrc_pair *pair;
++	struct dma_chan *tmp_chan = NULL;
++	u8 dir = tx ? OUT : IN;
++	int ret = 0;
+ 
+ 	pair = kzalloc(sizeof(struct fsl_asrc_pair), GFP_KERNEL);
+ 	if (!pair)
+@@ -285,11 +288,51 @@ static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
+ 
+ 	runtime->private_data = pair;
+ 
+-	snd_pcm_hw_constraint_integer(substream->runtime,
+-				      SNDRV_PCM_HW_PARAM_PERIODS);
+-	snd_soc_set_runtime_hwparams(substream, &snd_imx_hardware);
++	ret = snd_pcm_hw_constraint_integer(substream->runtime,
++					    SNDRV_PCM_HW_PARAM_PERIODS);
++	if (ret < 0) {
++		dev_err(dev, "failed to set pcm hw params periods\n");
++		return ret;
++	}
+ 
+-	return 0;
++	/* Request a dummy pair, which will be released later.
++	 * Request pair function needs channel num as input, for this
++	 * dummy pair, we just request "1" channel temporary.
++	 */
++	ret = fsl_asrc_request_pair(1, pair);
++	if (ret < 0) {
++		dev_err(dev, "failed to request asrc pair\n");
++		return ret;
++	}
++
++	/* Request a dummy dma channel, which will be release later. */
++	tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
++	if (!tmp_chan) {
++		dev_err(dev, "failed to get dma channel\n");
++		ret = -EINVAL;
++		goto out;
++	}
++
++	dma_data = snd_soc_dai_get_dma_data(rtd->cpu_dai, substream);
++
++	/* Refine the snd_imx_hardware according to caps of DMA. */
++	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
++							dma_data,
++							&snd_imx_hardware,
++							tmp_chan);
++	if (ret < 0) {
++		dev_err(dev, "failed to refine runtime hwparams\n");
++		goto out;
++	}
++
++	ret = snd_soc_set_runtime_hwparams(substream, &snd_imx_hardware);
++
++out:
++	if (tmp_chan)
++		dma_release_channel(tmp_chan);
++	fsl_asrc_release_pair(pair);
++
++	return ret;
+ }
+ 
+ static int fsl_asrc_dma_shutdown(struct snd_pcm_substream *substream)
 -- 
 2.21.0
