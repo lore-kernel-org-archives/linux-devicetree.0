@@ -1,99 +1,51 @@
-From: Leo Li <leoyang.li@nxp.com>
-Subject: RE: [v3,3/3] Documentation: dt: binding: fsl: Add
- 'fsl,ippdexpcr-alt-addr' property
-Date: Tue, 24 Sep 2019 15:58:21 +0000
-Message-ID: <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
-References: <20190924024548.4356-1-biwen.li@nxp.com>
- <20190924024548.4356-3-biwen.li@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190924024548.4356-3-biwen.li@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Ran Wang <ran.wang_1@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Biwen Li <biwen.li@nxp.com>
+From: Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH 3/4] ARM: dts: aspeed: ast2500: Add SCU interrupt controller
+Date: Tue, 24 Sep 2019 11:14:31 -0500
+Message-ID: <1569341672-27632-4-git-send-email-eajames@linux.ibm.com>
+References: <1569341672-27632-1-git-send-email-eajames@linux.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1569341672-27632-1-git-send-email-eajames@linux.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, joel@jms.id.au, mark.rutland@arm.com, robh+dt@kernel.org, maz@kernel.org, jason@lakedaemon.net, tglx@linutronix.de, Eddie James <eajames@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
+Add a node for the interrupt controller provided by the SCU.
 
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+---
+ arch/arm/boot/dts/aspeed-g5.dtsi | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-> -----Original Message-----
-> From: Biwen Li <biwen.li@nxp.com>
-> Sent: Monday, September 23, 2019 9:46 PM
-> To: Leo Li <leoyang.li@nxp.com>; shawnguo@kernel.org;
-> robh+dt@kernel.org; mark.rutland@arm.com; Ran Wang
-> <ran.wang_1@nxp.com>
-> Cc: linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
-> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Biwen Li
-> <biwen.li@nxp.com>
-> Subject: [v3,3/3] Documentation: dt: binding: fsl: Add 'fsl,ippdexpcr-alt-addr'
-> property
-> 
-> The 'fsl,ippdexpcr-alt-addr' property is used to handle an errata A-008646 on
-> LS1021A
-> 
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
-> Change in v3:
-> 	- rename property name
-> 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
-> 
-> Change in v2:
-> 	- update desc of the property 'fsl,rcpm-scfg'
-> 
->  Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14
-> ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> index 5a33619d881d..157dcf6da17c 100644
-> --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> @@ -34,6 +34,11 @@ Chassis Version		Example Chips
->  Optional properties:
->   - little-endian : RCPM register block is Little Endian. Without it RCPM
->     will be Big Endian (default case).
-> + - fsl,ippdexpcr-alt-addr : Must add the property for SoC LS1021A,
-
-You probably should mention this is related to a hardware issue on LS1021a and only needed on LS1021a.
-
-> +   Must include n + 1 entries (n = #fsl,rcpm-wakeup-cells, such as:
-> +   #fsl,rcpm-wakeup-cells equal to 2, then must include 2 + 1 entries).
-
-#fsl,rcpm-wakeup-cells is the number of IPPDEXPCR registers on an SoC.  However you are defining an offset to scfg registers here.  Why these two are related?  The length here should actually be related to the #address-cells of the soc/.  But since this is only needed for LS1021, you can just make it 3.
-
-> +   The first entry must be a link to the SCFG device node.
-> +   The non-first entry must be offset of registers of SCFG.
-> 
->  Example:
->  The RCPM node for T4240:
-> @@ -43,6 +48,15 @@ The RCPM node for T4240:
->  		#fsl,rcpm-wakeup-cells = <2>;
->  	};
-> 
-> +The RCPM node for LS1021A:
-> +	rcpm: rcpm@1ee2140 {
-> +		compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
-> +		reg = <0x0 0x1ee2140 0x0 0x8>;
-> +		#fsl,rcpm-wakeup-cells = <2>;
-> +		fsl,ippdexpcr-alt-addr = <&scfg 0x0 0x51c>; /*
-> SCFG_SPARECR8 */
-> +	};
-> +
-> +
->  * Freescale RCPM Wakeup Source Device Tree Bindings
->  -------------------------------------------
->  Required fsl,rcpm-wakeup property should be added to a device node if the
-> device
-> --
-> 2.17.1
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index e8feb8b..450c2d2 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -209,8 +209,9 @@
+ 			syscon: syscon@1e6e2000 {
+ 				compatible = "aspeed,ast2500-scu", "syscon", "simple-mfd";
+ 				reg = <0x1e6e2000 0x1a8>;
++				ranges = <0 0x1e6e2000 0x1a8>;
+ 				#address-cells = <1>;
+-				#size-cells = <0>;
++				#size-cells = <1>;
+ 				#clock-cells = <1>;
+ 				#reset-cells = <1>;
+ 
+@@ -224,6 +225,14 @@
+ 					compatible = "aspeed,ast2500-p2a-ctrl";
+ 					status = "disabled";
+ 				};
++
++				scu_ic: interrupt-controller@18 {
++					#interrupt-cells = <1>;
++					compatible = "aspeed,ast2500-scu-ic";
++					reg = <0x18 0x04>;
++					interrupts = <21>;
++					interrupt-controller;
++				};
+ 			};
+ 
+ 			rng: hwrng@1e6e2078 {
+-- 
+1.8.3.1
