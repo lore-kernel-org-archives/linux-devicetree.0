@@ -1,158 +1,99 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH 0/6] Add the Mobiveil EP and Layerscape Gen4 EP driver
- support
-Date: Tue, 24 Sep 2019 16:52:23 +0100
-Message-ID: <20190924155223.GX25745@shell.armlinux.org.uk>
-References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
- <20190924141847.GW25745@shell.armlinux.org.uk>
+From: Leo Li <leoyang.li@nxp.com>
+Subject: RE: [v3,3/3] Documentation: dt: binding: fsl: Add
+ 'fsl,ippdexpcr-alt-addr' property
+Date: Tue, 24 Sep 2019 15:58:21 +0000
+Message-ID: <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
+References: <20190924024548.4356-1-biwen.li@nxp.com>
+ <20190924024548.4356-3-biwen.li@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190924141847.GW25745@shell.armlinux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, Zhiqiang.Hou@nxp.com, linux-kernel@vger.kernel.org, leoyang.li@nxp.com, Minghuan.Lian@nxp.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, bhelgaas@google.com, andrew.murray@arm.com, kishon@ti.com, shawnguo@kernel.org, mingkai.hu@nxp.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190924024548.4356-3-biwen.li@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Ran Wang <ran.wang_1@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Biwen Li <biwen.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 03:18:47PM +0100, Russell King - ARM Linux admin wrote:
-> On Mon, Sep 16, 2019 at 10:17:36AM +0800, Xiaowei Bao wrote:
-> > This patch set are for adding Mobiveil EP driver and adding PCIe Gen4
-> > EP driver of NXP Layerscape platform.
-> > 
-> > This patch set depends on:
-> > https://patchwork.kernel.org/project/linux-pci/list/?series=159139
-> > 
-> > Xiaowei Bao (6):
-> >   PCI: mobiveil: Add the EP driver support
-> >   dt-bindings: Add DT binding for PCIE GEN4 EP of the layerscape
-> >   PCI: mobiveil: Add PCIe Gen4 EP driver for NXP Layerscape SoCs
-> >   PCI: mobiveil: Add workaround for unsupported request error
-> >   arm64: dts: lx2160a: Add PCIe EP node
-> >   misc: pci_endpoint_test: Add the layerscape PCIe GEN4 EP device
-> >     support
-> > 
-> >  .../bindings/pci/layerscape-pcie-gen4.txt          |  28 +-
-> >  MAINTAINERS                                        |   3 +
-> >  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |  56 ++
-> >  drivers/misc/pci_endpoint_test.c                   |   2 +
-> >  drivers/pci/controller/mobiveil/Kconfig            |  22 +-
-> >  drivers/pci/controller/mobiveil/Makefile           |   2 +
-> >  .../controller/mobiveil/pcie-layerscape-gen4-ep.c  | 169 ++++++
-> >  drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c | 568 +++++++++++++++++++++
-> >  drivers/pci/controller/mobiveil/pcie-mobiveil.c    |  99 +++-
-> >  drivers/pci/controller/mobiveil/pcie-mobiveil.h    |  72 +++
-> >  10 files changed, 1009 insertions(+), 12 deletions(-)
-> >  create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4-ep.c
-> >  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-ep.c
-> 
-> Hi,
-> 
-> I've applied "PCI: mobiveil: Fix the CPU base address setup in inbound
-> window" and your patch set to 5.3, which seems to be able to detect the
-> PCIe card I have plugged in:
-> 
-> layerscape-pcie-gen4 3800000.pcie: host bridge /soc/pcie@3800000 ranges:
-> layerscape-pcie-gen4 3800000.pcie:   MEM 0xa040000000..0xa07fffffff -> 0x40000000
-> layerscape-pcie-gen4 3800000.pcie: PCI host bridge to bus 0000:00
-> pci_bus 0000:00: root bus resource [bus 00-ff]
-> pci_bus 0000:00: root bus resource [mem 0xa040000000-0xa07fffffff] (bus address
-> [0x40000000-0x7fffffff])
-> pci 0000:00:00.0: [1957:8d90] type 01 class 0x060400
-> pci 0000:00:00.0: enabling Extended Tags
-> pci 0000:00:00.0: supports D1 D2
-> pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot D3cold
-> pci 0000:01:00.0: [15b3:6750] type 00 class 0x020000
-> pci 0000:01:00.0: reg 0x10: [mem 0xa040000000-0xa0400fffff 64bit]
-> pci 0000:01:00.0: reg 0x18: [mem 0xa040800000-0xa040ffffff 64bit pref]
-> pci 0000:01:00.0: reg 0x30: [mem 0xa041000000-0xa0410fffff pref]
-> pci 0000:00:00.0: up support 3 enabled 0
-> pci 0000:00:00.0: dn support 1 enabled 0
-> pci 0000:00:00.0: BAR 9: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
-> pci 0000:00:00.0: BAR 8: assigned [mem 0xa040800000-0xa0409fffff]
-> pci 0000:01:00.0: BAR 2: assigned [mem 0xa040000000-0xa0407fffff 64bit pref]
-> pci 0000:01:00.0: BAR 0: assigned [mem 0xa040800000-0xa0408fffff 64bit]
-> pci 0000:01:00.0: BAR 6: assigned [mem 0xa040900000-0xa0409fffff pref]
-> pci 0000:00:00.0: PCI bridge to [bus 01-ff]
-> pci 0000:00:00.0:   bridge window [mem 0xa040800000-0xa0409fffff]
-> pci 0000:00:00.0:   bridge window [mem 0xa040000000-0xa0407fffff 64bit pref]
-> pci 0000:00:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pci 0000:01:00.0: Max Payload Size set to  256/ 256 (was  128), Max Read Rq  256pcieport 0000:00:00.0: PCIe capabilities: 0x13
-> pcieport 0000:00:00.0: init_service_irqs: -19
-> 
-> However, a bit later in the kernel boot, I get:
-> 
-> SError Interrupt on CPU1, code 0xbf000002 -- SError
-> CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
-> Hardware name: SolidRun LX2160A COM express type 7 module (DT)
-> pstate: 60400085 (nZCv daIf +PAN -UAO)
-> pc : pci_generic_config_read+0xb0/0xc0
-> lr : pci_generic_config_read+0x1c/0xc0
-> sp : ffffff8010f9baf0
-> x29: ffffff8010f9baf0 x28: ffffff8010d620a0
-> x27: ffffff8010d79000 x26: ffffff8010d62000
-> x25: ffffff8010cb06d4 x24: 0000000000000000
-> x23: ffffff8010e499b8 x22: ffffff8010f9bbaf
-> x21: 0000000000000000 x20: ffffffe2eda11800
-> x19: ffffff8010f62158 x18: ffffff8010bdede0
-> x17: ffffff8010bdede8 x16: ffffff8010b96970
-> x15: ffffffffffffffff x14: ffffffffff000000
-> x13: ffffffffffffffff x12: 0000000000000030
-> x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
-> x9 : 2dff716475687163 x8 : ffffffffffffffff
-> x7 : fefefefefefefefe x6 : 0000000000000000
-> x5 : 0000000000000000 x4 : ffffff8010f9bb6c
-> x3 : 0000000000000001 x2 : 0000000000000003
-> x1 : 0000000000000000 x0 : 0000000000000000
-> Kernel panic - not syncing: Asynchronous SError Interrupt
-> CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0+ #392
-> Hardware name: SolidRun LX2160A COM express type 7 module (DT)
-> Call trace:
->  dump_backtrace+0x0/0x120
->  show_stack+0x14/0x1c
->  dump_stack+0x9c/0xc0
->  panic+0x148/0x34c
->  print_tainted+0x0/0xa8
->  arm64_serror_panic+0x74/0x80
->  do_serror+0x8c/0x13c
->  el1_error+0xbc/0x160
->  pci_generic_config_read+0xb0/0xc0
->  pci_bus_read_config_byte+0x64/0x90
->  pci_read_config_byte+0x40/0x48
->  pci_assign_irq+0x34/0xc8
->  pci_device_probe+0x28/0x148
->  really_probe+0x1c4/0x2d0
->  driver_probe_device+0x58/0xfc
->  device_driver_attach+0x68/0x70
->  __driver_attach+0x94/0xdc
->  bus_for_each_dev+0x50/0xa0
->  driver_attach+0x20/0x28
->  bus_add_driver+0x14c/0x200
->  driver_register+0x6c/0x124
->  __pci_register_driver+0x48/0x50
->  mlx4_init+0x154/0x180
->  do_one_initcall+0x30/0x250
->  kernel_init_freeable+0x23c/0x32c
->  kernel_init+0x10/0xfc
->  ret_from_fork+0x10/0x18
-> SMP: stopping secondary CPUs
-> Kernel Offset: disabled
-> CPU features: 0x0002,21006008
-> Memory Limit: none
-> 
-> and there it dies.  Any ideas?
 
-The failing access seems to be:
 
-        pci_read_config_byte(dev, PCI_INTERRUPT_PIN, &pin);
+> -----Original Message-----
+> From: Biwen Li <biwen.li@nxp.com>
+> Sent: Monday, September 23, 2019 9:46 PM
+> To: Leo Li <leoyang.li@nxp.com>; shawnguo@kernel.org;
+> robh+dt@kernel.org; mark.rutland@arm.com; Ran Wang
+> <ran.wang_1@nxp.com>
+> Cc: linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
+> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Biwen Li
+> <biwen.li@nxp.com>
+> Subject: [v3,3/3] Documentation: dt: binding: fsl: Add 'fsl,ippdexpcr-alt-addr'
+> property
+> 
+> The 'fsl,ippdexpcr-alt-addr' property is used to handle an errata A-008646 on
+> LS1021A
+> 
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v3:
+> 	- rename property name
+> 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
+> 
+> Change in v2:
+> 	- update desc of the property 'fsl,rcpm-scfg'
+> 
+>  Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14
+> ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> index 5a33619d881d..157dcf6da17c 100644
+> --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> @@ -34,6 +34,11 @@ Chassis Version		Example Chips
+>  Optional properties:
+>   - little-endian : RCPM register block is Little Endian. Without it RCPM
+>     will be Big Endian (default case).
+> + - fsl,ippdexpcr-alt-addr : Must add the property for SoC LS1021A,
 
-for the Mellanox Ethernet card.  Presumably, being a PCIe ethernet
-card, it doesn't implement this register (just a guess), and aborts
-the PCI transaction, which is presumably triggering the above SError.
+You probably should mention this is related to a hardware issue on LS1021a and only needed on LS1021a.
 
-Note that I've used this card with the Macchiatobin (Armada 8040)
-without issue.
+> +   Must include n + 1 entries (n = #fsl,rcpm-wakeup-cells, such as:
+> +   #fsl,rcpm-wakeup-cells equal to 2, then must include 2 + 1 entries).
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+#fsl,rcpm-wakeup-cells is the number of IPPDEXPCR registers on an SoC.  However you are defining an offset to scfg registers here.  Why these two are related?  The length here should actually be related to the #address-cells of the soc/.  But since this is only needed for LS1021, you can just make it 3.
+
+> +   The first entry must be a link to the SCFG device node.
+> +   The non-first entry must be offset of registers of SCFG.
+> 
+>  Example:
+>  The RCPM node for T4240:
+> @@ -43,6 +48,15 @@ The RCPM node for T4240:
+>  		#fsl,rcpm-wakeup-cells = <2>;
+>  	};
+> 
+> +The RCPM node for LS1021A:
+> +	rcpm: rcpm@1ee2140 {
+> +		compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
+> +		reg = <0x0 0x1ee2140 0x0 0x8>;
+> +		#fsl,rcpm-wakeup-cells = <2>;
+> +		fsl,ippdexpcr-alt-addr = <&scfg 0x0 0x51c>; /*
+> SCFG_SPARECR8 */
+> +	};
+> +
+> +
+>  * Freescale RCPM Wakeup Source Device Tree Bindings
+>  -------------------------------------------
+>  Required fsl,rcpm-wakeup property should be added to a device node if the
+> device
+> --
+> 2.17.1
