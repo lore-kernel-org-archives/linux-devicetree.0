@@ -1,130 +1,185 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Drop PMU node
-Date: Mon, 23 Sep 2019 16:55:59 -0700
-Message-ID: <CA+E=qVeArUV0u_17ty=HgaU35TwcBfQjSOJf0A5yM6L6+W-0Og@mail.gmail.com>
-References: <E1hv5vZ-0000jN-M8@stardust.g4.wien.funkfeuer.at>
- <CA+E=qVdHOtebR6xjpwTY_Whp0cHLtv82YULmxLPSEzdLN9TnVg@mail.gmail.com>
- <36e60078-7dd5-9c07-ffa1-6092d8c70fa8@arm.com>
- <CA+E=qVeAR4AFN99ZVy8EZLW6p_8ucTewOdMis37wnpV3DObaGg@mail.gmail.com>
- <20190807115614.phm7sbyae6yajkug@flea>
- <CA+E=qVdh3MHMsEC9XKe5-7O8fGTHFh76WLOgVf+PZPv7c4JE9w@mail.gmail.com>
- <20190808162628.pthvy3tgf3naj76s@flea>
- <CA+E=qVeiWoRGn05HpMzx_5yidit4GM18tBrziW5MBo00f_-PKQ@mail.gmail.com>
- <20190812080420.saelmqb36vkelxn4@flea>
- <CA+E=qVchsqOF_hVD-qBuKwi7PTMYtUR-LE2dD_mpptFJcWE_yw@mail.gmail.com>
- <20190813053905.hu2hyi7fah2vujzz@flea>
- <CA+E=qVegU8M09tmbxGUaBSoueGU6PRsAtr9XWrc8V8HnCPjULg@mail.gmail.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v18 15/19] Documentation: kunit: add documentation for
+ KUnit
+Date: Mon, 23 Sep 2019 17:51:41 -0700
+Message-ID: <9cd80aa2-fc8d-1fed-838b-cf4951692b6d@infradead.org>
+References: <20190923090249.127984-1-brendanhiggins@google.com>
+ <20190923090249.127984-16-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CA+E=qVegU8M09tmbxGUaBSoueGU6PRsAtr9XWrc8V8HnCPjULg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "Jared D . McNeill" <jmcneill@netbsd.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Harald Geyer <harald@ccbib.org>, Robin Murphy <robin.murphy@arm.com>, arm-linux <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190923090249.127984-16-brendanhiggins@google.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>, frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com, richard@nod.at, rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com, torvalds@linux-foundation.org, Felix Guo <felixguoxiuping@gmail.com>, Jonathan Corbet <corbet@lwn.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 4:51 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->
-> On Mon, Aug 12, 2019 at 10:39 PM Maxime Ripard
-> <maxime.ripard@bootlin.com> wrote:
-> >
-> > On Mon, Aug 12, 2019 at 11:01:51AM -0700, Vasily Khoruzhick wrote:
-> > > On Mon, Aug 12, 2019 at 1:04 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > >
-> > > > On Thu, Aug 08, 2019 at 12:59:07PM -0700, Vasily Khoruzhick wrote:
-> > > > > On Thu, Aug 8, 2019 at 9:26 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > >
-> > > > > > On Wed, Aug 07, 2019 at 10:36:08AM -0700, Vasily Khoruzhick wrote:
-> > > > > > > On Wed, Aug 7, 2019 at 4:56 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > > > > >
-> > > > > > > > On Tue, Aug 06, 2019 at 07:39:26PM -0700, Vasily Khoruzhick wrote:
-> > > > > > > > > On Tue, Aug 6, 2019 at 2:14 PM Robin Murphy <robin.murphy@arm.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > On 2019-08-06 9:52 pm, Vasily Khoruzhick wrote:
-> > > > > > > > > > > On Tue, Aug 6, 2019 at 1:19 PM Harald Geyer <harald@ccbib.org> wrote:
-> > > > > > > > > > >>
-> > > > > > > > > > >> Vasily Khoruzhick writes:
-> > > > > > > > > > >>> On Tue, Aug 6, 2019 at 7:35 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> > > > > > > > > > >>>>
-> > > > > > > > > > >>>> On 06/08/2019 15:01, Vasily Khoruzhick wrote:
-> > > > > > > > > > >>>>> Looks like PMU in A64 is broken, it generates no interrupts at all and
-> > > > > > > > > > >>>>> as result 'perf top' shows no events.
-> > > > > > > > > > >>>>
-> > > > > > > > > > >>>> Does something like 'perf stat sleep 1' at least count cycles correctly?
-> > > > > > > > > > >>>> It could well just be that the interrupt numbers are wrong...
-> > > > > > > > > > >>>
-> > > > > > > > > > >>> Looks like it does, at least result looks plausible:
-> > > > > > > > > > >>
-> > > > > > > > > > >> I'm using perf stat regularly (cache benchmarks) and it works fine.
-> > > > > > > > > > >>
-> > > > > > > > > > >> Unfortunately I wasn't aware that perf stat is a poor test for
-> > > > > > > > > > >> the interrupts part of the node, when I added it. So I'm not too
-> > > > > > > > > > >> surprised I got it wrong.
-> > > > > > > > > > >>
-> > > > > > > > > > >> However, it would be unfortunate if the node got removed completely,
-> > > > > > > > > > >> because perf stat would not work anymore. Maybe we can only remove
-> > > > > > > > > > >> the interrupts or just fix them even if the HW doesn't work?
-> > > > > > > > > > >
-> > > > > > > > > > > I'm not familiar with PMU driver. Is it possible to get it working
-> > > > > > > > > > > without interrupts?
-> > > > > > > > > >
-> > > > > > > > > > Yup - you get a grumpy message from the driver, it will refuse sampling
-> > > > > > > > > > events (the ones which weren't working anyway), and if you measure
-> > > > > > > > > > anything for long enough that a counter overflows you'll get wonky
-> > > > > > > > > > results. But for counting hardware events over relatively short periods
-> > > > > > > > > > it'll still do the job.
-> > > > > > > > >
-> > > > > > > > > I tried to drop interrupts completely from the node but 'perf top' is
-> > > > > > > > > still broken. Though now in different way: it complains "cycles: PMU
-> > > > > > > > > Hardware doesn't support sampling/overflow-interrupts. Try 'perf
-> > > > > > > > > stat'"
-> > > > > > > >
-> > > > > > > > I have no idea if that's the culprit, but what is the state of the
-> > > > > > > > 0x09010000 register?
-> > > > > > >
-> > > > > > > What register is that and how do I check it?
-> > > > > >
-> > > > > > It's in the CPUX Configuration block, and the bits are labelled as CPU
-> > > > > > Debug Reset.
-> > > > > >
-> > > > > > And if you have busybox, you can use devmem.
-> > > > >
-> > > > > CPUX configuration block is at 0x01700000 according to A64 user
-> > > > > manual, and particular register you're interested in is at 0x01700080,
-> > > > > its value is 0x1110110F.
-> > > > >
-> > > > > Bits 16-19 are not defined in user manual and are not set.
-> > > >
-> > > > Sorry, I somehow thought this was for the H6...
-> > > >
-> > > > I don't have any idea then :/
-> > >
-> > > OK, so what should we do? 'perf top'/'perf record' work fine if PMU
-> > > node is dropped, but they don't work if PMU node is present (even with
-> > > interrupts dropped). I'd prefer to have 'perf top' and 'perf record'
-> > > working instead of 'perf stat'
-> >
-> > Well, it doesn't work so we should just remove the node, and if
-> > someone wants it back, they should figure it out.
->
-> Hey Maxime,
->
-> So can you merge this patch?
+On 9/23/19 2:02 AM, Brendan Higgins wrote:
 
-Added new Maxime's email to CC
+> diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
+> new file mode 100644
+> index 000000000000..c6e69634e274
+> --- /dev/null
+> +++ b/Documentation/dev-tools/kunit/usage.rst
+> @@ -0,0 +1,576 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +===========
+> +Using KUnit
+> +===========
+> +
+> +The purpose of this document is to describe what KUnit is, how it works, how it
+> +is intended to be used, and all the concepts and terminology that are needed to
+> +understand it. This guide assumes a working knowledge of the Linux kernel and
+> +some basic knowledge of testing.
+> +
+> +For a high level introduction to KUnit, including setting up KUnit for your
+> +project, see :doc:`start`.
+> +
+> +Organization of this document
+> +=============================
+> +
+> +This document is organized into two main sections: Testing and Isolating
+> +Behavior. The first covers what a unit test is and how to use KUnit to write
 
-> > Maxime
-> >
-> > --
-> > Maxime Ripard, Bootlin
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com
+                              what unit tests are
+would agree with the following "them."
+
+> +them. The second covers how to use KUnit to isolate code and make it possible
+> +to unit test code that was otherwise un-unit-testable.
+> +
+> +Testing
+> +=======
+> +
+
+[snip]
+
+
+> +
+> +Test Suites
+> +~~~~~~~~~~~
+> +
+> +Now obviously one unit test isn't very helpful; the power comes from having
+> +many test cases covering all of your behaviors. Consequently it is common to
+
+                   covering all of a unit's behaviors.
+
+> +have many *similar* tests; in order to reduce duplication in these closely
+> +related tests most unit testing frameworks provide the concept of a *test
+> +suite*, in KUnit we call it a *test suite*; all it is is just a collection of
+
+                                             . This is just a collection of
+
+> +test cases for a unit of code with a set up function that gets invoked before
+> +every test cases and then a tear down function that gets invoked after every
+
+   every test case
+
+> +test case completes.
+> +
+> +Example:
+> +
+> +.. code-block:: c
+> +
+> +	static struct kunit_case example_test_cases[] = {
+> +		KUNIT_CASE(example_test_foo),
+> +		KUNIT_CASE(example_test_bar),
+> +		KUNIT_CASE(example_test_baz),
+> +		{}
+> +	};
+> +
+> +	static struct kunit_suite example_test_suite = {
+> +		.name = "example",
+> +		.init = example_test_init,
+> +		.exit = example_test_exit,
+> +		.test_cases = example_test_cases,
+> +	};
+> +	kunit_test_suite(example_test_suite);
+> +
+> +In the above example the test suite, ``example_test_suite``, would run the test
+> +cases ``example_test_foo``, ``example_test_bar``, and ``example_test_baz``,
+> +each would have ``example_test_init`` called immediately before it and would
+> +have ``example_test_exit`` called immediately after it.
+> +``kunit_test_suite(example_test_suite)`` registers the test suite with the
+> +KUnit test framework.
+> +
+> +.. note::
+> +   A test case will only be run if it is associated with a test suite.
+> +
+> +For a more information on these types of things see the :doc:`api/test`.
+
+   For more
+
+> +
+> +Isolating Behavior
+> +==================
+> +
+
+[snip]
+
+> +
+> +.. _kunit-on-non-uml:
+> +
+> +KUnit on non-UML architectures
+> +==============================
+> +
+> +By default KUnit uses UML as a way to provide dependencies for code under test.
+> +Under most circumstances KUnit's usage of UML should be treated as an
+> +implementation detail of how KUnit works under the hood. Nevertheless, there
+> +are instances where being able to run architecture specific code, or test
+
+                           I would drop the comma above.
+
+> +against real hardware is desirable. For these reasons KUnit supports running on
+> +other architectures.
+> +
+> +Running existing KUnit tests on non-UML architectures
+> +-----------------------------------------------------
+> +
+
+[snip]
+
+> +Writing new tests for other architectures
+> +-----------------------------------------
+> +
+> +The first thing you must do is ask yourself whether it is necessary to write a
+> +KUnit test for a specific architecture, and then whether it is necessary to
+> +write that test for a particular piece of hardware. In general, writing a test
+> +that depends on having access to a particular piece of hardware or software (not
+> +included in the Linux source repo) should be avoided at all costs.
+> +
+> +Even if you only ever plan on running your KUnit test on your hardware
+> +configuration, other people may want to run your tests and may not have access
+> +to your hardware. If you write your test to run on UML, then anyone can run your
+> +tests without knowing anything about your particular setup, and you can still
+> +run your tests on your hardware setup just by compiling for your architecture.
+> +
+> +.. important::
+> +   Always prefer tests that run on UML to tests that only run under a particular
+> +   architecture, and always prefer tests that run under QEMU or another easy
+> +   (and monitarily free) to obtain software environment to a specific piece of
+
+           monetarily
+
+> +   hardware.
+> +
+> +Nevertheless, there are still valid reasons to write an architecture or hardware
+> +specific test: for example, you might want to test some code that really belongs
+> +in ``arch/some-arch/*``. Even so, try your best to write the test so that it
+> +does not depend on physical hardware: if some of your test cases don't need the
+> +hardware, only require the hardware for tests that actually need it.
+> +
+> +Now that you have narrowed down exactly what bits are hardware specific, the
+> +actual procedure for writing and running the tests is pretty much the same as
+> +writing normal KUnit tests. One special caveat is that you have to reset
+> +hardware state in between test cases; if this is not possible, you may only be
+> +able to run one test case per invocation.
+> +
+> +.. TODO(brendanhiggins@google.com): Add an actual example of an architecture
+> +   dependent KUnit test.
+
+
+-- 
+~Randy
