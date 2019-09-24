@@ -1,7 +1,7 @@
 From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH v4 05/11] dt-bindings: pci: layerscape-pci: Add compatible strings for ls1088a and ls2088a
-Date: Tue, 24 Sep 2019 10:18:43 +0800
-Message-ID: <20190924021849.3185-6-xiaowei.bao@nxp.com>
+Subject: [PATCH v4 06/11] PCI: layerscape: Fix some format issue of the code
+Date: Tue, 24 Sep 2019 10:18:44 +0800
+Message-ID: <20190924021849.3185-7-xiaowei.bao@nxp.com>
 References: <20190924021849.3185-1-xiaowei.bao@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190924021849.3185-1-xiaowei.bao@nxp.com>
@@ -10,32 +10,42 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nx
 Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add compatible strings for ls1088a and ls2088a.
+Fix some format issue of the code in EP driver.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 ---
 v2:
  - No change.
 v3:
- - Use one valid combination of compatible strings.
+ - No change.
 v4:
- - Add the comma between the two compatible.
+ - No change.
 
- Documentation/devicetree/bindings/pci/layerscape-pci.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pci/controller/dwc/pci-layerscape-ep.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-index e20ceaa..3717e3d 100644
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-@@ -23,6 +23,8 @@ Required properties:
-         "fsl,ls1012a-pcie"
-   EP mode:
- 	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
-+	"fsl,ls1088a-pcie-ep", "fsl,ls-pcie-ep"
-+	"fsl,ls2088a-pcie-ep", "fsl,ls-pcie-ep"
- - reg: base addresses and lengths of the PCIe controller register blocks.
- - interrupts: A list of interrupt outputs of the controller. Must contain an
-   entry for each entry in the interrupt-names property.
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index ca9aa45..a9c552e 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -63,7 +63,7 @@ static void ls_pcie_ep_init(struct dw_pcie_ep *ep)
+ }
+ 
+ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+-				  enum pci_epc_irq_type type, u16 interrupt_num)
++				enum pci_epc_irq_type type, u16 interrupt_num)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+ 
+@@ -87,7 +87,7 @@ static const struct dw_pcie_ep_ops pcie_ep_ops = {
+ };
+ 
+ static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+-					struct platform_device *pdev)
++				 struct platform_device *pdev)
+ {
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
 -- 
 2.9.5
