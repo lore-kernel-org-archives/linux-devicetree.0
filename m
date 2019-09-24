@@ -1,56 +1,42 @@
-From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-Subject: Re: Re: [PATCH 5/5] arm64: dts: imx8mq: add DCSS node
-Date: Tue, 24 Sep 2019 07:29:46 +0000
-Message-ID: <20190924072945.GB25260@fsr-ub1664-121>
-References: <1569248002-2485-1-git-send-email-laurentiu.palcu@nxp.com>
- <1569248002-2485-6-git-send-email-laurentiu.palcu@nxp.com>
- <CAOMZO5AOVfBpz2Azh65iT_W3CBZUxf9KnqA=kdow7XWd4j--Qg@mail.gmail.com>
+From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: [PATCH] dt-bindings: iommu: ipmmu-vmsa: Add r8a774b1 support
+Date: Tue, 24 Sep 2019 08:40:54 +0100
+Message-ID: <1569310854-37057-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5AOVfBpz2Azh65iT_W3CBZUxf9KnqA=kdow7XWd4j--Qg@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <A2FB6DA96285D2448B3353184E71BB06@eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, =?iso-8859-1?Q?Guido_G=FCnther?= <agx@sigxcpu.org>, Lucas Stach <l.stach@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+Document RZ/G2N (R8A774B1) SoC bindings.
 
-On Mon, Sep 23, 2019 at 01:12:42PM -0300, Fabio Estevam wrote:
-> Hi Laurentiu,
->=20
-> On Mon, Sep 23, 2019 at 11:14 AM Laurentiu Palcu
-> <laurentiu.palcu@nxp.com> wrote:
->=20
-> > +
-> > +                       dcss: dcss@0x32e00000 {
->=20
-> Node names should be generic, so:
->=20
-> dcss: display-controller@32e00000
+Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-fair enough, done.
-
->=20
-> > +                               #address-cells =3D <1>;
-> > +                               #size-cells =3D <0>;
-> > +                               compatible =3D "nxp,imx8mq-dcss";
-> > +                               reg =3D <0x32e00000 0x2D000>, <0x32e2f0=
-00 0x1000>;
->=20
-> 0x2d000 for consistency.
-
-will change this as well.
-
-Thanks,
-laurentiu
-
-
->=20
-> > +                               interrupts =3D <6>, <8>, <9>;
->=20
-> The interrupts are passed in the <GIC_SPI xxx IRQ_TYPE_LEVEL_HIGH> format=
-.=
+diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+index b6bfbec..020d6f2 100644
+--- a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
++++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+@@ -15,6 +15,7 @@ Required Properties:
+     - "renesas,ipmmu-r8a7744" for the R8A7744 (RZ/G1N) IPMMU.
+     - "renesas,ipmmu-r8a7745" for the R8A7745 (RZ/G1E) IPMMU.
+     - "renesas,ipmmu-r8a774a1" for the R8A774A1 (RZ/G2M) IPMMU.
++    - "renesas,ipmmu-r8a774b1" for the R8A774B1 (RZ/G2N) IPMMU.
+     - "renesas,ipmmu-r8a774c0" for the R8A774C0 (RZ/G2E) IPMMU.
+     - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
+     - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
+-- 
+2.7.4
