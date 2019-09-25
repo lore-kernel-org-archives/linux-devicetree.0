@@ -1,14 +1,16 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [RFCv4 0/7] interconnect: Add imx support via devfreq
-Date: Tue, 24 Sep 2019 19:37:53 -0700
-Message-ID: <02d3fe6a-53a6-3290-deab-d79e940978ff@linaro.org>
-References: <cover.1566570260.git.leonard.crestez@nxp.com>
- <VI1PR04MB702373BE28E4404C7F2CE75FEE8C0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+From: Biwen Li <biwen.li@nxp.com>
+Subject: RE: [v3,3/3] Documentation: dt: binding: fsl: Add
+ 'fsl,ippdexpcr-alt-addr' property
+Date: Wed, 25 Sep 2019 03:13:07 +0000
+Message-ID: <DB7PR04MB449034C4BBAA89685A2130F78F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190924024548.4356-1-biwen.li@nxp.com>
+ <20190924024548.4356-3-biwen.li@nxp.com>
+ <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <VI1PR04MB702373BE28E4404C7F2CE75FEE8C0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -19,41 +21,77 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>, Saravana Kannan <saravanak@google.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Ran Wang <ran.wang_1@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leonard,
-
-On 9/16/19 05:34, Leonard Crestez wrote:
-> On 23.08.2019 17:37, Leonard Crestez wrote:
->> This series add imx support for interconnect via devfreq: the ICC
->> framework is used to aggregate requests from devices and then those are
->> converted to DEV_PM_QOS_MIN_FREQUENCY requests for devfreq.
->>  
->> Since there is no single devicetree node that can represent the "interconnect"
->> new API is added to allow individual devfreq nodes to act as parsing proxies
->> all mapping to a single soc-level icc provider. This is still RFC
->> because of this
+> >
+> > The 'fsl,ippdexpcr-alt-addr' property is used to handle an errata
+> > A-008646 on LS1021A
+> >
+> > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > ---
+> > Change in v3:
+> > 	- rename property name
+> > 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
+> >
+> > Change in v2:
+> > 	- update desc of the property 'fsl,rcpm-scfg'
+> >
+> >  Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14
+> > ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > index 5a33619d881d..157dcf6da17c 100644
+> > --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > @@ -34,6 +34,11 @@ Chassis Version		Example Chips
+> >  Optional properties:
+> >   - little-endian : RCPM register block is Little Endian. Without it RCPM
+> >     will be Big Endian (default case).
+> > + - fsl,ippdexpcr-alt-addr : Must add the property for SoC LS1021A,
 > 
-> Any comments? I made a lot of changes relative to previous versions, 
-> most of them solely to avoid adding a virtual node in DT bindings.
+> You probably should mention this is related to a hardware issue on LS1021a
+> and only needed on LS1021a.
+Okay, got it, thanks, I will add this in v4.
 > 
-> The only current interconnect provider implementation is for qcom and it 
-> uses a firmware node as the provider node (with #interconnect-cells). 
-> However there is no obvious equivalent of that for imx and many other SOCs.
-
-Not sure if it will help, but have you seen the qcs404 interconnect driver?
-There is also mt8183 interconnect provider driver on LKML.
-
-> On imx there are multiple pieces of scalable fabric which can be defined 
-> in DT as devfreq devices and it sort of makes sense to add 
-> #interconnect-cells to those. However when it comes to describing the 
-> SOC interconnect graph it's much more convenient to have a single 
-> per-SOC platform driver.
-
-Is all the NoC configuration done only by ATF? Are there any NoC related memory
-mapped registers?
-
-Thanks,
-Georgi
+> > +   Must include n + 1 entries (n = #fsl,rcpm-wakeup-cells, such as:
+> > +   #fsl,rcpm-wakeup-cells equal to 2, then must include 2 + 1 entries).
+> 
+> #fsl,rcpm-wakeup-cells is the number of IPPDEXPCR registers on an SoC.
+> However you are defining an offset to scfg registers here.  Why these two
+> are related?  The length here should actually be related to the #address-cells
+> of the soc/.  But since this is only needed for LS1021, you can just make it 3.
+I need set the value of IPPDEXPCR resgiters from ftm_alarm0 device node(fsl,rcpm-wakeup = <&rcpm 0x0 0x20000000>;
+0x0 is a value for IPPDEXPCR0, 0x20000000 is a value for IPPDEXPCR1).
+But because of the hardware issue on LS1021A, I need store the value of IPPDEXPCR registers
+to an alt address. So I defining an offset to scfg registers, then RCPM driver get an abosolute address from offset,
+ RCPM driver write the value of IPPDEXPCR registers to these abosolute addresses(backup the value of IPPDEXPCR registers).
+> 
+> > +   The first entry must be a link to the SCFG device node.
+> > +   The non-first entry must be offset of registers of SCFG.
+> >
+> >  Example:
+> >  The RCPM node for T4240:
+> > @@ -43,6 +48,15 @@ The RCPM node for T4240:
+> >  		#fsl,rcpm-wakeup-cells = <2>;
+> >  	};
+> >
+> > +The RCPM node for LS1021A:
+> > +	rcpm: rcpm@1ee2140 {
+> > +		compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
+> > +		reg = <0x0 0x1ee2140 0x0 0x8>;
+> > +		#fsl,rcpm-wakeup-cells = <2>;
+> > +		fsl,ippdexpcr-alt-addr = <&scfg 0x0 0x51c>; /*
+> > SCFG_SPARECR8 */
+> > +	};
+> > +
+> > +
+> >  * Freescale RCPM Wakeup Source Device Tree Bindings
+> >  -------------------------------------------
+> >  Required fsl,rcpm-wakeup property should be added to a device node if
+> > the device
+> > --
+> > 2.17.1
