@@ -1,44 +1,37 @@
 From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v2 0/5] LogiCVC mfd and GPIO support
-Date: Wed, 25 Sep 2019 10:45:50 +0200
-Message-ID: <20190925084555.147771-1-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v2 1/5] dt-bindings: Add Xylon vendor prefix
+Date: Wed, 25 Sep 2019 10:45:51 +0200
+Message-ID: <20190925084555.147771-2-paul.kocialkowski@bootlin.com>
+References: <20190925084555.147771-1-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190925084555.147771-1-paul.kocialkowski@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-This series introduces support for the LogiCVC GPIO block to the syscon GPIO
-driver, with dt bindings documentation also including the top-level mfd
-component.
+Xylon is an electronics company that produces FPGA hardware block designs
+optimized for Xilinx FPGAs.
 
-Changes since v1:
-- Converted dt bindings documentation to dt schemas;
-- Used BIT macro and removed version from structure name;
-- Improved documentation example with gpio-line-names;
-- Added vendor prefix to dt bindings;
-- Added mfd component dt bindings documentation.
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Cheers,
-
-Paul
-
-Paul Kocialkowski (5):
-  dt-bindings: Add Xylon vendor prefix
-  dt-bindings: mfd: Document the Xylon LogiCVC multi-function device
-  gpio: syscon: Add support for a custom get operation
-  dt-bindings: gpio: Document the Xylon LogiCVC GPIO controller
-  gpio: syscon: Add support for the Xylon LogiCVC GPIOs
-
- .../bindings/gpio/xylon,logicvc-gpio.yaml     | 70 +++++++++++++++++
- .../bindings/mfd/xylon,logicvc.yaml           | 60 +++++++++++++++
- .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
- drivers/gpio/gpio-syscon.c                    | 75 ++++++++++++++++++-
- 4 files changed, 204 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 29dcc6f8a64a..6c9913244e4c 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1036,6 +1036,8 @@ patternProperties:
+     description: Xilinx
+   "^xunlong,.*":
+     description: Shenzhen Xunlong Software CO.,Limited
++  "^xylon,.*":
++    description: Xylon
+   "^yones-toptech,.*":
+     description: Yones Toptech Co., Ltd.
+   "^ysoft,.*":
 -- 
 2.23.0
