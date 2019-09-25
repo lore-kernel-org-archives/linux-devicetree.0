@@ -1,216 +1,102 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/2] clk: meson: a1: add support for Amlogic A1 clock driver
-Date: Wed, 25 Sep 2019 06:12:31 -0700
-Message-ID: <20190925131232.4751020640@mail.kernel.org>
-References: <1569411888-98116-1-git-send-email-jian.hu@amlogic.com> <1569411888-98116-3-git-send-email-jian.hu@amlogic.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v2] dt-bindings: riscv: Fix CPU schema errors
+Date: Wed, 25 Sep 2019 08:12:52 -0500
+Message-ID: <20190925131252.19359-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569411888-98116-3-git-send-email-jian.hu@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Rob Herring <robh@kernel.org>, Jianxin Pan <jianxin.pan@amlogic.com>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jian Hu (2019-09-25 04:44:48)
-> The Amlogic A1 clock includes three parts:
-> peripheral clocks, pll clocks, CPU clocks.
-> sys pll and CPU clocks will be sent in next patch.
->=20
-> Unlike the previous series, there is no EE/AO domain
-> in A1 CLK controllers.
->=20
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+Fix the errors in the RiscV CPU DT schema:
 
-This second name didn't send the patch. Please follow the signoff
-procedures documented in Documentation/process/submitting-patches.rst
+Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
+Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@1: 'timebase-frequency' is a required property
+Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible:0: 'riscv' is not one of ['sifive,rocket0', 'sifive,e5', 'sifive,e51', 'sifive,u54-mc', 'sifive,u54', 'sifive,u5']
+Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible: ['riscv'] is too short
+Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
 
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 16d7614..a48f67d 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -138,6 +138,7 @@ config ARCH_MESON
->         select COMMON_CLK_AXG
->         select COMMON_CLK_G12A
->         select MESON_IRQ_GPIO
-> +       select COMMON_CLK_A1
+Fixes: 4fd669a8c487 ("dt-bindings: riscv: convert cpu binding to json-schema")
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+v2:
+ - Add timebase-frequency to simulator example.
 
-Sort?
+ .../devicetree/bindings/riscv/cpus.yaml       | 26 ++++++++++---------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
->         help
->           This enables support for the arm64 based Amlogic SoCs
->           such as the s905, S905X/D, S912, A113X/D or S905X/D2
-> diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
-> index dabeb43..e6cb4c3 100644
-> --- a/drivers/clk/meson/Kconfig
-> +++ b/drivers/clk/meson/Kconfig
-> @@ -107,3 +107,13 @@ config COMMON_CLK_G12A
->         help
->           Support for the clock controller on Amlogic S905D2, S905X2 and =
-S905Y2
->           devices, aka g12a. Say Y if you want peripherals to work.
-> +
-> +config COMMON_CLK_A1
-
-Probably should be placed somewhere alphabetically in this file?
-
-> +       bool
-> +       depends on ARCH_MESON
-> +       select COMMON_CLK_MESON_REGMAP
-> +       select COMMON_CLK_MESON_DUALDIV
-> +       select COMMON_CLK_MESON_PLL
-> +       help
-> +         Support for the clock controller on Amlogic A113L device,
-> +         aka a1. Say Y if you want peripherals to work.
-> diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
-> index 3939f21..6be3a8f 100644
-> --- a/drivers/clk/meson/Makefile
-> +++ b/drivers/clk/meson/Makefile
-> @@ -19,3 +19,4 @@ obj-$(CONFIG_COMMON_CLK_AXG_AUDIO) +=3D axg-audio.o
->  obj-$(CONFIG_COMMON_CLK_GXBB) +=3D gxbb.o gxbb-aoclk.o
->  obj-$(CONFIG_COMMON_CLK_G12A) +=3D g12a.o g12a-aoclk.o
->  obj-$(CONFIG_COMMON_CLK_MESON8B) +=3D meson8b.o
-> +obj-$(CONFIG_COMMON_CLK_A1) +=3D a1.o
-
-I would guess this should be sorted on Kconfig name in this file?
-
-> diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
-> new file mode 100644
-> index 0000000..26edae0f
-> --- /dev/null
-> +++ b/drivers/clk/meson/a1.c
-> @@ -0,0 +1,2617 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/init.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of_address.h>
-> +#include "clk-mpll.h"
-> +#include "clk-pll.h"
-> +#include "clk-regmap.h"
-> +#include "vid-pll-div.h"
-> +#include "clk-dualdiv.h"
-> +#include "meson-eeclk.h"
-> +#include "a1.h"
-> +
-[...]
-> +
-> +/*
-> + * The Meson A1 HIFI PLL is 614.4M, it requires
-> + * a strict register sequence to enable the PLL.
-> + * set meson_clk_pcie_pll_ops as its ops
-
-Please remove this last line as it's obvious from the code what ops are
-used.
-
-> + */
-> +static struct clk_regmap a1_hifi_pll =3D {
-> +       .data =3D &(struct meson_clk_pll_data){
-> +               .en =3D {
-> +                       .reg_off =3D ANACTRL_HIFIPLL_CTRL0,
-> +                       .shift   =3D 28,
-> +                       .width   =3D 1,
-> +               },
-> +               .m =3D {
-> +                       .reg_off =3D ANACTRL_HIFIPLL_CTRL0,
-> +                       .shift   =3D 0,
-> +                       .width   =3D 8,
-> +               },
-> +               .n =3D {
-> +                       .reg_off =3D ANACTRL_HIFIPLL_CTRL0,
-> +                       .shift   =3D 10,
-> +                       .width   =3D 5,
-> +               },
-> +               .frac =3D {
-> +                       .reg_off =3D ANACTRL_HIFIPLL_CTRL1,
-> +                       .shift   =3D 0,
-> +                       .width   =3D 19,
-> +               },
-> +               .l =3D {
-> +                       .reg_off =3D ANACTRL_HIFIPLL_STS,
-> +                       .shift   =3D 31,
-> +                       .width   =3D 1,
-> +               },
-> +               .table =3D a1_hifi_pll_params_table,
-> +               .init_regs =3D a1_hifi_init_regs,
-> +               .init_count =3D ARRAY_SIZE(a1_hifi_init_regs),
-> +       },
-> +       .hw.init =3D &(struct clk_init_data){
-> +               .name =3D "hifi_pll",
-> +               .ops =3D &meson_clk_pcie_pll_ops,
-> +               .parent_hws =3D (const struct clk_hw *[]) {
-> +                       &a1_xtal_hifipll.hw
-> +               },
-> +               .num_parents =3D 1,
-> +       },
-> +};
-> +
-[..]
-> +
-> +static struct clk_regmap a1_fclk_div2 =3D {
-> +       .data =3D &(struct clk_regmap_gate_data){
-> +               .offset =3D ANACTRL_FIXPLL_CTRL0,
-> +               .bit_idx =3D 21,
-> +       },
-> +       .hw.init =3D &(struct clk_init_data){
-> +               .name =3D "fclk_div2",
-> +               .ops =3D &clk_regmap_gate_ops,
-> +               .parent_hws =3D (const struct clk_hw *[]) {
-> +                       &a1_fclk_div2_div.hw
-> +               },
-> +               .num_parents =3D 1,
-> +               /*
-> +                * add CLK_IS_CRITICAL flag to avoid being disabled by cl=
-k core
-> +                * or its children clocks.
-
-This comment is useless. Please replace it with an actual reason for
-keeping the clk on instead of describing what the flag does.
-
-> +                */
-> +               .flags =3D CLK_IS_CRITICAL,
-> +       },
-> +};
-> +
-[..]
-> +static struct clk_regmap a1_dmc =3D {
-> +       .data =3D &(struct clk_regmap_gate_data){
-> +               .offset =3D DMC_CLK_CTRL,
-> +               .bit_idx =3D 8,
-> +       },
-> +       .hw.init =3D &(struct clk_init_data) {
-> +               .name =3D "dmc",
-> +               .ops =3D &clk_regmap_gate_ops,
-> +               .parent_hws =3D (const struct clk_hw *[]) {
-> +                       &a1_dmc_sel2.hw
-> +               },
-> +               .num_parents =3D 1,
-> +               /*
-> +                * add CLK_IGNORE_UNUSED to avoid hangup
-> +                * DDR clock should not change at runtime
-> +                */
-> +               .flags =3D CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
-
-So not CLK_IS_CRITICAL?
-
-> +       },
-> +};
-> +
-[...]
-> +
-> +/*
-> + * cpu clock register base address is 0xfd000080
-> + */
-> +static struct clk_regmap *const a1_cpu_clk_regmaps[] =3D {
-> +       /* TODO */
-
-Can it be done?
-
-> +};
+diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
+index b261a3015f84..eb0ef19829b6 100644
+--- a/Documentation/devicetree/bindings/riscv/cpus.yaml
++++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
+@@ -24,15 +24,17 @@ description: |
+ 
+ properties:
+   compatible:
+-    items:
+-      - enum:
+-          - sifive,rocket0
+-          - sifive,e5
+-          - sifive,e51
+-          - sifive,u54-mc
+-          - sifive,u54
+-          - sifive,u5
+-      - const: riscv
++    oneOf:
++      - items:
++          - enum:
++              - sifive,rocket0
++              - sifive,e5
++              - sifive,e51
++              - sifive,u54-mc
++              - sifive,u54
++              - sifive,u5
++          - const: riscv
++      - const: riscv    # Simulator only
+     description:
+       Identifies that the hart uses the RISC-V instruction set
+       and identifies the type of the hart.
+@@ -67,8 +69,6 @@ properties:
+       lowercase to simplify parsing.
+ 
+   timebase-frequency:
+-    type: integer
+-    minimum: 1
+     description:
+       Specifies the clock frequency of the system timer in Hz.
+       This value is common to all harts on a single system image.
+@@ -102,9 +102,9 @@ examples:
+     cpus {
+         #address-cells = <1>;
+         #size-cells = <0>;
+-        timebase-frequency = <1000000>;
+         cpu@0 {
+                 clock-frequency = <0>;
++                timebase-frequency = <1000000>;
+                 compatible = "sifive,rocket0", "riscv";
+                 device_type = "cpu";
+                 i-cache-block-size = <64>;
+@@ -120,6 +120,7 @@ examples:
+         };
+         cpu@1 {
+                 clock-frequency = <0>;
++                timebase-frequency = <1000000>;
+                 compatible = "sifive,rocket0", "riscv";
+                 d-cache-block-size = <64>;
+                 d-cache-sets = <64>;
+@@ -153,6 +154,7 @@ examples:
+                 device_type = "cpu";
+                 reg = <0>;
+                 compatible = "riscv";
++                timebase-frequency = <1000000>;
+                 riscv,isa = "rv64imafdc";
+                 mmu-type = "riscv,sv48";
+                 interrupt-controller {
+-- 
+2.20.1
