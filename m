@@ -1,82 +1,35 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
-Date: Wed, 25 Sep 2019 16:09:12 +0100
-Message-ID: <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
- <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
- <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2 00/21] Refine memblock API
+Date: Wed, 25 Sep 2019 12:17:28 -0300
+Message-ID: <CAOMZO5D2uzR6Sz1QnX3G-Ce_juxU-0PO_vBZX+nR1mpQB8s8-w@mail.gmail.com>
+References: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
+ <CAHCN7x+Jv7yGPoB0Gm=TJ30ObLJduw2XomHkd++KqFEURYQcGg@mail.gmail.com>
+ <CAOMZO5A_U4aYC4XZXK1r9JaLg-eRdXy8m6z4GatQp62rK4HZ6A@mail.gmail.com>
+ <CAHCN7xJdzEppn8-74SvzACsA25bUHGdV7v=CfS08xzSi59Z2uw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-wireless <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, etnaviv@lists.freedesktop.org, dri-devel <dri-devel@lists.freedesktop.org>, xen-devel@lists.xenproject.org, linux-tegra@vger.kernel.org, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-pci@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>, Florian Fainelli <f.fainelli@gmail.com>, james.quinlan@broadcom.com, Stefan Wahren <wahrenst@gmx.net>, Dan Williams <dan.j>
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAHCN7xJdzEppn8-74SvzACsA25bUHGdV7v=CfS08xzSi59Z2uw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Adam Ford <aford173@gmail.com>
+Cc: Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, devicetree <devicetree@vger.kernel.org>, Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, x86@kernel.org, Russell King <linux@armlinux.org.uk>, kasan-dev <kasan-dev@googlegroups.com>, Mike Rapoport <rppt@linux.ibm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.org, Chris Healy <cphealy@gmail.com>, uclinux-h8-devel@lists.sourceforge.jp
 List-Id: devicetree@vger.kernel.org
 
-On 25/09/2019 15:52, Nicolas Saenz Julienne wrote:
-> On Tue, 2019-09-24 at 16:59 -0500, Rob Herring wrote:
->> On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
->> <nsaenzjulienne@suse.de> wrote:
->>> Hi All,
->>> this series tries to address one of the issues blocking us from
->>> upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact that
->>> devices not represented in DT which sit behind a PCI bus fail to get the
->>> bus' DMA addressing constraints.
->>>
->>> This is due to the fact that of_dma_configure() assumes it's receiving a
->>> DT node representing the device being configured, as opposed to the PCIe
->>> bridge node we currently pass. This causes the code to directly jump
->>> into PCI's parent node when checking for 'dma-ranges' and misses
->>> whatever was set there.
->>>
->>> To address this I create a new API in OF - inspired from Robin Murphys
->>> original proposal[2] - which accepts a bus DT node as it's input in
->>> order to configure a device's DMA constraints. The changes go deep into
->>> of/address.c's implementation, as a device being having a DT node
->>> assumption was pretty strong.
->>>
->>> On top of this work, I also cleaned up of_dma_configure() removing its
->>> redundant arguments and creating an alternative function for the special
->>> cases
->>> not applicable to either the above case or the default usage.
->>>
->>> IMO the resulting functions are more explicit. They will probably
->>> surface some hacky usages that can be properly fixed as I show with the
->>> DT fixes on the Layerscape platform.
->>>
->>> This was also tested on a Raspberry Pi 4 with a custom PCIe driver and
->>> on a Seattle AMD board.
->>
->> Humm, I've been working on this issue too. Looks similar though yours
->> has a lot more churn and there's some other bugs I've found.
-> 
-> That's good news, and yes now that I see it, some stuff on my series is overly
-> complicated. Specially around of_translate_*().
-> 
-> On top of that, you removed in of_dma_get_range():
-> 
-> -	/*
-> -	 * At least empty ranges has to be defined for parent node if
-> -	 * DMA is supported
-> -	 */
-> -	if (!ranges)
-> -		break;
-> 
-> Which I assumed was bound to the standard and makes things easier.
-> 
->> Can you test out this branch[1]. I don't have any h/w needing this,
->> but wrote a unittest and tested with modified QEMU.
-> 
-> I reviewed everything, I did find a minor issue, see the patch attached.
+On Wed, Sep 25, 2019 at 9:17 AM Adam Ford <aford173@gmail.com> wrote:
 
-WRT that patch, the original intent of "force_dma" was purely to 
-consider a device DMA-capable regardless of the presence of 
-"dma-ranges". Expecting of_dma_configure() to do anything for a non-OF 
-device has always been bogus - magic paravirt devices which appear out 
-of nowhere and expect to be treated as genuine DMA masters are a 
-separate problem that we haven't really approached yet.
+> I tried cma=256M and noticed the cma dump at the beginning didn't
+> change.  Do we need to setup a reserved-memory node like
+> imx6ul-ccimx6ulsom.dtsi did?
 
-Robin.
+I don't think so.
+
+Were you able to identify what was the exact commit that caused such regression?
