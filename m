@@ -1,102 +1,89 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2] dt-bindings: riscv: Fix CPU schema errors
-Date: Wed, 25 Sep 2019 08:12:52 -0500
-Message-ID: <20190925131252.19359-1-robh@kernel.org>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: display: Document the Xylon LogiCVC
+ display controller
+Date: Wed, 25 Sep 2019 15:14:28 +0200
+Message-ID: <20190925131428.GA207379@aptenodytes>
+References: <20190925084932.147971-1-paul.kocialkowski@bootlin.com>
+ <20190925084932.147971-2-paul.kocialkowski@bootlin.com>
+ <CAL_JsqJY+d9frxuxspvo2SQ=vpWMCAWZfMODA-jm_rKu1GOEaw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJY+d9frxuxspvo2SQ=vpWMCAWZfMODA-jm_rKu1GOEaw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix the errors in the RiscV CPU DT schema:
 
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@1: 'timebase-frequency' is a required property
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible:0: 'riscv' is not one of ['sifive,rocket0', 'sifive,e5', 'sifive,e51', 'sifive,u54-mc', 'sifive,u54', 'sifive,u5']
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: compatible: ['riscv'] is too short
-Documentation/devicetree/bindings/riscv/cpus.example.dt.yaml: cpu@0: 'timebase-frequency' is a required property
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 4fd669a8c487 ("dt-bindings: riscv: convert cpu binding to json-schema")
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-v2:
- - Add timebase-frequency to simulator example.
+Hi,
 
- .../devicetree/bindings/riscv/cpus.yaml       | 26 ++++++++++---------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+On Wed 25 Sep 19, 08:07, Rob Herring wrote:
+> On Wed, Sep 25, 2019 at 3:49 AM Paul Kocialkowski
+> <paul.kocialkowski@bootlin.com> wrote:
+> >
+> > The Xylon LogiCVC is a display controller implemented as programmable
+> > logic in Xilinx FPGAs.
+> >
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > ---
+> >  .../display/xylon,logicvc-display.yaml        | 314 ++++++++++++++++++
+> >  1 file changed, 314 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/xylon,log=
+icvc-display.yaml
+>=20
+> Error: Documentation/devicetree/bindings/display/xylon,logicvc-display.ex=
+ample.dts:17.1-6
+> syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:321: recipe for target
+> 'Documentation/devicetree/bindings/display/xylon,logicvc-display.example.=
+dt.yaml'
+> failed
+> make[1]: *** [Documentation/devicetree/bindings/display/xylon,logicvc-dis=
+play.example.dt.yaml]
+> Error 1
+> Makefile:1282: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
 
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-index b261a3015f84..eb0ef19829b6 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-+++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-@@ -24,15 +24,17 @@ description: |
- 
- properties:
-   compatible:
--    items:
--      - enum:
--          - sifive,rocket0
--          - sifive,e5
--          - sifive,e51
--          - sifive,u54-mc
--          - sifive,u54
--          - sifive,u5
--      - const: riscv
-+    oneOf:
-+      - items:
-+          - enum:
-+              - sifive,rocket0
-+              - sifive,e5
-+              - sifive,e51
-+              - sifive,u54-mc
-+              - sifive,u54
-+              - sifive,u5
-+          - const: riscv
-+      - const: riscv    # Simulator only
-     description:
-       Identifies that the hart uses the RISC-V instruction set
-       and identifies the type of the hart.
-@@ -67,8 +69,6 @@ properties:
-       lowercase to simplify parsing.
- 
-   timebase-frequency:
--    type: integer
--    minimum: 1
-     description:
-       Specifies the clock frequency of the system timer in Hz.
-       This value is common to all harts on a single system image.
-@@ -102,9 +102,9 @@ examples:
-     cpus {
-         #address-cells = <1>;
-         #size-cells = <0>;
--        timebase-frequency = <1000000>;
-         cpu@0 {
-                 clock-frequency = <0>;
-+                timebase-frequency = <1000000>;
-                 compatible = "sifive,rocket0", "riscv";
-                 device_type = "cpu";
-                 i-cache-block-size = <64>;
-@@ -120,6 +120,7 @@ examples:
-         };
-         cpu@1 {
-                 clock-frequency = <0>;
-+                timebase-frequency = <1000000>;
-                 compatible = "sifive,rocket0", "riscv";
-                 d-cache-block-size = <64>;
-                 d-cache-sets = <64>;
-@@ -153,6 +154,7 @@ examples:
-                 device_type = "cpu";
-                 reg = <0>;
-                 compatible = "riscv";
-+                timebase-frequency = <1000000>;
-                 riscv,isa = "rv64imafdc";
-                 mmu-type = "riscv,sv48";
-                 interrupt-controller {
--- 
-2.20.1
+Okay I hadn't realized the example is extracted and tested, so I included .=
+=2E.
+in there. My mistake, sorry.
+
+I did the testing with the dt-schema tools directly, on an out-of-tree dts,
+not in-kernel-tree.
+
+Will fix with v3 then.
+
+Cheers,
+
+Paul
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2LaDQACgkQ3cLmz3+f
+v9GDfAf7BGkW/MJkbSMHAOH7JJPvjMO6DZKdGlxsc7aseFvyex7joJAYutxV5TeF
+zo5GZKigVItIuoKdkctHGdFJ/W/13C90SOMEx8NntTFv4Aan00ZF2/PPypkCQUKO
+bPbIDnRC6lvdCb5L5ZP+y7d08yrq3Vbhoyz37LUyXahd3eqYS2EwS4m43jtEKsz2
+lSTQ2BGmRth/wDJrFVoq1H40+JRX6GsePcmhOuXmKiAx9a2LErnbhgbWKo+48var
+m1BxAMtecR4lFp7qWE7L1OdKGy4L3VlzszEcUEMtdb/zPWy8o6pJMaySL5aQtyjI
+Ps/os9b9Kh316ykRUf5mkAuHk5izdg==
+=9Fif
+-----END PGP SIGNATURE-----
+
+--vtzGhvizbBRQ85DL--
