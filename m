@@ -1,748 +1,581 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [RFC PATCH 2/2] misc: xilinx_flex: Add support for the flex noc Performance Monitor
-Date: Wed, 25 Sep 2019 16:53:07 +0530
-Message-ID: <5694e92158ce93f774fc804c069b465b3dc1f62a.1569410216.git.shubhrajyoti.datta@xilinx.com>
-References: <2de75a74ef4086090c532d3b80b7d6dcd115e45e.1569410216.git.shubhrajyoti.datta@xilinx.com>
+From: ppvk@codeaurora.org
+Subject: Re: [RFC 1/2] mmc: sdhci-msm: Add support for bus bandwidth voting
+Date: Wed, 25 Sep 2019 16:57:26 +0530
+Message-ID: <1b02d465353e12f47b372a7a240f0838@codeaurora.org>
+References: <1567774037-2344-1-git-send-email-ppvk@codeaurora.org>
+ <1567774037-2344-2-git-send-email-ppvk@codeaurora.org>
+ <20190912164532.GA8466@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2de75a74ef4086090c532d3b80b7d6dcd115e45e.1569410216.git.shubhrajyoti.datta@xilinx.com>
+In-Reply-To: <20190912164532.GA8466@tuxbook-pro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, asutoshd@codeaurora.org, vbadigan@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, rampraka@codeaurora.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Andy Gross <agross@kernel.org>, linux-mmc-owner@vger.kernel.org, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the FlexNoc Performance Monitor.
-Adds support for various port setting and monitoring
-the packets transactions. It supports LPD and FPD monitoring
-counters for read and write transaction requests and responses.
+On 2019-09-12 22:15, Bjorn Andersson wrote:
+> On Fri 06 Sep 05:47 PDT 2019, Pradeep P V K wrote:
+> 
+>> Vote for the MSM bus bandwidth required by SDHC driver
+>> based on the clock frequency and bus width of the card.
+>> Otherwise,the system clocks may run at minimum clock speed
+>> and thus affecting the performance.
+>> 
+>> This change is based on Georgi Djakov [RFC]
+>> (https://lkml.org/lkml/2018/10/11/499)
+>> 
+>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+>> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+> 
+> This says that Sahitya wrote the patch, then Subhash handled it, then
+> Veerabhadrarao handled it and finally you handled it; but you're at the
+> same time listed as author (by From:).
+> 
+> Please see section 12 on Co-Developed-by in submitting-patches.rst
+> 
+Thanks Bjorn, i will update this on my next patch set.
+>> ---
+>>  drivers/mmc/host/sdhci-msm.c | 393 
+>> ++++++++++++++++++++++++++++++++++++++++++-
+> 
+> This patch implements support for requesting bandwidth to the register
+> space and for the controllers access to DDR. To me this seems like
+> common requirements for any mmc controller, can this functionality be
+> provided by the mmc/sdhci common code?
+> 
+> Regards,
+> Bjorn
+> 
+Yes, this can be provided in common code but the bandwidth calculations
+(arbitrated value or average bandwidth and instantaneous value or peak 
+bandwidth) for bus vote will
+consider various parameters like voltage corners, clock domains, clock 
+plans etc. which may differ from
+vendor to vendor and target to target. So, these values should be 
+updated properly and correctly (considering all the parameters)
+if it brings to common area.
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
- drivers/misc/Kconfig          |   9 +
- drivers/misc/Makefile         |   1 +
- drivers/misc/xilinx_flex_pm.c | 644 ++++++++++++++++++++++++++++++++++++++=
-++++
- 3 files changed, 654 insertions(+)
- create mode 100644 drivers/misc/xilinx_flex_pm.c
+Hence the reason for implementing this in sdhci-msm.c file.
+It would be really helpful if you could suggest your insights on where 
+and how exactly this needs to be
+implemented in common code area.
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index c55b637..1e9a6fa 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -454,6 +454,15 @@ config XILINX_SDFEC
+Hi Ulf and Adrian,
 
-          If unsure, say N.
+Can you please also suggest your recommendations on this ?
 
-+config XILINX_FLEX_PM
-+       tristate "Xilinx Flexnoc Performance Monitor"
-+       help
-+         This option enables support for the Xilinx Flex Noc Performance M=
-onitor driver.
-+         It monitors the read and write transactions. It has counters for =
-the LPD and
-+         FPD domains.
-+
-+         If unsure, say N
-+
- config MISC_RTSX
-        tristate
-        default MISC_RTSX_PCI || MISC_RTSX_USB
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index c1860d3..1f1c34d 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -57,3 +57,4 @@ obj-y                         +=3D cardreader/
- obj-$(CONFIG_PVPANIC)          +=3D pvpanic.o
- obj-$(CONFIG_HABANA_AI)                +=3D habanalabs/
- obj-$(CONFIG_XILINX_SDFEC)     +=3D xilinx_sdfec.o
-+obj-$(CONFIG_XILINX_FLEX_PM)   +=3D xilinx_flex_pm.o
-diff --git a/drivers/misc/xilinx_flex_pm.c b/drivers/misc/xilinx_flex_pm.c
-new file mode 100644
-index 0000000..891ab3a
---- /dev/null
-+++ b/drivers/misc/xilinx_flex_pm.c
-@@ -0,0 +1,644 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Xilinx Flex Noc Performance Monitor driver.
-+ * Copyright (c) 2019 Xilinx Inc.
-+ */
-+
-+#include <linux/firmware/xlnx-zynqmp.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+/* Macro */
-+#define to_xflex_dev_info(n)   ((struct xflex_dev_info *)dev_get_drvdata(n=
-))
-+
-+#define FPM_LAR_OFFSET                         0xFB0
-+#define FPM_UNLOCK                             0xC5ACCE55
-+
-+#define FPM_RD_REQ_OFFSET              0x1000
-+#define FPM_RD_RES_OFFSET              0x2000
-+#define FPM_WR_REQ_OFFSET              0x3000
-+#define FPM_WR_RES_OFFSET              0x4000
-+
-+#define FPM_PORT_SEL_OFFSET            0x134
-+#define FPM_MAIN_CTRL_OFFSET           0x008
-+#define FPM_SRC_SEL_OFFSET             0x138
-+#define FPM_STATPERIOD                 0x24
-+#define FPM_CFGCTRL                    0x0C
-+#define FPM_LPD                                0x4210002
-+#define FPM_FPD                                0x420c003
-+
-+#define FPM_VAL                                0x300
-+#define FPM_SRC                                0x200
-+#define FPM_WRRSP_L                    0x70000
-+#define FPM_WRREQ_L                    0x60000
-+#define FPM_RDRSP_L                    0x50000
-+#define FPM_RDREQ_L                    0x40000
-+#define FPM_PROBE_SHIFT                        16
-+#define FPM_COUNTER_OFFSET             0x14
-+#define FPM_GLOBALEN                   BIT(0)
-+#define FPM_STATEN                     BIT(3)
-+#define FPM_STATCOND_DUMP              BIT(5)
-+#define FPM_NUM_COUNTERS               4
-+#define FPM_MAINCTL_DIS                        0
-+
-+#define FPM_SRC_OFF                    0x0
-+#define FPM_SRC_CYCLE                  0x1
-+#define FPM_SRC_IDLE                   0x2
-+#define FPM_SRC_XFER                   0x3
-+#define FPM_SRC_BUSY                   0x4
-+#define FPM_SRC_WAIT                   0x5
-+#define FPM_SRC_PACKET                 0x6
-+
-+/*Port values */
-+#define FPM_PORT_LPD_AFIFS_AXI         0x0
-+#define FPM_PORT_LPD_OCM               0x1
-+#define FPM_PORT_LPD_OCMEXT            0x2
-+#define FPM_PORT_PMC_RPU_AXI0          0x3
-+
-+#define FPM_PORT_FPDAXI                        0x1
-+#define FPM_PORT_PROTXPPU              0x2
-+
-+/**
-+ * struct xflex_dev_info - Global Driver structure
-+ * @dev: Device structure
-+ * @baselpd: Iomapped LPD base address
-+ * @basefpd: Iomapped FPD base address
-+ * @funnel: Iomapped funnel register base address
-+ * @counterid_lpd: LPD counter id
-+ * @counterid_fpd: FPD counter id
-+ */
-+struct xflex_dev_info {
-+       struct device *dev;
-+       void __iomem *baselpd;
-+       void __iomem *basefpd;
-+       void __iomem *funnel;
-+       u32 counterid_fpd;
-+       u32 counterid_lpd;
-+};
-+
-+/**
-+ * enum xflex_sysfs_cmd_codes - sysfs command codes
-+ * @XFLEX_GET_COUNTER_FPD: get the FPD counter value
-+ * @XFLEX_SET_COUNTER_FPD: set the FPD counter value
-+ * @XFLEX_GET_COUNTER_FPD_RDREQ: get the FPD read request count
-+ * @XFLEX_GET_COUNTER_FPD_RDRSP: get the FPD read response count
-+ * @XFLEX_GET_COUNTER_FPD_WRREQ: get the FPD write request count
-+ * @XFLEX_GET_COUNTER_FPD_WRRSP: get the FPD write response count
-+ * @XFLEX_GET_COUNTER_LPD_RDREQ: get the LPD read request count
-+ * @XFLEX_GET_COUNTER_LPD_RDRSP: get the LPD read response count
-+ * @XFLEX_GET_COUNTER_LPD_WRREQ: get the LPD write request count
-+ * @XFLEX_GET_COUNTER_LPD_WRRSP: get the LPD write response count
-+ * @XFLEX_SET_COUNTER_LPD: set the LPD counter value
-+ * @XFLEX_SET_SRC_COUNTER_LPD: set the LPD source
-+ * @XFLEX_SET_SRC_COUNTER_FPD: set the FPD source
-+ * @XFLEX_SET_PORT_COUNTER_LPD: set the LPD port
-+ * @XFLEX_SET_PORT_COUNTER_FPD: set the FPD port
-+ */
-+enum xflex_sysfs_cmd_codes {
-+       XFLEX_GET_COUNTER_FPD =3D 0,
-+       XFLEX_SET_COUNTER_FPD,
-+       XFLEX_GET_COUNTER_FPD_RDREQ,
-+       XFLEX_GET_COUNTER_FPD_RDRSP,
-+       XFLEX_GET_COUNTER_FPD_WRREQ,
-+       XFLEX_GET_COUNTER_FPD_WRRSP,
-+       XFLEX_GET_COUNTER_LPD_RDREQ,
-+       XFLEX_GET_COUNTER_LPD_RDRSP,
-+       XFLEX_GET_COUNTER_LPD_WRREQ,
-+       XFLEX_GET_COUNTER_LPD_WRRSP,
-+       XFLEX_SET_COUNTER_LPD,
-+       XFLEX_SET_SRC_COUNTER_LPD,
-+       XFLEX_SET_SRC_COUNTER_FPD,
-+       XFLEX_SET_PORT_COUNTER_LPD,
-+       XFLEX_SET_PORT_COUNTER_FPD,
-+};
-+
-+static inline void fpm_reg(void __iomem *base, u32 val, u32 offset)
-+{
-+       writel(val, base + FPM_RD_REQ_OFFSET + offset);
-+       writel(val, base + FPM_RD_RES_OFFSET + offset);
-+       writel(val, base + FPM_WR_REQ_OFFSET + offset);
-+       writel(val, base + FPM_WR_RES_OFFSET + offset);
-+}
-+
-+static void reset_default(struct device *dev, u32 counter, u32 domain)
-+{
-+       struct xflex_dev_info *flexpm =3D to_xflex_dev_info(dev);
-+       void __iomem *base =3D flexpm->basefpd;
-+       u32 offset;
-+
-+       if (domain =3D=3D FPM_LPD)
-+               base =3D flexpm->baselpd;
-+
-+       fpm_reg(base, FPM_MAINCTL_DIS, FPM_MAIN_CTRL_OFFSET);
-+       fpm_reg(base, FPM_STATEN | FPM_STATCOND_DUMP, FPM_MAIN_CTRL_OFFSET)=
-;
-+       fpm_reg(base, FPM_STATEN | FPM_STATCOND_DUMP, FPM_MAIN_CTRL_OFFSET)=
-;
-+
-+       offset =3D FPM_PORT_SEL_OFFSET + counter * FPM_COUNTER_OFFSET;
-+       fpm_reg(base, FPM_PORT_LPD_OCM, offset);
-+       offset =3D FPM_SRC_SEL_OFFSET + counter * FPM_COUNTER_OFFSET;
-+       fpm_reg(base, FPM_SRC_PACKET, offset);
-+
-+       fpm_reg(base, 0, FPM_STATPERIOD);
-+       fpm_reg(base, FPM_GLOBALEN, FPM_CFGCTRL);
-+}
-+
-+/**
-+ * xflex_sysfs_cmd - Implements sysfs operations
-+ * @dev: Device structure
-+ * @buf: Value to write
-+ * @cmd: sysfs cmd
-+ *
-+ * Return: value read from the sysfs cmd on success and negative error cod=
-e
-+ *             otherwise.
-+ */
-+static int xflex_sysfs_cmd(struct device *dev, const char *buf,
-+                          enum xflex_sysfs_cmd_codes cmd)
-+{
-+       struct xflex_dev_info *flexpm =3D to_xflex_dev_info(dev);
-+       u32 domain, src, offset, reg, val, counter;
-+       int ret;
-+       const struct zynqmp_eemi_ops *eemi_ops =3D zynqmp_pm_get_eemi_ops()=
-;
-+       u32 rdval =3D 0;
-+       u32 pm_api_ret[4] =3D {0, 0, 0, 0};
-+
-+       if (IS_ERR_OR_NULL(eemi_ops))
-+               return PTR_ERR(eemi_ops);
-+
-+       if (!eemi_ops->ioctl)
-+               return -ENOTSUPP;
-+
-+       switch (cmd) {
-+       case XFLEX_GET_COUNTER_LPD_WRRSP:
-+               reg =3D flexpm->counterid_lpd | FPM_WRRSP_L | FPM_VAL;
-+               ret =3D eemi_ops->ioctl(FPM_LPD, IOCTL_PROBE_COUNTER_READ,
-+                                     reg, 0,
-+                                     &pm_api_ret[0]);
-+               if (ret < 0) {
-+                       dev_err(dev, "Counter read error %d\n", ret);
-+                       return ret;
-+               }
-+               rdval =3D pm_api_ret[1];
-+               break;
-+
-+       case XFLEX_GET_COUNTER_LPD_WRREQ:
-+               reg =3D flexpm->counterid_lpd | FPM_WRREQ_L | FPM_VAL;
-+               ret =3D eemi_ops->ioctl(FPM_LPD, IOCTL_PROBE_COUNTER_READ,
-+                                     reg, 0,
-+                                     &pm_api_ret[0]);
-+               if (ret < 0) {
-+                       dev_err(dev, "Counter read error %d\n", ret);
-+                       return ret;
-+               }
-+               rdval =3D pm_api_ret[1];
-+               break;
-+
-+       case XFLEX_GET_COUNTER_LPD_RDRSP:
-+               reg =3D flexpm->counterid_lpd | FPM_RDRSP_L | FPM_VAL;
-+               ret =3D eemi_ops->ioctl(FPM_LPD, IOCTL_PROBE_COUNTER_READ,
-+                                     reg, 0,
-+                                     &pm_api_ret[0]);
-+               if (ret < 0) {
-+                       dev_err(dev, "Counter read error %d\n", ret);
-+                       return ret;
-+               }
-+               rdval =3D pm_api_ret[1];
-+               break;
-+
-+       case XFLEX_GET_COUNTER_LPD_RDREQ:
-+               reg =3D flexpm->counterid_lpd | FPM_RDREQ_L | FPM_VAL;
-+               ret =3D eemi_ops->ioctl(FPM_LPD, IOCTL_PROBE_COUNTER_READ,
-+                                     reg, 0,
-+                                     &pm_api_ret[0]);
-+               if (ret < 0) {
-+                       dev_err(dev, "Counter read error %d\n", ret);
-+                       return ret;
-+               }
-+               rdval =3D pm_api_ret[1];
-+               break;
-+
-+       case XFLEX_SET_COUNTER_LPD:
-+               ret =3D kstrtou32(buf, 0, &val);
-+               if (ret < 0)
-+                       return ret;
-+
-+               flexpm->counterid_lpd =3D val;
-+
-+               reset_default(dev, val, FPM_LPD);
-+
-+               break;
-+
-+       case XFLEX_SET_PORT_COUNTER_FPD:
-+               ret =3D kstrtou32(buf, 0, &val);
-+               if (ret < 0)
-+                       return ret;
-+               counter =3D flexpm->counterid_fpd * FPM_COUNTER_OFFSET;
-+               offset =3D FPM_PORT_SEL_OFFSET + counter * FPM_COUNTER_OFFS=
-ET;
-+               fpm_reg(flexpm->basefpd, val, offset);
-+               break;
-+
-+       case XFLEX_SET_PORT_COUNTER_LPD:
-+               ret =3D kstrtou32(buf, 0, &val);
-+               if (ret < 0)
-+                       return ret;
-+               counter =3D flexpm->counterid_lpd * FPM_COUNTER_OFFSET;
-+               offset =3D FPM_PORT_SEL_OFFSET + counter * FPM_COUNTER_OFFS=
-ET;
-+               fpm_reg(flexpm->baselpd, val, offset);
-+               break;
-+
-+       case XFLEX_SET_SRC_COUNTER_LPD:
-+               reg =3D flexpm->counterid_lpd;
-+               domain =3D FPM_LPD;
-+               ret =3D kstrtou32(buf, 0, &val);
-+               if (ret < 0)
-+                       return ret;
-+               for (src =3D 0; src < FPM_NUM_COUNTERS; src++) {
-+                       reg =3D reg | FPM_SRC | (src << FPM_PROBE_SHIFT);
-+                       ret =3D eemi_ops->ioctl(domain, IOCTL_PROBE_COUNTER=
-_WRITE,
-+                                     reg, val, NULL);
-+                       if (ret < 0) {
-+                               dev_err(dev, "Counter write error %d\n", re=
-t);
-+                               return ret;
-+                       }
-+               }
-+               break;
-+
-+       case XFLEX_SET_SRC_COUNTER_FPD:
-+               reg =3D flexpm->counterid_fpd;
-+               domain =3D FPM_FPD;
-+               ret =3D kstrtou32(buf, 0, &val);
-+               if (ret < 0)
-+                       return ret;
-+               for (src =3D 0; src < FPM_NUM_COUNTERS; src++) {
-+                       reg =3D reg | FPM_SRC | (src << FPM_PROBE_SHIFT);
-+                       ret =3D eemi_ops->ioctl(domain, IOCTL_PROBE_COUNTER=
-_WRITE,
-+                                     reg, val, NULL);
-+                       if (ret < 0) {
-+                               dev_err(dev, "Counter write error %d\n", re=
-t);
-+                               return ret;
-+                       }
-+               }
-+               break;
-+
-+       case XFLEX_SET_COUNTER_FPD:
-+               ret =3D kstrtou32(buf, 0, &val);
-+               if (ret < 0)
-+                       return ret;
-+
-+               flexpm->counterid_fpd =3D val;
-+               reset_default(dev, val, FPM_FPD);
-+               break;
-+
-+       case XFLEX_GET_COUNTER_FPD_WRRSP:
-+               reg =3D flexpm->counterid_fpd | FPM_WRRSP_L | FPM_VAL;
-+               ret =3D eemi_ops->ioctl(FPM_FPD, IOCTL_PROBE_COUNTER_READ,
-+                                     reg, 0,
-+                                     &pm_api_ret[0]);
-+               if (ret < 0) {
-+                       dev_err(dev, "Counter read error %d\n", ret);
-+                       return ret;
-+               }
-+               rdval =3D pm_api_ret[1];
-+               break;
-+
-+       case XFLEX_GET_COUNTER_FPD_WRREQ:
-+               reg =3D flexpm->counterid_fpd | FPM_WRREQ_L | FPM_VAL;
-+               ret =3D eemi_ops->ioctl(FPM_FPD, IOCTL_PROBE_COUNTER_READ,
-+                                     reg, 0,
-+                                     &pm_api_ret[0]);
-+               if (ret < 0) {
-+                       dev_err(dev, "Counter read error %d\n", ret);
-+                       return ret;
-+               }
-+               rdval =3D pm_api_ret[1];
-+               break;
-+
-+       case XFLEX_GET_COUNTER_FPD_RDRSP:
-+               reg =3D flexpm->counterid_fpd | FPM_RDRSP_L | FPM_VAL;
-+               ret =3D eemi_ops->ioctl(FPM_FPD, IOCTL_PROBE_COUNTER_READ,
-+                                     reg, 0,
-+                                     &pm_api_ret[0]);
-+               if (ret < 0) {
-+                       dev_err(dev, "Counter read error %d\n", ret);
-+                       return ret;
-+               }
-+               rdval =3D pm_api_ret[1];
-+               break;
-+
-+       case XFLEX_GET_COUNTER_FPD_RDREQ:
-+               reg =3D flexpm->counterid_fpd | FPM_RDREQ_L | FPM_VAL;
-+               ret =3D eemi_ops->ioctl(FPM_FPD, IOCTL_PROBE_COUNTER_READ,
-+                                     reg, 0,
-+                                     &pm_api_ret[0]);
-+               if (ret < 0) {
-+                       dev_err(dev, "Counter read error %d\n", ret);
-+                       return ret;
-+               }
-+               rdval =3D pm_api_ret[1];
-+               break;
-+
-+       default:
-+               dev_err(dev, "Invalid option\n");
-+               break;
-+       }
-+
-+       return rdval;
-+}
-+
-+/* Sysfs functions */
-+
-+static ssize_t counterfpd_wrreq_show(struct device *dev,
-+                                    struct device_attribute *attr, char *b=
-uf)
-+{
-+       int rdval =3D xflex_sysfs_cmd(dev, buf, XFLEX_GET_COUNTER_FPD_WRREQ=
-);
-+
-+       if (rdval < 0)
-+               return 0;
-+
-+       return snprintf(buf, PAGE_SIZE, "%d\n", rdval);
-+}
-+static DEVICE_ATTR_RO(counterfpd_wrreq);
-+
-+static ssize_t counterfpd_wrrsp_show(struct device *dev,
-+                                    struct device_attribute *attr, char *b=
-uf)
-+{
-+       int rdval =3D xflex_sysfs_cmd(dev, buf, XFLEX_GET_COUNTER_FPD_WRRSP=
-);
-+
-+       if (rdval < 0)
-+               return 0;
-+
-+       return snprintf(buf, PAGE_SIZE, "%d\n", rdval);
-+}
-+static DEVICE_ATTR_RO(counterfpd_wrrsp);
-+
-+static ssize_t counterfpd_rdreq_show(struct device *dev,
-+                                    struct device_attribute *attr, char *b=
-uf)
-+{
-+       int rdval =3D xflex_sysfs_cmd(dev, buf, XFLEX_GET_COUNTER_FPD_RDREQ=
-);
-+
-+       if (rdval < 0)
-+               return 0;
-+
-+       return snprintf(buf, PAGE_SIZE, "%d\n", rdval);
-+}
-+static DEVICE_ATTR_RO(counterfpd_rdreq);
-+
-+static ssize_t counterfpd_rdrsp_show(struct device *dev,
-+                                    struct device_attribute *attr, char *b=
-uf)
-+{
-+       int rdval =3D xflex_sysfs_cmd(dev, buf, XFLEX_GET_COUNTER_FPD_RDRSP=
-);
-+
-+       if (rdval < 0)
-+               return 0;
-+
-+       return snprintf(buf, PAGE_SIZE, "%d\n", rdval);
-+}
-+static DEVICE_ATTR_RO(counterfpd_rdrsp);
-+
-+static ssize_t counterlpd_wrreq_show(struct device *dev,
-+                                    struct device_attribute *attr, char *b=
-uf)
-+{
-+       int rdval =3D xflex_sysfs_cmd(dev, buf, XFLEX_GET_COUNTER_LPD_WRREQ=
-);
-+
-+       if (rdval < 0)
-+               return 0;
-+
-+       return snprintf(buf, PAGE_SIZE, "%d\n", rdval);
-+}
-+static DEVICE_ATTR_RO(counterlpd_wrreq);
-+
-+static ssize_t counterlpd_wrrsp_show(struct device *dev,
-+                                    struct device_attribute *attr, char *b=
-uf)
-+{
-+       int rdval =3D xflex_sysfs_cmd(dev, buf, XFLEX_GET_COUNTER_LPD_WRRSP=
-);
-+
-+       if (rdval < 0)
-+               return 0;
-+
-+       return snprintf(buf, PAGE_SIZE, "%d\n", rdval);
-+}
-+static DEVICE_ATTR_RO(counterlpd_wrrsp);
-+
-+static ssize_t counterlpd_rdreq_show(struct device *dev,
-+                                    struct device_attribute *attr, char *b=
-uf)
-+{
-+       int rdval =3D xflex_sysfs_cmd(dev, buf, XFLEX_GET_COUNTER_LPD_RDREQ=
-);
-+
-+       if (rdval < 0)
-+               return 0;
-+
-+       return snprintf(buf, PAGE_SIZE, "%d\n", rdval);
-+}
-+static DEVICE_ATTR_RO(counterlpd_rdreq);
-+
-+static ssize_t counterlpd_rdrsp_show(struct device *dev,
-+                                    struct device_attribute *attr, char *b=
-uf)
-+{
-+       int rdval =3D xflex_sysfs_cmd(dev, buf, XFLEX_GET_COUNTER_LPD_RDRSP=
-);
-+
-+       if (rdval < 0)
-+               return 0;
-+
-+       return snprintf(buf, PAGE_SIZE, "%d\n", rdval);
-+}
-+static DEVICE_ATTR_RO(counterlpd_rdrsp);
-+
-+static ssize_t counterlpdsrc_store(struct device *dev,
-+                                  struct device_attribute *attr,
-+                                  const char *buf, size_t size)
-+{
-+       xflex_sysfs_cmd(dev, buf, XFLEX_SET_SRC_COUNTER_LPD);
-+
-+       return size;
-+}
-+static DEVICE_ATTR_WO(counterlpdsrc);
-+
-+static ssize_t counterfpdsrc_store(struct device *dev,
-+                                  struct device_attribute *attr,
-+                                  const char *buf, size_t size)
-+{
-+       xflex_sysfs_cmd(dev, buf, XFLEX_SET_SRC_COUNTER_FPD);
-+
-+       return size;
-+}
-+static DEVICE_ATTR_WO(counterfpdsrc);
-+
-+static ssize_t counterlpdport_store(struct device *dev,
-+                                   struct device_attribute *attr,
-+                                   const char *buf, size_t size)
-+{
-+       xflex_sysfs_cmd(dev, buf, XFLEX_SET_PORT_COUNTER_LPD);
-+
-+       return size;
-+}
-+static DEVICE_ATTR_WO(counterlpdport);
-+
-+static ssize_t counterfpdport_store(struct device *dev,
-+                                   struct device_attribute *attr,
-+                                   const char *buf, size_t size)
-+{
-+       xflex_sysfs_cmd(dev, buf, XFLEX_SET_PORT_COUNTER_FPD);
-+
-+       return size;
-+}
-+static DEVICE_ATTR_WO(counterfpdport);
-+
-+static ssize_t counteridlpd_show(struct device *dev,
-+                                struct device_attribute *attr, char *buf)
-+{
-+       struct xflex_dev_info *flexpm =3D to_xflex_dev_info(dev);
-+
-+       return snprintf(buf, PAGE_SIZE, "%08d\n", flexpm->counterid_lpd);
-+}
-+
-+static ssize_t counteridlpd_store(struct device *dev,
-+                                 struct device_attribute *attr,
-+                                 const char *buf, size_t size)
-+{
-+       int ret;
-+       struct xflex_dev_info *flexpm =3D to_xflex_dev_info(dev);
-+
-+       ret =3D kstrtou32(buf, 0, &flexpm->counterid_lpd);
-+       if (ret < 0)
-+               return ret;
-+
-+       reset_default(dev, flexpm->counterid_lpd, FPM_LPD);
-+
-+       return size;
-+}
-+static DEVICE_ATTR_RW(counteridlpd);
-+
-+static ssize_t counteridfpd_show(struct device *dev,
-+                                struct device_attribute *attr, char *buf)
-+{
-+       struct xflex_dev_info *flexpm =3D to_xflex_dev_info(dev);
-+
-+       return snprintf(buf, PAGE_SIZE, "%08d\n", flexpm->counterid_fpd);
-+}
-+
-+static ssize_t counteridfpd_store(struct device *dev,
-+                                 struct device_attribute *attr,
-+                                 const char *buf, size_t size)
-+{
-+       int ret;
-+       struct xflex_dev_info *flexpm =3D to_xflex_dev_info(dev);
-+
-+       ret =3D kstrtou32(buf, 0, &flexpm->counterid_fpd);
-+       if (ret < 0)
-+               return ret;
-+       return size;
-+}
-+static DEVICE_ATTR_RW(counteridfpd);
-+
-+static struct attribute *xflex_attrs[] =3D {
-+       &dev_attr_counterlpdsrc.attr,
-+       &dev_attr_counterlpdport.attr,
-+       &dev_attr_counterfpdsrc.attr,
-+       &dev_attr_counterfpdport.attr,
-+
-+       &dev_attr_counterlpd_rdreq.attr,
-+       &dev_attr_counterlpd_wrreq.attr,
-+       &dev_attr_counterlpd_rdrsp.attr,
-+       &dev_attr_counterlpd_wrrsp.attr,
-+
-+       &dev_attr_counterfpd_rdreq.attr,
-+       &dev_attr_counterfpd_wrreq.attr,
-+       &dev_attr_counterfpd_rdrsp.attr,
-+       &dev_attr_counterfpd_wrrsp.attr,
-+
-+       &dev_attr_counteridlpd.attr,
-+       &dev_attr_counteridfpd.attr,
-+       NULL,
-+};
-+ATTRIBUTE_GROUPS(xflex);
-+
-+/**
-+ * xflex_probe - Driver probe function
-+ * @pdev: Pointer to the platform_device structure
-+ *
-+ * This is the driver probe routine. It does all the memory
-+ * allocation and creates sysfs entries for the device.
-+ *
-+ * Return: 0 on success and failure value on error
-+ */
-+static int xflex_probe(struct platform_device *pdev)
-+{
-+       struct xflex_dev_info *flexpm;
-+       struct resource *res;
-+       int err;
-+       struct device *dev =3D &pdev->dev;
-+
-+       flexpm =3D devm_kzalloc(dev, sizeof(*flexpm), GFP_KERNEL);
-+       if (!flexpm)
-+               return -ENOMEM;
-+
-+       res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "baselpd=
-");
-+       flexpm->baselpd =3D devm_ioremap_resource(&pdev->dev, res);
-+       if (IS_ERR(flexpm->baselpd))
-+               return PTR_ERR(flexpm->baselpd);
-+
-+       res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "basefpd=
-");
-+       flexpm->basefpd =3D devm_ioremap_resource(&pdev->dev, res);
-+       if (IS_ERR(flexpm->basefpd))
-+               return PTR_ERR(flexpm->basefpd);
-+
-+       res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "funnel"=
-);
-+       flexpm->funnel =3D devm_ioremap_resource(&pdev->dev, res);
-+       if (IS_ERR(flexpm->funnel))
-+               return PTR_ERR(flexpm->funnel);
-+
-+       writel(FPM_UNLOCK, flexpm->funnel + FPM_LAR_OFFSET);
-+       writel(FPM_UNLOCK, flexpm->baselpd + FPM_LAR_OFFSET);
-+       /*
-+        * Create sysfs file entries for the device
-+        */
-+       err =3D sysfs_create_groups(&dev->kobj, xflex_groups);
-+       if (err < 0) {
-+               dev_err(dev, "unable to create sysfs entries\n");
-+               return err;
-+       }
-+
-+       dev_set_drvdata(dev, flexpm);
-+
-+       return 0;
-+}
-+
-+/**
-+ * xflex_remove - Driver remove function
-+ * @pdev: Pointer to the platform_device structure
-+ *
-+ * This function frees all the resources allocated to the device.
-+ *
-+ * Return: 0 always
-+ */
-+static int xflex_remove(struct platform_device *pdev)
-+{
-+       sysfs_remove_groups(&pdev->dev.kobj, xflex_groups);
-+       return 0;
-+}
-+
-+static const struct of_device_id xflex_of_match[] =3D {
-+       { .compatible =3D "xlnx,flexnoc-pm-2.7", },
-+       { /* end of table */ }
-+};
-+MODULE_DEVICE_TABLE(of, xflex_of_match);
-+
-+static struct platform_driver xflex_driver =3D {
-+       .driver =3D {
-+               .name =3D "xilinx-flex",
-+               .of_match_table =3D xflex_of_match,
-+       },
-+       .probe =3D xflex_probe,
-+       .remove =3D xflex_remove,
-+};
-+
-+module_platform_driver(xflex_driver);
-+
-+MODULE_AUTHOR("Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>");
-+MODULE_DESCRIPTION("Xilinx Flexnoc performance monitor driver");
-+MODULE_LICENSE("GPL v2");
---
-2.1.1
+Thanks and Regards,
+Pradeep
 
-This email and any attachments are intended for the sole use of the named r=
-ecipient(s) and contain(s) confidential information that may be proprietary=
-, privileged or copyrighted under applicable law. If you are not the intend=
-ed recipient, do not read, copy, or forward this email message or any attac=
-hments. Delete this email message and any attachments immediately.
+>>  1 file changed, 390 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/drivers/mmc/host/sdhci-msm.c 
+>> b/drivers/mmc/host/sdhci-msm.c
+>> index b75c82d..71515ca 100644
+>> --- a/drivers/mmc/host/sdhci-msm.c
+>> +++ b/drivers/mmc/host/sdhci-msm.c
+>> @@ -11,6 +11,7 @@
+>>  #include <linux/mmc/mmc.h>
+>>  #include <linux/pm_runtime.h>
+>>  #include <linux/slab.h>
+>> +#include <linux/interconnect.h>
+>>  #include <linux/iopoll.h>
+>>  #include <linux/regulator/consumer.h>
+>> 
+>> @@ -122,6 +123,9 @@
+>>  #define msm_host_writel(msm_host, val, host, offset) \
+>>  	msm_host->var_ops->msm_writel_relaxed(val, host, offset)
+>> 
+>> +#define SDHC_DDR "sdhc-ddr"
+>> +#define CPU_SDHC "cpu-sdhc"
+>> +
+>>  struct sdhci_msm_offset {
+>>  	u32 core_hc_mode;
+>>  	u32 core_mci_data_cnt;
+>> @@ -228,6 +232,31 @@ struct sdhci_msm_variant_info {
+>>  	const struct sdhci_msm_offset *offset;
+>>  };
+>> 
+>> +struct msm_bus_vectors {
+>> +	uint64_t ab;
+>> +	uint64_t ib;
+>> +};
+>> +
+>> +struct msm_bus_path {
+>> +	unsigned int num_paths;
+>> +	struct msm_bus_vectors *vec;
+>> +};
+>> +
+>> +struct sdhci_msm_bus_vote_data {
+>> +	const char *name;
+>> +	unsigned int num_usecase;
+>> +	struct msm_bus_path *usecase;
+>> +
+>> +	unsigned int *bw_vecs;
+>> +	unsigned int bw_vecs_size;
+>> +
+>> +	struct icc_path *sdhc_ddr;
+>> +	struct icc_path *cpu_sdhc;
+>> +
+>> +	uint32_t curr_vote;
+>> +
+>> +};
+>> +
+>>  struct sdhci_msm_host {
+>>  	struct platform_device *pdev;
+>>  	void __iomem *core_mem;	/* MSM SDCC mapped address */
+>> @@ -253,8 +282,13 @@ struct sdhci_msm_host {
+>>  	const struct sdhci_msm_offset *offset;
+>>  	bool use_cdr;
+>>  	u32 transfer_mode;
+>> +	bool skip_bus_bw_voting;
+>> +	struct sdhci_msm_bus_vote_data *bus_vote_data;
+>> +	struct delayed_work bus_vote_work;
+>>  };
+>> 
+>> +static void sdhci_msm_bus_voting(struct sdhci_host *host, u32 
+>> enable);
+>> +
+>>  static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct 
+>> sdhci_host *host)
+>>  {
+>>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> @@ -1557,6 +1591,8 @@ static void sdhci_msm_set_clock(struct 
+>> sdhci_host *host, unsigned int clock)
+>> 
+>>  	msm_set_clock_rate_for_bus_mode(host, clock);
+>>  out:
+>> +	if (!msm_host->skip_bus_bw_voting)
+>> +		sdhci_msm_bus_voting(host, !!clock);
+>>  	__sdhci_msm_set_clock(host, clock);
+>>  }
+>> 
+>> @@ -1678,6 +1714,341 @@ static void 
+>> sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+>>  	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
+>>  }
+>> 
+>> +static int sdhci_msm_dt_get_array(struct device *dev, const char 
+>> *prop_name,
+>> +				 u32 **bw_vecs, int *len, u32 size)
+>> +{
+>> +	int ret = 0;
+>> +	struct device_node *np = dev->of_node;
+>> +	size_t sz;
+>> +	u32 *arr = NULL;
+>> +
+>> +	if (!of_get_property(np, prop_name, len)) {
+>> +		ret = -EINVAL;
+>> +		goto out;
+>> +	}
+>> +	sz = *len = *len / sizeof(*arr);
+>> +	if (sz <= 0 || (size > 0 && (sz > size))) {
+>> +		dev_err(dev, "%s invalid size\n", prop_name);
+>> +		ret = -EINVAL;
+>> +		goto out;
+>> +	}
+>> +
+>> +	arr = devm_kzalloc(dev, sz * sizeof(*arr), GFP_KERNEL);
+>> +	if (!arr) {
+>> +		ret = -ENOMEM;
+>> +		goto out;
+>> +	}
+>> +
+>> +	ret = of_property_read_u32_array(np, prop_name, arr, sz);
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "%s failed reading array %d\n", prop_name, ret);
+>> +		goto out;
+>> +	}
+>> +	*bw_vecs = arr;
+>> +out:
+>> +	if (ret)
+>> +		*len = 0;
+>> +	return ret;
+>> +}
+>> +
+>> +/* Returns required bandwidth in Bytes per Sec */
+>> +static unsigned long sdhci_get_bw_required(struct sdhci_host *host,
+>> +					struct mmc_ios *ios)
+>> +{
+>> +	unsigned long bw;
+>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +
+>> +	bw = msm_host->clk_rate;
+>> +
+>> +	if (ios->bus_width == MMC_BUS_WIDTH_4)
+>> +		bw /= 2;
+>> +	else if (ios->bus_width == MMC_BUS_WIDTH_1)
+>> +		bw /= 8;
+>> +
+>> +	return bw;
+>> +}
+>> +
+>> +static int sdhci_msm_bus_get_vote_for_bw(struct sdhci_msm_host *host,
+>> +					   unsigned int bw)
+>> +{
+>> +	struct sdhci_msm_bus_vote_data *bvd = host->bus_vote_data;
+>> +
+>> +	unsigned int *table = bvd->bw_vecs;
+>> +	unsigned int size = bvd->bw_vecs_size;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < size; i++) {
+>> +		if (bw <= table[i])
+>> +			break;
+>> +	}
+>> +
+>> +	if (i && (i == size))
+>> +		i--;
+>> +
+>> +	return i;
+>> +}
+>> +
+>> +/*
+>> + * This function must be called with host lock acquired.
+>> + * Caller of this function should also ensure that msm bus client
+>> + * handle is not null.
+>> + */
+>> +static inline int sdhci_msm_bus_set_vote(struct sdhci_msm_host 
+>> *msm_host,
+>> +					     int vote,
+>> +					     unsigned long *flags)
+>> +{
+>> +	struct sdhci_host *host =  platform_get_drvdata(msm_host->pdev);
+>> +	struct sdhci_msm_bus_vote_data *bvd = msm_host->bus_vote_data;
+>> +	struct msm_bus_path *usecase = bvd->usecase;
+>> +	struct msm_bus_vectors *vec = usecase[vote].vec;
+>> +	int ddr_rc = 0, cpu_rc = 0;
+>> +
+>> +	if (vote != bvd->curr_vote) {
+>> +		spin_unlock_irqrestore(&host->lock, *flags);
+>> +		pr_debug("%s: vote:%d sdhc_ddr ab:%llu ib:%llu cpu_sdhc ab:%llu 
+>> ib:%llu\n",
+>> +				mmc_hostname(host->mmc), vote, vec[0].ab,
+>> +				vec[0].ib, vec[1].ab, vec[1].ib);
+>> +		ddr_rc = icc_set_bw(bvd->sdhc_ddr, vec[0].ab, vec[0].ib);
+>> +		cpu_rc = icc_set_bw(bvd->cpu_sdhc, vec[1].ab, vec[1].ib);
+>> +		spin_lock_irqsave(&host->lock, *flags);
+>> +		if (ddr_rc || cpu_rc) {
+>> +			pr_err("%s: icc_set() failed\n",
+>> +				mmc_hostname(host->mmc));
+>> +			goto out;
+>> +		}
+>> +		bvd->curr_vote = vote;
+>> +	}
+>> +out:
+>> +	return cpu_rc;
+>> +}
+>> +
+>> +/*
+>> + * Internal work. Work to set 0 bandwidth for msm bus.
+>> + */
+>> +static void sdhci_msm_bus_work(struct work_struct *work)
+>> +{
+>> +	struct sdhci_msm_host *msm_host;
+>> +	struct sdhci_host *host;
+>> +	unsigned long flags;
+>> +
+>> +	msm_host = container_of(work, struct sdhci_msm_host,
+>> +				bus_vote_work.work);
+>> +	host =  platform_get_drvdata(msm_host->pdev);
+>> +
+>> +	/* Check handle and return */
+>> +	if (!msm_host->bus_vote_data->sdhc_ddr ||
+>> +			!msm_host->bus_vote_data->cpu_sdhc)
+>> +		return;
+>> +	spin_lock_irqsave(&host->lock, flags);
+>> +	/* don't vote for 0 bandwidth if any request is in progress */
+>> +	if (!host->mmc->ongoing_mrq)
+>> +		sdhci_msm_bus_set_vote(msm_host, 0, &flags);
+>> +	else
+>> +		pr_warn("Transfer in progress.Skipping bus voting to 0\n");
+>> +	spin_unlock_irqrestore(&host->lock, flags);
+>> +}
+>> +
+>> +/*
+>> + * This function cancels any scheduled delayed work and sets the bus
+>> + * vote based on bw (bandwidth) argument.
+>> + */
+>> +static void sdhci_msm_bus_cancel_work_and_set_vote(struct sdhci_host 
+>> *host,
+>> +						unsigned int bw)
+>> +{
+>> +	int vote;
+>> +	unsigned long flags;
+>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +
+>> +	cancel_delayed_work_sync(&msm_host->bus_vote_work);
+>> +	spin_lock_irqsave(&host->lock, flags);
+>> +	vote = sdhci_msm_bus_get_vote_for_bw(msm_host, bw);
+>> +	sdhci_msm_bus_set_vote(msm_host, vote, &flags);
+>> +	spin_unlock_irqrestore(&host->lock, flags);
+>> +}
+>> +
+>> +
+>> +#define MSM_MMC_BUS_VOTING_DELAY	200 /* msecs */
+>> +#define VOTE_ZERO  0
+>> +
+>> +/* This function queues a work which will set the bandwidth 
+>> requiement to 0 */
+>> +static void sdhci_msm_bus_queue_work(struct sdhci_host *host)
+>> +{
+>> +	unsigned long flags;
+>> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
+>> +
+>> +	spin_lock_irqsave(&host->lock, flags);
+>> +	if (msm_host->bus_vote_data->curr_vote != VOTE_ZERO)
+>> +		queue_delayed_work(system_wq,
+>> +				   &msm_host->bus_vote_work,
+>> +				   msecs_to_jiffies(MSM_MMC_BUS_VOTING_DELAY));
+>> +	spin_unlock_irqrestore(&host->lock, flags);
+>> +}
+>> +
+>> +static struct sdhci_msm_bus_vote_data 
+>> *sdhci_msm_get_bus_vote_data(struct device
+>> +				       *dev, struct sdhci_msm_host *host)
+>> +
+>> +{
+>> +	struct platform_device *pdev = to_platform_device(dev);
+>> +	struct device_node *of_node = dev->of_node;
+>> +	struct sdhci_msm_bus_vote_data *bvd = NULL;
+>> +	struct msm_bus_path *usecase = NULL;
+>> +	int ret = 0, i = 0, j, k, num_paths, len;
+>> +	const uint32_t *vec_arr = NULL;
+>> +	bool mem_err = false;
+>> +
+>> +	if (!pdev) {
+>> +		dev_err(dev, "Null platform device!\n");
+>> +		return NULL;
+>> +	}
+>> +
+>> +	bvd = devm_kzalloc(dev, sizeof(struct sdhci_msm_bus_vote_data),
+>> +				GFP_KERNEL);
+>> +	if (!bvd) {
+>> +		ret = -ENOMEM;
+>> +		dev_err(dev, "No sufficient memory!\n");
+>> +		return bvd;
+>> +	}
+>> +	ret = sdhci_msm_dt_get_array(dev, "qcom,bus-bw-vectors-bps",
+>> +				&bvd->bw_vecs, &bvd->bw_vecs_size, 0);
+>> +	if (ret) {
+>> +		dev_info(dev, "No dt property of bus bw. voting defined!\n");
+>> +		dev_info(dev, "Skipping Bus BW voting now!!\n");
+>> +		host->skip_bus_bw_voting = true;
+>> +		if (ret != -EINVAL && ret != -ENOMEM)
+>> +			goto free;
+>> +		goto err;
+>> +	}
+>> +
+>> +	ret = of_property_read_string(of_node, "qcom,msm-bus,name", 
+>> &bvd->name);
+>> +	if (ret) {
+>> +		dev_err(dev, "Error: (%d) Bus name missing!\n", ret);
+>> +		goto err;
+>> +	}
+>> +
+>> +	ret = of_property_read_u32(of_node, "qcom,msm-bus,num-cases",
+>> +		&bvd->num_usecase);
+>> +	if (ret) {
+>> +		dev_err(dev, "Error: num-usecases not found\n");
+>> +		goto err;
+>> +	}
+>> +
+>> +	usecase = devm_kzalloc(dev, (sizeof(struct msm_bus_path) *
+>> +				   bvd->num_usecase), GFP_KERNEL);
+>> +	if (!usecase)
+>> +		goto err;
+>> +
+>> +	ret = of_property_read_u32(of_node, "qcom,msm-bus,num-paths",
+>> +				   &num_paths);
+>> +	if (ret) {
+>> +		dev_err(dev, "Error: num_paths not found\n");
+>> +		goto out;
+>> +	}
+>> +
+>> +	vec_arr = of_get_property(of_node, "qcom,msm-bus,vectors-KBps", 
+>> &len);
+>> +	if (vec_arr == NULL) {
+>> +		dev_err(dev, "Error: Vector array not found\n");
+>> +		goto out;
+>> +	}
+>> +
+>> +	for (i = 0; i < bvd->num_usecase; i++) {
+>> +		usecase[i].num_paths = num_paths;
+>> +		usecase[i].vec = devm_kzalloc(dev, num_paths *
+>> +					      sizeof(struct msm_bus_vectors),
+>> +					      GFP_KERNEL);
+>> +		if (!usecase[i].vec) {
+>> +			mem_err = true;
+>> +			dev_err(dev, "Error: Failed to alloc mem for vectors\n");
+>> +			goto out;
+>> +		}
+>> +		for (j = 0; j < num_paths; j++) {
+>> +			int idx = ((i * num_paths) + j) * 2;
+>> +
+>> +			usecase[i].vec[j].ab = (uint64_t)
+>> +				be32_to_cpu(vec_arr[idx]);
+>> +			usecase[i].vec[j].ib = (uint64_t)
+>> +				be32_to_cpu(vec_arr[idx + 1]);
+>> +		}
+>> +	}
+>> +
+>> +	bvd->usecase = usecase;
+>> +	return bvd;
+>> +out:
+>> +	if (mem_err) {
+>> +		for (k = i - 1; k >= 0; k--)
+>> +			devm_kfree(dev, usecase[k].vec);
+>> +	}
+>> +	devm_kfree(dev, usecase);
+>> +free:
+>> +	devm_kfree(dev, bvd->bw_vecs);
+>> +err:
+>> +	devm_kfree(dev, bvd);
+>> +	bvd = NULL;
+>> +	return bvd;
+>> +}
+>> +
+>> +static int sdhci_msm_bus_register(struct sdhci_msm_host *host,
+>> +				struct platform_device *pdev)
+>> +{
+>> +	struct sdhci_msm_bus_vote_data *bsd;
+>> +	struct device *dev = &pdev->dev;
+>> +
+>> +	bsd = sdhci_msm_get_bus_vote_data(dev, host);
+>> +	if (!bsd) {
+>> +		dev_err(&pdev->dev, "Failed: getting bus_scale data\n");
+>> +		return PTR_ERR(bsd);
+>> +	}
+>> +	host->bus_vote_data = bsd;
+>> +
+>> +	bsd->sdhc_ddr = of_icc_get(&pdev->dev, SDHC_DDR);
+>> +	if (IS_ERR(bsd->sdhc_ddr)) {
+>> +		dev_err(&pdev->dev, "Error: (%ld) failed getting %s path\n",
+>> +			PTR_ERR(bsd->sdhc_ddr), SDHC_DDR);
+>> +		return PTR_ERR(bsd->sdhc_ddr);
+>> +	}
+>> +
+>> +	bsd->cpu_sdhc = of_icc_get(&pdev->dev, CPU_SDHC);
+>> +	if (IS_ERR(bsd->cpu_sdhc)) {
+>> +		dev_err(&pdev->dev, "Error: (%ld) failed getting %s path\n",
+>> +			PTR_ERR(bsd->cpu_sdhc), CPU_SDHC);
+>> +		return PTR_ERR(bsd->cpu_sdhc);
+>> +	}
+>> +
+>> +	INIT_DELAYED_WORK(&host->bus_vote_work, sdhci_msm_bus_work);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void sdhci_msm_bus_unregister(struct device *dev,
+>> +				struct sdhci_msm_host *host)
+>> +{
+>> +	struct sdhci_msm_bus_vote_data *bsd = host->bus_vote_data;
+>> +	int i;
+>> +
+>> +	icc_put(bsd->sdhc_ddr);
+>> +	icc_put(bsd->cpu_sdhc);
+>> +
+>> +	for (i = 0; i < bsd->num_usecase; i++)
+>> +		devm_kfree(dev, bsd->usecase[i].vec);
+>> +	devm_kfree(dev, bsd->usecase);
+>> +	devm_kfree(dev, bsd->bw_vecs);
+>> +	devm_kfree(dev, bsd);
+>> +}
+>> +
+>> +static void sdhci_msm_bus_voting(struct sdhci_host *host, u32 enable)
+>> +{
+>> +	struct mmc_ios *ios = &host->mmc->ios;
+>> +	unsigned int bw;
+>> +
+>> +	bw = sdhci_get_bw_required(host, ios);
+>> +	if (enable)
+>> +		sdhci_msm_bus_cancel_work_and_set_vote(host, bw);
+>> +	else
+>> +		sdhci_msm_bus_queue_work(host);
+>> +}
+>> +
+>>  static const struct sdhci_msm_variant_ops mci_var_ops = {
+>>  	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
+>>  	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
+>> @@ -1839,6 +2210,13 @@ static int sdhci_msm_probe(struct 
+>> platform_device *pdev)
+>>  		dev_warn(&pdev->dev, "TCXO clk not present (%d)\n", ret);
+>>  	}
+>> 
+>> +	ret = sdhci_msm_bus_register(msm_host, pdev);
+>> +	if (ret && !msm_host->skip_bus_bw_voting)
+>> +		goto clk_disable;
+>> +
+>> +	if (!msm_host->skip_bus_bw_voting)
+>> +		sdhci_msm_bus_voting(host, 1);
+>> +
+>>  	if (!msm_host->mci_removed) {
+>>  		core_memres = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>>  		msm_host->core_mem = devm_ioremap_resource(&pdev->dev,
+>> @@ -1846,7 +2224,7 @@ static int sdhci_msm_probe(struct 
+>> platform_device *pdev)
+>> 
+>>  		if (IS_ERR(msm_host->core_mem)) {
+>>  			ret = PTR_ERR(msm_host->core_mem);
+>> -			goto clk_disable;
+>> +			goto bus_unregister;
+>>  		}
+>>  	}
+>> 
+>> @@ -1918,7 +2296,7 @@ static int sdhci_msm_probe(struct 
+>> platform_device *pdev)
+>>  	msm_host->pwr_irq = platform_get_irq_byname(pdev, "pwr_irq");
+>>  	if (msm_host->pwr_irq < 0) {
+>>  		ret = msm_host->pwr_irq;
+>> -		goto clk_disable;
+>> +		goto bus_unregister;
+>>  	}
+>> 
+>>  	sdhci_msm_init_pwr_irq_wait(msm_host);
+>> @@ -1931,7 +2309,7 @@ static int sdhci_msm_probe(struct 
+>> platform_device *pdev)
+>>  					dev_name(&pdev->dev), host);
+>>  	if (ret) {
+>>  		dev_err(&pdev->dev, "Request IRQ failed (%d)\n", ret);
+>> -		goto clk_disable;
+>> +		goto bus_unregister;
+>>  	}
+>> 
+>>  	pm_runtime_get_noresume(&pdev->dev);
+>> @@ -1956,6 +2334,11 @@ static int sdhci_msm_probe(struct 
+>> platform_device *pdev)
+>>  	pm_runtime_disable(&pdev->dev);
+>>  	pm_runtime_set_suspended(&pdev->dev);
+>>  	pm_runtime_put_noidle(&pdev->dev);
+>> +bus_unregister:
+>> +	if (!msm_host->skip_bus_bw_voting) {
+>> +		sdhci_msm_bus_cancel_work_and_set_vote(host, 0);
+>> +		sdhci_msm_bus_unregister(&pdev->dev, msm_host);
+>> +	}
+>>  clk_disable:
+>>  	clk_bulk_disable_unprepare(ARRAY_SIZE(msm_host->bulk_clks),
+>>  				   msm_host->bulk_clks);
+>> @@ -1985,6 +2368,10 @@ static int sdhci_msm_remove(struct 
+>> platform_device *pdev)
+>>  				   msm_host->bulk_clks);
+>>  	if (!IS_ERR(msm_host->bus_clk))
+>>  		clk_disable_unprepare(msm_host->bus_clk);
+>> +	if (!msm_host->skip_bus_bw_voting) {
+>> +		sdhci_msm_bus_cancel_work_and_set_vote(host, 0);
+>> +		sdhci_msm_bus_unregister(&pdev->dev, msm_host);
+>> +	}
+>>  	sdhci_pltfm_free(pdev);
+>>  	return 0;
+>>  }
+>> --
+>> 1.9.1
+>> 
