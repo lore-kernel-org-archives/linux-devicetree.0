@@ -1,177 +1,37 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
-Date: Wed, 25 Sep 2019 06:03:45 -0700
-Message-ID: <20190925130346.42E0820640@mail.kernel.org>
-References: <20190918095018.17979-1-tdas@codeaurora.org> <20190918095018.17979-4-tdas@codeaurora.org> <20190918213946.DC03521924@mail.kernel.org> <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org> <20190924231223.9012C207FD@mail.kernel.org> <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: display: Document the Xylon LogiCVC
+ display controller
+Date: Wed, 25 Sep 2019 08:07:30 -0500
+Message-ID: <CAL_JsqJY+d9frxuxspvo2SQ=vpWMCAWZfMODA-jm_rKu1GOEaw@mail.gmail.com>
+References: <20190925084932.147971-1-paul.kocialkowski@bootlin.com> <20190925084932.147971-2-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
+In-Reply-To: <20190925084932.147971-2-paul.kocialkowski@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Taniya Das <tdas@codeaurora.org>, robh+dt@kernel.org
-Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2019-09-25 04:20:07)
-> Hi Stephen,
->=20
-> Please find my comments.
->=20
-> On 9/25/2019 4:42 AM, Stephen Boyd wrote:
-> > Quoting Taniya Das (2019-09-23 01:01:11)
-> >> Hi Stephen,
-> >>
-> >> Thanks for your comments.
-> >>
-> >> On 9/19/2019 3:09 AM, Stephen Boyd wrote:
-> >>> Quoting Taniya Das (2019-09-18 02:50:18)
-> >>>> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc=
-7180.c
-> >>>> new file mode 100644
-> >>>> index 000000000000..d47865d5408f
-> >>>> --- /dev/null
-> >>>> +++ b/drivers/clk/qcom/gcc-sc7180.c
-> >>>> +                       .ops =3D &clk_branch2_ops,
-> >>>> +               },
-> >>>> +       },
-> >>>> +};
-> >>>> +
-> > [...]
-> >>>> +static struct clk_branch gcc_ufs_phy_phy_aux_clk =3D {
-> >>>> +       .halt_reg =3D 0x77094,
-> >>>> +       .halt_check =3D BRANCH_HALT,
-> >>>> +       .hwcg_reg =3D 0x77094,
-> >>>> +       .hwcg_bit =3D 1,
-> >>>> +       .clkr =3D {
-> >>>> +               .enable_reg =3D 0x77094,
-> >>>> +               .enable_mask =3D BIT(0),
-> >>>> +               .hw.init =3D &(struct clk_init_data){
-> >>>> +                       .name =3D "gcc_ufs_phy_phy_aux_clk",
-> >>>> +                       .parent_data =3D &(const struct clk_parent_d=
-ata){
-> >>>> +                               .hw =3D &gcc_ufs_phy_phy_aux_clk_src=
-.clkr.hw,
-> >>>> +                       },
-> >>>> +                       .num_parents =3D 1,
-> >>>> +                       .flags =3D CLK_SET_RATE_PARENT,
-> >>>> +                       .ops =3D &clk_branch2_ops,
-> >>>> +               },
-> >>>> +       },
-> >>>> +};
-> >>>> +
-> >>>> +static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk =3D {
-> >>>> +       .halt_reg =3D 0x7701c,
-> >>>> +       .halt_check =3D BRANCH_HALT_SKIP,
-> >>>
-> >>> Again, nobody has fixed the UFS driver to not need to do this halt sk=
-ip
-> >>> check for these clks? It's been over a year.
-> >>>
-> >>
-> >> The UFS_PHY_RX/TX clocks could be left enabled due to certain HW boot
-> >> configuration and thus during the late initcall of clk_disable there
-> >> could be warnings of "clock stuck ON" in the dmesg. That is the reason
-> >> also to use the BRANCH_HALT_SKIP flag.
-> >=20
-> > Oh that's bad. Why do the clks stay on when we try to turn them off?
-> >
->=20
-> Those could be due to the configuration selected by HW and SW cannot=20
-> override them, so traditionally we have never polled for CLK_OFF for=20
-> these clocks.
+On Wed, Sep 25, 2019 at 3:49 AM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
+>
+> The Xylon LogiCVC is a display controller implemented as programmable
+> logic in Xilinx FPGAs.
+>
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> ---
+>  .../display/xylon,logicvc-display.yaml        | 314 ++++++++++++++++++
+>  1 file changed, 314 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/xylon,logicvc-display.yaml
 
-Is that the case or just a guess?
-
->=20
-> >>
-> >> I would also check internally for the UFS driver fix you are referring=
- here.
-> >=20
-> > Sure. I keep asking but nothing is done :(
-> >=20
-> >>
-> >>>> +       .clkr =3D {
-> >>>> +               .enable_reg =3D 0x7701c,
-> >>>> +               .enable_mask =3D BIT(0),
-> >>>> +               .hw.init =3D &(struct clk_init_data){
-> >>>> +                       .name =3D "gcc_ufs_phy_rx_symbol_0_clk",
-> >>>> +                       .ops =3D &clk_branch2_ops,
-> >>>> +               },
-> >>>> +       },
-> >>>> +};
-> >>>> +
-> > [...]
-> >>>> +
-> >>>> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk =3D {
-> >>>> +       .halt_reg =3D 0xf058,
-> >>>> +       .halt_check =3D BRANCH_HALT_SKIP,
-> >>>
-> >>> Why does this need halt_skip?
-> >>
-> >> This is required as the source is external PHY, so we want to not check
-> >> for HALT.
-> >=20
-> > This doesn't really answer my question. If the source is an external phy
-> > then it should be listed as a clock in the DT binding and the parent
-> > should be specified here. Unless something doesn't work because of that?
-> >=20
->=20
-> The USB phy is managed by the USB driver and clock driver is not aware=20
-> if USB driver models the phy as a clock. Thus we do want to keep a=20
-> dependency on the parent and not poll for CLK_ENABLE.
-
-The clk driver should be aware of the USB driver modeling the phy as a
-clk. We do that for other phys so what is the difference here?
-
->=20
-> >>
-> >>>
-> >>>> +       .clkr =3D {
-> >>>> +               .enable_reg =3D 0xf058,
-> >>>> +               .enable_mask =3D BIT(0),
-> >>>> +               .hw.init =3D &(struct clk_init_data){
-> >>>> +                       .name =3D "gcc_usb3_prim_phy_pipe_clk",
-> >>>> +                       .ops =3D &clk_branch2_ops,
-> >>>> +               },
-> >>>> +       },
-> >>>> +};
-> >>>> +
-> >>>> +static struct clk_branch gcc_usb_phy_cfg_ahb2phy_clk =3D {
-> >>>> +       .halt_reg =3D 0x6a004,
-> >>>> +       .halt_check =3D BRANCH_HALT,
-> >>>> +       .hwcg_reg =3D 0x6a004,
-> >>>> +       .hwcg_bit =3D 1,
-> >>>> +       .clkr =3D {
-> >>>> +               .enable_reg =3D 0x6a004,
-> >>>> +               .enable_mask =3D BIT(0),
-> >>>> +               .hw.init =3D &(struct clk_init_data){
-> >>>> +                       .name =3D "gcc_usb_phy_cfg_ahb2phy_clk",
-> >>>> +                       .ops =3D &clk_branch2_ops,
-> >>>> +               },
-> >>>> +       },
-> >>>> +};
-> >>>> +
-> >>>> +/* Leave the clock ON for parent config_noc_clk to be kept enabled =
-*/
-> >>>
-> >>> There's no parent though... So I guess this means it keeps it enabled
-> >>> implicitly in hardware?
-> >>>
-> >>
-> >> These are not left enabled, but want to leave them enabled for clients
-> >> on config NOC.
-> >=20
-> > Sure. It just doesn't make sense to create clk structures and expose
-> > them in the kernel when we just want to turn the bits on and leave them
-> > on forever. Why not just do some register writes in probe for this
-> > driver? Doesn't that work just as well and use less memory?
-> >=20
->=20
-> Even if I write these registers during probe, the late init check=20
-> 'clk_core_is_enabled' would return true and would be turned OFF, that is =
-
-> the reason for marking them CRITICAL.
->=20
-
-That wouldn't happen if the clks weren't registered though, no?
+Error: Documentation/devicetree/bindings/display/xylon,logicvc-display.example.dts:17.1-6
+syntax error
+FATAL ERROR: Unable to parse input tree
+scripts/Makefile.lib:321: recipe for target
+'Documentation/devicetree/bindings/display/xylon,logicvc-display.example.dt.yaml'
+failed
+make[1]: *** [Documentation/devicetree/bindings/display/xylon,logicvc-display.example.dt.yaml]
+Error 1
+Makefile:1282: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
