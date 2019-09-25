@@ -1,193 +1,149 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH V3 09/10] interconnect: mediatek: Add mt8183 interconnect
- provider driver
-Date: Tue, 24 Sep 2019 16:53:57 -0700
-Message-ID: <ff52d219-1621-37de-3b70-d10d95bf370f@linaro.org>
-References: <1566995328-15158-1-git-send-email-henryc.chen@mediatek.com>
- <1566995328-15158-10-git-send-email-henryc.chen@mediatek.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V9 0/2] mailbox: arm: introduce smc triggered mailbox
+Date: Wed, 25 Sep 2019 02:09:04 +0000
+Message-ID: <1569377224-5755-1-git-send-email-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1566995328-15158-10-git-send-email-henryc.chen@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Henry Chen <henryc.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Viresh Kumar <vireshk@kernel.org>, Stephen Boyd <swboyd@chromium.org>, Ryan Case <ryandcase@chromium.org>
-Cc: Nicolas Boichat <drinkcat@google.com>, Fan Chen <fan.chen@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Henry,
+From: Peng Fan <peng.fan@nxp.com>
 
-Please CC also the linux-pm@ list.
+V9:
+ - Add Florian's R-b tag in patch 1/2
+ - Mark arm,func-id as a required property per Andre's comments in patch 1/=
+2.
+ - Make invoke_smc_mbox_fn as a private entry in a channal per Florian's
+   comments in pach 2/2
+ - Include linux/types.h in arm-smccc-mbox.h in patch 2/2
+ - Drop function_id from arm_smccc_mbox_cmd since func-id is from DT
+   in patch 2/2/.
 
-On 8/28/19 05:28, Henry Chen wrote:
-> Introduce Mediatek MT8183 specific provider driver using the
-> interconnect framework.
-> 
-> Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
-> ---
->  drivers/interconnect/Kconfig            |   1 +
->  drivers/interconnect/Makefile           |   1 +
->  drivers/interconnect/mediatek/Kconfig   |  13 ++
->  drivers/interconnect/mediatek/Makefile  |   3 +
->  drivers/interconnect/mediatek/mtk-emi.c | 246 ++++++++++++++++++++++++++++++++
->  5 files changed, 264 insertions(+)
->  create mode 100644 drivers/interconnect/mediatek/Kconfig
->  create mode 100644 drivers/interconnect/mediatek/Makefile
->  create mode 100644 drivers/interconnect/mediatek/mtk-emi.c
-> 
-[..]
-> +
-> +#define MT8183_MAX_LINKS	6
+   Andre,
+    I have marked arm,func-id as a required property and dropped function-i=
+d
+    from client, please see whether you are happy with the patchset.
+    Hope we could finalize and get patches land in.
 
-Looks like 1 is enough. Sorry for missing this in my earlier review.
+   Thanks,
+   Peng.
 
-> +
-> +/**
-> + * struct mtk_icc_node - Mediatek specific interconnect nodes
-> + * @name: the node name used in debugfs
-> + * @ep: true if the node is an end point.
-> + * @id: a unique node identifier
-> + * @links: an array of nodes where we can go next while traversing
-> + * @num_links: the total number of @links
-> + * @buswidth: width of the interconnect between a node and the bus
-> + * @sum_avg: current sum aggregate value of all avg bw kBps requests
-> + * @max_peak: current max aggregate value of all peak bw kBps requests
-> + */
-> +struct mtk_icc_node {
-> +	unsigned char *name;
-> +	bool ep;
-> +	u16 id;
-> +	u16 links[MT8183_MAX_LINKS];
-> +	u16 num_links;
-> +	u16 buswidth;
-> +	u64 sum_avg;
-> +	u64 max_peak;
-> +};
-> +
-> +struct mtk_icc_desc {
-> +	struct mtk_icc_node **nodes;
-> +	size_t num_nodes;
-> +};
-> +
-> +#define DEFINE_MNODE(_name, _id, _buswidth, _ep, ...)	\
-> +		static struct mtk_icc_node _name = {			\
-> +		.name = #_name,						\
-> +		.id = _id,						\
-> +		.buswidth = _buswidth,					\
-> +		.ep = _ep,						\
-> +		.num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),	\
-> +}
-> +
-> +DEFINE_MNODE(ddr_emi, SLAVE_DDR_EMI, 1024, 1, 0);
-> +DEFINE_MNODE(mcusys, MASTER_MCUSYS, 256, 0, SLAVE_DDR_EMI);
-> +DEFINE_MNODE(gpu, MASTER_GPUSYS, 256, 0, SLAVE_DDR_EMI);
-> +DEFINE_MNODE(mmsys, MASTER_MMSYS, 256, 0, SLAVE_DDR_EMI);
-> +DEFINE_MNODE(mm_vpu, MASTER_MM_VPU, 128, 0, MASTER_MMSYS);
-> +DEFINE_MNODE(mm_disp, MASTER_MM_DISP, 128, 0, MASTER_MMSYS);
-> +DEFINE_MNODE(mm_vdec, MASTER_MM_VDEC, 128, 0, MASTER_MMSYS);
-> +DEFINE_MNODE(mm_venc, MASTER_MM_VENC, 128, 0, MASTER_MMSYS);
-> +DEFINE_MNODE(mm_cam, MASTER_MM_CAM, 128, 0, MASTER_MMSYS);
-> +DEFINE_MNODE(mm_img, MASTER_MM_IMG, 128, 0, MASTER_MMSYS);
-> +DEFINE_MNODE(mm_mdp, MASTER_MM_MDP, 128, 0, MASTER_MMSYS);
-> +
-[..]
+V8:
+Add missed arm-smccc-mbox.h
 
-> +static int emi_icc_aggregate(struct icc_node *node, u32 avg_bw,
-> +			      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-> +{
+V7:
+Typo fix
+#mbox-cells changed to 0
+Add a new header file arm-smccc-mbox.h
+Use ARM_SMCCC_IS_64
 
-The prototype of this function has changed meanwhile, so you might want to update.
+Andre,
+  The function_id is still kept in arm_smccc_mbox_cmd, because arm,func-id
+property is optional, so clients could pass function_id to mbox driver.
 
-[..]
-> +static int emi_icc_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	const struct mtk_icc_desc *desc;
-> +	struct icc_node *node;
-> +	struct icc_onecell_data *data;
-> +	struct icc_provider *provider;
-> +	struct mtk_icc_node **mnodes;
-> +	size_t num_nodes, i, j;
-> +
-> +	desc = of_device_get_match_data(&pdev->dev);
-> +	if (!desc)
-> +		return -EINVAL;
-> +
-> +	mnodes = desc->nodes;
-> +	num_nodes = desc->num_nodes;
-> +
-> +	provider = devm_kzalloc(&pdev->dev, sizeof(*provider), GFP_KERNEL);
-> +	if (!provider)
-> +		return -ENOMEM;
-> +
-> +	data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	provider->dev = &pdev->dev;
-> +	provider->set = emi_icc_set;
-> +	provider->aggregate = emi_icc_aggregate;
-> +	provider->xlate = of_icc_xlate_onecell;
-> +	INIT_LIST_HEAD(&provider->nodes);
-> +	provider->data = data;
-> +
-> +	ret = icc_provider_add(provider);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "error adding interconnect provider\n");
-> +		return ret;
-> +	}
-> +
-> +	for (i = 0; i < num_nodes; i++) {
-> +		node = icc_node_create(mnodes[i]->id);
-> +		if (IS_ERR(node)) {
-> +			ret = PTR_ERR(node);
-> +			goto err;
-> +		}
-> +
-> +		node->name = mnodes[i]->name;
-> +		node->data = mnodes[i];
-> +		icc_node_add(node, provider);
-> +
-> +		dev_dbg(&pdev->dev, "registered node %s, num link: %d\n",
-> +			mnodes[i]->name, mnodes[i]->num_links);
-> +
-> +		/* populate links */
-> +		for (j = 0; j < mnodes[i]->num_links; j++)
-> +			icc_link_create(node, mnodes[i]->links[j]);
-> +
-> +		data->nodes[i] = node;
-> +	}
-> +	data->num_nodes = num_nodes;
-> +
-> +	platform_set_drvdata(pdev, provider);
-> +
-> +	return 0;
-> +err:
-> +	list_for_each_entry(node, &provider->nodes, node_list) {
-> +		icc_node_del(node);
-> +		icc_node_destroy(node->id);
-> +	}
-> +
-> +	icc_provider_del(provider);
+V6:
+Switch to per-channel a mbox controller
+Drop arm,num-chans, transports, method
+Add arm,hvc-mbox compatible
+Fix smc/hvc args, drop client id and use correct type.
+https://patchwork.kernel.org/cover/11146641/
 
-You can just call emi_icc_remove() instead of the above.
+V5:
+yaml fix
+https://patchwork.kernel.org/cover/11117741/
 
-Thanks,
-Georgi
+V4:
+yaml fix for num-chans in patch 1/2.
+https://patchwork.kernel.org/cover/11116521/
 
-> +	return ret;
-> +}
-> +
-> +static int emi_icc_remove(struct platform_device *pdev)
-> +{
-> +	struct icc_provider *provider = platform_get_drvdata(pdev);
-> +	struct icc_node *n;
-> +
-> +	list_for_each_entry(n, &provider->nodes, node_list) {
-> +		icc_node_del(n);
-> +		icc_node_destroy(n->id);
-> +	}
-> +
-> +	return icc_provider_del(provider);
-> +}
+V3:
+Drop interrupt
+Introduce transports for mem/reg usage
+Add chan-id for mem usage
+Convert to yaml format
+https://patchwork.kernel.org/cover/11043541/
+
+V2:
+This is a modified version from Andre Przywara's patch series
+https://lore.kernel.org/patchwork/cover/812997/.
+The modification are mostly:
+Introduce arm,num-chans
+Introduce arm_smccc_mbox_cmd
+txdone_poll and txdone_irq are both set to false
+arm,func-ids are kept, but as an optional property.
+Rewords SCPI to SCMI, because I am trying SCMI over SMC, not SCPI.
+Introduce interrupts notification.
+
+[1] is a draft implementation of i.MX8MM SCMI ATF implementation that
+use smc as mailbox, power/clk is included, but only part of clk has been
+implemented to work with hardware, power domain only supports get name
+for now.
+
+The traditional Linux mailbox mechanism uses some kind of dedicated hardwar=
+e
+IP to signal a condition to some other processing unit, typically a dedicat=
+ed
+management processor.
+This mailbox feature is used for instance by the SCMI protocol to signal a
+request for some action to be taken by the management processor.
+However some SoCs does not have a dedicated management core to provide
+those services. In order to service TEE and to avoid linux shutdown
+power and clock that used by TEE, need let firmware to handle power
+and clock, the firmware here is ARM Trusted Firmware that could also
+run SCMI service.
+
+The existing SCMI implementation uses a rather flexible shared memory
+region to communicate commands and their parameters, it still requires a
+mailbox to actually trigger the action.
+
+This patch series provides a Linux mailbox compatible service which uses
+smc calls to invoke firmware code, for instance taking care of SCMI request=
+s.
+The actual requests are still communicated using the standard SCMI way of
+shared memory regions, but a dedicated mailbox hardware IP can be replaced =
+via
+this new driver.
+
+This simple driver uses the architected SMC calling convention to trigger
+firmware services, also allows for using "HVC" calls to call into hyperviso=
+rs
+or firmware layers running in the EL2 exception level.
+
+Patch 1 contains the device tree binding documentation, patch 2 introduces
+the actual mailbox driver.
+
+Please note that this driver just provides a generic mailbox mechanism,
+It could support synchronous TX/RX, or synchronous TX with asynchronous
+RX. And while providing SCMI services was the reason for this exercise,
+this driver is in no way bound to this use case, but can be used genericall=
+y
+where the OS wants to signal a mailbox condition to firmware or a
+hypervisor.
+Also the driver is in no way meant to replace any existing firmware
+interface, but actually to complement existing interfaces.
+
+[1] https://github.com/MrVan/arm-trusted-firmware/tree/scmi
+
+
+Peng Fan (2):
+  dt-bindings: mailbox: add binding doc for the ARM SMC/HVC mailbox
+  mailbox: introduce ARM SMC based mailbox
+
+ .../devicetree/bindings/mailbox/arm-smc.yaml       |  96 ++++++++++++
+ drivers/mailbox/Kconfig                            |   7 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/arm-smc-mailbox.c                  | 167 +++++++++++++++++=
+++++
+ include/linux/mailbox/arm-smccc-mbox.h             |  20 +++
+ 5 files changed, 292 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+ create mode 100644 drivers/mailbox/arm-smc-mailbox.c
+ create mode 100644 include/linux/mailbox/arm-smccc-mbox.h
+
+--=20
+2.16.4
