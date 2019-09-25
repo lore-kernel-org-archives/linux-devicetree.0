@@ -1,139 +1,175 @@
-From: Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
-Subject: Re: [RFC PATCH v2 00/11] Simple QoS for exynos-bus driver using
- interconnect
-Date: Wed, 25 Sep 2019 07:47:43 +0200
-Message-ID: <c06ca89f2b40e0282f19727b95da5e5b0158d7e3.camel@samsung.com>
-References: <CGME20190919142321eucas1p164c2591ad402427cb71fd00c348a29ec@eucas1p1.samsung.com>
-        <20190919142236.4071-1-a.swigon@samsung.com>
-        <fe6d026d-71b5-438d-6932-6a2234fc72c2@samsung.com>
-        <d8550f93-d4cf-f215-c083-8ecad267d430@samsung.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [RFC PATCH] interconnect: Replace of_icc_get() with icc_get()
+ and reduce DT binding
+Date: Tue, 24 Sep 2019 22:59:33 -0700
+Message-ID: <20190925055933.GA2810@tuxbook-pro>
+References: <20190925054133.206992-1-swboyd@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d8550f93-d4cf-f215-c083-8ecad267d430@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <20190925054133.206992-1-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: myungjoo.ham@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, georgi.djakov@linaro.org, leonard.crestez@nxp.com, m.szyprowski@samsung.com, b.zolnierkie@samsung.com, krzk@kernel.org, "cpgs (cpgs@samsung.com)" <cpgs@samsung.com>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Maxime Ripard <mripard@kernel.org>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, David Dai <daidavid1@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue 24 Sep 22:41 PDT 2019, Stephen Boyd wrote:
 
-On Fri, 2019-09-20 at 11:14 +0900, Chanwoo Choi wrote:
-> Hi Artur,
+> I don't see any users of icc_get() in the kernel today, and adding them
+> doesn't make sense. That's because adding calls to that function in a
+> driver will make the driver SoC specific given that the arguments are
+> some sort of source and destination numbers that would typically be
+> listed in DT or come from platform data so they can match a global
+> numberspace of interconnect numbers. It would be better to follow the
+> approach of other kernel frameworks where the API is the same no matter
+> how the platform is described (i.e. platform data, DT, ACPI, etc.) and
+> swizzle the result in the framework to match whatever the device is by
+> checking for a DT node pointer or a fwnode pointer, etc. Therefore,
+> install icc_get() as the defacto API and make drivers use that instead
+> of of_icc_get() which implies the driver is DT specific when it doesn't
+> need to be.
 > 
-> I tried to just build this patch on mainline kernel or linux-next.
-> But, when I applied them, merge conflict happens. You didn't develop
-> them on latest version. Please rebase them based on latest mainline kernel.
 
-I developed on top of next-20190918 on which I applied
-https://patchwork.kernel.org/cover/11149497/ as I mentioned in the cover
-letter. The dev_pm_qos patches and my RFC have just cleanly rebased together on
-top of next-20190920. Could you check if you have the dev_pm_qos patches (v5,
-the version number is missing in this one; link above) and if so, where does the
-conflict appear?
++1 on this part!
 
-> On 19. 9. 20. 오전 10:07, Chanwoo Choi wrote:
-> > Hi Artur,
-> > 
-> > On v1, I mentioned that we need to discuss how to change
-> > the v2 for this. But, I have not received any reply from you on v1.
-> > And, without your reply from v1, you just send v2.
-> > 
-> > I think that it is not proper development sequence.
-> > I have spent many times to review your patches
-> > and also I'll review your patches. You have to take care
-> > the reply of reviewer and and keep the basic rule
-> > of mailing contribution for discussion.
-> > 
-> > On 19. 9. 19. 오후 11:22, Artur Świgoń wrote:
-> > > The following patchset adds interconnect[1][2] framework support to the
-> > > exynos-bus devfreq driver. Extending the devfreq driver with interconnect
-> > > capabilities started as a response to the issue referenced in [3]. The
-> > > patches can be subdivided into four logical groups:
-> > > 
-> > > (a) Refactoring the existing devfreq driver in order to improve readability
-> > > and accommodate for adding new code (patches 01--04/11).
-> > > 
-> > > (b) Tweaking the interconnect framework to support the exynos-bus use case
-> > > (patches 05--07/11). Exporting of_icc_get_from_provider() allows us to
-> > > avoid hardcoding every single graph edge in the DT or driver source, and
-> > > relaxing the requirement contained in that function removes the need to
-> > > provide dummy node IDs in the DT. Adjusting the logic in
-> > > apply_constraints() (drivers/interconnect/core.c) accounts for the fact
-> > > that every bus is a separate entity and therefore a separate interconnect
-> > > provider, albeit constituting a part of a larger hierarchy.
-> > > 
-> > > (c) Implementing interconnect providers in the exynos-bus devfreq driver
-> > > and adding required DT properties for one selected platform, namely
-> > > Exynos4412 (patches 08--09/11). Due to the fact that this aims to be a
-> > > generic driver for various Exynos SoCs, node IDs are generated dynamically
-> > > rather than hardcoded. This has been determined to be a simpler approach,
-> > > but depends on changes described in (b).
-> > > 
-> > > (d) Implementing a sample interconnect consumer for exynos-mixer targeted
-> > > at the issue referenced in [3], again with DT info only for Exynos4412
-> > > (patches 10--11/11).
-> > > 
-> > > Integration of devfreq and interconnect functionalities is achieved by
-> > > using dev_pm_qos_*() API[5]. All new code works equally well when
-> > > CONFIG_INTERCONNECT is 'n' (as in exynos_defconfig) in which case all
-> > > interconnect API functions are no-ops.
-> > > 
-> > > This patchset depends on [5].
-> > > 
-> > > --- Changes since v1 [6]:
-> > > * Rebase on [4] (coupled regulators).
-> > > * Rebase on [5] (dev_pm_qos for devfreq).
-> > > * Use dev_pm_qos_*() API[5] instead of overriding frequency in
-> > >   exynos_bus_target().
-> > > * Use IDR for node ID allocation.
-> > > * Avoid goto in functions extracted in patches 01 & 02 (cf. patch 04).
-> > > * Reverse order of multiplication and division in
-> > >   mixer_set_memory_bandwidth() (patch 11) to avoid integer overflow.
-> > > 
-> > > ---
-> > > Artur Świgoń
-> > > Samsung R&D Institute Poland
-> > > Samsung Electronics
-> > > 
-> > > ---
-> > > References:
-> > > [1] Documentation/interconnect/interconnect.rst
-> > > [2] Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > > [3] https://patchwork.kernel.org/patch/10861757/ (original issue)
-> > > [4] https://patchwork.kernel.org/cover/11083663/ (coupled regulators; merged)
-> > > [5] https://patchwork.kernel.org/cover/11149497/ (dev_pm_qos for devfreq)
-> > > [6] https://patchwork.kernel.org/cover/11054417/ (v1 of this RFC)
-> > > 
-> > > Artur Świgoń (10):
-> > >   devfreq: exynos-bus: Extract exynos_bus_profile_init()
-> > >   devfreq: exynos-bus: Extract exynos_bus_profile_init_passive()
-> > >   devfreq: exynos-bus: Change goto-based logic to if-else logic
-> > >   devfreq: exynos-bus: Clean up code
-> > >   interconnect: Export of_icc_get_from_provider()
-> > >   interconnect: Relax requirement in of_icc_get_from_provider()
-> > >   interconnect: Relax condition in apply_constraints()
-> > >   arm: dts: exynos: Add parents and #interconnect-cells to Exynos4412
-> > >   devfreq: exynos-bus: Add interconnect functionality to exynos-bus
-> > >   arm: dts: exynos: Add interconnects to Exynos4412 mixer
-> > > 
-> > > Marek Szyprowski (1):
-> > >   drm: exynos: mixer: Add interconnect support
-> > > 
-> > >  .../boot/dts/exynos4412-odroid-common.dtsi    |   1 +
-> > >  arch/arm/boot/dts/exynos4412.dtsi             |  10 +
-> > >  drivers/devfreq/exynos-bus.c                  | 319 +++++++++++++-----
-> > >  drivers/gpu/drm/exynos/exynos_mixer.c         |  71 +++-
-> > >  drivers/interconnect/core.c                   |  12 +-
-> > >  include/linux/interconnect-provider.h         |   6 +
-> > >  6 files changed, 327 insertions(+), 92 deletions(-)
-> > > 
-> > 
-> > 
+> The DT binding could also be simplified somewhat. Currently a path needs
+> to be specified in DT for each and every use case that is possible for a
+> device to want. Typically the path is to memory, which looks to be
+> reserved for in the binding with the "dma-mem" named path, but sometimes
+> the path is from a device to the CPU or more generically from a device
+> to another device which could be a CPU, cache, DMA master, or another
+> device if some sort of DMA to DMA scenario is happening. Let's remove
+> the pair part of the binding so that we just list out a device's
+> possible endpoints on the bus or busses that it's connected to.
 > 
+> If the kernel wants to figure out what the path is to memory or the CPU
+> or a cache or something else it should be able to do that by finding the
+> node for the "destination" endpoint, extracting that node's
+> "interconnects" property, and deriving the path in software. For
+> example, we shouldn't need to write out each use case path by path in DT
+> for each endpoint node that wants to set a bandwidth to memory. We
+> should just be able to indicate what endpoint(s) a device sits on based
+> on the interconnect provider in the system and then walk the various
+> interconnects to find the path from that source endpoint to the
+> destination endpoint.
 > 
--- 
-Artur Świgoń
-Samsung R&D Institute Poland
-Samsung Electronics
+
+But doesn't this implies that the other end of the path is always some
+specific node, e.g. DDR? With a single node how would you describe
+CPU->LLCC or GPU->OCIMEM?
+
+> Obviously this patch doesn't compile but I'm sending it out to start
+> this discussion so we don't get stuck on the binding or the kernel APIs
+> for a long time. It looks like we should be OK in terms of backwards
+> compatibility because we can just ignore the second element in an old
+> binding, but maybe we'll want to describe paths in different directions
+> (e.g. the path from the CPU to the SD controller may be different than
+> the path the SD controller takes to the CPU) and that may require
+> extending interconnect-names to indicate what direction/sort of path it
+> is. I'm basically thinking about master vs. slave ports in AXI land.
+> 
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: <linux-pm@vger.kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: <devicetree@vger.kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: David Dai <daidavid1@codeaurora.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  .../bindings/interconnect/interconnect.txt    | 19 ++++---------------
+>  include/linux/interconnect.h                  | 13 ++-----------
+>  2 files changed, 6 insertions(+), 26 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> index 6f5d23a605b7..f8979186b8a7 100644
+> --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> @@ -11,7 +11,7 @@ The interconnect provider binding is intended to represent the interconnect
+>  controllers in the system. Each provider registers a set of interconnect
+>  nodes, which expose the interconnect related capabilities of the interconnect
+>  to consumer drivers. These capabilities can be throughput, latency, priority
+> -etc. The consumer drivers set constraints on interconnect path (or endpoints)
+> +etc. The consumer drivers set constraints on interconnect paths (or endpoints)
+>  depending on the use case. Interconnect providers can also be interconnect
+>  consumers, such as in the case where two network-on-chip fabrics interface
+>  directly.
+> @@ -42,23 +42,12 @@ multiple paths from different providers depending on use case and the
+>  components it has to interact with.
+>  
+>  Required properties:
+> -interconnects : Pairs of phandles and interconnect provider specifier to denote
+> -	        the edge source and destination ports of the interconnect path.
+> -
+> -Optional properties:
+> -interconnect-names : List of interconnect path name strings sorted in the same
+> -		     order as the interconnects property. Consumers drivers will use
+> -		     interconnect-names to match interconnect paths with interconnect
+> -		     specifier pairs.
+> -
+> -                     Reserved interconnect names:
+> -			 * dma-mem: Path from the device to the main memory of
+> -			            the system
+> +interconnects : phandle and interconnect provider specifier to denote
+> +	        the edge source for this node.
+>  
+>  Example:
+>  
+>  	sdhci@7864000 {
+>  		...
+> -		interconnects = <&pnoc MASTER_SDCC_1 &bimc SLAVE_EBI_CH0>;
+> -		interconnect-names = "sdhc-mem";
+> +		interconnects = <&pnoc MASTER_SDCC_1>;
+
+This example seems incomplete, as it doesn't describe the path between
+CPU and the config space, with this in place I think you need the
+interconnect-names.
+
+
+But with a single interconnect, the interconnect-names should be
+omitted, as done in other frameworks.
+
+>  	};
+> diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
+> index d70a914cba11..e1ae704f5ab1 100644
+> --- a/include/linux/interconnect.h
+> +++ b/include/linux/interconnect.h
+> @@ -25,23 +25,14 @@ struct device;
+>  
+>  #if IS_ENABLED(CONFIG_INTERCONNECT)
+>  
+> -struct icc_path *icc_get(struct device *dev, const int src_id,
+> -			 const int dst_id);
+> -struct icc_path *of_icc_get(struct device *dev, const char *name);
+> +struct icc_path *icc_get(struct device *dev, const char *name);
+>  void icc_put(struct icc_path *path);
+>  int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
+>  void icc_set_tag(struct icc_path *path, u32 tag);
+>  
+>  #else
+>  
+> -static inline struct icc_path *icc_get(struct device *dev, const int src_id,
+> -				       const int dst_id)
+> -{
+> -	return NULL;
+> -}
+> -
+> -static inline struct icc_path *of_icc_get(struct device *dev,
+> -					  const char *name)
+> +static inline struct icc_path *icc_get(struct device *dev, const char *name)
+
+I like this part, if mimics what's done in other frameworks and removes
+the ties to OF from the API.
+
+Regards,
+Bjorn
+
+>  {
+>  	return NULL;
+>  }
+> 
+> base-commit: b5b3bd898ba99fb0fb6aed3b23ec6353a1724d6f
+> -- 
+> Sent by a computer through tubes
+> 
