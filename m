@@ -1,86 +1,130 @@
-From: "S.j. Wang" <shengjiu.wang@nxp.com>
-Subject: Re: [PATCH V4 4/4] ASoC: fsl_asrc: Fix error with S24_3LE format
- bitstream in i.MX8
-Date: Wed, 25 Sep 2019 03:34:44 +0000
-Message-ID: <AM0PR04MB6468B2731299F16400BD4601E3870@AM0PR04MB6468.eurprd04.prod.outlook.com>
+From: Leo Li <leoyang.li@nxp.com>
+Subject: RE: [v3,3/3] Documentation: dt: binding: fsl: Add
+ 'fsl,ippdexpcr-alt-addr' property
+Date: Wed, 25 Sep 2019 03:34:47 +0000
+Message-ID: <AM0PR04MB6676BD24B814C3D1D67CF9F88F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+References: <20190924024548.4356-1-biwen.li@nxp.com>
+ <20190924024548.4356-3-biwen.li@nxp.com>
+ <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB449034C4BBAA89685A2130F78F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <AM0PR04MB66762594DDFC6E5B00BD103C8F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB4490FECDC76507AADC35948E8F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <DB7PR04MB4490FECDC76507AADC35948E8F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: "timur@kernel.org" <timur@kernel.org>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "festevam@gmail.com" <festevam@gmail.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.com" <tiwai@suse.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>
+To: Biwen Li <biwen.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Ran Wang <ran.wang_1@nxp.com>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
 
-> On Tue, Sep 24, 2019 at 06:52:35PM +0800, Shengjiu Wang wrote:
-> > There is error "aplay: pcm_write:2023: write error: Input/output error"
-> > on i.MX8QM/i.MX8QXP platform for S24_3LE format.
-> >
-> > In i.MX8QM/i.MX8QXP, the DMA is EDMA, which don't support 24bit
-> > sample, but we didn't add any constraint, that cause issues.
-> >
-> > So we need to query the caps of dma, then update the hw parameters
-> > according to the caps.
-> >
-> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > ---
-> >  sound/soc/fsl/fsl_asrc.c     |  4 +--
-> >  sound/soc/fsl/fsl_asrc.h     |  3 ++
-> >  sound/soc/fsl/fsl_asrc_dma.c | 59
-> > +++++++++++++++++++++++++++++++-----
-> >  3 files changed, 56 insertions(+), 10 deletions(-)
-> >
-> > @@ -270,12 +268,17 @@ static int fsl_asrc_dma_hw_free(struct
-> > snd_pcm_substream *substream)
-> >
-> >  static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
-> > {
-> > +     bool tx =3D substream->stream =3D=3D SNDRV_PCM_STREAM_PLAYBACK;
-> >       struct snd_soc_pcm_runtime *rtd =3D substream->private_data;
-> >       struct snd_pcm_runtime *runtime =3D substream->runtime;
-> >       struct snd_soc_component *component =3D
-> snd_soc_rtdcom_lookup(rtd,
-> > DRV_NAME);
-> > +     struct snd_dmaengine_dai_dma_data *dma_data;
-> >       struct device *dev =3D component->dev;
-> >       struct fsl_asrc *asrc_priv =3D dev_get_drvdata(dev);
-> >       struct fsl_asrc_pair *pair;
-> > +     struct dma_chan *tmp_chan =3D NULL;
-> > +     u8 dir =3D tx ? OUT : IN;
-> > +     int ret =3D 0;
-> >
-> >       pair =3D kzalloc(sizeof(struct fsl_asrc_pair), GFP_KERNEL);
->=20
-> Sorry, I didn't catch it previously. We would need to release this memory
-> also for all error-out paths, as the code doesn't have any error-out rout=
-ine,
-> prior to applying this change.
->=20
-> >       if (!pair)
-> > @@ -285,11 +288,51 @@ static int fsl_asrc_dma_startup(struct
-> > snd_pcm_substream *substream)
->=20
-> > +     /* Request a dummy pair, which will be released later.
-> > +      * Request pair function needs channel num as input, for this
-> > +      * dummy pair, we just request "1" channel temporary.
-> > +      */
->=20
-> "temporary" =3D> "temporarily"
->=20
-> > +     ret =3D fsl_asrc_request_pair(1, pair);
-> > +     if (ret < 0) {
-> > +             dev_err(dev, "failed to request asrc pair\n");
-> > +             return ret;
-> > +     }
-> > +
-> > +     /* Request a dummy dma channel, which will be release later. */
->=20
-> "release" =3D> "released"
 
-Ok, will update them.
+> -----Original Message-----
+> From: Biwen Li
+> Sent: Tuesday, September 24, 2019 10:30 PM
+> To: Leo Li <leoyang.li@nxp.com>; shawnguo@kernel.org;
+> robh+dt@kernel.org; mark.rutland@arm.com; Ran Wang
+> <ran.wang_1@nxp.com>
+> Cc: linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
+> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org
+> Subject: RE: [v3,3/3] Documentation: dt: binding: fsl: Add 'fsl,ippdexpcr=
+-alt-
+> addr' property
+>=20
+> > > > >
+> > > > > The 'fsl,ippdexpcr-alt-addr' property is used to handle an
+> > > > > errata
+> > > > > A-008646 on LS1021A
+> > > > >
+> > > > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > > > > ---
+> > > > > Change in v3:
+> > > > > 	- rename property name
+> > > > > 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
+> > > > >
+> > > > > Change in v2:
+> > > > > 	- update desc of the property 'fsl,rcpm-scfg'
+> > > > >
+> > > > >  Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14
+> > > > > ++++++++++++++
+> > > > >  1 file changed, 14 insertions(+)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > index 5a33619d881d..157dcf6da17c 100644
+> > > > > --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > @@ -34,6 +34,11 @@ Chassis Version		Example Chips
+> > > > >  Optional properties:
+> > > > >   - little-endian : RCPM register block is Little Endian. Without=
+ it RCPM
+> > > > >     will be Big Endian (default case).
+> > > > > + - fsl,ippdexpcr-alt-addr : Must add the property for SoC
+> > > > > + LS1021A,
+> > > >
+> > > > You probably should mention this is related to a hardware issue on
+> > > > LS1021a and only needed on LS1021a.
+> > > Okay, got it, thanks, I will add this in v4.
+> > > >
+> > > > > +   Must include n + 1 entries (n =3D #fsl,rcpm-wakeup-cells, suc=
+h as:
+> > > > > +   #fsl,rcpm-wakeup-cells equal to 2, then must include 2 + 1 en=
+tries).
+> > > >
+> > > > #fsl,rcpm-wakeup-cells is the number of IPPDEXPCR registers on an S=
+oC.
+> > > > However you are defining an offset to scfg registers here.  Why
+> > > > these two are related?  The length here should actually be related
+> > > > to the #address-cells of the soc/.  But since this is only needed
+> > > > for LS1021, you can
+> > > just make it 3.
+> > > I need set the value of IPPDEXPCR resgiters from ftm_alarm0 device
+> > > node(fsl,rcpm-wakeup =3D <&rcpm 0x0 0x20000000>;
+> > > 0x0 is a value for IPPDEXPCR0, 0x20000000 is a value for IPPDEXPCR1).
+> > > But because of the hardware issue on LS1021A, I need store the value
+> > > of IPPDEXPCR registers to an alt address. So I defining an offset to
+> > > scfg registers, then RCPM driver get an abosolute address from
+> > > offset, RCPM driver write the value of IPPDEXPCR registers to these
+> > > abosolute addresses(backup the value of IPPDEXPCR registers).
+> >
+> > I understand what you are trying to do.  The problem is that the new
+> > fsl,ippdexpcr-alt-addr property contains a phandle and an offset.  The
+> > size of it shouldn't be related to #fsl,rcpm-wakeup-cells.
+> You maybe like this: fsl,ippdexpcr-alt-addr =3D <&scfg 0x51c>;/*
+> SCFG_SPARECR8 */
 
-Best regards
-Wang shengjiu
+No.  The #address-cell for the soc/ is 2, so the offset to scfg should be 0=
+x0 0x51c.  The total size should be 3, but it shouldn't be coming from #fsl=
+,rcpm-wakeup-cells like you mentioned in the binding.
+
+> >
+> > > >
+> > > > > +   The first entry must be a link to the SCFG device node.
+> > > > > +   The non-first entry must be offset of registers of SCFG.
+> > > > >
+> > > > >  Example:
+> > > > >  The RCPM node for T4240:
+> > > > > @@ -43,6 +48,15 @@ The RCPM node for T4240:
+> > > > >  		#fsl,rcpm-wakeup-cells =3D <2>;
+> > > > >  	};
+> > > > >
+> > > > > +The RCPM node for LS1021A:
+> > > > > +	rcpm: rcpm@1ee2140 {
+> > > > > +		compatible =3D "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-
+> 2.1+";
+> > > > > +		reg =3D <0x0 0x1ee2140 0x0 0x8>;
+> > > > > +		#fsl,rcpm-wakeup-cells =3D <2>;
+> > > > > +		fsl,ippdexpcr-alt-addr =3D <&scfg 0x0 0x51c>; /*
+> > > > > SCFG_SPARECR8 */
+> > > > > +	};
+> > > > > +
+> > > > > +
+> > > > >  * Freescale RCPM Wakeup Source Device Tree Bindings
+> > > > >  -------------------------------------------
+> > > > >  Required fsl,rcpm-wakeup property should be added to a device
+> > > > > node if the device
+> > > > > --
+> > > > > 2.17.1
