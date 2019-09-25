@@ -1,160 +1,144 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: RE: [v3,3/3] Documentation: dt: binding: fsl: Add
- 'fsl,ippdexpcr-alt-addr' property
-Date: Wed, 25 Sep 2019 04:21:00 +0000
-Message-ID: <DB7PR04MB4490684FE0E95695E89173948F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
-References: <20190924024548.4356-1-biwen.li@nxp.com>
- <20190924024548.4356-3-biwen.li@nxp.com>
- <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB449034C4BBAA89685A2130F78F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <AM0PR04MB66762594DDFC6E5B00BD103C8F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB4490FECDC76507AADC35948E8F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <AM0PR04MB6676BD24B814C3D1D67CF9F88F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB4490EAE9591B5AE7112C9D188F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <AM0PR04MB6676B8A6F7C7C3BC822B45B28F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB44902BADDDFD090BAF4178C68F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: [RFC PATCH] interconnect: Replace of_icc_get() with icc_get() and reduce DT binding
+Date: Tue, 24 Sep 2019 22:41:33 -0700
+Message-ID: <20190925054133.206992-1-swboyd@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB7PR04MB44902BADDDFD090BAF4178C68F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Ran Wang <ran.wang_1@nxp.com>
-Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Maxime Ripard <mripard@kernel.org>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Evan Green <evgreen@chromium.org>, David Dai <daidavid1@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-> > >
-> > > > > > > > >
-> > > > > > > > > The 'fsl,ippdexpcr-alt-addr' property is used to handle
-> > > > > > > > > an errata
-> > > > > > > > > A-008646 on LS1021A
-> > > > > > > > >
-> > > > > > > > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > > > > > > > > ---
-> > > > > > > > > Change in v3:
-> > > > > > > > > 	- rename property name
-> > > > > > > > > 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
-> > > > > > > > >
-> > > > > > > > > Change in v2:
-> > > > > > > > > 	- update desc of the property 'fsl,rcpm-scfg'
-> > > > > > > > >
-> > > > > > > > >  Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14
-> > > > > > > > > ++++++++++++++
-> > > > > > > > >  1 file changed, 14 insertions(+)
-> > > > > > > > >
-> > > > > > > > > diff --git
-> > > > > > > > > a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > > > b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > > > index 5a33619d881d..157dcf6da17c 100644
-> > > > > > > > > --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > > > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > > > > @@ -34,6 +34,11 @@ Chassis Version		Example
-> > > Chips
-> > > > > > > > >  Optional properties:
-> > > > > > > > >   - little-endian : RCPM register block is Little Endian.
-> > > > > > > > > Without it
-> > > > RCPM
-> > > > > > > > >     will be Big Endian (default case).
-> > > > > > > > > + - fsl,ippdexpcr-alt-addr : Must add the property for
-> > > > > > > > > + SoC LS1021A,
-> > > > > > > >
-> > > > > > > > You probably should mention this is related to a hardware
-> > > > > > > > issue on LS1021a and only needed on LS1021a.
-> > > > > > > Okay, got it, thanks, I will add this in v4.
-> > > > > > > >
-> > > > > > > > > +   Must include n + 1 entries (n =3D
-> > > > > > > > > + #fsl,rcpm-wakeup-cells, such
-> > as:
-> > > > > > > > > +   #fsl,rcpm-wakeup-cells equal to 2, then must include
-> > > > > > > > > + 2
-> > > > > > > > > + +
-> > > > > > > > > + 1
-> > > > entries).
-> > > > > > > >
-> > > > > > > > #fsl,rcpm-wakeup-cells is the number of IPPDEXPCR
-> > > > > > > > registers on an
-> > > > SoC.
-> > > > > > > > However you are defining an offset to scfg registers here.
-> > > > > > > > Why these two are related?  The length here should
-> > > > > > > > actually be related to the #address-cells of the soc/.
-> > > > > > > > But since this is only needed for LS1021, you can
-> > > > > > > just make it 3.
-> > > > > > > I need set the value of IPPDEXPCR resgiters from ftm_alarm0
-> > > > > > > device node(fsl,rcpm-wakeup =3D <&rcpm 0x0 0x20000000>;
-> > > > > > > 0x0 is a value for IPPDEXPCR0, 0x20000000 is a value for
-> > > > IPPDEXPCR1).
-> > > > > > > But because of the hardware issue on LS1021A, I need store
-> > > > > > > the value of IPPDEXPCR registers to an alt address. So I
-> > > > > > > defining an offset to scfg registers, then RCPM driver get
-> > > > > > > an abosolute address from offset, RCPM driver write the
-> > > > > > > value of IPPDEXPCR registers to these abosolute
-> > > > > > > addresses(backup the value of IPPDEXPCR
-> > > > registers).
-> > > > > >
-> > > > > > I understand what you are trying to do.  The problem is that
-> > > > > > the new fsl,ippdexpcr-alt-addr property contains a phandle and =
-an
-> offset.
-> > > > > > The size of it shouldn't be related to #fsl,rcpm-wakeup-cells.
-> > > > > You maybe like this: fsl,ippdexpcr-alt-addr =3D <&scfg 0x51c>;/*
-> > > > > SCFG_SPARECR8 */
-> > > >
-> > > > No.  The #address-cell for the soc/ is 2, so the offset to scfg
-> > > > should be 0x0 0x51c.  The total size should be 3, but it shouldn't
-> > > > be coming from #fsl,rcpm-wakeup-cells like you mentioned in the
-> binding.
-> > > Oh, I got it. You want that fsl,ippdexpcr-alt-add is relative with
-> > > #address-cells instead of #fsl,rcpm-wakeup-cells.
-> >
-> > Yes.
-> I got an example from drivers/pci/controller/dwc/pci-layerscape.c
-> and arch/arm/boot/dts/ls1021a.dtsi as follows:
-> fsl,pcie-scfg =3D <&scfg 0>, 0 is an index
->=20
-> In my fsl,ippdexpcr-alt-addr =3D <&scfg 0x0 0x51c>, It means that 0x0 is =
-an alt
-> offset address for IPPDEXPCR0, 0x51c is an alt offset address For
-> IPPDEXPCR1 instead of 0x0 and 0x51c compose to an alt address of
-> SCFG_SPARECR8.
-Maybe I need write it as:
-fsl,ippdexpcr-alt-addr =3D <&scfg 0x0 0x0 0x0 0x51c>;
-first two 0x0 compose an alt offset address for IPPDEXPCR0,
-last 0x0 and 0x51c compose an alt address for IPPDEXPCR1,
+I don't see any users of icc_get() in the kernel today, and adding them
+doesn't make sense. That's because adding calls to that function in a
+driver will make the driver SoC specific given that the arguments are
+some sort of source and destination numbers that would typically be
+listed in DT or come from platform data so they can match a global
+numberspace of interconnect numbers. It would be better to follow the
+approach of other kernel frameworks where the API is the same no matter
+how the platform is described (i.e. platform data, DT, ACPI, etc.) and
+swizzle the result in the framework to match whatever the device is by
+checking for a DT node pointer or a fwnode pointer, etc. Therefore,
+install icc_get() as the defacto API and make drivers use that instead
+of of_icc_get() which implies the driver is DT specific when it doesn't
+need to be.
 
-Best Regards,
-Biwen Li=20
-> >
-> > Regards,
-> > Leo
-> > > >
-> > > > > >
-> > > > > > > >
-> > > > > > > > > +   The first entry must be a link to the SCFG device nod=
-e.
-> > > > > > > > > +   The non-first entry must be offset of registers of SC=
-FG.
-> > > > > > > > >
-> > > > > > > > >  Example:
-> > > > > > > > >  The RCPM node for T4240:
-> > > > > > > > > @@ -43,6 +48,15 @@ The RCPM node for T4240:
-> > > > > > > > >  		#fsl,rcpm-wakeup-cells =3D <2>;
-> > > > > > > > >  	};
-> > > > > > > > >
-> > > > > > > > > +The RCPM node for LS1021A:
-> > > > > > > > > +	rcpm: rcpm@1ee2140 {
-> > > > > > > > > +		compatible =3D "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-
-> > > > > 2.1+";
-> > > > > > > > > +		reg =3D <0x0 0x1ee2140 0x0 0x8>;
-> > > > > > > > > +		#fsl,rcpm-wakeup-cells =3D <2>;
-> > > > > > > > > +		fsl,ippdexpcr-alt-addr =3D <&scfg 0x0 0x51c>; /*
-> > > > > > > > > SCFG_SPARECR8 */
-> > > > > > > > > +	};
-> > > > > > > > > +
-> > > > > > > > > +
-> > > > > > > > >  * Freescale RCPM Wakeup Source Device Tree Bindings
-> > > > > > > > >  -------------------------------------------
-> > > > > > > > >  Required fsl,rcpm-wakeup property should be added to a
-> > > > > > > > > device node if the device
-> > > > > > > > > --
-> > > > > > > > > 2.17.1
+The DT binding could also be simplified somewhat. Currently a path needs
+to be specified in DT for each and every use case that is possible for a
+device to want. Typically the path is to memory, which looks to be
+reserved for in the binding with the "dma-mem" named path, but sometimes
+the path is from a device to the CPU or more generically from a device
+to another device which could be a CPU, cache, DMA master, or another
+device if some sort of DMA to DMA scenario is happening. Let's remove
+the pair part of the binding so that we just list out a device's
+possible endpoints on the bus or busses that it's connected to.
+
+If the kernel wants to figure out what the path is to memory or the CPU
+or a cache or something else it should be able to do that by finding the
+node for the "destination" endpoint, extracting that node's
+"interconnects" property, and deriving the path in software. For
+example, we shouldn't need to write out each use case path by path in DT
+for each endpoint node that wants to set a bandwidth to memory. We
+should just be able to indicate what endpoint(s) a device sits on based
+on the interconnect provider in the system and then walk the various
+interconnects to find the path from that source endpoint to the
+destination endpoint.
+
+Obviously this patch doesn't compile but I'm sending it out to start
+this discussion so we don't get stuck on the binding or the kernel APIs
+for a long time. It looks like we should be OK in terms of backwards
+compatibility because we can just ignore the second element in an old
+binding, but maybe we'll want to describe paths in different directions
+(e.g. the path from the CPU to the SD controller may be different than
+the path the SD controller takes to the CPU) and that may require
+extending interconnect-names to indicate what direction/sort of path it
+is. I'm basically thinking about master vs. slave ports in AXI land.
+
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: <linux-pm@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: <devicetree@vger.kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: David Dai <daidavid1@codeaurora.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ .../bindings/interconnect/interconnect.txt    | 19 ++++---------------
+ include/linux/interconnect.h                  | 13 ++-----------
+ 2 files changed, 6 insertions(+), 26 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+index 6f5d23a605b7..f8979186b8a7 100644
+--- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
++++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+@@ -11,7 +11,7 @@ The interconnect provider binding is intended to represent the interconnect
+ controllers in the system. Each provider registers a set of interconnect
+ nodes, which expose the interconnect related capabilities of the interconnect
+ to consumer drivers. These capabilities can be throughput, latency, priority
+-etc. The consumer drivers set constraints on interconnect path (or endpoints)
++etc. The consumer drivers set constraints on interconnect paths (or endpoints)
+ depending on the use case. Interconnect providers can also be interconnect
+ consumers, such as in the case where two network-on-chip fabrics interface
+ directly.
+@@ -42,23 +42,12 @@ multiple paths from different providers depending on use case and the
+ components it has to interact with.
+ 
+ Required properties:
+-interconnects : Pairs of phandles and interconnect provider specifier to denote
+-	        the edge source and destination ports of the interconnect path.
+-
+-Optional properties:
+-interconnect-names : List of interconnect path name strings sorted in the same
+-		     order as the interconnects property. Consumers drivers will use
+-		     interconnect-names to match interconnect paths with interconnect
+-		     specifier pairs.
+-
+-                     Reserved interconnect names:
+-			 * dma-mem: Path from the device to the main memory of
+-			            the system
++interconnects : phandle and interconnect provider specifier to denote
++	        the edge source for this node.
+ 
+ Example:
+ 
+ 	sdhci@7864000 {
+ 		...
+-		interconnects = <&pnoc MASTER_SDCC_1 &bimc SLAVE_EBI_CH0>;
+-		interconnect-names = "sdhc-mem";
++		interconnects = <&pnoc MASTER_SDCC_1>;
+ 	};
+diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
+index d70a914cba11..e1ae704f5ab1 100644
+--- a/include/linux/interconnect.h
++++ b/include/linux/interconnect.h
+@@ -25,23 +25,14 @@ struct device;
+ 
+ #if IS_ENABLED(CONFIG_INTERCONNECT)
+ 
+-struct icc_path *icc_get(struct device *dev, const int src_id,
+-			 const int dst_id);
+-struct icc_path *of_icc_get(struct device *dev, const char *name);
++struct icc_path *icc_get(struct device *dev, const char *name);
+ void icc_put(struct icc_path *path);
+ int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
+ void icc_set_tag(struct icc_path *path, u32 tag);
+ 
+ #else
+ 
+-static inline struct icc_path *icc_get(struct device *dev, const int src_id,
+-				       const int dst_id)
+-{
+-	return NULL;
+-}
+-
+-static inline struct icc_path *of_icc_get(struct device *dev,
+-					  const char *name)
++static inline struct icc_path *icc_get(struct device *dev, const char *name)
+ {
+ 	return NULL;
+ }
+
+base-commit: b5b3bd898ba99fb0fb6aed3b23ec6353a1724d6f
+-- 
+Sent by a computer through tubes
