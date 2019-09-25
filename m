@@ -1,7 +1,7 @@
 From: John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 3/5] usb: dwc3: Increase timeout for CmdAct cleared by device controller
-Date: Wed, 25 Sep 2019 23:42:22 +0000
-Message-ID: <20190925234224.95216-4-john.stultz@linaro.org>
+Subject: [PATCH 5/5] usb: dwc3: dwc3-of-simple: Add support for dwc3 of Hisilicon Soc Platform
+Date: Wed, 25 Sep 2019 23:42:24 +0000
+Message-ID: <20190925234224.95216-6-john.stultz@linaro.org>
 References: <20190925234224.95216-1-john.stultz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190925234224.95216-1-john.stultz@linaro.org>
@@ -12,8 +12,8 @@ List-Id: devicetree@vger.kernel.org
 
 From: Yu Chen <chenyu56@huawei.com>
 
-It needs more time for the device controller to clear the CmdAct of
-DEPCMD on Hisilicon Kirin Soc.
+This patch adds support for the poweron and shutdown of dwc3 core
+on Hisilicon Soc Platform.
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Felipe Balbi <balbi@kernel.org>
@@ -28,21 +28,30 @@ Cc: devicetree@vger.kernel.org
 Signed-off-by: Yu Chen <chenyu56@huawei.com>
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
- drivers/usb/dwc3/gadget.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc3/dwc3-of-simple.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index 8adb59f8e4f1..81907e163252 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -270,7 +270,7 @@ int dwc3_send_gadget_ep_cmd(struct dwc3_ep *dep, unsigned cmd,
- {
- 	const struct usb_endpoint_descriptor *desc = dep->endpoint.desc;
- 	struct dwc3		*dwc = dep->dwc;
--	u32			timeout = 1000;
-+	u32			timeout = 5000;
- 	u32			saved_config = 0;
- 	u32			reg;
+diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
+index bdac3e7d7b18..78617500edee 100644
+--- a/drivers/usb/dwc3/dwc3-of-simple.c
++++ b/drivers/usb/dwc3/dwc3-of-simple.c
+@@ -51,7 +51,8 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
+ 	 * Some controllers need to toggle the usb3-otg reset before trying to
+ 	 * initialize the PHY, otherwise the PHY times out.
+ 	 */
+-	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3"))
++	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3") ||
++	    of_device_is_compatible(np, "hisilicon,hi3660-dwc3"))
+ 		simple->need_reset = true;
  
+ 	if (of_device_is_compatible(np, "amlogic,meson-axg-dwc3") ||
+@@ -183,6 +184,7 @@ static const struct of_device_id of_dwc3_simple_match[] = {
+ 	{ .compatible = "amlogic,meson-axg-dwc3" },
+ 	{ .compatible = "amlogic,meson-gxl-dwc3" },
+ 	{ .compatible = "allwinner,sun50i-h6-dwc3" },
++	{ .compatible = "hisilicon,hi3660-dwc3" },
+ 	{ /* Sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, of_dwc3_simple_match);
 -- 
 2.17.1
