@@ -1,279 +1,161 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v4 1/8] dt-bindings: timer: Convert Exynos MCT bindings
- to json-schema
-Date: Wed, 25 Sep 2019 15:40:52 +0200
-Message-ID: <aa4acd33-eff3-175f-b86a-459ba8c1d17c@samsung.com>
-References: <CGME20190923161449epcas3p4bf25ddc76d4893a93b9472c3a286f410@epcas3p4.samsung.com>
-        <20190923161411.9236-1-krzk@kernel.org>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: [v3,3/3] Documentation: dt: binding: fsl: Add 'fsl,ippdexpcr-alt-addr'
+ property
+Date: Wed, 25 Sep 2019 09:07:12 -0500
+Message-ID: <CADRPPNQ+=au2qRL2K-tzhH8HK1+sO+ut9YBhYw4UhWSv5FF88A@mail.gmail.com>
+References: <20190924024548.4356-1-biwen.li@nxp.com> <20190924024548.4356-3-biwen.li@nxp.com>
+ <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB449034C4BBAA89685A2130F78F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <AM0PR04MB66762594DDFC6E5B00BD103C8F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB4490FECDC76507AADC35948E8F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <AM0PR04MB6676BD24B814C3D1D67CF9F88F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB4490EAE9591B5AE7112C9D188F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <AM0PR04MB6676B8A6F7C7C3BC822B45B28F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <DB7PR04MB44902BADDDFD090BAF4178C68F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
+ <DB7PR04MB4490684FE0E95695E89173948F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190923161411.9236-1-krzk@kernel.org>
-Content-Language: en-US
+In-Reply-To: <DB7PR04MB4490684FE0E95695E89173948F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: Sylwester Nawrocki <snawrocki@kernel.org>
+To: Biwen Li <biwen.li@nxp.com>
+Cc: "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Ran Wang <ran.wang_1@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+On Tue, Sep 24, 2019 at 11:27 PM Biwen Li <biwen.li@nxp.com> wrote:
+>
+> > > >
+> > > > > > > > > >
+> > > > > > > > > > The 'fsl,ippdexpcr-alt-addr' property is used to handle
+> > > > > > > > > > an errata
+> > > > > > > > > > A-008646 on LS1021A
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> > > > > > > > > > ---
+> > > > > > > > > > Change in v3:
+> > > > > > > > > >       - rename property name
+> > > > > > > > > >         fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
+> > > > > > > > > >
+> > > > > > > > > > Change in v2:
+> > > > > > > > > >       - update desc of the property 'fsl,rcpm-scfg'
+> > > > > > > > > >
+> > > > > > > > > >  Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14
+> > > > > > > > > > ++++++++++++++
+> > > > > > > > > >  1 file changed, 14 insertions(+)
+> > > > > > > > > >
+> > > > > > > > > > diff --git
+> > > > > > > > > > a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > > > > > b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > > > > > index 5a33619d881d..157dcf6da17c 100644
+> > > > > > > > > > --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > > > > > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
+> > > > > > > > > > @@ -34,6 +34,11 @@ Chassis Version            Example
+> > > > Chips
+> > > > > > > > > >  Optional properties:
+> > > > > > > > > >   - little-endian : RCPM register block is Little Endian.
+> > > > > > > > > > Without it
+> > > > > RCPM
+> > > > > > > > > >     will be Big Endian (default case).
+> > > > > > > > > > + - fsl,ippdexpcr-alt-addr : Must add the property for
+> > > > > > > > > > + SoC LS1021A,
+> > > > > > > > >
+> > > > > > > > > You probably should mention this is related to a hardware
+> > > > > > > > > issue on LS1021a and only needed on LS1021a.
+> > > > > > > > Okay, got it, thanks, I will add this in v4.
+> > > > > > > > >
+> > > > > > > > > > +   Must include n + 1 entries (n =
+> > > > > > > > > > + #fsl,rcpm-wakeup-cells, such
+> > > as:
+> > > > > > > > > > +   #fsl,rcpm-wakeup-cells equal to 2, then must include
+> > > > > > > > > > + 2
+> > > > > > > > > > + +
+> > > > > > > > > > + 1
+> > > > > entries).
+> > > > > > > > >
+> > > > > > > > > #fsl,rcpm-wakeup-cells is the number of IPPDEXPCR
+> > > > > > > > > registers on an
+> > > > > SoC.
+> > > > > > > > > However you are defining an offset to scfg registers here.
+> > > > > > > > > Why these two are related?  The length here should
+> > > > > > > > > actually be related to the #address-cells of the soc/.
+> > > > > > > > > But since this is only needed for LS1021, you can
+> > > > > > > > just make it 3.
+> > > > > > > > I need set the value of IPPDEXPCR resgiters from ftm_alarm0
+> > > > > > > > device node(fsl,rcpm-wakeup = <&rcpm 0x0 0x20000000>;
+> > > > > > > > 0x0 is a value for IPPDEXPCR0, 0x20000000 is a value for
+> > > > > IPPDEXPCR1).
+> > > > > > > > But because of the hardware issue on LS1021A, I need store
+> > > > > > > > the value of IPPDEXPCR registers to an alt address. So I
+> > > > > > > > defining an offset to scfg registers, then RCPM driver get
+> > > > > > > > an abosolute address from offset, RCPM driver write the
+> > > > > > > > value of IPPDEXPCR registers to these abosolute
+> > > > > > > > addresses(backup the value of IPPDEXPCR
+> > > > > registers).
+> > > > > > >
+> > > > > > > I understand what you are trying to do.  The problem is that
+> > > > > > > the new fsl,ippdexpcr-alt-addr property contains a phandle and an
+> > offset.
+> > > > > > > The size of it shouldn't be related to #fsl,rcpm-wakeup-cells.
+> > > > > > You maybe like this: fsl,ippdexpcr-alt-addr = <&scfg 0x51c>;/*
+> > > > > > SCFG_SPARECR8 */
+> > > > >
+> > > > > No.  The #address-cell for the soc/ is 2, so the offset to scfg
+> > > > > should be 0x0 0x51c.  The total size should be 3, but it shouldn't
+> > > > > be coming from #fsl,rcpm-wakeup-cells like you mentioned in the
+> > binding.
+> > > > Oh, I got it. You want that fsl,ippdexpcr-alt-add is relative with
+> > > > #address-cells instead of #fsl,rcpm-wakeup-cells.
+> > >
+> > > Yes.
+> > I got an example from drivers/pci/controller/dwc/pci-layerscape.c
+> > and arch/arm/boot/dts/ls1021a.dtsi as follows:
+> > fsl,pcie-scfg = <&scfg 0>, 0 is an index
+> >
+> > In my fsl,ippdexpcr-alt-addr = <&scfg 0x0 0x51c>, It means that 0x0 is an alt
+> > offset address for IPPDEXPCR0, 0x51c is an alt offset address For
+> > IPPDEXPCR1 instead of 0x0 and 0x51c compose to an alt address of
+> > SCFG_SPARECR8.
+> Maybe I need write it as:
+> fsl,ippdexpcr-alt-addr = <&scfg 0x0 0x0 0x0 0x51c>;
+> first two 0x0 compose an alt offset address for IPPDEXPCR0,
+> last 0x0 and 0x51c compose an alt address for IPPDEXPCR1,
 
-On 23.09.2019 18:14, Krzysztof Kozlowski wrote:
-> Convert Samsung Exynos Soc Multi Core Timer bindings to DT schema format
-> using json-schema.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> ---
->
-> Changes since v3:
-> 1. Use interrupts-extended instead of interrupts-map.
->
-> Changes since v1:
-> 1. Indent example with four spaces (more readable),
-> 2. Rename nodes in example to timer,
-> 3. Remove mct-map subnode.
-> ---
->   .../bindings/timer/samsung,exynos4210-mct.txt |  88 ------------
->   .../timer/samsung,exynos4210-mct.yaml         | 125 ++++++++++++++++++
->   2 files changed, 125 insertions(+), 88 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
->   create mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
->
-> diff --git a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
-> deleted file mode 100644
-> index 8f78640ad64c..000000000000
-> --- a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
-> +++ /dev/null
-> @@ -1,88 +0,0 @@
-> -Samsung's Multi Core Timer (MCT)
-> -
-> -The Samsung's Multi Core Timer (MCT) module includes two main blocks, the
-> -global timer and CPU local timers. The global timer is a 64-bit free running
-> -up-counter and can generate 4 interrupts when the counter reaches one of the
-> -four preset counter values. The CPU local timers are 32-bit free running
-> -down-counters and generate an interrupt when the counter expires. There is
-> -one CPU local timer instantiated in MCT for every CPU in the system.
-> -
-> -Required properties:
-> -
-> -- compatible: should be "samsung,exynos4210-mct".
-> -  (a) "samsung,exynos4210-mct", for mct compatible with Exynos4210 mct.
-> -  (b) "samsung,exynos4412-mct", for mct compatible with Exynos4412 mct.
-> -
-> -- reg: base address of the mct controller and length of the address space
-> -  it occupies.
-> -
-> -- interrupts: the list of interrupts generated by the controller. The following
-> -  should be the order of the interrupts specified. The local timer interrupts
-> -  should be specified after the four global timer interrupts have been
-> -  specified.
-> -
-> -	0: Global Timer Interrupt 0
-> -	1: Global Timer Interrupt 1
-> -	2: Global Timer Interrupt 2
-> -	3: Global Timer Interrupt 3
-> -	4: Local Timer Interrupt 0
-> -	5: Local Timer Interrupt 1
-> -	6: ..
-> -	7: ..
-> -	i: Local Timer Interrupt n
-> -
-> -  For MCT block that uses a per-processor interrupt for local timers, such
-> -  as ones compatible with "samsung,exynos4412-mct", only one local timer
-> -  interrupt might be specified, meaning that all local timers use the same
-> -  per processor interrupt.
-> -
-> -Example 1: In this example, the IP contains two local timers, using separate
-> -	   interrupts, so two local timer interrupts have been specified,
-> -	   in addition to four global timer interrupts.
-> -
-> -	mct@10050000 {
-> -		compatible = "samsung,exynos4210-mct";
-> -		reg = <0x10050000 0x800>;
-> -		interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> -			     <0 42 0>, <0 48 0>;
-> -	};
-> -
-> -Example 2: In this example, the timer interrupts are connected to two separate
-> -	   interrupt controllers. Hence, an interrupt-map is created to map
-> -	   the interrupts to the respective interrupt controllers.
-> -
-> -	mct@101c0000 {
-> -		compatible = "samsung,exynos4210-mct";
-> -		reg = <0x101C0000 0x800>;
-> -		interrupt-parent = <&mct_map>;
-> -		interrupts = <0>, <1>, <2>, <3>, <4>, <5>;
-> -
-> -		mct_map: mct-map {
-> -			#interrupt-cells = <1>;
-> -			#address-cells = <0>;
-> -			#size-cells = <0>;
-> -			interrupt-map = <0 &gic 0 57 0>,
-> -					<1 &gic 0 69 0>,
-> -					<2 &combiner 12 6>,
-> -					<3 &combiner 12 7>,
-> -					<4 &gic 0 42 0>,
-> -					<5 &gic 0 48 0>;
-> -		};
-> -	};
-> -
-> -Example 3: In this example, the IP contains four local timers, but using
-> -	   a per-processor interrupt to handle them. Either all the local
-> -	   timer interrupts can be specified, with the same interrupt specifier
-> -	   value or just the first one.
-> -
-> -	mct@10050000 {
-> -		compatible = "samsung,exynos4412-mct";
-> -		reg = <0x10050000 0x800>;
-> -
-> -		/* Both ways are possible in this case. Either: */
-> -		interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> -			     <0 42 0>;
-> -		/* or: */
-> -		interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> -			     <0 42 0>, <0 42 0>, <0 42 0>, <0 42 0>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
-> new file mode 100644
-> index 000000000000..bff3f54a398f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
-> @@ -0,0 +1,125 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/timer/samsung,exynos4210-mct.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung Exynos SoC Multi Core Timer (MCT)
-> +
-> +maintainers:
-> +  - Krzysztof Kozlowski <krzk@kernel.org>
-> +
-> +description: |+
-> +  The Samsung's Multi Core Timer (MCT) module includes two main blocks, the
-> +  global timer and CPU local timers. The global timer is a 64-bit free running
-> +  up-counter and can generate 4 interrupts when the counter reaches one of the
-> +  four preset counter values. The CPU local timers are 32-bit free running
-> +  down-counters and generate an interrupt when the counter expires. There is
-> +  one CPU local timer instantiated in MCT for every CPU in the system.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - samsung,exynos4210-mct
-> +      - samsung,exynos4412-mct
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description: |
-> +      Interrupts should be put in specific order. This is, the local timer
-> +      interrupts should be specified after the four global timer interrupts
-> +      have been specified:
-> +      0: Global Timer Interrupt 0
-> +      1: Global Timer Interrupt 1
-> +      2: Global Timer Interrupt 2
-> +      3: Global Timer Interrupt 3
-> +      4: Local Timer Interrupt 0
-> +      5: Local Timer Interrupt 1
-> +      6: ..
-> +      7: ..
-> +      i: Local Timer Interrupt n
-> +      For MCT block that uses a per-processor interrupt for local timers, such
-> +      as ones compatible with "samsung,exynos4412-mct", only one local timer
-> +      interrupt might be specified, meaning that all local timers use the same
-> +      per processor interrupt.
-> +    minItems: 5               # 4 Global + 1 local
-> +    maxItems: 20              # 4 Global + 16 local
-> +
-> +  interrupts-extended:
-> +    description: |
-> +      If interrupts are coming from different controllers, this property
-> +      can be used instead of regular "interrupts" property.
-> +      The format is exactly the same as with "interrupts".
-> +      Interrupts should be put in specific order. This is, the local timer
-> +    minItems: 5               # 4 Global + 1 local
-> +    maxItems: 20              # 4 Global + 16 local
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - reg
-> +
-> +allOf:
-> +  - if:
-> +      not:
-> +        required:
-> +          - interrupts
-> +    then:
-> +      required:
-> +        - interrupts-extended
-> +
-> +examples:
-> +  - |
-> +    // In this example, the IP contains two local timers, using separate
-> +    // interrupts, so two local timer interrupts have been specified,
-> +    // in addition to four global timer interrupts.
-> +
-> +    timer@10050000 {
-> +        compatible = "samsung,exynos4210-mct";
-> +        reg = <0x10050000 0x800>;
-> +        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> +                     <0 42 0>, <0 48 0>;
-> +    };
-> +
-> +  - |
-> +    // In this example, the timer interrupts are connected to two separate
-> +    // interrupt controllers. Hence, an interrupts-extended is needed.
-> +
-> +    timer@101c0000 {
-> +        compatible = "samsung,exynos4210-mct";
-> +        reg = <0x101C0000 0x800>;
-> +        interrupts-extended = <&gic 0 57 0>,
-> +                              <&gic 0 69 0>,
-> +                              <&combiner 12 6>,
-> +                              <&combiner 12 7>,
-> +                              <&gic 0 42 0>,
-> +                              <&gic 0 48 0>;
-> +    };
-> +
-> +  - |
-> +    // In this example, the IP contains four local timers, but using
-> +    // a per-processor interrupt to handle them. Only one first local
-> +    // interrupt is specified.
-> +
-> +    timer@10050000 {
-> +        compatible = "samsung,exynos4412-mct";
-> +        reg = <0x10050000 0x800>;
-> +
-> +        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> +                     <0 42 0>;
-> +    };
-> +
-> +  - |
-> +    // In this example, the IP contains four local timers, but using
-> +    // a per-processor interrupt to handle them. All the local timer
-> +    // interrupts are specified.
-> +
-> +    timer@10050000 {
-> +        compatible = "samsung,exynos4412-mct";
-> +        reg = <0x10050000 0x800>;
-> +
-> +        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> +                     <0 42 0>, <0 42 0>, <0 42 0>, <0 42 0>;
-> +    };
-I would add "#include <dt-bindings/interrupt-controller/arm-gic.h>" and
-replace zeros with proper defines like GIC_SPI and GIC_PPI. The last two
-examples describes per-processor-interrupts, but have 0 in the specifier
-cell 0. I would also use proper IRQ_TYPE_LEVEL_HIGH at cell 3 instead
-of 0. I would also consider adding artificial 'interrupt-parent = &git'
-property to the 1st, 3rd and 4th examples to make it clear that they
-refer to ARM GIC bindings.
+I remember the hardware issue is only is only related to IPPDEXPCR1
+register, no idea why you need to define IPPDEXPCR0 in the binding.
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+>
+> Best Regards,
+> Biwen Li
+> > >
+> > > Regards,
+> > > Leo
+> > > > >
+> > > > > > >
+> > > > > > > > >
+> > > > > > > > > > +   The first entry must be a link to the SCFG device node.
+> > > > > > > > > > +   The non-first entry must be offset of registers of SCFG.
+> > > > > > > > > >
+> > > > > > > > > >  Example:
+> > > > > > > > > >  The RCPM node for T4240:
+> > > > > > > > > > @@ -43,6 +48,15 @@ The RCPM node for T4240:
+> > > > > > > > > >               #fsl,rcpm-wakeup-cells = <2>;
+> > > > > > > > > >       };
+> > > > > > > > > >
+> > > > > > > > > > +The RCPM node for LS1021A:
+> > > > > > > > > > +     rcpm: rcpm@1ee2140 {
+> > > > > > > > > > +             compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-
+> > > > > > 2.1+";
+> > > > > > > > > > +             reg = <0x0 0x1ee2140 0x0 0x8>;
+> > > > > > > > > > +             #fsl,rcpm-wakeup-cells = <2>;
+> > > > > > > > > > +             fsl,ippdexpcr-alt-addr = <&scfg 0x0 0x51c>; /*
+> > > > > > > > > > SCFG_SPARECR8 */
+> > > > > > > > > > +     };
+> > > > > > > > > > +
+> > > > > > > > > > +
+> > > > > > > > > >  * Freescale RCPM Wakeup Source Device Tree Bindings
+> > > > > > > > > >  -------------------------------------------
+> > > > > > > > > >  Required fsl,rcpm-wakeup property should be added to a
+> > > > > > > > > > device node if the device
+> > > > > > > > > > --
+> > > > > > > > > > 2.17.1
+>
