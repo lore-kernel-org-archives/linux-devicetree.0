@@ -1,121 +1,117 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: RE: [PATCH 2/5] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Date: Wed, 25 Sep 2019 16:18:59 +0000
-Message-ID: <AM5PR1001MB09941810C3AE97110DD82E0F80870@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-References: <20190917124246.11732-1-m.felsch@pengutronix.de>
- <20190917124246.11732-3-m.felsch@pengutronix.de>
- <AM5PR1001MB0994ABEF9C32BFB7BEA099B680840@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20190925155151.75uaxfiiei3i23tz@pengutronix.de>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
+Date: Wed, 25 Sep 2019 17:52:39 +0100
+Message-ID: <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
+ <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+ <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
+ <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
+ <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
+ <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190925155151.75uaxfiiei3i23tz@pengutronix.de>
-Content-Language: en-US
+In-Reply-To: <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: Support Opensource <Support.Opensource@diasemi.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, Steve Twiss <stwiss.opensource@diasemi.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc: devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-wireless <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, etnaviv@lists.freedesktop.org, linux-tegra@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com, linux-pci@vger.kernel.org, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, xen-devel@lists.xenproject.org, Dan Williams <dan.j.williams@intel.com>, freedreno <freedreno@lists.freedesktop.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lis>
 List-Id: devicetree@vger.kernel.org
 
-On 25 September 2019 16:52, Marco Felsch wrote:
+On 25/09/2019 17:16, Rob Herring wrote:
+> On Wed, Sep 25, 2019 at 10:30 AM Nicolas Saenz Julienne
+> <nsaenzjulienne@suse.de> wrote:
+>>
+>> On Wed, 2019-09-25 at 16:09 +0100, Robin Murphy wrote:
+>>> On 25/09/2019 15:52, Nicolas Saenz Julienne wrote:
+>>>> On Tue, 2019-09-24 at 16:59 -0500, Rob Herring wrote:
+>>>>> On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
+>>>>> <nsaenzjulienne@suse.de> wrote:
+>>>>>> Hi All,
+>>>>>> this series tries to address one of the issues blocking us from
+>>>>>> upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact that
+>>>>>> devices not represented in DT which sit behind a PCI bus fail to get the
+>>>>>> bus' DMA addressing constraints.
+>>>>>>
+>>>>>> This is due to the fact that of_dma_configure() assumes it's receiving a
+>>>>>> DT node representing the device being configured, as opposed to the PCIe
+>>>>>> bridge node we currently pass. This causes the code to directly jump
+>>>>>> into PCI's parent node when checking for 'dma-ranges' and misses
+>>>>>> whatever was set there.
+>>>>>>
+>>>>>> To address this I create a new API in OF - inspired from Robin Murphys
+>>>>>> original proposal[2] - which accepts a bus DT node as it's input in
+>>>>>> order to configure a device's DMA constraints. The changes go deep into
+>>>>>> of/address.c's implementation, as a device being having a DT node
+>>>>>> assumption was pretty strong.
+>>>>>>
+>>>>>> On top of this work, I also cleaned up of_dma_configure() removing its
+>>>>>> redundant arguments and creating an alternative function for the special
+>>>>>> cases
+>>>>>> not applicable to either the above case or the default usage.
+>>>>>>
+>>>>>> IMO the resulting functions are more explicit. They will probably
+>>>>>> surface some hacky usages that can be properly fixed as I show with the
+>>>>>> DT fixes on the Layerscape platform.
+>>>>>>
+>>>>>> This was also tested on a Raspberry Pi 4 with a custom PCIe driver and
+>>>>>> on a Seattle AMD board.
+>>>>>
+>>>>> Humm, I've been working on this issue too. Looks similar though yours
+>>>>> has a lot more churn and there's some other bugs I've found.
+>>>>
+>>>> That's good news, and yes now that I see it, some stuff on my series is
+>>>> overly
+>>>> complicated. Specially around of_translate_*().
+>>>>
+>>>> On top of that, you removed in of_dma_get_range():
+>>>>
+>>>> -   /*
+>>>> -    * At least empty ranges has to be defined for parent node if
+>>>> -    * DMA is supported
+>>>> -    */
+>>>> -   if (!ranges)
+>>>> -           break;
+>>>>
+>>>> Which I assumed was bound to the standard and makes things easier.
+>>>>
+>>>>> Can you test out this branch[1]. I don't have any h/w needing this,
+>>>>> but wrote a unittest and tested with modified QEMU.
+>>>>
+>>>> I reviewed everything, I did find a minor issue, see the patch attached.
+>>>
+>>> WRT that patch, the original intent of "force_dma" was purely to
+>>> consider a device DMA-capable regardless of the presence of
+>>> "dma-ranges". Expecting of_dma_configure() to do anything for a non-OF
+>>> device has always been bogus - magic paravirt devices which appear out
+>>> of nowhere and expect to be treated as genuine DMA masters are a
+>>> separate problem that we haven't really approached yet.
+>>
+>> I agree it's clearly abusing the function. I have no problem with the behaviour
+>> change if it's OK with you.
 
-> Hi Adam,
->=20
-> On 19-09-24 09:23, Adam Thomson wrote:
-> > On 17 September 2019 13:43, Marco Felsch wrote:
-> >
-> > > Add the documentation which describe the voltage selection gpio suppo=
-rt.
-> > > This property can be applied to each subnode within the 'regulators'
-> > > node so each regulator can be configured differently.
-> > >
-> > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > ---
-> > >  Documentation/devicetree/bindings/mfd/da9062.txt | 9 +++++++++
-> > >  1 file changed, 9 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > b/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > index edca653a5777..9d9820d8177d 100644
-> > > --- a/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > @@ -66,6 +66,15 @@ Sub-nodes:
-> > >    details of individual regulator device can be found in:
-> > >    Documentation/devicetree/bindings/regulator/regulator.txt
-> > >
-> > > +  Optional regulator device-specific properties:
-> > > +  - dlg,vsel-sense-gpios : The GPIO reference which should be used b=
-y the
-> > > +    regulator to switch the voltage between active/suspend voltage s=
-ettings.
-> If
-> > > +    the signal is active the active-settings are applied else the su=
-spend
-> > > +    settings are applied. Attention: Sharing the same gpio for other=
- purposes
-> > > +    or across multiple regulators is possible but the gpio settings =
-must be the
-> > > +    same. Also the gpio phandle must refer to to the dlg,da9062-gpio=
- device
-> > > +    other gpios are not allowed and make no sense.
-> > > +
-> >
-> > Should we not use the binding names that are defined in 'gpio-regulator=
-.yaml'
-> as
-> > these seem to be generic and would probably serve the purpose here?
->=20
-> Hm.. as the description says:
->=20
-> 8<--------------------------------------------------
-> gpios:
->    description: Array of one or more GPIO pins used to select the
->    regulator voltage/current listed in "states".
-> 8<--------------------------------------------------
->=20
-> But we don't have a "states" property and we can't select between
-> voltage or current.
+Thinking about it, you could probably just remove that call from the Xen 
+DRM driver now anyway - since the dma-direct rework, we lost the ability 
+to set dma_dummy_ops by default, and NULL ops now represent what it 
+(presumably) wants.
 
-Yes I think I was at cross purposes when I made this remark. The bindings t=
-here
-describe the GPOs that are used to enable/disable and set voltage/current f=
-or
-regulators and the supported voltage/current levels that can be configured =
-in
-this manner. What you're describing is the GPI for DA9061/2. If you look at
-GPIO handling in existing regulator drivers I believe they all deal with ex=
-ternal
-GPOs that are configured to enable/disable and set voltage/current limits r=
-ather
-than the GPI on the PMIC itself. That's why I'm thinking that the configura=
-tions
-you're doing here should actually be in a pinctrl or GPIO driver.
+>> Robin, have you looked into supporting multiple dma-ranges? It's the next thing
+>> we need for BCM STB's PCIe. I'll have a go at it myself if nothing is in the
+>> works already.
+> 
+> Multiple dma-ranges as far as configuring inbound windows should work
+> already other than the bug when there's any parent translation. But if
+> you mean supporting multiple DMA offsets and masks per device in the
+> DMA API, there's nothing in the works yet.
 
-I'd be interested in hearing Mark's view on this though as he has far more
-experience in this area than I do.
+There's also the in-between step of making of_dma_get_range() return a 
+size based on all the dma-ranges entries rather than only the first one 
+- otherwise, something like [1] can lead to pretty unworkable default 
+masks. We implemented that when doing acpi_dma_get_range(), it's just 
+that the OF counterpart never caught up.
 
->=20
-> Regards,
->   Marco
->=20
-> > >  - rtc : This node defines settings required for the Real-Time Clock =
-associated
-> > >    with the DA9062. There are currently no entries in this binding, h=
-owever
-> > >    compatible =3D "dlg,da9062-rtc" should be added if a node is creat=
-ed.
-> > > --
-> > > 2.20.1
-> >
-> >
->=20
-> --
-> Pengutronix e.K.                           |                             =
-|
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
-|
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    =
-|
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 =
-|
+Robin.
+
+[1] 
+http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=a2814af56b3486c2985a95540a88d8f9fa3a699f
