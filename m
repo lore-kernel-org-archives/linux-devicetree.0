@@ -1,47 +1,57 @@
-From: Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v10 11/12] dt-bindings: pwm: update bindings for MT7629 SoC
-Date: Wed, 25 Sep 2019 22:32:36 +0800
-Message-ID: <1569421957-20765-12-git-send-email-sam.shih@mediatek.com>
-References: <1569421957-20765-1-git-send-email-sam.shih@mediatek.com>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [Patch v3 6/8] media: i2c: ov2659: Add powerdown/reset gpio
+ handling
+Date: Wed, 25 Sep 2019 09:37:41 -0500
+Message-ID: <20190925143741.25qn2wuyiwapsehr@ti.com>
+References: <20190924164414.21897-1-bparrot@ti.com>
+ <20190924164414.21897-7-bparrot@ti.com>
+ <20190925095154.GL9467@paasikivi.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569421957-20765-1-git-send-email-sam.shih@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <20190925095154.GL9467@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Sam Shih <sam.shih@mediatek.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Prabhakar Lad <prabhakar.csengg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Wed [2019-Sep-25 12:51:54 +0300]:
+> Hi Benoit,
+> 
+> On Tue, Sep 24, 2019 at 11:44:12AM -0500, Benoit Parrot wrote:
+> > On some board it is possible that the sensor 'powerdown' and or 'reset'
+> > pin might be controlled by gpio instead of being tied.
+> > 
+> > To implement we add pm_runtime support which will handle the power
+> > up/down sequence when it is available otherwise the sensor will be
+> > powered on at module insertion/probe and powered off at module removal.
+> > 
+> > Now originally the driver assumed that the sensor would always stay
+> > powered and keep its register setting. We cannot assume this anymore, so
+> > every time we "power up" we need to re-program the initial registers
+> > configuration first. This was previously done only at probe time.
+> > 
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> 
+> Thanks for the update.
+> 
+> I missed the control interface is accessible also when the device is not
+> streaming, and the driver doesn't appear to power on the sensor for that,
+> leading to a failing I²C write.
+> 
+> Could you address that as well, either here or as a separate patch? E.g.
+> the smiapp driver does this.
 
-This updates bindings for MT7629 pwm controller.
+Yes, I missed that also.
+I'll add a check in .s_ctrl().
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
----
-Changes since v7:
-- add a missed Reviewed-by tag back from v1:
-https://patchwork.kernel.org/patch/10769381/
-Changes since v1:
-- add a Reviewed-by tag
+Benoit
 
----
- Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-index 975d7871830d..744deea8a256 100644
---- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-@@ -6,6 +6,7 @@ Required properties:
-    - "mediatek,mt7622-pwm": found on mt7622 SoC.
-    - "mediatek,mt7623-pwm": found on mt7623 SoC.
-    - "mediatek,mt7628-pwm": found on mt7628 SoC.
-+   - "mediatek,mt7629-pwm": found on mt7629 SoC.
-  - reg: physical base address and length of the controller's registers.
-  - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
-    the cell format.
--- 
-2.17.1
+> 
+> -- 
+> Kind regards,
+> 
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
