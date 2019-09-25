@@ -1,217 +1,63 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC)
- driver for SC7180
-Date: Wed, 25 Sep 2019 16:50:07 +0530
-Message-ID: <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
-References: <20190918095018.17979-1-tdas@codeaurora.org>
- <20190918095018.17979-4-tdas@codeaurora.org>
- <20190918213946.DC03521924@mail.kernel.org>
- <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org>
- <20190924231223.9012C207FD@mail.kernel.org>
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: [RFC PATCH 1/2] dt-bindings: misc: Add dt bindings for flex noc Performance Monitor
+Date: Wed, 25 Sep 2019 16:53:06 +0530
+Message-ID: <2de75a74ef4086090c532d3b80b7d6dcd115e45e.1569410216.git.shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190924231223.9012C207FD@mail.kernel.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
-Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Add dt bindings for flexnoc Performance Monitor.
+The flexnoc counters for read and write response and requests are
+supported.
 
-Please find my comments.
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+---
+ .../devicetree/bindings/misc/xlnx,flexnoc.txt      | 24 ++++++++++++++++++=
+++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt
 
-On 9/25/2019 4:42 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2019-09-23 01:01:11)
->> Hi Stephen,
->>
->> Thanks for your comments.
->>
->> On 9/19/2019 3:09 AM, Stephen Boyd wrote:
->>> Quoting Taniya Das (2019-09-18 02:50:18)
->>>> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
->>>> new file mode 100644
->>>> index 000000000000..d47865d5408f
->>>> --- /dev/null
->>>> +++ b/drivers/clk/qcom/gcc-sc7180.c
->>>> @@ -0,0 +1,2515 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
->>>> + */
->>>> +
->>>> +#include <linux/err.h>
->>>> +#include <linux/kernel.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/of.h>
->>>> +#include <linux/of_device.h>
->>>> +#include <linux/regmap.h>
->>>
->>> include clk-provider.h
->>>
->>
->> will add this header.
->> Currently the <drivers/clk/qcom/clk-regmap.h> already includes it.
-> 
-> Yes but it should be included in any clk-provider drivers too.
-> 
->>>> +
->>>> +/* Leave the clock ON for parent config_noc_clk to be kept enabled */
->>>> +static struct clk_branch gcc_disp_ahb_clk = {
->>>> +       .halt_reg = 0xb00c,
->>>> +       .halt_check = BRANCH_HALT,
->>>> +       .hwcg_reg = 0xb00c,
->>>> +       .hwcg_bit = 1,
->>>> +       .clkr = {
->>>> +               .enable_reg = 0xb00c,
->>>> +               .enable_mask = BIT(0),
->>>> +               .hw.init = &(struct clk_init_data){
->>>> +                       .name = "gcc_disp_ahb_clk",
->>>> +                       .flags = CLK_IS_CRITICAL,
->>>
->>> Does this assume the display is left enabled out of the bootloader? Why
->>> is this critical to system operation? Maybe it is really
->>> CLK_IGNORE_UNUSED?
->>>
->>
->> This clock is not kept enabled by bootloader. But leaving this ON for
->> clients on config noc.
-> 
-> Please see below comment for the other critical clk with no parent.
-> 
->>
->>>> +                       .ops = &clk_branch2_ops,
->>>> +               },
->>>> +       },
->>>> +};
->>>> +
-> [...]
->>>> +static struct clk_branch gcc_ufs_phy_phy_aux_clk = {
->>>> +       .halt_reg = 0x77094,
->>>> +       .halt_check = BRANCH_HALT,
->>>> +       .hwcg_reg = 0x77094,
->>>> +       .hwcg_bit = 1,
->>>> +       .clkr = {
->>>> +               .enable_reg = 0x77094,
->>>> +               .enable_mask = BIT(0),
->>>> +               .hw.init = &(struct clk_init_data){
->>>> +                       .name = "gcc_ufs_phy_phy_aux_clk",
->>>> +                       .parent_data = &(const struct clk_parent_data){
->>>> +                               .hw = &gcc_ufs_phy_phy_aux_clk_src.clkr.hw,
->>>> +                       },
->>>> +                       .num_parents = 1,
->>>> +                       .flags = CLK_SET_RATE_PARENT,
->>>> +                       .ops = &clk_branch2_ops,
->>>> +               },
->>>> +       },
->>>> +};
->>>> +
->>>> +static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk = {
->>>> +       .halt_reg = 0x7701c,
->>>> +       .halt_check = BRANCH_HALT_SKIP,
->>>
->>> Again, nobody has fixed the UFS driver to not need to do this halt skip
->>> check for these clks? It's been over a year.
->>>
->>
->> The UFS_PHY_RX/TX clocks could be left enabled due to certain HW boot
->> configuration and thus during the late initcall of clk_disable there
->> could be warnings of "clock stuck ON" in the dmesg. That is the reason
->> also to use the BRANCH_HALT_SKIP flag.
-> 
-> Oh that's bad. Why do the clks stay on when we try to turn them off?
->
-
-Those could be due to the configuration selected by HW and SW cannot 
-override them, so traditionally we have never polled for CLK_OFF for 
-these clocks.
-
->>
->> I would also check internally for the UFS driver fix you are referring here.
-> 
-> Sure. I keep asking but nothing is done :(
-> 
->>
->>>> +       .clkr = {
->>>> +               .enable_reg = 0x7701c,
->>>> +               .enable_mask = BIT(0),
->>>> +               .hw.init = &(struct clk_init_data){
->>>> +                       .name = "gcc_ufs_phy_rx_symbol_0_clk",
->>>> +                       .ops = &clk_branch2_ops,
->>>> +               },
->>>> +       },
->>>> +};
->>>> +
-> [...]
->>>> +
->>>> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk = {
->>>> +       .halt_reg = 0xf058,
->>>> +       .halt_check = BRANCH_HALT_SKIP,
->>>
->>> Why does this need halt_skip?
->>
->> This is required as the source is external PHY, so we want to not check
->> for HALT.
-> 
-> This doesn't really answer my question. If the source is an external phy
-> then it should be listed as a clock in the DT binding and the parent
-> should be specified here. Unless something doesn't work because of that?
-> 
-
-The USB phy is managed by the USB driver and clock driver is not aware 
-if USB driver models the phy as a clock. Thus we do want to keep a 
-dependency on the parent and not poll for CLK_ENABLE.
-
->>
->>>
->>>> +       .clkr = {
->>>> +               .enable_reg = 0xf058,
->>>> +               .enable_mask = BIT(0),
->>>> +               .hw.init = &(struct clk_init_data){
->>>> +                       .name = "gcc_usb3_prim_phy_pipe_clk",
->>>> +                       .ops = &clk_branch2_ops,
->>>> +               },
->>>> +       },
->>>> +};
->>>> +
->>>> +static struct clk_branch gcc_usb_phy_cfg_ahb2phy_clk = {
->>>> +       .halt_reg = 0x6a004,
->>>> +       .halt_check = BRANCH_HALT,
->>>> +       .hwcg_reg = 0x6a004,
->>>> +       .hwcg_bit = 1,
->>>> +       .clkr = {
->>>> +               .enable_reg = 0x6a004,
->>>> +               .enable_mask = BIT(0),
->>>> +               .hw.init = &(struct clk_init_data){
->>>> +                       .name = "gcc_usb_phy_cfg_ahb2phy_clk",
->>>> +                       .ops = &clk_branch2_ops,
->>>> +               },
->>>> +       },
->>>> +};
->>>> +
->>>> +/* Leave the clock ON for parent config_noc_clk to be kept enabled */
->>>
->>> There's no parent though... So I guess this means it keeps it enabled
->>> implicitly in hardware?
->>>
->>
->> These are not left enabled, but want to leave them enabled for clients
->> on config NOC.
-> 
-> Sure. It just doesn't make sense to create clk structures and expose
-> them in the kernel when we just want to turn the bits on and leave them
-> on forever. Why not just do some register writes in probe for this
-> driver? Doesn't that work just as well and use less memory?
-> 
-
-Even if I write these registers during probe, the late init check 
-'clk_core_is_enabled' would return true and would be turned OFF, that is 
-the reason for marking them CRITICAL.
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
+diff --git a/Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt b/Docu=
+mentation/devicetree/bindings/misc/xlnx,flexnoc.txt
+new file mode 100644
+index 0000000..6b533bc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt
+@@ -0,0 +1,24 @@
++* Xilinx Flexnoc Performance Monitor driver
++
++The FlexNoc Performance Monitor has counters for monitoring
++the read and the write transaction counter.
++
++Required properties:
++- compatible: "xlnx,flexnoc-pm-2.7"
++- reg : Address and length of register sets for each device in
++       "reg-names"
++- reg-names : The names of the register addresses corresponding to the
++               registers filled in "reg"
++               - funnel: base address of the funnel registers
++               - baselpd: base address of the LPD PM registers
++               - basefpd: base address FPD PM registers
++
++Example:
++++++++++
++performance-monitor@f0920000 {
++               compatible =3D "xlnx,flexnoc-pm-2.7";
++               reg-names =3D "funnel", "baselpd", "basefpd";
++               reg =3D <0x0 0xf0920000 0x0 0x1000>,
++                       <0x0 0xf0980000 0x0 0x9000>,
++                       <0x0 0xf0b80000 0x0 0x9000>;
++};
 --
+2.1.1
+
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
