@@ -1,50 +1,26 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH 2/2] arm64: tegra: Fix 'active-low' warning for Jetson TX1 regulator
-Date: Wed, 25 Sep 2019 15:12:29 +0100
-Message-ID: <20190925141229.10992-2-jonathanh@nvidia.com>
-References: <20190925141229.10992-1-jonathanh@nvidia.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [v1, 0/1] gpio: dts: aspeed: Add SGPIO driver
+Date: Wed, 25 Sep 2019 16:15:10 +0200
+Message-ID: <CACRpkdbhRo62inQS96OfFO4iWkLn2+P+w1+6g+Y=HFvVyVnXAA@mail.gmail.com>
+References: <1569351740-6285-1-git-send-email-hongweiz@ami.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190925141229.10992-1-jonathanh@nvidia.com>
+In-Reply-To: <1569351740-6285-1-git-send-email-hongweiz@ami.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, vidyas@nvidia.com, Jon Hunter <jonathanh@nvidia.com>
+To: Hongwei Zhang <hongweiz@ami.com>
+Cc: Andrew Jeffery <andrew@aj.id.au>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Joel Stanley <joel@jms.id.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Doug Anderson <armlinux@m.disordat.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Mike Rapoport <rppt@linux.ibm.com>, Russell King <linux@armlinux.org.u>
 List-Id: devicetree@vger.kernel.org
 
-Commit 34993594181d ("arm64: tegra: Enable HDMI on Jetson TX1")
-added a regulator for HDMI on the Jetson TX1 platform. This regulator
-has an active high enable, but the GPIO specifier for enabling the
-regulator incorrectly defines it as active-low. This causes the
-following warning to occur on boot ...
+On Tue, Sep 24, 2019 at 9:02 PM Hongwei Zhang <hongweiz@ami.com> wrote:
 
- WARNING KERN regulator@10 GPIO handle specifies active low - ignored
+> The related SGPIO driver has been accepted and merged into v5.4:
+> _http://patchwork.ozlabs.org/patch/1150357/
 
-The fixed-regulator binding does not use the active-low flag from the
-gpio specifier and purely relies of the presence of the
-'enable-active-high' property to determine if it is active high or low
-(if this property is omitted). Fix this warning by setting the GPIO
-to active-high in the GPIO specifier which aligns with the presense of
-the 'enable-active-high' property.
+Oh what a mess, it didn't add the necessary code into Kconfig
+and Makefile, also names it sgpio-gpio.c when everything
+else is named gpio-sgpio.c.
 
-Fixes: 34993594181d ("arm64: tegra: Enable HDMI on Jetson TX1")
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I guess I have to fix it up. My fault for missing.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-index a7dc319214a4..b0095072bc28 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-@@ -1612,7 +1612,7 @@
- 			regulator-name = "VDD_HDMI_5V0";
- 			regulator-min-microvolt = <5000000>;
- 			regulator-max-microvolt = <5000000>;
--			gpio = <&exp1 12 GPIO_ACTIVE_LOW>;
-+			gpio = <&exp1 12 GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
- 			vin-supply = <&vdd_5v0_sys>;
- 		};
--- 
-2.17.1
+Linus Walleij
