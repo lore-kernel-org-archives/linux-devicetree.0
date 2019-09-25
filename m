@@ -1,268 +1,147 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v5] dt-bindings: sound: Convert Samsung I2S controller to
- dt-schema
-Date: Wed, 25 Sep 2019 15:26:28 +0200
-Message-ID: <20190925132628.31858-1-m.szyprowski@samsung.com>
-References: <CGME20190925132644eucas1p2716a805d184f9bbc4ad7a94cc9cca633@eucas1p2.samsung.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [RFC PATCH] interconnect: Replace of_icc_get() with icc_get() and reduce DT binding
+Date: Wed, 25 Sep 2019 06:28:42 -0700
+Message-ID: <5d8b6b8b.1c69fb81.14b36.c053@mx.google.com>
+References: <20190925054133.206992-1-swboyd@chromium.org> <20190925055933.GA2810@tuxbook-pro>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190925055933.GA2810@tuxbook-pro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Mark Brown <broonie@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Maciej Falkowski <m.falkowski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Maxime Ripard <mripard@kernel.org>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>, David Dai <daidavid1@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Maciej Falkowski <m.falkowski@samsung.com>
+Quoting Bjorn Andersson (2019-09-24 22:59:33)
+> On Tue 24 Sep 22:41 PDT 2019, Stephen Boyd wrote:
+>=20
+> > The DT binding could also be simplified somewhat. Currently a path needs
+> > to be specified in DT for each and every use case that is possible for a
+> > device to want. Typically the path is to memory, which looks to be
+> > reserved for in the binding with the "dma-mem" named path, but sometimes
+> > the path is from a device to the CPU or more generically from a device
+> > to another device which could be a CPU, cache, DMA master, or another
+> > device if some sort of DMA to DMA scenario is happening. Let's remove
+> > the pair part of the binding so that we just list out a device's
+> > possible endpoints on the bus or busses that it's connected to.
+> >=20
+> > If the kernel wants to figure out what the path is to memory or the CPU
+> > or a cache or something else it should be able to do that by finding the
+> > node for the "destination" endpoint, extracting that node's
+> > "interconnects" property, and deriving the path in software. For
+> > example, we shouldn't need to write out each use case path by path in DT
+> > for each endpoint node that wants to set a bandwidth to memory. We
+> > should just be able to indicate what endpoint(s) a device sits on based
+> > on the interconnect provider in the system and then walk the various
+> > interconnects to find the path from that source endpoint to the
+> > destination endpoint.
+> >=20
+>=20
+> But doesn't this implies that the other end of the path is always some
+> specific node, e.g. DDR? With a single node how would you describe
+> CPU->LLCC or GPU->OCIMEM?
 
-Convert Samsung I2S controller to newer dt-schema format.
+By only specifying the endpoint the device uses it describes what the
+hardware block interfaces with. It doesn't imply that there's only one
+other end of the path. It implies that the paths should be discoverable
+by walking the interconnect graph given some source device node and
+target device node. In most cases the target device node will be a DDR
+controller node, but sometimes it could be LLCC or OCIMEM. We may need
+to add some sort of "get the DDR controller device" API or work it into
+the interconnect API somehow to indicate what target endpoint is
+desired. By not listing all those paths in DT we gain flexibility to add
+more paths later on without having to update or tweak DT to describe
+more paths/routes through the interconnect.
 
-Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
-v5:
-- Removed '#clock-cells' property from required properties
-- Added deprecated property to 'clock-output-names'
-and removed corresponding comment. 
+>=20
+> > Obviously this patch doesn't compile but I'm sending it out to start
+> > this discussion so we don't get stuck on the binding or the kernel APIs
+> > for a long time. It looks like we should be OK in terms of backwards
+> > compatibility because we can just ignore the second element in an old
+> > binding, but maybe we'll want to describe paths in different directions
+> > (e.g. the path from the CPU to the SD controller may be different than
+> > the path the SD controller takes to the CPU) and that may require
+> > extending interconnect-names to indicate what direction/sort of path it
+> > is. I'm basically thinking about master vs. slave ports in AXI land.
+> >=20
+> > Cc: Maxime Ripard <mripard@kernel.org>
+> > Cc: <linux-pm@vger.kernel.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: <devicetree@vger.kernel.org>
+> > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > Cc: Evan Green <evgreen@chromium.org>
+> > Cc: David Dai <daidavid1@codeaurora.org>
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> >  .../bindings/interconnect/interconnect.txt    | 19 ++++---------------
+> >  include/linux/interconnect.h                  | 13 ++-----------
+> >  2 files changed, 6 insertions(+), 26 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/interconnect/interconnec=
+t.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> > index 6f5d23a605b7..f8979186b8a7 100644
+> > --- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> > +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+> > @@ -11,7 +11,7 @@ The interconnect provider binding is intended to repr=
+esent the interconnect
+> >  controllers in the system. Each provider registers a set of interconne=
+ct
+> >  nodes, which expose the interconnect related capabilities of the inter=
+connect
+> >  to consumer drivers. These capabilities can be throughput, latency, pr=
+iority
+> > -etc. The consumer drivers set constraints on interconnect path (or end=
+points)
+> > +etc. The consumer drivers set constraints on interconnect paths (or en=
+dpoints)
+> >  depending on the use case. Interconnect providers can also be intercon=
+nect
+> >  consumers, such as in the case where two network-on-chip fabrics inter=
+face
+> >  directly.
+> > @@ -42,23 +42,12 @@ multiple paths from different providers depending o=
+n use case and the
+> >  components it has to interact with.
+> > =20
+> >  Required properties:
+> > -interconnects : Pairs of phandles and interconnect provider specifier =
+to denote
+> > -             the edge source and destination ports of the interconnect=
+ path.
+> > -
+> > -Optional properties:
+> > -interconnect-names : List of interconnect path name strings sorted in =
+the same
+> > -                  order as the interconnects property. Consumers drive=
+rs will use
+> > -                  interconnect-names to match interconnect paths with =
+interconnect
+> > -                  specifier pairs.
+> > -
+> > -                     Reserved interconnect names:
+> > -                      * dma-mem: Path from the device to the main memo=
+ry of
+> > -                                 the system
+> > +interconnects : phandle and interconnect provider specifier to denote
+> > +             the edge source for this node.
+> > =20
+> >  Example:
+> > =20
+> >       sdhci@7864000 {
+> >               ...
+> > -             interconnects =3D <&pnoc MASTER_SDCC_1 &bimc SLAVE_EBI_CH=
+0>;
+> > -             interconnect-names =3D "sdhc-mem";
+> > +             interconnects =3D <&pnoc MASTER_SDCC_1>;
+>=20
+> This example seems incomplete, as it doesn't describe the path between
+> CPU and the config space, with this in place I think you need the
+> interconnect-names.
+>=20
+>=20
+> But with a single interconnect, the interconnect-names should be
+> omitted, as done in other frameworks.
+>=20
 
-Best regards, 
-Maciej Falkowski
----
- .../devicetree/bindings/sound/samsung-i2s.txt |  84 -----------
- .../bindings/sound/samsung-i2s.yaml           | 136 ++++++++++++++++++
- 2 files changed, 136 insertions(+), 84 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
- create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-
-diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.txt b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
-deleted file mode 100644
-index a88cb00fa096..000000000000
---- a/Documentation/devicetree/bindings/sound/samsung-i2s.txt
-+++ /dev/null
-@@ -1,84 +0,0 @@
--* Samsung I2S controller
--
--Required SoC Specific Properties:
--
--- compatible : should be one of the following.
--   - samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
--   - samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
--     secondary fifo, s/w reset control and internal mux for root clk src.
--   - samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
--     playback, stereo channel capture, secondary fifo using internal
--     or external dma, s/w reset control, internal mux for root clk src
--     and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
--     is to allow transfer of multiple channel audio data on single data line.
--   - samsung,exynos7-i2s: with all the available features of exynos5 i2s,
--     exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
--     with only external dma and more no.of root clk sampling frequencies.
--   - samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
--     stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
--     slightly modified bit offsets.
--
--- reg: physical base address of the controller and length of memory mapped
--  region.
--- dmas: list of DMA controller phandle and DMA request line ordered pairs.
--- dma-names: identifier string for each DMA request line in the dmas property.
--  These strings correspond 1:1 with the ordered pairs in dmas.
--- clocks: Handle to iis clock and RCLK source clk.
--- clock-names:
--  i2s0 uses some base clocks from CMU and some are from audio subsystem internal
--  clock controller. The clock names for i2s0 should be "iis", "i2s_opclk0" and
--  "i2s_opclk1" as shown in the example below.
--  i2s1 and i2s2 uses clocks from CMU. The clock names for i2s1 and i2s2 should
--  be "iis" and "i2s_opclk0".
--  "iis" is the i2s bus clock and i2s_opclk0, i2s_opclk1 are sources of the root
--  clk. i2s0 has internal mux to select the source of root clk and i2s1 and i2s2
--  doesn't have any such mux.
--- #clock-cells: should be 1, this property must be present if the I2S device
--  is a clock provider in terms of the common clock bindings, described in
--  ../clock/clock-bindings.txt.
--- clock-output-names (deprecated): from the common clock bindings, names of
--  the CDCLK I2S output clocks, suggested values are "i2s_cdclk0", "i2s_cdclk1",
--  "i2s_cdclk3" for the I2S0, I2S1, I2S2 devices respectively.
--
--There are following clocks available at the I2S device nodes:
-- CLK_I2S_CDCLK    - the CDCLK (CODECLKO) gate clock,
-- CLK_I2S_RCLK_PSR - the RCLK prescaler divider clock (corresponding to the
--		    IISPSR register),
-- CLK_I2S_RCLK_SRC - the RCLKSRC mux clock (corresponding to RCLKSRC bit in
--		    IISMOD register).
--
--Refer to the SoC datasheet for availability of the above clocks.
--The CLK_I2S_RCLK_PSR and CLK_I2S_RCLK_SRC clocks are usually only available
--in the IIS Multi Audio Interface.
--
--Note: Old DTs may not have the #clock-cells property and then not use the I2S
--node as a clock supplier.
--
--Optional SoC Specific Properties:
--
--- samsung,idma-addr: Internal DMA register base address of the audio
--  sub system(used in secondary sound source).
--- pinctrl-0: Should specify pin control groups used for this controller.
--- pinctrl-names: Should contain only one value - "default".
--- #sound-dai-cells: should be 1.
--
--
--Example:
--
--i2s0: i2s@3830000 {
--	compatible = "samsung,s5pv210-i2s";
--	reg = <0x03830000 0x100>;
--	dmas = <&pdma0 10
--		&pdma0 9
--		&pdma0 8>;
--	dma-names = "tx", "rx", "tx-sec";
--	clocks = <&clock_audss EXYNOS_I2S_BUS>,
--		<&clock_audss EXYNOS_I2S_BUS>,
--		<&clock_audss EXYNOS_SCLK_I2S>;
--	clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
--	#clock-cells = <1>;
--	samsung,idma-addr = <0x03000000>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2s0_bus>;
--	#sound-dai-cells = <1>;
--};
-diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.yaml b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-new file mode 100644
-index 000000000000..b9502b82fa9d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-@@ -0,0 +1,136 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/samsung-i2s.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung SoC I2S controller
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+  - Sylwester Nawrocki <s.nawrocki@samsung.com>
-+
-+properties:
-+  compatible:
-+    description: |
-+      samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
-+
-+      samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
-+      secondary fifo, s/w reset control and internal mux for root clk src.
-+
-+      samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
-+      playback, stereo channel capture, secondary fifo using internal
-+      or external dma, s/w reset control, internal mux for root clk src
-+      and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
-+      is to allow transfer of multiple channel audio data on single data line.
-+
-+      samsung,exynos7-i2s: with all the available features of exynos5 i2s.
-+      exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
-+      with only external dma and more no.of root clk sampling frequencies.
-+
-+      samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
-+      stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
-+      slightly modified bit offsets.
-+    enum:
-+      - samsung,s3c6410-i2s
-+      - samsung,s5pv210-i2s
-+      - samsung,exynos5420-i2s
-+      - samsung,exynos7-i2s
-+      - samsung,exynos7-i2s1
-+
-+  reg:
-+    maxItems: 1
-+
-+  dmas:
-+    minItems: 2
-+    maxItems: 3
-+
-+  dma-names:
-+    oneOf:
-+      - items:
-+          - const: tx
-+          - const: rx
-+      - items:
-+          - const: tx
-+          - const: rx
-+          - const: tx-sec
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 3
-+
-+  clock-names:
-+    oneOf:
-+      - items:
-+          - const: iis
-+      - items: # for i2s0
-+          - const: iis
-+          - const: i2s_opclk0
-+          - const: i2s_opclk1
-+      - items: # for i2s1 and i2s2
-+          - const: iis
-+          - const: i2s_opclk0
-+    description: |
-+      "iis" is the i2s bus clock and i2s_opclk0, i2s_opclk1 are sources
-+      of the root clk. i2s0 has internal mux to select the source
-+      of root clk and i2s1 and i2s2 doesn't have any such mux.
-+
-+  "#clock-cells":
-+    const: 1
-+
-+  clock-output-names:
-+    deprecated: true
-+    oneOf:
-+      - items: # for i2s0
-+          - const: i2s_cdclk0
-+      - items: # for i2s1
-+          - const: i2s_cdclk1
-+      - items: # for i2s2
-+          - const: i2s_cdclk2
-+    description: Names of the CDCLK I2S output clocks.
-+
-+  samsung,idma-addr:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Internal DMA register base address of the audio
-+      sub system(used in secondary sound source).
-+
-+  pinctrl-0:
-+    description: Should specify pin control groups used for this controller.
-+
-+  pinctrl-names:
-+    const: default
-+
-+  "#sound-dai-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - dmas
-+  - dma-names
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/exynos-audss-clk.h>
-+
-+    i2s0: i2s@3830000 {
-+        compatible = "samsung,s5pv210-i2s";
-+        reg = <0x03830000 0x100>;
-+        dmas = <&pdma0 10>,
-+                <&pdma0 9>,
-+                <&pdma0 8>;
-+        dma-names = "tx", "rx", "tx-sec";
-+        clocks = <&clock_audss EXYNOS_I2S_BUS>,
-+                <&clock_audss EXYNOS_I2S_BUS>,
-+                <&clock_audss EXYNOS_SCLK_I2S>;
-+        clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
-+        #clock-cells = <1>;
-+        samsung,idma-addr = <0x03000000>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&i2s0_bus>;
-+        #sound-dai-cells = <1>;
-+    };
-+
--- 
-2.17.1
+Sure, no names makes sense when it's just one path.
