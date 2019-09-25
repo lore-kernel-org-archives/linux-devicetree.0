@@ -1,189 +1,165 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [RFC PATCH v2 00/11] Simple QoS for exynos-bus driver using
- interconnect
-Date: Wed, 25 Sep 2019 15:48:14 +0900
-Message-ID: <a5ff844f-12c6-4e82-6364-cad22dc852b0@samsung.com>
-References: <CGME20190919142321eucas1p164c2591ad402427cb71fd00c348a29ec@eucas1p1.samsung.com>
-        <20190919142236.4071-1-a.swigon@samsung.com>
-        <fe6d026d-71b5-438d-6932-6a2234fc72c2@samsung.com>
-        <d8550f93-d4cf-f215-c083-8ecad267d430@samsung.com>
-        <c06ca89f2b40e0282f19727b95da5e5b0158d7e3.camel@samsung.com>
-        <0cceb46a-fca1-62ae-c2cc-fb0f9b9bd132@samsung.com>
-        <f7387513d3c11cea7a7d35652457c1e7d7fed009.camel@samsung.com>
+From: James Tai <james.tai@realtek.com>
+Subject: [PATCH v1] ARM: dts: realtek: Add support for Realtek evaluation
+Date: Wed, 25 Sep 2019 06:49:08 +0000
+Message-ID: <43B123F21A8CFE44A9641C099E4196FFCF8EA2EC@RTITMBSVM04.realtek.com.tw>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f7387513d3c11cea7a7d35652457c1e7d7fed009.camel@samsung.com>
-Content-Language: en-US
+Content-Language: zh-TW
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: myungjoo.ham@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, georgi.djakov@linaro.org, leonard.crestez@nxp.com, m.szyprowski@samsung.com, b.zolnierkie@samsung.com, krzk@kernel.org, "cpgs (cpgs@samsung.com)" <cpgs@samsung.com>, k.konieczny@samsung.com
+To: 'Arnd Bergmann' <arnd@arndb.de>
+Cc: 'DTML' <devicetree@vger.kernel.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, =?big5?B?Q1lfSHVhbmdbtsDgsq7LXQ==?= <cy.huang@realtek.com>, Phinex Hung <phinex@realtek.com>, Adklei <adklei@realtek.com>, =?big5?B?Q2hhc2UgWWVuIFvDQ6dlqHxd?= <chase.yen@realtek.com>, =?big5?B?RWRnYXIgTGVlIFun9anTv9ld?= <cylee12@realtek.com>, =?big5?B?RWR3YXJkIFd1W6dkq7O8ZV0=?= <edwardwu@realtek.com>, =?big5?B?RXJpYyBXYW5nW6T9sLal/l0=?= <ericwang@realtek.com>, Hau <hau@realtek.com>, James Tai <james.tai@realtek.com>, =?big5?B?SmltIFRzYWkgW72yuvuuyl0=?= <tsaijim10@realtek.com>, =?big5?B?Smlubi5DaGVuZ1u+R6R+tmld?= <jinn.cheng@realtek.com>, phelic <phelic@realtek.com>, =?big5?B?UEsuQ2h1YW5nIFuy+LP
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 19. 9. 25. 오후 3:37, Artur Świgoń wrote:
-> On Wed, 2019-09-25 at 15:12 +0900, Chanwoo Choi wrote:
->> Hi,
->>
->> On 19. 9. 25. 오후 2:47, Artur Świgoń wrote:
->>> Hi,
->>>
->>> On Fri, 2019-09-20 at 11:14 +0900, Chanwoo Choi wrote:
->>>> Hi Artur,
->>>>
->>>> I tried to just build this patch on mainline kernel or linux-next.
->>>> But, when I applied them, merge conflict happens. You didn't develop
->>>> them on latest version. Please rebase them based on latest mainline kernel.
->>>
->>> I developed on top of next-20190918 on which I applied
->>> https://patchwork.kernel.org/cover/11149497/ as I mentioned in the cover
->>> letter. The dev_pm_qos patches and my RFC have just cleanly rebased together on
->>> top of next-20190920. Could you check if you have the dev_pm_qos patches (v5,
->>> the version number is missing in this one; link above) and if so, where does the
->>> conflict appear?
->>
->> I faced on the merge conflict of drivers/devfreq/exynos-bus.c.
->> I think that It is not related to to dev_pm_qos patch.
-> 
-> I think that it is actually related to the specific version of dev_pm_qos (v5) that
-> I used because patch 08/08 of dev_pm_qos series modifies exynos_bus_probe() in
-> drivers/devfreq/exynos-bus.c (https://patchwork.kernel.org/patch/11149507/).
-> 
-> I will rebase the next RFC (v3) on latest dev_pm_qos patches from Leonard and the
-> latest Linux-next kernel.
-
-My mistake. I only checked the Leonard's latest patches(v8)
-which doesn't contain this patch. OK. I'll try again. Thanks.
-[1] https://patchwork.kernel.org/patch/11149507/
-- PM / devfreq: Move opp notifier registration to core
-
-> 
->> Maybe, Kamil's patches[1] changed the many things of exynos-bus.c
->> If your test branch doesn't contain following patches, 
->> you need to rebase your patches based on latest mainline kernel 
->> from Linus Torvald.
->> [1] https://patchwork.kernel.org/cover/11083663/
->> - [RESEND PATCH v5 0/4] add coupled regulators for Exynos5422/5800
-> 
-> Yes, requiring Kamil's patches is one of the changes in this RFC (v2), since they
-> are already merged.
-> 
->> Today, I tried to apply these patch again based on latest mainline kernel.
->> The merge conflict happen still.
->>
->> - merge conflict log
->> Applying: devfreq: exynos-bus: Extract exynos_bus_profile_init()
->> error: patch failed: drivers/devfreq/exynos-bus.c:334
->> error: drivers/devfreq/exynos-bus.c: patch does not apply
->> Patch failed at 0001 devfreq: exynos-bus: Extract exynos_bus_profile_init()
->>
->>
->>>
->>>> On 19. 9. 20. 오전 10:07, Chanwoo Choi wrote:
->>>>> Hi Artur,
->>>>>
->>>>> On v1, I mentioned that we need to discuss how to change
->>>>> the v2 for this. But, I have not received any reply from you on v1.
->>>>> And, without your reply from v1, you just send v2.
->>>>>
->>>>> I think that it is not proper development sequence.
->>>>> I have spent many times to review your patches
->>>>> and also I'll review your patches. You have to take care
->>>>> the reply of reviewer and and keep the basic rule
->>>>> of mailing contribution for discussion.
->>>>>
->>>>> On 19. 9. 19. 오후 11:22, Artur Świgoń wrote:
->>>>>> The following patchset adds interconnect[1][2] framework support to the
->>>>>> exynos-bus devfreq driver. Extending the devfreq driver with interconnect
->>>>>> capabilities started as a response to the issue referenced in [3]. The
->>>>>> patches can be subdivided into four logical groups:
->>>>>>
->>>>>> (a) Refactoring the existing devfreq driver in order to improve readability
->>>>>> and accommodate for adding new code (patches 01--04/11).
->>>>>>
->>>>>> (b) Tweaking the interconnect framework to support the exynos-bus use case
->>>>>> (patches 05--07/11). Exporting of_icc_get_from_provider() allows us to
->>>>>> avoid hardcoding every single graph edge in the DT or driver source, and
->>>>>> relaxing the requirement contained in that function removes the need to
->>>>>> provide dummy node IDs in the DT. Adjusting the logic in
->>>>>> apply_constraints() (drivers/interconnect/core.c) accounts for the fact
->>>>>> that every bus is a separate entity and therefore a separate interconnect
->>>>>> provider, albeit constituting a part of a larger hierarchy.
->>>>>>
->>>>>> (c) Implementing interconnect providers in the exynos-bus devfreq driver
->>>>>> and adding required DT properties for one selected platform, namely
->>>>>> Exynos4412 (patches 08--09/11). Due to the fact that this aims to be a
->>>>>> generic driver for various Exynos SoCs, node IDs are generated dynamically
->>>>>> rather than hardcoded. This has been determined to be a simpler approach,
->>>>>> but depends on changes described in (b).
->>>>>>
->>>>>> (d) Implementing a sample interconnect consumer for exynos-mixer targeted
->>>>>> at the issue referenced in [3], again with DT info only for Exynos4412
->>>>>> (patches 10--11/11).
->>>>>>
->>>>>> Integration of devfreq and interconnect functionalities is achieved by
->>>>>> using dev_pm_qos_*() API[5]. All new code works equally well when
->>>>>> CONFIG_INTERCONNECT is 'n' (as in exynos_defconfig) in which case all
->>>>>> interconnect API functions are no-ops.
->>>>>>
->>>>>> This patchset depends on [5].
->>>>>>
->>>>>> --- Changes since v1 [6]:
->>>>>> * Rebase on [4] (coupled regulators).
->>>>>> * Rebase on [5] (dev_pm_qos for devfreq).
->>>>>> * Use dev_pm_qos_*() API[5] instead of overriding frequency in
->>>>>>   exynos_bus_target().
->>>>>> * Use IDR for node ID allocation.
->>>>>> * Avoid goto in functions extracted in patches 01 & 02 (cf. patch 04).
->>>>>> * Reverse order of multiplication and division in
->>>>>>   mixer_set_memory_bandwidth() (patch 11) to avoid integer overflow.
->>>>>>
->>>>>> ---
->>>>>> Artur Świgoń
->>>>>> Samsung R&D Institute Poland
->>>>>> Samsung Electronics
->>>>>>
->>>>>> ---
->>>>>> References:
->>>>>> [1] Documentation/interconnect/interconnect.rst
->>>>>> [2] Documentation/devicetree/bindings/interconnect/interconnect.txt
->>>>>> [3] https://patchwork.kernel.org/patch/10861757/ (original issue)
->>>>>> [4] https://patchwork.kernel.org/cover/11083663/ (coupled regulators; merged)
->>>>>> [5] https://patchwork.kernel.org/cover/11149497/ (dev_pm_qos for devfreq)
->>>>>> [6] https://patchwork.kernel.org/cover/11054417/ (v1 of this RFC)
->>>>>>
->>>>>> Artur Świgoń (10):
->>>>>>   devfreq: exynos-bus: Extract exynos_bus_profile_init()
->>>>>>   devfreq: exynos-bus: Extract exynos_bus_profile_init_passive()
->>>>>>   devfreq: exynos-bus: Change goto-based logic to if-else logic
->>>>>>   devfreq: exynos-bus: Clean up code
->>>>>>   interconnect: Export of_icc_get_from_provider()
->>>>>>   interconnect: Relax requirement in of_icc_get_from_provider()
->>>>>>   interconnect: Relax condition in apply_constraints()
->>>>>>   arm: dts: exynos: Add parents and #interconnect-cells to Exynos4412
->>>>>>   devfreq: exynos-bus: Add interconnect functionality to exynos-bus
->>>>>>   arm: dts: exynos: Add interconnects to Exynos4412 mixer
->>>>>>
->>>>>> Marek Szyprowski (1):
->>>>>>   drm: exynos: mixer: Add interconnect support
->>>>>>
->>>>>>  .../boot/dts/exynos4412-odroid-common.dtsi    |   1 +
->>>>>>  arch/arm/boot/dts/exynos4412.dtsi             |  10 +
->>>>>>  drivers/devfreq/exynos-bus.c                  | 319 +++++++++++++-----
->>>>>>  drivers/gpu/drm/exynos/exynos_mixer.c         |  71 +++-
->>>>>>  drivers/interconnect/core.c                   |  12 +-
->>>>>>  include/linux/interconnect-provider.h         |   6 +
->>>>>>  6 files changed, 327 insertions(+), 92 deletions(-)
->>>>>>
-> 
-> 
-> 
-> 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+RnJvbTogImphbWVzLnRhaSIgPGphbWVzLnRhaUByZWFsdGVrLmNvbT4NCg0KVGhpcyBwYXRjaCBh
+ZGRzIGEgZ2VuZXJpYyBkZXZpY2V0cmVlIGJvYXJkIGZpbGUgYW5kIGEgZHRzaSBmb3INClJlYWx0
+ZWsgUlREMTZYWCBhbmQgUlREMTNYWCBwbGF0Zm9ybS4NCg0KU2lnbmVkLW9mZi1ieTogamFtZXMu
+dGFpIDxqYW1lcy50YWlAcmVhbHRlay5jb20+DQotLS0NCkNoYW5nZXMgc2luY2UgbGFzdCB2ZXJz
+aW9uOg0KCS0gQWRkIFJURDEzWFggcGxhdGZvcm0uDQoJLSBBZGQgUFNDSSBzdXBwb3J0Lg0KCS0g
+QWRkIGFsaWFzZXMuDQoJLSBtb3ZlIHVhcnQwIHRvIGR0c2kgZmlsZS4NCi0tLQ0KIGFyY2gvYXJt
+L2Jvb3QvZHRzL01ha2VmaWxlICAgICAgICAgICAgICAgIHwgICA0ICsNCiBhcmNoL2FybS9ib290
+L2R0cy9ydGQxMzE5LXB5bXBhcnRpY2xlLmR0cyB8ICAzMCArKysrKysNCiBhcmNoL2FybS9ib290
+L2R0cy9ydGQxM3h4LmR0c2kgICAgICAgICAgICB8IDEwNSArKysrKysrKysrKysrKysrKysrDQog
+YXJjaC9hcm0vYm9vdC9kdHMvcnRkMTYxOS1tam9sbmlyLmR0cyAgICAgfCAgMzEgKysrKysrDQog
+YXJjaC9hcm0vYm9vdC9kdHMvcnRkMTZ4eC5kdHNpICAgICAgICAgICAgfCAxMTkgKysrKysrKysr
+KysrKysrKysrKysrKw0KIDUgZmlsZXMgY2hhbmdlZCwgMjg5IGluc2VydGlvbnMoKykNCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvcnRkMTMxOS1weW1wYXJ0aWNsZS5kdHMN
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvcnRkMTN4eC5kdHNpDQogY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3J0ZDE2MTktbWpvbG5pci5kdHMNCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvcnRkMTZ4eC5kdHNpDQoNCmRpZmYg
+LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3QvZHRzL01h
+a2VmaWxlDQppbmRleCA5MTU5ZmEyY2VhOTAuLmM0MDExODQ2MjJjZCAxMDA2NDQNCi0tLSBhL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlDQorKysgYi9hcmNoL2FybS9ib290L2R0cy9NYWtlZmls
+ZQ0KQEAgLTkyNyw2ICs5MjcsOSBAQCBkdGItJChDT05GSUdfQVJDSF9ST0NLQ0hJUCkgKz0gXA0K
+IAlyazMyODgtdmV5cm9uLXBpbmt5LmR0YiBcDQogCXJrMzI4OC12ZXlyb24tc3BlZWR5LmR0YiBc
+DQogCXJrMzI4OC12eWFzYS5kdGINCisgZHRiLSQoQ09ORklHX0FSQ0hfUkVBTFRFSykgKz0gXA0K
+KyAJcnRkMTYxOS1tam9sbmlyLmR0YiBcDQorIAlydGQxMzE5LXB5bXBhcnRpY2xlLmR0Yg0KIGR0
+Yi0kKENPTkZJR19BUkNIX1MzQzI0WFgpICs9IFwNCiAJczNjMjQxNi1zbWRrMjQxNi5kdGINCiBk
+dGItJChDT05GSUdfQVJDSF9TM0M2NFhYKSArPSBcDQpAQCAtMTI4NiwzICsxMjg5LDQgQEAgZHRi
+LSQoQ09ORklHX0FSQ0hfQVNQRUVEKSArPSBcDQogCWFzcGVlZC1ibWMtb3BwLXphaXVzLmR0YiBc
+DQogCWFzcGVlZC1ibWMtcG9ydHdlbGwtbmVwdHVuZS5kdGIgXA0KIAlhc3BlZWQtYm1jLXF1YW50
+YS1xNzFsLmR0Yg0KKw0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3J0ZDEzMTktcHlt
+cGFydGljbGUuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvcnRkMTMxOS1weW1wYXJ0aWNsZS5kdHMN
+Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwMDAwMDAuLjg4N2FiODk0YmJhMQ0K
+LS0tIC9kZXYvbnVsbA0KKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcnRkMTMxOS1weW1wYXJ0aWNs
+ZS5kdHMNCkBAIC0wLDAgKzEsMzAgQEANCisvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BM
+LTIuMC1vbmx5DQorDQorLyoNCisgKiBDb3B5cmlnaHQgKGMpIDIwMTkgUmVhbHRlayBTZW1pY29u
+ZHVjdG9yIENvcnAuDQorICovDQorDQorL2R0cy12MS87DQorDQorI2luY2x1ZGUgInJ0ZDEzeHgu
+ZHRzaSINCisNCisvIHsNCisJbW9kZWw9ICJSZWFsdGVrIFB5bXBhcnRpY2xlIEV2YWx1YXRpb24g
+Qm9hcmQiOw0KKw0KKwlhbGlhc2VzIHsNCisJCXNlcmlhbDAgPSAmdWFydDA7DQorCX07DQorDQor
+CWNob3NlbiB7DQorCQlib290YXJncyA9ICJjb25zb2xlPXR0eVMwLDQ2MDgwMCBlYXJseWNvbiI7
+DQorCX07DQorDQorCW1lbW9yeUAwIHsNCisJCWRldmljZV90eXBlID0gIm1lbW9yeSI7DQorCQly
+ZWcgPSA8MHgwMDAwMDAwMCAweDAwMDAwMDAwIDB4MDAwMDAwMDAgMHg4MDAwMDAwMD47DQorCX07
+DQorfTsNCisNCismdWFydDAgew0KKwlzdGF0dXMgPSAib2theSI7DQorfTsNCmRpZmYgLS1naXQg
+YS9hcmNoL2FybS9ib290L2R0cy9ydGQxM3h4LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9ydGQx
+M3h4LmR0c2kNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwMDAwMDAuLjlhNTY1
+OTE5YWI4Mw0KLS0tIC9kZXYvbnVsbA0KKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcnRkMTN4eC5k
+dHNpDQpAQCAtMCwwICsxLDEwNSBAQA0KKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwt
+Mi4wLW9ubHkNCisNCisvKg0KKyAqIENvcHlyaWdodCAoYykgMjAxOSBSZWFsdGVrIFNlbWljb25k
+dWN0b3IgQ29ycC4NCisgKi8NCisNCisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNv
+bnRyb2xsZXIvaXJxLmg+DQorI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9s
+bGVyL2FybS1naWMuaD4NCisNCisvew0KKwljb21wYXRpYmxlID0gInJlYWx0ZWsscnRkMTMxOSI7
+DQorCWludGVycnVwdC1wYXJlbnQgPSA8JmdpYz47DQorCSNhZGRyZXNzLWNlbGxzID0gPDB4Mj47
+DQorCSNzaXplLWNlbGxzID0gPDB4Mj47DQorDQorCWNwdXMgew0KKwkJI2FkZHJlc3MtY2VsbHMg
+PSA8MT47DQorCQkjc2l6ZS1jZWxscyA9IDwwPjsNCisNCisJCUE1NV8wOiBjcHVAMCB7DQorCQkJ
+ZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTU1Iiwg
+ImFybSxhcm12OCI7DQorCQkJcmVnID0gPDB4MDAwPjsNCisJCQluZXh0LWxldmVsLWNhY2hlID0g
+PCZhNTVfbDI+Ow0KKwkJfTsNCisNCisJCUE1NV8xOiBjcHVAMSB7DQorCQkJZGV2aWNlX3R5cGUg
+PSAiY3B1IjsNCisJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTU1IiwgImFybSxhcm12OCI7
+DQorCQkJcmVnID0gPDB4MTAwPjsNCisJCQllbmFibGUtbWV0aG9kID0gInBzY2kiOw0KKwkJfTsN
+CisNCisJCUE1NV8yOiBjcHVAMiB7DQorCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisJCQljb21w
+YXRpYmxlID0gImFybSxjb3J0ZXgtYTU1IiwgImFybSxhcm12OCI7DQorCQkJcmVnID0gPDB4MjAw
+PjsNCisJCQllbmFibGUtbWV0aG9kID0gInBzY2kiOw0KKwkJfTsNCisNCisJCUE1NV8zOiBjcHVA
+MyB7DQorCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisJCQljb21wYXRpYmxlID0gImFybSxjb3J0
+ZXgtYTU1IiwgImFybSxhcm12OCI7DQorCQkJcmVnID0gPDB4MzAwPjsNCisJCQllbmFibGUtbWV0
+aG9kID0gInBzY2kiOw0KKwkJfTsNCisNCisJCWE1NV9sMjogbDItY2FjaGUgew0KKwkJCWNvbXBh
+dGlibGUgPSAiY2FjaGUiOw0KKwkJfTsNCisJfTsNCisNCisJcHNjaSB7DQorCQljb21wYXRpYmxl
+ID0gImFybSxwc2NpLTEuMCIsICJhcm0scHNjaS0wLjIiOw0KKwkJbWV0aG9kID0gInNtYyI7DQor
+CX07DQorDQorCXRpbWVyIHsNCisJCWNvbXBhdGlibGUgPSAiYXJtLGFybXY4LXRpbWVyIjsNCisJ
+CWludGVycnVwdHMgPSA8R0lDX1BQSSAxMyAoR0lDX0NQVV9NQVNLX1NJTVBMRSg0KSB8IDgpPiwN
+CisJCQk8R0lDX1BQSSAxNCAoR0lDX0NQVV9NQVNLX1NJTVBMRSg0KSB8IDgpPiwNCisJCQk8R0lD
+X1BQSSAxMSAoR0lDX0NQVV9NQVNLX1NJTVBMRSg0KSB8IDgpPiwNCisJCQk8R0lDX1BQSSAxMCAo
+R0lDX0NQVV9NQVNLX1NJTVBMRSg0KSB8IDgpPjsNCisJCWNsb2NrLWZyZXF1ZW5jeSA9IDwyNzAw
+MDAwMD47DQorCX07DQorDQorCW9zYzI3TTogb3NjMjdNIHsNCisJCWNvbXBhdGlibGUgPSAiZml4
+ZWQtY2xvY2siOw0KKwkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0KKwkJY2xvY2stZnJlcXVlbmN5ID0g
+PDI3MDAwMDAwPjsNCisJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJvc2MyN00iOw0KKwl9Ow0KKw0K
+Kwlzb2Mgew0KKwkJI2FkZHJlc3MtY2VsbHMgPSA8Mj47DQorCQkjc2l6ZS1jZWxscyA9IDwyPjsN
+CisJCWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7DQorCQlyYW5nZXM7DQorDQorCQlnaWM6IGlu
+dGVycnVwdC1jb250cm9sbGVyQGZmMTAwMDAwIHsNCisJCQljb21wYXRpYmxlID0gImFybSxnaWMt
+djMiOw0KKwkJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8Mz47DQorCQkJI2FkZHJlc3MtY2VsbHMgPSA8
+Mj47DQorCQkJI3NpemUtY2VsbHMgPSA8Mj47DQorCQkJcmFuZ2VzOw0KKwkJCWludGVycnVwdC1j
+b250cm9sbGVyOw0KKwkJCXJlZGlzdHJpYnV0b3Itc3RyaWRlID0gPDB4MCAweDIwMDAwPjsNCisJ
+CQkjcmVkaXN0cmlidXRvci1yZWdpb25zID0gPDE+Ow0KKwkJCXJlZyA9IDwweDAgMHhmZjEwMDAw
+MCAweDAgMHgxMDAwMD4sIC8qIEdJQ0QgKi8NCisJCQkJPDB4MCAweGZmMTQwMDAwIDB4MCAweDIw
+MDAwMD47IC8qIEdJQ1IgKi8NCisJCQlpbnRlcnJ1cHRzID0gPEdJQ19QUEkgOSA0PjsNCisJCX07
+DQorDQorCQl1YXJ0MDogc2VyaWFsMEA5ODAwNzgwMCB7DQorCQkJY29tcGF0aWJsZSA9ICJzbnBz
+LGR3LWFwYi11YXJ0IjsNCisJCQlyZWcgPSA8MHgwIDB4OTgwMDc4MDAgMHgwIDB4NDAwPiwNCisJ
+CQkJPDB4MCAweDk4MDA3MDAwIDB4MCAweDEwMD47DQorCQkJcmVnLXNoaWZ0ID0gPDI+Ow0KKwkJ
+CXJlZy1pby13aWR0aCA9IDw0PjsNCisJCQlpbnRlcnJ1cHRzID0gPDAgNjggND47DQorCQkJY2xv
+Y2stZnJlcXVlbmN5ID0gPDQzMjAwMDAwMD47DQorCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCisJ
+CX07DQorCX07DQorfTsNCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9ydGQxNjE5LW1q
+b2xuaXIuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvcnRkMTYxOS1tam9sbmlyLmR0cw0KbmV3IGZp
+bGUgbW9kZSAxMDA2NDQNCmluZGV4IDAwMDAwMDAwMDAwMC4uMzE1N2M4Y2Q1NDMwDQotLS0gL2Rl
+di9udWxsDQorKysgYi9hcmNoL2FybS9ib290L2R0cy9ydGQxNjE5LW1qb2xuaXIuZHRzDQpAQCAt
+MCwwICsxLDMxIEBADQorLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb25seQ0K
+Kw0KKy8qDQorICogQ29weXJpZ2h0IChjKSAyMDE5IFJlYWx0ZWsgU2VtaWNvbmR1Y3RvciBDb3Jw
+Lg0KKyAqLw0KKw0KKy9kdHMtdjEvOw0KKw0KKyNpbmNsdWRlICJydGQxNnh4LmR0c2kiDQorDQor
+LyB7DQorCW1vZGVsPSAiUmVhbHRlayBNam9sbmlyIEV2YWx1YXRpb24gQm9hcmQiOw0KKw0KKwlh
+bGlhc2VzIHsNCisJCXNlcmlhbDAgPSAmdWFydDA7DQorCX07DQorDQorCWNob3NlbiB7DQorCQli
+b290YXJncyA9ICJjb25zb2xlPXR0eVMwLDExNTIwMCBlYXJseWNvbiI7DQorCX07DQorDQorCW1l
+bW9yeUAwIHsNCisJCWRldmljZV90eXBlID0gIm1lbW9yeSI7DQorCQlyZWcgPSA8MHgwIDB4MCAw
+eDAgMHg4MDAwMDAwMD47DQorCX07DQorfTsNCisNCismdWFydDAgew0KKwlzdGF0dXMgPSAib2th
+eSI7DQorfTsNCisNCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9ydGQxNnh4LmR0c2kg
+Yi9hcmNoL2FybS9ib290L2R0cy9ydGQxNnh4LmR0c2kNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQpp
+bmRleCAwMDAwMDAwMDAwMDAuLmYxODcyNjA4Njc0Ng0KLS0tIC9kZXYvbnVsbA0KKysrIGIvYXJj
+aC9hcm0vYm9vdC9kdHMvcnRkMTZ4eC5kdHNpDQpAQCAtMCwwICsxLDExOSBAQA0KKy8vIFNQRFgt
+TGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wLW9ubHkNCisNCisvKg0KKyAqIENvcHlyaWdodCAo
+YykgMjAxOSBSZWFsdGVrIFNlbWljb25kdWN0b3IgQ29ycC4NCisgKi8NCisNCisjaW5jbHVkZSA8
+ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvaXJxLmg+DQorI2luY2x1ZGUgPGR0LWJp
+bmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2FybS1naWMuaD4NCisNCisvew0KKwljb21wYXRp
+YmxlID0gInJlYWx0ZWsscnRkMTYxOSI7DQorCWludGVycnVwdC1wYXJlbnQgPSA8JmdpYz47DQor
+CSNhZGRyZXNzLWNlbGxzID0gPDB4Mj47DQorCSNzaXplLWNlbGxzID0gPDB4Mj47DQorDQorCWNw
+dXMgew0KKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQorCQkjc2l6ZS1jZWxscyA9IDwwPjsNCisN
+CisJCUE1NV8wOiBjcHVAMCB7DQorCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisJCQljb21wYXRp
+YmxlID0gImFybSxjb3J0ZXgtYTU1IiwgImFybSxhcm12OCI7DQorCQkJcmVnID0gPDB4MDAwPjsN
+CisJCQluZXh0LWxldmVsLWNhY2hlID0gPCZhNTVfbDI+Ow0KKwkJfTsNCisNCisJCUE1NV8xOiBj
+cHVAMSB7DQorCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisJCQljb21wYXRpYmxlID0gImFybSxj
+b3J0ZXgtYTU1IiwgImFybSxhcm12OCI7DQorCQkJcmVnID0gPDB4MTAwPjsNCisJCQllbmFibGUt
+bWV0aG9kID0gInBzY2kiOw0KKwkJfTsNCisNCisJCUE1NV8yOiBjcHVAMiB7DQorCQkJZGV2aWNl
+X3R5cGUgPSAiY3B1IjsNCisJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTU1IiwgImFybSxh
+cm12OCI7DQorCQkJcmVnID0gPDB4MjAwPjsNCisJCQllbmFibGUtbWV0aG9kID0gInBzY2kiOw0K
+KwkJfTsNCisNCisJCUE1NV8zOiBjcHVAMyB7DQorCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisJ
+CQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTU1IiwgImFybSxhcm12OCI7DQorCQkJcmVnID0g
+PDB4MzAwPjsNCisJCQllbmFibGUtbWV0aG9kID0gInBzY2kiOw0KKwkJfTsNCisNCisJCUE1NV80
+OiBjcHVANCB7DQorCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsNCisJCQljb21wYXRpYmxlID0gImFy
+bSxjb3J0ZXgtYTU1IiwgImFybSxhcm12OCI7DQorCQkJcmVnID0gPDB4NDAwPjsNCisJCQllbmFi
+bGUtbWV0aG9kID0gInBzY2kiOw0KKwkJfTsNCisNCisJCUE1NV81OiBjcHVANSB7DQorCQkJZGV2
+aWNlX3R5cGUgPSAiY3B1IjsNCisJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTU1IiwgImFy
+bSxhcm12OCI7DQorCQkJcmVnID0gPDB4NTAwPjsNCisJCQllbmFibGUtbWV0aG9kID0gInBzY2ki
+Ow0KKwkJfTsNCisNCisJCWE1NV9sMjogbDItY2FjaGUgew0KKwkJCWNvbXBhdGlibGUgPSAiY2Fj
+aGUiOw0KKwkJfTsNCisJfTsNCisNCisJcHNjaSB7DQorCQljb21wYXRpYmxlID0gImFybSxwc2Np
+LTEuMCIsICJhcm0scHNjaS0wLjIiOw0KKwkJbWV0aG9kID0gInNtYyI7DQorCX07DQorDQorCXRp
+bWVyIHsNCisJCWNvbXBhdGlibGUgPSAiYXJtLGFybXY4LXRpbWVyIjsNCisJCWludGVycnVwdHMg
+PSA8R0lDX1BQSSAxMyAoR0lDX0NQVV9NQVNLX1NJTVBMRSg0KSB8IDgpPiwNCisJCQk8R0lDX1BQ
+SSAxNCAoR0lDX0NQVV9NQVNLX1NJTVBMRSg0KSB8IDgpPiwNCisJCQk8R0lDX1BQSSAxMSAoR0lD
+X0NQVV9NQVNLX1NJTVBMRSg0KSB8IDgpPiwNCisJCQk8R0lDX1BQSSAxMCAoR0lDX0NQVV9NQVNL
+X1NJTVBMRSg0KSB8IDgpPjsNCisJCWNsb2NrLWZyZXF1ZW5jeSA9IDwyNzAwMDAwMD47DQorCX07
+DQorDQorCW9zYzI3TTogb3NjMjdNIHsNCisJCWNvbXBhdGlibGUgPSAiZml4ZWQtY2xvY2siOw0K
+KwkJI2Nsb2NrLWNlbGxzID0gPDA+Ow0KKwkJY2xvY2stZnJlcXVlbmN5ID0gPDI3MDAwMDAwPjsN
+CisJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJvc2MyN00iOw0KKwl9Ow0KKw0KKwlzb2Mgew0KKwkJ
+I2FkZHJlc3MtY2VsbHMgPSA8Mj47DQorCQkjc2l6ZS1jZWxscyA9IDwyPjsNCisJCWNvbXBhdGli
+bGUgPSAic2ltcGxlLWJ1cyI7DQorCQlyYW5nZXM7DQorDQorCQlnaWM6IGludGVycnVwdC1jb250
+cm9sbGVyQGZmMTAwMDAwIHsNCisJCQljb21wYXRpYmxlID0gImFybSxnaWMtdjMiOw0KKwkJCSNp
+bnRlcnJ1cHQtY2VsbHMgPSA8Mz47DQorCQkJI2FkZHJlc3MtY2VsbHMgPSA8Mj47DQorCQkJI3Np
+emUtY2VsbHMgPSA8Mj47DQorCQkJcmFuZ2VzOw0KKwkJCWludGVycnVwdC1jb250cm9sbGVyOw0K
+KwkJCXJlZGlzdHJpYnV0b3Itc3RyaWRlID0gPDB4MCAweDIwMDAwPjsNCisJCQkjcmVkaXN0cmli
+dXRvci1yZWdpb25zID0gPDE+Ow0KKwkJCXJlZyA9IDwweDAgMHhmZjEwMDAwMCAweDAgMHgxMDAw
+MD4sIC8qIEdJQ0QgKi8NCisJCQkJPDB4MCAweGZmMTQwMDAwIDB4MCAweDIwMDAwMD47IC8qIEdJ
+Q1IgKi8NCisJCQlpbnRlcnJ1cHRzID0gPEdJQ19QUEkgOSA0PjsNCisJCX07DQorDQorCQl1YXJ0
+MDogc2VyaWFsMEA5ODAwNzgwMCB7DQorCQkJY29tcGF0aWJsZSA9ICJzbnBzLGR3LWFwYi11YXJ0
+IjsNCisJCQlyZWcgPSA8MHgwIDB4OTgwMDc4MDAgMHgwIDB4NDAwPiwNCisJCQkJPDB4MCAweDk4
+MDA3MDAwIDB4MCAweDEwMD47DQorCQkJcmVnLXNoaWZ0ID0gPDI+Ow0KKwkJCXJlZy1pby13aWR0
+aCA9IDw0PjsNCisJCQlpbnRlcnJ1cHRzID0gPDAgNjggND47DQorCQkJY2xvY2stZnJlcXVlbmN5
+ID0gPDI3MDAwMDAwPjsNCisJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KKwkJfTsNCisJfTsNCit9
+Ow0KLS0gDQoyLjE3LjENCg0K
