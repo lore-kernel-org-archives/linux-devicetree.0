@@ -1,55 +1,54 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: [PATCH V3 3/3] ARM: logicpd-torpedo-37xx-devkit-28: Reference new DRM panel
-Date: Wed, 25 Sep 2019 13:42:38 -0500
-Message-ID: <20190925184239.22330-3-aford173@gmail.com>
-References: <20190925184239.22330-1-aford173@gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 1/2] dt-bindings: nvmem: add binding for Rockchip OTP controller
+Date: Wed, 25 Sep 2019 20:49:56 +0200
+Message-ID: <20190925184957.14338-1-heiko@sntech.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190925184239.22330-1-aford173@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: srinivas.kandagatla@linaro.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, christoph.muellner@theobroma-systems.com, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-With the removal of the panel-dpi from the omap drivers, the
-LCD no longer works.  This patch points the device tree to
-a newly created panel named "logicpd,type28"
+Newer Rockchip SoCs use a different IP for accessing special one-
+time-programmable memory, so add a binding for these controllers.
 
-Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
-
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
-V3:  No change
-V2:  Remove legacy 'label' from binding
+ .../bindings/nvmem/rockchip-otp.txt           | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/rockchip-otp.txt
 
-diff --git a/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts b/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
-index 07ac99b9cda6..cdb89b3e2a9b 100644
---- a/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
-+++ b/arch/arm/boot/dts/logicpd-torpedo-37xx-devkit-28.dts
-@@ -11,22 +11,6 @@
- #include "logicpd-torpedo-37xx-devkit.dts"
- 
- &lcd0 {
--
--	label = "28";
--
--	panel-timing {
--		clock-frequency = <9000000>;
--		hactive = <480>;
--		vactive = <272>;
--		hfront-porch = <3>;
--		hback-porch = <2>;
--		hsync-len = <42>;
--		vback-porch = <3>;
--		vfront-porch = <2>;
--		vsync-len = <11>;
--		hsync-active = <1>;
--		vsync-active = <1>;
--		de-active = <1>;
--		pixelclk-active = <0>;
--	};
-+	/* To make it work, set CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=4 */
-+	compatible = "logicpd,type28";
- };
+diff --git a/Documentation/devicetree/bindings/nvmem/rockchip-otp.txt b/Documentation/devicetree/bindings/nvmem/rockchip-otp.txt
+new file mode 100644
+index 000000000000..40f649f7c2e5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/rockchip-otp.txt
+@@ -0,0 +1,25 @@
++Rockchip internal OTP (One Time Programmable) memory device tree bindings
++
++Required properties:
++- compatible: Should be one of the following.
++  - "rockchip,px30-otp" - for PX30 SoCs.
++  - "rockchip,rk3308-otp" - for RK3308 SoCs.
++- reg: Should contain the registers location and size
++- clocks: Must contain an entry for each entry in clock-names.
++- clock-names: Should be "otp", "apb_pclk" and "phy".
++- resets: Must contain an entry for each entry in reset-names.
++  See ../../reset/reset.txt for details.
++- reset-names: Should be "phy".
++
++See nvmem.txt for more information.
++
++Example:
++	otp: otp@ff290000 {
++		compatible = "rockchip,px30-otp";
++		reg = <0x0 0xff290000 0x0 0x4000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		clocks = <&cru SCLK_OTP_USR>, <&cru PCLK_OTP_NS>,
++			 <&cru PCLK_OTP_PHY>;
++		clock-names = "otp", "apb_pclk", "phy";
++	};
 -- 
-2.17.1
+2.23.0
