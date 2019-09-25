@@ -1,105 +1,68 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [RFCv4 0/7] interconnect: Add imx support via devfreq
-Date: Wed, 25 Sep 2019 22:52:14 +0000
-Message-ID: <VI1PR04MB7023ADED2210DFCB81E588CFEE870@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1566570260.git.leonard.crestez@nxp.com>
- <VI1PR04MB702373BE28E4404C7F2CE75FEE8C0@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <02d3fe6a-53a6-3290-deab-d79e940978ff@linaro.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: reset: add bindings for the Meson-A1 SoC Reset Controller
+Date: Wed, 25 Sep 2019 15:55:05 -0700
+Message-ID: <7htv90rnp2.fsf@baylibre.com>
+References: <1569227661-4261-1-git-send-email-xingyu.chen@amlogic.com> <1569227661-4261-3-git-send-email-xingyu.chen@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Saravana Kannan <saravanak@google.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1569227661-4261-3-git-send-email-xingyu.chen@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Xingyu Chen <xingyu.chen@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, Hanjie Lin <hanjie.lin@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 25.09.2019 05:38, Georgi Djakov wrote:
-> Hi Leonard,
-> 
-> On 9/16/19 05:34, Leonard Crestez wrote:
->> On 23.08.2019 17:37, Leonard Crestez wrote:
->>> This series add imx support for interconnect via devfreq: the ICC
->>> framework is used to aggregate requests from devices and then those are
->>> converted to DEV_PM_QOS_MIN_FREQUENCY requests for devfreq.
->>>   
->>> Since there is no single devicetree node that can represent the "interconnect"
->>> new API is added to allow individual devfreq nodes to act as parsing proxies
->>> all mapping to a single soc-level icc provider. This is still RFC
->>> because of this
->>
->> Any comments? I made a lot of changes relative to previous versions,
->> most of them solely to avoid adding a virtual node in DT bindings.
->>
->> The only current interconnect provider implementation is for qcom and it
->> uses a firmware node as the provider node (with #interconnect-cells).
->> However there is no obvious equivalent of that for imx and many other SOCs.
-> 
-> Not sure if it will help, but have you seen the qcs404 interconnect driver?
-> There is also mt8183 interconnect provider driver on LKML.
+Xingyu Chen <xingyu.chen@amlogic.com> writes:
 
-Yes, but only yesterday. The qcs404 driver involves multiple DT devices 
-so it seems closer to imx.
+> Add DT bindings for the Meson-A1 SoC Reset Controller include file,
+> and also slightly update documentation.
+>
+> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
 
-As far as I understand from reading qcs404 source:
+The order here doesn't look right.  As the sender, your sign-off should
+be last.  Is Jianxin the author or are you?  If Jianxin, there should be
+a "From:" line at the beginning of the changelog to indicate authorship
+that's different from the sender.
 
-* There is no struct device representing the entire graph.
-* There are multiple NOCs and each registers itself as a separate 
-interconnect provider.
-* Each NOC registers multiple icc_nodes of various sorts:
-   * Device masters and slaves
-   * Some nodes representing NoC ports?
-   * Multiple internal nodes
-* There is single per-SOC master list of QNOCs in the qcs404 driver.
-* The QNOCs can reference each other between multiple providers.
-* Each NOC registers an icc_provider and a subset of the graph.
-* The multiple NoC inside a chip are distinguished by compat strings. 
-This seems strange, aren't they really different instantiations of the 
-same IP with small config changes?
+> ---
+>  .../bindings/reset/amlogic,meson-reset.yaml        |  1 +
+>  include/dt-bindings/reset/amlogic,meson-a1-reset.h | 59 ++++++++++++++++++++++
+>  2 files changed, 60 insertions(+)
+>  create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
+>
+> diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+> index 00917d8..b3f57d8 100644
+> --- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+> +++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+> @@ -16,6 +16,7 @@ properties:
+>        - amlogic,meson8b-reset # Reset Controller on Meson8b and compatible SoCs
+>        - amlogic,meson-gxbb-reset # Reset Controller on GXBB and compatible SoCs
+>        - amlogic,meson-axg-reset # Reset Controller on AXG and compatible SoCs
+> +      - amlogic,meson-a1-reset # Reset Controller on A1 and compatible SoCs
+>  
+>    reg:
+>      maxItems: 1
+> diff --git a/include/dt-bindings/reset/amlogic,meson-a1-reset.h b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
+> new file mode 100644
+> index 00000000..8d76a47
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
+> @@ -0,0 +1,59 @@
+> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> + *
+> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+> + * Author: Xingyu Chen <xingyu.chen@amlogic.com>
+> + *
+> + */
+> +
+> +#ifndef _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
+> +#define _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
+> +
+> +/* RESET0 */
+> +#define RESET_AM2AXI_VAD		1
 
-This design is still quite odd, what would make sense to me is to 
-register the "interconnect graph" once and then provide multiple 
-"interconnect scalers" which handle the aggregated requests for certain 
-specific nodes.
+minor nit: can you use comments/whitespace here to indicate holes?
+Please see the other amlogic files in this dir for examples.
 
->> On imx there are multiple pieces of scalable fabric which can be defined
->> in DT as devfreq devices and it sort of makes sense to add
->> #interconnect-cells to those. However when it comes to describing the
->> SOC interconnect graph it's much more convenient to have a single
->> per-SOC platform driver.
-> 
-> Is all the NoC configuration done only by ATF? Are there any NoC related memory
-> mapped registers?
-
-Registers are memory-mapped and visible to the A-cores but should only 
-be accessed through secure transactions. This means that configuration 
-needs be done by ATF in EL3 (we don't support running linux in secure 
-world on imx8m). There is no "remote processor" managing this on imx8m.
-
-On older imx6/7 chips we actually have two out-of-tree implementations 
-of bus freq switching code: An older one in Linux (used when running in 
-secure world) and a different one in optee for running Linux in 
-non-secure world.
-
-NoC registers can be used to control some "transaction priority" bits 
-but I don't want to expose that part right now.
-
-What determines bandwidth versus power consumption is the NoC clk rate 
-and clocks are managed by Linux directly.
-
-DVFS on the RAM controller (DDRC) is also important. That component is 
-only a bus slave and frequency switching requires a complex sequence 
-inside ATF.
-
---
-Regards,
-Leonard
+Kevin
