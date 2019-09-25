@@ -1,39 +1,81 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 0/7] add support for clocksource/clockevent DT selection
-Date: Wed, 25 Sep 2019 19:19:16 +0200
-Message-ID: <c3a68a08-d134-cd28-c8af-f757628e07f1@linaro.org>
-References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Adam Ford <aford173@gmail.com>
+Subject: [PATCH V3 1/3] drm/panel: simple: Add Logic PD Type 28 display support
+Date: Wed, 25 Sep 2019 13:42:36 -0500
+Message-ID: <20190925184239.22330-1-aford173@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu Beznea <claudiu.beznea@microchip.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, nsekhar@ti.com, bgolaszewski@baylibre.com, monstr@monstr.eu, john@phrozen.org, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, lftan@altera.com, tglx@linutronix.de, vgupta@synopsys.com, marc.zyngier@arm.com, patrice.chotard@st.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, eric@anholt.net, wahrenst@gmx.net, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org, shc_work@mail.ru, kgene@kernel.org, krzk@kernel.org, ysato@users.sourceforge.jp, liviu.dudau@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org, linux-snps-arc@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, linux-rpi-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, uclinux-h8-devel@lists.sourceforge.jp, linux-amlogic@lists.infradead.org, openbmc@lists.ozlabs.org, linux-oxnas@groups.io, linux-arm-msm@vger.kernel.org, linux-unisoc@lists.infradead.org, linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: dri-devel@lists.freedesktop.org
+Cc: adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Previously, there was an omap panel-dpi driver that would
+read generic timings from the device tree and set the display
+timing accordingly.  This driver was removed so the screen
+no longer functions.  This patch modifies the panel-simple
+file to setup the timings to the same values previously used.
 
-Hi Claudiu,
+Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
 
-On 10/09/2019 15:47, Claudiu Beznea wrote:
-> Hi,
-> 
-> This series adds support to permit the selection of clocksource/clockevent
-> via DT.
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+---
+V3:  No change
+V2:  No change
 
-Thanks for the proposal and taking care of making some progress on this.
-
-I just wanted to let you know I've been traveling but the series is in
-my pipe and I did not forget it. I'll comment it next week.
-
- -- Daniel
-
-
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 28fa6ba7b767..8abb31f83ffc 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2048,6 +2048,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+ 	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+ };
+ 
++static const struct drm_display_mode logicpd_type_28_mode = {
++	.clock = 9000,
++	.hdisplay = 480,
++	.hsync_start = 480 + 3,
++	.hsync_end = 480 + 3 + 42,
++	.htotal = 480 + 3 + 42 + 2,
++
++	.vdisplay = 272,
++	.vsync_start = 272 + 2,
++	.vsync_end = 272 + 2 + 11,
++	.vtotal = 272 + 2 + 11 + 3,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
++};
++
++static const struct panel_desc logicpd_type_28 = {
++	.modes = &logicpd_type_28_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 105,
++		.height = 67,
++	},
++	.delay = {
++		.prepare = 200,
++		.enable = 200,
++		.unprepare = 200,
++		.disable = 200,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
++		     DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
++};
++
+ static const struct panel_desc mitsubishi_aa070mc01 = {
+ 	.modes = &mitsubishi_aa070mc01_mode,
+ 	.num_modes = 1,
+@@ -3264,6 +3298,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "lg,lp129qe",
+ 		.data = &lg_lp129qe,
++	}, {
++		.compatible = "logicpd,type28",
++		.data = &logicpd_type_28,
+ 	}, {
+ 		.compatible = "mitsubishi,aa070mc01-ca1",
+ 		.data = &mitsubishi_aa070mc01,
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.17.1
