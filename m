@@ -1,70 +1,310 @@
-From: Hongwei Zhang <hongweiz@ami.com>
-Subject: [v2, 1/2] gpio: dts: aspeed: Add SGPIO driver
-Date: Wed, 25 Sep 2019 15:22:16 -0400
-Message-ID: <1569439337-10482-2-git-send-email-hongweiz@ami.com>
-References: <1569439337-10482-1-git-send-email-hongweiz@ami.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v3] dt-bindings: at24: convert the binding document to yaml
+Date: Wed, 25 Sep 2019 15:38:08 -0500
+Message-ID: <20190925203808.14249-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569439337-10482-1-git-send-email-hongweiz@ami.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Joel Stanley <joel@jms.id.au>
-Cc: Hongwei Zhang <hongweiz@ami.com>, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Doug Anderson <armlinux@m.disordat.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Mike Rapoport <rppt@linux.ibm.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Peter Rosin <peda@axentia.se>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add SGPIO driver support for Aspeed AST2500 SoC.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Signed-off-by: Hongwei Zhang <hongweiz@ami.com>
+Convert the binding document for at24 EEPROMs from txt to yaml. The
+compatible property uses a regex pattern to address all the possible
+combinations of "vendor,model" strings.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+[robh: rework compatible schema, fix missing allOf for $ref, fix errors in example]
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/Kconfig                 |  2 ++
- arch/arm/boot/dts/aspeed-g5.dtsi | 16 +++++++++++++++-
+Here's my reworking of compatible schema and all the other fixes I 
+found. The inner 'oneOf' is probably a little excessive given the number 
+of lines. All it does is ensure both compatible strings have the same 
+part number.
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 2436021..c9f08ab 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1460,6 +1460,8 @@ config ARCH_NR_GPIO
- 	default 416 if ARCH_SUNXI
- 	default 392 if ARCH_U8500
- 	default 352 if ARCH_VT8500
-+	default 312 if MACH_ASPEED_G5
-+	default 304 if MACH_ASPEED_G4
- 	default 288 if ARCH_ROCKCHIP
- 	default 264 if MACH_H4700
- 	default 0
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index 00f05bd..85da7ea 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -311,7 +311,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				compatible = "aspeed,ast2500-gpio";
--				reg = <0x1e780000 0x1000>;
-+				reg = <0x1e780000 0x200>;
- 				interrupts = <20>;
- 				gpio-ranges = <&pinctrl 0 0 232>;
- 				clocks = <&syscon ASPEED_CLK_APB>;
-@@ -319,6 +319,20 @@
- 				#interrupt-cells = <2>;
- 			};
- 
-+			sgpio: sgpio@1e780200 {
-+				#gpio-cells = <2>;
-+				compatible = "aspeed,ast2500-sgpio";
-+				gpio-controller;
-+				interrupts = <40>;
-+				reg = <0x1e780200 0x0100>;
-+				clocks = <&syscon ASPEED_CLK_APB>;
-+				interrupt-controller;
-+				ngpios = <8>;
-+				bus-frequency = <12000000>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_sgpm_default>;
-+			};
+Getting these errors checking Arm dts files:
+
+arch/arm/boot/dts/at91-tse850-3.dt.yaml: jc42@18: compatible: ['nxp,se97b', 'jedec,jc-42.4-temp'] is not valid under any of the given schemas
+arch/arm/boot/dts/at91-nattis-2-natte-2.dt.yaml: temp@18: compatible: ['nxp,se97b', 'jedec,jc-42.4-temp'] is not valid under any of the given schemas
+arch/arm/boot/dts/imx7d-mba7.dt.yaml: temperature-sensor-eeprom@1e: compatible: ['nxp,se97b', 'jedec,jc-42.4-temp'] is not valid under any of the given schemas
+arch/arm/boot/dts/imx7s-mba7.dt.yaml: temperature-sensor-eeprom@1e: compatible: ['nxp,se97b', 'jedec,jc-42.4-temp'] is not valid under any of the given schemas
+
+ .../devicetree/bindings/eeprom/at24.txt       |  90 +---------
+ .../devicetree/bindings/eeprom/at24.yaml      | 154 ++++++++++++++++++
+ MAINTAINERS                                   |   2 +-
+ 3 files changed, 156 insertions(+), 90 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/eeprom/at24.yaml
+
+diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Documentation/devicetree/bindings/eeprom/at24.txt
+index 22aead844d0f..c94acbb8cb0c 100644
+--- a/Documentation/devicetree/bindings/eeprom/at24.txt
++++ b/Documentation/devicetree/bindings/eeprom/at24.txt
+@@ -1,89 +1 @@
+-EEPROMs (I2C)
+-
+-Required properties:
+-
+-  - compatible: Must be a "<manufacturer>,<model>" pair. The following <model>
+-                values are supported (assuming "atmel" as manufacturer):
+-
+-                "atmel,24c00",
+-                "atmel,24c01",
+-                "atmel,24cs01",
+-                "atmel,24c02",
+-                "atmel,24cs02",
+-                "atmel,24mac402",
+-                "atmel,24mac602",
+-                "atmel,spd",
+-                "atmel,24c04",
+-                "atmel,24cs04",
+-                "atmel,24c08",
+-                "atmel,24cs08",
+-                "atmel,24c16",
+-                "atmel,24cs16",
+-                "atmel,24c32",
+-                "atmel,24cs32",
+-                "atmel,24c64",
+-                "atmel,24cs64",
+-                "atmel,24c128",
+-                "atmel,24c256",
+-                "atmel,24c512",
+-                "atmel,24c1024",
+-                "atmel,24c2048",
+-
+-                If <manufacturer> is not "atmel", then a fallback must be used
+-                with the same <model> and "atmel" as manufacturer.
+-
+-                Example:
+-                        compatible = "microchip,24c128", "atmel,24c128";
+-
+-                Supported manufacturers are:
+-
+-                "catalyst",
+-                "microchip",
+-                "nxp",
+-                "ramtron",
+-                "renesas",
+-                "rohm",
+-                "st",
+-
+-                Some vendors use different model names for chips which are just
+-                variants of the above. Known such exceptions are listed below:
+-
+-                "nxp,se97b" - the fallback is "atmel,24c02",
+-                "renesas,r1ex24002" - the fallback is "atmel,24c02"
+-                "renesas,r1ex24016" - the fallback is "atmel,24c16"
+-                "renesas,r1ex24128" - the fallback is "atmel,24c128"
+-                "rohm,br24t01" - the fallback is "atmel,24c01"
+-
+-  - reg: The I2C address of the EEPROM.
+-
+-Optional properties:
+-
+-  - pagesize: The length of the pagesize for writing. Please consult the
+-              manual of your device, that value varies a lot. A wrong value
+-              may result in data loss! If not specified, a safety value of
+-              '1' is used which will be very slow.
+-
+-  - read-only: This parameterless property disables writes to the eeprom.
+-
+-  - size: Total eeprom size in bytes.
+-
+-  - no-read-rollover: This parameterless property indicates that the
+-                      multi-address eeprom does not automatically roll over
+-                      reads to the next slave address. Please consult the
+-                      manual of your device.
+-
+-  - wp-gpios: GPIO to which the write-protect pin of the chip is connected.
+-
+-  - address-width: number of address bits (one of 8, 16).
+-
+-  - num-addresses: total number of i2c slave addresses this device takes
+-
+-Example:
+-
+-eeprom@52 {
+-	compatible = "atmel,24c32";
+-	reg = <0x52>;
+-	pagesize = <32>;
+-	wp-gpios = <&gpio1 3 0>;
+-	num-addresses = <8>;
+-};
++This file has been moved to at24.yaml.
+diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documentation/devicetree/bindings/eeprom/at24.yaml
+new file mode 100644
+index 000000000000..5faa03014cc5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
+@@ -0,0 +1,154 @@
++# SPDX-License-Identifier: GPL-2.0-only
++# Copyright 2019 BayLibre SAS
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/eeprom/at24.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
- 			rtc: rtc@1e781000 {
- 				compatible = "aspeed,ast2500-rtc";
- 				reg = <0x1e781000 0x18>;
++title: I2C EEPROMs compatible with Atmel's AT24
++
++maintainers:
++  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
++
++properties:
++  compatible:
++    oneOf:
++      - allOf:
++          - minItems: 1
++            maxItems: 2
++            items:
++              - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas|rohm|st),(24(c|cs|mac)[0-9]+|spd)$"
++              - pattern: "^atmel,(24(c|cs|mac)[0-9]+|spd)$"
++          - oneOf:
++              - items:
++                  pattern: c00$
++              - items:
++                  pattern: c01$
++              - items:
++                  pattern: c02$
++              - items:
++                  pattern: c04$
++              - items:
++                  pattern: c08$
++              - items:
++                  pattern: c16$
++              - items:
++                  pattern: cs16$
++              - items:
++                  pattern: c32$
++              - items:
++                  pattern: cs32$
++              - items:
++                  pattern: c64$
++              - items:
++                  pattern: cs64$
++              - items:
++                  pattern: c128$
++              - items:
++                  pattern: cs128$
++              - items:
++                  pattern: c256$
++              - items:
++                  pattern: cs256$
++              - items:
++                  pattern: c512$
++              - items:
++                  pattern: cs512$
++              - items:
++                  pattern: c1024$
++              - items:
++                  pattern: cs1024$
++              - items:
++                  pattern: c2048$
++              - items:
++                  pattern: cs2048$
++              - items:
++                  pattern: spd$
++      - items:
++          - const: rohm,br24t01
++          - const: atmel,24c01
++      - items:
++          - const: nxp,se97b
++          - const: atmel,24c02
++      - items:
++          - const: renesas,r1ex24002
++          - const: atmel,24c02
++      - items:
++          - const: renesas,r1ex24016
++          - const: atmel,24c16
++      - items:
++          - const: renesas,r1ex24128
++          - const: atmel,24c128
++
++  reg:
++    maxItems: 1
++
++  pagesize:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      The length of the pagesize for writing. Please consult the
++      manual of your device, that value varies a lot. A wrong value
++      may result in data loss! If not specified, a safety value of
++      '1' is used which will be very slow.
++    enum: [ 1, 8, 16, 32, 64, 128, 258 ]
++    default: 1
++
++  read-only:
++    $ref: /schemas/types.yaml#definitions/flag
++    description:
++      This parameterless property disables writes to the eeprom.
++
++  size:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Total eeprom size in bytes.
++
++  no-read-rollover:
++    $ref: /schemas/types.yaml#definitions/flag
++    description:
++      This parameterless property indicates that the multi-address
++      eeprom does not automatically roll over reads to the next slave
++      address. Please consult the manual of your device.
++
++  wp-gpios:
++    description:
++      GPIO to which the write-protect pin of the chip is connected.
++    maxItems: 1
++
++  address-width:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Number of address bits (one of 8, 16).
++    default: 8
++    enum: [ 8, 16 ]
++
++  num-addresses:
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Total number of i2c slave addresses this device takes.
++    default: 1
++    minimum: 1
++    maximum: 8
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      eeprom@52 {
++          compatible = "microchip,24c32", "atmel,24c32";
++          reg = <0x52>;
++          pagesize = <32>;
++          wp-gpios = <&gpio1 3 0>;
++          num-addresses = <8>;
++      };
++    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a50e97a63bc8..a65e6bcd957b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2687,7 +2687,7 @@ M:	Bartosz Golaszewski <bgolaszewski@baylibre.com>
+ L:	linux-i2c@vger.kernel.org
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/eeprom/at24.txt
++F:	Documentation/devicetree/bindings/eeprom/at24.yaml
+ F:	drivers/misc/eeprom/at24.c
+ 
+ ATA OVER ETHERNET (AOE) DRIVER
 -- 
-2.7.4
+2.20.1
