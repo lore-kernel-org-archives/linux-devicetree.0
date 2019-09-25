@@ -1,117 +1,149 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
-Date: Wed, 25 Sep 2019 17:52:39 +0100
-Message-ID: <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
- <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
- <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
- <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
- <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
- <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH V9 1/2] dt-bindings: mailbox: add binding doc for the
+ ARM SMC/HVC mailbox
+Date: Wed, 25 Sep 2019 18:09:01 +0100
+Message-ID: <20190925180901.11fe5165@donnerap.cambridge.arm.com>
+References: <1569377224-5755-1-git-send-email-peng.fan@nxp.com>
+        <1569377224-5755-2-git-send-email-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
-Content-Language: en-GB
+In-Reply-To: <1569377224-5755-2-git-send-email-peng.fan@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc: devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-wireless <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, etnaviv@lists.freedesktop.org, linux-tegra@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com, linux-pci@vger.kernel.org, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, xen-devel@lists.xenproject.org, Dan Williams <dan.j.williams@intel.com>, freedreno <freedreno@lists.freedesktop.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lis>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 25/09/2019 17:16, Rob Herring wrote:
-> On Wed, Sep 25, 2019 at 10:30 AM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
->>
->> On Wed, 2019-09-25 at 16:09 +0100, Robin Murphy wrote:
->>> On 25/09/2019 15:52, Nicolas Saenz Julienne wrote:
->>>> On Tue, 2019-09-24 at 16:59 -0500, Rob Herring wrote:
->>>>> On Tue, Sep 24, 2019 at 1:12 PM Nicolas Saenz Julienne
->>>>> <nsaenzjulienne@suse.de> wrote:
->>>>>> Hi All,
->>>>>> this series tries to address one of the issues blocking us from
->>>>>> upstreaming Broadcom's STB PCIe controller[1]. Namely, the fact that
->>>>>> devices not represented in DT which sit behind a PCI bus fail to get the
->>>>>> bus' DMA addressing constraints.
->>>>>>
->>>>>> This is due to the fact that of_dma_configure() assumes it's receiving a
->>>>>> DT node representing the device being configured, as opposed to the PCIe
->>>>>> bridge node we currently pass. This causes the code to directly jump
->>>>>> into PCI's parent node when checking for 'dma-ranges' and misses
->>>>>> whatever was set there.
->>>>>>
->>>>>> To address this I create a new API in OF - inspired from Robin Murphys
->>>>>> original proposal[2] - which accepts a bus DT node as it's input in
->>>>>> order to configure a device's DMA constraints. The changes go deep into
->>>>>> of/address.c's implementation, as a device being having a DT node
->>>>>> assumption was pretty strong.
->>>>>>
->>>>>> On top of this work, I also cleaned up of_dma_configure() removing its
->>>>>> redundant arguments and creating an alternative function for the special
->>>>>> cases
->>>>>> not applicable to either the above case or the default usage.
->>>>>>
->>>>>> IMO the resulting functions are more explicit. They will probably
->>>>>> surface some hacky usages that can be properly fixed as I show with the
->>>>>> DT fixes on the Layerscape platform.
->>>>>>
->>>>>> This was also tested on a Raspberry Pi 4 with a custom PCIe driver and
->>>>>> on a Seattle AMD board.
->>>>>
->>>>> Humm, I've been working on this issue too. Looks similar though yours
->>>>> has a lot more churn and there's some other bugs I've found.
->>>>
->>>> That's good news, and yes now that I see it, some stuff on my series is
->>>> overly
->>>> complicated. Specially around of_translate_*().
->>>>
->>>> On top of that, you removed in of_dma_get_range():
->>>>
->>>> -   /*
->>>> -    * At least empty ranges has to be defined for parent node if
->>>> -    * DMA is supported
->>>> -    */
->>>> -   if (!ranges)
->>>> -           break;
->>>>
->>>> Which I assumed was bound to the standard and makes things easier.
->>>>
->>>>> Can you test out this branch[1]. I don't have any h/w needing this,
->>>>> but wrote a unittest and tested with modified QEMU.
->>>>
->>>> I reviewed everything, I did find a minor issue, see the patch attached.
->>>
->>> WRT that patch, the original intent of "force_dma" was purely to
->>> consider a device DMA-capable regardless of the presence of
->>> "dma-ranges". Expecting of_dma_configure() to do anything for a non-OF
->>> device has always been bogus - magic paravirt devices which appear out
->>> of nowhere and expect to be treated as genuine DMA masters are a
->>> separate problem that we haven't really approached yet.
->>
->> I agree it's clearly abusing the function. I have no problem with the behaviour
->> change if it's OK with you.
+On Wed, 25 Sep 2019 02:09:08 +0000
+Peng Fan <peng.fan@nxp.com> wrote:
 
-Thinking about it, you could probably just remove that call from the Xen 
-DRM driver now anyway - since the dma-direct rework, we lost the ability 
-to set dma_dummy_ops by default, and NULL ops now represent what it 
-(presumably) wants.
+Hi,
 
->> Robin, have you looked into supporting multiple dma-ranges? It's the next thing
->> we need for BCM STB's PCIe. I'll have a go at it myself if nothing is in the
->> works already.
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Multiple dma-ranges as far as configuring inbound windows should work
-> already other than the bug when there's any parent translation. But if
-> you mean supporting multiple DMA offsets and masks per device in the
-> DMA API, there's nothing in the works yet.
+> The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
+> actions in software layers running in the EL2 or EL3 exception levels.
+> The term "ARM" here relates to the SMC instruction as part of the ARM
+> instruction set, not as a standard endorsed by ARM Ltd.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  .../devicetree/bindings/mailbox/arm-smc.yaml       | 96 ++++++++++++++++++++++
+>  1 file changed, 96 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> new file mode 100644
+> index 000000000000..b061954d1678
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> @@ -0,0 +1,96 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ARM SMC Mailbox Interface
+> +
+> +maintainers:
+> +  - Peng Fan <peng.fan@nxp.com>
+> +
+> +description: |
+> +  This mailbox uses the ARM smc (secure monitor call) or hvc (hypervisor
+> +  call) instruction to trigger a mailbox-connected activity in firmware,
+> +  executing on the very same core as the caller. The value of r0/w0/x0
+> +  the firmware returns after the smc call is delivered as a received
+> +  message to the mailbox framework, so synchronous communication can be
+> +  established. The exact meaning of the action the mailbox triggers as
+> +  well as the return value is defined by their users and is not subject
+> +  to this binding.
+> +
+> +  One example use case of this mailbox is the SCMI interface, which uses
+> +  shared memory to transfer commands and parameters, and a mailbox to
+> +  trigger a function call. This allows SoCs without a separate management
+> +  processor (or when such a processor is not available or used) to use
+> +  this standardized interface anyway.
+> +
+> +  This binding describes no hardware, but establishes a firmware interface.
+> +  Upon receiving an SMC using the described SMC function identifier, the
+> +  firmware is expected to trigger some mailbox connected functionality.
+> +  The communication follows the ARM SMC calling convention.
+> +  Firmware expects an SMC function identifier in r0 or w0. The supported
+> +  identifier are passed from consumers, or listed in the the arm,func-id
 
-There's also the in-between step of making of_dma_get_range() return a 
-size based on all the dma-ranges entries rather than only the first one 
-- otherwise, something like [1] can lead to pretty unworkable default 
-masks. We implemented that when doing acpi_dma_get_range(), it's just 
-that the OF counterpart never caught up.
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+		This is now obsolete.
 
-Robin.
+The rest looks good to me, thanks for the changes!
 
-[1] 
-http://linux-arm.org/git?p=linux-rm.git;a=commitdiff;h=a2814af56b3486c2985a95540a88d8f9fa3a699f
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+
+Cheers,
+Andre.
+
+> +  property as described below. The firmware can return one value in
+> +  the first SMC result register, it is expected to be an error value,
+> +  which shall be propagated to the mailbox client.
+> +
+> +  Any core which supports the SMC or HVC instruction can be used, as long
+> +  as a firmware component running in EL3 or EL2 is handling these calls.
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - description:
+> +          For implementations using ARM SMC instruction.
+> +        const: arm,smc-mbox
+> +
+> +      - description:
+> +          For implementations using ARM HVC instruction.
+> +        const: arm,hvc-mbox
+> +
+> +  "#mbox-cells":
+> +    const: 0
+> +
+> +  arm,func-id:
+> +    description: |
+> +      An single 32-bit value specifying the function ID used by the mailbox.
+> +      The function ID follows the ARM SMC calling convention standard.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +required:
+> +  - compatible
+> +  - "#mbox-cells"
+> +  - arm,func-id
+> +
+> +examples:
+> +  - |
+> +    sram@93f000 {
+> +      compatible = "mmio-sram";
+> +      reg = <0x0 0x93f000 0x0 0x1000>;
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      ranges = <0x0 0x93f000 0x1000>;
+> +
+> +      cpu_scp_lpri: scp-shmem@0 {
+> +        compatible = "arm,scmi-shmem";
+> +        reg = <0x0 0x200>;
+> +      };
+> +    };
+> +
+> +    smc_tx_mbox: tx_mbox {
+> +      #mbox-cells = <0>;
+> +      compatible = "arm,smc-mbox";
+> +      arm,func-id = <0xc20000fe>;
+> +    };
+> +
+> +    firmware {
+> +      scmi {
+> +        compatible = "arm,scmi";
+> +        mboxes = <&smc_tx_mbox>;
+> +        mbox-names = "tx";
+> +        shmem = <&cpu_scp_lpri>;
+> +      };
+> +    };
+> +
+> +...
