@@ -1,124 +1,77 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH] arm64: dts: meson: g12a: add audio devices resets
-Date: Wed, 25 Sep 2019 11:33:58 +0200
-Message-ID: <20190925093358.15476-1-jbrunet@baylibre.com>
+From: You-Sheng Yang <vicamo.yang@canonical.com>
+Subject: [PATCH 0/2] HID: i2c-hid: add 60ms SET_POWER delay for Goodix touchpad
+Date: Wed, 25 Sep 2019 17:43:24 +0800
+Message-ID: <20190925094326.41693-1-vicamo.yang@canonical.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Kai-Heng Feng <kai.heng.feng@canonical.com>, Hui Wang <hui.wang@canonical.com>, Julian Sax <jsbc@gmx.de>, HungNien Chen <hn.chen@weidahitech.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Provide the reset lines coming from the audio clock controller to
-the audio devices of the g12 family
+I2C traffic after resumed from s2idle:
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12.dtsi | 28 +++++++++++++++++-----
- 1 file changed, 22 insertions(+), 6 deletions(-)
+  [ 275.312190] i2c_hid i2c-DELL096E:00: i2c_hid_set_power
+  [ 275.312191] i2c_hid i2c-DELL096E:00: __i2c_hid_command: cmd=05 00 01 08
+  [ 283.926905] i2c_hid i2c-DELL096E:00: i2c_hid_set_power
+  [ 283.926910] i2c_hid i2c-DELL096E:00: __i2c_hid_command: cmd=05 00 00 08
+  [ 283.927146] i2c_hid i2c-DELL096E:00: i2c_hid_set_or_send_report
+  [ 283.927149] i2c_hid i2c-DELL096E:00: __i2c_hid_command: cmd=05 00 37 03 06 00 05 00 07 00 00
+  [ 283.927872] i2c_hid i2c-DELL096E:00: i2c_hid_set_or_send_report
+  [ 283.927874] i2c_hid i2c-DELL096E:00: __i2c_hid_command: cmd=05 00 33 03 06 00 05 00 03 03 00
+  [ 283.929148] i2c_hid i2c-DELL096E:00: i2c_hid_set_or_send_report
+  [ 283.929151] i2c_hid i2c-DELL096E:00: __i2c_hid_command: cmd=05 00 35 03 06 00 05 00 05 03 00
+  # when touching touchpad:
+  [ 289.262675] i2c_hid i2c-DELL096E:00: input: 0b 00 01 00 00 00 00 00 00 00 00
+  [ 289.270314] i2c_hid i2c-DELL096E:00: input: 0b 00 01 00 fe 00 00 00 00 00 00
+  [ 289.276806] i2c_hid i2c-DELL096E:00: input: 0b 00 01 00 fd 00 00 00 00 00 00
+  [ 289.283863] i2c_hid i2c-DELL096E:00: input: 0b 00 01 00 fb 01 00 00 00 00 00
+  [ 289.291213] i2c_hid i2c-DELL096E:00: input: 0b 00 01 00 fa 02 00 00 00 00 00
+  [ 289.297932] i2c_hid i2c-DELL096E:00: input: 0b 00 01 00 f9 03 00 00 00 00 00
+  [ 289.304775] i2c_hid i2c-DELL096E:00: input: 0b 00 01 00 f9 03 00 00 00 00 00
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
-index 0d9df29994f3..3cf74fc96434 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
-@@ -103,7 +103,9 @@
- 			sound-name-prefix = "TODDR_A";
- 			interrupts = <GIC_SPI 148 IRQ_TYPE_EDGE_RISING>;
- 			clocks = <&clkc_audio AUD_CLKID_TODDR_A>;
--			resets = <&arb AXG_ARB_TODDR_A>;
-+			resets = <&arb AXG_ARB_TODDR_A>,
-+				 <&clkc_audio AUD_RESET_TODDR_A>;
-+			reset-names = "arb", "rst";
- 			status = "disabled";
- 		};
- 
-@@ -115,7 +117,9 @@
- 			sound-name-prefix = "TODDR_B";
- 			interrupts = <GIC_SPI 149 IRQ_TYPE_EDGE_RISING>;
- 			clocks = <&clkc_audio AUD_CLKID_TODDR_B>;
--			resets = <&arb AXG_ARB_TODDR_B>;
-+			resets = <&arb AXG_ARB_TODDR_B>,
-+				 <&clkc_audio AUD_RESET_TODDR_B>;
-+			reset-names = "arb", "rst";
- 			status = "disabled";
- 		};
- 
-@@ -127,7 +131,9 @@
- 			sound-name-prefix = "TODDR_C";
- 			interrupts = <GIC_SPI 150 IRQ_TYPE_EDGE_RISING>;
- 			clocks = <&clkc_audio AUD_CLKID_TODDR_C>;
--			resets = <&arb AXG_ARB_TODDR_C>;
-+			resets = <&arb AXG_ARB_TODDR_C>,
-+				 <&clkc_audio AUD_RESET_TODDR_C>;
-+			reset-names = "arb", "rst";
- 			status = "disabled";
- 		};
- 
-@@ -139,7 +145,9 @@
- 			sound-name-prefix = "FRDDR_A";
- 			interrupts = <GIC_SPI 152 IRQ_TYPE_EDGE_RISING>;
- 			clocks = <&clkc_audio AUD_CLKID_FRDDR_A>;
--			resets = <&arb AXG_ARB_FRDDR_A>;
-+			resets = <&arb AXG_ARB_FRDDR_A>,
-+				 <&clkc_audio AUD_RESET_FRDDR_A>;
-+			reset-names = "arb", "rst";
- 			status = "disabled";
- 		};
- 
-@@ -151,7 +159,9 @@
- 			sound-name-prefix = "FRDDR_B";
- 			interrupts = <GIC_SPI 153 IRQ_TYPE_EDGE_RISING>;
- 			clocks = <&clkc_audio AUD_CLKID_FRDDR_B>;
--			resets = <&arb AXG_ARB_FRDDR_B>;
-+			resets = <&arb AXG_ARB_FRDDR_B>,
-+				 <&clkc_audio AUD_RESET_FRDDR_B>;
-+			reset-names = "arb", "rst";
- 			status = "disabled";
- 		};
- 
-@@ -163,7 +173,9 @@
- 			sound-name-prefix = "FRDDR_C";
- 			interrupts = <GIC_SPI 154 IRQ_TYPE_EDGE_RISING>;
- 			clocks = <&clkc_audio AUD_CLKID_FRDDR_C>;
--			resets = <&arb AXG_ARB_FRDDR_C>;
-+			resets = <&arb AXG_ARB_FRDDR_C>,
-+				 <&clkc_audio AUD_RESET_FRDDR_C>;
-+			reset-names = "arb", "rst";
- 			status = "disabled";
- 		};
- 
-@@ -249,6 +261,7 @@
- 			clocks = <&clkc_audio AUD_CLKID_SPDIFIN>,
- 				 <&clkc_audio AUD_CLKID_SPDIFIN_CLK>;
- 			clock-names = "pclk", "refclk";
-+			resets = <&clkc_audio AUD_RESET_SPDIFIN>;
- 			status = "disabled";
- 		};
- 
-@@ -261,6 +274,7 @@
- 			clocks = <&clkc_audio AUD_CLKID_SPDIFOUT>,
- 				 <&clkc_audio AUD_CLKID_SPDIFOUT_CLK>;
- 			clock-names = "pclk", "mclk";
-+			resets = <&clkc_audio AUD_RESET_SPDIFOUT>;
- 			status = "disabled";
- 		};
- 
-@@ -318,6 +332,7 @@
- 			clocks = <&clkc_audio AUD_CLKID_SPDIFOUT_B>,
- 				 <&clkc_audio AUD_CLKID_SPDIFOUT_B_CLK>;
- 			clock-names = "pclk", "mclk";
-+			resets = <&clkc_audio AUD_RESET_SPDIFOUT_B>;
- 			status = "disabled";
- 		};
- 
-@@ -326,6 +341,7 @@
- 			reg = <0x0 0x744 0x0 0x4>;
- 			#sound-dai-cells = <1>;
- 			sound-name-prefix = "TOHDMITX";
-+			resets = <&clkc_audio AUD_RESET_TOHDMITX>;
- 			status = "disabled";
- 		};
- 	};
+On this device (Goodix touchpad 27C6:01F0), both Precision Touchpad
+mode and a legacy Mouse mode are supported. When I2C SET_POWER ON is
+issued, it would take as long as 60ms to complete state transition and
+is then able to receive and execute further commands. On boot the
+device is running under Mouse mode for legacy platform support, and
+will be put to PTP mode with a SET_OR_SEND_REPORT command. If somehow
+the time gap between the first SET_POWER ON and further
+SET_OR_SEND_REPORT commands is less than 60ms, the device will still
+operating under Mouse mode and gives reports like
+"0b 00 01 00 fe 00 00 00 00 00 00".
+
+On Linux system boot, it may take 500ms from i2c probe (SET_POWER ON)
+to hid initialization (SET_OR_SEND_REPORT), so it will always be put
+to PTP mode successfully. But when the device is put under s2idle
+suspend and resumed, the hid reset resume process will be right after
+i2c resume, so the device won't have enough time to complete its
+state transition, which fails following SET_OR_SEND_REPORT executing
+and therefore it operates under Mouse mode instead.
+
+Currently Linux has a at most 5ms sleep in i2c_hid_hwreset(), but
+according to HID over I2C Specification[1] section 7.2.8 "SET_POWER":
+
+> The DEVICE must ensure that it transitions to the HOST
+> specified Power State in under 1 second.
+
+it can take as long as 1 second.
+
+This changeset add a device property post-setpower-delay-ms and use it
+to specify the delay after a SET_POWER command is issued for this
+device.
+
+References: https://bugzilla.kernel.org/show_bug.cgi?id=204991
+
+You-Sheng Yang (2):
+  HID: i2c-hid: allow delay after SET_POWER
+  HID: i2c-hid: add 60ms SET_POWER delay for Goodix touchpad
+
+ .../bindings/input/hid-over-i2c.txt           |  2 +
+ drivers/hid/i2c-hid/i2c-hid-core.c            | 48 +++++++++++--------
+ include/linux/platform_data/i2c-hid.h         |  3 ++
+ 3 files changed, 33 insertions(+), 20 deletions(-)
+
 -- 
-2.21.0
+2.23.0
