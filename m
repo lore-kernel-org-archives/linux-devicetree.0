@@ -1,77 +1,71 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/5] provide the XTAL clock via OF on Meson8/8b/8m2
-Date: Wed, 25 Sep 2019 15:47:34 -0700
-Message-ID: <7h7e5wt2m1.fsf@baylibre.com>
-References: <20190921151223.768842-1-martin.blumenstingl@googlemail.com> <1jzhivs6n6.fsf@starbuckisacylon.baylibre.com> <CAFBinCA0NaCJEDfNEg+LRfW3wxfNFGbXmGS+z7D5792TsupVAA@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v10 07/12] dt-bindings: pwm: pwm-mediatek: add a property
+ "num-pwms"
+Date: Thu, 26 Sep 2019 00:50:05 +0200
+Message-ID: <20190925225005.GB8115@mithrandir>
+References: <1569421957-20765-1-git-send-email-sam.shih@mediatek.com>
+ <1569421957-20765-8-git-send-email-sam.shih@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCA0NaCJEDfNEg+LRfW3wxfNFGbXmGS+z7D5792TsupVAA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1569421957-20765-8-git-send-email-sam.shih@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: Sam Shih <sam.shih@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-> Hi Jerome,
->
-> On Mon, Sep 23, 2019 at 11:29 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
->>
->> On Sat 21 Sep 2019 at 17:12, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
->>
->> > So far the HHI clock controller has been providing the XTAL clock on
->> > Amlogic Meson8/Meson8b/Meson8m2 SoCs.
->> > This is not correct because the XTAL is actually a crystal on the
->> > boards and the SoC has a dedicated input for it.
->> >
->> > This updates the dt-bindings of the HHI clock controller and defines
->> > a fixed-clock in meson.dtsi (along with switching everything over to
->> > use this clock).
->> > The clock driver needs three updates to use this:
->> > - patch #2 uses clk_hw_set_parent in the CPU clock notifier. This drops
->> >   the explicit reference to CLKID_XTAL while at the same time making
->> >   the code much easier (thanks to Neil for providing this new method
->> >   as part of the G12A CPU clock bringup!)
->> > - patch #3 ensures that the clock driver doesn't rely on it's internal
->> >   XTAL clock while not losing support for older .dtbs that don't have
->> >   the XTAL clock input yet
->> > - with patch #4 the clock controller's own XTAL clock is not registered
->> >   anymore when a clock input is provided via OF
->> >
->> > This series is a functional no-op. It's main goal is to better represent
->> > how the actual hardware looks like.
->>
->> I'm a bit unsure about this series.
->>
->> On one hand, I totally agree with you ... having the xtal in DT is the
->> right way to do it ... when done from the start
-> yep
->
->> On the other hand, things have been this way for years, they are working
->> and going for xtal in DT does not solve any pending issue. Doing this
->> means adding complexity in the driver to support both methods. It is
->> also quite a significant change in DT :/
-> my two main motivations were:
-> - keeping the 32-bit SoCs as similar as possible to the 64-bit ones in
-> terms of "how are the [clock] drivers implemented"
-> - with the DDR clock controller the .dts looked weird: &ddr_clkc took
-> CLKID_XTAL from &clkc as input and &clkc took DDR_CLKID_DDR_PLL as
-> input from &ddr_clkc
->
-> RE complexity in the driver to support both:
-> I still have a cleanup of the meson8b.c init code on my TODO-list
-> because we're still supporting .dtbs without parent syscon
-> my plan is to drop that code-path along with the newly added fallback
-> for "skip CLKID_XTAL" (assuming this is accepted) together for v5.6 or
-> v5.7
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-TBH, I'm big(ish) "functional no-op" changes like this are not things I
-get super exicted about, especially for SoCs that have been working well
-for awhile, and are do not have a large (upstream) userbase.
+On Wed, Sep 25, 2019 at 10:32:32PM +0800, Sam Shih wrote:
+> From: Ryder Lee <ryder.lee@mediatek.com>
+>=20
+> This adds a property "num-pwms" in example so that we could
+> specify the number of PWM channels via device tree.
+>=20
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+> Changes since v10:
+> 1. Follow reviewers's comments:
+> - derive the number of PWMs from the specific compatible string
+[...]
+> + - num-pwms: the number of PWM channels.
+[...]
 
-OTOH, since Martin is doing most of the heavy lifting for keeping this
-platform working upstream, I'm happy to take the changes, as long as
-Martin is willing to deal with any fallout.
+Why is num-pwms still there if you derive it from the compatible string?
+I guess I must not have made myself clear. Please drop this.
 
-Kevin
+Also, as I mentioned earlier, I've already applied the patches from v9
+that were suitable. Please take a look.
+
+Thierry
+
+--oLBj+sq0vYjzfsbl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2L7xwACgkQ3SOs138+
+s6EKQBAAkjKF3mGlNiF2VtYjBYbi8012ySVpqf2IVmJEdG1xulyW6cUqSPW50ZRu
+biZJTXPgRLuLLIt9/vt5h/XKjvXevhTlhgv3FCWTl+tgqpgo9xhDpFANSZksadH9
+EsVp5NE1/jgTvdPa/0iYJiDHzF6pg/+zNRweveinqkVcM5mfICWwK42vZVOHx23b
+O+Nzhgr/D1ExmA4W6BUQ8BdCnCyVr8OAL7eYiRWRDwC9esDg34fuq9/irwcMo+mc
+MZE5ieoQmMvs4GOYjOdNy4G5OrBlfadzfpU95xtshQTUyv+w+TX5bj9mWpkZWlgX
+ah5DydkbX7fgR0BMnD8K0UqFr8GOgiJOmQ3VU1Q/orjaw/k0byjAQ3DoEjzGUoS+
+hAy+zt5H+IwVmMO+U9giO66xOWZLKBLa1loJJpSJ0ly0mYCO5KsJx1digyBAc1l5
+DELrYLXnLaXvxQfibweSxiKbCpOeJrsY5REaU5cmbasIFGSYRtvvI6/emTe+YUgW
+IPQ6s3CgvLVw/F+IvZle7CAfuhvltywTksUsYLsJYDjszGhuhYQiM26yjSzE62eM
+ykgQxzfDn/SN1H/cqEQgoTgMmUSxBJNa6SKYrRSlTuyWkj/74pWQdzP9hzUwi7c7
+moqU0o8poSC29OA665w+DJ4AMeQ8QSGNm+ZOO9SpmGBY8752amg=
+=QjmR
+-----END PGP SIGNATURE-----
+
+--oLBj+sq0vYjzfsbl--
