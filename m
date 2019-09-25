@@ -1,107 +1,95 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 1/2] dt-bindings: clock: meson: add A1 clock controller bindings
-Date: Wed, 25 Sep 2019 16:29:43 +0200
-Message-ID: <1j4l10motk.fsf@starbuckisacylon.baylibre.com>
-References: <1569411888-98116-1-git-send-email-jian.hu@amlogic.com> <1569411888-98116-2-git-send-email-jian.hu@amlogic.com>
+From: Sam Shih <sam.shih@mediatek.com>
+Subject: [PATCH v10 0/12] Add mt7629 and fix mt7628 pwm
+Date: Wed, 25 Sep 2019 22:32:25 +0800
+Message-ID: <1569421957-20765-1-git-send-email-sam.shih@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569411888-98116-2-git-send-email-jian.hu@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Jian Hu <jian.hu@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Sam Shih <sam.shih@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 25 Sep 2019 at 19:44, Jian Hu <jian.hu@amlogic.com> wrote:
+Changes since v10
+  1. Follow reviewers's comments:
+  - derive the number of PWMs from the specific compatible string
+  2. Add mt7629 pwm description
+  3. Add mt7628 fixed-clock description
 
-In addition to the comment expressed by Stephen on patch 2
+Changes since v9:
+  1. PATCH 03/11: Add an Acked-by tag
 
-> Add the documentation to support Amlogic A1 clock driver,
-> and add A1 clock controller bindings.
->
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> ---
->  .../devicetree/bindings/clock/amlogic,a1-clkc.yaml |  65 +++++++++++++
->  include/dt-bindings/clock/a1-clkc.h                | 102 +++++++++++++++++++++
->  2 files changed, 167 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
->  create mode 100644 include/dt-bindings/clock/a1-clkc.h
->
-> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
-> new file mode 100644
-> index 0000000..f012eb2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
-> @@ -0,0 +1,65 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + */
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/clock/amlogic,a1-clkc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson A1 Clock Control Unit Device Tree Bindings
-> +
-> +maintainers:
-> +  - Neil Armstrong <narmstrong@baylibre.com>
-> +  - Jerome Brunet <jbrunet@baylibre.com>
-> +  - Jian Hu <jian.hu@jian.hu.com>
-> +
-> +properties:
-> +  compatible:
-> +    - enum:
-> +        - amlogic,a1-clkc
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 3
-> +    items:
-> +      - description: peripheral registers
-> +      - description: cpu registers
-> +      - description: pll registers
-> +
-> +  reg-names:
-> +    items:
-> +      - const: peripheral
-> +      - const: pll
-> +      - const: cpu
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    items:
-> +      - description: Input Oscillator (usually at 24MHz)
-> +
-> +  clock-names:
-> +    maxItems: 1
-> +    items:
-> +      - const: xtal
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - clocks
-> +  - clock-names
-> +  - "#clock-cells"
-> +
-> +examples:
-> +  - |
-> +    clkc: clock-controller {
-> +        compatible = "amlogic,a1-clkc";
-> +        reg = <0x0 0xfe000800 0x0 0x100>,
-> +              <0x0 0xfe007c00 0x0 0x21c>,
-> +              <0x0 0xfd000080 0x0 0x20>;
-> +        reg-names = "peripheral", "pll", "cpu";
+Changes since v8:
+  1. Fix warning and build-error for patch 04/11
 
-I'm sorry but I don't agree with this. You are trying to regroup several
-controllers into one with this, and it is not OK
+Changes since v7:
+  1. PATCH v7 10/11: Add a missed Reviewed-by tag
 
-By the looks of it there are 3 different controllers, including one you
-did not implement in the driver.
+Changes since v6:
+  1. Due to we can use fixed-clock in DT
+     We removed has_clks and fixed-clock properties 
 
-> +        clocks = <&xtal;
-> +        clock-names = "xtal";
-> +        #clock-cells = <1>;
+Changes since v5:
+- Follow reviewer's comments:
+  1. the license stuff is a separate change
+  2. split fix mt7628 pwm into a single patch
+  3. to ensure to not use mtk_pwm_clk_name[10] 
+     (After dynamic allocate clock array patch, 
+      this is no need to check)
+  4. Use clock-frequency property to replace 
+     the use of has_clks
+
+Changes since v4:
+- Follow reviewer's comments (v3: pwm: mediatek: add a property "num-pwms")
+  Move the changes of droping the check for of_device_get_match_data
+  returning non-NULL to next patch
+- Follow reviewers's comments 
+  (v3: pwm: mediatek: allocate the clks array dynamically)
+  1. use pc->soc->has_clks to check clocks exist or not.
+  2. Add error message when probe() unable to get clks
+- Fixes bug when SoC is old mips which has no complex clock tree.
+if clocks not exist, use the new property from DT to apply period 
+calculation; otherwise, use clk_get_rate to get clock frequency and 
+apply period calculation.
+
+Changes since v3:
+- add a new property "clock-frequency" and fix mt7628 pwm
+- add mt7629 pwm support
+
+Changes since v2:
+- use num-pwms instead of mediatek,num-pwms.
+- rename the member from num_pwms to fallback_num_pwms to make it 
+  more obvious that it doesn't represent the actually used value.
+- add a dev_warn and a expressive comment to help other developers 
+  to not start adding num_pwms in the compatible_data.
+
+Changes since v1:
+- add some checks for backwards compatibility.
+
+
+
+Ryder Lee (5):
+  pwm: mediatek: add a property "num-pwms"
+  dt-bindings: pwm: pwm-mediatek: add a property "num-pwms"
+  arm64: dts: mt7622: add a property "num-pwms" for PWM
+  arm: dts: mt7623: add a property "num-pwms" for PWM
+  dt-bindings: pwm: update bindings for MT7629 SoC
+
+Sam Shih (7):
+  pwm: mediatek: droping the check for of_device_get_match_data
+  pwm: mediatek: remove a property "has-clks"
+  pwm: mediatek: allocate the clks array dynamically
+  pwm: mediatek: use pwm_mediatek as common prefix
+  pwm: mediatek: update license and switch to SPDX tag
+  pwm: mediatek: Add MT7629 compatible string
+  arm: dts: mediatek: add mt7629 pwm support
+
+ .../devicetree/bindings/pwm/pwm-mediatek.txt  |  11 +-
+ arch/arm/boot/dts/mt7623.dtsi                 |   1 +
+ arch/arm/boot/dts/mt7629.dtsi                 |  15 ++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi      |   1 +
+ drivers/pwm/pwm-mediatek.c                    | 249 +++++++++---------
+ 5 files changed, 155 insertions(+), 122 deletions(-)
+
+-- 
+2.17.1
