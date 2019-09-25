@@ -1,90 +1,124 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [RFC PATCH] interconnect: Replace of_icc_get() with icc_get()
- and reduce DT binding
-Date: Wed, 25 Sep 2019 11:15:22 +0200
-Message-ID: <20190925091522.jf5q2jdo6njfkxto@gilmour>
-References: <20190925054133.206992-1-swboyd@chromium.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] arm64: dts: meson: g12a: add audio devices resets
+Date: Wed, 25 Sep 2019 11:33:58 +0200
+Message-ID: <20190925093358.15476-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5486269731441519147=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190925054133.206992-1-swboyd@chromium.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Dai <daidavid1@codeaurora.org>, linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Provide the reset lines coming from the audio clock controller to
+the audio devices of the g12 family
 
---===============5486269731441519147==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="aomtcuidegtr2wsv"
-Content-Disposition: inline
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-g12.dtsi | 28 +++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
-
---aomtcuidegtr2wsv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Stephen,
-
-On Tue, Sep 24, 2019 at 10:41:33PM -0700, Stephen Boyd wrote:
-> The DT binding could also be simplified somewhat. Currently a path needs
-> to be specified in DT for each and every use case that is possible for a
-> device to want. Typically the path is to memory, which looks to be
-> reserved for in the binding with the "dma-mem" named path, but sometimes
-> the path is from a device to the CPU or more generically from a device
-> to another device which could be a CPU, cache, DMA master, or another
-> device if some sort of DMA to DMA scenario is happening. Let's remove
-> the pair part of the binding so that we just list out a device's
-> possible endpoints on the bus or busses that it's connected to.
->
-> If the kernel wants to figure out what the path is to memory or the CPU
-> or a cache or something else it should be able to do that by finding the
-> node for the "destination" endpoint, extracting that node's
-> "interconnects" property, and deriving the path in software. For
-> example, we shouldn't need to write out each use case path by path in DT
-> for each endpoint node that wants to set a bandwidth to memory. We
-> should just be able to indicate what endpoint(s) a device sits on based
-> on the interconnect provider in the system and then walk the various
-> interconnects to find the path from that source endpoint to the
-> destination endpoint.
-
-The dma-mem name is used by the OF core to adjust the mapping of the
-devices as well. So, any solution needs to be generic (or provide a
-generic helper).
-
-Maxime
-
---aomtcuidegtr2wsv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXYswKgAKCRDj7w1vZxhR
-xe8UAQC3EqIcKg882wsQj/TdlIO/sf9HoBIDnQnVNJ2t2kaPsAD/Qsa+D9ZQUlKc
-qhYx4agifh1/WXVN4H+Wb39VO4vx5wk=
-=Z0s1
------END PGP SIGNATURE-----
-
---aomtcuidegtr2wsv--
-
-
---===============5486269731441519147==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5486269731441519147==--
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
+index 0d9df29994f3..3cf74fc96434 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
+@@ -103,7 +103,9 @@
+ 			sound-name-prefix = "TODDR_A";
+ 			interrupts = <GIC_SPI 148 IRQ_TYPE_EDGE_RISING>;
+ 			clocks = <&clkc_audio AUD_CLKID_TODDR_A>;
+-			resets = <&arb AXG_ARB_TODDR_A>;
++			resets = <&arb AXG_ARB_TODDR_A>,
++				 <&clkc_audio AUD_RESET_TODDR_A>;
++			reset-names = "arb", "rst";
+ 			status = "disabled";
+ 		};
+ 
+@@ -115,7 +117,9 @@
+ 			sound-name-prefix = "TODDR_B";
+ 			interrupts = <GIC_SPI 149 IRQ_TYPE_EDGE_RISING>;
+ 			clocks = <&clkc_audio AUD_CLKID_TODDR_B>;
+-			resets = <&arb AXG_ARB_TODDR_B>;
++			resets = <&arb AXG_ARB_TODDR_B>,
++				 <&clkc_audio AUD_RESET_TODDR_B>;
++			reset-names = "arb", "rst";
+ 			status = "disabled";
+ 		};
+ 
+@@ -127,7 +131,9 @@
+ 			sound-name-prefix = "TODDR_C";
+ 			interrupts = <GIC_SPI 150 IRQ_TYPE_EDGE_RISING>;
+ 			clocks = <&clkc_audio AUD_CLKID_TODDR_C>;
+-			resets = <&arb AXG_ARB_TODDR_C>;
++			resets = <&arb AXG_ARB_TODDR_C>,
++				 <&clkc_audio AUD_RESET_TODDR_C>;
++			reset-names = "arb", "rst";
+ 			status = "disabled";
+ 		};
+ 
+@@ -139,7 +145,9 @@
+ 			sound-name-prefix = "FRDDR_A";
+ 			interrupts = <GIC_SPI 152 IRQ_TYPE_EDGE_RISING>;
+ 			clocks = <&clkc_audio AUD_CLKID_FRDDR_A>;
+-			resets = <&arb AXG_ARB_FRDDR_A>;
++			resets = <&arb AXG_ARB_FRDDR_A>,
++				 <&clkc_audio AUD_RESET_FRDDR_A>;
++			reset-names = "arb", "rst";
+ 			status = "disabled";
+ 		};
+ 
+@@ -151,7 +159,9 @@
+ 			sound-name-prefix = "FRDDR_B";
+ 			interrupts = <GIC_SPI 153 IRQ_TYPE_EDGE_RISING>;
+ 			clocks = <&clkc_audio AUD_CLKID_FRDDR_B>;
+-			resets = <&arb AXG_ARB_FRDDR_B>;
++			resets = <&arb AXG_ARB_FRDDR_B>,
++				 <&clkc_audio AUD_RESET_FRDDR_B>;
++			reset-names = "arb", "rst";
+ 			status = "disabled";
+ 		};
+ 
+@@ -163,7 +173,9 @@
+ 			sound-name-prefix = "FRDDR_C";
+ 			interrupts = <GIC_SPI 154 IRQ_TYPE_EDGE_RISING>;
+ 			clocks = <&clkc_audio AUD_CLKID_FRDDR_C>;
+-			resets = <&arb AXG_ARB_FRDDR_C>;
++			resets = <&arb AXG_ARB_FRDDR_C>,
++				 <&clkc_audio AUD_RESET_FRDDR_C>;
++			reset-names = "arb", "rst";
+ 			status = "disabled";
+ 		};
+ 
+@@ -249,6 +261,7 @@
+ 			clocks = <&clkc_audio AUD_CLKID_SPDIFIN>,
+ 				 <&clkc_audio AUD_CLKID_SPDIFIN_CLK>;
+ 			clock-names = "pclk", "refclk";
++			resets = <&clkc_audio AUD_RESET_SPDIFIN>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -261,6 +274,7 @@
+ 			clocks = <&clkc_audio AUD_CLKID_SPDIFOUT>,
+ 				 <&clkc_audio AUD_CLKID_SPDIFOUT_CLK>;
+ 			clock-names = "pclk", "mclk";
++			resets = <&clkc_audio AUD_RESET_SPDIFOUT>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -318,6 +332,7 @@
+ 			clocks = <&clkc_audio AUD_CLKID_SPDIFOUT_B>,
+ 				 <&clkc_audio AUD_CLKID_SPDIFOUT_B_CLK>;
+ 			clock-names = "pclk", "mclk";
++			resets = <&clkc_audio AUD_RESET_SPDIFOUT_B>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -326,6 +341,7 @@
+ 			reg = <0x0 0x744 0x0 0x4>;
+ 			#sound-dai-cells = <1>;
+ 			sound-name-prefix = "TOHDMITX";
++			resets = <&clkc_audio AUD_RESET_TOHDMITX>;
+ 			status = "disabled";
+ 		};
+ 	};
+-- 
+2.21.0
