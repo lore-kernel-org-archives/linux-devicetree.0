@@ -1,60 +1,65 @@
-From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-Subject: Re: Re: [PATCH 4/5] dt-bindings: display: imx: add bindings for DCSS
-Date: Wed, 25 Sep 2019 06:14:34 +0000
-Message-ID: <20190925061433.GA16686@fsr-ub1664-121>
-References: <1569248002-2485-1-git-send-email-laurentiu.palcu@nxp.com>
- <1569248002-2485-5-git-send-email-laurentiu.palcu@nxp.com>
- <CAL_JsqK1egTpkqsgVUMUiYzKvVJ=nWtJu+OeujJotRCD9ADsnw@mail.gmail.com>
+From: ppvk@codeaurora.org
+Subject: Re: [RFC 1/2] mmc: sdhci-msm: Add support for bus bandwidth voting
+Date: Wed, 25 Sep 2019 11:54:11 +0530
+Message-ID: <d10c21360d4830c864374a57c491c21c@codeaurora.org>
+References: <1567774037-2344-1-git-send-email-ppvk@codeaurora.org>
+ <1567774037-2344-2-git-send-email-ppvk@codeaurora.org>
+ <616c7a8c-a1cf-2043-4ea4-f452ee90f083@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqK1egTpkqsgVUMUiYzKvVJ=nWtJu+OeujJotRCD9ADsnw@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <C68E1DEA7D81984A98B5320990996987@eurprd04.prod.outlook.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?iso-8859-1?Q?Guido_G=FCnther?= <agx@sigxcpu.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM
- ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <616c7a8c-a1cf-2043-4ea4-f452ee90f083@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, asutoshd@codeaurora.org, vbadigan@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, rampraka@codeaurora.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Andy Gross <agross@kernel.org>, linux-mmc-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUdWUsIFNlcCAyNCwgMjAxOSBhdCAwMTo1MzoyOFBNIC0wNTAwLCBSb2IgSGVycmlu
-ZyB3cm90ZToKPiBPbiBNb24sIFNlcCAyMywgMjAxOSBhdCA5OjE0IEFNIExhdXJlbnRpdSBQYWxj
-dSA8bGF1cmVudGl1LnBhbGN1QG54cC5jb20+IHdyb3RlOgo+ID4KPiA+IEFkZCBiaW5kaW5ncyBm
-b3IgaU1YOE1RIERpc3BsYXkgQ29udHJvbGxlciBTdWJzeXN0ZW0uCj4gPgo+ID4gU2lnbmVkLW9m
-Zi1ieTogTGF1cmVudGl1IFBhbGN1IDxsYXVyZW50aXUucGFsY3VAbnhwLmNvbT4KPiA+IC0tLQo+
-ID4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2lteC9ueHAsaW14OG1xLWRjc3MueWFtbCAgICAgIHwg
-ODYgKysrKysrKysrKysrKysrKysrKysrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA4NiBpbnNlcnRp
-b25zKCspCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L2lteC9ueHAsaW14OG1xLWRjc3MueWFtbAo+IAo+IEZhaWxzIHRvIGJ1
-aWxkIHdpdGggJ21ha2UgZHRfYmluZGluZ19jaGVjayc6CgpNdXN0IGJlIGJlY2F1c2Ugb2YgdGhl
-IGV4dHJhICcweCcgU3RlcGhlbiBCb3lkIHBvaW50ZWQgb3V0LiBGdW5ueSB0aGluZwppcyBJIHJh
-bjoKCm1ha2UgZHRic19jaGVjayBEVF9TQ0hFTUFfRklMRVM9RG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaW14L254cCxpbXg4bXEtZGNzcy55YW1sCgphdCBteSBzaWRl
-LCBiZWZvcmUgc2VuZGluZyBvdXQgdGhlIHBhdGNoc2V0LCBhbmQgaXQgcGFzc2VkLiBUaGUgY29t
-bWFuZAphbHNvIHJ1bnMgZHRfYmluZGluZ19jaGVjaywgQUZBSVM6CgogIFNDSEVNQSAgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Byb2Nlc3NlZC1zY2hlbWEueWFtbAogIENIS0RU
-ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaW14L254cCxpbXg4
-bXEtZGNzcy55YW1sCiAgRFRDICAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9pbXgvbnhwLGlteDhtcS1kY3NzLmV4YW1wbGUuZHQueWFtbAogIENIRUNLICAgRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaW14L254cCxpbXg4bXEtZGNz
-cy5leGFtcGxlLmR0LnlhbWwKCk5vdCBzdXJlIHdoYXQgSSdtIGRvaW5nIHdyb25nIHdoZW4gcnVu
-bmluZyBpdC4gSSBzaG91bGQndmUgY2F0Y2hlZCB0aGF0LiA6LwoKQW55d2F5LCBhbHJlYWR5IGZp
-eGVkIGl0IGFuZCB3aWxsIGJlIGluY2x1ZGVkIGluIHYyLgoKVGhhbmtzLApsYXVyZW50aXUKCgo+
-IAo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1o
-dHRwcyUzQSUyRiUyRnBhdGNod29yay5vemxhYnMub3JnJTJGcGF0Y2glMkYxMTY2MDczJTJGJmFt
-cDtkYXRhPTAyJTdDMDElN0NsYXVyZW50aXUucGFsY3UlNDBueHAuY29tJTdDZjk3ODQ3Y2U3Mzli
-NDZmZGI3MjMwOGQ3NDEyMDg1OGIlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3
-QzAlN0MwJTdDNjM3MDQ5NDgwMjQ0NDI0OTgwJmFtcDtzZGF0YT1manlxNTJsaXZFbk1BUVl6VkFH
-cU8lMkZPdG1MUzgzZHVuZ1N2UHFIWWxlMTAlM0QmYW1wO3Jlc2VydmVkPTAKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On 2019-09-12 18:26, Georgi Djakov wrote:
+> Hi Pradeep,
+> 
+> Thanks for the patch!
+> 
+> On 9/6/19 15:47, Pradeep P V K wrote:
+>> Vote for the MSM bus bandwidth required by SDHC driver
+>> based on the clock frequency and bus width of the card.
+>> Otherwise,the system clocks may run at minimum clock speed
+>> and thus affecting the performance.
+>> 
+>> This change is based on Georgi Djakov [RFC]
+>> (https://lkml.org/lkml/2018/10/11/499)
+> 
+> I am just wondering whether do we really need to predefine the 
+> bandwidth values
+> in DT? Can't we use the computations from the above patch or is there 
+> any
+> problem with that approach?
+> 
+> Thanks,
+> Georgi
+
+Hi Georgi,
+
+By using the direct required bandwidth(bw / 1000) values, it will not 
+guarantee
+that all the NOC clocks are running in the same voltage corner as 
+required,
+which is very crucial for power concern devices like Mobiles etc.
+Also, it will not guarantee that the value passed is in proper Clock 
+Plans domain
+there by effecting the requested Bandwidth.
+I think, you already aware of these consequences on using direct 
+bandwidth values for
+RPMh based devices.
+
+The value the we passed in DT will make sure that all the NOC clocks 
+between the end points
+are running in the same voltage corners as required and also it will 
+guarantee that
+the requested BW's for the clients are obtained.
+
+Hence the reason for passing the predefined bandwidth values in DT.
+
+Thanks and Regards,
+Pradeep
