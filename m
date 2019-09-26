@@ -1,25 +1,167 @@
-From: Shannon Nelson <snelson@pensando.io>
-Subject: Re: [PATCH 1/3] docs: fix some broken references
-Date: Thu, 26 Sep 2019 09:29:56 -0700
-Message-ID: <81dc41d5-606a-7638-1d11-4fe53e9c2a7f@pensando.io>
-References: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+From: Maciej Falkowski <m.falkowski@samsung.com>
+Subject: Re: [PATCH v2] dt-bindings: gpu: Convert Samsung Image Scaler to
+ dt-schema
+Date: Thu, 26 Sep 2019 18:54:01 +0200
+Message-ID: <f06da64d-58de-1d51-48d4-95a6efd417d0@samsung.com>
+References: <CGME20190926125619eucas1p249ac149ef1e1a3eb975dae94b08cd7be@eucas1p2.samsung.com>
+        <20190926125614.10408-1-m.szyprowski@samsung.com>
+        <20190926140315.GA16002@pi3>
+        <0d3831ae-e33d-774d-02f7-fba45a95d25c@samsung.com>
+        <CAL_JsqL4LZdkWkDkZdEpv4Sh840GywfHhLgmWjYCm9z+QPxrLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+In-Reply-To: <CAL_JsqL4LZdkWkDkZdEpv4Sh840GywfHhLgmWjYCm9z+QPxrLg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, corbet@lwn.net
-Cc: Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Saeed Mahameed <saeedm@mellanox.com>, Leon Romanovsky <leon@kernel.org>, "David S. Miller" <davem@davemloft.net>, Pensando Drivers <drivers@pensando.io>, Steve French <sfrench@samba.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@sif>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Inki Dae <inki.dae@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9/24/19 6:01 AM, Mauro Carvalho Chehab wrote:
-> There are a number of documentation files that got moved or
-> renamed. update their references.
+
+On 9/26/19 5:35 PM, Rob Herring wrote:
+> On Thu, Sep 26, 2019 at 9:47 AM Maciej Falkowski
+> <m.falkowski@samsung.com> wrote:
+>>
+>> On 9/26/19 4:03 PM, Krzysztof Kozlowski wrote:
+>>> On Thu, Sep 26, 2019 at 02:56:14PM +0200, Marek Szyprowski wrote:
+>>>> From: Maciej Falkowski <m.falkowski@samsung.com>
+>>>>
+>>>> Convert Samsung Image Scaler to newer dt-schema format.
+>>>>
+>>>> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+>>>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>> ---
+>>>> v2:
+>>>> - Removed quotation marks from string in 'compatible' property
+>>>> - Added if-then statement for 'clocks' and 'clock-names' property
+>>>> - Added include directive to example
+>>>> - Added GIC_SPI macro to example
+>>>>
+>>>> Best regards,
+>>>> Maciej Falkowski
+>>>> ---
+>>>>    .../bindings/gpu/samsung-scaler.txt           | 27 -------
+>>>>    .../bindings/gpu/samsung-scaler.yaml          | 71 +++++++++++++++++++
+>>>>    2 files changed, 71 insertions(+), 27 deletions(-)
+>>>>    delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+>>>>    create mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt b/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+>>>> deleted file mode 100644
+>>>> index 9c3d98105dfd..000000000000
+>>>> --- a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+>>>> +++ /dev/null
+>>>> @@ -1,27 +0,0 @@
+>>>> -* Samsung Exynos Image Scaler
+>>>> -
+>>>> -Required properties:
+>>>> -  - compatible : value should be one of the following:
+>>>> -    (a) "samsung,exynos5420-scaler" for Scaler IP in Exynos5420
+>>>> -    (b) "samsung,exynos5433-scaler" for Scaler IP in Exynos5433
+>>>> -
+>>>> -  - reg : Physical base address of the IP registers and length of memory
+>>>> -      mapped region.
+>>>> -
+>>>> -  - interrupts : Interrupt specifier for scaler interrupt, according to format
+>>>> -             specific to interrupt parent.
+>>>> -
+>>>> -  - clocks : Clock specifier for scaler clock, according to generic clock
+>>>> -         bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
+>>>> -
+>>>> -  - clock-names : Names of clocks. For exynos scaler, it should be "mscl"
+>>>> -              on 5420 and "pclk", "aclk" and "aclk_xiu" on 5433.
+>>>> -
+>>>> -Example:
+>>>> -    scaler@12800000 {
+>>>> -            compatible = "samsung,exynos5420-scaler";
+>>>> -            reg = <0x12800000 0x1294>;
+>>>> -            interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH>;
+>>>> -            clocks = <&clock CLK_MSCL0>;
+>>>> -            clock-names = "mscl";
+>>>> -    };
+>>>> diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..af19930d052e
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+>>>> @@ -0,0 +1,71 @@
+>>>> +# SPDX-License-Identifier: GPL-2.0
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: https://protect2.fireeye.com/url?k=1ffa720fd467d028.1ffbf940-9a5a550397b4da2b&u=http://devicetree.org/schemas/gpu/samsung-scaler.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Samsung Exynos SoC Image Scaler
+>>>> +
+>>>> +maintainers:
+>>>> +  - Inki Dae <inki.dae@samsung.com>
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    enum:
+>>>> +      - samsung,exynos5420-scaler
+>>>> +      - samsung,exynos5433-scaler
+>>>> +
+>>>> +  reg:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  interrupts:
+>>>> +    maxItems: 1
+>>>> +
+>> Hi Krzysztof,
+> Please work on your quoting. Reply below what you are replying to.
 >
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+>> By "Midgard" I assume that you referred to
+>> 'Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml'.
+>>
+>> I think that 'clocks' and 'clock-names' properties before if statement
+>> serve different purpose in this schema.
+>> It totally has about 10 different compatibles grouped in five pairs.
+>> Then schema declares for 'clocks' minItems as one and maxItems as two and
+>> later it overrides this boundaries with if statement for particular
+>> compatibles.
+> It's not an override, but an AND. So what's under 'properties' has to
+> be the looser constraints than what is under an if/then schema.
+Hi Rob,
+Thank you for explaining that.
+>> Well, then clearly, the purpose is to declare boundaries for all of
+>> pairs and
+>> not to provide easy-to-find definition for this properties.
+>>
+>> In my schema I directly set boundaries per compatible with single
+>> if-else statement.
+>> I didn't know what to put before then as if statement is already
+>> self-explanatory.
+>>
+>> Best regards,
+>> Maciej Falkowski
+>>
+>>> I am repeating myself... leave the clocks and clock-names.
+>>>
+>>> "I think it is worth to leave the clocks and clock-names here (could be
+>>> empty or with min/max values for number of items). This makes it easy to
+>>> find the properties by humans.
+> I agree.
+>
+> Let me put it another way. You need to add an 'additionalProperties:
+> false' and (I think) to make that work you'll need them listed here.
+>
+> Rob
 
->   drivers/net/ethernet/pensando/ionic/ionic_if.h            | 4 ++--
+So when properties are only defined inside if-then scope,
+they are labeled as 'additional' as they are not defined inside
+scope of 'properties'. It is mandatory then to mention 'clock' and
+'clock-names' there if 'additionalProperties: false' .
 
-Acked-by: Shannon Nelson <snelson@pensando.io>
+However I had not set it intentionally as there are additional 
+properties in some bindings,
+exactly 'iommu' and 'power-domains' are undocumented.
+Is it a good way to put them in 'properties' just to be able to forbid 
+additional properties?
+
+Best regards,
+Maciej Falkowski
+
+>
