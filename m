@@ -1,193 +1,72 @@
-From: Maciej Falkowski <m.falkowski@samsung.com>
-Subject: Re: [PATCH v2] dt-bindings: gpu: Convert Samsung Image Scaler to
- dt-schema
-Date: Thu, 26 Sep 2019 16:47:01 +0200
-Message-ID: <0d3831ae-e33d-774d-02f7-fba45a95d25c@samsung.com>
-References: <CGME20190926125619eucas1p249ac149ef1e1a3eb975dae94b08cd7be@eucas1p2.samsung.com>
-        <20190926125614.10408-1-m.szyprowski@samsung.com>
-        <20190926140315.GA16002@pi3>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v9 1/4] dt-bindings: display: xlnx: Add ZynqMP DP
+ subsystem bindings
+Date: Thu, 26 Sep 2019 09:57:29 -0500
+Message-ID: <CAL_JsqJTPzXkoyhTwWtc_Rsb5tkY-kggXhJj67EfcYgEk5tq=A@mail.gmail.com>
+References: <20190925235544.11524-1-laurent.pinchart@ideasonboard.com>
+ <20190925235544.11524-2-laurent.pinchart@ideasonboard.com>
+ <CAL_JsqL7-33B4CaEX0r5V7PhX9EnghxNfcbZNLT4yo+FLeCOCA@mail.gmail.com>
+ <20190926142318.GB16469@pendragon.ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190926140315.GA16002@pi3>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Inki Dae <inki.dae@samsung.com>
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190926142318.GB16469@pendragon.ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree@vger.kernel.org, Hyun Kwon <hyun.kwon@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, dri-devel <dri-devel@lists.freedesktop.org>, Satish Kumar Nagireddy <SATISHNA@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 9/26/19 4:03 PM, Krzysztof Kozlowski wrote:
-> On Thu, Sep 26, 2019 at 02:56:14PM +0200, Marek Szyprowski wrote:
->> From: Maciej Falkowski <m.falkowski@samsung.com>
->>
->> Convert Samsung Image Scaler to newer dt-schema format.
->>
->> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> ---
->> v2:
->> - Removed quotation marks from string in 'compatible' property
->> - Added if-then statement for 'clocks' and 'clock-names' property
->> - Added include directive to example
->> - Added GIC_SPI macro to example
->>
->> Best regards,
->> Maciej Falkowski
->> ---
->>   .../bindings/gpu/samsung-scaler.txt           | 27 -------
->>   .../bindings/gpu/samsung-scaler.yaml          | 71 +++++++++++++++++++
->>   2 files changed, 71 insertions(+), 27 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.txt
->>   create mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt b/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
->> deleted file mode 100644
->> index 9c3d98105dfd..000000000000
->> --- a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
->> +++ /dev/null
->> @@ -1,27 +0,0 @@
->> -* Samsung Exynos Image Scaler
->> -
->> -Required properties:
->> -  - compatible : value should be one of the following:
->> -	(a) "samsung,exynos5420-scaler" for Scaler IP in Exynos5420
->> -	(b) "samsung,exynos5433-scaler" for Scaler IP in Exynos5433
->> -
->> -  - reg : Physical base address of the IP registers and length of memory
->> -	  mapped region.
->> -
->> -  - interrupts : Interrupt specifier for scaler interrupt, according to format
->> -		 specific to interrupt parent.
->> -
->> -  - clocks : Clock specifier for scaler clock, according to generic clock
->> -	     bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
->> -
->> -  - clock-names : Names of clocks. For exynos scaler, it should be "mscl"
->> -		  on 5420 and "pclk", "aclk" and "aclk_xiu" on 5433.
->> -
->> -Example:
->> -	scaler@12800000 {
->> -		compatible = "samsung,exynos5420-scaler";
->> -		reg = <0x12800000 0x1294>;
->> -		interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH>;
->> -		clocks = <&clock CLK_MSCL0>;
->> -		clock-names = "mscl";
->> -	};
->> diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
->> new file mode 100644
->> index 000000000000..af19930d052e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
->> @@ -0,0 +1,71 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: https://protect2.fireeye.com/url?k=1ffa720fd467d028.1ffbf940-9a5a550397b4da2b&u=http://devicetree.org/schemas/gpu/samsung-scaler.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Samsung Exynos SoC Image Scaler
->> +
->> +maintainers:
->> +  - Inki Dae <inki.dae@samsung.com>
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - samsung,exynos5420-scaler
->> +      - samsung,exynos5433-scaler
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
-
-Hi Krzysztof,
-
-By "Midgard" I assume that you referred to 
-'Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml'.
-
-I think that 'clocks' and 'clock-names' properties before if statement 
-serve different purpose in this schema.
-It totally has about 10 different compatibles grouped in five pairs.
-Then schema declares for 'clocks' minItems as one and maxItems as two and
-later it overrides this boundaries with if statement for particular 
-compatibles.
-Well, then clearly, the purpose is to declare boundaries for all of 
-pairs and
-not to provide easy-to-find definition for this properties.
-
-In my schema I directly set boundaries per compatible with single 
-if-else statement.
-I didn't know what to put before then as if statement is already 
-self-explanatory.
-
-Best regards,
-Maciej Falkowski
-
-> I am repeating myself... leave the clocks and clock-names.
->
-> "I think it is worth to leave the clocks and clock-names here (could be
-> empty or with min/max values for number of items). This makes it easy to
-> find the properties by humans.
->
-> Midgard bindings could be used as example."
->
->> +if:
->> +  properties:
->> +    compatible:
->> +      contains:
->> +        const: samsung,exynos5420-scaler
->> +then:
->> +  properties:
->> +    clocks:
->> +      items:
->> +        - description: mscl clock
->> +
->> +    clock-names:
->> +      items:
->> +        - const: mscl
->> +else:
->> +  properties:
->> +    clocks:
->> +      items:
->> +        - description: mscl clock
->> +        - description: aclk clock
->> +        - description: aclk_xiu clock
->> +
->> +    clock-names:
->> +      items:
->> +        - const: pclk
->> +        - const: aclk
->> +        - const: aclk_xiu
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - clocks
->> +  - clock-names
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/exynos5420.h>
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +    scaler@12800000 {
->> +        compatible = "samsung,exynos5420-scaler";
->> +        reg = <0x12800000 0x1294>;
->> +        interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
->> +        clocks = <&clock CLK_MSCL0>;
->> +        clock-names = "mscl";
->> +    };
->> +
-> Unneeded trailing line.
->
-> Best regards,
-> Krzysztof
->
->
->
+T24gVGh1LCBTZXAgMjYsIDIwMTkgYXQgOToyMyBBTSBMYXVyZW50IFBpbmNoYXJ0CjxsYXVyZW50
+LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+IHdyb3RlOgo+Cj4gSGkgUm9iLAo+Cj4gT24gVGh1
+LCBTZXAgMjYsIDIwMTkgYXQgMDk6MTU6MDFBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4g
+PiBPbiBXZWQsIFNlcCAyNSwgMjAxOSBhdCA2OjU2IFBNIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6
+Cj4gPiA+Cj4gPiA+IEZyb206IEh5dW4gS3dvbiA8aHl1bi5rd29uQHhpbGlueC5jb20+Cj4gPiA+
+Cj4gPiA+IFRoZSBiaW5kaW5ncyBkZXNjcmliZSB0aGUgWnlucU1QIERQIHN1YnN5c3RlbS4gVGhl
+eSBkb24ndCBzdXBwb3J0IHRoZQo+ID4gPiBpbnRlcmZhY2Ugd2l0aCB0aGUgcHJvZ3JhbW1hYmxl
+IGxvZ2ljIChGUEdBKSBvciBhdWRpbyB5ZXQuCj4gPiA+Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IEh5
+dW4gS3dvbiA8aHl1bi5rd29uQHhpbGlueC5jb20+Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IExhdXJl
+bnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KPiA+ID4gLS0t
+Cj4gPiA+IENoYW5nZXMgc2luY2Ugdjg6Cj4gPiA+Cj4gPiA+IC0gQ29udmVydCB0byB5YW1sCj4g
+PiA+IC0gUmVuYW1lIGFjbGsgdG8gZHBfYXBiX2Nsawo+ID4KPiA+IC9idWlsZHMvcm9iaGVycmlu
+Zy9saW51eC1kdC1yZXZpZXcvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkveGxueC94bG54LHp5bnFtcC1kcHN1Yi5leGFtcGxlLmR0LnlhbWw6Cj4gPiBkaXNwbGF5QGZk
+NGEwMDAwOiBjbG9jay1uYW1lczoyOiAnZHBfdnRjX3BpeGVsX2Nsa19pbicgd2FzIGV4cGVjdGVk
+Cj4KPiBJZiB5b3UgYWxsb3cgbWUgdG8gc3RlYWwgYSBiaXQgb2YgeW91ciBicmFpbiB0aW1lLCBj
+b3VsZCB5b3UgaGVscCBtZQo+IGV4cHJlc3NpbmcgdGhlIGNsb2NrcyBjb25zdHJhaW50ID8KPgo+
+ICAgY2xvY2tzOgo+ICAgICBkZXNjcmlwdGlvbjoKPiAgICAgICBUaGUgQVhJIGNsb2NrIGFuZCBh
+dCBsZWFzdCBvbmUgdmlkZW8gY2xvY2sgYXJlIG1hbmRhdG9yeSwgdGhlIGF1ZGlvIGNsb2NrCj4g
+ICAgICAgb3B0aW9uYWwuCj4gICAgIG1pbkl0ZW1zOiAyCj4gICAgIG1heEl0ZW1zOiA0Cj4gICAg
+IGl0ZW1zOgo+ICAgICAgIC0gZGVzY3JpcHRpb246IEFYSSBjbG9jawo+ICAgICAgIC0gZGVzY3Jp
+cHRpb246IEF1ZGlvIGNsb2NrCj4gICAgICAgLSBkZXNjcmlwdGlvbjogTm9uLWxpdmUgdmlkZW8g
+Y2xvY2sgKGZyb20gUHJvY2Vzc2luZyBTeXN0ZW0pCj4gICAgICAgLSBkZXNjcmlwdGlvbjogTGl2
+ZSB2aWRlbyBjbG9jayAoZnJvbSBQcm9ncmFtbWFibGUgTG9naWMpCj4gICBjbG9jay1uYW1lczoK
+PiAgICAgbWluSXRlbXM6IDIKPiAgICAgbWF4SXRlbXM6IDQKPiAgICAgaXRlbXM6Cj4gICAgICAg
+LSBjb25zdDogZHBfYXBiX2Nsawo+ICAgICAgIC0gY29uc3Q6IGRwX2F1ZF9jbGsKPiAgICAgICAt
+IGNvbnN0OiBkcF92dGNfcGl4ZWxfY2xrX2luCj4gICAgICAgLSBjb25zdDogZHBfbGl2ZV92aWRl
+b19pbl9jbGsKPgo+IGRwX2FwYl9jbGsgaXMgcmVxdWlyZWQsIGRwX2F1ZF9jbGsgaXMgb3B0aW9u
+YWwsIGFuZCBhdCBsZWFzdCBvbmUgb2YKPiBkcF92dGNfcGl4ZWxfY2xrX2luIGFuZCBkcF9saXZl
+X3ZpZGVvX2luX2NsayBpcyByZXF1aXJlZC4KCkknbSBob3BpbmcgcGVvcGxlJ3MgaW5hYmlsaXR5
+IHRvIGV4cHJlc3MgdGhlIHNjaGVtYSB3aWxsIHByZXZlbnQKY29tcGxpY2F0ZWQgb25lcyBsaWtl
+IHRoaXMgaW4gdGhlIGZpcnN0IHBsYWNlLi4uCgpjbG9jay1uYW1lczoKICBvbmVPZjoKICAgIC0g
+bWluSXRlbXM6IDMKICAgICAgbWF4SXRlbXM6IDQKICAgICAgaXRlbXM6CiAgICAgICAgLSBjb25z
+dDogZHBfYXBiX2NsawogICAgICAgIC0gY29uc3Q6IGRwX2F1ZF9jbGsKICAgICAgICAtIGVudW06
+IFsgZHBfdnRjX3BpeGVsX2Nsa19pbiwgZHBfbGl2ZV92aWRlb19pbl9jbGsgXQogICAgICAgIC0g
+ZW51bTogWyBkcF92dGNfcGl4ZWxfY2xrX2luLCBkcF9saXZlX3ZpZGVvX2luX2NsayBdCiAgICAt
+IG1pbkl0ZW1zOiAyCiAgICAgIG1heEl0ZW1zOiAzCiAgICAgIGl0ZW1zOgogICAgICAgIC0gY29u
+c3Q6IGRwX2FwYl9jbGsKICAgICAgICAtIGVudW06IFsgZHBfdnRjX3BpeGVsX2Nsa19pbiwgZHBf
+bGl2ZV92aWRlb19pbl9jbGsgXQogICAgICAgIC0gZW51bTogWyBkcF92dGNfcGl4ZWxfY2xrX2lu
+LCBkcF9saXZlX3ZpZGVvX2luX2NsayBdCgpTdHJpY3RseSBzcGVha2luZywgdGhhdCBsZWF2ZXMg
+aXRlbXMgY2xvY2tzIHdyb25nLCBidXQgJ2Rlc2NyaXB0aW9uJwpkb2Vzbid0IGRvIGFueXRoaW5n
+LiBTbyBJJ2QganVzdCBsZWF2ZSBpdCBhcyBpcy4KClJvYgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
