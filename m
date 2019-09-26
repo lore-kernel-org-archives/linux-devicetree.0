@@ -1,51 +1,111 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH 4/5] dt-bindings: usb: dwc3: of-simple: add compatible for HiSi
-Date: Wed, 25 Sep 2019 21:06:34 -0700
-Message-ID: <CALAqxLX=csTtnqr2Hc9v_R8ex8zPj_P1JvSyjZXUKEqSaF=gPA@mail.gmail.com>
-References: <20190925234224.95216-1-john.stultz@linaro.org>
- <20190925234224.95216-5-john.stultz@linaro.org> <1569461658.32135.12.camel@mhfsdcap03>
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: [RFC PATCHv2 3/3] Documentation: short descriptions for Flexnoc Performance Monitor driver
+Date: Thu, 26 Sep 2019 10:46:26 +0530
+Message-ID: <81f9de9559d248be498cac1ee0e3ab15c7a2696c.1569474867.git.shubhrajyoti.datta@xilinx.com>
+References: <2de75a74ef4086090c532d3b80b7d6dcd115e45e.1569474867.git.shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569461658.32135.12.camel@mhfsdcap03>
+In-Reply-To: <2de75a74ef4086090c532d3b80b7d6dcd115e45e.1569474867.git.shubhrajyoti.datta@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yu Chen <chenyu56@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 6:34 PM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
-> On Wed, 2019-09-25 at 23:42 +0000, John Stultz wrote:
-> > +++ b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> > @@ -0,0 +1,52 @@
-> > +HiSi SuperSpeed DWC3 USB SoC controller
-> > +
-> > +Required properties:
-> > +- compatible:                should contain "hisilicon,hi3660-dwc3" for HiSi SoC
-> > +- clocks:            A list of phandle + clock-specifier pairs for the
-> > +                     clocks listed in clock-names
-> > +- clock-names:               Should contain the following:
-> > +  "clk_usb3phy_ref"  Phy reference clk
-> It's not good idea to apply phy's clock in dwc3's node
+Add short documentation for FlexNoc Performance Monitor driver.
 
-Hey! Thanks for taking a look at this!
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+---
+v2:
+patch added
 
-So first, my apologies, I'm not the driver author and I don't have any
-real specs on the hardware other then what's in the source tree I'm
-working on.  Not the ideal person to be documenting the binding, but I
-realized we still needed some binding documentation (although a few
-other dwc-of-simple compat entries are undocumented), so this is my
-rough stab at it. :/
+ Documentation/misc-devices/xilinx_flex.txt | 66 ++++++++++++++++++++++++++=
+++++
+ 1 file changed, 66 insertions(+)
+ create mode 100644 Documentation/misc-devices/xilinx_flex.txt
 
-Given the name clk_usb3phy_ref I'm assuming its a phy reference clock,
-but I honestly don't know if I'm getting that wrong.  It all seems to
-be leveraging the fact that the dwc-of-simple driver batch enables and
-disables all the clocks w/o really looking at the names.
+diff --git a/Documentation/misc-devices/xilinx_flex.txt b/Documentation/mis=
+c-devices/xilinx_flex.txt
+new file mode 100644
+index 0000000..c075934
+--- /dev/null
++++ b/Documentation/misc-devices/xilinx_flex.txt
+@@ -0,0 +1,66 @@
++Kernel driver xilinx_flex
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
++
++Supported chips:
++Versal SOC
++
++Author:
++       Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
++
++Description
++-----------
++
++Versal uses the Arteris FlexNoC interconnect instead of the ARM NIC. FlexN=
+oC
++provides the capability to integrate performance counters in the interconn=
+ect.
++It has configurable probe points to monitor the packet and forwards it to
++observer for logging. It supports read and write transaction counts for
++request and response.
++
++Features:
++---> Run-time programmable selection of packet probe points.
++---> Recording of traffic and link statistics.
++---> Separate read and write response and request count.
++
++SYSFS:
++
++counteridfpd
++       RW - shows the counter number selected for the FPD Flexnoc.
++
++counterfpd_rdreq
++       RO - shows the read request count for the FPD counters.
++
++counterfpdsrc
++       WO - sets the source of the FPD counter.
++
++counterfpd_wrrsp
++       RO - shows the write response count for the FPD counters.
++
++counterfpd_rdrsp
++       RO - shows the read response count for the FPD counters.
++
++counterfpd_wrreq
++       RO - shows the write request count for the FPD counters.
++
++counterfpdport
++       WO - sets the port number selected for the FPD Flexnoc.
++
++counteridlpd
++       RW - shows the counter number selected for the LPD Flexnoc.
++
++counterlpdport
++       WO - sets the port number selected for the LPD Flexnoc.
++
++counterlpd_rdreq
++       RO - shows the read request count for the LPD counters.
++
++counterlpd_wrreq
++       RO - shows the write request count for the LPD counters.
++
++counterlpd_wrrsp
++       RO - shows the write response count for the LPD counters.
++
++counterlpdsrc
++       WO - sets the source of the LPD counter.
++
++counterlpd_rdrsp
++       RO - shows the read response count for the LPD counters.
+--
+2.1.1
 
-Do you have a recommendation for what would be best here? I suspect
-it's necessary to enable/disable the clk in a similar path(though I'm
-unfortunately traveling this week so I can't validate that). Do I try
-to move the clk_usb3phy_ref clock enable/disable handling to somewhere
-else?
-
-thanks
--john
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
