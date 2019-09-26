@@ -1,72 +1,68 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v9 1/4] dt-bindings: display: xlnx: Add ZynqMP DP
- subsystem bindings
-Date: Thu, 26 Sep 2019 09:57:29 -0500
-Message-ID: <CAL_JsqJTPzXkoyhTwWtc_Rsb5tkY-kggXhJj67EfcYgEk5tq=A@mail.gmail.com>
-References: <20190925235544.11524-1-laurent.pinchart@ideasonboard.com>
- <20190925235544.11524-2-laurent.pinchart@ideasonboard.com>
- <CAL_JsqL7-33B4CaEX0r5V7PhX9EnghxNfcbZNLT4yo+FLeCOCA@mail.gmail.com>
- <20190926142318.GB16469@pendragon.ideasonboard.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] ASOC: Add ADAU7118 8 Channel
+ PDM-to-I2S/TDM Converter driver
+Date: Thu, 26 Sep 2019 08:07:21 -0700
+Message-ID: <20190926150721.GT2036@sirena.org.uk>
+References: <20190926071707.17557-1-nuno.sa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190926142318.GB16469@pendragon.ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, Hyun Kwon <hyun.kwon@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, dri-devel <dri-devel@lists.freedesktop.org>, Satish Kumar Nagireddy <SATISHNA@xilinx.com>
+Content-Type: multipart/mixed; boundary="===============7741625905344322906=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20190926071707.17557-1-nuno.sa@analog.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBTZXAgMjYsIDIwMTkgYXQgOToyMyBBTSBMYXVyZW50IFBpbmNoYXJ0CjxsYXVyZW50
-LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+IHdyb3RlOgo+Cj4gSGkgUm9iLAo+Cj4gT24gVGh1
-LCBTZXAgMjYsIDIwMTkgYXQgMDk6MTU6MDFBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4g
-PiBPbiBXZWQsIFNlcCAyNSwgMjAxOSBhdCA2OjU2IFBNIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6
-Cj4gPiA+Cj4gPiA+IEZyb206IEh5dW4gS3dvbiA8aHl1bi5rd29uQHhpbGlueC5jb20+Cj4gPiA+
-Cj4gPiA+IFRoZSBiaW5kaW5ncyBkZXNjcmliZSB0aGUgWnlucU1QIERQIHN1YnN5c3RlbS4gVGhl
-eSBkb24ndCBzdXBwb3J0IHRoZQo+ID4gPiBpbnRlcmZhY2Ugd2l0aCB0aGUgcHJvZ3JhbW1hYmxl
-IGxvZ2ljIChGUEdBKSBvciBhdWRpbyB5ZXQuCj4gPiA+Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IEh5
-dW4gS3dvbiA8aHl1bi5rd29uQHhpbGlueC5jb20+Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IExhdXJl
-bnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KPiA+ID4gLS0t
-Cj4gPiA+IENoYW5nZXMgc2luY2Ugdjg6Cj4gPiA+Cj4gPiA+IC0gQ29udmVydCB0byB5YW1sCj4g
-PiA+IC0gUmVuYW1lIGFjbGsgdG8gZHBfYXBiX2Nsawo+ID4KPiA+IC9idWlsZHMvcm9iaGVycmlu
-Zy9saW51eC1kdC1yZXZpZXcvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkveGxueC94bG54LHp5bnFtcC1kcHN1Yi5leGFtcGxlLmR0LnlhbWw6Cj4gPiBkaXNwbGF5QGZk
-NGEwMDAwOiBjbG9jay1uYW1lczoyOiAnZHBfdnRjX3BpeGVsX2Nsa19pbicgd2FzIGV4cGVjdGVk
-Cj4KPiBJZiB5b3UgYWxsb3cgbWUgdG8gc3RlYWwgYSBiaXQgb2YgeW91ciBicmFpbiB0aW1lLCBj
-b3VsZCB5b3UgaGVscCBtZQo+IGV4cHJlc3NpbmcgdGhlIGNsb2NrcyBjb25zdHJhaW50ID8KPgo+
-ICAgY2xvY2tzOgo+ICAgICBkZXNjcmlwdGlvbjoKPiAgICAgICBUaGUgQVhJIGNsb2NrIGFuZCBh
-dCBsZWFzdCBvbmUgdmlkZW8gY2xvY2sgYXJlIG1hbmRhdG9yeSwgdGhlIGF1ZGlvIGNsb2NrCj4g
-ICAgICAgb3B0aW9uYWwuCj4gICAgIG1pbkl0ZW1zOiAyCj4gICAgIG1heEl0ZW1zOiA0Cj4gICAg
-IGl0ZW1zOgo+ICAgICAgIC0gZGVzY3JpcHRpb246IEFYSSBjbG9jawo+ICAgICAgIC0gZGVzY3Jp
-cHRpb246IEF1ZGlvIGNsb2NrCj4gICAgICAgLSBkZXNjcmlwdGlvbjogTm9uLWxpdmUgdmlkZW8g
-Y2xvY2sgKGZyb20gUHJvY2Vzc2luZyBTeXN0ZW0pCj4gICAgICAgLSBkZXNjcmlwdGlvbjogTGl2
-ZSB2aWRlbyBjbG9jayAoZnJvbSBQcm9ncmFtbWFibGUgTG9naWMpCj4gICBjbG9jay1uYW1lczoK
-PiAgICAgbWluSXRlbXM6IDIKPiAgICAgbWF4SXRlbXM6IDQKPiAgICAgaXRlbXM6Cj4gICAgICAg
-LSBjb25zdDogZHBfYXBiX2Nsawo+ICAgICAgIC0gY29uc3Q6IGRwX2F1ZF9jbGsKPiAgICAgICAt
-IGNvbnN0OiBkcF92dGNfcGl4ZWxfY2xrX2luCj4gICAgICAgLSBjb25zdDogZHBfbGl2ZV92aWRl
-b19pbl9jbGsKPgo+IGRwX2FwYl9jbGsgaXMgcmVxdWlyZWQsIGRwX2F1ZF9jbGsgaXMgb3B0aW9u
-YWwsIGFuZCBhdCBsZWFzdCBvbmUgb2YKPiBkcF92dGNfcGl4ZWxfY2xrX2luIGFuZCBkcF9saXZl
-X3ZpZGVvX2luX2NsayBpcyByZXF1aXJlZC4KCkknbSBob3BpbmcgcGVvcGxlJ3MgaW5hYmlsaXR5
-IHRvIGV4cHJlc3MgdGhlIHNjaGVtYSB3aWxsIHByZXZlbnQKY29tcGxpY2F0ZWQgb25lcyBsaWtl
-IHRoaXMgaW4gdGhlIGZpcnN0IHBsYWNlLi4uCgpjbG9jay1uYW1lczoKICBvbmVPZjoKICAgIC0g
-bWluSXRlbXM6IDMKICAgICAgbWF4SXRlbXM6IDQKICAgICAgaXRlbXM6CiAgICAgICAgLSBjb25z
-dDogZHBfYXBiX2NsawogICAgICAgIC0gY29uc3Q6IGRwX2F1ZF9jbGsKICAgICAgICAtIGVudW06
-IFsgZHBfdnRjX3BpeGVsX2Nsa19pbiwgZHBfbGl2ZV92aWRlb19pbl9jbGsgXQogICAgICAgIC0g
-ZW51bTogWyBkcF92dGNfcGl4ZWxfY2xrX2luLCBkcF9saXZlX3ZpZGVvX2luX2NsayBdCiAgICAt
-IG1pbkl0ZW1zOiAyCiAgICAgIG1heEl0ZW1zOiAzCiAgICAgIGl0ZW1zOgogICAgICAgIC0gY29u
-c3Q6IGRwX2FwYl9jbGsKICAgICAgICAtIGVudW06IFsgZHBfdnRjX3BpeGVsX2Nsa19pbiwgZHBf
-bGl2ZV92aWRlb19pbl9jbGsgXQogICAgICAgIC0gZW51bTogWyBkcF92dGNfcGl4ZWxfY2xrX2lu
-LCBkcF9saXZlX3ZpZGVvX2luX2NsayBdCgpTdHJpY3RseSBzcGVha2luZywgdGhhdCBsZWF2ZXMg
-aXRlbXMgY2xvY2tzIHdyb25nLCBidXQgJ2Rlc2NyaXB0aW9uJwpkb2Vzbid0IGRvIGFueXRoaW5n
-LiBTbyBJJ2QganVzdCBsZWF2ZSBpdCBhcyBpcy4KClJvYgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+
+--===============7741625905344322906==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zQiiCAM5ptAyb9EE"
+Content-Disposition: inline
+
+
+--zQiiCAM5ptAyb9EE
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Sep 26, 2019 at 09:17:06AM +0200, Nuno S=E1 wrote:
+> This patch adds support for the 8 channel PDM-to-I2S/TDM converter. The
+> ADAU7118 converts four stereo pulse density modulation (PDM) bitstreams
+> into one pulse code modulation (PCM) output stream. The source for the PDM
+
+This is the third copy of this I've got in the past 24 hours -
+there's no versioning or anything so what's going on?
+
+--zQiiCAM5ptAyb9EE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2M1CgACgkQJNaLcl1U
+h9A4EQf6A7KkdqPiVOYmb+wMLdzwvMZ5a7NT59t1LTN1pQxfvhj9DFWW5yC2kn4U
+vV2EtKpQhx203WjJiTOTffygZYyOLLFqoG1rB8hdHkmbrk5Oc3qHvNiP0FZSBQue
+ExwQdk1eDpvLU4SVcoD9Wy6/YjLJCs1KnABIAdPqbKyIpUZnUwi11n4NKg4HPBo9
+LzytHc+Wt68kmbadQDVGM/u4hMi8vCD93mWyjyYwsZGgMWppvianVMyEE8x02iEF
+KGlLC8HpaafCHTEgVOghdXzyiDr2pz0fyqZUG+Cp1uL9sTWTr53PfoMxx52J702h
+B1RKOXoQIveEeCemwYq0E5tNXNIhwQ==
+=4BYm
+-----END PGP SIGNATURE-----
+
+--zQiiCAM5ptAyb9EE--
+
+--===============7741625905344322906==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7741625905344322906==--
