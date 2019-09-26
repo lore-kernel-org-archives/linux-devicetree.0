@@ -1,179 +1,111 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [Patch V10 0/8] Tegra XUSB gadget driver support
-Date: Thu, 26 Sep 2019 11:04:34 +0200
-Message-ID: <20190926090434.GA3432@ulmo>
-References: <1569227152-3030-1-git-send-email-nkristam@nvidia.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: RE: [PATCH V9 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+Date: Thu, 26 Sep 2019 09:15:48 +0000
+Message-ID: <AM0PR04MB4481EA21FAC45DCCF295A71F88860@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1569377224-5755-1-git-send-email-peng.fan@nxp.com>
+        <1569377224-5755-2-git-send-email-peng.fan@nxp.com>
+ <20190925180901.11fe5165@donnerap.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1569227152-3030-1-git-send-email-nkristam@nvidia.com>
+In-Reply-To: <20190925180901.11fe5165@donnerap.cambridge.arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nagarjuna Kristam <nkristam@nvidia.com>
-Cc: balbi@kernel.org, gregkh@linuxfoundation.org, jonathanh@nvidia.com, mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Andre,
 
---uAKRQypu60I7Lcqm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Sep 23, 2019 at 01:55:44PM +0530, Nagarjuna Kristam wrote:
-> Patches 1-3 are phy driver changes to add support for device
-> mode.
-> Patches 4-7 are changes related to XUSB device mode
-> controller driver.
-> Patch 8 is to enable drivers for XUDC support in defconfig
+> Subject: Re: [PATCH V9 1/2] dt-bindings: mailbox: add binding doc for the
+> ARM SMC/HVC mailbox
 >=20
-> Test Steps(USB 2.0):
-> - Enable "USB Gadget precomposed configurations" in defconfig
-> - Build, flash and boot Jetson TX1
-> - Connect Jetson TX1 and Ubuntu device using USB A to Micro B
->   cable
-> - After boot on Jetson TX1 terminal usb0 network device should be
->   enumerated
-> - Assign static ip to usb0 on Jetson TX1 and corresponding net
->   device on ubuntu
-> - Run ping test and transfer test(used scp) to check data transfer
->   communication
+[...]
+> > + supported  identifier are passed from consumers, or listed in the
+> > + the arm,func-id
 >=20
-> SS mode is verified by enabling Type A port as peripheral
-> ---
-> v10:
-> * Patches 1,2,4,5,7,8 - No changes.
-> * Patch 3 has braces added to one single line else condition.
-> * Patch 6 has update on compatible string as per suggestion from Chunfeng.
-> ---
-> v9:
-> * Patches 1,2,3,4,5 - No changes.
-> * Patch 6 has update on compatible string as per suggestion from Chunfeng.
-> * Patch 7 has comment fixes as suggested by Chunfeng.
-> * Patch 8 has CONFIG_USB_GPIO enabled as module additionally.
-> ---
-> v8:
-> * Patches 1,2,3,4,5,8 - No changes.
-> * Patch 6 has update on compatible string as per change done in [1].
-> * Patch 7 has issue fix, where device mode didnot got enabled after resume
->   from suspend.
-> ---
-> v7:
-> * Patches 1,2,3,4,5,6,8 - No changes.
-> * Patch 7 - Comments from Balbi and Chunfun adrresed.
->   Added COMPILE_TEST in Kconfig and updated dependencies.
-> ---
-> v6:
-> * Patches 1,2,3,7,8 - No changes.
-> * Patch 4,5,6 - Comments from Rob addressed, updated usb connector driver
->   compatibility string.
-> ---
-> v5:
-> * Patches 1-3 - Commit subject updated as per inputs from Thierry.
-> * Patch 4 - Added reg-names used on Tegra210 in the bindings doc
-> * Enabled xudc driver as module instead of part of kernel in patch 8.
-> * Patched 5-8 - No changes.
-> ---
-> v4:
-> * patch 1 - no changes.
-> * corrected companion device search based on inputs from Thierry in patch=
- 2.
-> * removed unneeded dev variable and corrected value read in
->   tegra210_utmi_port_reset function in patch 3.
-> * dt binding doc and dtb files are corrected for alignments.
->   Replaced extcon-usb-gpio with usb role switch.
-> * Added support for USB role switch instead of extcon-usb-gpio and other =
-minor
->   comments as suggested by Chunfeng.
-> * Enabled xudc driver as module instead of part of kernel in patch 8.
-> ---
-> V3:
-> * Rebased patch 1 to top of tree.
-> * Fixed bug in patch 2, where xudc interrupts dont get generated if USB h=
-ost
->   mode fails to probe. Moved fake port detection logic to generic xusb.c.=
- fake
->   usb port data is updated based on soc flag need_fake_usb3_port.
-> * Added extra lines whereever necessary to make code more readable in pat=
-ch 3
->   and 7.
-> * dt binding doc is corrected for typos and extcon references. Also added
->   details for clocks and removed xusb_ references to clock and power-doma=
-in
->   names and accordingly patch 5 is updated.
-> * removed avdd-pll-utmip-supply in patch 6, as its now part of padctl dri=
-ver.
-> * Patch 8 has no changes.
-> ---
-> V2:
-> * Patches 1-3 are new patches in this series, which splits unified featur=
-es
->   patch to speprated features and removes need of port-fake entry in DT.
-> * Patch 4 is re-arragend dt-bindings patch which incorporates previous
->   patch comments to sort DT entries alphabetically, addresses name changes
->   and PM domain details added.
-> * Patch 5-6 are re-arranged DT patches with major changes - sort entries
->   alphabetically, and adds clock names.
-> * Patch 7 is UDC driver tegra XUSB device mode controller with major
->   changes - remove un-used module params, lockinng for device_mode flag,
->   moving un-needed info logs to debug level, making changes feature flag
->   dependent rather than SOC based macros and other error handling in prob=
-e.
-> * Patch 8 has no changes.
+>                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 		This is now obsolete.
 >=20
-> Nagarjuna Kristam (8):
->   phy: tegra: xusb: Add XUSB dual mode support on Tegra210
->   phy: tegra: xusb: Add usb3 port fake support on Tegra210
->   phy: tegra: xusb: Add vbus override support on Tegra210
->   dt-bindings: usb: Add NVIDIA Tegra XUSB device mode controller binding
->   arm64: tegra: Add xudc node for Tegra210
->   arm64: tegra: Enable xudc on Jetson TX1
->   usb: gadget: Add UDC driver for tegra XUSB device mode controller
->   arm64: defconfig: Enable tegra XUDC support
+> The rest looks good to me, thanks for the changes!
 >=20
->  .../devicetree/bindings/usb/nvidia,tegra-xudc.txt  |  110 +
->  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   31 +-
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   19 +
->  arch/arm64/configs/defconfig                       |    2 +
->  drivers/phy/tegra/xusb-tegra210.c                  |  134 +-
->  drivers/phy/tegra/xusb.c                           |   87 +
->  drivers/phy/tegra/xusb.h                           |    4 +
->  drivers/usb/gadget/udc/Kconfig                     |   11 +
->  drivers/usb/gadget/udc/Makefile                    |    1 +
->  drivers/usb/gadget/udc/tegra-xudc.c                | 3787 ++++++++++++++=
-++++++
->  include/linux/phy/tegra/xusb.h                     |    4 +-
->  11 files changed, 4186 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra-xu=
-dc.txt
->  create mode 100644 drivers/usb/gadget/udc/tegra-xudc.c
+> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
 
-Hi Felipe, Kishon,
+Thanks, I'll wait to see whether Rob and Jassi has some comments or not.
 
-since the DT bindings have been acked by Rob, I plan on applying the DTS
-changes of the above once v5.4-rc1 is release. Do you have any remaining
-concerns about the UDC or PHY patches, respectively?
+Then post out v10 to address your comments.
 
-Thierry
+Thanks,
+Peng.
 
---uAKRQypu60I7Lcqm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2Mfx8ACgkQ3SOs138+
-s6HJIxAAsf7S8QBJIk0ZSPmaCeEGHV6AE0bi7bHJecdS4ZZoyyjbsLf1YxblDgBm
-/UQrgTOJcIN82mAZNQBL+dgJK5LLiBdMFYPJPfD5R48dEWtXbmZzIAliFV9MJmJ7
-DfZXuu1tWKq2GqTJrI71AKcv6EfbWG81w/G5IZFoFhg0zDxLe4AkHct5NpnCI0On
-6vFMrxM0Z1qRkEDFP1nSCY1v/ci0Q3gEaNwvdP+H5FYwvjGBvNu501Yjj+xWj0AS
-iT8SX4OkeaN5aWbMHUNViNQP26ul04wePJXLgPYfOGLw5bvG4+cSbbUbk07IfYni
-KBPzoRwHV6r5xb1/fwE/dGrpLRrrA6RU7lKK0GBOoepBKQSIecLBR0dw6B4qSIov
-si/nSwOe3z3dWk8v3mWWjON7pI5My+Trf/oEjq3TCJRTp/OQIVrNz7WA6qcJT+TR
-hyrIweJ6w87eqtT9htRtye1S11KGphM2NklLPflSqymREjt1li5ESSJcUNuagz94
-ThXS8VQRI2ZIFpy7Vor32qdTIY0yzTwePZdRHMTg7osVj/EhucFZTTeDNdKF0UB1
-LxXGgPsOrRrSr7SewHVusPrYJ4GMVU6OmFyQOli48Hd60vlPBm7hbHJGBr6+m2S7
-g08c/clhteBDZYsMHMWTju4c2WWyd5NfxF+9CtP7msj8s8i/jg0=
-=m6Ln
------END PGP SIGNATURE-----
-
---uAKRQypu60I7Lcqm--
+>=20
+> Cheers,
+> Andre.
+>=20
+> > +  property as described below. The firmware can return one value in
+> > + the first SMC result register, it is expected to be an error value,
+> > + which shall be propagated to the mailbox client.
+> > +
+> > +  Any core which supports the SMC or HVC instruction can be used, as
+> > + long  as a firmware component running in EL3 or EL2 is handling these
+> calls.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - description:
+> > +          For implementations using ARM SMC instruction.
+> > +        const: arm,smc-mbox
+> > +
+> > +      - description:
+> > +          For implementations using ARM HVC instruction.
+> > +        const: arm,hvc-mbox
+> > +
+> > +  "#mbox-cells":
+> > +    const: 0
+> > +
+> > +  arm,func-id:
+> > +    description: |
+> > +      An single 32-bit value specifying the function ID used by the
+> mailbox.
+> > +      The function ID follows the ARM SMC calling convention standard.
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +required:
+> > +  - compatible
+> > +  - "#mbox-cells"
+> > +  - arm,func-id
+> > +
+> > +examples:
+> > +  - |
+> > +    sram@93f000 {
+> > +      compatible =3D "mmio-sram";
+> > +      reg =3D <0x0 0x93f000 0x0 0x1000>;
+> > +      #address-cells =3D <1>;
+> > +      #size-cells =3D <1>;
+> > +      ranges =3D <0x0 0x93f000 0x1000>;
+> > +
+> > +      cpu_scp_lpri: scp-shmem@0 {
+> > +        compatible =3D "arm,scmi-shmem";
+> > +        reg =3D <0x0 0x200>;
+> > +      };
+> > +    };
+> > +
+> > +    smc_tx_mbox: tx_mbox {
+> > +      #mbox-cells =3D <0>;
+> > +      compatible =3D "arm,smc-mbox";
+> > +      arm,func-id =3D <0xc20000fe>;
+> > +    };
+> > +
+> > +    firmware {
+> > +      scmi {
+> > +        compatible =3D "arm,scmi";
+> > +        mboxes =3D <&smc_tx_mbox>;
+> > +        mbox-names =3D "tx";
+> > +        shmem =3D <&cpu_scp_lpri>;
+> > +      };
+> > +    };
+> > +
+> > +...
