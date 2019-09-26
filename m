@@ -1,119 +1,118 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH 2/5] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Date: Thu, 26 Sep 2019 10:09:56 +0200
-Message-ID: <20190926080956.a3k2z4gf3n6m3n4s@pengutronix.de>
-References: <20190917124246.11732-1-m.felsch@pengutronix.de>
- <20190917124246.11732-3-m.felsch@pengutronix.de>
- <AM5PR1001MB0994ABEF9C32BFB7BEA099B680840@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20190925155151.75uaxfiiei3i23tz@pengutronix.de>
- <AM5PR1001MB09941810C3AE97110DD82E0F80870@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+From: Piotr Sroka <piotrs@cadence.com>
+Subject: [v8 2/2] dt-bindings: mtd: Add Cadence NAND controller driver
+Date: Thu, 26 Sep 2019 09:13:21 +0100
+Message-ID: <20190926081358.24212-1-piotrs@cadence.com>
+References: <20190926080924.19220-1-piotrs@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AM5PR1001MB09941810C3AE97110DD82E0F80870@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+In-Reply-To: <20190926080924.19220-1-piotrs@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: Support Opensource <Support.Opensource@diasemi.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, Steve Twiss <stwiss.opensource@diasemi.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Piotr Sroka <piotrs@cadence.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, "Paul E. McKenney" <paulmck@linux.ibm.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19-09-25 16:18, Adam Thomson wrote:
-> On 25 September 2019 16:52, Marco Felsch wrote:
-> 
-> > Hi Adam,
-> > 
-> > On 19-09-24 09:23, Adam Thomson wrote:
-> > > On 17 September 2019 13:43, Marco Felsch wrote:
-> > >
-> > > > Add the documentation which describe the voltage selection gpio support.
-> > > > This property can be applied to each subnode within the 'regulators'
-> > > > node so each regulator can be configured differently.
-> > > >
-> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/mfd/da9062.txt | 9 +++++++++
-> > > >  1 file changed, 9 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > b/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > index edca653a5777..9d9820d8177d 100644
-> > > > --- a/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > @@ -66,6 +66,15 @@ Sub-nodes:
-> > > >    details of individual regulator device can be found in:
-> > > >    Documentation/devicetree/bindings/regulator/regulator.txt
-> > > >
-> > > > +  Optional regulator device-specific properties:
-> > > > +  - dlg,vsel-sense-gpios : The GPIO reference which should be used by the
-> > > > +    regulator to switch the voltage between active/suspend voltage settings.
-> > If
-> > > > +    the signal is active the active-settings are applied else the suspend
-> > > > +    settings are applied. Attention: Sharing the same gpio for other purposes
-> > > > +    or across multiple regulators is possible but the gpio settings must be the
-> > > > +    same. Also the gpio phandle must refer to to the dlg,da9062-gpio device
-> > > > +    other gpios are not allowed and make no sense.
-> > > > +
-> > >
-> > > Should we not use the binding names that are defined in 'gpio-regulator.yaml'
-> > as
-> > > these seem to be generic and would probably serve the purpose here?
-> > 
-> > Hm.. as the description says:
-> > 
-> > 8<--------------------------------------------------
-> > gpios:
-> >    description: Array of one or more GPIO pins used to select the
-> >    regulator voltage/current listed in "states".
-> > 8<--------------------------------------------------
-> > 
-> > But we don't have a "states" property and we can't select between
-> > voltage or current.
-> 
-> Yes I think I was at cross purposes when I made this remark. The bindings there
-> describe the GPOs that are used to enable/disable and set voltage/current for
-> regulators and the supported voltage/current levels that can be configured in
-> this manner. What you're describing is the GPI for DA9061/2. If you look at
-> GPIO handling in existing regulator drivers I believe they all deal with external
-> GPOs that are configured to enable/disable and set voltage/current limits rather
-> than the GPI on the PMIC itself. That's why I'm thinking that the configurations
-> you're doing here should actually be in a pinctrl or GPIO driver.
+Document the bindings used by Cadence NAND controller driver
 
-That's true, the common gpio bindings are from the view of the
-processor, e.g. which gpio must the processor drive to enable/switch the
-regualtor. So one reasone more to use a non-common binding.
+Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes for v8:
+- none
+Changes for v7:
+- none
+Changes for v6:
+- add documentation for address-cells and size-cells
+- remove not needed space
+- put myself as maintainer of the Cadence nand driver bindings
+Changes for v5:
+- replace "_" by "-" in all properties
+- change compatible name from cdns,hpnfc to cdns,hp-nfc
+Changes for v4:
+- add commit message
+Changes for v3:
+- add unit suffix for board_delay 
+- move child description to proper place
+- remove prefix cadence_ for reg and sdma fields
+Changes for v2:
+- remove chip dependends parameters from dts bindings
+- add names for register ranges in dts bindings
+- add generic bindings to describe NAND chip representation
+---
+ .../bindings/mtd/cadence-nand-controller.txt       | 53 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
 
-Please take a look on my other comment I made :) I don't use the
-gpio-alternative function. I use it as an input.
-
-Regards,
-  Marco
-
-
-> I'd be interested in hearing Mark's view on this though as he has far more
-> experience in this area than I do.
-> 
-> > 
-> > Regards,
-> >   Marco
-> > 
-> > > >  - rtc : This node defines settings required for the Real-Time Clock associated
-> > > >    with the DA9062. There are currently no entries in this binding, however
-> > > >    compatible = "dlg,da9062-rtc" should be added if a node is created.
-> > > > --
-> > > > 2.20.1
-> > >
-> > >
-> > 
-> > --
-> > Pengutronix e.K.                           |                             |
-> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> 
-
+diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+new file mode 100644
+index 000000000000..f3893c4d3c6a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+@@ -0,0 +1,53 @@
++* Cadence NAND controller
++
++Required properties:
++  - compatible : "cdns,hp-nfc"
++  - reg : Contains two entries, each of which is a tuple consisting of a
++	  physical address and length. The first entry is the address and
++	  length of the controller register set. The second entry is the
++	  address and length of the Slave DMA data port.
++  - reg-names: should contain "reg" and "sdma"
++  - #address-cells: should be 1. The cell encodes the chip select connection.
++  - #size-cells : should be 0.
++  - interrupts : The interrupt number.
++  - clocks: phandle of the controller core clock (nf_clk).
++
++Optional properties:
++  - dmas: shall reference DMA channel associated to the NAND controller
++  - cdns,board-delay-ps : Estimated Board delay. The value includes the total
++    round trip delay for the signals and is used for deciding on values
++    associated with data read capture. The example formula for SDR mode is
++    the following:
++    board delay = RE#PAD delay + PCB trace to device + PCB trace from device
++    + DQ PAD delay
++
++Child nodes represent the available NAND chips.
++
++Required properties of NAND chips:
++  - reg: shall contain the native Chip Select ids from 0 to max supported by
++    the cadence nand flash controller
++
++See Documentation/devicetree/bindings/mtd/nand.txt for more details on
++generic bindings.
++
++Example:
++
++nand_controller: nand-controller@60000000 {
++	  compatible = "cdns,hp-nfc";
++	  #address-cells = <1>;
++	  #size-cells = <0>;
++	  reg = <0x60000000 0x10000>, <0x80000000 0x10000>;
++	  reg-names = "reg", "sdma";
++	  clocks = <&nf_clk>;
++	  cdns,board-delay-ps = <4830>;
++	  interrupts = <2 0>;
++	  nand@0 {
++	      reg = <0>;
++	      label = "nand-1";
++	  };
++	  nand@1 {
++	      reg = <1>;
++	      label = "nand-2";
++	  };
++
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 16e16445b88b..94d78f4e29ba 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3584,6 +3584,7 @@ M:	Piotr Sroka <piotrs@cadence.com>
+ L:	linux-mtd@lists.infradead.org
+ S:	Maintained
+ F:	drivers/mtd/nand/raw/cadence-nand-controller.c
++F:	Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+ 
+ CADET FM/AM RADIO RECEIVER DRIVER
+ M:	Hans Verkuil <hverkuil@xs4all.nl>
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.15.0
