@@ -1,118 +1,28 @@
-From: Piotr Sroka <piotrs@cadence.com>
-Subject: [v8 2/2] dt-bindings: mtd: Add Cadence NAND controller driver
-Date: Thu, 26 Sep 2019 09:13:21 +0100
-Message-ID: <20190926081358.24212-1-piotrs@cadence.com>
-References: <20190926080924.19220-1-piotrs@cadence.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH 0/7] add support for clocksource/clockevent DT selection
+Date: Thu, 26 Sep 2019 08:42:57 +0000
+Message-ID: <72edc5fd-df05-cba5-5aa7-39da1709415b@microchip.com>
+References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
+ <c3a68a08-d134-cd28-c8af-f757628e07f1@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190926080924.19220-1-piotrs@cadence.com>
+In-Reply-To: <c3a68a08-d134-cd28-c8af-f757628e07f1@linaro.org>
+Content-Language: en-US
+Content-ID: <BCA8ECD1111F6948AB05E557D0B1C52E@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Kazuhiro Kasai <kasai.kazuhiro@socionext.com>, Piotr Sroka <piotrs@cadence.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, "Paul E. McKenney" <paulmck@linux.ibm.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, nsekhar@ti.com, bgolaszewski@baylibre.com, monstr@monstr.eu, john@phrozen.org, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, lftan@altera.com, tglx@linutronix.de, vgupta@synopsys.com, marc.zyngier@arm.com, patrice.chotard@st.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, eric@anholt.net, wahrenst@gmx.net, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org, shc_work@mail.ru, kgene@kernel.org, krzk@kernel.org, ysato@users.sourceforge.jp, liviu.dudau@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, nios2-dev@lists.rocketboards.org, linux-snps-arc@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, linux-rpi-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, uclinux-h8-devel@lists.sourceforge.jp, linux-amlogic@lists.infradead.org, openbmc@lists.ozlabs.org, linux-oxnas@groups.io, linux-arm-msm@vger.kernel.org, linux-unisoc@lists.infradead.org, linux-riscv@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document the bindings used by Cadence NAND controller driver
-
-Signed-off-by: Piotr Sroka <piotrs@cadence.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes for v8:
-- none
-Changes for v7:
-- none
-Changes for v6:
-- add documentation for address-cells and size-cells
-- remove not needed space
-- put myself as maintainer of the Cadence nand driver bindings
-Changes for v5:
-- replace "_" by "-" in all properties
-- change compatible name from cdns,hpnfc to cdns,hp-nfc
-Changes for v4:
-- add commit message
-Changes for v3:
-- add unit suffix for board_delay 
-- move child description to proper place
-- remove prefix cadence_ for reg and sdma fields
-Changes for v2:
-- remove chip dependends parameters from dts bindings
-- add names for register ranges in dts bindings
-- add generic bindings to describe NAND chip representation
----
- .../bindings/mtd/cadence-nand-controller.txt       | 53 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
-
-diff --git a/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
-new file mode 100644
-index 000000000000..f3893c4d3c6a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
-@@ -0,0 +1,53 @@
-+* Cadence NAND controller
-+
-+Required properties:
-+  - compatible : "cdns,hp-nfc"
-+  - reg : Contains two entries, each of which is a tuple consisting of a
-+	  physical address and length. The first entry is the address and
-+	  length of the controller register set. The second entry is the
-+	  address and length of the Slave DMA data port.
-+  - reg-names: should contain "reg" and "sdma"
-+  - #address-cells: should be 1. The cell encodes the chip select connection.
-+  - #size-cells : should be 0.
-+  - interrupts : The interrupt number.
-+  - clocks: phandle of the controller core clock (nf_clk).
-+
-+Optional properties:
-+  - dmas: shall reference DMA channel associated to the NAND controller
-+  - cdns,board-delay-ps : Estimated Board delay. The value includes the total
-+    round trip delay for the signals and is used for deciding on values
-+    associated with data read capture. The example formula for SDR mode is
-+    the following:
-+    board delay = RE#PAD delay + PCB trace to device + PCB trace from device
-+    + DQ PAD delay
-+
-+Child nodes represent the available NAND chips.
-+
-+Required properties of NAND chips:
-+  - reg: shall contain the native Chip Select ids from 0 to max supported by
-+    the cadence nand flash controller
-+
-+See Documentation/devicetree/bindings/mtd/nand.txt for more details on
-+generic bindings.
-+
-+Example:
-+
-+nand_controller: nand-controller@60000000 {
-+	  compatible = "cdns,hp-nfc";
-+	  #address-cells = <1>;
-+	  #size-cells = <0>;
-+	  reg = <0x60000000 0x10000>, <0x80000000 0x10000>;
-+	  reg-names = "reg", "sdma";
-+	  clocks = <&nf_clk>;
-+	  cdns,board-delay-ps = <4830>;
-+	  interrupts = <2 0>;
-+	  nand@0 {
-+	      reg = <0>;
-+	      label = "nand-1";
-+	  };
-+	  nand@1 {
-+	      reg = <1>;
-+	      label = "nand-2";
-+	  };
-+
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 16e16445b88b..94d78f4e29ba 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3584,6 +3584,7 @@ M:	Piotr Sroka <piotrs@cadence.com>
- L:	linux-mtd@lists.infradead.org
- S:	Maintained
- F:	drivers/mtd/nand/raw/cadence-nand-controller.c
-+F:	Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
- 
- CADET FM/AM RADIO RECEIVER DRIVER
- M:	Hans Verkuil <hverkuil@xs4all.nl>
--- 
-2.15.0
+DQoNCk9uIDI1LjA5LjIwMTkgMjA6MTksIERhbmllbCBMZXpjYW5vIHdyb3RlOg0KPiBFeHRlcm5h
+bCBFLU1haWwNCj4gDQo+IA0KPiBIaSBDbGF1ZGl1LA0KPiANCj4gT24gMTAvMDkvMjAxOSAxNTo0
+NywgQ2xhdWRpdSBCZXpuZWEgd3JvdGU6DQo+PiBIaSwNCj4+DQo+PiBUaGlzIHNlcmllcyBhZGRz
+IHN1cHBvcnQgdG8gcGVybWl0IHRoZSBzZWxlY3Rpb24gb2YgY2xvY2tzb3VyY2UvY2xvY2tldmVu
+dA0KPj4gdmlhIERULg0KPiANCj4gVGhhbmtzIGZvciB0aGUgcHJvcG9zYWwgYW5kIHRha2luZyBj
+YXJlIG9mIG1ha2luZyBzb21lIHByb2dyZXNzIG9uIHRoaXMuDQo+IA0KPiBJIGp1c3Qgd2FudGVk
+IHRvIGxldCB5b3Uga25vdyBJJ3ZlIGJlZW4gdHJhdmVsaW5nIGJ1dCB0aGUgc2VyaWVzIGlzIGlu
+DQo+IG15IHBpcGUgYW5kIEkgZGlkIG5vdCBmb3JnZXQgaXQuIEknbGwgY29tbWVudCBpdCBuZXh0
+IHdlZWsuDQoNCkhpIERhbmllbCwNCg0KTm8gcHJvYmxlbS4gVGhhbmsgeW91IGZvciBsZXR0aW5n
+IG1lIGtub3cuDQoNCkNsYXVkaXUNCg0KPiANCj4gIC0tIERhbmllbA0KPiANCj4gDQo=
