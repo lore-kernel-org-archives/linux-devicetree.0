@@ -1,117 +1,66 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: gpu: Convert Samsung Image Scaler to
- dt-schema
-Date: Thu, 26 Sep 2019 10:35:58 -0500
-Message-ID: <CAL_JsqL4LZdkWkDkZdEpv4Sh840GywfHhLgmWjYCm9z+QPxrLg@mail.gmail.com>
-References: <CGME20190926125619eucas1p249ac149ef1e1a3eb975dae94b08cd7be@eucas1p2.samsung.com>
- <20190926125614.10408-1-m.szyprowski@samsung.com> <20190926140315.GA16002@pi3>
- <0d3831ae-e33d-774d-02f7-fba45a95d25c@samsung.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCHv3-next 0/3] Odroid c2 missing regulator linking
+Date: Thu, 26 Sep 2019 21:08:31 +0530
+Message-ID: <CANAwSgT-RDicoTxe1574_0KhCJ0=JpRGXydjGPdedJ+sULRfpA@mail.gmail.com>
+References: <20190906122044.372-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <0d3831ae-e33d-774d-02f7-fba45a95d25c@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maciej Falkowski <m.falkowski@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190906122044.372-1-linux.amoon@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBTZXAgMjYsIDIwMTkgYXQgOTo0NyBBTSBNYWNpZWogRmFsa293c2tpCjxtLmZhbGtv
-d3NraUBzYW1zdW5nLmNvbT4gd3JvdGU6Cj4KPgo+IE9uIDkvMjYvMTkgNDowMyBQTSwgS3J6eXN6
-dG9mIEtvemxvd3NraSB3cm90ZToKPiA+IE9uIFRodSwgU2VwIDI2LCAyMDE5IGF0IDAyOjU2OjE0
-UE0gKzAyMDAsIE1hcmVrIFN6eXByb3dza2kgd3JvdGU6Cj4gPj4gRnJvbTogTWFjaWVqIEZhbGtv
-d3NraSA8bS5mYWxrb3dza2lAc2Ftc3VuZy5jb20+Cj4gPj4KPiA+PiBDb252ZXJ0IFNhbXN1bmcg
-SW1hZ2UgU2NhbGVyIHRvIG5ld2VyIGR0LXNjaGVtYSBmb3JtYXQuCj4gPj4KPiA+PiBTaWduZWQt
-b2ZmLWJ5OiBNYWNpZWogRmFsa293c2tpIDxtLmZhbGtvd3NraUBzYW1zdW5nLmNvbT4KPiA+PiBT
-aWduZWQtb2ZmLWJ5OiBNYXJlayBTenlwcm93c2tpIDxtLnN6eXByb3dza2lAc2Ftc3VuZy5jb20+
-Cj4gPj4gLS0tCj4gPj4gdjI6Cj4gPj4gLSBSZW1vdmVkIHF1b3RhdGlvbiBtYXJrcyBmcm9tIHN0
-cmluZyBpbiAnY29tcGF0aWJsZScgcHJvcGVydHkKPiA+PiAtIEFkZGVkIGlmLXRoZW4gc3RhdGVt
-ZW50IGZvciAnY2xvY2tzJyBhbmQgJ2Nsb2NrLW5hbWVzJyBwcm9wZXJ0eQo+ID4+IC0gQWRkZWQg
-aW5jbHVkZSBkaXJlY3RpdmUgdG8gZXhhbXBsZQo+ID4+IC0gQWRkZWQgR0lDX1NQSSBtYWNybyB0
-byBleGFtcGxlCj4gPj4KPiA+PiBCZXN0IHJlZ2FyZHMsCj4gPj4gTWFjaWVqIEZhbGtvd3NraQo+
-ID4+IC0tLQo+ID4+ICAgLi4uL2JpbmRpbmdzL2dwdS9zYW1zdW5nLXNjYWxlci50eHQgICAgICAg
-ICAgIHwgMjcgLS0tLS0tLQo+ID4+ICAgLi4uL2JpbmRpbmdzL2dwdS9zYW1zdW5nLXNjYWxlci55
-YW1sICAgICAgICAgIHwgNzEgKysrKysrKysrKysrKysrKysrKwo+ID4+ICAgMiBmaWxlcyBjaGFu
-Z2VkLCA3MSBpbnNlcnRpb25zKCspLCAyNyBkZWxldGlvbnMoLSkKPiA+PiAgIGRlbGV0ZSBtb2Rl
-IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L3NhbXN1bmctc2Nh
-bGVyLnR4dAo+ID4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1zY2FsZXIueWFtbAo+ID4+Cj4gPj4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1zY2FsZXIudHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9zYW1zdW5nLXNjYWxlci50
-eHQKPiA+PiBkZWxldGVkIGZpbGUgbW9kZSAxMDA2NDQKPiA+PiBpbmRleCA5YzNkOTgxMDVkZmQu
-LjAwMDAwMDAwMDAwMAo+ID4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9ncHUvc2Ftc3VuZy1zY2FsZXIudHh0Cj4gPj4gKysrIC9kZXYvbnVsbAo+ID4+IEBAIC0xLDI3
-ICswLDAgQEAKPiA+PiAtKiBTYW1zdW5nIEV4eW5vcyBJbWFnZSBTY2FsZXIKPiA+PiAtCj4gPj4g
-LVJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPj4gLSAgLSBjb21wYXRpYmxlIDogdmFsdWUgc2hvdWxk
-IGJlIG9uZSBvZiB0aGUgZm9sbG93aW5nOgo+ID4+IC0gICAgKGEpICJzYW1zdW5nLGV4eW5vczU0
-MjAtc2NhbGVyIiBmb3IgU2NhbGVyIElQIGluIEV4eW5vczU0MjAKPiA+PiAtICAgIChiKSAic2Ft
-c3VuZyxleHlub3M1NDMzLXNjYWxlciIgZm9yIFNjYWxlciBJUCBpbiBFeHlub3M1NDMzCj4gPj4g
-LQo+ID4+IC0gIC0gcmVnIDogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIG9mIHRoZSBJUCByZWdpc3Rl
-cnMgYW5kIGxlbmd0aCBvZiBtZW1vcnkKPiA+PiAtICAgICAgbWFwcGVkIHJlZ2lvbi4KPiA+PiAt
-Cj4gPj4gLSAgLSBpbnRlcnJ1cHRzIDogSW50ZXJydXB0IHNwZWNpZmllciBmb3Igc2NhbGVyIGlu
-dGVycnVwdCwgYWNjb3JkaW5nIHRvIGZvcm1hdAo+ID4+IC0gICAgICAgICAgICAgc3BlY2lmaWMg
-dG8gaW50ZXJydXB0IHBhcmVudC4KPiA+PiAtCj4gPj4gLSAgLSBjbG9ja3MgOiBDbG9jayBzcGVj
-aWZpZXIgZm9yIHNjYWxlciBjbG9jaywgYWNjb3JkaW5nIHRvIGdlbmVyaWMgY2xvY2sKPiA+PiAt
-ICAgICAgICAgYmluZGluZ3MuIChTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Nsb2NrL2V4eW5vcyoudHh0KQo+ID4+IC0KPiA+PiAtICAtIGNsb2NrLW5hbWVzIDogTmFtZXMg
-b2YgY2xvY2tzLiBGb3IgZXh5bm9zIHNjYWxlciwgaXQgc2hvdWxkIGJlICJtc2NsIgo+ID4+IC0g
-ICAgICAgICAgICAgIG9uIDU0MjAgYW5kICJwY2xrIiwgImFjbGsiIGFuZCAiYWNsa194aXUiIG9u
-IDU0MzMuCj4gPj4gLQo+ID4+IC1FeGFtcGxlOgo+ID4+IC0gICAgc2NhbGVyQDEyODAwMDAwIHsK
-PiA+PiAtICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJzYW1zdW5nLGV4eW5vczU0MjAtc2NhbGVy
-IjsKPiA+PiAtICAgICAgICAgICAgcmVnID0gPDB4MTI4MDAwMDAgMHgxMjk0PjsKPiA+PiAtICAg
-ICAgICAgICAgaW50ZXJydXB0cyA9IDwwIDIyMCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiA+PiAt
-ICAgICAgICAgICAgY2xvY2tzID0gPCZjbG9jayBDTEtfTVNDTDA+Owo+ID4+IC0gICAgICAgICAg
-ICBjbG9jay1uYW1lcyA9ICJtc2NsIjsKPiA+PiAtICAgIH07Cj4gPj4gZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1zY2FsZXIueWFtbCBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1zY2FsZXIueWFt
-bAo+ID4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPj4gaW5kZXggMDAwMDAwMDAwMDAwLi5hZjE5
-OTMwZDA1MmUKPiA+PiAtLS0gL2Rldi9udWxsCj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2dwdS9zYW1zdW5nLXNjYWxlci55YW1sCj4gPj4gQEAgLTAsMCArMSw3
-MSBAQAo+ID4+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4gPj4gKyVZQU1M
-IDEuMgo+ID4+ICstLS0KPiA+PiArJGlkOiBodHRwczovL3Byb3RlY3QyLmZpcmVleWUuY29tL3Vy
-bD9rPTFmZmE3MjBmZDQ2N2QwMjguMWZmYmY5NDAtOWE1YTU1MDM5N2I0ZGEyYiZ1PWh0dHA6Ly9k
-ZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2dwdS9zYW1zdW5nLXNjYWxlci55YW1sIwo+ID4+ICskc2No
-ZW1hOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMKPiA+PiAr
-Cj4gPj4gK3RpdGxlOiBTYW1zdW5nIEV4eW5vcyBTb0MgSW1hZ2UgU2NhbGVyCj4gPj4gKwo+ID4+
-ICttYWludGFpbmVyczoKPiA+PiArICAtIElua2kgRGFlIDxpbmtpLmRhZUBzYW1zdW5nLmNvbT4K
-PiA+PiArCj4gPj4gK3Byb3BlcnRpZXM6Cj4gPj4gKyAgY29tcGF0aWJsZToKPiA+PiArICAgIGVu
-dW06Cj4gPj4gKyAgICAgIC0gc2Ftc3VuZyxleHlub3M1NDIwLXNjYWxlcgo+ID4+ICsgICAgICAt
-IHNhbXN1bmcsZXh5bm9zNTQzMy1zY2FsZXIKPiA+PiArCj4gPj4gKyAgcmVnOgo+ID4+ICsgICAg
-bWF4SXRlbXM6IDEKPiA+PiArCj4gPj4gKyAgaW50ZXJydXB0czoKPiA+PiArICAgIG1heEl0ZW1z
-OiAxCj4gPj4gKwo+Cj4gSGkgS3J6eXN6dG9mLAoKUGxlYXNlIHdvcmsgb24geW91ciBxdW90aW5n
-LiBSZXBseSBiZWxvdyB3aGF0IHlvdSBhcmUgcmVwbHlpbmcgdG8uCgo+Cj4gQnkgIk1pZGdhcmQi
-IEkgYXNzdW1lIHRoYXQgeW91IHJlZmVycmVkIHRvCj4gJ0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2FyZC55YW1sJy4KPgo+IEkgdGhpbmsgdGhhdCAn
-Y2xvY2tzJyBhbmQgJ2Nsb2NrLW5hbWVzJyBwcm9wZXJ0aWVzIGJlZm9yZSBpZiBzdGF0ZW1lbnQK
-PiBzZXJ2ZSBkaWZmZXJlbnQgcHVycG9zZSBpbiB0aGlzIHNjaGVtYS4KPiBJdCB0b3RhbGx5IGhh
-cyBhYm91dCAxMCBkaWZmZXJlbnQgY29tcGF0aWJsZXMgZ3JvdXBlZCBpbiBmaXZlIHBhaXJzLgo+
-IFRoZW4gc2NoZW1hIGRlY2xhcmVzIGZvciAnY2xvY2tzJyBtaW5JdGVtcyBhcyBvbmUgYW5kIG1h
-eEl0ZW1zIGFzIHR3byBhbmQKPiBsYXRlciBpdCBvdmVycmlkZXMgdGhpcyBib3VuZGFyaWVzIHdp
-dGggaWYgc3RhdGVtZW50IGZvciBwYXJ0aWN1bGFyCj4gY29tcGF0aWJsZXMuCgpJdCdzIG5vdCBh
-biBvdmVycmlkZSwgYnV0IGFuIEFORC4gU28gd2hhdCdzIHVuZGVyICdwcm9wZXJ0aWVzJyBoYXMg
-dG8KYmUgdGhlIGxvb3NlciBjb25zdHJhaW50cyB0aGFuIHdoYXQgaXMgdW5kZXIgYW4gaWYvdGhl
-biBzY2hlbWEuCgo+IFdlbGwsIHRoZW4gY2xlYXJseSwgdGhlIHB1cnBvc2UgaXMgdG8gZGVjbGFy
-ZSBib3VuZGFyaWVzIGZvciBhbGwgb2YKPiBwYWlycyBhbmQKPiBub3QgdG8gcHJvdmlkZSBlYXN5
-LXRvLWZpbmQgZGVmaW5pdGlvbiBmb3IgdGhpcyBwcm9wZXJ0aWVzLgo+Cj4gSW4gbXkgc2NoZW1h
-IEkgZGlyZWN0bHkgc2V0IGJvdW5kYXJpZXMgcGVyIGNvbXBhdGlibGUgd2l0aCBzaW5nbGUKPiBp
-Zi1lbHNlIHN0YXRlbWVudC4KPiBJIGRpZG4ndCBrbm93IHdoYXQgdG8gcHV0IGJlZm9yZSB0aGVu
-IGFzIGlmIHN0YXRlbWVudCBpcyBhbHJlYWR5Cj4gc2VsZi1leHBsYW5hdG9yeS4KPgo+IEJlc3Qg
-cmVnYXJkcywKPiBNYWNpZWogRmFsa293c2tpCj4KPiA+IEkgYW0gcmVwZWF0aW5nIG15c2VsZi4u
-LiBsZWF2ZSB0aGUgY2xvY2tzIGFuZCBjbG9jay1uYW1lcy4KPiA+Cj4gPiAiSSB0aGluayBpdCBp
-cyB3b3J0aCB0byBsZWF2ZSB0aGUgY2xvY2tzIGFuZCBjbG9jay1uYW1lcyBoZXJlIChjb3VsZCBi
-ZQo+ID4gZW1wdHkgb3Igd2l0aCBtaW4vbWF4IHZhbHVlcyBmb3IgbnVtYmVyIG9mIGl0ZW1zKS4g
-VGhpcyBtYWtlcyBpdCBlYXN5IHRvCj4gPiBmaW5kIHRoZSBwcm9wZXJ0aWVzIGJ5IGh1bWFucy4K
-CkkgYWdyZWUuCgpMZXQgbWUgcHV0IGl0IGFub3RoZXIgd2F5LiBZb3UgbmVlZCB0byBhZGQgYW4g
-J2FkZGl0aW9uYWxQcm9wZXJ0aWVzOgpmYWxzZScgYW5kIChJIHRoaW5rKSB0byBtYWtlIHRoYXQg
-d29yayB5b3UnbGwgbmVlZCB0aGVtIGxpc3RlZCBoZXJlLgoKUm9iCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Hi Kevin,
+
+On Fri, 6 Sep 2019 at 17:50, Anand Moon <linux.amoon@gmail.com> wrote:
+>
+> Below small changes help re-configure or fix missing inter linking
+> of regulator node.
+>
+> Re-based on linux-next-20190904
+> Changes from previous patch's series.
+> Build using Cross Compiler.
+>
+> Added missing Reviewed-by Neil's and Martin.
+> Added few suggestion from martin for rename of node.
+>
+> Dependencies:
+> Changes based top on my previous usb fix series patch's.
+>
+> [0] https://patchwork.kernel.org/patch/11113095/
+> [1] https://patchwork.kernel.org/patch/11113099/
+> [3] https://patchwork.kernel.org/patch/11113103/
+>
+> Hope this series get picked up for 5.4-rc1, finger crossed.
+>
+> Changes for previous changes.
+> Fix some typo.
+> Updated few patches as per Martin's suggestion.
+>
+> I will try to commit less mistake in the future.
+>
+> Best Regards
+> -Anand
+>
+
+Gentle ping for this series.
+
+Best Regards
+-Anand
+
+> Anand Moon (3):
+>   arm64: dts: meson: odroid-c2: Add missing regulator linked to P5V0
+>     regulator
+>   arm64: dts: meson: odroid-c2: Add missing regulator linked to
+>     VDDIO_AO3V3 regulator
+>   arm64: dts: meson: odroid-c2: Add missing regulator linked to HDMI
+>     supply
+>
+>  .../boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 53 +++++++++++++++++--
+>  1 file changed, 50 insertions(+), 3 deletions(-)
+>
+> --
+> 2.23.0
+>
