@@ -1,48 +1,114 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] regulator: Document "regulator-boot-on" binding more thoroughly
-Date: Thu, 26 Sep 2019 12:41:18 -0700
-Message-ID: <20190926124115.1.Ice34ad5970a375c3c03cb15c3859b3ee501561bf@changeid>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/6] iommu/qcom: Use the asid read from device-tree if
+	specified
+Date: Thu, 26 Sep 2019 13:06:03 -0700
+Message-ID: <CAF6AEGs-+SGEJYA4FgGcMXVghLoXmDWbBMjS_BHm=7+9FfYv5g@mail.gmail.com>
+References: <20190926120516.4981-1-kholk11@gmail.com>
+	<20190926120516.4981-2-kholk11@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Marco Felsch <m.felsch@pengutronix.de>, ckeepax@opensource.cirrus.com, zhang.chunyan@linaro.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20190926120516.4981-2-kholk11-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: AngeloGioacchino Del Regno <kholk11-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, marijns95-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Andy Gross <agross-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The description of "regulator-boot-on" was a little unclear, at least
-to me.  Did this property mean that we should turn the regulator on at
-boot?  Or perhaps it was intended only to be used for regulators where
-we couldn't read the state at bootup to indicate what state we should
-assume?  The answer, it turns out, is both [1].
+On Thu, Sep 26, 2019 at 5:05 AM <kholk11-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+> From: AngeloGioacchino Del Regno <kholk11-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> As specified in this driver, the context banks are 0x1000 apart.
+> Problem is that sometimes the context number (our asid) does not
+> match this logic and we end up using the wrong one: this starts
+> being a problem in the case that we need to send TZ commands
+> to do anything on a specific context.
+>
+> For this reason, read the ASID from the DT if the property
+> "qcom,ctx-num" is present on the IOMMU context node.
+>
+> Signed-off-by: AngeloGioacchino Del Regno <kholk11-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iommu/qcom,iommu.txt    |  1 +
+>  drivers/iommu/qcom_iommu.c                      | 17 ++++++++++++++---
+>  2 files changed, 15 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+> index 059139abce35..98102b323196 100644
+> --- a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+> +++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+> @@ -38,6 +38,7 @@ to non-secure vs secure interrupt line.
+>          - "qcom,msm-iommu-v1-sec" : secure context bank
+>    - reg            : Base address and size of context bank within the iommu
+>    - interrupts     : The context fault irq.
+> +  - qcom,ctx-num   : The number associated to the context bank
 
-Let's document this.
 
-[1] https://lore.kernel.org/r/20190923181431.GU2036@sirena.org.uk
+I guess this should be more like:
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
++  and the following optional properties:
++  - qcom,ctx-num   : The number associated to the context bank
 
- Documentation/devicetree/bindings/regulator/regulator.yaml | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+(since this is an optional property)
 
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.yaml b/Documentation/devicetree/bindings/regulator/regulator.yaml
-index 02c3043ce419..4e67fb41db6b 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.yaml
-+++ b/Documentation/devicetree/bindings/regulator/regulator.yaml
-@@ -38,7 +38,12 @@ properties:
-     type: boolean
- 
-   regulator-boot-on:
--    description: bootloader/firmware enabled regulator
-+    description: bootloader/firmware enabled regulator.
-+      It's expected that this regulator was left on by the bootloader.
-+      If the bootloader didn't leave it on then OS should turn it on
-+      at boot but shouldn't prevent it from being turned off later.
-+      This property is intended to only be used for regulators where
-+      Linux cannot read the state of the regulator at bootup.
-     type: boolean
- 
-   regulator-allow-bypass:
--- 
-2.23.0.444.g18eeb5a265-goog
+BR,
+-R
+
+>
+>  ** Optional properties:
+>
+> diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
+> index dadc707573a2..5837556af147 100644
+> --- a/drivers/iommu/qcom_iommu.c
+> +++ b/drivers/iommu/qcom_iommu.c
+> @@ -557,7 +557,8 @@ static int qcom_iommu_of_xlate(struct device *dev, struct of_phandle_args *args)
+>          * index into qcom_iommu->ctxs:
+>          */
+>         if (WARN_ON(asid < 1) ||
+> -           WARN_ON(asid > qcom_iommu->num_ctxs))
+> +           WARN_ON(asid > qcom_iommu->num_ctxs) ||
+> +           WARN_ON(qcom_iommu->ctxs[asid - 1] == NULL))
+>                 return -EINVAL;
+>
+>         if (!fwspec->iommu_priv) {
+> @@ -665,7 +666,8 @@ static int qcom_iommu_sec_ptbl_init(struct device *dev)
+>
+>  static int get_asid(const struct device_node *np)
+>  {
+> -       u32 reg;
+> +       u32 reg, val;
+> +       int asid;
+>
+>         /* read the "reg" property directly to get the relative address
+>          * of the context bank, and calculate the asid from that:
+> @@ -673,7 +675,16 @@ static int get_asid(const struct device_node *np)
+>         if (of_property_read_u32_index(np, "reg", 0, &reg))
+>                 return -ENODEV;
+>
+> -       return reg / 0x1000;      /* context banks are 0x1000 apart */
+> +       /* Context banks are 0x1000 apart but, in some cases, the ASID
+> +        * number doesn't match to this logic and needs to be passed
+> +        * from the DT configuration explicitly.
+> +        */
+> +       if (of_property_read_u32(np, "qcom,ctx-num", &val))
+> +               asid = reg / 0x1000;
+> +       else
+> +               asid = val;
+> +
+> +       return asid;
+>  }
+>
+>  static int qcom_iommu_ctx_probe(struct platform_device *pdev)
+> --
+> 2.21.0
+>
