@@ -1,7 +1,7 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 3/3] ARM: dts: armada-xp: add label to sdram-controller node
-Date: Fri, 27 Sep 2019 11:28:20 +1200
-Message-ID: <20190926232820.27676-4-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 1/3] ARM: dts: armada-xp: enable L2 cache parity and ecc on db-xc3-24g4xg
+Date: Fri, 27 Sep 2019 11:28:18 +1200
+Message-ID: <20190926232820.27676-2-chris.packham@alliedtelesis.co.nz>
 References: <20190926232820.27676-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -12,42 +12,31 @@ To: jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-Add the label "sdramc" to the sdram-controller nodes for the Armada-XP
-and 98dx3236 SoCs.
+Enable L2 cache parity and ECC on the db-xc3-24g4xg board so that cache
+operations are protected and errors can be flagged to the EDAC
+subsystem.
 
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
- arch/arm/boot/dts/armada-xp-98dx3236.dtsi | 2 +-
- arch/arm/boot/dts/armada-xp.dtsi          | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dt=
-s/armada-xp-98dx3236.dtsi
-index 267d0c178e55..654648b05c7c 100644
---- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-@@ -90,7 +90,7 @@
- 		};
+diff --git a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts b/arch/arm/boo=
+t/dts/armada-xp-db-xc3-24g4xg.dts
+index df048050615f..4ec0ae01b61d 100644
+--- a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
++++ b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
+@@ -33,6 +33,11 @@
+ 	};
+ };
 =20
- 		internal-regs {
--			sdramc@1400 {
-+			sdramc: sdramc@1400 {
- 				compatible =3D "marvell,armada-xp-sdram-controller";
- 				reg =3D <0x1400 0x500>;
- 			};
-diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-=
-xp.dtsi
-index ee15c77d3689..6c19984d668e 100644
---- a/arch/arm/boot/dts/armada-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -36,7 +36,7 @@
- 		};
++&L2 {
++	arm,parity-enable;
++	marvell,ecc-enable;
++};
++
+ &devbus_bootcs {
+ 	status =3D "okay";
 =20
- 		internal-regs {
--			sdramc@1400 {
-+			sdramc: sdramc@1400 {
- 				compatible =3D "marvell,armada-xp-sdram-controller";
- 				reg =3D <0x1400 0x500>;
- 			};
 --=20
 2.23.0
