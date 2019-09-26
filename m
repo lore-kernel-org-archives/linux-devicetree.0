@@ -1,148 +1,76 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v3 3/3] dmaengine: ti: edma: Add support for handling reserved channels
-Date: Thu, 26 Sep 2019 14:19:54 +0300
-Message-ID: <20190926111954.9184-4-peter.ujfalusi@ti.com>
-References: <20190926111954.9184-1-peter.ujfalusi@ti.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
+Date: Thu, 26 Sep 2019 12:20:44 +0100
+Message-ID: <c27a51e1-1adf-ae6a-dc67-ae76222a1163@arm.com>
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
+ <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+ <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
+ <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
+ <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
+ <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
+ <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
+ <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
+ <307b988d0c67fb1c42166eca12742bcfda09d92d.camel@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190926111954.9184-1-peter.ujfalusi@ti.com>
+In-Reply-To: <307b988d0c67fb1c42166eca12742bcfda09d92d.camel@suse.de>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: vkoul@kernel.org, robh+dt@kernel.org
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
+To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Rob Herring <robh+dt@kernel.org>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-wireless <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, etnaviv@lists.freedesktop.org, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org, xen-devel@lists.xenproject.org, Dan Williams <dan.j.williams@intel.com>, freedreno <freedre>
 List-Id: devicetree@vger.kernel.org
 
-Like paRAM slots, channels could be used by other cores and in this case
-we need to make sure that the driver do not alter these channels.
+On 2019-09-26 11:44 am, Nicolas Saenz Julienne wrote:
+>>>>> Robin, have you looked into supporting multiple dma-ranges? It's the
+>>>>> next thing
+>>>>> we need for BCM STB's PCIe. I'll have a go at it myself if nothing is in
+>>>>> the
+>>>>> works already.
+>>>>
+>>>> Multiple dma-ranges as far as configuring inbound windows should work
+>>>> already other than the bug when there's any parent translation. But if
+>>>> you mean supporting multiple DMA offsets and masks per device in the
+>>>> DMA API, there's nothing in the works yet.
+> 
+> Sorry, I meant supporting multiple DMA offsets[1]. I think I could still make
+> it with a single DMA mask though.
 
-Handle the generic dma-channel-mask property to mark channels in a bitmap
-which can not be used by Linux and convert the legacy rsv_chans if it is
-provided by platform_data.
+The main problem for supporting that case in general is the disgusting 
+carving up of the physical memory map you may have to do to guarantee 
+that a single buffer allocation cannot ever span two windows with 
+different offsets. I don't think we ever reached a conclusion on whether 
+that was even achievable in practice.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/dma/ti/edma.c | 59 ++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 53 insertions(+), 6 deletions(-)
+>>> There's also the in-between step of making of_dma_get_range() return a
+>>> size based on all the dma-ranges entries rather than only the first one
+>>> - otherwise, something like [1] can lead to pretty unworkable default
+>>> masks. We implemented that when doing acpi_dma_get_range(), it's just
+>>> that the OF counterpart never caught up.
+>>
+>> Right. I suppose we assume any holes in the ranges are addressable by
+>> the device but won't get used for other reasons (such as no memory
+>> there). However, to be correct, the range of the dma offset plus mask
+>> would need to be within the min start and max end addresses. IOW,
+>> while we need to round up (0xa_8000_0000 - 0x2c1c_0000) to the next
+>> power of 2, the 'correct' thing to do is round down.
+> 
+> IIUC I also have this issue on my list. The RPi4 PCIe block has an integration
+> bug that only allows DMA to the lower 3GB. With dma-ranges of size 0xc000_0000
+> you get a 32bit DMA mask wich is not what you need. So far I faked it in the
+> device-tree but I guess it be better to add an extra check in
+> of_dma_configure(), decrease the mask and print some kind of warning stating
+> that DMA addressing is suboptimal.
 
-diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-index ba7c4f07fcd6..03c9c6296006 100644
---- a/drivers/dma/ti/edma.c
-+++ b/drivers/dma/ti/edma.c
-@@ -260,6 +260,13 @@ struct edma_cc {
- 	 */
- 	unsigned long *slot_inuse;
- 
-+	/*
-+	 * For tracking reserved channels used by DSP.
-+	 * If the bit is cleared, the channel is allocated to be used by DSP
-+	 * and Linux must not touch it.
-+	 */
-+	unsigned long *channels_mask;
-+
- 	struct dma_device		dma_slave;
- 	struct dma_device		*dma_memcpy;
- 	struct edma_chan		*slave_chans;
-@@ -716,6 +723,12 @@ static int edma_alloc_channel(struct edma_chan *echan,
- 	struct edma_cc *ecc = echan->ecc;
- 	int channel = EDMA_CHAN_SLOT(echan->ch_num);
- 
-+	if (!test_bit(echan->ch_num, ecc->channels_mask)) {
-+		dev_err(ecc->dev, "Channel%d is reserved, can not be used!\n",
-+			echan->ch_num);
-+		return -EINVAL;
-+	}
-+
- 	/* ensure access through shadow region 0 */
- 	edma_or_array2(ecc, EDMA_DRAE, 0, EDMA_REG_ARRAY_INDEX(channel),
- 		       EDMA_CHANNEL_BIT(channel));
-@@ -2250,7 +2263,7 @@ static int edma_probe(struct platform_device *pdev)
- 	struct edma_soc_info	*info = pdev->dev.platform_data;
- 	s8			(*queue_priority_mapping)[2];
- 	int			i, off;
--	const s16		(*rsv_slots)[2];
-+	const s16		(*reserved)[2];
- 	const s16		(*xbar_chans)[2];
- 	int			irq;
- 	char			*irq_name;
-@@ -2331,15 +2344,32 @@ static int edma_probe(struct platform_device *pdev)
- 	if (!ecc->slot_inuse)
- 		return -ENOMEM;
- 
-+	ecc->channels_mask = devm_kcalloc(dev,
-+					   BITS_TO_LONGS(ecc->num_channels),
-+					   sizeof(unsigned long), GFP_KERNEL);
-+	if (!ecc->channels_mask)
-+		return -ENOMEM;
-+
-+	/* Mark all channels available initially */
-+	bitmap_fill(ecc->channels_mask, ecc->num_channels);
-+
- 	ecc->default_queue = info->default_queue;
- 
- 	if (info->rsv) {
- 		/* Set the reserved slots in inuse list */
--		rsv_slots = info->rsv->rsv_slots;
--		if (rsv_slots) {
--			for (i = 0; rsv_slots[i][0] != -1; i++)
--				bitmap_set(ecc->slot_inuse, rsv_slots[i][0],
--					   rsv_slots[i][1]);
-+		reserved = info->rsv->rsv_slots;
-+		if (reserved) {
-+			for (i = 0; reserved[i][0] != -1; i++)
-+				bitmap_set(ecc->slot_inuse, reserved[i][0],
-+					   reserved[i][1]);
-+		}
-+
-+		/* Clear channels not usable for Linux */
-+		reserved = info->rsv->rsv_chans;
-+		if (reserved) {
-+			for (i = 0; reserved[i][0] != -1; i++)
-+				bitmap_clear(ecc->channels_mask, reserved[i][0],
-+					     reserved[i][1]);
- 		}
- 	}
- 
-@@ -2399,6 +2429,7 @@ static int edma_probe(struct platform_device *pdev)
- 
- 	if (!ecc->legacy_mode) {
- 		int lowest_priority = 0;
-+		unsigned int array_max;
- 		struct of_phandle_args tc_args;
- 
- 		ecc->tc_list = devm_kcalloc(dev, ecc->num_tc,
-@@ -2420,6 +2451,18 @@ static int edma_probe(struct platform_device *pdev)
- 				info->default_queue = i;
- 			}
- 		}
-+
-+		/* See if we have optional dma-channel-mask array */
-+		array_max = DIV_ROUND_UP(ecc->num_channels, BITS_PER_TYPE(u32));
-+		ret = of_property_read_variable_u32_array(node,
-+						"dma-channel-mask",
-+						(u32 *)ecc->channels_mask,
-+						1, array_max);
-+		if (ret > 0 && ret != array_max)
-+			dev_warn(dev, "dma-channel-mask is not complete.\n");
-+		else if (ret == -EOVERFLOW || ret == -ENODATA)
-+			dev_warn(dev,
-+				 "dma-channel-mask is out of range or empty\n");
- 	}
- 
- 	/* Event queue priority mapping */
-@@ -2437,6 +2480,10 @@ static int edma_probe(struct platform_device *pdev)
- 	edma_dma_init(ecc, legacy_mode);
- 
- 	for (i = 0; i < ecc->num_channels; i++) {
-+		/* Do not touch reserved channels */
-+		if (!test_bit(i, ecc->channels_mask))
-+			continue;
-+
- 		/* Assign all channels to the default queue */
- 		edma_assign_channel_eventq(&ecc->slave_chans[i],
- 					   info->default_queue);
--- 
-Peter
+Yeah, there's just no way for masks to describe that the device can 
+drive all the individual bits, just not in certain combinations :(
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+The plan I have sketched out there is to merge dma_pfn_offset and 
+bus_dma_mask into a "DMA range" descriptor, so we can then hang one or 
+more of those off a device to properly cope with all these weird 
+interconnects. Conceptually it feels pretty straightforward; I think 
+most of the challenge is in implementing it efficiently. Plus there's 
+the question of whether it could also subsume the dma_mask as well.
+
+Robin.
