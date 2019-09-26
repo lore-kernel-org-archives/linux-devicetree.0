@@ -1,111 +1,225 @@
-From: Peng Fan <peng.fan@nxp.com>
-Subject: RE: [PATCH V9 1/2] dt-bindings: mailbox: add binding doc for the ARM
- SMC/HVC mailbox
-Date: Thu, 26 Sep 2019 09:15:48 +0000
-Message-ID: <AM0PR04MB4481EA21FAC45DCCF295A71F88860@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1569377224-5755-1-git-send-email-peng.fan@nxp.com>
-        <1569377224-5755-2-git-send-email-peng.fan@nxp.com>
- <20190925180901.11fe5165@donnerap.cambridge.arm.com>
+From: Jianxin Pan <jianxin.pan@amlogic.com>
+Subject: Re: [PATCH 2/3] soc: amlogic: Add support for Secure power domains
+ controller
+Date: Thu, 26 Sep 2019 17:17:05 +0800
+Message-ID: <3859c748-01f0-4dbd-05d6-20fff31edf11@amlogic.com>
+References: <1568895064-4116-1-git-send-email-jianxin.pan@amlogic.com>
+ <1568895064-4116-3-git-send-email-jianxin.pan@amlogic.com>
+ <7hh850t2wy.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190925180901.11fe5165@donnerap.cambridge.arm.com>
+In-Reply-To: <7hh850t2wy.fsf@baylibre.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
+Cc: Zhiqiang Liang <zhiqiang.liang@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andre,
+Hi Kevin,
 
-> Subject: Re: [PATCH V9 1/2] dt-bindings: mailbox: add binding doc for the
-> ARM SMC/HVC mailbox
->=20
+Thanks for your review. Please see my comments below.
+
+
+On 2019/9/26 6:41, Kevin Hilman wrote:
+> Hi Jianxin,
+> 
+> Jianxin Pan <jianxin.pan@amlogic.com> writes:
+> 
+>> Add support for the Amlogic Secure Power controller. In A1/C1 series, power
+>> control registers are in secure domain, and should be accessed by smc.
+>>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>> Signed-off-by: Zhiqiang Liang <zhiqiang.liang@amlogic.com>
+> 
+> Thanks for the new power domain driver.
+> 
+>> ---
+>>  drivers/soc/amlogic/Kconfig             |  13 +++
+>>  drivers/soc/amlogic/Makefile            |   1 +
+>>  drivers/soc/amlogic/meson-secure-pwrc.c | 182 ++++++++++++++++++++++++++++++++
+>>  3 files changed, 196 insertions(+)
+>>  create mode 100644 drivers/soc/amlogic/meson-secure-pwrc.c
+>>
+>> diff --git a/drivers/soc/amlogic/Kconfig b/drivers/soc/amlogic/Kconfig
+>> index bc2c912..6cb06e7 100644
+>> --- a/drivers/soc/amlogic/Kconfig
+>> +++ b/drivers/soc/amlogic/Kconfig
+>> @@ -48,6 +48,19 @@ config MESON_EE_PM_DOMAINS
+>>  	  Say yes to expose Amlogic Meson Everything-Else Power Domains as
+>>  	  Generic Power Domains.
+>>  
+>> +config MESON_SECURE_PM_DOMAINS
+>> +	bool "Amlogic Meson Secure Power Domains driver"
+>> +	depends on ARCH_MESON || COMPILE_TEST
+>> +	depends on PM && OF
+>> +	depends on HAVE_ARM_SMCCC
+>> +	default ARCH_MESON
+>> +	select PM_GENERIC_DOMAINS
+>> +	select PM_GENERIC_DOMAINS_OF
+>> +	help
+>> +	  Support for the power controller on Amlogic A1/C1 series.
+>> +	  Say yes to expose Amlogic Meson Secure Power Domains as Generic
+>> +	  Power Domains.
+>> +
+>>  config MESON_MX_SOCINFO
+>>  	bool "Amlogic Meson MX SoC Information driver"
+>>  	depends on ARCH_MESON || COMPILE_TEST
+>> diff --git a/drivers/soc/amlogic/Makefile b/drivers/soc/amlogic/Makefile
+>> index de79d044..7b8c5d3 100644
+>> --- a/drivers/soc/amlogic/Makefile
+>> +++ b/drivers/soc/amlogic/Makefile
+>> @@ -5,3 +5,4 @@ obj-$(CONFIG_MESON_GX_SOCINFO) += meson-gx-socinfo.o
+>>  obj-$(CONFIG_MESON_GX_PM_DOMAINS) += meson-gx-pwrc-vpu.o
+>>  obj-$(CONFIG_MESON_MX_SOCINFO) += meson-mx-socinfo.o
+>>  obj-$(CONFIG_MESON_EE_PM_DOMAINS) += meson-ee-pwrc.o
+>> +obj-$(CONFIG_MESON_SECURE_PM_DOMAINS) += meson-secure-pwrc.o
+>> diff --git a/drivers/soc/amlogic/meson-secure-pwrc.c b/drivers/soc/amlogic/meson-secure-pwrc.c
+>> new file mode 100644
+>> index 00000000..00c7232
+>> --- /dev/null
+>> +++ b/drivers/soc/amlogic/meson-secure-pwrc.c
+>> @@ -0,0 +1,182 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 [...]
-> > + supported  identifier are passed from consumers, or listed in the
-> > + the arm,func-id
->=20
->                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 		This is now obsolete.
->=20
-> The rest looks good to me, thanks for the changes!
->=20
-> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+>> +
+>> +static bool pwrc_secure_get_power(struct meson_secure_pwrc_domain *pwrc_domain)
+>> +{
+>> +	struct arm_smccc_res res;
+>> +
+>> +	arm_smccc_smc(SMC_PWRC_GET, pwrc_domain->index, 0,
+>> +		      0, 0, 0, 0, 0, &res);
+>> +
+>> +	return res.a0 & 0x1;
+> 
+> Please use a #define with a readable name for this mask.
+> The return type of this smc is bool. I will remove 0x1 mask in next version. 
 
-Thanks, I'll wait to see whether Rob and Jassi has some comments or not.
+Another question about smc:
+In this driver, no share memory is needed, and I use arm_smccc_smc() directly.
+Should I add secure-monitor = <&sm> in dtb and use meson_sm_call() from sm driver instead? 
+>> +}
+> 
+> What does the return value for this function mean?  Does true mean
+> "powered off" or "powered on">
+The return vaule for SMC_PWRC_GET :
+0 -> power on
+1 -> power off> See the rename I just did on the ee-pwrc driver:
+> https://lore.kernel.org/linux-amlogic/20190925213528.21515-2-khilman@kernel.org/
+> I will follow and rename to _is_off() in the next verson.
+>> +static int meson_secure_pwrc_off(struct generic_pm_domain *domain)
+>> +{
+>> +	struct arm_smccc_res res;
+>> +	struct meson_secure_pwrc_domain *pwrc_domain =
+[...]
+>> +
+>> +#define SEC_PD(__name, __flag)			\
+>> +{						\
+>> +	.name = #__name,			\
+>> +	.index = PWRC_##__name##_ID,		\
+>> +	.get_power = pwrc_secure_get_power,	\
+>> +	.flags = __flag,			\
+>> +}
+>> +
+>> +static struct meson_secure_pwrc_domain_desc a1_pwrc_domains[] = {
+>> +	SEC_PD(DSPA,	0),
+>> +	SEC_PD(DSPB,	0),
+>> +	SEC_PD(UART,	GENPD_FLAG_ALWAYS_ON),
+> 
+> This flag should only be used for domains where there are no linux
+> drivers.
+> 
+> Rather than using this flag, you need to add a 'power-domain' property
+> to the uart driver in DT, and then update the meson_uart driver to use
+> the runtime PM API so that the domain is enabled whenever the UART is in
+> use.
+PM_UART Power domain is shared by uart, msr, jtag and cec.
+Uart should keep working in BL31, after kernel suspend and before kernel resume.
+> 
+>> +	SEC_PD(DMC,	GENPD_FLAG_ALWAYS_ON),
+> 
+> Please explain the need for ALWAYS_ON.
+> 
+PM_DMC is used for DDR PHY ana/dig and DMC. 
+There is no linux drver for them, and it should be always on. 
 
-Then post out v10 to address your comments.
-
-Thanks,
-Peng.
-
->=20
-> Cheers,
-> Andre.
->=20
-> > +  property as described below. The firmware can return one value in
-> > + the first SMC result register, it is expected to be an error value,
-> > + which shall be propagated to the mailbox client.
-> > +
-> > +  Any core which supports the SMC or HVC instruction can be used, as
-> > + long  as a firmware component running in EL3 or EL2 is handling these
-> calls.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - description:
-> > +          For implementations using ARM SMC instruction.
-> > +        const: arm,smc-mbox
-> > +
-> > +      - description:
-> > +          For implementations using ARM HVC instruction.
-> > +        const: arm,hvc-mbox
-> > +
-> > +  "#mbox-cells":
-> > +    const: 0
-> > +
-> > +  arm,func-id:
-> > +    description: |
-> > +      An single 32-bit value specifying the function ID used by the
-> mailbox.
-> > +      The function ID follows the ARM SMC calling convention standard.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +
-> > +required:
-> > +  - compatible
-> > +  - "#mbox-cells"
-> > +  - arm,func-id
-> > +
-> > +examples:
-> > +  - |
-> > +    sram@93f000 {
-> > +      compatible =3D "mmio-sram";
-> > +      reg =3D <0x0 0x93f000 0x0 0x1000>;
-> > +      #address-cells =3D <1>;
-> > +      #size-cells =3D <1>;
-> > +      ranges =3D <0x0 0x93f000 0x1000>;
-> > +
-> > +      cpu_scp_lpri: scp-shmem@0 {
-> > +        compatible =3D "arm,scmi-shmem";
-> > +        reg =3D <0x0 0x200>;
-> > +      };
-> > +    };
-> > +
-> > +    smc_tx_mbox: tx_mbox {
-> > +      #mbox-cells =3D <0>;
-> > +      compatible =3D "arm,smc-mbox";
-> > +      arm,func-id =3D <0xc20000fe>;
-> > +    };
-> > +
-> > +    firmware {
-> > +      scmi {
-> > +        compatible =3D "arm,scmi";
-> > +        mboxes =3D <&smc_tx_mbox>;
-> > +        mbox-names =3D "tx";
-> > +        shmem =3D <&cpu_scp_lpri>;
-> > +      };
-> > +    };
-> > +
-> > +...
+I will add comments for all these always on domains.
+>> +	SEC_PD(I2C,	0),
+>> +	SEC_PD(PSRAM,	0),
+>> +	SEC_PD(ACODEC,	0),
+>> +	SEC_PD(AUDIO,	0),
+>> +	SEC_PD(OTP,	0),
+>> +	SEC_PD(DMA,	0),
+>> +	SEC_PD(SD_EMMC,	0),
+>> +	SEC_PD(RAMA,	0),
+>> +	SEC_PD(RAMB,	GENPD_FLAG_ALWAYS_ON),
+> 
+> Please explain the need for ALWAYS_ON.
+> 
+In A1, SRAMB is used for bl31 ATF. 
+>> +	SEC_PD(IR,	0),
+>> +	SEC_PD(SPICC,	0),
+>> +	SEC_PD(SPIFC,	0),
+>> +	SEC_PD(USB,	0),
+>> +	SEC_PD(NIC,	GENPD_FLAG_ALWAYS_ON),
+> 
+> Please explain the need for ALWAYS_ON.
+> 
+PD_NIC is used for NIC400, and should keep on.
+>> +	SEC_PD(PDMIN,	0),
+>> +	SEC_PD(RSA,	0),
+>> +};
+>> +
+>> +static int meson_secure_pwrc_probe(struct platform_device *pdev)
+>> +{
+>> +	const struct meson_secure_pwrc_domain_data *match;
+>> +	struct meson_secure_pwrc *pwrc;
+>> +	int i;
+[...]
+>> +
+>> +	return of_genpd_add_provider_onecell(pdev->dev.of_node, &pwrc->xlate);
+>> +}
+>> +
+>> +static struct meson_secure_pwrc_domain_data meson_secure_a1_pwrc_data = {
+>> +	.domains = a1_pwrc_domains,
+>> +	.count = ARRAY_SIZE(a1_pwrc_domains),
+>> +};
+>> +
+>> +static const struct of_device_id meson_secure_pwrc_match_table[] = {
+>> +	{
+>> +		.compatible = "amlogic,meson-a1-pwrc",
+>> +		.data = &meson_secure_a1_pwrc_data,
+>> +	},
+>> +	{ }
+> 
+> as mentioned by Martin, please add the sentinel string here.  Helps for
+> readability.
+> 
+OK, I will fix it. Thank you.
+>> +};
+>> +
+>> +static struct platform_driver meson_secure_pwrc_driver = {
+>> +	.probe = meson_secure_pwrc_probe,
+>> +	.driver = {
+>> +		.name		= "meson_secure_pwrc",
+>> +		.of_match_table	= meson_secure_pwrc_match_table,
+>> +	},
+>> +};
+>> +
+>> +static int meson_secure_pwrc_init(void)
+>> +{
+>> +	return platform_driver_register(&meson_secure_pwrc_driver);
+>> +}
+>> +arch_initcall_sync(meson_secure_pwrc_init);
+> 
+> Please use builtin_platform_driver() or explain in detail why the
+> initcall is needed.
+> 
+OK, I will use builtin_platform_driver instead.
+> Thanks,
+> 
+> Kevin
+> 
+> .
+> 
