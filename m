@@ -1,47 +1,69 @@
-From: Luca Weiss <luca@z3ntu.xyz>
-Subject: [PATCH 2/2] ARM: dts: msm8974-FP2: Increase load on l20 for sdhci
-Date: Thu, 26 Sep 2019 20:44:35 +0200
-Message-ID: <20190926184436.1078314-2-luca@z3ntu.xyz>
-References: <20190926184436.1078314-1-luca@z3ntu.xyz>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: asoc: Add ADAU7118
+	documentation
+Date: Thu, 26 Sep 2019 11:44:02 -0700
+Message-ID: <20190926184402.GG2036@sirena.org.uk>
+References: <20190926071707.17557-1-nuno.sa@analog.com>
+ <20190926071707.17557-2-nuno.sa@analog.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190926184436.1078314-1-luca@z3ntu.xyz>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Luca Weiss <luca@z3ntu.xyz>, Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============6021427838965693078=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20190926071707.17557-2-nuno.sa@analog.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Before this change, trying to boot from the internal storage would
-result in a lot of errors like:
 
-[   11.224046] mmc0: cache flush error -110
-[   11.224180] blk_update_request: I/O error, dev mmcblk0, sector 0 op 0x1:(WRITE) flags 0x800 phys_seg 0 prio class 0
+--===============6021427838965693078==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="0TJQK8JvXJ+EbTps"
+Content-Disposition: inline
 
-or:
 
-[  137.544673] mmc0: tuning execution failed: -5
-[  137.569832] mmcblk0: error -110 requesting status
-[  137.593558] mmcblk0: recovery failed!
+--0TJQK8JvXJ+EbTps
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-With this patch, there are no more sdhci errors and booting works fine.
+On Thu, Sep 26, 2019 at 09:17:07AM +0200, Nuno S=E1 wrote:
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts | 2 ++
- 1 file changed, 2 insertions(+)
+> +required:
+> +  - "#sound-dai-cells"
+> +  - compatible
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts b/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
-index 2869be16bc6e..dfab2518df60 100644
---- a/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dts
-@@ -221,6 +221,8 @@
- 						regulator-max-microvolt = <2950000>;
- 
- 						regulator-boot-on;
-+						regulator-system-load = <200000>;
-+						regulator-allow-set-load;
- 					};
- 
- 					l21 {
--- 
-2.23.0
+The regulators should be listed as required too.
+
+--0TJQK8JvXJ+EbTps
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2NBvEACgkQJNaLcl1U
+h9Bozgf9G95EmLRFp/BjEK+ieWiSOxCSpfQ8L8hEJCGT8vD8d9yf2e6H/KdCTo6V
+b17L8CH24RuXJehCjLgjAkGKyzcGUtiLgqb9IYHzeMchMRMqVK2rbgic9C2uku1K
+xKOdX9+oshFQwmPAdXSQIWTazGE6yjSiUgi5MqFQXL29qPLd9ussClxVlIo+us7r
+zDB3k4TR5RvSXmbH6qlgh6DXLif5iagV1Wj6eDx8Y1gKa8Rq+IzqXtsHPDjMyjyj
+UGPPHWYSSbHKjhHWdh1cxzlO0nI5f87PsuaWtFc5ih0Xq/DZuMhJKn07pYREiyV5
+P9kxfSY4g5mLQdX6vQaVeX54HJfUqA==
+=DuqT
+-----END PGP SIGNATURE-----
+
+--0TJQK8JvXJ+EbTps--
+
+--===============6021427838965693078==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6021427838965693078==--
