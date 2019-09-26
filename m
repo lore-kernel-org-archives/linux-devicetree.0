@@ -1,97 +1,46 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH 4/5] dt-bindings: usb: dwc3: of-simple: add compatible
- for HiSi
-Date: Thu, 26 Sep 2019 09:34:18 +0800
-Message-ID: <1569461658.32135.12.camel@mhfsdcap03>
-References: <20190925234224.95216-1-john.stultz@linaro.org>
-         <20190925234224.95216-5-john.stultz@linaro.org>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH V5 4/4] ASoC: fsl_asrc: Fix error with S24_3LE format
+ bitstream in i.MX8
+Date: Wed, 25 Sep 2019 18:49:06 -0700
+Message-ID: <20190926014905.GA24545@Asurada-Nvidia.nvidia.com>
+References: <cover.1569387932.git.shengjiu.wang@nxp.com>
+ <7c05d8396fd8c4f9d41c13a85e7486f3664bc73f.1569387932.git.shengjiu.wang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190925234224.95216-5-john.stultz@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <7c05d8396fd8c4f9d41c13a85e7486f3664bc73f.1569387932.git.shengjiu.wang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yu Chen <chenyu56@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+To: Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc: timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-09-25 at 23:42 +0000, John Stultz wrote:
-> Add necessary compatible flag for HiSi's DWC3 so
-> dwc3-of-simple will probe.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Yu Chen <chenyu56@huawei.com>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/hisi,dwc3.txt b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> new file mode 100644
-> index 000000000000..dc31b8a3c006
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> @@ -0,0 +1,52 @@
-> +HiSi SuperSpeed DWC3 USB SoC controller
-> +
-> +Required properties:
-> +- compatible:		should contain "hisilicon,hi3660-dwc3" for HiSi SoC
-> +- clocks:		A list of phandle + clock-specifier pairs for the
-> +			clocks listed in clock-names
-> +- clock-names:		Should contain the following:
-> +  "clk_usb3phy_ref"	Phy reference clk
-It's not good idea to apply phy's clock in dwc3's node
+Just a small concern...
 
-> +  "aclk_usb3otg"	USB3 OTG aclk
+On Thu, Sep 26, 2019 at 09:29:51AM +0800, Shengjiu Wang wrote:
+>  static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
+>  {
 > +
-> +- assigned-clocks:	Should be:
-> +				HI3660_ACLK_GATE_USB3OTG
-> +- assigned-clock-rates: Should be:
-> +				229Mhz (229000000) for HI3660_ACLK_GATE_USB3OTG
+> +	release_pair = false;
+> +	ret = snd_soc_set_runtime_hwparams(substream, &snd_imx_hardware);
+
+This set_runtime_hwparams() always returns 0 for now, but if
+one day it changes and it fails here, kfree() will be still
+ignored although the startup() gets error-out.
+
+We could avoid this if we continue to ignore the return value
+like the current code. Or we may check ret at kfree() also?
+
 > +
-> +Optional properties:
-> +- resets:		Phandle to reset control that resets core and wrapper.
+> +out:
+> +	dma_release_channel(tmp_chan);
 > +
-> +Required child node:
-> +A child node must exist to represent the core DWC3 IP block. The name of
-> +the node is not important. The content of the node is defined in dwc3.txt.
+> +dma_chan_err:
+> +	fsl_asrc_release_pair(pair);
 > +
-> +Example device nodes:
+> +req_pair_err:
+> +	if (release_pair)
+> +		kfree(pair);
 > +
-> +	usb3: hisi_dwc3 {
-> +		compatible = "hisilicon,hi3660-dwc3";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
-> +			 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-> +		clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
-> +
-> +		assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
-> +		assigned-clock-rates = <229 000 000>;
-> +		resets = <&crg_rst 0x90 8>,
-> +			 <&crg_rst 0x90 7>,
-> +			 <&crg_rst 0x90 6>,
-> +			 <&crg_rst 0x90 5>;
-> +
-> +		dwc3: dwc3@ff100000 {
-> +			compatible = "snps,dwc3";
-> +			reg = <0x0 0xff100000 0x0 0x100000>;
-> +			interrupts = <0 159 4>, <0 161 4>;
-> +			phys = <&usb_phy>;
-> +			phy-names = "usb3-phy";
-> +			dr_mode = "otg";
-> +
-> +			...
-> +		};
-> +	};
+> +	return ret;
+>  }
