@@ -1,145 +1,40 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] dt-bindings: sound: Convert Samsung Exynos5433 TM2(E)
- audio complex with WM5110 codec to dt-schema
-Date: Thu, 26 Sep 2019 14:43:46 +0200
-Message-ID: <20190926124346.GA15876@pi3>
-References: <CGME20190924150230eucas1p295da8f6aa018aec4acabc068f6e1afa1@eucas1p2.samsung.com>
- <20190924150146.15972-1-m.szyprowski@samsung.com>
- <20190924152028.GD9218@pi3>
- <50932d65-6d8b-aca2-2bec-d4eedaba0bdc@samsung.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: iommu: ipmmu-vmsa: Add r8a774b1 support
+Date: Thu, 26 Sep 2019 14:45:54 +0200
+Message-ID: <CAMuHMdWtH=1FAx=QNNxRV4YCmnRUNqwTUjr7-dRcQwCxtt5yDA@mail.gmail.com>
+References: <1569310854-37057-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50932d65-6d8b-aca2-2bec-d4eedaba0bdc@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Falkowski <m.falkowski@samsung.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1569310854-37057-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 01:49:09PM +0200, Maciej Falkowski wrote:
-> 
-> On 9/24/19 5:20 PM, Krzysztof Kozlowski wrote:
-> > On Tue, Sep 24, 2019 at 05:01:46PM +0200, Marek Szyprowski wrote:
-> >> From: Maciej Falkowski <m.falkowski@samsung.com>
-> >>
-> >> Convert Samsung Exynos5433 TM2(E) audio complex with WM5110 codec to newer dt-schema format.
-> >>
-> >> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-> >> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> >> ---
-> >>   .../bindings/sound/samsung,tm2-audio.txt      | 42 ----------
-> >>   .../bindings/sound/samsung,tm2-audio.yaml     | 83 +++++++++++++++++++
-> >>   2 files changed, 83 insertions(+), 42 deletions(-)
-> >>   delete mode 100644 Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
-> >>   create mode 100644 Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
-> >> deleted file mode 100644
-> >> index f5ccc12ddc00..000000000000
-> >> --- a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
-> >> +++ /dev/null
-> >> @@ -1,42 +0,0 @@
-> >> -Samsung Exynos5433 TM2(E) audio complex with WM5110 codec
-> >> -
-> >> -Required properties:
-> >> -
-> >> - - compatible		 : "samsung,tm2-audio"
-> >> - - model		 : the user-visible name of this sound complex
-> >> - - audio-codec		 : the first entry should be phandle of the wm5110 audio
-> >> -			   codec node, as described in ../mfd/arizona.txt;
-> >> -			   the second entry should be phandle of the HDMI
-> >> -			   transmitter node
-> >> - - i2s-controller	 : the list of phandle and argument tuples pointing to
-> >> -			   I2S controllers, the first entry should be I2S0 and
-> >> -			   the second one I2S1
-> >> - - audio-amplifier	 : the phandle of the MAX98504 amplifier
-> >> - - samsung,audio-routing : a list of the connections between audio components;
-> >> -			   each entry is a pair of strings, the first being the
-> >> -			   connection's sink, the second being the connection's
-> >> -			   source; valid names for sources and sinks are the
-> >> -			   WM5110's and MAX98504's pins and the jacks on the
-> >> -			   board: HP, SPK, Main Mic, Sub Mic, Third Mic,
-> >> -			   Headset Mic
-> >> - - mic-bias-gpios	 : GPIO pin that enables the Main Mic bias regulator
-> >> -
-> >> -
-> >> -Example:
-> >> -
-> >> -sound {
-> >> -	compatible = "samsung,tm2-audio";
-> >> -	audio-codec = <&wm5110>, <&hdmi>;
-> >> -	i2s-controller = <&i2s0 0>, <&i2s1 0>;
-> >> -	audio-amplifier = <&max98504>;
-> >> -	mic-bias-gpios = <&gpr3 2 0>;
-> >> -	model = "wm5110";
-> >> -	samsung,audio-routing =
-> >> -		"HP", "HPOUT1L",
-> >> -		"HP", "HPOUT1R",
-> >> -		"SPK", "SPKOUT",
-> >> -		"SPKOUT", "HPOUT2L",
-> >> -		"SPKOUT", "HPOUT2R",
-> >> -		"Main Mic", "MICBIAS2",
-> >> -		"IN1R", "Main Mic";
-> >> -};
-> >> diff --git a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml
-> >> new file mode 100644
-> >> index 000000000000..377f8cbe17b8
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.yaml
-> >> @@ -0,0 +1,83 @@
-> >> +# SPDX-License-Identifier: GPL-2.0
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: https://protect2.fireeye.com/url?k=ccb9abe11b8a2745.ccb820ae-a91cd712f01d248e&u=http://devicetree.org/schemas/sound/samsung,tm2-audio.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Samsung Exynos SoC Exynos5433 TM2(E) audio complex with WM5110 codec
-> >> +
-> >> +maintainers:
-> >> +  - Krzysztof Kozlowski <krzk@kernel.org>
-> >> +  - Sylwester Nawrocki <s.nawrocki@samsung.com>
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    const: samsung,tm2-audio
-> >> +
-> >> +  model:
-> >> +    maxItems: 1
-> > $ref to string, then maxItems are not needed.
-> > Add description (copy-paste).
-> 
-> Hi Krzysztof,
-> 
-> You're right, model is not a standard property.
-> 
-> >> +
-> >> +  audio-codec:
-> >> +    allOf:
-> >> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
-> >> +      - items:
-> >> +          - description: |
-> >> +              phandle of the wm5110 audio codec node,
-> >> +              as described in ../mfd/arizona.txt;
-> >> +          - description: phandle of the HDMI transmitter node.
-> >> +
-> >> +  i2s-controller:
-> >> +    allOf:
-> >> +      - $ref: /schemas/types.yaml#/definitions/phandle-array
-> >> +      - items:
-> >> +          - description: phandle of the I2S0.
-> >> +          - description: phandle of the I2S1.
-> >> +
-> >> +  audio-amplifier:
-> > Can you order the nodes here and in required section by name (except
-> > compatible which should be first)?
-> 
-> Current order is already well-established across bindings (even example).
-> I think that sorted properties are undesired with that.
+On Tue, Sep 24, 2019 at 9:41 AM Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
+> Document RZ/G2N (R8A774B1) SoC bindings.
+>
+> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 
-OK, good point, so leave the standard properties in order matching
-example-bindings. However order the reset because "audio-codec", then
-"i2s-controler" and then again "audio-...". So bring some order here.
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Best regards,
-Krzysztof
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
