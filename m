@@ -1,106 +1,58 @@
 From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [RFC PATCHv2 3/3] Documentation: short descriptions for Flexnoc Performance Monitor driver
-Date: Thu, 26 Sep 2019 10:46:26 +0530
-Message-ID: <81f9de9559d248be498cac1ee0e3ab15c7a2696c.1569474867.git.shubhrajyoti.datta@xilinx.com>
-References: <2de75a74ef4086090c532d3b80b7d6dcd115e45e.1569474867.git.shubhrajyoti.datta@xilinx.com>
+Subject: [RFC PATCHv2 1/3] dt-bindings: misc: Add dt bindings for flex noc Performance Monitor
+Date: Thu, 26 Sep 2019 10:46:24 +0530
+Message-ID: <2de75a74ef4086090c532d3b80b7d6dcd115e45e.1569474867.git.shubhrajyoti.datta@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2de75a74ef4086090c532d3b80b7d6dcd115e45e.1569474867.git.shubhrajyoti.datta@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, michal.simek@xilinx.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add short documentation for FlexNoc Performance Monitor driver.
+Add dt bindings for flexnoc Performance Monitor.
+The flexnoc counters for read and write response and requests are
+supported.
 
 Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 ---
-v2:
-patch added
-
- Documentation/misc-devices/xilinx_flex.txt | 66 ++++++++++++++++++++++++++=
+ .../devicetree/bindings/misc/xlnx,flexnoc.txt      | 24 ++++++++++++++++++=
 ++++
- 1 file changed, 66 insertions(+)
- create mode 100644 Documentation/misc-devices/xilinx_flex.txt
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt
 
-diff --git a/Documentation/misc-devices/xilinx_flex.txt b/Documentation/mis=
-c-devices/xilinx_flex.txt
+diff --git a/Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt b/Docu=
+mentation/devicetree/bindings/misc/xlnx,flexnoc.txt
 new file mode 100644
-index 0000000..c075934
+index 0000000..6b533bc
 --- /dev/null
-+++ b/Documentation/misc-devices/xilinx_flex.txt
-@@ -0,0 +1,66 @@
-+Kernel driver xilinx_flex
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
++++ b/Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt
+@@ -0,0 +1,24 @@
++* Xilinx Flexnoc Performance Monitor driver
 +
-+Supported chips:
-+Versal SOC
++The FlexNoc Performance Monitor has counters for monitoring
++the read and the write transaction counter.
 +
-+Author:
-+       Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
++Required properties:
++- compatible: "xlnx,flexnoc-pm-2.7"
++- reg : Address and length of register sets for each device in
++       "reg-names"
++- reg-names : The names of the register addresses corresponding to the
++               registers filled in "reg"
++               - funnel: base address of the funnel registers
++               - baselpd: base address of the LPD PM registers
++               - basefpd: base address FPD PM registers
 +
-+Description
-+-----------
-+
-+Versal uses the Arteris FlexNoC interconnect instead of the ARM NIC. FlexN=
-oC
-+provides the capability to integrate performance counters in the interconn=
-ect.
-+It has configurable probe points to monitor the packet and forwards it to
-+observer for logging. It supports read and write transaction counts for
-+request and response.
-+
-+Features:
-+---> Run-time programmable selection of packet probe points.
-+---> Recording of traffic and link statistics.
-+---> Separate read and write response and request count.
-+
-+SYSFS:
-+
-+counteridfpd
-+       RW - shows the counter number selected for the FPD Flexnoc.
-+
-+counterfpd_rdreq
-+       RO - shows the read request count for the FPD counters.
-+
-+counterfpdsrc
-+       WO - sets the source of the FPD counter.
-+
-+counterfpd_wrrsp
-+       RO - shows the write response count for the FPD counters.
-+
-+counterfpd_rdrsp
-+       RO - shows the read response count for the FPD counters.
-+
-+counterfpd_wrreq
-+       RO - shows the write request count for the FPD counters.
-+
-+counterfpdport
-+       WO - sets the port number selected for the FPD Flexnoc.
-+
-+counteridlpd
-+       RW - shows the counter number selected for the LPD Flexnoc.
-+
-+counterlpdport
-+       WO - sets the port number selected for the LPD Flexnoc.
-+
-+counterlpd_rdreq
-+       RO - shows the read request count for the LPD counters.
-+
-+counterlpd_wrreq
-+       RO - shows the write request count for the LPD counters.
-+
-+counterlpd_wrrsp
-+       RO - shows the write response count for the LPD counters.
-+
-+counterlpdsrc
-+       WO - sets the source of the LPD counter.
-+
-+counterlpd_rdrsp
-+       RO - shows the read response count for the LPD counters.
++Example:
++++++++++
++performance-monitor@f0920000 {
++               compatible =3D "xlnx,flexnoc-pm-2.7";
++               reg-names =3D "funnel", "baselpd", "basefpd";
++               reg =3D <0x0 0xf0920000 0x0 0x1000>,
++                       <0x0 0xf0980000 0x0 0x9000>,
++                       <0x0 0xf0b80000 0x0 0x9000>;
++};
 --
 2.1.1
 
