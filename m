@@ -1,36 +1,59 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCHv2 1/3] dt-bindings: misc: Add dt bindings for flex
- noc Performance Monitor
-Date: Thu, 26 Sep 2019 07:29:59 +0200
-Message-ID: <20190926052959.GA1562021@kroah.com>
-References: <2de75a74ef4086090c532d3b80b7d6dcd115e45e.1569474867.git.shubhrajyoti.datta@xilinx.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH 4/5] dt-bindings: usb: dwc3: of-simple: add compatible
+ for HiSi
+Date: Thu, 26 Sep 2019 14:42:32 +0800
+Message-ID: <1569480152.32135.16.camel@mhfsdcap03>
+References: <20190925234224.95216-1-john.stultz@linaro.org>
+         <20190925234224.95216-5-john.stultz@linaro.org>
+         <1569461658.32135.12.camel@mhfsdcap03>
+         <CALAqxLX=csTtnqr2Hc9v_R8ex8zPj_P1JvSyjZXUKEqSaF=gPA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2de75a74ef4086090c532d3b80b7d6dcd115e45e.1569474867.git.shubhrajyoti.datta@xilinx.com>
+In-Reply-To: <CALAqxLX=csTtnqr2Hc9v_R8ex8zPj_P1JvSyjZXUKEqSaF=gPA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, arnd@arndb.de, michal.simek@xilinx.com
+To: John Stultz <john.stultz@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yu Chen <chenyu56@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 10:46:24AM +0530, Shubhrajyoti Datta wrote:
-> Add dt bindings for flexnoc Performance Monitor.
-> The flexnoc counters for read and write response and requests are
-> supported.
+On Wed, 2019-09-25 at 21:06 -0700, John Stultz wrote:
+> On Wed, Sep 25, 2019 at 6:34 PM Chunfeng Yun <chunfeng.yun@mediatek.com> wrote:
+> > On Wed, 2019-09-25 at 23:42 +0000, John Stultz wrote:
+> > > +++ b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> > > @@ -0,0 +1,52 @@
+> > > +HiSi SuperSpeed DWC3 USB SoC controller
+> > > +
+> > > +Required properties:
+> > > +- compatible:                should contain "hisilicon,hi3660-dwc3" for HiSi SoC
+> > > +- clocks:            A list of phandle + clock-specifier pairs for the
+> > > +                     clocks listed in clock-names
+> > > +- clock-names:               Should contain the following:
+> > > +  "clk_usb3phy_ref"  Phy reference clk
+> > It's not good idea to apply phy's clock in dwc3's node
 > 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-> ---
->  .../devicetree/bindings/misc/xlnx,flexnoc.txt      | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/xlnx,flexnoc.txt
+> Hey! Thanks for taking a look at this!
+> 
+> So first, my apologies, I'm not the driver author and I don't have any
+> real specs on the hardware other then what's in the source tree I'm
+> working on.  Not the ideal person to be documenting the binding, but I
+> realized we still needed some binding documentation (although a few
+> other dwc-of-simple compat entries are undocumented), so this is my
+> rough stab at it. :/
+> 
+> Given the name clk_usb3phy_ref I'm assuming its a phy reference clock,
+> but I honestly don't know if I'm getting that wrong.  It all seems to
+> be leveraging the fact that the dwc-of-simple driver batch enables and
+> disables all the clocks w/o really looking at the names.
+> 
+> Do you have a recommendation for what would be best here? I suspect
+> it's necessary to enable/disable the clk in a similar path(though I'm
+> unfortunately traveling this week so I can't validate that). Do I try
+> to move the clk_usb3phy_ref clock enable/disable handling to somewhere
+> else?
+If it's phy clock, we should enable/disable it in phy driver, maybe we'd
+better ask for help from Yu Chen
 
-<snip>
-
-Why are these "RFC"?
-
-I guess you don't want them merged because you are not thinking that
-they are good enough?  What needs to be done on them that you are
-sending them out now?
-
-greg k-h
+> 
+> thanks
+> -john
