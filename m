@@ -1,109 +1,138 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] dt-bindings: timer: Use defines instead of numbers in Exynos MCT examples
-Date: Thu, 26 Sep 2019 20:36:43 +0200
-Message-ID: <20190926183643.7118-1-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] ASOC: Add ADAU7118 8 Channel
+ PDM-to-I2S/TDM Converter driver
+Date: Thu, 26 Sep 2019 11:43:18 -0700
+Message-ID: <20190926184318.GF2036@sirena.org.uk>
+References: <20190926071707.17557-1-nuno.sa@analog.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============2580827850041757329=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20190926071707.17557-1-nuno.sa@analog.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Make the examples in Exynos Multi Core Timer bindings more readable and
-bring them closer to real DTS by using defines for interrupt flags.
 
-Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+--===============2580827850041757329==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="TWLMYU3k2ba4mEMM"
+Content-Disposition: inline
 
----
 
-Rebased on top of:
-https://patchwork.kernel.org/project/linux-samsung-soc/list/?series=177667&state=*
----
- .../timer/samsung,exynos4210-mct.yaml         | 37 ++++++++++++++-----
- 1 file changed, 27 insertions(+), 10 deletions(-)
+--TWLMYU3k2ba4mEMM
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
-index bff3f54a398f..c4d152009f76 100644
---- a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
-+++ b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
-@@ -75,51 +75,68 @@ examples:
-     // In this example, the IP contains two local timers, using separate
-     // interrupts, so two local timer interrupts have been specified,
-     // in addition to four global timer interrupts.
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
-     timer@10050000 {
-         compatible = "samsung,exynos4210-mct";
-         reg = <0x10050000 0x800>;
--        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
--                     <0 42 0>, <0 48 0>;
-+        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-     };
- 
-   - |
-     // In this example, the timer interrupts are connected to two separate
-     // interrupt controllers. Hence, an interrupts-extended is needed.
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
-     timer@101c0000 {
-         compatible = "samsung,exynos4210-mct";
-         reg = <0x101C0000 0x800>;
--        interrupts-extended = <&gic 0 57 0>,
--                              <&gic 0 69 0>,
-+        interrupts-extended = <&gic GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+                              <&gic GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-                               <&combiner 12 6>,
-                               <&combiner 12 7>,
--                              <&gic 0 42 0>,
--                              <&gic 0 48 0>;
-+                              <&gic GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-+                              <&gic GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-     };
- 
-   - |
-     // In this example, the IP contains four local timers, but using
-     // a per-processor interrupt to handle them. Only one first local
-     // interrupt is specified.
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
-     timer@10050000 {
-         compatible = "samsung,exynos4412-mct";
-         reg = <0x10050000 0x800>;
- 
--        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
--                     <0 42 0>;
-+        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-     };
- 
-   - |
-     // In this example, the IP contains four local timers, but using
-     // a per-processor interrupt to handle them. All the local timer
-     // interrupts are specified.
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
-     timer@10050000 {
-         compatible = "samsung,exynos4412-mct";
-         reg = <0x10050000 0x800>;
- 
--        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
--                     <0 42 0>, <0 42 0>, <0 42 0>, <0 42 0>;
-+        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-     };
--- 
-2.17.1
+On Thu, Sep 26, 2019 at 09:17:06AM +0200, Nuno S=E1 wrote:
+
+> --- /dev/null
+> +++ b/sound/soc/codecs/adau7118-hw.c
+> @@ -0,0 +1,43 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Analog Devices ADAU7118 8 channel PDM-to-I2S/TDM Converter Standalone=
+ Hw
+> + * driver
+> + *
+> + * Copyright 2019 Analog Devices Inc.
+> + */
+
+Please make the entire comment a C++ style one in the .c files so
+things look more intentional.
+
+> +	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+> +	case SND_SOC_DAIFMT_I2S:
+> +		ret =3D snd_soc_component_update_bits(dai->component,
+> +						    ADAU7118_REG_SPT_CTRL1,
+> +						    ADAU7118_DATA_FMT_MASK,
+> +						    ADAU7118_DATA_FMT(0));
+> +		break;
+> +	case SND_SOC_DAIFMT_LEFT_J:
+> +		ret =3D snd_soc_component_update_bits(dai->component,
+> +						    ADAU7118_REG_SPT_CTRL1,
+> +						    ADAU7118_DATA_FMT_MASK,
+> +						    ADAU7118_DATA_FMT(1));
+> +		break;
+> +	case SND_SOC_DAIFMT_RIGHT_J:
+> +		st->right_j =3D true;
+> +		break;
+
+Don't we need to set any register values here?
+
+> +
+> +	return ret < 0 ? ret : 0;
+> +}
+
+Please don't use the ternery operator like this, it just makes
+things harder to read - write normal if conditional statements.
+
+> +	case SND_SOC_BIAS_STANDBY:
+> +		if (snd_soc_component_get_bias_level(component) =3D=3D
+> +							SND_SOC_BIAS_OFF) {
+> +			if (!st->iovdd)
+> +				return 0;
+
+This is broken, the device will always require power so it should
+always control the regulators.
+
+> +static int adau7118_suspend(struct snd_soc_component *component)
+> +{
+> +	return snd_soc_component_force_bias_level(component, SND_SOC_BIAS_OFF);
+> +}
+> +
+> +static int adau7118_resume(struct snd_soc_component *component)
+> +{
+> +	return snd_soc_component_force_bias_level(component,
+> +						  SND_SOC_BIAS_STANDBY);
+> +}
+
+Let DAPM do this for you, there's no substantial delays on power
+on so you're probably best just setting idle_bias_off.
+
+> +static int adau7118_regulator_setup(struct adau7118_data *st)
+> +{
+> +	int ret =3D 0;
+> +
+> +	st->iovdd =3D devm_regulator_get_optional(st->dev, "IOVDD");
+> +	if (!IS_ERR(st->iovdd)) {
+
+Unless the device can operate with supplies physically absent it
+should not be requesting regulators as optional, this breaks your
+error handling especially with probe deferral which is a fairly
+common case.
+
+--TWLMYU3k2ba4mEMM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2NBsUACgkQJNaLcl1U
+h9DTSwf6A3j4WBOC0vVeOzs40lDzb88KcOkWvTA0Pt+vEUZ0DUHQ/AOX1GgN6Zh6
+At4k18u+ptataFlScXDHRmrtEcz3Eu8n/gRTXvpifr6z/8EwVhvAMEu5PbL2zHqG
+vpV3LE8V0HLflyp+e7V44W8MkLTm21G3xVTqnKEpxFkaUTm/V9nXXZFMHc5249tb
+oyHXflE5Ykbp52INzLLjkcIAsg8znpl+RFezGG1GmU8arFGMmnxmMc4Dc+owEC9p
+eaXVLp0KTPw+J3h6ajs8jSffq9IxT+124gSvooJoJo009cRjSNP83OHKwdoyLFxc
+fbPqwfsORdF+ZnG8k0XqhLjiGYZYWQ==
+=3zRw
+-----END PGP SIGNATURE-----
+
+--TWLMYU3k2ba4mEMM--
+
+--===============2580827850041757329==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2580827850041757329==--
