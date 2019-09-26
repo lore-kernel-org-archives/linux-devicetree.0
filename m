@@ -1,79 +1,156 @@
-From: Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v2 00/21] Refine memblock API
-Date: Thu, 26 Sep 2019 19:04:34 +0300
-Message-ID: <20190926160433.GD32311@linux.ibm.com>
-References: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
- <CAHCN7x+Jv7yGPoB0Gm=TJ30ObLJduw2XomHkd++KqFEURYQcGg@mail.gmail.com>
- <CAOMZO5A_U4aYC4XZXK1r9JaLg-eRdXy8m6z4GatQp62rK4HZ6A@mail.gmail.com>
- <CAHCN7xJdzEppn8-74SvzACsA25bUHGdV7v=CfS08xzSi59Z2uw@mail.gmail.com>
- <CAOMZO5D2uzR6Sz1QnX3G-Ce_juxU-0PO_vBZX+nR1mpQB8s8-w@mail.gmail.com>
- <CAHCN7xJ32BYZu-DVTVLSzv222U50JDb8F0A_tLDERbb8kPdRxg@mail.gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/3] soc: amlogic: Add support for Secure power domains controller
+Date: Thu, 26 Sep 2019 09:23:42 -0700
+Message-ID: <7ha7arrppt.fsf@baylibre.com>
+References: <1568895064-4116-1-git-send-email-jianxin.pan@amlogic.com> <1568895064-4116-3-git-send-email-jianxin.pan@amlogic.com> <7hh850t2wy.fsf@baylibre.com> <3859c748-01f0-4dbd-05d6-20fff31edf11@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAHCN7xJ32BYZu-DVTVLSzv222U50JDb8F0A_tLDERbb8kPdRxg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Adam Ford <aford173@gmail.com>
-Cc: Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, devicetree <devicetree@vger.kernel.org>, Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, x86@kernel.org, Russell King <linux@armlinux.org.uk>, kasan-dev <kasan-dev@googlegroups.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.org, Chris Healy <cphealy@gmail.com>, uclinux-h8-devel@lists.sourceforge.j
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3859c748-01f0-4dbd-05d6-20fff31edf11@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jianxin Pan <jianxin.pan@amlogic.com>, linux-amlogic@lists.infradead.org
+Cc: Zhiqiang Liang <zhiqiang.liang@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Jianxin Pan <jianxin.pan@amlogic.com> writes:
 
-On Thu, Sep 26, 2019 at 08:09:52AM -0500, Adam Ford wrote:
-> On Wed, Sep 25, 2019 at 10:17 AM Fabio Estevam <festevam@gmail.com> wrote:
-> >
-> > On Wed, Sep 25, 2019 at 9:17 AM Adam Ford <aford173@gmail.com> wrote:
-> >
-> > > I tried cma=256M and noticed the cma dump at the beginning didn't
-> > > change.  Do we need to setup a reserved-memory node like
-> > > imx6ul-ccimx6ulsom.dtsi did?
-> >
-> > I don't think so.
-> >
-> > Were you able to identify what was the exact commit that caused such regression?
-> 
-> I was able to narrow it down the 92d12f9544b7 ("memblock: refactor
-> internal allocation functions") that caused the regression with
-> Etnaviv.
+> Hi Kevin,
+>
+> Thanks for your review. Please see my comments below.
+>
+>
+> On 2019/9/26 6:41, Kevin Hilman wrote:
+>> Hi Jianxin,
+>> 
+>> Jianxin Pan <jianxin.pan@amlogic.com> writes:
+>> 
+>>> Add support for the Amlogic Secure Power controller. In A1/C1 series, power
+>>> control registers are in secure domain, and should be accessed by smc.
+>>>
+>>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>>> Signed-off-by: Zhiqiang Liang <zhiqiang.liang@amlogic.com>
+>> 
+>> Thanks for the new power domain driver.
+>> 
+>>> ---
+>>>  drivers/soc/amlogic/Kconfig             |  13 +++
+>>>  drivers/soc/amlogic/Makefile            |   1 +
+>>>  drivers/soc/amlogic/meson-secure-pwrc.c | 182 ++++++++++++++++++++++++++++++++
+>>>  3 files changed, 196 insertions(+)
+>>>  create mode 100644 drivers/soc/amlogic/meson-secure-pwrc.c
+>>>
+>>> diff --git a/drivers/soc/amlogic/Kconfig b/drivers/soc/amlogic/Kconfig
+>>> index bc2c912..6cb06e7 100644
+>>> --- a/drivers/soc/amlogic/Kconfig
+>>> +++ b/drivers/soc/amlogic/Kconfig
+>>> @@ -48,6 +48,19 @@ config MESON_EE_PM_DOMAINS
+>>>  	  Say yes to expose Amlogic Meson Everything-Else Power Domains as
+>>>  	  Generic Power Domains.
+>>>  
+>>> +config MESON_SECURE_PM_DOMAINS
+>>> +	bool "Amlogic Meson Secure Power Domains driver"
+>>> +	depends on ARCH_MESON || COMPILE_TEST
+>>> +	depends on PM && OF
+>>> +	depends on HAVE_ARM_SMCCC
+>>> +	default ARCH_MESON
+>>> +	select PM_GENERIC_DOMAINS
+>>> +	select PM_GENERIC_DOMAINS_OF
+>>> +	help
+>>> +	  Support for the power controller on Amlogic A1/C1 series.
+>>> +	  Say yes to expose Amlogic Meson Secure Power Domains as Generic
+>>> +	  Power Domains.
+>>> +
+>>>  config MESON_MX_SOCINFO
+>>>  	bool "Amlogic Meson MX SoC Information driver"
+>>>  	depends on ARCH_MESON || COMPILE_TEST
+>>> diff --git a/drivers/soc/amlogic/Makefile b/drivers/soc/amlogic/Makefile
+>>> index de79d044..7b8c5d3 100644
+>>> --- a/drivers/soc/amlogic/Makefile
+>>> +++ b/drivers/soc/amlogic/Makefile
+>>> @@ -5,3 +5,4 @@ obj-$(CONFIG_MESON_GX_SOCINFO) += meson-gx-socinfo.o
+>>>  obj-$(CONFIG_MESON_GX_PM_DOMAINS) += meson-gx-pwrc-vpu.o
+>>>  obj-$(CONFIG_MESON_MX_SOCINFO) += meson-mx-socinfo.o
+>>>  obj-$(CONFIG_MESON_EE_PM_DOMAINS) += meson-ee-pwrc.o
+>>> +obj-$(CONFIG_MESON_SECURE_PM_DOMAINS) += meson-secure-pwrc.o
+>>> diff --git a/drivers/soc/amlogic/meson-secure-pwrc.c b/drivers/soc/amlogic/meson-secure-pwrc.c
+>>> new file mode 100644
+>>> index 00000000..00c7232
+>>> --- /dev/null
+>>> +++ b/drivers/soc/amlogic/meson-secure-pwrc.c
+>>> @@ -0,0 +1,182 @@
+>>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> [...]
+>>> +
+>>> +static bool pwrc_secure_get_power(struct meson_secure_pwrc_domain *pwrc_domain)
+>>> +{
+>>> +	struct arm_smccc_res res;
+>>> +
+>>> +	arm_smccc_smc(SMC_PWRC_GET, pwrc_domain->index, 0,
+>>> +		      0, 0, 0, 0, 0, &res);
+>>> +
+>>> +	return res.a0 & 0x1;
+>> 
+>> Please use a #define with a readable name for this mask.
+>> The return type of this smc is bool. I will remove 0x1 mask in next version. 
+>
+> Another question about smc:
+> In this driver, no share memory is needed, and I use arm_smccc_smc() directly.
+> Should I add secure-monitor = <&sm> in dtb and use meson_sm_call() from sm driver instead? 
+
+Yes, that would be preferred.
+
+>>> +}
+>> 
+>> What does the return value for this function mean?  Does true mean
+>> "powered off" or "powered on">
+> The return vaule for SMC_PWRC_GET :
+> 0 -> power on
+> 1 -> power off> See the rename I just did on the ee-pwrc driver:
+>> https://lore.kernel.org/linux-amlogic/20190925213528.21515-2-khilman@kernel.org/
+>> I will follow and rename to _is_off() in the next verson.
+>>> +static int meson_secure_pwrc_off(struct generic_pm_domain *domain)
+>>> +{
+>>> +	struct arm_smccc_res res;
+>>> +	struct meson_secure_pwrc_domain *pwrc_domain =
+> [...]
+>>> +
+>>> +#define SEC_PD(__name, __flag)			\
+>>> +{						\
+>>> +	.name = #__name,			\
+>>> +	.index = PWRC_##__name##_ID,		\
+>>> +	.get_power = pwrc_secure_get_power,	\
+>>> +	.flags = __flag,			\
+>>> +}
+>>> +
+>>> +static struct meson_secure_pwrc_domain_desc a1_pwrc_domains[] = {
+>>> +	SEC_PD(DSPA,	0),
+>>> +	SEC_PD(DSPB,	0),
+>>> +	SEC_PD(UART,	GENPD_FLAG_ALWAYS_ON),
+>> 
+>> This flag should only be used for domains where there are no linux
+>> drivers.
+>> 
+>> Rather than using this flag, you need to add a 'power-domain' property
+>> to the uart driver in DT, and then update the meson_uart driver to use
+>> the runtime PM API so that the domain is enabled whenever the UART is in
+>> use.
+>
+> PM_UART Power domain is shared by uart, msr, jtag and cec.
+> Uart should keep working in BL31, after kernel suspend and before kernel resume.
+
+OK.
+
+>> 
+>>> +	SEC_PD(DMC,	GENPD_FLAG_ALWAYS_ON),
+>> 
+>> Please explain the need for ALWAYS_ON.
+>> 
+> PM_DMC is used for DDR PHY ana/dig and DMC. 
+> There is no linux drver for them, and it should be always on. 
+>
+> I will add comments for all these always on domains.
+
+OK, thank you.
 
 
-Can you please test with this change:
-
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 7d4f61a..1f5a0eb 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -1356,9 +1356,6 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
- 		align = SMP_CACHE_BYTES;
- 	}
- 
--	if (end > memblock.current_limit)
--		end = memblock.current_limit;
--
- again:
- 	found = memblock_find_in_range_node(size, align, start, end, nid,
- 					    flags);
- 
-> I also noticed that if I create a reserved memory node as was done one
-> imx6ul-ccimx6ulsom.dtsi the 3D seems to work again, but without it, I
-> was getting errors regardless of the 'cma=256M' or not.
-> I don't have a problem using the reserved memory, but I guess I am not
-> sure what the amount should be.  I know for the video decoding 1080p,
-> I have historically used cma=128M, but with the 3D also needing some
-> memory allocation, is that enough or should I use 256M?
-> 
-> adam
-
--- 
-Sincerely yours,
-Mike.
+Kevin
