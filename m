@@ -1,177 +1,233 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: RE: [PATCH 2/5] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Date: Thu, 26 Sep 2019 10:17:06 +0000
-Message-ID: <AM5PR1001MB09944C0F9A4F547BF9E175CF80860@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-References: <20190917124246.11732-1-m.felsch@pengutronix.de>
- <20190917124246.11732-3-m.felsch@pengutronix.de>
- <AM5PR1001MB0994ABEF9C32BFB7BEA099B680840@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20190925155151.75uaxfiiei3i23tz@pengutronix.de>
- <AM5PR1001MB09941810C3AE97110DD82E0F80870@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
- <20190926080956.a3k2z4gf3n6m3n4s@pengutronix.de>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: Re: [PATCH 1/2] HID: i2c-hid: allow delay after SET_POWER
+Date: Thu, 26 Sep 2019 12:29:27 +0200
+Message-ID: <CAO-hwJJsJPQxBLTPpHnvERiCtkWUfbwB-5ZcJFTcXu-c07GuNg@mail.gmail.com>
+References: <20190925094326.41693-1-vicamo.yang@canonical.com> <20190925094326.41693-2-vicamo.yang@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190926080956.a3k2z4gf3n6m3n4s@pengutronix.de>
-Content-Language: en-US
+In-Reply-To: <20190925094326.41693-2-vicamo.yang@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: Support Opensource <Support.Opensource@diasemi.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, Steve Twiss <stwiss.opensource@diasemi.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: You-Sheng Yang <vicamo.yang@canonical.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Kosina <jikos@kernel.org>, Kai-Heng Feng <kai.heng.feng@canonical.com>, Hui Wang <hui.wang@canonical.com>, Julian Sax <jsbc@gmx.de>, HungNien Chen <hn.chen@weidahitech.com>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26 September 2019 09:10, Marco Felsch wrote:
+Hi,
 
-> On 19-09-25 16:18, Adam Thomson wrote:
-> > On 25 September 2019 16:52, Marco Felsch wrote:
-> >
-> > > Hi Adam,
-> > >
-> > > On 19-09-24 09:23, Adam Thomson wrote:
-> > > > On 17 September 2019 13:43, Marco Felsch wrote:
-> > > >
-> > > > > Add the documentation which describe the voltage selection gpio
-> support.
-> > > > > This property can be applied to each subnode within the 'regulato=
-rs'
-> > > > > node so each regulator can be configured differently.
-> > > > >
-> > > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/mfd/da9062.txt | 9 +++++++++
-> > > > >  1 file changed, 9 insertions(+)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > > b/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > > index edca653a5777..9d9820d8177d 100644
-> > > > > --- a/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > > +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > > @@ -66,6 +66,15 @@ Sub-nodes:
-> > > > >    details of individual regulator device can be found in:
-> > > > >    Documentation/devicetree/bindings/regulator/regulator.txt
-> > > > >
-> > > > > +  Optional regulator device-specific properties:
-> > > > > +  - dlg,vsel-sense-gpios : The GPIO reference which should be us=
-ed by
-> the
-> > > > > +    regulator to switch the voltage between active/suspend volta=
-ge
-> settings.
-> > > If
-> > > > > +    the signal is active the active-settings are applied else th=
-e suspend
-> > > > > +    settings are applied. Attention: Sharing the same gpio for o=
-ther
-> purposes
-> > > > > +    or across multiple regulators is possible but the gpio setti=
-ngs must be
-> the
-> > > > > +    same. Also the gpio phandle must refer to to the dlg,da9062-=
-gpio
-> device
-> > > > > +    other gpios are not allowed and make no sense.
-> > > > > +
-> > > >
-> > > > Should we not use the binding names that are defined in 'gpio-
-> regulator.yaml'
-> > > as
-> > > > these seem to be generic and would probably serve the purpose here?
-> > >
-> > > Hm.. as the description says:
-> > >
-> > > 8<--------------------------------------------------
-> > > gpios:
-> > >    description: Array of one or more GPIO pins used to select the
-> > >    regulator voltage/current listed in "states".
-> > > 8<--------------------------------------------------
-> > >
-> > > But we don't have a "states" property and we can't select between
-> > > voltage or current.
-> >
-> > Yes I think I was at cross purposes when I made this remark. The bindin=
-gs there
-> > describe the GPOs that are used to enable/disable and set voltage/curre=
-nt for
-> > regulators and the supported voltage/current levels that can be configu=
-red in
-> > this manner. What you're describing is the GPI for DA9061/2. If you loo=
-k at
-> > GPIO handling in existing regulator drivers I believe they all deal wit=
-h external
-> > GPOs that are configured to enable/disable and set voltage/current limi=
-ts
-> rather
-> > than the GPI on the PMIC itself. That's why I'm thinking that the confi=
-gurations
-> > you're doing here should actually be in a pinctrl or GPIO driver.
->=20
-> That's true, the common gpio bindings are from the view of the
-> processor, e.g. which gpio must the processor drive to enable/switch the
-> regualtor. So one reasone more to use a non-common binding.
->=20
-> Please take a look on my other comment I made :) I don't use the
-> gpio-alternative function. I use it as an input.
 
-I know in the datasheet this isn't marked as an alternate function specific=
-ally
-but to me having regulator control by the chip's own GPI is an alternative
-function for that GPIO pin, in the same way a specific pin can be used for
-SYS_EN or Watchdog control. It's a dedicated purpose rather than being a no=
-rmal
-GPI.
+On Wed, Sep 25, 2019 at 11:43 AM You-Sheng Yang
+<vicamo.yang@canonical.com> wrote:
+>
+> According to HID over I2C specification v1.0 section 7.2.8, a device is
+> allowed to take at most 1 second to make the transition to the specified
+> power state. On some touchpad devices implements Microsoft Precision
+> Touchpad, it may fail to execute following set PTP mode command without
+> the delay and leaves the device in an unsupported Mouse mode.
+>
+> This change adds a post-setpower-delay-ms device property that allows
+> specifying the delay after a SET_POWER command is issued.
 
-See the following as an example of what I'm suggesting:
+I must confess I have at least 2 problems with your series:
+- this patch is quite hard to review. There are unrelated changes and
+it should be split in at least 2 (I'll detail this in the code review
+below)
+- you are basically adding a new quirk when Windows doesn't need it.
 
-https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bin=
-dings/pinctrl/pinctrl-palmas.txt
+So before we merge this, I'd like to actually know if Windows is doing
+the same and if we could not mimic what Windows is doing to prevent
+further similar quirks in the future.
 
-You could then pass the pinctrl information to the regulator driver and use
-that rather than having device specific bindings for this. That's at least =
-my
-current interpretation of this anyway.
 
->=20
-> Regards,
->   Marco
->=20
->=20
-> > I'd be interested in hearing Mark's view on this though as he has far m=
-ore
-> > experience in this area than I do.
-> >
-> > >
-> > > Regards,
-> > >   Marco
-> > >
-> > > > >  - rtc : This node defines settings required for the Real-Time Cl=
-ock
-> associated
-> > > > >    with the DA9062. There are currently no entries in this bindin=
-g, however
-> > > > >    compatible =3D "dlg,da9062-rtc" should be added if a node is c=
-reated.
-> > > > > --
-> > > > > 2.20.1
-> > > >
-> > > >
-> > >
-> > > --
-> > > Pengutronix e.K.                           |                         =
-    |
-> > > Industrial Linux Solutions                 | http://www.pengutronix.d=
-e/  |
-> > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0=
-    |
-> > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5=
-555 |
-> >
->=20
+>
+> References: https://bugzilla.kernel.org/show_bug.cgi?id=3D204991
+> Signed-off-by: You-Sheng Yang <vicamo.yang@canonical.com>
+> ---
+>  .../bindings/input/hid-over-i2c.txt           |  2 +
+>  drivers/hid/i2c-hid/i2c-hid-core.c            | 46 +++++++++++--------
+>  include/linux/platform_data/i2c-hid.h         |  3 ++
+>  3 files changed, 32 insertions(+), 19 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/input/hid-over-i2c.txt b/D=
+ocumentation/devicetree/bindings/input/hid-over-i2c.txt
+> index c76bafaf98d2f..d82faae335da0 100644
+> --- a/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+> +++ b/Documentation/devicetree/bindings/input/hid-over-i2c.txt
+> @@ -32,6 +32,8 @@ device-specific compatible properties, which should be =
+used in addition to the
+>  - vdd-supply: phandle of the regulator that provides the supply voltage.
+>  - post-power-on-delay-ms: time required by the device after enabling its=
+ regulators
+
+Why are you removing those 2 properties?
+
+>    or powering it on, before it is ready for communication.
+> +- post-setpower-delay-ms: time required by the device after a SET_POWER =
+command
+> +  before it finished the state transition.
+
+couple of issues:
+- the name might not be the best. It is similar to the
+post-power-on-delay while having a complete different impact. (note: I
+don't have a better name at hand)
+- checkpatch complains that device tree changes should be in a
+separate patch, and I tend to agree.
+
+>
+>  Example:
+>
+> diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c=
+-hid-core.c
+> index 2a7c6e33bb1c4..a5bc2786dc440 100644
+> --- a/drivers/hid/i2c-hid/i2c-hid-core.c
+> +++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+> @@ -168,6 +168,7 @@ static const struct i2c_hid_quirks {
+>         __u16 idVendor;
+>         __u16 idProduct;
+>         __u32 quirks;
+> +       __u32 post_setpower_delay_ms;
+>  } i2c_hid_quirks[] =3D {
+>         { USB_VENDOR_ID_WEIDA, HID_ANY_ID,
+>                 I2C_HID_QUIRK_SET_PWR_WAKEUP_DEV },
+> @@ -189,21 +190,20 @@ static const struct i2c_hid_quirks {
+>   * i2c_hid_lookup_quirk: return any quirks associated with a I2C HID dev=
+ice
+>   * @idVendor: the 16-bit vendor ID
+>   * @idProduct: the 16-bit product ID
+> - *
+> - * Returns: a u32 quirks value.
+>   */
+> -static u32 i2c_hid_lookup_quirk(const u16 idVendor, const u16 idProduct)
+> +static void i2c_hid_set_quirk(struct i2c_hid *ihid,
+> +               const u16 idVendor, const u16 idProduct)
+>  {
+> -       u32 quirks =3D 0;
+>         int n;
+>
+>         for (n =3D 0; i2c_hid_quirks[n].idVendor; n++)
+>                 if (i2c_hid_quirks[n].idVendor =3D=3D idVendor &&
+>                     (i2c_hid_quirks[n].idProduct =3D=3D (__u16)HID_ANY_ID=
+ ||
+> -                    i2c_hid_quirks[n].idProduct =3D=3D idProduct))
+> -                       quirks =3D i2c_hid_quirks[n].quirks;
+> -
+> -       return quirks;
+> +                    i2c_hid_quirks[n].idProduct =3D=3D idProduct)) {
+> +                       ihid->quirks =3D i2c_hid_quirks[n].quirks;
+> +                       ihid->pdata.post_setpower_delay_ms =3D
+> +                               i2c_hid_quirks[n].post_setpower_delay_ms;
+> +               }
+
+Why are you changing the signature of i2c_hid_set_quirk? If this is
+really a good thing to do, it should go in a separate patch.
+
+>  }
+>
+>  static int __i2c_hid_command(struct i2c_client *client,
+> @@ -431,8 +431,22 @@ static int i2c_hid_set_power(struct i2c_client *clie=
+nt, int power_state)
+>             power_state =3D=3D I2C_HID_PWR_SLEEP)
+>                 ihid->sleep_delay =3D jiffies + msecs_to_jiffies(20);
+>
+> -       if (ret)
+> +       if (ret) {
+>                 dev_err(&client->dev, "failed to change power setting.\n"=
+);
+> +               goto set_pwr_exit;
+> +       }
+> +
+> +       /*
+> +        * The HID over I2C specification states that if a DEVICE needs t=
+ime
+> +        * after the PWR_ON request, it should utilise CLOCK stretching.
+> +        * However, it has been observered that the Windows driver provid=
+es a
+> +        * 1ms sleep between the PWR_ON and RESET requests and that some =
+devices
+> +        * rely on this.
+> +        */
+> +       if (ihid->pdata.post_setpower_delay_ms)
+> +               msleep(ihid->pdata.post_setpower_delay_ms);
+> +       else
+> +               usleep_range(1000, 5000);
+
+Moving up this part needs definitively to be in a separate patch as
+well, with a good explanation on why.
+
+Cheers,
+Benjamin
+
+>
+>  set_pwr_exit:
+>         return ret;
+> @@ -456,15 +470,6 @@ static int i2c_hid_hwreset(struct i2c_client *client=
+)
+>         if (ret)
+>                 goto out_unlock;
+>
+> -       /*
+> -        * The HID over I2C specification states that if a DEVICE needs t=
+ime
+> -        * after the PWR_ON request, it should utilise CLOCK stretching.
+> -        * However, it has been observered that the Windows driver provid=
+es a
+> -        * 1ms sleep between the PWR_ON and RESET requests and that some =
+devices
+> -        * rely on this.
+> -        */
+> -       usleep_range(1000, 5000);
+> -
+>         i2c_hid_dbg(ihid, "resetting...\n");
+>
+>         ret =3D i2c_hid_command(client, &hid_reset_cmd, NULL, 0);
+> @@ -1023,6 +1028,9 @@ static void i2c_hid_fwnode_probe(struct i2c_client =
+*client,
+>         if (!device_property_read_u32(&client->dev, "post-power-on-delay-=
+ms",
+>                                       &val))
+>                 pdata->post_power_delay_ms =3D val;
+> +       if (!device_property_read_u32(&client->dev, "post-setpower-delay-=
+ms",
+> +                                     &val))
+> +               pdata->post_setpower_delay_ms =3D val;
+>  }
+>
+>  static int i2c_hid_probe(struct i2c_client *client,
+> @@ -1145,7 +1153,7 @@ static int i2c_hid_probe(struct i2c_client *client,
+>                  client->name, hid->vendor, hid->product);
+>         strlcpy(hid->phys, dev_name(&client->dev), sizeof(hid->phys));
+>
+> -       ihid->quirks =3D i2c_hid_lookup_quirk(hid->vendor, hid->product);
+> +       i2c_hid_set_quirk(ihid, hid->vendor, hid->product);
+>
+>         ret =3D hid_add_device(hid);
+>         if (ret) {
+> diff --git a/include/linux/platform_data/i2c-hid.h b/include/linux/platfo=
+rm_data/i2c-hid.h
+> index c628bb5e10610..71682f2ad8a53 100644
+> --- a/include/linux/platform_data/i2c-hid.h
+> +++ b/include/linux/platform_data/i2c-hid.h
+> @@ -20,6 +20,8 @@
+>   * @hid_descriptor_address: i2c register where the HID descriptor is sto=
+red.
+>   * @supplies: regulators for powering on the device.
+>   * @post_power_delay_ms: delay after powering on before device is usable=
+.
+> + * @post_setpower_delay_ms: delay after SET_POWER command before device
+> + *                          completes state transition.
+>   *
+>   * Note that it is the responsibility of the platform driver (or the acp=
+i 5.0
+>   * driver, or the flattened device tree) to setup the irq related to the=
+ gpio in
+> @@ -36,6 +38,7 @@ struct i2c_hid_platform_data {
+>         u16 hid_descriptor_address;
+>         struct regulator_bulk_data supplies[2];
+>         int post_power_delay_ms;
+> +       int post_setpower_delay_ms;
+>  };
+>
+>  #endif /* __LINUX_I2C_HID_H */
 > --
-> Pengutronix e.K.                           |                             =
-|
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
-|
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    =
-|
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 =
-|
+> 2.23.0
+>
