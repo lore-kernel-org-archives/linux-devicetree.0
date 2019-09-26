@@ -1,169 +1,89 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: gpu: Convert Samsung Image Scaler to dt-schema
-Date: Thu, 26 Sep 2019 14:19:41 -0500
-Message-ID: <CAL_Jsq+yWL3ZSnvHbGb4B0zHptQtFXjvOUJe0pNSHmH05GN-PA@mail.gmail.com>
-References: <CGME20190926125619eucas1p249ac149ef1e1a3eb975dae94b08cd7be@eucas1p2.samsung.com>
- <20190926125614.10408-1-m.szyprowski@samsung.com> <20190926140315.GA16002@pi3>
- <0d3831ae-e33d-774d-02f7-fba45a95d25c@samsung.com> <CAL_JsqL4LZdkWkDkZdEpv4Sh840GywfHhLgmWjYCm9z+QPxrLg@mail.gmail.com>
- <f06da64d-58de-1d51-48d4-95a6efd417d0@samsung.com>
+From: Adam Ford <aford173@gmail.com>
+Subject: Re: [PATCH v2 00/21] Refine memblock API
+Date: Thu, 26 Sep 2019 14:35:53 -0500
+Message-ID: <CAHCN7xL1sFXDhKUpj04d3eDZNgLA1yGAOqwEeCxedy1Qm-JOfQ@mail.gmail.com>
+References: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
+ <CAHCN7x+Jv7yGPoB0Gm=TJ30ObLJduw2XomHkd++KqFEURYQcGg@mail.gmail.com>
+ <CAOMZO5A_U4aYC4XZXK1r9JaLg-eRdXy8m6z4GatQp62rK4HZ6A@mail.gmail.com>
+ <CAHCN7xJdzEppn8-74SvzACsA25bUHGdV7v=CfS08xzSi59Z2uw@mail.gmail.com>
+ <CAOMZO5D2uzR6Sz1QnX3G-Ce_juxU-0PO_vBZX+nR1mpQB8s8-w@mail.gmail.com>
+ <CAHCN7xJ32BYZu-DVTVLSzv222U50JDb8F0A_tLDERbb8kPdRxg@mail.gmail.com>
+ <20190926160433.GD32311@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f06da64d-58de-1d51-48d4-95a6efd417d0@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Falkowski <m.falkowski@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Inki Dae <inki.dae@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190926160433.GD32311@linux.ibm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, devicetree <devicetree@vger.kernel.org>, Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, x86@kernel.org, Russell King <linux@armlinux.org.uk>, kasan-dev <kasan-dev@googlegroups.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.org, Chris Healy <cphealy@gmail.com>, uclinux-h8-devel@lists.sourceforge.j
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 11:54 AM Maciej Falkowski
-<m.falkowski@samsung.com> wrote:
+On Thu, Sep 26, 2019 at 11:04 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+>
+> Hi,
+>
+> On Thu, Sep 26, 2019 at 08:09:52AM -0500, Adam Ford wrote:
+> > On Wed, Sep 25, 2019 at 10:17 AM Fabio Estevam <festevam@gmail.com> wrote:
+> > >
+> > > On Wed, Sep 25, 2019 at 9:17 AM Adam Ford <aford173@gmail.com> wrote:
+> > >
+> > > > I tried cma=256M and noticed the cma dump at the beginning didn't
+> > > > change.  Do we need to setup a reserved-memory node like
+> > > > imx6ul-ccimx6ulsom.dtsi did?
+> > >
+> > > I don't think so.
+> > >
+> > > Were you able to identify what was the exact commit that caused such regression?
+> >
+> > I was able to narrow it down the 92d12f9544b7 ("memblock: refactor
+> > internal allocation functions") that caused the regression with
+> > Etnaviv.
 >
 >
-> On 9/26/19 5:35 PM, Rob Herring wrote:
-> > On Thu, Sep 26, 2019 at 9:47 AM Maciej Falkowski
-> > <m.falkowski@samsung.com> wrote:
-> >>
-> >> On 9/26/19 4:03 PM, Krzysztof Kozlowski wrote:
-> >>> On Thu, Sep 26, 2019 at 02:56:14PM +0200, Marek Szyprowski wrote:
-> >>>> From: Maciej Falkowski <m.falkowski@samsung.com>
-> >>>>
-> >>>> Convert Samsung Image Scaler to newer dt-schema format.
-> >>>>
-> >>>> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-> >>>> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> >>>> ---
-> >>>> v2:
-> >>>> - Removed quotation marks from string in 'compatible' property
-> >>>> - Added if-then statement for 'clocks' and 'clock-names' property
-> >>>> - Added include directive to example
-> >>>> - Added GIC_SPI macro to example
-> >>>>
-> >>>> Best regards,
-> >>>> Maciej Falkowski
-> >>>> ---
-> >>>>    .../bindings/gpu/samsung-scaler.txt           | 27 -------
-> >>>>    .../bindings/gpu/samsung-scaler.yaml          | 71 +++++++++++++++++++
-> >>>>    2 files changed, 71 insertions(+), 27 deletions(-)
-> >>>>    delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.txt
-> >>>>    create mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt b/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
-> >>>> deleted file mode 100644
-> >>>> index 9c3d98105dfd..000000000000
-> >>>> --- a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
-> >>>> +++ /dev/null
-> >>>> @@ -1,27 +0,0 @@
-> >>>> -* Samsung Exynos Image Scaler
-> >>>> -
-> >>>> -Required properties:
-> >>>> -  - compatible : value should be one of the following:
-> >>>> -    (a) "samsung,exynos5420-scaler" for Scaler IP in Exynos5420
-> >>>> -    (b) "samsung,exynos5433-scaler" for Scaler IP in Exynos5433
-> >>>> -
-> >>>> -  - reg : Physical base address of the IP registers and length of memory
-> >>>> -      mapped region.
-> >>>> -
-> >>>> -  - interrupts : Interrupt specifier for scaler interrupt, according to format
-> >>>> -             specific to interrupt parent.
-> >>>> -
-> >>>> -  - clocks : Clock specifier for scaler clock, according to generic clock
-> >>>> -         bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
-> >>>> -
-> >>>> -  - clock-names : Names of clocks. For exynos scaler, it should be "mscl"
-> >>>> -              on 5420 and "pclk", "aclk" and "aclk_xiu" on 5433.
-> >>>> -
-> >>>> -Example:
-> >>>> -    scaler@12800000 {
-> >>>> -            compatible = "samsung,exynos5420-scaler";
-> >>>> -            reg = <0x12800000 0x1294>;
-> >>>> -            interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH>;
-> >>>> -            clocks = <&clock CLK_MSCL0>;
-> >>>> -            clock-names = "mscl";
-> >>>> -    };
-> >>>> diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
-> >>>> new file mode 100644
-> >>>> index 000000000000..af19930d052e
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
-> >>>> @@ -0,0 +1,71 @@
-> >>>> +# SPDX-License-Identifier: GPL-2.0
-> >>>> +%YAML 1.2
-> >>>> +---
-> >>>> +$id: https://protect2.fireeye.com/url?k=1ffa720fd467d028.1ffbf940-9a5a550397b4da2b&u=http://devicetree.org/schemas/gpu/samsung-scaler.yaml#
-> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >>>> +
-> >>>> +title: Samsung Exynos SoC Image Scaler
-> >>>> +
-> >>>> +maintainers:
-> >>>> +  - Inki Dae <inki.dae@samsung.com>
-> >>>> +
-> >>>> +properties:
-> >>>> +  compatible:
-> >>>> +    enum:
-> >>>> +      - samsung,exynos5420-scaler
-> >>>> +      - samsung,exynos5433-scaler
-> >>>> +
-> >>>> +  reg:
-> >>>> +    maxItems: 1
-> >>>> +
-> >>>> +  interrupts:
-> >>>> +    maxItems: 1
-> >>>> +
-> >> Hi Krzysztof,
-> > Please work on your quoting. Reply below what you are replying to.
-> >
-> >> By "Midgard" I assume that you referred to
-> >> 'Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml'.
-> >>
-> >> I think that 'clocks' and 'clock-names' properties before if statement
-> >> serve different purpose in this schema.
-> >> It totally has about 10 different compatibles grouped in five pairs.
-> >> Then schema declares for 'clocks' minItems as one and maxItems as two and
-> >> later it overrides this boundaries with if statement for particular
-> >> compatibles.
-> > It's not an override, but an AND. So what's under 'properties' has to
-> > be the looser constraints than what is under an if/then schema.
-> Hi Rob,
-> Thank you for explaining that.
-> >> Well, then clearly, the purpose is to declare boundaries for all of
-> >> pairs and
-> >> not to provide easy-to-find definition for this properties.
-> >>
-> >> In my schema I directly set boundaries per compatible with single
-> >> if-else statement.
-> >> I didn't know what to put before then as if statement is already
-> >> self-explanatory.
-> >>
-> >> Best regards,
-> >> Maciej Falkowski
-> >>
-> >>> I am repeating myself... leave the clocks and clock-names.
-> >>>
-> >>> "I think it is worth to leave the clocks and clock-names here (could be
-> >>> empty or with min/max values for number of items). This makes it easy to
-> >>> find the properties by humans.
-> > I agree.
-> >
-> > Let me put it another way. You need to add an 'additionalProperties:
-> > false' and (I think) to make that work you'll need them listed here.
-> >
-> > Rob
+> Can you please test with this change:
 >
-> So when properties are only defined inside if-then scope,
-> they are labeled as 'additional' as they are not defined inside
-> scope of 'properties'. It is mandatory then to mention 'clock' and
-> 'clock-names' there if 'additionalProperties: false' .
 
-Yes, which makes additionalProperties a bit fragile and can't be used
-if we include a common schema. There's a fix for that coming in
-json-schema draft8 called 'unevaluatedProperties'.
+That appears to have fixed my issue.  I am not sure what the impact
+is, but is this a safe option?
 
-> However I had not set it intentionally as there are additional
-> properties in some bindings,
-> exactly 'iommu' and 'power-domains' are undocumented.
-> Is it a good way to put them in 'properties' just to be able to forbid
-> additional properties?
 
-Simply put, they should be documented too.
+adam
 
-Rob
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 7d4f61a..1f5a0eb 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -1356,9 +1356,6 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+>                 align = SMP_CACHE_BYTES;
+>         }
+>
+> -       if (end > memblock.current_limit)
+> -               end = memblock.current_limit;
+> -
+>  again:
+>         found = memblock_find_in_range_node(size, align, start, end, nid,
+>                                             flags);
+>
+> > I also noticed that if I create a reserved memory node as was done one
+> > imx6ul-ccimx6ulsom.dtsi the 3D seems to work again, but without it, I
+> > was getting errors regardless of the 'cma=256M' or not.
+> > I don't have a problem using the reserved memory, but I guess I am not
+> > sure what the amount should be.  I know for the video decoding 1080p,
+> > I have historically used cma=128M, but with the 3D also needing some
+> > memory allocation, is that enough or should I use 256M?
+> >
+> > adam
+>
+> --
+> Sincerely yours,
+> Mike.
+>
