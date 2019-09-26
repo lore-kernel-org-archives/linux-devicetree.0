@@ -1,106 +1,254 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: gpu: Convert Samsung Image Scaler to
- dt-schema
-Date: Thu, 26 Sep 2019 16:03:15 +0200
-Message-ID: <20190926140315.GA16002@pi3>
-References: <CGME20190926125619eucas1p249ac149ef1e1a3eb975dae94b08cd7be@eucas1p2.samsung.com>
- <20190926125614.10408-1-m.szyprowski@samsung.com>
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Subject: RE: [PATCH 2/5] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Date: Thu, 26 Sep 2019 14:04:23 +0000
+Message-ID: <AM5PR1001MB099405D4A0C06CD6BF2886E880860@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+References: <20190917124246.11732-1-m.felsch@pengutronix.de>
+ <20190917124246.11732-3-m.felsch@pengutronix.de>
+ <AM5PR1001MB0994ABEF9C32BFB7BEA099B680840@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20190925155151.75uaxfiiei3i23tz@pengutronix.de>
+ <AM5PR1001MB09941810C3AE97110DD82E0F80870@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20190926080956.a3k2z4gf3n6m3n4s@pengutronix.de>
+ <AM5PR1001MB09944C0F9A4F547BF9E175CF80860@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+ <20190926114354.qvv2rs7mc4xh6lkp@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190926125614.10408-1-m.szyprowski@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Maciej Falkowski <m.falkowski@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190926114354.qvv2rs7mc4xh6lkp@pengutronix.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marco Felsch <m.felsch@pengutronix.de>, "broonie@kernel.org" <broonie@kernel.org>, Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc: Support Opensource <Support.Opensource@diasemi.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, Steve Twiss <stwiss.opensource@diasemi.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBTZXAgMjYsIDIwMTkgYXQgMDI6NTY6MTRQTSArMDIwMCwgTWFyZWsgU3p5cHJvd3Nr
-aSB3cm90ZToKPiBGcm9tOiBNYWNpZWogRmFsa293c2tpIDxtLmZhbGtvd3NraUBzYW1zdW5nLmNv
-bT4KPiAKPiBDb252ZXJ0IFNhbXN1bmcgSW1hZ2UgU2NhbGVyIHRvIG5ld2VyIGR0LXNjaGVtYSBm
-b3JtYXQuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWFjaWVqIEZhbGtvd3NraSA8bS5mYWxrb3dza2lA
-c2Ftc3VuZy5jb20+Cj4gU2lnbmVkLW9mZi1ieTogTWFyZWsgU3p5cHJvd3NraSA8bS5zenlwcm93
-c2tpQHNhbXN1bmcuY29tPgo+IC0tLQo+IHYyOgo+IC0gUmVtb3ZlZCBxdW90YXRpb24gbWFya3Mg
-ZnJvbSBzdHJpbmcgaW4gJ2NvbXBhdGlibGUnIHByb3BlcnR5Cj4gLSBBZGRlZCBpZi10aGVuIHN0
-YXRlbWVudCBmb3IgJ2Nsb2NrcycgYW5kICdjbG9jay1uYW1lcycgcHJvcGVydHkKPiAtIEFkZGVk
-IGluY2x1ZGUgZGlyZWN0aXZlIHRvIGV4YW1wbGUKPiAtIEFkZGVkIEdJQ19TUEkgbWFjcm8gdG8g
-ZXhhbXBsZQo+IAo+IEJlc3QgcmVnYXJkcywKPiBNYWNpZWogRmFsa293c2tpCj4gLS0tCj4gIC4u
-Li9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1zY2FsZXIudHh0ICAgICAgICAgICB8IDI3IC0tLS0tLS0K
-PiAgLi4uL2JpbmRpbmdzL2dwdS9zYW1zdW5nLXNjYWxlci55YW1sICAgICAgICAgIHwgNzEgKysr
-KysrKysrKysrKysrKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDcxIGluc2VydGlvbnMoKyksIDI3
-IGRlbGV0aW9ucygtKQo+ICBkZWxldGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2dwdS9zYW1zdW5nLXNjYWxlci50eHQKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1zY2FsZXIueWFt
-bAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1
-L3NhbXN1bmctc2NhbGVyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9n
-cHUvc2Ftc3VuZy1zY2FsZXIudHh0Cj4gZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXgg
-OWMzZDk4MTA1ZGZkLi4wMDAwMDAwMDAwMDAKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZ3B1L3NhbXN1bmctc2NhbGVyLnR4dAo+ICsrKyAvZGV2L251bGwKPiBAQCAt
-MSwyNyArMCwwIEBACj4gLSogU2Ftc3VuZyBFeHlub3MgSW1hZ2UgU2NhbGVyCj4gLQo+IC1SZXF1
-aXJlZCBwcm9wZXJ0aWVzOgo+IC0gIC0gY29tcGF0aWJsZSA6IHZhbHVlIHNob3VsZCBiZSBvbmUg
-b2YgdGhlIGZvbGxvd2luZzoKPiAtCShhKSAic2Ftc3VuZyxleHlub3M1NDIwLXNjYWxlciIgZm9y
-IFNjYWxlciBJUCBpbiBFeHlub3M1NDIwCj4gLQkoYikgInNhbXN1bmcsZXh5bm9zNTQzMy1zY2Fs
-ZXIiIGZvciBTY2FsZXIgSVAgaW4gRXh5bm9zNTQzMwo+IC0KPiAtICAtIHJlZyA6IFBoeXNpY2Fs
-IGJhc2UgYWRkcmVzcyBvZiB0aGUgSVAgcmVnaXN0ZXJzIGFuZCBsZW5ndGggb2YgbWVtb3J5Cj4g
-LQkgIG1hcHBlZCByZWdpb24uCj4gLQo+IC0gIC0gaW50ZXJydXB0cyA6IEludGVycnVwdCBzcGVj
-aWZpZXIgZm9yIHNjYWxlciBpbnRlcnJ1cHQsIGFjY29yZGluZyB0byBmb3JtYXQKPiAtCQkgc3Bl
-Y2lmaWMgdG8gaW50ZXJydXB0IHBhcmVudC4KPiAtCj4gLSAgLSBjbG9ja3MgOiBDbG9jayBzcGVj
-aWZpZXIgZm9yIHNjYWxlciBjbG9jaywgYWNjb3JkaW5nIHRvIGdlbmVyaWMgY2xvY2sKPiAtCSAg
-ICAgYmluZGluZ3MuIChTZWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2Nr
-L2V4eW5vcyoudHh0KQo+IC0KPiAtICAtIGNsb2NrLW5hbWVzIDogTmFtZXMgb2YgY2xvY2tzLiBG
-b3IgZXh5bm9zIHNjYWxlciwgaXQgc2hvdWxkIGJlICJtc2NsIgo+IC0JCSAgb24gNTQyMCBhbmQg
-InBjbGsiLCAiYWNsayIgYW5kICJhY2xrX3hpdSIgb24gNTQzMy4KPiAtCj4gLUV4YW1wbGU6Cj4g
-LQlzY2FsZXJAMTI4MDAwMDAgewo+IC0JCWNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlub3M1NDIw
-LXNjYWxlciI7Cj4gLQkJcmVnID0gPDB4MTI4MDAwMDAgMHgxMjk0PjsKPiAtCQlpbnRlcnJ1cHRz
-ID0gPDAgMjIwIElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+IC0JCWNsb2NrcyA9IDwmY2xvY2sgQ0xL
-X01TQ0wwPjsKPiAtCQljbG9jay1uYW1lcyA9ICJtc2NsIjsKPiAtCX07Cj4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1zY2FsZXIueWFt
-bCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1zY2FsZXIu
-eWFtbAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi5hZjE5OTMw
-ZDA1MmUKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2dwdS9zYW1zdW5nLXNjYWxlci55YW1sCj4gQEAgLTAsMCArMSw3MSBAQAo+ICsjIFNQ
-RFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4gKyVZQU1MIDEuMgo+ICstLS0KPiArJGlk
-OiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9ncHUvc2Ftc3VuZy1zY2FsZXIueWFtbCMK
-PiArJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwj
-Cj4gKwo+ICt0aXRsZTogU2Ftc3VuZyBFeHlub3MgU29DIEltYWdlIFNjYWxlcgo+ICsKPiArbWFp
-bnRhaW5lcnM6Cj4gKyAgLSBJbmtpIERhZSA8aW5raS5kYWVAc2Ftc3VuZy5jb20+Cj4gKwo+ICtw
-cm9wZXJ0aWVzOgo+ICsgIGNvbXBhdGlibGU6Cj4gKyAgICBlbnVtOgo+ICsgICAgICAtIHNhbXN1
-bmcsZXh5bm9zNTQyMC1zY2FsZXIKPiArICAgICAgLSBzYW1zdW5nLGV4eW5vczU0MzMtc2NhbGVy
-Cj4gKwo+ICsgIHJlZzoKPiArICAgIG1heEl0ZW1zOiAxCj4gKwo+ICsgIGludGVycnVwdHM6Cj4g
-KyAgICBtYXhJdGVtczogMQo+ICsKCkkgYW0gcmVwZWF0aW5nIG15c2VsZi4uLiBsZWF2ZSB0aGUg
-Y2xvY2tzIGFuZCBjbG9jay1uYW1lcy4KCiJJIHRoaW5rIGl0IGlzIHdvcnRoIHRvIGxlYXZlIHRo
-ZSBjbG9ja3MgYW5kIGNsb2NrLW5hbWVzIGhlcmUgKGNvdWxkIGJlCmVtcHR5IG9yIHdpdGggbWlu
-L21heCB2YWx1ZXMgZm9yIG51bWJlciBvZiBpdGVtcykuIFRoaXMgbWFrZXMgaXQgZWFzeSB0bwpm
-aW5kIHRoZSBwcm9wZXJ0aWVzIGJ5IGh1bWFucy4KCk1pZGdhcmQgYmluZGluZ3MgY291bGQgYmUg
-dXNlZCBhcyBleGFtcGxlLiIKCj4gK2lmOgo+ICsgIHByb3BlcnRpZXM6Cj4gKyAgICBjb21wYXRp
-YmxlOgo+ICsgICAgICBjb250YWluczoKPiArICAgICAgICBjb25zdDogc2Ftc3VuZyxleHlub3M1
-NDIwLXNjYWxlcgo+ICt0aGVuOgo+ICsgIHByb3BlcnRpZXM6Cj4gKyAgICBjbG9ja3M6Cj4gKyAg
-ICAgIGl0ZW1zOgo+ICsgICAgICAgIC0gZGVzY3JpcHRpb246IG1zY2wgY2xvY2sKPiArCj4gKyAg
-ICBjbG9jay1uYW1lczoKPiArICAgICAgaXRlbXM6Cj4gKyAgICAgICAgLSBjb25zdDogbXNjbAo+
-ICtlbHNlOgo+ICsgIHByb3BlcnRpZXM6Cj4gKyAgICBjbG9ja3M6Cj4gKyAgICAgIGl0ZW1zOgo+
-ICsgICAgICAgIC0gZGVzY3JpcHRpb246IG1zY2wgY2xvY2sKPiArICAgICAgICAtIGRlc2NyaXB0
-aW9uOiBhY2xrIGNsb2NrCj4gKyAgICAgICAgLSBkZXNjcmlwdGlvbjogYWNsa194aXUgY2xvY2sK
-PiArCj4gKyAgICBjbG9jay1uYW1lczoKPiArICAgICAgaXRlbXM6Cj4gKyAgICAgICAgLSBjb25z
-dDogcGNsawo+ICsgICAgICAgIC0gY29uc3Q6IGFjbGsKPiArICAgICAgICAtIGNvbnN0OiBhY2xr
-X3hpdQo+ICsKPiArcmVxdWlyZWQ6Cj4gKyAgLSBjb21wYXRpYmxlCj4gKyAgLSByZWcKPiArICAt
-IGludGVycnVwdHMKPiArICAtIGNsb2Nrcwo+ICsgIC0gY2xvY2stbmFtZXMKPiArCj4gK2V4YW1w
-bGVzOgo+ICsgIC0gfAo+ICsgICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL2V4eW5vczU0
-MjAuaD4KPiArICAgICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9h
-cm0tZ2ljLmg+Cj4gKwo+ICsgICAgc2NhbGVyQDEyODAwMDAwIHsKPiArICAgICAgICBjb21wYXRp
-YmxlID0gInNhbXN1bmcsZXh5bm9zNTQyMC1zY2FsZXIiOwo+ICsgICAgICAgIHJlZyA9IDwweDEy
-ODAwMDAwIDB4MTI5ND47Cj4gKyAgICAgICAgaW50ZXJydXB0cyA9IDxHSUNfU1BJIDIyMCBJUlFf
-VFlQRV9MRVZFTF9ISUdIPjsKPiArICAgICAgICBjbG9ja3MgPSA8JmNsb2NrIENMS19NU0NMMD47
-Cj4gKyAgICAgICAgY2xvY2stbmFtZXMgPSAibXNjbCI7Cj4gKyAgICB9Owo+ICsKClVubmVlZGVk
-IHRyYWlsaW5nIGxpbmUuCgpCZXN0IHJlZ2FyZHMsCktyenlzenRvZgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On 26 September 2019 12:44, Marco Felsch wrote:
+
+> On 19-09-26 10:17, Adam Thomson wrote:
+> > On 26 September 2019 09:10, Marco Felsch wrote:
+> >
+> > > On 19-09-25 16:18, Adam Thomson wrote:
+> > > > On 25 September 2019 16:52, Marco Felsch wrote:
+> > > >
+> > > > > Hi Adam,
+> > > > >
+> > > > > On 19-09-24 09:23, Adam Thomson wrote:
+> > > > > > On 17 September 2019 13:43, Marco Felsch wrote:
+> > > > > >
+> > > > > > > Add the documentation which describe the voltage selection gp=
+io
+> > > support.
+> > > > > > > This property can be applied to each subnode within the 'regu=
+lators'
+> > > > > > > node so each regulator can be configured differently.
+> > > > > > >
+> > > > > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > > > > > ---
+> > > > > > >  Documentation/devicetree/bindings/mfd/da9062.txt | 9 +++++++=
+++
+> > > > > > >  1 file changed, 9 insertions(+)
+> > > > > > >
+> > > > > > > diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > b/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > index edca653a5777..9d9820d8177d 100644
+> > > > > > > --- a/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > @@ -66,6 +66,15 @@ Sub-nodes:
+> > > > > > >    details of individual regulator device can be found in:
+> > > > > > >    Documentation/devicetree/bindings/regulator/regulator.txt
+> > > > > > >
+> > > > > > > +  Optional regulator device-specific properties:
+> > > > > > > +  - dlg,vsel-sense-gpios : The GPIO reference which should b=
+e used
+> by
+> > > the
+> > > > > > > +    regulator to switch the voltage between active/suspend v=
+oltage
+> > > settings.
+> > > > > If
+> > > > > > > +    the signal is active the active-settings are applied els=
+e the suspend
+> > > > > > > +    settings are applied. Attention: Sharing the same gpio f=
+or other
+> > > purposes
+> > > > > > > +    or across multiple regulators is possible but the gpio s=
+ettings must
+> be
+> > > the
+> > > > > > > +    same. Also the gpio phandle must refer to to the dlg,da9=
+062-gpio
+> > > device
+> > > > > > > +    other gpios are not allowed and make no sense.
+> > > > > > > +
+> > > > > >
+> > > > > > Should we not use the binding names that are defined in 'gpio-
+> > > regulator.yaml'
+> > > > > as
+> > > > > > these seem to be generic and would probably serve the purpose h=
+ere?
+> > > > >
+> > > > > Hm.. as the description says:
+> > > > >
+> > > > > 8<--------------------------------------------------
+> > > > > gpios:
+> > > > >    description: Array of one or more GPIO pins used to select the
+> > > > >    regulator voltage/current listed in "states".
+> > > > > 8<--------------------------------------------------
+> > > > >
+> > > > > But we don't have a "states" property and we can't select between
+> > > > > voltage or current.
+> > > >
+> > > > Yes I think I was at cross purposes when I made this remark. The bi=
+ndings
+> there
+> > > > describe the GPOs that are used to enable/disable and set voltage/c=
+urrent
+> for
+> > > > regulators and the supported voltage/current levels that can be con=
+figured
+> in
+> > > > this manner. What you're describing is the GPI for DA9061/2. If you=
+ look at
+> > > > GPIO handling in existing regulator drivers I believe they all deal=
+ with
+> external
+> > > > GPOs that are configured to enable/disable and set voltage/current =
+limits
+> > > rather
+> > > > than the GPI on the PMIC itself. That's why I'm thinking that the
+> configurations
+> > > > you're doing here should actually be in a pinctrl or GPIO driver.
+> > >
+> > > That's true, the common gpio bindings are from the view of the
+> > > processor, e.g. which gpio must the processor drive to enable/switch =
+the
+> > > regualtor. So one reasone more to use a non-common binding.
+> > >
+> > > Please take a look on my other comment I made :) I don't use the
+> > > gpio-alternative function. I use it as an input.
+> >
+> > I know in the datasheet this isn't marked as an alternate function spec=
+ifically
+> > but to me having regulator control by the chip's own GPI is an alternat=
+ive
+> > function for that GPIO pin, in the same way a specific pin can be used =
+for
+> > SYS_EN or Watchdog control. It's a dedicated purpose rather than being =
+a
+> normal
+> > GPI.
+>=20
+> Nope, SYS_EN or Watchdog is a special/alternate function and not a
+> normal input.
+
+Having spoken with our HW team there's essentially no real difference.
+
+>=20
+> > See the following as an example of what I'm suggesting:
+> >
+> >
+> https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/b=
+indin
+> gs/pinctrl/pinctrl-palmas.txt
+> >
+> > You could then pass the pinctrl information to the regulator driver and=
+ use
+> > that rather than having device specific bindings for this. That's at le=
+ast my
+> > current interpretation of this anyway.
+>=20
+> For me pinctrl decides which function should be assigned to a pin. So in
+> our case this would be:
+>   - alternate
+>   - gpo
+>   - gpi
+>=20
+> In our use-case it is a gpi..
+
+It's not being used as a normal GPI as such. It's being used to enable/disa=
+ble
+the regulator so I disagree.
+
+>=20
+> An other reason why pinctrl seems not be the right solution is that the
+> regulator must be configured to use this gpi. This decision can't be
+> made globally because each regulator can be configured differently.. For
+> me its just a local gpio.
+
+You'd pass pinctrl information, via DT, to the regulator driver so it can s=
+et
+accordingly. At least that's my take here, unless I'm missing something. Th=
+e
+regulator driver would be the consumer and could set the regulator control
+accordingly.
+
+At the end of the day I'm not the gatekeeper here so I think Mark's input i=
+s
+necessary as he will likely have a view on how this should be done. I appre=
+ciate
+the work you've done here but I want to be sure we have a generic solution
+as this would also apply to DA9063 and possibly other devices too.
+
+Have added Mark to the 'To' in this e-mail thread so he might see it.
+>=20
+> Regards,
+>   Marco
+>=20
+> > >
+> > > Regards,
+> > >   Marco
+> > >
+> > >
+> > > > I'd be interested in hearing Mark's view on this though as he has f=
+ar more
+> > > > experience in this area than I do.
+> > > >
+> > > > >
+> > > > > Regards,
+> > > > >   Marco
+> > > > >
+> > > > > > >  - rtc : This node defines settings required for the Real-Tim=
+e Clock
+> > > associated
+> > > > > > >    with the DA9062. There are currently no entries in this bi=
+nding,
+> however
+> > > > > > >    compatible =3D "dlg,da9062-rtc" should be added if a node =
+is created.
+> > > > > > > --
+> > > > > > > 2.20.1
+> > > > > >
+> > > > > >
+> > > > >
+> > > > > --
+> > > > > Pengutronix e.K.                           |                     =
+        |
+> > > > > Industrial Linux Solutions                 | http://www.pengutron=
+ix.de/  |
+> > > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-2069=
+17-0
+> |
+> > > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-2069=
+17-5555 |
+> > > >
+> > >
+> > > --
+> > > Pengutronix e.K.                           |                         =
+    |
+> > > Industrial Linux Solutions                 | http://www.pengutronix.d=
+e/  |
+> > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0=
+    |
+> > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5=
+555 |
+> >
+>=20
+> --
+> Pengutronix e.K.                           |                             =
+|
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    =
+|
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 =
+|
