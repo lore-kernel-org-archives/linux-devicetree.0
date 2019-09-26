@@ -1,86 +1,354 @@
-From: =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>
-Subject: [PATCH 2/2] dt-bindings: asoc: Add ADAU7118
-	documentation
-Date: Thu, 26 Sep 2019 09:17:07 +0200
-Message-ID: <20190926071707.17557-2-nuno.sa@analog.com>
-References: <20190926071707.17557-1-nuno.sa@analog.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v3] dt-bindings: at24: convert the binding document to yaml
+Date: Thu, 26 Sep 2019 09:55:44 +0200
+Message-ID: <CAMpxmJUiiEB8Mpv+hxN8s6=h8pfRXpHMva4OR5LkDWLuU5xQzg@mail.gmail.com>
+References: <20190925203808.14249-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20190926071707.17557-1-nuno.sa@analog.com>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Lars-Peter Clausen <lars@metafoo.de>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190925203808.14249-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Peter Rosin <peda@axentia.se>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIEFEQVU3MTE4IDggY2hhbm5lbCBQRE0gdG8gSTJTL1RETSBjb252ZXJ0ZXIg
-ZGV2aWNldHJlZQpiaW5kaW5ncy4KClNpZ25lZC1vZmYtYnk6IE51bm8gU8OhIDxudW5vLnNhQGFu
-YWxvZy5jb20+Ci0tLQogLi4uL2JpbmRpbmdzL3NvdW5kL2FkaSxhZGF1NzExOC55YW1sICAgICAg
-ICAgIHwgODggKysrKysrKysrKysrKysrKysrKwogTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHwgIDEgKwogMiBmaWxlcyBjaGFuZ2VkLCA4OSBpbnNlcnRpb25z
-KCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3NvdW5kL2FkaSxhZGF1NzExOC55YW1sCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxhZGF1NzExOC55YW1sIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxhZGF1NzExOC55YW1sCm5ldyBmaWxlIG1vZGUg
-MTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uZTU3NzZmYjYwYzdmCi0tLSAvZGV2L251bGwKKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxhZGF1NzExOC55
-YW1sCkBAIC0wLDAgKzEsODggQEAKKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAK
-KyVZQU1MIDEuMgorLS0tCiskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL3NvdW5k
-L2FkaSxhZGF1NzExOC55YW1sIworJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEt
-c2NoZW1hcy9jb3JlLnlhbWwjCisKKwordGl0bGU6IEFuYWxvZyBEZXZpY2VzIEFEQVU3MTE4IDgg
-Q2hhbm5lbCBQRE0gdG8gSTJTL1RETSBDb252ZXJ0ZXIKKworbWFpbnRhaW5lcnM6CisgIC0gTnVu
-byBTw6EgPG51bm8uc2FAYW5hbG9nLmNvbT4KKworZGVzY3JpcHRpb246IHwKKyAgQW5hbG9nIERl
-dmljZXMgQURBVTcxMTggOCBDaGFubmVsIFBETSB0byBJMlMvVERNIENvbnZlcnRlciBvdmVyIEky
-QyBvciBIVworICBzdGFuZGFsb25lIG1vZGUuCisgIGh0dHBzOi8vd3d3LmFuYWxvZy5jb20vbWVk
-aWEvZW4vdGVjaG5pY2FsLWRvY3VtZW50YXRpb24vZGF0YS1zaGVldHMvQURBVTcxMTgucGRmCisK
-K3Byb3BlcnRpZXM6CisgIGNvbXBhdGlibGU6CisgICAgZW51bToKKyAgICAgIC0gYWRpLGFkYXU3
-MTE4CisKKyAgcmVnOgorICAgIG1heEl0ZW1zOiAxCisKKyAgIiNzb3VuZC1kYWktY2VsbHMiOgor
-ICAgIGNvbnN0OiAwCisKKyAgSU9WREQtc3VwcGx5OgorICAgIGRlc2NyaXB0aW9uOiBEaWdpdGFs
-IElucHV0L091dHB1dCBQb3dlciBTdXBwbHkuCisgICAgJHJlZjogIi9zY2hlbWFzL3R5cGVzLnlh
-bWwjL2RlZmluaXRpb25zL3BoYW5kbGUiCisKKyAgRFZERC1zdXBwbHk6CisgICAgZGVzY3JpcHRp
-b246IEludGVybmFsIENvcmUgRGlnaXRhbCBQb3dlciBTdXBwbHkuCisgICAgJHJlZjogIi9zY2hl
-bWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3BoYW5kbGUiCisKKyAgYWRpLGRlY2ltYXRpb24t
-cmF0aW86CisgICAgZGVzY3JpcHRpb246IHwKKyAgICAgIFRoaXMgcHJvcGVydHkgc2V0J3MgdGhl
-IGRlY2ltYXRpb24gcmF0aW8gb2YgUERNIHRvIFBDTSBhdWRpbyBkYXRhLgorICAgIGFsbE9mOgor
-ICAgICAgLSAkcmVmOiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy91aW50MzIKKyAg
-ICAgIC0gZW51bTogWzY0LCAzMiwgMTZdCisgICAgICAgIGRlZmF1bHQ6IDY0CisKKyAgYWRpLHBk
-bS1jbGstbWFwOgorICAgIGRlc2NyaXB0aW9uOiB8CisgICAgICBUaGUgQURBVTcxMTggaGFzIHR3
-byBQRE0gY2xvY2tzIGZvciB0aGUgZm91ciBJbnB1dHMuIEVhY2ggaW5wdXQgbXVzdCBiZQorICAg
-ICAgYXNzaWduZWQgdG8gb25lIG9mIHRoZXNlIHR3byBjbG9ja3MuIFRoaXMgcHJvcGVydHkgc2V0
-J3MgdGhlIG1hcHBpbmcKKyAgICAgIGJldHdlZW4gdGhlIGNsb2NrcyBhbmQgdGhlIGlucHV0cy4K
-KyAgICBhbGxPZjoKKyAgICAgIC0gJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlv
-bnMvdWludDMyLWFycmF5CisgICAgICAtIG1pbkl0ZW1zOiA0CisgICAgICAgIG1heEl0ZW1zOiA0
-CisgICAgICAgIGl0ZW1zOgorICAgICAgICAgIG1heGltdW06IDEKKyAgICAgICAgZGVmYXVsdDog
-WzAsIDAsIDEsIDFdCisKK3JlcXVpcmVkOgorICAtICIjc291bmQtZGFpLWNlbGxzIgorICAtIGNv
-bXBhdGlibGUKKworZGVwZW5kZW5jaWVzOgorICBJT1ZERC1zdXBwbHk6IFsgRFZERC1zdXBwbHkg
-XQorICBEVkRELXN1cHBseTogWyBJT1ZERC1zdXBwbHkgXQorCitleGFtcGxlczoKKyAgLSB8Cisg
-ICAgaTJjMCB7CisgICAgICAgIC8qIGV4YW1wbGUgd2l0aCBpMmMgc3VwcG9ydCAqLworICAgICAg
-ICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKKyAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47CisgICAg
-ICAgIHN0YXR1cyA9ICJva2F5IjsKKyAgICAgICAgYWRhdTcxMThfY29kZWM6IGFkYXU3MTE4LWNv
-ZGVjQDE0IHsKKyAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFkaSxhZGF1NzExOCI7Cisg
-ICAgICAgICAgICAgICAgcmVnID0gPDE0PjsKKyAgICAgICAgICAgICAgICAjc291bmQtZGFpLWNl
-bGxzID0gPDA+OworICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKKyAgICAgICAgICAg
-ICAgICBhZGkscGRtLWNsay1tYXAgPSA8MSAxIDAgMD47CisgICAgICAgICAgICAgICAgYWRpLGRl
-Y2ltYXRpb24tcmF0aW8gPSA8MTY+OworICAgICAgICB9OworICAgIH07CisKKyAgICAvKiBleGFt
-cGxlIHdpdGggaHcgc3RhbmRhbG9uZSBtb2RlICovCisgICAgYWRhdTcxMThfY29kZWNfaHc6IGFk
-YXU3MTE4LWNvZGVjLWh3IHsKKyAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYWRpLGFkYXU3MTE4
-IjsKKyAgICAgICAgICAgICNzb3VuZC1kYWktY2VsbHMgPSA8MD47CisgICAgICAgICAgICBzdGF0
-dXMgPSAib2theSI7CisgICAgfTsKZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5F
-UlMKaW5kZXggNzdjOTIwNTU5ZDgyLi44ODE1ODAxMGZiZDcgMTAwNjQ0Ci0tLSBhL01BSU5UQUlO
-RVJTCisrKyBiL01BSU5UQUlORVJTCkBAIC05OTYsNiArOTk2LDcgQEAgRjoJc291bmQvc29jL2Nv
-ZGVjcy9hZDEqCiBGOglzb3VuZC9zb2MvY29kZWNzL2FkNyoKIEY6CXNvdW5kL3NvYy9jb2RlY3Mv
-c3NtKgogRjoJc291bmQvc29jL2NvZGVjcy9zaWdtYWRzcC4qCitGOglEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3Mvc291bmQvYWRpLGFkYXUqCiAKIEFOQUxPRyBERVZJQ0VTIElOQyBE
-TUEgRFJJVkVSUwogTToJTGFycy1QZXRlciBDbGF1c2VuIDxsYXJzQG1ldGFmb28uZGU+Ci0tIAoy
-LjIzLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFs
-c2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwczov
-L21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
+=C5=9Br., 25 wrz 2019 o 22:38 Rob Herring <robh@kernel.org> napisa=C5=82(a)=
+:
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Convert the binding document for at24 EEPROMs from txt to yaml. The
+> compatible property uses a regex pattern to address all the possible
+> combinations of "vendor,model" strings.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> [robh: rework compatible schema, fix missing allOf for $ref, fix errors i=
+n example]
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Here's my reworking of compatible schema and all the other fixes I
+> found. The inner 'oneOf' is probably a little excessive given the number
+> of lines. All it does is ensure both compatible strings have the same
+> part number.
+>
+
+Thanks for doing this! Since I'm not well versed in this I can only
+accept it as the right solution. :)
+
+> Getting these errors checking Arm dts files:
+>
+> arch/arm/boot/dts/at91-tse850-3.dt.yaml: jc42@18: compatible: ['nxp,se97b=
+', 'jedec,jc-42.4-temp'] is not valid under any of the given schemas
+> arch/arm/boot/dts/at91-nattis-2-natte-2.dt.yaml: temp@18: compatible: ['n=
+xp,se97b', 'jedec,jc-42.4-temp'] is not valid under any of the given schema=
+s
+> arch/arm/boot/dts/imx7d-mba7.dt.yaml: temperature-sensor-eeprom@1e: compa=
+tible: ['nxp,se97b', 'jedec,jc-42.4-temp'] is not valid under any of the gi=
+ven schemas
+> arch/arm/boot/dts/imx7s-mba7.dt.yaml: temperature-sensor-eeprom@1e: compa=
+tible: ['nxp,se97b', 'jedec,jc-42.4-temp'] is not valid under any of the gi=
+ven schemas
+>
+
+Interesting. Apparently this chip is a memory sensor with an EEPROM
+compatible with 24c02 built in. The EEPROM and temp sensor are visible
+on different slave addresses. I guess this means the DT is correct.
+The 'nxp,se97b' compatible string however is never mentioned in
+Documentation/devicetree/bindings/hwmon/jc42.txt though. I'm not sure
+what we should do about it. Any advice?
+
+Bart
+
+>  .../devicetree/bindings/eeprom/at24.txt       |  90 +---------
+>  .../devicetree/bindings/eeprom/at24.yaml      | 154 ++++++++++++++++++
+>  MAINTAINERS                                   |   2 +-
+>  3 files changed, 156 insertions(+), 90 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/eeprom/at24.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Document=
+ation/devicetree/bindings/eeprom/at24.txt
+> index 22aead844d0f..c94acbb8cb0c 100644
+> --- a/Documentation/devicetree/bindings/eeprom/at24.txt
+> +++ b/Documentation/devicetree/bindings/eeprom/at24.txt
+> @@ -1,89 +1 @@
+> -EEPROMs (I2C)
+> -
+> -Required properties:
+> -
+> -  - compatible: Must be a "<manufacturer>,<model>" pair. The following <=
+model>
+> -                values are supported (assuming "atmel" as manufacturer):
+> -
+> -                "atmel,24c00",
+> -                "atmel,24c01",
+> -                "atmel,24cs01",
+> -                "atmel,24c02",
+> -                "atmel,24cs02",
+> -                "atmel,24mac402",
+> -                "atmel,24mac602",
+> -                "atmel,spd",
+> -                "atmel,24c04",
+> -                "atmel,24cs04",
+> -                "atmel,24c08",
+> -                "atmel,24cs08",
+> -                "atmel,24c16",
+> -                "atmel,24cs16",
+> -                "atmel,24c32",
+> -                "atmel,24cs32",
+> -                "atmel,24c64",
+> -                "atmel,24cs64",
+> -                "atmel,24c128",
+> -                "atmel,24c256",
+> -                "atmel,24c512",
+> -                "atmel,24c1024",
+> -                "atmel,24c2048",
+> -
+> -                If <manufacturer> is not "atmel", then a fallback must b=
+e used
+> -                with the same <model> and "atmel" as manufacturer.
+> -
+> -                Example:
+> -                        compatible =3D "microchip,24c128", "atmel,24c128=
+";
+> -
+> -                Supported manufacturers are:
+> -
+> -                "catalyst",
+> -                "microchip",
+> -                "nxp",
+> -                "ramtron",
+> -                "renesas",
+> -                "rohm",
+> -                "st",
+> -
+> -                Some vendors use different model names for chips which a=
+re just
+> -                variants of the above. Known such exceptions are listed =
+below:
+> -
+> -                "nxp,se97b" - the fallback is "atmel,24c02",
+> -                "renesas,r1ex24002" - the fallback is "atmel,24c02"
+> -                "renesas,r1ex24016" - the fallback is "atmel,24c16"
+> -                "renesas,r1ex24128" - the fallback is "atmel,24c128"
+> -                "rohm,br24t01" - the fallback is "atmel,24c01"
+> -
+> -  - reg: The I2C address of the EEPROM.
+> -
+> -Optional properties:
+> -
+> -  - pagesize: The length of the pagesize for writing. Please consult the
+> -              manual of your device, that value varies a lot. A wrong va=
+lue
+> -              may result in data loss! If not specified, a safety value =
+of
+> -              '1' is used which will be very slow.
+> -
+> -  - read-only: This parameterless property disables writes to the eeprom=
+.
+> -
+> -  - size: Total eeprom size in bytes.
+> -
+> -  - no-read-rollover: This parameterless property indicates that the
+> -                      multi-address eeprom does not automatically roll o=
+ver
+> -                      reads to the next slave address. Please consult th=
+e
+> -                      manual of your device.
+> -
+> -  - wp-gpios: GPIO to which the write-protect pin of the chip is connect=
+ed.
+> -
+> -  - address-width: number of address bits (one of 8, 16).
+> -
+> -  - num-addresses: total number of i2c slave addresses this device takes
+> -
+> -Example:
+> -
+> -eeprom@52 {
+> -       compatible =3D "atmel,24c32";
+> -       reg =3D <0x52>;
+> -       pagesize =3D <32>;
+> -       wp-gpios =3D <&gpio1 3 0>;
+> -       num-addresses =3D <8>;
+> -};
+> +This file has been moved to at24.yaml.
+> diff --git a/Documentation/devicetree/bindings/eeprom/at24.yaml b/Documen=
+tation/devicetree/bindings/eeprom/at24.yaml
+> new file mode 100644
+> index 000000000000..5faa03014cc5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/eeprom/at24.yaml
+> @@ -0,0 +1,154 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +# Copyright 2019 BayLibre SAS
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/eeprom/at24.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: I2C EEPROMs compatible with Atmel's AT24
+> +
+> +maintainers:
+> +  - Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - allOf:
+> +          - minItems: 1
+> +            maxItems: 2
+> +            items:
+> +              - pattern: "^(atmel|catalyst|microchip|nxp|ramtron|renesas=
+|rohm|st),(24(c|cs|mac)[0-9]+|spd)$"
+> +              - pattern: "^atmel,(24(c|cs|mac)[0-9]+|spd)$"
+> +          - oneOf:
+> +              - items:
+> +                  pattern: c00$
+> +              - items:
+> +                  pattern: c01$
+> +              - items:
+> +                  pattern: c02$
+> +              - items:
+> +                  pattern: c04$
+> +              - items:
+> +                  pattern: c08$
+> +              - items:
+> +                  pattern: c16$
+> +              - items:
+> +                  pattern: cs16$
+> +              - items:
+> +                  pattern: c32$
+> +              - items:
+> +                  pattern: cs32$
+> +              - items:
+> +                  pattern: c64$
+> +              - items:
+> +                  pattern: cs64$
+> +              - items:
+> +                  pattern: c128$
+> +              - items:
+> +                  pattern: cs128$
+> +              - items:
+> +                  pattern: c256$
+> +              - items:
+> +                  pattern: cs256$
+> +              - items:
+> +                  pattern: c512$
+> +              - items:
+> +                  pattern: cs512$
+> +              - items:
+> +                  pattern: c1024$
+> +              - items:
+> +                  pattern: cs1024$
+> +              - items:
+> +                  pattern: c2048$
+> +              - items:
+> +                  pattern: cs2048$
+> +              - items:
+> +                  pattern: spd$
+> +      - items:
+> +          - const: rohm,br24t01
+> +          - const: atmel,24c01
+> +      - items:
+> +          - const: nxp,se97b
+> +          - const: atmel,24c02
+> +      - items:
+> +          - const: renesas,r1ex24002
+> +          - const: atmel,24c02
+> +      - items:
+> +          - const: renesas,r1ex24016
+> +          - const: atmel,24c16
+> +      - items:
+> +          - const: renesas,r1ex24128
+> +          - const: atmel,24c128
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  pagesize:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      The length of the pagesize for writing. Please consult the
+> +      manual of your device, that value varies a lot. A wrong value
+> +      may result in data loss! If not specified, a safety value of
+> +      '1' is used which will be very slow.
+> +    enum: [ 1, 8, 16, 32, 64, 128, 258 ]
+> +    default: 1
+> +
+> +  read-only:
+> +    $ref: /schemas/types.yaml#definitions/flag
+> +    description:
+> +      This parameterless property disables writes to the eeprom.
+> +
+> +  size:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Total eeprom size in bytes.
+> +
+> +  no-read-rollover:
+> +    $ref: /schemas/types.yaml#definitions/flag
+> +    description:
+> +      This parameterless property indicates that the multi-address
+> +      eeprom does not automatically roll over reads to the next slave
+> +      address. Please consult the manual of your device.
+> +
+> +  wp-gpios:
+> +    description:
+> +      GPIO to which the write-protect pin of the chip is connected.
+> +    maxItems: 1
+> +
+> +  address-width:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Number of address bits (one of 8, 16).
+> +    default: 8
+> +    enum: [ 8, 16 ]
+> +
+> +  num-addresses:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Total number of i2c slave addresses this device takes.
+> +    default: 1
+> +    minimum: 1
+> +    maximum: 8
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +
+> +      eeprom@52 {
+> +          compatible =3D "microchip,24c32", "atmel,24c32";
+> +          reg =3D <0x52>;
+> +          pagesize =3D <32>;
+> +          wp-gpios =3D <&gpio1 3 0>;
+> +          num-addresses =3D <8>;
+> +      };
+> +    };
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a50e97a63bc8..a65e6bcd957b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2687,7 +2687,7 @@ M:        Bartosz Golaszewski <bgolaszewski@baylibr=
+e.com>
+>  L:     linux-i2c@vger.kernel.org
+>  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+>  S:     Maintained
+> -F:     Documentation/devicetree/bindings/eeprom/at24.txt
+> +F:     Documentation/devicetree/bindings/eeprom/at24.yaml
+>  F:     drivers/misc/eeprom/at24.c
+>
+>  ATA OVER ETHERNET (AOE) DRIVER
+> --
+> 2.20.1
+>
