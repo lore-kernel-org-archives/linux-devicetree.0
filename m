@@ -1,50 +1,90 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: [v4,2/3] arm: dts: ls1021a: fix that FlexTimer cannot wakeup system in deep sleep
-Date: Thu, 26 Sep 2019 10:41:17 +0800
-Message-ID: <20190926024118.15931-2-biwen.li@nxp.com>
-References: <20190926024118.15931-1-biwen.li@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190926024118.15931-1-biwen.li@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, ran.wang_1@nxp.com
-Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
+From: Xingyu Chen <xingyu.chen@amlogic.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: reset: add bindings for the Meson-A1
+ SoC Reset Controller
+Date: Thu, 26 Sep 2019 11:40:36 +0800
+Message-ID: <5d2af18b-1b0a-0b35-9855-b27bbae3a71b@amlogic.com>
+References: <1569227661-4261-1-git-send-email-xingyu.chen@amlogic.com>
+ <1569227661-4261-3-git-send-email-xingyu.chen@amlogic.com>
+ <7htv90rnp2.fsf@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <7htv90rnp2.fsf@baylibre.com>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kevin Hilman <khilman@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, Hanjie Lin <hanjie.lin@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch fixes a bug that FlexTimer cannot
-wakeup system in deep sleep.
+Hi, Kevin
+Thanks for your review
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
-Change in v4:
-	- update property name
-	  fsl,ippdexpcr-alt-addr -> fsl,ippdexpcr1-alt-addr
-
-Change in v3:
-	- update property name
-	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
-	  
-Change in v2:
-	- None
-
- arch/arm/boot/dts/ls1021a.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index e3973b611c3a..ae427f039e8b 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -1000,6 +1000,12 @@
- 			compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
- 			reg = <0x0 0x1ee2140 0x0 0x8>;
- 			#fsl,rcpm-wakeup-cells = <2>;
-+
-+			/*
-+			 * The second and third entry compose an alt offset
-+			 * address for IPPDEXPCR1(SCFG_SPARECR8)
-+			 */
-+			fsl,ippdexpcr1-alt-addr = <&scfg 0x0 0x51c>;
- 		};
- 
- 		ftm_alarm0: timer0@29d0000 {
--- 
-2.17.1
+On 2019/9/26 6:55, Kevin Hilman wrote:
+> Xingyu Chen <xingyu.chen@amlogic.com> writes:
+> 
+>> Add DT bindings for the Meson-A1 SoC Reset Controller include file,
+>> and also slightly update documentation.
+>>
+>> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+> 
+> The order here doesn't look right.  As the sender, your sign-off should
+> be last.  Is Jianxin the author or are you?  If Jianxin, there should be
+> a "From:" line at the beginning of the changelog to indicate authorship
+> that's different from the sender.
+I am an author for this patchset, i will reorder Signed-off in next version.
+> 
+>> ---
+>>   .../bindings/reset/amlogic,meson-reset.yaml        |  1 +
+>>   include/dt-bindings/reset/amlogic,meson-a1-reset.h | 59 ++++++++++++++++++++++
+>>   2 files changed, 60 insertions(+)
+>>   create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+>> index 00917d8..b3f57d8 100644
+>> --- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+>> +++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.yaml
+>> @@ -16,6 +16,7 @@ properties:
+>>         - amlogic,meson8b-reset # Reset Controller on Meson8b and compatible SoCs
+>>         - amlogic,meson-gxbb-reset # Reset Controller on GXBB and compatible SoCs
+>>         - amlogic,meson-axg-reset # Reset Controller on AXG and compatible SoCs
+>> +      - amlogic,meson-a1-reset # Reset Controller on A1 and compatible SoCs
+>>   
+>>     reg:
+>>       maxItems: 1
+>> diff --git a/include/dt-bindings/reset/amlogic,meson-a1-reset.h b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
+>> new file mode 100644
+>> index 00000000..8d76a47
+>> --- /dev/null
+>> +++ b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
+>> @@ -0,0 +1,59 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> + *
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + * Author: Xingyu Chen <xingyu.chen@amlogic.com>
+>> + *
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
+>> +#define _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
+>> +
+>> +/* RESET0 */
+>> +#define RESET_AM2AXI_VAD		1
+> 
+> minor nit: can you use comments/whitespace here to indicate holes?
+> Please see the other amlogic files in this dir for examples.
+I will fix it in next version.
+> 
+> Kevin
+> 
+> .
+> 
