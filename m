@@ -1,7 +1,7 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 01/21] dt-bindings: PCI: Endpoint: Add DT bindings for PCI EPF Bus
-Date: Thu, 26 Sep 2019 16:59:13 +0530
-Message-ID: <20190926112933.8922-2-kishon@ti.com>
+Subject: [RFC PATCH 02/21] dt-bindings: PCI: Endpoint: Add DT bindings for PCI EPF Device
+Date: Thu, 26 Sep 2019 16:59:14 +0530
+Message-ID: <20190926112933.8922-3-kishon@ti.com>
 References: <20190926112933.8922-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,47 +12,49 @@ To: Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>, Rob H
 Cc: Mark Rutland <mark.rutland@arm.com>, kishon@ti.com, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-ntb@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings for PCI endpoint function bus to which
-endpoint function devices should be attached.
+Add device tree bindings for PCI endpoint function device. The
+nodes for PCI endpoint function device should be attached to
+PCI endpoint function bus.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- .../bindings/pci/endpoint/pci-epf-bus.txt     | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.txt
+ .../bindings/pci/endpoint/pci-epf.txt         | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
 
-diff --git a/Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.txt b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.txt
+diff --git a/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt b/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
 new file mode 100644
-index 000000000000..16727ddf01f5
+index 000000000000..f006395fd526
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.txt
-@@ -0,0 +1,27 @@
-+PCI Endpoint Function Bus
++++ b/Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
+@@ -0,0 +1,28 @@
++PCI Endpoint Function Device
 +
-+This describes the bindings for endpoint function bus to which endpoint
-+function devices should be attached.
++This describes the generic bindings to be used when a device has to be
++exposed to the remote host over PCIe. The device could be an actual
++peripheral in the platform or a virtual device created by the software.
 +
-+Required Properties:
-+ - compatible: Should be "pci-epf-bus"
-+
-+One or more subnodes representing PCIe endpoint function device exposed
-+to the remote host.
++epcs : phandle to the endpoint controller device
++epc-names : the names of the endpoint controller device corresponding
++	    to the EPCs present in the *epcs* phandle
++vendor-id: used to identify device manufacturer
++device-id: used to identify a particular device
++baseclass-code: used to classify the type of function the device performs
++subclass-code: used to identify more specifically the function of the device
++subsys-vendor-id: used to identify vendor of the add-in card or subsystem
++subsys-id: used to specify an id that is specific to a vendor
 +
 +Example:
 +Following is an example of NTB device exposed to the remote host.
 +
-+epf_bus {
-+	compatible = "pci-epf-bus";
-+
-+	ntb {
-+		compatible = "pci-epf-ntb";
-+		epcs = <&pcie0_ep>, <&pcie1_ep>;
-+		epc-names = "primary", "secondary";
-+		vendor-id = /bits/ 16 <0x104c>;
-+		device-id = /bits/ 16 <0xb00d>;
-+		num-mws = <4>;
-+		mws-size = <0x100000>, <0x100000>, <0x100000>, <0x100000>;
-+	};
++ntb {
++	compatible = "pci-epf-ntb";
++	epcs = <&pcie0_ep>, <&pcie1_ep>;
++	epc-names = "primary", "secondary";
++	vendor-id = /bits/ 16 <0x104c>;
++	device-id = /bits/ 16 <0xb00d>;
++	num-mws = <4>;
++	mws-size = <0x100000>, <0x100000>, <0x100000>, <0x100000>;
 +};
 -- 
 2.17.1
