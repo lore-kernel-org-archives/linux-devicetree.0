@@ -1,166 +1,97 @@
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-Subject: [PATCH V5 4/4] ASoC: fsl_asrc: Fix error with S24_3LE format bitstream in i.MX8
-Date: Thu, 26 Sep 2019 09:29:51 +0800
-Message-ID: <7c05d8396fd8c4f9d41c13a85e7486f3664bc73f.1569387932.git.shengjiu.wang@nxp.com>
-References: <cover.1569387932.git.shengjiu.wang@nxp.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH 4/5] dt-bindings: usb: dwc3: of-simple: add compatible
+ for HiSi
+Date: Thu, 26 Sep 2019 09:34:18 +0800
+Message-ID: <1569461658.32135.12.camel@mhfsdcap03>
+References: <20190925234224.95216-1-john.stultz@linaro.org>
+         <20190925234224.95216-5-john.stultz@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1569387932.git.shengjiu.wang@nxp.com>
-In-Reply-To: <cover.1569387932.git.shengjiu.wang@nxp.com>
-References: <cover.1569387932.git.shengjiu.wang@nxp.com>
+In-Reply-To: <20190925234224.95216-5-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de
+To: John Stultz <john.stultz@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yu Chen <chenyu56@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There is error "aplay: pcm_write:2023: write error: Input/output error"
-on i.MX8QM/i.MX8QXP platform for S24_3LE format.
+On Wed, 2019-09-25 at 23:42 +0000, John Stultz wrote:
+> Add necessary compatible flag for HiSi's DWC3 so
+> dwc3-of-simple will probe.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Yu Chen <chenyu56@huawei.com>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: linux-usb@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/hisi,dwc3.txt b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> new file mode 100644
+> index 000000000000..dc31b8a3c006
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> @@ -0,0 +1,52 @@
+> +HiSi SuperSpeed DWC3 USB SoC controller
+> +
+> +Required properties:
+> +- compatible:		should contain "hisilicon,hi3660-dwc3" for HiSi SoC
+> +- clocks:		A list of phandle + clock-specifier pairs for the
+> +			clocks listed in clock-names
+> +- clock-names:		Should contain the following:
+> +  "clk_usb3phy_ref"	Phy reference clk
+It's not good idea to apply phy's clock in dwc3's node
 
-In i.MX8QM/i.MX8QXP, the DMA is EDMA, which don't support 24bit
-sample, but we didn't add any constraint, that cause issues.
-
-So we need to query the caps of dma, then update the hw parameters
-according to the caps.
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/fsl_asrc.c     |  4 +--
- sound/soc/fsl/fsl_asrc.h     |  3 ++
- sound/soc/fsl/fsl_asrc_dma.c | 66 +++++++++++++++++++++++++++++++-----
- 3 files changed, 63 insertions(+), 10 deletions(-)
-
-diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-index 584badf956d2..0bf91a6f54b9 100644
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -115,7 +115,7 @@ static void fsl_asrc_sel_proc(int inrate, int outrate,
-  * within range [ANCA, ANCA+ANCB-1], depends on the channels of pair A
-  * while pair A and pair C are comparatively independent.
-  */
--static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
-+int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
- {
- 	enum asrc_pair_index index = ASRC_INVALID_PAIR;
- 	struct fsl_asrc *asrc_priv = pair->asrc_priv;
-@@ -158,7 +158,7 @@ static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
-  *
-  * It clears the resource from asrc_priv and releases the occupied channels.
-  */
--static void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
-+void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
- {
- 	struct fsl_asrc *asrc_priv = pair->asrc_priv;
- 	enum asrc_pair_index index = pair->index;
-diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
-index 38af485bdd22..2b57e8c53728 100644
---- a/sound/soc/fsl/fsl_asrc.h
-+++ b/sound/soc/fsl/fsl_asrc.h
-@@ -462,4 +462,7 @@ struct fsl_asrc {
- #define DRV_NAME "fsl-asrc-dai"
- extern struct snd_soc_component_driver fsl_asrc_component;
- struct dma_chan *fsl_asrc_get_dma_channel(struct fsl_asrc_pair *pair, bool dir);
-+int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair);
-+void fsl_asrc_release_pair(struct fsl_asrc_pair *pair);
-+
- #endif /* _FSL_ASRC_H */
-diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-index 01052a0808b0..7712970aeb28 100644
---- a/sound/soc/fsl/fsl_asrc_dma.c
-+++ b/sound/soc/fsl/fsl_asrc_dma.c
-@@ -16,13 +16,11 @@
- 
- #define FSL_ASRC_DMABUF_SIZE	(256 * 1024)
- 
--static const struct snd_pcm_hardware snd_imx_hardware = {
-+static struct snd_pcm_hardware snd_imx_hardware = {
- 	.info = SNDRV_PCM_INFO_INTERLEAVED |
- 		SNDRV_PCM_INFO_BLOCK_TRANSFER |
- 		SNDRV_PCM_INFO_MMAP |
--		SNDRV_PCM_INFO_MMAP_VALID |
--		SNDRV_PCM_INFO_PAUSE |
--		SNDRV_PCM_INFO_RESUME,
-+		SNDRV_PCM_INFO_MMAP_VALID,
- 	.buffer_bytes_max = FSL_ASRC_DMABUF_SIZE,
- 	.period_bytes_min = 128,
- 	.period_bytes_max = 65535, /* Limited by SDMA engine */
-@@ -270,12 +268,25 @@ static int fsl_asrc_dma_hw_free(struct snd_pcm_substream *substream)
- 
- static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
- {
-+	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct snd_soc_component *component = snd_soc_rtdcom_lookup(rtd, DRV_NAME);
-+	struct snd_dmaengine_dai_dma_data *dma_data;
- 	struct device *dev = component->dev;
- 	struct fsl_asrc *asrc_priv = dev_get_drvdata(dev);
- 	struct fsl_asrc_pair *pair;
-+	struct dma_chan *tmp_chan = NULL;
-+	u8 dir = tx ? OUT : IN;
-+	bool release_pair = true;
-+	int ret = 0;
-+
-+	ret = snd_pcm_hw_constraint_integer(substream->runtime,
-+					    SNDRV_PCM_HW_PARAM_PERIODS);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to set pcm hw params periods\n");
-+		return ret;
-+	}
- 
- 	pair = kzalloc(sizeof(struct fsl_asrc_pair), GFP_KERNEL);
- 	if (!pair)
-@@ -285,11 +296,50 @@ static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
- 
- 	runtime->private_data = pair;
- 
--	snd_pcm_hw_constraint_integer(substream->runtime,
--				      SNDRV_PCM_HW_PARAM_PERIODS);
--	snd_soc_set_runtime_hwparams(substream, &snd_imx_hardware);
-+	/* Request a dummy pair, which will be released later.
-+	 * Request pair function needs channel num as input, for this
-+	 * dummy pair, we just request "1" channel temporarily.
-+	 */
-+	ret = fsl_asrc_request_pair(1, pair);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to request asrc pair\n");
-+		goto req_pair_err;
-+	}
- 
--	return 0;
-+	/* Request a dummy dma channel, which will be released later. */
-+	tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
-+	if (!tmp_chan) {
-+		dev_err(dev, "failed to get dma channel\n");
-+		ret = -EINVAL;
-+		goto dma_chan_err;
-+	}
-+
-+	dma_data = snd_soc_dai_get_dma_data(rtd->cpu_dai, substream);
-+
-+	/* Refine the snd_imx_hardware according to caps of DMA. */
-+	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
-+							dma_data,
-+							&snd_imx_hardware,
-+							tmp_chan);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to refine runtime hwparams\n");
-+		goto out;
-+	}
-+
-+	release_pair = false;
-+	ret = snd_soc_set_runtime_hwparams(substream, &snd_imx_hardware);
-+
-+out:
-+	dma_release_channel(tmp_chan);
-+
-+dma_chan_err:
-+	fsl_asrc_release_pair(pair);
-+
-+req_pair_err:
-+	if (release_pair)
-+		kfree(pair);
-+
-+	return ret;
- }
- 
- static int fsl_asrc_dma_shutdown(struct snd_pcm_substream *substream)
--- 
-2.21.0
+> +  "aclk_usb3otg"	USB3 OTG aclk
+> +
+> +- assigned-clocks:	Should be:
+> +				HI3660_ACLK_GATE_USB3OTG
+> +- assigned-clock-rates: Should be:
+> +				229Mhz (229000000) for HI3660_ACLK_GATE_USB3OTG
+> +
+> +Optional properties:
+> +- resets:		Phandle to reset control that resets core and wrapper.
+> +
+> +Required child node:
+> +A child node must exist to represent the core DWC3 IP block. The name of
+> +the node is not important. The content of the node is defined in dwc3.txt.
+> +
+> +Example device nodes:
+> +
+> +	usb3: hisi_dwc3 {
+> +		compatible = "hisilicon,hi3660-dwc3";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
+> +			 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> +		clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
+> +
+> +		assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> +		assigned-clock-rates = <229 000 000>;
+> +		resets = <&crg_rst 0x90 8>,
+> +			 <&crg_rst 0x90 7>,
+> +			 <&crg_rst 0x90 6>,
+> +			 <&crg_rst 0x90 5>;
+> +
+> +		dwc3: dwc3@ff100000 {
+> +			compatible = "snps,dwc3";
+> +			reg = <0x0 0xff100000 0x0 0x100000>;
+> +			interrupts = <0 159 4>, <0 161 4>;
+> +			phys = <&usb_phy>;
+> +			phy-names = "usb3-phy";
+> +			dr_mode = "otg";
+> +
+> +			...
+> +		};
+> +	};
