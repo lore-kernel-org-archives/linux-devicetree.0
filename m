@@ -1,76 +1,160 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
-Date: Thu, 26 Sep 2019 12:20:44 +0100
-Message-ID: <c27a51e1-1adf-ae6a-dc67-ae76222a1163@arm.com>
-References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
- <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
- <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
- <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
- <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
- <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
- <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
- <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
- <307b988d0c67fb1c42166eca12742bcfda09d92d.camel@suse.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [RFC PATCH 00/21] Implement NTB Controller using multiple PCI
+Date: Thu, 26 Sep 2019 16:59:12 +0530
+Message-ID: <20190926112933.8922-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <307b988d0c67fb1c42166eca12742bcfda09d92d.camel@suse.de>
-Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Rob Herring <robh+dt@kernel.org>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-wireless <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, etnaviv@lists.freedesktop.org, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org, xen-devel@lists.xenproject.org, Dan Williams <dan.j.williams@intel.com>, freedreno <freedre>
+To: Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, kishon@ti.com, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-ntb@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On 2019-09-26 11:44 am, Nicolas Saenz Julienne wrote:
->>>>> Robin, have you looked into supporting multiple dma-ranges? It's the
->>>>> next thing
->>>>> we need for BCM STB's PCIe. I'll have a go at it myself if nothing is in
->>>>> the
->>>>> works already.
->>>>
->>>> Multiple dma-ranges as far as configuring inbound windows should work
->>>> already other than the bug when there's any parent translation. But if
->>>> you mean supporting multiple DMA offsets and masks per device in the
->>>> DMA API, there's nothing in the works yet.
-> 
-> Sorry, I meant supporting multiple DMA offsets[1]. I think I could still make
-> it with a single DMA mask though.
+This series is sent as RFC since this series is dependent on
+[1] (cannot be merged before that series) and to get early review
+comments.
 
-The main problem for supporting that case in general is the disgusting 
-carving up of the physical memory map you may have to do to guarantee 
-that a single buffer allocation cannot ever span two windows with 
-different offsets. I don't think we ever reached a conclusion on whether 
-that was even achievable in practice.
+I'll also split this series into smaller chunk when I post the
+next revision.
 
->>> There's also the in-between step of making of_dma_get_range() return a
->>> size based on all the dma-ranges entries rather than only the first one
->>> - otherwise, something like [1] can lead to pretty unworkable default
->>> masks. We implemented that when doing acpi_dma_get_range(), it's just
->>> that the OF counterpart never caught up.
->>
->> Right. I suppose we assume any holes in the ranges are addressable by
->> the device but won't get used for other reasons (such as no memory
->> there). However, to be correct, the range of the dma offset plus mask
->> would need to be within the min start and max end addresses. IOW,
->> while we need to round up (0xa_8000_0000 - 0x2c1c_0000) to the next
->> power of 2, the 'correct' thing to do is round down.
-> 
-> IIUC I also have this issue on my list. The RPi4 PCIe block has an integration
-> bug that only allows DMA to the lower 3GB. With dma-ranges of size 0xc000_0000
-> you get a 32bit DMA mask wich is not what you need. So far I faked it in the
-> device-tree but I guess it be better to add an extra check in
-> of_dma_configure(), decrease the mask and print some kind of warning stating
-> that DMA addressing is suboptimal.
+This series is about implementing SW defined NTB using
+multiple endpoint instances. This series has been tested using
+2 endpoint instances in J7 connected to two DRA7 boards.
 
-Yeah, there's just no way for masks to describe that the device can 
-drive all the individual bits, just not in certain combinations :(
+This was presented in Linux Plumbers Conference. The presentation
+can be found @ [2]
 
-The plan I have sketched out there is to merge dma_pfn_offset and 
-bus_dma_mask into a "DMA range" descriptor, so we can then hang one or 
-more of those off a device to properly cope with all these weird 
-interconnects. Conceptually it feels pretty straightforward; I think 
-most of the challenge is in implementing it efficiently. Plus there's 
-the question of whether it could also subsume the dma_mask as well.
+This series:
+  *) Add support to define endpoint function using device tree
+  *) Add a specification for implementing NTB controller using
+     multiple endpoint instances.
+  *) Add a NTB endpoint function driver and a NTB host side PCI
+     driver that follows the specification.
+  *) Add support in PCIe endpoint core to support secondary
+     interface.
+  *) Add a device tree overlay file to configure J7 as NTB
 
-Robin.
+The test setup is something like below
+   +-------------+                                   +-------------+
+   |             |                                   |             |
+   |    DRA72    |                                   |    DRA76    |
+   |             |                                   |             |
+   +------^------+                                   +------^------+
+          |                                                 |
+          |                                                 |
++---------|-------------------------------------------------|---------+
+|  +------v------+                                   +------v------+  |
+|  |             |                                   |             |  |
+|  |     EP      |                                   |     EP      |  |
+|  | CONTROLLER1 |                                   | CONTROLLER2 |  |
+|  |             <----------------------------------->             |  |
+|  |             |                                   |             |  |
+|  |             |                                   |             |  |
+|  |             |                 J7                |             |  |
+|  |             |  (Configured using NTB Function)  |             |  |
+|  +-------------+                                   +-------------+  |
++---------------------------------------------------------------------+
+
+Here DRA72 and DRA76 could be replaced with *any* PCI host.
+
+EP side (J7):
+=============
+
+In the kernel:
+        cd /sys/kernel/config/pci_ep/
+        echo 1 > controllers/d800000.pcie-ep/start
+        echo 1 > controllers/d000000.pcie-ep/start
+
+RC side (DRA7):
+===============
+        echo 0000:01:00.0 > /sys/bus/pci/devices/0000\:01\:00.0/driver/unbind
+        echo 0000:01:00.0 > /sys/bus/pci/drivers/ntb_hw_epf/bind
+        modprobe ntb_transport
+        modprobe ntb_netdev
+
+On each of the hosts Ethernet Interface will be created.
+
+Provide an IP address to each of the hosts:
+HOST1 (dra72):
+ifconfig eth2 192.168.1.2 up
+
+HOST2 (dra76):
+ifconfig eth2 192.168.1.1 up
+
+Once this is done standard network utilities like ping or iperf can be
+used.
+
+root@dra7xx-evm:~# iperf -c 192.168.1.2
+------------------------------------------------------------
+Client connecting to 192.168.1.2, TCP port 5001
+TCP window size: 2.50 MByte (default)
+------------------------------------------------------------
+[  3] local 192.168.1.1 port 60814 connected with 192.168.1.2 port 5001
+[ ID] Interval       Transfer     Bandwidth
+[  3]  0.0-10.0 sec   705 MBytes   591 Mbits/sec
+
+[1] -> http://lore.kernel.org/r/20190604131516.13596-1-kishon@ti.com
+[2] -> https://www.linuxplumbersconf.org/event/4/contributions/395/attachments/284/481/Implementing_NTB_Controller_Using_PCIe_Endpoint_-_final.pdf
+
+Kishon Vijay Abraham I (21):
+  dt-bindings: PCI: Endpoint: Add DT bindings for PCI EPF Bus
+  dt-bindings: PCI: Endpoint: Add DT bindings for PCI EPF Device
+  dt-bindings: PCI: Endpoint: Add DT bindings for PCI EPF NTB Device
+  Documentation: PCI: Add specification for the *PCI NTB* function
+    device
+  PCI: endpoint: Add API to get reference to EPC from device-tree
+  PCI: endpoint: Add API to create EPF device from device tree
+  PCI: endpoint: Add "pci-epf-bus" driver
+  PCI: endpoint: Make *_get_first_free_bar() take into account 64 bit
+    BAR
+  PCI: endpoint: Add helper API to get the 'next' unreserved BAR
+  PCI: endpoint: Make pci_epf_driver ops optional
+  PCI: endpoint: Add helper API to populate header with values from DT
+  PCI: endpoint: Add support to associate secondary EPC with EPF
+  PCI: endpoint: Add pci_epc_ops to map MSI irq
+  PCI: cadence: Implement ->msi_map_irq() ops
+  PCI: endpoint: Remove unused pci_epf_match_device()
+  PCI: endpoint: Fix missing mutex_unlock in error case
+  PCI: endpoint: *_free_bar() to return error codes on failure
+  PCI: endpoint: Add EP function driver to provide NTB functionality
+  PCI: Add TI J721E device to pci ids
+  NTB: Add support for EPF PCI-Express Non-Transparent Bridge
+  NTB: tool: Enable the NTB/PCIe link on the local or remote side of
+    bridge
+
+ Documentation/PCI/endpoint/pci-test-ntb.txt   |  315 +++++
+ .../bindings/pci/endpoint/pci-epf-bus.txt     |   27 +
+ .../bindings/pci/endpoint/pci-epf-ntb.txt     |   31 +
+ .../bindings/pci/endpoint/pci-epf.txt         |   28 +
+ drivers/ntb/hw/Kconfig                        |    1 +
+ drivers/ntb/hw/Makefile                       |    1 +
+ drivers/ntb/hw/epf/Kconfig                    |    5 +
+ drivers/ntb/hw/epf/Makefile                   |    1 +
+ drivers/ntb/hw/epf/ntb_hw_epf.c               |  648 ++++++++++
+ drivers/ntb/test/ntb_tool.c                   |    1 +
+ drivers/pci/controller/pcie-cadence-ep.c      |   59 +
+ drivers/pci/endpoint/Makefile                 |    3 +-
+ drivers/pci/endpoint/functions/Kconfig        |   12 +
+ drivers/pci/endpoint/functions/Makefile       |    1 +
+ drivers/pci/endpoint/functions/pci-epf-ntb.c  | 1143 +++++++++++++++++
+ drivers/pci/endpoint/functions/pci-epf-test.c |   12 +-
+ drivers/pci/endpoint/pci-ep-cfs.c             |    6 +-
+ drivers/pci/endpoint/pci-epc-core.c           |  221 +++-
+ drivers/pci/endpoint/pci-epf-bus.c            |   54 +
+ drivers/pci/endpoint/pci-epf-core.c           |  133 +-
+ include/linux/pci-epc.h                       |   42 +-
+ include/linux/pci-epf.h                       |   35 +-
+ include/linux/pci_ids.h                       |    1 +
+ 23 files changed, 2715 insertions(+), 65 deletions(-)
+ create mode 100644 Documentation/PCI/endpoint/pci-test-ntb.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-bus.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf-ntb.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/endpoint/pci-epf.txt
+ create mode 100644 drivers/ntb/hw/epf/Kconfig
+ create mode 100644 drivers/ntb/hw/epf/Makefile
+ create mode 100644 drivers/ntb/hw/epf/ntb_hw_epf.c
+ create mode 100644 drivers/pci/endpoint/functions/pci-epf-ntb.c
+ create mode 100644 drivers/pci/endpoint/pci-epf-bus.c
+
+-- 
+2.17.1
