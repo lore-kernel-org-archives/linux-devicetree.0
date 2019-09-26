@@ -1,128 +1,126 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v9 1/4] dt-bindings: display: xlnx: Add ZynqMP DP subsystem
- bindings
-Date: Thu, 26 Sep 2019 02:55:41 +0300
-Message-ID: <20190925235544.11524-2-laurent.pinchart@ideasonboard.com>
-References: <20190925235544.11524-1-laurent.pinchart@ideasonboard.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [RFCv4 0/7] interconnect: Add imx support via devfreq
+Date: Wed, 25 Sep 2019 17:51:58 -0700
+Message-ID: <a1f04769-9547-58e6-2bd0-5b6a5864fbf0@linaro.org>
+References: <cover.1566570260.git.leonard.crestez@nxp.com>
+ <VI1PR04MB702373BE28E4404C7F2CE75FEE8C0@VI1PR04MB7023.eurprd04.prod.outlook.com>
+ <02d3fe6a-53a6-3290-deab-d79e940978ff@linaro.org>
+ <VI1PR04MB7023ADED2210DFCB81E588CFEE870@VI1PR04MB7023.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190925235544.11524-1-laurent.pinchart@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, Hyun Kwon <hyun.kwon@xilinx.com>, Satish Kumar Nagireddy <SATISHNA@xilinx.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <VI1PR04MB7023ADED2210DFCB81E588CFEE870@VI1PR04MB7023.eurprd04.prod.outlook.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?B?QXJ0dXIgxZp3aWdvxYQ=?= <a.swigon@partner.samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Saravana Kannan <saravanak@google.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSHl1biBLd29uIDxoeXVuLmt3b25AeGlsaW54LmNvbT4KClRoZSBiaW5kaW5ncyBkZXNj
-cmliZSB0aGUgWnlucU1QIERQIHN1YnN5c3RlbS4gVGhleSBkb24ndCBzdXBwb3J0IHRoZQppbnRl
-cmZhY2Ugd2l0aCB0aGUgcHJvZ3JhbW1hYmxlIGxvZ2ljIChGUEdBKSBvciBhdWRpbyB5ZXQuCgpT
-aWduZWQtb2ZmLWJ5OiBIeXVuIEt3b24gPGh5dW4ua3dvbkB4aWxpbnguY29tPgpTaWduZWQtb2Zm
-LWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+
-Ci0tLQpDaGFuZ2VzIHNpbmNlIHY4OgoKLSBDb252ZXJ0IHRvIHlhbWwKLSBSZW5hbWUgYWNsayB0
-byBkcF9hcGJfY2xrCi0tLQogLi4uL2Rpc3BsYXkveGxueC94bG54LHp5bnFtcC1kcHN1Yi55YW1s
-ICAgICAgIHwgMTUzICsrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDE1MyBpbnNl
-cnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkveGxueC94bG54LHp5bnFtcC1kcHN1Yi55YW1sCgpkaWZmIC0tZ2l0IGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkveGxueC94bG54LHp5bnFt
-cC1kcHN1Yi55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-eGxueC94bG54LHp5bnFtcC1kcHN1Yi55YW1sCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAw
-MDAwMDAwMDAwMC4uZTcyMjY0YTUyMTVkCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkveGxueC94bG54LHp5bnFtcC1kcHN1Yi55YW1s
-CkBAIC0wLDAgKzEsMTUzIEBACisjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCisl
-WUFNTCAxLjIKKy0tLQorJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9kaXNwbGF5
-L3hsbngveGxueCx6eW5xbXAtZHBzdWIueWFtbCMKKyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0cmVl
-Lm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIworCit0aXRsZTogWGlsaW54IFp5bnFNUCBEaXNw
-bGF5UG9ydCBTdWJzeXN0ZW0KKworZGVzY3JpcHRpb246IHwKKyAgVGhlIERpc3BsYXlQb3J0IHN1
-YnN5c3RlbSBvZiBYaWxpbnggWnlucU1QIChaeW5xIFVsdHJhU2NhbGUrIE1QU29DKQorICBpbXBs
-ZW1lbnRzIHRoZSBkaXNwbGF5IGFuZCBhdWRpbyBwaXBlbGluZXMgYmFzZWQgb24gdGhlIERpc3Bs
-YXlQb3J0IHYxLjIKKyAgc3RhbmRhcmQuIFRoZSBzdWJzeXN0ZW0gaW5jbHVkZXMgbXVsdGlwbGUg
-ZnVuY3Rpb25hbCBibG9ja3MgYXMgYmVsb3c6CisKKyAgICAgICAgICAgICAgICstLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCisgICst
-LS0tLS0tLSsgICB8ICstLS0tLS0tLS0tLS0tLS0tKyAgICAgKy0tLS0tLS0tLS0tKyAgICAgICAg
-ICAgICAgICAgICAgICAgfAorICB8IERQRE1BICB8IC0tLT58ICAgICAgICAgICAgICAgIHwgLS0+
-IHwgICBWaWRlbyAgIHwgVmlkZW8gKy0tLS0tLS0tLS0tLS0rIHwKKyAgfCA0eCB2aWQgfCAgIHwg
-fCAgICAgICAgICAgICAgICB8ICAgICB8IFJlbmRlcmluZyB8IC0rLS0+IHwgICAgICAgICAgICAg
-fCB8ICAgKy0tLS0tLSsKKyAgfCAyeCBhdWQgfCAgIHwgfCAgQXVkaW8vVmlkZW8gICB8IC0tPiB8
-IFBpcGVsaW5lICB8ICB8ICAgIHwgRGlzcGxheVBvcnQgfC0tLT4gfCBQSFkwIHwKKyAgKy0tLS0t
-LS0tKyAgIHwgfCBCdWZmZXIgTWFuYWdlciB8ICAgICArLS0tLS0tLS0tLS0rICB8ICAgIHwgICBT
-b3VyY2UgICAgfCB8ICAgKy0tLS0tLSsKKyAgICAgICAgICAgICAgIHwgfCAgICBhbmQgU1RDICAg
-ICB8ICAgICArLS0tLS0tLS0tLS0rICB8ICAgIHwgQ29udHJvbGxlciAgfCB8ICAgKy0tLS0tLSsK
-KyAgTGl2ZSBWaWRlbyAtLS0+fCAgICAgICAgICAgICAgICB8IC0tPiB8ICAgQXVkaW8gICB8IEF1
-ZGlvIHwgICAgICAgICAgICAgfC0tLT4gfCBQSFkxIHwKKyAgICAgICAgICAgICAgIHwgfCAgICAg
-ICAgICAgICAgICB8ICAgICB8ICAgTWl4ZXIgICB8IC0tKy0+IHwgICAgICAgICAgICAgfCB8ICAg
-Ky0tLS0tLSsKKyAgTGl2ZSBBdWRpbyAtLS0+fCAgICAgICAgICAgICAgICB8IC0tPiB8ICAgICAg
-ICAgICB8ICB8fCAgICstLS0tLS0tLS0tLS0tKyB8CisgICAgICAgICAgICAgICB8ICstLS0tLS0t
-LS0tLS0tLS0tKyAgICAgKy0tLS0tLS0tLS0tKyAgfHwgICAgICAgICAgICAgICAgICAgfAorICAg
-ICAgICAgICAgICAgKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLXx8LS0t
-LS0tLS0tLS0tLS0tLS0tLSsKKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICB2dgorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIEJsZW5kZWQgVmlkZW8gYW5kCisgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgTWl4ZWQgQXVkaW8gdG8gUEwKKworICBUaGUgQnVmZmVy
-IE1hbmFnZXIgaW50ZXJhY3RzIHdpdGggZXh0ZXJuYWwgaW50ZXJmYWNlIHN1Y2ggYXMgRE1BIGVu
-Z2luZXMgb3IKKyAgbGl2ZSBhdWRpby92aWRlbyBzdHJlYW1zIGZyb20gdGhlIHByb2dyYW1tYWJs
-ZSBsb2dpYy4gVGhlIFZpZGVvIFJlbmRlcmluZworICBQaXBlbGluZSBibGVuZHMgdGhlIHZpZGVv
-IGFuZCBncmFwaGljcyBsYXllcnMgYW5kIHBlcmZvcm1zIGNvbG9yc3BhY2UKKyAgY29udmVyc2lv
-bi4gVGhlIEF1ZGlvIE1peGVyIG1peGVzIHRoZSBpbmNvbWluZyBhdWRpbyBzdHJlYW1zLiBUaGUg
-RGlzcGxheVBvcnQKKyAgU291cmNlIENvbnRyb2xsZXIgaGFuZGxlcyB0aGUgRGlzcGxheVBvcnQg
-cHJvdG9jb2wgYW5kIGNvbm5lY3RzIHRvIGV4dGVybmFsCisgIFBIWXMuCisKKyAgVGhlIHN1YnN5
-c3RlbSBzdXBwb3J0cyAyIHZpZGVvIGFuZCAyIGF1ZGlvIHN0cmVhbXMsIGFuZCB2YXJpb3VzIHBp
-eGVsIGZvcm1hdHMKKyAgYW5kIGRlcHRocyB1cCB0byA0S0AzMCByZXNvbHV0aW9uLgorCisgIFBs
-ZWFzZSByZWZlciB0byAiWnlucSBVbHRyYVNjYWxlKyBEZXZpY2UgVGVjaG5pY2FsIFJlZmVyZW5j
-ZSBNYW51YWwiCisgIChodHRwczovL3d3dy54aWxpbnguY29tL3N1cHBvcnQvZG9jdW1lbnRhdGlv
-bi91c2VyX2d1aWRlcy91ZzEwODUtenlucS11bHRyYXNjYWxlLXRybS5wZGYpCisgIGZvciBtb3Jl
-IGRldGFpbHMuCisKK21haW50YWluZXJzOgorICAtIExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQu
-cGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KKworcHJvcGVydGllczoKKyAgY29tcGF0aWJsZToK
-KyAgICBjb25zdDogeGxueCx6eW5xbXAtZHBzdWItMS43CisKKyAgcmVnOgorICAgIG1heEl0ZW1z
-OiA0CisgIHJlZy1uYW1lczoKKyAgICBpdGVtczoKKyAgICAgIC0gY29uc3Q6IGRwCisgICAgICAt
-IGNvbnN0OiBibGVuZAorICAgICAgLSBjb25zdDogYXZfYnVmCisgICAgICAtIGNvbnN0OiBhdWQK
-KworICBpbnRlcnJ1cHRzOgorICAgIG1heEl0ZW1zOiAxCisKKyAgY2xvY2tzOgorICAgIGRlc2Ny
-aXB0aW9uOgorICAgICAgVGhlIEFYSSBjbG9jayBhbmQgYXQgbGVhc3Qgb25lIHZpZGVvIGNsb2Nr
-IGFyZSBtYW5kYXRvcnksIHRoZSBhdWRpbyBjbG9jaworICAgICAgb3B0aW9uYWwuCisgICAgbWlu
-SXRlbXM6IDIKKyAgICBtYXhJdGVtczogNAorICAgIGl0ZW1zOgorICAgICAgLSBkZXNjcmlwdGlv
-bjogQVhJIGNsb2NrCisgICAgICAtIGRlc2NyaXB0aW9uOiBBdWRpbyBjbG9jaworICAgICAgLSBk
-ZXNjcmlwdGlvbjogTm9uLWxpdmUgdmlkZW8gY2xvY2sgKGZyb20gUHJvY2Vzc2luZyBTeXN0ZW0p
-CisgICAgICAtIGRlc2NyaXB0aW9uOiBMaXZlIHZpZGVvIGNsb2NrIChmcm9tIFByb2dyYW1tYWJs
-ZSBMb2dpYykKKyAgY2xvY2stbmFtZXM6CisgICAgbWluSXRlbXM6IDIKKyAgICBtYXhJdGVtczog
-NAorICAgIGl0ZW1zOgorICAgICAgLSBjb25zdDogZHBfYXBiX2NsaworICAgICAgLSBjb25zdDog
-ZHBfYXVkX2NsaworICAgICAgLSBjb25zdDogZHBfdnRjX3BpeGVsX2Nsa19pbgorICAgICAgLSBj
-b25zdDogZHBfbGl2ZV92aWRlb19pbl9jbGsKKworICBwb3dlci1kb21haW5zOgorICAgIG1heEl0
-ZW1zOiAxCisKKyAgZG1hczoKKyAgICBtYXhJdGVtczogNAorICAgIGl0ZW1zOgorICAgICAgLSBk
-ZXNjcmlwdGlvbjogVmlkZW8gbGF5ZXIsIHBsYW5lIDAgKFJHQiBvciBsdW1hKQorICAgICAgLSBk
-ZXNjcmlwdGlvbjogVmlkZW8gbGF5ZXIsIHBsYW5lIDEgKFUvViBvciBVKQorICAgICAgLSBkZXNj
-cmlwdGlvbjogVmlkZW8gbGF5ZXIsIHBsYW5lIDIgKFYpCisgICAgICAtIGRlc2NyaXB0aW9uOiBH
-cmFwaGljcyBsYXllcgorICBkbWEtbmFtZXM6CisgICAgaXRlbXM6CisgICAgICAtIGNvbnN0OiB2
-aWQwCisgICAgICAtIGNvbnN0OiB2aWQxCisgICAgICAtIGNvbnN0OiB2aWQyCisgICAgICAtIGNv
-bnN0OiBnZngwCisKKyAgcGh5czoKKyAgICBkZXNjcmlwdGlvbjogUEhZcyBmb3IgdGhlIERQIGRh
-dGEgbGFuZXMKKyAgICBtaW5JdGVtczogMQorICAgIG1heEl0ZW1zOiAyCisgIHBoeS1uYW1lczoK
-KyAgICBtaW5JdGVtczogMQorICAgIG1heEl0ZW1zOiAyCisgICAgaXRlbXM6CisgICAgICAtIGNv
-bnN0OiBkcC1waHkwCisgICAgICAtIGNvbnN0OiBkcC1waHkxCisKK3JlcXVpcmVkOgorICAtIGNv
-bXBhdGlibGUKKyAgLSByZWcKKyAgLSByZWctbmFtZXMKKyAgLSBpbnRlcnJ1cHRzCisgIC0gY2xv
-Y2tzCisgIC0gY2xvY2stbmFtZXMKKyAgLSBwb3dlci1kb21haW5zCisgIC0gZG1hcworICAtIGRt
-YS1uYW1lcworICAtIHBoeXMKKyAgLSBwaHktbmFtZXMKKworYWRkaXRpb25hbFByb3BlcnRpZXM6
-IGZhbHNlCisKK2V4YW1wbGVzOgorICAtIHwKKyAgICBkaXNwbGF5QGZkNGEwMDAwIHsKKyAgICAg
-IGNvbXBhdGlibGUgPSAieGxueCx6eW5xbXAtZHBzdWItMS43IjsKKyAgICAgIHJlZyA9IDwweDAg
-MHhmZDRhMDAwMCAweDAgMHgxMDAwPiwKKyAgICAgICAgICAgIDwweDAgMHhmZDRhYTAwMCAweDAg
-MHgxMDAwPiwKKyAgICAgICAgICAgIDwweDAgMHhmZDRhYjAwMCAweDAgMHgxMDAwPiwKKyAgICAg
-ICAgICAgIDwweDAgMHhmZDRhYzAwMCAweDAgMHgxMDAwPjsKKyAgICAgIHJlZy1uYW1lcyA9ICJk
-cCIsICJibGVuZCIsICJhdl9idWYiLCAiYXVkIjsKKyAgICAgIGludGVycnVwdHMgPSA8MCAxMTkg
-ND47CisgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZnaWM+OworCisgICAgICBjbG9jay1uYW1l
-cyA9ICJkcF9hcGJfY2xrIiwgImRwX2F1ZF9jbGsiLCAiZHBfbGl2ZV92aWRlb19pbl9jbGsiOwor
-ICAgICAgY2xvY2tzID0gPCZkcF9hY2xrPiwgPCZjbGtjIDE3PiwgPCZzaTU3MF8xPjsKKworICAg
-ICAgcG93ZXItZG9tYWlucyA9IDwmcGRfZHA+OworCisgICAgICBkbWEtbmFtZXMgPSAidmlkMCIs
-ICJ2aWQxIiwgInZpZDIiLCAiZ2Z4MCI7CisgICAgICBkbWFzID0gPCZ4bG54X2RwZG1hIDA+LAor
-ICAgICAgICAgICAgIDwmeGxueF9kcGRtYSAxPiwKKyAgICAgICAgICAgICA8JnhsbnhfZHBkbWEg
-Mj4sCisgICAgICAgICAgICAgPCZ4bG54X2RwZG1hIDM+OworCisgICAgICBwaHlzID0gPCZsYW5l
-MT4sIDwmbGFuZTA+OworICAgICAgcGh5LW5hbWVzID0gImRwLXBoeTAiLCAiZHAtcGh5MSI7Cisg
-ICAgfTsKKworLi4uCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On 9/25/19 15:52, Leonard Crestez wrote:
+> On 25.09.2019 05:38, Georgi Djakov wrote:
+>> Hi Leonard,
+>>
+>> On 9/16/19 05:34, Leonard Crestez wrote:
+>>> On 23.08.2019 17:37, Leonard Crestez wrote:
+>>>> This series add imx support for interconnect via devfreq: the ICC
+>>>> framework is used to aggregate requests from devices and then those are
+>>>> converted to DEV_PM_QOS_MIN_FREQUENCY requests for devfreq.
+>>>>   
+>>>> Since there is no single devicetree node that can represent the "interconnect"
+>>>> new API is added to allow individual devfreq nodes to act as parsing proxies
+>>>> all mapping to a single soc-level icc provider. This is still RFC
+>>>> because of this
+>>>
+>>> Any comments? I made a lot of changes relative to previous versions,
+>>> most of them solely to avoid adding a virtual node in DT bindings.
+>>>
+>>> The only current interconnect provider implementation is for qcom and it
+>>> uses a firmware node as the provider node (with #interconnect-cells).
+>>> However there is no obvious equivalent of that for imx and many other SOCs.
+>>
+>> Not sure if it will help, but have you seen the qcs404 interconnect driver?
+>> There is also mt8183 interconnect provider driver on LKML.
+> 
+> Yes, but only yesterday. The qcs404 driver involves multiple DT devices 
+> so it seems closer to imx.
+> 
+> As far as I understand from reading qcs404 source:
+> 
+> * There is no struct device representing the entire graph.
+> * There are multiple NOCs and each registers itself as a separate 
+> interconnect provider.
+> * Each NOC registers multiple icc_nodes of various sorts:
+>    * Device masters and slaves
+>    * Some nodes representing NoC ports?
+
+Well, all nodes are representing ports.
+
+>    * Multiple internal nodes
+> * There is single per-SOC master list of QNOCs in the qcs404 driver.
+> * The QNOCs can reference each other between multiple providers.
+> * Each NOC registers an icc_provider and a subset of the graph.
+> * The multiple NoC inside a chip are distinguished by compat strings. 
+> This seems strange, aren't they really different instantiations of the 
+> same IP with small config changes?
+
+No, they are different IPs - ahb, axi or custom based.
+
+> This design is still quite odd, what would make sense to me is to 
+> register the "interconnect graph" once and then provide multiple 
+> "interconnect scalers" which handle the aggregated requests for certain 
+> specific nodes.
+> 
+>>> On imx there are multiple pieces of scalable fabric which can be defined
+>>> in DT as devfreq devices and it sort of makes sense to add
+>>> #interconnect-cells to those. However when it comes to describing the
+>>> SOC interconnect graph it's much more convenient to have a single
+>>> per-SOC platform driver.
+>>
+>> Is all the NoC configuration done only by ATF? Are there any NoC related memory
+>> mapped registers?
+> 
+> Registers are memory-mapped and visible to the A-cores but should only 
+> be accessed through secure transactions. This means that configuration 
+> needs be done by ATF in EL3 (we don't support running linux in secure 
+> world on imx8m). There is no "remote processor" managing this on imx8m.
+
+Can we create some noc DT node with it's memory mapped address and make
+it an interconnect provider? Sounds to me like a more correct representation
+of the hardware?
+Other option would be to bless some PSCI DT node (for example) to be a
+provider.
+
+> 
+> On older imx6/7 chips we actually have two out-of-tree implementations 
+> of bus freq switching code: An older one in Linux (used when running in 
+> secure world) and a different one in optee for running Linux in 
+> non-secure world.
+> 
+> NoC registers can be used to control some "transaction priority" bits 
+> but I don't want to expose that part right now.
+
+This is very similar to some of the Qcom hardware.
+
+> What determines bandwidth versus power consumption is the NoC clk rate 
+> and clocks are managed by Linux directly.
+
+So you will need to describe these clocks in the interconnect provider
+DT node like on qcs404.
+
+> DVFS on the RAM controller (DDRC) is also important. That component is 
+> only a bus slave and frequency switching requires a complex sequence 
+> inside ATF.
+
+Makes sense.
+
+Thanks,
+Georgi
