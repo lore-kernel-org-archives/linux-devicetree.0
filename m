@@ -1,147 +1,52 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v2] dt-bindings: gpu: Convert Samsung Image Scaler to
- dt-schema
-Date: Thu, 26 Sep 2019 14:56:14 +0200
-Message-ID: <20190926125614.10408-1-m.szyprowski@samsung.com>
-References: <CGME20190926125619eucas1p249ac149ef1e1a3eb975dae94b08cd7be@eucas1p2.samsung.com>
-Content-Type: text/plain; charset="utf-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Inki Dae <inki.dae@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Maciej Falkowski <m.falkowski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+From: Adam Ford <aford173@gmail.com>
+Subject: Re: [PATCH v2 00/21] Refine memblock API
+Date: Thu, 26 Sep 2019 08:09:52 -0500
+Message-ID: <CAHCN7xJ32BYZu-DVTVLSzv222U50JDb8F0A_tLDERbb8kPdRxg@mail.gmail.com>
+References: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
+ <CAHCN7x+Jv7yGPoB0Gm=TJ30ObLJduw2XomHkd++KqFEURYQcGg@mail.gmail.com>
+ <CAOMZO5A_U4aYC4XZXK1r9JaLg-eRdXy8m6z4GatQp62rK4HZ6A@mail.gmail.com>
+ <CAHCN7xJdzEppn8-74SvzACsA25bUHGdV7v=CfS08xzSi59Z2uw@mail.gmail.com>
+ <CAOMZO5D2uzR6Sz1QnX3G-Ce_juxU-0PO_vBZX+nR1mpQB8s8-w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOMZO5D2uzR6Sz1QnX3G-Ce_juxU-0PO_vBZX+nR1mpQB8s8-w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, devicetree <devicetree@vger.kernel.org>, Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, x86@kernel.org, Russell King <linux@armlinux.org.uk>, kasan-dev <kasan-dev@googlegroups.com>, Mike Rapoport <rppt@linux.ibm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.org, Chris Healy <cphealy@gmail.com>, uclinux-h8-devel@lists.sourceforge.jp
 List-Id: devicetree@vger.kernel.org
 
-From: Maciej Falkowski <m.falkowski@samsung.com>
+On Wed, Sep 25, 2019 at 10:17 AM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> On Wed, Sep 25, 2019 at 9:17 AM Adam Ford <aford173@gmail.com> wrote:
+>
+> > I tried cma=256M and noticed the cma dump at the beginning didn't
+> > change.  Do we need to setup a reserved-memory node like
+> > imx6ul-ccimx6ulsom.dtsi did?
+>
+> I don't think so.
+>
+> Were you able to identify what was the exact commit that caused such regression?
 
-Convert Samsung Image Scaler to newer dt-schema format.
+I was able to narrow it down the 92d12f9544b7 ("memblock: refactor
+internal allocation functions") that caused the regression with
+Etnaviv.
 
-Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
-v2:
-- Removed quotation marks from string in 'compatible' property
-- Added if-then statement for 'clocks' and 'clock-names' property
-- Added include directive to example
-- Added GIC_SPI macro to example
+I also noticed that if I create a reserved memory node as was done one
+imx6ul-ccimx6ulsom.dtsi the 3D seems to work again, but without it, I
+was getting errors regardless of the 'cma=256M' or not.
+I don't have a problem using the reserved memory, but I guess I am not
+sure what the amount should be.  I know for the video decoding 1080p,
+I have historically used cma=128M, but with the 3D also needing some
+memory allocation, is that enough or should I use 256M?
 
-Best regards,
-Maciej Falkowski
----
- .../bindings/gpu/samsung-scaler.txt           | 27 -------
- .../bindings/gpu/samsung-scaler.yaml          | 71 +++++++++++++++++++
- 2 files changed, 71 insertions(+), 27 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.txt
- create mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
-
-diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt b/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
-deleted file mode 100644
-index 9c3d98105dfd..000000000000
---- a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--* Samsung Exynos Image Scaler
--
--Required properties:
--  - compatible : value should be one of the following:
--	(a) "samsung,exynos5420-scaler" for Scaler IP in Exynos5420
--	(b) "samsung,exynos5433-scaler" for Scaler IP in Exynos5433
--
--  - reg : Physical base address of the IP registers and length of memory
--	  mapped region.
--
--  - interrupts : Interrupt specifier for scaler interrupt, according to format
--		 specific to interrupt parent.
--
--  - clocks : Clock specifier for scaler clock, according to generic clock
--	     bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
--
--  - clock-names : Names of clocks. For exynos scaler, it should be "mscl"
--		  on 5420 and "pclk", "aclk" and "aclk_xiu" on 5433.
--
--Example:
--	scaler@12800000 {
--		compatible = "samsung,exynos5420-scaler";
--		reg = <0x12800000 0x1294>;
--		interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&clock CLK_MSCL0>;
--		clock-names = "mscl";
--	};
-diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
-new file mode 100644
-index 000000000000..af19930d052e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
-@@ -0,0 +1,71 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpu/samsung-scaler.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung Exynos SoC Image Scaler
-+
-+maintainers:
-+  - Inki Dae <inki.dae@samsung.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - samsung,exynos5420-scaler
-+      - samsung,exynos5433-scaler
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        const: samsung,exynos5420-scaler
-+then:
-+  properties:
-+    clocks:
-+      items:
-+        - description: mscl clock
-+
-+    clock-names:
-+      items:
-+        - const: mscl
-+else:
-+  properties:
-+    clocks:
-+      items:
-+        - description: mscl clock
-+        - description: aclk clock
-+        - description: aclk_xiu clock
-+
-+    clock-names:
-+      items:
-+        - const: pclk
-+        - const: aclk
-+        - const: aclk_xiu
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/exynos5420.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    scaler@12800000 {
-+        compatible = "samsung,exynos5420-scaler";
-+        reg = <0x12800000 0x1294>;
-+        interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
-+        clocks = <&clock CLK_MSCL0>;
-+        clock-names = "mscl";
-+    };
-+
--- 
-2.17.1
+adam
