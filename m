@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 11/16] media: ti-vpe: vpe: fix a v4l2-compliance failure about frame sequence number
-Date: Fri, 27 Sep 2019 13:36:45 -0500
-Message-ID: <20190927183650.31345-12-bparrot@ti.com>
+Subject: [Patch 03/16] media: ti-vpe: vpe: Remove unnecessary use of container_of
+Date: Fri, 27 Sep 2019 13:36:37 -0500
+Message-ID: <20190927183650.31345-4-bparrot@ti.com>
 References: <20190927183650.31345-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,40 +12,98 @@ To: Hans Verkuil <hverkuil@xs4all.nl>
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-v4l2-compliance fails with this message:
-
-   fail: v4l2-test-buffers.cpp(294): \
-	(int)g_sequence() < seq.last_seq + 1
-   fail: v4l2-test-buffers.cpp(740): \
-	buf.check(m2m_q, last_m2m_seq)
-   fail: v4l2-test-buffers.cpp(974): \
-	captureBufs(node, q, m2m_q, frame_count, true)
-   test MMAP: FAIL
-
-The driver is failing to update the source frame sequence number in the
-vb2 buffer object. Only the destination frame sequence was being
-updated.
-
-This is only a reporting issue if the user space app actually cares
-about the frame sequence number. But it is fixed nonetheless.
+Instead of saving a pointer to the 'fh' member of struct vpe_ctx to
+later have to use container_of to retrieve the actual pointer to the
+context structure, which seems to confuse static code analysis tool
+anyways, just save the pointer to the actual structure and then retrieve
+it directly.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/ti-vpe/vpe.c | 22 +++++++---------------
+ 1 file changed, 7 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 0a7cf9c820c6..8ab1c3241b74 100644
+index 56f60dbea15c..0e9cb0319a92 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1440,6 +1440,7 @@ static irqreturn_t vpe_irq(int irq_vpe, void *data)
- 		d_vb->timecode = s_vb->timecode;
+@@ -900,14 +900,6 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
+ 	return 0;
+ }
  
- 	d_vb->sequence = ctx->sequence;
-+	s_vb->sequence = ctx->sequence;
+-/*
+- * Return the vpe_ctx structure for a given struct file
+- */
+-static struct vpe_ctx *file2ctx(struct file *file)
+-{
+-	return container_of(file->private_data, struct vpe_ctx, fh);
+-}
+-
+ /*
+  * mem2mem callbacks
+  */
+@@ -1527,7 +1519,7 @@ static int vpe_enum_fmt(struct file *file, void *priv,
+ static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ {
+ 	struct v4l2_pix_format_mplane *pix = &f->fmt.pix_mp;
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 	struct vb2_queue *vq;
+ 	struct vpe_q_data *q_data;
+ 	int i;
+@@ -1689,7 +1681,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
  
- 	d_q_data = &ctx->q_data[Q_DATA_DST];
- 	if (d_q_data->flags & Q_IS_INTERLACED) {
+ static int vpe_try_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ {
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 	struct vpe_fmt *fmt = find_format(f);
+ 
+ 	if (V4L2_TYPE_IS_OUTPUT(f->type))
+@@ -1762,7 +1754,7 @@ static int __vpe_s_fmt(struct vpe_ctx *ctx, struct v4l2_format *f)
+ static int vpe_s_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ {
+ 	int ret;
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 
+ 	ret = vpe_try_fmt(file, priv, f);
+ 	if (ret)
+@@ -1847,7 +1839,7 @@ static int __vpe_try_selection(struct vpe_ctx *ctx, struct v4l2_selection *s)
+ static int vpe_g_selection(struct file *file, void *fh,
+ 		struct v4l2_selection *s)
+ {
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 	struct vpe_q_data *q_data;
+ 	bool use_c_rect = false;
+ 
+@@ -1908,7 +1900,7 @@ static int vpe_g_selection(struct file *file, void *fh,
+ static int vpe_s_selection(struct file *file, void *fh,
+ 		struct v4l2_selection *s)
+ {
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 	struct vpe_q_data *q_data;
+ 	struct v4l2_selection sel = *s;
+ 	int ret;
+@@ -2275,7 +2267,7 @@ static int vpe_open(struct file *file)
+ 	init_adb_hdrs(ctx);
+ 
+ 	v4l2_fh_init(&ctx->fh, video_devdata(file));
+-	file->private_data = &ctx->fh;
++	file->private_data = ctx;
+ 
+ 	hdl = &ctx->hdl;
+ 	v4l2_ctrl_handler_init(hdl, 1);
+@@ -2360,7 +2352,7 @@ static int vpe_open(struct file *file)
+ static int vpe_release(struct file *file)
+ {
+ 	struct vpe_dev *dev = video_drvdata(file);
+-	struct vpe_ctx *ctx = file2ctx(file);
++	struct vpe_ctx *ctx = file->private_data;
+ 
+ 	vpe_dbg(dev, "releasing instance %p\n", ctx);
+ 
 -- 
 2.17.1
