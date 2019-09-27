@@ -1,174 +1,43 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH V6 4/4] ASoC: fsl_asrc: Fix error with S24_3LE format
- bitstream in i.MX8
-Date: Thu, 26 Sep 2019 18:53:53 -0700
-Message-ID: <20190927015352.GA3253@Asurada-Nvidia.nvidia.com>
-References: <cover.1569493933.git.shengjiu.wang@nxp.com>
- <b6a4de2bbf960ef291ee902afe4388bd0fc1d347.1569493933.git.shengjiu.wang@nxp.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH V9 2/2] mailbox: introduce ARM SMC based mailbox
+Date: Thu, 26 Sep 2019 19:39:26 -0700
+Message-ID: <9dff720e-2e81-a7b8-ff52-1f2c3d257368@gmail.com>
+References: <1569377224-5755-1-git-send-email-peng.fan@nxp.com>
+ <1569377224-5755-3-git-send-email-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b6a4de2bbf960ef291ee902afe4388bd0fc1d347.1569493933.git.shengjiu.wang@nxp.com>
+In-Reply-To: <1569377224-5755-3-git-send-email-peng.fan@nxp.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc: timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de
+To: Peng Fan <peng.fan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 09:46:12AM +0800, Shengjiu Wang wrote:
-> There is error "aplay: pcm_write:2023: write error: Input/output error"
-> on i.MX8QM/i.MX8QXP platform for S24_3LE format.
-> 
-> In i.MX8QM/i.MX8QXP, the DMA is EDMA, which don't support 24bit
-> sample, but we didn't add any constraint, that cause issues.
-> 
-> So we need to query the caps of dma, then update the hw parameters
-> according to the caps.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-> ---
->  sound/soc/fsl/fsl_asrc.c     |  4 +--
->  sound/soc/fsl/fsl_asrc.h     |  3 ++
->  sound/soc/fsl/fsl_asrc_dma.c | 64 ++++++++++++++++++++++++++++++++----
->  3 files changed, 62 insertions(+), 9 deletions(-)
+On 9/24/2019 7:09 PM, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-> index 584badf956d2..0bf91a6f54b9 100644
-> --- a/sound/soc/fsl/fsl_asrc.c
-> +++ b/sound/soc/fsl/fsl_asrc.c
-> @@ -115,7 +115,7 @@ static void fsl_asrc_sel_proc(int inrate, int outrate,
->   * within range [ANCA, ANCA+ANCB-1], depends on the channels of pair A
->   * while pair A and pair C are comparatively independent.
->   */
-> -static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
-> +int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
->  {
->  	enum asrc_pair_index index = ASRC_INVALID_PAIR;
->  	struct fsl_asrc *asrc_priv = pair->asrc_priv;
-> @@ -158,7 +158,7 @@ static int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair)
->   *
->   * It clears the resource from asrc_priv and releases the occupied channels.
->   */
-> -static void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
-> +void fsl_asrc_release_pair(struct fsl_asrc_pair *pair)
->  {
->  	struct fsl_asrc *asrc_priv = pair->asrc_priv;
->  	enum asrc_pair_index index = pair->index;
-> diff --git a/sound/soc/fsl/fsl_asrc.h b/sound/soc/fsl/fsl_asrc.h
-> index 38af485bdd22..2b57e8c53728 100644
-> --- a/sound/soc/fsl/fsl_asrc.h
-> +++ b/sound/soc/fsl/fsl_asrc.h
-> @@ -462,4 +462,7 @@ struct fsl_asrc {
->  #define DRV_NAME "fsl-asrc-dai"
->  extern struct snd_soc_component_driver fsl_asrc_component;
->  struct dma_chan *fsl_asrc_get_dma_channel(struct fsl_asrc_pair *pair, bool dir);
-> +int fsl_asrc_request_pair(int channels, struct fsl_asrc_pair *pair);
-> +void fsl_asrc_release_pair(struct fsl_asrc_pair *pair);
-> +
->  #endif /* _FSL_ASRC_H */
-> diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-> index 01052a0808b0..2a60fc6142b1 100644
-> --- a/sound/soc/fsl/fsl_asrc_dma.c
-> +++ b/sound/soc/fsl/fsl_asrc_dma.c
-> @@ -16,13 +16,11 @@
->  
->  #define FSL_ASRC_DMABUF_SIZE	(256 * 1024)
->  
-> -static const struct snd_pcm_hardware snd_imx_hardware = {
-> +static struct snd_pcm_hardware snd_imx_hardware = {
->  	.info = SNDRV_PCM_INFO_INTERLEAVED |
->  		SNDRV_PCM_INFO_BLOCK_TRANSFER |
->  		SNDRV_PCM_INFO_MMAP |
-> -		SNDRV_PCM_INFO_MMAP_VALID |
-> -		SNDRV_PCM_INFO_PAUSE |
-> -		SNDRV_PCM_INFO_RESUME,
-> +		SNDRV_PCM_INFO_MMAP_VALID,
->  	.buffer_bytes_max = FSL_ASRC_DMABUF_SIZE,
->  	.period_bytes_min = 128,
->  	.period_bytes_max = 65535, /* Limited by SDMA engine */
-> @@ -270,12 +268,25 @@ static int fsl_asrc_dma_hw_free(struct snd_pcm_substream *substream)
->  
->  static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
->  {
-> +	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
->  	struct snd_soc_pcm_runtime *rtd = substream->private_data;
->  	struct snd_pcm_runtime *runtime = substream->runtime;
->  	struct snd_soc_component *component = snd_soc_rtdcom_lookup(rtd, DRV_NAME);
-> +	struct snd_dmaengine_dai_dma_data *dma_data;
->  	struct device *dev = component->dev;
->  	struct fsl_asrc *asrc_priv = dev_get_drvdata(dev);
->  	struct fsl_asrc_pair *pair;
-> +	struct dma_chan *tmp_chan = NULL;
-> +	u8 dir = tx ? OUT : IN;
-> +	bool release_pair = true;
-> +	int ret = 0;
-> +
-> +	ret = snd_pcm_hw_constraint_integer(substream->runtime,
-> +					    SNDRV_PCM_HW_PARAM_PERIODS);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to set pcm hw params periods\n");
-> +		return ret;
-> +	}
->  
->  	pair = kzalloc(sizeof(struct fsl_asrc_pair), GFP_KERNEL);
->  	if (!pair)
-> @@ -285,11 +296,50 @@ static int fsl_asrc_dma_startup(struct snd_pcm_substream *substream)
->  
->  	runtime->private_data = pair;
->  
-> -	snd_pcm_hw_constraint_integer(substream->runtime,
-> -				      SNDRV_PCM_HW_PARAM_PERIODS);
-> +	/* Request a dummy pair, which will be released later.
-> +	 * Request pair function needs channel num as input, for this
-> +	 * dummy pair, we just request "1" channel temporarily.
-> +	 */
-> +	ret = fsl_asrc_request_pair(1, pair);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to request asrc pair\n");
-> +		goto req_pair_err;
-> +	}
-> +
-> +	/* Request a dummy dma channel, which will be released later. */
-> +	tmp_chan = fsl_asrc_get_dma_channel(pair, dir);
-> +	if (!tmp_chan) {
-> +		dev_err(dev, "failed to get dma channel\n");
-> +		ret = -EINVAL;
-> +		goto dma_chan_err;
-> +	}
-> +
-> +	dma_data = snd_soc_dai_get_dma_data(rtd->cpu_dai, substream);
-> +
-> +	/* Refine the snd_imx_hardware according to caps of DMA. */
-> +	ret = snd_dmaengine_pcm_refine_runtime_hwparams(substream,
-> +							dma_data,
-> +							&snd_imx_hardware,
-> +							tmp_chan);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to refine runtime hwparams\n");
-> +		goto out;
-> +	}
-> +
-> +	release_pair = false;
->  	snd_soc_set_runtime_hwparams(substream, &snd_imx_hardware);
->  
-> -	return 0;
-> +out:
-> +	dma_release_channel(tmp_chan);
-> +
-> +dma_chan_err:
-> +	fsl_asrc_release_pair(pair);
-> +
-> +req_pair_err:
-> +	if (release_pair)
-> +		kfree(pair);
-> +
-> +	return ret;
->  }
->  
->  static int fsl_asrc_dma_shutdown(struct snd_pcm_substream *substream)
-> -- 
-> 2.21.0
+> This mailbox driver implements a mailbox which signals transmitted data
+> via an ARM smc (secure monitor call) instruction. The mailbox receiver
+> is implemented in firmware and can synchronously return data when it
+> returns execution to the non-secure world again.
+> An asynchronous receive path is not implemented.
+> This allows the usage of a mailbox to trigger firmware actions on SoCs
+> which either don't have a separate management processor or on which such
+> a core is not available. A user of this mailbox could be the SCP
+> interface.
 > 
+> Modified from Andre Przywara's v2 patch
+> https://lore.kernel.org/patchwork/patch/812999/
+> 
+> Cc: Andre Przywara <andre.przywara@arm.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Thanks for your persistence working on this!
+-- 
+Florian
