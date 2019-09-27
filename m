@@ -1,62 +1,158 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] checkpatch: Warn if DT bindings are not in schema format
-Date: Fri, 27 Sep 2019 07:29:28 -0700
-Message-ID: <7672dd2f651bfdcdb1615ab739e36a381b2535b1.camel@perches.com>
-References: <20190913211349.28245-1-robh@kernel.org>
-         <713b2e5bbab16ddf850245ae1d92be66d9730e02.camel@perches.com>
-         <CAL_JsqLtEM9+LK=3YDLnoZbC1v09R9-qfFNEH-gTWj94FAjnyg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH v3] dt-bindings: gpu: Convert Samsung Image Scaler to
+ dt-schema
+Date: Fri, 27 Sep 2019 16:33:06 +0200
+Message-ID: <20190927143306.12133-1-m.szyprowski@samsung.com>
+References: <CGME20190927143314eucas1p2d419866cd740207426cd37cb6fdff468@eucas1p2.samsung.com>
+Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLtEM9+LK=3YDLnoZbC1v09R9-qfFNEH-gTWj94FAjnyg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Whitcroft <apw@canonical.com>
+To: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Inki Dae <inki.dae@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Maciej Falkowski <m.falkowski@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-09-27 at 09:02 -0500, Rob Herring wrote:
-> On Fri, Sep 13, 2019 at 4:48 PM Joe Perches <joe@perches.com> wrote:
-> > On Fri, 2019-09-13 at 16:13 -0500, Rob Herring wrote:
-> > > DT bindings are moving to using a json-schema based schema format
-> > > instead of freeform text. Add a checkpatch.pl check to encourage using
-> > > the schema for new bindings. It's not yet a requirement, but is
-> > > progressively being required by some maintainers.
-> > []
-> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > []
-> > > @@ -2822,6 +2822,14 @@ sub process {
-> > >                            "added, moved or deleted file(s), does MAINTAINERS need updating?\n" . $herecurr);
-> > >               }
-> > > 
-> > > +# Check for adding new DT bindings not in schema format
-> > > +             if (!$in_commit_log &&
-> > > +                 ($line =~ /^new file mode\s*\d+\s*$/) &&
-> > > +                 ($realfile =~ m@^Documentation/devicetree/bindings/.*\.txt$@)) {
-> > > +                     WARN("DT_SCHEMA_BINDING_PATCH",
-> > > +                          "DT bindings should be in DT schema format. See: Documentation/devicetree/writing-schema.rst\n");
-> > > +             }
-> > > +
-> > 
-> > As this already seems to be git dependent, perhaps
-> 
-> It's quite rare to see a non git generated diff these days.
-> 
-> > it's easier to read with a single line test like:
-> > 
-> >                 if ($line =~ m{^\s*create mode\s*\d+\s*Documentation/devicetree/bindings/.*\.txt$}) {
-> >                         etc...
-> >                 }
-> 
-> I frequently do 'git show $commit | scripts/checkpatch.pl' and this
-> doesn't work with that. I really should have a '--pretty=email' in
-> there, but I just ignore the commit msg warnings. In any case, that
-> still doesn't help because there's no diffstat. There's probably some
-> way to turn that on or just use git-format-patch, but really we want
-> this to work with any git diff.
+From: Maciej Falkowski <m.falkowski@samsung.com>
 
-I don't understand your argument against what I proposed at all.
+Convert Samsung Image Scaler to newer dt-schema format.
 
-and btw:
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+v3:
+- Fixed description of 'clocks' property:
+rather than 'mscl clock', 'pclk clock'
+- Added empty line within if-else statement
+- Added 'additionalProperties: false'
+- Listed all missing 'properties' in properties scope
 
-$ git format-patch -1 --stdout <commit> | ./scripts/checkpatch.pl
+Best regards,
+Maciej Falkowski
+---
+ .../bindings/gpu/samsung-scaler.txt           | 27 -------
+ .../bindings/gpu/samsung-scaler.yaml          | 81 +++++++++++++++++++
+ 2 files changed, 81 insertions(+), 27 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+ create mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt b/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+deleted file mode 100644
+index 9c3d98105dfd..000000000000
+--- a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-* Samsung Exynos Image Scaler
+-
+-Required properties:
+-  - compatible : value should be one of the following:
+-	(a) "samsung,exynos5420-scaler" for Scaler IP in Exynos5420
+-	(b) "samsung,exynos5433-scaler" for Scaler IP in Exynos5433
+-
+-  - reg : Physical base address of the IP registers and length of memory
+-	  mapped region.
+-
+-  - interrupts : Interrupt specifier for scaler interrupt, according to format
+-		 specific to interrupt parent.
+-
+-  - clocks : Clock specifier for scaler clock, according to generic clock
+-	     bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
+-
+-  - clock-names : Names of clocks. For exynos scaler, it should be "mscl"
+-		  on 5420 and "pclk", "aclk" and "aclk_xiu" on 5433.
+-
+-Example:
+-	scaler@12800000 {
+-		compatible = "samsung,exynos5420-scaler";
+-		reg = <0x12800000 0x1294>;
+-		interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&clock CLK_MSCL0>;
+-		clock-names = "mscl";
+-	};
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+new file mode 100644
+index 000000000000..5317ac64426a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+@@ -0,0 +1,81 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpu/samsung-scaler.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung Exynos SoC Image Scaler
++
++maintainers:
++  - Inki Dae <inki.dae@samsung.com>
++
++properties:
++  compatible:
++    enum:
++      - samsung,exynos5420-scaler
++      - samsung,exynos5433-scaler
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks: {}
++  clock-names: {}
++  iommus: {}
++  power-domains: {}
++
++if:
++  properties:
++    compatible:
++      contains:
++        const: samsung,exynos5420-scaler
++
++then:
++  properties:
++    clocks:
++      items:
++        - description: mscl clock
++
++    clock-names:
++      items:
++        - const: mscl
++
++else:
++  properties:
++    clocks:
++      items:
++        - description: pclk clock
++        - description: aclk clock
++        - description: aclk_xiu clock
++
++    clock-names:
++      items:
++        - const: pclk
++        - const: aclk
++        - const: aclk_xiu
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/exynos5420.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    scaler@12800000 {
++        compatible = "samsung,exynos5420-scaler";
++        reg = <0x12800000 0x1294>;
++        interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clock CLK_MSCL0>;
++        clock-names = "mscl";
++    };
++
++...
+-- 
+2.17.1
