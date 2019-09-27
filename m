@@ -1,7 +1,7 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 09/11] of: Make of_dma_get_range() work on bus nodes
-Date: Thu, 26 Sep 2019 19:24:53 -0500
-Message-ID: <20190927002455.13169-10-robh@kernel.org>
+Subject: [PATCH 08/11] of: Factor out #{addr,size}-cells parsing
+Date: Thu, 26 Sep 2019 19:24:52 -0500
+Message-ID: <20190927002455.13169-9-robh@kernel.org>
 References: <20190927002455.13169-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,71 +14,109 @@ List-Id: devicetree@vger.kernel.org
 
 From: Robin Murphy <robin.murphy@arm.com>
 
-Since the "dma-ranges" property is only valid for a node representing a
-bus, of_dma_get_range() currently assumes the node passed in is a leaf
-representing a device, and starts the walk from its parent. In cases
-like PCI host controllers on typical FDT systems, however, where the PCI
-endpoints are probed dynamically the initial leaf node represents the
-'bus' itself, and this logic means we fail to consider any "dma-ranges"
-describing the host bridge itself. Rework the logic such that
-of_dma_get_range() works correctly starting from a bus node containing
-"dma-ranges".
+In some cases such as PCI host controllers, we may have a "parent bus"
+which is an OF leaf node, but still need to correctly parse ranges from
+the point of view of that bus. For that, factor out variants of the
+"#addr-cells" and "#size-cells" parsers which do not assume they have a
+device node and thus immediately traverse upwards before reading the
+relevant property.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-[robh: Allow for the bus child node to still be passed in]
+[robh: don't make of_bus_n_{addr,size}_cells() public]
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/address.c | 24 +++++-------------------
- 1 file changed, 5 insertions(+), 19 deletions(-)
+ drivers/of/address.c    |  2 ++
+ drivers/of/base.c       | 32 ++++++++++++++++++++++----------
+ drivers/of/of_private.h |  3 +++
+ 3 files changed, 27 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 887c0413f648..e918001c7798 100644
+index 3fd34f7ad772..887c0413f648 100644
 --- a/drivers/of/address.c
 +++ b/drivers/of/address.c
-@@ -922,18 +922,9 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
- 	if (!node)
- 		return -EINVAL;
+@@ -14,6 +14,8 @@
+ #include <linux/slab.h>
+ #include <linux/string.h>
  
--	while (1) {
--		struct device_node *parent;
--
--		naddr = of_n_addr_cells(node);
--		nsize = of_n_size_cells(node);
--
--		parent = __of_get_dma_parent(node);
--		of_node_put(node);
--
--		node = parent;
--		if (!node)
--			break;
-+	while (node) {
-+		naddr = of_bus_n_addr_cells(node);
-+		nsize = of_bus_n_size_cells(node);
++#include "of_private.h"
++
+ /* Max address size we deal with */
+ #define OF_MAX_ADDR_CELLS	4
+ #define OF_CHECK_ADDR_COUNT(na)	((na) > 0 && (na) <= OF_MAX_ADDR_CELLS)
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 55e7f5bb0549..12b2e9287117 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -86,34 +86,46 @@ static bool __of_node_is_type(const struct device_node *np, const char *type)
+ 	return np && match && type && !strcmp(match, type);
+ }
  
- 		ranges = of_get_property(node, "dma-ranges", &len);
+-int of_n_addr_cells(struct device_node *np)
++int of_bus_n_addr_cells(struct device_node *np)
+ {
+ 	u32 cells;
  
-@@ -941,12 +932,7 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
- 		if (ranges && len > 0)
- 			break;
+-	do {
+-		if (np->parent)
+-			np = np->parent;
++	for (; np; np = np->parent)
+ 		if (!of_property_read_u32(np, "#address-cells", &cells))
+ 			return cells;
+-	} while (np->parent);
++
+ 	/* No #address-cells property for the root node */
+ 	return OF_ROOT_NODE_ADDR_CELLS_DEFAULT;
+ }
++
++int of_n_addr_cells(struct device_node *np)
++{
++	if (np->parent)
++		np = np->parent;
++
++	return of_bus_n_addr_cells(np);
++}
+ EXPORT_SYMBOL(of_n_addr_cells);
  
--		/*
--		 * At least empty ranges has to be defined for parent node if
--		 * DMA is supported
--		 */
--		if (!ranges)
--			break;
-+		node = of_get_next_dma_parent(node);
- 	}
+-int of_n_size_cells(struct device_node *np)
++int of_bus_n_size_cells(struct device_node *np)
+ {
+ 	u32 cells;
  
- 	if (!ranges) {
-@@ -965,7 +951,7 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
- 	 * size		: nsize cells
- 	 */
- 	dmaaddr = of_read_number(ranges, naddr);
--	*paddr = of_translate_dma_address(np, ranges);
-+	*paddr = of_translate_dma_address(node, ranges + naddr);
- 	if (*paddr == OF_BAD_ADDR) {
- 		pr_err("translation of DMA address(%llx) to CPU address failed node(%pOF)\n",
- 		       dmaaddr, np);
+-	do {
+-		if (np->parent)
+-			np = np->parent;
++	for (; np; np = np->parent)
+ 		if (!of_property_read_u32(np, "#size-cells", &cells))
+ 			return cells;
+-	} while (np->parent);
++
+ 	/* No #size-cells property for the root node */
+ 	return OF_ROOT_NODE_SIZE_CELLS_DEFAULT;
+ }
++
++int of_n_size_cells(struct device_node *np)
++{
++	if (np->parent)
++		np = np->parent;
++
++	return of_bus_n_size_cells(np);
++}
+ EXPORT_SYMBOL(of_n_size_cells);
+ 
+ #ifdef CONFIG_NUMA
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index f8c58615c393..66294d29942a 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -158,6 +158,9 @@ extern void __of_sysfs_remove_bin_file(struct device_node *np,
+ #define for_each_transaction_entry_reverse(_oft, _te) \
+ 	list_for_each_entry_reverse(_te, &(_oft)->te_list, node)
+ 
++extern int of_bus_n_addr_cells(struct device_node *np);
++extern int of_bus_n_size_cells(struct device_node *np);
++
+ #ifdef CONFIG_OF_ADDRESS
+ extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
+ 			    u64 *paddr, u64 *size);
 -- 
 2.20.1
