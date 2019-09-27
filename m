@@ -1,7 +1,7 @@
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v5 5/7] arm64: dts: amlogic: g12a: add missing cooling info
-Date: Fri, 27 Sep 2019 14:47:47 +0200
-Message-ID: <20190927124750.12467-7-glaroque@baylibre.com>
+Subject: [PATCH v5 6/7] arm64: dts: amlogic: g12b: add missing cooling info
+Date: Fri, 27 Sep 2019 14:47:49 +0200
+Message-ID: <20190927124750.12467-9-glaroque@baylibre.com>
 References: <20190927124750.12467-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190927124750.12467-1-glaroque@baylibre.com>
@@ -10,21 +10,21 @@ To: amit.kucheria@linaro.org, rui.zhang@intel.com, edubezval@gmail.com, daniel.l
 Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add missing #colling-cells field for G12A SoC
+Add missing #colling-cells field for G12B SoC
 Add cooling-map for passive and hot trip point
 
 Tested-by: Christian Hewitt <christianshewitt@gmail.com>
 Tested-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 24 +++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-g12b.dtsi | 29 +++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index 733a9d46fc4b..3ab6497548ca 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -18,6 +18,7 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
+index 98ae8a7c8b41..4bb89bce758f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
+@@ -49,6 +49,7 @@
  			reg = <0x0 0x0>;
  			enable-method = "psci";
  			next-level-cache = <&l2>;
@@ -32,31 +32,47 @@ index 733a9d46fc4b..3ab6497548ca 100644
  		};
  
  		cpu1: cpu@1 {
-@@ -26,6 +27,7 @@
+@@ -57,6 +58,7 @@
  			reg = <0x0 0x1>;
  			enable-method = "psci";
  			next-level-cache = <&l2>;
 +			#cooling-cells = <2>;
  		};
  
- 		cpu2: cpu@2 {
-@@ -34,6 +36,7 @@
- 			reg = <0x0 0x2>;
+ 		cpu100: cpu@100 {
+@@ -65,6 +67,7 @@
+ 			reg = <0x0 0x100>;
  			enable-method = "psci";
  			next-level-cache = <&l2>;
 +			#cooling-cells = <2>;
  		};
  
- 		cpu3: cpu@3 {
-@@ -42,6 +45,7 @@
- 			reg = <0x0 0x3>;
+ 		cpu101: cpu@101 {
+@@ -73,6 +76,7 @@
+ 			reg = <0x0 0x101>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu102: cpu@102 {
+@@ -81,6 +85,7 @@
+ 			reg = <0x0 0x102>;
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
++			#cooling-cells = <2>;
+ 		};
+ 
+ 		cpu103: cpu@103 {
+@@ -89,6 +94,7 @@
+ 			reg = <0x0 0x103>;
  			enable-method = "psci";
  			next-level-cache = <&l2>;
 +			#cooling-cells = <2>;
  		};
  
  		l2: l2-cache0 {
-@@ -113,3 +117,23 @@
+@@ -219,3 +225,26 @@
  &sd_emmc_a {
  	amlogic,dram-access-quirk;
  };
@@ -66,17 +82,20 @@ index 733a9d46fc4b..3ab6497548ca 100644
 +		map0 {
 +			trip = <&cpu_passive>;
 +			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 +		};
-+
 +		map1 {
 +			trip = <&cpu_hot>;
 +			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
++					 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 +		};
 +	};
 +};
