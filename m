@@ -1,55 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] checkpatch: Warn if DT bindings are not in schema format
-Date: Fri, 27 Sep 2019 09:02:29 -0500
-Message-ID: <CAL_JsqLtEM9+LK=3YDLnoZbC1v09R9-qfFNEH-gTWj94FAjnyg@mail.gmail.com>
-References: <20190913211349.28245-1-robh@kernel.org> <713b2e5bbab16ddf850245ae1d92be66d9730e02.camel@perches.com>
+From: Vincent Cheng <vincent.cheng.xh@renesas.com>
+Subject: Re: [PATCH v2 2/2] ptp: Add a ptp clock driver for IDT ClockMatrix.
+Date: Fri, 27 Sep 2019 14:12:30 +0000
+Message-ID: <20190927141215.GA24424@renesas.com>
+References: <1569556128-22212-1-git-send-email-vincent.cheng.xh@renesas.com>
+ <1569556128-22212-2-git-send-email-vincent.cheng.xh@renesas.com>
+ <20190927122518.GA25474@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <713b2e5bbab16ddf850245ae1d92be66d9730e02.camel@perches.com>
+In-Reply-To: <20190927122518.GA25474@lunn.ch>
+Content-Language: en-US
+Content-ID: <8E637F3650C0904CA0867BC8DA56FB57@jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Whitcroft <apw@canonical.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "richardcochran@gmail.com" <richardcochran@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 4:48 PM Joe Perches <joe@perches.com> wrote:
->
-> On Fri, 2019-09-13 at 16:13 -0500, Rob Herring wrote:
-> > DT bindings are moving to using a json-schema based schema format
-> > instead of freeform text. Add a checkpatch.pl check to encourage using
-> > the schema for new bindings. It's not yet a requirement, but is
-> > progressively being required by some maintainers.
-> []
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> []
-> > @@ -2822,6 +2822,14 @@ sub process {
-> >                            "added, moved or deleted file(s), does MAINTAINERS need updating?\n" . $herecurr);
-> >               }
-> >
-> > +# Check for adding new DT bindings not in schema format
-> > +             if (!$in_commit_log &&
-> > +                 ($line =~ /^new file mode\s*\d+\s*$/) &&
-> > +                 ($realfile =~ m@^Documentation/devicetree/bindings/.*\.txt$@)) {
-> > +                     WARN("DT_SCHEMA_BINDING_PATCH",
-> > +                          "DT bindings should be in DT schema format. See: Documentation/devicetree/writing-schema.rst\n");
-> > +             }
-> > +
->
-> As this already seems to be git dependent, perhaps
-
-It's quite rare to see a non git generated diff these days.
-
-> it's easier to read with a single line test like:
->
->                 if ($line =~ m{^\s*create mode\s*\d+\s*Documentation/devicetree/bindings/.*\.txt$}) {
->                         etc...
->                 }
-
-I frequently do 'git show $commit | scripts/checkpatch.pl' and this
-doesn't work with that. I really should have a '--pretty=email' in
-there, but I just ignore the commit msg warnings. In any case, that
-still doesn't help because there's no diffstat. There's probably some
-way to turn that on or just use git-format-patch, but really we want
-this to work with any git diff.
-
-Rob
+T24gRnJpLCBTZXAgMjcsIDIwMTkgYXQgMDg6MjU6MThBTSBFRFQsIEFuZHJldyBMdW5uIHdyb3Rl
+Og0KPj4gK3N0YXRpYyBzMzIgaWR0Y21feGZlcihzdHJ1Y3QgaWR0Y20gKmlkdGNtLA0KPj4gKwkJ
+ICAgICAgdTggcmVnYWRkciwNCj4+ICsJCSAgICAgIHU4ICpidWYsDQo+PiArCQkgICAgICB1MTYg
+Y291bnQsDQo+PiArCQkgICAgICBib29sIHdyaXRlKQ0KPj4gK3sNCj4+ICsJc3RydWN0IGkyY19j
+bGllbnQgKmNsaWVudCA9IGlkdGNtLT5jbGllbnQ7DQo+PiArCXN0cnVjdCBpMmNfbXNnIG1zZ1sy
+XTsNCj4+ICsJczMyIGNudDsNCj4+ICsNCj4+ICsJbXNnWzBdLmFkZHIgPSBjbGllbnQtPmFkZHI7
+DQo+PiArCW1zZ1swXS5mbGFncyA9IDA7DQo+PiArCW1zZ1swXS5sZW4gPSAxOw0KPj4gKwltc2db
+MF0uYnVmID0gJnJlZ2FkZHI7DQo+PiArDQo+PiArCW1zZ1sxXS5hZGRyID0gY2xpZW50LT5hZGRy
+Ow0KPj4gKwltc2dbMV0uZmxhZ3MgPSB3cml0ZSA/IDAgOiBJMkNfTV9SRDsNCj4+ICsJbXNnWzFd
+LmxlbiA9IGNvdW50Ow0KPj4gKwltc2dbMV0uYnVmID0gYnVmOw0KPj4gKw0KPj4gKwljbnQgPSBp
+MmNfdHJhbnNmZXIoY2xpZW50LT5hZGFwdGVyLCBtc2csIDIpOw0KPj4gKw0KPj4gKwlpZiAoY250
+IDwgMCkgew0KPj4gKwkJZGV2X2VycigmY2xpZW50LT5kZXYsICJpMmNfdHJhbnNmZXIgcmV0dXJu
+ZWQgJWRcbiIsIGNudCk7DQo+PiArCQlyZXR1cm4gY250Ow0KPj4gKwl9IGVsc2UgaWYgKGNudCAh
+PSAyKSB7DQo+PiArCQlkZXZfZXJyKCZjbGllbnQtPmRldiwNCj4+ICsJCQkiaTJjX3RyYW5zZmVy
+IHNlbnQgb25seSAlZCBvZiAlZCBtZXNzYWdlc1xuIiwgY250LCAyKTsNCj4+ICsJCXJldHVybiAt
+RUlPOw0KPj4gKwl9DQo+PiArDQo+PiArCXJldHVybiAwOw0KPj4gK30NCj4+ICsNCj4+ICtzdGF0
+aWMgczMyIGlkdGNtX3BhZ2Vfb2Zmc2V0KHN0cnVjdCBpZHRjbSAqaWR0Y20sIHU4IHZhbCkNCj4+
+ICt7DQo+PiArCXU4IGJ1Zls0XTsNCj4+ICsJczMyIGVycjsNCj4NCj5IaSBWaW5jZW50DQoNCkhp
+IEFuZHJldywNCg0KVGhhbmsteW91IGZvciBsb29raW5nIGF0IHRoZSBwYXRjaC4NCg0KPkFsbCB5
+b3VyIGZ1bmN0aW9ucyByZXR1cm4gczMyLCByYXRoZXIgdGhhbiB0aGUgdXN1YWwgaW50LiBlcnIg
+aXMgYW4NCj5zMzIuICBpMmNfdHJhbnNmZXIoKSB3aWxsIHJldHVybiBhbiBpbnQsIHdoaWNoIHlv
+dSB0aGVuIGFzc2lnbiB0byBhbg0KPnMzMi4gIEkndmUgbm8gaWRlYSwgYnV0IG1heWJlIHRoZSBz
+dGF0aWMgY29kZSBjaGVja2VycyBsaWtlIHNtYXRjaA0KPndpbGwgY29tcGxhaW4gYWJvdXQgdGhp
+cywgZXNwZWNpYWxseSBvbiA2NCBiaXQgc3lzdGVtcz8gSSBzdXNwZWN0IG9uDQo+NjQgYml0IG1h
+Y2hpbmVzLCB0aGUgY29tcGlsZXIgd2lsbCBiZSBnZW5lcmF0aW5nIHdvcnNlIGNvZGUsIG1hc2tp
+bmcNCj5yZWdpc3RlcnM/IE1heWJlIHVzZSBpbnQsIG5vdCBzMzI/DQoNCk9vcHMuICBZb3UgYXJl
+IGNvcnJlY3QsIEkgbWVzc2VkIHVwIHdoZW4gdHJ5aW5nIHRvIHN0YW5kYXJkaXplDQpvbiBsaW51
+eCB0eXBlcy5oLiAgSSB3aWxsIGdvIHRocm91Z2ggdGhlIGNvZGUgdG8gZW5zdXJlIGludCBpcyB1
+c2VkDQpmb3IgZXJyb3IgY29kZXMgYW5kIHJldHVybiB2YWx1ZXMuDQoNCj4+ICsJY2FzZSBPVVRQ
+VVRfTUFTS19QTEwyX0FERFIgKyAxOg0KPj4gKwkJU0VUX1UxNl9NU0IoaWR0Y20tPmNoYW5uZWxb
+Ml0ub3V0cHV0X21hc2ssIHZhbCk7DQo+PiArCQlicmVhazsNCj4+ICsJY2FzZSBPVVRQVVRfTUFT
+S19QTEwzX0FERFI6DQo+PiArCQlTRVRfVTE2X0xTQihpZHRjbS0+Y2hhbm5lbFszXS5vdXRwdXRf
+bWFzaywgdmFsKTsNCj4+ICsJCWJyZWFrOw0KPj4gKwljYXNlIE9VVFBVVF9NQVNLX1BMTDNfQURE
+UiArIDE6DQo+PiArCQlTRVRfVTE2X01TQihpZHRjbS0+Y2hhbm5lbFszXS5vdXRwdXRfbWFzaywg
+dmFsKTsNCj4+ICsJCWJyZWFrOw0KPj4gKwlkZWZhdWx0Og0KPj4gKwkJZXJyID0gLTE7DQo+DQo+
+RUlOVkFMPw0KDQpZZXMsIHdpbGwgcmVwbGFjZSB3aXRoIC1FSU5WQUwuICBUaGFua3MuDQoNCj4+
+ICtzdGF0aWMgdm9pZCBzZXRfZGVmYXVsdF9mdW5jdGlvbl9wb2ludGVycyhzdHJ1Y3QgaWR0Y20g
+KmlkdGNtKQ0KPj4gK3sNCj4+ICsJaWR0Y20tPl9pZHRjbV9nZXR0aW1lID0gX2lkdGNtX2dldHRp
+bWU7DQo+PiArCWlkdGNtLT5faWR0Y21fc2V0dGltZSA9IF9pZHRjbV9zZXR0aW1lOw0KPj4gKwlp
+ZHRjbS0+X2lkdGNtX3Jkd3IgPSBpZHRjbV9yZHdyOw0KPj4gKwlpZHRjbS0+X3N5bmNfcGxsX291
+dHB1dCA9IHN5bmNfcGxsX291dHB1dDsNCj4+ICt9DQo+DQo+V2h5IGRvZXMgdGhpcyBpbmRpcmVj
+dGlvbj8gQXJlIHRoZSBTUEkgdmVyc2lvbnMgb2YgdGhlIHNpbGljb24/DQoNClRoZSBpbmRpcmVj
+dGlvbiBpcyB0byBlbmFibGUgdXMgdG8gcmVwbGFjZSB0aG9zZSBmdW5jdGlvbnMgaW4NCm91ciB1
+bml0IHRlc3RzIHdpdGggbW9ja2VkIGZ1bmN0aW9ucy4NCg0KSSByZWFkIHNvbWV3aGVyZSB0aGF0
+IEkgc2hvdWxkIGxlYXZlIGEgd2VlayBiZXR3ZWVuIHNlbmRpbmcgYQ0KcmV2aXNlZCBwYXRjaCBz
+ZXJpZXMuICBJcyB0aGlzIGEgZ29vZCBydWxlIHRvIGZvbGxvdz8NCg0KUmVnYXJkcywNClZpbmNl
+bnQNCg==
