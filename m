@@ -1,43 +1,68 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 2/3] ARM: dts: mvebu: add sdram controller node to Armada-38x
-Date: Fri, 27 Sep 2019 11:28:19 +1200
-Message-ID: <20190926232820.27676-3-chris.packham@alliedtelesis.co.nz>
-References: <20190926232820.27676-1-chris.packham@alliedtelesis.co.nz>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 00/11] of: dma-ranges fixes and improvements
+Date: Thu, 26 Sep 2019 19:24:44 -0500
+Message-ID: <20190927002455.13169-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190926232820.27676-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Robin Murphy <robin.murphy@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marek.vasut@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Oza Pawandeep <oza.oza@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-The Armada-38x uses an SDRAM controller that is compatible with the
-Armada-XP. The key difference is the width of the bus (XP is 64/32, 38x
-is 32/16). The SDRAM controller registers are the same between the two
-SoCs.
+This series fixes several issues related to 'dma-ranges'. Primarily,
+'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
+devices not described in the DT. A common case needing dma-ranges is a
+32-bit PCIe bridge on a 64-bit system. This affects several platforms
+including Broadcom, NXP, Renesas, and Arm Juno. There's been several
+attempts to fix these issues, most recently earlier this week[1].
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- arch/arm/boot/dts/armada-38x.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+In the process, I found several bugs in the address translation. It
+appears that things have happened to work as various DTs happen to use
+1:1 addresses.
 
-diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada=
--38x.dtsi
-index 3f4bb44d85f0..e038abc0c6b4 100644
---- a/arch/arm/boot/dts/armada-38x.dtsi
-+++ b/arch/arm/boot/dts/armada-38x.dtsi
-@@ -103,6 +103,11 @@
- 			#size-cells =3D <1>;
- 			ranges =3D <0 MBUS_ID(0xf0, 0x01) 0 0x100000>;
-=20
-+			sdramc: sdramc@1400 {
-+				compatible =3D "marvell,armada-xp-sdram-controller";
-+				reg =3D <0x1400 0x500>;
-+			};
-+
- 			L2: cache-controller@8000 {
- 				compatible =3D "arm,pl310-cache";
- 				reg =3D <0x8000 0x1000>;
---=20
-2.23.0
+First 3 patches are just some clean-up. The 4th patch adds a unittest
+exhibiting the issues. Patches 5-9 rework how of_dma_configure() works
+making it work on either a struct device child node or a struct
+device_node parent node so that it works on bus leaf nodes like PCI
+bridges. Patches 10 and 11 fix 2 issues with address translation for
+dma-ranges.
+
+My testing on this has been with QEMU virt machine hacked up to set PCI
+dma-ranges and the unittest. Nicolas reports this series resolves the
+issues on Rpi4 and NXP Layerscape platforms.
+
+Rob
+
+[1] https://lore.kernel.org/linux-arm-kernel/20190924181244.7159-1-nsaenzjulienne@suse.de/
+
+Rob Herring (5):
+  of: Remove unused of_find_matching_node_by_address()
+  of: Make of_dma_get_range() private
+  of/unittest: Add dma-ranges address translation tests
+  of/address: Translate 'dma-ranges' for parent nodes missing
+    'dma-ranges'
+  of/address: Fix of_pci_range_parser_one translation of DMA addresses
+
+Robin Murphy (6):
+  of: address: Report of_dma_get_range() errors meaningfully
+  of: Ratify of_dma_configure() interface
+  of/address: Introduce of_get_next_dma_parent() helper
+  of: address: Follow DMA parent for "dma-coherent"
+  of: Factor out #{addr,size}-cells parsing
+  of: Make of_dma_get_range() work on bus nodes
+
+ drivers/of/address.c                        | 83 +++++++++----------
+ drivers/of/base.c                           | 32 ++++---
+ drivers/of/device.c                         | 12 ++-
+ drivers/of/of_private.h                     | 14 ++++
+ drivers/of/unittest-data/testcases.dts      |  1 +
+ drivers/of/unittest-data/tests-address.dtsi | 48 +++++++++++
+ drivers/of/unittest.c                       | 92 +++++++++++++++++++++
+ include/linux/of_address.h                  | 21 +----
+ include/linux/of_device.h                   |  4 +-
+ 9 files changed, 227 insertions(+), 80 deletions(-)
+ create mode 100644 drivers/of/unittest-data/tests-address.dtsi
+
+--
+2.20.1
