@@ -1,71 +1,64 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] checkpatch: Warn if DT bindings are not in schema format
-Date: Fri, 27 Sep 2019 10:39:11 -0500
-Message-ID: <CAL_JsqKAbP6KYjiJ6dLr=dpFG-j-e4rJPCKZ0+pZrDjsSPAUPQ@mail.gmail.com>
-References: <20190913211349.28245-1-robh@kernel.org> <713b2e5bbab16ddf850245ae1d92be66d9730e02.camel@perches.com>
- <CAL_JsqLtEM9+LK=3YDLnoZbC1v09R9-qfFNEH-gTWj94FAjnyg@mail.gmail.com> <7672dd2f651bfdcdb1615ab739e36a381b2535b1.camel@perches.com>
+Subject: Re: [PATCH v4] dt-bindings: at24: convert the binding document to yaml
+Date: Fri, 27 Sep 2019 10:44:29 -0500
+Message-ID: <CAL_Jsq+R9wdB521dQtwMiWXEJEB5tGEDYi_efDqZL6xzF9YduA@mail.gmail.com>
+References: <20190927134220.8734-1-robh@kernel.org> <CAMRc=MctTVh99vE+dfd25ienWEjtMNwrM200f1im--fx9ALo7Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7672dd2f651bfdcdb1615ab739e36a381b2535b1.camel@perches.com>
+In-Reply-To: <CAMRc=MctTVh99vE+dfd25ienWEjtMNwrM200f1im--fx9ALo7Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Whitcroft <apw@canonical.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Peter Rosin <peda@axentia.se>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 9:29 AM Joe Perches <joe@perches.com> wrote:
+On Fri, Sep 27, 2019 at 10:06 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> On Fri, 2019-09-27 at 09:02 -0500, Rob Herring wrote:
-> > On Fri, Sep 13, 2019 at 4:48 PM Joe Perches <joe@perches.com> wrote:
-> > > On Fri, 2019-09-13 at 16:13 -0500, Rob Herring wrote:
-> > > > DT bindings are moving to using a json-schema based schema format
-> > > > instead of freeform text. Add a checkpatch.pl check to encourage using
-> > > > the schema for new bindings. It's not yet a requirement, but is
-> > > > progressively being required by some maintainers.
-> > > []
-> > > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > > []
-> > > > @@ -2822,6 +2822,14 @@ sub process {
-> > > >                            "added, moved or deleted file(s), does MAINTAINERS need updating?\n" . $herecurr);
-> > > >               }
-> > > >
-> > > > +# Check for adding new DT bindings not in schema format
-> > > > +             if (!$in_commit_log &&
-> > > > +                 ($line =~ /^new file mode\s*\d+\s*$/) &&
-> > > > +                 ($realfile =~ m@^Documentation/devicetree/bindings/.*\.txt$@)) {
-> > > > +                     WARN("DT_SCHEMA_BINDING_PATCH",
-> > > > +                          "DT bindings should be in DT schema format. See: Documentation/devicetree/writing-schema.rst\n");
-> > > > +             }
-> > > > +
-> > >
-> > > As this already seems to be git dependent, perhaps
+> pt., 27 wrz 2019 o 15:42 Rob Herring <robh@kernel.org> napisa=C5=82(a):
 > >
-> > It's quite rare to see a non git generated diff these days.
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > >
-> > > it's easier to read with a single line test like:
-> > >
-> > >                 if ($line =~ m{^\s*create mode\s*\d+\s*Documentation/devicetree/bindings/.*\.txt$}) {
-> > >                         etc...
-> > >                 }
+> > Convert the binding document for at24 EEPROMs from txt to yaml. The
+> > compatible property uses a regex pattern to address all the possible
+> > combinations of "vendor,model" strings.
 > >
-> > I frequently do 'git show $commit | scripts/checkpatch.pl' and this
-> > doesn't work with that. I really should have a '--pretty=email' in
-> > there, but I just ignore the commit msg warnings. In any case, that
-> > still doesn't help because there's no diffstat. There's probably some
-> > way to turn that on or just use git-format-patch, but really we want
-> > this to work with any git diff.
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > [robh: rework compatible schema, fix missing allOf for $ref, fix errors=
+ in example]
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> > v4:
+> > - Add a $nodename definition
+> >
+> > - Turns out the compatible schema is too complex for generating a 'sele=
+ct'
+> > schema and only a small subset where getting validated. So we need a
+> > custom 'select' schema. This in turn fixes the issue with the nxp,se97b
+> > binding.
 >
-> I don't understand your argument against what I proposed at all.
-
-It is dependent on the commit message rather than the diff itself. I
-want it to work with or without a diffstat.
-
-> and btw:
+> Thanks again!
 >
-> $ git format-patch -1 --stdout <commit> | ./scripts/checkpatch.pl
+> >
+> > Now we get a different set of errors checking Arm dts files (omitting
+> > a bunch of node name ones):
+> >
+>
+> > arch/arm/boot/dts/at91-dvk_som60.dt.yaml: eeprom@57: compatible: ['gian=
+tec,gt24c32a', 'atmel,24c32'] is not valid under any of the given schemas
+>
+> This is because nobody bothered adding 'giantec,gt24c32a' to previous
+> .txt bindings. I'll add this in a follow-up patch.
+>
+> > arch/arm/boot/dts/am3874-iceboard.dt.yaml: at24cs01@5f: compatible: ['a=
+tmel,24cs01'] is not valid under any of the given schemas
+> > arch/arm/boot/dts/am3874-iceboard.dt.yaml: at24cs08@5c: compatible: ['a=
+tmel,24cs08'] is not valid under any of the given schemas
+> >
+>
+> These look fine at first glance, I'm not sure what the problem here
+> is. I'll take a look at these as soon as I can.
 
-Yes, I stated this was possible. My concern is there are lots of ways
-to generate a diff in git. My way works for *all* of them. Yours
-doesn't.
+Ah, that's my mistake. I guess there's only no 24cs00 variant.
 
 Rob
