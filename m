@@ -1,103 +1,45 @@
-From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v6 6/7] arm64: dts: amlogic: g12b: add cooling properties
-Date: Fri, 27 Sep 2019 20:43:51 +0200
-Message-ID: <20190927184352.28759-7-glaroque@baylibre.com>
-References: <20190927184352.28759-1-glaroque@baylibre.com>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v4 2/8] media: i2c: ov2659: Fix sensor detection to actually fail when device is not present
+Date: Fri, 27 Sep 2019 13:47:16 -0500
+Message-ID: <20190927184722.31989-3-bparrot@ti.com>
+References: <20190927184722.31989-1-bparrot@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190927184352.28759-1-glaroque@baylibre.com>
+In-Reply-To: <20190927184722.31989-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: amit.kucheria@linaro.org, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add missing #colling-cells field for G12B SoC
-Add cooling-map for passive and hot trip point
+Make sure that if the expected sensor device id register
+is not recognized properly the failure is propagated
+up so devices are not left partially initialized.
 
-Tested-by: Christian Hewitt <christianshewitt@gmail.com>
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12b.dtsi | 29 +++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ drivers/media/i2c/ov2659.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-index 98ae8a7c8b41..4bb89bce758f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-@@ -49,6 +49,7 @@
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			#cooling-cells = <2>;
- 		};
+diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+index 17573257097d..efbe6dc720e2 100644
+--- a/drivers/media/i2c/ov2659.c
++++ b/drivers/media/i2c/ov2659.c
+@@ -1330,11 +1330,12 @@ static int ov2659_detect(struct v4l2_subdev *sd)
+ 		unsigned short id;
  
- 		cpu1: cpu@1 {
-@@ -57,6 +58,7 @@
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu100: cpu@100 {
-@@ -65,6 +67,7 @@
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu101: cpu@101 {
-@@ -73,6 +76,7 @@
- 			reg = <0x0 0x101>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu102: cpu@102 {
-@@ -81,6 +85,7 @@
- 			reg = <0x0 0x102>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu103: cpu@103 {
-@@ -89,6 +94,7 @@
- 			reg = <0x0 0x103>;
- 			enable-method = "psci";
- 			next-level-cache = <&l2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		l2: l2-cache0 {
-@@ -219,3 +225,26 @@
- &sd_emmc_a {
- 	amlogic,dram-access-quirk;
- };
-+
-+&cpu_thermal {
-+	cooling-maps {
-+		map0 {
-+			trip = <&cpu_passive>;
-+			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+		};
-+		map1 {
-+			trip = <&cpu_hot>;
-+			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+		};
-+	};
-+};
+ 		id = OV265X_ID(pid, ver);
+-		if (id != OV2659_ID)
++		if (id != OV2659_ID) {
+ 			dev_err(&client->dev,
+ 				"Sensor detection failed (%04X, %d)\n",
+ 				id, ret);
+-		else {
++			ret = -ENODEV;
++		} else {
+ 			dev_info(&client->dev, "Found OV%04X sensor\n", id);
+ 			ret = ov2659_init(sd, 0);
+ 		}
 -- 
 2.17.1
