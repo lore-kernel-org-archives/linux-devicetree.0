@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 03/16] media: ti-vpe: vpe: Remove unnecessary use of container_of
-Date: Fri, 27 Sep 2019 13:36:37 -0500
-Message-ID: <20190927183650.31345-4-bparrot@ti.com>
+Subject: [Patch 10/16] media: ti-vpe: vpe: fix a v4l2-compliance failure about invalid sizeimage
+Date: Fri, 27 Sep 2019 13:36:44 -0500
+Message-ID: <20190927183650.31345-11-bparrot@ti.com>
 References: <20190927183650.31345-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,98 +12,54 @@ To: Hans Verkuil <hverkuil@xs4all.nl>
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Instead of saving a pointer to the 'fh' member of struct vpe_ctx to
-later have to use container_of to retrieve the actual pointer to the
-context structure, which seems to confuse static code analysis tool
-anyways, just save the pointer to the actual structure and then retrieve
-it directly.
+v4l2-compliance fails with this message:
+
+   fail: v4l2-test-formats.cpp(463): !pfmt.sizeimage
+   fail: v4l2-test-formats.cpp(736): \
+	Video Capture Multiplanar is valid, \
+	but TRY_FMT failed to return a format
+   test VIDIOC_TRY_FMT: FAIL
+
+This failure is causd by the driver failing to handle out range
+'bytesperline' values from user space applications.
+
+VPDMA hardware is limited to 64k line stride (16 bytes aligned, so 65520
+bytes). So make sure the provided or calculated 'bytesperline' is
+smaller than the maximum value.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 22 +++++++---------------
- 1 file changed, 7 insertions(+), 15 deletions(-)
+ drivers/media/platform/ti-vpe/vpdma.h | 1 +
+ drivers/media/platform/ti-vpe/vpe.c   | 4 ++++
+ 2 files changed, 5 insertions(+)
 
+diff --git a/drivers/media/platform/ti-vpe/vpdma.h b/drivers/media/platform/ti-vpe/vpdma.h
+index bce17329c4c9..393fcbb3cb40 100644
+--- a/drivers/media/platform/ti-vpe/vpdma.h
++++ b/drivers/media/platform/ti-vpe/vpdma.h
+@@ -57,6 +57,7 @@ struct vpdma_data_format {
+ 						 * line stride of source and dest
+ 						 * buffers should be 16 byte aligned
+ 						 */
++#define VPDMA_MAX_STRIDE		65520	/* Max line stride 16 byte aligned */
+ #define VPDMA_DTD_DESC_SIZE		32	/* 8 words */
+ #define VPDMA_CFD_CTD_DESC_SIZE		16	/* 4 words */
+ 
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 56f60dbea15c..0e9cb0319a92 100644
+index 7aa83026fb6c..0a7cf9c820c6 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -900,14 +900,6 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
- 	return 0;
- }
+@@ -1694,6 +1694,10 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 		if (stride > plane_fmt->bytesperline)
+ 			plane_fmt->bytesperline = stride;
  
--/*
-- * Return the vpe_ctx structure for a given struct file
-- */
--static struct vpe_ctx *file2ctx(struct file *file)
--{
--	return container_of(file->private_data, struct vpe_ctx, fh);
--}
--
- /*
-  * mem2mem callbacks
-  */
-@@ -1527,7 +1519,7 @@ static int vpe_enum_fmt(struct file *file, void *priv,
- static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
- {
- 	struct v4l2_pix_format_mplane *pix = &f->fmt.pix_mp;
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vb2_queue *vq;
- 	struct vpe_q_data *q_data;
- 	int i;
-@@ -1689,7 +1681,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
- 
- static int vpe_try_fmt(struct file *file, void *priv, struct v4l2_format *f)
- {
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vpe_fmt *fmt = find_format(f);
- 
- 	if (V4L2_TYPE_IS_OUTPUT(f->type))
-@@ -1762,7 +1754,7 @@ static int __vpe_s_fmt(struct vpe_ctx *ctx, struct v4l2_format *f)
- static int vpe_s_fmt(struct file *file, void *priv, struct v4l2_format *f)
- {
- 	int ret;
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 
- 	ret = vpe_try_fmt(file, priv, f);
- 	if (ret)
-@@ -1847,7 +1839,7 @@ static int __vpe_try_selection(struct vpe_ctx *ctx, struct v4l2_selection *s)
- static int vpe_g_selection(struct file *file, void *fh,
- 		struct v4l2_selection *s)
- {
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vpe_q_data *q_data;
- 	bool use_c_rect = false;
- 
-@@ -1908,7 +1900,7 @@ static int vpe_g_selection(struct file *file, void *fh,
- static int vpe_s_selection(struct file *file, void *fh,
- 		struct v4l2_selection *s)
- {
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vpe_q_data *q_data;
- 	struct v4l2_selection sel = *s;
- 	int ret;
-@@ -2275,7 +2267,7 @@ static int vpe_open(struct file *file)
- 	init_adb_hdrs(ctx);
- 
- 	v4l2_fh_init(&ctx->fh, video_devdata(file));
--	file->private_data = &ctx->fh;
-+	file->private_data = ctx;
- 
- 	hdl = &ctx->hdl;
- 	v4l2_ctrl_handler_init(hdl, 1);
-@@ -2360,7 +2352,7 @@ static int vpe_open(struct file *file)
- static int vpe_release(struct file *file)
- {
- 	struct vpe_dev *dev = video_drvdata(file);
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 
- 	vpe_dbg(dev, "releasing instance %p\n", ctx);
++		plane_fmt->bytesperline = clamp_t(u32, plane_fmt->bytesperline,
++						  stride,
++						  VPDMA_MAX_STRIDE);
++
+ 		plane_fmt->bytesperline = ALIGN(plane_fmt->bytesperline,
+ 						VPDMA_STRIDE_ALIGN);
  
 -- 
 2.17.1
