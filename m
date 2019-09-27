@@ -1,112 +1,49 @@
-From: Hui Song <hui.song_1@nxp.com>
-Subject: [PATCH v6] gpio/mpc8xxx: change irq handler from chained to normal
-Date: Fri, 27 Sep 2019 11:15:51 +0800
-Message-ID: <20190927031551.20074-1-hui.song_1@nxp.com>
+From: vincent.cheng.xh@renesas.com
+Subject: [PATCH v2 1/2] dt-bindings: ptp: Add bindings doc for IDT ClockMatrix based PTP clock
+Date: Thu, 26 Sep 2019 23:48:47 -0400
+Message-ID: <1569556128-22212-1-git-send-email-vincent.cheng.xh@renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Song Hui <hui.song_1@nxp.com>
+To: robh+dt@kernel.org, mark.rutland@arm.com, richardcochran@gmail.com
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, andrew@lunn.ch, Vincent Cheng <vincent.cheng.xh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+From: Vincent Cheng <vincent.cheng.xh@renesas.com>
 
-More than one gpio controllers can share one interrupt, change the
-driver to request shared irq.
+Add device tree binding doc for the IDT ClockMatrix PTP clock driver.
 
-While this will work, it will mess up userspace accounting of the number
-of interrupts per second in tools such as vmstat.  The reason is that
-for every GPIO interrupt, /proc/interrupts records the count against GIC
-interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
-interrupt, the total number of interrupts that the system has seen
-increments by two
-
-Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
+Co-developed-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
 ---
- Changes in v6:
-	- change request_irq to devm_request_irq and add commit message
- Changes in v5:
-	- add traverse every bit function.
- Changes in v4:
-	- convert 'pr_err' to 'dev_err'.
- Changes in v3:
-	- update the patch description.
- Changes in v2:
-	- delete the compatible of ls1088a.
 
- drivers/gpio/gpio-mpc8xxx.c | 31 ++++++++++++++++++++-----------
- 1 file changed, 20 insertions(+), 11 deletions(-)
+Changes since v1:
+ - No changes
+---
+ Documentation/devicetree/bindings/ptp/ptp-idtcm.txt | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ptp/ptp-idtcm.txt
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 16a47de..f0be284 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -22,6 +22,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/interrupt.h>
- 
- #define MPC8XXX_GPIO_PINS	32
- 
-@@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 		return -ENXIO;
- }
- 
--static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-+static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
- {
--	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = data;
- 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
- 	unsigned int mask;
-+	int i;
- 
- 	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
- 		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
--	if (mask)
-+	for_each_set_bit(i, &mask, 32)
- 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
--						     32 - ffs(mask)));
--	if (chip->irq_eoi)
--		chip->irq_eoi(&desc->irq_data);
-+						     31 - i));
+diff --git a/Documentation/devicetree/bindings/ptp/ptp-idtcm.txt b/Documentation/devicetree/bindings/ptp/ptp-idtcm.txt
+new file mode 100644
+index 0000000..4eaa34d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ptp/ptp-idtcm.txt
+@@ -0,0 +1,15 @@
++* IDT ClockMatrix (TM) PTP clock
 +
-+	return IRQ_HANDLED;
- }
- 
- static void mpc8xxx_irq_unmask(struct irq_data *d)
-@@ -388,8 +389,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 
- 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
- 	if (ret) {
--		pr_err("%pOF: GPIO chip registration failed with status %d\n",
--		       np, ret);
-+		dev_err(&pdev->dev, "%pOF: GPIO chip registration failed with status %d\n",
-+			np, ret);
- 		goto err;
- 	}
- 
-@@ -409,8 +410,16 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	if (devtype->gpio_dir_in_init)
- 		devtype->gpio_dir_in_init(gc);
- 
--	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
--					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-+	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
-+			       mpc8xxx_gpio_irq_cascade,
-+			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
-+			       mpc8xxx_gc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
-+			np->full_name, mpc8xxx_gc->irqn, ret);
-+		goto err;
-+	}
++Required properties:
 +
- 	return 0;
- err:
- 	iounmap(mpc8xxx_gc->regs);
++  - compatible  Should be "idt,8a3400x-ptp" for System Synchronizer
++                Should be "idt,8a3401x-ptp" for Port Synchronizer
++                Should be "idt,8a3404x-ptp" for Universal Frequency Translator (UFT)
++  - reg         I2C slave address of the device
++
++Example:
++
++	phc@5b {
++		compatible = "idt,8a3400x-ptp";
++		reg = <0x5b>;
++	};
 -- 
-2.9.5
+2.7.4
