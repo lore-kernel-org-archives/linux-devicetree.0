@@ -1,296 +1,241 @@
-From: Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH v2 2/4] irqchip: Add Aspeed SCU interrupt controller
-Date: Fri, 27 Sep 2019 15:58:47 -0500
-Message-ID: <1569617929-29055-3-git-send-email-eajames@linux.ibm.com>
-References: <1569617929-29055-1-git-send-email-eajames@linux.ibm.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Subject: Re: [Patch v4 6/8] media: i2c: ov2659: Add powerdown/reset gpio handling
+Date: Fri, 27 Sep 2019 22:09:45 +0100
+Message-ID: <CA+V-a8vdjYoVxScjBAt5fb-sPWjsj53R8JpEfWt4Dvd5Kcr_0Q@mail.gmail.com>
+References: <20190927184722.31989-1-bparrot@ti.com> <20190927184722.31989-7-bparrot@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569617929-29055-1-git-send-email-eajames@linux.ibm.com>
+In-Reply-To: <20190927184722.31989-7-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, joel@jms.id.au, mark.rutland@arm.com, robh+dt@kernel.org, maz@kernel.org, jason@lakedaemon.net, tglx@linutronix.de, Eddie James <eajames@linux.ibm.com>
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The Aspeed SOCs provide some interrupts through the System Control
-Unit registers. Add an interrupt controller that provides these
-interrupts to the system.
+Hi Benoit,
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
-Changes since v1:
- - add a spinlock to protect read-modify-write operation for irq masking
- - use readl/writel relaxed versions
- - add a comment explaining the irq status/enable register
- - provide affinity callback that returns -EINVAL
+thank you for the patch.
 
- MAINTAINERS                         |   1 +
- drivers/irqchip/Makefile            |   2 +-
- drivers/irqchip/irq-aspeed-scu-ic.c | 233 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 235 insertions(+), 1 deletion(-)
- create mode 100644 drivers/irqchip/irq-aspeed-scu-ic.c
+On Fri, Sep 27, 2019 at 7:49 PM Benoit Parrot <bparrot@ti.com> wrote:
+>
+> On some board it is possible that the sensor 'powerdown' and or 'reset'
+> pin might be controlled by gpio instead of being tied.
+>
+> To implement we add pm_runtime support which will handle the power
+> up/down sequence when it is available otherwise the sensor will be
+> powered on at module insertion/probe and powered off at module removal.
+>
+> Now originally the driver assumed that the sensor would always stay
+> powered and keep its register setting. We cannot assume this anymore, so
+> every time we "power up" we need to re-program the initial registers
+> configuration first. This was previously done only at probe time.
+>
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> ---
+>  drivers/media/i2c/Kconfig  |  2 +-
+>  drivers/media/i2c/ov2659.c | 88 +++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 87 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> index 7eee1812bba3..315c1d8bdb7b 100644
+> --- a/drivers/media/i2c/Kconfig
+> +++ b/drivers/media/i2c/Kconfig
+> @@ -634,7 +634,7 @@ config VIDEO_OV2640
+>  config VIDEO_OV2659
+>         tristate "OmniVision OV2659 sensor support"
+>         depends on VIDEO_V4L2 && I2C
+> -       depends on MEDIA_CAMERA_SUPPORT
+> +       depends on MEDIA_CAMERA_SUPPORT && GPIOLIB
+>         select V4L2_FWNODE
+>         help
+>           This is a Video4Linux2 sensor driver for the OmniVision
+> diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+> index cd4625432264..7d0baa386644 100644
+> --- a/drivers/media/i2c/ov2659.c
+> +++ b/drivers/media/i2c/ov2659.c
+> @@ -22,9 +22,11 @@
+>
+>  #include <linux/clk.h>
+>  #include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/i2c.h>
+>  #include <linux/module.h>
+>  #include <linux/of_graph.h>
+> +#include <linux/pm_runtime.h>
+>
+>  #include <media/i2c/ov2659.h>
+>  #include <media/v4l2-ctrls.h>
+> @@ -218,6 +220,11 @@ struct ov2659 {
+>         struct sensor_register *format_ctrl_regs;
+>         struct ov2659_pll_ctrl pll;
+>         int streaming;
+> +       /* used to control the sensor PWDN pin */
+> +       struct gpio_desc *pwdn_gpio;
+> +       /* used to control the sensor RESETB pin */
+> +       struct gpio_desc *resetb_gpio;
+> +       int on;
+>  };
+>
+>  static const struct sensor_register ov2659_init_regs[] = {
+> @@ -1184,10 +1191,19 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
+>                 /* Stop Streaming Sequence */
+>                 ov2659_set_streaming(ov2659, 0);
+>                 ov2659->streaming = on;
+> +               pm_runtime_put(&client->dev);
+>                 goto unlock;
+>         }
+>
+> -       ret = ov2659_set_pixel_clock(ov2659);
+> +       ret = pm_runtime_get_sync(&client->dev);
+> +       if (ret < 0) {
+> +               pm_runtime_put_noidle(&client->dev);
+> +               goto unlock;
+> +       }
+> +
+> +       ret = ov2659_init(sd, 0);
+> +       if (!ret)
+> +               ret = ov2659_set_pixel_clock(ov2659);
+>         if (!ret)
+>                 ret = ov2659_set_frame_size(ov2659);
+>         if (!ret)
+> @@ -1229,6 +1245,9 @@ static int ov2659_s_ctrl(struct v4l2_ctrl *ctrl)
+>         struct ov2659 *ov2659 =
+>                         container_of(ctrl->handler, struct ov2659, ctrls);
+>
+> +       if (!ov2659->on)
+> +               return 0;
+> +
+why is this check only in s_ctrl() ? I think we could just drop this variable.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c7e028c..b6db122 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2656,6 +2656,7 @@ M:	Eddie James <eajames@linux.ibm.com>
- L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
- S:	Maintained
- F:	Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
-+F:	drivers/irqchip/irq-aspeed-scu-ic.c
- F:	include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
- 
- ASPEED VIDEO ENGINE DRIVER
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index cc7c439..fce6b1d 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -86,7 +86,7 @@ obj-$(CONFIG_MVEBU_PIC)			+= irq-mvebu-pic.o
- obj-$(CONFIG_MVEBU_SEI)			+= irq-mvebu-sei.o
- obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
- obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
--obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o irq-aspeed-i2c-ic.o
-+obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o irq-aspeed-i2c-ic.o irq-aspeed-scu-ic.o
- obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
- obj-$(CONFIG_QCOM_IRQ_COMBINER)		+= qcom-irq-combiner.o
- obj-$(CONFIG_IRQ_UNIPHIER_AIDET)	+= irq-uniphier-aidet.o
-diff --git a/drivers/irqchip/irq-aspeed-scu-ic.c b/drivers/irqchip/irq-aspeed-scu-ic.c
-new file mode 100644
-index 0000000..64c3ac4
---- /dev/null
-+++ b/drivers/irqchip/irq-aspeed-scu-ic.c
-@@ -0,0 +1,233 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Aspeed AST24XX, AST25XX, and AST26XX SCU Interrupt Controller
-+ * Copyright 2019 IBM Corporation
-+ *
-+ * Eddie James <eajames@linux.ibm.com>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/io.h>
-+#include <linux/spinlock.h>
-+
-+#define ASPEED_SCU_IC_SHIFT		0
-+#define ASPEED_SCU_IC_ENABLE		GENMASK(6, ASPEED_SCU_IC_SHIFT)
-+#define ASPEED_SCU_IC_NUM_IRQS		7
-+#define ASPEED_SCU_IC_STATUS_SHIFT	16
-+
-+#define ASPEED_AST2600_SCU_IC0_SHIFT	0
-+#define ASPEED_AST2600_SCU_IC0_ENABLE	\
-+	GENMASK(5, ASPEED_AST2600_SCU_IC0_SHIFT)
-+#define ASPEED_AST2600_SCU_IC0_NUM_IRQS	6
-+
-+#define ASPEED_AST2600_SCU_IC1_SHIFT	4
-+#define ASPEED_AST2600_SCU_IC1_ENABLE	\
-+	GENMASK(5, ASPEED_AST2600_SCU_IC1_SHIFT)
-+#define ASPEED_AST2600_SCU_IC1_NUM_IRQS	2
-+
-+struct aspeed_scu_ic {
-+	unsigned long irq_enable;
-+	unsigned long irq_shift;
-+	unsigned int num_irqs;
-+	void __iomem *reg;
-+	struct irq_domain *irq_domain;
-+	spinlock_t lock;
-+};
-+
-+static void aspeed_scu_ic_irq_handler(struct irq_desc *desc)
-+{
-+	unsigned int irq;
-+	unsigned long bit;
-+	unsigned long enabled;
-+	unsigned long max;
-+	unsigned long status;
-+	struct aspeed_scu_ic *scu_ic = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+
-+	chained_irq_enter(chip, desc);
-+
-+	/*
-+	 * The SCU IC has just one register to control its operation and read
-+	 * status. The interrupt enable bits occupy the lower 16 bits of the
-+	 * register, while the interrupt status bits occupy the upper 16 bits.
-+	 * The status bit for a given interrupt is always 16 bits shifted from
-+	 * the enable bit for the same interrupt.
-+	 * Therefore, perform the IRQ operations in the enable bit space by
-+	 * shifting the status down to get the mapping and then back up to
-+	 * clear the bit.
-+	 */
-+	status = readl_relaxed(scu_ic->reg);
-+	enabled = status & scu_ic->irq_enable;
-+	status = (status >> ASPEED_SCU_IC_STATUS_SHIFT) & enabled;
-+
-+	bit = scu_ic->irq_shift;
-+	max = scu_ic->num_irqs + bit;
-+
-+	for_each_set_bit_from(bit, &status, max) {
-+		irq = irq_find_mapping(scu_ic->irq_domain,
-+				       bit - scu_ic->irq_shift);
-+		generic_handle_irq(irq);
-+
-+		writel_relaxed(enabled | BIT(bit + ASPEED_SCU_IC_STATUS_SHIFT),
-+			       scu_ic->reg);
-+	}
-+
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static void aspeed_scu_ic_irq_mask(struct irq_data *data)
-+{
-+	struct aspeed_scu_ic *scu_ic = irq_data_get_irq_chip_data(data);
-+	unsigned long bit = BIT(data->hwirq + scu_ic->irq_shift);
-+	unsigned long flags;
-+	unsigned long reg;
-+
-+	spin_lock_irqsave(&scu_ic->lock, flags);
-+
-+	reg = readl_relaxed(scu_ic->reg);
-+	writel_relaxed((reg & ~bit) & scu_ic->irq_enable, scu_ic->reg);
-+
-+	spin_unlock_irqrestore(&scu_ic->lock, flags);
-+}
-+
-+static void aspeed_scu_ic_irq_unmask(struct irq_data *data)
-+{
-+	struct aspeed_scu_ic *scu_ic = irq_data_get_irq_chip_data(data);
-+	unsigned long bit = BIT(data->hwirq + scu_ic->irq_shift);
-+	unsigned long flags;
-+	unsigned long reg;
-+
-+	spin_lock_irqsave(&scu_ic->lock, flags);
-+
-+	reg = readl_relaxed(scu_ic->reg);
-+	writel_relaxed((reg | bit) & scu_ic->irq_enable, scu_ic->reg);
-+
-+	spin_unlock_irqrestore(&scu_ic->lock, flags);
-+}
-+
-+static int aspeed_scu_ic_irq_set_affinity(struct irq_data *data,
-+					  const struct cpumask *dest,
-+					  bool force)
-+{
-+	return -EINVAL;
-+}
-+
-+struct irq_chip aspeed_scu_ic_chip = {
-+	.name			= "aspeed-scu-ic",
-+	.irq_mask		= aspeed_scu_ic_irq_mask,
-+	.irq_unmask		= aspeed_scu_ic_irq_unmask,
-+	.irq_set_affinity	= aspeed_scu_ic_irq_set_affinity,
-+};
-+
-+static int aspeed_scu_ic_map(struct irq_domain *domain, unsigned int irq,
-+			     irq_hw_number_t hwirq)
-+{
-+	irq_set_chip_and_handler(irq, &aspeed_scu_ic_chip, handle_simple_irq);
-+	irq_set_chip_data(irq, domain->host_data);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops aspeed_scu_ic_domain_ops = {
-+	.map = aspeed_scu_ic_map,
-+};
-+
-+static int aspeed_scu_ic_of_init_common(struct aspeed_scu_ic *scu_ic,
-+					struct device_node *node)
-+{
-+	int irq;
-+	int rc = 0;
-+
-+	scu_ic->reg = of_iomap(node, 0);
-+	if (!scu_ic->reg) {
-+		rc = -ENOMEM;
-+		goto err_free;
-+	}
-+
-+	irq = irq_of_parse_and_map(node, 0);
-+	if (irq < 0) {
-+		rc = irq;
-+		goto err_iounmap;
-+	}
-+
-+	spin_lock_init(&scu_ic->lock);
-+
-+	scu_ic->irq_domain = irq_domain_add_linear(node, scu_ic->num_irqs,
-+						   &aspeed_scu_ic_domain_ops,
-+						   scu_ic);
-+	if (!scu_ic->irq_domain) {
-+		rc = -ENOMEM;
-+		goto err_iounmap;
-+	}
-+
-+	irq_set_chained_handler_and_data(irq, aspeed_scu_ic_irq_handler,
-+					 scu_ic);
-+
-+	return 0;
-+
-+err_iounmap:
-+	iounmap(scu_ic->reg);
-+
-+err_free:
-+	kfree(scu_ic);
-+
-+	return rc;
-+}
-+
-+static int __init aspeed_scu_ic_of_init(struct device_node *node,
-+					struct device_node *parent)
-+{
-+	struct aspeed_scu_ic *scu_ic = kzalloc(sizeof(*scu_ic), GFP_KERNEL);
-+
-+	if (!scu_ic)
-+		return -ENOMEM;
-+
-+	scu_ic->irq_enable = ASPEED_SCU_IC_ENABLE;
-+	scu_ic->irq_shift = ASPEED_SCU_IC_SHIFT;
-+	scu_ic->num_irqs = ASPEED_SCU_IC_NUM_IRQS;
-+
-+	return aspeed_scu_ic_of_init_common(scu_ic, node);
-+}
-+
-+static int __init aspeed_ast2600_scu_ic0_of_init(struct device_node *node,
-+						 struct device_node *parent)
-+{
-+	struct aspeed_scu_ic *scu_ic = kzalloc(sizeof(*scu_ic), GFP_KERNEL);
-+
-+	if (!scu_ic)
-+		return -ENOMEM;
-+
-+	scu_ic->irq_enable = ASPEED_AST2600_SCU_IC0_ENABLE;
-+	scu_ic->irq_shift = ASPEED_AST2600_SCU_IC0_SHIFT;
-+	scu_ic->num_irqs = ASPEED_AST2600_SCU_IC0_NUM_IRQS;
-+
-+	return aspeed_scu_ic_of_init_common(scu_ic, node);
-+}
-+
-+static int __init aspeed_ast2600_scu_ic1_of_init(struct device_node *node,
-+						 struct device_node *parent)
-+{
-+	struct aspeed_scu_ic *scu_ic = kzalloc(sizeof(*scu_ic), GFP_KERNEL);
-+
-+	if (!scu_ic)
-+		return -ENOMEM;
-+
-+	scu_ic->irq_enable = ASPEED_AST2600_SCU_IC1_ENABLE;
-+	scu_ic->irq_shift = ASPEED_AST2600_SCU_IC1_SHIFT;
-+	scu_ic->num_irqs = ASPEED_AST2600_SCU_IC1_NUM_IRQS;
-+
-+	return aspeed_scu_ic_of_init_common(scu_ic, node);
-+}
-+
-+IRQCHIP_DECLARE(ast2400_scu_ic, "aspeed,ast2400-scu-ic", aspeed_scu_ic_of_init);
-+IRQCHIP_DECLARE(ast2500_scu_ic, "aspeed,ast2500-scu-ic", aspeed_scu_ic_of_init);
-+IRQCHIP_DECLARE(ast2600_scu_ic0, "aspeed,ast2600-scu-ic0",
-+		aspeed_ast2600_scu_ic0_of_init);
-+IRQCHIP_DECLARE(ast2600_scu_ic1, "aspeed,ast2600-scu-ic1",
-+		aspeed_ast2600_scu_ic1_of_init);
--- 
-1.8.3.1
+Cheers,
+--Prabhakar
+
+>         switch (ctrl->id) {
+>         case V4L2_CID_TEST_PATTERN:
+>                 return ov2659_set_test_pattern(ov2659, ctrl->val);
+> @@ -1246,6 +1265,43 @@ static const char * const ov2659_test_pattern_menu[] = {
+>         "Vertical Color Bars",
+>  };
+>
+> +static int ov2659_power_off(struct device *dev)
+> +{
+> +       struct i2c_client *client = to_i2c_client(dev);
+> +       struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +       struct ov2659 *ov2659 = to_ov2659(sd);
+> +
+> +       dev_dbg(&client->dev, "%s:\n", __func__);
+> +
+> +       gpiod_set_value(ov2659->pwdn_gpio, 1);
+> +
+> +       ov2659->on = false;
+> +
+> +       return 0;
+> +}
+> +
+> +static int ov2659_power_on(struct device *dev)
+> +{
+> +       struct i2c_client *client = to_i2c_client(dev);
+> +       struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +       struct ov2659 *ov2659 = to_ov2659(sd);
+> +
+> +       dev_dbg(&client->dev, "%s:\n", __func__);
+> +
+> +       gpiod_set_value(ov2659->pwdn_gpio, 0);
+> +
+> +       if (ov2659->resetb_gpio) {
+> +               gpiod_set_value(ov2659->resetb_gpio, 1);
+> +               usleep_range(500, 1000);
+> +               gpiod_set_value(ov2659->resetb_gpio, 0);
+> +               usleep_range(3000, 5000);
+> +       }
+> +
+> +       ov2659->on = true;
+> +
+> +       return 0;
+> +}
+> +
+>  /* -----------------------------------------------------------------------------
+>   * V4L2 subdev internal operations
+>   */
+> @@ -1326,7 +1382,6 @@ static int ov2659_detect(struct v4l2_subdev *sd)
+>                         ret = -ENODEV;
+>                 } else {
+>                         dev_info(&client->dev, "Found OV%04X sensor\n", id);
+> -                       ret = ov2659_init(sd, 0);
+>                 }
+>         }
+>
+> @@ -1403,6 +1458,18 @@ static int ov2659_probe(struct i2c_client *client)
+>             ov2659->xvclk_frequency > 27000000)
+>                 return -EINVAL;
+>
+> +       /* Optional gpio don't fail if not present */
+> +       ov2659->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
+> +                                                   GPIOD_OUT_LOW);
+> +       if (IS_ERR(ov2659->pwdn_gpio))
+> +               return PTR_ERR(ov2659->pwdn_gpio);
+> +
+> +       /* Optional gpio don't fail if not present */
+> +       ov2659->resetb_gpio = devm_gpiod_get_optional(&client->dev, "reset",
+> +                                                     GPIOD_OUT_HIGH);
+> +       if (IS_ERR(ov2659->resetb_gpio))
+> +               return PTR_ERR(ov2659->resetb_gpio);
+> +
+>         v4l2_ctrl_handler_init(&ov2659->ctrls, 2);
+>         ov2659->link_frequency =
+>                         v4l2_ctrl_new_std(&ov2659->ctrls, &ov2659_ctrl_ops,
+> @@ -1448,6 +1515,8 @@ static int ov2659_probe(struct i2c_client *client)
+>         ov2659->frame_size = &ov2659_framesizes[2];
+>         ov2659->format_ctrl_regs = ov2659_formats[0].format_ctrl_regs;
+>
+> +       ov2659_power_on(&client->dev);
+> +
+>         ret = ov2659_detect(sd);
+>         if (ret < 0)
+>                 goto error;
+> @@ -1461,10 +1530,15 @@ static int ov2659_probe(struct i2c_client *client)
+>
+>         dev_info(&client->dev, "%s sensor driver registered !!\n", sd->name);
+>
+> +       pm_runtime_set_active(&client->dev);
+> +       pm_runtime_enable(&client->dev);
+> +       pm_runtime_idle(&client->dev);
+> +
+>         return 0;
+>
+>  error:
+>         v4l2_ctrl_handler_free(&ov2659->ctrls);
+> +       ov2659_power_off(&client->dev);
+>         media_entity_cleanup(&sd->entity);
+>         mutex_destroy(&ov2659->lock);
+>         return ret;
+> @@ -1480,9 +1554,18 @@ static int ov2659_remove(struct i2c_client *client)
+>         media_entity_cleanup(&sd->entity);
+>         mutex_destroy(&ov2659->lock);
+>
+> +       pm_runtime_disable(&client->dev);
+> +       if (!pm_runtime_status_suspended(&client->dev))
+> +               ov2659_power_off(&client->dev);
+> +       pm_runtime_set_suspended(&client->dev);
+> +
+>         return 0;
+>  }
+>
+> +static const struct dev_pm_ops ov2659_pm_ops = {
+> +       SET_RUNTIME_PM_OPS(ov2659_power_off, ov2659_power_on, NULL)
+> +};
+> +
+>  static const struct i2c_device_id ov2659_id[] = {
+>         { "ov2659", 0 },
+>         { /* sentinel */ },
+> @@ -1500,6 +1583,7 @@ MODULE_DEVICE_TABLE(of, ov2659_of_match);
+>  static struct i2c_driver ov2659_i2c_driver = {
+>         .driver = {
+>                 .name   = DRIVER_NAME,
+> +               .pm     = &ov2659_pm_ops,
+>                 .of_match_table = of_match_ptr(ov2659_of_match),
+>         },
+>         .probe_new      = ov2659_probe,
+> --
+> 2.17.1
+>
