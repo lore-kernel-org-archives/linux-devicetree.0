@@ -1,7 +1,7 @@
 From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v3 5/5] gpio: syscon: Add support for the Xylon LogiCVC GPIOs
-Date: Fri, 27 Sep 2019 12:04:07 +0200
-Message-ID: <20190927100407.1863293-6-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v3 2/5] dt-bindings: mfd: Document the Xylon LogiCVC multi-function device
+Date: Fri, 27 Sep 2019 12:04:04 +0200
+Message-ID: <20190927100407.1863293-3-paul.kocialkowski@bootlin.com>
 References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,104 +12,71 @@ To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.ke
 Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-The LogiCVC display hardware block comes with GPIO capabilities
-that must be exposed separately from the main driver (as GPIOs) for
-use with regulators and panels. A syscon is used to share the same
-regmap across the two drivers.
-
-Since the GPIO capabilities are pretty simple, add them to the syscon
-GPIO driver.
+The LogiCVC is a display engine which also exposes GPIO functionality.
+For this reason, it is described as a multi-function device that is expected
+to provide register access to its children nodes for gpio and display.
 
 Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 ---
- drivers/gpio/gpio-syscon.c | 68 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+ .../bindings/mfd/xylon,logicvc.yaml           | 50 +++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
 
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 05c537ed73f1..cdcb913b8f0c 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -190,6 +190,70 @@ static const struct syscon_gpio_data keystone_dsp_gpio = {
- 	.set		= keystone_gpio_set,
- };
- 
-+#define LOGICVC_CTRL_REG		0x40
-+#define LOGICVC_CTRL_GPIO_SHIFT		11
-+#define LOGICVC_CTRL_GPIO_BITS		5
+diff --git a/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+new file mode 100644
+index 000000000000..abc9937506e0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 Bootlin
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/mfd/xylon,logicvc.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+#define LOGICVC_POWER_CTRL_REG		0x78
-+#define LOGICVC_POWER_CTRL_GPIO_SHIFT	0
-+#define LOGICVC_POWER_CTRL_GPIO_BITS	4
++title: Xylon LogiCVC multi-function device
 +
-+static void logicvc_gpio_offset(struct syscon_gpio_priv *priv,
-+				unsigned offset, unsigned int *reg,
-+				unsigned int *bit)
-+{
-+	if (offset >= LOGICVC_CTRL_GPIO_BITS) {
-+		*reg = LOGICVC_POWER_CTRL_REG;
++maintainers:
++  - Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 +
-+		/* To the (virtual) power ctrl offset. */
-+		offset -= LOGICVC_CTRL_GPIO_BITS;
-+		/* To the actual bit offset in reg. */
-+		offset += LOGICVC_POWER_CTRL_GPIO_SHIFT;
-+	} else {
-+		*reg = LOGICVC_CTRL_REG;
++description: |
++  The LogiCVC is a display controller that also contains a GPIO controller.
++  As a result, a multi-function device is exposed as parent of the display
++  and GPIO blocks.
 +
-+		/* To the actual bit offset in reg. */
-+		offset += LOGICVC_CTRL_GPIO_SHIFT;
-+	}
++properties:
++  compatible:
++    items:
++      - enum:
++          - xylon,logicvc-3.02.a
++      - const: syscon
++      - const: simple-mfd
 +
-+	*bit = BIT(offset);
-+}
++  reg:
++    maxItems: 1
 +
-+static int logicvc_gpio_get(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct syscon_gpio_priv *priv = gpiochip_get_data(chip);
-+	unsigned int reg;
-+	unsigned int bit;
-+	unsigned int value;
-+	int ret;
++select:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - xylon,logicvc-3.02.a
 +
-+	logicvc_gpio_offset(priv, offset, &reg, &bit);
++  required:
++    - compatible
 +
-+	ret = regmap_read(priv->syscon, reg, &value);
-+	if (ret)
-+		return ret;
++required:
++  - compatible
++  - reg
 +
-+	return !!(value & bit);
-+}
-+
-+static void logicvc_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
-+{
-+	struct syscon_gpio_priv *priv = gpiochip_get_data(chip);
-+	unsigned int reg;
-+	unsigned int bit;
-+
-+	logicvc_gpio_offset(priv, offset, &reg, &bit);
-+
-+	regmap_update_bits(priv->syscon, reg, bit, val ? bit : 0);
-+}
-+
-+static const struct syscon_gpio_data logicvc_gpio = {
-+	.flags		= GPIO_SYSCON_FEAT_OUT,
-+	.bit_count	= LOGICVC_CTRL_GPIO_BITS + LOGICVC_POWER_CTRL_GPIO_BITS,
-+	.get		= logicvc_gpio_get,
-+	.set		= logicvc_gpio_set,
-+};
-+
- static const struct of_device_id syscon_gpio_ids[] = {
- 	{
- 		.compatible	= "cirrus,ep7209-mctrl-gpio",
-@@ -203,6 +267,10 @@ static const struct of_device_id syscon_gpio_ids[] = {
- 		.compatible	= "rockchip,rk3328-grf-gpio",
- 		.data		= &rockchip_rk3328_gpio_mute,
- 	},
-+	{
-+		.compatible	= "xylon,logicvc-3.02.a-gpio",
-+		.data		= &logicvc_gpio,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, syscon_gpio_ids);
++examples:
++  - |
++    logicvc: logicvc@43c00000 {
++      compatible = "xylon,logicvc-3.02.a", "syscon", "simple-mfd";
++      reg = <0x43c00000 0x6000>;
++      #address-cells = <1>;
++      #size-cells = <1>;
++    };
 -- 
 2.23.0
