@@ -1,53 +1,130 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/3] ARM: dts: exynos: Add interrupt to DMC controller in
- Exynos5422
-Date: Fri, 27 Sep 2019 10:53:59 +0200
-Message-ID: <20190927085359.GA19131@pi3>
-References: <20190925161813.21117-1-l.luba@partner.samsung.com>
- <CGME20190925161842eucas1p271a9cf4f62b3d7af02c0a5d0d1eb9c4f@eucas1p2.samsung.com>
- <20190925161813.21117-2-l.luba@partner.samsung.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH] arm64: dts: meson: g12a: add audio devices resets
+Date: Fri, 27 Sep 2019 11:08:54 +0200
+Message-ID: <9ff3a6f8-13c2-856f-f37b-dd96cb45faad@baylibre.com>
+References: <20190925093358.15476-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190925161813.21117-2-l.luba@partner.samsung.com>
+In-Reply-To: <20190925093358.15476-1-jbrunet@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com, kgene@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, robh+dt@kernel.org, willy.mh.wolff.ml@gmail.com
+To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 06:18:11PM +0200, Lukasz Luba wrote:
-> Add interrupt to Dynamic Memory Controller in Exynos5422 and Odroid
-> XU3-family boards. It will be used instead of devfreq polling mode
-> governor. The interrupt is connected to performance counters private
-> for DMC, which might track utilisation of the memory channels.
+On 25/09/2019 11:33, Jerome Brunet wrote:
+> Provide the reset lines coming from the audio clock controller to
+> the audio devices of the g12 family
 > 
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->  arch/arm/boot/dts/exynos5420.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
+>  arch/arm64/boot/dts/amlogic/meson-g12.dtsi | 28 +++++++++++++++++-----
+>  1 file changed, 22 insertions(+), 6 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index ac49373baae7..72738e620d11 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -240,6 +240,8 @@
->  		dmc: memory-controller@10c20000 {
->  			compatible = "samsung,exynos5422-dmc";
->  			reg = <0x10c20000 0x100>, <0x10c30000 0x100>;
-> +			interrupt-parent = <&combiner>;
-> +			interrupts = <16 0>;
-
-You register DMC for DREX0 and DREX1 but take only DREX0 interrupt. Why
-skipping second?
-
-Best regards,
-Krzysztof
-
-
->  			clocks = <&clock CLK_FOUT_SPLL>,
->  				 <&clock CLK_MOUT_SCLK_SPLL>,
->  				 <&clock CLK_FF_DOUT_SPLL2>,
-> -- 
-> 2.17.1
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
+> index 0d9df29994f3..3cf74fc96434 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
+> @@ -103,7 +103,9 @@
+>  			sound-name-prefix = "TODDR_A";
+>  			interrupts = <GIC_SPI 148 IRQ_TYPE_EDGE_RISING>;
+>  			clocks = <&clkc_audio AUD_CLKID_TODDR_A>;
+> -			resets = <&arb AXG_ARB_TODDR_A>;
+> +			resets = <&arb AXG_ARB_TODDR_A>,
+> +				 <&clkc_audio AUD_RESET_TODDR_A>;
+> +			reset-names = "arb", "rst";
+>  			status = "disabled";
+>  		};
+>  
+> @@ -115,7 +117,9 @@
+>  			sound-name-prefix = "TODDR_B";
+>  			interrupts = <GIC_SPI 149 IRQ_TYPE_EDGE_RISING>;
+>  			clocks = <&clkc_audio AUD_CLKID_TODDR_B>;
+> -			resets = <&arb AXG_ARB_TODDR_B>;
+> +			resets = <&arb AXG_ARB_TODDR_B>,
+> +				 <&clkc_audio AUD_RESET_TODDR_B>;
+> +			reset-names = "arb", "rst";
+>  			status = "disabled";
+>  		};
+>  
+> @@ -127,7 +131,9 @@
+>  			sound-name-prefix = "TODDR_C";
+>  			interrupts = <GIC_SPI 150 IRQ_TYPE_EDGE_RISING>;
+>  			clocks = <&clkc_audio AUD_CLKID_TODDR_C>;
+> -			resets = <&arb AXG_ARB_TODDR_C>;
+> +			resets = <&arb AXG_ARB_TODDR_C>,
+> +				 <&clkc_audio AUD_RESET_TODDR_C>;
+> +			reset-names = "arb", "rst";
+>  			status = "disabled";
+>  		};
+>  
+> @@ -139,7 +145,9 @@
+>  			sound-name-prefix = "FRDDR_A";
+>  			interrupts = <GIC_SPI 152 IRQ_TYPE_EDGE_RISING>;
+>  			clocks = <&clkc_audio AUD_CLKID_FRDDR_A>;
+> -			resets = <&arb AXG_ARB_FRDDR_A>;
+> +			resets = <&arb AXG_ARB_FRDDR_A>,
+> +				 <&clkc_audio AUD_RESET_FRDDR_A>;
+> +			reset-names = "arb", "rst";
+>  			status = "disabled";
+>  		};
+>  
+> @@ -151,7 +159,9 @@
+>  			sound-name-prefix = "FRDDR_B";
+>  			interrupts = <GIC_SPI 153 IRQ_TYPE_EDGE_RISING>;
+>  			clocks = <&clkc_audio AUD_CLKID_FRDDR_B>;
+> -			resets = <&arb AXG_ARB_FRDDR_B>;
+> +			resets = <&arb AXG_ARB_FRDDR_B>,
+> +				 <&clkc_audio AUD_RESET_FRDDR_B>;
+> +			reset-names = "arb", "rst";
+>  			status = "disabled";
+>  		};
+>  
+> @@ -163,7 +173,9 @@
+>  			sound-name-prefix = "FRDDR_C";
+>  			interrupts = <GIC_SPI 154 IRQ_TYPE_EDGE_RISING>;
+>  			clocks = <&clkc_audio AUD_CLKID_FRDDR_C>;
+> -			resets = <&arb AXG_ARB_FRDDR_C>;
+> +			resets = <&arb AXG_ARB_FRDDR_C>,
+> +				 <&clkc_audio AUD_RESET_FRDDR_C>;
+> +			reset-names = "arb", "rst";
+>  			status = "disabled";
+>  		};
+>  
+> @@ -249,6 +261,7 @@
+>  			clocks = <&clkc_audio AUD_CLKID_SPDIFIN>,
+>  				 <&clkc_audio AUD_CLKID_SPDIFIN_CLK>;
+>  			clock-names = "pclk", "refclk";
+> +			resets = <&clkc_audio AUD_RESET_SPDIFIN>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -261,6 +274,7 @@
+>  			clocks = <&clkc_audio AUD_CLKID_SPDIFOUT>,
+>  				 <&clkc_audio AUD_CLKID_SPDIFOUT_CLK>;
+>  			clock-names = "pclk", "mclk";
+> +			resets = <&clkc_audio AUD_RESET_SPDIFOUT>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -318,6 +332,7 @@
+>  			clocks = <&clkc_audio AUD_CLKID_SPDIFOUT_B>,
+>  				 <&clkc_audio AUD_CLKID_SPDIFOUT_B_CLK>;
+>  			clock-names = "pclk", "mclk";
+> +			resets = <&clkc_audio AUD_RESET_SPDIFOUT_B>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -326,6 +341,7 @@
+>  			reg = <0x0 0x744 0x0 0x4>;
+>  			#sound-dai-cells = <1>;
+>  			sound-name-prefix = "TOHDMITX";
+> +			resets = <&clkc_audio AUD_RESET_TOHDMITX>;
+>  			status = "disabled";
+>  		};
+>  	};
 > 
+
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
