@@ -1,52 +1,55 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-Date: Fri, 27 Sep 2019 16:47:46 +0300
-Message-ID: <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
-References: <20190510194229.20628-1-aford173@gmail.com>
- <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
- <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
- <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
- <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] checkpatch: Warn if DT bindings are not in schema format
+Date: Fri, 27 Sep 2019 09:02:29 -0500
+Message-ID: <CAL_JsqLtEM9+LK=3YDLnoZbC1v09R9-qfFNEH-gTWj94FAjnyg@mail.gmail.com>
+References: <20190913211349.28245-1-robh@kernel.org> <713b2e5bbab16ddf850245ae1d92be66d9730e02.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <713b2e5bbab16ddf850245ae1d92be66d9730e02.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Joe Perches <joe@perches.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Whitcroft <apw@canonical.com>
 List-Id: devicetree@vger.kernel.org
 
-On 27/09/2019 15:33, Adam Ford wrote:
+On Fri, Sep 13, 2019 at 4:48 PM Joe Perches <joe@perches.com> wrote:
+>
+> On Fri, 2019-09-13 at 16:13 -0500, Rob Herring wrote:
+> > DT bindings are moving to using a json-schema based schema format
+> > instead of freeform text. Add a checkpatch.pl check to encourage using
+> > the schema for new bindings. It's not yet a requirement, but is
+> > progressively being required by some maintainers.
+> []
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> []
+> > @@ -2822,6 +2822,14 @@ sub process {
+> >                            "added, moved or deleted file(s), does MAINTAINERS need updating?\n" . $herecurr);
+> >               }
+> >
+> > +# Check for adding new DT bindings not in schema format
+> > +             if (!$in_commit_log &&
+> > +                 ($line =~ /^new file mode\s*\d+\s*$/) &&
+> > +                 ($realfile =~ m@^Documentation/devicetree/bindings/.*\.txt$@)) {
+> > +                     WARN("DT_SCHEMA_BINDING_PATCH",
+> > +                          "DT bindings should be in DT schema format. See: Documentation/devicetree/writing-schema.rst\n");
+> > +             }
+> > +
+>
+> As this already seems to be git dependent, perhaps
 
->> It looks like a bug in omap clock handling.
->>
->> DSS uses dss1_alwon_fck_3430es2 as fclk. dss1_alwon_fck_3430es2 comes
->> from dpll4_ck, and there's a divider after the PLL, dpll4_m4_ck.
->>
->> When the DSS driver sets dss1_alwon_fck_3430es2 rate to 27000000 or
->> 27870967, which can be created with m4 dividers 32 and 31, it looks like
->> the divider goes to bypass, or to a very small value. DSS gets a very
->> high clock rate and breaks down.
-> 
-> Is there anything I can do to help troubleshoot this?  I could insert
-> a hack that checks if we're omap3 and if so make the divider equal to
-> 4, but that seems like just a hack.
-> I can run more tests or insert code somewhere if you want.
+It's quite rare to see a non git generated diff these days.
 
-I think it's up to someone who's knowledgeable in omap clock framework. 
-I'm kind of hoping that Tero or Tony would be willing to debug =). I can 
-try to find time to debug the omap clk framework, but I'll be going on 
-blindly there.
+> it's easier to read with a single line test like:
+>
+>                 if ($line =~ m{^\s*create mode\s*\d+\s*Documentation/devicetree/bindings/.*\.txt$}) {
+>                         etc...
+>                 }
 
-  Tomi
+I frequently do 'git show $commit | scripts/checkpatch.pl' and this
+doesn't work with that. I really should have a '--pretty=email' in
+there, but I just ignore the commit msg warnings. In any case, that
+still doesn't help because there's no diffstat. There's probably some
+way to turn that on or just use git-format-patch, but really we want
+this to work with any git diff.
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Rob
