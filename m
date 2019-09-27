@@ -1,26 +1,34 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net] of: mdio: Fix a signedness bug in
- of_phy_get_and_connect()
-Date: Fri, 27 Sep 2019 10:20:14 +0200 (CEST)
-Message-ID: <20190927.102014.1540733849871544653.davem@davemloft.net>
-References: <20190925110100.GL3264@mwanda>
+From: Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] ARM: dts: stm32: Enable high resolution timer
+Date: Fri, 27 Sep 2019 10:48:19 +0200
+Message-ID: <20190927084819.645-1-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190925110100.GL3264@mwanda>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dan.carpenter@oracle.com
-Cc: andrew@lunn.ch, lidongpo@hisilicon.com, f.fainelli@gmail.com, hkallweit1@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+To: alexandre.torgue@st.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Date: Wed, 25 Sep 2019 14:01:00 +0300
+Adding always-on makes arm arch_timer claim to be an high resolution timer.
+That is possible because power mode won't stop clocking the timer.
 
-> The "iface" variable is an enum and in this context GCC treats it as
-> an unsigned int so the error handling is never triggered.
-> 
-> Fixes: b78624125304 ("of_mdio: Abstract a general interface for phy connect")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Applied.
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index 9b11654a0a39..74f64745d60d 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -50,6 +50,7 @@
+ 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 		interrupt-parent = <&intc>;
++		always-on;
+ 	};
+ 
+ 	clocks {
+-- 
+2.15.0
