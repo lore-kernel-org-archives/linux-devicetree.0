@@ -1,130 +1,59 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH] arm64: dts: meson: g12a: add audio devices resets
-Date: Fri, 27 Sep 2019 11:08:54 +0200
-Message-ID: <9ff3a6f8-13c2-856f-f37b-dd96cb45faad@baylibre.com>
-References: <20190925093358.15476-1-jbrunet@baylibre.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 03/11] of: address: Report of_dma_get_range() errors meaningfully
+Date: Fri, 27 Sep 2019 11:15:58 +0200
+Message-ID: <CAMuHMdV5Dw2FZcp6K7Kytzxtp7apEQ0FuE1CiOi+R4QVDrhM3A@mail.gmail.com>
+References: <20190927002455.13169-1-robh@kernel.org> <20190927002455.13169-4-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190925093358.15476-1-jbrunet@baylibre.com>
-Content-Language: en-US
+In-Reply-To: <20190927002455.13169-4-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Robin Murphy <robin.murphy@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marek.vasut@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Oza Pawandeep <oza.oza@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On 25/09/2019 11:33, Jerome Brunet wrote:
-> Provide the reset lines coming from the audio clock controller to
-> the audio devices of the g12 family
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-g12.dtsi | 28 +++++++++++++++++-----
->  1 file changed, 22 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
-> index 0d9df29994f3..3cf74fc96434 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12.dtsi
-> @@ -103,7 +103,9 @@
->  			sound-name-prefix = "TODDR_A";
->  			interrupts = <GIC_SPI 148 IRQ_TYPE_EDGE_RISING>;
->  			clocks = <&clkc_audio AUD_CLKID_TODDR_A>;
-> -			resets = <&arb AXG_ARB_TODDR_A>;
-> +			resets = <&arb AXG_ARB_TODDR_A>,
-> +				 <&clkc_audio AUD_RESET_TODDR_A>;
-> +			reset-names = "arb", "rst";
->  			status = "disabled";
->  		};
->  
-> @@ -115,7 +117,9 @@
->  			sound-name-prefix = "TODDR_B";
->  			interrupts = <GIC_SPI 149 IRQ_TYPE_EDGE_RISING>;
->  			clocks = <&clkc_audio AUD_CLKID_TODDR_B>;
-> -			resets = <&arb AXG_ARB_TODDR_B>;
-> +			resets = <&arb AXG_ARB_TODDR_B>,
-> +				 <&clkc_audio AUD_RESET_TODDR_B>;
-> +			reset-names = "arb", "rst";
->  			status = "disabled";
->  		};
->  
-> @@ -127,7 +131,9 @@
->  			sound-name-prefix = "TODDR_C";
->  			interrupts = <GIC_SPI 150 IRQ_TYPE_EDGE_RISING>;
->  			clocks = <&clkc_audio AUD_CLKID_TODDR_C>;
-> -			resets = <&arb AXG_ARB_TODDR_C>;
-> +			resets = <&arb AXG_ARB_TODDR_C>,
-> +				 <&clkc_audio AUD_RESET_TODDR_C>;
-> +			reset-names = "arb", "rst";
->  			status = "disabled";
->  		};
->  
-> @@ -139,7 +145,9 @@
->  			sound-name-prefix = "FRDDR_A";
->  			interrupts = <GIC_SPI 152 IRQ_TYPE_EDGE_RISING>;
->  			clocks = <&clkc_audio AUD_CLKID_FRDDR_A>;
-> -			resets = <&arb AXG_ARB_FRDDR_A>;
-> +			resets = <&arb AXG_ARB_FRDDR_A>,
-> +				 <&clkc_audio AUD_RESET_FRDDR_A>;
-> +			reset-names = "arb", "rst";
->  			status = "disabled";
->  		};
->  
-> @@ -151,7 +159,9 @@
->  			sound-name-prefix = "FRDDR_B";
->  			interrupts = <GIC_SPI 153 IRQ_TYPE_EDGE_RISING>;
->  			clocks = <&clkc_audio AUD_CLKID_FRDDR_B>;
-> -			resets = <&arb AXG_ARB_FRDDR_B>;
-> +			resets = <&arb AXG_ARB_FRDDR_B>,
-> +				 <&clkc_audio AUD_RESET_FRDDR_B>;
-> +			reset-names = "arb", "rst";
->  			status = "disabled";
->  		};
->  
-> @@ -163,7 +173,9 @@
->  			sound-name-prefix = "FRDDR_C";
->  			interrupts = <GIC_SPI 154 IRQ_TYPE_EDGE_RISING>;
->  			clocks = <&clkc_audio AUD_CLKID_FRDDR_C>;
-> -			resets = <&arb AXG_ARB_FRDDR_C>;
-> +			resets = <&arb AXG_ARB_FRDDR_C>,
-> +				 <&clkc_audio AUD_RESET_FRDDR_C>;
-> +			reset-names = "arb", "rst";
->  			status = "disabled";
->  		};
->  
-> @@ -249,6 +261,7 @@
->  			clocks = <&clkc_audio AUD_CLKID_SPDIFIN>,
->  				 <&clkc_audio AUD_CLKID_SPDIFIN_CLK>;
->  			clock-names = "pclk", "refclk";
-> +			resets = <&clkc_audio AUD_RESET_SPDIFIN>;
->  			status = "disabled";
->  		};
->  
-> @@ -261,6 +274,7 @@
->  			clocks = <&clkc_audio AUD_CLKID_SPDIFOUT>,
->  				 <&clkc_audio AUD_CLKID_SPDIFOUT_CLK>;
->  			clock-names = "pclk", "mclk";
-> +			resets = <&clkc_audio AUD_RESET_SPDIFOUT>;
->  			status = "disabled";
->  		};
->  
-> @@ -318,6 +332,7 @@
->  			clocks = <&clkc_audio AUD_CLKID_SPDIFOUT_B>,
->  				 <&clkc_audio AUD_CLKID_SPDIFOUT_B_CLK>;
->  			clock-names = "pclk", "mclk";
-> +			resets = <&clkc_audio AUD_RESET_SPDIFOUT_B>;
->  			status = "disabled";
->  		};
->  
-> @@ -326,6 +341,7 @@
->  			reg = <0x0 0x744 0x0 0x4>;
->  			#sound-dai-cells = <1>;
->  			sound-name-prefix = "TOHDMITX";
-> +			resets = <&clkc_audio AUD_RESET_TOHDMITX>;
->  			status = "disabled";
->  		};
->  	};
-> 
+On Fri, Sep 27, 2019 at 2:25 AM Rob Herring <robh@kernel.org> wrote:
+> From: Robin Murphy <robin.murphy@arm.com>
+>
+> If we failed to translate a DMA address, at least show the offending
+> address rather than the uninitialised contents of the destination
+> argument.
+>
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> ---
+>  drivers/of/address.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 8e354d12fb04..53d2656c2269 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -955,8 +955,8 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+>         dmaaddr = of_read_number(ranges, naddr);
+>         *paddr = of_translate_dma_address(np, ranges);
+>         if (*paddr == OF_BAD_ADDR) {
+> -               pr_err("translation of DMA address(%pad) to CPU address failed node(%pOF)\n",
+
+Yeah, the %pad was wrong on 32-bit without CONFIG_PHYS_ADDR_T_64BIT.
+
+> -                      dma_addr, np);
+> +               pr_err("translation of DMA address(%llx) to CPU address failed node(%pOF)\n",
+> +                      dmaaddr, np);
+>                 ret = -EINVAL;
+>                 goto out;
+>         }
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
