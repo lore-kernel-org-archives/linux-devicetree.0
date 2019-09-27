@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 01/16] media: ti-vpe: vpe: Fix Motion Vector vpdma stride
-Date: Fri, 27 Sep 2019 13:36:35 -0500
-Message-ID: <20190927183650.31345-2-bparrot@ti.com>
+Subject: [Patch 02/16] media: ti-vpe: vpe: Add missing null pointer checks
+Date: Fri, 27 Sep 2019 13:36:36 -0500
+Message-ID: <20190927183650.31345-3-bparrot@ti.com>
 References: <20190927183650.31345-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,95 +12,58 @@ To: Hans Verkuil <hverkuil@xs4all.nl>
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-commit 52831a418fa6 ("[media] media: ti-vpe: vpe: allow use of user
-specified stride") and commit 8c1e4fa17e92 ("[media] media: ti-vpe: vpdma:
-add support for user specified stride") resulted in the Motion Vector
-stride to be the same as the image stride.
+A few NULL pointer checks were missing.
+Add check with appropriate return code.
 
-This caused memory corruption in the output image as mentionned in
-commit 44f98adf71a8 ("[media] media: ti-vpe: vpe: Fix line stride
-for output motion vector").
-
-Fixes: 52831a418fa6 ("[media] media: ti-vpe: vpe: allow use of user specified stride")
-Fixes: 8c1e4fa17e92 ("[media] media: ti-vpe: vpdma: add support for user specified stride")
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Acked-by: Nikhil Devshatwar <nikhil.nd@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ drivers/media/platform/ti-vpe/vpe.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 60b575bb44c4..5ba72445584d 100644
+index 5ba72445584d..56f60dbea15c 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1013,11 +1013,14 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
- 	dma_addr_t dma_addr;
- 	u32 flags = 0;
- 	u32 offset = 0;
-+	u32 stride;
+@@ -1537,6 +1537,8 @@ static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ 		return -EINVAL;
  
- 	if (port == VPE_PORT_MV_OUT) {
- 		vpdma_fmt = &vpdma_misc_fmts[VPDMA_DATA_FMT_MV];
- 		dma_addr = ctx->mv_buf_dma[mv_buf_selector];
- 		q_data = &ctx->q_data[Q_DATA_SRC];
-+		stride = ALIGN((q_data->width * vpdma_fmt->depth) >> 3,
-+			       VPDMA_STRIDE_ALIGN);
- 	} else {
- 		/* to incorporate interleaved formats */
- 		int plane = fmt->coplanar ? p_data->vb_part : 0;
-@@ -1044,6 +1047,7 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
- 		}
- 		/* Apply the offset */
- 		dma_addr += offset;
-+		stride = q_data->bytesperline[VPE_LUMA];
- 	}
+ 	q_data = get_q_data(ctx, f->type);
++	if (!q_data)
++		return -EINVAL;
  
- 	if (q_data->flags & Q_DATA_FRAME_1D)
-@@ -1055,7 +1059,7 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
- 			   MAX_W, MAX_H);
+ 	pix->width = q_data->width;
+ 	pix->height = q_data->height;
+@@ -2001,6 +2003,8 @@ static int vpe_queue_setup(struct vb2_queue *vq,
+ 	struct vpe_q_data *q_data;
  
- 	vpdma_add_out_dtd(&ctx->desc_list, q_data->width,
--			  q_data->bytesperline[VPE_LUMA], &q_data->c_rect,
-+			  stride, &q_data->c_rect,
- 			  vpdma_fmt, dma_addr, MAX_OUT_WIDTH_REG1,
- 			  MAX_OUT_HEIGHT_REG1, p_data->channel, flags);
- }
-@@ -1074,10 +1078,13 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 	dma_addr_t dma_addr;
- 	u32 flags = 0;
- 	u32 offset = 0;
-+	u32 stride;
+ 	q_data = get_q_data(ctx, vq->type);
++	if (!q_data)
++		return -EINVAL;
  
- 	if (port == VPE_PORT_MV_IN) {
- 		vpdma_fmt = &vpdma_misc_fmts[VPDMA_DATA_FMT_MV];
- 		dma_addr = ctx->mv_buf_dma[mv_buf_selector];
-+		stride = ALIGN((q_data->width * vpdma_fmt->depth) >> 3,
-+			       VPDMA_STRIDE_ALIGN);
- 	} else {
- 		/* to incorporate interleaved formats */
- 		int plane = fmt->coplanar ? p_data->vb_part : 0;
-@@ -1104,6 +1111,7 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 		}
- 		/* Apply the offset */
- 		dma_addr += offset;
-+		stride = q_data->bytesperline[VPE_LUMA];
+ 	*nplanes = q_data->nplanes;
  
- 		if (q_data->flags & Q_DATA_INTERLACED_SEQ_TB) {
- 			/*
-@@ -1139,10 +1147,10 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 	if (p_data->vb_part && fmt->fourcc == V4L2_PIX_FMT_NV12)
- 		frame_height /= 2;
+@@ -2025,6 +2029,8 @@ static int vpe_buf_prepare(struct vb2_buffer *vb)
+ 	vpe_dbg(ctx->dev, "type: %d\n", vb->vb2_queue->type);
  
--	vpdma_add_in_dtd(&ctx->desc_list, q_data->width,
--			 q_data->bytesperline[VPE_LUMA], &q_data->c_rect,
--		vpdma_fmt, dma_addr, p_data->channel, field, flags, frame_width,
--		frame_height, 0, 0);
-+	vpdma_add_in_dtd(&ctx->desc_list, q_data->width, stride,
-+			 &q_data->c_rect, vpdma_fmt, dma_addr,
-+			 p_data->channel, field, flags, frame_width,
-+			 frame_height, 0, 0);
- }
+ 	q_data = get_q_data(ctx, vb->vb2_queue->type);
++	if (!q_data)
++		return -EINVAL;
+ 	num_planes = q_data->nplanes;
  
- /*
+ 	if (vb->vb2_queue->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
+@@ -2481,7 +2487,12 @@ static int vpe_probe(struct platform_device *pdev)
+ 	mutex_init(&dev->dev_mutex);
+ 
+ 	dev->res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-			"vpe_top");
++						"vpe_top");
++	if (!dev->res) {
++		dev_err(&pdev->dev, "missing 'vpe_top' resources data\n");
++		return -ENODEV;
++	}
++
+ 	/*
+ 	 * HACK: we get resource info from device tree in the form of a list of
+ 	 * VPE sub blocks, the driver currently uses only the base of vpe_top
 -- 
 2.17.1
