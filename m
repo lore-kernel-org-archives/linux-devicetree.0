@@ -1,64 +1,47 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] dt-bindings: timer: Use defines instead of numbers in
- Exynos MCT examples
-Date: Fri, 27 Sep 2019 08:52:29 +0200
-Message-ID: <20190927065229.GA18923@pi3>
-References: <CGME20190926183707epcas3p350fe17bc738540b37f1130d967c31a62@epcas3p3.samsung.com>
- <20190926183643.7118-1-krzk@kernel.org>
- <fc0809b0-1e6a-0564-75d9-0ccb14d2826c@samsung.com>
+From: Dongchun Zhu <dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] media: i2c: ov5695: Modify the function of async register
+ subdev related devices
+Date: Fri, 27 Sep 2019 15:18:24 +0800
+Message-ID: <20190927071824.18675-2-dongchun.zhu@mediatek.com>
+References: <20190927071824.18675-1-dongchun.zhu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <fc0809b0-1e6a-0564-75d9-0ccb14d2826c@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190927071824.18675-1-dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bingbu.cao-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, shengnan.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, louis.kuo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 08:36:47AM +0200, Marek Szyprowski wrote:
-> Hi Krzysztof,
- >   
-> >       timer@10050000 {
-> >           compatible = "samsung,exynos4412-mct";
-> >           reg = <0x10050000 0x800>;
-> >   
-> > -        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> > -                     <0 42 0>;
-> > +        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> 
-> the last one should be GIC_PPI
-> 
-> >       };
-> >   
-> >     - |
-> >       // In this example, the IP contains four local timers, but using
-> >       // a per-processor interrupt to handle them. All the local timer
-> >       // interrupts are specified.
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >   
-> >       timer@10050000 {
-> >           compatible = "samsung,exynos4412-mct";
-> >           reg = <0x10050000 0x800>;
-> >   
-> > -        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
-> > -                     <0 42 0>, <0 42 0>, <0 42 0>, <0 42 0>;
-> > +        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-> > +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> 
-> again, last 4 entries should use GIC_PPI
+This patch adds support for registering a sensor sub-device to the async sub-device framework and parse set up common
+sensor related devices such as actuator/VCM.
 
-Indeed, thanks for noticing it.
+Signed-off-by: Dongchun Zhu <dongchun.zhu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/media/i2c/ov5695.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/media/i2c/ov5695.c b/drivers/media/i2c/ov5695.c
+index e65a943..b6ee62c 100644
+--- a/drivers/media/i2c/ov5695.c
++++ b/drivers/media/i2c/ov5695.c
+@@ -1328,7 +1328,7 @@ static int ov5695_probe(struct i2c_client *client,
+ 		goto err_power_off;
+ #endif
+ 
+-	ret = v4l2_async_register_subdev(sd);
++	ret = v4l2_async_register_subdev_sensor_common(sd);
+ 	if (ret) {
+ 		dev_err(dev, "v4l2 async register subdev failed\n");
+ 		goto err_clean_entity;
+-- 
+2.9.2
