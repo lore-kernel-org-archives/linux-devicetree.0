@@ -1,54 +1,65 @@
-From: Benjamin GAIGNARD <benjamin.gaignard@st.com>
+From: Marc Zyngier <maz@kernel.org>
 Subject: Re: [PATCH] ARM: dts: stm32: Enable high resolution timer
-Date: Fri, 27 Sep 2019 12:36:20 +0000
-Message-ID: <341949c8-7864-5d65-2797-988022724a4c@st.com>
+Date: Fri, 27 Sep 2019 13:41:03 +0100
+Message-ID: <ff11797da8f049b354797689754fde52@www.loen.fr>
 References: <20190927084819.645-1-benjamin.gaignard@st.com>
  <da48ce9633441cd0186518fa7ce1d528@www.loen.fr>
+ <341949c8-7864-5d65-2797-988022724a4c@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <da48ce9633441cd0186518fa7ce1d528@www.loen.fr>
-Content-Language: en-US
-Content-ID: <886CBEEE619ADF48BFF7435C2FD21580@st.com>
+In-Reply-To: <341949c8-7864-5d65-2797-988022724a4c@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <maz@kernel.org>
-Cc: Alexandre TORGUE <alexandre.torgue@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc: Alexandre TORGUE <alexandre.torgue@st.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQpPbiA5LzI3LzE5IDE6MjIgUE0sIE1hcmMgWnluZ2llciB3cm90ZToNCj4gT24gMjAxOS0wOS0y
-NyAwOTo0OCwgQmVuamFtaW4gR2FpZ25hcmQgd3JvdGU6DQo+PiBBZGRpbmcgYWx3YXlzLW9uIG1h
-a2VzIGFybSBhcmNoX3RpbWVyIGNsYWltIHRvIGJlIGFuIGhpZ2ggcmVzb2x1dGlvbiANCj4+IHRp
-bWVyLg0KPj4gVGhhdCBpcyBwb3NzaWJsZSBiZWNhdXNlIHBvd2VyIG1vZGUgd29uJ3Qgc3RvcCBj
-bG9ja2luZyB0aGUgdGltZXIuDQo+DQo+IFRoZSAiYWx3YXlzLW9uIiBpcyBub3QgYWJvdXQgdGhl
-IGNsb2NrLiBJdCBpcyBhYm91dCB0aGUgY29tcGFyYXRvci4NCj4gVGhlIGNsb2NrIGl0c2VsZiBp
-cyAqZ3VhcmFudGVlZCogdG8gYWx3YXlzIHRpY2suIElmIGl0IGRpZG4ndCwgdGhhdCdkIGJlDQo+
-IGFuIGludGVncmF0aW9uIGJ1ZywgYW5kIGEgcHJldHR5IGJhZCBvbmUuDQo+DQo+IFdoYXQgeW91
-J3JlIGNsYWltaW5nIGhlcmUgaXMgdGhhdCB5b3VyIENQVSBuZXZlciBlbnRlcnMgYSBsb3ctcG93
-ZXIgbW9kZT8NCj4gRXZlcj8gSSBmaW5kIHRoaXMgdmVyeSBoYXJkIHRvIGJlbGlldmUuDQo+DQo+
-IEZ1cnRoZXJtb3JlLCBjbGFpbWluZyB0aGF0IGFsd2F5cy1vbiBpcyB0aGUgd2F5IHRvIGZvcmNl
-IHRoZSBhcmNoLXRpbWVyDQo+IHRvIGJlIGFuIGhydGltZXIgaXMgZmFjdHVhbGx5IHdyb25nLiBU
-aGlzIGlzIHdoYXQgaGFwcGVucyAqaWYqIHRoaXMgaXMNCj4gdGhlIG9ubHkgdGltZXIgaW4gdGhl
-IHN5c3RlbS4gVGhlIG9ubHkgY2FzZSB0aGlzIGlzIHRydWUgaXMgZm9yIHZpcnR1YWwNCj4gbWFj
-aGluZXMuIEFueXRoaW5nIGVsc2UgaGFzIGEgZ2xvYmFsIHRpbWVyIHNvbWV3aGVyZSB0aGF0IHdp
-bGwgYWxsb3cNCj4gdGhlIGFyY2ggdGltZXJzIHRvIGJlIHVzZWQgYXMgYW4gaHJ0aW1lci4NCj4N
-Cj4gSSdtIHByZXR0eSBzdXJlIHlvdSB0b28gaGF2ZSBhIGdsb2JhbCB0aW1lciBzb21ld2hlcmUg
-aW4geW91ciBzeXN0ZW0uDQo+IEVuYWJsZSBpdCwgYW5kIGVuam95IGhydGltZXJzIHdpdGhvdXQg
-aGF2aW5nIHRvIGxpZSBhYm91dCB0aGUgcHJvcGVydGllcw0KPiBvZiB5b3VyIHN5c3RlbSEgOy0p
-DQoNCkhpIE1hcmMsDQoNClRoaXMgU29DIGRvZXNuJ3QgaGF2ZSBhbnkgb3RoZXIgZ2xvYmFsIHRp
-bWVyLiBVc2UgYXJjaF90aW1lIGlzIHRoZSBvbmx5DQp3ZSBoYXZlIHRvIHByb3ZpZGUgaHJ0aW1l
-ciBvbiB0aGlzIHN5c3RlbS4NCg0KQmVuamFtaW4NCg0KPg0KPiDCoMKgwqDCoMKgwqDCoCBNLg0K
-Pg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWln
-bmFyZEBzdC5jb20+DQo+PiAtLS0NCj4+IMKgYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJtcDE1N2Mu
-ZHRzaSB8IDEgKw0KPj4gwqAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4+DQo+PiBk
-aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJtcDE1N2MuZHRzaQ0KPj4gYi9hcmNo
-L2FybS9ib290L2R0cy9zdG0zMm1wMTU3Yy5kdHNpDQo+PiBpbmRleCA5YjExNjU0YTBhMzkuLjc0
-ZjY0NzQ1ZDYwZCAxMDA2NDQNCj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTdj
-LmR0c2kNCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTdjLmR0c2kNCj4+IEBA
-IC01MCw2ICs1MCw3IEBADQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDxH
-SUNfUFBJIDExIChHSUNfQ1BVX01BU0tfU0lNUExFKDQpIHwgDQo+PiBJUlFfVFlQRV9MRVZFTF9M
-T1cpPiwNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPEdJQ19QUEkgMTAg
-KEdJQ19DUFVfTUFTS19TSU1QTEUoNCkgfCANCj4+IElSUV9UWVBFX0xFVkVMX0xPVyk+Ow0KPj4g
-wqDCoMKgwqDCoMKgwqDCoCBpbnRlcnJ1cHQtcGFyZW50ID0gPCZpbnRjPjsNCj4+ICvCoMKgwqDC
-oMKgwqDCoCBhbHdheXMtb247DQo+PiDCoMKgwqDCoCB9Ow0KPj4NCj4+IMKgwqDCoMKgIGNsb2Nr
-cyB7DQo+
+On 2019-09-27 13:36, Benjamin GAIGNARD wrote:
+> On 9/27/19 1:22 PM, Marc Zyngier wrote:
+>> On 2019-09-27 09:48, Benjamin Gaignard wrote:
+>>> Adding always-on makes arm arch_timer claim to be an high 
+>>> resolution
+>>> timer.
+>>> That is possible because power mode won't stop clocking the timer.
+>>
+>> The "always-on" is not about the clock. It is about the comparator.
+>> The clock itself is *guaranteed* to always tick. If it didn't, 
+>> that'd be
+>> an integration bug, and a pretty bad one.
+>>
+>> What you're claiming here is that your CPU never enters a low-power 
+>> mode?
+>> Ever? I find this very hard to believe.
+>>
+>> Furthermore, claiming that always-on is the way to force the 
+>> arch-timer
+>> to be an hrtimer is factually wrong. This is what happens *if* this 
+>> is
+>> the only timer in the system. The only case this is true is for 
+>> virtual
+>> machines. Anything else has a global timer somewhere that will allow
+>> the arch timers to be used as an hrtimer.
+>>
+>> I'm pretty sure you too have a global timer somewhere in your 
+>> system.
+>> Enable it, and enjoy hrtimers without having to lie about the 
+>> properties
+>> of your system! ;-)
+>
+> Hi Marc,
+>
+> This SoC doesn't have any other global timer. Use arch_time is the 
+> only
+> we have to provide hrtimer on this system.
+
+And you don't have any form of power management either? What happens 
+when
+your CPU goes into idle? If your system does any form of power 
+management
+*and* doesn't have a separate timer, it is remarkably broken.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
