@@ -1,7 +1,7 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 11/11] of/address: Fix of_pci_range_parser_one translation of DMA addresses
-Date: Thu, 26 Sep 2019 19:24:55 -0500
-Message-ID: <20190927002455.13169-12-robh@kernel.org>
+Subject: [PATCH 10/11] of/address: Translate 'dma-ranges' for parent nodes missing 'dma-ranges'
+Date: Thu, 26 Sep 2019 19:24:54 -0500
+Message-ID: <20190927002455.13169-11-robh@kernel.org>
 References: <20190927002455.13169-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,69 +12,37 @@ To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Robin Murphy <robin.murphy@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marek.vasut@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Oza Pawandeep <oza.oza@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-of_pci_range_parser_one() has a bug when parsing dma-ranges. When it
-translates the parent address (aka cpu address in the code), 'ranges' is
-always being used. This happens to work because most users are just 1:1
-translation.
+'dma-ranges' frequently exists without parent nodes having 'dma-ranges'.
+While this is an error for 'ranges', this is fine because DMA capable
+devices always have a translatable DMA address. Also, with no
+'dma-ranges' at all, the assumption is that DMA addresses are 1:1 with
+no restrictions unless perhaps the device itself has implicit
+restrictions.
 
 Cc: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/address.c       | 15 ++++++++++++---
- include/linux/of_address.h |  1 +
- 2 files changed, 13 insertions(+), 3 deletions(-)
+ drivers/of/address.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 5b835d332709..54011a355b81 100644
+index e918001c7798..5b835d332709 100644
 --- a/drivers/of/address.c
 +++ b/drivers/of/address.c
-@@ -243,6 +243,7 @@ static int parser_init(struct of_pci_range_parser *parser,
- 	parser->node = node;
- 	parser->pna = of_n_addr_cells(node);
- 	parser->np = parser->pna + na + ns;
-+	parser->dma = !strcmp(name, "dma-ranges");
- 
- 	parser->range = of_get_property(node, name, &rlen);
- 	if (parser->range == NULL)
-@@ -281,7 +282,11 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
- 	range->pci_space = be32_to_cpup(parser->range);
- 	range->flags = of_bus_pci_get_flags(parser->range);
- 	range->pci_addr = of_read_number(parser->range + 1, ns);
--	range->cpu_addr = of_translate_address(parser->node,
-+	if (parser->dma)
-+		range->cpu_addr = of_translate_dma_address(parser->node,
-+				parser->range + na);
-+	else
-+		range->cpu_addr = of_translate_address(parser->node,
- 				parser->range + na);
- 	range->size = of_read_number(parser->range + parser->pna + na, ns);
- 
-@@ -294,8 +299,12 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
- 
- 		flags = of_bus_pci_get_flags(parser->range);
- 		pci_addr = of_read_number(parser->range + 1, ns);
--		cpu_addr = of_translate_address(parser->node,
--				parser->range + na);
-+		if (parser->dma)
-+			cpu_addr = of_translate_dma_address(parser->node,
-+					parser->range + na);
-+		else
-+			cpu_addr = of_translate_address(parser->node,
-+					parser->range + na);
- 		size = of_read_number(parser->range + parser->pna + na, ns);
- 
- 		if (flags != range->flags)
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index ddda3936039c..eac7ab109df4 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -12,6 +12,7 @@ struct of_pci_range_parser {
- 	const __be32 *end;
- 	int np;
- 	int pna;
-+	bool dma;
- };
- 
- struct of_pci_range {
+@@ -519,9 +519,13 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
+ 	 *
+ 	 * As far as we know, this damage only exists on Apple machines, so
+ 	 * This code is only enabled on powerpc. --gcl
++	 *
++	 * This quirk also applies for 'dma-ranges' which frequently exist in
++	 * child nodes without 'dma-ranges' in the parent nodes. --RobH
+ 	 */
+ 	ranges = of_get_property(parent, rprop, &rlen);
+-	if (ranges == NULL && !of_empty_ranges_quirk(parent)) {
++	if (ranges == NULL && !of_empty_ranges_quirk(parent) &&
++	    strcmp(rprop, "dma-ranges")) {
+ 		pr_debug("no ranges; cannot translate\n");
+ 		return 1;
+ 	}
 -- 
 2.20.1
