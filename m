@@ -1,69 +1,59 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: dmaengine: dma-common: Change
- dma-channel-mask to uint32-array
-Date: Fri, 27 Sep 2019 15:25:39 -0500
-Message-ID: <20190927202539.GA20669@bogus>
-References: <20190926111954.9184-1-peter.ujfalusi@ti.com>
- <20190926111954.9184-2-peter.ujfalusi@ti.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Subject: Re: [Patch v4 4/8] media: i2c: ov2659: fix s_stream return value
+Date: Fri, 27 Sep 2019 21:33:28 +0100
+Message-ID: <CA+V-a8t3h6+2a8QWKWNwROJRz546rGbUyXs5ez9wtH6AQ-euPA@mail.gmail.com>
+References: <20190927184722.31989-1-bparrot@ti.com> <20190927184722.31989-5-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190926111954.9184-2-peter.ujfalusi@ti.com>
+In-Reply-To: <20190927184722.31989-5-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 02:19:52PM +0300, Peter Ujfalusi wrote:
-> Make the dma-channel-mask to be usable for controllers with more than 32
-> channels.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Hi Benoit,
+
+thank you for the patch.
+
+On Fri, Sep 27, 2019 at 7:46 PM Benoit Parrot <bparrot@ti.com> wrote:
+>
+> In ov2659_s_stream() return value for invoked function should be checked
+> and propagated.
+>
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
 > ---
->  Documentation/devicetree/bindings/dma/dma-common.yaml | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
-> index ed0a49a6f020..4527f20301ff 100644
-> --- a/Documentation/devicetree/bindings/dma/dma-common.yaml
-> +++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
-> @@ -25,11 +25,18 @@ properties:
->        Used to provide DMA controller specific information.
->  
->    dma-channel-mask:
-> -    $ref: /schemas/types.yaml#definitions/uint32
->      description:
->        Bitmask of available DMA channels in ascending order that are
->        not reserved by firmware and are available to the
->        kernel. i.e. first channel corresponds to LSB.
-> +      The first item in the array is for channels 0-31, the second is for
-> +      channels 32-63, etc.
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        items:
-> +          minItems: 1
-> +          # Should be enough
-> +          maxItems: 255
+>  drivers/media/i2c/ov2659.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+> index f77320e8a60d..cd4625432264 100644
+> --- a/drivers/media/i2c/ov2659.c
+> +++ b/drivers/media/i2c/ov2659.c
+> @@ -1187,10 +1187,13 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
+>                 goto unlock;
+>         }
+>
+> -       ov2659_set_pixel_clock(ov2659);
+> -       ov2659_set_frame_size(ov2659);
+> -       ov2659_set_format(ov2659);
+> -       ov2659_set_streaming(ov2659, 1);
+> +       ret = ov2659_set_pixel_clock(ov2659);
+> +       if (!ret)
+> +               ret = ov2659_set_frame_size(ov2659);
+> +       if (!ret)
+> +               ret = ov2659_set_format(ov2659);
+> +       if (!ret)
+> +               ov2659_set_streaming(ov2659, 1);
+>         ov2659->streaming = on;
+>
+the "ov2659->streaming = on;" should only be set if above calls
+succeed, otherwise we might hit -EBUSY during set_fmt.
 
-'items' has to be a separate sub-schema from $ref to have any effect:
+Cheers,
+--Prabhakar Lad
 
-    allOf:
-      - $ref: /schemas/types.yaml#/definitions/uint32-array                                                        
-    items:
-      minItems: 1
-      # Should be enough
-      maxItems: 255
-
-Or (note the added '-'):
-
-    allOf:                                                                                                            
-      - $ref: /schemas/types.yaml#/definitions/uint32-array                                                           
-      - items:                                                                                                            
-          minItems: 1                                                                                                     
-          # Should be enough                                                                                              
-          maxItems: 255                                                                                                   
-
-The first way is my preference.
-
-Rob
+>  unlock:
+> --
+> 2.17.1
+>
