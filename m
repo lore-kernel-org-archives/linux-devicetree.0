@@ -1,82 +1,48 @@
 From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v3 2/5] dt-bindings: mfd: Document the Xylon LogiCVC multi-function device
-Date: Fri, 27 Sep 2019 12:04:04 +0200
-Message-ID: <20190927100407.1863293-3-paul.kocialkowski@bootlin.com>
-References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
+Subject: [PATCH v3 0/5] LogiCVC mfd and GPIO support
+Date: Fri, 27 Sep 2019 12:04:02 +0200
+Message-ID: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-The LogiCVC is a display engine which also exposes GPIO functionality.
-For this reason, it is described as a multi-function device that is expected
-to provide register access to its children nodes for gpio and display.
+This series introduces support for the LogiCVC GPIO block to the syscon GPIO
+driver, with dt bindings documentation also including the top-level mfd
+component.
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
----
- .../bindings/mfd/xylon,logicvc.yaml           | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
+Changes since v2:
+- Fixed dt schema examples.
+
+Changes since v1:
+- Converted dt bindings documentation to dt schemas;
+- Used BIT macro and removed version from structure name;
+- Improved documentation example with gpio-line-names;
+- Added vendor prefix to dt bindings;
+- Added mfd component dt bindings documentation.
+
+Cheers,
+
+Paul
+
+
+Paul Kocialkowski (5):
+  dt-bindings: Add Xylon vendor prefix
+  dt-bindings: mfd: Document the Xylon LogiCVC multi-function device
+  gpio: syscon: Add support for a custom get operation
+  dt-bindings: gpio: Document the Xylon LogiCVC GPIO controller
+  gpio: syscon: Add support for the Xylon LogiCVC GPIOs
+
+ .../bindings/gpio/xylon,logicvc-gpio.yaml     | 69 +++++++++++++++++
+ .../bindings/mfd/xylon,logicvc.yaml           | 50 +++++++++++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+ drivers/gpio/gpio-syscon.c                    | 75 ++++++++++++++++++-
+ 4 files changed, 193 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/xylon,logicvc-gpio.yaml
  create mode 100644 Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
 
-diff --git a/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
-new file mode 100644
-index 000000000000..abc9937506e0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019 Bootlin
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/mfd/xylon,logicvc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Xylon LogiCVC multi-function device
-+
-+maintainers:
-+  - Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-+
-+description: |
-+  The LogiCVC is a display controller that also contains a GPIO controller.
-+  As a result, a multi-function device is exposed as parent of the display
-+  and GPIO blocks.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - xylon,logicvc-3.02.a
-+      - const: syscon
-+      - const: simple-mfd
-+
-+  reg:
-+    maxItems: 1
-+
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - xylon,logicvc-3.02.a
-+
-+  required:
-+    - compatible
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    logicvc: logicvc@43c00000 {
-+      compatible = "xylon,logicvc-3.02.a", "syscon", "simple-mfd";
-+      reg = <0x43c00000 0x6000>;
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+    };
 -- 
 2.23.0
