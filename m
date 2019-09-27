@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v4 3/8] media: i2c: ov2659: Cleanup include file list
-Date: Fri, 27 Sep 2019 13:47:17 -0500
-Message-ID: <20190927184722.31989-4-bparrot@ti.com>
+Subject: [Patch v4 4/8] media: i2c: ov2659: fix s_stream return value
+Date: Fri, 27 Sep 2019 13:47:18 -0500
+Message-ID: <20190927184722.31989-5-bparrot@ti.com>
 References: <20190927184722.31989-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,49 +12,35 @@ To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.co
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Several of include files listed are not explicitly needed.
-If they are need then they are implicitly included.
-
-Reduce the list of includes to an easier to manage list.
+In ov2659_s_stream() return value for invoked function should be checked
+and propagated.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/i2c/ov2659.c | 14 --------------
- 1 file changed, 14 deletions(-)
+ drivers/media/i2c/ov2659.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index efbe6dc720e2..f77320e8a60d 100644
+index f77320e8a60d..cd4625432264 100644
 --- a/drivers/media/i2c/ov2659.c
 +++ b/drivers/media/i2c/ov2659.c
-@@ -22,29 +22,15 @@
+@@ -1187,10 +1187,13 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
+ 		goto unlock;
+ 	}
  
- #include <linux/clk.h>
- #include <linux/delay.h>
--#include <linux/err.h>
--#include <linux/init.h>
--#include <linux/interrupt.h>
--#include <linux/io.h>
- #include <linux/i2c.h>
--#include <linux/kernel.h>
--#include <linux/media.h>
- #include <linux/module.h>
--#include <linux/of.h>
- #include <linux/of_graph.h>
--#include <linux/slab.h>
--#include <linux/uaccess.h>
--#include <linux/videodev2.h>
+-	ov2659_set_pixel_clock(ov2659);
+-	ov2659_set_frame_size(ov2659);
+-	ov2659_set_format(ov2659);
+-	ov2659_set_streaming(ov2659, 1);
++	ret = ov2659_set_pixel_clock(ov2659);
++	if (!ret)
++		ret = ov2659_set_frame_size(ov2659);
++	if (!ret)
++		ret = ov2659_set_format(ov2659);
++	if (!ret)
++		ov2659_set_streaming(ov2659, 1);
+ 	ov2659->streaming = on;
  
--#include <media/media-entity.h>
- #include <media/i2c/ov2659.h>
--#include <media/v4l2-common.h>
- #include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-event.h>
- #include <media/v4l2-fwnode.h>
- #include <media/v4l2-image-sizes.h>
--#include <media/v4l2-mediabus.h>
- #include <media/v4l2-subdev.h>
- 
- #define DRIVER_NAME "ov2659"
+ unlock:
 -- 
 2.17.1
