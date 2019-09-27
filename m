@@ -1,59 +1,115 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
-Date: Fri, 27 Sep 2019 07:13:59 -0500
-Message-ID: <CAHCN7x+ysOEXFCE5DXvoPh6sQBdnHRE8t-KJfcijWesJRx9iXg@mail.gmail.com>
-References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com> <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com> <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <f6012b3a-7b96-6020-d09d-c458fa8742d8@ti.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 2/2] ptp: Add a ptp clock driver for IDT ClockMatrix.
+Date: Fri, 27 Sep 2019 14:25:18 +0200
+Message-ID: <20190927122518.GA25474@lunn.ch>
+References: <1569556128-22212-1-git-send-email-vincent.cheng.xh@renesas.com>
+ <1569556128-22212-2-git-send-email-vincent.cheng.xh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f6012b3a-7b96-6020-d09d-c458fa8742d8@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1569556128-22212-2-git-send-email-vincent.cheng.xh@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: vincent.cheng.xh@renesas.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, richardcochran@gmail.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 1:22 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
->
-> On 26/09/2019 17:12, Adam Ford wrote:
->
-> >> And what is the hdmi5_configure there? I don't see anything in the
-> >> driver that would print hdmi5_configure. And, of course, there's no
-> >> hdmi5 on that platform. Hmm, ok... it's from component.c, using "%ps".
-> >> Somehow that goes wrong. Which is a bit alarming, but perhaps a totally
-> >> different issue.
-> >
-> > I'll try to take a look later.  For Logic PD distributions, we create
-> > a custom defconfig with all those drivers removed, so I'm not worked
-> > up about it, but it would be nice to not call drivers that don't
-> > exist.
->
-> So you have CONFIG_OMAP5_DSS_HDMI=n? Then it's even more disturbing, as
-> there's no way the string "hdmi5_configure" can be in the kernel image...
+> +static s32 idtcm_xfer(struct idtcm *idtcm,
+> +		      u8 regaddr,
+> +		      u8 *buf,
+> +		      u16 count,
+> +		      bool write)
+> +{
+> +	struct i2c_client *client = idtcm->client;
+> +	struct i2c_msg msg[2];
+> +	s32 cnt;
+> +
+> +	msg[0].addr = client->addr;
+> +	msg[0].flags = 0;
+> +	msg[0].len = 1;
+> +	msg[0].buf = &regaddr;
+> +
+> +	msg[1].addr = client->addr;
+> +	msg[1].flags = write ? 0 : I2C_M_RD;
+> +	msg[1].len = count;
+> +	msg[1].buf = buf;
+> +
+> +	cnt = i2c_transfer(client->adapter, msg, 2);
+> +
+> +	if (cnt < 0) {
+> +		dev_err(&client->dev, "i2c_transfer returned %d\n", cnt);
+> +		return cnt;
+> +	} else if (cnt != 2) {
+> +		dev_err(&client->dev,
+> +			"i2c_transfer sent only %d of %d messages\n", cnt, 2);
+> +		return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static s32 idtcm_page_offset(struct idtcm *idtcm, u8 val)
+> +{
+> +	u8 buf[4];
+> +	s32 err;
 
-For the logs and problems I am showing in this thread, I am using a
-stock omap2plus_defconfig which has it enabled.  I was only trying to
-state that I am not worried about the omap5 hdmi stuff, because when I
-do a custom distribution for Logic PD, I remove those config options
-to make the issue go away.
->
-> Maybe it's nothing, but... It's just so odd.
+Hi Vincent
 
-I don't think we need to worry about it now.  Ideally, it would be
-nice to have the drivers recognize they are not needed and or setup
-the Kconfig options to make these drivers dependent on the platforms
-that support it so unselecting OMAP5 could make the omap5 options
-disappear.
+All your functions return s32, rather than the usual int. err is an
+s32.  i2c_transfer() will return an int, which you then assign to an
+s32.  I've no idea, but maybe the static code checkers like smatch
+will complain about this, especially on 64 bit systems? I suspect on
+64 bit machines, the compiler will be generating worse code, masking
+registers? Maybe use int, not s32?
 
-Sorry if I accidentally threw in a distraction or confusion.
+> +static s32 set_pll_output_mask(struct idtcm *idtcm, u16 addr, u8 val)
+> +{
+> +	s32 err = 0;
+> +
+> +	switch (addr) {
+> +	case OUTPUT_MASK_PLL0_ADDR:
+> +		SET_U16_LSB(idtcm->channel[0].output_mask, val);
+> +		break;
+> +	case OUTPUT_MASK_PLL0_ADDR + 1:
+> +		SET_U16_MSB(idtcm->channel[0].output_mask, val);
+> +		break;
+> +	case OUTPUT_MASK_PLL1_ADDR:
+> +		SET_U16_LSB(idtcm->channel[1].output_mask, val);
+> +		break;
+> +	case OUTPUT_MASK_PLL1_ADDR + 1:
+> +		SET_U16_MSB(idtcm->channel[1].output_mask, val);
+> +		break;
+> +	case OUTPUT_MASK_PLL2_ADDR:
+> +		SET_U16_LSB(idtcm->channel[2].output_mask, val);
+> +		break;
+> +	case OUTPUT_MASK_PLL2_ADDR + 1:
+> +		SET_U16_MSB(idtcm->channel[2].output_mask, val);
+> +		break;
+> +	case OUTPUT_MASK_PLL3_ADDR:
+> +		SET_U16_LSB(idtcm->channel[3].output_mask, val);
+> +		break;
+> +	case OUTPUT_MASK_PLL3_ADDR + 1:
+> +		SET_U16_MSB(idtcm->channel[3].output_mask, val);
+> +		break;
+> +	default:
+> +		err = -1;
 
-adam
->
->   Tomi
->
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+EINVAL?
+
+> +		break;
+> +	}
+> +
+> +	return err;
+> +}
+
+> +static void set_default_function_pointers(struct idtcm *idtcm)
+> +{
+> +	idtcm->_idtcm_gettime = _idtcm_gettime;
+> +	idtcm->_idtcm_settime = _idtcm_settime;
+> +	idtcm->_idtcm_rdwr = idtcm_rdwr;
+> +	idtcm->_sync_pll_output = sync_pll_output;
+> +}
+
+Why does this indirection? Are the SPI versions of the silicon?
+
+    Andrew
