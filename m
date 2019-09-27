@@ -1,90 +1,34 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v3] dt-bindings: gpu: Convert Samsung 2D Graphics
- Accelerator to dt-schema
-Date: Fri, 27 Sep 2019 16:33:19 +0200
-Message-ID: <20190927143319.12232-1-m.szyprowski@samsung.com>
-References: <CGME20190927143325eucas1p289cb46e8dcbb1ace0b1f80ade738c29b@eucas1p2.samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V9 1/2] dt-bindings: mailbox: add binding doc for the ARM
+  SMC/HVC mailbox
+Date: Fri, 27 Sep 2019 09:46:46 -0500
+Message-ID: <20190927144646.GA1921@bogus>
+References: <1569377224-5755-1-git-send-email-peng.fan@nxp.com>
+ <1569377224-5755-2-git-send-email-peng.fan@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Maciej Falkowski <m.falkowski@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1569377224-5755-2-git-send-email-peng.fan@nxp.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogTWFjaWVqIEZhbGtvd3NraSA8bS5mYWxrb3dza2lAc2Ftc3VuZy5jb20+CgpDb252ZXJ0
-IFNhbXN1bmcgMkQgR3JhcGhpY3MgQWNjZWxlcmF0b3IgdG8gbmV3ZXIgZHQtc2NoZW1hIGZvcm1h
-dAoKU2lnbmVkLW9mZi1ieTogTWFjaWVqIEZhbGtvd3NraSA8bS5mYWxrb3dza2lAc2Ftc3VuZy5j
-b20+Ci0tLQp2MzoKLSBNZXJnZWQgdHdvIGlmLXN0YXRlbWVudHMgd2l0aCBzaW5nbGUgaWYtZWxz
-ZSBzdGF0ZW1lbnQKLSBBZGRlZCAnYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlJwotIExpc3Rl
-ZCBhbGwgbWlzc2luZyAncHJvcGVydGllcycgaW4gcHJvcGVydGllcyBzY29wZQoKQmVzdCByZWdh
-cmRzLApNYWNpZWogRmFsa293c2tpCi0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L3Nh
-bXN1bmctZzJkLnR4dCAgIHwgMjcgLS0tLS0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1
-L3NhbXN1bmctZzJkLnlhbWwgIHwgNzUgKysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFu
-Z2VkLCA3NSBpbnNlcnRpb25zKCspLCAyNyBkZWxldGlvbnMoLSkKIGRlbGV0ZSBtb2RlIDEwMDY0
-NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L3NhbXN1bmctZzJkLnR4dAog
-Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUv
-c2Ftc3VuZy1nMmQueWFtbAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9ncHUvc2Ftc3VuZy1nMmQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2dwdS9zYW1zdW5nLWcyZC50eHQKZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4
-IDFlNzk1OTMzMmRiYy4uMDAwMDAwMDAwMDAwCi0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1nMmQudHh0CisrKyAvZGV2L251bGwKQEAgLTEsMjcgKzAs
-MCBAQAotKiBTYW1zdW5nIDJEIEdyYXBoaWNzIEFjY2VsZXJhdG9yCi0KLVJlcXVpcmVkIHByb3Bl
-cnRpZXM6Ci0gIC0gY29tcGF0aWJsZSA6IHZhbHVlIHNob3VsZCBiZSBvbmUgYW1vbmcgdGhlIGZv
-bGxvd2luZzoKLQkoYSkgInNhbXN1bmcsczVwdjIxMC1nMmQiIGZvciBHMkQgSVAgcHJlc2VudCBp
-biBTNVBWMjEwICYgRXh5bm9zNDIxMCBTb0MKLQkoYikgInNhbXN1bmcsZXh5bm9zNDIxMi1nMmQi
-IGZvciBHMkQgSVAgcHJlc2VudCBpbiBFeHlub3M0eDEyIFNvQ3MKLQkoYykgInNhbXN1bmcsZXh5
-bm9zNTI1MC1nMmQiIGZvciBHMkQgSVAgcHJlc2VudCBpbiBFeHlub3M1MjUwIFNvQwotCi0gIC0g
-cmVnIDogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIG9mIHRoZSBJUCByZWdpc3RlcnMgYW5kIGxlbmd0
-aCBvZiBtZW1vcnkKLQkgIG1hcHBlZCByZWdpb24uCi0KLSAgLSBpbnRlcnJ1cHRzIDogRzJEIGlu
-dGVycnVwdCBudW1iZXIgdG8gdGhlIENQVS4KLSAgLSBjbG9ja3MgOiBmcm9tIGNvbW1vbiBjbG9j
-ayBiaW5kaW5nOiBoYW5kbGUgdG8gRzJEIGNsb2Nrcy4KLSAgLSBjbG9jay1uYW1lcyA6IG5hbWVz
-IG9mIGNsb2NrcyBsaXN0ZWQgaW4gY2xvY2tzIHByb3BlcnR5LCBpbiB0aGUgc2FtZQotCQkgIG9y
-ZGVyLCBkZXBlbmRpbmcgb24gU29DIHR5cGU6Ci0JCSAgLSBmb3IgUzVQVjIxMCBhbmQgRXh5bm9z
-NCBiYXNlZCBTb0NzOiAiZmltZzJkIiBhbmQKLQkJICAgICJzY2xrX2ZpbWcyZCIKLQkJICAtIGZv
-ciBFeHlub3M1MjUwIFNvQzogImZpbWcyZCIuCi0KLUV4YW1wbGU6Ci0JZzJkQDEyODAwMDAwIHsK
-LQkJY29tcGF0aWJsZSA9ICJzYW1zdW5nLHM1cHYyMTAtZzJkIjsKLQkJcmVnID0gPDB4MTI4MDAw
-MDAgMHgxMDAwPjsKLQkJaW50ZXJydXB0cyA9IDwwIDg5IDA+OwotCQljbG9ja3MgPSA8JmNsb2Nr
-IDE3Nz4sIDwmY2xvY2sgMjc3PjsKLQkJY2xvY2stbmFtZXMgPSAic2Nsa19maW1nMmQiLCAiZmlt
-ZzJkIjsKLQl9OwpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2dwdS9zYW1zdW5nLWcyZC55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2dwdS9zYW1zdW5nLWcyZC55YW1sCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAw
-MDAwMC4uZTdkYWFlODYyNTc4Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2dwdS9zYW1zdW5nLWcyZC55YW1sCkBAIC0wLDAgKzEsNzUgQEAKKyMg
-U1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAKKyVZQU1MIDEuMgorLS0tCiskaWQ6IGh0
-dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL2dwdS9zYW1zdW5nLWcyZC55YW1sIworJHNjaGVt
-YTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjCisKK3RpdGxl
-OiBTYW1zdW5nIFNvQyAyRCBHcmFwaGljcyBBY2NlbGVyYXRvcgorCittYWludGFpbmVyczoKKyAg
-LSBJbmtpIERhZSA8aW5raS5kYWVAc2Ftc3VuZy5jb20+CisKK3Byb3BlcnRpZXM6CisgIGNvbXBh
-dGlibGU6CisgICAgZW51bToKKyAgICAgIC0gc2Ftc3VuZyxzNXB2MjEwLWcyZCAgICAjIGluIFM1
-UFYyMTAgJiBFeHlub3M0MjEwIFNvQworICAgICAgLSBzYW1zdW5nLGV4eW5vczQyMTItZzJkICMg
-aW4gRXh5bm9zNHgxMiBTb0NzCisgICAgICAtIHNhbXN1bmcsZXh5bm9zNTI1MC1nMmQKKworICBy
-ZWc6CisgICAgbWF4SXRlbXM6IDEKKworICBpbnRlcnJ1cHRzOgorICAgIG1heEl0ZW1zOiAxCisK
-KyAgY2xvY2tzOiB7fQorICBjbG9jay1uYW1lczoge30KKyAgaW9tbXVzOiB7fQorICBwb3dlci1k
-b21haW5zOiB7fQorCitpZjoKKyAgcHJvcGVydGllczoKKyAgICBjb21wYXRpYmxlOgorICAgICAg
-Y29udGFpbnM6CisgICAgICAgIGNvbnN0OiBzYW1zdW5nLGV4eW5vczUyNTAtZzJkCisKK3RoZW46
-CisgIHByb3BlcnRpZXM6CisgICAgY2xvY2tzOgorICAgICAgaXRlbXM6CisgICAgICAgIC0gZGVz
-Y3JpcHRpb246IGZpbWcyZCBjbG9jaworICAgIGNsb2NrLW5hbWVzOgorICAgICAgaXRlbXM6Cisg
-ICAgICAgIC0gY29uc3Q6IGZpbWcyZAorCitlbHNlOgorICBwcm9wZXJ0aWVzOgorICAgIGNsb2Nr
-czoKKyAgICAgIGl0ZW1zOgorICAgICAgICAtIGRlc2NyaXB0aW9uOiBzY2xrX2ZpbWcyZCBjbG9j
-aworICAgICAgICAtIGRlc2NyaXB0aW9uOiBmaW1nMmQgY2xvY2sKKyAgICBjbG9jay1uYW1lczoK
-KyAgICAgIGl0ZW1zOgorICAgICAgICAtIGNvbnN0OiBzY2xrX2ZpbWcyZAorICAgICAgICAtIGNv
-bnN0OiBmaW1nMmQKKworcmVxdWlyZWQ6CisgIC0gY29tcGF0aWJsZQorICAtIHJlZworICAtIGlu
-dGVycnVwdHMKKyAgLSBjbG9ja3MKKyAgLSBjbG9jay1uYW1lcworCithZGRpdGlvbmFsUHJvcGVy
-dGllczogZmFsc2UKKworZXhhbXBsZXM6CisgIC0gfAorICAgIGcyZEAxMjgwMDAwMCB7CisgICAg
-ICAgIGNvbXBhdGlibGUgPSAic2Ftc3VuZyxzNXB2MjEwLWcyZCI7CisgICAgICAgIHJlZyA9IDww
-eDEyODAwMDAwIDB4MTAwMD47CisgICAgICAgIGludGVycnVwdHMgPSA8MCA4OSAwPjsKKyAgICAg
-ICAgY2xvY2tzID0gPCZjbG9jayAxNzc+LCA8JmNsb2NrIDI3Nz47CisgICAgICAgIGNsb2NrLW5h
-bWVzID0gInNjbGtfZmltZzJkIiwgImZpbWcyZCI7CisgICAgfTsKKworLi4uCi0tIAoyLjE3LjEK
-CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On Wed, 25 Sep 2019 02:09:08 +0000, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
+> actions in software layers running in the EL2 or EL3 exception levels.
+> The term "ARM" here relates to the SMC instruction as part of the ARM
+> instruction set, not as a standard endorsed by ARM Ltd.
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  .../devicetree/bindings/mailbox/arm-smc.yaml       | 96 ++++++++++++++++++++++
+>  1 file changed, 96 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+>
+
+Reviewed-by: Rob Herring <robh@kernel.org>
