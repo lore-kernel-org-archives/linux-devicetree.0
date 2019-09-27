@@ -1,68 +1,85 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 00/11] of: dma-ranges fixes and improvements
-Date: Thu, 26 Sep 2019 19:24:44 -0500
-Message-ID: <20190927002455.13169-1-robh@kernel.org>
+Subject: [PATCH 01/11] of: Remove unused of_find_matching_node_by_address()
+Date: Thu, 26 Sep 2019 19:24:45 -0500
+Message-ID: <20190927002455.13169-2-robh@kernel.org>
+References: <20190927002455.13169-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190927002455.13169-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Robin Murphy <robin.murphy@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marek.vasut@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Oza Pawandeep <oza.oza@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This series fixes several issues related to 'dma-ranges'. Primarily,
-'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
-devices not described in the DT. A common case needing dma-ranges is a
-32-bit PCIe bridge on a 64-bit system. This affects several platforms
-including Broadcom, NXP, Renesas, and Arm Juno. There's been several
-attempts to fix these issues, most recently earlier this week[1].
+of_find_matching_node_by_address() is unused, so remove it.
 
-In the process, I found several bugs in the address translation. It
-appears that things have happened to work as various DTs happen to use
-1:1 addresses.
+Cc: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/of/address.c       | 19 -------------------
+ include/linux/of_address.h | 12 ------------
+ 2 files changed, 31 deletions(-)
 
-First 3 patches are just some clean-up. The 4th patch adds a unittest
-exhibiting the issues. Patches 5-9 rework how of_dma_configure() works
-making it work on either a struct device child node or a struct
-device_node parent node so that it works on bus leaf nodes like PCI
-bridges. Patches 10 and 11 fix 2 issues with address translation for
-dma-ranges.
-
-My testing on this has been with QEMU virt machine hacked up to set PCI
-dma-ranges and the unittest. Nicolas reports this series resolves the
-issues on Rpi4 and NXP Layerscape platforms.
-
-Rob
-
-[1] https://lore.kernel.org/linux-arm-kernel/20190924181244.7159-1-nsaenzjulienne@suse.de/
-
-Rob Herring (5):
-  of: Remove unused of_find_matching_node_by_address()
-  of: Make of_dma_get_range() private
-  of/unittest: Add dma-ranges address translation tests
-  of/address: Translate 'dma-ranges' for parent nodes missing
-    'dma-ranges'
-  of/address: Fix of_pci_range_parser_one translation of DMA addresses
-
-Robin Murphy (6):
-  of: address: Report of_dma_get_range() errors meaningfully
-  of: Ratify of_dma_configure() interface
-  of/address: Introduce of_get_next_dma_parent() helper
-  of: address: Follow DMA parent for "dma-coherent"
-  of: Factor out #{addr,size}-cells parsing
-  of: Make of_dma_get_range() work on bus nodes
-
- drivers/of/address.c                        | 83 +++++++++----------
- drivers/of/base.c                           | 32 ++++---
- drivers/of/device.c                         | 12 ++-
- drivers/of/of_private.h                     | 14 ++++
- drivers/of/unittest-data/testcases.dts      |  1 +
- drivers/of/unittest-data/tests-address.dtsi | 48 +++++++++++
- drivers/of/unittest.c                       | 92 +++++++++++++++++++++
- include/linux/of_address.h                  | 21 +----
- include/linux/of_device.h                   |  4 +-
- 9 files changed, 227 insertions(+), 80 deletions(-)
- create mode 100644 drivers/of/unittest-data/tests-address.dtsi
-
---
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 978427a9d5e6..0c3cf515c510 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -826,25 +826,6 @@ int of_address_to_resource(struct device_node *dev, int index,
+ }
+ EXPORT_SYMBOL_GPL(of_address_to_resource);
+ 
+-struct device_node *of_find_matching_node_by_address(struct device_node *from,
+-					const struct of_device_id *matches,
+-					u64 base_address)
+-{
+-	struct device_node *dn = of_find_matching_node(from, matches);
+-	struct resource res;
+-
+-	while (dn) {
+-		if (!of_address_to_resource(dn, 0, &res) &&
+-		    res.start == base_address)
+-			return dn;
+-
+-		dn = of_find_matching_node(dn, matches);
+-	}
+-
+-	return NULL;
+-}
+-
+-
+ /**
+  * of_iomap - Maps the memory mapped IO for a given device_node
+  * @device:	the device whose io range will be mapped
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 30e40fb6936b..e317f375374a 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -33,10 +33,6 @@ extern u64 of_translate_dma_address(struct device_node *dev,
+ extern u64 of_translate_address(struct device_node *np, const __be32 *addr);
+ extern int of_address_to_resource(struct device_node *dev, int index,
+ 				  struct resource *r);
+-extern struct device_node *of_find_matching_node_by_address(
+-					struct device_node *from,
+-					const struct of_device_id *matches,
+-					u64 base_address);
+ extern void __iomem *of_iomap(struct device_node *device, int index);
+ void __iomem *of_io_request_and_map(struct device_node *device,
+ 				    int index, const char *name);
+@@ -71,14 +67,6 @@ static inline u64 of_translate_address(struct device_node *np,
+ 	return OF_BAD_ADDR;
+ }
+ 
+-static inline struct device_node *of_find_matching_node_by_address(
+-					struct device_node *from,
+-					const struct of_device_id *matches,
+-					u64 base_address)
+-{
+-	return NULL;
+-}
+-
+ static inline const __be32 *of_get_address(struct device_node *dev, int index,
+ 					u64 *size, unsigned int *flags)
+ {
+-- 
 2.20.1
