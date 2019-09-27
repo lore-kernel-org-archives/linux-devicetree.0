@@ -1,114 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [v3,3/3] Documentation: dt: binding: fsl: Add
- 'fsl,ippdexpcr-alt-addr' property
-Date: Fri, 27 Sep 2019 13:28:44 -0500
-Message-ID: <20190927182844.GA5203@bogus>
-References: <20190924024548.4356-1-biwen.li@nxp.com>
- <20190924024548.4356-3-biwen.li@nxp.com>
- <AM0PR04MB667690EE76D327D0FC09F7818F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB449034C4BBAA89685A2130F78F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <AM0PR04MB66762594DDFC6E5B00BD103C8F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
- <DB7PR04MB4490FECDC76507AADC35948E8F870@DB7PR04MB4490.eurprd04.prod.outlook.com>
- <AM0PR04MB6676BD24B814C3D1D67CF9F88F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH v3 1/5] media: dt-bindings: Add jpeg enc device tree node
+ document
+Date: Fri, 27 Sep 2019 13:31:07 -0500
+Message-ID: <20190927183107.GA16235@bogus>
+References: <20190924074303.22713-1-xia.jiang@mediatek.com>
+ <20190924074303.22713-2-xia.jiang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <AM0PR04MB6676BD24B814C3D1D67CF9F88F870@AM0PR04MB6676.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leo Li <leoyang.li@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Biwen Li <biwen.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ran Wang <ran.wang_1@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20190924074303.22713-2-xia.jiang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rick Chang <rick.chang@mediatek.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com, Xia Jiang <xia.jiang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 03:34:47AM +0000, Leo Li wrote:
+On Tue, 24 Sep 2019 15:43:00 +0800, Xia Jiang wrote:
+> Add jpeg enc device tree node document.
 > 
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> ---
+> v3: change compatible to SoC specific compatible
 > 
-> > -----Original Message-----
-> > From: Biwen Li
-> > Sent: Tuesday, September 24, 2019 10:30 PM
-> > To: Leo Li <leoyang.li@nxp.com>; shawnguo@kernel.org;
-> > robh+dt@kernel.org; mark.rutland@arm.com; Ran Wang
-> > <ran.wang_1@nxp.com>
-> > Cc: linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
-> > linux-kernel@vger.kernel.org; devicetree@vger.kernel.org
-> > Subject: RE: [v3,3/3] Documentation: dt: binding: fsl: Add 'fsl,ippdexpcr-alt-
-> > addr' property
-> > 
-> > > > > >
-> > > > > > The 'fsl,ippdexpcr-alt-addr' property is used to handle an
-> > > > > > errata
-> > > > > > A-008646 on LS1021A
-> > > > > >
-> > > > > > Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> > > > > > ---
-> > > > > > Change in v3:
-> > > > > > 	- rename property name
-> > > > > > 	  fsl,rcpm-scfg -> fsl,ippdexpcr-alt-addr
-> > > > > >
-> > > > > > Change in v2:
-> > > > > > 	- update desc of the property 'fsl,rcpm-scfg'
-> > > > > >
-> > > > > >  Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 14
-> > > > > > ++++++++++++++
-> > > > > >  1 file changed, 14 insertions(+)
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > index 5a33619d881d..157dcf6da17c 100644
-> > > > > > --- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > +++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-> > > > > > @@ -34,6 +34,11 @@ Chassis Version		Example Chips
-> > > > > >  Optional properties:
-> > > > > >   - little-endian : RCPM register block is Little Endian. Without it RCPM
-> > > > > >     will be Big Endian (default case).
-> > > > > > + - fsl,ippdexpcr-alt-addr : Must add the property for SoC
-> > > > > > + LS1021A,
-> > > > >
-> > > > > You probably should mention this is related to a hardware issue on
-> > > > > LS1021a and only needed on LS1021a.
-> > > > Okay, got it, thanks, I will add this in v4.
-> > > > >
-> > > > > > +   Must include n + 1 entries (n = #fsl,rcpm-wakeup-cells, such as:
-> > > > > > +   #fsl,rcpm-wakeup-cells equal to 2, then must include 2 + 1 entries).
-> > > > >
-> > > > > #fsl,rcpm-wakeup-cells is the number of IPPDEXPCR registers on an SoC.
-> > > > > However you are defining an offset to scfg registers here.  Why
-> > > > > these two are related?  The length here should actually be related
-> > > > > to the #address-cells of the soc/.  But since this is only needed
-> > > > > for LS1021, you can
-> > > > just make it 3.
-> > > > I need set the value of IPPDEXPCR resgiters from ftm_alarm0 device
-> > > > node(fsl,rcpm-wakeup = <&rcpm 0x0 0x20000000>;
-> > > > 0x0 is a value for IPPDEXPCR0, 0x20000000 is a value for IPPDEXPCR1).
-> > > > But because of the hardware issue on LS1021A, I need store the value
-> > > > of IPPDEXPCR registers to an alt address. So I defining an offset to
-> > > > scfg registers, then RCPM driver get an abosolute address from
-> > > > offset, RCPM driver write the value of IPPDEXPCR registers to these
-> > > > abosolute addresses(backup the value of IPPDEXPCR registers).
-> > >
-> > > I understand what you are trying to do.  The problem is that the new
-> > > fsl,ippdexpcr-alt-addr property contains a phandle and an offset.  The
-> > > size of it shouldn't be related to #fsl,rcpm-wakeup-cells.
-> > You maybe like this: fsl,ippdexpcr-alt-addr = <&scfg 0x51c>;/*
-> > SCFG_SPARECR8 */
+> v2: no changes
+> ---
+>  .../bindings/media/mediatek-jpeg-encoder.txt  | 37 +++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-jpeg-encoder.txt
 > 
-> No.  The #address-cell for the soc/ is 2, so the offset to scfg 
-> should be 0x0 0x51c.  The total size should be 3, but it shouldn't be 
-> coming from #fsl,rcpm-wakeup-cells like you mentioned in the binding.
 
-Um, no. #address-cells applies to reg and ranges, not some vendor 
-specific property. You can just define how many cells you need if that's 
-fixed. 
-
-However, I suggested doing this another way in the next version of this.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
