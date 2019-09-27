@@ -1,7 +1,7 @@
 From: Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH v2 3/4] ARM: dts: aspeed: ast2500: Add SCU interrupt controller
-Date: Fri, 27 Sep 2019 15:58:48 -0500
-Message-ID: <1569617929-29055-4-git-send-email-eajames@linux.ibm.com>
+Subject: [PATCH v2 1/4] dt-bindings: interrupt-controller: Add Aspeed SCU interrupt controller
+Date: Fri, 27 Sep 2019 15:58:46 -0500
+Message-ID: <1569617929-29055-2-git-send-email-eajames@linux.ibm.com>
 References: <1569617929-29055-1-git-send-email-eajames@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1569617929-29055-1-git-send-email-eajames@linux.ibm.com>
@@ -10,42 +10,96 @@ To: linux-kernel@vger.kernel.org
 Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, joel@jms.id.au, mark.rutland@arm.com, robh+dt@kernel.org, maz@kernel.org, jason@lakedaemon.net, tglx@linutronix.de, Eddie James <eajames@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a node for the interrupt controller provided by the SCU.
+Document the Aspeed SCU interrupt controller and add an include file
+for the interrupts it provides.
 
 Signed-off-by: Eddie James <eajames@linux.ibm.com>
 ---
- arch/arm/boot/dts/aspeed-g5.dtsi | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ .../interrupt-controller/aspeed,ast2xxx-scu-ic.txt | 26 ++++++++++++++++++++++
+ MAINTAINERS                                        |  7 ++++++
+ .../interrupt-controller/aspeed-scu-ic.h           | 23 +++++++++++++++++++
+ 3 files changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
+ create mode 100644 include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index e8feb8b..450c2d2 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -209,8 +209,9 @@
- 			syscon: syscon@1e6e2000 {
- 				compatible = "aspeed,ast2500-scu", "syscon", "simple-mfd";
- 				reg = <0x1e6e2000 0x1a8>;
-+				ranges = <0 0x1e6e2000 0x1a8>;
- 				#address-cells = <1>;
--				#size-cells = <0>;
-+				#size-cells = <1>;
- 				#clock-cells = <1>;
- 				#reset-cells = <1>;
- 
-@@ -224,6 +225,14 @@
- 					compatible = "aspeed,ast2500-p2a-ctrl";
- 					status = "disabled";
- 				};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
+new file mode 100644
+index 0000000..baa3780
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
+@@ -0,0 +1,26 @@
++Aspeed AST25XX and AST26XX SCU Interrupt Controller
 +
-+				scu_ic: interrupt-controller@18 {
-+					#interrupt-cells = <1>;
-+					compatible = "aspeed,ast2500-scu-ic";
-+					reg = <0x18 0x04>;
-+					interrupts = <21>;
-+					interrupt-controller;
-+				};
- 			};
++Required Properties:
++ - #interrupt-cells		: must be 1
++ - compatible			: must be "aspeed,ast2500-scu-ic",
++				  "aspeed,ast2600-scu-ic0" or
++				  "aspeed,ast2600-scu-ic1"
++ - reg				: address and size of the SCU register
++				  associated with the controller
++ - interrupts			: interrupt from the parent controller
++ - interrupt-controller		: indicates that the controlle receives and
++				  fires new interrupts for child busses
++
++Example:
++
++    syscon@1e6e2000 {
++        ranges = <0 0x1e6e2000 0x1a8>;
++
++        scu_ic: interrupt-controller@18 {
++            #interrupt-cells = <1>;
++            compatible = "aspeed,ast2500-scu-ic";
++            reg = <0x18 0x04>;
++            interrupts = <21>;
++            interrupt-controller;
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7ce3c95..c7e028c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2651,6 +2651,13 @@ S:	Maintained
+ F:	drivers/pinctrl/aspeed/
+ F:	Documentation/devicetree/bindings/pinctrl/aspeed,*
  
- 			rng: hwrng@1e6e2078 {
++ASPEED SCU INTERRUPT CONTROLLER DRIVER
++M:	Eddie James <eajames@linux.ibm.com>
++L:	linux-aspeed@lists.ozlabs.org (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
++F:	include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
++
+ ASPEED VIDEO ENGINE DRIVER
+ M:	Eddie James <eajames@linux.ibm.com>
+ L:	linux-media@vger.kernel.org
+diff --git a/include/dt-bindings/interrupt-controller/aspeed-scu-ic.h b/include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
+new file mode 100644
+index 0000000..f315d5a
+--- /dev/null
++++ b/include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++
++#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_ASPEED_SCU_IC_H_
++#define _DT_BINDINGS_INTERRUPT_CONTROLLER_ASPEED_SCU_IC_H_
++
++#define ASPEED_SCU_IC_VGA_CURSOR_CHANGE			0
++#define ASPEED_SCU_IC_VGA_SCRATCH_REG_CHANGE		1
++
++#define ASPEED_AST2500_SCU_IC_PCIE_RESET_LO_TO_HI	2
++#define ASPEED_AST2500_SCU_IC_PCIE_RESET_HI_TO_LO	3
++#define ASPEED_AST2500_SCU_IC_LPC_RESET_LO_TO_HI	4
++#define ASPEED_AST2500_SCU_IC_LPC_RESET_HI_TO_LO	5
++#define ASPEED_AST2500_SCU_IC_ISSUE_MSI			6
++
++#define ASPEED_AST2600_SCU_IC0_PCIE_PERST_LO_TO_HI	2
++#define ASPEED_AST2600_SCU_IC0_PCIE_PERST_HI_TO_LO	3
++#define ASPEED_AST2600_SCU_IC0_PCIE_RCRST_LO_TO_HI	4
++#define ASPEED_AST2600_SCU_IC0_PCIE_RCRST_HI_TO_LO	5
++
++#define ASPEED_AST2600_SCU_IC1_LPC_RESET_LO_TO_HI	0
++#define ASPEED_AST2600_SCU_IC1_LPC_RESET_HI_TO_LO	1
++
++#endif /* _DT_BINDINGS_INTERRUPT_CONTROLLER_ASPEED_SCU_IC_H_ */
 -- 
 1.8.3.1
