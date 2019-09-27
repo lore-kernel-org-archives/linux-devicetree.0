@@ -1,64 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] dt-bindings: at24: convert the binding document to yaml
-Date: Fri, 27 Sep 2019 10:44:29 -0500
-Message-ID: <CAL_Jsq+R9wdB521dQtwMiWXEJEB5tGEDYi_efDqZL6xzF9YduA@mail.gmail.com>
-References: <20190927134220.8734-1-robh@kernel.org> <CAMRc=MctTVh99vE+dfd25ienWEjtMNwrM200f1im--fx9ALo7Q@mail.gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
+ dts
+Date: Fri, 27 Sep 2019 18:47:54 +0300
+Message-ID: <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
+References: <20190510194229.20628-1-aford173@gmail.com>
+ <af325707-3e42-493d-e858-77878ef06138@ti.com>
+ <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
+ <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
+ <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
+ <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
+ <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+ <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
+ <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+ <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
+ <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=MctTVh99vE+dfd25ienWEjtMNwrM200f1im--fx9ALo7Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Peter Rosin <peda@axentia.se>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tero Kristo <t-kristo@ti.com>, Adam Ford <aford173@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 10:06 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> pt., 27 wrz 2019 o 15:42 Rob Herring <robh@kernel.org> napisa=C5=82(a):
-> >
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Convert the binding document for at24 EEPROMs from txt to yaml. The
-> > compatible property uses a regex pattern to address all the possible
-> > combinations of "vendor,model" strings.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > [robh: rework compatible schema, fix missing allOf for $ref, fix errors=
- in example]
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> > v4:
-> > - Add a $nodename definition
-> >
-> > - Turns out the compatible schema is too complex for generating a 'sele=
-ct'
-> > schema and only a small subset where getting validated. So we need a
-> > custom 'select' schema. This in turn fixes the issue with the nxp,se97b
-> > binding.
->
-> Thanks again!
->
-> >
-> > Now we get a different set of errors checking Arm dts files (omitting
-> > a bunch of node name ones):
-> >
->
-> > arch/arm/boot/dts/at91-dvk_som60.dt.yaml: eeprom@57: compatible: ['gian=
-tec,gt24c32a', 'atmel,24c32'] is not valid under any of the given schemas
->
-> This is because nobody bothered adding 'giantec,gt24c32a' to previous
-> .txt bindings. I'll add this in a follow-up patch.
->
-> > arch/arm/boot/dts/am3874-iceboard.dt.yaml: at24cs01@5f: compatible: ['a=
-tmel,24cs01'] is not valid under any of the given schemas
-> > arch/arm/boot/dts/am3874-iceboard.dt.yaml: at24cs08@5c: compatible: ['a=
-tmel,24cs08'] is not valid under any of the given schemas
-> >
->
-> These look fine at first glance, I'm not sure what the problem here
-> is. I'll take a look at these as soon as I can.
-
-Ah, that's my mistake. I guess there's only no 24cs00 variant.
-
-Rob
+T24gMjcvMDkvMjAxOSAxODozNywgVGVybyBLcmlzdG8gd3JvdGU6Cgo+IElmIHlvdSBjYW4gcHJv
+dmlkZSBkZXRhaWxzIGFib3V0IHdoYXQgY2xvY2sgZnJhbWV3b3JrIC8gZHJpdmVyIGRvZXMgCj4g
+d3JvbmcgKHNhbXBsZSBjbGtfc2V0X3h5eiBjYWxsIHNlcXVlbmNlLCBleHBlY3RlZCByZXN1bHRz
+IHZpYSAKPiBjbGtfZ2V0X3h5eiwgYW5kIHdoYXQgZmFpbHMpLCBJIGNhbiB0YWtlIGEgbG9vayBh
+dCBpdC4gSnVzdCByZXBvcnRpbmcgCj4gYXJiaXRyYXJ5IGRpc3BsYXkgZHJpdmVyIGlzc3VlcyBJ
+IHdvbid0IGJlIGFibGUgdG8gZGVidWcgYXQgYWxsIChJIGRvbid0IAo+IGhhdmUgYWNjZXNzIHRv
+IGFueSBvZiB0aGUgZGlzcGxheXMsIG5vciBkbyBJIHdhbnQgdG8gd2FzdGUgdGltZSAKPiBkZWJ1
+Z2dpbmcgdGhlbSB3aXRob3V0IGFic29sdXRlbHkgbm8ga25vd2xlZGdlIHdoYXRzb2V2ZXIuKQoK
+SSB1c2VkIHlvdXIgaGFjayBwYXRjaGVzIHRvIGFsbG93IGNoYW5naW5nIHJhdGVzIHZpYSBkZWJ1
+Z2ZzLiBBbmQgc2V0IApkc3MxX2Fsd29uX2Zja18zNDMwZXMyIHRvIDI3MDAwMDAwIG9yIDI3ODcw
+OTY3LiBUaGUgZW5kIHJlc3VsdCB3YXMgdGhhdCAKRFNTIGdldHMgc29tZSB2ZXJ5IGhpZ2ggY2xv
+Y2sgZnJvbSBkc3MxX2Fsd29uX2Zja18zNDMwZXMyLCBhcyB0aGUgZnJhbWUgCnJhdGUganVtcHMg
+dG8gbWFueSBodW5kcmVkcyBmcHMuCgpTbywgdGhlc2UgbnVtYmVycyBhcmUgbm90IHJlYWwsIGJ1
+dCB0byBnaXZlIHRoZSBpZGVhIHdoYXQgSSBzYXcuIFJ1bm5pbmcgCmZpcnN0IHdpdGggNTAgTUh6
+LCBJIGNhbiBzZWUsIHNheSwgNDAgZnBzLiBUaGVuIEkgc2V0IHRoZSBjbG9jayB0byAzMCAKTUh6
+LCBhbmQgZnBzIGRyb3BwZWQgdG8sIHNheSwgMzBmcHMsIGFzIGV4cGVjdGVkIHdpdGggbG93ZXIg
+Y2xvY2suIFRoZW4gCkkgc2V0IHRoZSBjbG9jayB0byAyN01IeiAob3IgdGhlIG90aGVyIG9uZSks
+IGV4cGVjdGluZyBhIGJpdCBsb3dlciBmcHMsIApidXQgaW5zdGVhZCBJIHNhdyBodW5kcmVkcyBv
+ZiBmcHMuCgpJIGRvbid0IGtub3cgaWYgdGhlcmUncyBhbnkgb3RoZXIgd2F5IHRvIG9ic2VydmUg
+dGhlIHdyb25nIGNsb2NrIHJhdGUgCmJ1dCBoYXZlIHRoZSBkc3MgZW5hYmxlZCBhbmQgcnVubmlu
+ZyBrbXN0ZXN0IG9yIHNpbWlsYXIuIEkgY2FuIGhlbHAgeW91IApzZXQgdGhhdCB1cCBuZXh0IHdl
+ZWssIHNob3VsZCBiZSB0cml2aWFsLiBZb3UgZG9uJ3QgbmVlZCBhIGRpc3BsYXkgZm9yIHRoYXQu
+CgogIFRvbWkKCi0tIApUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1
+IDIyLCAwMDE4MCBIZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290
+aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVs
