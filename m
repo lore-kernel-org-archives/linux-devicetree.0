@@ -1,235 +1,112 @@
-From: Jian Hu <jian.hu@amlogic.com>
-Subject: Re: [PATCH 2/2] clk: meson: a1: add support for Amlogic A1 clock
- driver
-Date: Fri, 27 Sep 2019 11:11:36 +0800
-Message-ID: <8351489a-f91e-be08-7fcc-e2a90c6e87f0@amlogic.com>
-References: <1569411888-98116-1-git-send-email-jian.hu@amlogic.com>
- <1569411888-98116-3-git-send-email-jian.hu@amlogic.com>
- <20190925131232.4751020640@mail.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Hui Song <hui.song_1@nxp.com>
+Subject: [PATCH v6] gpio/mpc8xxx: change irq handler from chained to normal
+Date: Fri, 27 Sep 2019 11:15:51 +0800
+Message-ID: <20190927031551.20074-1-hui.song_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190925131232.4751020640@mail.kernel.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Rob Herring <robh@kernel.org>, Jianxin Pan <jianxin.pan@amlogic.com>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Song Hui <hui.song_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Stephen
+From: Song Hui <hui.song_1@nxp.com>
 
-Thank you for review
+More than one gpio controllers can share one interrupt, change the
+driver to request shared irq.
 
-On 2019/9/25 21:12, Stephen Boyd wrote:
-> Quoting Jian Hu (2019-09-25 04:44:48)
->> The Amlogic A1 clock includes three parts:
->> peripheral clocks, pll clocks, CPU clocks.
->> sys pll and CPU clocks will be sent in next patch.
->>
->> Unlike the previous series, there is no EE/AO domain
->> in A1 CLK controllers.
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> 
-> This second name didn't send the patch. Please follow the signoff
-> procedures documented in Documentation/process/submitting-patches.rst
-> 
->> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
->> index 16d7614..a48f67d 100644
->> --- a/arch/arm64/Kconfig.platforms
->> +++ b/arch/arm64/Kconfig.platforms
->> @@ -138,6 +138,7 @@ config ARCH_MESON
->>          select COMMON_CLK_AXG
->>          select COMMON_CLK_G12A
->>          select MESON_IRQ_GPIO
->> +       select COMMON_CLK_A1
-> 
-> Sort?
-ok, I will put it behind COMMON_CLK_AXG
-> 
->>          help
->>            This enables support for the arm64 based Amlogic SoCs
->>            such as the s905, S905X/D, S912, A113X/D or S905X/D2
->> diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
->> index dabeb43..e6cb4c3 100644
->> --- a/drivers/clk/meson/Kconfig
->> +++ b/drivers/clk/meson/Kconfig
->> @@ -107,3 +107,13 @@ config COMMON_CLK_G12A
->>          help
->>            Support for the clock controller on Amlogic S905D2, S905X2 and S905Y2
->>            devices, aka g12a. Say Y if you want peripherals to work.
->> +
->> +config COMMON_CLK_A1
-> 
-> Probably should be placed somewhere alphabetically in this file?
-ok, I will put it behind COMMON_CLK_AXG_AUDIO
-> 
->> +       bool
->> +       depends on ARCH_MESON
->> +       select COMMON_CLK_MESON_REGMAP
->> +       select COMMON_CLK_MESON_DUALDIV
->> +       select COMMON_CLK_MESON_PLL
->> +       help
->> +         Support for the clock controller on Amlogic A113L device,
->> +         aka a1. Say Y if you want peripherals to work.
->> diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
->> index 3939f21..6be3a8f 100644
->> --- a/drivers/clk/meson/Makefile
->> +++ b/drivers/clk/meson/Makefile
->> @@ -19,3 +19,4 @@ obj-$(CONFIG_COMMON_CLK_AXG_AUDIO) += axg-audio.o
->>   obj-$(CONFIG_COMMON_CLK_GXBB) += gxbb.o gxbb-aoclk.o
->>   obj-$(CONFIG_COMMON_CLK_G12A) += g12a.o g12a-aoclk.o
->>   obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
->> +obj-$(CONFIG_COMMON_CLK_A1) += a1.o
-> 
-> I would guess this should be sorted on Kconfig name in this file?
-ok, I will put it behind COMMON_CLK_AXG_AUDIO
-> 
->> diff --git a/drivers/clk/meson/a1.c b/drivers/clk/meson/a1.c
->> new file mode 100644
->> index 0000000..26edae0f
->> --- /dev/null
->> +++ b/drivers/clk/meson/a1.c
->> @@ -0,0 +1,2617 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +/*
->> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/init.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/of_address.h>
->> +#include "clk-mpll.h"
->> +#include "clk-pll.h"
->> +#include "clk-regmap.h"
->> +#include "vid-pll-div.h"
->> +#include "clk-dualdiv.h"
->> +#include "meson-eeclk.h"
->> +#include "a1.h"
->> +
-> [...]
->> +
->> +/*
->> + * The Meson A1 HIFI PLL is 614.4M, it requires
->> + * a strict register sequence to enable the PLL.
->> + * set meson_clk_pcie_pll_ops as its ops
-> 
-> Please remove this last line as it's obvious from the code what ops are
-> used.
-> 
-ok, I will remove it.
->> + */
->> +static struct clk_regmap a1_hifi_pll = {
->> +       .data = &(struct meson_clk_pll_data){
->> +               .en = {
->> +                       .reg_off = ANACTRL_HIFIPLL_CTRL0,
->> +                       .shift   = 28,
->> +                       .width   = 1,
->> +               },
->> +               .m = {
->> +                       .reg_off = ANACTRL_HIFIPLL_CTRL0,
->> +                       .shift   = 0,
->> +                       .width   = 8,
->> +               },
->> +               .n = {
->> +                       .reg_off = ANACTRL_HIFIPLL_CTRL0,
->> +                       .shift   = 10,
->> +                       .width   = 5,
->> +               },
->> +               .frac = {
->> +                       .reg_off = ANACTRL_HIFIPLL_CTRL1,
->> +                       .shift   = 0,
->> +                       .width   = 19,
->> +               },
->> +               .l = {
->> +                       .reg_off = ANACTRL_HIFIPLL_STS,
->> +                       .shift   = 31,
->> +                       .width   = 1,
->> +               },
->> +               .table = a1_hifi_pll_params_table,
->> +               .init_regs = a1_hifi_init_regs,
->> +               .init_count = ARRAY_SIZE(a1_hifi_init_regs),
->> +       },
->> +       .hw.init = &(struct clk_init_data){
->> +               .name = "hifi_pll",
->> +               .ops = &meson_clk_pcie_pll_ops,
->> +               .parent_hws = (const struct clk_hw *[]) {
->> +                       &a1_xtal_hifipll.hw
->> +               },
->> +               .num_parents = 1,
->> +       },
->> +};
->> +
-> [..]
->> +
->> +static struct clk_regmap a1_fclk_div2 = {
->> +       .data = &(struct clk_regmap_gate_data){
->> +               .offset = ANACTRL_FIXPLL_CTRL0,
->> +               .bit_idx = 21,
->> +       },
->> +       .hw.init = &(struct clk_init_data){
->> +               .name = "fclk_div2",
->> +               .ops = &clk_regmap_gate_ops,
->> +               .parent_hws = (const struct clk_hw *[]) {
->> +                       &a1_fclk_div2_div.hw
->> +               },
->> +               .num_parents = 1,
->> +               /*
->> +                * add CLK_IS_CRITICAL flag to avoid being disabled by clk core
->> +                * or its children clocks.
-> 
-> This comment is useless. Please replace it with an actual reason for
-> keeping the clk on instead of describing what the flag does.
-> 
-ok, The actual reason is it should not change at runtime.
->> +                */
->> +               .flags = CLK_IS_CRITICAL,
->> +       },
->> +};
->> +
-> [..]
->> +static struct clk_regmap a1_dmc = {
->> +       .data = &(struct clk_regmap_gate_data){
->> +               .offset = DMC_CLK_CTRL,
->> +               .bit_idx = 8,
->> +       },
->> +       .hw.init = &(struct clk_init_data) {
->> +               .name = "dmc",
->> +               .ops = &clk_regmap_gate_ops,
->> +               .parent_hws = (const struct clk_hw *[]) {
->> +                       &a1_dmc_sel2.hw
->> +               },
->> +               .num_parents = 1,
->> +               /*
->> +                * add CLK_IGNORE_UNUSED to avoid hangup
->> +                * DDR clock should not change at runtime
->> +                */
->> +               .flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
-> 
-> So not CLK_IS_CRITICAL?
-Yes, CLK_IS_CRITICAL is better, I will change it.
-> 
->> +       },
->> +};
->> +
-> [...]
->> +
->> +/*
->> + * cpu clock register base address is 0xfd000080
->> + */
->> +static struct clk_regmap *const a1_cpu_clk_regmaps[] = {
->> +       /* TODO */
-> 
-> Can it be done?
-I plan to compelte cpu clock with the DVFS verified. And  Some 
-peripheral devices rely on this patch to send. I prefer to do it in the 
-next patch.
-> 
->> +};
-> 
-> .
-> 
+While this will work, it will mess up userspace accounting of the number
+of interrupts per second in tools such as vmstat.  The reason is that
+for every GPIO interrupt, /proc/interrupts records the count against GIC
+interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
+interrupt, the total number of interrupts that the system has seen
+increments by two
+
+Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+Signed-off-by: Song Hui <hui.song_1@nxp.com>
+---
+ Changes in v6:
+	- change request_irq to devm_request_irq and add commit message
+ Changes in v5:
+	- add traverse every bit function.
+ Changes in v4:
+	- convert 'pr_err' to 'dev_err'.
+ Changes in v3:
+	- update the patch description.
+ Changes in v2:
+	- delete the compatible of ls1088a.
+
+ drivers/gpio/gpio-mpc8xxx.c | 31 ++++++++++++++++++++-----------
+ 1 file changed, 20 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
+index 16a47de..f0be284 100644
+--- a/drivers/gpio/gpio-mpc8xxx.c
++++ b/drivers/gpio/gpio-mpc8xxx.c
+@@ -22,6 +22,7 @@
+ #include <linux/irq.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/bitops.h>
++#include <linux/interrupt.h>
+ 
+ #define MPC8XXX_GPIO_PINS	32
+ 
+@@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+ 		return -ENXIO;
+ }
+ 
+-static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
++static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
+ {
+-	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
+-	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct mpc8xxx_gpio_chip *mpc8xxx_gc = data;
+ 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
+ 	unsigned int mask;
++	int i;
+ 
+ 	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
+ 		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
+-	if (mask)
++	for_each_set_bit(i, &mask, 32)
+ 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
+-						     32 - ffs(mask)));
+-	if (chip->irq_eoi)
+-		chip->irq_eoi(&desc->irq_data);
++						     31 - i));
++
++	return IRQ_HANDLED;
+ }
+ 
+ static void mpc8xxx_irq_unmask(struct irq_data *d)
+@@ -388,8 +389,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 
+ 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
+ 	if (ret) {
+-		pr_err("%pOF: GPIO chip registration failed with status %d\n",
+-		       np, ret);
++		dev_err(&pdev->dev, "%pOF: GPIO chip registration failed with status %d\n",
++			np, ret);
+ 		goto err;
+ 	}
+ 
+@@ -409,8 +410,16 @@ static int mpc8xxx_probe(struct platform_device *pdev)
+ 	if (devtype->gpio_dir_in_init)
+ 		devtype->gpio_dir_in_init(gc);
+ 
+-	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
+-					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
++	ret = devm_request_irq(&pdev->dev, mpc8xxx_gc->irqn,
++			       mpc8xxx_gpio_irq_cascade,
++			       IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
++			       mpc8xxx_gc);
++	if (ret) {
++		dev_err(&pdev->dev, "%s: failed to devm_request_irq(%d), ret = %d\n",
++			np->full_name, mpc8xxx_gc->irqn, ret);
++		goto err;
++	}
++
+ 	return 0;
+ err:
+ 	iounmap(mpc8xxx_gc->regs);
+-- 
+2.9.5
