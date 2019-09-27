@@ -1,98 +1,97 @@
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v5 1/7] dt-bindings: thermal: Add DT bindings documentation
- for Amlogic Thermal
-Date: Fri, 27 Sep 2019 14:47:42 +0200
-Message-ID: <20190927124750.12467-2-glaroque@baylibre.com>
+Subject: [PATCH v5 4/7] arm64: dts: meson: g12: Add minimal thermal zone
+Date: Fri, 27 Sep 2019 14:47:45 +0200
+Message-ID: <20190927124750.12467-5-glaroque@baylibre.com>
 References: <20190927124750.12467-1-glaroque@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190927124750.12467-1-glaroque@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: amit.kucheria@linaro.org, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Adding the devicetree binding documentation for the Amlogic temperature
-sensor found in the Amlogic Meson G12A and G12B SoCs.
+Add minimal thermal zone for two temperature sensor
+One is located close to the DDR and the other one is
+located close to the PLLs (between the CPU and GPU)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Tested-by: Christian Hewitt <christianshewitt@gmail.com>
 Tested-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- .../bindings/thermal/amlogic,thermal.yaml     | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+ .../boot/dts/amlogic/meson-g12-common.dtsi    | 46 +++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
-new file mode 100644
-index 000000000000..f761681e4c0d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/amlogic,thermal.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+index 0660d9ef6a86..f98171949fcb 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+@@ -12,6 +12,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
+ #include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
++#include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+ 	interrupt-parent = <&gic>;
+@@ -94,6 +95,50 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 
++		thermal-zones {
++			cpu_thermal: cpu-thermal {
++				polling-delay = <1000>;
++				polling-delay-passive = <100>;
++				thermal-sensors = <&cpu_temp>;
 +
-+title: Amlogic Thermal
++				trips {
++					cpu_passive: cpu-passive {
++						temperature = <85000>; /* millicelsius */
++						hysteresis = <2000>; /* millicelsius */
++						type = "passive";
++					};
 +
-+maintainers:
-+  - Guillaume La Roque <glaroque@baylibre.com>
++					cpu_hot: cpu-hot {
++						temperature = <95000>; /* millicelsius */
++						hysteresis = <2000>; /* millicelsius */
++						type = "hot";
++					};
 +
-+description: Binding for Amlogic Thermal
++				};
++			};
 +
-+properties:
-+  compatible:
-+      items:
-+        - enum:
-+            - amlogic,g12a-cpu-thermal
-+            - amlogic,g12a-ddr-thermal
-+        - const: amlogic,g12a-thermal
++			ddr_thermal: ddr-thermal {
++				polling-delay = <1000>;
++				polling-delay-passive = <100>;
++				thermal-sensors = <&ddr_temp>;
 +
-+  reg:
-+    maxItems: 1
++				trips {
++					ddr_passive: ddr-passive {
++						temperature = <85000>; /* millicelsius */
++						hysteresis = <2000>; /* millicelsius */
++						type = "passive";
++					};
++				};
 +
-+  interrupts:
-+    maxItems: 1
++				cooling-maps {
++					map {
++						trip = <&ddr_passive>;
++						cooling-device = <&mali THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					};
++				};
++			};
++		};
 +
-+  clocks:
-+    maxItems: 1
-+
-+  amlogic,ao-secure:
-+    description: phandle to the ao-secure syscon
-+    $ref: '/schemas/types.yaml#/definitions/phandle'
-+
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - amlogic,ao-secure
-+
-+examples:
-+  - |
-+        cpu_temp: temperature-sensor@ff634800 {
-+                compatible = "amlogic,g12a-cpu-thermal",
-+                             "amlogic,g12a-thermal";
-+                reg = <0xff634800 0x50>;
-+                interrupts = <0x0 0x24 0x0>;
-+                clocks = <&clk 164>;
-+                #thermal-sensor-cells = <0>;
-+                amlogic,ao-secure = <&sec_AO>;
-+        };
-+...
+ 		ethmac: ethernet@ff3f0000 {
+ 			compatible = "amlogic,meson-axg-dwmac",
+ 				     "snps,dwmac-3.70a",
+@@ -2412,6 +2457,7 @@
+ 			assigned-clock-rates = <0>, /* Do Nothing */
+ 					       <800000000>,
+ 					       <0>; /* Do Nothing */
++			#cooling-cells = <2>;
+ 		};
+ 	};
+ 
 -- 
 2.17.1
