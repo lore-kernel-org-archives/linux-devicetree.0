@@ -1,38 +1,62 @@
-From: Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH v6 9/9] powerpc/ima: update ima arch policy to check for blacklist
-Date: Fri, 27 Sep 2019 10:26:00 -0400
-Message-ID: <1569594360-7141-10-git-send-email-nayna@linux.ibm.com>
-References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH] checkpatch: Warn if DT bindings are not in schema format
+Date: Fri, 27 Sep 2019 07:29:28 -0700
+Message-ID: <7672dd2f651bfdcdb1615ab739e36a381b2535b1.camel@perches.com>
+References: <20190913211349.28245-1-robh@kernel.org>
+         <713b2e5bbab16ddf850245ae1d92be66d9730e02.camel@perches.com>
+         <CAL_JsqLtEM9+LK=3YDLnoZbC1v09R9-qfFNEH-gTWj94FAjnyg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
+In-Reply-To: <CAL_JsqLtEM9+LK=3YDLnoZbC1v09R9-qfFNEH-gTWj94FAjnyg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Jeremy Kerr <jk@ozlabs.org>, Matthew Garret <matthew.garret@nebula.com>, Mimi Zohar <zohar@linux.ibm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Claudio Carvalho <cclaudio@linux.ibm.com>, George Wilson <gcwilson@linux.ibm.com>, Elaine Palmer <erpalmer@us.ibm.com>, Eric Ricther <erichte@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nayna Jain <nayna@linux.ibm.com>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andy Whitcroft <apw@canonical.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the arch specific policies for PowernV systems
-to add check against blacklisted hashes before doing the verification.
+On Fri, 2019-09-27 at 09:02 -0500, Rob Herring wrote:
+> On Fri, Sep 13, 2019 at 4:48 PM Joe Perches <joe@perches.com> wrote:
+> > On Fri, 2019-09-13 at 16:13 -0500, Rob Herring wrote:
+> > > DT bindings are moving to using a json-schema based schema format
+> > > instead of freeform text. Add a checkpatch.pl check to encourage using
+> > > the schema for new bindings. It's not yet a requirement, but is
+> > > progressively being required by some maintainers.
+> > []
+> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > []
+> > > @@ -2822,6 +2822,14 @@ sub process {
+> > >                            "added, moved or deleted file(s), does MAINTAINERS need updating?\n" . $herecurr);
+> > >               }
+> > > 
+> > > +# Check for adding new DT bindings not in schema format
+> > > +             if (!$in_commit_log &&
+> > > +                 ($line =~ /^new file mode\s*\d+\s*$/) &&
+> > > +                 ($realfile =~ m@^Documentation/devicetree/bindings/.*\.txt$@)) {
+> > > +                     WARN("DT_SCHEMA_BINDING_PATCH",
+> > > +                          "DT bindings should be in DT schema format. See: Documentation/devicetree/writing-schema.rst\n");
+> > > +             }
+> > > +
+> > 
+> > As this already seems to be git dependent, perhaps
+> 
+> It's quite rare to see a non git generated diff these days.
+> 
+> > it's easier to read with a single line test like:
+> > 
+> >                 if ($line =~ m{^\s*create mode\s*\d+\s*Documentation/devicetree/bindings/.*\.txt$}) {
+> >                         etc...
+> >                 }
+> 
+> I frequently do 'git show $commit | scripts/checkpatch.pl' and this
+> doesn't work with that. I really should have a '--pretty=email' in
+> there, but I just ignore the commit msg warnings. In any case, that
+> still doesn't help because there's no diffstat. There's probably some
+> way to turn that on or just use git-format-patch, but really we want
+> this to work with any git diff.
 
-Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
----
- arch/powerpc/kernel/ima_arch.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I don't understand your argument against what I proposed at all.
 
-diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
-index 77c61b142042..3f57433c0824 100644
---- a/arch/powerpc/kernel/ima_arch.c
-+++ b/arch/powerpc/kernel/ima_arch.c
-@@ -24,9 +24,9 @@ bool arch_ima_get_secureboot(void)
- static const char *const arch_rules[] = {
- 	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
- 	"measure func=MODULE_CHECK template=ima-modsig",
--	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
-+	"appraise func=KEXEC_KERNEL_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #if !IS_ENABLED(CONFIG_MODULE_SIG)
--	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
-+	"appraise func=MODULE_CHECK appraise_flag=check_blacklist appraise_type=imasig|modsig",
- #endif
- 	NULL
- };
--- 
-2.20.1
+and btw:
+
+$ git format-patch -1 --stdout <commit> | ./scripts/checkpatch.pl
