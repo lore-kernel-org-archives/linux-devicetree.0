@@ -1,60 +1,70 @@
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Subject: Re: [Patch v4 5/8] media: dt-bindings: ov2659: add
- powerdown/reset-gpios optional property
-Date: Fri, 27 Sep 2019 21:37:22 +0100
-Message-ID: <CA+V-a8ss26F4nEFRDtXytn4ZPi==fMYdoe0JpEunURAYy9J99g@mail.gmail.com>
-References: <20190927184722.31989-1-bparrot@ti.com> <20190927184722.31989-6-bparrot@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: dma: ti-edma: Document
+ dma-channel-mask for EDMA
+Date: Fri, 27 Sep 2019 15:48:54 -0500
+Message-ID: <20190927204854.GA20463@bogus>
+References: <20190926111954.9184-1-peter.ujfalusi@ti.com>
+ <20190926111954.9184-3-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190927184722.31989-6-bparrot@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20190926111954.9184-3-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 7:47 PM Benoit Parrot <bparrot@ti.com> wrote:
->
-> Add powerdown-gpios and reset-gpios to the list of optional properties
-> for the OV2659 camera sensor.
->
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+On Thu, Sep 26, 2019 at 02:19:53PM +0300, Peter Ujfalusi wrote:
+> Similarly to paRAM slots, channels can be used by other cores.
+> 
+> The common dma-channel-mask property can be used for specifying the
+> available channels.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 > ---
->  Documentation/devicetree/bindings/media/i2c/ov2659.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-
-Cheers,
---Prabhakar Lad
-
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov2659.txt b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
-> index cabc7d827dfb..92989a619f29 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/ov2659.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
-> @@ -12,6 +12,12 @@ Required Properties:
->  - clock-names: should be "xvclk".
->  - link-frequencies: target pixel clock frequency.
->
-> +Optional Properties:
-> +- powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
-> +  Active high with internal pull down resistor.
-> +- reset-gpios: reference to the GPIO connected to the resetb pin, if any.
-> +  Active low with internal pull up resistor.
+>  Documentation/devicetree/bindings/dma/ti-edma.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
+> index 4bbc94d829c8..014187088020 100644
+> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
+> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
+> @@ -42,6 +42,11 @@ Optional properties:
+>  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
+>  		the driver, they are allocated to be used by for example the
+>  		DSP. See example.
+> +- dma-channel-mask: Mask of usable channels.
+> +		Single uint32 for EDMA with 32 channels, array of two uint32 for
+> +		EDMA with 64 channels. See example and
+> +		Documentation/devicetree/bindings/dma/dma-common.yaml
 > +
->  For further reading on port node refer to
->  Documentation/devicetree/bindings/media/video-interfaces.txt.
->
-> @@ -27,6 +33,9 @@ Example:
->                         clocks = <&clk_ov2659 0>;
->                         clock-names = "xvclk";
->
-> +                       powerdown-gpios = <&gpio6 14 GPIO_ACTIVE_HIGH>;
-> +                       reset-gpios = <&gpio6 15 GPIO_ACTIVE_LOW>;
-> +
->                         port {
->                                 ov2659_0: endpoint {
->                                         remote-endpoint = <&vpfe_ep>;
-> --
-> 2.17.1
->
+>  
+>  ------------------------------------------------------------------------------
+>  eDMA3 Transfer Controller
+> @@ -91,6 +96,9 @@ edma: edma@49000000 {
+>  	ti,edma-memcpy-channels = <20 21>;
+>  	/* The following PaRAM slots are reserved: 35-44 and 100-109 */
+>  	ti,edma-reserved-slot-ranges = <35 10>, <100 10>;
+> +	/* The following channels are reserved: 35-44 */
+> +	dma-channel-mask = <0xffffffff>, /* Channel 0-31 */
+> +			   <0xffffe007>; /* Channel 32-63 */
+
+Doesn't matter yet, but you have a mismatch here with the schema. While 
+the <> around each int or not doesn't matter for the dtb, it does for 
+the schema.
+
+dma-channel-mask = <0xffffffff>, <0xffffe007>;
+minItems: 1
+maxItems: 255
+
+dma-channel-mask = <0xffffffff 0xffffe007>;
+items:
+  minItems: 1
+  maxItems: 255
+
+I think the latter case is slightly more logical here as you have 1 
+thing (a mask). If had N of something (like interrupts), then the former 
+makes sense. 
+
+Rob
