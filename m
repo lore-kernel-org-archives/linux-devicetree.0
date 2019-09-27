@@ -1,39 +1,69 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: clock: meson: add A1 clock controller bindings
-Date: Fri, 27 Sep 2019 15:10:36 -0500
-Message-ID: <CAL_JsqL8r-8J_bSaQax3cJkOUL8D7P+6_PcCqaC1k8=zS18moQ@mail.gmail.com>
-References: <1569411888-98116-1-git-send-email-jian.hu@amlogic.com> <1569411888-98116-2-git-send-email-jian.hu@amlogic.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: dmaengine: dma-common: Change
+ dma-channel-mask to uint32-array
+Date: Fri, 27 Sep 2019 15:25:39 -0500
+Message-ID: <20190927202539.GA20669@bogus>
+References: <20190926111954.9184-1-peter.ujfalusi@ti.com>
+ <20190926111954.9184-2-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569411888-98116-2-git-send-email-jian.hu@amlogic.com>
+Content-Disposition: inline
+In-Reply-To: <20190926111954.9184-2-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jian Hu <jian.hu@amlogic.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Jianxin Pan <jianxin.pan@amlogic.com>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: vkoul@kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 6:45 AM Jian Hu <jian.hu@amlogic.com> wrote:
->
-> Add the documentation to support Amlogic A1 clock driver,
-> and add A1 clock controller bindings.
->
-> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+On Thu, Sep 26, 2019 at 02:19:52PM +0300, Peter Ujfalusi wrote:
+> Make the dma-channel-mask to be usable for controllers with more than 32
+> channels.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 > ---
->  .../devicetree/bindings/clock/amlogic,a1-clkc.yaml |  65 +++++++++++++
->  include/dt-bindings/clock/a1-clkc.h                | 102 +++++++++++++++++++++
->  2 files changed, 167 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
->  create mode 100644 include/dt-bindings/clock/a1-clkc.h
->
-> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
-> new file mode 100644
-> index 0000000..f012eb2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
-> @@ -0,0 +1,65 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+>  Documentation/devicetree/bindings/dma/dma-common.yaml | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
+> index ed0a49a6f020..4527f20301ff 100644
+> --- a/Documentation/devicetree/bindings/dma/dma-common.yaml
+> +++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
+> @@ -25,11 +25,18 @@ properties:
+>        Used to provide DMA controller specific information.
+>  
+>    dma-channel-mask:
+> -    $ref: /schemas/types.yaml#definitions/uint32
+>      description:
+>        Bitmask of available DMA channels in ascending order that are
+>        not reserved by firmware and are available to the
+>        kernel. i.e. first channel corresponds to LSB.
+> +      The first item in the array is for channels 0-31, the second is for
+> +      channels 32-63, etc.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +        items:
+> +          minItems: 1
+> +          # Should be enough
+> +          maxItems: 255
 
-(GPL-2.0-only OR BSD-2-Clause) please.
+'items' has to be a separate sub-schema from $ref to have any effect:
+
+    allOf:
+      - $ref: /schemas/types.yaml#/definitions/uint32-array                                                        
+    items:
+      minItems: 1
+      # Should be enough
+      maxItems: 255
+
+Or (note the added '-'):
+
+    allOf:                                                                                                            
+      - $ref: /schemas/types.yaml#/definitions/uint32-array                                                           
+      - items:                                                                                                            
+          minItems: 1                                                                                                     
+          # Should be enough                                                                                              
+          maxItems: 255                                                                                                   
+
+The first way is my preference.
 
 Rob
