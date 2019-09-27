@@ -1,66 +1,122 @@
-From: Vincent Cheng <vincent.cheng.xh@renesas.com>
-Subject: Re: [PATCH v2 2/2] ptp: Add a ptp clock driver for IDT ClockMatrix.
-Date: Fri, 27 Sep 2019 14:12:30 +0000
-Message-ID: <20190927141215.GA24424@renesas.com>
-References: <1569556128-22212-1-git-send-email-vincent.cheng.xh@renesas.com>
- <1569556128-22212-2-git-send-email-vincent.cheng.xh@renesas.com>
- <20190927122518.GA25474@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH v6 0/9] powerpc: Enabling IMA arch specific secure boot policies
+Date: Fri, 27 Sep 2019 10:25:51 -0400
+Message-ID: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190927122518.GA25474@lunn.ch>
-Content-Language: en-US
-Content-ID: <8E637F3650C0904CA0867BC8DA56FB57@jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "richardcochran@gmail.com" <richardcochran@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Jeremy Kerr <jk@ozlabs.org>, Matthew Garret <matthew.garret@nebula.com>, Mimi Zohar <zohar@linux.ibm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Claudio Carvalho <cclaudio@linux.ibm.com>, George Wilson <gcwilson@linux.ibm.com>, Elaine Palmer <erpalmer@us.ibm.com>, Eric Ricther <erichte@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nayna Jain <nayna@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBTZXAgMjcsIDIwMTkgYXQgMDg6MjU6MThBTSBFRFQsIEFuZHJldyBMdW5uIHdyb3Rl
-Og0KPj4gK3N0YXRpYyBzMzIgaWR0Y21feGZlcihzdHJ1Y3QgaWR0Y20gKmlkdGNtLA0KPj4gKwkJ
-ICAgICAgdTggcmVnYWRkciwNCj4+ICsJCSAgICAgIHU4ICpidWYsDQo+PiArCQkgICAgICB1MTYg
-Y291bnQsDQo+PiArCQkgICAgICBib29sIHdyaXRlKQ0KPj4gK3sNCj4+ICsJc3RydWN0IGkyY19j
-bGllbnQgKmNsaWVudCA9IGlkdGNtLT5jbGllbnQ7DQo+PiArCXN0cnVjdCBpMmNfbXNnIG1zZ1sy
-XTsNCj4+ICsJczMyIGNudDsNCj4+ICsNCj4+ICsJbXNnWzBdLmFkZHIgPSBjbGllbnQtPmFkZHI7
-DQo+PiArCW1zZ1swXS5mbGFncyA9IDA7DQo+PiArCW1zZ1swXS5sZW4gPSAxOw0KPj4gKwltc2db
-MF0uYnVmID0gJnJlZ2FkZHI7DQo+PiArDQo+PiArCW1zZ1sxXS5hZGRyID0gY2xpZW50LT5hZGRy
-Ow0KPj4gKwltc2dbMV0uZmxhZ3MgPSB3cml0ZSA/IDAgOiBJMkNfTV9SRDsNCj4+ICsJbXNnWzFd
-LmxlbiA9IGNvdW50Ow0KPj4gKwltc2dbMV0uYnVmID0gYnVmOw0KPj4gKw0KPj4gKwljbnQgPSBp
-MmNfdHJhbnNmZXIoY2xpZW50LT5hZGFwdGVyLCBtc2csIDIpOw0KPj4gKw0KPj4gKwlpZiAoY250
-IDwgMCkgew0KPj4gKwkJZGV2X2VycigmY2xpZW50LT5kZXYsICJpMmNfdHJhbnNmZXIgcmV0dXJu
-ZWQgJWRcbiIsIGNudCk7DQo+PiArCQlyZXR1cm4gY250Ow0KPj4gKwl9IGVsc2UgaWYgKGNudCAh
-PSAyKSB7DQo+PiArCQlkZXZfZXJyKCZjbGllbnQtPmRldiwNCj4+ICsJCQkiaTJjX3RyYW5zZmVy
-IHNlbnQgb25seSAlZCBvZiAlZCBtZXNzYWdlc1xuIiwgY250LCAyKTsNCj4+ICsJCXJldHVybiAt
-RUlPOw0KPj4gKwl9DQo+PiArDQo+PiArCXJldHVybiAwOw0KPj4gK30NCj4+ICsNCj4+ICtzdGF0
-aWMgczMyIGlkdGNtX3BhZ2Vfb2Zmc2V0KHN0cnVjdCBpZHRjbSAqaWR0Y20sIHU4IHZhbCkNCj4+
-ICt7DQo+PiArCXU4IGJ1Zls0XTsNCj4+ICsJczMyIGVycjsNCj4NCj5IaSBWaW5jZW50DQoNCkhp
-IEFuZHJldywNCg0KVGhhbmsteW91IGZvciBsb29raW5nIGF0IHRoZSBwYXRjaC4NCg0KPkFsbCB5
-b3VyIGZ1bmN0aW9ucyByZXR1cm4gczMyLCByYXRoZXIgdGhhbiB0aGUgdXN1YWwgaW50LiBlcnIg
-aXMgYW4NCj5zMzIuICBpMmNfdHJhbnNmZXIoKSB3aWxsIHJldHVybiBhbiBpbnQsIHdoaWNoIHlv
-dSB0aGVuIGFzc2lnbiB0byBhbg0KPnMzMi4gIEkndmUgbm8gaWRlYSwgYnV0IG1heWJlIHRoZSBz
-dGF0aWMgY29kZSBjaGVja2VycyBsaWtlIHNtYXRjaA0KPndpbGwgY29tcGxhaW4gYWJvdXQgdGhp
-cywgZXNwZWNpYWxseSBvbiA2NCBiaXQgc3lzdGVtcz8gSSBzdXNwZWN0IG9uDQo+NjQgYml0IG1h
-Y2hpbmVzLCB0aGUgY29tcGlsZXIgd2lsbCBiZSBnZW5lcmF0aW5nIHdvcnNlIGNvZGUsIG1hc2tp
-bmcNCj5yZWdpc3RlcnM/IE1heWJlIHVzZSBpbnQsIG5vdCBzMzI/DQoNCk9vcHMuICBZb3UgYXJl
-IGNvcnJlY3QsIEkgbWVzc2VkIHVwIHdoZW4gdHJ5aW5nIHRvIHN0YW5kYXJkaXplDQpvbiBsaW51
-eCB0eXBlcy5oLiAgSSB3aWxsIGdvIHRocm91Z2ggdGhlIGNvZGUgdG8gZW5zdXJlIGludCBpcyB1
-c2VkDQpmb3IgZXJyb3IgY29kZXMgYW5kIHJldHVybiB2YWx1ZXMuDQoNCj4+ICsJY2FzZSBPVVRQ
-VVRfTUFTS19QTEwyX0FERFIgKyAxOg0KPj4gKwkJU0VUX1UxNl9NU0IoaWR0Y20tPmNoYW5uZWxb
-Ml0ub3V0cHV0X21hc2ssIHZhbCk7DQo+PiArCQlicmVhazsNCj4+ICsJY2FzZSBPVVRQVVRfTUFT
-S19QTEwzX0FERFI6DQo+PiArCQlTRVRfVTE2X0xTQihpZHRjbS0+Y2hhbm5lbFszXS5vdXRwdXRf
-bWFzaywgdmFsKTsNCj4+ICsJCWJyZWFrOw0KPj4gKwljYXNlIE9VVFBVVF9NQVNLX1BMTDNfQURE
-UiArIDE6DQo+PiArCQlTRVRfVTE2X01TQihpZHRjbS0+Y2hhbm5lbFszXS5vdXRwdXRfbWFzaywg
-dmFsKTsNCj4+ICsJCWJyZWFrOw0KPj4gKwlkZWZhdWx0Og0KPj4gKwkJZXJyID0gLTE7DQo+DQo+
-RUlOVkFMPw0KDQpZZXMsIHdpbGwgcmVwbGFjZSB3aXRoIC1FSU5WQUwuICBUaGFua3MuDQoNCj4+
-ICtzdGF0aWMgdm9pZCBzZXRfZGVmYXVsdF9mdW5jdGlvbl9wb2ludGVycyhzdHJ1Y3QgaWR0Y20g
-KmlkdGNtKQ0KPj4gK3sNCj4+ICsJaWR0Y20tPl9pZHRjbV9nZXR0aW1lID0gX2lkdGNtX2dldHRp
-bWU7DQo+PiArCWlkdGNtLT5faWR0Y21fc2V0dGltZSA9IF9pZHRjbV9zZXR0aW1lOw0KPj4gKwlp
-ZHRjbS0+X2lkdGNtX3Jkd3IgPSBpZHRjbV9yZHdyOw0KPj4gKwlpZHRjbS0+X3N5bmNfcGxsX291
-dHB1dCA9IHN5bmNfcGxsX291dHB1dDsNCj4+ICt9DQo+DQo+V2h5IGRvZXMgdGhpcyBpbmRpcmVj
-dGlvbj8gQXJlIHRoZSBTUEkgdmVyc2lvbnMgb2YgdGhlIHNpbGljb24/DQoNClRoZSBpbmRpcmVj
-dGlvbiBpcyB0byBlbmFibGUgdXMgdG8gcmVwbGFjZSB0aG9zZSBmdW5jdGlvbnMgaW4NCm91ciB1
-bml0IHRlc3RzIHdpdGggbW9ja2VkIGZ1bmN0aW9ucy4NCg0KSSByZWFkIHNvbWV3aGVyZSB0aGF0
-IEkgc2hvdWxkIGxlYXZlIGEgd2VlayBiZXR3ZWVuIHNlbmRpbmcgYQ0KcmV2aXNlZCBwYXRjaCBz
-ZXJpZXMuICBJcyB0aGlzIGEgZ29vZCBydWxlIHRvIGZvbGxvdz8NCg0KUmVnYXJkcywNClZpbmNl
-bnQNCg==
+This patchset extends the previous version of the patchset[1] by adding
+the support for checking against the binary blacklisted hashes.
+
+IMA subsystem supports custom, built-in, arch-specific policies to define
+the files to be measured and appraised. These policies are honored based
+on the priority where arch-specific policies is the highest and custom
+is the lowest.
+
+PowerNV systems uses the linux based bootloader and kexec the Host OS.
+It rely on IMA for signature verification of the kernel before doing the
+kexec. This patchset adds support for powerpc arch specific ima policies
+that are defined based on system's OS secureboot and trustedboot state.
+The OS secureboot and trustedboot state are determined via device-tree
+properties.
+
+The verification needs to be done only for the binaries which are not
+blacklisted. The kernel currently checks against the blacklisted keys.
+However that results in blacklisting all the binaries that are signed by
+that key. In order to prevent single binary from loading, it is required
+to support checking against blacklisting of the binary hash. This patchset
+adds the support in IMA to check against blacklisted hashes for the files
+signed by appended signature.
+
+[1] http://patchwork.ozlabs.org/cover/1149262/ 
+
+Changelog:
+v6:
+* includes feedbacks from Michael Ellerman on the patchset v5
+  * removed email ids from comments
+  * add the doc for the device-tree
+  * renames the secboot.c to secure_boot.c and secboot.h to secure_boot.h
+  * other code specific fixes
+* split the patches to differentiate between secureboot and trustedboot
+state of the system
+* adds the patches to support the blacklisting of the binary hash.
+
+v5:
+* secureboot state is now read via device tree entry rather than OPAL
+secure variables
+* ima arch policies are updated to use policy based template for
+measurement rules
+
+v4:
+* Fixed the build issue as reported by Satheesh Rajendran.
+
+v3:
+* OPAL APIs in Patch 1 are updated to provide generic interface based on
+key/keylen. This patchset updates kernel OPAL APIs to be compatible with
+generic interface.
+* Patch 2 is cleaned up to use new OPAL APIs.
+* Since OPAL can support different types of backend which can vary in the
+variable interpretation, the Patch 2 is updated to add a check for the
+backend version
+* OPAL API now expects consumer to first check the supported backend version
+before calling other secvar OPAL APIs. This check is now added in patch 2.
+* IMA policies in Patch 3 is updated to specify appended signature and
+per policy template.
+* The patches now are free of any EFIisms.
+
+v2:
+
+* Removed Patch 1: powerpc/include: Override unneeded early ioremap
+functions
+* Updated Subject line and patch description of the Patch 1 of this series
+* Removed dependency of OPAL_SECVAR on EFI, CPU_BIG_ENDIAN and UCS2_STRING
+* Changed OPAL APIs from static to non-static. Added opal-secvar.h for the
+same
+* Removed EFI hooks from opal_secvar.c
+* Removed opal_secvar_get_next(), opal_secvar_enqueue() and
+opal_query_variable_info() function
+* get_powerpc_sb_mode() in secboot.c now directly calls OPAL Runtime API
+rather than via EFI hooks.
+* Fixed log messages in get_powerpc_sb_mode() function.
+* Added dependency for PPC_SECURE_BOOT on configs PPC64 and OPAL_SECVAR
+* Replaced obj-$(CONFIG_IMA) with obj-$(CONFIG_PPC_SECURE_BOOT) in
+arch/powerpc/kernel/Makefile
+
+Nayna Jain (9):
+  dt-bindings: ibm,secureboot: secure boot specific properties for
+    PowerNV
+  powerpc: detect the secure boot mode of the system
+  powerpc: add support to initialize ima policy rules
+  powerpc: detect the trusted boot state of the system
+  powerpc/ima: add measurement rules to ima arch specific policy
+  ima: make process_buffer_measurement() non-static
+  ima: check against blacklisted hashes for files with modsig
+  ima: deprecate permit_directio, instead use appraise_flag
+  powerpc/ima: update ima arch policy to check for blacklist
+
+ Documentation/ABI/testing/ima_policy          |  3 +-
+ .../bindings/powerpc/ibm,secureboot.rst       | 76 +++++++++++++++
+ .../devicetree/bindings/powerpc/secvar.rst    | 89 +++++++++++++++++
+ arch/powerpc/Kconfig                          | 12 +++
+ arch/powerpc/include/asm/secure_boot.h        | 37 +++++++
+ arch/powerpc/kernel/Makefile                  |  2 +
+ arch/powerpc/kernel/ima_arch.c                | 71 ++++++++++++++
+ arch/powerpc/kernel/secure_boot.c             | 96 +++++++++++++++++++
+ include/linux/ima.h                           |  3 +-
+ security/integrity/ima/ima.h                  | 15 +++
+ security/integrity/ima/ima_appraise.c         | 35 +++++++
+ security/integrity/ima/ima_main.c             | 37 +++----
+ security/integrity/ima/ima_policy.c           | 12 ++-
+ security/integrity/integrity.h                |  1 +
+ 14 files changed, 468 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst
+ create mode 100644 Documentation/devicetree/bindings/powerpc/secvar.rst
+ create mode 100644 arch/powerpc/include/asm/secure_boot.h
+ create mode 100644 arch/powerpc/kernel/ima_arch.c
+ create mode 100644 arch/powerpc/kernel/secure_boot.c
+
+-- 
+2.20.1
