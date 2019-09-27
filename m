@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 10/16] media: ti-vpe: vpe: fix a v4l2-compliance failure about invalid sizeimage
-Date: Fri, 27 Sep 2019 13:36:44 -0500
-Message-ID: <20190927183650.31345-11-bparrot@ti.com>
+Subject: [Patch 09/16] media: ti-vpe: vpe: Make sure YUYV is set as default format
+Date: Fri, 27 Sep 2019 13:36:43 -0500
+Message-ID: <20190927183650.31345-10-bparrot@ti.com>
 References: <20190927183650.31345-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,52 +14,42 @@ List-Id: devicetree@vger.kernel.org
 
 v4l2-compliance fails with this message:
 
-   fail: v4l2-test-formats.cpp(463): !pfmt.sizeimage
-   fail: v4l2-test-formats.cpp(736): \
-	Video Capture Multiplanar is valid, \
-	but TRY_FMT failed to return a format
+   fail: v4l2-test-formats.cpp(672): \
+	Video Capture Multiplanar: TRY_FMT(G_FMT) != G_FMT
+   fail: v4l2-test-formats.cpp(672): \
+	Video Output Multiplanar: TRY_FMT(G_FMT) != G_FMT
+	...
    test VIDIOC_TRY_FMT: FAIL
 
-This failure is causd by the driver failing to handle out range
-'bytesperline' values from user space applications.
+Fixes: 94ed726e8e01 ("media: ti-vpe: Add support for NV21 format")
 
-VPDMA hardware is limited to 64k line stride (16 bytes aligned, so 65520
-bytes). So make sure the provided or calculated 'bytesperline' is
-smaller than the maximum value.
+The default pixel format was setup as pointing to a specific offset in
+the vpe_formats table assuming it was pointing to the V4L2_PIX_FMT_YUYV
+entry. This became false after the addition on the NV21 format (see
+above commid-id)
+
+So instead of hard-coding an offset which might change over time we need
+to use a lookup helper instead so we know the default will always be what
+we intended.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpdma.h | 1 +
- drivers/media/platform/ti-vpe/vpe.c   | 4 ++++
- 2 files changed, 5 insertions(+)
+ drivers/media/platform/ti-vpe/vpe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpdma.h b/drivers/media/platform/ti-vpe/vpdma.h
-index bce17329c4c9..393fcbb3cb40 100644
---- a/drivers/media/platform/ti-vpe/vpdma.h
-+++ b/drivers/media/platform/ti-vpe/vpdma.h
-@@ -57,6 +57,7 @@ struct vpdma_data_format {
- 						 * line stride of source and dest
- 						 * buffers should be 16 byte aligned
- 						 */
-+#define VPDMA_MAX_STRIDE		65520	/* Max line stride 16 byte aligned */
- #define VPDMA_DTD_DESC_SIZE		32	/* 8 words */
- #define VPDMA_CFD_CTD_DESC_SIZE		16	/* 4 words */
- 
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 7aa83026fb6c..0a7cf9c820c6 100644
+index d3f1ae8b72fa..7aa83026fb6c 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1694,6 +1694,10 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
- 		if (stride > plane_fmt->bytesperline)
- 			plane_fmt->bytesperline = stride;
+@@ -2321,7 +2321,7 @@ static int vpe_open(struct file *file)
+ 	v4l2_ctrl_handler_setup(hdl);
  
-+		plane_fmt->bytesperline = clamp_t(u32, plane_fmt->bytesperline,
-+						  stride,
-+						  VPDMA_MAX_STRIDE);
-+
- 		plane_fmt->bytesperline = ALIGN(plane_fmt->bytesperline,
- 						VPDMA_STRIDE_ALIGN);
- 
+ 	s_q_data = &ctx->q_data[Q_DATA_SRC];
+-	s_q_data->fmt = &vpe_formats[2];
++	s_q_data->fmt = __find_format(V4L2_PIX_FMT_YUYV);
+ 	s_q_data->width = 1920;
+ 	s_q_data->height = 1080;
+ 	s_q_data->nplanes = 1;
 -- 
 2.17.1
