@@ -1,107 +1,161 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH V3 2/3] dt-bindings: Add Logic PD Type 28 display panel
-Date: Fri, 27 Sep 2019 14:02:35 -0500
-Message-ID: <CAHCN7x+V_-PZjhC_1K1kU+fnQYwWM4br1PTPEBd4Kks=sR5K7g@mail.gmail.com>
-References: <20190925184239.22330-1-aford173@gmail.com> <20190925184239.22330-2-aford173@gmail.com>
- <20190927185153.GA982@bogus>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH 1/3] ARM: dts: add Netronix E60K02 board common file
+Date: Fri, 27 Sep 2019 21:08:07 +0200
+Message-ID: <20190927210807.26439a94@aktux>
+References: <20190927061423.17278-1-andreas@kemnade.info>
+        <20190927061423.17278-2-andreas@kemnade.info>
+        <20190927094721.w26ggnli4f5a64uv@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190927185153.GA982@bogus>
+In-Reply-To: <20190927094721.w26ggnli4f5a64uv@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, Adam Ford <adam.ford@logicpd.com>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com, marex@denx.de, angus@akkea.ca, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 1:51 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Sep 25, 2019 at 01:42:37PM -0500, Adam Ford wrote:
-> > This patch adds documentation of device tree bindings for the WVGA panel
-> > Logic PD Type 28 display.
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > ---
-> > V3:  Correct build errors from 'make dt_binding_check'
-> > V2:  Use YAML instead of TXT for binding
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
-> > new file mode 100644
-> > index 000000000000..74ba650ea7a0
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/panel/logicpd,type28.yaml
-> > @@ -0,0 +1,31 @@
-> > +# SPDX-License-Identifier: (GPL-2.0+ OR X11)
->
-> (GPL-2.0-only OR BSD-2-Clause) please.
->
-> X11 is pretty much never right unless this is copyright X Consortium.
->
+Hi Marco,
 
-I copied the example from
-Documentation/devicetree/bindings/display/panel/ronbo,rb070d30.yaml
+On Fri, 27 Sep 2019 11:47:21 +0200
+Marco Felsch <m.felsch@pengutronix.de> wrote:
 
-Is there a better example I can use?  If what I did is wrong, then it
-seems like that board is wrong too.
+> Hi Andreas,
+> 
+> thanks for the patch.
+> 
+thanks for the quick review. Most of your comments are clear.
 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/panel/logicpd,type28.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+[...]
+> > +	wifi_pwrseq: wifi_pwrseq {
+> > +		compatible = "mmc-pwrseq-simple";
+> > +		post-power-on-delay-ms = <20>;
+> > +		reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;  
+> 
+> Can you add a pinctrl-entry here please? The general rule is to mux
+> things where you use it.
+> 
+yes, there are many places in my patch where they are added to some
+parent devices.
+I will fix that.
+[...]
+> > +	leds {
+> > +		compatible = "gpio-leds";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_led>;  
+> 
+> Please move all muxing you made here into this file or add phandles so
+> the dts file need to add only the muxing stuff. This applies to all
+> pinctrl you made here.
+> 
+so you disagree with this pattern:
+in .dtsi
+ some_device {
+   pinctrl-0 = <&pinctrl_some_device>;
+ };
+
+and in .dts (one I sent with this patch series and the tolino/mx6sl one
+is not ready-cooked yet, will be part of a later series)
+&iomuxc {
+   pinctrl_some_device: some_devicegrp {
+   	fsl,pins = <...>;
+   };
+};
+
+?
+
 > > +
-> > +title: Logic PD Type 28 4.3" WQVGA TFT LCD panel
+> > +		GLED {
+> > +			gpios = <&gpio5 7 GPIO_ACTIVE_LOW>;
+> > +			linux,default-trigger = "timer";
+> > +		};
+> > +	};
 > > +
-> > +maintainers:
-> > +  - Adam Ford <aford173@gmail.com>
-> > +
->
-> You need:
->
-> allOf:
->   - $ref: panel-common.yaml#
->
-> > +properties:
-> > +  compatible:
-> > +    const: logicpd,type28
-> > +
->
-> > +  power-supply:
-> > +    description: Regulator to provide the supply voltage
-> > +    maxItems: 1
-> > +
-> > +  enable-gpios:
-> > +    description: GPIO pin to enable or disable the panel
-> > +    maxItems: 1
-> > +
-> > +  backlight:
-> > +    description: Backlight used by the panel
-> > +    $ref: "/schemas/types.yaml#/definitions/phandle"
->
-> These 3 are all defined in the common schema, so you just need 'true'
-> for the value to indicate they apply to this panel and to make
-> 'additionalProperties: false' happy.
+> > +	gpio-keys {
+> > +		compatible = "gpio-keys";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&pinctrl_gpio_keys>;
+> > +		power {
+> > +			label = "Power";
+> > +			gpios = <&gpio5 8 GPIO_ACTIVE_LOW>;
+> > +			linux,code = <KEY_POWER>;  
+> 
+> Add missing header: dt-bindings/input/input.h to use this.
+> 
+I am doing this in the .dts but it is probably better to do it here
+because it is used here.
 
-Sorry for my ignorance, but I am not familiar with the syntax here,
-nor do I understand what is required.  Since there aren't many display
-panels with yaml docs, I don't know what is expected and clearly the
-one I used as a template didn't do it right either.
+> > +			gpio-key,wakeup;
+> > +		};
+> > +		cover {
+> > +			label = "Cover";
+> > +			gpios = <&gpio5 12 GPIO_ACTIVE_LOW>;
+> > +			linux,code = <SW_LID>;
+> > +			linux,input-type = <0x05>;    /* EV_SW */  
+> 
+> In the header above EV_SW is also specified so please use it here.
+> 
+This pattern is in many files. I took one as an example. It seems that
+50% of devicetree files have this pattern, the other 50% do have the
+pattern you proposed (which I like more). So probably EV_SW was not
+available in former times?
 
-Is there a branch  where this stuff is located? I am just using the
-latest linux-stable branch.
-
->
+> > +			gpio-key,wakeup;
+> > +		};
+> > +	};
 > > +
-> > +required:
-> > +  - compatible
->
-> Are the rest really optional?
-
->From what I can tell, they are optional.  I am just adding some timing
-info to an already existing driver.  It's not my driver.
-
-
->
+> > +};
 > > +
-> > +additionalProperties: false
-> > --
-> > 2.17.1
-> >
+> > +
+> > +  
+> 
+> Whitespaces
+> 
+> > +&audmux {
+> > +	pinctrl-names = "default";
+> > +	status = "disabled";  
+> 
+> Why you mentioned a pinctrl-names here without the mux? Do we need the
+> status line here? The common case is that such devices are off by
+> default/the base dt.
+> 
+yes, that things can be removed.
+> > +};
+> > +
+> > +&snvs_rtc {
+> > +	status = "disabled";  
+> 
+> Same applies here.
+> 
+
+No, seems to be an exception, it does not have a status = "disabled" in
+imx6sll.dtsi.
+
+> > +};
+> > +
+> > +&i2c1 {
+> > +	clock-frequency = <100000>;
+> > +	pinctrl-names = "default","sleep";
+> > +	pinctrl-0 = <&pinctrl_i2c1 &pinctrl_lm3630a_bl_gpio>;  
+> 
+> The &pinctrl_lm3630a_bl_gpio should be moved into the lm3630a node.
+> 
+> > +	pinctrl-1 = <&pinctrl_i2c1_sleep>;
+> > +	status = "okay";
+> > +
+> > +	lm3630a: lm3630a-i2c@36 {  
+> 
+> please name it backlight@36
+> 
+> > +		reg = <0x36>;
+> > +		status = "ok";  
+> 
+> status lines are always be the last and if it is okay you can drop it
+> because the default is okay.
+> 
+well, I added it because the driver was not loaded but later I found out
+that the real reason is that module aliases were broken and forgot to
+remove that "ok".
+
+Regards,
+Andreas
