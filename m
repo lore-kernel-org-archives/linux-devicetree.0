@@ -1,161 +1,39 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH 1/3] ARM: dts: add Netronix E60K02 board common file
-Date: Fri, 27 Sep 2019 21:08:07 +0200
-Message-ID: <20190927210807.26439a94@aktux>
-References: <20190927061423.17278-1-andreas@kemnade.info>
-        <20190927061423.17278-2-andreas@kemnade.info>
-        <20190927094721.w26ggnli4f5a64uv@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: meson: add A1 clock controller bindings
+Date: Fri, 27 Sep 2019 15:10:36 -0500
+Message-ID: <CAL_JsqL8r-8J_bSaQax3cJkOUL8D7P+6_PcCqaC1k8=zS18moQ@mail.gmail.com>
+References: <1569411888-98116-1-git-send-email-jian.hu@amlogic.com> <1569411888-98116-2-git-send-email-jian.hu@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190927094721.w26ggnli4f5a64uv@pengutronix.de>
+In-Reply-To: <1569411888-98116-2-git-send-email-jian.hu@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com, marex@denx.de, angus@akkea.ca, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+To: Jian Hu <jian.hu@amlogic.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Jianxin Pan <jianxin.pan@amlogic.com>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Qiufang Dai <qiufang.dai@amlogic.com>, linux-amlogic@lists.infradead.org, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marco,
+On Wed, Sep 25, 2019 at 6:45 AM Jian Hu <jian.hu@amlogic.com> wrote:
+>
+> Add the documentation to support Amlogic A1 clock driver,
+> and add A1 clock controller bindings.
+>
+> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
+> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+> ---
+>  .../devicetree/bindings/clock/amlogic,a1-clkc.yaml |  65 +++++++++++++
+>  include/dt-bindings/clock/a1-clkc.h                | 102 +++++++++++++++++++++
+>  2 files changed, 167 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+>  create mode 100644 include/dt-bindings/clock/a1-clkc.h
+>
+> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+> new file mode 100644
+> index 0000000..f012eb2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-clkc.yaml
+> @@ -0,0 +1,65 @@
+> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
 
-On Fri, 27 Sep 2019 11:47:21 +0200
-Marco Felsch <m.felsch@pengutronix.de> wrote:
+(GPL-2.0-only OR BSD-2-Clause) please.
 
-> Hi Andreas,
-> 
-> thanks for the patch.
-> 
-thanks for the quick review. Most of your comments are clear.
-
-[...]
-> > +	wifi_pwrseq: wifi_pwrseq {
-> > +		compatible = "mmc-pwrseq-simple";
-> > +		post-power-on-delay-ms = <20>;
-> > +		reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;  
-> 
-> Can you add a pinctrl-entry here please? The general rule is to mux
-> things where you use it.
-> 
-yes, there are many places in my patch where they are added to some
-parent devices.
-I will fix that.
-[...]
-> > +	leds {
-> > +		compatible = "gpio-leds";
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pinctrl_led>;  
-> 
-> Please move all muxing you made here into this file or add phandles so
-> the dts file need to add only the muxing stuff. This applies to all
-> pinctrl you made here.
-> 
-so you disagree with this pattern:
-in .dtsi
- some_device {
-   pinctrl-0 = <&pinctrl_some_device>;
- };
-
-and in .dts (one I sent with this patch series and the tolino/mx6sl one
-is not ready-cooked yet, will be part of a later series)
-&iomuxc {
-   pinctrl_some_device: some_devicegrp {
-   	fsl,pins = <...>;
-   };
-};
-
-?
-
-> > +
-> > +		GLED {
-> > +			gpios = <&gpio5 7 GPIO_ACTIVE_LOW>;
-> > +			linux,default-trigger = "timer";
-> > +		};
-> > +	};
-> > +
-> > +	gpio-keys {
-> > +		compatible = "gpio-keys";
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pinctrl_gpio_keys>;
-> > +		power {
-> > +			label = "Power";
-> > +			gpios = <&gpio5 8 GPIO_ACTIVE_LOW>;
-> > +			linux,code = <KEY_POWER>;  
-> 
-> Add missing header: dt-bindings/input/input.h to use this.
-> 
-I am doing this in the .dts but it is probably better to do it here
-because it is used here.
-
-> > +			gpio-key,wakeup;
-> > +		};
-> > +		cover {
-> > +			label = "Cover";
-> > +			gpios = <&gpio5 12 GPIO_ACTIVE_LOW>;
-> > +			linux,code = <SW_LID>;
-> > +			linux,input-type = <0x05>;    /* EV_SW */  
-> 
-> In the header above EV_SW is also specified so please use it here.
-> 
-This pattern is in many files. I took one as an example. It seems that
-50% of devicetree files have this pattern, the other 50% do have the
-pattern you proposed (which I like more). So probably EV_SW was not
-available in former times?
-
-> > +			gpio-key,wakeup;
-> > +		};
-> > +	};
-> > +
-> > +};
-> > +
-> > +
-> > +  
-> 
-> Whitespaces
-> 
-> > +&audmux {
-> > +	pinctrl-names = "default";
-> > +	status = "disabled";  
-> 
-> Why you mentioned a pinctrl-names here without the mux? Do we need the
-> status line here? The common case is that such devices are off by
-> default/the base dt.
-> 
-yes, that things can be removed.
-> > +};
-> > +
-> > +&snvs_rtc {
-> > +	status = "disabled";  
-> 
-> Same applies here.
-> 
-
-No, seems to be an exception, it does not have a status = "disabled" in
-imx6sll.dtsi.
-
-> > +};
-> > +
-> > +&i2c1 {
-> > +	clock-frequency = <100000>;
-> > +	pinctrl-names = "default","sleep";
-> > +	pinctrl-0 = <&pinctrl_i2c1 &pinctrl_lm3630a_bl_gpio>;  
-> 
-> The &pinctrl_lm3630a_bl_gpio should be moved into the lm3630a node.
-> 
-> > +	pinctrl-1 = <&pinctrl_i2c1_sleep>;
-> > +	status = "okay";
-> > +
-> > +	lm3630a: lm3630a-i2c@36 {  
-> 
-> please name it backlight@36
-> 
-> > +		reg = <0x36>;
-> > +		status = "ok";  
-> 
-> status lines are always be the last and if it is okay you can drop it
-> because the default is okay.
-> 
-well, I added it because the driver was not loaded but later I found out
-that the real reason is that module aliases were broken and forgot to
-remove that "ok".
-
-Regards,
-Andreas
+Rob
