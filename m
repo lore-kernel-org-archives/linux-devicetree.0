@@ -1,7 +1,7 @@
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v5 6/7] arm64: dts: amlogic: g12b: add missing cooling info
-Date: Fri, 27 Sep 2019 14:47:49 +0200
-Message-ID: <20190927124750.12467-9-glaroque@baylibre.com>
+Subject: [PATCH v5 6/7] arm64: dts: amlogic: g12b: add cooling properties
+Date: Fri, 27 Sep 2019 14:47:48 +0200
+Message-ID: <20190927124750.12467-8-glaroque@baylibre.com>
 References: <20190927124750.12467-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190927124750.12467-1-glaroque@baylibre.com>
