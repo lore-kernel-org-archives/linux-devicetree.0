@@ -1,26 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/5] dt-bindings: Add Xylon vendor prefix
-Date: Fri, 27 Sep 2019 15:49:24 -0500
-Message-ID: <20190927204924.GA28620@bogus>
-References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
- <20190927100407.1863293-2-paul.kocialkowski@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH v2 0/4] irqchip: Add Aspeed SCU Interrupt Controller
+Date: Fri, 27 Sep 2019 15:58:45 -0500
+Message-ID: <1569617929-29055-1-git-send-email-eajames@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190927100407.1863293-2-paul.kocialkowski@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, joel@jms.id.au, mark.rutland@arm.com, robh+dt@kernel.org, maz@kernel.org, jason@lakedaemon.net, tglx@linutronix.de, Eddie James <eajames@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 27 Sep 2019 12:04:03 +0200, Paul Kocialkowski wrote:
-> Xylon is an electronics company that produces FPGA hardware block designs
-> optimized for Xilinx FPGAs.
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+The Aspeed SOCs provide some interrupts through the System Control
+Unit registers. Add an interrupt controller that provides these
+interrupts to the system. Add the interrupt controller to the AST25XX
+and AST26XX devicetrees.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Changes since v1:
+ - add a spinlock to protect read-modify-write operation for irq masking
+ - use readl/writel relaxed versions
+ - add a comment explaining the irq status/enable register
+ - provide affinity callback that returns -EINVAL
+
+Eddie James (4):
+  dt-bindings: interrupt-controller: Add Aspeed SCU interrupt controller
+  irqchip: Add Aspeed SCU interrupt controller
+  ARM: dts: aspeed: ast2500: Add SCU interrupt controller
+  ARM: dts: aspeed: ast2600: Add SCU interrupt controllers
+
+ .../interrupt-controller/aspeed,ast2xxx-scu-ic.txt |  26 +++
+ MAINTAINERS                                        |   8 +
+ arch/arm/boot/dts/aspeed-g5.dtsi                   |  11 +-
+ arch/arm/boot/dts/aspeed-g6.dtsi                   |  18 ++
+ drivers/irqchip/Makefile                           |   2 +-
+ drivers/irqchip/irq-aspeed-scu-ic.c                | 233 +++++++++++++++++++++
+ .../interrupt-controller/aspeed-scu-ic.h           |  23 ++
+ 7 files changed, 319 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/aspeed,ast2xxx-scu-ic.txt
+ create mode 100644 drivers/irqchip/irq-aspeed-scu-ic.c
+ create mode 100644 include/dt-bindings/interrupt-controller/aspeed-scu-ic.h
+
+-- 
+1.8.3.1
