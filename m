@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v4 4/8] media: i2c: ov2659: fix s_stream return value
-Date: Fri, 27 Sep 2019 13:47:18 -0500
-Message-ID: <20190927184722.31989-5-bparrot@ti.com>
+Subject: [Patch v4 8/8] media: i2c: ov2659: Switch to SPDX Licensing
+Date: Fri, 27 Sep 2019 13:47:22 -0500
+Message-ID: <20190927184722.31989-9-bparrot@ti.com>
 References: <20190927184722.31989-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,35 +12,41 @@ To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.co
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-In ov2659_s_stream() return value for invoked function should be checked
-and propagated.
+Switch to SPDX licensing and drop the redundant GPL text.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/i2c/ov2659.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/media/i2c/ov2659.c | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
 
 diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index f77320e8a60d..cd4625432264 100644
+index 720310e0725d..e6da23d3a555 100644
 --- a/drivers/media/i2c/ov2659.c
 +++ b/drivers/media/i2c/ov2659.c
-@@ -1187,10 +1187,13 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
- 		goto unlock;
- 	}
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Omnivision OV2659 CMOS Image Sensor driver
+  *
+@@ -5,19 +6,6 @@
+  *
+  * Benoit Parrot <bparrot@ti.com>
+  * Lad, Prabhakar <prabhakar.csengg@gmail.com>
+- *
+- * This program is free software; you may redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; version 2 of the License.
+- *
+- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+- * SOFTWARE.
+  */
  
--	ov2659_set_pixel_clock(ov2659);
--	ov2659_set_frame_size(ov2659);
--	ov2659_set_format(ov2659);
--	ov2659_set_streaming(ov2659, 1);
-+	ret = ov2659_set_pixel_clock(ov2659);
-+	if (!ret)
-+		ret = ov2659_set_frame_size(ov2659);
-+	if (!ret)
-+		ret = ov2659_set_format(ov2659);
-+	if (!ret)
-+		ov2659_set_streaming(ov2659, 1);
- 	ov2659->streaming = on;
- 
- unlock:
+ #include <linux/clk.h>
 -- 
 2.17.1
