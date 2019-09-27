@@ -1,52 +1,66 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v4 8/8] media: i2c: ov2659: Switch to SPDX Licensing
-Date: Fri, 27 Sep 2019 13:47:22 -0500
-Message-ID: <20190927184722.31989-9-bparrot@ti.com>
-References: <20190927184722.31989-1-bparrot@ti.com>
+Subject: [Patch v4 0/8] media: i2c: ov2659: maintenance series
+Date: Fri, 27 Sep 2019 13:47:14 -0500
+Message-ID: <20190927184722.31989-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190927184722.31989-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Switch to SPDX licensing and drop the redundant GPL text.
+This patch series is a collection of patches we have been carrying for a
+while.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
----
- drivers/media/i2c/ov2659.c | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
+It includes a few sensor register fixes which would cause visual
+artifacts at lower resolution and also at 720p.
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 720310e0725d..e6da23d3a555 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Omnivision OV2659 CMOS Image Sensor driver
-  *
-@@ -5,19 +6,6 @@
-  *
-  * Benoit Parrot <bparrot@ti.com>
-  * Lad, Prabhakar <prabhakar.csengg@gmail.com>
-- *
-- * This program is free software; you may redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; version 2 of the License.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/clk.h>
+Also on some board the 'powerdown' and /or 'reset' pins are not tied so
+we need to add support for optional gpios to handle these.
+
+Since these camera are removable on some board we also need the driver
+to actually fail when there is no hardware present so the driver is
+actually removed.
+
+Also added a patch to check and propagate errors on s_stream invocation.
+
+Finally, we update the licensing statement to use SPDX licensing.
+
+Changes since v3:
+- Addressed review comment from Sakari about s_ctrl i2c access whne
+  powered off
+
+Changes since v2:
+- Addressed review comment from Sakari
+- Reworked the "media: i2c: ov2659: Add powerdown/reset gpio handling"
+  to use pm_runtime if it is available but not to make it depend on it.
+- Cleaned up the gpio related calls to remove the unnecessary NULL check
+
+Changes since v1:
+- Addressed review comment from Prabhakar
+- Added support for reset-gpios
+- Rework the power setting to use pm_runtime instead of s_power
+  as based on discussion with Sakari it would be the prefered method
+- Added a patch to reduce the number explicit include files to the
+  minimum necessary instead of the previous kitchen sink approach
+
+Benoit Parrot (8):
+  media: i2c: ov2659: Fix for image wrap-around in lower resolution
+  media: i2c: ov2659: Fix sensor detection to actually fail when device
+    is not present
+  media: i2c: ov2659: Cleanup include file list
+  media: i2c: ov2659: fix s_stream return value
+  media: dt-bindings: ov2659: add powerdown/reset-gpios optional
+    property
+  media: i2c: ov2659: Add powerdown/reset gpio handling
+  media: i2c: ov2659: Fix missing 720p register config
+  media: i2c: ov2659: Switch to SPDX Licensing
+
+ .../devicetree/bindings/media/i2c/ov2659.txt  |   9 ++
+ drivers/media/i2c/Kconfig                     |   2 +-
+ drivers/media/i2c/ov2659.c                    | 138 +++++++++++++-----
+ 3 files changed, 112 insertions(+), 37 deletions(-)
+
 -- 
 2.17.1
