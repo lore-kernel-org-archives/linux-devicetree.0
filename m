@@ -1,161 +1,100 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 00/16] media: vpe: maintenance
-Date: Fri, 27 Sep 2019 13:36:34 -0500
-Message-ID: <20190927183650.31345-1-bparrot@ti.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 3/3] arm64: dts: mark lx2160a esdhc controllers dma
+ coherent
+Date: Fri, 27 Sep 2019 20:35:35 +0200
+Message-ID: <CAPDyKFpm-73euWRWDHhMz=aRt38VLWp5-OaTVhVeFwuc+y46mQ@mail.gmail.com>
+References: <20190922102341.GO25745@shell.armlinux.org.uk>
+ <E1iBz55-0008Mj-CX@rmk-PC.armlinux.org.uk>
+ <CAPDyKFpQn+O-M60q-Tc4QOBM+WhFhmnkU6_-t5hnQcndLo==YA@mail.gmail.com>
+ <AM0PR04MB66766AC0807A85B3E5428E028F840@AM0PR04MB6676.eurprd04.prod.outlook.com>
+ <4cb91a30-ed1b-1fef-58df-fbc46757bd5d@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4cb91a30-ed1b-1fef-58df-fbc46757bd5d@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, dann frazier <dann.frazier@canonical.com>, Will Deacon <will.deacon@arm.com>, Leo Li <leoyang.li@nxp.com>, Nicolin Chen <nicoleotsuka@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, "Y.b. Lu" <yangbo.lu@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Christoph Hellwig <hch@lst.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This a collection of backlog patches I have been carrying for the VPE
-driver.
+On Tue, 24 Sep 2019 at 20:04, Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 24/09/2019 04:41, Leo Li wrote:
+> >
+> >
+> >> -----Original Message-----
+> >> From: Ulf Hansson <ulf.hansson@linaro.org>
+> >> Sent: Monday, September 23, 2019 4:27 PM
+> >> To: Russell King <rmk+kernel@armlinux.org.uk>
+> >> Cc: Robin Murphy <robin.murphy@arm.com>; dann frazier
+> >> <dann.frazier@canonical.com>; Will Deacon <will.deacon@arm.com>;
+> >> Nicolin Chen <nicoleotsuka@gmail.com>; Y.b. Lu <yangbo.lu@nxp.com>;
+> >> Christoph Hellwig <hch@lst.de>; Mark Rutland <mark.rutland@arm.com>;
+> >> DTML <devicetree@vger.kernel.org>; Leo Li <leoyang.li@nxp.com>; Rob
+> >> Herring <robh+dt@kernel.org>; Shawn Guo <shawnguo@kernel.org>; Linux
+> >> ARM <linux-arm-kernel@lists.infradead.org>
+> >> Subject: Re: [PATCH 3/3] arm64: dts: mark lx2160a esdhc controllers dma
+> >> coherent
+> >>
+> >> On Sun, 22 Sep 2019 at 12:29, Russell King <rmk+kernel@armlinux.org.uk>
+> >> wrote:
+> >>>
+> >>> The LX2160A esdhc controllers are setup by the driver to be DMA
+> >>> coherent, but without marking them as such in DT, Linux thinks they
+> >>> are not.  This can lead to random sporadic DMA errors, even to the
+> >>> extent of preventing boot, such as:
+> >>>
+> >>> mmc0: ADMA error
+> >>> mmc0: sdhci: ============ SDHCI REGISTER DUMP ===========
+> >>> mmc0: sdhci: Sys addr:  0x00000000 | Version:  0x00002202
+> >>> mmc0: sdhci: Blk size:  0x00000008 | Blk cnt:  0x00000001
+> >>> mmc0: sdhci: Argument:  0x00000000 | Trn mode: 0x00000013
+> >>> mmc0: sdhci: Present:   0x01f50008 | Host ctl: 0x00000038
+> >>> mmc0: sdhci: Power:     0x00000003 | Blk gap:  0x00000000
+> >>> mmc0: sdhci: Wake-up:   0x00000000 | Clock:    0x000040d8
+> >>> mmc0: sdhci: Timeout:   0x00000003 | Int stat: 0x00000001
+> >>> mmc0: sdhci: Int enab:  0x037f108f | Sig enab: 0x037f108b
+> >>> mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00002202
+> >>> mmc0: sdhci: Caps:      0x35fa0000 | Caps_1:   0x0000af00
+> >>> mmc0: sdhci: Cmd:       0x0000333a | Max curr: 0x00000000
+> >>> mmc0: sdhci: Resp[0]:   0x00000920 | Resp[1]:  0x001d8a33
+> >>> mmc0: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x3f400e00
+> >>> mmc0: sdhci: Host ctl2: 0x00000000
+> >>> mmc0: sdhci: ADMA Err:  0x00000009 | ADMA Ptr: 0x000000236d43820c
+> >>> mmc0: sdhci: ============================================
+> >>> mmc0: error -5 whilst initialising SD card
+> >>>
+> >>> These are caused by the device's descriptor fetch hitting
+> >>> speculatively loaded CPU cache lines that the CPU does not see through
+> >>> the normal, non-cacheable DMA coherent mapping that it uses for
+> >>> non-coherent devices.
+> >>>
+> >>> DT and the device must agree wrt whether the device is DMA coherent or
+> >>> not.
+> >>>
+> >>> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> >>
+> >> As I am picking up patch1 and patch2 from this series, I can also help out and
+> >> pick up this one, if that is okay by people?
+> >
+> > There is some concern recently from linux-next maintainer about this causing potential conflicts.  https://lkml.org/lkml/2019/9/15/225
+>
+> In principle, it should be fine for #2 and #3 to go via separate trees -
+> #3 aligns the DT with the existing behaviour of the driver, while #2
+> will make the driver behave correctly whichever state the DT is in.
+>
+> Robin.
 
-It adds supports for SEQ_BT as well as NV21.
-And fixes a number of issues both through v4l2-compliance and normal
-usage.
+That's right, so I am leaving this patch for arm-soc people to pick up then.
 
-======================================
-v4l2-compliance SHA: 5b168dc8473911227890526bad26553d9e8ff81b, 32 bits
-
-Compliance test for vpe device /dev/video0:
-
-Driver Info:
-	Driver name      : vpe
-	Card type        : vpe
-	Bus info         : platform:vpe
-	Driver version   : 5.3.0
-	Capabilities     : 0x84204000
-		Video Memory-to-Memory Multiplanar
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04204000
-		Video Memory-to-Memory Multiplanar
-		Streaming
-		Extended Pix Format
-
-Required ioctls:
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second /dev/video0 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-	test VIDIOC_QUERYCTRL: OK
-	test VIDIOC_G/S_CTRL: OK
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 1 Private Controls: 1
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK
-	test Composing: OK
-	test Scaling: OK
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls:
-		warn: v4l2-test-buffers.cpp(683): VIDIOC_CREATE_BUFS not supported
-		warn: v4l2-test-buffers.cpp(683): VIDIOC_CREATE_BUFS not supported
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK (Not Supported)
-
-Test input 0:
-
-Streaming ioctls:
-	test read/write: OK (Not Supported)
-	test blocking wait: OK
-	Video Capture Multiplanar: Captured 58 buffers    
-	test MMAP (no poll): OK
-	Video Capture Multiplanar: Captured 58 buffers    
-	test MMAP (select): OK
-	Video Capture Multiplanar: Captured 58 buffers    
-	test MMAP (epoll): OK
-	test USERPTR (no poll): OK (Not Supported)
-	test USERPTR (select): OK (Not Supported)
-	test DMABUF: Cannot test, specify --expbuf-device
-
-Total for vpe device /dev/video0: 51, Succeeded: 51, Failed: 0, Warnings: 2
-======================================
-
-Benoit Parrot (13):
-  media: ti-vpe: vpe: Fix Motion Vector vpdma stride
-  media: ti-vpe: vpe: Add missing null pointer checks
-  media: ti-vpe: vpe: Remove unnecessary use of container_of
-  media: ti-vpe: vpe: fix a v4l2-compliance failure causing a kernel
-    panic
-  media: ti-vpe: vpe: fix a v4l2-compliance warning about invalid pixel
-    format
-  media: ti-vpe: vpe: Make sure YUYV is set as default format
-  media: ti-vpe: vpe: fix a v4l2-compliance failure about invalid
-    sizeimage
-  media: ti-vpe: vpe: fix a v4l2-compliance failure about frame sequence
-    number
-  media: ti-vpe: vpe: ensure buffers are cleaned up properly in abort
-    cases
-  media: ti-vpe: vpdma: Use fixed type for address in descriptor
-  media: ti-vpe: Set the DMA mask and coherent mask
-  media: ti-vpe: vpe: fix v4l2_compliance issue related to xfer_func
-  media: ti-vpe: vpe: don't rely on colorspace member for conversion
-
-Nikhil Devshatwar (2):
-  media: ti-vpe: Add support for SEQ_BT
-  media: ti-vpe: Add support for NV21 format
-
-Ram Prasad (1):
-  media: ti-vpe: Set MAX height supported to 2048 pixels
-
- drivers/media/platform/ti-vpe/vpdma.c      |  11 +-
- drivers/media/platform/ti-vpe/vpdma.h      |   2 +
- drivers/media/platform/ti-vpe/vpdma_priv.h |   5 +-
- drivers/media/platform/ti-vpe/vpe.c        | 251 +++++++++++++++------
- 4 files changed, 192 insertions(+), 77 deletions(-)
-
--- 
-2.17.1
+Kind regards
+Uffe
