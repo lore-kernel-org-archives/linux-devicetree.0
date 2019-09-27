@@ -1,34 +1,53 @@
-From: Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] ARM: dts: stm32: Enable high resolution timer
-Date: Fri, 27 Sep 2019 10:48:19 +0200
-Message-ID: <20190927084819.645-1-benjamin.gaignard@st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/3] ARM: dts: exynos: Add interrupt to DMC controller in
+ Exynos5422
+Date: Fri, 27 Sep 2019 10:53:59 +0200
+Message-ID: <20190927085359.GA19131@pi3>
+References: <20190925161813.21117-1-l.luba@partner.samsung.com>
+ <CGME20190925161842eucas1p271a9cf4f62b3d7af02c0a5d0d1eb9c4f@eucas1p2.samsung.com>
+ <20190925161813.21117-2-l.luba@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190925161813.21117-2-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.torgue@st.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: Lukasz Luba <l.luba@partner.samsung.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com, kgene@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, robh+dt@kernel.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Adding always-on makes arm arch_timer claim to be an high resolution timer.
-That is possible because power mode won't stop clocking the timer.
+On Wed, Sep 25, 2019 at 06:18:11PM +0200, Lukasz Luba wrote:
+> Add interrupt to Dynamic Memory Controller in Exynos5422 and Odroid
+> XU3-family boards. It will be used instead of devfreq polling mode
+> governor. The interrupt is connected to performance counters private
+> for DMC, which might track utilisation of the memory channels.
+> 
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5420.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index ac49373baae7..72738e620d11 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -240,6 +240,8 @@
+>  		dmc: memory-controller@10c20000 {
+>  			compatible = "samsung,exynos5422-dmc";
+>  			reg = <0x10c20000 0x100>, <0x10c30000 0x100>;
+> +			interrupt-parent = <&combiner>;
+> +			interrupts = <16 0>;
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+You register DMC for DREX0 and DREX1 but take only DREX0 interrupt. Why
+skipping second?
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 9b11654a0a39..74f64745d60d 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -50,6 +50,7 @@
- 			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
- 		interrupt-parent = <&intc>;
-+		always-on;
- 	};
- 
- 	clocks {
--- 
-2.15.0
+Best regards,
+Krzysztof
+
+
+>  			clocks = <&clock CLK_FOUT_SPLL>,
+>  				 <&clock CLK_MOUT_SCLK_SPLL>,
+>  				 <&clock CLK_FF_DOUT_SPLL2>,
+> -- 
+> 2.17.1
+> 
