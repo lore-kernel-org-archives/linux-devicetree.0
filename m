@@ -1,7 +1,7 @@
 From: Nayna Jain <nayna@linux.ibm.com>
-Subject: [PATCH v6 3/9] powerpc: add support to initialize ima policy rules
-Date: Fri, 27 Sep 2019 10:25:54 -0400
-Message-ID: <1569594360-7141-4-git-send-email-nayna@linux.ibm.com>
+Subject: [PATCH v6 4/9] powerpc: detect the trusted boot state of the system
+Date: Fri, 27 Sep 2019 10:25:55 -0400
+Message-ID: <1569594360-7141-5-git-send-email-nayna@linux.ibm.com>
 References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
@@ -10,104 +10,62 @@ To: linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org, linux-integrity@vger.ker
 Cc: linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Jeremy Kerr <jk@ozlabs.org>, Matthew Garret <matthew.garret@nebula.com>, Mimi Zohar <zohar@linux.ibm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Claudio Carvalho <cclaudio@linux.ibm.com>, George Wilson <gcwilson@linux.ibm.com>, Elaine Palmer <erpalmer@us.ibm.com>, Eric Ricther <erichte@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nayna Jain <nayna@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-PowerNV systems uses kernel based bootloader, thus its secure boot
-implementation uses kernel IMA security subsystem to verify the kernel
-before kexec. Since the verification policy might differ based on the
-secure boot mode of the system, the policies are defined at runtime.
+PowerNV systems enables the IMA measurement rules only if the
+trusted boot is enabled on the system.
 
-This patch implements the arch-specific support to define the IMA policy
-rules based on the runtime secure boot mode of the system.
-
-This patch provides arch-specific IMA policies if PPC_SECURE_BOOT
-config is enabled.
+This patch adds the function to detect if the system has trusted
+boot enabled.
 
 Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
 ---
- arch/powerpc/Kconfig           |  2 ++
- arch/powerpc/kernel/Makefile   |  2 +-
- arch/powerpc/kernel/ima_arch.c | 33 +++++++++++++++++++++++++++++++++
- include/linux/ima.h            |  3 ++-
- 4 files changed, 38 insertions(+), 2 deletions(-)
- create mode 100644 arch/powerpc/kernel/ima_arch.c
+ arch/powerpc/include/asm/secure_boot.h |  6 ++++++
+ arch/powerpc/kernel/secure_boot.c      | 14 ++++++++++++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 2c54beb29f1a..54eda07c74e5 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -916,6 +916,8 @@ config PPC_SECURE_BOOT
- 	prompt "Enable secure boot support"
- 	bool
- 	depends on PPC_POWERNV
-+	depends on IMA
-+	depends on IMA_ARCH_POLICY
- 	help
- 	  Systems with firmware secure boot enabled needs to define security
- 	  policies to extend secure boot to the OS. This config allows user
-diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-index 875b0785a20e..7156ac1fc956 100644
---- a/arch/powerpc/kernel/Makefile
-+++ b/arch/powerpc/kernel/Makefile
-@@ -157,7 +157,7 @@ endif
- obj-$(CONFIG_EPAPR_PARAVIRT)	+= epapr_paravirt.o epapr_hcalls.o
- obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvm_emul.o
+diff --git a/arch/powerpc/include/asm/secure_boot.h b/arch/powerpc/include/asm/secure_boot.h
+index 4e8e2b08a993..192caaedbe7a 100644
+--- a/arch/powerpc/include/asm/secure_boot.h
++++ b/arch/powerpc/include/asm/secure_boot.h
+@@ -14,6 +14,7 @@
  
--obj-$(CONFIG_PPC_SECURE_BOOT)	+= secure_boot.o
-+obj-$(CONFIG_PPC_SECURE_BOOT)	+= secure_boot.o ima_arch.o
+ bool is_powerpc_os_secureboot_enabled(void);
+ int get_powerpc_os_sb_node(struct device_node **node);
++bool is_powerpc_trustedboot_enabled(void);
  
- # Disable GCOV, KCOV & sanitizers in odd or sensitive code
- GCOV_PROFILE_prom_init.o := n
-diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
-new file mode 100644
-index 000000000000..39401b67f19e
---- /dev/null
-+++ b/arch/powerpc/kernel/ima_arch.c
-@@ -0,0 +1,33 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 IBM Corporation
-+ * Author: Nayna Jain
-+ */
-+
-+#include <linux/ima.h>
-+#include <asm/secure_boot.h>
-+
-+bool arch_ima_get_secureboot(void)
-+{
-+	return is_powerpc_os_secureboot_enabled();
-+}
-+
-+/* Defines IMA appraise rules for secureboot */
-+static const char *const arch_rules[] = {
-+	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
-+#if !IS_ENABLED(CONFIG_MODULE_SIG)
-+	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
-+#endif
-+	NULL
-+};
-+
-+/*
-+ * Returns the relevant IMA arch policies based on the system secureboot state.
-+ */
-+const char *const *arch_get_ima_policy(void)
-+{
-+	if (is_powerpc_os_secureboot_enabled())
-+		return arch_rules;
-+
-+	return NULL;
-+}
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index a20ad398d260..10af09b5b478 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -29,7 +29,8 @@ extern void ima_kexec_cmdline(const void *buf, int size);
- extern void ima_add_kexec_buffer(struct kimage *image);
- #endif
- 
--#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390)
-+#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
-+	|| defined(CONFIG_PPC_SECURE_BOOT)
- extern bool arch_ima_get_secureboot(void);
- extern const char * const *arch_get_ima_policy(void);
  #else
+ 
+@@ -27,5 +28,10 @@ static inline int get_powerpc_os_sb_node(struct device_node **node)
+ 	return -ENOENT;
+ }
+ 
++static inline bool is_powerpc_os_trustedboot_enabled(void)
++{
++	return false;
++}
++
+ #endif
+ #endif
+diff --git a/arch/powerpc/kernel/secure_boot.c b/arch/powerpc/kernel/secure_boot.c
+index 45ca19f5e836..9d452e1550ae 100644
+--- a/arch/powerpc/kernel/secure_boot.c
++++ b/arch/powerpc/kernel/secure_boot.c
+@@ -80,3 +80,17 @@ bool is_powerpc_os_secureboot_enabled(void)
+ 	pr_info("secureboot mode disabled\n");
+ 	return false;
+ }
++
++bool is_powerpc_trustedboot_enabled(void)
++{
++	struct device_node *node;
++
++	node = get_powerpc_fw_sb_node();
++	if (node && (of_find_property(node, "trusted-enabled", NULL))) {
++		pr_info("trustedboot mode enabled\n");
++		return true;
++	}
++
++	pr_info("trustedboot mode disabled\n");
++	return false;
++}
 -- 
 2.20.1
