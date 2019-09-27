@@ -1,50 +1,127 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-Date: Fri, 27 Sep 2019 09:21:59 +0300
-Message-ID: <f6012b3a-7b96-6020-d09d-c458fa8742d8@ti.com>
-References: <20190510194229.20628-1-aford173@gmail.com>
- <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
- <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
- <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH] dt-bindings: timer: Use defines instead of numbers in
+ Exynos MCT examples
+Date: Fri, 27 Sep 2019 08:36:47 +0200
+Message-ID: <fc0809b0-1e6a-0564-75d9-0ccb14d2826c@samsung.com>
+References: <CGME20190926183707epcas3p350fe17bc738540b37f1130d967c31a62@epcas3p3.samsung.com>
+        <20190926183643.7118-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190926183643.7118-1-krzk@kernel.org>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Adam Ford <aford173@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, David Airlie <airlied@linux.ie>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjYvMDkvMjAxOSAxNzoxMiwgQWRhbSBGb3JkIHdyb3RlOgoKPj4gQW5kIHdoYXQgaXMgdGhl
-IGhkbWk1X2NvbmZpZ3VyZSB0aGVyZT8gSSBkb24ndCBzZWUgYW55dGhpbmcgaW4gdGhlCj4+IGRy
-aXZlciB0aGF0IHdvdWxkIHByaW50IGhkbWk1X2NvbmZpZ3VyZS4gQW5kLCBvZiBjb3Vyc2UsIHRo
-ZXJlJ3Mgbm8KPj4gaGRtaTUgb24gdGhhdCBwbGF0Zm9ybS4gSG1tLCBvay4uLiBpdCdzIGZyb20g
-Y29tcG9uZW50LmMsIHVzaW5nICIlcHMiLgo+PiBTb21laG93IHRoYXQgZ29lcyB3cm9uZy4gV2hp
-Y2ggaXMgYSBiaXQgYWxhcm1pbmcsIGJ1dCBwZXJoYXBzIGEgdG90YWxseQo+PiBkaWZmZXJlbnQg
-aXNzdWUuCj4gCj4gSSdsbCB0cnkgdG8gdGFrZSBhIGxvb2sgbGF0ZXIuICBGb3IgTG9naWMgUEQg
-ZGlzdHJpYnV0aW9ucywgd2UgY3JlYXRlCj4gYSBjdXN0b20gZGVmY29uZmlnIHdpdGggYWxsIHRo
-b3NlIGRyaXZlcnMgcmVtb3ZlZCwgc28gSSdtIG5vdCB3b3JrZWQKPiB1cCBhYm91dCBpdCwgYnV0
-IGl0IHdvdWxkIGJlIG5pY2UgdG8gbm90IGNhbGwgZHJpdmVycyB0aGF0IGRvbid0Cj4gZXhpc3Qu
-CgpTbyB5b3UgaGF2ZSBDT05GSUdfT01BUDVfRFNTX0hETUk9bj8gVGhlbiBpdCdzIGV2ZW4gbW9y
-ZSBkaXN0dXJiaW5nLCBhcyAKdGhlcmUncyBubyB3YXkgdGhlIHN0cmluZyAiaGRtaTVfY29uZmln
-dXJlIiBjYW4gYmUgaW4gdGhlIGtlcm5lbCBpbWFnZS4uLgoKTWF5YmUgaXQncyBub3RoaW5nLCBi
-dXQuLi4gSXQncyBqdXN0IHNvIG9kZC4KCiAgVG9taQoKLS0gClRleGFzIEluc3RydW1lbnRzIEZp
-bmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNp
-bmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Hi Krzysztof,
+
+On 26.09.2019 20:36, Krzysztof Kozlowski wrote:
+> Make the examples in Exynos Multi Core Timer bindings more readable and
+> bring them closer to real DTS by using defines for interrupt flags.
+>
+> Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
+> ---
+>
+> Rebased on top of:
+> https://patchwork.kernel.org/project/linux-samsung-soc/list/?series=177667&state=*
+> ---
+>   .../timer/samsung,exynos4210-mct.yaml         | 37 ++++++++++++++-----
+>   1 file changed, 27 insertions(+), 10 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
+> index bff3f54a398f..c4d152009f76 100644
+> --- a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
+> +++ b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
+> @@ -75,51 +75,68 @@ examples:
+>       // In this example, the IP contains two local timers, using separate
+>       // interrupts, so two local timer interrupts have been specified,
+>       // in addition to four global timer interrupts.
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>   
+>       timer@10050000 {
+>           compatible = "samsung,exynos4210-mct";
+>           reg = <0x10050000 0x800>;
+> -        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
+> -                     <0 42 0>, <0 48 0>;
+> +        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+>       };
+>   
+>     - |
+>       // In this example, the timer interrupts are connected to two separate
+>       // interrupt controllers. Hence, an interrupts-extended is needed.
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>   
+>       timer@101c0000 {
+>           compatible = "samsung,exynos4210-mct";
+>           reg = <0x101C0000 0x800>;
+> -        interrupts-extended = <&gic 0 57 0>,
+> -                              <&gic 0 69 0>,
+> +        interrupts-extended = <&gic GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+> +                              <&gic GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
+>                                 <&combiner 12 6>,
+>                                 <&combiner 12 7>,
+> -                              <&gic 0 42 0>,
+> -                              <&gic 0 48 0>;
+> +                              <&gic GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
+> +                              <&gic GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+>       };
+>   
+>     - |
+>       // In this example, the IP contains four local timers, but using
+>       // a per-processor interrupt to handle them. Only one first local
+>       // interrupt is specified.
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>   
+>       timer@10050000 {
+>           compatible = "samsung,exynos4412-mct";
+>           reg = <0x10050000 0x800>;
+>   
+> -        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
+> -                     <0 42 0>;
+> +        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+
+the last one should be GIC_PPI
+
+>       };
+>   
+>     - |
+>       // In this example, the IP contains four local timers, but using
+>       // a per-processor interrupt to handle them. All the local timer
+>       // interrupts are specified.
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>   
+>       timer@10050000 {
+>           compatible = "samsung,exynos4412-mct";
+>           reg = <0x10050000 0x800>;
+>   
+> -        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
+> -                     <0 42 0>, <0 42 0>, <0 42 0>, <0 42 0>;
+> +        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+
+again, last 4 entries should use GIC_PPI
+
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
