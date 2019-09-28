@@ -1,14 +1,14 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH V3 6/8] ARM: bcm: Add support for BCM2711 SoC
-Date: Sat, 28 Sep 2019 12:16:30 -0700
-Message-ID: <6b251871-59ae-6040-cbbc-74207b2169f3@gmail.com>
+Subject: Re: [PATCH V3 7/8] ARM: dts: Add minimal Raspberry Pi 4 support
+Date: Sat, 28 Sep 2019 12:58:20 -0700
+Message-ID: <77b0a773-912a-aa5b-6eb5-5423c2c07e58@gmail.com>
 References: <1569672435-19823-1-git-send-email-wahrenst@gmx.net>
- <1569672435-19823-7-git-send-email-wahrenst@gmx.net>
+ <1569672435-19823-8-git-send-email-wahrenst@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1569672435-19823-7-git-send-email-wahrenst@gmx.net>
+In-Reply-To: <1569672435-19823-8-git-send-email-wahrenst@gmx.net>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -26,111 +26,123 @@ List-Id: devicetree@vger.kernel.org
 
 
 On 9/28/2019 5:07 AM, Stefan Wahren wrote:
-> Add the BCM2711 to ARCH_BCM2835, but use new machine board code
-> because of the differences.
+> This adds minimal support for the new Raspberry Pi 4 without the
+> fancy stuff like GENET, PCIe, xHCI, 40 bit DMA and V3D. The RPi 4 is
+> available in 3 different variants (1, 2 and 4 GB RAM), so leave the memory
+> size to zero and let the bootloader take care of it. The DWC2 is still
+> usable as peripheral via the USB-C port.
+
+That comment is useful, and probably belongs where the memory node is
+declared, see below.
+
+> 
+> Other differences to the Raspberry Pi 3:
+> - additional GIC 400 Interrupt controller
+> - new thermal IP and HWRNG
+> - additional MMC interface (emmc2)
+> - additional UART, I2C, SPI and PWM interfaces
+> - clock stretching bug in I2C IP has been fixed
 > 
 > Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> Reviewed-by: Eric Anholt <eric@anholt.net>
+> Acked-by: Eric Anholt <eric@anholt.net>
 > ---
->  arch/arm/mach-bcm/Kconfig    |  3 ++-
->  arch/arm/mach-bcm/Makefile   |  3 ++-
->  arch/arm/mach-bcm/bcm2711.c  | 24 ++++++++++++++++++++++++
->  arch/arm64/Kconfig.platforms |  5 +++--
->  4 files changed, 31 insertions(+), 4 deletions(-)
->  create mode 100644 arch/arm/mach-bcm/bcm2711.c
-> 
-> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-> index 5e5f1fa..39bcbea 100644
-> --- a/arch/arm/mach-bcm/Kconfig
-> +++ b/arch/arm/mach-bcm/Kconfig
-> @@ -161,6 +161,7 @@ config ARCH_BCM2835
->  	select GPIOLIB
->  	select ARM_AMBA
->  	select ARM_ERRATA_411920 if ARCH_MULTI_V6
-> +	select ARM_GIC if ARCH_MULTI_V7
->  	select ARM_TIMER_SP804
->  	select HAVE_ARM_ARCH_TIMER if ARCH_MULTI_V7
->  	select TIMER_OF
 
-Are not we missing a select ZONE_DMA here?
+[snip]
 
-> @@ -169,7 +170,7 @@ config ARCH_BCM2835
->  	select PINCTRL_BCM2835
->  	select MFD_CORE
->  	help
-> -	  This enables support for the Broadcom BCM2835 and BCM2836 SoCs.
-> +	  This enables support for the Broadcom BCM2711 and BCM283x SoCs.
->  	  This SoC is used in the Raspberry Pi and Roku 2 devices.
-> 
->  config ARCH_BCM_53573
-> diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
-> index b59c813..7baa8c9 100644
-> --- a/arch/arm/mach-bcm/Makefile
-> +++ b/arch/arm/mach-bcm/Makefile
-> @@ -42,8 +42,9 @@ obj-$(CONFIG_ARCH_BCM_MOBILE_L2_CACHE) += kona_l2_cache.o
->  obj-$(CONFIG_ARCH_BCM_MOBILE_SMC) += bcm_kona_smc.o
-> 
->  # BCM2835
-> -obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
->  ifeq ($(CONFIG_ARCH_BCM2835),y)
-> +obj-y				+= board_bcm2835.o
-> +obj-y				+= bcm2711.o
->  ifeq ($(CONFIG_ARM),y)
->  obj-$(CONFIG_SMP)		+= platsmp.o
->  endif
-> diff --git a/arch/arm/mach-bcm/bcm2711.c b/arch/arm/mach-bcm/bcm2711.c
-> new file mode 100644
-> index 0000000..dbe2967
-> --- /dev/null
-> +++ b/arch/arm/mach-bcm/bcm2711.c
-> @@ -0,0 +1,24 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (C) 2019 Stefan Wahren
-> + */
+> +/ {
+> +	compatible = "raspberrypi,4-model-b", "brcm,bcm2711";
+> +	model = "Raspberry Pi 4 Model B";
 > +
-> +#include <linux/of_address.h>
+> +	chosen {
+> +		/* 8250 auxiliary UART instead of pl011 */
+> +		stdout-path = "serial1:115200n8";
+> +	};
 > +
-> +#include <asm/mach/arch.h>
+
+Might be worth a comment that the reg property of the memory node is
+filed by the boot loader based on the populated amount of DRAM. You can
+also go with a shorter format for the size (0)?
+
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0 0 0x00000000>;
+> +	};
 > +
-> +#include "platsmp.h"
+
+[snip]
+
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/soc/bcm2835-pm.h>
 > +
-> +static const char * const bcm2711_compat[] = {
-> +#ifdef CONFIG_ARCH_MULTI_V7
-> +	"brcm,bcm2711",
-> +#endif
-> +};
+> +/ {
+> +	compatible = "brcm,bcm2711";
 > +
-> +DT_MACHINE_START(BCM2711, "BCM2711")
-> +#ifdef CONFIG_ZONE_DMA
-> +	.dma_zone_size	= SZ_1G,
-> +#endif
-> +	.dt_compat = bcm2711_compat,
-> +	.smp = smp_ops(bcm2836_smp_ops),
-> +MACHINE_END
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 16d7614..b5d31dc 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -37,11 +37,12 @@ config ARCH_BCM2835
->  	select PINCTRL
->  	select PINCTRL_BCM2835
->  	select ARM_AMBA
-> +	select ARM_GIC
->  	select ARM_TIMER_SP804
->  	select HAVE_ARM_ARCH_TIMER
->  	help
-> -	  This enables support for the Broadcom BCM2837 SoC.
-> -	  This SoC is used in the Raspberry Pi 3 device.
-> +	  This enables support for the Broadcom BCM2837 and BCM2711 SoC.
-> +	  This SoC is used in the Raspberry Pi 3 and 4 device.
+> +	#address-cells = <2>;
+> +	#size-cells = <1>;
 
-Nit:
+Trying to see if we may need a #size-cells property value of 2 here, for
+the 4GB model, I would assume that we would have to, unless we are fine
+with supporting 4GB - 1byte of DRAM?
 
-These SoCs are used in the Raspberry Pi 3 and 4 devices.
+> +
+> +	interrupt-parent = <&gicv2>;
+> +
+> +	soc {
+> +		ranges = <0x7e000000  0x0 0xfe000000  0x01800000>,
+> +			 <0x7c000000  0x0 0xfc000000  0x02000000>,
+> +			 <0x40000000  0x0 0xff800000  0x00800000>;
 
-With that:
+Might be nice to get some comments about
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> +		/* Emulate a contiguous 30-bit address range for DMA */
+> +		dma-ranges = <0xc0000000  0x0 0x00000000  0x3c000000>;
+> +
+> +		local_intc: local_intc@40000000 {
+> +			compatible = "brcm,bcm2836-l1-intc";
+> +			reg = <0x40000000 0x100>;
+> +		};
+
+This deserves a comment to indicate that this node is the provider for
+the enable-method for bringing up secondary cores. And no PSCI, still,
+what year is this?
+
+[snip]
+
+> +		rng@7e104000 {
+> +			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +			/* RNG is incompatible to brcm,bcm2835-rng */
+
+Nit: s/to/with/
+
+[snip]
+
+> +		spi@7e204000 {
+> +			reg = <0x7e204000 0x0200>;
+> +			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+
+Why is this SPI node incomplete, are you just overriding a previously
+defined node here?
+
+[snip]
+
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
+> +					  IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
+> +					  IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
+> +					  IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
+> +					  IRQ_TYPE_LEVEL_LOW)>;
+> +		/* This only applies to the ARMv7 stub */
+> +		arm,cpu-registers-not-fw-configured;
+> +
+> +		/* The ARM cores doesn't enter deep enough states */
+
+Nit: s/doesn't/do not/
 -- 
 Florian
