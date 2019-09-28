@@ -1,13 +1,15 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH V3 0/8] ARM: Add minimal Raspberry Pi 4 support
-Date: Sat, 28 Sep 2019 13:01:55 -0700
-Message-ID: <a9368cbc-a62d-0fed-9e8e-3d65111de1dd@gmail.com>
+From: Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH V3 6/8] ARM: bcm: Add support for BCM2711 SoC
+Date: Sun, 29 Sep 2019 01:09:19 +0200
+Message-ID: <c420bf03-784e-073f-b0d7-471d0fb48d22@gmx.net>
 References: <1569672435-19823-1-git-send-email-wahrenst@gmx.net>
+ <1569672435-19823-7-git-send-email-wahrenst@gmx.net>
+ <6b251871-59ae-6040-cbbc-74207b2169f3@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1569672435-19823-1-git-send-email-wahrenst@gmx.net>
+In-Reply-To: <6b251871-59ae-6040-cbbc-74207b2169f3@gmail.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -18,117 +20,115 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <wahrenst@gmx.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
+To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
+Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, Will Deacon <will@kernel.org>, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 9/28/2019 5:07 AM, Stefan Wahren wrote:
-> This series adds minimal support for the new Raspberry Pi 4, so we are able
-> to login via debug UART.
-> 
-> Patch 1-2:   Fix some DT schema warnings
-> Patch 3-4:   Prepare DTS for the new SoC BMC2711
-> Patch 5-7:   Add Raspberry Pi 4 DTS support
-> Patch 8:     Update MAINTAINERS
-> 
-> Unfortunately the Raspberry Pi Foundation didn't released a
-> peripheral documentation for the new SoC yet. So we only have a preliminary
-> datasheet [1] and reduced schematics [2].
-
-Overall this looks good to me, just a few comments in specific patches,
-if you can re-spin those patches we should try to get that in 5.5?
-
-> 
-> Known issues:
-> Since Linux 5.3-rc1 DMA doesn't work properly on that platform.
-> Nicolas Saenz Julienne investigates on that issue. As a temporary workaround
-> i reverted the following patch to test this series:
-> 
-> 79a98672 "dma-mapping: remove dma_max_pfn"
-> 7559d612 "mmc: core: let the dma map ops handle bouncing"
-> 
-> Changes in V3:
-> - rebased series
-> - add Reviewed-by
-> - enable ARM_GIC for ARCH_BCM2835 on arm64 too
-> - configure i2c pull-up in bcm2711.dtsi
-> - move i2c2 to bcm2835-common.dtsi
-> - add missing compatibles to DT schema as suggested by Rob
-> - fix DT schema warnings in dtsi files
-> - replace brcm pintrl with generic pinctrl as suggested by Linus
-> - make dma_zone_size depend on CONFIG_ZONE_DMA as suggested by Matthias
-> 
-> Changes in V2:
-> - use separate board file for BCM2711
-> - enable ARM_GIC for ARCH_BCM2835
-> - add Acked-by and Reviewed-by
-> - fix arm-pmu and timer nodes for BCM2711 reported by Marc Zyngier
-> - enable HDMI at board level
-> - move HDMI and pixelvalve into bcm2835-common.dtsi as suggested by Eric Anholt
-> - fix DWC2 probing warning by setting USB role to peripheral
-> - fix order of node references in bcm2711.dtsi
-> - disable I2C clock stretching quirk for BCM2711
-> - mark PLLD_PER as critical clock
-> - make PLLH clock unavailable on BCM2711
-> - fix compile warning in clk-bcm2835 for arm64
-> 
-> Changes since RFC:
-> - change BCM2838 -> BCM2711 as discussed in RFC
-> - update MAINTAINERS accordingly
-> - drop "spi: bcm2835: enable shared interrupt support" from series
-> - squash all pinctrl-bcm2835 changes into one patch
-> - introduce SoC specific clock registration as suggested by Florian
-> - fix watchdog probing for Raspberry Pi 4
-> - convert brcm,bcm2835.txt to json-schema
-> - move VC4 node to bcm2835-common.dtsi
-> - fallback to legacy pull config for Raspberry Pi 4
-> - revert unintended change of mailbox in bcm283x.dtsi
-> - add reference for arm64
-> 
-> [1] - https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2711/rpi_DATA_2711_1p0_preliminary.pdf
-> [2] - https://www.raspberrypi.org/documentation/hardware/raspberrypi/schematics/rpi_SCH_4b_4p0_reduced.pdf
-> 
-> Stefan Wahren (8):
->   ARM: dts: bcm283x: Remove simple-bus from fixed clocks
->   ARM: dts: bcm283x: Remove brcm,bcm2835-pl011 compatible
->   ARM: dts: bcm283x: Move BCM2835/6/7 specific to bcm2835-common.dtsi
->   dt-bindings: arm: Convert BCM2835 board/soc bindings to json-schema
->   dt-bindings: arm: bcm2835: Add Raspberry Pi 4 to DT schema
->   ARM: bcm: Add support for BCM2711 SoC
->   ARM: dts: Add minimal Raspberry Pi 4 support
->   MAINTAINERS: Add BCM2711 to BCM2835 ARCH
-> 
->  .../devicetree/bindings/arm/bcm/bcm2835.yaml       |  54 ++
->  .../devicetree/bindings/arm/bcm/brcm,bcm2835.txt   |  67 --
->  MAINTAINERS                                        |   3 +-
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/bcm2711-rpi-4-b.dts              | 121 +++
->  arch/arm/boot/dts/bcm2711.dtsi                     | 838 +++++++++++++++++++++
->  arch/arm/boot/dts/bcm2835-common.dtsi              | 194 +++++
->  arch/arm/boot/dts/bcm2835-rpi.dtsi                 |   4 -
->  arch/arm/boot/dts/bcm2835.dtsi                     |   1 +
->  arch/arm/boot/dts/bcm2836.dtsi                     |   1 +
->  arch/arm/boot/dts/bcm2837.dtsi                     |   1 +
->  arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi  |   7 +
->  arch/arm/boot/dts/bcm283x.dtsi                     | 190 +----
->  arch/arm/mach-bcm/Kconfig                          |   3 +-
->  arch/arm/mach-bcm/Makefile                         |   3 +-
->  arch/arm/mach-bcm/bcm2711.c                        |  24 +
->  arch/arm64/Kconfig.platforms                       |   5 +-
->  17 files changed, 1257 insertions(+), 260 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
->  delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
->  create mode 100644 arch/arm/boot/dts/bcm2711-rpi-4-b.dts
->  create mode 100644 arch/arm/boot/dts/bcm2711.dtsi
->  create mode 100644 arch/arm/boot/dts/bcm2835-common.dtsi
->  create mode 100644 arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
->  create mode 100644 arch/arm/mach-bcm/bcm2711.c
-> 
-> --
-> 2.7.4
-> 
-
--- 
-Florian
+Am 28.09.19 um 21:16 schrieb Florian Fainelli:
+>
+> On 9/28/2019 5:07 AM, Stefan Wahren wrote:
+>> Add the BCM2711 to ARCH_BCM2835, but use new machine board code
+>> because of the differences.
+>>
+>> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+>> Reviewed-by: Eric Anholt <eric@anholt.net>
+>> ---
+>>  arch/arm/mach-bcm/Kconfig    |  3 ++-
+>>  arch/arm/mach-bcm/Makefile   |  3 ++-
+>>  arch/arm/mach-bcm/bcm2711.c  | 24 ++++++++++++++++++++++++
+>>  arch/arm64/Kconfig.platforms |  5 +++--
+>>  4 files changed, 31 insertions(+), 4 deletions(-)
+>>  create mode 100644 arch/arm/mach-bcm/bcm2711.c
+>>
+>> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+>> index 5e5f1fa..39bcbea 100644
+>> --- a/arch/arm/mach-bcm/Kconfig
+>> +++ b/arch/arm/mach-bcm/Kconfig
+>> @@ -161,6 +161,7 @@ config ARCH_BCM2835
+>>  	select GPIOLIB
+>>  	select ARM_AMBA
+>>  	select ARM_ERRATA_411920 if ARCH_MULTI_V6
+>> +	select ARM_GIC if ARCH_MULTI_V7
+>>  	select ARM_TIMER_SP804
+>>  	select HAVE_ARM_ARCH_TIMER if ARCH_MULTI_V7
+>>  	select TIMER_OF
+> Are not we missing a select ZONE_DMA here?
+Yes. I think for arm and arm64.
+>
+>> @@ -169,7 +170,7 @@ config ARCH_BCM2835
+>>  	select PINCTRL_BCM2835
+>>  	select MFD_CORE
+>>  	help
+>> -	  This enables support for the Broadcom BCM2835 and BCM2836 SoCs.
+>> +	  This enables support for the Broadcom BCM2711 and BCM283x SoCs.
+>>  	  This SoC is used in the Raspberry Pi and Roku 2 devices.
+>>
+>>  config ARCH_BCM_53573
+>> diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
+>> index b59c813..7baa8c9 100644
+>> --- a/arch/arm/mach-bcm/Makefile
+>> +++ b/arch/arm/mach-bcm/Makefile
+>> @@ -42,8 +42,9 @@ obj-$(CONFIG_ARCH_BCM_MOBILE_L2_CACHE) += kona_l2_cache.o
+>>  obj-$(CONFIG_ARCH_BCM_MOBILE_SMC) += bcm_kona_smc.o
+>>
+>>  # BCM2835
+>> -obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
+>>  ifeq ($(CONFIG_ARCH_BCM2835),y)
+>> +obj-y				+= board_bcm2835.o
+>> +obj-y				+= bcm2711.o
+>>  ifeq ($(CONFIG_ARM),y)
+>>  obj-$(CONFIG_SMP)		+= platsmp.o
+>>  endif
+>> diff --git a/arch/arm/mach-bcm/bcm2711.c b/arch/arm/mach-bcm/bcm2711.c
+>> new file mode 100644
+>> index 0000000..dbe2967
+>> --- /dev/null
+>> +++ b/arch/arm/mach-bcm/bcm2711.c
+>> @@ -0,0 +1,24 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +/*
+>> + * Copyright (C) 2019 Stefan Wahren
+>> + */
+>> +
+>> +#include <linux/of_address.h>
+>> +
+>> +#include <asm/mach/arch.h>
+>> +
+>> +#include "platsmp.h"
+>> +
+>> +static const char * const bcm2711_compat[] = {
+>> +#ifdef CONFIG_ARCH_MULTI_V7
+>> +	"brcm,bcm2711",
+>> +#endif
+>> +};
+>> +
+>> +DT_MACHINE_START(BCM2711, "BCM2711")
+>> +#ifdef CONFIG_ZONE_DMA
+>> +	.dma_zone_size	= SZ_1G,
+>> +#endif
+>> +	.dt_compat = bcm2711_compat,
+>> +	.smp = smp_ops(bcm2836_smp_ops),
+>> +MACHINE_END
+>> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+>> index 16d7614..b5d31dc 100644
+>> --- a/arch/arm64/Kconfig.platforms
+>> +++ b/arch/arm64/Kconfig.platforms
+>> @@ -37,11 +37,12 @@ config ARCH_BCM2835
+>>  	select PINCTRL
+>>  	select PINCTRL_BCM2835
+>>  	select ARM_AMBA
+>> +	select ARM_GIC
+>>  	select ARM_TIMER_SP804
+>>  	select HAVE_ARM_ARCH_TIMER
+>>  	help
+>> -	  This enables support for the Broadcom BCM2837 SoC.
+>> -	  This SoC is used in the Raspberry Pi 3 device.
+>> +	  This enables support for the Broadcom BCM2837 and BCM2711 SoC.
+>> +	  This SoC is used in the Raspberry Pi 3 and 4 device.
+> Nit:
+>
+> These SoCs are used in the Raspberry Pi 3 and 4 devices.
+>
+> With that:
+>
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
