@@ -1,7 +1,8 @@
 From: Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V3 8/8] MAINTAINERS: Add BCM2711 to BCM2835 ARCH
-Date: Sat, 28 Sep 2019 14:07:14 +0200
-Message-ID: <1569672435-19823-9-git-send-email-wahrenst@gmx.net>
+Subject: [PATCH V3 5/8] dt-bindings: arm: bcm2835: Add Raspberry Pi 4 to DT
+ schema
+Date: Sat, 28 Sep 2019 14:07:11 +0200
+Message-ID: <1569672435-19823-6-git-send-email-wahrenst@gmx.net>
 References: <1569672435-19823-1-git-send-email-wahrenst@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,34 +22,30 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric 
 Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, bcm-kernel-feedback-list@broadcom.com, Stefan Wahren <wahrenst@gmx.net>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Clarify that BCM2711 belongs to the BCM2835 ARCH.
+Add new Raspberry Pi 4 to DT schema.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 Acked-by: Eric Anholt <eric@anholt.net>
 ---
- MAINTAINERS | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 857611c..49420e0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3186,7 +3186,7 @@ N:	bcm216*
- N:	kona
- F:	arch/arm/mach-bcm/
-
--BROADCOM BCM2835 ARM ARCHITECTURE
-+BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE
- M:	Eric Anholt <eric@anholt.net>
- M:	Stefan Wahren <wahrenst@gmx.net>
- L:	bcm-kernel-feedback-list@broadcom.com
-@@ -3194,6 +3194,7 @@ L:	linux-rpi-kernel@lists.infradead.org (moderated for non-subscribers)
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- T:	git git://github.com/anholt/linux
- S:	Maintained
-+N:	bcm2711
- N:	bcm2835
- F:	drivers/staging/vc04_services
-
+diff --git a/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml b/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
+index 67bf9e2..dd52e29 100644
+--- a/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
++++ b/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
+@@ -15,6 +15,12 @@ properties:
+     const: '/'
+   compatible:
+     oneOf:
++      - description: BCM2711 based Boards
++        items:
++          - enum:
++              - raspberrypi,4-model-b
++          - const: brcm,bcm2711
++
+       - description: BCM2835 based Boards
+         items:
+           - enum:
 --
 2.7.4
