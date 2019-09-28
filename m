@@ -1,30 +1,100 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: display: Document the Xylon LogiCVC
- display controller
-Date: Fri, 27 Sep 2019 17:20:38 -0500
-Message-ID: <20190927222038.GA22180@bogus>
-References: <20190927100738.1863563-1-paul.kocialkowski@bootlin.com>
- <20190927100738.1863563-2-paul.kocialkowski@bootlin.com>
+From: Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v2 00/21] Refine memblock API
+Date: Sat, 28 Sep 2019 10:33:32 +0300
+Message-ID: <20190928073331.GA5269@linux.ibm.com>
+References: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
+ <CAHCN7x+Jv7yGPoB0Gm=TJ30ObLJduw2XomHkd++KqFEURYQcGg@mail.gmail.com>
+ <CAOMZO5A_U4aYC4XZXK1r9JaLg-eRdXy8m6z4GatQp62rK4HZ6A@mail.gmail.com>
+ <CAHCN7xJdzEppn8-74SvzACsA25bUHGdV7v=CfS08xzSi59Z2uw@mail.gmail.com>
+ <CAOMZO5D2uzR6Sz1QnX3G-Ce_juxU-0PO_vBZX+nR1mpQB8s8-w@mail.gmail.com>
+ <CAHCN7xJ32BYZu-DVTVLSzv222U50JDb8F0A_tLDERbb8kPdRxg@mail.gmail.com>
+ <20190926160433.GD32311@linux.ibm.com>
+ <CAHCN7xL1sFXDhKUpj04d3eDZNgLA1yGAOqwEeCxedy1Qm-JOfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190927100738.1863563-2-paul.kocialkowski@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Mark Rutland <mark.rutland@arm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Sean Paul <sean@poorly.run>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+In-Reply-To: <CAHCN7xL1sFXDhKUpj04d3eDZNgLA1yGAOqwEeCxedy1Qm-JOfQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Adam Ford <aford173@gmail.com>
+Cc: Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, devicetree <devicetree@vger.kernel.org>, Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, x86@kernel.org, Russell King <linux@armlinux.org.uk>, kasan-dev <kasan-dev@googlegroups.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.org, Chris Healy <cphealy@gmail.com>, uclinux-h8-devel@lists.sourceforge.j
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 27, 2019 at 12:07:37PM +0200, Paul Kocialkowski wrote:
-> The Xylon LogiCVC is a display controller implemented as programmable
-> logic in Xilinx FPGAs.
+On Thu, Sep 26, 2019 at 02:35:53PM -0500, Adam Ford wrote:
+> On Thu, Sep 26, 2019 at 11:04 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> >
+> > Hi,
+> >
+> > On Thu, Sep 26, 2019 at 08:09:52AM -0500, Adam Ford wrote:
+> > > On Wed, Sep 25, 2019 at 10:17 AM Fabio Estevam <festevam@gmail.com> wrote:
+> > > >
+> > > > On Wed, Sep 25, 2019 at 9:17 AM Adam Ford <aford173@gmail.com> wrote:
+> > > >
+> > > > > I tried cma=256M and noticed the cma dump at the beginning didn't
+> > > > > change.  Do we need to setup a reserved-memory node like
+> > > > > imx6ul-ccimx6ulsom.dtsi did?
+> > > >
+> > > > I don't think so.
+> > > >
+> > > > Were you able to identify what was the exact commit that caused such regression?
+> > >
+> > > I was able to narrow it down the 92d12f9544b7 ("memblock: refactor
+> > > internal allocation functions") that caused the regression with
+> > > Etnaviv.
+> >
+> >
+> > Can you please test with this change:
+> >
 > 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  .../display/xylon,logicvc-display.yaml        | 313 ++++++++++++++++++
->  1 file changed, 313 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/xylon,logicvc-display.yaml
+> That appears to have fixed my issue.  I am not sure what the impact
+> is, but is this a safe option?
 
-Any response to my last mail on v1?
+It's not really a fix, I just wanted to see how exactly 92d12f9544b7 ("memblock:
+refactor internal allocation functions") broke your setup.
 
-Rob
+Can you share the dts you are using and the full kernel log?
+ 
+> adam
+> 
+> > diff --git a/mm/memblock.c b/mm/memblock.c
+> > index 7d4f61a..1f5a0eb 100644
+> > --- a/mm/memblock.c
+> > +++ b/mm/memblock.c
+> > @@ -1356,9 +1356,6 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+> >                 align = SMP_CACHE_BYTES;
+> >         }
+> >
+> > -       if (end > memblock.current_limit)
+> > -               end = memblock.current_limit;
+> > -
+> >  again:
+> >         found = memblock_find_in_range_node(size, align, start, end, nid,
+> >                                             flags);
+> >
+> > > I also noticed that if I create a reserved memory node as was done one
+> > > imx6ul-ccimx6ulsom.dtsi the 3D seems to work again, but without it, I
+> > > was getting errors regardless of the 'cma=256M' or not.
+> > > I don't have a problem using the reserved memory, but I guess I am not
+> > > sure what the amount should be.  I know for the video decoding 1080p,
+> > > I have historically used cma=128M, but with the 3D also needing some
+> > > memory allocation, is that enough or should I use 256M?
+> > >
+> > > adam
+> >
+> > --
+> > Sincerely yours,
+> > Mike.
+> >
+
+-- 
+Sincerely yours,
+Mike.
