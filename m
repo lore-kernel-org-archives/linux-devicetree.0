@@ -1,12 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v2 1/6] dt-bindings: bus: sunxi: Add H3 MBUS compatible
-Date: Sun, 29 Sep 2019 18:16:48 +0200
-Message-ID: <20190929161653.160158-2-jernej.skrabec@siol.net>
+Subject: [PATCH v2 3/6] ARM: dts: sunxi: h3/h5: Add MBUS
+ controller node
+Date: Sun, 29 Sep 2019 18:16:50 +0200
+Message-ID: <20190929161653.160158-4-jernej.skrabec@siol.net>
 References: <20190929161653.160158-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBCFSYPWAKGQEQXBMZBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBDFSYPWAKGQEXGKXYAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190929161653.160158-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,26 +20,44 @@ To: mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gma
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Allwinner H3 SoC also contains MBUS controller.
+Both, H3 and H5, contain MBUS, which is the bus used by DMA devices to
+access system memory.
 
-Add compatible for it.
+MBUS controller is responsible for arbitration between channels based
+on set priority and can do some other things as well, like report
+bandwidth used. It also maps RAM region to different address than CPU.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt b/Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt
-index 1464a4713553..2005bb486705 100644
---- a/Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt
-+++ b/Documentation/devicetree/bindings/arm/sunxi/sunxi-mbus.txt
-@@ -8,6 +8,7 @@ bus.
- Required properties:
-  - compatible: Must be one of:
- 	- allwinner,sun5i-a13-mbus
-+	- allwinner,sun8i-h3-mbus
-  - reg: Offset and length of the register set for the controller
-  - clocks: phandle to the clock driving the controller
-  - dma-ranges: See section 2.3.9 of the DeviceTree Specification
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index eba190b3f9de..ef1d03812636 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -109,6 +109,7 @@
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
++		dma-ranges;
+ 		ranges;
+ 
+ 		display_clocks: clock@1000000 {
+@@ -538,6 +539,14 @@
+ 			};
+ 		};
+ 
++		mbus: dram-controller@1c62000 {
++			compatible = "allwinner,sun8i-h3-mbus";
++			reg = <0x01c62000 0x1000>;
++			clocks = <&ccu 113>;
++			dma-ranges = <0x00000000 0x40000000 0xc0000000>;
++			#interconnect-cells = <1>;
++		};
++
+ 		spi0: spi@1c68000 {
+ 			compatible = "allwinner,sun8i-h3-spi";
+ 			reg = <0x01c68000 0x1000>;
 -- 
 2.23.0
