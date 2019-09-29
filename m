@@ -1,7 +1,7 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 01/13] clk: jz4740: Add TCU clock
-Date: Sun, 29 Sep 2019 13:36:11 -0400
-Message-ID: <20190929173625.10003-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 1/9] clk: jz4740: Add TCU clock
+Date: Sun, 29 Sep 2019 13:36:46 -0400
+Message-ID: <20190929173655.10178-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -48,7 +48,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 7 insertions(+)
 
 diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
-index 510fe7e0c8f1c..79f0d48ec875b 100644
+index 305a26c2a800e..01b5b8b103888 100644
 --- a/drivers/clk/ingenic/jz4740-cgu.c
 +++ b/drivers/clk/ingenic/jz4740-cgu.c
 @@ -211,6 +211,12 @@ static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
