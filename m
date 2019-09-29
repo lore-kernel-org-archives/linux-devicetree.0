@@ -1,14 +1,15 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 1/6] arm64: dts: rockchip: Fix rk3399-roc-pc pwm2 pin
-Date: Sun, 29 Sep 2019 23:21:34 +0200
-Message-ID: <6797961.eJj5WIFbM9@phil>
+Subject: Re: [PATCH 4/6] arm64: dts: rockchip: Rename roc-pc with libretech
+ notation
+Date: Sun, 29 Sep 2019 23:32:18 +0200
+Message-ID: <4177305.6QI6aNXrAv@phil>
 References: <20190919052822.10403-1-jagan@amarulasolutions.com>
- <20190919052822.10403-2-jagan@amarulasolutions.com>
+ <20190919052822.10403-5-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190919052822.10403-2-jagan@amarulasolutions.com>
+In-Reply-To: <20190919052822.10403-5-jagan@amarulasolutions.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,57 +25,64 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Jagan,
 
-Am Donnerstag, 19. September 2019, 07:28:17 CEST schrieb Jagan Teki:
-> ROC-PC is not able to boot linux console if PWM2_d is
-> unattached to any pinctrl logic.
+Am Donnerstag, 19. September 2019, 07:28:20 CEST schrieb Jagan Teki:
+> Though the ROC-PC is manufactured by firefly, it is co-designed
+> by libretch like other Libretech computer boards from allwinner,
+> amlogic does.
 > 
-> To be precise the linux boot hang with last logs as,
-> ...
-> .....
-> [    0.003367] Console: colour dummy device 80x25
-> [    0.003788] printk: console [tty0] enabled
-> [    0.004178] printk: bootconsole [uart8250] disabled
+> So, it is always meaningful to keep maintain those vendors who
+> are part of design participation so-that the linux mainline
+> code will expose outside world who are the makers of such
+> hardware prototypes.
 > 
-> In ROC-PC the PWM2_d pin is connected to LOG_DVS_PWM of
-> VDD_LOG. So, for normal working operations this needs to
-> active and pull-down.
-> 
-> This patch fix, by attaching pinctrl active and pull-down
-> the pwm2.
-
-This looks highly dubious on first glance. The pwm subsystem nor
-the Rockchip pwm driver do not do any pinctrl handling.
-
-So I don't really see where that "active" pinctrl state is supposed
-to come from.
-
-Comparing with the pwm driver in the vendor tree I see that there
-is such a state defined there. But that code there also looks strange
-as that driver never again leaves this active state after entering it.
-
-Also for example all the Gru devices run with quite a number of pwm-
-regulators without needing additional fiddling with the pwm itself, so
-I don't really see why that should be different here.
-
-Heiko
-
+> So, rename the existing rk3399-roc-pc.dts with libretch notation,
+> rk3399-libretech-roc-rk3399-pc.dts
 > 
 > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 > ---
->  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 2 ++
->  1 file changed, 2 insertions(+)
+>  arch/arm64/boot/dts/rockchip/Makefile                           | 2 +-
+>  .../{rk3399-roc-pc.dts => rk3399-libretech-roc-rk3399-pc.dts}   | 0
+
+Somewhat "randomly" renaming files for "exposure" of the maker isn't the
+way to go. Especially as the file name itself is merely a handle and not
+meant for fame. The board filename should mainly enable developers to
+hopefully the correct board file to use/change - and "rk3399-roc-pc"
+is sufficiently unique to do that.
+
+Similar to how the NanoPi boards do that.
+
+And renames not only loose the history of changes but also in this case
+the file is in the kernel since july 2018 - more than a year, so this might
+actually affect the workflow of someone.
+
+So I'd really expect an actual technical reason for a rename.
+
+Heiko
+
+
+>  2 files changed, 1 insertion(+), 1 deletion(-)
+>  rename arch/arm64/boot/dts/rockchip/{rk3399-roc-pc.dts => rk3399-libretech-roc-rk3399-pc.dts} (100%)
 > 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> index 19f7732d728c..c53f3d571620 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
-> @@ -548,6 +548,8 @@
->  };
->  
->  &pwm2 {
-> +	pinctrl-names = "active";
-> +	pinctrl-0 = <&pwm2_pin_pull_down>;
->  	status = "okay";
->  };
->  
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index 1f18a9392d15..73c10ddb4300 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -21,12 +21,12 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-khadas-edge.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-khadas-edge-captain.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-khadas-edge-v.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-leez-p710.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-libretech-roc-rk3399-pc.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopc-t4.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-m4.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-neo4.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-orangepi.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
+> -dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts b/arch/arm64/boot/dts/rockchip/rk3399-libretech-roc-rk3399-pc.dts
+> similarity index 100%
+> rename from arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dts
+> rename to arch/arm64/boot/dts/rockchip/rk3399-libretech-roc-rk3399-pc.dts
 > 
