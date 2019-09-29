@@ -1,13 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v2 3/6] ARM: dts: sunxi: h3/h5: Add MBUS
- controller node
-Date: Sun, 29 Sep 2019 18:16:50 +0200
-Message-ID: <20190929161653.160158-4-jernej.skrabec@siol.net>
+Subject: [PATCH v2 4/6] dt-bindings: media: Add Allwinner H3
+ Deinterlace binding
+Date: Sun, 29 Sep 2019 18:16:51 +0200
+Message-ID: <20190929161653.160158-5-jernej.skrabec@siol.net>
 References: <20190929161653.160158-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBDFSYPWAKGQEXGKXYAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBDVSYPWAKGQEVQEZJ7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190929161653.160158-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,44 +20,95 @@ To: mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gma
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Both, H3 and H5, contain MBUS, which is the bus used by DMA devices to
-access system memory.
-
-MBUS controller is responsible for arbitration between channels based
-on set priority and can do some other things as well, like report
-bandwidth used. It also maps RAM region to different address than CPU.
+Allwinner H3 Deinterlace core is used for deinterlacing interlaced video
+content. Core can also be found on some later SoCs, like H5 and R40.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- arch/arm/boot/dts/sunxi-h3-h5.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ .../media/allwinner,sun8i-h3-deinterlace.yaml | 75 +++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun8i-h3-deinterlace.yaml
 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index eba190b3f9de..ef1d03812636 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -109,6 +109,7 @@
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-+		dma-ranges;
- 		ranges;
- 
- 		display_clocks: clock@1000000 {
-@@ -538,6 +539,14 @@
- 			};
- 		};
- 
-+		mbus: dram-controller@1c62000 {
-+			compatible = "allwinner,sun8i-h3-mbus";
-+			reg = <0x01c62000 0x1000>;
-+			clocks = <&ccu 113>;
-+			dma-ranges = <0x00000000 0x40000000 0xc0000000>;
-+			#interconnect-cells = <1>;
-+		};
+diff --git a/Documentation/devicetree/bindings/media/allwinner,sun8i-h3-deinterlace.yaml b/Documentation/devicetree/bindings/media/allwinner,sun8i-h3-deinterlace.yaml
+new file mode 100644
+index 000000000000..55a5d4e4f0f9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/allwinner,sun8i-h3-deinterlace.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/arm/allwinner,sun8i-h3-deinterlace.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 		spi0: spi@1c68000 {
- 			compatible = "allwinner,sun8i-h3-spi";
- 			reg = <0x01c68000 0x1000>;
++title: Allwinner H3 Deinterlace Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
++  - Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
++
++description: |-
++  The Allwinner H3 and later has a deinterlace core used for
++  deinterlacing interlaced video content.
++
++properties:
++  compatible:
++    const: allwinner,sun8i-h3-deinterlace
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Deinterlace interface clock
++      - description: Deinterlace module clock
++      - description: Deinterlace DRAM clock
++
++  clock-names:
++    items:
++      - const: bus
++      - const: mod
++      - const: ram
++
++  resets:
++    maxItems: 1
++
++  interconnects:
++    maxItems: 1
++
++  interconnect-names:
++    const: dma-mem
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/sun8i-h3-ccu.h>
++    #include <dt-bindings/reset/sun8i-h3-ccu.h>
++
++    deinterlace: deinterlace@1400000 {
++        compatible = "allwinner,sun8i-h3-deinterlace";
++        reg = <0x01400000 0x20000>;
++        clocks = <&ccu CLK_BUS_DEINTERLACE>,
++                 <&ccu CLK_DEINTERLACE>,
++                 <&ccu CLK_DRAM_DEINTERLACE>;
++        clock-names = "bus", "mod", "ram";
++        resets = <&ccu RST_BUS_DEINTERLACE>;
++        interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
++        interconnects = <&mbus 9>;
++        interconnect-names = "dma-mem";
++    };
++
++...
 -- 
 2.23.0
