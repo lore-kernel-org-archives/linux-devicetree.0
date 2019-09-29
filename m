@@ -1,69 +1,35 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [GIT PULL 1/2] arm64: dts: exynos: Pull for v5.4
-Date: Sun, 29 Sep 2019 10:51:34 -0700
-Message-ID: <20190929175134.fsieffurfdiqhpj2@localhost>
-References: <20190911183632.4317-1-krzk@kernel.org>
- <CAK8P3a2pBV+fh0rHitZ30Zz61QNRLfNSD-nhnzq4ZtxSh66F1Q@mail.gmail.com>
- <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] arm64: dts: rockchip: fix Rockpro64 RK808 interrupt line
+Date: Sun, 29 Sep 2019 21:58:36 +0200
+Message-ID: <2631784.KOmX0qhJ1H@phil>
+References: <20190921131457.36258-1-sigmaris@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
+In-Reply-To: <20190921131457.36258-1-sigmaris@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, arm-soc <arm@kernel.org>, SoC Team <soc@kernel.org>, Kukjin Kim <kgene@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+To: Hugh Cole-Baker <sigmaris@gmail.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Akash Gajjar <Akash_Gajjar@mentor.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Sep 12, 2019 at 08:32:47AM +0200, Krzysztof Kozlowski wrote:
-> On Wed, 11 Sep 2019 at 23:07, Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Wed, Sep 11, 2019 at 8:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > Unfortunately the patches were applied right after closing the linux-next.
-> >
-> > Hi Krzysztof,
-> >
-> > I took a look at these and am not convinced this is right:
-> >
-> > > 1. Fix boot of Exynos7 due to wrong address/size of memory node,
-> >
-> > The current state is clearly broken and a fix is needed, but
-> > I'm not sure this is the right fix. Why do you have 32-bit physical
-> > addressing on a 64-bit chip? I looked at commit ef72171b3621
-> > that introduced it, and it seems it would be better to just
-> > revert back to 64-bit addresses.
+Am Samstag, 21. September 2019, 15:14:57 CEST schrieb Hugh Cole-Baker:
+> Fix the pinctrl and interrupt specifier for RK808 to use GPIO3_B2. On the
+> Rockpro64 schematic [1] page 16, it shows GPIO3_B2 used for the interrupt
+> line PMIC_INT_L from the RK808, and there's a note which translates as:
+> "PMU termination GPIO1_C5 changed to this".
 > 
-> We discussed with Marek Szyprowski that either we can go back to
-> 64-bit addressing or stick to 32. There are not known boards with more
-> than 4 GB of RAM so from this point of view the choice was irrelevant.
-> At the end of discussion I mentioned to stick with other arm64 boards
-> (although not all), so revert to have 64 bit address... but Marek
-> chosen differently. Since you ask, let's go back with revert.
+> Tested by setting an RTC wakealarm and checking /proc/interrupts counters.
+> Without this patch, neither the rockchip_gpio_irq counter for the RK808,
+> nor the RTC alarm counter increment when the alarm time is reached.
+> With this patch, both interrupt counters increment by 1 as expected.
 > 
-> >
-> > > 2. Move GPU under /soc node,
-> >
-> > No problem
-> >
-> > > 3. Minor cleanup of #address-cells.
-> >
-> > IIRC, an interrupt-controller is required to have a #address-cells
-> > property, even if that is normally zero. I don't remember the
-> > details, but the gic binding lists it as mandatory, and I think
-> > the PCI interrupt-map relies on it. I would just drop this patch.
+> [1] http://files.pine64.org/doc/rockpro64/rockpro64_v21-SCH.pdf
 > 
-> Indeed, binding requires both address and size cells. I'll drop it.
+> Fixes: e4f3fb4 ("arm64: dts: rockchip: add initial dts support for Rockpro64")
+> Signed-off-by: Hugh Cole-Baker <sigmaris@gmail.com>
 
-Looking through the history of pending material, I didn't see a new pull for
-this material. Just checking in to see if there's something we missed?
+applied as fix for 5.4
 
-
-Thanks,
-
-
--Olof
+Thanks
+Heiko
