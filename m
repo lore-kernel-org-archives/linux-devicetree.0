@@ -1,38 +1,99 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: arm: rockchip: fix Theobroma-System board
- bindings
-Date: Sun, 29 Sep 2019 23:39:58 +0200
-Message-ID: <2067842.OmCvtMiqeS@phil>
-References: <20190917083453.25744-1-heiko@sntech.de>
+From: Vivek Unune <npcomplete13@gmail.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Fix usb-c on Hugsun X99 TV Box
+Date: Sun, 29 Sep 2019 19:46:15 -0400
+Message-ID: <20190929234615.GA5355@vivek-desktop>
+References: <20190929032230.24628-1-npcomplete13@gmail.com>
+ <54c67ca8-8428-48ee-9a96-e1216ba02839@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190917083453.25744-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christoph.muellner-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <54c67ca8-8428-48ee-9a96-e1216ba02839@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vicente Bergas <vicencb@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, heiko@sntech.de, Felipe Balbi <felipe.balbi@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, akash@openedev.com, ezequiel@collabora.com, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 17. September 2019, 10:34:53 CEST schrieb Heiko Stuebner:
-> The naming convention for the existing Theobroma boards is
-> soc-q7module-baseboard, so rk3399-puma-haikou and the in-kernel
-> devicetrees also follow that scheme.
-> 
-> For some reason in the binding a wrong or outdated naming slipped
-> in which does not match the used devicetrees and makes the dt-schema
-> complain now.
-> 
-> Fix this by using the names used in the wild by actual boards.
-> 
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+On Sun, Sep 29, 2019 at 01:22:17PM +0200, Vicente Bergas wrote:
+> On Sunday, September 29, 2019 5:22:30 AM CEST, Vivek Unune wrote:
+> > Fix usb-c on X99 TV Box. Tested with armbian w/ kernel 5.3
+> > =
 
-added a Fixes tag and applies as fix for 5.4
+> > Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
+> > ---
+> >  arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > =
+
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+> > b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+> > index 0d1f5f9a0de9..c133e8d64b2a 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
+> > @@ -644,7 +644,7 @@
+> >  	status =3D "okay";
+> >  	u2phy0_host: host-port {
+> > -		phy-supply =3D <&vcc5v0_host>;
+> > +		phy-supply =3D <&vcc5v0_typec>;
+> >  		status =3D "okay";
+> >  	};
+> > @@ -712,7 +712,7 @@
+> >  &usbdrd_dwc3_0 {
+> >  	status =3D "okay";
+> > -	dr_mode =3D "otg";
+> > +	dr_mode =3D "host";
+> >  };
+> >  &usbdrd3_1 {
+> =
+
+> Hi Vivek,
+> =
+
+> which is the relationship of your patch and this commit:
+> =
+
+> e1d9149e8389f1690cdd4e4056766dd26488a0fe
+> arm64: dts: rockchip: Fix USB3 Type-C on rk3399-sapphire
+> =
+
+> with respect to this other commit:
+> =
+
+> c09b73cfac2a9317f1104169045c519c6021aa1d
+> usb: dwc3: don't set gadget->is_otg flag
+> =
+
+> ?
+> =
+
+> I did not test reverting e1d9149e since c09b73cf was applied.
+> =
+
+> Regards,
+>  Vicen=E7.
+> =
+
+
+Hi Vicen=E7,
+
+Indeed, I was motivated by e1d9149e ("arm64: dts: rockchip: Fix USB3 =
+
+Type-C on rk3399-sapphire"). X99 TV box showed exact same symptoms
+with usb-c port. After applying the fix, it worked.
+
+I was not aware of c09b73cf ("usb: dwc3: don't set gadget->is_otg
+ flag") and it will be interesting to test it. This might render
+my fix unecessary.
+
+Thanks,
+
+Vivek
