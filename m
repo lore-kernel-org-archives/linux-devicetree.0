@@ -1,13 +1,13 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 02/49] clk: jz4740: Add TCU clock
-Date: Sun, 29 Sep 2019 13:30:02 -0400
-Message-ID: <20190929173053.8400-2-sashal@kernel.org>
-References: <20190929173053.8400-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 02/42] clk: jz4740: Add TCU clock
+Date: Sun, 29 Sep 2019 13:32:01 -0400
+Message-ID: <20190929173244.8918-2-sashal@kernel.org>
+References: <20190929173244.8918-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190929173244.8918-1-sashal@kernel.org>
+Sender: stable-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc: Paul Cercueil <paul@crapouillou.net>, Mathieu Malaterre <malat@debian.org>, Artur Rojek <contact@artur-rojek.eu>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Lee Jones <lee.jones@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Michael Turquette <mturquette@baylibre.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-mips@vger.kernel.org, linux-clk@vger.
 List-Id: devicetree@vger.kernel.org
@@ -50,10 +50,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 7 insertions(+)
 
 diff --git a/drivers/clk/ingenic/jz4740-cgu.c b/drivers/clk/ingenic/jz4740-cgu.c
-index 4c0a20949c2c2..67f8a0e142845 100644
+index c77f4e1506dc0..176d911b58397 100644
 --- a/drivers/clk/ingenic/jz4740-cgu.c
 +++ b/drivers/clk/ingenic/jz4740-cgu.c
-@@ -222,6 +222,12 @@ static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
+@@ -203,6 +203,12 @@ static const struct ingenic_cgu_clk_info jz4740_cgu_clocks[] = {
  		.parents = { JZ4740_CLK_EXT, -1, -1, -1 },
  		.gate = { CGU_REG_CLKGR, 5 },
  	},
