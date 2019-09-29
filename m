@@ -1,134 +1,92 @@
-From: Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH V3 6/8] ARM: bcm: Add support for BCM2711 SoC
-Date: Sun, 29 Sep 2019 01:09:19 +0200
-Message-ID: <c420bf03-784e-073f-b0d7-471d0fb48d22@gmx.net>
-References: <1569672435-19823-1-git-send-email-wahrenst@gmx.net>
- <1569672435-19823-7-git-send-email-wahrenst@gmx.net>
- <6b251871-59ae-6040-cbbc-74207b2169f3@gmail.com>
+From: Austin Kim <austinkernel.kim@gmail.com>
+Subject: Re: [Patch 02/16] media: ti-vpe: vpe: Add missing null pointer checks
+Date: Sun, 29 Sep 2019 09:08:37 +0900
+Message-ID: <CAOoBcBUd7reG=-WOq+Vq9SynZMJ81CWFZPN35MkmaQvquZ9xyg@mail.gmail.com>
+References: <20190927183650.31345-1-bparrot@ti.com> <20190927183650.31345-3-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6b251871-59ae-6040-cbbc-74207b2169f3@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
-Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, Will Deacon <will@kernel.org>, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190927183650.31345-3-bparrot@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 28.09.19 um 21:16 schrieb Florian Fainelli:
+2019=EB=85=84 9=EC=9B=94 28=EC=9D=BC (=ED=86=A0) =EC=98=A4=EC=A0=84 3:37, B=
+enoit Parrot <bparrot@ti.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
 >
-> On 9/28/2019 5:07 AM, Stefan Wahren wrote:
->> Add the BCM2711 to ARCH_BCM2835, but use new machine board code
->> because of the differences.
->>
->> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
->> Reviewed-by: Eric Anholt <eric@anholt.net>
->> ---
->>  arch/arm/mach-bcm/Kconfig    |  3 ++-
->>  arch/arm/mach-bcm/Makefile   |  3 ++-
->>  arch/arm/mach-bcm/bcm2711.c  | 24 ++++++++++++++++++++++++
->>  arch/arm64/Kconfig.platforms |  5 +++--
->>  4 files changed, 31 insertions(+), 4 deletions(-)
->>  create mode 100644 arch/arm/mach-bcm/bcm2711.c
->>
->> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
->> index 5e5f1fa..39bcbea 100644
->> --- a/arch/arm/mach-bcm/Kconfig
->> +++ b/arch/arm/mach-bcm/Kconfig
->> @@ -161,6 +161,7 @@ config ARCH_BCM2835
->>  	select GPIOLIB
->>  	select ARM_AMBA
->>  	select ARM_ERRATA_411920 if ARCH_MULTI_V6
->> +	select ARM_GIC if ARCH_MULTI_V7
->>  	select ARM_TIMER_SP804
->>  	select HAVE_ARM_ARCH_TIMER if ARCH_MULTI_V7
->>  	select TIMER_OF
-> Are not we missing a select ZONE_DMA here?
-Yes. I think for arm and arm64.
+> A few NULL pointer checks were missing.
+> Add check with appropriate return code.
 >
->> @@ -169,7 +170,7 @@ config ARCH_BCM2835
->>  	select PINCTRL_BCM2835
->>  	select MFD_CORE
->>  	help
->> -	  This enables support for the Broadcom BCM2835 and BCM2836 SoCs.
->> +	  This enables support for the Broadcom BCM2711 and BCM283x SoCs.
->>  	  This SoC is used in the Raspberry Pi and Roku 2 devices.
->>
->>  config ARCH_BCM_53573
->> diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
->> index b59c813..7baa8c9 100644
->> --- a/arch/arm/mach-bcm/Makefile
->> +++ b/arch/arm/mach-bcm/Makefile
->> @@ -42,8 +42,9 @@ obj-$(CONFIG_ARCH_BCM_MOBILE_L2_CACHE) += kona_l2_cache.o
->>  obj-$(CONFIG_ARCH_BCM_MOBILE_SMC) += bcm_kona_smc.o
->>
->>  # BCM2835
->> -obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
->>  ifeq ($(CONFIG_ARCH_BCM2835),y)
->> +obj-y				+= board_bcm2835.o
->> +obj-y				+= bcm2711.o
->>  ifeq ($(CONFIG_ARM),y)
->>  obj-$(CONFIG_SMP)		+= platsmp.o
->>  endif
->> diff --git a/arch/arm/mach-bcm/bcm2711.c b/arch/arm/mach-bcm/bcm2711.c
->> new file mode 100644
->> index 0000000..dbe2967
->> --- /dev/null
->> +++ b/arch/arm/mach-bcm/bcm2711.c
->> @@ -0,0 +1,24 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * Copyright (C) 2019 Stefan Wahren
->> + */
->> +
->> +#include <linux/of_address.h>
->> +
->> +#include <asm/mach/arch.h>
->> +
->> +#include "platsmp.h"
->> +
->> +static const char * const bcm2711_compat[] = {
->> +#ifdef CONFIG_ARCH_MULTI_V7
->> +	"brcm,bcm2711",
->> +#endif
->> +};
->> +
->> +DT_MACHINE_START(BCM2711, "BCM2711")
->> +#ifdef CONFIG_ZONE_DMA
->> +	.dma_zone_size	= SZ_1G,
->> +#endif
->> +	.dt_compat = bcm2711_compat,
->> +	.smp = smp_ops(bcm2836_smp_ops),
->> +MACHINE_END
->> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
->> index 16d7614..b5d31dc 100644
->> --- a/arch/arm64/Kconfig.platforms
->> +++ b/arch/arm64/Kconfig.platforms
->> @@ -37,11 +37,12 @@ config ARCH_BCM2835
->>  	select PINCTRL
->>  	select PINCTRL_BCM2835
->>  	select ARM_AMBA
->> +	select ARM_GIC
->>  	select ARM_TIMER_SP804
->>  	select HAVE_ARM_ARCH_TIMER
->>  	help
->> -	  This enables support for the Broadcom BCM2837 SoC.
->> -	  This SoC is used in the Raspberry Pi 3 device.
->> +	  This enables support for the Broadcom BCM2837 and BCM2711 SoC.
->> +	  This SoC is used in the Raspberry Pi 3 and 4 device.
-> Nit:
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> ---
+>  drivers/media/platform/ti-vpe/vpe.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 >
-> These SoCs are used in the Raspberry Pi 3 and 4 devices.
+> diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform=
+/ti-vpe/vpe.c
+> index 5ba72445584d..56f60dbea15c 100644
+> --- a/drivers/media/platform/ti-vpe/vpe.c
+> +++ b/drivers/media/platform/ti-vpe/vpe.c
+> @@ -1537,6 +1537,8 @@ static int vpe_g_fmt(struct file *file, void *priv,=
+ struct v4l2_format *f)
+>                 return -EINVAL;
 >
-> With that:
+>         q_data =3D get_q_data(ctx, f->type);
+> +       if (!q_data)
+> +               return -EINVAL;
+
+With this commit, it seems that 'Null Pointer Dereference' could be
+avoidable even though 'get_q_data(ctx, f->type);' returns NULL.
+
+* Original Code:
+        q_data =3D get_q_data(ctx, f->type);
+        // q_data =3D NULL;
+
+        pix->width =3D q_data->width;
+        // pix->width =3D  (NULL)->width;
+        // In this case, data abort would be raised.
+
 >
-> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+>         pix->width =3D q_data->width;
+>         pix->height =3D q_data->height;
+> @@ -2001,6 +2003,8 @@ static int vpe_queue_setup(struct vb2_queue *vq,
+>         struct vpe_q_data *q_data;
+>
+>         q_data =3D get_q_data(ctx, vq->type);
+> +       if (!q_data)
+> +               return -EINVAL;
+>
+>         *nplanes =3D q_data->nplanes;
+>
+> @@ -2025,6 +2029,8 @@ static int vpe_buf_prepare(struct vb2_buffer *vb)
+>         vpe_dbg(ctx->dev, "type: %d\n", vb->vb2_queue->type);
+>
+>         q_data =3D get_q_data(ctx, vb->vb2_queue->type);
+> +       if (!q_data)
+> +               return -EINVAL;
+>         num_planes =3D q_data->nplanes;
+>
+>         if (vb->vb2_queue->type =3D=3D V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)=
+ {
+> @@ -2481,7 +2487,12 @@ static int vpe_probe(struct platform_device *pdev)
+>         mutex_init(&dev->dev_mutex);
+>
+>         dev->res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> -                       "vpe_top");
+> +                                               "vpe_top");
+> +       if (!dev->res) {
+> +               dev_err(&pdev->dev, "missing 'vpe_top' resources data\n")=
+;
+> +               return -ENODEV;
+> +       }
+> +
+>         /*
+>          * HACK: we get resource info from device tree in the form of a l=
+ist of
+>          * VPE sub blocks, the driver currently uses only the base of vpe=
+_top
+> --
+> 2.17.1
+>
