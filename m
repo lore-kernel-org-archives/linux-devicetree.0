@@ -1,52 +1,106 @@
-From: Vivek Unune <npcomplete13@gmail.com>
-Subject: [PATCH] arm64: dts: rockchip: Fix usb-c on Hugsun X99 TV Box
-Date: Sat, 28 Sep 2019 23:22:30 -0400
-Message-ID: <20190929032230.24628-1-npcomplete13@gmail.com>
+From: Mimi Zohar <zohar@linux.ibm.com>
+Subject: Re: [PATCH v6 5/9] powerpc/ima: add measurement rules to ima arch
+ specific policy
+Date: Sun, 29 Sep 2019 00:20:38 -0400
+Message-ID: <1569730838.4999.31.camel@linux.ibm.com>
+References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
+         <1569594360-7141-6-git-send-email-nayna@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de, ezequiel@collabora.com, vicencb@gmail.com, akash@openedev.com
-Cc: devicetree@vger.kernel.org, Vivek Unune <npcomplete13@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1569594360-7141-6-git-send-email-nayna@linux.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Jeremy Kerr <jk@ozlabs.org>, Matthew Garret <matthew.garret@nebula.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Claudio Carvalho <cclaudio@linux.ibm.com>, George Wilson <gcwilson@linux.ibm.com>, Elaine Palmer <erpalmer@us.ibm.com>, Eric Ricther <erichte@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix usb-c on X99 TV Box. Tested with armbian w/ kernel 5.3
+On Fri, 2019-09-27 at 10:25 -0400, Nayna Jain wrote:
+> This patch adds the measurement rules to the arch specific policies for the
+> systems with trusted boot.
+> 
 
-Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+on trusted boot enabled systems.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-index 0d1f5f9a0de9..c133e8d64b2a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-@@ -644,7 +644,7 @@
- 	status = "okay";
- 
- 	u2phy0_host: host-port {
--		phy-supply = <&vcc5v0_host>;
-+		phy-supply = <&vcc5v0_typec>;
- 		status = "okay";
- 	};
- 
-@@ -712,7 +712,7 @@
- 
- &usbdrd_dwc3_0 {
- 	status = "okay";
--	dr_mode = "otg";
-+	dr_mode = "host";
- };
- 
- &usbdrd3_1 {
--- 
-2.17.1
+
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+
+Minor comment correction below.
+
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+
+> ---
+>  arch/powerpc/kernel/ima_arch.c | 44 +++++++++++++++++++++++++++++++---
+>  1 file changed, 41 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
+> index 39401b67f19e..77c61b142042 100644
+> --- a/arch/powerpc/kernel/ima_arch.c
+> +++ b/arch/powerpc/kernel/ima_arch.c
+> @@ -12,8 +12,18 @@ bool arch_ima_get_secureboot(void)
+>  	return is_powerpc_os_secureboot_enabled();
+>  }
+>  
+> -/* Defines IMA appraise rules for secureboot */
+> +/*
+> + * The "arch_rules" contains both the securebot and trustedboot rules for adding
+> + * the kexec kernel image and kernel modules file hashes to the IMA measurement
+> + * list and verifying the file signatures against known good values.
+> + *
+> + * The "appraise_type=imasig|modsig" option allows the good signature to be
+> + * stored as an xattr or as an appended signature. The "template=ima-modsig"
+> + * option includes the appended signature in the IMA measurement list.
+
+includes the appended signature, when available, in the IMA
+measurement list. 
+
+> + */
+>  static const char *const arch_rules[] = {
+> +	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
+> +	"measure func=MODULE_CHECK template=ima-modsig",
+>  	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
+>  #if !IS_ENABLED(CONFIG_MODULE_SIG)
+>  	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
+> @@ -22,12 +32,40 @@ static const char *const arch_rules[] = {
+>  };
+>  
+>  /*
+> - * Returns the relevant IMA arch policies based on the system secureboot state.
+> + * The "measure_rules" are enabled only on "trustedboot" enabled systems.
+> + * These rules add the kexec kernel image and kernel modules file hashes to
+> + * the IMA measurement list.
+> + */
+> +static const char *const measure_rules[] = {
+> +	"measure func=KEXEC_KERNEL_CHECK",
+> +	"measure func=MODULE_CHECK",
+> +	NULL
+> +};
+> +
+> +/*
+> + * Returns the relevant IMA arch policies based on the system secureboot
+> + * and trustedboot state.
+>   */
+>  const char *const *arch_get_ima_policy(void)
+>  {
+> -	if (is_powerpc_os_secureboot_enabled())
+> +	const char *const *rules;
+> +	int offset = 0;
+> +
+> +	for (rules = arch_rules; *rules != NULL; rules++) {
+> +		if (strncmp(*rules, "appraise", 8) == 0)
+> +			break;
+> +		offset++;
+> +	}
+> +
+> +	if (is_powerpc_os_secureboot_enabled()
+> +	    && is_powerpc_trustedboot_enabled())
+>  		return arch_rules;
+>  
+> +	if (is_powerpc_os_secureboot_enabled())
+> +		return arch_rules + offset;
+> +
+> +	if (is_powerpc_trustedboot_enabled())
+> +		return measure_rules;
+> +
+>  	return NULL;
+>  }
