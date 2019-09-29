@@ -1,72 +1,112 @@
-From: Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH V3 7/8] ARM: dts: Add minimal Raspberry Pi 4 support
-Date: Sun, 29 Sep 2019 12:25:19 +0100
-Message-ID: <b75876e1b3c46297142c052e1c6ea0a2@www.loen.fr>
-References: <1569672435-19823-1-git-send-email-wahrenst@gmx.net>
- <1569672435-19823-8-git-send-email-wahrenst@gmx.net>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH 5/6] media: sun4i: Add H3 deinterlace driver
+Date: Sun, 29 Sep 2019 15:18:58 +0200
+Message-ID: <14809830.gx5DXe3C1k@jernej-laptop>
+References: <20190912175132.411-1-jernej.skrabec@siol.net> <20190912175132.411-6-jernej.skrabec@siol.net> <20190912202647.wfcjur7yxhlelvd6@localhost.localdomain>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1569672435-19823-8-git-send-email-wahrenst@gmx.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBRG6YLWAKGQEGHWDVDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190912202647.wfcjur7yxhlelvd6-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2019-09-28 13:07, Stefan Wahren wrote:
-> This adds minimal support for the new Raspberry Pi 4 without the
-> fancy stuff like GENET, PCIe, xHCI, 40 bit DMA and V3D. The RPi 4 is
-> available in 3 different variants (1, 2 and 4 GB RAM), so leave the 
-> memory
-> size to zero and let the bootloader take care of it. The DWC2 is 
-> still
-> usable as peripheral via the USB-C port.
->
-> Other differences to the Raspberry Pi 3:
-> - additional GIC 400 Interrupt controller
-> - new thermal IP and HWRNG
-> - additional MMC interface (emmc2)
-> - additional UART, I2C, SPI and PWM interfaces
-> - clock stretching bug in I2C IP has been fixed
->
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> Acked-by: Eric Anholt <eric@anholt.net>
+Dne =C4=8Detrtek, 12. september 2019 ob 22:26:47 CEST je Maxime Ripard napi=
+sal(a):
+> Hi,
+>=20
+> On Thu, Sep 12, 2019 at 07:51:31PM +0200, Jernej Skrabec wrote:
+> > +	dev->regmap =3D devm_regmap_init_mmio(dev->dev, dev->base,
+> > +					   =20
+&deinterlace_regmap_config);
+> > +	if (IS_ERR(dev->regmap)) {
+> > +		dev_err(dev->dev, "Couldn't create deinterlace=20
+regmap\n");
+> > +
+> > +		return PTR_ERR(dev->regmap);
+> > +	}
+> > +
+> > +	ret =3D clk_prepare_enable(dev->bus_clk);
+> > +	if (ret) {
+> > +		dev_err(dev->dev, "Failed to enable bus clock\n");
+> > +
+> > +		return ret;
+> > +	}
+>=20
+> Do you need to keep the bus clock enabled all the time? Usually, for
+> the SoCs that have a reset line, you only need it to read / write to
+> the registers, not to have the controller actually running.
+>=20
+> If you don't, then regmap_init_mmio_clk will take care of that for
+> you.
 
-[...]
+I just tested and using regmap_init_mmio_clk() with "bus" clock doesn't wor=
+k.=20
+I guess it has to be enabled whole time. I'll just leave it as-is.
 
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
-> +					  IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
-> +					  IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
-> +					  IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
-> +					  IRQ_TYPE_LEVEL_LOW)>;
-> +		/* This only applies to the ARMv7 stub */
-> +		arm,cpu-registers-not-fw-configured;
-> +
-> +		/* The ARM cores doesn't enter deep enough states */
-> +		always-on;
+Best regards,
+Jernej
 
-I already commented on this. The A72 not entering a deep enough sleep 
-state to
-lose its comparator seems dubious at best. The right way to do this is 
-to have
-a global timer, which you said the platform has.
+>=20
+> > +	clk_set_rate(dev->mod_clk, 300000000);
+> > +
+> > +	ret =3D clk_prepare_enable(dev->mod_clk);
+> > +	if (ret) {
+> > +		dev_err(dev->dev, "Failed to enable mod clock\n");
+> > +
+> > +		goto err_bus_clk;
+> > +	}
+> > +
+> > +	ret =3D clk_prepare_enable(dev->ram_clk);
+> > +	if (ret) {
+> > +		dev_err(dev->dev, "Failed to enable ram clock\n");
+> > +
+> > +		goto err_mod_clk;
+> > +	}
+> > +
+> > +	ret =3D reset_control_reset(dev->rstc);
+> > +	if (ret) {
+> > +		dev_err(dev->dev, "Failed to apply reset\n");
+> > +
+> > +		goto err_ram_clk;
+> > +	}
+>=20
+> This could be moved to a runtime_pm hook, with get_sync called in the
+> open. That way you won't leave the device powered on if it's unused.
+>=20
+> > +struct deinterlace_dev {
+> > +	struct v4l2_device	v4l2_dev;
+> > +	struct video_device	vfd;
+> > +	struct device		*dev;
+> > +	struct v4l2_m2m_dev	*m2m_dev;
+> > +
+> > +	/* Device file mutex */
+> > +	struct mutex		dev_mutex;
+> > +
+> > +	void __iomem		*base;
+> > +	struct regmap		*regmap;
+>=20
+> Do you need to store the base address in that structure if you're
+> using the regmap?
+>=20
+> Maxime
 
-Please drop this.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/14809830.gx5DXe3C1k%40jernej-laptop.
