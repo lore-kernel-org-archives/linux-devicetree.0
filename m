@@ -1,13 +1,14 @@
-From: Vicente Bergas <vicencb@gmail.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: Fix usb-c on Hugsun X99 TV Box
-Date: Sun, 29 Sep 2019 13:22:17 +0200
-Message-ID: <54c67ca8-8428-48ee-9a96-e1216ba02839@gmail.com>
-References: <20190929032230.24628-1-npcomplete13@gmail.com>
+From: Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH V3 7/8] ARM: dts: Add minimal Raspberry Pi 4 support
+Date: Sun, 29 Sep 2019 12:25:19 +0100
+Message-ID: <b75876e1b3c46297142c052e1c6ea0a2@www.loen.fr>
+References: <1569672435-19823-1-git-send-email-wahrenst@gmx.net>
+ <1569672435-19823-8-git-send-email-wahrenst@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190929032230.24628-1-npcomplete13@gmail.com>
+In-Reply-To: <1569672435-19823-8-git-send-email-wahrenst@gmx.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,33 +18,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vivek Unune <npcomplete13@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, heiko@sntech.de, Felipe Balbi <felipe.balbi@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, akash@openedev.com, ezequiel@collabora.com, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuZGF5LCBTZXB0ZW1iZXIgMjksIDIwMTkgNToyMjozMCBBTSBDRVNULCBWaXZlayBVbnVu
-ZSB3cm90ZToKPiBGaXggdXNiLWMgb24gWDk5IFRWIEJveC4gVGVzdGVkIHdpdGggYXJtYmlhbiB3
-LyBrZXJuZWwgNS4zCj4KPiBTaWduZWQtb2ZmLWJ5OiBWaXZlayBVbnVuZSA8bnBjb21wbGV0ZTEz
-QGdtYWlsLmNvbT4KPiAtLS0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTkt
-aHVnc3VuLXg5OS5kdHMgfCA0ICsrLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygr
-KSwgMiBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Jv
-Y2tjaGlwL3JrMzM5OS1odWdzdW4teDk5LmR0cyAKPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9j
-a2NoaXAvcmszMzk5LWh1Z3N1bi14OTkuZHRzCj4gaW5kZXggMGQxZjVmOWEwZGU5Li5jMTMzZThk
-NjRiMmEgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTkt
-aHVnc3VuLXg5OS5kdHMKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5
-OS1odWdzdW4teDk5LmR0cwo+IEBAIC02NDQsNyArNjQ0LDcgQEAKPiAgCXN0YXR1cyA9ICJva2F5
-IjsKPiAgCj4gIAl1MnBoeTBfaG9zdDogaG9zdC1wb3J0IHsKPiAtCQlwaHktc3VwcGx5ID0gPCZ2
-Y2M1djBfaG9zdD47Cj4gKwkJcGh5LXN1cHBseSA9IDwmdmNjNXYwX3R5cGVjPjsKPiAgCQlzdGF0
-dXMgPSAib2theSI7Cj4gIAl9Owo+ICAKPiBAQCAtNzEyLDcgKzcxMiw3IEBACj4gIAo+ICAmdXNi
-ZHJkX2R3YzNfMCB7Cj4gIAlzdGF0dXMgPSAib2theSI7Cj4gLQlkcl9tb2RlID0gIm90ZyI7Cj4g
-Kwlkcl9tb2RlID0gImhvc3QiOwo+ICB9Owo+ICAKPiAgJnVzYmRyZDNfMSB7CgpIaSBWaXZlaywK
-CndoaWNoIGlzIHRoZSByZWxhdGlvbnNoaXAgb2YgeW91ciBwYXRjaCBhbmQgdGhpcyBjb21taXQ6
-CgplMWQ5MTQ5ZTgzODlmMTY5MGNkZDRlNDA1Njc2NmRkMjY0ODhhMGZlCmFybTY0OiBkdHM6IHJv
-Y2tjaGlwOiBGaXggVVNCMyBUeXBlLUMgb24gcmszMzk5LXNhcHBoaXJlCgp3aXRoIHJlc3BlY3Qg
-dG8gdGhpcyBvdGhlciBjb21taXQ6CgpjMDliNzNjZmFjMmE5MzE3ZjExMDQxNjkwNDVjNTE5YzYw
-MjFhYTFkCnVzYjogZHdjMzogZG9uJ3Qgc2V0IGdhZGdldC0+aXNfb3RnIGZsYWcKCj8KCkkgZGlk
-IG5vdCB0ZXN0IHJldmVydGluZyBlMWQ5MTQ5ZSBzaW5jZSBjMDliNzNjZiB3YXMgYXBwbGllZC4K
-ClJlZ2FyZHMsCiAgVmljZW7Dpy4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On 2019-09-28 13:07, Stefan Wahren wrote:
+> This adds minimal support for the new Raspberry Pi 4 without the
+> fancy stuff like GENET, PCIe, xHCI, 40 bit DMA and V3D. The RPi 4 is
+> available in 3 different variants (1, 2 and 4 GB RAM), so leave the 
+> memory
+> size to zero and let the bootloader take care of it. The DWC2 is 
+> still
+> usable as peripheral via the USB-C port.
+>
+> Other differences to the Raspberry Pi 3:
+> - additional GIC 400 Interrupt controller
+> - new thermal IP and HWRNG
+> - additional MMC interface (emmc2)
+> - additional UART, I2C, SPI and PWM interfaces
+> - clock stretching bug in I2C IP has been fixed
+>
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> Acked-by: Eric Anholt <eric@anholt.net>
+
+[...]
+
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
+> +					  IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
+> +					  IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
+> +					  IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
+> +					  IRQ_TYPE_LEVEL_LOW)>;
+> +		/* This only applies to the ARMv7 stub */
+> +		arm,cpu-registers-not-fw-configured;
+> +
+> +		/* The ARM cores doesn't enter deep enough states */
+> +		always-on;
+
+I already commented on this. The A72 not entering a deep enough sleep 
+state to
+lose its comparator seems dubious at best. The right way to do this is 
+to have
+a global timer, which you said the platform has.
+
+Please drop this.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
