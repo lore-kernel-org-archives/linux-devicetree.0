@@ -1,96 +1,69 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.3 19/49] MIPS: lantiq: update the clock alias' for the mainline PCIe PHY driver
-Date: Sun, 29 Sep 2019 13:30:19 -0400
-Message-ID: <20190929173053.8400-19-sashal@kernel.org>
-References: <20190929173053.8400-1-sashal@kernel.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [GIT PULL 1/2] arm64: dts: exynos: Pull for v5.4
+Date: Sun, 29 Sep 2019 10:51:34 -0700
+Message-ID: <20190929175134.fsieffurfdiqhpj2@localhost>
+References: <20190911183632.4317-1-krzk@kernel.org>
+ <CAK8P3a2pBV+fh0rHitZ30Zz61QNRLfNSD-nhnzq4ZtxSh66F1Q@mail.gmail.com>
+ <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190929173053.8400-1-sashal@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org, devicetree@vger.kernel.org, john@phrozen.org, kishon@ti.com, ralf@linux-mips.org, robh+dt@kernel.org, hauke@hauke-m.de, mark.rutland@arm.com, ms@dev.tdt.de, Sasha Levin <sashal@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, arm-soc <arm@kernel.org>, SoC Team <soc@kernel.org>, Kukjin Kim <kgene@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Hi,
 
-[ Upstream commit ed90302be64a53d9031c8ce05428c358b16a5d96 ]
+On Thu, Sep 12, 2019 at 08:32:47AM +0200, Krzysztof Kozlowski wrote:
+> On Wed, 11 Sep 2019 at 23:07, Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Wed, Sep 11, 2019 at 8:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > >
+> > > Hi,
+> > >
+> > > Unfortunately the patches were applied right after closing the linux-next.
+> >
+> > Hi Krzysztof,
+> >
+> > I took a look at these and am not convinced this is right:
+> >
+> > > 1. Fix boot of Exynos7 due to wrong address/size of memory node,
+> >
+> > The current state is clearly broken and a fix is needed, but
+> > I'm not sure this is the right fix. Why do you have 32-bit physical
+> > addressing on a 64-bit chip? I looked at commit ef72171b3621
+> > that introduced it, and it seems it would be better to just
+> > revert back to 64-bit addresses.
+> 
+> We discussed with Marek Szyprowski that either we can go back to
+> 64-bit addressing or stick to 32. There are not known boards with more
+> than 4 GB of RAM so from this point of view the choice was irrelevant.
+> At the end of discussion I mentioned to stick with other arm64 boards
+> (although not all), so revert to have 64 bit address... but Marek
+> chosen differently. Since you ask, let's go back with revert.
+> 
+> >
+> > > 2. Move GPU under /soc node,
+> >
+> > No problem
+> >
+> > > 3. Minor cleanup of #address-cells.
+> >
+> > IIRC, an interrupt-controller is required to have a #address-cells
+> > property, even if that is normally zero. I don't remember the
+> > details, but the gic binding lists it as mandatory, and I think
+> > the PCI interrupt-map relies on it. I would just drop this patch.
+> 
+> Indeed, binding requires both address and size cells. I'll drop it.
 
-The mainline PCIe PHY driver has it's own devicetree node. Update the
-clock alias so the mainline driver finds the clocks.
+Looking through the history of pending material, I didn't see a new pull for
+this material. Just checking in to see if there's something we missed?
 
-The first PCIe PHY is located at 0x1f106800 and exists on VRX200, ARX300
-and GRX390.
-The second PCIe PHY is located at 0x1f700400 and exists on ARX300 and
-GRX390.
-The third PCIe PHY is located at 0x1f106a00 and exists onl on GRX390.
-Lantiq's board support package (called "UGW") names these registers
-"PDI".
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: john@phrozen.org
-Cc: kishon@ti.com
-Cc: ralf@linux-mips.org
-Cc: robh+dt@kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: hauke@hauke-m.de
-Cc: mark.rutland@arm.com
-Cc: ms@dev.tdt.de
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/mips/lantiq/xway/sysctrl.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Thanks,
 
-diff --git a/arch/mips/lantiq/xway/sysctrl.c b/arch/mips/lantiq/xway/sysctrl.c
-index b4323b2214e20..156a95ac5c725 100644
---- a/arch/mips/lantiq/xway/sysctrl.c
-+++ b/arch/mips/lantiq/xway/sysctrl.c
-@@ -468,14 +468,14 @@ void __init ltq_soc_init(void)
- 		clkdev_add_pmu("1f203018.usb2-phy", "phy", 1, 2, PMU_ANALOG_USB0_P);
- 		clkdev_add_pmu("1f203034.usb2-phy", "phy", 1, 2, PMU_ANALOG_USB1_P);
- 		/* rc 0 */
--		clkdev_add_pmu("1d900000.pcie", "phy", 1, 2, PMU_ANALOG_PCIE0_P);
-+		clkdev_add_pmu("1f106800.phy", "phy", 1, 2, PMU_ANALOG_PCIE0_P);
- 		clkdev_add_pmu("1d900000.pcie", "msi", 1, 1, PMU1_PCIE_MSI);
--		clkdev_add_pmu("1d900000.pcie", "pdi", 1, 1, PMU1_PCIE_PDI);
-+		clkdev_add_pmu("1f106800.phy", "pdi", 1, 1, PMU1_PCIE_PDI);
- 		clkdev_add_pmu("1d900000.pcie", "ctl", 1, 1, PMU1_PCIE_CTL);
- 		/* rc 1 */
--		clkdev_add_pmu("19000000.pcie", "phy", 1, 2, PMU_ANALOG_PCIE1_P);
-+		clkdev_add_pmu("1f700400.phy", "phy", 1, 2, PMU_ANALOG_PCIE1_P);
- 		clkdev_add_pmu("19000000.pcie", "msi", 1, 1, PMU1_PCIE1_MSI);
--		clkdev_add_pmu("19000000.pcie", "pdi", 1, 1, PMU1_PCIE1_PDI);
-+		clkdev_add_pmu("1f700400.phy", "pdi", 1, 1, PMU1_PCIE1_PDI);
- 		clkdev_add_pmu("19000000.pcie", "ctl", 1, 1, PMU1_PCIE1_CTL);
- 	}
- 
-@@ -499,9 +499,9 @@ void __init ltq_soc_init(void)
- 		clkdev_add_pmu("1e101000.usb", "otg", 1, 0, PMU_USB0);
- 		clkdev_add_pmu("1e106000.usb", "otg", 1, 0, PMU_USB1);
- 		/* rc 2 */
--		clkdev_add_pmu("1a800000.pcie", "phy", 1, 2, PMU_ANALOG_PCIE2_P);
-+		clkdev_add_pmu("1f106a00.pcie", "phy", 1, 2, PMU_ANALOG_PCIE2_P);
- 		clkdev_add_pmu("1a800000.pcie", "msi", 1, 1, PMU1_PCIE2_MSI);
--		clkdev_add_pmu("1a800000.pcie", "pdi", 1, 1, PMU1_PCIE2_PDI);
-+		clkdev_add_pmu("1f106a00.pcie", "pdi", 1, 1, PMU1_PCIE2_PDI);
- 		clkdev_add_pmu("1a800000.pcie", "ctl", 1, 1, PMU1_PCIE2_CTL);
- 		clkdev_add_pmu("1e10b308.eth", NULL, 0, 0, PMU_SWITCH | PMU_PPE_DP);
- 		clkdev_add_pmu("1da00000.usif", "NULL", 1, 0, PMU_USIF);
-@@ -526,10 +526,10 @@ void __init ltq_soc_init(void)
- 		clkdev_add_pmu("1e101000.usb", "otg", 1, 0, PMU_USB0 | PMU_AHBM);
- 		clkdev_add_pmu("1f203034.usb2-phy", "phy", 1, 0, PMU_USB1_P);
- 		clkdev_add_pmu("1e106000.usb", "otg", 1, 0, PMU_USB1 | PMU_AHBM);
--		clkdev_add_pmu("1d900000.pcie", "phy", 1, 1, PMU1_PCIE_PHY);
-+		clkdev_add_pmu("1f106800.phy", "phy", 1, 1, PMU1_PCIE_PHY);
- 		clkdev_add_pmu("1d900000.pcie", "bus", 1, 0, PMU_PCIE_CLK);
- 		clkdev_add_pmu("1d900000.pcie", "msi", 1, 1, PMU1_PCIE_MSI);
--		clkdev_add_pmu("1d900000.pcie", "pdi", 1, 1, PMU1_PCIE_PDI);
-+		clkdev_add_pmu("1f106800.phy", "pdi", 1, 1, PMU1_PCIE_PDI);
- 		clkdev_add_pmu("1d900000.pcie", "ctl", 1, 1, PMU1_PCIE_CTL);
- 		clkdev_add_pmu(NULL, "ahb", 1, 0, PMU_AHBM | PMU_AHBS);
- 
--- 
-2.20.1
+
+-Olof
