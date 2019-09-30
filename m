@@ -1,41 +1,105 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCH] ARM: dts: am4372: Set memory bandwidth limit for DISPC
-Date: Mon, 30 Sep 2019 11:54:50 +0300
-Message-ID: <20190930085450.15874-1-tomi.valkeinen@ti.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
+Date: Mon, 30 Sep 2019 10:56:06 +0200
+Message-ID: <20190930085606.GG1518582@ulmo>
+References: <20190927002455.13169-1-robh@kernel.org>
+ <CAK8P3a0oct0EOMi5t4BmpgdkiBM+LjC+2pTST4hcvNCa3MGLmw@mail.gmail.com>
+ <20190930082055.GA21971@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7lMq7vMTJT4tNk0a"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190930082055.GA21971@infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Robin Murphy <robin.murphy@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, Frank Rowand <frowand.list@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Oza Pawandeep <oza.oza@broadcom.com>, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUGV0ZXIgVWpmYWx1c2kgPHBldGVyLnVqZmFsdXNpQHRpLmNvbT4KClNldCBtZW1vcnkg
-YmFuZHdpZHRoIGxpbWl0IHRvIGZpbHRlciBvdXQgcmVzb2x1dGlvbnMgYWJvdmUgNzIwcEA2MEh6
-IHRvCmF2b2lkIHVuZGVyZmxvdyBlcnJvcnMgZHVlIHRvIHRoZSBiYW5kd2lkdGggbmVlZHMgb2Yg
-aGlnaGVyIHJlc29sdXRpb25zLgoKYW00M3h4IGNhbiBub3QgcHJvdmlkZSBlbm91Z2ggYmFuZHdp
-ZHRoIHRvIERJU1BDIHRvIGNvcnJlY3RseSBoYW5kbGUKJ2hpZ2gnIHJlc29sdXRpb25zLgoKU2ln
-bmVkLW9mZi1ieTogUGV0ZXIgVWpmYWx1c2kgPHBldGVyLnVqZmFsdXNpQHRpLmNvbT4KU2lnbmVk
-LW9mZi1ieTogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KLS0tCiBhcmNo
-L2FybS9ib290L2R0cy9hbTQzNzIuZHRzaSB8IDIgKysKIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2Vy
-dGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9hbTQzNzIuZHRzaSBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2FtNDM3Mi5kdHNpCmluZGV4IDg0OGUyYTg4ODRlMi4uMTRiYmM0Mzgw
-NTVmIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9hbTQzNzIuZHRzaQorKysgYi9hcmNo
-L2FybS9ib290L2R0cy9hbTQzNzIuZHRzaQpAQCAtMzM3LDYgKzMzNyw4IEBACiAJCQkJdGksaHdt
-b2RzID0gImRzc19kaXNwYyI7CiAJCQkJY2xvY2tzID0gPCZkaXNwX2Nsaz47CiAJCQkJY2xvY2st
-bmFtZXMgPSAiZmNrIjsKKworCQkJCW1heC1tZW1vcnktYmFuZHdpZHRoID0gPDIzMDAwMDAwMD47
-CiAJCQl9OwogCiAJCQlyZmJpOiByZmJpQDQ4MzJhODAwIHsKLS0gClRleGFzIEluc3RydW1lbnRz
-IEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9C
-dXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+
+--7lMq7vMTJT4tNk0a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Sep 30, 2019 at 01:20:55AM -0700, Christoph Hellwig wrote:
+> On Sun, Sep 29, 2019 at 01:16:20PM +0200, Arnd Bergmann wrote:
+> > On a semi-related note, Thierry asked about one aspect of the dma-ranges
+> > property recently, which is the behavior of dma_set_mask() and related
+> > functions when a driver sets a mask that is larger than the memory
+> > area in the bus-ranges but smaller than the available physical RAM.
+> > As I understood Thierry's problem and the current code, the generic
+> > dma_set_mask() will either reject the new mask entirely or override
+> > the mask set by of_dma_configure, but it fails to set a correct mask
+> > within the limitations of the parent bus in this case.
+>=20
+> There days dma_set_mask will only reject a mask if it is too small
+> to be supported by the hardware.  Larger than required masks are now
+> always accepted.
+
+Summarizing why this came up: the memory subsystem on Tegra194 has a
+mechanism controlled by bit 39 of physical addresses. This is used to
+support two variants of sector ordering for block linear formats. The
+GPU uses a slightly different ordering than other MSS clients, so the
+drivers have to set this bit depending on who they interoperate with.
+
+I was running into this as I was adding support for IOMMU support for
+the Ethernet controller on Tegra194. The controller has a HW feature
+register that contains how many address bits it supports. This is 40
+for Tegra194, corresponding to the number of address bits to the MSS.
+Without IOMMU support that's not a problem because there are no systems
+with 40 bits of system memory. However, if we enable IOMMU support, the
+DMA/IOMMU code will allocate from the top of a 48-bit (constrained to
+40 bits via the DMA mask) input address space. This causes bit 39 to be
+set, which in turn will make the MSS reorder sectors and break network
+communications.
+
+Since this reordering takes place at the MSS level, this applies to all
+MSS clients. Most of these clients always want bit 39 to be 0, whereas
+the clients that can and want to make use of the reordering always want
+bit 39 to be under their control, so they can control in a fine-grained
+way when to set it.
+
+This means that effectively all MSS clients can only address 39 bits, so
+instead of hard-coding that for each driver I thought it'd make sense to
+have a central place to configure this, so that all devices by default
+are restricted to 39-bit addressing. However, with the current DMA API
+implementation this causes a problem because the default 39-bit DMA mask
+would get overwritten by the driver (as in the example of the Ethernet
+controller setting a 40-bit DMA mask because that's what the hardware
+supports).
+
+I realize that this is somewhat exotic. On one hand it is correct for a
+driver to say that the hardware supports 40-bit addressing (i.e. the
+Ethernet controller can address bit 39), but from a system integration
+point of view, using bit 39 is wrong, except in a very restricted set of
+cases.
+
+If I understand correctly, describing this with a dma-ranges property is
+the right thing to do, but it wouldn't work with the current
+implementation because drivers can still override a lower DMA mask with
+a higher one.
+
+Thierry
+
+--7lMq7vMTJT4tNk0a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2RwyMACgkQ3SOs138+
+s6HYvBAAiJWcvv5xcJncOs7e0ol6y9Mk77w/r0hKJYeifVE572SDCmbwK8orp3zk
+P0DcZYqws8pYA0kK38w8FJO6ptv754PoJ7Gp8Io9SIsbrvY9YFUFZAK7OQ3SExGx
+LKwNoEeKNM5ceP0HFonHM2YTTuKL7soYqLm/4fTiOTACT2c42pRTLqonIXL73vxE
+gV3/ssj+hfwNkORM3vSqgiC14re/1fi7uzG5YLjhe1maobqJ8hVUD8rfZfKIcE17
+XFPHbBo8wILS6P6vYrrw8LJLsUNJMKrmqlxCYaAhuEQaosUatdHp9/KdDXOLZDxV
+NLu2jOD4RZ46PC8P6p4E9ZgEuAJMrh5NydXMdSuGIbACndvQchObUEWbHEP8W8Xi
+Cr70CmMxfFDGoqKO99X/07jvG0D/iEmF2CwQPO0QKaIDZPYN0weoIbcEm9r1KEAm
+XCvXQl80jaMmZH2xpqeSV+i1wO0dNpPZ0MZUutXqjIyE189WvrcHsTk8HAJIcbj+
+spwwo11tAR/x2t3WIgcrAHVbSEXUuK6hNwpeC44HBcQbWPOxa1sSJvNeYq0z/kPb
+YuYY9NvQaZBX87qVunbANq05ev4cK2oeFbZjkWHKKhdBsb4rcaUvHWCQOpgTL0wQ
+Sy9ckOP6goBXLArIFmTkuDyGxoNG5mqrcPGk1duSBP8nzDQvcVw=
+=Iybe
+-----END PGP SIGNATURE-----
+
+--7lMq7vMTJT4tNk0a--
