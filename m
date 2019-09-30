@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v5 3/8] media: i2c: ov2659: Cleanup include file list
-Date: Mon, 30 Sep 2019 08:06:39 -0500
-Message-ID: <20190930130644.8704-4-bparrot@ti.com>
+Subject: [Patch v5 5/8] media: dt-bindings: ov2659: add powerdown/reset-gpios optional property
+Date: Mon, 30 Sep 2019 08:06:41 -0500
+Message-ID: <20190930130644.8704-6-bparrot@ti.com>
 References: <20190930130644.8704-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,50 +12,42 @@ To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.co
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Several of include files listed are not explicitly needed.
-If they are need then they are implicitly included.
-
-Reduce the list of includes to an easier to manage list.
+Add powerdown-gpios and reset-gpios to the list of optional properties
+for the OV2659 camera sensor.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/media/i2c/ov2659.c | 14 --------------
- 1 file changed, 14 deletions(-)
+ Documentation/devicetree/bindings/media/i2c/ov2659.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index efbe6dc720e2..f77320e8a60d 100644
---- a/drivers/media/i2c/ov2659.c
-+++ b/drivers/media/i2c/ov2659.c
-@@ -22,29 +22,15 @@
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov2659.txt b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
+index cabc7d827dfb..92989a619f29 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ov2659.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ov2659.txt
+@@ -12,6 +12,12 @@ Required Properties:
+ - clock-names: should be "xvclk".
+ - link-frequencies: target pixel clock frequency.
  
- #include <linux/clk.h>
- #include <linux/delay.h>
--#include <linux/err.h>
--#include <linux/init.h>
--#include <linux/interrupt.h>
--#include <linux/io.h>
- #include <linux/i2c.h>
--#include <linux/kernel.h>
--#include <linux/media.h>
- #include <linux/module.h>
--#include <linux/of.h>
- #include <linux/of_graph.h>
--#include <linux/slab.h>
--#include <linux/uaccess.h>
--#include <linux/videodev2.h>
++Optional Properties:
++- powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
++  Active high with internal pull down resistor.
++- reset-gpios: reference to the GPIO connected to the resetb pin, if any.
++  Active low with internal pull up resistor.
++
+ For further reading on port node refer to
+ Documentation/devicetree/bindings/media/video-interfaces.txt.
  
--#include <media/media-entity.h>
- #include <media/i2c/ov2659.h>
--#include <media/v4l2-common.h>
- #include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-event.h>
- #include <media/v4l2-fwnode.h>
- #include <media/v4l2-image-sizes.h>
--#include <media/v4l2-mediabus.h>
- #include <media/v4l2-subdev.h>
+@@ -27,6 +33,9 @@ Example:
+ 			clocks = <&clk_ov2659 0>;
+ 			clock-names = "xvclk";
  
- #define DRIVER_NAME "ov2659"
++			powerdown-gpios = <&gpio6 14 GPIO_ACTIVE_HIGH>;
++			reset-gpios = <&gpio6 15 GPIO_ACTIVE_LOW>;
++
+ 			port {
+ 				ov2659_0: endpoint {
+ 					remote-endpoint = <&vpfe_ep>;
 -- 
 2.17.1
