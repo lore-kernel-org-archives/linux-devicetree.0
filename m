@@ -1,57 +1,102 @@
-From: Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v3 5/5] RFC: drm/atomic-helper: Reapply color transformation after resume
-Date: Mon, 30 Sep 2019 19:28:02 -0300
-Message-ID: <20190930222802.32088-6-ezequiel@collabora.com>
-References: <20190930222802.32088-1-ezequiel@collabora.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH RFC v2 06/14] dt-bindings/interrupt-controller: pdc: add SPI config register
+Date: Mon, 30 Sep 2019 15:33:01 -0700
+Message-ID: <5d92829e.1c69fb81.d860a.9096@mx.google.com>
+References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org> <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190930222802.32088-1-ezequiel@collabora.com>
+In-Reply-To: <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: linux-rockchip@lists.infradead.org, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, Boris Brezillon <boris.brezillon@collabora.com>, Douglas Anderson <dianders@chromium.org>, Jacopo Mondi <jacopo@jmondi.org>, Ilia Mirkin <imirkin@alum.mit.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>
+To: evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some platforms are not able to maintain the color transformation
-state after a system suspend/resume cycle.
+Quoting Lina Iyer (2019-09-13 14:59:14)
+> In addition to configuring the PDC, additional registers that interface
+> the GIC have to be configured to match the GPIO type. The registers on
+> some QCOM SoCs are access restricted, while on other SoCs are not. They
+> SoCs with access restriction to these SPI registers need to be written
+> from the firmware using the SCM interface. Add a flag to indicate if the
+> register is to be written using SCM interface.
+>=20
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
+>  .../devicetree/bindings/interrupt-controller/qcom,pdc.txt   | 13 +++++++=
++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,=
+pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.t=
+xt
+> index 8e0797c..e329f8d 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+> @@ -24,6 +24,9 @@ Properties:
+>         Usage: required
+>         Value type: <prop-encoded-array>
+>         Definition: Specifies the base physical address for PDC hardware.
+> +                   Optionally, specify the PDC's GIC interface registers=
+ that
+> +                   need to be configured for wakeup capable GPIOs routed=
+ to
+> +                   the PDC.
+> =20
+>  - interrupt-cells:
+>         Usage: required
+> @@ -50,15 +53,23 @@ Properties:
+>                     The second element is the GIC hwirq number for the PD=
+C port.
+>                     The third element is the number of interrupts in sequ=
+ence.
+> =20
+> +- qcom,scm-spi-cfg:
+> +       Usage: optional
+> +       Value type: <bool>
+> +       Definition: Specifies if the SPI configuration registers have to =
+be
+> +                   written from the firmware. Sometimes the PDC interface
+> +                   register to the GIC can only be written from the firm=
+ware.
+> +
+>  Example:
+> =20
+>         pdc: interrupt-controller@b220000 {
+>                 compatible =3D "qcom,sdm845-pdc";
+> -               reg =3D <0xb220000 0x30000>;
+> +               reg =3D <0 0x0b220000 0 0x30000>, <0 0x179900f0 0 0x60>;
+>                 qcom,pdc-ranges =3D <0 512 94>, <94 641 15>, <115 662 7>;
+>                 #interrupt-cells =3D <2>;
+>                 interrupt-parent =3D <&intc>;
+>                 interrupt-controller;
+> +               qcom,scm-spi-cfg;
+>         };
 
-Set the colog_mgmt_changed flag so that CMM on the CRTCs in
-the suspend state are reapplied after system resume.
+This overlaps register region with the mailbox node. That node is
+actually a pile of random "CPU" registers used to ping remote processors
+and apparently control how the PDC interacts with the GIC. Maybe this
+can be changed to a phandle and then the driver can interogate the
+phandle to determine if it's the SCM firmware or if it's the shared
+mailbox register? If it's a shared mailbox then it can write to it at
+the offset it knows about (because it's sdm845 compatible specific) and
+if it's SCM then it can use the hardcoded address as well?
 
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
-This is an RFC, and it's mostly based on Jacopo Mondi's work https://lkml.org/lkml/2019/9/6/498.
+Basically I'm saying that it just needs a phandle.
 
-Changes from v2:
-* New patch.
----
- drivers/gpu/drm/drm_atomic_helper.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+	qcom,spi-cfg =3D <&scm>;
 
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index e41db0f202ca..518488125575 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -3234,8 +3234,20 @@ int drm_atomic_helper_resume(struct drm_device *dev,
- 			     struct drm_atomic_state *state)
- {
- 	struct drm_modeset_acquire_ctx ctx;
-+	struct drm_crtc_state *crtc_state;
-+	struct drm_crtc *crtc;
-+	unsigned int i;
- 	int err;
- 
-+	for_each_new_crtc_in_state(state, crtc, crtc_state, i) {
-+		/*
-+		 * Force re-enablement of CMM after system resume if any
-+		 * of the DRM color transformation properties was set in
-+		 * the state saved at system suspend time.
-+		 */
-+		if (crtc_state->gamma_lut)
-+			crtc_state->color_mgmt_changed = true;
-+	}
- 	drm_mode_config_reset(dev);
- 
- 	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, err);
--- 
-2.22.0
+or
+
+	qcom,spi-cfg =3D <&mailbox>;
+
+and then driver knows how to use that to write into random registers.
+Maybe we can have an API in regmap that finds the regmap for a given
+device node? That way we don't have to funnel everything through syscon
+for this.
+
+	of_get_regmap(struct device_node *np, const char *name);
+
+Where NULL name means "first available" and then do the devres search
+otherwise for a device that has the matching node pointer.
