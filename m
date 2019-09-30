@@ -1,97 +1,81 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 05/11] of: Ratify of_dma_configure() interface
-Date: Mon, 30 Sep 2019 16:24:20 -0500
-Message-ID: <CAL_JsqLnKxuQRR3sGGtXF3nwwDx7DOONPPYz37ROk7u_+cxRug@mail.gmail.com>
-References: <20190927002455.13169-1-robh@kernel.org> <20190927002455.13169-6-robh@kernel.org>
- <20190930125752.GD12051@infradead.org> <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: serial: document LiteUART bindings
+Date: Mon, 30 Sep 2019 16:32:27 -0500
+Message-ID: <CAL_JsqLXJNvWOOajS4JVVek=h+v_Fxrx58ogQ0Cz+5n5Sh0+=g@mail.gmail.com>
+References: <20190930130430.GA9080@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
+In-Reply-To: <20190930130430.GA9080@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc: Christoph Hellwig <hch@infradead.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Frank Rowand <frowand.list@gmail.com>, PCI <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Oza Pawandeep <oza.oza@broadcom.com>, Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Robin Murphy <robin.murphy@arm.com>
+To: Mateusz Holenko <mholenko@antmicro.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, devicetree@vger.kernel.org, Karol Gugala <kgugala@antmicro.com>, Jiri Slaby <jslaby@suse.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maxime Ripard <mripard@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Sam Ravnborg <sam@ravnborg.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, "Paul E. McKenney" <paulmck@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 8:32 AM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
+On Mon, Sep 30, 2019 at 8:04 AM Mateusz Holenko <mholenko@antmicro.com> wrote:
 >
-> On Mon, 2019-09-30 at 05:57 -0700, Christoph Hellwig wrote:
-> > On Thu, Sep 26, 2019 at 07:24:49PM -0500, Rob Herring wrote:
-> > > -int of_dma_configure(struct device *dev, struct device_node *np, bool
-> > > force_dma)
-> > > +int of_dma_configure(struct device *dev, struct device_node *parent, bool
-> > > force_dma)
-> >
-> > This creates a > 80 char line.
-> >
-> > >  {
-> > >     u64 dma_addr, paddr, size = 0;
-> > >     int ret;
-> > >     bool coherent;
-> > >     unsigned long offset;
-> > >     const struct iommu_ops *iommu;
-> > > +   struct device_node *np;
-> > >     u64 mask;
-> > >
-> > > +   np = dev->of_node;
-> > > +   if (!np)
-> > > +           np = parent;
-> > > +   if (!np)
-> > > +           return -ENODEV;
-> >
-> > I have to say I find the older calling convention simpler to understand.
-> > If we want to enforce the invariant I'd rather do that explicitly:
-> >
-> >       if (dev->of_node && np != dev->of_node)
-> >               return -EINVAL;
+> From: Filip Kokosinski <fkokosinski@internships.antmicro.com>
 >
-> As is, this would break Freescale Layerscape fsl-mc bus' dma_configure():
-
-This may break PCI too for devices that have a DT node.
-
-> static int fsl_mc_dma_configure(struct device *dev)
-> {
->         struct device *dma_dev = dev;
+> Add documentation for LiteUART devicetree bindings.
 >
->         while (dev_is_fsl_mc(dma_dev))
->                 dma_dev = dma_dev->parent;
+> Signed-off-by: Filip Kokosinski <fkokosinski@internships.antmicro.com>
+> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> ---
+>  .../devicetree/bindings/serial/litex,liteuart.txt    | 12 ++++++++++++
+>  MAINTAINERS                                          |  6 ++++++
+>  2 files changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.txt
+
+Please make this a schema. See
+Documentation/devicetree/writing-schema.rst (or .md before 5.4).
+
 >
->         return of_dma_configure(dev, dma_dev->of_node, 0);
-> }
+> diff --git a/Documentation/devicetree/bindings/serial/litex,liteuart.txt b/Documentation/devicetree/bindings/serial/litex,liteuart.txt
+> new file mode 100644
+> index 000000000..13c71a0c9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/litex,liteuart.txt
+> @@ -0,0 +1,12 @@
+> +LiteUART serial controller
+> +
+> +Required properties:
+> +- compatible: should be "litex,liteuart"
+
+Only 1 version?
+
+> +- reg: base address and length of the register set for this device
+
+Is there really no interrupt line? That should be added if there's h/w
+support even if the driver doesn't yet support it.
+
+> +
+> +Example:
+> +
+> +uart0: serial@f0001000 {
+
+Wrong unit address. Should be "@e0001800".
+
+
+> +       compatible = "litex,liteuart";
+> +       reg = <0xe0001800 0x100>;
+> +};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b2326dece..65a6cf296 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9462,6 +9462,12 @@ F:       Documentation/misc-devices/lis3lv02d.rst
+>  F:     drivers/misc/lis3lv02d/
+>  F:     drivers/platform/x86/hp_accel.c
 >
-> But I think that with this series, given the fact that we now treat the lack of
-> dma-ranges as a 1:1 mapping instead of an error, we could rewrite the function
-> like this:
-
-Now, I'm reconsidering allowing this abuse... It's better if the code
-which understands the bus structure in DT for a specific bus passes in
-the right thing. Maybe I should go back to Robin's version (below).
-OTOH, the existing assumption that 'dma-ranges' was in the immediate
-parent was an assumption on the bus structure which maybe doesn't
-always apply.
-
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index a45261e21144..6951450bb8f3 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -98,12 +98,15 @@ int of_dma_configure(struct device *dev, struct
-device_node *parent, bool force_
-        u64 mask;
-
-        np = dev->of_node;
--       if (!np)
--               np = parent;
-+       if (np)
-+               parent = of_get_dma_parent(np);
-+       else
-+               np = of_node_get(parent);
-        if (!np)
-                return -ENODEV;
-
--       ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
-+       ret = of_dma_get_range(parent, &dma_addr, &paddr, &size);
-+       of_node_put(parent);
-        if (ret < 0) {
-                /*
-                 * For legacy reasons, we have to assume some devices need
+> +LITEX PLATFORM
+> +M:     Karol Gugala <kgugala@antmicro.com>
+> +M:     Mateusz Holenko <mholenko@antmicro.com>
+> +S:     Maintained
+> +F:     Documentation/devicetree/bindings/serial/litex,liteuart.txt
+> +
+>  LIVE PATCHING
+>  M:     Josh Poimboeuf <jpoimboe@redhat.com>
+>  M:     Jiri Kosina <jikos@kernel.org>
+> --
+> 2.23.0
+>
