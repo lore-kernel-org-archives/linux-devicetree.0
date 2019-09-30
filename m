@@ -1,51 +1,30 @@
-From: Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH 1/1] arm: dts: mediatek: add mt7629 pwm support
-Date: Mon, 30 Sep 2019 17:59:45 +0800
-Message-ID: <1569837585-13247-2-git-send-email-sam.shih@mediatek.com>
-References: <1569837585-13247-1-git-send-email-sam.shih@mediatek.com>
+From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Subject: [PATCH 0/2] This patch introduces a feature to force gpio-poweroff
+ module
+Date: Mon, 30 Sep 2019 10:35:36 +0000
+Message-ID: <20190930103531.13764-1-oleksandr.suvorov@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569837585-13247-1-git-send-email-sam.shih@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Sam Shih <sam.shih@mediatek.com>
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>, Jamie Lentin <jm@lentin.co.uk>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Igor Opaniuk <igor.opaniuk@toradex.com>, Oleksandr Suvorov <oleksandr.suvorov@toradex.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds pwm support for MT7629.
-Used:
-https://patchwork.kernel.org/patch/11160851/
+to register its own pm_power_off handler even if someone has registered
+this handler earlier.
+Useful to change a way to power off the system using DT files.
 
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
----
- arch/arm/boot/dts/mt7629.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-index 9608bc2ccb3f..24375fc5f936 100644
---- a/arch/arm/boot/dts/mt7629.dtsi
-+++ b/arch/arm/boot/dts/mt7629.dtsi
-@@ -241,6 +241,21 @@
- 			status = "disabled";
- 		};
- 
-+		pwm: pwm@11006000 {
-+			compatible = "mediatek,mt7629-pwm";
-+			reg = <0x11006000 0x1000>;
-+			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&topckgen CLK_TOP_PWM_SEL>,
-+				 <&pericfg CLK_PERI_PWM_PD>,
-+				 <&pericfg CLK_PERI_PWM1_PD>;
-+			clock-names = "top", "main", "pwm1";
-+			assigned-clocks = <&topckgen CLK_TOP_PWM_SEL>;
-+			assigned-clock-parents =
-+					<&topckgen CLK_TOP_UNIVPLL2_D4>;
-+			num-pwms = <1>;
-+			status = "disabled";
-+		};
-+
- 		i2c: i2c@11007000 {
- 			compatible = "mediatek,mt7629-i2c",
- 				     "mediatek,mt2712-i2c";
--- 
-2.17.1
+Oleksandr Suvorov (2):
+  power: reset: gpio-poweroff: add force mode
+  dt-bindings: power: reset: gpio-poweroff: Add 'force-mode' property
+
+ .../bindings/power/reset/gpio-poweroff.txt    |  3 +++
+ drivers/power/reset/gpio-poweroff.c           | 27 ++++++++++++++-----
+ 2 files changed, 24 insertions(+), 6 deletions(-)
+
+--=20
+2.20.1
