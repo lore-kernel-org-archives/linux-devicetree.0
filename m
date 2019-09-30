@@ -1,54 +1,156 @@
 From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: sopine-baseboard: Add PHY
- regulator delay
-Date: Mon, 30 Sep 2019 16:21:10 +0200
-Message-ID: <20190930142110.vscmnupg6lqrbmuy@gilmour>
-References: <20190929085259.76462-1-jernej.skrabec@siol.net>
+Subject: Re: [PATCH v2 0/6] media: Introduce Allwinner H3 deinterlace driver
+Date: Mon, 30 Sep 2019 16:25:29 +0200
+Message-ID: <20190930142529.7b2x3bmu6723dctm@gilmour>
+References: <20190929161653.160158-1-jernej.skrabec@siol.net>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="quermkw47rmscx7x"
+        protocol="application/pgp-signature"; boundary="boflox5qes4r6omb"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190929085259.76462-1-jernej.skrabec@siol.net>
+In-Reply-To: <20190929161653.160158-1-jernej.skrabec@siol.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
 
---quermkw47rmscx7x
+--boflox5qes4r6omb
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sun, Sep 29, 2019 at 10:52:59AM +0200, Jernej Skrabec wrote:
-> It turns out that sopine-baseboard needs same fix as pine64-plus
-> for ethernet PHY. Here too Realtek ethernet PHY chip needs additional
-> power on delay to properly initialize. Datasheet mentions that chip
-> needs 30 ms to be properly powered on and that it needs some more time
-> to be initialized.
->
-> Fix that by adding 100ms ramp delay to regulator responsible for
-> powering PHY.
->
-> Note that issue was found out and fix tested on pine64-lts, but it's
-> basically the same as sopine-baseboard, only layout and connectors
-> differ.
->
-> Fixes: bdfe4cebea11 ("arm64: allwinner: a64: add Ethernet PHY regulator for several boards")
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Hi,
 
-Applied as a fix for 5.4, thanks!
+On Sun, Sep 29, 2019 at 06:16:47PM +0200, Jernej Skrabec wrote:
+> Starting with H3, Allwinner began to include standalone deinterlace
+> core in multimedia oriented SoCs. This patch series introduces support
+> for it. Note that new SoCs, like H6, have radically different (updated)
+> deinterlace core, which will need a new driver.
+>
+> v4l2-compliance report:
+> v4l2-compliance SHA: dece02f862f38d8f866230ca9f1015cb93ddfac4, 32 bits
+>
+> Compliance test for sun8i-di device /dev/video0:
+>
+> Driver Info:
+>         Driver name      : sun8i-di
+>         Card type        : sun8i-di
+>         Bus info         : platform:sun8i-di
+>         Driver version   : 5.3.0
+>         Capabilities     : 0x84208000
+>                 Video Memory-to-Memory
+>                 Streaming
+>                 Extended Pix Format
+>                 Device Capabilities
+>         Device Caps      : 0x04208000
+>                 Video Memory-to-Memory
+>                 Streaming
+>                 Extended Pix Format
+>
+> Required ioctls:
+>         test VIDIOC_QUERYCAP: OK
+>
+> Allow for multiple opens:
+>         test second /dev/video0 open: OK
+>         test VIDIOC_QUERYCAP: OK
+>         test VIDIOC_G/S_PRIORITY: OK
+>         test for unlimited opens: OK
+>
+> Debug ioctls:
+>         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+>         test VIDIOC_LOG_STATUS: OK (Not Supported)
+>
+> Input ioctls:
+>         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+>         test VIDIOC_ENUMAUDIO: OK (Not Supported)
+>         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+>         test VIDIOC_G/S_AUDIO: OK (Not Supported)
+>         Inputs: 0 Audio Inputs: 0 Tuners: 0
+>
+> Output ioctls:
+>         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+>         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+>         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+>         Outputs: 0 Audio Outputs: 0 Modulators: 0
+>
+> Input/Output configuration ioctls:
+>         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+>         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+>         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+>         test VIDIOC_G/S_EDID: OK (Not Supported)
+>
+> Control ioctls:
+>         test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+>         test VIDIOC_QUERYCTRL: OK (Not Supported)
+>         test VIDIOC_G/S_CTRL: OK (Not Supported)
+>         test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+>         test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+>         test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+>         Standard Controls: 0 Private Controls: 0
+>
+> Format ioctls:
+>         test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+>         test VIDIOC_G/S_PARM: OK (Not Supported)
+>         test VIDIOC_G_FBUF: OK (Not Supported)
+>         test VIDIOC_G_FMT: OK
+>         test VIDIOC_TRY_FMT: OK
+>         test VIDIOC_S_FMT: OK
+>         test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+>         test Cropping: OK (Not Supported)
+>         test Composing: OK (Not Supported)
+>         test Scaling: OK
+>
+> Codec ioctls:
+>         test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+>         test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+>         test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+>
+> Buffer ioctls:
+>         test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+>         test VIDIOC_EXPBUF: OK
+>         test Requests: OK (Not Supported)
+>
+> Total for sun8i-di device /dev/video0: 44, Succeeded: 44, Failed: 0, Warnings: 0
+>
+> Please take a look.
+>
+> Best regards,
+> Jernej
+>
+> Changes from v1:
+> - updated Maxime's e-mail in DT binding
+> - removed "items" for single item in DT binding
+> - implemented power management
+> - replaced regmap with direct io access
+> - set exclusive clock rate
+> - renamed DEINTERLACE_FRM_CTRL_COEF_CTRL to DEINTERLACE_FRM_CTRL_COEF_ACCESS
+>
+> Jernej Skrabec (6):
+>   dt-bindings: bus: sunxi: Add H3 MBUS compatible
+>   clk: sunxi-ng: h3: Export MBUS clock
+>   ARM: dts: sunxi: h3/h5: Add MBUS controller node
+>   dt-bindings: media: Add Allwinner H3 Deinterlace binding
+>   media: sun4i: Add H3 deinterlace driver
+>   dts: arm: sun8i: h3: Enable deinterlace unit
+
+I'm fine with all the dt-bindings / dt patches, so you can add my
+Acked-by on those.
+
 Maxime
 
---quermkw47rmscx7x
+--boflox5qes4r6omb
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZIPVgAKCRDj7w1vZxhR
-xVgqAQCDfcX+A/qtKjlld5IAr3fEdXZnqTWyYKgCOlqsd8Kl7gEA8JWPsQEWWnH9
-gsSbLYjkSKUkUMavqHDbIgZ6r9D58wg=
-=PU/D
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZIQWQAKCRDj7w1vZxhR
+xVrrAP95BvBjx5D+oV3oe3nrrkwjKQeFkYqSNUiiKAZDSGDZnAEAnW5FCkLRnxuA
+5+5trRlcF70qySyqsWs0534ctqwJ0wQ=
+=AK5h
 -----END PGP SIGNATURE-----
 
---quermkw47rmscx7x--
+--boflox5qes4r6omb--
