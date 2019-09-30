@@ -1,97 +1,98 @@
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
-Date: Mon, 30 Sep 2019 11:20:55 +0200
-Message-ID: <202216c6e456bfd1a30f7cdb000aa714e3855e10.camel@suse.de>
-References: <20190927002455.13169-1-robh@kernel.org>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v6 1/7] dt-bindings: thermal: Add DT bindings
+ documentation for Amlogic Thermal
+Date: Mon, 30 Sep 2019 15:04:59 +0530
+Message-ID: <CAHLCerPxrGMm98nDC529pYkzEaiDk0p6VTdVzyHx8=U8_PYe_A@mail.gmail.com>
+References: <20190927184352.28759-1-glaroque@baylibre.com> <20190927184352.28759-2-glaroque@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-/7Fyj1jMsFE0z7R36gtv"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190927002455.13169-1-robh@kernel.org>
+In-Reply-To: <20190927184352.28759-2-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marek.vasut@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Oza Pawandeep <oza.oza@broadcom.com>
+To: Guillaume La Roque <glaroque@baylibre.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-amlogic@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---=-/7Fyj1jMsFE0z7R36gtv
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2019-09-26 at 19:24 -0500, Rob Herring wrote:
-> This series fixes several issues related to 'dma-ranges'. Primarily,
-> 'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
-> devices not described in the DT. A common case needing dma-ranges is a
-> 32-bit PCIe bridge on a 64-bit system. This affects several platforms
-> including Broadcom, NXP, Renesas, and Arm Juno. There's been several
-> attempts to fix these issues, most recently earlier this week[1].
->=20
-> In the process, I found several bugs in the address translation. It
-> appears that things have happened to work as various DTs happen to use
-> 1:1 addresses.
->=20
-> First 3 patches are just some clean-up. The 4th patch adds a unittest
-> exhibiting the issues. Patches 5-9 rework how of_dma_configure() works
-> making it work on either a struct device child node or a struct
-> device_node parent node so that it works on bus leaf nodes like PCI
-> bridges. Patches 10 and 11 fix 2 issues with address translation for
-> dma-ranges.
->=20
-> My testing on this has been with QEMU virt machine hacked up to set PCI
-> dma-ranges and the unittest. Nicolas reports this series resolves the
-> issues on Rpi4 and NXP Layerscape platforms.
->=20
-> Rob
->=20
-> [1]=20
->=20
-https://lore.kernel.org/linux-arm-kernel/20190924181244.7159-1-nsaenzjulien=
-ne@suse.de/
->=20
-> Rob Herring (5):
->   of: Remove unused of_find_matching_node_by_address()
->   of: Make of_dma_get_range() private
->   of/unittest: Add dma-ranges address translation tests
->   of/address: Translate 'dma-ranges' for parent nodes missing
->     'dma-ranges'
->   of/address: Fix of_pci_range_parser_one translation of DMA addresses
->=20
-> Robin Murphy (6):
->   of: address: Report of_dma_get_range() errors meaningfully
->   of: Ratify of_dma_configure() interface
->   of/address: Introduce of_get_next_dma_parent() helper
->   of: address: Follow DMA parent for "dma-coherent"
->   of: Factor out #{addr,size}-cells parsing
->   of: Make of_dma_get_range() work on bus nodes
-
-Re-tested the whole series. Verified both the unittests run fine and PCIe's
-behaviour is fixed.
-
-Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-Also for the whole series:
-
-Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-Regards,
-Nicolas
-
-
---=-/7Fyj1jMsFE0z7R36gtv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2RyPcACgkQlfZmHno8
-x/5aaggAjeyCHdUtuhmPYMOr0eHC3qN6bd3dUsbXdN2lP82cn6S6n08OsHIfHaS/
-mKzeb3RK8lHn7v8Pv/nfe7UU93Lxx4Dyq4D4vXXTWyTFNg67C/KxtJswHvKhdQBX
-u/r/OIhCnewJLTEZV9g44OFAko61Zuf8mp8KIwSjj+vfUXORyUc/KLfFYNt6b8Fb
-YQRdgTyuF4Xhy/XYdxn8uCcDKkz0MtQ1Z9yJiao0h1c5p1Hia8Xhilq7uglx6+/3
-w6Izh+0OAiDP30yMBVW+5APyhFPUdfzlP3hdifrkv8LiwCyMsukutfWawrm0r9E6
-Ubrk8jYhhRg1qlpwQQ9V6QeapBjgsA==
-=14/S
------END PGP SIGNATURE-----
-
---=-/7Fyj1jMsFE0z7R36gtv--
+On Sat, Sep 28, 2019 at 12:14 AM Guillaume La Roque
+<glaroque@baylibre.com> wrote:
+>
+> Adding the devicetree binding documentation for the Amlogic temperature
+> sensor found in the Amlogic Meson G12A and G12B SoCs.
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Tested-by: Christian Hewitt <christianshewitt@gmail.com>
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> ---
+>  .../bindings/thermal/amlogic,thermal.yaml     | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+> new file mode 100644
+> index 000000000000..f761681e4c0d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/amlogic,thermal.yaml
+> @@ -0,0 +1,54 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/amlogic,thermal.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic Thermal
+> +
+> +maintainers:
+> +  - Guillaume La Roque <glaroque@baylibre.com>
+> +
+> +description: Binding for Amlogic Thermal
+> +
+> +properties:
+> +  compatible:
+> +      items:
+> +        - enum:
+> +            - amlogic,g12a-cpu-thermal
+> +            - amlogic,g12a-ddr-thermal
+> +        - const: amlogic,g12a-thermal
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  amlogic,ao-secure:
+> +    description: phandle to the ao-secure syscon
+> +    $ref: '/schemas/types.yaml#/definitions/phandle'
+> +
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - amlogic,ao-secure
+> +
+> +examples:
+> +  - |
+> +        cpu_temp: temperature-sensor@ff634800 {
+> +                compatible = "amlogic,g12a-cpu-thermal",
+> +                             "amlogic,g12a-thermal";
+> +                reg = <0xff634800 0x50>;
+> +                interrupts = <0x0 0x24 0x0>;
+> +                clocks = <&clk 164>;
+> +                #thermal-sensor-cells = <0>;
+> +                amlogic,ao-secure = <&sec_AO>;
+> +        };
+> +...
+> --
+> 2.17.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
