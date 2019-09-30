@@ -1,13 +1,15 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] arm64: dts: juno: add GPU subsystem
-Date: Mon, 30 Sep 2019 12:46:33 -0500
-Message-ID: <CAL_JsqKUP6qG6PVL47RQ5A5OcBhpdOA_0VL1YeYDuyVSVcRqCQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/panfrost: Use coherent pagetable walk on Juno
+Date: Mon, 30 Sep 2019 12:52:36 -0500
+Message-ID: <CAL_Jsq+GnSVTEPaLfwcWiAbbTwJFM=NzJB1WnS-D3SfW4xzCSw@mail.gmail.com>
 References: <88dc6386929b3dcd7a65ba8063628c62b66b330c.1569856049.git.robin.murphy@arm.com>
+ <1e499f85220b735849126171e64ebdd1da0302ce.1569856049.git.robin.murphy@arm.com>
+ <167ec566-1936-8a05-83fc-74d20d9fb8bc@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <88dc6386929b3dcd7a65ba8063628c62b66b330c.1569856049.git.robin.murphy@arm.com>
+In-Reply-To: <167ec566-1936-8a05-83fc-74d20d9fb8bc@arm.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -17,24 +19,41 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Liviu Dudau <liviu.dudau@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Steven Price <steven.price@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Steven Price <steven.price@arm.com>, Robin Murphy <robin.murphy@arm.com>
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Liviu Dudau <liviu.dudau@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sudeep Holla <sudeep.holla@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBTZXAgMzAsIDIwMTkgYXQgMTA6MjUgQU0gUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJw
-aHlAYXJtLmNvbT4gd3JvdGU6Cj4KPiBTaW5jZSB3ZSBub3cgaGF2ZSBiaW5kaW5ncyBmb3IgTWFs
-aSBNaWRnYXJkIEdQVXMsIGxldCdzIHVzZSB0aGVtIHRvCj4gZGVzY3JpYmUgSnVubydzIEdQVSBz
-dWJzeXN0ZW0sIGlmIG9ubHkgYmVjYXVzZSB3ZSBjYW4uIEp1bm8gc3BvcnRzIGEKPiBNYWxpLVQ2
-MjQgaW50ZWdyYXRlZCBiZWhpbmQgYW4gTU1VLTQwMCAoYXMgYSBnZXN0dXJlIHRvd2FyZHMKPiB2
-aXJ0dWFsaXNhdGlvbiksIGluIHRoZWlyIG93biBkZWRpY2F0ZWQgcG93ZXIgZG9tYWluIHdpdGgg
-RFZGUwo+IGNvbnRyb2xsZWQgYnkgdGhlIFNDUC4KPgo+IENDOiBMaXZpdSBEdWRhdSA8bGl2aXUu
-ZHVkYXVAYXJtLmNvbT4KPiBDQzogU3VkZWVwIEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT4K
-PiBDQzogTG9yZW56byBQaWVyYWxpc2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+Cj4gU2ln
-bmVkLW9mZi1ieTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4KPiAtLS0KPiAg
-Li4uL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnlhbWwgICAgICAgIHwgIDUgKysrLQo+
-ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLWJhc2UuZHRzaSAgICAgICAgfCAyNyArKysr
-KysrKysrKysrKysrKysrCj4gIDIgZmlsZXMgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMSBk
-ZWxldGlvbigtKQoKUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+T24gTW9uLCBTZXAgMzAsIDIwMTkgYXQgMTE6MjYgQU0gU3RldmVuIFByaWNlIDxzdGV2ZW4ucHJp
+Y2VAYXJtLmNvbT4gd3JvdGU6Cj4KPiBPbiAzMC8wOS8yMDE5IDE2OjI0LCBSb2JpbiBNdXJwaHkg
+d3JvdGU6Cj4gPiBBbHRob3VnaCBnb2luZyBmdWxsICJkbWEtY29oZXJlbnQiIGVuZHMgYmFkbHkg
+ZHVlIHRvIEdFTSBvYmplY3RzIHN0aWxsCj4gPiBiZWluZyBmb3JjaWJseSBtYXBwZWQgbm9uLWNh
+Y2hlYWJsZSwgd2UgY2FuIGF0IGxlYXN0IHRha2UgYWR2YW50YWdlIG9mCj4gPiBKdW5vJ3MgQUNF
+LWxpdGUgaW50ZWdyYXRpb24gdG8gc2tpcCBjYWNoZSBtYWludGVuYW5jZSBmb3IgcGFnZXRhYmxl
+cy4KPiA+Cj4gPiBDQzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPiA+IENDOiBUb21l
+dSBWaXpvc28gPHRvbWV1LnZpem9zb0Bjb2xsYWJvcmEuY29tPgo+ID4gU2lnbmVkLW9mZi1ieTog
+Um9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4KPiA+IC0tLQo+ID4KPiA+IFRoaXMg
+aXNuJ3QgcmVhbGx5IG1lYW50IGFzIGEgc2VyaWVzLCBJJ20ganVzdCBzZW5kaW5nIGl0IHRvZ2V0
+aGVyCj4gPiB3aXRoIHBhdGNoICMxIGZvciBjb250ZXh0Lgo+ID4KPiA+ICBkcml2ZXJzL2dwdS9k
+cm0vcGFuZnJvc3QvcGFuZnJvc3RfbW11LmMgfCAzICsrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAz
+IGluc2VydGlvbnMoKykKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmZy
+b3N0L3BhbmZyb3N0X21tdS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0X21t
+dS5jCj4gPiBpbmRleCBiZGQ5OTA1Njg0NzYuLjU2MDQzOWY2MzI3NyAxMDA2NDQKPiA+IC0tLSBh
+L2RyaXZlcnMvZ3B1L2RybS9wYW5mcm9zdC9wYW5mcm9zdF9tbXUuYwo+ID4gKysrIGIvZHJpdmVy
+cy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0X21tdS5jCj4gPiBAQCAtMzY1LDYgKzM2NSw5IEBA
+IGludCBwYW5mcm9zdF9tbXVfcGd0YWJsZV9hbGxvYyhzdHJ1Y3QgcGFuZnJvc3RfZmlsZV9wcml2
+ICpwcml2KQo+ID4gICAgICAgICAgICAgICAuaW9tbXVfZGV2ICAgICAgPSBwZmRldi0+ZGV2LAo+
+ID4gICAgICAgfTsKPiA+Cj4gPiArICAgICBpZiAob2ZfZGV2aWNlX2lzX2NvbXBhdGlibGUocGZk
+ZXYtPmRldi0+b2Zfbm9kZSwgImFybSxqdW5vLW1hbGkiKSkKPiA+ICsgICAgICAgICAgICAgcGZk
+ZXYtPm1tdS0+cGd0YmxfY2ZnLmNvaGVyZW50X3dhbGsgPSB0cnVlOwo+Cj4gU2hvdWxkIGJlOgo+
+ICAgICAgICAgbW11LT5wZ3RibF9jZmcuY29oZXJlbnRfd2FsayA9IHRydWU7CgpJT1csIGJhc2Ug
+dGhpcyBvbiA1LjQgb3IgZHJtLW1pc2MtbmV4dC4KCj4gQWxzbyBJJ20gbm90IHN1cmUgd2hldGhl
+ciB3ZSBzaG91bGQgZG8gdGhpcyBiYXNlZCBvbiBhIGNvbXBhdGlibGUKPiBzdHJpbmcuIGtiYXNl
+IGhhcyBhICJzeXN0ZW0tY29oZXJlbmN5IiBkZXZpY2UtdHJlZSBmbGFnIGZvciBpdC4gSW4KPiB0
+aGVvcnkgd2UgY291bGQgZW5kIHVwIHdpdGggYSBsb25nIGxpc3Qgb2YgY29tcGF0aWJsZXMgaGVy
+ZS4uLgoKV2h5IG5vdCB1c2UgJ2RtYS1jb2hlcmVudCcgd2hpY2ggeW91IHNldD8gSWYgbm90LCBJ
+J20gY29uZnVzZWQgYXMgdG8Kd2hhdCAnZG1hLWNvaGVyZW50JyBpcyBzdXBwb3NlZCB0byBtZWFu
+LiBJcyBpdCBwb3NzaWJsZSBmb3IgcGFnZSB0YWJsZQp3YWxrcyB0byBoYXZlIGRpZmZlcmVudCBj
+b2hlcmVuY3kgdGhhbiB0aGUgcmVzdCBvZiB0aGUgYWNjZXNzZXM/CgpSb2IKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
