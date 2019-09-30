@@ -1,69 +1,57 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH 1/3] ARM: dts: add Netronix E60K02 board common file
-Date: Mon, 30 Sep 2019 13:02:22 +0200
-Message-ID: <20190930130222.4e1cdf64@aktux>
-References: <20190927061423.17278-1-andreas@kemnade.info>
-        <20190927061423.17278-2-andreas@kemnade.info>
-        <20190927094721.w26ggnli4f5a64uv@pengutronix.de>
-        <20190927210807.26439a94@aktux>
-        <20190930082715.mplf5ra35ikqmbyr@pengutronix.de>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v4 0/3] dmaengine: bindings/edma: dma-channel-mask to array
+Date: Mon, 30 Sep 2019 14:40:52 +0300
+Message-ID: <20190930114055.29315-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190930082715.mplf5ra35ikqmbyr@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com, marex@denx.de, angus@akkea.ca, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+To: vkoul@kernel.org, robh+dt@kernel.org
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 30 Sep 2019 10:27:15 +0200
-Marco Felsch <m.felsch@pengutronix.de> wrote:
+Hi,
 
-[..]
-> > so you disagree with this pattern:
-> > in .dtsi
-> >  some_device {
-> >    pinctrl-0 = <&pinctrl_some_device>;
-> >  };
-> > 
-> > and in .dts (one I sent with this patch series and the tolino/mx6sl one
-> > is not ready-cooked yet, will be part of a later series)
-> > &iomuxc {
-> >    pinctrl_some_device: some_devicegrp {
-> >    	fsl,pins = <...>;
-> >    };
-> > };
-> > 
-> > ?  
-> 
-> Yes, because IMHO a dtsi is self contained as well as a dts. If it is
-> common for all boards you can move the muxing into the dtsi else it
-> should be done within the dts.
-> 
-well, since imx6sll-pinfunc.h is different than imx6sl-pinfunc.h,
-we agree that this belongs to the dts.
+Changes since v3:
+- Update the dma-common.yaml and edma binding documentation according to Rob's
+  suggestion
 
-> > > > +&snvs_rtc {
-> > > > +	status = "disabled";    
-> > > 
-> > > Same applies here.
-> > >   
-> > 
-> > No, seems to be an exception, it does not have a status = "disabled" in
-> > imx6sll.dtsi.  
-> 
-> Did you mean 6sll or 6ull?
-> 
-> Okay, is this baseboard only used with a 6ull?
-> 
+Changes since v2:
+- Fix dma-common.yaml documentation patch and extend the description of the
+  dma-channel-mask array
+- The edma documentation now includes information on the dma-channel-mask array
+  size for EDMAs with 32 or 64 channels
 
-MCIMX6V7DVN10AB and MCIMX6L8DVN10AB
-So it is 6sll and 6sl (6sl support will be added in a follow-up patch
-series). 
+Changes since v1:
+- Extend the common dma-channel-mask to uint32-array to be usable for
+  controllers with more than 32 channels
+- Use the dma-channel-mask instead custom property for available channels for
+  EDMA.
 
-I will send a v2 this evening, so we can all look at better-sorted
-things.
+The original patch was part of the EDMA multicore usage series.
+
+Rob: I'm not sure if I got the dma-common.yaml update correctly...
+
+EDMAs can have 32 or 64 channels depending on the SoC, the dma-channel-mask
+needs to be an array to be usable for the driver.
 
 Regards,
-Andreas
+Peter
+---
+Peter Ujfalusi (3):
+  dt-bindings: dmaengine: dma-common: Change dma-channel-mask to
+    uint32-array
+  dt-bindings: dma: ti-edma: Document dma-channel-mask for EDMA
+  dmaengine: ti: edma: Add support for handling reserved channels
+
+ .../devicetree/bindings/dma/dma-common.yaml   |  9 ++-
+ .../devicetree/bindings/dma/ti-edma.txt       |  8 +++
+ drivers/dma/ti/edma.c                         | 59 +++++++++++++++++--
+ 3 files changed, 69 insertions(+), 7 deletions(-)
+
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
