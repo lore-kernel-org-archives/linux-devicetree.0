@@ -1,7 +1,7 @@
 From: Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v3 1/5] Revert "drm/rockchip: Use drm_atomic_helper_commit_tail_rpm"
-Date: Mon, 30 Sep 2019 19:27:58 -0300
-Message-ID: <20190930222802.32088-2-ezequiel@collabora.com>
+Subject: [PATCH v3 2/5] dt-bindings: display: rockchip: document VOP gamma LUT address
+Date: Mon, 30 Sep 2019 19:27:59 -0300
+Message-ID: <20190930222802.32088-3-ezequiel@collabora.com>
 References: <20190930222802.32088-1-ezequiel@collabora.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,57 +9,47 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190930222802.32088-1-ezequiel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org
-Cc: linux-rockchip@lists.infradead.org, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, Boris Brezillon <boris.brezillon@collabora.com>, Douglas Anderson <dianders@chromium.org>, Jacopo Mondi <jacopo@jmondi.org>, Ilia Mirkin <imirkin@alum.mit.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>, Sean Paul <sean@poorly.run>
+Cc: linux-rockchip@lists.infradead.org, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, Boris Brezillon <boris.brezillon@collabora.com>, Douglas Anderson <dianders@chromium.org>, Jacopo Mondi <jacopo@jmondi.org>, Ilia Mirkin <imirkin@alum.mit.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ezequiel Garcia <ezequiel@collabora.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This reverts commit c87fb38df19da3362a0e20df1aad852100995ead,
-which conflicts with adding driver-specific behavior in
-atomic_commit_tail().
+Add the register specifier description for an
+optional gamma LUT address.
 
-No functional changes expected on this commit, but just preparation
-for the upcoming gamma LUT support.
-
-Cc: Sean Paul <sean@poorly.run>
 Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 Changes from v2:
-* New patch.
+* None.
+Changes from v1:
+* Drop reg-names, suggested by Doug.
 ---
- drivers/gpu/drm/rockchip/rockchip_drm_fb.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/display/rockchip/rockchip-vop.txt   | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-index ca01234c037c..dba352ec0ee3 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-@@ -105,8 +105,27 @@ rockchip_user_fb_create(struct drm_device *dev, struct drm_file *file_priv,
- 	return ERR_PTR(ret);
- }
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+index 4f58c5a2d195..8b3a5f514205 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+@@ -20,6 +20,10 @@ Required properties:
+ 		"rockchip,rk3228-vop";
+ 		"rockchip,rk3328-vop";
  
-+static void
-+rockchip_atomic_helper_commit_tail_rpm(struct drm_atomic_state *old_state)
-+{
-+	struct drm_device *dev = old_state->dev;
++- reg: Must contain one entry corresponding to the base address and length
++	of the register space. Can optionally contain a second entry
++	corresponding to the CRTC gamma LUT address.
 +
-+	drm_atomic_helper_commit_modeset_disables(dev, old_state);
-+
-+	drm_atomic_helper_commit_modeset_enables(dev, old_state);
-+
-+	drm_atomic_helper_commit_planes(dev, old_state,
-+					DRM_PLANE_COMMIT_ACTIVE_ONLY);
-+
-+	drm_atomic_helper_commit_hw_done(old_state);
-+
-+	drm_atomic_helper_wait_for_vblanks(dev, old_state);
-+
-+	drm_atomic_helper_cleanup_planes(dev, old_state);
-+}
-+
- static const struct drm_mode_config_helper_funcs rockchip_mode_config_helpers = {
--	.atomic_commit_tail = drm_atomic_helper_commit_tail_rpm,
-+	.atomic_commit_tail = rockchip_atomic_helper_commit_tail_rpm,
- };
- 
- static const struct drm_mode_config_funcs rockchip_drm_mode_config_funcs = {
+ - interrupts: should contain a list of all VOP IP block interrupts in the
+ 		 order: VSYNC, LCD_SYSTEM. The interrupt specifier
+ 		 format depends on the interrupt controller used.
+@@ -48,7 +52,7 @@ Example:
+ SoC specific DT entry:
+ 	vopb: vopb@ff930000 {
+ 		compatible = "rockchip,rk3288-vop";
+-		reg = <0xff930000 0x19c>;
++		reg = <0x0 0xff930000 0x0 0x19c>, <0x0 0xff931000 0x0 0x1000>;
+ 		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
+ 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
 -- 
 2.22.0
