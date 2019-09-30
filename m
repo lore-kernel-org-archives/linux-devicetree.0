@@ -1,46 +1,71 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH 2/2] drm/panfrost: Use coherent pagetable walk on Juno
-Date: Mon, 30 Sep 2019 16:24:59 +0100
-Message-ID: <1e499f85220b735849126171e64ebdd1da0302ce.1569856049.git.robin.murphy@arm.com>
-References: <88dc6386929b3dcd7a65ba8063628c62b66b330c.1569856049.git.robin.murphy@arm.com>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH] arm64: dts: renesas: Add /soc dma-ranges
+Date: Mon, 30 Sep 2019 17:38:32 +0200
+Message-ID: <9ff6eb72-a01d-37de-8aa1-671406f3d7ac@gmail.com>
+References: <20190907161634.27378-1-marek.vasut@gmail.com>
+ <CAL_JsqL47dQT-P78j4Ph61fsgA45Ha0AJjDajiMk52yFj++s+g@mail.gmail.com>
+ <CAL_JsqK+SwX8Lu+-4UgpLVxL05yTcs8Af9mPVHqzbf6+HF9v3A@mail.gmail.com>
+ <0bf7c8c8-d03e-c08e-4879-3d3a2fb90ca7@gmail.com>
+ <CAL_JsqJf-TGE-SWWj=6AVbpfuN1AsEdDTSOCOk+iUzTT3yZSgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <88dc6386929b3dcd7a65ba8063628c62b66b330c.1569856049.git.robin.murphy@arm.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: robh@kernel.org, tomeu.vizoso@collabora.com, sudeep.holla@arm.com
-Cc: devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, liviu.dudau@arm.com, dri-devel@lists.freedesktop.org, steven.price@arm.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqJf-TGE-SWWj=6AVbpfuN1AsEdDTSOCOk+iUzTT3yZSgw@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Wolfram Sang <wsa@the-dreams.de>
 List-Id: devicetree@vger.kernel.org
 
-QWx0aG91Z2ggZ29pbmcgZnVsbCAiZG1hLWNvaGVyZW50IiBlbmRzIGJhZGx5IGR1ZSB0byBHRU0g
-b2JqZWN0cyBzdGlsbApiZWluZyBmb3JjaWJseSBtYXBwZWQgbm9uLWNhY2hlYWJsZSwgd2UgY2Fu
-IGF0IGxlYXN0IHRha2UgYWR2YW50YWdlIG9mCkp1bm8ncyBBQ0UtbGl0ZSBpbnRlZ3JhdGlvbiB0
-byBza2lwIGNhY2hlIG1haW50ZW5hbmNlIGZvciBwYWdldGFibGVzLgoKQ0M6IFJvYiBIZXJyaW5n
-IDxyb2JoQGtlcm5lbC5vcmc+CkNDOiBUb21ldSBWaXpvc28gPHRvbWV1LnZpem9zb0Bjb2xsYWJv
-cmEuY29tPgpTaWduZWQtb2ZmLWJ5OiBSb2JpbiBNdXJwaHkgPHJvYmluLm11cnBoeUBhcm0uY29t
-PgotLS0KClRoaXMgaXNuJ3QgcmVhbGx5IG1lYW50IGFzIGEgc2VyaWVzLCBJJ20ganVzdCBzZW5k
-aW5nIGl0IHRvZ2V0aGVyCndpdGggcGF0Y2ggIzEgZm9yIGNvbnRleHQuCgogZHJpdmVycy9ncHUv
-ZHJtL3BhbmZyb3N0L3BhbmZyb3N0X21tdS5jIHwgMyArKysKIDEgZmlsZSBjaGFuZ2VkLCAzIGlu
-c2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZnJvc3QvcGFuZnJv
-c3RfbW11LmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZnJvc3QvcGFuZnJvc3RfbW11LmMKaW5kZXgg
-YmRkOTkwNTY4NDc2Li41NjA0MzlmNjMyNzcgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9w
-YW5mcm9zdC9wYW5mcm9zdF9tbXUuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZnJvc3QvcGFu
-ZnJvc3RfbW11LmMKQEAgLTM2NSw2ICszNjUsOSBAQCBpbnQgcGFuZnJvc3RfbW11X3BndGFibGVf
-YWxsb2Moc3RydWN0IHBhbmZyb3N0X2ZpbGVfcHJpdiAqcHJpdikKIAkJLmlvbW11X2Rldgk9IHBm
-ZGV2LT5kZXYsCiAJfTsKIAorCWlmIChvZl9kZXZpY2VfaXNfY29tcGF0aWJsZShwZmRldi0+ZGV2
-LT5vZl9ub2RlLCAiYXJtLGp1bm8tbWFsaSIpKQorCQlwZmRldi0+bW11LT5wZ3RibF9jZmcuY29o
-ZXJlbnRfd2FsayA9IHRydWU7CisKIAltbXUtPnBndGJsX29wcyA9IGFsbG9jX2lvX3BndGFibGVf
-b3BzKEFSTV9NQUxJX0xQQUUsICZtbXUtPnBndGJsX2NmZywKIAkJCQkJICAgICAgcHJpdik7CiAJ
-aWYgKCFtbXUtPnBndGJsX29wcykKLS0gCjIuMjEuMC5kaXJ0eQoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On 9/30/19 5:08 PM, Rob Herring wrote:
+> On Mon, Sep 30, 2019 at 7:45 AM Marek Vasut wrote:
+>>
+>> On 9/24/19 12:33 AM, Rob Herring wrote:
+>>> On Fri, Sep 13, 2019 at 10:14 AM Rob Herring wrote:
+>>>>
+>>>> On Sat, Sep 7, 2019 at 5:16 PM wrote:
+>>>>>
+>>>>> From: Marek Vasut
+>>>>>
+>>>>> Add dma-ranges property into /soc node to describe the DMA capabilities
+>>>>> of the bus. This is currently needed to translate PCI DMA ranges, which
+>>>>> are limited to 32bit addresses.
+>>>>
+>>>> FYI, I've started working on this problem and issues around
+>>>> dma-ranges/dma_mask. Hopefully I'll get some patches out next week.
+>>>
+>>> I've pushed out a branch here:
+>>>
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dma-masks
+>>>
+>>> Can you test it on Renesas. I don't have a real platform having the issue.
+>>
+>>
+>> With the following patches applied:
+>>       https://patchwork.ozlabs.org/patch/1144870/
+> 
+> I'd rather not have yet another instance of {dma-}ranges parsing code.
+> With this series[1], dma-ranges gets parsed into resource list for
+> you.
+> 
+>>       https://patchwork.ozlabs.org/patch/1144871/
+> 
+> How can this one be applied? It would conflict horribly. Plus I think
+> it duplicates what's in my series.
+
+I fixed it up real quick, but apparently these are not needed indeed.
+
+[...]
+
+-- 
+Best regards,
+Marek Vasut
