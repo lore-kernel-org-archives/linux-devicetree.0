@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v5 7/8] media: i2c: ov2659: Fix missing 720p register config
-Date: Mon, 30 Sep 2019 08:06:43 -0500
-Message-ID: <20190930130644.8704-8-bparrot@ti.com>
+Subject: [Patch v5 3/8] media: i2c: ov2659: Cleanup include file list
+Date: Mon, 30 Sep 2019 08:06:39 -0500
+Message-ID: <20190930130644.8704-4-bparrot@ti.com>
 References: <20190930130644.8704-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,38 +12,50 @@ To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.co
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The initial registers sequence is only loaded at probe
-time. Afterward only the resolution and format specific
-register are modified. Care must be taken to make sure
-registers modified by one resolution setting are reverted
-back when another resolution is programmed.
+Several of include files listed are not explicitly needed.
+If they are need then they are implicitly included.
 
-This was not done properly for the 720p case.
+Reduce the list of includes to an easier to manage list.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 ---
- drivers/media/i2c/ov2659.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/media/i2c/ov2659.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
 diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index 80de2e35aeca..c1e2aa1f952d 100644
+index efbe6dc720e2..f77320e8a60d 100644
 --- a/drivers/media/i2c/ov2659.c
 +++ b/drivers/media/i2c/ov2659.c
-@@ -411,10 +411,14 @@ static struct sensor_register ov2659_720p[] = {
- 	{ REG_TIMING_YINC, 0x11 },
- 	{ REG_TIMING_VERT_FORMAT, 0x80 },
- 	{ REG_TIMING_HORIZ_FORMAT, 0x00 },
-+	{ 0x370a, 0x12 },
- 	{ 0x3a03, 0xe8 },
- 	{ 0x3a09, 0x6f },
- 	{ 0x3a0b, 0x5d },
- 	{ 0x3a15, 0x9a },
-+	{ REG_VFIFO_READ_START_H, 0x00 },
-+	{ REG_VFIFO_READ_START_L, 0x80 },
-+	{ REG_ISP_CTRL02, 0x00 },
- 	{ REG_NULL, 0x00 },
- };
+@@ -22,29 +22,15 @@
  
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+-#include <linux/err.h>
+-#include <linux/init.h>
+-#include <linux/interrupt.h>
+-#include <linux/io.h>
+ #include <linux/i2c.h>
+-#include <linux/kernel.h>
+-#include <linux/media.h>
+ #include <linux/module.h>
+-#include <linux/of.h>
+ #include <linux/of_graph.h>
+-#include <linux/slab.h>
+-#include <linux/uaccess.h>
+-#include <linux/videodev2.h>
+ 
+-#include <media/media-entity.h>
+ #include <media/i2c/ov2659.h>
+-#include <media/v4l2-common.h>
+ #include <media/v4l2-ctrls.h>
+-#include <media/v4l2-device.h>
+ #include <media/v4l2-event.h>
+ #include <media/v4l2-fwnode.h>
+ #include <media/v4l2-image-sizes.h>
+-#include <media/v4l2-mediabus.h>
+ #include <media/v4l2-subdev.h>
+ 
+ #define DRIVER_NAME "ov2659"
 -- 
 2.17.1
