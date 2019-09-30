@@ -1,131 +1,380 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
-Date: Mon, 30 Sep 2019 08:17:18 -0500
-Message-ID: <CAHCN7xKKNpQwWZkg-JBncp9=VOcLJFEkcvST=rZqv-i9+5_Q2g@mail.gmail.com>
-References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com> <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com> <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com> <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
- <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com> <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
- <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com> <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
- <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com> <CAHCN7xLKL42ib4t0Lte3sJPoJrKX0TPJR9VWi+uW=fZjUg1ssg@mail.gmail.com>
- <c816d70d-fa5b-a43f-ae7a-6df4589fe484@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 14/19] MIPS: Loongson64: Add generic dts
+Date: Mon, 30 Sep 2019 08:20:55 -0500
+Message-ID: <20190930132055.GA3354@bogus>
+References: <20190905144316.12527-1-jiaxun.yang@flygoat.com>
+ <20190905144316.12527-15-jiaxun.yang@flygoat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c816d70d-fa5b-a43f-ae7a-6df4589fe484@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20190905144316.12527-15-jiaxun.yang@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Tony Lindgren <tony@atomide.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: linux-mips@vger.kernel.org, chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 7:48 AM Tero Kristo <t-kristo@ti.com> wrote:
->
-> On 30/09/2019 15:41, Adam Ford wrote:
-> > On Mon, Sep 30, 2019 at 3:53 AM Tero Kristo <t-kristo@ti.com> wrote:
-> >>
-> >> On 30/09/2019 09:45, Tomi Valkeinen wrote:
-> >>> Hi,
-> >>>
-> >>> On 27/09/2019 18:47, Tomi Valkeinen wrote:
-> >>>> On 27/09/2019 18:37, Tero Kristo wrote:
-> >>>>
-> >>>>> If you can provide details about what clock framework / driver does
-> >>>>> wrong (sample clk_set_xyz call sequence, expected results via
-> >>>>> clk_get_xyz, and what fails), I can take a look at it. Just reporting
-> >>>>> arbitrary display driver issues I won't be able to debug at all (I
-> >>>>> don't have access to any of the displays, nor do I want to waste time
-> >>>>> debugging them without absolutely no knowledge whatsoever.)
-> >>>>
-> >>>> I used your hack patches to allow changing rates via debugfs. And set
-> >>>> dss1_alwon_fck_3430es2 to 27000000 or 27870967. The end result was
-> >>>> that DSS gets some very high clock from dss1_alwon_fck_3430es2, as the
-> >>>> frame rate jumps to many hundreds fps.
-> >>>>
-> >>>> So, these numbers are not real, but to give the idea what I saw.
-> >>>> Running first with 50 MHz, I can see, say, 40 fps. Then I set the
-> >>>> clock to 30 MHz, and fps dropped to, say, 30fps, as expected with
-> >>>> lower clock. Then I set the clock to 27MHz (or the other one),
-> >>>> expecting a bit lower fps, but instead I saw hundreds of fps.
-> >>>>
-> >>>> I don't know if there's any other way to observe the wrong clock rate
-> >>>> but have the dss enabled and running kmstest or similar. I can help
-> >>>> you set that up next week, should be trivial. You don't need a display
-> >>>> for that.
-> >>>
-> >>> Here's how to reproduce. I have the attached patches. Three of them are
-> >>> the clk-debug ones, and one of mine to make it easy to test without a
-> >>> display, and without underflow flood halting the device. There are on
-> >>> top of v5.3. Kernel config also attached.
-> >>>
-> >>> kmstest is from kms++ project (https://github.com/tomba/kmsxx). It
-> >>> should be straightforward to compile, but kmstest binary is also
-> >>> included in TI's rootfs.
-> >>
-> >> Ok, I ignored all your test code and just fiddled with my trusty clk
-> >> debugfs patches. I don't like debugging with test code I have no
-> >> experience with. :)
-> >>
-> >> Anyways, it seems the dpll4_m4_ck max divider value is wrong, it only
-> >> accepts values upto 16 at least on my board. The setting for this in DT
-> >> is 32, and it is most likely SoC specific what happens if you write an
-> >> invalid value to the divider.
-> >>
-> >> The best action here is probably to drop the max-div value for this
-> >> clock to 16. Can someone check this with their display setup and see
-> >> what happens? Attached patch should do the trick.
-> >
-> > I tried your attached patch on my dm3730 and that seems to make it
-> > somewhat better in that it doesn't hang anymore, so that leads me to
-> > believe that your comment about the divider being only valid on the
-> > omap36 may not be true. I do think it solves the hanging issue that i
-> > was seeing, but I now see a new one now which is dumping a backtrace.
-> >
-> > It looks like it's unhappy that its trying to get one frequency and
-> > getting something different instead.
-> >
-> > [   10.014099] WARNING: CPU: 0 PID: 111 at
-> > drivers/gpu/drm/omapdrm/dss/dss.c:655 dss_set_fck_rate+0x70/0x90
-> > [omapdss]
-> > [   10.014129] clk rate mismatch: 27870968 != 27000000
->
-> I believe this one is for Tomi to comment, his driver does some magic
-> compares for the requested vs. actual received clock rates. If I am not
-> mistaken, we are only modifying an integer divider here, and thus it is
-> physically impossible to get accurate 27MHz rate to display.
+On Thu, Sep 05, 2019 at 10:43:11PM +0800, Jiaxun Yang wrote:
+> Add generic device dts for Loongson-3 devices.
+> They seems identical but will be different later.
+> 
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  arch/mips/Kconfig                           |  4 +-
+>  arch/mips/boot/dts/Makefile                 |  1 +
+>  arch/mips/boot/dts/loongson/3a-package.dtsi | 69 +++++++++++++++++++++
+>  arch/mips/boot/dts/loongson/3a1000_780e.dts | 10 +++
+>  arch/mips/boot/dts/loongson/3a2000_780e.dts | 10 +++
+>  arch/mips/boot/dts/loongson/3a3000_780e.dts | 10 +++
+>  arch/mips/boot/dts/loongson/3b-package.dtsi | 69 +++++++++++++++++++++
+>  arch/mips/boot/dts/loongson/3b1x00_780e.dts | 10 +++
+>  arch/mips/boot/dts/loongson/Makefile        |  5 ++
+>  arch/mips/boot/dts/loongson/rs780e-pch.dtsi | 35 +++++++++++
+>  10 files changed, 222 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/mips/boot/dts/loongson/3a-package.dtsi
+>  create mode 100644 arch/mips/boot/dts/loongson/3a1000_780e.dts
+>  create mode 100644 arch/mips/boot/dts/loongson/3a2000_780e.dts
+>  create mode 100644 arch/mips/boot/dts/loongson/3a3000_780e.dts
+>  create mode 100644 arch/mips/boot/dts/loongson/3b-package.dtsi
+>  create mode 100644 arch/mips/boot/dts/loongson/3b1x00_780e.dts
+>  create mode 100644 arch/mips/boot/dts/loongson/Makefile
+>  create mode 100644 arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+> 
+> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+> index b6bdd96ec74e..5bad9aafcbdf 100644
+> --- a/arch/mips/Kconfig
+> +++ b/arch/mips/Kconfig
+> @@ -489,6 +489,8 @@ config MACH_LOONGSON64
+>  	select SYS_SUPPORTS_LITTLE_ENDIAN
+>  	select ZONE_DMA32
+>  	select SYS_SUPPORTS_ZBOOT
+> +	select USE_OF
+> +	select BUILTIN_DTB
+>  	help
+>  	  This enables the support of Loongson-3A/3B/2-series-soc processors
+>  
+> @@ -3047,7 +3049,7 @@ endchoice
+>  choice
+>  	prompt "Kernel command line type" if !CMDLINE_OVERRIDE
+>  	default MIPS_CMDLINE_FROM_DTB if USE_OF && !ATH79 && !MACH_INGENIC && \
+> -					 !MIPS_MALTA && \
+> +					 !MACH_LOONGSON64 && !MIPS_MALTA && \
+>  					 !CAVIUM_OCTEON_SOC
+>  	default MIPS_CMDLINE_FROM_BOOTLOADER
+>  
+> diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+> index 1e79cab8e269..d429a69bfe30 100644
+> --- a/arch/mips/boot/dts/Makefile
+> +++ b/arch/mips/boot/dts/Makefile
+> @@ -4,6 +4,7 @@ subdir-y	+= cavium-octeon
+>  subdir-y	+= img
+>  subdir-y	+= ingenic
+>  subdir-y	+= lantiq
+> +subdir-y	+= loongson
+>  subdir-y	+= mscc
+>  subdir-y	+= mti
+>  subdir-y	+= netlogic
+> diff --git a/arch/mips/boot/dts/loongson/3a-package.dtsi b/arch/mips/boot/dts/loongson/3a-package.dtsi
+> new file mode 100644
+> index 000000000000..739cf43c7310
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/loongson/3a-package.dtsi
+> @@ -0,0 +1,69 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +/ {
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	cpuintc: interrupt-controller {
+> +		#address-cells = <0>;
+> +		#interrupt-cells = <1>;
+> +		interrupt-controller;
+> +		compatible = "mti,cpu-interrupt-controller";
+> +	};
+> +
+> +	package@0 {
 
-I didn't expect exactly 27MHz,but the back trace is what concerns me more.
+bus@1fe00000
 
-However, looking at
-# cat clk/dpll4_ck/clk_rate
-864000000
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0x1fe00000 0 0x1fe00000 0x100000
+> +				0 0x3ff00000 0 0x3ff00000 0x100000
+> +				0xEFD 0xFB000000 0xEFD 0xFB000000 0x10000000 /* 3A HT Config Space */>;
 
-It seems like 864000000 / 32 would be 27 MHz, but instead we're
-dividing it by 31 yielding 27870968.  I don't know the clocking
-architecture, so I don't know what your patch actually did or how the
-divide by 16 limit worked into this.  If lck cannot divide by 32, it
-would be nice to see if it could divide by 27 to get to 32MHz.  From
-there, the pck could then divide by 4 yielding 9MHz.
+Lowercase hex please.
 
-adam
+> +
+> +		iointc: interrupt-controller@3ff01400 {
+> +			compatible = "loongson,ls3-iointc";
+> +			reg = <0 0x3ff01400 0x64>;
+> +
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +
+> +			interrupt-parent = <&cpuintc>;
+> +			interrupts = <2>;
+> +			};
 
->
-> -Tero
->
-> >
-> > See attached log for the full dump.
-> >
-> > Either way, I think you've identified the main issue.  I just think we
-> > may have uncovered another one in the process.
-> >
-> > For what it's worth, the video looks good.  :-)
-> >
-> > adam
-> >>
-> >> -Tero
-> >>
-> >> --
->
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Too much indentation.
+
+> +
+> +		cpu_uart0: serial@1fe001e0 {
+> +			device_type = "serial";
+
+Drop device_type. It's deprecated for everything but cpu, memory, and 
+pci.
+
+> +			compatible = "ns16550a";
+> +			reg = <0 0x1fe001e0 0x8>;
+> +			clock-frequency = <33000000>;
+> +			interrupt-parent = <&iointc>;
+> +			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+> +			no-loopback-test;
+> +		};
+> +
+> +		cpu_uart1: serial@1fe001e8 {
+> +			status = "disabled";
+> +			device_type = "serial";
+> +			compatible = "ns16550a";
+> +			reg = <0 0x1fe001e8 0x8>;
+> +			clock-frequency = <33000000>;
+> +			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-parent = <&iointc>;
+> +			no-loopback-test;
+> +		};
+> +
+> +		htintc: interrupt-controller@0xEFDFB000080 {
+
+Drop '0x' and lowercase. Building with 'W=12' will tell you this. Do 
+that, and fix the warnings.
+
+> +			compatible = "loongson,ls3-htintc";
+> +			reg = <0xEFD 0xFB000080 0x100>;
+
+lowercase
+
+> +			interrupt-controller;
+> +			#interrupt-cells = <1>;
+> +
+> +			interrupt-parent = <&iointc>;
+> +			interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
+> +						<25 IRQ_TYPE_LEVEL_HIGH>,
+> +						<26 IRQ_TYPE_LEVEL_HIGH>,
+> +						<27 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +	};
+> +};
+> diff --git a/arch/mips/boot/dts/loongson/3a1000_780e.dts b/arch/mips/boot/dts/loongson/3a1000_780e.dts
+> new file mode 100644
+> index 000000000000..dc1afe9410c8
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/loongson/3a1000_780e.dts
+> @@ -0,0 +1,10 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/dts-v1/;
+> +
+> +#include "3a-package.dtsi"
+> +#include "rs780e-pch.dtsi"
+> +
+> +/ {
+> +	compatible = "loongson,ls3a1000-780e";
+> +};
+> diff --git a/arch/mips/boot/dts/loongson/3a2000_780e.dts b/arch/mips/boot/dts/loongson/3a2000_780e.dts
+> new file mode 100644
+> index 000000000000..621e0d3b5fbd
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/loongson/3a2000_780e.dts
+> @@ -0,0 +1,10 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/dts-v1/;
+> +
+> +#include "3a-package.dtsi"
+> +#include "rs780e-pch.dtsi"
+> +
+> +/ {
+> +	compatible = "loongson,ls3a2000-780e";
+> +};
+> diff --git a/arch/mips/boot/dts/loongson/3a3000_780e.dts b/arch/mips/boot/dts/loongson/3a3000_780e.dts
+> new file mode 100644
+> index 000000000000..f170f1c2189d
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/loongson/3a3000_780e.dts
+> @@ -0,0 +1,10 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/dts-v1/;
+> +
+> +#include "3a-package.dtsi"
+> +#include "rs780e-pch.dtsi"
+> +
+> +/ {
+> +	compatible = "loongson,ls3a3000-780e";
+> +};
+> diff --git a/arch/mips/boot/dts/loongson/3b-package.dtsi b/arch/mips/boot/dts/loongson/3b-package.dtsi
+> new file mode 100644
+> index 000000000000..af6e115d33c0
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/loongson/3b-package.dtsi
+
+Same comments apply to this file.
+
+Looks like this one is pretty similar to 3a-package.dtsi. Can't you 
+share more?
+
+> @@ -0,0 +1,69 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +/ {
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	cpuintc: interrupt-controller {
+> +		#address-cells = <0>;
+> +		#interrupt-cells = <1>;
+> +		interrupt-controller;
+> +		compatible = "mti,cpu-interrupt-controller";
+> +	};
+> +
+> +	package@0 {
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0x1fe00000 0 0x1fe00000 0x100000
+> +				0 0x3ff00000 0 0x3ff00000 0x100000
+> +				0x1EFD 0xFB000000 0x1EFD 0xFB000000 0x10000000 /* 3B HT Config Space */>;
+> +
+> +		iointc: interrupt-controller@3ff01400 {
+> +			compatible = "loongson,ls3-iointc";
+> +			reg = <0 0x3ff01400 0x64>;
+> +
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +
+> +			interrupt-parent = <&cpuintc>;
+> +			interrupts = <2>;
+> +			};
+> +
+> +		cpu_uart0: serial@1fe001e0 {
+> +			device_type = "serial";
+> +			compatible = "ns16550a";
+> +			reg = <0 0x1fe001e0 0x8>;
+> +			clock-frequency = <33000000>;
+> +			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-parent = <&iointc>;
+> +			no-loopback-test;
+> +		};
+> +
+> +		cpu_uart1: serial@1fe001e8 {
+> +			status = "disabled";
+> +			device_type = "serial";
+> +			compatible = "ns16550a";
+> +			reg = <0 0x1fe001e8 0x8>;
+> +			clock-frequency = <33000000>;
+> +			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-parent = <&iointc>;
+> +			no-loopback-test;
+> +		};
+> +
+> +		htintc: interrupt-controller@0x1EFDFB000080 {
+> +			compatible = "loongson,ls3-htintc";
+> +			reg = <0x1EFD 0xFB000080 0x100>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <1>;
+> +
+> +			interrupt-parent = <&iointc>;
+> +			interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
+> +						<25 IRQ_TYPE_LEVEL_HIGH>,
+> +						<26 IRQ_TYPE_LEVEL_HIGH>,
+> +						<27 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +	};
+> +};
+> diff --git a/arch/mips/boot/dts/loongson/3b1x00_780e.dts b/arch/mips/boot/dts/loongson/3b1x00_780e.dts
+> new file mode 100644
+> index 000000000000..9b0dff0b1482
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/loongson/3b1x00_780e.dts
+> @@ -0,0 +1,10 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/dts-v1/;
+> +
+> +#include "3b-package.dtsi"
+> +#include "rs780e-pch.dtsi"
+> +
+> +/ {
+> +	compatible = "loongson,ls3b-780e";
+> +};
+> diff --git a/arch/mips/boot/dts/loongson/Makefile b/arch/mips/boot/dts/loongson/Makefile
+> new file mode 100644
+> index 000000000000..a225d84a521e
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/loongson/Makefile
+> @@ -0,0 +1,5 @@
+> +# SPDX_License_Identifier: GPL_2.0
+> +dtb-$(CONFIG_MACH_LOONGSON64)	+= 3a1000_780e.dtb 3a2000_780e.dtb 3a3000_780e.dtb 3b1x00_780e.dtb \
+> +
+> +
+> +obj-$(CONFIG_BUILTIN_DTB)	+= $(addsuffix .o, $(dtb-y))
+> diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+> new file mode 100644
+> index 000000000000..915363eafa2f
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+> @@ -0,0 +1,35 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/ {
+> +	pch {
+
+bus@10000000
+
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges = <0x000 0x10000000 0x000 0x10000000 0x10000000
+> +			  0x000 0x40000000 0x000 0x40000000 0x40000000>;
+> +
+> +		isa {
+
+This doesn't seem like it would be an accurate representation of the 
+h/w. I'd expect this would be behind a PCI bridge for example? How do 
+you identify a RS780E chip? Using the top level compatible is not the 
+right way to do it.
+
+> +			compatible = "isa";
+> +			#address-cells = <2>;
+> +			#size-cells = <1>;
+> +			ranges = <1 0 0 0 0x1000>;
+> +
+> +			i8259: interrupt-controller@20 {
+> +				compatible = "intel,i8259";
+> +				interrupt-controller;
+> +				#interrupt-cells = <1>;
+> +				plat-poll;
+> +				interrupts = <0>, <1>, <2>, <3>, <4>, <5>, <6>, <7>,
+> +							<8>, <9>, <10>, <11>, <12>, <13>, <14>, <15>;
+> +				interrupt-parent = <&htintc>;
+> +			};
+> +
+> +			rtc0: rtc@70 {
+> +				compatible = "motorola,mc146818";
+> +				reg = <1 0x70 0x8>;
+> +				interrupts = <8>;
+> +				interrupt-parent = <&i8259>;
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.22.0
+> 
