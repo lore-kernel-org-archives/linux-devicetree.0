@@ -1,150 +1,163 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/2] dt-bindings: spi: Add support for cadence-qspi IP
- Intel LGM SoC
-Date: Mon, 30 Sep 2019 17:36:40 -0500
-Message-ID: <20190930223640.GA18491@bogus>
-References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190916073843.39618-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
+ power states
+Date: Tue, 1 Oct 2019 04:14:31 +0530
+Message-ID: <CAHLCerOS1Hi3XdDZzTKFKnrsATj5cMKtjPEuJknWu-aPtwzP9g@mail.gmail.com>
+References: <cover.1558430617.git.amit.kucheria@linaro.org>
+ <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
+ <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190916073843.39618-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc: broonie@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: lkml <linux-kernel@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Niklas Cassel <niklas.cassel@linaro.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Sibi Sankar <sibis@codeaurora.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 03:38:42PM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> On Intel Lightening Mountain(LGM) SoCs QSPI controller support
-> to QSPI-NAND flash. This introduces to device tree binding
-> documentation for Cadence-QSPI controller and spi-nand flash.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  .../devicetree/bindings/spi/cadence,qspi-nand.yaml | 84 ++++++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml b/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
-> new file mode 100644
-> index 000000000000..9aae4c1459cc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
-> @@ -0,0 +1,84 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/spi/cadence,qspi-nand.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence QSPI Flash Controller on Intel's SoC
-> +
-> +maintainers:
-> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> +
-> +allOf:
-> +  - $ref: "spi-controller.yaml#"
-> +
-> +description: |
-> +  The Cadence QSPI is a controller optimized for communication with SPI
-> +  FLASH memories, without DMA support on Intel's SoC.
-> +
-> +properties:
-> +  compatible:
-> +    const: cadence,lgm-qspi
+Can you try removing just the *SLEEP_1 states from the cpu-idle-states
+property? I want to understand if this is triggered just by the deeper
+C-state.
 
-Vendor here should be 'intel'. Perhaps the binding should be shared too 
-like the driver.
-
-Plus the vendor prefix for Cadence is cdns.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  fifo-depth:
-> +    maxItems: 1
-> +
-This is vendor specific, so needs a vendor prefix, type, and 
-description.
-
-> +  fifo-width:
-> +    maxItems: 1
-
-Same
-
-> +
-> +  qspi-phyaddr:
-> +    maxItems: 1
-
-Same
-
-> +
-> +  qspi-phymask:
-> +    maxItems: 1
-
-Same
-
-> +
-> +  clocks:
-> +    maxItems: 2
-
-Need to define what each clock is when there is more than 1.
-
-> +
-> +  clocks-names:
-> +    maxItems: 2
-
-Need to define the strings.
-
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  reset-names:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - fifo-depth
-> +  - fifo-width
-> +  - qspi-phyaddr
-> +  - qspi-phymask
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - reset-names
-> +
-> +examples:
-> +  - |
-> +    qspi@ec000000 {
-
-spi@...
-
-> +          compatible = "cadence,qspi-nand";
-> +          reg = <0xec000000 0x100>;
-> +          fifo-depth = <128>;
-> +          fifo-width = <4>;
-> +          qspi-phyaddr = <0xf4000000>;
-> +          qspi-phymask = <0xffffffff>;
-> +          clocks = <&cgu0 LGM_CLK_QSPI>, <&cgu0 LGM_GCLK_QSPI>;
-> +          clock-names = "freq", "qspi";
-> +          resets = <&rcu0 0x10 1>;
-> +          reset-names = "qspi";
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +          flash: flash@1 {
-> +              compatible = "spi-nand";
-> +              reg = <1>;
-> +              spi-max-frequency = <10000000>;
-> +          };
-> +    };
-> +
-> -- 
-> 2.11.0
-> 
+On Tue, Oct 1, 2019 at 3:50 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>
+> Amit, the merged version of the below change causes a boot failure
+> (nasty hang, sometimes with RCU stalls) on the msm8998 laptops.  Oddly
+> enough, it seems to be resolved if I remove the cpu-idle-states
+> property from one of the cpu nodes.
+>
+> I see no issues with the msm8998 MTP.
+>
+> Do you have any suggestions on how we might debug this?
+>
+> On Tue, May 21, 2019 at 3:38 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> >
+> > Add device bindings for cpuidle states for cpu devices.
+> >
+> > Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/msm8998.dtsi | 50 +++++++++++++++++++++++++++
+> >  1 file changed, 50 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > index 3fd0769fe648..54810980fcf9 100644
+> > --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > @@ -78,6 +78,7 @@
+> >                         compatible = "arm,armv8";
+> >                         reg = <0x0 0x0>;
+> >                         enable-method = "psci";
+> > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
+> >                         efficiency = <1024>;
+> >                         next-level-cache = <&L2_0>;
+> >                         L2_0: l2-cache {
+> > @@ -97,6 +98,7 @@
+> >                         compatible = "arm,armv8";
+> >                         reg = <0x0 0x1>;
+> >                         enable-method = "psci";
+> > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
+> >                         efficiency = <1024>;
+> >                         next-level-cache = <&L2_0>;
+> >                         L1_I_1: l1-icache {
+> > @@ -112,6 +114,7 @@
+> >                         compatible = "arm,armv8";
+> >                         reg = <0x0 0x2>;
+> >                         enable-method = "psci";
+> > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
+> >                         efficiency = <1024>;
+> >                         next-level-cache = <&L2_0>;
+> >                         L1_I_2: l1-icache {
+> > @@ -127,6 +130,7 @@
+> >                         compatible = "arm,armv8";
+> >                         reg = <0x0 0x3>;
+> >                         enable-method = "psci";
+> > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
+> >                         efficiency = <1024>;
+> >                         next-level-cache = <&L2_0>;
+> >                         L1_I_3: l1-icache {
+> > @@ -142,6 +146,7 @@
+> >                         compatible = "arm,armv8";
+> >                         reg = <0x0 0x100>;
+> >                         enable-method = "psci";
+> > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
+> >                         efficiency = <1536>;
+> >                         next-level-cache = <&L2_1>;
+> >                         L2_1: l2-cache {
+> > @@ -161,6 +166,7 @@
+> >                         compatible = "arm,armv8";
+> >                         reg = <0x0 0x101>;
+> >                         enable-method = "psci";
+> > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
+> >                         efficiency = <1536>;
+> >                         next-level-cache = <&L2_1>;
+> >                         L1_I_101: l1-icache {
+> > @@ -176,6 +182,7 @@
+> >                         compatible = "arm,armv8";
+> >                         reg = <0x0 0x102>;
+> >                         enable-method = "psci";
+> > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
+> >                         efficiency = <1536>;
+> >                         next-level-cache = <&L2_1>;
+> >                         L1_I_102: l1-icache {
+> > @@ -191,6 +198,7 @@
+> >                         compatible = "arm,armv8";
+> >                         reg = <0x0 0x103>;
+> >                         enable-method = "psci";
+> > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
+> >                         efficiency = <1536>;
+> >                         next-level-cache = <&L2_1>;
+> >                         L1_I_103: l1-icache {
+> > @@ -238,6 +246,48 @@
+> >                                 };
+> >                         };
+> >                 };
+> > +
+> > +               idle-states {
+> > +                       entry-method = "psci";
+> > +
+> > +                       LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
+> > +                               compatible = "arm,idle-state";
+> > +                               idle-state-name = "little-retention";
+> > +                               arm,psci-suspend-param = <0x00000002>;
+> > +                               entry-latency-us = <43>;
+> > +                               exit-latency-us = <86>;
+> > +                               min-residency-us = <200>;
+> > +                       };
+> > +
+> > +                       LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
+> > +                               compatible = "arm,idle-state";
+> > +                               idle-state-name = "little-power-collapse";
+> > +                               arm,psci-suspend-param = <0x00000003>;
+> > +                               entry-latency-us = <100>;
+> > +                               exit-latency-us = <612>;
+> > +                               min-residency-us = <1000>;
+> > +                               local-timer-stop;
+> > +                       };
+> > +
+> > +                       BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
+> > +                               compatible = "arm,idle-state";
+> > +                               idle-state-name = "big-retention";
+> > +                               arm,psci-suspend-param = <0x00000002>;
+> > +                               entry-latency-us = <41>;
+> > +                               exit-latency-us = <82>;
+> > +                               min-residency-us = <200>;
+> > +                       };
+> > +
+> > +                       BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
+> > +                               compatible = "arm,idle-state";
+> > +                               idle-state-name = "big-power-collapse";
+> > +                               arm,psci-suspend-param = <0x00000003>;
+> > +                               entry-latency-us = <100>;
+> > +                               exit-latency-us = <525>;
+> > +                               min-residency-us = <1000>;
+> > +                               local-timer-stop;
+> > +                       };
+> > +               };
+> >         };
+> >
+> >         firmware {
+> > --
+> > 2.17.1
+> >
