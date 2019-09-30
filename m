@@ -1,56 +1,136 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
-Date: Mon, 30 Sep 2019 10:10:11 -0500
-Message-ID: <CAHCN7xJNJca8W_yw5nNY3AmKDSPoLzJ8voPmR1HS3bNcU8uQGg@mail.gmail.com>
-References: <20190510194229.20628-1-aford173@gmail.com> <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
- <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com> <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com> <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
- <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com> <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
- <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com> <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
- <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com> <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
- <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
- <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
- <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
- <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com> <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] ASOC: Add ADAU7118 8 Channel
+ PDM-to-I2S/TDM Converter driver
+Date: Mon, 30 Sep 2019 16:11:32 +0100
+Message-ID: <20190930151132.GA4265@sirena.co.uk>
+References: <20190926071707.17557-1-nuno.sa@analog.com>
+ <20190926184318.GF2036@sirena.org.uk>
+ <6245f99f37c10dcec0a52344bab4b980f08e07da.camel@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============3642646242028983781=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <6245f99f37c10dcec0a52344bab4b980f08e07da.camel@analog.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: "Sa, Nuno" <Nuno.Sa@analog.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "lars@metafoo.de" <lars@metafoo.de>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 9:27 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
->
-> On 30/09/2019 17:20, Tomi Valkeinen wrote:
->
-> > Let's see what Tero says, but yeah, something is odd here. I expected
-> > the max divider to be 16 with Tero's patch, but I don't see it having
-> > that effect. I can get the div to 31.
-> >
-> > You can see this from the clock register 0x48004e40 (CM_CLKSEL_DSS). The
-> > lowest bits are the divider, 5 to 0. The TRM says max div is 32.
-> >
-> > Tero said for him the dividers > 16 didn't "stick" to the register. I'm
-> > now wondering if he has an old beagleboard with OMAP34xx, which has max
-> > div 16.
->
-> So testing a bit more here, I can see the DSS working fine and fps as
-> expected when I write values directly to CM_CLKSEL_DSS:5:0, with
-> dividers up to 31. With 32, DSS breaks. The TRM (AM/DM37x) says value 32
-> is valid.
 
-I wonder if it's somehow being masked with bits 4:0 instead of 5:0
-which could potentially make the divider 0 and that value doesn't
-appear to be valid.
+--===============3642646242028983781==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
+Content-Disposition: inline
 
-adam
 
->
->   Tomi
->
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--AqsLC8rIMeq19msA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Sep 30, 2019 at 09:44:00AM +0000, Sa, Nuno wrote:
+> On Thu, 2019-09-26 at 11:43 -0700, Mark Brown wrote:
+
+> > > +	case SND_SOC_DAIFMT_RIGHT_J:
+> > > +		st->right_j = true;
+> > > +		break;
+
+> > Don't we need to set any register values here?
+
+> The register set is done in adau7118_hw_params(). For right
+> justification the device can delay bclck by 8, 12 or 16. So, We need to
+> know the data_width to check if we can apply the configuration.
+
+OK.
+
+> > > +	case SND_SOC_BIAS_STANDBY:
+> > > +		if (snd_soc_component_get_bias_level(component) ==
+> > > +							SND_SOC_BIAS_OF
+> > > F) {
+> > > +			if (!st->iovdd)
+> > > +				return 0;
+
+> > This is broken, the device will always require power so it should
+> > always control the regulators.
+
+> The reason why I made this optional was to let the user assume that, in
+> some cases, the supply can be always present (and not controlled by the
+> kernel) and, in those cases, he would not have to care about giving
+> regulators nodes in devicetree. Furthermore, the driver would not have
+
+Have you tried doing that?  Notice how the regulator API subtitutes in a
+dummy regulator for you and the driver works fine without custom code.
+
+> to care about enabling/disabling  regulators. Is this not a valid
+> scenario? Or is it that, for this kind of devices it does not really
+
+It's not a valid scenario in driver code - the driver shouldn't be
+randomly ignoring errors and hoping the errors were deliberate rather
+than indiciations of real problems.
+
+> > > +static int adau7118_resume(struct snd_soc_component *component)
+> > > +{
+> > > +	return snd_soc_component_force_bias_level(component,
+> > > +						  SND_SOC_BIAS_STANDBY)
+> > > ;
+> > > +}
+
+> > Let DAPM do this for you, there's no substantial delays on power
+> > on so you're probably best just setting idle_bias_off.
+
+> So, this means dropping resume/suspend and to not set idle_bias_on,
+> right?
+
+Right.  Like I say it looks like your power up path is fast enough for
+this.
+
+> > > +static int adau7118_regulator_setup(struct adau7118_data *st)
+> > > +{
+> > > +	int ret = 0;
+> > > +
+> > > +	st->iovdd = devm_regulator_get_optional(st->dev, "IOVDD");
+> > > +	if (!IS_ERR(st->iovdd)) {
+
+> > Unless the device can operate with supplies physically absent it
+> > should not be requesting regulators as optional, this breaks your
+> > error handling especially with probe deferral which is a fairly
+> > common case.
+
+> Just for my understanding (most likely I'm missing something obvious),
+> why would I have issues with the error handling in probe deferral?
+
+Actually it does look like you handle this correctly further down, the
+normal pattern would have been to have the error handling inside the if
+here and not indent the rest of the success path so I misread it.
+
+--AqsLC8rIMeq19msA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2SGyMACgkQJNaLcl1U
+h9CkAwf9EYiV4BQm0xxoHsLhEYWWYl4f4l8dyWkSXXJg/n2cm55ZotoM4Rxa3+Ir
+L9m1vcsZPqn9T9CR2lBzOUKXfFkPnvpxao2yvwaZHrZrHELKGBtG+g+Kjgk9YT2+
+VjvdYBf7czonV8AmRHnvZpgzv69cAfLJM0H4iVfmy0sclAgCMBSesTixTUDGcRgw
+IjiCtqt9TkzZBrLUqefaCMDN3k3Jba+3jA580jZS3SUS6geaLyQCzSOnTkPQUka5
+BAlftJCTfbAH/dUVLJlvpDTbzN11ivTduZU/y5q5SMvgp17jDU/e7yF0QUVDv0wK
+zLChmYfli7ZUEHXi44LPrAeOfZY9NQ==
+=syDp
+-----END PGP SIGNATURE-----
+
+--AqsLC8rIMeq19msA--
+
+--===============3642646242028983781==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3642646242028983781==--
