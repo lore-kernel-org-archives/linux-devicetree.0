@@ -1,184 +1,244 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 2/2] pwm: stm32: add power management support
-Date: Mon, 30 Sep 2019 17:39:11 +0200
-Message-ID: <1569857951-20007-3-git-send-email-fabrice.gasnier@st.com>
-References: <1569857951-20007-1-git-send-email-fabrice.gasnier@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v5 1/2] dt-bindings: timer: Convert Exynos MCT bindings to json-schema
+Date: Mon, 30 Sep 2019 17:44:17 +0200
+Message-ID: <20190930154418.4884-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569857951-20007-1-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org
-Cc: alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, benjamin.gaignard@st.com, linux-stm32@st-md-mailman.stormreply.com
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add suspend/resume PM sleep ops. When going to low power, enforce the PWM
-channel isn't active. Let the PWM consumers disable it during their own
-suspend sequence, see [1]. So, perform a check here, and handle the
-pinctrl states. Also restore the break inputs upon resume, as registers
-content may be lost when going to low power mode.
+Convert Samsung Exynos Soc Multi Core Timer bindings to DT schema format
+using json-schema.
 
-[1] https://lkml.org/lkml/2019/2/5/770
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- drivers/pwm/pwm-stm32.c | 82 +++++++++++++++++++++++++++++++++++++------------
- 1 file changed, 62 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-index 740e2de..9bcd73a 100644
---- a/drivers/pwm/pwm-stm32.c
-+++ b/drivers/pwm/pwm-stm32.c
-@@ -12,6 +12,7 @@
- #include <linux/mfd/stm32-timers.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
- 
-@@ -19,6 +20,12 @@
- #define CCMR_CHANNEL_MASK  0xFF
- #define MAX_BREAKINPUT 2
- 
-+struct stm32_breakinput {
-+	u32 index;
-+	u32 level;
-+	u32 filter;
-+};
-+
- struct stm32_pwm {
- 	struct pwm_chip chip;
- 	struct mutex lock; /* protect pwm config/enable */
-@@ -26,15 +33,11 @@ struct stm32_pwm {
- 	struct regmap *regmap;
- 	u32 max_arr;
- 	bool have_complementary_output;
-+	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
-+	unsigned int nbreakinput;
- 	u32 capture[4] ____cacheline_aligned; /* DMA'able buffer */
- };
- 
--struct stm32_breakinput {
--	u32 index;
--	u32 level;
--	u32 filter;
--};
+Changes since v4:
+1. Do not mention interrupts-extended in the bindings (old bindings
+   mentioned only interrupts).
+
+Changes since v3:
+1. Use interrupts-extended instead of interrupts-map in example.
+
+Changes since v1:
+1. Indent example with four spaces (more readable),
+2. Rename nodes in example to timer,
+3. Remove mct-map subnode.
+---
+ .../bindings/timer/samsung,exynos4210-mct.txt |  88 --------------
+ .../timer/samsung,exynos4210-mct.yaml         | 107 ++++++++++++++++++
+ 2 files changed, 107 insertions(+), 88 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
+
+diff --git a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
+deleted file mode 100644
+index 8f78640ad64c..000000000000
+--- a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
++++ /dev/null
+@@ -1,88 +0,0 @@
+-Samsung's Multi Core Timer (MCT)
 -
- static inline struct stm32_pwm *to_stm32_pwm_dev(struct pwm_chip *chip)
- {
- 	return container_of(chip, struct stm32_pwm, chip);
-@@ -512,15 +515,27 @@ static int stm32_pwm_set_breakinput(struct stm32_pwm *priv,
- 	return (bdtr & bke) ? 0 : -EINVAL;
- }
- 
--static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
-+static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv)
-+{
-+	int i, ret = 0;
-+
-+	for (i = 0; i < priv->nbreakinput && !ret; i++) {
-+		ret = stm32_pwm_set_breakinput(priv,
-+					       priv->breakinput[i].index,
-+					       priv->breakinput[i].level,
-+					       priv->breakinput[i].filter);
-+	}
-+
-+	return ret;
-+}
-+
-+static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
- 				       struct device_node *np)
- {
--	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
--	int nb, ret, i, array_size;
-+	int nb, ret, array_size;
- 
- 	nb = of_property_count_elems_of_size(np, "st,breakinput",
- 					     sizeof(struct stm32_breakinput));
+-The Samsung's Multi Core Timer (MCT) module includes two main blocks, the
+-global timer and CPU local timers. The global timer is a 64-bit free running
+-up-counter and can generate 4 interrupts when the counter reaches one of the
+-four preset counter values. The CPU local timers are 32-bit free running
+-down-counters and generate an interrupt when the counter expires. There is
+-one CPU local timer instantiated in MCT for every CPU in the system.
 -
- 	/*
- 	 * Because "st,breakinput" parameter is optional do not make probe
- 	 * failed if it doesn't exist.
-@@ -531,20 +546,14 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
- 	if (nb > MAX_BREAKINPUT)
- 		return -EINVAL;
- 
-+	priv->nbreakinput = nb;
- 	array_size = nb * sizeof(struct stm32_breakinput) / sizeof(u32);
- 	ret = of_property_read_u32_array(np, "st,breakinput",
--					 (u32 *)breakinput, array_size);
-+					 (u32 *)priv->breakinput, array_size);
- 	if (ret)
- 		return ret;
- 
--	for (i = 0; i < nb && !ret; i++) {
--		ret = stm32_pwm_set_breakinput(priv,
--					       breakinput[i].index,
--					       breakinput[i].level,
--					       breakinput[i].filter);
--	}
+-Required properties:
 -
--	return ret;
-+	return stm32_pwm_apply_breakinputs(priv);
- }
- 
- static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
-@@ -614,7 +623,7 @@ static int stm32_pwm_probe(struct platform_device *pdev)
- 	if (!priv->regmap || !priv->clk)
- 		return -EINVAL;
- 
--	ret = stm32_pwm_apply_breakinputs(priv, np);
-+	ret = stm32_pwm_probe_breakinputs(priv, np);
- 	if (ret)
- 		return ret;
- 
-@@ -647,6 +656,38 @@ static int stm32_pwm_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int __maybe_unused stm32_pwm_suspend(struct device *dev)
-+{
-+	struct stm32_pwm *priv = dev_get_drvdata(dev);
-+	struct pwm_state state;
-+	unsigned int i;
+-- compatible: should be "samsung,exynos4210-mct".
+-  (a) "samsung,exynos4210-mct", for mct compatible with Exynos4210 mct.
+-  (b) "samsung,exynos4412-mct", for mct compatible with Exynos4412 mct.
+-
+-- reg: base address of the mct controller and length of the address space
+-  it occupies.
+-
+-- interrupts: the list of interrupts generated by the controller. The following
+-  should be the order of the interrupts specified. The local timer interrupts
+-  should be specified after the four global timer interrupts have been
+-  specified.
+-
+-	0: Global Timer Interrupt 0
+-	1: Global Timer Interrupt 1
+-	2: Global Timer Interrupt 2
+-	3: Global Timer Interrupt 3
+-	4: Local Timer Interrupt 0
+-	5: Local Timer Interrupt 1
+-	6: ..
+-	7: ..
+-	i: Local Timer Interrupt n
+-
+-  For MCT block that uses a per-processor interrupt for local timers, such
+-  as ones compatible with "samsung,exynos4412-mct", only one local timer
+-  interrupt might be specified, meaning that all local timers use the same
+-  per processor interrupt.
+-
+-Example 1: In this example, the IP contains two local timers, using separate
+-	   interrupts, so two local timer interrupts have been specified,
+-	   in addition to four global timer interrupts.
+-
+-	mct@10050000 {
+-		compatible = "samsung,exynos4210-mct";
+-		reg = <0x10050000 0x800>;
+-		interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
+-			     <0 42 0>, <0 48 0>;
+-	};
+-
+-Example 2: In this example, the timer interrupts are connected to two separate
+-	   interrupt controllers. Hence, an interrupt-map is created to map
+-	   the interrupts to the respective interrupt controllers.
+-
+-	mct@101c0000 {
+-		compatible = "samsung,exynos4210-mct";
+-		reg = <0x101C0000 0x800>;
+-		interrupt-parent = <&mct_map>;
+-		interrupts = <0>, <1>, <2>, <3>, <4>, <5>;
+-
+-		mct_map: mct-map {
+-			#interrupt-cells = <1>;
+-			#address-cells = <0>;
+-			#size-cells = <0>;
+-			interrupt-map = <0 &gic 0 57 0>,
+-					<1 &gic 0 69 0>,
+-					<2 &combiner 12 6>,
+-					<3 &combiner 12 7>,
+-					<4 &gic 0 42 0>,
+-					<5 &gic 0 48 0>;
+-		};
+-	};
+-
+-Example 3: In this example, the IP contains four local timers, but using
+-	   a per-processor interrupt to handle them. Either all the local
+-	   timer interrupts can be specified, with the same interrupt specifier
+-	   value or just the first one.
+-
+-	mct@10050000 {
+-		compatible = "samsung,exynos4412-mct";
+-		reg = <0x10050000 0x800>;
+-
+-		/* Both ways are possible in this case. Either: */
+-		interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
+-			     <0 42 0>;
+-		/* or: */
+-		interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
+-			     <0 42 0>, <0 42 0>, <0 42 0>, <0 42 0>;
+-	};
+diff --git a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
+new file mode 100644
+index 000000000000..3e26fd5e235a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
+@@ -0,0 +1,107 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/samsung,exynos4210-mct.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	for (i = 0; i < priv->chip.npwm; i++) {
-+		pwm_get_state(&priv->chip.pwms[i], &state);
-+		if (state.enabled) {
-+			dev_err(dev, "The consumer didn't stop us (%s)\n",
-+				priv->chip.pwms[i].label);
-+			return -EBUSY;
-+		}
-+	}
++title: Samsung Exynos SoC Multi Core Timer (MCT)
 +
-+	return pinctrl_pm_select_sleep_state(dev);
-+}
++maintainers:
++  - Krzysztof Kozlowski <krzk@kernel.org>
 +
-+static int __maybe_unused stm32_pwm_resume(struct device *dev)
-+{
-+	struct stm32_pwm *priv = dev_get_drvdata(dev);
-+	int ret;
++description: |+
++  The Samsung's Multi Core Timer (MCT) module includes two main blocks, the
++  global timer and CPU local timers. The global timer is a 64-bit free running
++  up-counter and can generate 4 interrupts when the counter reaches one of the
++  four preset counter values. The CPU local timers are 32-bit free running
++  down-counters and generate an interrupt when the counter expires. There is
++  one CPU local timer instantiated in MCT for every CPU in the system.
 +
-+	ret = pinctrl_pm_select_default_state(dev);
-+	if (ret)
-+		return ret;
++properties:
++  compatible:
++    enum:
++      - samsung,exynos4210-mct
++      - samsung,exynos4412-mct
 +
-+	return stm32_pwm_apply_breakinputs(priv);
-+}
++  reg:
++    maxItems: 1
 +
-+static SIMPLE_DEV_PM_OPS(stm32_pwm_pm_ops, stm32_pwm_suspend, stm32_pwm_resume);
++  interrupts:
++    description: |
++      Interrupts should be put in specific order. This is, the local timer
++      interrupts should be specified after the four global timer interrupts
++      have been specified:
++      0: Global Timer Interrupt 0
++      1: Global Timer Interrupt 1
++      2: Global Timer Interrupt 2
++      3: Global Timer Interrupt 3
++      4: Local Timer Interrupt 0
++      5: Local Timer Interrupt 1
++      6: ..
++      7: ..
++      i: Local Timer Interrupt n
++      For MCT block that uses a per-processor interrupt for local timers, such
++      as ones compatible with "samsung,exynos4412-mct", only one local timer
++      interrupt might be specified, meaning that all local timers use the same
++      per processor interrupt.
++    minItems: 5               # 4 Global + 1 local
++    maxItems: 20              # 4 Global + 16 local
 +
- static const struct of_device_id stm32_pwm_of_match[] = {
- 	{ .compatible = "st,stm32-pwm",	},
- 	{ /* end node */ },
-@@ -659,6 +700,7 @@ static struct platform_driver stm32_pwm_driver = {
- 	.driver	= {
- 		.name = "stm32-pwm",
- 		.of_match_table = stm32_pwm_of_match,
-+		.pm = &stm32_pwm_pm_ops,
- 	},
- };
- module_platform_driver(stm32_pwm_driver);
++required:
++  - compatible
++  - interrupts
++  - reg
++
++examples:
++  - |
++    // In this example, the IP contains two local timers, using separate
++    // interrupts, so two local timer interrupts have been specified,
++    // in addition to four global timer interrupts.
++
++    timer@10050000 {
++        compatible = "samsung,exynos4210-mct";
++        reg = <0x10050000 0x800>;
++        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
++                     <0 42 0>, <0 48 0>;
++    };
++
++  - |
++    // In this example, the timer interrupts are connected to two separate
++    // interrupt controllers. Hence, an interrupts-extended is needed.
++
++    timer@101c0000 {
++        compatible = "samsung,exynos4210-mct";
++        reg = <0x101C0000 0x800>;
++        interrupts-extended = <&gic 0 57 0>,
++                              <&gic 0 69 0>,
++                              <&combiner 12 6>,
++                              <&combiner 12 7>,
++                              <&gic 0 42 0>,
++                              <&gic 0 48 0>;
++    };
++
++  - |
++    // In this example, the IP contains four local timers, but using
++    // a per-processor interrupt to handle them. Only one first local
++    // interrupt is specified.
++
++    timer@10050000 {
++        compatible = "samsung,exynos4412-mct";
++        reg = <0x10050000 0x800>;
++
++        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
++                     <0 42 0>;
++    };
++
++  - |
++    // In this example, the IP contains four local timers, but using
++    // a per-processor interrupt to handle them. All the local timer
++    // interrupts are specified.
++
++    timer@10050000 {
++        compatible = "samsung,exynos4412-mct";
++        reg = <0x10050000 0x800>;
++
++        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
++                     <0 42 0>, <0 42 0>, <0 42 0>, <0 42 0>;
++    };
 -- 
-2.7.4
+2.17.1
