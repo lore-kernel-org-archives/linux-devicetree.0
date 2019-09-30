@@ -1,380 +1,77 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 14/19] MIPS: Loongson64: Add generic dts
-Date: Mon, 30 Sep 2019 08:20:55 -0500
-Message-ID: <20190930132055.GA3354@bogus>
+Subject: Re: [PATCH v2 12/19] dt-bindings: mips: Add loongson boards
+Date: Mon, 30 Sep 2019 08:23:20 -0500
+Message-ID: <20190930132320.GB3354@bogus>
 References: <20190905144316.12527-1-jiaxun.yang@flygoat.com>
- <20190905144316.12527-15-jiaxun.yang@flygoat.com>
+ <20190905144316.12527-13-jiaxun.yang@flygoat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190905144316.12527-15-jiaxun.yang@flygoat.com>
+In-Reply-To: <20190905144316.12527-13-jiaxun.yang@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Cc: linux-mips@vger.kernel.org, chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 10:43:11PM +0800, Jiaxun Yang wrote:
-> Add generic device dts for Loongson-3 devices.
-> They seems identical but will be different later.
+On Thu, Sep 05, 2019 at 10:43:09PM +0800, Jiaxun Yang wrote:
+> Prepare for later dts.
 > 
 > Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
->  arch/mips/Kconfig                           |  4 +-
->  arch/mips/boot/dts/Makefile                 |  1 +
->  arch/mips/boot/dts/loongson/3a-package.dtsi | 69 +++++++++++++++++++++
->  arch/mips/boot/dts/loongson/3a1000_780e.dts | 10 +++
->  arch/mips/boot/dts/loongson/3a2000_780e.dts | 10 +++
->  arch/mips/boot/dts/loongson/3a3000_780e.dts | 10 +++
->  arch/mips/boot/dts/loongson/3b-package.dtsi | 69 +++++++++++++++++++++
->  arch/mips/boot/dts/loongson/3b1x00_780e.dts | 10 +++
->  arch/mips/boot/dts/loongson/Makefile        |  5 ++
->  arch/mips/boot/dts/loongson/rs780e-pch.dtsi | 35 +++++++++++
->  10 files changed, 222 insertions(+), 1 deletion(-)
->  create mode 100644 arch/mips/boot/dts/loongson/3a-package.dtsi
->  create mode 100644 arch/mips/boot/dts/loongson/3a1000_780e.dts
->  create mode 100644 arch/mips/boot/dts/loongson/3a2000_780e.dts
->  create mode 100644 arch/mips/boot/dts/loongson/3a3000_780e.dts
->  create mode 100644 arch/mips/boot/dts/loongson/3b-package.dtsi
->  create mode 100644 arch/mips/boot/dts/loongson/3b1x00_780e.dts
->  create mode 100644 arch/mips/boot/dts/loongson/Makefile
->  create mode 100644 arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+>  .../bindings/mips/loongson/devices.yaml       | 39 +++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
 > 
-> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-> index b6bdd96ec74e..5bad9aafcbdf 100644
-> --- a/arch/mips/Kconfig
-> +++ b/arch/mips/Kconfig
-> @@ -489,6 +489,8 @@ config MACH_LOONGSON64
->  	select SYS_SUPPORTS_LITTLE_ENDIAN
->  	select ZONE_DMA32
->  	select SYS_SUPPORTS_ZBOOT
-> +	select USE_OF
-> +	select BUILTIN_DTB
->  	help
->  	  This enables the support of Loongson-3A/3B/2-series-soc processors
->  
-> @@ -3047,7 +3049,7 @@ endchoice
->  choice
->  	prompt "Kernel command line type" if !CMDLINE_OVERRIDE
->  	default MIPS_CMDLINE_FROM_DTB if USE_OF && !ATH79 && !MACH_INGENIC && \
-> -					 !MIPS_MALTA && \
-> +					 !MACH_LOONGSON64 && !MIPS_MALTA && \
->  					 !CAVIUM_OCTEON_SOC
->  	default MIPS_CMDLINE_FROM_BOOTLOADER
->  
-> diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-> index 1e79cab8e269..d429a69bfe30 100644
-> --- a/arch/mips/boot/dts/Makefile
-> +++ b/arch/mips/boot/dts/Makefile
-> @@ -4,6 +4,7 @@ subdir-y	+= cavium-octeon
->  subdir-y	+= img
->  subdir-y	+= ingenic
->  subdir-y	+= lantiq
-> +subdir-y	+= loongson
->  subdir-y	+= mscc
->  subdir-y	+= mti
->  subdir-y	+= netlogic
-> diff --git a/arch/mips/boot/dts/loongson/3a-package.dtsi b/arch/mips/boot/dts/loongson/3a-package.dtsi
+> diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
 > new file mode 100644
-> index 000000000000..739cf43c7310
+> index 000000000000..0665f0f7ec45
 > --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/3a-package.dtsi
-> @@ -0,0 +1,69 @@
-> +// SPDX-License-Identifier: GPL-2.0
+> +++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
+> @@ -0,0 +1,39 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mips/loongson/devices.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +#include <dt-bindings/interrupt-controller/irq.h>
+> +title: Loongson based Platforms Device Tree Bindings
 > +
-> +/ {
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
+> +maintainers:
+> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
+> +description: |
+> +  Devices with a Loongson CPU shall have the following properties.
 > +
-> +	cpuintc: interrupt-controller {
-> +		#address-cells = <0>;
-> +		#interrupt-cells = <1>;
-> +		interrupt-controller;
-> +		compatible = "mti,cpu-interrupt-controller";
-> +	};
+> +properties:
+> +  $nodename:
+> +    const: '/'
+> +  compatible:
+> +    oneOf:
 > +
-> +	package@0 {
+> +      - description: Loongson 3A1000 + RS780E
+> +        items:
+> +          - const: loongson,ls3a1000-780e
 
-bus@1fe00000
-
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0x1fe00000 0 0x1fe00000 0x100000
-> +				0 0x3ff00000 0 0x3ff00000 0x100000
-> +				0xEFD 0xFB000000 0xEFD 0xFB000000 0x10000000 /* 3A HT Config Space */>;
-
-Lowercase hex please.
+These should reflect the specific maker and model of board, not just 
+what's the cpu and south bridge.
 
 > +
-> +		iointc: interrupt-controller@3ff01400 {
-> +			compatible = "loongson,ls3-iointc";
-> +			reg = <0 0x3ff01400 0x64>;
+> +      - description: Loongson 3A2000 + RS780E
+> +        items:
+> +          - const: loongson,ls3a2000-780e
 > +
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
+> +      - description: Loongson 3A3000 + RS780E
+> +        items:
+> +          - const: loongson,ls3a3000-780e
 > +
-> +			interrupt-parent = <&cpuintc>;
-> +			interrupts = <2>;
-> +			};
-
-Too much indentation.
-
+> +      - description: Loongson 3A3000 + 7A
+> +        items:
+> +          - const: loongson,ls3a3000-7a
 > +
-> +		cpu_uart0: serial@1fe001e0 {
-> +			device_type = "serial";
-
-Drop device_type. It's deprecated for everything but cpu, memory, and 
-pci.
-
-> +			compatible = "ns16550a";
-> +			reg = <0 0x1fe001e0 0x8>;
-> +			clock-frequency = <33000000>;
-> +			interrupt-parent = <&iointc>;
-> +			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-> +			no-loopback-test;
-> +		};
-> +
-> +		cpu_uart1: serial@1fe001e8 {
-> +			status = "disabled";
-> +			device_type = "serial";
-> +			compatible = "ns16550a";
-> +			reg = <0 0x1fe001e8 0x8>;
-> +			clock-frequency = <33000000>;
-> +			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-parent = <&iointc>;
-> +			no-loopback-test;
-> +		};
-> +
-> +		htintc: interrupt-controller@0xEFDFB000080 {
-
-Drop '0x' and lowercase. Building with 'W=12' will tell you this. Do 
-that, and fix the warnings.
-
-> +			compatible = "loongson,ls3-htintc";
-> +			reg = <0xEFD 0xFB000080 0x100>;
-
-lowercase
-
-> +			interrupt-controller;
-> +			#interrupt-cells = <1>;
-> +
-> +			interrupt-parent = <&iointc>;
-> +			interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
-> +						<25 IRQ_TYPE_LEVEL_HIGH>,
-> +						<26 IRQ_TYPE_LEVEL_HIGH>,
-> +						<27 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +	};
-> +};
-> diff --git a/arch/mips/boot/dts/loongson/3a1000_780e.dts b/arch/mips/boot/dts/loongson/3a1000_780e.dts
-> new file mode 100644
-> index 000000000000..dc1afe9410c8
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/3a1000_780e.dts
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/dts-v1/;
-> +
-> +#include "3a-package.dtsi"
-> +#include "rs780e-pch.dtsi"
-> +
-> +/ {
-> +	compatible = "loongson,ls3a1000-780e";
-> +};
-> diff --git a/arch/mips/boot/dts/loongson/3a2000_780e.dts b/arch/mips/boot/dts/loongson/3a2000_780e.dts
-> new file mode 100644
-> index 000000000000..621e0d3b5fbd
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/3a2000_780e.dts
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/dts-v1/;
-> +
-> +#include "3a-package.dtsi"
-> +#include "rs780e-pch.dtsi"
-> +
-> +/ {
-> +	compatible = "loongson,ls3a2000-780e";
-> +};
-> diff --git a/arch/mips/boot/dts/loongson/3a3000_780e.dts b/arch/mips/boot/dts/loongson/3a3000_780e.dts
-> new file mode 100644
-> index 000000000000..f170f1c2189d
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/3a3000_780e.dts
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/dts-v1/;
-> +
-> +#include "3a-package.dtsi"
-> +#include "rs780e-pch.dtsi"
-> +
-> +/ {
-> +	compatible = "loongson,ls3a3000-780e";
-> +};
-> diff --git a/arch/mips/boot/dts/loongson/3b-package.dtsi b/arch/mips/boot/dts/loongson/3b-package.dtsi
-> new file mode 100644
-> index 000000000000..af6e115d33c0
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/3b-package.dtsi
-
-Same comments apply to this file.
-
-Looks like this one is pretty similar to 3a-package.dtsi. Can't you 
-share more?
-
-> @@ -0,0 +1,69 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +/ {
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	cpuintc: interrupt-controller {
-> +		#address-cells = <0>;
-> +		#interrupt-cells = <1>;
-> +		interrupt-controller;
-> +		compatible = "mti,cpu-interrupt-controller";
-> +	};
-> +
-> +	package@0 {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0x1fe00000 0 0x1fe00000 0x100000
-> +				0 0x3ff00000 0 0x3ff00000 0x100000
-> +				0x1EFD 0xFB000000 0x1EFD 0xFB000000 0x10000000 /* 3B HT Config Space */>;
-> +
-> +		iointc: interrupt-controller@3ff01400 {
-> +			compatible = "loongson,ls3-iointc";
-> +			reg = <0 0x3ff01400 0x64>;
-> +
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +
-> +			interrupt-parent = <&cpuintc>;
-> +			interrupts = <2>;
-> +			};
-> +
-> +		cpu_uart0: serial@1fe001e0 {
-> +			device_type = "serial";
-> +			compatible = "ns16550a";
-> +			reg = <0 0x1fe001e0 0x8>;
-> +			clock-frequency = <33000000>;
-> +			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-parent = <&iointc>;
-> +			no-loopback-test;
-> +		};
-> +
-> +		cpu_uart1: serial@1fe001e8 {
-> +			status = "disabled";
-> +			device_type = "serial";
-> +			compatible = "ns16550a";
-> +			reg = <0 0x1fe001e8 0x8>;
-> +			clock-frequency = <33000000>;
-> +			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-parent = <&iointc>;
-> +			no-loopback-test;
-> +		};
-> +
-> +		htintc: interrupt-controller@0x1EFDFB000080 {
-> +			compatible = "loongson,ls3-htintc";
-> +			reg = <0x1EFD 0xFB000080 0x100>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <1>;
-> +
-> +			interrupt-parent = <&iointc>;
-> +			interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
-> +						<25 IRQ_TYPE_LEVEL_HIGH>,
-> +						<26 IRQ_TYPE_LEVEL_HIGH>,
-> +						<27 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +	};
-> +};
-> diff --git a/arch/mips/boot/dts/loongson/3b1x00_780e.dts b/arch/mips/boot/dts/loongson/3b1x00_780e.dts
-> new file mode 100644
-> index 000000000000..9b0dff0b1482
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/3b1x00_780e.dts
-> @@ -0,0 +1,10 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/dts-v1/;
-> +
-> +#include "3b-package.dtsi"
-> +#include "rs780e-pch.dtsi"
-> +
-> +/ {
-> +	compatible = "loongson,ls3b-780e";
-> +};
-> diff --git a/arch/mips/boot/dts/loongson/Makefile b/arch/mips/boot/dts/loongson/Makefile
-> new file mode 100644
-> index 000000000000..a225d84a521e
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/Makefile
-> @@ -0,0 +1,5 @@
-> +# SPDX_License_Identifier: GPL_2.0
-> +dtb-$(CONFIG_MACH_LOONGSON64)	+= 3a1000_780e.dtb 3a2000_780e.dtb 3a3000_780e.dtb 3b1x00_780e.dtb \
-> +
-> +
-> +obj-$(CONFIG_BUILTIN_DTB)	+= $(addsuffix .o, $(dtb-y))
-> diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-> new file mode 100644
-> index 000000000000..915363eafa2f
-> --- /dev/null
-> +++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
-> @@ -0,0 +1,35 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/ {
-> +	pch {
-
-bus@10000000
-
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges = <0x000 0x10000000 0x000 0x10000000 0x10000000
-> +			  0x000 0x40000000 0x000 0x40000000 0x40000000>;
-> +
-> +		isa {
-
-This doesn't seem like it would be an accurate representation of the 
-h/w. I'd expect this would be behind a PCI bridge for example? How do 
-you identify a RS780E chip? Using the top level compatible is not the 
-right way to do it.
-
-> +			compatible = "isa";
-> +			#address-cells = <2>;
-> +			#size-cells = <1>;
-> +			ranges = <1 0 0 0 0x1000>;
-> +
-> +			i8259: interrupt-controller@20 {
-> +				compatible = "intel,i8259";
-> +				interrupt-controller;
-> +				#interrupt-cells = <1>;
-> +				plat-poll;
-> +				interrupts = <0>, <1>, <2>, <3>, <4>, <5>, <6>, <7>,
-> +							<8>, <9>, <10>, <11>, <12>, <13>, <14>, <15>;
-> +				interrupt-parent = <&htintc>;
-> +			};
-> +
-> +			rtc0: rtc@70 {
-> +				compatible = "motorola,mc146818";
-> +				reg = <1 0x70 0x8>;
-> +				interrupts = <8>;
-> +				interrupt-parent = <&i8259>;
-> +			};
-> +		};
-> +	};
-> +};
+> +      - description: Loongson 3B1000/1500 + RS780E 2Way
+> +        items:
+> +          - const: loongson,ls3b1x00-780e
+> +...
 > -- 
 > 2.22.0
 > 
