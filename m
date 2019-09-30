@@ -1,54 +1,64 @@
-From: Steven Price <steven.price@arm.com>
-Subject: Re: [PATCH 2/2] drm/panfrost: Use coherent pagetable walk on Juno
-Date: Mon, 30 Sep 2019 17:26:27 +0100
-Message-ID: <167ec566-1936-8a05-83fc-74d20d9fb8bc@arm.com>
-References: <88dc6386929b3dcd7a65ba8063628c62b66b330c.1569856049.git.robin.murphy@arm.com>
- <1e499f85220b735849126171e64ebdd1da0302ce.1569856049.git.robin.murphy@arm.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 0/2] This patch introduces a feature to force
+ gpio-poweroff module
+Date: Mon, 30 Sep 2019 18:32:03 +0200
+Message-ID: <20190930163203.GC15343@lunn.ch>
+References: <20190930103531.13764-1-oleksandr.suvorov@toradex.com>
+ <20190930121440.GC13301@lunn.ch>
+ <CAGgjyvEx_F0C2XHDGxf3F0Z8iHF1vQZkoPft3_ZbTswVFv=SJA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1e499f85220b735849126171e64ebdd1da0302ce.1569856049.git.robin.murphy@arm.com>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Robin Murphy <robin.murphy@arm.com>, robh@kernel.org, tomeu.vizoso@collabora.com, sudeep.holla@arm.com
-Cc: devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, liviu.dudau@arm.com, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGgjyvEx_F0C2XHDGxf3F0Z8iHF1vQZkoPft3_ZbTswVFv=SJA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Jamie Lentin <jm@lentin.co.uk>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Igor Opaniuk <igor.opaniuk@toradex.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMzAvMDkvMjAxOSAxNjoyNCwgUm9iaW4gTXVycGh5IHdyb3RlOgo+IEFsdGhvdWdoIGdvaW5n
-IGZ1bGwgImRtYS1jb2hlcmVudCIgZW5kcyBiYWRseSBkdWUgdG8gR0VNIG9iamVjdHMgc3RpbGwK
-PiBiZWluZyBmb3JjaWJseSBtYXBwZWQgbm9uLWNhY2hlYWJsZSwgd2UgY2FuIGF0IGxlYXN0IHRh
-a2UgYWR2YW50YWdlIG9mCj4gSnVubydzIEFDRS1saXRlIGludGVncmF0aW9uIHRvIHNraXAgY2Fj
-aGUgbWFpbnRlbmFuY2UgZm9yIHBhZ2V0YWJsZXMuCj4gCj4gQ0M6IFJvYiBIZXJyaW5nIDxyb2Jo
-QGtlcm5lbC5vcmc+Cj4gQ0M6IFRvbWV1IFZpem9zbyA8dG9tZXUudml6b3NvQGNvbGxhYm9yYS5j
-b20+Cj4gU2lnbmVkLW9mZi1ieTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4K
-PiAtLS0KPiAKPiBUaGlzIGlzbid0IHJlYWxseSBtZWFudCBhcyBhIHNlcmllcywgSSdtIGp1c3Qg
-c2VuZGluZyBpdCB0b2dldGhlcgo+IHdpdGggcGF0Y2ggIzEgZm9yIGNvbnRleHQuCj4gCj4gIGRy
-aXZlcnMvZ3B1L2RybS9wYW5mcm9zdC9wYW5mcm9zdF9tbXUuYyB8IDMgKysrCj4gIDEgZmlsZSBj
-aGFuZ2VkLCAzIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L3BhbmZyb3N0L3BhbmZyb3N0X21tdS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZy
-b3N0X21tdS5jCj4gaW5kZXggYmRkOTkwNTY4NDc2Li41NjA0MzlmNjMyNzcgMTAwNjQ0Cj4gLS0t
-IGEvZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0X21tdS5jCj4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0X21tdS5jCj4gQEAgLTM2NSw2ICszNjUsOSBAQCBp
-bnQgcGFuZnJvc3RfbW11X3BndGFibGVfYWxsb2Moc3RydWN0IHBhbmZyb3N0X2ZpbGVfcHJpdiAq
-cHJpdikKPiAgCQkuaW9tbXVfZGV2CT0gcGZkZXYtPmRldiwKPiAgCX07Cj4gIAo+ICsJaWYgKG9m
-X2RldmljZV9pc19jb21wYXRpYmxlKHBmZGV2LT5kZXYtPm9mX25vZGUsICJhcm0sanVuby1tYWxp
-IikpCj4gKwkJcGZkZXYtPm1tdS0+cGd0YmxfY2ZnLmNvaGVyZW50X3dhbGsgPSB0cnVlOwoKU2hv
-dWxkIGJlOgoJbW11LT5wZ3RibF9jZmcuY29oZXJlbnRfd2FsayA9IHRydWU7CgpBbHNvIEknbSBu
-b3Qgc3VyZSB3aGV0aGVyIHdlIHNob3VsZCBkbyB0aGlzIGJhc2VkIG9uIGEgY29tcGF0aWJsZQpz
-dHJpbmcuIGtiYXNlIGhhcyBhICJzeXN0ZW0tY29oZXJlbmN5IiBkZXZpY2UtdHJlZSBmbGFnIGZv
-ciBpdC4gSW4KdGhlb3J5IHdlIGNvdWxkIGVuZCB1cCB3aXRoIGEgbG9uZyBsaXN0IG9mIGNvbXBh
-dGlibGVzIGhlcmUuLi4KClN0ZXZlCgo+ICsKPiAgCW1tdS0+cGd0Ymxfb3BzID0gYWxsb2NfaW9f
-cGd0YWJsZV9vcHMoQVJNX01BTElfTFBBRSwgJm1tdS0+cGd0YmxfY2ZnLAo+ICAJCQkJCSAgICAg
-IHByaXYpOwo+ICAJaWYgKCFtbXUtPnBndGJsX29wcykKPiAKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Mon, Sep 30, 2019 at 02:11:59PM +0000, Oleksandr Suvorov wrote:
+> Hi Andrew,
+> 
+> On Mon, Sep 30, 2019 at 3:16 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> >
+> > On Mon, Sep 30, 2019 at 10:35:36AM +0000, Oleksandr Suvorov wrote:
+> > > to register its own pm_power_off handler even if someone has registered
+> > > this handler earlier.
+> > > Useful to change a way to power off the system using DT files.
+> >
+> > Hi Oleksandr
+> >
+> > I'm not sure this is a good idea. What happens when there are two
+> > drivers using forced mode? You then get which ever is register last.
+> > Non deterministic behaviour.
+> 
+> You're right, we have to handle a case when gpio-poweroff fails to
+> power the system off. Please look at the
+> 2nd version of the patchset.
+> 
+> There are 3 only drivers that forcibly register its own pm_power_off
+> handler even if it has been registered before.
+> 
+> drivers/firmware/efi/reboot.c - supports chained call of next
+> pm_power_off handler if its own handler fails.
+> 
+> arch/x86/platform/iris/iris.c, drivers/char/ipmi/ipmi_poweroff.c -
+> don't support calling of next pm_power_off handler.
+> Looks like these drivers should be fixed too.
+> 
+> All other drivers don't change already initialized pm_power_off handler.
+> 
+> > What is the other driver which is causing you problems? How is it
+> > getting probed? DT?
+> 
+> There are several PMUs, RTCs, watchdogs that register their own pm_power_off.
+> Most of them, probably not all, are probed from DT.
+
+And which specific one is causing you problems.
+
+I don't like this forced parameter. No other driver is using it.
+
+Maybe we should change this driver to support chained pm_power_off
+handlers?
+
+   Andrew
