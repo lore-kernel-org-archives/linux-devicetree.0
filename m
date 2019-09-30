@@ -1,136 +1,56 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V10 1/2] dt-bindings: mailbox: add binding doc for the
- ARM SMC/HVC mailbox
-Date: Mon, 30 Sep 2019 15:26:40 +0100
-Message-ID: <20190930142640.GA24945@bogus>
-References: <1569824287-4263-1-git-send-email-peng.fan@nxp.com>
- <1569824287-4263-2-git-send-email-peng.fan@nxp.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
+ dts
+Date: Mon, 30 Sep 2019 17:27:05 +0300
+Message-ID: <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
+References: <20190510194229.20628-1-aford173@gmail.com>
+ <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
+ <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
+ <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
+ <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+ <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
+ <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+ <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
+ <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
+ <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
+ <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
+ <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com>
+ <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
+ <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
+ <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
+ <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
+ <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1569824287-4263-2-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>, Sudeep Holla <sudeep.holla@arm.com>
+To: Adam Ford <aford173@gmail.com>, "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 06:20:09AM +0000, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On 30/09/2019 17:20, Tomi Valkeinen wrote:
+
+> Let's see what Tero says, but yeah, something is odd here. I expected 
+> the max divider to be 16 with Tero's patch, but I don't see it having 
+> that effect. I can get the div to 31.
 > 
-> The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
-> actions in software layers running in the EL2 or EL3 exception levels.
-> The term "ARM" here relates to the SMC instruction as part of the ARM
-> instruction set, not as a standard endorsed by ARM Ltd.
+> You can see this from the clock register 0x48004e40 (CM_CLKSEL_DSS). The 
+> lowest bits are the divider, 5 to 0. The TRM says max div is 32.
 > 
+> Tero said for him the dividers > 16 didn't "stick" to the register. I'm 
+> now wondering if he has an old beagleboard with OMAP34xx, which has max 
+> div 16.
 
-FWIW:
+So testing a bit more here, I can see the DSS working fine and fps as 
+expected when I write values directly to CM_CLKSEL_DSS:5:0, with 
+dividers up to 31. With 32, DSS breaks. The TRM (AM/DM37x) says value 32 
+is valid.
 
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+  Tomi
 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  .../devicetree/bindings/mailbox/arm-smc.yaml       | 96 ++++++++++++++++++++++
->  1 file changed, 96 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> new file mode 100644
-> index 000000000000..c165946a64e4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> @@ -0,0 +1,96 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ARM SMC Mailbox Interface
-> +
-> +maintainers:
-> +  - Peng Fan <peng.fan@nxp.com>
-> +
-> +description: |
-> +  This mailbox uses the ARM smc (secure monitor call) or hvc (hypervisor
-> +  call) instruction to trigger a mailbox-connected activity in firmware,
-> +  executing on the very same core as the caller. The value of r0/w0/x0
-> +  the firmware returns after the smc call is delivered as a received
-> +  message to the mailbox framework, so synchronous communication can be
-> +  established. The exact meaning of the action the mailbox triggers as
-> +  well as the return value is defined by their users and is not subject
-> +  to this binding.
-> +
-> +  One example use case of this mailbox is the SCMI interface, which uses
-> +  shared memory to transfer commands and parameters, and a mailbox to
-> +  trigger a function call. This allows SoCs without a separate management
-> +  processor (or when such a processor is not available or used) to use
-> +  this standardized interface anyway.
-> +
-> +  This binding describes no hardware, but establishes a firmware interface.
-> +  Upon receiving an SMC using the described SMC function identifier, the
-> +  firmware is expected to trigger some mailbox connected functionality.
-> +  The communication follows the ARM SMC calling convention.
-> +  Firmware expects an SMC function identifier in r0 or w0. The supported
-> +  identifier is listed in the the arm,func-id property as described below.
-> +  The firmware can return one value in the first SMC result register,
-> +  it is expected to be an error value, which shall be propagated to the
-> +  mailbox client.
-> +
-> +  Any core which supports the SMC or HVC instruction can be used, as long
-> +  as a firmware component running in EL3 or EL2 is handling these calls.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - description:
-> +          For implementations using ARM SMC instruction.
-> +        const: arm,smc-mbox
-> +
-> +      - description:
-> +          For implementations using ARM HVC instruction.
-> +        const: arm,hvc-mbox
-> +
-> +  "#mbox-cells":
-> +    const: 0
-> +
-> +  arm,func-id:
-> +    description: |
-> +      An single 32-bit value specifying the function ID used by the mailbox.
-> +      The function ID follows the ARM SMC calling convention standard.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +required:
-> +  - compatible
-> +  - "#mbox-cells"
-> +  - arm,func-id
-> +
-> +examples:
-> +  - |
-> +    sram@93f000 {
-> +      compatible = "mmio-sram";
-> +      reg = <0x0 0x93f000 0x0 0x1000>;
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +      ranges = <0x0 0x93f000 0x1000>;
-> +
-> +      cpu_scp_lpri: scp-shmem@0 {
-> +        compatible = "arm,scmi-shmem";
-> +        reg = <0x0 0x200>;
-> +      };
-> +    };
-> +
-> +    smc_tx_mbox: tx_mbox {
-
-[nit]              ^^^^^^^^^ s/tx_mbox/mailbox/ ?
-
-mailbox sounds more generic name to use, you can always use what ever
-name in the label. This is not a must change, just thought of mentioning
-as the pattern followed is to use generic names.
-
---
-Regards,
-Sudeep
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
