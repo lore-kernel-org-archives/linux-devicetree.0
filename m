@@ -1,104 +1,86 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [Patch 02/16] media: ti-vpe: vpe: Add missing null pointer checks
-Date: Mon, 30 Sep 2019 10:58:26 -0500
-Message-ID: <20190930155826.pimkap75k67mji3e@ti.com>
+Subject: Re: [Patch 07/16] media: ti-vpe: vpe: fix a v4l2-compliance failure
+ causing a kernel panic
+Date: Mon, 30 Sep 2019 11:04:17 -0500
+Message-ID: <20190930160417.3vpefsots6i7ge2d@ti.com>
 References: <20190927183650.31345-1-bparrot@ti.com>
- <20190927183650.31345-3-bparrot@ti.com>
- <CAOoBcBUd7reG=-WOq+Vq9SynZMJ81CWFZPN35MkmaQvquZ9xyg@mail.gmail.com>
+ <20190927183650.31345-8-bparrot@ti.com>
+ <1a7c5929-15f1-8f04-1212-42f064654742@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOoBcBUd7reG=-WOq+Vq9SynZMJ81CWFZPN35MkmaQvquZ9xyg@mail.gmail.com>
+In-Reply-To: <1a7c5929-15f1-8f04-1212-42f064654742@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Austin Kim <austinkernel.kim@gmail.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Austin,
-
-Thanks for the review,
-
-Austin Kim <austinkernel.kim@gmail.com> wrote on Sun [2019-Sep-29 09:08:37 +0900]:
-> 2019년 9월 28일 (토) 오전 3:37, Benoit Parrot <bparrot@ti.com>님이 작성:
-> >
-> > A few NULL pointer checks were missing.
-> > Add check with appropriate return code.
-> >
+Hans Verkuil <hverkuil@xs4all.nl> wrote on Mon [2019-Sep-30 10:35:05 +0200]:
+> On 9/27/19 8:36 PM, Benoit Parrot wrote:
+> > v4l2-compliance fails with this message:
+> > 
+> >    warn: v4l2-test-formats.cpp(717): \
+> >    	TRY_FMT cannot handle an invalid pixelformat.
+> >    test VIDIOC_TRY_FMT: FAIL
+> > 
+> > This causes the following kernel panic:
+> > 
+> > Unable to handle kernel paging request at virtual address 56595561
+> > pgd = ecd80e00
+> > *pgd=00000000
+> > Internal error: Oops: 205 [#1] PREEMPT SMP ARM
+> > ...
+> > CPU: 0 PID: 930 Comm: v4l2-compliance Not tainted \
+> > 	4.14.62-01715-gc8cd67f49a19 #1
+> > Hardware name: Generic DRA72X (Flattened Device Tree)
+> > task: ece44d80 task.stack: ecc6e000
+> > PC is at __vpe_try_fmt+0x18c/0x2a8 [ti_vpe]
+> > LR is at 0x8
+> > 
+> > Because the driver fails to properly check the 'num_planes' values for
+> > proper ranges it ends up accessing out of bound data causing the kernel
+> > panic.
+> > 
+> > Since this driver only handle single or dual plane pixel format, make
+> > sure the provided value does not exceed 2 planes.
+> > 
 > > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 > > ---
-> >  drivers/media/platform/ti-vpe/vpe.c | 13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
-> >
+> >  drivers/media/platform/ti-vpe/vpe.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
 > > diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-> > index 5ba72445584d..56f60dbea15c 100644
+> > index bbbf11174e16..1278d457f753 100644
 > > --- a/drivers/media/platform/ti-vpe/vpe.c
 > > +++ b/drivers/media/platform/ti-vpe/vpe.c
-> > @@ -1537,6 +1537,8 @@ static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
-> >                 return -EINVAL;
-> >
-> >         q_data = get_q_data(ctx, f->type);
-> > +       if (!q_data)
-> > +               return -EINVAL;
+> > @@ -1650,7 +1650,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+> >  			      &pix->height, MIN_H, MAX_H, H_ALIGN,
+> >  			      S_ALIGN);
+> >  
+> > -	if (!pix->num_planes)
+> > +	if (!pix->num_planes || pix->num_planes > 2)
+> >  		pix->num_planes = fmt->coplanar ? 2 : 1;
+> >  	else if (pix->num_planes > 1 && !fmt->coplanar)
+> >  		pix->num_planes = 1;
+> > 
 > 
-> With this commit, it seems that 'Null Pointer Dereference' could be
-> avoidable even though 'get_q_data(ctx, f->type);' returns NULL.
+> This looks weird.
 > 
-> * Original Code:
->         q_data = get_q_data(ctx, f->type);
->         // q_data = NULL;
+> Why not just unconditionally do:
 > 
->         pix->width = q_data->width;
->         // pix->width =  (NULL)->width;
->         // In this case, data abort would be raised.
+> 	pix->num_planes = fmt->coplanar ? 2 : 1;
 
-Yes I know this that is why the NULL check were added.
-
-You mentionned earlier that the NULL pointer dereference could be
-avoidable, but based on your comment I fail to see what you mean.
-
-Please also note that this patch was a result of static analysis software
-(klocwork) warnings.
+In order to not change the behavior, VPE would assume that NV12 format for
+instance were always sent as 2 separate planes buffers. So for backward
+compatibility this is order to handle both cases where NV12 could be
+handled as both a single plane and a dual plane buffers based on what the
+user space application intent on passing in/out.
 
 Benoit
 
 > 
-> >
-> >         pix->width = q_data->width;
-> >         pix->height = q_data->height;
-> > @@ -2001,6 +2003,8 @@ static int vpe_queue_setup(struct vb2_queue *vq,
-> >         struct vpe_q_data *q_data;
-> >
-> >         q_data = get_q_data(ctx, vq->type);
-> > +       if (!q_data)
-> > +               return -EINVAL;
-> >
-> >         *nplanes = q_data->nplanes;
-> >
-> > @@ -2025,6 +2029,8 @@ static int vpe_buf_prepare(struct vb2_buffer *vb)
-> >         vpe_dbg(ctx->dev, "type: %d\n", vb->vb2_queue->type);
-> >
-> >         q_data = get_q_data(ctx, vb->vb2_queue->type);
-> > +       if (!q_data)
-> > +               return -EINVAL;
-> >         num_planes = q_data->nplanes;
-> >
-> >         if (vb->vb2_queue->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
-> > @@ -2481,7 +2487,12 @@ static int vpe_probe(struct platform_device *pdev)
-> >         mutex_init(&dev->dev_mutex);
-> >
-> >         dev->res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > -                       "vpe_top");
-> > +                                               "vpe_top");
-> > +       if (!dev->res) {
-> > +               dev_err(&pdev->dev, "missing 'vpe_top' resources data\n");
-> > +               return -ENODEV;
-> > +       }
-> > +
-> >         /*
-> >          * HACK: we get resource info from device tree in the form of a list of
-> >          * VPE sub blocks, the driver currently uses only the base of vpe_top
-> > --
-> > 2.17.1
-> >
+> Regards,
+> 
+> 	Hans
