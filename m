@@ -1,62 +1,50 @@
-From: Mateusz Holenko <mholenko@antmicro.com>
-Subject: [PATCH 2/3] dt-bindings: serial: document LiteUART bindings
-Date: Mon, 30 Sep 2019 15:04:30 +0200
-Message-ID: <20190930130430.GA9080@localhost.localdomain>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v5 1/8] media: i2c: ov2659: Fix for image wrap-around in lower resolution
+Date: Mon, 30 Sep 2019 08:06:37 -0500
+Message-ID: <20190930130644.8704-2-bparrot@ti.com>
+References: <20190930130644.8704-1-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <20190930130644.8704-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Karol Gugala <kgugala@antmicro.com>, Mateusz Holenko <mholenko@antmicro.com>, Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Sam Ravnborg <sam@ravnborg.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Icenowy Zheng <icenowy@aosc.io>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, "Paul E. McKenney" <paulmck@linux.ibm.com>
+To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Filip Kokosinski <fkokosinski@internships.antmicro.com>
+Based on recently found sensor configuration examples, it was
+discovered that when scaling and binning are used for the lower
+resolutions (i.e. 640x480, 320x240) the read offset has to be
+increased otherwise the image appears to be wrapped around.
 
-Add documentation for LiteUART devicetree bindings.
-
-Signed-off-by: Filip Kokosinski <fkokosinski@internships.antmicro.com>
-Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 ---
- .../devicetree/bindings/serial/litex,liteuart.txt    | 12 ++++++++++++
- MAINTAINERS                                          |  6 ++++++
- 2 files changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/litex,liteuart.txt
+ drivers/media/i2c/ov2659.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/serial/litex,liteuart.txt b/Documentation/devicetree/bindings/serial/litex,liteuart.txt
-new file mode 100644
-index 000000000..13c71a0c9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/litex,liteuart.txt
-@@ -0,0 +1,12 @@
-+LiteUART serial controller
-+
-+Required properties:
-+- compatible: should be "litex,liteuart"
-+- reg: base address and length of the register set for this device
-+
-+Example:
-+
-+uart0: serial@f0001000 {
-+	compatible = "litex,liteuart";
-+	reg = <0xe0001800 0x100>;
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b2326dece..65a6cf296 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9462,6 +9462,12 @@ F:	Documentation/misc-devices/lis3lv02d.rst
- F:	drivers/misc/lis3lv02d/
- F:	drivers/platform/x86/hp_accel.c
- 
-+LITEX PLATFORM
-+M:	Karol Gugala <kgugala@antmicro.com>
-+M:	Mateusz Holenko <mholenko@antmicro.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/serial/litex,liteuart.txt
-+
- LIVE PATCHING
- M:	Josh Poimboeuf <jpoimboe@redhat.com>
- M:	Jiri Kosina <jikos@kernel.org>
+diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+index f4ded0669ff9..17573257097d 100644
+--- a/drivers/media/i2c/ov2659.c
++++ b/drivers/media/i2c/ov2659.c
+@@ -661,7 +661,7 @@ static struct sensor_register ov2659_vga[] = {
+ 	{ REG_TIMING_HORIZ_FORMAT, 0x01 },
+ 	{ 0x370a, 0x52 },
+ 	{ REG_VFIFO_READ_START_H, 0x00 },
+-	{ REG_VFIFO_READ_START_L, 0x80 },
++	{ REG_VFIFO_READ_START_L, 0xa0 },
+ 	{ REG_ISP_CTRL02, 0x10 },
+ 	{ REG_NULL, 0x00 },
+ };
+@@ -709,7 +709,7 @@ static  struct sensor_register ov2659_qvga[] = {
+ 	{ REG_TIMING_HORIZ_FORMAT, 0x01 },
+ 	{ 0x370a, 0x52 },
+ 	{ REG_VFIFO_READ_START_H, 0x00 },
+-	{ REG_VFIFO_READ_START_L, 0x80 },
++	{ REG_VFIFO_READ_START_L, 0xa0 },
+ 	{ REG_ISP_CTRL02, 0x10 },
+ 	{ REG_NULL, 0x00 },
+ };
 -- 
-2.23.0
+2.17.1
