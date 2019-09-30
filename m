@@ -1,86 +1,54 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [Patch 07/16] media: ti-vpe: vpe: fix a v4l2-compliance failure
- causing a kernel panic
-Date: Mon, 30 Sep 2019 11:04:17 -0500
-Message-ID: <20190930160417.3vpefsots6i7ge2d@ti.com>
-References: <20190927183650.31345-1-bparrot@ti.com>
- <20190927183650.31345-8-bparrot@ti.com>
- <1a7c5929-15f1-8f04-1212-42f064654742@xs4all.nl>
+From: Steven Price <steven.price@arm.com>
+Subject: Re: [PATCH 2/2] drm/panfrost: Use coherent pagetable walk on Juno
+Date: Mon, 30 Sep 2019 17:26:27 +0100
+Message-ID: <167ec566-1936-8a05-83fc-74d20d9fb8bc@arm.com>
+References: <88dc6386929b3dcd7a65ba8063628c62b66b330c.1569856049.git.robin.murphy@arm.com>
+ <1e499f85220b735849126171e64ebdd1da0302ce.1569856049.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1a7c5929-15f1-8f04-1212-42f064654742@xs4all.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1e499f85220b735849126171e64ebdd1da0302ce.1569856049.git.robin.murphy@arm.com>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Robin Murphy <robin.murphy@arm.com>, robh@kernel.org, tomeu.vizoso@collabora.com, sudeep.holla@arm.com
+Cc: devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, liviu.dudau@arm.com, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hans Verkuil <hverkuil@xs4all.nl> wrote on Mon [2019-Sep-30 10:35:05 +0200]:
-> On 9/27/19 8:36 PM, Benoit Parrot wrote:
-> > v4l2-compliance fails with this message:
-> > 
-> >    warn: v4l2-test-formats.cpp(717): \
-> >    	TRY_FMT cannot handle an invalid pixelformat.
-> >    test VIDIOC_TRY_FMT: FAIL
-> > 
-> > This causes the following kernel panic:
-> > 
-> > Unable to handle kernel paging request at virtual address 56595561
-> > pgd = ecd80e00
-> > *pgd=00000000
-> > Internal error: Oops: 205 [#1] PREEMPT SMP ARM
-> > ...
-> > CPU: 0 PID: 930 Comm: v4l2-compliance Not tainted \
-> > 	4.14.62-01715-gc8cd67f49a19 #1
-> > Hardware name: Generic DRA72X (Flattened Device Tree)
-> > task: ece44d80 task.stack: ecc6e000
-> > PC is at __vpe_try_fmt+0x18c/0x2a8 [ti_vpe]
-> > LR is at 0x8
-> > 
-> > Because the driver fails to properly check the 'num_planes' values for
-> > proper ranges it ends up accessing out of bound data causing the kernel
-> > panic.
-> > 
-> > Since this driver only handle single or dual plane pixel format, make
-> > sure the provided value does not exceed 2 planes.
-> > 
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > ---
-> >  drivers/media/platform/ti-vpe/vpe.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-> > index bbbf11174e16..1278d457f753 100644
-> > --- a/drivers/media/platform/ti-vpe/vpe.c
-> > +++ b/drivers/media/platform/ti-vpe/vpe.c
-> > @@ -1650,7 +1650,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
-> >  			      &pix->height, MIN_H, MAX_H, H_ALIGN,
-> >  			      S_ALIGN);
-> >  
-> > -	if (!pix->num_planes)
-> > +	if (!pix->num_planes || pix->num_planes > 2)
-> >  		pix->num_planes = fmt->coplanar ? 2 : 1;
-> >  	else if (pix->num_planes > 1 && !fmt->coplanar)
-> >  		pix->num_planes = 1;
-> > 
-> 
-> This looks weird.
-> 
-> Why not just unconditionally do:
-> 
-> 	pix->num_planes = fmt->coplanar ? 2 : 1;
-
-In order to not change the behavior, VPE would assume that NV12 format for
-instance were always sent as 2 separate planes buffers. So for backward
-compatibility this is order to handle both cases where NV12 could be
-handled as both a single plane and a dual plane buffers based on what the
-user space application intent on passing in/out.
-
-Benoit
-
-> 
-> Regards,
-> 
-> 	Hans
+T24gMzAvMDkvMjAxOSAxNjoyNCwgUm9iaW4gTXVycGh5IHdyb3RlOgo+IEFsdGhvdWdoIGdvaW5n
+IGZ1bGwgImRtYS1jb2hlcmVudCIgZW5kcyBiYWRseSBkdWUgdG8gR0VNIG9iamVjdHMgc3RpbGwK
+PiBiZWluZyBmb3JjaWJseSBtYXBwZWQgbm9uLWNhY2hlYWJsZSwgd2UgY2FuIGF0IGxlYXN0IHRh
+a2UgYWR2YW50YWdlIG9mCj4gSnVubydzIEFDRS1saXRlIGludGVncmF0aW9uIHRvIHNraXAgY2Fj
+aGUgbWFpbnRlbmFuY2UgZm9yIHBhZ2V0YWJsZXMuCj4gCj4gQ0M6IFJvYiBIZXJyaW5nIDxyb2Jo
+QGtlcm5lbC5vcmc+Cj4gQ0M6IFRvbWV1IFZpem9zbyA8dG9tZXUudml6b3NvQGNvbGxhYm9yYS5j
+b20+Cj4gU2lnbmVkLW9mZi1ieTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4K
+PiAtLS0KPiAKPiBUaGlzIGlzbid0IHJlYWxseSBtZWFudCBhcyBhIHNlcmllcywgSSdtIGp1c3Qg
+c2VuZGluZyBpdCB0b2dldGhlcgo+IHdpdGggcGF0Y2ggIzEgZm9yIGNvbnRleHQuCj4gCj4gIGRy
+aXZlcnMvZ3B1L2RybS9wYW5mcm9zdC9wYW5mcm9zdF9tbXUuYyB8IDMgKysrCj4gIDEgZmlsZSBj
+aGFuZ2VkLCAzIGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L3BhbmZyb3N0L3BhbmZyb3N0X21tdS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZy
+b3N0X21tdS5jCj4gaW5kZXggYmRkOTkwNTY4NDc2Li41NjA0MzlmNjMyNzcgMTAwNjQ0Cj4gLS0t
+IGEvZHJpdmVycy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0X21tdS5jCj4gKysrIGIvZHJpdmVy
+cy9ncHUvZHJtL3BhbmZyb3N0L3BhbmZyb3N0X21tdS5jCj4gQEAgLTM2NSw2ICszNjUsOSBAQCBp
+bnQgcGFuZnJvc3RfbW11X3BndGFibGVfYWxsb2Moc3RydWN0IHBhbmZyb3N0X2ZpbGVfcHJpdiAq
+cHJpdikKPiAgCQkuaW9tbXVfZGV2CT0gcGZkZXYtPmRldiwKPiAgCX07Cj4gIAo+ICsJaWYgKG9m
+X2RldmljZV9pc19jb21wYXRpYmxlKHBmZGV2LT5kZXYtPm9mX25vZGUsICJhcm0sanVuby1tYWxp
+IikpCj4gKwkJcGZkZXYtPm1tdS0+cGd0YmxfY2ZnLmNvaGVyZW50X3dhbGsgPSB0cnVlOwoKU2hv
+dWxkIGJlOgoJbW11LT5wZ3RibF9jZmcuY29oZXJlbnRfd2FsayA9IHRydWU7CgpBbHNvIEknbSBu
+b3Qgc3VyZSB3aGV0aGVyIHdlIHNob3VsZCBkbyB0aGlzIGJhc2VkIG9uIGEgY29tcGF0aWJsZQpz
+dHJpbmcuIGtiYXNlIGhhcyBhICJzeXN0ZW0tY29oZXJlbmN5IiBkZXZpY2UtdHJlZSBmbGFnIGZv
+ciBpdC4gSW4KdGhlb3J5IHdlIGNvdWxkIGVuZCB1cCB3aXRoIGEgbG9uZyBsaXN0IG9mIGNvbXBh
+dGlibGVzIGhlcmUuLi4KClN0ZXZlCgo+ICsKPiAgCW1tdS0+cGd0Ymxfb3BzID0gYWxsb2NfaW9f
+cGd0YWJsZV9vcHMoQVJNX01BTElfTFBBRSwgJm1tdS0+cGd0YmxfY2ZnLAo+ICAJCQkJCSAgICAg
+IHByaXYpOwo+ICAJaWYgKCFtbXUtPnBndGJsX29wcykKPiAKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
