@@ -1,115 +1,104 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v5 2/2] dt-bindings: timer: Use defines instead of numbers in Exynos MCT examples
-Date: Mon, 30 Sep 2019 17:44:18 +0200
-Message-ID: <20190930154418.4884-2-krzk@kernel.org>
-References: <20190930154418.4884-1-krzk@kernel.org>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [Patch 02/16] media: ti-vpe: vpe: Add missing null pointer checks
+Date: Mon, 30 Sep 2019 10:58:26 -0500
+Message-ID: <20190930155826.pimkap75k67mji3e@ti.com>
+References: <20190927183650.31345-1-bparrot@ti.com>
+ <20190927183650.31345-3-bparrot@ti.com>
+ <CAOoBcBUd7reG=-WOq+Vq9SynZMJ81CWFZPN35MkmaQvquZ9xyg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190930154418.4884-1-krzk@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOoBcBUd7reG=-WOq+Vq9SynZMJ81CWFZPN35MkmaQvquZ9xyg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+To: Austin Kim <austinkernel.kim@gmail.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Make the examples in Exynos Multi Core Timer bindings more readable and
-bring them closer to real DTS by using defines for interrupt flags.
-Fix also GIC interrupt type in example for Exynos4412 (from SPI to PPI).
+Hi Austin,
 
-Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Thanks for the review,
 
----
+Austin Kim <austinkernel.kim@gmail.com> wrote on Sun [2019-Sep-29 09:08:37 +0900]:
+> 2019년 9월 28일 (토) 오전 3:37, Benoit Parrot <bparrot@ti.com>님이 작성:
+> >
+> > A few NULL pointer checks were missing.
+> > Add check with appropriate return code.
+> >
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/platform/ti-vpe/vpe.c | 13 ++++++++++++-
+> >  1 file changed, 12 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+> > index 5ba72445584d..56f60dbea15c 100644
+> > --- a/drivers/media/platform/ti-vpe/vpe.c
+> > +++ b/drivers/media/platform/ti-vpe/vpe.c
+> > @@ -1537,6 +1537,8 @@ static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
+> >                 return -EINVAL;
+> >
+> >         q_data = get_q_data(ctx, f->type);
+> > +       if (!q_data)
+> > +               return -EINVAL;
+> 
+> With this commit, it seems that 'Null Pointer Dereference' could be
+> avoidable even though 'get_q_data(ctx, f->type);' returns NULL.
+> 
+> * Original Code:
+>         q_data = get_q_data(ctx, f->type);
+>         // q_data = NULL;
+> 
+>         pix->width = q_data->width;
+>         // pix->width =  (NULL)->width;
+>         // In this case, data abort would be raised.
 
-Changes since v1:
-1. Use GIC_PPI where applicable.
+Yes I know this that is why the NULL check were added.
 
-Rebased on top of:
-https://patchwork.kernel.org/project/linux-samsung-soc/list/?series=177667&state=*
----
- .../timer/samsung,exynos4210-mct.yaml         | 37 ++++++++++++++-----
- 1 file changed, 27 insertions(+), 10 deletions(-)
+You mentionned earlier that the NULL pointer dereference could be
+avoidable, but based on your comment I fail to see what you mean.
 
-diff --git a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
-index 3e26fd5e235a..273e359854dd 100644
---- a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
-+++ b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.yaml
-@@ -57,51 +57,68 @@ examples:
-     // In this example, the IP contains two local timers, using separate
-     // interrupts, so two local timer interrupts have been specified,
-     // in addition to four global timer interrupts.
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
-     timer@10050000 {
-         compatible = "samsung,exynos4210-mct";
-         reg = <0x10050000 0x800>;
--        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
--                     <0 42 0>, <0 48 0>;
-+        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-     };
- 
-   - |
-     // In this example, the timer interrupts are connected to two separate
-     // interrupt controllers. Hence, an interrupts-extended is needed.
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
-     timer@101c0000 {
-         compatible = "samsung,exynos4210-mct";
-         reg = <0x101C0000 0x800>;
--        interrupts-extended = <&gic 0 57 0>,
--                              <&gic 0 69 0>,
-+        interrupts-extended = <&gic GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+                              <&gic GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-                               <&combiner 12 6>,
-                               <&combiner 12 7>,
--                              <&gic 0 42 0>,
--                              <&gic 0 48 0>;
-+                              <&gic GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-+                              <&gic GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-     };
- 
-   - |
-     // In this example, the IP contains four local timers, but using
-     // a per-processor interrupt to handle them. Only one first local
-     // interrupt is specified.
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
-     timer@10050000 {
-         compatible = "samsung,exynos4412-mct";
-         reg = <0x10050000 0x800>;
- 
--        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
--                     <0 42 0>;
-+        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_PPI 42 IRQ_TYPE_LEVEL_HIGH>;
-     };
- 
-   - |
-     // In this example, the IP contains four local timers, but using
-     // a per-processor interrupt to handle them. All the local timer
-     // interrupts are specified.
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
-     timer@10050000 {
-         compatible = "samsung,exynos4412-mct";
-         reg = <0x10050000 0x800>;
- 
--        interrupts = <0 57 0>, <0 69 0>, <0 70 0>, <0 71 0>,
--                     <0 42 0>, <0 42 0>, <0 42 0>, <0 42 0>;
-+        interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_PPI 42 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_PPI 42 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_PPI 42 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_PPI 42 IRQ_TYPE_LEVEL_HIGH>;
-     };
--- 
-2.17.1
+Please also note that this patch was a result of static analysis software
+(klocwork) warnings.
+
+Benoit
+
+> 
+> >
+> >         pix->width = q_data->width;
+> >         pix->height = q_data->height;
+> > @@ -2001,6 +2003,8 @@ static int vpe_queue_setup(struct vb2_queue *vq,
+> >         struct vpe_q_data *q_data;
+> >
+> >         q_data = get_q_data(ctx, vq->type);
+> > +       if (!q_data)
+> > +               return -EINVAL;
+> >
+> >         *nplanes = q_data->nplanes;
+> >
+> > @@ -2025,6 +2029,8 @@ static int vpe_buf_prepare(struct vb2_buffer *vb)
+> >         vpe_dbg(ctx->dev, "type: %d\n", vb->vb2_queue->type);
+> >
+> >         q_data = get_q_data(ctx, vb->vb2_queue->type);
+> > +       if (!q_data)
+> > +               return -EINVAL;
+> >         num_planes = q_data->nplanes;
+> >
+> >         if (vb->vb2_queue->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
+> > @@ -2481,7 +2487,12 @@ static int vpe_probe(struct platform_device *pdev)
+> >         mutex_init(&dev->dev_mutex);
+> >
+> >         dev->res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> > -                       "vpe_top");
+> > +                                               "vpe_top");
+> > +       if (!dev->res) {
+> > +               dev_err(&pdev->dev, "missing 'vpe_top' resources data\n");
+> > +               return -ENODEV;
+> > +       }
+> > +
+> >         /*
+> >          * HACK: we get resource info from device tree in the form of a list of
+> >          * VPE sub blocks, the driver currently uses only the base of vpe_top
+> > --
+> > 2.17.1
+> >
