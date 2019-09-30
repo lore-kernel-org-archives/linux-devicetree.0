@@ -1,84 +1,199 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: dt-bindings: mt8183: add missing
-	update" to the asoc tree
-Date: Tue,  1 Oct 2019 12:40:51 +0100 (BST)
-Message-ID: <20191001114051.293F627429C0@ypsilon.sirena.org.uk>
-References: <20190920112320.166052-1-tzungbi@google.com>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [Patch 16/16] media: ti-vpe: vpe: don't rely on colorspace
+ member for conversion
+Date: Mon, 30 Sep 2019 15:24:43 -0500
+Message-ID: <20190930202443.tvu4htu7w5sv33ee@ti.com>
+References: <20190927183650.31345-1-bparrot@ti.com>
+ <20190927183650.31345-17-bparrot@ti.com>
+ <263b7b22-b867-3f73-bcaf-8978f9e3b415@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20190920112320.166052-1-tzungbi@google.com>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, cychiang@google.com, robh+dt@kernel.org, tzungbi@google.com, Mark Brown <broonie@kernel.org>, dgreid@google.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <263b7b22-b867-3f73-bcaf-8978f9e3b415@xs4all.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hans Verkuil <hverkuil@xs4all.nl> wrote on Mon [2019-Sep-30 11:05:13 +0200]:
+> On 9/27/19 8:36 PM, Benoit Parrot wrote:
+> > Up to now VPE was relying on the colorspace value of struct v4l2_format
+> > as an indication to perform color space conversion from YUV to RGB or
+> > not.
+> > 
+> > Instead we should used the source/destination fourcc codes as a more
+> > reliable indication to perform color space conversion or not.
+> > 
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/platform/ti-vpe/vpe.c | 41 ++++++++++++++++++++++-------
+> >  1 file changed, 32 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+> > index e30981cd3e8f..d002adc6263f 100644
+> > --- a/drivers/media/platform/ti-vpe/vpe.c
+> > +++ b/drivers/media/platform/ti-vpe/vpe.c
+> > @@ -353,6 +353,32 @@ enum {
+> >  	Q_DATA_DST = 1,
+> >  };
+> >  
+> > +static bool is_fmt_rgb(u32 fourcc)
+> > +{
+> > +	if (fourcc == V4L2_PIX_FMT_RGB24 ||
+> > +	    fourcc == V4L2_PIX_FMT_BGR24 ||
+> > +	    fourcc == V4L2_PIX_FMT_RGB32 ||
+> > +	    fourcc == V4L2_PIX_FMT_BGR32 ||
+> > +	    fourcc == V4L2_PIX_FMT_RGB565 ||
+> > +	    fourcc == V4L2_PIX_FMT_RGB555)
+> > +		return true;
+> > +
+> > +	return false;
+> > +}
+> 
+> Why not add a 'bool is_rgb' to struct vpe_fmt?
+> 
+> It is all too easy to forget to update this function if a new RGB format is
+> added to the vpe_formats array in the future.
 
-   ASoC: dt-bindings: mt8183: add missing update
+Yeah I debate going that route also.
+I can change it easily enough.
 
-has been applied to the asoc tree at
+Although, depending on the further changes required below this may be moot.
+We'll see.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+> 
+> > +
+> > +/*
+> > + * This helper is only used to setup the color space converter
+> > + * the actual value returned is only to broadly differentiate between
+> > + * RGB and YUV
+> > + */
+> > +static enum  v4l2_colorspace fourcc_to_colorspace(u32 fourcc)
+> 
+> double space after enum.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Arrg, I'll fix that.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> 
+> > +{
+> > +	if (is_fmt_rgb(fourcc))
+> > +		return V4L2_COLORSPACE_SRGB;
+> > +
+> > +	return V4L2_COLORSPACE_SMPTE170M;
+> > +}
+> 
+> This is highly confusing. RGB or YUV conversion does not change the colorspace
+> at all.
+> 
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Well I see here that I am missing some understanding.
+But as you saw all I am trying to get to is this: do we need to setup YUV
+to RGB conversion or not.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Regarding csc_set_coeff() I was not trying to re-write it but use the
+pixel_formats as hint. I understand that this might not be as flexible as
+it needs to be (meaning handling colorspace, xfer_func, ycbr_encoding or
+quantization in a sane way) but to at least get the correct direction of the
+conversion. At the moment VPE driver only handles YUV to RGB conversion.
 
-Thanks,
-Mark
 
->From 7cf2804775f8a388411624b3e768e55d08711e9d Mon Sep 17 00:00:00 2001
-From: Tzung-Bi Shih <tzungbi@google.com>
-Date: Fri, 20 Sep 2019 19:23:20 +0800
-Subject: [PATCH] ASoC: dt-bindings: mt8183: add missing update
+> There are four colorimetry related fields: colorspace, xfer_func, ycbcr_enc and
+> quantization. Most hardware (including this one AFAICT) have a 3x3 matrix + a
+> vector to do the conversion. This only allows you to convert between different
+> ycbcr encodings and quantization ranges. The colorspace and xfer_func parameters
+> stay unchanged (you need gamma tables and two other 3x3 matrices for that).
+> 
+> So if you want to set up the 3x3 matrix + vector correctly, then you need to
+> provide the ycbcr_enc value + quantization value of the source to your function.
+> ycbcr_enc is only valid of YUV pixelformats, of course, and you can use
+> V4L2_MAP_COLORSPACE_DEFAULT, V4L2_MAP_YCBCR_ENC_DEFAULT and V4L2_MAP_QUANTIZATION_DEFAULT
+> if one or more of these values as set by userspace are 0.
+> 
+> Since the V4L2 API does not (yet) support setting ycbcr_enc and quantization for the
+> capture queue you have to provide that information yourself:
+> 
+> For RGB ycbcr_enc is of course ignored, and quantization should be full range.
+> For YUV it depends: the quantization is always limited range, but for the ycbcr_enc
+> you have a choice: if the source was YUV, then you can decide to just copy the
+> ycbcr_enc value. Alternatively, you can convert to 601 for SDTV and 709 for anything
+> else. The latter is also the recommended choice if the source was RGB.
+> 
+> In any case, please do not use enum v4l2_colorspace in the csc_set_coeff function:
+> it's misleading.
 
-Headset codec is optional.  Add missing update to DT binding document.
+But I guess I can rewrite the csc_set_coeff() module API to use at least
+pixel_format instead of enum_colorspace at least as a first step.
 
-Fixes: a962a809e5e4 ("ASoC: mediatek: mt8183: make headset codec optional")
-Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
-Link: https://lore.kernel.org/r/20190920112320.166052-1-tzungbi@google.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/sound/mt8183-mt6358-ts3a227-max98357.txt         | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Full color space parameters support (meaning all 4 of them) would probably
+be better done as its own future patch series.
 
-diff --git a/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt b/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
-index d6d5207fa996..17ff3892f439 100644
---- a/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
-+++ b/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
-@@ -2,9 +2,11 @@ MT8183 with MT6358, TS3A227 and MAX98357 CODECS
- 
- Required properties:
- - compatible : "mediatek,mt8183_mt6358_ts3a227_max98357"
--- mediatek,headset-codec: the phandles of ts3a227 codecs
- - mediatek,platform: the phandle of MT8183 ASoC platform
- 
-+Optional properties:
-+- mediatek,headset-codec: the phandles of ts3a227 codecs
-+
- Example:
- 
- 	sound {
--- 
-2.20.1
+Benoit
+
+> 
+> https://hverkuil.home.xs4all.nl/spec/uapi/v4l/colorspaces.html and the following two
+> sections contain a lot of information about how colorspaces work.
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > +
+> >  /* find our format description corresponding to the passed v4l2_format */
+> >  static struct vpe_fmt *__find_format(u32 fourcc)
+> >  {
+> > @@ -764,11 +790,10 @@ static void set_src_registers(struct vpe_ctx *ctx)
+> >  static void set_dst_registers(struct vpe_ctx *ctx)
+> >  {
+> >  	struct vpe_mmr_adb *mmr_adb = ctx->mmr_adb.addr;
+> > -	enum v4l2_colorspace clrspc = ctx->q_data[Q_DATA_DST].colorspace;
+> >  	struct vpe_fmt *fmt = ctx->q_data[Q_DATA_DST].fmt;
+> >  	u32 val = 0;
+> >  
+> > -	if (clrspc == V4L2_COLORSPACE_SRGB) {
+> > +	if (is_fmt_rgb(fmt->fourcc)) {
+> >  		val |= VPE_RGB_OUT_SELECT;
+> >  		vpdma_set_bg_color(ctx->dev->vpdma,
+> >  			(struct vpdma_data_format *)fmt->vpdma_fmt[0], 0xff);
+> > @@ -912,7 +937,8 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
+> >  	set_dei_regs(ctx);
+> >  
+> >  	csc_set_coeff(ctx->dev->csc, &mmr_adb->csc_regs[0],
+> > -		s_q_data->colorspace, d_q_data->colorspace);
+> > +		      fourcc_to_colorspace(s_q_data->fmt->fourcc),
+> > +		      fourcc_to_colorspace(d_q_data->fmt->fourcc));
+> >  
+> >  	sc_set_hs_coeffs(ctx->dev->sc, ctx->sc_coeff_h.addr, src_w, dst_w);
+> >  	sc_set_vs_coeffs(ctx->dev->sc, ctx->sc_coeff_v.addr, src_h, dst_h);
+> > @@ -1285,7 +1311,7 @@ static void device_run(void *priv)
+> >  	if (ctx->deinterlacing)
+> >  		add_out_dtd(ctx, VPE_PORT_MV_OUT);
+> >  
+> > -	if (d_q_data->colorspace == V4L2_COLORSPACE_SRGB) {
+> > +	if (is_fmt_rgb(d_q_data->fmt->fourcc)) {
+> >  		add_out_dtd(ctx, VPE_PORT_RGB_OUT);
+> >  	} else {
+> >  		add_out_dtd(ctx, VPE_PORT_LUMA_OUT);
+> > @@ -1327,7 +1353,7 @@ static void device_run(void *priv)
+> >  	}
+> >  
+> >  	/* sync on channel control descriptors for output ports */
+> > -	if (d_q_data->colorspace == V4L2_COLORSPACE_SRGB) {
+> > +	if (is_fmt_rgb(d_q_data->fmt->fourcc)) {
+> >  		vpdma_add_sync_on_channel_ctd(&ctx->desc_list,
+> >  			VPE_CHAN_RGB_OUT);
+> >  	} else {
+> > @@ -1682,10 +1708,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+> >  		height = pix->height;
+> >  
+> >  	if (!pix->colorspace) {
+> > -		if (fmt->fourcc == V4L2_PIX_FMT_RGB24 ||
+> > -				fmt->fourcc == V4L2_PIX_FMT_BGR24 ||
+> > -				fmt->fourcc == V4L2_PIX_FMT_RGB32 ||
+> > -				fmt->fourcc == V4L2_PIX_FMT_BGR32) {
+> > +		if (is_fmt_rgb(fmt->fourcc)) {
+> >  			pix->colorspace = V4L2_COLORSPACE_SRGB;
+> >  		} else {
+> >  			if (height > 1280)	/* HD */
+> > 
+> 
