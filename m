@@ -1,114 +1,156 @@
-From: Biwen Li <biwen.li@nxp.com>
-Subject: [v2,1/2] i2c: pca954x: Add property to skip disabling PCA954x MUX device
-Date: Mon, 30 Sep 2019 11:25:02 +0800
-Message-ID: <20190930032503.44425-1-biwen.li@nxp.com>
+From: Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V10 0/2] mailbox: arm: introduce smc triggered mailbox
+Date: Mon, 30 Sep 2019 06:20:05 +0000
+Message-ID: <1569824287-4263-1-git-send-email-peng.fan@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: peda@axentia.se, leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "andre.przywara@arm.com" <andre.przywara@arm.com>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>, Peng Fan <peng.fan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On some Layerscape boards like LS2085ARDB and LS2088ARDB,
-input pull-up resistors on PCA954x MUX device are missing on board,
-So, if MUX are disabled after powered-on, input lines will float
-leading to incorrect functionality.
+From: Peng Fan <peng.fan@nxp.com>
 
-Hence, PCA954x MUX device should never be turned-off after
-power-on.
+V10:
+ - Add R-b tag from Andre, Rob and Florian
+ - Two minor fixes
+  - Drop "passed from consumers" in patch 1/2 per Andre's comments
+  - Drop interrupts.h in patch 2/2 per Andre's comments
 
-Add property to skip disabling PCA954x MUX device
-if device tree contains "i2c-mux-never-disable"
-for PCA954x device node.
+V9:
+ - Add Florian's R-b tag in patch 1/2
+ - Mark arm,func-id as a required property per Andre's comments in patch 1/=
+2.
+ - Make invoke_smc_mbox_fn as a private entry in a channal per Florian's
+   comments in pach 2/2
+ - Include linux/types.h in arm-smccc-mbox.h in patch 2/2
+ - Drop function_id from arm_smccc_mbox_cmd since func-id is from DT
+   in patch 2/2/.
 
-Errata ID: E-00013 on board LS2085ARDB and LS2088ARDB
-(The hardware bug found on board revision
-Rev.B, Rev.C and Rev.D)
+   Andre,
+    I have marked arm,func-id as a required property and dropped function-i=
+d
+    from client, please see whether you are happy with the patchset.
+    Hope we could finalize and get patches land in.
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
-Change in v2:
-	- update variable name
-	  disable_mux->never_disable
+   Thanks,
+   Peng.
 
- drivers/i2c/muxes/i2c-mux-pca954x.c | 37 +++++++++++++++++++++++++----
- 1 file changed, 33 insertions(+), 4 deletions(-)
+V8:
+Add missed arm-smccc-mbox.h
 
-diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
-index 923aa3a5a3dc..b4647b033163 100644
---- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-+++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-@@ -93,6 +93,11 @@ struct pca954x {
- 	struct irq_domain *irq;
- 	unsigned int irq_mask;
- 	raw_spinlock_t lock;
-+	/*
-+	 * never disable value will write to control register of mux
-+	 * to always enable mux
-+	 */
-+	u8 never_disable;
- };
- 
- /* Provide specs for the PCA954x types we know about */
-@@ -258,6 +263,11 @@ static int pca954x_deselect_mux(struct i2c_mux_core *muxc, u32 chan)
- 	struct i2c_client *client = data->client;
- 	s8 idle_state;
- 
-+	if (data->never_disable) {
-+		data->last_chan = data->chip->nchans;
-+		return pca954x_reg_write(muxc->parent, client, data->never_disable);
-+	}
-+
- 	idle_state = READ_ONCE(data->idle_state);
- 	if (idle_state >= 0)
- 		/* Set the mux back to a predetermined channel */
-@@ -462,16 +472,32 @@ static int pca954x_probe(struct i2c_client *client,
- 		}
- 	}
- 
-+	/* Errata ID E-00013 on board LS2088ARDB and LS2088ARDB:
-+	 * The point here is that you must not disable a mux if there
-+	 * are no pullups on the input or you mess up the I2C. This
-+	 * needs to be put into the DTS really as the kernel cannot
-+	 * know this otherwise.
-+	 */
-+
-+	data->never_disable = np &&
-+		of_property_read_bool(np, "i2c-mux-never-disable") &&
-+		data->chip->muxtype == pca954x_ismux ?
-+		data->chip->enable : 0;
-+
- 	/* Write the mux register at addr to verify
- 	 * that the mux is in fact present. This also
- 	 * initializes the mux to disconnected state.
- 	 */
--	if (i2c_smbus_write_byte(client, 0) < 0) {
-+	if (i2c_smbus_write_byte(client, data->never_disable) < 0) {
- 		dev_warn(dev, "probe failed\n");
- 		return -ENODEV;
- 	}
- 
--	data->last_chan = 0;		   /* force the first selection */
-+	if (data->never_disable)
-+		data->last_chan = data->chip->nchans;
-+	else
-+		data->last_chan = 0;               /* force the first selection */
-+
- 	data->idle_state = MUX_IDLE_AS_IS;
- 
- 	idle_disconnect_dt = np &&
-@@ -531,8 +557,11 @@ static int pca954x_resume(struct device *dev)
- 	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
- 	struct pca954x *data = i2c_mux_priv(muxc);
- 
--	data->last_chan = 0;
--	return i2c_smbus_write_byte(client, 0);
-+	if (data->never_disable)
-+		data->last_chan = data->chip->nchans;
-+	else
-+		data->last_chan = 0;
-+	return i2c_smbus_write_byte(client, data->never_disable);
- }
- #endif
- 
--- 
-2.17.1
+V7:
+Typo fix
+#mbox-cells changed to 0
+Add a new header file arm-smccc-mbox.h
+Use ARM_SMCCC_IS_64
+
+Andre,
+  The function_id is still kept in arm_smccc_mbox_cmd, because arm,func-id
+property is optional, so clients could pass function_id to mbox driver.
+
+V6:
+Switch to per-channel a mbox controller
+Drop arm,num-chans, transports, method
+Add arm,hvc-mbox compatible
+Fix smc/hvc args, drop client id and use correct type.
+https://patchwork.kernel.org/cover/11146641/
+
+V5:
+yaml fix
+https://patchwork.kernel.org/cover/11117741/
+
+V4:
+yaml fix for num-chans in patch 1/2.
+https://patchwork.kernel.org/cover/11116521/
+
+V3:
+Drop interrupt
+Introduce transports for mem/reg usage
+Add chan-id for mem usage
+Convert to yaml format
+https://patchwork.kernel.org/cover/11043541/
+
+V2:
+This is a modified version from Andre Przywara's patch series
+https://lore.kernel.org/patchwork/cover/812997/.
+The modification are mostly:
+Introduce arm,num-chans
+Introduce arm_smccc_mbox_cmd
+txdone_poll and txdone_irq are both set to false
+arm,func-ids are kept, but as an optional property.
+Rewords SCPI to SCMI, because I am trying SCMI over SMC, not SCPI.
+Introduce interrupts notification.
+
+[1] is a draft implementation of i.MX8MM SCMI ATF implementation that
+use smc as mailbox, power/clk is included, but only part of clk has been
+implemented to work with hardware, power domain only supports get name
+for now.
+
+The traditional Linux mailbox mechanism uses some kind of dedicated hardwar=
+e
+IP to signal a condition to some other processing unit, typically a dedicat=
+ed
+management processor.
+This mailbox feature is used for instance by the SCMI protocol to signal a
+request for some action to be taken by the management processor.
+However some SoCs does not have a dedicated management core to provide
+those services. In order to service TEE and to avoid linux shutdown
+power and clock that used by TEE, need let firmware to handle power
+and clock, the firmware here is ARM Trusted Firmware that could also
+run SCMI service.
+
+The existing SCMI implementation uses a rather flexible shared memory
+region to communicate commands and their parameters, it still requires a
+mailbox to actually trigger the action.
+
+This patch series provides a Linux mailbox compatible service which uses
+smc calls to invoke firmware code, for instance taking care of SCMI request=
+s.
+The actual requests are still communicated using the standard SCMI way of
+shared memory regions, but a dedicated mailbox hardware IP can be replaced =
+via
+this new driver.
+
+This simple driver uses the architected SMC calling convention to trigger
+firmware services, also allows for using "HVC" calls to call into hyperviso=
+rs
+or firmware layers running in the EL2 exception level.
+
+Patch 1 contains the device tree binding documentation, patch 2 introduces
+the actual mailbox driver.
+
+Please note that this driver just provides a generic mailbox mechanism,
+It could support synchronous TX/RX, or synchronous TX with asynchronous
+RX. And while providing SCMI services was the reason for this exercise,
+this driver is in no way bound to this use case, but can be used genericall=
+y
+where the OS wants to signal a mailbox condition to firmware or a
+hypervisor.
+Also the driver is in no way meant to replace any existing firmware
+interface, but actually to complement existing interfaces.
+
+[1] https://github.com/MrVan/arm-trusted-firmware/tree/scmi
+
+
+
+Peng Fan (2):
+  dt-bindings: mailbox: add binding doc for the ARM SMC/HVC mailbox
+  mailbox: introduce ARM SMC based mailbox
+
+ .../devicetree/bindings/mailbox/arm-smc.yaml       |  96 ++++++++++++
+ drivers/mailbox/Kconfig                            |   7 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/arm-smc-mailbox.c                  | 166 +++++++++++++++++=
+++++
+ include/linux/mailbox/arm-smccc-mbox.h             |  20 +++
+ 5 files changed, 291 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+ create mode 100644 drivers/mailbox/arm-smc-mailbox.c
+ create mode 100644 include/linux/mailbox/arm-smccc-mbox.h
+
+--=20
+2.16.4
