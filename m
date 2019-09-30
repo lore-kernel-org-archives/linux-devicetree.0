@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v5 8/8] media: i2c: ov2659: Switch to SPDX Licensing
-Date: Mon, 30 Sep 2019 08:06:44 -0500
-Message-ID: <20190930130644.8704-9-bparrot@ti.com>
+Subject: [Patch v5 7/8] media: i2c: ov2659: Fix missing 720p register config
+Date: Mon, 30 Sep 2019 08:06:43 -0500
+Message-ID: <20190930130644.8704-8-bparrot@ti.com>
 References: <20190930130644.8704-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,42 +12,38 @@ To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.co
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Switch to SPDX licensing and drop the redundant GPL text.
+The initial registers sequence is only loaded at probe
+time. Afterward only the resolution and format specific
+register are modified. Care must be taken to make sure
+registers modified by one resolution setting are reverted
+back when another resolution is programmed.
+
+This was not done properly for the 720p case.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 Acked-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 ---
- drivers/media/i2c/ov2659.c | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
+ drivers/media/i2c/ov2659.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-index c1e2aa1f952d..42f64175a6df 100644
+index 80de2e35aeca..c1e2aa1f952d 100644
 --- a/drivers/media/i2c/ov2659.c
 +++ b/drivers/media/i2c/ov2659.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Omnivision OV2659 CMOS Image Sensor driver
-  *
-@@ -5,19 +6,6 @@
-  *
-  * Benoit Parrot <bparrot@ti.com>
-  * Lad, Prabhakar <prabhakar.csengg@gmail.com>
-- *
-- * This program is free software; you may redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; version 2 of the License.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
+@@ -411,10 +411,14 @@ static struct sensor_register ov2659_720p[] = {
+ 	{ REG_TIMING_YINC, 0x11 },
+ 	{ REG_TIMING_VERT_FORMAT, 0x80 },
+ 	{ REG_TIMING_HORIZ_FORMAT, 0x00 },
++	{ 0x370a, 0x12 },
+ 	{ 0x3a03, 0xe8 },
+ 	{ 0x3a09, 0x6f },
+ 	{ 0x3a0b, 0x5d },
+ 	{ 0x3a15, 0x9a },
++	{ REG_VFIFO_READ_START_H, 0x00 },
++	{ REG_VFIFO_READ_START_L, 0x80 },
++	{ REG_ISP_CTRL02, 0x00 },
+ 	{ REG_NULL, 0x00 },
+ };
  
- #include <linux/clk.h>
 -- 
 2.17.1
