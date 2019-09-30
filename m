@@ -1,110 +1,99 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v6 4/7] arm64: dts: meson: g12: Add minimal thermal zone
-Date: Mon, 30 Sep 2019 15:14:07 +0530
-Message-ID: <CAHLCerOuY1cLrkN9_f1O+Uqm9fyE18+98yU6xryojcznuPMZow@mail.gmail.com>
-References: <20190927184352.28759-1-glaroque@baylibre.com> <20190927184352.28759-5-glaroque@baylibre.com>
+From: "Sa, Nuno" <Nuno.Sa@analog.com>
+Subject: Re: [PATCH 1/2] ASOC: Add ADAU7118 8 Channel
+ PDM-to-I2S/TDM Converter driver
+Date: Mon, 30 Sep 2019 09:44:00 +0000
+Message-ID: <6245f99f37c10dcec0a52344bab4b980f08e07da.camel@analog.com>
+References: <20190926071707.17557-1-nuno.sa@analog.com>
+ <20190926184318.GF2036@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190927184352.28759-5-glaroque@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume La Roque <glaroque@baylibre.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20190926184318.GF2036@sirena.org.uk>
+Content-Language: en-US
+Content-ID: <D7D58CB599F22D478039609D6A7E180B@namprd03.prod.outlook.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: "broonie@kernel.org" <broonie@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "lars@metafoo.de" <lars@metafoo.de>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 28, 2019 at 12:14 AM Guillaume La Roque
-<glaroque@baylibre.com> wrote:
->
-> Add minimal thermal zone for two temperature sensor
-> One is located close to the DDR and the other one is
-> located close to the PLLs (between the CPU and GPU)
->
-> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Tested-by: Christian Hewitt <christianshewitt@gmail.com>
-> Tested-by: Kevin Hilman <khilman@baylibre.com>
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> ---
->  .../boot/dts/amlogic/meson-g12-common.dtsi    | 46 +++++++++++++++++++
->  1 file changed, 46 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> index 0660d9ef6a86..f98171949fcb 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> @@ -12,6 +12,7 @@
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
->  #include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
-> +#include <dt-bindings/thermal/thermal.h>
->
->  / {
->         interrupt-parent = <&gic>;
-> @@ -94,6 +95,50 @@
->                 #size-cells = <2>;
->                 ranges;
->
-> +               thermal-zones {
-> +                       cpu_thermal: cpu-thermal {
-> +                               polling-delay = <1000>;
-> +                               polling-delay-passive = <100>;
-> +                               thermal-sensors = <&cpu_temp>;
-> +
-> +                               trips {
-> +                                       cpu_passive: cpu-passive {
-> +                                               temperature = <85000>; /* millicelsius */
-> +                                               hysteresis = <2000>; /* millicelsius */
-> +                                               type = "passive";
-> +                                       };
-> +
-> +                                       cpu_hot: cpu-hot {
-> +                                               temperature = <95000>; /* millicelsius */
-> +                                               hysteresis = <2000>; /* millicelsius */
-> +                                               type = "hot";
-
-critical instead of hot? What is the SoC's critical shutdown temperature?
-
-Typically, you would use 'hot' at the beginning of at up trend e.g. at
-75000, 'passive' to start throttling and 'critical' for shutdown
-temperature.
-
-> +                                       };
-> +
-> +                               };
-> +                       };
-> +
-> +                       ddr_thermal: ddr-thermal {
-> +                               polling-delay = <1000>;
-> +                               polling-delay-passive = <100>;
-> +                               thermal-sensors = <&ddr_temp>;
-> +
-> +                               trips {
-> +                                       ddr_passive: ddr-passive {
-> +                                               temperature = <85000>; /* millicelsius */
-> +                                               hysteresis = <2000>; /* millicelsius */
-> +                                               type = "passive";
-> +                                       };
-> +                               };
-> +
-> +                               cooling-maps {
-> +                                       map {
-> +                                               trip = <&ddr_passive>;
-> +                                               cooling-device = <&mali THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +                                       };
-> +                               };
-> +                       };
-> +               };
-> +
->                 ethmac: ethernet@ff3f0000 {
->                         compatible = "amlogic,meson-axg-dwmac",
->                                      "snps,dwmac-3.70a",
-> @@ -2412,6 +2457,7 @@
->                         assigned-clock-rates = <0>, /* Do Nothing */
->                                                <800000000>,
->                                                <0>; /* Do Nothing */
-> +                       #cooling-cells = <2>;
->                 };
->         };
->
-> --
-> 2.17.1
->
+SGkgTWFyaywNCg0KVGhhbmtzIGZvciB0aGUgcmV2aWV3LiBTb21lIGNvbW1lbnRzL2RvdWJ0cyBp
+bmxpbmUuIFRoaXMgZGV2aWNlIHdhcyBteQ0KZmlyc3QgY29udGFjdCB3aXRoIEFTT0Mvc291bmQg
+ZGV2cyBzbywgSSBhcG9sb2dpemUgaWYgc29tZSBvZiB0aGUNCmNvbW1lbnRzL2RvdWJ0cyBhcmUg
+Y29tcGxldGVseSB3cm9uZy90cml2aWFsLg0KDQpPbiBUaHUsIDIwMTktMDktMjYgYXQgMTE6NDMg
+LTA3MDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+IA0KPiBPbiBUaHUsIFNlcCAyNiwgMjAxOSBhdCAw
+OToxNzowNkFNICswMjAwLCBOdW5vIFPDoSB3cm90ZToNCj4gDQo+ID4gLS0tIC9kZXYvbnVsbA0K
+PiA+ICsrKyBiL3NvdW5kL3NvYy9jb2RlY3MvYWRhdTcxMTgtaHcuYw0KPiA+IEBAIC0wLDAgKzEs
+NDMgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gPiArLyoN
+Cj4gPiArICogQW5hbG9nIERldmljZXMgQURBVTcxMTggOCBjaGFubmVsIFBETS10by1JMlMvVERN
+IENvbnZlcnRlcg0KPiA+IFN0YW5kYWxvbmUgSHcNCj4gPiArICogZHJpdmVyDQo+ID4gKyAqDQo+
+ID4gKyAqIENvcHlyaWdodCAyMDE5IEFuYWxvZyBEZXZpY2VzIEluYy4NCj4gPiArICovDQo+IA0K
+PiBQbGVhc2UgbWFrZSB0aGUgZW50aXJlIGNvbW1lbnQgYSBDKysgc3R5bGUgb25lIGluIHRoZSAu
+YyBmaWxlcyBzbw0KPiB0aGluZ3MgbG9vayBtb3JlIGludGVudGlvbmFsLg0KPiANCj4gPiArCXN3
+aXRjaCAoZm10ICYgU05EX1NPQ19EQUlGTVRfRk9STUFUX01BU0spIHsNCj4gPiArCWNhc2UgU05E
+X1NPQ19EQUlGTVRfSTJTOg0KPiA+ICsJCXJldCA9IHNuZF9zb2NfY29tcG9uZW50X3VwZGF0ZV9i
+aXRzKGRhaS0+Y29tcG9uZW50LA0KPiA+ICsJCQkJCQkgICAgQURBVTcxMThfUkVHX1NQVF9DVA0K
+PiA+IFJMMSwNCj4gPiArCQkJCQkJICAgIEFEQVU3MTE4X0RBVEFfRk1UX00NCj4gPiBBU0ssDQo+
+ID4gKwkJCQkJCSAgICBBREFVNzExOF9EQVRBX0ZNVCgwDQo+ID4gKSk7DQo+ID4gKwkJYnJlYWs7
+DQo+ID4gKwljYXNlIFNORF9TT0NfREFJRk1UX0xFRlRfSjoNCj4gPiArCQlyZXQgPSBzbmRfc29j
+X2NvbXBvbmVudF91cGRhdGVfYml0cyhkYWktPmNvbXBvbmVudCwNCj4gPiArCQkJCQkJICAgIEFE
+QVU3MTE4X1JFR19TUFRfQ1QNCj4gPiBSTDEsDQo+ID4gKwkJCQkJCSAgICBBREFVNzExOF9EQVRB
+X0ZNVF9NDQo+ID4gQVNLLA0KPiA+ICsJCQkJCQkgICAgQURBVTcxMThfREFUQV9GTVQoMQ0KPiA+
+ICkpOw0KPiA+ICsJCWJyZWFrOw0KPiA+ICsJY2FzZSBTTkRfU09DX0RBSUZNVF9SSUdIVF9KOg0K
+PiA+ICsJCXN0LT5yaWdodF9qID0gdHJ1ZTsNCj4gPiArCQlicmVhazsNCj4gDQo+IERvbid0IHdl
+IG5lZWQgdG8gc2V0IGFueSByZWdpc3RlciB2YWx1ZXMgaGVyZT8NCg0KVGhlIHJlZ2lzdGVyIHNl
+dCBpcyBkb25lIGluIGFkYXU3MTE4X2h3X3BhcmFtcygpLiBGb3IgcmlnaHQNCmp1c3RpZmljYXRp
+b24gdGhlIGRldmljZSBjYW4gZGVsYXkgYmNsY2sgYnkgOCwgMTIgb3IgMTYuIFNvLCBXZSBuZWVk
+IHRvDQprbm93IHRoZSBkYXRhX3dpZHRoIHRvIGNoZWNrIGlmIHdlIGNhbiBhcHBseSB0aGUgY29u
+ZmlndXJhdGlvbi4NCg0KPiA+ICsNCj4gPiArCXJldHVybiByZXQgPCAwID8gcmV0IDogMDsNCj4g
+PiArfQ0KPiANCj4gUGxlYXNlIGRvbid0IHVzZSB0aGUgdGVybmVyeSBvcGVyYXRvciBsaWtlIHRo
+aXMsIGl0IGp1c3QgbWFrZXMNCj4gdGhpbmdzIGhhcmRlciB0byByZWFkIC0gd3JpdGUgbm9ybWFs
+IGlmIGNvbmRpdGlvbmFsIHN0YXRlbWVudHMuDQoNCmFjay4NCg0KPiA+ICsJY2FzZSBTTkRfU09D
+X0JJQVNfU1RBTkRCWToNCj4gPiArCQlpZiAoc25kX3NvY19jb21wb25lbnRfZ2V0X2JpYXNfbGV2
+ZWwoY29tcG9uZW50KSA9PQ0KPiA+ICsJCQkJCQkJU05EX1NPQ19CSUFTX09GDQo+ID4gRikgew0K
+PiA+ICsJCQlpZiAoIXN0LT5pb3ZkZCkNCj4gPiArCQkJCXJldHVybiAwOw0KPiANCj4gVGhpcyBp
+cyBicm9rZW4sIHRoZSBkZXZpY2Ugd2lsbCBhbHdheXMgcmVxdWlyZSBwb3dlciBzbyBpdCBzaG91
+bGQNCj4gYWx3YXlzIGNvbnRyb2wgdGhlIHJlZ3VsYXRvcnMuDQoNClRoZSByZWFzb24gd2h5IEkg
+bWFkZSB0aGlzIG9wdGlvbmFsIHdhcyB0byBsZXQgdGhlIHVzZXIgYXNzdW1lIHRoYXQsIGluDQpz
+b21lIGNhc2VzLCB0aGUgc3VwcGx5IGNhbiBiZSBhbHdheXMgcHJlc2VudCAoYW5kIG5vdCBjb250
+cm9sbGVkIGJ5IHRoZQ0Ka2VybmVsKSBhbmQsIGluIHRob3NlIGNhc2VzLCBoZSB3b3VsZCBub3Qg
+aGF2ZSB0byBjYXJlIGFib3V0IGdpdmluZw0KcmVndWxhdG9ycyBub2RlcyBpbiBkZXZpY2V0cmVl
+LiBGdXJ0aGVybW9yZSwgdGhlIGRyaXZlciB3b3VsZCBub3QgaGF2ZQ0KdG8gY2FyZSBhYm91dCBl
+bmFibGluZy9kaXNhYmxpbmcgIHJlZ3VsYXRvcnMuIElzIHRoaXMgbm90IGEgdmFsaWQNCnNjZW5h
+cmlvPyBPciBpcyBpdCB0aGF0LCBmb3IgdGhpcyBraW5kIG9mIGRldmljZXMgaXQgZG9lcyBub3Qg
+cmVhbGx5DQptYWtlIHNlbnNlICh3aGljaCBJIHRoaW5rIGl0IGRvZXNuJ3QpIHRvIGhhdmUgdGhl
+bSBhbHdheXMgcG93ZXJlZCwgc28NCndlIGp1c3QgYXNzdW1lIGEgcmVndWxhdG9yIGlzIG5lZWRl
+ZCAoYW5kIGluIHRoZSB1bmxpa2VseSBzY2VuYXJpbyB3ZQ0KZG9uJ3QgaGF2ZSBvbmUsIHRoZSB1
+c2VyIGp1c3QgcHJvdmlkZXMgYSBmaXhlZC1yZWd1bGF0b3IpPw0KDQo+ID4gK3N0YXRpYyBpbnQg
+YWRhdTcxMThfc3VzcGVuZChzdHJ1Y3Qgc25kX3NvY19jb21wb25lbnQgKmNvbXBvbmVudCkNCj4g
+PiArew0KPiA+ICsJcmV0dXJuIHNuZF9zb2NfY29tcG9uZW50X2ZvcmNlX2JpYXNfbGV2ZWwoY29t
+cG9uZW50LA0KPiA+IFNORF9TT0NfQklBU19PRkYpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0
+aWMgaW50IGFkYXU3MTE4X3Jlc3VtZShzdHJ1Y3Qgc25kX3NvY19jb21wb25lbnQgKmNvbXBvbmVu
+dCkNCj4gPiArew0KPiA+ICsJcmV0dXJuIHNuZF9zb2NfY29tcG9uZW50X2ZvcmNlX2JpYXNfbGV2
+ZWwoY29tcG9uZW50LA0KPiA+ICsJCQkJCQkgIFNORF9TT0NfQklBU19TVEFOREJZKQ0KPiA+IDsN
+Cj4gPiArfQ0KPiANCj4gTGV0IERBUE0gZG8gdGhpcyBmb3IgeW91LCB0aGVyZSdzIG5vIHN1YnN0
+YW50aWFsIGRlbGF5cyBvbiBwb3dlcg0KPiBvbiBzbyB5b3UncmUgcHJvYmFibHkgYmVzdCBqdXN0
+IHNldHRpbmcgaWRsZV9iaWFzX29mZi4NCg0KU28sIHRoaXMgbWVhbnMgZHJvcHBpbmcgcmVzdW1l
+L3N1c3BlbmQgYW5kIHRvIG5vdCBzZXQgaWRsZV9iaWFzX29uLA0KcmlnaHQ/DQoNCj4gPiArc3Rh
+dGljIGludCBhZGF1NzExOF9yZWd1bGF0b3Jfc2V0dXAoc3RydWN0IGFkYXU3MTE4X2RhdGEgKnN0
+KQ0KPiA+ICt7DQo+ID4gKwlpbnQgcmV0ID0gMDsNCj4gPiArDQo+ID4gKwlzdC0+aW92ZGQgPSBk
+ZXZtX3JlZ3VsYXRvcl9nZXRfb3B0aW9uYWwoc3QtPmRldiwgIklPVkREIik7DQo+ID4gKwlpZiAo
+IUlTX0VSUihzdC0+aW92ZGQpKSB7DQo+IA0KPiBVbmxlc3MgdGhlIGRldmljZSBjYW4gb3BlcmF0
+ZSB3aXRoIHN1cHBsaWVzIHBoeXNpY2FsbHkgYWJzZW50IGl0DQo+IHNob3VsZCBub3QgYmUgcmVx
+dWVzdGluZyByZWd1bGF0b3JzIGFzIG9wdGlvbmFsLCB0aGlzIGJyZWFrcyB5b3VyDQo+IGVycm9y
+IGhhbmRsaW5nIGVzcGVjaWFsbHkgd2l0aCBwcm9iZSBkZWZlcnJhbCB3aGljaCBpcyBhIGZhaXJs
+eQ0KPiBjb21tb24gY2FzZS4NCg0KSnVzdCBmb3IgbXkgdW5kZXJzdGFuZGluZyAobW9zdCBsaWtl
+bHkgSSdtIG1pc3Npbmcgc29tZXRoaW5nIG9idmlvdXMpLA0Kd2h5IHdvdWxkIEkgaGF2ZSBpc3N1
+ZXMgd2l0aCB0aGUgZXJyb3IgaGFuZGxpbmcgaW4gcHJvYmUgZGVmZXJyYWw/DQoNClRoYW5rcyEN
+Ck51bm8gU8OhDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0
+cHM6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVs
+Cg==
