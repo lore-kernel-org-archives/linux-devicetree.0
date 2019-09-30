@@ -1,85 +1,40 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [GIT PULL 1/2] arm64: dts: exynos: Pull for v5.4
-Date: Mon, 30 Sep 2019 10:35:01 -0700
-Message-ID: <CAOesGMi2w9vci+kU=WFHJJBqgz9BM5RJBzqwwrR7k=275w4Tyg@mail.gmail.com>
-References: <20190911183632.4317-1-krzk@kernel.org>
- <CAK8P3a2pBV+fh0rHitZ30Zz61QNRLfNSD-nhnzq4ZtxSh66F1Q@mail.gmail.com>
- <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
- <20190929175134.fsieffurfdiqhpj2@localhost> <20190930080217.GA23709@pi3>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] arm64: dts: juno: add GPU subsystem
+Date: Mon, 30 Sep 2019 12:46:33 -0500
+Message-ID: <CAL_JsqKUP6qG6PVL47RQ5A5OcBhpdOA_0VL1YeYDuyVSVcRqCQ@mail.gmail.com>
+References: <88dc6386929b3dcd7a65ba8063628c62b66b330c.1569856049.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190930080217.GA23709@pi3>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: DTML <devicetree@vger.kernel.org>, "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" <linux-samsung-soc@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SoC Team <soc@kernel.org>, arm-soc <arm@kernel.org>, Kukjin Kim <kgene@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <88dc6386929b3dcd7a65ba8063628c62b66b330c.1569856049.git.robin.murphy@arm.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Liviu Dudau <liviu.dudau@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Steven Price <steven.price@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 1:02 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Sun, Sep 29, 2019 at 10:51:34AM -0700, Olof Johansson wrote:
-> > Hi,
-> >
-> > On Thu, Sep 12, 2019 at 08:32:47AM +0200, Krzysztof Kozlowski wrote:
-> > > On Wed, 11 Sep 2019 at 23:07, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > >
-> > > > On Wed, Sep 11, 2019 at 8:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > > >
-> > > > > Hi,
-> > > > >
-> > > > > Unfortunately the patches were applied right after closing the linux-next.
-> > > >
-> > > > Hi Krzysztof,
-> > > >
-> > > > I took a look at these and am not convinced this is right:
-> > > >
-> > > > > 1. Fix boot of Exynos7 due to wrong address/size of memory node,
-> > > >
-> > > > The current state is clearly broken and a fix is needed, but
-> > > > I'm not sure this is the right fix. Why do you have 32-bit physical
-> > > > addressing on a 64-bit chip? I looked at commit ef72171b3621
-> > > > that introduced it, and it seems it would be better to just
-> > > > revert back to 64-bit addresses.
-> > >
-> > > We discussed with Marek Szyprowski that either we can go back to
-> > > 64-bit addressing or stick to 32. There are not known boards with more
-> > > than 4 GB of RAM so from this point of view the choice was irrelevant.
-> > > At the end of discussion I mentioned to stick with other arm64 boards
-> > > (although not all), so revert to have 64 bit address... but Marek
-> > > chosen differently. Since you ask, let's go back with revert.
-> > >
-> > > >
-> > > > > 2. Move GPU under /soc node,
-> > > >
-> > > > No problem
-> > > >
-> > > > > 3. Minor cleanup of #address-cells.
-> > > >
-> > > > IIRC, an interrupt-controller is required to have a #address-cells
-> > > > property, even if that is normally zero. I don't remember the
-> > > > details, but the gic binding lists it as mandatory, and I think
-> > > > the PCI interrupt-map relies on it. I would just drop this patch.
-> > >
-> > > Indeed, binding requires both address and size cells. I'll drop it.
-> >
-> > Looking through the history of pending material, I didn't see a new pull for
-> > this material. Just checking in to see if there's something we missed?
->
-> No, it's me who forgot to resend. I was sure that I rebased the branch
-> and created new pull request. However it seems I did not. Let's keep it
-> for next merge window... v5.4-rc should be any minute, I guess?
-
-Yeah, we're too late for this merge window but feel free to send it
-for next release.
-
-
--Olof
+T24gTW9uLCBTZXAgMzAsIDIwMTkgYXQgMTA6MjUgQU0gUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJw
+aHlAYXJtLmNvbT4gd3JvdGU6Cj4KPiBTaW5jZSB3ZSBub3cgaGF2ZSBiaW5kaW5ncyBmb3IgTWFs
+aSBNaWRnYXJkIEdQVXMsIGxldCdzIHVzZSB0aGVtIHRvCj4gZGVzY3JpYmUgSnVubydzIEdQVSBz
+dWJzeXN0ZW0sIGlmIG9ubHkgYmVjYXVzZSB3ZSBjYW4uIEp1bm8gc3BvcnRzIGEKPiBNYWxpLVQ2
+MjQgaW50ZWdyYXRlZCBiZWhpbmQgYW4gTU1VLTQwMCAoYXMgYSBnZXN0dXJlIHRvd2FyZHMKPiB2
+aXJ0dWFsaXNhdGlvbiksIGluIHRoZWlyIG93biBkZWRpY2F0ZWQgcG93ZXIgZG9tYWluIHdpdGgg
+RFZGUwo+IGNvbnRyb2xsZWQgYnkgdGhlIFNDUC4KPgo+IENDOiBMaXZpdSBEdWRhdSA8bGl2aXUu
+ZHVkYXVAYXJtLmNvbT4KPiBDQzogU3VkZWVwIEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT4K
+PiBDQzogTG9yZW56byBQaWVyYWxpc2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+Cj4gU2ln
+bmVkLW9mZi1ieTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4KPiAtLS0KPiAg
+Li4uL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnlhbWwgICAgICAgIHwgIDUgKysrLQo+
+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLWJhc2UuZHRzaSAgICAgICAgfCAyNyArKysr
+KysrKysrKysrKysrKysrCj4gIDIgZmlsZXMgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMSBk
+ZWxldGlvbigtKQoKUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
