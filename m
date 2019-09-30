@@ -1,8 +1,8 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
 Subject: Re: [PATCH v6 1/7] dt-bindings: thermal: Add DT bindings
  documentation for Amlogic Thermal
-Date: Mon, 30 Sep 2019 15:04:59 +0530
-Message-ID: <CAHLCerPxrGMm98nDC529pYkzEaiDk0p6VTdVzyHx8=U8_PYe_A@mail.gmail.com>
+Date: Mon, 30 Sep 2019 15:05:44 +0530
+Message-ID: <CAHLCerMDyuLW-XJ6XxnDq5Th42g_970e_Scqtuxo0r0=pbSWdA@mail.gmail.com>
 References: <20190927184352.28759-1-glaroque@baylibre.com> <20190927184352.28759-2-glaroque@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -23,6 +23,9 @@ On Sat, Sep 28, 2019 at 12:14 AM Guillaume La Roque
 > Tested-by: Christian Hewitt <christianshewitt@gmail.com>
 > Tested-by: Kevin Hilman <khilman@baylibre.com>
 > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+
 > ---
 >  .../bindings/thermal/amlogic,thermal.yaml     | 54 +++++++++++++++++++
 >  1 file changed, 54 insertions(+)
