@@ -1,102 +1,150 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH RFC v2 06/14] dt-bindings/interrupt-controller: pdc: add SPI config register
-Date: Mon, 30 Sep 2019 15:33:01 -0700
-Message-ID: <5d92829e.1c69fb81.d860a.9096@mx.google.com>
-References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org> <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 1/2] dt-bindings: spi: Add support for cadence-qspi IP
+ Intel LGM SoC
+Date: Mon, 30 Sep 2019 17:36:40 -0500
+Message-ID: <20190930223640.GA18491@bogus>
+References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190916073843.39618-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20190916073843.39618-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
+To: "Ramuthevar,Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc: broonie@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lina Iyer (2019-09-13 14:59:14)
-> In addition to configuring the PDC, additional registers that interface
-> the GIC have to be configured to match the GPIO type. The registers on
-> some QCOM SoCs are access restricted, while on other SoCs are not. They
-> SoCs with access restriction to these SPI registers need to be written
-> from the firmware using the SCM interface. Add a flag to indicate if the
-> register is to be written using SCM interface.
->=20
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+On Mon, Sep 16, 2019 at 03:38:42PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> On Intel Lightening Mountain(LGM) SoCs QSPI controller support
+> to QSPI-NAND flash. This introduces to device tree binding
+> documentation for Cadence-QSPI controller and spi-nand flash.
+> 
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > ---
->  .../devicetree/bindings/interrupt-controller/qcom,pdc.txt   | 13 +++++++=
-+++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,=
-pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.t=
-xt
-> index 8e0797c..e329f8d 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-> @@ -24,6 +24,9 @@ Properties:
->         Usage: required
->         Value type: <prop-encoded-array>
->         Definition: Specifies the base physical address for PDC hardware.
-> +                   Optionally, specify the PDC's GIC interface registers=
- that
-> +                   need to be configured for wakeup capable GPIOs routed=
- to
-> +                   the PDC.
-> =20
->  - interrupt-cells:
->         Usage: required
-> @@ -50,15 +53,23 @@ Properties:
->                     The second element is the GIC hwirq number for the PD=
-C port.
->                     The third element is the number of interrupts in sequ=
-ence.
-> =20
-> +- qcom,scm-spi-cfg:
-> +       Usage: optional
-> +       Value type: <bool>
-> +       Definition: Specifies if the SPI configuration registers have to =
-be
-> +                   written from the firmware. Sometimes the PDC interface
-> +                   register to the GIC can only be written from the firm=
-ware.
+>  .../devicetree/bindings/spi/cadence,qspi-nand.yaml | 84 ++++++++++++++++++++++
+>  1 file changed, 84 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml b/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
+> new file mode 100644
+> index 000000000000..9aae4c1459cc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
+> @@ -0,0 +1,84 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/spi/cadence,qspi-nand.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 > +
->  Example:
-> =20
->         pdc: interrupt-controller@b220000 {
->                 compatible =3D "qcom,sdm845-pdc";
-> -               reg =3D <0xb220000 0x30000>;
-> +               reg =3D <0 0x0b220000 0 0x30000>, <0 0x179900f0 0 0x60>;
->                 qcom,pdc-ranges =3D <0 512 94>, <94 641 15>, <115 662 7>;
->                 #interrupt-cells =3D <2>;
->                 interrupt-parent =3D <&intc>;
->                 interrupt-controller;
-> +               qcom,scm-spi-cfg;
->         };
+> +title: Cadence QSPI Flash Controller on Intel's SoC
+> +
+> +maintainers:
+> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> +
+> +allOf:
+> +  - $ref: "spi-controller.yaml#"
+> +
+> +description: |
+> +  The Cadence QSPI is a controller optimized for communication with SPI
+> +  FLASH memories, without DMA support on Intel's SoC.
+> +
+> +properties:
+> +  compatible:
+> +    const: cadence,lgm-qspi
 
-This overlaps register region with the mailbox node. That node is
-actually a pile of random "CPU" registers used to ping remote processors
-and apparently control how the PDC interacts with the GIC. Maybe this
-can be changed to a phandle and then the driver can interogate the
-phandle to determine if it's the SCM firmware or if it's the shared
-mailbox register? If it's a shared mailbox then it can write to it at
-the offset it knows about (because it's sdm845 compatible specific) and
-if it's SCM then it can use the hardcoded address as well?
+Vendor here should be 'intel'. Perhaps the binding should be shared too 
+like the driver.
 
-Basically I'm saying that it just needs a phandle.
+Plus the vendor prefix for Cadence is cdns.
 
-	qcom,spi-cfg =3D <&scm>;
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  fifo-depth:
+> +    maxItems: 1
+> +
+This is vendor specific, so needs a vendor prefix, type, and 
+description.
 
-or
+> +  fifo-width:
+> +    maxItems: 1
 
-	qcom,spi-cfg =3D <&mailbox>;
+Same
 
-and then driver knows how to use that to write into random registers.
-Maybe we can have an API in regmap that finds the regmap for a given
-device node? That way we don't have to funnel everything through syscon
-for this.
+> +
+> +  qspi-phyaddr:
+> +    maxItems: 1
 
-	of_get_regmap(struct device_node *np, const char *name);
+Same
 
-Where NULL name means "first available" and then do the devres search
-otherwise for a device that has the matching node pointer.
+> +
+> +  qspi-phymask:
+> +    maxItems: 1
+
+Same
+
+> +
+> +  clocks:
+> +    maxItems: 2
+
+Need to define what each clock is when there is more than 1.
+
+> +
+> +  clocks-names:
+> +    maxItems: 2
+
+Need to define the strings.
+
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  reset-names:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - fifo-depth
+> +  - fifo-width
+> +  - qspi-phyaddr
+> +  - qspi-phymask
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - reset-names
+> +
+> +examples:
+> +  - |
+> +    qspi@ec000000 {
+
+spi@...
+
+> +          compatible = "cadence,qspi-nand";
+> +          reg = <0xec000000 0x100>;
+> +          fifo-depth = <128>;
+> +          fifo-width = <4>;
+> +          qspi-phyaddr = <0xf4000000>;
+> +          qspi-phymask = <0xffffffff>;
+> +          clocks = <&cgu0 LGM_CLK_QSPI>, <&cgu0 LGM_GCLK_QSPI>;
+> +          clock-names = "freq", "qspi";
+> +          resets = <&rcu0 0x10 1>;
+> +          reset-names = "qspi";
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +
+> +          flash: flash@1 {
+> +              compatible = "spi-nand";
+> +              reg = <1>;
+> +              spi-max-frequency = <10000000>;
+> +          };
+> +    };
+> +
+> -- 
+> 2.11.0
+> 
