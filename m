@@ -1,107 +1,68 @@
-From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [RESEND PATCH] ARM: dts: Add stmpe-adc DT node to Toradex T30
- modules
-Date: Mon, 30 Sep 2019 11:54:59 +0000
-Message-ID: <b40974742543a2e8450c097bf86c5c0d3baec977.camel@toradex.com>
-References: <20190814105318.21902-1-philippe.schenker@toradex.com>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [Patch v4 4/8] media: i2c: ov2659: fix s_stream return value
+Date: Mon, 30 Sep 2019 07:08:38 -0500
+Message-ID: <20190930120838.vdmmglkbp226hhfq@ti.com>
+References: <20190927184722.31989-1-bparrot@ti.com>
+ <20190927184722.31989-5-bparrot@ti.com>
+ <CA+V-a8t3h6+2a8QWKWNwROJRz546rGbUyXs5ez9wtH6AQ-euPA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190814105318.21902-1-philippe.schenker@toradex.com>
-Content-Language: en-US
-Content-ID: <C4A366A8AB460B489402F808F44AA3B1@eurprd05.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8t3h6+2a8QWKWNwROJRz546rGbUyXs5ez9wtH6AQ-euPA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA4LTE0IGF0IDEwOjUzICswMDAwLCBQaGlsaXBwZSBTY2hlbmtlciB3cm90
-ZToNCj4gQWRkIHRoZSBzdG1wZS1hZGMgRFQgbm9kZSBhcyBmb3VuZCBvbiBUb3JhZGV4IFQzMCBt
-b2R1bGVzDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBTY2hlbmtlciA8cGhpbGlwcGUu
-c2NoZW5rZXJAdG9yYWRleC5jb20+DQoNCkhpIFRoaWVycnksIGNvdWxkIHlvdSBwbGVhc2UgcHVs
-bCB0aGlzIHBhdGNoIGZvciA1LjQ/IE9yIHRlbGwgbWUgd2hhdCBpcw0KaG9sZGluZyBpdCBiYWNr
-IGZyb20gYmVpbmcgcHVsbGVkPw0KDQpUaGFua3MgZm9yIHlvdXIgZmVlZGJhY2sNCg0KUGhpbGlw
-cGUNCg0KPiANCj4gLS0tDQo+IA0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvdGVncmEzMC1hcGFsaXMt
-djEuMS5kdHNpIHwgMjIgKysrKysrKysrKysrKystLS0tLS0tDQo+IC0NCj4gIGFyY2gvYXJtL2Jv
-b3QvZHRzL3RlZ3JhMzAtYXBhbGlzLmR0c2kgICAgICB8IDIyICsrKysrKysrKysrKysrLS0tLS0t
-LQ0KPiAtDQo+ICBhcmNoL2FybS9ib290L2R0cy90ZWdyYTMwLWNvbGlicmkuZHRzaSAgICAgfCAy
-MiArKysrKysrKysrKysrKy0tLS0tLS0NCj4gLQ0KPiAgMyBmaWxlcyBjaGFuZ2VkLCA0MiBpbnNl
-cnRpb25zKCspLCAyNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9i
-b290L2R0cy90ZWdyYTMwLWFwYWxpcy12MS4xLmR0c2kNCj4gYi9hcmNoL2FybS9ib290L2R0cy90
-ZWdyYTMwLWFwYWxpcy12MS4xLmR0c2kNCj4gaW5kZXggMDJmODEyNjQ4MWEyLi44YjdhODI3ZDYw
-NGQgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMzAtYXBhbGlzLXYxLjEu
-ZHRzaQ0KPiArKysgYi9hcmNoL2FybS9ib290L2R0cy90ZWdyYTMwLWFwYWxpcy12MS4xLmR0c2kN
-Cj4gQEAgLTk5NCwxMSArOTk0LDE3IEBADQo+ICAJCQlpZCA9IDwwPjsNCj4gIAkJCWJsb2NrcyA9
-IDwweDU+Ow0KPiAgCQkJaXJxLXRyaWdnZXIgPSA8MHgxPjsNCj4gKwkJCS8qIDMuMjUgTUh6IEFE
-QyBjbG9jayBzcGVlZCAqLw0KPiArCQkJc3QsYWRjLWZyZXEgPSA8MT47DQo+ICsJCQkvKiAxMi1i
-aXQgQURDICovDQo+ICsJCQlzdCxtb2QtMTJiID0gPDE+Ow0KPiArCQkJLyogaW50ZXJuYWwgQURD
-IHJlZmVyZW5jZSAqLw0KPiArCQkJc3QscmVmLXNlbCA9IDwwPjsNCj4gKwkJCS8qIEFEQyBjb252
-ZXJzdGlvbiB0aW1lOiA4MCBjbG9ja3MgKi8NCj4gKwkJCXN0LHNhbXBsZS10aW1lID0gPDQ+Ow0K
-PiAgDQo+ICAJCQlzdG1wZV90b3VjaHNjcmVlbiB7DQo+ICAJCQkJY29tcGF0aWJsZSA9ICJzdCxz
-dG1wZS10cyI7DQo+IC0JCQkJLyogMy4yNSBNSHogQURDIGNsb2NrIHNwZWVkICovDQo+IC0JCQkJ
-c3QsYWRjLWZyZXEgPSA8MT47DQo+ICAJCQkJLyogOCBzYW1wbGUgYXZlcmFnZSBjb250cm9sICov
-DQo+ICAJCQkJc3QsYXZlLWN0cmwgPSA8Mz47DQo+ICAJCQkJLyogNyBsZW5ndGggZnJhY3Rpb25h
-bCBwYXJ0IGluIHogKi8NCj4gQEAgLTEwMDgsMTcgKzEwMTQsMTcgQEANCj4gIAkJCQkgKiBjdXJy
-ZW50IGxpbWl0IHZhbHVlDQo+ICAJCQkJICovDQo+ICAJCQkJc3QsaS1kcml2ZSA9IDwxPjsNCj4g
-LQkJCQkvKiAxMi1iaXQgQURDICovDQo+IC0JCQkJc3QsbW9kLTEyYiA9IDwxPjsNCj4gLQkJCQkv
-KiBpbnRlcm5hbCBBREMgcmVmZXJlbmNlICovDQo+IC0JCQkJc3QscmVmLXNlbCA9IDwwPjsNCj4g
-LQkJCQkvKiBBREMgY29udmVyc3Rpb24gdGltZTogODAgY2xvY2tzICovDQo+IC0JCQkJc3Qsc2Ft
-cGxlLXRpbWUgPSA8ND47DQo+ICAJCQkJLyogMSBtcyBwYW5lbCBkcml2ZXIgc2V0dGxpbmcgdGlt
-ZSAqLw0KPiAgCQkJCXN0LHNldHRsaW5nID0gPDM+Ow0KPiAgCQkJCS8qIDUgbXMgdG91Y2ggZGV0
-ZWN0IGludGVycnVwdCBkZWxheSAqLw0KPiAgCQkJCXN0LHRvdWNoLWRldC1kZWxheSA9IDw1PjsN
-Cj4gIAkJCX07DQo+ICsNCj4gKwkJCXN0bXBlX2FkYyB7DQo+ICsJCQkJY29tcGF0aWJsZSA9ICJz
-dCxzdG1wZS1hZGMiOw0KPiArCQkJCS8qIGZvcmJpZCB0byB1c2UgQURDIGNoYW5uZWxzIDMtMA0K
-PiAodG91Y2gpICovDQo+ICsJCQkJc3Qsbm9yZXF1ZXN0LW1hc2sgPSA8MHgwRj47DQo+ICsJCQl9
-Ow0KPiAgCQl9Ow0KPiAgDQo+ICAJCS8qDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0
-cy90ZWdyYTMwLWFwYWxpcy5kdHNpDQo+IGIvYXJjaC9hcm0vYm9vdC9kdHMvdGVncmEzMC1hcGFs
-aXMuZHRzaQ0KPiBpbmRleCA3ZjExMmYxOTJmZTkuLmMxOGY2ZjYxZDc2NCAxMDA2NDQNCj4gLS0t
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvdGVncmEzMC1hcGFsaXMuZHRzaQ0KPiArKysgYi9hcmNoL2Fy
-bS9ib290L2R0cy90ZWdyYTMwLWFwYWxpcy5kdHNpDQo+IEBAIC05NzYsMTEgKzk3NiwxNyBAQA0K
-PiAgCQkJaWQgPSA8MD47DQo+ICAJCQlibG9ja3MgPSA8MHg1PjsNCj4gIAkJCWlycS10cmlnZ2Vy
-ID0gPDB4MT47DQo+ICsJCQkvKiAzLjI1IE1IeiBBREMgY2xvY2sgc3BlZWQgKi8NCj4gKwkJCXN0
-LGFkYy1mcmVxID0gPDE+Ow0KPiArCQkJLyogMTItYml0IEFEQyAqLw0KPiArCQkJc3QsbW9kLTEy
-YiA9IDwxPjsNCj4gKwkJCS8qIGludGVybmFsIEFEQyByZWZlcmVuY2UgKi8NCj4gKwkJCXN0LHJl
-Zi1zZWwgPSA8MD47DQo+ICsJCQkvKiBBREMgY29udmVyc3Rpb24gdGltZTogODAgY2xvY2tzICov
-DQo+ICsJCQlzdCxzYW1wbGUtdGltZSA9IDw0PjsNCj4gIA0KPiAgCQkJc3RtcGVfdG91Y2hzY3Jl
-ZW4gew0KPiAgCQkJCWNvbXBhdGlibGUgPSAic3Qsc3RtcGUtdHMiOw0KPiAtCQkJCS8qIDMuMjUg
-TUh6IEFEQyBjbG9jayBzcGVlZCAqLw0KPiAtCQkJCXN0LGFkYy1mcmVxID0gPDE+Ow0KPiAgCQkJ
-CS8qIDggc2FtcGxlIGF2ZXJhZ2UgY29udHJvbCAqLw0KPiAgCQkJCXN0LGF2ZS1jdHJsID0gPDM+
-Ow0KPiAgCQkJCS8qIDcgbGVuZ3RoIGZyYWN0aW9uYWwgcGFydCBpbiB6ICovDQo+IEBAIC05OTAs
-MTcgKzk5NiwxNyBAQA0KPiAgCQkJCSAqIGN1cnJlbnQgbGltaXQgdmFsdWUNCj4gIAkJCQkgKi8N
-Cj4gIAkJCQlzdCxpLWRyaXZlID0gPDE+Ow0KPiAtCQkJCS8qIDEyLWJpdCBBREMgKi8NCj4gLQkJ
-CQlzdCxtb2QtMTJiID0gPDE+Ow0KPiAtCQkJCS8qIGludGVybmFsIEFEQyByZWZlcmVuY2UgKi8N
-Cj4gLQkJCQlzdCxyZWYtc2VsID0gPDA+Ow0KPiAtCQkJCS8qIEFEQyBjb252ZXJzdGlvbiB0aW1l
-OiA4MCBjbG9ja3MgKi8NCj4gLQkJCQlzdCxzYW1wbGUtdGltZSA9IDw0PjsNCj4gIAkJCQkvKiAx
-IG1zIHBhbmVsIGRyaXZlciBzZXR0bGluZyB0aW1lICovDQo+ICAJCQkJc3Qsc2V0dGxpbmcgPSA8
-Mz47DQo+ICAJCQkJLyogNSBtcyB0b3VjaCBkZXRlY3QgaW50ZXJydXB0IGRlbGF5ICovDQo+ICAJ
-CQkJc3QsdG91Y2gtZGV0LWRlbGF5ID0gPDU+Ow0KPiAgCQkJfTsNCj4gKw0KPiArCQkJc3RtcGVf
-YWRjIHsNCj4gKwkJCQljb21wYXRpYmxlID0gInN0LHN0bXBlLWFkYyI7DQo+ICsJCQkJLyogZm9y
-YmlkIHRvIHVzZSBBREMgY2hhbm5lbHMgMy0wDQo+ICh0b3VjaCkgKi8NCj4gKwkJCQlzdCxub3Jl
-cXVlc3QtbWFzayA9IDwweDBGPjsNCj4gKwkJCX07DQo+ICAJCX07DQo+ICANCj4gIAkJLyoNCj4g
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMzAtY29saWJyaS5kdHNpDQo+IGIv
-YXJjaC9hcm0vYm9vdC9kdHMvdGVncmEzMC1jb2xpYnJpLmR0c2kNCj4gaW5kZXggMzVhZjAzY2E5
-ZTkwLi4xZjkxOThiYjI0ZmYgMTAwNjQ0DQo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3RlZ3Jh
-MzAtY29saWJyaS5kdHNpDQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMzAtY29saWJy
-aS5kdHNpDQo+IEBAIC04NDUsMTEgKzg0NSwxOCBAQA0KPiAgCQkJaWQgPSA8MD47DQo+ICAJCQli
-bG9ja3MgPSA8MHg1PjsNCj4gIAkJCWlycS10cmlnZ2VyID0gPDB4MT47DQo+ICsJCQkvKiAzLjI1
-IE1IeiBBREMgY2xvY2sgc3BlZWQgKi8NCj4gKwkJCXN0LGFkYy1mcmVxID0gPDE+Ow0KPiArCQkJ
-LyogMTItYml0IEFEQyAqLw0KPiArCQkJc3QsbW9kLTEyYiA9IDwxPjsNCj4gKwkJCS8qIGludGVy
-bmFsIEFEQyByZWZlcmVuY2UgKi8NCj4gKwkJCXN0LHJlZi1zZWwgPSA8MD47DQo+ICsJCQkvKiBB
-REMgY29udmVyc3Rpb24gdGltZTogODAgY2xvY2tzICovDQo+ICsJCQlzdCxzYW1wbGUtdGltZSA9
-IDw0PjsNCj4gKwkJCS8qIGZvcmJpZCB0byB1c2UgQURDIGNoYW5uZWxzIDMtMCAodG91Y2gpICov
-DQo+ICANCj4gIAkJCXN0bXBlX3RvdWNoc2NyZWVuIHsNCj4gIAkJCQljb21wYXRpYmxlID0gInN0
-LHN0bXBlLXRzIjsNCj4gLQkJCQkvKiAzLjI1IE1IeiBBREMgY2xvY2sgc3BlZWQgKi8NCj4gLQkJ
-CQlzdCxhZGMtZnJlcSA9IDwxPjsNCj4gIAkJCQkvKiA4IHNhbXBsZSBhdmVyYWdlIGNvbnRyb2wg
-Ki8NCj4gIAkJCQlzdCxhdmUtY3RybCA9IDwzPjsNCj4gIAkJCQkvKiA3IGxlbmd0aCBmcmFjdGlv
-bmFsIHBhcnQgaW4geiAqLw0KPiBAQCAtODU5LDE3ICs4NjYsMTYgQEANCj4gIAkJCQkgKiBjdXJy
-ZW50IGxpbWl0IHZhbHVlDQo+ICAJCQkJICovDQo+ICAJCQkJc3QsaS1kcml2ZSA9IDwxPjsNCj4g
-LQkJCQkvKiAxMi1iaXQgQURDICovDQo+IC0JCQkJc3QsbW9kLTEyYiA9IDwxPjsNCj4gLQkJCQkv
-KiBpbnRlcm5hbCBBREMgcmVmZXJlbmNlICovDQo+IC0JCQkJc3QscmVmLXNlbCA9IDwwPjsNCj4g
-LQkJCQkvKiBBREMgY29udmVyc3Rpb24gdGltZTogODAgY2xvY2tzICovDQo+IC0JCQkJc3Qsc2Ft
-cGxlLXRpbWUgPSA8ND47DQo+ICAJCQkJLyogMSBtcyBwYW5lbCBkcml2ZXIgc2V0dGxpbmcgdGlt
-ZSAqLw0KPiAgCQkJCXN0LHNldHRsaW5nID0gPDM+Ow0KPiAgCQkJCS8qIDUgbXMgdG91Y2ggZGV0
-ZWN0IGludGVycnVwdCBkZWxheSAqLw0KPiAgCQkJCXN0LHRvdWNoLWRldC1kZWxheSA9IDw1PjsN
-Cj4gIAkJCX07DQo+ICsNCj4gKwkJCXN0bXBlX2FkYyB7DQo+ICsJCQkJY29tcGF0aWJsZSA9ICJz
-dCxzdG1wZS1hZGMiOw0KPiArCQkJCXN0LG5vcmVxdWVzdC1tYXNrID0gPDB4MEY+Ow0KPiArCQkJ
-fTsNCj4gIAkJfTsNCj4gIA0KPiAgCQkvKg0K
+Lad, Prabhakar <prabhakar.csengg@gmail.com> wrote on Fri [2019-Sep-27 21:33:28 +0100]:
+> Hi Benoit,
+> 
+> thank you for the patch.
+> 
+> On Fri, Sep 27, 2019 at 7:46 PM Benoit Parrot <bparrot@ti.com> wrote:
+> >
+> > In ov2659_s_stream() return value for invoked function should be checked
+> > and propagated.
+> >
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/i2c/ov2659.c | 11 +++++++----
+> >  1 file changed, 7 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+> > index f77320e8a60d..cd4625432264 100644
+> > --- a/drivers/media/i2c/ov2659.c
+> > +++ b/drivers/media/i2c/ov2659.c
+> > @@ -1187,10 +1187,13 @@ static int ov2659_s_stream(struct v4l2_subdev *sd, int on)
+> >                 goto unlock;
+> >         }
+> >
+> > -       ov2659_set_pixel_clock(ov2659);
+> > -       ov2659_set_frame_size(ov2659);
+> > -       ov2659_set_format(ov2659);
+> > -       ov2659_set_streaming(ov2659, 1);
+> > +       ret = ov2659_set_pixel_clock(ov2659);
+> > +       if (!ret)
+> > +               ret = ov2659_set_frame_size(ov2659);
+> > +       if (!ret)
+> > +               ret = ov2659_set_format(ov2659);
+> > +       if (!ret)
+> > +               ov2659_set_streaming(ov2659, 1);
+> >         ov2659->streaming = on;
+> >
+> the "ov2659->streaming = on;" should only be set if above calls
+> succeed, otherwise we might hit -EBUSY during set_fmt.
+
+Thanks, good catch.
+
+Benoit
+
+> 
+> Cheers,
+> --Prabhakar Lad
+> 
+> >  unlock:
+> > --
+> > 2.17.1
+> >
