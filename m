@@ -1,71 +1,26 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH] arm64: dts: renesas: Add /soc dma-ranges
-Date: Mon, 30 Sep 2019 17:38:32 +0200
-Message-ID: <9ff6eb72-a01d-37de-8aa1-671406f3d7ac@gmail.com>
-References: <20190907161634.27378-1-marek.vasut@gmail.com>
- <CAL_JsqL47dQT-P78j4Ph61fsgA45Ha0AJjDajiMk52yFj++s+g@mail.gmail.com>
- <CAL_JsqK+SwX8Lu+-4UgpLVxL05yTcs8Af9mPVHqzbf6+HF9v3A@mail.gmail.com>
- <0bf7c8c8-d03e-c08e-4879-3d3a2fb90ca7@gmail.com>
- <CAL_JsqJf-TGE-SWWj=6AVbpfuN1AsEdDTSOCOk+iUzTT3yZSgw@mail.gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 0/2] Add PM support to STM32 Timer PWM
+Date: Mon, 30 Sep 2019 17:39:09 +0200
+Message-ID: <1569857951-20007-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqJf-TGE-SWWj=6AVbpfuN1AsEdDTSOCOk+iUzTT3yZSgw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Wolfram Sang <wsa@the-dreams.de>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: thierry.reding@gmail.com, robh+dt@kernel.org
+Cc: alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, benjamin.gaignard@st.com, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On 9/30/19 5:08 PM, Rob Herring wrote:
-> On Mon, Sep 30, 2019 at 7:45 AM Marek Vasut wrote:
->>
->> On 9/24/19 12:33 AM, Rob Herring wrote:
->>> On Fri, Sep 13, 2019 at 10:14 AM Rob Herring wrote:
->>>>
->>>> On Sat, Sep 7, 2019 at 5:16 PM wrote:
->>>>>
->>>>> From: Marek Vasut
->>>>>
->>>>> Add dma-ranges property into /soc node to describe the DMA capabilities
->>>>> of the bus. This is currently needed to translate PCI DMA ranges, which
->>>>> are limited to 32bit addresses.
->>>>
->>>> FYI, I've started working on this problem and issues around
->>>> dma-ranges/dma_mask. Hopefully I'll get some patches out next week.
->>>
->>> I've pushed out a branch here:
->>>
->>> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dma-masks
->>>
->>> Can you test it on Renesas. I don't have a real platform having the issue.
->>
->>
->> With the following patches applied:
->>       https://patchwork.ozlabs.org/patch/1144870/
-> 
-> I'd rather not have yet another instance of {dma-}ranges parsing code.
-> With this series[1], dma-ranges gets parsed into resource list for
-> you.
-> 
->>       https://patchwork.ozlabs.org/patch/1144871/
-> 
-> How can this one be applied? It would conflict horribly. Plus I think
-> it duplicates what's in my series.
+This patch series adds power management support for STM32 Timer PWM:
+- Document the pinctrl sleep state for STM32 Timer PWM
+- STM32 Timer PWM driver
 
-I fixed it up real quick, but apparently these are not needed indeed.
+Fabrice Gasnier (2):
+  dt-bindings: pwm-stm32: document pinctrl sleep state
+  pwm: stm32: add power management support
 
-[...]
+ .../devicetree/bindings/pwm/pwm-stm32.txt          |  8 ++-
+ drivers/pwm/pwm-stm32.c                            | 82 ++++++++++++++++------
+ 2 files changed, 67 insertions(+), 23 deletions(-)
 
 -- 
-Best regards,
-Marek Vasut
+2.7.4
