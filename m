@@ -1,110 +1,29 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v6 6/7] arm64: dts: amlogic: g12b: add cooling properties
-Date: Mon, 30 Sep 2019 10:19:41 +0200
-Message-ID: <e57cd8d9-5174-bd1b-e091-98d6328f7891@baylibre.com>
-References: <20190927184352.28759-1-glaroque@baylibre.com>
- <20190927184352.28759-7-glaroque@baylibre.com>
+From: Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
+Date: Mon, 30 Sep 2019 01:20:55 -0700
+Message-ID: <20190930082055.GA21971@infradead.org>
+References: <20190927002455.13169-1-robh@kernel.org>
+ <CAK8P3a0oct0EOMi5t4BmpgdkiBM+LjC+2pTST4hcvNCa3MGLmw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190927184352.28759-7-glaroque@baylibre.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0oct0EOMi5t4BmpgdkiBM+LjC+2pTST4hcvNCa3MGLmw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume La Roque <glaroque@baylibre.com>, amit.kucheria@linaro.org, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh@kernel.org>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Robin Murphy <robin.murphy@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, Frank Rowand <frowand.list@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Oza Pawandeep <oza.oza@broadcom.com>, Christoph Hellwig <hch@infradead.org>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 27/09/2019 20:43, Guillaume La Roque wrote:
-> Add missing #colling-cells field for G12B SoC
-> Add cooling-map for passive and hot trip point
-> 
-> Tested-by: Christian Hewitt <christianshewitt@gmail.com>
-> Tested-by: Kevin Hilman <khilman@baylibre.com>
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-g12b.dtsi | 29 +++++++++++++++++++++
->  1 file changed, 29 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-> index 98ae8a7c8b41..4bb89bce758f 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b.dtsi
-> @@ -49,6 +49,7 @@
->  			reg = <0x0 0x0>;
->  			enable-method = "psci";
->  			next-level-cache = <&l2>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		cpu1: cpu@1 {
-> @@ -57,6 +58,7 @@
->  			reg = <0x0 0x1>;
->  			enable-method = "psci";
->  			next-level-cache = <&l2>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		cpu100: cpu@100 {
-> @@ -65,6 +67,7 @@
->  			reg = <0x0 0x100>;
->  			enable-method = "psci";
->  			next-level-cache = <&l2>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		cpu101: cpu@101 {
-> @@ -73,6 +76,7 @@
->  			reg = <0x0 0x101>;
->  			enable-method = "psci";
->  			next-level-cache = <&l2>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		cpu102: cpu@102 {
-> @@ -81,6 +85,7 @@
->  			reg = <0x0 0x102>;
->  			enable-method = "psci";
->  			next-level-cache = <&l2>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		cpu103: cpu@103 {
-> @@ -89,6 +94,7 @@
->  			reg = <0x0 0x103>;
->  			enable-method = "psci";
->  			next-level-cache = <&l2>;
-> +			#cooling-cells = <2>;
->  		};
->  
->  		l2: l2-cache0 {
-> @@ -219,3 +225,26 @@
->  &sd_emmc_a {
->  	amlogic,dram-access-quirk;
->  };
-> +
-> +&cpu_thermal {
-> +	cooling-maps {
-> +		map0 {
-> +			trip = <&cpu_passive>;
-> +			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +					 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +					 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +					 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +					 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +					 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +		};
-> +		map1 {
-> +			trip = <&cpu_hot>;
-> +			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +					 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +					 <&cpu100 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +					 <&cpu101 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +					 <&cpu102 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +					 <&cpu103 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +		};
-> +	};
-> +};
-> 
+On Sun, Sep 29, 2019 at 01:16:20PM +0200, Arnd Bergmann wrote:
+> On a semi-related note, Thierry asked about one aspect of the dma-ranges
+> property recently, which is the behavior of dma_set_mask() and related
+> functions when a driver sets a mask that is larger than the memory
+> area in the bus-ranges but smaller than the available physical RAM.
+> As I understood Thierry's problem and the current code, the generic
+> dma_set_mask() will either reject the new mask entirely or override
+> the mask set by of_dma_configure, but it fails to set a correct mask
+> within the limitations of the parent bus in this case.
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+There days dma_set_mask will only reject a mask if it is too small
+to be supported by the hardware.  Larger than required masks are now
+always accepted.
