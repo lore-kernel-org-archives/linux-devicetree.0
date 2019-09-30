@@ -1,166 +1,97 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [Patch 16/16] media: ti-vpe: vpe: don't rely on colorspace member
- for conversion
-Date: Mon, 30 Sep 2019 11:05:13 +0200
-Message-ID: <263b7b22-b867-3f73-bcaf-8978f9e3b415@xs4all.nl>
-References: <20190927183650.31345-1-bparrot@ti.com>
- <20190927183650.31345-17-bparrot@ti.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH 00/11] of: dma-ranges fixes and improvements
+Date: Mon, 30 Sep 2019 11:20:55 +0200
+Message-ID: <202216c6e456bfd1a30f7cdb000aa714e3855e10.camel@suse.de>
+References: <20190927002455.13169-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-/7Fyj1jMsFE0z7R36gtv"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190927183650.31345-17-bparrot@ti.com>
-Content-Language: en-US
+In-Reply-To: <20190927002455.13169-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <wahrenst@gmx.net>, Frank Rowand <frowand.list@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marek.vasut@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Oza Pawandeep <oza.oza@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On 9/27/19 8:36 PM, Benoit Parrot wrote:
-> Up to now VPE was relying on the colorspace value of struct v4l2_format
-> as an indication to perform color space conversion from YUV to RGB or
-> not.
-> 
-> Instead we should used the source/destination fourcc codes as a more
-> reliable indication to perform color space conversion or not.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  drivers/media/platform/ti-vpe/vpe.c | 41 ++++++++++++++++++++++-------
->  1 file changed, 32 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-> index e30981cd3e8f..d002adc6263f 100644
-> --- a/drivers/media/platform/ti-vpe/vpe.c
-> +++ b/drivers/media/platform/ti-vpe/vpe.c
-> @@ -353,6 +353,32 @@ enum {
->  	Q_DATA_DST = 1,
->  };
->  
-> +static bool is_fmt_rgb(u32 fourcc)
-> +{
-> +	if (fourcc == V4L2_PIX_FMT_RGB24 ||
-> +	    fourcc == V4L2_PIX_FMT_BGR24 ||
-> +	    fourcc == V4L2_PIX_FMT_RGB32 ||
-> +	    fourcc == V4L2_PIX_FMT_BGR32 ||
-> +	    fourcc == V4L2_PIX_FMT_RGB565 ||
-> +	    fourcc == V4L2_PIX_FMT_RGB555)
-> +		return true;
-> +
-> +	return false;
-> +}
 
-Why not add a 'bool is_rgb' to struct vpe_fmt?
+--=-/7Fyj1jMsFE0z7R36gtv
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-It is all too easy to forget to update this function if a new RGB format is
-added to the vpe_formats array in the future.
+On Thu, 2019-09-26 at 19:24 -0500, Rob Herring wrote:
+> This series fixes several issues related to 'dma-ranges'. Primarily,
+> 'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
+> devices not described in the DT. A common case needing dma-ranges is a
+> 32-bit PCIe bridge on a 64-bit system. This affects several platforms
+> including Broadcom, NXP, Renesas, and Arm Juno. There's been several
+> attempts to fix these issues, most recently earlier this week[1].
+>=20
+> In the process, I found several bugs in the address translation. It
+> appears that things have happened to work as various DTs happen to use
+> 1:1 addresses.
+>=20
+> First 3 patches are just some clean-up. The 4th patch adds a unittest
+> exhibiting the issues. Patches 5-9 rework how of_dma_configure() works
+> making it work on either a struct device child node or a struct
+> device_node parent node so that it works on bus leaf nodes like PCI
+> bridges. Patches 10 and 11 fix 2 issues with address translation for
+> dma-ranges.
+>=20
+> My testing on this has been with QEMU virt machine hacked up to set PCI
+> dma-ranges and the unittest. Nicolas reports this series resolves the
+> issues on Rpi4 and NXP Layerscape platforms.
+>=20
+> Rob
+>=20
+> [1]=20
+>=20
+https://lore.kernel.org/linux-arm-kernel/20190924181244.7159-1-nsaenzjulien=
+ne@suse.de/
+>=20
+> Rob Herring (5):
+>   of: Remove unused of_find_matching_node_by_address()
+>   of: Make of_dma_get_range() private
+>   of/unittest: Add dma-ranges address translation tests
+>   of/address: Translate 'dma-ranges' for parent nodes missing
+>     'dma-ranges'
+>   of/address: Fix of_pci_range_parser_one translation of DMA addresses
+>=20
+> Robin Murphy (6):
+>   of: address: Report of_dma_get_range() errors meaningfully
+>   of: Ratify of_dma_configure() interface
+>   of/address: Introduce of_get_next_dma_parent() helper
+>   of: address: Follow DMA parent for "dma-coherent"
+>   of: Factor out #{addr,size}-cells parsing
+>   of: Make of_dma_get_range() work on bus nodes
 
-> +
-> +/*
-> + * This helper is only used to setup the color space converter
-> + * the actual value returned is only to broadly differentiate between
-> + * RGB and YUV
-> + */
-> +static enum  v4l2_colorspace fourcc_to_colorspace(u32 fourcc)
+Re-tested the whole series. Verified both the unittests run fine and PCIe's
+behaviour is fixed.
 
-double space after enum.
+Tested-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-> +{
-> +	if (is_fmt_rgb(fourcc))
-> +		return V4L2_COLORSPACE_SRGB;
-> +
-> +	return V4L2_COLORSPACE_SMPTE170M;
-> +}
+Also for the whole series:
 
-This is highly confusing. RGB or YUV conversion does not change the colorspace
-at all.
-
-There are four colorimetry related fields: colorspace, xfer_func, ycbcr_enc and
-quantization. Most hardware (including this one AFAICT) have a 3x3 matrix + a
-vector to do the conversion. This only allows you to convert between different
-ycbcr encodings and quantization ranges. The colorspace and xfer_func parameters
-stay unchanged (you need gamma tables and two other 3x3 matrices for that).
-
-So if you want to set up the 3x3 matrix + vector correctly, then you need to
-provide the ycbcr_enc value + quantization value of the source to your function.
-ycbcr_enc is only valid of YUV pixelformats, of course, and you can use
-V4L2_MAP_COLORSPACE_DEFAULT, V4L2_MAP_YCBCR_ENC_DEFAULT and V4L2_MAP_QUANTIZATION_DEFAULT
-if one or more of these values as set by userspace are 0.
-
-Since the V4L2 API does not (yet) support setting ycbcr_enc and quantization for the
-capture queue you have to provide that information yourself:
-
-For RGB ycbcr_enc is of course ignored, and quantization should be full range.
-For YUV it depends: the quantization is always limited range, but for the ycbcr_enc
-you have a choice: if the source was YUV, then you can decide to just copy the
-ycbcr_enc value. Alternatively, you can convert to 601 for SDTV and 709 for anything
-else. The latter is also the recommended choice if the source was RGB.
-
-In any case, please do not use enum v4l2_colorspace in the csc_set_coeff function:
-it's misleading.
-
-https://hverkuil.home.xs4all.nl/spec/uapi/v4l/colorspaces.html and the following two
-sections contain a lot of information about how colorspaces work.
+Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
 Regards,
+Nicolas
 
-	Hans
 
-> +
->  /* find our format description corresponding to the passed v4l2_format */
->  static struct vpe_fmt *__find_format(u32 fourcc)
->  {
-> @@ -764,11 +790,10 @@ static void set_src_registers(struct vpe_ctx *ctx)
->  static void set_dst_registers(struct vpe_ctx *ctx)
->  {
->  	struct vpe_mmr_adb *mmr_adb = ctx->mmr_adb.addr;
-> -	enum v4l2_colorspace clrspc = ctx->q_data[Q_DATA_DST].colorspace;
->  	struct vpe_fmt *fmt = ctx->q_data[Q_DATA_DST].fmt;
->  	u32 val = 0;
->  
-> -	if (clrspc == V4L2_COLORSPACE_SRGB) {
-> +	if (is_fmt_rgb(fmt->fourcc)) {
->  		val |= VPE_RGB_OUT_SELECT;
->  		vpdma_set_bg_color(ctx->dev->vpdma,
->  			(struct vpdma_data_format *)fmt->vpdma_fmt[0], 0xff);
-> @@ -912,7 +937,8 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
->  	set_dei_regs(ctx);
->  
->  	csc_set_coeff(ctx->dev->csc, &mmr_adb->csc_regs[0],
-> -		s_q_data->colorspace, d_q_data->colorspace);
-> +		      fourcc_to_colorspace(s_q_data->fmt->fourcc),
-> +		      fourcc_to_colorspace(d_q_data->fmt->fourcc));
->  
->  	sc_set_hs_coeffs(ctx->dev->sc, ctx->sc_coeff_h.addr, src_w, dst_w);
->  	sc_set_vs_coeffs(ctx->dev->sc, ctx->sc_coeff_v.addr, src_h, dst_h);
-> @@ -1285,7 +1311,7 @@ static void device_run(void *priv)
->  	if (ctx->deinterlacing)
->  		add_out_dtd(ctx, VPE_PORT_MV_OUT);
->  
-> -	if (d_q_data->colorspace == V4L2_COLORSPACE_SRGB) {
-> +	if (is_fmt_rgb(d_q_data->fmt->fourcc)) {
->  		add_out_dtd(ctx, VPE_PORT_RGB_OUT);
->  	} else {
->  		add_out_dtd(ctx, VPE_PORT_LUMA_OUT);
-> @@ -1327,7 +1353,7 @@ static void device_run(void *priv)
->  	}
->  
->  	/* sync on channel control descriptors for output ports */
-> -	if (d_q_data->colorspace == V4L2_COLORSPACE_SRGB) {
-> +	if (is_fmt_rgb(d_q_data->fmt->fourcc)) {
->  		vpdma_add_sync_on_channel_ctd(&ctx->desc_list,
->  			VPE_CHAN_RGB_OUT);
->  	} else {
-> @@ -1682,10 +1708,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
->  		height = pix->height;
->  
->  	if (!pix->colorspace) {
-> -		if (fmt->fourcc == V4L2_PIX_FMT_RGB24 ||
-> -				fmt->fourcc == V4L2_PIX_FMT_BGR24 ||
-> -				fmt->fourcc == V4L2_PIX_FMT_RGB32 ||
-> -				fmt->fourcc == V4L2_PIX_FMT_BGR32) {
-> +		if (is_fmt_rgb(fmt->fourcc)) {
->  			pix->colorspace = V4L2_COLORSPACE_SRGB;
->  		} else {
->  			if (height > 1280)	/* HD */
-> 
+--=-/7Fyj1jMsFE0z7R36gtv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2RyPcACgkQlfZmHno8
+x/5aaggAjeyCHdUtuhmPYMOr0eHC3qN6bd3dUsbXdN2lP82cn6S6n08OsHIfHaS/
+mKzeb3RK8lHn7v8Pv/nfe7UU93Lxx4Dyq4D4vXXTWyTFNg67C/KxtJswHvKhdQBX
+u/r/OIhCnewJLTEZV9g44OFAko61Zuf8mp8KIwSjj+vfUXORyUc/KLfFYNt6b8Fb
+YQRdgTyuF4Xhy/XYdxn8uCcDKkz0MtQ1Z9yJiao0h1c5p1Hia8Xhilq7uglx6+/3
+w6Izh+0OAiDP30yMBVW+5APyhFPUdfzlP3hdifrkv8LiwCyMsukutfWawrm0r9E6
+Ubrk8jYhhRg1qlpwQQ9V6QeapBjgsA==
+=14/S
+-----END PGP SIGNATURE-----
+
+--=-/7Fyj1jMsFE0z7R36gtv--
