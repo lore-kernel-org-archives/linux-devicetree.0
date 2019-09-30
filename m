@@ -1,14 +1,14 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v6 4/7] arm64: dts: meson: g12: Add minimal thermal zone
-Date: Mon, 30 Sep 2019 10:19:18 +0200
-Message-ID: <61a8f023-c8df-5721-bf1e-90f242474bc0@baylibre.com>
+Subject: Re: [PATCH v6 5/7] arm64: dts: amlogic: g12a: add cooling properties
+Date: Mon, 30 Sep 2019 10:19:29 +0200
+Message-ID: <73f3dc4c-2f3e-2c29-f667-15ce76ebcf3e@baylibre.com>
 References: <20190927184352.28759-1-glaroque@baylibre.com>
- <20190927184352.28759-5-glaroque@baylibre.com>
+ <20190927184352.28759-6-glaroque@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190927184352.28759-5-glaroque@baylibre.com>
+In-Reply-To: <20190927184352.28759-6-glaroque@baylibre.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Guillaume La Roque <glaroque@baylibre.com>, amit.kucheria@linaro.org, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org
@@ -16,89 +16,76 @@ Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@
 List-Id: devicetree@vger.kernel.org
 
 On 27/09/2019 20:43, Guillaume La Roque wrote:
-> Add minimal thermal zone for two temperature sensor
-> One is located close to the DDR and the other one is
-> located close to the PLLs (between the CPU and GPU)
+> Add missing #colling-cells field for G12A SoC
+> Add cooling-map for passive and hot trip point
 > 
-> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > Tested-by: Christian Hewitt <christianshewitt@gmail.com>
 > Tested-by: Kevin Hilman <khilman@baylibre.com>
 > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 > ---
->  .../boot/dts/amlogic/meson-g12-common.dtsi    | 46 +++++++++++++++++++
->  1 file changed, 46 insertions(+)
+>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 24 +++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> index 0660d9ef6a86..f98171949fcb 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> @@ -12,6 +12,7 @@
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
->  #include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
-> +#include <dt-bindings/thermal/thermal.h>
->  
->  / {
->  	interrupt-parent = <&gic>;
-> @@ -94,6 +95,50 @@
->  		#size-cells = <2>;
->  		ranges;
->  
-> +		thermal-zones {
-> +			cpu_thermal: cpu-thermal {
-> +				polling-delay = <1000>;
-> +				polling-delay-passive = <100>;
-> +				thermal-sensors = <&cpu_temp>;
-> +
-> +				trips {
-> +					cpu_passive: cpu-passive {
-> +						temperature = <85000>; /* millicelsius */
-> +						hysteresis = <2000>; /* millicelsius */
-> +						type = "passive";
-> +					};
-> +
-> +					cpu_hot: cpu-hot {
-> +						temperature = <95000>; /* millicelsius */
-> +						hysteresis = <2000>; /* millicelsius */
-> +						type = "hot";
-> +					};
-> +
-> +				};
-> +			};
-> +
-> +			ddr_thermal: ddr-thermal {
-> +				polling-delay = <1000>;
-> +				polling-delay-passive = <100>;
-> +				thermal-sensors = <&ddr_temp>;
-> +
-> +				trips {
-> +					ddr_passive: ddr-passive {
-> +						temperature = <85000>; /* millicelsius */
-> +						hysteresis = <2000>; /* millicelsius */
-> +						type = "passive";
-> +					};
-> +				};
-> +
-> +				cooling-maps {
-> +					map {
-> +						trip = <&ddr_passive>;
-> +						cooling-device = <&mali THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
->  		ethmac: ethernet@ff3f0000 {
->  			compatible = "amlogic,meson-axg-dwmac",
->  				     "snps,dwmac-3.70a",
-> @@ -2412,6 +2457,7 @@
->  			assigned-clock-rates = <0>, /* Do Nothing */
->  					       <800000000>,
->  					       <0>; /* Do Nothing */
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> index 733a9d46fc4b..3ab6497548ca 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> @@ -18,6 +18,7 @@
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&l2>;
 > +			#cooling-cells = <2>;
 >  		};
->  	};
 >  
+>  		cpu1: cpu@1 {
+> @@ -26,6 +27,7 @@
+>  			reg = <0x0 0x1>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&l2>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		cpu2: cpu@2 {
+> @@ -34,6 +36,7 @@
+>  			reg = <0x0 0x2>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&l2>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		cpu3: cpu@3 {
+> @@ -42,6 +45,7 @@
+>  			reg = <0x0 0x3>;
+>  			enable-method = "psci";
+>  			next-level-cache = <&l2>;
+> +			#cooling-cells = <2>;
+>  		};
+>  
+>  		l2: l2-cache0 {
+> @@ -113,3 +117,23 @@
+>  &sd_emmc_a {
+>  	amlogic,dram-access-quirk;
+>  };
+> +
+> +&cpu_thermal {
+> +	cooling-maps {
+> +		map0 {
+> +			trip = <&cpu_passive>;
+> +			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +					<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +					<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +					<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +		};
+> +
+> +		map1 {
+> +			trip = <&cpu_hot>;
+> +			cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +					<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +					<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +					<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +		};
+> +	};
+> +};
 > 
 
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
