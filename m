@@ -1,28 +1,50 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/5] dt-bindings: Document brcm,int-fwd-mask property
- for bcm7038-l1-intc
-Date: Mon, 30 Sep 2019 14:10:45 -0500
-Message-ID: <20190930191045.GA8851@bogus>
-References: <20190913191542.9908-1-f.fainelli@gmail.com>
- <20190913191542.9908-5-f.fainelli@gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: i2c: Aspeed: Add AST2600 compatible
+Date: Mon, 30 Sep 2019 13:59:18 -0500
+Message-ID: <20190930185918.GA18431@bogus>
+References: <1568392510-866-1-git-send-email-eajames@linux.ibm.com>
+ <1568392510-866-3-git-send-email-eajames@linux.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190913191542.9908-5-f.fainelli@gmail.com>
+In-Reply-To: <1568392510-866-3-git-send-email-eajames@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>
+To: Eddie James <eajames@linux.ibm.com>
+Cc: linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, brendanhiggins@google.com, joel@jms.id.au, andrew@aj.id.au, mark.rutland@arm.com, benh@kernel.crashing.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 13 Sep 2019 12:15:41 -0700, Florian Fainelli wrote:
-> Indicate that the brcm,int-fwd-mask property is optional and can be
-> optionaly set on platforms which require to leave specific interrupts
-> untouched from Linux and retain the firmware configuration.
+On Fri, Sep 13, 2019 at 11:35:10AM -0500, Eddie James wrote:
+> Document the AST2600 I2C bus compatible string.
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 > ---
->  .../bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt    | 4 ++++
->  1 file changed, 4 insertions(+)
+>  Documentation/devicetree/bindings/i2c/i2c-aspeed.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+> index 8fbd863..b47f6cc 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
+> @@ -1,4 +1,4 @@
+> -Device tree configuration for the I2C busses on the AST24XX and AST25XX SoCs.
+> +Device tree configuration for the I2C busses on the AST24XX, AST25XX, and AST26XX SoCs.
+
+Perhaps s/buses/busses/ while you're here.
 
 Acked-by: Rob Herring <robh@kernel.org>
+
+>  
+>  Required Properties:
+>  - #address-cells	: should be 1
+> @@ -6,6 +6,7 @@ Required Properties:
+>  - reg			: address offset and range of bus
+>  - compatible		: should be "aspeed,ast2400-i2c-bus"
+>  			  or "aspeed,ast2500-i2c-bus"
+> +			  or "aspeed,ast2600-i2c-bus"
+>  - clocks		: root clock of bus, should reference the APB
+>  			  clock in the second cell
+>  - resets		: phandle to reset controller with the reset number in
+> -- 
+> 1.8.3.1
+> 
