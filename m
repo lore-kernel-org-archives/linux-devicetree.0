@@ -1,56 +1,138 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-Date: Mon, 30 Sep 2019 17:27:05 +0300
-Message-ID: <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
-References: <20190510194229.20628-1-aford173@gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
- <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
- <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
- <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
- <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
- <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
- <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
- <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
- <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com>
- <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
- <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
- <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
- <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
- <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com>
+From: ppvk@codeaurora.org
+Subject: Re: [RFC 2/2] dt-bindings: mmc: sdhci-msm: Add Bus BW vote supported
+ strings
+Date: Mon, 30 Sep 2019 20:02:19 +0530
+Message-ID: <695802ae255fe40ab9ca7750e0bbed91@codeaurora.org>
+References: <1567774037-2344-1-git-send-email-ppvk@codeaurora.org>
+ <1567774037-2344-3-git-send-email-ppvk@codeaurora.org>
+ <5d7ba95c.1c69fb81.edf8e.6556@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com>
-Content-Language: en-US
+In-Reply-To: <5d7ba95c.1c69fb81.edf8e.6556@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>, "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, asutoshd@codeaurora.org, vbadigan@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, rampraka@codeaurora.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 30/09/2019 17:20, Tomi Valkeinen wrote:
-
-> Let's see what Tero says, but yeah, something is odd here. I expected 
-> the max divider to be 16 with Tero's patch, but I don't see it having 
-> that effect. I can get the div to 31.
+On 2019-09-13 20:06, Rob Herring wrote:
+> On Fri, Sep 06, 2019 at 06:17:17PM +0530, Pradeep P V K wrote:
+>> Add Bus bandwidth voting supported strings for qcom-sdhci controller.
 > 
-> You can see this from the clock register 0x48004e40 (CM_CLKSEL_DSS). The 
-> lowest bits are the divider, 5 to 0. The TRM says max div is 32.
+> What is bus bandwidth voting?
+
+Controller is connected with its master using NOC and it controls its 
+slaves using another NOC path.
+So,controller have 2 NOC paths as below.
+     a. CPU to Controller, This path is used to access the registers of 
+controllers.
+     b. Controller to DDR, This path is a data path, where data is 
+read/write from/to DDR.
+All data transfer will happen on these NOC's, which is shared between 
+other peripherals.
+In order to achieve required throughput (Data transfer Bandwidth) we put 
+vote on these NOC's to
+scale the NOC clocks to support required bandwidth.
+
+Instantaneous bandwidth (ib) and Arbitrated bandwidth (ab) values are 
+the values calculated (This involves various arch. specific parameters
+like clock plans, voltage corners, etc. which varies from vendor to 
+vendor and target to target)
+to put vote on those noc's to achieve require throughput.
+
 > 
-> Tero said for him the dividers > 16 didn't "stick" to the register. I'm 
-> now wondering if he has an old beagleboard with OMAP34xx, which has max 
-> div 16.
+>> 
+>> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/mmc/sdhci-msm.txt          | 32 
+>> ++++++++++++++++++++++
+>>  1 file changed, 32 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt 
+>> b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> index da4edb1..8255d92 100644
+>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> @@ -39,6 +39,25 @@ Required properties:
+>>  	"cal"	- reference clock for RCLK delay calibration (optional)
+>>  	"sleep"	- sleep clock for RCLK delay calibration (optional)
+>> 
+>> +Optional Properties:
+>> +* Following bus parameters are required for bus bw voting:
+>> +- interconnects: Pairs of phandles and interconnect provider 
+>> specifier
+>> +		 to denote the edge source and destination ports of
+>> +		 the interconnect path. Please refer to
+>> +		 Documentation/devicetree/bindings/interconnect/
+>> +		 for more details.
+>> +- interconnect-names: List of interconnect path name strings sorted 
+>> in the same
+>> +		order as the interconnects property. Consumers drivers will use
+>> +		interconnect-names to match interconnect paths with interconnect
+>> +		specifiers. Please refer to Documentation/devicetree/bindings/
+>> +		interconnect/ for more details.
+> 
+> How many? What are the strings?
 
-So testing a bit more here, I can see the DSS working fine and fps as 
-expected when I write values directly to CM_CLKSEL_DSS:5:0, with 
-dividers up to 31. With 32, DSS breaks. The TRM (AM/DM37x) says value 32 
-is valid.
+As this is implemented using interconnect framework, "interconnects" and 
+"interconnect-names" are required
+and below qcom specific properties are required to calculate the ab and 
+ib values.
+> 
+>> +- qcom,msm-bus,name: string describing the bus path
+>> +- qcom,msm-bus,num-cases: number of configurations in which sdhc can 
+>> operate in
+>> +- qcom,msm-bus,num-paths: number of paths to vote for
+>> +- qcom,msm-bus,vectors-KBps: Takes a tuple <ib ab>, <ib ab> (2 tuples 
+>> for 2
+> 
+> ib and ab are what? Didn't we just add interconnect bindings for
+> expressing bandwidth?
 
-  Tomi
+Instantaneous bandwidth (ib) is peak bandwidth and Arbitrated bandwidth 
+(ab) is the Average bandwidth.
+There is no interconnect binding node as such for expressing the 
+bandwidth. Hence the reason to use the
+above qcom nodes for parsing and storing the req. bandwidth.
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+>> +				num-paths) The number of these entries *must*
+>> +				be same as num-cases.
+> 
+> Are all these properties SDHCI specific or can we expect to get these
+> for *all* the QCom blocks?
+> 
+As per the current implementation, these are some optional properties 
+and is required
+only when the bus bandwidth support is needed and all these are qcom 
+specific.
+
+>> +
+>>  Example:
+>> 
+>>  	sdhc_1: sdhci@f9824900 {
+>> @@ -56,6 +75,19 @@ Example:
+>> 
+>>  		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
+>>  		clock-names = "core", "iface";
+>> +		interconnects = <&qnoc 50 &qnoc 512>,
+>> +				<&qnoc 1 &qnoc 544>;
+>> +		interconnect-names = "sdhc-ddr","cpu-sdhc";
+>> +		qcom,msm-bus,name = "sdhc1";
+>> +		qcom,msm-bus,num-cases = <3>;
+>> +		qcom,msm-bus,num-paths = <2>;
+>> +		qcom,msm-bus,vectors-KBps =
+>> +		/* No Vote */
+>> +		<0 0>, <0 0>,
+>> +		/* 50 MB/s */
+>> +		<130718 200000>, <133320 133320>,
+>> +		/* 200 MB/s */
+>> +		<1338562 4096000>, <1338562 4096000>;
+>>  	};
+>> 
+>>  	sdhc_2: sdhci@f98a4900 {
+>> --
+>> 1.9.1
+>> 
