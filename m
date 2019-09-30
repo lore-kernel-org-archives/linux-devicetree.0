@@ -1,99 +1,89 @@
-From: "Sa, Nuno" <Nuno.Sa@analog.com>
-Subject: Re: [PATCH 1/2] ASOC: Add ADAU7118 8 Channel
- PDM-to-I2S/TDM Converter driver
-Date: Mon, 30 Sep 2019 09:44:00 +0000
-Message-ID: <6245f99f37c10dcec0a52344bab4b980f08e07da.camel@analog.com>
-References: <20190926071707.17557-1-nuno.sa@analog.com>
- <20190926184318.GF2036@sirena.org.uk>
+From: Sam Shih <sam.shih@mediatek.com>
+Subject: Re: [PATCH v10 08/12] pwm: mediatek: Add MT7629 compatible string
+Date: Mon, 30 Sep 2019 17:51:19 +0800
+Message-ID: <1569837079.32131.5.camel@mtksdccf07>
+References: <1569421957-20765-1-git-send-email-sam.shih@mediatek.com>
+         <1569421957-20765-9-git-send-email-sam.shih@mediatek.com>
+         <20190927112831.GA1171568@ulmo> <1569833468.32131.4.camel@mtksdccf07>
+         <20190930093629.GH1518582@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20190926184318.GF2036@sirena.org.uk>
-Content-Language: en-US
-Content-ID: <D7D58CB599F22D478039609D6A7E180B@namprd03.prod.outlook.com>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: "broonie@kernel.org" <broonie@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "lars@metafoo.de" <lars@metafoo.de>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190930093629.GH1518582@ulmo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyaywNCg0KVGhhbmtzIGZvciB0aGUgcmV2aWV3LiBTb21lIGNvbW1lbnRzL2RvdWJ0cyBp
-bmxpbmUuIFRoaXMgZGV2aWNlIHdhcyBteQ0KZmlyc3QgY29udGFjdCB3aXRoIEFTT0Mvc291bmQg
-ZGV2cyBzbywgSSBhcG9sb2dpemUgaWYgc29tZSBvZiB0aGUNCmNvbW1lbnRzL2RvdWJ0cyBhcmUg
-Y29tcGxldGVseSB3cm9uZy90cml2aWFsLg0KDQpPbiBUaHUsIDIwMTktMDktMjYgYXQgMTE6NDMg
-LTA3MDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+IA0KPiBPbiBUaHUsIFNlcCAyNiwgMjAxOSBhdCAw
-OToxNzowNkFNICswMjAwLCBOdW5vIFPDoSB3cm90ZToNCj4gDQo+ID4gLS0tIC9kZXYvbnVsbA0K
-PiA+ICsrKyBiL3NvdW5kL3NvYy9jb2RlY3MvYWRhdTcxMTgtaHcuYw0KPiA+IEBAIC0wLDAgKzEs
-NDMgQEANCj4gPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gPiArLyoN
-Cj4gPiArICogQW5hbG9nIERldmljZXMgQURBVTcxMTggOCBjaGFubmVsIFBETS10by1JMlMvVERN
-IENvbnZlcnRlcg0KPiA+IFN0YW5kYWxvbmUgSHcNCj4gPiArICogZHJpdmVyDQo+ID4gKyAqDQo+
-ID4gKyAqIENvcHlyaWdodCAyMDE5IEFuYWxvZyBEZXZpY2VzIEluYy4NCj4gPiArICovDQo+IA0K
-PiBQbGVhc2UgbWFrZSB0aGUgZW50aXJlIGNvbW1lbnQgYSBDKysgc3R5bGUgb25lIGluIHRoZSAu
-YyBmaWxlcyBzbw0KPiB0aGluZ3MgbG9vayBtb3JlIGludGVudGlvbmFsLg0KPiANCj4gPiArCXN3
-aXRjaCAoZm10ICYgU05EX1NPQ19EQUlGTVRfRk9STUFUX01BU0spIHsNCj4gPiArCWNhc2UgU05E
-X1NPQ19EQUlGTVRfSTJTOg0KPiA+ICsJCXJldCA9IHNuZF9zb2NfY29tcG9uZW50X3VwZGF0ZV9i
-aXRzKGRhaS0+Y29tcG9uZW50LA0KPiA+ICsJCQkJCQkgICAgQURBVTcxMThfUkVHX1NQVF9DVA0K
-PiA+IFJMMSwNCj4gPiArCQkJCQkJICAgIEFEQVU3MTE4X0RBVEFfRk1UX00NCj4gPiBBU0ssDQo+
-ID4gKwkJCQkJCSAgICBBREFVNzExOF9EQVRBX0ZNVCgwDQo+ID4gKSk7DQo+ID4gKwkJYnJlYWs7
-DQo+ID4gKwljYXNlIFNORF9TT0NfREFJRk1UX0xFRlRfSjoNCj4gPiArCQlyZXQgPSBzbmRfc29j
-X2NvbXBvbmVudF91cGRhdGVfYml0cyhkYWktPmNvbXBvbmVudCwNCj4gPiArCQkJCQkJICAgIEFE
-QVU3MTE4X1JFR19TUFRfQ1QNCj4gPiBSTDEsDQo+ID4gKwkJCQkJCSAgICBBREFVNzExOF9EQVRB
-X0ZNVF9NDQo+ID4gQVNLLA0KPiA+ICsJCQkJCQkgICAgQURBVTcxMThfREFUQV9GTVQoMQ0KPiA+
-ICkpOw0KPiA+ICsJCWJyZWFrOw0KPiA+ICsJY2FzZSBTTkRfU09DX0RBSUZNVF9SSUdIVF9KOg0K
-PiA+ICsJCXN0LT5yaWdodF9qID0gdHJ1ZTsNCj4gPiArCQlicmVhazsNCj4gDQo+IERvbid0IHdl
-IG5lZWQgdG8gc2V0IGFueSByZWdpc3RlciB2YWx1ZXMgaGVyZT8NCg0KVGhlIHJlZ2lzdGVyIHNl
-dCBpcyBkb25lIGluIGFkYXU3MTE4X2h3X3BhcmFtcygpLiBGb3IgcmlnaHQNCmp1c3RpZmljYXRp
-b24gdGhlIGRldmljZSBjYW4gZGVsYXkgYmNsY2sgYnkgOCwgMTIgb3IgMTYuIFNvLCBXZSBuZWVk
-IHRvDQprbm93IHRoZSBkYXRhX3dpZHRoIHRvIGNoZWNrIGlmIHdlIGNhbiBhcHBseSB0aGUgY29u
-ZmlndXJhdGlvbi4NCg0KPiA+ICsNCj4gPiArCXJldHVybiByZXQgPCAwID8gcmV0IDogMDsNCj4g
-PiArfQ0KPiANCj4gUGxlYXNlIGRvbid0IHVzZSB0aGUgdGVybmVyeSBvcGVyYXRvciBsaWtlIHRo
-aXMsIGl0IGp1c3QgbWFrZXMNCj4gdGhpbmdzIGhhcmRlciB0byByZWFkIC0gd3JpdGUgbm9ybWFs
-IGlmIGNvbmRpdGlvbmFsIHN0YXRlbWVudHMuDQoNCmFjay4NCg0KPiA+ICsJY2FzZSBTTkRfU09D
-X0JJQVNfU1RBTkRCWToNCj4gPiArCQlpZiAoc25kX3NvY19jb21wb25lbnRfZ2V0X2JpYXNfbGV2
-ZWwoY29tcG9uZW50KSA9PQ0KPiA+ICsJCQkJCQkJU05EX1NPQ19CSUFTX09GDQo+ID4gRikgew0K
-PiA+ICsJCQlpZiAoIXN0LT5pb3ZkZCkNCj4gPiArCQkJCXJldHVybiAwOw0KPiANCj4gVGhpcyBp
-cyBicm9rZW4sIHRoZSBkZXZpY2Ugd2lsbCBhbHdheXMgcmVxdWlyZSBwb3dlciBzbyBpdCBzaG91
-bGQNCj4gYWx3YXlzIGNvbnRyb2wgdGhlIHJlZ3VsYXRvcnMuDQoNClRoZSByZWFzb24gd2h5IEkg
-bWFkZSB0aGlzIG9wdGlvbmFsIHdhcyB0byBsZXQgdGhlIHVzZXIgYXNzdW1lIHRoYXQsIGluDQpz
-b21lIGNhc2VzLCB0aGUgc3VwcGx5IGNhbiBiZSBhbHdheXMgcHJlc2VudCAoYW5kIG5vdCBjb250
-cm9sbGVkIGJ5IHRoZQ0Ka2VybmVsKSBhbmQsIGluIHRob3NlIGNhc2VzLCBoZSB3b3VsZCBub3Qg
-aGF2ZSB0byBjYXJlIGFib3V0IGdpdmluZw0KcmVndWxhdG9ycyBub2RlcyBpbiBkZXZpY2V0cmVl
-LiBGdXJ0aGVybW9yZSwgdGhlIGRyaXZlciB3b3VsZCBub3QgaGF2ZQ0KdG8gY2FyZSBhYm91dCBl
-bmFibGluZy9kaXNhYmxpbmcgIHJlZ3VsYXRvcnMuIElzIHRoaXMgbm90IGEgdmFsaWQNCnNjZW5h
-cmlvPyBPciBpcyBpdCB0aGF0LCBmb3IgdGhpcyBraW5kIG9mIGRldmljZXMgaXQgZG9lcyBub3Qg
-cmVhbGx5DQptYWtlIHNlbnNlICh3aGljaCBJIHRoaW5rIGl0IGRvZXNuJ3QpIHRvIGhhdmUgdGhl
-bSBhbHdheXMgcG93ZXJlZCwgc28NCndlIGp1c3QgYXNzdW1lIGEgcmVndWxhdG9yIGlzIG5lZWRl
-ZCAoYW5kIGluIHRoZSB1bmxpa2VseSBzY2VuYXJpbyB3ZQ0KZG9uJ3QgaGF2ZSBvbmUsIHRoZSB1
-c2VyIGp1c3QgcHJvdmlkZXMgYSBmaXhlZC1yZWd1bGF0b3IpPw0KDQo+ID4gK3N0YXRpYyBpbnQg
-YWRhdTcxMThfc3VzcGVuZChzdHJ1Y3Qgc25kX3NvY19jb21wb25lbnQgKmNvbXBvbmVudCkNCj4g
-PiArew0KPiA+ICsJcmV0dXJuIHNuZF9zb2NfY29tcG9uZW50X2ZvcmNlX2JpYXNfbGV2ZWwoY29t
-cG9uZW50LA0KPiA+IFNORF9TT0NfQklBU19PRkYpOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0
-aWMgaW50IGFkYXU3MTE4X3Jlc3VtZShzdHJ1Y3Qgc25kX3NvY19jb21wb25lbnQgKmNvbXBvbmVu
-dCkNCj4gPiArew0KPiA+ICsJcmV0dXJuIHNuZF9zb2NfY29tcG9uZW50X2ZvcmNlX2JpYXNfbGV2
-ZWwoY29tcG9uZW50LA0KPiA+ICsJCQkJCQkgIFNORF9TT0NfQklBU19TVEFOREJZKQ0KPiA+IDsN
-Cj4gPiArfQ0KPiANCj4gTGV0IERBUE0gZG8gdGhpcyBmb3IgeW91LCB0aGVyZSdzIG5vIHN1YnN0
-YW50aWFsIGRlbGF5cyBvbiBwb3dlcg0KPiBvbiBzbyB5b3UncmUgcHJvYmFibHkgYmVzdCBqdXN0
-IHNldHRpbmcgaWRsZV9iaWFzX29mZi4NCg0KU28sIHRoaXMgbWVhbnMgZHJvcHBpbmcgcmVzdW1l
-L3N1c3BlbmQgYW5kIHRvIG5vdCBzZXQgaWRsZV9iaWFzX29uLA0KcmlnaHQ/DQoNCj4gPiArc3Rh
-dGljIGludCBhZGF1NzExOF9yZWd1bGF0b3Jfc2V0dXAoc3RydWN0IGFkYXU3MTE4X2RhdGEgKnN0
-KQ0KPiA+ICt7DQo+ID4gKwlpbnQgcmV0ID0gMDsNCj4gPiArDQo+ID4gKwlzdC0+aW92ZGQgPSBk
-ZXZtX3JlZ3VsYXRvcl9nZXRfb3B0aW9uYWwoc3QtPmRldiwgIklPVkREIik7DQo+ID4gKwlpZiAo
-IUlTX0VSUihzdC0+aW92ZGQpKSB7DQo+IA0KPiBVbmxlc3MgdGhlIGRldmljZSBjYW4gb3BlcmF0
-ZSB3aXRoIHN1cHBsaWVzIHBoeXNpY2FsbHkgYWJzZW50IGl0DQo+IHNob3VsZCBub3QgYmUgcmVx
-dWVzdGluZyByZWd1bGF0b3JzIGFzIG9wdGlvbmFsLCB0aGlzIGJyZWFrcyB5b3VyDQo+IGVycm9y
-IGhhbmRsaW5nIGVzcGVjaWFsbHkgd2l0aCBwcm9iZSBkZWZlcnJhbCB3aGljaCBpcyBhIGZhaXJs
-eQ0KPiBjb21tb24gY2FzZS4NCg0KSnVzdCBmb3IgbXkgdW5kZXJzdGFuZGluZyAobW9zdCBsaWtl
-bHkgSSdtIG1pc3Npbmcgc29tZXRoaW5nIG9idmlvdXMpLA0Kd2h5IHdvdWxkIEkgaGF2ZSBpc3N1
-ZXMgd2l0aCB0aGUgZXJyb3IgaGFuZGxpbmcgaW4gcHJvYmUgZGVmZXJyYWw/DQoNClRoYW5rcyEN
-Ck51bm8gU8OhDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0
-cHM6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVs
-Cg==
+On Mon, 2019-09-30 at 11:36 +0200, Thierry Reding wrote:
+> On Mon, Sep 30, 2019 at 04:51:08PM +0800, Sam Shih wrote:
+> > Hi,
+> > 
+> > On Fri, 2019-09-27 at 13:28 +0200, Thierry Reding wrote:
+> > > On Wed, Sep 25, 2019 at 10:32:33PM +0800, Sam Shih wrote:
+> > > > This adds pwm support for MT7629, and separate mt7629 compatible string
+> > > > from mt7622
+> > > > 
+> > > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> > > > ---
+> > > >  drivers/pwm/pwm-mediatek.c | 6 ++++++
+> > > >  1 file changed, 6 insertions(+)
+> > > 
+> > > I picked this patch up and made some minor adjustments to make it build
+> > > without the num_pwms patches. With that I don't think there's anything
+> > > left from this series that you need.
+> > 
+> > Yes, I think the driver should work once dtsi updated.
+> > ("[v10,12/12] arm: dts: mediatek: add mt7629 pwm support")
+> > 
+> > But, due to we use comaptible string separately for every SoC now,
+> > The comaptible string in dt-bindings should be "mediatek,mt7629-pwm".
+> > I think we should use "[v10,11/12] dt-bindings: pwm: update bindings 
+> > for MT7629" to replace commit 1c00ad6ebf36aa3b0fa598a48b8ae59782be4121,
+> > Or maybe we need a little modification like this ?
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt ...
+> > - - "mediatek,mt7629-pwm", "mediatek,mt7622-pwm": found on mt7629 SoC.
+> > + - "mediatek,mt7629-pwm": found on mt7629 SoC.
+> 
+> Good catch, I must've taken this from the wrong version of the patch.
+> 
+> How about the attached patch?
+> 
+> Thanks,
+> Thierry
+> --- >8 ---
+> From 641b0ee176b139f9edd137ba636ca0cb9c63289a Mon Sep 17 00:00:00 2001
+> From: Thierry Reding <thierry.reding@gmail.com>
+> Date: Mon, 30 Sep 2019 11:33:31 +0200
+> Subject: [PATCH] dt-bindings: pwm: mediatek: Remove gratuitous compatible
+>  string for MT7629
+> 
+> The MT7629 is, in fact, not compatible with the MT7622 because the
+> former has a single PWM channel while the former has 6. Remove the
+> gratuitous compatible string for MT7629.
+> 
+> Reported-by: Sam Shih <sam.shih@mediatek.com>
+> Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> index c8501530173c..053e9b5880f1 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> @@ -6,7 +6,7 @@ Required properties:
+>     - "mediatek,mt7622-pwm": found on mt7622 SoC.
+>     - "mediatek,mt7623-pwm": found on mt7623 SoC.
+>     - "mediatek,mt7628-pwm": found on mt7628 SoC.
+> -   - "mediatek,mt7629-pwm", "mediatek,mt7622-pwm": found on mt7629 SoC.
+> +   - "mediatek,mt7629-pwm": found on mt7629 SoC.
+>     - "mediatek,mt8516-pwm": found on mt8516 SoC.
+>   - reg: physical base address and length of the controller's registers.
+>   - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
+
+It seems good to me.
+
+Thanks,
+Regards, Sam
