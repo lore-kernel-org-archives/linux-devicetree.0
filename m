@@ -1,138 +1,89 @@
-From: ppvk@codeaurora.org
-Subject: Re: [RFC 2/2] dt-bindings: mmc: sdhci-msm: Add Bus BW vote supported
- strings
-Date: Mon, 30 Sep 2019 20:02:19 +0530
-Message-ID: <695802ae255fe40ab9ca7750e0bbed91@codeaurora.org>
-References: <1567774037-2344-1-git-send-email-ppvk@codeaurora.org>
- <1567774037-2344-3-git-send-email-ppvk@codeaurora.org>
- <5d7ba95c.1c69fb81.edf8e.6556@mx.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/7] dt-bindings: chosen: Add clocksource and clockevent
+ selection
+Date: Mon, 30 Sep 2019 09:32:46 -0500
+Message-ID: <20190930143246.GA19967@bogus>
+References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
+ <1568123236-767-5-git-send-email-claudiu.beznea@microchip.com>
+ <20190910143231.GB14966@e107533-lin.cambridge.arm.com>
+ <ab43b209-78fa-0cab-b8ea-acd4c550e689@microchip.com>
+ <20190910150826.GA18308@e107533-lin.cambridge.arm.com>
+ <20190910151055.GX21254@piout.net>
+ <CACRpkda4mmpbPWa2nD93CvD6HWzcTUDzyyLdQxC2gNB7XiJF3w@mail.gmail.com>
+ <a2aca46a-8eb9-d8a8-de42-9850a8a8f44c@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d7ba95c.1c69fb81.edf8e.6556@mx.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, asutoshd@codeaurora.org, vbadigan@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, rampraka@codeaurora.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <a2aca46a-8eb9-d8a8-de42-9850a8a8f44c@microchip.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Claudiu.Beznea@microchip.com
+Cc: tmaimon77@gmail.com, linus.walleij@linaro.org, nsekhar@ti.com, guoren@kernel.org, linux-stm32@st-md-mailman.stormreply.com, heiko@sntech.de, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, khilman@baylibre.com, Ludovic.Desroches@microchip.com, linux-imx@nxp.com, u.kleine-koenig@pengutronix.de, uclinux-h8-devel@lists.sourceforge.jp, marc.zyngier@arm.com, s.hauer@pengutronix.de, linux-unisoc@lists.infradead.org, khalasa@piap.pl, tglx@linutronix.de, sbranden@broadcom.com, linux-kernel@vger.kernel.org, ralf@linux-mips.org, paul.burton@mips.com, kernel@pengutronix.de, mark.rutland@arm.com, alexandre.belloni@bootlin.com, jhogan@kernel.org, palmer@sifive.com, eric@anholt.net, thierry.reding@gmail.com, manivannan.sadhasivam@linaro.org, ysato@users.sourceforge.jp, zhang.lyra@gmail.com, daniel.lezcano@linaro.org, jonathanh@nvidia.com, bgolaszewski@baylibre.co
 List-Id: devicetree@vger.kernel.org
 
-On 2019-09-13 20:06, Rob Herring wrote:
-> On Fri, Sep 06, 2019 at 06:17:17PM +0530, Pradeep P V K wrote:
->> Add Bus bandwidth voting supported strings for qcom-sdhci controller.
+On Wed, Sep 11, 2019 at 07:18:07AM +0000, Claudiu.Beznea@microchip.com wrote:
 > 
-> What is bus bandwidth voting?
+> 
+> On 11.09.2019 03:03, Linus Walleij wrote:
+> > External E-Mail
+> > 
+> > 
+> > On Tue, Sep 10, 2019 at 4:11 PM Alexandre Belloni
+> > <alexandre.belloni@bootlin.com> wrote:
+> >> On 10/09/2019 16:08:26+0100, Sudeep Holla wrote:
+> >>> On Tue, Sep 10, 2019 at 02:51:50PM +0000, Claudiu.Beznea@microchip.com wrote:
+> > 
+> >>> In that case, why can't we identify capability that with the compatibles
+> >>> for this timer IP ?
+> >>>
+> >>> IOW, I don't like the proposal as it's hardware limitation.
+> >>
+> >> To be clear, bot timers are exactly the same but can't be clocksource
+> >> and clockevent at the same time. Why would we have different compatibles
+> >> for the exact same IP?
+> > 
+> > In that case why not just pick the first one you find as clocksource
+> > and the second one as clock event? As they all come to the
+> > same timer of init function two simple local state variables can
+> > solve that:
+> > 
+> > static bool registered_clocksource;
+> > static bool registered_clockevent;
+> > 
+> > probe(timer) {
+> >    if (!registered_clocksource) {
+> >        register_clocksource(timer);
+> >        registrered_clocksource = true;
+> >        return;
+> >    }
+> >    if (!registered_clockevent) {
+> >        register_clockevent(timer);
+> >        registered_clockevent = true;
+> >        return;
+> >    }
+> >    pr_info("surplus timer %p\n", timer);
+> > }
+> > 
+> 
+> That was also my proposal for the driver I'm sending this series for (see
+> [1]) but it has been proposed to implement a mechanism similar to this one
+> in this series (see [2] and [3]).
 
-Controller is connected with its master using NOC and it controls its 
-slaves using another NOC path.
-So,controller have 2 NOC paths as below.
-     a. CPU to Controller, This path is used to access the registers of 
-controllers.
-     b. Controller to DDR, This path is a data path, where data is 
-read/write from/to DDR.
-All data transfer will happen on these NOC's, which is shared between 
-other peripherals.
-In order to achieve required throughput (Data transfer Bandwidth) we put 
-vote on these NOC's to
-scale the NOC clocks to support required bandwidth.
+This comes up over and over, and the answer is still no. Either each 
+block is identical and doesn't matter which one is used for what or 
+there is some h/w difference that you should describe. 
 
-Instantaneous bandwidth (ib) and Arbitrated bandwidth (ab) values are 
-the values calculated (This involves various arch. specific parameters
-like clock plans, voltage corners, etc. which varies from vendor to 
-vendor and target to target)
-to put vote on those noc's to achieve require throughput.
+If you want something that would even be considered to put into DT, 
+then define something BSD or other OS's could use too. (That's not a 
+suggestion to respin this with generalized names.)
 
-> 
->> 
->> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
->> ---
->>  .../devicetree/bindings/mmc/sdhci-msm.txt          | 32 
->> ++++++++++++++++++++++
->>  1 file changed, 32 insertions(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt 
->> b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> index da4edb1..8255d92 100644
->> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> @@ -39,6 +39,25 @@ Required properties:
->>  	"cal"	- reference clock for RCLK delay calibration (optional)
->>  	"sleep"	- sleep clock for RCLK delay calibration (optional)
->> 
->> +Optional Properties:
->> +* Following bus parameters are required for bus bw voting:
->> +- interconnects: Pairs of phandles and interconnect provider 
->> specifier
->> +		 to denote the edge source and destination ports of
->> +		 the interconnect path. Please refer to
->> +		 Documentation/devicetree/bindings/interconnect/
->> +		 for more details.
->> +- interconnect-names: List of interconnect path name strings sorted 
->> in the same
->> +		order as the interconnects property. Consumers drivers will use
->> +		interconnect-names to match interconnect paths with interconnect
->> +		specifiers. Please refer to Documentation/devicetree/bindings/
->> +		interconnect/ for more details.
-> 
-> How many? What are the strings?
-
-As this is implemented using interconnect framework, "interconnects" and 
-"interconnect-names" are required
-and below qcom specific properties are required to calculate the ab and 
-ib values.
-> 
->> +- qcom,msm-bus,name: string describing the bus path
->> +- qcom,msm-bus,num-cases: number of configurations in which sdhc can 
->> operate in
->> +- qcom,msm-bus,num-paths: number of paths to vote for
->> +- qcom,msm-bus,vectors-KBps: Takes a tuple <ib ab>, <ib ab> (2 tuples 
->> for 2
-> 
-> ib and ab are what? Didn't we just add interconnect bindings for
-> expressing bandwidth?
-
-Instantaneous bandwidth (ib) is peak bandwidth and Arbitrated bandwidth 
-(ab) is the Average bandwidth.
-There is no interconnect binding node as such for expressing the 
-bandwidth. Hence the reason to use the
-above qcom nodes for parsing and storing the req. bandwidth.
-
-> 
->> +				num-paths) The number of these entries *must*
->> +				be same as num-cases.
-> 
-> Are all these properties SDHCI specific or can we expect to get these
-> for *all* the QCom blocks?
-> 
-As per the current implementation, these are some optional properties 
-and is required
-only when the bus bandwidth support is needed and all these are qcom 
-specific.
-
->> +
->>  Example:
->> 
->>  	sdhc_1: sdhci@f9824900 {
->> @@ -56,6 +75,19 @@ Example:
->> 
->>  		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
->>  		clock-names = "core", "iface";
->> +		interconnects = <&qnoc 50 &qnoc 512>,
->> +				<&qnoc 1 &qnoc 544>;
->> +		interconnect-names = "sdhc-ddr","cpu-sdhc";
->> +		qcom,msm-bus,name = "sdhc1";
->> +		qcom,msm-bus,num-cases = <3>;
->> +		qcom,msm-bus,num-paths = <2>;
->> +		qcom,msm-bus,vectors-KBps =
->> +		/* No Vote */
->> +		<0 0>, <0 0>,
->> +		/* 50 MB/s */
->> +		<130718 200000>, <133320 133320>,
->> +		/* 200 MB/s */
->> +		<1338562 4096000>, <1338562 4096000>;
->>  	};
->> 
->>  	sdhc_2: sdhci@f98a4900 {
->> --
->> 1.9.1
->> 
+Rob
