@@ -1,100 +1,172 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
-Date: Mon, 30 Sep 2019 09:04:18 -0500
-Message-ID: <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
-References: <20190510194229.20628-1-aford173@gmail.com> <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com> <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com> <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com> <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
- <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com> <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
- <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com> <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
- <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com> <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
- <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC 2/2] dt-bindings: power: Convert Samsung Exynos Power
+ Domain bindings to json-schema
+Date: Mon, 30 Sep 2019 09:06:00 -0500
+Message-ID: <20190930140600.GA18975@bogus>
+References: <20190908152813.20646-1-krzk@kernel.org>
+ <20190908152813.20646-2-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190908152813.20646-2-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Tero Kristo <t-kristo@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Tony Lindgren <tony@atomide.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 8:54 AM Adam Ford <aford173@gmail.com> wrote:
->
-> On Mon, Sep 30, 2019 at 8:39 AM H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> >
-> >
-> > > Am 30.09.2019 um 10:53 schrieb Tero Kristo <t-kristo@ti.com>:
-> > >
-> > > The best action here is probably to drop the max-div value for this clock to 16. Can someone check this with their display setup and see what happens? Attached patch should do the trick.
-> >
-> > I have checked on GTA04 and OpenPandora (DM3730 resp. OMAP3430) and did not notice a negative effect.
-> >
-> > (Well, we never see the problem that is discussed here and have built with CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=0).
->
-> I have never been able to use CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK=0, but
-> I assume it's either a function of pck or a combination of pck with
-> the resolution.
->
-> Based on Tomi's comment, I assume he's working on the following.  Can
-> you also try:
->
-> diff --git a/drivers/gpu/drm/omapdrm/dss/dss.c
-> b/drivers/gpu/drm/omapdrm/dss/dss.c
-> index 5711b7a720e6..5e584f32ea6a 100644
-> --- a/drivers/gpu/drm/omapdrm/dss/dss.c
-> +++ b/drivers/gpu/drm/omapdrm/dss/dss.c
-> @@ -1090,7 +1090,7 @@ static const struct dss_features omap34xx_dss_feats = {
->
->  static const struct dss_features omap3630_dss_feats = {
->         .model                  =       DSS_MODEL_OMAP3,
-> -       .fck_div_max            =       32,
-> +       .fck_div_max            =       16,
->         .fck_freq_max           =       173000000,
->         .dss_fck_multiplier     =       1,
->         .parent_clk_name        =       "dpll4_ck",
->
->
-> Hopefully it doesn't break the 3630 for you, but it fixed my issue
-> with no back trace:
->
-> [    9.915588] DSS: set fck to 54000000
-> [    9.915618] DISPC: lck = 54000000 (1)
-> [    9.915649] DISPC: pck = 9000000 (6)
-> [    9.917633] DISPC: channel 0 xres 480 yres 272
-> [    9.917663] DISPC: pck 9000000
->
-> I do wonder, however if there is a divider that is higher than 16, but
-> lower than 32.
-> I was able to run fck at 36MHz before with divide by 4 to 9MHz, so I
-> am hoping that by running at 54MHz / 6 doesn't draw more power.  I was
-> reading through the datasheet, but I could not find any reference to
-> the max divider.
->
+On Sun, Sep 08, 2019 at 05:28:13PM +0200, Krzysztof Kozlowski wrote:
+> Convert Samsung Exynos Soc Power Domain bindings to DT schema format using
+> json-schema.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  .../devicetree/bindings/power/pd-samsung.txt  | 45 ------------
+>  .../devicetree/bindings/power/pd-samsung.yaml | 70 +++++++++++++++++++
+>  2 files changed, 70 insertions(+), 45 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/power/pd-samsung.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/pd-samsung.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/power/pd-samsung.txt b/Documentation/devicetree/bindings/power/pd-samsung.txt
+> deleted file mode 100644
+> index 92ef355e8f64..000000000000
+> --- a/Documentation/devicetree/bindings/power/pd-samsung.txt
+> +++ /dev/null
+> @@ -1,45 +0,0 @@
+> -* Samsung Exynos Power Domains
+> -
+> -Exynos processors include support for multiple power domains which are used
+> -to gate power to one or more peripherals on the processor.
+> -
+> -Required Properties:
+> -- compatible: should be one of the following.
+> -    * samsung,exynos4210-pd - for exynos4210 type power domain.
+> -    * samsung,exynos5433-pd - for exynos5433 type power domain.
+> -- reg: physical base address of the controller and length of memory mapped
+> -    region.
+> -- #power-domain-cells: number of cells in power domain specifier;
+> -    must be 0.
+> -
+> -Optional Properties:
+> -- label: Human readable string with domain name. Will be visible in userspace
+> -	to let user to distinguish between multiple domains in SoC.
+> -- power-domains: phandle pointing to the parent power domain, for more details
+> -		 see Documentation/devicetree/bindings/power/power_domain.txt
+> -
+> -Deprecated Properties:
+> -- clocks
+> -- clock-names
+> -
+> -Node of a device using power domains must have a power-domains property
+> -defined with a phandle to respective power domain.
+> -
+> -Example:
+> -
+> -	lcd0: power-domain-lcd0 {
+> -		compatible = "samsung,exynos4210-pd";
+> -		reg = <0x10023C00 0x10>;
+> -		#power-domain-cells = <0>;
+> -		label = "LCD0";
+> -	};
+> -
+> -	mfc_pd: power-domain@10044060 {
+> -		compatible = "samsung,exynos4210-pd";
+> -		reg = <0x10044060 0x20>;
+> -		#power-domain-cells = <0>;
+> -		label = "MFC";
+> -	};
+> -
+> -See Documentation/devicetree/bindings/power/power_domain.txt for description
+> -of consumer-side bindings.
+> diff --git a/Documentation/devicetree/bindings/power/pd-samsung.yaml b/Documentation/devicetree/bindings/power/pd-samsung.yaml
+> new file mode 100644
+> index 000000000000..0fc012734a79
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/pd-samsung.yaml
+> @@ -0,0 +1,70 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/power/pd-samsung.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung Exynos SoC Power Domains
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzk@kernel.org>
+> +
+> +description: |+
+> +  Exynos processors include support for multiple power domains which are used
+> +  to gate power to one or more peripherals on the processor.
+> +
+> +allOf:
+> +  - $ref: power-domain.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - samsung,exynos4210-pd
+> +      - samsung,exynos5433-pd
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    deprecated: true
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    deprecated: true
+> +    maxItems: 1
+> +
+> +  label:
+> +    $ref: /schemas/types.yaml#/definitions/string
 
-For run, I tested a max divider of 27, and I was able to get it
-functional with a slower fck
+label already has a type.
 
-[    9.939056] DSS: set fck to 36000000
-[    9.939086] DISPC: lck = 36000000 (1)
-[    9.939086] DISPC: pck = 9000000 (4)
-[    9.941314] DISPC: channel 0 xres 480 yres 272
-[    9.941314] DISPC: pck 9000000
-[    9.941314] DISPC: hsync_len 42 hfp 3 hbp 2 vsw 11 vfp 2 vbp 3
-[    9.941314] DISPC: vsync_level 1 hsync_level 1 data_pclk_edge 1
-de_level 1 sync_pclk_edge -1
-[    9.941345] DISPC: hsync 17077Hz, vsync 59Hz
+Is there a defined set of values?
 
+> +    description:
+> +      Human readable string with domain name. Will be visible in userspace
+> +      to let user to distinguish between multiple domains in SoC.
+> +
+> +  "#power-domain-cells":
+> +    const: 0
+> +
+> +  power-domains:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
 
-I don't know the implications, so if the people from TI say stick with
-16, I'm fine with that, but at least there is some evidence that it
-can be higher than 16, but lower than 32.
+Already has a type.
 
-adam
+maxItems: 1
 
-> adam
-> >
-> > BR,
-> > Nikolaus
-> >
+> +    description:
+> +      Phandle pointing to the parent power domain, for more details
+> +      see power-domain-consumers.yaml.
+
+Unless there's something specific about this device to say, drop this.
+
+> +
+> +required:
+> +  - compatible
+> +  - "#power-domain-cells"
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    lcd0: power-domain-lcd0 {
+> +      compatible = "samsung,exynos4210-pd";
+> +      reg = <0x10023C00 0x10>;
+> +      #power-domain-cells = <0>;
+> +      label = "LCD0";
+> +    };
+> +
+> +    mfc_pd: power-domain@10044060 {
+> +      compatible = "samsung,exynos4210-pd";
+> +      reg = <0x10044060 0x20>;
+> +      #power-domain-cells = <0>;
+> +      label = "MFC";
+> +    };
+> -- 
+> 2.17.1
+> 
