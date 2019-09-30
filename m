@@ -1,66 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] arm64: dts: renesas: Add /soc dma-ranges
-Date: Mon, 30 Sep 2019 10:08:19 -0500
-Message-ID: <CAL_JsqJf-TGE-SWWj=6AVbpfuN1AsEdDTSOCOk+iUzTT3yZSgw@mail.gmail.com>
-References: <20190907161634.27378-1-marek.vasut@gmail.com>
- <CAL_JsqL47dQT-P78j4Ph61fsgA45Ha0AJjDajiMk52yFj++s+g@mail.gmail.com>
- <CAL_JsqK+SwX8Lu+-4UgpLVxL05yTcs8Af9mPVHqzbf6+HF9v3A@mail.gmail.com>
- <0bf7c8c8-d03e-c08e-4879-3d3a2fb90ca7@gmail.com>
+From: Adam Ford <aford173@gmail.com>
+Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
+Date: Mon, 30 Sep 2019 10:10:11 -0500
+Message-ID: <CAHCN7xJNJca8W_yw5nNY3AmKDSPoLzJ8voPmR1HS3bNcU8uQGg@mail.gmail.com>
+References: <20190510194229.20628-1-aford173@gmail.com> <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
+ <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
+ <845055e2-8182-de74-2077-629fdf50ac6c@ti.com> <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
+ <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com> <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
+ <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com> <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
+ <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com> <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
+ <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com> <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
+ <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
+ <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
+ <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
+ <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com> <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <0bf7c8c8-d03e-c08e-4879-3d3a2fb90ca7@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 7:45 AM Marek Vasut <marek.vasut@gmail.com> wrote:
+On Mon, Sep 30, 2019 at 9:27 AM Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
 >
-> On 9/24/19 12:33 AM, Rob Herring wrote:
-> > On Fri, Sep 13, 2019 at 10:14 AM Rob Herring wrote:
-> >>
-> >> On Sat, Sep 7, 2019 at 5:16 PM wrote:
-> >>>
-> >>> From: Marek Vasut
-> >>>
-> >>> Add dma-ranges property into /soc node to describe the DMA capabilities
-> >>> of the bus. This is currently needed to translate PCI DMA ranges, which
-> >>> are limited to 32bit addresses.
-> >>
-> >> FYI, I've started working on this problem and issues around
-> >> dma-ranges/dma_mask. Hopefully I'll get some patches out next week.
-> >
-> > I've pushed out a branch here:
-> >
-> > git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dma-masks
-> >
-> > Can you test it on Renesas. I don't have a real platform having the issue.
+> On 30/09/2019 17:20, Tomi Valkeinen wrote:
 >
+> > Let's see what Tero says, but yeah, something is odd here. I expected
+> > the max divider to be 16 with Tero's patch, but I don't see it having
+> > that effect. I can get the div to 31.
+> >
+> > You can see this from the clock register 0x48004e40 (CM_CLKSEL_DSS). The
+> > lowest bits are the divider, 5 to 0. The TRM says max div is 32.
+> >
+> > Tero said for him the dividers > 16 didn't "stick" to the register. I'm
+> > now wondering if he has an old beagleboard with OMAP34xx, which has max
+> > div 16.
 >
-> With the following patches applied:
->       https://patchwork.ozlabs.org/patch/1144870/
+> So testing a bit more here, I can see the DSS working fine and fps as
+> expected when I write values directly to CM_CLKSEL_DSS:5:0, with
+> dividers up to 31. With 32, DSS breaks. The TRM (AM/DM37x) says value 32
+> is valid.
 
-I'd rather not have yet another instance of {dma-}ranges parsing code.
-With this series[1], dma-ranges gets parsed into resource list for
-you.
+I wonder if it's somehow being masked with bits 4:0 instead of 5:0
+which could potentially make the divider 0 and that value doesn't
+appear to be valid.
 
->       https://patchwork.ozlabs.org/patch/1144871/
+adam
 
-How can this one be applied? It would conflict horribly. Plus I think
-it duplicates what's in my series.
-
-Rob
-
-> on R8A7795 Salvator-XS, works fine.
-
-[1] https://lore.kernel.org/linux-arm-kernel/20190924214630.12817-7-robh@kernel.org/T/
+>
+>   Tomi
+>
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
