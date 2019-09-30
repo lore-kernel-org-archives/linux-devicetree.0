@@ -1,77 +1,100 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 12/19] dt-bindings: mips: Add loongson boards
-Date: Mon, 30 Sep 2019 08:23:20 -0500
-Message-ID: <20190930132320.GB3354@bogus>
-References: <20190905144316.12527-1-jiaxun.yang@flygoat.com>
- <20190905144316.12527-13-jiaxun.yang@flygoat.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH 05/11] of: Ratify of_dma_configure() interface
+Date: Mon, 30 Sep 2019 15:32:55 +0200
+Message-ID: <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
+References: <20190927002455.13169-1-robh@kernel.org>
+         <20190927002455.13169-6-robh@kernel.org>
+         <20190930125752.GD12051@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-J2uUUCx3PD1vZZDm+yYn"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190905144316.12527-13-jiaxun.yang@flygoat.com>
+In-Reply-To: <20190930125752.GD12051@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: linux-mips@vger.kernel.org, chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.co, devicetree@vger.kernel.org
+To: Christoph Hellwig <hch@infradead.org>, Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Frank Rowand <frowand.list@gmail.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Oza Pawandeep <oza.oza@broadcom.com>, Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 10:43:09PM +0800, Jiaxun Yang wrote:
-> Prepare for later dts.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
->  .../bindings/mips/loongson/devices.yaml       | 39 +++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-> new file mode 100644
-> index 000000000000..0665f0f7ec45
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-> @@ -0,0 +1,39 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mips/loongson/devices.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Loongson based Platforms Device Tree Bindings
-> +
-> +maintainers:
-> +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-> +description: |
-> +  Devices with a Loongson CPU shall have the following properties.
-> +
-> +properties:
-> +  $nodename:
-> +    const: '/'
-> +  compatible:
-> +    oneOf:
-> +
-> +      - description: Loongson 3A1000 + RS780E
-> +        items:
-> +          - const: loongson,ls3a1000-780e
 
-These should reflect the specific maker and model of board, not just 
-what's the cpu and south bridge.
+--=-J2uUUCx3PD1vZZDm+yYn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> +
-> +      - description: Loongson 3A2000 + RS780E
-> +        items:
-> +          - const: loongson,ls3a2000-780e
-> +
-> +      - description: Loongson 3A3000 + RS780E
-> +        items:
-> +          - const: loongson,ls3a3000-780e
-> +
-> +      - description: Loongson 3A3000 + 7A
-> +        items:
-> +          - const: loongson,ls3a3000-7a
-> +
-> +      - description: Loongson 3B1000/1500 + RS780E 2Way
-> +        items:
-> +          - const: loongson,ls3b1x00-780e
-> +...
-> -- 
-> 2.22.0
-> 
+On Mon, 2019-09-30 at 05:57 -0700, Christoph Hellwig wrote:
+> On Thu, Sep 26, 2019 at 07:24:49PM -0500, Rob Herring wrote:
+> > -int of_dma_configure(struct device *dev, struct device_node *np, bool
+> > force_dma)
+> > +int of_dma_configure(struct device *dev, struct device_node *parent, b=
+ool
+> > force_dma)
+>=20
+> This creates a > 80 char line.
+>=20
+> >  {
+> >  	u64 dma_addr, paddr, size =3D 0;
+> >  	int ret;
+> >  	bool coherent;
+> >  	unsigned long offset;
+> >  	const struct iommu_ops *iommu;
+> > +	struct device_node *np;
+> >  	u64 mask;
+> > =20
+> > +	np =3D dev->of_node;
+> > +	if (!np)
+> > +		np =3D parent;
+> > +	if (!np)
+> > +		return -ENODEV;
+>=20
+> I have to say I find the older calling convention simpler to understand.
+> If we want to enforce the invariant I'd rather do that explicitly:
+>=20
+> 	if (dev->of_node && np !=3D dev->of_node)
+> 		return -EINVAL;
+
+As is, this would break Freescale Layerscape fsl-mc bus' dma_configure():
+
+static int fsl_mc_dma_configure(struct device *dev)
+{
+	struct device *dma_dev =3D dev;
+
+	while (dev_is_fsl_mc(dma_dev))
+		dma_dev =3D dma_dev->parent;
+
+	return of_dma_configure(dev, dma_dev->of_node, 0);
+}
+
+But I think that with this series, given the fact that we now treat the lac=
+k of
+dma-ranges as a 1:1 mapping instead of an error, we could rewrite the funct=
+ion
+like this:
+
+static int fsl_mc_dma_configure(struct device *dev)
+{
+	return of_dma_configure(dev, false, 0);
+}
+
+If needed I can test this.
+
+Regards,
+Nicolas
+
+
+--=-J2uUUCx3PD1vZZDm+yYn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2SBAcACgkQlfZmHno8
+x/4Nzwf+LG0gvylrOQLw5x/IHv2Kgv6fhZ0lnwVON/shyUQa9M2SJ6AmcGSBXL/D
+poq3K8WHsQdr5e2yEyy2/lT92p6qSNbdIDjOeDyq3YskHZP6SBm/nC2l/dtDU9z6
+fv3/gGTWP7ckQI4v4690kUZ4Txb3ndCWgrf7GXn7JKT7uDaqmIsiefi0S+YU8Y2L
+mr1dudpZ3wAnCI0uA6Za8Db6QQ2lCtGHvchLzv0dC8n4qlMMipuWGFD8y/R6BGw7
+90iinlHnoJrL07DjWy4nVFPqvXnFUADXr5eXAijh+ZQ7kCFOKHwYvEB7Zrh0mEw8
+bdGzfMEbXgkzUdAaLb8mb48VqHBsOg==
+=Byb8
+-----END PGP SIGNATURE-----
+
+--=-J2uUUCx3PD1vZZDm+yYn--
