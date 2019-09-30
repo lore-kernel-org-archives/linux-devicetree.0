@@ -1,50 +1,57 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: i2c: Aspeed: Add AST2600 compatible
-Date: Mon, 30 Sep 2019 13:59:18 -0500
-Message-ID: <20190930185918.GA18431@bogus>
-References: <1568392510-866-1-git-send-email-eajames@linux.ibm.com>
- <1568392510-866-3-git-send-email-eajames@linux.ibm.com>
+Subject: Re: [PATCH v2 2/5] dt-bindings: Document brcm,irq-can-wake for
+ brcm,bcm7038-l1-intc.txt
+Date: Mon, 30 Sep 2019 14:05:49 -0500
+Message-ID: <20190930190549.GA21236@bogus>
+References: <20190913191542.9908-1-f.fainelli@gmail.com>
+ <20190913191542.9908-3-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1568392510-866-3-git-send-email-eajames@linux.ibm.com>
+In-Reply-To: <20190913191542.9908-3-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.ibm.com>
-Cc: linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, brendanhiggins@google.com, joel@jms.id.au, andrew@aj.id.au, mark.rutland@arm.com, benh@kernel.crashing.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 11:35:10AM -0500, Eddie James wrote:
-> Document the AST2600 I2C bus compatible string.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-aspeed.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> index 8fbd863..b47f6cc 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> @@ -1,4 +1,4 @@
-> -Device tree configuration for the I2C busses on the AST24XX and AST25XX SoCs.
-> +Device tree configuration for the I2C busses on the AST24XX, AST25XX, and AST26XX SoCs.
+On Fri, Sep 13, 2019 at 12:15:39PM -0700, Florian Fainelli wrote:
+> The BCM7038 L1 interrupt controller can be used as a wake-up interrupt
+> controller on MIPS and ARM-based systems, document the brcm,irq-can-wake
+> which has been "standardized" across Broadcom interrupt controllers.
 
-Perhaps s/buses/busses/ while you're here.
+Not clear that that got much review...
+
+We have a defined way to indicate wakeup sources (which maybe didn't 
+exist in 2014), why can't that be used? If a device can wakeup the 
+system, I'd think we can just assume that the parent interrupt 
+controller(s) can support that.
+
+In any case, I'm not going to stand in the way of this:
 
 Acked-by: Rob Herring <robh@kernel.org>
 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  .../bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt   | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+> index 2117d4ac1ae5..4eb043270f5b 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7038-l1-intc.txt
+> @@ -31,6 +31,11 @@ Required properties:
+>  - interrupts: specifies the interrupt line(s) in the interrupt-parent controller
+>    node; valid values depend on the type of parent interrupt controller
 >  
->  Required Properties:
->  - #address-cells	: should be 1
-> @@ -6,6 +6,7 @@ Required Properties:
->  - reg			: address offset and range of bus
->  - compatible		: should be "aspeed,ast2400-i2c-bus"
->  			  or "aspeed,ast2500-i2c-bus"
-> +			  or "aspeed,ast2600-i2c-bus"
->  - clocks		: root clock of bus, should reference the APB
->  			  clock in the second cell
->  - resets		: phandle to reset controller with the reset number in
+> +Optional properties:
+> +
+> +- brcm,irq-can-wake: If present, this means the L1 controller can be used as a
+> +  wakeup source for system suspend/resume.
+> +
+>  If multiple reg ranges and interrupt-parent entries are present on an SMP
+>  system, the driver will allow IRQ SMP affinity to be set up through the
+>  /proc/irq/ interface.  In the simplest possible configuration, only one
 > -- 
-> 1.8.3.1
+> 2.17.1
 > 
