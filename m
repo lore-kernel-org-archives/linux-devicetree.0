@@ -1,186 +1,76 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH 1/3] ARM: dts: add Netronix E60K02 board common file
-Date: Mon, 30 Sep 2019 10:27:15 +0200
-Message-ID: <20190930082715.mplf5ra35ikqmbyr@pengutronix.de>
-References: <20190927061423.17278-1-andreas@kemnade.info>
- <20190927061423.17278-2-andreas@kemnade.info>
- <20190927094721.w26ggnli4f5a64uv@pengutronix.de>
- <20190927210807.26439a94@aktux>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [Patch 07/16] media: ti-vpe: vpe: fix a v4l2-compliance failure
+ causing a kernel panic
+Date: Mon, 30 Sep 2019 10:35:05 +0200
+Message-ID: <1a7c5929-15f1-8f04-1212-42f064654742@xs4all.nl>
+References: <20190927183650.31345-1-bparrot@ti.com>
+ <20190927183650.31345-8-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190927210807.26439a94@aktux>
+In-Reply-To: <20190927183650.31345-8-bparrot@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com, marex@denx.de, angus@akkea.ca, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+To: Benoit Parrot <bparrot@ti.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
-
-On 19-09-27 21:08, Andreas Kemnade wrote:
-> Hi Marco,
+On 9/27/19 8:36 PM, Benoit Parrot wrote:
+> v4l2-compliance fails with this message:
 > 
-> On Fri, 27 Sep 2019 11:47:21 +0200
-> Marco Felsch <m.felsch@pengutronix.de> wrote:
+>    warn: v4l2-test-formats.cpp(717): \
+>    	TRY_FMT cannot handle an invalid pixelformat.
+>    test VIDIOC_TRY_FMT: FAIL
 > 
-> > Hi Andreas,
-> > 
-> > thanks for the patch.
-> > 
-> thanks for the quick review. Most of your comments are clear.
+> This causes the following kernel panic:
 > 
-> [...]
-> > > +	wifi_pwrseq: wifi_pwrseq {
-> > > +		compatible = "mmc-pwrseq-simple";
-> > > +		post-power-on-delay-ms = <20>;
-> > > +		reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;  
-> > 
-> > Can you add a pinctrl-entry here please? The general rule is to mux
-> > things where you use it.
-> > 
-> yes, there are many places in my patch where they are added to some
-> parent devices.
-> I will fix that.
-> [...]
-> > > +	leds {
-> > > +		compatible = "gpio-leds";
-> > > +		pinctrl-names = "default";
-> > > +		pinctrl-0 = <&pinctrl_led>;  
-> > 
-> > Please move all muxing you made here into this file or add phandles so
-> > the dts file need to add only the muxing stuff. This applies to all
-> > pinctrl you made here.
-> > 
-> so you disagree with this pattern:
-> in .dtsi
->  some_device {
->    pinctrl-0 = <&pinctrl_some_device>;
->  };
+> Unable to handle kernel paging request at virtual address 56595561
+> pgd = ecd80e00
+> *pgd=00000000
+> Internal error: Oops: 205 [#1] PREEMPT SMP ARM
+> ...
+> CPU: 0 PID: 930 Comm: v4l2-compliance Not tainted \
+> 	4.14.62-01715-gc8cd67f49a19 #1
+> Hardware name: Generic DRA72X (Flattened Device Tree)
+> task: ece44d80 task.stack: ecc6e000
+> PC is at __vpe_try_fmt+0x18c/0x2a8 [ti_vpe]
+> LR is at 0x8
 > 
-> and in .dts (one I sent with this patch series and the tolino/mx6sl one
-> is not ready-cooked yet, will be part of a later series)
-> &iomuxc {
->    pinctrl_some_device: some_devicegrp {
->    	fsl,pins = <...>;
->    };
-> };
+> Because the driver fails to properly check the 'num_planes' values for
+> proper ranges it ends up accessing out of bound data causing the kernel
+> panic.
 > 
-> ?
-
-Yes, because IMHO a dtsi is self contained as well as a dts. If it is
-common for all boards you can move the muxing into the dtsi else it
-should be done within the dts.
-
-> > > +
-> > > +		GLED {
-> > > +			gpios = <&gpio5 7 GPIO_ACTIVE_LOW>;
-> > > +			linux,default-trigger = "timer";
-> > > +		};
-> > > +	};
-> > > +
-> > > +	gpio-keys {
-> > > +		compatible = "gpio-keys";
-> > > +		pinctrl-names = "default";
-> > > +		pinctrl-0 = <&pinctrl_gpio_keys>;
-> > > +		power {
-> > > +			label = "Power";
-> > > +			gpios = <&gpio5 8 GPIO_ACTIVE_LOW>;
-> > > +			linux,code = <KEY_POWER>;  
-> > 
-> > Add missing header: dt-bindings/input/input.h to use this.
-> > 
-> I am doing this in the .dts but it is probably better to do it here
-> because it is used here.
+> Since this driver only handle single or dual plane pixel format, make
+> sure the provided value does not exceed 2 planes.
 > 
-> > > +			gpio-key,wakeup;
-> > > +		};
-> > > +		cover {
-> > > +			label = "Cover";
-> > > +			gpios = <&gpio5 12 GPIO_ACTIVE_LOW>;
-> > > +			linux,code = <SW_LID>;
-> > > +			linux,input-type = <0x05>;    /* EV_SW */  
-> > 
-> > In the header above EV_SW is also specified so please use it here.
-> > 
-> This pattern is in many files. I took one as an example. It seems that
-> 50% of devicetree files have this pattern, the other 50% do have the
-> pattern you proposed (which I like more). So probably EV_SW was not
-> available in former times?
-
-I don't know, checking the git history should bring the answer ;)
-Anyway, if it is available we should use it.
-
-> > > +			gpio-key,wakeup;
-> > > +		};
-> > > +	};
-> > > +
-> > > +};
-> > > +
-> > > +
-> > > +  
-> > 
-> > Whitespaces
-> > 
-> > > +&audmux {
-> > > +	pinctrl-names = "default";
-> > > +	status = "disabled";  
-> > 
-> > Why you mentioned a pinctrl-names here without the mux? Do we need the
-> > status line here? The common case is that such devices are off by
-> > default/the base dt.
-> > 
-> yes, that things can be removed.
-> > > +};
-> > > +
-> > > +&snvs_rtc {
-> > > +	status = "disabled";  
-> > 
-> > Same applies here.
-> > 
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> ---
+>  drivers/media/platform/ti-vpe/vpe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> No, seems to be an exception, it does not have a status = "disabled" in
-> imx6sll.dtsi.
+> diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+> index bbbf11174e16..1278d457f753 100644
+> --- a/drivers/media/platform/ti-vpe/vpe.c
+> +++ b/drivers/media/platform/ti-vpe/vpe.c
+> @@ -1650,7 +1650,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+>  			      &pix->height, MIN_H, MAX_H, H_ALIGN,
+>  			      S_ALIGN);
+>  
+> -	if (!pix->num_planes)
+> +	if (!pix->num_planes || pix->num_planes > 2)
+>  		pix->num_planes = fmt->coplanar ? 2 : 1;
+>  	else if (pix->num_planes > 1 && !fmt->coplanar)
+>  		pix->num_planes = 1;
+> 
 
-Did you mean 6sll or 6ull?
+This looks weird.
 
-Okay, is this baseboard only used with a 6ull?
+Why not just unconditionally do:
+
+	pix->num_planes = fmt->coplanar ? 2 : 1;
 
 Regards,
-  Marco
 
-> > > +};
-> > > +
-> > > +&i2c1 {
-> > > +	clock-frequency = <100000>;
-> > > +	pinctrl-names = "default","sleep";
-> > > +	pinctrl-0 = <&pinctrl_i2c1 &pinctrl_lm3630a_bl_gpio>;  
-> > 
-> > The &pinctrl_lm3630a_bl_gpio should be moved into the lm3630a node.
-> > 
-> > > +	pinctrl-1 = <&pinctrl_i2c1_sleep>;
-> > > +	status = "okay";
-> > > +
-> > > +	lm3630a: lm3630a-i2c@36 {  
-> > 
-> > please name it backlight@36
-> > 
-> > > +		reg = <0x36>;
-> > > +		status = "ok";  
-> > 
-> > status lines are always be the last and if it is okay you can drop it
-> > because the default is okay.
-> > 
-> well, I added it because the driver was not loaded but later I found out
-> that the real reason is that module aliases were broken and forgot to
-> remove that "ok".
-> 
-> Regards,
-> Andreas
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+	Hans
