@@ -1,94 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/6] dt-bindings: Add DT binding for PCIE GEN4 EP of the
- layerscape
-Date: Mon, 30 Sep 2019 17:22:21 -0500
-Message-ID: <20190930222221.GA13251@bogus>
-References: <20190916021742.22844-1-xiaowei.bao@nxp.com>
- <20190916021742.22844-3-xiaowei.bao@nxp.com>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH v1] MIPS: dts: ar9331: fix interrupt-controller size
+Date: Mon, 30 Sep 2019 22:23:08 +0000
+Message-ID: <MWHPR2201MB12777F4BB53AEC23CDE5B996C1820@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190930093952.22418-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190916021742.22844-3-xiaowei.bao@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, Zhiqiang.Hou@nxp.com, linux-kernel@vger.kernel.org, kishon@ti.com, Minghuan.Lian@nxp.com, linux-arm-kernel@lists.infradead.org, bhelgaas@google.com, andrew.murray@arm.com, leoyang.li@nxp.com, shawnguo@kernel.org, mingkai.hu@nxp.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190930093952.22418-1-o.rempel@pengutronix.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Oleksij Rempel <o.rempel@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <pburton@wavecomp.com>, James Hogan <jhogan@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 10:17:38AM +0800, Xiaowei Bao wrote:
-> Add the documentation for the Device Tree binding of the layerscape
-> PCIe GEN4 controller with EP mode.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
->  .../bindings/pci/layerscape-pcie-gen4.txt          | 28 +++++++++++++++++++++-
->  1 file changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt b/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> index b40fb5d..414a86c 100644
-> --- a/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> +++ b/Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
-> @@ -3,6 +3,8 @@ NXP Layerscape PCIe Gen4 controller
->  This PCIe controller is based on the Mobiveil PCIe IP and thus inherits all
->  the common properties defined in mobiveil-pcie.txt.
->  
-> +HOST MODE
-> +=========
->  Required properties:
->  - compatible: should contain the platform identifier such as:
->    "fsl,lx2160a-pcie"
-> @@ -23,7 +25,20 @@ Required properties:
->  - msi-parent : See the generic MSI binding described in
->    Documentation/devicetree/bindings/interrupt-controller/msi.txt.
->  
-> -Example:
-> +DEVICE MODE
-> +=========
-> +Required properties:
-> +- compatible: should contain the platform identifier such as:
-> +  "fsl,lx2160a-pcie-ep"
-> +- reg: base addresses and lengths of the PCIe controller register blocks.
-> +  "regs": PCIe controller registers.
-> +  "addr_space" EP device CPU address.
-> +- apio-wins: number of requested apio outbound windows.
-> +
-> +Optional Property:
-> +- max-functions: Maximum number of functions that can be configured (default 1).
-> +
-> +RC Example:
->  
->  	pcie@3400000 {
->  		compatible = "fsl,lx2160a-pcie";
-> @@ -50,3 +65,14 @@ Example:
->  				<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
->  				<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
->  	};
-> +
-> +EP Example:
-> +
-> +	pcie_ep@3400000 {
+Hello,
 
-pcie-endpoint@...
+Oleksij Rempel wrote:
+> It is two registers each of 4 byte.
 
-> +		compatible = "fsl,lx2160a-pcie-ep";
-> +		reg = <0x00 0x03400000 0x0 0x00100000
-> +		       0x80 0x00000000 0x8 0x00000000>;
-> +		reg-names = "regs", "addr_space";
-> +		apio-wins = <8>;
-> +		status = "disabled";
+Applied to mips-fixes.
 
-Don't show status in examples.
+> commit 0889d07f3e4b
+> https://git.kernel.org/mips/c/0889d07f3e4b
+>=20
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> Signed-off-by: Paul Burton <paul.burton@mips.com>
 
-> +	};
-> -- 
-> 2.9.5
-> 
+Thanks,
+    Paul
+
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
