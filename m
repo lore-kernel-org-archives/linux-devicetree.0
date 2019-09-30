@@ -1,168 +1,108 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [RFCv4 0/7] interconnect: Add imx support via devfreq
-Date: Mon, 30 Sep 2019 12:31:22 +0000
-Message-ID: <VI1PR04MB70230CC67539BC41E08F4956EE820@VI1PR04MB7023.eurprd04.prod.outlook.com>
-References: <cover.1566570260.git.leonard.crestez@nxp.com>
- <VI1PR04MB702373BE28E4404C7F2CE75FEE8C0@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <02d3fe6a-53a6-3290-deab-d79e940978ff@linaro.org>
- <VI1PR04MB7023ADED2210DFCB81E588CFEE870@VI1PR04MB7023.eurprd04.prod.outlook.com>
- <a1f04769-9547-58e6-2bd0-5b6a5864fbf0@linaro.org>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [Patch v4 6/8] media: i2c: ov2659: Add powerdown/reset gpio
+ handling
+Date: Mon, 30 Sep 2019 15:38:26 +0300
+Message-ID: <20190930123826.GC19037@paasikivi.fi.intel.com>
+References: <20190927184722.31989-1-bparrot@ti.com>
+ <20190927184722.31989-7-bparrot@ti.com>
+ <20190930072857.GA19037@paasikivi.fi.intel.com>
+ <20190930122946.2io4pkri4gy3pnkr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh+dt@kernel.org>, =?iso-8859-2?Q?Artur_=A6wigo=F1?= <a.swigon@partner.samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Saravana Kannan <saravanak@google.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Krzysztof Kozlowski <krzk@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Alexandre Bailon <abailon@baylibre.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190930122946.2io4pkri4gy3pnkr@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2019-09-26 3:52 AM, Georgi Djakov wrote:
-> On 9/25/19 15:52, Leonard Crestez wrote:
->> On 25.09.2019 05:38, Georgi Djakov wrote:
->>> Hi Leonard,
->>>
->>> On 9/16/19 05:34, Leonard Crestez wrote:
->>>> On 23.08.2019 17:37, Leonard Crestez wrote:
->>>>> This series add imx support for interconnect via devfreq: the ICC
->>>>> framework is used to aggregate requests from devices and then those are
->>>>> converted to DEV_PM_QOS_MIN_FREQUENCY requests for devfreq.
->>>>>    
->>>>> Since there is no single devicetree node that can represent the "interconnect"
->>>>> new API is added to allow individual devfreq nodes to act as parsing proxies
->>>>> all mapping to a single soc-level icc provider. This is still RFC
->>>>> because of this
->>>>
->>>> Any comments? I made a lot of changes relative to previous versions,
->>>> most of them solely to avoid adding a virtual node in DT bindings.
->>>>
->>>> The only current interconnect provider implementation is for qcom and it
->>>> uses a firmware node as the provider node (with #interconnect-cells).
->>>> However there is no obvious equivalent of that for imx and many other SOCs.
->>>
->>> Not sure if it will help, but have you seen the qcs404 interconnect driver?
->>> There is also mt8183 interconnect provider driver on LKML.
->>
->> Yes, but only yesterday. The qcs404 driver involves multiple DT devices
->> so it seems closer to imx.
->>
->> As far as I understand from reading qcs404 source:
->>
->> * There is no struct device representing the entire graph.
->> * There are multiple NOCs and each registers itself as a separate
->> interconnect provider.
->> * Each NOC registers multiple icc_nodes of various sorts:
->>     * Device masters and slaves
->>     * Some nodes representing NoC ports?
+On Mon, Sep 30, 2019 at 07:29:46AM -0500, Benoit Parrot wrote:
+> Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Mon [2019-Sep-30 10:28:57 +0300]:
+> > Hi Benoit,
+> > 
+> > On Fri, Sep 27, 2019 at 01:47:20PM -0500, Benoit Parrot wrote:
+> > > On some board it is possible that the sensor 'powerdown' and or 'reset'
+> > > pin might be controlled by gpio instead of being tied.
+> > > 
+> > > To implement we add pm_runtime support which will handle the power
+> > > up/down sequence when it is available otherwise the sensor will be
+> > > powered on at module insertion/probe and powered off at module removal.
+> > > 
+> > > Now originally the driver assumed that the sensor would always stay
+> > > powered and keep its register setting. We cannot assume this anymore, so
+> > > every time we "power up" we need to re-program the initial registers
+> > > configuration first. This was previously done only at probe time.
+> > > 
+> > > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > > ---
+> > >  drivers/media/i2c/Kconfig  |  2 +-
+> > >  drivers/media/i2c/ov2659.c | 88 +++++++++++++++++++++++++++++++++++++-
+> > >  2 files changed, 87 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+> > > index 7eee1812bba3..315c1d8bdb7b 100644
+> > > --- a/drivers/media/i2c/Kconfig
+> > > +++ b/drivers/media/i2c/Kconfig
+> > > @@ -634,7 +634,7 @@ config VIDEO_OV2640
+> > >  config VIDEO_OV2659
+> > >  	tristate "OmniVision OV2659 sensor support"
+> > >  	depends on VIDEO_V4L2 && I2C
+> > > -	depends on MEDIA_CAMERA_SUPPORT
+> > > +	depends on MEDIA_CAMERA_SUPPORT && GPIOLIB
+> > >  	select V4L2_FWNODE
+> > >  	help
+> > >  	  This is a Video4Linux2 sensor driver for the OmniVision
+> > > diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
+> > > index cd4625432264..7d0baa386644 100644
+> > > --- a/drivers/media/i2c/ov2659.c
+> > > +++ b/drivers/media/i2c/ov2659.c
+> > > @@ -22,9 +22,11 @@
+> > >  
+> > >  #include <linux/clk.h>
+> > >  #include <linux/delay.h>
+> > > +#include <linux/gpio/consumer.h>
+> > >  #include <linux/i2c.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/of_graph.h>
+> > > +#include <linux/pm_runtime.h>
+> > >  
+> > >  #include <media/i2c/ov2659.h>
+> > >  #include <media/v4l2-ctrls.h>
+> > > @@ -218,6 +220,11 @@ struct ov2659 {
+> > >  	struct sensor_register *format_ctrl_regs;
+> > >  	struct ov2659_pll_ctrl pll;
+> > >  	int streaming;
+> > > +	/* used to control the sensor PWDN pin */
+> > > +	struct gpio_desc *pwdn_gpio;
+> > > +	/* used to control the sensor RESETB pin */
+> > > +	struct gpio_desc *resetb_gpio;
+> > > +	int on;
+> > 
+> > Please use runtime PM for this instead. It's hard to get this right
+> > otherwise.
 > 
-> Well, all nodes are representing ports.
+> So you mean, I should use the "if (!pm_runtime_get_if_in_use(dev))"
+> construct?
+
+Yes, please.
+
 > 
->>     * Multiple internal nodes
->> * There is single per-SOC master list of QNOCs in the qcs404 driver.
->> * The QNOCs can reference each other between multiple providers.
->> * Each NOC registers an icc_provider and a subset of the graph.
->> * The multiple NoC inside a chip are distinguished by compat strings.
->> This seems strange, aren't they really different instantiations of the
->> same IP with small config changes?
+> Ok I'll switch it to that, just using "on" was a little simple but I
+> already had it :).
 > 
-> No, they are different IPs - ahb, axi or custom based.
-
-On IMX some of the buses are just different instantiations.
-
-Would it make sense to standardize an "interconnect-node-id" to identify 
-middle nodes? For example if you have nearly identical "audio" "display" 
-"vpu" NICs then this property would make it possible to map from a DT 
-done to an ICC graph node.
-
->> This design is still quite odd, what would make sense to me is to
->> register the "interconnect graph" once and then provide multiple
->> "interconnect scalers" which handle the aggregated requests for certain
->> specific nodes.
->>
->>>> On imx there are multiple pieces of scalable fabric which can be defined
->>>> in DT as devfreq devices and it sort of makes sense to add
->>>> #interconnect-cells to those. However when it comes to describing the
->>>> SOC interconnect graph it's much more convenient to have a single
->>>> per-SOC platform driver.
->>>
->>> Is all the NoC configuration done only by ATF? Are there any NoC related memory
->>> mapped registers?
->>
->> Registers are memory-mapped and visible to the A-cores but should only
->> be accessed through secure transactions. This means that configuration
->> needs be done by ATF in EL3 (we don't support running linux in secure
->> world on imx8m). There is no "remote processor" managing this on imx8m.
 > 
-> Can we create some noc DT node with it's memory mapped address and make
-> it an interconnect provider? Sounds to me like a more correct representation
-> of the hardware?
-
-This is what I did, it's just that the initial binding is in this series:
-https://patchwork.kernel.org/cover/11104113/
-https://patchwork.kernel.org/patch/11104137/
-https://patchwork.kernel.org/patch/11104141/
-
-The nodes are scaled via devfreq and interconnect comes "on top" to make 
-device bandwidth requests.
-
-I think using devfreq is valuable for example:
-  * DDRC can support reactive scaling based on performance counters
-  * The NOC can run at different voltages so it should have it's own OPP 
-table.
-
-> Other option would be to bless some PSCI DT node (for example) to be a
-> provider.
-
-I don't think this can be a good fit, I want to support different 
-interconnect nodes with different underlying interfaces on the same SOC.
-
-There is no abstraction layer in firmware so abstractions for different 
-interconnect midnodes should be in linux instead.
-
->> On older imx6/7 chips we actually have two out-of-tree implementations
->> of bus freq switching code: An older one in Linux (used when running in
->> secure world) and a different one in optee for running Linux in
->> non-secure world.
->>
->> NoC registers can be used to control some "transaction priority" bits
->> but I don't want to expose that part right now.
+> > 
+> > Access to "on" is not serialised with the power state changes. In this case
+> > e.g. drivers/media/i2c/ov5670.c is a good example. I think I'll see how I
+> > could improve smiapp as well.
 > 
-> This is very similar to some of the Qcom hardware.
+> Ok so that driver uses this pm method but does not actually power up or
+> down the sensor. 
 
-NoC IP is licensed from Arteris which was bought-out by Qcom. 
-Documentation is not public though and there are likely many differences 
-versus what Qcom has in their own chips.
->> What determines bandwidth versus power consumption is the NoC clk rate
->> and clocks are managed by Linux directly.
-> 
-> So you will need to describe these clocks in the interconnect provider
-> DT node like on qcs404.
+Well, not explicitly. The driver supports ACPI based systems only right
+now.
 
-I already implemented the nodes as devfreq provider and DDRC even 
-includes ondemand reactive scaling support:
-
-https://patchwork.kernel.org/patch/11104139/
-https://patchwork.kernel.org/patch/11104145/
-https://patchwork.kernel.org/patch/11104143/
-
-I could just pick the "main" NOC and turn than into the "only" 
-interconnect provider. Something like this:
-
-if (has_property(noc_device, "#interconnect-cells")) {
-     register_soc_icc_driver(noc_device);
-}
-
-This would get rid of the icc_proxy stuff but fetching references to 
-other scalable nodes would require some other way to identify them.
-
---
-Regards,
-Leonard
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
