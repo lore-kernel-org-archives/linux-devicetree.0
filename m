@@ -1,89 +1,85 @@
-From: Liviu Dudau <liviu.dudau@arm.com>
-Subject: Re: [PATCH 1/2] arm64: dts: juno: add GPU subsystem
-Date: Mon, 30 Sep 2019 18:27:21 +0100
-Message-ID: <20190930172721.3yatbfxcyb4gteed@e110455-lin.cambridge.arm.com>
-References: <88dc6386929b3dcd7a65ba8063628c62b66b330c.1569856049.git.robin.murphy@arm.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [GIT PULL 1/2] arm64: dts: exynos: Pull for v5.4
+Date: Mon, 30 Sep 2019 10:35:01 -0700
+Message-ID: <CAOesGMi2w9vci+kU=WFHJJBqgz9BM5RJBzqwwrR7k=275w4Tyg@mail.gmail.com>
+References: <20190911183632.4317-1-krzk@kernel.org>
+ <CAK8P3a2pBV+fh0rHitZ30Zz61QNRLfNSD-nhnzq4ZtxSh66F1Q@mail.gmail.com>
+ <CAJKOXPcOSvc2DfoN+7Tca=t5dSm3RcKqmm06AfR0PAVBeY=GvQ@mail.gmail.com>
+ <20190929175134.fsieffurfdiqhpj2@localhost> <20190930080217.GA23709@pi3>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <88dc6386929b3dcd7a65ba8063628c62b66b330c.1569856049.git.robin.murphy@arm.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: lorenzo.pieralisi@arm.com, tomeu.vizoso@collabora.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, steven.price@arm.com, sudeep.holla@arm.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190930080217.GA23709@pi3>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: DTML <devicetree@vger.kernel.org>, "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" <linux-samsung-soc@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SoC Team <soc@kernel.org>, arm-soc <arm@kernel.org>, Kukjin Kim <kgene@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBTZXAgMzAsIDIwMTkgYXQgMDQ6MjQ6NThQTSArMDEwMCwgUm9iaW4gTXVycGh5IHdy
-b3RlOgo+IFNpbmNlIHdlIG5vdyBoYXZlIGJpbmRpbmdzIGZvciBNYWxpIE1pZGdhcmQgR1BVcywg
-bGV0J3MgdXNlIHRoZW0gdG8KPiBkZXNjcmliZSBKdW5vJ3MgR1BVIHN1YnN5c3RlbSwgaWYgb25s
-eSBiZWNhdXNlIHdlIGNhbi4gSnVubyBzcG9ydHMgYQo+IE1hbGktVDYyNCBpbnRlZ3JhdGVkIGJl
-aGluZCBhbiBNTVUtNDAwIChhcyBhIGdlc3R1cmUgdG93YXJkcwo+IHZpcnR1YWxpc2F0aW9uKSwg
-aW4gdGhlaXIgb3duIGRlZGljYXRlZCBwb3dlciBkb21haW4gd2l0aCBEVkZTCj4gY29udHJvbGxl
-ZCBieSB0aGUgU0NQLgo+IAo+IENDOiBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4K
-CkFja2VkLWJ5OiBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4KClRoYW5rcywKTGl2
-aXUKCj4gQ0M6IFN1ZGVlcCBIb2xsYSA8c3VkZWVwLmhvbGxhQGFybS5jb20+Cj4gQ0M6IExvcmVu
-em8gUGllcmFsaXNpIDxsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29tPgo+IFNpZ25lZC1vZmYtYnk6
-IFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+Cj4gLS0tCj4gIC4uLi9iaW5kaW5n
-cy9ncHUvYXJtLG1hbGktbWlkZ2FyZC55YW1sICAgICAgICB8ICA1ICsrKy0KPiAgYXJjaC9hcm02
-NC9ib290L2R0cy9hcm0vanVuby1iYXNlLmR0c2kgICAgICAgIHwgMjcgKysrKysrKysrKysrKysr
-KysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDMxIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkK
-PiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9h
-cm0sbWFsaS1taWRnYXJkLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-Z3B1L2FybSxtYWxpLW1pZGdhcmQueWFtbAo+IGluZGV4IDQ3YmMxYWMzNjQyNi4uMDE4ZjNhZTRi
-NDNjIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUv
-YXJtLG1hbGktbWlkZ2FyZC55YW1sCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnlhbWwKPiBAQCAtMjIsNiArMjIsMTAgQEAgcHJv
-cGVydGllczoKPiAgICAgICAgICAgIC0gZW51bToKPiAgICAgICAgICAgICAgIC0gYW1sb2dpYyxt
-ZXNvbi1neG0tbWFsaQo+ICAgICAgICAgICAgLSBjb25zdDogYXJtLG1hbGktdDgyMAo+ICsgICAg
-ICAtIGl0ZW1zOgo+ICsgICAgICAgICAgLSBlbnVtOgo+ICsgICAgICAgICAgICAgLSBhcm0sanVu
-by1tYWxpCj4gKyAgICAgICAgICAtIGNvbnN0OiBhcm0sbWFsaS10NjI0Cj4gICAgICAgIC0gaXRl
-bXM6Cj4gICAgICAgICAgICAtIGVudW06Cj4gICAgICAgICAgICAgICAtIHJvY2tjaGlwLHJrMzI4
-OC1tYWxpCj4gQEAgLTM5LDcgKzQzLDYgQEAgcHJvcGVydGllczoKPiAgICAgICAgICAgICAgIC0g
-c2Ftc3VuZyxleHlub3M1NDMzLW1hbGkKPiAgICAgICAgICAgIC0gY29uc3Q6IGFybSxtYWxpLXQ3
-NjAKPiAgCj4gLSAgICAgICAgICAjICJhcm0sbWFsaS10NjI0Igo+ICAgICAgICAgICAgIyAiYXJt
-LG1hbGktdDYyOCIKPiAgICAgICAgICAgICMgImFybSxtYWxpLXQ4MzAiCj4gICAgICAgICAgICAj
-ICJhcm0sbWFsaS10ODgwIgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9q
-dW5vLWJhc2UuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYXJtL2p1bm8tYmFzZS5kdHNpCj4g
-aW5kZXggMjZhMDM5YTAyOGI4Li45ZTNlOGNlNmFkZmUgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02
-NC9ib290L2R0cy9hcm0vanVuby1iYXNlLmR0c2kKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRz
-L2FybS9qdW5vLWJhc2UuZHRzaQo+IEBAIC0zNSw2ICszNSwxOCBAQAo+ICAJCWNsb2NrLW5hbWVz
-ID0gImFwYl9wY2xrIjsKPiAgCX07Cj4gIAo+ICsJc21tdV9ncHU6IGlvbW11QDJiNDAwMDAwIHsK
-PiArCQljb21wYXRpYmxlID0gImFybSxtbXUtNDAwIiwgImFybSxzbW11LXYxIjsKPiArCQlyZWcg
-PSA8MHgwIDB4MmI0MDAwMDAgMHgwIDB4MTAwMDA+Owo+ICsJCWludGVycnVwdHMgPSA8R0lDX1NQ
-SSAzOCBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKPiArCQkJICAgICA8R0lDX1NQSSAzOCBJUlFfVFlQ
-RV9MRVZFTF9ISUdIPjsKPiArCQkjaW9tbXUtY2VsbHMgPSA8MT47Cj4gKwkJI2dsb2JhbC1pbnRl
-cnJ1cHRzID0gPDE+Owo+ICsJCXBvd2VyLWRvbWFpbnMgPSA8JnNjcGlfZGV2cGQgMT47Cj4gKwkJ
-ZG1hLWNvaGVyZW50Owo+ICsJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwl9Owo+ICsKPiAgCXNt
-bXVfcGNpZTogaW9tbXVAMmI1MDAwMDAgewo+ICAJCWNvbXBhdGlibGUgPSAiYXJtLG1tdS00MDEi
-LCAiYXJtLHNtbXUtdjEiOwo+ICAJCXJlZyA9IDwweDAgMHgyYjUwMDAwMCAweDAgMHgxMDAwMD47
-Cj4gQEAgLTQ4Nyw2ICs0OTksMjEgQEAKPiAgCQl9Owo+ICAJfTsKPiAgCj4gKwlncHU6IGdwdUAy
-ZDAwMDAwMCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJhcm0sanVuby1tYWxpIiwgImFybSxtYWxpLXQ2
-MjQiOwo+ICsJCXJlZyA9IDwwIDB4MmQwMDAwMDAgMCAweDEwMDAwPjsKPiArCQlpbnRlcnJ1cHRz
-ID0gPEdJQ19TUEkgMzIgSVJRX1RZUEVfTEVWRUxfSElHSD4sCj4gKwkJCSAgICAgPEdJQ19TUEkg
-MzMgSVJRX1RZUEVfTEVWRUxfSElHSD4sCj4gKwkJCSAgICAgPEdJQ19TUEkgMzQgSVJRX1RZUEVf
-TEVWRUxfSElHSD47Cj4gKwkJaW50ZXJydXB0LW5hbWVzID0gImdwdSIsICJqb2IiLCAibW11IjsK
-PiArCQljbG9ja3MgPSA8JnNjcGlfZHZmcyAyPjsKPiArCQlwb3dlci1kb21haW5zID0gPCZzY3Bp
-X2RldnBkIDE+Owo+ICsJCWRtYS1jb2hlcmVudDsKPiArCQkvKiBUaGUgU01NVSBpcyBvbmx5IHJl
-YWxseSBvZiBpbnRlcmVzdCB0byBiYXJlLW1ldGFsIGh5cGVydmlzb3JzICovCj4gKwkJLyogaW9t
-bXVzID0gPCZzbW11X2dwdSAwPjsgKi8KPiArCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsJfTsK
-PiArCj4gIAlzcmFtOiBzcmFtQDJlMDAwMDAwIHsKPiAgCQljb21wYXRpYmxlID0gImFybSxqdW5v
-LXNyYW0tbnMiLCAibW1pby1zcmFtIjsKPiAgCQlyZWcgPSA8MHgwIDB4MmUwMDAwMDAgMHgwIDB4
-ODAwMD47Cj4gLS0gCj4gMi4yMS4wLmRpcnR5Cj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4gZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKPT09PT09PT09PT09PT09PT09PT0KfCBJ
-IHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8CnwgYnV0IHRoZXkncmUgbm90IHwK
-fCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEgIC8KICAtLS0tLS0tLS0tLS0tLS0K
-ICAgIMKvXF8o44OEKV8vwq8KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVs
+On Mon, Sep 30, 2019 at 1:02 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Sun, Sep 29, 2019 at 10:51:34AM -0700, Olof Johansson wrote:
+> > Hi,
+> >
+> > On Thu, Sep 12, 2019 at 08:32:47AM +0200, Krzysztof Kozlowski wrote:
+> > > On Wed, 11 Sep 2019 at 23:07, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > >
+> > > > On Wed, Sep 11, 2019 at 8:36 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > Unfortunately the patches were applied right after closing the linux-next.
+> > > >
+> > > > Hi Krzysztof,
+> > > >
+> > > > I took a look at these and am not convinced this is right:
+> > > >
+> > > > > 1. Fix boot of Exynos7 due to wrong address/size of memory node,
+> > > >
+> > > > The current state is clearly broken and a fix is needed, but
+> > > > I'm not sure this is the right fix. Why do you have 32-bit physical
+> > > > addressing on a 64-bit chip? I looked at commit ef72171b3621
+> > > > that introduced it, and it seems it would be better to just
+> > > > revert back to 64-bit addresses.
+> > >
+> > > We discussed with Marek Szyprowski that either we can go back to
+> > > 64-bit addressing or stick to 32. There are not known boards with more
+> > > than 4 GB of RAM so from this point of view the choice was irrelevant.
+> > > At the end of discussion I mentioned to stick with other arm64 boards
+> > > (although not all), so revert to have 64 bit address... but Marek
+> > > chosen differently. Since you ask, let's go back with revert.
+> > >
+> > > >
+> > > > > 2. Move GPU under /soc node,
+> > > >
+> > > > No problem
+> > > >
+> > > > > 3. Minor cleanup of #address-cells.
+> > > >
+> > > > IIRC, an interrupt-controller is required to have a #address-cells
+> > > > property, even if that is normally zero. I don't remember the
+> > > > details, but the gic binding lists it as mandatory, and I think
+> > > > the PCI interrupt-map relies on it. I would just drop this patch.
+> > >
+> > > Indeed, binding requires both address and size cells. I'll drop it.
+> >
+> > Looking through the history of pending material, I didn't see a new pull for
+> > this material. Just checking in to see if there's something we missed?
+>
+> No, it's me who forgot to resend. I was sure that I rebased the branch
+> and created new pull request. However it seems I did not. Let's keep it
+> for next merge window... v5.4-rc should be any minute, I guess?
+
+Yeah, we're too late for this merge window but feel free to send it
+for next release.
+
+
+-Olof
