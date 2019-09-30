@@ -1,89 +1,80 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/7] dt-bindings: chosen: Add clocksource and clockevent
- selection
-Date: Mon, 30 Sep 2019 09:32:46 -0500
-Message-ID: <20190930143246.GA19967@bogus>
-References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
- <1568123236-767-5-git-send-email-claudiu.beznea@microchip.com>
- <20190910143231.GB14966@e107533-lin.cambridge.arm.com>
- <ab43b209-78fa-0cab-b8ea-acd4c550e689@microchip.com>
- <20190910150826.GA18308@e107533-lin.cambridge.arm.com>
- <20190910151055.GX21254@piout.net>
- <CACRpkda4mmpbPWa2nD93CvD6HWzcTUDzyyLdQxC2gNB7XiJF3w@mail.gmail.com>
- <a2aca46a-8eb9-d8a8-de42-9850a8a8f44c@microchip.com>
+Subject: Re: [PATCH 3/5] dt-bindings: thermal: Add generic power domain
+ warming device binding
+Date: Mon, 30 Sep 2019 09:42:05 -0500
+Message-ID: <20190930144205.GA11539@bogus>
+References: <1568135676-9328-1-git-send-email-thara.gopinath@linaro.org>
+ <1568135676-9328-4-git-send-email-thara.gopinath@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <a2aca46a-8eb9-d8a8-de42-9850a8a8f44c@microchip.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Claudiu.Beznea@microchip.com
-Cc: tmaimon77@gmail.com, linus.walleij@linaro.org, nsekhar@ti.com, guoren@kernel.org, linux-stm32@st-md-mailman.stormreply.com, heiko@sntech.de, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, khilman@baylibre.com, Ludovic.Desroches@microchip.com, linux-imx@nxp.com, u.kleine-koenig@pengutronix.de, uclinux-h8-devel@lists.sourceforge.jp, marc.zyngier@arm.com, s.hauer@pengutronix.de, linux-unisoc@lists.infradead.org, khalasa@piap.pl, tglx@linutronix.de, sbranden@broadcom.com, linux-kernel@vger.kernel.org, ralf@linux-mips.org, paul.burton@mips.com, kernel@pengutronix.de, mark.rutland@arm.com, alexandre.belloni@bootlin.com, jhogan@kernel.org, palmer@sifive.com, eric@anholt.net, thierry.reding@gmail.com, manivannan.sadhasivam@linaro.org, ysato@users.sourceforge.jp, zhang.lyra@gmail.com, daniel.lezcano@linaro.org, jonathanh@nvidia.com, bgolaszewski@baylibre.co
+In-Reply-To: <1568135676-9328-4-git-send-email-thara.gopinath@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thara Gopinath <thara.gopinath@linaro.org>
+Cc: edubezval@gmail.com, rui.zhang@intel.com, ulf.hansson@linaro.org, daniel.lezcano@linaro.org, bjorn.andersson@linaro.org, agross@kernel.org, amit.kucheria@verdurent.com, mark.rutland@arm.com, rjw@rjwysocki.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 07:18:07AM +0000, Claudiu.Beznea@microchip.com wrote:
+On Tue, Sep 10, 2019 at 01:14:34PM -0400, Thara Gopinath wrote:
+> Add binding to define power domains as thermal warming
+> devices.
 > 
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+>  .../bindings/thermal/pwr-domain-warming.txt        | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt
 > 
-> On 11.09.2019 03:03, Linus Walleij wrote:
-> > External E-Mail
-> > 
-> > 
-> > On Tue, Sep 10, 2019 at 4:11 PM Alexandre Belloni
-> > <alexandre.belloni@bootlin.com> wrote:
-> >> On 10/09/2019 16:08:26+0100, Sudeep Holla wrote:
-> >>> On Tue, Sep 10, 2019 at 02:51:50PM +0000, Claudiu.Beznea@microchip.com wrote:
-> > 
-> >>> In that case, why can't we identify capability that with the compatibles
-> >>> for this timer IP ?
-> >>>
-> >>> IOW, I don't like the proposal as it's hardware limitation.
-> >>
-> >> To be clear, bot timers are exactly the same but can't be clocksource
-> >> and clockevent at the same time. Why would we have different compatibles
-> >> for the exact same IP?
-> > 
-> > In that case why not just pick the first one you find as clocksource
-> > and the second one as clock event? As they all come to the
-> > same timer of init function two simple local state variables can
-> > solve that:
-> > 
-> > static bool registered_clocksource;
-> > static bool registered_clockevent;
-> > 
-> > probe(timer) {
-> >    if (!registered_clocksource) {
-> >        register_clocksource(timer);
-> >        registrered_clocksource = true;
-> >        return;
-> >    }
-> >    if (!registered_clockevent) {
-> >        register_clockevent(timer);
-> >        registered_clockevent = true;
-> >        return;
-> >    }
-> >    pr_info("surplus timer %p\n", timer);
-> > }
-> > 
-> 
-> That was also my proposal for the driver I'm sending this series for (see
-> [1]) but it has been proposed to implement a mechanism similar to this one
-> in this series (see [2] and [3]).
+> diff --git a/Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt b/Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt
+> new file mode 100644
+> index 0000000..25fc568
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/pwr-domain-warming.txt
+> @@ -0,0 +1,32 @@
+> +* Generic power domain based thermal warming device.
+> +
+> +This binding describes the power domains that can be used as a
+> +thermal warming device.
 
-This comes up over and over, and the answer is still no. Either each 
-block is identical and doesn't matter which one is used for what or 
-there is some h/w difference that you should describe. 
+This looks like just a gathering of properties and way to instantiate 
+some driver.
 
-If you want something that would even be considered to put into DT, 
-then define something BSD or other OS's could use too. (That's not a 
-suggestion to respin this with generalized names.)
+I think this all belongs in the power domain provider. Make it a cooling 
+device and you should know which domains are relevant based on the 
+compatible (though perhaps we could consider a list in DT). If you want 
+to instantiate a separate driver to handle this, then make the power 
+domain driver do that.
 
 Rob
+
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be "thermal-power-domain-wdev"
+> +
+> +- #temp-reg-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Must be 2
+> +
+> +- power-domains:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: reference to power-domains that match power-domain-names
+> +
+> +- power-domain-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: The power-domains that can behave as warming devices
+> +
+> +Example 1
+> +thermal_wdev: rpmhpd_mx_wdev {
+> +		compatible = "thermal-power-domain-wdev";
+> +		#cooling-cells = <2>;
+> +		power-domains =  <&rpmhpd SDM845_MX>;
+> +		power-domain-names = "mx";
+> +	};
+> -- 
+> 2.1.4
+> 
