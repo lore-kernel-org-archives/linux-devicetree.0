@@ -1,65 +1,34 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v6 3/7] arm64: dts: amlogic: g12: add temperature sensor
-Date: Mon, 30 Sep 2019 15:09:13 +0530
-Message-ID: <CAHLCerPQ4Uzoo2F-fNxZNV0_uZZnLwNenDYZTzgj7pfOiwPtGg@mail.gmail.com>
-References: <20190927184352.28759-1-glaroque@baylibre.com> <20190927184352.28759-4-glaroque@baylibre.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [PATCH v1] MIPS: dts: ar9331: fix interrupt-controller size
+Date: Mon, 30 Sep 2019 11:39:52 +0200
+Message-ID: <20190930093952.22418-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190927184352.28759-4-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guillaume La Roque <glaroque@baylibre.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 28, 2019 at 12:14 AM Guillaume La Roque
-<glaroque@baylibre.com> wrote:
->
-> Add cpu and ddr temperature sensors for G12 Socs
->
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Tested-by: Christian Hewitt <christianshewitt@gmail.com>
-> Tested-by: Kevin Hilman <khilman@baylibre.com>
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+It is two registers each of 4 byte.
 
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ arch/mips/boot/dts/qca/ar9331.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-
-> ---
->  .../boot/dts/amlogic/meson-g12-common.dtsi    | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> index 38d70ce1cfc7..0660d9ef6a86 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-> @@ -1353,6 +1353,26 @@
->                                 };
->                         };
->
-> +                       cpu_temp: temperature-sensor@34800 {
-> +                               compatible = "amlogic,g12a-cpu-thermal",
-> +                                            "amlogic,g12a-thermal";
-> +                               reg = <0x0 0x34800 0x0 0x50>;
-> +                               interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
-> +                               clocks = <&clkc CLKID_TS>;
-> +                               #thermal-sensor-cells = <0>;
-> +                               amlogic,ao-secure = <&sec_AO>;
-> +                       };
-> +
-> +                       ddr_temp: temperature-sensor@34c00 {
-> +                               compatible = "amlogic,g12a-ddr-thermal",
-> +                                            "amlogic,g12a-thermal";
-> +                               reg = <0x0 0x34c00 0x0 0x50>;
-> +                               interrupts = <GIC_SPI 36 IRQ_TYPE_EDGE_RISING>;
-> +                               clocks = <&clkc CLKID_TS>;
-> +                               #thermal-sensor-cells = <0>;
-> +                               amlogic,ao-secure = <&sec_AO>;
-> +                       };
-> +
->                         usb2_phy0: phy@36000 {
->                                 compatible = "amlogic,g12a-usb2-phy";
->                                 reg = <0x0 0x36000 0x0 0x2000>;
-> --
-> 2.17.1
->
+diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
+index 63a9f33aa43e..5cfc9d347826 100644
+--- a/arch/mips/boot/dts/qca/ar9331.dtsi
++++ b/arch/mips/boot/dts/qca/ar9331.dtsi
+@@ -99,7 +99,7 @@
+ 
+ 			miscintc: interrupt-controller@18060010 {
+ 				compatible = "qca,ar7240-misc-intc";
+-				reg = <0x18060010 0x4>;
++				reg = <0x18060010 0x8>;
+ 
+ 				interrupt-parent = <&cpuintc>;
+ 				interrupts = <6>;
+-- 
+2.23.0
