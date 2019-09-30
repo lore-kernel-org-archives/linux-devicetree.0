@@ -1,59 +1,66 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v4 11/11] misc: pci_endpoint_test: Add LS1088a in
- pci_device_id table
-Date: Mon, 30 Sep 2019 15:57:24 +0100
-Message-ID: <20190930145723.GC42880@e119886-lin.cambridge.arm.com>
-References: <20190924021849.3185-1-xiaowei.bao@nxp.com>
- <20190924021849.3185-12-xiaowei.bao@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] arm64: dts: renesas: Add /soc dma-ranges
+Date: Mon, 30 Sep 2019 10:08:19 -0500
+Message-ID: <CAL_JsqJf-TGE-SWWj=6AVbpfuN1AsEdDTSOCOk+iUzTT3yZSgw@mail.gmail.com>
+References: <20190907161634.27378-1-marek.vasut@gmail.com>
+ <CAL_JsqL47dQT-P78j4Ph61fsgA45Ha0AJjDajiMk52yFj++s+g@mail.gmail.com>
+ <CAL_JsqK+SwX8Lu+-4UgpLVxL05yTcs8Af9mPVHqzbf6+HF9v3A@mail.gmail.com>
+ <0bf7c8c8-d03e-c08e-4879-3d3a2fb90ca7@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190924021849.3185-12-xiaowei.bao@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <0bf7c8c8-d03e-c08e-4879-3d3a2fb90ca7@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 10:18:49AM +0800, Xiaowei Bao wrote:
-> Add LS1088a in pci_device_id table so that pci-epf-test can be used
-> for testing PCIe EP in LS1088a.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - No change.
-> v3:
->  - No change.
-> v4:
->  - Use a maco to define the LS1088a device ID.
->  
->  drivers/misc/pci_endpoint_test.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 6e208a0..8c222a6 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -65,6 +65,7 @@
->  #define PCI_ENDPOINT_TEST_IRQ_NUMBER		0x28
->  
->  #define PCI_DEVICE_ID_TI_AM654			0xb00c
-> +#define PCI_DEVICE_ID_LS1088A			0x80c0
+On Mon, Sep 30, 2019 at 7:45 AM Marek Vasut <marek.vasut@gmail.com> wrote:
+>
+> On 9/24/19 12:33 AM, Rob Herring wrote:
+> > On Fri, Sep 13, 2019 at 10:14 AM Rob Herring wrote:
+> >>
+> >> On Sat, Sep 7, 2019 at 5:16 PM wrote:
+> >>>
+> >>> From: Marek Vasut
+> >>>
+> >>> Add dma-ranges property into /soc node to describe the DMA capabilities
+> >>> of the bus. This is currently needed to translate PCI DMA ranges, which
+> >>> are limited to 32bit addresses.
+> >>
+> >> FYI, I've started working on this problem and issues around
+> >> dma-ranges/dma_mask. Hopefully I'll get some patches out next week.
+> >
+> > I've pushed out a branch here:
+> >
+> > git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dma-masks
+> >
+> > Can you test it on Renesas. I don't have a real platform having the issue.
+>
+>
+> With the following patches applied:
+>       https://patchwork.ozlabs.org/patch/1144870/
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+I'd rather not have yet another instance of {dma-}ranges parsing code.
+With this series[1], dma-ranges gets parsed into resource list for
+you.
 
->  
->  #define is_am654_pci_dev(pdev)		\
->  		((pdev)->device == PCI_DEVICE_ID_TI_AM654)
-> @@ -793,6 +794,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, PCI_DEVICE_ID_LS1088A) },
->  	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, NULL) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
->  	  .driver_data = (kernel_ulong_t)&am654_data
-> -- 
-> 2.9.5
-> 
+>       https://patchwork.ozlabs.org/patch/1144871/
+
+How can this one be applied? It would conflict horribly. Plus I think
+it duplicates what's in my series.
+
+Rob
+
+> on R8A7795 Salvator-XS, works fine.
+
+[1] https://lore.kernel.org/linux-arm-kernel/20190924214630.12817-7-robh@kernel.org/T/
