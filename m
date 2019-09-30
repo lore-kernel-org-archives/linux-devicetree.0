@@ -1,88 +1,97 @@
-From: Jamie Lentin <jm@lentin.co.uk>
-Subject: Re: [PATCH 0/2] This patch introduces a feature to force gpio-poweroff
- module
-Date: Mon, 30 Sep 2019 20:42:53 +0100 (BST)
-Message-ID: <alpine.DEB.2.21.1909301909360.6576@clifford.vandergast.wormnet.eu>
-References: <20190930103531.13764-1-oleksandr.suvorov@toradex.com> <20190930121440.GC13301@lunn.ch> <CAGgjyvEx_F0C2XHDGxf3F0Z8iHF1vQZkoPft3_ZbTswVFv=SJA@mail.gmail.com> <20190930163203.GC15343@lunn.ch>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 05/11] of: Ratify of_dma_configure() interface
+Date: Mon, 30 Sep 2019 16:24:20 -0500
+Message-ID: <CAL_JsqLnKxuQRR3sGGtXF3nwwDx7DOONPPYz37ROk7u_+cxRug@mail.gmail.com>
+References: <20190927002455.13169-1-robh@kernel.org> <20190927002455.13169-6-robh@kernel.org>
+ <20190930125752.GD12051@infradead.org> <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190930163203.GC15343@lunn.ch>
+In-Reply-To: <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Igor Opaniuk <igor.opaniuk@toradex.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc: Christoph Hellwig <hch@infradead.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Frank Rowand <frowand.list@gmail.com>, PCI <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Oza Pawandeep <oza.oza@broadcom.com>, Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Robin Murphy <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 30 Sep 2019, Andrew Lunn wrote:
-
-> On Mon, Sep 30, 2019 at 02:11:59PM +0000, Oleksandr Suvorov wrote:
->> Hi Andrew,
->>
->> On Mon, Sep 30, 2019 at 3:16 PM Andrew Lunn <andrew@lunn.ch> wrote:
->>>
->>> On Mon, Sep 30, 2019 at 10:35:36AM +0000, Oleksandr Suvorov wrote:
->>>> to register its own pm_power_off handler even if someone has registered
->>>> this handler earlier.
->>>> Useful to change a way to power off the system using DT files.
->>>
->>> Hi Oleksandr
->>>
->>> I'm not sure this is a good idea. What happens when there are two
->>> drivers using forced mode? You then get which ever is register last.
->>> Non deterministic behaviour.
->>
->> You're right, we have to handle a case when gpio-poweroff fails to
->> power the system off. Please look at the
->> 2nd version of the patchset.
->>
->> There are 3 only drivers that forcibly register its own pm_power_off
->> handler even if it has been registered before.
->>
->> drivers/firmware/efi/reboot.c - supports chained call of next
->> pm_power_off handler if its own handler fails.
->>
->> arch/x86/platform/iris/iris.c, drivers/char/ipmi/ipmi_poweroff.c -
->> don't support calling of next pm_power_off handler.
->> Looks like these drivers should be fixed too.
->>
->> All other drivers don't change already initialized pm_power_off handler.
->>
->>> What is the other driver which is causing you problems? How is it
->>> getting probed? DT?
->>
->> There are several PMUs, RTCs, watchdogs that register their own pm_power_off.
->> Most of them, probably not all, are probed from DT.
+On Mon, Sep 30, 2019 at 8:32 AM Nicolas Saenz Julienne
+<nsaenzjulienne@suse.de> wrote:
 >
-> And which specific one is causing you problems.
+> On Mon, 2019-09-30 at 05:57 -0700, Christoph Hellwig wrote:
+> > On Thu, Sep 26, 2019 at 07:24:49PM -0500, Rob Herring wrote:
+> > > -int of_dma_configure(struct device *dev, struct device_node *np, bool
+> > > force_dma)
+> > > +int of_dma_configure(struct device *dev, struct device_node *parent, bool
+> > > force_dma)
+> >
+> > This creates a > 80 char line.
+> >
+> > >  {
+> > >     u64 dma_addr, paddr, size = 0;
+> > >     int ret;
+> > >     bool coherent;
+> > >     unsigned long offset;
+> > >     const struct iommu_ops *iommu;
+> > > +   struct device_node *np;
+> > >     u64 mask;
+> > >
+> > > +   np = dev->of_node;
+> > > +   if (!np)
+> > > +           np = parent;
+> > > +   if (!np)
+> > > +           return -ENODEV;
+> >
+> > I have to say I find the older calling convention simpler to understand.
+> > If we want to enforce the invariant I'd rather do that explicitly:
+> >
+> >       if (dev->of_node && np != dev->of_node)
+> >               return -EINVAL;
 >
-> I don't like this forced parameter. No other driver is using it.
+> As is, this would break Freescale Layerscape fsl-mc bus' dma_configure():
+
+This may break PCI too for devices that have a DT node.
+
+> static int fsl_mc_dma_configure(struct device *dev)
+> {
+>         struct device *dma_dev = dev;
 >
-> Maybe we should change this driver to support chained pm_power_off
-> handlers?
-
-There's still scope for non-deterministic behaviour though, as the 
-chaining would take place depending on the probe ordering. Admittedly if 
-the gpio-poweroff works it's unlikely to be a problem, but still seems 
-messy.
-
-Without knowing specifics, disabling the devices that can't turn the 
-device off seems like a better bet. If they'd be otherwise useful, I see 
-there's a of_device_is_system_power_controller(), see:
-
-/Documentation/devicetree/bindings/power/power-controller.txt
-https://elixir.bootlin.com/linux/latest/source/drivers/mfd/max77620.c#L566
-
-...maybe that can be added to the devices getting in the way?
-
-Cheers,
-
-[0] https://elixir.bootlin.com/linux/latest/source/drivers/watchdog/bcm2835_wdt.c#L152
-(chosen at random)
-
-
+>         while (dev_is_fsl_mc(dma_dev))
+>                 dma_dev = dma_dev->parent;
 >
->   Andrew
+>         return of_dma_configure(dev, dma_dev->of_node, 0);
+> }
 >
+> But I think that with this series, given the fact that we now treat the lack of
+> dma-ranges as a 1:1 mapping instead of an error, we could rewrite the function
+> like this:
 
--- 
-Jamie Lentin
+Now, I'm reconsidering allowing this abuse... It's better if the code
+which understands the bus structure in DT for a specific bus passes in
+the right thing. Maybe I should go back to Robin's version (below).
+OTOH, the existing assumption that 'dma-ranges' was in the immediate
+parent was an assumption on the bus structure which maybe doesn't
+always apply.
+
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index a45261e21144..6951450bb8f3 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -98,12 +98,15 @@ int of_dma_configure(struct device *dev, struct
+device_node *parent, bool force_
+        u64 mask;
+
+        np = dev->of_node;
+-       if (!np)
+-               np = parent;
++       if (np)
++               parent = of_get_dma_parent(np);
++       else
++               np = of_node_get(parent);
+        if (!np)
+                return -ENODEV;
+
+-       ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
++       ret = of_dma_get_range(parent, &dma_addr, &paddr, &size);
++       of_node_put(parent);
+        if (ret < 0) {
+                /*
+                 * For legacy reasons, we have to assume some devices need
