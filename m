@@ -1,76 +1,122 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-Date: Mon, 30 Sep 2019 16:35:38 +0300
-Message-ID: <d2bec234-be61-5ac1-2899-63d29660a80c@ti.com>
-References: <20190510194229.20628-1-aford173@gmail.com>
- <af325707-3e42-493d-e858-77878ef06138@ti.com>
- <CAHCN7xLzoCNW6q5yDCsqMHeNvdNegkGhd0N+q9+Gd8JUGbG=_g@mail.gmail.com>
- <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com>
- <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com>
- <845055e2-8182-de74-2077-629fdf50ac6c@ti.com>
- <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com>
- <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com>
- <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com>
- <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
- <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
- <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
- <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
- <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com>
- <CAHCN7xLKL42ib4t0Lte3sJPoJrKX0TPJR9VWi+uW=fZjUg1ssg@mail.gmail.com>
- <c816d70d-fa5b-a43f-ae7a-6df4589fe484@ti.com>
- <CAHCN7xKKNpQwWZkg-JBncp9=VOcLJFEkcvST=rZqv-i9+5_Q2g@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/3] dt-bindings: soc: add mtk svs dt-bindings
+Date: Mon, 30 Sep 2019 08:35:48 -0500
+Message-ID: <20190930133548.GA24574@bogus>
+References: <20190906100514.30803-1-roger.lu@mediatek.com>
+ <20190906100514.30803-2-roger.lu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHCN7xKKNpQwWZkg-JBncp9=VOcLJFEkcvST=rZqv-i9+5_Q2g@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190906100514.30803-2-roger.lu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>, Tero Kristo <t-kristo@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Roger Lu <roger.lu@mediatek.com>
+Cc: Kevin Hilman <khilman@kernel.org>, Nicolas Boichat <drinkcat@google.com>, Stephen Boyd <sboyd@kernel.org>, Fan Chen <fan.chen@mediatek.com>, HenryC Chen <HenryC.Chen@mediatek.com>, yt.lee@mediatek.com, Angus Lin <Angus.Lin@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 30/09/2019 16:17, Adam Ford wrote:
-
->>> It looks like it's unhappy that its trying to get one frequency and
->>> getting something different instead.
->>>
->>> [   10.014099] WARNING: CPU: 0 PID: 111 at
->>> drivers/gpu/drm/omapdrm/dss/dss.c:655 dss_set_fck_rate+0x70/0x90
->>> [omapdss]
->>> [   10.014129] clk rate mismatch: 27870968 != 27000000
->>
->> I believe this one is for Tomi to comment, his driver does some magic
->> compares for the requested vs. actual received clock rates. If I am not
->> mistaken, we are only modifying an integer divider here, and thus it is
->> physically impossible to get accurate 27MHz rate to display.
+On Fri, Sep 06, 2019 at 06:05:13PM +0800, Roger Lu wrote:
+> Document the binding for enabling mtk svs on MediaTek SoC.
 > 
-> I didn't expect exactly 27MHz,but the back trace is what concerns me more.
-
-Ah sorry... DSS driver knows the max divider value, so that it can 
-iterate over all the rates to find a good one.
-
-I'll send a patch later, but look for omap3630_dss_feats in dss.c, and 
-change fck_div_max from 32 to 16.
-
-> However, looking at
-> # cat clk/dpll4_ck/clk_rate
-> 864000000
+> Signed-off-by: Roger Lu <roger.lu@mediatek.com>
+> ---
+>  .../devicetree/bindings/power/mtk-svs.txt     | 88 +++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
 > 
-> It seems like 864000000 / 32 would be 27 MHz, but instead we're
-> dividing it by 31 yielding 27870968.  I don't know the clocking
-> architecture, so I don't know what your patch actually did or how the
-> divide by 16 limit worked into this.  If lck cannot divide by 32, it
-> would be nice to see if it could divide by 27 to get to 32MHz.  From
-> there, the pck could then divide by 4 yielding 9MHz.
+> diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> new file mode 100644
+> index 000000000000..6a71992ef162
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
+> @@ -0,0 +1,88 @@
+> +* Mediatek Smart Voltage Scaling (MTK SVS)
+> +
+> +This describes the device tree binding for the MTK SVS controller (bank)
+> +which helps provide the optimized CPU/GPU/CCI voltages. This device also
+> +needs thermal data to calculate thermal slope for accurately compensate
+> +the voltages when temperature change.
+> +
+> +Required properties:
+> +- compatible:
+> +  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
+> +- reg: Address range of the MTK SVS controller.
+> +- interrupts: IRQ for the MTK SVS controller.
+> +- clocks, clock-names: Clocks needed for the svs controller. required
+> +                       clocks are:
+> +		       "main_clk": Main clock needed for register access
 
-That's pretty odd. With Tero's patch (I didn't test it though) the max 
-divider should be 16. So the minimum fclk rate should be 54MHz. But 
-somehow the clock framework managed to produce 27870968...
+'_clk' is redundant.
 
-  Tomi
+> +- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
+> +- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
+> +
+> +Subnodes:
+> +- svs_cpu_little: SVS bank device node of little CPU
+> +  compatible: "mediatek,mt8183-svs-cpu-little"
+> +  operating-points-v2: OPP table hooked by SVS little CPU bank.
+> +		       SVS will optimze this OPP table voltage part.
+> +  vcpu-little-supply: PMIC buck of little CPU
+> +- svs_cpu_big: SVS bank device node of big CPU
+> +  compatible: "mediatek,mt8183-svs-cpu-big"
+> +  operating-points-v2: OPP table hooked by SVS big CPU bank.
+> +		       SVS will optimze this OPP table voltage part.
+> +  vcpu-big-supply: PMIC buck of big CPU
+> +- svs_cci: SVS bank device node of CCI
+> +  compatible: "mediatek,mt8183-svs-cci"
+> +  operating-points-v2: OPP table hooked by SVS CCI bank.
+> +		       SVS will optimze this OPP table voltage part.
+> +  vcci-supply: PMIC buck of CCI
+> +- svs_gpu: SVS bank device node of GPU
+> +  compatible: "mediatek,mt8183-svs-gpu"
+> +  operating-points-v2: OPP table hooked by SVS GPU bank.
+> +		       SVS will optimze this OPP table voltage part.
+> +  vgpu-spply: PMIC buck of GPU
+> +
+> +Example:
+> +
+> +	svs: svs@1100b000 {
+> +		compatible = "mediatek,mt8183-svs";
+> +		reg = <0 0x1100b000 0 0x1000>;
+> +		interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW 0>;
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+GIC interrupts are 3 cells, you have 4.
+
+> +		clocks = <&infracfg CLK_INFRA_THERM>;
+> +		clock-names = "main_clk";
+> +		nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
+> +		nvmem-cell-names = "svs-calibration-data", "calibration-data";
+> +
+> +		svs_cpu_little: svs_cpu_little {
+
+Don't use '_' in node names.
+
+> +			compatible = "mediatek,mt8183-svs-cpu-little";
+> +			operating-points-v2 = <&cluster0_opp>;
+> +		};
+> +
+> +		svs_cpu_big: svs_cpu_big {
+> +			compatible = "mediatek,mt8183-svs-cpu-big";
+> +			operating-points-v2 = <&cluster1_opp>;
+> +		};
+> +
+> +		svs_cci: svs_cci {
+> +			compatible = "mediatek,mt8183-svs-cci";
+> +			operating-points-v2 = <&cci_opp>;
+> +		};
+> +
+> +		svs_gpu: svs_gpu {
+> +			compatible = "mediatek,mt8183-svs-gpu";
+> +			power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
+> +			operating-points-v2 = <&gpu_opp_table>;
+> +		};
+> +	};
+> +
+> +	&svs_cpu_little {
+> +		vcpu-little-supply = <&mt6358_vproc12_reg>;
+
+It's already defined to have OPP and supply in the cpu nodes. Parse them
+to get this information rather than duplicating it here.
+
+The same should apply to the CCI and GPU.
+
+Rob
