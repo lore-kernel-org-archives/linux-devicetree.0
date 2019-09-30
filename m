@@ -1,106 +1,46 @@
 From: Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH 1/2] arm64: dts: juno: add GPU subsystem
-Date: Mon, 30 Sep 2019 16:24:58 +0100
-Message-ID: <88dc6386929b3dcd7a65ba8063628c62b66b330c.1569856049.git.robin.murphy@arm.com>
+Subject: [PATCH 2/2] drm/panfrost: Use coherent pagetable walk on Juno
+Date: Mon, 30 Sep 2019 16:24:59 +0100
+Message-ID: <1e499f85220b735849126171e64ebdd1da0302ce.1569856049.git.robin.murphy@arm.com>
+References: <88dc6386929b3dcd7a65ba8063628c62b66b330c.1569856049.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <88dc6386929b3dcd7a65ba8063628c62b66b330c.1569856049.git.robin.murphy@arm.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: robh@kernel.org, tomeu.vizoso@collabora.com, sudeep.holla@arm.com
 Cc: devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, liviu.dudau@arm.com, dri-devel@lists.freedesktop.org, steven.price@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Since we now have bindings for Mali Midgard GPUs, let's use them to
-describe Juno's GPU subsystem, if only because we can. Juno sports a
-Mali-T624 integrated behind an MMU-400 (as a gesture towards
-virtualisation), in their own dedicated power domain with DVFS
-controlled by the SCP.
-
-CC: Liviu Dudau <liviu.dudau@arm.com>
-CC: Sudeep Holla <sudeep.holla@arm.com>
-CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- .../bindings/gpu/arm,mali-midgard.yaml        |  5 +++-
- arch/arm64/boot/dts/arm/juno-base.dtsi        | 27 +++++++++++++++++++
- 2 files changed, 31 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-index 47bc1ac36426..018f3ae4b43c 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-@@ -22,6 +22,10 @@ properties:
-           - enum:
-              - amlogic,meson-gxm-mali
-           - const: arm,mali-t820
-+      - items:
-+          - enum:
-+             - arm,juno-mali
-+          - const: arm,mali-t624
-       - items:
-           - enum:
-              - rockchip,rk3288-mali
-@@ -39,7 +43,6 @@ properties:
-              - samsung,exynos5433-mali
-           - const: arm,mali-t760
- 
--          # "arm,mali-t624"
-           # "arm,mali-t628"
-           # "arm,mali-t830"
-           # "arm,mali-t880"
-diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-index 26a039a028b8..9e3e8ce6adfe 100644
---- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-@@ -35,6 +35,18 @@
- 		clock-names = "apb_pclk";
- 	};
- 
-+	smmu_gpu: iommu@2b400000 {
-+		compatible = "arm,mmu-400", "arm,smmu-v1";
-+		reg = <0x0 0x2b400000 0x0 0x10000>;
-+		interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-+		#iommu-cells = <1>;
-+		#global-interrupts = <1>;
-+		power-domains = <&scpi_devpd 1>;
-+		dma-coherent;
-+		status = "disabled";
-+	};
-+
- 	smmu_pcie: iommu@2b500000 {
- 		compatible = "arm,mmu-401", "arm,smmu-v1";
- 		reg = <0x0 0x2b500000 0x0 0x10000>;
-@@ -487,6 +499,21 @@
- 		};
- 	};
- 
-+	gpu: gpu@2d000000 {
-+		compatible = "arm,juno-mali", "arm,mali-t624";
-+		reg = <0 0x2d000000 0 0x10000>;
-+		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "gpu", "job", "mmu";
-+		clocks = <&scpi_dvfs 2>;
-+		power-domains = <&scpi_devpd 1>;
-+		dma-coherent;
-+		/* The SMMU is only really of interest to bare-metal hypervisors */
-+		/* iommus = <&smmu_gpu 0>; */
-+		status = "disabled";
-+	};
-+
- 	sram: sram@2e000000 {
- 		compatible = "arm,juno-sram-ns", "mmio-sram";
- 		reg = <0x0 0x2e000000 0x0 0x8000>;
--- 
-2.21.0.dirty
+QWx0aG91Z2ggZ29pbmcgZnVsbCAiZG1hLWNvaGVyZW50IiBlbmRzIGJhZGx5IGR1ZSB0byBHRU0g
+b2JqZWN0cyBzdGlsbApiZWluZyBmb3JjaWJseSBtYXBwZWQgbm9uLWNhY2hlYWJsZSwgd2UgY2Fu
+IGF0IGxlYXN0IHRha2UgYWR2YW50YWdlIG9mCkp1bm8ncyBBQ0UtbGl0ZSBpbnRlZ3JhdGlvbiB0
+byBza2lwIGNhY2hlIG1haW50ZW5hbmNlIGZvciBwYWdldGFibGVzLgoKQ0M6IFJvYiBIZXJyaW5n
+IDxyb2JoQGtlcm5lbC5vcmc+CkNDOiBUb21ldSBWaXpvc28gPHRvbWV1LnZpem9zb0Bjb2xsYWJv
+cmEuY29tPgpTaWduZWQtb2ZmLWJ5OiBSb2JpbiBNdXJwaHkgPHJvYmluLm11cnBoeUBhcm0uY29t
+PgotLS0KClRoaXMgaXNuJ3QgcmVhbGx5IG1lYW50IGFzIGEgc2VyaWVzLCBJJ20ganVzdCBzZW5k
+aW5nIGl0IHRvZ2V0aGVyCndpdGggcGF0Y2ggIzEgZm9yIGNvbnRleHQuCgogZHJpdmVycy9ncHUv
+ZHJtL3BhbmZyb3N0L3BhbmZyb3N0X21tdS5jIHwgMyArKysKIDEgZmlsZSBjaGFuZ2VkLCAzIGlu
+c2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZnJvc3QvcGFuZnJv
+c3RfbW11LmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZnJvc3QvcGFuZnJvc3RfbW11LmMKaW5kZXgg
+YmRkOTkwNTY4NDc2Li41NjA0MzlmNjMyNzcgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9w
+YW5mcm9zdC9wYW5mcm9zdF9tbXUuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZnJvc3QvcGFu
+ZnJvc3RfbW11LmMKQEAgLTM2NSw2ICszNjUsOSBAQCBpbnQgcGFuZnJvc3RfbW11X3BndGFibGVf
+YWxsb2Moc3RydWN0IHBhbmZyb3N0X2ZpbGVfcHJpdiAqcHJpdikKIAkJLmlvbW11X2Rldgk9IHBm
+ZGV2LT5kZXYsCiAJfTsKIAorCWlmIChvZl9kZXZpY2VfaXNfY29tcGF0aWJsZShwZmRldi0+ZGV2
+LT5vZl9ub2RlLCAiYXJtLGp1bm8tbWFsaSIpKQorCQlwZmRldi0+bW11LT5wZ3RibF9jZmcuY29o
+ZXJlbnRfd2FsayA9IHRydWU7CisKIAltbXUtPnBndGJsX29wcyA9IGFsbG9jX2lvX3BndGFibGVf
+b3BzKEFSTV9NQUxJX0xQQUUsICZtbXUtPnBndGJsX2NmZywKIAkJCQkJICAgICAgcHJpdik7CiAJ
+aWYgKCFtbXUtPnBndGJsX29wcykKLS0gCjIuMjEuMC5kaXJ0eQoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
