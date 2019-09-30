@@ -1,136 +1,32 @@
-Return-Path: <SRS0=lNVK=W5=linux.intel.com=sakari.ailus@kernel.org>
-Date: Mon, 2 Sep 2019 10:22:22 +0300
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v3 09/10] lib/vsprintf: Add %pfw conversion specifier for
- printing fwnode names
-Message-ID: <20190902072222.GG5475@paasikivi.fi.intel.com>
-References: <20190829101043.24963-1-sakari.ailus@linux.intel.com>
- <20190829101043.24963-10-sakari.ailus@linux.intel.com>
- <20190830130349.GJ2680@smile.fi.intel.com>
-MIME-Version: 1.0
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RFC v2 06/14] dt-bindings/interrupt-controller: pdc: add
+ SPI config register
+Date: Mon, 30 Sep 2019 17:14:16 -0500
+Message-ID: <20190930221416.GA2501@bogus>
+References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
+ <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190830130349.GJ2680@smile.fi.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-List-ID: <devicetree@vger.kernel.org>
+In-Reply-To: <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: swboyd@chromium.org, evgreen@chromium.org, maz@kernel.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, mkshah@codeaurora.org, linux-gpio@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
+List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
-
-Thanks for the review.
-
-On Fri, Aug 30, 2019 at 04:03:49PM +0300, Andy Shevchenko wrote:
-> On Thu, Aug 29, 2019 at 01:10:42PM +0300, Sakari Ailus wrote:
-> > Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
-> > support printing full path of the node, including its name ("f") and only
-> > the node's name ("P") in the printk family of functions. The two flags
-> > have equivalent functionality to existing %pOF with the same two modifiers
-> > ("f" and "P") on OF based systems. The ability to do the same on ACPI
-> > based systems is added by this patch.
-> > 
-> > On ACPI based systems the resulting strings look like
-> > 
-> > 	\_SB.PCI0.CIO2.port@1.endpoint@0
-> > 
-> > where the nodes are separated by a dot (".") and the first three are
-> > ACPI device nodes and the latter two ACPI data nodes.
+On Fri, 13 Sep 2019 15:59:14 -0600, Lina Iyer wrote:
+> In addition to configuring the PDC, additional registers that interface
+> the GIC have to be configured to match the GPIO type. The registers on
+> some QCOM SoCs are access restricted, while on other SoCs are not. They
+> SoCs with access restriction to these SPI registers need to be written
+> from the firmware using the SCM interface. Add a flag to indicate if the
+> register is to be written using SCM interface.
 > 
-> Couple of comments below, FWIW,
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Thanks!
-
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
+>  .../devicetree/bindings/interrupt-controller/qcom,pdc.txt   | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
 > 
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > ---
-> >  Documentation/core-api/printk-formats.rst | 24 +++++++++++++++
-> >  lib/vsprintf.c                            | 37 +++++++++++++++++++++++
-> >  scripts/checkpatch.pl                     |  3 +-
-> >  3 files changed, 63 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-> > index 922a29eb70e6c..abba210f67567 100644
-> > --- a/Documentation/core-api/printk-formats.rst
-> > +++ b/Documentation/core-api/printk-formats.rst
-> > @@ -418,6 +418,30 @@ Examples::
-> >  
-> >  Passed by reference.
-> >  
-> > +Fwnode handles
-> > +--------------
-> > +
-> > +::
-> > +
-> > +	%pfw[fP]
-> 
-> I'm not familiar with all flavours of the OF case, the question is do we use
-> same letters for analogues?
 
-Yes. There are some that may be unworkable to be extended, but in general
-this helps folks who are familiar with the OF conversion specifiers.
-
-> 
-> > +
-> > +For printing information on fwnode handles. The default is to print the full
-> > +node name, including the path. The modifiers are functionally equivalent to
-> > +%pOF above.
-> > +
-> > +	- f - full name of the node, including the path
-> > +	- P - the name of the node including an address (if there is one)
-> > +
-> > +Examples (ACPI):
-> > +
-> > +	%pfwf	\_SB.PCI0.CIO2.port@1.endpoint@0	- Full node name
-> > +	%pfwP	endpoint@0				- Node name
-> > +
-> > +Examples (OF):
-> > +
-> > +	%pfwf	/ocp@68000000/i2c@48072000/camera@10/port/endpoint - Full name
-> > +	%pfwP	endpoint				- Node name
-> > +
-> >  Time and date (struct rtc_time)
-> >  -------------------------------
-> >  
-> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> > index 19f9b3f30623e..79dacd0b9e124 100644
-> > --- a/lib/vsprintf.c
-> > +++ b/lib/vsprintf.c
-> > @@ -1978,6 +1978,37 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
-> >  	return widen_string(buf, buf - buf_start, end, spec);
-> >  }
-> >  
-> > +static noinline_for_stack
-> > +char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
-> > +		    struct printf_spec spec, const char *fmt)
-> > +{
-> > +	struct printf_spec str_spec = spec;
-> > +	char *buf_start = buf;
-> > +
-> > +	str_spec.field_width = -1;
-> > +
-> > +	if (*fmt != 'w')
-> > +		return error_string(buf, end, "(%pfw?)", spec);
-> > +
-> > +	if (check_pointer(&buf, end, fwnode, spec))
-> > +		return buf;
-> > +
-> > +	fmt++;
-> > +
-> > +	switch (*fmt) {
-> > +	case 'f':	/* full_name */
-> > +	default:
-> > +		buf = fwnode_full_name_string(fwnode, buf, end);
-> > +		break;
-> > +	case 'P':	/* name */
-> 
-> > +		buf = string(buf, end, fwnode_get_name(fwnode),
-> > +			     str_spec);
-> 
-> Perfectly one line.
-
-Fixed.
-
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Reviewed-by: Rob Herring <robh@kernel.org>
