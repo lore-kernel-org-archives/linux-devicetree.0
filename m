@@ -1,36 +1,59 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
-Date: Mon, 30 Sep 2019 16:56:39 +0200
-Message-ID: <BCB0237F-1AF7-4603-A778-8944C3618BC7@goldelico.com>
-References: <20190510194229.20628-1-aford173@gmail.com> <7ada0752-6f65-2906-cb29-a47c9490fd57@ti.com> <CAHCN7xJexJvh71vyb31ETgo=n_y_CupHH-AZwVK9mZe3GzJfEQ@mail.gmail.com> <845055e2-8182-de74-2077-629fdf50ac6c@ti.com> <CAHCN7xJFrTLOnbqrnH2W_T2whR8Xji0EMNR_cy8GYkDV-JDodQ@mail.gmail.com> <854f6130-c8a8-81cb-aa76-4830f218ae54@ti.com> <CAHCN7xKocdiWOdmoWQV3POr84qte6WNt0QbQRAwxKSvU8COB_w@mail.gmail.com> <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com> <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com> <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com> <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com> <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com> <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com> <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com> <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBh
- ZV5zA@mail.gmail.com> <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com> <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com> <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH v4 11/11] misc: pci_endpoint_test: Add LS1088a in
+ pci_device_id table
+Date: Mon, 30 Sep 2019 15:57:24 +0100
+Message-ID: <20190930145723.GC42880@e119886-lin.cambridge.arm.com>
+References: <20190924021849.3185-1-xiaowei.bao@nxp.com>
+ <20190924021849.3185-12-xiaowei.bao@nxp.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20190924021849.3185-12-xiaowei.bao@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Adam Ford <aford173@gmail.com>, Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Sep 24, 2019 at 10:18:49AM +0800, Xiaowei Bao wrote:
+> Add LS1088a in pci_device_id table so that pci-epf-test can be used
+> for testing PCIe EP in LS1088a.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+> v2:
+>  - No change.
+> v3:
+>  - No change.
+> v4:
+>  - Use a maco to define the LS1088a device ID.
+>  
+>  drivers/misc/pci_endpoint_test.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index 6e208a0..8c222a6 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -65,6 +65,7 @@
+>  #define PCI_ENDPOINT_TEST_IRQ_NUMBER		0x28
+>  
+>  #define PCI_DEVICE_ID_TI_AM654			0xb00c
+> +#define PCI_DEVICE_ID_LS1088A			0x80c0
 
-> Am 30.09.2019 um 16:27 schrieb Tomi Valkeinen <tomi.valkeinen@ti.com>:
->=20
-> On 30/09/2019 17:20, Tomi Valkeinen wrote:
->=20
->> Let's see what Tero says, but yeah, something is odd here. I expected =
-the max divider to be 16 with Tero's patch, but I don't see it having =
-that effect. I can get the div to 31.
->> You can see this from the clock register 0x48004e40 (CM_CLKSEL_DSS). =
-The lowest bits are the divider, 5 to 0. The TRM says max div is 32.
->> Tero said for him the dividers > 16 didn't "stick" to the register. =
-I'm now wondering if he has an old beagleboard with OMAP34xx, which has =
-max div 16.
->=20
-> So testing a bit more here, I can see the DSS working fine and fps as =
-expected when I write values directly to CM_CLKSEL_DSS:5:0, with =
-dividers up to 31. With 32, DSS breaks. The TRM (AM/DM37x) says value 32 =
-is valid.
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-Just a blind guess: is there something in the errata to take care of?
+>  
+>  #define is_am654_pci_dev(pdev)		\
+>  		((pdev)->device == PCI_DEVICE_ID_TI_AM654)
+> @@ -793,6 +794,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, PCI_DEVICE_ID_LS1088A) },
+>  	{ PCI_DEVICE_DATA(SYNOPSYS, EDDA, NULL) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
+>  	  .driver_data = (kernel_ulong_t)&am654_data
+> -- 
+> 2.9.5
+> 
