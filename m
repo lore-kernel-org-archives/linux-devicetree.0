@@ -1,57 +1,83 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] regulator: Document "regulator-boot-on" binding more
- thoroughly
-Date: Tue, 1 Oct 2019 18:41:04 +0100
-Message-ID: <20191001174104.GD4786@sirena.co.uk>
-References: <20190926124115.1.Ice34ad5970a375c3c03cb15c3859b3ee501561bf@changeid>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="48TaNjbzBVislYPb"
+From: John Stultz <john.stultz@linaro.org>
+Subject: [PATCH] arm64: dts: hisilicon: Add Mali-450 MP4 GPU DT entry
+Date: Tue,  1 Oct 2019 18:35:35 +0000
+Message-ID: <20191001183535.70835-1-john.stultz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190926124115.1.Ice34ad5970a375c3c03cb15c3859b3ee501561bf@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Marco Felsch <m.felsch@pengutronix.de>, ckeepax@opensource.cirrus.com, zhang.chunyan@linaro.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Peter Griffin <peter.griffin@linaro.org>
 
---48TaNjbzBVislYPb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+hi6220 has a Mali450 MP4 so lets add it into the DT.
 
-On Thu, Sep 26, 2019 at 12:41:18PM -0700, Douglas Anderson wrote:
+Cc: Wei Xu <xuwei5@hisilicon.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 38 +++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-> -    description: bootloader/firmware enabled regulator
-> +    description: bootloader/firmware enabled regulator.
-> +      It's expected that this regulator was left on by the bootloader.
-> +      If the bootloader didn't leave it on then OS should turn it on
-> +      at boot but shouldn't prevent it from being turned off later.
-
-This is good...
-
-> +      This property is intended to only be used for regulators where
-> +      Linux cannot read the state of the regulator at bootup.
-
-...but we shouldn't say "Linux" here since the DT binding is for all
-OSs, not just Linux.  I'd say "software" instead.  Really the
-expectation is that things wouldn't support readback at all, though it's
-possible there's some weird hardware out there that will support
-readback some of the time I guess.
-
---48TaNjbzBVislYPb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2Tj68ACgkQJNaLcl1U
-h9CRrgf+OhK++Wg53aKS5GOG5Scxu88CKfhRSgAezLcnGjLTBX16YijOdZNEM3yX
-+eknFRwLl189sJOTSGpO+skgW1BNVYJac8PHCk8wviVL5APiFqIMkGNNIcPQZnQc
-gJQFBLCnBO6RSqMiT98i0YK5Qes492NNap2lWKl+a7OvwXHo4onrdE9oYZcwmMVj
-DqsJAf+7VPG+BT1nIqJVL4jTuZeAWFyWMKaUMDFWmWev0RDEMF+bHXFMf2pFtkzj
-LfvVrsc7/JgU35ruEO3vCrJnDOS1Z4mplIKKFiAn/41OByNYePUx0RzdOHwinpT8
-Q9w5NkdPaasBpx6zg7XiXlwSjLScfg==
-=INGH
------END PGP SIGNATURE-----
-
---48TaNjbzBVislYPb--
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 108e2a4227f6..2072b637b5af 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -260,6 +260,7 @@
+ 			compatible = "hisilicon,hi6220-aoctrl", "syscon";
+ 			reg = <0x0 0xf7800000 0x0 0x2000>;
+ 			#clock-cells = <1>;
++			#reset-cells = <1>;
+ 		};
+ 
+ 		sys_ctrl: sys_ctrl@f7030000 {
+@@ -1021,6 +1022,43 @@
+ 			clock-names = "apb_pclk";
+ 			cpu = <&cpu7>;
+ 		};
++
++		mali: gpu@f4080000 {
++			compatible = "hisilicon,hi6220-mali", "arm,mali-450";
++			reg = <0x0 0xf4080000 0x0 0x00040000>;
++			interrupt-parent = <&gic>;
++			interrupts =	<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_PPI 126 IRQ_TYPE_LEVEL_HIGH>;
++
++			interrupt-names = "gp",
++					  "gpmmu",
++					  "pp",
++					  "pp0",
++					  "ppmmu0",
++					  "pp1",
++					  "ppmmu1",
++					  "pp2",
++					  "ppmmu2",
++					  "pp3",
++					  "ppmmu3";
++			clocks = <&media_ctrl HI6220_G3D_CLK>,
++				 <&media_ctrl HI6220_G3D_PCLK>;
++			clock-names = "core", "bus";
++			assigned-clocks = <&media_ctrl HI6220_G3D_CLK>,
++					  <&media_ctrl HI6220_G3D_PCLK>;
++			assigned-clock-rates = <500000000>, <144000000>;
++			reset-names = "ao_g3d", "media_g3d";
++			resets = <&ao_ctrl AO_G3D>, <&media_ctrl MEDIA_G3D>;
++		};
+ 	};
+ };
+ 
+-- 
+2.17.1
