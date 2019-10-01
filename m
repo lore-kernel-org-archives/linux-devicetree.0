@@ -1,63 +1,133 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH 0/3] Pine64+ specific hacks for RTL8211E
- Ethernet PHY
-Date: Wed, 02 Oct 2019 00:08:39 +0800
-Message-ID: <2CCD0856-433E-4602-A079-9F7F5F2E00D6@aosc.io>
-References: <20191001082912.12905-1-icenowy@aosc.io> <20191001.090651.796983023328992596.davem@davemloft.net>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [Patch 1/3] media: ov5640: add PIXEL_RATE control
+Date: Tue, 1 Oct 2019 11:23:41 -0500
+Message-ID: <20191001162341.f2o7ruar2nifl5ws@ti.com>
+References: <20190925152301.21645-1-bparrot@ti.com>
+ <20190925152301.21645-2-bparrot@ti.com>
+ <20191001075704.GA5449@paasikivi.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBF7UZXWAKGQEYYRA7SQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20191001.090651.796983023328992596.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20191001075704.GA5449@paasikivi.fi.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sakari,
 
+Thanks for the review.
 
-=E4=BA=8E 2019=E5=B9=B410=E6=9C=882=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=8812=
-:06:51, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> =E5=86=99=E5=88=B0:
->From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->Date: Tue,  1 Oct 2019 16:29:09 +0800
->
->> There're some Pine64+ boards known to have broken RTL8211E chips, and
->> a hack is given by Pine64+, which is said to be from Realtek.
->>=20
->> This patchset adds the hack.
->>=20
->> The hack is taken from U-Boot, and it contains magic numbers without
->> any document.
->
->Please contact Realtek and try to get an explanation about this.
+Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Tue [2019-Oct-01 10:57:04 +0300]:
+> Hi Benoit,
+> 
+> On Wed, Sep 25, 2019 at 10:22:59AM -0500, Benoit Parrot wrote:
+> > Add v4l2 controls to report the pixel rates of each mode. This is
+> > needed by some CSI2 receiver in order to perform proper DPHY
+> > configuration.
+> > 
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/i2c/ov5640.c | 25 +++++++++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
+> > 
+> > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> > index 500d9bbff10b..c2a44f30d56e 100644
+> > --- a/drivers/media/i2c/ov5640.c
+> > +++ b/drivers/media/i2c/ov5640.c
+> > @@ -193,6 +193,9 @@ struct ov5640_mode_info {
+> >  
+> >  struct ov5640_ctrls {
+> >  	struct v4l2_ctrl_handler handler;
+> > +	struct {
+> > +		struct v4l2_ctrl *pixel_rate;
+> > +	};
+> >  	struct {
+> >  		struct v4l2_ctrl *auto_exp;
+> >  		struct v4l2_ctrl *exposure;
+> > @@ -241,6 +244,7 @@ struct ov5640_dev {
+> >  	const struct ov5640_mode_info *last_mode;
+> >  	enum ov5640_frame_rate current_fr;
+> >  	struct v4l2_fract frame_interval;
+> > +	u64 pixel_rate;
+> >  
+> >  	struct ov5640_ctrls ctrls;
+> >  
+> > @@ -2202,6 +2206,7 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
+> >  	const struct ov5640_mode_info *new_mode;
+> >  	struct v4l2_mbus_framefmt *mbus_fmt = &format->format;
+> >  	struct v4l2_mbus_framefmt *fmt;
+> > +	u64 rate;
+> >  	int ret;
+> >  
+> >  	if (format->pad != 0)
+> > @@ -2233,6 +2238,12 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
+> >  	if (mbus_fmt->code != sensor->fmt.code)
+> >  		sensor->pending_fmt_change = true;
+> >  
+> > +	rate = sensor->current_mode->vtot * sensor->current_mode->htot;
+> > +	rate *= ov5640_framerates[sensor->current_fr];
+> > +	sensor->pixel_rate = rate;
+> > +
+> > +	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> > +				 sensor->pixel_rate);
+> >  out:
+> >  	mutex_unlock(&sensor->lock);
+> >  	return ret;
+> > @@ -2657,6 +2668,13 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
+> >  	/* we can use our own mutex for the ctrl lock */
+> >  	hdl->lock = &sensor->lock;
+> >  
+> > +	/* Clock related controls */
+> > +	ctrls->pixel_rate =
+> > +		v4l2_ctrl_new_std(hdl, ops,
+> > +				  V4L2_CID_PIXEL_RATE, 0, INT_MAX, 1,
+> > +				  55969920);
+> 
+> Could you calculate this value instead of using a seemingly random number?
 
-Sorry, but Realtek never shows any idea to add more infomation about this.
+Yes I guess I could, especially if I make a helper function for it :).
 
-These hacks had existed and worked for years.
+> 
+> > +	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> > +
+> >  	/* Auto/manual white balance */
+> >  	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
+> >  					   V4L2_CID_AUTO_WHITE_BALANCE,
+> > @@ -2782,6 +2800,7 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
+> >  	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+> >  	const struct ov5640_mode_info *mode;
+> >  	int frame_rate, ret = 0;
+> > +	u64 rate;
+> >  
+> >  	if (fi->pad != 0)
+> >  		return -EINVAL;
+> > @@ -2816,6 +2835,12 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
+> >  		sensor->frame_interval = fi->interval;
+> >  		sensor->current_mode = mode;
+> >  		sensor->pending_mode_change = true;
+> > +
+> > +		rate = sensor->current_mode->vtot * sensor->current_mode->htot;
+> > +		rate *= ov5640_framerates[sensor->current_fr];
+> > +		sensor->pixel_rate = rate;
+> 
+> I think it'd be better to have a function to calculate the value instead of
+> duplicating the code here.
 
->
->I understand that eventually we may not get a proper explanation
->but I really want you to put forth real effort to nail down whats
->going on here before I even consider these patches seriously.
->
->Thank you.
->
->_______________________________________________
->linux-arm-kernel mailing list
->linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Yes I'll create a helper function.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-To view this discussion on the web, visit https://groups.google.com/d/msgid=
-/linux-sunxi/2CCD0856-433E-4602-A079-9F7F5F2E00D6%40aosc.io.
+Benoit
+
+> 
+> > +		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> > +					 sensor->pixel_rate);
+> >  	}
+> >  out:
+> >  	mutex_unlock(&sensor->lock);
+> 
+> -- 
+> Kind regards,
+> 
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
