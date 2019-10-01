@@ -1,13 +1,12 @@
 From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 04/11] ARM: dts: sun8i: R40: add crypto
- engine node
-Date: Tue,  1 Oct 2019 20:41:34 +0200
-Message-ID: <20191001184141.27956-5-clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 05/11] ARM: dts: sun8i: H3: Add Crypto Engine node
+Date: Tue,  1 Oct 2019 20:41:35 +0200
+Message-ID: <20191001184141.27956-6-clabbe.montjoie@gmail.com>
 References: <20191001184141.27956-1-clabbe.montjoie@gmail.com>
 Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBB4V3Z3WAKGQEHFPZ4OA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7YLCN32UNBB453Z3WAKGQE4MKQVQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20191001184141.27956-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,37 +19,38 @@ To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@p
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Crypto Engine is a hardware cryptographic offloader that supports
+The Crypto Engine is a hardware cryptographic accelerator that supports
 many algorithms.
 It could be found on most Allwinner SoCs.
 
-This patch enables the Crypto Engine on the Allwinner R40 SoC Device-tree.
+This patch enables the Crypto Engine on the Allwinner H3 SoC Device-tree.
 
 Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-r40.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index bde068111b85..1fc3297a55ec 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -266,6 +266,16 @@
- 			#phy-cells = <1>;
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index e37c30e811d3..778a23a794c9 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -153,6 +153,17 @@
+ 			allwinner,sram = <&ve_sram 1>;
  		};
  
-+		crypto: crypto-engine@1c15000 {
-+			compatible = "allwinner,sun8i-r40-crypto";
++		crypto: crypto@1c15000 {
++			compatible = "allwinner,sun8i-h3-crypto";
 +			reg = <0x01c15000 0x1000>;
 +			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>;
-+			clock-names = "bus", "mod";
++			interrupt-names = "ce_ns";
 +			resets = <&ccu RST_BUS_CE>;
 +			reset-names = "bus";
++			clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>;
++			clock-names = "bus", "mod";
 +		};
 +
- 		ehci1: usb@1c19000 {
- 			compatible = "allwinner,sun8i-r40-ehci", "generic-ehci";
- 			reg = <0x01c19000 0x100>;
+ 		mali: gpu@1c40000 {
+ 			compatible = "allwinner,sun8i-h3-mali", "arm,mali-400";
+ 			reg = <0x01c40000 0x10000>;
 -- 
 2.21.0
