@@ -1,158 +1,64 @@
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: Re: [PATCH 05/11] of: Ratify of_dma_configure() interface
-Date: Tue, 01 Oct 2019 17:43:09 +0200
-Message-ID: <0557c83bcb781724a284811fef7fdb122039f336.camel@suse.de>
-References: <20190927002455.13169-1-robh@kernel.org>
-         <20190927002455.13169-6-robh@kernel.org>
-         <20190930125752.GD12051@infradead.org>
-         <95f8dabea99f104336491281b88c04b58d462258.camel@suse.de>
-         <CAL_JsqLnKxuQRR3sGGtXF3nwwDx7DOONPPYz37ROk7u_+cxRug@mail.gmail.com>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: memory-controllers: Add Exynos5422
+ DMC interrupts description
+Date: Tue, 1 Oct 2019 17:58:52 +0200
+Message-ID: <74f31100-7503-e333-fa51-ca218b45bb98@partner.samsung.com>
+References: <20191001125436.24086-1-l.luba@partner.samsung.com>
+ <CGME20191001125444eucas1p2e4254acf8434e1fadf0e208dbe62b2d7@eucas1p2.samsung.com>
+ <20191001125436.24086-2-l.luba@partner.samsung.com>
+ <20191001131807.GB30129@pi3>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-Cs3oOlvxVqdSsNFddCdM"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLnKxuQRR3sGGtXF3nwwDx7DOONPPYz37ROk7u_+cxRug@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Arnd Bergmann <arnd@arndb.de>, PCI <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>, Marek Vasut <marek.vasut@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Oza Pawandeep <oza.oza@broadcom.com>, Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms+renesas@verge.net.au>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191001131807.GB30129@pi3>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, willy.mh.wolff.ml@gmail.com, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, kgene@kernel.org, myungjoo.ham@samsung.com, s.nawrocki@samsung.com, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
 
---=-Cs3oOlvxVqdSsNFddCdM
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2019-09-30 at 16:24 -0500, Rob Herring wrote:
-> On Mon, Sep 30, 2019 at 8:32 AM Nicolas Saenz Julienne
-> <nsaenzjulienne@suse.de> wrote:
-> > On Mon, 2019-09-30 at 05:57 -0700, Christoph Hellwig wrote:
-> > > On Thu, Sep 26, 2019 at 07:24:49PM -0500, Rob Herring wrote:
-> > > > -int of_dma_configure(struct device *dev, struct device_node *np, b=
-ool
-> > > > force_dma)
-> > > > +int of_dma_configure(struct device *dev, struct device_node *paren=
-t,
-> > > > bool
-> > > > force_dma)
-> > >=20
-> > > This creates a > 80 char line.
-> > >=20
-> > > >  {
-> > > >     u64 dma_addr, paddr, size =3D 0;
-> > > >     int ret;
-> > > >     bool coherent;
-> > > >     unsigned long offset;
-> > > >     const struct iommu_ops *iommu;
-> > > > +   struct device_node *np;
-> > > >     u64 mask;
-> > > >=20
-> > > > +   np =3D dev->of_node;
-> > > > +   if (!np)
-> > > > +           np =3D parent;
-> > > > +   if (!np)
-> > > > +           return -ENODEV;
-> > >=20
-> > > I have to say I find the older calling convention simpler to understa=
-nd.
-> > > If we want to enforce the invariant I'd rather do that explicitly:
-> > >=20
-> > >       if (dev->of_node && np !=3D dev->of_node)
-> > >               return -EINVAL;
-> >=20
-> > As is, this would break Freescale Layerscape fsl-mc bus' dma_configure(=
-):
->=20
-> This may break PCI too for devices that have a DT node.
->=20
-> > static int fsl_mc_dma_configure(struct device *dev)
-> > {
-> >         struct device *dma_dev =3D dev;
-> >=20
-> >         while (dev_is_fsl_mc(dma_dev))
-> >                 dma_dev =3D dma_dev->parent;
-> >=20
-> >         return of_dma_configure(dev, dma_dev->of_node, 0);
-> > }
-> >=20
-> > But I think that with this series, given the fact that we now treat the=
- lack
-> > of
-> > dma-ranges as a 1:1 mapping instead of an error, we could rewrite the
-> > function
-> > like this:
->=20
-> Now, I'm reconsidering allowing this abuse... It's better if the code
-> which understands the bus structure in DT for a specific bus passes in
-> the right thing. Maybe I should go back to Robin's version (below).
-> OTOH, the existing assumption that 'dma-ranges' was in the immediate
-> parent was an assumption on the bus structure which maybe doesn't
-> always apply.
->=20
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index a45261e21144..6951450bb8f3 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -98,12 +98,15 @@ int of_dma_configure(struct device *dev, struct
-> device_node *parent, bool force_
->         u64 mask;
->=20
->         np =3D dev->of_node;
-> -       if (!np)
-> -               np =3D parent;
-> +       if (np)
-> +               parent =3D of_get_dma_parent(np);
-> +       else
-> +               np =3D of_node_get(parent);
->         if (!np)
->                 return -ENODEV;
->=20
-> -       ret =3D of_dma_get_range(np, &dma_addr, &paddr, &size);
-> +       ret =3D of_dma_get_range(parent, &dma_addr, &paddr, &size);
-> +       of_node_put(parent);
->         if (ret < 0) {
->                 /*
->                  * For legacy reasons, we have to assume some devices nee=
-d
+On 10/1/19 3:18 PM, Krzysztof Kozlowski wrote:
+> On Tue, Oct 01, 2019 at 02:54:33PM +0200, Lukasz Luba wrote:
+>> Add description for optional interrupt lines. It provides a new operation
+>> mode, which uses internal performance counters interrupt when overflow.
+>> This is more reliable than using default polling mode implemented in
+>> devfreq.
+>>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   .../bindings/memory-controllers/exynos5422-dmc.txt     | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+>> index 02aeb3b5a820..afc38aea6b1c 100644
+>> --- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+>> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+>> @@ -31,6 +31,13 @@ Required properties for DMC device for Exynos5422:
+>>   	The register offsets are in the driver code and specyfic for this SoC
+>>   	type.
+>>   
+>> +Optional properties for DMC device for Exynos5422:
+>> +- interrupt-parent : The parent interrupt controller.
+>> +- interrupts : Contains the IRQ line numbers for the DMC internal performance
+>> +  event counters. Align with specification of the interrupt line(s) in the
+>> +  interrupt-parent controller.
+>> +- interrupt-names : List of IRQ names.
+> 
+> Since the names are important (not the order) they are part of the
+> bindings and they must be listed here.
 
-I spent some time thinking about your comments and researching. I came to t=
-he
-realization that both these solutions break the usage in
-drivers/gpu/drm/sun4i/sun4i_backend.c:805. In that specific case both
-'dev->of_node' and 'parent' exist yet the device receiving the configuratio=
-n
-and 'parent' aren't related in any way.
-
-IOW we can't just use 'dev->of_node' as a starting point to walk upwards th=
-e
-tree. We always have to respect whatever DT node the bus provided, and star=
-t
-there. This clashes with the current solutions, as they are based on the fa=
-ct
-that we can use dev->of_node when present.
-
-My guess at this point, if we're forced to honor that behaviour, is that we
-have to create a new API for the PCI use case. Something the likes of
-of_dma_configure_parent().
+Good point, thanks. I will add it to the description.
 
 Regards,
-Nicolas
-
-
---=-Cs3oOlvxVqdSsNFddCdM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2TdA0ACgkQlfZmHno8
-x/6K4AgAjioHwGF/mb4/iuCV18ZNbc5+28Uj8QSuVjilegKoNykY14Tj+cUOZScx
-3EF7lURVACHKIEG1K4mOtTqx/gzU+CkDYq3h6j7WkGGOIVY9Uadlnj/Koe7b3WuN
-CtyjG0ZpwC0Houf+sUzULF/oh70hKCQnGJqaw4zM11eaV3GWVFusupxh6VuZ61Ez
-PFo9kjYEn9DJFCUYzlZBYmqo7KIXm17W2fiY6AqjPvYE7s4HoA3Y1IE3uofxIY0B
-0jyx5feECFqXNM6OXhaOVDV5jiDrM2aFc1/w0IYU3dcaQxjkPFlb4yI7KtzE/HBT
-DJ49VyTT04oQy0DYBsw8BXur1BGXCw==
-=Iift
------END PGP SIGNATURE-----
-
---=-Cs3oOlvxVqdSsNFddCdM--
+Lukasz
