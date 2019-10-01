@@ -1,43 +1,84 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt: spi: Add Renesas RZ/N1 binding documentation
-Date: Tue, 1 Oct 2019 06:43:05 -0500
-Message-ID: <20191001114305.GA27944@bogus>
-References: <1568793876-9009-1-git-send-email-gareth.williams.jx@renesas.com>
- <1568793876-9009-2-git-send-email-gareth.williams.jx@renesas.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: dt-bindings: mt8183: add missing
+	update" to the asoc tree
+Date: Tue,  1 Oct 2019 12:40:51 +0100 (BST)
+Message-ID: <20191001114051.293F627429C0@ypsilon.sirena.org.uk>
+References: <20190920112320.166052-1-tzungbi@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1568793876-9009-2-git-send-email-gareth.williams.jx@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gareth Williams <gareth.williams.jx@renesas.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20190920112320.166052-1-tzungbi@google.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, cychiang@google.com, robh+dt@kernel.org, tzungbi@google.com, Mark Brown <broonie@kernel.org>, dgreid@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Sep 2019 09:04:33 +0100, Gareth Williams wrote:
-> From: Phil Edworthy <phil.edworthy@renesas.com>
-> 
-> The Renesas RZ/N1 SPI Controller is based on the Synopsys DW SSI, but has
-> additional registers for software CS control and DMA. This patch does not
-> address the changes required for DMA support, it simply adds the compatible
-> string. The CS functionality is not very useful and also not needed as
-> Linux can use gpios for the CS signals.
-> 
-> Add a compatible string to handle any unforeseen issues that may arise, and
-> pave the way for DMA support.
-> 
-> Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
-> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> ---
-> Note: All the other manufacturers detail their compatible strings in
-> snps,dw-apb-ssi.txt. I think it makes sense for rzn1 to be in it's own file
-> due to the changes made to the peripheral for DMA support.
-> 
-> v2:
->  - No changes.
-> ---
->  Documentation/devicetree/bindings/spi/renesas,rzn1-spi.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/renesas,rzn1-spi.txt
-> 
+The patch
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+   ASoC: dt-bindings: mt8183: add missing update
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 7cf2804775f8a388411624b3e768e55d08711e9d Mon Sep 17 00:00:00 2001
+From: Tzung-Bi Shih <tzungbi@google.com>
+Date: Fri, 20 Sep 2019 19:23:20 +0800
+Subject: [PATCH] ASoC: dt-bindings: mt8183: add missing update
+
+Headset codec is optional.  Add missing update to DT binding document.
+
+Fixes: a962a809e5e4 ("ASoC: mediatek: mt8183: make headset codec optional")
+Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
+Link: https://lore.kernel.org/r/20190920112320.166052-1-tzungbi@google.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/sound/mt8183-mt6358-ts3a227-max98357.txt         | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt b/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
+index d6d5207fa996..17ff3892f439 100644
+--- a/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
++++ b/Documentation/devicetree/bindings/sound/mt8183-mt6358-ts3a227-max98357.txt
+@@ -2,9 +2,11 @@ MT8183 with MT6358, TS3A227 and MAX98357 CODECS
+ 
+ Required properties:
+ - compatible : "mediatek,mt8183_mt6358_ts3a227_max98357"
+-- mediatek,headset-codec: the phandles of ts3a227 codecs
+ - mediatek,platform: the phandle of MT8183 ASoC platform
+ 
++Optional properties:
++- mediatek,headset-codec: the phandles of ts3a227 codecs
++
+ Example:
+ 
+ 	sound {
+-- 
+2.20.1
