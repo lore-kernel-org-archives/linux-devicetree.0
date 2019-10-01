@@ -1,124 +1,155 @@
-From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH v6 3/9] powerpc: add support to initialize ima policy rules
-Date: Mon, 30 Sep 2019 22:04:48 -0300
-Message-ID: <877e5pwa1b.fsf@morokweng.localdomain>
-References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com> <1569594360-7141-4-git-send-email-nayna@linux.ibm.com>
+From: "Ramuthevar, Vadivel MuruganX"
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: spi: Add support for cadence-qspi IP
+ Intel LGM SoC
+Date: Tue, 1 Oct 2019 09:13:13 +0800
+Message-ID: <e70c6f98-7e0f-97f2-bede-00de4389f825@linux.intel.com>
+References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190916073843.39618-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190930223640.GA18491@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1569594360-7141-4-git-send-email-nayna@linux.ibm.com>
+In-Reply-To: <20190930223640.GA18491@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nayna Jain <nayna@linux.ibm.com>
-Cc: linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Jeremy Kerr <jk@ozlabs.org>, Matthew Garret <matthew.garret@nebula.com>, Mimi Zohar <zohar@linux.ibm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Claudio Carvalho <cclaudio@linux.ibm.com>, George Wilson <gcwilson@linux.ibm.com>, Elaine Palmer <erpalmer@us.ibm.com>, Eric Ricther <erichte@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Rob Herring <robh@kernel.org>
+Cc: broonie@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
-Hello,
+    Thank you for the review comments.
 
-Nayna Jain <nayna@linux.ibm.com> writes:
-
-> PowerNV systems uses kernel based bootloader, thus its secure boot
-> implementation uses kernel IMA security subsystem to verify the kernel
-> before kexec. Since the verification policy might differ based on the
-> secure boot mode of the system, the policies are defined at runtime.
+On 1/10/2019 6:36 AM, Rob Herring wrote:
+> On Mon, Sep 16, 2019 at 03:38:42PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>
+>> On Intel Lightening Mountain(LGM) SoCs QSPI controller support
+>> to QSPI-NAND flash. This introduces to device tree binding
+>> documentation for Cadence-QSPI controller and spi-nand flash.
+>>
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   .../devicetree/bindings/spi/cadence,qspi-nand.yaml | 84 ++++++++++++++++++++++
+>>   1 file changed, 84 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml b/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
+>> new file mode 100644
+>> index 000000000000..9aae4c1459cc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
+>> @@ -0,0 +1,84 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/spi/cadence,qspi-nand.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: Cadence QSPI Flash Controller on Intel's SoC
+>> +
+>> +maintainers:
+>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> +
+>> +allOf:
+>> +  - $ref: "spi-controller.yaml#"
+>> +
+>> +description: |
+>> +  The Cadence QSPI is a controller optimized for communication with SPI
+>> +  FLASH memories, without DMA support on Intel's SoC.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: cadence,lgm-qspi
+> Vendor here should be 'intel'. Perhaps the binding should be shared too
+> like the driver.
 >
-> This patch implements the arch-specific support to define the IMA policy
-> rules based on the runtime secure boot mode of the system.
+> Plus the vendor prefix for Cadence is cdns.
+Agreed!, will update.
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  fifo-depth:
+>> +    maxItems: 1
+>> +
+> This is vendor specific, so needs a vendor prefix, type, and
+> description.
+agreed!
+>> +  fifo-width:
+>> +    maxItems: 1
+> Same
 >
-> This patch provides arch-specific IMA policies if PPC_SECURE_BOOT
-> config is enabled.
+>> +
+>> +  qspi-phyaddr:
+>> +    maxItems: 1
+> Same
 >
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> ---
->  arch/powerpc/Kconfig           |  2 ++
->  arch/powerpc/kernel/Makefile   |  2 +-
->  arch/powerpc/kernel/ima_arch.c | 33 +++++++++++++++++++++++++++++++++
->  include/linux/ima.h            |  3 ++-
->  4 files changed, 38 insertions(+), 2 deletions(-)
->  create mode 100644 arch/powerpc/kernel/ima_arch.c
->
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 2c54beb29f1a..54eda07c74e5 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -916,6 +916,8 @@ config PPC_SECURE_BOOT
->  	prompt "Enable secure boot support"
->  	bool
->  	depends on PPC_POWERNV
-> +	depends on IMA
-> +	depends on IMA_ARCH_POLICY
->  	help
->  	  Systems with firmware secure boot enabled needs to define security
->  	  policies to extend secure boot to the OS. This config allows user
-> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-> index 875b0785a20e..7156ac1fc956 100644
-> --- a/arch/powerpc/kernel/Makefile
-> +++ b/arch/powerpc/kernel/Makefile
-> @@ -157,7 +157,7 @@ endif
->  obj-$(CONFIG_EPAPR_PARAVIRT)	+= epapr_paravirt.o epapr_hcalls.o
->  obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvm_emul.o
->
-> -obj-$(CONFIG_PPC_SECURE_BOOT)	+= secure_boot.o
-> +obj-$(CONFIG_PPC_SECURE_BOOT)	+= secure_boot.o ima_arch.o
->
->  # Disable GCOV, KCOV & sanitizers in odd or sensitive code
->  GCOV_PROFILE_prom_init.o := n
-> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
-> new file mode 100644
-> index 000000000000..39401b67f19e
-> --- /dev/null
-> +++ b/arch/powerpc/kernel/ima_arch.c
-> @@ -0,0 +1,33 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 IBM Corporation
-> + * Author: Nayna Jain
-> + */
-> +
-> +#include <linux/ima.h>
-> +#include <asm/secure_boot.h>
-> +
-> +bool arch_ima_get_secureboot(void)
-> +{
-> +	return is_powerpc_os_secureboot_enabled();
-> +}
-> +
-> +/* Defines IMA appraise rules for secureboot */
-> +static const char *const arch_rules[] = {
-> +	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
-> +#if !IS_ENABLED(CONFIG_MODULE_SIG)
-> +	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
-> +#endif
-> +	NULL
-> +};
-> +
-> +/*
-> + * Returns the relevant IMA arch policies based on the system secureboot state.
-> + */
-> +const char *const *arch_get_ima_policy(void)
-> +{
-> +	if (is_powerpc_os_secureboot_enabled())
-> +		return arch_rules;
-> +
-> +	return NULL;
-> +}
+>> +
+>> +  qspi-phymask:
+>> +    maxItems: 1
+> Same
+will update all the above.
+>> +
+>> +  clocks:
+>> +    maxItems: 2
+> Need to define what each clock is when there is more than 1.
+Sure, will update.
+>> +
+>> +  clocks-names:
+>> +    maxItems: 2
+> Need to define the strings.
+Noted, will update.
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +
+>> +  reset-names:
+>> +    maxItems: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - fifo-depth
+>> +  - fifo-width
+>> +  - qspi-phyaddr
+>> +  - qspi-phymask
+>> +  - clocks
+>> +  - clock-names
+>> +  - resets
+>> +  - reset-names
+>> +
+>> +examples:
+>> +  - |
+>> +    qspi@ec000000 {
+> spi@...
 
-If CONFIG_MODULE_SIG is enabled but module signatures aren't enforced,
-then IMA won't enforce module signature either. x86's
-arch_get_ima_policy() calls set_module_sig_enforced(). Doesn't the
-powerpc version need to do that as well?
+Controller is qspi , so that have updated.
 
-On the flip side, if module signatures are enforced by the module
-subsystem then IMA will verify the signature a second time since there's
-no sharing of signature verification results between the module
-subsystem and IMA (this was observed by Mimi).
-
-IMHO this is a minor issue, since module loading isn't a hot path and
-the duplicate work shouldn't impact anything. But it could be avoided by
-having a NULL entry in arch_rules, which arch_get_ima_policy() would
-dynamically update with the "appraise func=MODULE_CHECK" rule if
-is_module_sig_enforced() is true.
-
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
+With Best Regards
+Vadivel Murugan R
+>> +          compatible = "cadence,qspi-nand";
+>> +          reg = <0xec000000 0x100>;
+>> +          fifo-depth = <128>;
+>> +          fifo-width = <4>;
+>> +          qspi-phyaddr = <0xf4000000>;
+>> +          qspi-phymask = <0xffffffff>;
+>> +          clocks = <&cgu0 LGM_CLK_QSPI>, <&cgu0 LGM_GCLK_QSPI>;
+>> +          clock-names = "freq", "qspi";
+>> +          resets = <&rcu0 0x10 1>;
+>> +          reset-names = "qspi";
+>> +          #address-cells = <1>;
+>> +          #size-cells = <0>;
+>> +
+>> +          flash: flash@1 {
+>> +              compatible = "spi-nand";
+>> +              reg = <1>;
+>> +              spi-max-frequency = <10000000>;
+>> +          };
+>> +    };
+>> +
+>> -- 
+>> 2.11.0
+>>
