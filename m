@@ -1,176 +1,44 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 2/2] pwm: stm32: add power management support
-Date: Tue, 1 Oct 2019 09:04:50 +0200
-Message-ID: <20191001070450.4zogfryzo7a5ssbd@pengutronix.de>
-References: <1569857951-20007-1-git-send-email-fabrice.gasnier@st.com>
- <1569857951-20007-3-git-send-email-fabrice.gasnier@st.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCHv3 RESEND-next 0/3] Odroid c2 missing regulator linking
+Date: Tue,  1 Oct 2019 07:38:58 +0000
+Message-ID: <20191001073901.372-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1569857951-20007-3-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, benjamin.gaignard@st.com, linux-stm32@st-md-mailman.stormreply.com
+To: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Fabrice,
+Looks like this changes got lost so resend these changes again.
 
-On Mon, Sep 30, 2019 at 05:39:11PM +0200, Fabrice Gasnier wrote:
-> Add suspend/resume PM sleep ops. When going to low power, enforce the PWM
-> channel isn't active. Let the PWM consumers disable it during their own
-> suspend sequence, see [1]. So, perform a check here, and handle the
-> pinctrl states. Also restore the break inputs upon resume, as registers
-> content may be lost when going to low power mode.
-> 
-> [1] https://lkml.org/lkml/2019/2/5/770
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> ---
->  drivers/pwm/pwm-stm32.c | 82 +++++++++++++++++++++++++++++++++++++------------
->  1 file changed, 62 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> index 740e2de..9bcd73a 100644
-> --- a/drivers/pwm/pwm-stm32.c
-> +++ b/drivers/pwm/pwm-stm32.c
-> @@ -12,6 +12,7 @@
->  #include <linux/mfd/stm32-timers.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/pinctrl/consumer.h>
->  #include <linux/platform_device.h>
->  #include <linux/pwm.h>
->  
-> @@ -19,6 +20,12 @@
->  #define CCMR_CHANNEL_MASK  0xFF
->  #define MAX_BREAKINPUT 2
->  
-> +struct stm32_breakinput {
-> +	u32 index;
-> +	u32 level;
-> +	u32 filter;
-> +};
-> +
->  struct stm32_pwm {
->  	struct pwm_chip chip;
->  	struct mutex lock; /* protect pwm config/enable */
-> @@ -26,15 +33,11 @@ struct stm32_pwm {
->  	struct regmap *regmap;
->  	u32 max_arr;
->  	bool have_complementary_output;
-> +	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
-> +	unsigned int nbreakinput;
->  	u32 capture[4] ____cacheline_aligned; /* DMA'able buffer */
->  };
->  
-> -struct stm32_breakinput {
-> -	u32 index;
-> -	u32 level;
-> -	u32 filter;
-> -};
-> -
->  static inline struct stm32_pwm *to_stm32_pwm_dev(struct pwm_chip *chip)
->  {
->  	return container_of(chip, struct stm32_pwm, chip);
-> @@ -512,15 +515,27 @@ static int stm32_pwm_set_breakinput(struct stm32_pwm *priv,
->  	return (bdtr & bke) ? 0 : -EINVAL;
->  }
->  
-> -static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
-> +static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv)
-> +{
-> +	int i, ret = 0;
-> +
-> +	for (i = 0; i < priv->nbreakinput && !ret; i++) {
-> +		ret = stm32_pwm_set_breakinput(priv,
-> +					       priv->breakinput[i].index,
-> +					       priv->breakinput[i].level,
-> +					       priv->breakinput[i].filter);
-> +	}
-> +
-> +	return ret;
-> +}
+Below small changes help re-configure or fix missing inter linking
+of regulator node.
 
-Can you explain what the effect of this function is? This is something
-that is lost during suspend?
+Re-based on *next-20191001*
+Changes from previous patch's series.
+Build using Cross Compiler.
 
-I wonder why the patch is so big. There are some rearrangements that
-should have no effect and I think it would be beneficial for
-reviewability to split this patch in a patch that only does the
-restructuring and than on top of that add the PM stuff.
+Added missing Reviewed-by Neil's and Martin.
+Added few suggestion from martin for rename of node.
 
-> +
-> +static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
->  				       struct device_node *np)
->  {
-> -	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
-> -	int nb, ret, i, array_size;
-> +	int nb, ret, array_size;
->  
->  	nb = of_property_count_elems_of_size(np, "st,breakinput",
->  					     sizeof(struct stm32_breakinput));
-> -
->  	/*
->  	 * Because "st,breakinput" parameter is optional do not make probe
->  	 * failed if it doesn't exist.
-> @@ -531,20 +546,14 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
->  	if (nb > MAX_BREAKINPUT)
->  		return -EINVAL;
->  
-> +	priv->nbreakinput = nb;
->  	array_size = nb * sizeof(struct stm32_breakinput) / sizeof(u32);
->  	ret = of_property_read_u32_array(np, "st,breakinput",
-> -					 (u32 *)breakinput, array_size);
-> +					 (u32 *)priv->breakinput, array_size);
->  	if (ret)
->  		return ret;
->  
-> -	for (i = 0; i < nb && !ret; i++) {
-> -		ret = stm32_pwm_set_breakinput(priv,
-> -					       breakinput[i].index,
-> -					       breakinput[i].level,
-> -					       breakinput[i].filter);
-> -	}
-> -
-> -	return ret;
-> +	return stm32_pwm_apply_breakinputs(priv);
->  }
->  
->  static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
-> @@ -614,7 +623,7 @@ static int stm32_pwm_probe(struct platform_device *pdev)
->  	if (!priv->regmap || !priv->clk)
->  		return -EINVAL;
->  
-> -	ret = stm32_pwm_apply_breakinputs(priv, np);
-> +	ret = stm32_pwm_probe_breakinputs(priv, np);
->  	if (ret)
->  		return ret;
->  
-> @@ -647,6 +656,38 @@ static int stm32_pwm_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static int __maybe_unused stm32_pwm_suspend(struct device *dev)
-> +{
-> +	struct stm32_pwm *priv = dev_get_drvdata(dev);
-> +	struct pwm_state state;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < priv->chip.npwm; i++) {
-> +		pwm_get_state(&priv->chip.pwms[i], &state);
+Changes for previous changes.
+Fix some typo.
+Updated few patches as per Martin's suggestion.
 
-pwm_get_state is a function designed to be used by PWM consumers. I
-would prefer to check the hardware registers here instead.
+Best Regards
+-Anand
 
-What if there is no consumer and the PWM just happens to be enabled by
-the bootloader? Or is this too minor an issue to be worth consideration?
+Anand Moon (3):
+  arm64: dts: meson: odroid-c2: Add missing regulator linked to P5V0
+    regulator
+  arm64: dts: meson: odroid-c2: Add missing regulator linked to
+    VDDIO_AO3V3 regulator
+  arm64: dts: meson: odroid-c2: Add missing regulator linked to HDMI
+    supply
 
-Best regards
-Uwe
+ .../boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 53 +++++++++++++++++--
+ 1 file changed, 50 insertions(+), 3 deletions(-)
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.23.0
