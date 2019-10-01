@@ -1,73 +1,82 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH v2 5/5] MIPS: JZ4780: DTS: Add CPU nodes
-Date: Tue, 1 Oct 2019 23:20:33 +0000
-Message-ID: <20191001232031.qaci6hk5tjo652mi@pburton-laptop>
-References: <cover.1569955865.git.agriveaux@deutnet.info>
- <0dbd1986be4ee50bdd9f45c140aded7c49fddb8a.1569955865.git.agriveaux@deutnet.info>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: Adam Ford <aford173@gmail.com>
+Subject: [PATCH V4 1/3] drm/panel: simple: Add Logic PD Type 28 display support
+Date: Tue,  1 Oct 2019 18:39:18 -0500
+Message-ID: <20191001233923.16514-1-aford173@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0dbd1986be4ee50bdd9f45c140aded7c49fddb8a.1569955865.git.agriveaux@deutnet.info>
-Content-Language: en-US
-Content-ID: <9529F98D2530BE4ABE646708C200EF09@namprd22.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre GRIVEAUX <agriveaux@deutnet.info>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "jhogan@kernel.org" <jhogan@kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: dri-devel@lists.freedesktop.org
+Cc: linux-omap@vger.kernel.org, adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
+Previously, there was an omap panel-dpi driver that would
+read generic timings from the device tree and set the display
+timing accordingly.  This driver was removed so the screen
+no longer functions.  This patch modifies the panel-simple
+file to setup the timings to the same values previously used.
 
-On Tue, Oct 01, 2019 at 09:09:48PM +0200, Alexandre GRIVEAUX wrote:
-> The JZ4780 have 2 core, adding to DT.
->=20
-> Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
-> ---
->  arch/mips/boot/dts/ingenic/jz4780.dtsi | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->=20
-> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/=
-ingenic/jz4780.dtsi
-> index f928329b034b..9c7346724f1f 100644
-> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-> @@ -7,6 +7,23 @@
->  	#size-cells =3D <1>;
->  	compatible =3D "ingenic,jz4780";
-> =20
-> +	cpus {
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +
-> +		cpu@0 {
-> +			compatible =3D "ingenic,jz4780";
+Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
 
-This should probably be something like ingenic,xburst2. JZ4780 is the
-SoC. It also should be a documented binding, but I think it would be
-worth holding off on the whole thing until we actually get SMP support
-merged - just in case we come up with a binding that doesn't actually
-work out.
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+---
+V4:  No Change
+V3:  No Change
+V2:  No Change
 
-So I expect I'll just apply patches 1-4 for now.
-
-Thanks for working on it!
-
-    Paul
-
-> +			device_type =3D "cpu";
-> +			reg =3D <0>;
-> +		};
-> +
-> +		cpu@1 {
-> +			compatible =3D "ingenic,jz4780";
-> +			device_type =3D "cpu";
-> +			reg =3D <1>;
-> +		};
-> +	};
-> +
->  	cpuintc: interrupt-controller {
->  		#address-cells =3D <0>;
->  		#interrupt-cells =3D <1>;
-> --=20
-> 2.20.1
->=20
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 28fa6ba7b767..8abb31f83ffc 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2048,6 +2048,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+ 	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+ };
+ 
++static const struct drm_display_mode logicpd_type_28_mode = {
++	.clock = 9000,
++	.hdisplay = 480,
++	.hsync_start = 480 + 3,
++	.hsync_end = 480 + 3 + 42,
++	.htotal = 480 + 3 + 42 + 2,
++
++	.vdisplay = 272,
++	.vsync_start = 272 + 2,
++	.vsync_end = 272 + 2 + 11,
++	.vtotal = 272 + 2 + 11 + 3,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
++};
++
++static const struct panel_desc logicpd_type_28 = {
++	.modes = &logicpd_type_28_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 105,
++		.height = 67,
++	},
++	.delay = {
++		.prepare = 200,
++		.enable = 200,
++		.unprepare = 200,
++		.disable = 200,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
++		     DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
++};
++
+ static const struct panel_desc mitsubishi_aa070mc01 = {
+ 	.modes = &mitsubishi_aa070mc01_mode,
+ 	.num_modes = 1,
+@@ -3264,6 +3298,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "lg,lp129qe",
+ 		.data = &lg_lp129qe,
++	}, {
++		.compatible = "logicpd,type28",
++		.data = &logicpd_type_28,
+ 	}, {
+ 		.compatible = "mitsubishi,aa070mc01-ca1",
+ 		.data = &mitsubishi_aa070mc01,
+-- 
+2.17.1
