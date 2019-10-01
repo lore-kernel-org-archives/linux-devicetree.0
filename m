@@ -1,16 +1,16 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 4/8] dt-bindings: arm: Convert BCM2835 board/soc
- bindings to json-schema
-Date: Tue, 1 Oct 2019 08:46:35 -0500
-Message-ID: <20191001134635.GA26744@bogus>
+Subject: Re: [PATCH V3 5/8] dt-bindings: arm: bcm2835: Add Raspberry Pi 4 to
+ DT schema
+Date: Tue, 1 Oct 2019 08:46:49 -0500
+Message-ID: <20191001134649.GA27323@bogus>
 References: <1569672435-19823-1-git-send-email-wahrenst@gmx.net>
- <1569672435-19823-5-git-send-email-wahrenst@gmx.net>
+ <1569672435-19823-6-git-send-email-wahrenst@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1569672435-19823-5-git-send-email-wahrenst@gmx.net>
+In-Reply-To: <1569672435-19823-6-git-send-email-wahrenst@gmx.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,18 +23,14 @@ Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Eric Anholt <eric@anholt.net>, bcm-kernel-feedback-list@broadcom.com, Stefan Wahren <wahrenst@gmx.net>, Ray Jui <rjui@broadcom.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 28 Sep 2019 14:07:10 +0200, Stefan Wahren wrote:
-> Convert the BCM2835/6/7 SoC bindings to DT schema format using json-schema.
-> All the other Broadcom boards are maintained by Florian Fainelli.
+On Sat, 28 Sep 2019 14:07:11 +0200, Stefan Wahren wrote:
+> Add new Raspberry Pi 4 to DT schema.
 >
 > Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 > Acked-by: Eric Anholt <eric@anholt.net>
 > ---
->  .../devicetree/bindings/arm/bcm/bcm2835.yaml       | 48 ++++++++++++++++
->  .../devicetree/bindings/arm/bcm/brcm,bcm2835.txt   | 67 ----------------------
->  2 files changed, 48 insertions(+), 67 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
->  delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+>  Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 >
 
 Reviewed-by: Rob Herring <robh@kernel.org>
