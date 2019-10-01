@@ -1,43 +1,69 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] regulator: Document "regulator-boot-on" binding more thoroughly
-Date: Tue, 1 Oct 2019 12:46:35 -0700
-Message-ID: <CAD=FV=UE4K8Oj99KA5HNBxX0pXu11bkHjdwcmwwW3Z-+_nDiLA@mail.gmail.com>
-References: <20190926124115.1.Ice34ad5970a375c3c03cb15c3859b3ee501561bf@changeid>
- <20191001174104.GD4786@sirena.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v6 0/6] MSM8998 Multimedia Clock Controller
+Date: Tue,  1 Oct 2019 13:54:16 -0600
+Message-ID: <1569959656-5202-1-git-send-email-jhugo@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191001174104.GD4786@sirena.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Marco Felsch <m.felsch@pengutronix.de>, ckeepax@opensource.cirrus.com, Chunyan Zhang <zhang.chunyan@linaro.org>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, LKML <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: agross@kernel.org, bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The multimedia clock controller (mmcc) is the main clock controller for
+the multimedia subsystem and is required to enable things like display and
+camera.
 
-On Tue, Oct 1, 2019 at 10:41 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Thu, Sep 26, 2019 at 12:41:18PM -0700, Douglas Anderson wrote:
->
-> > -    description: bootloader/firmware enabled regulator
-> > +    description: bootloader/firmware enabled regulator.
-> > +      It's expected that this regulator was left on by the bootloader.
-> > +      If the bootloader didn't leave it on then OS should turn it on
-> > +      at boot but shouldn't prevent it from being turned off later.
->
-> This is good...
->
-> > +      This property is intended to only be used for regulators where
-> > +      Linux cannot read the state of the regulator at bootup.
->
-> ...but we shouldn't say "Linux" here since the DT binding is for all
-> OSs, not just Linux.  I'd say "software" instead.  Really the
-> expectation is that things wouldn't support readback at all, though it's
-> possible there's some weird hardware out there that will support
-> readback some of the time I guess.
+v6:
+-drop clk_get from mmcc clock provider
 
-Argh.  I knew not to mention "Linux" and kept it in mind to write the
-first part.  ...but then I must have just spaced.  I also removed the
-"at bootup" part since it seemed better.
+v5:
+-handle the case where gcc uses rpmcc for xo, but the link is not specified in dt
+-have gcc select rpmcc
 
--Doug
+v4:
+-fix makefile to use correct config item
+-pick up tags
+-fix ordering of clocks and clock-names in dt
+-drop MODULE_ALIAS
+-wait for xo in mmcc since that was found to be useful in some debug configs
+
+v3:
+-Rebase onto linux-next to get the final version of the clk parent rewrite
+series
+-Moved the bindings header to the bindings patch per Rob
+-Made xo manditory for GCC to work around the lack of clk orphan probe defer
+to avoid the uart console glitch
+
+v2:
+-Rebased on the "Rewrite clk parent handling" series and updated to the clk init
+mechanisms introduced there.
+-Marked XO clk as CLK_IGNORE_UNUSED to avoid the concern about the XO going away
+"incorrectly" during late init
+-Corrected the name of the XO clock to "xo"
+-Dropped the fake XO clock in GCC to prevent a namespace conflict
+-Fully enumerated the external clocks (DSI PLLs, etc) in the DT binding
+-Cleaned up the weird newlines in the added DT node
+-Added DT header file to msm8998 DT for future clients
+
+
+Jeffrey Hugo (6):
+  dt-bindings: clock: Document external clocks for MSM8998 gcc
+  arm64: dts: msm8998: Add xo clock to gcc node
+  clk: qcom: smd: Add XO clock for MSM8998
+  dt-bindings: clock: Add support for the MSM8998 mmcc
+  clk: qcom: Add MSM8998 Multimedia Clock Controller (MMCC) driver
+  arm64: dts: qcom: msm8998: Add mmcc node
+
+ .../devicetree/bindings/clock/qcom,gcc.txt    |   10 +
+ .../devicetree/bindings/clock/qcom,mmcc.txt   |   21 +
+ arch/arm64/boot/dts/qcom/msm8998.dtsi         |   16 +
+ drivers/clk/qcom/Kconfig                      |   10 +
+ drivers/clk/qcom/Makefile                     |    1 +
+ drivers/clk/qcom/clk-smd-rpm.c                |   24 +-
+ drivers/clk/qcom/gcc-msm8998.c                |   29 +-
+ drivers/clk/qcom/mmcc-msm8998.c               | 2914 +++++++++++++++++
+ include/dt-bindings/clock/qcom,mmcc-msm8998.h |  210 ++
+ 9 files changed, 3214 insertions(+), 21 deletions(-)
+ create mode 100644 drivers/clk/qcom/mmcc-msm8998.c
+ create mode 100644 include/dt-bindings/clock/qcom,mmcc-msm8998.h
+
+-- 
+2.17.1
