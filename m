@@ -1,36 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 5/8] dt-bindings: arm: bcm2835: Add Raspberry Pi 4 to
- DT schema
-Date: Tue, 1 Oct 2019 08:46:49 -0500
-Message-ID: <20191001134649.GA27323@bogus>
-References: <1569672435-19823-1-git-send-email-wahrenst@gmx.net>
- <1569672435-19823-6-git-send-email-wahrenst@gmx.net>
+Subject: Re: [PATCH v3 2/3] dt-bindings: reset: add bindings for the Meson-A1
+ SoC Reset Controller
+Date: Tue, 1 Oct 2019 08:47:44 -0500
+Message-ID: <20191001134744.GA28989@bogus>
+References: <1569738255-3941-1-git-send-email-xingyu.chen@amlogic.com>
+ <1569738255-3941-3-git-send-email-xingyu.chen@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1569672435-19823-6-git-send-email-wahrenst@gmx.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Eric Anholt <eric@anholt.net>, bcm-kernel-feedback-list@broadcom.com, Stefan Wahren <wahrenst@gmx.net>, Ray Jui <rjui@broadcom.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1569738255-3941-3-git-send-email-xingyu.chen@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Jerome Brunet <jbrunet@baylibre.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 28 Sep 2019 14:07:11 +0200, Stefan Wahren wrote:
-> Add new Raspberry Pi 4 to DT schema.
->
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> Acked-by: Eric Anholt <eric@anholt.net>
+On Sun, 29 Sep 2019 14:24:14 +0800, Xingyu Chen wrote:
+> Add DT bindings for the Meson-A1 SoC Reset Controller include file,
+> and also slightly update documentation.
+> 
+> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
 > ---
->  Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
->
+>  .../bindings/reset/amlogic,meson-reset.yaml        |  1 +
+>  include/dt-bindings/reset/amlogic,meson-a1-reset.h | 74 ++++++++++++++++++++++
+>  2 files changed, 75 insertions(+)
+>  create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
+> 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
