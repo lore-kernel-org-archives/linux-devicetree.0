@@ -1,7 +1,7 @@
 From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
-Subject: [PATCH v2 2/5] MIPS: CI20: DTS: Add I2C nodes
-Date: Tue, 1 Oct 2019 21:09:00 +0200
-Message-ID: <ceeb8d3316809672697f735b927cac77b449c70f.1569955865.git.agriveaux@deutnet.info>
+Subject: [PATCH v2 3/5] MIPS: CI20: DTS: Add IW8103 Wifi + bluetooth
+Date: Tue, 1 Oct 2019 21:09:14 +0200
+Message-ID: <cda033047367d5359067f6d7e9a73cebc6cdc722.1569955865.git.agriveaux@deutnet.info>
 References: <cover.1569955865.git.agriveaux@deutnet.info>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -13,179 +13,86 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, paul.burton@m
 Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adding missing I2C nodes and some peripheral:
-- PMU
-- RTC
+Add IW8103 Wifi + bluetooth module to device tree and related power domain.
 
 Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
 ---
- arch/mips/boot/dts/ingenic/ci20.dts | 147 ++++++++++++++++++++++++++++
- 1 file changed, 147 insertions(+)
+ arch/mips/boot/dts/ingenic/ci20.dts | 39 +++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
 diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 2e9952311ecd..4a77fa30a9cd 100644
+index 4a77fa30a9cd..c62c36ae94c2 100644
 --- a/arch/mips/boot/dts/ingenic/ci20.dts
 +++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -87,6 +87,123 @@
- 	pinctrl-0 = <&pins_uart4>;
+@@ -31,6 +31,13 @@
+ 		gpio = <&gpb 25 GPIO_ACTIVE_LOW>;
+ 		enable-active-high;
+ 	};
++
++	wlan0_power: fixedregulator@1 {
++		compatible = "regulator-fixed";
++		regulator-name = "wlan0_power";
++		gpio = <&gpb 19 GPIO_ACTIVE_LOW>;
++		enable-active-high;
++	};
  };
  
-+&i2c0 {
+ &ext {
+@@ -54,9 +61,18 @@
+ 
+ 	bus-width = <4>;
+ 	max-frequency = <50000000>;
++	non-removable;
+ 
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pins_mmc1>;
++
++	brcmf: wifi@1 {
++/*		reg = <4>;*/
++		compatible = "brcm,bcm4330-fmac";
++		vcc-supply = <&wlan0_power>;
++		device-wakeup-gpios = <&gpd 9 GPIO_ACTIVE_HIGH>;
++		shutdown-gpios = <&gpf 7 GPIO_ACTIVE_LOW>;
++	};
+ };
+ 
+ &uart0 {
+@@ -73,6 +89,23 @@
+ 	pinctrl-0 = <&pins_uart1>;
+ };
+ 
++&uart2 {
 +	status = "okay";
 +
 +	pinctrl-names = "default";
-+	pinctrl-0 = <&pins_i2c0>;
++	pinctrl-0 = <&pins_uart2>;
++	uart-has-rtscts;
 +
-+	clock-frequency = <400000>;
-+
-+	act8600: act8600@5a {
-+		compatible = "active-semi,act8600";
-+		reg = <0x5a>;
-+		status = "okay";
-+
-+		regulators {
-+			vddcore: SUDCDC1 {
-+				regulator-name = "VDDCORE";
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-always-on;
-+			};
-+			vddmem: SUDCDC2 {
-+				regulator-name = "VDDMEM";
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+			};
-+			vcc_33: SUDCDC3 {
-+				regulator-name = "VCC33";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+			vcc_50: SUDCDC4 {
-+				regulator-name = "VCC50";
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5000000>;
-+				regulator-always-on;
-+			};
-+			vcc_25: LDO_REG5 {
-+				regulator-name = "VCC25";
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <2500000>;
-+				regulator-always-on;
-+			};
-+			wifi_io: LDO_REG6 {
-+				regulator-name = "WIFIIO";
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <2500000>;
-+				regulator-always-on;
-+			};
-+			vcc_28: LDO_REG7 {
-+				regulator-name = "VCC28";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-always-on;
-+			};
-+			vcc_15: LDO_REG8 {
-+				regulator-name = "VCC15";
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+			};
-+			vcc_18: LDO_REG9 {
-+				regulator-name = "VCC18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+			vcc_11: LDO_REG10 {
-+				regulator-name = "VCC11";
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-always-on;
-+			};
-+		};
++	bluetooth {
++		compatible = "brcm,bcm4330-bt";
++		reset-gpios = <&gpf 8 GPIO_ACTIVE_HIGH>;
++		vcc-supply = <&wlan0_power>;
++		device-wakeup-gpios = <&gpf 5 GPIO_ACTIVE_HIGH>;
++		host-wakeup-gpios = <&gpf 6 GPIO_ACTIVE_HIGH>;
++		shutdown-gpios = <&gpf 4 GPIO_ACTIVE_LOW>;
 +	};
 +};
 +
-+&i2c1 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pins_i2c1>;
-+
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pins_i2c2>;
-+
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pins_i2c3>;
-+
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pins_i2c4>;
-+
-+	clock-frequency = <400000>;
-+
-+		rtc@51 {
-+			compatible = "nxp,pcf8563";
-+			reg = <0x51>;
-+			interrupts = <110>;
-+		};
-+};
-+
- &nemc {
+ &uart3 {
  	status = "okay";
  
-@@ -209,6 +326,36 @@
+@@ -314,6 +347,12 @@
  		bias-disable;
  	};
  
-+	pins_i2c0: i2c0 {
-+		function = "i2c0";
-+		groups = "i2c0-data";
++	pins_uart2: uart2 {
++		function = "uart2";
++		groups = "uart2-data", "uart2-hwflow";
 +		bias-disable;
 +	};
 +
-+	pins_i2c1: i2c1 {
-+		function = "i2c1";
-+		groups = "i2c1-data";
-+		bias-disable;
-+	};
-+
-+	pins_i2c2: i2c2 {
-+		function = "i2c2";
-+		groups = "i2c2-data";
-+		bias-disable;
-+	};
-+
-+	pins_i2c3: i2c3 {
-+		function = "i2c3";
-+		groups = "i2c3-data";
-+		bias-disable;
-+	};
-+
-+	pins_i2c4: i2c4 {
-+		function = "i2c4";
-+		groups = "i2c4-data-e";
-+		bias-disable;
-+	};
-+
- 	pins_nemc: nemc {
- 		function = "nemc";
- 		groups = "nemc-data", "nemc-cle-ale", "nemc-rd-we", "nemc-frd-fwe";
+ 	pins_uart3: uart3 {
+ 		function = "uart3";
+ 		groups = "uart3-data", "uart3-hwflow";
 -- 
 2.20.1
