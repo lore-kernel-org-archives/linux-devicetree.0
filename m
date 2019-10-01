@@ -1,22 +1,34 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "dt-bindings: snps,dw-apb-ssi: Add optional clock domain information" to the spi tree
-Date: Tue,  1 Oct 2019 12:41:07 +0100 (BST)
-Message-ID: <20191001114107.ACF3F2742A10@ypsilon.sirena.org.uk>
-References: <1568793876-9009-3-git-send-email-gareth.williams.jx@renesas.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568793876-9009-3-git-send-email-gareth.williams.jx@renesas.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gareth Williams <gareth.williams.jx@renesas.com>
-Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Rob Herring <robh+dt@kernel.org>
+Subject: Applied "ASoC: dt-bindings: Convert Allwinner A23 analog codec to a
+ schema" to the asoc tree
+Date: Tue,  1 Oct 2019 12:40:51 +0100 (BST)
+Message-ID: <20191001114051.D8C5E27429C0@ypsilon.sirena.org.uk>
+References: <20190906151221.3148-2-mripard@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190906151221.3148-2-mripard@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Maxime Ripard <mripard@kernel.org>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   dt-bindings: snps,dw-apb-ssi: Add optional clock domain information
+   ASoC: dt-bindings: Convert Allwinner A23 analog codec to a schema
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,35 +49,96 @@ to this mail.
 Thanks,
 Mark
 
->From 47cf13bc763c891c6192184c5e5aa8c1b331b2ff Mon Sep 17 00:00:00 2001
-From: Gareth Williams <gareth.williams.jx@renesas.com>
-Date: Wed, 18 Sep 2019 09:04:34 +0100
-Subject: [PATCH] dt-bindings: snps,dw-apb-ssi: Add optional clock domain
- information
+>From 8735141031d7ba96f1c2b3a45ec4efbfd47ad24b Mon Sep 17 00:00:00 2001
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Date: Fri, 6 Sep 2019 18:12:21 +0300
+Subject: [PATCH] ASoC: dt-bindings: Convert Allwinner A23 analog codec to a
+ schema
 
-Note in the bindings documentation that pclk should be renamed if a clock
-domain is used to enable the optional bus clock.
+The Allwinner A23 SoC and later have an embedded audio codec that uses a
+separate controller to drive its analog part, which is supported in Linux,
+with a matching Device Tree binding.
 
-Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
-Link: https://lore.kernel.org/r/1568793876-9009-3-git-send-email-gareth.williams.jx@renesas.com
+Now that we have the DT validation in place, let's convert the device tree
+bindings for that controller over to a YAML schemas.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20190906151221.3148-2-mripard@kernel.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../allwinner,sun8i-a23-codec-analog.yaml     | 38 +++++++++++++++++++
+ .../bindings/sound/sun8i-codec-analog.txt     | 17 ---------
+ 2 files changed, 38 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/allwinner,sun8i-a23-codec-analog.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
 
-diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-index f54c8c36395e..3ed08ee9feba 100644
---- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-+++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-@@ -16,7 +16,8 @@ Required properties:
- Optional properties:
- - clock-names : Contains the names of the clocks:
-     "ssi_clk", for the core clock used to generate the external SPI clock.
--    "pclk", the interface clock, required for register access.
-+    "pclk", the interface clock, required for register access. If a clock domain
-+     used to enable this clock then it should be named "pclk_clkdomain".
- - cs-gpios : Specifies the gpio pins to be used for chipselects.
- - num-cs : The number of chipselects. If omitted, this will default to 4.
- - reg-io-width : The I/O register width (in bytes) implemented by this
+diff --git a/Documentation/devicetree/bindings/sound/allwinner,sun8i-a23-codec-analog.yaml b/Documentation/devicetree/bindings/sound/allwinner,sun8i-a23-codec-analog.yaml
+new file mode 100644
+index 000000000000..85305b4c2729
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/allwinner,sun8i-a23-codec-analog.yaml
+@@ -0,0 +1,38 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/allwinner,sun8i-a23-codec-analog.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A23 Analog Codec Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++properties:
++  compatible:
++    enum:
++      # FIXME: This is documented in the PRCM binding, but needs to be
++      # migrated here at some point
++      # - allwinner,sun8i-a23-codec-analog
++      - allwinner,sun8i-h3-codec-analog
++      - allwinner,sun8i-v3s-codec-analog
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    codec_analog: codec-analog@1f015c0 {
++      compatible = "allwinner,sun8i-h3-codec-analog";
++      reg = <0x01f015c0 0x4>;
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt b/Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
+deleted file mode 100644
+index 07356758bd91..000000000000
+--- a/Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt
++++ /dev/null
+@@ -1,17 +0,0 @@
+-* Allwinner Codec Analog Controls
+-
+-Required properties:
+-- compatible: must be one of the following compatibles:
+-		- "allwinner,sun8i-a23-codec-analog"
+-		- "allwinner,sun8i-h3-codec-analog"
+-		- "allwinner,sun8i-v3s-codec-analog"
+-
+-Required properties if not a sub-node of the PRCM node:
+-- reg: must contain the registers location and length
+-
+-Example:
+-prcm: prcm@1f01400 {
+-	codec_analog: codec-analog {
+-		compatible = "allwinner,sun8i-a23-codec-analog";
+-	};
+-};
 -- 
 2.20.1
