@@ -1,30 +1,18 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: wm8994: Add support for MCLKn clock gating" to the
- asoc tree
-Date: Tue,  1 Oct 2019 12:40:50 +0100 (BST)
-Message-ID: <20191001114050.9CC842742A10@ypsilon.sirena.org.uk>
-References: <20190920130218.32690-5-s.nawrocki@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190920130218.32690-5-s.nawrocki@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, ckeepax@opensource.cirrus.com, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, lgirdwood@gmail.com, Krzysztof Kozlowski <krzk@kernel.org>, robh+dt@kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Subject: Applied "ASoC: fsl_mqs: Add MQS component driver" to the asoc tree
+Date: Tue,  1 Oct 2019 12:40:52 +0100 (BST)
+Message-ID: <20191001114052.6328B2742A30@ypsilon.sirena.org.uk>
+References: <74dfc73a92d2df4213225abe7d2a3db82672fe0f.1568367274.git.shengjiu.wang@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <74dfc73a92d2df4213225abe7d2a3db82672fe0f.1568367274.git.shengjiu.wang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc: alsa-devel@alsa-project.org, broonie@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.orgMark Brown <broonie@kernel.org>, mark.rutland@arm.com, nicoleotsuka@gmail.comNicolin Chen <nicoleotsuka@gmail.com>, perex@perex.cz, robh+dt@kernel.org, timur@kernel.org, tiwai@suse.com, Xiubo.Lee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: wm8994: Add support for MCLKn clock gating
+   ASoC: fsl_mqs: Add MQS component driver
 
 has been applied to the asoc tree at
 
@@ -49,219 +37,417 @@ to this mail.
 Thanks,
 Mark
 
->From 001b83d395ab2acfddc46b73376f8dbdece89af7 Mon Sep 17 00:00:00 2001
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Date: Fri, 20 Sep 2019 15:02:13 +0200
-Subject: [PATCH] ASoC: wm8994: Add support for MCLKn clock gating
+>From 9e28f6532c611c0c3fa759d2101aba9f0d41e860 Mon Sep 17 00:00:00 2001
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+Date: Fri, 13 Sep 2019 17:42:14 +0800
+Subject: [PATCH] ASoC: fsl_mqs: Add MQS component driver
 
-As an intermediate step before covering the clocking subsystem
-of the CODEC entirely by the clk API add handling of external CODEC's
-master clocks in DAPM events when the AIFn clocks are sourced directly
-from MCLKn; when FLLn are used we enable/disable respective MCLKn
-before/after FLLn is enabled/disabled.
+MQS (medium quality sound), is used to generate medium quality
+audio via a standard digital output pin. It can be used to
+connect stereo speakers or headphones simply via power amplifier
+stages without an additional DAC chip. It only accepts 2-channel,
+LSB-valid 16bit, MSB shift-out first, frame sync asserting with
+the first bit of the frame, data shifted with the posedge of
+bit clock, 44.1 kHz or 48 kHz signals from SAI1 in left justified
+format; and it provides the SNR target as no more than 20dB for
+the signals below 10 kHz. The signals above 10 kHz will have
+worse THD+N values.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Link: https://lore.kernel.org/r/20190920130218.32690-5-s.nawrocki@samsung.com
+MQS provides only simple audio reproduction. No internal pop,
+click or distortion artifact reduction methods are provided.
+
+The MQS receives the audio data from the SAI1 Tx section.
+
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Link: https://lore.kernel.org/r/74dfc73a92d2df4213225abe7d2a3db82672fe0f.1568367274.git.shengjiu.wang@nxp.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/codecs/wm8994.c | 108 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 104 insertions(+), 4 deletions(-)
+ sound/soc/fsl/Kconfig   |  10 ++
+ sound/soc/fsl/Makefile  |   2 +
+ sound/soc/fsl/fsl_mqs.c | 333 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 345 insertions(+)
+ create mode 100644 sound/soc/fsl/fsl_mqs.c
 
-diff --git a/sound/soc/codecs/wm8994.c b/sound/soc/codecs/wm8994.c
-index 35fbaa0138bf..b633093afb9d 100644
---- a/sound/soc/codecs/wm8994.c
-+++ b/sound/soc/codecs/wm8994.c
-@@ -1033,6 +1033,45 @@ static bool wm8994_check_class_w_digital(struct snd_soc_component *component)
- 	return true;
- }
+diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
+index aa99c008a925..65e8cd4be930 100644
+--- a/sound/soc/fsl/Kconfig
++++ b/sound/soc/fsl/Kconfig
+@@ -25,6 +25,16 @@ config SND_SOC_FSL_SAI
+ 	  This option is only useful for out-of-tree drivers since
+ 	  in-tree drivers select it automatically.
  
-+static int aif_mclk_set(struct snd_soc_component *component, int aif, bool enable)
++config SND_SOC_FSL_MQS
++	tristate "Medium Quality Sound (MQS) module support"
++	depends on SND_SOC_FSL_SAI
++	select REGMAP_MMIO
++	help
++	  Say Y if you want to add Medium Quality Sound (MQS)
++	  support for the Freescale CPUs.
++	  This option is only useful for out-of-tree drivers since
++	  in-tree drivers select it automatically.
++
+ config SND_SOC_FSL_AUDMIX
+ 	tristate "Audio Mixer (AUDMIX) module support"
+ 	select REGMAP_MMIO
+diff --git a/sound/soc/fsl/Makefile b/sound/soc/fsl/Makefile
+index c0dd04422fe9..8cde88c72d93 100644
+--- a/sound/soc/fsl/Makefile
++++ b/sound/soc/fsl/Makefile
+@@ -23,6 +23,7 @@ snd-soc-fsl-esai-objs := fsl_esai.o
+ snd-soc-fsl-micfil-objs := fsl_micfil.o
+ snd-soc-fsl-utils-objs := fsl_utils.o
+ snd-soc-fsl-dma-objs := fsl_dma.o
++snd-soc-fsl-mqs-objs := fsl_mqs.o
+ 
+ obj-$(CONFIG_SND_SOC_FSL_AUDMIX) += snd-soc-fsl-audmix.o
+ obj-$(CONFIG_SND_SOC_FSL_ASOC_CARD) += snd-soc-fsl-asoc-card.o
+@@ -33,6 +34,7 @@ obj-$(CONFIG_SND_SOC_FSL_SPDIF) += snd-soc-fsl-spdif.o
+ obj-$(CONFIG_SND_SOC_FSL_ESAI) += snd-soc-fsl-esai.o
+ obj-$(CONFIG_SND_SOC_FSL_MICFIL) += snd-soc-fsl-micfil.o
+ obj-$(CONFIG_SND_SOC_FSL_UTILS) += snd-soc-fsl-utils.o
++obj-$(CONFIG_SND_SOC_FSL_MQS) += snd-soc-fsl-mqs.o
+ obj-$(CONFIG_SND_SOC_POWERPC_DMA) += snd-soc-fsl-dma.o
+ 
+ # MPC5200 Platform Support
+diff --git a/sound/soc/fsl/fsl_mqs.c b/sound/soc/fsl/fsl_mqs.c
+new file mode 100644
+index 000000000000..c1619a553514
+--- /dev/null
++++ b/sound/soc/fsl/fsl_mqs.c
+@@ -0,0 +1,333 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// ALSA SoC IMX MQS driver
++//
++// Copyright (C) 2014-2015 Freescale Semiconductor, Inc.
++// Copyright 2019 NXP
++
++#include <linux/clk.h>
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/mfd/syscon.h>
++#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
++#include <linux/pm_runtime.h>
++#include <linux/of.h>
++#include <linux/pm.h>
++#include <linux/slab.h>
++#include <sound/soc.h>
++#include <sound/pcm.h>
++#include <sound/initval.h>
++
++#define REG_MQS_CTRL		0x00
++
++#define MQS_EN_MASK			(0x1 << 28)
++#define MQS_EN_SHIFT			(28)
++#define MQS_SW_RST_MASK			(0x1 << 24)
++#define MQS_SW_RST_SHIFT		(24)
++#define MQS_OVERSAMPLE_MASK		(0x1 << 20)
++#define MQS_OVERSAMPLE_SHIFT		(20)
++#define MQS_CLK_DIV_MASK		(0xFF << 0)
++#define MQS_CLK_DIV_SHIFT		(0)
++
++/* codec private data */
++struct fsl_mqs {
++	struct regmap *regmap;
++	struct clk *mclk;
++	struct clk *ipg;
++
++	unsigned int reg_iomuxc_gpr2;
++	unsigned int reg_mqs_ctrl;
++	bool use_gpr;
++};
++
++#define FSL_MQS_RATES	(SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_48000)
++#define FSL_MQS_FORMATS	SNDRV_PCM_FMTBIT_S16_LE
++
++static int fsl_mqs_hw_params(struct snd_pcm_substream *substream,
++			     struct snd_pcm_hw_params *params,
++			     struct snd_soc_dai *dai)
 +{
-+	struct wm8994_priv *wm8994 = snd_soc_component_get_drvdata(component);
-+	unsigned int offset, val, clk_idx;
-+	int ret;
++	struct snd_soc_component *component = dai->component;
++	struct fsl_mqs *mqs_priv = snd_soc_component_get_drvdata(component);
++	unsigned long mclk_rate;
++	int div, res;
++	int bclk, lrclk;
 +
-+	if (aif)
-+		offset = 4;
-+	else
-+		offset = 0;
++	mclk_rate = clk_get_rate(mqs_priv->mclk);
++	bclk = snd_soc_params_to_bclk(params);
++	lrclk = params_rate(params);
 +
-+	val = snd_soc_component_read32(component, WM8994_AIF1_CLOCKING_1 + offset);
-+	val &= WM8994_AIF1CLK_SRC_MASK;
++	/*
++	 * mclk_rate / (oversample(32,64) * FS * 2 * divider ) = repeat_rate;
++	 * if repeat_rate is 8, mqs can achieve better quality.
++	 * oversample rate is fix to 32 currently.
++	 */
++	div = mclk_rate / (32 * lrclk * 2 * 8);
++	res = mclk_rate % (32 * lrclk * 2 * 8);
 +
-+	switch (val) {
-+	case 0:
-+		clk_idx = WM8994_MCLK1;
-+		break;
-+	case 1:
-+		clk_idx = WM8994_MCLK2;
-+		break;
-+	default:
-+		return 0;
-+	}
-+
-+	if (enable) {
-+		ret = clk_prepare_enable(wm8994->mclk[clk_idx].clk);
-+		if (ret < 0) {
-+			dev_err(component->dev,	"Failed to enable MCLK%d\n",
-+				clk_idx);
-+			return ret;
++	if (res == 0 && div > 0 && div <= 256) {
++		if (mqs_priv->use_gpr) {
++			regmap_update_bits(mqs_priv->regmap, IOMUXC_GPR2,
++					   IMX6SX_GPR2_MQS_CLK_DIV_MASK,
++					   (div - 1) << IMX6SX_GPR2_MQS_CLK_DIV_SHIFT);
++			regmap_update_bits(mqs_priv->regmap, IOMUXC_GPR2,
++					   IMX6SX_GPR2_MQS_OVERSAMPLE_MASK, 0);
++		} else {
++			regmap_update_bits(mqs_priv->regmap, REG_MQS_CTRL,
++					   MQS_CLK_DIV_MASK,
++					   (div - 1) << MQS_CLK_DIV_SHIFT);
++			regmap_update_bits(mqs_priv->regmap, REG_MQS_CTRL,
++					   MQS_OVERSAMPLE_MASK, 0);
 +		}
 +	} else {
-+		clk_disable_unprepare(wm8994->mclk[clk_idx].clk);
++		dev_err(component->dev, "can't get proper divider\n");
 +	}
 +
 +	return 0;
 +}
 +
- static int aif1clk_ev(struct snd_soc_dapm_widget *w,
- 		      struct snd_kcontrol *kcontrol, int event)
- {
-@@ -1040,7 +1079,7 @@ static int aif1clk_ev(struct snd_soc_dapm_widget *w,
- 	struct wm8994_priv *wm8994 = snd_soc_component_get_drvdata(component);
- 	struct wm8994 *control = wm8994->wm8994;
- 	int mask = WM8994_AIF1DAC1L_ENA | WM8994_AIF1DAC1R_ENA;
--	int i;
-+	int ret, i;
- 	int dac;
- 	int adc;
- 	int val;
-@@ -1056,6 +1095,10 @@ static int aif1clk_ev(struct snd_soc_dapm_widget *w,
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
-+		ret = aif_mclk_set(component, 0, true);
-+		if (ret < 0)
-+			return ret;
-+
- 		/* Don't enable timeslot 2 if not in use */
- 		if (wm8994->channels[0] <= 2)
- 			mask &= ~(WM8994_AIF1DAC2L_ENA | WM8994_AIF1DAC2R_ENA);
-@@ -1128,6 +1171,12 @@ static int aif1clk_ev(struct snd_soc_dapm_widget *w,
- 		break;
- 	}
- 
-+	switch (event) {
-+	case SND_SOC_DAPM_POST_PMD:
-+		aif_mclk_set(component, 0, false);
-+		break;
-+	}
-+
- 	return 0;
- }
- 
-@@ -1135,13 +1184,17 @@ static int aif2clk_ev(struct snd_soc_dapm_widget *w,
- 		      struct snd_kcontrol *kcontrol, int event)
- {
- 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
--	int i;
-+	int ret, i;
- 	int dac;
- 	int adc;
- 	int val;
- 
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
-+		ret = aif_mclk_set(component, 1, true);
-+		if (ret < 0)
-+			return ret;
-+
- 		val = snd_soc_component_read32(component, WM8994_AIF2_CONTROL_1);
- 		if ((val & WM8994_AIF2ADCL_SRC) &&
- 		    (val & WM8994_AIF2ADCR_SRC))
-@@ -1213,6 +1266,12 @@ static int aif2clk_ev(struct snd_soc_dapm_widget *w,
- 		break;
- 	}
- 
-+	switch (event) {
-+	case SND_SOC_DAPM_POST_PMD:
-+		aif_mclk_set(component, 1, false);
-+		break;
-+	}
-+
- 	return 0;
- }
- 
-@@ -1618,10 +1677,10 @@ SND_SOC_DAPM_POST("Late Disable PGA", late_disable_ev)
- static const struct snd_soc_dapm_widget wm8994_lateclk_widgets[] = {
- SND_SOC_DAPM_SUPPLY("AIF1CLK", WM8994_AIF1_CLOCKING_1, 0, 0, aif1clk_ev,
- 		    SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU |
--		    SND_SOC_DAPM_PRE_PMD),
-+		    SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD),
- SND_SOC_DAPM_SUPPLY("AIF2CLK", WM8994_AIF2_CLOCKING_1, 0, 0, aif2clk_ev,
- 		    SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU |
--		    SND_SOC_DAPM_PRE_PMD),
-+		    SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD),
- SND_SOC_DAPM_PGA("Direct Voice", SND_SOC_NOPM, 0, 0, NULL, 0),
- SND_SOC_DAPM_MIXER("SPKL", WM8994_POWER_MANAGEMENT_3, 8, 0,
- 		   left_speaker_mixer, ARRAY_SIZE(left_speaker_mixer)),
-@@ -2136,6 +2195,7 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
- 	u16 reg, clk1, aif_reg, aif_src;
- 	unsigned long timeout;
- 	bool was_enabled;
-+	struct clk *mclk;
- 
- 	switch (id) {
- 	case WM8994_FLL1:
-@@ -2211,6 +2271,27 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
- 	snd_soc_component_update_bits(component, WM8994_FLL1_CONTROL_1 + reg_offset,
- 			    WM8994_FLL1_ENA, 0);
- 
-+	/* Disable MCLK if needed before we possibly change to new clock parent */
-+	if (was_enabled) {
-+		reg = snd_soc_component_read32(component, WM8994_FLL1_CONTROL_5
-+							+ reg_offset);
-+		reg = ((reg & WM8994_FLL1_REFCLK_SRC_MASK)
-+			>> WM8994_FLL1_REFCLK_SRC_SHIFT) + 1;
-+
-+		switch (reg) {
-+		case WM8994_FLL_SRC_MCLK1:
-+			mclk = wm8994->mclk[WM8994_MCLK1].clk;
-+			break;
-+		case WM8994_FLL_SRC_MCLK2:
-+			mclk = wm8994->mclk[WM8994_MCLK2].clk;
-+			break;
-+		default:
-+			mclk = NULL;
-+		}
-+
-+		clk_disable_unprepare(mclk);
-+	}
-+
- 	if (wm8994->fll_byp && src == WM8994_FLL_SRC_BCLK &&
- 	    freq_in == freq_out && freq_out) {
- 		dev_dbg(component->dev, "Bypassing FLL%d\n", id + 1);
-@@ -2255,10 +2336,29 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
- 	/* Clear any pending completion from a previous failure */
- 	try_wait_for_completion(&wm8994->fll_locked[id]);
- 
-+	switch (src) {
-+	case WM8994_FLL_SRC_MCLK1:
-+		mclk = wm8994->mclk[WM8994_MCLK1].clk;
-+		break;
-+	case WM8994_FLL_SRC_MCLK2:
-+		mclk = wm8994->mclk[WM8994_MCLK2].clk;
++static int fsl_mqs_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
++{
++	/* Only LEFT_J & SLAVE mode is supported. */
++	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
++	case SND_SOC_DAIFMT_LEFT_J:
 +		break;
 +	default:
-+		mclk = NULL;
++		return -EINVAL;
 +	}
 +
- 	/* Enable (with fractional mode if required) */
- 	if (freq_out) {
-+		ret = clk_prepare_enable(mclk);
-+		if (ret < 0) {
-+			dev_err(component->dev, "Failed to enable MCLK for FLL%d\n",
-+				id + 1);
-+			return ret;
++	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
++	case SND_SOC_DAIFMT_NB_NF:
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
++	case SND_SOC_DAIFMT_CBS_CFS:
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int fsl_mqs_startup(struct snd_pcm_substream *substream,
++			   struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component = dai->component;
++	struct fsl_mqs *mqs_priv = snd_soc_component_get_drvdata(component);
++
++	if (mqs_priv->use_gpr)
++		regmap_update_bits(mqs_priv->regmap, IOMUXC_GPR2,
++				   IMX6SX_GPR2_MQS_EN_MASK,
++				   1 << IMX6SX_GPR2_MQS_EN_SHIFT);
++	else
++		regmap_update_bits(mqs_priv->regmap, REG_MQS_CTRL,
++				   MQS_EN_MASK,
++				   1 << MQS_EN_SHIFT);
++	return 0;
++}
++
++static void fsl_mqs_shutdown(struct snd_pcm_substream *substream,
++			     struct snd_soc_dai *dai)
++{
++	struct snd_soc_component *component = dai->component;
++	struct fsl_mqs *mqs_priv = snd_soc_component_get_drvdata(component);
++
++	if (mqs_priv->use_gpr)
++		regmap_update_bits(mqs_priv->regmap, IOMUXC_GPR2,
++				   IMX6SX_GPR2_MQS_EN_MASK, 0);
++	else
++		regmap_update_bits(mqs_priv->regmap, REG_MQS_CTRL,
++				   MQS_EN_MASK, 0);
++}
++
++const static struct snd_soc_component_driver soc_codec_fsl_mqs = {
++	.idle_bias_on = 1,
++	.non_legacy_dai_naming	= 1,
++};
++
++static const struct snd_soc_dai_ops fsl_mqs_dai_ops = {
++	.startup = fsl_mqs_startup,
++	.shutdown = fsl_mqs_shutdown,
++	.hw_params = fsl_mqs_hw_params,
++	.set_fmt = fsl_mqs_set_dai_fmt,
++};
++
++static struct snd_soc_dai_driver fsl_mqs_dai = {
++	.name		= "fsl-mqs-dai",
++	.playback	= {
++		.stream_name	= "Playback",
++		.channels_min	= 2,
++		.channels_max	= 2,
++		.rates		= FSL_MQS_RATES,
++		.formats	= FSL_MQS_FORMATS,
++	},
++	.ops = &fsl_mqs_dai_ops,
++};
++
++static const struct regmap_config fsl_mqs_regmap_config = {
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.max_register = REG_MQS_CTRL,
++	.cache_type = REGCACHE_NONE,
++};
++
++static int fsl_mqs_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct device_node *gpr_np = 0;
++	struct fsl_mqs *mqs_priv;
++	void __iomem *regs;
++	int ret = 0;
++
++	mqs_priv = devm_kzalloc(&pdev->dev, sizeof(*mqs_priv), GFP_KERNEL);
++	if (!mqs_priv)
++		return -ENOMEM;
++
++	/* On i.MX6sx the MQS control register is in GPR domain
++	 * But in i.MX8QM/i.MX8QXP the control register is moved
++	 * to its own domain.
++	 */
++	if (of_device_is_compatible(np, "fsl,imx8qm-mqs"))
++		mqs_priv->use_gpr = false;
++	else
++		mqs_priv->use_gpr = true;
++
++	if (mqs_priv->use_gpr) {
++		gpr_np = of_parse_phandle(np, "gpr", 0);
++		if (IS_ERR(gpr_np)) {
++			dev_err(&pdev->dev, "failed to get gpr node by phandle\n");
++			ret = PTR_ERR(gpr_np);
++			goto out;
 +		}
 +
- 		/* Enable VMID if we need it */
- 		if (!was_enabled) {
++		mqs_priv->regmap = syscon_node_to_regmap(gpr_np);
++		if (IS_ERR(mqs_priv->regmap)) {
++			dev_err(&pdev->dev, "failed to get gpr regmap\n");
++			ret = PTR_ERR(mqs_priv->regmap);
++			goto out;
++		}
++	} else {
++		regs = devm_platform_ioremap_resource(pdev, 0);
++		if (IS_ERR(regs))
++			return PTR_ERR(regs);
 +
- 			active_reference(component);
- 
- 			switch (control->type) {
++		mqs_priv->regmap = devm_regmap_init_mmio_clk(&pdev->dev,
++							     "core",
++							     regs,
++							     &fsl_mqs_regmap_config);
++		if (IS_ERR(mqs_priv->regmap)) {
++			dev_err(&pdev->dev, "failed to init regmap: %ld\n",
++				PTR_ERR(mqs_priv->regmap));
++			return PTR_ERR(mqs_priv->regmap);
++		}
++
++		mqs_priv->ipg = devm_clk_get(&pdev->dev, "core");
++		if (IS_ERR(mqs_priv->ipg)) {
++			dev_err(&pdev->dev, "failed to get the clock: %ld\n",
++				PTR_ERR(mqs_priv->ipg));
++			goto out;
++		}
++	}
++
++	mqs_priv->mclk = devm_clk_get(&pdev->dev, "mclk");
++	if (IS_ERR(mqs_priv->mclk)) {
++		dev_err(&pdev->dev, "failed to get the clock: %ld\n",
++			PTR_ERR(mqs_priv->mclk));
++		goto out;
++	}
++
++	dev_set_drvdata(&pdev->dev, mqs_priv);
++	pm_runtime_enable(&pdev->dev);
++
++	return devm_snd_soc_register_component(&pdev->dev, &soc_codec_fsl_mqs,
++			&fsl_mqs_dai, 1);
++out:
++	if (!IS_ERR(gpr_np))
++		of_node_put(gpr_np);
++
++	return ret;
++}
++
++static int fsl_mqs_remove(struct platform_device *pdev)
++{
++	pm_runtime_disable(&pdev->dev);
++	return 0;
++}
++
++#ifdef CONFIG_PM
++static int fsl_mqs_runtime_resume(struct device *dev)
++{
++	struct fsl_mqs *mqs_priv = dev_get_drvdata(dev);
++
++	if (mqs_priv->ipg)
++		clk_prepare_enable(mqs_priv->ipg);
++
++	if (mqs_priv->mclk)
++		clk_prepare_enable(mqs_priv->mclk);
++
++	if (mqs_priv->use_gpr)
++		regmap_write(mqs_priv->regmap, IOMUXC_GPR2,
++			     mqs_priv->reg_iomuxc_gpr2);
++	else
++		regmap_write(mqs_priv->regmap, REG_MQS_CTRL,
++			     mqs_priv->reg_mqs_ctrl);
++	return 0;
++}
++
++static int fsl_mqs_runtime_suspend(struct device *dev)
++{
++	struct fsl_mqs *mqs_priv = dev_get_drvdata(dev);
++
++	if (mqs_priv->use_gpr)
++		regmap_read(mqs_priv->regmap, IOMUXC_GPR2,
++			    &mqs_priv->reg_iomuxc_gpr2);
++	else
++		regmap_read(mqs_priv->regmap, REG_MQS_CTRL,
++			    &mqs_priv->reg_mqs_ctrl);
++
++	if (mqs_priv->mclk)
++		clk_disable_unprepare(mqs_priv->mclk);
++
++	if (mqs_priv->ipg)
++		clk_disable_unprepare(mqs_priv->ipg);
++
++	return 0;
++}
++#endif
++
++static const struct dev_pm_ops fsl_mqs_pm_ops = {
++	SET_RUNTIME_PM_OPS(fsl_mqs_runtime_suspend,
++			   fsl_mqs_runtime_resume,
++			   NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				pm_runtime_force_resume)
++};
++
++static const struct of_device_id fsl_mqs_dt_ids[] = {
++	{ .compatible = "fsl,imx8qm-mqs", },
++	{ .compatible = "fsl,imx6sx-mqs", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, fsl_mqs_dt_ids);
++
++static struct platform_driver fsl_mqs_driver = {
++	.probe		= fsl_mqs_probe,
++	.remove		= fsl_mqs_remove,
++	.driver		= {
++		.name	= "fsl-mqs",
++		.of_match_table = fsl_mqs_dt_ids,
++		.pm = &fsl_mqs_pm_ops,
++	},
++};
++
++module_platform_driver(fsl_mqs_driver);
++
++MODULE_AUTHOR("Shengjiu Wang <Shengjiu.Wang@nxp.com>");
++MODULE_DESCRIPTION("MQS codec driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform: fsl-mqs");
 -- 
 2.20.1
