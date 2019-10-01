@@ -1,13 +1,13 @@
 From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 10/11] arm64: defconfig: add new Allwinner
- crypto options
-Date: Tue,  1 Oct 2019 20:41:40 +0200
-Message-ID: <20191001184141.27956-11-clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 07/11] ARM64: dts: allwinner: sun50i: Add
+ crypto engine node on H5
+Date: Tue,  1 Oct 2019 20:41:37 +0200
+Message-ID: <20191001184141.27956-8-clabbe.montjoie@gmail.com>
 References: <20191001184141.27956-1-clabbe.montjoie@gmail.com>
 Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBB653Z3WAKGQEAHFQCBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7YLCN32UNBB553Z3WAKGQEWSKCR7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20191001184141.27956-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,25 +20,38 @@ To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@p
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the new allwinner crypto configs to ARM64 defconfig
+The Crypto Engine is a hardware cryptographic accelerator that supports
+many algorithms.
+It could be found on most Allwinner SoCs.
+
+This patch enables the Crypto Engine on the Allwinner H5 SoC Device-tree.
 
 Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 8e05c39eab08..f2f330b8416d 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -114,6 +114,8 @@ CONFIG_CRYPTO_AES_ARM64_CE_CCM=y
- CONFIG_CRYPTO_AES_ARM64_CE_BLK=y
- CONFIG_CRYPTO_CHACHA20_NEON=m
- CONFIG_CRYPTO_AES_ARM64_BS=m
-+CONFIG_CRYPTO_DEV_ALLWINNER=y
-+CONFIG_CRYPTO_DEV_SUN8I_CE=m
- CONFIG_JUMP_LABEL=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+index f002a496d7cb..362f78e9122e 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+@@ -127,6 +127,17 @@
+ 			allwinner,sram = <&ve_sram 1>;
+ 		};
+ 
++		crypto: crypto@1c15000 {
++			compatible = "allwinner,sun50i-h5-crypto";
++			reg = <0x01c15000 0x1000>;
++			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "ce_ns";
++			resets = <&ccu RST_BUS_CE>;
++			reset-names = "bus";
++			clocks = <&ccu CLK_BUS_CE>, <&ccu CLK_CE>;
++			clock-names = "bus", "mod";
++		};
++
+ 		mali: gpu@1e80000 {
+ 			compatible = "allwinner,sun50i-h5-mali", "arm,mali-450";
+ 			reg = <0x01e80000 0x30000>;
 -- 
 2.21.0
