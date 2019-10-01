@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 1/7] irqchip: Introduce Kconfig symbol to build irq-bcm283x.c
-Date: Tue,  1 Oct 2019 15:48:36 -0700
-Message-ID: <20191001224842.9382-2-f.fainelli@gmail.com>
+Subject: [PATCH 2/7] dt-bindings: interrupt-controller: Add brcm,bcm7211-armctrl-ic binding
+Date: Tue,  1 Oct 2019 15:48:37 -0700
+Message-ID: <20191001224842.9382-3-f.fainelli@gmail.com>
 References: <20191001224842.9382-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191001224842.9382-1-f.fainelli@gmail.com>
@@ -14,47 +14,38 @@ Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de
         ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Both irq-bcm2835.c and irq-bcm2836.c are currently used with
-ARCH_BCM2835 but are soon going to be used with ARCH_BRCMSTB, introduce
-a Kconfig symbol to make that those drivers selected/built by other
-platforms.
+BCM7211 features a second level interrupt controller similar in nature
+to BCM2836, with a few modifications to the register offsets, document
+that specific compatible string.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/irqchip/Kconfig  | 5 +++++
- drivers/irqchip/Makefile | 4 ++--
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ .../interrupt-controller/brcm,bcm2835-armctrl-ic.txt        | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 80e10f4e213a..d1bb20d23d27 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -113,6 +113,11 @@ config I8259
- 	bool
- 	select IRQ_DOMAIN
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
+index 0f1af5a1c12e..0b07845b46e4 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
+@@ -12,7 +12,8 @@ interrupt there indicates that the ARMCTRL has an interrupt to handle.
+ Required properties:
  
-+config BCM283X_IRQ
-+	bool
-+	select IRQ_DOMAIN
-+	default ARCH_BCM2835
-+
- config BCM6345_L1_IRQ
- 	bool
- 	select GENERIC_IRQ_CHIP
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 8d0fcec6ab23..9cf14c7945f6 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -5,8 +5,8 @@ obj-$(CONFIG_AL_FIC)			+= irq-al-fic.o
- obj-$(CONFIG_ALPINE_MSI)		+= irq-alpine-msi.o
- obj-$(CONFIG_ATH79)			+= irq-ath79-cpu.o
- obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
--obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
--obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
-+obj-$(CONFIG_BCM283X_IRQ)		+= irq-bcm2835.o
-+obj-$(CONFIG_BCM283X_IRQ)		+= irq-bcm2836.o
- obj-$(CONFIG_DAVINCI_AINTC)		+= irq-davinci-aintc.o
- obj-$(CONFIG_DAVINCI_CP_INTC)		+= irq-davinci-cp-intc.o
- obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
+ - compatible : should be "brcm,bcm2835-armctrl-ic" or
+-                 "brcm,bcm2836-armctrl-ic"
++                 "brcm,bcm2836-armctrl-ic" or
++		 "brcm,bcm7211-armctrl-ic"
+ - reg : Specifies base physical address and size of the registers.
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Specifies the number of cells needed to encode an
+@@ -25,7 +26,8 @@ Required properties:
+   The 2nd cell contains the interrupt number within the bank. Valid values
+   are 0..7 for bank 0, and 0..31 for bank 1.
+ 
+-Additional required properties for brcm,bcm2836-armctrl-ic:
++Additional required properties for brcm,bcm2836-armctrl-ic and
++brcm,bcm7211-armctrl-ic:
+ - interrupts : Specifies the interrupt on the parent for this interrupt
+   controller to handle.
+ 
 -- 
 2.17.1
