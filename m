@@ -1,101 +1,76 @@
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v3 5/5] RFC: drm/atomic-helper: Reapply color
- transformation after resume
-Date: Tue, 1 Oct 2019 16:52:22 +0200
-Message-ID: <20191001145222.32aapomoqlaxpvbb@uno.localdomain>
-References: <20190930222802.32088-1-ezequiel@collabora.com>
- <20190930222802.32088-6-ezequiel@collabora.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: snps,dw-apb-ssi: Add optional clock
+ domain information
+Date: Tue, 1 Oct 2019 16:51:02 +0200
+Message-ID: <CAMuHMdXBfgC=x7H_mnLb_s0gMOBS7r9h8vqbiSU+168VKs9q1w@mail.gmail.com>
+References: <1568793876-9009-1-git-send-email-gareth.williams.jx@renesas.com>
+ <1568793876-9009-3-git-send-email-gareth.williams.jx@renesas.com>
+ <20191001120203.GA28106@bogus> <TY2PR01MB292460F29AE0664CFFD70EFDDF9D0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zl62uyu5oe5zzls3"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190930222802.32088-6-ezequiel@collabora.com>
+In-Reply-To: <TY2PR01MB292460F29AE0664CFFD70EFDDF9D0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, Boris Brezillon <boris.brezillon@collabora.com>, Douglas Anderson <dianders@chromium.org>, Ilia Mirkin <imirkin@alum.mit.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Gareth Williams <gareth.williams.jx@renesas.com>
+Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Gareth,
 
---zl62uyu5oe5zzls3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+On Tue, Oct 1, 2019 at 3:50 PM Gareth Williams
+<gareth.williams.jx@renesas.com> wrote:
+> On Tue, Oct 01, 2019 at 13:02:34AM +0100, Rob Herring wrote:
+> > On Wed, Sep 18, 2019 at 09:04:34AM +0100, Gareth Williams wrote:
+> > > Note in the bindings documentation that pclk should be renamed if a
+> > > clock domain is used to enable the optional bus clock.
+> > >
+> > > Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+> > > ---
+> > > v2: Introduced this patch.
+> > > ---
+> > >  Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+> > > b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+> > > index f54c8c3..3ed08ee 100644
+> > > --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+> > > +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+> > > @@ -16,7 +16,8 @@ Required properties:
+> > >  Optional properties:
+> > >  - clock-names : Contains the names of the clocks:
+> > >      "ssi_clk", for the core clock used to generate the external SPI clock.
+> > > -    "pclk", the interface clock, required for register access.
+> > > +    "pclk", the interface clock, required for register access. If a clock domain
+> > > +     used to enable this clock then it should be named "pclk_clkdomain".
+> >
+> > What's a clock domain?
+> >
+> > Unless this is a h/w difference in the IP block, then this change doesn't make
+> > sense.
+> This is a reference to the use of clock domains that are implemented through
+> generic power domains. The domain is implemented in
+> drivers/clk/renesas/r9a06g032-clocks.c and general details of clock domains
+> can be found at
+> https://elinux.org/images/1/14/Last_One_Out%2C_Turn_Off_The_Lights.pdf
 
-Hi Ezequiel,
+Rob is right: the clock domain is an SoC integration detail, not specific to
+the snps,dw-apb-ssi block.
+Remember, DT describes hardware, not implementation details.
 
-On Mon, Sep 30, 2019 at 07:28:02PM -0300, Ezequiel Garcia wrote:
-> Some platforms are not able to maintain the color transformation
-> state after a system suspend/resume cycle.
->
-> Set the colog_mgmt_changed flag so that CMM on the CRTCs in
+So the Linux snps,dw-apb-ssi driver should take care of it.
 
-CMM is the name of the Renesas unit for color enanchement. It should
-not be used here as this will apply to all platforms.
+Which brings us back to an old discussion topic: power-domains properties
+describe integration, and thus should be documented at a higher level than
+in individual binding documents, just like e.g. interrupt-parent.
 
-> the suspend state are reapplied after system resume.
->
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
-> This is an RFC, and it's mostly based on Jacopo Mondi's work https://lkml.org/lkml/2019/9/6/498.
->
-> Changes from v2:
-> * New patch.
-> ---
->  drivers/gpu/drm/drm_atomic_helper.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> index e41db0f202ca..518488125575 100644
-> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> @@ -3234,8 +3234,20 @@ int drm_atomic_helper_resume(struct drm_device *dev,
->  			     struct drm_atomic_state *state)
->  {
->  	struct drm_modeset_acquire_ctx ctx;
-> +	struct drm_crtc_state *crtc_state;
-> +	struct drm_crtc *crtc;
-> +	unsigned int i;
->  	int err;
->
-> +	for_each_new_crtc_in_state(state, crtc, crtc_state, i) {
-> +		/*
-> +		 * Force re-enablement of CMM after system resume if any
-> +		 * of the DRM color transformation properties was set in
-> +		 * the state saved at system suspend time.
-> +		 */
-> +		if (crtc_state->gamma_lut)
+Gr{oetje,eeting}s,
 
-Please note that in my original patch I only took gamma_lut into
-account as that's what our CMM supports at the moment, but you should
-here consider the degamma_lut and cmt flags in the crtc_state.
+                        Geert
 
-> +			crtc_state->color_mgmt_changed = true;
-> +	}
->  	drm_mode_config_reset(dev);
->
->  	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, err);
-> --
-> 2.22.0
->
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---zl62uyu5oe5zzls3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2TaCYACgkQcjQGjxah
-VjyNJA//aSwBuTdB7lLcaiEaE+P3RsAcLZl6sS/EGaTO5tsvgJD43qhcW0FyAZdV
-8ABNJ3e+W7ZgTzkHWVBvs6Y5eQlE3AvvAhXFPEjL9ca9Y/rRLgcF6mQ8GQCqsYO7
-dvBkd1bpWG7XBOO5KzSLSDbIsjDRmDbpFVQHtTWDJZN/LzIqZHoGPZL9Tc7yoAY7
-9MW3av52glPOWqTJj9zscg/Y7BWuapCmmPPV97iLUPKVtvN/G+2fgIVxushM2e3K
-TJvYsU63CZ5pzKX1U02UBbs0KKsENRRjWCTcGs2gf5xq0WhBs+lC0uZAclNkw/lu
-wd5ehPD3CaE2NiBECnHtptxEZE+jMzzP7jmDojYHILG0NqV6pcVVHdZsYK7AE/qb
-CfqDtLn6HnbaZZcia7Smp50QpTGY5z46Qe9l15CH/wtzjywwyKyl9GvuEK18ycx5
-6iwGZW0PYHJnAQwh0U4F92akAXIOf5xfpW2358jlIr8iwmSE5UgrqA4YcDDPGDfs
-7YvBDUBn/Bs0RYUetb/+HI5rcYZsWdBkpL/cHP6y+8yItmdS9IyYlHS6pXxm3X04
-dS7tEaUs29GYJKsVshqq7ORctg0pd4ebsSsZeyqTLq7YmzXefjzpHihSvuKt0oMU
-pqCdnYKZkFUm70gLJXTHVVjSty7YOBB428DgPlWTFmgNUvVUqec=
-=hYRk
------END PGP SIGNATURE-----
-
---zl62uyu5oe5zzls3--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
