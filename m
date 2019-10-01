@@ -1,33 +1,69 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] arm64: dts: exynos: Exynos5433: swap clock order of
- sysmmu
-Date: Tue, 1 Oct 2019 21:14:50 +0200
-Message-ID: <20191001191450.GA30860@kozik-lap>
-References: <20190919131944.11007-1-m.szyprowski@samsung.com>
- <CGME20190919135115eucas1p2e1c9c090c5a75211e5a137c598721287@eucas1p2.samsung.com>
- <20190919135053.11849-1-m.szyprowski@samsung.com>
+Subject: Re: [PATCH v13 0/8] Exynos5 Dynamic Memory Controller driver
+Date: Tue, 1 Oct 2019 21:29:47 +0200
+Message-ID: <20191001192947.GA1815@kozik-lap>
+References: <CGME20190821104316eucas1p2ecd715f3105921ec83e0acf1291201f8@eucas1p2.samsung.com>
+ <20190821104303.32079-1-l.luba@partner.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190919135053.11849-1-m.szyprowski@samsung.com>
+In-Reply-To: <20190821104303.32079-1-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Maciej Falkowski <m.falkowski@samsung.com>, mark.rutland@arm.com, robh@kernel.org, a.hajda@samsung.com
+To: Lukasz Luba <l.luba@partner.samsung.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, b.zolnierkie@samsung.com, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 03:50:53PM +0200, Marek Szyprowski wrote:
-> From: Maciej Falkowski <m.falkowski@samsung.com>
+On Wed, Aug 21, 2019 at 12:42:55PM +0200, Lukasz Luba wrote:
+> Hi all,
 > 
-> dt-schema supports only order of names "aclk", "pclk".
-> Swap some sysmmu definitions to make them compatible with schema.
+> This is v13 which makes cosmetic changes. It is based on current mainline
+> (v5.3-rc5) with with devfreq/for-next where there is a PPMU patch [1].
 > 
-> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 54 +++++++++++-----------
+> The patch set adds support of Dynamic Memory Controller for Exynos5422 SoC.
+> The driver supports Dynamic Voltage and Frequency Scaling
+> for the DMC and DRAM. It also provides needed timings for different
+> speed operations of the DRAM memory.
+> There is also new generic code in of_memory and headers which allows to parse
+> LPDDR3 memories defined in device-tree.
+> 
+> Here are the last changes suggested by Krzysztof during his review.
+> For the previous changes in older revisions please refer to [2], there is
+> more detailed change log.
+> 
+> changes:
+> v13:
+> - skipped patch with chipID changes in DT, since it is not used anymore,
+> - removed license comment in of_memory.c since SPDX has been merged,
+> - aligned comment to the current fields in the structure,
+> - changed printed warning when timings are not found,
+> 
+> Regards,
+> Lukasz Luba
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/commit/?h=for-next&id=b617376df8f01c975dee66802f4da16291f92079
+> [2] https://lkml.org/lkml/2019/7/22/251
+> 
+> 
+> Lukasz Luba (8):
+>   dt-bindings: ddr: rename lpddr2 directory
+>   dt-bindings: ddr: add LPDDR3 memories
+>   drivers: memory: extend of_memory by LPDDR3 support
+>   dt-bindings: memory-controllers: add Exynos5422 DMC device description
+>   drivers: memory: add DMC driver for Exynos5422
+>   ARM: dts: exynos: add syscon to clock compatible
+>   ARM: dts: exynos: add DMC device for exynos5422
+>   ARM: exynos_defconfig: enable DMC driver
+>
 
-Thanks, applied.
+Just to let you know:
+
+I applied the set some days ago but this did not make to merge window.
+Now, I put it on for-next branch so will appear on linux-next soon. I
+also applied the fixes sent later.
+
+I'll take also the latest work with interrupt mode for DMC (after minor
+fix in bindings).
 
 Best regards,
 Krzysztof
