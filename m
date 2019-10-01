@@ -1,38 +1,78 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/2] dt-bindings: add vendor prefix for logic
- technologies limited
-Date: Tue, 01 Oct 2019 17:09:11 -0500
-Message-ID: <5d93ce89.1c69fb81.9b763.e2b7@mx.google.com>
-References: <20190920075411.15735-1-marcel@ziswiler.com>
+Subject: Re: [PATCH] of: Add of_get_memory_prop()
+Date: Tue, 01 Oct 2019 17:09:01 -0500
+Message-ID: <5d93ce80.1c69fb81.4acf3.4716@mx.google.com>
+References: <20190918184656.7633-1-rananta@codeaurora.org>
+ <CAL_JsqJ2WeW0JHSHZuvo9bbc7JSFBr_qCuOp97i=b6Q+OPY7Cg@mail.gmail.com>
+ <19d727bbfce08e59294920ba8097be7a@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190920075411.15735-1-marcel@ziswiler.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marcel Ziswiler <marcel@ziswiler.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, j.bauer@endrich.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Maxime Ripard <mripard@kernel.org>, info@logictechno.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <19d727bbfce08e59294920ba8097be7a@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: rananta@codeaurora.org
+Cc: Frank Rowand <frowand.list@gmail.com>, Trilok Soni <tsoni@codeaurora.org>, Android Kernel Team <kernel-team@android.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMCBTZXAgMjAxOSAwOTo1NDoxMCArMDIwMCwgTWFyY2VsIFppc3dpbGVyIHdyb3Rl
-Ogo+IEZyb206IE1hcmNlbCBaaXN3aWxlciA8bWFyY2VsLnppc3dpbGVyQHRvcmFkZXguY29tPgo+
-IAo+IEFkZCB2ZW5kb3IgcHJlZml4IGZvciBMb2dpYyBUZWNobm9sb2dpZXMgTGltaXRlZCBbMV0g
-d2hpY2ggaXMgYSBDaGluZXNlCj4gZGlzcGxheSBtYW51ZmFjdHVyZXIgZS5nLiBkaXN0cmlidXRl
-ZCBieSBHZXJtYW4gRW5kcmljaCBCYXVlbGVtZW50ZQo+IFZlcnRyaWVicyBHbWJIIFsyXS4KPiAK
-PiBbMV0gaHR0cHM6Ly9sb2dpY3RlY2huby5jb20vY29udGFjdC11cy8KPiBbMl0gaHR0cHM6Ly93
-d3cuZW5kcmljaC5jb20vaXNpNTBfaXNpMzBfdGZ0LWRpc3BsYXlzL2x0MTcwNDEwLTF3aGNfaXNp
-MzAKPiAKPiBTaWduZWQtb2ZmLWJ5OiBNYXJjZWwgWmlzd2lsZXIgPG1hcmNlbC56aXN3aWxlckB0
-b3JhZGV4LmNvbT4KPiAKPiAtLS0KPiAKPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3ZlbmRvci1wcmVmaXhlcy55YW1sIHwgMiArKwo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNl
-cnRpb25zKCspCj4gCgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Wed, Sep 18, 2019 at 03:32:14PM -0700, rananta@codeaurora.org wrote:
+> On 2019-09-18 13:13, Rob Herring wrote:
+> > On Wed, Sep 18, 2019 at 1:47 PM Raghavendra Rao Ananta
+> > <rananta@codeaurora.org> wrote:
+> > > 
+> > > On some embedded systems, the '/memory' dt-property gets updated
+> > > by the bootloader (for example, the DDR configuration) and then
+> > > gets passed onto the kernel. The device drivers may have to read
+> > > the properties at runtime to make decisions. Hence, add
+> > > of_get_memory_prop() for the device drivers to query the requested
+> > 
+> > Function name doesn't match. Device drivers don't need to access the
+> > FDT.
+> > 
+> > > properties.
+> > > 
+> > > Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
+> > > ---
+> > >  drivers/of/fdt.c       | 27 +++++++++++++++++++++++++++
+> > >  include/linux/of_fdt.h |  1 +
+> > >  2 files changed, 28 insertions(+)
+> > 
+> > We don't add kernel api's without users.
+> > 
+> > > 
+> > > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> > > index 223d617ecfe1..925cf2852433 100644
+> > > --- a/drivers/of/fdt.c
+> > > +++ b/drivers/of/fdt.c
+> > > @@ -79,6 +79,33 @@ void __init of_fdt_limit_memory(int limit)
+> > >         }
+> > >  }
+> > > 
+> > > +/**
+> > > + * of_fdt_get_memory_prop - Return the requested property from the
+> > > /memory node
+> > > + *
+> > > + * On match, returns a non-zero positive value which represents the
+> > > property
+> > > + * value. Otherwise returns -ENOENT.
+> > > + */
+> > > +int of_fdt_get_memory_prop(const char *pname)
+> > > +{
+> > > +       int memory;
+> > > +       int len;
+> > > +       fdt32_t *prop = NULL;
+> > > +
+> > > +       if (!pname)
+> > > +               return -EINVAL;
+> > > +
+> > > +       memory = fdt_path_offset(initial_boot_params, "/memory");
+> > 
+> > Memory nodes should have a unit-address, so this won't work frequently.
+> Sorry, can you please elaborate more on this? What do you mean by
+> unit-address and working frequently?
+
+A memory node is typically going to be something like: /memory@80000000. 
+So your function will not work for any of those cases. And just 
+'/memory' generates a dtc warning.
+
+Rob
