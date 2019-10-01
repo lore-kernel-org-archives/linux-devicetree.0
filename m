@@ -1,211 +1,101 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
-Date: Tue, 01 Oct 2019 07:38:25 -0700
-Message-ID: <20191001143825.CD3212054F@mail.kernel.org>
-References: <20190918095018.17979-1-tdas@codeaurora.org> <20190918095018.17979-4-tdas@codeaurora.org> <20190918213946.DC03521924@mail.kernel.org> <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org> <20190924231223.9012C207FD@mail.kernel.org> <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org> <20190925130346.42E0820640@mail.kernel.org> <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org>
+From: Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v3 5/5] RFC: drm/atomic-helper: Reapply color
+ transformation after resume
+Date: Tue, 1 Oct 2019 16:52:22 +0200
+Message-ID: <20191001145222.32aapomoqlaxpvbb@uno.localdomain>
+References: <20190930222802.32088-1-ezequiel@collabora.com>
+ <20190930222802.32088-6-ezequiel@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zl62uyu5oe5zzls3"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20190930222802.32088-6-ezequiel@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Taniya Das <tdas@codeaurora.org>, robh+dt@kernel.org
-Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Ezequiel Garcia <ezequiel@collabora.com>
+Cc: dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com, Sean Paul <seanpaul@chromium.org>, Boris Brezillon <boris.brezillon@collabora.com>, Douglas Anderson <dianders@chromium.org>, Ilia Mirkin <imirkin@alum.mit.edu>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Taniya Das (2019-09-27 00:37:57)
-> Hi Stephen,
->=20
-> On 9/25/2019 6:33 PM, Stephen Boyd wrote:
-> > Quoting Taniya Das (2019-09-25 04:20:07)
-> >> Hi Stephen,
-> >>
-> >> Please find my comments.
-> >>
-> >> On 9/25/2019 4:42 AM, Stephen Boyd wrote:
-> >>> Quoting Taniya Das (2019-09-23 01:01:11)
-> >>>> Hi Stephen,
-> >>>>
-> >>>> Thanks for your comments.
-> >>>>
-> >>>> On 9/19/2019 3:09 AM, Stephen Boyd wrote:
-> >>>>> Quoting Taniya Das (2019-09-18 02:50:18)
-> >>>>>> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-=
-sc7180.c
-> >>>>>> new file mode 100644
-> >>>>>> index 000000000000..d47865d5408f
-> >>>>>> --- /dev/null
-> >>>>>> +++ b/drivers/clk/qcom/gcc-sc7180.c
-> >>>>>> +                       .ops =3D &clk_branch2_ops,
-> >>>>>> +               },
-> >>>>>> +       },
-> >>>>>> +};
-> >>>>>> +
-> >>> [...]
-> >>>>>> +static struct clk_branch gcc_ufs_phy_phy_aux_clk =3D {
-> >>>>>> +       .halt_reg =3D 0x77094,
-> >>>>>> +       .halt_check =3D BRANCH_HALT,
-> >>>>>> +       .hwcg_reg =3D 0x77094,
-> >>>>>> +       .hwcg_bit =3D 1,
-> >>>>>> +       .clkr =3D {
-> >>>>>> +               .enable_reg =3D 0x77094,
-> >>>>>> +               .enable_mask =3D BIT(0),
-> >>>>>> +               .hw.init =3D &(struct clk_init_data){
-> >>>>>> +                       .name =3D "gcc_ufs_phy_phy_aux_clk",
-> >>>>>> +                       .parent_data =3D &(const struct clk_parent=
-_data){
-> >>>>>> +                               .hw =3D &gcc_ufs_phy_phy_aux_clk_s=
-rc.clkr.hw,
-> >>>>>> +                       },
-> >>>>>> +                       .num_parents =3D 1,
-> >>>>>> +                       .flags =3D CLK_SET_RATE_PARENT,
-> >>>>>> +                       .ops =3D &clk_branch2_ops,
-> >>>>>> +               },
-> >>>>>> +       },
-> >>>>>> +};
-> >>>>>> +
-> >>>>>> +static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk =3D {
-> >>>>>> +       .halt_reg =3D 0x7701c,
-> >>>>>> +       .halt_check =3D BRANCH_HALT_SKIP,
-> >>>>>
-> >>>>> Again, nobody has fixed the UFS driver to not need to do this halt =
-skip
-> >>>>> check for these clks? It's been over a year.
-> >>>>>
-> >>>>
-> >>>> The UFS_PHY_RX/TX clocks could be left enabled due to certain HW boot
-> >>>> configuration and thus during the late initcall of clk_disable there
-> >>>> could be warnings of "clock stuck ON" in the dmesg. That is the reas=
-on
-> >>>> also to use the BRANCH_HALT_SKIP flag.
-> >>>
-> >>> Oh that's bad. Why do the clks stay on when we try to turn them off?
-> >>>
-> >>
-> >> Those could be due to the configuration selected by HW and SW cannot
-> >> override them, so traditionally we have never polled for CLK_OFF for
-> >> these clocks.
-> >=20
-> > Is that the case or just a guess?
-> >=20
->=20
-> This is the behavior :).
 
-Ok. It's the same as sdm845 so I guess it's OK.
+--zl62uyu5oe5zzls3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
->=20
-> >>
-> >>>>
-> >>>> I would also check internally for the UFS driver fix you are referri=
-ng here.
-> >>>
-> >>> Sure. I keep asking but nothing is done :(
-> >>>
-> >>>>
-> >>>>>> +       .clkr =3D {
-> >>>>>> +               .enable_reg =3D 0x7701c,
-> >>>>>> +               .enable_mask =3D BIT(0),
-> >>>>>> +               .hw.init =3D &(struct clk_init_data){
-> >>>>>> +                       .name =3D "gcc_ufs_phy_rx_symbol_0_clk",
-> >>>>>> +                       .ops =3D &clk_branch2_ops,
-> >>>>>> +               },
-> >>>>>> +       },
-> >>>>>> +};
-> >>>>>> +
-> >>> [...]
-> >>>>>> +
-> >>>>>> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk =3D {
-> >>>>>> +       .halt_reg =3D 0xf058,
-> >>>>>> +       .halt_check =3D BRANCH_HALT_SKIP,
-> >>>>>
-> >>>>> Why does this need halt_skip?
-> >>>>
-> >>>> This is required as the source is external PHY, so we want to not ch=
-eck
-> >>>> for HALT.
-> >>>
-> >>> This doesn't really answer my question. If the source is an external =
-phy
-> >>> then it should be listed as a clock in the DT binding and the parent
-> >>> should be specified here. Unless something doesn't work because of th=
-at?
-> >>>
-> >>
-> >> The USB phy is managed by the USB driver and clock driver is not aware
-> >> if USB driver models the phy as a clock. Thus we do want to keep a
-> >> dependency on the parent and not poll for CLK_ENABLE.
-> >=20
-> > The clk driver should be aware of the USB driver modeling the phy as a
-> > clk. We do that for other phys so what is the difference here?
-> >=20
->=20
-> Let me check with the USB team, but could we keep them for now?
+Hi Ezequiel,
 
-Ok. It's also the same as sdm845 so I guess it's OK. Would be nice to
-properly model it though so we can be certain the clk is actually
-enabled.
+On Mon, Sep 30, 2019 at 07:28:02PM -0300, Ezequiel Garcia wrote:
+> Some platforms are not able to maintain the color transformation
+> state after a system suspend/resume cycle.
+>
+> Set the colog_mgmt_changed flag so that CMM on the CRTCs in
 
->=20
-> >>
-> >>>>
-> >>>>>
-> >>>>>> +       .clkr =3D {
-> >>>>>> +               .enable_reg =3D 0xf058,
-> >>>>>> +               .enable_mask =3D BIT(0),
-> >>>>>> +               .hw.init =3D &(struct clk_init_data){
-> >>>>>> +                       .name =3D "gcc_usb3_prim_phy_pipe_clk",
-> >>>>>> +                       .ops =3D &clk_branch2_ops,
-> >>>>>> +               },
-> >>>>>> +       },
-> >>>>>> +};
-> >>>>>> +
-> >>>>>> +static struct clk_branch gcc_usb_phy_cfg_ahb2phy_clk =3D {
-> >>>>>> +       .halt_reg =3D 0x6a004,
-> >>>>>> +       .halt_check =3D BRANCH_HALT,
-> >>>>>> +       .hwcg_reg =3D 0x6a004,
-> >>>>>> +       .hwcg_bit =3D 1,
-> >>>>>> +       .clkr =3D {
-> >>>>>> +               .enable_reg =3D 0x6a004,
-> >>>>>> +               .enable_mask =3D BIT(0),
-> >>>>>> +               .hw.init =3D &(struct clk_init_data){
-> >>>>>> +                       .name =3D "gcc_usb_phy_cfg_ahb2phy_clk",
-> >>>>>> +                       .ops =3D &clk_branch2_ops,
-> >>>>>> +               },
-> >>>>>> +       },
-> >>>>>> +};
-> >>>>>> +
-> >>>>>> +/* Leave the clock ON for parent config_noc_clk to be kept enable=
-d */
-> >>>>>
-> >>>>> There's no parent though... So I guess this means it keeps it enabl=
-ed
-> >>>>> implicitly in hardware?
-> >>>>>
-> >>>>
-> >>>> These are not left enabled, but want to leave them enabled for clien=
-ts
-> >>>> on config NOC.
-> >>>
-> >>> Sure. It just doesn't make sense to create clk structures and expose
-> >>> them in the kernel when we just want to turn the bits on and leave th=
-em
-> >>> on forever. Why not just do some register writes in probe for this
-> >>> driver? Doesn't that work just as well and use less memory?
-> >>>
-> >>
-> >> Even if I write these registers during probe, the late init check
-> >> 'clk_core_is_enabled' would return true and would be turned OFF, that =
-is
-> >> the reason for marking them CRITICAL.
-> >>
-> >=20
-> > That wouldn't happen if the clks weren't registered though, no?
-> >=20
->=20
-> I want to keep these clock CRITICAL and registered for now, but we=20
-> should be able to revisit/clean them up later.
->=20
+CMM is the name of the Renesas unit for color enanchement. It should
+not be used here as this will apply to all platforms.
 
-Why do you want to keep them critical and registered? I'm suggesting
-that any clk that is marked critical and doesn't have a parent should
-instead become a register write in probe to turn the clk on.
+> the suspend state are reapplied after system resume.
+>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+> This is an RFC, and it's mostly based on Jacopo Mondi's work https://lkml.org/lkml/2019/9/6/498.
+>
+> Changes from v2:
+> * New patch.
+> ---
+>  drivers/gpu/drm/drm_atomic_helper.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> index e41db0f202ca..518488125575 100644
+> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> @@ -3234,8 +3234,20 @@ int drm_atomic_helper_resume(struct drm_device *dev,
+>  			     struct drm_atomic_state *state)
+>  {
+>  	struct drm_modeset_acquire_ctx ctx;
+> +	struct drm_crtc_state *crtc_state;
+> +	struct drm_crtc *crtc;
+> +	unsigned int i;
+>  	int err;
+>
+> +	for_each_new_crtc_in_state(state, crtc, crtc_state, i) {
+> +		/*
+> +		 * Force re-enablement of CMM after system resume if any
+> +		 * of the DRM color transformation properties was set in
+> +		 * the state saved at system suspend time.
+> +		 */
+> +		if (crtc_state->gamma_lut)
+
+Please note that in my original patch I only took gamma_lut into
+account as that's what our CMM supports at the moment, but you should
+here consider the degamma_lut and cmt flags in the crtc_state.
+
+> +			crtc_state->color_mgmt_changed = true;
+> +	}
+>  	drm_mode_config_reset(dev);
+>
+>  	DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, 0, err);
+> --
+> 2.22.0
+>
+
+--zl62uyu5oe5zzls3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2TaCYACgkQcjQGjxah
+VjyNJA//aSwBuTdB7lLcaiEaE+P3RsAcLZl6sS/EGaTO5tsvgJD43qhcW0FyAZdV
+8ABNJ3e+W7ZgTzkHWVBvs6Y5eQlE3AvvAhXFPEjL9ca9Y/rRLgcF6mQ8GQCqsYO7
+dvBkd1bpWG7XBOO5KzSLSDbIsjDRmDbpFVQHtTWDJZN/LzIqZHoGPZL9Tc7yoAY7
+9MW3av52glPOWqTJj9zscg/Y7BWuapCmmPPV97iLUPKVtvN/G+2fgIVxushM2e3K
+TJvYsU63CZ5pzKX1U02UBbs0KKsENRRjWCTcGs2gf5xq0WhBs+lC0uZAclNkw/lu
+wd5ehPD3CaE2NiBECnHtptxEZE+jMzzP7jmDojYHILG0NqV6pcVVHdZsYK7AE/qb
+CfqDtLn6HnbaZZcia7Smp50QpTGY5z46Qe9l15CH/wtzjywwyKyl9GvuEK18ycx5
+6iwGZW0PYHJnAQwh0U4F92akAXIOf5xfpW2358jlIr8iwmSE5UgrqA4YcDDPGDfs
+7YvBDUBn/Bs0RYUetb/+HI5rcYZsWdBkpL/cHP6y+8yItmdS9IyYlHS6pXxm3X04
+dS7tEaUs29GYJKsVshqq7ORctg0pd4ebsSsZeyqTLq7YmzXefjzpHihSvuKt0oMU
+pqCdnYKZkFUm70gLJXTHVVjSty7YOBB428DgPlWTFmgNUvVUqec=
+=hYRk
+-----END PGP SIGNATURE-----
+
+--zl62uyu5oe5zzls3--
