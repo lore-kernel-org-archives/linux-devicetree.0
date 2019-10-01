@@ -1,34 +1,58 @@
 From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 0/3] Pine64+ specific hacks for RTL8211E Ethernet PHY
-Date: Tue,  1 Oct 2019 16:29:09 +0800
-Message-ID: <20191001082912.12905-1-icenowy@aosc.io>
+Subject: [PATCH 1/3] dt-bindings: add binding for RTL8211E Ethernet PHY
+Date: Tue,  1 Oct 2019 16:29:10 +0800
+Message-ID: <20191001082912.12905-2-icenowy@aosc.io>
+References: <20191001082912.12905-1-icenowy@aosc.io>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191001082912.12905-1-icenowy@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.xyz>
 List-Id: devicetree@vger.kernel.org
 
-There're some Pine64+ boards known to have broken RTL8211E chips, and
-a hack is given by Pine64+, which is said to be from Realtek.
+From: Icenowy Zheng <icenowy@aosc.xyz>
 
-This patchset adds the hack.
+Some RTL8211E Ethernet PHY have an issue that needs a workaround, and a
+way to indicate the need of the workaround should be added.
 
-The hack is taken from U-Boot, and it contains magic numbers without
-any document.
+Add the binding for a DT property that indicates this workaround.
 
-Icenowy Zheng (3):
-  dt-bindings: add binding for RTL8211E Ethernet PHY
-  net: phy: realtek: add config hack for broken RTL8211E on Pine64+
-    boards
-  arm64: allwinner: a64: dts: apply hack for RTL8211E on Pine64+
-
+Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+---
  .../bindings/net/realtek,rtl8211e.yaml        | 23 +++++++++++++++++++
- .../dts/allwinner/sun50i-a64-pine64-plus.dts  |  1 +
- drivers/net/phy/realtek.c                     | 14 +++++++++++
- 3 files changed, 38 insertions(+)
+ 1 file changed, 23 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/net/realtek,rtl8211e.yaml
 
+diff --git a/Documentation/devicetree/bindings/net/realtek,rtl8211e.yaml b/Documentation/devicetree/bindings/net/realtek,rtl8211e.yaml
+new file mode 100644
+index 000000000000..264e93cafbec
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/realtek,rtl8211e.yaml
+@@ -0,0 +1,23 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/realtek,rtl8211e.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Realtek RTL8211E Ethernet PHY
++
++properties:
++  realtek,config-magic-for-pine64:
++    description:
++      Enabling specific hacks for some broken RTL8211E chips known to be
++      used by Pine64+ boards.
++
++examples:
++  - |
++    &mdio {
++        ext_phy: ethernet-phy@0 {
++            compatible = "ethernet-phy-ieee802.3-c22";
++            reg = <0>;
++            realtek,config-magic-for-pine64;
++        };
++    };
 -- 
 2.21.0
