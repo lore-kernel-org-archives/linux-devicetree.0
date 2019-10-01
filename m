@@ -1,7 +1,7 @@
 From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
-Subject: [PATCH v2 3/5] MIPS: CI20: DTS: Add IW8103 Wifi + bluetooth
-Date: Tue, 1 Oct 2019 21:09:14 +0200
-Message-ID: <cda033047367d5359067f6d7e9a73cebc6cdc722.1569955865.git.agriveaux@deutnet.info>
+Subject: [PATCH v2 4/5] MIPS: CI20: DTS: Add Leds
+Date: Tue, 1 Oct 2019 21:09:30 +0200
+Message-ID: <fa61d681bad1d551876ce879643226dd59611316.1569955865.git.agriveaux@deutnet.info>
 References: <cover.1569955865.git.agriveaux@deutnet.info>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -13,86 +13,51 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, paul.burton@m
 Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add IW8103 Wifi + bluetooth module to device tree and related power domain.
+Adding leds and related triggers.
 
 Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
 ---
- arch/mips/boot/dts/ingenic/ci20.dts | 39 +++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ arch/mips/boot/dts/ingenic/ci20.dts | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
 diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
-index 4a77fa30a9cd..c62c36ae94c2 100644
+index c62c36ae94c2..37b93166bf22 100644
 --- a/arch/mips/boot/dts/ingenic/ci20.dts
 +++ b/arch/mips/boot/dts/ingenic/ci20.dts
-@@ -31,6 +31,13 @@
- 		gpio = <&gpb 25 GPIO_ACTIVE_LOW>;
- 		enable-active-high;
- 	};
-+
-+	wlan0_power: fixedregulator@1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "wlan0_power";
-+		gpio = <&gpb 19 GPIO_ACTIVE_LOW>;
-+		enable-active-high;
-+	};
- };
- 
- &ext {
-@@ -54,9 +61,18 @@
- 
- 	bus-width = <4>;
- 	max-frequency = <50000000>;
-+	non-removable;
- 
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pins_mmc1>;
-+
-+	brcmf: wifi@1 {
-+/*		reg = <4>;*/
-+		compatible = "brcm,bcm4330-fmac";
-+		vcc-supply = <&wlan0_power>;
-+		device-wakeup-gpios = <&gpd 9 GPIO_ACTIVE_HIGH>;
-+		shutdown-gpios = <&gpf 7 GPIO_ACTIVE_LOW>;
-+	};
- };
- 
- &uart0 {
-@@ -73,6 +89,23 @@
- 	pinctrl-0 = <&pins_uart1>;
- };
- 
-+&uart2 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pins_uart2>;
-+	uart-has-rtscts;
-+
-+	bluetooth {
-+		compatible = "brcm,bcm4330-bt";
-+		reset-gpios = <&gpf 8 GPIO_ACTIVE_HIGH>;
-+		vcc-supply = <&wlan0_power>;
-+		device-wakeup-gpios = <&gpf 5 GPIO_ACTIVE_HIGH>;
-+		host-wakeup-gpios = <&gpf 6 GPIO_ACTIVE_HIGH>;
-+		shutdown-gpios = <&gpf 4 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
- &uart3 {
- 	status = "okay";
- 
-@@ -314,6 +347,12 @@
- 		bias-disable;
+@@ -25,6 +25,34 @@
+ 		       0x30000000 0x30000000>;
  	};
  
-+	pins_uart2: uart2 {
-+		function = "uart2";
-+		groups = "uart2-data", "uart2-hwflow";
-+		bias-disable;
++	leds {
++		compatible = "gpio-leds";
++
++		led0 {
++			label = "ci20:red:led0";
++			gpios = <&gpc 3 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "none";
++		};
++
++		led1 {
++			label = "ci20:red:led1";
++			gpios = <&gpc 2 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "nand-disk";
++		};
++
++		led2 {
++			label = "ci20:red:led2";
++			gpios = <&gpc 1 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "cpu1";
++		};
++
++		led3 {
++			label = "ci20:red:led3";
++			gpios = <&gpc 0 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "cpu0";
++		};
 +	};
 +
- 	pins_uart3: uart3 {
- 		function = "uart3";
- 		groups = "uart3-data", "uart3-hwflow";
+ 	eth0_power: fixedregulator@0 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "eth0_power";
 -- 
 2.20.1
