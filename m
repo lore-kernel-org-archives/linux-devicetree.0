@@ -1,22 +1,34 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: dt-bindings: Convert spi-sifive binding to json-schema" to the spi tree
-Date: Tue,  1 Oct 2019 12:41:08 +0100 (BST)
-Message-ID: <20191001114108.2D26327429C0@ypsilon.sirena.org.uk>
-References: <1568804927-13565-1-git-send-email-pragnesh.patel@sifive.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568804927-13565-1-git-send-email-pragnesh.patel@sifive.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pragnesh Patel <pragnesh.patel@sifive.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, palmer@sifive.com, paul.walmsley@sifive.com, Rob Herring <robh+dt@kernel.org>
+Subject: Applied "ASoC: wm8994: Add support for MCLKn clock gating" to the
+ asoc tree
+Date: Tue,  1 Oct 2019 12:40:50 +0100 (BST)
+Message-ID: <20191001114050.9CC842742A10@ypsilon.sirena.org.uk>
+References: <20190920130218.32690-5-s.nawrocki@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190920130218.32690-5-s.nawrocki@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, ckeepax@opensource.cirrus.com, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, lgirdwood@gmail.com, Krzysztof Kozlowski <krzk@kernel.org>, robh+dt@kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   spi: dt-bindings: Convert spi-sifive binding to json-schema
+   ASoC: wm8994: Add support for MCLKn clock gating
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,158 +49,219 @@ to this mail.
 Thanks,
 Mark
 
->From 9c12e34a3be127454b26054043c3b302bca08fdc Mon Sep 17 00:00:00 2001
-From: Pragnesh Patel <pragnesh.patel@sifive.com>
-Date: Wed, 18 Sep 2019 16:38:39 +0530
-Subject: [PATCH] spi: dt-bindings: Convert spi-sifive binding to json-schema
+>From 001b83d395ab2acfddc46b73376f8dbdece89af7 Mon Sep 17 00:00:00 2001
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Date: Fri, 20 Sep 2019 15:02:13 +0200
+Subject: [PATCH] ASoC: wm8994: Add support for MCLKn clock gating
 
-Convert the spi-sifive binding to DT schema format.
+As an intermediate step before covering the clocking subsystem
+of the CODEC entirely by the clk API add handling of external CODEC's
+master clocks in DAPM events when the AIFn clocks are sourced directly
+from MCLKn; when FLLn are used we enable/disable respective MCLKn
+before/after FLLn is enabled/disabled.
 
-Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/1568804927-13565-1-git-send-email-pragnesh.patel@sifive.com
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Link: https://lore.kernel.org/r/20190920130218.32690-5-s.nawrocki@samsung.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/spi/spi-sifive.txt    | 37 --------
- .../devicetree/bindings/spi/spi-sifive.yaml   | 86 +++++++++++++++++++
- 2 files changed, 86 insertions(+), 37 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.txt
- create mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.yaml
+ sound/soc/codecs/wm8994.c | 108 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 104 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-sifive.txt b/Documentation/devicetree/bindings/spi/spi-sifive.txt
-deleted file mode 100644
-index 3f5c6e438972..000000000000
---- a/Documentation/devicetree/bindings/spi/spi-sifive.txt
-+++ /dev/null
-@@ -1,37 +0,0 @@
--SiFive SPI controller Device Tree Bindings
--------------------------------------------
--
--Required properties:
--- compatible		: Should be "sifive,<chip>-spi" and "sifive,spi<version>".
--			  Supported compatible strings are:
--			  "sifive,fu540-c000-spi" for the SiFive SPI v0 as integrated
--			  onto the SiFive FU540 chip, and "sifive,spi0" for the SiFive
--			  SPI v0 IP block with no chip integration tweaks.
--			  Please refer to sifive-blocks-ip-versioning.txt for details
--- reg			: Physical base address and size of SPI registers map
--			  A second (optional) range can indicate memory mapped flash
--- interrupts		: Must contain one entry
--- interrupt-parent	: Must be core interrupt controller
--- clocks		: Must reference the frequency given to the controller
--- #address-cells	: Must be '1', indicating which CS to use
--- #size-cells		: Must be '0'
--
--Optional properties:
--- sifive,fifo-depth		: Depth of hardware queues; defaults to 8
--- sifive,max-bits-per-word	: Maximum bits per word; defaults to 8
--
--SPI RTL that corresponds to the IP block version numbers can be found here:
--https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/spi
--
--Example:
--	spi: spi@10040000 {
--		compatible = "sifive,fu540-c000-spi", "sifive,spi0";
--		reg = <0x0 0x10040000 0x0 0x1000 0x0 0x20000000 0x0 0x10000000>;
--		interrupt-parent = <&plic>;
--		interrupts = <51>;
--		clocks = <&tlclk>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--		sifive,fifo-depth = <8>;
--		sifive,max-bits-per-word = <8>;
--	};
-diff --git a/Documentation/devicetree/bindings/spi/spi-sifive.yaml b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
-new file mode 100644
-index 000000000000..140e4351a19f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
-@@ -0,0 +1,86 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/spi-sifive.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/sound/soc/codecs/wm8994.c b/sound/soc/codecs/wm8994.c
+index 35fbaa0138bf..b633093afb9d 100644
+--- a/sound/soc/codecs/wm8994.c
++++ b/sound/soc/codecs/wm8994.c
+@@ -1033,6 +1033,45 @@ static bool wm8994_check_class_w_digital(struct snd_soc_component *component)
+ 	return true;
+ }
+ 
++static int aif_mclk_set(struct snd_soc_component *component, int aif, bool enable)
++{
++	struct wm8994_priv *wm8994 = snd_soc_component_get_drvdata(component);
++	unsigned int offset, val, clk_idx;
++	int ret;
 +
-+title: SiFive SPI controller
++	if (aif)
++		offset = 4;
++	else
++		offset = 0;
 +
-+maintainers:
-+  - Pragnesh Patel <pragnesh.patel@sifive.com>
-+  - Paul Walmsley  <paul.walmsley@sifive.com>
-+  - Palmer Dabbelt <palmer@sifive.com>
++	val = snd_soc_component_read32(component, WM8994_AIF1_CLOCKING_1 + offset);
++	val &= WM8994_AIF1CLK_SRC_MASK;
 +
-+allOf:
-+  - $ref: "spi-controller.yaml#"
++	switch (val) {
++	case 0:
++		clk_idx = WM8994_MCLK1;
++		break;
++	case 1:
++		clk_idx = WM8994_MCLK2;
++		break;
++	default:
++		return 0;
++	}
 +
-+properties:
-+  compatible:
-+    items:
-+      - const: sifive,fu540-c000-spi
-+      - const: sifive,spi0
++	if (enable) {
++		ret = clk_prepare_enable(wm8994->mclk[clk_idx].clk);
++		if (ret < 0) {
++			dev_err(component->dev,	"Failed to enable MCLK%d\n",
++				clk_idx);
++			return ret;
++		}
++	} else {
++		clk_disable_unprepare(wm8994->mclk[clk_idx].clk);
++	}
 +
-+    description:
-+      Should be "sifive,<chip>-spi" and "sifive,spi<version>".
-+      Supported compatible strings are -
-+      "sifive,fu540-c000-spi" for the SiFive SPI v0 as integrated
-+      onto the SiFive FU540 chip, and "sifive,spi0" for the SiFive
-+      SPI v0 IP block with no chip integration tweaks.
-+      Please refer to sifive-blocks-ip-versioning.txt for details
++	return 0;
++}
 +
-+      SPI RTL that corresponds to the IP block version numbers can be found here -
-+      https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/spi
+ static int aif1clk_ev(struct snd_soc_dapm_widget *w,
+ 		      struct snd_kcontrol *kcontrol, int event)
+ {
+@@ -1040,7 +1079,7 @@ static int aif1clk_ev(struct snd_soc_dapm_widget *w,
+ 	struct wm8994_priv *wm8994 = snd_soc_component_get_drvdata(component);
+ 	struct wm8994 *control = wm8994->wm8994;
+ 	int mask = WM8994_AIF1DAC1L_ENA | WM8994_AIF1DAC1R_ENA;
+-	int i;
++	int ret, i;
+ 	int dac;
+ 	int adc;
+ 	int val;
+@@ -1056,6 +1095,10 @@ static int aif1clk_ev(struct snd_soc_dapm_widget *w,
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_PRE_PMU:
++		ret = aif_mclk_set(component, 0, true);
++		if (ret < 0)
++			return ret;
 +
-+  reg:
-+    maxItems: 1
+ 		/* Don't enable timeslot 2 if not in use */
+ 		if (wm8994->channels[0] <= 2)
+ 			mask &= ~(WM8994_AIF1DAC2L_ENA | WM8994_AIF1DAC2R_ENA);
+@@ -1128,6 +1171,12 @@ static int aif1clk_ev(struct snd_soc_dapm_widget *w,
+ 		break;
+ 	}
+ 
++	switch (event) {
++	case SND_SOC_DAPM_POST_PMD:
++		aif_mclk_set(component, 0, false);
++		break;
++	}
 +
-+    description:
-+      Physical base address and size of SPI registers map
-+      A second (optional) range can indicate memory mapped flash
+ 	return 0;
+ }
+ 
+@@ -1135,13 +1184,17 @@ static int aif2clk_ev(struct snd_soc_dapm_widget *w,
+ 		      struct snd_kcontrol *kcontrol, int event)
+ {
+ 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
+-	int i;
++	int ret, i;
+ 	int dac;
+ 	int adc;
+ 	int val;
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_PRE_PMU:
++		ret = aif_mclk_set(component, 1, true);
++		if (ret < 0)
++			return ret;
 +
-+  interrupts:
-+    maxItems: 1
+ 		val = snd_soc_component_read32(component, WM8994_AIF2_CONTROL_1);
+ 		if ((val & WM8994_AIF2ADCL_SRC) &&
+ 		    (val & WM8994_AIF2ADCR_SRC))
+@@ -1213,6 +1266,12 @@ static int aif2clk_ev(struct snd_soc_dapm_widget *w,
+ 		break;
+ 	}
+ 
++	switch (event) {
++	case SND_SOC_DAPM_POST_PMD:
++		aif_mclk_set(component, 1, false);
++		break;
++	}
 +
-+  clocks:
-+    maxItems: 1
+ 	return 0;
+ }
+ 
+@@ -1618,10 +1677,10 @@ SND_SOC_DAPM_POST("Late Disable PGA", late_disable_ev)
+ static const struct snd_soc_dapm_widget wm8994_lateclk_widgets[] = {
+ SND_SOC_DAPM_SUPPLY("AIF1CLK", WM8994_AIF1_CLOCKING_1, 0, 0, aif1clk_ev,
+ 		    SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU |
+-		    SND_SOC_DAPM_PRE_PMD),
++		    SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD),
+ SND_SOC_DAPM_SUPPLY("AIF2CLK", WM8994_AIF2_CLOCKING_1, 0, 0, aif2clk_ev,
+ 		    SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMU |
+-		    SND_SOC_DAPM_PRE_PMD),
++		    SND_SOC_DAPM_PRE_PMD | SND_SOC_DAPM_POST_PMD),
+ SND_SOC_DAPM_PGA("Direct Voice", SND_SOC_NOPM, 0, 0, NULL, 0),
+ SND_SOC_DAPM_MIXER("SPKL", WM8994_POWER_MANAGEMENT_3, 8, 0,
+ 		   left_speaker_mixer, ARRAY_SIZE(left_speaker_mixer)),
+@@ -2136,6 +2195,7 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
+ 	u16 reg, clk1, aif_reg, aif_src;
+ 	unsigned long timeout;
+ 	bool was_enabled;
++	struct clk *mclk;
+ 
+ 	switch (id) {
+ 	case WM8994_FLL1:
+@@ -2211,6 +2271,27 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
+ 	snd_soc_component_update_bits(component, WM8994_FLL1_CONTROL_1 + reg_offset,
+ 			    WM8994_FLL1_ENA, 0);
+ 
++	/* Disable MCLK if needed before we possibly change to new clock parent */
++	if (was_enabled) {
++		reg = snd_soc_component_read32(component, WM8994_FLL1_CONTROL_5
++							+ reg_offset);
++		reg = ((reg & WM8994_FLL1_REFCLK_SRC_MASK)
++			>> WM8994_FLL1_REFCLK_SRC_SHIFT) + 1;
 +
-+    description:
-+      Must reference the frequency given to the controller
++		switch (reg) {
++		case WM8994_FLL_SRC_MCLK1:
++			mclk = wm8994->mclk[WM8994_MCLK1].clk;
++			break;
++		case WM8994_FLL_SRC_MCLK2:
++			mclk = wm8994->mclk[WM8994_MCLK2].clk;
++			break;
++		default:
++			mclk = NULL;
++		}
 +
-+  sifive,fifo-depth:
-+    description:
-+      Depth of hardware queues; defaults to 8
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - enum: [ 8 ]
-+      - default: 8
++		clk_disable_unprepare(mclk);
++	}
 +
-+  sifive,max-bits-per-word:
-+    description:
-+      Maximum bits per word; defaults to 8
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/uint32"
-+      - enum: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
-+      - default: 8
+ 	if (wm8994->fll_byp && src == WM8994_FLL_SRC_BCLK &&
+ 	    freq_in == freq_out && freq_out) {
+ 		dev_dbg(component->dev, "Bypassing FLL%d\n", id + 1);
+@@ -2255,10 +2336,29 @@ static int _wm8994_set_fll(struct snd_soc_component *component, int id, int src,
+ 	/* Clear any pending completion from a previous failure */
+ 	try_wait_for_completion(&wm8994->fll_locked[id]);
+ 
++	switch (src) {
++	case WM8994_FLL_SRC_MCLK1:
++		mclk = wm8994->mclk[WM8994_MCLK1].clk;
++		break;
++	case WM8994_FLL_SRC_MCLK2:
++		mclk = wm8994->mclk[WM8994_MCLK2].clk;
++		break;
++	default:
++		mclk = NULL;
++	}
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
+ 	/* Enable (with fractional mode if required) */
+ 	if (freq_out) {
++		ret = clk_prepare_enable(mclk);
++		if (ret < 0) {
++			dev_err(component->dev, "Failed to enable MCLK for FLL%d\n",
++				id + 1);
++			return ret;
++		}
 +
-+examples:
-+  - |
-+    spi: spi@10040000 {
-+      compatible = "sifive,fu540-c000-spi", "sifive,spi0";
-+      reg = <0x0 0x10040000 0x0 0x1000 0x0 0x20000000 0x0 0x10000000>;
-+      interrupt-parent = <&plic>;
-+      interrupts = <51>;
-+      clocks = <&tlclk>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      sifive,fifo-depth = <8>;
-+      sifive,max-bits-per-word = <8>;
-+    };
+ 		/* Enable VMID if we need it */
+ 		if (!was_enabled) {
 +
-+...
+ 			active_reference(component);
+ 
+ 			switch (control->type) {
 -- 
 2.20.1
