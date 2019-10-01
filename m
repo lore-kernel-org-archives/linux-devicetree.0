@@ -1,148 +1,79 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: interconnect: Add OSM L3 DT bindings
-Date: Tue, 01 Oct 2019 17:50:49 +0530
-Message-ID: <e163cb4ff67b312c39c3eef543d7c62b@codeaurora.org>
-References: <20190821091132.14994-1-sibis@codeaurora.org>
- <20190821091132.14994-2-sibis@codeaurora.org>
- <53e76100-b7c9-1069-b571-b17271fe41c5@linaro.org>
+From: MarkLee <Mark-MC.Lee@mediatek.com>
+Subject: [PATCH net 2/2] arm: dts: mediatek: Fix mt7629 dts to reflect the latest dt-binding
+Date: Tue, 1 Oct 2019 20:31:50 +0800
+Message-ID: <20191001123150.23135-3-Mark-MC.Lee@mediatek.com>
+References: <20191001123150.23135-1-Mark-MC.Lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53e76100-b7c9-1069-b571-b17271fe41c5@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, mark.rutland@arm.com, evgreen@chromium.org, daidavid1@codeaurora.org, saravanak@google.com, linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20191001123150.23135-1-Mark-MC.Lee@mediatek.com>
+Sender: netdev-owner@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>, Sean Wang <sean.wang@mediatek.com>, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@openwrt.org>, Nelson Chang <nelson.chang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rene van Dorst <opensource@vdorst.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, MarkLee <Mark-MC.Lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hey Georgi,
+* Removes mediatek,physpeed property from dtsi that is useless in PHYLINK
+* Set gmac0 to fixed-link sgmii 2.5Gbit mode
+* Set gmac1 to gmii mode that connect to a internal gphy
 
-On 2019-09-27 04:46, Georgi Djakov wrote:
-> Hi Sibi,
-> 
-> On 8/21/19 02:11, Sibi Sankar wrote:
->> Add bindings for Operating State Manager (OSM) L3 interconnect 
->> provider
->> on SDM845 SoCs.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  .../bindings/interconnect/qcom,osm-l3.yaml    | 56 
->> +++++++++++++++++++
->>  .../dt-bindings/interconnect/qcom,osm-l3.h    | 12 ++++
->>  2 files changed, 68 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
->>  create mode 100644 include/dt-bindings/interconnect/qcom,osm-l3.h
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml 
->> b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
->> new file mode 100644
->> index 0000000000000..dab2b6875ab27
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
->> @@ -0,0 +1,56 @@
->> +# SPDX-License-Identifier: BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/interconnect/qcom,osm-l3.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Operating State Manager (OSM) L3 Interconnect 
->> Provider
->> +
->> +maintainers:
->> +  - Sibi Sankar <sibis@codeaurora.org>
->> +
->> +description:
->> +  L3 cache bandwidth requirements on Qualcomm SoCs is serviced by the 
->> OSM.
->> +  The OSM L3 interconnect provider aggregates the L3 bandwidth 
->> requests
->> +  from CPU/GPU and relays it to the OSM.
->> +
->> +properties:
->> +  compatible:
->> +    const: "qcom,sdm845-osm-l3"
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    items:
->> +      - description: xo clock
->> +      - description: alternate clock
->> +
->> +  clock-names:
->> +    items:
->> +      - const: xo
->> +      - const: alternate
->> +
->> +  '#interconnect-cells':
->> +    const: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - '#interconnect-cells'
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    osm_l3: interconnect@17d41000 {
->> +      compatible = "qcom,sdm845-osm-l3";
->> +      reg = <0x17d41000 0x1400>;
->> +
->> +      clocks = <&rpmhcc 0>, <&gcc 165>;
->> +      clock-names = "xo", "alternate";
->> +
->> +      #interconnect-cells = <1>;
->> +    };
-> 
-> Are we going to do the bandwidth scaling from some cpufreq driver? 
-> Under which
-> DT node will we put the "interconnects" property?
+Signed-off-by: MarkLee <Mark-MC.Lee@mediatek.com>
+---
+ arch/arm/boot/dts/mt7629-rfb.dts | 13 ++++++++++++-
+ arch/arm/boot/dts/mt7629.dtsi    |  2 --
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-Its still undecided :( unfortunately.
-Using Saravana's series means that
-bandwidth scaling will be done from
-the cpufreq driver. The property
-will be a part of the cpu-nodes. But
-the part of adding the bw opp-tables
-also to cpufreq driver or nodes doesn't
-seem correct to me.
-
-> 
-> Thanks,
-> Georgi
-> 
->> diff --git a/include/dt-bindings/interconnect/qcom,osm-l3.h 
->> b/include/dt-bindings/interconnect/qcom,osm-l3.h
->> new file mode 100644
->> index 0000000000000..54858ff7674d7
->> --- /dev/null
->> +++ b/include/dt-bindings/interconnect/qcom,osm-l3.h
->> @@ -0,0 +1,12 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Copyright (C) 2019 The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
->> +#define __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
->> +
->> +#define MASTER_OSM_L3_APPS	0
->> +#define SLAVE_OSM_L3		1
->> +
->> +#endif
->> 
-
+diff --git a/arch/arm/boot/dts/mt7629-rfb.dts b/arch/arm/boot/dts/mt7629-rfb.dts
+index 3621b7d2b22a..6bf1f7d8ddb5 100644
+--- a/arch/arm/boot/dts/mt7629-rfb.dts
++++ b/arch/arm/boot/dts/mt7629-rfb.dts
+@@ -66,9 +66,21 @@
+ 	pinctrl-1 = <&ephy_leds_pins>;
+ 	status = "okay";
+ 
++	gmac0: mac@0 {
++		compatible = "mediatek,eth-mac";
++		reg = <0>;
++		phy-mode = "sgmii";
++		fixed-link {
++			speed = <2500>;
++			full-duplex;
++			pause;
++		};
++	};
++
+ 	gmac1: mac@1 {
+ 		compatible = "mediatek,eth-mac";
+ 		reg = <1>;
++		phy-mode = "gmii";
+ 		phy-handle = <&phy0>;
+ 	};
+ 
+@@ -78,7 +90,6 @@
+ 
+ 		phy0: ethernet-phy@0 {
+ 			reg = <0>;
+-			phy-mode = "gmii";
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
+index 9608bc2ccb3f..867b88103b9d 100644
+--- a/arch/arm/boot/dts/mt7629.dtsi
++++ b/arch/arm/boot/dts/mt7629.dtsi
+@@ -468,14 +468,12 @@
+ 			compatible = "mediatek,mt7629-sgmiisys", "syscon";
+ 			reg = <0x1b128000 0x3000>;
+ 			#clock-cells = <1>;
+-			mediatek,physpeed = "2500";
+ 		};
+ 
+ 		sgmiisys1: syscon@1b130000 {
+ 			compatible = "mediatek,mt7629-sgmiisys", "syscon";
+ 			reg = <0x1b130000 0x3000>;
+ 			#clock-cells = <1>;
+-			mediatek,physpeed = "2500";
+ 		};
+ 	};
+ };
 -- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+2.17.1
