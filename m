@@ -1,170 +1,75 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
- power states
-Date: Tue, 1 Oct 2019 08:21:54 -0600
-Message-ID: <CAOCk7NpA5OmgmH0PZpcrj1KmhdrTKvOb+3eUL6=Mo8HRUnKjdA@mail.gmail.com>
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
- <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
- <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com> <CAHLCerOS1Hi3XdDZzTKFKnrsATj5cMKtjPEuJknWu-aPtwzP9g@mail.gmail.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 1/2] arm64: dts: juno: add GPU subsystem
+Date: Tue, 1 Oct 2019 15:34:07 +0100
+Message-ID: <20191001143350.GA404@bogus>
+References: <88dc6386929b3dcd7a65ba8063628c62b66b330c.1569856049.git.robin.murphy@arm.com>
+ <CAL_JsqKUP6qG6PVL47RQ5A5OcBhpdOA_0VL1YeYDuyVSVcRqCQ@mail.gmail.com>
+ <20191001085954.GA10443@bogus>
+ <2a3b2fe1-b08a-bc21-6f3b-4a595b51463c@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHLCerOS1Hi3XdDZzTKFKnrsATj5cMKtjPEuJknWu-aPtwzP9g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Niklas Cassel <niklas.cassel@linaro.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Sibi Sankar <sibis@codeaurora.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <2a3b2fe1-b08a-bc21-6f3b-4a595b51463c@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Rob Herring <robh@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Steven Price <steven.price@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 4:44 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
->
-> Can you try removing just the *SLEEP_1 states from the cpu-idle-states
-> property? I want to understand if this is triggered just by the deeper
-> C-state.
+On Tue, Oct 01, 2019 at 01:45:30PM +0100, Robin Murphy wrote:
+> On 01/10/2019 09:59, Sudeep Holla wrote:
+> > On Mon, Sep 30, 2019 at 12:46:33PM -0500, Rob Herring wrote:
+> > > On Mon, Sep 30, 2019 at 10:25 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> > > > 
+> > > > Since we now have bindings for Mali Midgard GPUs, let's use them to
+> > > > describe Juno's GPU subsystem, if only because we can. Juno sports a
+> > > > Mali-T624 integrated behind an MMU-400 (as a gesture towards
+> > > > virtualisation), in their own dedicated power domain with DVFS
+> > > > controlled by the SCP.
+> > > > 
+> > > > CC: Liviu Dudau <liviu.dudau@arm.com>
+> > > > CC: Sudeep Holla <sudeep.holla@arm.com>
+> > > > CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> > > > ---
+> > > >   .../bindings/gpu/arm,mali-midgard.yaml        |  5 +++-
+> > > >   arch/arm64/boot/dts/arm/juno-base.dtsi        | 27 +++++++++++++++++++
+> > > >   2 files changed, 31 insertions(+), 1 deletion(-)
+> > > 
+> > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > 
+> > If you plan to take it along with driver change,
+> > 
+> > Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+> > 
+> > If not, please let us know. I can take it for v5.5
+> 
+> The driver change is debatable and not strictly necessary, so it probably
+> makes more sense to take this one through the VExpress tree on its own. I
+> wouldn't suggest flipping the status to "enabled" just yet, but it seems
 
-Still seeing the issue with just the SLEEP_0 states.  For reference,
-Bjorn suggested adding kpti=no to the command line, which also
-appeared to have no effect on the issue.
+Sure, make sense.
 
->
-> On Tue, Oct 1, 2019 at 3:50 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
-> >
-> > Amit, the merged version of the below change causes a boot failure
-> > (nasty hang, sometimes with RCU stalls) on the msm8998 laptops.  Oddly
-> > enough, it seems to be resolved if I remove the cpu-idle-states
-> > property from one of the cpu nodes.
-> >
-> > I see no issues with the msm8998 MTP.
-> >
-> > Do you have any suggestions on how we might debug this?
-> >
-> > On Tue, May 21, 2019 at 3:38 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> > >
-> > > Add device bindings for cpuidle states for cpu devices.
-> > >
-> > > Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/msm8998.dtsi | 50 +++++++++++++++++++++++++++
-> > >  1 file changed, 50 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > > index 3fd0769fe648..54810980fcf9 100644
-> > > --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> > > @@ -78,6 +78,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x0>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
-> > >                         efficiency = <1024>;
-> > >                         next-level-cache = <&L2_0>;
-> > >                         L2_0: l2-cache {
-> > > @@ -97,6 +98,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x1>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
-> > >                         efficiency = <1024>;
-> > >                         next-level-cache = <&L2_0>;
-> > >                         L1_I_1: l1-icache {
-> > > @@ -112,6 +114,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x2>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
-> > >                         efficiency = <1024>;
-> > >                         next-level-cache = <&L2_0>;
-> > >                         L1_I_2: l1-icache {
-> > > @@ -127,6 +130,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x3>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
-> > >                         efficiency = <1024>;
-> > >                         next-level-cache = <&L2_0>;
-> > >                         L1_I_3: l1-icache {
-> > > @@ -142,6 +146,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x100>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
-> > >                         efficiency = <1536>;
-> > >                         next-level-cache = <&L2_1>;
-> > >                         L2_1: l2-cache {
-> > > @@ -161,6 +166,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x101>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
-> > >                         efficiency = <1536>;
-> > >                         next-level-cache = <&L2_1>;
-> > >                         L1_I_101: l1-icache {
-> > > @@ -176,6 +182,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x102>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
-> > >                         efficiency = <1536>;
-> > >                         next-level-cache = <&L2_1>;
-> > >                         L1_I_102: l1-icache {
-> > > @@ -191,6 +198,7 @@
-> > >                         compatible = "arm,armv8";
-> > >                         reg = <0x0 0x103>;
-> > >                         enable-method = "psci";
-> > > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
-> > >                         efficiency = <1536>;
-> > >                         next-level-cache = <&L2_1>;
-> > >                         L1_I_103: l1-icache {
-> > > @@ -238,6 +246,48 @@
-> > >                                 };
-> > >                         };
-> > >                 };
-> > > +
-> > > +               idle-states {
-> > > +                       entry-method = "psci";
-> > > +
-> > > +                       LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
-> > > +                               compatible = "arm,idle-state";
-> > > +                               idle-state-name = "little-retention";
-> > > +                               arm,psci-suspend-param = <0x00000002>;
-> > > +                               entry-latency-us = <43>;
-> > > +                               exit-latency-us = <86>;
-> > > +                               min-residency-us = <200>;
-> > > +                       };
-> > > +
-> > > +                       LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
-> > > +                               compatible = "arm,idle-state";
-> > > +                               idle-state-name = "little-power-collapse";
-> > > +                               arm,psci-suspend-param = <0x00000003>;
-> > > +                               entry-latency-us = <100>;
-> > > +                               exit-latency-us = <612>;
-> > > +                               min-residency-us = <1000>;
-> > > +                               local-timer-stop;
-> > > +                       };
-> > > +
-> > > +                       BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
-> > > +                               compatible = "arm,idle-state";
-> > > +                               idle-state-name = "big-retention";
-> > > +                               arm,psci-suspend-param = <0x00000002>;
-> > > +                               entry-latency-us = <41>;
-> > > +                               exit-latency-us = <82>;
-> > > +                               min-residency-us = <200>;
-> > > +                       };
-> > > +
-> > > +                       BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
-> > > +                               compatible = "arm,idle-state";
-> > > +                               idle-state-name = "big-power-collapse";
-> > > +                               arm,psci-suspend-param = <0x00000003>;
-> > > +                               entry-latency-us = <100>;
-> > > +                               exit-latency-us = <525>;
-> > > +                               min-residency-us = <1000>;
-> > > +                               local-timer-stop;
-> > > +                       };
-> > > +               };
-> > >         };
-> > >
-> > >         firmware {
-> > > --
-> > > 2.17.1
-> > >
+> worth putting the basic description in place as a jumping-off point for
+> folks to hack on (e.g. it's another 'interesting' case for devfreq OPP
+> stuff).
+
+IIUC, the devfreq support in panfrost driver should work fine with SCPI
+as it has clock provider for GPU DVFS.
+
+With SCMI, we don't want to hook to clock framework, but I am yet to come
+up with a sane generic way to add SCMI devfreq and integrate it with the
+panfrost devfreq.
+
+--
+Regards,
+Sudeep
