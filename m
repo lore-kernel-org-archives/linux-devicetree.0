@@ -1,46 +1,253 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v3 1/3] arm64: dts: meson: add reset controller for
- Meson-A1 SoC
-Date: Tue, 1 Oct 2019 15:49:14 +0200
-Message-ID: <491aa5c6-f4e7-8214-c9c4-34894451ba30@baylibre.com>
-References: <1569738255-3941-1-git-send-email-xingyu.chen@amlogic.com>
- <1569738255-3941-2-git-send-email-xingyu.chen@amlogic.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 2/2] pwm: stm32: add power management support
+Date: Tue, 1 Oct 2019 15:48:52 +0200
+Message-ID: <f0fd1926-9fca-99c5-4a54-99252b865bc6@st.com>
+References: <1569857951-20007-1-git-send-email-fabrice.gasnier@st.com>
+ <1569857951-20007-3-git-send-email-fabrice.gasnier@st.com>
+ <20191001070450.4zogfryzo7a5ssbd@pengutronix.de>
+ <3c6e551b-98a2-a418-c4ee-002077e46f31@st.com>
+ <20191001095119.ws36f7liwgvbokem@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1569738255-3941-2-git-send-email-xingyu.chen@amlogic.com>
+In-Reply-To: <20191001095119.ws36f7liwgvbokem@pengutronix.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xingyu Chen <xingyu.chen@amlogic.com>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, alexandre.torgue@st.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, benjamin.gaignard@st.com, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On 29/09/2019 08:24, Xingyu Chen wrote:
-> Add the reset controller device of Meson-A1 SoC family
+On 10/1/19 11:51 AM, Uwe Kleine-König wrote:
+> Hello Fabrice,
 > 
-> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
+> On Tue, Oct 01, 2019 at 10:18:31AM +0200, Fabrice Gasnier wrote:
+>> On 10/1/19 9:04 AM, Uwe Kleine-König wrote:
+>>> On Mon, Sep 30, 2019 at 05:39:11PM +0200, Fabrice Gasnier wrote:
+>>>> Add suspend/resume PM sleep ops. When going to low power, enforce the PWM
+>>>> channel isn't active. Let the PWM consumers disable it during their own
+>>>> suspend sequence, see [1]. So, perform a check here, and handle the
+>>>> pinctrl states. Also restore the break inputs upon resume, as registers
+>>>> content may be lost when going to low power mode.
+>>>>
+>>>> [1] https://lkml.org/lkml/2019/2/5/770
+>>>>
+>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>>>> ---
+>>>>  drivers/pwm/pwm-stm32.c | 82 +++++++++++++++++++++++++++++++++++++------------
+>>>>  1 file changed, 62 insertions(+), 20 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
+>>>> index 740e2de..9bcd73a 100644
+>>>> --- a/drivers/pwm/pwm-stm32.c
+>>>> +++ b/drivers/pwm/pwm-stm32.c
+>>>> @@ -12,6 +12,7 @@
+>>>>  #include <linux/mfd/stm32-timers.h>
+>>>>  #include <linux/module.h>
+>>>>  #include <linux/of.h>
+>>>> +#include <linux/pinctrl/consumer.h>
+>>>>  #include <linux/platform_device.h>
+>>>>  #include <linux/pwm.h>
+>>>>  
+>>>> @@ -19,6 +20,12 @@
+>>>>  #define CCMR_CHANNEL_MASK  0xFF
+>>>>  #define MAX_BREAKINPUT 2
+>>>>  
+>>>> +struct stm32_breakinput {
+>>>> +	u32 index;
+>>>> +	u32 level;
+>>>> +	u32 filter;
+>>>> +};
+>>>> +
+>>>>  struct stm32_pwm {
+>>>>  	struct pwm_chip chip;
+>>>>  	struct mutex lock; /* protect pwm config/enable */
+>>>> @@ -26,15 +33,11 @@ struct stm32_pwm {
+>>>>  	struct regmap *regmap;
+>>>>  	u32 max_arr;
+>>>>  	bool have_complementary_output;
+>>>> +	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
+>>>> +	unsigned int nbreakinput;
+>>>>  	u32 capture[4] ____cacheline_aligned; /* DMA'able buffer */
+>>>>  };
+>>>>  
+>>>> -struct stm32_breakinput {
+>>>> -	u32 index;
+>>>> -	u32 level;
+>>>> -	u32 filter;
+>>>> -};
+>>>> -
+>>>>  static inline struct stm32_pwm *to_stm32_pwm_dev(struct pwm_chip *chip)
+>>>>  {
+>>>>  	return container_of(chip, struct stm32_pwm, chip);
+>>>> @@ -512,15 +515,27 @@ static int stm32_pwm_set_breakinput(struct stm32_pwm *priv,
+>>>>  	return (bdtr & bke) ? 0 : -EINVAL;
+>>>>  }
+>>>>  
+>>>> -static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
+>>>> +static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv)
+>>>> +{
+>>>> +	int i, ret = 0;
+>>>> +
+>>>> +	for (i = 0; i < priv->nbreakinput && !ret; i++) {
+>>>> +		ret = stm32_pwm_set_breakinput(priv,
+>>>> +					       priv->breakinput[i].index,
+>>>> +					       priv->breakinput[i].level,
+>>>> +					       priv->breakinput[i].filter);
+>>>> +	}
+>>>> +
+>>>> +	return ret;
+>>>> +}
+>>>
+>>> Can you explain what the effect of this function is? This is something
+>>> that is lost during suspend?
+>>
+>> Yes, that's what I explain in the commit message: ...registers content
+>> may be lost when going to low power mode.
+>> Do you think I need to rephrase ?
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> index 7210ad0..1c588ab 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> @@ -74,6 +74,12 @@
->  			#size-cells = <2>;
->  			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x1000000>;
->  
-> +			reset: reset-controller@0 {
-> +				compatible = "amlogic,meson-a1-reset";
-> +				reg = <0x0 0x0 0x0 0x8c>;
-> +				#reset-cells = <1>;
-> +			};
-> +
->  			uart_AO: serial@1c00 {
->  				compatible = "amlogic,meson-gx-uart",
->  					     "amlogic,meson-ao-uart";
-> 
+> Ah, right I missed it in the commit log. It might be worth adding that
+> to a code comment. Also having the purpose of this function described
+> would be great. Does it configure some electrical characteristics? Or
+> has it to do with pinmuxing? Why is an input relevant for a PWM?
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Hi Uwe,
+
+I'll add a comment in the suspend routine to mention the need to restore
+breakinput registers that may have been lost in low power.
+
+Regarding the purpose of the break feature, maybe I can enhance comment
+bellow (e.g. Because "st,breakinput" parameter is optional...) to
+something like:
+
+/*
+ * Some timer instances can have BRK input pins (e.g. basically a fault
+ * pin from the output power stage). The break feature allow a safe shut
+ * down of the PWM outputs to a predefined state.
+ * Because "st,breakinput" parameter is optional do not make probe
+ * failed if it doesn't exist. Note the pinctrl handle must be inline
+ * with "st,breakinput" property.
+ */
+
+FYI, the feature is described in Application note AN4277, "Using STM32
+device PWM shut-down features..."
+
+Would it answer your concern here? But I think this should be done in a
+separate patch (not related to PM support).
+
+> 
+>>> I wonder why the patch is so big. There are some rearrangements that
+>>> should have no effect and I think it would be beneficial for
+>>> reviewability to split this patch in a patch that only does the
+>>> restructuring and than on top of that add the PM stuff.
+>>
+>> I can split this to ease the review.
+>>>
+>>>> +
+>>>> +static int stm32_pwm_probe_breakinputs(struct stm32_pwm *priv,
+>>>>  				       struct device_node *np)
+>>>>  {
+>>>> -	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
+>>>> -	int nb, ret, i, array_size;
+>>>> +	int nb, ret, array_size;
+>>>>  
+>>>>  	nb = of_property_count_elems_of_size(np, "st,breakinput",
+>>>>  					     sizeof(struct stm32_breakinput));
+>>>> -
+>>>>  	/*
+>>>>  	 * Because "st,breakinput" parameter is optional do not make probe
+>>>>  	 * failed if it doesn't exist.
+>>>> @@ -531,20 +546,14 @@ static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
+>>>>  	if (nb > MAX_BREAKINPUT)
+>>>>  		return -EINVAL;
+>>>>  
+>>>> +	priv->nbreakinput = nb;
+>>>>  	array_size = nb * sizeof(struct stm32_breakinput) / sizeof(u32);
+>>>>  	ret = of_property_read_u32_array(np, "st,breakinput",
+>>>> -					 (u32 *)breakinput, array_size);
+>>>> +					 (u32 *)priv->breakinput, array_size);
+>>>>  	if (ret)
+>>>>  		return ret;
+>>>>  
+>>>> -	for (i = 0; i < nb && !ret; i++) {
+>>>> -		ret = stm32_pwm_set_breakinput(priv,
+>>>> -					       breakinput[i].index,
+>>>> -					       breakinput[i].level,
+>>>> -					       breakinput[i].filter);
+>>>> -	}
+>>>> -
+>>>> -	return ret;
+>>>> +	return stm32_pwm_apply_breakinputs(priv);
+>>>>  }
+>>>>  
+>>>>  static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
+>>>> @@ -614,7 +623,7 @@ static int stm32_pwm_probe(struct platform_device *pdev)
+>>>>  	if (!priv->regmap || !priv->clk)
+>>>>  		return -EINVAL;
+>>>>  
+>>>> -	ret = stm32_pwm_apply_breakinputs(priv, np);
+>>>> +	ret = stm32_pwm_probe_breakinputs(priv, np);
+>>>>  	if (ret)
+>>>>  		return ret;
+>>>>  
+>>>> @@ -647,6 +656,38 @@ static int stm32_pwm_remove(struct platform_device *pdev)
+>>>>  	return 0;
+>>>>  }
+>>>>  
+>>>> +static int __maybe_unused stm32_pwm_suspend(struct device *dev)
+>>>> +{
+>>>> +	struct stm32_pwm *priv = dev_get_drvdata(dev);
+>>>> +	struct pwm_state state;
+>>>> +	unsigned int i;
+>>>> +
+>>>> +	for (i = 0; i < priv->chip.npwm; i++) {
+>>>> +		pwm_get_state(&priv->chip.pwms[i], &state);
+>>>
+>>> pwm_get_state is a function designed to be used by PWM consumers. I
+>>> would prefer to check the hardware registers here instead.
+>>
+>> It's also useful for PWM provider: This PWM driver is part of a MFD that
+> 
+> I don't doubt "useful". But still you should only call it if you called
+> pwm_get (or a similar function) to get a PWM handle.
+> 
+>> also take care of IIO trigger (can be used simultaneously). Simply
+>> reading a register doesn't tell us that the timer is used/configured as
+>> a PWM here. That's the reason to use this helper to read pwm->state.
+> 
+> How can the pwm driver be bound and the hardware not be used a PWM?
+> 
+>> Do you wish I add a comment to clarify this here ?
+> 
+> No, I wish you inspect the hardware to determine what you need to know :-)
+
+Ok, finally I found out the "active_channels()" routine does the job
+(e.g. read CCER register), and is already used for that purpose (check
+for active channels).
+I'll use it in v2.
+
+Thanks,
+Fabrice
+
+> 
+>>> What if there is no consumer and the PWM just happens to be enabled by
+>>> the bootloader? Or is this too minor an issue to be worth consideration?
+>>
+>> That's the purpose of returning -EBUSY: "PWM should not stop if the PWM
+>> user didn't call pwm_disable()" ... "to avoid situation where the PWM is
+>> actually suspended before the user". This has been enforced in later
+>> series with the device_link_add(). See our previous discussions here:
+>> https://lkml.org/lkml/2019/2/5/770
+>> So, I guess this would point exactly a lack for a PWM user to manage it
+>> after the boot stage, in the kernel.
+>>
+>> Could you please clarify, provide an example here ?
+> 
+> This is something different than I asked for. Not having a consumer
+> isn't an error. Still the pwm might be running (for a good reason or
+> not). (This is more a question that affects how a driver should behave
+> in general, it is not specific to the stm32 driver here.)
+> 
+> Best regards
+> Uwe
+> 
