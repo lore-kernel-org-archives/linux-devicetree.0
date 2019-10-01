@@ -1,62 +1,119 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCHv3 RESEND-next 3/3] arm64: dts: meson: odroid-c2: Add missing regulator linked to HDMI supply
-Date: Tue,  1 Oct 2019 07:39:01 +0000
-Message-ID: <20191001073901.372-4-linux.amoon@gmail.com>
-References: <20191001073901.372-1-linux.amoon@gmail.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [Patch 1/3] media: ov5640: add PIXEL_RATE control
+Date: Tue, 1 Oct 2019 10:57:04 +0300
+Message-ID: <20191001075704.GA5449@paasikivi.fi.intel.com>
+References: <20190925152301.21645-1-bparrot@ti.com>
+ <20190925152301.21645-2-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191001073901.372-1-linux.amoon@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190925152301.21645-2-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As per schematics HDMI_P5V0 is supplied by P5V0 so add missing link.
+Hi Benoit,
 
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-Changes from previous
-Patchv1
-- As per Martin's suggestion added the HDMI_P5V0 fix regulator node.
-Patchv2
-- Added Matrin's and Neil's Reviewed-by.
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+On Wed, Sep 25, 2019 at 10:22:59AM -0500, Benoit Parrot wrote:
+> Add v4l2 controls to report the pixel rates of each mode. This is
+> needed by some CSI2 receiver in order to perform proper DPHY
+> configuration.
+> 
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> ---
+>  drivers/media/i2c/ov5640.c | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> index 500d9bbff10b..c2a44f30d56e 100644
+> --- a/drivers/media/i2c/ov5640.c
+> +++ b/drivers/media/i2c/ov5640.c
+> @@ -193,6 +193,9 @@ struct ov5640_mode_info {
+>  
+>  struct ov5640_ctrls {
+>  	struct v4l2_ctrl_handler handler;
+> +	struct {
+> +		struct v4l2_ctrl *pixel_rate;
+> +	};
+>  	struct {
+>  		struct v4l2_ctrl *auto_exp;
+>  		struct v4l2_ctrl *exposure;
+> @@ -241,6 +244,7 @@ struct ov5640_dev {
+>  	const struct ov5640_mode_info *last_mode;
+>  	enum ov5640_frame_rate current_fr;
+>  	struct v4l2_fract frame_interval;
+> +	u64 pixel_rate;
+>  
+>  	struct ov5640_ctrls ctrls;
+>  
+> @@ -2202,6 +2206,7 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
+>  	const struct ov5640_mode_info *new_mode;
+>  	struct v4l2_mbus_framefmt *mbus_fmt = &format->format;
+>  	struct v4l2_mbus_framefmt *fmt;
+> +	u64 rate;
+>  	int ret;
+>  
+>  	if (format->pad != 0)
+> @@ -2233,6 +2238,12 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
+>  	if (mbus_fmt->code != sensor->fmt.code)
+>  		sensor->pending_fmt_change = true;
+>  
+> +	rate = sensor->current_mode->vtot * sensor->current_mode->htot;
+> +	rate *= ov5640_framerates[sensor->current_fr];
+> +	sensor->pixel_rate = rate;
+> +
+> +	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> +				 sensor->pixel_rate);
+>  out:
+>  	mutex_unlock(&sensor->lock);
+>  	return ret;
+> @@ -2657,6 +2668,13 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
+>  	/* we can use our own mutex for the ctrl lock */
+>  	hdl->lock = &sensor->lock;
+>  
+> +	/* Clock related controls */
+> +	ctrls->pixel_rate =
+> +		v4l2_ctrl_new_std(hdl, ops,
+> +				  V4L2_CID_PIXEL_RATE, 0, INT_MAX, 1,
+> +				  55969920);
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 2fcd512373a3..6ded279c40c8 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -66,6 +66,15 @@
- 		regulator-always-on;
- 	};
- 
-+	hdmi_p5v0: regulator-hdmi_p5v0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "HDMI_P5V0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		/* AP2331SA-7 */
-+		vin-supply = <&p5v0>;
-+	};
-+
- 	tflash_vdd: regulator-tflash_vdd {
- 		compatible = "regulator-fixed";
- 
-@@ -220,6 +229,7 @@
- 	status = "okay";
- 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
- 	pinctrl-names = "default";
-+	hdmi-supply = <&hdmi_p5v0>;
- };
- 
- &hdmi_tx_tmds_port {
+Could you calculate this value instead of using a seemingly random number?
+
+> +	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> +
+>  	/* Auto/manual white balance */
+>  	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
+>  					   V4L2_CID_AUTO_WHITE_BALANCE,
+> @@ -2782,6 +2800,7 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
+>  	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+>  	const struct ov5640_mode_info *mode;
+>  	int frame_rate, ret = 0;
+> +	u64 rate;
+>  
+>  	if (fi->pad != 0)
+>  		return -EINVAL;
+> @@ -2816,6 +2835,12 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
+>  		sensor->frame_interval = fi->interval;
+>  		sensor->current_mode = mode;
+>  		sensor->pending_mode_change = true;
+> +
+> +		rate = sensor->current_mode->vtot * sensor->current_mode->htot;
+> +		rate *= ov5640_framerates[sensor->current_fr];
+> +		sensor->pixel_rate = rate;
+
+I think it'd be better to have a function to calculate the value instead of
+duplicating the code here.
+
+> +		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> +					 sensor->pixel_rate);
+>  	}
+>  out:
+>  	mutex_unlock(&sensor->lock);
+
 -- 
-2.23.0
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
