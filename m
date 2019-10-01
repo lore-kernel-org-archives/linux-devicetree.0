@@ -1,49 +1,66 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to
- dts
-Date: Tue, 1 Oct 2019 16:14:52 +0300
-Message-ID: <2690bef6-eb69-8849-1300-1a85f71245fd@ti.com>
-References: <20190510194229.20628-1-aford173@gmail.com>
- <0473526e-df0a-94a5-5c22-debd0084ab16@ti.com>
- <36369388-e9c8-22cd-8c19-e2bdf2d0389b@ti.com>
- <eb2eb1f6-3c9b-7ecb-667e-819033af9c14@ti.com>
- <23eba53a-9304-2ceb-d97e-01891ec0b3ed@ti.com>
- <cb028b1e-05ca-9b22-be5d-c63f5fd56cc4@ti.com>
- <F3335195-6EB7-4D44-B884-2F29D9238011@goldelico.com>
- <CAHCN7xL9bFxO=2i1DzmRj6A3XwUNdt=DZeJ2a0EZ0f9gcFTy6g@mail.gmail.com>
- <CAHCN7x+vCfPTRE+zzYUwAXdbBzRotTP2hSOgsHB0FdgBhZV5zA@mail.gmail.com>
- <CAHCN7xJDV=R9Ysjhff7=mEXdciwPP_5LQbHwaUT8KvhSkLKw8A@mail.gmail.com>
- <04306a5e-f9be-35a4-1aa1-5795d780e289@ti.com>
- <3777f1b1-2d9a-334b-b9e7-99dfda2ae29b@ti.com>
- <CAHCN7xJNJca8W_yw5nNY3AmKDSPoLzJ8voPmR1HS3bNcU8uQGg@mail.gmail.com>
- <6cd7c9f0-cb26-588b-dfd1-faf462732549@ti.com>
- <ec718740-bb8f-0d31-3622-89a62bd8fede@ti.com>
- <202ae3b3-f72c-5b5b-4344-be22c8368cc7@ti.com>
- <f01bf6ec-e531-371b-4f66-312b12379273@ti.com>
- <CAHCN7xLbcQGEEVzLgP3MTp_ej0JnSdOXMgULt4EVSg9B+AjPdw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: memory-controllers: Add Exynos5422
+ DMC interrupts description
+Date: Tue, 1 Oct 2019 15:18:07 +0200
+Message-ID: <20191001131807.GB30129@pi3>
+References: <20191001125436.24086-1-l.luba@partner.samsung.com>
+ <CGME20191001125444eucas1p2e4254acf8434e1fadf0e208dbe62b2d7@eucas1p2.samsung.com>
+ <20191001125436.24086-2-l.luba@partner.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHCN7xLbcQGEEVzLgP3MTp_ej0JnSdOXMgULt4EVSg9B+AjPdw@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20191001125436.24086-2-l.luba@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>
-Cc: Tero Kristo <t-kristo@ti.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, Tony Lindgren <tony@atomide.com>, Linux-OMAP <linux-omap@vger.kernel.org>, Adam Ford <adam.ford@logicpd.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Lukasz Luba <l.luba@partner.samsung.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com, kgene@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, robh+dt@kernel.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/10/2019 16:06, Adam Ford wrote:
+On Tue, Oct 01, 2019 at 02:54:33PM +0200, Lukasz Luba wrote:
+> Add description for optional interrupt lines. It provides a new operation
+> mode, which uses internal performance counters interrupt when overflow.
+> This is more reliable than using default polling mode implemented in
+> devfreq.
+> 
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  .../bindings/memory-controllers/exynos5422-dmc.txt     | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> index 02aeb3b5a820..afc38aea6b1c 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> @@ -31,6 +31,13 @@ Required properties for DMC device for Exynos5422:
+>  	The register offsets are in the driver code and specyfic for this SoC
+>  	type.
+>  
+> +Optional properties for DMC device for Exynos5422:
+> +- interrupt-parent : The parent interrupt controller.
+> +- interrupts : Contains the IRQ line numbers for the DMC internal performance
+> +  event counters. Align with specification of the interrupt line(s) in the
+> +  interrupt-parent controller.
+> +- interrupt-names : List of IRQ names.
 
-> Do you want me to push a patch to remove the
-> CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK hack once these patches have been
-> posted?  It seems like the divider fix eliminates the need for this
-> hack.
+Since the names are important (not the order) they are part of the
+bindings and they must be listed here.
 
-No, the point of OMAP2_DSS_MIN_FCK_PER_PCK was never to work around 
-divider bugs. It's for scaling.
+Best regards,
+Krzysztof
 
-  Tomi
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> +
+>  Example:
+>  
+>  	ppmu_dmc0_0: ppmu@10d00000 {
+> @@ -70,4 +77,7 @@ Example:
+>  		device-handle = <&samsung_K3QF2F20DB>;
+>  		vdd-supply = <&buck1_reg>;
+>  		samsung,syscon-clk = <&clock>;
+> +		interrupt-parent = <&combiner>;
+> +		interrupts = <16 0>, <16 1>;
+> +		interrupt-names = "drex_0", "drex_1";
+>  	};
+> -- 
+> 2.17.1
+> 
