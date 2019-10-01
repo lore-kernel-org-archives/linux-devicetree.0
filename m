@@ -1,95 +1,63 @@
-From: Nayna <nayna@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 3/9] powerpc: add support to initialize ima policy
- rules
-Date: Tue, 1 Oct 2019 12:07:10 -0400
-Message-ID: <84f057d0-6a0b-d486-0eb6-f1590f32e377@linux.vnet.ibm.com>
-References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
- <1569594360-7141-4-git-send-email-nayna@linux.ibm.com>
- <877e5pwa1b.fsf@morokweng.localdomain>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH 0/3] Pine64+ specific hacks for RTL8211E
+ Ethernet PHY
+Date: Wed, 02 Oct 2019 00:08:39 +0800
+Message-ID: <2CCD0856-433E-4602-A079-9F7F5F2E00D6@aosc.io>
+References: <20191001082912.12905-1-icenowy@aosc.io> <20191001.090651.796983023328992596.davem@davemloft.net>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <877e5pwa1b.fsf@morokweng.localdomain>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thiago Jung Bauermann <bauerman@linux.ibm.com>, Nayna Jain <nayna@linux.ibm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Eric Ricther <erichte@linux.ibm.com>, linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>, Claudio Carvalho <cclaudio@linux.ibm.com>, Matthew Garret <matthew.garret@nebula.com>, linuxppc-dev@ozlabs.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Paul Mackerras <paulus@samba.org>, Jeremy Kerr <jk@ozlabs.org>, Elaine Palmer <erpalmer@us.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, linux-integrity@vger.kernel.org, George Wilson <gcwilson@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBF7UZXWAKGQEYYRA7SQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20191001.090651.796983023328992596.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 09/30/2019 09:04 PM, Thiago Jung Bauermann wrote:
-> Hello,
+=E4=BA=8E 2019=E5=B9=B410=E6=9C=882=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=8812=
+:06:51, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> =E5=86=99=E5=88=B0:
+>From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>Date: Tue,  1 Oct 2019 16:29:09 +0800
+>
+>> There're some Pine64+ boards known to have broken RTL8211E chips, and
+>> a hack is given by Pine64+, which is said to be from Realtek.
+>>=20
+>> This patchset adds the hack.
+>>=20
+>> The hack is taken from U-Boot, and it contains magic numbers without
+>> any document.
+>
+>Please contact Realtek and try to get an explanation about this.
 
-Hi,
+Sorry, but Realtek never shows any idea to add more infomation about this.
+
+These hacks had existed and worked for years.
 
 >
->> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
->> new file mode 100644
->> index 000000000000..39401b67f19e
->> --- /dev/null
->> +++ b/arch/powerpc/kernel/ima_arch.c
->> @@ -0,0 +1,33 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2019 IBM Corporation
->> + * Author: Nayna Jain
->> + */
->> +
->> +#include <linux/ima.h>
->> +#include <asm/secure_boot.h>
->> +
->> +bool arch_ima_get_secureboot(void)
->> +{
->> +	return is_powerpc_os_secureboot_enabled();
->> +}
->> +
->> +/* Defines IMA appraise rules for secureboot */
->> +static const char *const arch_rules[] = {
->> +	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
->> +#if !IS_ENABLED(CONFIG_MODULE_SIG)
->> +	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
->> +#endif
->> +	NULL
->> +};
->> +
->> +/*
->> + * Returns the relevant IMA arch policies based on the system secureboot state.
->> + */
->> +const char *const *arch_get_ima_policy(void)
->> +{
->> +	if (is_powerpc_os_secureboot_enabled())
->> +		return arch_rules;
->> +
->> +	return NULL;
->> +}
-> If CONFIG_MODULE_SIG is enabled but module signatures aren't enforced,
-> then IMA won't enforce module signature either. x86's
-> arch_get_ima_policy() calls set_module_sig_enforced(). Doesn't the
-> powerpc version need to do that as well?
+>I understand that eventually we may not get a proper explanation
+>but I really want you to put forth real effort to nail down whats
+>going on here before I even consider these patches seriously.
 >
-> On the flip side, if module signatures are enforced by the module
-> subsystem then IMA will verify the signature a second time since there's
-> no sharing of signature verification results between the module
-> subsystem and IMA (this was observed by Mimi).
+>Thank you.
 >
-> IMHO this is a minor issue, since module loading isn't a hot path and
-> the duplicate work shouldn't impact anything. But it could be avoided by
-> having a NULL entry in arch_rules, which arch_get_ima_policy() would
-> dynamically update with the "appraise func=MODULE_CHECK" rule if
-> is_module_sig_enforced() is true.
+>_______________________________________________
+>linux-arm-kernel mailing list
+>linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Thanks Thiago for reviewing.  I am wondering that this will give two 
-meanings for NULL. Can we do something like below, there are possibly 
-two options ?
-
-1. Set IMA_APPRAISED in the iint->flags if is_module_sig_enforced().
-
-OR
-
-2. Let ima_get_action() check for is_module_sig_enforced() when policy 
-is appraise and func is MODULE_CHECK.
-
-Thanks & Regards,
-    - Nayna
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+To view this discussion on the web, visit https://groups.google.com/d/msgid=
+/linux-sunxi/2CCD0856-433E-4602-A079-9F7F5F2E00D6%40aosc.io.
