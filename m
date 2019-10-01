@@ -1,56 +1,43 @@
-From: Nayna <nayna@linux.vnet.ibm.com>
-Subject: Re: [PATCH v6 1/9] dt-bindings: ibm,secureboot: secure boot specific
- properties for PowerNV
-Date: Tue, 1 Oct 2019 12:29:06 -0400
-Message-ID: <e0575a28-5bd9-1f5b-c09d-ed86cb715165@linux.vnet.ibm.com>
-References: <1569594360-7141-1-git-send-email-nayna@linux.ibm.com>
- <1569594360-7141-2-git-send-email-nayna@linux.ibm.com>
- <20191001133330.GA29810@bogus>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 0/3] Pine64+ specific hacks for RTL8211E Ethernet PHY
+Date: Tue, 01 Oct 2019 09:30:00 -0700 (PDT)
+Message-ID: <20191001.093000.372726574458067639.davem@davemloft.net>
+References: <20191001082912.12905-1-icenowy@aosc.io>
+        <20191001.090651.796983023328992596.davem@davemloft.net>
+        <2CCD0856-433E-4602-A079-9F7F5F2E00D6@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: Text/Plain; charset=iso-2022-jp
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191001133330.GA29810@bogus>
-Content-Language: en-US
+In-Reply-To: <2CCD0856-433E-4602-A079-9F7F5F2E00D6@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Nayna Jain <nayna@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@ozlabs.org, linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Jeremy Kerr <jk@ozlabs.org>, Matthew Garret <matthew.garret@nebula.com>, Mimi Zohar <zohar@linux.ibm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Claudio Carvalho <cclaudio@linux.ibm.com>, George Wilson <gcwilson@linux.ibm.com>, Elaine Palmer <erpalmer@us.ibm.com>, Eric Ricther <erichte@linux.ibm.com>, Oliver O'Halloran <oohall@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+To: icenowy@aosc.io
+Cc: linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, mripard@kernel.org, wens@csie.org, robh+dt@kernel.org, hkallweit1@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+From: Icenowy Zheng <icenowy@aosc.io>
+Date: Wed, 02 Oct 2019 00:08:39 +0800
 
-
-On 10/01/2019 09:33 AM, Rob Herring wrote:
-> On Fri, Sep 27, 2019 at 10:25:52AM -0400, Nayna Jain wrote:
->> PowerNV represents both the firmware and Host OS secureboot state of the
->> system via device tree. This patch adds the documentation to give
->> the definition of the nodes and the properties.
+> 
+> 
+> $BP2(B 2019$BG/(B10$B7n(B2$BF|(B GMT+08:00 $B>e8a(B12:06:51, David Miller <davem@davemloft.net> $B<LE~(B:
+>>From: Icenowy Zheng <icenowy@aosc.io>
+>>Date: Tue,  1 Oct 2019 16:29:09 +0800
 >>
->> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
->> ---
->>   .../bindings/powerpc/ibm,secureboot.rst       | 76 ++++++++++++++++
->>   .../devicetree/bindings/powerpc/secvar.rst    | 89 +++++++++++++++++++
->>   2 files changed, 165 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst
->>   create mode 100644 Documentation/devicetree/bindings/powerpc/secvar.rst
+>>> There're some Pine64+ boards known to have broken RTL8211E chips, and
+>>> a hack is given by Pine64+, which is said to be from Realtek.
+>>> 
+>>> This patchset adds the hack.
+>>> 
+>>> The hack is taken from U-Boot, and it contains magic numbers without
+>>> any document.
 >>
->> diff --git a/Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst b/Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst
->> new file mode 100644
->> index 000000000000..03d32099d2eb
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/powerpc/ibm,secureboot.rst
->> @@ -0,0 +1,76 @@
->> +# SPDX-License-Identifier: GPL-2.0
-> Not the right form for reST files.
->
->> +*** NOTE ***
->> +This document is copied from OPAL firmware
->> +(skiboot/doc/device-tree/ibm,secureboot.rst)
-> Why copy into the kernel?
+>>Please contact Realtek and try to get an explanation about this.
+> 
+> Sorry, but Realtek never shows any idea to add more infomation about this.
+> 
+> These hacks had existed and worked for years.
 
-Do you mean we do not need the device-tree documentation in the kernel 
-when it already exists in the skiboot tree ?
+Have you actually tried to communicate with an appropriate contact yourself?
 
-I think I am ok with that. Michael, what do you think ?
-
-Thanks & Regards,
-      - Nayna
+If not, I am asking you to do so.
