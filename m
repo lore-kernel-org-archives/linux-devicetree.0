@@ -1,10 +1,8 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 2/7] dt-bindings: interrupt-controller: Add brcm,bcm7211-armctrl-ic binding
-Date: Tue,  1 Oct 2019 15:48:37 -0700
-Message-ID: <20191001224842.9382-3-f.fainelli@gmail.com>
-References: <20191001224842.9382-1-f.fainelli@gmail.com>
+Subject: [PATCH 0/7] irqchip/irq-bcm283x update for BCM7211
+Date: Tue,  1 Oct 2019 15:48:35 -0700
+Message-ID: <20191001224842.9382-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191001224842.9382-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <maz@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "maintainer:BROADCOM
@@ -14,38 +12,31 @@ Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de
         ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-BCM7211 features a second level interrupt controller similar in nature
-to BCM2836, with a few modifications to the register offsets, document
-that specific compatible string.
+Hi Marc, Jason, Thomas,
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- .../interrupt-controller/brcm,bcm2835-armctrl-ic.txt        | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+This patch series updates the BCM2835 and BCM2836 interrupt controller
+drivers to support BCM7211 which can make use of those drivers in some
+configurations where the ARM GIC is muxed out and the legacy ARM
+interrupt controller is used instead.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-index 0f1af5a1c12e..0b07845b46e4 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-@@ -12,7 +12,8 @@ interrupt there indicates that the ARMCTRL has an interrupt to handle.
- Required properties:
- 
- - compatible : should be "brcm,bcm2835-armctrl-ic" or
--                 "brcm,bcm2836-armctrl-ic"
-+                 "brcm,bcm2836-armctrl-ic" or
-+		 "brcm,bcm7211-armctrl-ic"
- - reg : Specifies base physical address and size of the registers.
- - interrupt-controller : Identifies the node as an interrupt controller
- - #interrupt-cells : Specifies the number of cells needed to encode an
-@@ -25,7 +26,8 @@ Required properties:
-   The 2nd cell contains the interrupt number within the bank. Valid values
-   are 0..7 for bank 0, and 0..31 for bank 1.
- 
--Additional required properties for brcm,bcm2836-armctrl-ic:
-+Additional required properties for brcm,bcm2836-armctrl-ic and
-+brcm,bcm7211-armctrl-ic:
- - interrupts : Specifies the interrupt on the parent for this interrupt
-   controller to handle.
- 
+Thank you!
+
+Florian Fainelli (7):
+  irqchip: Introduce Kconfig symbol to build irq-bcm283x.c
+  dt-bindings: interrupt-controller: Add brcm,bcm7211-armctrl-ic binding
+  irqchip/irq-bcm2835: Add support for 7211 interrupt controller
+  dt-bindings: interrupt-controller: Add brcm,bcm7211-l1-intc binding
+  irqchip/irq-bcm2836: Add support for the 7211 interrupt controller
+  irqchip: Build BCM283X_IRQ for ARCH_BRCMSTB
+  irqchip/irq-bcm283x: Add registration prints
+
+ .../brcm,bcm2835-armctrl-ic.txt               |  6 +-
+ .../brcm,bcm2836-l1-intc.txt                  |  4 +-
+ drivers/irqchip/Kconfig                       |  5 +
+ drivers/irqchip/Makefile                      |  4 +-
+ drivers/irqchip/irq-bcm2835.c                 | 95 ++++++++++++++++---
+ drivers/irqchip/irq-bcm2836.c                 | 27 +++++-
+ 6 files changed, 119 insertions(+), 22 deletions(-)
+
 -- 
 2.17.1
