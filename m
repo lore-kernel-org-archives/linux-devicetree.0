@@ -1,155 +1,187 @@
-From: "Ramuthevar, Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: Re: [PATCH v1 1/2] dt-bindings: spi: Add support for cadence-qspi IP
- Intel LGM SoC
-Date: Tue, 1 Oct 2019 09:13:13 +0800
-Message-ID: <e70c6f98-7e0f-97f2-bede-00de4389f825@linux.intel.com>
-References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190916073843.39618-2-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190930223640.GA18491@bogus>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v15 1/4] soc: mediatek: cmdq: define the instruction
+ struct
+Date: Tue, 1 Oct 2019 10:17:23 +0800
+Message-ID: <1569896243.21654.8.camel@mtksdaap41>
+References: <20190927114254.6258-1-bibby.hsieh@mediatek.com>
+         <20190927114254.6258-2-bibby.hsieh@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190930223640.GA18491@bogus>
-Content-Language: en-US
+In-Reply-To: <20190927114254.6258-2-bibby.hsieh@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: broonie@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+To: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi, Bibby:
 
-    Thank you for the review comments.
+On Fri, 2019-09-27 at 19:42 +0800, Bibby Hsieh wrote:
+> Define an instruction structure for gce driver to append command.
+> This structure can make the client's code more readability.
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-On 1/10/2019 6:36 AM, Rob Herring wrote:
-> On Mon, Sep 16, 2019 at 03:38:42PM +0800, Ramuthevar,Vadivel MuruganX wrote:
->> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->>
->> On Intel Lightening Mountain(LGM) SoCs QSPI controller support
->> to QSPI-NAND flash. This introduces to device tree binding
->> documentation for Cadence-QSPI controller and spi-nand flash.
->>
->> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> ---
->>   .../devicetree/bindings/spi/cadence,qspi-nand.yaml | 84 ++++++++++++++++++++++
->>   1 file changed, 84 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml b/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
->> new file mode 100644
->> index 000000000000..9aae4c1459cc
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
->> @@ -0,0 +1,84 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/spi/cadence,qspi-nand.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: Cadence QSPI Flash Controller on Intel's SoC
->> +
->> +maintainers:
->> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
->> +
->> +allOf:
->> +  - $ref: "spi-controller.yaml#"
->> +
->> +description: |
->> +  The Cadence QSPI is a controller optimized for communication with SPI
->> +  FLASH memories, without DMA support on Intel's SoC.
->> +
->> +properties:
->> +  compatible:
->> +    const: cadence,lgm-qspi
-> Vendor here should be 'intel'. Perhaps the binding should be shared too
-> like the driver.
->
-> Plus the vendor prefix for Cadence is cdns.
-Agreed!, will update.
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  fifo-depth:
->> +    maxItems: 1
->> +
-> This is vendor specific, so needs a vendor prefix, type, and
-> description.
-agreed!
->> +  fifo-width:
->> +    maxItems: 1
-> Same
->
->> +
->> +  qspi-phyaddr:
->> +    maxItems: 1
-> Same
->
->> +
->> +  qspi-phymask:
->> +    maxItems: 1
-> Same
-will update all the above.
->> +
->> +  clocks:
->> +    maxItems: 2
-> Need to define what each clock is when there is more than 1.
-Sure, will update.
->> +
->> +  clocks-names:
->> +    maxItems: 2
-> Need to define the strings.
-Noted, will update.
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  reset-names:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - fifo-depth
->> +  - fifo-width
->> +  - qspi-phyaddr
->> +  - qspi-phymask
->> +  - clocks
->> +  - clock-names
->> +  - resets
->> +  - reset-names
->> +
->> +examples:
->> +  - |
->> +    qspi@ec000000 {
-> spi@...
+You've modified this patch in this version, so you should drop this
+'Reviewed-by' tag.
 
-Controller is qspi , so that have updated.
+> Reviewed-by: Houlong Wei <houlong.wei@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c   | 106 +++++++++++++++++------
+>  include/linux/mailbox/mtk-cmdq-mailbox.h |  10 +++
+>  2 files changed, 90 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 7aa0517ff2f3..7af327b98d25 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -9,12 +9,24 @@
+>  #include <linux/mailbox_controller.h>
+>  #include <linux/soc/mediatek/mtk-cmdq.h>
+>  
+> -#define CMDQ_ARG_A_WRITE_MASK	0xffff
+>  #define CMDQ_WRITE_ENABLE_MASK	BIT(0)
+>  #define CMDQ_EOC_IRQ_EN		BIT(0)
+>  #define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
+>  				<< 32 | CMDQ_EOC_IRQ_EN)
+>  
+> +struct cmdq_instruction {
+> +	union {
+> +		u32 value;
+> +		u32 mask;
+> +	};
+> +	union {
+> +		u16 offset;
+> +		u16 event;
+> +	};
+> +	u8 subsys;
+> +	u8 op;
+> +};
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>  	struct cmdq_client *client = from_timer(client, t, timer);
+> @@ -110,10 +122,10 @@ void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_destroy);
+>  
+> -static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+> -				   u32 arg_a, u32 arg_b)
+> +static int cmdq_pkt_append_command(struct cmdq_pkt *pkt,
+> +				   struct cmdq_instruction *inst)
+>  {
+> -	u64 *cmd_ptr;
+> +	struct cmdq_instruction *cmd_ptr;
+>  
+>  	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
+>  		/*
+> @@ -129,8 +141,9 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+>  			__func__, (u32)pkt->buf_size);
+>  		return -ENOMEM;
+>  	}
+> +
+>  	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
+> -	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
+> +	*cmd_ptr = *inst;
+>  	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+>  
+>  	return 0;
+> @@ -138,24 +151,42 @@ static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+>  
+>  int cmdq_pkt_write(struct cmdq_pkt *pkt, u8 subsys, u16 offset, u32 value)
+>  {
+> -	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+> -		    (subsys << CMDQ_SUBSYS_SHIFT);
+> +	struct cmdq_instruction *inst = kzalloc(sizeof(*inst), GFP_KERNEL);
 
-With Best Regards
-Vadivel Murugan R
->> +          compatible = "cadence,qspi-nand";
->> +          reg = <0xec000000 0x100>;
->> +          fifo-depth = <128>;
->> +          fifo-width = <4>;
->> +          qspi-phyaddr = <0xf4000000>;
->> +          qspi-phymask = <0xffffffff>;
->> +          clocks = <&cgu0 LGM_CLK_QSPI>, <&cgu0 LGM_GCLK_QSPI>;
->> +          clock-names = "freq", "qspi";
->> +          resets = <&rcu0 0x10 1>;
->> +          reset-names = "qspi";
->> +          #address-cells = <1>;
->> +          #size-cells = <0>;
->> +
->> +          flash: flash@1 {
->> +              compatible = "spi-nand";
->> +              reg = <1>;
->> +              spi-max-frequency = <10000000>;
->> +          };
->> +    };
->> +
->> -- 
->> 2.11.0
->>
+Frequently allocate/free increase CPU loading. The simpler way is
+
+struct cmdq_instruction inst = { 0 };
+
+cmdq_pkt_append_command(pkt, &inst);
+
+
+> +	int err = 0;
+
+No need to assign initial value.
+
+> +
+> +	if (!inst)
+> +		return -ENOMEM;
+> +
+> +	inst->op = CMDQ_CODE_WRITE;
+> +	inst->value = value;
+> +	inst->offset = offset;
+> +	inst->subsys = subsys;
+>  
+> -	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
+> +	err = cmdq_pkt_append_command(pkt, inst);
+> +	kfree(inst);
+> +
+> +	return err;
+>  }
+>  EXPORT_SYMBOL(cmdq_pkt_write);
+>  
+
+[snip]
+
+>  
+>  static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>  {
+> -	int err;
+> +	struct cmdq_instruction *inst = kzalloc(sizeof(*inst), GFP_KERNEL);
+> +	int err = 0;
+> +
+> +	if (!inst)
+> +		return -ENOMEM;
+>  
+>  	/* insert EOC and generate IRQ for each command iteration */
+> -	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
+> +	inst->op = CMDQ_CODE_EOC;
+> +	inst->value = CMDQ_EOC_IRQ_EN;
+> +	err = cmdq_pkt_append_command(pkt, inst);
+>  
+>  	/* JUMP to end */
+> -	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
+> +	inst->op = CMDQ_CODE_JUMP;
+> +	inst->value = CMDQ_JUMP_PASS;
+> +	err |= cmdq_pkt_append_command(pkt, inst);
+
+OR the err value looks strange. If you OR err 0x1 and err 0x10, you
+would get the new err 0x11. How do you know that err 0x11 is the
+combination of 0x1 and 0x10?
+
+This bug seems exist in previous patch, so I would like you to fix this
+bug first and then apply this patch.
+
+Regards,
+CK
+
+
+> +	kfree(inst);
+>  
+>  	return err;
+>  }
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> index e6f54ef6698b..678760548791 100644
+> --- a/include/linux/mailbox/mtk-cmdq-mailbox.h
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> @@ -20,6 +20,16 @@
+>  #define CMDQ_WFE_WAIT			BIT(15)
+>  #define CMDQ_WFE_WAIT_VALUE		0x1
+>  
+> +/*
+> + * WFE arg_b
+> + * bit 0-11: wait value
+> + * bit 15: 1 - wait, 0 - no wait
+> + * bit 16-27: update value
+> + * bit 31: 1 - update, 0 - no update
+> + */
+> +#define CMDQ_WFE_OPTION			(CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | \
+> +					CMDQ_WFE_WAIT_VALUE)
+> +
+>  /** cmdq event maximum */
+>  #define CMDQ_MAX_EVENT			0x3ff
+>  
