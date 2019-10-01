@@ -1,86 +1,64 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: nvmem: Add Spreadtrum eFuse
- controller documentation
-Date: Tue, 1 Oct 2019 11:32:16 +0100
-Message-ID: <9da5f5f9-885f-3131-d700-e1d8e2628884@linaro.org>
-References: <20f750aab0e16e45fa2d4e32843cee08395c7350.1568094534.git.baolin.wang@linaro.org>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH 4/6] arm64: dts: rockchip: Rename roc-pc with libretech notation
+Date: Tue, 1 Oct 2019 16:03:54 +0530
+Message-ID: <CAMty3ZBZ0kXsc-4EwUwy9rAHcDvhhYL1JWkyhhdvSvfRdyvvwA@mail.gmail.com>
+References: <20190919052822.10403-1-jagan@amarulasolutions.com>
+ <20190919052822.10403-5-jagan@amarulasolutions.com> <4177305.6QI6aNXrAv@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20f750aab0e16e45fa2d4e32843cee08395c7350.1568094534.git.baolin.wang@linaro.org>
-Content-Language: en-US
+In-Reply-To: <4177305.6QI6aNXrAv@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: orsonzhai@gmail.com, zhang.lyra@gmail.com, freeman.liu@unisoc.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Levin Du <djw@t-chip.com.cn>, Akash Gajjar <akash@openedev.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Da Xue <da@lessconfused.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-amarula <linux-amarula@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 30, 2019 at 3:02 AM Heiko Stuebner <heiko@sntech.de> wrote:
+>
+> Hi Jagan,
+>
+> Am Donnerstag, 19. September 2019, 07:28:20 CEST schrieb Jagan Teki:
+> > Though the ROC-PC is manufactured by firefly, it is co-designed
+> > by libretch like other Libretech computer boards from allwinner,
+> > amlogic does.
+> >
+> > So, it is always meaningful to keep maintain those vendors who
+> > are part of design participation so-that the linux mainline
+> > code will expose outside world who are the makers of such
+> > hardware prototypes.
+> >
+> > So, rename the existing rk3399-roc-pc.dts with libretch notation,
+> > rk3399-libretech-roc-rk3399-pc.dts
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> >  arch/arm64/boot/dts/rockchip/Makefile                           | 2 +-
+> >  .../{rk3399-roc-pc.dts => rk3399-libretech-roc-rk3399-pc.dts}   | 0
+>
+> Somewhat "randomly" renaming files for "exposure" of the maker isn't the
+> way to go. Especially as the file name itself is merely a handle and not
+> meant for fame. The board filename should mainly enable developers to
+> hopefully the correct board file to use/change - and "rk3399-roc-pc"
+> is sufficiently unique to do that.
+>
+> Similar to how the NanoPi boards do that.
+>
+> And renames not only loose the history of changes but also in this case
+> the file is in the kernel since july 2018 - more than a year, so this might
+> actually affect the workflow of someone.
 
+Yes, I agreed this point.
 
-On 10/09/2019 06:52, Baolin Wang wrote:
-> From: Freeman Liu <freeman.liu@unisoc.com>
-> 
-> This patch adds the binding documentation for Spreadtrum eFuse controller.
-> 
-> Signed-off-by: Freeman Liu <freeman.liu@unisoc.com>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
+>
+> So I'd really expect an actual technical reason for a rename.
 
-Applied both,
+This changes purely based on the recent changes on naming conventions
+that have been followed in amlogic and allwinner with regards to
+libretech [1]. I have seen few Bananapi boards from Allwinner H3 has
+been converted as per Libretech computer recently. I assume these
+changes are because libretech has part of co-designed vendor and also
+open source forum supported for these hardware.
 
-Thanks,
-srini
-> Changes from v1:
->   - Add reviewed tag from Rob.
-> ---
->   .../devicetree/bindings/nvmem/sprd-efuse.txt       |   39 ++++++++++++++++++++
->   1 file changed, 39 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/nvmem/sprd-efuse.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/nvmem/sprd-efuse.txt b/Documentation/devicetree/bindings/nvmem/sprd-efuse.txt
-> new file mode 100644
-> index 0000000..96b6fee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/sprd-efuse.txt
-> @@ -0,0 +1,39 @@
-> += Spreadtrum eFuse device tree bindings =
-> +
-> +Required properties:
-> +- compatible: Should be "sprd,ums312-efuse".
-> +- reg: Specify the address offset of efuse controller.
-> +- clock-names: Should be "enable".
-> +- clocks: The phandle and specifier referencing the controller's clock.
-> +- hwlocks: Reference to a phandle of a hwlock provider node.
-> +
-> += Data cells =
-> +Are child nodes of eFuse, bindings of which as described in
-> +bindings/nvmem/nvmem.txt
-> +
-> +Example:
-> +
-> +	ap_efuse: efuse@32240000 {
-> +		compatible = "sprd,ums312-efuse";
-> +		reg = <0 0x32240000 0 0x10000>;
-> +		clock-names = "enable";
-> +		hwlocks = <&hwlock 8>;
-> +		clocks = <&aonapb_gate CLK_EFUSE_EB>;
-> +
-> +		/* Data cells */
-> +		thermal_calib: calib@10 {
-> +			reg = <0x10 0x2>;
-> +		};
-> +	};
-> +
-> += Data consumers =
-> +Are device nodes which consume nvmem data cells.
-> +
-> +Example:
-> +
-> +	thermal {
-> +		...
-> +
-> +		nvmem-cells = <&thermal_calib>;
-> +		nvmem-cell-names = "calibration";
-> +	};
-> 
+For further information, may be Da Xue can comment on this.
+
+[1] https://libre.computer/products/boards/
