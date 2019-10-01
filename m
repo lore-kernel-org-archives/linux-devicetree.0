@@ -1,29 +1,46 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: reset: add bindings for the Meson-A1
- SoC Reset Controller
-Date: Tue, 1 Oct 2019 08:47:44 -0500
-Message-ID: <20191001134744.GA28989@bogus>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v3 1/3] arm64: dts: meson: add reset controller for
+ Meson-A1 SoC
+Date: Tue, 1 Oct 2019 15:49:14 +0200
+Message-ID: <491aa5c6-f4e7-8214-c9c4-34894451ba30@baylibre.com>
 References: <1569738255-3941-1-git-send-email-xingyu.chen@amlogic.com>
- <1569738255-3941-3-git-send-email-xingyu.chen@amlogic.com>
+ <1569738255-3941-2-git-send-email-xingyu.chen@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1569738255-3941-3-git-send-email-xingyu.chen@amlogic.com>
+In-Reply-To: <1569738255-3941-2-git-send-email-xingyu.chen@amlogic.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Xingyu Chen <xingyu.chen@amlogic.com>, Jerome Brunet <jbrunet@baylibre.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Xingyu Chen <xingyu.chen@amlogic.com>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 29 Sep 2019 14:24:14 +0800, Xingyu Chen wrote:
-> Add DT bindings for the Meson-A1 SoC Reset Controller include file,
-> and also slightly update documentation.
+On 29/09/2019 08:24, Xingyu Chen wrote:
+> Add the reset controller device of Meson-A1 SoC family
 > 
 > Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
 > ---
->  .../bindings/reset/amlogic,meson-reset.yaml        |  1 +
->  include/dt-bindings/reset/amlogic,meson-a1-reset.h | 74 ++++++++++++++++++++++
->  2 files changed, 75 insertions(+)
->  create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
+>  arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> index 7210ad0..1c588ab 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+> @@ -74,6 +74,12 @@
+>  			#size-cells = <2>;
+>  			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x1000000>;
+>  
+> +			reset: reset-controller@0 {
+> +				compatible = "amlogic,meson-a1-reset";
+> +				reg = <0x0 0x0 0x0 0x8c>;
+> +				#reset-cells = <1>;
+> +			};
+> +
+>  			uart_AO: serial@1c00 {
+>  				compatible = "amlogic,meson-gx-uart",
+>  					     "amlogic,meson-ao-uart";
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
