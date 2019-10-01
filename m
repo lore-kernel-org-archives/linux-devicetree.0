@@ -1,120 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: power: add Amlogic secure power domains
- bindings
-Date: Tue, 01 Oct 2019 17:09:09 -0500
-Message-ID: <5d93ce88.1c69fb81.aec64.6b1b@mx.google.com>
-References: <1568895064-4116-1-git-send-email-jianxin.pan@amlogic.com>
- <1568895064-4116-2-git-send-email-jianxin.pan@amlogic.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: add vendor prefix for logic
+ technologies limited
+Date: Tue, 01 Oct 2019 17:09:11 -0500
+Message-ID: <5d93ce89.1c69fb81.9b763.e2b7@mx.google.com>
+References: <20190920075411.15735-1-marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1568895064-4116-2-git-send-email-jianxin.pan@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jianxin Pan <jianxin.pan@amlogic.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, Zhiqiang Liang <zhiqiang.liang@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Xingyu Chen <xingyu.chen@amlogic.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190920075411.15735-1-marcel@ziswiler.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Marcel Ziswiler <marcel@ziswiler.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, j.bauer@endrich.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Maxime Ripard <mripard@kernel.org>, info@logictechno.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 08:11:02AM -0400, Jianxin Pan wrote:
-> Add the bindings for the Amlogic Secure power domains, controlling the
-> secure power domains.
-> 
-> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
-> power domain registers are in secure world.
-> 
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> Signed-off-by: Zhiqiang Liang <zhiqiang.liang@amlogic.com>
-> ---
->  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 32 ++++++++++++++++++++++
->  include/dt-bindings/power/meson-a1-power.h         | 32 ++++++++++++++++++++++
->  2 files changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->  create mode 100644 include/dt-bindings/power/meson-a1-power.h
-> 
-> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> new file mode 100644
-> index 00000000..327e0d9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> @@ -0,0 +1,32 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +# Copyright (c) 2019 Amlogic, Inc
-> +# Author: Jianxin Pan <jianxin.pan@amlogic.com>
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson Secure Power Domains
-> +
-> +maintainers:
-> +  - Jianxin Pan <jianxin.pan@amlogic.com>
-> +
-> +description: |+
-> +  A1/C1 series The Secure Power Domains node should be the child of a syscon
-> +  node with the required property.
-
-'a syscon node' is not specific enough. It must be a specific node.
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,meson-a1-pwrc
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    pwrc: power-controller {
-> +          compatible = "amlogic,meson-a1-pwrc";
-
-But why do you need this node? It has no resources.
-
-#power-domain-cells needed?
-
-> +    };
-> +
-> +
-> diff --git a/include/dt-bindings/power/meson-a1-power.h b/include/dt-bindings/power/meson-a1-power.h
-> new file mode 100644
-> index 00000000..6cf50bf
-> --- /dev/null
-> +++ b/include/dt-bindings/power/meson-a1-power.h
-> @@ -0,0 +1,32 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ or MIT) */
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc.
-> + * Author: Jianxin Pan <jianxin.pan@amlogic.com>
-> + */
-> +
-> +#ifndef _DT_BINDINGS_MESON_A1_POWER_H
-> +#define _DT_BINDINGS_MESON_A1_POWER_H
-> +
-> +#define PWRC_DSPA_ID	8
-> +#define PWRC_DSPB_ID	9
-> +#define PWRC_UART_ID	10
-> +#define PWRC_DMC_ID	11
-> +#define PWRC_I2C_ID	12
-> +#define PWRC_PSRAM_ID	13
-> +#define PWRC_ACODEC_ID	14
-> +#define PWRC_AUDIO_ID	15
-> +#define PWRC_OTP_ID	16
-> +#define PWRC_DMA_ID	17
-> +#define PWRC_SD_EMMC_ID	18
-> +#define PWRC_RAMA_ID	19
-> +#define PWRC_RAMB_ID	20
-> +#define PWRC_IR_ID	21
-> +#define PWRC_SPICC_ID	22
-> +#define PWRC_SPIFC_ID	23
-> +#define PWRC_USB_ID	24
-> +#define PWRC_NIC_ID	25
-> +#define PWRC_PDMIN_ID	26
-> +#define PWRC_RSA_ID	27
-> +#define PWRC_MAX_ID	28
-> +
-> +#endif
-> -- 
-> 2.7.4
-> 
+T24gRnJpLCAyMCBTZXAgMjAxOSAwOTo1NDoxMCArMDIwMCwgTWFyY2VsIFppc3dpbGVyIHdyb3Rl
+Ogo+IEZyb206IE1hcmNlbCBaaXN3aWxlciA8bWFyY2VsLnppc3dpbGVyQHRvcmFkZXguY29tPgo+
+IAo+IEFkZCB2ZW5kb3IgcHJlZml4IGZvciBMb2dpYyBUZWNobm9sb2dpZXMgTGltaXRlZCBbMV0g
+d2hpY2ggaXMgYSBDaGluZXNlCj4gZGlzcGxheSBtYW51ZmFjdHVyZXIgZS5nLiBkaXN0cmlidXRl
+ZCBieSBHZXJtYW4gRW5kcmljaCBCYXVlbGVtZW50ZQo+IFZlcnRyaWVicyBHbWJIIFsyXS4KPiAK
+PiBbMV0gaHR0cHM6Ly9sb2dpY3RlY2huby5jb20vY29udGFjdC11cy8KPiBbMl0gaHR0cHM6Ly93
+d3cuZW5kcmljaC5jb20vaXNpNTBfaXNpMzBfdGZ0LWRpc3BsYXlzL2x0MTcwNDEwLTF3aGNfaXNp
+MzAKPiAKPiBTaWduZWQtb2ZmLWJ5OiBNYXJjZWwgWmlzd2lsZXIgPG1hcmNlbC56aXN3aWxlckB0
+b3JhZGV4LmNvbT4KPiAKPiAtLS0KPiAKPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3ZlbmRvci1wcmVmaXhlcy55YW1sIHwgMiArKwo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNl
+cnRpb25zKCspCj4gCgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
