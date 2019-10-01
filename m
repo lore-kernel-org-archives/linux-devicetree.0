@@ -1,54 +1,64 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: display: imx: fix native-mode setting
-Date: Tue, 01 Oct 2019 17:09:04 -0500
-Message-ID: <5d93ce82.1c69fb81.fe9a0.e3e6@mx.google.com>
-References: <20190918193853.25689-1-martin@kaiser.cx>
+Subject: Re: [PATCH 1/2] dt-bindings: ptp: Add binding doc for IDT
+ ClockMatrix based PTP clock
+Date: Tue, 01 Oct 2019 17:09:06 -0500
+Message-ID: <5d93ce84.1c69fb81.8e964.4dc1@mx.google.com>
+References: <1568837198-27211-1-git-send-email-vincent.cheng.xh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190918193853.25689-1-martin@kaiser.cx>
+In-Reply-To: <1568837198-27211-1-git-send-email-vincent.cheng.xh@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kaiser <martin@kaiser.cx>
-Cc: Shawn Guo <shawnguo@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: vincent.cheng.xh@renesas.com
+Cc: mark.rutland@arm.com, richardcochran@gmail.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 09:38:53PM +0200, Martin Kaiser wrote:
-> According to
-> Documentation/devicetree/bindings/display/panel/display-timing.txt,
-> native-mode is a property of the display-timings node.
+On Wed, Sep 18, 2019 at 04:06:37PM -0400, vincent.cheng.xh@renesas.com wrote:
+> From: Vincent Cheng <vincent.cheng.xh@renesas.com>
 > 
-> If it's located outside of display-timings, the native-mode setting is
-> ignored and the first display timing is used.
+> Add device tree binding doc for the IDT ClockMatrix PTP clock driver.
+
+Bindings are for h/w, not drivers...
+
 > 
-> We've already fixed the board definitions which got this wrong. Fix the
-> example in the imx framebuffer bindings as well.
-> 
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+> Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
 > ---
->  Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/ptp/ptp-idtcm.txt | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-idtcm.txt
 
-Please also fix 
-Documentation/devicetree/bindings/display/cirrus,clps711x-fb.txt
+Please make this a DT schema.
 
 > 
-> diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-> index e5a8b363d829..f4df9e83bcd2 100644
-> --- a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-> +++ b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-> @@ -38,10 +38,10 @@ Example:
->  
->  	display0: display0 {
->  		model = "Primeview-PD050VL1";
-> -		native-mode = <&timing_disp0>;
->  		bits-per-pixel = <16>;
->  		fsl,pcr = <0xf0c88080>;	/* non-standard but required */
->  		display-timings {
-> +			native-mode = <&timing_disp0>;
->  			timing_disp0: 640x480 {
->  				hactive = <640>;
->  				vactive = <480>;
+> diff --git a/Documentation/devicetree/bindings/ptp/ptp-idtcm.txt b/Documentation/devicetree/bindings/ptp/ptp-idtcm.txt
+> new file mode 100644
+> index 0000000..4eaa34d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ptp/ptp-idtcm.txt
+> @@ -0,0 +1,15 @@
+> +* IDT ClockMatrix (TM) PTP clock
+> +
+> +Required properties:
+> +
+> +  - compatible  Should be "idt,8a3400x-ptp" for System Synchronizer
+> +                Should be "idt,8a3401x-ptp" for Port Synchronizer
+> +                Should be "idt,8a3404x-ptp" for Universal Frequency Translator (UFT)
+
+If PTP is the only function of the chip, you don't need to append 
+'-ptp'.
+
+What's the 'x' for? We generally don't use wildcards in compatible 
+strings.
+
+> +  - reg         I2C slave address of the device
+> +
+> +Example:
+> +
+> +	phc@5b {
+> +		compatible = "idt,8a3400x-ptp";
+> +		reg = <0x5b>;
+> +	};
 > -- 
-> 2.11.0
+> 2.7.4
 > 
