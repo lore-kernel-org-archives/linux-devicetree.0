@@ -1,206 +1,170 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/8] dt-bindings: sram: Convert SRAM bindings to
- json-schema
-Date: Tue, 1 Oct 2019 09:00:03 -0500
-Message-ID: <20191001140003.GA31344@bogus>
-References: <20190918173141.4314-1-krzk@kernel.org>
- <20190918173141.4314-2-krzk@kernel.org>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
+ power states
+Date: Tue, 1 Oct 2019 08:21:54 -0600
+Message-ID: <CAOCk7NpA5OmgmH0PZpcrj1KmhdrTKvOb+3eUL6=Mo8HRUnKjdA@mail.gmail.com>
+References: <cover.1558430617.git.amit.kucheria@linaro.org>
+ <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
+ <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com> <CAHLCerOS1Hi3XdDZzTKFKnrsATj5cMKtjPEuJknWu-aPtwzP9g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190918173141.4314-2-krzk@kernel.org>
+In-Reply-To: <CAHLCerOS1Hi3XdDZzTKFKnrsATj5cMKtjPEuJknWu-aPtwzP9g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-riscv@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Niklas Cassel <niklas.cassel@linaro.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Sibi Sankar <sibis@codeaurora.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 07:31:35PM +0200, Krzysztof Kozlowski wrote:
-> Convert generic mmio-sram bindings to DT schema format using
-> json-schema.
+On Mon, Sep 30, 2019 at 4:44 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> Can you try removing just the *SLEEP_1 states from the cpu-idle-states
+> property? I want to understand if this is triggered just by the deeper
+> C-state.
 
-I've been slow getting to this because I started on the same thing...
+Still seeing the issue with just the SLEEP_0 states.  For reference,
+Bjorn suggested adding kpti=no to the command line, which also
+appeared to have no effect on the issue.
 
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> ---
-> 
-> Changes since v1:
-> 1. Indent example with four spaces (more readable).
-> ---
->  .../devicetree/bindings/sram/sram.txt         |  80 ----------
->  .../devicetree/bindings/sram/sram.yaml        | 138 ++++++++++++++++++
->  2 files changed, 138 insertions(+), 80 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sram/sram.txt
->  create mode 100644 Documentation/devicetree/bindings/sram/sram.yaml
-
-> diff --git a/Documentation/devicetree/bindings/sram/sram.yaml b/Documentation/devicetree/bindings/sram/sram.yaml
-> new file mode 100644
-> index 000000000000..8d9d6ce494b2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sram/sram.yaml
-> @@ -0,0 +1,138 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sram/sram.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic on-chip SRAM
-> +
-> +maintainers:
-> +  - FIXME <who@should.it.be>
-
-You can put me.
-
-> +
-> +description: |+
-> +  Simple IO memory regions to be managed by the genalloc API.
-> +
-> +  Each child of the sram node specifies a region of reserved memory. Each
-> +  child node should use a 'reg' property to specify a specific range of
-> +  reserved memory.
-> +
-> +  Following the generic-names recommended practice, node names should
-> +  reflect the purpose of the node. Unit address (@<address>) should be
-> +  appended to the name.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "^sram(@.*)?"
-> +
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - mmio-sram
-> +          - atmel,sama5d2-securam
-
-I was trying to go down the path of putting all the compatibles for 
-various SRAM bindings here, but I ran into some issues. I need to 
-revisit as I've forgotten the exact issue.
-
-This would need to be a 'contains' if this is going to work for others.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    description: Should use the same values as the root node.
-> +
-> +  "#size-cells":
-> +    description: Should use the same values as the root node.
-
-I defined both of these to be 1 as 4GB of SRAM should be enough for a 
-while. We can debate 1 or 2 cells vs. 1, but there's no reason it has to 
-be the same as the root (unless we're failing to do address 
-translation).
-
-> +
-> +  ranges:
-> +    description:
-> +      Should translate from local addresses within the sram to bus addresses.
-> +
-> +  no-memory-wc:
-> +    description:
-> +      The flag indicating, that SRAM memory region has not to be remapped
-> +      as write combining. WC is used by default.
-> +    type: boolean
-> +
-> +  # TODO: additionalProperties: false
-> +
-> +patternProperties:
-> +  "^([a-z]*-)?sram@[a-f0-9]$":
-> +    type: object
-> +    description:
-> +      Each child of the sram node specifies a region of reserved memory.
-> +    properties:
-> +      reg:
-> +        description:
-> +          IO mem address range, relative to the SRAM range.
-
-maxItems: 1
-
-> +
-> +      compatible:
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        description:
-> +          Should contain a vendor specific string in the form
-> +          <vendor>,[<device>-]<usage>
-> +
-> +      pool:
-> +        description:
-> +          Indicates that the particular reserved SRAM area is addressable
-> +          and in use by another device or devices.
-> +        type: boolean
-> +
-> +      export:
-> +        description:
-> +          Indicates that the reserved SRAM area may be accessed outside
-> +          of the kernel, e.g. by bootloader or userspace.
-> +        type: boolean
-> +
-> +      protect-exec:
-> +        description: |
-> +          Same as 'pool' above but with the additional constraint that code
-> +          will be run from the region and that the memory is maintained as
-> +          read-only, executable during code execution. NOTE: This region must
-> +          be page aligned on start and end in order to properly allow
-> +          manipulation of the page attributes.
-> +        type: boolean
-> +
-> +      label:
-> +        $ref: /schemas/types.yaml#/definitions/string
-
-Already has a type definition.
-
-> +        description:
-> +          The name for the reserved partition, if omitted, the label is taken
-> +          from the node name excluding the unit address.
-> +
-> +      clocks:
-> +        description:
-> +          A list of phandle and clock specifier pair that controls the
-> +          single SRAM clock.
-> +
-> +      # TODO: additionalProperties: false
-> +
-> +    required:
-> +      - reg
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - ranges
-> +
-> +examples:
-> +  - |
-> +    sram: sram@5c000000 {
-> +        compatible = "mmio-sram";
-> +        reg = <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        ranges = <0 0x5c000000 0x40000>;
-> +
-> +        smp-sram@100 {
-> +            compatible = "socvendor,smp-sram";
-> +            reg = <0x100 0x50>;
-> +        };
-> +
-> +        device-sram@1000 {
-> +            reg = <0x1000 0x1000>;
-> +            pool;
-> +        };
-> +
-> +        exported@20000 {
-> +            reg = <0x20000 0x20000>;
-> +            export;
-> +        };
-> +    };
-> -- 
-> 2.17.1
-> 
+>
+> On Tue, Oct 1, 2019 at 3:50 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+> >
+> > Amit, the merged version of the below change causes a boot failure
+> > (nasty hang, sometimes with RCU stalls) on the msm8998 laptops.  Oddly
+> > enough, it seems to be resolved if I remove the cpu-idle-states
+> > property from one of the cpu nodes.
+> >
+> > I see no issues with the msm8998 MTP.
+> >
+> > Do you have any suggestions on how we might debug this?
+> >
+> > On Tue, May 21, 2019 at 3:38 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> > >
+> > > Add device bindings for cpuidle states for cpu devices.
+> > >
+> > > Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/msm8998.dtsi | 50 +++++++++++++++++++++++++++
+> > >  1 file changed, 50 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > > index 3fd0769fe648..54810980fcf9 100644
+> > > --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> > > @@ -78,6 +78,7 @@
+> > >                         compatible = "arm,armv8";
+> > >                         reg = <0x0 0x0>;
+> > >                         enable-method = "psci";
+> > > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
+> > >                         efficiency = <1024>;
+> > >                         next-level-cache = <&L2_0>;
+> > >                         L2_0: l2-cache {
+> > > @@ -97,6 +98,7 @@
+> > >                         compatible = "arm,armv8";
+> > >                         reg = <0x0 0x1>;
+> > >                         enable-method = "psci";
+> > > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
+> > >                         efficiency = <1024>;
+> > >                         next-level-cache = <&L2_0>;
+> > >                         L1_I_1: l1-icache {
+> > > @@ -112,6 +114,7 @@
+> > >                         compatible = "arm,armv8";
+> > >                         reg = <0x0 0x2>;
+> > >                         enable-method = "psci";
+> > > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
+> > >                         efficiency = <1024>;
+> > >                         next-level-cache = <&L2_0>;
+> > >                         L1_I_2: l1-icache {
+> > > @@ -127,6 +130,7 @@
+> > >                         compatible = "arm,armv8";
+> > >                         reg = <0x0 0x3>;
+> > >                         enable-method = "psci";
+> > > +                       cpu-idle-states = <&LITTLE_CPU_SLEEP_0 &LITTLE_CPU_SLEEP_1>;
+> > >                         efficiency = <1024>;
+> > >                         next-level-cache = <&L2_0>;
+> > >                         L1_I_3: l1-icache {
+> > > @@ -142,6 +146,7 @@
+> > >                         compatible = "arm,armv8";
+> > >                         reg = <0x0 0x100>;
+> > >                         enable-method = "psci";
+> > > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
+> > >                         efficiency = <1536>;
+> > >                         next-level-cache = <&L2_1>;
+> > >                         L2_1: l2-cache {
+> > > @@ -161,6 +166,7 @@
+> > >                         compatible = "arm,armv8";
+> > >                         reg = <0x0 0x101>;
+> > >                         enable-method = "psci";
+> > > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
+> > >                         efficiency = <1536>;
+> > >                         next-level-cache = <&L2_1>;
+> > >                         L1_I_101: l1-icache {
+> > > @@ -176,6 +182,7 @@
+> > >                         compatible = "arm,armv8";
+> > >                         reg = <0x0 0x102>;
+> > >                         enable-method = "psci";
+> > > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
+> > >                         efficiency = <1536>;
+> > >                         next-level-cache = <&L2_1>;
+> > >                         L1_I_102: l1-icache {
+> > > @@ -191,6 +198,7 @@
+> > >                         compatible = "arm,armv8";
+> > >                         reg = <0x0 0x103>;
+> > >                         enable-method = "psci";
+> > > +                       cpu-idle-states = <&BIG_CPU_SLEEP_0 &BIG_CPU_SLEEP_1>;
+> > >                         efficiency = <1536>;
+> > >                         next-level-cache = <&L2_1>;
+> > >                         L1_I_103: l1-icache {
+> > > @@ -238,6 +246,48 @@
+> > >                                 };
+> > >                         };
+> > >                 };
+> > > +
+> > > +               idle-states {
+> > > +                       entry-method = "psci";
+> > > +
+> > > +                       LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
+> > > +                               compatible = "arm,idle-state";
+> > > +                               idle-state-name = "little-retention";
+> > > +                               arm,psci-suspend-param = <0x00000002>;
+> > > +                               entry-latency-us = <43>;
+> > > +                               exit-latency-us = <86>;
+> > > +                               min-residency-us = <200>;
+> > > +                       };
+> > > +
+> > > +                       LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
+> > > +                               compatible = "arm,idle-state";
+> > > +                               idle-state-name = "little-power-collapse";
+> > > +                               arm,psci-suspend-param = <0x00000003>;
+> > > +                               entry-latency-us = <100>;
+> > > +                               exit-latency-us = <612>;
+> > > +                               min-residency-us = <1000>;
+> > > +                               local-timer-stop;
+> > > +                       };
+> > > +
+> > > +                       BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
+> > > +                               compatible = "arm,idle-state";
+> > > +                               idle-state-name = "big-retention";
+> > > +                               arm,psci-suspend-param = <0x00000002>;
+> > > +                               entry-latency-us = <41>;
+> > > +                               exit-latency-us = <82>;
+> > > +                               min-residency-us = <200>;
+> > > +                       };
+> > > +
+> > > +                       BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
+> > > +                               compatible = "arm,idle-state";
+> > > +                               idle-state-name = "big-power-collapse";
+> > > +                               arm,psci-suspend-param = <0x00000003>;
+> > > +                               entry-latency-us = <100>;
+> > > +                               exit-latency-us = <525>;
+> > > +                               min-residency-us = <1000>;
+> > > +                               local-timer-stop;
+> > > +                       };
+> > > +               };
+> > >         };
+> > >
+> > >         firmware {
+> > > --
+> > > 2.17.1
+> > >
