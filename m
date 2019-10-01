@@ -1,102 +1,148 @@
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH 1/2] dt-bindings: ufs: ti,j721e-ufs.yaml: Add binding for
- TI UFS wrapper
-Date: Tue, 1 Oct 2019 17:48:30 +0530
-Message-ID: <c3490572-8230-3e41-0916-097091386b21@ti.com>
-References: <20190918133921.25844-1-vigneshr@ti.com>
- <20190918133921.25844-2-vigneshr@ti.com> <20191001120826.GA4214@bogus>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: interconnect: Add OSM L3 DT bindings
+Date: Tue, 01 Oct 2019 17:50:49 +0530
+Message-ID: <e163cb4ff67b312c39c3eef543d7c62b@codeaurora.org>
+References: <20190821091132.14994-1-sibis@codeaurora.org>
+ <20190821091132.14994-2-sibis@codeaurora.org>
+ <53e76100-b7c9-1069-b571-b17271fe41c5@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191001120826.GA4214@bogus>
-Content-Language: en-US
+In-Reply-To: <53e76100-b7c9-1069-b571-b17271fe41c5@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, jejb@linux.ibm.com, Martin K Petersen <martin.petersen@oracle.com>, Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, Janek Kotas <jank@cadence.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, nsekhar@ti.com
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: robh+dt@kernel.org, bjorn.andersson@linaro.org, agross@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, mark.rutland@arm.com, evgreen@chromium.org, daidavid1@codeaurora.org, saravanak@google.com, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hey Georgi,
 
-
-On 01/10/19 5:38 PM, Rob Herring wrote:
-> On Wed, Sep 18, 2019 at 07:09:20PM +0530, Vignesh Raghavendra wrote:
->> Add binding documentation of TI wrapper for Cadence UFS Controller.
->>
->> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+On 2019-09-27 04:46, Georgi Djakov wrote:
+> Hi Sibi,
+> 
+> On 8/21/19 02:11, Sibi Sankar wrote:
+>> Add bindings for Operating State Manager (OSM) L3 interconnect 
+>> provider
+>> on SDM845 SoCs.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 >> ---
->>  .../devicetree/bindings/ufs/ti,j721e-ufs.yaml | 45 +++++++++++++++++++
->>  1 file changed, 45 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
+>>  .../bindings/interconnect/qcom,osm-l3.yaml    | 56 
+>> +++++++++++++++++++
+>>  .../dt-bindings/interconnect/qcom,osm-l3.h    | 12 ++++
+>>  2 files changed, 68 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
+>>  create mode 100644 include/dt-bindings/interconnect/qcom,osm-l3.h
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml 
+>> b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
 >> new file mode 100644
->> index 000000000000..dabd7c795fbe
+>> index 0000000000000..dab2b6875ab27
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
->> @@ -0,0 +1,45 @@
->> +# SPDX-License-Identifier: GPL-2.0
+>> +++ b/Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml
+>> @@ -0,0 +1,56 @@
+>> +# SPDX-License-Identifier: BSD-2-Clause
 >> +%YAML 1.2
 >> +---
->> +$id: http://devicetree.org/schemas/ufs/ti,j721e-ufs.yaml#
+>> +$id: http://devicetree.org/schemas/interconnect/qcom,osm-l3.yaml#
 >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 >> +
->> +title: TI J721e UFS Host Controller Glue Driver
+>> +title: Qualcomm Operating State Manager (OSM) L3 Interconnect 
+>> Provider
 >> +
 >> +maintainers:
->> +  - Vignesh Raghavendra <vigneshr@ti.com>
+>> +  - Sibi Sankar <sibis@codeaurora.org>
+>> +
+>> +description:
+>> +  L3 cache bandwidth requirements on Qualcomm SoCs is serviced by the 
+>> OSM.
+>> +  The OSM L3 interconnect provider aggregates the L3 bandwidth 
+>> requests
+>> +  from CPU/GPU and relays it to the OSM.
 >> +
 >> +properties:
 >> +  compatible:
->> +    items:
->> +      - const: ti,j721e-ufs
+>> +    const: "qcom,sdm845-osm-l3"
 >> +
 >> +  reg:
 >> +    maxItems: 1
->> +    description: address of TI UFS glue registers
 >> +
 >> +  clocks:
->> +    maxItems: 1
->> +    description: phandle to the M-PHY clock
+>> +    items:
+>> +      - description: xo clock
+>> +      - description: alternate clock
 >> +
->> +  power-domains:
->> +    maxItems: 1
+>> +  clock-names:
+>> +    items:
+>> +      - const: xo
+>> +      - const: alternate
+>> +
+>> +  '#interconnect-cells':
+>> +    const: 1
 >> +
 >> +required:
 >> +  - compatible
 >> +  - reg
 >> +  - clocks
->> +  - power-domains
+>> +  - clock-names
+>> +  - '#interconnect-cells'
+>> +
+>> +additionalProperties: false
 >> +
 >> +examples:
 >> +  - |
->> +    ufs_wrapper: ufs-wrapper@4e80000 {
->> +       compatible = "ti,j721e-ufs";
->> +       reg = <0x0 0x4e80000 0x0 0x100>;
->> +       power-domains = <&k3_pds 277>;
->> +       clocks = <&k3_clks 277 1>;
->> +       assigned-clocks = <&k3_clks 277 1>;
->> +       assigned-clock-parents = <&k3_clks 277 4>;
->> +       #address-cells = <2>;
->> +       #size-cells = <2>;
-> 
-> Based on the driver you expect to have a child node here with the UFS 
-> controller? You need to show that and have a schema for it.
-> 
-
-Yes, Cadence UFS controller node will be the child node. Its bindings
-are documented at: Documentation/devicetree/bindings/ufs/cdns,ufshc.txt
-(which in turn refers to
-Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt)
-
-But they are not in .yaml yet. How would you suggest to reference that?
-Or should I just write plain text DT binding doc given that subsystem is
-not converted to yaml?
-
+>> +    osm_l3: interconnect@17d41000 {
+>> +      compatible = "qcom,sdm845-osm-l3";
+>> +      reg = <0x17d41000 0x1400>;
+>> +
+>> +      clocks = <&rpmhcc 0>, <&gcc 165>;
+>> +      clock-names = "xo", "alternate";
+>> +
+>> +      #interconnect-cells = <1>;
 >> +    };
->> -- 
->> 2.23.0
->>
+> 
+> Are we going to do the bandwidth scaling from some cpufreq driver? 
+> Under which
+> DT node will we put the "interconnects" property?
+
+Its still undecided :( unfortunately.
+Using Saravana's series means that
+bandwidth scaling will be done from
+the cpufreq driver. The property
+will be a part of the cpu-nodes. But
+the part of adding the bw opp-tables
+also to cpufreq driver or nodes doesn't
+seem correct to me.
+
+> 
+> Thanks,
+> Georgi
+> 
+>> diff --git a/include/dt-bindings/interconnect/qcom,osm-l3.h 
+>> b/include/dt-bindings/interconnect/qcom,osm-l3.h
+>> new file mode 100644
+>> index 0000000000000..54858ff7674d7
+>> --- /dev/null
+>> +++ b/include/dt-bindings/interconnect/qcom,osm-l3.h
+>> @@ -0,0 +1,12 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +/*
+>> + * Copyright (C) 2019 The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
+>> +#define __DT_BINDINGS_INTERCONNECT_QCOM_OSM_L3_H
+>> +
+>> +#define MASTER_OSM_L3_APPS	0
+>> +#define SLAVE_OSM_L3		1
+>> +
+>> +#endif
+>> 
 
 -- 
-Regards
-Vignesh
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
