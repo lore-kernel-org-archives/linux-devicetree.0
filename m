@@ -1,75 +1,60 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 1/2] arm64: dts: juno: add GPU subsystem
-Date: Tue, 1 Oct 2019 15:34:07 +0100
-Message-ID: <20191001143350.GA404@bogus>
-References: <88dc6386929b3dcd7a65ba8063628c62b66b330c.1569856049.git.robin.murphy@arm.com>
- <CAL_JsqKUP6qG6PVL47RQ5A5OcBhpdOA_0VL1YeYDuyVSVcRqCQ@mail.gmail.com>
- <20191001085954.GA10443@bogus>
- <2a3b2fe1-b08a-bc21-6f3b-4a595b51463c@arm.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RESEND PATCH] ARM: dts: Add stmpe-adc DT node to Toradex T30
+ modules
+Date: Tue, 1 Oct 2019 16:35:01 +0200
+Message-ID: <20191001143501.GA3566931@ulmo>
+References: <20190814105318.21902-1-philippe.schenker@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2a3b2fe1-b08a-bc21-6f3b-4a595b51463c@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Rob Herring <robh@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Steven Price <steven.price@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20190814105318.21902-1-philippe.schenker@toradex.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philippe Schenker <philippe.schenker@toradex.com>
+Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 01:45:30PM +0100, Robin Murphy wrote:
-> On 01/10/2019 09:59, Sudeep Holla wrote:
-> > On Mon, Sep 30, 2019 at 12:46:33PM -0500, Rob Herring wrote:
-> > > On Mon, Sep 30, 2019 at 10:25 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> > > > 
-> > > > Since we now have bindings for Mali Midgard GPUs, let's use them to
-> > > > describe Juno's GPU subsystem, if only because we can. Juno sports a
-> > > > Mali-T624 integrated behind an MMU-400 (as a gesture towards
-> > > > virtualisation), in their own dedicated power domain with DVFS
-> > > > controlled by the SCP.
-> > > > 
-> > > > CC: Liviu Dudau <liviu.dudau@arm.com>
-> > > > CC: Sudeep Holla <sudeep.holla@arm.com>
-> > > > CC: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> > > > ---
-> > > >   .../bindings/gpu/arm,mali-midgard.yaml        |  5 +++-
-> > > >   arch/arm64/boot/dts/arm/juno-base.dtsi        | 27 +++++++++++++++++++
-> > > >   2 files changed, 31 insertions(+), 1 deletion(-)
-> > > 
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > 
-> > If you plan to take it along with driver change,
-> > 
-> > Acked-by: Sudeep Holla <sudeep.holla@arm.com>
-> > 
-> > If not, please let us know. I can take it for v5.5
-> 
-> The driver change is debatable and not strictly necessary, so it probably
-> makes more sense to take this one through the VExpress tree on its own. I
-> wouldn't suggest flipping the status to "enabled" just yet, but it seems
 
-Sure, make sense.
+--PNTmBPCT7hxwcZjr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> worth putting the basic description in place as a jumping-off point for
-> folks to hack on (e.g. it's another 'interesting' case for devfreq OPP
-> stuff).
+On Wed, Aug 14, 2019 at 10:53:38AM +0000, Philippe Schenker wrote:
+> Add the stmpe-adc DT node as found on Toradex T30 modules
+>=20
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+>=20
+> ---
+>=20
+>  arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi | 22 ++++++++++++++--------
+>  arch/arm/boot/dts/tegra30-apalis.dtsi      | 22 ++++++++++++++--------
+>  arch/arm/boot/dts/tegra30-colibri.dtsi     | 22 ++++++++++++++--------
+>  3 files changed, 42 insertions(+), 24 deletions(-)
 
-IIUC, the devfreq support in panfrost driver should work fine with SCPI
-as it has clock provider for GPU DVFS.
+Applied to for-5.5/arm/dt , thanks.
 
-With SCMI, we don't want to hook to clock framework, but I am yet to come
-up with a sane generic way to add SCMI devfreq and integrate it with the
-panfrost devfreq.
+Thierry
 
---
-Regards,
-Sudeep
+--PNTmBPCT7hxwcZjr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2TZBIACgkQ3SOs138+
+s6Hftw/9GSzpANShuy2Bl8XDU0wfm4ImQZHn+gvloV9ychIEQKAJuFYroWjvf1kc
+x/NskhwR081Ap9AfiDk9KWEg2Xe4fnfQmI+zFAPDSEee+OMmvMaTEfY0xYQOAe7l
+OrhXiNadMZKXohIKA2L7lKEGiUsbojTVOh7RSfxTzjCirS+3FWnHnozRVL0Cwwwx
+8lkBdHnUSvJMLrjB7JmE5hFJHIdxmwtkp5YmnQCp+708xMmdy1c3G3kffiyiyrAM
+//qYyzPtduSVEbrBcmQX/22+dOHi9HKPSgzmStqn40j4gioBp06TmRmLe+wdOu90
+G8ZO8tdyFU7TpWwCU8BAZXkpb5C64vZNxjyKDZeLZ4hk2pgu+dQ9hTiJQywyM/oa
+/1Hn/AX43COH++K5KBcVWhu5LvzYMRL7GZzlkiOOGuR9k3F/ig7Qx6DMrnjFPlqI
+m7t4nqqZTlDEzDa53yoVVVdXXiDsKwi8nEOfeIiuEBlU6w6nPf+nui3DBWA3Zkn2
+2XS2Lq2G1qttg5xv1naf5geG5a7Vop+3goArJKpCLNzac/2Vzrkm9kKNyVBre5pz
+dobkYxt5O3x/y7+DIqnpmCV37Gx/9juYh2EH+C3lWCsWiGqzMZxELLU0E1qX9FqR
+O0lbuoWfYfzEuoLEILEfjo1lxpziqUOw1condM59Se6u9R5A+uo=
+=/g0r
+-----END PGP SIGNATURE-----
+
+--PNTmBPCT7hxwcZjr--
