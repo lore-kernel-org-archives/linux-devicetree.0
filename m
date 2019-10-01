@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 4/7] dt-bindings: interrupt-controller: Add brcm,bcm7211-l1-intc binding
-Date: Tue,  1 Oct 2019 15:48:39 -0700
-Message-ID: <20191001224842.9382-5-f.fainelli@gmail.com>
+Subject: [PATCH 6/7] irqchip: Build BCM283X_IRQ for ARCH_BRCMSTB
+Date: Tue,  1 Oct 2019 15:48:41 -0700
+Message-ID: <20191001224842.9382-7-f.fainelli@gmail.com>
 References: <20191001224842.9382-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191001224842.9382-1-f.fainelli@gmail.com>
@@ -14,29 +14,27 @@ Cc: Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de
         ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-BCM7211 uses a very similar root interrupt controller than what exists on
-BCM2836, define a specific compatible string to key off specific
-behavior.
+Now that irq-bcm2835.c and irq-bcm2836.c have been updated to support
+BCM7211 which is under ARCH_BRCMSTB, build both drivers for
+ARCH_BRCMSTB.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- .../bindings/interrupt-controller/brcm,bcm2836-l1-intc.txt    | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/irqchip/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2836-l1-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2836-l1-intc.txt
-index 8ced1696c325..13bef028d6ad 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2836-l1-intc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2836-l1-intc.txt
-@@ -7,7 +7,9 @@ controller.
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index d1bb20d23d27..ffd5f986172a 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -116,7 +116,7 @@ config I8259
+ config BCM283X_IRQ
+ 	bool
+ 	select IRQ_DOMAIN
+-	default ARCH_BCM2835
++	default ARCH_BCM2835 || ARCH_BRCMSTB
  
- Required properties:
- 
--- compatible:	 	Should be "brcm,bcm2836-l1-intc"
-+- compatible:	 	Should be one of
-+			"brcm,bcm2836-l1-intc"
-+			"brcm,bcm7211-l1-intc"
- - reg:			Specifies base physical address and size of the
- 			  registers
- - interrupt-controller:	Identifies the node as an interrupt controller
+ config BCM6345_L1_IRQ
+ 	bool
 -- 
 2.17.1
