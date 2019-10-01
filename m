@@ -1,60 +1,211 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RESEND PATCH] ARM: dts: Add stmpe-adc DT node to Toradex T30
- modules
-Date: Tue, 1 Oct 2019 16:35:01 +0200
-Message-ID: <20191001143501.GA3566931@ulmo>
-References: <20190814105318.21902-1-philippe.schenker@toradex.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
+Date: Tue, 01 Oct 2019 07:38:25 -0700
+Message-ID: <20191001143825.CD3212054F@mail.kernel.org>
+References: <20190918095018.17979-1-tdas@codeaurora.org> <20190918095018.17979-4-tdas@codeaurora.org> <20190918213946.DC03521924@mail.kernel.org> <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org> <20190924231223.9012C207FD@mail.kernel.org> <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org> <20190925130346.42E0820640@mail.kernel.org> <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190814105318.21902-1-philippe.schenker@toradex.com>
+In-Reply-To: <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <philippe.schenker@toradex.com>
-Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Michael Turquette <mturquette@baylibre.com>, Taniya Das <tdas@codeaurora.org>, robh+dt@kernel.org
+Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---PNTmBPCT7hxwcZjr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Aug 14, 2019 at 10:53:38AM +0000, Philippe Schenker wrote:
-> Add the stmpe-adc DT node as found on Toradex T30 modules
+Quoting Taniya Das (2019-09-27 00:37:57)
+> Hi Stephen,
 >=20
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> On 9/25/2019 6:33 PM, Stephen Boyd wrote:
+> > Quoting Taniya Das (2019-09-25 04:20:07)
+> >> Hi Stephen,
+> >>
+> >> Please find my comments.
+> >>
+> >> On 9/25/2019 4:42 AM, Stephen Boyd wrote:
+> >>> Quoting Taniya Das (2019-09-23 01:01:11)
+> >>>> Hi Stephen,
+> >>>>
+> >>>> Thanks for your comments.
+> >>>>
+> >>>> On 9/19/2019 3:09 AM, Stephen Boyd wrote:
+> >>>>> Quoting Taniya Das (2019-09-18 02:50:18)
+> >>>>>> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-=
+sc7180.c
+> >>>>>> new file mode 100644
+> >>>>>> index 000000000000..d47865d5408f
+> >>>>>> --- /dev/null
+> >>>>>> +++ b/drivers/clk/qcom/gcc-sc7180.c
+> >>>>>> +                       .ops =3D &clk_branch2_ops,
+> >>>>>> +               },
+> >>>>>> +       },
+> >>>>>> +};
+> >>>>>> +
+> >>> [...]
+> >>>>>> +static struct clk_branch gcc_ufs_phy_phy_aux_clk =3D {
+> >>>>>> +       .halt_reg =3D 0x77094,
+> >>>>>> +       .halt_check =3D BRANCH_HALT,
+> >>>>>> +       .hwcg_reg =3D 0x77094,
+> >>>>>> +       .hwcg_bit =3D 1,
+> >>>>>> +       .clkr =3D {
+> >>>>>> +               .enable_reg =3D 0x77094,
+> >>>>>> +               .enable_mask =3D BIT(0),
+> >>>>>> +               .hw.init =3D &(struct clk_init_data){
+> >>>>>> +                       .name =3D "gcc_ufs_phy_phy_aux_clk",
+> >>>>>> +                       .parent_data =3D &(const struct clk_parent=
+_data){
+> >>>>>> +                               .hw =3D &gcc_ufs_phy_phy_aux_clk_s=
+rc.clkr.hw,
+> >>>>>> +                       },
+> >>>>>> +                       .num_parents =3D 1,
+> >>>>>> +                       .flags =3D CLK_SET_RATE_PARENT,
+> >>>>>> +                       .ops =3D &clk_branch2_ops,
+> >>>>>> +               },
+> >>>>>> +       },
+> >>>>>> +};
+> >>>>>> +
+> >>>>>> +static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk =3D {
+> >>>>>> +       .halt_reg =3D 0x7701c,
+> >>>>>> +       .halt_check =3D BRANCH_HALT_SKIP,
+> >>>>>
+> >>>>> Again, nobody has fixed the UFS driver to not need to do this halt =
+skip
+> >>>>> check for these clks? It's been over a year.
+> >>>>>
+> >>>>
+> >>>> The UFS_PHY_RX/TX clocks could be left enabled due to certain HW boot
+> >>>> configuration and thus during the late initcall of clk_disable there
+> >>>> could be warnings of "clock stuck ON" in the dmesg. That is the reas=
+on
+> >>>> also to use the BRANCH_HALT_SKIP flag.
+> >>>
+> >>> Oh that's bad. Why do the clks stay on when we try to turn them off?
+> >>>
+> >>
+> >> Those could be due to the configuration selected by HW and SW cannot
+> >> override them, so traditionally we have never polled for CLK_OFF for
+> >> these clocks.
+> >=20
+> > Is that the case or just a guess?
+> >=20
 >=20
-> ---
+> This is the behavior :).
+
+Ok. It's the same as sdm845 so I guess it's OK.
+
 >=20
->  arch/arm/boot/dts/tegra30-apalis-v1.1.dtsi | 22 ++++++++++++++--------
->  arch/arm/boot/dts/tegra30-apalis.dtsi      | 22 ++++++++++++++--------
->  arch/arm/boot/dts/tegra30-colibri.dtsi     | 22 ++++++++++++++--------
->  3 files changed, 42 insertions(+), 24 deletions(-)
+> >>
+> >>>>
+> >>>> I would also check internally for the UFS driver fix you are referri=
+ng here.
+> >>>
+> >>> Sure. I keep asking but nothing is done :(
+> >>>
+> >>>>
+> >>>>>> +       .clkr =3D {
+> >>>>>> +               .enable_reg =3D 0x7701c,
+> >>>>>> +               .enable_mask =3D BIT(0),
+> >>>>>> +               .hw.init =3D &(struct clk_init_data){
+> >>>>>> +                       .name =3D "gcc_ufs_phy_rx_symbol_0_clk",
+> >>>>>> +                       .ops =3D &clk_branch2_ops,
+> >>>>>> +               },
+> >>>>>> +       },
+> >>>>>> +};
+> >>>>>> +
+> >>> [...]
+> >>>>>> +
+> >>>>>> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk =3D {
+> >>>>>> +       .halt_reg =3D 0xf058,
+> >>>>>> +       .halt_check =3D BRANCH_HALT_SKIP,
+> >>>>>
+> >>>>> Why does this need halt_skip?
+> >>>>
+> >>>> This is required as the source is external PHY, so we want to not ch=
+eck
+> >>>> for HALT.
+> >>>
+> >>> This doesn't really answer my question. If the source is an external =
+phy
+> >>> then it should be listed as a clock in the DT binding and the parent
+> >>> should be specified here. Unless something doesn't work because of th=
+at?
+> >>>
+> >>
+> >> The USB phy is managed by the USB driver and clock driver is not aware
+> >> if USB driver models the phy as a clock. Thus we do want to keep a
+> >> dependency on the parent and not poll for CLK_ENABLE.
+> >=20
+> > The clk driver should be aware of the USB driver modeling the phy as a
+> > clk. We do that for other phys so what is the difference here?
+> >=20
+>=20
+> Let me check with the USB team, but could we keep them for now?
 
-Applied to for-5.5/arm/dt , thanks.
+Ok. It's also the same as sdm845 so I guess it's OK. Would be nice to
+properly model it though so we can be certain the clk is actually
+enabled.
 
-Thierry
+>=20
+> >>
+> >>>>
+> >>>>>
+> >>>>>> +       .clkr =3D {
+> >>>>>> +               .enable_reg =3D 0xf058,
+> >>>>>> +               .enable_mask =3D BIT(0),
+> >>>>>> +               .hw.init =3D &(struct clk_init_data){
+> >>>>>> +                       .name =3D "gcc_usb3_prim_phy_pipe_clk",
+> >>>>>> +                       .ops =3D &clk_branch2_ops,
+> >>>>>> +               },
+> >>>>>> +       },
+> >>>>>> +};
+> >>>>>> +
+> >>>>>> +static struct clk_branch gcc_usb_phy_cfg_ahb2phy_clk =3D {
+> >>>>>> +       .halt_reg =3D 0x6a004,
+> >>>>>> +       .halt_check =3D BRANCH_HALT,
+> >>>>>> +       .hwcg_reg =3D 0x6a004,
+> >>>>>> +       .hwcg_bit =3D 1,
+> >>>>>> +       .clkr =3D {
+> >>>>>> +               .enable_reg =3D 0x6a004,
+> >>>>>> +               .enable_mask =3D BIT(0),
+> >>>>>> +               .hw.init =3D &(struct clk_init_data){
+> >>>>>> +                       .name =3D "gcc_usb_phy_cfg_ahb2phy_clk",
+> >>>>>> +                       .ops =3D &clk_branch2_ops,
+> >>>>>> +               },
+> >>>>>> +       },
+> >>>>>> +};
+> >>>>>> +
+> >>>>>> +/* Leave the clock ON for parent config_noc_clk to be kept enable=
+d */
+> >>>>>
+> >>>>> There's no parent though... So I guess this means it keeps it enabl=
+ed
+> >>>>> implicitly in hardware?
+> >>>>>
+> >>>>
+> >>>> These are not left enabled, but want to leave them enabled for clien=
+ts
+> >>>> on config NOC.
+> >>>
+> >>> Sure. It just doesn't make sense to create clk structures and expose
+> >>> them in the kernel when we just want to turn the bits on and leave th=
+em
+> >>> on forever. Why not just do some register writes in probe for this
+> >>> driver? Doesn't that work just as well and use less memory?
+> >>>
+> >>
+> >> Even if I write these registers during probe, the late init check
+> >> 'clk_core_is_enabled' would return true and would be turned OFF, that =
+is
+> >> the reason for marking them CRITICAL.
+> >>
+> >=20
+> > That wouldn't happen if the clks weren't registered though, no?
+> >=20
+>=20
+> I want to keep these clock CRITICAL and registered for now, but we=20
+> should be able to revisit/clean them up later.
+>=20
 
---PNTmBPCT7hxwcZjr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2TZBIACgkQ3SOs138+
-s6Hftw/9GSzpANShuy2Bl8XDU0wfm4ImQZHn+gvloV9ychIEQKAJuFYroWjvf1kc
-x/NskhwR081Ap9AfiDk9KWEg2Xe4fnfQmI+zFAPDSEee+OMmvMaTEfY0xYQOAe7l
-OrhXiNadMZKXohIKA2L7lKEGiUsbojTVOh7RSfxTzjCirS+3FWnHnozRVL0Cwwwx
-8lkBdHnUSvJMLrjB7JmE5hFJHIdxmwtkp5YmnQCp+708xMmdy1c3G3kffiyiyrAM
-//qYyzPtduSVEbrBcmQX/22+dOHi9HKPSgzmStqn40j4gioBp06TmRmLe+wdOu90
-G8ZO8tdyFU7TpWwCU8BAZXkpb5C64vZNxjyKDZeLZ4hk2pgu+dQ9hTiJQywyM/oa
-/1Hn/AX43COH++K5KBcVWhu5LvzYMRL7GZzlkiOOGuR9k3F/ig7Qx6DMrnjFPlqI
-m7t4nqqZTlDEzDa53yoVVVdXXiDsKwi8nEOfeIiuEBlU6w6nPf+nui3DBWA3Zkn2
-2XS2Lq2G1qttg5xv1naf5geG5a7Vop+3goArJKpCLNzac/2Vzrkm9kKNyVBre5pz
-dobkYxt5O3x/y7+DIqnpmCV37Gx/9juYh2EH+C3lWCsWiGqzMZxELLU0E1qX9FqR
-O0lbuoWfYfzEuoLEILEfjo1lxpziqUOw1condM59Se6u9R5A+uo=
-=/g0r
------END PGP SIGNATURE-----
-
---PNTmBPCT7hxwcZjr--
+Why do you want to keep them critical and registered? I'm suggesting
+that any clk that is marked critical and doesn't have a parent should
+instead become a register write in probe to turn the clk on.
