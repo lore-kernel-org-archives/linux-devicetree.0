@@ -1,35 +1,56 @@
-From: MarkLee <Mark-MC.Lee@mediatek.com>
-Subject: [PATCH net 1/2] net: ethernet: mediatek: Fix MT7629 missing GMII mode support
-Date: Tue, 1 Oct 2019 20:31:49 +0800
-Message-ID: <20191001123150.23135-2-Mark-MC.Lee@mediatek.com>
-References: <20191001123150.23135-1-Mark-MC.Lee@mediatek.com>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH 1/3] ARM: dts: exynos: Add interrupt to DMC controller
+ in Exynos5422
+Date: Tue, 1 Oct 2019 14:38:43 +0200
+Message-ID: <16c56e81-d0a7-a405-fa12-83442364c260@partner.samsung.com>
+References: <20190925161813.21117-1-l.luba@partner.samsung.com>
+        <CGME20190925161842eucas1p271a9cf4f62b3d7af02c0a5d0d1eb9c4f@eucas1p2.samsung.com>
+        <20190925161813.21117-2-l.luba@partner.samsung.com>
+        <20190927085359.GA19131@pi3>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20191001123150.23135-1-Mark-MC.Lee@mediatek.com>
-Sender: netdev-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, Sean Wang <sean.wang@mediatek.com>, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@openwrt.org>, Nelson Chang <nelson.chang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rene van Dorst <opensource@vdorst.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, MarkLee <Mark-MC.Lee@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190927085359.GA19131@pi3>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com, kgene@kernel.org, mark.rutland@arm.com, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, robh+dt@kernel.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add missing configuration for mt7629 gmii mode support
+Hi Krzysztof,
 
-Signed-off-by: MarkLee <Mark-MC.Lee@mediatek.com>
----
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 1 +
- 1 file changed, 1 insertion(+)
+On 9/27/19 10:53 AM, Krzysztof Kozlowski wrote:
+> On Wed, Sep 25, 2019 at 06:18:11PM +0200, Lukasz Luba wrote:
+>> Add interrupt to Dynamic Memory Controller in Exynos5422 and Odroid
+>> XU3-family boards. It will be used instead of devfreq polling mode
+>> governor. The interrupt is connected to performance counters private
+>> for DMC, which might track utilisation of the memory channels.
+>>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos5420.dtsi | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+>> index ac49373baae7..72738e620d11 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -240,6 +240,8 @@
+>>   		dmc: memory-controller@10c20000 {
+>>   			compatible = "samsung,exynos5422-dmc";
+>>   			reg = <0x10c20000 0x100>, <0x10c30000 0x100>;
+>> +			interrupt-parent = <&combiner>;
+>> +			interrupts = <16 0>;
+> 
+> You register DMC for DREX0 and DREX1 but take only DREX0 interrupt. Why
+> skipping second?
+> 
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index c61069340f4f..703adb96429e 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -261,6 +261,7 @@ static void mtk_mac_config(struct phylink_config *config, unsigned int mode,
- 		ge_mode = 0;
- 		switch (state->interface) {
- 		case PHY_INTERFACE_MODE_MII:
-+		case PHY_INTERFACE_MODE_GMII:
- 			ge_mode = 1;
- 			break;
- 		case PHY_INTERFACE_MODE_REVMII:
--- 
-2.17.1
+Right, the second should also be there: <16 1>. The channel 1 has not
+been triggered in CPU test cases but might be used by some other
+NoC clients.
+I will add it in the next version.
+
+Regards,
+Lukasz
