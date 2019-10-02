@@ -1,114 +1,90 @@
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: [Patch 1/3] media: ov5640: add PIXEL_RATE control
-Date: Wed, 2 Oct 2019 16:32:26 +0200
-Message-ID: <20191002143226.psrcocsjs2wtiydd@uno.localdomain>
-References: <20190925152301.21645-1-bparrot@ti.com>
- <20190925152301.21645-2-bparrot@ti.com>
- <20191001075704.GA5449@paasikivi.fi.intel.com>
- <20191001162341.f2o7ruar2nifl5ws@ti.com>
- <20191002075951.afp2xligspqat4ew@uno.localdomain>
- <20191002121438.g3re6v54q4hit2wv@ti.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v4 1/6] opp: Handle target/min/max voltage in
+ dev_pm_opp_adjust_voltage()
+Date: Wed, 2 Oct 2019 16:33:10 +0200
+Message-ID: <20191002143310.GA15898@pi3>
+References: <20190910123618.27985-1-s.nawrocki@samsung.com>
+ <CGME20190910123636eucas1p250ec04901f227b947cc38936563f63b2@eucas1p2.samsung.com>
+ <20190910123618.27985-2-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kof3u5wcyurirvhq"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191002121438.g3re6v54q4hit2wv@ti.com>
+In-Reply-To: <20190910123618.27985-2-s.nawrocki@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, hugues.fruchet@st.com
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: vireshk@kernel.org, robh+dt@kernel.org, kgene@kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Sep 10, 2019 at 02:36:13PM +0200, Sylwester Nawrocki wrote:
+> To be squashed with patch "PM / OPP: Support adjusting OPP voltages
+> at runtime".
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+> Changes since v3:
+>  - new patch
+> 
+>  drivers/opp/core.c     | 10 ++++++++--
+>  include/linux/pm_opp.h |  3 ++-
+>  2 files changed, 10 insertions(+), 3 deletions(-)
 
---kof3u5wcyurirvhq
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+I'll take the ASV driver via samsung-soc but I see it depends on this
+one.  Please provide me a stable tag with it or an Ack.
 
-Hi Benoit,
+Best regards,
+Krzysztof
 
-On Wed, Oct 02, 2019 at 07:14:38AM -0500, Benoit Parrot wrote:
-> Hi Jacopo,
->
-> Maybe, I miss spoke when I mentioned a helper I did not intent a framework
-> level generic function. Just a function to help in this case :)
 
-Yes indeed, the discussion thread I linked here was mostly interesting
-because Hugues tried to do the same for LINK_FREQ iirc, and there
-where some usefult pointers.
-
->
-> That being said, I re-read the thread you mentioned. And as Hughes pointed
-> out dynamically generating a "working" link frequency value which can be
-> used by a CSI2 receiver to properly configure its PHY is not trivial.
->
-> When I created this patch, I also had another to add V4L2_CID_LINK_FREQ
-> support. I am testing this against the TI CAL CSI2 receiver, which already
-> uses the V4L2_CID_PIXEL_RATE value for that purpose, so I also had a patch
-> to add support for V4L2_CID_LINK_FREQ to that driver as well.
->
-> Unfortunately, similar to Hughes' findings I was not able to make it "work"
-> with all supported resolution/framerate.
-
-As reported by Hugues findings, the PLL calculation procedure might be
-faulty, and the actuall frequencies on the bus are different from the
-calculated ones.
-
-I wish I had more time to re-look at that, as they worked for my and
-Sam's use case, but deserve some rework.
-
->
-> Unlike my V4L2_CID_PIXEL_RATE solution which now works in all mode with the
-> same receiver.
->
-
-It seems to me you're reporting a fixed rate. It might make your
-receiver happy, but does not report what is acutally put on the bus.
-Am I missing something ?
-
-> So long story short I dropped the V4L2_CID_LINK_FREQ patch and focused on
-> V4L2_CID_PIXEL_RATE instead.
->
-
-As Sakari pointed out, going from one to the other is trivial and
-could be done on top.
-
-Thanks
-   j
-
-> Regard,
-> Benoit
->
-> Jacopo Mondi <jacopo@jmondi.org> wrote on Wed [2019-Oct-02 09:59:51 +0200]:
-> > Hi Benoit,
-> >   +Hugues
-> >
-> > If you're considering an helper, this thread might be useful to you:
-> > https://patchwork.kernel.org/patch/11019673/
-> >
-> > Thanks
-> >    j
-> >
->
->
-
---kof3u5wcyurirvhq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2UtPoACgkQcjQGjxah
-VjzuFhAAsWYgqaIr7PXgThGYiKp6BKXEWAlDPNxdgqz/qJIA3Lu/Vh94Q3RPmk91
-DaXn712XpeCv/lM4Z658bKPedhwKpze0kcoYK1E9/51Yde/5IEjf/WUSEJVvvpPY
-wdWqdAkwbeStd4uLDAHmy63ZOFqPWrA3gvYJbiZoBjDMz+lbfkxadC5vHKLMAZ9E
-ZBB2WjJsGpggxIqtyhH2qdI9akIqqfe17d1JfU1dacnAEM3PJ8TGcCky10Jg0xQr
-Ced86LUDDO1WI3ORKmzshEBXLFUW5t0hT5FnuloJClHAiTcZ4TbBo8HUYgTb81yq
-RqiurkEUaycHrgNriQ8KjblwNT0VLpL42+nbDYvjUH2qAC1pLQGsdRgKsTkCXgj2
-k3lSU4nUd/rXg5o9f2l3F6T5Yubl88l1qeYOtosmpsiIoJLCyQySDEvZvNQ+O093
-QV8k3tuy26nwzLpGN9lZO3skYwm6KKuEbyEZUKVDu2RUI5rX097Ea0Gl31/41/jO
-8TCPVuX2diAmO3ZbLMafUmlO7YJsXMx41cOCP4BeUsEPfXcjnObr/TkH3XtMrD0m
-BFUJZTKqBjYR/8x4T+1vH4Lfswi/Pj+uypI9FVamy5wN4LwRoQVbYUJI1zKsmcDc
-JIC0GIQRyX/h7Ice0YCFP361mHbz0ZQ9avvcAS7MlRhcVDofRMM=
-=medk
------END PGP SIGNATURE-----
-
---kof3u5wcyurirvhq--
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 407a07f29b12..4ebe5a6c280b 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -2057,14 +2057,18 @@ static int _opp_set_availability(struct device *dev, unsigned long freq,
+>   * dev_pm_opp_adjust_voltage() - helper to change the voltage of an OPP
+>   * @dev:		device for which we do this operation
+>   * @freq:		OPP frequency to adjust voltage of
+> - * @u_volt:		new OPP voltage
+> + * @u_volt:		new OPP target voltage
+> + * @u_volt_min:		new OPP min voltage
+> + * @u_volt_max:		new OPP max voltage
+>   *
+>   * Return: -EINVAL for bad pointers, -ENOMEM if no memory available for the
+>   * copy operation, returns 0 if no modifcation was done OR modification was
+>   * successful.
+>   */
+>  int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
+> -			      unsigned long u_volt)
+> +			      unsigned long u_volt, unsigned long u_volt_min,
+> +			      unsigned long u_volt_max)
+> +
+>  {
+>  	struct opp_table *opp_table;
+>  	struct dev_pm_opp *tmp_opp, *opp = ERR_PTR(-ENODEV);
+> @@ -2098,6 +2102,8 @@ int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
+>  		goto adjust_unlock;
+> 
+>  	opp->supplies->u_volt = u_volt;
+> +	opp->supplies->u_volt_min = u_volt_min;
+> +	opp->supplies->u_volt_max = u_volt_max;
+> 
+>  	dev_pm_opp_get(opp);
+>  	mutex_unlock(&opp_table->lock);
+> diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+> index 86947d53e8c4..0ee1daafe6af 100644
+> --- a/include/linux/pm_opp.h
+> +++ b/include/linux/pm_opp.h
+> @@ -113,7 +113,8 @@ void dev_pm_opp_remove(struct device *dev, unsigned long freq);
+>  void dev_pm_opp_remove_all_dynamic(struct device *dev);
+> 
+>  int dev_pm_opp_adjust_voltage(struct device *dev, unsigned long freq,
+> -			      unsigned long u_volt);
+> +			      unsigned long u_volt, unsigned long u_volt_min,
+> +			      unsigned long u_volt_max);
+> 
+>  int dev_pm_opp_enable(struct device *dev, unsigned long freq);
+> 
+> --
+> 2.17.1
+> 
