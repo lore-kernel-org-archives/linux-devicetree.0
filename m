@@ -1,8 +1,10 @@
 From: Adam Ford <aford173@gmail.com>
 Subject: [PATCH] ARM: dts: imx6q-logicpd: Fix 3.3V regulator on SDHC1
-Date: Tue,  1 Oct 2019 19:37:12 -0500
-Message-ID: <20191002003713.21332-1-aford173@gmail.com>
+Date: Tue,  1 Oct 2019 19:37:13 -0500
+Message-ID: <20191002003713.21332-2-aford173@gmail.com>
+References: <20191002003713.21332-1-aford173@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191002003713.21332-1-aford173@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
 Cc: adam.ford@logicpd.com, shawnguo@kernel.org, Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
