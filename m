@@ -1,110 +1,52 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH 2/2] dt-bindings: usb: Bring back phy-names
-Date: Wed,  2 Oct 2019 13:26:51 +0200
-Message-ID: <20191002112651.100504-2-mripard@kernel.org>
-References: <20191002112651.100504-1-mripard@kernel.org>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v7 09/13] lib/vsprintf: Add a note on re-using %pf or %pF
+Date: Wed, 2 Oct 2019 15:02:20 +0300
+Message-ID: <20191002120220.GF972@paasikivi.fi.intel.com>
+References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
+ <20190918133419.7969-10-sakari.ailus@linux.intel.com>
+ <20190924104549.qiayzhr7zikja7sp@pathway.suse.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191002112651.100504-1-mripard@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, Emmanuel Vadot <manu@bidouilliste.com>, linux-usb@vger.kernel.org, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190924104549.qiayzhr7zikja7sp@pathway.suse.cz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Petr Mladek <pmladek@suse.com>
+Cc: rafael@kernel.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-While the original bindings that were superseeded by the YAML schemas
-didn't mention that phy-names was needed, it turns out that phy-names is
-required if phys is set according to phy/phy-bindings.txt.
+On Tue, Sep 24, 2019 at 12:45:49PM +0200, Petr Mladek wrote:
+> On Wed 2019-09-18 16:34:15, Sakari Ailus wrote:
+> > Add a note warning of re-use of obsolete %pf or %pF extensions.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > ---
+> >  lib/vsprintf.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> > index b00b57f9f911f..df59818537b52 100644
+> > --- a/lib/vsprintf.c
+> > +++ b/lib/vsprintf.c
+> > @@ -2008,6 +2008,8 @@ static char *kobject_string(char *buf, char *end, void *ptr,
+> >   * - 'S' For symbolic direct pointers (or function descriptors) with offset
+> >   * - 's' For symbolic direct pointers (or function descriptors) without offset
+> >   * - '[Ss]R' as above with __builtin_extract_return_addr() translation
+> > + * - '[Ff]' Obsolete an now unsupported extension for printing direct pointers
+> > + *	    or function descriptors. Be careful when re-using %pf or %pF!
+> 
+> I am not a native speaker but the sentence is hard to parse to me.
+> Also I miss the word 'symbolic'. IMHO, it described that the output
+> was a symbol name.
+> 
+> What about something like?
+> 
+>   * - '[Ff]' %pf and %pF were obsoleted and later removed in favor of
+>   *	    %ps and %pS. Be careful when re-using these specifiers.
 
-Let's add back those properties.
+Yes, I'll use this in v8.
 
-Fixes: 14ec072a19ad ("dt-bindings: usb: Convert USB HCD generic binding to YAML")
-Fixes: c93bcace1098 ("dt-bindings: usb: Convert the generic OHCI binding to YAML")
-Fixes: c3e2485d5f4f ("dt-bindings: usb: Convert the generic EHCI binding to YAML")
-Reported-by: Emmanuel Vadot <manu@bidouilliste.com>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
----
- Documentation/devicetree/bindings/usb/generic-ehci.yaml | 7 ++++++-
- Documentation/devicetree/bindings/usb/generic-ohci.yaml | 7 ++++++-
- Documentation/devicetree/bindings/usb/usb-hcd.yaml      | 5 +++++
- 3 files changed, 17 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/generic-ehci.yaml b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-index 059f6ef1ad4a..1ca64c85191a 100644
---- a/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-+++ b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-@@ -63,7 +63,11 @@ properties:
-     description:
-       Set this flag to force EHCI reset after resume.
- 
--  phys: true
-+  phys:
-+    description: PHY specifier for the USB PHY
-+
-+  phy-names:
-+    const: usb
- 
- required:
-   - compatible
-@@ -89,6 +93,7 @@ examples:
-         interrupts = <39>;
-         clocks = <&ahb_gates 1>;
-         phys = <&usbphy 1>;
-+        phy-names = "usb";
-     };
- 
- ...
-diff --git a/Documentation/devicetree/bindings/usb/generic-ohci.yaml b/Documentation/devicetree/bindings/usb/generic-ohci.yaml
-index da5a14becbe5..bcffec1f1341 100644
---- a/Documentation/devicetree/bindings/usb/generic-ohci.yaml
-+++ b/Documentation/devicetree/bindings/usb/generic-ohci.yaml
-@@ -67,7 +67,11 @@ properties:
-     description:
-       Overrides the detected port count
- 
--  phys: true
-+  phys:
-+    description: PHY specifier for the USB PHY
-+
-+  phy-names:
-+    const: usb
- 
- required:
-   - compatible
-@@ -84,6 +88,7 @@ examples:
-           interrupts = <64>;
-           clocks = <&usb_clk 6>, <&ahb_gates 2>;
-           phys = <&usbphy 1>;
-+          phy-names = "usb";
-       };
- 
- ...
-diff --git a/Documentation/devicetree/bindings/usb/usb-hcd.yaml b/Documentation/devicetree/bindings/usb/usb-hcd.yaml
-index 9c8c56d3a792..7263b7f2b510 100644
---- a/Documentation/devicetree/bindings/usb/usb-hcd.yaml
-+++ b/Documentation/devicetree/bindings/usb/usb-hcd.yaml
-@@ -18,8 +18,13 @@ properties:
-     description:
-       List of all the USB PHYs on this HCD
- 
-+  phy-names:
-+    description:
-+      Name specifier for the USB PHY
-+
- examples:
-   - |
-     usb {
-         phys = <&usb2_phy1>, <&usb3_phy1>;
-+        phy-names = "usb";
-     };
 -- 
-2.23.0
+Sakari Ailus
+sakari.ailus@linux.intel.com
