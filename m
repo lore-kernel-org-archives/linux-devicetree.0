@@ -1,42 +1,28 @@
-From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
-Subject: Re: [PATCH v2 5/5] MIPS: JZ4780: DTS: Add CPU nodes
-Date: Wed, 2 Oct 2019 21:07:55 +0200
-Message-ID: <61516f78-18a9-2702-2812-312b05cd0279@deutnet.info>
-References: <cover.1569955865.git.agriveaux@deutnet.info>
- <0dbd1986be4ee50bdd9f45c140aded7c49fddb8a.1569955865.git.agriveaux@deutnet.info>
- <20191001232031.qaci6hk5tjo652mi@pburton-laptop>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: Applied "fixed-regulator: dt-bindings: Fixed building error for
+ compatible property" to the regulator tree
+Date: Wed, 2 Oct 2019 14:23:54 -0500
+Message-ID: <CAL_Jsq+FDrBQc8nZxDt50ONuDF_UZ4Hr=OOsTgKC2MsHBtHyqg@mail.gmail.com>
+References: <1568875145-2864-1-git-send-email-pragnesh.patel@sifive.com> <20191001114059.6B0572742A30@ypsilon.sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191001232031.qaci6hk5tjo652mi@pburton-laptop>
-Content-Language: fr
+In-Reply-To: <20191001114059.6B0572742A30@ypsilon.sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Burton <paul.burton@mips.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "jhogan@kernel.org" <jhogan@kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Pragnesh Patel <pragnesh.patel@sifive.com>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul and other.
-> Hi Alexandre,
-> This should probably be something like ingenic,xburst2. JZ4780 is the
-> SoC. It also should be a documented binding, but I think it would be
-> worth holding off on the whole thing until we actually get SMP support
-> merged - just in case we come up with a binding that doesn't actually
-> work out.
+On Tue, Oct 1, 2019 at 6:41 AM Mark Brown <broonie@kernel.org> wrote:
 >
-> So I expect I'll just apply patches 1-4 for now.
+> The patch
 >
-> Thanks for working on it!
+>    fixed-regulator: dt-bindings: Fixed building error for compatible property
+>
+> has been applied to the regulator tree at
+>
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
 
-I holding the CPU patch at this time for more work later, I would like
-to upstream some patchs from this repository:
+This needs to go into 5.4 fixes.
 
-https://github.com/MIPS/CI20_linux.git
-
-
-How i can do that and keep the contributors history ?
-
-
-Thanks for the help.
-
-Ps: I try to unban my e-mail server from office365...
+Rob
