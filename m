@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 09/10] ARM: dts: am: Rename "ocmcram" node to "sram"
-Date: Wed,  2 Oct 2019 18:43:15 +0200
-Message-ID: <20191002164316.14905-9-krzk@kernel.org>
+Subject: [PATCH v3 10/10] ARM: dts: omap: Rename "ocmcram" node to "sram"
+Date: Wed,  2 Oct 2019 18:43:16 +0200
+Message-ID: <20191002164316.14905-10-krzk@kernel.org>
 References: <20191002164316.14905-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191002164316.14905-1-krzk@kernel.org>
@@ -15,35 +15,35 @@ schema.  No functional change.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/am33xx.dtsi | 2 +-
- arch/arm/boot/dts/am4372.dtsi | 2 +-
+ arch/arm/boot/dts/omap4.dtsi | 2 +-
+ arch/arm/boot/dts/omap5.dtsi | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index fb6b8aa12cc5..3e37ae7241a4 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -393,7 +393,7 @@
- 			};
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 7cc95bc1598b..413304540f8b 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -148,7 +148,7 @@
+ 		l4_abe: interconnect@40100000 {
+ 		};
+ 
+-		ocmcram: ocmcram@40304000 {
++		ocmcram: sram@40304000 {
+ 			compatible = "mmio-sram";
+ 			reg = <0x40304000 0xa000>; /* 40k */
+ 		};
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index 1fb7937638f0..9f1621f554d7 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -162,7 +162,7 @@
+ 		l4_abe: interconnect@40100000 {
  		};
  
 -		ocmcram: ocmcram@40300000 {
 +		ocmcram: sram@40300000 {
  			compatible = "mmio-sram";
- 			reg = <0x40300000 0x10000>; /* 64k */
- 			ranges = <0x0 0x40300000 0x10000>;
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index 848e2a8884e2..d7775aed7483 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -349,7 +349,7 @@
- 			};
+ 			reg = <0x40300000 0x20000>; /* 128k */
  		};
- 
--		ocmcram: ocmcram@40300000 {
-+		ocmcram: sram@40300000 {
- 			compatible = "mmio-sram";
- 			reg = <0x40300000 0x40000>; /* 256k */
- 			ranges = <0x0 0x40300000 0x40000>;
 -- 
 2.17.1
