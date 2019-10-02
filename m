@@ -1,38 +1,58 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH 0/2] peci: aspeed: Add AST2600 compatible
-Date: Wed, 2 Oct 2019 11:11:28 -0700
-Message-ID: <70044749-785b-6ff3-7a28-fb049dcfec54@linux.intel.com>
-References: <20191002061200.29888-1-chiawei_wang@aspeedtech.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
+ power states
+Date: Wed, 2 Oct 2019 12:18:37 -0600
+Message-ID: <CAOCk7Nqqm6d3bR9hFJH6rp1jMPmx2e2qmJtnOuw5viaGWohEZA@mail.gmail.com>
+References: <cover.1558430617.git.amit.kucheria@linaro.org>
+ <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
+ <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
+ <20191002091950.GA9393@centauri> <20191002092734.GA15523@centauri>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191002061200.29888-1-chiawei_wang@aspeedtech.com>
-Content-Language: en-US
+In-Reply-To: <20191002092734.GA15523@centauri>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>
-Cc: jason.m.bills@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, ryan_chen@aspeedtech.com
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>, lkml <linux-kernel@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Sibi Sankar <sibis@codeaurora.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chia-Wei,
+On Wed, Oct 2, 2019 at 3:27 AM Niklas Cassel <niklas.cassel@linaro.org> wrote:
+>
+> On Wed, Oct 02, 2019 at 11:19:50AM +0200, Niklas Cassel wrote:
+> > On Mon, Sep 30, 2019 at 04:20:15PM -0600, Jeffrey Hugo wrote:
+> > > Amit, the merged version of the below change causes a boot failure
+> > > (nasty hang, sometimes with RCU stalls) on the msm8998 laptops.  Oddly
+> > > enough, it seems to be resolved if I remove the cpu-idle-states
+> > > property from one of the cpu nodes.
+> > >
+> > > I see no issues with the msm8998 MTP.
+> >
+> > Hello Jeffrey, Amit,
+> >
+> > If the PSCI idle states work properly on the msm8998 devboard (MTP),
+> > but causes crashes on msm8998 laptops, the only logical change is
+> > that the PSCI firmware is different between the two devices.
+>
+> Since the msm8998 laptops boot using ACPI, perhaps these laptops
+> doesn't support PSCI/have any PSCI firmware at all.
 
-On 10/1/2019 11:11 PM, Chia-Wei, Wang wrote:
-> Update the Aspeed PECI driver with the AST2600 compatible string.
-> A new comptabile string is needed for the extended HW feature of
-> AST2600.
-> 
-> Chia-Wei, Wang (2):
->    peci: aspeed: Add AST2600 compatible string
->    dt-bindings: peci: aspeed: Add AST2600 compatible
-> 
->   Documentation/devicetree/bindings/peci/peci-aspeed.txt | 1 +
->   drivers/peci/peci-aspeed.c                             | 1 +
->   2 files changed, 2 insertions(+)
-> 
+They have PSCI.  If there was no PSCI, I would expect the PSCI
+get_version request from Linux to fail, and all PSCI functionality to
+be disabled.
 
-PECI subsystem isn't in linux upstream yet so you should submit it into
-OpenBMC dev-5.3 tree only.
+However, your mention about ACPI sparked a thought.  ACPI describes
+the idle states, along with the PSCI info, in the ACPI0007 devices.
+Those exist on the laptops, and the info mostly correlates with Amit's
+patch (ACPI seems to be a bit more conservative about the latencies,
+and describes one additional deeper state).  However, upon a detailed
+analysis of the ACPI description, I did find something relevant - the
+retention state is not enabled.
 
-Cheers,
+So, I hacked out the retention state from Amit's patch, and I did not
+observe a hang.  I used sysfs, and appeared able to validate that the
+power collapse state was being used successfully.
 
-Jae
+I'm guessing that something is weird with the laptops, where the CPUs
+can go into retention, but not come out, thus causing issues.
+
+I'll post a patch to fix up the laptops.  Thanks for all the help.
