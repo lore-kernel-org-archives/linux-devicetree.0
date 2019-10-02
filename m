@@ -1,105 +1,167 @@
-From: Kamel Bouhara <kamel.bouhara@bootlin.com>
-Subject: [PATCH 3/4] ARM: at91/dt: sama5d3: add i2c gpio pinctrl
-Date: Wed,  2 Oct 2019 16:46:57 +0200
-Message-ID: <20191002144658.7718-4-kamel.bouhara@bootlin.com>
-References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH v6 1/5] dt-bindings: media: Add Allwinner A10 CSI binding
+Date: Wed, 2 Oct 2019 16:49:59 +0200
+Message-ID: <20191002144959.vg2rpbdauzbzvkcx@gilmour>
+References: <cover.34bcd988943a26671681eaf849aacab51fab1cfe.1562847292.git-series.maxime.ripard@bootlin.com>
+ <110dd9ff1784c29fa16304825a41d1603a33f166.1562847292.git-series.maxime.ripard@bootlin.com>
+ <CAGb2v64nx2AuWZN+RxCneE0pqvXr_d7u6mQ+=nCHv2VJ1MNtrQ@mail.gmail.com>
+ <CAGb2v66Sin9HZ+QENegLQ3d7iiy278niwdr9rEZ0HwUfeQNFRQ@mail.gmail.com>
+ <20191001085246.55srb62bpfc6jhtu@gilmour>
+ <CAGb2v66-Nak6RgtXYwOE6_nqHsOkLMh1G7CWJMDND1YzrywmHA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ci3xbatgbsxlfsb3"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v66-Nak6RgtXYwOE6_nqHsOkLMh1G7CWJMDND1YzrywmHA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Ludovic Desroches <ludovic.desroches@microchip.com>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Kamel Bouhara <kamel.bouhara@bootlin.com>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the i2c gpio pinctrls to support the i2c bus recovery
 
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
----
- arch/arm/boot/dts/sama5d3.dtsi | 33 ++++++++++++++++++++++++++++++---
- 1 file changed, 30 insertions(+), 3 deletions(-)
+--ci3xbatgbsxlfsb3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index f770aace0efd..faf8907d8d7d 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -159,8 +159,11 @@
- 				dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(7)>,
- 				       <&dma0 2 AT91_DMA_CFG_PER_ID(8)>;
- 				dma-names = "tx", "rx";
--				pinctrl-names = "default";
-+				pinctrl-names = "default", "gpio";
- 				pinctrl-0 = <&pinctrl_i2c0>;
-+				pinctrl-1 = <&pinctrl_i2c0_gpio>;
-+				sda-gpios = <&pioA 30 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA 31 GPIO_ACTIVE_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&twi0_clk>;
-@@ -174,8 +177,11 @@
- 				dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(9)>,
- 				       <&dma0 2 AT91_DMA_CFG_PER_ID(10)>;
- 				dma-names = "tx", "rx";
--				pinctrl-names = "default";
-+				pinctrl-names = "default", "gpio";
- 				pinctrl-0 = <&pinctrl_i2c1>;
-+				pinctrl-1 = <&pinctrl_i2c1_gpio>;
-+				sda-gpios = <&pioC 26 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioC 27 GPIO_ACTIVE_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&twi1_clk>;
-@@ -357,8 +363,11 @@
- 				dmas = <&dma1 2 AT91_DMA_CFG_PER_ID(11)>,
- 				       <&dma1 2 AT91_DMA_CFG_PER_ID(12)>;
- 				dma-names = "tx", "rx";
--				pinctrl-names = "default";
-+				pinctrl-names = "default", "gpio";
- 				pinctrl-0 = <&pinctrl_i2c2>;
-+				pinctrl-1 = <&pinctrl_i2c2_gpio>;
-+				sda-gpios = <&pioA 18 GPIO_ACTIVE_HIGH>;
-+				scl-gpios = <&pioA 19 GPIO_ACTIVE_HIGH>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&twi2_clk>;
-@@ -639,6 +648,12 @@
- 							<AT91_PIOA 30 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA30 periph A TWD0 pin, conflicts with URXD1, ISI_VSYNC */
- 							 AT91_PIOA 31 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PA31 periph A TWCK0 pin, conflicts with UTXD1, ISI_HSYNC */
- 					};
-+
-+					pinctrl_i2c0_gpio: i2c0-gpio {
-+						atmel,pins =
-+							<AT91_PIOA 30 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP
-+							 AT91_PIOA 31 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
-+					};
- 				};
- 
- 				i2c1 {
-@@ -647,6 +662,12 @@
- 							<AT91_PIOC 26 AT91_PERIPH_B AT91_PINCTRL_NONE	/* PC26 periph B TWD1 pin, conflicts with SPI1_NPCS1, ISI_D11 */
- 							 AT91_PIOC 27 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* PC27 periph B TWCK1 pin, conflicts with SPI1_NPCS2, ISI_D10 */
- 					};
-+
-+					pinctrl_i2c1_gpio: i2c1-gpio {
-+						atmel,pins =
-+							<AT91_PIOC 26 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP
-+							 AT91_PIOC 27 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
-+					};
- 				};
- 
- 				i2c2 {
-@@ -655,6 +676,12 @@
- 							<AT91_PIOA 18 AT91_PERIPH_B AT91_PINCTRL_NONE	/* TWD2 pin, conflicts with LCDDAT18, ISI_D2 */
- 							 AT91_PIOA 19 AT91_PERIPH_B AT91_PINCTRL_NONE>; /* TWCK2 pin, conflicts with LCDDAT19, ISI_D3 */
- 					};
-+
-+					pinctrl_i2c2_gpio: i2c2-gpio {
-+						atmel,pins =
-+							<AT91_PIOA 18 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP
-+							 AT91_PIOA 19 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
-+					};
- 				};
- 
- 				isi {
--- 
-2.23.0
+Hi,
+
+On Tue, Oct 01, 2019 at 05:04:40PM +0800, Chen-Yu Tsai wrote:
+> On Tue, Oct 1, 2019 at 4:52 PM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > Hi,
+> >
+> > Thanks for looking into this.
+> >
+> > On Sun, Sep 15, 2019 at 04:54:16PM +0800, Chen-Yu Tsai wrote:
+> > > On Thu, Aug 15, 2019 at 4:34 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > Sorry for chiming in so late.
+> > > >
+> > > > On Thu, Jul 11, 2019 at 8:15 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > >
+> > > > > The Allwinner A10 CMOS Sensor Interface is a camera capture interface also
+> > > > > used in later (A10s, A13, A20, R8 and GR8) SoCs.
+> > > > >
+> > > > > On some SoCs, like the A10, there's multiple instances of that controller,
+> > > > > with one instance supporting more channels and having an ISP.
+> > > > >
+> > > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > > > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 94 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+> > > > >  1 file changed, 94 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> > > > > new file mode 100644
+> > > > > index 000000000000..97c9fc3b5050
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> > > > > @@ -0,0 +1,94 @@
+> > > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > > > +%YAML 1.2
+> > > > > +---
+> > > > > +$id: http://devicetree.org/schemas/arm/allwinner,sun4i-a10-csi.yaml#
+> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > +
+> > > > > +title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
+> > > > > +
+> > > > > +maintainers:
+> > > > > +  - Chen-Yu Tsai <wens@csie.org>
+> > > > > +  - Maxime Ripard <maxime.ripard@bootlin.com>
+> > > > > +
+> > > > > +description: |-
+> > > > > +  The Allwinner A10 and later has a CMOS Sensor Interface to retrieve
+> > > > > +  frames from a parallel or BT656 sensor.
+> > > > > +
+> > > > > +
+> > > > > +properties:
+> > > > > +  compatible:
+> > > > > +    oneOf:
+> > > > > +      - items:
+> > > > > +          - enum:
+> > > > > +              - allwinner,sun7i-a20-csi0
+> > > > > +          - const: allwinner,sun4i-a10-csi0
+> > > >
+> > > > CSI0 on the A10 has an ISP. Do we know if the one in the A20 does
+> > > > as well? It certainly doesn't say so in the user manual. If not,
+> > > > then we can't claim that A20 CSI0 is compatible with A10 CSI0.
+> > > >
+> > > > > +
+> > > > > +      - items:
+> > > > > +          - const: allwinner,sun4i-a10-csi0
+> > > > > +
+> > > > > +  reg:
+> > > > > +    maxItems: 1
+> > > > > +
+> > > > > +  interrupts:
+> > > > > +    maxItems: 1
+> > > > > +
+> > > > > +  clocks:
+> > > > > +    items:
+> > > > > +      - description: The CSI interface clock
+> > > > > +      - description: The CSI module clock
+> > > > > +      - description: The CSI ISP clock
+> > > > > +      - description: The CSI DRAM clock
+> > > > > +
+> > > > > +  clock-names:
+> > > > > +    items:
+> > > > > +      - const: bus
+> > > > > +      - const: mod
+> > > >
+> > > > I doubt this actually is a module clock. Based on the usage in your
+> > > > device tree patch, and the csi driver in the old linux-sunxi kernel,
+> > > > the clock rate is set to 24 MHz, or whatever the sensor requires for
+> > > > MCLK.
+> > >
+> > > I'm working on adding support for this on the R40, and it seems with
+> > > this SoC the picture is much clearer. It has the same CSI interface
+> > > block, but the CCU has the clocks correctly named. We have:
+> > >
+> > >   - CSI_MCLK0
+> > >   - CSI_MCLK1
+> > >   - CSI_SCLK
+> > >
+> > > in addition to the bus clocks.
+> > >
+> > > The CSI section also explains the clock signals:
+> > >
+> > >     6.1.3.2. Clock Sources
+> > >     Two Clocks need to be configured for CSI controller. CSI0/1_MCLK
+> > >     provides the master clock for sensor and other devices. CSI_SCLK
+> > >     is the top clock for the whole CSI module.
+> > >
+> > > So it would seem the ISP clock we currently have in the DT is simply
+> > > the module clock shared by all CSI-related hardware blocks, and the
+> > > module clock is bogus.
+> >
+> > I don't think it is. It looks like there's no ISP in the R40 CSI
+> > controllers, so that would mean that we don't have an ISP clock, and
+> > the SCLK is the module clock.
+> >
+> > Does that make sense?
+>
+> Right. That's another way to put it. The point is I believe the
+> CSI[01]_CLK clocks on the A10/A20 are simply the MCLK outputs.
+
+Looking at the Allwinner BSP again, it looks like you're right. I'll
+send some patches to remove that clock from the binding.
+
+Thanks!
+Maxime
+
+--ci3xbatgbsxlfsb3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZS5FwAKCRDj7w1vZxhR
+xcsgAP9qc0COV67+Hl3wJfkscyqUVifCgbluweo1QS6EiFrDggD/factOgnJNhXe
+mZ+HTQ7UXodlm8GoSOzwo9mNt9KC1AA=
+=TTvP
+-----END PGP SIGNATURE-----
+
+--ci3xbatgbsxlfsb3--
