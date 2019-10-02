@@ -1,39 +1,39 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v3 0/8] OMAP3: convert opp-v1 to opp-v2 and read speed
- binned / 720MHz grade bits
-Date: Wed, 2 Oct 2019 11:00:32 +0200
-Message-ID: <CAKohpo=44UkJ3RBjtB8F3=1D9HzicULh303jF2uowiboa2328g@mail.gmail.com>
-References: <cover.1568224032.git.hns@goldelico.com> <20190916162816.GF52127@atomide.com>
- <DAF6ACB4-AD7E-4528-9F4B-C54104B5E260@goldelico.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 2/6] clk: meson: add a driver for the Meson8/8b/8m2 DDR clock controller
+Date: Wed, 02 Oct 2019 11:04:42 +0200
+Message-ID: <1jbluzr00l.fsf@starbuckisacylon.baylibre.com>
+References: <20190921151835.770263-1-martin.blumenstingl@googlemail.com> <20190921151835.770263-3-martin.blumenstingl@googlemail.com> <1jftkcr3uy.fsf@starbuckisacylon.baylibre.com> <CAFBinCCED4YWYkdtrfrC80C8WLE=fyMJdjTa3wFNMJgC1OsoOA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DAF6ACB4-AD7E-4528-9F4B-C54104B5E260@goldelico.com>
+In-reply-to: <CAFBinCCED4YWYkdtrfrC80C8WLE=fyMJdjTa3wFNMJgC1OsoOA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Tony Lindgren <tony@atomide.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, =?UTF-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Roger Quadros <rogerq@ti.com>, Teresa Remmet <t.remmet@phytec.de>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com, linux-a
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Sep 2019 at 16:35, H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> Hi Tony,
->
-> > Am 16.09.2019 um 18:28 schrieb Tony Lindgren <tony@atomide.com>:
-> >
-> > * H. Nikolaus Schaller <hns@goldelico.com> [190911 17:48]:
-> >> CHANGES V3:
-> >> * make omap36xx control the abb-ldo and properly switch mode
-> >>  (suggested by Adam Ford <aford173@gmail.com>)
-> >> * add a note about enabling the turbo-mode OPPs
-> >
-> > Looks good to me, when applying, please provide a
-> > minimal immutable branch maybe against v5.3 or v5.4-rc1,
-> > that I can also merge in if needed for the dts changes.
->
-> Should I resend a v4 with your Acked-By added?
 
-I will pick them up in a few days. I was waiting for rc1 to get released and
-am on vacation right now. Tony already provided his Acks.
+On Tue 01 Oct 2019 at 20:53, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 
---
-viresh
+>
+> [...]
+>> > +static struct clk_hw_onecell_data meson8_ddr_clk_hw_onecell_data = {
+>> > +     .hws = {
+>> > +             [DDR_CLKID_DDR_PLL_DCO]         = &meson8_ddr_pll_dco.hw,
+>> > +             [DDR_CLKID_DDR_PLL]             = &meson8_ddr_pll.hw,
+>>
+>> I wonder if onecell is not overkill for this driver. We won't expose the
+>> DCO, so only the post divider remains
+>>
+>> Do you expect this provider to have more than one leaf clock ?
+>> If not, maybe you could use of_clk_hw_simple_get() instead ?
+> there's some more clock bits in DDR_CLK_CNTL - the public A311D
+> datasheet has a description for these bits but I'm not sure they do
+> the same on Meson8/Meson8b/Meson8m2
+> all I know is that some magic bytes are written to DDR_CLK_CNTL in the
+> old u-boot code
+>
+> that's why I don't want to make any assumptions and play safe here (by
+> using a onecell clock provider)
+
+Understood. Let's keep onecell then.
