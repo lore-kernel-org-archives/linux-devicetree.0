@@ -1,304 +1,421 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH v2 00/21] Refine memblock API
-Date: Wed, 2 Oct 2019 06:14:11 -0500
-Message-ID: <CAHCN7xL1MkJh44N3W_1+08DHmX__SqnfH6dqUzYzr2Wpg0kQyQ@mail.gmail.com>
-References: <CAHCN7x+Jv7yGPoB0Gm=TJ30ObLJduw2XomHkd++KqFEURYQcGg@mail.gmail.com>
- <CAOMZO5A_U4aYC4XZXK1r9JaLg-eRdXy8m6z4GatQp62rK4HZ6A@mail.gmail.com>
- <CAHCN7xJdzEppn8-74SvzACsA25bUHGdV7v=CfS08xzSi59Z2uw@mail.gmail.com>
- <CAOMZO5D2uzR6Sz1QnX3G-Ce_juxU-0PO_vBZX+nR1mpQB8s8-w@mail.gmail.com>
- <CAHCN7xJ32BYZu-DVTVLSzv222U50JDb8F0A_tLDERbb8kPdRxg@mail.gmail.com>
- <20190926160433.GD32311@linux.ibm.com>
- <CAHCN7xL1sFXDhKUpj04d3eDZNgLA1yGAOqwEeCxedy1Qm-JOfQ@mail.gmail.com>
- <20190928073331.GA5269@linux.ibm.com>
- <CAHCN7xJEvS2Si=M+BYtz+kY0M4NxmqDjiX9Nwq6_3GGBh3yg=w@mail.gmail.com>
- <CAHCN7xKLhWw4P9-sZKXQcfSfh2r3J_+rLxuxACW0UVgimCzyVw@mail.gmail.com>
- <20191002073605.GA30433@linux.ibm.com>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: [PATCH 1/2] ARM: dts: sunxi: Revert phy-names removal for ECHI and
+ OHCI
+Date: Wed,  2 Oct 2019 13:26:50 +0200
+Message-ID: <20191002112651.100504-1-mripard@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191002073605.GA30433@linux.ibm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, devicetree <devicetree@vger.kernel.org>, Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, x86@kernel.org, Russell King <linux@armlinux.org.uk>, kasan-dev <kasan-dev@googlegroups.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.org, Chris Healy <cphealy@gmail.com>, uclinux-h8-devel@lists.sourceforge.j
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, Emmanuel Vadot <manu@bidouilliste.com>, linux-usb@vger.kernel.org, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 2:36 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
->
-> Hi Adam,
->
-> On Tue, Oct 01, 2019 at 07:14:13PM -0500, Adam Ford wrote:
-> > On Sun, Sep 29, 2019 at 8:33 AM Adam Ford <aford173@gmail.com> wrote:
-> > >
-> > > I am attaching two logs.  I now the mailing lists will be unhappy, but
-> > >  don't want to try and spam a bunch of log through the mailing liast.
-> > > The two logs show the differences between the working and non-working
-> > > imx6q 3D accelerator when trying to run a simple glmark2-es2-drm demo.
-> > >
-> > > The only change between them is the 2 line code change you suggested.
-> > >
-> > > In both cases, I have cma=128M set in my bootargs.  Historically this
-> > > has been sufficient, but cma=256M has not made a difference.
-> > >
-> >
-> > Mike any suggestions on how to move forward?
-> > I was hoping to get the fixes tested and pushed before 5.4 is released
-> > if at all possible
->
-> I have a fix (below) that kinda restores the original behaviour, but I
-> still would like to double check to make sure it's not a band aid and I
-> haven't missed the actual root cause.
->
-> Can you please send me your device tree definition and the output of
->
-> cat /sys/kernel/debug/memblock/memory
->
-> and
->
-> cat /sys/kernel/debug/memblock/reserved
->
-> Thanks!
->
+This reverts commits 3d109bdca981 ("ARM: dts: sunxi: Remove useless
+phy-names from EHCI and OHCI"), 0a3df8bb6dad ("ARM: dts: sunxi: h3/h5:
+Remove useless phy-names from EHCI and OHCI") and 3c7ab90aaa28 ("arm64:
+dts: allwinner: Remove useless phy-names from EHCI and OHCI").
 
-Before the patch:
+It turns out that while the USB bindings were not mentionning it, the PHY
+client bindings were mandating that phy-names is set when phys is. Let's
+add it back.
 
-# cat /sys/kernel/debug/memblock/memory
-   0: 0x10000000..0x8fffffff
-# cat /sys/kernel/debug/memblock/reserved
-   0: 0x10004000..0x10007fff
-   1: 0x10100000..0x11ab141f
-   2: 0x1fff1000..0x1fffcfff
-   3: 0x2ee40000..0x2ef53fff
-   4: 0x2ef56940..0x2ef56c43
-   5: 0x2ef56c48..0x2fffefff
-   6: 0x2ffff0c0..0x2ffff4d8
-   7: 0x2ffff500..0x2ffff55f
-   8: 0x2ffff580..0x2ffff703
-   9: 0x2ffff740..0x2ffff918
-  10: 0x2ffff940..0x2ffff9cf
-  11: 0x2ffffa00..0x2ffffa0f
-  12: 0x2ffffa40..0x2ffffa43
-  13: 0x2ffffa80..0x2ffffad5
-  14: 0x2ffffb00..0x2ffffb55
-  15: 0x2ffffb80..0x2ffffbd5
-  16: 0x2ffffc00..0x2ffffc4e
-  17: 0x2ffffc50..0x2ffffc6a
-  18: 0x2ffffc6c..0x2ffffce6
-  19: 0x2ffffce8..0x2ffffd02
-  20: 0x2ffffd04..0x2ffffd1e
-  21: 0x2ffffd20..0x2ffffd3a
-  22: 0x2ffffd3c..0x2ffffd56
-  23: 0x2ffffd58..0x2ffffe30
-  24: 0x2ffffe34..0x2ffffe4c
-  25: 0x2ffffe50..0x2ffffe68
-  26: 0x2ffffe6c..0x2ffffe84
-  27: 0x2ffffe88..0x2ffffea0
-  28: 0x2ffffea4..0x2ffffebc
-  29: 0x2ffffec0..0x2ffffedf
-  30: 0x2ffffee4..0x2ffffefc
-  31: 0x2fffff00..0x2fffff13
-  32: 0x2fffff28..0x2fffff4b
-  33: 0x2fffff50..0x2fffff84
-  34: 0x2fffff88..0x3fffffff
+Fixes: 3d109bdca981 ("ARM: dts: sunxi: Remove useless phy-names from EHCI and OHCI")
+Fixes: 0a3df8bb6dad ("ARM: dts: sunxi: h3/h5: Remove useless phy-names from EHCI and OHCI")
+Fixes: 3c7ab90aaa28 ("arm64: dts: allwinner: Remove useless phy-names from EHCI and OHCI")
+Reported-by: Emmanuel Vadot <manu@bidouilliste.com>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+---
+ arch/arm/boot/dts/sun4i-a10.dtsi                      | 4 ++++
+ arch/arm/boot/dts/sun5i.dtsi                          | 2 ++
+ arch/arm/boot/dts/sun6i-a31.dtsi                      | 4 ++++
+ arch/arm/boot/dts/sun7i-a20.dtsi                      | 4 ++++
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi                  | 2 ++
+ arch/arm/boot/dts/sun8i-a83t.dtsi                     | 3 +++
+ arch/arm/boot/dts/sun8i-r40.dtsi                      | 4 ++++
+ arch/arm/boot/dts/sun9i-a80.dtsi                      | 5 +++++
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                    | 6 ++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts | 2 ++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi         | 2 ++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi          | 2 ++
+ 12 files changed, 40 insertions(+)
 
-
-After the patch:
-# cat /sys/kernel/debug/memblock/memory
-   0: 0x10000000..0x8fffffff
-# cat /sys/kernel/debug/memblock/reserved
-   0: 0x10004000..0x10007fff
-   1: 0x10100000..0x11ab141f
-   2: 0x1fff1000..0x1fffcfff
-   3: 0x3eec0000..0x3efd3fff
-   4: 0x3efd6940..0x3efd6c43
-   5: 0x3efd6c48..0x3fffbfff
-   6: 0x3fffc0c0..0x3fffc4d8
-   7: 0x3fffc500..0x3fffc55f
-   8: 0x3fffc580..0x3fffc703
-   9: 0x3fffc740..0x3fffc918
-  10: 0x3fffc940..0x3fffc9cf
-  11: 0x3fffca00..0x3fffca0f
-  12: 0x3fffca40..0x3fffca43
-  13: 0x3fffca80..0x3fffca83
-  14: 0x3fffcac0..0x3fffcb15
-  15: 0x3fffcb40..0x3fffcb95
-  16: 0x3fffcbc0..0x3fffcc15
-  17: 0x3fffcc28..0x3fffcc72
-  18: 0x3fffcc74..0x3fffcc8e
-  19: 0x3fffcc90..0x3fffcd0a
-  20: 0x3fffcd0c..0x3fffcd26
-  21: 0x3fffcd28..0x3fffcd42
-  22: 0x3fffcd44..0x3fffcd5e
-  23: 0x3fffcd60..0x3fffcd7a
-  24: 0x3fffcd7c..0x3fffce54
-  25: 0x3fffce58..0x3fffce70
-  26: 0x3fffce74..0x3fffce8c
-  27: 0x3fffce90..0x3fffcea8
-  28: 0x3fffceac..0x3fffcec4
-  29: 0x3fffcec8..0x3fffcee0
-  30: 0x3fffcee4..0x3fffcefc
-  31: 0x3fffcf00..0x3fffcf1f
-  32: 0x3fffcf28..0x3fffcf53
-  33: 0x3fffcf68..0x3fffcf8b
-  34: 0x3fffcf90..0x3fffcfac
-  35: 0x3fffcfb0..0x3fffffff
-  36: 0x80000000..0x8fffffff
-
-> From 06529f861772b7dea2912fc2245debe4690139b8 Mon Sep 17 00:00:00 2001
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> Date: Wed, 2 Oct 2019 10:14:17 +0300
-> Subject: [PATCH] mm: memblock: do not enforce current limit for memblock_phys*
->  family
->
-> Until commit 92d12f9544b7 ("memblock: refactor internal allocation
-> functions") the maximal address for memblock allocations was forced to
-> memblock.current_limit only for the allocation functions returning virtual
-> address. The changes introduced by that commit moved the limit enforcement
-> into the allocation core and as a result the allocation functions returning
-> physical address also started to limit allocations to
-> memblock.current_limit.
->
-> This caused breakage of etnaviv GPU driver:
->
-> [    3.682347] etnaviv etnaviv: bound 130000.gpu (ops gpu_ops)
-> [    3.688669] etnaviv etnaviv: bound 134000.gpu (ops gpu_ops)
-> [    3.695099] etnaviv etnaviv: bound 2204000.gpu (ops gpu_ops)
-> [    3.700800] etnaviv-gpu 130000.gpu: model: GC2000, revision: 5108
-> [    3.723013] etnaviv-gpu 130000.gpu: command buffer outside valid
-> memory window
-> [    3.731308] etnaviv-gpu 134000.gpu: model: GC320, revision: 5007
-> [    3.752437] etnaviv-gpu 134000.gpu: command buffer outside valid
-> memory window
-> [    3.760583] etnaviv-gpu 2204000.gpu: model: GC355, revision: 1215
-> [    3.766766] etnaviv-gpu 2204000.gpu: Ignoring GPU with VG and FE2.0
->
-> Restore the behaviour of memblock_phys* family so that these functions will
-> not enforce memblock.current_limit.
->
-
-This fixed the issue.  Thank you
-
-Tested-by: Adam Ford <aford173@gmail.com> #imx6q-logicpd
-
-> Fixes: 92d12f9544b7 ("memblock: refactor internal allocation functions")
-> Reported-by: Adam Ford <aford173@gmail.com>
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  mm/memblock.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 7d4f61a..c4b16ca 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -1356,9 +1356,6 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
->                 align = SMP_CACHE_BYTES;
->         }
->
-> -       if (end > memblock.current_limit)
-> -               end = memblock.current_limit;
-> -
->  again:
->         found = memblock_find_in_range_node(size, align, start, end, nid,
->                                             flags);
-> @@ -1469,6 +1466,9 @@ static void * __init memblock_alloc_internal(
->         if (WARN_ON_ONCE(slab_is_available()))
->                 return kzalloc_node(size, GFP_NOWAIT, nid);
->
-> +       if (max_addr > memblock.current_limit)
-> +               max_addr = memblock.current_limit;
-> +
->         alloc = memblock_alloc_range_nid(size, align, min_addr, max_addr, nid);
->
->         /* retry allocation without lower limit */
-> --
-> 2.7.4
->
->
-> > > adam
-> > >
-> > > On Sat, Sep 28, 2019 at 2:33 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> > > >
-> > > > On Thu, Sep 26, 2019 at 02:35:53PM -0500, Adam Ford wrote:
-> > > > > On Thu, Sep 26, 2019 at 11:04 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> > > > > >
-> > > > > > Hi,
-> > > > > >
-> > > > > > On Thu, Sep 26, 2019 at 08:09:52AM -0500, Adam Ford wrote:
-> > > > > > > On Wed, Sep 25, 2019 at 10:17 AM Fabio Estevam <festevam@gmail.com> wrote:
-> > > > > > > >
-> > > > > > > > On Wed, Sep 25, 2019 at 9:17 AM Adam Ford <aford173@gmail.com> wrote:
-> > > > > > > >
-> > > > > > > > > I tried cma=256M and noticed the cma dump at the beginning didn't
-> > > > > > > > > change.  Do we need to setup a reserved-memory node like
-> > > > > > > > > imx6ul-ccimx6ulsom.dtsi did?
-> > > > > > > >
-> > > > > > > > I don't think so.
-> > > > > > > >
-> > > > > > > > Were you able to identify what was the exact commit that caused such regression?
-> > > > > > >
-> > > > > > > I was able to narrow it down the 92d12f9544b7 ("memblock: refactor
-> > > > > > > internal allocation functions") that caused the regression with
-> > > > > > > Etnaviv.
-> > > > > >
-> > > > > >
-> > > > > > Can you please test with this change:
-> > > > > >
-> > > > >
-> > > > > That appears to have fixed my issue.  I am not sure what the impact
-> > > > > is, but is this a safe option?
-> > > >
-> > > > It's not really a fix, I just wanted to see how exactly 92d12f9544b7 ("memblock:
-> > > > refactor internal allocation functions") broke your setup.
-> > > >
-> > > > Can you share the dts you are using and the full kernel log?
-> > > >
-> > > > > adam
-> > > > >
-> > > > > > diff --git a/mm/memblock.c b/mm/memblock.c
-> > > > > > index 7d4f61a..1f5a0eb 100644
-> > > > > > --- a/mm/memblock.c
-> > > > > > +++ b/mm/memblock.c
-> > > > > > @@ -1356,9 +1356,6 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
-> > > > > >                 align = SMP_CACHE_BYTES;
-> > > > > >         }
-> > > > > >
-> > > > > > -       if (end > memblock.current_limit)
-> > > > > > -               end = memblock.current_limit;
-> > > > > > -
-> > > > > >  again:
-> > > > > >         found = memblock_find_in_range_node(size, align, start, end, nid,
-> > > > > >                                             flags);
-> > > > > >
-> > > > > > > I also noticed that if I create a reserved memory node as was done one
-> > > > > > > imx6ul-ccimx6ulsom.dtsi the 3D seems to work again, but without it, I
-> > > > > > > was getting errors regardless of the 'cma=256M' or not.
-> > > > > > > I don't have a problem using the reserved memory, but I guess I am not
-> > > > > > > sure what the amount should be.  I know for the video decoding 1080p,
-> > > > > > > I have historically used cma=128M, but with the 3D also needing some
-> > > > > > > memory allocation, is that enough or should I use 256M?
-> > > > > > >
-> > > > > > > adam
-> > > > > >
-> > > > > > --
-> > > > > > Sincerely yours,
-> > > > > > Mike.
-> > > > > >
-> > > >
-> > > > --
-> > > > Sincerely yours,
-> > > > Mike.
-> > > >
->
-> --
-> Sincerely yours,
-> Mike.
->
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index ce823c44e98a..4c268b70b735 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -520,6 +520,7 @@
+ 			interrupts = <39>;
+ 			clocks = <&ccu CLK_AHB_EHCI0>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -529,6 +530,7 @@
+ 			interrupts = <64>;
+ 			clocks = <&ccu CLK_USB_OHCI0>, <&ccu CLK_AHB_OHCI0>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -608,6 +610,7 @@
+ 			interrupts = <40>;
+ 			clocks = <&ccu CLK_AHB_EHCI1>;
+ 			phys = <&usbphy 2>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -617,6 +620,7 @@
+ 			interrupts = <65>;
+ 			clocks = <&ccu CLK_USB_OHCI1>, <&ccu CLK_AHB_OHCI1>;
+ 			phys = <&usbphy 2>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
+index cfb1efc8828c..6befa236ba99 100644
+--- a/arch/arm/boot/dts/sun5i.dtsi
++++ b/arch/arm/boot/dts/sun5i.dtsi
+@@ -391,6 +391,7 @@
+ 			interrupts = <39>;
+ 			clocks = <&ccu CLK_AHB_EHCI>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -400,6 +401,7 @@
+ 			interrupts = <40>;
+ 			clocks = <&ccu CLK_USB_OHCI>, <&ccu CLK_AHB_OHCI>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index bbeb743633c6..ac7638078420 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -545,6 +545,7 @@
+ 			clocks = <&ccu CLK_AHB1_EHCI0>;
+ 			resets = <&ccu RST_AHB1_EHCI0>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -555,6 +556,7 @@
+ 			clocks = <&ccu CLK_AHB1_OHCI0>, <&ccu CLK_USB_OHCI0>;
+ 			resets = <&ccu RST_AHB1_OHCI0>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -565,6 +567,7 @@
+ 			clocks = <&ccu CLK_AHB1_EHCI1>;
+ 			resets = <&ccu RST_AHB1_EHCI1>;
+ 			phys = <&usbphy 2>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -575,6 +578,7 @@
+ 			clocks = <&ccu CLK_AHB1_OHCI1>, <&ccu CLK_USB_OHCI1>;
+ 			resets = <&ccu RST_AHB1_OHCI1>;
+ 			phys = <&usbphy 2>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 49380de754a9..874231be04e4 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -623,6 +623,7 @@
+ 			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&ccu CLK_AHB_EHCI0>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -632,6 +633,7 @@
+ 			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&ccu CLK_USB_OHCI0>, <&ccu CLK_AHB_OHCI0>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -714,6 +716,7 @@
+ 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&ccu CLK_AHB_EHCI1>;
+ 			phys = <&usbphy 2>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -723,6 +726,7 @@
+ 			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&ccu CLK_USB_OHCI1>, <&ccu CLK_AHB_OHCI1>;
+ 			phys = <&usbphy 2>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+index 52eed0ae3607..f292f96ab39b 100644
+--- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+@@ -307,6 +307,7 @@
+ 			clocks = <&ccu CLK_BUS_EHCI>;
+ 			resets = <&ccu RST_BUS_EHCI>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -317,6 +318,7 @@
+ 			clocks = <&ccu CLK_BUS_OHCI>, <&ccu CLK_USB_OHCI>;
+ 			resets = <&ccu RST_BUS_OHCI>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 523be6611c50..74bb053cf23c 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -632,6 +632,7 @@
+ 			clocks = <&ccu CLK_BUS_EHCI0>;
+ 			resets = <&ccu RST_BUS_EHCI0>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -643,6 +644,7 @@
+ 			clocks = <&ccu CLK_BUS_OHCI0>, <&ccu CLK_USB_OHCI0>;
+ 			resets = <&ccu RST_BUS_OHCI0>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -654,6 +656,7 @@
+ 			clocks = <&ccu CLK_BUS_EHCI1>;
+ 			resets = <&ccu RST_BUS_EHCI1>;
+ 			phys = <&usbphy 2>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+index bde068111b85..c9c2688db66d 100644
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -273,6 +273,7 @@
+ 			clocks = <&ccu CLK_BUS_EHCI1>;
+ 			resets = <&ccu RST_BUS_EHCI1>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -284,6 +285,7 @@
+ 				 <&ccu CLK_USB_OHCI1>;
+ 			resets = <&ccu RST_BUS_OHCI1>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -294,6 +296,7 @@
+ 			clocks = <&ccu CLK_BUS_EHCI2>;
+ 			resets = <&ccu RST_BUS_EHCI2>;
+ 			phys = <&usbphy 2>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -305,6 +308,7 @@
+ 				 <&ccu CLK_USB_OHCI2>;
+ 			resets = <&ccu RST_BUS_OHCI2>;
+ 			phys = <&usbphy 2>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
+index 4fd879fb099c..1d9d12a90df9 100644
+--- a/arch/arm/boot/dts/sun9i-a80.dtsi
++++ b/arch/arm/boot/dts/sun9i-a80.dtsi
+@@ -346,6 +346,7 @@
+ 			clocks = <&usb_clocks CLK_BUS_HCI0>;
+ 			resets = <&usb_clocks RST_USB0_HCI>;
+ 			phys = <&usbphy1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -357,6 +358,7 @@
+ 				 <&usb_clocks CLK_USB_OHCI0>;
+ 			resets = <&usb_clocks RST_USB0_HCI>;
+ 			phys = <&usbphy1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -378,6 +380,7 @@
+ 			clocks = <&usb_clocks CLK_BUS_HCI1>;
+ 			resets = <&usb_clocks RST_USB1_HCI>;
+ 			phys = <&usbphy2>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -407,6 +410,7 @@
+ 			clocks = <&usb_clocks CLK_BUS_HCI2>;
+ 			resets = <&usb_clocks RST_USB2_HCI>;
+ 			phys = <&usbphy3>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -418,6 +422,7 @@
+ 				 <&usb_clocks CLK_USB_OHCI2>;
+ 			resets = <&usb_clocks RST_USB2_HCI>;
+ 			phys = <&usbphy3>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index eba190b3f9de..107eeafad20a 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -304,6 +304,7 @@
+ 			clocks = <&ccu CLK_BUS_EHCI1>, <&ccu CLK_BUS_OHCI1>;
+ 			resets = <&ccu RST_BUS_EHCI1>, <&ccu RST_BUS_OHCI1>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -315,6 +316,7 @@
+ 				 <&ccu CLK_USB_OHCI1>;
+ 			resets = <&ccu RST_BUS_EHCI1>, <&ccu RST_BUS_OHCI1>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -325,6 +327,7 @@
+ 			clocks = <&ccu CLK_BUS_EHCI2>, <&ccu CLK_BUS_OHCI2>;
+ 			resets = <&ccu RST_BUS_EHCI2>, <&ccu RST_BUS_OHCI2>;
+ 			phys = <&usbphy 2>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -336,6 +339,7 @@
+ 				 <&ccu CLK_USB_OHCI2>;
+ 			resets = <&ccu RST_BUS_EHCI2>, <&ccu RST_BUS_OHCI2>;
+ 			phys = <&usbphy 2>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -346,6 +350,7 @@
+ 			clocks = <&ccu CLK_BUS_EHCI3>, <&ccu CLK_BUS_OHCI3>;
+ 			resets = <&ccu RST_BUS_EHCI3>, <&ccu RST_BUS_OHCI3>;
+ 			phys = <&usbphy 3>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -357,6 +362,7 @@
+ 				 <&ccu CLK_USB_OHCI3>;
+ 			resets = <&ccu RST_BUS_EHCI3>, <&ccu RST_BUS_OHCI3>;
+ 			phys = <&usbphy 3>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+index 2b6345db7dc0..78c82a665c84 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+@@ -104,6 +104,7 @@
+ 
+ &ehci0 {
+ 	phys = <&usbphy 0>;
++	phy-names = "usb";
+ 	status = "okay";
+ };
+ 
+@@ -150,6 +151,7 @@
+ 
+ &ohci0 {
+ 	phys = <&usbphy 0>;
++	phy-names = "usb";
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index d0028934e11c..70f4cce6be43 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -544,6 +544,7 @@
+ 			resets = <&ccu RST_BUS_OHCI1>,
+ 				 <&ccu RST_BUS_EHCI1>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -555,6 +556,7 @@
+ 				 <&ccu CLK_USB_OHCI1>;
+ 			resets = <&ccu RST_BUS_OHCI1>;
+ 			phys = <&usbphy 1>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index 4020a1aafa3e..0d5ea19336a1 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -547,6 +547,7 @@
+ 			resets = <&ccu RST_BUS_OHCI3>,
+ 				 <&ccu RST_BUS_EHCI3>;
+ 			phys = <&usb2phy 3>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+@@ -558,6 +559,7 @@
+ 				 <&ccu CLK_USB_OHCI3>;
+ 			resets = <&ccu RST_BUS_OHCI3>;
+ 			phys = <&usb2phy 3>;
++			phy-names = "usb";
+ 			status = "disabled";
+ 		};
+ 
+-- 
+2.23.0
