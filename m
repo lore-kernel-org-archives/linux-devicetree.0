@@ -1,124 +1,53 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3] dt-bindings: rng: exynos4-rng: Convert Exynos PRNG bindings to json-schema
-Date: Wed,  2 Oct 2019 18:13:40 +0200
-Message-ID: <20191002161340.11846-1-krzk@kernel.org>
+From: Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH V3 7/8] ARM: dts: Add minimal Raspberry Pi 4 support
+Date: Wed, 2 Oct 2019 18:24:13 +0200
+Message-ID: <7d0414bb-fea8-e3e5-8b85-c18615a56c94@gmx.net>
+References: <1569672435-19823-1-git-send-email-wahrenst@gmx.net>
+ <1569672435-19823-8-git-send-email-wahrenst@gmx.net>
+ <77b0a773-912a-aa5b-6eb5-5423c2c07e58@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <77b0a773-912a-aa5b-6eb5-5423c2c07e58@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Convert Samsung Exynos Pseudo Random Number Generator bindings to DT
-schema format using json-schema.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
----
-
-Changes since v2:
-1. Add additionalProperties false,
-2. Include clock header and use defines instead of clock numbers.
-
-Changes since v1:
-1. Indent example with four spaces (more readable).
----
- .../bindings/rng/samsung,exynos4-rng.txt      | 19 --------
- .../bindings/rng/samsung,exynos4-rng.yaml     | 45 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 46 insertions(+), 20 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/rng/samsung,exynos4-rng.txt
- create mode 100644 Documentation/devicetree/bindings/rng/samsung,exynos4-rng.yaml
-
-diff --git a/Documentation/devicetree/bindings/rng/samsung,exynos4-rng.txt b/Documentation/devicetree/bindings/rng/samsung,exynos4-rng.txt
-deleted file mode 100644
-index a13fbdb4bd88..000000000000
---- a/Documentation/devicetree/bindings/rng/samsung,exynos4-rng.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--Exynos Pseudo Random Number Generator
--
--Required properties:
--
--- compatible  : One of:
--                - "samsung,exynos4-rng" for Exynos4210 and Exynos4412
--                - "samsung,exynos5250-prng" for Exynos5250+
--- reg         : Specifies base physical address and size of the registers map.
--- clocks      : Phandle to clock-controller plus clock-specifier pair.
--- clock-names : "secss" as a clock name.
--
--Example:
--
--	rng@10830400 {
--		compatible = "samsung,exynos4-rng";
--		reg = <0x10830400 0x200>;
--		clocks = <&clock CLK_SSS>;
--		clock-names = "secss";
--	};
-diff --git a/Documentation/devicetree/bindings/rng/samsung,exynos4-rng.yaml b/Documentation/devicetree/bindings/rng/samsung,exynos4-rng.yaml
-new file mode 100644
-index 000000000000..3362cb1213c0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rng/samsung,exynos4-rng.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/rng/samsung,exynos4-rng.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung Exynos SoC Pseudo Random Number Generator
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - samsung,exynos4-rng                   # for Exynos4210 and Exynos4412
-+      - samsung,exynos5250-prng               # for Exynos5250+
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: secss
-+
-+required:
-+  - compatible
-+  - reg
-+  - clock-names
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/exynos4.h>
-+
-+    rng@10830400 {
-+        compatible = "samsung,exynos4-rng";
-+        reg = <0x10830400 0x200>;
-+        clocks = <&clock CLK_SSS>;
-+        clock-names = "secss";
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 00b75028b280..b26b2009c230 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14212,7 +14212,7 @@ L:	linux-crypto@vger.kernel.org
- L:	linux-samsung-soc@vger.kernel.org
- S:	Maintained
- F:	drivers/crypto/exynos-rng.c
--F:	Documentation/devicetree/bindings/rng/samsung,exynos4-rng.txt
-+F:	Documentation/devicetree/bindings/rng/samsung,exynos4-rng.yaml
- 
- SAMSUNG EXYNOS TRUE RANDOM NUMBER GENERATOR (TRNG) DRIVER
- M:	Łukasz Stelmach <l.stelmach@samsung.com>
--- 
-2.17.1
+SGkgRmxvcmlhbiwKCkFtIDI4LjA5LjE5IHVtIDIxOjU4IHNjaHJpZWIgRmxvcmlhbiBGYWluZWxs
+aToKPgo+IE9uIDkvMjgvMjAxOSA1OjA3IEFNLCBTdGVmYW4gV2FocmVuIHdyb3RlOgo+Cj4+ICsJ
+bWVtb3J5QDAgewo+PiArCQlkZXZpY2VfdHlwZSA9ICJtZW1vcnkiOwo+PiArCQlyZWcgPSA8MCAw
+IDB4MDAwMDAwMDA+Owo+PiArCX07Cj4+ICsKPiBbc25pcF0KPgo+PiArI2luY2x1ZGUgPGR0LWJp
+bmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2FybS1naWMuaD4KPj4gKyNpbmNsdWRlIDxkdC1i
+aW5kaW5ncy9zb2MvYmNtMjgzNS1wbS5oPgo+PiArCj4+ICsvIHsKPj4gKwljb21wYXRpYmxlID0g
+ImJyY20sYmNtMjcxMSI7Cj4+ICsKPj4gKwkjYWRkcmVzcy1jZWxscyA9IDwyPjsKPj4gKwkjc2l6
+ZS1jZWxscyA9IDwxPjsKPiBUcnlpbmcgdG8gc2VlIGlmIHdlIG1heSBuZWVkIGEgI3NpemUtY2Vs
+bHMgcHJvcGVydHkgdmFsdWUgb2YgMiBoZXJlLCBmb3IKPiB0aGUgNEdCIG1vZGVsLCBJIHdvdWxk
+IGFzc3VtZSB0aGF0IHdlIHdvdWxkIGhhdmUgdG8sIHVubGVzcyB3ZSBhcmUgZmluZQo+IHdpdGgg
+c3VwcG9ydGluZyA0R0IgLSAxYnl0ZSBvZiBEUkFNPwpJIHdpbGwgdHJ5IHVubGVzcyB0aGlzIHJl
+cXVpcmVzIGEgbG90IG9mIGFkanVzdG1lbnRzIG9yIGJyZWFrIHRoZQpib290bG9hZGVyLgo+Cj4+
+ICsKPj4gKwlpbnRlcnJ1cHQtcGFyZW50ID0gPCZnaWN2Mj47Cj4+ICsKPj4gKwlzb2Mgewo+PiAr
+CQlyYW5nZXMgPSA8MHg3ZTAwMDAwMCAgMHgwIDB4ZmUwMDAwMDAgIDB4MDE4MDAwMDA+LAo+PiAr
+CQkJIDwweDdjMDAwMDAwICAweDAgMHhmYzAwMDAwMCAgMHgwMjAwMDAwMD4sCj4+ICsJCQkgPDB4
+NDAwMDAwMDAgIDB4MCAweGZmODAwMDAwICAweDAwODAwMDAwPjsKPiBNaWdodCBiZSBuaWNlIHRv
+IGdldCBzb21lIGNvbW1lbnRzIGFib3V0CnJhbmdlcyA9IDwweDdlMDAwMDAwwqAgMHgwIDB4ZmUw
+MDAwMDDCoCAweDAxODAwMDAwPizCoCAvLyBDb21tb24gQkNNMjgzeApwZXJpcGhlcmFscwrCoMKg
+wqAgwqA8MHg3YzAwMDAwMMKgIDB4MCAweGZjMDAwMDAwwqAgMHgwMjAwMDAwMD4swqAgLy8gQkNN
+MjcxMS1zcGVjaWZpYwpwZXJpcGhlcmFscwoKwqDCoMKgIMKgPDB4NDAwMDAwMDDCoCAweDAgMHhm
+ZjgwMDAwMMKgIDB4MDA4MDAwMDA+O8KgIC8vIEFSTS1sb2NhbCBwZXJpcGhlcmFscwoKSSB3aWxs
+IHNpbXBseSBmb3J3YXJkIHRoZSBhbnN3ZXIgZnJvbSB0aGUgUlBpIGd1eXMuCgpJcyBpdCB3aGF0
+IHlvdSBoYWQgaW4gbWluZD8gT3RoZXJ3aXNlIHBsZWFzZSBiZSBtb3JlIHNwZWNpZmljLgoKUmVn
+YXJkcwpTdGVmYW4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsCg==
