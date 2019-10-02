@@ -1,227 +1,100 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 6/6] arm64: tegra: Enable XUSB host in P2972-0000 board
-Date: Wed, 2 Oct 2019 12:26:11 +0200
-Message-ID: <20191002102611.GH3716706@ulmo>
-References: <20191002080051.11142-1-jckuo@nvidia.com>
- <20191002080051.11142-7-jckuo@nvidia.com>
+From: Philippe Schenker <philippe.schenker@toradex.com>
+Subject: Re: [PATCH v1 2/2] drm/panel: simple: add display timings for logic
+ technologies displays
+Date: Wed, 2 Oct 2019 10:27:00 +0000
+Message-ID: <e6fdfd7f46308dbc8fd33d4a2ff0b242ec39a84c.camel@toradex.com>
+References: <20190920075411.15735-1-marcel@ziswiler.com>
+         <20190920075411.15735-2-marcel@ziswiler.com> <20191001220539.GA16232@bogus>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mYYhpFXgKVw71fwr"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191002080051.11142-7-jckuo@nvidia.com>
+In-Reply-To: <20191001220539.GA16232@bogus>
+Content-Language: en-US
+Content-ID: <D3C60422FD7EBD47B696FB27DF221D96@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: JC Kuo <jckuo@nvidia.com>
-Cc: gregkh@linuxfoundation.org, jonathanh@nvidia.com, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com
+To: "robh@kernel.org" <robh@kernel.org>, "marcel@ziswiler.com" <marcel@ziswiler.com>
+Cc: "info@logictechno.com" <info@logictechno.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "airlied@linux.ie" <airlied@linux.ie>, "sam@ravnborg.org" <sam@ravnborg.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "j.bauer@endrich.com" <j.bauer@endrich.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-
---mYYhpFXgKVw71fwr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Oct 02, 2019 at 04:00:51PM +0800, JC Kuo wrote:
-> This commit enables XUSB host and pad controller in Tegra194
-> P2972-0000 board.
->=20
-> Signed-off-by: JC Kuo <jckuo@nvidia.com>
-> ---
->  .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 31 +++++++++-
->  .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 59 +++++++++++++++++++
->  2 files changed, 89 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/=
-boot/dts/nvidia/tegra194-p2888.dtsi
-> index 4c38426a6969..cb236edc6a0d 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-> @@ -229,7 +229,7 @@
->  						regulator-max-microvolt =3D <3300000>;
->  					};
-> =20
-> -					ldo5 {
-> +					vdd_usb_3v3: ldo5 {
->  						regulator-name =3D "VDD_USB_3V3";
->  						regulator-min-microvolt =3D <3300000>;
->  						regulator-max-microvolt =3D <3300000>;
-> @@ -313,5 +313,34 @@
->  			regulator-boot-on;
->  			enable-active-low;
->  		};
-> +
-> +		vdd_5v_sata: regulator@4 {
-> +			compatible =3D "regulator-fixed";
-> +			reg =3D <4>;
-> +
-> +			regulator-name =3D "vdd-5v-sata";
-
-Please keep capitalization of regulator names consistent. We use
-all-caps and underscores for the others (which mirrors the names in the
-schematics), so please stick with that for this one as well.
-
-Also, I'm wondering if perhaps you can clarify something here. My
-understanding is that SATA functionality is provided via a controller on
-the PCI bus. Why is it that we route the 5 V SATA power to the USB port?
-Oh wait... this is one of those eSATAp (hybrid) ports that can take
-either eSATA or USB, right? Do we need any additional setup to switch
-between eSATA and USB modes? Or is this all done in hardware? That is,
-if I plug in an eSATA, does it automatically hotplug detect the device
-as SATA and if I plug in a USB device, does it automatically detect it
-as USB?
-
-> +			regulator-min-microvolt =3D <5000000>;
-> +			regulator-max-microvolt =3D <5000000>;
-> +			gpio =3D <&gpio TEGRA194_MAIN_GPIO(Z, 1) GPIO_ACTIVE_LOW>;
-
-This will actually cause a warning on boot. For fixed regulators the
-polarity of the enable GPIO is not specified in the GPIO specifier.
-Instead you're supposed to use the boolean enable-active-high property
-to specify if the enable GPIO is active-high. By default the enable GPIO
-is considered to be active-low. The GPIO specifier needs to have the
-GPIO_ACTIVE_HIGH flag set regardless for backwards-compatibilitiy
-reasons.
-
-Note that regulator@3 above your new entry does this wrongly, but
-next-20191002 should have a fix for that.
-
-> +		};
-> +	};
-> +
-> +	padctl@3520000 {
-
-Don't forget to move this into /cbb as well to match the changes to
-patch 5/6.
-
-> +		avdd-usb-supply =3D <&vdd_usb_3v3>;
-> +		vclamp-usb-supply =3D <&vdd_1v8ao>;
-> +		ports {
-
-Blank line between the above two for better readability.
-
-> +			usb2-1 {
-> +				vbus-supply =3D <&vdd_5v0_sys>;
-> +			};
-> +			usb2-3 {
-
-Same here and below.
-
-> +				vbus-supply =3D <&vdd_5v_sata>;
-> +			};
-> +			usb3-0 {
-> +				vbus-supply =3D <&vdd_5v0_sys>;
-> +			};
-> +			usb3-3 {
-> +				vbus-supply =3D <&vdd_5v0_sys>;
-> +			};
-> +		};
->  	};
->  };
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/ar=
-m64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> index d47cd8c4dd24..410221927dfa 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> @@ -222,4 +222,63 @@
->  			};
->  		};
->  	};
-> +
-> +	padctl@3520000 {
-
-Same comment as above. Move this into /cbb.
-
-> +		status =3D "okay";
-> +
-> +		pads {
-> +			usb2 {
-> +				lanes {
-> +					usb2-1 {
-> +						status =3D "okay";
-> +					};
-> +					usb2-2 {
-
-And blank lines for readability here and below.
-
-> +						status =3D "okay";
-> +					};
-> +					usb2-3 {
-> +						status =3D "okay";
-> +					};
-> +				};
-> +			};
-> +			usb3 {
-> +				lanes {
-> +					usb3-0 {
-> +						status =3D "okay";
-> +					};
-> +					usb3-3 {
-> +						status =3D "okay";
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		ports {
-> +			usb2-1 {
-> +				mode =3D "host";
-> +				status =3D "okay";
-> +			};
-> +			usb2-3 {
-> +				mode =3D "host";
-> +				status =3D "okay";
-> +			};
-> +			usb3-0 {
-> +				nvidia,usb2-companion =3D <1>;
-> +				status =3D "okay";
-> +			};
-> +			usb3-3 {
-> +				nvidia,usb2-companion =3D <3>;
-> +				nvidia,disable-gen2;
-> +				status =3D "okay";
-> +			};
-> +		};
-> +	};
-> +
-> +	tegra_xhci: xhci@3610000 {
-
-Also needs to move into /cbb. Also, you can drop the tegra_xhci label
-here since we never reference the controller from elsewhere.
-
-Also make sure to update the name here to match the changes in 5/6.
-
-Thierry
-
-> +		status =3D "okay";
-> +		phys =3D	<&{/padctl@3520000/pads/usb2/lanes/usb2-1}>,
-> +			<&{/padctl@3520000/pads/usb2/lanes/usb2-3}>,
-> +			<&{/padctl@3520000/pads/usb3/lanes/usb3-0}>,
-> +			<&{/padctl@3520000/pads/usb3/lanes/usb3-3}>;
-> +		phy-names =3D "usb2-1", "usb2-3", "usb3-0", "usb3-3";
-> +	};
->  };
-> --=20
-> 2.17.1
->=20
-
---mYYhpFXgKVw71fwr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2Ue0AACgkQ3SOs138+
-s6GAgw//bgErm+FyPqbnCyw/CJbKUYXSkpwC/rGhxRnk037h2UYIJSIXtCRFllmx
-SDCCTvU0l9ii/dSkaVfo/eOpp/B1RTI0E9mdtJkzaFdmedkogE9m+JrlDGBMeXMe
-WwEksdW08PDcYOjecHBlcpB7+WA4a097WN1zWezOAGrdvNaaKGTSg3A/QSnFDOc9
-Wge4KazOfhy6csT+Sjf++A/0uqWrOVhoIZjbdsDjD/zdua6CT96W06YmkK/qZLRU
-bWn42dGoJLtRCtRFEzHerUq1P5d9k/C29iWduJ/DyM2SeQP6VvwgYO+DY7pOp+Ng
-sWHN3yyIzR9G0rUpdH+R6KwpFbwqbfNpD4h5U/Z1P/bt8T9TVBdVxrYQnzCRm4ry
-Mg1FUW13zbmvH5rUgewEdvhGAvRO90SvIQx1Z/RHO3wTbWhkT1jQawiqlYl57fBc
-bixdkc7Uft4GvSZPc/0mT0IfWWpssVQMZ9J7DHFJpM/wxs8pV84sPJZbg3CSo6C9
-PqW917GsFFOCfNjHq1GukmS0C3OKOM4lgwhHCdZ4QaRTK/zzkZohS/iSigSUaxQM
-7TC7isxVGkApoeQ8TjugbhW+xeLTVv0PA/ebtnAoBfOQA3vfsB+GIxKEJp69HrbF
-+Q3D36qqMfE8I1YW0+mCAvH6uEqqYBWDyrEiTvoG0GpZEeQVNrQ=
-=0eUt
------END PGP SIGNATURE-----
-
---mYYhpFXgKVw71fwr--
+T24gVHVlLCAyMDE5LTEwLTAxIGF0IDE3OjA1IC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gRnJpLCBTZXAgMjAsIDIwMTkgYXQgMDk6NTQ6MTFBTSArMDIwMCwgTWFyY2VsIFppc3dpbGVy
+IHdyb3RlOg0KPiA+IEZyb206IE1hcmNlbCBaaXN3aWxlciA8bWFyY2VsLnppc3dpbGVyQHRvcmFk
+ZXguY29tPg0KPiA+IA0KPiA+IEFkZCBkaXNwbGF5IHRpbWluZ3MgZm9yIHRoZSBmb2xsb3dpbmcg
+MyBkaXNwbGF5IHBhbmVscyBtYW51ZmFjdHVyZWQNCj4gPiBieQ0KPiA+IExvZ2ljIFRlY2hub2xv
+Z2llcyBMaW1pdGVkOg0KPiA+IA0KPiA+IC0gTFQxNjEwMTAtMk5IQyBlLmcuIGFzIGZvdW5kIGlu
+IHRoZSBUb3JhZGV4IENhcGFjaXRpdmUgVG91Y2gNCj4gPiBEaXNwbGF5DQo+ID4gICA3IiBQYXJh
+bGxlbCBbMV0NCj4gPiAtIExUMTYxMDEwLTJOSFIgZS5nLiBhcyBmb3VuZCBpbiB0aGUgVG9yYWRl
+eCBSZXNpc3RpdmUgVG91Y2ggRGlzcGxheQ0KPiA+IDciDQo+ID4gICBQYXJhbGxlbCBbMl0NCj4g
+PiAtIExUMTcwNDEwLTJXSEMgZS5nLiBhcyBmb3VuZCBpbiB0aGUgVG9yYWRleCBDYXBhY2l0aXZl
+IFRvdWNoDQo+ID4gRGlzcGxheQ0KPiA+ICAgMTAuMSIgTFZEUyBbM10NCj4gPiANCj4gPiBUaG9z
+ZSBwYW5lbHMgbWF5IGFsc28gYmUgZGlzdHJpYnV0ZWQgYnkgRW5kcmljaCBCYXVlbGVtZW50ZQ0K
+PiA+IFZlcnRyaWVicw0KPiA+IEdtYkggWzRdLg0KPiA+IA0KPiA+IFsxXSANCj4gPiBodHRwczov
+L2RvY3MudG9yYWRleC5jb20vMTA0NDk3LTctaW5jaC1wYXJhbGxlbC1jYXBhY2l0aXZlLXRvdWNo
+LWRpc3BsYXktODAweDQ4MC1kYXRhc2hlZXQucGRmDQo+ID4gWzJdIA0KPiA+IGh0dHBzOi8vZG9j
+cy50b3JhZGV4LmNvbS8xMDQ0OTgtNy1pbmNoLXBhcmFsbGVsLXJlc2lzdGl2ZS10b3VjaC1kaXNw
+bGF5LTgwMHg0ODAucGRmDQo+ID4gWzNdIA0KPiA+IGh0dHBzOi8vZG9jcy50b3JhZGV4LmNvbS8x
+MDU5NTItMTAtMS1pbmNoLWx2ZHMtY2FwYWNpdGl2ZS10b3VjaC1kaXNwbGF5LTEyODB4ODAwLWRh
+dGFzaGVldC5wZGYNCj4gPiBbNF0gDQo+ID4gaHR0cHM6Ly93d3cuZW5kcmljaC5jb20vaXNpNTBf
+aXNpMzBfdGZ0LWRpc3BsYXlzL2x0MTcwNDEwLTF3aGNfaXNpMzANCj4gPiANCj4gPiBTaWduZWQt
+b2ZmLWJ5OiBNYXJjZWwgWmlzd2lsZXIgPG1hcmNlbC56aXN3aWxlckB0b3JhZGV4LmNvbT4NCj4g
+PiANCj4gPiAtLS0NCj4gPiANCj4gPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
+ZS5jIHwgNjUNCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCA2NSBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYw0KPiA+IGIvZHJpdmVycy9ncHUvZHJtL3BhbmVs
+L3BhbmVsLXNpbXBsZS5jDQo+ID4gaW5kZXggMjhmYTZiYTdiNzY3Li40MmJkMGRlMjUxNjcgMTAw
+NjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jDQo+ID4g
+KysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jDQo+ID4gQEAgLTIwMzQs
+NiArMjAzNCw2MiBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgbGdfbHAxMjlxZSA9
+IHsNCj4gPiAgCX0sDQo+ID4gIH07DQo+ID4gIA0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRp
+c3BsYXlfdGltaW5nIGxvZ2ljdGVjaG5vX2x0MTYxMDEwXzJuaF90aW1pbmcNCj4gPiA9IHsNCj4g
+PiArCS5waXhlbGNsb2NrID0geyAyNjQwMDAwMCwgMzMzMDAwMDAsIDQ2ODAwMDAwIH0sDQo+ID4g
+KwkuaGFjdGl2ZSA9IHsgODAwLCA4MDAsIDgwMCB9LA0KPiA+ICsJLmhmcm9udF9wb3JjaCA9IHsg
+MTYsIDIxMCwgMzU0IH0sDQo+ID4gKwkuaGJhY2tfcG9yY2ggPSB7IDQ2LCA0NiwgNDYgfSwNCj4g
+PiArCS5oc3luY19sZW4gPSB7IDEsIDIwLCA0MCB9LA0KPiA+ICsJLnZhY3RpdmUgPSB7IDQ4MCwg
+NDgwLCA0ODAgfSwNCj4gPiArCS52ZnJvbnRfcG9yY2ggPSB7IDcsIDIyLCAxNDcgfSwNCj4gPiAr
+CS52YmFja19wb3JjaCA9IHsgMjMsIDIzLCAyMyB9LA0KPiA+ICsJLnZzeW5jX2xlbiA9IHsgMSwg
+MTAsIDIwIH0sDQo+ID4gKwkuZmxhZ3MgPSBESVNQTEFZX0ZMQUdTX0hTWU5DX0xPVyB8IERJU1BM
+QVlfRkxBR1NfVlNZTkNfTE9XIHwNCj4gPiArCQkgRElTUExBWV9GTEFHU19ERV9ISUdIIHwgRElT
+UExBWV9GTEFHU19QSVhEQVRBX1BPU0VER0UgfA0KPiA+ICsJCSBESVNQTEFZX0ZMQUdTX1NZTkNf
+UE9TRURHRSwNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxf
+ZGVzYyBsb2dpY3RlY2hub19sdDE2MTAxMF8ybmggPSB7DQo+ID4gKwkudGltaW5ncyA9ICZsb2dp
+Y3RlY2hub19sdDE2MTAxMF8ybmhfdGltaW5nLA0KPiA+ICsJLm51bV90aW1pbmdzID0gMSwNCj4g
+PiArCS5zaXplID0gew0KPiA+ICsJCS53aWR0aCA9IDE1NCwNCj4gPiArCQkuaGVpZ2h0ID0gODYs
+DQo+ID4gKwl9LA0KPiA+ICsJLmJ1c19mb3JtYXQgPSBNRURJQV9CVVNfRk1UX1JHQjY2Nl8xWDE4
+LA0KPiA+ICsJLmJ1c19mbGFncyA9IERSTV9CVVNfRkxBR19ERV9ISUdIIHwNCj4gPiArCQkgICAg
+IERSTV9CVVNfRkxBR19QSVhEQVRBX1NBTVBMRV9ORUdFREdFIHwNCj4gPiArCQkgICAgIERSTV9C
+VVNfRkxBR19TWU5DX1NBTVBMRV9ORUdFREdFLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGlj
+IGNvbnN0IHN0cnVjdCBkaXNwbGF5X3RpbWluZyBsb2dpY3RlY2hub19sdDE3MDQxMF8yd2hjX3Rp
+bWluZw0KPiA+ID0gew0KPiA+ICsJLnBpeGVsY2xvY2sgPSB7IDY4OTAwMDAwLCA3MTEwMDAwMCwg
+NzM0MDAwMCB9LA0KPiA+ICsJLmhhY3RpdmUgPSB7IDEyODAsIDEyODAsIDEyODAgfSwNCj4gPiAr
+CS5oZnJvbnRfcG9yY2ggPSB7IDIzLCA2MCwgNzEgfSwNCj4gPiArCS5oYmFja19wb3JjaCA9IHsg
+MjMsIDYwLCA3MSB9LA0KPiA+ICsJLmhzeW5jX2xlbiA9IHsgMTUsIDQwLCA0NyB9LA0KPiA+ICsJ
+LnZhY3RpdmUgPSB7IDgwMCwgODAwLCA4MDAgfSwNCj4gPiArCS52ZnJvbnRfcG9yY2ggPSB7IDUs
+IDcsIDEwIH0sDQo+ID4gKwkudmJhY2tfcG9yY2ggPSB7IDUsIDcsIDEwIH0sDQo+ID4gKwkudnN5
+bmNfbGVuID0geyA2LCA5LCAxMiB9LA0KPiA+ICsJLmZsYWdzID0gRElTUExBWV9GTEFHU19IU1lO
+Q19MT1cgfCBESVNQTEFZX0ZMQUdTX1ZTWU5DX0xPVyB8DQo+ID4gKwkJIERJU1BMQVlfRkxBR1Nf
+REVfSElHSCB8IERJU1BMQVlfRkxBR1NfUElYREFUQV9QT1NFREdFIHwNCj4gPiArCQkgRElTUExB
+WV9GTEFHU19TWU5DX1BPU0VER0UsDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qg
+c3RydWN0IHBhbmVsX2Rlc2MgbG9naWN0ZWNobm9fbHQxNzA0MTBfMndoYyA9IHsNCj4gPiArCS50
+aW1pbmdzID0gJmxvZ2ljdGVjaG5vX2x0MTcwNDEwXzJ3aGNfdGltaW5nLA0KPiA+ICsJLm51bV90
+aW1pbmdzID0gMSwNCj4gPiArCS5zaXplID0gew0KPiA+ICsJCS53aWR0aCA9IDIxNywNCj4gPiAr
+CQkuaGVpZ2h0ID0gMTM2LA0KPiA+ICsJfSwNCj4gPiArCS5idXNfZm9ybWF0ID0gTUVESUFfQlVT
+X0ZNVF9SR0I4ODhfMVg3WDRfU1BXRywNCj4gPiArCS5idXNfZmxhZ3MgPSBEUk1fQlVTX0ZMQUdf
+REVfSElHSCB8DQo+ID4gKwkJICAgICBEUk1fQlVTX0ZMQUdfUElYREFUQV9TQU1QTEVfTkVHRURH
+RSB8DQo+ID4gKwkJICAgICBEUk1fQlVTX0ZMQUdfU1lOQ19TQU1QTEVfTkVHRURHRSwNCj4gPiAr
+fTsNCj4gPiArDQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBtaXRz
+dWJpc2hpX2FhMDcwbWMwMV9tb2RlID0gew0KPiA+ICAJLmNsb2NrID0gMzA0MDAsDQo+ID4gIAku
+aGRpc3BsYXkgPSA4MDAsDQo+ID4gQEAgLTMyNjQsNiArMzMyMCwxNSBAQCBzdGF0aWMgY29uc3Qg
+c3RydWN0IG9mX2RldmljZV9pZA0KPiA+IHBsYXRmb3JtX29mX21hdGNoW10gPSB7DQo+ID4gIAl9
+LCB7DQo+ID4gIAkJLmNvbXBhdGlibGUgPSAibGcsbHAxMjlxZSIsDQo+ID4gIAkJLmRhdGEgPSAm
+bGdfbHAxMjlxZSwNCj4gPiArCX0sIHsNCj4gPiArCQkuY29tcGF0aWJsZSA9ICJsb2dpY3RlY2hu
+byxsdDE2MTAxMC0ybmhjIiwNCj4gPiArCQkuZGF0YSA9ICZsb2dpY3RlY2hub19sdDE2MTAxMF8y
+bmgsDQo+ID4gKwl9LCB7DQo+ID4gKwkJLmNvbXBhdGlibGUgPSAibG9naWN0ZWNobm8sbHQxNjEw
+MTAtMm5ociIsDQo+ID4gKwkJLmRhdGEgPSAmbG9naWN0ZWNobm9fbHQxNjEwMTBfMm5oLA0KPiA+
+ICsJfSwgew0KPiA+ICsJCS5jb21wYXRpYmxlID0gImxvZ2ljdGVjaG5vLGx0MTcwNDEwLTJ3aGMi
+LA0KPiA+ICsJCS5kYXRhID0gJmxvZ2ljdGVjaG5vX2x0MTcwNDEwXzJ3aGMsDQo+IA0KPiBUaGUg
+dmVuZG9yIHByZWZpeCB3YXNuJ3QgZG9jdW1lbnRlZCwgYnV0IHRoZSBjb21wYXRpYmxlIHN0cmlu
+ZyBhbmQNCj4gcmVzdCANCj4gYWxyZWFkeSBhcmU/DQoNCk1hcmNlbCBhZGRlZCB0aGUgdmVuZG9y
+IHByZWZpeCBpbiB0aGUgZmlyc3QgcGF0Y2ggb2YgdGhlIHNlcmllcyBbMV0NCg0KWzFdIGh0dHBz
+Oi8vbGttbC5vcmcvbGttbC8yMDE5LzkvMjAvMTI2DQoNClBoaWxpcHBlDQoNCj4gDQo+IFJvYg0K
