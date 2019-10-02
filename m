@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 7/7] dt-bindings: iio: adc: max1027: Document max12xx series compatibles
-Date: Wed,  2 Oct 2019 14:30:25 +0200
-Message-ID: <20191002123025.21413-8-miquel.raynal@bootlin.com>
+Subject: [PATCH 5/7] iio: adc: max1027: Introduce 12-bit devices support
+Date: Wed,  2 Oct 2019 14:30:23 +0200
+Message-ID: <20191002123025.21413-6-miquel.raynal@bootlin.com>
 References: <20191002123025.21413-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,32 +12,107 @@ To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-
 Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Update the bindings documentation with new Maxim ADCs compatibles.
+Maxim's max12xx series is very similar to the max10xx series, with the
+difference of the measurements depth which is upgraded from 10 to 12
+bits per channel. Everything else looks the same.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- .../devicetree/bindings/iio/adc/max1027-adc.txt        | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/iio/adc/Kconfig   |  4 ++--
+ drivers/iio/adc/max1027.c | 41 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 42 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-index 7b23d68f655c..1b703a01d882 100644
---- a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-@@ -1,7 +1,13 @@
--* Maxim 1027/1029/1031 Analog to Digital Converter (ADC)
-+* Maxim 1027/1029/1031/1227/1229/1231 Analog to Digital Converter (ADC)
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index f0af3a42f53c..6ac16d738822 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -508,8 +508,8 @@ config MAX1027
+ 	select IIO_BUFFER
+ 	select IIO_TRIGGERED_BUFFER
+ 	help
+-	  Say yes here to build support for Maxim SPI ADC models
+-	  max1027, max1029 and max1031.
++	  Say yes here to build support for Maxim SPI {10,12}-bit ADC models:
++	  max1027, max1029, max1031, max1227, max1229 and max1231.
  
- Required properties:
--  - compatible: Should be "maxim,max1027" or "maxim,max1029" or "maxim,max1031"
-+  - compatible: Should be one of:
-+    * "maxim,max1027"
-+    * "maxim,max1029"
-+    * "maxim,max1031"
-+    * "maxim,max1227"
-+    * "maxim,max1229"
-+    * "maxim,max1231"
-   - reg: SPI chip select number for the device
+ 	  To compile this driver as a module, choose M here: the module will be
+ 	  called max1027.
+diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+index fc75764a6fd7..0d7116e9a63b 100644
+--- a/drivers/iio/adc/max1027.c
++++ b/drivers/iio/adc/max1027.c
+@@ -63,12 +63,18 @@ enum max1027_id {
+ 	max1027,
+ 	max1029,
+ 	max1031,
++	max1227,
++	max1229,
++	max1231,
+ };
  
- Optional properties:
+ static const struct spi_device_id max1027_id[] = {
+ 	{"max1027", max1027},
+ 	{"max1029", max1029},
+ 	{"max1031", max1031},
++	{"max1227", max1227},
++	{"max1229", max1229},
++	{"max1231", max1231},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(spi, max1027_id);
+@@ -156,6 +162,21 @@ static const struct iio_chan_spec max1031_channels[] = {
+ 	MAX1X31_CHANNELS(10)
+ };
+ 
++static const struct iio_chan_spec max1227_channels[] = {
++	MAX1X27_CHANNELS(12)
++};
++
++static const struct iio_chan_spec max1229_channels[] = {
++	MAX1X27_CHANNELS(12),
++	MAX1X29_CHANNELS(12)
++};
++
++static const struct iio_chan_spec max1231_channels[] = {
++	MAX1X27_CHANNELS(12),
++	MAX1X29_CHANNELS(12),
++	MAX1X31_CHANNELS(12)
++};
++
+ static const unsigned long max1027_available_scan_masks[] = {
+ 	0x000001ff,
+ 	0x00000000,
+@@ -197,6 +218,24 @@ static const struct max1027_chip_info max1027_chip_info_tbl[] = {
+ 		.depth = 10,
+ 		.available_scan_masks = max1031_available_scan_masks,
+ 	},
++	[max1227] = {
++		.channels = max1227_channels,
++		.num_channels = ARRAY_SIZE(max1227_channels),
++		.depth = 12,
++		.available_scan_masks = max1027_available_scan_masks,
++	},
++	[max1229] = {
++		.channels = max1229_channels,
++		.num_channels = ARRAY_SIZE(max1229_channels),
++		.depth = 12,
++		.available_scan_masks = max1029_available_scan_masks,
++	},
++	[max1231] = {
++		.channels = max1231_channels,
++		.num_channels = ARRAY_SIZE(max1231_channels),
++		.depth = 12,
++		.available_scan_masks = max1031_available_scan_masks,
++	},
+ };
+ 
+ struct max1027_state {
+@@ -493,5 +532,5 @@ static struct spi_driver max1027_driver = {
+ module_spi_driver(max1027_driver);
+ 
+ MODULE_AUTHOR("Philippe Reynes <tremyfr@yahoo.fr>");
+-MODULE_DESCRIPTION("MAX1027/MAX1029/MAX1031 ADC");
++MODULE_DESCRIPTION("MAX1X27/MAX1X29/MAX1X31 ADC");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.20.1
