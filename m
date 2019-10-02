@@ -1,166 +1,340 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 1/3] docs: fix some broken references
-Date: Wed, 2 Oct 2019 06:39:40 -0700
-Message-ID: <20191002133940.GA29214@roeck-us.net>
-References: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH 2/5] dt-bindings: mfd: da9062: add regulator voltage
+ selection documentation
+Date: Wed, 2 Oct 2019 15:45:21 +0200
+Message-ID: <20191002134521.zcree6w4loutjrud@pengutronix.de>
+References: <AM5PR1001MB0994316EA8AD903B2943CE2080820@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+In-Reply-To: <AM5PR1001MB0994316EA8AD903B2943CE2080820@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, corbet@lwn.net, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Jean Delvare <jdelvare@suse.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Saeed Mahameed <saeedm@mellanox.com>, Leon Romanovsky <leon@kernel.org>, "David S. Miller" <davem@davemloft.net>, Shannon Nelson <snelson@pensando.io>, Pensando Drivers <drivers@pensando.io>, Steve French <sfrench@samba.org>
+To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, Steve Twiss <stwiss.opensource@diasemi.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 10:01:28AM -0300, Mauro Carvalho Chehab wrote:
-> There are a number of documentation files that got moved or
-> renamed. update their references.
+On 19-09-30 09:53, Adam Thomson wrote:
+> On 26 September 2019 15:39, Marco Felsch wrote:
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> Acked-by: Shannon Nelson <snelson@pensando.io>
-> ---
->  Documentation/devicetree/bindings/cpu/cpu-topology.txt    | 2 +-
->  Documentation/devicetree/bindings/timer/ingenic,tcu.txt   | 2 +-
->  Documentation/driver-api/gpio/driver.rst                  | 2 +-
->  Documentation/hwmon/inspur-ipsps1.rst                     | 2 +-
-
-For hwmon:
-
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-
->  Documentation/mips/ingenic-tcu.rst                        | 2 +-
->  Documentation/networking/device_drivers/mellanox/mlx5.rst | 2 +-
->  MAINTAINERS                                               | 2 +-
->  drivers/net/ethernet/faraday/ftgmac100.c                  | 2 +-
->  drivers/net/ethernet/pensando/ionic/ionic_if.h            | 4 ++--
->  fs/cifs/cifsfs.c                                          | 2 +-
->  10 files changed, 11 insertions(+), 11 deletions(-)
+> > On 19-09-26 14:04, Adam Thomson wrote:
+> > > On 26 September 2019 12:44, Marco Felsch wrote:
+> > >
+> > > > On 19-09-26 10:17, Adam Thomson wrote:
+> > > > > On 26 September 2019 09:10, Marco Felsch wrote:
+> > > > >
+> > > > > > On 19-09-25 16:18, Adam Thomson wrote:
+> > > > > > > On 25 September 2019 16:52, Marco Felsch wrote:
+> > > > > > >
+> > > > > > > > Hi Adam,
+> > > > > > > >
+> > > > > > > > On 19-09-24 09:23, Adam Thomson wrote:
+> > > > > > > > > On 17 September 2019 13:43, Marco Felsch wrote:
+> > > > > > > > >
+> > > > > > > > > > Add the documentation which describe the voltage selection gpio
+> > > > > > support.
+> > > > > > > > > > This property can be applied to each subnode within the
+> > 'regulators'
+> > > > > > > > > > node so each regulator can be configured differently.
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > > > > > > > > ---
+> > > > > > > > > >  Documentation/devicetree/bindings/mfd/da9062.txt | 9
+> > +++++++++
+> > > > > > > > > >  1 file changed, 9 insertions(+)
+> > > > > > > > > >
+> > > > > > > > > > diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > > > > b/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > > > > index edca653a5777..9d9820d8177d 100644
+> > > > > > > > > > --- a/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > > > > +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+> > > > > > > > > > @@ -66,6 +66,15 @@ Sub-nodes:
+> > > > > > > > > >    details of individual regulator device can be found in:
+> > > > > > > > > >    Documentation/devicetree/bindings/regulator/regulator.txt
+> > > > > > > > > >
+> > > > > > > > > > +  Optional regulator device-specific properties:
+> > > > > > > > > > +  - dlg,vsel-sense-gpios : The GPIO reference which should be
+> > used
+> > > > by
+> > > > > > the
+> > > > > > > > > > +    regulator to switch the voltage between active/suspend
+> > voltage
+> > > > > > settings.
+> > > > > > > > If
+> > > > > > > > > > +    the signal is active the active-settings are applied else the
+> > suspend
+> > > > > > > > > > +    settings are applied. Attention: Sharing the same gpio for other
+> > > > > > purposes
+> > > > > > > > > > +    or across multiple regulators is possible but the gpio settings
+> > must
+> > > > be
+> > > > > > the
+> > > > > > > > > > +    same. Also the gpio phandle must refer to to the dlg,da9062-
+> > gpio
+> > > > > > device
+> > > > > > > > > > +    other gpios are not allowed and make no sense.
+> > > > > > > > > > +
+> > > > > > > > >
+> > > > > > > > > Should we not use the binding names that are defined in 'gpio-
+> > > > > > regulator.yaml'
+> > > > > > > > as
+> > > > > > > > > these seem to be generic and would probably serve the purpose
+> > here?
+> > > > > > > >
+> > > > > > > > Hm.. as the description says:
+> > > > > > > >
+> > > > > > > > 8<--------------------------------------------------
+> > > > > > > > gpios:
+> > > > > > > >    description: Array of one or more GPIO pins used to select the
+> > > > > > > >    regulator voltage/current listed in "states".
+> > > > > > > > 8<--------------------------------------------------
+> > > > > > > >
+> > > > > > > > But we don't have a "states" property and we can't select between
+> > > > > > > > voltage or current.
+> > > > > > >
+> > > > > > > Yes I think I was at cross purposes when I made this remark. The
+> > bindings
+> > > > there
+> > > > > > > describe the GPOs that are used to enable/disable and set
+> > voltage/current
+> > > > for
+> > > > > > > regulators and the supported voltage/current levels that can be
+> > configured
+> > > > in
+> > > > > > > this manner. What you're describing is the GPI for DA9061/2. If you look
+> > at
+> > > > > > > GPIO handling in existing regulator drivers I believe they all deal with
+> > > > external
+> > > > > > > GPOs that are configured to enable/disable and set voltage/current
+> > limits
+> > > > > > rather
+> > > > > > > than the GPI on the PMIC itself. That's why I'm thinking that the
+> > > > configurations
+> > > > > > > you're doing here should actually be in a pinctrl or GPIO driver.
+> > > > > >
+> > > > > > That's true, the common gpio bindings are from the view of the
+> > > > > > processor, e.g. which gpio must the processor drive to enable/switch the
+> > > > > > regualtor. So one reasone more to use a non-common binding.
+> > > > > >
+> > > > > > Please take a look on my other comment I made :) I don't use the
+> > > > > > gpio-alternative function. I use it as an input.
+> > > > >
+> > > > > I know in the datasheet this isn't marked as an alternate function specifically
+> > > > > but to me having regulator control by the chip's own GPI is an alternative
+> > > > > function for that GPIO pin, in the same way a specific pin can be used for
+> > > > > SYS_EN or Watchdog control. It's a dedicated purpose rather than being a
+> > > > normal
+> > > > > GPI.
+> > > >
+> > > > Nope, SYS_EN or Watchdog is a special/alternate function and not a
+> > > > normal input.
+> > >
+> > > Having spoken with our HW team there's essentially no real difference.
+> >
+> > So I don't have to configure the gpio to alternate to use it as SYS_EN?
 > 
-> diff --git a/Documentation/devicetree/bindings/cpu/cpu-topology.txt b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
-> index 99918189403c..9bd530a35d14 100644
-> --- a/Documentation/devicetree/bindings/cpu/cpu-topology.txt
-> +++ b/Documentation/devicetree/bindings/cpu/cpu-topology.txt
-> @@ -549,5 +549,5 @@ Example 3: HiFive Unleashed (RISC-V 64 bit, 4 core system)
->  [2] Devicetree NUMA binding description
->      Documentation/devicetree/bindings/numa.txt
->  [3] RISC-V Linux kernel documentation
-> -    Documentation/devicetree/bindings/riscv/cpus.txt
-> +    Documentation/devicetree/bindings/riscv/cpus.yaml
->  [4] https://www.devicetree.org/specifications/
-> diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-> index 5a4b9ddd9470..7f6fe20503f5 100644
-> --- a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-> +++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-> @@ -2,7 +2,7 @@ Ingenic JZ47xx SoCs Timer/Counter Unit devicetree bindings
->  ==========================================================
->  
->  For a description of the TCU hardware and drivers, have a look at
-> -Documentation/mips/ingenic-tcu.txt.
-> +Documentation/mips/ingenic-tcu.rst.
->  
->  Required properties:
->  
-> diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
-> index 3fdb32422f8a..9076cc76d5bf 100644
-> --- a/Documentation/driver-api/gpio/driver.rst
-> +++ b/Documentation/driver-api/gpio/driver.rst
-> @@ -493,7 +493,7 @@ available but we try to move away from this:
->    gpiochip. It will pass the struct gpio_chip* for the chip to all IRQ
->    callbacks, so the callbacks need to embed the gpio_chip in its state
->    container and obtain a pointer to the container using container_of().
-> -  (See Documentation/driver-model/design-patterns.txt)
-> +  (See Documentation/driver-api/driver-model/design-patterns.rst)
->  
->  - gpiochip_irqchip_add_nested(): adds a nested cascaded irqchip to a gpiochip,
->    as discussed above regarding different types of cascaded irqchips. The
-> diff --git a/Documentation/hwmon/inspur-ipsps1.rst b/Documentation/hwmon/inspur-ipsps1.rst
-> index 2b871ae3448f..ed32a65c30e1 100644
-> --- a/Documentation/hwmon/inspur-ipsps1.rst
-> +++ b/Documentation/hwmon/inspur-ipsps1.rst
-> @@ -17,7 +17,7 @@ Usage Notes
->  -----------
->  
->  This driver does not auto-detect devices. You will have to instantiate the
-> -devices explicitly. Please see Documentation/i2c/instantiating-devices for
-> +devices explicitly. Please see Documentation/i2c/instantiating-devices.rst for
->  details.
->  
->  Sysfs entries
-> diff --git a/Documentation/mips/ingenic-tcu.rst b/Documentation/mips/ingenic-tcu.rst
-> index c4ef4c45aade..c5a646b14450 100644
-> --- a/Documentation/mips/ingenic-tcu.rst
-> +++ b/Documentation/mips/ingenic-tcu.rst
-> @@ -68,4 +68,4 @@ and frameworks can be controlled from the same registers, all of these
->  drivers access their registers through the same regmap.
->  
->  For more information regarding the devicetree bindings of the TCU drivers,
-> -have a look at Documentation/devicetree/bindings/mfd/ingenic,tcu.txt.
-> +have a look at Documentation/devicetree/bindings/timer/ingenic,tcu.txt.
-> diff --git a/Documentation/networking/device_drivers/mellanox/mlx5.rst b/Documentation/networking/device_drivers/mellanox/mlx5.rst
-> index d071c6b49e1f..a74422058351 100644
-> --- a/Documentation/networking/device_drivers/mellanox/mlx5.rst
-> +++ b/Documentation/networking/device_drivers/mellanox/mlx5.rst
-> @@ -258,7 +258,7 @@ mlx5 tracepoints
->  ================
->  
->  mlx5 driver provides internal trace points for tracking and debugging using
-> -kernel tracepoints interfaces (refer to Documentation/trace/ftrase.rst).
-> +kernel tracepoints interfaces (refer to Documentation/trace/ftrace.rst).
->  
->  For the list of support mlx5 events check /sys/kernel/debug/tracing/events/mlx5/
->  
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 54f1286087e9..65b7d9a0a44a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3680,7 +3680,7 @@ M:	Oleksij Rempel <o.rempel@pengutronix.de>
->  R:	Pengutronix Kernel Team <kernel@pengutronix.de>
->  L:	linux-can@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/networking/j1939.txt
-> +F:	Documentation/networking/j1939.rst
->  F:	net/can/j1939/
->  F:	include/uapi/linux/can/j1939.h
->  
-> diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
-> index 9b7af94a40bb..8abe5e90d268 100644
-> --- a/drivers/net/ethernet/faraday/ftgmac100.c
-> +++ b/drivers/net/ethernet/faraday/ftgmac100.c
-> @@ -1835,7 +1835,7 @@ static int ftgmac100_probe(struct platform_device *pdev)
->  		}
->  
->  		/* Indicate that we support PAUSE frames (see comment in
-> -		 * Documentation/networking/phy.txt)
-> +		 * Documentation/networking/phy.rst)
->  		 */
->  		phy_support_asym_pause(phy);
->  
-> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_if.h b/drivers/net/ethernet/pensando/ionic/ionic_if.h
-> index 5bfdda19f64d..80028f781c83 100644
-> --- a/drivers/net/ethernet/pensando/ionic/ionic_if.h
-> +++ b/drivers/net/ethernet/pensando/ionic/ionic_if.h
-> @@ -596,8 +596,8 @@ enum ionic_txq_desc_opcode {
->   *                      the @encap is set, the device will
->   *                      offload the outer header checksums using
->   *                      LCO (local checksum offload) (see
-> - *                      Documentation/networking/checksum-
-> - *                      offloads.txt for more info).
-> + *                      Documentation/networking/checksum-offloads.rst
-> + *                      for more info).
->   *
->   *                   IONIC_TXQ_DESC_OPCODE_CSUM_HW:
->   *
-> diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
-> index 2e9c7f493f99..811f510578cb 100644
-> --- a/fs/cifs/cifsfs.c
-> +++ b/fs/cifs/cifsfs.c
-> @@ -1529,7 +1529,7 @@ init_cifs(void)
->  	/*
->  	 * Consider in future setting limit!=0 maybe to min(num_of_cores - 1, 3)
->  	 * so that we don't launch too many worker threads but
-> -	 * Documentation/workqueue.txt recommends setting it to 0
-> +	 * Documentation/core-api/workqueue.rst recommends setting it to 0
->  	 */
->  
->  	/* WQ_UNBOUND allows decrypt tasks to run on any CPU */
+> Yes you do, but the effect is much the same as manually configuring the GPIO as
+> input, just that the IC does it for you. The regulator control features could
+> well have been done in a similar manner. Guess that was a design choice.
+> 
+> >
+> > > >
+> > > > > See the following as an example of what I'm suggesting:
+> > > > >
+> > > > >
+> > > >
+> > https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindin
+> > > > gs/pinctrl/pinctrl-palmas.txt
+> > > > >
+> > > > > You could then pass the pinctrl information to the regulator driver and use
+> > > > > that rather than having device specific bindings for this. That's at least my
+> > > > > current interpretation of this anyway.
+> > > >
+> > > > For me pinctrl decides which function should be assigned to a pin. So in
+> > > > our case this would be:
+> > > >   - alternate
+> > > >   - gpo
+> > > >   - gpi
+> > > >
+> > > > In our use-case it is a gpi..
+> > >
+> > > It's not being used as a normal GPI as such. It's being used to enable/disable
+> > > the regulator so I disagree.
+> >
+> > This one is used as voltage-selection. What is a "normal" GPI in your
+> > point of view?
+> 
+> With the voltage selection and enable/disable control the actual work of
+> handling the GPI state is all done internally in the IC. There is no control
+> required from SW other than setting of initial direction. For a normal GPI
+
+Thats correct and setting the direction and active levels can be done
+perfectly by the gpio-interface.
+
+> I would expect SW to be involved in the handling of that GPI state, for example
+> as part of a bit banging interface.
+> 
+> >
+> > > >
+> > > > An other reason why pinctrl seems not be the right solution is that the
+> > > > regulator must be configured to use this gpi. This decision can't be
+> > > > made globally because each regulator can be configured differently.. For
+> > > > me its just a local gpio.
+> > >
+> > > You'd pass pinctrl information, via DT, to the regulator driver so it can set
+> > > accordingly. At least that's my take here, unless I'm missing something. The
+> > > regulator driver would be the consumer and could set the regulator control
+> > > accordingly.
+> >
+> > IMHO this is what I have done. I use the gpi so the regulator is the
+> > consumer. Since the gpi can be used by several regulators for voltage
+> > selection or enable/disable action this gpi is marked as shared. If I
+> > got you right than you would do something like for regulatorX.
+> >
+> >   pinctrl-node {
+> >
+> >   	gpio2 {
+> > 		func = "vsel";
+> > 	}
+> >   }
+> >
+> > But the gpi(o)2 can also be used to enable/disable a regulatorY if I
+> > understood the datasheet correctly. I other words:
+> >
+> >
+> >
+> >          +--> Alternate function
+> >       /
+> >   ---+   +--> GPI ----> Edge detection ---> more processing
+> >    |       |                |
+> >    |       |                +-----> Regulator control
+> >    |       |                          |
+> >    \__  __/ \__________  _______
+> >       \/               \/
+> >    pinctrl            gpio
+> >
+> > This is how I understood the pinctrl use-case. I configure the pin as
+> > gpio and then the regulator driver consume a gpio.
+> 
+> How I see it is that you configure the function through pinctrl as
+> 'regulator_switch' or 'regulator_vsel' (or whatever name is deemed sensible to
+
+The case is that it can be "muxed" for both at same time so there is no
+or instead it is a or/and. Depending on the design some regulators can
+be turned off and some should be switched upon that signal.
+
+> cover the two types of functionality) and then the pinctrl driver code would do
+> the work of requesting and configuring the relevant GPIO as input so it's no
+> longer available for use as something else (basically what you do in the
+> regulator driver right now).
+
+So by this I avoided the user-space to get this gpio and this seems fine
+to me. What a driver does with a gpio is up to the driver but the gpio
+shouldn't be reachable from the user-space.
+
+> I believe you can have more than one consumer of a pinctrl pin so it could be
+> provided to both regulator X and Y to indicate that this is the chosen
+> functionality of that pin and so the regulator can then be marked as being
+> controlled by that pin. Using pinctrl also would mean you're using standard
+> bindings as well rather than something which is device specific.
+
+That seems wrong to me because pinctrl should assign a dedicated function
+to that pin e.g. regulator_switch or regulator_vsel. But thats wrong as
+I pointed out above. On the other hand the gpio as the name says is
+general purpose and each regulator gives the meaning to it.
+
+> > > At the end of the day I'm not the gatekeeper here so I think Mark's input is
+> > > necessary as he will likely have a view on how this should be done. I appreciate
+> > > the work you've done here but I want to be sure we have a generic solution
+> > > as this would also apply to DA9063 and possibly other devices too.
+> >
+> > Why should this only apply to da9062 devices? IMHO this property can be
+> > used by any other dlg pmic as well if it is supported. Comments and suggestions
+> > are welcome so no worries ;)
+> 
+> You're right. You can do the same for DA9063 and other devices potentially. I
+> would just like to make sure we take the right/agreed approach. Potentially
+> this could be used in non-Dialog products as well which have similar
+> functionality.
+
+Yeah, but I think we should consider about that after an other device
+appears with that funcitonality.
+
+> As I say, Mark is really the gatekeeper so his input is also key in this.
+
+That's right, I added Mark to To.
+
+Regards,
+  Marco
+
+> 
+> >
+> > Regards,
+> >   Marco
+> >
+> > > Have added Mark to the 'To' in this e-mail thread so he might see it.
+> > > >
+> > > > Regards,
+> > > >   Marco
+> > > >
+> > > > > >
+> > > > > > Regards,
+> > > > > >   Marco
+> > > > > >
+> > > > > >
+> > > > > > > I'd be interested in hearing Mark's view on this though as he has far
+> > more
+> > > > > > > experience in this area than I do.
+> > > > > > >
+> > > > > > > >
+> > > > > > > > Regards,
+> > > > > > > >   Marco
+> > > > > > > >
+> > > > > > > > > >  - rtc : This node defines settings required for the Real-Time Clock
+> > > > > > associated
+> > > > > > > > > >    with the DA9062. There are currently no entries in this binding,
+> > > > however
+> > > > > > > > > >    compatible = "dlg,da9062-rtc" should be added if a node is
+> > created.
+> > > > > > > > > > --
+> > > > > > > > > > 2.20.1
+> > > > > > > > >
+> > > > > > > > >
+> > > > > > > >
+> > > > > > > > --
+> > > > > > > > Pengutronix e.K.                           |                             |
+> > > > > > > > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > > > > > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-
+> > 0
+> > > > |
+> > > > > > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555
+> > |
+> > > > > > >
+> > > > > >
+> > > > > > --
+> > > > > > Pengutronix e.K.                           |                             |
+> > > > > > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > > > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
+> > |
+> > > > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> > > > >
+> > > >
+> > > > --
+> > > > Pengutronix e.K.                           |                             |
+> > > > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> > >
+> >
+> > --
+> > Pengutronix e.K.                           |                             |
+> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
