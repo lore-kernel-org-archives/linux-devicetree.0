@@ -1,12 +1,13 @@
 From: Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH 1/2] ARM: dts: sunxi: Revert phy-names removal for ECHI and
- OHCI
-Date: Wed,  2 Oct 2019 13:26:50 +0200
-Message-ID: <20191002112651.100504-1-mripard@kernel.org>
+Subject: [PATCH 2/2] dt-bindings: usb: Bring back phy-names
+Date: Wed,  2 Oct 2019 13:26:51 +0200
+Message-ID: <20191002112651.100504-2-mripard@kernel.org>
+References: <20191002112651.100504-1-mripard@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191002112651.100504-1-mripard@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,402 +21,90 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@
 Cc: devicetree@vger.kernel.org, Emmanuel Vadot <manu@bidouilliste.com>, linux-usb@vger.kernel.org, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This reverts commits 3d109bdca981 ("ARM: dts: sunxi: Remove useless
-phy-names from EHCI and OHCI"), 0a3df8bb6dad ("ARM: dts: sunxi: h3/h5:
-Remove useless phy-names from EHCI and OHCI") and 3c7ab90aaa28 ("arm64:
-dts: allwinner: Remove useless phy-names from EHCI and OHCI").
+While the original bindings that were superseeded by the YAML schemas
+didn't mention that phy-names was needed, it turns out that phy-names is
+required if phys is set according to phy/phy-bindings.txt.
 
-It turns out that while the USB bindings were not mentionning it, the PHY
-client bindings were mandating that phy-names is set when phys is. Let's
-add it back.
+Let's add back those properties.
 
-Fixes: 3d109bdca981 ("ARM: dts: sunxi: Remove useless phy-names from EHCI and OHCI")
-Fixes: 0a3df8bb6dad ("ARM: dts: sunxi: h3/h5: Remove useless phy-names from EHCI and OHCI")
-Fixes: 3c7ab90aaa28 ("arm64: dts: allwinner: Remove useless phy-names from EHCI and OHCI")
+Fixes: 14ec072a19ad ("dt-bindings: usb: Convert USB HCD generic binding to YAML")
+Fixes: c93bcace1098 ("dt-bindings: usb: Convert the generic OHCI binding to YAML")
+Fixes: c3e2485d5f4f ("dt-bindings: usb: Convert the generic EHCI binding to YAML")
 Reported-by: Emmanuel Vadot <manu@bidouilliste.com>
 Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- arch/arm/boot/dts/sun4i-a10.dtsi                      | 4 ++++
- arch/arm/boot/dts/sun5i.dtsi                          | 2 ++
- arch/arm/boot/dts/sun6i-a31.dtsi                      | 4 ++++
- arch/arm/boot/dts/sun7i-a20.dtsi                      | 4 ++++
- arch/arm/boot/dts/sun8i-a23-a33.dtsi                  | 2 ++
- arch/arm/boot/dts/sun8i-a83t.dtsi                     | 3 +++
- arch/arm/boot/dts/sun8i-r40.dtsi                      | 4 ++++
- arch/arm/boot/dts/sun9i-a80.dtsi                      | 5 +++++
- arch/arm/boot/dts/sunxi-h3-h5.dtsi                    | 6 ++++++
- arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts | 2 ++
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi         | 2 ++
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi          | 2 ++
- 12 files changed, 40 insertions(+)
+ Documentation/devicetree/bindings/usb/generic-ehci.yaml | 7 ++++++-
+ Documentation/devicetree/bindings/usb/generic-ohci.yaml | 7 ++++++-
+ Documentation/devicetree/bindings/usb/usb-hcd.yaml      | 5 +++++
+ 3 files changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index ce823c44e98a..4c268b70b735 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -520,6 +520,7 @@
- 			interrupts = <39>;
- 			clocks = <&ccu CLK_AHB_EHCI0>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
+diff --git a/Documentation/devicetree/bindings/usb/generic-ehci.yaml b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
+index 059f6ef1ad4a..1ca64c85191a 100644
+--- a/Documentation/devicetree/bindings/usb/generic-ehci.yaml
++++ b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
+@@ -63,7 +63,11 @@ properties:
+     description:
+       Set this flag to force EHCI reset after resume.
  
-@@ -529,6 +530,7 @@
- 			interrupts = <64>;
- 			clocks = <&ccu CLK_USB_OHCI0>, <&ccu CLK_AHB_OHCI0>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
+-  phys: true
++  phys:
++    description: PHY specifier for the USB PHY
++
++  phy-names:
++    const: usb
  
-@@ -608,6 +610,7 @@
- 			interrupts = <40>;
- 			clocks = <&ccu CLK_AHB_EHCI1>;
- 			phys = <&usbphy 2>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
+ required:
+   - compatible
+@@ -89,6 +93,7 @@ examples:
+         interrupts = <39>;
+         clocks = <&ahb_gates 1>;
+         phys = <&usbphy 1>;
++        phy-names = "usb";
+     };
  
-@@ -617,6 +620,7 @@
- 			interrupts = <65>;
- 			clocks = <&ccu CLK_USB_OHCI1>, <&ccu CLK_AHB_OHCI1>;
- 			phys = <&usbphy 2>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
+ ...
+diff --git a/Documentation/devicetree/bindings/usb/generic-ohci.yaml b/Documentation/devicetree/bindings/usb/generic-ohci.yaml
+index da5a14becbe5..bcffec1f1341 100644
+--- a/Documentation/devicetree/bindings/usb/generic-ohci.yaml
++++ b/Documentation/devicetree/bindings/usb/generic-ohci.yaml
+@@ -67,7 +67,11 @@ properties:
+     description:
+       Overrides the detected port count
  
-diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
-index cfb1efc8828c..6befa236ba99 100644
---- a/arch/arm/boot/dts/sun5i.dtsi
-+++ b/arch/arm/boot/dts/sun5i.dtsi
-@@ -391,6 +391,7 @@
- 			interrupts = <39>;
- 			clocks = <&ccu CLK_AHB_EHCI>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
+-  phys: true
++  phys:
++    description: PHY specifier for the USB PHY
++
++  phy-names:
++    const: usb
  
-@@ -400,6 +401,7 @@
- 			interrupts = <40>;
- 			clocks = <&ccu CLK_USB_OHCI>, <&ccu CLK_AHB_OHCI>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
+ required:
+   - compatible
+@@ -84,6 +88,7 @@ examples:
+           interrupts = <64>;
+           clocks = <&usb_clk 6>, <&ahb_gates 2>;
+           phys = <&usbphy 1>;
++          phy-names = "usb";
+       };
  
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index bbeb743633c6..ac7638078420 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -545,6 +545,7 @@
- 			clocks = <&ccu CLK_AHB1_EHCI0>;
- 			resets = <&ccu RST_AHB1_EHCI0>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
+ ...
+diff --git a/Documentation/devicetree/bindings/usb/usb-hcd.yaml b/Documentation/devicetree/bindings/usb/usb-hcd.yaml
+index 9c8c56d3a792..7263b7f2b510 100644
+--- a/Documentation/devicetree/bindings/usb/usb-hcd.yaml
++++ b/Documentation/devicetree/bindings/usb/usb-hcd.yaml
+@@ -18,8 +18,13 @@ properties:
+     description:
+       List of all the USB PHYs on this HCD
  
-@@ -555,6 +556,7 @@
- 			clocks = <&ccu CLK_AHB1_OHCI0>, <&ccu CLK_USB_OHCI0>;
- 			resets = <&ccu RST_AHB1_OHCI0>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -565,6 +567,7 @@
- 			clocks = <&ccu CLK_AHB1_EHCI1>;
- 			resets = <&ccu RST_AHB1_EHCI1>;
- 			phys = <&usbphy 2>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -575,6 +578,7 @@
- 			clocks = <&ccu CLK_AHB1_OHCI1>, <&ccu CLK_USB_OHCI1>;
- 			resets = <&ccu RST_AHB1_OHCI1>;
- 			phys = <&usbphy 2>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 49380de754a9..874231be04e4 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -623,6 +623,7 @@
- 			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_AHB_EHCI0>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -632,6 +633,7 @@
- 			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_USB_OHCI0>, <&ccu CLK_AHB_OHCI0>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -714,6 +716,7 @@
- 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_AHB_EHCI1>;
- 			phys = <&usbphy 2>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -723,6 +726,7 @@
- 			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_USB_OHCI1>, <&ccu CLK_AHB_OHCI1>;
- 			phys = <&usbphy 2>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index 52eed0ae3607..f292f96ab39b 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -307,6 +307,7 @@
- 			clocks = <&ccu CLK_BUS_EHCI>;
- 			resets = <&ccu RST_BUS_EHCI>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -317,6 +318,7 @@
- 			clocks = <&ccu CLK_BUS_OHCI>, <&ccu CLK_USB_OHCI>;
- 			resets = <&ccu RST_BUS_OHCI>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 523be6611c50..74bb053cf23c 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -632,6 +632,7 @@
- 			clocks = <&ccu CLK_BUS_EHCI0>;
- 			resets = <&ccu RST_BUS_EHCI0>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -643,6 +644,7 @@
- 			clocks = <&ccu CLK_BUS_OHCI0>, <&ccu CLK_USB_OHCI0>;
- 			resets = <&ccu RST_BUS_OHCI0>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -654,6 +656,7 @@
- 			clocks = <&ccu CLK_BUS_EHCI1>;
- 			resets = <&ccu RST_BUS_EHCI1>;
- 			phys = <&usbphy 2>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index bde068111b85..c9c2688db66d 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -273,6 +273,7 @@
- 			clocks = <&ccu CLK_BUS_EHCI1>;
- 			resets = <&ccu RST_BUS_EHCI1>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -284,6 +285,7 @@
- 				 <&ccu CLK_USB_OHCI1>;
- 			resets = <&ccu RST_BUS_OHCI1>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -294,6 +296,7 @@
- 			clocks = <&ccu CLK_BUS_EHCI2>;
- 			resets = <&ccu RST_BUS_EHCI2>;
- 			phys = <&usbphy 2>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -305,6 +308,7 @@
- 				 <&ccu CLK_USB_OHCI2>;
- 			resets = <&ccu RST_BUS_OHCI2>;
- 			phys = <&usbphy 2>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index 4fd879fb099c..1d9d12a90df9 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -346,6 +346,7 @@
- 			clocks = <&usb_clocks CLK_BUS_HCI0>;
- 			resets = <&usb_clocks RST_USB0_HCI>;
- 			phys = <&usbphy1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -357,6 +358,7 @@
- 				 <&usb_clocks CLK_USB_OHCI0>;
- 			resets = <&usb_clocks RST_USB0_HCI>;
- 			phys = <&usbphy1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -378,6 +380,7 @@
- 			clocks = <&usb_clocks CLK_BUS_HCI1>;
- 			resets = <&usb_clocks RST_USB1_HCI>;
- 			phys = <&usbphy2>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -407,6 +410,7 @@
- 			clocks = <&usb_clocks CLK_BUS_HCI2>;
- 			resets = <&usb_clocks RST_USB2_HCI>;
- 			phys = <&usbphy3>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -418,6 +422,7 @@
- 				 <&usb_clocks CLK_USB_OHCI2>;
- 			resets = <&usb_clocks RST_USB2_HCI>;
- 			phys = <&usbphy3>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-index eba190b3f9de..107eeafad20a 100644
---- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-+++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
-@@ -304,6 +304,7 @@
- 			clocks = <&ccu CLK_BUS_EHCI1>, <&ccu CLK_BUS_OHCI1>;
- 			resets = <&ccu RST_BUS_EHCI1>, <&ccu RST_BUS_OHCI1>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -315,6 +316,7 @@
- 				 <&ccu CLK_USB_OHCI1>;
- 			resets = <&ccu RST_BUS_EHCI1>, <&ccu RST_BUS_OHCI1>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -325,6 +327,7 @@
- 			clocks = <&ccu CLK_BUS_EHCI2>, <&ccu CLK_BUS_OHCI2>;
- 			resets = <&ccu RST_BUS_EHCI2>, <&ccu RST_BUS_OHCI2>;
- 			phys = <&usbphy 2>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -336,6 +339,7 @@
- 				 <&ccu CLK_USB_OHCI2>;
- 			resets = <&ccu RST_BUS_EHCI2>, <&ccu RST_BUS_OHCI2>;
- 			phys = <&usbphy 2>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -346,6 +350,7 @@
- 			clocks = <&ccu CLK_BUS_EHCI3>, <&ccu CLK_BUS_OHCI3>;
- 			resets = <&ccu RST_BUS_EHCI3>, <&ccu RST_BUS_OHCI3>;
- 			phys = <&usbphy 3>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -357,6 +362,7 @@
- 				 <&ccu CLK_USB_OHCI3>;
- 			resets = <&ccu RST_BUS_EHCI3>, <&ccu RST_BUS_OHCI3>;
- 			phys = <&usbphy 3>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-index 2b6345db7dc0..78c82a665c84 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-@@ -104,6 +104,7 @@
- 
- &ehci0 {
- 	phys = <&usbphy 0>;
-+	phy-names = "usb";
- 	status = "okay";
- };
- 
-@@ -150,6 +151,7 @@
- 
- &ohci0 {
- 	phys = <&usbphy 0>;
-+	phy-names = "usb";
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index d0028934e11c..70f4cce6be43 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -544,6 +544,7 @@
- 			resets = <&ccu RST_BUS_OHCI1>,
- 				 <&ccu RST_BUS_EHCI1>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -555,6 +556,7 @@
- 				 <&ccu CLK_USB_OHCI1>;
- 			resets = <&ccu RST_BUS_OHCI1>;
- 			phys = <&usbphy 1>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 4020a1aafa3e..0d5ea19336a1 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -547,6 +547,7 @@
- 			resets = <&ccu RST_BUS_OHCI3>,
- 				 <&ccu RST_BUS_EHCI3>;
- 			phys = <&usb2phy 3>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
-@@ -558,6 +559,7 @@
- 				 <&ccu CLK_USB_OHCI3>;
- 			resets = <&ccu RST_BUS_OHCI3>;
- 			phys = <&usb2phy 3>;
-+			phy-names = "usb";
- 			status = "disabled";
- 		};
- 
++  phy-names:
++    description:
++      Name specifier for the USB PHY
++
+ examples:
+   - |
+     usb {
+         phys = <&usb2_phy1>, <&usb3_phy1>;
++        phy-names = "usb";
+     };
 -- 
 2.23.0
