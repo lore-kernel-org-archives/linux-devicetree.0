@@ -1,99 +1,54 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 2/7] iio: adc: max1027: Make it optional to use interrupts
-Date: Wed,  2 Oct 2019 14:30:20 +0200
-Message-ID: <20191002123025.21413-3-miquel.raynal@bootlin.com>
-References: <20191002123025.21413-1-miquel.raynal@bootlin.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [Patch 1/3] media: ov5640: add PIXEL_RATE control
+Date: Wed, 2 Oct 2019 15:35:13 +0300
+Message-ID: <20191002123513.GI972@paasikivi.fi.intel.com>
+References: <20190925152301.21645-1-bparrot@ti.com>
+ <20190925152301.21645-2-bparrot@ti.com>
+ <20191001075704.GA5449@paasikivi.fi.intel.com>
+ <20191001162341.f2o7ruar2nifl5ws@ti.com>
+ <20191002075951.afp2xligspqat4ew@uno.localdomain>
+ <20191002121438.g3re6v54q4hit2wv@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191002123025.21413-1-miquel.raynal@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <20191002121438.g3re6v54q4hit2wv@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Jacopo Mondi <jacopo@jmondi.org>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, hugues.fruchet@st.com
 List-Id: devicetree@vger.kernel.org
 
-The chip has a 'start conversion' and a 'end of conversion' pair of
-pins. They can be used but this is absolutely not mandatory as regular
-polling of the value is totally fine with the current internal
-clocking setup. Turn the interrupts optional and do not error out if
-they are not inquired in the device tree. This has the effect to
-prevent triggered buffers use though.
+Hi Benoit,
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/iio/adc/max1027.c | 57 +++++++++++++++++++++------------------
- 1 file changed, 31 insertions(+), 26 deletions(-)
+On Wed, Oct 02, 2019 at 07:14:38AM -0500, Benoit Parrot wrote:
+> Hi Jacopo,
+> 
+> Maybe, I miss spoke when I mentioned a helper I did not intent a framework
+> level generic function. Just a function to help in this case :)
+> 
+> That being said, I re-read the thread you mentioned. And as Hughes pointed
+> out dynamically generating a "working" link frequency value which can be
+> used by a CSI2 receiver to properly configure its PHY is not trivial.
+> 
+> When I created this patch, I also had another to add V4L2_CID_LINK_FREQ
+> support. I am testing this against the TI CAL CSI2 receiver, which already
+> uses the V4L2_CID_PIXEL_RATE value for that purpose, so I also had a patch
+> to add support for V4L2_CID_LINK_FREQ to that driver as well.
+> 
+> Unfortunately, similar to Hughes' findings I was not able to make it "work"
+> with all supported resolution/framerate.
+> 
+> Unlike my V4L2_CID_PIXEL_RATE solution which now works in all mode with the
+> same receiver.
+> 
+> So long story short I dropped the V4L2_CID_LINK_FREQ patch and focused on
+> V4L2_CID_PIXEL_RATE instead.
 
-diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index 6cdfe9ef73fc..823223b77a70 100644
---- a/drivers/iio/adc/max1027.c
-+++ b/drivers/iio/adc/max1027.c
-@@ -430,35 +430,40 @@ static int max1027_probe(struct spi_device *spi)
- 		return -ENOMEM;
- 	}
- 
--	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
--					&iio_pollfunc_store_time,
--					&max1027_trigger_handler, NULL);
--	if (ret < 0) {
--		dev_err(&indio_dev->dev, "Failed to setup buffer\n");
--		return ret;
--	}
-+	if (spi->irq) {
-+		ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
-+						      &iio_pollfunc_store_time,
-+						      &max1027_trigger_handler,
-+						      NULL);
-+		if (ret < 0) {
-+			dev_err(&indio_dev->dev, "Failed to setup buffer\n");
-+			return ret;
-+		}
- 
--	st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
--							indio_dev->name);
--	if (st->trig == NULL) {
--		ret = -ENOMEM;
--		dev_err(&indio_dev->dev, "Failed to allocate iio trigger\n");
--		return ret;
--	}
-+		st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
-+						  indio_dev->name);
-+		if (st->trig == NULL) {
-+			ret = -ENOMEM;
-+			dev_err(&indio_dev->dev,
-+				"Failed to allocate iio trigger\n");
-+			return ret;
-+		}
- 
--	st->trig->ops = &max1027_trigger_ops;
--	st->trig->dev.parent = &spi->dev;
--	iio_trigger_set_drvdata(st->trig, indio_dev);
--	iio_trigger_register(st->trig);
-+		st->trig->ops = &max1027_trigger_ops;
-+		st->trig->dev.parent = &spi->dev;
-+		iio_trigger_set_drvdata(st->trig, indio_dev);
-+		iio_trigger_register(st->trig);
- 
--	ret = devm_request_threaded_irq(&spi->dev, spi->irq,
--					iio_trigger_generic_data_rdy_poll,
--					NULL,
--					IRQF_TRIGGER_FALLING,
--					spi->dev.driver->name, st->trig);
--	if (ret < 0) {
--		dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
--		return ret;
-+		ret = devm_request_threaded_irq(&spi->dev, spi->irq,
-+						iio_trigger_generic_data_rdy_poll,
-+						NULL,
-+						IRQF_TRIGGER_FALLING,
-+						spi->dev.driver->name,
-+						st->trig);
-+		if (ret < 0) {
-+			dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
-+			return ret;
-+		}
- 	}
- 
- 	/* Disable averaging */
+It shouldn't make a difference which one you use; if you know the bus type
+(and if it's CSI-2 with D-PHY, number of lanes and how many bits per pixel
+the media bus format has), you can convert fairly trivially between the
+two.
+
 -- 
-2.20.1
+Sakari Ailus
+sakari.ailus@linux.intel.com
