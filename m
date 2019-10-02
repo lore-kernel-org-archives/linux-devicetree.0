@@ -1,52 +1,82 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v7 09/13] lib/vsprintf: Add a note on re-using %pf or %pF
-Date: Wed, 2 Oct 2019 15:02:20 +0300
-Message-ID: <20191002120220.GF972@paasikivi.fi.intel.com>
+Subject: Re: [PATCH v7 08/13] lib/vsprintf: Remove support for %pF and %pf in
+ favour of %pS and %ps
+Date: Wed, 2 Oct 2019 15:06:40 +0300
+Message-ID: <20191002120640.GG972@paasikivi.fi.intel.com>
 References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
- <20190918133419.7969-10-sakari.ailus@linux.intel.com>
- <20190924104549.qiayzhr7zikja7sp@pathway.suse.cz>
+ <20190918133419.7969-9-sakari.ailus@linux.intel.com>
+ <20190924103829.uk4mr3z23hwhqdpe@pathway.suse.cz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190924104549.qiayzhr7zikja7sp@pathway.suse.cz>
+In-Reply-To: <20190924103829.uk4mr3z23hwhqdpe@pathway.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Petr Mladek <pmladek@suse.com>
-Cc: rafael@kernel.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc: rafael@kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 12:45:49PM +0200, Petr Mladek wrote:
-> On Wed 2019-09-18 16:34:15, Sakari Ailus wrote:
-> > Add a note warning of re-use of obsolete %pf or %pF extensions.
+Hi Petr,
+
+Thank you for the review.
+
+On Tue, Sep 24, 2019 at 12:38:29PM +0200, Petr Mladek wrote:
+> On Wed 2019-09-18 16:34:14, Sakari Ailus wrote:
+> > %pS and %ps are now the preferred conversion specifiers to print function
+> > names. The functionality is equivalent; remove the old, deprecated %pF
+> > and %pf support.
 > > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > ---
-> >  lib/vsprintf.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> > index b00b57f9f911f..df59818537b52 100644
 > > --- a/lib/vsprintf.c
 > > +++ b/lib/vsprintf.c
-> > @@ -2008,6 +2008,8 @@ static char *kobject_string(char *buf, char *end, void *ptr,
+> > @@ -909,7 +909,7 @@ char *symbol_string(char *buf, char *end, void *ptr,
+> >  #ifdef CONFIG_KALLSYMS
+> >  	if (*fmt == 'B')
+> >  		sprint_backtrace(sym, value);
+> > -	else if (*fmt != 'f' && *fmt != 's')
+> > +	else if (*fmt != 's')
+> >  		sprint_symbol(sym, value);
+> >  	else
+> >  		sprint_symbol_no_offset(sym, value);
+> > @@ -2007,9 +2007,7 @@ static char *kobject_string(char *buf, char *end, void *ptr,
+> >   *
 > >   * - 'S' For symbolic direct pointers (or function descriptors) with offset
 > >   * - 's' For symbolic direct pointers (or function descriptors) without offset
-> >   * - '[Ss]R' as above with __builtin_extract_return_addr() translation
-> > + * - '[Ff]' Obsolete an now unsupported extension for printing direct pointers
-> > + *	    or function descriptors. Be careful when re-using %pf or %pF!
+> > - * - 'F' Same as 'S'
+> > - * - 'f' Same as 's'
+> > - * - '[FfSs]R' as above with __builtin_extract_return_addr() translation
+> > + * - '[Ss]R' as above with __builtin_extract_return_addr() translation
+> >   * - 'B' For backtraced symbolic direct pointers with offset
+> >   * - 'R' For decoded struct resource, e.g., [mem 0x0-0x1f 64bit pref]
+> >   * - 'r' For raw struct resource, e.g., [mem 0x0-0x1f flags 0x201]
+> > @@ -2112,8 +2110,6 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+> >  	      struct printf_spec spec)
+> >  {
+> >  	switch (*fmt) {
+> > -	case 'F':
+> > -	case 'f':
+> >  	case 'S':
+> >  	case 's':
+> >  		ptr = dereference_symbol_descriptor(ptr);
 > 
-> I am not a native speaker but the sentence is hard to parse to me.
-> Also I miss the word 'symbolic'. IMHO, it described that the output
-> was a symbol name.
+> IMHO, we should do the same also in vbin_printf().
 > 
-> What about something like?
+> The compatibility with traceevent tools was discussed in the thread
+> https://lkml.kernel.org/r/20190910084707.18380-2-sakari.ailus@linux.intel.com
 > 
->   * - '[Ff]' %pf and %pF were obsoleted and later removed in favor of
->   *	    %ps and %pS. Be careful when re-using these specifiers.
+> If I understand it correctly the tools should be able to handle stored
+> 'f' and 'F' modifiers because they might be produced by
+> older kernels. But new kernels should not longer produce them.
 
-Yes, I'll use this in v8.
+Agreed.
+
+> 
+> Otherwise the patch looks good to me. I am getting used to the fact
+> that we will remove the obsolete specifiers completely.
+
+I'll address this in v8 soon.
 
 -- 
+Regards,
+
 Sakari Ailus
 sakari.ailus@linux.intel.com
