@@ -1,104 +1,114 @@
-From: Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] dt-bindings: timer: Convert stm32 timer bindings to json-schema
-Date: Wed, 2 Oct 2019 17:22:53 +0200
-Message-ID: <20191002152253.16393-1-benjamin.gaignard@st.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH RESEND] ARM: dts: arndale: Add audio support (WM1811 CODEC
+ boards)
+Date: Wed,  2 Oct 2019 17:28:31 +0200
+Message-ID: <20191002152831.18509-1-s.nawrocki@samsung.com>
+References: <CGME20191002152842eucas1p281f3fb4b7efffaf74fa89ffaa4108b3f@eucas1p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: krzk@kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, robh+dt@kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Convert the STM32 timer binding to DT schema format using json-schema
+Add sound node and the clock configurations for the I2S controller
+for audio support on the Exynos5250 SoC Arndale boards with
+WM1811 based audio daughter board.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+We need to increase drive strength of the I2S bus, otherwise
+the audio CODEC doesn't work. Likely the CODEC's master clock
+is the main issue here.
+
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
- .../devicetree/bindings/timer/st,stm32-timer.txt   | 22 -----------
- .../devicetree/bindings/timer/st,stm32-timer.yaml  | 46 ++++++++++++++++++++++
- 2 files changed, 46 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/st,stm32-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/st,stm32-timer.yaml
+Changes since v2:
+ - none.
+Changes since v1:
+ - moved &clock, &clock_audss parts to preserve alphabetical order
+---
+ arch/arm/boot/dts/exynos5250-arndale.dts | 27 +++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/st,stm32-timer.txt b/Documentation/devicetree/bindings/timer/st,stm32-timer.txt
-deleted file mode 100644
-index 8ef28e70d6e8..000000000000
---- a/Documentation/devicetree/bindings/timer/st,stm32-timer.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--. STMicroelectronics STM32 timer
--
--The STM32 MCUs family has several general-purpose 16 and 32 bits timers.
--
--Required properties:
--- compatible : Should be "st,stm32-timer"
--- reg : Address and length of the register set
--- clocks : Reference on the timer input clock
--- interrupts : Reference to the timer interrupt
--
--Optional properties:
--- resets: Reference to a reset controller asserting the timer
--
--Example:
--
--timer5: timer@40000c00 {
--	compatible = "st,stm32-timer";
--	reg = <0x40000c00 0x400>;
--	interrupts = <50>;
--	resets = <&rrc 259>;
--	clocks = <&clk_pmtr1>;
--};
-diff --git a/Documentation/devicetree/bindings/timer/st,stm32-timer.yaml b/Documentation/devicetree/bindings/timer/st,stm32-timer.yaml
-new file mode 100644
-index 000000000000..e128ac9a5391
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/st,stm32-timer.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/st,stm32-timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index 6fcb78a354fe..d6c85efdb465 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -11,6 +11,7 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/clock/samsung,s2mps11.h>
++#include <dt-bindings/sound/samsung-i2s.h>
+ #include "exynos5250.dtsi"
+
+ / {
+@@ -135,6 +136,12 @@
+ 		};
+ 	};
+
++	sound {
++		compatible = "samsung,arndale-wm1811";
++		samsung,audio-cpu = <&i2s0>;
++		samsung,audio-codec = <&wm1811>;
++	};
 +
-+title: STMicroelectronics STM32 general-purpose 16 and 32 bits timers bindings
+ 	fixed-rate-clocks {
+ 		xxti {
+ 			compatible = "samsung,clock-xxti";
+@@ -151,6 +158,16 @@
+ 	};
+ };
+
++&clock {
++	assigned-clocks = <&clock CLK_FOUT_EPLL>;
++	assigned-clock-rates = <49152000>;
++};
 +
-+maintainers:
-+  - Benjamin Gaignard <benjamin.gaignard@st.com>
++&clock_audss {
++	assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>;
++	assigned-clock-parents = <&clock CLK_FOUT_EPLL>;
++};
 +
-+properties:
-+  compatible:
-+    const: st,stm32-timer
+ &cpu0 {
+ 	cpu0-supply = <&buck2_reg>;
+ };
+@@ -502,9 +519,11 @@
+ &i2c_3 {
+ 	status = "okay";
+
+-	wm1811a@1a {
++	wm1811: codec@1a {
+ 		compatible = "wlf,wm1811";
+ 		reg = <0x1a>;
++		clocks = <&i2s0 CLK_I2S_CDCLK>;
++		clock-names = "MCLK1";
+
+ 		AVDD2-supply = <&main_dc_reg>;
+ 		CPVDD-supply = <&main_dc_reg>;
+@@ -540,9 +559,15 @@
+ };
+
+ &i2s0 {
++	assigned-clocks = <&i2s0 CLK_I2S_RCLK_SRC>;
++	assigned-clock-parents = <&clock_audss EXYNOS_I2S_BUS>;
+ 	status = "okay";
+ };
+
++&i2s0_bus {
++	samsung,pin-drv = <EXYNOS4_PIN_DRV_LV2>;
++};
 +
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Module Clock
-+
-+  resets:
-+        maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    timer: timer@40000c00 {
-+        compatible = "st,stm32-timer";
-+        reg = <0x40000c00 0x400>;
-+        interrupts = <50>;
-+        clocks = <&clk_pmtr1>;
-+    };
-+
-+...
--- 
-2.15.0
+ &mali {
+ 	mali-supply = <&buck4_reg>;
+ 	status = "okay";
+--
+2.17.1
