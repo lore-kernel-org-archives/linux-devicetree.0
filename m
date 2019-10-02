@@ -1,89 +1,161 @@
-From: =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>
-Subject: [PATCH v2 2/2] dt-bindings: asoc: Add ADAU7118
-	documentation
-Date: Wed, 2 Oct 2019 12:37:29 +0200
-Message-ID: <20191002103729.94676-2-nuno.sa@analog.com>
-References: <20191002103729.94676-1-nuno.sa@analog.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [RFC,V2,07/11] media: platform: Add Mediatek ISP P1 private
+ control
+Date: Wed, 2 Oct 2019 13:55:59 +0300
+Message-ID: <20191002105559.GC972@paasikivi.fi.intel.com>
+References: <jungo.lin@mediatek.com>
+ <20190510015755.51495-8-jungo.lin@mediatek.com>
+ <49a8ba54-aba4-1915-6732-987a58e8bd3c@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20191002103729.94676-1-nuno.sa@analog.com>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: devicetree@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Lars-Peter Clausen <lars@metafoo.de>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <49a8ba54-aba4-1915-6732-987a58e8bd3c@xs4all.nl>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: ryan.yu@mediatek.com, frankie.chiu@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, suleiman@chromium.org, Jerry-ch.Chen@mediatek.com, Jungo Lin <jungo.lin@mediatek.com>, frederic.chen@mediatek.com, seraph.huang@mediatek.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, shik@chromium.org, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, Sean.Cheng@mediatek.com, srv_heupstream@mediatek.com, sj.huang@mediatek.com, tfiga@chromium.org, christie.yu@mediatek.com, zwisler@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIEFEQVU3MTE4IDggY2hhbm5lbCBQRE0gdG8gSTJTL1RETSBjb252ZXJ0ZXIg
-ZGV2aWNldHJlZQpiaW5kaW5ncy4KClNpZ25lZC1vZmYtYnk6IE51bm8gU8OhIDxudW5vLnNhQGFu
-YWxvZy5jb20+Ci0tLQpDaGFuZ2VzIGluIHYyOgogKiBMaXN0IHJlZ3VsYXRvcnMgYXMgcmVxdWly
-ZWQuCgogLi4uL2JpbmRpbmdzL3NvdW5kL2FkaSxhZGF1NzExOC55YW1sICAgICAgICAgIHwgOTAg
-KysrKysrKysrKysrKysrKysrKwogTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgIDEgKwogMiBmaWxlcyBjaGFuZ2VkLCA5MSBpbnNlcnRpb25zKCspCiBjcmVh
-dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2Fk
-aSxhZGF1NzExOC55YW1sCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3NvdW5kL2FkaSxhZGF1NzExOC55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3NvdW5kL2FkaSxhZGF1NzExOC55YW1sCm5ldyBmaWxlIG1vZGUgMTAwNjQ0Cmlu
-ZGV4IDAwMDAwMDAwMDAwMC4uNTcxMzEzMzAwNWI1Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2FkaSxhZGF1NzExOC55YW1sCkBAIC0w
-LDAgKzEsOTAgQEAKKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjAKKyVZQU1MIDEu
-MgorLS0tCiskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL3NvdW5kL2FkaSxhZGF1
-NzExOC55YW1sIworJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9j
-b3JlLnlhbWwjCisKKwordGl0bGU6IEFuYWxvZyBEZXZpY2VzIEFEQVU3MTE4IDggQ2hhbm5lbCBQ
-RE0gdG8gSTJTL1RETSBDb252ZXJ0ZXIKKworbWFpbnRhaW5lcnM6CisgIC0gTnVubyBTw6EgPG51
-bm8uc2FAYW5hbG9nLmNvbT4KKworZGVzY3JpcHRpb246IHwKKyAgQW5hbG9nIERldmljZXMgQURB
-VTcxMTggOCBDaGFubmVsIFBETSB0byBJMlMvVERNIENvbnZlcnRlciBvdmVyIEkyQyBvciBIVwor
-ICBzdGFuZGFsb25lIG1vZGUuCisgIGh0dHBzOi8vd3d3LmFuYWxvZy5jb20vbWVkaWEvZW4vdGVj
-aG5pY2FsLWRvY3VtZW50YXRpb24vZGF0YS1zaGVldHMvQURBVTcxMTgucGRmCisKK3Byb3BlcnRp
-ZXM6CisgIGNvbXBhdGlibGU6CisgICAgZW51bToKKyAgICAgIC0gYWRpLGFkYXU3MTE4CisKKyAg
-cmVnOgorICAgIG1heEl0ZW1zOiAxCisKKyAgIiNzb3VuZC1kYWktY2VsbHMiOgorICAgIGNvbnN0
-OiAwCisKKyAgSU9WREQtc3VwcGx5OgorICAgIGRlc2NyaXB0aW9uOiBEaWdpdGFsIElucHV0L091
-dHB1dCBQb3dlciBTdXBwbHkuCisgICAgJHJlZjogIi9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmlu
-aXRpb25zL3BoYW5kbGUiCisKKyAgRFZERC1zdXBwbHk6CisgICAgZGVzY3JpcHRpb246IEludGVy
-bmFsIENvcmUgRGlnaXRhbCBQb3dlciBTdXBwbHkuCisgICAgJHJlZjogIi9zY2hlbWFzL3R5cGVz
-LnlhbWwjL2RlZmluaXRpb25zL3BoYW5kbGUiCisKKyAgYWRpLGRlY2ltYXRpb24tcmF0aW86Cisg
-ICAgZGVzY3JpcHRpb246IHwKKyAgICAgIFRoaXMgcHJvcGVydHkgc2V0J3MgdGhlIGRlY2ltYXRp
-b24gcmF0aW8gb2YgUERNIHRvIFBDTSBhdWRpbyBkYXRhLgorICAgIGFsbE9mOgorICAgICAgLSAk
-cmVmOiAvc2NoZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy91aW50MzIKKyAgICAgIC0gZW51
-bTogWzY0LCAzMiwgMTZdCisgICAgICAgIGRlZmF1bHQ6IDY0CisKKyAgYWRpLHBkbS1jbGstbWFw
-OgorICAgIGRlc2NyaXB0aW9uOiB8CisgICAgICBUaGUgQURBVTcxMTggaGFzIHR3byBQRE0gY2xv
-Y2tzIGZvciB0aGUgZm91ciBJbnB1dHMuIEVhY2ggaW5wdXQgbXVzdCBiZQorICAgICAgYXNzaWdu
-ZWQgdG8gb25lIG9mIHRoZXNlIHR3byBjbG9ja3MuIFRoaXMgcHJvcGVydHkgc2V0J3MgdGhlIG1h
-cHBpbmcKKyAgICAgIGJldHdlZW4gdGhlIGNsb2NrcyBhbmQgdGhlIGlucHV0cy4KKyAgICBhbGxP
-ZjoKKyAgICAgIC0gJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCMvZGVmaW5pdGlvbnMvdWludDMy
-LWFycmF5CisgICAgICAtIG1pbkl0ZW1zOiA0CisgICAgICAgIG1heEl0ZW1zOiA0CisgICAgICAg
-IGl0ZW1zOgorICAgICAgICAgIG1heGltdW06IDEKKyAgICAgICAgZGVmYXVsdDogWzAsIDAsIDEs
-IDFdCisKK3JlcXVpcmVkOgorICAtICIjc291bmQtZGFpLWNlbGxzIgorICAtIGNvbXBhdGlibGUK
-KyAgLSBJT1ZERC1zdXBwbHkKKyAgLSBEVkRELXN1cHBseQorCitleGFtcGxlczoKKyAgLSB8Cisg
-ICAgaTJjMCB7CisgICAgICAgIC8qIGV4YW1wbGUgd2l0aCBpMmMgc3VwcG9ydCAqLworICAgICAg
-ICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKKyAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47CisgICAg
-ICAgIHN0YXR1cyA9ICJva2F5IjsKKyAgICAgICAgYWRhdTcxMThfY29kZWM6IGFkYXU3MTE4LWNv
-ZGVjQDE0IHsKKyAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFkaSxhZGF1NzExOCI7Cisg
-ICAgICAgICAgICAgICAgcmVnID0gPDE0PjsKKyAgICAgICAgICAgICAgICAjc291bmQtZGFpLWNl
-bGxzID0gPDA+OworICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKKyAgICAgICAgICAg
-ICAgICBJT1ZERC1zdXBwbHkgPSA8JnN1cHBseT47CisgICAgICAgICAgICAgICAgRFZERC1zdXBw
-bHkgPSA8JnN1cHBseT47CisgICAgICAgICAgICAgICAgYWRpLHBkbS1jbGstbWFwID0gPDEgMSAw
-IDA+OworICAgICAgICAgICAgICAgIGFkaSxkZWNpbWF0aW9uLXJhdGlvID0gPDE2PjsKKyAgICAg
-ICAgfTsKKyAgICB9OworCisgICAgLyogZXhhbXBsZSB3aXRoIGh3IHN0YW5kYWxvbmUgbW9kZSAq
-LworICAgIGFkYXU3MTE4X2NvZGVjX2h3OiBhZGF1NzExOC1jb2RlYy1odyB7CisgICAgICAgICAg
-ICBjb21wYXRpYmxlID0gImFkaSxhZGF1NzExOCI7CisgICAgICAgICAgICAjc291bmQtZGFpLWNl
-bGxzID0gPDA+OworICAgICAgICAgICAgc3RhdHVzID0gIm9rYXkiOworICAgICAgICAgICAgSU9W
-REQtc3VwcGx5ID0gPCZzdXBwbHk+OworICAgICAgICAgICAgRFZERC1zdXBwbHkgPSA8JnN1cHBs
-eT47CisgICAgfTsKZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMKaW5kZXgg
-OGJhNDdjYWM4ZTgzLi41OGY3YmM2ZTg4OTcgMTAwNjQ0Ci0tLSBhL01BSU5UQUlORVJTCisrKyBi
-L01BSU5UQUlORVJTCkBAIC0xMDEzLDYgKzEwMTMsNyBAQCBGOglzb3VuZC9zb2MvY29kZWNzL2Fk
-MSoKIEY6CXNvdW5kL3NvYy9jb2RlY3MvYWQ3KgogRjoJc291bmQvc29jL2NvZGVjcy9zc20qCiBG
-Oglzb3VuZC9zb2MvY29kZWNzL3NpZ21hZHNwLioKK0Y6CURvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9zb3VuZC9hZGksYWRhdSoKIAogQU5BTE9HIERFVklDRVMgSU5DIERNQSBEUklW
-RVJTCiBNOglMYXJzLVBldGVyIENsYXVzZW4gPGxhcnNAbWV0YWZvby5kZT4KLS0gCjIuMjMuMAoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZl
-bCBtYWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHBzOi8vbWFpbG1h
-bi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+Hi Jungo, Hans,
+
+On Mon, May 13, 2019 at 10:46:46AM +0200, Hans Verkuil wrote:
+> On 5/10/19 3:58 AM, Jungo Lin wrote:
+...
+> > +struct v4l2_ctrl_config mtk_cam_controls[] = {
+> > +	{
+> > +	.ops = &mtk_cam_dev_ctrl_ops,
+> > +	.id = V4L2_CID_PRIVATE_GET_BIN_INFO,
+> 
+> Don't use "PRIVATE" in the name. I'd replace that with MTK to indicate
+> that this is mediatek-specific. Same for the next control below.
+> 
+> > +	.name = "MTK CAM GET BIN INFO",
+> > +	.type = V4L2_CTRL_TYPE_INTEGER,
+> > +	.min = (IMG_MIN_WIDTH << 16) | IMG_MIN_HEIGHT,
+> > +	.max = (IMG_MAX_WIDTH << 16) | IMG_MAX_HEIGHT,
+> > +	.step = 1,
+> > +	.def = (IMG_MAX_WIDTH << 16) | IMG_MAX_HEIGHT,
+> > +	.flags = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_VOLATILE,
+> 
+> Don't mix width and height. I recommend splitting this into two controls.
+> 
+> Sakari might have an opinion on this as well.
+> 
+> > +	},
+> > +	{
+> > +	.ops = &mtk_cam_dev_ctrl_ops,
+> > +	.id = V4L2_CID_PRIVATE_RAW_PATH,
+> > +	.name = "MTK CAM RAW PATH",
+> > +	.type = V4L2_CTRL_TYPE_BOOLEAN,
+> > +	.min = 0,
+> > +	.max = 1,
+> > +	.step = 1,
+> > +	.def = 1,
+> > +	},
+> 
+> RAW_PATH is a very vague name. If it is 0, then it is pure raw, and if it
+> is 1, then it is 'processing raw'? If so, call it "Processing Raw".
+
+Jungo: what's the purpose of 
+
+> 
+> Although you have to describe in the header or here what that means.
+> 
+> Private controls should be well documented.
+> 
+> > +};
+> > +
+> > +int mtk_cam_ctrl_init(struct mtk_cam_dev *cam_dev,
+> > +		      struct v4l2_ctrl_handler *hdl)
+> > +{
+> > +	unsigned int i;
+> > +
+> > +	/* Initialized HW controls, allow V4L2_CID_MTK_CAM_MAX ctrls */
+> > +	v4l2_ctrl_handler_init(hdl, V4L2_CID_MTK_CAM_MAX);
+> > +	if (hdl->error) {
+> > +		v4l2_ctrl_handler_free(hdl);
+> > +		return hdl->error;
+> > +	}
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(mtk_cam_controls); i++)
+> > +		v4l2_ctrl_new_custom(hdl, &mtk_cam_controls[i], cam_dev);
+> > +
+> > +	dev_dbg(&cam_dev->pdev->dev, "%s done", __func__);
+> > +	return 0;
+> > +}
+> > diff --git a/drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.h b/drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.h
+> > new file mode 100644
+> > index 000000000000..74a6538c81ac
+> > --- /dev/null
+> > +++ b/drivers/media/platform/mtk-isp/isp_50/cam/mtk_cam-ctrl.h
+> > @@ -0,0 +1,32 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright (c) 2018 MediaTek Inc.
+> > + * Author: Ryan Yu <ryan.yu@mediatek.com>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#ifndef __MTK_CAM_CTRL_H__
+> > +#define __MTK_CAM_CTRL_H__
+> > +
+> > +#include <media/v4l2-ctrls.h>
+> > +
+> > +#define V4L2_CID_MTK_CAM_PRIVATE_CAM  V4L2_CID_USER_MTK_CAM_BASE
+> > +#define V4L2_CID_PRIVATE_GET_BIN_INFO \
+> > +	(V4L2_CID_MTK_CAM_PRIVATE_CAM + 1)
+> > +#define V4L2_CID_PRIVATE_RAW_PATH \
+> > +	(V4L2_CID_MTK_CAM_PRIVATE_CAM + 2)
+> 
+> These last two defines can be on a single line.
+> 
+> They need to be documented in the header.
+> 
+> > +
+> > +#define V4L2_CID_MTK_CAM_MAX	16
+> > +
+> > +int mtk_cam_ctrl_init(struct mtk_cam_dev *cam_dev,
+> > +		      struct v4l2_ctrl_handler *hdl);
+> > +
+> > +#endif /* __MTK_CAM_CTRL_H__ */
+> > diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> > index 06479f2fb3ae..cbe8f5f7782b 100644
+> > --- a/include/uapi/linux/v4l2-controls.h
+> > +++ b/include/uapi/linux/v4l2-controls.h
+> > @@ -192,6 +192,10 @@ enum v4l2_colorfx {
+> >   * We reserve 16 controls for this driver. */
+> >  #define V4L2_CID_USER_IMX_BASE			(V4L2_CID_USER_BASE + 0x10b0)
+> >  
+> > +/* The base for the mediatek ISP Pass 1 driver controls */
+> > +/* We reserve 16 controls for this driver. */
+> > +#define V4L2_CID_USER_MTK_CAM_BASE		(V4L2_CID_USER_BASE + 0x10c0)
+> > +
+> >  /* MPEG-class control IDs */
+> >  /* The MPEG controls are applicable to all codec controls
+> >   * and the 'MPEG' part of the define is historical */
+> > 
+> 
+> Regards,
+> 
+> 	Hans
+
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
