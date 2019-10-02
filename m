@@ -1,82 +1,123 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v7 08/13] lib/vsprintf: Remove support for %pF and %pf in
- favour of %pS and %ps
-Date: Wed, 2 Oct 2019 15:06:40 +0300
-Message-ID: <20191002120640.GG972@paasikivi.fi.intel.com>
-References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
- <20190918133419.7969-9-sakari.ailus@linux.intel.com>
- <20190924103829.uk4mr3z23hwhqdpe@pathway.suse.cz>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: [PATCH] dt-bindings: serio: Convert Allwinner PS2 controller to a
+ schema
+Date: Wed,  2 Oct 2019 14:06:45 +0200
+Message-ID: <20191002120645.102805-1-mripard@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190924103829.uk4mr3z23hwhqdpe@pathway.suse.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: rafael@kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dmitry.torokhov@gmail.com, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Petr,
+The older Allwinner SoCs have a PS2 controller that is supported in Linux,
+with a matching Device Tree binding.
 
-Thank you for the review.
+Now that we have the DT validation in place, let's convert the device tree
+bindings for that controller over to a YAML schemas.
 
-On Tue, Sep 24, 2019 at 12:38:29PM +0200, Petr Mladek wrote:
-> On Wed 2019-09-18 16:34:14, Sakari Ailus wrote:
-> > %pS and %ps are now the preferred conversion specifiers to print function
-> > names. The functionality is equivalent; remove the old, deprecated %pF
-> > and %pf support.
-> > 
-> > --- a/lib/vsprintf.c
-> > +++ b/lib/vsprintf.c
-> > @@ -909,7 +909,7 @@ char *symbol_string(char *buf, char *end, void *ptr,
-> >  #ifdef CONFIG_KALLSYMS
-> >  	if (*fmt == 'B')
-> >  		sprint_backtrace(sym, value);
-> > -	else if (*fmt != 'f' && *fmt != 's')
-> > +	else if (*fmt != 's')
-> >  		sprint_symbol(sym, value);
-> >  	else
-> >  		sprint_symbol_no_offset(sym, value);
-> > @@ -2007,9 +2007,7 @@ static char *kobject_string(char *buf, char *end, void *ptr,
-> >   *
-> >   * - 'S' For symbolic direct pointers (or function descriptors) with offset
-> >   * - 's' For symbolic direct pointers (or function descriptors) without offset
-> > - * - 'F' Same as 'S'
-> > - * - 'f' Same as 's'
-> > - * - '[FfSs]R' as above with __builtin_extract_return_addr() translation
-> > + * - '[Ss]R' as above with __builtin_extract_return_addr() translation
-> >   * - 'B' For backtraced symbolic direct pointers with offset
-> >   * - 'R' For decoded struct resource, e.g., [mem 0x0-0x1f 64bit pref]
-> >   * - 'r' For raw struct resource, e.g., [mem 0x0-0x1f flags 0x201]
-> > @@ -2112,8 +2110,6 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
-> >  	      struct printf_spec spec)
-> >  {
-> >  	switch (*fmt) {
-> > -	case 'F':
-> > -	case 'f':
-> >  	case 'S':
-> >  	case 's':
-> >  		ptr = dereference_symbol_descriptor(ptr);
-> 
-> IMHO, we should do the same also in vbin_printf().
-> 
-> The compatibility with traceevent tools was discussed in the thread
-> https://lkml.kernel.org/r/20190910084707.18380-2-sakari.ailus@linux.intel.com
-> 
-> If I understand it correctly the tools should be able to handle stored
-> 'f' and 'F' modifiers because they might be produced by
-> older kernels. But new kernels should not longer produce them.
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+---
+ .../serio/allwinner,sun4i-a10-ps2.yaml        | 51 +++++++++++++++++++
+ .../bindings/serio/allwinner,sun4i-ps2.txt    | 22 --------
+ 2 files changed, 51 insertions(+), 22 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serio/allwinner,sun4i-a10-ps2.yaml
+ delete mode 100644 Documentation/devicetree/bindings/serio/allwinner,sun4i-ps2.txt
 
-Agreed.
-
-> 
-> Otherwise the patch looks good to me. I am getting used to the fact
-> that we will remove the obsolete specifiers completely.
-
-I'll address this in v8 soon.
-
+diff --git a/Documentation/devicetree/bindings/serio/allwinner,sun4i-a10-ps2.yaml b/Documentation/devicetree/bindings/serio/allwinner,sun4i-a10-ps2.yaml
+new file mode 100644
+index 000000000000..ee9712f1c97d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serio/allwinner,sun4i-a10-ps2.yaml
+@@ -0,0 +1,51 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/serio/allwinner,sun4i-a10-ps2.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Allwinner A10 PS2 Host Controller Device Tree Bindings
++
++maintainers:
++  - Chen-Yu Tsai <wens@csie.org>
++  - Maxime Ripard <maxime.ripard@bootlin.com>
++
++description:
++  A20 PS2 is dual role controller (PS2 host and PS2 device). These
++  bindings for PS2 A10/A20 host controller. IBM compliant IBM PS2 and
++  AT-compatible keyboard and mouse can be connected.
++
++properties:
++  compatible:
++    const: allwinner,sun4i-a10-ps2
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/sun7i-a20-ccu.h>
++
++    ps20: ps2@1c2a000 {
++        compatible = "allwinner,sun4i-a10-ps2";
++        reg = <0x01c2a000 0x400>;
++        interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&ccu CLK_APB1_PS20>;
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/serio/allwinner,sun4i-ps2.txt b/Documentation/devicetree/bindings/serio/allwinner,sun4i-ps2.txt
+deleted file mode 100644
+index 75996b6111bb..000000000000
+--- a/Documentation/devicetree/bindings/serio/allwinner,sun4i-ps2.txt
++++ /dev/null
+@@ -1,22 +0,0 @@
+-* Device tree bindings for Allwinner A10, A20 PS2 host controller
+-
+-A20 PS2 is dual role controller (PS2 host and PS2 device). These bindings are
+-for PS2 A10/A20 host controller. IBM compliant IBM PS2 and AT-compatible keyboard
+-and mouse can be connected.
+-
+-Required properties:
+-
+- - reg             : Offset and length of the register set for the device.
+- - compatible      : Should be as of the following:
+-                     - "allwinner,sun4i-a10-ps2"
+- - interrupts      : The interrupt line connected to the PS2.
+- - clocks          : The gate clk connected to the PS2.
+-
+-
+-Example:
+-	ps20: ps2@01c2a000 {
+-		compatible = "allwinner,sun4i-a10-ps2";
+-		reg = <0x01c2a000 0x400>;
+-		interrupts = <0 62 4>;
+-		clocks = <&apb1_gates 6>;
+-	};
 -- 
-Regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+2.23.0
