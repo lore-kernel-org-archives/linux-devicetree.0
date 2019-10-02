@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 04/10] arm64: dts: tegra: Rename sysram node to "sram"
-Date: Wed,  2 Oct 2019 18:43:10 +0200
-Message-ID: <20191002164316.14905-4-krzk@kernel.org>
+Subject: [PATCH v3 05/10] ARM: dts: dove: Rename "sa-sram" node to "sram"
+Date: Wed,  2 Oct 2019 18:43:11 +0200
+Message-ID: <20191002164316.14905-5-krzk@kernel.org>
 References: <20191002164316.14905-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191002164316.14905-1-krzk@kernel.org>
@@ -10,40 +10,26 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukji
 List-Id: devicetree@vger.kernel.org
 
 The device node name should reflect generic class of a device so rename
-the "sysram" node to "sram".  This will be also in sync with upcoming DT
+the "sa-sram" node to "sram".  This will be also in sync with upcoming DT
 schema.  No functional change.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/nvidia/tegra186.dtsi | 2 +-
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/dove.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index 47cd831fcf44..90a3a5978369 100644
---- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -1174,7 +1174,7 @@
- 		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_GPU>;
- 	};
+diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
+index 2e8a3977219f..3081b04e8c08 100644
+--- a/arch/arm/boot/dts/dove.dtsi
++++ b/arch/arm/boot/dts/dove.dtsi
+@@ -784,7 +784,7 @@
+ 				status = "disabled";
+ 			};
  
--	sysram@30000000 {
-+	sram@30000000 {
- 		compatible = "nvidia,tegra186-sysram", "mmio-sram";
- 		reg = <0x0 0x30000000 0x0 0x50000>;
- 		#address-cells = <2>;
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 3c0cf54f0aab..29118ca417e5 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -1430,7 +1430,7 @@
- 			  0x82000000 0x0  0x40000000 0x1f 0x40000000 0x0 0xc0000000>; /* non-prefetchable memory (3GB) */
- 	};
- 
--	sysram@40000000 {
-+	sram@40000000 {
- 		compatible = "nvidia,tegra194-sysram", "mmio-sram";
- 		reg = <0x0 0x40000000 0x0 0x50000>;
- 		#address-cells = <1>;
+-			crypto_sram: sa-sram@ffffe000 {
++			crypto_sram: sram@ffffe000 {
+ 				compatible = "mmio-sram";
+ 				reg = <0xffffe000 0x800>;
+ 				clocks = <&gate_clk 15>;
 -- 
 2.17.1
