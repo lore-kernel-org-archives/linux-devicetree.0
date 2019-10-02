@@ -1,34 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] docs: fix some broken references
-Date: Wed, 02 Oct 2019 09:19:29 -0500
-Message-ID: <5d94b1f4.1c69fb81.6f9ad.2586@mx.google.com>
-References: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [RESEND PATCH v5 3/4] ARM: dts: exynos: add initial data for
+ coupled regulators for Exynos5422/5800
+Date: Wed, 2 Oct 2019 16:27:04 +0200
+Message-ID: <20191002142704.GA15827@pi3>
+References: <20190808090234.12577-1-k.konieczny@partner.samsung.com>
+ <CGME20190808090252eucas1p2afec3e288965bb7e7aa6f96f67686273@eucas1p2.samsung.com>
+ <20190808090234.12577-4-k.konieczny@partner.samsung.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b87385b2ac6ce6c75df82062fce2976149bbaa6b.1569330078.git.mchehab+samsung@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190808090234.12577-4-k.konieczny@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, corbet@lwn.net, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Shannon Nelson <snelson@pensando.io>, Pensando Drivers <drivers@pensando.io>, Steve French <sfrench@samba.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-mips@vger.kernel.org, netdev@vger.kernel.org, linux-rdma@vger.kernel.org, linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, linux-riscv@lists.infradead.org
+To: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Kukjin Kim <kgene@kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Mark Rutland <mark.rutland@arm.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 24 Sep 2019 10:01:28 -0300, Mauro Carvalho Chehab wrote:
-> There are a number of documentation files that got moved or
-> renamed. update their references.
+On Thu, Aug 08, 2019 at 11:02:33AM +0200, Kamil Konieczny wrote:
+> From: Marek Szyprowski <m.szyprowski@samsung.com>
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> ---
->  Documentation/devicetree/bindings/cpu/cpu-topology.txt    | 2 +-
->  Documentation/devicetree/bindings/timer/ingenic,tcu.txt   | 2 +-
->  Documentation/driver-api/gpio/driver.rst                  | 2 +-
->  Documentation/hwmon/inspur-ipsps1.rst                     | 2 +-
->  Documentation/mips/ingenic-tcu.rst                        | 2 +-
->  Documentation/networking/device_drivers/mellanox/mlx5.rst | 2 +-
->  MAINTAINERS                                               | 2 +-
->  drivers/net/ethernet/faraday/ftgmac100.c                  | 2 +-
->  drivers/net/ethernet/pensando/ionic/ionic_if.h            | 4 ++--
->  fs/cifs/cifsfs.c                                          | 2 +-
->  10 files changed, 11 insertions(+), 11 deletions(-)
+> Declare Exynos5422/5800 voltage ranges for opp points for big cpu core and
+> bus wcore and couple their voltage supllies as vdd_arm and vdd_int should
+> be in 300mV range.
 > 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> [k.konieczny: add missing patch description]
+> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+The bindings were acked. Can I pick it up?
+
+Best regards,
+Krzysztof
