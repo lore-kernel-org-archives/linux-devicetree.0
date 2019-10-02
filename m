@@ -1,78 +1,99 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] misc: add cc1101 devicetree binding
-Date: Wed, 02 Oct 2019 09:19:12 -0500
-Message-ID: <5d94b1e3.1c69fb81.9d89.1cce@mx.google.com>
-References: <20190922060356.58763-1-hs@denx.de>
- <20190922060356.58763-2-hs@denx.de>
+Subject: Re: [PATCH] dt-bindings: iio: maxbotix,mb1232.yaml: transform to yaml
+Date: Wed, 02 Oct 2019 09:19:21 -0500
+Message-ID: <5d94b1ec.1c69fb81.bb720.6d97@mx.google.com>
+References: <20190923174605.mhrbmdic3ynaw22o@arbad>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190922060356.58763-2-hs@denx.de>
+In-Reply-To: <20190923174605.mhrbmdic3ynaw22o@arbad>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 22, 2019 at 08:03:55AM +0200, Heiko Schocher wrote:
-> add devicetree binding for cc1101 misc driver.
+On Mon, Sep 23, 2019 at 07:46:34PM +0200, Andreas Klinger wrote:
+> transform existing documentation of maxbotix,mb1232 ultrasonic ranger
+> from text documentation format into yaml.
 > 
-> Signed-off-by: Heiko Schocher <hs@denx.de>
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 > ---
-> 
->  .../devicetree/bindings/misc/cc1101.txt       | 27 +++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/cc1101.txt
+>  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
+>  .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 56 ++++++++++++++++++++++
+>  2 files changed, 56 insertions(+), 29 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
 
-Can you please convert this to DT schema.
-
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/cc1101.txt b/Documentation/devicetree/bindings/misc/cc1101.txt
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
 > new file mode 100644
-> index 0000000000000..afea6acf4a9c5
+> index 000000000000..8301a1ad2a47
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/cc1101.txt
-
-Normal naming is to use compatible string. So ti,cc1101.yaml for schema.
-
-> @@ -0,0 +1,27 @@
-> +driver cc1101 Low-Power Sub-1 GHz RF Transceiver chip from Texas
-> +Instruments.
+> +++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/proximity/maxbotix,mb1232.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +Requires node properties:
-> +- compatible : should be "ti,cc1101";
-> +- reg        : Chip select address of device, see:
-> +               Documentation/devicetree/bindings/spi/spi-bus.txt
-> +- gpios      : list of 2 gpios, first gpio is for GDO0 pin
-> +               second for GDO2 pin, see more:
-
-Is there a GDO1? Would be hard to add later because you can't change the 
-indices once defined.
-
-> +               Documentation/devicetree/bindings/gpio/gpio.txt
+> +title: MaxBotix I2CXL-MaxSonar ultrasonic distance sensor
 > +
-> +Recommended properties:
-> + - spi-max-frequency: Definition as per
-> +                Documentation/devicetree/bindings/spi/spi-bus.txt
-
-Notice that this file is now just in redirection...
-
-> + - freq       : used spi frequency for communication with cc1101 chip
-
-What's this? Doesn't spi-max-frequency cover it?
-
+> +maintainers:
+> +  - Andreas Klinger <ak@it-klinger.de>
 > +
-> +example:
+> +description: |
+> +  MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
+> +  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
+> +  for ranging
 > +
-> +&ecspi4 {
-> +        cc1101@0 {
-> +                compatible = "ti,cc1101";
-> +                spi-max-frequency = <10000000>;
-> +                reg = <0>;
-> +                freq = <5000000>;
-> +                gpios = <&gpio2 11 GPIO_ACTIVE_HIGH &gpio5 8 GPIO_ACTIVE_HIGH>;
-> +        };
-> +};
+> +  Specifications about the devices can be found at:
+> +  https://www.maxbotix.com/documents/I2CXL-MaxSonar-EZ_Datasheet.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - maxbotix,mb1202
+> +      - maxbotix,mb1212
+> +      - maxbotix,mb1222
+> +      - maxbotix,mb1232
+> +      - maxbotix,mb1242
+> +      - maxbotix,mb7040
+> +      - maxbotix,mb7137
+> +
+> +  reg:
+> +    description:
+> +      i2c address of the device, see also i2c/i2c.txt
+
+Drop this.
+
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description:
+> +      Interrupt used to announce the preceding reading request has finished
+> +      and that data is available.  If no interrupt is specified the device
+> +      driver falls back to wait a fixed amount of time until data can be
+> +      retrieved.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+
+Add a:
+
+additionalProperties: false
+
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    proximity@70 {
+> +      compatible = "maxbotix,mb1232";
+> +      reg = <0x70>;
+> +      interrupt-parent = <&gpio2>;
+> +      interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> +    };
 > -- 
-> 2.21.0
-> 
+> 2.11.0
