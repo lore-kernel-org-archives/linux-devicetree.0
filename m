@@ -1,39 +1,35 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 2/6] clk: meson: add a driver for the Meson8/8b/8m2 DDR clock controller
-Date: Wed, 02 Oct 2019 11:04:42 +0200
-Message-ID: <1jbluzr00l.fsf@starbuckisacylon.baylibre.com>
-References: <20190921151835.770263-1-martin.blumenstingl@googlemail.com> <20190921151835.770263-3-martin.blumenstingl@googlemail.com> <1jftkcr3uy.fsf@starbuckisacylon.baylibre.com> <CAFBinCCED4YWYkdtrfrC80C8WLE=fyMJdjTa3wFNMJgC1OsoOA@mail.gmail.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
+ power states
+Date: Wed, 2 Oct 2019 11:19:50 +0200
+Message-ID: <20191002091950.GA9393@centauri>
+References: <cover.1558430617.git.amit.kucheria@linaro.org>
+ <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
+ <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAFBinCCED4YWYkdtrfrC80C8WLE=fyMJdjTa3wFNMJgC1OsoOA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>, lkml <linux-kernel@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Sibi Sankar <sibis@codeaurora.org>, daniel.lezcano@linaro.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 30, 2019 at 04:20:15PM -0600, Jeffrey Hugo wrote:
+> Amit, the merged version of the below change causes a boot failure
+> (nasty hang, sometimes with RCU stalls) on the msm8998 laptops.  Oddly
+> enough, it seems to be resolved if I remove the cpu-idle-states
+> property from one of the cpu nodes.
+> 
+> I see no issues with the msm8998 MTP.
 
-On Tue 01 Oct 2019 at 20:53, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+Hello Jeffrey, Amit,
 
->
-> [...]
->> > +static struct clk_hw_onecell_data meson8_ddr_clk_hw_onecell_data = {
->> > +     .hws = {
->> > +             [DDR_CLKID_DDR_PLL_DCO]         = &meson8_ddr_pll_dco.hw,
->> > +             [DDR_CLKID_DDR_PLL]             = &meson8_ddr_pll.hw,
->>
->> I wonder if onecell is not overkill for this driver. We won't expose the
->> DCO, so only the post divider remains
->>
->> Do you expect this provider to have more than one leaf clock ?
->> If not, maybe you could use of_clk_hw_simple_get() instead ?
-> there's some more clock bits in DDR_CLK_CNTL - the public A311D
-> datasheet has a description for these bits but I'm not sure they do
-> the same on Meson8/Meson8b/Meson8m2
-> all I know is that some magic bytes are written to DDR_CLK_CNTL in the
-> old u-boot code
->
-> that's why I don't want to make any assumptions and play safe here (by
-> using a onecell clock provider)
+If the PSCI idle states work properly on the msm8998 devboard (MTP),
+but causes crashes on msm8998 laptops, the only logical change is
+that the PSCI firmware is different between the two devices.
 
-Understood. Let's keep onecell then.
+
+Kind regards,
+Niklas
