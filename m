@@ -1,85 +1,65 @@
 From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-Subject: [PATCH v2 0/5] Add support for iMX8MQ Display Controller Subsystem
-Date: Wed,  2 Oct 2019 17:04:52 +0300
-Message-ID: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, agx@sigxcpu.org, linux-kernel@vger.kernel.org, Laurentiu Palcu <laurentiu.palcu@nxp.com>, linux-clk@vger.kernel.org
+Subject: [PATCH v2 1/5] clk: imx8mq: Add VIDEO2_PLL clock
+Date: Wed,  2 Oct 2019 17:04:53 +0300
+Message-ID: <1570025100-5634-2-git-send-email-laurentiu.palcu@nxp.com>
+References: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>
+Cc: agx@sigxcpu.org, l.stach@pengutronix.de, Laurentiu Palcu <laurentiu.palcu@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpUaGlzIHBhdGNoc2V0IGFkZHMgaW5pdGlhbCBEQ1NTIHN1cHBvcnQgZm9yIGlNWDhNUSBj
-aGlwLiBJbml0aWFsIHN1cHBvcnQKaW5jbHVkZXMgb25seSBncmFwaGljcyBwbGFuZSBzdXBwb3J0
-IChubyB2aWRlbyBwbGFuZXMpLCBubyBIRFIxMCBjYXBhYmlsaXRpZXMsCm5vIGdyYXBoaWNzIGRl
-Y29tcHJlc3Npb24gKG9ubHkgbGluZWFyLCB0aWxlZCBhbmQgc3VwZXItdGlsZWQgYnVmZmVycyBh
-bGxvd2VkKS4KClN1cHBvcnQgZm9yIHRoZSByZXN0IG9mIHRoZSBmZWF0dXJlcyB3aWxsIGJlIGFk
-ZGVkIGluY3JlbWVudGFsbHksIGluIHN1YnNlcXVlbnQKcGF0Y2hlcy4KClRoZSBwYXRjaHNldCB3
-YXMgdGVzdGVkIHdpdGggYm90aCBIRFAgZHJpdmVyIChub3QgeWV0IHVwc3RyZWFtZWQpIGFuZCBN
-SVBJLURTSQooZHJpdmVycyBhbHJlYWR5IG9uIHRoZSBkcmktZGV2ZWwgTUwpLgoKVGhhbmtzLApM
-YXVyZW50aXUKCkNoYW5nZXMgaW4gdjI6CiAqIFJlbW92ZWQgJzB4JyBpbiBub2RlJ3MgdW5pdC1h
-ZGRyZXNzIGJvdGggaW4gRFQgYW5kIHlhbWw7CiAqIE1hZGUgdGhlIGFkZHJlc3MgcmVnaW9uIHNp
-emUgbG93ZXJjYXNlLCB0byBiZSBjb25zaXN0ZW50OwogKiBSZW1vdmVkIHNvbWUgbGVmdC1vdmVy
-IHJlZmVyZW5jZXMgdG8gUDAxMDsKICogQWRkZWQgYSBLY29uZmlnIGRlcGVuZGVuY3kgb2YgRFJN
-ICYmIEFSQ0hfTVhDLiBUaGlzIHdpbGwgYWxzbyBzaWxlbmNlIGNvbXBpbGF0aW9uCiAgIGlzc3Vl
-cyByZXBvcnRlZCBieSBrYnVpbGQgZm9yIG90aGVyIGFyY2hpdGVjdHVyZXM7CgoKTGF1cmVudGl1
-IFBhbGN1ICg1KToKICBjbGs6IGlteDhtcTogQWRkIFZJREVPMl9QTEwgY2xvY2sKICBkcm0vaW14
-OiBjb21waWxlIGlteCBkaXJlY3RvcnkgYnkgZGVmYXVsdAogIGRybS9pbXg6IEFkZCBpbml0aWFs
-IHN1cHBvcnQgZm9yIERDU1Mgb24gaU1YOE1RCiAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IGlteDog
-YWRkIGJpbmRpbmdzIGZvciBEQ1NTCiAgYXJtNjQ6IGR0czogaW14OG1xOiBhZGQgRENTUyBub2Rl
-CgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvaW14L254cCxpbXg4bXEtZGNzcy55YW1sICAgICAgfCAg
-ODYgKysrCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaSAgICAgICAg
-ICB8ICAyNSArCiBkcml2ZXJzL2Nsay9pbXgvY2xrLWlteDhtcS5jICAgICAgICAgICAgICAgICAg
-ICAgICB8ICAgNCArCiBkcml2ZXJzL2dwdS9kcm0vTWFrZWZpbGUgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB8ICAgMiArLQogZHJpdmVycy9ncHUvZHJtL2lteC9LY29uZmlnICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAgIDIgKwogZHJpdmVycy9ncHUvZHJtL2lteC9NYWtlZmlsZSAgICAgICAg
-ICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9ncHUvZHJtL2lteC9kY3NzL0tjb25maWcg
-ICAgICAgICAgICAgICAgICAgfCAgIDggKwogZHJpdmVycy9ncHUvZHJtL2lteC9kY3NzL01ha2Vm
-aWxlICAgICAgICAgICAgICAgICAgfCAgIDYgKwogZHJpdmVycy9ncHUvZHJtL2lteC9kY3NzL2Rj
-c3MtYmxrY3RsLmMgICAgICAgICAgICAgfCAgNzUgKysKIGRyaXZlcnMvZ3B1L2RybS9pbXgvZGNz
-cy9kY3NzLWNydGMuYyAgICAgICAgICAgICAgIHwgMjIzICsrKysrKwogZHJpdmVycy9ncHUvZHJt
-L2lteC9kY3NzL2Rjc3MtY3R4bGQuYyAgICAgICAgICAgICAgfCA0NDcgKysrKysrKysrKysKIGRy
-aXZlcnMvZ3B1L2RybS9pbXgvZGNzcy9kY3NzLWRldi5jICAgICAgICAgICAgICAgIHwgMjg2ICsr
-KysrKysKIGRyaXZlcnMvZ3B1L2RybS9pbXgvZGNzcy9kY3NzLWRldi5oICAgICAgICAgICAgICAg
-IHwgMTk1ICsrKysrCiBkcml2ZXJzL2dwdS9kcm0vaW14L2Rjc3MvZGNzcy1kcHIuYyAgICAgICAg
-ICAgICAgICB8IDU0OCArKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL2lteC9kY3NzL2Rj
-c3MtZHJ2LmMgICAgICAgICAgICAgICAgfCAxODIgKysrKysKIGRyaXZlcnMvZ3B1L2RybS9pbXgv
-ZGNzcy9kY3NzLWR0Zy5jICAgICAgICAgICAgICAgIHwgNDM4ICsrKysrKysrKysrCiBkcml2ZXJz
-L2dwdS9kcm0vaW14L2Rjc3MvZGNzcy1rbXMuYyAgICAgICAgICAgICAgICB8IDMyMSArKysrKysr
-KwogZHJpdmVycy9ncHUvZHJtL2lteC9kY3NzL2Rjc3Mta21zLmggICAgICAgICAgICAgICAgfCAg
-NTIgKysKIGRyaXZlcnMvZ3B1L2RybS9pbXgvZGNzcy9kY3NzLXBsYW5lLmMgICAgICAgICAgICAg
-IHwgNDE4ICsrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vaW14L2Rjc3MvZGNzcy1zY2FsZXIu
-YyAgICAgICAgICAgICB8IDgyNiArKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2Ry
-bS9pbXgvZGNzcy9kY3NzLXNzLmMgICAgICAgICAgICAgICAgIHwgMTc5ICsrKysrCiBpbmNsdWRl
-L2R0LWJpbmRpbmdzL2Nsb2NrL2lteDhtcS1jbG9jay5oICAgICAgICAgICB8ICAgNCArLQogMjIg
-ZmlsZXMgY2hhbmdlZCwgNDMyNiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQogY3JlYXRl
-IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lt
-eC9ueHAsaW14OG1xLWRjc3MueWFtbAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
-bS9pbXgvZGNzcy9LY29uZmlnCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2lt
-eC9kY3NzL01ha2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2lteC9k
-Y3NzL2Rjc3MtYmxrY3RsLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaW14
-L2Rjc3MvZGNzcy1jcnRjLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaW14
-L2Rjc3MvZGNzcy1jdHhsZC5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2lt
-eC9kY3NzL2Rjc3MtZGV2LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaW14
-L2Rjc3MvZGNzcy1kZXYuaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pbXgv
-ZGNzcy9kY3NzLWRwci5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2lteC9k
-Y3NzL2Rjc3MtZHJ2LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaW14L2Rj
-c3MvZGNzcy1kdGcuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pbXgvZGNz
-cy9kY3NzLWttcy5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2lteC9kY3Nz
-L2Rjc3Mta21zLmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaW14L2Rjc3Mv
-ZGNzcy1wbGFuZS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2lteC9kY3Nz
-L2Rjc3Mtc2NhbGVyLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaW14L2Rj
-c3MvZGNzcy1zcy5jCgotLSAKMi43LjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbA==
+This clock is needed by DCSS when high resolutions are used.
+
+Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+CC: Abel Vesa <abel.vesa@nxp.com>
+---
+ drivers/clk/imx/clk-imx8mq.c             | 4 ++++
+ include/dt-bindings/clock/imx8mq-clock.h | 4 +++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
+index 41fc9c6..05ece7b 100644
+--- a/drivers/clk/imx/clk-imx8mq.c
++++ b/drivers/clk/imx/clk-imx8mq.c
+@@ -38,6 +38,7 @@ static const char * const sys1_pll_out_sels[] = {"sys1_pll1_ref_sel", };
+ static const char * const sys2_pll_out_sels[] = {"sys1_pll1_ref_sel", "sys2_pll1_ref_sel", };
+ static const char * const sys3_pll_out_sels[] = {"sys3_pll1_ref_sel", "sys2_pll1_ref_sel", };
+ static const char * const dram_pll_out_sels[] = {"dram_pll1_ref_sel", };
++static const char * const video2_pll_out_sels[] = {"video2_pll1_ref_sel", };
+ 
+ /* CCM ROOT */
+ static const char * const imx8mq_a53_sels[] = {"osc_25m", "arm_pll_out", "sys2_pll_500m", "sys2_pll_1000m",
+@@ -311,6 +312,7 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
+ 	clks[IMX8MQ_SYS2_PLL1_REF_SEL]	= imx_clk_mux("sys2_pll1_ref_sel", base + 0x3c, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+ 	clks[IMX8MQ_SYS3_PLL1_REF_SEL]	= imx_clk_mux("sys3_pll1_ref_sel", base + 0x48, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+ 	clks[IMX8MQ_DRAM_PLL1_REF_SEL]	= imx_clk_mux("dram_pll1_ref_sel", base + 0x60, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
++	clks[IMX8MQ_VIDEO2_PLL1_REF_SEL] = imx_clk_mux("video2_pll1_ref_sel", base + 0x54, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+ 
+ 	clks[IMX8MQ_ARM_PLL_REF_DIV]	= imx_clk_divider("arm_pll_ref_div", "arm_pll_ref_sel", base + 0x28, 5, 6);
+ 	clks[IMX8MQ_GPU_PLL_REF_DIV]	= imx_clk_divider("gpu_pll_ref_div", "gpu_pll_ref_sel", base + 0x18, 5, 6);
+@@ -346,6 +348,8 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
+ 	clks[IMX8MQ_SYS2_PLL_OUT] = imx_clk_sccg_pll("sys2_pll_out", sys2_pll_out_sels, ARRAY_SIZE(sys2_pll_out_sels), 0, 0, 1, base + 0x3c, CLK_IS_CRITICAL);
+ 	clks[IMX8MQ_SYS3_PLL_OUT] = imx_clk_sccg_pll("sys3_pll_out", sys3_pll_out_sels, ARRAY_SIZE(sys3_pll_out_sels), 0, 0, 1, base + 0x48, CLK_IS_CRITICAL);
+ 	clks[IMX8MQ_DRAM_PLL_OUT] = imx_clk_sccg_pll("dram_pll_out", dram_pll_out_sels, ARRAY_SIZE(dram_pll_out_sels), 0, 0, 0, base + 0x60, CLK_IS_CRITICAL);
++	clks[IMX8MQ_VIDEO2_PLL_OUT] = imx_clk_sccg_pll("video2_pll_out", video2_pll_out_sels, ARRAY_SIZE(video2_pll_out_sels), 0, 0, 0, base + 0x54, 0);
++
+ 	/* SYS PLL fixed output */
+ 	clks[IMX8MQ_SYS1_PLL_40M] = imx_clk_fixed_factor("sys1_pll_40m", "sys1_pll_out", 1, 20);
+ 	clks[IMX8MQ_SYS1_PLL_80M] = imx_clk_fixed_factor("sys1_pll_80m", "sys1_pll_out", 1, 10);
+diff --git a/include/dt-bindings/clock/imx8mq-clock.h b/include/dt-bindings/clock/imx8mq-clock.h
+index 6546367..35b9ed9 100644
+--- a/include/dt-bindings/clock/imx8mq-clock.h
++++ b/include/dt-bindings/clock/imx8mq-clock.h
+@@ -403,5 +403,7 @@
+ #define IMX8MQ_CLK_SNVS_ROOT			264
+ #define IMX8MQ_CLK_GIC				265
+ 
+-#define IMX8MQ_CLK_END				266
++#define IMX8MQ_VIDEO2_PLL1_REF_SEL		266
++
++#define IMX8MQ_CLK_END				267
+ #endif /* __DT_BINDINGS_CLOCK_IMX8MQ_H */
+-- 
+2.7.4
