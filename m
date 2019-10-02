@@ -1,43 +1,53 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: db845c: Enable LVS 1 and 2
-Date: Tue,  1 Oct 2019 21:16:54 -0700
-Message-ID: <20191002041654.3620-1-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v3 0/8] OMAP3: convert opp-v1 to opp-v2 and read speed
+ binned / 720MHz grade bits
+Date: Wed, 2 Oct 2019 07:47:07 +0200
+Message-ID: <8C3DD775-07DF-45E0-8E04-2B050CEB5800@goldelico.com>
+References: <cover.1568224032.git.hns@goldelico.com>
+ <20190916162816.GF52127@atomide.com>
+ <DAF6ACB4-AD7E-4528-9F4B-C54104B5E260@goldelico.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <DAF6ACB4-AD7E-4528-9F4B-C54104B5E260@goldelico.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, letux-kernel@openphoenux.org, linux-pm@vger.kernel.org, Enric Balletbo i Serra <eballetbo@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, kernel@pyra-handheld.com, Teresa Remmet <t.remmet@phytec.de>, Javier Martinez Canillas <javier@dowhile0.org>, linux-omap@vger.kernel.org, Adam Ford <aford173@gmail.com>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-vreg_lvs1a_1p8 and vreg_lvs2a_1p8 are both feeding pins in the low speed
-connectors and should as such alway be on, so enable them.
+Hi Tony,
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+> Am 17.09.2019 um 16:35 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
+> 
+> Hi Tony,
+> 
+>> Am 16.09.2019 um 18:28 schrieb Tony Lindgren <tony@atomide.com>:
+>> 
+>> * H. Nikolaus Schaller <hns@goldelico.com> [190911 17:48]:
+>>> CHANGES V3:
+>>> * make omap36xx control the abb-ldo and properly switch mode
+>>> (suggested by Adam Ford <aford173@gmail.com>)
+>>> * add a note about enabling the turbo-mode OPPs
+>> 
+>> Looks good to me, when applying, please provide a
+>> minimal immutable branch maybe against v5.3 or v5.4-rc1,
+>> that I can also merge in if needed for the dts changes.
+> 
+> Should I resend a v4 with your Acked-By added?
+> 
+> BR and thanks,
+> Nikolaus
+> 
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index c314b5d55796..6e97ae7f7a08 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -312,6 +312,18 @@
- 			regulator-max-microvolt = <1200000>;
- 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- 		};
-+
-+		vreg_lvs1a_1p8: lvs1 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		vreg_lvs2a_1p8: lvs2 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
- 	};
- 
- 	pmi8998-rpmh-regulators {
--- 
-2.18.0
+what is the procedure to get this and Adam's thermal setup into linux-next?
+BR and thanks,
+Nikolaus
