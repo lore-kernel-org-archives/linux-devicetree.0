@@ -1,185 +1,304 @@
-From: <Eugen.Hristev@microchip.com>
-Subject: Re: [PATCH 2/3] watchdog: sam9x60_wdt: introduce sam9x60 watchdog
- timer driver
-Date: Wed, 2 Oct 2019 11:07:58 +0000
-Message-ID: <41dc5cc8-4ce3-62ee-132f-e8117190b850@microchip.com>
-References: <1570001371-8174-1-git-send-email-eugen.hristev@microchip.com>
- <1570001371-8174-2-git-send-email-eugen.hristev@microchip.com>
- <20191002102343.GL4106@piout.net>
+From: Adam Ford <aford173@gmail.com>
+Subject: Re: [PATCH v2 00/21] Refine memblock API
+Date: Wed, 2 Oct 2019 06:14:11 -0500
+Message-ID: <CAHCN7xL1MkJh44N3W_1+08DHmX__SqnfH6dqUzYzr2Wpg0kQyQ@mail.gmail.com>
+References: <CAHCN7x+Jv7yGPoB0Gm=TJ30ObLJduw2XomHkd++KqFEURYQcGg@mail.gmail.com>
+ <CAOMZO5A_U4aYC4XZXK1r9JaLg-eRdXy8m6z4GatQp62rK4HZ6A@mail.gmail.com>
+ <CAHCN7xJdzEppn8-74SvzACsA25bUHGdV7v=CfS08xzSi59Z2uw@mail.gmail.com>
+ <CAOMZO5D2uzR6Sz1QnX3G-Ce_juxU-0PO_vBZX+nR1mpQB8s8-w@mail.gmail.com>
+ <CAHCN7xJ32BYZu-DVTVLSzv222U50JDb8F0A_tLDERbb8kPdRxg@mail.gmail.com>
+ <20190926160433.GD32311@linux.ibm.com>
+ <CAHCN7xL1sFXDhKUpj04d3eDZNgLA1yGAOqwEeCxedy1Qm-JOfQ@mail.gmail.com>
+ <20190928073331.GA5269@linux.ibm.com>
+ <CAHCN7xJEvS2Si=M+BYtz+kY0M4NxmqDjiX9Nwq6_3GGBh3yg=w@mail.gmail.com>
+ <CAHCN7xKLhWw4P9-sZKXQcfSfh2r3J_+rLxuxACW0UVgimCzyVw@mail.gmail.com>
+ <20191002073605.GA30433@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191002102343.GL4106@piout.net>
-Content-Language: en-US
-Content-ID: <DD8BAB5E16639445A6C662787A1A0435@namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com
-Cc: wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas.Ferre@microchip.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191002073605.GA30433@linux.ibm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, devicetree <devicetree@vger.kernel.org>, Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, x86@kernel.org, Russell King <linux@armlinux.org.uk>, kasan-dev <kasan-dev@googlegroups.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.org, Chris Healy <cphealy@gmail.com>, uclinux-h8-devel@lists.sourceforge.j
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDAyLjEwLjIwMTkgMTM6MjMsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KDQo+IEhp
-LA0KPiANCj4gT24gMDIvMTAvMjAxOSAwNzozNToyNiswMDAwLCBFdWdlbi5IcmlzdGV2QG1pY3Jv
-Y2hpcC5jb20gd3JvdGU6DQo+PiArc3RhdGljIHZvaWQgd2R0X3dyaXRlKHN0cnVjdCBzYW05eDYw
-X3dkdCAqd2R0LCB1MzIgZmllbGQsIHUzMiB2YWwpDQo+PiArew0KPj4gKwkvKg0KPj4gKwkgKiBX
-RFRfQ1IgYW5kIFdEVF9NUiBtdXN0IG5vdCBiZSBtb2RpZmllZCB3aXRoaW4gdGhyZWUgc2xvdyBj
-bG9jaw0KPj4gKwkgKiBwZXJpb2RzIGZvbGxvd2luZyBhIHJlc3RhcnQgb2YgdGhlIHdhdGNoZG9n
-IHBlcmZvcm1lZCBieSBhIHdyaXRlDQo+PiArCSAqIGFjY2VzcyBpbiBXRFRfQ1IuDQo+PiArCSAq
-Lw0KPj4gKwl3aGlsZSAodGltZV9iZWZvcmUoamlmZmllcywgd2R0LT5sYXN0X3BpbmcgKyBXRFRf
-REVMQVkpKQ0KPj4gKwkJdXNsZWVwX3JhbmdlKDMwLCAxMjUpOw0KPj4gKwl3cml0ZWxfcmVsYXhl
-ZCh2YWwsIHdkdC0+cmVnX2Jhc2UgKyBmaWVsZCk7DQo+PiArCXdkdC0+bGFzdF9waW5nID0gamlm
-ZmllczsNCj4+ICt9DQo+PiArDQo+PiArc3RhdGljIHZvaWQgd2R0X3dyaXRlX25vc2xlZXAoc3Ry
-dWN0IHNhbTl4NjBfd2R0ICp3ZHQsIHUzMiBmaWVsZCwgdTMyIHZhbCkNCj4+ICt7DQo+PiArCWlm
-ICh0aW1lX2JlZm9yZShqaWZmaWVzLCB3ZHQtPmxhc3RfcGluZyArIFdEVF9ERUxBWSkpDQo+PiAr
-CQl1c2xlZXBfcmFuZ2UoMTIzLCAyNTApOw0KPiANCj4gU28geW91IGhhdmUgYSBfbm9zbGVlcCBm
-dW5jdGlvbiB0aGF0IGRvZXMgc2xlZXA/DQo+IA0KPj4gKwl3cml0ZWxfcmVsYXhlZCh2YWwsIHdk
-dC0+cmVnX2Jhc2UgKyBmaWVsZCk7DQo+PiArCXdkdC0+bGFzdF9waW5nID0gamlmZmllczsNCj4+
-ICt9DQo+PiArDQo+PiArc3RhdGljIGludCBzYW05eDYwX3dkdF9zdGFydChzdHJ1Y3Qgd2F0Y2hk
-b2dfZGV2aWNlICp3ZGQpDQo+PiArew0KPj4gKwlzdHJ1Y3Qgc2FtOXg2MF93ZHQgKndkdCA9IHdh
-dGNoZG9nX2dldF9kcnZkYXRhKHdkZCk7DQo+PiArDQo+PiArCXdkdC0+bXIgJj0gfkFUOTFfV0RU
-X1dERElTOw0KPj4gKwl3ZHRfd3JpdGUod2R0LCBBVDkxX1dEVF9NUiwgd2R0LT5tcik7DQo+PiAr
-CXdkdF93cml0ZV9ub3NsZWVwKHdkdCwgQVQ5MV9XRFRfSUVSLCB3ZHQtPmlyKTsNCj4gDQo+IEkg
-ZG9uJ3QgdGhpbmsgQVQ5MV9XRFRfSUVSIG5lZWRzIHRvIGJlIHByb3RlY3RlZCwgeW91IGNhbiBw
-cm9iYWJseSB3cml0ZQ0KPiBpdCBkaXJlY3RseS4gQWxzbywgeW91IGNlcnRhaW5seSBuZWVkIHRv
-IGRvIHRoYXQgYmVmb3JlIHN0YXJ0aW5nIHRoZQ0KPiB3YXRjaGRvZyB0byBhdm9pZCByYWNlIGNv
-bmRpdGlvbnMuDQo+IA0KPj4gKw0KPj4gKwlyZXR1cm4gMDsNCj4+ICt9DQo+PiArDQo+PiArc3Rh
-dGljIGludCBzYW05eDYwX3dkdF9zdG9wKHN0cnVjdCB3YXRjaGRvZ19kZXZpY2UgKndkZCkNCj4+
-ICt7DQo+PiArCXN0cnVjdCBzYW05eDYwX3dkdCAqd2R0ID0gd2F0Y2hkb2dfZ2V0X2RydmRhdGEo
-d2RkKTsNCj4+ICsNCj4+ICsJd2R0LT5tciB8PSBBVDkxX1dEVF9XRERJUzsNCj4+ICsJd2R0X3dy
-aXRlKHdkdCwgQVQ5MV9XRFRfTVIsIHdkdC0+bXIpOw0KPj4gKwl3ZHRfd3JpdGVfbm9zbGVlcCh3
-ZHQsIEFUOTFfV0RUX0lEUiwgd2R0LT5pcik7DQo+PiArDQo+IA0KPiBJIGRvbid0IHRoaW5rIEFU
-OTFfV0RUX0lEUiBuZWVkcyB0byBiZSBwcm90ZWN0ZWQuDQo+IA0KPj4gKwlyZXR1cm4gMDsNCj4+
-ICt9DQo+PiArDQo+PiArc3RhdGljIGludCBzYW05eDYwX3dkdF9waW5nKHN0cnVjdCB3YXRjaGRv
-Z19kZXZpY2UgKndkZCkNCj4+ICt7DQo+PiArCXN0cnVjdCBzYW05eDYwX3dkdCAqd2R0ID0gd2F0
-Y2hkb2dfZ2V0X2RydmRhdGEod2RkKTsNCj4+ICsNCj4+ICsJd2R0X3dyaXRlKHdkdCwgQVQ5MV9X
-RFRfQ1IsIEFUOTFfV0RUX0tFWSB8IEFUOTFfV0RUX1dEUlNUVCk7DQo+PiArDQo+PiArCXJldHVy
-biAwOw0KPj4gK30NCj4+ICsNCj4+ICtzdGF0aWMgaW50IHNhbTl4NjBfd2R0X3NldF90aW1lb3V0
-KHN0cnVjdCB3YXRjaGRvZ19kZXZpY2UgKndkZCwNCj4+ICsJCQkJICAgdW5zaWduZWQgaW50IHRp
-bWVvdXQpDQo+PiArew0KPj4gKwlzdHJ1Y3Qgc2FtOXg2MF93ZHQgKndkdCA9IHdhdGNoZG9nX2dl
-dF9kcnZkYXRhKHdkZCk7DQo+PiArDQo+PiArCXdkdF93cml0ZSh3ZHQsIEFUOTFfV0RUX1dMUiwN
-Cj4+ICsJCSAgQVQ5MV9XRFRfU0VUX0NPVU5URVIoV0RUX1NFQzJUSUNLUyh0aW1lb3V0KSkpOw0K
-Pj4gKw0KPiANCj4gSSBkb24ndCB0aGluayBBVDkxX1dEVF9XTFIgbmVlZHMgdG8gYmUgcHJvdGVj
-dGVkLg0KPiANCj4+ICsJd2RkLT50aW1lb3V0ID0gdGltZW91dDsNCj4+ICsNCj4+ICsJcmV0dXJu
-IDA7DQo+PiArfQ0KPj4gKw0KPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgd2F0Y2hkb2dfaW5mbyBz
-YW05eDYwX3dkdF9pbmZvID0gew0KPj4gKwkub3B0aW9ucyA9IFdESU9GX1NFVFRJTUVPVVQgfCBX
-RElPRl9NQUdJQ0NMT1NFIHwgV0RJT0ZfS0VFUEFMSVZFUElORywNCj4+ICsJLmlkZW50aXR5ID0g
-Ik1pY3JvY2hpcCBTQU05WDYwIFdhdGNoZG9nIiwNCj4+ICt9Ow0KPj4gKw0KPj4gK3N0YXRpYyBj
-b25zdCBzdHJ1Y3Qgd2F0Y2hkb2dfb3BzIHNhbTl4NjBfd2R0X29wcyA9IHsNCj4+ICsJLm93bmVy
-ID0gVEhJU19NT0RVTEUsDQo+PiArCS5zdGFydCA9IHNhbTl4NjBfd2R0X3N0YXJ0LA0KPj4gKwku
-c3RvcCA9IHNhbTl4NjBfd2R0X3N0b3AsDQo+PiArCS5waW5nID0gc2FtOXg2MF93ZHRfcGluZywN
-Cj4+ICsJLnNldF90aW1lb3V0ID0gc2FtOXg2MF93ZHRfc2V0X3RpbWVvdXQsDQo+PiArfTsNCj4+
-ICsNCj4+ICtzdGF0aWMgaXJxcmV0dXJuX3Qgc2FtOXg2MF93ZHRfaXJxX2hhbmRsZXIoaW50IGly
-cSwgdm9pZCAqZGV2X2lkKQ0KPj4gK3sNCj4+ICsJc3RydWN0IHNhbTl4NjBfd2R0ICp3ZHQgPSBw
-bGF0Zm9ybV9nZXRfZHJ2ZGF0YShkZXZfaWQpOw0KPj4gKw0KPj4gKwlpZiAod2R0X3JlYWQod2R0
-LCBBVDkxX1dEVF9JU1IpKSB7DQo+PiArCQlwcl9jcml0KCJNaWNyb2NoaXAgV2F0Y2hkb2cgU29m
-dHdhcmUgUmVzZXRcbiIpOw0KPj4gKwkJZW1lcmdlbmN5X3Jlc3RhcnQoKTsNCj4+ICsJCXByX2Ny
-aXQoIlJlYm9vdCBkaWRuJ3Qgc3VjY2VlZFxuIik7DQo+PiArCX0NCj4gDQo+IEknbSBub3QgcmVh
-bGx5IGNvbnZpbmNlZCBieSB0aGUgc29mdHdhcmUgcmVzdGFydCB1c2UgY2FzZSBidXQgSSBndWVz
-cyBpdA0KPiBpcyB0byBiZSBhYmxlIHRvIHNodXQgZG93biB3aGlsZSBzdGlsbCBmbHVzaGluZyBk
-YXRhIHRvIHRoZSBzdG9yYWdlLg0KPiBUaGlzIHdvdWxkIG5vdCBwcm90ZWN0IGFnYWluc3Qga2Vy
-bmVsIGlzc3VlcyB0aGVuLg0KDQpIaSBBbGV4YW5kcmUsDQoNClRoYXQncyBjb3JyZWN0LiBJdCBp
-cyB0byBkbyBhIHNvZnR3YXJlIHNodXRkb3duIGluc3RlYWQgb2YgaGFyZCByZWJvb3QgDQpieSBo
-YXJkd2FyZS4gSXQgaGFzIGl0O3MgdXNlIGNhc2VzLCBzbyBJIHByZXNlcnZlZCB0aGUgc2FtZSBs
-ZXZlbCBvZiANCmZ1bmN0aW9uYWxpdHkgYXMgaW4gc2FtYTVkNF93ZHQNCg0KPiANCj4+ICsNCj4+
-ICsJcmV0dXJuIElSUV9IQU5ETEVEOw0KPj4gK30NCj4+ICsNCj4+ICtzdGF0aWMgaW50IG9mX3Nh
-bTl4NjBfd2R0X2luaXQoc3RydWN0IGRldmljZV9ub2RlICpucCwgc3RydWN0IHNhbTl4NjBfd2R0
-ICp3ZHQpDQo+PiArew0KPj4gKwljb25zdCBjaGFyICp0bXA7DQo+PiArDQo+PiArCXdkdC0+bXIg
-PSBBVDkxX1dEVF9XRERJUzsNCj4+ICsNCj4+ICsJaWYgKCFvZl9wcm9wZXJ0eV9yZWFkX3N0cmlu
-ZyhucCwgImF0bWVsLHdhdGNoZG9nLXR5cGUiLCAmdG1wKSAmJg0KPj4gKwkgICAgIXN0cmNtcCh0
-bXAsICJzb2Z0d2FyZSIpKQ0KPj4gKwkJd2R0LT5pciA9IEFUOTFfV0RUX1BFUklOVDsNCj4+ICsJ
-ZWxzZQ0KPj4gKwkJd2R0LT5tciB8PSBBVDkxX1dEVF9QRVJJT0RSU1Q7DQo+PiArDQo+PiArCWlm
-IChvZl9wcm9wZXJ0eV9yZWFkX2Jvb2wobnAsICJhdG1lbCxpZGxlLWhhbHQiKSkNCj4+ICsJCXdk
-dC0+bXIgfD0gQVQ5MV9XRFRfV0RJRExFSExUOw0KPj4gKw0KPj4gKwlpZiAob2ZfcHJvcGVydHlf
-cmVhZF9ib29sKG5wLCAiYXRtZWwsZGJnLWhhbHQiKSkNCj4+ICsJCXdkdC0+bXIgfD0gQVQ5MV9X
-RFRfV0REQkdITFQ7DQo+PiArDQo+PiArCXJldHVybiAwOw0KPj4gK30NCj4+ICsNCj4+ICtzdGF0
-aWMgaW50IHNhbTl4NjBfd2R0X2luaXQoc3RydWN0IHNhbTl4NjBfd2R0ICp3ZHQpDQo+PiArew0K
-Pj4gKwl1MzIgcmVnOw0KPj4gKwkvKg0KPj4gKwkgKiBXaGVuIGJvb3RpbmcgYW5kIHJlc3VtaW5n
-LCB0aGUgYm9vdGxvYWRlciBtYXkgaGF2ZSBjaGFuZ2VkIHRoZQ0KPj4gKwkgKiB3YXRjaGRvZyBj
-b25maWd1cmF0aW9uLg0KPj4gKwkgKiBJZiB0aGUgd2F0Y2hkb2cgaXMgYWxyZWFkeSBydW5uaW5n
-LCB3ZSBjYW4gc2FmZWx5IHVwZGF0ZSBpdC4NCj4+ICsJICogRWxzZSwgd2UgaGF2ZSB0byBkaXNh
-YmxlIGl0IHByb3Blcmx5Lg0KPj4gKwkgKi8NCj4+ICsJaWYgKHdkdF9lbmFibGVkKSB7DQo+PiAr
-CQl3ZHRfd3JpdGVfbm9zbGVlcCh3ZHQsIEFUOTFfV0RUX01SLCB3ZHQtPm1yKTsNCj4+ICsJCXdk
-dF93cml0ZV9ub3NsZWVwKHdkdCwgQVQ5MV9XRFRfSUVSLCB3ZHQtPmlyKTsNCj4+ICsJCXdkdF93
-cml0ZSh3ZHQsIEFUOTFfV0RUX1dMUiwNCj4+ICsJCQkgIEFUOTFfV0RUX1NFVF9DT1VOVEVSKFdE
-VF9TRUMyVElDS1MoV0RUX0RFRkFVTFRfVElNRU9VVCkpKTsNCj4+ICsNCj4+ICsJfSBlbHNlIHsN
-Cj4+ICsJCXJlZyA9IHdkdF9yZWFkKHdkdCwgQVQ5MV9XRFRfTVIpOw0KPj4gKwkJaWYgKCEocmVn
-ICYgQVQ5MV9XRFRfV0RESVMpKQ0KPj4gKwkJCXdkdF93cml0ZV9ub3NsZWVwKHdkdCwgQVQ5MV9X
-RFRfTVIsDQo+PiArCQkJCQkgIHJlZyB8IEFUOTFfV0RUX1dERElTKTsNCj4+ICsJfQ0KPj4gKwly
-ZXR1cm4gMDsNCj4+ICt9DQo+PiArDQo+PiArc3RhdGljIGludCBzYW05eDYwX3dkdF9wcm9iZShz
-dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPj4gK3sNCj4+ICsJc3RydWN0IHdhdGNoZG9n
-X2RldmljZSAqd2RkOw0KPj4gKwlzdHJ1Y3Qgc2FtOXg2MF93ZHQgKndkdDsNCj4+ICsJc3RydWN0
-IHJlc291cmNlICpyZXM7DQo+PiArCXZvaWQgX19pb21lbSAqcmVnczsNCj4+ICsJdTMyIGlycSA9
-IDA7DQo+PiArCWludCByZXQ7DQo+PiArDQo+PiArCXdkdCA9IGRldm1fa3phbGxvYygmcGRldi0+
-ZGV2LCBzaXplb2YoKndkdCksIEdGUF9LRVJORUwpOw0KPj4gKwlpZiAoIXdkdCkNCj4+ICsJCXJl
-dHVybiAtRU5PTUVNOw0KPj4gKw0KPj4gKwl3ZGQgPSAmd2R0LT53ZGQ7DQo+PiArCXdkZC0+dGlt
-ZW91dCA9IFdEVF9ERUZBVUxUX1RJTUVPVVQ7DQo+PiArCXdkZC0+aW5mbyA9ICZzYW05eDYwX3dk
-dF9pbmZvOw0KPj4gKwl3ZGQtPm9wcyA9ICZzYW05eDYwX3dkdF9vcHM7DQo+PiArCXdkZC0+bWlu
-X3RpbWVvdXQgPSBNSU5fV0RUX1RJTUVPVVQ7DQo+PiArCXdkZC0+bWF4X3RpbWVvdXQgPSBNQVhf
-V0RUX1RJTUVPVVQ7DQo+PiArCXdkdC0+bGFzdF9waW5nID0gamlmZmllczsNCj4+ICsNCj4+ICsJ
-d2F0Y2hkb2dfc2V0X2RydmRhdGEod2RkLCB3ZHQpOw0KPj4gKw0KPj4gKwlyZXMgPSBwbGF0Zm9y
-bV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9NRU0sIDApOw0KPj4gKwlyZWdzID0gZGV2
-bV9pb3JlbWFwX3Jlc291cmNlKCZwZGV2LT5kZXYsIHJlcyk7DQo+PiArCWlmIChJU19FUlIocmVn
-cykpDQo+PiArCQlyZXR1cm4gUFRSX0VSUihyZWdzKTsNCj4+ICsNCj4+ICsJd2R0LT5yZWdfYmFz
-ZSA9IHJlZ3M7DQo+PiArDQo+PiArCWlycSA9IGlycV9vZl9wYXJzZV9hbmRfbWFwKHBkZXYtPmRl
-di5vZl9ub2RlLCAwKTsNCj4+ICsJaWYgKCFpcnEpDQo+PiArCQlkZXZfd2FybigmcGRldi0+ZGV2
-LCAiZmFpbGVkIHRvIGdldCBJUlEgZnJvbSBEVFxuIik7DQo+PiArDQo+PiArCXJldCA9IG9mX3Nh
-bTl4NjBfd2R0X2luaXQocGRldi0+ZGV2Lm9mX25vZGUsIHdkdCk7DQo+PiArCWlmIChyZXQpDQo+
-PiArCQlyZXR1cm4gcmV0Ow0KPj4gKw0KPj4gKwlpZiAoKHdkdC0+aXIgJiBBVDkxX1dEVF9QRVJJ
-TlQpICYmIGlycSkgew0KPj4gKwkJcmV0ID0gZGV2bV9yZXF1ZXN0X2lycSgmcGRldi0+ZGV2LCBp
-cnEsIHNhbTl4NjBfd2R0X2lycV9oYW5kbGVyLA0KPj4gKwkJCQkgICAgICAgSVJRRl9TSEFSRUQg
-fCBJUlFGX0lSUVBPTEwgfA0KPj4gKwkJCQkgICAgICAgSVJRRl9OT19TVVNQRU5ELCBwZGV2LT5u
-YW1lLCBwZGV2KTsNCj4+ICsJCWlmIChyZXQpIHsNCj4+ICsJCQlkZXZfZXJyKCZwZGV2LT5kZXYs
-DQo+PiArCQkJCSJjYW5ub3QgcmVnaXN0ZXIgaW50ZXJydXB0IGhhbmRsZXJcbiIpOw0KPj4gKwkJ
-CXJldHVybiByZXQ7DQo+PiArCQl9DQo+PiArCX0NCj4+ICsNCj4+ICsJd2F0Y2hkb2dfaW5pdF90
-aW1lb3V0KHdkZCwgd2R0X3RpbWVvdXQsICZwZGV2LT5kZXYpOw0KPj4gKw0KPj4gKwlyZXQgPSBz
-YW05eDYwX3dkdF9pbml0KHdkdCk7DQo+PiArCWlmIChyZXQpDQo+PiArCQlyZXR1cm4gcmV0Ow0K
-Pj4gKw0KPj4gKwl3YXRjaGRvZ19zZXRfbm93YXlvdXQod2RkLCBub3dheW91dCk7DQo+PiArDQo+
-PiArCXJldCA9IHdhdGNoZG9nX3JlZ2lzdGVyX2RldmljZSh3ZGQpOw0KPj4gKwlpZiAocmV0KSB7
-DQo+PiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gcmVnaXN0ZXIgd2F0Y2hkb2cg
-ZGV2aWNlXG4iKTsNCj4+ICsJCXJldHVybiByZXQ7DQo+PiArCX0NCj4+ICsNCj4+ICsJcGxhdGZv
-cm1fc2V0X2RydmRhdGEocGRldiwgd2R0KTsNCj4+ICsNCj4+ICsJZGV2X2luZm8oJnBkZXYtPmRl
-diwgImluaXRpYWxpemVkICh0aW1lb3V0ID0gJWQgc2VjLCBub3dheW91dCA9ICVkKVxuIiwNCj4+
-ICsJCSB3ZGQtPnRpbWVvdXQsIG5vd2F5b3V0KTsNCj4+ICsNCj4+ICsJcmV0dXJuIDA7DQo+PiAr
-fQ0KPj4gKw0KPj4gK3N0YXRpYyBpbnQgc2FtOXg2MF93ZHRfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9y
-bV9kZXZpY2UgKnBkZXYpDQo+PiArew0KPj4gKwlzdHJ1Y3Qgc2FtOXg2MF93ZHQgKndkdCA9IHBs
-YXRmb3JtX2dldF9kcnZkYXRhKHBkZXYpOw0KPj4gKw0KPj4gKwlzYW05eDYwX3dkdF9zdG9wKCZ3
-ZHQtPndkZCk7DQo+PiArDQo+PiArCXdhdGNoZG9nX3VucmVnaXN0ZXJfZGV2aWNlKCZ3ZHQtPndk
-ZCk7DQo+PiArDQo+PiArCXJldHVybiAwOw0KPj4gK30NCj4+ICsNCj4+ICtzdGF0aWMgY29uc3Qg
-c3RydWN0IG9mX2RldmljZV9pZCBzYW05eDYwX3dkdF9vZl9tYXRjaFtdID0gew0KPj4gKwl7IC5j
-b21wYXRpYmxlID0gIm1pY3JvY2hpcCxzYW05eDYwLXdkdCIsIH0sDQo+PiArCXsgfQ0KPj4gK307
-DQo+PiArTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgc2FtOXg2MF93ZHRfb2ZfbWF0Y2gpOw0KPj4g
-Kw0KPj4gKyNpZmRlZiBDT05GSUdfUE1fU0xFRVANCj4gDQo+IE1vc3Qgb2YgdGhlIGxvZ2ljIGhh
-cyBiZWVuIGNvcHkvcGFzdGVkIGZyb20gc2FtYTVkNF93ZHQuYyBhbmQgdGhpcw0KPiBhbHJlYWR5
-IG1pc3Mgc29tZSBpbXByb3ZlbWVudCB0aGF0IGhhdmUgYmVlbiBtYWRlIGJldHdlZW4gdGhlIHRp
-bWUgeW91DQo+IGNvcGllZCBpdCBhbmQgbm93Lg0KDQpJIHdpbGwgZml4IGFjY29yZGluZ2x5LiBB
-cyBJIHNhaWQgaW4gdGhlIGNvbW1pdCBtZXNzYWdlLCBzYW1hNWQ0X3dkdCBpcyANCnVzZWQgYXMg
-YSBzdGFydGluZyBwb2ludCBzbyB5ZXMsIGFsbCB0aGUgZnVuY3Rpb25hbGl0eSBpcyB0aGUgc2Ft
-ZSwgDQpleGNlcHQgdGhlIGFjdHVhbCBoYXJkd2FyZSBpbnRlcmFjdGlvbi4NCg0KPiANCj4gQXJl
-IHlvdSBzdXJlIGJvdGggZHJpdmVycyBzaG91bGRuJ3QgYmUgbWVyZ2VkPyBJIGZlZWwgbGlrZSB0
-aGlzIHdpbGwgYmUgYQ0KPiBtYWludGVuYW5jZSBoZWxsIGlmIHdlIGRvbid0IGRvIHRoYXQgbm93
-Lg0KDQpJdCBjb3VsZCBiZSBtZXJnZWQsIGJ1dCB3ZSBzaG91bGQgZG8gc28gPw0KQ291bGQgaGF2
-ZSB0d28gY29tcGF0aWJsZXMsIHdpdGggcGxhdGZvcm0gZGF0YSwgc2VsZWN0YWJsZSwgYW5kIHdp
-dGggDQpkaWZmZXJlbnQgZnVuY3Rpb25zLCB0aGF0IGNhbiBiZSBzZWxlY3RlZC4uIGVpdGhlciB0
-aGlzIG9yIHRoYXQuDQpZb3UgdGhpbmsgdGhhdCdzIGEgYmV0dGVyIHdheSB0byBoYW5kbGUgdGhp
-cyBuZXcgSVAgYmxvY2sgPw0KSSB3b3VsZCBsaWtlIHRvIGF2b2lkIGhhdmluZyBhIGJpZyBkcml2
-ZXIgY292ZXJpbmcgbXVsdGlwbGUgZGlmZmVyZW50IA0KaGFyZHdhcmUgcGllY2VzLCBidXQgdGhh
-dCdzIGp1c3QgbXkgcHJlZmVyZW5jZS4gSSBjYW4gcmV3b3JrIHRoaXMgaW50byBhIA0Kc2luZ2xl
-IGRyaXZlciBpZiBpdCdzIGJldHRlciB0aGF0IHdheS4NCg0KRXVnZW4NCg0KPiANCj4+ICtzdGF0
-aWMgaW50IHNhbTl4NjBfd2R0X3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+PiArew0KPj4g
-KwlzdHJ1Y3Qgc2FtOXg2MF93ZHQgKndkdCA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPj4gKw0K
-Pj4gKwkvKg0KPj4gKwkgKiBGSVhNRTogd3JpdGluZyBNUiBhbHNvIHBpbmdzIHRoZSB3YXRjaGRv
-ZyB3aGljaCBtYXkgbm90IGJlIGRlc2lyZWQuDQo+PiArCSAqIFRoaXMgc2hvdWxkIG9ubHkgYmUg
-ZG9uZSB3aGVuIHRoZSByZWdpc3RlcnMgYXJlIGxvc3Qgb24gc3VzcGVuZCBidXQNCj4+ICsJICog
-dGhlcmUgaXMgbm8gd2F5IHRvIGdldCB0aGlzIGluZm9ybWF0aW9uIHJpZ2h0IG5vdy4NCj4+ICsJ
-ICovDQo+PiArCXNhbTl4NjBfd2R0X2luaXQod2R0KTsNCj4+ICsNCj4+ICsJcmV0dXJuIDA7DQo+
-PiArfQ0KPj4gKyNlbmRpZg0KPj4gKw0KPj4gK3N0YXRpYyBTSU1QTEVfREVWX1BNX09QUyhzYW05
-eDYwX3dkdF9wbV9vcHMsIE5VTEwsDQo+PiArCQkJIHNhbTl4NjBfd2R0X3Jlc3VtZSk7DQo+PiAr
-DQo+PiArc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgc2FtOXg2MF93ZHRfZHJpdmVyID0g
-ew0KPj4gKwkucHJvYmUJCT0gc2FtOXg2MF93ZHRfcHJvYmUsDQo+PiArCS5yZW1vdmUJCT0gc2Ft
-OXg2MF93ZHRfcmVtb3ZlLA0KPj4gKwkuZHJpdmVyCQk9IHsNCj4+ICsJCS5uYW1lCT0gInNhbTl4
-NjBfd2R0IiwNCj4+ICsJCS5wbQk9ICZzYW05eDYwX3dkdF9wbV9vcHMsDQo+PiArCQkub2ZfbWF0
-Y2hfdGFibGUgPSBzYW05eDYwX3dkdF9vZl9tYXRjaCwNCj4+ICsJfQ0KPj4gK307DQo+PiArbW9k
-dWxlX3BsYXRmb3JtX2RyaXZlcihzYW05eDYwX3dkdF9kcml2ZXIpOw0KPj4gKw0KPj4gK01PRFVM
-RV9BVVRIT1IoIkV1Z2VuIEhyaXN0ZXYiKTsNCj4+ICtNT0RVTEVfREVTQ1JJUFRJT04oIk1pY3Jv
-Y2hpcCBTQU05WDYwIFdhdGNoZG9nIFRpbWVyIGRyaXZlciIpOw0KPj4gK01PRFVMRV9MSUNFTlNF
-KCJHUEwgdjIiKTsNCj4+IC0tIA0KPj4gMi43LjQNCj4+DQo+IA0K
+On Wed, Oct 2, 2019 at 2:36 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+>
+> Hi Adam,
+>
+> On Tue, Oct 01, 2019 at 07:14:13PM -0500, Adam Ford wrote:
+> > On Sun, Sep 29, 2019 at 8:33 AM Adam Ford <aford173@gmail.com> wrote:
+> > >
+> > > I am attaching two logs.  I now the mailing lists will be unhappy, but
+> > >  don't want to try and spam a bunch of log through the mailing liast.
+> > > The two logs show the differences between the working and non-working
+> > > imx6q 3D accelerator when trying to run a simple glmark2-es2-drm demo.
+> > >
+> > > The only change between them is the 2 line code change you suggested.
+> > >
+> > > In both cases, I have cma=128M set in my bootargs.  Historically this
+> > > has been sufficient, but cma=256M has not made a difference.
+> > >
+> >
+> > Mike any suggestions on how to move forward?
+> > I was hoping to get the fixes tested and pushed before 5.4 is released
+> > if at all possible
+>
+> I have a fix (below) that kinda restores the original behaviour, but I
+> still would like to double check to make sure it's not a band aid and I
+> haven't missed the actual root cause.
+>
+> Can you please send me your device tree definition and the output of
+>
+> cat /sys/kernel/debug/memblock/memory
+>
+> and
+>
+> cat /sys/kernel/debug/memblock/reserved
+>
+> Thanks!
+>
+
+Before the patch:
+
+# cat /sys/kernel/debug/memblock/memory
+   0: 0x10000000..0x8fffffff
+# cat /sys/kernel/debug/memblock/reserved
+   0: 0x10004000..0x10007fff
+   1: 0x10100000..0x11ab141f
+   2: 0x1fff1000..0x1fffcfff
+   3: 0x2ee40000..0x2ef53fff
+   4: 0x2ef56940..0x2ef56c43
+   5: 0x2ef56c48..0x2fffefff
+   6: 0x2ffff0c0..0x2ffff4d8
+   7: 0x2ffff500..0x2ffff55f
+   8: 0x2ffff580..0x2ffff703
+   9: 0x2ffff740..0x2ffff918
+  10: 0x2ffff940..0x2ffff9cf
+  11: 0x2ffffa00..0x2ffffa0f
+  12: 0x2ffffa40..0x2ffffa43
+  13: 0x2ffffa80..0x2ffffad5
+  14: 0x2ffffb00..0x2ffffb55
+  15: 0x2ffffb80..0x2ffffbd5
+  16: 0x2ffffc00..0x2ffffc4e
+  17: 0x2ffffc50..0x2ffffc6a
+  18: 0x2ffffc6c..0x2ffffce6
+  19: 0x2ffffce8..0x2ffffd02
+  20: 0x2ffffd04..0x2ffffd1e
+  21: 0x2ffffd20..0x2ffffd3a
+  22: 0x2ffffd3c..0x2ffffd56
+  23: 0x2ffffd58..0x2ffffe30
+  24: 0x2ffffe34..0x2ffffe4c
+  25: 0x2ffffe50..0x2ffffe68
+  26: 0x2ffffe6c..0x2ffffe84
+  27: 0x2ffffe88..0x2ffffea0
+  28: 0x2ffffea4..0x2ffffebc
+  29: 0x2ffffec0..0x2ffffedf
+  30: 0x2ffffee4..0x2ffffefc
+  31: 0x2fffff00..0x2fffff13
+  32: 0x2fffff28..0x2fffff4b
+  33: 0x2fffff50..0x2fffff84
+  34: 0x2fffff88..0x3fffffff
+
+
+After the patch:
+# cat /sys/kernel/debug/memblock/memory
+   0: 0x10000000..0x8fffffff
+# cat /sys/kernel/debug/memblock/reserved
+   0: 0x10004000..0x10007fff
+   1: 0x10100000..0x11ab141f
+   2: 0x1fff1000..0x1fffcfff
+   3: 0x3eec0000..0x3efd3fff
+   4: 0x3efd6940..0x3efd6c43
+   5: 0x3efd6c48..0x3fffbfff
+   6: 0x3fffc0c0..0x3fffc4d8
+   7: 0x3fffc500..0x3fffc55f
+   8: 0x3fffc580..0x3fffc703
+   9: 0x3fffc740..0x3fffc918
+  10: 0x3fffc940..0x3fffc9cf
+  11: 0x3fffca00..0x3fffca0f
+  12: 0x3fffca40..0x3fffca43
+  13: 0x3fffca80..0x3fffca83
+  14: 0x3fffcac0..0x3fffcb15
+  15: 0x3fffcb40..0x3fffcb95
+  16: 0x3fffcbc0..0x3fffcc15
+  17: 0x3fffcc28..0x3fffcc72
+  18: 0x3fffcc74..0x3fffcc8e
+  19: 0x3fffcc90..0x3fffcd0a
+  20: 0x3fffcd0c..0x3fffcd26
+  21: 0x3fffcd28..0x3fffcd42
+  22: 0x3fffcd44..0x3fffcd5e
+  23: 0x3fffcd60..0x3fffcd7a
+  24: 0x3fffcd7c..0x3fffce54
+  25: 0x3fffce58..0x3fffce70
+  26: 0x3fffce74..0x3fffce8c
+  27: 0x3fffce90..0x3fffcea8
+  28: 0x3fffceac..0x3fffcec4
+  29: 0x3fffcec8..0x3fffcee0
+  30: 0x3fffcee4..0x3fffcefc
+  31: 0x3fffcf00..0x3fffcf1f
+  32: 0x3fffcf28..0x3fffcf53
+  33: 0x3fffcf68..0x3fffcf8b
+  34: 0x3fffcf90..0x3fffcfac
+  35: 0x3fffcfb0..0x3fffffff
+  36: 0x80000000..0x8fffffff
+
+> From 06529f861772b7dea2912fc2245debe4690139b8 Mon Sep 17 00:00:00 2001
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> Date: Wed, 2 Oct 2019 10:14:17 +0300
+> Subject: [PATCH] mm: memblock: do not enforce current limit for memblock_phys*
+>  family
+>
+> Until commit 92d12f9544b7 ("memblock: refactor internal allocation
+> functions") the maximal address for memblock allocations was forced to
+> memblock.current_limit only for the allocation functions returning virtual
+> address. The changes introduced by that commit moved the limit enforcement
+> into the allocation core and as a result the allocation functions returning
+> physical address also started to limit allocations to
+> memblock.current_limit.
+>
+> This caused breakage of etnaviv GPU driver:
+>
+> [    3.682347] etnaviv etnaviv: bound 130000.gpu (ops gpu_ops)
+> [    3.688669] etnaviv etnaviv: bound 134000.gpu (ops gpu_ops)
+> [    3.695099] etnaviv etnaviv: bound 2204000.gpu (ops gpu_ops)
+> [    3.700800] etnaviv-gpu 130000.gpu: model: GC2000, revision: 5108
+> [    3.723013] etnaviv-gpu 130000.gpu: command buffer outside valid
+> memory window
+> [    3.731308] etnaviv-gpu 134000.gpu: model: GC320, revision: 5007
+> [    3.752437] etnaviv-gpu 134000.gpu: command buffer outside valid
+> memory window
+> [    3.760583] etnaviv-gpu 2204000.gpu: model: GC355, revision: 1215
+> [    3.766766] etnaviv-gpu 2204000.gpu: Ignoring GPU with VG and FE2.0
+>
+> Restore the behaviour of memblock_phys* family so that these functions will
+> not enforce memblock.current_limit.
+>
+
+This fixed the issue.  Thank you
+
+Tested-by: Adam Ford <aford173@gmail.com> #imx6q-logicpd
+
+> Fixes: 92d12f9544b7 ("memblock: refactor internal allocation functions")
+> Reported-by: Adam Ford <aford173@gmail.com>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>  mm/memblock.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 7d4f61a..c4b16ca 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -1356,9 +1356,6 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+>                 align = SMP_CACHE_BYTES;
+>         }
+>
+> -       if (end > memblock.current_limit)
+> -               end = memblock.current_limit;
+> -
+>  again:
+>         found = memblock_find_in_range_node(size, align, start, end, nid,
+>                                             flags);
+> @@ -1469,6 +1466,9 @@ static void * __init memblock_alloc_internal(
+>         if (WARN_ON_ONCE(slab_is_available()))
+>                 return kzalloc_node(size, GFP_NOWAIT, nid);
+>
+> +       if (max_addr > memblock.current_limit)
+> +               max_addr = memblock.current_limit;
+> +
+>         alloc = memblock_alloc_range_nid(size, align, min_addr, max_addr, nid);
+>
+>         /* retry allocation without lower limit */
+> --
+> 2.7.4
+>
+>
+> > > adam
+> > >
+> > > On Sat, Sep 28, 2019 at 2:33 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> > > >
+> > > > On Thu, Sep 26, 2019 at 02:35:53PM -0500, Adam Ford wrote:
+> > > > > On Thu, Sep 26, 2019 at 11:04 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> > > > > >
+> > > > > > Hi,
+> > > > > >
+> > > > > > On Thu, Sep 26, 2019 at 08:09:52AM -0500, Adam Ford wrote:
+> > > > > > > On Wed, Sep 25, 2019 at 10:17 AM Fabio Estevam <festevam@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > On Wed, Sep 25, 2019 at 9:17 AM Adam Ford <aford173@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > > I tried cma=256M and noticed the cma dump at the beginning didn't
+> > > > > > > > > change.  Do we need to setup a reserved-memory node like
+> > > > > > > > > imx6ul-ccimx6ulsom.dtsi did?
+> > > > > > > >
+> > > > > > > > I don't think so.
+> > > > > > > >
+> > > > > > > > Were you able to identify what was the exact commit that caused such regression?
+> > > > > > >
+> > > > > > > I was able to narrow it down the 92d12f9544b7 ("memblock: refactor
+> > > > > > > internal allocation functions") that caused the regression with
+> > > > > > > Etnaviv.
+> > > > > >
+> > > > > >
+> > > > > > Can you please test with this change:
+> > > > > >
+> > > > >
+> > > > > That appears to have fixed my issue.  I am not sure what the impact
+> > > > > is, but is this a safe option?
+> > > >
+> > > > It's not really a fix, I just wanted to see how exactly 92d12f9544b7 ("memblock:
+> > > > refactor internal allocation functions") broke your setup.
+> > > >
+> > > > Can you share the dts you are using and the full kernel log?
+> > > >
+> > > > > adam
+> > > > >
+> > > > > > diff --git a/mm/memblock.c b/mm/memblock.c
+> > > > > > index 7d4f61a..1f5a0eb 100644
+> > > > > > --- a/mm/memblock.c
+> > > > > > +++ b/mm/memblock.c
+> > > > > > @@ -1356,9 +1356,6 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+> > > > > >                 align = SMP_CACHE_BYTES;
+> > > > > >         }
+> > > > > >
+> > > > > > -       if (end > memblock.current_limit)
+> > > > > > -               end = memblock.current_limit;
+> > > > > > -
+> > > > > >  again:
+> > > > > >         found = memblock_find_in_range_node(size, align, start, end, nid,
+> > > > > >                                             flags);
+> > > > > >
+> > > > > > > I also noticed that if I create a reserved memory node as was done one
+> > > > > > > imx6ul-ccimx6ulsom.dtsi the 3D seems to work again, but without it, I
+> > > > > > > was getting errors regardless of the 'cma=256M' or not.
+> > > > > > > I don't have a problem using the reserved memory, but I guess I am not
+> > > > > > > sure what the amount should be.  I know for the video decoding 1080p,
+> > > > > > > I have historically used cma=128M, but with the 3D also needing some
+> > > > > > > memory allocation, is that enough or should I use 256M?
+> > > > > > >
+> > > > > > > adam
+> > > > > >
+> > > > > > --
+> > > > > > Sincerely yours,
+> > > > > > Mike.
+> > > > > >
+> > > >
+> > > > --
+> > > > Sincerely yours,
+> > > > Mike.
+> > > >
+>
+> --
+> Sincerely yours,
+> Mike.
+>
