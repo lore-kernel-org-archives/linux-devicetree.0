@@ -1,84 +1,57 @@
 From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-Subject: [PATCH v2 4/5] dt-bindings: display: imx: add bindings for DCSS
-Date: Wed,  2 Oct 2019 17:04:56 +0300
-Message-ID: <1570025100-5634-5-git-send-email-laurentiu.palcu@nxp.com>
+Subject: [PATCH v2 5/5] arm64: dts: imx8mq: add DCSS node
+Date: Wed,  2 Oct 2019 17:04:57 +0300
+Message-ID: <1570025100-5634-6-git-send-email-laurentiu.palcu@nxp.com>
 References: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>
-Cc: devicetree@vger.kernel.org, agx@sigxcpu.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurentiu Palcu <laurentiu.palcu@nxp.com>, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>
+Cc: agx@sigxcpu.org, l.stach@pengutronix.de, Laurentiu Palcu <laurentiu.palcu@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGJpbmRpbmdzIGZvciBpTVg4TVEgRGlzcGxheSBDb250cm9sbGVyIFN1YnN5c3RlbS4KClNp
-Z25lZC1vZmYtYnk6IExhdXJlbnRpdSBQYWxjdSA8bGF1cmVudGl1LnBhbGN1QG54cC5jb20+Ci0t
-LQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvaW14L254cCxpbXg4bXEtZGNzcy55YW1sICAgICAgfCA4
-NiArKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgODYgaW5zZXJ0aW9ucygr
-KQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L2lteC9ueHAsaW14OG1xLWRjc3MueWFtbAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9ueHAsaW14OG1xLWRjc3MueWFtbCBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9ueHAsaW14OG1x
-LWRjc3MueWFtbApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMC4uZWZkMjQ5NAot
-LS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L2lteC9ueHAsaW14OG1xLWRjc3MueWFtbApAQCAtMCwwICsxLDg2IEBACisjIFNQRFgtTGlj
-ZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMCBPUiBCU0QtMi1DbGF1c2UpCisjIENvcHlyaWdodCAy
-MDE5IE5YUAorJVlBTUwgMS4yCistLS0KKyRpZDogImh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hl
-bWFzL2Rpc3BsYXkvaW14L254cCxpbXg4bXEtZGNzcy55YW1sIyIKKyRzY2hlbWE6ICJodHRwOi8v
-ZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMiCisKK3RpdGxlOiBpTVg4TVEg
-RGlzcGxheSBDb250cm9sbGVyIFN1YnN5c3RlbSAoRENTUykKKworbWFpbnRhaW5lcnM6CisgIC0g
-TGF1cmVudGl1IFBhbGN1IDxsYXVyZW50aXUucGFsY3VAbnhwLmNvbT4KKworZGVzY3JpcHRpb246
-CisKKyAgVGhlIERDU1MgKGRpc3BsYXkgY29udHJvbGxlciBzdWIgc3lzdGVtKSBpcyB1c2VkIHRv
-IHNvdXJjZSB1cCB0byB0aHJlZQorICBkaXNwbGF5IGJ1ZmZlcnMsIGNvbXBvc2UgdGhlbSwgYW5k
-IGRyaXZlIGEgZGlzcGxheSB1c2luZyBIRE1JIDIuMGEod2l0aCBIRENQCisgIDIuMikgb3IgTUlQ
-SS1EU0kuIFRoZSBEQ1NTIGlzIGludGVuZGVkIHRvIHN1cHBvcnQgdXAgdG8gNGtwNjAgZGlzcGxh
-eXMuIEhEUjEwCisgIGltYWdlIHByb2Nlc3NpbmcgY2FwYWJpbGl0aWVzIGFyZSBpbmNsdWRlZCB0
-byBwcm92aWRlIGEgc29sdXRpb24gY2FwYWJsZSBvZgorICBkcml2aW5nIG5leHQgZ2VuZXJhdGlv
-biBoaWdoIGR5bmFtaWMgcmFuZ2UgZGlzcGxheXMuCisKK3Byb3BlcnRpZXM6CisgIGNvbXBhdGli
-bGU6CisgICAgY29uc3Q6IG54cCxpbXg4bXEtZGNzcworCisgIHJlZzoKKyAgICBtYXhJdGVtczog
-MgorCisgIGludGVycnVwdHM6CisgICAgbWF4SXRlbXM6IDMKKyAgICBpdGVtczoKKyAgICAgIC0g
-ZGVzY3JpcHRpb246IENvbnRleHQgbG9hZGVyIGNvbXBsZXRpb24gYW5kIGVycm9yIGludGVycnVw
-dAorICAgICAgLSBkZXNjcmlwdGlvbjogRFRHIGludGVycnVwdCB1c2VkIHRvIHNpZ25hbCBjb250
-ZXh0IGxvYWRlciB0cmlnZ2VyIHRpbWUKKyAgICAgIC0gZGVzY3JpcHRpb246IERURyBpbnRlcnJ1
-cHQgZm9yIFZibGFuaworCisgIGludGVycnVwdC1uYW1lczoKKyAgICBtYXhJdGVtczogMworICAg
-IGl0ZW1zOgorICAgICAgLSBjb25zdDogY3R4X2xkCisgICAgICAtIGNvbnN0OiBjdHhsZF9raWNr
-CisgICAgICAtIGNvbnN0OiB2YmxhbmsKKworICBjbG9ja3M6CisgICAgbWF4SXRlbXM6IDUKKyAg
-ICBpdGVtczoKKyAgICAgIC0gZGVzY3JpcHRpb246IERpc3BsYXkgQVBCIGNsb2NrIGZvciBhbGwg
-cGVyaXBoZXJhbCBQSU8gYWNjZXNzIGludGVyZmFjZXMKKyAgICAgIC0gZGVzY3JpcHRpb246IERp
-c3BsYXkgQVhJIGNsb2NrIG5lZWRlZCBieSBEUFIsIFNjYWxlciwgUlRSQU1fQ1RSTAorICAgICAg
-LSBkZXNjcmlwdGlvbjogUlRSQU0gY2xvY2sKKyAgICAgIC0gZGVzY3JpcHRpb246IFBpeGVsIGNs
-b2NrLCBjYW4gYmUgZHJpdmVyIGVpdGhlciBieSBIRE1JIHBoeSBjbG9jayBvciBNSVBJCisgICAg
-ICAtIGRlc2NyaXB0aW9uOiBEVFJDIGNsb2NrLCBuZWVkZWQgYnkgdmlkZW8gZGVjb21wcmVzc29y
-CisKKyAgY2xvY2stbmFtZXM6CisgICAgaXRlbXM6CisgICAgICAtIGNvbnN0OiBhcGIKKyAgICAg
-IC0gY29uc3Q6IGF4aQorICAgICAgLSBjb25zdDogcnRybQorICAgICAgLSBjb25zdDogcGl4Cisg
-ICAgICAtIGNvbnN0OiBkdHJjCisKKyAgcG9ydEAwOgorICAgIHR5cGU6IG9iamVjdAorICAgIGRl
-c2NyaXB0aW9uOiBBIHBvcnQgbm9kZSBwb2ludGluZyB0byBhIGhkbWlfaW4gb3IgbWlwaV9pbiBw
-b3J0IG5vZGUuCisKK2V4YW1wbGVzOgorICAtIHwKKyAgICBkY3NzOiBkaXNwbGF5LWNvbnRyb2xs
-ZXJAMzJlMDAwMDAgeworICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKKyAgICAgICAgI3Np
-emUtY2VsbHMgPSA8MD47CisgICAgICAgIGNvbXBhdGlibGUgPSAibnhwLGlteDhtcS1kY3NzIjsK
-KyAgICAgICAgcmVnID0gPDB4MzJlMDAwMDAgMHgyZDAwMD4sIDwweDMyZTJmMDAwIDB4MTAwMD47
-CisgICAgICAgIGludGVycnVwdHMgPSA8Nj4sIDw4PiwgPDk+OworICAgICAgICBpbnRlcnJ1cHQt
-bmFtZXMgPSAiY3R4X2xkIiwgImN0eGxkX2tpY2siLCAidmJsYW5rIjsKKyAgICAgICAgaW50ZXJy
-dXB0LXBhcmVudCA9IDwmaXJxc3RlZXI+OworICAgICAgICBjbG9ja3MgPSA8JmNsayAyNDg+LCA8
-JmNsayAyNDc+LCA8JmNsayAyNDk+LAorICAgICAgICAgICAgICAgICA8JmNsayAyNTQ+LDwmY2xr
-IDEyMj47CisgICAgICAgIGNsb2NrLW5hbWVzID0gImFwYiIsICJheGkiLCAicnRybSIsICJwaXgi
-LCAiZHRyYyI7CisgICAgICAgIGFzc2lnbmVkLWNsb2NrcyA9IDwmY2xrIDEwNz4sIDwmY2xrIDEw
-OT4sIDwmY2xrIDI2Nj47CisgICAgICAgIGFzc2lnbmVkLWNsb2NrLXBhcmVudHMgPSA8JmNsayA3
-OD4sIDwmY2xrIDc4PiwgPCZjbGsgMz47CisgICAgICAgIGFzc2lnbmVkLWNsb2NrLXJhdGVzID0g
-PDgwMDAwMDAwMD4sCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDQwMDAwMDAwMD47
-CisgICAgICAgIHBvcnRAMCB7CisgICAgICAgICAgICBkY3NzX291dDogZW5kcG9pbnQgeworICAg
-ICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9pbj47CisgICAgICAgICAgICB9
-OworICAgICAgICB9OworICAgIH07CisKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+This patch adds the node for iMX8MQ Display Controller Subsystem.
+
+Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 04115ca..7f4bfb4 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -938,6 +938,31 @@
+ 				interrupt-controller;
+ 				#interrupt-cells = <1>;
+ 			};
++
++			dcss: display-controller@32e00000 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "nxp,imx8mq-dcss";
++				reg = <0x32e00000 0x2d000>, <0x32e2f000 0x1000>;
++				interrupts = <6>, <8>, <9>;
++				interrupt-names = "ctx_ld", "ctxld_kick", "vblank";
++				interrupt-parent = <&irqsteer>;
++				clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>,
++					 <&clk IMX8MQ_CLK_DISP_AXI_ROOT>,
++					 <&clk IMX8MQ_CLK_DISP_RTRM_ROOT>,
++					 <&clk IMX8MQ_VIDEO2_PLL_OUT>,
++					 <&clk IMX8MQ_CLK_DISP_DTRC>;
++				clock-names = "apb", "axi", "rtrm", "pix", "dtrc";
++				assigned-clocks = <&clk IMX8MQ_CLK_DISP_AXI>,
++						  <&clk IMX8MQ_CLK_DISP_RTRM>,
++						  <&clk IMX8MQ_VIDEO2_PLL1_REF_SEL>;
++				assigned-clock-parents = <&clk IMX8MQ_SYS1_PLL_800M>,
++							 <&clk IMX8MQ_SYS1_PLL_800M>,
++							 <&clk IMX8MQ_CLK_27M>;
++				assigned-clock-rates = <800000000>,
++							   <400000000>;
++				status = "disabled";
++			};
+ 		};
+ 
+ 		gpu: gpu@38000000 {
+-- 
+2.7.4
