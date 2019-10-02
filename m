@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4/7] iio: adc: max1027: Prepare the introduction of different resolutions
-Date: Wed,  2 Oct 2019 14:30:22 +0200
-Message-ID: <20191002123025.21413-5-miquel.raynal@bootlin.com>
+Subject: [PATCH 2/7] iio: adc: max1027: Make it optional to use interrupts
+Date: Wed,  2 Oct 2019 14:30:20 +0200
+Message-ID: <20191002123025.21413-3-miquel.raynal@bootlin.com>
 References: <20191002123025.21413-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,167 +12,88 @@ To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-
 Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Maxim's max1027/29/31 series returns the measured voltages with a
-resolution of 10 bits. There is a very similar series, max1227/29/31
-which works very similarly but uses a resolution of 12 bits. Prepare
-the support for these chips by turning the 'depth' into a macro
-parameter instead of hardcoding it everywhere. Also reorganize just a
-bit the macros at the top to avoid repeating tens of lines when adding
-support for a new chip.
+The chip has a 'start conversion' and a 'end of conversion' pair of
+pins. They can be used but this is absolutely not mandatory as regular
+polling of the value is totally fine with the current internal
+clocking setup. Turn the interrupts optional and do not error out if
+they are not inquired in the device tree. This has the effect to
+prevent triggered buffers use though.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/iio/adc/max1027.c | 81 +++++++++++++++++++--------------------
- 1 file changed, 39 insertions(+), 42 deletions(-)
+ drivers/iio/adc/max1027.c | 57 +++++++++++++++++++++------------------
+ 1 file changed, 31 insertions(+), 26 deletions(-)
 
 diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index f9b473ee6711..fc75764a6fd7 100644
+index 6cdfe9ef73fc..823223b77a70 100644
 --- a/drivers/iio/adc/max1027.c
 +++ b/drivers/iio/adc/max1027.c
-@@ -78,12 +78,15 @@ static const struct of_device_id max1027_adc_dt_ids[] = {
- 	{ .compatible = "maxim,max1027" },
- 	{ .compatible = "maxim,max1029" },
- 	{ .compatible = "maxim,max1031" },
-+	{ .compatible = "maxim,max1227" },
-+	{ .compatible = "maxim,max1229" },
-+	{ .compatible = "maxim,max1231" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
- #endif
- 
--#define MAX1027_V_CHAN(index)						\
-+#define MAX1027_V_CHAN(index, depth)					\
- 	{								\
- 		.type = IIO_VOLTAGE,					\
- 		.indexed = 1,						\
-@@ -93,7 +96,7 @@ MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
- 		.scan_index = index + 1,				\
- 		.scan_type = {						\
- 			.sign = 'u',					\
--			.realbits = 10,					\
-+			.realbits = depth,				\
- 			.storagebits = 16,				\
- 			.shift = 2,					\
- 			.endianness = IIO_BE,				\
-@@ -115,52 +118,42 @@ MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
- 		},							\
+@@ -430,35 +430,40 @@ static int max1027_probe(struct spi_device *spi)
+ 		return -ENOMEM;
  	}
  
-+#define MAX1X27_CHANNELS(depth)			\
-+	MAX1027_T_CHAN,				\
-+	MAX1027_V_CHAN(0, depth),		\
-+	MAX1027_V_CHAN(1, depth),		\
-+	MAX1027_V_CHAN(2, depth),		\
-+	MAX1027_V_CHAN(3, depth),		\
-+	MAX1027_V_CHAN(4, depth),		\
-+	MAX1027_V_CHAN(5, depth),		\
-+	MAX1027_V_CHAN(6, depth),		\
-+	MAX1027_V_CHAN(7, depth)
-+
-+#define MAX1X29_CHANNELS(depth)			\
-+	MAX1027_V_CHAN(8, depth),		\
-+	MAX1027_V_CHAN(9, depth),		\
-+	MAX1027_V_CHAN(10, depth),		\
-+	MAX1027_V_CHAN(11, depth)
-+
-+#define MAX1X31_CHANNELS(depth)			\
-+	MAX1027_V_CHAN(12, depth),		\
-+	MAX1027_V_CHAN(13, depth),		\
-+	MAX1027_V_CHAN(14, depth),		\
-+	MAX1027_V_CHAN(15, depth)
-+
- static const struct iio_chan_spec max1027_channels[] = {
--	MAX1027_T_CHAN,
--	MAX1027_V_CHAN(0),
--	MAX1027_V_CHAN(1),
--	MAX1027_V_CHAN(2),
--	MAX1027_V_CHAN(3),
--	MAX1027_V_CHAN(4),
--	MAX1027_V_CHAN(5),
--	MAX1027_V_CHAN(6),
--	MAX1027_V_CHAN(7)
-+	MAX1X27_CHANNELS(10)
- };
+-	ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
+-					&iio_pollfunc_store_time,
+-					&max1027_trigger_handler, NULL);
+-	if (ret < 0) {
+-		dev_err(&indio_dev->dev, "Failed to setup buffer\n");
+-		return ret;
+-	}
++	if (spi->irq) {
++		ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
++						      &iio_pollfunc_store_time,
++						      &max1027_trigger_handler,
++						      NULL);
++		if (ret < 0) {
++			dev_err(&indio_dev->dev, "Failed to setup buffer\n");
++			return ret;
++		}
  
- static const struct iio_chan_spec max1029_channels[] = {
--	MAX1027_T_CHAN,
--	MAX1027_V_CHAN(0),
--	MAX1027_V_CHAN(1),
--	MAX1027_V_CHAN(2),
--	MAX1027_V_CHAN(3),
--	MAX1027_V_CHAN(4),
--	MAX1027_V_CHAN(5),
--	MAX1027_V_CHAN(6),
--	MAX1027_V_CHAN(7),
--	MAX1027_V_CHAN(8),
--	MAX1027_V_CHAN(9),
--	MAX1027_V_CHAN(10),
--	MAX1027_V_CHAN(11)
-+	MAX1X27_CHANNELS(10),
-+	MAX1X29_CHANNELS(10)
- };
+-	st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
+-							indio_dev->name);
+-	if (st->trig == NULL) {
+-		ret = -ENOMEM;
+-		dev_err(&indio_dev->dev, "Failed to allocate iio trigger\n");
+-		return ret;
+-	}
++		st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
++						  indio_dev->name);
++		if (st->trig == NULL) {
++			ret = -ENOMEM;
++			dev_err(&indio_dev->dev,
++				"Failed to allocate iio trigger\n");
++			return ret;
++		}
  
- static const struct iio_chan_spec max1031_channels[] = {
--	MAX1027_T_CHAN,
--	MAX1027_V_CHAN(0),
--	MAX1027_V_CHAN(1),
--	MAX1027_V_CHAN(2),
--	MAX1027_V_CHAN(3),
--	MAX1027_V_CHAN(4),
--	MAX1027_V_CHAN(5),
--	MAX1027_V_CHAN(6),
--	MAX1027_V_CHAN(7),
--	MAX1027_V_CHAN(8),
--	MAX1027_V_CHAN(9),
--	MAX1027_V_CHAN(10),
--	MAX1027_V_CHAN(11),
--	MAX1027_V_CHAN(12),
--	MAX1027_V_CHAN(13),
--	MAX1027_V_CHAN(14),
--	MAX1027_V_CHAN(15)
-+	MAX1X27_CHANNELS(10),
-+	MAX1X29_CHANNELS(10),
-+	MAX1X31_CHANNELS(10)
- };
+-	st->trig->ops = &max1027_trigger_ops;
+-	st->trig->dev.parent = &spi->dev;
+-	iio_trigger_set_drvdata(st->trig, indio_dev);
+-	iio_trigger_register(st->trig);
++		st->trig->ops = &max1027_trigger_ops;
++		st->trig->dev.parent = &spi->dev;
++		iio_trigger_set_drvdata(st->trig, indio_dev);
++		iio_trigger_register(st->trig);
  
- static const unsigned long max1027_available_scan_masks[] = {
-@@ -181,6 +174,7 @@ static const unsigned long max1031_available_scan_masks[] = {
- struct max1027_chip_info {
- 	const struct iio_chan_spec *channels;
- 	unsigned int num_channels;
-+	unsigned int depth;
- 	const unsigned long *available_scan_masks;
- };
+-	ret = devm_request_threaded_irq(&spi->dev, spi->irq,
+-					iio_trigger_generic_data_rdy_poll,
+-					NULL,
+-					IRQF_TRIGGER_FALLING,
+-					spi->dev.driver->name, st->trig);
+-	if (ret < 0) {
+-		dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
+-		return ret;
++		ret = devm_request_threaded_irq(&spi->dev, spi->irq,
++						iio_trigger_generic_data_rdy_poll,
++						NULL,
++						IRQF_TRIGGER_FALLING,
++						spi->dev.driver->name,
++						st->trig);
++		if (ret < 0) {
++			dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
++			return ret;
++		}
+ 	}
  
-@@ -188,16 +182,19 @@ static const struct max1027_chip_info max1027_chip_info_tbl[] = {
- 	[max1027] = {
- 		.channels = max1027_channels,
- 		.num_channels = ARRAY_SIZE(max1027_channels),
-+		.depth = 10,
- 		.available_scan_masks = max1027_available_scan_masks,
- 	},
- 	[max1029] = {
- 		.channels = max1029_channels,
- 		.num_channels = ARRAY_SIZE(max1029_channels),
-+		.depth = 10,
- 		.available_scan_masks = max1029_available_scan_masks,
- 	},
- 	[max1031] = {
- 		.channels = max1031_channels,
- 		.num_channels = ARRAY_SIZE(max1031_channels),
-+		.depth = 10,
- 		.available_scan_masks = max1031_available_scan_masks,
- 	},
- };
-@@ -284,7 +281,7 @@ static int max1027_read_raw(struct iio_dev *indio_dev,
- 			break;
- 		case IIO_VOLTAGE:
- 			*val = 2500;
--			*val2 = 10;
-+			*val2 = st->info->depth;
- 			ret = IIO_VAL_FRACTIONAL_LOG2;
- 			break;
- 		default:
+ 	/* Disable averaging */
 -- 
 2.20.1
