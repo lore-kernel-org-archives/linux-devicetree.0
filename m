@@ -1,340 +1,119 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH 2/5] dt-bindings: mfd: da9062: add regulator voltage
- selection documentation
-Date: Wed, 2 Oct 2019 15:45:21 +0200
-Message-ID: <20191002134521.zcree6w4loutjrud@pengutronix.de>
-References: <AM5PR1001MB0994316EA8AD903B2943CE2080820@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+From: Neal Liu <neal.liu@mediatek.com>
+Subject: Re: [PATCH v4 2/3] dt-bindings: rng: add bindings for MediaTek
+ ARMv8 SoCs
+Date: Wed, 2 Oct 2019 21:47:50 +0800
+Message-ID: <1570024070.4002.1.camel@mtkswgap22>
+References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
+         <1561361052-13072-3-git-send-email-neal.liu@mediatek.com>
+         <20190722171320.GA9806@bogus> <1563848465.31451.4.camel@mtkswgap22>
+         <CAL_Jsq+SRhd=-5O2G_CMfJX9Z188kvA05MQOXaU1J8iExwUixQ@mail.gmail.com>
+         <1568771054.21700.7.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <AM5PR1001MB0994316EA8AD903B2943CE2080820@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
+In-Reply-To: <1568771054.21700.7.camel@mtkswgap22>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc: "broonie@kernel.org" <broonie@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, Steve Twiss <stwiss.opensource@diasemi.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, wsd_upstream <wsd_upstream@mediatek.com>, Sean Wang <sean.wang@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= <Crystal.Guo@mediatek.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, Matt Mackall <mpm@selenic.com>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Neal Liu <neal.liu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 19-09-30 09:53, Adam Thomson wrote:
-> On 26 September 2019 15:39, Marco Felsch wrote:
-> 
-> > On 19-09-26 14:04, Adam Thomson wrote:
-> > > On 26 September 2019 12:44, Marco Felsch wrote:
+Dear Rob,
+
+Just a gentle ping.
+
+Neal
+
+On Wed, 2019-09-18 at 09:44 +0800, Neal Liu wrote:
+> On Tue, 2019-07-23 at 22:35 +0800, Rob Herring wrote:
+> > On Mon, Jul 22, 2019 at 8:21 PM Neal Liu <neal.liu@mediatek.com> wrote:
 > > >
-> > > > On 19-09-26 10:17, Adam Thomson wrote:
-> > > > > On 26 September 2019 09:10, Marco Felsch wrote:
-> > > > >
-> > > > > > On 19-09-25 16:18, Adam Thomson wrote:
-> > > > > > > On 25 September 2019 16:52, Marco Felsch wrote:
-> > > > > > >
-> > > > > > > > Hi Adam,
-> > > > > > > >
-> > > > > > > > On 19-09-24 09:23, Adam Thomson wrote:
-> > > > > > > > > On 17 September 2019 13:43, Marco Felsch wrote:
-> > > > > > > > >
-> > > > > > > > > > Add the documentation which describe the voltage selection gpio
-> > > > > > support.
-> > > > > > > > > > This property can be applied to each subnode within the
-> > 'regulators'
-> > > > > > > > > > node so each regulator can be configured differently.
-> > > > > > > > > >
-> > > > > > > > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > > > > > > > > ---
-> > > > > > > > > >  Documentation/devicetree/bindings/mfd/da9062.txt | 9
-> > +++++++++
-> > > > > > > > > >  1 file changed, 9 insertions(+)
-> > > > > > > > > >
-> > > > > > > > > > diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > > > > > > > b/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > > > > > > > index edca653a5777..9d9820d8177d 100644
-> > > > > > > > > > --- a/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > > > > > > > +++ b/Documentation/devicetree/bindings/mfd/da9062.txt
-> > > > > > > > > > @@ -66,6 +66,15 @@ Sub-nodes:
-> > > > > > > > > >    details of individual regulator device can be found in:
-> > > > > > > > > >    Documentation/devicetree/bindings/regulator/regulator.txt
-> > > > > > > > > >
-> > > > > > > > > > +  Optional regulator device-specific properties:
-> > > > > > > > > > +  - dlg,vsel-sense-gpios : The GPIO reference which should be
-> > used
-> > > > by
-> > > > > > the
-> > > > > > > > > > +    regulator to switch the voltage between active/suspend
-> > voltage
-> > > > > > settings.
-> > > > > > > > If
-> > > > > > > > > > +    the signal is active the active-settings are applied else the
-> > suspend
-> > > > > > > > > > +    settings are applied. Attention: Sharing the same gpio for other
-> > > > > > purposes
-> > > > > > > > > > +    or across multiple regulators is possible but the gpio settings
-> > must
-> > > > be
-> > > > > > the
-> > > > > > > > > > +    same. Also the gpio phandle must refer to to the dlg,da9062-
-> > gpio
-> > > > > > device
-> > > > > > > > > > +    other gpios are not allowed and make no sense.
-> > > > > > > > > > +
-> > > > > > > > >
-> > > > > > > > > Should we not use the binding names that are defined in 'gpio-
-> > > > > > regulator.yaml'
-> > > > > > > > as
-> > > > > > > > > these seem to be generic and would probably serve the purpose
-> > here?
-> > > > > > > >
-> > > > > > > > Hm.. as the description says:
-> > > > > > > >
-> > > > > > > > 8<--------------------------------------------------
-> > > > > > > > gpios:
-> > > > > > > >    description: Array of one or more GPIO pins used to select the
-> > > > > > > >    regulator voltage/current listed in "states".
-> > > > > > > > 8<--------------------------------------------------
-> > > > > > > >
-> > > > > > > > But we don't have a "states" property and we can't select between
-> > > > > > > > voltage or current.
-> > > > > > >
-> > > > > > > Yes I think I was at cross purposes when I made this remark. The
-> > bindings
-> > > > there
-> > > > > > > describe the GPOs that are used to enable/disable and set
-> > voltage/current
-> > > > for
-> > > > > > > regulators and the supported voltage/current levels that can be
-> > configured
-> > > > in
-> > > > > > > this manner. What you're describing is the GPI for DA9061/2. If you look
-> > at
-> > > > > > > GPIO handling in existing regulator drivers I believe they all deal with
-> > > > external
-> > > > > > > GPOs that are configured to enable/disable and set voltage/current
-> > limits
-> > > > > > rather
-> > > > > > > than the GPI on the PMIC itself. That's why I'm thinking that the
-> > > > configurations
-> > > > > > > you're doing here should actually be in a pinctrl or GPIO driver.
-> > > > > >
-> > > > > > That's true, the common gpio bindings are from the view of the
-> > > > > > processor, e.g. which gpio must the processor drive to enable/switch the
-> > > > > > regualtor. So one reasone more to use a non-common binding.
-> > > > > >
-> > > > > > Please take a look on my other comment I made :) I don't use the
-> > > > > > gpio-alternative function. I use it as an input.
-> > > > >
-> > > > > I know in the datasheet this isn't marked as an alternate function specifically
-> > > > > but to me having regulator control by the chip's own GPI is an alternative
-> > > > > function for that GPIO pin, in the same way a specific pin can be used for
-> > > > > SYS_EN or Watchdog control. It's a dedicated purpose rather than being a
-> > > > normal
-> > > > > GPI.
-> > > >
-> > > > Nope, SYS_EN or Watchdog is a special/alternate function and not a
-> > > > normal input.
+> > 
+> > Please don't top post to lists.
+> > 
+> > > Dear Rob,
+> > >         You can check my driver for detail:
+> > >         http://patchwork.kernel.org/patch/11012475/ or patchset 3/3
+> > 
+> > I could, or you could just answer my question.
+> > 
 > > >
-> > > Having spoken with our HW team there's essentially no real difference.
-> >
-> > So I don't have to configure the gpio to alternate to use it as SYS_EN?
+> > >         This driver is registered as hardware random number generator, and
+> > > combines with rng-core.
+> > >         We want to add one rng hw based on the dts. Is this proper or do you
+> > > have other suggestion to meet this requirement?
+> > 
+> > It depends. There doesn't appear to be any resource configuration, so
+> > why does it need to be in DT. DT is not the only way instantiate
+> > drivers.
+> > 
+> > Rob
+> > 
 > 
-> Yes you do, but the effect is much the same as manually configuring the GPIO as
-> input, just that the IC does it for you. The regulator control features could
-> well have been done in a similar manner. Guess that was a design choice.
+> We would like to consult more about this patch.
+> We cannot figure out what method should be used instead of DT.
+> The interface to access firmware is "smc" and firmware function only
+> exists on certain platforms.
+> Some DT has similar way, like:
+> http://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts#L470
 > 
-> >
-> > > >
-> > > > > See the following as an example of what I'm suggesting:
-> > > > >
-> > > > >
-> > > >
-> > https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindin
-> > > > gs/pinctrl/pinctrl-palmas.txt
-> > > > >
-> > > > > You could then pass the pinctrl information to the regulator driver and use
-> > > > > that rather than having device specific bindings for this. That's at least my
-> > > > > current interpretation of this anyway.
-> > > >
-> > > > For me pinctrl decides which function should be assigned to a pin. So in
-> > > > our case this would be:
-> > > >   - alternate
-> > > >   - gpo
-> > > >   - gpi
-> > > >
-> > > > In our use-case it is a gpi..
+> 	firmware {
+> 		optee {
+> 			compatible = "linaro,optee-tz";
+> 			method = "smc";
+> 		};
+> 	};
+> 
+> Is there any way to instantiate driver on certain platforms without DT?
+> Could you give us some examples?
+> Thanks
+> 
 > > >
-> > > It's not being used as a normal GPI as such. It's being used to enable/disable
-> > > the regulator so I disagree.
-> >
-> > This one is used as voltage-selection. What is a "normal" GPI in your
-> > point of view?
-> 
-> With the voltage selection and enable/disable control the actual work of
-> handling the GPI state is all done internally in the IC. There is no control
-> required from SW other than setting of initial direction. For a normal GPI
-
-Thats correct and setting the direction and active levels can be done
-perfectly by the gpio-interface.
-
-> I would expect SW to be involved in the handling of that GPI state, for example
-> as part of a bit banging interface.
-> 
-> >
-> > > >
-> > > > An other reason why pinctrl seems not be the right solution is that the
-> > > > regulator must be configured to use this gpi. This decision can't be
-> > > > made globally because each regulator can be configured differently.. For
-> > > > me its just a local gpio.
+> > >         Thanks
 > > >
-> > > You'd pass pinctrl information, via DT, to the regulator driver so it can set
-> > > accordingly. At least that's my take here, unless I'm missing something. The
-> > > regulator driver would be the consumer and could set the regulator control
-> > > accordingly.
-> >
-> > IMHO this is what I have done. I use the gpi so the regulator is the
-> > consumer. Since the gpi can be used by several regulators for voltage
-> > selection or enable/disable action this gpi is marked as shared. If I
-> > got you right than you would do something like for regulatorX.
-> >
-> >   pinctrl-node {
-> >
-> >   	gpio2 {
-> > 		func = "vsel";
-> > 	}
-> >   }
-> >
-> > But the gpi(o)2 can also be used to enable/disable a regulatorY if I
-> > understood the datasheet correctly. I other words:
-> >
-> >
-> >
-> >          +--> Alternate function
-> >       /
-> >   ---+   +--> GPI ----> Edge detection ---> more processing
-> >    |       |                |
-> >    |       |                +-----> Regulator control
-> >    |       |                          |
-> >    \__  __/ \__________  _______
-> >       \/               \/
-> >    pinctrl            gpio
-> >
-> > This is how I understood the pinctrl use-case. I configure the pin as
-> > gpio and then the regulator driver consume a gpio.
-> 
-> How I see it is that you configure the function through pinctrl as
-> 'regulator_switch' or 'regulator_vsel' (or whatever name is deemed sensible to
-
-The case is that it can be "muxed" for both at same time so there is no
-or instead it is a or/and. Depending on the design some regulators can
-be turned off and some should be switched upon that signal.
-
-> cover the two types of functionality) and then the pinctrl driver code would do
-> the work of requesting and configuring the relevant GPIO as input so it's no
-> longer available for use as something else (basically what you do in the
-> regulator driver right now).
-
-So by this I avoided the user-space to get this gpio and this seems fine
-to me. What a driver does with a gpio is up to the driver but the gpio
-shouldn't be reachable from the user-space.
-
-> I believe you can have more than one consumer of a pinctrl pin so it could be
-> provided to both regulator X and Y to indicate that this is the chosen
-> functionality of that pin and so the regulator can then be marked as being
-> controlled by that pin. Using pinctrl also would mean you're using standard
-> bindings as well rather than something which is device specific.
-
-That seems wrong to me because pinctrl should assign a dedicated function
-to that pin e.g. regulator_switch or regulator_vsel. But thats wrong as
-I pointed out above. On the other hand the gpio as the name says is
-general purpose and each regulator gives the meaning to it.
-
-> > > At the end of the day I'm not the gatekeeper here so I think Mark's input is
-> > > necessary as he will likely have a view on how this should be done. I appreciate
-> > > the work you've done here but I want to be sure we have a generic solution
-> > > as this would also apply to DA9063 and possibly other devices too.
-> >
-> > Why should this only apply to da9062 devices? IMHO this property can be
-> > used by any other dlg pmic as well if it is supported. Comments and suggestions
-> > are welcome so no worries ;)
-> 
-> You're right. You can do the same for DA9063 and other devices potentially. I
-> would just like to make sure we take the right/agreed approach. Potentially
-> this could be used in non-Dialog products as well which have similar
-> functionality.
-
-Yeah, but I think we should consider about that after an other device
-appears with that funcitonality.
-
-> As I say, Mark is really the gatekeeper so his input is also key in this.
-
-That's right, I added Mark to To.
-
-Regards,
-  Marco
-
-> 
-> >
-> > Regards,
-> >   Marco
-> >
-> > > Have added Mark to the 'To' in this e-mail thread so he might see it.
+> > >
+> > > On Tue, 2019-07-23 at 01:13 +0800, Rob Herring wrote:
+> > > > On Mon, Jun 24, 2019 at 03:24:11PM +0800, Neal Liu wrote:
+> > > > > Document the binding used by the MediaTek ARMv8 SoCs random
+> > > > > number generator with TrustZone enabled.
+> > > > >
+> > > > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> > > > > ---
+> > > > >  .../devicetree/bindings/rng/mtk-sec-rng.txt        |   10 ++++++++++
+> > > > >  1 file changed, 10 insertions(+)
+> > > > >  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > > > > new file mode 100644
+> > > > > index 0000000..c04ce15
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > > > > @@ -0,0 +1,10 @@
+> > > > > +MediaTek random number generator with TrustZone enabled
+> > > > > +
+> > > > > +Required properties:
+> > > > > +- compatible : Should be "mediatek,mtk-sec-rng"
 > > > >
-> > > > Regards,
-> > > >   Marco
+> > > > What's the interface to access this?
 > > > >
-> > > > > >
-> > > > > > Regards,
-> > > > > >   Marco
-> > > > > >
-> > > > > >
-> > > > > > > I'd be interested in hearing Mark's view on this though as he has far
-> > more
-> > > > > > > experience in this area than I do.
-> > > > > > >
-> > > > > > > >
-> > > > > > > > Regards,
-> > > > > > > >   Marco
-> > > > > > > >
-> > > > > > > > > >  - rtc : This node defines settings required for the Real-Time Clock
-> > > > > > associated
-> > > > > > > > > >    with the DA9062. There are currently no entries in this binding,
-> > > > however
-> > > > > > > > > >    compatible = "dlg,da9062-rtc" should be added if a node is
-> > created.
-> > > > > > > > > > --
-> > > > > > > > > > 2.20.1
-> > > > > > > > >
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > --
-> > > > > > > > Pengutronix e.K.                           |                             |
-> > > > > > > > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> > > > > > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-
-> > 0
-> > > > |
-> > > > > > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555
-> > |
-> > > > > > >
-> > > > > >
-> > > > > > --
-> > > > > > Pengutronix e.K.                           |                             |
-> > > > > > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> > > > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
-> > |
-> > > > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> > > > A node with a 'compatible' and nothing else is a sign of something that
+> > > > a parent device should instantiate and doesn't need to be in DT. IOW,
+> > > > what do complete bindings for firmware functions look like?
+> > > >
+> > > > > +
+> > > > > +Example:
+> > > > > +
+> > > > > +hwrng: hwrng {
+> > > > > +   compatible = "mediatek,mtk-sec-rng";
+> > > > > +}
+> > > > > --
+> > > > > 1.7.9.5
 > > > > >
 > > > >
-> > > > --
-> > > > Pengutronix e.K.                           |                             |
-> > > > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> > > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> > > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> > > > _______________________________________________
+> > > > Linux-mediatek mailing list
+> > > > Linux-mediatek@lists.infradead.org
+> > > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
 > > >
-> >
-> > --
-> > Pengutronix e.K.                           |                             |
-> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> > >
 > 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
