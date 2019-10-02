@@ -1,65 +1,84 @@
 From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-Subject: [PATCH v2 1/5] clk: imx8mq: Add VIDEO2_PLL clock
-Date: Wed,  2 Oct 2019 17:04:53 +0300
-Message-ID: <1570025100-5634-2-git-send-email-laurentiu.palcu@nxp.com>
+Subject: [PATCH v2 4/5] dt-bindings: display: imx: add bindings for DCSS
+Date: Wed,  2 Oct 2019 17:04:56 +0300
+Message-ID: <1570025100-5634-5-git-send-email-laurentiu.palcu@nxp.com>
 References: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1570025100-5634-1-git-send-email-laurentiu.palcu@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>
-Cc: agx@sigxcpu.org, l.stach@pengutronix.de, Laurentiu Palcu <laurentiu.palcu@nxp.com>, Abel Vesa <abel.vesa@nxp.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>
+Cc: devicetree@vger.kernel.org, agx@sigxcpu.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurentiu Palcu <laurentiu.palcu@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This clock is needed by DCSS when high resolutions are used.
-
-Signed-off-by: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-CC: Abel Vesa <abel.vesa@nxp.com>
----
- drivers/clk/imx/clk-imx8mq.c             | 4 ++++
- include/dt-bindings/clock/imx8mq-clock.h | 4 +++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/clk/imx/clk-imx8mq.c b/drivers/clk/imx/clk-imx8mq.c
-index 41fc9c6..05ece7b 100644
---- a/drivers/clk/imx/clk-imx8mq.c
-+++ b/drivers/clk/imx/clk-imx8mq.c
-@@ -38,6 +38,7 @@ static const char * const sys1_pll_out_sels[] = {"sys1_pll1_ref_sel", };
- static const char * const sys2_pll_out_sels[] = {"sys1_pll1_ref_sel", "sys2_pll1_ref_sel", };
- static const char * const sys3_pll_out_sels[] = {"sys3_pll1_ref_sel", "sys2_pll1_ref_sel", };
- static const char * const dram_pll_out_sels[] = {"dram_pll1_ref_sel", };
-+static const char * const video2_pll_out_sels[] = {"video2_pll1_ref_sel", };
- 
- /* CCM ROOT */
- static const char * const imx8mq_a53_sels[] = {"osc_25m", "arm_pll_out", "sys2_pll_500m", "sys2_pll_1000m",
-@@ -311,6 +312,7 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
- 	clks[IMX8MQ_SYS2_PLL1_REF_SEL]	= imx_clk_mux("sys2_pll1_ref_sel", base + 0x3c, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
- 	clks[IMX8MQ_SYS3_PLL1_REF_SEL]	= imx_clk_mux("sys3_pll1_ref_sel", base + 0x48, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
- 	clks[IMX8MQ_DRAM_PLL1_REF_SEL]	= imx_clk_mux("dram_pll1_ref_sel", base + 0x60, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
-+	clks[IMX8MQ_VIDEO2_PLL1_REF_SEL] = imx_clk_mux("video2_pll1_ref_sel", base + 0x54, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
- 
- 	clks[IMX8MQ_ARM_PLL_REF_DIV]	= imx_clk_divider("arm_pll_ref_div", "arm_pll_ref_sel", base + 0x28, 5, 6);
- 	clks[IMX8MQ_GPU_PLL_REF_DIV]	= imx_clk_divider("gpu_pll_ref_div", "gpu_pll_ref_sel", base + 0x18, 5, 6);
-@@ -346,6 +348,8 @@ static int imx8mq_clocks_probe(struct platform_device *pdev)
- 	clks[IMX8MQ_SYS2_PLL_OUT] = imx_clk_sccg_pll("sys2_pll_out", sys2_pll_out_sels, ARRAY_SIZE(sys2_pll_out_sels), 0, 0, 1, base + 0x3c, CLK_IS_CRITICAL);
- 	clks[IMX8MQ_SYS3_PLL_OUT] = imx_clk_sccg_pll("sys3_pll_out", sys3_pll_out_sels, ARRAY_SIZE(sys3_pll_out_sels), 0, 0, 1, base + 0x48, CLK_IS_CRITICAL);
- 	clks[IMX8MQ_DRAM_PLL_OUT] = imx_clk_sccg_pll("dram_pll_out", dram_pll_out_sels, ARRAY_SIZE(dram_pll_out_sels), 0, 0, 0, base + 0x60, CLK_IS_CRITICAL);
-+	clks[IMX8MQ_VIDEO2_PLL_OUT] = imx_clk_sccg_pll("video2_pll_out", video2_pll_out_sels, ARRAY_SIZE(video2_pll_out_sels), 0, 0, 0, base + 0x54, 0);
-+
- 	/* SYS PLL fixed output */
- 	clks[IMX8MQ_SYS1_PLL_40M] = imx_clk_fixed_factor("sys1_pll_40m", "sys1_pll_out", 1, 20);
- 	clks[IMX8MQ_SYS1_PLL_80M] = imx_clk_fixed_factor("sys1_pll_80m", "sys1_pll_out", 1, 10);
-diff --git a/include/dt-bindings/clock/imx8mq-clock.h b/include/dt-bindings/clock/imx8mq-clock.h
-index 6546367..35b9ed9 100644
---- a/include/dt-bindings/clock/imx8mq-clock.h
-+++ b/include/dt-bindings/clock/imx8mq-clock.h
-@@ -403,5 +403,7 @@
- #define IMX8MQ_CLK_SNVS_ROOT			264
- #define IMX8MQ_CLK_GIC				265
- 
--#define IMX8MQ_CLK_END				266
-+#define IMX8MQ_VIDEO2_PLL1_REF_SEL		266
-+
-+#define IMX8MQ_CLK_END				267
- #endif /* __DT_BINDINGS_CLOCK_IMX8MQ_H */
--- 
-2.7.4
+QWRkIGJpbmRpbmdzIGZvciBpTVg4TVEgRGlzcGxheSBDb250cm9sbGVyIFN1YnN5c3RlbS4KClNp
+Z25lZC1vZmYtYnk6IExhdXJlbnRpdSBQYWxjdSA8bGF1cmVudGl1LnBhbGN1QG54cC5jb20+Ci0t
+LQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvaW14L254cCxpbXg4bXEtZGNzcy55YW1sICAgICAgfCA4
+NiArKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgODYgaW5zZXJ0aW9ucygr
+KQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L2lteC9ueHAsaW14OG1xLWRjc3MueWFtbAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9ueHAsaW14OG1xLWRjc3MueWFtbCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9ueHAsaW14OG1x
+LWRjc3MueWFtbApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMC4uZWZkMjQ5NAot
+LS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2lteC9ueHAsaW14OG1xLWRjc3MueWFtbApAQCAtMCwwICsxLDg2IEBACisjIFNQRFgtTGlj
+ZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMCBPUiBCU0QtMi1DbGF1c2UpCisjIENvcHlyaWdodCAy
+MDE5IE5YUAorJVlBTUwgMS4yCistLS0KKyRpZDogImh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hl
+bWFzL2Rpc3BsYXkvaW14L254cCxpbXg4bXEtZGNzcy55YW1sIyIKKyRzY2hlbWE6ICJodHRwOi8v
+ZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMiCisKK3RpdGxlOiBpTVg4TVEg
+RGlzcGxheSBDb250cm9sbGVyIFN1YnN5c3RlbSAoRENTUykKKworbWFpbnRhaW5lcnM6CisgIC0g
+TGF1cmVudGl1IFBhbGN1IDxsYXVyZW50aXUucGFsY3VAbnhwLmNvbT4KKworZGVzY3JpcHRpb246
+CisKKyAgVGhlIERDU1MgKGRpc3BsYXkgY29udHJvbGxlciBzdWIgc3lzdGVtKSBpcyB1c2VkIHRv
+IHNvdXJjZSB1cCB0byB0aHJlZQorICBkaXNwbGF5IGJ1ZmZlcnMsIGNvbXBvc2UgdGhlbSwgYW5k
+IGRyaXZlIGEgZGlzcGxheSB1c2luZyBIRE1JIDIuMGEod2l0aCBIRENQCisgIDIuMikgb3IgTUlQ
+SS1EU0kuIFRoZSBEQ1NTIGlzIGludGVuZGVkIHRvIHN1cHBvcnQgdXAgdG8gNGtwNjAgZGlzcGxh
+eXMuIEhEUjEwCisgIGltYWdlIHByb2Nlc3NpbmcgY2FwYWJpbGl0aWVzIGFyZSBpbmNsdWRlZCB0
+byBwcm92aWRlIGEgc29sdXRpb24gY2FwYWJsZSBvZgorICBkcml2aW5nIG5leHQgZ2VuZXJhdGlv
+biBoaWdoIGR5bmFtaWMgcmFuZ2UgZGlzcGxheXMuCisKK3Byb3BlcnRpZXM6CisgIGNvbXBhdGli
+bGU6CisgICAgY29uc3Q6IG54cCxpbXg4bXEtZGNzcworCisgIHJlZzoKKyAgICBtYXhJdGVtczog
+MgorCisgIGludGVycnVwdHM6CisgICAgbWF4SXRlbXM6IDMKKyAgICBpdGVtczoKKyAgICAgIC0g
+ZGVzY3JpcHRpb246IENvbnRleHQgbG9hZGVyIGNvbXBsZXRpb24gYW5kIGVycm9yIGludGVycnVw
+dAorICAgICAgLSBkZXNjcmlwdGlvbjogRFRHIGludGVycnVwdCB1c2VkIHRvIHNpZ25hbCBjb250
+ZXh0IGxvYWRlciB0cmlnZ2VyIHRpbWUKKyAgICAgIC0gZGVzY3JpcHRpb246IERURyBpbnRlcnJ1
+cHQgZm9yIFZibGFuaworCisgIGludGVycnVwdC1uYW1lczoKKyAgICBtYXhJdGVtczogMworICAg
+IGl0ZW1zOgorICAgICAgLSBjb25zdDogY3R4X2xkCisgICAgICAtIGNvbnN0OiBjdHhsZF9raWNr
+CisgICAgICAtIGNvbnN0OiB2YmxhbmsKKworICBjbG9ja3M6CisgICAgbWF4SXRlbXM6IDUKKyAg
+ICBpdGVtczoKKyAgICAgIC0gZGVzY3JpcHRpb246IERpc3BsYXkgQVBCIGNsb2NrIGZvciBhbGwg
+cGVyaXBoZXJhbCBQSU8gYWNjZXNzIGludGVyZmFjZXMKKyAgICAgIC0gZGVzY3JpcHRpb246IERp
+c3BsYXkgQVhJIGNsb2NrIG5lZWRlZCBieSBEUFIsIFNjYWxlciwgUlRSQU1fQ1RSTAorICAgICAg
+LSBkZXNjcmlwdGlvbjogUlRSQU0gY2xvY2sKKyAgICAgIC0gZGVzY3JpcHRpb246IFBpeGVsIGNs
+b2NrLCBjYW4gYmUgZHJpdmVyIGVpdGhlciBieSBIRE1JIHBoeSBjbG9jayBvciBNSVBJCisgICAg
+ICAtIGRlc2NyaXB0aW9uOiBEVFJDIGNsb2NrLCBuZWVkZWQgYnkgdmlkZW8gZGVjb21wcmVzc29y
+CisKKyAgY2xvY2stbmFtZXM6CisgICAgaXRlbXM6CisgICAgICAtIGNvbnN0OiBhcGIKKyAgICAg
+IC0gY29uc3Q6IGF4aQorICAgICAgLSBjb25zdDogcnRybQorICAgICAgLSBjb25zdDogcGl4Cisg
+ICAgICAtIGNvbnN0OiBkdHJjCisKKyAgcG9ydEAwOgorICAgIHR5cGU6IG9iamVjdAorICAgIGRl
+c2NyaXB0aW9uOiBBIHBvcnQgbm9kZSBwb2ludGluZyB0byBhIGhkbWlfaW4gb3IgbWlwaV9pbiBw
+b3J0IG5vZGUuCisKK2V4YW1wbGVzOgorICAtIHwKKyAgICBkY3NzOiBkaXNwbGF5LWNvbnRyb2xs
+ZXJAMzJlMDAwMDAgeworICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKKyAgICAgICAgI3Np
+emUtY2VsbHMgPSA8MD47CisgICAgICAgIGNvbXBhdGlibGUgPSAibnhwLGlteDhtcS1kY3NzIjsK
+KyAgICAgICAgcmVnID0gPDB4MzJlMDAwMDAgMHgyZDAwMD4sIDwweDMyZTJmMDAwIDB4MTAwMD47
+CisgICAgICAgIGludGVycnVwdHMgPSA8Nj4sIDw4PiwgPDk+OworICAgICAgICBpbnRlcnJ1cHQt
+bmFtZXMgPSAiY3R4X2xkIiwgImN0eGxkX2tpY2siLCAidmJsYW5rIjsKKyAgICAgICAgaW50ZXJy
+dXB0LXBhcmVudCA9IDwmaXJxc3RlZXI+OworICAgICAgICBjbG9ja3MgPSA8JmNsayAyNDg+LCA8
+JmNsayAyNDc+LCA8JmNsayAyNDk+LAorICAgICAgICAgICAgICAgICA8JmNsayAyNTQ+LDwmY2xr
+IDEyMj47CisgICAgICAgIGNsb2NrLW5hbWVzID0gImFwYiIsICJheGkiLCAicnRybSIsICJwaXgi
+LCAiZHRyYyI7CisgICAgICAgIGFzc2lnbmVkLWNsb2NrcyA9IDwmY2xrIDEwNz4sIDwmY2xrIDEw
+OT4sIDwmY2xrIDI2Nj47CisgICAgICAgIGFzc2lnbmVkLWNsb2NrLXBhcmVudHMgPSA8JmNsayA3
+OD4sIDwmY2xrIDc4PiwgPCZjbGsgMz47CisgICAgICAgIGFzc2lnbmVkLWNsb2NrLXJhdGVzID0g
+PDgwMDAwMDAwMD4sCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDQwMDAwMDAwMD47
+CisgICAgICAgIHBvcnRAMCB7CisgICAgICAgICAgICBkY3NzX291dDogZW5kcG9pbnQgeworICAg
+ICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV9pbj47CisgICAgICAgICAgICB9
+OworICAgICAgICB9OworICAgIH07CisKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
