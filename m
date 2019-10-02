@@ -1,55 +1,43 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [Patch 1/3] media: ov5640: add PIXEL_RATE control
-Date: Wed, 2 Oct 2019 07:14:38 -0500
-Message-ID: <20191002121438.g3re6v54q4hit2wv@ti.com>
-References: <20190925152301.21645-1-bparrot@ti.com>
- <20190925152301.21645-2-bparrot@ti.com>
- <20191001075704.GA5449@paasikivi.fi.intel.com>
- <20191001162341.f2o7ruar2nifl5ws@ti.com>
- <20191002075951.afp2xligspqat4ew@uno.localdomain>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 0/7] Introduce max12xx ADC support
+Date: Wed,  2 Oct 2019 14:30:18 +0200
+Message-ID: <20191002123025.21413-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191002075951.afp2xligspqat4ew@uno.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo@jmondi.org>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, hugues.fruchet@st.com
+To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+Hello, here is a patchset updating the existing max1027.c driver (for
+10-bit max1027/29/31 ADCs) with a few corrections/improvements and
+then introducing their 12-bit cousins named max1227/29/31.
 
-Maybe, I miss spoke when I mentioned a helper I did not intent a framework
-level generic function. Just a function to help in this case :)
+As on my hardware setup the "start conversion" and "end of conversion"
+pin are not wired (which is absolutely fine for this chip), I also
+updated the driver and the bindings to support optional interrupts. In
+this case, triggered buffers are not available and the user must poll
+the value from sysfs.
 
-That being said, I re-read the thread you mentioned. And as Hughes pointed
-out dynamically generating a "working" link frequency value which can be
-used by a CSI2 receiver to properly configure its PHY is not trivial.
+Thanks,
+Miquèl
 
-When I created this patch, I also had another to add V4L2_CID_LINK_FREQ
-support. I am testing this against the TI CAL CSI2 receiver, which already
-uses the V4L2_CID_PIXEL_RATE value for that purpose, so I also had a patch
-to add support for V4L2_CID_LINK_FREQ to that driver as well.
 
-Unfortunately, similar to Hughes' findings I was not able to make it "work"
-with all supported resolution/framerate.
+Miquel Raynal (7):
+  iio: adc: max1027: Add debugfs register read support
+  iio: adc: max1027: Make it optional to use interrupts
+  iio: adc: max1027: Reset the device at probe time
+  iio: adc: max1027: Prepare the introduction of different resolutions
+  iio: adc: max1027: Introduce 12-bit devices support
+  dt-bindings: iio: adc: max1027: Mark interrupts as optional
+  dt-bindings: iio: adc: max1027: Document max12xx series compatibles
 
-Unlike my V4L2_CID_PIXEL_RATE solution which now works in all mode with the
-same receiver.
+ .../bindings/iio/adc/max1027-adc.txt          |  12 +-
+ drivers/iio/adc/Kconfig                       |   4 +-
+ drivers/iio/adc/max1027.c                     | 190 +++++++++++-------
+ 3 files changed, 133 insertions(+), 73 deletions(-)
 
-So long story short I dropped the V4L2_CID_LINK_FREQ patch and focused on
-V4L2_CID_PIXEL_RATE instead.
-
-Regard,
-Benoit
-
-Jacopo Mondi <jacopo@jmondi.org> wrote on Wed [2019-Oct-02 09:59:51 +0200]:
-> Hi Benoit,
->   +Hugues
-> 
-> If you're considering an helper, this thread might be useful to you:
-> https://patchwork.kernel.org/patch/11019673/
-> 
-> Thanks
->    j
-> 
+-- 
+2.20.1
