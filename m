@@ -1,48 +1,40 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [RFC PATCH V3 1/5] dt-bindings: mt8183: Added DIP dt-bindings
-Date: Wed, 2 Oct 2019 12:22:54 +0300
-Message-ID: <20191002092254.GQ896@valkosipuli.retiisi.org.uk>
-References: <20190909192244.9367-1-frederic.chen@mediatek.com>
- <20190909192244.9367-2-frederic.chen@mediatek.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
+ power states
+Date: Wed, 2 Oct 2019 11:27:34 +0200
+Message-ID: <20191002092734.GA15523@centauri>
+References: <cover.1558430617.git.amit.kucheria@linaro.org>
+ <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
+ <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
+ <20191002091950.GA9393@centauri>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190909192244.9367-2-frederic.chen@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: frederic.chen@mediatek.com
-Cc: laurent.pinchart+renesas@ideasonboard.com, Rynn.Wu@mediatek.com, Allan.Yang@mediatek.com, suleiman@chromium.org, Jerry-ch.Chen@mediatek.com, jungo.lin@mediatek.com, hans.verkuil@cisco.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, holmes.chiou@mediatek.com, shik@chromium.org, yuzhao@chromium.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, Sean.Cheng@mediatek.com, srv_heupstream@mediatek.com, sj.huang@mediatek.com, tfiga@chromium.org, christie.yu@mediatek.com, zwisler@chromium.org
+In-Reply-To: <20191002091950.GA9393@centauri>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>, lkml <linux-kernel@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Sibi Sankar <sibis@codeaurora.org>, daniel.lezcano@linaro.org, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frederic,
+On Wed, Oct 02, 2019 at 11:19:50AM +0200, Niklas Cassel wrote:
+> On Mon, Sep 30, 2019 at 04:20:15PM -0600, Jeffrey Hugo wrote:
+> > Amit, the merged version of the below change causes a boot failure
+> > (nasty hang, sometimes with RCU stalls) on the msm8998 laptops.  Oddly
+> > enough, it seems to be resolved if I remove the cpu-idle-states
+> > property from one of the cpu nodes.
+> > 
+> > I see no issues with the msm8998 MTP.
+> 
+> Hello Jeffrey, Amit,
+> 
+> If the PSCI idle states work properly on the msm8998 devboard (MTP),
+> but causes crashes on msm8998 laptops, the only logical change is
+> that the PSCI firmware is different between the two devices.
 
-On Tue, Sep 10, 2019 at 03:22:40AM +0800, frederic.chen@mediatek.com wrote:
-> From: Frederic Chen <frederic.chen@mediatek.com>
-> 
-> This patch adds DT binding documentation for the Digital Image
-> Processing (DIP) unit of camera ISP system on Mediatek's SoCs.
-> 
-> It depends on the SCP and MDP 3 patch as following:
-> 
-> 1. dt-bindings: Add a binding for Mediatek SCP
->    https://patchwork.kernel.org/patch/11027247/
-> 2. dt-binding: mt8183: Add Mediatek MDP3 dt-bindings
->    https://patchwork.kernel.org/patch/10945603/
-> 
-> Signed-off-by: Frederic Chen <frederic.chen@mediatek.com>
-> ---
->  .../bindings/media/mediatek,mt8183-dip.txt    | 40 +++++++++++++++++++
+Since the msm8998 laptops boot using ACPI, perhaps these laptops
+doesn't support PSCI/have any PSCI firmware at all.
 
-Could you add a MAINTAINERS entry for this, please? Same for the driver.
 
--- 
-Sakari Ailus
+Kind regards,
+Niklas
