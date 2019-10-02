@@ -1,10 +1,8 @@
 From: Adam Ford <aford173@gmail.com>
 Subject: [PATCH] ARM: dts: imx6q-logicpd: Re-Enable SNVS power key
-Date: Tue,  1 Oct 2019 19:20:29 -0500
-Message-ID: <20191002002029.19189-2-aford173@gmail.com>
-References: <20191002002029.19189-1-aford173@gmail.com>
+Date: Tue,  1 Oct 2019 19:20:28 -0500
+Message-ID: <20191002002029.19189-1-aford173@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191002002029.19189-1-aford173@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
 Cc: adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
