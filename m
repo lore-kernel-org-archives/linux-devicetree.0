@@ -1,187 +1,34 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [RFC 2/2] dt-bindings: power: Convert Samsung Exynos Power
- Domain bindings to json-schema
-Date: Wed, 2 Oct 2019 11:20:19 +0200
-Message-ID: <20191002092019.GA9952@pi3>
-References: <20190908152813.20646-1-krzk@kernel.org>
- <20190908152813.20646-2-krzk@kernel.org>
- <20190930140600.GA18975@bogus>
+From: mtk15127 <Mark-MC.Lee@mediatek.com>
+Subject: Re: [PATCH net 1/2] net: ethernet: mediatek: Fix MT7629 missing
+ GMII mode support
+Date: Wed, 2 Oct 2019 17:21:00 +0800
+Message-ID: <1570008060.13954.12.camel@mtksdccf07>
+References: <20191001123150.23135-1-Mark-MC.Lee@mediatek.com>
+         <20191001123150.23135-2-Mark-MC.Lee@mediatek.com>
+         <20191001124206.GC869@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190930140600.GA18975@bogus>
+In-Reply-To: <20191001124206.GC869@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "David S. Miller" <davem@davemloft.net>, Sean Wang <sean.wang@mediatek.com>, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@openwrt.org>, Nelson Chang <nelson.chang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Rene van Dorst <opensource@vdorst.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, MarkLee <Mark-MC.Lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 30, 2019 at 09:06:00AM -0500, Rob Herring wrote:
-> On Sun, Sep 08, 2019 at 05:28:13PM +0200, Krzysztof Kozlowski wrote:
-> > Convert Samsung Exynos Soc Power Domain bindings to DT schema format using
-> > json-schema.
+On Tue, 2019-10-01 at 14:42 +0200, Andrew Lunn wrote:
+> On Tue, Oct 01, 2019 at 08:31:49PM +0800, MarkLee wrote:
+> > Add missing configuration for mt7629 gmii mode support
 > > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  .../devicetree/bindings/power/pd-samsung.txt  | 45 ------------
-> >  .../devicetree/bindings/power/pd-samsung.yaml | 70 +++++++++++++++++++
-> >  2 files changed, 70 insertions(+), 45 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/power/pd-samsung.txt
-> >  create mode 100644 Documentation/devicetree/bindings/power/pd-samsung.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/power/pd-samsung.txt b/Documentation/devicetree/bindings/power/pd-samsung.txt
-> > deleted file mode 100644
-> > index 92ef355e8f64..000000000000
-> > --- a/Documentation/devicetree/bindings/power/pd-samsung.txt
-> > +++ /dev/null
-> > @@ -1,45 +0,0 @@
-> > -* Samsung Exynos Power Domains
-> > -
-> > -Exynos processors include support for multiple power domains which are used
-> > -to gate power to one or more peripherals on the processor.
-> > -
-> > -Required Properties:
-> > -- compatible: should be one of the following.
-> > -    * samsung,exynos4210-pd - for exynos4210 type power domain.
-> > -    * samsung,exynos5433-pd - for exynos5433 type power domain.
-> > -- reg: physical base address of the controller and length of memory mapped
-> > -    region.
-> > -- #power-domain-cells: number of cells in power domain specifier;
-> > -    must be 0.
-> > -
-> > -Optional Properties:
-> > -- label: Human readable string with domain name. Will be visible in userspace
-> > -	to let user to distinguish between multiple domains in SoC.
-> > -- power-domains: phandle pointing to the parent power domain, for more details
-> > -		 see Documentation/devicetree/bindings/power/power_domain.txt
-> > -
-> > -Deprecated Properties:
-> > -- clocks
-> > -- clock-names
-> > -
-> > -Node of a device using power domains must have a power-domains property
-> > -defined with a phandle to respective power domain.
-> > -
-> > -Example:
-> > -
-> > -	lcd0: power-domain-lcd0 {
-> > -		compatible = "samsung,exynos4210-pd";
-> > -		reg = <0x10023C00 0x10>;
-> > -		#power-domain-cells = <0>;
-> > -		label = "LCD0";
-> > -	};
-> > -
-> > -	mfc_pd: power-domain@10044060 {
-> > -		compatible = "samsung,exynos4210-pd";
-> > -		reg = <0x10044060 0x20>;
-> > -		#power-domain-cells = <0>;
-> > -		label = "MFC";
-> > -	};
-> > -
-> > -See Documentation/devicetree/bindings/power/power_domain.txt for description
-> > -of consumer-side bindings.
-> > diff --git a/Documentation/devicetree/bindings/power/pd-samsung.yaml b/Documentation/devicetree/bindings/power/pd-samsung.yaml
-> > new file mode 100644
-> > index 000000000000..0fc012734a79
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power/pd-samsung.yaml
-> > @@ -0,0 +1,70 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/power/pd-samsung.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Samsung Exynos SoC Power Domains
-> > +
-> > +maintainers:
-> > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > +
-> > +description: |+
-> > +  Exynos processors include support for multiple power domains which are used
-> > +  to gate power to one or more peripherals on the processor.
-> > +
-> > +allOf:
-> > +  - $ref: power-domain.yaml#
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - samsung,exynos4210-pd
-> > +      - samsung,exynos5433-pd
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    deprecated: true
-> > +    maxItems: 1
-> > +
-> > +  clock-names:
-> > +    deprecated: true
-> > +    maxItems: 1
-> > +
-> > +  label:
-> > +    $ref: /schemas/types.yaml#/definitions/string
+> > Signed-off-by: MarkLee <Mark-MC.Lee@mediatek.com>
 > 
-> label already has a type.
+> Hi Mark
 > 
-> Is there a defined set of values?
+> Since this is for net, it should have a Fixes: tag.
+> 
+> Thanks
+> 	Andrew
+Hi Andrew,
+  Thanks for your reminder,will add a Fixes tag in the next patch.
 
-No, many Exynos SoCs have similar values but newer designs are bringing
-new names.
-
-> 
-> > +    description:
-> > +      Human readable string with domain name. Will be visible in userspace
-> > +      to let user to distinguish between multiple domains in SoC.
-> > +
-> > +  "#power-domain-cells":
-> > +    const: 0
-> > +
-> > +  power-domains:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle
-> 
-> Already has a type.
-> 
-> maxItems: 1
-
-OK
-
-> 
-> > +    description:
-> > +      Phandle pointing to the parent power domain, for more details
-> > +      see power-domain-consumers.yaml.
-> 
-> Unless there's something specific about this device to say, drop this.
-
-Sure.
-
-Best regards,
-Krzysztof
-
-> 
-> > +
-> > +required:
-> > +  - compatible
-> > +  - "#power-domain-cells"
-> > +  - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    lcd0: power-domain-lcd0 {
-> > +      compatible = "samsung,exynos4210-pd";
-> > +      reg = <0x10023C00 0x10>;
-> > +      #power-domain-cells = <0>;
-> > +      label = "LCD0";
-> > +    };
-> > +
-> > +    mfc_pd: power-domain@10044060 {
-> > +      compatible = "samsung,exynos4210-pd";
-> > +      reg = <0x10044060 0x20>;
-> > +      #power-domain-cells = <0>;
-> > +      label = "MFC";
-> > +    };
-> > -- 
-> > 2.17.1
-> > 
+Mark
