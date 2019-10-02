@@ -1,62 +1,38 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] dt-bindings: memory-controllers: exynos5422-dmc: Correct example syntax and memory region
-Date: Wed,  2 Oct 2019 19:44:01 +0200
-Message-ID: <20191002174401.17590-1-krzk@kernel.org>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH 0/2] peci: aspeed: Add AST2600 compatible
+Date: Wed, 2 Oct 2019 11:11:28 -0700
+Message-ID: <70044749-785b-6ff3-7a28-fb049dcfec54@linux.intel.com>
+References: <20191002061200.29888-1-chiawei_wang@aspeedtech.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191002061200.29888-1-chiawei_wang@aspeedtech.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>
+Cc: jason.m.bills@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, ryan_chen@aspeedtech.com
 List-Id: devicetree@vger.kernel.org
 
-After adding the interrupt properties to Exynos5422 DMC bindings
-example, the mapped memory region must be big enough to access
-performance counters registers.
+Hi Chia-Wei,
 
-Fix also syntax errors (semicolons) and adjust indentation.
+On 10/1/2019 11:11 PM, Chia-Wei, Wang wrote:
+> Update the Aspeed PECI driver with the AST2600 compatible string.
+> A new comptabile string is needed for the extended HW feature of
+> AST2600.
+> 
+> Chia-Wei, Wang (2):
+>    peci: aspeed: Add AST2600 compatible string
+>    dt-bindings: peci: aspeed: Add AST2600 compatible
+> 
+>   Documentation/devicetree/bindings/peci/peci-aspeed.txt | 1 +
+>   drivers/peci/peci-aspeed.c                             | 1 +
+>   2 files changed, 2 insertions(+)
+> 
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+PECI subsystem isn't in linux upstream yet so you should submit it into
+OpenBMC dev-5.3 tree only.
 
----
+Cheers,
 
-Rebased on top of my for-next branch as exynos5422-dmc.txt bindings were
-applied by me.
----
- .../bindings/memory-controllers/exynos5422-dmc.txt        | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-index e2434cac4858..02e4a1f862f1 100644
---- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-@@ -55,7 +55,7 @@ Example:
- 
- 	dmc: memory-controller@10c20000 {
- 		compatible = "samsung,exynos5422-dmc";
--		reg = <0x10c20000 0x100>, <0x10c30000 0x100>,
-+		reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>;
- 		clocks = <&clock CLK_FOUT_SPLL>,
- 			 <&clock CLK_MOUT_SCLK_SPLL>,
- 			 <&clock CLK_FF_DOUT_SPLL2>,
-@@ -63,7 +63,7 @@ Example:
- 			 <&clock CLK_MOUT_BPLL>,
- 			 <&clock CLK_SCLK_BPLL>,
- 			 <&clock CLK_MOUT_MX_MSPLL_CCORE>,
--			 <&clock CLK_MOUT_MCLK_CDREX>,
-+			 <&clock CLK_MOUT_MCLK_CDREX>;
- 		clock-names = "fout_spll",
- 			      "mout_sclk_spll",
- 			      "ff_dout_spll2",
-@@ -71,10 +71,10 @@ Example:
- 			      "mout_bpll",
- 			      "sclk_bpll",
- 			      "mout_mx_mspll_ccore",
--			      "mout_mclk_cdrex",
-+			      "mout_mclk_cdrex";
- 		operating-points-v2 = <&dmc_opp_table>;
- 		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
--				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
-+				 <&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
- 		device-handle = <&samsung_K3QF2F20DB>;
- 		vdd-supply = <&buck1_reg>;
- 		samsung,syscon-clk = <&clock>;
--- 
-2.17.1
+Jae
