@@ -1,29 +1,43 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [EXT] Re: [PATCH v5] arm64: dts: ls1028a: Add esdhc node in dts
-Date: Wed, 2 Oct 2019 08:57:25 +0800
-Message-ID: <20191002005723.GA18972@dragon>
-References: <20190815033901.18696-1-yinbo.zhu@nxp.com>
- <20190819131033.GH5999@X250>
- <VI1PR04MB4158E2E8C626FCABF089E15AE9840@VI1PR04MB4158.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: db845c: Enable LVS 1 and 2
+Date: Tue,  1 Oct 2019 21:16:54 -0700
+Message-ID: <20191002041654.3620-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <VI1PR04MB4158E2E8C626FCABF089E15AE9840@VI1PR04MB4158.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yinbo Zhu <yinbo.zhu@nxp.com>
-Cc: Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>, "Y.b. Lu" <yangbo.lu@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>
+To: Andy Gross <agross@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 24, 2019 at 03:02:04AM +0000, Yinbo Zhu wrote:
-> Hi Shawn Guo,
-> 
-> I see that you had merged my patch, but I don't see that in 
-> url = git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git master branch.
-> Please help check.
+vreg_lvs1a_1p8 and vreg_lvs2a_1p8 are both feeding pins in the low speed
+connectors and should as such alway be on, so enable them.
 
-My master branch will only get updated to each -rc1 tag when merge
-window closes.  I just updated it to v5.4-rc1, and it should has your
-patch now.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Shawn
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index c314b5d55796..6e97ae7f7a08 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -312,6 +312,18 @@
+ 			regulator-max-microvolt = <1200000>;
+ 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
++
++		vreg_lvs1a_1p8: lvs1 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++		};
++
++		vreg_lvs2a_1p8: lvs2 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++		};
+ 	};
+ 
+ 	pmi8998-rpmh-regulators {
+-- 
+2.18.0
