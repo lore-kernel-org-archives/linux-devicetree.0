@@ -1,466 +1,101 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/3] watchdog: sam9x60_wdt: introduce sam9x60 watchdog
- timer driver
-Date: Wed, 2 Oct 2019 06:16:15 -0700
-Message-ID: <e58a3ab5-69bc-cad3-5faa-ed00ff7906c7@roeck-us.net>
-References: <1570001371-8174-1-git-send-email-eugen.hristev@microchip.com>
- <1570001371-8174-2-git-send-email-eugen.hristev@microchip.com>
+From: <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH 4/7] dt-bindings: chosen: Add clocksource and clockevent
+ selection
+Date: Wed, 2 Oct 2019 13:32:44 +0000
+Message-ID: <e78e7520-213c-8075-d71e-b8db2ebdceb7@microchip.com>
+References: <1568123236-767-1-git-send-email-claudiu.beznea@microchip.com>
+ <1568123236-767-5-git-send-email-claudiu.beznea@microchip.com>
+ <20190910143231.GB14966@e107533-lin.cambridge.arm.com>
+ <ab43b209-78fa-0cab-b8ea-acd4c550e689@microchip.com>
+ <20190910150826.GA18308@e107533-lin.cambridge.arm.com>
+ <20190910151055.GX21254@piout.net>
+ <CACRpkda4mmpbPWa2nD93CvD6HWzcTUDzyyLdQxC2gNB7XiJF3w@mail.gmail.com>
+ <a2aca46a-8eb9-d8a8-de42-9850a8a8f44c@microchip.com>
+ <20190930143246.GA19967@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570001371-8174-2-git-send-email-eugen.hristev@microchip.com>
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190930143246.GA19967@bogus>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eugen.Hristev@microchip.com, wim@linux-watchdog.org, robh+dt@kernel.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.or
-Cc: Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com
+Content-ID: <2405F53375D403478DD0705798481038@namprd11.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: robh@kernel.org
+Cc: tmaimon77@gmail.com, linus.walleij@linaro.org, nsekhar@ti.com, guoren@kernel.org, linux-stm32@st-md-mailman.stormreply.com, heiko@sntech.de, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, khilman@baylibre.com, Ludovic.Desroches@microchip.com, linux-imx@nxp.com, u.kleine-koenig@pengutronix.de, uclinux-h8-devel@lists.sourceforge.jp, marc.zyngier@arm.com, s.hauer@pengutronix.de, linux-unisoc@lists.infradead.org, khalasa@piap.pl, tglx@linutronix.de, sbranden@broadcom.com, linux-kernel@vger.kernel.org, ralf@linux-mips.org, paul.burton@mips.com, kernel@pengutronix.de, mark.rutland@arm.com, alexandre.belloni@bootlin.com, jhogan@kernel.org, palmer@sifive.com, eric@anholt.net, thierry.reding@gmail.com, manivannan.sadhasivam@linaro.org, ysato@users.sourceforge.jp, zhang.lyra@gmail.com, daniel.lezcano@linaro.org, jonathanh@nvidia.com, bgolaszewski@baylibre.co
 List-Id: devicetree@vger.kernel.org
 
-On 10/2/19 12:35 AM, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
+
+
+On 30.09.2019 17:32, Rob Herring wrote:
+> On Wed, Sep 11, 2019 at 07:18:07AM +0000, Claudiu.Beznea@microchip.com wrote:
+>>
+>>
+>> On 11.09.2019 03:03, Linus Walleij wrote:
+>>> External E-Mail
+>>>
+>>>
+>>> On Tue, Sep 10, 2019 at 4:11 PM Alexandre Belloni
+>>> <alexandre.belloni@bootlin.com> wrote:
+>>>> On 10/09/2019 16:08:26+0100, Sudeep Holla wrote:
+>>>>> On Tue, Sep 10, 2019 at 02:51:50PM +0000, Claudiu.Beznea@microchip.com wrote:
+>>>
+>>>>> In that case, why can't we identify capability that with the compatibles
+>>>>> for this timer IP ?
+>>>>>
+>>>>> IOW, I don't like the proposal as it's hardware limitation.
+>>>>
+>>>> To be clear, bot timers are exactly the same but can't be clocksource
+>>>> and clockevent at the same time. Why would we have different compatibles
+>>>> for the exact same IP?
+>>>
+>>> In that case why not just pick the first one you find as clocksource
+>>> and the second one as clock event? As they all come to the
+>>> same timer of init function two simple local state variables can
+>>> solve that:
+>>>
+>>> static bool registered_clocksource;
+>>> static bool registered_clockevent;
+>>>
+>>> probe(timer) {
+>>>    if (!registered_clocksource) {
+>>>        register_clocksource(timer);
+>>>        registrered_clocksource = true;
+>>>        return;
+>>>    }
+>>>    if (!registered_clockevent) {
+>>>        register_clockevent(timer);
+>>>        registered_clockevent = true;
+>>>        return;
+>>>    }
+>>>    pr_info("surplus timer %p\n", timer);
+>>> }
+>>>
+>>
+>> That was also my proposal for the driver I'm sending this series for (see
+>> [1]) but it has been proposed to implement a mechanism similar to this one
+>> in this series (see [2] and [3]).
 > 
-> This is the driver for SAM9X60 watchdog timer.
-> The offered functionality is the same as sama5d4_wdt.
-> The difference comes in register map, way to configure the timeout and
-> interrupts.
-> Developed starting from sama5d4_wdt.c
+> This comes up over and over, and the answer is still no. Either each 
+> block is identical and doesn't matter which one is used for what or 
+> there is some h/w difference that you should describe. 
+
+There are no hardware differences in my case. The block just cannot work at
+the same time  as clocksource and clockevent. And on SAM9X60's we want to
+use it as clockevent for high resolution timers support.
+
 > 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
->   drivers/watchdog/Kconfig       |   9 ++
->   drivers/watchdog/Makefile      |   1 +
->   drivers/watchdog/sam9x60_wdt.c | 335 +++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 345 insertions(+)
->   create mode 100644 drivers/watchdog/sam9x60_wdt.c
+> If you want something that would even be considered to put into DT, 
+> then define something BSD or other OS's could use too. (That's not a 
+> suggestion to respin this with generalized names.)
 > 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 58e7c10..3562e26 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -416,6 +416,15 @@ config SAMA5D4_WATCHDOG
->   	  Its Watchdog Timer Mode Register can be written more than once.
->   	  This will reboot your system when the timeout is reached.
->   
-> +config SAM9X60_WATCHDOG
-> +	tristate "Microchip SAM9X60 Watchdog Timer"
-> +	depends on ARCH_AT91 || COMPILE_TEST
-
-depends on HAS_IOMEM
-
-> +	select WATCHDOG_CORE
-> +	help
-> +	  Microchip SAM9X60 watchdog timer is embedded into SAM9X60 chips.
-> +	  Its Watchdog Timer Mode Register can be written more than once.
-> +	  This will reboot your system when the timeout is reached.
-> +
->   config CADENCE_WATCHDOG
->   	tristate "Cadence Watchdog Timer"
->   	depends on HAS_IOMEM
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index 2ee352b..93ba599 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -52,6 +52,7 @@ obj-$(CONFIG_IXP4XX_WATCHDOG) += ixp4xx_wdt.o
->   obj-$(CONFIG_S3C2410_WATCHDOG) += s3c2410_wdt.o
->   obj-$(CONFIG_SA1100_WATCHDOG) += sa1100_wdt.o
->   obj-$(CONFIG_SAMA5D4_WATCHDOG) += sama5d4_wdt.o
-> +obj-$(CONFIG_SAM9X60_WATCHDOG) += sam9x60_wdt.o
->   obj-$(CONFIG_DW_WATCHDOG) += dw_wdt.o
->   obj-$(CONFIG_EP93XX_WATCHDOG) += ep93xx_wdt.o
->   obj-$(CONFIG_PNX4008_WATCHDOG) += pnx4008_wdt.o
-> diff --git a/drivers/watchdog/sam9x60_wdt.c b/drivers/watchdog/sam9x60_wdt.c
-> new file mode 100644
-> index 00000000..f612230
-> --- /dev/null
-> +++ b/drivers/watchdog/sam9x60_wdt.c
-> @@ -0,0 +1,335 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Driver for Microchip SAM9X60 Watchdog Timer
-> + *
-> + * Copyright (C) 2019 Microchip Technology, Inc.
-> + * Author: Eugen Hristev <eugen.hristev@microchip.com>
-> + *
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reboot.h>
-> +#include <linux/watchdog.h>
-> +
-> +#define AT91_WDT_CR		0x00			/* Watchdog Control Register */
-> +#define		AT91_WDT_WDRSTT		BIT(0)		/* Restart */
-> +#define		AT91_WDT_KEY		(0xa5 << 24)		/* KEY Password */
-> +
-> +#define AT91_WDT_MR		0x04			/* Watchdog Mode Register */
-> +#define		AT91_WDT_PERIODRST	BIT(4)		/* Period Reset */
-> +#define		AT91_WDT_RPTHRST	BIT(5)		/* Minimum Restart Period */
-> +#define		AT91_WDT_WDDIS		BIT(12)		/* Disable */
-> +#define		AT91_WDT_WDDBGHLT	BIT(28)		/* Debug Halt */
-> +#define		AT91_WDT_WDIDLEHLT	BIT(29)		/* Idle Halt */
-> +
-> +#define AT91_WDT_VR		0x08			/* Watchdog Timer Value Register */
-> +
-> +#define AT91_WDT_WLR		0x0c
-> +#define		AT91_WDT_COUNTER	(0xfff << 0)		/* Watchdog Period Value */
-> +#define		AT91_WDT_SET_COUNTER(x)	((x) & AT91_WDT_COUNTER)
-> +
-> +#define AT91_WDT_IER		0x14			/* Interrupt Enable Register */
-> +#define		AT91_WDT_PERINT		BIT(0)		/* Period Interrupt Enable */
-> +#define AT91_WDT_IDR		0x18			/* Interrupt Disable Register */
-> +#define AT91_WDT_ISR		0x1c			/* Interrupt Status Register */
-> +
-> +/* minimum and maximum watchdog timeout, in seconds */
-> +#define MIN_WDT_TIMEOUT		1
-> +#define MAX_WDT_TIMEOUT		16
-> +#define WDT_DEFAULT_TIMEOUT	MAX_WDT_TIMEOUT
-> +
-> +#define WDT_SEC2TICKS(s)	((s) ? (((s) << 8) - 1) : 0)
-> +
-> +struct sam9x60_wdt {
-> +	struct watchdog_device	wdd;
-> +	void __iomem		*reg_base;
-> +	u32			mr;
-> +	u32			ir;
-> +	unsigned long		last_ping;
-> +};
-> +
-> +static int wdt_timeout;
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +
-> +module_param(wdt_timeout, int, 0);
-> +MODULE_PARM_DESC(wdt_timeout,
-> +		 "Watchdog timeout in seconds. (default = "
-> +		 __MODULE_STRING(WDT_DEFAULT_TIMEOUT) ")");
-> +
-> +module_param(nowayout, bool, 0);
-> +MODULE_PARM_DESC(nowayout,
-> +		 "Watchdog cannot be stopped once started (default="
-> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +#define wdt_enabled (!(wdt->mr & AT91_WDT_WDDIS))
-
-Please no use in variables in macros without referencing them in the argument.
-
-> +
-> +#define wdt_read(wdt, field) \
-> +	readl_relaxed((wdt)->reg_base + (field))
-> +
-> +/* 4 slow clock periods is 4/32768 = 122.07us*/
-> +#define WDT_DELAY	usecs_to_jiffies(123)
-> +
-> +static void wdt_write(struct sam9x60_wdt *wdt, u32 field, u32 val)
-> +{
-> +	/*
-> +	 * WDT_CR and WDT_MR must not be modified within three slow clock
-> +	 * periods following a restart of the watchdog performed by a write
-> +	 * access in WDT_CR.
-> +	 */
-> +	while (time_before(jiffies, wdt->last_ping + WDT_DELAY))
-> +		usleep_range(30, 125);
-> +	writel_relaxed(val, wdt->reg_base + field);
-> +	wdt->last_ping = jiffies;
-> +}
-> +
-> +static void wdt_write_nosleep(struct sam9x60_wdt *wdt, u32 field, u32 val)
-> +{
-> +	if (time_before(jiffies, wdt->last_ping + WDT_DELAY))
-
-WDT_DELAY is most likely 1 under all circumstances. If the last access was just before
-a tick, this won't guarantee that really 123 uS expired.
-
-In situations like this, I would suggest not to rely on jiffies related functions.
-If the last access time is stored based on ktime_get(), the remaining time in
-us can be calculated using ktime_us_delta(). Then just sleep (or delay in case
-of nosleep) for that amount of microseconds.
-
-Also, I don't see why this second function would be necessary.
-A single function with an if() should be sufficient.
-
-	ktime_t delta = WDT_DELAY_US - ktime_us_delta(ktime_get(), wdt->last_ping);
-
-	if (delta > 0)
-		usleep_range(delta, delta * 2);
-	writel_relaxed(val, wdt->reg_base + field);
-	wdt->last_ping = ktime_get();
-
-> +		usleep_range(123, 250);
-> +	writel_relaxed(val, wdt->reg_base + field);
-> +	wdt->last_ping = jiffies;
-> +}
-> +
-> +static int sam9x60_wdt_start(struct watchdog_device *wdd)
-> +{
-> +	struct sam9x60_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	wdt->mr &= ~AT91_WDT_WDDIS;
-> +	wdt_write(wdt, AT91_WDT_MR, wdt->mr);
-> +	wdt_write_nosleep(wdt, AT91_WDT_IER, wdt->ir);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sam9x60_wdt_stop(struct watchdog_device *wdd)
-> +{
-> +	struct sam9x60_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	wdt->mr |= AT91_WDT_WDDIS;
-> +	wdt_write(wdt, AT91_WDT_MR, wdt->mr);
-> +	wdt_write_nosleep(wdt, AT91_WDT_IDR, wdt->ir);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sam9x60_wdt_ping(struct watchdog_device *wdd)
-> +{
-> +	struct sam9x60_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	wdt_write(wdt, AT91_WDT_CR, AT91_WDT_KEY | AT91_WDT_WDRSTT);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sam9x60_wdt_set_timeout(struct watchdog_device *wdd,
-> +				   unsigned int timeout)
-> +{
-> +	struct sam9x60_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	wdt_write(wdt, AT91_WDT_WLR,
-> +		  AT91_WDT_SET_COUNTER(WDT_SEC2TICKS(timeout)));
-> +
-> +	wdd->timeout = timeout;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct watchdog_info sam9x60_wdt_info = {
-> +	.options = WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING,
-> +	.identity = "Microchip SAM9X60 Watchdog",
-> +};
-> +
-> +static const struct watchdog_ops sam9x60_wdt_ops = {
-> +	.owner = THIS_MODULE,
-> +	.start = sam9x60_wdt_start,
-> +	.stop = sam9x60_wdt_stop,
-> +	.ping = sam9x60_wdt_ping,
-> +	.set_timeout = sam9x60_wdt_set_timeout,
-> +};
-> +
-> +static irqreturn_t sam9x60_wdt_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct sam9x60_wdt *wdt = platform_get_drvdata(dev_id);
-> +
-> +	if (wdt_read(wdt, AT91_WDT_ISR)) {
-> +		pr_crit("Microchip Watchdog Software Reset\n");
-> +		emergency_restart();
-> +		pr_crit("Reboot didn't succeed\n");
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int of_sam9x60_wdt_init(struct device_node *np, struct sam9x60_wdt *wdt)
-> +{
-> +	const char *tmp;
-> +
-> +	wdt->mr = AT91_WDT_WDDIS;
-> +
-> +	if (!of_property_read_string(np, "atmel,watchdog-type", &tmp) &&
-> +	    !strcmp(tmp, "software"))
-> +		wdt->ir = AT91_WDT_PERINT;
-> +	else
-> +		wdt->mr |= AT91_WDT_PERIODRST;
-> +
-> +	if (of_property_read_bool(np, "atmel,idle-halt"))
-> +		wdt->mr |= AT91_WDT_WDIDLEHLT;
-> +
-> +	if (of_property_read_bool(np, "atmel,dbg-halt"))
-> +		wdt->mr |= AT91_WDT_WDDBGHLT;
-> +
-> +	return 0;
-> +}
-> +
-> +static int sam9x60_wdt_init(struct sam9x60_wdt *wdt)
-> +{
-> +	u32 reg;
-> +	/*
-> +	 * When booting and resuming, the bootloader may have changed the
-> +	 * watchdog configuration.
-> +	 * If the watchdog is already running, we can safely update it.
-> +	 * Else, we have to disable it properly.
-> +	 */
-> +	if (wdt_enabled) {
-> +		wdt_write_nosleep(wdt, AT91_WDT_MR, wdt->mr);
-> +		wdt_write_nosleep(wdt, AT91_WDT_IER, wdt->ir);
-> +		wdt_write(wdt, AT91_WDT_WLR,
-> +			  AT91_WDT_SET_COUNTER(WDT_SEC2TICKS(WDT_DEFAULT_TIMEOUT)));
-> +
-> +	} else {
-> +		reg = wdt_read(wdt, AT91_WDT_MR);
-> +		if (!(reg & AT91_WDT_WDDIS))
-> +			wdt_write_nosleep(wdt, AT91_WDT_MR,
-> +					  reg | AT91_WDT_WDDIS);
-> +	}
-
-If the watchdog may be running at boot time, the watchdog core
-should be informed about it.
-
-> +	return 0;
-> +}
-> +
-> +static int sam9x60_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct watchdog_device *wdd;
-> +	struct sam9x60_wdt *wdt;
-> +	struct resource *res;
-> +	void __iomem *regs;
-> +	u32 irq = 0;
-
-Unnecessary initialization.
-
-> +	int ret;
-> +
-> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-> +	if (!wdt)
-> +		return -ENOMEM;
-> +
-> +	wdd = &wdt->wdd;
-> +	wdd->timeout = WDT_DEFAULT_TIMEOUT;
-> +	wdd->info = &sam9x60_wdt_info;
-> +	wdd->ops = &sam9x60_wdt_ops;
-> +	wdd->min_timeout = MIN_WDT_TIMEOUT;
-> +	wdd->max_timeout = MAX_WDT_TIMEOUT;
-> +	wdt->last_ping = jiffies;
-> +
-> +	watchdog_set_drvdata(wdd, wdt);
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	regs = devm_ioremap_resource(&pdev->dev, res);
-
-devm_platform_ioremap_resource()
-
-> +	if (IS_ERR(regs))
-> +		return PTR_ERR(regs);
-> +
-> +	wdt->reg_base = regs;
-> +
-> +	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
-> +	if (!irq)
-> +		dev_warn(&pdev->dev, "failed to get IRQ from DT\n");
-> +
-
-The interrupt property is optional. Not providing it does not warrant a warning.
-
-> +	ret = of_sam9x60_wdt_init(pdev->dev.of_node, wdt);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if ((wdt->ir & AT91_WDT_PERINT) && irq) {
-
-... even more so if it isn't actually used in some cases. irq_of_parse_and_map()
-should probably only be called in the first place if AT91_WDT_PERINT is set.
-
-> +		ret = devm_request_irq(&pdev->dev, irq, sam9x60_wdt_irq_handler,
-> +				       IRQF_SHARED | IRQF_IRQPOLL |
-> +				       IRQF_NO_SUSPEND, pdev->name, pdev);
-> +		if (ret) {
-> +			dev_err(&pdev->dev,
-> +				"cannot register interrupt handler\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	watchdog_init_timeout(wdd, wdt_timeout, &pdev->dev);
-> +
-> +	ret = sam9x60_wdt_init(wdt);
-> +	if (ret)
-> +		return ret;
-> +
-> +	watchdog_set_nowayout(wdd, nowayout);
-> +
-> +	ret = watchdog_register_device(wdd);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to register watchdog device\n");
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, wdt);
-> +
-> +	dev_info(&pdev->dev, "initialized (timeout = %d sec, nowayout = %d)\n",
-> +		 wdd->timeout, nowayout);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sam9x60_wdt_remove(struct platform_device *pdev)
-> +{
-> +	struct sam9x60_wdt *wdt = platform_get_drvdata(pdev);
-> +
-> +	sam9x60_wdt_stop(&wdt->wdd);
-> +
-
-Please use watchdog_stop_on_unregister() instead.
-
-> +	watchdog_unregister_device(&wdt->wdd);
-> +
-
-Please use devm_watchdog_register_device() and drop the remove function.
-
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id sam9x60_wdt_of_match[] = {
-> +	{ .compatible = "microchip,sam9x60-wdt", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, sam9x60_wdt_of_match);
-> +
-> +#ifdef CONFIG_PM_SLEEP
-
-Please use __maybe_unused
-
-> +static int sam9x60_wdt_resume(struct device *dev)
-> +{
-> +	struct sam9x60_wdt *wdt = dev_get_drvdata(dev);
-> +
-> +	/*
-> +	 * FIXME: writing MR also pings the watchdog which may not be desired.
-> +	 * This should only be done when the registers are lost on suspend but
-> +	 * there is no way to get this information right now.
-> +	 */
-
-This seems wrong. The bootloader may have stopped the watchdog in the
-suspend/resume cycle. This does not properly re-initialize it.
-
-Also, is there really no need to stop the watchdog on suspend ?
-
-> +	sam9x60_wdt_init(wdt);
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(sam9x60_wdt_pm_ops, NULL,
-> +			 sam9x60_wdt_resume);
-> +
-> +static struct platform_driver sam9x60_wdt_driver = {
-> +	.probe		= sam9x60_wdt_probe,
-> +	.remove		= sam9x60_wdt_remove,
-> +	.driver		= {
-> +		.name	= "sam9x60_wdt",
-> +		.pm	= &sam9x60_wdt_pm_ops,
-> +		.of_match_table = sam9x60_wdt_of_match,
-> +	}
-> +};
-> +module_platform_driver(sam9x60_wdt_driver);
-> +
-> +MODULE_AUTHOR("Eugen Hristev");
-> +MODULE_DESCRIPTION("Microchip SAM9X60 Watchdog Timer driver");
-> +MODULE_LICENSE("GPL v2");
+> Rob
+> 
 > 
