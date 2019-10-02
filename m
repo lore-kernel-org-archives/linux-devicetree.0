@@ -1,80 +1,48 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: phy: add binding for the Lantiq
- VRX200 and ARX300 PCIe PHYs
-Date: Wed, 2 Oct 2019 09:36:45 -0500
-Message-ID: <CAL_JsqJ9yUK2HNu9fLes1eEtEKdAZcXqBjGF90xKEuQh9fCU6g@mail.gmail.com>
-References: <20190704122319.8983-1-martin.blumenstingl@googlemail.com> <20190704122319.8983-2-martin.blumenstingl@googlemail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 09/10] ARM: dts: arndale: Add audio
+ support (WM1811 CODEC boards)
+Date: Wed, 2 Oct 2019 16:42:11 +0200
+Message-ID: <20191002144211.GB15898@pi3>
+References: <20190920130218.32690-1-s.nawrocki@samsung.com>
+ <CGME20190920130324eucas1p118bfab45306a29752bf4c1cfdd8f61a1@eucas1p1.samsung.com>
+ <20190920130218.32690-10-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190704122319.8983-2-martin.blumenstingl@googlemail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: "open list:MIPS" <linux-mips@vger.kernel.org>, devicetree@vger.kernel.org, John Crispin <john@phrozen.org>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, Mark Rutland <mark.rutland@arm.com>, Martin Schiller <ms@dev.tdt.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20190920130218.32690-10-s.nawrocki@samsung.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, ckeepax@opensource.cirrus.com, b.zolnierkie@samsung.com, sbkim73@samsung.com, patches@opensource.cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 4, 2019 at 7:23 AM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Add the bindings for the PCIe PHY on Lantiq VRX200 and ARX300 SoCs.
-> The IP block contains settings for the PHY and a PLL.
-> The PLL mode is configurable through a dedicated #phy-cell in .dts.
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Fri, Sep 20, 2019 at 03:02:18PM +0200, Sylwester Nawrocki wrote:
+> Add sound node and the clock configurations for the I2S controller
+> for audio support on the Exynos5250 SoC Arndale boards with
+> WM1811 based audio daughter board.
+> 
+> We need to increase drive strength of the I2S bus, otherwise
+> the audio CODEC doesn't work. Likely the CODEC's master clock
+> is the main issue here.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 > ---
->  .../bindings/phy/lantiq,vrx200-pcie-phy.yaml  | 95 +++++++++++++++++++
->  .../dt-bindings/phy/phy-lantiq-vrx200-pcie.h  | 11 +++
->  2 files changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
->  create mode 100644 include/dt-bindings/phy/phy-lantiq-vrx200-pcie.h
->
-> diff --git a/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
-> new file mode 100644
-> index 000000000000..8a56a8526cef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml
-> @@ -0,0 +1,95 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/lantiq,vrx200-pcie-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Lantiq VRX200 and ARX300 PCIe PHY Device Tree Bindings
-> +
-> +maintainers:
-> +  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> +
-> +properties:
-> +  "#phy-cells":
-> +    const: 1
-> +    description: selects the PHY mode as defined in <dt-bindings/phy/phy-lantiq-vrx200-pcie.h>
-> +
-> +  compatible:
-> +    enum:
-> +      - lantiq,vrx200-pcie-phy
-> +      - lantiq,arx300-pcie-phy
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: PHY module clock
-> +      - description: PDI register clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: phy
-> +      - const: pdi
-> +
-> +  resets:
-> +    items:
-> +      - description: exclusive PHY reset line
-> +      - description: shared reset line between the PCIe PHY and PCIe controller
-> +
-> +  resets-names:
+> Changes since v1:
+>  - moved &clock, &clock_audss parts to preserve alphabetical order
+> ---
+>  arch/arm/boot/dts/exynos5250-arndale.dts | 27 +++++++++++++++++++++++-
+>  1 file changed, 26 insertions(+), 1 deletion(-)
 
-This breaks 'make dt_binding_check'. It should be 'reset-names'.
+This does not apply. Please rebase and resend.
 
-Rob
+Best regards,
+Krzysztof
