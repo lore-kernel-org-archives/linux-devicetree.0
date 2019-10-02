@@ -1,122 +1,83 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 4/6] dt-bindings: phy: tegra: Add Tegra194 support
-Date: Wed, 2 Oct 2019 11:44:38 +0200
-Message-ID: <20191002094438.GD3716706@ulmo>
-References: <20191002080051.11142-1-jckuo@nvidia.com>
- <20191002080051.11142-5-jckuo@nvidia.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 1/3] dt-bindings: watchdog: sam9x60_wdt: add bindings
+Date: Wed, 2 Oct 2019 11:56:51 +0200
+Message-ID: <20191002095627.GK4106@piout.net>
+References: <1570001371-8174-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yudcn1FV7Hsu/q59"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191002080051.11142-5-jckuo@nvidia.com>
+In-Reply-To: <1570001371-8174-1-git-send-email-eugen.hristev@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: JC Kuo <jckuo@nvidia.com>
-Cc: gregkh@linuxfoundation.org, jonathanh@nvidia.com, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com
+To: Eugen.Hristev@microchip.com
+Cc: wim@linux-watchdog.org, linux@roeck-us.net, robh+dt@kernel.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas.Ferre@microchip.com
 List-Id: devicetree@vger.kernel.org
 
+On 02/10/2019 07:35:23+0000, Eugen.Hristev@microchip.com wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+> 
+> Add bindings for Microchip SAM9X60 Watchdog Timer
+> 
+> It has the same bindings as
+> Documentation/devicetree/bindings/watchdog/atmel-sama5d4-wdt.txt
+> except the compatible.
+> 
 
---yudcn1FV7Hsu/q59
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Maybe it can then use the same documentation file. However, I think you
+should already use the yaml dt bindings schema instead of a simple text
+file.
 
-On Wed, Oct 02, 2019 at 04:00:49PM +0800, JC Kuo wrote:
-> Extend the bindings to cover the set of features found in Tegra194.
-> Note that, technically, there are four more supplies connected to the
-> XUSB pad controller (DVDD_PEX, DVDD_PEX_PLL, HVDD_PEX and HVDD_PEX_PLL)
-> , but the power sequencing requirements of Tegra194 require these to be
-> under the control of the PMIC.
->=20
-> Tegra194 XUSB PADCTL supports up to USB 3.1 Gen 2 speed, however, it is
-> possible for some platforms have long signal trace that could not
-> provide sufficient electrical environment for Gen 2 speed. To deal with
-> this, a new device node property "nvidia,disable-gen2" was added to
-> Tegra194 that be used to specifically disable Gen 2 speed for a
-> particular USB 3.0 port so that the port can be limited to Gen 1 speed
-> and avoid the instability.
->=20
-> Signed-off-by: JC Kuo <jckuo@nvidia.com>
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 > ---
->  .../bindings/phy/nvidia,tegra124-xusb-padctl.txt | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-p=
-adctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padc=
-tl.txt
-> index 9fb682e47c29..3bef37e7c365 100644
-> --- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.t=
-xt
-> +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.t=
-xt
-> @@ -37,6 +37,7 @@ Required properties:
->    - Tegra132: "nvidia,tegra132-xusb-padctl", "nvidia,tegra124-xusb-padct=
-l"
->    - Tegra210: "nvidia,tegra210-xusb-padctl"
->    - Tegra186: "nvidia,tegra186-xusb-padctl"
-> +  - Tegra194: "nvidia,tegra194-xusb-padctl"
->  - reg: Physical base address and length of the controller's registers.
->  - resets: Must contain an entry for each entry in reset-names.
->  - reset-names: Must include the following entries:
-> @@ -62,6 +63,10 @@ For Tegra186:
->  - vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
->  - vddio-hsic-supply: HSIC PHY power supply. Must supply 1.2 V.
-> =20
-> +For Tegra194:
-> +- avdd-usb-supply: USB I/Os, VBUS, ID, REXT, D+/D- power supply. Must su=
-pply
-> +  3.3 V.
-> +- vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
-> =20
->  Pad nodes:
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> @@ -154,6 +159,11 @@ For Tegra210, the list of valid PHY nodes is given b=
-elow:
->  - sata: sata-0
->    - functions: "usb3-ss", "sata"
-> =20
-> +For Tegra194, the list of valid PHY nodes is given below:
-> +- usb2: usb2-0, usb2-1, usb2-2, usb2-3
-> +  - functions: "xusb"
-> +- usb3: usb3-0, usb3-1, usb3-2, usb3-3
-> +  - functions: "xusb"
-> =20
->  Port nodes:
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> @@ -221,6 +231,9 @@ Optional properties:
->    is internal. In the absence of this property the port is considered to=
- be
->    external.
-> =20
-> +- nvidia,disable-gen2: A boolean property whose presence determines that=
- a port
-> +  should be limited to USB 3.1 Gen 1. This properlty is only for Tegra19=
-4.
+>  .../devicetree/bindings/watchdog/sam9x60-wdt.txt   | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/sam9x60-wdt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/sam9x60-wdt.txt b/Documentation/devicetree/bindings/watchdog/sam9x60-wdt.txt
+> new file mode 100644
+> index 00000000..74b4e2d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/sam9x60-wdt.txt
+> @@ -0,0 +1,34 @@
+> +* Microchip SAM9X60 Watchdog Timer (WDT) Controller
+> +
+> +Required properties:
+> +- compatible: "microchip,sam9x60-wdt"
+> +- reg: base physical address and length of memory mapped region.
+> +
+> +Optional properties:
+> +- timeout-sec: watchdog timeout value (in seconds).
+> +- interrupts: interrupt number to the CPU.
+> +- atmel,watchdog-type: should be "hardware" or "software".
+> +	"hardware": enable watchdog fault reset. A watchdog fault triggers
+> +		    watchdog reset.
+> +	"software": enable watchdog fault interrupt. A watchdog fault asserts
+> +		    watchdog interrupt.
+> +- atmel,idle-halt: present if you want to stop the watchdog when the CPU is
+> +		   in idle state.
+> +	CAUTION: This property should be used with care, it actually makes the
+> +	watchdog not counting when the CPU is in idle state, therefore the
+> +	watchdog reset time depends on mean CPU usage and will not reset at all
+> +	if the CPU stop working while it is in idle state, which is probably
+> +	not what you want.
+> +- atmel,dbg-halt: present if you want to stop the watchdog when the CPU is
+> +		  in debug state.
+> +
+> +Example:
+> +	watchdog@ffffff80 {
+> +		compatible = "microchip,sam9x60-wdt";
+> +		reg = <0xffffff80 0x24>;
+> +		interrupts = <1 IRQ_TYPE_LEVEL_HIGH 5>;
+> +		timeout-sec = <10>;
+> +		atmel,watchdog-type = "hardware";
+> +		atmel,dbg-halt;
+> +		atmel,idle-halt;
+> +	};
+> -- 
+> 2.7.4
+> 
 
-s/properlty/property/
-
-With that:
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---yudcn1FV7Hsu/q59
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2UcYUACgkQ3SOs138+
-s6GoPA/+JMIwA9BAlwTjZUJ+GX5F2ueO+KNypGWxfrXY9bbnQce4zE0lBjJsFduQ
-+SC45V+BO7PzxeiWbY9tabxMQSccdHIkZmg+JeKvV+WlRr+GsMh8w+EDc6uCff6F
-+Uo8DWLuST621FBNAgKHHO5HUMYa+tKG0j/c5QlPC7OJJGcYX0gFiM+7UG2WFrm5
-kNUOEQTQk6FqwdV7YquWeoyDAP2uPvUgkfghrfZrqpQbgA1j9Kwqrfmt3povSTSr
-4ptWP5rYGR8a68t+K0KrtRUfWEo95pr2bjD55IdZIzoqy3hDuoOPPRgZE8b0ETBu
-LJVMnKqAPixVZvNZXQXyLYtHQ+k0b5jHQ5f5tNvH9usdLDvnbMcOISW1kTIWtEBI
-lPLuXPmThDqxtWEA7eikS8MrmHXmSLe+SMR938X0ba6fU6zGUXBxrPvLPQZXZcPB
-tUp7RkAVmF0kfsFyElb1fAqpMcIWPAHeTFrp+5Tn3QOI3gMQ/N9cXLuF+KVvt+CW
-PnnwDVNSWJNglB44SOo03L25SRH/n9X/QAY31ip8ddKaseFGngXLXdgN1GyXpdPb
-y8Vnm8lliPhUbRAPVC/m5l9YTYKIQ3vHlLz8AZcLif04Z8+K2be9ccjHvucSYTwY
-kv57JVC70eEEAlidTyGlaXTc3F2KVjV4P/Fzr2JE8stAMMz9ekE=
-=HWX1
------END PGP SIGNATURE-----
-
---yudcn1FV7Hsu/q59--
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
