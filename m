@@ -1,54 +1,172 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: watchdog: Convert Samsung SoC
- watchdog bindings to json-schema
-Date: Wed, 2 Oct 2019 09:48:28 +0200
-Message-ID: <20191002074828.GA6221@pi3>
-References: <20190920162124.7036-1-krzk@kernel.org>
- <20191001222109.GA26050@bogus>
+From: Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [Patch 1/3] media: ov5640: add PIXEL_RATE control
+Date: Wed, 2 Oct 2019 09:59:51 +0200
+Message-ID: <20191002075951.afp2xligspqat4ew@uno.localdomain>
+References: <20190925152301.21645-1-bparrot@ti.com>
+ <20190925152301.21645-2-bparrot@ti.com>
+ <20191001075704.GA5449@paasikivi.fi.intel.com>
+ <20191001162341.f2o7ruar2nifl5ws@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ikhqxt5tabr5x7tv"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191001222109.GA26050@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <20191001162341.f2o7ruar2nifl5ws@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, hugues.fruchet@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 05:21:09PM -0500, Rob Herring wrote:
-> On Fri, Sep 20, 2019 at 06:21:22PM +0200, Krzysztof Kozlowski wrote:
-> > Convert Samsung S3C/S5P/Exynos watchdog bindings to DT schema format
-> > using json-schema.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > 
-> > ---
-> > 
-> > Changes since v1:
-> > 1. Indent example with four spaces (more readable),
-> > 2. Remove unneeded timeout-sec description and include generic bindings.
-> > ---
-> >  .../bindings/watchdog/samsung-wdt.txt         | 35 ----------
-> >  .../bindings/watchdog/samsung-wdt.yaml        | 65 +++++++++++++++++++
-> >  2 files changed, 65 insertions(+), 35 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-> >  create mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Hi Rob,
+--ikhqxt5tabr5x7tv
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-The generic watchdog YAML/DT schema is already in v5.4-rc1 so this can
-go either trough you, or through watchdog tree.
+Hi Benoit,
+  +Hugues
 
-Best regards,
-Krzysztof
+If you're considering an helper, this thread might be useful to you:
+https://patchwork.kernel.org/patch/11019673/
+
+Thanks
+   j
+
+On Tue, Oct 01, 2019 at 11:23:41AM -0500, Benoit Parrot wrote:
+> Hi Sakari,
+>
+> Thanks for the review.
+>
+> Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Tue [2019-Oct-01 10:57:04 +0300]:
+> > Hi Benoit,
+> >
+> > On Wed, Sep 25, 2019 at 10:22:59AM -0500, Benoit Parrot wrote:
+> > > Add v4l2 controls to report the pixel rates of each mode. This is
+> > > needed by some CSI2 receiver in order to perform proper DPHY
+> > > configuration.
+> > >
+> > > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > > ---
+> > >  drivers/media/i2c/ov5640.c | 25 +++++++++++++++++++++++++
+> > >  1 file changed, 25 insertions(+)
+> > >
+> > > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> > > index 500d9bbff10b..c2a44f30d56e 100644
+> > > --- a/drivers/media/i2c/ov5640.c
+> > > +++ b/drivers/media/i2c/ov5640.c
+> > > @@ -193,6 +193,9 @@ struct ov5640_mode_info {
+> > >
+> > >  struct ov5640_ctrls {
+> > >  	struct v4l2_ctrl_handler handler;
+> > > +	struct {
+> > > +		struct v4l2_ctrl *pixel_rate;
+> > > +	};
+> > >  	struct {
+> > >  		struct v4l2_ctrl *auto_exp;
+> > >  		struct v4l2_ctrl *exposure;
+> > > @@ -241,6 +244,7 @@ struct ov5640_dev {
+> > >  	const struct ov5640_mode_info *last_mode;
+> > >  	enum ov5640_frame_rate current_fr;
+> > >  	struct v4l2_fract frame_interval;
+> > > +	u64 pixel_rate;
+> > >
+> > >  	struct ov5640_ctrls ctrls;
+> > >
+> > > @@ -2202,6 +2206,7 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
+> > >  	const struct ov5640_mode_info *new_mode;
+> > >  	struct v4l2_mbus_framefmt *mbus_fmt = &format->format;
+> > >  	struct v4l2_mbus_framefmt *fmt;
+> > > +	u64 rate;
+> > >  	int ret;
+> > >
+> > >  	if (format->pad != 0)
+> > > @@ -2233,6 +2238,12 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
+> > >  	if (mbus_fmt->code != sensor->fmt.code)
+> > >  		sensor->pending_fmt_change = true;
+> > >
+> > > +	rate = sensor->current_mode->vtot * sensor->current_mode->htot;
+> > > +	rate *= ov5640_framerates[sensor->current_fr];
+> > > +	sensor->pixel_rate = rate;
+> > > +
+> > > +	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> > > +				 sensor->pixel_rate);
+> > >  out:
+> > >  	mutex_unlock(&sensor->lock);
+> > >  	return ret;
+> > > @@ -2657,6 +2668,13 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
+> > >  	/* we can use our own mutex for the ctrl lock */
+> > >  	hdl->lock = &sensor->lock;
+> > >
+> > > +	/* Clock related controls */
+> > > +	ctrls->pixel_rate =
+> > > +		v4l2_ctrl_new_std(hdl, ops,
+> > > +				  V4L2_CID_PIXEL_RATE, 0, INT_MAX, 1,
+> > > +				  55969920);
+> >
+> > Could you calculate this value instead of using a seemingly random number?
+>
+> Yes I guess I could, especially if I make a helper function for it :).
+>
+> >
+> > > +	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> > > +
+> > >  	/* Auto/manual white balance */
+> > >  	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
+> > >  					   V4L2_CID_AUTO_WHITE_BALANCE,
+> > > @@ -2782,6 +2800,7 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
+> > >  	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+> > >  	const struct ov5640_mode_info *mode;
+> > >  	int frame_rate, ret = 0;
+> > > +	u64 rate;
+> > >
+> > >  	if (fi->pad != 0)
+> > >  		return -EINVAL;
+> > > @@ -2816,6 +2835,12 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
+> > >  		sensor->frame_interval = fi->interval;
+> > >  		sensor->current_mode = mode;
+> > >  		sensor->pending_mode_change = true;
+> > > +
+> > > +		rate = sensor->current_mode->vtot * sensor->current_mode->htot;
+> > > +		rate *= ov5640_framerates[sensor->current_fr];
+> > > +		sensor->pixel_rate = rate;
+> >
+> > I think it'd be better to have a function to calculate the value instead of
+> > duplicating the code here.
+>
+> Yes I'll create a helper function.
+>
+> Benoit
+>
+> >
+> > > +		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> > > +					 sensor->pixel_rate);
+> > >  	}
+> > >  out:
+> > >  	mutex_unlock(&sensor->lock);
+> >
+> > --
+> > Kind regards,
+> >
+> > Sakari Ailus
+> > sakari.ailus@linux.intel.com
+
+--ikhqxt5tabr5x7tv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2UWPYACgkQcjQGjxah
+VjyMUBAAv63bbrUWjsL9pUBz7wdu92GfRg/kGitLLZQHVYMs8q0YxiA31AE+vnpY
+fPrDu45KjWSq1IFFX/NaS90fnWXQ9jYslhyyYQiG1zz2Gvw1XiLQD7CkjnNiAr/i
+IJGNcm2I2av/w4eEM4J+QdLgR4k4AHyOptXD+D/xJAOKWjBXehl2PSFCPY7DKDOv
+Or4PFzplX15a14GNHAqgjjATOKKw7yv+I9uLX1BazX2CHvGyeuqm4A5Q7HL1BnWu
+zm5kmuw6p7d5Zgy3eT36u6vixx+w1MpZVzLq1ZqipO4bo0QdvW6a0Ik8jUXxKnjd
+rMpJ/WJkTkf9juSNcaN7ewSy7hGTpBztjwBzZIFr6KiuYdPn1w11QCR1BORiVYFh
+YmMgm0sfmSkauu4LftQaLmMMlfl5p9KzRxjnTc0fkZsst5jrjdSZ+1m9dXXhAz9n
+0A6X3e1RkmnwsvgTmhYh02ICgMipYo6haH+4frS6ABnbhvCd5TdLaVeauwqbiKSH
+2gamkDttXB11urVdKP/fE0qO1ScSktjkEkrkNTqEo9APin8u4jtW3OpFJOWX+DN/
+F4YMhQ6ZdfK6GfI4iCBmXk0nl5RNiwB9orxinZTLt10rJip38PYO8+LKcThZNHrF
++GNsZF5N2OZBRwi1Bx8u14Iok0pdoZIXm7nGtGYAHi1i6s5Z4jE=
+=1XCp
+-----END PGP SIGNATURE-----
+
+--ikhqxt5tabr5x7tv--
