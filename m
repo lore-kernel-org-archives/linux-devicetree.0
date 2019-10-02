@@ -1,100 +1,208 @@
-From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [PATCH v1 2/2] drm/panel: simple: add display timings for logic
- technologies displays
-Date: Wed, 2 Oct 2019 10:27:00 +0000
-Message-ID: <e6fdfd7f46308dbc8fd33d4a2ff0b242ec39a84c.camel@toradex.com>
-References: <20190920075411.15735-1-marcel@ziswiler.com>
-         <20190920075411.15735-2-marcel@ziswiler.com> <20191001220539.GA16232@bogus>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH v2 02/11] crypto: Add Allwinner sun8i-ce Crypto Engine
+Date: Wed, 2 Oct 2019 12:35:06 +0200
+Message-ID: <20191002103506.zdoyhhzmroa6smwl@gilmour>
+References: <20191001184141.27956-1-clabbe.montjoie@gmail.com>
+ <20191001184141.27956-3-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bmfwxxf5fnjaabw6"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191001220539.GA16232@bogus>
-Content-Language: en-US
-Content-ID: <D3C60422FD7EBD47B696FB27DF221D96@eurprd05.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <20191001184141.27956-3-clabbe.montjoie@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh@kernel.org" <robh@kernel.org>, "marcel@ziswiler.com" <marcel@ziswiler.com>
-Cc: "info@logictechno.com" <info@logictechno.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "airlied@linux.ie" <airlied@linux.ie>, "sam@ravnborg.org" <sam@ravnborg.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "j.bauer@endrich.com" <j.bauer@endrich.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: catalin.marinas@arm.com, davem@davemloft.net, herbert@gondor.apana.org.au, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org, will@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTEwLTAxIGF0IDE3OjA1IC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gRnJpLCBTZXAgMjAsIDIwMTkgYXQgMDk6NTQ6MTFBTSArMDIwMCwgTWFyY2VsIFppc3dpbGVy
-IHdyb3RlOg0KPiA+IEZyb206IE1hcmNlbCBaaXN3aWxlciA8bWFyY2VsLnppc3dpbGVyQHRvcmFk
-ZXguY29tPg0KPiA+IA0KPiA+IEFkZCBkaXNwbGF5IHRpbWluZ3MgZm9yIHRoZSBmb2xsb3dpbmcg
-MyBkaXNwbGF5IHBhbmVscyBtYW51ZmFjdHVyZWQNCj4gPiBieQ0KPiA+IExvZ2ljIFRlY2hub2xv
-Z2llcyBMaW1pdGVkOg0KPiA+IA0KPiA+IC0gTFQxNjEwMTAtMk5IQyBlLmcuIGFzIGZvdW5kIGlu
-IHRoZSBUb3JhZGV4IENhcGFjaXRpdmUgVG91Y2gNCj4gPiBEaXNwbGF5DQo+ID4gICA3IiBQYXJh
-bGxlbCBbMV0NCj4gPiAtIExUMTYxMDEwLTJOSFIgZS5nLiBhcyBmb3VuZCBpbiB0aGUgVG9yYWRl
-eCBSZXNpc3RpdmUgVG91Y2ggRGlzcGxheQ0KPiA+IDciDQo+ID4gICBQYXJhbGxlbCBbMl0NCj4g
-PiAtIExUMTcwNDEwLTJXSEMgZS5nLiBhcyBmb3VuZCBpbiB0aGUgVG9yYWRleCBDYXBhY2l0aXZl
-IFRvdWNoDQo+ID4gRGlzcGxheQ0KPiA+ICAgMTAuMSIgTFZEUyBbM10NCj4gPiANCj4gPiBUaG9z
-ZSBwYW5lbHMgbWF5IGFsc28gYmUgZGlzdHJpYnV0ZWQgYnkgRW5kcmljaCBCYXVlbGVtZW50ZQ0K
-PiA+IFZlcnRyaWVicw0KPiA+IEdtYkggWzRdLg0KPiA+IA0KPiA+IFsxXSANCj4gPiBodHRwczov
-L2RvY3MudG9yYWRleC5jb20vMTA0NDk3LTctaW5jaC1wYXJhbGxlbC1jYXBhY2l0aXZlLXRvdWNo
-LWRpc3BsYXktODAweDQ4MC1kYXRhc2hlZXQucGRmDQo+ID4gWzJdIA0KPiA+IGh0dHBzOi8vZG9j
-cy50b3JhZGV4LmNvbS8xMDQ0OTgtNy1pbmNoLXBhcmFsbGVsLXJlc2lzdGl2ZS10b3VjaC1kaXNw
-bGF5LTgwMHg0ODAucGRmDQo+ID4gWzNdIA0KPiA+IGh0dHBzOi8vZG9jcy50b3JhZGV4LmNvbS8x
-MDU5NTItMTAtMS1pbmNoLWx2ZHMtY2FwYWNpdGl2ZS10b3VjaC1kaXNwbGF5LTEyODB4ODAwLWRh
-dGFzaGVldC5wZGYNCj4gPiBbNF0gDQo+ID4gaHR0cHM6Ly93d3cuZW5kcmljaC5jb20vaXNpNTBf
-aXNpMzBfdGZ0LWRpc3BsYXlzL2x0MTcwNDEwLTF3aGNfaXNpMzANCj4gPiANCj4gPiBTaWduZWQt
-b2ZmLWJ5OiBNYXJjZWwgWmlzd2lsZXIgPG1hcmNlbC56aXN3aWxlckB0b3JhZGV4LmNvbT4NCj4g
-PiANCj4gPiAtLS0NCj4gPiANCj4gPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
-ZS5jIHwgNjUNCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCA2NSBpbnNlcnRpb25zKCspDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYw0KPiA+IGIvZHJpdmVycy9ncHUvZHJtL3BhbmVs
-L3BhbmVsLXNpbXBsZS5jDQo+ID4gaW5kZXggMjhmYTZiYTdiNzY3Li40MmJkMGRlMjUxNjcgMTAw
-NjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jDQo+ID4g
-KysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jDQo+ID4gQEAgLTIwMzQs
-NiArMjAzNCw2MiBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgbGdfbHAxMjlxZSA9
-IHsNCj4gPiAgCX0sDQo+ID4gIH07DQo+ID4gIA0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRp
-c3BsYXlfdGltaW5nIGxvZ2ljdGVjaG5vX2x0MTYxMDEwXzJuaF90aW1pbmcNCj4gPiA9IHsNCj4g
-PiArCS5waXhlbGNsb2NrID0geyAyNjQwMDAwMCwgMzMzMDAwMDAsIDQ2ODAwMDAwIH0sDQo+ID4g
-KwkuaGFjdGl2ZSA9IHsgODAwLCA4MDAsIDgwMCB9LA0KPiA+ICsJLmhmcm9udF9wb3JjaCA9IHsg
-MTYsIDIxMCwgMzU0IH0sDQo+ID4gKwkuaGJhY2tfcG9yY2ggPSB7IDQ2LCA0NiwgNDYgfSwNCj4g
-PiArCS5oc3luY19sZW4gPSB7IDEsIDIwLCA0MCB9LA0KPiA+ICsJLnZhY3RpdmUgPSB7IDQ4MCwg
-NDgwLCA0ODAgfSwNCj4gPiArCS52ZnJvbnRfcG9yY2ggPSB7IDcsIDIyLCAxNDcgfSwNCj4gPiAr
-CS52YmFja19wb3JjaCA9IHsgMjMsIDIzLCAyMyB9LA0KPiA+ICsJLnZzeW5jX2xlbiA9IHsgMSwg
-MTAsIDIwIH0sDQo+ID4gKwkuZmxhZ3MgPSBESVNQTEFZX0ZMQUdTX0hTWU5DX0xPVyB8IERJU1BM
-QVlfRkxBR1NfVlNZTkNfTE9XIHwNCj4gPiArCQkgRElTUExBWV9GTEFHU19ERV9ISUdIIHwgRElT
-UExBWV9GTEFHU19QSVhEQVRBX1BPU0VER0UgfA0KPiA+ICsJCSBESVNQTEFZX0ZMQUdTX1NZTkNf
-UE9TRURHRSwNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxf
-ZGVzYyBsb2dpY3RlY2hub19sdDE2MTAxMF8ybmggPSB7DQo+ID4gKwkudGltaW5ncyA9ICZsb2dp
-Y3RlY2hub19sdDE2MTAxMF8ybmhfdGltaW5nLA0KPiA+ICsJLm51bV90aW1pbmdzID0gMSwNCj4g
-PiArCS5zaXplID0gew0KPiA+ICsJCS53aWR0aCA9IDE1NCwNCj4gPiArCQkuaGVpZ2h0ID0gODYs
-DQo+ID4gKwl9LA0KPiA+ICsJLmJ1c19mb3JtYXQgPSBNRURJQV9CVVNfRk1UX1JHQjY2Nl8xWDE4
-LA0KPiA+ICsJLmJ1c19mbGFncyA9IERSTV9CVVNfRkxBR19ERV9ISUdIIHwNCj4gPiArCQkgICAg
-IERSTV9CVVNfRkxBR19QSVhEQVRBX1NBTVBMRV9ORUdFREdFIHwNCj4gPiArCQkgICAgIERSTV9C
-VVNfRkxBR19TWU5DX1NBTVBMRV9ORUdFREdFLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArc3RhdGlj
-IGNvbnN0IHN0cnVjdCBkaXNwbGF5X3RpbWluZyBsb2dpY3RlY2hub19sdDE3MDQxMF8yd2hjX3Rp
-bWluZw0KPiA+ID0gew0KPiA+ICsJLnBpeGVsY2xvY2sgPSB7IDY4OTAwMDAwLCA3MTEwMDAwMCwg
-NzM0MDAwMCB9LA0KPiA+ICsJLmhhY3RpdmUgPSB7IDEyODAsIDEyODAsIDEyODAgfSwNCj4gPiAr
-CS5oZnJvbnRfcG9yY2ggPSB7IDIzLCA2MCwgNzEgfSwNCj4gPiArCS5oYmFja19wb3JjaCA9IHsg
-MjMsIDYwLCA3MSB9LA0KPiA+ICsJLmhzeW5jX2xlbiA9IHsgMTUsIDQwLCA0NyB9LA0KPiA+ICsJ
-LnZhY3RpdmUgPSB7IDgwMCwgODAwLCA4MDAgfSwNCj4gPiArCS52ZnJvbnRfcG9yY2ggPSB7IDUs
-IDcsIDEwIH0sDQo+ID4gKwkudmJhY2tfcG9yY2ggPSB7IDUsIDcsIDEwIH0sDQo+ID4gKwkudnN5
-bmNfbGVuID0geyA2LCA5LCAxMiB9LA0KPiA+ICsJLmZsYWdzID0gRElTUExBWV9GTEFHU19IU1lO
-Q19MT1cgfCBESVNQTEFZX0ZMQUdTX1ZTWU5DX0xPVyB8DQo+ID4gKwkJIERJU1BMQVlfRkxBR1Nf
-REVfSElHSCB8IERJU1BMQVlfRkxBR1NfUElYREFUQV9QT1NFREdFIHwNCj4gPiArCQkgRElTUExB
-WV9GTEFHU19TWU5DX1BPU0VER0UsDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMgY29uc3Qg
-c3RydWN0IHBhbmVsX2Rlc2MgbG9naWN0ZWNobm9fbHQxNzA0MTBfMndoYyA9IHsNCj4gPiArCS50
-aW1pbmdzID0gJmxvZ2ljdGVjaG5vX2x0MTcwNDEwXzJ3aGNfdGltaW5nLA0KPiA+ICsJLm51bV90
-aW1pbmdzID0gMSwNCj4gPiArCS5zaXplID0gew0KPiA+ICsJCS53aWR0aCA9IDIxNywNCj4gPiAr
-CQkuaGVpZ2h0ID0gMTM2LA0KPiA+ICsJfSwNCj4gPiArCS5idXNfZm9ybWF0ID0gTUVESUFfQlVT
-X0ZNVF9SR0I4ODhfMVg3WDRfU1BXRywNCj4gPiArCS5idXNfZmxhZ3MgPSBEUk1fQlVTX0ZMQUdf
-REVfSElHSCB8DQo+ID4gKwkJICAgICBEUk1fQlVTX0ZMQUdfUElYREFUQV9TQU1QTEVfTkVHRURH
-RSB8DQo+ID4gKwkJICAgICBEUk1fQlVTX0ZMQUdfU1lOQ19TQU1QTEVfTkVHRURHRSwNCj4gPiAr
-fTsNCj4gPiArDQo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBtaXRz
-dWJpc2hpX2FhMDcwbWMwMV9tb2RlID0gew0KPiA+ICAJLmNsb2NrID0gMzA0MDAsDQo+ID4gIAku
-aGRpc3BsYXkgPSA4MDAsDQo+ID4gQEAgLTMyNjQsNiArMzMyMCwxNSBAQCBzdGF0aWMgY29uc3Qg
-c3RydWN0IG9mX2RldmljZV9pZA0KPiA+IHBsYXRmb3JtX29mX21hdGNoW10gPSB7DQo+ID4gIAl9
-LCB7DQo+ID4gIAkJLmNvbXBhdGlibGUgPSAibGcsbHAxMjlxZSIsDQo+ID4gIAkJLmRhdGEgPSAm
-bGdfbHAxMjlxZSwNCj4gPiArCX0sIHsNCj4gPiArCQkuY29tcGF0aWJsZSA9ICJsb2dpY3RlY2hu
-byxsdDE2MTAxMC0ybmhjIiwNCj4gPiArCQkuZGF0YSA9ICZsb2dpY3RlY2hub19sdDE2MTAxMF8y
-bmgsDQo+ID4gKwl9LCB7DQo+ID4gKwkJLmNvbXBhdGlibGUgPSAibG9naWN0ZWNobm8sbHQxNjEw
-MTAtMm5ociIsDQo+ID4gKwkJLmRhdGEgPSAmbG9naWN0ZWNobm9fbHQxNjEwMTBfMm5oLA0KPiA+
-ICsJfSwgew0KPiA+ICsJCS5jb21wYXRpYmxlID0gImxvZ2ljdGVjaG5vLGx0MTcwNDEwLTJ3aGMi
-LA0KPiA+ICsJCS5kYXRhID0gJmxvZ2ljdGVjaG5vX2x0MTcwNDEwXzJ3aGMsDQo+IA0KPiBUaGUg
-dmVuZG9yIHByZWZpeCB3YXNuJ3QgZG9jdW1lbnRlZCwgYnV0IHRoZSBjb21wYXRpYmxlIHN0cmlu
-ZyBhbmQNCj4gcmVzdCANCj4gYWxyZWFkeSBhcmU/DQoNCk1hcmNlbCBhZGRlZCB0aGUgdmVuZG9y
-IHByZWZpeCBpbiB0aGUgZmlyc3QgcGF0Y2ggb2YgdGhlIHNlcmllcyBbMV0NCg0KWzFdIGh0dHBz
-Oi8vbGttbC5vcmcvbGttbC8yMDE5LzkvMjAvMTI2DQoNClBoaWxpcHBlDQoNCj4gDQo+IFJvYg0K
+
+--bmfwxxf5fnjaabw6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+On Tue, Oct 01, 2019 at 08:41:32PM +0200, Corentin Labbe wrote:
+> +	/* CTS and recent CE (H6) need length in bytes, in word otherwise */
+> +	if (ce->variant->model == CE_v2)
+> +		cet->t_dlen = areq->cryptlen;
+
+It's entirely redundant withe the compatible.
+
+How about using something like has_t_dlen or whatever name you find
+best in the variant structure?
+
+> +static int sun8i_ce_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *res;
+> +	u32 v;
+> +	int err, i, ce_method, id, irq;
+> +	unsigned long cr;
+> +	struct sun8i_ce_dev *ce;
+> +
+> +	ce = devm_kzalloc(&pdev->dev, sizeof(*ce), GFP_KERNEL);
+> +	if (!ce)
+> +		return -ENOMEM;
+> +
+> +	ce->dev = &pdev->dev;
+> +	platform_set_drvdata(pdev, ce);
+> +
+> +	ce->variant = of_device_get_match_data(&pdev->dev);
+> +	if (!ce->variant) {
+> +		dev_err(&pdev->dev, "Missing Crypto Engine variant\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	ce->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(ce->base))
+> +		return PTR_ERR(ce->base);
+> +
+> +	for (i = 0; i < CE_MAX_CLOCKS; i++) {
+> +		if (!ce->variant->ce_clks[i].name)
+> +			continue;
+> +		ce->ceclks[i] = devm_clk_get(&pdev->dev, ce->variant->ce_clks[i].name);
+> +		if (IS_ERR(ce->ceclks[i])) {
+> +			err = PTR_ERR(ce->ceclks[i]);
+> +			dev_err(&pdev->dev, "Cannot get %s CE clock err=%d\n",
+> +				ce->variant->ce_clks[i].name, err);
+> +			return err;
+> +		}
+> +		cr = clk_get_rate(ce->ceclks[i]);
+> +		if (!cr)
+> +			return -EINVAL;
+> +		if (ce->variant->ce_clks[i].freq > 0 &&
+> +		    cr != ce->variant->ce_clks[i].freq) {
+> +			dev_info(&pdev->dev, "Set %s clock to %lu (%lu Mhz) from %lu (%lu Mhz)\n",
+> +				 ce->variant->ce_clks[i].name,
+> +				 ce->variant->ce_clks[i].freq,
+> +				 ce->variant->ce_clks[i].freq / 1000000,
+> +				 cr, cr / 1000000);
+> +			err = clk_set_rate(ce->ceclks[i], ce->variant->ce_clks[i].freq);
+> +			if (err)
+> +				dev_err(&pdev->dev, "Fail to set %s clk speed to %lu hz\n",
+> +					ce->variant->ce_clks[i].name,
+> +					ce->variant->ce_clks[i].freq);
+> +		}
+> +		if (ce->variant->ce_clks[i].max_freq > 0 &&
+> +		    cr > ce->variant->ce_clks[i].max_freq)
+> +			dev_warn(&pdev->dev, "Frequency for %s (%lu hz) is higher than datasheet's recommandation (%lu hz)",
+> +				 ce->variant->ce_clks[i].name, cr,
+> +				 ce->variant->ce_clks[i].max_freq);
+> +	}
+> +
+> +	/* Get Non Secure IRQ */
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		dev_err(ce->dev, "Cannot get CryptoEngine Non-secure IRQ\n");
+> +		return irq;
+> +	}
+> +
+> +	ce->reset = devm_reset_control_get_optional(&pdev->dev, "bus");
+> +	if (IS_ERR(ce->reset)) {
+> +		if (PTR_ERR(ce->reset) == -EPROBE_DEFER)
+> +			return PTR_ERR(ce->reset);
+> +		dev_err(&pdev->dev, "No reset control found\n");
+> +		return PTR_ERR(ce->reset);
+> +	}
+> +
+> +	mutex_init(&ce->mlock);
+> +
+> +	err = allocate_chanlist(ce);
+> +	if (err)
+> +		return err;
+> +
+> +	err = sun8i_ce_pm_init(ce);
+> +	if (err)
+> +		goto error_pm;
+> +
+> +	err = devm_request_irq(&pdev->dev, irq, ce_irq_handler, 0,
+> +			       "sun8i-ce-ns", ce);
+> +	if (err) {
+> +		dev_err(ce->dev, "Cannot request CryptoEngine Non-secure IRQ (err=%d)\n", err);
+> +		goto error_irq;
+> +	}
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ce_algs); i++) {
+> +		ce_algs[i].ce = ce;
+> +		switch (ce_algs[i].type) {
+> +		case CRYPTO_ALG_TYPE_SKCIPHER:
+> +			id = ce_algs[i].ce_algo_id;
+> +			ce_method = ce->variant->alg_cipher[id];
+> +			if (ce_method == CE_ID_NOTSUPP) {
+> +				dev_info(ce->dev,
+> +					 "DEBUG: Algo of %s not supported\n",
+> +					 ce_algs[i].alg.skcipher.base.cra_name);
+> +				ce_algs[i].ce = NULL;
+> +				break;
+> +			}
+> +			id = ce_algs[i].ce_blockmode;
+> +			ce_method = ce->variant->op_mode[id];
+> +			if (ce_method == CE_ID_NOTSUPP) {
+> +				dev_info(ce->dev, "DEBUG: Blockmode of %s not supported\n",
+> +					 ce_algs[i].alg.skcipher.base.cra_name);
+> +				ce_algs[i].ce = NULL;
+> +				break;
+> +			}
+> +			dev_info(ce->dev, "DEBUG: Register %s\n",
+> +				 ce_algs[i].alg.skcipher.base.cra_name);
+> +			err = crypto_register_skcipher(&ce_algs[i].alg.skcipher);
+> +			if (err) {
+> +				dev_err(ce->dev, "Fail to register %s\n",
+> +					ce_algs[i].alg.skcipher.base.cra_name);
+> +				ce_algs[i].ce = NULL;
+> +				goto error_alg;
+> +			}
+> +			break;
+> +		default:
+> +			ce_algs[i].ce = NULL;
+> +			dev_err(ce->dev, "ERROR: tryed to register an unknown algo\n");
+> +		}
+> +	}
+> +
+> +	err = pm_runtime_get_sync(ce->dev);
+> +	if (err < 0)
+> +		goto error_alg;
+> +
+> +	v = readl(ce->base + CE_CTR);
+> +	v >>= CE_DIE_ID_SHIFT;
+> +	v &= CE_DIE_ID_MASK;
+> +	dev_info(&pdev->dev, "CryptoEngine Die ID %x\n", v);
+> +
+> +	pm_runtime_put_sync(ce->dev);
+> +
+> +#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
+> +	/* Ignore error of debugfs */
+> +	ce->dbgfs_dir = debugfs_create_dir("sun8i-ce", NULL);
+> +	ce->dbgfs_stats = debugfs_create_file("stats", 0444,
+> +					      ce->dbgfs_dir, ce,
+> +					      &sun8i_ce_debugfs_fops);
+> +#endif
+> +	return 0;
+> +error_alg:
+> +	unregister_algs(ce);
+> +	i = MAXFLOW;
+> +error_irq:
+> +	sun8i_ce_pm_exit(ce);
+> +error_pm:
+> +	free_chanlist(ce, i);
+> +	return err;
+> +}
+
+It's still pretty long. Can you move the clocks, algo initialisation
+(and debugfs maybe?) to a function of their own?
+
+Maxime
+
+--bmfwxxf5fnjaabw6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZR9WgAKCRDj7w1vZxhR
+xfjVAP91tltcU83h8GVTqSvoqqTWADm4H5LeA3sI7p7k+z8ovQEAlHdQIwX6SuiQ
+DQJAlSoeZZ7cZRgoANODDLBzmpD1Pgo=
+=42mB
+-----END PGP SIGNATURE-----
+
+--bmfwxxf5fnjaabw6--
