@@ -1,58 +1,86 @@
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
- power states
-Date: Wed, 2 Oct 2019 12:18:37 -0600
-Message-ID: <CAOCk7Nqqm6d3bR9hFJH6rp1jMPmx2e2qmJtnOuw5viaGWohEZA@mail.gmail.com>
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
- <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
- <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
- <20191002091950.GA9393@centauri> <20191002092734.GA15523@centauri>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 00/11] of: Fix DMA configuration for non-DT masters
+Date: Wed, 2 Oct 2019 11:28:06 -0700
+Message-ID: <fbae48ca-fbd4-e32b-e874-92b5bba5df4d@gmail.com>
+References: <20190924181244.7159-1-nsaenzjulienne@suse.de>
+ <CAL_Jsq+v+svTyna7UzQdRVqfNc5Z_bgWzxNRXv7-Wqv3NwDu2g@mail.gmail.com>
+ <d1a31a2ec8eb2f226b1fb41f6c24ffb47c3bf7c7.camel@suse.de>
+ <e404c65b-5a66-6f91-5b38-8bf89a7697b2@arm.com>
+ <43fb5fe1de317d65a4edf592f88ea150c6e3b8cc.camel@suse.de>
+ <CAL_JsqLhx500cx3YLoC7HL1ux3bBpV+fEA2Qnk7D5RFGgiGzSw@mail.gmail.com>
+ <aa4c8d62-7990-e385-2bb1-cec55148f0a8@arm.com>
+ <CAL_JsqKKYcHPnA80ZwLY=Sk3e5MqrimedUhWQ5+iuPZXQxYHdA@mail.gmail.com>
+ <307b988d0c67fb1c42166eca12742bcfda09d92d.camel@suse.de>
+ <c27a51e1-1adf-ae6a-dc67-ae76222a1163@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191002092734.GA15523@centauri>
+In-Reply-To: <c27a51e1-1adf-ae6a-dc67-ae76222a1163@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Amit Kucheria <amit.kucheria@linaro.org>, lkml <linux-kernel@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Sibi Sankar <sibis@codeaurora.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, DTML <devicetree@vger.kernel.org>
+To: Robin Murphy <robin.murphy@arm.com>, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Rob Herring <robh+dt@kernel.org>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Matthias Brugger <mbrugger@suse.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-wireless <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, etnaviv@lists.freedesktop.org, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org, xen-devel@lists.xenproject.org, Dan Williams <dan.j.williams@intel.com>, freedreno <freedreno@lists.freedesktop.org>, Linux
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 3:27 AM Niklas Cassel <niklas.cassel@linaro.org> wrote:
->
-> On Wed, Oct 02, 2019 at 11:19:50AM +0200, Niklas Cassel wrote:
-> > On Mon, Sep 30, 2019 at 04:20:15PM -0600, Jeffrey Hugo wrote:
-> > > Amit, the merged version of the below change causes a boot failure
-> > > (nasty hang, sometimes with RCU stalls) on the msm8998 laptops.  Oddly
-> > > enough, it seems to be resolved if I remove the cpu-idle-states
-> > > property from one of the cpu nodes.
-> > >
-> > > I see no issues with the msm8998 MTP.
-> >
-> > Hello Jeffrey, Amit,
-> >
-> > If the PSCI idle states work properly on the msm8998 devboard (MTP),
-> > but causes crashes on msm8998 laptops, the only logical change is
-> > that the PSCI firmware is different between the two devices.
->
-> Since the msm8998 laptops boot using ACPI, perhaps these laptops
-> doesn't support PSCI/have any PSCI firmware at all.
 
-They have PSCI.  If there was no PSCI, I would expect the PSCI
-get_version request from Linux to fail, and all PSCI functionality to
-be disabled.
 
-However, your mention about ACPI sparked a thought.  ACPI describes
-the idle states, along with the PSCI info, in the ACPI0007 devices.
-Those exist on the laptops, and the info mostly correlates with Amit's
-patch (ACPI seems to be a bit more conservative about the latencies,
-and describes one additional deeper state).  However, upon a detailed
-analysis of the ACPI description, I did find something relevant - the
-retention state is not enabled.
+On 9/26/2019 4:20 AM, Robin Murphy wrote:
+> On 2019-09-26 11:44 am, Nicolas Saenz Julienne wrote:
+>>>>>> Robin, have you looked into supporting multiple dma-ranges? It's the
+>>>>>> next thing
+>>>>>> we need for BCM STB's PCIe. I'll have a go at it myself if nothing
+>>>>>> is in
+>>>>>> the
+>>>>>> works already.
+>>>>>
+>>>>> Multiple dma-ranges as far as configuring inbound windows should work
+>>>>> already other than the bug when there's any parent translation. But if
+>>>>> you mean supporting multiple DMA offsets and masks per device in the
+>>>>> DMA API, there's nothing in the works yet.
+>>
+>> Sorry, I meant supporting multiple DMA offsets[1]. I think I could
+>> still make
+>> it with a single DMA mask though.
+> 
+> The main problem for supporting that case in general is the disgusting
+> carving up of the physical memory map you may have to do to guarantee
+> that a single buffer allocation cannot ever span two windows with
+> different offsets. I don't think we ever reached a conclusion on whether
+> that was even achievable in practice.
 
-So, I hacked out the retention state from Amit's patch, and I did not
-observe a hang.  I used sysfs, and appeared able to validate that the
-power collapse state was being used successfully.
+It is with the Broadcom STB SoCs which have between 1 and 3 memory
+controllers depending on the SoC, and multiple dma-ranges cells for PCIe
+as a consequence.
 
-I'm guessing that something is weird with the laptops, where the CPUs
-can go into retention, but not come out, thus causing issues.
+Each memory controller has a different physical address aperture in the
+CPU's physical address map (e.g.: MEMC0 is 0x0 - 0x3fff_ffff, MEMC1
+0x4000_0000 - 0x7ffff_ffff and MEMC2 0x8000_0000 - 0xbfff_ffff, not
+counting the extension regions above 4GB), and while the CPU is
+scheduled and arbitrated the same way across all memory controllers
+(thus making it virtually UMA, almost) having a buffer span two memory
+controllers would be problematic because the memory controllers do not
+know how to guarantee the transaction ordering and buffer data
+consistency in both DRAM itself and for other memory controller clients,
+like PCIe.
 
-I'll post a patch to fix up the laptops.  Thanks for all the help.
+We historically had to reserve the last 4KB of each memory controller to
+avoid problematic controllers like EHCI to prefetch beyond the end of a
+memory controller's populated memory and that also incidentally takes
+care of never having a buffer cross a controller boundary. Either you
+can allocate the entire buffer on a given memory controller, or you
+cannot allocate memory at all on that zone/region and another one must
+be found (or there is no more memory and there is a genuine OOM).
+
+The way we reserve memory right now is based on the first patch
+submitted by Jim:
+
+https://lore.kernel.org/patchwork/patch/988469/
+
+whereby we read the memory node's "reg" property and we map the physical
+addresses to the memory controller configuration read from the specific
+registers in the CPU's Bus Interface Unit (where the memory controller
+apertures are architecturally defined) and then we use that to call
+memblock_reserve() (not part of that patch, it should be though).
+-- 
+Florian
