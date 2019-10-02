@@ -1,7 +1,7 @@
 From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 05/10] ARM: dts: dove: Rename "sa-sram" node to "sram"
-Date: Wed,  2 Oct 2019 18:43:11 +0200
-Message-ID: <20191002164316.14905-5-krzk@kernel.org>
+Subject: [PATCH v3 06/10] ARM: dts: imx: Rename "iram" node to "sram"
+Date: Wed,  2 Oct 2019 18:43:12 +0200
+Message-ID: <20191002164316.14905-6-krzk@kernel.org>
 References: <20191002164316.14905-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191002164316.14905-1-krzk@kernel.org>
@@ -10,26 +10,54 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukji
 List-Id: devicetree@vger.kernel.org
 
 The device node name should reflect generic class of a device so rename
-the "sa-sram" node to "sram".  This will be also in sync with upcoming DT
+the "iram" node to "sram".  This will be also in sync with upcoming DT
 schema.  No functional change.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/dove.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/imx27.dtsi | 2 +-
+ arch/arm/boot/dts/imx31.dtsi | 2 +-
+ arch/arm/boot/dts/imx51.dtsi | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index 2e8a3977219f..3081b04e8c08 100644
---- a/arch/arm/boot/dts/dove.dtsi
-+++ b/arch/arm/boot/dts/dove.dtsi
-@@ -784,7 +784,7 @@
- 				status = "disabled";
- 			};
+diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
+index 3652f5556b29..f3464cf52e49 100644
+--- a/arch/arm/boot/dts/imx27.dtsi
++++ b/arch/arm/boot/dts/imx27.dtsi
+@@ -585,7 +585,7 @@
+ 			status = "disabled";
+ 		};
  
--			crypto_sram: sa-sram@ffffe000 {
-+			crypto_sram: sram@ffffe000 {
- 				compatible = "mmio-sram";
- 				reg = <0xffffe000 0x800>;
- 				clocks = <&gate_clk 15>;
+-		iram: iram@ffff4c00 {
++		iram: sram@ffff4c00 {
+ 			compatible = "mmio-sram";
+ 			reg = <0xffff4c00 0xb400>;
+ 		};
+diff --git a/arch/arm/boot/dts/imx31.dtsi b/arch/arm/boot/dts/imx31.dtsi
+index d7f6fb764997..6b62f0745b82 100644
+--- a/arch/arm/boot/dts/imx31.dtsi
++++ b/arch/arm/boot/dts/imx31.dtsi
+@@ -55,7 +55,7 @@
+ 		interrupt-parent = <&avic>;
+ 		ranges;
+ 
+-		iram: iram@1fffc000 {
++		iram: sram@1fffc000 {
+ 			compatible = "mmio-sram";
+ 			reg = <0x1fffc000 0x4000>;
+ 			#address-cells = <1>;
+diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
+index 0a4b9a5d9a9c..dea86b98e9c3 100644
+--- a/arch/arm/boot/dts/imx51.dtsi
++++ b/arch/arm/boot/dts/imx51.dtsi
+@@ -116,7 +116,7 @@
+ 		interrupt-parent = <&tzic>;
+ 		ranges;
+ 
+-		iram: iram@1ffe0000 {
++		iram: sram@1ffe0000 {
+ 			compatible = "mmio-sram";
+ 			reg = <0x1ffe0000 0x20000>;
+ 		};
 -- 
 2.17.1
