@@ -1,63 +1,123 @@
 From: Adam Ford <aford173@gmail.com>
-Subject: [PATCH V4 1/3] drm/panel: simple: Add Logic PD Type 28 display support
-Date: Tue,  1 Oct 2019 18:39:21 -0500
-Message-ID: <20191001233923.16514-4-aford173@gmail.com>
-References: <20191001233923.16514-1-aford173@gmail.com>
+Subject: Re: [PATCH v2 00/21] Refine memblock API
+Date: Tue, 1 Oct 2019 19:14:13 -0500
+Message-ID: <CAHCN7xKLhWw4P9-sZKXQcfSfh2r3J_+rLxuxACW0UVgimCzyVw@mail.gmail.com>
+References: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
+ <CAHCN7x+Jv7yGPoB0Gm=TJ30ObLJduw2XomHkd++KqFEURYQcGg@mail.gmail.com>
+ <CAOMZO5A_U4aYC4XZXK1r9JaLg-eRdXy8m6z4GatQp62rK4HZ6A@mail.gmail.com>
+ <CAHCN7xJdzEppn8-74SvzACsA25bUHGdV7v=CfS08xzSi59Z2uw@mail.gmail.com>
+ <CAOMZO5D2uzR6Sz1QnX3G-Ce_juxU-0PO_vBZX+nR1mpQB8s8-w@mail.gmail.com>
+ <CAHCN7xJ32BYZu-DVTVLSzv222U50JDb8F0A_tLDERbb8kPdRxg@mail.gmail.com>
+ <20190926160433.GD32311@linux.ibm.com>
+ <CAHCN7xL1sFXDhKUpj04d3eDZNgLA1yGAOqwEeCxedy1Qm-JOfQ@mail.gmail.com>
+ <20190928073331.GA5269@linux.ibm.com>
+ <CAHCN7xJEvS2Si=M+BYtz+kY0M4NxmqDjiX9Nwq6_3GGBh3yg=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20191001233923.16514-1-aford173@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>, adam.ford@logicpd.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-omap@vger.kernel.org, Adam Ford <aford173@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAHCN7xJEvS2Si=M+BYtz+kY0M4NxmqDjiX9Nwq6_3GGBh3yg=w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, devicetree <devicetree@vger.kernel.org>, Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, x86@kernel.org, Russell King <linux@armlinux.org.uk>, kasan-dev <kasan-dev@googlegroups.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.org, Chris Healy <cphealy@gmail.com>, uclinux-h8-devel@lists.sourceforge.j
 List-Id: devicetree@vger.kernel.org
 
-UHJldmlvdXNseSwgdGhlcmUgd2FzIGFuIG9tYXAgcGFuZWwtZHBpIGRyaXZlciB0aGF0IHdvdWxk
-CnJlYWQgZ2VuZXJpYyB0aW1pbmdzIGZyb20gdGhlIGRldmljZSB0cmVlIGFuZCBzZXQgdGhlIGRp
-c3BsYXkKdGltaW5nIGFjY29yZGluZ2x5LiAgVGhpcyBkcml2ZXIgd2FzIHJlbW92ZWQgc28gdGhl
-IHNjcmVlbgpubyBsb25nZXIgZnVuY3Rpb25zLiAgVGhpcyBwYXRjaCBtb2RpZmllcyB0aGUgcGFu
-ZWwtc2ltcGxlCmZpbGUgdG8gc2V0dXAgdGhlIHRpbWluZ3MgdG8gdGhlIHNhbWUgdmFsdWVzIHBy
-ZXZpb3VzbHkgdXNlZC4KCkZpeGVzOiA4YmY0YjE2MjExNzggKCJkcm0vb21hcDogUmVtb3ZlIHBh
-bmVsLWRwaSBkcml2ZXIiKQoKU2lnbmVkLW9mZi1ieTogQWRhbSBGb3JkIDxhZm9yZDE3M0BnbWFp
-bC5jb20+ClJldmlld2VkLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+Ci0tLQpW
-NDogIE5vIENoYW5nZQpWMzogIE5vIENoYW5nZQpWMjogIE5vIENoYW5nZQoKZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9w
-YW5lbC9wYW5lbC1zaW1wbGUuYwppbmRleCAyOGZhNmJhN2I3NjcuLjhhYmIzMWY4M2ZmYyAxMDA2
-NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCisrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwpAQCAtMjA0OCw2ICsyMDQ4LDQwIEBAIHN0
-YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBtaXRzdWJpc2hpX2FhMDcwbWMwMV9t
-b2RlID0gewogCS5mbGFncyA9IERSTV9NT0RFX0ZMQUdfTkhTWU5DIHwgRFJNX01PREVfRkxBR19O
-VlNZTkMsCiB9OwogCitzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgbG9naWNw
-ZF90eXBlXzI4X21vZGUgPSB7CisJLmNsb2NrID0gOTAwMCwKKwkuaGRpc3BsYXkgPSA0ODAsCisJ
-LmhzeW5jX3N0YXJ0ID0gNDgwICsgMywKKwkuaHN5bmNfZW5kID0gNDgwICsgMyArIDQyLAorCS5o
-dG90YWwgPSA0ODAgKyAzICsgNDIgKyAyLAorCisJLnZkaXNwbGF5ID0gMjcyLAorCS52c3luY19z
-dGFydCA9IDI3MiArIDIsCisJLnZzeW5jX2VuZCA9IDI3MiArIDIgKyAxMSwKKwkudnRvdGFsID0g
-MjcyICsgMiArIDExICsgMywKKwkudnJlZnJlc2ggPSA2MCwKKwkuZmxhZ3MgPSBEUk1fTU9ERV9G
-TEFHX1BIU1lOQyB8IERSTV9NT0RFX0ZMQUdfUFZTWU5DLAorfTsKKworc3RhdGljIGNvbnN0IHN0
-cnVjdCBwYW5lbF9kZXNjIGxvZ2ljcGRfdHlwZV8yOCA9IHsKKwkubW9kZXMgPSAmbG9naWNwZF90
-eXBlXzI4X21vZGUsCisJLm51bV9tb2RlcyA9IDEsCisJLmJwYyA9IDgsCisJLnNpemUgPSB7CisJ
-CS53aWR0aCA9IDEwNSwKKwkJLmhlaWdodCA9IDY3LAorCX0sCisJLmRlbGF5ID0geworCQkucHJl
-cGFyZSA9IDIwMCwKKwkJLmVuYWJsZSA9IDIwMCwKKwkJLnVucHJlcGFyZSA9IDIwMCwKKwkJLmRp
-c2FibGUgPSAyMDAsCisJfSwKKwkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4XzFY
-MjQsCisJLmJ1c19mbGFncyA9IERSTV9CVVNfRkxBR19ERV9ISUdIIHwgRFJNX0JVU19GTEFHX1BJ
-WERBVEFfRFJJVkVfUE9TRURHRSB8CisJCSAgICAgRFJNX0JVU19GTEFHX1NZTkNfRFJJVkVfTkVH
-RURHRSwKK307CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBtaXRzdWJpc2hpX2Fh
-MDcwbWMwMSA9IHsKIAkubW9kZXMgPSAmbWl0c3ViaXNoaV9hYTA3MG1jMDFfbW9kZSwKIAkubnVt
-X21vZGVzID0gMSwKQEAgLTMyNjQsNiArMzI5OCw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2Zf
-ZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJfSwgewogCQkuY29tcGF0aWJsZSA9
-ICJsZyxscDEyOXFlIiwKIAkJLmRhdGEgPSAmbGdfbHAxMjlxZSwKKwl9LCB7CisJCS5jb21wYXRp
-YmxlID0gImxvZ2ljcGQsdHlwZTI4IiwKKwkJLmRhdGEgPSAmbG9naWNwZF90eXBlXzI4LAogCX0s
-IHsKIAkJLmNvbXBhdGlibGUgPSAibWl0c3ViaXNoaSxhYTA3MG1jMDEtY2ExIiwKIAkJLmRhdGEg
-PSAmbWl0c3ViaXNoaV9hYTA3MG1jMDEsCi0tIAoyLjE3LjEKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+On Sun, Sep 29, 2019 at 8:33 AM Adam Ford <aford173@gmail.com> wrote:
+>
+> I am attaching two logs.  I now the mailing lists will be unhappy, but
+>  don't want to try and spam a bunch of log through the mailing liast.
+> The two logs show the differences between the working and non-working
+> imx6q 3D accelerator when trying to run a simple glmark2-es2-drm demo.
+>
+> The only change between them is the 2 line code change you suggested.
+>
+> In both cases, I have cma=128M set in my bootargs.  Historically this
+> has been sufficient, but cma=256M has not made a difference.
+>
+
+Mike any suggestions on how to move forward?
+I was hoping to get the fixes tested and pushed before 5.4 is released
+if at all possible
+
+> adam
+>
+> On Sat, Sep 28, 2019 at 2:33 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> >
+> > On Thu, Sep 26, 2019 at 02:35:53PM -0500, Adam Ford wrote:
+> > > On Thu, Sep 26, 2019 at 11:04 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Thu, Sep 26, 2019 at 08:09:52AM -0500, Adam Ford wrote:
+> > > > > On Wed, Sep 25, 2019 at 10:17 AM Fabio Estevam <festevam@gmail.com> wrote:
+> > > > > >
+> > > > > > On Wed, Sep 25, 2019 at 9:17 AM Adam Ford <aford173@gmail.com> wrote:
+> > > > > >
+> > > > > > > I tried cma=256M and noticed the cma dump at the beginning didn't
+> > > > > > > change.  Do we need to setup a reserved-memory node like
+> > > > > > > imx6ul-ccimx6ulsom.dtsi did?
+> > > > > >
+> > > > > > I don't think so.
+> > > > > >
+> > > > > > Were you able to identify what was the exact commit that caused such regression?
+> > > > >
+> > > > > I was able to narrow it down the 92d12f9544b7 ("memblock: refactor
+> > > > > internal allocation functions") that caused the regression with
+> > > > > Etnaviv.
+> > > >
+> > > >
+> > > > Can you please test with this change:
+> > > >
+> > >
+> > > That appears to have fixed my issue.  I am not sure what the impact
+> > > is, but is this a safe option?
+> >
+> > It's not really a fix, I just wanted to see how exactly 92d12f9544b7 ("memblock:
+> > refactor internal allocation functions") broke your setup.
+> >
+> > Can you share the dts you are using and the full kernel log?
+> >
+> > > adam
+> > >
+> > > > diff --git a/mm/memblock.c b/mm/memblock.c
+> > > > index 7d4f61a..1f5a0eb 100644
+> > > > --- a/mm/memblock.c
+> > > > +++ b/mm/memblock.c
+> > > > @@ -1356,9 +1356,6 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+> > > >                 align = SMP_CACHE_BYTES;
+> > > >         }
+> > > >
+> > > > -       if (end > memblock.current_limit)
+> > > > -               end = memblock.current_limit;
+> > > > -
+> > > >  again:
+> > > >         found = memblock_find_in_range_node(size, align, start, end, nid,
+> > > >                                             flags);
+> > > >
+> > > > > I also noticed that if I create a reserved memory node as was done one
+> > > > > imx6ul-ccimx6ulsom.dtsi the 3D seems to work again, but without it, I
+> > > > > was getting errors regardless of the 'cma=256M' or not.
+> > > > > I don't have a problem using the reserved memory, but I guess I am not
+> > > > > sure what the amount should be.  I know for the video decoding 1080p,
+> > > > > I have historically used cma=128M, but with the 3D also needing some
+> > > > > memory allocation, is that enough or should I use 256M?
+> > > > >
+> > > > > adam
+> > > >
+> > > > --
+> > > > Sincerely yours,
+> > > > Mike.
+> > > >
+> >
+> > --
+> > Sincerely yours,
+> > Mike.
+> >
