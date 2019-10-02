@@ -1,131 +1,80 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH v2 03/11] dt-bindings: crypto: Add DT bindings
- documentation for sun8i-ce Crypto Engine
-Date: Wed, 2 Oct 2019 07:54:58 +0200
-Message-ID: <20191002055458.zo2vdbxodj3ch53g@gilmour>
-References: <20191001184141.27956-1-clabbe.montjoie@gmail.com>
- <20191001184141.27956-4-clabbe.montjoie@gmail.com>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v13 0/8] Exynos5 Dynamic Memory Controller driver
+Date: Wed, 2 Oct 2019 08:01:05 +0200
+Message-ID: <7c8cd09c-aa6b-29e4-1208-2476027d9c85@partner.samsung.com>
+References: <CGME20190821104316eucas1p2ecd715f3105921ec83e0acf1291201f8@eucas1p2.samsung.com>
+        <20190821104303.32079-1-l.luba@partner.samsung.com>
+        <20191001192947.GA1815@kozik-lap>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2fgyg66uvun6eeak"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191001184141.27956-4-clabbe.montjoie@gmail.com>
+In-Reply-To: <20191001192947.GA1815@kozik-lap>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: catalin.marinas@arm.com, davem@davemloft.net, herbert@gondor.apana.org.au, linux@armlinux.org.uk, mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org, will@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, b.zolnierkie@samsung.com, kgene@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, s.nawrocki@samsung.com, myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com, jroedel@suse.de, treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 
---2fgyg66uvun6eeak
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 10/1/19 9:29 PM, Krzysztof Kozlowski wrote:
+> On Wed, Aug 21, 2019 at 12:42:55PM +0200, Lukasz Luba wrote:
+>> Hi all,
+>>
+>> This is v13 which makes cosmetic changes. It is based on current mainline
+>> (v5.3-rc5) with with devfreq/for-next where there is a PPMU patch [1].
+>>
+>> The patch set adds support of Dynamic Memory Controller for Exynos5422 SoC.
+>> The driver supports Dynamic Voltage and Frequency Scaling
+>> for the DMC and DRAM. It also provides needed timings for different
+>> speed operations of the DRAM memory.
+>> There is also new generic code in of_memory and headers which allows to parse
+>> LPDDR3 memories defined in device-tree.
+>>
+>> Here are the last changes suggested by Krzysztof during his review.
+>> For the previous changes in older revisions please refer to [2], there is
+>> more detailed change log.
+>>
+>> changes:
+>> v13:
+>> - skipped patch with chipID changes in DT, since it is not used anymore,
+>> - removed license comment in of_memory.c since SPDX has been merged,
+>> - aligned comment to the current fields in the structure,
+>> - changed printed warning when timings are not found,
+>>
+>> Regards,
+>> Lukasz Luba
+>>
+>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/commit/?h=for-next&id=b617376df8f01c975dee66802f4da16291f92079
+>> [2] https://protect2.fireeye.com/url?k=76a66a31f783ea89.76a7e17e-142fcaf2360aff73&u=https://lkml.org/lkml/2019/7/22/251
+>>
+>>
+>> Lukasz Luba (8):
+>>    dt-bindings: ddr: rename lpddr2 directory
+>>    dt-bindings: ddr: add LPDDR3 memories
+>>    drivers: memory: extend of_memory by LPDDR3 support
+>>    dt-bindings: memory-controllers: add Exynos5422 DMC device description
+>>    drivers: memory: add DMC driver for Exynos5422
+>>    ARM: dts: exynos: add syscon to clock compatible
+>>    ARM: dts: exynos: add DMC device for exynos5422
+>>    ARM: exynos_defconfig: enable DMC driver
+>>
+> 
+> Just to let you know:
+> 
+> I applied the set some days ago but this did not make to merge window.
+> Now, I put it on for-next branch so will appear on linux-next soon. I
+> also applied the fixes sent later.
 
-On Tue, Oct 01, 2019 at 08:41:33PM +0200, Corentin Labbe wrote:
-> This patch adds documentation for Device-Tree bindings for the
-> Crypto Engine cryptographic accelerator driver.
->
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> ---
->  .../bindings/crypto/allwinner,sun8i-ce.yaml   | 92 +++++++++++++++++++
->  1 file changed, 92 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
->
-> diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
-> new file mode 100644
-> index 000000000000..9bd26a2eff33
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/crypto/allwinner,sun8i-ce.yaml
-> @@ -0,0 +1,92 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/crypto/allwinner,sun8i-ce.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Allwinner Crypto Engine driver
-> +
-> +maintainers:
-> +  - Corentin Labbe <clabbe.montjoie@gmail.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - allwinner,sun8i-h3-crypto
-> +      - allwinner,sun8i-r40-crypto
-> +      - allwinner,sun50i-a64-crypto
-> +      - allwinner,sun50i-h5-crypto
-> +      - allwinner,sun50i-h6-crypto
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Bus clock
-> +      - description: Module clock
-> +      - description: MBus clock
-> +    minItems: 2
-> +    maxItems: 3
-> +
-> +  clock-names:
-> +    items:
-> +      - const: bus
-> +      - const: mod
-> +      - const: ram
-> +    minItems: 2
-> +    maxItems: 3
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  reset-names:
-> +    const: bus
-> +
-> +if:
-> +  properties:
-> +    compatible:
-> +      items:
-> +        const: allwinner,sun50i-h6-crypto
-> +then:
-> +  properties:
-> +      clocks:
-> +        minItems: 3
-> +      clock-names:
-> +        minItems: 3
-> +else:
-> +  properties:
-> +      clocks:
-> +        maxItems: 2
-> +      clock-names:
-> +        maxItems: 2
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +
-> +additionalProperties: true
+Thank you Krzysztof!
 
-I guess you meant false here?
+> 
+> I'll take also the latest work with interrupt mode for DMC (after minor
+> fix in bindings).
+> 
 
-Maxime
+I will send the latest IRQ mode version with this binding IRQ names
+description in a minute.
 
---2fgyg66uvun6eeak
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZQ7rQAKCRDj7w1vZxhR
-xdFbAQCEkUlhME2ax9rLhbr3MrlsTcoOQtlq/F3s52pxJLaI3QD+OMbHPPV//HCY
-MPqSdqIOu1r5jzZjtXPgjsZTo4VsqAo=
-=m0Hw
------END PGP SIGNATURE-----
-
---2fgyg66uvun6eeak--
+Regards,
+Lukasz
