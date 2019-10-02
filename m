@@ -1,44 +1,62 @@
-From: "Chia-Wei, Wang" <chiawei_wang@aspeedtech.com>
-Subject: [PATCH 1/2] peci: aspeed: Add AST2600 compatible string
-Date: Wed, 2 Oct 2019 14:11:59 +0800
-Message-ID: <20191002061200.29888-2-chiawei_wang@aspeedtech.com>
-References: <20191002061200.29888-1-chiawei_wang@aspeedtech.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v6 0/2] at24: convert the binding document to yaml
+Date: Wed,  2 Oct 2019 09:20:45 +0200
+Message-ID: <20191002072047.20895-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191002061200.29888-1-chiawei_wang@aspeedtech.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jae.hyun.yoo@linux.intel.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ryan_chen@aspeedtech.com, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au, jason.m.bills@linux.intel.com, chiawei_wang@aspeedtech.com, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Peter Rosin <peda@axentia.se>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-The AST2600 SoC contains the same register set as AST25xx.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Signed-off-by: Chia-Wei, Wang <chiawei_wang@aspeedtech.com>
----
- drivers/peci/peci-aspeed.c | 1 +
- 1 file changed, 1 insertion(+)
+The first patch converts the at24 DT binding to yaml. The second adds a new
+compatible special case that's being used undocumented currently.
 
-diff --git a/drivers/peci/peci-aspeed.c b/drivers/peci/peci-aspeed.c
-index 51cb2563ceb6..4eed119dc83b 100644
---- a/drivers/peci/peci-aspeed.c
-+++ b/drivers/peci/peci-aspeed.c
-@@ -485,6 +485,7 @@ static int aspeed_peci_remove(struct platform_device *pdev)
- static const struct of_device_id aspeed_peci_of_table[] = {
- 	{ .compatible = "aspeed,ast2400-peci", },
- 	{ .compatible = "aspeed,ast2500-peci", },
-+	{ .compatible = "aspeed,ast2600-peci", },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, aspeed_peci_of_table);
+v1 -> v2:
+- modified the compatible property: we now list all possible combinations and
+  non-standard types with appropriate fallbacks to be as strict as possible
+- minor changes to other properties: added constraints, converted to enums
+  where applicable and referenced the types from schema
+
+v2 -> v3:
+(Rob Herring:)
+- Here's my reworking of compatible schema and all the other fixes I
+  found. The inner 'oneOf' is probably a little excessive given the number
+  of lines. All it does is ensure both compatible strings have the same
+  part number.
+
+v3 -> v4:
+- Add a $nodename definition
+- Turns out the compatible schema is too complex for generating a 'select'
+  schema and only a small subset where getting validated. So we need a
+  custom 'select' schema. This in turn fixes the issue with the nxp,se97b
+  binding.
+
+v4 -> v5:
+- added a new patch extending the list of special cases of the compatible
+  property
+- added comments explaining the schema for the compatible property
+- dropped redundant information from property descriptions (for instance:
+  there's no need to say "This parameterless property" where it's obvious
+  from the type that the property is a flag)
+
+v5 -> v6:
+- common 'compatible' schema prevents non-unique compatible items, so remove
+  that part of the comment
+- add missing cs and mac variants to the list of patterns
+
+Bartosz Golaszewski (2):
+  dt-bindings: at24: convert the binding document to yaml
+  dt-bindings: at24: add new compatible
+
+ .../devicetree/bindings/eeprom/at24.txt       |  90 +--------
+ .../devicetree/bindings/eeprom/at24.yaml      | 188 ++++++++++++++++++
+ MAINTAINERS                                   |   2 +-
+ 3 files changed, 190 insertions(+), 90 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/eeprom/at24.yaml
+
 -- 
-2.17.1
+2.23.0
