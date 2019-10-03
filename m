@@ -1,14 +1,13 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: move ltdc pinctrl on stm32mp157a dk1
- board
-Date: Thu, 3 Oct 2019 12:05:06 +0200
-Message-ID: <05cc08f2-36c8-af75-39f3-7b7f4ac4e671@st.com>
-References: <1564754931-13861-1-git-send-email-yannick.fertre@st.com>
+From: Gerald BAEZA <gerald.baeza@st.com>
+Subject: RE: [PATCH v3 0/5] stm32-ddr-pmu driver creation
+Date: Thu, 3 Oct 2019 10:08:06 +0000
+Message-ID: <013321ff60ae44da892d806fbd3024d4@SFHDAG5NODE1.st.com>
+References: <1566918464-23927-1-git-send-email-gerald.baeza@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1564754931-13861-1-git-send-email-yannick.fertre@st.com>
+In-Reply-To: <1566918464-23927-1-git-send-email-gerald.baeza@st.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -19,29 +18,69 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, Philippe Cornu <philippe.cornu@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>
+To: "will@kernel.org" <will@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "corbet@lwn.net" <corbet@lwn.net>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgWWFubmljawoKT24gOC8yLzE5IDQ6MDggUE0sIFlhbm5pY2sgRmVydHLDqSB3cm90ZToKPiBU
-aGUgbHRkYyBwaW5jdHJsIG11c3QgYmUgaW4gdGhlIGRpc3BsYXkgY29udHJvbGxlciBub2RlIGFu
-ZAo+IG5vdCBpbiB0aGUgcGVyaXBoZXJhbCBub2RlIChoZG1pIGJyaWRnZSkuCj4gCj4gU2lnbmVk
-LW9mZi1ieTogWWFubmljayBGZXJ0csOpIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+Cj4gLS0tCj4g
-ICBhcmNoL2FybS9ib290L2R0cy9zdG0zMm1wMTU3YS1kazEuZHRzIHwgNiArKystLS0KPiAgIDEg
-ZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMybXAxNTdhLWRrMS5kdHMgYi9hcmNoL2FybS9i
-b290L2R0cy9zdG0zMm1wMTU3YS1kazEuZHRzCj4gaW5kZXggZjNmMGUzNy4uMTI4NWNmYyAxMDA2
-NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdG0zMm1wMTU3YS1kazEuZHRzCj4gKysrIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJtcDE1N2EtZGsxLmR0cwo+IEBAIC05OSw5ICs5OSw2IEBA
-Cj4gICAJCXJlc2V0LWdwaW9zID0gPCZncGlvYSAxMCBHUElPX0FDVElWRV9MT1c+Owo+ICAgCQlp
-bnRlcnJ1cHRzID0gPDEgSVJRX1RZUEVfRURHRV9GQUxMSU5HPjsKPiAgIAkJaW50ZXJydXB0LXBh
-cmVudCA9IDwmZ3Bpb2c+Owo+IC0JCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCIsICJzbGVlcCI7
-Cj4gLQkJcGluY3RybC0wID0gPCZsdGRjX3BpbnNfYT47Cj4gLQkJcGluY3RybC0xID0gPCZsdGRj
-X3BpbnNfc2xlZXBfYT47Cj4gICAJCXN0YXR1cyA9ICJva2F5IjsKPiAgIAo+ICAgCQlwb3J0cyB7
-Cj4gQEAgLTI3Niw2ICsyNzMsOSBAQAo+ICAgfTsKPiAgIAo+ICAgJmx0ZGMgewo+ICsJcGluY3Ry
-bC1uYW1lcyA9ICJkZWZhdWx0IiwgInNsZWVwIjsKPiArCXBpbmN0cmwtMCA9IDwmbHRkY19waW5z
-X2E+Owo+ICsJcGluY3RybC0xID0gPCZsdGRjX3BpbnNfc2xlZXBfYT47Cj4gICAJc3RhdHVzID0g
-Im9rYXkiOwo+ICAgCj4gICAJcG9ydCB7Cj4gCgpBcHBsaWVkIG9uIHN0bTMyLW5leHQuCgpUaGFu
-a3MuCkFsZXgKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LWFybS1rZXJuZWwK
+Dear all
+
+Gentle reminder for this review.
+
+Thanks in advance !
+
+G=E9rald
+
+> From: Gerald BAEZA <gerald.baeza@st.com>
+> =
+
+> The DDRPERFM is the DDR Performance Monitor embedded in STM32MP1
+> SOC.
+> =
+
+> This series adds support for the DDRPERFM via a new stm32-ddr-pmu driver,
+> registered into the perf framework.
+> =
+
+> This driver is inspired from arch/arm/mm/cache-l2x0-pmu.c
+> =
+
+> ---
+> Changes from v1:
+> - add 'resets' description (bindings) and using (driver). Thanks Rob.
+> - rebase on 5.2-rc1 (that includes the ddrperfm clock control patch).
+> =
+
+> Changes from v2:
+> - rebase on 5.3-rc6 that has to be completed with
+>   'perf tools: fix alignment trap in perf stat': mandatory.
+>   'Documentation: add link to stm32mp157 docs': referenced from this seri=
+es.
+> - take into account all remarks from Mark Rutland: thanks for your time!
+>   https://lkml.org/lkml/2019/6/26/388
+> - fix for event type filtering in stm32_ddr_pmu_event_init()
+> =
+
+> Gerald Baeza (5):
+>   Documentation: perf: stm32: ddrperfm support
+>   dt-bindings: perf: stm32: ddrperfm support
+>   perf: stm32: ddrperfm driver creation
+>   ARM: configs: enable STM32_DDR_PMU
+>   ARM: dts: stm32: add ddrperfm on stm32mp157c
+> =
+
+>  .../devicetree/bindings/perf/stm32-ddr-pmu.txt     |  16 +
+>  Documentation/perf/stm32-ddr-pmu.txt               |  37 ++
+>  arch/arm/boot/dts/stm32mp157c.dtsi                 |   8 +
+>  arch/arm/configs/multi_v7_defconfig                |   1 +
+>  drivers/perf/Kconfig                               |   6 +
+>  drivers/perf/Makefile                              |   1 +
+>  drivers/perf/stm32_ddr_pmu.c                       | 426 +++++++++++++++=
+++++++
+>  7 files changed, 495 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/perf/stm32-ddr-
+> pmu.txt
+>  create mode 100644 Documentation/perf/stm32-ddr-pmu.txt
+>  create mode 100644 drivers/perf/stm32_ddr_pmu.c
+> =
+
+> --
+> 2.7.4
