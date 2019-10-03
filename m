@@ -1,83 +1,129 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v11 0/7] drm/sun4i: dsi: Fixes/updates (A33 reworked!)
-Date: Thu,  3 Oct 2019 12:15:20 +0530
-Message-ID: <20191003064527.15128-1-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v11 1/7] drm/sun4i: dsi: Fix TCON DRQ set bits
+Date: Thu,  3 Oct 2019 12:15:21 +0530
+Message-ID: <20191003064527.15128-2-jagan@amarulasolutions.com>
+References: <20191003064527.15128-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi <linux-sunxi@googlegroups.com>, Jagan Teki <jagan@amarulasolutions.com>, michael@amarulasolutions.com, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBLVS23WAKGQEUTEPXCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20191003064527.15128-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Cc: michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBpcyB2MTEgdmVyc2lvbiBjaGFuZ2VzIGZvciBwcmV2aW91cyBzZXJpZXNbMV0uCgpUaGlz
-IHNlcmllcyBkcm9wcGVkIHRoZSB0Y29uLT5kY2xrX21pbl9kaXYgYW5kIHRjb24tPmRjbGtfbWF4
-X2RpdgpwYXRjaGVzLCBzaW5jZSB0aGUgZGlzY3Vzc2lvbiBvbiB0aGUgcmVzcGVjdGl2ZSB0aHJl
-YWRzWzJdWzNdIApub3QgZmluYWxpemVkIG9yIG5vdCBhZ3JlZSBvbiBib3RoIHRoZSBlbmRzLgoK
-VGhpcyBzZXJpZXMgbW9zdGx5IHRoZSBjb21taXQgbWVzc2FnZXMgY2hhbmdlcyBzdWdnZXN0ZWQg
-YnkgQ2hlbi1ZdS4KCk1vc3Qgb2YgdGhlc2UgaXNzdWVzIGFyZSByZXByb2R1Y2VkIHdoaWxlIHN1
-cHBvcnRpbmcgQWxsd2lubmVyIEE2NApNSVBJLURTSSBbNF0gYnV0IHRvIGNvbmZpcm0gaXQgd2l0
-aCBvdGhlciBTb0MgdGhpcyBzZXJpZXMgaXMgcmV3b3JrZWQKb24gQTMzIHNpbmNlIHRoZSBjb250
-cm9sbGVyIHRlc3RlZCBpdCBBMzMgYXMgb2Ygbm93LgoKU2luY2Ugd2UgZG9uJ3QgaGF2ZSBwcm9w
-ZXIgZXZpZGVuY2UgYW5kIGRvY3VtZW50YXRpb24gZm9yIGRzaSBjb250cm9sbGVyCmluIEFsbHdp
-bm5lciwgdGhlc2UgY2hhbmdlcyBhcmUgbW9yZSBsaWtlbHkgdG8gcmVseSBvbiBuZXcgd29ya2lu
-ZyBCU1AKY29kZXMgKGV2ZW4gdGhlIGluaXRpYWwgZHJpdmVyIHdyaXR0ZW4gYXMgcGVyIHRoaXMg
-cnVsZSkuCgpBbGwgdGhlc2UgZml4ZXMvdXBkYXRlcyBhcmUgdGVzdGVkIGluICJiYW5hbmFwaSxz
-MDcwd3YyMC1jdDE2IiBwYW5lbApvbiBBbGx3aW5uZXIgQTMzLCB0aGUgc2FtZSBwYW5lbCB0aW1p
-bmdzIGFyZSBhdmFpbGFibGUgaW4gcGFuZWwtc2ltcGxlCmluIG1haW5saW5lIHRyZWUuCgpDaGFu
-Z2VzIGZvciB2MTE6Ci0gRHJvcCBEQ0xLIGRpdmlkZXJzIHBhdGNoZXMKLSBVcGRhdGVkIHRoZSBj
-b21taXQgbWVzc2FnZSBjaGFuZ2VzIHN1Z2dlc3RlZCBieSBDaGVuLVl1Ci0gcmViYXNlZCBvbiBs
-aW51eC1uZXh0CkNoYW5nZXMgZm9yIHYxMDoKLSByZXdvcmtlZCBwcmV2aW91cyAiRml4ZXMvdXBk
-YXRlcyIgcGF0Y2hlcyBvbiBBMzMKLSByZXdvcmtlZCBwcmV2aW91cyBBNjQgRFNJIGZpeGVzIG9u
-IEEzMwotIGFkZGVkIHByb3BlciBkZXRhaWxlZCBjb21taXQgbWVzc2FnZXMgd2l0aCBsb2dzCi0g
-dGVzdGVkIG9uIEJQSS1NMk0gYm9hcmQuCkNoYW5nZXMgZm9yIHY5OgotIHJlYmFzZSBvbiBkcm0t
-bWlzYwotIHVwZGF0ZSBjb21taXQgbWVzc2FnZXMKLSBhZGQgaHN5bmNfcG9yY2ggb3ZlcmZsb3cg
-cGF0Y2gKQ2hhbmdlcyBmb3Igdjg6Ci0gcmViYXNlIG9uIG1hc3RlcgotIHJld29yayBvbiBjb21t
-aXQgbWVzc2FnZXMKLSByZXdvcmsgdmlkZW8gc3RhcnQgZGVsYXkKLSBpbmNsdWRlIGRycSBjaGFu
-Z2VzIGZyb20gcHJldmlvdXMgdmVyc2lvbgpDaGFuZ2VzIGZvciB2NzoKLSByZWJhc2Ugb24gbWFz
-dGVyCi0gY29sbGVjdCBNZXJsaWpuIFdhamVyIFRlc3RlZC1ieSBjcmVkaXRzLgpDaGFuZ2VzIGZv
-ciB2NjoKLSBmaXhlZCBhbGwgYnVyc3QgbW9kZSBwYXRjaGVzIGFzIHBlciBwcmV2aW91cyB2ZXJz
-aW9uIGNvbW1lbnRzCi0gcmViYXNlIG9uIG1hc3RlcgotIHVwZGF0ZSBwcm9wZXIgY29tbWl0IG1l
-c3NhZ2UKLSBkcm9wcGVkIHVubmVlZGVkIGNvbW1lbnRzCi0gb3JkZXIgdGhlIHBhdGNoZXMgdGhh
-dCBtYWtlIHJldmlldyBlYXN5CkNoYW5nZXMgZm9yIHY1LCB2NCwgdjMsIHYyOgotIHVzZSBleGlz
-dGluZyBkcml2ZXIgY29kZSBjb25zdHJ1Y3QgZm9yIGhibGsgY29tcHV0YXRpb24KLSBjcmVhdGUg
-c2VwYXJhdGUgZnVuY3Rpb24gZm9yIHZibGsgY29tcHV0YXRpb24KLSBjbGVhbnVwIGNvbW1pdCBt
-ZXNzYWdlcwotIHVwZGF0ZSBwcm9wZXIgY29tbWl0IG1lc3NhZ2VzCi0gZml4ZWQgY2hlY2twYXRj
-aCB3YXJuaW5ncy9lcnJvcnMKLSB1c2UgcHJvcGVyIHJldHVybiB2YWx1ZSBmb3IgdGNvbjAgcHJv
-YmUKLSBhZGQgbG9naWMgdG8gZ2V0IHRjb24wIGRpdmlkZXIgdmFsdWVzCi0gc2ltcGxpZnkgdGlt
-aW5ncyBjb2RlIHRvIHN1cHBvcnQgYnVyc3QgbW9kZQotIGZpeCBkcnEgY29tcHV0YXRpb24gcmV0
-dXJuIHZhbHVlcwotIHJlYmFzZSBvbiBtYXN0ZXIKCkFueSBpbnB1dHM/CkphZ2FuLgoKWzFdIGh0
-dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNjA4NDcvClsyXSBodHRwczov
-L3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvcGF0Y2gvMzA1OTIzLz9zZXJpZXM9NjA4NDcmcmV2
-PTEKWzNdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA3Nzk5MzcvCls0XSBo
-dHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvc2VyaWVzLzU3ODM0LwoKSmFnYW4gVGVr
-aSAoNyk6CiAgZHJtL3N1bjRpOiBkc2k6IEZpeCBUQ09OIERSUSBzZXQgYml0cwogIGRybS9zdW40
-aTogZHNpOiBVcGRhdGUgc3RhcnQgdmFsdWUgaW4gdmlkZW8gc3RhcnQgZGVsYXkKICBkcm0vc3Vu
-NGk6IGRzaTogRml4IHZpZGVvIHN0YXJ0IGRlbGF5IGNvbXB1dGF0aW9uCiAgZHQtYmluZGluZ3M6
-IHN1bjZpLWRzaTogQWRkIFZDQy1EU0kgc3VwcGx5IHByb3BlcnR5CiAgZHJtL3N1bjRpOiBzdW42
-aV9taXBpX2RzaTogQWRkIFZDQy1EU0kgcmVndWxhdG9yIHN1cHBvcnQKICBbRE8gTk9UIE1FUkdF
-XSBkcm0vcGFuZWw6IEFkZCBCYW5hbmFwaSBTMDcwV1YyMC1DVDE2IElDTjYyMTEgTUlQSS1EU0kg
-dG8gUkdCIGJyaWRnZQogIFtETyBOT1QgTUVSR0VdIEFSTTogZHRzOiBzdW44aTogYmFuYW5hcGkt
-bTJtOiBFbmFibGUgQmFuYW5hcGkgUzA3MFdWMjAtQ1QxNiBEU0kgcGFuZWwKCiAuLi4vZGlzcGxh
-eS9hbGx3aW5uZXIsc3VuNmktYTMxLW1pcGktZHNpLnlhbWwgfCAgIDMgKwogYXJjaC9hcm0vYm9v
-dC9kdHMvc3VuOGktcjE2LWJhbmFuYXBpLW0ybS5kdHMgIHwgIDQwICsrKwogZHJpdmVycy9ncHUv
-ZHJtL3BhbmVsL0tjb25maWcgICAgICAgICAgICAgICAgIHwgICA5ICsKIGRyaXZlcnMvZ3B1L2Ry
-bS9wYW5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAgMSArCiAuLi4vcGFuZWwvcGFuZWwt
-YmFuYW5hcGktczA3MHd2MjAtaWNuNjIxMS5jICAgfCAyOTMgKysrKysrKysrKysrKysrKysrCiBk
-cml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNmlfbWlwaV9kc2kuYyAgICAgICAgfCAgMzIgKy0KIGRy
-aXZlcnMvZ3B1L2RybS9zdW40aS9zdW42aV9taXBpX2RzaS5oICAgICAgICB8ICAgMiArCiA3IGZp
-bGVzIGNoYW5nZWQsIDM3NiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQogY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1iYW5hbmFwaS1zMDcwd3YyMC1p
-Y242MjExLmMKCi0tIAoyLjE4LjAuMzIxLmdmZmM2ZmEwZTMKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+The LCD timing definitions between Linux DRM vs Allwinner are different,
+below diagram shows this clear differences.
+
+           Active                 Front           Sync           Back
+           Region                 Porch                          Porch
+<-----------------------><----------------><--------------><-------------->
+  //////////////////////|
+ ////////////////////// |
+//////////////////////  |..................                ................
+                                           ________________
+<----- [hv]display ----->
+<------------- [hv]sync_start ------------>
+<--------------------- [hv]sync_end ---------------------->
+<-------------------------------- [hv]total ------------------------------>
+
+<----- lcd_[xy] -------->		  <- lcd_[hv]spw ->
+					  <---------- lcd_[hv]bp --------->
+<-------------------------------- lcd_[hv]t ------------------------------>
+
+The DSI driver misinterpreted the hbp term from the BSP code to refer
+only to the backporch, when in fact it was backporch + sync. Thus the
+driver incorrectly used the horizontal front porch plus sync in its
+calculation of the DRQ set bit value, when it should not have included
+the sync timing.
+
+Including additional sync timings leads to flip_done timed out as:
+
+WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
+[CRTC:46:crtc-0] vblank wait timed out
+Modules linked in:
+CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted 5.1.0-next-20190514-00026-g01f0c75b902d-dirty #13
+Hardware name: Allwinner sun8i Family
+Workqueue: events deferred_probe_work_func
+[<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
+[<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
+[<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
+[<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
+[<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
+[<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
+[<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
+[<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
+[<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
+[<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
+[<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
+[<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>] (fbcon_init+0x560/0x5ac)
+[<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
+[<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
+[<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
+[<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
+[<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
+[<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
+[<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
+[<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
+[<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
+[<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
+[<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
+[<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
+[<c043f060>] (sun4i_drv_bind) from [<c044b598>] (try_to_bring_up_master+0x164/0x1a0)
+[<c044b598>] (try_to_bring_up_master) from [<c044b668>] (__component_add+0x94/0x140)
+[<c044b668>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
+[<c0445e1c>] (sun6i_dsi_probe) from [<c0452ef4>] (platform_drv_probe+0x48/0x9c)
+[<c0452ef4>] (platform_drv_probe) from [<c04512cc>] (really_probe+0x1dc/0x2c8)
+[<c04512cc>] (really_probe) from [<c0451518>] (driver_probe_device+0x60/0x160)
+[<c0451518>] (driver_probe_device) from [<c044f7a4>] (bus_for_each_drv+0x74/0xb8)
+[<c044f7a4>] (bus_for_each_drv) from [<c045107c>] (__device_attach+0xd0/0x13c)
+[<c045107c>] (__device_attach) from [<c0450474>] (bus_probe_device+0x84/0x8c)
+[<c0450474>] (bus_probe_device) from [<c0450900>] (deferred_probe_work_func+0x64/0x90)
+[<c0450900>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
+[<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
+[<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
+[<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+Exception stack(0xde539fb0 to 0xde539ff8)
+9fa0:                                     00000000 00000000 00000000 00000000
+9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+---[ end trace b57eb1e5c64c6b8b ]---
+random: fast init done
+[drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
+[drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
+[drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
+
+With the terms(as described in above diagram) fixed, the panel
+displays correctly without any timeouts.
+
+Tested-by: Merlijn Wajer <merlijn-tF0PIh4TN3odnm+yROfE0A@public.gmane.org>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index 1636344ba9ec..f83522717488 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -437,9 +437,9 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
+ 			     SUN6I_DSI_BURST_LINE_SYNC_POINT(SUN6I_DSI_SYNC_POINT));
+ 
+ 		val = SUN6I_DSI_TCON_DRQ_ENABLE_MODE;
+-	} else if ((mode->hsync_end - mode->hdisplay) > 20) {
++	} else if ((mode->hsync_start - mode->hdisplay) > 20) {
+ 		/* Maaaaaagic */
+-		u16 drq = (mode->hsync_end - mode->hdisplay) - 20;
++		u16 drq = (mode->hsync_start - mode->hdisplay) - 20;
+ 
+ 		drq *= mipi_dsi_pixel_format_to_bpp(device->format);
+ 		drq /= 32;
+-- 
+2.18.0.321.gffc6fa0e3
