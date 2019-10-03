@@ -1,141 +1,62 @@
-From: Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: [Patch 1/3] media: ov5640: add PIXEL_RATE control
-Date: Thu, 3 Oct 2019 08:55:06 +0200
-Message-ID: <20191003065506.ijivptniwvzyo5oz@uno.localdomain>
-References: <20190925152301.21645-1-bparrot@ti.com>
- <20190925152301.21645-2-bparrot@ti.com>
- <20191001075704.GA5449@paasikivi.fi.intel.com>
- <20191001162341.f2o7ruar2nifl5ws@ti.com>
- <20191002075951.afp2xligspqat4ew@uno.localdomain>
- <20191002121438.g3re6v54q4hit2wv@ti.com>
- <20191002143226.psrcocsjs2wtiydd@uno.localdomain>
- <20191002150615.tyxy3n6cbxttbpum@ti.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v11 1/7] drm/sun4i: dsi: Fix TCON DRQ
+ set bits
+Date: Thu, 3 Oct 2019 12:25:32 +0530
+Message-ID: <CAMty3ZDZBctSRcgfMTc3moTzrJZXL_S-tKKNKyOa4jUKT8rW+Q@mail.gmail.com>
+References: <20191003064527.15128-1-jagan@amarulasolutions.com>
+ <20191003064527.15128-2-jagan@amarulasolutions.com> <DB2FB6E5-E4B5-40F4-A05F-9A2303FCA1AE@aosc.io>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="t4za3ljubo5keeag"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191002150615.tyxy3n6cbxttbpum@ti.com>
+In-Reply-To: <DB2FB6E5-E4B5-40F4-A05F-9A2303FCA1AE@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Parrot <bparrot@ti.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, hugues.fruchet@st.com
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Michael Trimarchi <michael@amarulasolutions.com>, linux-sunxi <linux-sunxi@googlegroups.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---t4za3ljubo5keeag
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Benoit,
-
-On Wed, Oct 02, 2019 at 10:06:15AM -0500, Benoit Parrot wrote:
-> Jacopo Mondi <jacopo@jmondi.org> wrote on Wed [2019-Oct-02 16:32:26 +0200]:
-> > Hi Benoit,
-> >
-> > On Wed, Oct 02, 2019 at 07:14:38AM -0500, Benoit Parrot wrote:
-> > > Hi Jacopo,
-> > >
-> > > Maybe, I miss spoke when I mentioned a helper I did not intent a framework
-> > > level generic function. Just a function to help in this case :)
-> >
-> > Yes indeed, the discussion thread I linked here was mostly interesting
-> > because Hugues tried to do the same for LINK_FREQ iirc, and there
-> > where some usefult pointers.
-> >
-> > >
-> > > That being said, I re-read the thread you mentioned. And as Hughes pointed
-> > > out dynamically generating a "working" link frequency value which can be
-> > > used by a CSI2 receiver to properly configure its PHY is not trivial.
-> > >
-> > > When I created this patch, I also had another to add V4L2_CID_LINK_FREQ
-> > > support. I am testing this against the TI CAL CSI2 receiver, which already
-> > > uses the V4L2_CID_PIXEL_RATE value for that purpose, so I also had a patch
-> > > to add support for V4L2_CID_LINK_FREQ to that driver as well.
-> > >
-> > > Unfortunately, similar to Hughes' findings I was not able to make it "work"
-> > > with all supported resolution/framerate.
-> >
-> > As reported by Hugues findings, the PLL calculation procedure might be
-> > faulty, and the actuall frequencies on the bus are different from the
-> > calculated ones.
-> >
-> > I wish I had more time to re-look at that, as they worked for my and
-> > Sam's use case, but deserve some rework.
-> >
-> > >
-> > > Unlike my V4L2_CID_PIXEL_RATE solution which now works in all mode with the
-> > > same receiver.
-> > >
-> >
-> > It seems to me you're reporting a fixed rate. It might make your
-> > receiver happy, but does not report what is acutally put on the bus.
-> > Am I missing something ?
->
-> No it is not fixed, the only fixed value was the initial value (which
-> representative of the initial/default resolution and framerate), I
-> fixed this in v2. The reported PIXEL_RATE is re-calculated every time there
-> is a s_fmt and/or framerate change and the V4L2_CID_PIXEL_RATE control
-> value is updated accordingly.
-
-Oh I missed v2! I only seen this one.
-I'll reply there.
-
-Thanks
-  j
-
->
-> >
-> > > So long story short I dropped the V4L2_CID_LINK_FREQ patch and focused on
-> > > V4L2_CID_PIXEL_RATE instead.
-> > >
-> >
-> > As Sakari pointed out, going from one to the other is trivial and
-> > could be done on top.
->
-> As you said it could be done on top. :)
->
-> Benoit
->
-> >
-> > Thanks
-> >    j
-> >
-> > > Regard,
-> > > Benoit
-> > >
-> > > Jacopo Mondi <jacopo@jmondi.org> wrote on Wed [2019-Oct-02 09:59:51 +0200]:
-> > > > Hi Benoit,
-> > > >   +Hugues
-> > > >
-> > > > If you're considering an helper, this thread might be useful to you:
-> > > > https://patchwork.kernel.org/patch/11019673/
-> > > >
-> > > > Thanks
-> > > >    j
-> > > >
-> > >
-> > >
+On Thu, Oct 3, 2019 at 12:21 PM Icenowy Zheng <icenowy@aosc.io> wrote:
 >
 >
+>
+> =E4=BA=8E 2019=E5=B9=B410=E6=9C=883=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
+2:45:21, Jagan Teki <jagan@amarulasolutions.com> =E5=86=99=E5=88=B0:
+> >The LCD timing definitions between Linux DRM vs Allwinner are
+> >different,
+> >below diagram shows this clear differences.
+> >
+> >           Active                 Front           Sync           Back
+> >           Region                 Porch                          Porch
+> ><-----------------------><----------------><--------------><------------=
+-->
+> >  //////////////////////|
+> > ////////////////////// |
+> >//////////////////////  |..................
+> >................
+> >                                           ________________
+> ><----- [hv]display ----->
+> ><------------- [hv]sync_start ------------>
+> ><--------------------- [hv]sync_end ---------------------->
+> ><-------------------------------- [hv]total
+> >------------------------------>
+> >
+> ><----- lcd_[xy] -------->                <- lcd_[hv]spw ->
+> >                                         <---------- lcd_[hv]bp --------=
+->
+> ><-------------------------------- lcd_[hv]t
+> >------------------------------>
+> >
+> >The DSI driver misinterpreted the hbp term from the BSP code to refer
+> >only to the backporch, when in fact it was backporch + sync. Thus the
+> >driver incorrectly used the horizontal front porch plus sync in its
+> >calculation of the DRQ set bit value, when it should not have included
+> >the sync timing.
+> >
+> >Including additional sync timings leads to flip_done timed out as:
+>
+> I don't think attaching this error infomation is useful at all.
 
---t4za3ljubo5keeag
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2Vm0kACgkQcjQGjxah
-VjxCvA/8CIxJ1u3/4d340kMy543hq9yHlp9oKDwuamw0VLyqOdOGYKiJTrD8HN1M
-oE5TrFlcc4j5crvLg6MHre35j2e+EHsJKsFQ+lrJp9OhXaOGSzELWc4/ixzFnLox
-1hmew+DyLq/lCEThSxrRN9cWQq6mtZ4oItfB1pzGDLcaSUJ9j4sr1w+Y3gvkC3/M
-zbp+IWqT75CtP7HlNgTu8ncnOJ76g+FXmQiJq1oIazq5NXTwM7vbm2V0vl+ZCnzQ
-w+dz+dgmqfrO0KPthbp7HDb9Nh5SnAr0wr+E4v/ur69aHFtw5duRRHZlVmChh4vk
-yg6gtrykzwx2UvT+xZWuQKoJZ2Q1m+DC3hahnKYv4Sp/wQsYuXOn5NN/MsgOBrLI
-HG6SmTx0yjnygv0qXKWRbq1hwyojiED2MozPBHxGsFOUo88Gu5uZl1W7Z0K9/z18
-y77Xcfj7E7W92dazdsyklxR5f2Q9/xHKV2vkVGb33WKs0j2dpNhzvSKboUV9lZX0
-EiSv9njvXCN9ZkEN23SRHewP8l04+lAMSdPeA6WcZbFxkO64z2XzyuHAH2JIE1Lu
-+ZqJPKRaoUQQEDtnHuZpkS7nDRUElS6EKnIp95HsYT55WB72nuINyUfTrQhTih94
-BKKfRRIQ6qZ49dqlcXrh03FcDc1P/wKgU5cN1a9898NwrJZ7QWA=
-=3rJs
------END PGP SIGNATURE-----
-
---t4za3ljubo5keeag--
+Since the error would be common irrespective of panels and it would
+trigger from dsi controller, I thought this would be useful for
+reference. I have had this conversation in previous version changes,
+so I have added it. let me know if have any comments.
