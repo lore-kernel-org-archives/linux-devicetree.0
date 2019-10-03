@@ -1,70 +1,59 @@
-From: Talel Shenhar <talel@amazon.com>
-Subject: [PATCH v3 1/2] dt-bindings: edac: al-mc-edac: Amazon's Annapurna Labs Memory Controller EDAC
-Date: Thu, 3 Oct 2019 14:49:22 +0300
-Message-ID: <1570103363-21486-2-git-send-email-talel@amazon.com>
-References: <1570103363-21486-1-git-send-email-talel@amazon.com>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH] media: dt-bindings: media: Fixup Allwinner A10 CSI
+ binding
+Date: Thu, 3 Oct 2019 13:51:54 +0200
+Message-ID: <20191003115154.6f2jgj3dnqsved2y@gilmour>
+References: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nmzxrjrlzz4yd5h2"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570103363-21486-1-git-send-email-talel@amazon.com>
+Content-Disposition: inline
+In-Reply-To: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, talel@amazon.com, davem@davemloft.net, gregkh@linuxfoundation.org, paulmck@linux.ibm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
-Cc: dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com, barakw@amazon.com
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document Amazon's Annapurna Labs Memory Controller EDAC SoC binding.
 
-Signed-off-by: Talel Shenhar <talel@amazon.com>
----
- .../bindings/edac/amazon,al-mc-edac.yaml           | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
+--nmzxrjrlzz4yd5h2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-new file mode 100644
-index 0000000..33da051
---- /dev/null
-+++ b/Documentation/devicetree/bindings/edac/amazon,al-mc-edac.yaml
-@@ -0,0 +1,40 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/edac/amazon,al-mc-edac.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Amazon's Annapurna Labs Memory Controller EDAC
-+
-+maintainers:
-+  - Talel Shenhar <talel@amazon.com>
-+  - Talel Shenhar <talelshenhar@gmail.com>
-+
-+description: |
-+  EDAC node is defined to describe on-chip error detection and correction for
-+  Amazon's Annapurna Labs Memory Controller.
-+
-+properties:
-+
-+  compatible:
-+    - const: "amazon,al-mc-edac"
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    edac@f0080000 {
-+      compatible = "amazon,al-mc-edac";
-+      reg = <0x0 0xf0080000 0x0 0x00010000>;
-+      interrupt-parent = <&amazon_al_system_fabric>;
-+      interrupt-names = "ue";
-+      interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
-+    };
--- 
-2.7.4
+Hi,
+
+On Thu, Oct 03, 2019 at 04:52:24PM +0530, Amit Kucheria wrote:
+> This new binding fails dt_binding_check due to a typo. Fix it up.
+>
+> linux.git/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
+> linux.git/Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts' failed
+> make[2]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts] Error 1
+> make[2]: *** Waiting for unfinished jobs....
+> linux.git/Makefile:1284: recipe for target 'dt_binding_check' failed
+> make[1]: *** [dt_binding_check] Error 2
+>
+> Fixes: c5e8f4ccd7750 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+
+Thanks for your patch.
+
+It has already been submitted though:
+https://lore.kernel.org/linux-arm-kernel/1568808060-17516-1-git-send-email-pragnesh.patel@sifive.com/
+
+I'm not sure why it hasn't been applied yet though :/
+
+Maxime
+>
+
+--nmzxrjrlzz4yd5h2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZXg2gAKCRDj7w1vZxhR
+xS0OAP0SU5JvkUNzuu7h9+tNkONFA7iQwgl1sR9AZpJjgOiFJAEAoJeO4CR/ZOBa
+0Vu6m/HmNJojnOFoY2ILvkflVt+Zlwg=
+=RF+5
+-----END PGP SIGNATURE-----
+
+--nmzxrjrlzz4yd5h2--
