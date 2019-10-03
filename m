@@ -1,225 +1,333 @@
-From: Dilip Kota <eswara.kota@linux.intel.com>
-Subject: Re: Fwd: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas
- for the PCIe RC controller
-Date: Thu, 3 Oct 2019 14:35:02 +0800
-Message-ID: <655892bd-6b62-ec2b-ff85-89ca1f86326e@linux.intel.com>
-References: <bf5c8a24-e969-87d4-c62b-4032273e0824@linux.intel.com>
- <b7e549bb-b46c-c393-50ac-9ef3b198fd49@linux.intel.com>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: msm8998: Disable coresight by default
+Date: Thu,  3 Oct 2019 12:14:49 +0530
+Message-ID: <20191003064449.2201-1-saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b7e549bb-b46c-c393-50ac-9ef3b198fd49@linux.intel.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com, martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org, hch@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+To: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Boot failure has been reported on MSM8998 based laptop when
+coresight is enabled. This is most likely due to lack of
+firmware support for coresight on production device when
+compared to debug device like MTP where this issue is not
+observed. So disable coresight by default for MSM8998 and
+enable it only for MSM8998 MTP.
 
+Reported-and-tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Fixes: 783abfa2249a ("arm64: dts: qcom: msm8998: Add Coresight support")
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 68 +++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8998.dtsi     | 51 +++++++++++------
+ 2 files changed, 102 insertions(+), 17 deletions(-)
 
-On 18/9/2019 2:56 PM, Dilip Kota wrote:
-> On 9/18/2019 2:40 AM, Rob Herring wrote:
->> On Wed, Sep 04, 2019 at 06:10:30PM +0800, Dilip Kota wrote:
->>> The Intel PCIe RC controller is Synopsys Designware
->>> based PCIe core. Add YAML schemas for PCIe in RC mode
->>> present in Intel Universal Gateway soc.
->>>
->>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->>> ---
->>> changes on v3:
->>> Add the appropriate License-Identifier
->>> Rename intel,rst-interval to 'reset-assert-us'
->>> Add additionalProperties: false
->>> Rename phy-names to 'pciephy'
->>> Remove the dtsi node split of SoC and board in the example
->>> Add #interrupt-cells = <1>; or else interrupt parsing will fail
->>> Name yaml file with compatible name
->>>
->>> .../devicetree/bindings/pci/intel,lgm-pcie.yaml | 137 
->>> +++++++++++++++++++++
->>> 1 file changed, 137 insertions(+)
->>> create mode 100644 
->>> Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
->>>
->>> diff --git 
->>> a/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml 
->>> b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
->>> new file mode 100644
->>> index 000000000000..5e5cc7fd66cd
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
->>> @@ -0,0 +1,137 @@
->>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/pci/intel-pcie.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Intel AXI bus based PCI express root complex
->>> +
->>> +maintainers:
->>> + - Dilip Kota <eswara.kota@linux.intel.com>
->>> +
->>> +properties:
->>> + compatible:
->>> + const: intel,lgm-pcie
->>> +
->>> + device_type:
->>> + const: pci
->>> +
->>> + "#address-cells":
->>> + const: 3
->>> +
->>> + "#size-cells":
->>> + const: 2
->> These all belong in a common schema.
->>
->>> +
->>> + reg:
->>> + items:
->>> + - description: Controller control and status registers.
->>> + - description: PCIe configuration registers.
->>> + - description: Controller application registers.
->>> +
->>> + reg-names:
->>> + items:
->>> + - const: dbi
->>> + - const: config
->>> + - const: app
->>> +
->>> + ranges:
->>> + description: Ranges for the PCI memory and I/O regions.
->> And this.
->>
->>> +
->>> + resets:
->>> + maxItems: 1
->>> +
->>> + clocks:
->>> + description: PCIe registers interface clock.
->>> +
->>> + phys:
->>> + maxItems: 1
->>> +
->>> + phy-names:
->>> + const: pciephy
->>> +
->>> + reset-gpios:
->>> + maxItems: 1
->>> +
->>> + num-lanes:
->>> + description: Number of lanes to use for this port.
->>> +
->>> + linux,pci-domain:
->>> + $ref: /schemas/types.yaml#/definitions/uint32
->>> + description: PCI domain ID.
->> These 2 also should be common.
->>
->>> +
->>> + interrupts:
->>> + description: PCIe core integrated miscellaneous interrupt.
->> How many? No need for description if there's only 1.
->>
->>> +
->>> + '#interrupt-cells':
->>> + const: 1
->>> +
->>> + interrupt-map-mask:
->>> + description: Standard PCI IRQ mapping properties.
->>> +
->>> + interrupt-map:
->>> + description: Standard PCI IRQ mapping properties.
->>> +
->>> + max-link-speed:
->>> + description: Specify PCI Gen for link capability.
->>> +
->>> + bus-range:
->>> + description: Range of bus numbers associated with this controller.
->> All common.
-> You mean to remove all the common schema entries description!.
-> In most of the Documention/devicetree/binding/pci documents all the 
-> common entries are described so I followed the same.
-
-If common schemas are removed, getting below warning during the 
-dt_binding_check.
-
-Documentation/devicetree/bindings/pci/intel,lgm-pcie.example.dt.yaml: 
-pcie@d0e00000: '#address-cells', '#interrupt-cells', '#size-cells', 
-'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 
-'interrupt-parent', 'linux,pci-domain', 'ranges', 'reset-gpios' do not 
-match any of the regexes: 'pinctrl-[0-9]+'
-
-Regards,
-Dilip
-
->>
->>> +
->>> + reset-assert-ms:
->>> + description: |
->>> + Device reset interval in ms.
->>> + Some devices need an interval upto 500ms. By default it is 100ms.
->> This is a property of a device, so it belongs in a device node. How
->> would you deal with this without DT?
-> This property is for the PCIe RC to keep a delay before notifying the 
-> reset to the device.
-> If this entry is not present, PCIe driver will set a default value of 
-> 100ms.
->>
->>> +
->>> +required:
->>> + - compatible
->>> + - device_type
->>> + - reg
->>> + - reg-names
->>> + - ranges
->>> + - resets
->>> + - clocks
->>> + - phys
->>> + - phy-names
->>> + - reset-gpios
->>> + - num-lanes
->>> + - linux,pci-domain
->>> + - interrupts
->>> + - interrupt-map
->>> + - interrupt-map-mask
->>> +
->>> +additionalProperties: false
->>> +
->>> +examples:
->>> + - |
->>> + pcie10:pcie@d0e00000 {
->>> + compatible = "intel,lgm-pcie";
->>> + device_type = "pci";
->>> + #address-cells = <3>;
->>> + #size-cells = <2>;
->>> + reg = <
->>> + 0xd0e00000 0x1000
->>> + 0xd2000000 0x800000
->>> + 0xd0a41000 0x1000
->>> + >;
->>> + reg-names = "dbi", "config", "app";
->>> + linux,pci-domain = <0>;
->>> + max-link-speed = <4>;
->>> + bus-range = <0x00 0x08>;
->>> + interrupt-parent = <&ioapic1>;
->>> + interrupts = <67 1>;
->>> + #interrupt-cells = <1>;
->>> + interrupt-map-mask = <0 0 0 0x7>;
->>> + interrupt-map = <0 0 0 1 &ioapic1 27 1>,
->>> + <0 0 0 2 &ioapic1 28 1>,
->>> + <0 0 0 3 &ioapic1 29 1>,
->>> + <0 0 0 4 &ioapic1 30 1>;
->>> + ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
->>> + resets = <&rcu0 0x50 0>;
->>> + clocks = <&cgu0 LGM_GCLK_PCIE10>;
->>> + phys = <&cb0phy0>;
->>> + phy-names = "pciephy";
->>> + status = "okay";
->>> + reset-assert-ms = <500>;
->>> + reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
->>> + num-lanes = <2>;
->>> + };
->>> -- 2.11.0
->>>
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index 108667ce4f31..8d15572d18e6 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -27,6 +27,66 @@
+ 	status = "okay";
+ };
+ 
++&etf {
++	status = "okay";
++};
++
++&etm1 {
++	status = "okay";
++};
++
++&etm2 {
++	status = "okay";
++};
++
++&etm3 {
++	status = "okay";
++};
++
++&etm4 {
++	status = "okay";
++};
++
++&etm5 {
++	status = "okay";
++};
++
++&etm6 {
++	status = "okay";
++};
++
++&etm7 {
++	status = "okay";
++};
++
++&etm8 {
++	status = "okay";
++};
++
++&etr {
++	status = "okay";
++};
++
++&funnel1 {
++	status = "okay";
++};
++
++&funnel2 {
++	status = "okay";
++};
++
++&funnel3 {
++	status = "okay";
++};
++
++&funnel4 {
++	status = "okay";
++};
++
++&funnel5 {
++	status = "okay";
++};
++
+ &pm8005_lsid1 {
+ 	pm8005-regulators {
+ 		compatible = "qcom,pm8005-regulators";
+@@ -51,6 +111,10 @@
+ 	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
+ };
+ 
++&replicator1 {
++	status = "okay";
++};
++
+ &rpm_requests {
+ 	pm8998-regulators {
+ 		compatible = "qcom,rpm-pm8998-regulators";
+@@ -249,6 +313,10 @@
+ 	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
+ };
+ 
++&stm {
++	status = "okay";
++};
++
+ &ufshc {
+ 	vcc-supply = <&vreg_l20a_2p95>;
+ 	vccq-supply = <&vreg_l26a_1p2>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index c6f81431983e..ffb64fc239ee 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -998,11 +998,12 @@
+ 			#interrupt-cells = <0x2>;
+ 		};
+ 
+-		stm@6002000 {
++		stm: stm@6002000 {
+ 			compatible = "arm,coresight-stm", "arm,primecell";
+ 			reg = <0x06002000 0x1000>,
+ 			      <0x16280000 0x180000>;
+ 			reg-names = "stm-base", "stm-data-base";
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1016,9 +1017,10 @@
+ 			};
+ 		};
+ 
+-		funnel@6041000 {
++		funnel1: funnel@6041000 {
+ 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+ 			reg = <0x06041000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1045,9 +1047,10 @@
+ 			};
+ 		};
+ 
+-		funnel@6042000 {
++		funnel2: funnel@6042000 {
+ 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+ 			reg = <0x06042000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1075,9 +1078,10 @@
+ 			};
+ 		};
+ 
+-		funnel@6045000 {
++		funnel3: funnel@6045000 {
+ 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+ 			reg = <0x06045000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1113,9 +1117,10 @@
+ 			};
+ 		};
+ 
+-		replicator@6046000 {
++		replicator1: replicator@6046000 {
+ 			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
+ 			reg = <0x06046000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1137,9 +1142,10 @@
+ 			};
+ 		};
+ 
+-		etf@6047000 {
++		etf: etf@6047000 {
+ 			compatible = "arm,coresight-tmc", "arm,primecell";
+ 			reg = <0x06047000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1163,9 +1169,10 @@
+ 			};
+ 		};
+ 
+-		etr@6048000 {
++		etr: etr@6048000 {
+ 			compatible = "arm,coresight-tmc", "arm,primecell";
+ 			reg = <0x06048000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1181,9 +1188,10 @@
+ 			};
+ 		};
+ 
+-		etm@7840000 {
++		etm1: etm@7840000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07840000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1200,9 +1208,10 @@
+ 			};
+ 		};
+ 
+-		etm@7940000 {
++		etm2: etm@7940000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07940000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1219,9 +1228,10 @@
+ 			};
+ 		};
+ 
+-		etm@7a40000 {
++		etm3: etm@7a40000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07a40000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1238,9 +1248,10 @@
+ 			};
+ 		};
+ 
+-		etm@7b40000 {
++		etm4: etm@7b40000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07b40000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1257,9 +1268,10 @@
+ 			};
+ 		};
+ 
+-		funnel@7b60000 { /* APSS Funnel */
++		funnel4: funnel@7b60000 { /* APSS Funnel */
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07b60000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1343,9 +1355,10 @@
+ 			};
+ 		};
+ 
+-		funnel@7b70000 {
++		funnel5: funnel@7b70000 {
+ 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
+ 			reg = <0x07b70000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1369,9 +1382,10 @@
+ 			};
+ 		};
+ 
+-		etm@7c40000 {
++		etm5: etm@7c40000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07c40000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1385,9 +1399,10 @@
+ 			};
+ 		};
+ 
+-		etm@7d40000 {
++		etm6: etm@7d40000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07d40000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1401,9 +1416,10 @@
+ 			};
+ 		};
+ 
+-		etm@7e40000 {
++		etm7: etm@7e40000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07e40000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+@@ -1417,9 +1433,10 @@
+ 			};
+ 		};
+ 
+-		etm@7f40000 {
++		etm8: etm@7f40000 {
+ 			compatible = "arm,coresight-etm4x", "arm,primecell";
+ 			reg = <0x07f40000 0x1000>;
++			status = "disabled";
+ 
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
