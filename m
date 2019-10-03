@@ -1,76 +1,42 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: [RFC][PATCH] dt-bindings: usb: rt1711h: Add connector bindings
-Date: Thu,  3 Oct 2019 03:22:32 +0000
-Message-ID: <20191003032232.115832-1-john.stultz@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lkml <linux-kernel@vger.kernel.org>
-Cc: John Stultz <john.stultz@linaro.org>, ShuFan Lee <shufan_lee@richtek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+From: "Ramuthevar,
+ Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v1 0/2] mmc: sdhci-of-arasan: Add Support for Intel LGM SDXC
+Date: Thu,  3 Oct 2019 12:00:30 +0800
+Message-ID: <20191003040032.37696-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, qi-ming.wu@intel.com, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, "Ramuthevar,
+ Vadivel MuruganX" <vadivel.muruganx.ramuthevar@linux.intel.com>, robh+dt@kernel.org, adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add connector binding documentation for Richtek RT1711H Type-C
-chip driver
+The current arasan sdhci PHY configuration isn't compatible
+with the PHY on Intel's LGM(Lightning Mountain) SoC devices.
 
-It was noted by Rob Herring that the rt1711h binding docs
-doesn't include the connector binding.
+Therefore, add a new compatible, to adapt the Intel's LGM
+SDXC PHY with arasan-sdhc controller to configure the PHY.
 
-Thus this patch adds such documentation following the details
-in Documentation/devicetree/bindings/usb/typec-tcpci.txt
+Linux code base : V5.4-rc1 
 
-CC: ShuFan Lee <shufan_lee@richtek.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-usb@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- .../bindings/usb/richtek,rt1711h.txt          | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: mmc: sdhci-of-arasan: Add new compatible for Intel LGM
+    SDXC
+  mmc: sdhci-of-arasan: Add Support for Intel LGM SDXC
 
-diff --git a/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt b/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
-index d4cf53c071d9..e3fc57e605ed 100644
---- a/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
-+++ b/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
-@@ -6,10 +6,39 @@ Required properties:
-  - interrupts : <a b> where a is the interrupt number and b represents an
-    encoding of the sense and level information for the interrupt.
- 
-+Required sub-node:
-+- connector: The "usb-c-connector" attached to the tcpci chip, the bindings
-+  of connector node are specified in
-+  Documentation/devicetree/bindings/connector/usb-connector.txt
-+
- Example :
- rt1711h@4e {
- 	compatible = "richtek,rt1711h";
- 	reg = <0x4e>;
- 	interrupt-parent = <&gpio26>;
- 	interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+
-+	usb_con: connector {
-+		compatible = "usb-c-connector";
-+		label = "USB-C";
-+		data-role = "dual";
-+		power-role = "dual";
-+		try-power-role = "sink";
-+		source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)>;
-+		sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)
-+			     PDO_VAR(5000, 12000, 2000)>;
-+		op-sink-microwatt = <10000000>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@1 {
-+				reg = <1>;
-+				usb_con_ss: endpoint {
-+					remote-endpoint = <&usb3_data_ss>;
-+				};
-+			};
-+		};
-+	};
- };
+ Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 17 +++++++++++++++++
+ drivers/mmc/host/sdhci-of-arasan.c                     | 15 +++++++++++++++
+ 2 files changed, 32 insertions(+)
+
 -- 
-2.17.1
+2.11.0
