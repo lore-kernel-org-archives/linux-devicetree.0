@@ -1,47 +1,70 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [EXT] Re: [PATCH] arm64: dts: ls1028a: fix a compatible issue
-Date: Thu, 3 Oct 2019 16:44:47 +0800
-Message-ID: <20191003084443.GA22491@X250>
-References: <20190829073439.13069-1-andy.tang@nxp.com>
- <20190914024231.GB3425@dragon>
- <VI1PR04MB4333F1CF5DF521678575D61EF3840@VI1PR04MB4333.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <VI1PR04MB4333F1CF5DF521678575D61EF3840@VI1PR04MB4333.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Tang <andy.tang@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Leo Li <leoyang.li@nxp.com>
+From: Green Wan <green.wan@sifive.com>
+Subject: [PATCH v4 0/4] dmaengine: sf-pdma: Add platform dma driver
+Date: Thu,  3 Oct 2019 17:09:00 +0800
+Message-ID: <20191003090945.29210-1-green.wan@sifive.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-hackers@sifive.com
+Cc: Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Dan Williams <dan.j.williams@intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, Yash Shah <yash.shah@sifive.com>, Bin Meng <bmeng.cn@gmail.com>, Sagar Kadam <sagar.kadam@sifive.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBTZXAgMjQsIDIwMTkgYXQgMDg6MDA6MjlBTSArMDAwMCwgQW5keSBUYW5nIHdyb3Rl
-Ogo+IEhpIFNoYXduLAo+IAo+IAo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPiA+IEZy
-b206IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4KPiA+IFNlbnQ6IDIwMTnlubQ55pyI
-MTTml6UgMTA6NDMKPiA+IFRvOiBBbmR5IFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPgo+ID4gQ2M6
-IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOwo+ID4gbWFy
-ay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsK
-PiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gPiBTdWJqZWN0OiBbRVhUXSBSZTogW1BB
-VENIXSBhcm02NDogZHRzOiBsczEwMjhhOiBmaXggYSBjb21wYXRpYmxlIGlzc3VlCj4gPiAKPiA+
-IENhdXRpb246IEVYVCBFbWFpbAo+ID4gCj4gPiBPbiBUaHUsIEF1ZyAyOSwgMjAxOSBhdCAwMzoz
-NDozOVBNICswODAwLCBZdWFudGlhbiBUYW5nIHdyb3RlOgo+ID4gPiBUaGUgSTJDIG11bHRpcGxl
-eGVyIHVzZWQgb24gbHMxMDI4YXFkcyBpcyBQQ0E5NTQ3LCBub3QgUENBOTg0Ny4KPiA+ID4gU28g
-Y29ycmVjdCBpdC4KPiA+IAo+ID4gQ2FuIGVsYWJvcmF0ZSB0aGUgZml4IGEgbGl0dGxlIGJpdCwg
-c2F5aW5nIHdoYXQncyB0aGUgaXNzdWUgZXhhY3RseSB3aXRoIHVzaW5nCj4gPiB0aGF0IGluY29y
-cmVjdCBjb21wYXRpYmxlPwo+IE9rLgo+IAo+ID4gCj4gPiA+Cj4gPiA+IFNpZ25lZC1vZmYtYnk6
-IFl1YW50aWFuIFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPgo+ID4gCj4gPiBEbyB3ZSBuZWVkIGEg
-Zml4IHRhZz8KPiBXaGF0IGRvZXMgImZpeCB0YWciIG1lYW4/IAoKUGxlYXNlIHNlYXJjaCAnRml4
-ZXMnIGluIERvY3VtZW50YXRpb24vcHJvY2Vzcy9zdWJtaXR0aW5nLXBhdGNoZXMucnN0LgoKU2hh
-d24KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
-LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
-bS1rZXJuZWwK
+Add PDMA driver support for SiFive HiFive Unleashed RevA00 board. Mainly follows
+DMAengine controller doc[1] to implement and take other DMA drivers as reference.
+Such as
+
+  - drivers/dma/fsl-edma.c
+  - drivers/dma/dw-edma/
+  - drivers/dma/pxa-dma.c
+
+Using DMA test client[2] to test. Detailed datasheet is doc[3]. Driver supports:
+
+ - 4 physical DMA channels, share same DONE and error interrupt handler. 
+ - Support MEM_TO_MEM
+ - Tested by DMA test client
+ - patches include DT Bindgins document and dts for fu450-c000 SoC. Separate dts
+   patch for easier review and apply to different branch or SoC platform.
+ - retry 1 time if DMA error occurs.
+
+[Reference Doc]
+ [1] ./Documentation/driver-api/dmaengine/provider.rst
+ [2] ./Documentation/driver-api/dmaengine/dmatest.rst
+ [3] https://static.dev.sifive.com/FU540-C000-v1.0.pdf 
+
+[Simple steps to test of DMA Test client]
+ $ echo 1 > /sys/module/dmatest/parameters/iterations
+ $ echo dma0chan0 > /sys/module/dmatest/parameters/channel
+ $ echo dma0chan1 > /sys/module/dmatest/parameters/channel
+ $ echo dma0chan2 > /sys/module/dmatest/parameters/channel
+ $ echo dma0chan3 > /sys/module/dmatest/parameters/channel
+ $ echo 1 > /sys/module/dmatest/parameters/run
+
+[Expected test result]
+[  267.563323] dmatest: dma0chan0-copy0: summary 45629 tests, 0 failures 38769.01 iops 309661 KB/s (0)
+[  267.572427] dmatest: dma0chan1-copy0: summary 45863 tests, 0 failures 40286.85 iops 321643 KB/s (0)
+[  267.581392] dmatest: dma0chan2-copy0: summary 45975 tests, 0 failures 41178.48 iops 328740 KB/s (0)
+[  267.590542] dmatest: dma0chan3-copy0: summary 44768 tests, 0 failures 38560.29 iops 307726 KB/s (0)
+
+Green Wan (4):
+  dt-bindings: dmaengine: sf-pdma: add bindins for SiFive PDMA
+  riscv: dts: add support for PDMA device of HiFive Unleashed Rev A00
+  dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00
+  MAINTAINERS: Add Green as SiFive PDMA driver maintainer
+
+ .../bindings/dma/sifive,fu540-c000-pdma.yaml  |  55 ++
+ MAINTAINERS                                   |   6 +
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi    |   7 +
+ drivers/dma/Kconfig                           |   2 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/sf-pdma/Kconfig                   |   6 +
+ drivers/dma/sf-pdma/Makefile                  |   1 +
+ drivers/dma/sf-pdma/sf-pdma.c                 | 601 ++++++++++++++++++
+ drivers/dma/sf-pdma/sf-pdma.h                 | 124 ++++
+ 9 files changed, 803 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+ create mode 100644 drivers/dma/sf-pdma/Kconfig
+ create mode 100644 drivers/dma/sf-pdma/Makefile
+ create mode 100644 drivers/dma/sf-pdma/sf-pdma.c
+ create mode 100644 drivers/dma/sf-pdma/sf-pdma.h
+
+-- 
+2.17.1
