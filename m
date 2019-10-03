@@ -1,59 +1,84 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
-Date: Thu, 3 Oct 2019 17:10:33 +0800
-Message-ID: <20191003091019.GB22491@X250>
-References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
- <20190902034319.14026-3-xiaowei.bao@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Green Wan <green.wan@sifive.com>
+Subject: [PATCH v4 1/4] dt-bindings: dmaengine: sf-pdma: add bindins for SiFive PDMA
+Date: Thu,  3 Oct 2019 17:09:01 +0800
+Message-ID: <20191003090945.29210-2-green.wan@sifive.com>
+References: <20191003090945.29210-1-green.wan@sifive.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190902034319.14026-3-xiaowei.bao@nxp.com>
+In-Reply-To: <20191003090945.29210-1-green.wan@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+To: linux-hackers@sifive.com
+Cc: Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Dan Williams <dan.j.williams@intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, Yash Shah <yash.shah@sifive.com>, Bin Meng <bmeng.cn@gmail.com>, Sagar Kadam <sagar.kadam@sifive.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:43:19AM +0800, Xiaowei Bao wrote:
-> Add support for the LS1028a PCIe controller.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
-> v2:
->  - No change.
-> v3:
->  - Reuse the ls2088 driver data structurt.
-> v4:
->  - No change.
-> v5:
->  - No change.
-> v6:
->  - No change.
-> 
->  drivers/pci/controller/dwc/pci-layerscape.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-> index 3a5fa26..f24f79a 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> @@ -263,6 +263,7 @@ static const struct ls_pcie_drvdata ls2088_drvdata = {
->  static const struct of_device_id ls_pcie_of_match[] = {
->  	{ .compatible = "fsl,ls1012a-pcie", .data = &ls1046_drvdata },
->  	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
-> +	{ .compatible = "fsl,ls1028a-pcie", .data = &ls2088_drvdata },
+Add DT bindings document for Platform DMA(PDMA) driver of board,
+HiFive Unleashed Rev A00.
 
-I think you can save this driver change by using "fsl,ls2088a-pcie" as
-compatible fallback like below.
+Signed-off-by: Green Wan <green.wan@sifive.com>
+---
+ .../bindings/dma/sifive,fu540-c000-pdma.yaml  | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
 
-  compatible = "fsl,ls1028a-pcie", "fsl,ls2088a-pcie";
-
-Shawn
-
->  	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
->  	{ .compatible = "fsl,ls1046a-pcie", .data = &ls1046_drvdata },
->  	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
-> -- 
-> 2.9.5
-> 
+diff --git a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+new file mode 100644
+index 000000000000..2ca3ddbe1ff4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/sifive,fu540-c000-pdma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: SiFive Unleashed Rev C000 Platform DMA
++
++maintainers:
++  - Green Wan <green.wan@sifive.com>
++  - Palmer Debbelt <palmer@sifive.com>
++  - Paul Walmsley <paul.walmsley@sifive.com>
++
++description: |
++  Platform DMA is a DMA engine of SiFive Unleashed. It supports 4
++  channels. Each channel has 2 interrupts. One is for DMA done and
++  the other is for DME error.
++
++  In different SoC, DMA could be attached to different IRQ line.
++  DT file need to be changed to meet the difference. For technical
++  doc,
++
++  https://static.dev.sifive.com/FU540-C000-v1.0.pdf
++
++properties:
++  compatible:
++    items:
++      - const: sifive,fu540-c000-pdma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 1
++    maxItems: 8
++
++  '#dma-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#dma-cells'
++
++examples:
++  - |
++    dma@3000000 {
++      compatible = "sifive,fu540-c000-pdma";
++      reg = <0x0 0x3000000 0x0 0x8000>;
++      interrupts = <23 24 25 26 27 28 29 30>;
++      #dma-cells = <1>;
++    };
++
++...
+-- 
+2.17.1
