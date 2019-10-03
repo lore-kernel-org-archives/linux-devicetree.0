@@ -1,66 +1,227 @@
-From: <Eugen.Hristev@microchip.com>
-Subject: Re: [PATCH 2/2] ARM: dts: at91: sama5d27_som1_ek: add mmc
- capabilities for SDMMC0
-Date: Thu, 3 Oct 2019 10:24:52 +0000
-Message-ID: <c2c355cd-b798-02de-0606-0f6442f6fdca@microchip.com>
-References: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
- <1565252928-28994-2-git-send-email-eugen.hristev@microchip.com>
- <20190808124217.wrmcxohw5i6ju2qe@M43218.corp.atmel.com>
- <04fd74c3-a828-1064-b77b-f3de07a26190@intel.com>
- <20190809062322.syuieymdqjs4e7lh@M43218.corp.atmel.com>
- <fa0debbb-b84c-1f74-f8b8-8fdd7812aaee@microchip.com>
- <20190813065306.tqz57hqeiofofbnz@M43218.corp.atmel.com>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC)
+ driver for SC7180
+Date: Thu, 3 Oct 2019 16:01:15 +0530
+Message-ID: <7ac5f6bf-33c5-580e-bd40-e82f3052d460@codeaurora.org>
+References: <20190918095018.17979-1-tdas@codeaurora.org>
+ <20190918095018.17979-4-tdas@codeaurora.org>
+ <20190918213946.DC03521924@mail.kernel.org>
+ <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org>
+ <20190924231223.9012C207FD@mail.kernel.org>
+ <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
+ <20190925130346.42E0820640@mail.kernel.org>
+ <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org>
+ <20191001143825.CD3212054F@mail.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190813065306.tqz57hqeiofofbnz@M43218.corp.atmel.com>
+In-Reply-To: <20191001143825.CD3212054F@mail.kernel.org>
 Content-Language: en-US
-Content-ID: <B477413D9188AE4692F41B4A177C285D@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc: adrian.hunter@intel.com, Nicolas.Ferre@microchip.com, ulf.hansson@linaro.org
+To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
+Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDEzLjA4LjIwMTkgMDk6NTMsIEx1ZG92aWMgRGVzcm9jaGVzIHdyb3RlOg0KPiBPbiBN
-b24sIEF1ZyAxMiwgMjAxOSBhdCAwMzozODozNFBNICswMDAwLCBFdWdlbi5IcmlzdGV2QG1pY3Jv
-Y2hpcC5jb20gd3JvdGU6DQo+PiBPbiAwOS4wOC4yMDE5IDA5OjIzLCBMdWRvdmljIERlc3JvY2hl
-cyB3cm90ZToNCj4+PiBPbiBUaHUsIEF1ZyAwOCwgMjAxOSBhdCAwMzo1NzozMFBNICswMzAwLCBB
-ZHJpYW4gSHVudGVyIHdyb3RlOg0KPj4+PiBPbiA4LzA4LzE5IDM6NDIgUE0sIEx1ZG92aWMgRGVz
-cm9jaGVzIHdyb3RlOg0KPj4+Pj4gT24gVGh1LCBBdWcgMDgsIDIwMTkgYXQgMTA6MzU6NDNBTSAr
-MDIwMCwgRXVnZW4gSHJpc3RldiAtIE0xODI4MiB3cm90ZToNCj4+Pj4+PiBGcm9tOiBFdWdlbiBI
-cmlzdGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+Pj4+Pj4NCj4+Pj4+PiBBZGQg
-bW1jIGNhcGFiaWxpdGllcyBmb3IgU0RNTUMwIGZvciB0aGlzIGJvYXJkLg0KPj4+Pj4+IFdpdGgg
-dGhpcyBlbmFibGVkLCBlTU1DIGNvbm5lY3RlZCBjYXJkIGlzIGRldGVjdGVkIGFzOg0KPj4+Pj4+
-DQo+Pj4+Pj4gbW1jMDogbmV3IEREUiBNTUMgY2FyZCBhdCBhZGRyZXNzIDAwMDENCj4+Pj4+Pg0K
-Pj4+Pj4+IFNpZ25lZC1vZmYtYnk6IEV1Z2VuIEhyaXN0ZXYgPGV1Z2VuLmhyaXN0ZXZAbWljcm9j
-aGlwLmNvbT4NCj4+Pj4+IEFja2VkLWJ5OiBMdWRvdmljIERlc3JvY2hlcyA8bHVkb3ZpYy5kZXNy
-b2NoZXNAbWljcm9jaGlwLmNvbT4NCj4+Pj4+DQo+Pj4+PiBJIGFtIGludGVyZXN0ZWQgdG8gaGF2
-ZSB0aGUgc29tZSBpbnNpZ2h0cyBhYm91dCB0aGUgdXNlIG9mIHNkLXVocy0qDQo+Pj4+PiBwcm9w
-ZXJ0aWVzLg0KPj4+Pj4NCj4+Pj4+IE91ciBJUCBjYW4ndCBkZWFsIHdpdGggMVY4IGJ5IGl0c2Vs
-Zi4gSXQgaGFzIGEgMVY4U0VMIHNpZ25hbCB3aGljaCBjYW4NCj4+Pj4+IGJlIHVzZWQgYXMgdGhl
-IGxvZ2ljIGNvbnRyb2wgaW5wdXQgb2YgYSBtdXguIFNvIGV2ZW4gaWYgdGhlIElQIGNsYWltcw0K
-Pj4+Pj4gdG8gc3VwcG9ydCBVSFMgbW9kZXMsIGl0IGRlcGVuZHMgb24gdGhlIGJvYXJkLg0KPj4+
-Pj4NCj4+Pj4+IEFyZSB0aGUgc2QtdWhzLSogcHJvcGVydGllcyBhIHdheSB0byBkZWFsIHdpdGgg
-dGhpcz8gSSB0ZW5kIHRvIHRoaW5rIG5vDQo+Pj4+PiBhcyBzZGhjaV9zZXR1cF9ob3N0KCkgd2ls
-bCBzZXQgdGhlIGNhcHMgZGVwZW5kaW5nIG9uIHRoZSBjb250ZW50IG9mIHRoZQ0KPj4+Pj4gY2Fw
-YWJpbGl0aWVzIHJlZ2lzdGVyLiBEbyB3ZSBoYXZlIHRvIHVzZSB0aGUgU0RIQ0lfUVVJUktfTUlT
-U0lOR19DQVBTDQo+Pj4+PiBxdWlyayBvciBzZGhjaS1jYXBzL3NkaGNpLWNhcHMtbWFzaz8NCj4+
-Pj4NCj4+Pj4gVGhlcmUgaXMgIm5vLTEtOC12IiB3aGljaCBpdCBsb29rcyBsaWtlIHNkaGNpLW9m
-LWF0OTEuYyBhbHJlYWR5IHN1cHBvcnRzOg0KPj4+Pg0KPj4+PiAgICAgc2RoY2lfYXQ5MV9wcm9i
-ZSgpIC0+IHNkaGNpX2dldF9vZl9wcm9wZXJ0eSgpIC0+IHNkaGNpX2dldF9wcm9wZXJ0eSgpDQo+
-Pj4+DQo+Pj4+ICAgICAgIAlpZiAoZGV2aWNlX3Byb3BlcnR5X3ByZXNlbnQoZGV2LCAibm8tMS04
-LXYiKSkNCj4+Pj4gCQlob3N0LT5xdWlya3MyIHw9IFNESENJX1FVSVJLMl9OT18xXzhfVjsNCj4+
-Pj4NCj4+Pg0KPj4+IFJpZ2h0LCBJIGZvcmdvdCB0aGlzIHByb3BlcnR5LiBUaGFua3MuDQo+Pj4N
-Cj4+PiBFdWdlbiwgZG8geW91IHNlZSBjYXNlcyB3ZSBjYW4ndCBjb3ZlciB3aXRoIHRoaXMgcHJv
-cGVydHk/DQo+Pg0KPj4gSGksDQo+Pg0KPj4gRm9yIGN1cnJlbnQgcmVxdWlyZW1lbnRzIGFuZCBk
-cml2ZXIgc3VwcG9ydCwgdGhpcyBzaG91bGQgYmUgZW5vdWdoLg0KPj4NCj4+IEkgbm90aWNlZCBv
-bmUgdGhpbmcgcmVnYXJkaW5nIFNELUNhcmRzLCBpZiBJIGFkZCBwcm9wZXJ0eSBzZC11aHMtc2Ry
-MTA0DQo+PiB0aGUgY2xhc3MgMTAgdWhzMSBjYXJkcyBhcmUgZGV0ZWN0ZWQgYXMgU0RSMTA0IC4g
-V2l0aG91dCB0aGlzIHByb3BlcnR5DQo+PiB0aGV5IGFyZSBkZXRlY3RlZCBhcyBERFI1MC4gQW55
-IGlkZWEgd2h5IHRoZSBkaWZmZXJlbmNlID8gVGhlIGNvbnRyb2xsZXINCj4+IGRvZXMgbm90IGNs
-YWltIHRvIGhhdmUgU0RSMTA0IHN1cHBvcnQgPyAgV2Ugc2hvdWxkIGFkZCBpdCA/DQo+IA0KPiBX
-aXRoIHRoZSBtYWlubGluZSwgb3VyIHRyZWUgb3IgYm90aD8gSW4gb3VyIHRyZWUsIFNEUjEwNCBp
-cyByZW1vdmVkIGZyb20NCj4gdGhlIGNhcGFiaWxpdGllcy4NCj4gDQo+IEx1ZG92aWMNCj4gDQoN
-Cg0KSGVsbG8gQWxleGFuZHJlLA0KDQpBbnl0aGluZyBtb3JlIG5lZWRlZCByZWdhcmRpbmcgdGhp
-cyBwYXRjaCA/DQoNClRoYW5rcywNCkV1Z2VuDQo=
+Hi Stephen,
+
+On 10/1/2019 8:08 PM, Stephen Boyd wrote:
+> Quoting Taniya Das (2019-09-27 00:37:57)
+>> Hi Stephen,
+>>
+>> On 9/25/2019 6:33 PM, Stephen Boyd wrote:
+>>> Quoting Taniya Das (2019-09-25 04:20:07)
+>>>> Hi Stephen,
+>>>>
+>>>> Please find my comments.
+>>>>
+>>>> On 9/25/2019 4:42 AM, Stephen Boyd wrote:
+>>>>> Quoting Taniya Das (2019-09-23 01:01:11)
+>>>>>> Hi Stephen,
+>>>>>>
+>>>>>> Thanks for your comments.
+>>>>>>
+>>>>>> On 9/19/2019 3:09 AM, Stephen Boyd wrote:
+>>>>>>> Quoting Taniya Das (2019-09-18 02:50:18)
+>>>>>>>> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
+>>>>>>>> new file mode 100644
+>>>>>>>> index 000000000000..d47865d5408f
+>>>>>>>> --- /dev/null
+>>>>>>>> +++ b/drivers/clk/qcom/gcc-sc7180.c
+>>>>>>>> +                       .ops = &clk_branch2_ops,
+>>>>>>>> +               },
+>>>>>>>> +       },
+>>>>>>>> +};
+>>>>>>>> +
+>>>>> [...]
+>>>>>>>> +static struct clk_branch gcc_ufs_phy_phy_aux_clk = {
+>>>>>>>> +       .halt_reg = 0x77094,
+>>>>>>>> +       .halt_check = BRANCH_HALT,
+>>>>>>>> +       .hwcg_reg = 0x77094,
+>>>>>>>> +       .hwcg_bit = 1,
+>>>>>>>> +       .clkr = {
+>>>>>>>> +               .enable_reg = 0x77094,
+>>>>>>>> +               .enable_mask = BIT(0),
+>>>>>>>> +               .hw.init = &(struct clk_init_data){
+>>>>>>>> +                       .name = "gcc_ufs_phy_phy_aux_clk",
+>>>>>>>> +                       .parent_data = &(const struct clk_parent_data){
+>>>>>>>> +                               .hw = &gcc_ufs_phy_phy_aux_clk_src.clkr.hw,
+>>>>>>>> +                       },
+>>>>>>>> +                       .num_parents = 1,
+>>>>>>>> +                       .flags = CLK_SET_RATE_PARENT,
+>>>>>>>> +                       .ops = &clk_branch2_ops,
+>>>>>>>> +               },
+>>>>>>>> +       },
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk = {
+>>>>>>>> +       .halt_reg = 0x7701c,
+>>>>>>>> +       .halt_check = BRANCH_HALT_SKIP,
+>>>>>>>
+>>>>>>> Again, nobody has fixed the UFS driver to not need to do this halt skip
+>>>>>>> check for these clks? It's been over a year.
+>>>>>>>
+>>>>>>
+>>>>>> The UFS_PHY_RX/TX clocks could be left enabled due to certain HW boot
+>>>>>> configuration and thus during the late initcall of clk_disable there
+>>>>>> could be warnings of "clock stuck ON" in the dmesg. That is the reason
+>>>>>> also to use the BRANCH_HALT_SKIP flag.
+>>>>>
+>>>>> Oh that's bad. Why do the clks stay on when we try to turn them off?
+>>>>>
+>>>>
+>>>> Those could be due to the configuration selected by HW and SW cannot
+>>>> override them, so traditionally we have never polled for CLK_OFF for
+>>>> these clocks.
+>>>
+>>> Is that the case or just a guess?
+>>>
+>>
+>> This is the behavior :).
+> 
+> Ok. It's the same as sdm845 so I guess it's OK.
+> 
+
+Thanks.
+
+>>
+>>>>
+>>>>>>
+>>>>>> I would also check internally for the UFS driver fix you are referring here.
+>>>>>
+>>>>> Sure. I keep asking but nothing is done :(
+>>>>>
+>>>>>>
+>>>>>>>> +       .clkr = {
+>>>>>>>> +               .enable_reg = 0x7701c,
+>>>>>>>> +               .enable_mask = BIT(0),
+>>>>>>>> +               .hw.init = &(struct clk_init_data){
+>>>>>>>> +                       .name = "gcc_ufs_phy_rx_symbol_0_clk",
+>>>>>>>> +                       .ops = &clk_branch2_ops,
+>>>>>>>> +               },
+>>>>>>>> +       },
+>>>>>>>> +};
+>>>>>>>> +
+>>>>> [...]
+>>>>>>>> +
+>>>>>>>> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk = {
+>>>>>>>> +       .halt_reg = 0xf058,
+>>>>>>>> +       .halt_check = BRANCH_HALT_SKIP,
+>>>>>>>
+>>>>>>> Why does this need halt_skip?
+>>>>>>
+>>>>>> This is required as the source is external PHY, so we want to not check
+>>>>>> for HALT.
+>>>>>
+>>>>> This doesn't really answer my question. If the source is an external phy
+>>>>> then it should be listed as a clock in the DT binding and the parent
+>>>>> should be specified here. Unless something doesn't work because of that?
+>>>>>
+>>>>
+>>>> The USB phy is managed by the USB driver and clock driver is not aware
+>>>> if USB driver models the phy as a clock. Thus we do want to keep a
+>>>> dependency on the parent and not poll for CLK_ENABLE.
+>>>
+>>> The clk driver should be aware of the USB driver modeling the phy as a
+>>> clk. We do that for other phys so what is the difference here?
+>>>
+>>
+>> Let me check with the USB team, but could we keep them for now?
+> 
+> Ok. It's also the same as sdm845 so I guess it's OK. Would be nice to
+> properly model it though so we can be certain the clk is actually
+> enabled.
+> 
+
+I am going to follow it up and close on this.
+
+>>
+>>>>
+>>>>>>
+>>>>>>>
+>>>>>>>> +       .clkr = {
+>>>>>>>> +               .enable_reg = 0xf058,
+>>>>>>>> +               .enable_mask = BIT(0),
+>>>>>>>> +               .hw.init = &(struct clk_init_data){
+>>>>>>>> +                       .name = "gcc_usb3_prim_phy_pipe_clk",
+>>>>>>>> +                       .ops = &clk_branch2_ops,
+>>>>>>>> +               },
+>>>>>>>> +       },
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +static struct clk_branch gcc_usb_phy_cfg_ahb2phy_clk = {
+>>>>>>>> +       .halt_reg = 0x6a004,
+>>>>>>>> +       .halt_check = BRANCH_HALT,
+>>>>>>>> +       .hwcg_reg = 0x6a004,
+>>>>>>>> +       .hwcg_bit = 1,
+>>>>>>>> +       .clkr = {
+>>>>>>>> +               .enable_reg = 0x6a004,
+>>>>>>>> +               .enable_mask = BIT(0),
+>>>>>>>> +               .hw.init = &(struct clk_init_data){
+>>>>>>>> +                       .name = "gcc_usb_phy_cfg_ahb2phy_clk",
+>>>>>>>> +                       .ops = &clk_branch2_ops,
+>>>>>>>> +               },
+>>>>>>>> +       },
+>>>>>>>> +};
+>>>>>>>> +
+>>>>>>>> +/* Leave the clock ON for parent config_noc_clk to be kept enabled */
+>>>>>>>
+>>>>>>> There's no parent though... So I guess this means it keeps it enabled
+>>>>>>> implicitly in hardware?
+>>>>>>>
+>>>>>>
+>>>>>> These are not left enabled, but want to leave them enabled for clients
+>>>>>> on config NOC.
+>>>>>
+>>>>> Sure. It just doesn't make sense to create clk structures and expose
+>>>>> them in the kernel when we just want to turn the bits on and leave them
+>>>>> on forever. Why not just do some register writes in probe for this
+>>>>> driver? Doesn't that work just as well and use less memory?
+>>>>>
+>>>>
+>>>> Even if I write these registers during probe, the late init check
+>>>> 'clk_core_is_enabled' would return true and would be turned OFF, that is
+>>>> the reason for marking them CRITICAL.
+>>>>
+>>>
+>>> That wouldn't happen if the clks weren't registered though, no?
+>>>
+>>
+>> I want to keep these clock CRITICAL and registered for now, but we
+>> should be able to revisit/clean them up later.
+>>
+> 
+> Why do you want to keep them critical and registered? I'm suggesting
+> that any clk that is marked critical and doesn't have a parent should
+> instead become a register write in probe to turn the clk on.
+> 
+Sure, let me do a one-time enable from probe for the clocks which 
+doesn't have a parent.
+But I would now have to educate the clients of these clocks to remove 
+using them.
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
