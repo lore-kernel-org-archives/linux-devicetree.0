@@ -1,57 +1,93 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v3 3/5] memremap: Add support for read-only memory mappings
-Date: Thu, 03 Oct 2019 11:56:03 -0700
-Message-ID: <5d964444.1c69fb81.121ce.d43b@mx.google.com>
-References: <20190910160903.65694-1-swboyd@chromium.org> <20190910160903.65694-4-swboyd@chromium.org> <CAE=gft6YdNszcJV67CwcY2gOgPHrJ1+SnKMLr63f2bix2aZXXA@mail.gmail.com>
+From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: [PATCH] dt-bindings: usb: Fix references to usb-hcd.yaml
+Date: Thu,  3 Oct 2019 21:31:32 +0200
+Message-ID: <20191003193132.17758-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAE=gft6YdNszcJV67CwcY2gOgPHrJ1+SnKMLr63f2bix2aZXXA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>
-Cc: Dan Williams <dan.j.williams@intel.com>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Evan Green (2019-09-18 12:37:34)
-> On Tue, Sep 10, 2019 at 9:09 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > @@ -53,6 +60,9 @@ static void *try_ram_remap(resource_size_t offset, si=
-ze_t size,
-> >   * mapping types will be attempted in the order listed below until one=
- of
-> >   * them succeeds.
-> >   *
-> > + * MEMREMAP_RO - establish a mapping whereby writes are ignored/reject=
-ed.
-> > + * Attempts to map System RAM with this mapping type will fail.
->=20
-> Why should attempts to map RAM with this flag fail? MEMREMAP_WB will
-> allow RAM and quietly give you back the direct mapping, so it seems
-> like at least some values in this function allow RAM.
->=20
-> Oh, I see a comment below about "Enforce that this mapping is not
-> aliasing System RAM". I guess this is worried about cache coloring?
-> But is that a problem with RO mappings? I guess the RO mappings could
-> get partially stale, so if the memory were being updated out from
-> under you, you might see some updates but not others. Was that the
-> rationale?
-
-Will Deacon, Dan Williams, and I talked about this RO flag at LPC and I
-believe we decided to mostly get rid of the flags argument to this
-function. The vast majority of callers pass MEMREMAP_WB, so I'll just
-make that be the implementation default and support the flags for
-encrpytion (MEMREMAP_ENC and MEMREMAP_DEC). There are a few callers that
-pass MEMREMAP_WC or MEMREMAP_WT (and one that passes all of them), but I
-believe those can be changed to MEMREMAP_WB and not care. There's also
-the efi framebuffer code that matches the memory attributes in the EFI
-memory map. I'm not sure what to do with that one to be quite honest.
-Maybe EFI shouldn't care and just use whatever is already there in the
-mapping?
-
-Either way, I'll introduce a memremap_ro() API that maps memory as read
-only if possible and return a const void pointer as well. I'm debating
-making that API fallback to memremap() if RO isn't supported for some
-reason or can't work because we're remapping system memory but that
-seems a little too nice when the caller could just as well decide to
-fail if memory can't be mapped as read only.
+dXNiLWhjZC50eHQgaGFzIGJlZW4gY29udmVydGVkIHRvIFlBTUwuIFVwZGF0ZSByZWZlcmVuY2Vz
+IGFjY29yZGluZ2x5LgoKRml4ZXM6IDE0ZWMwNzJhMTlhZCAoImR0LWJpbmRpbmdzOiB1c2I6IENv
+bnZlcnQgVVNCIEhDRCBnZW5lcmljIGJpbmRpbmcgdG8gWUFNTCIpClNpZ25lZC1vZmYtYnk6IEpv
+bmF0aGFuIE5ldXNjaMOkZmVyIDxqLm5ldXNjaGFlZmVyQGdteC5uZXQ+Ci0tLQogRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9tZWRpYXRlayxtdGsteGhjaS50eHQgfCA0ICsr
+LS0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvbWVkaWF0ZWssbXR1My50
+eHQgICAgIHwgNCArKy0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3Vz
+Yi11aGNpLnR4dCAgICAgICAgICB8IDIgKy0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy91c2IvdXNiLXhoY2kudHh0ICAgICAgICAgIHwgNCArKy0tCiA0IGZpbGVzIGNoYW5nZWQs
+IDcgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL21lZGlhdGVrLG10ay14aGNpLnR4dCBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvbWVkaWF0ZWssbXRrLXhoY2kudHh0Cmlu
+ZGV4IGYzZTRhY2VjYWJlOC4uNDJkODgxNGY5MDNhIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvdXNiL21lZGlhdGVrLG10ay14aGNpLnR4dAorKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL21lZGlhdGVrLG10ay14aGNpLnR4dApA
+QCAtMzMsNyArMzMsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogCSJkbWFfY2siOiBkbWFfYnVz
+IGNsb2NrIGZvciBkYXRhIHRyYW5zZmVyIGJ5IERNQSwKIAkieGhjaV9jayI6IGNvbnRyb2xsZXIg
+Y2xvY2sKCi0gLSBwaHlzIDogc2VlIHVzYi1oY2QudHh0IGluIHRoZSBjdXJyZW50IGRpcmVjdG9y
+eQorIC0gcGh5cyA6IHNlZSB1c2ItaGNkLnlhbWwgaW4gdGhlIGN1cnJlbnQgZGlyZWN0b3J5Cgog
+T3B0aW9uYWwgcHJvcGVydGllczoKICAtIHdha2V1cC1zb3VyY2UgOiBlbmFibGUgVVNCIHJlbW90
+ZSB3YWtldXA7CkBAIC01Myw3ICs1Myw3IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6CiAJU2VlOiBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9waW5jdHJsLWJpbmRpbmdz
+LnR4dAogIC0gaW1vZC1pbnRlcnZhbC1uczogZGVmYXVsdCBpbnRlcnJ1cHQgbW9kZXJhdGlvbiBp
+bnRlcnZhbCBpcyA1MDAwbnMKCi1hZGRpdGlvbmFsbHkgdGhlIHByb3BlcnRpZXMgZnJvbSB1c2It
+aGNkLnR4dCAoaW4gdGhlIGN1cnJlbnQgZGlyZWN0b3J5KSBhcmUKK2FkZGl0aW9uYWxseSB0aGUg
+cHJvcGVydGllcyBmcm9tIHVzYi1oY2QueWFtbCAoaW4gdGhlIGN1cnJlbnQgZGlyZWN0b3J5KSBh
+cmUKIHN1cHBvcnRlZC4KCiBFeGFtcGxlOgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3VzYi9tZWRpYXRlayxtdHUzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy91c2IvbWVkaWF0ZWssbXR1My50eHQKaW5kZXggYjlhZjdmNWVlOTFk
+Li5lMGFlNjA5NmY3YWMgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy91c2IvbWVkaWF0ZWssbXR1My50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3VzYi9tZWRpYXRlayxtdHUzLnR4dApAQCAtMTcsNyArMTcsNyBAQCBSZXF1aXJl
+ZCBwcm9wZXJ0aWVzOgogIC0gY2xvY2stbmFtZXMgOiBtdXN0IGNvbnRhaW4gInN5c19jayIgZm9y
+IGNsb2NrIG9mIGNvbnRyb2xsZXIsCiAJdGhlIGZvbGxvd2luZyBjbG9ja3MgYXJlIG9wdGlvbmFs
+OgogCSJyZWZfY2siLCAibWN1X2NrIiBhbmQgImRtYV9jayI7Ci0gLSBwaHlzIDogc2VlIHVzYi1o
+Y2QudHh0IGluIHRoZSBjdXJyZW50IGRpcmVjdG9yeQorIC0gcGh5cyA6IHNlZSB1c2ItaGNkLnlh
+bWwgaW4gdGhlIGN1cnJlbnQgZGlyZWN0b3J5CiAgLSBkcl9tb2RlIDogc2hvdWxkIGJlIG9uZSBv
+ZiAiaG9zdCIsICJwZXJpcGhlcmFsIiBvciAib3RnIiwKIAlyZWZlciB0byB1c2IvZ2VuZXJpYy50
+eHQKCkBAIC02MCw3ICs2MCw3IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6CiAgLSBtZWRpYXRlayx1
+M3AtZGlzLW1zayA6IG1hc2sgdG8gZGlzYWJsZSB1M3BvcnRzLCBiaXQwIGZvciB1M3BvcnQwLAog
+CWJpdDEgZm9yIHUzcG9ydDEsIC4uLiBldGM7CgotYWRkaXRpb25hbGx5IHRoZSBwcm9wZXJ0aWVz
+IGZyb20gdXNiLWhjZC50eHQgKGluIHRoZSBjdXJyZW50IGRpcmVjdG9yeSkgYXJlCithZGRpdGlv
+bmFsbHkgdGhlIHByb3BlcnRpZXMgZnJvbSB1c2ItaGNkLnlhbWwgKGluIHRoZSBjdXJyZW50IGRp
+cmVjdG9yeSkgYXJlCiBzdXBwb3J0ZWQuCgogU3ViLW5vZGVzOgpkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi91c2ItdWhjaS50eHQgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3VzYi11aGNpLnR4dAppbmRleCBjYzJlNmY3ZDYw
+MmUuLmQxNzAyZWIyYzhiZCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3VzYi91c2ItdWhjaS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3VzYi91c2ItdWhjaS50eHQKQEAgLTYsNyArNiw3IEBAIFJlcXVpcmVkIHByb3BlcnRp
+ZXM6CiAtIHJlZyA6IFNob3VsZCBjb250YWluIDEgcmVnaXN0ZXIgcmFuZ2VzKGFkZHJlc3MgYW5k
+IGxlbmd0aCkKIC0gaW50ZXJydXB0cyA6IFVIQ0kgY29udHJvbGxlciBpbnRlcnJ1cHQKCi1hZGRp
+dGlvbmFsbHkgdGhlIHByb3BlcnRpZXMgZnJvbSB1c2ItaGNkLnR4dCAoaW4gdGhlIGN1cnJlbnQg
+ZGlyZWN0b3J5KSBhcmUKK2FkZGl0aW9uYWxseSB0aGUgcHJvcGVydGllcyBmcm9tIHVzYi1oY2Qu
+eWFtbCAoaW4gdGhlIGN1cnJlbnQgZGlyZWN0b3J5KSBhcmUKIHN1cHBvcnRlZC4KCiBFeGFtcGxl
+OgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi91c2It
+eGhjaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3VzYi14aGNp
+LnR4dAppbmRleCA5NzQwMGU4Zjg2MDUuLmI0OWI4MTk1NzFmOSAxMDA2NDQKLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi91c2IteGhjaS50eHQKKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi91c2IteGhjaS50eHQKQEAgLTQxLDkgKzQx
+LDkgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKICAgLSB1c2IzLWxwbS1jYXBhYmxlOiBkZXRlcm1p
+bmVzIGlmIHBsYXRmb3JtIGlzIFVTQjMgTFBNIGNhcGFibGUKICAgLSBxdWlyay1icm9rZW4tcG9y
+dC1wZWQ6IHNldCBpZiB0aGUgY29udHJvbGxlciBoYXMgYnJva2VuIHBvcnQgZGlzYWJsZSBtZWNo
+YW5pc20KICAgLSBpbW9kLWludGVydmFsLW5zOiBkZWZhdWx0IGludGVycnVwdCBtb2RlcmF0aW9u
+IGludGVydmFsIGlzIDUwMDBucwotICAtIHBoeXMgOiBzZWUgdXNiLWhjZC50eHQgaW4gdGhlIGN1
+cnJlbnQgZGlyZWN0b3J5CisgIC0gcGh5cyA6IHNlZSB1c2ItaGNkLnlhbWwgaW4gdGhlIGN1cnJl
+bnQgZGlyZWN0b3J5CgotYWRkaXRpb25hbGx5IHRoZSBwcm9wZXJ0aWVzIGZyb20gdXNiLWhjZC50
+eHQgKGluIHRoZSBjdXJyZW50IGRpcmVjdG9yeSkgYXJlCithZGRpdGlvbmFsbHkgdGhlIHByb3Bl
+cnRpZXMgZnJvbSB1c2ItaGNkLnlhbWwgKGluIHRoZSBjdXJyZW50IGRpcmVjdG9yeSkgYXJlCiBz
+dXBwb3J0ZWQuCgoKLS0KMi4yMC4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
