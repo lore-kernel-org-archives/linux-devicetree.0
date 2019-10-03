@@ -1,57 +1,98 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
-Date: Thu, 3 Oct 2019 14:33:38 -0700
-Message-ID: <CALAqxLX3uSJKvRwzcQznaF4WK52BcM5Bh+PNXHmfDe1aTSUL8Q@mail.gmail.com>
-References: <20191002231617.3670-1-john.stultz@linaro.org> <20191002231617.3670-3-john.stultz@linaro.org>
- <20191003112618.GA2420393@kroah.com> <CALAqxLWm_u3KsXHn4a6PdBCOKM1vs5k0xS3G5jY+M-=HBqUJag@mail.gmail.com>
- <9cfccb6a-fba1-61a3-3eb6-3009c2f5e747@redhat.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: ufs: ti,j721e-ufs.yaml: Add binding for
+ TI UFS wrapper
+Date: Thu, 3 Oct 2019 16:56:31 -0500
+Message-ID: <CAL_Jsq+=8Xrti5FQ-Tmdivb5QvXxBzNxgbYiU+KChiNjkOreaA@mail.gmail.com>
+References: <20190918133921.25844-1-vigneshr@ti.com> <20190918133921.25844-2-vigneshr@ti.com>
+ <20191001120826.GA4214@bogus> <c3490572-8230-3e41-0916-097091386b21@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9cfccb6a-fba1-61a3-3eb6-3009c2f5e747@redhat.com>
+In-Reply-To: <c3490572-8230-3e41-0916-097091386b21@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Jun Li <lijun.kernel@gmail.com>, Valentin Schneider <valentin.schneider@arm.com>, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Vignesh Raghavendra <vigneshr@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "James E.J. Bottomley" <jejb@linux.ibm.com>, Martin K Petersen <martin.petersen@oracle.com>, Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, Pedro Sousa <pedrom.sousa@synopsys.com>, Janek Kotas <jank@cadence.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, SCSI <linux-scsi@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 1:56 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 03-10-2019 22:45, John Stultz wrote:
-> > The HiKey960 has only one USB controller, but in order to support both
-> > USB-C gadget/OTG and USB-A (host only) ports. When the USB-C
-> > connection is attached, it powers down and disconnects the hub. When
-> > the USB-C connection is detached, it powers the hub on and connects
-> > the controller to the hub.
+On Tue, Oct 1, 2019 at 7:18 AM Vignesh Raghavendra <vigneshr@ti.com> wrote:
 >
-> When you say one controller, do you mean 1 host and 1 gadget controller,
-> or is this one of these lovely devices where a gadget controller gets
-> abused as / confused with a proper host controller?
+>
+>
+> On 01/10/19 5:38 PM, Rob Herring wrote:
+> > On Wed, Sep 18, 2019 at 07:09:20PM +0530, Vignesh Raghavendra wrote:
+> >> Add binding documentation of TI wrapper for Cadence UFS Controller.
+> >>
+> >> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> >> ---
+> >>  .../devicetree/bindings/ufs/ti,j721e-ufs.yaml | 45 +++++++++++++++++++
+> >>  1 file changed, 45 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
+> >> new file mode 100644
+> >> index 000000000000..dabd7c795fbe
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
+> >> @@ -0,0 +1,45 @@
+> >> +# SPDX-License-Identifier: GPL-2.0
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/ufs/ti,j721e-ufs.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: TI J721e UFS Host Controller Glue Driver
+> >> +
+> >> +maintainers:
+> >> +  - Vignesh Raghavendra <vigneshr@ti.com>
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    items:
+> >> +      - const: ti,j721e-ufs
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +    description: address of TI UFS glue registers
+> >> +
+> >> +  clocks:
+> >> +    maxItems: 1
+> >> +    description: phandle to the M-PHY clock
+> >> +
+> >> +  power-domains:
+> >> +    maxItems: 1
+> >> +
+> >> +required:
+> >> +  - compatible
+> >> +  - reg
+> >> +  - clocks
+> >> +  - power-domains
+> >> +
+> >> +examples:
+> >> +  - |
+> >> +    ufs_wrapper: ufs-wrapper@4e80000 {
+> >> +       compatible = "ti,j721e-ufs";
+> >> +       reg = <0x0 0x4e80000 0x0 0x100>;
+> >> +       power-domains = <&k3_pds 277>;
+> >> +       clocks = <&k3_clks 277 1>;
+> >> +       assigned-clocks = <&k3_clks 277 1>;
+> >> +       assigned-clock-parents = <&k3_clks 277 4>;
+> >> +       #address-cells = <2>;
+> >> +       #size-cells = <2>;
+> >
+> > Based on the driver you expect to have a child node here with the UFS
+> > controller? You need to show that and have a schema for it.
+> >
+>
+> Yes, Cadence UFS controller node will be the child node. Its bindings
+> are documented at: Documentation/devicetree/bindings/ufs/cdns,ufshc.txt
+> (which in turn refers to
+> Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt)
+>
+> But they are not in .yaml yet. How would you suggest to reference that?
+> Or should I just write plain text DT binding doc given that subsystem is
+> not converted to yaml?
 
-I'm not totally sure myself, but I believe it's the latter, as the
-host ports have to be disabled in order for the gadet/otg port to
-function.
+I guess for now just define the child node and refer to the text
+document. Or feel free to convert the above 2 docs to schema. :)
 
-There was a similar situation w/ the original HiKey board (dwc2
-controller) as well, though the switching was done fully in hardware
-and we only needed some minor tweaks to the driver to keep the state
-transitions straight.
-
-> And since you are doing a usb-role-switch driver, I guess that the
-> role-switch is integrated inside the SoC, so you only get one pair
-> of USB datalines to the outside ?
-
-I believe so, but again, I don't have a ton of knowledge about the SoC
-details, Chen Yu would probably be the right person to answer, but I
-don't know if he's doing upstreaming anymore.
-
-> This does seem rather special, it might help if you can provide a diagram
-> with both the relevant bits inside the SoC as well as what lives outside
-> the Soc. even if it is in ASCII art...
-
-There is a schematic pdf here:
-https://github.com/96boards/documentation/raw/master/consumer/hikey/hikey960/hardware-docs/HiKey960_Schematics.pdf
-
-The larger block diagram on page 3 might be helpful, but you can find
-more details on the usb hub bits on page 17 and 18.
-
-thanks
--john
+Rob
