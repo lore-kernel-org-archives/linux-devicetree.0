@@ -1,70 +1,59 @@
-From: Green Wan <green.wan@sifive.com>
-Subject: [PATCH v4 0/4] dmaengine: sf-pdma: Add platform dma driver
-Date: Thu,  3 Oct 2019 17:09:00 +0800
-Message-ID: <20191003090945.29210-1-green.wan@sifive.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
+Date: Thu, 3 Oct 2019 17:10:33 +0800
+Message-ID: <20191003091019.GB22491@X250>
+References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+ <20190902034319.14026-3-xiaowei.bao@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190902034319.14026-3-xiaowei.bao@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-hackers@sifive.com
-Cc: Green Wan <green.wan@sifive.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Dan Williams <dan.j.williams@intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, "Paul E. McKenney" <paulmck@linux.ibm.com>, Yash Shah <yash.shah@sifive.com>, Bin Meng <bmeng.cn@gmail.com>, Sagar Kadam <sagar.kadam@sifive.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add PDMA driver support for SiFive HiFive Unleashed RevA00 board. Mainly follows
-DMAengine controller doc[1] to implement and take other DMA drivers as reference.
-Such as
+On Mon, Sep 02, 2019 at 11:43:19AM +0800, Xiaowei Bao wrote:
+> Add support for the LS1028a PCIe controller.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+> v2:
+>  - No change.
+> v3:
+>  - Reuse the ls2088 driver data structurt.
+> v4:
+>  - No change.
+> v5:
+>  - No change.
+> v6:
+>  - No change.
+> 
+>  drivers/pci/controller/dwc/pci-layerscape.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> index 3a5fa26..f24f79a 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> @@ -263,6 +263,7 @@ static const struct ls_pcie_drvdata ls2088_drvdata = {
+>  static const struct of_device_id ls_pcie_of_match[] = {
+>  	{ .compatible = "fsl,ls1012a-pcie", .data = &ls1046_drvdata },
+>  	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
+> +	{ .compatible = "fsl,ls1028a-pcie", .data = &ls2088_drvdata },
 
-  - drivers/dma/fsl-edma.c
-  - drivers/dma/dw-edma/
-  - drivers/dma/pxa-dma.c
+I think you can save this driver change by using "fsl,ls2088a-pcie" as
+compatible fallback like below.
 
-Using DMA test client[2] to test. Detailed datasheet is doc[3]. Driver supports:
+  compatible = "fsl,ls1028a-pcie", "fsl,ls2088a-pcie";
 
- - 4 physical DMA channels, share same DONE and error interrupt handler. 
- - Support MEM_TO_MEM
- - Tested by DMA test client
- - patches include DT Bindgins document and dts for fu450-c000 SoC. Separate dts
-   patch for easier review and apply to different branch or SoC platform.
- - retry 1 time if DMA error occurs.
+Shawn
 
-[Reference Doc]
- [1] ./Documentation/driver-api/dmaengine/provider.rst
- [2] ./Documentation/driver-api/dmaengine/dmatest.rst
- [3] https://static.dev.sifive.com/FU540-C000-v1.0.pdf 
-
-[Simple steps to test of DMA Test client]
- $ echo 1 > /sys/module/dmatest/parameters/iterations
- $ echo dma0chan0 > /sys/module/dmatest/parameters/channel
- $ echo dma0chan1 > /sys/module/dmatest/parameters/channel
- $ echo dma0chan2 > /sys/module/dmatest/parameters/channel
- $ echo dma0chan3 > /sys/module/dmatest/parameters/channel
- $ echo 1 > /sys/module/dmatest/parameters/run
-
-[Expected test result]
-[  267.563323] dmatest: dma0chan0-copy0: summary 45629 tests, 0 failures 38769.01 iops 309661 KB/s (0)
-[  267.572427] dmatest: dma0chan1-copy0: summary 45863 tests, 0 failures 40286.85 iops 321643 KB/s (0)
-[  267.581392] dmatest: dma0chan2-copy0: summary 45975 tests, 0 failures 41178.48 iops 328740 KB/s (0)
-[  267.590542] dmatest: dma0chan3-copy0: summary 44768 tests, 0 failures 38560.29 iops 307726 KB/s (0)
-
-Green Wan (4):
-  dt-bindings: dmaengine: sf-pdma: add bindins for SiFive PDMA
-  riscv: dts: add support for PDMA device of HiFive Unleashed Rev A00
-  dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00
-  MAINTAINERS: Add Green as SiFive PDMA driver maintainer
-
- .../bindings/dma/sifive,fu540-c000-pdma.yaml  |  55 ++
- MAINTAINERS                                   |   6 +
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi    |   7 +
- drivers/dma/Kconfig                           |   2 +
- drivers/dma/Makefile                          |   1 +
- drivers/dma/sf-pdma/Kconfig                   |   6 +
- drivers/dma/sf-pdma/Makefile                  |   1 +
- drivers/dma/sf-pdma/sf-pdma.c                 | 601 ++++++++++++++++++
- drivers/dma/sf-pdma/sf-pdma.h                 | 124 ++++
- 9 files changed, 803 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
- create mode 100644 drivers/dma/sf-pdma/Kconfig
- create mode 100644 drivers/dma/sf-pdma/Makefile
- create mode 100644 drivers/dma/sf-pdma/sf-pdma.c
- create mode 100644 drivers/dma/sf-pdma/sf-pdma.h
-
--- 
-2.17.1
+>  	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
+>  	{ .compatible = "fsl,ls1046a-pcie", .data = &ls1046_drvdata },
+>  	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
+> -- 
+> 2.9.5
+> 
