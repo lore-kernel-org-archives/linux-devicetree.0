@@ -1,30 +1,154 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH RFC v2 05/14] of: irq: document properties for wakeup
- interrupt parent
-Date: Thu, 3 Oct 2019 14:02:33 +0200
-Message-ID: <CACRpkdYO3ioakyrmv_2mTUuWCeBZ5goW28qr+y_M8qFv64FD4Q@mail.gmail.com>
-References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org> <1568411962-1022-6-git-send-email-ilina@codeaurora.org>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [Patch v2 1/3] media: ov5640: add PIXEL_RATE control
+Date: Thu, 3 Oct 2019 07:07:41 -0500
+Message-ID: <20191003120741.h2k5hcqjqxnu6ts6@ti.com>
+References: <20191002135134.12273-1-bparrot@ti.com>
+ <20191002135134.12273-2-bparrot@ti.com>
+ <20191003071714.zyldxfoollm26o4u@uno.localdomain>
+ <20191003072251.GA14917@paasikivi.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1568411962-1022-6-git-send-email-ilina@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20191003072251.GA14917@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: Stephen Boyd <swboyd@chromium.org>, Evan Green <evgreen@chromium.org>, Marc Zyngier <maz@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, mkshah@codeaurora.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Jacopo Mondi <jacopo@jmondi.org>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 11:59 PM Lina Iyer <ilina@codeaurora.org> wrote:
+Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Thu [2019-Oct-03 10:22:51 +0300]:
+> Hi Jacopo, Benoit,
+> 
+> On Thu, Oct 03, 2019 at 09:17:14AM +0200, Jacopo Mondi wrote:
+> > Hi Benoit,
+> > 
+> > On Wed, Oct 02, 2019 at 08:51:32AM -0500, Benoit Parrot wrote:
+> > > Add v4l2 controls to report the pixel rates of each mode. This is
+> > > needed by some CSI2 receiver in order to perform proper DPHY
+> > > configuration.
+> > >
+> > > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > > ---
+> > >  drivers/media/i2c/ov5640.c | 25 +++++++++++++++++++++++++
+> > >  1 file changed, 25 insertions(+)
+> > >
+> > > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> > > index 500d9bbff10b..5198dc887400 100644
+> > > --- a/drivers/media/i2c/ov5640.c
+> > > +++ b/drivers/media/i2c/ov5640.c
+> > > @@ -193,6 +193,9 @@ struct ov5640_mode_info {
+> > >
+> > >  struct ov5640_ctrls {
+> > >  	struct v4l2_ctrl_handler handler;
+> > > +	struct {
+> > > +		struct v4l2_ctrl *pixel_rate;
+> > > +	};
+> > 
+> > Do you need to wrap this v4l2_ctrl in it's own unnamed struct? Other
+> > controls here declared in this way are clustered and, if I'm not
+> > mistaken, using unnamed struct to wrap them is just a typographically
+> > nice way to convey that. I think your new control could be declared
+> > without a wrapping struct { }.
+> > 
+> > >  	struct {
+> > >  		struct v4l2_ctrl *auto_exp;
+> > >  		struct v4l2_ctrl *exposure;
+> > > @@ -2194,6 +2197,16 @@ static int ov5640_try_fmt_internal(struct v4l2_subdev *sd,
+> > >  	return 0;
+> > >  }
+> > >
+> > > +static u64 ov5640_calc_pixel_rate(struct ov5640_dev *sensor)
+> > > +{
+> > > +	u64 rate;
+> > > +
+> > > +	rate = sensor->current_mode->vtot * sensor->current_mode->htot;
+> > > +	rate *= ov5640_framerates[sensor->current_fr];
+> > > +
+> > > +	return rate;
+> > > +}
+> > > +
+> > 
+> > Just to point out this is the -theoretical- pixel rate, and might be
+> > quite different from the one calculated by the clock tree tuning
+> > procedure (which should be updated to match Hugues' latest findings).
+> 
+> Hmm. Considering the xclk rate may be pretty much anything, I'd suppose
+> the value above would only be correct for a given xclk rate.
 
-> Some interrupt controllers in a SoC, are always powered on and have a
-> select interrupts routed to them, so that they can wakeup the SoC from
-> suspend. Add wakeup-parent DT property to refer to these interrupt
-> controllers.
->
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+I am not sure about that, different xclk rate might yield slightly
+different byte clock, but all in all the resolution and framerate pretty
+much dictate the end result, no?
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Could this be simply calculated from the clock tree configuration, to get
+> the right value in all cases?
 
-Yours,
-Linus Walleij
+It probably could, and as I said earlier I gave it a try and failed, since
+the theoretical value worked for me that's what I went with. Those are the
+same values that Maxime's patch referred to. (dfbfb7aa832cdb media: ov5640:
+Compute the clock rate at runtime).
+
+Here I am just "publishing it".
+
+Benoit
+
+> 
+> > 
+> > >  static int ov5640_set_fmt(struct v4l2_subdev *sd,
+> > >  			  struct v4l2_subdev_pad_config *cfg,
+> > >  			  struct v4l2_subdev_format *format)
+> > > @@ -2233,6 +2246,8 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
+> > >  	if (mbus_fmt->code != sensor->fmt.code)
+> > >  		sensor->pending_fmt_change = true;
+> > >
+> > > +	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> > > +				 ov5640_calc_pixel_rate(sensor));
+> > >  out:
+> > >  	mutex_unlock(&sensor->lock);
+> > >  	return ret;
+> > > @@ -2657,6 +2672,13 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
+> > >  	/* we can use our own mutex for the ctrl lock */
+> > >  	hdl->lock = &sensor->lock;
+> > >
+> > > +	/* Clock related controls */
+> > > +	ctrls->pixel_rate =
+> > > +		v4l2_ctrl_new_std(hdl, ops,
+> > 
+> > If you like it better, this could fit in 1 line
+> > 
+> > 	ctrls->pixel_rate = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_PIXEL_RATE,
+> > 					      0, INT_MAX, 1,
+> > 					      ov5640_calc_pixel_rate(sensor)
+> > 
+> > Thanks
+> >    j
+> > 
+> > > +				  V4L2_CID_PIXEL_RATE, 0, INT_MAX, 1,
+> > > +				  ov5640_calc_pixel_rate(sensor));
+> > 
+> > 
+> > > +	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> 
+> Note that ctrls->pixel_rate is NULL if e.g. memory allocation fails when
+> creating the control.
+> 
+> > > +
+> > >  	/* Auto/manual white balance */
+> > >  	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
+> > >  					   V4L2_CID_AUTO_WHITE_BALANCE,
+> > > @@ -2816,6 +2838,9 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
+> > >  		sensor->frame_interval = fi->interval;
+> > >  		sensor->current_mode = mode;
+> > >  		sensor->pending_mode_change = true;
+> > > +
+> > > +		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> > > +					 ov5640_calc_pixel_rate(sensor));
+> > >  	}
+> > >  out:
+> > >  	mutex_unlock(&sensor->lock);
+> 
+> -- 
+> Regards,
+> 
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
