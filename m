@@ -1,79 +1,65 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 1/2] dt-bindings: media: sun4i-csi: Drop the module clock
-Date: Thu, 3 Oct 2019 23:51:05 +0800
-Message-ID: <CAGb2v66az3uQnibudKai7ATfXh+w1Y+bJ=o258RVe9SCNRpGNQ@mail.gmail.com>
-References: <20191003154842.248763-1-mripard@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: ptp: Add binding doc for IDT ClockMatrix
+ based PTP clock
+Date: Thu, 3 Oct 2019 10:56:19 -0500
+Message-ID: <CAL_JsqK12p48gqZdwNfYGNsBafmjMY=5U=QcHPHZy5sD-nGntA@mail.gmail.com>
+References: <1568837198-27211-1-git-send-email-vincent.cheng.xh@renesas.com>
+ <5d93ce84.1c69fb81.8e964.4dc1@mx.google.com> <20191003145546.GA19695@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191003154842.248763-1-mripard@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191003145546.GA19695@renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vincent Cheng <vincent.cheng.xh@renesas.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "richardcochran@gmail.com" <richardcochran@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Oct 3, 2019 at 10:12 AM Vincent Cheng
+<vincent.cheng.xh@renesas.com> wrote:
+>
+> On Tue, Oct 01, 2019 at 06:09:06PM EDT, Rob Herring wrote:
+> >On Wed, Sep 18, 2019 at 04:06:37PM -0400, vincent.cheng.xh@renesas.com wrote:
+> >> From: Vincent Cheng <vincent.cheng.xh@renesas.com>
+>
+> Hi Rob,
+>
+> Welcome back.  Thank-you for providing feedback.
+>
+> >>
+> >> Add device tree binding doc for the IDT ClockMatrix PTP clock driver.
+> >
+> >Bindings are for h/w, not drivers...
+>
+> Yes, will remove 'driver'.
+>
+> >>  Documentation/devicetree/bindings/ptp/ptp-idtcm.txt | 15 +++++++++++++++
+> >>  1 file changed, 15 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-idtcm.txt
+> >
+> >Please make this a DT schema.
+>
+> Sure, will give it a try.
+>
+> >> +  - compatible  Should be "idt,8a3400x-ptp" for System Synchronizer
+> >> +                Should be "idt,8a3401x-ptp" for Port Synchronizer
+> >> +                Should be "idt,8a3404x-ptp" for Universal Frequency Translator (UFT)
+> >
+> >If PTP is the only function of the chip, you don't need to append
+> >'-ptp'.
+>
+> Okay, will remove '-ptp'.  Thanks.
+>
+>
+> >What's the 'x' for? We generally don't use wildcards in compatible
+> >strings.
+>
+> We were hoping to use 'x' to represent a single driver to match the various
+> part numbers 8A34001, 8A34002, 8A34003, 8A34004, 8A34011, 8A34012, etc.
+>
+> What should be used instead of 'x'?
 
-On Thu, Oct 3, 2019 at 11:48 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> It turns out that what was thought to be the module clock was actually the
-> clock meant to be used by the sensor, and isn't playing any role with the
-> CSI controller itself. Let's drop that clock from our binding.
->
-> Fixes: c5e8f4ccd775 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
-> Reported-by: Chen-Yu Tsai <wens@csie.org>
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> ---
->  .../devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> index 5dd1cf490cd9..d3e423fcb6c2 100644
-> --- a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> +++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-> @@ -27,14 +27,12 @@ properties:
->    clocks:
->      items:
->        - description: The CSI interface clock
-> -      - description: The CSI module clock
->        - description: The CSI ISP clock
->        - description: The CSI DRAM clock
->
->    clock-names:
->      items:
->        - const: bus
-> -      - const: mod
->        - const: isp
->        - const: ram
->
-> @@ -89,9 +87,8 @@ examples:
->          compatible = "allwinner,sun7i-a20-csi0";
->          reg = <0x01c09000 0x1000>;
->          interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> -        clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
-> -                 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
-> -        clock-names = "bus", "mod", "isp", "ram";
-> +        clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
-> +        clock-names = "bus", "isp", "ram";
+Enumerate all the part numbers. Are the differences discoverable in
+some other way? If so, then 'x' is fine, but just add a note how
+models are distinguished.
 
-I believe what we thought was the ISP clock is actually the module clock
-for the whole CSI subsystem. So we should still use the module clock entry,
-and remove the ISP entry.
-
-ChenYu
-
->          resets = <&ccu RST_CSI0>;
->
->          port {
-> --
-> 2.23.0
->
+Rob
