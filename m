@@ -1,82 +1,25 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v9 12/12] lib/test_printf: Add tests for %pfw printk modifier
-Date: Thu,  3 Oct 2019 15:32:19 +0300
-Message-ID: <20191003123219.11237-13-sakari.ailus@linux.intel.com>
-References: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
+From: Austin Kim <austinkernel.kim@gmail.com>
+Subject: Re: [Patch 02/16] media: ti-vpe: vpe: Add missing null pointer checks
+Date: Thu, 3 Oct 2019 21:37:53 +0900
+Message-ID: <CAOoBcBV=4GYVXdhhyNcpi97RzO3qR_NG6TfYxk=niwn5=RWzbw@mail.gmail.com>
+References: <20190927183650.31345-1-bparrot@ti.com> <20190927183650.31345-3-bparrot@ti.com>
+ <CAOoBcBUd7reG=-WOq+Vq9SynZMJ81CWFZPN35MkmaQvquZ9xyg@mail.gmail.com> <20190930155826.pimkap75k67mji3e@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
+In-Reply-To: <20190930155826.pimkap75k67mji3e@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a test for the %pfw printk modifier using software nodes.
+2019=EB=85=84 10=EC=9B=94 1=EC=9D=BC (=ED=99=94) =EC=98=A4=EC=A0=84 12:56, =
+Benoit Parrot <bparrot@ti.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> Hi Austin,
+>
+> Thanks for the review,
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
----
- lib/test_printf.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/lib/test_printf.c b/lib/test_printf.c
-index 944eb50f38625..bb6a7d334084b 100644
---- a/lib/test_printf.c
-+++ b/lib/test_printf.c
-@@ -22,6 +22,8 @@
- #include <linux/gfp.h>
- #include <linux/mm.h>
- 
-+#include <linux/property.h>
-+
- #include "../tools/testing/selftests/kselftest_module.h"
- 
- #define BUF_SIZE 256
-@@ -588,6 +590,35 @@ flags(void)
- 	kfree(cmp_buffer);
- }
- 
-+static void __init fwnode_pointer(void)
-+{
-+	const struct software_node softnodes[] = {
-+		{ .name = "first", },
-+		{ .name = "second", .parent = &softnodes[0], },
-+		{ .name = "third", .parent = &softnodes[1], },
-+		{ NULL /* Guardian */ }
-+	};
-+	const char * const full_name = "first/second/third";
-+	const char * const full_name_second = "first/second";
-+	const char * const second_name = "second";
-+	const char * const third_name = "third";
-+	int rval;
-+
-+	rval = software_node_register_nodes(softnodes);
-+	if (rval) {
-+		pr_warn("cannot register softnodes; rval %d\n", rval);
-+		return;
-+	}
-+
-+	test(full_name_second, "%pfw", software_node_fwnode(&softnodes[1]));
-+	test(full_name, "%pfw", software_node_fwnode(&softnodes[2]));
-+	test(full_name, "%pfwf", software_node_fwnode(&softnodes[2]));
-+	test(second_name, "%pfwP", software_node_fwnode(&softnodes[1]));
-+	test(third_name, "%pfwP", software_node_fwnode(&softnodes[2]));
-+
-+	software_node_unregister_nodes(softnodes);
-+}
-+
- static void __init
- test_pointer(void)
- {
-@@ -610,6 +641,7 @@ test_pointer(void)
- 	bitmap();
- 	netdev_features();
- 	flags();
-+	fwnode_pointer();
- }
- 
- static void __init selftest(void)
--- 
-2.20.1
+It's my pleasure.
+Hope to see this patch will arrive the destination(linux-next) safely.  :)
