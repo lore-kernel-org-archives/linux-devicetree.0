@@ -1,8 +1,7 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH 2/2] ARM: dts: sun7i: Drop the module clock from the device
- tree
-Date: Thu,  3 Oct 2019 17:48:42 +0200
-Message-ID: <20191003154842.248763-2-mripard@kernel.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 1/2] dt-bindings: media: sun4i-csi: Drop the module clock
+Date: Thu, 3 Oct 2019 23:51:05 +0800
+Message-ID: <CAGb2v66az3uQnibudKai7ATfXh+w1Y+bJ=o258RVe9SCNRpGNQ@mail.gmail.com>
 References: <20191003154842.248763-1-mripard@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,36 +17,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, sakari.ailus@linux.intel.com, mchehab@kernel.org
-Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-What we thought would be the module clock is actually the clock meant to be
-used by the sensors, and play no role in the CSI controller. Now that the
-binding has been updated to reflect that, let's update the device tree too.
+Hi,
 
-Fixes: d2b9c6444301 ("ARM: dts: sun7i: Add CSI0 controller")
-Reported-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
----
- arch/arm/boot/dts/sun7i-a20.dtsi | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+On Thu, Oct 3, 2019 at 11:48 PM Maxime Ripard <mripard@kernel.org> wrote:
+>
+> It turns out that what was thought to be the module clock was actually the
+> clock meant to be used by the sensor, and isn't playing any role with the
+> CSI controller itself. Let's drop that clock from our binding.
+>
+> Fixes: c5e8f4ccd775 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
+> Reported-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+>  .../devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> index 5dd1cf490cd9..d3e423fcb6c2 100644
+> --- a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> +++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> @@ -27,14 +27,12 @@ properties:
+>    clocks:
+>      items:
+>        - description: The CSI interface clock
+> -      - description: The CSI module clock
+>        - description: The CSI ISP clock
+>        - description: The CSI DRAM clock
+>
+>    clock-names:
+>      items:
+>        - const: bus
+> -      - const: mod
+>        - const: isp
+>        - const: ram
+>
+> @@ -89,9 +87,8 @@ examples:
+>          compatible = "allwinner,sun7i-a20-csi0";
+>          reg = <0x01c09000 0x1000>;
+>          interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+> -        clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
+> -                 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
+> -        clock-names = "bus", "mod", "isp", "ram";
+> +        clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
+> +        clock-names = "bus", "isp", "ram";
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 874231be04e4..8aebefd6accf 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -380,9 +380,8 @@
- 			compatible = "allwinner,sun7i-a20-csi0";
- 			reg = <0x01c09000 0x1000>;
- 			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
--				 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
--			clock-names = "bus", "mod", "isp", "ram";
-+			clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
-+			clock-names = "bus", "isp", "ram";
- 			resets = <&ccu RST_CSI0>;
- 			status = "disabled";
- 		};
--- 
-2.23.0
+I believe what we thought was the ISP clock is actually the module clock
+for the whole CSI subsystem. So we should still use the module clock entry,
+and remove the ISP entry.
+
+ChenYu
+
+>          resets = <&ccu RST_CSI0>;
+>
+>          port {
+> --
+> 2.23.0
+>
