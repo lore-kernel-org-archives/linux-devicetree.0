@@ -1,49 +1,39 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 0/5] net: ethernet: stmmac: some fixes and optimization
-Date: Thu, 3 Oct 2019 12:16:24 +0200
-Message-ID: <7575369f-0f42-9afa-4212-bb82100a7a1b@st.com>
-References: <20190920053817.13754-1-christophe.roullier@st.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6] gpio/mpc8xxx: change irq handler from chained to normal
+Date: Thu, 3 Oct 2019 12:19:42 +0200
+Message-ID: <CACRpkdZh80H+G43-y0AGXJo0p=C5YADZBu3h1v2-3LvLj_Z=aQ@mail.gmail.com>
+References: <20190927031551.20074-1-hui.song_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190920053817.13754-1-christophe.roullier@st.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christophe Roullier <christophe.roullier@st.com>, robh@kernel.org, davem@davemloft.net, joabreu@synopsys.com, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, peppe.cavallaro@st.com
-Cc: devicetree@vger.kernel.org, andrew@lunn.ch, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190927031551.20074-1-hui.song_1@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hui Song <hui.song_1@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Christophe
+On Fri, Sep 27, 2019 at 5:26 AM Hui Song <hui.song_1@nxp.com> wrote:
 
-On 9/20/19 7:38 AM, Christophe Roullier wrote:
-> Some improvements (manage syscfg as optional clock, update slew rate of
-> ETH_MDIO pin, Enable gating of the MAC TX clock during TX low-power mode)
-> Fix warning build message when W=1
-> 
-> Christophe Roullier (5):
->    net: ethernet: stmmac: Add support for syscfg clock
->    net: ethernet: stmmac: fix warning when w=1 option is used during
->      build
->    ARM: dts: stm32: remove syscfg clock on stm32mp157c ethernet
->    ARM: dts: stm32: adjust slew rate for Ethernet
->    ARM: dts: stm32: Enable gating of the MAC TX clock during TX low-power
->      mode on stm32mp157c
-> 
+> From: Song Hui <hui.song_1@nxp.com>
+>
+> More than one gpio controllers can share one interrupt, change the
+> driver to request shared irq.
+>
+> While this will work, it will mess up userspace accounting of the number
+> of interrupts per second in tools such as vmstat.  The reason is that
+> for every GPIO interrupt, /proc/interrupts records the count against GIC
+> interrupt 68 or 69, as well as the GPIO itself.  So, for every GPIO
+> interrupt, the total number of interrupts that the system has seen
+> increments by two
+>
+> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
+> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
+> Signed-off-by: Song Hui <hui.song_1@nxp.com>
+> ---
+>  Changes in v6:
+>         - change request_irq to devm_request_irq and add commit message
 
-DT patches will be applied on stm32-next after dwmac-stm32 patches merge 
-in net-next.
+There is some build error on the patch, can you look into it?
 
->   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi     |  9 +++-
->   arch/arm/boot/dts/stm32mp157c.dtsi            |  7 ++--
->   .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 42 ++++++++++++-------
->   3 files changed, 38 insertions(+), 20 deletions(-)
-> 
+Yours,
+Linus Walleij
