@@ -1,93 +1,95 @@
-From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH] dt-bindings: usb: Fix references to usb-hcd.yaml
-Date: Thu,  3 Oct 2019 21:31:32 +0200
-Message-ID: <20191003193132.17758-1-j.neuschaefer@gmx.net>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 2/2] ARM: dts: at91: sama5d27_som1_ek: add mmc
+ capabilities for SDMMC0
+Date: Thu, 3 Oct 2019 21:42:03 +0200
+Message-ID: <20191003194203.GI575@piout.net>
+References: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
+ <1565252928-28994-2-git-send-email-eugen.hristev@microchip.com>
+ <20190808124217.wrmcxohw5i6ju2qe@M43218.corp.atmel.com>
+ <04fd74c3-a828-1064-b77b-f3de07a26190@intel.com>
+ <20190809062322.syuieymdqjs4e7lh@M43218.corp.atmel.com>
+ <fa0debbb-b84c-1f74-f8b8-8fdd7812aaee@microchip.com>
+ <20190813065306.tqz57hqeiofofbnz@M43218.corp.atmel.com>
+ <c2c355cd-b798-02de-0606-0f6442f6fdca@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c2c355cd-b798-02de-0606-0f6442f6fdca@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eugen.Hristev@microchip.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, Nicolas.Ferre@microchip.com, ulf.hansson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-dXNiLWhjZC50eHQgaGFzIGJlZW4gY29udmVydGVkIHRvIFlBTUwuIFVwZGF0ZSByZWZlcmVuY2Vz
-IGFjY29yZGluZ2x5LgoKRml4ZXM6IDE0ZWMwNzJhMTlhZCAoImR0LWJpbmRpbmdzOiB1c2I6IENv
-bnZlcnQgVVNCIEhDRCBnZW5lcmljIGJpbmRpbmcgdG8gWUFNTCIpClNpZ25lZC1vZmYtYnk6IEpv
-bmF0aGFuIE5ldXNjaMOkZmVyIDxqLm5ldXNjaGFlZmVyQGdteC5uZXQ+Ci0tLQogRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9tZWRpYXRlayxtdGsteGhjaS50eHQgfCA0ICsr
-LS0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvbWVkaWF0ZWssbXR1My50
-eHQgICAgIHwgNCArKy0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3Vz
-Yi11aGNpLnR4dCAgICAgICAgICB8IDIgKy0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy91c2IvdXNiLXhoY2kudHh0ICAgICAgICAgIHwgNCArKy0tCiA0IGZpbGVzIGNoYW5nZWQs
-IDcgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL21lZGlhdGVrLG10ay14aGNpLnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvbWVkaWF0ZWssbXRrLXhoY2kudHh0Cmlu
-ZGV4IGYzZTRhY2VjYWJlOC4uNDJkODgxNGY5MDNhIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvdXNiL21lZGlhdGVrLG10ay14aGNpLnR4dAorKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL21lZGlhdGVrLG10ay14aGNpLnR4dApA
-QCAtMzMsNyArMzMsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogCSJkbWFfY2siOiBkbWFfYnVz
-IGNsb2NrIGZvciBkYXRhIHRyYW5zZmVyIGJ5IERNQSwKIAkieGhjaV9jayI6IGNvbnRyb2xsZXIg
-Y2xvY2sKCi0gLSBwaHlzIDogc2VlIHVzYi1oY2QudHh0IGluIHRoZSBjdXJyZW50IGRpcmVjdG9y
-eQorIC0gcGh5cyA6IHNlZSB1c2ItaGNkLnlhbWwgaW4gdGhlIGN1cnJlbnQgZGlyZWN0b3J5Cgog
-T3B0aW9uYWwgcHJvcGVydGllczoKICAtIHdha2V1cC1zb3VyY2UgOiBlbmFibGUgVVNCIHJlbW90
-ZSB3YWtldXA7CkBAIC01Myw3ICs1Myw3IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6CiAJU2VlOiBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9waW5jdHJsLWJpbmRpbmdz
-LnR4dAogIC0gaW1vZC1pbnRlcnZhbC1uczogZGVmYXVsdCBpbnRlcnJ1cHQgbW9kZXJhdGlvbiBp
-bnRlcnZhbCBpcyA1MDAwbnMKCi1hZGRpdGlvbmFsbHkgdGhlIHByb3BlcnRpZXMgZnJvbSB1c2It
-aGNkLnR4dCAoaW4gdGhlIGN1cnJlbnQgZGlyZWN0b3J5KSBhcmUKK2FkZGl0aW9uYWxseSB0aGUg
-cHJvcGVydGllcyBmcm9tIHVzYi1oY2QueWFtbCAoaW4gdGhlIGN1cnJlbnQgZGlyZWN0b3J5KSBh
-cmUKIHN1cHBvcnRlZC4KCiBFeGFtcGxlOgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3VzYi9tZWRpYXRlayxtdHUzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy91c2IvbWVkaWF0ZWssbXR1My50eHQKaW5kZXggYjlhZjdmNWVlOTFk
-Li5lMGFlNjA5NmY3YWMgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy91c2IvbWVkaWF0ZWssbXR1My50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3VzYi9tZWRpYXRlayxtdHUzLnR4dApAQCAtMTcsNyArMTcsNyBAQCBSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOgogIC0gY2xvY2stbmFtZXMgOiBtdXN0IGNvbnRhaW4gInN5c19jayIgZm9y
-IGNsb2NrIG9mIGNvbnRyb2xsZXIsCiAJdGhlIGZvbGxvd2luZyBjbG9ja3MgYXJlIG9wdGlvbmFs
-OgogCSJyZWZfY2siLCAibWN1X2NrIiBhbmQgImRtYV9jayI7Ci0gLSBwaHlzIDogc2VlIHVzYi1o
-Y2QudHh0IGluIHRoZSBjdXJyZW50IGRpcmVjdG9yeQorIC0gcGh5cyA6IHNlZSB1c2ItaGNkLnlh
-bWwgaW4gdGhlIGN1cnJlbnQgZGlyZWN0b3J5CiAgLSBkcl9tb2RlIDogc2hvdWxkIGJlIG9uZSBv
-ZiAiaG9zdCIsICJwZXJpcGhlcmFsIiBvciAib3RnIiwKIAlyZWZlciB0byB1c2IvZ2VuZXJpYy50
-eHQKCkBAIC02MCw3ICs2MCw3IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6CiAgLSBtZWRpYXRlayx1
-M3AtZGlzLW1zayA6IG1hc2sgdG8gZGlzYWJsZSB1M3BvcnRzLCBiaXQwIGZvciB1M3BvcnQwLAog
-CWJpdDEgZm9yIHUzcG9ydDEsIC4uLiBldGM7CgotYWRkaXRpb25hbGx5IHRoZSBwcm9wZXJ0aWVz
-IGZyb20gdXNiLWhjZC50eHQgKGluIHRoZSBjdXJyZW50IGRpcmVjdG9yeSkgYXJlCithZGRpdGlv
-bmFsbHkgdGhlIHByb3BlcnRpZXMgZnJvbSB1c2ItaGNkLnlhbWwgKGluIHRoZSBjdXJyZW50IGRp
-cmVjdG9yeSkgYXJlCiBzdXBwb3J0ZWQuCgogU3ViLW5vZGVzOgpkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi91c2ItdWhjaS50eHQgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3VzYi11aGNpLnR4dAppbmRleCBjYzJlNmY3ZDYw
-MmUuLmQxNzAyZWIyYzhiZCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3VzYi91c2ItdWhjaS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3VzYi91c2ItdWhjaS50eHQKQEAgLTYsNyArNiw3IEBAIFJlcXVpcmVkIHByb3BlcnRp
-ZXM6CiAtIHJlZyA6IFNob3VsZCBjb250YWluIDEgcmVnaXN0ZXIgcmFuZ2VzKGFkZHJlc3MgYW5k
-IGxlbmd0aCkKIC0gaW50ZXJydXB0cyA6IFVIQ0kgY29udHJvbGxlciBpbnRlcnJ1cHQKCi1hZGRp
-dGlvbmFsbHkgdGhlIHByb3BlcnRpZXMgZnJvbSB1c2ItaGNkLnR4dCAoaW4gdGhlIGN1cnJlbnQg
-ZGlyZWN0b3J5KSBhcmUKK2FkZGl0aW9uYWxseSB0aGUgcHJvcGVydGllcyBmcm9tIHVzYi1oY2Qu
-eWFtbCAoaW4gdGhlIGN1cnJlbnQgZGlyZWN0b3J5KSBhcmUKIHN1cHBvcnRlZC4KCiBFeGFtcGxl
-OgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi91c2It
-eGhjaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3VzYi14aGNp
-LnR4dAppbmRleCA5NzQwMGU4Zjg2MDUuLmI0OWI4MTk1NzFmOSAxMDA2NDQKLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi91c2IteGhjaS50eHQKKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi91c2IteGhjaS50eHQKQEAgLTQxLDkgKzQx
-LDkgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKICAgLSB1c2IzLWxwbS1jYXBhYmxlOiBkZXRlcm1p
-bmVzIGlmIHBsYXRmb3JtIGlzIFVTQjMgTFBNIGNhcGFibGUKICAgLSBxdWlyay1icm9rZW4tcG9y
-dC1wZWQ6IHNldCBpZiB0aGUgY29udHJvbGxlciBoYXMgYnJva2VuIHBvcnQgZGlzYWJsZSBtZWNo
-YW5pc20KICAgLSBpbW9kLWludGVydmFsLW5zOiBkZWZhdWx0IGludGVycnVwdCBtb2RlcmF0aW9u
-IGludGVydmFsIGlzIDUwMDBucwotICAtIHBoeXMgOiBzZWUgdXNiLWhjZC50eHQgaW4gdGhlIGN1
-cnJlbnQgZGlyZWN0b3J5CisgIC0gcGh5cyA6IHNlZSB1c2ItaGNkLnlhbWwgaW4gdGhlIGN1cnJl
-bnQgZGlyZWN0b3J5CgotYWRkaXRpb25hbGx5IHRoZSBwcm9wZXJ0aWVzIGZyb20gdXNiLWhjZC50
-eHQgKGluIHRoZSBjdXJyZW50IGRpcmVjdG9yeSkgYXJlCithZGRpdGlvbmFsbHkgdGhlIHByb3Bl
-cnRpZXMgZnJvbSB1c2ItaGNkLnlhbWwgKGluIHRoZSBjdXJyZW50IGRpcmVjdG9yeSkgYXJlCiBz
-dXBwb3J0ZWQuCgoKLS0KMi4yMC4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On 03/10/2019 10:24:52+0000, Eugen.Hristev@microchip.com wrote:
+> 
+> 
+> On 13.08.2019 09:53, Ludovic Desroches wrote:
+> > On Mon, Aug 12, 2019 at 03:38:34PM +0000, Eugen.Hristev@microchip.com wrote:
+> >> On 09.08.2019 09:23, Ludovic Desroches wrote:
+> >>> On Thu, Aug 08, 2019 at 03:57:30PM +0300, Adrian Hunter wrote:
+> >>>> On 8/08/19 3:42 PM, Ludovic Desroches wrote:
+> >>>>> On Thu, Aug 08, 2019 at 10:35:43AM +0200, Eugen Hristev - M18282 wrote:
+> >>>>>> From: Eugen Hristev <eugen.hristev@microchip.com>
+> >>>>>>
+> >>>>>> Add mmc capabilities for SDMMC0 for this board.
+> >>>>>> With this enabled, eMMC connected card is detected as:
+> >>>>>>
+> >>>>>> mmc0: new DDR MMC card at address 0001
+> >>>>>>
+> >>>>>> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+> >>>>> Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> >>>>>
+> >>>>> I am interested to have the some insights about the use of sd-uhs-*
+> >>>>> properties.
+> >>>>>
+> >>>>> Our IP can't deal with 1V8 by itself. It has a 1V8SEL signal which can
+> >>>>> be used as the logic control input of a mux. So even if the IP claims
+> >>>>> to support UHS modes, it depends on the board.
+> >>>>>
+> >>>>> Are the sd-uhs-* properties a way to deal with this? I tend to think no
+> >>>>> as sdhci_setup_host() will set the caps depending on the content of the
+> >>>>> capabilities register. Do we have to use the SDHCI_QUIRK_MISSING_CAPS
+> >>>>> quirk or sdhci-caps/sdhci-caps-mask?
+> >>>>
+> >>>> There is "no-1-8-v" which it looks like sdhci-of-at91.c already supports:
+> >>>>
+> >>>>     sdhci_at91_probe() -> sdhci_get_of_property() -> sdhci_get_property()
+> >>>>
+> >>>>       	if (device_property_present(dev, "no-1-8-v"))
+> >>>> 		host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
+> >>>>
+> >>>
+> >>> Right, I forgot this property. Thanks.
+> >>>
+> >>> Eugen, do you see cases we can't cover with this property?
+> >>
+> >> Hi,
+> >>
+> >> For current requirements and driver support, this should be enough.
+> >>
+> >> I noticed one thing regarding SD-Cards, if I add property sd-uhs-sdr104
+> >> the class 10 uhs1 cards are detected as SDR104 . Without this property
+> >> they are detected as DDR50. Any idea why the difference ? The controller
+> >> does not claim to have SDR104 support ?  We should add it ?
+> > 
+> > With the mainline, our tree or both? In our tree, SDR104 is removed from
+> > the capabilities.
+> > 
+> > Ludovic
+> > 
+> 
+> 
+> Hello Alexandre,
+> 
+> Anything more needed regarding this patch ?
+> 
+
+I was not sure it was applicable, seeing the discussion. I'll apply it
+now.
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
