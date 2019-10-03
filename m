@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v9 02/12] software node: Make argument to to_software_node const
-Date: Thu,  3 Oct 2019 15:32:09 +0300
-Message-ID: <20191003123219.11237-3-sakari.ailus@linux.intel.com>
+Subject: [PATCH v9 12/12] lib/test_printf: Add tests for %pfw printk modifier
+Date: Thu,  3 Oct 2019 15:32:19 +0300
+Message-ID: <20191003123219.11237-13-sakari.ailus@linux.intel.com>
 References: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,47 +12,71 @@ To: Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org, rafael@kernel.
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Joe Perches <joe@perches.com>
 List-Id: devicetree@vger.kernel.org
 
-to_software_node() does not need to modify the fwnode_handle it operates
-on; therefore make it const. This allows passing a const fwnode_handle to
-to_software_node().
+Add a test for the %pfw printk modifier using software nodes.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- drivers/base/swnode.c    | 4 ++--
- include/linux/property.h | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ lib/test_printf.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index a7cb41812cfda..951e7efd47c23 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -71,9 +71,9 @@ software_node_to_swnode(const struct software_node *node)
- 	return swnode;
+diff --git a/lib/test_printf.c b/lib/test_printf.c
+index 944eb50f38625..bb6a7d334084b 100644
+--- a/lib/test_printf.c
++++ b/lib/test_printf.c
+@@ -22,6 +22,8 @@
+ #include <linux/gfp.h>
+ #include <linux/mm.h>
+ 
++#include <linux/property.h>
++
+ #include "../tools/testing/selftests/kselftest_module.h"
+ 
+ #define BUF_SIZE 256
+@@ -588,6 +590,35 @@ flags(void)
+ 	kfree(cmp_buffer);
  }
  
--const struct software_node *to_software_node(struct fwnode_handle *fwnode)
-+const struct software_node *to_software_node(const struct fwnode_handle *fwnode)
++static void __init fwnode_pointer(void)
++{
++	const struct software_node softnodes[] = {
++		{ .name = "first", },
++		{ .name = "second", .parent = &softnodes[0], },
++		{ .name = "third", .parent = &softnodes[1], },
++		{ NULL /* Guardian */ }
++	};
++	const char * const full_name = "first/second/third";
++	const char * const full_name_second = "first/second";
++	const char * const second_name = "second";
++	const char * const third_name = "third";
++	int rval;
++
++	rval = software_node_register_nodes(softnodes);
++	if (rval) {
++		pr_warn("cannot register softnodes; rval %d\n", rval);
++		return;
++	}
++
++	test(full_name_second, "%pfw", software_node_fwnode(&softnodes[1]));
++	test(full_name, "%pfw", software_node_fwnode(&softnodes[2]));
++	test(full_name, "%pfwf", software_node_fwnode(&softnodes[2]));
++	test(second_name, "%pfwP", software_node_fwnode(&softnodes[1]));
++	test(third_name, "%pfwP", software_node_fwnode(&softnodes[2]));
++
++	software_node_unregister_nodes(softnodes);
++}
++
+ static void __init
+ test_pointer(void)
  {
--	struct swnode *swnode = to_swnode(fwnode);
-+	const struct swnode *swnode = to_swnode(fwnode);
- 
- 	return swnode ? swnode->node : NULL;
+@@ -610,6 +641,7 @@ test_pointer(void)
+ 	bitmap();
+ 	netdev_features();
+ 	flags();
++	fwnode_pointer();
  }
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 5a910ad795910..421c76e53708d 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -418,7 +418,8 @@ struct software_node {
- };
  
- bool is_software_node(const struct fwnode_handle *fwnode);
--const struct software_node *to_software_node(struct fwnode_handle *fwnode);
-+const struct software_node *
-+to_software_node(const struct fwnode_handle *fwnode);
- struct fwnode_handle *software_node_fwnode(const struct software_node *node);
- 
- int software_node_register_nodes(const struct software_node *nodes);
+ static void __init selftest(void)
 -- 
 2.20.1
