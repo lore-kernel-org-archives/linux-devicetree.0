@@ -1,298 +1,209 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v3 2/3] media: i2c: Add IMX290 CMOS image sensor driver
-Date: Thu, 3 Oct 2019 11:03:38 +0530
-Message-ID: <20191003053338.GA7868@Mani-XPS-13-9360>
-References: <20190830091943.22646-1-manivannan.sadhasivam@linaro.org>
- <20190830091943.22646-3-manivannan.sadhasivam@linaro.org>
- <20190923092209.GL5525@valkosipuli.retiisi.org.uk>
- <20191001184200.GA7739@Mani-XPS-13-9360>
- <20191002103715.GR896@valkosipuli.retiisi.org.uk>
+From: JC Kuo <jckuo@nvidia.com>
+Subject: Re: [PATCH 6/6] arm64: tegra: Enable XUSB host in P2972-0000 board
+Date: Thu, 3 Oct 2019 14:00:32 +0800
+Message-ID: <2b50ad58-e5da-2f93-0c18-f16843fe64ac@nvidia.com>
+References: <20191002080051.11142-1-jckuo@nvidia.com>
+ <20191002080051.11142-7-jckuo@nvidia.com> <20191002102611.GH3716706@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20191002103715.GR896@valkosipuli.retiisi.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: devicetree@vger.kernel.org, c.barrett@framos.com, linux-kernel@vger.kernel.org, a.brela@framos.com, robh+dt@kernel.org, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191002102611.GH3716706@ulmo>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: gregkh@linuxfoundation.org, jonathanh@nvidia.com, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+On 10/2/19 6:26 PM, Thierry Reding wrote:
+> On Wed, Oct 02, 2019 at 04:00:51PM +0800, JC Kuo wrote:
+>> This commit enables XUSB host and pad controller in Tegra194
+>> P2972-0000 board.
+>>
+>> Signed-off-by: JC Kuo <jckuo@nvidia.com>
+>> ---
+>>  .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 31 +++++++++-
+>>  .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 59 +++++++++++++++++++
+>>  2 files changed, 89 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+>> index 4c38426a6969..cb236edc6a0d 100644
+>> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+>> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+>> @@ -229,7 +229,7 @@
+>>  						regulator-max-microvolt = <3300000>;
+>>  					};
+>>  
+>> -					ldo5 {
+>> +					vdd_usb_3v3: ldo5 {
+>>  						regulator-name = "VDD_USB_3V3";
+>>  						regulator-min-microvolt = <3300000>;
+>>  						regulator-max-microvolt = <3300000>;
+>> @@ -313,5 +313,34 @@
+>>  			regulator-boot-on;
+>>  			enable-active-low;
+>>  		};
+>> +
+>> +		vdd_5v_sata: regulator@4 {
+>> +			compatible = "regulator-fixed";
+>> +			reg = <4>;
+>> +
+>> +			regulator-name = "vdd-5v-sata";
+> 
+> Please keep capitalization of regulator names consistent. We use
+> all-caps and underscores for the others (which mirrors the names in the
+> schematics), so please stick with that for this one as well.
+> 
+Sure. I will fix this.
+> Also, I'm wondering if perhaps you can clarify something here. My
+> understanding is that SATA functionality is provided via a controller on
+> the PCI bus. Why is it that we route the 5 V SATA power to the USB port?
+> Oh wait... this is one of those eSATAp (hybrid) ports that can take
+> either eSATA or USB, right? Do we need any additional setup to switch
+> between eSATA and USB modes? Or is this all done in hardware? That is,
+> if I plug in an eSATA, does it automatically hotplug detect the device
+> as SATA and if I plug in a USB device, does it automatically detect it
+> as USB?
+> 
+Yes, this 5V supply is for the eSATAp port. eSATA cable will deliver the 5V to
+SATA device. No SATA/USB switch is required as USB SuperSpeed and PCIE-to-SATA
+controller each has its own UPHY lane. SATA TX/RX pairs also have dedicated pins
+at the eSATAp connector. External SATA drive can be hotplug and hardware will
+detect automatically.
 
-On Wed, Oct 02, 2019 at 01:37:15PM +0300, Sakari Ailus wrote:
-> Hi Manivannan,
+>> +			regulator-min-microvolt = <5000000>;
+>> +			regulator-max-microvolt = <5000000>;
+>> +			gpio = <&gpio TEGRA194_MAIN_GPIO(Z, 1) GPIO_ACTIVE_LOW>;
 > 
-> On Wed, Oct 02, 2019 at 12:12:00AM +0530, Manivannan Sadhasivam wrote:
-> > Hi Sakari,
-> > 
-> > On Mon, Sep 23, 2019 at 12:22:09PM +0300, Sakari Ailus wrote:
-> > > Hi Manivannan,
-> > > 
-> > > On Fri, Aug 30, 2019 at 02:49:42PM +0530, Manivannan Sadhasivam wrote:
-> > > > Add driver for Sony IMX290 CMOS image sensor driver. The driver only
-> > > > supports I2C interface for programming and MIPI CSI-2 for sensor output.
-> > > > 
-> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > ---
-> > > >  drivers/media/i2c/Kconfig  |  11 +
-> > > >  drivers/media/i2c/Makefile |   1 +
-> > > >  drivers/media/i2c/imx290.c | 881 +++++++++++++++++++++++++++++++++++++
-> > > >  3 files changed, 893 insertions(+)
-> > > >  create mode 100644 drivers/media/i2c/imx290.c
-> > > > 
-> > > > diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> > > > index 79ce9ec6fc1b..4ebb80b18748 100644
-> > > > --- a/drivers/media/i2c/Kconfig
-> > > > +++ b/drivers/media/i2c/Kconfig
-> > > > @@ -595,6 +595,17 @@ config VIDEO_IMX274
-> > > >  	  This is a V4L2 sensor driver for the Sony IMX274
-> > > >  	  CMOS image sensor.
-> > > >  
-> > > > +config VIDEO_IMX290
-> > > > +	tristate "Sony IMX290 sensor support"
-> > > > +	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
-> > > > +	depends on MEDIA_CAMERA_SUPPORT
-> > > 
-> > > Please drop this line. It will be redundant very soon.
-> > > 
-> > 
-> > okay.
-> > 
-> > > > +	help
-> > > > +	  This is a Video4Linux2 sensor driver for the Sony
-> > > > +	  IMX290 camera sensor.
-> > > > +
-> > > > +	  To compile this driver as a module, choose M here: the
-> > > > +	  module will be called imx290.
-> > > > +
-> > > >  config VIDEO_IMX319
-> > > >  	tristate "Sony IMX319 sensor support"
-> > > >  	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
-> > > > diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-> > > > index fd4ea86dedd5..04411ddb4922 100644
-> > > > --- a/drivers/media/i2c/Makefile
-> > > > +++ b/drivers/media/i2c/Makefile
-> > > > @@ -111,6 +111,7 @@ obj-$(CONFIG_VIDEO_TC358743)	+= tc358743.o
-> > > >  obj-$(CONFIG_VIDEO_IMX214)	+= imx214.o
-> > > >  obj-$(CONFIG_VIDEO_IMX258)	+= imx258.o
-> > > >  obj-$(CONFIG_VIDEO_IMX274)	+= imx274.o
-> > > > +obj-$(CONFIG_VIDEO_IMX290)	+= imx290.o
-> > > >  obj-$(CONFIG_VIDEO_IMX319)	+= imx319.o
-> > > >  obj-$(CONFIG_VIDEO_IMX355)	+= imx355.o
-> > > >  obj-$(CONFIG_VIDEO_ST_MIPID02) += st-mipid02.o
-> > > > diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-> > > > new file mode 100644
-> > > > index 000000000000..db5bb0d69eb8
-> > > > --- /dev/null
-> > > > +++ b/drivers/media/i2c/imx290.c
-> > > > @@ -0,0 +1,881 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + * Sony IMX290 CMOS Image Sensor Driver
-> > > > + *
-> > > > + * Copyright (C) 2019 FRAMOS GmbH.
-> > > > + *
-> > > > + * Copyright (C) 2019 Linaro Ltd.
-> > > > + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > + */
-> > > > +
-> > > > +#include <linux/clk.h>
-> > > > +#include <linux/delay.h>
-> > > > +#include <linux/gpio/consumer.h>
-> > > > +#include <linux/i2c.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/pm_runtime.h>
-> > > > +#include <linux/regmap.h>
-> > > > +#include <linux/regulator/consumer.h>
-> > > > +#include <media/media-entity.h>
-> > > > +#include <media/v4l2-ctrls.h>
-> > > > +#include <media/v4l2-device.h>
-> > > > +#include <media/v4l2-fwnode.h>
-> > > > +#include <media/v4l2-subdev.h>
-> > > > +
-> > > > +#define IMX290_STANDBY 0x3000
-> > > > +#define IMX290_REGHOLD 0x3001
-> > > > +#define IMX290_XMSTA 0x3002
-> > > > +#define IMX290_GAIN 0x3014
-> > > > +
-> > > > +#define IMX290_DEFAULT_LINK_FREQ 445500000
-> > > > +
-> > > > +static const char * const imx290_supply_name[] = {
-> > > > +	"vdda",
-> > > > +	"vddd",
-> > > > +	"vdddo",
-> > > > +};
-> > > > +
-> > > > +#define IMX290_NUM_SUPPLIES ARRAY_SIZE(imx290_supply_name)
-> > > > +
-> > > > +struct imx290_regval {
-> > > > +	u16 reg;
-> > > > +	u8 val;
-> > > > +};
-> > > > +
-> > > > +struct imx290_mode {
-> > > > +	u32 width;
-> > > > +	u32 height;
-> > > > +	u32 pixel_rate;
-> > > > +	u32 link_freq_index;
-> > > > +
-> > > > +	const struct imx290_regval *data;
-> > > > +	u32 data_size;
-> > > > +};
-> > > > +
-> > > > +struct imx290 {
-> > > > +	struct device *dev;
-> > > > +	struct clk *xclk;
-> > > > +	struct regmap *regmap;
-> > > > +
-> > > > +	struct v4l2_subdev sd;
-> > > > +	struct v4l2_fwnode_endpoint ep;
-> > > > +	struct media_pad pad;
-> > > > +	struct v4l2_mbus_framefmt current_format;
-> > > > +	const struct imx290_mode *current_mode;
-> > > > +
-> > > > +	struct regulator_bulk_data supplies[IMX290_NUM_SUPPLIES];
-> > > > +	struct gpio_desc *rst_gpio;
-> > > > +
-> > > > +	struct v4l2_ctrl_handler ctrls;
-> > > > +	struct v4l2_ctrl *link_freq;
-> > > > +	struct v4l2_ctrl *pixel_rate;
-> > > > +
-> > > > +	struct mutex lock;
-> > > > +};
-> > > > +
-> > > > +struct imx290_pixfmt {
-> > > > +	u32 code;
-> > > > +};
-> > > > +
-> > > > +static const struct imx290_pixfmt imx290_formats[] = {
-> > > > +	{ MEDIA_BUS_FMT_SRGGB10_1X10 },
-> > > 
-> > > You have a single format here. You don't need the entire array, do you?
-> > > 
-> > > Unless you have plans to add more, that is.
-> > > 
-> > 
-> > Yes, the sensor supports RAW12 format as well and it will be added once
-> > this driver is merged.
+> This will actually cause a warning on boot. For fixed regulators the
+> polarity of the enable GPIO is not specified in the GPIO specifier.
+> Instead you're supposed to use the boolean enable-active-high property
+> to specify if the enable GPIO is active-high. By default the enable GPIO
+> is considered to be active-low. The GPIO specifier needs to have the
+> GPIO_ACTIVE_HIGH flag set regardless for backwards-compatibilitiy
+> reasons.
 > 
-> Ok. 
+> Note that regulator@3 above your new entry does this wrongly, but
+> next-20191002 should have a fix for that.
 > 
-> > 
-> > > > +};
-> > > > +
-> > > > +static struct regmap_config imx290_regmap_config = {
+Thanks for the information. I will fix this in the next revision.
+>> +		};
+>> +	};
+>> +
+>> +	padctl@3520000 {
 > 
-> Should this be const, too?
+> Don't forget to move this into /cbb as well to match the changes to
+> patch 5/6.
 > 
-
-yep
-
-> > > > +	.reg_bits = 16,
-> > > > +	.val_bits = 8,
-> > > > +	.cache_type = REGCACHE_RBTREE,
-> > > > +};
+Sure, will do.
+>> +		avdd-usb-supply = <&vdd_usb_3v3>;
+>> +		vclamp-usb-supply = <&vdd_1v8ao>;
+>> +		ports {
 > 
-> ...
+> Blank line between the above two for better readability.
 > 
-> > > > +static int imx290_write_buffered_reg(struct imx290 *imx290, u16 address_low,
-> > > > +				     u8 nr_regs, u32 value)
-> > > > +{
-> > > > +	unsigned int i;
-> > > > +	int ret;
-> > > > +
-> > > > +	ret = imx290_write_reg(imx290, IMX290_REGHOLD, 0x01);
-> > > > +	if (ret) {
-> > > > +		dev_err(imx290->dev, "Error setting hold register\n");
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > > +	for (i = 0; i < nr_regs; i++) {
-> > > > +		ret = imx290_write_reg(imx290, address_low + i,
-> > > > +				       (u8)(value >> (i * 8)));
-> > > > +		if (ret) {
-> > > > +			dev_err(imx290->dev, "Error writing buffered registers\n");
-> > > > +			return ret;
-> > > > +		}
-> > > > +	}
-> > > > +
-> > > > +	ret = imx290_write_reg(imx290, IMX290_REGHOLD, 0x00);
-> > > > +	if (ret) {
-> > > > +		dev_err(imx290->dev, "Error setting hold register\n");
-> > > > +		return ret;
-> > > > +	}
-> > > > +
-> > > > +	return ret;
-> > > > +}
-> > > > +
-> > > > +static int imx290_set_gain(struct imx290 *imx290, u32 value)
-> > > > +{
-> > > > +	int ret;
-> > > > +
-> > > > +	u32 adjusted_value = (value * 10) / 3;
-> > > 
-> > > What's the purpose of this? Why not to use the value directly?
-> > > 
-> > 
-> > The gain register accepts the value 10/3 of the actual gain required. Hence,
-> > we need to manually do the calculation before updating the value. I can
-> > add a comment here to clarify.
+Okay.
+>> +			usb2-1 {
+>> +				vbus-supply = <&vdd_5v0_sys>;
+>> +			};
+>> +			usb2-3 {
 > 
-> It's better to use the register value directly. Otherwise the granularity
-> won't be available to the user space.
+> Same here and below.
 > 
-
-The sensor datasheet clearly defines that the 10/3'rd of the expected gain
-should be set to this register. So, IMO we should be setting the value as
-mentioned in the datasheet. I agree that we are missing the userspace
-granularity here but sticking to the device limitation shouldn't be a problem.
-As I said, I'll add a comment here to clarify.
-
-> > 
-> > > > +
-> > > > +	ret = imx290_write_buffered_reg(imx290, IMX290_GAIN, 1, adjusted_value);
-> > > > +	if (ret)
-> > > > +		dev_err(imx290->dev, "Unable to write gain\n");
-> > > > +
-> > > > +	return ret;
-> > > > +}
-> > > > +
-> > > > +static int imx290_set_power_on(struct imx290 *imx290)
-> > > > +{
-> > > > +	int ret;
-> > > > +
-> > > > +	ret = clk_prepare_enable(imx290->xclk);
-> > > 
-> > > Please move the code from this function to the runtime PM runtime suspend
-> > > callback. The same for imx290_set_power_off().
-> > > 
-> > 
-> > May I know why? I think since this is being used only once, you're suggesting
-> > to move to the callback function itself but please see the comment below. I
-> > will reuse this function to power on the device during probe.
+>> +				vbus-supply = <&vdd_5v_sata>;
+>> +			};
+>> +			usb3-0 {
+>> +				vbus-supply = <&vdd_5v0_sys>;
+>> +			};
+>> +			usb3-3 {
+>> +				vbus-supply = <&vdd_5v0_sys>;
+>> +			};
+>> +		};
+>>  	};
+>>  };
+>> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+>> index d47cd8c4dd24..410221927dfa 100644
+>> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+>> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+>> @@ -222,4 +222,63 @@
+>>  			};
+>>  		};
+>>  	};
+>> +
+>> +	padctl@3520000 {
 > 
-> Yes, you can call the same function from probe, even if it's used as a
-> runtime PM callback.
+> Same comment as above. Move this into /cbb.
 > 
-> There's no need to have a function that acts as a wrapper for calling it
-> with a different type of an argument.
+>> +		status = "okay";
+>> +
+>> +		pads {
+>> +			usb2 {
+>> +				lanes {
+>> +					usb2-1 {
+>> +						status = "okay";
+>> +					};
+>> +					usb2-2 {
 > 
-
-You mean directly calling imx290_runtime_resume() from probe is fine?
-
-Thanks,
-Mani
-
-> -- 
-> Kind regards,
+> And blank lines for readability here and below.
 > 
-> Sakari Ailus
+>> +						status = "okay";
+>> +					};
+>> +					usb2-3 {
+>> +						status = "okay";
+>> +					};
+>> +				};
+>> +			};
+>> +			usb3 {
+>> +				lanes {
+>> +					usb3-0 {
+>> +						status = "okay";
+>> +					};
+>> +					usb3-3 {
+>> +						status = "okay";
+>> +					};
+>> +				};
+>> +			};
+>> +		};
+>> +
+>> +		ports {
+>> +			usb2-1 {
+>> +				mode = "host";
+>> +				status = "okay";
+>> +			};
+>> +			usb2-3 {
+>> +				mode = "host";
+>> +				status = "okay";
+>> +			};
+>> +			usb3-0 {
+>> +				nvidia,usb2-companion = <1>;
+>> +				status = "okay";
+>> +			};
+>> +			usb3-3 {
+>> +				nvidia,usb2-companion = <3>;
+>> +				nvidia,disable-gen2;
+>> +				status = "okay";
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +	tegra_xhci: xhci@3610000 {
+> 
+> Also needs to move into /cbb. Also, you can drop the tegra_xhci label
+> here since we never reference the controller from elsewhere.
+> 
+> Also make sure to update the name here to match the changes in 5/6.
+> 
+Got it. Thanks for the reminder.
+> Thierry
+> 
+>> +		status = "okay";
+>> +		phys =	<&{/padctl@3520000/pads/usb2/lanes/usb2-1}>,
+>> +			<&{/padctl@3520000/pads/usb2/lanes/usb2-3}>,
+>> +			<&{/padctl@3520000/pads/usb3/lanes/usb3-0}>,
+>> +			<&{/padctl@3520000/pads/usb3/lanes/usb3-3}>;
+>> +		phy-names = "usb2-1", "usb2-3", "usb3-0", "usb3-3";
+>> +	};
+>>  };
+>> -- 
+>> 2.17.1
+>>
