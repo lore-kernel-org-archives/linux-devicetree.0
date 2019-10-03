@@ -1,136 +1,82 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v3 5/5] gpio: syscon: Add support for the Xylon LogiCVC GPIOs
-Date: Thu, 3 Oct 2019 10:26:17 +0200
-Message-ID: <CAMpxmJWQ9iuNj8Nfhf0hVzP6piNPrb8_e7ucth0rmg8KwT4HdA@mail.gmail.com>
-References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com> <20190927100407.1863293-6-paul.kocialkowski@bootlin.com>
+From: Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH 5/7] irqchip/irq-bcm2836: Add support for the 7211
+ interrupt controller
+Date: Thu, 3 Oct 2019 09:29:50 +0100
+Message-ID: <20191003092950.04440d74@why>
+References: <20191001224842.9382-1-f.fainelli@gmail.com>
+        <20191001224842.9382-6-f.fainelli@gmail.com>
+        <20191002134041.5a181d96@why>
+        <72f07d2e-b070-301a-6a5d-8e89d32adcd7@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190927100407.1863293-6-paul.kocialkowski@bootlin.com>
+In-Reply-To: <72f07d2e-b070-301a-6a5d-8e89d32adcd7@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: linux-gpio <linux-gpio@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." <bcm-kernel-feedback-list@broadcom.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <wahrenst@gmx.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+On Wed, 2 Oct 2019 10:06:31 -0700
+Florian Fainelli <f.fainelli@gmail.com> wrote:
 
-just two nits:
+> On 10/2/19 5:40 AM, Marc Zyngier wrote:
+> > On Tue,  1 Oct 2019 15:48:40 -0700
+> > Florian Fainelli <f.fainelli@gmail.com> wrote:
+> >   
+> >> The root interrupt controller on 7211 is about identical to the one
+> >> existing on BCM2836, except that the SMP cross call are done through the
+> >> standard ARM GIC-400 interrupt controller. This interrupt controller is
+> >> used for side band wake-up signals though.  
+> > 
+> > I don't fully grasp how this thing works.
+> > 
+> > If the 7211 interrupt controller is root and the GIC is used for SGIs,
+> > this means that the GIC outputs (IRQ/FIQ/VIRQ/VFIQ, times eight) are
+> > connected to individual inputs to the 7211 controller. Seems totally
+> > braindead, and unexpectedly so.
+> > 
+> > If the GIC is root and the 7211 outputs into the GIC all of its
+> > interrupts as a secondary irqchip, it would at least match an existing
+> > (and pretty bad) pattern.
+> > 
+> > So which one of the two is it?  
+> 
+> The nominal configuration on 7211 is to have all interrupts go through
+> the ARM GIC. It is possible however, to fallback to the legacy 2836 mode
+> whereby the root interrupt controller for peripheral interrupts is this
+> ARMCTL IC. There is a mux that the firmware can control which will
+> dictate which root interrupt controller is used for peripherals.
+> 
+> I have used this mostly for silicon verification and since those are
+> fairly harmless patches, just decided to send them out to avoid
+> maintaining them out of tree.
 
-pt., 27 wrz 2019 o 12:04 Paul Kocialkowski
-<paul.kocialkowski@bootlin.com> napisa=C5=82(a):
->
-> The LogiCVC display hardware block comes with GPIO capabilities
-> that must be exposed separately from the main driver (as GPIOs) for
-> use with regulators and panels. A syscon is used to share the same
-> regmap across the two drivers.
->
-> Since the GPIO capabilities are pretty simple, add them to the syscon
-> GPIO driver.
->
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> ---
->  drivers/gpio/gpio-syscon.c | 68 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
->
-> diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-> index 05c537ed73f1..cdcb913b8f0c 100644
-> --- a/drivers/gpio/gpio-syscon.c
-> +++ b/drivers/gpio/gpio-syscon.c
-> @@ -190,6 +190,70 @@ static const struct syscon_gpio_data keystone_dsp_gp=
-io =3D {
->         .set            =3D keystone_gpio_set,
->  };
->
-> +#define LOGICVC_CTRL_REG               0x40
-> +#define LOGICVC_CTRL_GPIO_SHIFT                11
-> +#define LOGICVC_CTRL_GPIO_BITS         5
-> +
-> +#define LOGICVC_POWER_CTRL_REG         0x78
-> +#define LOGICVC_POWER_CTRL_GPIO_SHIFT  0
-> +#define LOGICVC_POWER_CTRL_GPIO_BITS   4
-> +
-> +static void logicvc_gpio_offset(struct syscon_gpio_priv *priv,
-> +                               unsigned offset, unsigned int *reg,
-> +                               unsigned int *bit)
-> +{
-> +       if (offset >=3D LOGICVC_CTRL_GPIO_BITS) {
-> +               *reg =3D LOGICVC_POWER_CTRL_REG;
-> +
-> +               /* To the (virtual) power ctrl offset. */
-> +               offset -=3D LOGICVC_CTRL_GPIO_BITS;
-> +               /* To the actual bit offset in reg. */
-> +               offset +=3D LOGICVC_POWER_CTRL_GPIO_SHIFT;
-> +       } else {
-> +               *reg =3D LOGICVC_CTRL_REG;
-> +
-> +               /* To the actual bit offset in reg. */
-> +               offset +=3D LOGICVC_CTRL_GPIO_SHIFT;
-> +       }
-> +
-> +       *bit =3D BIT(offset);
-> +}
-> +
-> +static int logicvc_gpio_get(struct gpio_chip *chip, unsigned offset)
-> +{
-> +       struct syscon_gpio_priv *priv =3D gpiochip_get_data(chip);
-> +       unsigned int reg;
-> +       unsigned int bit;
-> +       unsigned int value;
+This doesn't really answer my question. What I understand is that your
+system is laid out like this:
 
-Can you put these on a single line?
+     DEVICES -> ARMCTL -> CPUs
+                  ^
+                 GIC
 
-> +       int ret;
-> +
-> +       logicvc_gpio_offset(priv, offset, &reg, &bit);
-> +
-> +       ret =3D regmap_read(priv->syscon, reg, &value);
-> +       if (ret)
-> +               return ret;
-> +
-> +       return !!(value & bit);
-> +}
-> +
-> +static void logicvc_gpio_set(struct gpio_chip *chip, unsigned offset, in=
-t val)
-> +{
-> +       struct syscon_gpio_priv *priv =3D gpiochip_get_data(chip);
-> +       unsigned int reg;
-> +       unsigned int bit;
+How are the various GIC outputs mapped into the ARMCTL? It has 4 of
+them per CPU (IRQ/FIQ + vIRQ/vFIQ), which the ARMCTL must somehow map
+to its own interrupts, specially if you want to signal IPIs using the
+GIC's SGIs (to which you hint in the commit log).
 
-Same here.
+There is a link I'm missing here.
 
-Bart
+> We have a plan to use those as an "alternate" interrupt domain for low
+> power modes and use the fact that peripheral interrupts could be active
+> in both domains (GIC and ARMCTRL IC) to help support configuring and
+> identifying wake-up sources fro m within Linux.
 
-> +
-> +       logicvc_gpio_offset(priv, offset, &reg, &bit);
-> +
-> +       regmap_update_bits(priv->syscon, reg, bit, val ? bit : 0);
-> +}
-> +
-> +static const struct syscon_gpio_data logicvc_gpio =3D {
-> +       .flags          =3D GPIO_SYSCON_FEAT_OUT,
-> +       .bit_count      =3D LOGICVC_CTRL_GPIO_BITS + LOGICVC_POWER_CTRL_G=
-PIO_BITS,
-> +       .get            =3D logicvc_gpio_get,
-> +       .set            =3D logicvc_gpio_set,
-> +};
-> +
->  static const struct of_device_id syscon_gpio_ids[] =3D {
->         {
->                 .compatible     =3D "cirrus,ep7209-mctrl-gpio",
-> @@ -203,6 +267,10 @@ static const struct of_device_id syscon_gpio_ids[] =
-=3D {
->                 .compatible     =3D "rockchip,rk3328-grf-gpio",
->                 .data           =3D &rockchip_rk3328_gpio_mute,
->         },
-> +       {
-> +               .compatible     =3D "xylon,logicvc-3.02.a-gpio",
-> +               .data           =3D &logicvc_gpio,
-> +       },
->         { }
->  };
->  MODULE_DEVICE_TABLE(of, syscon_gpio_ids);
-> --
-> 2.23.0
->
+That's usually done with a hierarchy, where the ARMCTL IC would be a
+child of the GIC and see all interrupt configuration calls before they
+reach the GIC driver. We have plenty of examples in the tree already.
+
+Thanks,
+
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
