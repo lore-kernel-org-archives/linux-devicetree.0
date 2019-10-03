@@ -1,93 +1,37 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 2/2] ARM: dts: at91: sama5d27_som1_ek: add mmc
- capabilities for SDMMC0
-Date: Thu, 3 Oct 2019 21:42:03 +0200
-Message-ID: <20191003194203.GI575@piout.net>
-References: <1565252928-28994-1-git-send-email-eugen.hristev@microchip.com>
- <1565252928-28994-2-git-send-email-eugen.hristev@microchip.com>
- <20190808124217.wrmcxohw5i6ju2qe@M43218.corp.atmel.com>
- <04fd74c3-a828-1064-b77b-f3de07a26190@intel.com>
- <20190809062322.syuieymdqjs4e7lh@M43218.corp.atmel.com>
- <fa0debbb-b84c-1f74-f8b8-8fdd7812aaee@microchip.com>
- <20190813065306.tqz57hqeiofofbnz@M43218.corp.atmel.com>
- <c2c355cd-b798-02de-0606-0f6442f6fdca@microchip.com>
+Subject: Re: [PATCH] ARM: dts: at91: sama5d2: add an rtc label for derivated
+ boards
+Date: Thu, 3 Oct 2019 21:53:19 +0200
+Message-ID: <20191003195319.GK575@piout.net>
+References: <20191002145914.14874-1-kamel.bouhara@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <c2c355cd-b798-02de-0606-0f6442f6fdca@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eugen.Hristev@microchip.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, Nicolas.Ferre@microchip.com, ulf.hansson@linaro.org
+In-Reply-To: <20191002145914.14874-1-kamel.bouhara@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kamel Bouhara <kamel.bouhara@bootlin.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, devicetree@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/10/2019 10:24:52+0000, Eugen.Hristev@microchip.com wrote:
+On 02/10/2019 16:59:14+0200, Kamel Bouhara wrote:
+> Add an rtc label so we just need to alias it from derivated boards.
 > 
+> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+> ---
+>  arch/arm/boot/dts/sama5d2.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> On 13.08.2019 09:53, Ludovic Desroches wrote:
-> > On Mon, Aug 12, 2019 at 03:38:34PM +0000, Eugen.Hristev@microchip.com wrote:
-> >> On 09.08.2019 09:23, Ludovic Desroches wrote:
-> >>> On Thu, Aug 08, 2019 at 03:57:30PM +0300, Adrian Hunter wrote:
-> >>>> On 8/08/19 3:42 PM, Ludovic Desroches wrote:
-> >>>>> On Thu, Aug 08, 2019 at 10:35:43AM +0200, Eugen Hristev - M18282 wrote:
-> >>>>>> From: Eugen Hristev <eugen.hristev@microchip.com>
-> >>>>>>
-> >>>>>> Add mmc capabilities for SDMMC0 for this board.
-> >>>>>> With this enabled, eMMC connected card is detected as:
-> >>>>>>
-> >>>>>> mmc0: new DDR MMC card at address 0001
-> >>>>>>
-> >>>>>> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> >>>>> Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> >>>>>
-> >>>>> I am interested to have the some insights about the use of sd-uhs-*
-> >>>>> properties.
-> >>>>>
-> >>>>> Our IP can't deal with 1V8 by itself. It has a 1V8SEL signal which can
-> >>>>> be used as the logic control input of a mux. So even if the IP claims
-> >>>>> to support UHS modes, it depends on the board.
-> >>>>>
-> >>>>> Are the sd-uhs-* properties a way to deal with this? I tend to think no
-> >>>>> as sdhci_setup_host() will set the caps depending on the content of the
-> >>>>> capabilities register. Do we have to use the SDHCI_QUIRK_MISSING_CAPS
-> >>>>> quirk or sdhci-caps/sdhci-caps-mask?
-> >>>>
-> >>>> There is "no-1-8-v" which it looks like sdhci-of-at91.c already supports:
-> >>>>
-> >>>>     sdhci_at91_probe() -> sdhci_get_of_property() -> sdhci_get_property()
-> >>>>
-> >>>>       	if (device_property_present(dev, "no-1-8-v"))
-> >>>> 		host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
-> >>>>
-> >>>
-> >>> Right, I forgot this property. Thanks.
-> >>>
-> >>> Eugen, do you see cases we can't cover with this property?
-> >>
-> >> Hi,
-> >>
-> >> For current requirements and driver support, this should be enough.
-> >>
-> >> I noticed one thing regarding SD-Cards, if I add property sd-uhs-sdr104
-> >> the class 10 uhs1 cards are detected as SDR104 . Without this property
-> >> they are detected as DDR50. Any idea why the difference ? The controller
-> >> does not claim to have SDR104 support ?  We should add it ?
-> > 
-> > With the mainline, our tree or both? In our tree, SDR104 is removed from
-> > the capabilities.
-> > 
-> > Ludovic
-> > 
-> 
-> 
-> Hello Alexandre,
-> 
-> Anything more needed regarding this patch ?
-> 
-
-I was not sure it was applicable, seeing the discussion. I'll apply it
-now.
-
+Applied, thanks.
 
 -- 
 Alexandre Belloni, Bootlin
