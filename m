@@ -1,139 +1,60 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v11 1/7] drm/sun4i: dsi: Fix TCON DRQ set bits
-Date: Thu, 3 Oct 2019 20:46:31 +0530
-Message-ID: <CAMty3ZA9tV-2nNa6qCBLUwoJpqEfQVZGk1E9-_wobfx5JDjvgw@mail.gmail.com>
-References: <20191003064527.15128-1-jagan@amarulasolutions.com>
- <20191003064527.15128-2-jagan@amarulasolutions.com>
- <20191003131737.bvpf5quds66qtsmy@gilmour>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: qcom: msm8998: Disable coresight by default
+Date: Thu, 03 Oct 2019 20:51:46 +0530
+Message-ID: <89f5f76ae26682e902faa1b06379cc0f@codeaurora.org>
+References: <20191003064449.2201-1-saiprakash.ranjan@codeaurora.org>
+ <aecbc7a2-05fd-f30f-81c7-81947dc31c9f@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20191003131737.bvpf5quds66qtsmy@gilmour>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, linux-sunxi <linux-sunxi@googlegroups.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <aecbc7a2-05fd-f30f-81c7-81947dc31c9f@free.fr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc: Mark Rutland <mark.rutland@arm.com>, DT <devicetree@vger.kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBPY3QgMywgMjAxOSBhdCA2OjQ3IFBNIE1heGltZSBSaXBhcmQgPG1yaXBhcmRAa2Vy
-bmVsLm9yZz4gd3JvdGU6Cj4KPiBPbiBUaHUsIE9jdCAwMywgMjAxOSBhdCAxMjoxNToyMVBNICsw
-NTMwLCBKYWdhbiBUZWtpIHdyb3RlOgo+ID4gVGhlIExDRCB0aW1pbmcgZGVmaW5pdGlvbnMgYmV0
-d2VlbiBMaW51eCBEUk0gdnMgQWxsd2lubmVyIGFyZSBkaWZmZXJlbnQsCj4gPiBiZWxvdyBkaWFn
-cmFtIHNob3dzIHRoaXMgY2xlYXIgZGlmZmVyZW5jZXMuCj4gPgo+ID4gICAgICAgICAgICBBY3Rp
-dmUgICAgICAgICAgICAgICAgIEZyb250ICAgICAgICAgICBTeW5jICAgICAgICAgICBCYWNrCj4g
-PiAgICAgICAgICAgIFJlZ2lvbiAgICAgICAgICAgICAgICAgUG9yY2ggICAgICAgICAgICAgICAg
-ICAgICAgICAgIFBvcmNoCj4gPiA8LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0+PC0tLS0tLS0tLS0t
-LS0tLS0+PC0tLS0tLS0tLS0tLS0tPjwtLS0tLS0tLS0tLS0tLT4KPiA+ICAgLy8vLy8vLy8vLy8v
-Ly8vLy8vLy8vL3wKPiA+ICAvLy8vLy8vLy8vLy8vLy8vLy8vLy8vIHwKPiA+IC8vLy8vLy8vLy8v
-Ly8vLy8vLy8vLy8gIHwuLi4uLi4uLi4uLi4uLi4uLi4gICAgICAgICAgICAgICAgLi4uLi4uLi4u
-Li4uLi4uLgo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9f
-X19fX19fX19fX19fX18KPiA+IDwtLS0tLSBbaHZdZGlzcGxheSAtLS0tLT4KPiA+IDwtLS0tLS0t
-LS0tLS0tIFtodl1zeW5jX3N0YXJ0IC0tLS0tLS0tLS0tLT4KPiA+IDwtLS0tLS0tLS0tLS0tLS0t
-LS0tLS0gW2h2XXN5bmNfZW5kIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0+Cj4gPiA8LS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gW2h2XXRvdGFsIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLT4KPiA+Cj4gPiA8LS0tLS0gbGNkX1t4eV0gLS0tLS0tLS0+ICAgICAgICAgICAgICAg
-PC0gbGNkX1todl1zcHcgLT4KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICA8LS0tLS0tLS0tLSBsY2RfW2h2XWJwIC0tLS0tLS0tLT4KPiA+IDwtLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLSBsY2RfW2h2XXQgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tPgo+ID4KPiA+IFRoZSBEU0kgZHJpdmVyIG1pc2ludGVycHJldGVkIHRoZSBoYnAgdGVybSBm
-cm9tIHRoZSBCU1AgY29kZSB0byByZWZlcgo+ID4gb25seSB0byB0aGUgYmFja3BvcmNoLCB3aGVu
-IGluIGZhY3QgaXQgd2FzIGJhY2twb3JjaCArIHN5bmMuIFRodXMgdGhlCj4gPiBkcml2ZXIgaW5j
-b3JyZWN0bHkgdXNlZCB0aGUgaG9yaXpvbnRhbCBmcm9udCBwb3JjaCBwbHVzIHN5bmMgaW4gaXRz
-Cj4gPiBjYWxjdWxhdGlvbiBvZiB0aGUgRFJRIHNldCBiaXQgdmFsdWUsIHdoZW4gaXQgc2hvdWxk
-IG5vdCBoYXZlIGluY2x1ZGVkCj4gPiB0aGUgc3luYyB0aW1pbmcuCj4gPgo+ID4gSW5jbHVkaW5n
-IGFkZGl0aW9uYWwgc3luYyB0aW1pbmdzIGxlYWRzIHRvIGZsaXBfZG9uZSB0aW1lZCBvdXQgYXM6
-Cj4gPgo+ID4gV0FSTklORzogQ1BVOiAwIFBJRDogMzEgYXQgZHJpdmVycy9ncHUvZHJtL2RybV9h
-dG9taWNfaGVscGVyLmM6MTQyOSBkcm1fYXRvbWljX2hlbHBlcl93YWl0X2Zvcl92YmxhbmtzLnBh
-cnQuMSsweDI5OC8weDJhMAo+ID4gW0NSVEM6NDY6Y3J0Yy0wXSB2Ymxhbmsgd2FpdCB0aW1lZCBv
-dXQKPiA+IE1vZHVsZXMgbGlua2VkIGluOgo+ID4gQ1BVOiAwIFBJRDogMzEgQ29tbToga3dvcmtl
-ci8wOjEgTm90IHRhaW50ZWQgNS4xLjAtbmV4dC0yMDE5MDUxNC0wMDAyNi1nMDFmMGM3NWI5MDJk
-LWRpcnR5ICMxMwo+ID4gSGFyZHdhcmUgbmFtZTogQWxsd2lubmVyIHN1bjhpIEZhbWlseQo+ID4g
-V29ya3F1ZXVlOiBldmVudHMgZGVmZXJyZWRfcHJvYmVfd29ya19mdW5jCj4gPiBbPGMwMTBlZDU0
-Pl0gKHVud2luZF9iYWNrdHJhY2UpIGZyb20gWzxjMDEwYjc2Yz5dIChzaG93X3N0YWNrKzB4MTAv
-MHgxNCkKPiA+IFs8YzAxMGI3NmM+XSAoc2hvd19zdGFjaykgZnJvbSBbPGMwNjg4YzcwPl0gKGR1
-bXBfc3RhY2srMHg4NC8weDk4KQo+ID4gWzxjMDY4OGM3MD5dIChkdW1wX3N0YWNrKSBmcm9tIFs8
-YzAxMWQ5ZTQ+XSAoX193YXJuKzB4ZmMvMHgxMTQpCj4gPiBbPGMwMTFkOWU0Pl0gKF9fd2Fybikg
-ZnJvbSBbPGMwMTFkYTQwPl0gKHdhcm5fc2xvd3BhdGhfZm10KzB4NDQvMHg2OCkKPiA+IFs8YzAx
-MWRhNDA+XSAod2Fybl9zbG93cGF0aF9mbXQpIGZyb20gWzxjMDQwY2Q1MD5dIChkcm1fYXRvbWlj
-X2hlbHBlcl93YWl0X2Zvcl92YmxhbmtzLnBhcnQuMSsweDI5OC8weDJhMCkKPiA+IFs8YzA0MGNk
-NTA+XSAoZHJtX2F0b21pY19oZWxwZXJfd2FpdF9mb3JfdmJsYW5rcy5wYXJ0LjEpIGZyb20gWzxj
-MDQwZTY5ND5dIChkcm1fYXRvbWljX2hlbHBlcl9jb21taXRfdGFpbF9ycG0rMHg1Yy8weDZjKQo+
-ID4gWzxjMDQwZTY5ND5dIChkcm1fYXRvbWljX2hlbHBlcl9jb21taXRfdGFpbF9ycG0pIGZyb20g
-WzxjMDQwZTRkYz5dIChjb21taXRfdGFpbCsweDQwLzB4NmMpCj4gPiBbPGMwNDBlNGRjPl0gKGNv
-bW1pdF90YWlsKSBmcm9tIFs8YzA0MGU1Y2M+XSAoZHJtX2F0b21pY19oZWxwZXJfY29tbWl0KzB4
-YmMvMHgxMjgpCj4gPiBbPGMwNDBlNWNjPl0gKGRybV9hdG9taWNfaGVscGVyX2NvbW1pdCkgZnJv
-bSBbPGMwNDExYjY0Pl0gKHJlc3RvcmVfZmJkZXZfbW9kZV9hdG9taWMrMHgxY2MvMHgxZGMpCj4g
-PiBbPGMwNDExYjY0Pl0gKHJlc3RvcmVfZmJkZXZfbW9kZV9hdG9taWMpIGZyb20gWzxjMDQxNTZm
-OD5dIChkcm1fZmJfaGVscGVyX3Jlc3RvcmVfZmJkZXZfbW9kZV91bmxvY2tlZCsweDU0LzB4YTAp
-Cj4gPiBbPGMwNDE1NmY4Pl0gKGRybV9mYl9oZWxwZXJfcmVzdG9yZV9mYmRldl9tb2RlX3VubG9j
-a2VkKSBmcm9tIFs8YzA0MTU3NzQ+XSAoZHJtX2ZiX2hlbHBlcl9zZXRfcGFyKzB4MzAvMHg1NCkK
-PiA+IFs8YzA0MTU3NzQ+XSAoZHJtX2ZiX2hlbHBlcl9zZXRfcGFyKSBmcm9tIFs8YzAzYWQ0NTA+
-XSAoZmJjb25faW5pdCsweDU2MC8weDVhYykKPiA+IFs8YzAzYWQ0NTA+XSAoZmJjb25faW5pdCkg
-ZnJvbSBbPGMwM2ViOGEwPl0gKHZpc3VhbF9pbml0KzB4YmMvMHgxMDQpCj4gPiBbPGMwM2ViOGEw
-Pl0gKHZpc3VhbF9pbml0KSBmcm9tIFs8YzAzZWQxYjg+XSAoZG9fYmluZF9jb25fZHJpdmVyKzB4
-MWIwLzB4MzkwKQo+ID4gWzxjMDNlZDFiOD5dIChkb19iaW5kX2Nvbl9kcml2ZXIpIGZyb20gWzxj
-MDNlZDc4MD5dIChkb190YWtlX292ZXJfY29uc29sZSsweDEzYy8weDFjNCkKPiA+IFs8YzAzZWQ3
-ODA+XSAoZG9fdGFrZV9vdmVyX2NvbnNvbGUpIGZyb20gWzxjMDNhZDgwMD5dIChkb19mYmNvbl90
-YWtlb3ZlcisweDc0LzB4Y2MpCj4gPiBbPGMwM2FkODAwPl0gKGRvX2ZiY29uX3Rha2VvdmVyKSBm
-cm9tIFs8YzAxM2M5Yzg+XSAobm90aWZpZXJfY2FsbF9jaGFpbisweDQ0LzB4ODQpCj4gPiBbPGMw
-MTNjOWM4Pl0gKG5vdGlmaWVyX2NhbGxfY2hhaW4pIGZyb20gWzxjMDEzY2QyMD5dIChfX2Jsb2Nr
-aW5nX25vdGlmaWVyX2NhbGxfY2hhaW4rMHg0OC8weDYwKQo+ID4gWzxjMDEzY2QyMD5dIChfX2Js
-b2NraW5nX25vdGlmaWVyX2NhbGxfY2hhaW4pIGZyb20gWzxjMDEzY2Q1MD5dIChibG9ja2luZ19u
-b3RpZmllcl9jYWxsX2NoYWluKzB4MTgvMHgyMCkKPiA+IFs8YzAxM2NkNTA+XSAoYmxvY2tpbmdf
-bm90aWZpZXJfY2FsbF9jaGFpbikgZnJvbSBbPGMwM2E2ZTQ0Pl0gKHJlZ2lzdGVyX2ZyYW1lYnVm
-ZmVyKzB4MWUwLzB4MmY4KQo+ID4gWzxjMDNhNmU0ND5dIChyZWdpc3Rlcl9mcmFtZWJ1ZmZlcikg
-ZnJvbSBbPGMwNDE1M2MwPl0gKF9fZHJtX2ZiX2hlbHBlcl9pbml0aWFsX2NvbmZpZ19hbmRfdW5s
-b2NrKzB4MmZjLzB4NTBjKQo+ID4gWzxjMDQxNTNjMD5dIChfX2RybV9mYl9oZWxwZXJfaW5pdGlh
-bF9jb25maWdfYW5kX3VubG9jaykgZnJvbSBbPGMwNDE1OGM4Pl0gKGRybV9mYmRldl9jbGllbnRf
-aG90cGx1ZysweGU4LzB4MWI4KQo+ID4gWzxjMDQxNThjOD5dIChkcm1fZmJkZXZfY2xpZW50X2hv
-dHBsdWcpIGZyb20gWzxjMDQxNWEyMD5dIChkcm1fZmJkZXZfZ2VuZXJpY19zZXR1cCsweDg4LzB4
-MTE4KQo+ID4gWzxjMDQxNWEyMD5dIChkcm1fZmJkZXZfZ2VuZXJpY19zZXR1cCkgZnJvbSBbPGMw
-NDNmMDYwPl0gKHN1bjRpX2Rydl9iaW5kKzB4MTI4LzB4MTYwKQo+ID4gWzxjMDQzZjA2MD5dIChz
-dW40aV9kcnZfYmluZCkgZnJvbSBbPGMwNDRiNTk4Pl0gKHRyeV90b19icmluZ191cF9tYXN0ZXIr
-MHgxNjQvMHgxYTApCj4gPiBbPGMwNDRiNTk4Pl0gKHRyeV90b19icmluZ191cF9tYXN0ZXIpIGZy
-b20gWzxjMDQ0YjY2OD5dIChfX2NvbXBvbmVudF9hZGQrMHg5NC8weDE0MCkKPiA+IFs8YzA0NGI2
-Njg+XSAoX19jb21wb25lbnRfYWRkKSBmcm9tIFs8YzA0NDVlMWM+XSAoc3VuNmlfZHNpX3Byb2Jl
-KzB4MTQ0LzB4MjM0KQo+ID4gWzxjMDQ0NWUxYz5dIChzdW42aV9kc2lfcHJvYmUpIGZyb20gWzxj
-MDQ1MmVmND5dIChwbGF0Zm9ybV9kcnZfcHJvYmUrMHg0OC8weDljKQo+ID4gWzxjMDQ1MmVmND5d
-IChwbGF0Zm9ybV9kcnZfcHJvYmUpIGZyb20gWzxjMDQ1MTJjYz5dIChyZWFsbHlfcHJvYmUrMHgx
-ZGMvMHgyYzgpCj4gPiBbPGMwNDUxMmNjPl0gKHJlYWxseV9wcm9iZSkgZnJvbSBbPGMwNDUxNTE4
-Pl0gKGRyaXZlcl9wcm9iZV9kZXZpY2UrMHg2MC8weDE2MCkKPiA+IFs8YzA0NTE1MTg+XSAoZHJp
-dmVyX3Byb2JlX2RldmljZSkgZnJvbSBbPGMwNDRmN2E0Pl0gKGJ1c19mb3JfZWFjaF9kcnYrMHg3
-NC8weGI4KQo+ID4gWzxjMDQ0ZjdhND5dIChidXNfZm9yX2VhY2hfZHJ2KSBmcm9tIFs8YzA0NTEw
-N2M+XSAoX19kZXZpY2VfYXR0YWNoKzB4ZDAvMHgxM2MpCj4gPiBbPGMwNDUxMDdjPl0gKF9fZGV2
-aWNlX2F0dGFjaCkgZnJvbSBbPGMwNDUwNDc0Pl0gKGJ1c19wcm9iZV9kZXZpY2UrMHg4NC8weDhj
-KQo+ID4gWzxjMDQ1MDQ3ND5dIChidXNfcHJvYmVfZGV2aWNlKSBmcm9tIFs8YzA0NTA5MDA+XSAo
-ZGVmZXJyZWRfcHJvYmVfd29ya19mdW5jKzB4NjQvMHg5MCkKPiA+IFs8YzA0NTA5MDA+XSAoZGVm
-ZXJyZWRfcHJvYmVfd29ya19mdW5jKSBmcm9tIFs8YzAxMzU5NzA+XSAocHJvY2Vzc19vbmVfd29y
-aysweDIwNC8weDQyMCkKPiA+IFs8YzAxMzU5NzA+XSAocHJvY2Vzc19vbmVfd29yaykgZnJvbSBb
-PGMwMTM2OTBjPl0gKHdvcmtlcl90aHJlYWQrMHgyNzQvMHg1YTApCj4gPiBbPGMwMTM2OTBjPl0g
-KHdvcmtlcl90aHJlYWQpIGZyb20gWzxjMDEzYjNkOD5dIChrdGhyZWFkKzB4MTFjLzB4MTRjKQo+
-ID4gWzxjMDEzYjNkOD5dIChrdGhyZWFkKSBmcm9tIFs8YzAxMDEwZTg+XSAocmV0X2Zyb21fZm9y
-aysweDE0LzB4MmMpCj4gPiBFeGNlcHRpb24gc3RhY2soMHhkZTUzOWZiMCB0byAweGRlNTM5ZmY4
-KQo+ID4gOWZhMDogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMDAwMDAwMDAg
-MDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAKPiA+IDlmYzA6IDAwMDAwMDAwIDAwMDAwMDAwIDAw
-MDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwCj4gPiA5
-ZmUwOiAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAxMyAwMDAwMDAw
-MAo+ID4gLS0tWyBlbmQgdHJhY2UgYjU3ZWIxZTVjNjRjNmI4YiBdLS0tCj4gPiByYW5kb206IGZh
-c3QgaW5pdCBkb25lCj4gPiBbZHJtOmRybV9hdG9taWNfaGVscGVyX3dhaXRfZm9yX2RlcGVuZGVu
-Y2llc10gKkVSUk9SKiBbQ1JUQzo0NjpjcnRjLTBdIGZsaXBfZG9uZSB0aW1lZCBvdXQKPiA+IFtk
-cm06ZHJtX2F0b21pY19oZWxwZXJfd2FpdF9mb3JfZGVwZW5kZW5jaWVzXSAqRVJST1IqIFtDT05O
-RUNUT1I6NDg6RFNJLTFdIGZsaXBfZG9uZSB0aW1lZCBvdXQKPiA+IFtkcm06ZHJtX2F0b21pY19o
-ZWxwZXJfd2FpdF9mb3JfZGVwZW5kZW5jaWVzXSAqRVJST1IqIFtQTEFORTozMDpwbGFuZS0wXSBm
-bGlwX2RvbmUgdGltZWQgb3V0Cj4gPgo+ID4gV2l0aCB0aGUgdGVybXMoYXMgZGVzY3JpYmVkIGlu
-IGFib3ZlIGRpYWdyYW0pIGZpeGVkLCB0aGUgcGFuZWwKPiA+IGRpc3BsYXlzIGNvcnJlY3RseSB3
-aXRob3V0IGFueSB0aW1lb3V0cy4KPiA+Cj4gPiBUZXN0ZWQtYnk6IE1lcmxpam4gV2FqZXIgPG1l
-cmxpam5Ad2l6enVwLm9yZz4KPiA+IFNpZ25lZC1vZmYtYnk6IEphZ2FuIFRla2kgPGphZ2FuQGFt
-YXJ1bGFzb2x1dGlvbnMuY29tPgo+Cj4gQXBwbGllZCwgdGhhbmtzCgpUaGFua3MsIHdvdWxkIHlv
-dSBhcHBseSB0aGUgc2ltaWxhciBjaGFuZ2UgaW4gMy83PwpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+On 2019-10-03 18:23, Marc Gonzalez wrote:
+> On 03/10/2019 08:44, Sai Prakash Ranjan wrote:
+> 
+>> Boot failure has been reported on MSM8998 based laptop when
+>> coresight is enabled. This is most likely due to lack of
+>> firmware support for coresight on production device when
+>> compared to debug device like MTP where this issue is not
+>> observed. So disable coresight by default for MSM8998 and
+>> enable it only for MSM8998 MTP.
+>> 
+>> Reported-and-tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+>> Fixes: 783abfa2249a ("arm64: dts: qcom: msm8998: Add Coresight 
+>> support")
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 68 
+>> +++++++++++++++++++++++
+>>  arch/arm64/boot/dts/qcom/msm8998.dtsi     | 51 +++++++++++------
+>>  2 files changed, 102 insertions(+), 17 deletions(-)
+> 
+> Just wanted to toss an alternative, based on Suzuki's suggestion
+> (i.e. move the coresight nodes to a separate file)
+> 
+> 
+
+I believe this is a better approach.
+Initially I had coresight components in a separate file like this but 
+Bjorn had some concerns about having 2 separate files. If he is OK with 
+this,
+
+Acked-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
