@@ -1,68 +1,36 @@
-From: "Ramuthevar,Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v1 2/2] mmc: sdhci-of-arasan: Add Support for Intel LGM SDXC
-Date: Thu,  3 Oct 2019 12:00:32 +0800
-Message-ID: <20191003040032.37696-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20191003040032.37696-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: sdm845: Add APSS watchdog node
+Date: Wed,  2 Oct 2019 21:13:45 -0700
+Message-ID: <20191003041345.20912-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191003040032.37696-1-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, adrian.hunter@intel.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+To: Andy Gross <agross@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+Add a node describing the watchdog found in the application subsystem.
 
-The current arasan sdhci PHY configuration isn't compatible
-with the PHY on Intel's LGM(Lightning Mountain) SoC devices.
-
-Therefore, add a new compatible, to adapt the Intel's LGM
-SDXC PHY with arasan-sdhc controller to configure the PHY.
-
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/mmc/host/sdhci-of-arasan.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index 7023cbec4017..55de839a8a5e 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -120,6 +120,12 @@ static const struct sdhci_arasan_soc_ctl_map intel_lgm_emmc_soc_ctl_map = {
- 	.hiword_update = false,
- };
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index f0b2db34ec4a..23915eab4187 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -3488,6 +3488,12 @@
+ 			status = "disabled";
+ 		};
  
-+static const struct sdhci_arasan_soc_ctl_map intel_lgm_sdxc_soc_ctl_map = {
-+	.baseclkfreq = { .reg = 0x80, .width = 8, .shift = 2 },
-+	.clockmultiplier = { .reg = 0, .width = -1, .shift = -1 },
-+	.hiword_update = false,
-+};
++		watchdog@17980000 {
++			compatible = "qcom,apss-wdt-sdm845", "qcom,kpss-wdt";
++			reg = <0 0x17980000 0 0x1000>;
++			clocks = <&sleep_clk>;
++		};
 +
- /**
-  * sdhci_arasan_syscon_write - Write to a field in soc_ctl registers
-  *
-@@ -384,6 +390,11 @@ static struct sdhci_arasan_of_data intel_lgm_emmc_data = {
- 	.pdata = &sdhci_arasan_cqe_pdata,
- };
- 
-+static struct sdhci_arasan_of_data intel_lgm_sdxc_data = {
-+	.soc_ctl_map = &intel_lgm_sdxc_soc_ctl_map,
-+	.pdata = &sdhci_arasan_cqe_pdata,
-+};
-+
- #ifdef CONFIG_PM_SLEEP
- /**
-  * sdhci_arasan_suspend - Suspend method for the driver
-@@ -489,6 +500,10 @@ static const struct of_device_id sdhci_arasan_of_match[] = {
- 		.compatible = "intel,lgm-sdhci-5.1-emmc",
- 		.data = &intel_lgm_emmc_data,
- 	},
-+	{
-+		.compatible = "intel,lgm-sdhci-5.1-sdxc",
-+		.data = &intel_lgm_sdxc_data,
-+	},
- 	/* Generic compatible below here */
- 	{
- 		.compatible = "arasan,sdhci-8.9a",
+ 		apss_shared: mailbox@17990000 {
+ 			compatible = "qcom,sdm845-apss-shared";
+ 			reg = <0 0x17990000 0 0x1000>;
 -- 
-2.11.0
+2.18.0
