@@ -1,40 +1,111 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH] media: dt-bindings: media: Fixup Allwinner A10 CSI binding
-Date: Thu,  3 Oct 2019 16:52:24 +0530
-Message-ID: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v3 3/5] gpio: syscon: Add support for a custom get
+ operation
+Date: Thu, 3 Oct 2019 07:26:10 -0400
+Message-ID: <20191003112610.GA28856@aptenodytes>
+References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
+ <20190927100407.1863293-4-paul.kocialkowski@bootlin.com>
+ <CAMpxmJUHPuGPPPFSctyhtfj0oAk6oJ+=mvgN4=7jmLxAfHs45Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJUHPuGPPPFSctyhtfj0oAk6oJ+=mvgN4=7jmLxAfHs45Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Chen-Yu Tsai <wens@csie.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-gpio <linux-gpio@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-This new binding fails dt_binding_check due to a typo. Fix it up.
 
-linux.git/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
-linux.git/Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts' failed
-make[2]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts] Error 1
-make[2]: *** Waiting for unfinished jobs....
-linux.git/Makefile:1284: recipe for target 'dt_binding_check' failed
-make[1]: *** [dt_binding_check] Error 2
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: c5e8f4ccd7750 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- .../devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml      | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-index 27f38eed389e4..5dd1cf490cd9d 100644
---- a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-+++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--$id: http://devicetree.org/schemas/arm/allwinner,sun4i-a10-csi.yaml#
-+$id: http://devicetree.org/schemas/media/allwinner,sun4i-a10-csi.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
- title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
--- 
-2.17.1
+On Thu 03 Oct 19, 10:24, Bartosz Golaszewski wrote:
+> pt., 27 wrz 2019 o 12:04 Paul Kocialkowski
+> <paul.kocialkowski@bootlin.com> napisa=C5=82(a):
+> >
+> > Some drivers might need a custom get operation to match custom
+> > behavior implemented in the set operation.
+> >
+> > Add plumbing for supporting that.
+> >
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > ---
+> >  drivers/gpio/gpio-syscon.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+> > index 31f332074d7d..05c537ed73f1 100644
+> > --- a/drivers/gpio/gpio-syscon.c
+> > +++ b/drivers/gpio/gpio-syscon.c
+> > @@ -43,8 +43,9 @@ struct syscon_gpio_data {
+> >         unsigned int    bit_count;
+> >         unsigned int    dat_bit_offset;
+> >         unsigned int    dir_bit_offset;
+> > -       void            (*set)(struct gpio_chip *chip,
+> > -                              unsigned offset, int value);
+> > +       int             (*get)(struct gpio_chip *chip, unsigned offset);
+> > +       void            (*set)(struct gpio_chip *chip, unsigned offset,
+> > +                              int value);
+>=20
+> Why did you change this line? Doesn't seem necessary and pollutes the his=
+tory.
+
+This is for consistency since both the "chip" and "offset" arguments can fit
+in a single line. Since I want the "get" addition to fit in a single line,
+bringing back "offset" on the previous line of "set" makes things consisten=
+t.
+There's probably no particular reason for the split in the first place.
+
+Do you think it needs a separate cosmetic commit only for that?
+I'd rather add a note in the commit message and keep the change as-is.
+
+Cheers,
+
+Paul
+
+> Bart
+>=20
+> >  };
+> >
+> >  struct syscon_gpio_priv {
+> > @@ -252,7 +253,7 @@ static int syscon_gpio_probe(struct platform_device=
+ *pdev)
+> >         priv->chip.label =3D dev_name(dev);
+> >         priv->chip.base =3D -1;
+> >         priv->chip.ngpio =3D priv->data->bit_count;
+> > -       priv->chip.get =3D syscon_gpio_get;
+> > +       priv->chip.get =3D priv->data->get ? : syscon_gpio_get;
+> >         if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
+> >                 priv->chip.direction_input =3D syscon_gpio_dir_in;
+> >         if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
+> > --
+> > 2.23.0
+> >
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--KsGdsel6WgEHnImy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2V2tIACgkQ3cLmz3+f
+v9GFGwf+IxprRkzBRr6IH3r+Ju8Sd+z8fEo/prPvemGLA9fboSrQhRno5RP3V6dX
+h6NYZY+XEegXl+DrVqbJkNz0fpudKjY2XdJLhNR/9tKHQddj0UD2/ZgfavO30sZi
+DL7f2PCUYC1kVr8j8bgJz4Vr/4EnEHs4Vkjfm9jKV8giap/DUYOX3QL1OwhBFEJW
+53Cr+bJOuNC/+3G6oMeJ8GPzcikdYu+dRHV6Ka1mjxEeB3REj2g5jSEjZ+dwfczT
+WLp3usydgx1AC+ag8EObLYXTb3ysu7Ugz0k+3HACQ1OTXijo5YMDzTtCYwlVrn4A
+J+G/dstigrIs86FBd4MmZaOtafb+Xw==
+=vWKK
+-----END PGP SIGNATURE-----
+
+--KsGdsel6WgEHnImy--
