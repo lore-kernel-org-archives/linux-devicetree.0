@@ -1,39 +1,112 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v11 7/7] ARM: dts: sun8i: bananapi-m2m:
- Enable Bananapi S070WV20-CT16 DSI panel
-Date: Thu, 3 Oct 2019 12:20:37 +0530
-Message-ID: <CAMty3ZAHPWOn=h04AjGLf33uGhW4MxqpU4z1izGp0BgUmyOiLQ@mail.gmail.com>
-References: <20191003064527.15128-1-jagan@amarulasolutions.com> <20191003064527.15128-8-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Dilip Kota <eswara.kota@linux.intel.com>
+Subject: Re: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
+Date: Thu, 3 Oct 2019 14:50:59 +0800
+Message-ID: <6e55bedb-fc65-4ecc-6f65-11cf733b204f@linux.intel.com>
+References: <62697250-d2c2-87d5-6206-aac3f6fc2be7@linux.intel.com>
+ <29965a80-642b-8f11-b3d4-25c09c3d96cc@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBSNU23WAKGQE2PBJLBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20191003064527.15128-8-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <29965a80-642b-8f11-b3d4-25c09c3d96cc@linux.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: martin Blumenstingl <martin.blumenstingl@googlemail.com>, p.zabel@pengutronix.de
+Cc: "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, qi-ming.wu@intel.com, robh@kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 12:16 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
->
-> This patch add support for Bananapi S070WV20-CT16 DSI panel to
-> BPI-M2M board.
->
-> DSI panel connected via board DSI port with,
-> - DCDC1 as VCC-DSI supply
-> - DLDO1 as VDD supply
-> - PL5 gpio for lcd reset gpio pin
-> - PB7 gpio for lcd enable gpio pin
-> - PL4 gpio for backlight enable pin
->
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
+Hi Martin and Philipp,
 
-This would be an overlay patch, which doesn't need to mege. please
-correct the same.
+
+On 20/9/2019 10:47 AM, Dilip Kota wrote:
+> Hi Martin,
+>
+> On 9/20/2019 3:51 AM, Martin Blumenstingl wrote:
+>> Hi Dilip,
+>>
+>> (sorry for the late reply)
+>>
+>> On Thu, Sep 12, 2019 at 8:38 AM Dilip Kota 
+>> <eswara.kota@linux.intel.com> wrote:
+>> [...]
+>>> The major difference between the vrx200 and lgm is:
+>>> 1.) RCU in vrx200 is having multiple register regions wheres RCU in lgm
+>>> has one single register region.
+>>> 2.) Register offsets and bit offsets are different.
+>>>
+>>> So enhancing the intel-reset-syscon.c to provide compatibility/support
+>>> for vrx200.
+>>> Please check the below dtsi binding proposal and let me know your view.
+>>>
+>>> rcu0:reset-controller@00000000 {
+>>> compatible= "intel,rcu-lgm";
+>>> reg = <0x0000000 0x80000>, <reg_set2 size>, <reg_set3 size>,
+>>> <reg_set4 size>;
+>> I'm not sure that I understand what are reg_set2/3/4 for
+>> the first resource (0x80000 at 0x0) already covers the whole LGM RCU,
+>> so what is the purpose of the other register resources
+> Yes, as you said the first register resource is enough for LGM RCU as 
+> registers are at one single region. Whereas in older SoCs RCU 
+> registers are at different regions, so for that reason reg_set2/3/4 
+> are used.
+>
+> Driver will decide in reading the no. of register resources based on 
+> the "struct of_device_id".
+>
+> Regards,
+> Dilip
+>>
+>>> intel,global-reset = <0x10 30>;
+>>> #reset-cells = <3>;
+>>> };
+>>>
+>>> "#reset-cells":
+>>> const:3
+>>> description: |
+>>> The 1st cell is the reset register offset.
+>>> The 2nd cell is the reset set bit offset.
+>>> The 3rd cell is the reset status bit offset.
+>> I think this will work fine for VRX200 (and even older SoCs)
+>> as you have described in your previous emails we can determine the
+>> status offset from the reset offset using a simple if/else
+>>
+>> for LGM I like your initial suggestion with #reset-cells = <2> because
+>> it's easier to read and write.
+>>
+>>> Reset driver takes care of parsing the register address "reg" as per the
+>>> ".data" structure in struct of_device_id.
+>>> Reset driver takes care of traversing the status register offset.
+>> the differentiation between two and three #reset-cells can also happen
+>> based on the struct of_device_id:
+>> - the LGM implementation would simply also use the reset bit as status
+>> bit (only two cells are needed)
+>> - the implementation for earlier SoCs would parse the third cell and
+>> use that as status bit
+>>
+>> Philipp, can you please share your opinion on how to move forward with
+>> the reset-intel driver from this series?
+>> The reset_control_ops from the reset-intel driver are (in my opinion)
+>> a bug-fixed and improved version of what we already have in
+>> drivers/reset/reset-lantiq.c. The driver is NOT simply copy and paste
+>> because the register layout was greatly simplified for the newer SoCs
+>> (for which there is reset-intel) compared to the older ones
+>> (reset-lantiq).
+>> Dilip's suggestion (in my own words) is that you take his new
+>> reset-intel driver, then we will work on porting reset-lantiq over to
+>> that so in the end we can drop the reset-lantiq driver. This approach
+>> means more work for me (as I am probably the one who then has to do
+>> the work to port reset-lantiq over to reset-intel). I'm happy to do
+>> that work if you think that it's worth following this approach.
+>> So I want your opinion on this before I spend any effort on porting
+>> reset-lantiq over to reset-intel.
+
+I will start implementing this design in the next patch version along 
+with the other changes suggested in this patch review, please let me 
+know if you have other thoughts in this design.
+
+Regards,
+Dilip
+
+>>
+>>
+>> Martin
