@@ -1,79 +1,91 @@
-From: Lukasz Luba <l.luba@partner.samsung.com>
-Subject: Re: [PATCH] dt-bindings: memory-controllers: exynos5422-dmc:
- Correct example syntax and memory region
-Date: Thu, 3 Oct 2019 07:20:06 +0200
-Message-ID: <d0955b23-2111-7dbb-92ce-0a81ac417bb8@partner.samsung.com>
-References: <CGME20191002174416epcas4p15c507d0c8cacfafce9b538d0b08e277f@epcas4p1.samsung.com>
-        <20191002174401.17590-1-krzk@kernel.org>
+From: Heiko Schocher <hs@denx.de>
+Subject: Re: [PATCH 1/2] misc: add cc1101 devicetree binding
+Date: Thu, 3 Oct 2019 07:21:40 +0200
+Message-ID: <2329ed8f-7e34-596a-ae94-c9b5ac263908@denx.de>
+References: <20190922060356.58763-1-hs@denx.de>
+ <20190922060356.58763-2-hs@denx.de>
+ <5d94b1e3.1c69fb81.9d89.1cce@mx.google.com>
+Reply-To: hs@denx.de
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191002174401.17590-1-krzk@kernel.org>
+In-Reply-To: <5d94b1e3.1c69fb81.9d89.1cce@mx.google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Hello Rob,
 
-On 10/2/19 7:44 PM, Krzysztof Kozlowski wrote:
-> After adding the interrupt properties to Exynos5422 DMC bindings
-> example, the mapped memory region must be big enough to access
-> performance counters registers.
+Am 02.10.2019 um 16:19 schrieb Rob Herring:
+> On Sun, Sep 22, 2019 at 08:03:55AM +0200, Heiko Schocher wrote:
+>> add devicetree binding for cc1101 misc driver.
+>>
+>> Signed-off-by: Heiko Schocher <hs@denx.de>
+>> ---
+>>
+>>   .../devicetree/bindings/misc/cc1101.txt       | 27 +++++++++++++++++++
+>>   1 file changed, 27 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/misc/cc1101.txt
 > 
-> Fix also syntax errors (semicolons) and adjust indentation.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> ---
-> 
-> Rebased on top of my for-next branch as exynos5422-dmc.txt bindings were
-> applied by me.
-> ---
->   .../bindings/memory-controllers/exynos5422-dmc.txt        | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> index e2434cac4858..02e4a1f862f1 100644
-> --- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> @@ -55,7 +55,7 @@ Example:
->   
->   	dmc: memory-controller@10c20000 {
->   		compatible = "samsung,exynos5422-dmc";
-> -		reg = <0x10c20000 0x100>, <0x10c30000 0x100>,
-> +		reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>;
->   		clocks = <&clock CLK_FOUT_SPLL>,
->   			 <&clock CLK_MOUT_SCLK_SPLL>,
->   			 <&clock CLK_FF_DOUT_SPLL2>,
-> @@ -63,7 +63,7 @@ Example:
->   			 <&clock CLK_MOUT_BPLL>,
->   			 <&clock CLK_SCLK_BPLL>,
->   			 <&clock CLK_MOUT_MX_MSPLL_CCORE>,
-> -			 <&clock CLK_MOUT_MCLK_CDREX>,
-> +			 <&clock CLK_MOUT_MCLK_CDREX>;
->   		clock-names = "fout_spll",
->   			      "mout_sclk_spll",
->   			      "ff_dout_spll2",
-> @@ -71,10 +71,10 @@ Example:
->   			      "mout_bpll",
->   			      "sclk_bpll",
->   			      "mout_mx_mspll_ccore",
-> -			      "mout_mclk_cdrex",
-> +			      "mout_mclk_cdrex";
->   		operating-points-v2 = <&dmc_opp_table>;
->   		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
-> -				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
-> +				 <&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
->   		device-handle = <&samsung_K3QF2F20DB>;
->   		vdd-supply = <&buck1_reg>;
->   		samsung,syscon-clk = <&clock>;
-> 
+> Can you please convert this to DT schema.
 
-Thank you for the patch. Indeed it must also be updated.
+Of course, missed this point, sorry, reworked. Is there a HowTo
+for writting a schema?
+(beside Documentation/devicetree/bindings/example-schema.yaml)
 
-Reviewed-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> diff --git a/Documentation/devicetree/bindings/misc/cc1101.txt b/Documentation/devicetree/bindings/misc/cc1101.txt
+>> new file mode 100644
+>> index 0000000000000..afea6acf4a9c5
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/misc/cc1101.txt
+> 
+> Normal naming is to use compatible string. So ti,cc1101.yaml for schema.
 
-Regards,
-Lukasz
+renamed.
+
+> 
+>> @@ -0,0 +1,27 @@
+>> +driver cc1101 Low-Power Sub-1 GHz RF Transceiver chip from Texas
+>> +Instruments.
+>> +
+>> +Requires node properties:
+>> +- compatible : should be "ti,cc1101";
+>> +- reg        : Chip select address of device, see:
+>> +               Documentation/devicetree/bindings/spi/spi-bus.txt
+>> +- gpios      : list of 2 gpios, first gpio is for GDO0 pin
+>> +               second for GDO2 pin, see more:
+> 
+> Is there a GDO1? Would be hard to add later because you can't change the
+> indices once defined.
+
+Good point. There is a GDO1, so yes, this makes sense, added.
+
+> 
+>> +               Documentation/devicetree/bindings/gpio/gpio.txt
+>> +
+>> +Recommended properties:
+>> + - spi-max-frequency: Definition as per
+>> +                Documentation/devicetree/bindings/spi/spi-bus.txt
+> 
+> Notice that this file is now just in redirection...
+
+Ok.
+
+> 
+>> + - freq       : used spi frequency for communication with cc1101 chip
+> 
+> What's this? Doesn't spi-max-frequency cover it?
+
+Of course, removed.
+
+Thanks for your time and review.
+
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-52   Fax: +49-8142-66989-80   Email: hs@denx.de
