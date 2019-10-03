@@ -1,209 +1,225 @@
-From: JC Kuo <jckuo@nvidia.com>
-Subject: Re: [PATCH 6/6] arm64: tegra: Enable XUSB host in P2972-0000 board
-Date: Thu, 3 Oct 2019 14:00:32 +0800
-Message-ID: <2b50ad58-e5da-2f93-0c18-f16843fe64ac@nvidia.com>
-References: <20191002080051.11142-1-jckuo@nvidia.com>
- <20191002080051.11142-7-jckuo@nvidia.com> <20191002102611.GH3716706@ulmo>
+From: Dilip Kota <eswara.kota@linux.intel.com>
+Subject: Re: Fwd: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas
+ for the PCIe RC controller
+Date: Thu, 3 Oct 2019 14:35:02 +0800
+Message-ID: <655892bd-6b62-ec2b-ff85-89ca1f86326e@linux.intel.com>
+References: <bf5c8a24-e969-87d4-c62b-4032273e0824@linux.intel.com>
+ <b7e549bb-b46c-c393-50ac-9ef3b198fd49@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191002102611.GH3716706@ulmo>
+In-Reply-To: <b7e549bb-b46c-c393-50ac-9ef3b198fd49@linux.intel.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: gregkh@linuxfoundation.org, jonathanh@nvidia.com, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com
+To: Rob Herring <robh@kernel.org>
+Cc: jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com, martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org, hch@infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/2/19 6:26 PM, Thierry Reding wrote:
-> On Wed, Oct 02, 2019 at 04:00:51PM +0800, JC Kuo wrote:
->> This commit enables XUSB host and pad controller in Tegra194
->> P2972-0000 board.
->>
->> Signed-off-by: JC Kuo <jckuo@nvidia.com>
->> ---
->>  .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 31 +++++++++-
->>  .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 59 +++++++++++++++++++
->>  2 files changed, 89 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
->> index 4c38426a6969..cb236edc6a0d 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
->> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
->> @@ -229,7 +229,7 @@
->>  						regulator-max-microvolt = <3300000>;
->>  					};
->>  
->> -					ldo5 {
->> +					vdd_usb_3v3: ldo5 {
->>  						regulator-name = "VDD_USB_3V3";
->>  						regulator-min-microvolt = <3300000>;
->>  						regulator-max-microvolt = <3300000>;
->> @@ -313,5 +313,34 @@
->>  			regulator-boot-on;
->>  			enable-active-low;
->>  		};
->> +
->> +		vdd_5v_sata: regulator@4 {
->> +			compatible = "regulator-fixed";
->> +			reg = <4>;
->> +
->> +			regulator-name = "vdd-5v-sata";
-> 
-> Please keep capitalization of regulator names consistent. We use
-> all-caps and underscores for the others (which mirrors the names in the
-> schematics), so please stick with that for this one as well.
-> 
-Sure. I will fix this.
-> Also, I'm wondering if perhaps you can clarify something here. My
-> understanding is that SATA functionality is provided via a controller on
-> the PCI bus. Why is it that we route the 5 V SATA power to the USB port?
-> Oh wait... this is one of those eSATAp (hybrid) ports that can take
-> either eSATA or USB, right? Do we need any additional setup to switch
-> between eSATA and USB modes? Or is this all done in hardware? That is,
-> if I plug in an eSATA, does it automatically hotplug detect the device
-> as SATA and if I plug in a USB device, does it automatically detect it
-> as USB?
-> 
-Yes, this 5V supply is for the eSATAp port. eSATA cable will deliver the 5V to
-SATA device. No SATA/USB switch is required as USB SuperSpeed and PCIE-to-SATA
-controller each has its own UPHY lane. SATA TX/RX pairs also have dedicated pins
-at the eSATAp connector. External SATA drive can be hotplug and hardware will
-detect automatically.
+Hi Rob,
 
->> +			regulator-min-microvolt = <5000000>;
->> +			regulator-max-microvolt = <5000000>;
->> +			gpio = <&gpio TEGRA194_MAIN_GPIO(Z, 1) GPIO_ACTIVE_LOW>;
-> 
-> This will actually cause a warning on boot. For fixed regulators the
-> polarity of the enable GPIO is not specified in the GPIO specifier.
-> Instead you're supposed to use the boolean enable-active-high property
-> to specify if the enable GPIO is active-high. By default the enable GPIO
-> is considered to be active-low. The GPIO specifier needs to have the
-> GPIO_ACTIVE_HIGH flag set regardless for backwards-compatibilitiy
-> reasons.
-> 
-> Note that regulator@3 above your new entry does this wrongly, but
-> next-20191002 should have a fix for that.
-> 
-Thanks for the information. I will fix this in the next revision.
->> +		};
->> +	};
->> +
->> +	padctl@3520000 {
-> 
-> Don't forget to move this into /cbb as well to match the changes to
-> patch 5/6.
-> 
-Sure, will do.
->> +		avdd-usb-supply = <&vdd_usb_3v3>;
->> +		vclamp-usb-supply = <&vdd_1v8ao>;
->> +		ports {
-> 
-> Blank line between the above two for better readability.
-> 
-Okay.
->> +			usb2-1 {
->> +				vbus-supply = <&vdd_5v0_sys>;
->> +			};
->> +			usb2-3 {
-> 
-> Same here and below.
-> 
->> +				vbus-supply = <&vdd_5v_sata>;
->> +			};
->> +			usb3-0 {
->> +				vbus-supply = <&vdd_5v0_sys>;
->> +			};
->> +			usb3-3 {
->> +				vbus-supply = <&vdd_5v0_sys>;
->> +			};
->> +		};
->>  	};
->>  };
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
->> index d47cd8c4dd24..410221927dfa 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
->> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
->> @@ -222,4 +222,63 @@
->>  			};
->>  		};
->>  	};
->> +
->> +	padctl@3520000 {
-> 
-> Same comment as above. Move this into /cbb.
-> 
->> +		status = "okay";
->> +
->> +		pads {
->> +			usb2 {
->> +				lanes {
->> +					usb2-1 {
->> +						status = "okay";
->> +					};
->> +					usb2-2 {
-> 
-> And blank lines for readability here and below.
-> 
->> +						status = "okay";
->> +					};
->> +					usb2-3 {
->> +						status = "okay";
->> +					};
->> +				};
->> +			};
->> +			usb3 {
->> +				lanes {
->> +					usb3-0 {
->> +						status = "okay";
->> +					};
->> +					usb3-3 {
->> +						status = "okay";
->> +					};
->> +				};
->> +			};
->> +		};
->> +
->> +		ports {
->> +			usb2-1 {
->> +				mode = "host";
->> +				status = "okay";
->> +			};
->> +			usb2-3 {
->> +				mode = "host";
->> +				status = "okay";
->> +			};
->> +			usb3-0 {
->> +				nvidia,usb2-companion = <1>;
->> +				status = "okay";
->> +			};
->> +			usb3-3 {
->> +				nvidia,usb2-companion = <3>;
->> +				nvidia,disable-gen2;
->> +				status = "okay";
->> +			};
->> +		};
->> +	};
->> +
->> +	tegra_xhci: xhci@3610000 {
-> 
-> Also needs to move into /cbb. Also, you can drop the tegra_xhci label
-> here since we never reference the controller from elsewhere.
-> 
-> Also make sure to update the name here to match the changes in 5/6.
-> 
-Got it. Thanks for the reminder.
-> Thierry
-> 
->> +		status = "okay";
->> +		phys =	<&{/padctl@3520000/pads/usb2/lanes/usb2-1}>,
->> +			<&{/padctl@3520000/pads/usb2/lanes/usb2-3}>,
->> +			<&{/padctl@3520000/pads/usb3/lanes/usb3-0}>,
->> +			<&{/padctl@3520000/pads/usb3/lanes/usb3-3}>;
->> +		phy-names = "usb2-1", "usb2-3", "usb3-0", "usb3-3";
->> +	};
->>  };
->> -- 
->> 2.17.1
+
+On 18/9/2019 2:56 PM, Dilip Kota wrote:
+> On 9/18/2019 2:40 AM, Rob Herring wrote:
+>> On Wed, Sep 04, 2019 at 06:10:30PM +0800, Dilip Kota wrote:
+>>> The Intel PCIe RC controller is Synopsys Designware
+>>> based PCIe core. Add YAML schemas for PCIe in RC mode
+>>> present in Intel Universal Gateway soc.
+>>>
+>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>>> ---
+>>> changes on v3:
+>>> Add the appropriate License-Identifier
+>>> Rename intel,rst-interval to 'reset-assert-us'
+>>> Add additionalProperties: false
+>>> Rename phy-names to 'pciephy'
+>>> Remove the dtsi node split of SoC and board in the example
+>>> Add #interrupt-cells = <1>; or else interrupt parsing will fail
+>>> Name yaml file with compatible name
+>>>
+>>> .../devicetree/bindings/pci/intel,lgm-pcie.yaml | 137 
+>>> +++++++++++++++++++++
+>>> 1 file changed, 137 insertions(+)
+>>> create mode 100644 
+>>> Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
+>>>
+>>> diff --git 
+>>> a/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml 
+>>> b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
+>>> new file mode 100644
+>>> index 000000000000..5e5cc7fd66cd
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
+>>> @@ -0,0 +1,137 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/pci/intel-pcie.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Intel AXI bus based PCI express root complex
+>>> +
+>>> +maintainers:
+>>> + - Dilip Kota <eswara.kota@linux.intel.com>
+>>> +
+>>> +properties:
+>>> + compatible:
+>>> + const: intel,lgm-pcie
+>>> +
+>>> + device_type:
+>>> + const: pci
+>>> +
+>>> + "#address-cells":
+>>> + const: 3
+>>> +
+>>> + "#size-cells":
+>>> + const: 2
+>> These all belong in a common schema.
 >>
+>>> +
+>>> + reg:
+>>> + items:
+>>> + - description: Controller control and status registers.
+>>> + - description: PCIe configuration registers.
+>>> + - description: Controller application registers.
+>>> +
+>>> + reg-names:
+>>> + items:
+>>> + - const: dbi
+>>> + - const: config
+>>> + - const: app
+>>> +
+>>> + ranges:
+>>> + description: Ranges for the PCI memory and I/O regions.
+>> And this.
+>>
+>>> +
+>>> + resets:
+>>> + maxItems: 1
+>>> +
+>>> + clocks:
+>>> + description: PCIe registers interface clock.
+>>> +
+>>> + phys:
+>>> + maxItems: 1
+>>> +
+>>> + phy-names:
+>>> + const: pciephy
+>>> +
+>>> + reset-gpios:
+>>> + maxItems: 1
+>>> +
+>>> + num-lanes:
+>>> + description: Number of lanes to use for this port.
+>>> +
+>>> + linux,pci-domain:
+>>> + $ref: /schemas/types.yaml#/definitions/uint32
+>>> + description: PCI domain ID.
+>> These 2 also should be common.
+>>
+>>> +
+>>> + interrupts:
+>>> + description: PCIe core integrated miscellaneous interrupt.
+>> How many? No need for description if there's only 1.
+>>
+>>> +
+>>> + '#interrupt-cells':
+>>> + const: 1
+>>> +
+>>> + interrupt-map-mask:
+>>> + description: Standard PCI IRQ mapping properties.
+>>> +
+>>> + interrupt-map:
+>>> + description: Standard PCI IRQ mapping properties.
+>>> +
+>>> + max-link-speed:
+>>> + description: Specify PCI Gen for link capability.
+>>> +
+>>> + bus-range:
+>>> + description: Range of bus numbers associated with this controller.
+>> All common.
+> You mean to remove all the common schema entries description!.
+> In most of the Documention/devicetree/binding/pci documents all the 
+> common entries are described so I followed the same.
+
+If common schemas are removed, getting below warning during the 
+dt_binding_check.
+
+Documentation/devicetree/bindings/pci/intel,lgm-pcie.example.dt.yaml: 
+pcie@d0e00000: '#address-cells', '#interrupt-cells', '#size-cells', 
+'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 
+'interrupt-parent', 'linux,pci-domain', 'ranges', 'reset-gpios' do not 
+match any of the regexes: 'pinctrl-[0-9]+'
+
+Regards,
+Dilip
+
+>>
+>>> +
+>>> + reset-assert-ms:
+>>> + description: |
+>>> + Device reset interval in ms.
+>>> + Some devices need an interval upto 500ms. By default it is 100ms.
+>> This is a property of a device, so it belongs in a device node. How
+>> would you deal with this without DT?
+> This property is for the PCIe RC to keep a delay before notifying the 
+> reset to the device.
+> If this entry is not present, PCIe driver will set a default value of 
+> 100ms.
+>>
+>>> +
+>>> +required:
+>>> + - compatible
+>>> + - device_type
+>>> + - reg
+>>> + - reg-names
+>>> + - ranges
+>>> + - resets
+>>> + - clocks
+>>> + - phys
+>>> + - phy-names
+>>> + - reset-gpios
+>>> + - num-lanes
+>>> + - linux,pci-domain
+>>> + - interrupts
+>>> + - interrupt-map
+>>> + - interrupt-map-mask
+>>> +
+>>> +additionalProperties: false
+>>> +
+>>> +examples:
+>>> + - |
+>>> + pcie10:pcie@d0e00000 {
+>>> + compatible = "intel,lgm-pcie";
+>>> + device_type = "pci";
+>>> + #address-cells = <3>;
+>>> + #size-cells = <2>;
+>>> + reg = <
+>>> + 0xd0e00000 0x1000
+>>> + 0xd2000000 0x800000
+>>> + 0xd0a41000 0x1000
+>>> + >;
+>>> + reg-names = "dbi", "config", "app";
+>>> + linux,pci-domain = <0>;
+>>> + max-link-speed = <4>;
+>>> + bus-range = <0x00 0x08>;
+>>> + interrupt-parent = <&ioapic1>;
+>>> + interrupts = <67 1>;
+>>> + #interrupt-cells = <1>;
+>>> + interrupt-map-mask = <0 0 0 0x7>;
+>>> + interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+>>> + <0 0 0 2 &ioapic1 28 1>,
+>>> + <0 0 0 3 &ioapic1 29 1>,
+>>> + <0 0 0 4 &ioapic1 30 1>;
+>>> + ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
+>>> + resets = <&rcu0 0x50 0>;
+>>> + clocks = <&cgu0 LGM_GCLK_PCIE10>;
+>>> + phys = <&cb0phy0>;
+>>> + phy-names = "pciephy";
+>>> + status = "okay";
+>>> + reset-assert-ms = <500>;
+>>> + reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+>>> + num-lanes = <2>;
+>>> + };
+>>> -- 2.11.0
+>>>
