@@ -1,333 +1,83 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH] arm64: dts: qcom: msm8998: Disable coresight by default
-Date: Thu,  3 Oct 2019 12:14:49 +0530
-Message-ID: <20191003064449.2201-1-saiprakash.ranjan@codeaurora.org>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v11 0/7] drm/sun4i: dsi: Fixes/updates (A33 reworked!)
+Date: Thu,  3 Oct 2019 12:15:20 +0530
+Message-ID: <20191003064527.15128-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi <linux-sunxi@googlegroups.com>, Jagan Teki <jagan@amarulasolutions.com>, michael@amarulasolutions.com, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Boot failure has been reported on MSM8998 based laptop when
-coresight is enabled. This is most likely due to lack of
-firmware support for coresight on production device when
-compared to debug device like MTP where this issue is not
-observed. So disable coresight by default for MSM8998 and
-enable it only for MSM8998 MTP.
-
-Reported-and-tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Fixes: 783abfa2249a ("arm64: dts: qcom: msm8998: Add Coresight support")
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 68 +++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/msm8998.dtsi     | 51 +++++++++++------
- 2 files changed, 102 insertions(+), 17 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-index 108667ce4f31..8d15572d18e6 100644
---- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-@@ -27,6 +27,66 @@
- 	status = "okay";
- };
- 
-+&etf {
-+	status = "okay";
-+};
-+
-+&etm1 {
-+	status = "okay";
-+};
-+
-+&etm2 {
-+	status = "okay";
-+};
-+
-+&etm3 {
-+	status = "okay";
-+};
-+
-+&etm4 {
-+	status = "okay";
-+};
-+
-+&etm5 {
-+	status = "okay";
-+};
-+
-+&etm6 {
-+	status = "okay";
-+};
-+
-+&etm7 {
-+	status = "okay";
-+};
-+
-+&etm8 {
-+	status = "okay";
-+};
-+
-+&etr {
-+	status = "okay";
-+};
-+
-+&funnel1 {
-+	status = "okay";
-+};
-+
-+&funnel2 {
-+	status = "okay";
-+};
-+
-+&funnel3 {
-+	status = "okay";
-+};
-+
-+&funnel4 {
-+	status = "okay";
-+};
-+
-+&funnel5 {
-+	status = "okay";
-+};
-+
- &pm8005_lsid1 {
- 	pm8005-regulators {
- 		compatible = "qcom,pm8005-regulators";
-@@ -51,6 +111,10 @@
- 	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
- };
- 
-+&replicator1 {
-+	status = "okay";
-+};
-+
- &rpm_requests {
- 	pm8998-regulators {
- 		compatible = "qcom,rpm-pm8998-regulators";
-@@ -249,6 +313,10 @@
- 	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
- };
- 
-+&stm {
-+	status = "okay";
-+};
-+
- &ufshc {
- 	vcc-supply = <&vreg_l20a_2p95>;
- 	vccq-supply = <&vreg_l26a_1p2>;
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index c6f81431983e..ffb64fc239ee 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -998,11 +998,12 @@
- 			#interrupt-cells = <0x2>;
- 		};
- 
--		stm@6002000 {
-+		stm: stm@6002000 {
- 			compatible = "arm,coresight-stm", "arm,primecell";
- 			reg = <0x06002000 0x1000>,
- 			      <0x16280000 0x180000>;
- 			reg-names = "stm-base", "stm-data-base";
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1016,9 +1017,10 @@
- 			};
- 		};
- 
--		funnel@6041000 {
-+		funnel1: funnel@6041000 {
- 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
- 			reg = <0x06041000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1045,9 +1047,10 @@
- 			};
- 		};
- 
--		funnel@6042000 {
-+		funnel2: funnel@6042000 {
- 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
- 			reg = <0x06042000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1075,9 +1078,10 @@
- 			};
- 		};
- 
--		funnel@6045000 {
-+		funnel3: funnel@6045000 {
- 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
- 			reg = <0x06045000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1113,9 +1117,10 @@
- 			};
- 		};
- 
--		replicator@6046000 {
-+		replicator1: replicator@6046000 {
- 			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
- 			reg = <0x06046000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1137,9 +1142,10 @@
- 			};
- 		};
- 
--		etf@6047000 {
-+		etf: etf@6047000 {
- 			compatible = "arm,coresight-tmc", "arm,primecell";
- 			reg = <0x06047000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1163,9 +1169,10 @@
- 			};
- 		};
- 
--		etr@6048000 {
-+		etr: etr@6048000 {
- 			compatible = "arm,coresight-tmc", "arm,primecell";
- 			reg = <0x06048000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1181,9 +1188,10 @@
- 			};
- 		};
- 
--		etm@7840000 {
-+		etm1: etm@7840000 {
- 			compatible = "arm,coresight-etm4x", "arm,primecell";
- 			reg = <0x07840000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1200,9 +1208,10 @@
- 			};
- 		};
- 
--		etm@7940000 {
-+		etm2: etm@7940000 {
- 			compatible = "arm,coresight-etm4x", "arm,primecell";
- 			reg = <0x07940000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1219,9 +1228,10 @@
- 			};
- 		};
- 
--		etm@7a40000 {
-+		etm3: etm@7a40000 {
- 			compatible = "arm,coresight-etm4x", "arm,primecell";
- 			reg = <0x07a40000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1238,9 +1248,10 @@
- 			};
- 		};
- 
--		etm@7b40000 {
-+		etm4: etm@7b40000 {
- 			compatible = "arm,coresight-etm4x", "arm,primecell";
- 			reg = <0x07b40000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1257,9 +1268,10 @@
- 			};
- 		};
- 
--		funnel@7b60000 { /* APSS Funnel */
-+		funnel4: funnel@7b60000 { /* APSS Funnel */
- 			compatible = "arm,coresight-etm4x", "arm,primecell";
- 			reg = <0x07b60000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1343,9 +1355,10 @@
- 			};
- 		};
- 
--		funnel@7b70000 {
-+		funnel5: funnel@7b70000 {
- 			compatible = "arm,coresight-dynamic-funnel", "arm,primecell";
- 			reg = <0x07b70000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1369,9 +1382,10 @@
- 			};
- 		};
- 
--		etm@7c40000 {
-+		etm5: etm@7c40000 {
- 			compatible = "arm,coresight-etm4x", "arm,primecell";
- 			reg = <0x07c40000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1385,9 +1399,10 @@
- 			};
- 		};
- 
--		etm@7d40000 {
-+		etm6: etm@7d40000 {
- 			compatible = "arm,coresight-etm4x", "arm,primecell";
- 			reg = <0x07d40000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1401,9 +1416,10 @@
- 			};
- 		};
- 
--		etm@7e40000 {
-+		etm7: etm@7e40000 {
- 			compatible = "arm,coresight-etm4x", "arm,primecell";
- 			reg = <0x07e40000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
-@@ -1417,9 +1433,10 @@
- 			};
- 		};
- 
--		etm@7f40000 {
-+		etm8: etm@7f40000 {
- 			compatible = "arm,coresight-etm4x", "arm,primecell";
- 			reg = <0x07f40000 0x1000>;
-+			status = "disabled";
- 
- 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
- 			clock-names = "apb_pclk", "atclk";
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+VGhpcyBpcyB2MTEgdmVyc2lvbiBjaGFuZ2VzIGZvciBwcmV2aW91cyBzZXJpZXNbMV0uCgpUaGlz
+IHNlcmllcyBkcm9wcGVkIHRoZSB0Y29uLT5kY2xrX21pbl9kaXYgYW5kIHRjb24tPmRjbGtfbWF4
+X2RpdgpwYXRjaGVzLCBzaW5jZSB0aGUgZGlzY3Vzc2lvbiBvbiB0aGUgcmVzcGVjdGl2ZSB0aHJl
+YWRzWzJdWzNdIApub3QgZmluYWxpemVkIG9yIG5vdCBhZ3JlZSBvbiBib3RoIHRoZSBlbmRzLgoK
+VGhpcyBzZXJpZXMgbW9zdGx5IHRoZSBjb21taXQgbWVzc2FnZXMgY2hhbmdlcyBzdWdnZXN0ZWQg
+YnkgQ2hlbi1ZdS4KCk1vc3Qgb2YgdGhlc2UgaXNzdWVzIGFyZSByZXByb2R1Y2VkIHdoaWxlIHN1
+cHBvcnRpbmcgQWxsd2lubmVyIEE2NApNSVBJLURTSSBbNF0gYnV0IHRvIGNvbmZpcm0gaXQgd2l0
+aCBvdGhlciBTb0MgdGhpcyBzZXJpZXMgaXMgcmV3b3JrZWQKb24gQTMzIHNpbmNlIHRoZSBjb250
+cm9sbGVyIHRlc3RlZCBpdCBBMzMgYXMgb2Ygbm93LgoKU2luY2Ugd2UgZG9uJ3QgaGF2ZSBwcm9w
+ZXIgZXZpZGVuY2UgYW5kIGRvY3VtZW50YXRpb24gZm9yIGRzaSBjb250cm9sbGVyCmluIEFsbHdp
+bm5lciwgdGhlc2UgY2hhbmdlcyBhcmUgbW9yZSBsaWtlbHkgdG8gcmVseSBvbiBuZXcgd29ya2lu
+ZyBCU1AKY29kZXMgKGV2ZW4gdGhlIGluaXRpYWwgZHJpdmVyIHdyaXR0ZW4gYXMgcGVyIHRoaXMg
+cnVsZSkuCgpBbGwgdGhlc2UgZml4ZXMvdXBkYXRlcyBhcmUgdGVzdGVkIGluICJiYW5hbmFwaSxz
+MDcwd3YyMC1jdDE2IiBwYW5lbApvbiBBbGx3aW5uZXIgQTMzLCB0aGUgc2FtZSBwYW5lbCB0aW1p
+bmdzIGFyZSBhdmFpbGFibGUgaW4gcGFuZWwtc2ltcGxlCmluIG1haW5saW5lIHRyZWUuCgpDaGFu
+Z2VzIGZvciB2MTE6Ci0gRHJvcCBEQ0xLIGRpdmlkZXJzIHBhdGNoZXMKLSBVcGRhdGVkIHRoZSBj
+b21taXQgbWVzc2FnZSBjaGFuZ2VzIHN1Z2dlc3RlZCBieSBDaGVuLVl1Ci0gcmViYXNlZCBvbiBs
+aW51eC1uZXh0CkNoYW5nZXMgZm9yIHYxMDoKLSByZXdvcmtlZCBwcmV2aW91cyAiRml4ZXMvdXBk
+YXRlcyIgcGF0Y2hlcyBvbiBBMzMKLSByZXdvcmtlZCBwcmV2aW91cyBBNjQgRFNJIGZpeGVzIG9u
+IEEzMwotIGFkZGVkIHByb3BlciBkZXRhaWxlZCBjb21taXQgbWVzc2FnZXMgd2l0aCBsb2dzCi0g
+dGVzdGVkIG9uIEJQSS1NMk0gYm9hcmQuCkNoYW5nZXMgZm9yIHY5OgotIHJlYmFzZSBvbiBkcm0t
+bWlzYwotIHVwZGF0ZSBjb21taXQgbWVzc2FnZXMKLSBhZGQgaHN5bmNfcG9yY2ggb3ZlcmZsb3cg
+cGF0Y2gKQ2hhbmdlcyBmb3Igdjg6Ci0gcmViYXNlIG9uIG1hc3RlcgotIHJld29yayBvbiBjb21t
+aXQgbWVzc2FnZXMKLSByZXdvcmsgdmlkZW8gc3RhcnQgZGVsYXkKLSBpbmNsdWRlIGRycSBjaGFu
+Z2VzIGZyb20gcHJldmlvdXMgdmVyc2lvbgpDaGFuZ2VzIGZvciB2NzoKLSByZWJhc2Ugb24gbWFz
+dGVyCi0gY29sbGVjdCBNZXJsaWpuIFdhamVyIFRlc3RlZC1ieSBjcmVkaXRzLgpDaGFuZ2VzIGZv
+ciB2NjoKLSBmaXhlZCBhbGwgYnVyc3QgbW9kZSBwYXRjaGVzIGFzIHBlciBwcmV2aW91cyB2ZXJz
+aW9uIGNvbW1lbnRzCi0gcmViYXNlIG9uIG1hc3RlcgotIHVwZGF0ZSBwcm9wZXIgY29tbWl0IG1l
+c3NhZ2UKLSBkcm9wcGVkIHVubmVlZGVkIGNvbW1lbnRzCi0gb3JkZXIgdGhlIHBhdGNoZXMgdGhh
+dCBtYWtlIHJldmlldyBlYXN5CkNoYW5nZXMgZm9yIHY1LCB2NCwgdjMsIHYyOgotIHVzZSBleGlz
+dGluZyBkcml2ZXIgY29kZSBjb25zdHJ1Y3QgZm9yIGhibGsgY29tcHV0YXRpb24KLSBjcmVhdGUg
+c2VwYXJhdGUgZnVuY3Rpb24gZm9yIHZibGsgY29tcHV0YXRpb24KLSBjbGVhbnVwIGNvbW1pdCBt
+ZXNzYWdlcwotIHVwZGF0ZSBwcm9wZXIgY29tbWl0IG1lc3NhZ2VzCi0gZml4ZWQgY2hlY2twYXRj
+aCB3YXJuaW5ncy9lcnJvcnMKLSB1c2UgcHJvcGVyIHJldHVybiB2YWx1ZSBmb3IgdGNvbjAgcHJv
+YmUKLSBhZGQgbG9naWMgdG8gZ2V0IHRjb24wIGRpdmlkZXIgdmFsdWVzCi0gc2ltcGxpZnkgdGlt
+aW5ncyBjb2RlIHRvIHN1cHBvcnQgYnVyc3QgbW9kZQotIGZpeCBkcnEgY29tcHV0YXRpb24gcmV0
+dXJuIHZhbHVlcwotIHJlYmFzZSBvbiBtYXN0ZXIKCkFueSBpbnB1dHM/CkphZ2FuLgoKWzFdIGh0
+dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvNjA4NDcvClsyXSBodHRwczov
+L3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvcGF0Y2gvMzA1OTIzLz9zZXJpZXM9NjA4NDcmcmV2
+PTEKWzNdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA3Nzk5MzcvCls0XSBo
+dHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvc2VyaWVzLzU3ODM0LwoKSmFnYW4gVGVr
+aSAoNyk6CiAgZHJtL3N1bjRpOiBkc2k6IEZpeCBUQ09OIERSUSBzZXQgYml0cwogIGRybS9zdW40
+aTogZHNpOiBVcGRhdGUgc3RhcnQgdmFsdWUgaW4gdmlkZW8gc3RhcnQgZGVsYXkKICBkcm0vc3Vu
+NGk6IGRzaTogRml4IHZpZGVvIHN0YXJ0IGRlbGF5IGNvbXB1dGF0aW9uCiAgZHQtYmluZGluZ3M6
+IHN1bjZpLWRzaTogQWRkIFZDQy1EU0kgc3VwcGx5IHByb3BlcnR5CiAgZHJtL3N1bjRpOiBzdW42
+aV9taXBpX2RzaTogQWRkIFZDQy1EU0kgcmVndWxhdG9yIHN1cHBvcnQKICBbRE8gTk9UIE1FUkdF
+XSBkcm0vcGFuZWw6IEFkZCBCYW5hbmFwaSBTMDcwV1YyMC1DVDE2IElDTjYyMTEgTUlQSS1EU0kg
+dG8gUkdCIGJyaWRnZQogIFtETyBOT1QgTUVSR0VdIEFSTTogZHRzOiBzdW44aTogYmFuYW5hcGkt
+bTJtOiBFbmFibGUgQmFuYW5hcGkgUzA3MFdWMjAtQ1QxNiBEU0kgcGFuZWwKCiAuLi4vZGlzcGxh
+eS9hbGx3aW5uZXIsc3VuNmktYTMxLW1pcGktZHNpLnlhbWwgfCAgIDMgKwogYXJjaC9hcm0vYm9v
+dC9kdHMvc3VuOGktcjE2LWJhbmFuYXBpLW0ybS5kdHMgIHwgIDQwICsrKwogZHJpdmVycy9ncHUv
+ZHJtL3BhbmVsL0tjb25maWcgICAgICAgICAgICAgICAgIHwgICA5ICsKIGRyaXZlcnMvZ3B1L2Ry
+bS9wYW5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAgMSArCiAuLi4vcGFuZWwvcGFuZWwt
+YmFuYW5hcGktczA3MHd2MjAtaWNuNjIxMS5jICAgfCAyOTMgKysrKysrKysrKysrKysrKysrCiBk
+cml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNmlfbWlwaV9kc2kuYyAgICAgICAgfCAgMzIgKy0KIGRy
+aXZlcnMvZ3B1L2RybS9zdW40aS9zdW42aV9taXBpX2RzaS5oICAgICAgICB8ICAgMiArCiA3IGZp
+bGVzIGNoYW5nZWQsIDM3NiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1iYW5hbmFwaS1zMDcwd3YyMC1p
+Y242MjExLmMKCi0tIAoyLjE4LjAuMzIxLmdmZmM2ZmEwZTMKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
