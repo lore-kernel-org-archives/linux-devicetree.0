@@ -1,15 +1,14 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v4 0/7] Add SD/MMC driver for Actions Semi S900 SoC
-Date: Thu, 3 Oct 2019 21:47:14 +0530
-Message-ID: <20191003161714.GA14774@Mani-XPS-13-9360>
-References: <20190916154546.24982-1-manivannan.sadhasivam@linaro.org>
- <CAPDyKFqsZ1mZ53b9wLruATzi+ymFrUCLhxzx7NFUq48p5w0Gtw@mail.gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 081/211] ARM: dts: imx7d: cl-som-imx7: make ethernet work
+ again
+Date: Thu,  3 Oct 2019 17:52:27 +0200
+Message-ID: <20191003154505.754669718@linuxfoundation.org>
+References: <20191003154447.010950442@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFqsZ1mZ53b9wLruATzi+ymFrUCLhxzx7NFUq48p5w0Gtw@mail.gmail.com>
+In-Reply-To: <20191003154447.010950442@linuxfoundation.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,90 +18,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: DTML <devicetree@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, linux-actions@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, thomas.liau@actions-semi.com, linux-clk <linux-clk@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org, Sasha Levin <sashal@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, stable@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Igor Grinberg <grinberg@compulab.co.il>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>, Shawn Guo <shawnguo@kernel.org>, Ilya Ledvich <ilya@compulab.co.il>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
-
-On Thu, Oct 03, 2019 at 12:01:18PM +0200, Ulf Hansson wrote:
-> On Mon, 16 Sep 2019 at 17:46, Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > Hello,
-> >
-> > This patchset adds SD/MMC driver for Actions Semi S900 SoC from Owl
-> > family SoCs. There are 4 SD/MMC controller present in this SoC but
-> > only 2 are enabled currently for Bubblegum96 board to access uSD and
-> > onboard eMMC. SDIO support for this driver is not currently implemented.
-> >
-> > Note: Currently, driver uses 2 completion mechanisms for maintaining
-> > the coherency between SDC and DMA interrupts and I know that it is not
-> > efficient. Hence, I'd like to hear any suggestions for reimplementing
-> > the logic if anyone has.
-> >
-> > With this driver, this patchset also fixes one clk driver issue and enables
-> > the Actions Semi platform in ARM64 defconfig.
-> >
-> > Thanks,
-> > Mani
-> >
-> > Changes in v4:
-> >
-> > * Incorporated review comments from Rob on dt binding
-> >
-> > Changes in v3:
-> >
-> > * Incorporated a review comment from Andreas on board dts patch
-> > * Modified the MAINTAINERS entry for devicetree YAML binding
-> >
-> > Changes in v2:
-> >
-> > * Converted the devicetree bindings to YAML
-> > * Misc changes to bubblegum devicetree as per the review from Andreas
-> > * Dropped the read/write wrappers and renamed all functions to use owl-
-> >   prefix as per the review from Ulf
-> > * Renamed clk_val_best to owl_clk_val_best and added Reviewed-by tag
-> >   from Stephen
-> >
-> > Manivannan Sadhasivam (7):
-> >   clk: actions: Fix factor clk struct member access
-> >   dt-bindings: mmc: Add Actions Semi SD/MMC/SDIO controller binding
-> >   arm64: dts: actions: Add MMC controller support for S900
-> >   arm64: dts: actions: Add uSD and eMMC support for Bubblegum96
-> >   mmc: Add Actions Semi Owl SoCs SD/MMC driver
-> >   MAINTAINERS: Add entry for Actions Semi SD/MMC driver and binding
-> >   arm64: configs: Enable Actions Semi platform in defconfig
-> >
-> >  .../devicetree/bindings/mmc/owl-mmc.yaml      |  59 ++
-> >  MAINTAINERS                                   |   2 +
-> >  .../boot/dts/actions/s900-bubblegum-96.dts    |  62 ++
-> >  arch/arm64/boot/dts/actions/s900.dtsi         |  45 ++
-> >  arch/arm64/configs/defconfig                  |   1 +
-> >  drivers/clk/actions/owl-factor.c              |   7 +-
-> >  drivers/mmc/host/Kconfig                      |   8 +
-> >  drivers/mmc/host/Makefile                     |   1 +
-> >  drivers/mmc/host/owl-mmc.c                    | 696 ++++++++++++++++++
-> >  9 files changed, 877 insertions(+), 4 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/mmc/owl-mmc.yaml
-> >  create mode 100644 drivers/mmc/host/owl-mmc.c
-> >
-> > --
-> > 2.17.1
-> >
-> 
-> I have picked up the mmc patches for next
-
-Thanks :)
-
-> and as Stephen picked the
-> clock patch, the rest are now for arm-soc, I guess!?
-> 
-
-Yes, I'll queue them through actions tree (unless Andreas wants to do the PR).
-
-Regards,
-Mani
-
-> Kind regards
-> Uffe
+RnJvbTogQW5kcsOpIERyYXN6aWsgPGdpdEBhbmRyZWQubmV0PgoKWyBVcHN0cmVhbSBjb21taXQg
+OTg0NmE0NTI0YWM5MGI2MzQ5NjU4MGI3YWQ1MDY3NGI0MGQ5MmE4ZiBdCgpSZWNlbnQgY2hhbmdl
+cyB0byB0aGUgYXRoZXJvcyBhdDgwM3ggZHJpdmVyIGNhdXNlZApldGhlcm5ldCB0byBzdG9wIHdv
+cmtpbmcgb24gdGhpcyBib2FyZC4KSW4gcGFydGljdWxhciBjb21taXQgNmQ0Y2QwNDFmMGFmCigi
+bmV0OiBwaHk6IGF0ODAzeDogZGlzYWJsZSBkZWxheSBvbmx5IGZvciBSR01JSSBtb2RlIikKYW5k
+IGNvbW1pdCBjZDI4ZDFkNmU1MmUKKCJuZXQ6IHBoeTogYXQ4MDN4OiBEaXNhYmxlIHBoeSBkZWxh
+eSBmb3IgUkdNSUkgbW9kZSIpCmZpeCB0aGUgQVI4MDMxIGRyaXZlciB0byBjb25maWd1cmUgdGhl
+IHBoeSdzIChSWC9UWCkKZGVsYXlzIGFzIHBlciB0aGUgJ3BoeS1tb2RlJyBpbiB0aGUgZGV2aWNl
+IHRyZWUuCgpUaGlzIG5vdyBwcmV2ZW50cyBldGhlcm5ldCBmcm9tIHdvcmtpbmcgb24gdGhpcyBi
+b2FyZC4KCkl0IHVzZWQgdG8gd29yayBiZWZvcmUgdGhvc2UgY29tbWl0cywgYmVjYXVzZSB0aGUK
+QVI4MDMxIGNvbWVzIG91dCBvZiByZXNldCB3aXRoIFJYIGRlbGF5IGVuYWJsZWQsIGFuZAp0aGUg
+YXQ4MDN4IGRyaXZlciBkaWRuJ3QgdG91Y2ggdGhlIGRlbGF5IGNvbmZpZ3VyYXRpb24KYXQgYWxs
+IHdoZW4gInJnbWlpIiBtb2RlIHdhcyBzZWxlY3RlZCwgYW5kIGJlY2F1c2UKYXJjaC9hcm0vbWFj
+aC1pbXgvbWFjaC1pbXg3ZC5jOmFyODAzMV9waHlfZml4dXAoKQp1bmNvbmRpdGlvbmFsbHkgZW5h
+YmxlcyBUWCBkZWxheS4KClNpbmNlIGFib3ZlIGNvbW1pdHMgYXI4MDMxX3BoeV9maXh1cCgpIGFs
+c28gaGFzIG5vCmVmZmVjdCBhbnltb3JlLCBhbmQgdGhlIGVuZC1yZXN1bHQgaXMgdGhhdCBhbGwg
+ZGVsYXlzCmFyZSBkaXNhYmxlZCBpbiB0aGUgcGh5LCBubyBldGhlcm5ldC4KClVwZGF0ZSB0aGUg
+ZGV2aWNlIHRyZWUgdG8gcmVzdG9yZSBmdW5jdGlvbmFsaXR5LgoKU2lnbmVkLW9mZi1ieTogQW5k
+csOpIERyYXN6aWsgPGdpdEBhbmRyZWQubmV0PgpDQzogSWx5YSBMZWR2aWNoIDxpbHlhQGNvbXB1
+bGFiLmNvLmlsPgpDQzogSWdvciBHcmluYmVyZyA8Z3JpbmJlcmdAY29tcHVsYWIuY28uaWw+CkND
+OiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPgpDQzogTWFyayBSdXRsYW5kIDxtYXJr
+LnJ1dGxhbmRAYXJtLmNvbT4KQ0M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4KQ0M6
+IFNhc2NoYSBIYXVlciA8cy5oYXVlckBwZW5ndXRyb25peC5kZT4KQ0M6IFBlbmd1dHJvbml4IEtl
+cm5lbCBUZWFtIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+CkNDOiBGYWJpbyBFc3RldmFtIDxmZXN0
+ZXZhbUBnbWFpbC5jb20+CkNDOiBOWFAgTGludXggVGVhbSA8bGludXgtaW14QG54cC5jb20+CkND
+OiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwpDQzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnClNpZ25lZC1vZmYtYnk6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9y
+Zz4KU2lnbmVkLW9mZi1ieTogU2FzaGEgTGV2aW4gPHNhc2hhbEBrZXJuZWwub3JnPgotLS0KIGFy
+Y2gvYXJtL2Jvb3QvZHRzL2lteDdkLWNsLXNvbS1pbXg3LmR0cyB8IDQgKystLQogMSBmaWxlIGNo
+YW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNo
+L2FybS9ib290L2R0cy9pbXg3ZC1jbC1zb20taW14Ny5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9p
+bXg3ZC1jbC1zb20taW14Ny5kdHMKaW5kZXggOGJmMzY1ZDI4Y2FjZi4uNTg0NDE4ZjUxN2E4OCAx
+MDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14N2QtY2wtc29tLWlteDcuZHRzCisrKyBi
+L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdkLWNsLXNvbS1pbXg3LmR0cwpAQCAtNDMsNyArNDMsNyBA
+QAogCQkJICA8JmNsa3MgSU1YN0RfRU5FVDFfVElNRV9ST09UX0NMSz47CiAJYXNzaWduZWQtY2xv
+Y2stcGFyZW50cyA9IDwmY2xrcyBJTVg3RF9QTExfRU5FVF9NQUlOXzEwME1fQ0xLPjsKIAlhc3Np
+Z25lZC1jbG9jay1yYXRlcyA9IDwwPiwgPDEwMDAwMDAwMD47Ci0JcGh5LW1vZGUgPSAicmdtaWki
+OworCXBoeS1tb2RlID0gInJnbWlpLWlkIjsKIAlwaHktaGFuZGxlID0gPCZldGhwaHkwPjsKIAlm
+c2wsbWFnaWMtcGFja2V0OwogCXN0YXR1cyA9ICJva2F5IjsKQEAgLTY5LDcgKzY5LDcgQEAKIAkJ
+CSAgPCZjbGtzIElNWDdEX0VORVQyX1RJTUVfUk9PVF9DTEs+OwogCWFzc2lnbmVkLWNsb2NrLXBh
+cmVudHMgPSA8JmNsa3MgSU1YN0RfUExMX0VORVRfTUFJTl8xMDBNX0NMSz47CiAJYXNzaWduZWQt
+Y2xvY2stcmF0ZXMgPSA8MD4sIDwxMDAwMDAwMDA+OwotCXBoeS1tb2RlID0gInJnbWlpIjsKKwlw
+aHktbW9kZSA9ICJyZ21paS1pZCI7CiAJcGh5LWhhbmRsZSA9IDwmZXRocGh5MT47CiAJZnNsLG1h
+Z2ljLXBhY2tldDsKIAlzdGF0dXMgPSAib2theSI7Ci0tIAoyLjIwLjEKCgoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
+bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
