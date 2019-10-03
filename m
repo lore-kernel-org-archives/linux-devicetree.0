@@ -1,14 +1,11 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: qcom: msm8998: Disable coresight by default
-Date: Thu, 03 Oct 2019 20:51:46 +0530
-Message-ID: <89f5f76ae26682e902faa1b06379cc0f@codeaurora.org>
-References: <20191003064449.2201-1-saiprakash.ranjan@codeaurora.org>
- <aecbc7a2-05fd-f30f-81c7-81947dc31c9f@free.fr>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: [PATCH 1/2] dt-bindings: media: sun4i-csi: Drop the module clock
+Date: Thu,  3 Oct 2019 17:48:41 +0200
+Message-ID: <20191003154842.248763-1-mripard@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <aecbc7a2-05fd-f30f-81c7-81947dc31c9f@free.fr>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,43 +15,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc: Mark Rutland <mark.rutland@arm.com>, DT <devicetree@vger.kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, MSM <linux-arm-msm@vger.kernel.org>, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, Andy Gross <agross@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, sakari.ailus@linux.intel.com, mchehab@kernel.org
+Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <mripard@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2019-10-03 18:23, Marc Gonzalez wrote:
-> On 03/10/2019 08:44, Sai Prakash Ranjan wrote:
-> 
->> Boot failure has been reported on MSM8998 based laptop when
->> coresight is enabled. This is most likely due to lack of
->> firmware support for coresight on production device when
->> compared to debug device like MTP where this issue is not
->> observed. So disable coresight by default for MSM8998 and
->> enable it only for MSM8998 MTP.
->> 
->> Reported-and-tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
->> Fixes: 783abfa2249a ("arm64: dts: qcom: msm8998: Add Coresight 
->> support")
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
->>  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 68 
->> +++++++++++++++++++++++
->>  arch/arm64/boot/dts/qcom/msm8998.dtsi     | 51 +++++++++++------
->>  2 files changed, 102 insertions(+), 17 deletions(-)
-> 
-> Just wanted to toss an alternative, based on Suzuki's suggestion
-> (i.e. move the coresight nodes to a separate file)
-> 
-> 
+It turns out that what was thought to be the module clock was actually the
+clock meant to be used by the sensor, and isn't playing any role with the
+CSI controller itself. Let's drop that clock from our binding.
 
-I believe this is a better approach.
-Initially I had coresight components in a separate file like this but 
-Bjorn had some concerns about having 2 separate files. If he is OK with 
-this,
+Fixes: c5e8f4ccd775 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
+Reported-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+---
+ .../devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-Acked-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-
+diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+index 5dd1cf490cd9..d3e423fcb6c2 100644
+--- a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
++++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+@@ -27,14 +27,12 @@ properties:
+   clocks:
+     items:
+       - description: The CSI interface clock
+-      - description: The CSI module clock
+       - description: The CSI ISP clock
+       - description: The CSI DRAM clock
+ 
+   clock-names:
+     items:
+       - const: bus
+-      - const: mod
+       - const: isp
+       - const: ram
+ 
+@@ -89,9 +87,8 @@ examples:
+         compatible = "allwinner,sun7i-a20-csi0";
+         reg = <0x01c09000 0x1000>;
+         interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+-        clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
+-                 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
+-        clock-names = "bus", "mod", "isp", "ram";
++        clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
++        clock-names = "bus", "isp", "ram";
+         resets = <&ccu RST_CSI0>;
+ 
+         port {
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.23.0
