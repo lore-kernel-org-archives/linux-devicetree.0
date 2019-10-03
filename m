@@ -1,14 +1,12 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.3 123/344] ARM: dts: imx7d: cl-som-imx7: make ethernet work
- again
-Date: Thu,  3 Oct 2019 17:51:28 +0200
-Message-ID: <20191003154552.338918834@linuxfoundation.org>
-References: <20191003154540.062170222@linuxfoundation.org>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: Re: [PATCH V3 0/8] ARM: Add minimal Raspberry Pi 4 support
+Date: Thu, 03 Oct 2019 19:09:30 +0200
+Message-ID: <3853cd8425743b4991f5d599ec1c0fbbf4232f95.camel@suse.de>
+References: <1569672435-19823-1-git-send-email-wahrenst@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============3324605051170936829=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191003154540.062170222@linuxfoundation.org>
+In-Reply-To: <1569672435-19823-1-git-send-email-wahrenst@gmx.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,54 +16,122 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org, Sasha Levin <sashal@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, stable@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Igor Grinberg <grinberg@compulab.co.il>, Pengutronix Kernel Team <kernel@pengutronix.de>, =?UTF-8?q?Andr=C3=A9=20Draszik?= <git@andred.net>, Shawn Guo <shawnguo@kernel.org>, Ilya Ledvich <ilya@compulab.co.il>, NXP Linux Team <linux-imx@nxp.com>
+To: Stefan Wahren <wahrenst@gmx.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Matthias Brugger <mbrugger@suse.com>, Guillaume Gardet <Guillaume.Gardet@arm.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogQW5kcsOpIERyYXN6aWsgPGdpdEBhbmRyZWQubmV0PgoKWyBVcHN0cmVhbSBjb21taXQg
-OTg0NmE0NTI0YWM5MGI2MzQ5NjU4MGI3YWQ1MDY3NGI0MGQ5MmE4ZiBdCgpSZWNlbnQgY2hhbmdl
-cyB0byB0aGUgYXRoZXJvcyBhdDgwM3ggZHJpdmVyIGNhdXNlZApldGhlcm5ldCB0byBzdG9wIHdv
-cmtpbmcgb24gdGhpcyBib2FyZC4KSW4gcGFydGljdWxhciBjb21taXQgNmQ0Y2QwNDFmMGFmCigi
-bmV0OiBwaHk6IGF0ODAzeDogZGlzYWJsZSBkZWxheSBvbmx5IGZvciBSR01JSSBtb2RlIikKYW5k
-IGNvbW1pdCBjZDI4ZDFkNmU1MmUKKCJuZXQ6IHBoeTogYXQ4MDN4OiBEaXNhYmxlIHBoeSBkZWxh
-eSBmb3IgUkdNSUkgbW9kZSIpCmZpeCB0aGUgQVI4MDMxIGRyaXZlciB0byBjb25maWd1cmUgdGhl
-IHBoeSdzIChSWC9UWCkKZGVsYXlzIGFzIHBlciB0aGUgJ3BoeS1tb2RlJyBpbiB0aGUgZGV2aWNl
-IHRyZWUuCgpUaGlzIG5vdyBwcmV2ZW50cyBldGhlcm5ldCBmcm9tIHdvcmtpbmcgb24gdGhpcyBi
-b2FyZC4KCkl0IHVzZWQgdG8gd29yayBiZWZvcmUgdGhvc2UgY29tbWl0cywgYmVjYXVzZSB0aGUK
-QVI4MDMxIGNvbWVzIG91dCBvZiByZXNldCB3aXRoIFJYIGRlbGF5IGVuYWJsZWQsIGFuZAp0aGUg
-YXQ4MDN4IGRyaXZlciBkaWRuJ3QgdG91Y2ggdGhlIGRlbGF5IGNvbmZpZ3VyYXRpb24KYXQgYWxs
-IHdoZW4gInJnbWlpIiBtb2RlIHdhcyBzZWxlY3RlZCwgYW5kIGJlY2F1c2UKYXJjaC9hcm0vbWFj
-aC1pbXgvbWFjaC1pbXg3ZC5jOmFyODAzMV9waHlfZml4dXAoKQp1bmNvbmRpdGlvbmFsbHkgZW5h
-YmxlcyBUWCBkZWxheS4KClNpbmNlIGFib3ZlIGNvbW1pdHMgYXI4MDMxX3BoeV9maXh1cCgpIGFs
-c28gaGFzIG5vCmVmZmVjdCBhbnltb3JlLCBhbmQgdGhlIGVuZC1yZXN1bHQgaXMgdGhhdCBhbGwg
-ZGVsYXlzCmFyZSBkaXNhYmxlZCBpbiB0aGUgcGh5LCBubyBldGhlcm5ldC4KClVwZGF0ZSB0aGUg
-ZGV2aWNlIHRyZWUgdG8gcmVzdG9yZSBmdW5jdGlvbmFsaXR5LgoKU2lnbmVkLW9mZi1ieTogQW5k
-csOpIERyYXN6aWsgPGdpdEBhbmRyZWQubmV0PgpDQzogSWx5YSBMZWR2aWNoIDxpbHlhQGNvbXB1
-bGFiLmNvLmlsPgpDQzogSWdvciBHcmluYmVyZyA8Z3JpbmJlcmdAY29tcHVsYWIuY28uaWw+CkND
-OiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPgpDQzogTWFyayBSdXRsYW5kIDxtYXJr
-LnJ1dGxhbmRAYXJtLmNvbT4KQ0M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4KQ0M6
-IFNhc2NoYSBIYXVlciA8cy5oYXVlckBwZW5ndXRyb25peC5kZT4KQ0M6IFBlbmd1dHJvbml4IEtl
-cm5lbCBUZWFtIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+CkNDOiBGYWJpbyBFc3RldmFtIDxmZXN0
-ZXZhbUBnbWFpbC5jb20+CkNDOiBOWFAgTGludXggVGVhbSA8bGludXgtaW14QG54cC5jb20+CkND
-OiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwpDQzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnClNpZ25lZC1vZmYtYnk6IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9y
-Zz4KU2lnbmVkLW9mZi1ieTogU2FzaGEgTGV2aW4gPHNhc2hhbEBrZXJuZWwub3JnPgotLS0KIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDdkLWNsLXNvbS1pbXg3LmR0cyB8IDQgKystLQogMSBmaWxlIGNo
-YW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNo
-L2FybS9ib290L2R0cy9pbXg3ZC1jbC1zb20taW14Ny5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9p
-bXg3ZC1jbC1zb20taW14Ny5kdHMKaW5kZXggZTYxNTY3NDM3ZDczYy4uNjJkNWU5YTRhNzgxOCAx
-MDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14N2QtY2wtc29tLWlteDcuZHRzCisrKyBi
-L2FyY2gvYXJtL2Jvb3QvZHRzL2lteDdkLWNsLXNvbS1pbXg3LmR0cwpAQCAtNDQsNyArNDQsNyBA
-QAogCQkJICA8JmNsa3MgSU1YN0RfRU5FVDFfVElNRV9ST09UX0NMSz47CiAJYXNzaWduZWQtY2xv
-Y2stcGFyZW50cyA9IDwmY2xrcyBJTVg3RF9QTExfRU5FVF9NQUlOXzEwME1fQ0xLPjsKIAlhc3Np
-Z25lZC1jbG9jay1yYXRlcyA9IDwwPiwgPDEwMDAwMDAwMD47Ci0JcGh5LW1vZGUgPSAicmdtaWki
-OworCXBoeS1tb2RlID0gInJnbWlpLWlkIjsKIAlwaHktaGFuZGxlID0gPCZldGhwaHkwPjsKIAlm
-c2wsbWFnaWMtcGFja2V0OwogCXN0YXR1cyA9ICJva2F5IjsKQEAgLTcwLDcgKzcwLDcgQEAKIAkJ
-CSAgPCZjbGtzIElNWDdEX0VORVQyX1RJTUVfUk9PVF9DTEs+OwogCWFzc2lnbmVkLWNsb2NrLXBh
-cmVudHMgPSA8JmNsa3MgSU1YN0RfUExMX0VORVRfTUFJTl8xMDBNX0NMSz47CiAJYXNzaWduZWQt
-Y2xvY2stcmF0ZXMgPSA8MD4sIDwxMDAwMDAwMDA+OwotCXBoeS1tb2RlID0gInJnbWlpIjsKKwlw
-aHktbW9kZSA9ICJyZ21paS1pZCI7CiAJcGh5LWhhbmRsZSA9IDwmZXRocGh5MT47CiAJZnNsLG1h
-Z2ljLXBhY2tldDsKIAlzdGF0dXMgPSAib2theSI7Ci0tIAoyLjIwLjEKCgoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+--===============3324605051170936829==
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-Ix9TQYjbsAOkefZjezfO"
+
+
+--=-Ix9TQYjbsAOkefZjezfO
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, 2019-09-28 at 14:07 +0200, Stefan Wahren wrote:
+> This series adds minimal support for the new Raspberry Pi 4, so we are ab=
+le
+> to login via debug UART.
+>=20
+> Patch 1-2:   Fix some DT schema warnings
+> Patch 3-4:   Prepare DTS for the new SoC BMC2711
+> Patch 5-7:   Add Raspberry Pi 4 DTS support
+> Patch 8:     Update MAINTAINERS
+>=20
+> Unfortunately the Raspberry Pi Foundation didn't released a
+> peripheral documentation for the new SoC yet. So we only have a prelimina=
+ry
+> datasheet [1] and reduced schematics [2].
+>=20
+> Known issues:
+> Since Linux 5.3-rc1 DMA doesn't work properly on that platform.
+> Nicolas Saenz Julienne investigates on that issue. As a temporary workaro=
+und
+> i reverted the following patch to test this series:
+>=20
+> 79a98672 "dma-mapping: remove dma_max_pfn"
+> 7559d612 "mmc: core: let the dma map ops handle bouncing"
+
+[ adding Matthias and Guillaume who first saw this ]
+[ also adding Adrian Hunter just in case ]
+
+Hi,
+we stubled upon a bug in RPi's sdhci-iproc while testing this series.
+
+It only shows-up on slow SD cards, the class 4 ones. On each SD operation w=
+e
+get the following warning:
+
+[    2.093328] mmc1: Got data interrupt 0x00000002 even though no data oper=
+ation was in progress.
+[    2.102072] mmc1: sdhci: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D SDHCI REGI=
+STER DUMP =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[    2.108603] mmc1: sdhci: Sys addr:  0x00000000 | Version:  0x00001002
+[    2.115134] mmc1: sdhci: Blk size:  0x00007200 | Blk cnt:  0x00000000
+[    2.121664] mmc1: sdhci: Argument:  0x00000000 | Trn mode: 0x00000033
+[    2.128195] mmc1: sdhci: Present:   0x1fff0000 | Host ctl: 0x00000017
+[    2.134725] mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000080
+[    2.141255] mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
+[    2.147785] mmc1: sdhci: Timeout:   0x00000000 | Int stat: 0x00000000
+[    2.154314] mmc1: sdhci: Int enab:  0x03ff100b | Sig enab: 0x03ff100b
+[    2.160843] mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
+[    2.167373] mmc1: sdhci: Caps:      0x45ee6432 | Caps_1:   0x0000a525
+[    2.173902] mmc1: sdhci: Cmd:       0x00000c1a | Max curr: 0x00080008
+[    2.180432] mmc1: sdhci: Resp[0]:   0x00000b00 | Resp[1]:  0x00edc87f
+[    2.186961] mmc1: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00400e00
+[    2.193490] mmc1: sdhci: Host ctl2: 0x00000001
+[    2.197992] mmc1: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0xec040208
+[    2.204521] mmc1: sdhci: =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+
+Aside from the serial console noise the RPi still boots alright. But as it'=
+s
+printing one of these per SD operation which is a lot...
+
+I've been able to reproduce this both with arm and arn64 on multiple SD car=
+ds.
+Just copying the contents of a class 4 card into a class 10 one fixes the
+issue.
+
+Any ideas?
+
+Regards,
+Nicolas
+
+
+--=-Ix9TQYjbsAOkefZjezfO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl2WK0oACgkQlfZmHno8
+x/4z/gf/bgKAQ7B78/8mBvESG1i3VvI7BH3uv7umwrCL8SrGUWyrXiHLmiXVDd2+
+OAY9vm3OEdKw9qWVRKNvr029RE/csvFI7SibAwny6Rc5Y8cno2X+dXAIMr47zfQd
+RKvwlaZN9EgpJfM8dgMudUeSb73VuXMk148Fsi97DP/yjYPd3ofpTBPj2Ps/2W9I
+LOBJApYGDh6s6w2I7d7XMLb2Z5ErILbmx3Q8+DuF2MAFUY95Q5G72m0Gx5skYrbl
+pjGnYNqce7c9WtyhNzzFvQNi9qiVrzD1S/H5CUuTX2/Db9DnEbHiD4R8I7fKTpPX
+IVuRxWxwDwsfeswOBP9caCrg+50JDw==
+=FKHG
+-----END PGP SIGNATURE-----
+
+--=-Ix9TQYjbsAOkefZjezfO--
+
+
+
+--===============3324605051170936829==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3324605051170936829==--
