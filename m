@@ -1,109 +1,79 @@
-From: Mikko Perttunen <cyndis@kapsi.fi>
-Subject: Re: [PATCH] arm64: tegra: Set dma-ranges for memory subsystem
-Date: Thu, 3 Oct 2019 14:13:21 +0900
-Message-ID: <a0a299d2-a08f-1a4d-728e-6d7c54fa0e5a@kapsi.fi>
-References: <20191002154654.225690-1-thierry.reding@gmail.com>
- <20191002154946.GA225802@ulmo>
+From: Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH] dt-bindings: memory-controllers: exynos5422-dmc:
+ Correct example syntax and memory region
+Date: Thu, 3 Oct 2019 07:20:06 +0200
+Message-ID: <d0955b23-2111-7dbb-92ce-0a81ac417bb8@partner.samsung.com>
+References: <CGME20191002174416epcas4p15c507d0c8cacfafce9b538d0b08e277f@epcas4p1.samsung.com>
+        <20191002174401.17590-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191002154946.GA225802@ulmo>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Georgi Djakov <georgi.djakov@linaro.org>, Maxime Ripard <mripard@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191002174401.17590-1-krzk@kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/10/2019 0.49, Thierry Reding wrote:
-> On Wed, Oct 02, 2019 at 05:46:54PM +0200, Thierry Reding wrote:
->> From: Thierry Reding <treding@nvidia.com>
->>
->> On Tegra194, all clients of the memory subsystem can generally address
->> 40 bits of system memory. However, bit 39 has special meaning and will
->> cause the memory controller to reorder sectors for block-linear buffer
->> formats. This is primarily useful for graphics-related devices.
->>
->> Use of bit 39 must be controlled on a case-by-case basis. Buffers that
->> are used with bit 39 set by one device may be used with bit 39 cleared
->> by other devices.
->>
->> Care must be taken to allocate buffers at addresses that do not require
->> bit 39 to be set. This is normally not an issue for system memory since
->> there are no Tegra-based systems with enough RAM to exhaust the 39-bit
->> physical address space. However, when a device is behind an IOMMU, such
->> as the ARM SMMU on Tegra194, the IOMMUs input address space can cause
->> IOVA allocations to happen in this region. This is for example the case
->> when an operating system implements a top-down allocation policy for IO
->> virtual addresses.
->>
->> To account for this, describe the path that memory accesses take through
->> the system. Memory clients will send requests to the memory controller,
->> which forwards bits [38:0] of the address either to the external memory
->> controller or the SMMU, depending on the stream ID of the access. A good
->> way to describe this is using the interconnects bindings, see:
->>
->> 	Documentation/devicetree/bindings/interconnect/interconnect.txt
->>
->> The standard "dma-mem" path is used to describe the path towards system
->> memory via the memory controller. A dma-ranges property in the memory
->> controller's device tree node limits the range of DMA addresses that the
->> memory clients can use to bits [38:0], ensuring that bit 39 is not used.
->>
->> Signed-off-by: Thierry Reding <treding@nvidia.com>
->> ---
->> Arnd, Rob, Robin,
->>
->> This is what I came up with after our discussion on this thread:
->>
->> 	[PATCH 00/11] of: dma-ranges fixes and improvements
->>
->> Please take a look and see if that sounds reasonable. I'm slightly
->> unsure about the interconnects bindings as I used them here. According
->> to the bindings there's always supposed to be a pair of interconnect
->> paths, so this patch is not exactly compliant. It does work fine with
->> the __of_get_dma_parent() code that Maxime introduced a couple of months
->> ago and really very neatly describes the hardware. Interestingly this
->> will come in handy very soon now since we're starting work on a proper
->> interconnect provider (the memory controller driver is the natural fit
->> for this because it has additional knobs to configure latency and
->> priorities, etc.) to implement external memory frequency scaling based
->> on bandwidth requests from memory clients. So this all fits together
->> very nicely. But as I said, I'm not exactly sure what to add as a second
->> entry in "interconnects" to make this compliant with the bindings.
->>
->> Adding Georgi and Maxime, perhaps they can help clarify.
->>
->> Thierry
-> 
-> Updating Maxime's email address.
-> 
-> Thierry
-> 
->>   arch/arm64/boot/dts/nvidia/tegra194.dtsi | 32 +++++++++++++++++++++++-
->>   1 file changed, 31 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
->> index 6900e8bdf24d..f50150217806 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
->> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
->> @@ -53,6 +53,8 @@
->>   			clock-names = "master_bus", "slave_bus", "rx", "tx", "ptp_ref";
->>   			resets = <&bpmp TEGRA194_RESET_EQOS>;
->>   			reset-names = "eqos";
->> +			interconnects = <&mc TEGRA194_SID_EQOS>;
+Hi Krzysztof,
 
-It seems to me that the memory client ID may be a more appropriate 
-identifier for the interconnect. Stream IDs can sometimes change at 
-runtime based on software. Devices can also have multiple memory clients 
-using the same stream ID (or not).
+On 10/2/19 7:44 PM, Krzysztof Kozlowski wrote:
+> After adding the interrupt properties to Exynos5422 DMC bindings
+> example, the mapped memory region must be big enough to access
+> performance counters registers.
+> 
+> Fix also syntax errors (semicolons) and adjust indentation.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+> Rebased on top of my for-next branch as exynos5422-dmc.txt bindings were
+> applied by me.
+> ---
+>   .../bindings/memory-controllers/exynos5422-dmc.txt        | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> index e2434cac4858..02e4a1f862f1 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> @@ -55,7 +55,7 @@ Example:
+>   
+>   	dmc: memory-controller@10c20000 {
+>   		compatible = "samsung,exynos5422-dmc";
+> -		reg = <0x10c20000 0x100>, <0x10c30000 0x100>,
+> +		reg = <0x10c20000 0x10000>, <0x10c30000 0x10000>;
+>   		clocks = <&clock CLK_FOUT_SPLL>,
+>   			 <&clock CLK_MOUT_SCLK_SPLL>,
+>   			 <&clock CLK_FF_DOUT_SPLL2>,
+> @@ -63,7 +63,7 @@ Example:
+>   			 <&clock CLK_MOUT_BPLL>,
+>   			 <&clock CLK_SCLK_BPLL>,
+>   			 <&clock CLK_MOUT_MX_MSPLL_CCORE>,
+> -			 <&clock CLK_MOUT_MCLK_CDREX>,
+> +			 <&clock CLK_MOUT_MCLK_CDREX>;
+>   		clock-names = "fout_spll",
+>   			      "mout_sclk_spll",
+>   			      "ff_dout_spll2",
+> @@ -71,10 +71,10 @@ Example:
+>   			      "mout_bpll",
+>   			      "sclk_bpll",
+>   			      "mout_mx_mspll_ccore",
+> -			      "mout_mclk_cdrex",
+> +			      "mout_mclk_cdrex";
+>   		operating-points-v2 = <&dmc_opp_table>;
+>   		devfreq-events = <&ppmu_event3_dmc0_0>,	<&ppmu_event3_dmc0_1>,
+> -				<&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+> +				 <&ppmu_event3_dmc1_0>, <&ppmu_event3_dmc1_1>;
+>   		device-handle = <&samsung_K3QF2F20DB>;
+>   		vdd-supply = <&buck1_reg>;
+>   		samsung,syscon-clk = <&clock>;
+> 
 
-Cheers,
-Mikko
+Thank you for the patch. Indeed it must also be updated.
+
+Reviewed-by: Lukasz Luba <l.luba@partner.samsung.com>
+
+Regards,
+Lukasz
