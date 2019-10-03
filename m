@@ -1,227 +1,72 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC)
- driver for SC7180
-Date: Thu, 3 Oct 2019 16:01:15 +0530
-Message-ID: <7ac5f6bf-33c5-580e-bd40-e82f3052d460@codeaurora.org>
-References: <20190918095018.17979-1-tdas@codeaurora.org>
- <20190918095018.17979-4-tdas@codeaurora.org>
- <20190918213946.DC03521924@mail.kernel.org>
- <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org>
- <20190924231223.9012C207FD@mail.kernel.org>
- <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
- <20190925130346.42E0820640@mail.kernel.org>
- <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org>
- <20191001143825.CD3212054F@mail.kernel.org>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH] ARM: dts: stm32: add focaltech touchscreen on
+ stm32mp157c-dk2 board
+Date: Thu, 3 Oct 2019 12:34:17 +0200
+Message-ID: <09ad1310-ebc5-7a41-7af6-cdef79f20802@st.com>
+References: <1569854751-22337-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191001143825.CD3212054F@mail.kernel.org>
+In-Reply-To: <1569854751-22337-1-git-send-email-yannick.fertre@st.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
-Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, Philippe Cornu <philippe.cornu@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Hi Yannick
 
-On 10/1/2019 8:08 PM, Stephen Boyd wrote:
-> Quoting Taniya Das (2019-09-27 00:37:57)
->> Hi Stephen,
->>
->> On 9/25/2019 6:33 PM, Stephen Boyd wrote:
->>> Quoting Taniya Das (2019-09-25 04:20:07)
->>>> Hi Stephen,
->>>>
->>>> Please find my comments.
->>>>
->>>> On 9/25/2019 4:42 AM, Stephen Boyd wrote:
->>>>> Quoting Taniya Das (2019-09-23 01:01:11)
->>>>>> Hi Stephen,
->>>>>>
->>>>>> Thanks for your comments.
->>>>>>
->>>>>> On 9/19/2019 3:09 AM, Stephen Boyd wrote:
->>>>>>> Quoting Taniya Das (2019-09-18 02:50:18)
->>>>>>>> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
->>>>>>>> new file mode 100644
->>>>>>>> index 000000000000..d47865d5408f
->>>>>>>> --- /dev/null
->>>>>>>> +++ b/drivers/clk/qcom/gcc-sc7180.c
->>>>>>>> +                       .ops = &clk_branch2_ops,
->>>>>>>> +               },
->>>>>>>> +       },
->>>>>>>> +};
->>>>>>>> +
->>>>> [...]
->>>>>>>> +static struct clk_branch gcc_ufs_phy_phy_aux_clk = {
->>>>>>>> +       .halt_reg = 0x77094,
->>>>>>>> +       .halt_check = BRANCH_HALT,
->>>>>>>> +       .hwcg_reg = 0x77094,
->>>>>>>> +       .hwcg_bit = 1,
->>>>>>>> +       .clkr = {
->>>>>>>> +               .enable_reg = 0x77094,
->>>>>>>> +               .enable_mask = BIT(0),
->>>>>>>> +               .hw.init = &(struct clk_init_data){
->>>>>>>> +                       .name = "gcc_ufs_phy_phy_aux_clk",
->>>>>>>> +                       .parent_data = &(const struct clk_parent_data){
->>>>>>>> +                               .hw = &gcc_ufs_phy_phy_aux_clk_src.clkr.hw,
->>>>>>>> +                       },
->>>>>>>> +                       .num_parents = 1,
->>>>>>>> +                       .flags = CLK_SET_RATE_PARENT,
->>>>>>>> +                       .ops = &clk_branch2_ops,
->>>>>>>> +               },
->>>>>>>> +       },
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk = {
->>>>>>>> +       .halt_reg = 0x7701c,
->>>>>>>> +       .halt_check = BRANCH_HALT_SKIP,
->>>>>>>
->>>>>>> Again, nobody has fixed the UFS driver to not need to do this halt skip
->>>>>>> check for these clks? It's been over a year.
->>>>>>>
->>>>>>
->>>>>> The UFS_PHY_RX/TX clocks could be left enabled due to certain HW boot
->>>>>> configuration and thus during the late initcall of clk_disable there
->>>>>> could be warnings of "clock stuck ON" in the dmesg. That is the reason
->>>>>> also to use the BRANCH_HALT_SKIP flag.
->>>>>
->>>>> Oh that's bad. Why do the clks stay on when we try to turn them off?
->>>>>
->>>>
->>>> Those could be due to the configuration selected by HW and SW cannot
->>>> override them, so traditionally we have never polled for CLK_OFF for
->>>> these clocks.
->>>
->>> Is that the case or just a guess?
->>>
->>
->> This is the behavior :).
+On 9/30/19 4:45 PM, Yannick Fertré wrote:
+> Enable focaltech ft6236 touchscreen on STM32MP157C-DK2 board.
+> This device supports 2 different addresses (0x2a and 0x38)
+> depending on the display  board version (MB1407).
 > 
-> Ok. It's the same as sdm845 so I guess it's OK.
+> Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+> ---
+>   arch/arm/boot/dts/stm32mp157c-dk2.dts | 23 +++++++++++++++++++++++
+>   1 file changed, 23 insertions(+)
 > 
+> diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
+> index 20ea601..527bb75 100644
+> --- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
+> +++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
+> @@ -61,6 +61,29 @@
+>   	};
+>   };
+>   
+> +&i2c1 {
+> +	touchscreen@2a {
+> +		compatible = "focaltech,ft6236";
+> +		reg = <0x2a>;
+> +		interrupts = <2 2>;
+> +		interrupt-parent = <&gpiof>;
+> +		interrupt-controller;
+> +		touchscreen-size-x = <480>;
+> +		touchscreen-size-y = <800>;
+> +		status = "okay";
+> +	};
+> +	touchscreen@38 {
+> +		compatible = "focaltech,ft6236";
+> +		reg = <0x38>;
+> +		interrupts = <2 2>;
+> +		interrupt-parent = <&gpiof>;
+> +		interrupt-controller;
+> +		touchscreen-size-x = <480>;
+> +		touchscreen-size-y = <800>;
+> +		status = "okay";
+> +	};
+> +};
 
-Thanks.
+I'm not confident by this duplication. We should only support the latest 
+revision of the MB1407. I understand the need but my fear is to 
+duplicate this node each time we have a new revision (and imagine if we 
+do that for all i2c devices).
 
->>
->>>>
->>>>>>
->>>>>> I would also check internally for the UFS driver fix you are referring here.
->>>>>
->>>>> Sure. I keep asking but nothing is done :(
->>>>>
->>>>>>
->>>>>>>> +       .clkr = {
->>>>>>>> +               .enable_reg = 0x7701c,
->>>>>>>> +               .enable_mask = BIT(0),
->>>>>>>> +               .hw.init = &(struct clk_init_data){
->>>>>>>> +                       .name = "gcc_ufs_phy_rx_symbol_0_clk",
->>>>>>>> +                       .ops = &clk_branch2_ops,
->>>>>>>> +               },
->>>>>>>> +       },
->>>>>>>> +};
->>>>>>>> +
->>>>> [...]
->>>>>>>> +
->>>>>>>> +static struct clk_branch gcc_usb3_prim_phy_pipe_clk = {
->>>>>>>> +       .halt_reg = 0xf058,
->>>>>>>> +       .halt_check = BRANCH_HALT_SKIP,
->>>>>>>
->>>>>>> Why does this need halt_skip?
->>>>>>
->>>>>> This is required as the source is external PHY, so we want to not check
->>>>>> for HALT.
->>>>>
->>>>> This doesn't really answer my question. If the source is an external phy
->>>>> then it should be listed as a clock in the DT binding and the parent
->>>>> should be specified here. Unless something doesn't work because of that?
->>>>>
->>>>
->>>> The USB phy is managed by the USB driver and clock driver is not aware
->>>> if USB driver models the phy as a clock. Thus we do want to keep a
->>>> dependency on the parent and not poll for CLK_ENABLE.
->>>
->>> The clk driver should be aware of the USB driver modeling the phy as a
->>> clk. We do that for other phys so what is the difference here?
->>>
->>
->> Let me check with the USB team, but could we keep them for now?
+regards
+alex
+
+
+>   &ltdc {
+>   	status = "okay";
+>   
 > 
-> Ok. It's also the same as sdm845 so I guess it's OK. Would be nice to
-> properly model it though so we can be certain the clk is actually
-> enabled.
-> 
-
-I am going to follow it up and close on this.
-
->>
->>>>
->>>>>>
->>>>>>>
->>>>>>>> +       .clkr = {
->>>>>>>> +               .enable_reg = 0xf058,
->>>>>>>> +               .enable_mask = BIT(0),
->>>>>>>> +               .hw.init = &(struct clk_init_data){
->>>>>>>> +                       .name = "gcc_usb3_prim_phy_pipe_clk",
->>>>>>>> +                       .ops = &clk_branch2_ops,
->>>>>>>> +               },
->>>>>>>> +       },
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +static struct clk_branch gcc_usb_phy_cfg_ahb2phy_clk = {
->>>>>>>> +       .halt_reg = 0x6a004,
->>>>>>>> +       .halt_check = BRANCH_HALT,
->>>>>>>> +       .hwcg_reg = 0x6a004,
->>>>>>>> +       .hwcg_bit = 1,
->>>>>>>> +       .clkr = {
->>>>>>>> +               .enable_reg = 0x6a004,
->>>>>>>> +               .enable_mask = BIT(0),
->>>>>>>> +               .hw.init = &(struct clk_init_data){
->>>>>>>> +                       .name = "gcc_usb_phy_cfg_ahb2phy_clk",
->>>>>>>> +                       .ops = &clk_branch2_ops,
->>>>>>>> +               },
->>>>>>>> +       },
->>>>>>>> +};
->>>>>>>> +
->>>>>>>> +/* Leave the clock ON for parent config_noc_clk to be kept enabled */
->>>>>>>
->>>>>>> There's no parent though... So I guess this means it keeps it enabled
->>>>>>> implicitly in hardware?
->>>>>>>
->>>>>>
->>>>>> These are not left enabled, but want to leave them enabled for clients
->>>>>> on config NOC.
->>>>>
->>>>> Sure. It just doesn't make sense to create clk structures and expose
->>>>> them in the kernel when we just want to turn the bits on and leave them
->>>>> on forever. Why not just do some register writes in probe for this
->>>>> driver? Doesn't that work just as well and use less memory?
->>>>>
->>>>
->>>> Even if I write these registers during probe, the late init check
->>>> 'clk_core_is_enabled' would return true and would be turned OFF, that is
->>>> the reason for marking them CRITICAL.
->>>>
->>>
->>> That wouldn't happen if the clks weren't registered though, no?
->>>
->>
->> I want to keep these clock CRITICAL and registered for now, but we
->> should be able to revisit/clean them up later.
->>
-> 
-> Why do you want to keep them critical and registered? I'm suggesting
-> that any clk that is marked critical and doesn't have a parent should
-> instead become a register write in probe to turn the clk on.
-> 
-Sure, let me do a one-time enable from probe for the clocks which 
-doesn't have a parent.
-But I would now have to educate the clients of these clocks to remove 
-using them.
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
