@@ -1,137 +1,93 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [Patch v2 1/3] media: ov5640: add PIXEL_RATE control
-Date: Thu, 3 Oct 2019 10:22:51 +0300
-Message-ID: <20191003072251.GA14917@paasikivi.fi.intel.com>
+From: Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [Patch v2 2/3] media: ov5640: Fix 1920x1080 mode to remove extra
+ enable/disable
+Date: Thu, 3 Oct 2019 09:26:10 +0200
+Message-ID: <20191003072610.2vfji5pdz5ochxvd@uno.localdomain>
 References: <20191002135134.12273-1-bparrot@ti.com>
- <20191002135134.12273-2-bparrot@ti.com>
- <20191003071714.zyldxfoollm26o4u@uno.localdomain>
+ <20191002135134.12273-3-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="j2ofayquysxcif4h"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191003071714.zyldxfoollm26o4u@uno.localdomain>
+In-Reply-To: <20191002135134.12273-3-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo@jmondi.org>
-Cc: Benoit Parrot <bparrot@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo, Benoit,
 
-On Thu, Oct 03, 2019 at 09:17:14AM +0200, Jacopo Mondi wrote:
-> Hi Benoit,
-> 
-> On Wed, Oct 02, 2019 at 08:51:32AM -0500, Benoit Parrot wrote:
-> > Add v4l2 controls to report the pixel rates of each mode. This is
-> > needed by some CSI2 receiver in order to perform proper DPHY
-> > configuration.
-> >
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >  drivers/media/i2c/ov5640.c | 25 +++++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> >
-> > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-> > index 500d9bbff10b..5198dc887400 100644
-> > --- a/drivers/media/i2c/ov5640.c
-> > +++ b/drivers/media/i2c/ov5640.c
-> > @@ -193,6 +193,9 @@ struct ov5640_mode_info {
-> >
-> >  struct ov5640_ctrls {
-> >  	struct v4l2_ctrl_handler handler;
-> > +	struct {
-> > +		struct v4l2_ctrl *pixel_rate;
-> > +	};
-> 
-> Do you need to wrap this v4l2_ctrl in it's own unnamed struct? Other
-> controls here declared in this way are clustered and, if I'm not
-> mistaken, using unnamed struct to wrap them is just a typographically
-> nice way to convey that. I think your new control could be declared
-> without a wrapping struct { }.
-> 
-> >  	struct {
-> >  		struct v4l2_ctrl *auto_exp;
-> >  		struct v4l2_ctrl *exposure;
-> > @@ -2194,6 +2197,16 @@ static int ov5640_try_fmt_internal(struct v4l2_subdev *sd,
-> >  	return 0;
-> >  }
-> >
-> > +static u64 ov5640_calc_pixel_rate(struct ov5640_dev *sensor)
-> > +{
-> > +	u64 rate;
-> > +
-> > +	rate = sensor->current_mode->vtot * sensor->current_mode->htot;
-> > +	rate *= ov5640_framerates[sensor->current_fr];
-> > +
-> > +	return rate;
-> > +}
-> > +
-> 
-> Just to point out this is the -theoretical- pixel rate, and might be
-> quite different from the one calculated by the clock tree tuning
-> procedure (which should be updated to match Hugues' latest findings).
+--j2ofayquysxcif4h
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Hmm. Considering the xclk rate may be pretty much anything, I'd suppose
-the value above would only be correct for a given xclk rate.
+Hi Benoit,
+   good catch. I wonder why those power down/up sequences where only
+set for this mode...
 
-Could this be simply calculated from the clock tree configuration, to get
-the right value in all cases?
+I also wonder which kind of power down mode do we enter, if the chip
+is set in 'software power down mode' with 0x3008=0x42 at the beginning
+of the register blob write sequence, and we still can successfully
+program registers..
 
-> 
-> >  static int ov5640_set_fmt(struct v4l2_subdev *sd,
-> >  			  struct v4l2_subdev_pad_config *cfg,
-> >  			  struct v4l2_subdev_format *format)
-> > @@ -2233,6 +2246,8 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
-> >  	if (mbus_fmt->code != sensor->fmt.code)
-> >  		sensor->pending_fmt_change = true;
-> >
-> > +	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
-> > +				 ov5640_calc_pixel_rate(sensor));
-> >  out:
-> >  	mutex_unlock(&sensor->lock);
-> >  	return ret;
-> > @@ -2657,6 +2672,13 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
-> >  	/* we can use our own mutex for the ctrl lock */
-> >  	hdl->lock = &sensor->lock;
-> >
-> > +	/* Clock related controls */
-> > +	ctrls->pixel_rate =
-> > +		v4l2_ctrl_new_std(hdl, ops,
-> 
-> If you like it better, this could fit in 1 line
-> 
-> 	ctrls->pixel_rate = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_PIXEL_RATE,
-> 					      0, INT_MAX, 1,
-> 					      ov5640_calc_pixel_rate(sensor)
-> 
-> Thanks
->    j
-> 
-> > +				  V4L2_CID_PIXEL_RATE, 0, INT_MAX, 1,
-> > +				  ov5640_calc_pixel_rate(sensor));
-> 
-> 
-> > +	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+In any case, assuming 720p still works:
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
 
-Note that ctrls->pixel_rate is NULL if e.g. memory allocation fails when
-creating the control.
+Thanks
+   j
 
-> > +
-> >  	/* Auto/manual white balance */
-> >  	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
-> >  					   V4L2_CID_AUTO_WHITE_BALANCE,
-> > @@ -2816,6 +2838,9 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
-> >  		sensor->frame_interval = fi->interval;
-> >  		sensor->current_mode = mode;
-> >  		sensor->pending_mode_change = true;
-> > +
-> > +		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
-> > +					 ov5640_calc_pixel_rate(sensor));
-> >  	}
-> >  out:
-> >  	mutex_unlock(&sensor->lock);
+On Wed, Oct 02, 2019 at 08:51:33AM -0500, Benoit Parrot wrote:
+> In the 1920x1080 register array an extra pair of reset ctrl disable
+> re-enable was causing unwanted init delays.
+>
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> ---
+>  drivers/media/i2c/ov5640.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> index 5198dc887400..103a4e8f88e1 100644
+> --- a/drivers/media/i2c/ov5640.c
+> +++ b/drivers/media/i2c/ov5640.c
+> @@ -492,7 +492,6 @@ static const struct reg_value ov5640_setting_720P_1280_720[] = {
+>  };
+>
+>  static const struct reg_value ov5640_setting_1080P_1920_1080[] = {
+> -	{0x3008, 0x42, 0, 0},
+>  	{0x3c07, 0x08, 0, 0},
+>  	{0x3c09, 0x1c, 0, 0}, {0x3c0a, 0x9c, 0, 0}, {0x3c0b, 0x40, 0, 0},
+>  	{0x3814, 0x11, 0, 0},
+> @@ -520,7 +519,7 @@ static const struct reg_value ov5640_setting_1080P_1920_1080[] = {
+>  	{0x3a0e, 0x03, 0, 0}, {0x3a0d, 0x04, 0, 0}, {0x3a14, 0x04, 0, 0},
+>  	{0x3a15, 0x60, 0, 0}, {0x4407, 0x04, 0, 0},
+>  	{0x460b, 0x37, 0, 0}, {0x460c, 0x20, 0, 0}, {0x3824, 0x04, 0, 0},
+> -	{0x4005, 0x1a, 0, 0}, {0x3008, 0x02, 0, 0},
+> +	{0x4005, 0x1a, 0, 0},
+>  };
+>
+>  static const struct reg_value ov5640_setting_QSXGA_2592_1944[] = {
+> --
+> 2.17.1
+>
 
--- 
-Regards,
+--j2ofayquysxcif4h
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl2VopIACgkQcjQGjxah
+VjwSrw/8Dp2tzyCmSdWHALdBJ7ipgw0f7ok8fy0AQjIYLWn3elVL866oMKP98c4m
+pfQujjDPDPmcLb2zCH4MqvGEsy5VYw87LCSHeoEXVydWAKYEoD8QMayofHPGMOTE
+LgTOIFLTptjVsscnVgeOmaN6/tFsqGBkaMJAOCnXIFO0w3ZGadrTLfu9VmmDdJuS
+L7BYM10HfBVWv12E88DD0WC5mxrYu77nLNheaV5nCAuI0UprZgKLnNSMds+vXi+b
+Iu4uTbDeVQgZECm8JJrgTYE5l85W5ldtt1CDCjAtVNxYqze4Fxk3uQCpEzHWIlwK
+71E51UlRnxpKC7FyhgxzFzBmMjPZY8N4m42czDtkHOSUcWa4Zj1P9zVjJQ3eqN9E
+Mlj6qAjTMYrdN5Dzot8UsRvTMAvn0y3qmfAL3nogy4WHYLrQNBlTM6S+g7sL3lfG
+Drl7JDtq0swRKk9d2kkVu3Gy6fBQz9/BtkUG2sUFe0lv2roncXl+VtdQrOu37FKi
+3by5PvyjmB17VYUdxbz1GYrk6N8gISbg4/LPUGTR3aAcuy8zUJNNQFPsTcPV10/T
+mw3kbEw/nrhjZHUGxIyttqs65gop7URYBQElCGeSx855RzegjiOn5r5NXZVoJl2j
+qSfoMBktqVBVmLLsupc9vVb5zFNn+hcusrkGZPpG5Ol0/DSoqDw=
+=6rCH
+-----END PGP SIGNATURE-----
+
+--j2ofayquysxcif4h--
