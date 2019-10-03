@@ -1,111 +1,31 @@
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v3 3/5] gpio: syscon: Add support for a custom get
- operation
-Date: Thu, 3 Oct 2019 07:26:10 -0400
-Message-ID: <20191003112610.GA28856@aptenodytes>
-References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
- <20190927100407.1863293-4-paul.kocialkowski@bootlin.com>
- <CAMpxmJUHPuGPPPFSctyhtfj0oAk6oJ+=mvgN4=7jmLxAfHs45Q@mail.gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
+Date: Thu, 3 Oct 2019 13:26:18 +0200
+Message-ID: <20191003112618.GA2420393@kroah.com>
+References: <20191002231617.3670-1-john.stultz@linaro.org>
+ <20191002231617.3670-3-john.stultz@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMpxmJUHPuGPPPFSctyhtfj0oAk6oJ+=mvgN4=7jmLxAfHs45Q@mail.gmail.com>
+In-Reply-To: <20191002231617.3670-3-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-gpio <linux-gpio@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: John Stultz <john.stultz@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Felipe Balbi <balbi@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Jun Li <lijun.kernel@gmail.com>, Valentin Schneider <valentin.schneider@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Oct 02, 2019 at 11:16:16PM +0000, John Stultz wrote:
+> From: Yu Chen <chenyu56@huawei.com>
+> 
+> This patch adds notifier for drivers want to be informed of the usb role
+> switch.
 
---KsGdsel6WgEHnImy
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ick, I hate notifiers, they always come back to cause problems.
 
-Hi,
+What's just wrong with a "real" call to who ever needs to know this?
+And who does need to know this anyway?  Like Hans said, if we don't have
+a user for it, we should not add it.
 
-On Thu 03 Oct 19, 10:24, Bartosz Golaszewski wrote:
-> pt., 27 wrz 2019 o 12:04 Paul Kocialkowski
-> <paul.kocialkowski@bootlin.com> napisa=C5=82(a):
-> >
-> > Some drivers might need a custom get operation to match custom
-> > behavior implemented in the set operation.
-> >
-> > Add plumbing for supporting that.
-> >
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > ---
-> >  drivers/gpio/gpio-syscon.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-> > index 31f332074d7d..05c537ed73f1 100644
-> > --- a/drivers/gpio/gpio-syscon.c
-> > +++ b/drivers/gpio/gpio-syscon.c
-> > @@ -43,8 +43,9 @@ struct syscon_gpio_data {
-> >         unsigned int    bit_count;
-> >         unsigned int    dat_bit_offset;
-> >         unsigned int    dir_bit_offset;
-> > -       void            (*set)(struct gpio_chip *chip,
-> > -                              unsigned offset, int value);
-> > +       int             (*get)(struct gpio_chip *chip, unsigned offset);
-> > +       void            (*set)(struct gpio_chip *chip, unsigned offset,
-> > +                              int value);
->=20
-> Why did you change this line? Doesn't seem necessary and pollutes the his=
-tory.
+thanks,
 
-This is for consistency since both the "chip" and "offset" arguments can fit
-in a single line. Since I want the "get" addition to fit in a single line,
-bringing back "offset" on the previous line of "set" makes things consisten=
-t.
-There's probably no particular reason for the split in the first place.
-
-Do you think it needs a separate cosmetic commit only for that?
-I'd rather add a note in the commit message and keep the change as-is.
-
-Cheers,
-
-Paul
-
-> Bart
->=20
-> >  };
-> >
-> >  struct syscon_gpio_priv {
-> > @@ -252,7 +253,7 @@ static int syscon_gpio_probe(struct platform_device=
- *pdev)
-> >         priv->chip.label =3D dev_name(dev);
-> >         priv->chip.base =3D -1;
-> >         priv->chip.ngpio =3D priv->data->bit_count;
-> > -       priv->chip.get =3D syscon_gpio_get;
-> > +       priv->chip.get =3D priv->data->get ? : syscon_gpio_get;
-> >         if (priv->data->flags & GPIO_SYSCON_FEAT_IN)
-> >                 priv->chip.direction_input =3D syscon_gpio_dir_in;
-> >         if (priv->data->flags & GPIO_SYSCON_FEAT_OUT) {
-> > --
-> > 2.23.0
-> >
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---KsGdsel6WgEHnImy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2V2tIACgkQ3cLmz3+f
-v9GFGwf+IxprRkzBRr6IH3r+Ju8Sd+z8fEo/prPvemGLA9fboSrQhRno5RP3V6dX
-h6NYZY+XEegXl+DrVqbJkNz0fpudKjY2XdJLhNR/9tKHQddj0UD2/ZgfavO30sZi
-DL7f2PCUYC1kVr8j8bgJz4Vr/4EnEHs4Vkjfm9jKV8giap/DUYOX3QL1OwhBFEJW
-53Cr+bJOuNC/+3G6oMeJ8GPzcikdYu+dRHV6Ka1mjxEeB3REj2g5jSEjZ+dwfczT
-WLp3usydgx1AC+ag8EObLYXTb3ysu7Ugz0k+3HACQ1OTXijo5YMDzTtCYwlVrn4A
-J+G/dstigrIs86FBd4MmZaOtafb+Xw==
-=vWKK
------END PGP SIGNATURE-----
-
---KsGdsel6WgEHnImy--
+greg k-h
