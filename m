@@ -1,117 +1,173 @@
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v3 2/5] i3c: master: make sure ->boardinfo is
- initialized in add_i3c_dev_locked()
-Date: Thu, 3 Oct 2019 16:29:43 +0200
-Message-ID: <20191003162943.4a0d0274@collabora.com>
-References: <cover.1567608245.git.vitor.soares@synopsys.com>
-        <ed18fd927b5759a6a1edb351113ceca615283189.1567608245.git.vitor.soares@synopsys.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [Patch v2 1/3] media: ov5640: add PIXEL_RATE control
+Date: Thu, 3 Oct 2019 17:32:44 +0300
+Message-ID: <20191003143244.GC14917@paasikivi.fi.intel.com>
+References: <20191002135134.12273-1-bparrot@ti.com>
+ <20191002135134.12273-2-bparrot@ti.com>
+ <20191003071714.zyldxfoollm26o4u@uno.localdomain>
+ <20191003072251.GA14917@paasikivi.fi.intel.com>
+ <20191003120741.h2k5hcqjqxnu6ts6@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ed18fd927b5759a6a1edb351113ceca615283189.1567608245.git.vitor.soares@synopsys.com>
+Content-Disposition: inline
+In-Reply-To: <20191003120741.h2k5hcqjqxnu6ts6@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vitor Soares <Vitor.Soares@synopsys.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-i3c@lists.infradead.org, bbrezillon@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, pgaj@cadence.com, Joao.Pinto@synopsys.com, stable@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Jacopo Mondi <jacopo@jmondi.org>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  5 Sep 2019 12:00:35 +0200
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+Hi Benoit,
 
-> The newdev->boardinfo assignment was missing in
-> i3c_master_add_i3c_dev_locked() and hence the ->of_node info isn't
-> propagated to i3c_dev_desc.
+On Thu, Oct 03, 2019 at 07:07:41AM -0500, Benoit Parrot wrote:
+> Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Thu [2019-Oct-03 10:22:51 +0300]:
+> > Hi Jacopo, Benoit,
+> > 
+> > On Thu, Oct 03, 2019 at 09:17:14AM +0200, Jacopo Mondi wrote:
+> > > Hi Benoit,
+> > > 
+> > > On Wed, Oct 02, 2019 at 08:51:32AM -0500, Benoit Parrot wrote:
+> > > > Add v4l2 controls to report the pixel rates of each mode. This is
+> > > > needed by some CSI2 receiver in order to perform proper DPHY
+> > > > configuration.
+> > > >
+> > > > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > > > ---
+> > > >  drivers/media/i2c/ov5640.c | 25 +++++++++++++++++++++++++
+> > > >  1 file changed, 25 insertions(+)
+> > > >
+> > > > diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> > > > index 500d9bbff10b..5198dc887400 100644
+> > > > --- a/drivers/media/i2c/ov5640.c
+> > > > +++ b/drivers/media/i2c/ov5640.c
+> > > > @@ -193,6 +193,9 @@ struct ov5640_mode_info {
+> > > >
+> > > >  struct ov5640_ctrls {
+> > > >  	struct v4l2_ctrl_handler handler;
+> > > > +	struct {
+> > > > +		struct v4l2_ctrl *pixel_rate;
+> > > > +	};
+> > > 
+> > > Do you need to wrap this v4l2_ctrl in it's own unnamed struct? Other
+> > > controls here declared in this way are clustered and, if I'm not
+> > > mistaken, using unnamed struct to wrap them is just a typographically
+> > > nice way to convey that. I think your new control could be declared
+> > > without a wrapping struct { }.
+> > > 
+> > > >  	struct {
+> > > >  		struct v4l2_ctrl *auto_exp;
+> > > >  		struct v4l2_ctrl *exposure;
+> > > > @@ -2194,6 +2197,16 @@ static int ov5640_try_fmt_internal(struct v4l2_subdev *sd,
+> > > >  	return 0;
+> > > >  }
+> > > >
+> > > > +static u64 ov5640_calc_pixel_rate(struct ov5640_dev *sensor)
+> > > > +{
+> > > > +	u64 rate;
+> > > > +
+> > > > +	rate = sensor->current_mode->vtot * sensor->current_mode->htot;
+> > > > +	rate *= ov5640_framerates[sensor->current_fr];
+> > > > +
+> > > > +	return rate;
+> > > > +}
+> > > > +
+> > > 
+> > > Just to point out this is the -theoretical- pixel rate, and might be
+> > > quite different from the one calculated by the clock tree tuning
+> > > procedure (which should be updated to match Hugues' latest findings).
+> > 
+> > Hmm. Considering the xclk rate may be pretty much anything, I'd suppose
+> > the value above would only be correct for a given xclk rate.
 > 
-> Fix this by trying to initialize device i3c_dev_boardinfo if available.
-> 
-> Cc: <stable@vger.kernel.org>
-> Fixes: 3a379bbcea0a ("i3c: Add core I3C infrastructure")
-> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> ---
-> Change in v3:
->   - None
-> 
-> Changes in v2:
->   - Change commit message
->   - Change i3c_master_search_i3c_boardinfo(newdev) to
->   i3c_master_init_i3c_dev_boardinfo(newdev)
->   - Add fixes, stable tags
-> 
->  drivers/i3c/master.c | 27 +++++++++++++++++++++++++--
->  1 file changed, 25 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-> index 586e34f..9fb99bc 100644
-> --- a/drivers/i3c/master.c
-> +++ b/drivers/i3c/master.c
-> @@ -1798,6 +1798,22 @@ i3c_master_search_i3c_dev_duplicate(struct i3c_dev_desc *refdev)
->  	return NULL;
->  }
->  
-> +static void i3c_master_init_i3c_dev_boardinfo(struct i3c_dev_desc *dev)
-> +{
-> +	struct i3c_master_controller *master = i3c_dev_get_master(dev);
-> +	struct i3c_dev_boardinfo *boardinfo;
-> +
-> +	if (dev->boardinfo)
-> +		return;
-> +
-> +	list_for_each_entry(boardinfo, &master->boardinfo.i3c, node) {
-> +		if (dev->info.pid == boardinfo->pid) {
-> +			dev->boardinfo = boardinfo;
-> +			return;
-> +		}
-> +	}
-> +}
-> +
->  /**
->   * i3c_master_add_i3c_dev_locked() - add an I3C slave to the bus
->   * @master: master used to send frames on the bus
-> @@ -1818,8 +1834,9 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
->  				  u8 addr)
->  {
->  	struct i3c_device_info info = { .dyn_addr = addr };
-> -	struct i3c_dev_desc *newdev, *olddev;
->  	u8 old_dyn_addr = addr, expected_dyn_addr;
-> +	enum i3c_addr_slot_status addrstatus;
-> +	struct i3c_dev_desc *newdev, *olddev;
->  	struct i3c_ibi_setup ibireq = { };
->  	bool enable_ibi = false;
->  	int ret;
-> @@ -1878,6 +1895,8 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
->  	if (ret)
->  		goto err_detach_dev;
->  
-> +	i3c_master_init_i3c_dev_boardinfo(newdev);
-> +
->  	/*
->  	 * Depending on our previous state, the expected dynamic address might
->  	 * differ:
-> @@ -1895,7 +1914,11 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
->  	else
->  		expected_dyn_addr = newdev->info.dyn_addr;
->  
-> -	if (newdev->info.dyn_addr != expected_dyn_addr) {
-> +	addrstatus = i3c_bus_get_addr_slot_status(&master->bus,
-> +						  expected_dyn_addr);
-> +
-> +	if (newdev->info.dyn_addr != expected_dyn_addr &&
-> +	    addrstatus == I3C_ADDR_SLOT_FREE) {
+> I am not sure about that, different xclk rate might yield slightly
+> different byte clock, but all in all the resolution and framerate pretty
+> much dictate the end result, no?
 
-First, this change shouldn't be part of this patch, since the commit
-message only mentions the boardinfo init stuff, not the extra 'is slot
-free check'. Plus, I want the fix to be backported so we should avoid
-any unneeded deps.
+Interestingly, the driver determines the PLL configuration based on the
+pixels per line and lines per frame (including blanking) and the frames per
+seconds. I guess it's always been like that in this driver.
 
-But even with those 2 things addressed, I'm still convinced the
-'free desc when device is not reachable' change you do in patch 1 is
-not that great, and the fact that you can't pre-reserve the address to
-make sure no one uses it until the device had a chance to show up tends
-to prove me right.
+So I agree the target frame rate can be used for this.
 
-Can we please do what I suggest and solve the "not enough dev slots"
-problem later on (if we really have to).
+You could change ov5640_set_mode() to use this function as well to avoid
+doing the same calculation twice in different places in the driver. Up to
+you.
 
->  		/*
->  		 * Try to apply the expected dynamic address. If it fails, keep
->  		 * the address assigned by the master.
+> 
+> > 
+> > Could this be simply calculated from the clock tree configuration, to get
+> > the right value in all cases?
+> 
+> It probably could, and as I said earlier I gave it a try and failed, since
+> the theoretical value worked for me that's what I went with. Those are the
+> same values that Maxime's patch referred to. (dfbfb7aa832cdb media: ov5640:
+> Compute the clock rate at runtime).
+> 
+> Here I am just "publishing it".
+> 
+> Benoit
+> 
+> > 
+> > > 
+> > > >  static int ov5640_set_fmt(struct v4l2_subdev *sd,
+> > > >  			  struct v4l2_subdev_pad_config *cfg,
+> > > >  			  struct v4l2_subdev_format *format)
+> > > > @@ -2233,6 +2246,8 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
+> > > >  	if (mbus_fmt->code != sensor->fmt.code)
+> > > >  		sensor->pending_fmt_change = true;
+> > > >
+> > > > +	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> > > > +				 ov5640_calc_pixel_rate(sensor));
+> > > >  out:
+> > > >  	mutex_unlock(&sensor->lock);
+> > > >  	return ret;
+> > > > @@ -2657,6 +2672,13 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
+> > > >  	/* we can use our own mutex for the ctrl lock */
+> > > >  	hdl->lock = &sensor->lock;
+> > > >
+> > > > +	/* Clock related controls */
+> > > > +	ctrls->pixel_rate =
+> > > > +		v4l2_ctrl_new_std(hdl, ops,
+> > > 
+> > > If you like it better, this could fit in 1 line
+> > > 
+> > > 	ctrls->pixel_rate = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_PIXEL_RATE,
+> > > 					      0, INT_MAX, 1,
+> > > 					      ov5640_calc_pixel_rate(sensor)
+> > > 
+> > > Thanks
+> > >    j
+> > > 
+> > > > +				  V4L2_CID_PIXEL_RATE, 0, INT_MAX, 1,
+> > > > +				  ov5640_calc_pixel_rate(sensor));
+> > > 
+> > > 
+> > > > +	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+> > 
+> > Note that ctrls->pixel_rate is NULL if e.g. memory allocation fails when
+> > creating the control.
+> > 
+> > > > +
+> > > >  	/* Auto/manual white balance */
+> > > >  	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
+> > > >  					   V4L2_CID_AUTO_WHITE_BALANCE,
+> > > > @@ -2816,6 +2838,9 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
+> > > >  		sensor->frame_interval = fi->interval;
+> > > >  		sensor->current_mode = mode;
+> > > >  		sensor->pending_mode_change = true;
+> > > > +
+> > > > +		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
+> > > > +					 ov5640_calc_pixel_rate(sensor));
+> > > >  	}
+> > > >  out:
+> > > >  	mutex_unlock(&sensor->lock);
+> > 
+> > -- 
+> > Regards,
+> > 
+> > Sakari Ailus
+> > sakari.ailus@linux.intel.com
+
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
