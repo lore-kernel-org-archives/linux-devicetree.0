@@ -1,112 +1,178 @@
-From: Dilip Kota <eswara.kota@linux.intel.com>
-Subject: Re: [PATCH v2 2/2] reset: Reset controller driver for Intel LGM SoC
-Date: Thu, 3 Oct 2019 14:50:59 +0800
-Message-ID: <6e55bedb-fc65-4ecc-6f65-11cf733b204f@linux.intel.com>
-References: <62697250-d2c2-87d5-6206-aac3f6fc2be7@linux.intel.com>
- <29965a80-642b-8f11-b3d4-25c09c3d96cc@linux.intel.com>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH v11 1/7] drm/sun4i: dsi: Fix TCON DRQ set bits
+Date: Thu, 03 Oct 2019 14:51:42 +0800
+Message-ID: <DB2FB6E5-E4B5-40F4-A05F-9A2303FCA1AE@aosc.io>
+References: <20191003064527.15128-1-jagan@amarulasolutions.com> <20191003064527.15128-2-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <29965a80-642b-8f11-b3d4-25c09c3d96cc@linux.intel.com>
-Content-Language: en-US
+In-Reply-To: <20191003064527.15128-2-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: martin Blumenstingl <martin.blumenstingl@googlemail.com>, p.zabel@pengutronix.de
-Cc: "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>, cheol.yong.kim@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, qi-ming.wu@intel.com, robh@kernel.org, Hauke Mehrtens <hauke@hauke-m.de>
+To: Jagan Teki <jagan@amarulasolutions.com>, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
+Cc: michael@amarulasolutions.com, linux-sunxi <linux-sunxi@googlegroups.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin and Philipp,
 
 
-On 20/9/2019 10:47 AM, Dilip Kota wrote:
-> Hi Martin,
+于 2019年10月3日 GMT+08:00 下午2:45:21, Jagan Teki <jagan@amarulasolutions.com> 写到:
+>The LCD timing definitions between Linux DRM vs Allwinner are
+>different,
+>below diagram shows this clear differences.
 >
-> On 9/20/2019 3:51 AM, Martin Blumenstingl wrote:
->> Hi Dilip,
->>
->> (sorry for the late reply)
->>
->> On Thu, Sep 12, 2019 at 8:38 AM Dilip Kota 
->> <eswara.kota@linux.intel.com> wrote:
->> [...]
->>> The major difference between the vrx200 and lgm is:
->>> 1.) RCU in vrx200 is having multiple register regions wheres RCU in lgm
->>> has one single register region.
->>> 2.) Register offsets and bit offsets are different.
->>>
->>> So enhancing the intel-reset-syscon.c to provide compatibility/support
->>> for vrx200.
->>> Please check the below dtsi binding proposal and let me know your view.
->>>
->>> rcu0:reset-controller@00000000 {
->>> compatible= "intel,rcu-lgm";
->>> reg = <0x0000000 0x80000>, <reg_set2 size>, <reg_set3 size>,
->>> <reg_set4 size>;
->> I'm not sure that I understand what are reg_set2/3/4 for
->> the first resource (0x80000 at 0x0) already covers the whole LGM RCU,
->> so what is the purpose of the other register resources
-> Yes, as you said the first register resource is enough for LGM RCU as 
-> registers are at one single region. Whereas in older SoCs RCU 
-> registers are at different regions, so for that reason reg_set2/3/4 
-> are used.
+>           Active                 Front           Sync           Back
+>           Region                 Porch                          Porch
+><-----------------------><----------------><--------------><-------------->
+>  //////////////////////|
+> ////////////////////// |
+>//////////////////////  |..................               
+>................
+>                                           ________________
+><----- [hv]display ----->
+><------------- [hv]sync_start ------------>
+><--------------------- [hv]sync_end ---------------------->
+><-------------------------------- [hv]total
+>------------------------------>
 >
-> Driver will decide in reading the no. of register resources based on 
-> the "struct of_device_id".
+><----- lcd_[xy] -------->		  <- lcd_[hv]spw ->
+>					  <---------- lcd_[hv]bp --------->
+><-------------------------------- lcd_[hv]t
+>------------------------------>
 >
-> Regards,
-> Dilip
->>
->>> intel,global-reset = <0x10 30>;
->>> #reset-cells = <3>;
->>> };
->>>
->>> "#reset-cells":
->>> const:3
->>> description: |
->>> The 1st cell is the reset register offset.
->>> The 2nd cell is the reset set bit offset.
->>> The 3rd cell is the reset status bit offset.
->> I think this will work fine for VRX200 (and even older SoCs)
->> as you have described in your previous emails we can determine the
->> status offset from the reset offset using a simple if/else
->>
->> for LGM I like your initial suggestion with #reset-cells = <2> because
->> it's easier to read and write.
->>
->>> Reset driver takes care of parsing the register address "reg" as per the
->>> ".data" structure in struct of_device_id.
->>> Reset driver takes care of traversing the status register offset.
->> the differentiation between two and three #reset-cells can also happen
->> based on the struct of_device_id:
->> - the LGM implementation would simply also use the reset bit as status
->> bit (only two cells are needed)
->> - the implementation for earlier SoCs would parse the third cell and
->> use that as status bit
->>
->> Philipp, can you please share your opinion on how to move forward with
->> the reset-intel driver from this series?
->> The reset_control_ops from the reset-intel driver are (in my opinion)
->> a bug-fixed and improved version of what we already have in
->> drivers/reset/reset-lantiq.c. The driver is NOT simply copy and paste
->> because the register layout was greatly simplified for the newer SoCs
->> (for which there is reset-intel) compared to the older ones
->> (reset-lantiq).
->> Dilip's suggestion (in my own words) is that you take his new
->> reset-intel driver, then we will work on porting reset-lantiq over to
->> that so in the end we can drop the reset-lantiq driver. This approach
->> means more work for me (as I am probably the one who then has to do
->> the work to port reset-lantiq over to reset-intel). I'm happy to do
->> that work if you think that it's worth following this approach.
->> So I want your opinion on this before I spend any effort on porting
->> reset-lantiq over to reset-intel.
+>The DSI driver misinterpreted the hbp term from the BSP code to refer
+>only to the backporch, when in fact it was backporch + sync. Thus the
+>driver incorrectly used the horizontal front porch plus sync in its
+>calculation of the DRQ set bit value, when it should not have included
+>the sync timing.
+>
+>Including additional sync timings leads to flip_done timed out as:
 
-I will start implementing this design in the next patch version along 
-with the other changes suggested in this patch review, please let me 
-know if you have other thoughts in this design.
+I don't think attaching this error infomation is useful at all.
 
-Regards,
-Dilip
+It's just timing mismatch.
 
->>
->>
->> Martin
+>
+>WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429
+>drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
+>[CRTC:46:crtc-0] vblank wait timed out
+>Modules linked in:
+>CPU: 0 PID: 31 Comm: kworker/0:1 Not tainted
+>5.1.0-next-20190514-00026-g01f0c75b902d-dirty #13
+>Hardware name: Allwinner sun8i Family
+>Workqueue: events deferred_probe_work_func
+>[<c010ed54>] (unwind_backtrace) from [<c010b76c>]
+>(show_stack+0x10/0x14)
+>[<c010b76c>] (show_stack) from [<c0688c70>] (dump_stack+0x84/0x98)
+>[<c0688c70>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
+>[<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
+>[<c011da40>] (warn_slowpath_fmt) from [<c040cd50>]
+>(drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
+>[<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from
+>[<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
+>[<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>]
+>(commit_tail+0x40/0x6c)
+>[<c040e4dc>] (commit_tail) from [<c040e5cc>]
+>(drm_atomic_helper_commit+0xbc/0x128)
+>[<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>]
+>(restore_fbdev_mode_atomic+0x1cc/0x1dc)
+>[<c0411b64>] (restore_fbdev_mode_atomic) from [<c04156f8>]
+>(drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa0)
+>[<c04156f8>] (drm_fb_helper_restore_fbdev_mode_unlocked) from
+>[<c0415774>] (drm_fb_helper_set_par+0x30/0x54)
+>[<c0415774>] (drm_fb_helper_set_par) from [<c03ad450>]
+>(fbcon_init+0x560/0x5ac)
+>[<c03ad450>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
+>[<c03eb8a0>] (visual_init) from [<c03ed1b8>]
+>(do_bind_con_driver+0x1b0/0x390)
+>[<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>]
+>(do_take_over_console+0x13c/0x1c4)
+>[<c03ed780>] (do_take_over_console) from [<c03ad800>]
+>(do_fbcon_takeover+0x74/0xcc)
+>[<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>]
+>(notifier_call_chain+0x44/0x84)
+>[<c013c9c8>] (notifier_call_chain) from [<c013cd20>]
+>(__blocking_notifier_call_chain+0x48/0x60)
+>[<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>]
+>(blocking_notifier_call_chain+0x18/0x20)
+>[<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>]
+>(register_framebuffer+0x1e0/0x2f8)
+>[<c03a6e44>] (register_framebuffer) from [<c04153c0>]
+>(__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
+>[<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from
+>[<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
+>[<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>]
+>(drm_fbdev_generic_setup+0x88/0x118)
+>[<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>]
+>(sun4i_drv_bind+0x128/0x160)
+>[<c043f060>] (sun4i_drv_bind) from [<c044b598>]
+>(try_to_bring_up_master+0x164/0x1a0)
+>[<c044b598>] (try_to_bring_up_master) from [<c044b668>]
+>(__component_add+0x94/0x140)
+>[<c044b668>] (__component_add) from [<c0445e1c>]
+>(sun6i_dsi_probe+0x144/0x234)
+>[<c0445e1c>] (sun6i_dsi_probe) from [<c0452ef4>]
+>(platform_drv_probe+0x48/0x9c)
+>[<c0452ef4>] (platform_drv_probe) from [<c04512cc>]
+>(really_probe+0x1dc/0x2c8)
+>[<c04512cc>] (really_probe) from [<c0451518>]
+>(driver_probe_device+0x60/0x160)
+>[<c0451518>] (driver_probe_device) from [<c044f7a4>]
+>(bus_for_each_drv+0x74/0xb8)
+>[<c044f7a4>] (bus_for_each_drv) from [<c045107c>]
+>(__device_attach+0xd0/0x13c)
+>[<c045107c>] (__device_attach) from [<c0450474>]
+>(bus_probe_device+0x84/0x8c)
+>[<c0450474>] (bus_probe_device) from [<c0450900>]
+>(deferred_probe_work_func+0x64/0x90)
+>[<c0450900>] (deferred_probe_work_func) from [<c0135970>]
+>(process_one_work+0x204/0x420)
+>[<c0135970>] (process_one_work) from [<c013690c>]
+>(worker_thread+0x274/0x5a0)
+>[<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
+>[<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+>Exception stack(0xde539fb0 to 0xde539ff8)
+>9fa0:                                     00000000 00000000 00000000
+>00000000
+>9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>00000000
+>9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+>---[ end trace b57eb1e5c64c6b8b ]---
+>random: fast init done
+>[drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0]
+>flip_done timed out
+>[drm:drm_atomic_helper_wait_for_dependencies] *ERROR*
+>[CONNECTOR:48:DSI-1] flip_done timed out
+>[drm:drm_atomic_helper_wait_for_dependencies] *ERROR*
+>[PLANE:30:plane-0] flip_done timed out
+>
+>With the terms(as described in above diagram) fixed, the panel
+>displays correctly without any timeouts.
+>
+>Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+>Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+>---
+> drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>
+>diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+>b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+>index 1636344ba9ec..f83522717488 100644
+>--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+>+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+>@@ -437,9 +437,9 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi
+>*dsi,
+> 			     SUN6I_DSI_BURST_LINE_SYNC_POINT(SUN6I_DSI_SYNC_POINT));
+> 
+> 		val = SUN6I_DSI_TCON_DRQ_ENABLE_MODE;
+>-	} else if ((mode->hsync_end - mode->hdisplay) > 20) {
+>+	} else if ((mode->hsync_start - mode->hdisplay) > 20) {
+> 		/* Maaaaaagic */
+>-		u16 drq = (mode->hsync_end - mode->hdisplay) - 20;
+>+		u16 drq = (mode->hsync_start - mode->hdisplay) - 20;
+> 
+> 		drq *= mipi_dsi_pixel_format_to_bpp(device->format);
+> 		drq /= 32;
+
+-- 
+使用 K-9 Mail 发送自我的Android设备。
