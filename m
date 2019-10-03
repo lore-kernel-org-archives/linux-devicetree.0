@@ -1,16 +1,13 @@
-From: Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@samsung.com>
-Subject: Re: [RFC PATCH v2 04/11] devfreq: exynos-bus: Clean up code
-Date: Thu, 03 Oct 2019 10:10:24 +0200
-Message-ID: <400cff22991252ddff7777e51f17dec2ce6e06f5.camel@samsung.com>
-References: <20190919142236.4071-1-a.swigon@samsung.com>
- <CGME20190919142324eucas1p1638cec2aafbfcaf03cfdfa7d0189143a@eucas1p1.samsung.com>
- <20190919142236.4071-5-a.swigon@samsung.com>
- <39db18c5-534d-ff72-0a7f-7a838c13fa7a@samsung.com>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH] arm64: tegra: Set dma-ranges for memory subsystem
+Date: Thu, 3 Oct 2019 10:11:58 +0200
+Message-ID: <20191003081158.v72o3rilgg2bhncn@gilmour>
+References: <20191002154654.225690-1-thierry.reding@gmail.com>
+ <20191002154946.GA225802@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============7023560359398560420=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <39db18c5-534d-ff72-0a7f-7a838c13fa7a@samsung.com>
+In-Reply-To: <20191002154946.GA225802@ulmo>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,135 +17,105 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: b.zolnierkie@samsung.com, sw0312.kim@samsung.com, Artur =?UTF-8?Q?=C5=9Awigo=C5=84?= <a.swigon@samsung.com>, krzk@kernel.org, inki.dae@samsung.com, myungjoo.ham@samsung.com, leonard.crestez@nxp.com, georgi.djakov@linaro.org, m.szyprowski@samsung.com
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Jon Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>, Georgi Djakov <georgi.djakov@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBGcmksIDIwMTktMDktMjAgYXQgMTE6MjIgKzA5MDAsIENoYW53b28gQ2hvaSB3cm90
-ZToKPiBIaSBBcnR1ciwKPiAKPiBPbiAxOS4gOS4gMTkuIOyYpO2bhCAxMToyMiwgQXJ0dXIgxZp3
-aWdvxYQgd3JvdGU6Cj4gPiBGcm9tOiBBcnR1ciDFmndpZ2/FhCA8YS5zd2lnb25AcGFydG5lci5z
-YW1zdW5nLmNvbT4KPiA+IAo+ID4gVGhpcyBwYXRjaCBhZGRzIG1pbm9yIGltcHJvdmVtZW50cyB0
-byB0aGUgZXh5bm9zLWJ1cyBkcml2ZXIuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IEFydHVyIMWa
-d2lnb8WEIDxhLnN3aWdvbkBwYXJ0bmVyLnNhbXN1bmcuY29tPgo+ID4gUmV2aWV3ZWQtYnk6IEty
-enlzenRvZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4KPiA+IC0tLQo+ID4gIGRyaXZlcnMv
-ZGV2ZnJlcS9leHlub3MtYnVzLmMgfCA2NiArKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwgNDEgZGVsZXRpb25z
-KC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2RldmZyZXEvZXh5bm9zLWJ1cy5jIGIv
-ZHJpdmVycy9kZXZmcmVxL2V4eW5vcy1idXMuYwo+ID4gaW5kZXggNjBhZDQzMTlmZDgwLi44ZDQ0
-ODEwY2FjNjkgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2RldmZyZXEvZXh5bm9zLWJ1cy5jCj4g
-PiArKysgYi9kcml2ZXJzL2RldmZyZXEvZXh5bm9zLWJ1cy5jCj4gPiBAQCAtMTUsMTEgKzE1LDEw
-IEBACj4gPiAgI2luY2x1ZGUgPGxpbnV4L2RldmljZS5oPgo+ID4gICNpbmNsdWRlIDxsaW51eC9l
-eHBvcnQuaD4KPiA+ICAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4gPiAtI2luY2x1ZGUgPGxp
-bnV4L29mX2RldmljZS5oPgo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPgo+ID4gICNpbmNsdWRl
-IDxsaW51eC9wbV9vcHAuaD4KPiA+ICAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+
-Cj4gPiAgI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPgo+ID4gLSNpbmNsdWRl
-IDxsaW51eC9zbGFiLmg+Cj4gPiAgCj4gPiAgI2RlZmluZSBERUZBVUxUX1NBVFVSQVRJT05fUkFU
-SU8JNDAKPiA+ICAKPiA+IEBAIC0xNzgsNyArMTc3LDcgQEAgc3RhdGljIGludCBleHlub3NfYnVz
-X3BhcmVudF9wYXJzZV9vZihzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wLAo+ID4gIAlzdHJ1Y3QgZGV2
-aWNlICpkZXYgPSBidXMtPmRldjsKPiA+ICAJc3RydWN0IG9wcF90YWJsZSAqb3BwX3RhYmxlOwo+
-ID4gIAljb25zdCBjaGFyICp2ZGQgPSAidmRkIjsKPiA+IC0JaW50IGksIHJldCwgY291bnQsIHNp
-emU7Cj4gPiArCWludCBpLCByZXQsIGNvdW50Owo+ID4gIAo+ID4gIAlvcHBfdGFibGUgPSBkZXZf
-cG1fb3BwX3NldF9yZWd1bGF0b3JzKGRldiwgJnZkZCwgMSk7Cj4gPiAgCWlmIChJU19FUlIob3Bw
-X3RhYmxlKSkgewo+ID4gQEAgLTIwMSw4ICsyMDAsNyBAQCBzdGF0aWMgaW50IGV4eW5vc19idXNf
-cGFyZW50X3BhcnNlX29mKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsCj4gPiAgCX0KPiA+ICAJYnVz
-LT5lZGV2X2NvdW50ID0gY291bnQ7Cj4gPiAgCj4gPiAtCXNpemUgPSBzaXplb2YoKmJ1cy0+ZWRl
-dikgKiBjb3VudDsKPiA+IC0JYnVzLT5lZGV2ID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZSwgR0ZQ
-X0tFUk5FTCk7Cj4gPiArCWJ1cy0+ZWRldiA9IGRldm1fa2NhbGxvYyhkZXYsIGNvdW50LCBzaXpl
-b2YoKmJ1cy0+ZWRldiksIEdGUF9LRVJORUwpOwo+ID4gIAlpZiAoIWJ1cy0+ZWRldikgewo+ID4g
-IAkJcmV0ID0gLUVOT01FTTsKPiA+ICAJCWdvdG8gZXJyX3JlZ3VsYXRvcjsKPiA+IEBAIC0zMDEs
-MTAgKzI5OSw5IEBAIHN0YXRpYyBpbnQgZXh5bm9zX2J1c19wcm9maWxlX2luaXQoc3RydWN0IGV4
-eW5vc19idXMgKmJ1cywKPiA+ICAJcHJvZmlsZS0+ZXhpdCA9IGV4eW5vc19idXNfZXhpdDsKPiA+
-ICAKPiA+ICAJb25kZW1hbmRfZGF0YSA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqb25kZW1h
-bmRfZGF0YSksIEdGUF9LRVJORUwpOwo+ID4gLQlpZiAoIW9uZGVtYW5kX2RhdGEpIHsKPiA+IC0J
-CXJldCA9IC1FTk9NRU07Cj4gPiAtCQlnb3RvIGVycjsKPiA+IC0JfQo+ID4gKwlpZiAoIW9uZGVt
-YW5kX2RhdGEpCj4gPiArCQlyZXR1cm4gLUVOT01FTTsKPiA+ICsKPiA+ICAJb25kZW1hbmRfZGF0
-YS0+dXB0aHJlc2hvbGQgPSA0MDsKPiA+ICAJb25kZW1hbmRfZGF0YS0+ZG93bmRpZmZlcmVudGlh
-bCA9IDU7Cj4gPiAgCj4gPiBAQCAtMzE0LDggKzMxMSw3IEBAIHN0YXRpYyBpbnQgZXh5bm9zX2J1
-c19wcm9maWxlX2luaXQoc3RydWN0IGV4eW5vc19idXMgKmJ1cywKPiA+ICAJCQkJCQlvbmRlbWFu
-ZF9kYXRhKTsKPiA+ICAJaWYgKElTX0VSUihidXMtPmRldmZyZXEpKSB7Cj4gPiAgCQlkZXZfZXJy
-KGRldiwgImZhaWxlZCB0byBhZGQgZGV2ZnJlcSBkZXZpY2VcbiIpOwo+ID4gLQkJcmV0ID0gUFRS
-X0VSUihidXMtPmRldmZyZXEpOwo+ID4gLQkJZ290byBlcnI7Cj4gPiArCQlyZXR1cm4gUFRSX0VS
-UihidXMtPmRldmZyZXEpOwo+ID4gIAl9Cj4gPiAgCj4gPiAgCS8qCj4gPiBAQCAtMzI1LDE2ICsz
-MjEsMTMgQEAgc3RhdGljIGludCBleHlub3NfYnVzX3Byb2ZpbGVfaW5pdChzdHJ1Y3QgZXh5bm9z
-X2J1cyAqYnVzLAo+ID4gIAlyZXQgPSBleHlub3NfYnVzX2VuYWJsZV9lZGV2KGJ1cyk7Cj4gPiAg
-CWlmIChyZXQgPCAwKSB7Cj4gPiAgCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0byBlbmFibGUgZGV2
-ZnJlcS1ldmVudCBkZXZpY2VzXG4iKTsKPiA+IC0JCWdvdG8gZXJyOwo+ID4gKwkJcmV0dXJuIHJl
-dDsKPiA+ICAJfQo+ID4gIAo+ID4gIAlyZXQgPSBleHlub3NfYnVzX3NldF9ldmVudChidXMpOwo+
-ID4gLQlpZiAocmV0IDwgMCkgewo+ID4gKwlpZiAocmV0IDwgMCkKPiA+ICAJCWRldl9lcnIoZGV2
-LCAiZmFpbGVkIHRvIHNldCBldmVudCB0byBkZXZmcmVxLWV2ZW50IGRldmljZXNcbiIpOwo+ID4g
-LQkJZ290byBlcnI7Cj4gCj4gSW5zdGVhZCBvZiByZW1vdmluZyAnZ290byBlcnInLCBqdXN0IHJl
-dHVybiBlcnIgYXMgSSBjb21tZW50ZWRbMV0gb24gdjEuCj4gWzFdIGh0dHBzOi8vbGttbC5vcmcv
-bGttbC8yMDE5LzcvMjYvMzMxCj4gCj4gPiAtCX0KPiA+ICAKPiA+IC1lcnI6Cj4gPiAgCXJldHVy
-biByZXQ7Cj4gCj4gQW5kIHlvdSBqdXN0IGtlZXAgJ3JldHVybiByZXQnIG9yIHlvdSBjYW4gY2hh
-bmdlIGl0IGFzICdyZXR1cm4gMCcuCgpPSywgSSB3ZW50IGZvcjoKCnJldCA9IGV4eW5vc19idXNf
-c2V0X2V2ZW50KGJ1cyk7CmlmIChyZXQgPCAwKSB7CglkZXZfZXJyKGRldiwgImZhaWxlZCB0byBz
-ZXQgZXZlbnQgdG8gZGV2ZnJlcS1ldmVudCBkZXZpY2VzXG4iKTsKCXJldHVybiByZXQ7Cn0KCnJl
-dHVybiAwOwoKPiA+ICB9Cj4gPiAgCj4gPiBAQCAtMzQ0LDcgKzMzNyw2IEBAIHN0YXRpYyBpbnQg
-ZXh5bm9zX2J1c19wcm9maWxlX2luaXRfcGFzc2l2ZShzdHJ1Y3QgZXh5bm9zX2J1cyAqYnVzLAo+
-ID4gIAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSBidXMtPmRldjsKPiA+ICAJc3RydWN0IGRldmZyZXFf
-cGFzc2l2ZV9kYXRhICpwYXNzaXZlX2RhdGE7Cj4gPiAgCXN0cnVjdCBkZXZmcmVxICpwYXJlbnRf
-ZGV2ZnJlcTsKPiA+IC0JaW50IHJldCA9IDA7Cj4gPiAgCj4gPiAgCS8qIEluaXRpYWxpemUgdGhl
-IHN0cnVjdCBwcm9maWxlIGFuZCBnb3Zlcm5vciBkYXRhIGZvciBwYXNzaXZlIGRldmljZSAqLwo+
-ID4gIAlwcm9maWxlLT50YXJnZXQgPSBleHlub3NfYnVzX3RhcmdldDsKPiA+IEBAIC0zNTIsMzAg
-KzM0NCwyNiBAQCBzdGF0aWMgaW50IGV4eW5vc19idXNfcHJvZmlsZV9pbml0X3Bhc3NpdmUoc3Ry
-dWN0IGV4eW5vc19idXMgKmJ1cywKPiA+ICAKPiA+ICAJLyogR2V0IHRoZSBpbnN0YW5jZSBvZiBw
-YXJlbnQgZGV2ZnJlcSBkZXZpY2UgKi8KPiA+ICAJcGFyZW50X2RldmZyZXEgPSBkZXZmcmVxX2dl
-dF9kZXZmcmVxX2J5X3BoYW5kbGUoZGV2LCAwKTsKPiA+IC0JaWYgKElTX0VSUihwYXJlbnRfZGV2
-ZnJlcSkpIHsKPiA+IC0JCXJldCA9IC1FUFJPQkVfREVGRVI7Cj4gPiAtCQlnb3RvIGVycjsKPiA+
-IC0JfQo+ID4gKwlpZiAoSVNfRVJSKHBhcmVudF9kZXZmcmVxKSkKPiA+ICsJCXJldHVybiAtRVBS
-T0JFX0RFRkVSOwo+ID4gIAo+ID4gIAlwYXNzaXZlX2RhdGEgPSBkZXZtX2t6YWxsb2MoZGV2LCBz
-aXplb2YoKnBhc3NpdmVfZGF0YSksIEdGUF9LRVJORUwpOwo+ID4gLQlpZiAoIXBhc3NpdmVfZGF0
-YSkgewo+ID4gLQkJcmV0ID0gLUVOT01FTTsKPiA+IC0JCWdvdG8gZXJyOwo+ID4gLQl9Cj4gPiAr
-CWlmICghcGFzc2l2ZV9kYXRhKQo+ID4gKwkJcmV0dXJuIC1FTk9NRU07Cj4gPiArCj4gPiAgCXBh
-c3NpdmVfZGF0YS0+cGFyZW50ID0gcGFyZW50X2RldmZyZXE7Cj4gPiAgCj4gPiAgCS8qIEFkZCBk
-ZXZmcmVxIGRldmljZSBmb3IgZXh5bm9zIGJ1cyB3aXRoIHBhc3NpdmUgZ292ZXJub3IgKi8KPiA+
-IC0JYnVzLT5kZXZmcmVxID0gZGV2bV9kZXZmcmVxX2FkZF9kZXZpY2UoZGV2LCBwcm9maWxlLCBE
-RVZGUkVRX0dPVl9QQVNTSVZFLAo+ID4gKwlidXMtPmRldmZyZXEgPSBkZXZtX2RldmZyZXFfYWRk
-X2RldmljZShkZXYsIHByb2ZpbGUsCj4gPiArCQkJCQkJREVWRlJFUV9HT1ZfUEFTU0lWRSwKPiA+
-ICAJCQkJCQlwYXNzaXZlX2RhdGEpOwo+ID4gIAlpZiAoSVNfRVJSKGJ1cy0+ZGV2ZnJlcSkpIHsK
-PiA+ICAJCWRldl9lcnIoZGV2LAo+ID4gIAkJCSJmYWlsZWQgdG8gYWRkIGRldmZyZXEgZGV2IHdp
-dGggcGFzc2l2ZSBnb3Zlcm5vclxuIik7Cj4gPiAtCQlyZXQgPSBQVFJfRVJSKGJ1cy0+ZGV2ZnJl
-cSk7Cj4gPiAtCQlnb3RvIGVycjsKPiA+ICsJCXJldHVybiBQVFJfRVJSKGJ1cy0+ZGV2ZnJlcSk7
-Cj4gPiAgCX0KPiA+ICAKPiA+IC1lcnI6Cj4gPiAtCXJldHVybiByZXQ7Cj4gPiArCXJldHVybiAw
-Owo+ID4gIH0KPiA+ICAKPiA+ICBzdGF0aWMgaW50IGV4eW5vc19idXNfcHJvYmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqcGRldikKPiA+IEBAIC0zOTMsMTggKzM4MSwxOCBAQCBzdGF0aWMgaW50
-IGV4eW5vc19idXNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiA+ICAJCXJl
-dHVybiAtRUlOVkFMOwo+ID4gIAl9Cj4gPiAgCj4gPiAtCWJ1cyA9IGRldm1fa3phbGxvYygmcGRl
-di0+ZGV2LCBzaXplb2YoKmJ1cyksIEdGUF9LRVJORUwpOwo+ID4gKwlidXMgPSBkZXZtX2t6YWxs
-b2MoZGV2LCBzaXplb2YoKmJ1cyksIEdGUF9LRVJORUwpOwo+ID4gIAlpZiAoIWJ1cykKPiA+ICAJ
-CXJldHVybiAtRU5PTUVNOwo+ID4gIAltdXRleF9pbml0KCZidXMtPmxvY2spOwo+ID4gLQlidXMt
-PmRldiA9ICZwZGV2LT5kZXY7Cj4gPiArCWJ1cy0+ZGV2ID0gZGV2Owo+ID4gIAlwbGF0Zm9ybV9z
-ZXRfZHJ2ZGF0YShwZGV2LCBidXMpOwo+ID4gIAo+ID4gIAlwcm9maWxlID0gZGV2bV9remFsbG9j
-KGRldiwgc2l6ZW9mKCpwcm9maWxlKSwgR0ZQX0tFUk5FTCk7Cj4gPiAgCWlmICghcHJvZmlsZSkK
-PiA+ICAJCXJldHVybiAtRU5PTUVNOwo+ID4gIAo+ID4gLQlub2RlID0gb2ZfcGFyc2VfcGhhbmRs
-ZShkZXYtPm9mX25vZGUsICJkZXZmcmVxIiwgMCk7Cj4gPiArCW5vZGUgPSBvZl9wYXJzZV9waGFu
-ZGxlKG5wLCAiZGV2ZnJlcSIsIDApOwo+ID4gIAlpZiAobm9kZSkgewo+ID4gIAkJb2Zfbm9kZV9w
-dXQobm9kZSk7Cj4gPiAgCQlwYXNzaXZlID0gdHJ1ZTsKPiA+IEBAIC00NjEsMTIgKzQ0OSwxMCBA
-QCBzdGF0aWMgaW50IGV4eW5vc19idXNfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikKPiA+ICAJ
-aW50IHJldDsKPiA+ICAKPiA+ICAJcmV0ID0gZXh5bm9zX2J1c19lbmFibGVfZWRldihidXMpOwo+
-ID4gLQlpZiAocmV0IDwgMCkgewo+ID4gKwlpZiAocmV0IDwgMCkKPiA+ICAJCWRldl9lcnIoZGV2
-LCAiZmFpbGVkIHRvIGVuYWJsZSB0aGUgZGV2ZnJlcS1ldmVudCBkZXZpY2VzXG4iKTsKPiA+IC0J
-CXJldHVybiByZXQ7Cj4gCj4gS2VlcCB0aGUgJ3JldHVybiByZXQnIGlmIGVycm9yIGhhcHBlbiBh
-cyBJIGNvbW1lbnRlZFsxXSBvbiB2MS4KPiBbMV0gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTkv
-Ny8yNi8zMzEKPiAKPiA+IC0JfQo+ID4gIAo+ID4gLQlyZXR1cm4gMDsKPiA+ICsJcmV0dXJuIHJl
-dDsKPiAKPiBBbmQgeW91IGp1c3Qga2VlcCAncmV0dXJuIDAnIG9yIHlvdSBjYW4gY2hhbmdlIGl0
-IGFzICdyZXR1cm4gcmV0Jy4KCk9LLCBJIGtlcHQgdGhlIG9yaWdpbmFsIGNvZGU6CgpyZXQgPSBl
-eHlub3NfYnVzX2VuYWJsZV9lZGV2KGJ1cyk7CmlmIChyZXQgPCAwKSB7CglkZXZfZXJyKGRldiwg
-ImZhaWxlZCB0byBlbmFibGUgdGhlIGRldmZyZXEtZXZlbnQgZGV2aWNlc1xuIik7CglyZXR1cm4g
-cmV0Owp9CgpyZXR1cm4gMDsKCj4gPiAgfQo+ID4gIAo+ID4gIHN0YXRpYyBpbnQgZXh5bm9zX2J1
-c19zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikKPiA+IEBAIC00NzUsMTIgKzQ2MSwxMCBAQCBz
-dGF0aWMgaW50IGV4eW5vc19idXNfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiAgCWlu
-dCByZXQ7Cj4gPiAgCj4gPiAgCXJldCA9IGV4eW5vc19idXNfZGlzYWJsZV9lZGV2KGJ1cyk7Cj4g
-PiAtCWlmIChyZXQgPCAwKSB7Cj4gPiArCWlmIChyZXQgPCAwKQo+ID4gIAkJZGV2X2VycihkZXYs
-ICJmYWlsZWQgdG8gZGlzYWJsZSB0aGUgZGV2ZnJlcS1ldmVudCBkZXZpY2VzXG4iKTsKPiA+IC0J
-CXJldHVybiByZXQ7Cj4gCj4gS2VlcCB0aGUgJ3JldHVybiByZXQnIGlmIGVycm9yIGhhcHBlbiBh
-cyBJIGNvbW1lbnRlZFsxXSBvbiB2MS4KPiBbMV0gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTkv
-Ny8yNi8zMzEKCk9LLCBJIGtlcHQgdGhlIG9yaWdpbmFsIGNvZGUuCgo+ID4gLQl9Cj4gPiAgCj4g
-PiAtCXJldHVybiAwOwo+ID4gKwlyZXR1cm4gcmV0Owo+IAo+IEFuZCB5b3UganVzdCBrZWVwICdy
-ZXR1cm4gMCcgb3IgeW91IGNhbiBjaGFuZ2UgaXQgYXMgJ3JldHVybiByZXQnLgo+IAo+ID4gIH0K
-PiA+ICAjZW5kaWYKPiA+ICAKPiA+IAo+IAo+IAoKQmVzdCByZWdhcmRzLAotLSAKQXJ0dXIgxZp3
-aWdvxYQKU2Ftc3VuZyBSJkQgSW5zdGl0dXRlIFBvbGFuZApTYW1zdW5nIEVsZWN0cm9uaWNzCgoK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
-ZXJuZWwK
+
+--===============7023560359398560420==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="bengp4ayl5pew25c"
+Content-Disposition: inline
+
+
+--bengp4ayl5pew25c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Oct 02, 2019 at 05:49:46PM +0200, Thierry Reding wrote:
+> On Wed, Oct 02, 2019 at 05:46:54PM +0200, Thierry Reding wrote:
+> > From: Thierry Reding <treding@nvidia.com>
+> >
+> > On Tegra194, all clients of the memory subsystem can generally address
+> > 40 bits of system memory. However, bit 39 has special meaning and will
+> > cause the memory controller to reorder sectors for block-linear buffer
+> > formats. This is primarily useful for graphics-related devices.
+> >
+> > Use of bit 39 must be controlled on a case-by-case basis. Buffers that
+> > are used with bit 39 set by one device may be used with bit 39 cleared
+> > by other devices.
+> >
+> > Care must be taken to allocate buffers at addresses that do not require
+> > bit 39 to be set. This is normally not an issue for system memory since
+> > there are no Tegra-based systems with enough RAM to exhaust the 39-bit
+> > physical address space. However, when a device is behind an IOMMU, such
+> > as the ARM SMMU on Tegra194, the IOMMUs input address space can cause
+> > IOVA allocations to happen in this region. This is for example the case
+> > when an operating system implements a top-down allocation policy for IO
+> > virtual addresses.
+> >
+> > To account for this, describe the path that memory accesses take through
+> > the system. Memory clients will send requests to the memory controller,
+> > which forwards bits [38:0] of the address either to the external memory
+> > controller or the SMMU, depending on the stream ID of the access. A good
+> > way to describe this is using the interconnects bindings, see:
+> >
+> > 	Documentation/devicetree/bindings/interconnect/interconnect.txt
+> >
+> > The standard "dma-mem" path is used to describe the path towards system
+> > memory via the memory controller. A dma-ranges property in the memory
+> > controller's device tree node limits the range of DMA addresses that the
+> > memory clients can use to bits [38:0], ensuring that bit 39 is not used.
+> >
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> > Arnd, Rob, Robin,
+> >
+> > This is what I came up with after our discussion on this thread:
+> >
+> > 	[PATCH 00/11] of: dma-ranges fixes and improvements
+> >
+> > Please take a look and see if that sounds reasonable. I'm slightly
+> > unsure about the interconnects bindings as I used them here. According
+> > to the bindings there's always supposed to be a pair of interconnect
+> > paths, so this patch is not exactly compliant. It does work fine with
+> > the __of_get_dma_parent() code that Maxime introduced a couple of months
+> > ago and really very neatly describes the hardware. Interestingly this
+> > will come in handy very soon now since we're starting work on a proper
+> > interconnect provider (the memory controller driver is the natural fit
+> > for this because it has additional knobs to configure latency and
+> > priorities, etc.) to implement external memory frequency scaling based
+> > on bandwidth requests from memory clients. So this all fits together
+> > very nicely. But as I said, I'm not exactly sure what to add as a second
+> > entry in "interconnects" to make this compliant with the bindings.
+
+It definitely sounds reasonable to me :)
+
+Maxime
+
+--bengp4ayl5pew25c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZWtTgAKCRDj7w1vZxhR
+xaNSAQDPvQ0Eg3wgAsW+NG/VGPUeXTGz5HZ2S7wOq83jBXQOjwD+Mxiz+DDez9yR
+wEL8S5X8NUb7rZUsz+nnZoo4Dh142g4=
+=0yH4
+-----END PGP SIGNATURE-----
+
+--bengp4ayl5pew25c--
+
+
+--===============7023560359398560420==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7023560359398560420==--
