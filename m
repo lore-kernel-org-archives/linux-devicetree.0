@@ -1,27 +1,97 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/3] gpio: syscon: Add support for the Xylon LogiCVC GPIOs
-Date: Fri, 4 Oct 2019 23:24:04 +0200
-Message-ID: <CACRpkdbtFQWJK_RtdHrh8hr9HTq4Pmnd9VXC11H45w9XvGCU2w@mail.gmail.com>
-References: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
- <20190910152855.111588-3-paul.kocialkowski@bootlin.com> <CACRpkdY40PZc9R-yFwooR4-WMgn3LH7K+yTx00ZNxyq6OOnw6A@mail.gmail.com>
- <20190923133325.GA57525@aptenodytes>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH] userdiff: Fix some corner cases in dts regex
+Date: Fri,  4 Oct 2019 14:30:29 -0700
+Message-ID: <20191004213029.145027-1-sboyd@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190923133325.GA57525@aptenodytes>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <git-owner@vger.kernel.org>
+Sender: git-owner@vger.kernel.org
+To: git@vger.kernel.org
+Cc: Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Johannes Sixt <j6t@kdbg.org>, Matthieu Moy <matthieu.moy@grenoble-inp.fr>, Junio C Hamano <gitster@pobox.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 3:33 PM Paul Kocialkowski
-<paul.kocialkowski@bootlin.com> wrote:
+While reviewing some dts diffs recently I noticed that the hunk header
+logic was failing to find the containing node. This is because the regex
+doesn't consider properties that may span multiple lines, i.e.
 
-> Maybe a first step would be to introduce Kconfig options for each device and
-> ifdef around in the code, as to solve the "built unconditionally" aspect?
+	property = <something>,
+		   <something_else>;
 
-ifdefs is something we try to avoid using too much, better for things
-to have their own files and use a library, usually, it's cleaner.
+and it got hung up on comments inside nodes that look like the root node
+because they start with '/*'. Add tests for these cases and update the
+regex to find them. Maybe detecting the root node is too complicated but
+forcing it to be a backslash with any amount of whitespace up to an open
+bracket seemed OK. I tried to detect that a comment is in-between the
+two parts but I wasn't happy so I just dropped it.
 
-Yours,
-Linus Walleij
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ t/t4018/dts-nodes-multiline-prop | 12 ++++++++++++
+ t/t4018/dts-root                 |  2 +-
+ t/t4018/dts-root-comment         |  8 ++++++++
+ userdiff.c                       |  3 ++-
+ 4 files changed, 23 insertions(+), 2 deletions(-)
+ create mode 100644 t/t4018/dts-nodes-multiline-prop
+ create mode 100644 t/t4018/dts-root-comment
+
+diff --git a/t/t4018/dts-nodes-multiline-prop b/t/t4018/dts-nodes-multiline-prop
+new file mode 100644
+index 000000000000..f7b655935429
+--- /dev/null
++++ b/t/t4018/dts-nodes-multiline-prop
+@@ -0,0 +1,12 @@
++/ {
++	label_1: node1@ff00 {
++		RIGHT@deadf00,4000 {
++			multilineprop = <3>,
++					<4>;
++
++
++
++			ChangeMe = <0xffeedd00>;
++		};
++	};
++};
+diff --git a/t/t4018/dts-root b/t/t4018/dts-root
+index 2ef9e6ffaa2c..4353b8220c91 100644
+--- a/t/t4018/dts-root
++++ b/t/t4018/dts-root
+@@ -1,4 +1,4 @@
+-/RIGHT { /* Technically just supposed to be a slash */
++/ { RIGHT /* Technically just supposed to be a slash and brace */
+ 	#size-cells = <1>;
+ 
+ 	ChangeMe = <0xffeedd00>;
+diff --git a/t/t4018/dts-root-comment b/t/t4018/dts-root-comment
+new file mode 100644
+index 000000000000..333a625c7007
+--- /dev/null
++++ b/t/t4018/dts-root-comment
+@@ -0,0 +1,8 @@
++/ { RIGHT /* Technically just supposed to be a slash and brace */
++	#size-cells = <1>;
++
++	/* This comment should be ignored */
++
++	some-property = <40+2>;
++	ChangeMe = <0xffeedd00>;
++};
+diff --git a/userdiff.c b/userdiff.c
+index 86e3244e15dd..651b56caec56 100644
+--- a/userdiff.c
++++ b/userdiff.c
+@@ -25,8 +25,9 @@ IPATTERN("ada",
+ 	 "|=>|\\.\\.|\\*\\*|:=|/=|>=|<=|<<|>>|<>"),
+ PATTERNS("dts",
+ 	 "!;\n"
++	 "!.*=.*\n"
+ 	 /* lines beginning with a word optionally preceded by '&' or the root */
+-	 "^[ \t]*((/|&?[a-zA-Z_]).*)",
++	 "^[ \t]*((/[ \t]*\\{|&?[a-zA-Z_]).*)",
+ 	 /* -- */
+ 	 /* Property names and math operators */
+ 	 "[a-zA-Z0-9,._+?#-]+"
+-- 
+Sent by a computer through tubes
