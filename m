@@ -1,35 +1,85 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 0/2] reset: meson-audio-arb: add sm1 support
-Date: Fri, 04 Oct 2019 07:46:47 -0700
-Message-ID: <7hpnjch8ko.fsf@baylibre.com>
-References: <20190905135040.6635-1-jbrunet@baylibre.com> <1567693618.3958.4.camel@pengutronix.de> <1jk19oregr.fsf@starbuckisacylon.baylibre.com> <20191003180311.hlv7s32twzcaxj3x@pengutronix.de>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [PATCH 1/3] mfd: wm8998: Remove some unused registers
+Date: Fri, 4 Oct 2019 10:47:46 -0400
+Message-ID: <32854b25-d7b8-af85-b5a6-0d37386cee4a@ti.com>
+References: <20191001134617.12093-1-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191003180311.hlv7s32twzcaxj3x@pengutronix.de>
+In-Reply-To: <20191001134617.12093-1-ckeepax@opensource.cirrus.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <pza@pengutronix.de>, Jerome Brunet <jbrunet@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.cirrus.com>, lee.jones@linaro.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
-Philipp Zabel <pza@pengutronix.de> writes:
+On 10/1/19 9:46 AM, Charles Keepax wrote:
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+> 
 
-> Hi Jerome,
->
-> On Tue, Oct 01, 2019 at 11:40:20AM +0200, Jerome Brunet wrote:
-> [...]
->> Looks like this patchset missed v5.4-rc1.
->> Could you provide a tag with the bindings to Kevin so we can use the IDs
->> in DT until the next merge window ?
->
-> Does
->
->   git://git.pengutronix.de/git/pza/linux.git reset/meson-sm1-bindings
->
-> work for you?
 
-I'd prefer a tag as that's more of an indicator that it will be static,
-but if you're sure that's going to be static, and is the same branch/tag
-you'll be sending upstream, that will work.
+Why do this? There is no commit message..
 
-Kevin
+Andrew
+
+
+> Patch is new to the series.
+> 
+> Thanks,
+> Charles
+> 
+>  drivers/mfd/wm8998-tables.c           | 12 ------------
+>  include/linux/mfd/arizona/registers.h |  7 -------
+>  2 files changed, 19 deletions(-)
+> 
+> diff --git a/drivers/mfd/wm8998-tables.c b/drivers/mfd/wm8998-tables.c
+> index ebf0eadd2075c..9b34a6d760949 100644
+> --- a/drivers/mfd/wm8998-tables.c
+> +++ b/drivers/mfd/wm8998-tables.c
+> @@ -806,12 +806,6 @@ static const struct reg_default wm8998_reg_default[] = {
+>  	{ 0x00000EF3, 0x0000 },    /* R3827  - ISRC 2 CTRL 1 */
+>  	{ 0x00000EF4, 0x0001 },    /* R3828  - ISRC 2 CTRL 2 */
+>  	{ 0x00000EF5, 0x0000 },    /* R3829  - ISRC 2 CTRL 3 */
+> -	{ 0x00001700, 0x0000 },    /* R5888  - FRF_COEFF_1 */
+> -	{ 0x00001701, 0x0000 },    /* R5889  - FRF_COEFF_2 */
+> -	{ 0x00001702, 0x0000 },    /* R5890  - FRF_COEFF_3 */
+> -	{ 0x00001703, 0x0000 },    /* R5891  - FRF_COEFF_4 */
+> -	{ 0x00001704, 0x0000 },    /* R5892  - DAC_COMP_1 */
+> -	{ 0x00001705, 0x0000 },    /* R5893  - DAC_COMP_2 */
+>  };
+>  
+>  static bool wm8998_readable_register(struct device *dev, unsigned int reg)
+> @@ -1492,12 +1486,6 @@ static bool wm8998_readable_register(struct device *dev, unsigned int reg)
+>  	case ARIZONA_ISRC_2_CTRL_1:
+>  	case ARIZONA_ISRC_2_CTRL_2:
+>  	case ARIZONA_ISRC_2_CTRL_3:
+> -	case ARIZONA_FRF_COEFF_1:
+> -	case ARIZONA_FRF_COEFF_2:
+> -	case ARIZONA_FRF_COEFF_3:
+> -	case ARIZONA_FRF_COEFF_4:
+> -	case ARIZONA_V2_DAC_COMP_1:
+> -	case ARIZONA_V2_DAC_COMP_2:
+>  		return true;
+>  	default:
+>  		return false;
+> diff --git a/include/linux/mfd/arizona/registers.h b/include/linux/mfd/arizona/registers.h
+> index bb1a2530ae279..49e24d1de8d47 100644
+> --- a/include/linux/mfd/arizona/registers.h
+> +++ b/include/linux/mfd/arizona/registers.h
+> @@ -1186,13 +1186,6 @@
+>  #define ARIZONA_DSP4_SCRATCH_1                   0x1441
+>  #define ARIZONA_DSP4_SCRATCH_2                   0x1442
+>  #define ARIZONA_DSP4_SCRATCH_3                   0x1443
+> -#define ARIZONA_FRF_COEFF_1                      0x1700
+> -#define ARIZONA_FRF_COEFF_2                      0x1701
+> -#define ARIZONA_FRF_COEFF_3                      0x1702
+> -#define ARIZONA_FRF_COEFF_4                      0x1703
+> -#define ARIZONA_V2_DAC_COMP_1                    0x1704
+> -#define ARIZONA_V2_DAC_COMP_2                    0x1705
+> -
+>  
+>  /*
+>   * Field Definitions.
+> 
