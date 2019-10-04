@@ -1,89 +1,43 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH] arm64: tegra: Set dma-ranges for memory subsystem
-Date: Fri, 4 Oct 2019 16:06:57 +0300
-Message-ID: <3eaff5c9-ee6d-faa2-4771-7eeb9f759c8b@linaro.org>
-References: <20191002154654.225690-1-thierry.reding@gmail.com>
- <20191002154946.GA225802@ulmo>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/7] dt-bindings: watchdog: renesas-wdt: Document r8a774b1
+ support
+Date: Fri, 4 Oct 2019 06:12:18 -0700
+Message-ID: <eabf732e-33ba-8011-2cbc-f1df1f6dadb3@roeck-us.net>
+References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1570178133-21532-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191002154946.GA225802@ulmo>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1570178133-21532-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Jon Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Maxime Ripard <mripard@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/2/19 18:49, Thierry Reding wrote:
-> On Wed, Oct 02, 2019 at 05:46:54PM +0200, Thierry Reding wrote:
->> From: Thierry Reding <treding@nvidia.com>
->>
->> On Tegra194, all clients of the memory subsystem can generally address
->> 40 bits of system memory. However, bit 39 has special meaning and will
->> cause the memory controller to reorder sectors for block-linear buffer
->> formats. This is primarily useful for graphics-related devices.
->>
->> Use of bit 39 must be controlled on a case-by-case basis. Buffers that
->> are used with bit 39 set by one device may be used with bit 39 cleared
->> by other devices.
->>
->> Care must be taken to allocate buffers at addresses that do not require
->> bit 39 to be set. This is normally not an issue for system memory since
->> there are no Tegra-based systems with enough RAM to exhaust the 39-bit
->> physical address space. However, when a device is behind an IOMMU, such
->> as the ARM SMMU on Tegra194, the IOMMUs input address space can cause
->> IOVA allocations to happen in this region. This is for example the case
->> when an operating system implements a top-down allocation policy for IO
->> virtual addresses.
->>
->> To account for this, describe the path that memory accesses take through
->> the system. Memory clients will send requests to the memory controller,
->> which forwards bits [38:0] of the address either to the external memory
->> controller or the SMMU, depending on the stream ID of the access. A good
->> way to describe this is using the interconnects bindings, see:
->>
->> 	Documentation/devicetree/bindings/interconnect/interconnect.txt
->>
->> The standard "dma-mem" path is used to describe the path towards system
->> memory via the memory controller. A dma-ranges property in the memory
->> controller's device tree node limits the range of DMA addresses that the
->> memory clients can use to bits [38:0], ensuring that bit 39 is not used.
->>
->> Signed-off-by: Thierry Reding <treding@nvidia.com>
->> ---
->> Arnd, Rob, Robin,
->>
->> This is what I came up with after our discussion on this thread:
->>
->> 	[PATCH 00/11] of: dma-ranges fixes and improvements
->>
->> Please take a look and see if that sounds reasonable. I'm slightly
->> unsure about the interconnects bindings as I used them here. According
->> to the bindings there's always supposed to be a pair of interconnect
->> paths, so this patch is not exactly compliant. It does work fine with
->> the __of_get_dma_parent() code that Maxime introduced a couple of months
->> ago and really very neatly describes the hardware. Interestingly this
->> will come in handy very soon now since we're starting work on a proper
->> interconnect provider (the memory controller driver is the natural fit
->> for this because it has additional knobs to configure latency and
->> priorities, etc.) to implement external memory frequency scaling based
->> on bandwidth requests from memory clients. So this all fits together
->> very nicely. But as I said, I'm not exactly sure what to add as a second
->> entry in "interconnects" to make this compliant with the bindings.
->>
+On 10/4/19 1:35 AM, Fabrizio Castro wrote:
+> RZ/G2N (a.k.a. R8A774B1) watchdog implementation is compatible
+> with R-Car Gen3, therefore add the relevant documentation.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Sounds good to me. The bindings define the two endpoints, but the dma-mem is a
-special case and just a single phandle + specifier is fine. Maybe we should
-explicitly mention this in the interconnect binding docs. You can look at how
-Maxime is using it now in sun5i.dtsi.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Thanks,
-Georgi
+> ---
+>   Documentation/devicetree/bindings/watchdog/renesas,wdt.txt | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
+> index 9f365c1..a5bf04d 100644
+> --- a/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/renesas,wdt.txt
+> @@ -10,6 +10,7 @@ Required properties:
+>   		 - "renesas,r8a7745-wdt" (RZ/G1E)
+>   		 - "renesas,r8a77470-wdt" (RZ/G1C)
+>   		 - "renesas,r8a774a1-wdt" (RZ/G2M)
+> +		 - "renesas,r8a774b1-wdt" (RZ/G2N)
+>   		 - "renesas,r8a774c0-wdt" (RZ/G2E)
+>   	         - "renesas,r8a7790-wdt" (R-Car H2)
+>   	         - "renesas,r8a7791-wdt" (R-Car M2-W)
+> 
