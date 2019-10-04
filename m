@@ -1,35 +1,27 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v4 2/2] media: i2c: Add IMX290 CMOS image sensor driver
-Date: Fri, 4 Oct 2019 12:23:36 +0300
-Message-ID: <20191004092336.GL896@valkosipuli.retiisi.org.uk>
-References: <20191003095503.12614-1-manivannan.sadhasivam@linaro.org>
- <20191003095503.12614-3-manivannan.sadhasivam@linaro.org>
+From: <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
+Date: Fri, 4 Oct 2019 09:35:23 +0000
+Message-ID: <08e99a4b-851e-0bee-4c5a-8578b42c283e@microchip.com>
+References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
+ <20191002144658.7718-3-kamel.bouhara@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191003095503.12614-3-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20191002144658.7718-3-kamel.bouhara@bootlin.com>
+Content-Language: en-US
+Content-ID: <DA77BC9EC8C40C4A8D647BCD8BE57710@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, c.barrett@framos.com, a.brela@framos.com
+To: kamel.bouhara@bootlin.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Manivannan,
-
-On Thu, Oct 03, 2019 at 03:25:03PM +0530, Manivannan Sadhasivam wrote:
-> Add driver for Sony IMX290 CMOS image sensor driver. The driver only
-> supports I2C interface for programming and MIPI CSI-2 for sensor output.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Could you remove the unneeded ret variable from imx290_power_on() and
-unneeded goto in the same function?
-
-The MAINTAINERS entry belongs to the first patch adding new files.
-
-Then I think this is good.
-
--- 
-Regards,
-
-Sakari Ailus
+SGkgS2FtZWwsDQoNCk9uIDAyLjEwLjIwMTkgMTc6NDYsIEthbWVsIEJvdWhhcmEgd3JvdGU6DQo+
+ICtzdGF0aWMgaW50IGF0OTFfaW5pdF90d2lfcmVjb3ZlcnlfaW5mbyhzdHJ1Y3QgcGxhdGZvcm1f
+ZGV2aWNlICpwZGV2LA0KPiArCQkJCSAgICAgICBzdHJ1Y3QgYXQ5MV90d2lfZGV2ICpkZXYpDQo+
+ICt7DQo+ICsJc3RydWN0IGkyY19idXNfcmVjb3ZlcnlfaW5mbyAqcmluZm8gPSAmZGV2LT5yaW5m
+bzsNCj4gKw0KPiArCWRldi0+cGluY3RybCA9IGRldm1fcGluY3RybF9nZXQoJnBkZXYtPmRldik7
+DQo+ICsJaWYgKCFkZXYtPnBpbmN0cmwgfHwgSVNfRVJSKGRldi0+cGluY3RybCkpIHsNCg0KWW91
+IG1heSB1c2UgSVNfRVJSX09SX05VTEwoKSBoZXJlLg0KDQo+ICsJCWRldl9pbmZvKGRldi0+ZGV2
+LCAiY2FuJ3QgZ2V0IHBpbmN0cmwsIGJ1cyByZWNvdmVyeSBub3Qgc3VwcG9ydGVkXG4iKTsNCj4g
+KwkJcmV0dXJuIFBUUl9FUlIoZGV2LT5waW5jdHJsKTsNCj4gKwl9DQo+ICsNCg==
