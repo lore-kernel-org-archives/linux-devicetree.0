@@ -1,178 +1,157 @@
-From: Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Re: [PATCH v1 2/2] drm/panel: simple: add display timings for logic
- technologies displays
-Date: Fri, 4 Oct 2019 07:09:22 +0000
-Message-ID: <f6f7055534e0843eaccd6269f867ef44e4953849.camel@toradex.com>
-References: <20190920075411.15735-1-marcel@ziswiler.com>
- <20190920075411.15735-2-marcel@ziswiler.com> <20191001220539.GA16232@bogus>
- <e6fdfd7f46308dbc8fd33d4a2ff0b242ec39a84c.camel@toradex.com>
- <CAL_JsqKmCVP3Fc2sUY=FpM5-HLQ0-=uTf6PEwn0XzyC5BBHBOA@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V6 3/3] mmc: mmci: sdmmc: add busy_complete callback
+Date: Fri, 4 Oct 2019 09:31:25 +0200
+Message-ID: <CAPDyKFqbEzYpNty8u_QuSDfLgPoiTMZS2Bx4GbzfX-Y9TqXJTg@mail.gmail.com>
+References: <20190905122112.29672-1-ludovic.Barre@st.com> <20190905122112.29672-4-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqKmCVP3Fc2sUY=FpM5-HLQ0-=uTf6PEwn0XzyC5BBHBOA@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <8219941CBD310146973D8E8CCB36BEC4@eurprd05.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "robh@kernel.org" <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "airlied@linux.ie" <airlied@linux.ie>, "j.bauer@endrich.com" <j.bauer@endrich.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "info@logictechno.com" <info@logictechno.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "marcel@ziswiler.com" <marcel@ziswiler.com>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "sam@ravnborg.org" <sam@ravnborg.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190905122112.29672-4-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-10-03 at 10:59 -0500, Rob Herring wrote:
-> On Wed, Oct 2, 2019 at 5:27 AM Philippe Schenker
-> <philippe.schenker@toradex.com> wrote:
-> > On Tue, 2019-10-01 at 17:05 -0500, Rob Herring wrote:
-> > > On Fri, Sep 20, 2019 at 09:54:11AM +0200, Marcel Ziswiler wrote:
-> > > > From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> > > > 
-> > > > Add display timings for the following 3 display panels
-> > > > manufactured
-> > > > by
-> > > > Logic Technologies Limited:
-> > > > 
-> > > > - LT161010-2NHC e.g. as found in the Toradex Capacitive Touch
-> > > > Display
-> > > >   7" Parallel [1]
-> > > > - LT161010-2NHR e.g. as found in the Toradex Resistive Touch
-> > > > Display
-> > > > 7"
-> > > >   Parallel [2]
-> > > > - LT170410-2WHC e.g. as found in the Toradex Capacitive Touch
-> > > > Display
-> > > >   10.1" LVDS [3]
-> > > > 
-> > > > Those panels may also be distributed by Endrich Bauelemente
-> > > > Vertriebs
-> > > > GmbH [4].
-> > > > 
-> > > > [1]
-> > > > https://docs.toradex.com/104497-7-inch-parallel-capacitive-touch-display-800x480-datasheet.pdf
-> > > > [2]
-> > > > https://docs.toradex.com/104498-7-inch-parallel-resistive-touch-display-800x480.pdf
-> > > > [3]
-> > > > https://docs.toradex.com/105952-10-1-inch-lvds-capacitive-touch-display-1280x800-datasheet.pdf
-> > > > [4]
-> > > > https://www.endrich.com/isi50_isi30_tft-displays/lt170410-1whc_isi30
-> > > > 
-> > > > Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> > > > 
-> > > > ---
-> > > > 
-> > > >  drivers/gpu/drm/panel/panel-simple.c | 65
-> > > > ++++++++++++++++++++++++++++
-> > > >  1 file changed, 65 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/gpu/drm/panel/panel-simple.c
-> > > > b/drivers/gpu/drm/panel/panel-simple.c
-> > > > index 28fa6ba7b767..42bd0de25167 100644
-> > > > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > > > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > > > @@ -2034,6 +2034,62 @@ static const struct panel_desc lg_lp129qe
-> > > > = {
-> > > >     },
-> > > >  };
-> > > > 
-> > > > +static const struct display_timing
-> > > > logictechno_lt161010_2nh_timing
-> > > > = {
-> > > > +   .pixelclock = { 26400000, 33300000, 46800000 },
-> > > > +   .hactive = { 800, 800, 800 },
-> > > > +   .hfront_porch = { 16, 210, 354 },
-> > > > +   .hback_porch = { 46, 46, 46 },
-> > > > +   .hsync_len = { 1, 20, 40 },
-> > > > +   .vactive = { 480, 480, 480 },
-> > > > +   .vfront_porch = { 7, 22, 147 },
-> > > > +   .vback_porch = { 23, 23, 23 },
-> > > > +   .vsync_len = { 1, 10, 20 },
-> > > > +   .flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
-> > > > +            DISPLAY_FLAGS_DE_HIGH |
-> > > > DISPLAY_FLAGS_PIXDATA_POSEDGE |
-> > > > +            DISPLAY_FLAGS_SYNC_POSEDGE,
-> > > > +};
-> > > > +
-> > > > +static const struct panel_desc logictechno_lt161010_2nh = {
-> > > > +   .timings = &logictechno_lt161010_2nh_timing,
-> > > > +   .num_timings = 1,
-> > > > +   .size = {
-> > > > +           .width = 154,
-> > > > +           .height = 86,
-> > > > +   },
-> > > > +   .bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-> > > > +   .bus_flags = DRM_BUS_FLAG_DE_HIGH |
-> > > > +                DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
-> > > > +                DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
-> > > > +};
-> > > > +
-> > > > +static const struct display_timing
-> > > > logictechno_lt170410_2whc_timing
-> > > > = {
-> > > > +   .pixelclock = { 68900000, 71100000, 7340000 },
-> > > > +   .hactive = { 1280, 1280, 1280 },
-> > > > +   .hfront_porch = { 23, 60, 71 },
-> > > > +   .hback_porch = { 23, 60, 71 },
-> > > > +   .hsync_len = { 15, 40, 47 },
-> > > > +   .vactive = { 800, 800, 800 },
-> > > > +   .vfront_porch = { 5, 7, 10 },
-> > > > +   .vback_porch = { 5, 7, 10 },
-> > > > +   .vsync_len = { 6, 9, 12 },
-> > > > +   .flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
-> > > > +            DISPLAY_FLAGS_DE_HIGH |
-> > > > DISPLAY_FLAGS_PIXDATA_POSEDGE |
-> > > > +            DISPLAY_FLAGS_SYNC_POSEDGE,
-> > > > +};
-> > > > +
-> > > > +static const struct panel_desc logictechno_lt170410_2whc = {
-> > > > +   .timings = &logictechno_lt170410_2whc_timing,
-> > > > +   .num_timings = 1,
-> > > > +   .size = {
-> > > > +           .width = 217,
-> > > > +           .height = 136,
-> > > > +   },
-> > > > +   .bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-> > > > +   .bus_flags = DRM_BUS_FLAG_DE_HIGH |
-> > > > +                DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE |
-> > > > +                DRM_BUS_FLAG_SYNC_SAMPLE_NEGEDGE,
-> > > > +};
-> > > > +
-> > > >  static const struct drm_display_mode mitsubishi_aa070mc01_mode
-> > > > = {
-> > > >     .clock = 30400,
-> > > >     .hdisplay = 800,
-> > > > @@ -3264,6 +3320,15 @@ static const struct of_device_id
-> > > > platform_of_match[] = {
-> > > >     }, {
-> > > >             .compatible = "lg,lp129qe",
-> > > >             .data = &lg_lp129qe,
-> > > > +   }, {
-> > > > +           .compatible = "logictechno,lt161010-2nhc",
-> > > > +           .data = &logictechno_lt161010_2nh,
-> > > > +   }, {
-> > > > +           .compatible = "logictechno,lt161010-2nhr",
-> > > > +           .data = &logictechno_lt161010_2nh,
-> > > > +   }, {
-> > > > +           .compatible = "logictechno,lt170410-2whc",
-> > > > +           .data = &logictechno_lt170410_2whc,
-> > > 
-> > > The vendor prefix wasn't documented, but the compatible string and
-> > > rest
-> > > already are?
-> > 
-> > Marcel added the vendor prefix in the first patch of the series [1]
-> 
-> Right, but where's the panel's binding documentation with the above
-> compatible strings documented?
-> 
+On Thu, 5 Sep 2019 at 14:22, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>
+> From: Ludovic Barre <ludovic.barre@st.com>
+>
+> This patch adds a specific busy_complete callback for sdmmc variant.
+>
+> sdmmc has 2 status flags:
+> -busyd0: This is a hardware status flag (inverted value of d0 line).
+> it does not generate an interrupt.
+> -busyd0end: This indicates only end of busy following a CMD response.
+> On busy to Not busy changes, an interrupt is generated (if unmask)
+> and BUSYD0END status flag is set. Status flag is cleared by writing
+> corresponding interrupt clear bit in MMCICLEAR.
+>
+> The legacy busy completion monitors step by step the busy progression
+> start/in-progress/end. On sdmmc variant, the monitoring of busy steps
+> is difficult and not adapted (the software can miss a step and locks
+> the monitoring), the sdmmc has just need to wait the busyd0end bit
+> without monitoring all the changes.
 
-That one is indeed missing, we will provide that week. Thanks for
-pointing this out!
+To me it's a bit of the opposite as you describe it above. The legacy
+variants suffers from a somewhat broken HW that generates also a
+"busystart" IRQ. For the stm32_sdmmc variant, it's more clean/correct
+as only a busyend IRQ is raised.
 
-Philippe
+Maybe you can rephrase the above a bit to make that more clear somehow.
+
+>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  drivers/mmc/host/mmci.c             |  3 +++
+>  drivers/mmc/host/mmci.h             |  1 +
+>  drivers/mmc/host/mmci_stm32_sdmmc.c | 38 +++++++++++++++++++++++++++++
+>  3 files changed, 42 insertions(+)
+>
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index e20164f4354d..a666d826dbbd 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -260,6 +260,9 @@ static struct variant_data variant_stm32_sdmmc = {
+>         .datalength_bits        = 25,
+>         .datactrl_blocksz       = 14,
+>         .stm32_idmabsize_mask   = GENMASK(12, 5),
+> +       .busy_timeout           = true,
+> +       .busy_detect_flag       = MCI_STM32_BUSYD0,
+> +       .busy_detect_mask       = MCI_STM32_BUSYD0ENDMASK,
+>         .init                   = sdmmc_variant_init,
+>  };
+>
+> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+> index 733f9a035b06..841c5281beb5 100644
+> --- a/drivers/mmc/host/mmci.h
+> +++ b/drivers/mmc/host/mmci.h
+> @@ -164,6 +164,7 @@
+>  #define MCI_ST_CARDBUSY                (1 << 24)
+>  /* Extended status bits for the STM32 variants */
+>  #define MCI_STM32_BUSYD0       BIT(20)
+> +#define MCI_STM32_BUSYD0END    BIT(21)
+>
+>  #define MMCICLEAR              0x038
+>  #define MCI_CMDCRCFAILCLR      (1 << 0)
+> diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
+> index 8e83ae6920ae..bb5499cc9e81 100644
+> --- a/drivers/mmc/host/mmci_stm32_sdmmc.c
+> +++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
+> @@ -282,6 +282,43 @@ static u32 sdmmc_get_dctrl_cfg(struct mmci_host *host)
+>         return datactrl;
+>  }
+>
+> +bool sdmmc_busy_complete(struct mmci_host *host, u32 status, u32 err_msk)
+> +{
+> +       void __iomem *base = host->base;
+> +       u32 busy_d0, busy_d0end, mask;
+> +
+> +       mask = readl_relaxed(base + MMCIMASK0);
+> +       busy_d0end = readl_relaxed(base + MMCISTATUS) & MCI_STM32_BUSYD0END;
+> +       busy_d0 = readl_relaxed(base + MMCISTATUS) & MCI_STM32_BUSYD0;
+
+I have found some potential optimizations, but I leave it to you to
+decide what to do with my comments.
+
+*) You could avoid to read registers upfront, if that be skipped
+because of checking a known error condition. For example:
+"if (!host->busy_status && !(status & err_msk))" - would tell if it's
+even worth considering to unmask the busyend IRQ.
+
+**) Reading MMCISTATUS twice in row seems a bit silly, why not read it
+once and store its value in a local variable that you operate upon
+instead.
+
+> +
+> +       /* complete if there is an error or busy_d0end */
+> +       if ((status & err_msk) || busy_d0end)
+> +               goto complete;
+
+>From here, you may end up writing to MMCIMASK0 and MMCICLEAR, even if
+you didn't unmask the busyend IRQ in first place.
+
+> +
+> +       /*
+> +        * On response the busy signaling is reflected in the BUSYD0 flag.
+> +        * if busy_d0 is in-progress we must activate busyd0end interrupt
+> +        * to wait this completion. Else this request has no busy step.
+> +        */
+> +       if (busy_d0) {
+> +               if (!host->busy_status) {
+> +                       writel_relaxed(mask | host->variant->busy_detect_mask,
+> +                                      base + MMCIMASK0);
+> +                       host->busy_status = status &
+> +                               (MCI_CMDSENT | MCI_CMDRESPEND);
+> +               }
+> +               return false;
+> +       }
+> +
+> +complete:
+> +       writel_relaxed(mask & ~host->variant->busy_detect_mask,
+> +                      base + MMCIMASK0);
+> +       writel_relaxed(host->variant->busy_detect_mask, base + MMCICLEAR);
+> +       host->busy_status = 0;
+> +
+> +       return true;
+> +}
+> +
+>  static struct mmci_host_ops sdmmc_variant_ops = {
+>         .validate_data = sdmmc_idma_validate_data,
+>         .prep_data = sdmmc_idma_prep_data,
+> @@ -292,6 +329,7 @@ static struct mmci_host_ops sdmmc_variant_ops = {
+>         .dma_finalize = sdmmc_idma_finalize,
+>         .set_clkreg = mmci_sdmmc_set_clkreg,
+>         .set_pwrreg = mmci_sdmmc_set_pwrreg,
+> +       .busy_complete = sdmmc_busy_complete,
+>  };
+>
+>  void sdmmc_variant_init(struct mmci_host *host)
+> --
+> 2.17.1
+>
+
+Other than the comments above, which are plain suggestions for
+optimizations, the code looks correct to me!
+
+Kind regards
+Uffe
