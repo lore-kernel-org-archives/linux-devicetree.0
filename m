@@ -1,43 +1,43 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 0/7] add Tegra194 XUSB host and pad controller support
-Date: Fri, 4 Oct 2019 14:23:22 +0200
-Message-ID: <20191004122322.GB422178@kroah.com>
-References: <20191004081941.4831-1-jckuo@nvidia.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v2 0/3] Add PM support to STM32 Timer PWM
+Date: Fri, 4 Oct 2019 14:53:50 +0200
+Message-ID: <1570193633-6600-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191004081941.4831-1-jckuo@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: JC Kuo <jckuo@nvidia.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: thierry.reding@gmail.com, robh+dt@kernel.org, u.kleine-koenig@pengutronix.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 04:19:34PM +0800, JC Kuo wrote:
-> Hi,
-> 
-> This series introduces support for Tegra194 XUSB host and pad
-> controller. Tegra194 XUSB host and pad controller are highly
-> similar to the controllers found on Tegra186. Therefore, it's
-> possible to resue xhci-tegra.c and xusb-tegra186.c for Tegra194.
-> 
-> JC Kuo (7):
->   xhci: tegra: Parameterize mailbox register addresses
->   usb: host: xhci-tegra: Add Tegra194 XHCI support
->   phy: tegra: xusb: Protect Tegra186 soc with config
->   phy: tegra: xusb: Add Tegra194 support
->   dt-bindings: phy: tegra: Add Tegra194 support
->   arm64: tegra: Add XUSB and pad controller on Tegra194
->   arm64: tegra: Enable XUSB host in P2972-0000 board
+This patch series adds power management support for STM32 Timer PWM:
+- Document the pinctrl sleep state for STM32 Timer PWM
+- STM32 Timer PWM driver
 
-What changed from v1?  You need to put that somewhere, usually in the
-patches themselves, below the --- line.
+---
+Changes in v2:
+Follow Uwe suggestions/remarks:
+- Add a precursor patch to ease reviewing
+- Use registers read instead of pwm_get_state
+- Add a comment to mention registers content may be lost in low power mode
 
-Or at the very least, in the cover letter.
+Fabrice Gasnier (3):
+  dt-bindings: pwm-stm32: document pinctrl sleep state
+  pwm: stm32: split breakinput apply routine to ease PM support
+  pwm: stm32: add power management support
 
-Given that I can't find it anywhere here, I'll expect a v3 with that
-information to be sent soon :(
+ .../devicetree/bindings/pwm/pwm-stm32.txt          |  8 +-
+ drivers/pwm/pwm-stm32.c                            | 86 +++++++++++++++++-----
+ 2 files changed, 71 insertions(+), 23 deletions(-)
 
-thanks,
-
-greg k-h
+-- 
+2.7.4
