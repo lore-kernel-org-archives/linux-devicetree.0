@@ -1,66 +1,58 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
- power states
-Date: Fri, 4 Oct 2019 07:06:22 +0530
-Message-ID: <CAHLCerN6T2WszczwDOeg=F2MQ3hHBkgYubCu9WyuhsOaAR=mMg@mail.gmail.com>
-References: <cover.1558430617.git.amit.kucheria@linaro.org>
- <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
- <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
- <20191002091950.GA9393@centauri> <20191002092734.GA15523@centauri> <CAOCk7Nqqm6d3bR9hFJH6rp1jMPmx2e2qmJtnOuw5viaGWohEZA@mail.gmail.com>
+From: ChiaWei Wang <chiawei_wang@aspeedtech.com>
+Subject: RE: [PATCH 0/2] peci: aspeed: Add AST2600 compatible
+Date: Fri, 4 Oct 2019 01:34:43 +0000
+Message-ID: <ad79c20427ea4aa28c826d32e96b82e8@TWMBX02.aspeed.com>
+References: <20191002061200.29888-1-chiawei_wang@aspeedtech.com>
+ <70044749-785b-6ff3-7a28-fb049dcfec54@linux.intel.com>
+ <CACPK8XfBxC+4PHHCkMoXr+twjfWaovcJ5c=hfCmHRJ6LpGNeFg@mail.gmail.com>
+ <03d21443-aa9a-a126-dc77-a21f14f708c9@linux.intel.com>
+ <4af9eb8fa6fd41fc87708fc8afdcc83e@TWMBX02.aspeed.com>
+ <b219c8e9-4f72-f91c-ba57-96ffab82ff2e@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOCk7Nqqm6d3bR9hFJH6rp1jMPmx2e2qmJtnOuw5viaGWohEZA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc: Niklas Cassel <niklas.cassel@linaro.org>, lkml <linux-kernel@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Sibi Sankar <sibis@codeaurora.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b219c8e9-4f72-f91c-ba57-96ffab82ff2e@linux.intel.com>
+Content-Language: zh-TW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Joel Stanley <joel@jms.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Ryan Chen <ryan_chen@aspeedtech.com>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jason M Biils <jason.m.bills@linux.intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 2, 2019 at 11:48 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->
-> On Wed, Oct 2, 2019 at 3:27 AM Niklas Cassel <niklas.cassel@linaro.org> wrote:
-> >
-> > On Wed, Oct 02, 2019 at 11:19:50AM +0200, Niklas Cassel wrote:
-> > > On Mon, Sep 30, 2019 at 04:20:15PM -0600, Jeffrey Hugo wrote:
-> > > > Amit, the merged version of the below change causes a boot failure
-> > > > (nasty hang, sometimes with RCU stalls) on the msm8998 laptops.  Oddly
-> > > > enough, it seems to be resolved if I remove the cpu-idle-states
-> > > > property from one of the cpu nodes.
-> > > >
-> > > > I see no issues with the msm8998 MTP.
-> > >
-> > > Hello Jeffrey, Amit,
-> > >
-> > > If the PSCI idle states work properly on the msm8998 devboard (MTP),
-> > > but causes crashes on msm8998 laptops, the only logical change is
-> > > that the PSCI firmware is different between the two devices.
-> >
-> > Since the msm8998 laptops boot using ACPI, perhaps these laptops
-> > doesn't support PSCI/have any PSCI firmware at all.
->
-> They have PSCI.  If there was no PSCI, I would expect the PSCI
-> get_version request from Linux to fail, and all PSCI functionality to
-> be disabled.
->
-> However, your mention about ACPI sparked a thought.  ACPI describes
-> the idle states, along with the PSCI info, in the ACPI0007 devices.
-> Those exist on the laptops, and the info mostly correlates with Amit's
-> patch (ACPI seems to be a bit more conservative about the latencies,
-> and describes one additional deeper state).  However, upon a detailed
-> analysis of the ACPI description, I did find something relevant - the
-> retention state is not enabled.
->
-> So, I hacked out the retention state from Amit's patch, and I did not
-> observe a hang.  I used sysfs, and appeared able to validate that the
-> power collapse state was being used successfully.
+Sure. We will re-submit the patches with the revision suggested.
+Thanks.
 
-Interesting that the shallower sleep state was causing problems.
-Usually, it is the deeper states that cause problems. So you plan to
-override the idle states table in the board-specific DT?
+Regards,
+Chiawei
 
-Why does the platform even rely on DT? Shouldn't we use the ACPI tables instead?
+************* Email Confidentiality Notice ********************
+DISCLAIMER:
+This message (and any attachments) may contain legally privileged and/or other confidential information. If you have received it in error, please notify the sender by reply e-mail and immediately delete the e-mail and any attachments without copying or disclosing the contents. Thank you.
 
-> I'm guessing that something is weird with the laptops, where the CPUs
-> can go into retention, but not come out, thus causing issues.
->
-> I'll post a patch to fix up the laptops.  Thanks for all the help.
+
+-----Original Message-----
+From: Jae Hyun Yoo [mailto:jae.hyun.yoo@linux.intel.com] 
+Sent: Friday, October 4, 2019 12:20 AM
+To: ChiaWei Wang <chiawei_wang@aspeedtech.com>; Joel Stanley <joel@jms.id.au>
+Cc: Jason M Biils <jason.m.bills@linux.intel.com>; Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Andrew Jeffery <andrew@aj.id.au>; linux-aspeed <linux-aspeed@lists.ozlabs.org>; OpenBMC Maillist <openbmc@lists.ozlabs.org>; devicetree <devicetree@vger.kernel.org>; Linux ARM <linux-arm-kernel@lists.infradead.org>; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>; Ryan Chen <ryan_chen@aspeedtech.com>
+Subject: Re: [PATCH 0/2] peci: aspeed: Add AST2600 compatible
+
+On 10/2/2019 7:35 PM, ChiaWei Wang wrote:
+> Hi Jae Hyun,
+> 
+> Thanks for the feedback.
+> For now should I use GitHub pull-request to submit the patches of PECI-related change to OpenBMC dev-5.3 tree only?
+
+You could submit this patch series to OpenBMC mailing list with [PATCH linux dev-5.3] prefix.
+
+Thanks,
+
+Jae
