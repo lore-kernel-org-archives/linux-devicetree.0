@@ -1,41 +1,70 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH] arm: dts: integratorap: Remove top level dma-ranges
-Date: Fri, 4 Oct 2019 23:12:43 +0200
-Message-ID: <CACRpkdaY8G6LT-FSr7BQrGyskBTXqMmhooKBpHDVMBuv7uAQeQ@mail.gmail.com>
-References: <20190920153622.14616-1-robh@kernel.org>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH] .gitattributes: Use 'dts' diff driver for dts files
+Date: Fri,  4 Oct 2019 14:23:11 -0700
+Message-ID: <20191004212311.141538-1-swboyd@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190920153622.14616-1-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 5:36 PM Rob Herring <robh@kernel.org> wrote:
+Git is gaining support to display the closest node to the diff in the
+hunk header via the 'dts' diff driver. Use that driver for all dts and
+dtsi files so we can gain some more context on where the diff is. Taking
+a recent commit in the kernel dts files you can see the difference.
 
-> 'dma-ranges' at the top level doesn't make sense. 'dma-ranges' implies
-> there is a parent bus node with '#address-cells' and '#size-cells' which
-> is impossible here.
->
-> Likely this translation needs to be moved down to sub-nodes that need
-> it.
->
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+With this patch and an updated git
 
-Patch applied! I'll get this to ARM SoC with some
-other stuff.
+ diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+ index 62e07e1197cc..4c38426a6969 100644
+ --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+ +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+ @@ -289,5 +289,29 @@ vdd_hdmi: regulator@1 {
+                         gpio = <&gpio TEGRA194_MAIN_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
+                         enable-active-high;
+                 };
+ +
+ +               vdd_3v3_pcie: regulator@2 {
+ +                       compatible = "regulator-fixed";
 
-Yours,
-Linus Walleij
+vs. without this patch
+
+ diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+ index 62e07e1197cc..4c38426a6969 100644
+ --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+ +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+ @@ -289,5 +289,29 @@
+                         gpio = <&gpio TEGRA194_MAIN_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
+                         enable-active-high;
+                 };
+ +
+ +               vdd_3v3_pcie: regulator@2 {
+ +                       compatible = "regulator-fixed";
+
+You can see that we don't know what the context node is because it isn't shown
+after the '@@'.
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+
+Sending to Andrew but I suppose it can go through dt tree too.
+
+ .gitattributes | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/.gitattributes b/.gitattributes
+index 89c411b5ce6b..4b32eaa9571e 100644
+--- a/.gitattributes
++++ b/.gitattributes
+@@ -1,2 +1,4 @@
+ *.c   diff=cpp
+ *.h   diff=cpp
++*.dtsi diff=dts
++*.dts  diff=dts
+-- 
+Sent by a computer through tubes
