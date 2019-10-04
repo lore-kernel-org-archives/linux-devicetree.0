@@ -1,58 +1,118 @@
-From: ChiaWei Wang <chiawei_wang@aspeedtech.com>
-Subject: RE: [PATCH 0/2] peci: aspeed: Add AST2600 compatible
-Date: Fri, 4 Oct 2019 01:34:43 +0000
-Message-ID: <ad79c20427ea4aa28c826d32e96b82e8@TWMBX02.aspeed.com>
-References: <20191002061200.29888-1-chiawei_wang@aspeedtech.com>
- <70044749-785b-6ff3-7a28-fb049dcfec54@linux.intel.com>
- <CACPK8XfBxC+4PHHCkMoXr+twjfWaovcJ5c=hfCmHRJ6LpGNeFg@mail.gmail.com>
- <03d21443-aa9a-a126-dc77-a21f14f708c9@linux.intel.com>
- <4af9eb8fa6fd41fc87708fc8afdcc83e@TWMBX02.aspeed.com>
- <b219c8e9-4f72-f91c-ba57-96ffab82ff2e@linux.intel.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH] ARM: dts: am3874-iceboard: Fix 'i2c-mux-idle-disconnect' usage
+Date: Thu,  3 Oct 2019 18:45:48 -0700
+Message-ID: <20191004014548.29583-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b219c8e9-4f72-f91c-ba57-96ffab82ff2e@linux.intel.com>
-Content-Language: zh-TW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Joel Stanley <joel@jms.id.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Ryan Chen <ryan_chen@aspeedtech.com>, linux-aspeed <linux-aspeed@lists.ozlabs.org>, Andrew Jeffery <andrew@aj.id.au>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jason M Biils <jason.m.bills@linux.intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Graeme Smecher <gsmecher@threespeedlogic.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sure. We will re-submit the patches with the revision suggested.
-Thanks.
+According to
+Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt,
+i2c-mux-idle-disconnect is a property of a parent node since it
+pertains to the mux/switch as a whole, so move it there and drop all
+of the concurrences in child nodes.
 
-Regards,
-Chiawei
+Fixes: d031773169df ("ARM: dts: Adds device tree file for McGill's IceBoard, based on TI AM3874")
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Benoît Cousson <bcousson@baylibre.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Graeme Smecher <gsmecher@threespeedlogic.com>
+Cc: linux-omap@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
 
-************* Email Confidentiality Notice ********************
-DISCLAIMER:
-This message (and any attachments) may contain legally privileged and/or other confidential information. If you have received it in error, please notify the sender by reply e-mail and immediately delete the e-mail and any attachments without copying or disclosing the contents. Thank you.
+This is purely a drive-by fix, since it concerns the HW I've never
+heard of before. However I was working with PCA9548
+(vf610-zii-scu4-aib is my HW) and looking at various users in the
+kernel, when this code caught my eye. Apologies for the noise if this
+fix is somehow bogus.
 
-
------Original Message-----
-From: Jae Hyun Yoo [mailto:jae.hyun.yoo@linux.intel.com] 
-Sent: Friday, October 4, 2019 12:20 AM
-To: ChiaWei Wang <chiawei_wang@aspeedtech.com>; Joel Stanley <joel@jms.id.au>
-Cc: Jason M Biils <jason.m.bills@linux.intel.com>; Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Andrew Jeffery <andrew@aj.id.au>; linux-aspeed <linux-aspeed@lists.ozlabs.org>; OpenBMC Maillist <openbmc@lists.ozlabs.org>; devicetree <devicetree@vger.kernel.org>; Linux ARM <linux-arm-kernel@lists.infradead.org>; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>; Ryan Chen <ryan_chen@aspeedtech.com>
-Subject: Re: [PATCH 0/2] peci: aspeed: Add AST2600 compatible
-
-On 10/2/2019 7:35 PM, ChiaWei Wang wrote:
-> Hi Jae Hyun,
-> 
-> Thanks for the feedback.
-> For now should I use GitHub pull-request to submit the patches of PECI-related change to OpenBMC dev-5.3 tree only?
-
-You could submit this patch series to OpenBMC mailing list with [PATCH linux dev-5.3] prefix.
+In case that it matters this patch is based on top of 5.4-rc1.
 
 Thanks,
+Andrey Smirnov
 
-Jae
+ arch/arm/boot/dts/am3874-iceboard.dts | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/arch/arm/boot/dts/am3874-iceboard.dts b/arch/arm/boot/dts/am3874-iceboard.dts
+index 883fb85135d4..1b4b2b0500e4 100644
+--- a/arch/arm/boot/dts/am3874-iceboard.dts
++++ b/arch/arm/boot/dts/am3874-iceboard.dts
+@@ -111,13 +111,13 @@
+ 		reg = <0x70>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		i2c-mux-idle-disconnect;
+ 
+ 		i2c@0 {
+ 			/* FMC A */
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0>;
+-			i2c-mux-idle-disconnect;
+ 		};
+ 
+ 		i2c@1 {
+@@ -125,7 +125,6 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <1>;
+-			i2c-mux-idle-disconnect;
+ 		};
+ 
+ 		i2c@2 {
+@@ -133,7 +132,6 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <2>;
+-			i2c-mux-idle-disconnect;
+ 		};
+ 
+ 		i2c@3 {
+@@ -141,7 +139,6 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <3>;
+-			i2c-mux-idle-disconnect;
+ 		};
+ 
+ 		i2c@4 {
+@@ -149,14 +146,12 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <4>;
+-			i2c-mux-idle-disconnect;
+ 		};
+ 
+ 		i2c@5 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <5>;
+-			i2c-mux-idle-disconnect;
+ 
+ 			ina230@40 { compatible = "ti,ina230"; reg = <0x40>; shunt-resistor = <5000>; };
+ 			ina230@41 { compatible = "ti,ina230"; reg = <0x41>; shunt-resistor = <5000>; };
+@@ -182,14 +177,12 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <6>;
+-			i2c-mux-idle-disconnect;
+ 		};
+ 
+ 		i2c@7 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <7>;
+-			i2c-mux-idle-disconnect;
+ 
+ 			u41: pca9575@20 {
+ 				compatible = "nxp,pca9575";
+-- 
+2.21.0
