@@ -1,109 +1,188 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 04/21] media: ti-vpe: vpe: Remove unnecessary use of container_of
-Date: Fri, 4 Oct 2019 11:29:35 -0500
-Message-ID: <20191004162952.4963-5-bparrot@ti.com>
-References: <20191004162952.4963-1-bparrot@ti.com>
+From: JC Kuo <jckuo@nvidia.com>
+Subject: [PATCH v3 1/7] xhci: tegra: Parameterize mailbox register addresses
+Date: Sat, 5 Oct 2019 00:29:00 +0800
+Message-ID: <20191004162906.4818-2-jckuo@nvidia.com>
+References: <20191004162906.4818-1-jckuo@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191004162952.4963-1-bparrot@ti.com>
+In-Reply-To: <20191004162906.4818-1-jckuo@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
+To: gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com
+Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com, JC Kuo <jckuo@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Instead of saving a pointer to the 'fh' member of struct vpe_ctx to
-later have to use container_of to retrieve the actual pointer to the
-context structure, which seems to confuse static code analysis tool
-anyways, just save the pointer to the actual structure and then retrieve
-it directly.
+Tegra194 XUSB host controller has rearranged mailbox registers. This
+commit makes mailbox registers address a part of "soc" data so that
+xhci-tegra driver can be used for Tegra194.
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Signed-off-by: JC Kuo <jckuo@nvidia.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 22 +++++++---------------
- 1 file changed, 7 insertions(+), 15 deletions(-)
+Changes in v3: none
+Changes in v2: none
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 56f60dbea15c..0e9cb0319a92 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -900,14 +900,6 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
- 	return 0;
- }
+ drivers/usb/host/xhci-tegra.c | 58 +++++++++++++++++++++++++----------
+ 1 file changed, 42 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/usb/host/xhci-tegra.c b/drivers/usb/host/xhci-tegra.c
+index 2ff7c911fbd0..add6b8fb40e1 100644
+--- a/drivers/usb/host/xhci-tegra.c
++++ b/drivers/usb/host/xhci-tegra.c
+@@ -42,19 +42,18 @@
+ #define XUSB_CFG_CSB_BASE_ADDR			0x800
  
--/*
-- * Return the vpe_ctx structure for a given struct file
-- */
--static struct vpe_ctx *file2ctx(struct file *file)
--{
--	return container_of(file->private_data, struct vpe_ctx, fh);
--}
--
- /*
-  * mem2mem callbacks
-  */
-@@ -1527,7 +1519,7 @@ static int vpe_enum_fmt(struct file *file, void *priv,
- static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
- {
- 	struct v4l2_pix_format_mplane *pix = &f->fmt.pix_mp;
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vb2_queue *vq;
- 	struct vpe_q_data *q_data;
- 	int i;
-@@ -1689,7 +1681,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ /* FPCI mailbox registers */
+-#define XUSB_CFG_ARU_MBOX_CMD			0x0e4
++/* XUSB_CFG_ARU_MBOX_CMD */
+ #define  MBOX_DEST_FALC				BIT(27)
+ #define  MBOX_DEST_PME				BIT(28)
+ #define  MBOX_DEST_SMI				BIT(29)
+ #define  MBOX_DEST_XHCI				BIT(30)
+ #define  MBOX_INT_EN				BIT(31)
+-#define XUSB_CFG_ARU_MBOX_DATA_IN		0x0e8
++/* XUSB_CFG_ARU_MBOX_DATA_IN and XUSB_CFG_ARU_MBOX_DATA_OUT */
+ #define  CMD_DATA_SHIFT				0
+ #define  CMD_DATA_MASK				0xffffff
+ #define  CMD_TYPE_SHIFT				24
+ #define  CMD_TYPE_MASK				0xff
+-#define XUSB_CFG_ARU_MBOX_DATA_OUT		0x0ec
+-#define XUSB_CFG_ARU_MBOX_OWNER			0x0f0
++/* XUSB_CFG_ARU_MBOX_OWNER */
+ #define  MBOX_OWNER_NONE			0
+ #define  MBOX_OWNER_FW				1
+ #define  MBOX_OWNER_SW				2
+@@ -146,6 +145,13 @@ struct tegra_xusb_phy_type {
+ 	unsigned int num;
+ };
  
- static int vpe_try_fmt(struct file *file, void *priv, struct v4l2_format *f)
- {
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vpe_fmt *fmt = find_format(f);
++struct tega_xusb_mbox_regs {
++	u16 cmd;
++	u16 data_in;
++	u16 data_out;
++	u16 owner;
++};
++
+ struct tegra_xusb_soc {
+ 	const char *firmware;
+ 	const char * const *supply_names;
+@@ -160,6 +166,8 @@ struct tegra_xusb_soc {
+ 		} usb2, ulpi, hsic, usb3;
+ 	} ports;
  
- 	if (V4L2_TYPE_IS_OUTPUT(f->type))
-@@ -1762,7 +1754,7 @@ static int __vpe_s_fmt(struct vpe_ctx *ctx, struct v4l2_format *f)
- static int vpe_s_fmt(struct file *file, void *priv, struct v4l2_format *f)
- {
- 	int ret;
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
++	struct tega_xusb_mbox_regs mbox;
++
+ 	bool scale_ss_clock;
+ 	bool has_ipfs;
+ };
+@@ -395,15 +403,15 @@ static int tegra_xusb_mbox_send(struct tegra_xusb *tegra,
+ 	 * ACK/NAK messages.
+ 	 */
+ 	if (!(msg->cmd == MBOX_CMD_ACK || msg->cmd == MBOX_CMD_NAK)) {
+-		value = fpci_readl(tegra, XUSB_CFG_ARU_MBOX_OWNER);
++		value = fpci_readl(tegra, tegra->soc->mbox.owner);
+ 		if (value != MBOX_OWNER_NONE) {
+ 			dev_err(tegra->dev, "mailbox is busy\n");
+ 			return -EBUSY;
+ 		}
  
- 	ret = vpe_try_fmt(file, priv, f);
- 	if (ret)
-@@ -1847,7 +1839,7 @@ static int __vpe_try_selection(struct vpe_ctx *ctx, struct v4l2_selection *s)
- static int vpe_g_selection(struct file *file, void *fh,
- 		struct v4l2_selection *s)
- {
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vpe_q_data *q_data;
- 	bool use_c_rect = false;
+-		fpci_writel(tegra, MBOX_OWNER_SW, XUSB_CFG_ARU_MBOX_OWNER);
++		fpci_writel(tegra, MBOX_OWNER_SW, tegra->soc->mbox.owner);
  
-@@ -1908,7 +1900,7 @@ static int vpe_g_selection(struct file *file, void *fh,
- static int vpe_s_selection(struct file *file, void *fh,
- 		struct v4l2_selection *s)
- {
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
- 	struct vpe_q_data *q_data;
- 	struct v4l2_selection sel = *s;
- 	int ret;
-@@ -2275,7 +2267,7 @@ static int vpe_open(struct file *file)
- 	init_adb_hdrs(ctx);
+-		value = fpci_readl(tegra, XUSB_CFG_ARU_MBOX_OWNER);
++		value = fpci_readl(tegra, tegra->soc->mbox.owner);
+ 		if (value != MBOX_OWNER_SW) {
+ 			dev_err(tegra->dev, "failed to acquire mailbox\n");
+ 			return -EBUSY;
+@@ -413,17 +421,17 @@ static int tegra_xusb_mbox_send(struct tegra_xusb *tegra,
+ 	}
  
- 	v4l2_fh_init(&ctx->fh, video_devdata(file));
--	file->private_data = &ctx->fh;
-+	file->private_data = ctx;
+ 	value = tegra_xusb_mbox_pack(msg);
+-	fpci_writel(tegra, value, XUSB_CFG_ARU_MBOX_DATA_IN);
++	fpci_writel(tegra, value, tegra->soc->mbox.data_in);
  
- 	hdl = &ctx->hdl;
- 	v4l2_ctrl_handler_init(hdl, 1);
-@@ -2360,7 +2352,7 @@ static int vpe_open(struct file *file)
- static int vpe_release(struct file *file)
- {
- 	struct vpe_dev *dev = video_drvdata(file);
--	struct vpe_ctx *ctx = file2ctx(file);
-+	struct vpe_ctx *ctx = file->private_data;
+-	value = fpci_readl(tegra, XUSB_CFG_ARU_MBOX_CMD);
++	value = fpci_readl(tegra, tegra->soc->mbox.cmd);
+ 	value |= MBOX_INT_EN | MBOX_DEST_FALC;
+-	fpci_writel(tegra, value, XUSB_CFG_ARU_MBOX_CMD);
++	fpci_writel(tegra, value, tegra->soc->mbox.cmd);
  
- 	vpe_dbg(dev, "releasing instance %p\n", ctx);
+ 	if (wait_for_idle) {
+ 		unsigned long timeout = jiffies + msecs_to_jiffies(250);
  
+ 		while (time_before(jiffies, timeout)) {
+-			value = fpci_readl(tegra, XUSB_CFG_ARU_MBOX_OWNER);
++			value = fpci_readl(tegra, tegra->soc->mbox.owner);
+ 			if (value == MBOX_OWNER_NONE)
+ 				break;
+ 
+@@ -431,7 +439,7 @@ static int tegra_xusb_mbox_send(struct tegra_xusb *tegra,
+ 		}
+ 
+ 		if (time_after(jiffies, timeout))
+-			value = fpci_readl(tegra, XUSB_CFG_ARU_MBOX_OWNER);
++			value = fpci_readl(tegra, tegra->soc->mbox.owner);
+ 
+ 		if (value != MBOX_OWNER_NONE)
+ 			return -ETIMEDOUT;
+@@ -598,16 +606,16 @@ static irqreturn_t tegra_xusb_mbox_thread(int irq, void *data)
+ 
+ 	mutex_lock(&tegra->lock);
+ 
+-	value = fpci_readl(tegra, XUSB_CFG_ARU_MBOX_DATA_OUT);
++	value = fpci_readl(tegra, tegra->soc->mbox.data_out);
+ 	tegra_xusb_mbox_unpack(&msg, value);
+ 
+-	value = fpci_readl(tegra, XUSB_CFG_ARU_MBOX_CMD);
++	value = fpci_readl(tegra, tegra->soc->mbox.cmd);
+ 	value &= ~MBOX_DEST_SMI;
+-	fpci_writel(tegra, value, XUSB_CFG_ARU_MBOX_CMD);
++	fpci_writel(tegra, value, tegra->soc->mbox.cmd);
+ 
+ 	/* clear mailbox owner if no ACK/NAK is required */
+ 	if (!tegra_xusb_mbox_cmd_requires_ack(msg.cmd))
+-		fpci_writel(tegra, MBOX_OWNER_NONE, XUSB_CFG_ARU_MBOX_OWNER);
++		fpci_writel(tegra, MBOX_OWNER_NONE, tegra->soc->mbox.owner);
+ 
+ 	tegra_xusb_mbox_handle(tegra, &msg);
+ 
+@@ -1375,6 +1383,12 @@ static const struct tegra_xusb_soc tegra124_soc = {
+ 	},
+ 	.scale_ss_clock = true,
+ 	.has_ipfs = true,
++	.mbox = {
++		.cmd = 0xe4,
++		.data_in = 0xe8,
++		.data_out = 0xec,
++		.owner = 0xf0,
++	},
+ };
+ MODULE_FIRMWARE("nvidia/tegra124/xusb.bin");
+ 
+@@ -1407,6 +1421,12 @@ static const struct tegra_xusb_soc tegra210_soc = {
+ 	},
+ 	.scale_ss_clock = false,
+ 	.has_ipfs = true,
++	.mbox = {
++		.cmd = 0xe4,
++		.data_in = 0xe8,
++		.data_out = 0xec,
++		.owner = 0xf0,
++	},
+ };
+ MODULE_FIRMWARE("nvidia/tegra210/xusb.bin");
+ 
+@@ -1432,6 +1452,12 @@ static const struct tegra_xusb_soc tegra186_soc = {
+ 	},
+ 	.scale_ss_clock = false,
+ 	.has_ipfs = false,
++	.mbox = {
++		.cmd = 0xe4,
++		.data_in = 0xe8,
++		.data_out = 0xec,
++		.owner = 0xf0,
++	},
+ };
+ 
+ static const struct of_device_id tegra_xusb_of_match[] = {
 -- 
 2.17.1
