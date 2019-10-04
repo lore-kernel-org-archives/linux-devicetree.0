@@ -1,72 +1,45 @@
-From: JC Kuo <jckuo@nvidia.com>
-Subject: [PATCH v2 2/7] usb: host: xhci-tegra: Add Tegra194 XHCI support
-Date: Fri, 4 Oct 2019 16:19:36 +0800
-Message-ID: <20191004081941.4831-3-jckuo@nvidia.com>
-References: <20191004081941.4831-1-jckuo@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 0/7] Add RZ/G2N MSIOF/RWDT/PCIEC support
+Date: Fri,  4 Oct 2019 09:35:26 +0100
+Message-ID: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191004081941.4831-1-jckuo@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com, JC Kuo <jckuo@nvidia.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoperun.com
 List-Id: devicetree@vger.kernel.org
 
-This commit adds Tegra194 XUSB host mode controller support. This is
-very similar to the existing Tegra124/Tegra210/Tegra186 XHCI, except
-  1. the number of ports and PHYs differs
-  2. the IPFS wrapper being removed
-  3. mailbox registers address changes
+Dear All,
 
-Signed-off-by: JC Kuo <jckuo@nvidia.com>
----
- drivers/usb/host/xhci-tegra.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+this series adds MSDIF/RWDT/PCIEC support to the HiHope RZ/G2N.
 
-diff --git a/drivers/usb/host/xhci-tegra.c b/drivers/usb/host/xhci-tegra.c
-index add6b8fb40e1..f19d39874a3b 100644
---- a/drivers/usb/host/xhci-tegra.c
-+++ b/drivers/usb/host/xhci-tegra.c
-@@ -1460,10 +1460,40 @@ static const struct tegra_xusb_soc tegra186_soc = {
- 	},
- };
- 
-+static const char * const tegra194_supply_names[] = {
-+};
-+
-+static const struct tegra_xusb_phy_type tegra194_phy_types[] = {
-+	{ .name = "usb3", .num = 4, },
-+	{ .name = "usb2", .num = 4, },
-+};
-+
-+static const struct tegra_xusb_soc tegra194_soc = {
-+	.firmware = "nvidia/tegra194/xusb.bin",
-+	.supply_names = tegra194_supply_names,
-+	.num_supplies = ARRAY_SIZE(tegra194_supply_names),
-+	.phy_types = tegra194_phy_types,
-+	.num_types = ARRAY_SIZE(tegra194_phy_types),
-+	.ports = {
-+		.usb3 = { .offset = 0, .count = 4, },
-+		.usb2 = { .offset = 4, .count = 4, },
-+	},
-+	.scale_ss_clock = false,
-+	.has_ipfs = false,
-+	.mbox = {
-+		.cmd = 0x68,
-+		.data_in = 0x6c,
-+		.data_out = 0x70,
-+		.owner = 0x74,
-+	},
-+};
-+MODULE_FIRMWARE("nvidia/tegra194/xusb.bin");
-+
- static const struct of_device_id tegra_xusb_of_match[] = {
- 	{ .compatible = "nvidia,tegra124-xusb", .data = &tegra124_soc },
- 	{ .compatible = "nvidia,tegra210-xusb", .data = &tegra210_soc },
- 	{ .compatible = "nvidia,tegra186-xusb", .data = &tegra186_soc },
-+	{ .compatible = "nvidia,tegra194-xusb", .data = &tegra194_soc },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, tegra_xusb_of_match);
+This series depends on the following series and patches:
+* https://patchwork.kernel.org/cover/11166155/
+* https://patchwork.kernel.org/cover/11157129/
+* https://patchwork.kernel.org/cover/11158259/
+* https://patchwork.kernel.org/patch/11166327/
+* https://patchwork.kernel.org/cover/11171325/
+* https://patchwork.kernel.org/patch/11162283/
+
+Thanks,
+Fab
+
+Fabrizio Castro (7):
+  dt-bindings: watchdog: renesas-wdt: Document r8a774b1 support
+  dt-bindings: spi: sh-msiof: Add r8a774b1 support
+  dt-bindings: PCI: rcar: Add device tree support for r8a774b1
+  arm64: dts: renesas: r8a774b1: Add RWDT node
+  arm64: dts: renesas: r8a774b1: Add all MSIOF nodes
+  arm64: dts: renesas: r8a774b1: Add PCIe device nodes
+  arm64: dts: renesas: hihope-rzg2-ex: Let the board specific DT decide
+    about pciec1
+
+ Documentation/devicetree/bindings/pci/rcar-pci.txt |   1 +
+ .../devicetree/bindings/spi/renesas,sh-msiof.yaml  |   1 +
+ .../devicetree/bindings/watchdog/renesas,wdt.txt   |   1 +
+ arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi    |   4 -
+ .../boot/dts/renesas/r8a774a1-hihope-rzg2m-ex.dts  |   4 +
+ arch/arm64/boot/dts/renesas/r8a774b1.dtsi          | 111 ++++++++++++++++++++-
+ 6 files changed, 115 insertions(+), 7 deletions(-)
+
 -- 
-2.17.1
+2.7.4
