@@ -1,8 +1,8 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 04/21] MAINTAINERS: Add new Marvell CN9130-based files to
- track
-Date: Fri,  4 Oct 2019 16:27:21 +0200
-Message-ID: <20191004142738.7370-5-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 06/21] arm64: dts: marvell: Move clocks to AP806 specific
+ file
+Date: Fri,  4 Oct 2019 16:27:23 +0200
+Message-ID: <20191004142738.7370-7-miquel.raynal@bootlin.com>
 References: <20191004142738.7370-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,36 +22,68 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: devicetree@vger.kernel.org, Yan Markman <ymarkman@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Marvell has a new branch of products called CN9130 based on AP807 and
-CP115 which are derivatives of the currently supported AP806 and
-CP110. Update the MAINTAINERS entry to reflect this change in the
-naming.
+Regular clocks and CPU clocks are specific to AP806, move them out of
+the generic AP80x file so that AP807 can use its own clocks.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- MAINTAINERS | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 16 ++++++++++++++++
+ arch/arm64/boot/dts/marvell/armada-ap80x.dtsi | 12 ------------
+ 2 files changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 296de2b51c83..6b53cd42ae48 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1897,7 +1897,7 @@ F:	arch/arm/boot/dts/dove*
- F:	arch/arm/boot/dts/orion5x*
- T:	git git://git.infradead.org/linux-mvebu.git
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+index cdadb28f287e..866628679ac7 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+@@ -12,3 +12,19 @@
+ 	model = "Marvell Armada AP806";
+ 	compatible = "marvell,armada-ap806";
+ };
++
++&ap_syscon0 {
++	ap_clk: clock {
++		compatible = "marvell,ap806-clock";
++		#clock-cells = <1>;
++	};
++};
++
++&ap_syscon1 {
++	cpu_clk: clock-cpu@278 {
++		compatible = "marvell,ap806-cpu-clock";
++		clocks = <&ap_clk 0>, <&ap_clk 1>;
++		#clock-cells = <1>;
++		reg = <0x278 0xa30>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
+index 0dc1365e5758..e7438c21ccee 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap80x.dtsi
+@@ -248,11 +248,6 @@
+ 				compatible = "syscon", "simple-mfd";
+ 				reg = <0x6f4000 0x2000>;
  
--ARM/Marvell Kirkwood and Armada 370, 375, 38x, 39x, XP, 3700, 7K/8K SOC support
-+ARM/Marvell Kirkwood and Armada 370, 375, 38x, 39x, XP, 3700, 7K/8K, CN9130 SOC support
- M:	Jason Cooper <jason@lakedaemon.net>
- M:	Andrew Lunn <andrew@lunn.ch>
- M:	Gregory Clement <gregory.clement@bootlin.com>
-@@ -1909,6 +1909,7 @@ F:	arch/arm/boot/dts/kirkwood*
- F:	arch/arm/configs/mvebu_*_defconfig
- F:	arch/arm/mach-mvebu/
- F:	arch/arm64/boot/dts/marvell/armada*
-+F:	arch/arm64/boot/dts/marvell/cn913*
- F:	drivers/cpufreq/armada-37xx-cpufreq.c
- F:	drivers/cpufreq/armada-8k-cpufreq.c
- F:	drivers/cpufreq/mvebu-cpufreq.c
+-				ap_clk: clock {
+-					compatible = "marvell,ap806-clock";
+-					#clock-cells = <1>;
+-				};
+-
+ 				ap_pinctrl: pinctrl {
+ 					compatible = "marvell,ap806-pinctrl";
+ 
+@@ -278,13 +273,6 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
+ 
+-				cpu_clk: clock-cpu@278 {
+-					compatible = "marvell,ap806-cpu-clock";
+-					clocks = <&ap_clk 0>, <&ap_clk 1>;
+-					#clock-cells = <1>;
+-					reg = <0x278 0xa30>;
+-				};
+-
+ 				ap_thermal: thermal-sensor@80 {
+ 					compatible = "marvell,armada-ap806-thermal";
+ 					reg = <0x80 0x10>;
 -- 
 2.20.1
