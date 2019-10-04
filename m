@@ -1,44 +1,82 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH 0/4] Add RZ/G2N DU support
-Date: Fri, 4 Oct 2019 06:30:52 +0000
-Message-ID: <OSBPR01MB2103458EC171151BF8C05D9FB89E0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1569834905-42868-1-git-send-email-biju.das@bp.renesas.com>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
+Date: Fri, 4 Oct 2019 11:00:58 +0300
+Message-ID: <20191004080058.GD1048@kuha.fi.intel.com>
+References: <20191002231617.3670-1-john.stultz@linaro.org>
+ <20191002231617.3670-3-john.stultz@linaro.org>
+ <20191003112618.GA2420393@kroah.com>
+ <CALAqxLWm_u3KsXHn4a6PdBCOKM1vs5k0xS3G5jY+M-=HBqUJag@mail.gmail.com>
+ <9cfccb6a-fba1-61a3-3eb6-3009c2f5e747@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1569834905-42868-1-git-send-email-biju.das@bp.renesas.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9cfccb6a-fba1-61a3-3eb6-3009c2f5e747@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Jun Li <lijun.kernel@gmail.com>, Valentin Schneider <valentin.schneider@arm.com>, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKCkFyZSB5b3UgaGFwcHkgd2l0aCB0aGlzIHBhdGNoPyBQbGVhc2UgbGV0IG1l
-IGtub3cuCgpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgtcmVuZXNh
-cy1zb2MvbGlzdC8/c2VyaWVzPTE4MDI3MQoKcmVnYXJkcywKQmlqdQoKPiBTdWJqZWN0OiBbUEFU
-Q0ggMC80XSBBZGQgUlovRzJOIERVIHN1cHBvcnQKPiAKPiBUaGlzIHBhdGNoIHNlcmllcyBhaW1z
-IHRvIGFkZCBiaW5kaW5nL2RyaXZlciBzdXBwb3J0IGZvciBSOEE3NzRCMShhLmsuYQo+IFJaL0cy
-TikgRFUgKHdoaWNoIGlzIHZlcnkgc2ltaWxhciB0byB0aGUgUjhBNzc5NjUgRFUpOyBpdCBoYXMg
-b25lIFJHQgo+IG91dHB1dCwgb25lIExWRFMgb3V0cHV0IGFuZCBvbmUgSERNSSBvdXRwdXQuCj4g
-Cj4gQmlqdSBEYXMgKDQpOgo+ICAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IHJlbmVzYXM6IGR1OiBE
-b2N1bWVudCB0aGUgcjhhNzc0YjEgYmluZGluZ3MKPiAgIGRybTogcmNhci1kdTogQWRkIFI4QTc3
-NEIxIHN1cHBvcnQKPiAgIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiByZW5lc2FzOiBsdmRzOiBEb2N1
-bWVudCByOGE3NzRiMSBiaW5kaW5ncwo+ICAgZHJtOiByY2FyLWR1OiBsdmRzOiBBZGQgcjhhNzc0
-YjEgc3VwcG9ydAo+IAo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRz
-LnR4dCAgICAgICB8ICAxICsKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5l
-c2FzLGR1LnR4dCAgICAgfCAgMiArKwo+ICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1
-X2Rydi5jICAgICAgICAgICAgICB8IDMwCj4gKysrKysrKysrKysrKysrKysrKysrKwo+ICBkcml2
-ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2x2ZHMuYyAgICAgICAgICAgICAgICB8ICAxICsKPiAg
-NCBmaWxlcyBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspCj4gCj4gLS0KPiAyLjcuNAoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+On Thu, Oct 03, 2019 at 10:56:24PM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 03-10-2019 22:45, John Stultz wrote:
+> > On Thu, Oct 3, 2019 at 4:26 AM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > > 
+> > > On Wed, Oct 02, 2019 at 11:16:16PM +0000, John Stultz wrote:
+> > > > From: Yu Chen <chenyu56@huawei.com>
+> > > > 
+> > > > This patch adds notifier for drivers want to be informed of the usb role
+> > > > switch.
+> > > 
+> > > Ick, I hate notifiers, they always come back to cause problems.
+> > > 
+> > > What's just wrong with a "real" call to who ever needs to know this?
+> > > And who does need to know this anyway?  Like Hans said, if we don't have
+> > > a user for it, we should not add it.
+> > 
+> > So in this case, its used for interactions between the dwc3 driver and
+> > the hikey960 integrated USB hub, which is controlled via gpio (which I
+> > didn't submit here as I was trying to keep things short and
+> > reviewable, but likely misjudged).
+> > 
+> > The HiKey960 has only one USB controller, but in order to support both
+> > USB-C gadget/OTG and USB-A (host only) ports. When the USB-C
+> > connection is attached, it powers down and disconnects the hub. When
+> > the USB-C connection is detached, it powers the hub on and connects
+> > the controller to the hub.
+> 
+> When you say one controller, do you mean 1 host and 1 gadget controller,
+> or is this one of these lovely devices where a gadget controller gets
+> abused as / confused with a proper host controller?
+> 
+> And since you are doing a usb-role-switch driver, I guess that the
+> role-switch is integrated inside the SoC, so you only get one pair
+> of USB datalines to the outside ?
+
+Unless I'm mistaken, the dwc3 driver in this case is the
+usb-role-switch. The DWC3 IP includes both USB dost and device blocks,
+i.e. it's a dual role controller. Drivers like tcpm.c that negotiate
+the actual role need to tell the outcome of the negotiation to the
+dwc3 driver. So I think this part is OK.
+
+The platform has also some kind of discrete switch for routing the
+signals to either Standard-A (the hub) or Type-C connector, so it does
+not represent the usb-role-switch. It should however affect the USB role,
+as if that switch routes the data signals to the Standard-A port (to
+the hub) instead of USB Type-C, the USB role needs to be fixed to host
+mode.
+
+I guess this series does not include the driver for that discrete
+switch/mux. I don't remember/know how that switch was planned to be
+handled.
+
+> This does seem rather special, it might help if you can provide a diagram
+> with both the relevant bits inside the SoC as well as what lives outside
+> the Soc. even if it is in ASCII art...
+
+thanks,
+
+-- 
+heikki
