@@ -1,50 +1,82 @@
-From: JC Kuo <jckuo@nvidia.com>
-Subject: Re: [PATCH v2 0/7] add Tegra194 XUSB host and pad controller support
-Date: Sat, 5 Oct 2019 00:08:39 +0800
-Message-ID: <1a52dc83-3342-0cbf-c345-5c7be9602fd4@nvidia.com>
-References: <20191004081941.4831-1-jckuo@nvidia.com>
- <20191004122322.GB422178@kroah.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/5] dt-bindings: mfd: Document the Xylon LogiCVC
+ multi-function device
+Date: Fri, 4 Oct 2019 11:09:00 -0500
+Message-ID: <CAL_Jsq+J9z3zzENZxXwjjsVMbFr8uYpXX6jYbCqdQEKBQXOu9A@mail.gmail.com>
+References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
+ <20190927100407.1863293-3-paul.kocialkowski@bootlin.com> <20190927221550.GA28831@bogus>
+ <20191004144551.GR18429@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191004122322.GB422178@kroah.com>
-Content-Language: en-US
+In-Reply-To: <20191004144551.GR18429@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Paul Kocialkowski <paul.kocialkowski@bootlin.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/4/19 8:23 PM, Greg KH wrote:
-> On Fri, Oct 04, 2019 at 04:19:34PM +0800, JC Kuo wrote:
->> Hi,
->>
->> This series introduces support for Tegra194 XUSB host and pad
->> controller. Tegra194 XUSB host and pad controller are highly
->> similar to the controllers found on Tegra186. Therefore, it's
->> possible to resue xhci-tegra.c and xusb-tegra186.c for Tegra194.
->>
->> JC Kuo (7):
->>   xhci: tegra: Parameterize mailbox register addresses
->>   usb: host: xhci-tegra: Add Tegra194 XHCI support
->>   phy: tegra: xusb: Protect Tegra186 soc with config
->>   phy: tegra: xusb: Add Tegra194 support
->>   dt-bindings: phy: tegra: Add Tegra194 support
->>   arm64: tegra: Add XUSB and pad controller on Tegra194
->>   arm64: tegra: Enable XUSB host in P2972-0000 board
-> 
-> What changed from v1?  You need to put that somewhere, usually in the
-> patches themselves, below the --- line.
-> 
-> Or at the very least, in the cover letter.
-> 
-> Given that I can't find it anywhere here, I'll expect a v3 with that
-> information to be sent soon :(
-> 
-For the first two patches, v2 is identical to v1, sorry that I didn't describe
-in patches. For the patches 3 to 7, the individual patch has "Changes in v2:"
-session to describe.
-I will submit v3 with patch 1 and 2 updated.
+On Fri, Oct 4, 2019 at 9:45 AM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Fri, 27 Sep 2019, Rob Herring wrote:
+>
+> > On Fri, Sep 27, 2019 at 12:04:04PM +0200, Paul Kocialkowski wrote:
+> > > The LogiCVC is a display engine which also exposes GPIO functionality.
+> > > For this reason, it is described as a multi-function device that is expected
+> > > to provide register access to its children nodes for gpio and display.
+> > >
+> > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > ---
+> > >  .../bindings/mfd/xylon,logicvc.yaml           | 50 +++++++++++++++++++
+> > >  1 file changed, 50 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+> > > new file mode 100644
+> > > index 000000000000..abc9937506e0
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+> > > @@ -0,0 +1,50 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +# Copyright 2019 Bootlin
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: "http://devicetree.org/schemas/mfd/xylon,logicvc.yaml#"
+> > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > > +
+> > > +title: Xylon LogiCVC multi-function device
+> > > +
+> > > +maintainers:
+> > > +  - Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > +
+> > > +description: |
+> > > +  The LogiCVC is a display controller that also contains a GPIO controller.
+> > > +  As a result, a multi-function device is exposed as parent of the display
+> > > +  and GPIO blocks.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    items:
+> > > +      - enum:
+> > > +          - xylon,logicvc-3.02.a
+> > > +      - const: syscon
+> > > +      - const: simple-mfd
+> > > +
+> > > +  reg:
+> > > +    maxItems: 1
+> > > +
+> > > +select:
+> > > +  properties:
+> > > +    compatible:
+> > > +      contains:
+> > > +        enum:
+> > > +          - xylon,logicvc-3.02.a
+> >
+> > I've seen a couple of these with 'syscon' today, so I fixed the schema
+> > tool to just exclude 'syscon' and 'simple-mfd' from the generated
+> > 'select'. So you can drop select now.
+>
+> Does this need to happen before this patch can be applied?
 
-Thanks for the guidance,
-JC
+Drop the 'select'? Yes that should happen first.
+
+Rob
