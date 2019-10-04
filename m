@@ -1,44 +1,52 @@
-From: Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V1 1/2]  regulator: dt-bindings: Add PM6150x compatibles
-Date: Fri,  4 Oct 2019 15:38:53 +0530
-Message-ID: <1570183734-30706-2-git-send-email-kgunda@codeaurora.org>
-References: <1570183734-30706-1-git-send-email-kgunda@codeaurora.org>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v4 2/2] media: i2c: Add IMX290 CMOS image sensor driver
+Date: Fri, 4 Oct 2019 15:49:02 +0530
+Message-ID: <20191004101902.GA19685@mani>
+References: <20191003095503.12614-1-manivannan.sadhasivam@linaro.org>
+ <20191003095503.12614-3-manivannan.sadhasivam@linaro.org>
+ <20191004092336.GL896@valkosipuli.retiisi.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570183734-30706-1-git-send-email-kgunda@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20191004092336.GL896@valkosipuli.retiisi.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, Andy Gross <agross@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Kiran Gunda <kgunda@codeaurora.org>
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, c.barrett@framos.com, a.brela@framos.com
 List-Id: devicetree@vger.kernel.org
 
-Add PM6150 and PM6150L compatibles for Qualcomm SC7180 platfrom.
+Hi Sakari,
 
-Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
----
- Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+On Fri, Oct 04, 2019 at 12:23:36PM +0300, Sakari Ailus wrote:
+> Hi Manivannan,
+> 
+> On Thu, Oct 03, 2019 at 03:25:03PM +0530, Manivannan Sadhasivam wrote:
+> > Add driver for Sony IMX290 CMOS image sensor driver. The driver only
+> > supports I2C interface for programming and MIPI CSI-2 for sensor output.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> Could you remove the unneeded ret variable from imx290_power_on() and
+> unneeded goto in the same function?
+>
 
-diff --git a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
-index bab9f71..97c3e0b 100644
---- a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
-@@ -28,6 +28,8 @@ Supported regulator node names:
- 	PM8150L:	smps1 - smps8, ldo1 - ldo11, bob, flash, rgb
- 	PM8998:		smps1 - smps13, ldo1 - ldo28, lvs1 - lvs2
- 	PMI8998:	bob
-+	PM6150:         smps1 - smps5, ldo1 - ldo19
-+	PM6150L:        smps1 - smps8, ldo1 - ldo11, bob
+yep, sure.
  
- ========================
- First Level Nodes - PMIC
-@@ -43,6 +45,8 @@ First Level Nodes - PMIC
- 		    "qcom,pm8150l-rpmh-regulators"
- 		    "qcom,pm8998-rpmh-regulators"
- 		    "qcom,pmi8998-rpmh-regulators"
-+		    "qcom,pm6150-rpmh-regulators"
-+		    "qcom,pm6150l-rpmh-regulators"
- 
- - qcom,pmic-id
- 	Usage:      required
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+> The MAINTAINERS entry belongs to the first patch adding new files.
+> 
+
+You mean the bindings patch? If then, sorry no. Usually the devicetree bindings
+belongs to a separate patch and that is what perferred by Rob. I prefer the
+MAINTAINERS entry in a separate patch but I've seen subsystems maintainers
+asking to squash it with the driver patch. But squashing it with bindings
+patch seems weird to me.
+
+Thanks,
+Mani
+
+> Then I think this is good.
+> 
+> -- 
+> Regards,
+> 
+> Sakari Ailus
