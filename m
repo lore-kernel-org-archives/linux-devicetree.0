@@ -1,78 +1,66 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 1/2] dt-bindings: gpio: brcm: Add bindings for xgs-iproc
-Date: Fri,  4 Oct 2019 14:25:24 +1300
-Message-ID: <20191004012525.26647-2-chris.packham@alliedtelesis.co.nz>
-References: <20191004012525.26647-1-chris.packham@alliedtelesis.co.nz>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v2 7/9] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
+ power states
+Date: Fri, 4 Oct 2019 07:06:22 +0530
+Message-ID: <CAHLCerN6T2WszczwDOeg=F2MQ3hHBkgYubCu9WyuhsOaAR=mMg@mail.gmail.com>
+References: <cover.1558430617.git.amit.kucheria@linaro.org>
+ <49cf5d94beb9af9ef4e78d4c52f3b0ad20b7c63f.1558430617.git.amit.kucheria@linaro.org>
+ <CAOCk7NptTHPOdyEkCAofjTPuDQ5dsnPMQgfC0R8=7cp05xKQiA@mail.gmail.com>
+ <20191002091950.GA9393@centauri> <20191002092734.GA15523@centauri> <CAOCk7Nqqm6d3bR9hFJH6rp1jMPmx2e2qmJtnOuw5viaGWohEZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191004012525.26647-1-chris.packham@alliedtelesis.co.nz>
+In-Reply-To: <CAOCk7Nqqm6d3bR9hFJH6rp1jMPmx2e2qmJtnOuw5viaGWohEZA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com, richard.laing@alliedtelesis.co.nz
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
+To: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc: Niklas Cassel <niklas.cassel@linaro.org>, lkml <linux-kernel@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <agross@kernel.org>, Marc Gonzalez <marc.w.gonzalez@free.fr>, Sibi Sankar <sibis@codeaurora.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Brown <david.brown@linaro.org>, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This GPIO controller is present on a number of Broadcom switch ASICs
-with integrated SoCs. It is similar to the nsp-gpio and iproc-gpio
-blocks but different enough to require a separate driver.
+On Wed, Oct 2, 2019 at 11:48 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>
+> On Wed, Oct 2, 2019 at 3:27 AM Niklas Cassel <niklas.cassel@linaro.org> wrote:
+> >
+> > On Wed, Oct 02, 2019 at 11:19:50AM +0200, Niklas Cassel wrote:
+> > > On Mon, Sep 30, 2019 at 04:20:15PM -0600, Jeffrey Hugo wrote:
+> > > > Amit, the merged version of the below change causes a boot failure
+> > > > (nasty hang, sometimes with RCU stalls) on the msm8998 laptops.  Oddly
+> > > > enough, it seems to be resolved if I remove the cpu-idle-states
+> > > > property from one of the cpu nodes.
+> > > >
+> > > > I see no issues with the msm8998 MTP.
+> > >
+> > > Hello Jeffrey, Amit,
+> > >
+> > > If the PSCI idle states work properly on the msm8998 devboard (MTP),
+> > > but causes crashes on msm8998 laptops, the only logical change is
+> > > that the PSCI firmware is different between the two devices.
+> >
+> > Since the msm8998 laptops boot using ACPI, perhaps these laptops
+> > doesn't support PSCI/have any PSCI firmware at all.
+>
+> They have PSCI.  If there was no PSCI, I would expect the PSCI
+> get_version request from Linux to fail, and all PSCI functionality to
+> be disabled.
+>
+> However, your mention about ACPI sparked a thought.  ACPI describes
+> the idle states, along with the PSCI info, in the ACPI0007 devices.
+> Those exist on the laptops, and the info mostly correlates with Amit's
+> patch (ACPI seems to be a bit more conservative about the latencies,
+> and describes one additional deeper state).  However, upon a detailed
+> analysis of the ACPI description, I did find something relevant - the
+> retention state is not enabled.
+>
+> So, I hacked out the retention state from Amit's patch, and I did not
+> observe a hang.  I used sysfs, and appeared able to validate that the
+> power collapse state was being used successfully.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- .../bindings/gpio/brcm,xgs-iproc.txt          | 41 +++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/brcm,xgs-iproc=
-.txt
+Interesting that the shallower sleep state was causing problems.
+Usually, it is the deeper states that cause problems. So you plan to
+override the idle states table in the board-specific DT?
 
-diff --git a/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.txt b/=
-Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.txt
-new file mode 100644
-index 000000000000..328b844c82dc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/brcm,xgs-iproc.txt
-@@ -0,0 +1,41 @@
-+Broadcom XGS iProc GPIO controller
-+
-+This controller is the Chip Common A GPIO present on a number of Broadco=
-m
-+switch ASICs with integrated SoCs.
-+
-+Required properties:
-+- compatible:
-+    Must be "brcm,iproc-gpio-cca"
-+
-+- reg:
-+    The first region defines the base I/O address containing
-+    the GPIO controller registers. The second region defines
-+    the I/O address containing the Chip Common A interrupt
-+    registers.
-+
-+Optional properties:
-+
-+- interrupts:
-+    The interrupt shared by all GPIO lines for this controller.
-+
-+- #interrupt-cells:
-+    Should be <2>.  The first cell is the GPIO number, the second should=
- specify
-+    flags.
-+
-+    See also Documentation/devicetree/bindings/interrupt-controller/inte=
-rrupts.txt
-+
-+- interrupt-controller:
-+    Marks the device node as an interrupt controller
-+
-+Example:
-+	gpioa: gpio@18000060 {
-+		compatible =3D "brcm,iproc-gpio-cca";
-+		#gpio-cells =3D <2>;
-+		reg =3D <0x18000060 0x50>,
-+		      <0x18000000 0x50>;
-+		ngpios =3D <12>;
-+		gpio-controller;
-+		interrupt-controller;
-+		#interrupt-cells =3D <2>;
-+		interrupts =3D <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-+	};
---=20
-2.23.0
+Why does the platform even rely on DT? Shouldn't we use the ACPI tables instead?
+
+> I'm guessing that something is weird with the laptops, where the CPUs
+> can go into retention, but not come out, thus causing issues.
+>
+> I'll post a patch to fix up the laptops.  Thanks for all the help.
