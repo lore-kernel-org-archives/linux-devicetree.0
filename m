@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 06/21] media: ti-vpe: Add support for NV21 format
-Date: Fri, 4 Oct 2019 11:29:37 -0500
-Message-ID: <20191004162952.4963-7-bparrot@ti.com>
+Subject: [Patch v2 03/21] media: ti-vpe: vpe: Add missing null pointer checks
+Date: Fri, 4 Oct 2019 11:29:34 -0500
+Message-ID: <20191004162952.4963-4-bparrot@ti.com>
 References: <20191004162952.4963-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,166 +9,61 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191004162952.4963-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nikhil Devshatwar <nikhil.nd@ti.com>, Benoit Parrot <bparrot@ti.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Nikhil Devshatwar <nikhil.nd@ti.com>
+A few NULL pointer checks were missing.
+Add check with appropriate return code.
 
-In NV21 format, the chroma plane is written to memory such that the U
-and V components are swapped for NV12.
-
-Create a new entry in the VPDMA formats to describe the correct data
-types used in the data descriptors.
-
-Update all checks for NV12 and add NV21 there as well.
-
-Add support for V4L2_PIX_FMT_NV21 format for both capture and output
-streams.
-
-Signed-off-by: Nikhil Devshatwar <nikhil.nd@ti.com>
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpdma.c      | 11 ++++++--
- drivers/media/platform/ti-vpe/vpdma.h      |  1 +
- drivers/media/platform/ti-vpe/vpdma_priv.h |  1 +
- drivers/media/platform/ti-vpe/vpe.c        | 29 +++++++++++++++++-----
- 4 files changed, 34 insertions(+), 8 deletions(-)
+ drivers/media/platform/ti-vpe/vpe.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpdma.c b/drivers/media/platform/ti-vpe/vpdma.c
-index 53d27cd6e10a..817d287c8138 100644
---- a/drivers/media/platform/ti-vpe/vpdma.c
-+++ b/drivers/media/platform/ti-vpe/vpdma.c
-@@ -56,6 +56,11 @@ const struct vpdma_data_format vpdma_yuv_fmts[] = {
- 		.data_type	= DATA_TYPE_C420,
- 		.depth		= 4,
- 	},
-+	[VPDMA_DATA_FMT_CB420] = {
-+		.type		= VPDMA_DATA_FMT_TYPE_YUV,
-+		.data_type	= DATA_TYPE_CB420,
-+		.depth		= 4,
-+	},
- 	[VPDMA_DATA_FMT_YCR422] = {
- 		.type		= VPDMA_DATA_FMT_TYPE_YUV,
- 		.data_type	= DATA_TYPE_YCR422,
-@@ -825,7 +830,8 @@ void vpdma_rawchan_add_out_dtd(struct vpdma_desc_list *list, int width,
- 	channel = next_chan = raw_vpdma_chan;
- 
- 	if (fmt->type == VPDMA_DATA_FMT_TYPE_YUV &&
--			fmt->data_type == DATA_TYPE_C420) {
-+	    (fmt->data_type == DATA_TYPE_C420 ||
-+	     fmt->data_type == DATA_TYPE_CB420)) {
- 		rect.height >>= 1;
- 		rect.top >>= 1;
- 		depth = 8;
-@@ -893,7 +899,8 @@ void vpdma_add_in_dtd(struct vpdma_desc_list *list, int width,
- 	channel = next_chan = chan_info[chan].num;
- 
- 	if (fmt->type == VPDMA_DATA_FMT_TYPE_YUV &&
--			fmt->data_type == DATA_TYPE_C420) {
-+	    (fmt->data_type == DATA_TYPE_C420 ||
-+	     fmt->data_type == DATA_TYPE_CB420)) {
- 		rect.height >>= 1;
- 		rect.top >>= 1;
- 		depth = 8;
-diff --git a/drivers/media/platform/ti-vpe/vpdma.h b/drivers/media/platform/ti-vpe/vpdma.h
-index 28bc94129348..bce17329c4c9 100644
---- a/drivers/media/platform/ti-vpe/vpdma.h
-+++ b/drivers/media/platform/ti-vpe/vpdma.h
-@@ -71,6 +71,7 @@ enum vpdma_yuv_formats {
- 	VPDMA_DATA_FMT_C444,
- 	VPDMA_DATA_FMT_C422,
- 	VPDMA_DATA_FMT_C420,
-+	VPDMA_DATA_FMT_CB420,
- 	VPDMA_DATA_FMT_YCR422,
- 	VPDMA_DATA_FMT_YC444,
- 	VPDMA_DATA_FMT_CRY422,
-diff --git a/drivers/media/platform/ti-vpe/vpdma_priv.h b/drivers/media/platform/ti-vpe/vpdma_priv.h
-index c488609bc162..d8ae3e1cd54d 100644
---- a/drivers/media/platform/ti-vpe/vpdma_priv.h
-+++ b/drivers/media/platform/ti-vpe/vpdma_priv.h
-@@ -92,6 +92,7 @@
- #define DATA_TYPE_C444				0x4
- #define DATA_TYPE_C422				0x5
- #define DATA_TYPE_C420				0x6
-+#define DATA_TYPE_CB420				0x16
- #define DATA_TYPE_YC444				0x8
- #define DATA_TYPE_YCB422			0x7
- #define DATA_TYPE_YCR422			0x17
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 5d0ec5f7ca25..f3ee9ff87927 100644
+index 5ba72445584d..56f60dbea15c 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -248,6 +248,14 @@ static struct vpe_fmt vpe_formats[] = {
- 				    &vpdma_yuv_fmts[VPDMA_DATA_FMT_C420],
- 				  },
- 	},
-+	{
-+		.fourcc		= V4L2_PIX_FMT_NV21,
-+		.types		= VPE_FMT_TYPE_CAPTURE | VPE_FMT_TYPE_OUTPUT,
-+		.coplanar	= 1,
-+		.vpdma_fmt	= { &vpdma_yuv_fmts[VPDMA_DATA_FMT_Y420],
-+				    &vpdma_yuv_fmts[VPDMA_DATA_FMT_CB420],
-+				  },
-+	},
- 	{
- 		.fourcc		= V4L2_PIX_FMT_YUYV,
- 		.types		= VPE_FMT_TYPE_CAPTURE | VPE_FMT_TYPE_OUTPUT,
-@@ -686,7 +694,8 @@ static void set_cfg_modes(struct vpe_ctx *ctx)
- 	 * Cfg Mode 1: YUV422 source, disable upsampler, DEI is de-interlacing.
- 	 */
+@@ -1537,6 +1537,8 @@ static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
+ 		return -EINVAL;
  
--	if (fmt->fourcc == V4L2_PIX_FMT_NV12)
-+	if (fmt->fourcc == V4L2_PIX_FMT_NV12 ||
-+	    fmt->fourcc == V4L2_PIX_FMT_NV21)
- 		cfg_mode = 0;
+ 	q_data = get_q_data(ctx, f->type);
++	if (!q_data)
++		return -EINVAL;
  
- 	write_field(us1_reg0, cfg_mode, VPE_US_MODE_MASK, VPE_US_MODE_SHIFT);
-@@ -701,7 +710,8 @@ static void set_line_modes(struct vpe_ctx *ctx)
- 	struct vpe_fmt *fmt = ctx->q_data[Q_DATA_SRC].fmt;
- 	int line_mode = 1;
+ 	pix->width = q_data->width;
+ 	pix->height = q_data->height;
+@@ -2001,6 +2003,8 @@ static int vpe_queue_setup(struct vb2_queue *vq,
+ 	struct vpe_q_data *q_data;
  
--	if (fmt->fourcc == V4L2_PIX_FMT_NV12)
-+	if (fmt->fourcc == V4L2_PIX_FMT_NV12 ||
-+	    fmt->fourcc == V4L2_PIX_FMT_NV21)
- 		line_mode = 0;		/* double lines to line buffer */
+ 	q_data = get_q_data(ctx, vq->type);
++	if (!q_data)
++		return -EINVAL;
  
- 	/* regs for now */
-@@ -763,7 +773,8 @@ static void set_dst_registers(struct vpe_ctx *ctx)
- 	 */
- 	val |= VPE_DS_SRC_DEI_SCALER | VPE_CSC_SRC_DEI_SCALER;
+ 	*nplanes = q_data->nplanes;
  
--	if (fmt->fourcc != V4L2_PIX_FMT_NV12)
-+	if (fmt->fourcc != V4L2_PIX_FMT_NV12 &&
-+	    fmt->fourcc != V4L2_PIX_FMT_NV21)
- 		val |= VPE_DS_BYPASS;
+@@ -2025,6 +2029,8 @@ static int vpe_buf_prepare(struct vb2_buffer *vb)
+ 	vpe_dbg(ctx->dev, "type: %d\n", vb->vb2_queue->type);
  
- 	mmr_adb->out_fmt_reg[0] = val;
-@@ -1129,8 +1140,13 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
+ 	q_data = get_q_data(ctx, vb->vb2_queue->type);
++	if (!q_data)
++		return -EINVAL;
+ 	num_planes = q_data->nplanes;
  
- 			if (field) {
- 				int height = q_data->height / 2;
--				int bpp = fmt->fourcc == V4L2_PIX_FMT_NV12 ?
--						1 : (vpdma_fmt->depth >> 3);
-+				int bpp;
+ 	if (vb->vb2_queue->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
+@@ -2481,7 +2487,12 @@ static int vpe_probe(struct platform_device *pdev)
+ 	mutex_init(&dev->dev_mutex);
+ 
+ 	dev->res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-			"vpe_top");
++						"vpe_top");
++	if (!dev->res) {
++		dev_err(&pdev->dev, "missing 'vpe_top' resources data\n");
++		return -ENODEV;
++	}
 +
-+				if (fmt->fourcc == V4L2_PIX_FMT_NV12 ||
-+				    fmt->fourcc == V4L2_PIX_FMT_NV21)
-+					bpp = 1;
-+				else
-+					bpp = vpdma_fmt->depth >> 3;
- 
- 				if (plane)
- 					height /= 2;
-@@ -1148,7 +1164,8 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 	frame_width = q_data->c_rect.width;
- 	frame_height = q_data->c_rect.height;
- 
--	if (p_data->vb_part && fmt->fourcc == V4L2_PIX_FMT_NV12)
-+	if (p_data->vb_part && (fmt->fourcc == V4L2_PIX_FMT_NV12 ||
-+				fmt->fourcc == V4L2_PIX_FMT_NV21))
- 		frame_height /= 2;
- 
- 	vpdma_add_in_dtd(&ctx->desc_list, q_data->width, stride,
+ 	/*
+ 	 * HACK: we get resource info from device tree in the form of a list of
+ 	 * VPE sub blocks, the driver currently uses only the base of vpe_top
 -- 
 2.17.1
