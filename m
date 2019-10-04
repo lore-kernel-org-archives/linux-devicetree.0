@@ -1,270 +1,200 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v6] dt-bindings: sound: Convert Samsung I2S controller to
- dt-schema
-Date: Fri,  4 Oct 2019 14:59:14 +0200
-Message-ID: <20191004125914.1033-1-m.szyprowski@samsung.com>
-References: <CGME20191004125919eucas1p21149ecdf6d83fbe7bc8c39eaa8b29a46@eucas1p2.samsung.com>
-Content-Type: text/plain; charset="utf-8"
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH V6 1/3] mmc: mmci: add hardware busy timeout feature
+Date: Fri, 4 Oct 2019 14:59:16 +0200
+Message-ID: <da9072ce-852c-a46c-ecdf-ea6bfd89ef79@st.com>
+References: <20190905122112.29672-1-ludovic.Barre@st.com>
+ <20190905122112.29672-2-ludovic.Barre@st.com>
+ <CAPDyKFpcb=dT0XBAGVL68t--xi5853Dzsgak-vbx5VcvxLZ4zA@mail.gmail.com>
+ <CAPDyKFrRDHeVs6RpM=qTT1AogLnFWJLh2S4-wCcrYAON9XVKCA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrRDHeVs6RpM=qTT1AogLnFWJLh2S4-wCcrYAON9XVKCA@mail.gmail.com>
+Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Mark Brown <broonie@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maciej Falkowski <m.falkowski@samsung.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-From: Maciej Falkowski <m.falkowski@samsung.com>
+hi Ulf
 
-Convert Samsung I2S controller to newer dt-schema format.
+Le 10/4/19 à 8:20 AM, Ulf Hansson a écrit :
+> On Fri, 4 Oct 2019 at 08:12, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>
+>> On Thu, 5 Sep 2019 at 14:21, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>>
+>>> From: Ludovic Barre <ludovic.barre@st.com>
+>>>
+>>> In some variants, the data timer starts and decrements
+>>> when the DPSM enters in Wait_R or Busy state
+>>> (while data transfer or MMC_RSP_BUSY), and generates a
+>>> data timeout error if the counter reach 0.
+>>
+>>
+>>>
+>>> -Define max_busy_timeout (in ms) according to clock.
+>>> -Set data timer register if the command has rsp_busy flag.
+>>>   If busy_timeout is not defined by framework, the busy
+>>>   length after Data Burst is defined as 1 second
+>>>   (refer: 4.6.2.2 Write of sd specification part1 v6-0).
+>>
+>> How about re-phrasing this as below:
+>>
+>> -----
+>> In the stm32_sdmmc variant, the datatimer is active not only during
+>> data transfers with the DPSM, but also while waiting for the busyend
+>> IRQs from commands having the MMC_RSP_BUSY flag set. This leads to an
+>> incorrect IRQ being raised to signal MCI_DATATIMEOUT error, which
+>> simply breaks the behaviour.
+>>
+>> Address this by updating the datatimer value before sending a command
+>> having the MMC_RSP_BUSY flag set. To inform the mmc core about the
+>> maximum supported busy timeout, which also depends on the current
+>> clock rate, set ->max_busy_timeout (in ms).
 
-Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
-[mszyprow: integrated fix for minor spelling issues]
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v6:
-- integrated fix for minor spelling issues
-- collected tags
----
- .../devicetree/bindings/sound/samsung-i2s.txt |  84 -----------
- .../bindings/sound/samsung-i2s.yaml           | 138 ++++++++++++++++++
- 2 files changed, 138 insertions(+), 84 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
- create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.yaml
+Thanks for the re-phrasing.
 
-diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.txt b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
-deleted file mode 100644
-index a88cb00fa096..000000000000
---- a/Documentation/devicetree/bindings/sound/samsung-i2s.txt
-+++ /dev/null
-@@ -1,84 +0,0 @@
--* Samsung I2S controller
--
--Required SoC Specific Properties:
--
--- compatible : should be one of the following.
--   - samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
--   - samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
--     secondary fifo, s/w reset control and internal mux for root clk src.
--   - samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
--     playback, stereo channel capture, secondary fifo using internal
--     or external dma, s/w reset control, internal mux for root clk src
--     and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
--     is to allow transfer of multiple channel audio data on single data line.
--   - samsung,exynos7-i2s: with all the available features of exynos5 i2s,
--     exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
--     with only external dma and more no.of root clk sampling frequencies.
--   - samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
--     stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
--     slightly modified bit offsets.
--
--- reg: physical base address of the controller and length of memory mapped
--  region.
--- dmas: list of DMA controller phandle and DMA request line ordered pairs.
--- dma-names: identifier string for each DMA request line in the dmas property.
--  These strings correspond 1:1 with the ordered pairs in dmas.
--- clocks: Handle to iis clock and RCLK source clk.
--- clock-names:
--  i2s0 uses some base clocks from CMU and some are from audio subsystem internal
--  clock controller. The clock names for i2s0 should be "iis", "i2s_opclk0" and
--  "i2s_opclk1" as shown in the example below.
--  i2s1 and i2s2 uses clocks from CMU. The clock names for i2s1 and i2s2 should
--  be "iis" and "i2s_opclk0".
--  "iis" is the i2s bus clock and i2s_opclk0, i2s_opclk1 are sources of the root
--  clk. i2s0 has internal mux to select the source of root clk and i2s1 and i2s2
--  doesn't have any such mux.
--- #clock-cells: should be 1, this property must be present if the I2S device
--  is a clock provider in terms of the common clock bindings, described in
--  ../clock/clock-bindings.txt.
--- clock-output-names (deprecated): from the common clock bindings, names of
--  the CDCLK I2S output clocks, suggested values are "i2s_cdclk0", "i2s_cdclk1",
--  "i2s_cdclk3" for the I2S0, I2S1, I2S2 devices respectively.
--
--There are following clocks available at the I2S device nodes:
-- CLK_I2S_CDCLK    - the CDCLK (CODECLKO) gate clock,
-- CLK_I2S_RCLK_PSR - the RCLK prescaler divider clock (corresponding to the
--		    IISPSR register),
-- CLK_I2S_RCLK_SRC - the RCLKSRC mux clock (corresponding to RCLKSRC bit in
--		    IISMOD register).
--
--Refer to the SoC datasheet for availability of the above clocks.
--The CLK_I2S_RCLK_PSR and CLK_I2S_RCLK_SRC clocks are usually only available
--in the IIS Multi Audio Interface.
--
--Note: Old DTs may not have the #clock-cells property and then not use the I2S
--node as a clock supplier.
--
--Optional SoC Specific Properties:
--
--- samsung,idma-addr: Internal DMA register base address of the audio
--  sub system(used in secondary sound source).
--- pinctrl-0: Should specify pin control groups used for this controller.
--- pinctrl-names: Should contain only one value - "default".
--- #sound-dai-cells: should be 1.
--
--
--Example:
--
--i2s0: i2s@3830000 {
--	compatible = "samsung,s5pv210-i2s";
--	reg = <0x03830000 0x100>;
--	dmas = <&pdma0 10
--		&pdma0 9
--		&pdma0 8>;
--	dma-names = "tx", "rx", "tx-sec";
--	clocks = <&clock_audss EXYNOS_I2S_BUS>,
--		<&clock_audss EXYNOS_I2S_BUS>,
--		<&clock_audss EXYNOS_SCLK_I2S>;
--	clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
--	#clock-cells = <1>;
--	samsung,idma-addr = <0x03000000>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2s0_bus>;
--	#sound-dai-cells = <1>;
--};
-diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.yaml b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-new file mode 100644
-index 000000000000..53e3bad4178c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-@@ -0,0 +1,138 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/samsung-i2s.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung SoC I2S controller
-+
-+maintainers:
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+  - Sylwester Nawrocki <s.nawrocki@samsung.com>
-+
-+properties:
-+  compatible:
-+    description: |
-+      samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
-+
-+      samsung,s5pv210-i2s: for 8/16/24bit multichannel (5.1) I2S with
-+      secondary FIFO, s/w reset control and internal mux for root clock
-+      source.
-+
-+      samsung,exynos5420-i2s: for 8/16/24bit multichannel (5.1) I2S for
-+      playback, stereo channel capture, secondary FIFO using internal
-+      or external DMA, s/w reset control, internal mux for root clock
-+      source and 7.1 channel TDM support for playback; TDM (Time division
-+      multiplexing) is to allow transfer of multiple channel audio data on
-+      single data line.
-+
-+      samsung,exynos7-i2s: with all the available features of Exynos5 I2S.
-+      Exynos7 I2S has 7.1 channel TDM support for capture, secondary FIFO
-+      with only external DMA and more number of root clock sampling
-+      frequencies.
-+
-+      samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
-+      stereo channels. Exynos7 I2S1 upgraded to 5.1 multichannel with
-+      slightly modified bit offsets.
-+    enum:
-+      - samsung,s3c6410-i2s
-+      - samsung,s5pv210-i2s
-+      - samsung,exynos5420-i2s
-+      - samsung,exynos7-i2s
-+      - samsung,exynos7-i2s1
-+
-+  reg:
-+    maxItems: 1
-+
-+  dmas:
-+    minItems: 2
-+    maxItems: 3
-+
-+  dma-names:
-+    oneOf:
-+      - items:
-+          - const: tx
-+          - const: rx
-+      - items:
-+          - const: tx
-+          - const: rx
-+          - const: tx-sec
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 3
-+
-+  clock-names:
-+    oneOf:
-+      - items:
-+          - const: iis
-+      - items: # for I2S0
-+          - const: iis
-+          - const: i2s_opclk0
-+          - const: i2s_opclk1
-+      - items: # for I2S1 and I2S2
-+          - const: iis
-+          - const: i2s_opclk0
-+    description: |
-+      "iis" is the I2S bus clock and i2s_opclk0, i2s_opclk1 are sources
-+      of the root clock. I2S0 has internal mux to select the source
-+      of root clock and I2S1 and I2S2 doesn't have any such mux.
-+
-+  "#clock-cells":
-+    const: 1
-+
-+  clock-output-names:
-+    deprecated: true
-+    oneOf:
-+      - items: # for I2S0
-+          - const: i2s_cdclk0
-+      - items: # for I2S1
-+          - const: i2s_cdclk1
-+      - items: # for I2S2
-+          - const: i2s_cdclk2
-+    description: Names of the CDCLK I2S output clocks.
-+
-+  samsung,idma-addr:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Internal DMA register base address of the audio
-+      subsystem (used in secondary sound source).
-+
-+  pinctrl-0:
-+    description: Should specify pin control groups used for this controller.
-+
-+  pinctrl-names:
-+    const: default
-+
-+  "#sound-dai-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - dmas
-+  - dma-names
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/exynos-audss-clk.h>
-+
-+    i2s0: i2s@3830000 {
-+        compatible = "samsung,s5pv210-i2s";
-+        reg = <0x03830000 0x100>;
-+        dmas = <&pdma0 10>,
-+                <&pdma0 9>,
-+                <&pdma0 8>;
-+        dma-names = "tx", "rx", "tx-sec";
-+        clocks = <&clock_audss EXYNOS_I2S_BUS>,
-+                <&clock_audss EXYNOS_I2S_BUS>,
-+                <&clock_audss EXYNOS_SCLK_I2S>;
-+        clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
-+        #clock-cells = <1>;
-+        samsung,idma-addr = <0x03000000>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&i2s0_bus>;
-+        #sound-dai-cells = <1>;
-+    };
--- 
-2.17.1
+>> -----
+>>
+>> Regarding the busy_timeout, the core should really assign it a value
+>> for all commands having the RSP_BUSY flag set. However, I realize the
+>> core needs to be improved to cover all these cases - and I am looking
+>> at that, but not there yet.
+>>
+>> I would also suggest to use a greater value than 1s, as that seems a
+>> bit low for the "undefined" case. Perhaps use the max_busy_timeout,
+>> which would be nice a simple or 10s, which I think is used by some
+>> other drivers.
+
+OK, I will set 10s, the max_busy_timeout could be very long for small 
+frequencies (example, 25Mhz => 171s).
+
+>>
+>>> -Add MCI_DATATIMEOUT error management in mmci_cmd_irq.
+>>>
+>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>>> ---
+>>>   drivers/mmc/host/mmci.c | 42 ++++++++++++++++++++++++++++++++++++-----
+>>>   drivers/mmc/host/mmci.h |  3 +++
+>>>   2 files changed, 40 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+>>> index c37e70dbe250..c30319255dc2 100644
+>>> --- a/drivers/mmc/host/mmci.c
+>>> +++ b/drivers/mmc/host/mmci.c
+>>> @@ -1075,6 +1075,7 @@ static void
+>>>   mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
+>>>   {
+>>>          void __iomem *base = host->base;
+>>> +       unsigned long long clks;
+>>>
+>>>          dev_dbg(mmc_dev(host->mmc), "op %02x arg %08x flags %08x\n",
+>>>              cmd->opcode, cmd->arg, cmd->flags);
+>>> @@ -1097,6 +1098,16 @@ mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
+>>>                  else
+>>>                          c |= host->variant->cmdreg_srsp;
+>>>          }
+>>> +
+>>> +       if (host->variant->busy_timeout && cmd->flags & MMC_RSP_BUSY) {
+>>> +               if (!cmd->busy_timeout)
+>>> +                       cmd->busy_timeout = 1000;
+>>> +
+>>> +               clks = (unsigned long long)cmd->busy_timeout * host->cclk;
+>>> +               do_div(clks, MSEC_PER_SEC);
+>>> +               writel_relaxed(clks, host->base + MMCIDATATIMER);
+>>> +       }
+>>> +
+>>>          if (/*interrupt*/0)
+>>>                  c |= MCI_CPSM_INTERRUPT;
+>>>
+>>> @@ -1201,6 +1212,7 @@ static void
+>>>   mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>>               unsigned int status)
+>>>   {
+>>> +       u32 err_msk = MCI_CMDCRCFAIL | MCI_CMDTIMEOUT;
+>>>          void __iomem *base = host->base;
+>>>          bool sbc, busy_resp;
+>>>
+>>> @@ -1215,8 +1227,11 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>>           * handling. Note that we tag on any latent IRQs postponed
+>>>           * due to waiting for busy status.
+>>>           */
+>>> -       if (!((status|host->busy_status) &
+>>> -             (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT|MCI_CMDSENT|MCI_CMDRESPEND)))
+>>> +       if (host->variant->busy_timeout && busy_resp)
+>>> +               err_msk |= MCI_DATATIMEOUT;
+>>> +
+>>> +       if (!((status | host->busy_status) &
+>>> +             (err_msk | MCI_CMDSENT | MCI_CMDRESPEND)))
+>>>                  return;
+>>>
+>>>          /* Handle busy detection on DAT0 if the variant supports it. */
+>>> @@ -1235,8 +1250,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>>                   * while, to allow it to be set, but tests indicates that it
+>>>                   * isn't needed.
+>>>                   */
+>>> -               if (!host->busy_status &&
+>>> -                   !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
+>>> +               if (!host->busy_status && !(status & err_msk) &&
+>>>                      (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
+>>>
+>>>                          writel(readl(base + MMCIMASK0) |
+>>> @@ -1290,6 +1304,9 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>>                  cmd->error = -ETIMEDOUT;
+>>>          } else if (status & MCI_CMDCRCFAIL && cmd->flags & MMC_RSP_CRC) {
+>>>                  cmd->error = -EILSEQ;
+>>> +       } else if (host->variant->busy_timeout && busy_resp &&
+>>> +                  status & MCI_DATATIMEOUT) {
+>>> +               cmd->error = -ETIMEDOUT;
+>>
+>> It's not really clear to me what happens with the busy detection
+>> status bit (variant->busy_detect_flag), in case a MCI_DATATIMEOUT IRQ
+>> is raised, while also having host->busy_status set (waiting for
+>> busyend).
+>>
+>> By looking at the code a few lines above this, we may do a "return;"
+>> while waiting for the busyend IRQ even if MCI_DATATIMEOUT also is
+>> raised, potentially losing that from being caught. Is that really
+>> correct?
+> 
+> A second thought. That "return;" is to manage the busyend IRQ being
+> raised of the first edge due to broken HW. So I guess, this isn't an
+> issue for stm32_sdmmc variant after all?
+>
+> I have a look at the next patches in the series..
+
+you're referring to "return" of ?
+	if (host->busy_status &&
+	    (status & host->variant->busy_detect_flag)) {
+		writel(host->variant->busy_detect_mask,
+		       host->base + MMCICLEAR);
+		return;
+	}
+
+For stm32 variant (in patch 3/3): the "busy completion" is
+released immediately if there is an error or busyd0end,
+and cleans: irq, busyd0end mask, busy_status variable.
+
+I could add similar action in patch 2/3 function: "ux500_busy_complete"
+
+static bool ux500_busy_complete(struct mmci_host *host, u32 status, u32 
+err_msk)
+{
+	void __iomem *base = host->base;
+
+	if (status & err_msk)
+		goto complete;
+...
+complete:
+	/* specific action to clean busy detection, irq, mask, busy_status */
+}
+
+what do you think about it?
+
+> 
+> [...]
+> 
+> Kind regards
+> Uffe
+> 
