@@ -1,57 +1,35 @@
-From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v7 3/7] arm64: dts: amlogic: g12: add temperature sensor
-Date: Fri,  4 Oct 2019 11:01:10 +0200
-Message-ID: <20191004090114.30694-4-glaroque@baylibre.com>
-References: <20191004090114.30694-1-glaroque@baylibre.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v4 2/2] media: i2c: Add IMX290 CMOS image sensor driver
+Date: Fri, 4 Oct 2019 12:23:36 +0300
+Message-ID: <20191004092336.GL896@valkosipuli.retiisi.org.uk>
+References: <20191003095503.12614-1-manivannan.sadhasivam@linaro.org>
+ <20191003095503.12614-3-manivannan.sadhasivam@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191004090114.30694-1-glaroque@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <20191003095503.12614-3-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: amit.kucheria@linaro.org, rui.zhang@intel.com, edubezval@gmail.com, daniel.lezcano@linaro.org
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, c.barrett@framos.com, a.brela@framos.com
 List-Id: devicetree@vger.kernel.org
 
-Add cpu and ddr temperature sensors for G12 Socs
+Hi Manivannan,
 
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Tested-by: Christian Hewitt <christianshewitt@gmail.com>
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
----
- .../boot/dts/amlogic/meson-g12-common.dtsi    | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
+On Thu, Oct 03, 2019 at 03:25:03PM +0530, Manivannan Sadhasivam wrote:
+> Add driver for Sony IMX290 CMOS image sensor driver. The driver only
+> supports I2C interface for programming and MIPI CSI-2 for sensor output.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 38d70ce1cfc7..0660d9ef6a86 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -1353,6 +1353,26 @@
- 				};
- 			};
- 
-+			cpu_temp: temperature-sensor@34800 {
-+				compatible = "amlogic,g12a-cpu-thermal",
-+					     "amlogic,g12a-thermal";
-+				reg = <0x0 0x34800 0x0 0x50>;
-+				interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc CLKID_TS>;
-+				#thermal-sensor-cells = <0>;
-+				amlogic,ao-secure = <&sec_AO>;
-+			};
-+
-+			ddr_temp: temperature-sensor@34c00 {
-+				compatible = "amlogic,g12a-ddr-thermal",
-+					     "amlogic,g12a-thermal";
-+				reg = <0x0 0x34c00 0x0 0x50>;
-+				interrupts = <GIC_SPI 36 IRQ_TYPE_EDGE_RISING>;
-+				clocks = <&clkc CLKID_TS>;
-+				#thermal-sensor-cells = <0>;
-+				amlogic,ao-secure = <&sec_AO>;
-+			};
-+
- 			usb2_phy0: phy@36000 {
- 				compatible = "amlogic,g12a-usb2-phy";
- 				reg = <0x0 0x36000 0x0 0x2000>;
+Could you remove the unneeded ret variable from imx290_power_on() and
+unneeded goto in the same function?
+
+The MAINTAINERS entry belongs to the first patch adding new files.
+
+Then I think this is good.
+
 -- 
-2.17.1
+Regards,
+
+Sakari Ailus
