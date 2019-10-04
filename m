@@ -1,61 +1,67 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v3 0/2] hwrng: npcm: add NPCM RNG driver support
-Date: Sat, 5 Oct 2019 01:29:56 +1000
-Message-ID: <20191004152956.GE5148@gondor.apana.org.au>
-References: <20190912090149.7521-1-tmaimon77@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v11 0/6] Solve postboot supplier cleanup and optimize
+ probe ordering
+Date: Fri, 4 Oct 2019 17:34:14 +0200
+Message-ID: <20191004153414.GA823823@kroah.com>
+References: <20190904211126.47518-1-saravanak@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190912090149.7521-1-tmaimon77@gmail.com>
+In-Reply-To: <20190904211126.47518-1-saravanak@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: mpm@selenic.com, arnd@arndb.de, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, avifishman70@gmail.com, tali.perry1@gmail.com, venture@google.com, yuenn@google.com, benjaminfair@google.com, sumit.garg@linaro.org, jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de, joel@jms.id.au, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, openbmc@lists.ozlabs.org
+To: Saravana Kannan <saravanak@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Jonathan Corbet <corbet@lwn.net>, Len Brown <lenb@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-acpi@vger.kernel.org, clang-built-linux@googlegroups.com, David Collins <collinsd@codeaurora.org>, kernel-team@android.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 12:01:47PM +0300, Tomer Maimon wrote:
-> This patch set adds Random Number Generator (RNG) support 
-> for the Nuvoton NPCM Baseboard Management Controller (BMC).
+On Wed, Sep 04, 2019 at 02:11:19PM -0700, Saravana Kannan wrote:
+> Add device-links to track functional dependencies between devices
+> after they are created (but before they are probed) by looking at
+> their common DT bindings like clocks, interconnects, etc.
 > 
-> The RNG driver we use power consumption when the RNG 
-> is not required.
+> Having functional dependencies automatically added before the devices
+> are probed, provides the following benefits:
 > 
-> The NPCM RNG driver tested on NPCM750 evaluation board.
+> - Optimizes device probe order and avoids the useless work of
+>   attempting probes of devices that will not probe successfully
+>   (because their suppliers aren't present or haven't probed yet).
 > 
-> Addressed comments from:.
->  - Daniel Thompson: https://lkml.org/lkml/2019/9/10/352
->  - Milton Miller II : https://lkml.org/lkml/2019/9/10/847
->  - Daniel Thompson: https://lkml.org/lkml/2019/9/10/294
+>   For example, in a commonly available mobile SoC, registering just
+>   one consumer device's driver at an initcall level earlier than the
+>   supplier device's driver causes 11 failed probe attempts before the
+>   consumer device probes successfully. This was with a kernel with all
+>   the drivers statically compiled in. This problem gets a lot worse if
+>   all the drivers are loaded as modules without direct symbol
+>   dependencies.
 > 
-> Changes since version 2:
->  - Rearrange wait parameter in npcm_rng_read function.
->  - Calling pm_runtime_enable function before hwrng_register function 
->    called to enable the hwrng before add_early_randomness called.
->  - Remove quality dt-binding parameter in the driver and documentation.
->  - Disable CONFIG_PM if devm_hwrng_register failed.
->  - Remove owner setting in the driver struct.
+> - Supplier devices like clock providers, interconnect providers, etc
+>   need to keep the resources they provide active and at a particular
+>   state(s) during boot up even if their current set of consumers don't
+>   request the resource to be active. This is because the rest of the
+>   consumers might not have probed yet and turning off the resource
+>   before all the consumers have probed could lead to a hang or
+>   undesired user experience.
 > 
-> Changes since version 1:
->  - Define timout in real-world units.
->  - Using readl_poll_timeout in rng_read function.
->  - Honor wait parameter in rng_read function.
->  - Using local variable instead of #ifndef.
->  - Remove probe print.
+>   Some frameworks (Eg: regulator) handle this today by turning off
+>   "unused" resources at late_initcall_sync and hoping all the devices
+>   have probed by then. This is not a valid assumption for systems with
+>   loadable modules. Other frameworks (Eg: clock) just don't handle
+>   this due to the lack of a clear signal for when they can turn off
+>   resources. This leads to downstream hacks to handle cases like this
+>   that can easily be solved in the upstream kernel.
 > 
-> Tomer Maimon (2):
->   dt-binding: hwrng: add NPCM RNG documentation
->   hwrng: npcm: add NPCM RNG driver
+>   By linking devices before they are probed, we give suppliers a clear
+>   count of the number of dependent consumers. Once all of the
+>   consumers are active, the suppliers can turn off the unused
+>   resources without making assumptions about the number of consumers.
 > 
->  .../bindings/rng/nuvoton,npcm-rng.txt         |  12 ++
->  drivers/char/hw_random/Kconfig                |  13 ++
->  drivers/char/hw_random/Makefile               |   1 +
->  drivers/char/hw_random/npcm-rng.c             | 186 ++++++++++++++++++
->  4 files changed, 212 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
->  create mode 100644 drivers/char/hw_random/npcm-rng.c
+> By default we just add device-links to track "driver presence" (probe
+> succeeded) of the supplier device. If any other functionality provided
+> by device-links are needed, it is left to the consumer/supplier
+> devices to change the link when they probe.
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Hearing no real complaints again, I've now queued these up in my tree.
+
+thanks,
+
+greg k-h
