@@ -1,52 +1,43 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v4 2/2] media: i2c: Add IMX290 CMOS image sensor driver
-Date: Fri, 4 Oct 2019 15:49:02 +0530
-Message-ID: <20191004101902.GA19685@mani>
-References: <20191003095503.12614-1-manivannan.sadhasivam@linaro.org>
- <20191003095503.12614-3-manivannan.sadhasivam@linaro.org>
- <20191004092336.GL896@valkosipuli.retiisi.org.uk>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH 3/7] dt-bindings: PCI: rcar: Add device tree support for
+ r8a774b1
+Date: Fri, 4 Oct 2019 11:33:15 +0100
+Message-ID: <20191004103315.GS42880@e119886-lin.cambridge.arm.com>
+References: <1570178133-21532-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1570178133-21532-4-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191004092336.GL896@valkosipuli.retiisi.org.uk>
+In-Reply-To: <1570178133-21532-4-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, c.barrett@framos.com, a.brela@framos.com
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Bjorn Helgaas <bhelgaas@google.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, xu_shunji@hoper
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-On Fri, Oct 04, 2019 at 12:23:36PM +0300, Sakari Ailus wrote:
-> Hi Manivannan,
+On Fri, Oct 04, 2019 at 09:35:29AM +0100, Fabrizio Castro wrote:
+> Add PCIe support for the RZ/G2N (a.k.a. R8A774B1).
 > 
-> On Thu, Oct 03, 2019 at 03:25:03PM +0530, Manivannan Sadhasivam wrote:
-> > Add driver for Sony IMX290 CMOS image sensor driver. The driver only
-> > supports I2C interface for programming and MIPI CSI-2 for sensor output.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Could you remove the unneeded ret variable from imx290_power_on() and
-> unneeded goto in the same function?
->
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> index 45bba9f..12702c8 100644
+> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> @@ -4,6 +4,7 @@ Required properties:
+>  compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
+>  	    "renesas,pcie-r8a7744" for the R8A7744 SoC;
+>  	    "renesas,pcie-r8a774a1" for the R8A774A1 SoC;
+> +	    "renesas,pcie-r8a774b1" for the R8A774B1 SoC;
 
-yep, sure.
- 
-> The MAINTAINERS entry belongs to the first patch adding new files.
-> 
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-You mean the bindings patch? If then, sorry no. Usually the devicetree bindings
-belongs to a separate patch and that is what perferred by Rob. I prefer the
-MAINTAINERS entry in a separate patch but I've seen subsystems maintainers
-asking to squash it with the driver patch. But squashing it with bindings
-patch seems weird to me.
-
-Thanks,
-Mani
-
-> Then I think this is good.
-> 
+>  	    "renesas,pcie-r8a774c0" for the R8A774C0 SoC;
+>  	    "renesas,pcie-r8a7779" for the R8A7779 SoC;
+>  	    "renesas,pcie-r8a7790" for the R8A7790 SoC;
 > -- 
-> Regards,
+> 2.7.4
 > 
-> Sakari Ailus
