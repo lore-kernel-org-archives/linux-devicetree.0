@@ -1,97 +1,39 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH] userdiff: Fix some corner cases in dts regex
-Date: Fri,  4 Oct 2019 14:30:29 -0700
-Message-ID: <20191004213029.145027-1-sboyd@kernel.org>
+From: "Theodore Y. Ts'o" <tytso@mit.edu>
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Fri, 4 Oct 2019 17:38:12 -0400
+Message-ID: <20191004213812.GA24644@mit.edu>
+References: <20190923090249.127984-1-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <git-owner@vger.kernel.org>
-Sender: git-owner@vger.kernel.org
-To: git@vger.kernel.org
-Cc: Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Johannes Sixt <j6t@kdbg.org>, Matthieu Moy <matthieu.moy@grenoble-inp.fr>, Junio C Hamano <gitster@pobox.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190923090249.127984-1-brendanhiggins@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: frowand.list@gmail.com, gregkh@linuxfoundation.org, jpoimboe@redhat.com, keescook@google.com, kieran.bingham@ideasonboard.com, mcgrof@kernel.org, peterz@infradead.org, robh@kernel.org, sboyd@kernel.org, shuah@kernel.org, yamada.masahiro@socionext.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org, linux-um@lists.infradead.org, Alexander.Levin@microsoft.com, Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com
 List-Id: devicetree@vger.kernel.org
 
-While reviewing some dts diffs recently I noticed that the hunk header
-logic was failing to find the containing node. This is because the regex
-doesn't consider properties that may span multiple lines, i.e.
+On Mon, Sep 23, 2019 at 02:02:30AM -0700, Brendan Higgins wrote:
+> ## TL;DR
+> 
+> This revision addresses comments from Linus[1] and Randy[2], by moving
+> top level `kunit/` directory to `lib/kunit/` and likewise moves top
+> level Kconfig entry under lib/Kconfig.debug, so the KUnit submenu now
+> shows up under the "Kernel Hacking" menu.
 
-	property = <something>,
-		   <something_else>;
+This question is primarily directed at Shuah and Linus....
 
-and it got hung up on comments inside nodes that look like the root node
-because they start with '/*'. Add tests for these cases and update the
-regex to find them. Maybe detecting the root node is too complicated but
-forcing it to be a backslash with any amount of whitespace up to an open
-bracket seemed OK. I tried to detect that a comment is in-between the
-two parts but I wasn't happy so I just dropped it.
+What's the current status of the kunit series now that Brendan has
+moved it out of the top-level kunit directory as Linus has requested?
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
----
- t/t4018/dts-nodes-multiline-prop | 12 ++++++++++++
- t/t4018/dts-root                 |  2 +-
- t/t4018/dts-root-comment         |  8 ++++++++
- userdiff.c                       |  3 ++-
- 4 files changed, 23 insertions(+), 2 deletions(-)
- create mode 100644 t/t4018/dts-nodes-multiline-prop
- create mode 100644 t/t4018/dts-root-comment
+There doesn't appear to have been many comments or changes since since
+September 23rd, and I was very much hoping they could land before
+-rc2, since I've been hoping to add unit tests for ext4.
 
-diff --git a/t/t4018/dts-nodes-multiline-prop b/t/t4018/dts-nodes-multiline-prop
-new file mode 100644
-index 000000000000..f7b655935429
---- /dev/null
-+++ b/t/t4018/dts-nodes-multiline-prop
-@@ -0,0 +1,12 @@
-+/ {
-+	label_1: node1@ff00 {
-+		RIGHT@deadf00,4000 {
-+			multilineprop = <3>,
-+					<4>;
-+
-+
-+
-+			ChangeMe = <0xffeedd00>;
-+		};
-+	};
-+};
-diff --git a/t/t4018/dts-root b/t/t4018/dts-root
-index 2ef9e6ffaa2c..4353b8220c91 100644
---- a/t/t4018/dts-root
-+++ b/t/t4018/dts-root
-@@ -1,4 +1,4 @@
--/RIGHT { /* Technically just supposed to be a slash */
-+/ { RIGHT /* Technically just supposed to be a slash and brace */
- 	#size-cells = <1>;
- 
- 	ChangeMe = <0xffeedd00>;
-diff --git a/t/t4018/dts-root-comment b/t/t4018/dts-root-comment
-new file mode 100644
-index 000000000000..333a625c7007
---- /dev/null
-+++ b/t/t4018/dts-root-comment
-@@ -0,0 +1,8 @@
-+/ { RIGHT /* Technically just supposed to be a slash and brace */
-+	#size-cells = <1>;
-+
-+	/* This comment should be ignored */
-+
-+	some-property = <40+2>;
-+	ChangeMe = <0xffeedd00>;
-+};
-diff --git a/userdiff.c b/userdiff.c
-index 86e3244e15dd..651b56caec56 100644
---- a/userdiff.c
-+++ b/userdiff.c
-@@ -25,8 +25,9 @@ IPATTERN("ada",
- 	 "|=>|\\.\\.|\\*\\*|:=|/=|>=|<=|<<|>>|<>"),
- PATTERNS("dts",
- 	 "!;\n"
-+	 "!.*=.*\n"
- 	 /* lines beginning with a word optionally preceded by '&' or the root */
--	 "^[ \t]*((/|&?[a-zA-Z_]).*)",
-+	 "^[ \t]*((/[ \t]*\\{|&?[a-zA-Z_]).*)",
- 	 /* -- */
- 	 /* Property names and math operators */
- 	 "[a-zA-Z0-9,._+?#-]+"
--- 
-Sent by a computer through tubes
+Is kunit likely to be able to be landed in Linus's tree during this
+development cycle?
+
+Many thanks!
+
+					- Ted
