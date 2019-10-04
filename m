@@ -1,27 +1,44 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
-Date: Fri, 4 Oct 2019 09:35:23 +0000
-Message-ID: <08e99a4b-851e-0bee-4c5a-8578b42c283e@microchip.com>
-References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
- <20191002144658.7718-3-kamel.bouhara@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V1 1/2]  regulator: dt-bindings: Add PM6150x compatibles
+Date: Fri,  4 Oct 2019 15:38:53 +0530
+Message-ID: <1570183734-30706-2-git-send-email-kgunda@codeaurora.org>
+References: <1570183734-30706-1-git-send-email-kgunda@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191002144658.7718-3-kamel.bouhara@bootlin.com>
-Content-Language: en-US
-Content-ID: <DA77BC9EC8C40C4A8D647BCD8BE57710@namprd11.prod.outlook.com>
+In-Reply-To: <1570183734-30706-1-git-send-email-kgunda@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kamel.bouhara@bootlin.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, thomas.petazzoni@bootlin.com
+To: bjorn.andersson@linaro.org, Andy Gross <agross@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Kiran Gunda <kgunda@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2FtZWwsDQoNCk9uIDAyLjEwLjIwMTkgMTc6NDYsIEthbWVsIEJvdWhhcmEgd3JvdGU6DQo+
-ICtzdGF0aWMgaW50IGF0OTFfaW5pdF90d2lfcmVjb3ZlcnlfaW5mbyhzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlICpwZGV2LA0KPiArCQkJCSAgICAgICBzdHJ1Y3QgYXQ5MV90d2lfZGV2ICpkZXYpDQo+
-ICt7DQo+ICsJc3RydWN0IGkyY19idXNfcmVjb3ZlcnlfaW5mbyAqcmluZm8gPSAmZGV2LT5yaW5m
-bzsNCj4gKw0KPiArCWRldi0+cGluY3RybCA9IGRldm1fcGluY3RybF9nZXQoJnBkZXYtPmRldik7
-DQo+ICsJaWYgKCFkZXYtPnBpbmN0cmwgfHwgSVNfRVJSKGRldi0+cGluY3RybCkpIHsNCg0KWW91
-IG1heSB1c2UgSVNfRVJSX09SX05VTEwoKSBoZXJlLg0KDQo+ICsJCWRldl9pbmZvKGRldi0+ZGV2
-LCAiY2FuJ3QgZ2V0IHBpbmN0cmwsIGJ1cyByZWNvdmVyeSBub3Qgc3VwcG9ydGVkXG4iKTsNCj4g
-KwkJcmV0dXJuIFBUUl9FUlIoZGV2LT5waW5jdHJsKTsNCj4gKwl9DQo+ICsNCg==
+Add PM6150 and PM6150L compatibles for Qualcomm SC7180 platfrom.
+
+Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+---
+ Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+index bab9f71..97c3e0b 100644
+--- a/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt
+@@ -28,6 +28,8 @@ Supported regulator node names:
+ 	PM8150L:	smps1 - smps8, ldo1 - ldo11, bob, flash, rgb
+ 	PM8998:		smps1 - smps13, ldo1 - ldo28, lvs1 - lvs2
+ 	PMI8998:	bob
++	PM6150:         smps1 - smps5, ldo1 - ldo19
++	PM6150L:        smps1 - smps8, ldo1 - ldo11, bob
+ 
+ ========================
+ First Level Nodes - PMIC
+@@ -43,6 +45,8 @@ First Level Nodes - PMIC
+ 		    "qcom,pm8150l-rpmh-regulators"
+ 		    "qcom,pm8998-rpmh-regulators"
+ 		    "qcom,pmi8998-rpmh-regulators"
++		    "qcom,pm6150-rpmh-regulators"
++		    "qcom,pm6150l-rpmh-regulators"
+ 
+ - qcom,pmic-id
+ 	Usage:      required
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
