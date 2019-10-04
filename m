@@ -1,50 +1,41 @@
-From: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Subject: Re: [PATCH v5 3/5] serial: fsl_linflexuart: Be consistent with the
- name
-Date: Fri, 4 Oct 2019 13:40:48 +0000
-Message-ID: <VI1PR0402MB2863C5C76A9F709B98C7BDE7DF9E0@VI1PR0402MB2863.eurprd04.prod.outlook.com>
-References: <20191002130425.28905-1-stefan-gabriel.mirea@nxp.com>
- <20191002130425.28905-4-stefan-gabriel.mirea@nxp.com>
- <20191004130712.GA622272@kroah.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: max77650: convert the binding
+ document to yaml
+Date: Fri, 4 Oct 2019 14:52:29 +0100
+Message-ID: <20191004135229.GF18429@dell>
+References: <20190930130246.4860-1-brgl@bgdev.pl>
+ <20190930130246.4860-2-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "corbet@lwn.net" <corbet@lwn.net>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "jslaby@suse.com" <jslaby@suse.com>, "will@kernel.org" <will@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190930130246.4860-2-brgl@bgdev.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Greg,
+On Mon, 30 Sep 2019, Bartosz Golaszewski wrote:
 
-On 10/4/2019 4:07 PM, gregkh@linuxfoundation.org wrote:
-> On Wed, Oct 02, 2019 at 01:04:42PM +0000, Stefan-gabriel Mirea wrote:
->> --- a/include/uapi/linux/serial_core.h
->> +++ b/include/uapi/linux/serial_core.h
->> @@ -290,7 +290,7 @@
->>  /* Sunix UART */
->>  #define PORT_SUNIX   121
->>
->> -/* Freescale Linflex UART */
->> -#define PORT_LINFLEXUART     121
->> +/* Freescale LINFlexD UART */
->> +#define PORT_LINFLEXUART     122
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> This is a different change, and one that should be split out and
-> submitted now, for 5.4.  Please do that as the id number is incorrect,
-> don't bury a valid change in the middle of a "marketing renamed the
-> device" patch :)
+> Convert the binding document for max77650 core mfd module to yaml.
 
-I will do that, thanks!
+MAX77650, MFD, YAML.
 
-Regards,
-Stefan
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  .../devicetree/bindings/mfd/max77650.txt      | 47 +----------
+>  .../devicetree/bindings/mfd/max77650.yaml     | 83 +++++++++++++++++++
+>  2 files changed, 84 insertions(+), 46 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max77650.yaml
+
+Looks okay in principle, but needs a DT Ack.  Preferably from someone
+who speaks YAML.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
