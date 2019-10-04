@@ -1,38 +1,52 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH] .gitattributes: Use 'dts' diff driver for dts files
-Date: Fri, 04 Oct 2019 16:50:35 -0700
-Message-ID: <5d97dacc.1c69fb81.b5612.3794@mx.google.com>
-References: <20191004212311.141538-1-swboyd@chromium.org> <256a1ad3-6a0c-b4bd-e12c-9ab35db2939a@infradead.org>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Fri, 4 Oct 2019 16:52:06 -0700
+Message-ID: <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
+References: <20190923090249.127984-1-brendanhiggins@google.com>
+ <20191004213812.GA24644@mit.edu> <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+ <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org> <20191004222714.GA107737@google.com>
+ <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org> <20191004232955.GC12012@mit.edu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <256a1ad3-6a0c-b4bd-e12c-9ab35db2939a@infradead.org>
+In-Reply-To: <20191004232955.GC12012@mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+To: "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc: shuah <shuah@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Frank Rowand <frowand.list@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>Linux
 List-Id: devicetree@vger.kernel.org
 
-Quoting Randy Dunlap (2019-10-04 15:08:08)
-> On 10/4/19 2:23 PM, Stephen Boyd wrote:
-> >=20
-> > diff --git a/.gitattributes b/.gitattributes
-> > index 89c411b5ce6b..4b32eaa9571e 100644
-> > --- a/.gitattributes
-> > +++ b/.gitattributes
-> > @@ -1,2 +1,4 @@
-> >  *.c   diff=3Dcpp
-> >  *.h   diff=3Dcpp
-> > +*.dtsi diff=3Ddts
-> > +*.dts  diff=3Ddts
-> >=20
->=20
-> Hm, I have a "cpp" installed but not a "dts".
-> Where would I find this "dts" so that I can install it?
->=20
+On Fri, Oct 4, 2019 at 4:30 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>
+> On Fri, Oct 04, 2019 at 04:47:09PM -0600, shuah wrote:
+> > > However, if I encourage arbitrary tests/improvements into my KUnit
+> > > branch, it further diverges away from torvalds/master, and is more
+> > > likely that there will be a merge conflict or issue that is not related
+> > > to the core KUnit changes that will cause the whole thing to be
+> > > rejected again in v5.5.
+> >
+> > The idea is that the new development will happen based on kunit in
+> > linux-kselftest next. It will work just fine. As we accepts patches,
+> > they will go on top of kunit that is in linux-next now.
+>
+> I don't see how this would work.  If I add unit tests to ext4, they
+> would be in fs/ext4.  And to the extent that I need to add test mocks
+> to allow the unit tests to work, they will involve changes to existing
+> files in fs/ext4.  I can't put them in the ext4.git tree without
+> pulling in the kunit changes into the ext4 git tree.  And if they ext4
+> unit tests land in the kunit tree, it would be a receipe for large
+> numbers of merge conflicts.
 
-It's not released yet but it is staged to be in the next release[1]. You
-can probably build git from source and try it out if you're interested.
+That's where I was originally coming from.
 
-[1] https://git.kernel.org/pub/scm/git/git.git/commit/?id=3Dd49c2c3466d2c8c=
-b0b3d0a43e6b406b07078fdb1
+So here's a dumb idea: what if we merged KUnit through the ext4 tree?
+I imagine that could potentially get very confusing when we go back to
+sending changes in through the kselftest tree, but at least it means
+that ext4 can use it in the meantime, which means that it at least
+gets to be useful to one group of people. Also, since Ted seems pretty
+keen on using this, I imagine it is much more likely to produce real
+world, immediately useful tests not written by me (I'm not being lazy,
+I just think it is better to get other people's experiences other than
+my own).
+
+Thoughts?
