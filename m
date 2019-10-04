@@ -1,108 +1,70 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] arm64: dts: rockchip: Fix usb-c on Hugsun X99 TV Box
-Date: Fri, 04 Oct 2019 23:45:08 +0200
-Message-ID: <2223294.9I8gkMH88G@phil>
-References: <20190929032230.24628-1-npcomplete13@gmail.com>
- <54c67ca8-8428-48ee-9a96-e1216ba02839@gmail.com>
- <20190929234615.GA5355@vivek-desktop>
+From: Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH] ARM: dts: vf610-zii-scu4-aib: Specify 'i2c-mux-idle-disconnect'
+Date: Fri, 4 Oct 2019 14:52:03 -0700
+Message-ID: <CAFXsbZq6MQk1DyUVGjC5g6jmsOdmG=1Q=4fX=9n3amSjLW1Maw@mail.gmail.com>
+References: <20191004054115.26082-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190929234615.GA5355@vivek-desktop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vivek Unune <npcomplete13@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, linux-kernel@vger.kernel.org, Vicente Bergas <vicencb@gmail.com>, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, akash@openedev.com, ezequiel@collabora.com, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191004054115.26082-1-andrew.smirnov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Cory Tusar <cory.tusar@zii.aero>, Jeff White <jeff.white@zii.aero>, Rick Ramstetter <rick@anteaterllc.com>, Lucas Stach <l.stach@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
+On Thu, Oct 3, 2019 at 10:41 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+>
+> Specify 'i2c-mux-idle-disconnect' for both I2C switches present on the
+> board, since both are connected to the same parent bus and all of
+> their children have the same I2C address.
+>
+> Fixes: ca4b4d373fcc ("ARM: dts: vf610: Add ZII SCU4 AIB board")
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Cory Tusar <cory.tusar@zii.aero>
+> Cc: Jeff White <jeff.white@zii.aero>
+> Cc: Rick Ramstetter <rick@anteaterllc.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+> Shawn:
+>
+> If this is possible, I'd like this one to go into 5.4.
+>
+> Thanks,
+> Andrey Smirnov
+>
+>  arch/arm/boot/dts/vf610-zii-scu4-aib.dts | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
+> index dc8a5f37a1ef..c8ebb23c4e02 100644
+> --- a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
+> +++ b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
+> @@ -602,6 +602,7 @@
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>                 reg = <0x70>;
+> +               i2c-mux-idle-disconnect;
+>
+>                 sff0_i2c: i2c@1 {
+>                         #address-cells = <1>;
+> @@ -640,6 +641,7 @@
+>                 reg = <0x71>;
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+> +               i2c-mux-idle-disconnect;
+>
+>                 sff5_i2c: i2c@1 {
+>                         #address-cells = <1>;
+> --
+> 2.21.0
+>
 
-Am Montag, 30. September 2019, 01:46:15 CEST schrieb Vivek Unune:
-> On Sun, Sep 29, 2019 at 01:22:17PM +0200, Vicente Bergas wrote:
-> > On Sunday, September 29, 2019 5:22:30 AM CEST, Vivek Unune wrote:
-> > > Fix usb-c on X99 TV Box. Tested with armbian w/ kernel 5.3
-> > > =
+On an SCU4 AIB, this series is:
 
-> > > Signed-off-by: Vivek Unune <npcomplete13@gmail.com>
-> > > ---
-> > >  arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > =
-
-> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-> > > b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-> > > index 0d1f5f9a0de9..c133e8d64b2a 100644
-> > > --- a/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-> > > +++ b/arch/arm64/boot/dts/rockchip/rk3399-hugsun-x99.dts
-> > > @@ -644,7 +644,7 @@
-> > >  	status =3D "okay";
-> > >  	u2phy0_host: host-port {
-> > > -		phy-supply =3D <&vcc5v0_host>;
-> > > +		phy-supply =3D <&vcc5v0_typec>;
-> > >  		status =3D "okay";
-> > >  	};
-> > > @@ -712,7 +712,7 @@
-> > >  &usbdrd_dwc3_0 {
-> > >  	status =3D "okay";
-> > > -	dr_mode =3D "otg";
-> > > +	dr_mode =3D "host";
-> > >  };
-> > >  &usbdrd3_1 {
-> > =
-
-> > Hi Vivek,
-> > =
-
-> > which is the relationship of your patch and this commit:
-> > =
-
-> > e1d9149e8389f1690cdd4e4056766dd26488a0fe
-> > arm64: dts: rockchip: Fix USB3 Type-C on rk3399-sapphire
-> > =
-
-> > with respect to this other commit:
-> > =
-
-> > c09b73cfac2a9317f1104169045c519c6021aa1d
-> > usb: dwc3: don't set gadget->is_otg flag
-> > =
-
-> > ?
-> > =
-
-> > I did not test reverting e1d9149e since c09b73cf was applied.
-> > =
-
-> > Regards,
-> >  Vicen=E7.
-> > =
-
-> =
-
-> Hi Vicen=E7,
-> =
-
-> Indeed, I was motivated by e1d9149e ("arm64: dts: rockchip: Fix USB3 =
-
-> Type-C on rk3399-sapphire"). X99 TV box showed exact same symptoms
-> with usb-c port. After applying the fix, it worked.
-> =
-
-> I was not aware of c09b73cf ("usb: dwc3: don't set gadget->is_otg
->  flag") and it will be interesting to test it. This might render
-> my fix unecessary.
-
-So I'll let this patch sit here for now.
-Once you've done the testing, can you please respond with the
-result (both positive and negative results please).
-
-Thanks
-Heiko
+Tested-by: Chris Healy <cphealy@gmail.com>
