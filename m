@@ -1,74 +1,43 @@
-From: Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Subject: Re: [PATCH] dt-bindings: media: Convert stm32 cec bindings to
- json-schema
-Date: Fri, 4 Oct 2019 12:07:14 +0000
-Message-ID: <c74bae8a-e043-1484-2cd1-a644ad9b164d@st.com>
-References: <20191002151410.15306-1-benjamin.gaignard@st.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 0/7] add Tegra194 XUSB host and pad controller support
+Date: Fri, 4 Oct 2019 14:23:22 +0200
+Message-ID: <20191004122322.GB422178@kroah.com>
+References: <20191004081941.4831-1-jckuo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191002151410.15306-1-benjamin.gaignard@st.com>
-Content-Language: en-US
-Content-ID: <16574661833B034C85DD4354A28F4483@st.com>
+Content-Disposition: inline
+In-Reply-To: <20191004081941.4831-1-jckuo@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "mchehab@kernel.org" <mchehab@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Yannick FERTRE <yannick.fertre@st.com>, "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: JC Kuo <jckuo@nvidia.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-KyBIYW5zDQoNCk9uIDEwLzIvMTkgNToxNCBQTSwgQmVuamFtaW4gR2FpZ25hcmQgd3JvdGU6DQo+
-IENvbnZlcnQgdGhlIFNUTTMyIGNlYyBiaW5kaW5nIHRvIERUIHNjaGVtYSBmb3JtYXQgdXNpbmcg
-anNvbi1zY2hlbWENCj4NCj4gU2lnbmVkLW9mZi1ieTogQmVuamFtaW4gR2FpZ25hcmQgPGJlbmph
-bWluLmdhaWduYXJkQHN0LmNvbT4NCj4gLS0tDQo+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
-bWVkaWEvc3Qsc3RtMzItY2VjLnR4dCAgICAgfCAxOSAtLS0tLS0tLQ0KPiAgIC4uLi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL21lZGlhL3N0LHN0bTMyLWNlYy55YW1sICAgIHwgNTcgKysrKysrKysrKysr
-KysrKysrKysrKw0KPiAgIDIgZmlsZXMgY2hhbmdlZCwgNTcgaW5zZXJ0aW9ucygrKSwgMTkgZGVs
-ZXRpb25zKC0pDQo+ICAgZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9tZWRpYS9zdCxzdG0zMi1jZWMudHh0DQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zdCxzdG0zMi1jZWMueWFt
-bA0KPg0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21l
-ZGlhL3N0LHN0bTMyLWNlYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-bWVkaWEvc3Qsc3RtMzItY2VjLnR4dA0KPiBkZWxldGVkIGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5k
-ZXggNmJlMjM4MWMxODBkLi4wMDAwMDAwMDAwMDANCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL21lZGlhL3N0LHN0bTMyLWNlYy50eHQNCj4gKysrIC9kZXYvbnVsbA0K
-PiBAQCAtMSwxOSArMCwwIEBADQo+IC1TVE1pY3JvZWxlY3Ryb25pY3MgU1RNMzIgQ0VDIGRyaXZl
-cg0KPiAtDQo+IC1SZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAtIC0gY29tcGF0aWJsZSA6IHZhbHVl
-IHNob3VsZCBiZSAic3Qsc3RtMzItY2VjIg0KPiAtIC0gcmVnIDogUGh5c2ljYWwgYmFzZSBhZGRy
-ZXNzIG9mIHRoZSBJUCByZWdpc3RlcnMgYW5kIGxlbmd0aCBvZiBtZW1vcnkNCj4gLQkgbWFwcGVk
-IHJlZ2lvbi4NCj4gLSAtIGNsb2NrcyA6IGZyb20gY29tbW9uIGNsb2NrIGJpbmRpbmc6IGhhbmRs
-ZSB0byBDRUMgY2xvY2tzDQo+IC0gLSBjbG9jay1uYW1lcyA6IGZyb20gY29tbW9uIGNsb2NrIGJp
-bmRpbmc6IG11c3QgYmUgImNlYyIgYW5kICJoZG1pLWNlYyIuDQo+IC0gLSBpbnRlcnJ1cHRzIDog
-Q0VDIGludGVycnVwdCBudW1iZXIgdG8gdGhlIENQVS4NCj4gLQ0KPiAtRXhhbXBsZSBmb3Igc3Rt
-MzJmNzQ2Og0KPiAtDQo+IC1jZWM6IGNlY0A0MDAwNmMwMCB7DQo+IC0JY29tcGF0aWJsZSA9ICJz
-dCxzdG0zMi1jZWMiOw0KPiAtCXJlZyA9IDwweDQwMDA2QzAwIDB4NDAwPjsNCj4gLQlpbnRlcnJ1
-cHRzID0gPDk0PjsNCj4gLQljbG9ja3MgPSA8JnJjYyAwIFNUTTMyRjdfQVBCMV9DTE9DSyhDRUMp
-PiwgPCZyY2MgMSBDTEtfSERNSV9DRUM+Ow0KPiAtCWNsb2NrLW5hbWVzID0gImNlYyIsICJoZG1p
-LWNlYyI7DQo+IC19Ow0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL21lZGlhL3N0LHN0bTMyLWNlYy55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL21lZGlhL3N0LHN0bTMyLWNlYy55YW1sDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
-DQo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYzk5MTQ0MTA3MTg1DQo+IC0tLSAvZGV2L251bGwNCj4g
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3N0LHN0bTMyLWNl
-Yy55YW1sDQo+IEBAIC0wLDAgKzEsNTcgQEANCj4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6
-IEdQTC0yLjANCj4gKyVZQU1MIDEuMg0KPiArLS0tDQo+ICskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVl
-Lm9yZy9zY2hlbWFzL21lZGlhL3N0LHN0bTMyLWNlYy55YW1sIw0KPiArJHNjaGVtYTogaHR0cDov
-L2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+ICsNCj4gK3RpdGxlOiBT
-VE1pY3JvZWxlY3Ryb25pY3MgU1RNMzIgQ0VDIGJpbmRpbmdzDQo+ICsNCj4gK21haW50YWluZXJz
-Og0KPiArICAtIEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5jb20+DQo+
-ICsgIC0gWWFubmljayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4NCj4gKw0KPiArcHJv
-cGVydGllczoNCj4gKyAgY29tcGF0aWJsZToNCj4gKyAgICBjb25zdDogc3Qsc3RtMzItY2VjDQo+
-ICsNCj4gKyAgcmVnOg0KPiArICAgIG1heEl0ZW1zOiAxDQo+ICsNCj4gKyAgaW50ZXJydXB0czoN
-Cj4gKyAgICBtYXhJdGVtczogMQ0KPiArDQo+ICsgIGNsb2NrczoNCj4gKyAgICBpdGVtczoNCj4g
-KyAgICAgIC0gZGVzY3JpcHRpb246IE1vZHVsZSBDbG9jaw0KPiArICAgICAgLSBkZXNjcmlwdGlv
-bjogQnVzIENsb2NrDQo+ICsNCj4gKyAgY2xvY2stbmFtZXM6DQo+ICsgICAgaXRlbXM6DQo+ICsg
-ICAgICAtIGNvbnN0OiBjZWMNCj4gKyAgICAgIC0gY29uc3Q6IGhkbWktY2VjDQo+ICsNCj4gKyAg
-cGluY3RybC1uYW1lczogdHJ1ZQ0KPiArDQo+ICtwYXR0ZXJuUHJvcGVydGllczoNCj4gKyAgIl5w
-aW5jdHJsLVswLTldKyQiOiB0cnVlDQo+ICsNCj4gK3JlcXVpcmVkOg0KPiArICAtIGNvbXBhdGli
-bGUNCj4gKyAgLSByZWcNCj4gKyAgLSBpbnRlcnJ1cHRzDQo+ICsgIC0gY2xvY2tzDQo+ICsgIC0g
-Y2xvY2stbmFtZXMNCj4gKw0KPiArZXhhbXBsZXM6DQo+ICsgIC0gfA0KPiArICAgICNpbmNsdWRl
-IDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9hcm0tZ2ljLmg+DQo+ICsgICAgI2lu
-Y2x1ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL3N0bTMybXAxLWNsa3MuaD4NCj4gKyAgICBjZWM6IGNl
-Y0A0MDAwNmMwMCB7DQo+ICsgICAgICAgIGNvbXBhdGlibGUgPSAic3Qsc3RtMzItY2VjIjsNCj4g
-KyAgICAgICAgcmVnID0gPDB4NDAwMDZjMDAgMHg0MDA+Ow0KPiArICAgICAgICBpbnRlcnJ1cHRz
-ID0gPEdJQ19TUEkgOTQgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ICsgICAgICAgIGNsb2NrcyA9
-IDwmcmNjIENFQ19LPiwgPCZjbGtfbHNlPjsNCj4gKyAgICAgICAgY2xvY2stbmFtZXMgPSAiY2Vj
-IiwgImhkbWktY2VjIjsNCj4gKyAgICB9Ow0KPiArDQo+ICsuLi4=
+On Fri, Oct 04, 2019 at 04:19:34PM +0800, JC Kuo wrote:
+> Hi,
+> 
+> This series introduces support for Tegra194 XUSB host and pad
+> controller. Tegra194 XUSB host and pad controller are highly
+> similar to the controllers found on Tegra186. Therefore, it's
+> possible to resue xhci-tegra.c and xusb-tegra186.c for Tegra194.
+> 
+> JC Kuo (7):
+>   xhci: tegra: Parameterize mailbox register addresses
+>   usb: host: xhci-tegra: Add Tegra194 XHCI support
+>   phy: tegra: xusb: Protect Tegra186 soc with config
+>   phy: tegra: xusb: Add Tegra194 support
+>   dt-bindings: phy: tegra: Add Tegra194 support
+>   arm64: tegra: Add XUSB and pad controller on Tegra194
+>   arm64: tegra: Enable XUSB host in P2972-0000 board
+
+What changed from v1?  You need to put that somewhere, usually in the
+patches themselves, below the --- line.
+
+Or at the very least, in the cover letter.
+
+Given that I can't find it anywhere here, I'll expect a v3 with that
+information to be sent soon :(
+
+thanks,
+
+greg k-h
