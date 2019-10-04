@@ -1,40 +1,46 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 4/6] dt-bindings: pwm: mxs-pwm: Increase #pwm-cells
-Date: Fri, 4 Oct 2019 21:22:10 +0200
-Message-ID: <20191004192210.777t6tuku3y45fn3@pengutronix.de>
-References: <20191004133207.6663-1-linux@rasmusvillemoes.dk>
- <20191004133207.6663-5-linux@rasmusvillemoes.dk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/5] regulator: da9062: add voltage selection gpio support
+Date: Fri, 4 Oct 2019 21:41:12 +0200
+Message-ID: <CACRpkdYAjj+EuF+iu4fKjt2Cviu8V+U66HnQThawwU58UGRUzQ@mail.gmail.com>
+References: <20190917124246.11732-1-m.felsch@pengutronix.de> <20190917124246.11732-4-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20191004133207.6663-5-linux@rasmusvillemoes.dk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190917124246.11732-4-m.felsch@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Support Opensource <support.opensource@diasemi.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, stwiss.opensource@diasemi.com, Sascha Hauer <kernel@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 04, 2019 at 03:32:05PM +0200, Rasmus Villemoes wrote:
-> We need to increase the pwm-cells for the optional flags parameter, in
-> order to implement support for polarity setting via DT.
-> =
+On Tue, Sep 17, 2019 at 2:43 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
 
-> Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> +       /*
+> +        * We only must ensure that the gpio device is probed before the
+> +        * regulator driver so no need to store the reference global. Luckily
+> +        * devm_* releases the gpio upon a unbound action.
+> +        */
+> +       gpi = devm_gpiod_get_from_of_node(cfg->dev, np, prop, 0, GPIOD_IN |
+> +                                         GPIOD_FLAGS_BIT_NONEXCLUSIVE, label);
 
-Thanks
-Uwe
+Do you really need the GPIOD_FLAGS_BIT_NONEXCLUSIVE flag here?
+I don't think so, but describe what usecase you have that warrants this
+being claimed twice. Normally that is just needed when you let the
+regulator core handle enablement of a regulator over GPIO, i.e.
+ena_gpiod in struct regulator_config.
 
--- =
+> +       /* We need the local number */
+> +       nr = da9062_gpio_get_hwgpio(gpi);
 
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+If you really need this we should add a public API to gpiolib and not
+create custom APIs.
+
+Just make a patch adding
+
+int gpiod_to_offset(struct gpio_desc *d);
+
+to the public gpiolib API in include/linux/gpio/consumer.h
+
+and add the code in gpiolib.c to do this trick.
+
+Yours,
+Linus Walleij
