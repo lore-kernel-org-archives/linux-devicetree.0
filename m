@@ -1,49 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [GIT PULL] Devicetree fixes for v5.4
-Date: Fri, 4 Oct 2019 08:22:03 -0500
-Message-ID: <20191004132203.GA29838@bogus>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: [PATCH v2 0/6] pwm: mxs: add support for setting polarity via DT
+Date: Fri,  4 Oct 2019 15:32:01 +0200
+Message-ID: <20191004133207.6663-1-linux@rasmusvillemoes.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+To: Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+This series adds support for setting the polarity via DT to the
+pwm-mxs driver.
 
-Please pull a few DT fixes for 5.4.
+The DT binding is updated, but I'm not touching the existing .dts or
+.dtsi files - it seems that the same was done for bcm2835 in commits
+46421d9d8e802e570dfa4d793a4938d2642ec7a7 and
+8a88b2a2017d1e7e80db53080baff591fd454722, while
+arch/arm/boot/dts/bcm283x.dtsi still has #pwm-cells = <2>.
 
-Rob
+v2:
+- Rebase to v5.4-rc1
+- Address comments from Uwe.
+- Add Rob's ack to patch 4.
+- New patches 5 and 6. The last one is independent of the others, but
+  I stumbled on this when rebasing and found the signature had
+  changed.
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
+Rasmus Villemoes (6):
+  pwm: mxs: implement ->apply
+  pwm: mxs: remove legacy methods
+  pwm: mxs: add support for inverse polarity
+  dt-bindings: pwm: mxs-pwm: Increase #pwm-cells
+  pwm: mxs: avoid a division in mxs_pwm_apply()
+  pwm: update comment on struct pwm_ops::apply
 
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
+ .../devicetree/bindings/pwm/mxs-pwm.txt       |   4 +-
+ drivers/pwm/pwm-mxs.c                         | 101 +++++++++---------
+ include/linux/pwm.h                           |   5 +-
+ 3 files changed, 53 insertions(+), 57 deletions(-)
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.4
-
-for you to fetch changes up to f437ade3296bacaddb6d7882ba0515940f01daf4:
-
-  dt-bindings: phy: lantiq: Fix Property Name (2019-10-02 14:14:58 -0500)
-
-----------------------------------------------------------------
-DeviceTree fixes for v5.4:
-
-Fix several 'dt_binding_check' build failures.
-
-----------------------------------------------------------------
-Maxime Ripard (5):
-      dt-bindings: dsp: Fix fsl,dsp example
-      dt-bindings: media: rc: Fix redundant string
-      dt-bindings: iio: ad7192: Fix Regulator Properties
-      dt-bindings: iio: ad7192: Fix DTC warning in the example
-      dt-bindings: phy: lantiq: Fix Property Name
-
- Documentation/devicetree/bindings/dsp/fsl,dsp.yaml                | 1 +
- Documentation/devicetree/bindings/iio/adc/adi,ad7192.yaml         | 7 +++----
- Documentation/devicetree/bindings/media/rc.yaml                   | 1 -
- Documentation/devicetree/bindings/phy/lantiq,vrx200-pcie-phy.yaml | 2 +-
- 4 files changed, 5 insertions(+), 6 deletions(-)
+-- 
+2.20.1
