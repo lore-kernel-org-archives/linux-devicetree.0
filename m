@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 03/21] dt-bindings: ap80x: replace AP806 with AP80x
-Date: Fri,  4 Oct 2019 16:27:20 +0200
-Message-ID: <20191004142738.7370-4-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 07/21] arm64: dts: marvell: Add support for AP807/AP807-quad
+Date: Fri,  4 Oct 2019 16:27:24 +0200
+Message-ID: <20191004142738.7370-8-miquel.raynal@bootlin.com>
 References: <20191004142738.7370-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,51 +18,110 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Yan Markman <ymarkman@marvell.com>, Rob Herring <robh@kernel.org>, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Ben Peled <bpeled@marvell.com>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Yan Markman <ymarkman@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ben Peled <bpeled@marvell.com>
+Describe AP807 and AP807-quad support.
 
-Rename the text file and update "AP806" into "AP806/AP807" where
-relevant.
-
-Signed-off-by: Ben Peled <bpeled@marvell.com>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- ...-controller.txt => ap80x-system-controller.txt} | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
- rename Documentation/devicetree/bindings/arm/marvell/{ap806-system-controller.txt => ap80x-system-controller.txt} (91%)
+ .../boot/dts/marvell/armada-ap807-quad.dtsi   | 51 +++++++++++++++++++
+ arch/arm64/boot/dts/marvell/armada-ap807.dtsi | 29 +++++++++++
+ 2 files changed, 80 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-ap807.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
-similarity index 91%
-rename from Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-rename to Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
-index 26410fbb85be..098d932fc963 100644
---- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
-+++ b/Documentation/devicetree/bindings/arm/marvell/ap80x-system-controller.txt
-@@ -1,15 +1,15 @@
--Marvell Armada AP806 System Controller
-+Marvell Armada AP80x System Controller
- ======================================
- 
--The AP806 is one of the two core HW blocks of the Marvell Armada 7K/8K
--SoCs. It contains system controllers, which provide several registers
--giving access to numerous features: clocks, pin-muxing and many other
--SoC configuration items. This DT binding allows to describe these
--system controllers.
-+The AP806/AP807 is one of the two core HW blocks of the Marvell Armada
-+7K/8K/931x SoCs. It contains system controllers, which provide several
-+registers giving access to numerous features: clocks, pin-muxing and
-+many other SoC configuration items. This DT binding allows to describe
-+these system controllers.
- 
- For the top level node:
-  - compatible: must be: "syscon", "simple-mfd";
-- - reg: register area of the AP806 system controller
-+ - reg: register area of the AP80x system controller
- 
- SYSTEM CONTROLLER 0
- ===================
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
+new file mode 100644
+index 000000000000..65364691257d
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
+@@ -0,0 +1,51 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Device Tree file for Marvell Armada AP807 Quad
++ *
++ * Copyright (C) 2019 Marvell Technology Group Ltd.
++ */
++
++#include "armada-ap807.dtsi"
++
++/ {
++	model = "Marvell Armada AP807 Quad";
++	compatible = "marvell,armada-ap807-quad", "marvell,armada-ap807";
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a72", "arm,armv8";
++			reg = <0x000>;
++			enable-method = "psci";
++			#cooling-cells = <2>;
++			clocks = <&cpu_clk 0>;
++		};
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a72", "arm,armv8";
++			reg = <0x001>;
++			enable-method = "psci";
++			#cooling-cells = <2>;
++			clocks = <&cpu_clk 0>;
++		};
++		cpu2: cpu@100 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a72", "arm,armv8";
++			reg = <0x100>;
++			enable-method = "psci";
++			#cooling-cells = <2>;
++			clocks = <&cpu_clk 1>;
++		};
++		cpu3: cpu@101 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a72", "arm,armv8";
++			reg = <0x101>;
++			enable-method = "psci";
++			#cooling-cells = <2>;
++			clocks = <&cpu_clk 1>;
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap807.dtsi b/arch/arm64/boot/dts/marvell/armada-ap807.dtsi
+new file mode 100644
+index 000000000000..623010f3ca89
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/armada-ap807.dtsi
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Device Tree file for Marvell Armada AP807
++ *
++ * Copyright (C) 2019 Marvell Technology Group Ltd.
++ */
++
++#define AP_NAME		ap807
++#include "armada-ap80x.dtsi"
++
++/ {
++	model = "Marvell Armada AP807";
++	compatible = "marvell,armada-ap807";
++};
++
++&ap_syscon0 {
++	ap_clk: clock {
++		compatible = "marvell,ap807-clock";
++		#clock-cells = <1>;
++	};
++};
++
++&ap_syscon1 {
++	cpu_clk: clock-cpu {
++		compatible = "marvell,ap807-cpu-clock";
++		clocks = <&ap_clk 0>, <&ap_clk 1>;
++		#clock-cells = <1>;
++	};
++};
 -- 
 2.20.1
