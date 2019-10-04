@@ -1,13 +1,11 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 07/21] arm64: dts: marvell: Add support for AP807/AP807-quad
-Date: Fri,  4 Oct 2019 16:27:24 +0200
-Message-ID: <20191004142738.7370-8-miquel.raynal@bootlin.com>
-References: <20191004142738.7370-1-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 00/21] Add new Marvell CN9130 SoC support
+Date: Fri,  4 Oct 2019 16:27:17 +0200
+Message-ID: <20191004142738.7370-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191004142738.7370-1-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,107 +19,94 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: devicetree@vger.kernel.org, Yan Markman <ymarkman@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Describe AP807 and AP807-quad support.
-
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- .../boot/dts/marvell/armada-ap807-quad.dtsi   | 51 +++++++++++++++++++
- arch/arm64/boot/dts/marvell/armada-ap807.dtsi | 29 +++++++++++
- 2 files changed, 80 insertions(+)
- create mode 100644 arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
- create mode 100644 arch/arm64/boot/dts/marvell/armada-ap807.dtsi
-
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
-new file mode 100644
-index 000000000000..65364691257d
---- /dev/null
-+++ b/arch/arm64/boot/dts/marvell/armada-ap807-quad.dtsi
-@@ -0,0 +1,51 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Device Tree file for Marvell Armada AP807 Quad
-+ *
-+ * Copyright (C) 2019 Marvell Technology Group Ltd.
-+ */
-+
-+#include "armada-ap807.dtsi"
-+
-+/ {
-+	model = "Marvell Armada AP807 Quad";
-+	compatible = "marvell,armada-ap807-quad", "marvell,armada-ap807";
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72", "arm,armv8";
-+			reg = <0x000>;
-+			enable-method = "psci";
-+			#cooling-cells = <2>;
-+			clocks = <&cpu_clk 0>;
-+		};
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72", "arm,armv8";
-+			reg = <0x001>;
-+			enable-method = "psci";
-+			#cooling-cells = <2>;
-+			clocks = <&cpu_clk 0>;
-+		};
-+		cpu2: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72", "arm,armv8";
-+			reg = <0x100>;
-+			enable-method = "psci";
-+			#cooling-cells = <2>;
-+			clocks = <&cpu_clk 1>;
-+		};
-+		cpu3: cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72", "arm,armv8";
-+			reg = <0x101>;
-+			enable-method = "psci";
-+			#cooling-cells = <2>;
-+			clocks = <&cpu_clk 1>;
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap807.dtsi b/arch/arm64/boot/dts/marvell/armada-ap807.dtsi
-new file mode 100644
-index 000000000000..623010f3ca89
---- /dev/null
-+++ b/arch/arm64/boot/dts/marvell/armada-ap807.dtsi
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Device Tree file for Marvell Armada AP807
-+ *
-+ * Copyright (C) 2019 Marvell Technology Group Ltd.
-+ */
-+
-+#define AP_NAME		ap807
-+#include "armada-ap80x.dtsi"
-+
-+/ {
-+	model = "Marvell Armada AP807";
-+	compatible = "marvell,armada-ap807";
-+};
-+
-+&ap_syscon0 {
-+	ap_clk: clock {
-+		compatible = "marvell,ap807-clock";
-+		#clock-cells = <1>;
-+	};
-+};
-+
-+&ap_syscon1 {
-+	cpu_clk: clock-cpu {
-+		compatible = "marvell,ap807-cpu-clock";
-+		clocks = <&ap_clk 0>, <&ap_clk 1>;
-+		#clock-cells = <1>;
-+	};
-+};
--- 
-2.20.1
+SGVsbG8sCgpUaGlzIGlzIGEgcmVzcGluIG9mIHRoZSBsYXN0IHJlbWFpbmluZyBwYXRjaHNldCBu
+ZWVkZWQgdG8gZnVsbHkgc3VwcG9ydApNYXJ2ZWxsIENOOTEzMCBTb0NzLiBUaGUgQ045MTMwIGlz
+IG1hZGUgb2Ygb25lIEFQODA3IGFuZCBvbmUgaW50ZXJuYWwKQ1AxMTUuIFRoZXJlIGFyZSB0aHJl
+ZSBkZXZlbG9wbWVudCBib2FyZHMgdGhhdCBhcmUgbWFkZSBvZiB0aGlzIFNvQzoKKiBDTjkxMzAt
+REIKKiBDTjkxMzEtREIgKHdpdGggb25lIGFkZGl0aW9uYWwgbW9kdWxhciBDUDExNSBjb21wYXJl
+ZCB0byBDTjkxMzAtREIpCiogQ045MTMyLURCICh3aXRoIHR3byBhZGRpdGlvbmFsIG1vZHVsYXIg
+Q1AxMTUgY29tcGFyZWQgdG8gQ045MTMwLURCKQoKVGhpcyBzZXJpZXMgYXBwbGllcyBvbiB0b3Ag
+b2YgdjUuNC1yYzEgYW5kIHdvcmtzIHRoYW5rcyB0byB0aGUKcHJldmlvdXNseSBtZXJnZWQgZm9s
+bG93aW5nIHNlcmllczoKKiBDUDExMCBDT01QSFk6Cmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
+cmcvY292ZXIvMTEwNjc2NDcvCiogQVA4MDYgQ1BVIGNsb2NrczoKaHR0cHM6Ly9wYXRjaHdvcmsu
+a2VybmVsLm9yZy9jb3Zlci8xMTAzODU3Ny8KKiBBUDgwNyBjbG9ja3M6Cmh0dHBzOi8vcGF0Y2h3
+b3JrLmtlcm5lbC5vcmcvY292ZXIvMTEwNzY0MzUvCiogQ1AxMTUgcGluY3RybDoKaHR0cDovL3Bh
+dGNod29yay5vemxhYnMub3JnL2NvdmVyLzExNDIxMDcvCgpBcyBDUDExMCBhbmQgQ1AxMTUgKGFs
+dGVybmF0aXZlbHksIEFQODA2IGFuZCBBUDgwNykgYXJlIHZlcnkgc2ltaWxhciwKd2UgZmlyc3Qg
+cmVvcmdhbml6ZSBEVCBmaWxlcyB0byBjcmVhdGUgQ1AxMXggKGFuZCBBUDgweCkgZ2VuZXJpYwpm
+aWxlcywgYmVmb3JlIGluY2x1ZGluZyB0aGVtIGZyb20gdGhlIG5ldyBzcGVjaWZpYyBDUDExMC9D
+UDExNQooQVA4MDYvQVA4MDcpIG9uZXMuCgpBIGZldyBzbWFsbCBpbXByb3ZlbWVudHMvZml4ZXMg
+aW4gdGhlc2UgZmlsZXMgYXJlIGFsc28gY2FycmllZC4KClRoYW5rcywKTWlxdcOobAoKQ2hhbmdl
+cyBzaW5jZSB2MToKPT09PT09PT09PT09PT09PT0KKiBSZWJhc2VkIG9uIHRvcCBvZiB2NS40LXJj
+MS4KKiBSb2IncyBSZXZpZXdlZC1ieSB0YWcgb24gdGhlIGZpcnN0IGJpbmRpbmdzIHBhdGNoICgw
+MykuCiogVXNlZCB0aGUgQVBfTkFNRSBtYWNybyBpbnN0ZWFkIG9mIGhhcmRjb2RpbmcgYXA4MDYg
+aW4gdGhlIERUIHdoaWNoCiAgdHVybnMgZ2VuZXJpYyAoc3BvdHRlZCBieSBHcmVnb3J5KS4KKiBD
+b252ZXJ0ZWQgTWFydmVsbCBTb0MgY29tcGF0aWJsZSBiaW5kaW5ncyB0byB5YW1sIChwYXRjaCAx
+NikgYXMKICByZXF1ZXN0ZWQgYnkgUm9iLiBBZGQgR3JlZ29yeSBhcyB0aGUgZmlsZSBtYWludGFp
+bmVyLgoKCkJlbiBQZWxlZCAoMSk6CiAgZHQtYmluZGluZ3M6IGFwODB4OiByZXBsYWNlIEFQODA2
+IHdpdGggQVA4MHgKCkdyemVnb3J6IEphc3pjenlrICg3KToKICBhcm02NDogZHRzOiBtYXJ2ZWxs
+OiBBZGQgQVA4MDYtZHVhbCBjYWNoZSBkZXNjcmlwdGlvbgogIGFybTY0OiBkdHM6IG1hcnZlbGw6
+IEFkZCBBUDgwNi1xdWFkIGNhY2hlIGRlc2NyaXB0aW9uCiAgYXJtNjQ6IGR0czogbWFydmVsbDog
+QWRkIEFQODA3LXF1YWQgY2FjaGUgZGVzY3JpcHRpb24KICBkdC1iaW5kaW5nczogbWFydmVsbDog
+RGVjbGFyZSB0aGUgQ045MTN4IFNvQyBjb21wYXRpYmxlcwogIGFybTY0OiBkdHM6IG1hcnZlbGw6
+IEFkZCBzdXBwb3J0IGZvciBNYXJ2ZWxsIENOOTEzMC1EQgogIGFybTY0OiBkdHM6IG1hcnZlbGw6
+IEFkZCBzdXBwb3J0IGZvciBNYXJ2ZWxsIENOOTEzMS1EQgogIGFybTY0OiBkdHM6IG1hcnZlbGw6
+IEFkZCBzdXBwb3J0IGZvciBNYXJ2ZWxsIENOOTEzMi1EQgoKS29uc3RhbnRpbiBQb3JvdGNoa2lu
+ICgxKToKICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBQcmVwYXJlIHRoZSBpbnRyb2R1Y3Rpb24gb2Yg
+QVA4MDcgYmFzZWQgU29DcwoKTWlxdWVsIFJheW5hbCAoMTIpOgogIGFybTY0OiBkdHM6IG1hcnZl
+bGw6IEVudW1lcmF0ZSB0aGUgZmlyc3QgQVA4MDYgc3lzY29uCiAgYXJtNjQ6IGR0czogbWFydmVs
+bDogQWRkIEFQODA2LWR1YWwgbWlzc2luZyBDUFUgY2xvY2tzCiAgTUFJTlRBSU5FUlM6IEFkZCBu
+ZXcgTWFydmVsbCBDTjkxMzAtYmFzZWQgZmlsZXMgdG8gdHJhY2sKICBhcm02NDogZHRzOiBtYXJ2
+ZWxsOiBNb3ZlIGNsb2NrcyB0byBBUDgwNiBzcGVjaWZpYyBmaWxlCiAgYXJtNjQ6IGR0czogbWFy
+dmVsbDogQWRkIHN1cHBvcnQgZm9yIEFQODA3L0FQODA3LXF1YWQKICBhcm02NDogZHRzOiBtYXJ2
+ZWxsOiBGaXggQ1AxMTAgTkFORCBjb250cm9sbGVyIG5vZGUgbXVsdGktbGluZSBjb21tZW50CiAg
+ICBhbGlnbm1lbnQKICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBQcmVwYXJlIHRoZSBpbnRyb2R1Y3Rp
+b24gb2YgQ1AxMTUKICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBEcm9wIFBDSWUgSS9PIHJhbmdlcyBm
+cm9tIENQMTF4IGZpbGUKICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBFeHRlcm5hbGl6ZSBQQ0llIG1h
+Y3JvcyBmcm9tIENQMTF4IGZpbGUKICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBBZGQgc3VwcG9ydCBm
+b3IgQ1AxMTUKICBkdC1iaW5kaW5nczogbWFydmVsbDogQ29udmVydCB0aGUgU29DIGNvbXBhdGli
+bGVzIGRlc2NyaXB0aW9uIHRvIFlBTUwKICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBBZGQgc3VwcG9y
+dCBmb3IgTWFydmVsbCBDTjkxMzAgU29DIHN1cHBvcnQKCiAuLi5yb2xsZXIudHh0ID0+IGFwODB4
+LXN5c3RlbS1jb250cm9sbGVyLnR4dH0gfCAgMTQgKy0KIC4uLi9iaW5kaW5ncy9hcm0vbWFydmVs
+bC9hcm1hZGEtN2stOGsudHh0ICAgICB8ICAyNCAtCiAuLi4vYmluZGluZ3MvYXJtL21hcnZlbGwv
+YXJtYWRhLTdrLThrLnlhbWwgICAgfCAgNjEgKysKIE1BSU5UQUlORVJTICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICB8ICAgMyArLQogYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2ZWxs
+L01ha2VmaWxlICAgICAgICAgIHwgICAzICsKIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9h
+cm1hZGEtNzB4MC5kdHNpICB8ICAyOCArLQogLi4uL2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLTgw
+NDAtbWNiaW4uZHRzaSAgIHwgICAzICstCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJt
+YWRhLTgweDAuZHRzaSAgfCAgNTYgKy0KIC4uLi9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS1hcDgw
+Ni1kdWFsLmR0c2kgICB8ICAyMyArCiAuLi4vYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtYXA4MDYt
+cXVhZC5kdHNpICAgfCAgNDIgKysKIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEt
+YXA4MDYuZHRzaSB8IDQ1NiArLS0tLS0tLS0tLS0tLQogLi4uL2Jvb3QvZHRzL21hcnZlbGwvYXJt
+YWRhLWFwODA3LXF1YWQuZHRzaSAgIHwgIDkzICsrKwogYXJjaC9hcm02NC9ib290L2R0cy9tYXJ2
+ZWxsL2FybWFkYS1hcDgwNy5kdHNpIHwgIDI5ICsKIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVs
+bC9hcm1hZGEtYXA4MHguZHRzaSB8IDQ0NCArKysrKysrKysrKysrKwogLi4uL2FybTY0L2Jvb3Qv
+ZHRzL21hcnZlbGwvYXJtYWRhLWNvbW1vbi5kdHNpIHwgICA0ICstCiBhcmNoL2FybTY0L2Jvb3Qv
+ZHRzL21hcnZlbGwvYXJtYWRhLWNwMTEwLmR0c2kgfCA1NzUgKy0tLS0tLS0tLS0tLS0tLS0tCiBh
+cmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLWNwMTE1LmR0c2kgfCAgMTIgKwogYXJj
+aC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS1jcDExeC5kdHNpIHwgNTY4ICsrKysrKysr
+KysrKysrKysrCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvY245MTMwLWRiLmR0cyAgICAg
+fCA0MDMgKysrKysrKysrKysrCiBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvY245MTMwLmR0
+c2kgICAgICAgfCAgMzcgKysKIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9jbjkxMzEtZGIu
+ZHRzICAgICB8IDIwMiArKysrKysKIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWFydmVsbC9jbjkxMzIt
+ZGIuZHRzICAgICB8IDIyMSArKysrKysrCiAyMiBmaWxlcyBjaGFuZ2VkLCAyMjEwIGluc2VydGlv
+bnMoKyksIDEwOTEgZGVsZXRpb25zKC0pCiByZW5hbWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2FybS9tYXJ2ZWxsL3thcDgwNi1zeXN0ZW0tY29udHJvbGxlci50eHQgPT4gYXA4
+MHgtc3lzdGVtLWNvbnRyb2xsZXIudHh0fSAoOTElKQogZGVsZXRlIG1vZGUgMTAwNjQ0IERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWFydmVsbC9hcm1hZGEtN2stOGsudHh0
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Fy
+bS9tYXJ2ZWxsL2FybWFkYS03ay04ay55YW1sCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02
+NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS1hcDgwNy1xdWFkLmR0c2kKIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLWFwODA3LmR0c2kKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLWFwODB4LmR0
+c2kKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRh
+LWNwMTE1LmR0c2kKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZl
+bGwvYXJtYWRhLWNwMTF4LmR0c2kKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3Qv
+ZHRzL21hcnZlbGwvY245MTMwLWRiLmR0cwogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQv
+Ym9vdC9kdHMvbWFydmVsbC9jbjkxMzAuZHRzaQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJt
+NjQvYm9vdC9kdHMvbWFydmVsbC9jbjkxMzEtZGIuZHRzCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJj
+aC9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2NuOTEzMi1kYi5kdHMKCi0tIAoyLjIwLjEKCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
+bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
+Cg==
