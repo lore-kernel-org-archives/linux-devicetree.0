@@ -1,77 +1,70 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 3/3] mfd: madera: Add support for requesting the
- supply clocks
-Date: Fri, 4 Oct 2019 15:34:10 +0100
-Message-ID: <20191004143410.GJ18429@dell>
-References: <20191001134617.12093-1-ckeepax@opensource.cirrus.com>
- <20191001134617.12093-3-ckeepax@opensource.cirrus.com>
+From: <patrice.chotard@st.com>
+Subject: ARM: dts: stm32: relax qspi pins slew-rate for stm32mp157
+Date: Fri, 4 Oct 2019 16:44:21 +0200
+Message-ID: <20191004144421.21069-1-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191001134617.12093-3-ckeepax@opensource.cirrus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, Patrice Chotard <patrice.chotard@st.com>, mcoquelin.stm32@gmail.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 01 Oct 2019, Charles Keepax wrote:
+From: Patrice Chotard <patrice.chotard@st.com>
 
-> Add the ability to get the clock for each clock input pin of the chip
-> and enable MCLK2 since that is expected to be a permanently enabled
-> 32kHz clock.
-> 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
-> 
-> Changes since v2:
->  - Use new devm_clk_bulk_get_optional API
-> 
-> Thanks,
-> Charles
-> 
->  drivers/mfd/madera-core.c       | 27 ++++++++++++++++++++++++++-
->  include/linux/mfd/madera/core.h | 11 +++++++++++
->  2 files changed, 37 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
-> index 29540cbf75934..88d904eb016ea 100644
-> --- a/drivers/mfd/madera-core.c
-> +++ b/drivers/mfd/madera-core.c
-> @@ -450,6 +450,21 @@ int madera_dev_init(struct madera *madera)
->  		       sizeof(madera->pdata));
->  	}
->  
-> +	madera->mclk[MADERA_MCLK1].id = "mclk1";
-> +	madera->mclk[MADERA_MCLK2].id = "mclk2";
-> +	madera->mclk[MADERA_MCLK3].id = "mclk3";
-> +
-> +	ret = devm_clk_bulk_get_optional(madera->dev, ARRAY_SIZE(madera->mclk),
-> +					 madera->mclk);
-> +	if (ret) {
-> +		dev_err(madera->dev, "Failed to get clocks: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* Not using devm_clk_get to prevent breakage of existing DTs */
-> +	if (!madera->mclk[MADERA_MCLK2].clk)
-> +		dev_warn(madera->dev, "Missing MCLK2, requires 32kHz clock\n");
-> +
->  	ret = madera_get_reset_gpio(madera);
->  	if (ret)
->  		return ret;
-> @@ -660,13 +675,19 @@ int madera_dev_init(struct madera *madera)
->  	}
->  
->  	/* Init 32k clock sourced from MCLK2 */
-> +	ret = clk_prepare_enable(madera->mclk[MADERA_MCLK2].clk);
-> +	if (ret != 0) {
+Relax qspi pins slew-rate to minimize peak currents.
 
-Nit: Why is this not 'if (ret)' like in the rest of the file?
+Fixes: 844030057339 ("ARM: dts: stm32: add flash nor support on stm32mp157c eval board")
 
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+---
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+index e4a0d51ec3a8..0a3a7d66737b 100644
+--- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -609,13 +609,13 @@
+ 						 <STM32_PINMUX('F', 6, AF9)>; /* QSPI_BK1_IO3 */
+ 					bias-disable;
+ 					drive-push-pull;
+-					slew-rate = <3>;
++					slew-rate = <1>;
+ 				};
+ 				pins2 {
+ 					pinmux = <STM32_PINMUX('B', 6, AF10)>; /* QSPI_BK1_NCS */
+ 					bias-pull-up;
+ 					drive-push-pull;
+-					slew-rate = <3>;
++					slew-rate = <1>;
+ 				};
+ 			};
+ 
+@@ -637,13 +637,13 @@
+ 						 <STM32_PINMUX('G', 7, AF11)>; /* QSPI_BK2_IO3 */
+ 					bias-disable;
+ 					drive-push-pull;
+-					slew-rate = <3>;
++					slew-rate = <1>;
+ 				};
+ 				pins2 {
+ 					pinmux = <STM32_PINMUX('C', 0, AF10)>; /* QSPI_BK2_NCS */
+ 					bias-pull-up;
+ 					drive-push-pull;
+-					slew-rate = <3>;
++					slew-rate = <1>;
+ 				};
+ 			};
+ 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.17.1
