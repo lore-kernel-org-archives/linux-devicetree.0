@@ -1,48 +1,179 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 17/21] dt-bindings: marvell: Declare the CN913x SoC
- compatibles
-Date: Fri, 4 Oct 2019 11:14:42 -0500
-Message-ID: <CAL_JsqLQ+mfdDoTMiN8T3-0+LAv+rU=G6qVOvEcKb4beWGTWmw@mail.gmail.com>
-References: <20191004142738.7370-1-miquel.raynal@bootlin.com>
- <20191004142738.7370-18-miquel.raynal@bootlin.com>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: [Patch v2 00/21] media: vpe: maintenance
+Date: Fri, 4 Oct 2019 11:29:31 -0500
+Message-ID: <20191004162952.4963-1-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191004142738.7370-18-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yan Markman <ymarkman@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Gregory Clement <gregory.clement@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 9:28 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
->
-> From: Grzegorz Jaszczyk <jaz@semihalf.com>
->
-> Describe the compatible properties for the new Marvell SoCs:
-> * CN9130: 1x AP807-quad + 1x CP115 (1x embedded)
-> * CN9131: 1x AP807-quad + 2x CP115 (1x embedded + 1x modular)
-> * CN9132: 1x AP807-quad + 3x CP115 (1x embedded + 2x modular)
->
-> CP115 are similar to CP110 in terms of features.
->
-> There are three development boards based on these SoCs:
-> * CN9130-DB: comes as a single mother board (with the CP115 bundled)
-> * CN9131-DB: same as CN9130-DB with one additional modular CP115
-> * CN9132-DB: same as CN9130-DB with two additional modular CP115
->
-> Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  .../bindings/arm/marvell/armada-7k-8k.yaml    | 21 +++++++++++++++++++
->  1 file changed, 21 insertions(+)
+This a collection of backlog patches I have been carrying for the VPE
+driver.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+It adds supports for SEQ_BT as well as NV21.
+And fixes a number of issues both through v4l2-compliance and normal
+usage.
+
+Changes since v1:
+- Added a missing from my first set fixing a Makefile issue
+- Added a csc table fix to match the technical specification
+- Base on Hans' comment I reworked the last two patches which
+  yielded one more patch
+- This also led me to create additional patches to the
+  v4l2_format_info table to simplify pixel encoding lookup
+
+======================================
+v4l2-compliance SHA: 5b168dc8473911227890526bad26553d9e8ff81b, 32 bits
+
+Compliance test for vpe device /dev/video0:
+
+Driver Info:
+	Driver name      : vpe
+	Card type        : vpe
+	Bus info         : platform:vpe
+	Driver version   : 5.3.0
+	Capabilities     : 0x84204000
+		Video Memory-to-Memory Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04204000
+		Video Memory-to-Memory Multiplanar
+		Streaming
+		Extended Pix Format
+
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video0 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 1 Private Controls: 1
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK
+	test Composing: OK
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+		warn: v4l2-test-buffers.cpp(683): VIDIOC_CREATE_BUFS not supported
+		warn: v4l2-test-buffers.cpp(683): VIDIOC_CREATE_BUFS not supported
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK (Not Supported)
+
+Test input 0:
+
+Streaming ioctls:
+	test read/write: OK (Not Supported)
+	test blocking wait: OK
+	Video Capture Multiplanar: Captured 58 buffers    
+	test MMAP (no poll): OK
+	Video Capture Multiplanar: Captured 58 buffers    
+	test MMAP (select): OK
+	Video Capture Multiplanar: Captured 58 buffers    
+	test MMAP (epoll): OK
+	test USERPTR (no poll): OK (Not Supported)
+	test USERPTR (select): OK (Not Supported)
+	test DMABUF: Cannot test, specify --expbuf-device
+
+Total for vpe device /dev/video0: 51, Succeeded: 51, Failed: 0, Warnings: 2
+======================================
+
+Benoit Parrot (18):
+  media: ti-vpe: Fix a parallel build issue
+  media: ti-vpe: vpe: Fix Motion Vector vpdma stride
+  media: ti-vpe: vpe: Add missing null pointer checks
+  media: ti-vpe: vpe: Remove unnecessary use of container_of
+  media: ti-vpe: vpe: fix a v4l2-compliance failure causing a kernel
+    panic
+  media: ti-vpe: vpe: fix a v4l2-compliance warning about invalid pixel
+    format
+  media: ti-vpe: vpe: Make sure YUYV is set as default format
+  media: ti-vpe: vpe: fix a v4l2-compliance failure about invalid
+    sizeimage
+  media: ti-vpe: vpe: fix a v4l2-compliance failure about frame sequence
+    number
+  media: ti-vpe: vpe: ensure buffers are cleaned up properly in abort
+    cases
+  media: ti-vpe: vpdma: Use fixed type for address in descriptor
+  media: ti-vpe: Set the DMA mask and coherent mask
+  media: ti-vpe: vpe: use standard struct instead of duplicating fields
+  media: ti-vpe: vpe: fix v4l2_compliance issue related to xfer_func
+  media: ti-vpe: csc: rgb-to-yuv HD full range coeff are wrong
+  media: v4l2-common: add pixel encoding support
+  media: v4l2-common: add RGB565 and RGB55 to v4l2_format_info
+  media: ti-vpe: vpe: don't rely on colorspace member for conversion
+
+Nikhil Devshatwar (2):
+  media: ti-vpe: Add support for SEQ_BT
+  media: ti-vpe: Add support for NV21 format
+
+Ram Prasad (1):
+  media: ti-vpe: Set MAX height supported to 2048 pixels
+
+ drivers/media/platform/Makefile            |   4 +-
+ drivers/media/platform/ti-vpe/csc.c        | 220 +++++++-----
+ drivers/media/platform/ti-vpe/csc.h        |   4 +-
+ drivers/media/platform/ti-vpe/vpdma.c      |  11 +-
+ drivers/media/platform/ti-vpe/vpdma.h      |   2 +
+ drivers/media/platform/ti-vpe/vpdma_priv.h |   5 +-
+ drivers/media/platform/ti-vpe/vpe.c        | 379 ++++++++++++---------
+ drivers/media/v4l2-core/v4l2-common.c      | 164 +++++----
+ include/media/v4l2-common.h                |  20 ++
+ 9 files changed, 496 insertions(+), 313 deletions(-)
+
+-- 
+2.17.1
