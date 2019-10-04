@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 16/21] media: ti-vpe: vpe: use standard struct instead of duplicating fields
-Date: Fri, 4 Oct 2019 11:29:47 -0500
-Message-ID: <20191004162952.4963-17-bparrot@ti.com>
+Subject: [Patch v2 21/21] media: ti-vpe: vpe: don't rely on colorspace member for conversion
+Date: Fri, 4 Oct 2019 11:29:52 -0500
+Message-ID: <20191004162952.4963-22-bparrot@ti.com>
 References: <20191004162952.4963-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,517 +12,375 @@ To: Hans Verkuil <hverkuil@xs4all.nl>
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-For each queue we need to maintain resolutions, pixel format,
-bytesperline, sizeimage, colorspace, etc.
+Up to now VPE was relying on the colorspace value of struct v4l2_format
+as an indication to perform color space conversion from YUV to RGB or
+not.
 
-Instead of manually adding more entries in the vpe_q_data struct, it is
-better to just add a "struct v4l2_format" member and use that to store
-all needed information.
+Instead we should used the source/destination fourcc codes as a more
+reliable indication to perform color space conversion or not.
+
+To do so, we rework the csc module to use "struct v4l2_format *" as
+parameters, and reorganize the coefficients tables in a more logical
+way.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 185 ++++++++++++++--------------
- 1 file changed, 91 insertions(+), 94 deletions(-)
+ drivers/media/platform/ti-vpe/csc.c | 220 +++++++++++++++++-----------
+ drivers/media/platform/ti-vpe/csc.h |   4 +-
+ drivers/media/platform/ti-vpe/vpe.c |  17 +--
+ 3 files changed, 144 insertions(+), 97 deletions(-)
 
+diff --git a/drivers/media/platform/ti-vpe/csc.c b/drivers/media/platform/ti-vpe/csc.c
+index f0c45d187b5f..e2b5bee5e206 100644
+--- a/drivers/media/platform/ti-vpe/csc.c
++++ b/drivers/media/platform/ti-vpe/csc.c
+@@ -15,76 +15,96 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/videodev2.h>
++#include <media/v4l2-common.h>
+ 
+ #include "csc.h"
+ 
+ /*
+- * 16 coefficients in the order:
++ * 12 coefficients in the order:
+  * a0, b0, c0, a1, b1, c1, a2, b2, c2, d0, d1, d2
+- * (we may need to pass non-default values from user space later on, we might
+- * need to make the coefficient struct more easy to populate)
+  */
+-struct colorspace_coeffs {
+-	u16	sd[12];
+-	u16	hd[12];
++struct quantization {
++	u16	coeff[12];
+ };
+ 
+-/* VIDEO_RANGE: limited range, GRAPHICS_RANGE: full range */
+-#define	CSC_COEFFS_VIDEO_RANGE_Y2R	0
+-#define	CSC_COEFFS_GRAPHICS_RANGE_Y2R	1
+-#define	CSC_COEFFS_VIDEO_RANGE_R2Y	2
+-#define	CSC_COEFFS_GRAPHICS_RANGE_R2Y	3
++struct colorspace {
++	struct quantization limited;
++	struct quantization full;
++};
++
++struct encoding_direction {
++	struct colorspace r601;
++	struct colorspace r709;
++};
++
++struct csc_coeffs {
++	struct encoding_direction y2r;
++	struct encoding_direction r2y;
++};
+ 
+ /* default colorspace coefficients */
+-static struct colorspace_coeffs colorspace_coeffs[4] = {
+-	[CSC_COEFFS_VIDEO_RANGE_Y2R] = {
+-		{
+-			/* SDTV */
+-			0x0400, 0x0000, 0x057D, 0x0400, 0x1EA7, 0x1D35,
+-			0x0400, 0x06EF, 0x1FFE, 0x0D40, 0x0210, 0x0C88,
+-		},
+-		{
+-			/* HDTV */
+-			0x0400, 0x0000, 0x0629, 0x0400, 0x1F45, 0x1E2B,
+-			0x0400, 0x0742, 0x0000, 0x0CEC, 0x0148, 0x0C60,
+-		},
+-	},
+-	[CSC_COEFFS_GRAPHICS_RANGE_Y2R] = {
+-		{
+-			/* SDTV */
+-			0x04A8, 0x1FFE, 0x0662, 0x04A8, 0x1E6F, 0x1CBF,
+-			0x04A8, 0x0812, 0x1FFF, 0x0C84, 0x0220, 0x0BAC,
++static struct csc_coeffs csc_coeffs = {
++	.y2r = {
++		.r601 = {
++			.limited = {
++				{	/* SDTV */
++				0x0400, 0x0000, 0x057D, 0x0400, 0x1EA7, 0x1D35,
++				0x0400, 0x06EF, 0x1FFE, 0x0D40, 0x0210, 0x0C88,
++				}
++			},
++			.full = {
++				{	/* SDTV */
++				0x04A8, 0x1FFE, 0x0662, 0x04A8, 0x1E6F, 0x1CBF,
++				0x04A8, 0x0812, 0x1FFF, 0x0C84, 0x0220, 0x0BAC,
++				}
++			},
+ 		},
+-		{
+-			/* HDTV */
+-			0x04A8, 0x0000, 0x072C, 0x04A8, 0x1F26, 0x1DDE,
+-			0x04A8, 0x0873, 0x0000, 0x0C20, 0x0134, 0x0B7C,
++		.r709 = {
++			.limited = {
++				{	/* HDTV */
++				0x0400, 0x0000, 0x0629, 0x0400, 0x1F45, 0x1E2B,
++				0x0400, 0x0742, 0x0000, 0x0CEC, 0x0148, 0x0C60,
++				}
++			},
++			.full = {
++				{	/* HDTV */
++				0x04A8, 0x0000, 0x072C, 0x04A8, 0x1F26, 0x1DDE,
++				0x04A8, 0x0873, 0x0000, 0x0C20, 0x0134, 0x0B7C,
++				}
++			},
+ 		},
+ 	},
+-	[CSC_COEFFS_VIDEO_RANGE_R2Y] = {
+-		{
+-			/* SDTV */
+-			0x0132, 0x0259, 0x0075, 0x1F50, 0x1EA5, 0x020B,
+-			0x020B, 0x1E4A, 0x1FAB, 0x0000, 0x0200, 0x0200,
++	.r2y = {
++		.r601 = {
++			.limited = {
++				{	/* SDTV */
++				0x0132, 0x0259, 0x0075, 0x1F50, 0x1EA5, 0x020B,
++				0x020B, 0x1E4A, 0x1FAB, 0x0000, 0x0200, 0x0200,
++				}
++			},
++			.full = {
++				{	/* SDTV */
++				0x0107, 0x0204, 0x0064, 0x1F68, 0x1ED6, 0x01C2,
++				0x01C2, 0x1E87, 0x1FB7, 0x0040, 0x0200, 0x0200,
++				}
++			},
+ 		},
+-		{
+-			/* HDTV */
+-			0x00DA, 0x02DC, 0x004A, 0x1F88, 0x1E6C, 0x020C,
+-			0x020C, 0x1E24, 0x1FD0, 0x0000, 0x0200, 0x0200,
+-		},
+-	},
+-	[CSC_COEFFS_GRAPHICS_RANGE_R2Y] = {
+-		{
+-			/* SDTV */
+-			0x0107, 0x0204, 0x0064, 0x1F68, 0x1ED6, 0x01C2,
+-			0x01C2, 0x1E87, 0x1FB7, 0x0040, 0x0200, 0x0200,
+-		},
+-		{
+-			/* HDTV */
+-			0x00bb, 0x0275, 0x003f, 0x1f99, 0x1ea5, 0x01c2,
+-			0x01c2, 0x1e67, 0x1fd7, 0x0040, 0x0200, 0x0200,
++		.r709 = {
++			.limited = {
++				{	/* HDTV */
++				0x00DA, 0x02DC, 0x004A, 0x1F88, 0x1E6C, 0x020C,
++				0x020C, 0x1E24, 0x1FD0, 0x0000, 0x0200, 0x0200,
++				}
++			},
++			.full = {
++				{	/* HDTV */
++				0x00bb, 0x0275, 0x003f, 0x1f99, 0x1ea5, 0x01c2,
++				0x01c2, 0x1e67, 0x1fd7, 0x0040, 0x0200, 0x0200,
++				}
++			},
+ 		},
+ 	},
++
+ };
+ 
+ void csc_dump_regs(struct csc_data *csc)
+@@ -117,46 +137,80 @@ EXPORT_SYMBOL(csc_set_coeff_bypass);
+  * set the color space converter coefficient shadow register values
+  */
+ void csc_set_coeff(struct csc_data *csc, u32 *csc_reg0,
+-		enum v4l2_colorspace src_colorspace,
+-		enum v4l2_colorspace dst_colorspace)
++		   struct v4l2_format *src_fmt, struct v4l2_format *dst_fmt)
+ {
+ 	u32 *csc_reg5 = csc_reg0 + 5;
+ 	u32 *shadow_csc = csc_reg0;
+-	struct colorspace_coeffs *sd_hd_coeffs;
+ 	u16 *coeff, *end_coeff;
+-	enum v4l2_colorspace yuv_colorspace;
+-	int sel = 0;
+-
+-	/*
+-	 * support only graphics data range(full range) for now, a control ioctl
+-	 * would be nice here
+-	 */
+-	/* Y2R */
+-	if (dst_colorspace == V4L2_COLORSPACE_SRGB &&
+-			(src_colorspace == V4L2_COLORSPACE_SMPTE170M ||
+-			src_colorspace == V4L2_COLORSPACE_REC709)) {
++	enum v4l2_ycbcr_encoding ycbcr_enc;
++	enum v4l2_quantization quantization;
++
++	if (v4l2_is_format_yuv(src_fmt->fmt.pix_mp.pixelformat) &&
++	    v4l2_is_format_rgb(dst_fmt->fmt.pix_mp.pixelformat)) {
++
+ 		/* Y2R */
+-		sel = 1;
+-		yuv_colorspace = src_colorspace;
+-	} else if ((dst_colorspace == V4L2_COLORSPACE_SMPTE170M ||
+-			dst_colorspace == V4L2_COLORSPACE_REC709) &&
+-			src_colorspace == V4L2_COLORSPACE_SRGB) {
++		ycbcr_enc = src_fmt->fmt.pix_mp.ycbcr_enc;
++		quantization = src_fmt->fmt.pix_mp.quantization;
++
++		/*
++		 * These are not the standard default values but are
++		 * set this way for historical compatibility
++		 */
++		if (ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT)
++			ycbcr_enc = V4L2_YCBCR_ENC_601;
++
++		if (quantization == V4L2_QUANTIZATION_DEFAULT)
++			quantization = V4L2_QUANTIZATION_FULL_RANGE;
++
++		if (ycbcr_enc == V4L2_YCBCR_ENC_601) {
++			if (quantization == V4L2_QUANTIZATION_FULL_RANGE)
++				coeff = csc_coeffs.y2r.r601.full.coeff;
++			else
++				coeff = csc_coeffs.y2r.r601.limited.coeff;
++		} else if (ycbcr_enc == V4L2_YCBCR_ENC_709) {
++			if (quantization == V4L2_QUANTIZATION_FULL_RANGE)
++				coeff = csc_coeffs.y2r.r709.full.coeff;
++			else
++				coeff = csc_coeffs.y2r.r709.limited.coeff;
++		} else {
++			/* Should never reach this, but it keeps gcc happy */
++			coeff = csc_coeffs.y2r.r601.full.coeff;
++		}
++	} else if (v4l2_is_format_rgb(src_fmt->fmt.pix_mp.pixelformat) &&
++		   v4l2_is_format_yuv(dst_fmt->fmt.pix_mp.pixelformat)) {
+ 		/* R2Y */
+-		sel = 3;
+-		yuv_colorspace = dst_colorspace;
++		ycbcr_enc = dst_fmt->fmt.pix_mp.ycbcr_enc;
++		quantization = dst_fmt->fmt.pix_mp.quantization;
++
++		/*
++		 * These are not the standard default values but are
++		 * set this way for historical compatibility
++		 */
++		if (ycbcr_enc == V4L2_YCBCR_ENC_DEFAULT)
++			ycbcr_enc = V4L2_YCBCR_ENC_601;
++
++		if (quantization == V4L2_QUANTIZATION_DEFAULT)
++			quantization = V4L2_QUANTIZATION_FULL_RANGE;
++
++		if (ycbcr_enc == V4L2_YCBCR_ENC_601) {
++			if (quantization == V4L2_QUANTIZATION_FULL_RANGE)
++				coeff = csc_coeffs.r2y.r601.full.coeff;
++			else
++				coeff = csc_coeffs.r2y.r601.limited.coeff;
++		} else if (ycbcr_enc == V4L2_YCBCR_ENC_709) {
++			if (quantization == V4L2_QUANTIZATION_FULL_RANGE)
++				coeff = csc_coeffs.r2y.r709.full.coeff;
++			else
++				coeff = csc_coeffs.r2y.r709.limited.coeff;
++		} else {
++			/* Should never reach this, but it keeps gcc happy */
++			coeff = csc_coeffs.y2r.r601.full.coeff;
++		}
+ 	} else {
+ 		*csc_reg5 |= CSC_BYPASS;
+ 		return;
+ 	}
+ 
+-	sd_hd_coeffs = &colorspace_coeffs[sel];
+-
+-	/* select between SD or HD coefficients */
+-	if (yuv_colorspace == V4L2_COLORSPACE_SMPTE170M)
+-		coeff = sd_hd_coeffs->sd;
+-	else
+-		coeff = sd_hd_coeffs->hd;
+-
+ 	end_coeff = coeff + 12;
+ 
+ 	for (; coeff < end_coeff; coeff += 2)
+diff --git a/drivers/media/platform/ti-vpe/csc.h b/drivers/media/platform/ti-vpe/csc.h
+index de9a58af2ca8..af2e86bccf57 100644
+--- a/drivers/media/platform/ti-vpe/csc.h
++++ b/drivers/media/platform/ti-vpe/csc.h
+@@ -58,8 +58,8 @@ struct csc_data {
+ void csc_dump_regs(struct csc_data *csc);
+ void csc_set_coeff_bypass(struct csc_data *csc, u32 *csc_reg5);
+ void csc_set_coeff(struct csc_data *csc, u32 *csc_reg0,
+-		enum v4l2_colorspace src_colorspace,
+-		enum v4l2_colorspace dst_colorspace);
++		   struct v4l2_format *src_fmt, struct v4l2_format *dst_fmt);
++
+ struct csc_data *csc_create(struct platform_device *pdev, const char *res_name);
+ 
+ #endif
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index d7f8eb901475..5b1e9908fff2 100644
+index 19b027c5478a..003db923c8a4 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -319,14 +319,9 @@ static struct vpe_fmt vpe_formats[] = {
-  * there is one source queue and one destination queue for each m2m context.
-  */
- struct vpe_q_data {
--	unsigned int		width;				/* frame width */
--	unsigned int		height;				/* frame height */
--	unsigned int		nplanes;			/* Current number of planes */
--	unsigned int		bytesperline[VPE_MAX_PLANES];	/* bytes per line in memory */
--	enum v4l2_colorspace	colorspace;
--	enum v4l2_field		field;				/* supported field value */
-+	/* current v4l2 format info */
-+	struct v4l2_format	format;
- 	unsigned int		flags;
--	unsigned int		sizeimage[VPE_MAX_PLANES];	/* image size in memory */
- 	struct v4l2_rect	c_rect;				/* crop/compose rectangle */
- 	struct vpe_fmt		*fmt;				/* format info */
- };
-@@ -761,7 +756,8 @@ static void set_src_registers(struct vpe_ctx *ctx)
+@@ -756,12 +756,10 @@ static void set_src_registers(struct vpe_ctx *ctx)
  static void set_dst_registers(struct vpe_ctx *ctx)
  {
  	struct vpe_mmr_adb *mmr_adb = ctx->mmr_adb.addr;
--	enum v4l2_colorspace clrspc = ctx->q_data[Q_DATA_DST].colorspace;
-+	enum v4l2_colorspace clrspc =
-+			ctx->q_data[Q_DATA_DST].format.fmt.pix_mp.colorspace;
+-	enum v4l2_colorspace clrspc =
+-			ctx->q_data[Q_DATA_DST].format.fmt.pix_mp.colorspace;
  	struct vpe_fmt *fmt = ctx->q_data[Q_DATA_DST].fmt;
  	u32 val = 0;
  
-@@ -868,11 +864,15 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
- 	unsigned int src_h = s_q_data->c_rect.height;
+-	if (clrspc == V4L2_COLORSPACE_SRGB) {
++	if (v4l2_is_format_rgb(fmt->fourcc)) {
+ 		val |= VPE_RGB_OUT_SELECT;
+ 		vpdma_set_bg_color(ctx->dev->vpdma,
+ 			(struct vpdma_data_format *)fmt->vpdma_fmt[0], 0xff);
+@@ -865,14 +863,12 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
  	unsigned int dst_w = d_q_data->c_rect.width;
  	unsigned int dst_h = d_q_data->c_rect.height;
-+	struct v4l2_pix_format_mplane *spix;
-+	struct v4l2_pix_format_mplane *dpix;
+ 	struct v4l2_pix_format_mplane *spix;
+-	struct v4l2_pix_format_mplane *dpix;
  	size_t mv_buf_size;
  	int ret;
  
  	ctx->sequence = 0;
  	ctx->field = V4L2_FIELD_TOP;
-+	spix = &s_q_data->format.fmt.pix_mp;
-+	dpix = &d_q_data->format.fmt.pix_mp;
+ 	spix = &s_q_data->format.fmt.pix_mp;
+-	dpix = &d_q_data->format.fmt.pix_mp;
  
  	if ((s_q_data->flags & Q_IS_INTERLACED) &&
  			!(d_q_data->flags & Q_IS_INTERLACED)) {
-@@ -887,9 +887,9 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
- 		 * extra space will not be used by the de-interlacer, but will
- 		 * ensure that vpdma operates correctly
- 		 */
--		bytes_per_line = ALIGN((s_q_data->width * mv->depth) >> 3,
--					VPDMA_STRIDE_ALIGN);
--		mv_buf_size = bytes_per_line * s_q_data->height;
-+		bytes_per_line = ALIGN((spix->width * mv->depth) >> 3,
-+				       VPDMA_STRIDE_ALIGN);
-+		mv_buf_size = bytes_per_line * spix->height;
- 
- 		ctx->deinterlacing = true;
- 		src_h <<= 1;
-@@ -909,7 +909,7 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
+@@ -909,7 +905,7 @@ static int set_srcdst_params(struct vpe_ctx *ctx)
  	set_dei_regs(ctx);
  
  	csc_set_coeff(ctx->dev->csc, &mmr_adb->csc_regs[0],
--		s_q_data->colorspace, d_q_data->colorspace);
-+		      spix->colorspace, dpix->colorspace);
+-		      spix->colorspace, dpix->colorspace);
++		      &s_q_data->format, &d_q_data->format);
  
  	sc_set_hs_coeffs(ctx->dev->sc, ctx->sc_coeff_h.addr, src_w, dst_w);
  	sc_set_vs_coeffs(ctx->dev->sc, ctx->sc_coeff_v.addr, src_h, dst_h);
-@@ -1023,6 +1023,7 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
- 	struct vpe_fmt *fmt = q_data->fmt;
- 	const struct vpdma_data_format *vpdma_fmt;
- 	int mv_buf_selector = !ctx->src_mv_buf_selector;
-+	struct v4l2_pix_format_mplane *pix;
- 	dma_addr_t dma_addr;
- 	u32 flags = 0;
- 	u32 offset = 0;
-@@ -1032,21 +1033,23 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
- 		vpdma_fmt = &vpdma_misc_fmts[VPDMA_DATA_FMT_MV];
- 		dma_addr = ctx->mv_buf_dma[mv_buf_selector];
- 		q_data = &ctx->q_data[Q_DATA_SRC];
--		stride = ALIGN((q_data->width * vpdma_fmt->depth) >> 3,
-+		pix = &q_data->format.fmt.pix_mp;
-+		stride = ALIGN((pix->width * vpdma_fmt->depth) >> 3,
- 			       VPDMA_STRIDE_ALIGN);
- 	} else {
- 		/* to incorporate interleaved formats */
- 		int plane = fmt->coplanar ? p_data->vb_part : 0;
- 
-+		pix = &q_data->format.fmt.pix_mp;
- 		vpdma_fmt = fmt->vpdma_fmt[plane];
- 		/*
- 		 * If we are using a single plane buffer and
- 		 * we need to set a separate vpdma chroma channel.
- 		 */
--		if (q_data->nplanes == 1 && plane) {
-+		if (pix->num_planes == 1 && plane) {
- 			dma_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
- 			/* Compute required offset */
--			offset = q_data->bytesperline[0] * q_data->height;
-+			offset = pix->plane_fmt[0].bytesperline * pix->height;
- 		} else {
- 			dma_addr = vb2_dma_contig_plane_dma_addr(vb, plane);
- 			/* Use address as is, no offset */
-@@ -1060,7 +1063,7 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
- 		}
- 		/* Apply the offset */
- 		dma_addr += offset;
--		stride = q_data->bytesperline[VPE_LUMA];
-+		stride = pix->plane_fmt[VPE_LUMA].bytesperline;
- 	}
- 
- 	if (q_data->flags & Q_DATA_FRAME_1D)
-@@ -1071,7 +1074,7 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
- 	vpdma_set_max_size(ctx->dev->vpdma, VPDMA_MAX_SIZE1,
- 			   MAX_W, MAX_H);
- 
--	vpdma_add_out_dtd(&ctx->desc_list, q_data->width,
-+	vpdma_add_out_dtd(&ctx->desc_list, pix->width,
- 			  stride, &q_data->c_rect,
- 			  vpdma_fmt, dma_addr, MAX_OUT_WIDTH_REG1,
- 			  MAX_OUT_HEIGHT_REG1, p_data->channel, flags);
-@@ -1084,6 +1087,7 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 	struct vb2_buffer *vb = &ctx->src_vbs[p_data->vb_index]->vb2_buf;
- 	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
- 	struct vpe_fmt *fmt = q_data->fmt;
-+	struct v4l2_pix_format_mplane *pix;
- 	const struct vpdma_data_format *vpdma_fmt;
- 	int mv_buf_selector = ctx->src_mv_buf_selector;
- 	int field = vbuf->field == V4L2_FIELD_BOTTOM;
-@@ -1093,10 +1097,11 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 	u32 offset = 0;
- 	u32 stride;
- 
-+	pix = &q_data->format.fmt.pix_mp;
- 	if (port == VPE_PORT_MV_IN) {
- 		vpdma_fmt = &vpdma_misc_fmts[VPDMA_DATA_FMT_MV];
- 		dma_addr = ctx->mv_buf_dma[mv_buf_selector];
--		stride = ALIGN((q_data->width * vpdma_fmt->depth) >> 3,
-+		stride = ALIGN((pix->width * vpdma_fmt->depth) >> 3,
- 			       VPDMA_STRIDE_ALIGN);
- 	} else {
- 		/* to incorporate interleaved formats */
-@@ -1107,10 +1112,10 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 		 * If we are using a single plane buffer and
- 		 * we need to set a separate vpdma chroma channel.
- 		 */
--		if (q_data->nplanes == 1 && plane) {
-+		if (pix->num_planes == 1 && plane) {
- 			dma_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
- 			/* Compute required offset */
--			offset = q_data->bytesperline[0] * q_data->height;
-+			offset = pix->plane_fmt[0].bytesperline * pix->height;
- 		} else {
- 			dma_addr = vb2_dma_contig_plane_dma_addr(vb, plane);
- 			/* Use address as is, no offset */
-@@ -1124,7 +1129,7 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 		}
- 		/* Apply the offset */
- 		dma_addr += offset;
--		stride = q_data->bytesperline[VPE_LUMA];
-+		stride = pix->plane_fmt[VPE_LUMA].bytesperline;
- 
- 		/*
- 		 * field used in VPDMA desc  = 0 (top) / 1 (bottom)
-@@ -1144,7 +1149,7 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 			field = (field + p_data->vb_index + ctx->sequence) % 2;
- 
- 			if (field) {
--				int height = q_data->height / 2;
-+				int height = pix->height / 2;
- 				int bpp;
- 
- 				if (fmt->fourcc == V4L2_PIX_FMT_NV12 ||
-@@ -1156,7 +1161,7 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 				if (plane)
- 					height /= 2;
- 
--				dma_addr += q_data->width * height * bpp;
-+				dma_addr += pix->width * height * bpp;
- 			}
- 		}
- 	}
-@@ -1173,7 +1178,7 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
- 				fmt->fourcc == V4L2_PIX_FMT_NV21))
- 		frame_height /= 2;
- 
--	vpdma_add_in_dtd(&ctx->desc_list, q_data->width, stride,
-+	vpdma_add_in_dtd(&ctx->desc_list, pix->width, stride,
- 			 &q_data->c_rect, vpdma_fmt, dma_addr,
- 			 p_data->channel, field, flags, frame_width,
- 			 frame_height, 0, 0);
-@@ -1282,7 +1287,7 @@ static void device_run(void *priv)
+@@ -1287,7 +1283,7 @@ static void device_run(void *priv)
  	if (ctx->deinterlacing)
  		add_out_dtd(ctx, VPE_PORT_MV_OUT);
  
--	if (d_q_data->colorspace == V4L2_COLORSPACE_SRGB) {
-+	if (d_q_data->format.fmt.pix_mp.colorspace == V4L2_COLORSPACE_SRGB) {
+-	if (d_q_data->format.fmt.pix_mp.colorspace == V4L2_COLORSPACE_SRGB) {
++	if (v4l2_is_format_rgb(d_q_data->fmt->fourcc)) {
  		add_out_dtd(ctx, VPE_PORT_RGB_OUT);
  	} else {
  		add_out_dtd(ctx, VPE_PORT_LUMA_OUT);
-@@ -1324,7 +1329,7 @@ static void device_run(void *priv)
+@@ -1329,7 +1325,7 @@ static void device_run(void *priv)
  	}
  
  	/* sync on channel control descriptors for output ports */
--	if (d_q_data->colorspace == V4L2_COLORSPACE_SRGB) {
-+	if (d_q_data->format.fmt.pix_mp.colorspace == V4L2_COLORSPACE_SRGB) {
+-	if (d_q_data->format.fmt.pix_mp.colorspace == V4L2_COLORSPACE_SRGB) {
++	if (v4l2_is_format_rgb(d_q_data->fmt->fourcc)) {
  		vpdma_add_sync_on_channel_ctd(&ctx->desc_list,
  			VPE_CHAN_RGB_OUT);
  	} else {
-@@ -1559,7 +1564,6 @@ static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
- 	struct vpe_ctx *ctx = file->private_data;
- 	struct vb2_queue *vq;
- 	struct vpe_q_data *q_data;
--	int i;
+@@ -1668,10 +1664,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 		height = pix->height;
  
- 	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
- 	if (!vq)
-@@ -1569,27 +1573,15 @@ static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
- 	if (!q_data)
- 		return -EINVAL;
- 
--	pix->width = q_data->width;
--	pix->height = q_data->height;
--	pix->pixelformat = q_data->fmt->fourcc;
--	pix->field = q_data->field;
-+	*f = q_data->format;
- 
--	if (V4L2_TYPE_IS_OUTPUT(f->type)) {
--		pix->colorspace = q_data->colorspace;
--	} else {
-+	if (!V4L2_TYPE_IS_OUTPUT(f->type)) {
- 		struct vpe_q_data *s_q_data;
- 
- 		/* get colorspace from the source queue */
- 		s_q_data = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
- 
--		pix->colorspace = s_q_data->colorspace;
--	}
--
--	pix->num_planes = q_data->nplanes;
--
--	for (i = 0; i < pix->num_planes; i++) {
--		pix->plane_fmt[i].bytesperline = q_data->bytesperline[i];
--		pix->plane_fmt[i].sizeimage = q_data->sizeimage[i];
-+		pix->colorspace = s_q_data->format.fmt.pix_mp.colorspace;
- 	}
- 
- 	return 0;
-@@ -1736,10 +1728,8 @@ static int vpe_try_fmt(struct file *file, void *priv, struct v4l2_format *f)
- static int __vpe_s_fmt(struct vpe_ctx *ctx, struct v4l2_format *f)
- {
- 	struct v4l2_pix_format_mplane *pix = &f->fmt.pix_mp;
--	struct v4l2_plane_pix_format *plane_fmt;
- 	struct vpe_q_data *q_data;
- 	struct vb2_queue *vq;
--	int i;
- 
- 	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
- 	if (!vq)
-@@ -1755,29 +1745,18 @@ static int __vpe_s_fmt(struct vpe_ctx *ctx, struct v4l2_format *f)
- 		return -EINVAL;
- 
- 	q_data->fmt		= find_format(f);
--	q_data->width		= pix->width;
--	q_data->height		= pix->height;
--	q_data->colorspace	= pix->colorspace;
--	q_data->field		= pix->field;
--	q_data->nplanes		= pix->num_planes;
--
--	for (i = 0; i < pix->num_planes; i++) {
--		plane_fmt = &pix->plane_fmt[i];
--
--		q_data->bytesperline[i]	= plane_fmt->bytesperline;
--		q_data->sizeimage[i]	= plane_fmt->sizeimage;
--	}
-+	q_data->format = *f;
- 
- 	q_data->c_rect.left	= 0;
- 	q_data->c_rect.top	= 0;
--	q_data->c_rect.width	= q_data->width;
--	q_data->c_rect.height	= q_data->height;
-+	q_data->c_rect.width	= pix->width;
-+	q_data->c_rect.height	= pix->height;
- 
--	if (q_data->field == V4L2_FIELD_ALTERNATE)
-+	if (q_data->format.fmt.pix_mp.field == V4L2_FIELD_ALTERNATE)
- 		q_data->flags |= Q_DATA_INTERLACED_ALTERNATE;
--	else if (q_data->field == V4L2_FIELD_SEQ_TB)
-+	else if (q_data->format.fmt.pix_mp.field == V4L2_FIELD_SEQ_TB)
- 		q_data->flags |= Q_DATA_INTERLACED_SEQ_TB;
--	else if (q_data->field == V4L2_FIELD_SEQ_BT)
-+	else if (q_data->format.fmt.pix_mp.field == V4L2_FIELD_SEQ_BT)
- 		q_data->flags |= Q_DATA_INTERLACED_SEQ_BT;
- 	else
- 		q_data->flags &= ~Q_IS_INTERLACED;
-@@ -1787,11 +1766,11 @@ static int __vpe_s_fmt(struct vpe_ctx *ctx, struct v4l2_format *f)
- 		q_data->c_rect.height /= 2;
- 
- 	vpe_dbg(ctx->dev, "Setting format for type %d, wxh: %dx%d, fmt: %d bpl_y %d",
--		f->type, q_data->width, q_data->height, q_data->fmt->fourcc,
--		q_data->bytesperline[VPE_LUMA]);
--	if (q_data->nplanes == 2)
-+		f->type, pix->width, pix->height, pix->pixelformat,
-+		pix->plane_fmt[0].bytesperline);
-+	if (pix->num_planes == 2)
- 		vpe_dbg(ctx->dev, " bpl_uv %d\n",
--			q_data->bytesperline[VPE_CHROMA]);
-+			pix->plane_fmt[1].bytesperline);
- 
- 	return 0;
- }
-@@ -1820,6 +1799,7 @@ static int vpe_s_fmt(struct file *file, void *priv, struct v4l2_format *f)
- static int __vpe_try_selection(struct vpe_ctx *ctx, struct v4l2_selection *s)
- {
- 	struct vpe_q_data *q_data;
-+	struct v4l2_pix_format_mplane *pix;
- 	int height;
- 
- 	if ((s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE) &&
-@@ -1830,6 +1810,8 @@ static int __vpe_try_selection(struct vpe_ctx *ctx, struct v4l2_selection *s)
- 	if (!q_data)
- 		return -EINVAL;
- 
-+	pix = &q_data->format.fmt.pix_mp;
-+
- 	switch (s->target) {
- 	case V4L2_SEL_TGT_COMPOSE:
- 		/*
-@@ -1860,23 +1842,23 @@ static int __vpe_try_selection(struct vpe_ctx *ctx, struct v4l2_selection *s)
- 	 * the field height, not the buffer height
- 	 */
- 	if (q_data->flags & Q_IS_SEQ_XX)
--		height = q_data->height / 2;
-+		height = pix->height / 2;
- 	else
--		height = q_data->height;
-+		height = pix->height;
- 
- 	if (s->r.top < 0 || s->r.left < 0) {
- 		vpe_err(ctx->dev, "negative values for top and left\n");
- 		s->r.top = s->r.left = 0;
- 	}
- 
--	v4l_bound_align_image(&s->r.width, MIN_W, q_data->width, 1,
-+	v4l_bound_align_image(&s->r.width, MIN_W, pix->width, 1,
- 		&s->r.height, MIN_H, height, H_ALIGN, S_ALIGN);
- 
- 	/* adjust left/top if cropping rectangle is out of bounds */
--	if (s->r.left + s->r.width > q_data->width)
--		s->r.left = q_data->width - s->r.width;
--	if (s->r.top + s->r.height > q_data->height)
--		s->r.top = q_data->height - s->r.height;
-+	if (s->r.left + s->r.width > pix->width)
-+		s->r.left = pix->width - s->r.width;
-+	if (s->r.top + s->r.height > pix->height)
-+		s->r.top = pix->height - s->r.height;
- 
- 	return 0;
- }
-@@ -1886,6 +1868,7 @@ static int vpe_g_selection(struct file *file, void *fh,
- {
- 	struct vpe_ctx *ctx = file->private_data;
- 	struct vpe_q_data *q_data;
-+	struct v4l2_pix_format_mplane *pix;
- 	bool use_c_rect = false;
- 
- 	if ((s->type != V4L2_BUF_TYPE_VIDEO_CAPTURE) &&
-@@ -1896,6 +1879,8 @@ static int vpe_g_selection(struct file *file, void *fh,
- 	if (!q_data)
- 		return -EINVAL;
- 
-+	pix = &q_data->format.fmt.pix_mp;
-+
- 	switch (s->target) {
- 	case V4L2_SEL_TGT_COMPOSE_DEFAULT:
- 	case V4L2_SEL_TGT_COMPOSE_BOUNDS:
-@@ -1934,8 +1919,8 @@ static int vpe_g_selection(struct file *file, void *fh,
- 		 */
- 		s->r.left = 0;
- 		s->r.top = 0;
--		s->r.width = q_data->width;
--		s->r.height = q_data->height;
-+		s->r.width = pix->width;
-+		s->r.height = pix->height;
- 	}
- 
- 	return 0;
-@@ -2043,14 +2028,14 @@ static int vpe_queue_setup(struct vb2_queue *vq,
- 	if (!q_data)
- 		return -EINVAL;
- 
--	*nplanes = q_data->nplanes;
-+	*nplanes = q_data->format.fmt.pix_mp.num_planes;
- 
- 	for (i = 0; i < *nplanes; i++)
--		sizes[i] = q_data->sizeimage[i];
-+		sizes[i] = q_data->format.fmt.pix_mp.plane_fmt[i].sizeimage;
- 
- 	vpe_dbg(ctx->dev, "get %d buffer(s) of size %d", *nbuffers,
- 		sizes[VPE_LUMA]);
--	if (q_data->nplanes == 2)
-+	if (*nplanes == 2)
- 		vpe_dbg(ctx->dev, " and %d\n", sizes[VPE_CHROMA]);
- 
- 	return 0;
-@@ -2061,14 +2046,16 @@ static int vpe_buf_prepare(struct vb2_buffer *vb)
- 	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
- 	struct vpe_ctx *ctx = vb2_get_drv_priv(vb->vb2_queue);
- 	struct vpe_q_data *q_data;
--	int i, num_planes;
-+	struct v4l2_pix_format_mplane *pix;
-+	int i;
- 
- 	vpe_dbg(ctx->dev, "type: %d\n", vb->vb2_queue->type);
- 
- 	q_data = get_q_data(ctx, vb->vb2_queue->type);
- 	if (!q_data)
- 		return -EINVAL;
--	num_planes = q_data->nplanes;
-+
-+	pix = &q_data->format.fmt.pix_mp;
- 
- 	if (vb->vb2_queue->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
- 		if (!(q_data->flags & Q_IS_INTERLACED)) {
-@@ -2082,18 +2069,18 @@ static int vpe_buf_prepare(struct vb2_buffer *vb)
- 		}
- 	}
- 
--	for (i = 0; i < num_planes; i++) {
--		if (vb2_plane_size(vb, i) < q_data->sizeimage[i]) {
-+	for (i = 0; i < pix->num_planes; i++) {
-+		if (vb2_plane_size(vb, i) < pix->plane_fmt[i].sizeimage) {
- 			vpe_err(ctx->dev,
- 				"data will not fit into plane (%lu < %lu)\n",
- 				vb2_plane_size(vb, i),
--				(long) q_data->sizeimage[i]);
-+				(long) pix->plane_fmt[i].sizeimage);
- 			return -EINVAL;
- 		}
- 	}
- 
--	for (i = 0; i < num_planes; i++)
--		vb2_set_plane_payload(vb, i, q_data->sizeimage[i]);
-+	for (i = 0; i < pix->num_planes; i++)
-+		vb2_set_plane_payload(vb, i, pix->plane_fmt[i].sizeimage);
- 
- 	return 0;
- }
-@@ -2278,6 +2265,7 @@ static int vpe_open(struct file *file)
- 	struct vpe_q_data *s_q_data;
- 	struct v4l2_ctrl_handler *hdl;
- 	struct vpe_ctx *ctx;
-+	struct v4l2_pix_format_mplane *pix;
- 	int ret;
- 
- 	vpe_dbg(dev, "vpe_open\n");
-@@ -2326,23 +2314,32 @@ static int vpe_open(struct file *file)
- 	v4l2_ctrl_handler_setup(hdl);
- 
- 	s_q_data = &ctx->q_data[Q_DATA_SRC];
-+	pix = &s_q_data->format.fmt.pix_mp;
- 	s_q_data->fmt = __find_format(V4L2_PIX_FMT_YUYV);
--	s_q_data->width = 1920;
--	s_q_data->height = 1080;
--	s_q_data->nplanes = 1;
--	s_q_data->bytesperline[VPE_LUMA] = (s_q_data->width *
-+	pix->pixelformat = s_q_data->fmt->fourcc;
-+	s_q_data->format.type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
-+	pix->width = 1920;
-+	pix->height = 1080;
-+	pix->num_planes = 1;
-+	pix->plane_fmt[VPE_LUMA].bytesperline = (pix->width *
- 			s_q_data->fmt->vpdma_fmt[VPE_LUMA]->depth) >> 3;
--	s_q_data->sizeimage[VPE_LUMA] = (s_q_data->bytesperline[VPE_LUMA] *
--			s_q_data->height);
--	s_q_data->colorspace = V4L2_COLORSPACE_REC709;
--	s_q_data->field = V4L2_FIELD_NONE;
-+	pix->plane_fmt[VPE_LUMA].sizeimage =
-+			pix->plane_fmt[VPE_LUMA].bytesperline *
-+			pix->height;
-+	pix->colorspace = V4L2_COLORSPACE_REC709;
-+	pix->xfer_func = V4L2_XFER_FUNC_DEFAULT;
-+	pix->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
-+	pix->quantization = V4L2_QUANTIZATION_DEFAULT;
-+	pix->field = V4L2_FIELD_NONE;
- 	s_q_data->c_rect.left = 0;
- 	s_q_data->c_rect.top = 0;
--	s_q_data->c_rect.width = s_q_data->width;
--	s_q_data->c_rect.height = s_q_data->height;
-+	s_q_data->c_rect.width = pix->width;
-+	s_q_data->c_rect.height = pix->height;
- 	s_q_data->flags = 0;
- 
- 	ctx->q_data[Q_DATA_DST] = *s_q_data;
-+	ctx->q_data[Q_DATA_DST].format.type =
-+			V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
- 
- 	set_dei_shadow_registers(ctx);
- 	set_src_registers(ctx);
+ 	if (!pix->colorspace) {
+-		if (fmt->fourcc == V4L2_PIX_FMT_RGB24 ||
+-				fmt->fourcc == V4L2_PIX_FMT_BGR24 ||
+-				fmt->fourcc == V4L2_PIX_FMT_RGB32 ||
+-				fmt->fourcc == V4L2_PIX_FMT_BGR32) {
++		if (v4l2_is_format_rgb(fmt->fourcc)) {
+ 			pix->colorspace = V4L2_COLORSPACE_SRGB;
+ 		} else {
+ 			if (height > 1280)	/* HD */
 -- 
 2.17.1
