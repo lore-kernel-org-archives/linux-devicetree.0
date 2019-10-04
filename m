@@ -1,57 +1,61 @@
-From: Kiran Gunda <kgunda@codeaurora.org>
-Subject: [PATCH V1] dt-bindings: pinctrl: qcom-pmic-gpio: Add support for pm6150/pm6150l
-Date: Fri,  4 Oct 2019 16:50:39 +0530
-Message-ID: <1570188039-22122-1-git-send-email-kgunda@codeaurora.org>
+From: kgunda@codeaurora.org
+Subject: Re: [PATCH V6 5/8] backlight: qcom-wled: Restructure the driver for
+ WLED3
+Date: Fri, 04 Oct 2019 17:10:55 +0530
+Message-ID: <7300c740873439b341d05ee40e071c3f@codeaurora.org>
+References: <1569825553-26039-1-git-send-email-kgunda@codeaurora.org>
+ <1569825553-26039-6-git-send-email-kgunda@codeaurora.org>
+ <6f50ea19-f320-b4e6-f269-4d1e2189fa77@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6f50ea19-f320-b4e6-f269-4d1e2189fa77@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Kiran Gunda <kgunda@codeaurora.org>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: bjorn.andersson@linaro.org, jingoohan1@gmail.com, lee.jones@linaro.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the PM6150 and PM6150L GPIO support to the
-Qualcomm PMIC GPIO binding.
-
-Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
----
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 4 ++++
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                     | 2 ++
- 2 files changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-index c32bf32..2f48cca 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-@@ -23,6 +23,8 @@ PMIC's from Qualcomm.
- 		    "qcom,pms405-gpio"
- 		    "qcom,pm8150-gpio"
- 		    "qcom,pm8150b-gpio"
-+		    "qcom,pm6150-gpio"
-+		    "qcom,pm6150l-gpio"
- 
- 		    And must contain either "qcom,spmi-gpio" or "qcom,ssbi-gpio"
- 		    if the device is on an spmi bus or an ssbi bus respectively
-@@ -100,6 +102,8 @@ to specify in a pin configuration subnode:
- 					     and gpio8)
- 		    gpio1-gpio12 for pm8150b (holes on gpio3, gpio4, gpio7)
- 		    gpio1-gpio12 for pm8150l (hole on gpio7)
-+		    gpio1-gpio10 for pm6150
-+		    gpio1-gpio12 for pm6150l
- 
- - function:
- 	Usage: required
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index f1fece5..387917c 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -1121,6 +1121,8 @@ static int pmic_gpio_remove(struct platform_device *pdev)
- 	{ .compatible = "qcom,pm8150b-gpio", .data = (void *) 12 },
- 	/* pm8150l has 12 GPIOs with holes on 7 */
- 	{ .compatible = "qcom,pm8150l-gpio", .data = (void *) 12 },
-+	{ .compatible = "qcom,pm6150-gpio", .data = (void *) 10 },
-+	{ .compatible = "qcom,pm6150l-gpio", .data = (void *) 12 },
- 	{ },
- };
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+On 2019-10-01 20:47, Dan Murphy wrote:
+> Kiran
+> 
+> On 9/30/19 1:39 AM, Kiran Gunda wrote:
+>> Restructure the driver to add the support for new WLED
+>> peripherals.
+>> 
+>> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+>> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+>> ---
+>>   drivers/video/backlight/qcom-wled.c | 395 
+>> ++++++++++++++++++++++--------------
+>>   1 file changed, 245 insertions(+), 150 deletions(-)
+>> 
+>> diff --git a/drivers/video/backlight/qcom-wled.c 
+>> b/drivers/video/backlight/qcom-wled.c
+>> index f191242..740f1b6 100644
+>> --- a/drivers/video/backlight/qcom-wled.c
+>> +++ b/drivers/video/backlight/qcom-wled.c
+>> @@ -7,59 +7,71 @@
+>>   #include <linux/module.h>
+>>   #include <linux/of.h>
+>>   #include <linux/of_device.h>
+>> +#include <linux/of_address.h>
+>>   #include <linux/regmap.h>
+>>     /* From DT binding */
+>> +#define WLED_MAX_STRINGS				4
+>> +
+>>   #define WLED_DEFAULT_BRIGHTNESS				2048
+>>   -#define WLED3_SINK_REG_BRIGHT_MAX			0xFFF
+>> -#define WLED3_CTRL_REG_VAL_BASE				0x40
+>> +#define WLED_SINK_REG_BRIGHT_MAX			0xFFF
+> 
+> Why did you change some of these again?
+> 
+> Can you just change it to the final #define in patch 4/8?
+> 
+> Dan
+> 
+> <snip>
+Ok.. Looks like some thing went wrong with this series. I will re-upload 
+it again.
