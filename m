@@ -1,76 +1,121 @@
-From: shuah <shuah@kernel.org>
-Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Fri, 4 Oct 2019 17:57:26 -0600
-Message-ID: <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org>
-References: <20190923090249.127984-1-brendanhiggins@google.com>
- <20191004213812.GA24644@mit.edu>
- <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
- <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
- <20191004222714.GA107737@google.com>
- <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
- <20191004232955.GC12012@mit.edu>
- <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
+From: Graeme Smecher <gsmecher@threespeedlogic.com>
+Subject: Re: [PATCH] ARM: dts: am3874-iceboard: Fix 'i2c-mux-idle-disconnect'
+ usage
+Date: Fri, 4 Oct 2019 16:52:23 -0700
+Message-ID: <c40b8414-45a8-575a-c3c8-902ed35e5764@threespeedlogic.com>
+References: <20191004014548.29583-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
+Content-Type: multipart/mixed;
+ boundary="------------D88F802452A7457DB086316E"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191004014548.29583-1-andrew.smirnov@gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brendan Higgins <brendanhiggins@google.com>, "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-nvdimm <linux-nvdimm@lists.01.org>, Kevin Hilman <khilman@baylibre.com>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, shuah <shuah@kernel.org>Linux Kbuild mailing list <linux->
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>, linux-omap@vger.kernel.org
+Cc: =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvNC8xOSA1OjUyIFBNLCBCcmVuZGFuIEhpZ2dpbnMgd3JvdGU6Cj4gT24gRnJpLCBPY3Qg
-NCwgMjAxOSBhdCA0OjMwIFBNIFRoZW9kb3JlIFkuIFRzJ28gPHR5dHNvQG1pdC5lZHU+IHdyb3Rl
-Ogo+Pgo+PiBPbiBGcmksIE9jdCAwNCwgMjAxOSBhdCAwNDo0NzowOVBNIC0wNjAwLCBzaHVhaCB3
-cm90ZToKPj4+PiBIb3dldmVyLCBpZiBJIGVuY291cmFnZSBhcmJpdHJhcnkgdGVzdHMvaW1wcm92
-ZW1lbnRzIGludG8gbXkgS1VuaXQKPj4+PiBicmFuY2gsIGl0IGZ1cnRoZXIgZGl2ZXJnZXMgYXdh
-eSBmcm9tIHRvcnZhbGRzL21hc3RlciwgYW5kIGlzIG1vcmUKPj4+PiBsaWtlbHkgdGhhdCB0aGVy
-ZSB3aWxsIGJlIGEgbWVyZ2UgY29uZmxpY3Qgb3IgaXNzdWUgdGhhdCBpcyBub3QgcmVsYXRlZAo+
-Pj4+IHRvIHRoZSBjb3JlIEtVbml0IGNoYW5nZXMgdGhhdCB3aWxsIGNhdXNlIHRoZSB3aG9sZSB0
-aGluZyB0byBiZQo+Pj4+IHJlamVjdGVkIGFnYWluIGluIHY1LjUuCj4+Pgo+Pj4gVGhlIGlkZWEg
-aXMgdGhhdCB0aGUgbmV3IGRldmVsb3BtZW50IHdpbGwgaGFwcGVuIGJhc2VkIG9uIGt1bml0IGlu
-Cj4+PiBsaW51eC1rc2VsZnRlc3QgbmV4dC4gSXQgd2lsbCB3b3JrIGp1c3QgZmluZS4gQXMgd2Ug
-YWNjZXB0cyBwYXRjaGVzLAo+Pj4gdGhleSB3aWxsIGdvIG9uIHRvcCBvZiBrdW5pdCB0aGF0IGlz
-IGluIGxpbnV4LW5leHQgbm93Lgo+Pgo+PiBJIGRvbid0IHNlZSBob3cgdGhpcyB3b3VsZCB3b3Jr
-LiAgSWYgSSBhZGQgdW5pdCB0ZXN0cyB0byBleHQ0LCB0aGV5Cj4+IHdvdWxkIGJlIGluIGZzL2V4
-dDQuICBBbmQgdG8gdGhlIGV4dGVudCB0aGF0IEkgbmVlZCB0byBhZGQgdGVzdCBtb2Nrcwo+PiB0
-byBhbGxvdyB0aGUgdW5pdCB0ZXN0cyB0byB3b3JrLCB0aGV5IHdpbGwgaW52b2x2ZSBjaGFuZ2Vz
-IHRvIGV4aXN0aW5nCj4+IGZpbGVzIGluIGZzL2V4dDQuICBJIGNhbid0IHB1dCB0aGVtIGluIHRo
-ZSBleHQ0LmdpdCB0cmVlIHdpdGhvdXQKPj4gcHVsbGluZyBpbiB0aGUga3VuaXQgY2hhbmdlcyBp
-bnRvIHRoZSBleHQ0IGdpdCB0cmVlLiAgQW5kIGlmIHRoZXkgZXh0NAo+PiB1bml0IHRlc3RzIGxh
-bmQgaW4gdGhlIGt1bml0IHRyZWUsIGl0IHdvdWxkIGJlIGEgcmVjZWlwZSBmb3IgbGFyZ2UKPj4g
-bnVtYmVycyBvZiBtZXJnZSBjb25mbGljdHMuCj4gCj4gVGhhdCdzIHdoZXJlIEkgd2FzIG9yaWdp
-bmFsbHkgY29taW5nIGZyb20uCj4gCj4gU28gaGVyZSdzIGEgZHVtYiBpZGVhOiB3aGF0IGlmIHdl
-IG1lcmdlZCBLVW5pdCB0aHJvdWdoIHRoZSBleHQ0IHRyZWU/Cj4gSSBpbWFnaW5lIHRoYXQgY291
-bGQgcG90ZW50aWFsbHkgZ2V0IHZlcnkgY29uZnVzaW5nIHdoZW4gd2UgZ28gYmFjayB0bwo+IHNl
-bmRpbmcgY2hhbmdlcyBpbiB0aHJvdWdoIHRoZSBrc2VsZnRlc3QgdHJlZSwgYnV0IGF0IGxlYXN0
-IGl0IG1lYW5zCj4gdGhhdCBleHQ0IGNhbiB1c2UgaXQgaW4gdGhlIG1lYW50aW1lLCB3aGljaCBt
-ZWFucyB0aGF0IGl0IGF0IGxlYXN0Cj4gZ2V0cyB0byBiZSB1c2VmdWwgdG8gb25lIGdyb3VwIG9m
-IHBlb3BsZS4gQWxzbywgc2luY2UgVGVkIHNlZW1zIHByZXR0eQo+IGtlZW4gb24gdXNpbmcgdGhp
-cywgSSBpbWFnaW5lIGl0IGlzIG11Y2ggbW9yZSBsaWtlbHkgdG8gcHJvZHVjZSByZWFsCj4gd29y
-bGQsIGltbWVkaWF0ZWx5IHVzZWZ1bCB0ZXN0cyBub3Qgd3JpdHRlbiBieSBtZSAoSSdtIG5vdCBi
-ZWluZyBsYXp5LAo+IEkganVzdCB0aGluayBpdCBpcyBiZXR0ZXIgdG8gZ2V0IG90aGVyIHBlb3Bs
-ZSdzIGV4cGVyaWVuY2VzIG90aGVyIHRoYW4KPiBteSBvd24pLgo+IAoKVGhhdCBkb2Vzbid0IG1h
-a2Ugc2Vuc2UgZG9lcyBpdD8gVGhlIHRlc3RzIG1pZ2h0IG5vdCBiZSBsaW1pdGVkIHRvCmZzL2V4
-dDQuIFdlIG1pZ2h0IGhhdmUgb3RoZXIgc3ViLXN5c3RlbXMgdGhhdCBhZGQgdGVzdHMuCgpTbywg
-d2Ugd2lsbCBoYXZlIHRvIHdvcmsgdG8gbWFrZSBsaW51eC1uZXh0IGFzIHRoZSBiYXNlIGZvciBu
-ZXcKZGV2ZWxvcG1lbnQgYW5kIGxpbWl0IHRoZSBudW1iZXIgb2YgdGVzdHMgdG8gd2hlcmUgaXQg
-d2lsbCBiZQplYXNpZXIgd29yayBpbiB0aGlzIG1vZGUgZm9yIDUuNS4gV2UgY2FuIHN0YWdlIHRo
-ZSBwdWxsIHJlcXVlc3RzCnNvIHRoYXQga3VuaXQgbGFuZHMgZmlyc3QgZm9sbG93ZWQgYnkgdGVz
-dHMuCgpXZSBoYXZlIGEgc2ltaWxhciBzaXR1YXRpb24gd2l0aCBrc2VsZnRlc3QgYXMgd2VsbC4g
-U3ViLXN5c3RlbXMKc2VuZCB0ZXN0cyB0aGF0IGRlcGVuZCBvbiB0aGVpciB0cmVzcyBzZXBhcmF0
-ZWx5LgoKdGhhbmtzLAotLSBTaHVhaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWw=
+This is a multi-part message in MIME format.
+--------------D88F802452A7457DB086316E
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Hi Andrey,
+
+On 2019-10-03 6:45 p.m., Andrey Smirnov wrote:
+> According to
+> Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt,
+> i2c-mux-idle-disconnect is a property of a parent node since it
+> pertains to the mux/switch as a whole, so move it there and drop all
+> of the concurrences in child nodes.
+>=20
+> Fixes: d031773169df ("ARM: dts: Adds device tree file for McGill's IceB=
+oard, based on TI AM3874")
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Beno=C3=AEt Cousson <bcousson@baylibre.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Graeme Smecher <gsmecher@threespeedlogic.com>
+> Cc: linux-omap@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>=20
+> This is purely a drive-by fix, since it concerns the HW I've never
+> heard of before. However I was working with PCA9548
+> (vf610-zii-scu4-aib is my HW) and looking at various users in the
+> kernel, when this code caught my eye. Apologies for the noise if this
+> fix is somehow bogus.
+>=20
+> In case that it matters this patch is based on top of 5.4-rc1.
+
+Thanks! We do have I2C address collisions on downstream bus segments, so
+keeping these segments isolated is important. I'm surprised this patch
+was necessary and happy to see it.
+
+Lightly tested on 5.3.
+
+Tested-by: Graeme Smecher <gsmecher@threespeedlogic.com>
+
+cheers,
+Graeme
+
+--------------D88F802452A7457DB086316E
+Content-Type: application/pgp-keys;
+ name="pEpkey.asc"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="pEpkey.asc"
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+gbQuluiSg2k+M+9FMQ=3D=3D
+=3DO3pl
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------D88F802452A7457DB086316E--
