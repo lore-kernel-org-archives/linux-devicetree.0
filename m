@@ -1,79 +1,130 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: rsnd: Document r8a774b1 bindings" to
-	the asoc tree
-Date: Fri,  4 Oct 2019 18:52:33 +0100 (BST)
-Message-ID: <20191004175233.F20E92741EF0@ypsilon.sirena.org.uk>
-References: <1570171940-42937-1-git-send-email-biju.das@bp.renesas.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: mfd: Document the Xylon LogiCVC
+ multi-function device
+Date: Fri, 4 Oct 2019 14:12:22 -0400
+Message-ID: <20191004181222.GA16927@aptenodytes>
+References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
+ <20190927100407.1863293-3-paul.kocialkowski@bootlin.com>
+ <20190927221550.GA28831@bogus>
+ <20191004144551.GR18429@dell>
+ <CAL_Jsq+J9z3zzENZxXwjjsVMbFr8uYpXX6jYbCqdQEKBQXOu9A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1570171940-42937-1-git-send-email-biju.das@bp.renesas.com>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-renesas-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+J9z3zzENZxXwjjsVMbFr8uYpXX6jYbCqdQEKBQXOu9A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
 
-   ASoC: rsnd: Document r8a774b1 bindings
+--9jxsPFA5p3P2qPhR
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been applied to the asoc tree at
+Hi,
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.5
+On Fri 04 Oct 19, 11:09, Rob Herring wrote:
+> On Fri, Oct 4, 2019 at 9:45 AM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Fri, 27 Sep 2019, Rob Herring wrote:
+> >
+> > > On Fri, Sep 27, 2019 at 12:04:04PM +0200, Paul Kocialkowski wrote:
+> > > > The LogiCVC is a display engine which also exposes GPIO functionali=
+ty.
+> > > > For this reason, it is described as a multi-function device that is=
+ expected
+> > > > to provide register access to its children nodes for gpio and displ=
+ay.
+> > > >
+> > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > > ---
+> > > >  .../bindings/mfd/xylon,logicvc.yaml           | 50 +++++++++++++++=
+++++
+> > > >  1 file changed, 50 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/mfd/xylon,log=
+icvc.yaml
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/mfd/xylon,logicvc.ya=
+ml b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..abc9937506e0
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+> > > > @@ -0,0 +1,50 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > > +# Copyright 2019 Bootlin
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: "http://devicetree.org/schemas/mfd/xylon,logicvc.yaml#"
+> > > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > > > +
+> > > > +title: Xylon LogiCVC multi-function device
+> > > > +
+> > > > +maintainers:
+> > > > +  - Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > > +
+> > > > +description: |
+> > > > +  The LogiCVC is a display controller that also contains a GPIO co=
+ntroller.
+> > > > +  As a result, a multi-function device is exposed as parent of the=
+ display
+> > > > +  and GPIO blocks.
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    items:
+> > > > +      - enum:
+> > > > +          - xylon,logicvc-3.02.a
+> > > > +      - const: syscon
+> > > > +      - const: simple-mfd
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +select:
+> > > > +  properties:
+> > > > +    compatible:
+> > > > +      contains:
+> > > > +        enum:
+> > > > +          - xylon,logicvc-3.02.a
+> > >
+> > > I've seen a couple of these with 'syscon' today, so I fixed the schema
+> > > tool to just exclude 'syscon' and 'simple-mfd' from the generated
+> > > 'select'. So you can drop select now.
+> >
+> > Does this need to happen before this patch can be applied?
+>=20
+> Drop the 'select'? Yes that should happen first.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+I'll definitely respin the series for a v3 soon so no worries, I'll get rid
+of it.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Cheers,
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Paul
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
-Thanks,
-Mark
+--9jxsPFA5p3P2qPhR
+Content-Type: application/pgp-signature; name="signature.asc"
 
->From 01400bfb2ea76a399448486e2d26f2f1b5a77787 Mon Sep 17 00:00:00 2001
-From: Biju Das <biju.das@bp.renesas.com>
-Date: Fri, 4 Oct 2019 07:52:20 +0100
-Subject: [PATCH] ASoC: rsnd: Document r8a774b1 bindings
+-----BEGIN PGP SIGNATURE-----
 
-Document SoC specific bindings for RZ/G2N (r8a774b1) SoC.
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2Xi4YACgkQ3cLmz3+f
+v9HpAgf/a8qK5j4yyiRTtn9wRE0GwK+Ammm9c6YApasFhMqQ4fMGrYZThmMNepOB
+/VwPfRJx6qFbQ33IAZ/J3zK2T61jYlybouAEm7h+UO2W/9RazqGyx2NBPSq1t5Q7
+wbTHABnhrs06T8bDZTiKKeFV28gnCRPE3EkNLdeydpTZ7lbtW85VEP56Ua5xkVv1
+RzvJOIvd8BzqECyd95iZOe1G+TXC89AMQ5W8pMnpLNBnM3mwb0RvWSVHJ46u/Tkm
+NMxyUqe5jnj6fWeTFe0613OwraqgqBtU7smGdfKf09m8AsOyawxgBVfgrSvvDObT
+R5OlwonQzTy2wCjL5uK4Q75gpOd7qw==
+=eX7p
+-----END PGP SIGNATURE-----
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Link: https://lore.kernel.org/r/1570171940-42937-1-git-send-email-biju.das@bp.renesas.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-index 5c52182f7dcf..797fd035434c 100644
---- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-+++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-@@ -268,6 +268,7 @@ Required properties:
- 				    - "renesas,rcar_sound-r8a7745" (RZ/G1E)
- 				    - "renesas,rcar_sound-r8a77470" (RZ/G1C)
- 				    - "renesas,rcar_sound-r8a774a1" (RZ/G2M)
-+				    - "renesas,rcar_sound-r8a774b1" (RZ/G2N)
- 				    - "renesas,rcar_sound-r8a774c0" (RZ/G2E)
- 				    - "renesas,rcar_sound-r8a7778" (R-Car M1A)
- 				    - "renesas,rcar_sound-r8a7779" (R-Car H1)
--- 
-2.20.1
+--9jxsPFA5p3P2qPhR--
