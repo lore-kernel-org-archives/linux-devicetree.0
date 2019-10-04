@@ -1,96 +1,70 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 1/3] media: ov5640: add PIXEL_RATE control
-Date: Fri, 4 Oct 2019 12:24:16 -0500
-Message-ID: <20191004172418.2339-2-bparrot@ti.com>
-References: <20191004172418.2339-1-bparrot@ti.com>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC)
+ driver for SC7180
+Date: Fri, 4 Oct 2019 23:09:31 +0530
+Message-ID: <81a2fa46-a7e6-66a2-9649-009f22813c81@codeaurora.org>
+References: <20190918095018.17979-1-tdas@codeaurora.org>
+ <20190918095018.17979-4-tdas@codeaurora.org>
+ <20190918213946.DC03521924@mail.kernel.org>
+ <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org>
+ <20190924231223.9012C207FD@mail.kernel.org>
+ <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org>
+ <20190925130346.42E0820640@mail.kernel.org>
+ <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org>
+ <20191001143825.CD3212054F@mail.kernel.org>
+ <7ac5f6bf-33c5-580e-bd40-e82f3052d460@codeaurora.org>
+ <20191003160130.5A19B222D0@mail.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191004172418.2339-1-bparrot@ti.com>
+In-Reply-To: <20191003160130.5A19B222D0@mail.kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, Jacopo Mondi <jacopo@jmondi.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
+To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
+Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add v4l2 controls to report the pixel rates of each mode. This is
-needed by some CSI2 receiver in order to perform proper DPHY
-configuration.
+Hi Stephen,
 
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
----
- drivers/media/i2c/ov5640.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+On 10/3/2019 9:31 PM, Stephen Boyd wrote:
+> Quoting Taniya Das (2019-10-03 03:31:15)
+>> Hi Stephen,
+>>
+>> On 10/1/2019 8:08 PM, Stephen Boyd wrote:
+>>>
+>>> Why do you want to keep them critical and registered? I'm suggesting
+>>> that any clk that is marked critical and doesn't have a parent should
+>>> instead become a register write in probe to turn the clk on.
+>>>
+>> Sure, let me do a one-time enable from probe for the clocks which
+>> doesn't have a parent.
+>> But I would now have to educate the clients of these clocks to remove
+>> using them.
+>>
+> 
+> If anyone is using these clks we can return NULL from the provider for
+> the specifier so that we indicate there isn't support for them in the
+> kernel. At least I hope that code path still works given all the recent
+> changes to clk_get().
+> 
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 500d9bbff10b..a3946ca6a13d 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -193,6 +193,7 @@ struct ov5640_mode_info {
- 
- struct ov5640_ctrls {
- 	struct v4l2_ctrl_handler handler;
-+	struct v4l2_ctrl *pixel_rate;
- 	struct {
- 		struct v4l2_ctrl *auto_exp;
- 		struct v4l2_ctrl *exposure;
-@@ -1614,6 +1615,16 @@ ov5640_find_mode(struct ov5640_dev *sensor, enum ov5640_frame_rate fr,
- 	return mode;
- }
- 
-+static u64 ov5640_calc_pixel_rate(struct ov5640_dev *sensor)
-+{
-+	u64 rate;
-+
-+	rate = sensor->current_mode->vtot * sensor->current_mode->htot;
-+	rate *= ov5640_framerates[sensor->current_fr];
-+
-+	return rate;
-+}
-+
- /*
-  * sensor changes between scaling and subsampling, go through
-  * exposure calculation
-@@ -1818,8 +1829,7 @@ static int ov5640_set_mode(struct ov5640_dev *sensor)
- 	 * All the formats we support have 16 bits per pixel, seems to require
- 	 * the same rate than YUV, so we can just use 16 bpp all the time.
- 	 */
--	rate = mode->vtot * mode->htot * 16;
--	rate *= ov5640_framerates[sensor->current_fr];
-+	rate = ov5640_calc_pixel_rate(sensor) * 16;
- 	if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY) {
- 		rate = rate / sensor->ep.bus.mipi_csi2.num_data_lanes;
- 		ret = ov5640_set_mipi_pclk(sensor, rate);
-@@ -2233,6 +2243,8 @@ static int ov5640_set_fmt(struct v4l2_subdev *sd,
- 	if (mbus_fmt->code != sensor->fmt.code)
- 		sensor->pending_fmt_change = true;
- 
-+	__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
-+				 ov5640_calc_pixel_rate(sensor));
- out:
- 	mutex_unlock(&sensor->lock);
- 	return ret;
-@@ -2657,6 +2669,12 @@ static int ov5640_init_controls(struct ov5640_dev *sensor)
- 	/* we can use our own mutex for the ctrl lock */
- 	hdl->lock = &sensor->lock;
- 
-+	/* Clock related controls */
-+	ctrls->pixel_rate = v4l2_ctrl_new_std(hdl, ops, V4L2_CID_PIXEL_RATE,
-+					      0, INT_MAX, 1,
-+					      ov5640_calc_pixel_rate(sensor));
-+	ctrls->pixel_rate->flags |= V4L2_CTRL_FLAG_READ_ONLY;
-+
- 	/* Auto/manual white balance */
- 	ctrls->auto_wb = v4l2_ctrl_new_std(hdl, ops,
- 					   V4L2_CID_AUTO_WHITE_BALANCE,
-@@ -2816,6 +2834,9 @@ static int ov5640_s_frame_interval(struct v4l2_subdev *sd,
- 		sensor->frame_interval = fi->interval;
- 		sensor->current_mode = mode;
- 		sensor->pending_mode_change = true;
-+
-+		__v4l2_ctrl_s_ctrl_int64(sensor->ctrls.pixel_rate,
-+					 ov5640_calc_pixel_rate(sensor));
- 	}
- out:
- 	mutex_unlock(&sensor->lock);
+Could you please confirm if you are referring to update the below?
+
+--- a/drivers/clk/qcom/common.c
++++ b/drivers/clk/qcom/common.c
+@@ -218,7 +218,7 @@ static struct clk_hw *qcom_cc_clk_hw_get(struct 
+of_phandle_args *clkspec,
+                 return ERR_PTR(-EINVAL);
+         }
+
+-       return cc->rclks[idx] ? &cc->rclks[idx]->hw : ERR_PTR(-ENOENT);
++       return cc->rclks[idx] ? &cc->rclks[idx]->hw : NULL;
+  }
+
+
 -- 
-2.17.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
