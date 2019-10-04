@@ -1,149 +1,119 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 3/3] soc: mediatek: pwrap: add support for MT6359 PMIC
-Date: Fri, 4 Oct 2019 01:27:35 +0200
-Message-ID: <5ec86287-2a90-ca07-c9a6-262420a68fd3@gmail.com>
-References: <1570088901-23211-1-git-send-email-argus.lin@mediatek.com>
- <1570088901-23211-4-git-send-email-argus.lin@mediatek.com>
+From: Stefan Wahren <wahrenst@gmx.net>
+Subject: Re: [PATCH V3 0/8] ARM: Add minimal Raspberry Pi 4 support
+Date: Fri, 4 Oct 2019 03:03:00 +0200
+Message-ID: <a49902c4-e66f-34d4-efad-a6b0b11fab58@gmx.net>
+References: <1569672435-19823-1-git-send-email-wahrenst@gmx.net>
+ <3853cd8425743b4991f5d599ec1c0fbbf4232f95.camel@suse.de>
+ <d4774e5a-abc2-4c43-c97d-76600f74132d@gmx.net>
+ <420c18a3-d458-8115-ef00-f1cb4febe3b0@suse.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570088901-23211-4-git-send-email-argus.lin@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <420c18a3-d458-8115-ef00-f1cb4febe3b0@suse.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Argus Lin <argus.lin@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <mbrugger@suse.com>, Eric Anholt <eric@anholt.net>, Guillaume Gardet <Guillaume.Gardet@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+Am 04.10.19 um 00:42 schrieb Matthias Brugger:
+>
+> On 03/10/2019 19:24, Stefan Wahren wrote:
+>> Hi Nicolas,
+>>
+>> Am 03.10.19 um 19:09 schrieb Nicolas Saenz Julienne:
+>>> On Sat, 2019-09-28 at 14:07 +0200, Stefan Wahren wrote:
+>>>> This series adds minimal support for the new Raspberry Pi 4, so we are able
+>>>> to login via debug UART.
+>>>>
+>>>> Patch 1-2:   Fix some DT schema warnings
+>>>> Patch 3-4:   Prepare DTS for the new SoC BMC2711
+>>>> Patch 5-7:   Add Raspberry Pi 4 DTS support
+>>>> Patch 8:     Update MAINTAINERS
+>>>>
+>>>> Unfortunately the Raspberry Pi Foundation didn't released a
+>>>> peripheral documentation for the new SoC yet. So we only have a preliminary
+>>>> datasheet [1] and reduced schematics [2].
+>>>>
+>>>> Known issues:
+>>>> Since Linux 5.3-rc1 DMA doesn't work properly on that platform.
+>>>> Nicolas Saenz Julienne investigates on that issue. As a temporary workaround
+>>>> i reverted the following patch to test this series:
+>>>>
+>>>> 79a98672 "dma-mapping: remove dma_max_pfn"
+>>>> 7559d612 "mmc: core: let the dma map ops handle bouncing"
+>>> [ adding Matthias and Guillaume who first saw this ]
+>>> [ also adding Adrian Hunter just in case ]
+>>>
+>>> Hi,
+>>> we stubled upon a bug in RPi's sdhci-iproc while testing this series.
+>>>
+>>> It only shows-up on slow SD cards, the class 4 ones. On each SD operation we
+>>> get the following warning:
+>>>
+>>> [    2.093328] mmc1: Got data interrupt 0x00000002 even though no data operation was in progress.
+>>> [    2.102072] mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
+>>> [    2.108603] mmc1: sdhci: Sys addr:  0x00000000 | Version:  0x00001002
+>>> [    2.115134] mmc1: sdhci: Blk size:  0x00007200 | Blk cnt:  0x00000000
+>>> [    2.121664] mmc1: sdhci: Argument:  0x00000000 | Trn mode: 0x00000033
+>>> [    2.128195] mmc1: sdhci: Present:   0x1fff0000 | Host ctl: 0x00000017
+>>> [    2.134725] mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000080
+>>> [    2.141255] mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
+>>> [    2.147785] mmc1: sdhci: Timeout:   0x00000000 | Int stat: 0x00000000
+>>> [    2.154314] mmc1: sdhci: Int enab:  0x03ff100b | Sig enab: 0x03ff100b
+>>> [    2.160843] mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000000
+>>> [    2.167373] mmc1: sdhci: Caps:      0x45ee6432 | Caps_1:   0x0000a525
+>>> [    2.173902] mmc1: sdhci: Cmd:       0x00000c1a | Max curr: 0x00080008
+>>> [    2.180432] mmc1: sdhci: Resp[0]:   0x00000b00 | Resp[1]:  0x00edc87f
+>>> [    2.186961] mmc1: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00400e00
+>>> [    2.193490] mmc1: sdhci: Host ctl2: 0x00000001
+>>> [    2.197992] mmc1: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0xec040208
+>>> [    2.204521] mmc1: sdhci: ============================================
+>>>
+>>> Aside from the serial console noise the RPi still boots alright. But as it's
+>>> printing one of these per SD operation which is a lot...
+>>>
+>>> I've been able to reproduce this both with arm and arn64 on multiple SD cards.
+>>> Just copying the contents of a class 4 card into a class 10 one fixes the
+>>> issue.
+>>>
+>>> Any ideas?
+>> i saw this once during testing. AFAIR there has been some changes to
+>> sdhci in the downstream tree, maybe they was related to this issue.
+> I did a diff against drivers/mmc/host/sdhci-iproc.c of v5.4-rc1 and haven't
+> found any significant changes:
+> - compatible in the upstream driver is only bcm2711-emmc2 and not bcm2838-sdhci,
+> but DTS uses the former one.
+> - Upstream driver support probing via ACPI.
+> - pltfm_host->clk gets only set if we probe via DTS
+> - get_max_clock() is set to sdhci_iproc_get_max_clock() but this checks if
+> pltfm_host->clk is set and in that case invokes sdhci_pltfm_clk_get_max_clock()
+> (same function as the downstream driver).
+>
+> So AFAIKS nothing relevant here.
 
-On 03/10/2019 09:48, Argus Lin wrote:
-> MT6359 is a new power management IC and it is used for
-> MT6779 SoCs. To define mt6359_regs for pmic register mapping
-> and pmic_mt6359 for accessing register.
-> 
-> Signed-off-by: Argus Lin <argus.lin@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-pmic-wrap.c | 72 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> index fa8daf2..dd04318 100644
-> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> @@ -111,6 +111,29 @@ enum dew_regs {
->  	PWRAP_RG_SPI_CON13,
->  	PWRAP_SPISLV_KEY,
-> 
-> +	/* MT6359 only regs */
-> +	PWRAP_DEW_CRC_SWRST,
-> +	PWRAP_DEW_RG_EN_RECORD,
-> +	PWRAP_DEW_RECORD_CMD0,
-> +	PWRAP_DEW_RECORD_CMD1,
-> +	PWRAP_DEW_RECORD_CMD2,
-> +	PWRAP_DEW_RECORD_CMD3,
-> +	PWRAP_DEW_RECORD_CMD4,
-> +	PWRAP_DEW_RECORD_CMD5,
-> +	PWRAP_DEW_RECORD_WDATA0,
-> +	PWRAP_DEW_RECORD_WDATA1,
-> +	PWRAP_DEW_RECORD_WDATA2,
-> +	PWRAP_DEW_RECORD_WDATA3,
-> +	PWRAP_DEW_RECORD_WDATA4,
-> +	PWRAP_DEW_RECORD_WDATA5,
-> +	PWRAP_DEW_RG_ADDR_TARGET,
-> +	PWRAP_DEW_RG_ADDR_MASK,
-> +	PWRAP_DEW_RG_WDATA_TARGET,
-> +	PWRAP_DEW_RG_WDATA_MASK,
-> +	PWRAP_DEW_RG_SPI_RECORD_CLR,
-> +	PWRAP_DEW_RG_CMD_ALERT_CLR,
-> +	PWRAP_DEW_SPISLV_KEY,
+as i wrote about sdhci, i literally meant this driver [1]. But this
+looks like a workaround only.
 
-That looks like PWRAP_SPISLV_KEY from MT6358.
+[1] -
+https://github.com/raspberrypi/linux/commit/88b35d4338e238519bf4e6f73837b4ce44bfe4d6
 
-Regards,
-Matthias
-
-> +
->  	/* MT6397 only regs */
->  	PWRAP_DEW_EVENT_OUT_EN,
->  	PWRAP_DEW_EVENT_SRC_EN,
-> @@ -197,6 +220,42 @@ enum dew_regs {
->  	[PWRAP_SPISLV_KEY] =		0x044a,
->  };
-> 
-> +static const u32 mt6359_regs[] = {
-> +	[PWRAP_DEW_RG_EN_RECORD] =	0x040a,
-> +	[PWRAP_DEW_DIO_EN] =		0x040c,
-> +	[PWRAP_DEW_READ_TEST] =		0x040e,
-> +	[PWRAP_DEW_WRITE_TEST] =	0x0410,
-> +	[PWRAP_DEW_CRC_SWRST] =		0x0412,
-> +	[PWRAP_DEW_CRC_EN] =		0x0414,
-> +	[PWRAP_DEW_CRC_VAL] =		0x0416,
-> +	[PWRAP_DEW_CIPHER_KEY_SEL] =	0x0418,
-> +	[PWRAP_DEW_CIPHER_IV_SEL] =	0x041a,
-> +	[PWRAP_DEW_CIPHER_EN] =		0x041c,
-> +	[PWRAP_DEW_CIPHER_RDY] =	0x041e,
-> +	[PWRAP_DEW_CIPHER_MODE] =	0x0420,
-> +	[PWRAP_DEW_CIPHER_SWRST] =	0x0422,
-> +	[PWRAP_DEW_RDDMY_NO] =		0x0424,
-> +	[PWRAP_DEW_RECORD_CMD0] =	0x0428,
-> +	[PWRAP_DEW_RECORD_CMD1] =	0x042a,
-> +	[PWRAP_DEW_RECORD_CMD2] =	0x042c,
-> +	[PWRAP_DEW_RECORD_CMD3] =	0x042e,
-> +	[PWRAP_DEW_RECORD_CMD4] =	0x0430,
-> +	[PWRAP_DEW_RECORD_CMD5] =	0x0432,
-> +	[PWRAP_DEW_RECORD_WDATA0] =	0x0434,
-> +	[PWRAP_DEW_RECORD_WDATA1] =	0x0436,
-> +	[PWRAP_DEW_RECORD_WDATA2] =	0x0438,
-> +	[PWRAP_DEW_RECORD_WDATA3] =	0x043a,
-> +	[PWRAP_DEW_RECORD_WDATA4] =	0x043c,
-> +	[PWRAP_DEW_RECORD_WDATA5] =	0x043e,
-> +	[PWRAP_DEW_RG_ADDR_TARGET] =	0x0440,
-> +	[PWRAP_DEW_RG_ADDR_MASK] =	0x0442,
-> +	[PWRAP_DEW_RG_WDATA_TARGET] =	0x0444,
-> +	[PWRAP_DEW_RG_WDATA_MASK] =	0x0446,
-> +	[PWRAP_DEW_RG_SPI_RECORD_CLR] =	0x0448,
-> +	[PWRAP_DEW_RG_CMD_ALERT_CLR] =	0x0448,
-> +	[PWRAP_DEW_SPISLV_KEY] =	0x044a,
-> +};
-> +
->  static const u32 mt6397_regs[] = {
->  	[PWRAP_DEW_BASE] =		0xbc00,
->  	[PWRAP_DEW_EVENT_OUT_EN] =	0xbc00,
-> @@ -977,6 +1036,7 @@ enum pmic_type {
->  	PMIC_MT6351,
->  	PMIC_MT6357,
->  	PMIC_MT6358,
-> +	PMIC_MT6359,
->  	PMIC_MT6380,
->  	PMIC_MT6397,
->  };
-> @@ -1757,6 +1817,15 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
->  	.pwrap_write = pwrap_write16,
->  };
-> 
-> +static const struct pwrap_slv_type pmic_mt6359 = {
-> +	.dew_regs = mt6359_regs,
-> +	.type = PMIC_MT6359,
-> +	.regmap = &pwrap_regmap_config16,
-> +	.caps = PWRAP_SLV_CAP_DUALIO,
-> +	.pwrap_read = pwrap_read16,
-> +	.pwrap_write = pwrap_write16,
-> +};
-> +
->  static const struct pwrap_slv_type pmic_mt6380 = {
->  	.dew_regs = NULL,
->  	.type = PMIC_MT6380,
-> @@ -1790,6 +1859,9 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
->  		.compatible = "mediatek,mt6358",
->  		.data = &pmic_mt6358,
->  	}, {
-> +		.compatible = "mediatek,mt6359",
-> +		.data = &pmic_mt6359,
-> +	}, {
->  		/* The MT6380 PMIC only implements a regulator, so we bind it
->  		 * directly instead of using a MFD.
->  		 */
-> --
-> 1.8.1.1.dirty
-> 
+>
+> Regards,
+> Matthias
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
