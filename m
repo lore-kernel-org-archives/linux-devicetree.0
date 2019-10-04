@@ -1,7 +1,7 @@
 From: Guillaume La Roque <glaroque@baylibre.com>
-Subject: [PATCH v7 4/7] arm64: dts: meson: g12: Add minimal thermal zone
-Date: Fri,  4 Oct 2019 11:01:11 +0200
-Message-ID: <20191004090114.30694-5-glaroque@baylibre.com>
+Subject: [PATCH v7 3/7] arm64: dts: amlogic: g12: add temperature sensor
+Date: Fri,  4 Oct 2019 11:01:10 +0200
+Message-ID: <20191004090114.30694-4-glaroque@baylibre.com>
 References: <20191004090114.30694-1-glaroque@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191004090114.30694-1-glaroque@baylibre.com>
@@ -10,100 +10,48 @@ To: amit.kucheria@linaro.org, rui.zhang@intel.com, edubezval@gmail.com, daniel.l
 Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add minimal thermal zone for two temperature sensor
-One is located close to the DDR and the other one is
-located close to the PLLs (between the CPU and GPU)
+Add cpu and ddr temperature sensors for G12 Socs
 
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 Tested-by: Christian Hewitt <christianshewitt@gmail.com>
 Tested-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- .../boot/dts/amlogic/meson-g12-common.dtsi    | 57 +++++++++++++++++++
- 1 file changed, 57 insertions(+)
+ .../boot/dts/amlogic/meson-g12-common.dtsi    | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-index 0660d9ef6a86..a98c16e163c2 100644
+index 38d70ce1cfc7..0660d9ef6a86 100644
 --- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
 +++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
-@@ -12,6 +12,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
- #include <dt-bindings/reset/amlogic,meson-g12a-reset.h>
-+#include <dt-bindings/thermal/thermal.h>
+@@ -1353,6 +1353,26 @@
+ 				};
+ 			};
  
- / {
- 	interrupt-parent = <&gic>;
-@@ -94,6 +95,61 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		thermal-zones {
-+			cpu_thermal: cpu-thermal {
-+				polling-delay = <1000>;
-+				polling-delay-passive = <100>;
-+				thermal-sensors = <&cpu_temp>;
-+
-+				trips {
-+					cpu_passive: cpu-passive {
-+						temperature = <85000>; /* millicelsius */
-+						hysteresis = <2000>; /* millicelsius */
-+						type = "passive";
-+					};
-+
-+					cpu_hot: cpu-hot {
-+						temperature = <95000>; /* millicelsius */
-+						hysteresis = <2000>; /* millicelsius */
-+						type = "hot";
-+					};
-+
-+					cpu_critical: cpu-critical {
-+						temperature = <110000>; /* millicelsius */
-+						hysteresis = <2000>; /* millicelsius */
-+						type = "critical";
-+					};
-+				};
++			cpu_temp: temperature-sensor@34800 {
++				compatible = "amlogic,g12a-cpu-thermal",
++					     "amlogic,g12a-thermal";
++				reg = <0x0 0x34800 0x0 0x50>;
++				interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
++				clocks = <&clkc CLKID_TS>;
++				#thermal-sensor-cells = <0>;
++				amlogic,ao-secure = <&sec_AO>;
 +			};
 +
-+			ddr_thermal: ddr-thermal {
-+				polling-delay = <1000>;
-+				polling-delay-passive = <100>;
-+				thermal-sensors = <&ddr_temp>;
-+
-+				trips {
-+					ddr_passive: ddr-passive {
-+						temperature = <85000>; /* millicelsius */
-+						hysteresis = <2000>; /* millicelsius */
-+						type = "passive";
-+					};
-+
-+					ddr_critical: ddr-critical {
-+						temperature = <110000>; /* millicelsius */
-+						hysteresis = <2000>; /* millicelsius */
-+						type = "critical";
-+					};
-+				};
-+
-+				cooling-maps {
-+					map {
-+						trip = <&ddr_passive>;
-+						cooling-device = <&mali THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+					};
-+				};
++			ddr_temp: temperature-sensor@34c00 {
++				compatible = "amlogic,g12a-ddr-thermal",
++					     "amlogic,g12a-thermal";
++				reg = <0x0 0x34c00 0x0 0x50>;
++				interrupts = <GIC_SPI 36 IRQ_TYPE_EDGE_RISING>;
++				clocks = <&clkc CLKID_TS>;
++				#thermal-sensor-cells = <0>;
++				amlogic,ao-secure = <&sec_AO>;
 +			};
-+		};
 +
- 		ethmac: ethernet@ff3f0000 {
- 			compatible = "amlogic,meson-axg-dwmac",
- 				     "snps,dwmac-3.70a",
-@@ -2412,6 +2468,7 @@
- 			assigned-clock-rates = <0>, /* Do Nothing */
- 					       <800000000>,
- 					       <0>; /* Do Nothing */
-+			#cooling-cells = <2>;
- 		};
- 	};
- 
+ 			usb2_phy0: phy@36000 {
+ 				compatible = "amlogic,g12a-usb2-phy";
+ 				reg = <0x0 0x36000 0x0 0x2000>;
 -- 
 2.17.1
