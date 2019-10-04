@@ -1,298 +1,100 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V6 2/3] mmc: mmci: add busy_complete callback
-Date: Fri, 4 Oct 2019 08:29:01 +0200
-Message-ID: <CAPDyKFpWun8kEo00gfvx3b1W18HWQkaG2nQuvq2YiTWYUP2Maw@mail.gmail.com>
-References: <20190905122112.29672-1-ludovic.Barre@st.com> <20190905122112.29672-3-ludovic.Barre@st.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 1/2] dt-bindings: media: sun4i-csi: Drop the module clock
+Date: Fri, 4 Oct 2019 14:33:41 +0800
+Message-ID: <CAGb2v66WOZZj15GkARRzCTsSRhZi_6aEFK4w+O+aGmYwvVYGdw@mail.gmail.com>
+References: <20191003154842.248763-1-mripard@kernel.org>
+ <CAGb2v66az3uQnibudKai7ATfXh+w1Y+bJ=o258RVe9SCNRpGNQ@mail.gmail.com>
+ <20191003163754.26ciq2ljcbuuvcrx@gilmour>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190905122112.29672-3-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191003163754.26ciq2ljcbuuvcrx@gilmour>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 5 Sep 2019 at 14:22, Ludovic Barre <ludovic.Barre@st.com> wrote:
+On Fri, Oct 4, 2019 at 12:37 AM Maxime Ripard <mripard@kernel.org> wrote:
 >
-> From: Ludovic Barre <ludovic.barre@st.com>
+> Hi,
 >
-> This patch adds busy_completion callback at mmci_host_ops
-> to allow to define a specific busy completion by variant.
+> On Thu, Oct 03, 2019 at 11:51:05PM +0800, Chen-Yu Tsai wrote:
+> > On Thu, Oct 3, 2019 at 11:48 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > >
+> > > It turns out that what was thought to be the module clock was actually the
+> > > clock meant to be used by the sensor, and isn't playing any role with the
+> > > CSI controller itself. Let's drop that clock from our binding.
+> > >
+> > > Fixes: c5e8f4ccd775 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
+> > > Reported-by: Chen-Yu Tsai <wens@csie.org>
+> > > Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> > > ---
+> > >  .../devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 7 ++-----
+> > >  1 file changed, 2 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> > > index 5dd1cf490cd9..d3e423fcb6c2 100644
+> > > --- a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> > > +++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> > > @@ -27,14 +27,12 @@ properties:
+> > >    clocks:
+> > >      items:
+> > >        - description: The CSI interface clock
+> > > -      - description: The CSI module clock
+> > >        - description: The CSI ISP clock
+> > >        - description: The CSI DRAM clock
+> > >
+> > >    clock-names:
+> > >      items:
+> > >        - const: bus
+> > > -      - const: mod
+> > >        - const: isp
+> > >        - const: ram
+> > >
+> > > @@ -89,9 +87,8 @@ examples:
+> > >          compatible = "allwinner,sun7i-a20-csi0";
+> > >          reg = <0x01c09000 0x1000>;
+> > >          interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+> > > -        clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI0>,
+> > > -                 <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
+> > > -        clock-names = "bus", "mod", "isp", "ram";
+> > > +        clocks = <&ccu CLK_AHB_CSI0>, <&ccu CLK_CSI_SCLK>, <&ccu CLK_DRAM_CSI0>;
+> > > +        clock-names = "bus", "isp", "ram";
+> >
+> > I believe what we thought was the ISP clock is actually the module clock
+> > for the whole CSI subsystem. So we should still use the module clock entry,
+> > and remove the ISP entry.
 >
-> The legacy code corresponding to busy completion used
-> by ux500 variants is moved to ux500_busy_complete function.
+> I'm really not sure it is. CSI1 on the A20 (possibly the A10 as well,
+> I haven't checked), and the one on the A13 don't have any ISP embedded
+> in the CSI controller.
 >
-> The busy_detect boolean property is replaced by
-> busy_complete callback definition.
+> It makes some difference, because according to the BSP, you can see
+> that the ISP clock is taken for CSI0:
+> https://github.com/linux-sunxi/linux-sunxi/blob/sunxi-3.4/drivers/media/video/sun4i_csi/csi0/sun4i_drv_csi.c#L389
+>
+> While for CSI1, that block is commented out, and the ISP clock never
+> used:
+> https://github.com/linux-sunxi/linux-sunxi/blob/sunxi-3.4/drivers/media/video/sun4i_csi/csi1/sun4i_drv_csi.c#L396
+>
+> So I really believe that the ISP clock is here to feed the ISP block
+> within the CSI controller if there's any. But it's far from always the
+> case, as opposed to a module clock for the whole CSI controller that
+> would be here in both cases.
 
-At this point I prefer to keep th busy_detect boolean property. It
-makes the code a bit more consistent.
+I guess we should try to test this with CSI1 one, either on a Cubieboard
+or OlinuXino with a simple camera like the OV7670?
 
-Although, I think in case busy_detect is set for the variant, the
-variant also needs to assign the new ->busy_completion() callback. In
-other words, we don't need to check for a valid callback in code if
-busy_detect is set.
+Do you have any hardware on hand for this? I have the Cubieboard but I
+need to get some proper 2.0mm connector blocks.
 
-Otherwise, this looks good to me!
-
-Kind regards
-Uffe
-
->
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  drivers/mmc/host/mmci.c | 142 +++++++++++++++++++++-------------------
->  drivers/mmc/host/mmci.h |   3 +-
->  2 files changed, 76 insertions(+), 69 deletions(-)
->
-> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> index c30319255dc2..e20164f4354d 100644
-> --- a/drivers/mmc/host/mmci.c
-> +++ b/drivers/mmc/host/mmci.c
-> @@ -44,6 +44,7 @@
->  #define DRIVER_NAME "mmci-pl18x"
->
->  static void mmci_variant_init(struct mmci_host *host);
-> +static void ux500_variant_init(struct mmci_host *host);
->  static void ux500v2_variant_init(struct mmci_host *host);
->
->  static unsigned int fmax = 515633;
-> @@ -175,7 +176,6 @@ static struct variant_data variant_ux500 = {
->         .f_max                  = 100000000,
->         .signal_direction       = true,
->         .pwrreg_clkgate         = true,
-> -       .busy_detect            = true,
->         .busy_dpsm_flag         = MCI_DPSM_ST_BUSYMODE,
->         .busy_detect_flag       = MCI_ST_CARDBUSY,
->         .busy_detect_mask       = MCI_ST_BUSYENDMASK,
-> @@ -184,7 +184,7 @@ static struct variant_data variant_ux500 = {
->         .irq_pio_mask           = MCI_IRQ_PIO_MASK,
->         .start_err              = MCI_STARTBITERR,
->         .opendrain              = MCI_OD,
-> -       .init                   = mmci_variant_init,
-> +       .init                   = ux500_variant_init,
->  };
->
->  static struct variant_data variant_ux500v2 = {
-> @@ -208,7 +208,6 @@ static struct variant_data variant_ux500v2 = {
->         .f_max                  = 100000000,
->         .signal_direction       = true,
->         .pwrreg_clkgate         = true,
-> -       .busy_detect            = true,
->         .busy_dpsm_flag         = MCI_DPSM_ST_BUSYMODE,
->         .busy_detect_flag       = MCI_ST_CARDBUSY,
->         .busy_detect_mask       = MCI_ST_BUSYENDMASK,
-> @@ -610,6 +609,67 @@ static u32 ux500v2_get_dctrl_cfg(struct mmci_host *host)
->         return MCI_DPSM_ENABLE | (host->data->blksz << 16);
->  }
->
-> +static bool ux500_busy_complete(struct mmci_host *host, u32 status, u32 err_msk)
-> +{
-> +       void __iomem *base = host->base;
-> +
-> +       /*
-> +        * Before unmasking for the busy end IRQ, confirm that the
-> +        * command was sent successfully. To keep track of having a
-> +        * command in-progress, waiting for busy signaling to end,
-> +        * store the status in host->busy_status.
-> +        *
-> +        * Note that, the card may need a couple of clock cycles before
-> +        * it starts signaling busy on DAT0, hence re-read the
-> +        * MMCISTATUS register here, to allow the busy bit to be set.
-> +        * Potentially we may even need to poll the register for a
-> +        * while, to allow it to be set, but tests indicates that it
-> +        * isn't needed.
-> +        */
-> +       if (!host->busy_status && !(status & err_msk) &&
-> +           (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
-> +               writel(readl(base + MMCIMASK0) |
-> +                      host->variant->busy_detect_mask,
-> +                      base + MMCIMASK0);
-> +
-> +               host->busy_status = status & (MCI_CMDSENT | MCI_CMDRESPEND);
-> +               return false;
-> +       }
-> +
-> +       /*
-> +        * If there is a command in-progress that has been successfully
-> +        * sent, then bail out if busy status is set and wait for the
-> +        * busy end IRQ.
-> +        *
-> +        * Note that, the HW triggers an IRQ on both edges while
-> +        * monitoring DAT0 for busy completion, but there is only one
-> +        * status bit in MMCISTATUS for the busy state. Therefore
-> +        * both the start and the end interrupts needs to be cleared,
-> +        * one after the other. So, clear the busy start IRQ here.
-> +        */
-> +       if (host->busy_status &&
-> +           (status & host->variant->busy_detect_flag)) {
-> +               writel(host->variant->busy_detect_mask, base + MMCICLEAR);
-> +               return false;
-> +       }
-> +
-> +       /*
-> +        * If there is a command in-progress that has been successfully
-> +        * sent and the busy bit isn't set, it means we have received
-> +        * the busy end IRQ. Clear and mask the IRQ, then continue to
-> +        * process the command.
-> +        */
-> +       if (host->busy_status) {
-> +               writel(host->variant->busy_detect_mask, base + MMCICLEAR);
-> +
-> +               writel(readl(base + MMCIMASK0) &
-> +                      ~host->variant->busy_detect_mask, base + MMCIMASK0);
-> +               host->busy_status = 0;
-> +       }
-> +
-> +       return true;
-> +}
-> +
->  /*
->   * All the DMA operation mode stuff goes inside this ifdef.
->   * This assumes that you have a generic DMA device interface,
-> @@ -953,9 +1013,16 @@ void mmci_variant_init(struct mmci_host *host)
->         host->ops = &mmci_variant_ops;
->  }
->
-> +void ux500_variant_init(struct mmci_host *host)
-> +{
-> +       host->ops = &mmci_variant_ops;
-> +       host->ops->busy_complete = ux500_busy_complete;
-> +}
-> +
->  void ux500v2_variant_init(struct mmci_host *host)
->  {
->         host->ops = &mmci_variant_ops;
-> +       host->ops->busy_complete = ux500_busy_complete;
->         host->ops->get_datactrl_cfg = ux500v2_get_dctrl_cfg;
->  }
->
-> @@ -1235,68 +1302,9 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->                 return;
->
->         /* Handle busy detection on DAT0 if the variant supports it. */
-> -       if (busy_resp && host->variant->busy_detect) {
-> -
-> -               /*
-> -                * Before unmasking for the busy end IRQ, confirm that the
-> -                * command was sent successfully. To keep track of having a
-> -                * command in-progress, waiting for busy signaling to end,
-> -                * store the status in host->busy_status.
-> -                *
-> -                * Note that, the card may need a couple of clock cycles before
-> -                * it starts signaling busy on DAT0, hence re-read the
-> -                * MMCISTATUS register here, to allow the busy bit to be set.
-> -                * Potentially we may even need to poll the register for a
-> -                * while, to allow it to be set, but tests indicates that it
-> -                * isn't needed.
-> -                */
-> -               if (!host->busy_status && !(status & err_msk) &&
-> -                   (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
-> -
-> -                       writel(readl(base + MMCIMASK0) |
-> -                              host->variant->busy_detect_mask,
-> -                              base + MMCIMASK0);
-> -
-> -                       host->busy_status =
-> -                               status & (MCI_CMDSENT|MCI_CMDRESPEND);
-> -                       return;
-> -               }
-> -
-> -               /*
-> -                * If there is a command in-progress that has been successfully
-> -                * sent, then bail out if busy status is set and wait for the
-> -                * busy end IRQ.
-> -                *
-> -                * Note that, the HW triggers an IRQ on both edges while
-> -                * monitoring DAT0 for busy completion, but there is only one
-> -                * status bit in MMCISTATUS for the busy state. Therefore
-> -                * both the start and the end interrupts needs to be cleared,
-> -                * one after the other. So, clear the busy start IRQ here.
-> -                */
-> -               if (host->busy_status &&
-> -                   (status & host->variant->busy_detect_flag)) {
-> -                       writel(host->variant->busy_detect_mask,
-> -                              host->base + MMCICLEAR);
-> +       if (busy_resp && host->ops->busy_complete)
-> +               if (!host->ops->busy_complete(host, status, err_msk))
->                         return;
-> -               }
-> -
-> -               /*
-> -                * If there is a command in-progress that has been successfully
-> -                * sent and the busy bit isn't set, it means we have received
-> -                * the busy end IRQ. Clear and mask the IRQ, then continue to
-> -                * process the command.
-> -                */
-> -               if (host->busy_status) {
-> -
-> -                       writel(host->variant->busy_detect_mask,
-> -                              host->base + MMCICLEAR);
-> -
-> -                       writel(readl(base + MMCIMASK0) &
-> -                              ~host->variant->busy_detect_mask,
-> -                              base + MMCIMASK0);
-> -                       host->busy_status = 0;
-> -               }
-> -       }
->
->         host->cmd = NULL;
->
-> @@ -1537,7 +1545,7 @@ static irqreturn_t mmci_irq(int irq, void *dev_id)
->                  * clear the corresponding IRQ.
->                  */
->                 status &= readl(host->base + MMCIMASK0);
-> -               if (host->variant->busy_detect)
-> +               if (host->ops->busy_complete)
->                         writel(status & ~host->variant->busy_detect_mask,
->                                host->base + MMCICLEAR);
->                 else
-> @@ -1605,7 +1613,7 @@ static void mmci_set_max_busy_timeout(struct mmc_host *mmc)
->         struct mmci_host *host = mmc_priv(mmc);
->         u32 max_busy_timeout = 0;
->
-> -       if (!host->variant->busy_detect)
-> +       if (!host->ops->busy_complete)
->                 return;
->
->         if (host->variant->busy_timeout && mmc->actual_clock)
-> @@ -1980,7 +1988,7 @@ static int mmci_probe(struct amba_device *dev,
->         /*
->          * Enable busy detection.
->          */
-> -       if (variant->busy_detect) {
-> +       if (host->ops->busy_complete) {
->                 mmci_ops.card_busy = mmci_card_busy;
->                 /*
->                  * Not all variants have a flag to enable busy detection
-> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-> index d8b7f6774e8f..733f9a035b06 100644
-> --- a/drivers/mmc/host/mmci.h
-> +++ b/drivers/mmc/host/mmci.h
-> @@ -286,7 +286,6 @@ struct mmci_host;
->   * @f_max: maximum clk frequency supported by the controller.
->   * @signal_direction: input/out direction of bus signals can be indicated
->   * @pwrreg_clkgate: MMCIPOWER register must be used to gate the clock
-> - * @busy_detect: true if the variant supports busy detection on DAT0.
->   * @busy_timeout: true if the variant starts data timer when the DPSM
->   *               enter in Wait_R or Busy state.
->   * @busy_dpsm_flag: bitmask enabling busy detection in the DPSM
-> @@ -334,7 +333,6 @@ struct variant_data {
->         u32                     f_max;
->         u8                      signal_direction:1;
->         u8                      pwrreg_clkgate:1;
-> -       u8                      busy_detect:1;
->         u8                      busy_timeout:1;
->         u32                     busy_dpsm_flag;
->         u32                     busy_detect_flag;
-> @@ -369,6 +367,7 @@ struct mmci_host_ops {
->         void (*dma_error)(struct mmci_host *host);
->         void (*set_clkreg)(struct mmci_host *host, unsigned int desired);
->         void (*set_pwrreg)(struct mmci_host *host, unsigned int pwr);
-> +       bool (*busy_complete)(struct mmci_host *host, u32 status, u32 err_msk);
->  };
->
->  struct mmci_host {
-> --
-> 2.17.1
->
+ChenYu
