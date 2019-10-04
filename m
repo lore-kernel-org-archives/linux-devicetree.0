@@ -1,73 +1,95 @@
-From: JC Kuo <jckuo@nvidia.com>
-Subject: [PATCH v3 0/7] add Tegra194 XUSB host and pad controller support
-Date: Sat, 5 Oct 2019 00:28:59 +0800
-Message-ID: <20191004162906.4818-1-jckuo@nvidia.com>
+From: santosh.shilimkar@oracle.com
+Subject: Re: [PATCH v3 00/14] dmaengine/soc: Add Texas Instruments UDMA support
+Date: Fri, 4 Oct 2019 09:35:29 -0700
+Message-ID: <c567c1a2-2e74-3809-8e0f-4c2049ba4747@oracle.com>
+References: <20191001061704.2399-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, thierry.reding@gmail.com, jonathanh@nvidia.com
-Cc: linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com, JC Kuo <jckuo@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191001061704.2399-1-peter.ujfalusi@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, vkoul@kernel.org, robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
+Cc: devicetree@vger.kernel.org, grygorii.strashko@ti.com, lokeshvutla@ti.com, j-keerthy@ti.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, tony@atomide.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 9/30/19 11:16 PM, Peter Ujfalusi wrote:
+> Hi,
+> 
+> Changes since v2
+> )https://patchwork.kernel.org/project/linux-dmaengine/list/?series=152609&state=*)
+> - Based on 5.4-rc1
+> - Support for Flow only data transfer for the glue layer
+> 
 
-This series introduces support for Tegra194 XUSB host and pad
-controller. Tegra194 XUSB host and pad controller are highly
-similar to the controllers found on Tegra186. Therefore, it's
-possible to resue xhci-tegra.c and xusb-tegra186.c for Tegra194.
+> 
+> Grygorii Strashko (3):
+>    bindings: soc: ti: add documentation for k3 ringacc
+>    soc: ti: k3: add navss ringacc driver
+>    dmaengine: ti: k3-udma: Add glue layer for non DMAengine users
+> 
+> Peter Ujfalusi (11):
+>    dmaengine: doc: Add sections for per descriptor metadata support
+>    dmaengine: Add metadata_ops for dma_async_tx_descriptor
+>    dmaengine: Add support for reporting DMA cached data amount
+>    dmaengine: ti: Add cppi5 header for UDMA
+>    dt-bindings: dma: ti: Add document for K3 UDMA
+>    dmaengine: ti: New driver for K3 UDMA - split#1: defines, structs, io
+>      func
+>    dmaengine: ti: New driver for K3 UDMA - split#2: probe/remove, xlate
+>      and filter_fn
+>    dmaengine: ti: New driver for K3 UDMA - split#3: alloc/free
+>      chan_resources
+>    dmaengine: ti: New driver for K3 UDMA - split#4: dma_device callbacks
+>      1
+>    dmaengine: ti: New driver for K3 UDMA - split#5: dma_device callbacks
+>      2
+>    dmaengine: ti: New driver for K3 UDMA - split#6: Kconfig and Makefile
+> 
+>   .../devicetree/bindings/dma/ti/k3-udma.txt    |  185 +
+>   .../devicetree/bindings/soc/ti/k3-ringacc.txt |   59 +
+>   Documentation/driver-api/dmaengine/client.rst |   75 +
+>   .../driver-api/dmaengine/provider.rst         |   46 +
+>   drivers/dma/dmaengine.c                       |   73 +
+>   drivers/dma/dmaengine.h                       |    8 +
+>   drivers/dma/ti/Kconfig                        |   22 +
+>   drivers/dma/ti/Makefile                       |    2 +
+>   drivers/dma/ti/k3-udma-glue.c                 | 1225 ++++++
+>   drivers/dma/ti/k3-udma-private.c              |  141 +
+>   drivers/dma/ti/k3-udma.c                      | 3525 +++++++++++++++++
+>   drivers/dma/ti/k3-udma.h                      |  161 +
+>   drivers/soc/ti/Kconfig                        |   12 +
+>   drivers/soc/ti/Makefile                       |    1 +
+>   drivers/soc/ti/k3-ringacc.c                   | 1165 ++++++
+>   include/dt-bindings/dma/k3-udma.h             |   10 +
+>   include/linux/dma/k3-udma-glue.h              |  134 +
+>   include/linux/dma/ti-cppi5.h                  | 1049 +++++
+>   include/linux/dmaengine.h                     |  110 +
+>   include/linux/soc/ti/k3-ringacc.h             |  245 ++
+>   20 files changed, 8248 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.txt
+>   create mode 100644 Documentation/devicetree/bindings/soc/ti/k3-ringacc.txt
+>   create mode 100644 drivers/dma/ti/k3-udma-glue.c
+>   create mode 100644 drivers/dma/ti/k3-udma-private.c
+>   create mode 100644 drivers/dma/ti/k3-udma.c
+>   create mode 100644 drivers/dma/ti/k3-udma.h
+>   create mode 100644 drivers/soc/ti/k3-ringacc.c
+>   create mode 100644 include/dt-bindings/dma/k3-udma.h
+>   create mode 100644 include/linux/dma/k3-udma-glue.h
+>   create mode 100644 include/linux/dma/ti-cppi5.h
+>   create mode 100644 include/linux/soc/ti/k3-ringacc.h
+> 
+Can you please split this series and post drivers/soc/* bits
+separately ?  If its ready, I can apply k3-ringacc.c changes.
 
-Changelog:
-v3:
-  add change log to cover latter
-
-v2:
-  xhci: tegra: Parameterize mailbox register addresses
-   - no change
-
-  usb: host: xhci-tegra: Add Tegra194 XHCI support
-   - no change
-
-  phy: tegra: xusb: Protect Tegra186 soc with config
-   - new patch to protect Tegra186 soc data with config
-
-  phy: tegra: xusb: Add Tegra194 support
-   - removed unnecessary #if/#endif pairs
-   - introduce new soc->supports_gen2 flag which indicate whether or not
-     a soc supports USB 3.1 Gen 2 speed
-
-  dt-bindings: phy: tegra: Add Tegra194 support
-   - fix a typo
-
-  arm64: tegra: Add XUSB and pad controller on Tegra194
-   - renamed xhci@3610000 with usb@3610000
-   - moved padctl@3520000 and usb@3610000 inside /cbb
-   - cleaned up "clocks" property of usb@3610000 node
-   - added blanks lines to visually separate blocks
-
-  arm64: tegra: Enable XUSB host in P2972-0000 board
-   - use capitalization of regulator names
-   - fix gpio property of VDD_5V_SATA regulator
-
-JC Kuo (7):
-  xhci: tegra: Parameterize mailbox register addresses
-  usb: host: xhci-tegra: Add Tegra194 XHCI support
-  phy: tegra: xusb: Protect Tegra186 soc with config
-  phy: tegra: xusb: Add Tegra194 support
-  dt-bindings: phy: tegra: Add Tegra194 support
-  arm64: tegra: Add XUSB and pad controller on Tegra194
-  arm64: tegra: Enable XUSB host in P2972-0000 board
-
- .../phy/nvidia,tegra124-xusb-padctl.txt       |  16 ++
- .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |  36 ++++-
- .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  62 ++++++++
- arch/arm64/boot/dts/nvidia/tegra194.dtsi      | 139 +++++++++++++++++
- drivers/phy/tegra/Makefile                    |   1 +
- drivers/phy/tegra/xusb-tegra186.c             | 144 +++++++++++++-----
- drivers/phy/tegra/xusb.c                      |   7 +
- drivers/phy/tegra/xusb.h                      |   6 +
- drivers/usb/host/xhci-tegra.c                 |  88 +++++++++--
- 9 files changed, 448 insertions(+), 51 deletions(-)
-
--- 
-2.17.1
+Regards,
+Santosh
