@@ -1,74 +1,77 @@
-From: shuah <shuah@kernel.org>
+From: Brendan Higgins <brendanhiggins@google.com>
 Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
  testing framework
-Date: Fri, 4 Oct 2019 16:47:09 -0600
-Message-ID: <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
+Date: Fri, 4 Oct 2019 16:10:30 -0700
+Message-ID: <CAFd5g46pzu=Bh5X7-ttfhTP+NYNDCAxN16OCGFxc5ohjTL-v0g@mail.gmail.com>
 References: <20190923090249.127984-1-brendanhiggins@google.com>
- <20191004213812.GA24644@mit.edu>
- <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
- <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
- <20191004222714.GA107737@google.com>
+ <20191004213812.GA24644@mit.edu> <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+ <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org> <20191004222714.GA107737@google.com>
+ <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20191004222714.GA107737@google.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-nvdimm <linux-nvdimm@lists.01.org>, khilman@baylibre.com, knut.omang@oracle.com, kieran.bingham@ideasonboard.com, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, jdike@addtoit.com, Dan Carpenter <dan.carpenter@oracle.com>, devicetree@vger.kernel.org, shuah <shuah@kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Tim.Bird@sony.com, linux-um@lists.infradead.o
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shuah <shuah@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, "Theodore Y. Ts'o" <tytso@mit.edu>, Frank Rowand <frowand.list@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>Lin
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvNC8xOSA0OjI3IFBNLCBCcmVuZGFuIEhpZ2dpbnMgd3JvdGU6Cj4gT24gRnJpLCBPY3Qg
-MDQsIDIwMTkgYXQgMDM6NTk6MTBQTSAtMDYwMCwgc2h1YWggd3JvdGU6Cj4+IE9uIDEwLzQvMTkg
-Mzo0MiBQTSwgTGludXMgVG9ydmFsZHMgd3JvdGU6Cj4+PiBPbiBGcmksIE9jdCA0LCAyMDE5IGF0
-IDI6MzkgUE0gVGhlb2RvcmUgWS4gVHMnbyA8dHl0c29AbWl0LmVkdT4gd3JvdGU6Cj4+Pj4KPj4+
-PiBUaGlzIHF1ZXN0aW9uIGlzIHByaW1hcmlseSBkaXJlY3RlZCBhdCBTaHVhaCBhbmQgTGludXMu
-Li4uCj4+Pj4KPj4+PiBXaGF0J3MgdGhlIGN1cnJlbnQgc3RhdHVzIG9mIHRoZSBrdW5pdCBzZXJp
-ZXMgbm93IHRoYXQgQnJlbmRhbiBoYXMKPj4+PiBtb3ZlZCBpdCBvdXQgb2YgdGhlIHRvcC1sZXZl
-bCBrdW5pdCBkaXJlY3RvcnkgYXMgTGludXMgaGFzIHJlcXVlc3RlZD8KPj4+Cj4+Cj4+IFRoZSBt
-b3ZlIGhhcHBlbmVkIHNtYWNrIGluIHRoZSBtaWRkbGUgb2YgbWVyZ2Ugd2luZG93IGFuZCBsYW5k
-ZWQgaW4KPj4gbGludXgtbmV4dCB0b3dhcmRzIHRoZSBlbmQgb2YgdGhlIG1lcmdlIHdpbmRvdy4K
-Pj4KPj4+IFdlIHNlZW1lZCB0byBkZWNpZGUgdG8ganVzdCB3YWl0IGZvciA1LjUsIGJ1dCB0aGVy
-ZSBpcyBub3RoaW5nIHRoYXQKPj4+IGxvb2tzIHRvIGJsb2NrIHRoYXQuIEFuZCBJIGVuY291cmFn
-ZWQgU2h1YWggdG8gZmluZCBtb3JlIGt1bml0IGNhc2VzCj4+PiBmb3Igd2hlbiBpdCBfZG9lc18g
-Z2V0IG1lcmdlZC4KPj4+Cj4+Cj4+IFJpZ2h0LiBJIGNvbW11bmljYXRlZCB0aGF0IHRvIEJyZW5k
-YW4gdGhhdCB3ZSBjb3VsZCB3b3JrIG9uIGFkZGluZyBtb3JlCj4+IGt1bml0IGJhc2VkIHRlc3Rz
-IHdoaWNoIHdvdWxkIGhlbHAgZ2V0IG1vcmUgbWlsZWFnZSBvbiB0aGUga3VuaXQuCj4+Cj4+PiBT
-byBpZiB0aGUga3VuaXQgYnJhbmNoIGlzIHN0YWJsZSwgYW5kIHBlb3BsZSB3YW50IHRvIHN0YXJ0
-IHVzaW5nIGl0Cj4+PiBmb3IgdGhlaXIgdW5pdCB0ZXN0cywgdGhlbiBJIHRoaW5rIHRoYXQgd291
-bGQgYmUgYSBnb29kIGlkZWEsIGFuZCB0aGVuCj4+PiBkdXJpbmcgdGhlIDUuNSBtZXJnZSB3aW5k
-b3cgd2UnbGwgbm90IGp1c3QgZ2V0IHRoZSBpbmZyYXN0cnVjdHVyZSwKPj4+IHdlJ2xsIGdldCBh
-IGZldyBtb3JlIHVzZXJzIHRvbyBhbmQgbm90IGp1c3QgZXhhbXBsZXMuCj4gCj4gSSB3YXMgcGxh
-bm5pbmcgb24gaG9sZGluZyBvZmYgb24gYWNjZXB0aW5nIG1vcmUgdGVzdHMvY2hhbmdlcyB1bnRp
-bAo+IEtVbml0IGlzIGluIHRvcnZhbGRzL21hc3Rlci4gQXMgbXVjaCBhcyBJIHdvdWxkIGxpa2Ug
-dG8gZ28gYXJvdW5kCj4gcHJvbW90aW5nIGl0LCBJIGRvbid0IHJlYWxseSB3YW50IHRvIHByb21v
-dGUgdG9vIG11Y2ggY29tcGxleGl0eSBpbiBhCj4gbm9uLXVwc3RyZWFtIGJyYW5jaCBiZWZvcmUg
-Z2V0dGluZyBpdCB1cHN0cmVhbSBiZWNhdXNlIEkgZG9uJ3Qgd2FudCB0bwo+IHJpc2sgYWRkaW5n
-IHNvbWV0aGluZyB0aGF0IG1pZ2h0IGNhdXNlIGl0IHRvIGdldCByZWplY3RlZCBhZ2Fpbi4KPiAK
-PiBUbyBiZSBjbGVhciwgSSBjYW4gdW5kZXJzdGFuZCBmcm9tIHlvdXIgcGVyc3BlY3RpdmUgd2h5
-IGdldHRpbmcgbW9yZQo+IHRlc3RzL3VzYWdlIGJlZm9yZSBhY2NlcHRpbmcgaXQgaXMgYSBnb29k
-IHRoaW5nLiBUaGUgbW9yZSBwZW9wbGUgdGhhdAo+IHBsYXkgYXJvdW5kIHdpdGggaXQsIHRoZSBt
-b3JlIGxpa2VseSB0aGF0IHNvbWVvbmUgd2lsbCBmaW5kIGFuIGlzc3VlCj4gd2l0aCBpdCwgYW5k
-IG1vcmUgbGlrZWx5IHRoYXQgd2hhdCBpcyBhY2NlcHRlZCBpbnRvIHRvcnZhbGRzL21hc3RlciBp
-cwo+IG9mIGhpZ2ggcXVhbGl0eS4KPiAKPiBIb3dldmVyLCBpZiBJIGVuY291cmFnZSBhcmJpdHJh
-cnkgdGVzdHMvaW1wcm92ZW1lbnRzIGludG8gbXkgS1VuaXQKPiBicmFuY2gsIGl0IGZ1cnRoZXIg
-ZGl2ZXJnZXMgYXdheSBmcm9tIHRvcnZhbGRzL21hc3RlciwgYW5kIGlzIG1vcmUKPiBsaWtlbHkg
-dGhhdCB0aGVyZSB3aWxsIGJlIGEgbWVyZ2UgY29uZmxpY3Qgb3IgaXNzdWUgdGhhdCBpcyBub3Qg
-cmVsYXRlZAo+IHRvIHRoZSBjb3JlIEtVbml0IGNoYW5nZXMgdGhhdCB3aWxsIGNhdXNlIHRoZSB3
-aG9sZSB0aGluZyB0byBiZQo+IHJlamVjdGVkIGFnYWluIGluIHY1LjUuCj4gCgpUaGUgaWRlYSBp
-cyB0aGF0IHRoZSBuZXcgZGV2ZWxvcG1lbnQgd2lsbCBoYXBwZW4gYmFzZWQgb24ga3VuaXQgaW4K
-bGludXgta3NlbGZ0ZXN0IG5leHQuIEl0IHdpbGwgd29yayBqdXN0IGZpbmUuIEFzIHdlIGFjY2Vw
-dHMgcGF0Y2hlcywKdGhleSB3aWxsIGdvIG9uIHRvcCBvZiBrdW5pdCB0aGF0IGlzIGluIGxpbnV4
-LW5leHQgbm93LgoKdGhhbmtzLAotLSBTaHVhaApfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWw=
+On Fri, Oct 4, 2019 at 3:47 PM shuah <shuah@kernel.org> wrote:
+>
+> On 10/4/19 4:27 PM, Brendan Higgins wrote:
+> > On Fri, Oct 04, 2019 at 03:59:10PM -0600, shuah wrote:
+> >> On 10/4/19 3:42 PM, Linus Torvalds wrote:
+> >>> On Fri, Oct 4, 2019 at 2:39 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+> >>>>
+> >>>> This question is primarily directed at Shuah and Linus....
+> >>>>
+> >>>> What's the current status of the kunit series now that Brendan has
+> >>>> moved it out of the top-level kunit directory as Linus has requested?
+> >>>
+> >>
+> >> The move happened smack in the middle of merge window and landed in
+> >> linux-next towards the end of the merge window.
+> >>
+> >>> We seemed to decide to just wait for 5.5, but there is nothing that
+> >>> looks to block that. And I encouraged Shuah to find more kunit cases
+> >>> for when it _does_ get merged.
+> >>>
+> >>
+> >> Right. I communicated that to Brendan that we could work on adding more
+> >> kunit based tests which would help get more mileage on the kunit.
+> >>
+> >>> So if the kunit branch is stable, and people want to start using it
+> >>> for their unit tests, then I think that would be a good idea, and then
+> >>> during the 5.5 merge window we'll not just get the infrastructure,
+> >>> we'll get a few more users too and not just examples.
+> >
+> > I was planning on holding off on accepting more tests/changes until
+> > KUnit is in torvalds/master. As much as I would like to go around
+> > promoting it, I don't really want to promote too much complexity in a
+> > non-upstream branch before getting it upstream because I don't want to
+> > risk adding something that might cause it to get rejected again.
+> >
+> > To be clear, I can understand from your perspective why getting more
+> > tests/usage before accepting it is a good thing. The more people that
+> > play around with it, the more likely that someone will find an issue
+> > with it, and more likely that what is accepted into torvalds/master is
+> > of high quality.
+> >
+> > However, if I encourage arbitrary tests/improvements into my KUnit
+> > branch, it further diverges away from torvalds/master, and is more
+> > likely that there will be a merge conflict or issue that is not related
+> > to the core KUnit changes that will cause the whole thing to be
+> > rejected again in v5.5.
+> >
+>
+> The idea is that the new development will happen based on kunit in
+> linux-kselftest next. It will work just fine. As we accepts patches,
+> they will go on top of kunit that is in linux-next now.
+
+But then wouldn't we want to limit what KUnit changes are going into
+linux-kselftest next for v5.5? For example, we probably don't want to
+do anymore feature development on it until it is in v5.5, since the
+goal is to make it more stable, right?
+
+I am guessing that it will probably be fine, but it still sounds like
+we need to establish some ground rules, and play it *very* safe.
