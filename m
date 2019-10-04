@@ -1,130 +1,124 @@
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: mfd: Document the Xylon LogiCVC
- multi-function device
-Date: Fri, 4 Oct 2019 14:12:22 -0400
-Message-ID: <20191004181222.GA16927@aptenodytes>
-References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
- <20190927100407.1863293-3-paul.kocialkowski@bootlin.com>
- <20190927221550.GA28831@bogus>
- <20191004144551.GR18429@dell>
- <CAL_Jsq+J9z3zzENZxXwjjsVMbFr8uYpXX6jYbCqdQEKBQXOu9A@mail.gmail.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [RFC PATCH] interconnect: Replace of_icc_get() with icc_get() and reduce DT binding
+Date: Fri, 04 Oct 2019 11:14:16 -0700
+Message-ID: <5d978bf9.1c69fb81.7b927.b6ac@mx.google.com>
+References: <20190925054133.206992-1-swboyd@chromium.org> <20190925055933.GA2810@tuxbook-pro> <5d8b6b8b.1c69fb81.14b36.c053@mx.google.com> <91d09847-31ad-e238-d84d-f7e0e21c6ef1@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+J9z3zzENZxXwjjsVMbFr8uYpXX6jYbCqdQEKBQXOu9A@mail.gmail.com>
+In-Reply-To: <91d09847-31ad-e238-d84d-f7e0e21c6ef1@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, David Dai <daidavid1@codeaurora.org>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Maxime Ripard <mripard@kernel.org>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Evan Green <evgreen@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-
---9jxsPFA5p3P2qPhR
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Fri 04 Oct 19, 11:09, Rob Herring wrote:
-> On Fri, Oct 4, 2019 at 9:45 AM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > On Fri, 27 Sep 2019, Rob Herring wrote:
-> >
-> > > On Fri, Sep 27, 2019 at 12:04:04PM +0200, Paul Kocialkowski wrote:
-> > > > The LogiCVC is a display engine which also exposes GPIO functionali=
-ty.
-> > > > For this reason, it is described as a multi-function device that is=
- expected
-> > > > to provide register access to its children nodes for gpio and displ=
-ay.
-> > > >
-> > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > > > ---
-> > > >  .../bindings/mfd/xylon,logicvc.yaml           | 50 +++++++++++++++=
-++++
-> > > >  1 file changed, 50 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/mfd/xylon,log=
-icvc.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/mfd/xylon,logicvc.ya=
-ml b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..abc9937506e0
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
-> > > > @@ -0,0 +1,50 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > > +# Copyright 2019 Bootlin
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: "http://devicetree.org/schemas/mfd/xylon,logicvc.yaml#"
-> > > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > > > +
-> > > > +title: Xylon LogiCVC multi-function device
-> > > > +
-> > > > +maintainers:
-> > > > +  - Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > > > +
-> > > > +description: |
-> > > > +  The LogiCVC is a display controller that also contains a GPIO co=
-ntroller.
-> > > > +  As a result, a multi-function device is exposed as parent of the=
- display
-> > > > +  and GPIO blocks.
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    items:
-> > > > +      - enum:
-> > > > +          - xylon,logicvc-3.02.a
-> > > > +      - const: syscon
-> > > > +      - const: simple-mfd
-> > > > +
-> > > > +  reg:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +select:
-> > > > +  properties:
-> > > > +    compatible:
-> > > > +      contains:
-> > > > +        enum:
-> > > > +          - xylon,logicvc-3.02.a
-> > >
-> > > I've seen a couple of these with 'syscon' today, so I fixed the schema
-> > > tool to just exclude 'syscon' and 'simple-mfd' from the generated
-> > > 'select'. So you can drop select now.
-> >
-> > Does this need to happen before this patch can be applied?
+Quoting David Dai (2019-09-27 10:16:07)
 >=20
-> Drop the 'select'? Yes that should happen first.
+> On 9/25/2019 6:28 AM, Stephen Boyd wrote:
+> > Quoting Bjorn Andersson (2019-09-24 22:59:33)
+> >> On Tue 24 Sep 22:41 PDT 2019, Stephen Boyd wrote:
+> >>
+> >>> The DT binding could also be simplified somewhat. Currently a path ne=
+eds
+> >>> to be specified in DT for each and every use case that is possible fo=
+r a
+> >>> device to want. Typically the path is to memory, which looks to be
+> >>> reserved for in the binding with the "dma-mem" named path, but someti=
+mes
+> >>> the path is from a device to the CPU or more generically from a device
+> >>> to another device which could be a CPU, cache, DMA master, or another
+> >>> device if some sort of DMA to DMA scenario is happening. Let's remove
+> >>> the pair part of the binding so that we just list out a device's
+> >>> possible endpoints on the bus or busses that it's connected to.
+> >>>
+> >>> If the kernel wants to figure out what the path is to memory or the C=
+PU
+> >>> or a cache or something else it should be able to do that by finding =
+the
+> >>> node for the "destination" endpoint, extracting that node's
+> >>> "interconnects" property, and deriving the path in software. For
+> >>> example, we shouldn't need to write out each use case path by path in=
+ DT
+> >>> for each endpoint node that wants to set a bandwidth to memory. We
+> >>> should just be able to indicate what endpoint(s) a device sits on bas=
+ed
+> >>> on the interconnect provider in the system and then walk the various
+> >>> interconnects to find the path from that source endpoint to the
+> >>> destination endpoint.
+> >>>
+> >> But doesn't this implies that the other end of the path is always some
+> >> specific node, e.g. DDR? With a single node how would you describe
+> >> CPU->LLCC or GPU->OCIMEM?
+> > By only specifying the endpoint the device uses it describes what the
+> > hardware block interfaces with. It doesn't imply that there's only one
+> > other end of the path. It implies that the paths should be discoverable
+> > by walking the interconnect graph given some source device node and
+> > target device node. In most cases the target device node will be a DDR
+> > controller node, but sometimes it could be LLCC or OCIMEM. We may need
+> > to add some sort of "get the DDR controller device" API or work it into
+> > the interconnect API somehow to indicate what target endpoint is
+> > desired. By not listing all those paths in DT we gain flexibility to add
+> > more paths later on without having to update or tweak DT to describe
+> > more paths/routes through the interconnect.
+>=20
+>=20
+> I'm unsure that using the target device node or target source device is=20
+> the correct way to represent the constraints that the consumers apply on =
 
-I'll definitely respin the series for a v3 soon so no worries, I'll get rid
-of it.
+> the interconnects. While it's true the traffic is intended for the=20
+> targeted devices, the constraints(QoS or BW) are for the interconnect or =
 
-Cheers,
+> specifically the paths that span across the ports of various=20
+> interconnects(NoC devices in this case). I think having both src and dst =
 
-Paul
+> properties is still the simplest way to achieve the flexibility that we=20
+> require to set the constraints for ports(that may not have a target=20
+> device defined in DT or exists as some intermediate port across multiple =
 
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+> interconnects).
+>=20
 
---9jxsPFA5p3P2qPhR
-Content-Type: application/pgp-signature; name="signature.asc"
+The need for paths described in DT may make sense for certain cases but
+that seems to be the minority. My guess is that maybe an OPP binding
+would need to describe the path to apply the bandwidth to. Otherwise I
+don't see what the need is for. Maybe you can list out more scenarios?
 
------BEGIN PGP SIGNATURE-----
+Either way, the binding has been designed to cover all the possibilities
+by just saying that we have to describe at least two points for an
+'interconnect'. It is a path based binding. I'd rather see us have an
+endpoint based binding with the option to fallback to paths if we need
+to constrain something. Maybe this can be a new property that is used
+the majority of the time?
 
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl2Xi4YACgkQ3cLmz3+f
-v9HpAgf/a8qK5j4yyiRTtn9wRE0GwK+Ammm9c6YApasFhMqQ4fMGrYZThmMNepOB
-/VwPfRJx6qFbQ33IAZ/J3zK2T61jYlybouAEm7h+UO2W/9RazqGyx2NBPSq1t5Q7
-wbTHABnhrs06T8bDZTiKKeFV28gnCRPE3EkNLdeydpTZ7lbtW85VEP56Ua5xkVv1
-RzvJOIvd8BzqECyd95iZOe1G+TXC89AMQ5W8pMnpLNBnM3mwb0RvWSVHJ46u/Tkm
-NMxyUqe5jnj6fWeTFe0613OwraqgqBtU7smGdfKf09m8AsOyawxgBVfgrSvvDObT
-R5OlwonQzTy2wCjL5uK4Q75gpOd7qw==
-=eX7p
------END PGP SIGNATURE-----
+ gpu@f00 {
+   interconnect-endpoints =3D <&icc GPU_SLAVE_PORT>, <&icc GPU_MASTER_PORT0=
+>, <&icc GPU_MASTER_PORT1>;
+   interconnect-endpoint-names =3D "slave", "master0", "master1";
+ };
 
---9jxsPFA5p3P2qPhR--
+(Or we can invert it and make interconnect-paths be non-standard)
+
+The property would describe what's going to this device and how it's
+integrated into the SoC. This is similar to how we describe what port is
+connected to a device with the of graph binding or how we only list the
+clk or regulator that goes to a device and not the whole path to the
+root of the respective tree.
+
+There can be a driver API that gets these port numbers out and
+constructs a path to another struct device or struct device_node. I
+imagine that 90% of the time a driver is going to request some bandwidth
+from their master port (or ports) to the DDR controller. We could either
+make the DDR controller a device that can be globally acquired or
+integrate it deeply into the API to the point that it looks for a DDR
+controller somewhere or relies on interconnect providers to tell the
+framework about the controller.
+
+TL;DR is that I don't want to have to specify paths in each and every
+node to say that some port on this device here is connected to some port
+on the DDR controller and that we want to adjust the bandwidth or QoS
+across this path. I'd like to describe a device "hermetically" by
+listing out the ports the device has. Then we can rely on the OS to
+figure out what paths to construct and change. If we need to constrain
+or tweak those paths then we can do that with the existing interconnects
+binding, but let's worry about that when we get there.
