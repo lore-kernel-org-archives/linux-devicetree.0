@@ -1,70 +1,46 @@
-From: Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH] ARM: dts: vf610-zii-scu4-aib: Specify 'i2c-mux-idle-disconnect'
-Date: Fri, 4 Oct 2019 14:52:03 -0700
-Message-ID: <CAFXsbZq6MQk1DyUVGjC5g6jmsOdmG=1Q=4fX=9n3amSjLW1Maw@mail.gmail.com>
-References: <20191004054115.26082-1-andrew.smirnov@gmail.com>
+From: shuah <shuah@kernel.org>
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Fri, 4 Oct 2019 15:59:10 -0600
+Message-ID: <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
+References: <20190923090249.127984-1-brendanhiggins@google.com>
+ <20191004213812.GA24644@mit.edu>
+ <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191004054115.26082-1-andrew.smirnov@gmail.com>
+In-Reply-To: <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Cory Tusar <cory.tusar@zii.aero>, Jeff White <jeff.white@zii.aero>, Rick Ramstetter <rick@anteaterllc.com>, Lucas Stach <l.stach@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>, "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc: Brendan Higgins <brendanhiggins@google.com>, Frank Rowand <frowand.list@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, kieran.bingham@ideasonboard.com, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, robh@kernel.org, Stephen Boyd <sboyd@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, open list:KERNEL SELFTEST F
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 3, 2019 at 10:41 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
->
-> Specify 'i2c-mux-idle-disconnect' for both I2C switches present on the
-> board, since both are connected to the same parent bus and all of
-> their children have the same I2C address.
->
-> Fixes: ca4b4d373fcc ("ARM: dts: vf610: Add ZII SCU4 AIB board")
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Cory Tusar <cory.tusar@zii.aero>
-> Cc: Jeff White <jeff.white@zii.aero>
-> Cc: Rick Ramstetter <rick@anteaterllc.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
-> Shawn:
->
-> If this is possible, I'd like this one to go into 5.4.
->
-> Thanks,
-> Andrey Smirnov
->
->  arch/arm/boot/dts/vf610-zii-scu4-aib.dts | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-> index dc8a5f37a1ef..c8ebb23c4e02 100644
-> --- a/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-> +++ b/arch/arm/boot/dts/vf610-zii-scu4-aib.dts
-> @@ -602,6 +602,7 @@
->                 #address-cells = <1>;
->                 #size-cells = <0>;
->                 reg = <0x70>;
-> +               i2c-mux-idle-disconnect;
->
->                 sff0_i2c: i2c@1 {
->                         #address-cells = <1>;
-> @@ -640,6 +641,7 @@
->                 reg = <0x71>;
->                 #address-cells = <1>;
->                 #size-cells = <0>;
-> +               i2c-mux-idle-disconnect;
->
->                 sff5_i2c: i2c@1 {
->                         #address-cells = <1>;
-> --
-> 2.21.0
->
+On 10/4/19 3:42 PM, Linus Torvalds wrote:
+> On Fri, Oct 4, 2019 at 2:39 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>>
+>> This question is primarily directed at Shuah and Linus....
+>>
+>> What's the current status of the kunit series now that Brendan has
+>> moved it out of the top-level kunit directory as Linus has requested?
+> 
 
-On an SCU4 AIB, this series is:
+The move happened smack in the middle of merge window and landed in
+linux-next towards the end of the merge window.
 
-Tested-by: Chris Healy <cphealy@gmail.com>
+> We seemed to decide to just wait for 5.5, but there is nothing that
+> looks to block that. And I encouraged Shuah to find more kunit cases
+> for when it _does_ get merged.
+> 
+
+Right. I communicated that to Brendan that we could work on adding more
+kunit based tests which would help get more mileage on the kunit.
+
+> So if the kunit branch is stable, and people want to start using it
+> for their unit tests, then I think that would be a good idea, and then
+> during the 5.5 merge window we'll not just get the infrastructure,
+> we'll get a few more users too and not just examples.
+> 
+thanks,
+-- Shuah
