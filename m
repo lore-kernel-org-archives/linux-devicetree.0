@@ -1,70 +1,86 @@
-From: <patrice.chotard@st.com>
-Subject: ARM: dts: stm32: relax qspi pins slew-rate for stm32mp157
-Date: Fri, 4 Oct 2019 16:44:21 +0200
-Message-ID: <20191004144421.21069-1-patrice.chotard@st.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 2/5] dt-bindings: mfd: Document the Xylon LogiCVC
+ multi-function device
+Date: Fri, 4 Oct 2019 15:45:52 +0100
+Message-ID: <20191004144551.GR18429@dell>
+References: <20190927100407.1863293-1-paul.kocialkowski@bootlin.com>
+ <20190927100407.1863293-3-paul.kocialkowski@bootlin.com>
+ <20190927221550.GA28831@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, Patrice Chotard <patrice.chotard@st.com>, mcoquelin.stm32@gmail.com, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190927221550.GA28831@bogus>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Paul Kocialkowski <paul.kocialkowski@bootlin.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+On Fri, 27 Sep 2019, Rob Herring wrote:
 
-Relax qspi pins slew-rate to minimize peak currents.
+> On Fri, Sep 27, 2019 at 12:04:04PM +0200, Paul Kocialkowski wrote:
+> > The LogiCVC is a display engine which also exposes GPIO functionality.
+> > For this reason, it is described as a multi-function device that is expected
+> > to provide register access to its children nodes for gpio and display.
+> > 
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > ---
+> >  .../bindings/mfd/xylon,logicvc.yaml           | 50 +++++++++++++++++++
+> >  1 file changed, 50 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+> > new file mode 100644
+> > index 000000000000..abc9937506e0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml
+> > @@ -0,0 +1,50 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +# Copyright 2019 Bootlin
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/mfd/xylon,logicvc.yaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: Xylon LogiCVC multi-function device
+> > +
+> > +maintainers:
+> > +  - Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > +
+> > +description: |
+> > +  The LogiCVC is a display controller that also contains a GPIO controller.
+> > +  As a result, a multi-function device is exposed as parent of the display
+> > +  and GPIO blocks.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - enum:
+> > +          - xylon,logicvc-3.02.a
+> > +      - const: syscon
+> > +      - const: simple-mfd
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +select:
+> > +  properties:
+> > +    compatible:
+> > +      contains:
+> > +        enum:
+> > +          - xylon,logicvc-3.02.a
+> 
+> I've seen a couple of these with 'syscon' today, so I fixed the schema 
+> tool to just exclude 'syscon' and 'simple-mfd' from the generated 
+> 'select'. So you can drop select now.
 
-Fixes: 844030057339 ("ARM: dts: stm32: add flash nor support on stm32mp157c eval board")
+Does this need to happen before this patch can be applied?
 
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
----
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-index e4a0d51ec3a8..0a3a7d66737b 100644
---- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
-@@ -609,13 +609,13 @@
- 						 <STM32_PINMUX('F', 6, AF9)>; /* QSPI_BK1_IO3 */
- 					bias-disable;
- 					drive-push-pull;
--					slew-rate = <3>;
-+					slew-rate = <1>;
- 				};
- 				pins2 {
- 					pinmux = <STM32_PINMUX('B', 6, AF10)>; /* QSPI_BK1_NCS */
- 					bias-pull-up;
- 					drive-push-pull;
--					slew-rate = <3>;
-+					slew-rate = <1>;
- 				};
- 			};
- 
-@@ -637,13 +637,13 @@
- 						 <STM32_PINMUX('G', 7, AF11)>; /* QSPI_BK2_IO3 */
- 					bias-disable;
- 					drive-push-pull;
--					slew-rate = <3>;
-+					slew-rate = <1>;
- 				};
- 				pins2 {
- 					pinmux = <STM32_PINMUX('C', 0, AF10)>; /* QSPI_BK2_NCS */
- 					bias-pull-up;
- 					drive-push-pull;
--					slew-rate = <3>;
-+					slew-rate = <1>;
- 				};
- 			};
- 
 -- 
-2.17.1
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
