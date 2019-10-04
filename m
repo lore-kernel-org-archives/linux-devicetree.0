@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 17/21] media: ti-vpe: vpe: fix v4l2_compliance issue related to xfer_func
-Date: Fri, 4 Oct 2019 11:29:48 -0500
-Message-ID: <20191004162952.4963-18-bparrot@ti.com>
+Subject: [Patch v2 18/21] media: ti-vpe: csc: rgb-to-yuv HD full range coeff are wrong
+Date: Fri, 4 Oct 2019 11:29:49 -0500
+Message-ID: <20191004162952.4963-19-bparrot@ti.com>
 References: <20191004162952.4963-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,34 +12,30 @@ To: Hans Verkuil <hverkuil@xs4all.nl>
 Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-All 4 of the "colorspace" components were not originally handled.
-Causing issue related to xfer_func not being initialized properly.
+The RGB to YUV HD full range coefficients did not match the TRM values
+and appeared to be a cut-n-paste from the YUV to RGB section.
 
-This was found with v4l2-compliance test.
+Replace the entries with the values from the TRM.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/media/platform/ti-vpe/csc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index 5b1e9908fff2..19b027c5478a 100644
---- a/drivers/media/platform/ti-vpe/vpe.c
-+++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1578,10 +1578,13 @@ static int vpe_g_fmt(struct file *file, void *priv, struct v4l2_format *f)
- 	if (!V4L2_TYPE_IS_OUTPUT(f->type)) {
- 		struct vpe_q_data *s_q_data;
- 
--		/* get colorspace from the source queue */
-+		/* get colorimetry from the source queue */
- 		s_q_data = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
- 
- 		pix->colorspace = s_q_data->format.fmt.pix_mp.colorspace;
-+		pix->xfer_func = s_q_data->format.fmt.pix_mp.xfer_func;
-+		pix->ycbcr_enc = s_q_data->format.fmt.pix_mp.ycbcr_enc;
-+		pix->quantization = s_q_data->format.fmt.pix_mp.quantization;
- 	}
- 
- 	return 0;
+diff --git a/drivers/media/platform/ti-vpe/csc.c b/drivers/media/platform/ti-vpe/csc.c
+index eda2a5985da7..f0c45d187b5f 100644
+--- a/drivers/media/platform/ti-vpe/csc.c
++++ b/drivers/media/platform/ti-vpe/csc.c
+@@ -81,8 +81,8 @@ static struct colorspace_coeffs colorspace_coeffs[4] = {
+ 		},
+ 		{
+ 			/* HDTV */
+-			0x04A8, 0x0000, 0x072C, 0x04A8, 0x1F26, 0x1DDE,
+-			0x04A8, 0x0873, 0x0000, 0x0C20, 0x0134, 0x0B7C,
++			0x00bb, 0x0275, 0x003f, 0x1f99, 0x1ea5, 0x01c2,
++			0x01c2, 0x1e67, 0x1fd7, 0x0040, 0x0200, 0x0200,
+ 		},
+ 	},
+ };
 -- 
 2.17.1
