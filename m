@@ -1,59 +1,68 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: add focaltech touchscreen on
- stm32mp157c-dk2 board
-Date: Fri, 4 Oct 2019 16:05:13 +0200
-Message-ID: <c834748b-17f3-39ca-041b-1be86ad61d76@st.com>
-References: <1570195022-23327-1-git-send-email-yannick.fertre@st.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 5/6] pwm: mxs: avoid a division in mxs_pwm_apply()
+Date: Fri, 4 Oct 2019 16:08:34 +0200
+Message-ID: <20191004140834.4idddyohf52ha4ao@pengutronix.de>
+References: <20191004133207.6663-1-linux@rasmusvillemoes.dk>
+ <20191004133207.6663-6-linux@rasmusvillemoes.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1570195022-23327-1-git-send-email-yannick.fertre@st.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, Philippe Cornu <philippe.cornu@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20191004133207.6663-6-linux@rasmusvillemoes.dk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi yannick
+On Fri, Oct 04, 2019 at 03:32:06PM +0200, Rasmus Villemoes wrote:
+> Since the divisor is not a compile-time constant (unless gcc somehow
+> decided to unroll the loop PERIOD_CDIV_MAX times), this does a
+> somewhat expensive 32/32 division. Replace that with a right shift.
+> =
 
-On 10/4/19 3:17 PM, Yannick Fertré wrote:
-> Enable focaltech ft6236 touchscreen on STM32MP157C-DK2 board.
-> 
-> Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+> We still have a 64/32 division just below, but at least in that
+> case the divisor is compile-time constant.
+> =
+
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+
 > ---
->   arch/arm/boot/dts/stm32mp157c-dk2.dts | 13 +++++++++++++
->   1 file changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-> index 20ea601..d44a7c6 100644
-> --- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
-> +++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-> @@ -61,6 +61,19 @@
->   	};
->   };
->   
-> +&i2c1 {
-> +	touchscreen@38 {
-> +		compatible = "focaltech,ft6236";
-> +		reg = <0x38>;
-> +		interrupts = <2 2>;
-> +		interrupt-parent = <&gpiof>;
-> +		interrupt-controller;
-> +		touchscreen-size-x = <480>;
-> +		touchscreen-size-y = <800>;
-> +		status = "okay";
-> +	};
-> +};
-> +
->   &ltdc {
->   	status = "okay";
->   
-> 
+>  drivers/pwm/pwm-mxs.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> =
 
-For the next time, please don't forget to add "PATCH-v2" as it is a 
-second version of this patch.
+> diff --git a/drivers/pwm/pwm-mxs.c b/drivers/pwm/pwm-mxs.c
+> index 57562221c439..f2e57fcf8f8b 100644
+> --- a/drivers/pwm/pwm-mxs.c
+> +++ b/drivers/pwm/pwm-mxs.c
+> @@ -33,8 +33,8 @@
+>  #define  PERIOD_CDIV(div)	(((div) & 0x7) << 20)
+>  #define  PERIOD_CDIV_MAX	8
+>  =
 
-Applied on stm32-next.
+> -static const unsigned int cdiv[PERIOD_CDIV_MAX] =3D {
+> -	1, 2, 4, 8, 16, 64, 256, 1024
+> +static const u8 cdiv_shift[PERIOD_CDIV_MAX] =3D {
+> +	0, 1, 2, 3, 4, 6, 8, 10
 
-Thanks.
-Alex
+One small nitpick: I would like to see this name have a mxs_pwm_ prefix.
+But even without this change:
+
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Thanks
+Uwe
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
