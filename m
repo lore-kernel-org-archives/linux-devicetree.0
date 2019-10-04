@@ -1,81 +1,75 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH] .gitattributes: Use 'dts' diff driver for dts files
-Date: Fri, 4 Oct 2019 15:08:08 -0700
-Message-ID: <256a1ad3-6a0c-b4bd-e12c-9ab35db2939a@infradead.org>
-References: <20191004212311.141538-1-swboyd@chromium.org>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Fri, 4 Oct 2019 15:27:14 -0700
+Message-ID: <20191004222714.GA107737@google.com>
+References: <20190923090249.127984-1-brendanhiggins@google.com>
+ <20191004213812.GA24644@mit.edu>
+ <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+ <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191004212311.141538-1-swboyd@chromium.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: shuah <shuah@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-nvdimm <linux-nvdimm@lists.01.org>, khilman@baylibre.com, knut.omang@oracle.com, kieran.bingham@ideasonboard.com, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, jdike@addtoit.com, Dan Carpenter <dan.carpenter@oracle.com>, devicetree@vger.kernel.org, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Tim.Bird@sony.com, linux-um@lists.infradead.org, Steven Rostedt <rosted>
 List-Id: devicetree@vger.kernel.org
 
-On 10/4/19 2:23 PM, Stephen Boyd wrote:
-> Git is gaining support to display the closest node to the diff in the
-> hunk header via the 'dts' diff driver. Use that driver for all dts and
-> dtsi files so we can gain some more context on where the diff is. Taking
-> a recent commit in the kernel dts files you can see the difference.
-> 
-> With this patch and an updated git
-> 
->  diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
->  index 62e07e1197cc..4c38426a6969 100644
->  --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
->  +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
->  @@ -289,5 +289,29 @@ vdd_hdmi: regulator@1 {
->                          gpio = <&gpio TEGRA194_MAIN_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
->                          enable-active-high;
->                  };
->  +
->  +               vdd_3v3_pcie: regulator@2 {
->  +                       compatible = "regulator-fixed";
-> 
-> vs. without this patch
-> 
->  diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
->  index 62e07e1197cc..4c38426a6969 100644
->  --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
->  +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
->  @@ -289,5 +289,29 @@
->                          gpio = <&gpio TEGRA194_MAIN_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
->                          enable-active-high;
->                  };
->  +
->  +               vdd_3v3_pcie: regulator@2 {
->  +                       compatible = "regulator-fixed";
-> 
-> You can see that we don't know what the context node is because it isn't shown
-> after the '@@'.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
-> 
-> Sending to Andrew but I suppose it can go through dt tree too.
-> 
->  .gitattributes | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/.gitattributes b/.gitattributes
-> index 89c411b5ce6b..4b32eaa9571e 100644
-> --- a/.gitattributes
-> +++ b/.gitattributes
-> @@ -1,2 +1,4 @@
->  *.c   diff=cpp
->  *.h   diff=cpp
-> +*.dtsi diff=dts
-> +*.dts  diff=dts
-> 
-
-Hm, I have a "cpp" installed but not a "dts".
-Where would I find this "dts" so that I can install it?
-
-Thanks.
--- 
-~Randy
+T24gRnJpLCBPY3QgMDQsIDIwMTkgYXQgMDM6NTk6MTBQTSAtMDYwMCwgc2h1YWggd3JvdGU6Cj4g
+T24gMTAvNC8xOSAzOjQyIFBNLCBMaW51cyBUb3J2YWxkcyB3cm90ZToKPiA+IE9uIEZyaSwgT2N0
+IDQsIDIwMTkgYXQgMjozOSBQTSBUaGVvZG9yZSBZLiBUcydvIDx0eXRzb0BtaXQuZWR1PiB3cm90
+ZToKPiA+ID4gCj4gPiA+IFRoaXMgcXVlc3Rpb24gaXMgcHJpbWFyaWx5IGRpcmVjdGVkIGF0IFNo
+dWFoIGFuZCBMaW51cy4uLi4KPiA+ID4gCj4gPiA+IFdoYXQncyB0aGUgY3VycmVudCBzdGF0dXMg
+b2YgdGhlIGt1bml0IHNlcmllcyBub3cgdGhhdCBCcmVuZGFuIGhhcwo+ID4gPiBtb3ZlZCBpdCBv
+dXQgb2YgdGhlIHRvcC1sZXZlbCBrdW5pdCBkaXJlY3RvcnkgYXMgTGludXMgaGFzIHJlcXVlc3Rl
+ZD8KPiA+IAo+IAo+IFRoZSBtb3ZlIGhhcHBlbmVkIHNtYWNrIGluIHRoZSBtaWRkbGUgb2YgbWVy
+Z2Ugd2luZG93IGFuZCBsYW5kZWQgaW4KPiBsaW51eC1uZXh0IHRvd2FyZHMgdGhlIGVuZCBvZiB0
+aGUgbWVyZ2Ugd2luZG93Lgo+IAo+ID4gV2Ugc2VlbWVkIHRvIGRlY2lkZSB0byBqdXN0IHdhaXQg
+Zm9yIDUuNSwgYnV0IHRoZXJlIGlzIG5vdGhpbmcgdGhhdAo+ID4gbG9va3MgdG8gYmxvY2sgdGhh
+dC4gQW5kIEkgZW5jb3VyYWdlZCBTaHVhaCB0byBmaW5kIG1vcmUga3VuaXQgY2FzZXMKPiA+IGZv
+ciB3aGVuIGl0IF9kb2VzXyBnZXQgbWVyZ2VkLgo+ID4gCj4gCj4gUmlnaHQuIEkgY29tbXVuaWNh
+dGVkIHRoYXQgdG8gQnJlbmRhbiB0aGF0IHdlIGNvdWxkIHdvcmsgb24gYWRkaW5nIG1vcmUKPiBr
+dW5pdCBiYXNlZCB0ZXN0cyB3aGljaCB3b3VsZCBoZWxwIGdldCBtb3JlIG1pbGVhZ2Ugb24gdGhl
+IGt1bml0Lgo+IAo+ID4gU28gaWYgdGhlIGt1bml0IGJyYW5jaCBpcyBzdGFibGUsIGFuZCBwZW9w
+bGUgd2FudCB0byBzdGFydCB1c2luZyBpdAo+ID4gZm9yIHRoZWlyIHVuaXQgdGVzdHMsIHRoZW4g
+SSB0aGluayB0aGF0IHdvdWxkIGJlIGEgZ29vZCBpZGVhLCBhbmQgdGhlbgo+ID4gZHVyaW5nIHRo
+ZSA1LjUgbWVyZ2Ugd2luZG93IHdlJ2xsIG5vdCBqdXN0IGdldCB0aGUgaW5mcmFzdHJ1Y3R1cmUs
+Cj4gPiB3ZSdsbCBnZXQgYSBmZXcgbW9yZSB1c2VycyB0b28gYW5kIG5vdCBqdXN0IGV4YW1wbGVz
+LgoKSSB3YXMgcGxhbm5pbmcgb24gaG9sZGluZyBvZmYgb24gYWNjZXB0aW5nIG1vcmUgdGVzdHMv
+Y2hhbmdlcyB1bnRpbApLVW5pdCBpcyBpbiB0b3J2YWxkcy9tYXN0ZXIuIEFzIG11Y2ggYXMgSSB3
+b3VsZCBsaWtlIHRvIGdvIGFyb3VuZApwcm9tb3RpbmcgaXQsIEkgZG9uJ3QgcmVhbGx5IHdhbnQg
+dG8gcHJvbW90ZSB0b28gbXVjaCBjb21wbGV4aXR5IGluIGEKbm9uLXVwc3RyZWFtIGJyYW5jaCBi
+ZWZvcmUgZ2V0dGluZyBpdCB1cHN0cmVhbSBiZWNhdXNlIEkgZG9uJ3Qgd2FudCB0bwpyaXNrIGFk
+ZGluZyBzb21ldGhpbmcgdGhhdCBtaWdodCBjYXVzZSBpdCB0byBnZXQgcmVqZWN0ZWQgYWdhaW4u
+CgpUbyBiZSBjbGVhciwgSSBjYW4gdW5kZXJzdGFuZCBmcm9tIHlvdXIgcGVyc3BlY3RpdmUgd2h5
+IGdldHRpbmcgbW9yZQp0ZXN0cy91c2FnZSBiZWZvcmUgYWNjZXB0aW5nIGl0IGlzIGEgZ29vZCB0
+aGluZy4gVGhlIG1vcmUgcGVvcGxlIHRoYXQKcGxheSBhcm91bmQgd2l0aCBpdCwgdGhlIG1vcmUg
+bGlrZWx5IHRoYXQgc29tZW9uZSB3aWxsIGZpbmQgYW4gaXNzdWUKd2l0aCBpdCwgYW5kIG1vcmUg
+bGlrZWx5IHRoYXQgd2hhdCBpcyBhY2NlcHRlZCBpbnRvIHRvcnZhbGRzL21hc3RlciBpcwpvZiBo
+aWdoIHF1YWxpdHkuCgpIb3dldmVyLCBpZiBJIGVuY291cmFnZSBhcmJpdHJhcnkgdGVzdHMvaW1w
+cm92ZW1lbnRzIGludG8gbXkgS1VuaXQKYnJhbmNoLCBpdCBmdXJ0aGVyIGRpdmVyZ2VzIGF3YXkg
+ZnJvbSB0b3J2YWxkcy9tYXN0ZXIsIGFuZCBpcyBtb3JlCmxpa2VseSB0aGF0IHRoZXJlIHdpbGwg
+YmUgYSBtZXJnZSBjb25mbGljdCBvciBpc3N1ZSB0aGF0IGlzIG5vdCByZWxhdGVkCnRvIHRoZSBj
+b3JlIEtVbml0IGNoYW5nZXMgdGhhdCB3aWxsIGNhdXNlIHRoZSB3aG9sZSB0aGluZyB0byBiZQpy
+ZWplY3RlZCBhZ2FpbiBpbiB2NS41LgoKSSBkb24ndCBrbm93LiBJIGd1ZXNzIHdlIGNvdWxkIG1h
+eWJlIGFkZHJlc3MgdGhhdCBzaXR1YXRpb24gYnkgc3BsaXR0aW5nCnVwIHRoZSBwdWxsIHJlcXVl
+c3QgaW50byBmZWF0dXJlcyBhbmQgdGVzdHMgd2hlbiB3ZSBnbyB0byBzZW5kIGl0IGluLApidXQg
+dGhhdCBzZWVtcyB0byBpbnZpdGUgYSBsb3Qgb2YgdW5uZWNlc3NhcnkgY29tcGxleGl0eS4gSSBh
+Y3R1YWxseQphbHJlYWR5IGhhZCBzb21lIG90aGVyIHRlc3RzL2NoYW5nZXMgcmVhZHkgdG8gc2Vu
+ZCBmb3IgcmV2aWV3LCBidXQgd2FzCmhvbGRpbmcgb2ZmIHVudGlsIHRoZSBpbml0aWFsIHNldCBv
+ZiBwYXRjaGVzIG1hZCBpdCBpbi4KCkxvb2tpbmcgZm9yd2FyZCB0byBoZWFyaW5nIG90aGVyIHBl
+b3BsZSdzIHRob3VnaHRzLgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWw=
