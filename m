@@ -1,94 +1,45 @@
-From: shuah <shuah@kernel.org>
-Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Fri, 4 Oct 2019 17:15:59 -0600
-Message-ID: <b38b118f-9bcb-c2fc-4365-0b94fde4e1ec@kernel.org>
-References: <20190923090249.127984-1-brendanhiggins@google.com>
- <20191004213812.GA24644@mit.edu>
- <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
- <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
- <20191004222714.GA107737@google.com>
- <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
- <CAFd5g46pzu=Bh5X7-ttfhTP+NYNDCAxN16OCGFxc5ohjTL-v0g@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 3/3] clk: qcom: Add Global Clock controller (GCC) driver for SC7180
+Date: Fri, 04 Oct 2019 16:20:21 -0700
+Message-ID: <20191004232022.062A1215EA@mail.kernel.org>
+References: <20190918095018.17979-1-tdas@codeaurora.org> <a3cd82c9-8bfa-f4a3-ab1f-2e397fbd9d16@codeaurora.org> <20190924231223.9012C207FD@mail.kernel.org> <347780b9-c66b-01c4-b547-b03de2cf3078@codeaurora.org> <20190925130346.42E0820640@mail.kernel.org> <35f8b699-6ff7-9104-5e3d-ef4ee8635832@codeaurora.org> <20191001143825.CD3212054F@mail.kernel.org> <7ac5f6bf-33c5-580e-bd40-e82f3052d460@codeaurora.org> <20191003160130.5A19B222D0@mail.kernel.org> <81a2fa46-a7e6-66a2-9649-009f22813c81@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFd5g46pzu=Bh5X7-ttfhTP+NYNDCAxN16OCGFxc5ohjTL-v0g@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <81a2fa46-a7e6-66a2-9649-009f22813c81@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, "Theodore Y. Ts'o" <tytso@mit.edu>, Frank Rowand <frowand.list@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Kees Cook <keescook@google.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Luis Chamberlain <mcgrof@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree <devicetree@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, kunit-dev@googlegroups.com, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>Lin
+To: Michael Turquette <mturquette@baylibre.com>, Taniya Das <tdas@codeaurora.org>, robh+dt@kernel.org
+Cc: David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/4/19 5:10 PM, Brendan Higgins wrote:
-> On Fri, Oct 4, 2019 at 3:47 PM shuah <shuah@kernel.org> wrote:
->>
->> On 10/4/19 4:27 PM, Brendan Higgins wrote:
->>> On Fri, Oct 04, 2019 at 03:59:10PM -0600, shuah wrote:
->>>> On 10/4/19 3:42 PM, Linus Torvalds wrote:
->>>>> On Fri, Oct 4, 2019 at 2:39 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
->>>>>>
->>>>>> This question is primarily directed at Shuah and Linus....
->>>>>>
->>>>>> What's the current status of the kunit series now that Brendan has
->>>>>> moved it out of the top-level kunit directory as Linus has requested?
->>>>>
->>>>
->>>> The move happened smack in the middle of merge window and landed in
->>>> linux-next towards the end of the merge window.
->>>>
->>>>> We seemed to decide to just wait for 5.5, but there is nothing that
->>>>> looks to block that. And I encouraged Shuah to find more kunit cases
->>>>> for when it _does_ get merged.
->>>>>
->>>>
->>>> Right. I communicated that to Brendan that we could work on adding more
->>>> kunit based tests which would help get more mileage on the kunit.
->>>>
->>>>> So if the kunit branch is stable, and people want to start using it
->>>>> for their unit tests, then I think that would be a good idea, and then
->>>>> during the 5.5 merge window we'll not just get the infrastructure,
->>>>> we'll get a few more users too and not just examples.
->>>
->>> I was planning on holding off on accepting more tests/changes until
->>> KUnit is in torvalds/master. As much as I would like to go around
->>> promoting it, I don't really want to promote too much complexity in a
->>> non-upstream branch before getting it upstream because I don't want to
->>> risk adding something that might cause it to get rejected again.
->>>
->>> To be clear, I can understand from your perspective why getting more
->>> tests/usage before accepting it is a good thing. The more people that
->>> play around with it, the more likely that someone will find an issue
->>> with it, and more likely that what is accepted into torvalds/master is
->>> of high quality.
->>>
->>> However, if I encourage arbitrary tests/improvements into my KUnit
->>> branch, it further diverges away from torvalds/master, and is more
->>> likely that there will be a merge conflict or issue that is not related
->>> to the core KUnit changes that will cause the whole thing to be
->>> rejected again in v5.5.
->>>
->>
->> The idea is that the new development will happen based on kunit in
->> linux-kselftest next. It will work just fine. As we accepts patches,
->> they will go on top of kunit that is in linux-next now.
-> 
-> But then wouldn't we want to limit what KUnit changes are going into
-> linux-kselftest next for v5.5? For example, we probably don't want to
-> do anymore feature development on it until it is in v5.5, since the
-> goal is to make it more stable, right?
-> 
-> I am guessing that it will probably be fine, but it still sounds like
-> we need to establish some ground rules, and play it *very* safe.
-> 
+Quoting Taniya Das (2019-10-04 10:39:31)
+> Hi Stephen,
+>=20
+> On 10/3/2019 9:31 PM, Stephen Boyd wrote:
+> > Quoting Taniya Das (2019-10-03 03:31:15)
+> >> Hi Stephen,
+> >>
+> >> On 10/1/2019 8:08 PM, Stephen Boyd wrote:
+> >>>
+> >>> Why do you want to keep them critical and registered? I'm suggesting
+> >>> that any clk that is marked critical and doesn't have a parent should
+> >>> instead become a register write in probe to turn the clk on.
+> >>>
+> >> Sure, let me do a one-time enable from probe for the clocks which
+> >> doesn't have a parent.
+> >> But I would now have to educate the clients of these clocks to remove
+> >> using them.
+> >>
+> >=20
+> > If anyone is using these clks we can return NULL from the provider for
+> > the specifier so that we indicate there isn't support for them in the
+> > kernel. At least I hope that code path still works given all the recent
+> > changes to clk_get().
+> >=20
+>=20
+> Could you please confirm if you are referring to update the below?
 
-How about we identify a small number tests that can add value and focus
-on them. I am thinking a number between 2 and 5. This way we get a feel
-for the API, if it changes for the better great, if it doesn't have to,
-then you know you already did a great job.
-
-Does that sound reasonable to you?
-
-thanks,
--- Shuah
+I wasn't suggesting that explicitly but sure. Something like this would
+be necessary to make clk_get() pass back a NULL pointer to the caller.
+Does everything keep working with this change?
