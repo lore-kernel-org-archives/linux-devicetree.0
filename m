@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v2 08/21] media: ti-vpe: vpe: fix a v4l2-compliance failure causing a kernel panic
-Date: Fri, 4 Oct 2019 11:29:39 -0500
-Message-ID: <20191004162952.4963-9-bparrot@ti.com>
+Subject: [Patch v2 11/21] media: ti-vpe: vpe: fix a v4l2-compliance failure about invalid sizeimage
+Date: Fri, 4 Oct 2019 11:29:42 -0500
+Message-ID: <20191004162952.4963-12-bparrot@ti.com>
 References: <20191004162952.4963-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,49 +14,52 @@ List-Id: devicetree@vger.kernel.org
 
 v4l2-compliance fails with this message:
 
-   warn: v4l2-test-formats.cpp(717): \
-   	TRY_FMT cannot handle an invalid pixelformat.
+   fail: v4l2-test-formats.cpp(463): !pfmt.sizeimage
+   fail: v4l2-test-formats.cpp(736): \
+	Video Capture Multiplanar is valid, \
+	but TRY_FMT failed to return a format
    test VIDIOC_TRY_FMT: FAIL
 
-This causes the following kernel panic:
+This failure is causd by the driver failing to handle out range
+'bytesperline' values from user space applications.
 
-Unable to handle kernel paging request at virtual address 56595561
-pgd = ecd80e00
-*pgd=00000000
-Internal error: Oops: 205 [#1] PREEMPT SMP ARM
-...
-CPU: 0 PID: 930 Comm: v4l2-compliance Not tainted \
-	4.14.62-01715-gc8cd67f49a19 #1
-Hardware name: Generic DRA72X (Flattened Device Tree)
-task: ece44d80 task.stack: ecc6e000
-PC is at __vpe_try_fmt+0x18c/0x2a8 [ti_vpe]
-LR is at 0x8
-
-Because the driver fails to properly check the 'num_planes' values for
-proper ranges it ends up accessing out of bound data causing the kernel
-panic.
-
-Since this driver only handle single or dual plane pixel format, make
-sure the provided value does not exceed 2 planes.
+VPDMA hardware is limited to 64k line stride (16 bytes aligned, so 65520
+bytes). So make sure the provided or calculated 'bytesperline' is
+smaller than the maximum value.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
 Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/ti-vpe/vpdma.h | 1 +
+ drivers/media/platform/ti-vpe/vpe.c   | 4 ++++
+ 2 files changed, 5 insertions(+)
 
+diff --git a/drivers/media/platform/ti-vpe/vpdma.h b/drivers/media/platform/ti-vpe/vpdma.h
+index bce17329c4c9..393fcbb3cb40 100644
+--- a/drivers/media/platform/ti-vpe/vpdma.h
++++ b/drivers/media/platform/ti-vpe/vpdma.h
+@@ -57,6 +57,7 @@ struct vpdma_data_format {
+ 						 * line stride of source and dest
+ 						 * buffers should be 16 byte aligned
+ 						 */
++#define VPDMA_MAX_STRIDE		65520	/* Max line stride 16 byte aligned */
+ #define VPDMA_DTD_DESC_SIZE		32	/* 8 words */
+ #define VPDMA_CFD_CTD_DESC_SIZE		16	/* 4 words */
+ 
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index bbbf11174e16..1278d457f753 100644
+index 7aa83026fb6c..0a7cf9c820c6 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -1650,7 +1650,7 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
- 			      &pix->height, MIN_H, MAX_H, H_ALIGN,
- 			      S_ALIGN);
+@@ -1694,6 +1694,10 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 		if (stride > plane_fmt->bytesperline)
+ 			plane_fmt->bytesperline = stride;
  
--	if (!pix->num_planes)
-+	if (!pix->num_planes || pix->num_planes > 2)
- 		pix->num_planes = fmt->coplanar ? 2 : 1;
- 	else if (pix->num_planes > 1 && !fmt->coplanar)
- 		pix->num_planes = 1;
++		plane_fmt->bytesperline = clamp_t(u32, plane_fmt->bytesperline,
++						  stride,
++						  VPDMA_MAX_STRIDE);
++
+ 		plane_fmt->bytesperline = ALIGN(plane_fmt->bytesperline,
+ 						VPDMA_STRIDE_ALIGN);
+ 
 -- 
 2.17.1
