@@ -1,70 +1,27 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH] .gitattributes: Use 'dts' diff driver for dts files
-Date: Fri,  4 Oct 2019 14:23:11 -0700
-Message-ID: <20191004212311.141538-1-swboyd@chromium.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/3] gpio: syscon: Add support for the Xylon LogiCVC GPIOs
+Date: Fri, 4 Oct 2019 23:24:04 +0200
+Message-ID: <CACRpkdbtFQWJK_RtdHrh8hr9HTq4Pmnd9VXC11H45w9XvGCU2w@mail.gmail.com>
+References: <20190910152855.111588-1-paul.kocialkowski@bootlin.com>
+ <20190910152855.111588-3-paul.kocialkowski@bootlin.com> <CACRpkdY40PZc9R-yFwooR4-WMgn3LH7K+yTx00ZNxyq6OOnw6A@mail.gmail.com>
+ <20190923133325.GA57525@aptenodytes>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190923133325.GA57525@aptenodytes>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+To: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Git is gaining support to display the closest node to the diff in the
-hunk header via the 'dts' diff driver. Use that driver for all dts and
-dtsi files so we can gain some more context on where the diff is. Taking
-a recent commit in the kernel dts files you can see the difference.
+On Mon, Sep 23, 2019 at 3:33 PM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
 
-With this patch and an updated git
+> Maybe a first step would be to introduce Kconfig options for each device and
+> ifdef around in the code, as to solve the "built unconditionally" aspect?
 
- diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
- index 62e07e1197cc..4c38426a6969 100644
- --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
- +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
- @@ -289,5 +289,29 @@ vdd_hdmi: regulator@1 {
-                         gpio = <&gpio TEGRA194_MAIN_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
-                         enable-active-high;
-                 };
- +
- +               vdd_3v3_pcie: regulator@2 {
- +                       compatible = "regulator-fixed";
+ifdefs is something we try to avoid using too much, better for things
+to have their own files and use a library, usually, it's cleaner.
 
-vs. without this patch
-
- diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
- index 62e07e1197cc..4c38426a6969 100644
- --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
- +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
- @@ -289,5 +289,29 @@
-                         gpio = <&gpio TEGRA194_MAIN_GPIO(A, 3) GPIO_ACTIVE_HIGH>;
-                         enable-active-high;
-                 };
- +
- +               vdd_3v3_pcie: regulator@2 {
- +                       compatible = "regulator-fixed";
-
-You can see that we don't know what the context node is because it isn't shown
-after the '@@'.
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
-
-Sending to Andrew but I suppose it can go through dt tree too.
-
- .gitattributes | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/.gitattributes b/.gitattributes
-index 89c411b5ce6b..4b32eaa9571e 100644
---- a/.gitattributes
-+++ b/.gitattributes
-@@ -1,2 +1,4 @@
- *.c   diff=cpp
- *.h   diff=cpp
-+*.dtsi diff=dts
-+*.dts  diff=dts
--- 
-Sent by a computer through tubes
+Yours,
+Linus Walleij
