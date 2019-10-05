@@ -1,45 +1,147 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v10 2/6] dt-bindings: sun6i-dsi: Add A64 DPHY compatible (w/
- A31 fallback)
-Date: Sat,  5 Oct 2019 19:49:09 +0530
-Message-ID: <20191005141913.22020-3-jagan@amarulasolutions.com>
+Subject: [PATCH v10 3/6] drm/sun4i: dsi: Add has_mod_clk quirk
+Date: Sat,  5 Oct 2019 19:49:10 +0530
+Message-ID: <20191005141913.22020-4-jagan@amarulasolutions.com>
 References: <20191005141913.22020-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191005141913.22020-1-jagan@amarulasolutions.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi <linux-sunxi@googlegroups.com>, Jagan Teki <jagan@amarulasolutions.com>, michael@amarulasolutions.com, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Cc: michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>, linux-sunxi <linux-sunxi@googlegroups.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIE1JUEkgRFNJIFBIWSBjb250cm9sbGVyIG9uIEFsbHdpbm5lciBBNjQgaXMgc2ltaWxhcgpv
-biB0aGUgb25lIG9uIEEzMS4KCkFkZCBBNjQgY29tcGF0aWJsZSBhbmQgYXBwZW5kIEEzMSBjb21w
-YXRpYmxlIGFzIGZhbGxiYWNrLgoKU2lnbmVkLW9mZi1ieTogSmFnYW4gVGVraSA8amFnYW5AYW1h
-cnVsYXNvbHV0aW9ucy5jb20+Ci0tLQogLi4uL2JpbmRpbmdzL3BoeS9hbGx3aW5uZXIsc3VuNmkt
-YTMxLW1pcGktZHBoeS55YW1sICAgICAgICAgfCA2ICsrKysrLQogMSBmaWxlIGNoYW5nZWQsIDUg
-aW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvYWxsd2lubmVyLHN1bjZpLWEzMS1taXBpLWRwaHkueWFt
-bCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvYWxsd2lubmVyLHN1bjZp
-LWEzMS1taXBpLWRwaHkueWFtbAppbmRleCBmYTQ2NjcwZGUyOTkuLjg4NDE5MzgwNTBiMiAxMDA2
-NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9hbGx3aW5uZXIs
-c3VuNmktYTMxLW1pcGktZHBoeS55YW1sCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9waHkvYWxsd2lubmVyLHN1bjZpLWEzMS1taXBpLWRwaHkueWFtbApAQCAtMTUsNyAr
-MTUsMTEgQEAgcHJvcGVydGllczoKICAgICBjb25zdDogMAogCiAgIGNvbXBhdGlibGU6Ci0gICAg
-Y29uc3Q6IGFsbHdpbm5lcixzdW42aS1hMzEtbWlwaS1kcGh5CisgICAgb25lT2Y6CisgICAgICAt
-IGNvbnN0OiBhbGx3aW5uZXIsc3VuNmktYTMxLW1pcGktZHBoeQorICAgICAgLSBpdGVtczoKKyAg
-ICAgICAgICAtIGNvbnN0OiBhbGx3aW5uZXIsc3VuNTBpLWE2NC1taXBpLWRwaHkKKyAgICAgICAg
-ICAtIGNvbnN0OiBhbGx3aW5uZXIsc3VuNmktYTMxLW1pcGktZHBoeQogCiAgIHJlZzoKICAgICBt
-YXhJdGVtczogMQotLSAKMi4xOC4wLjMyMS5nZmZjNmZhMGUzCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+As per the user manual, look like mod clock is not mandatory
+for all Allwinner MIPI DSI controllers, it is connected to
+CLK_DSI_SCLK for A31 and not available in A64.
+
+So add has_mod_clk quirk and process the clk accordingly.
+
+Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 35 ++++++++++++++++++--------
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  5 ++++
+ 2 files changed, 30 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index b8a0d0501ca7..6724a14c816d 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -11,6 +11,7 @@
+ #include <linux/crc-ccitt.h>
+ #include <linux/module.h>
+ #include <linux/of_address.h>
++#include <linux/of_device.h>
+ #include <linux/phy/phy-mipi-dphy.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+@@ -1092,6 +1093,7 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ 	dsi->dev = dev;
+ 	dsi->host.ops = &sun6i_dsi_host_ops;
+ 	dsi->host.dev = dev;
++	dsi->variant = of_device_get_match_data(dev);
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	base = devm_ioremap_resource(dev, res);
+@@ -1119,17 +1121,20 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ 		return PTR_ERR(dsi->reset);
+ 	}
+ 
+-	dsi->mod_clk = devm_clk_get(dev, "mod");
+-	if (IS_ERR(dsi->mod_clk)) {
+-		dev_err(dev, "Couldn't get the DSI mod clock\n");
+-		return PTR_ERR(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk) {
++		dsi->mod_clk = devm_clk_get(dev, "mod");
++		if (IS_ERR(dsi->mod_clk)) {
++			dev_err(dev, "Couldn't get the DSI mod clock\n");
++			return PTR_ERR(dsi->mod_clk);
++		}
+ 	}
+ 
+ 	/*
+ 	 * In order to operate properly, that clock seems to be always
+ 	 * set to 297MHz.
+ 	 */
+-	clk_set_rate_exclusive(dsi->mod_clk, 297000000);
++	if (dsi->variant->has_mod_clk)
++		clk_set_rate_exclusive(dsi->mod_clk, 297000000);
+ 
+ 	dsi->dphy = devm_phy_get(dev, "dphy");
+ 	if (IS_ERR(dsi->dphy)) {
+@@ -1159,7 +1164,8 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ err_pm_disable:
+ 	pm_runtime_disable(dev);
+ err_unprotect_clk:
+-	clk_rate_exclusive_put(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk)
++		clk_rate_exclusive_put(dsi->mod_clk);
+ 	return ret;
+ }
+ 
+@@ -1171,7 +1177,8 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
+ 	component_del(&pdev->dev, &sun6i_dsi_ops);
+ 	mipi_dsi_host_unregister(&dsi->host);
+ 	pm_runtime_disable(dev);
+-	clk_rate_exclusive_put(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk)
++		clk_rate_exclusive_put(dsi->mod_clk);
+ 
+ 	return 0;
+ }
+@@ -1188,7 +1195,8 @@ static int __maybe_unused sun6i_dsi_runtime_resume(struct device *dev)
+ 	}
+ 
+ 	reset_control_deassert(dsi->reset);
+-	clk_prepare_enable(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk)
++		clk_prepare_enable(dsi->mod_clk);
+ 
+ 	/*
+ 	 * Enable the DSI block.
+@@ -1229,9 +1237,16 @@ static const struct dev_pm_ops sun6i_dsi_pm_ops = {
+ 			   NULL)
+ };
+ 
++static const struct sun6i_dsi_variant sun6i_a31_mipi_dsi = {
++	.has_mod_clk = true,
++};
++
+ static const struct of_device_id sun6i_dsi_of_table[] = {
+-	{ .compatible = "allwinner,sun6i-a31-mipi-dsi" },
+-	{ }
++	{
++		.compatible = "allwinner,sun6i-a31-mipi-dsi",
++		.data = &sun6i_a31_mipi_dsi,
++	},
++	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, sun6i_dsi_of_table);
+ 
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+index 3f4846f581ef..d791c9f6fccf 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+@@ -15,6 +15,10 @@
+ 
+ #define SUN6I_DSI_TCON_DIV	4
+ 
++struct sun6i_dsi_variant {
++	bool			has_mod_clk;
++};
++
+ struct sun6i_dsi {
+ 	struct drm_connector	connector;
+ 	struct drm_encoder	encoder;
+@@ -31,6 +35,7 @@ struct sun6i_dsi {
+ 	struct sun4i_drv	*drv;
+ 	struct mipi_dsi_device	*device;
+ 	struct drm_panel	*panel;
++	const struct sun6i_dsi_variant	*variant;
+ };
+ 
+ static inline struct sun6i_dsi *host_to_sun6i_dsi(struct mipi_dsi_host *host)
+-- 
+2.18.0.321.gffc6fa0e3
