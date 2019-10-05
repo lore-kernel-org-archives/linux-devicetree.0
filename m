@@ -1,94 +1,34 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [DO NOT MERGE] [PATCH v10 6/6] arm64: dts: allwinner: bananapi-m64: Enable Bananapi S070WV20-CT16 DSI panel
-Date: Sat,  5 Oct 2019 19:49:13 +0530
-Message-ID: <20191005141913.22020-7-jagan@amarulasolutions.com>
-References: <20191005141913.22020-1-jagan@amarulasolutions.com>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: Re: [PATCH] of: unittest: fix memory leak in unittest_data_add
+Date: Sat, 5 Oct 2019 16:34:09 +0200
+Message-ID: <50421413-f535-a608-fa7d-1b337eeb95e5@web.de>
+References: <20191004185847.14074-1-navid.emamdoost@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191005141913.22020-1-jagan@amarulasolutions.com>
+In-Reply-To: <20191004185847.14074-1-navid.emamdoost@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: michael@amarulasolutions.com, Icenowy Zheng <icenowy@aosc.io>, linux-sunxi <linux-sunxi@googlegroups.com>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
+To: Navid Emamdoost <navid.emamdoost@gmail.com>, devicetree@vger.kernel.org
+Cc: Navid Emamdoost <emamd001@umn.edu>, Kangjie Lu <kjlu@umn.edu>, Stephen McCamant <smccaman@umn.edu>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add support for Bananapi S070WV20-CT16 DSI panel to
-BPI-M64 board.
+> In unittest_data_add, a copy buffer is created via kmemdup. This buffer
+> is leaked if of_fdt_unflatten_tree fails. The release for the
+> unittest_data buffer is added.
 
-DSI panel connected via board DSI port with,
-- DLDO1 as VCC-DSI supply
-- DCDC1 as VDD supply
-- PD7 gpio for lcd enable pin
-- PD6 gpio for lcd reset pin
-- PD5 gpio for backlight enable pin
+Can a wording like the following be nicer for the change description?
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
+  The buffer =E2=80=9C__dtb_testcases_begin=E2=80=9D will be duplicated to=
+ the local
+  variable =E2=80=9Cunittest_data=E2=80=9D. Release the corresponding memo=
+ry
+  after a call of the function =E2=80=9Cof_fdt_unflatten_tree=E2=80=9D fai=
+led
+  in the implementation of the function =E2=80=9Cunittest_data_add=E2=80=
+=9D.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index 208373efee49..6beaecdd802a 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -45,6 +45,7 @@
- #include "sun50i-a64.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pwm/pwm.h>
- 
- / {
- 	model = "BananaPi-M64";
-@@ -56,6 +57,14 @@
- 		serial1 = &uart1;
- 	};
- 
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <1 2 4 8 16 32 64 128 255>;
-+		default-brightness-level = <2>;
-+		enable-gpios = <&pio 3 5 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PD5 */
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -116,6 +125,24 @@
- 	status = "okay";
- };
- 
-+&dphy {
-+	status = "okay";
-+};
-+
-+&dsi {
-+	vcc-dsi-supply = <&reg_dldo1>;		/* VCC3V3-DSI */
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "bananapi,s070wv20-ct16-icn6211";
-+		reg = <0>;
-+		enable-gpios = <&pio 3 7 GPIO_ACTIVE_HIGH>; /* LCD-PWR-EN: PD7 */
-+		reset-gpios = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD6 */
-+		vdd-supply = <&reg_dcdc1>;
-+		backlight = <&backlight>;
-+	};
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -206,6 +233,10 @@
- 	status = "okay";
- };
- 
-+&r_pwm {
-+	status = "okay";
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
--- 
-2.18.0.321.gffc6fa0e3
+
+Regards,
+Markus
