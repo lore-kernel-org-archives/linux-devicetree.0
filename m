@@ -1,141 +1,109 @@
-From: Johannes Sixt <j6t@kdbg.org>
-Subject: Re: [PATCH] userdiff: Fix some corner cases in dts regex
-Date: Sat, 5 Oct 2019 16:09:11 +0200
-Message-ID: <c3a054d9-2646-e440-40c5-b0aecf21e690@kdbg.org>
-References: <20191004213029.145027-1-sboyd@kernel.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [RESEND PATCH v2 2/3] dt-bindings: iio: light: add veml6030 ALS
+ bindings
+Date: Sat, 5 Oct 2019 15:14:04 +0100
+Message-ID: <20191005151404.5fc7386f@archlinux>
+References: <cover.1569321085.git.gupt21@gmail.com>
+        <b9d5cb134c7c2c7351025a0b556148bca23f302f.1569321085.git.gupt21@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <git-owner@vger.kernel.org>
-In-Reply-To: <20191004213029.145027-1-sboyd@kernel.org>
-Content-Language: en-US
-Sender: git-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: git@vger.kernel.org, Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Matthieu Moy <matthieu.moy@grenoble-inp.fr>, Junio C Hamano <gitster@pobox.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b9d5cb134c7c2c7351025a0b556148bca23f302f.1569321085.git.gupt21@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rishi Gupta <gupt21@gmail.com>
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, tglx@linutronix.de, allison@lohutok.net, alexios.zavras@intel.com, angus@akkea.ca, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, hslester96@gmail.com, wsa+renesas@sang-engineering.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 04.10.19 um 23:30 schrieb Stephen Boyd:
-> While reviewing some dts diffs recently I noticed that the hunk header
-> logic was failing to find the containing node. This is because the regex
-> doesn't consider properties that may span multiple lines, i.e.
+On Tue, 24 Sep 2019 16:21:57 +0530
+Rishi Gupta <gupt21@gmail.com> wrote:
+
+> This commit adds device tree bindings for veml6030 ambient
+> light sensor.
 > 
-> 	property = <something>,
-> 		   <something_else>;
+> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
+looks fine to me, but...
 
-What if the property spans more than two lines?
+DT bindings should always be sent to the DT-bindings maintainers and mailing list
+for review.
 
-	property = <something>,
-		   more,
-		   <something_else>;
++CC Rob, Mark and devicetree list.
 
-Can the second line "more," begin with a word, or are the angle brackets
-mandatory?
+Jonathan
 
-I understand that the continuation lines can begin with a word when the
-property is an expression that is distributed over a number of lines.
-Such continuation lines could be picked up as hunk headers.
-
-But I don't want to complicate things: The hunk header patterns do not
-have to be perfect; it is sufficient when they are helpful in a good
-majority of cases that occur in practice.
-
-> and it got hung up on comments inside nodes that look like the root node
-> because they start with '/*'. Add tests for these cases and update the
-> regex to find them. Maybe detecting the root node is too complicated but
-> forcing it to be a backslash with any amount of whitespace up to an open
-> bracket seemed OK. I tried to detect that a comment is in-between the
-> two parts but I wasn't happy so I just dropped it.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 > ---
->  t/t4018/dts-nodes-multiline-prop | 12 ++++++++++++
->  t/t4018/dts-root                 |  2 +-
->  t/t4018/dts-root-comment         |  8 ++++++++
->  userdiff.c                       |  3 ++-
->  4 files changed, 23 insertions(+), 2 deletions(-)
->  create mode 100644 t/t4018/dts-nodes-multiline-prop
->  create mode 100644 t/t4018/dts-root-comment
+> Changes in v2:
+> * Corrected grammatical mistake from 'is' to 'are' in description of bindings
 > 
-> diff --git a/t/t4018/dts-nodes-multiline-prop b/t/t4018/dts-nodes-multiline-prop
-> new file mode 100644
-> index 000000000000..f7b655935429
-> --- /dev/null
-> +++ b/t/t4018/dts-nodes-multiline-prop
-> @@ -0,0 +1,12 @@
-> +/ {
-> +	label_1: node1@ff00 {
-> +		RIGHT@deadf00,4000 {
-> +			multilineprop = <3>,
-> +					<4>;
-
-You could insert more lines to demonstrate that "<x>," on a line by
-itself is not picked up.
-
-> +
-> +
-> +> +			ChangeMe = <0xffeedd00>;
-
-Sufficient distance to the incorrect candidates above. Good.
-
-> +		};
-> +	};
-> +};
-> diff --git a/t/t4018/dts-root b/t/t4018/dts-root
-> index 2ef9e6ffaa2c..4353b8220c91 100644
-> --- a/t/t4018/dts-root
-> +++ b/t/t4018/dts-root
-> @@ -1,4 +1,4 @@
-> -/RIGHT { /* Technically just supposed to be a slash */
-> +/ { RIGHT /* Technically just supposed to be a slash and brace */
-
-Do I understand correctly that the updated form, "/ {", is the common
-way to spell a root node, but "/" or "/word" are not?
-
->  	#size-cells = <1>;
->  
->  	ChangeMe = <0xffeedd00>;
-> diff --git a/t/t4018/dts-root-comment b/t/t4018/dts-root-comment
-> new file mode 100644
-> index 000000000000..333a625c7007
-> --- /dev/null
-> +++ b/t/t4018/dts-root-comment
-> @@ -0,0 +1,8 @@
-> +/ { RIGHT /* Technically just supposed to be a slash and brace */
-
-Devil's advocate here: insert ';' or '=' in the comment, and the line
-would not be picked up. Does that hurt in practice?
-
-> +	#size-cells = <1>;
-> +
-> +	/* This comment should be ignored */
-> +
-> +	some-property = <40+2>;
-> +	ChangeMe = <0xffeedd00>;
-> +};
-> diff --git a/userdiff.c b/userdiff.c
-> index 86e3244e15dd..651b56caec56 100644
-> --- a/userdiff.c
-> +++ b/userdiff.c
-> @@ -25,8 +25,9 @@ IPATTERN("ada",
->  	 "|=>|\\.\\.|\\*\\*|:=|/=|>=|<=|<<|>>|<>"),
->  PATTERNS("dts",
->  	 "!;\n"
-> +	 "!.*=.*\n"
-
-This behaves the same way as just
-
-	"!=\n"
-
-no?
-
->  	 /* lines beginning with a word optionally preceded by '&' or the root */
-> -	 "^[ \t]*((/|&?[a-zA-Z_]).*)",
-> +	 "^[ \t]*((/[ \t]*\\{|&?[a-zA-Z_]).*)",
->  	 /* -- */
->  	 /* Property names and math operators */
->  	 "[a-zA-Z0-9,._+?#-]+"
+>  .../devicetree/bindings/iio/light/veml6030.yaml    | 62 ++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/veml6030.yaml
 > 
-
--- Hannes
+> diff --git a/Documentation/devicetree/bindings/iio/light/veml6030.yaml b/Documentation/devicetree/bindings/iio/light/veml6030.yaml
+> new file mode 100644
+> index 0000000..969b314
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/veml6030.yaml
+> @@ -0,0 +1,62 @@
+> +# SPDX-License-Identifier: GPL-2.0+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/light/veml6030.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: VEML6030 Ambient Light Sensor (ALS)
+> +
+> +maintainers:
+> +  - Rishi Gupta <gupt21@gmail.com>
+> +
+> +description: |
+> +  Bindings for the ambient light sensor veml6030 from Vishay
+> +  Semiconductors over an i2c interface.
+> +
+> +  Irrespective of whether interrupt is used or not, application
+> +  can get the ALS and White channel reading from IIO raw interface.
+> +
+> +  If the interrupts are used, application will receive an IIO event
+> +  whenever configured threshold is crossed.
+> +
+> +  Specifications about the sensor can be found at:
+> +    https://www.vishay.com/docs/84366/veml6030.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - vishay,veml6030
+> +
+> +  reg:
+> +    description:
+> +      I2C address of the device. If the ADDR pin on veml6030
+> +      is pulled up, this address is 0x48. If the ADDR pin is
+> +      pulled down, this address is 0x10.
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description:
+> +      interrupt mapping for IRQ. Configure with IRQ_TYPE_LEVEL_LOW.
+> +      Refer to interrupt-controller/interrupts.txt for generic
+> +      interrupt client node bindings.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        light-sensor@10 {
+> +                compatible = "vishay,veml6030";
+> +                reg = <0x10>;
+> +                interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
+> +        };
+> +    };
+> +...
