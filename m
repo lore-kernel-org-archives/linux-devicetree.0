@@ -1,60 +1,93 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v19 0/2] PS8640 MIPI-to-eDP bridge
-Date: Sat, 5 Oct 2019 13:16:56 +0200
-Message-ID: <4df984a5-a917-753e-5870-7453f3d5438e@gmail.com>
-References: <1570216148-22802-1-git-send-email-uli@fpond.eu>
+From: Brian Masney <masneyb@onstation.org>
+Subject: [PATCH v2 0/2] interconnect: qcom: add msm8974 support
+Date: Sat,  5 Oct 2019 07:46:03 -0400
+Message-ID: <20191005114605.5279-1-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1570216148-22802-1-git-send-email-uli@fpond.eu>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ulrich Hecht <uli@fpond.eu>, linux-mediatek@lists.infradead.org, dri-devel@lists.freedesktop.org, jitao.shi@mediatek.com
-Cc: mark.rutland@arm.com, stonea168@163.com, ajaykumar.rs@samsung.com, architt@codeaurora.org, vpalatin@chromium.org, cawa.cheng@mediatek.com, yingjoe.chen@mediatek.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, seanpaul@chromium.org, eddie.huang@mediatek.com, rahul.sharma@samsung.com, kernel@pengutronix.de, galak@codeaurora.org, enric.balletbo@collabora.com, andy.yan@rock-chips.com
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, georgi.djakov@linaro.org, robh+dt@kernel.org
+Cc: agross@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, jonathan@marek.ca
 List-Id: devicetree@vger.kernel.org
 
-SGkgVWxpLAoKT24gMDQvMTAvMjAxOSAyMTowOSwgVWxyaWNoIEhlY2h0IHdyb3RlOgo+IEhpIQo+
-IAo+IFRoaXMgZHJpdmVyIHNlZW1zIHRvIGhhdmUgZmFsbGVuIGJ5IHRoZSB3YXlzaWRlIGJlY2F1
-c2UsIHdoaWxlIG90aGVyd2lzZQo+IGZpbmUsIGl0IGhhcyBhIGZpcm13YXJlIHVwZGF0ZSBmZWF0
-dXJlIHRoYXQgcmVxdWlyZXMgYSBibG9iIHRoYXQgaXMgbm90IGluCj4gdGhlIGxpbnV4LWZpcm13
-YXJlIHJlcG8uWzFdCj4gCj4gV2hhdGV2ZXIgdGhlIGNhdXNlIGZvciB0aGF0IG1heSBiZSwgdGhl
-IHVwZGF0ZSBjb2RlIGlzIGVudGlyZWx5IG9wdGlvbmFsCj4gKG15IGNoaXAgd29ya3MgZmluZSB3
-aXRoIHdoYXRldmVyIGZpcm13YXJlIGlzIGN1cnJlbnRseSBpbnN0YWxsZWQpLCBzbyBJCj4gaGF2
-ZSByZW1vdmVkIGl0IGluIG9yZGVyIHRvIGdldCB0aGlzIG1lcmdlZCBhZnRlciBhbGwuIEkgaGF2
-ZSBhbHNvCj4gZm9sbG93ZWQgdmFyaW91cyB0cml2aWFsIEFQSSBjaGFuZ2VzIHRoYXQgaGF2ZSBw
-aWxlZCB1cCBzaW5jZSAyMDE2OyBzZWUKPiB0aGUgaW5kaXZpZHVhbCBwYXRjaGVzIGZvciBkZXRh
-aWxzLgo+IAo+IEknbSB1c2luZyB0aGlzIGRyaXZlciBvbiBhbiBBY2VyIENocm9tZWJvb2sgUjEz
-ICgiRWxtIik7IHNlZQo+IGh0dHBzOi8vZ2l0aHViLmNvbS91bGkva2VybmVsL3RyZWUvZWxtLXdv
-cmtpbmctNS40Lgo+IAoKVGhhbmtzIGZvciB5b3VyIGVmZm9ydCB0byBnZXQgdGhpbmdzIHVwc3Ry
-ZWFtLgpJIGp1c3QgdHJpZWQgeW91ciBicmFuY2ggb24gbXkgUjEzLiBJIGhhZCB0byBkbyBhIHRy
-aXZpYWwgY29uZmlnIGNoYW5nZSBJIGhhZCB0bwpkbywgYXMgSSBkb24ndCBoYXZlIGFuZCBjYXJl
-IGFib3V0IHRoZSBibHVldG9vdGggRlcgcmlnaHQgbm93LgpCdXQgYWZ0ZXIgdGhhdCBteSBzY3Jl
-ZW4ga2VlcHMgYmxhY2suIEkgd2FzIGFibGUgdG8gYnVpbGQgYW5kIGJvb3QKZWxtLXdvcmtpbmct
-NS4zIGFuZCBlbG0td29ya2luZy01LjIuCgpVbmZvcnR1bmF0bGV5IEkgZG9uJ3QgaGF2ZSBhIHNl
-cmlhbCBjb25zb2xlIG9uIHRoZSBDaHJvbWVib29rLCBzbyBpdCdzIGRpZmZpY3VsdAp0byBmaW5k
-IG91dCB3aGVyZSBpdCBoYW5ncy4gQ2FuIHlvdSBwbGVhc2UgZG91YmxlIGNoZWNrIGlmIHlvdXIg
-bmV3CmVsbS13b3JraW5nLTUuNCBhY3R1YWxseSByZWFsbHkgd29ya3M/CgpUaGFua3MsCk1hdHRo
-aWFzCgo+IENVCj4gVWxpCj4gCj4gWzFdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0
-Y2gvOTQyNzU0My8KPiAKPiBKaXRhbyBTaGkgKDIpOgo+ICAgRG9jdW1lbnRhdGlvbjogYnJpZGdl
-OiBBZGQgZG9jdW1lbnRhdGlvbiBmb3IgcHM4NjQwIERUIHByb3BlcnRpZXMKPiAgIGRybS9icmlk
-Z2U6IEFkZCBJMkMgYmFzZWQgZHJpdmVyIGZvciBwczg2NDAgYnJpZGdlCj4gCj4gIC4uLi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3BzODY0MC50eHQgIHwgIDQ0ICsrCj4gIGRy
-aXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgIHwgIDEyICsK
-PiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgfCAg
-IDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3BhcmFkZS1wczg2NDAuYyAgICAgICAgICAg
-ICB8IDY3MiArKysrKysrKysrKysrKysrKysrKysKPiAgNCBmaWxlcyBjaGFuZ2VkLCA3MjkgaW5z
-ZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3BzODY0MC50eHQKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvcGFyYWRlLXBzODY0MC5jCj4gCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
+Here's a patch series that adds interconnect support for the Qualcomm
+MSM8974, which is needed so that the GPU can be supported upstream.
+
+I didn't include the changes to arch/arm/boot/dts/qcom-msm8974.dtsi
+since I have some other device tree patches coming. I'll send them
+all out in a single series once rc4 comes out to avoid any merge
+conflicts. Here's the necessary nodes that need to be added to that
+file:
+
+  #include <dt-bindings/interconnect/qcom,msm8974.h>
+
+  bimc: interconnect@fc380000 {
+          reg = <0xfc380000 0x6a000>;
+          compatible = "qcom,msm8974-bimc";
+          #interconnect-cells = <1>;
+          clock-names = "bus", "bus_a";
+          clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
+                   <&rpmcc RPM_SMD_BIMC_A_CLK>;
+  };
+
+  cnoc: interconnect@fc480000 {
+          reg = <0xfc480000 0x4000>;
+          compatible = "qcom,msm8974-cnoc";
+          #interconnect-cells = <1>;
+          clock-names = "bus", "bus_a";
+          clocks = <&rpmcc RPM_SMD_CNOC_CLK>,
+                   <&rpmcc RPM_SMD_CNOC_A_CLK>;
+  };
+
+  mmssnoc: interconnect@fc478000 {
+          reg = <0xfc478000 0x4000>;
+          compatible = "qcom,msm8974-mmssnoc";
+          #interconnect-cells = <1>;
+          clock-names = "bus", "bus_a";
+          clocks = <&mmcc MMSS_S0_AXI_CLK>,
+                   <&mmcc MMSS_S0_AXI_CLK>;
+  };
+
+  ocmemnoc: interconnect@fc470000 {
+          reg = <0xfc470000 0x4000>;
+          compatible = "qcom,msm8974-ocmemnoc";
+          #interconnect-cells = <1>;
+          clock-names = "bus", "bus_a";
+          clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
+                   <&rpmcc RPM_SMD_OCMEMGX_A_CLK>;
+  };
+
+  pnoc: interconnect@fc468000 {
+          reg = <0xfc468000 0x4000>;
+          compatible = "qcom,msm8974-pnoc";
+          #interconnect-cells = <1>;
+          clock-names = "bus", "bus_a";
+          clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
+                   <&rpmcc RPM_SMD_PNOC_A_CLK>;
+  };
+
+  snoc: interconnect@fc460000 {
+          reg = <0xfc460000 0x4000>;
+          compatible = "qcom,msm8974-snoc";
+          #interconnect-cells = <1>;
+          clock-names = "bus", "bus_a";
+          clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
+                   <&rpmcc RPM_SMD_SNOC_A_CLK>;
+  };
+
+Brian Masney (2):
+  dt-bindings: interconnect: qcom: add msm8974 bindings
+  interconnect: qcom: add msm8974 driver
+
+ .../bindings/interconnect/qcom,msm8974.yaml   |  62 ++
+ drivers/interconnect/qcom/Kconfig             |   9 +
+ drivers/interconnect/qcom/Makefile            |   2 +
+ drivers/interconnect/qcom/msm8974.c           | 784 ++++++++++++++++++
+ .../dt-bindings/interconnect/qcom,msm8974.h   | 146 ++++
+ 5 files changed, 1003 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml
+ create mode 100644 drivers/interconnect/qcom/msm8974.c
+ create mode 100644 include/dt-bindings/interconnect/qcom,msm8974.h
+
+-- 
+2.21.0
