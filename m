@@ -1,8 +1,8 @@
 From: Jonathan Cameron <jic23@kernel.org>
 Subject: Re: [PATCH 1/2] dt-bindings: iio: light: bh1750: convert bindings
  to yaml
-Date: Sat, 5 Oct 2019 13:17:21 +0100
-Message-ID: <20191005131721.374ebcb1@archlinux>
+Date: Sat, 5 Oct 2019 13:21:40 +0100
+Message-ID: <20191005132140.6354efd6@archlinux>
 References: <20190916190024.9955-1-tduszyns@gmail.com>
         <20190916190024.9955-2-tduszyns@gmail.com>
         <CAL_JsqLj6jpgC5e607uDdVJGhKE6b53k=HHgZ3_dq8Qk-X5WDg@mail.gmail.com>
@@ -32,6 +32,7 @@ Rob Herring <robh+dt@kernel.org> wrote:
 > >  create mode 100644 Documentation/devicetree/bindings/iio/light/bh1750.yaml  
 > 
 > Reviewed-by: Rob Herring <robh@kernel.org>
+
 Applied to the togreg branch of iio.git and pushed out as testing.
 
 Thanks,
