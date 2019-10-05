@@ -1,109 +1,99 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [RESEND PATCH v2 2/3] dt-bindings: iio: light: add veml6030 ALS
- bindings
-Date: Sat, 5 Oct 2019 15:14:04 +0100
-Message-ID: <20191005151404.5fc7386f@archlinux>
-References: <cover.1569321085.git.gupt21@gmail.com>
-        <b9d5cb134c7c2c7351025a0b556148bca23f302f.1569321085.git.gupt21@gmail.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v10 0/6] drm/sun4i: Allwinner A64 MIPI-DSI support
+Date: Sat,  5 Oct 2019 19:49:07 +0530
+Message-ID: <20191005141913.22020-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b9d5cb134c7c2c7351025a0b556148bca23f302f.1569321085.git.gupt21@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rishi Gupta <gupt21@gmail.com>
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, tglx@linutronix.de, allison@lohutok.net, alexios.zavras@intel.com, angus@akkea.ca, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, hslester96@gmail.com, wsa+renesas@sang-engineering.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB3OM4LWAKGQE24RTULA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <mripard-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 24 Sep 2019 16:21:57 +0530
-Rishi Gupta <gupt21@gmail.com> wrote:
+This is v10 version for Allwinner A64 MIPI-DSI support
+and here is the previous version set[1].
 
-> This commit adds device tree bindings for veml6030 ambient
-> light sensor.
-> 
-> Signed-off-by: Rishi Gupta <gupt21@gmail.com>
-looks fine to me, but...
+This series on top of drm-misc/for-linux-next along with video start
+delay fix [2]
 
-DT bindings should always be sent to the DT-bindings maintainers and mailing list
-for review.
+Changes for v10:
+- updated dt-bindings as per .yaml format
+- rebased on drm-misc/for-linux-next
+Changes for v9:
+- moved dsi fixes in separate series on top of A33 [2]
+- rebase on linux-next and on top of [2]
+Changes for v8:
+- rebased on drm-misc change along with linux-next
+- reworked video start delay patch
+- tested on 4 different dsi panels
+- reworked commit messages
+Changes for v7:
+- moved vcc-dsi binding to required filed.
+- drop quotes on fallback dphy bindings.
+- drop min_rate clock pll-mipi patches.
+- introduce dclk divider computation as like A64 BSP.
+- add A64 DSI quark patches.
+- fixed A64 DSI pipeline.
+- add proper commit messages.
+- collect Merlijn Wajer Tested-by credits.
+Changes for v6:
+- dropped unneeded changes, patches
+- fixed all burst mode patches as per previous version comments
+- rebase on master
+- update proper commit message
+- dropped unneeded comments
+- order the patches that make review easy
+Changes for v5:
+- collect Rob, Acked-by
+- droped "Fix VBP size calculation" patch
+- updated vblk timing calculation.
+- droped techstar, bananapi dsi panel drivers which may require
+  bridge or other setup. it's under discussion.
+Changes for v4:
+- droppoed untested CCU_FEATURE_FIXED_POSTDIV check code in
+  nkm min, max rate patches
+- create two patches for "Add Allwinner A64 MIPI DSI support"
+  one for has_mod_clk quirk and other one for A64 support
+- use existing driver code construct for hblk computation
+- dropped "Increase hfp packet overhead" patch [2], though BSP added
+  this but we have no issues as of now.
+  (no issues on panel side w/o this change)
+- create separate function for vblk computation 
+- enable vcc-dsi regulator in dsi_runtime_resume
+- collect Rob, Acked-by
+- update MAINTAINERS file for panel drivers
+- cleanup commit messages
+- fixed checkpatch warnings/errors
 
-+CC Rob, Mark and devicetree list.
+[1] https://patchwork.freedesktop.org/series/61310/
+[2] https://patchwork.freedesktop.org/patch/334086/
 
-Jonathan
+Any inputs?
+Jagan.
 
-> ---
-> Changes in v2:
-> * Corrected grammatical mistake from 'is' to 'are' in description of bindings
-> 
->  .../devicetree/bindings/iio/light/veml6030.yaml    | 62 ++++++++++++++++++++++
->  1 file changed, 62 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/veml6030.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/light/veml6030.yaml b/Documentation/devicetree/bindings/iio/light/veml6030.yaml
-> new file mode 100644
-> index 0000000..969b314
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/veml6030.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: GPL-2.0+
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/light/veml6030.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: VEML6030 Ambient Light Sensor (ALS)
-> +
-> +maintainers:
-> +  - Rishi Gupta <gupt21@gmail.com>
-> +
-> +description: |
-> +  Bindings for the ambient light sensor veml6030 from Vishay
-> +  Semiconductors over an i2c interface.
-> +
-> +  Irrespective of whether interrupt is used or not, application
-> +  can get the ALS and White channel reading from IIO raw interface.
-> +
-> +  If the interrupts are used, application will receive an IIO event
-> +  whenever configured threshold is crossed.
-> +
-> +  Specifications about the sensor can be found at:
-> +    https://www.vishay.com/docs/84366/veml6030.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - vishay,veml6030
-> +
-> +  reg:
-> +    description:
-> +      I2C address of the device. If the ADDR pin on veml6030
-> +      is pulled up, this address is 0x48. If the ADDR pin is
-> +      pulled down, this address is 0x10.
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description:
-> +      interrupt mapping for IRQ. Configure with IRQ_TYPE_LEVEL_LOW.
-> +      Refer to interrupt-controller/interrupts.txt for generic
-> +      interrupt client node bindings.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        light-sensor@10 {
-> +                compatible = "vishay,veml6030";
-> +                reg = <0x10>;
-> +                interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
-> +        };
-> +    };
-> +...
+Jagan Teki (6):
+  dt-bindings: sun6i-dsi: Add A64 MIPI-DSI compatible
+  dt-bindings: sun6i-dsi: Add A64 DPHY compatible (w/ A31 fallback)
+  drm/sun4i: dsi: Add has_mod_clk quirk
+  drm/sun4i: dsi: Add Allwinner A64 MIPI DSI support
+  arm64: dts: allwinner: a64: Add MIPI DSI pipeline
+  [DO NOT MERGE] arm64: dts: allwinner: bananapi-m64: Enable Bananapi S070WV20-CT16 DSI
+    panel
+
+ .../display/allwinner,sun6i-a31-mipi-dsi.yaml |  4 +-
+ .../phy/allwinner,sun6i-a31-mipi-dphy.yaml    |  6 ++-
+ .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 31 ++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 38 +++++++++++++++++
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c        | 42 ++++++++++++++-----
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h        |  5 +++
+ 6 files changed, 114 insertions(+), 12 deletions(-)
+
+-- 
+2.18.0.321.gffc6fa0e3
