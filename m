@@ -1,69 +1,75 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH V1] dt-bindings: pinctrl: qcom-pmic-gpio: Add support for
- pm6150/pm6150l
-Date: Fri, 4 Oct 2019 21:38:35 -0700
-Message-ID: <20191005043835.GD6390@tuxbook-pro>
-References: <1570188039-22122-1-git-send-email-kgunda@codeaurora.org>
+From: Tzung-Bi Shih <tzungbi@google.com>
+Subject: [PATCH 00/10] ASoC: mediatek:
+	mt8183-mt6358-ts3a227-max98357: support WoV
+Date: Sat,  5 Oct 2019 13:57:58 +0800
+Message-ID: <20191005055808.249089-1-tzungbi@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1570188039-22122-1-git-send-email-kgunda@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kiran Gunda <kgunda@codeaurora.org>
-Cc: Andy Gross <agross@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: broonie@kernel.org
+Cc: gwendal@google.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, cychiang@google.com, drinkcat@google.com, tzungbi@google.com, robh+dt@kernel.org, enric.balletbo@collabora.com, bleung@google.com, dgreid@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri 04 Oct 04:20 PDT 2019, Kiran Gunda wrote:
+This series makes mt6358, cros_ec_codec, and mt8183-mt6358-ts3a227-max98357
+support WoV (wake on voice).
 
-> Add support for the PM6150 and PM6150L GPIO support to the
-> Qualcomm PMIC GPIO binding.
-> 
-> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+The first 3 commits are some cleanups and refactors.  It looks like breaking
+the existing interface.  But please be noticed that, the cros_ec_codec has
+not used by any real device yet.  The refactor is very necessary to keep
+the style consistent and for easier to further extend and maintain.
+  platform/chrome: cros_ec: remove unused EC feature
+  ASoC: cros_ec_codec: refactor I2S RX
+  ASoC: cros_ec_codec: extract DMIC EC command from I2S RX
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+The 4th commit extends the feature offered from EC codec.
+  platform/chrome: cros_ec: add common commands for EC codec
 
-> ---
->  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 4 ++++
->  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                     | 2 ++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> index c32bf32..2f48cca 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> @@ -23,6 +23,8 @@ PMIC's from Qualcomm.
->  		    "qcom,pms405-gpio"
->  		    "qcom,pm8150-gpio"
->  		    "qcom,pm8150b-gpio"
-> +		    "qcom,pm6150-gpio"
-> +		    "qcom,pm6150l-gpio"
->  
->  		    And must contain either "qcom,spmi-gpio" or "qcom,ssbi-gpio"
->  		    if the device is on an spmi bus or an ssbi bus respectively
-> @@ -100,6 +102,8 @@ to specify in a pin configuration subnode:
->  					     and gpio8)
->  		    gpio1-gpio12 for pm8150b (holes on gpio3, gpio4, gpio7)
->  		    gpio1-gpio12 for pm8150l (hole on gpio7)
-> +		    gpio1-gpio10 for pm6150
-> +		    gpio1-gpio12 for pm6150l
->  
->  - function:
->  	Usage: required
-> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> index f1fece5..387917c 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> @@ -1121,6 +1121,8 @@ static int pmic_gpio_remove(struct platform_device *pdev)
->  	{ .compatible = "qcom,pm8150b-gpio", .data = (void *) 12 },
->  	/* pm8150l has 12 GPIOs with holes on 7 */
->  	{ .compatible = "qcom,pm8150l-gpio", .data = (void *) 12 },
-> +	{ .compatible = "qcom,pm6150-gpio", .data = (void *) 10 },
-> +	{ .compatible = "qcom,pm6150l-gpio", .data = (void *) 12 },
->  	{ },
->  };
->  
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->  a Linux Foundation Collaborative Project
-> 
+The 5th commit changes the behavior of setting and getting DMIC gains.
+  ASoC: cros_ec_codec: read max DMIC gain from EC codec
+
+The 6th and 7th commit make cros_ec_codec support WoV.
+  ASoC: dt-bindings: cros_ec_codec: add SHM bindings
+  ASoC: cros_ec_codec: support WoV
+
+The 8th commit sets necessary registers on mt6358 to support WoV.
+  ASoC: mediatek: mt6358: support WoV
+
+The last 2 commit make machine driver mt8183-mt6358-ts3a227-max98357 support
+WoV if ec-codec is in DTS.
+  ASoC: dt-bindings: mt8183: add ec-codec
+  ASoC: mediatek: mt8183: support WoV
+
+Tzung-Bi Shih (10):
+  platform/chrome: cros_ec: remove unused EC feature
+  ASoC: cros_ec_codec: refactor I2S RX
+  ASoC: cros_ec_codec: extract DMIC EC command from I2S RX
+  platform/chrome: cros_ec: add common commands for EC codec
+  ASoC: cros_ec_codec: read max DMIC gain from EC codec
+  ASoC: dt-bindings: cros_ec_codec: add SHM bindings
+  ASoC: cros_ec_codec: support WoV
+  ASoC: mediatek: mt6358: support WoV
+  ASoC: dt-bindings: mt8183: add ec-codec
+  ASoC: mediatek: mt8183: support WoV
+
+ .../bindings/sound/google,cros-ec-codec.txt   |   24 +-
+ .../sound/mt8183-mt6358-ts3a227-max98357.txt  |    3 +
+ drivers/platform/chrome/cros_ec_trace.c       |    5 +-
+ .../linux/platform_data/cros_ec_commands.h    |  285 ++++-
+ sound/soc/codecs/cros_ec_codec.c              | 1125 +++++++++++++----
+ sound/soc/codecs/mt6358.c                     |  105 ++
+ sound/soc/mediatek/Kconfig                    |    1 +
+ .../mt8183/mt8183-mt6358-ts3a227-max98357.c   |   70 +-
+ 8 files changed, 1292 insertions(+), 326 deletions(-)
+
+-- 
+2.23.0.581.g78d2f28ef7-goog
