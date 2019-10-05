@@ -1,7 +1,7 @@
 From: Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH v2 2/2] dt-bindings: display: clps711x-fb: fix native-mode setting
-Date: Sat,  5 Oct 2019 15:09:21 +0200
-Message-ID: <20191005130921.12874-3-martin@kaiser.cx>
+Subject: [PATCH v2 1/2] dt-bindings: display: imx: fix native-mode setting
+Date: Sat,  5 Oct 2019 15:09:20 +0200
+Message-ID: <20191005130921.12874-2-martin@kaiser.cx>
 References: <20190918193853.25689-1-martin@kaiser.cx>
  <20191005130921.12874-1-martin@kaiser.cx>
 Mime-Version: 1.0
@@ -19,27 +19,26 @@ display-timing, it is ignored.
 Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 ---
 changes in v2
- fix the example in this binding as well
+ move parts of the commit message into the cover letter
 
- Documentation/devicetree/bindings/display/cirrus,clps711x-fb.txt | 2 +-
+ Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/cirrus,clps711x-fb.txt b/Documentation/devicetree/bindings/display/cirrus,clps711x-fb.txt
-index b0e506610400..0ab5f0663611 100644
---- a/Documentation/devicetree/bindings/display/cirrus,clps711x-fb.txt
-+++ b/Documentation/devicetree/bindings/display/cirrus,clps711x-fb.txt
-@@ -27,11 +27,11 @@ Example:
+diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
+index e5a8b363d829..f4df9e83bcd2 100644
+--- a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
++++ b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
+@@ -38,10 +38,10 @@ Example:
  
- 	display: display {
- 		model = "320x240x4";
--		native-mode = <&timing0>;
- 		bits-per-pixel = <4>;
- 		ac-prescale = <17>;
- 
+ 	display0: display0 {
+ 		model = "Primeview-PD050VL1";
+-		native-mode = <&timing_disp0>;
+ 		bits-per-pixel = <16>;
+ 		fsl,pcr = <0xf0c88080>;	/* non-standard but required */
  		display-timings {
-+			native-mode = <&timing0>;
- 			timing0: 320x240 {
- 				hactive = <320>;
- 				hback-porch = <0>;
++			native-mode = <&timing_disp0>;
+ 			timing_disp0: 640x480 {
+ 				hactive = <640>;
+ 				vactive = <480>;
 -- 
 2.11.0
