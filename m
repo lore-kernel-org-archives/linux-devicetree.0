@@ -1,49 +1,34 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 2/2] MAINTAINERS: add entry for ROHM BH1750 driver
-Date: Sat, 5 Oct 2019 13:22:25 +0100
-Message-ID: <20191005132225.63019df2@archlinux>
-References: <20190916190024.9955-1-tduszyns@gmail.com>
-        <20190916190024.9955-3-tduszyns@gmail.com>
+From: Martin Kaiser <martin@kaiser.cx>
+Subject: [PATCH v2 0/2] dt-bindings: display: fix native-mode setting
+Date: Sat,  5 Oct 2019 15:09:19 +0200
+Message-ID: <20191005130921.12874-1-martin@kaiser.cx>
+References: <20190918193853.25689-1-martin@kaiser.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190916190024.9955-3-tduszyns@gmail.com>
+In-Reply-To: <20190918193853.25689-1-martin@kaiser.cx>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Duszynski <tduszyns@gmail.com>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Alexander Shiyan <shc_work@mail.ru>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Kaiser <martin@kaiser.cx>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 16 Sep 2019 21:00:24 +0200
-Tomasz Duszynski <tduszyns@gmail.com> wrote:
+According to
+Documentation/devicetree/bindings/display/panel/display-timing.txt,
+native-mode is a property of the display-timings node.
 
-> Add myself as a ROHM BH1750 ambient light sensor driver maintainer.
-> 
-> Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-Applied.
+If it's located outside of display-timings, the native-mode setting is
+ignored and the first display timing is used.
 
-Thanks,
+We've already fixed the board definitions which got this wrong. Fix the
+examples in the device tree bindings as well.
 
-Jonathan
+Martin Kaiser (2):
+  dt-bindings: display: imx: fix native-mode setting
+  dt-bindings: display: clps711x-fb: fix native-mode setting
 
-> ---
->  MAINTAINERS | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f0c03740b9fb..928059c5cd49 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13792,6 +13792,12 @@ L:	linux-serial@vger.kernel.org
->  S:	Odd Fixes
->  F:	drivers/tty/serial/rp2.*
->  
-> +ROHM BH1750 AMBIENT LIGHT SENSOR DRIVER
-> +M:	Tomasz Duszynski <tduszyns@gmail.com>
-> +S:	Maintained
-> +F:	drivers/iio/light/bh1750.c
-> +F:	Documentation/devicetree/bindings/iio/light/bh1750.yaml
-> +
->  ROHM MULTIFUNCTION BD9571MWV-M PMIC DEVICE DRIVERS
->  M:	Marek Vasut <marek.vasut+renesas@gmail.com>
->  L:	linux-kernel@vger.kernel.org
+ Documentation/devicetree/bindings/display/cirrus,clps711x-fb.txt | 2 +-
+ Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+-- 
+2.11.0
