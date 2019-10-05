@@ -1,40 +1,49 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: light: bh1750: convert bindings
- to yaml
-Date: Sat, 5 Oct 2019 13:21:40 +0100
-Message-ID: <20191005132140.6354efd6@archlinux>
+Subject: Re: [PATCH 2/2] MAINTAINERS: add entry for ROHM BH1750 driver
+Date: Sat, 5 Oct 2019 13:22:25 +0100
+Message-ID: <20191005132225.63019df2@archlinux>
 References: <20190916190024.9955-1-tduszyns@gmail.com>
-        <20190916190024.9955-2-tduszyns@gmail.com>
-        <CAL_JsqLj6jpgC5e607uDdVJGhKE6b53k=HHgZ3_dq8Qk-X5WDg@mail.gmail.com>
+        <20190916190024.9955-3-tduszyns@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLj6jpgC5e607uDdVJGhKE6b53k=HHgZ3_dq8Qk-X5WDg@mail.gmail.com>
+In-Reply-To: <20190916190024.9955-3-tduszyns@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Tomasz Duszynski <tduszyns@gmail.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Tomasz Duszynski <tduszyns@gmail.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Sep 2019 09:17:40 -0500
-Rob Herring <robh+dt@kernel.org> wrote:
+On Mon, 16 Sep 2019 21:00:24 +0200
+Tomasz Duszynski <tduszyns@gmail.com> wrote:
 
-> On Mon, Sep 16, 2019 at 2:01 PM Tomasz Duszynski <tduszyns@gmail.com> wrote:
-> >
-> > Convert existing device tree bindings to yaml.
-> >
-> > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-> > ---
-> >  .../devicetree/bindings/iio/light/bh1750.txt  | 18 --------
-> >  .../devicetree/bindings/iio/light/bh1750.yaml | 43 +++++++++++++++++++
-> >  2 files changed, 43 insertions(+), 18 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/light/bh1750.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/light/bh1750.yaml  
+> Add myself as a ROHM BH1750 ambient light sensor driver maintainer.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-Applied to the togreg branch of iio.git and pushed out as testing.
+> Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
+Applied.
 
 Thanks,
 
 Jonathan
+
+> ---
+>  MAINTAINERS | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f0c03740b9fb..928059c5cd49 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13792,6 +13792,12 @@ L:	linux-serial@vger.kernel.org
+>  S:	Odd Fixes
+>  F:	drivers/tty/serial/rp2.*
+>  
+> +ROHM BH1750 AMBIENT LIGHT SENSOR DRIVER
+> +M:	Tomasz Duszynski <tduszyns@gmail.com>
+> +S:	Maintained
+> +F:	drivers/iio/light/bh1750.c
+> +F:	Documentation/devicetree/bindings/iio/light/bh1750.yaml
+> +
+>  ROHM MULTIFUNCTION BD9571MWV-M PMIC DEVICE DRIVERS
+>  M:	Marek Vasut <marek.vasut+renesas@gmail.com>
+>  L:	linux-kernel@vger.kernel.org
