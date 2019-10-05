@@ -1,58 +1,47 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH] dt-bindings: display: renesas: Add r8a774b1 support
-Date: Fri, 4 Oct 2019 07:39:13 +0000
-Message-ID: <OSBPR01MB21033EA129C4C8C8301EDCE8B89E0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1569835731-8096-1-git-send-email-biju.das@bp.renesas.com>
- <20191004070211.GA9380@pendragon.ideasonboard.com>
+From: Vidya Sagar <vidyas@nvidia.com>
+Subject: [PATCH 1/2] PCI: tegra: Fix CLKREQ dependency programming
+Date: Sat, 5 Oct 2019 22:12:11 +0530
+Message-ID: <20191005164212.3646-1-vidyas@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20191004070211.GA9380@pendragon.ideasonboard.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, David Airlie <airlied@linux.ie>, Simon Horman <horms@verge.net.au>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, andrew.murray@arm.com
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kthota@nvidia.com, mmaddireddy@nvidia.com, vidyas@nvidia.com, sagar.tv@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwNCg0KVGhhbmtzIGZvciB0aGUgZmVlZGJhY2suDQoNCj4gU3ViamVjdDogUmU6
-IFtQQVRDSF0gZHQtYmluZGluZ3M6IGRpc3BsYXk6IHJlbmVzYXM6IEFkZCByOGE3NzRiMSBzdXBw
-b3J0DQo+IA0KPiBIaSBCaWp1LA0KPiANCj4gVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guDQo+IA0K
-PiBPbiBNb24sIFNlcCAzMCwgMjAxOSBhdCAxMDoyODo1MUFNICswMTAwLCBCaWp1IERhcyB3cm90
-ZToNCj4gPiBEb2N1bWVudCBSWi9HMk4gKFI4QTc3NEIxKSBTb0MgYmluZGluZ3MuDQo+ID4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+IA0K
-PiBJIHJlYWxseSBsaWtlIGhvdyB5b3VyIFJaIHBhdGNoZXMgYXJlIHNpbXBsZSwgdGhleSdyZSBw
-YWlubGVzcyB0byByZXZpZXcsIGl0J3MgYWxsDQo+IHZlcnkgcGxlYXN1cmFibGUgOi0pDQoNClll
-cyBJIGFncmVlLCBJdCBpcyBiZWNhdXNlIG9mIHRoZSBnb29kIHdvcmsgZG9uZSBieSB5b3UgYW5k
-IHlvdXIgdGVhbS4NCg0KUmVnYXJkcywNCkJpanUNCg0KPiBSZXZpZXdlZC1ieTogTGF1cmVudCBQ
-aW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPg0KPiANCj4gQW5kIGFw
-cGxpZWQgdG8gbXkgdHJlZS4NCj4gDQo+ID4gLS0tDQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGR3LWhkbWkudHh0DQo+ID4gfCAx
-ICsNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+ID4NCj4gPiBkaWZmIC0t
-Z2l0DQo+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlk
-Z2UvcmVuZXNhcyxkdy0NCj4gaGRtaS50eHQNCj4gPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGR3LQ0KPiBoZG1pLnR4dA0KPiA+IGlu
-ZGV4IGRiNjgwNDEuLjgxOWYzZTMgMTAwNjQ0DQo+ID4gLS0tDQo+ID4gYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxkdy0NCj4gaGRtaS50
-eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
-cmlkZ2UvcmVuZXNhcyxkdy0NCj4gaGRtaQ0KPiA+ICsrKyAudHh0DQo+ID4gQEAgLTEzLDYgKzEz
-LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPg0KPiA+ICAtIGNvbXBhdGlibGUgOiBTaGFs
-bCBjb250YWluIG9uZSBvciBtb3JlIG9mDQo+ID4gICAgLSAicmVuZXNhcyxyOGE3NzRhMS1oZG1p
-IiBmb3IgUjhBNzc0QTEgKFJaL0cyTSkgY29tcGF0aWJsZSBIRE1JIFRYDQo+ID4gKyAgLSAicmVu
-ZXNhcyxyOGE3NzRiMS1oZG1pIiBmb3IgUjhBNzc0QjEgKFJaL0cyTikgY29tcGF0aWJsZSBIRE1J
-IFRYDQo+ID4gICAgLSAicmVuZXNhcyxyOGE3Nzk1LWhkbWkiIGZvciBSOEE3Nzk1IChSLUNhciBI
-MykgY29tcGF0aWJsZSBIRE1JIFRYDQo+ID4gICAgLSAicmVuZXNhcyxyOGE3Nzk2LWhkbWkiIGZv
-ciBSOEE3Nzk2IChSLUNhciBNMy1XKSBjb21wYXRpYmxlIEhETUkgVFgNCj4gPiAgICAtICJyZW5l
-c2FzLHI4YTc3OTY1LWhkbWkiIGZvciBSOEE3Nzk2NSAoUi1DYXIgTTMtTikgY29tcGF0aWJsZSBI
-RE1JDQo+ID4gVFgNCj4gDQo+IC0tDQo+IFJlZ2FyZHMsDQo+IA0KPiBMYXVyZW50IFBpbmNoYXJ0
-DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+Corrects the programming to provide REFCLK to the downstream device
+when there is no CLKREQ sideband signal routing present from root port
+to the endpont.
+
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+ drivers/pci/controller/dwc/pcie-tegra194.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index f89f5acee72d..cbe95f0ea0ca 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -40,8 +40,6 @@
+ #define APPL_PINMUX_CLKREQ_OVERRIDE		BIT(3)
+ #define APPL_PINMUX_CLK_OUTPUT_IN_OVERRIDE_EN	BIT(4)
+ #define APPL_PINMUX_CLK_OUTPUT_IN_OVERRIDE	BIT(5)
+-#define APPL_PINMUX_CLKREQ_OUT_OVRD_EN		BIT(9)
+-#define APPL_PINMUX_CLKREQ_OUT_OVRD		BIT(10)
+ 
+ #define APPL_CTRL				0x4
+ #define APPL_CTRL_SYS_PRE_DET_STATE		BIT(6)
+@@ -1193,8 +1191,8 @@ static int tegra_pcie_config_controller(struct tegra_pcie_dw *pcie,
+ 
+ 	if (!pcie->supports_clkreq) {
+ 		val = appl_readl(pcie, APPL_PINMUX);
+-		val |= APPL_PINMUX_CLKREQ_OUT_OVRD_EN;
+-		val |= APPL_PINMUX_CLKREQ_OUT_OVRD;
++		val |= APPL_PINMUX_CLKREQ_OVERRIDE_EN;
++		val &= ~APPL_PINMUX_CLKREQ_OVERRIDE;
+ 		appl_writel(pcie, val, APPL_PINMUX);
+ 	}
+ 
+-- 
+2.17.1
