@@ -1,44 +1,141 @@
-From: Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH v2 1/2] dt-bindings: display: imx: fix native-mode setting
-Date: Sat,  5 Oct 2019 15:09:20 +0200
-Message-ID: <20191005130921.12874-2-martin@kaiser.cx>
-References: <20190918193853.25689-1-martin@kaiser.cx>
- <20191005130921.12874-1-martin@kaiser.cx>
+From: Johannes Sixt <j6t@kdbg.org>
+Subject: Re: [PATCH] userdiff: Fix some corner cases in dts regex
+Date: Sat, 5 Oct 2019 16:09:11 +0200
+Message-ID: <c3a054d9-2646-e440-40c5-b0aecf21e690@kdbg.org>
+References: <20191004213029.145027-1-sboyd@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191005130921.12874-1-martin@kaiser.cx>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, Alexander Shiyan <shc_work@mail.ru>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Martin Kaiser <martin@kaiser.cx>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <git-owner@vger.kernel.org>
+In-Reply-To: <20191004213029.145027-1-sboyd@kernel.org>
+Content-Language: en-US
+Sender: git-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: git@vger.kernel.org, Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Matthieu Moy <matthieu.moy@grenoble-inp.fr>, Junio C Hamano <gitster@pobox.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Move the native-mode setting inside the display-timing node. Outside of
-display-timing, it is ignored.
+Am 04.10.19 um 23:30 schrieb Stephen Boyd:
+> While reviewing some dts diffs recently I noticed that the hunk header
+> logic was failing to find the containing node. This is because the regex
+> doesn't consider properties that may span multiple lines, i.e.
+> 
+> 	property = <something>,
+> 		   <something_else>;
 
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
-changes in v2
- move parts of the commit message into the cover letter
+What if the property spans more than two lines?
 
- Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	property = <something>,
+		   more,
+		   <something_else>;
 
-diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-index e5a8b363d829..f4df9e83bcd2 100644
---- a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-+++ b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-@@ -38,10 +38,10 @@ Example:
- 
- 	display0: display0 {
- 		model = "Primeview-PD050VL1";
--		native-mode = <&timing_disp0>;
- 		bits-per-pixel = <16>;
- 		fsl,pcr = <0xf0c88080>;	/* non-standard but required */
- 		display-timings {
-+			native-mode = <&timing_disp0>;
- 			timing_disp0: 640x480 {
- 				hactive = <640>;
- 				vactive = <480>;
--- 
-2.11.0
+Can the second line "more," begin with a word, or are the angle brackets
+mandatory?
+
+I understand that the continuation lines can begin with a word when the
+property is an expression that is distributed over a number of lines.
+Such continuation lines could be picked up as hunk headers.
+
+But I don't want to complicate things: The hunk header patterns do not
+have to be perfect; it is sufficient when they are helpful in a good
+majority of cases that occur in practice.
+
+> and it got hung up on comments inside nodes that look like the root node
+> because they start with '/*'. Add tests for these cases and update the
+> regex to find them. Maybe detecting the root node is too complicated but
+> forcing it to be a backslash with any amount of whitespace up to an open
+> bracket seemed OK. I tried to detect that a comment is in-between the
+> two parts but I wasn't happy so I just dropped it.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> ---
+>  t/t4018/dts-nodes-multiline-prop | 12 ++++++++++++
+>  t/t4018/dts-root                 |  2 +-
+>  t/t4018/dts-root-comment         |  8 ++++++++
+>  userdiff.c                       |  3 ++-
+>  4 files changed, 23 insertions(+), 2 deletions(-)
+>  create mode 100644 t/t4018/dts-nodes-multiline-prop
+>  create mode 100644 t/t4018/dts-root-comment
+> 
+> diff --git a/t/t4018/dts-nodes-multiline-prop b/t/t4018/dts-nodes-multiline-prop
+> new file mode 100644
+> index 000000000000..f7b655935429
+> --- /dev/null
+> +++ b/t/t4018/dts-nodes-multiline-prop
+> @@ -0,0 +1,12 @@
+> +/ {
+> +	label_1: node1@ff00 {
+> +		RIGHT@deadf00,4000 {
+> +			multilineprop = <3>,
+> +					<4>;
+
+You could insert more lines to demonstrate that "<x>," on a line by
+itself is not picked up.
+
+> +
+> +
+> +> +			ChangeMe = <0xffeedd00>;
+
+Sufficient distance to the incorrect candidates above. Good.
+
+> +		};
+> +	};
+> +};
+> diff --git a/t/t4018/dts-root b/t/t4018/dts-root
+> index 2ef9e6ffaa2c..4353b8220c91 100644
+> --- a/t/t4018/dts-root
+> +++ b/t/t4018/dts-root
+> @@ -1,4 +1,4 @@
+> -/RIGHT { /* Technically just supposed to be a slash */
+> +/ { RIGHT /* Technically just supposed to be a slash and brace */
+
+Do I understand correctly that the updated form, "/ {", is the common
+way to spell a root node, but "/" or "/word" are not?
+
+>  	#size-cells = <1>;
+>  
+>  	ChangeMe = <0xffeedd00>;
+> diff --git a/t/t4018/dts-root-comment b/t/t4018/dts-root-comment
+> new file mode 100644
+> index 000000000000..333a625c7007
+> --- /dev/null
+> +++ b/t/t4018/dts-root-comment
+> @@ -0,0 +1,8 @@
+> +/ { RIGHT /* Technically just supposed to be a slash and brace */
+
+Devil's advocate here: insert ';' or '=' in the comment, and the line
+would not be picked up. Does that hurt in practice?
+
+> +	#size-cells = <1>;
+> +
+> +	/* This comment should be ignored */
+> +
+> +	some-property = <40+2>;
+> +	ChangeMe = <0xffeedd00>;
+> +};
+> diff --git a/userdiff.c b/userdiff.c
+> index 86e3244e15dd..651b56caec56 100644
+> --- a/userdiff.c
+> +++ b/userdiff.c
+> @@ -25,8 +25,9 @@ IPATTERN("ada",
+>  	 "|=>|\\.\\.|\\*\\*|:=|/=|>=|<=|<<|>>|<>"),
+>  PATTERNS("dts",
+>  	 "!;\n"
+> +	 "!.*=.*\n"
+
+This behaves the same way as just
+
+	"!=\n"
+
+no?
+
+>  	 /* lines beginning with a word optionally preceded by '&' or the root */
+> -	 "^[ \t]*((/|&?[a-zA-Z_]).*)",
+> +	 "^[ \t]*((/[ \t]*\\{|&?[a-zA-Z_]).*)",
+>  	 /* -- */
+>  	 /* Property names and math operators */
+>  	 "[a-zA-Z0-9,._+?#-]+"
+> 
+
+-- Hannes
