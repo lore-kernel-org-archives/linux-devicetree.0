@@ -1,15 +1,15 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 1/6] dt-bindings: arm: fsl: Add the S32V234-EVB board
-Date: Sun, 6 Oct 2019 09:59:44 +0800
-Message-ID: <20191006015942.GK7150@dragon>
-References: <20190905115803.19565-1-stefan-gabriel.mirea@nxp.com>
- <20190905115803.19565-2-stefan-gabriel.mirea@nxp.com>
+Subject: Re: [PATCH v1] usb: dwc3: enable otg mode for dwc3 usb ip on
+ layerscape
+Date: Sun, 6 Oct 2019 10:54:52 +0800
+Message-ID: <20191006025450.GO7150@dragon>
+References: <20190909090244.42543-1-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190905115803.19565-2-stefan-gabriel.mirea@nxp.com>
+In-Reply-To: <20190909090244.42543-1-yinbo.zhu@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,33 +19,69 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan-gabriel Mirea <stefan-gabriel.mirea@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Eddy Petrisor <eddy.petrisor@nxp.com>, "corbet@lwn.net" <corbet@lwn.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "jslaby@suse.com" <jslaby@suse.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org" <will@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Yinbo Zhu <yinbo.zhu@nxp.com>, Li Yang <leoyang.li@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, xiaobo.xie@nxp.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, jiafei.pan@nxp.com, Ran Wang <ran.wang_1@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBTZXAgMDUsIDIwMTkgYXQgMTE6NTg6MzJBTSArMDAwMCwgU3RlZmFuLWdhYnJpZWwg
-TWlyZWEgd3JvdGU6Cj4gRnJvbTogRWRkeSBQZXRyaciZb3IgPGVkZHkucGV0cmlzb3JAbnhwLmNv
-bT4KPiAKPiBBZGQgZW50cnkgZm9yIHRoZSBOWFAgUzMyVjIzNCBDdXN0b21lciBFdmFsdWF0aW9u
-IEJvYXJkIHRvIHRoZSBib2FyZC9Tb0MKPiBiaW5kaW5ncy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBF
-ZGR5IFBldHJpyJlvciA8ZWRkeS5wZXRyaXNvckBueHAuY29tPgo+IFNpZ25lZC1vZmYtYnk6IFN0
-ZWZhbi1HYWJyaWVsIE1pcmVhIDxzdGVmYW4tZ2FicmllbC5taXJlYUBueHAuY29tPgo+IFJldmll
-d2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKSSdtIGFib3V0IHRvIGFwcGx5
-IHRoZSBwYXRjaGVzLCBidXQgZm91bmQgdGhlIG1lc3NhZ2VzIGFyZSB1c2luZyBiYXNlNjQKQ29u
-dGVudC1UcmFuc2Zlci1FbmNvZGluZywgd2hpY2ggaXMgZGlmZmljdWx0IGZvciBtZSB0byBhcHBs
-eSBwYXRjaApmcm9tLiAgUGxlYXNlIGZpeCBpdCBhbmQgcmVzZW5kLgoKU2hhd24KCj4gLS0tCj4g
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsLnlhbWwgfCA2ICsrKysr
-Kwo+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsLnlhbWwgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sCj4gaW5kZXggNzI5NGFjMzZmNGMw
-Li41OTdjNTYzYmRlYzkgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2FybS9mc2wueWFtbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9hcm0vZnNsLnlhbWwKPiBAQCAtMzA5LDQgKzMwOSwxMCBAQCBwcm9wZXJ0aWVzOgo+ICAg
-ICAgICAgICAgICAgIC0gZnNsLGxzMjA4OGEtcmRiCj4gICAgICAgICAgICAtIGNvbnN0OiBmc2ws
-bHMyMDg4YQo+ICAKPiArICAgICAgLSBkZXNjcmlwdGlvbjogUzMyVjIzNCBiYXNlZCBCb2FyZHMK
-PiArICAgICAgICBpdGVtczoKPiArICAgICAgICAgIC0gZW51bToKPiArICAgICAgICAgICAgICAt
-IGZzbCxzMzJ2MjM0LWV2YiAgICAgICAgICAgIyBTMzJWMjM0LUVWQjIgQ3VzdG9tZXIgRXZhbHVh
-dGlvbiBCb2FyZAo+ICsgICAgICAgICAgLSBjb25zdDogZnNsLHMzMnYyMzQKPiArCj4gIC4uLgo+
-IC0tIAo+IDIuMjIuMAo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Mon, Sep 09, 2019 at 05:02:44PM +0800, Yinbo Zhu wrote:
+> layerscape otg function should be supported HNP SRP and ADP protocol
+> accroing to rm doc, but dwc3 code not realize it and use id pin to
+> detect who is host or device(0 is host 1 is device) this patch is to
+> enable OTG mode on ls1028ardb ls1088ardb and ls1046ardb in dts
+> 
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+
+The patch prefix should be something like: 'arm64: dts: ...'
+
+@Leo, do you agree with the changes?
+
+Shawn
+
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 2 +-
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 7975519b4f56..5810d0400dbc 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -320,7 +320,7 @@
+>  			compatible = "fsl,ls1028a-dwc3", "snps,dwc3";
+>  			reg = <0x0 0x3110000 0x0 0x10000>;
+>  			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+> -			dr_mode = "host";
+> +			dr_mode = "otg";
+>  			snps,dis_rxdet_inp3_quirk;
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> index b0ef08b090dd..ecce6151b9b0 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> @@ -582,7 +582,7 @@
+>  			compatible = "snps,dwc3";
+>  			reg = <0x0 0x3000000 0x0 0x10000>;
+>  			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+> -			dr_mode = "host";
+> +			dr_mode = "otg";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+>  			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index dacd8cf03a7f..4b5413f7c90c 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -385,7 +385,7 @@
+>  			compatible = "snps,dwc3";
+>  			reg = <0x0 0x3110000 0x0 0x10000>;
+>  			interrupts = <0 81 IRQ_TYPE_LEVEL_HIGH>;
+> -			dr_mode = "host";
+> +			dr_mode = "otg";
+>  			snps,quirk-frame-length-adjustment = <0x20>;
+>  			snps,dis_rxdet_inp3_quirk;
+>  			status = "disabled";
+> -- 
+> 2.17.1
+> 
