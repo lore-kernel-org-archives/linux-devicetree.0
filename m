@@ -1,7 +1,7 @@
 From: Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V4 10/10] MAINTAINERS: Add BCM2711 to BCM2835 ARCH
-Date: Sun,  6 Oct 2019 17:28:28 +0200
-Message-ID: <1570375708-26965-11-git-send-email-wahrenst@gmx.net>
+Subject: [PATCH V4 01/10] bluetooth: hci_bcm: Fix RTS handling during startup
+Date: Sun,  6 Oct 2019 17:28:19 +0200
+Message-ID: <1570375708-26965-2-git-send-email-wahrenst@gmx.net>
 References: <1570375708-26965-1-git-send-email-wahrenst@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,34 +21,32 @@ To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.co
 Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-bluetooth@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Stefan Wahren <wahrenst@gmx.net>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Clarify that BCM2711 belongs to the BCM2835 ARCH.
+The RPi 4 uses the hardware handshake lines for CYW43455, but the chip
+doesn't react to HCI requests during DT probe. The reason is the inproper
+handling of the RTS line during startup. According to the startup
+signaling sequence in the CYW43455 datasheet, the hosts RTS line must
+be driven after BT_REG_ON and BT_HOST_WAKE.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Acked-by: Eric Anholt <eric@anholt.net>
 ---
- MAINTAINERS | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/bluetooth/hci_bcm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 296de2b..14a939a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3187,7 +3187,7 @@ N:	bcm216*
- N:	kona
- F:	arch/arm/mach-bcm/
+diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+index 7646636..0f73f6a 100644
+--- a/drivers/bluetooth/hci_bcm.c
++++ b/drivers/bluetooth/hci_bcm.c
+@@ -445,9 +445,11 @@ static int bcm_open(struct hci_uart *hu)
 
--BROADCOM BCM2835 ARM ARCHITECTURE
-+BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE
- M:	Eric Anholt <eric@anholt.net>
- M:	Stefan Wahren <wahrenst@gmx.net>
- L:	bcm-kernel-feedback-list@broadcom.com
-@@ -3195,6 +3195,7 @@ L:	linux-rpi-kernel@lists.infradead.org (moderated for non-subscribers)
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- T:	git git://github.com/anholt/linux
- S:	Maintained
-+N:	bcm2711
- N:	bcm2835
- F:	drivers/staging/vc04_services
-
+ out:
+ 	if (bcm->dev) {
++		hci_uart_set_flow_control(hu, true);
+ 		hu->init_speed = bcm->dev->init_speed;
+ 		hu->oper_speed = bcm->dev->oper_speed;
+ 		err = bcm_gpio_set_power(bcm->dev, true);
++		hci_uart_set_flow_control(hu, false);
+ 		if (err)
+ 			goto err_unset_hu;
+ 	}
 --
 2.7.4
