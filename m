@@ -1,32 +1,43 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: imx8mn: Add "fsl,imx8mq-src" as src's
- fallback compatible
-Date: Sun, 6 Oct 2019 11:54:50 +0800
-Message-ID: <20191006035449.GQ7150@dragon>
-References: <1568126359-2887-1-git-send-email-Anson.Huang@nxp.com>
+From: Zhou Yanjie <zhouyanjie@zoho.com>
+Subject: Re: [PATCH 4/4] MMC: Ingenic: Add support for JZ4760 and support for
+ LPM.
+Date: Sun, 6 Oct 2019 13:58:22 +0800
+Message-ID: <5D99827E.9070505@zoho.com>
+References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
+ <1567669089-88693-5-git-send-email-zhouyanjie@zoho.com>
+ <CAPDyKFo0aR2fhCd8qCNAf7hoXSjV+9vG1BqB6vEM=B9Vpmpovg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1568126359-2887-1-git-send-email-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, daniel.baluta@nxp.com, s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, leonard.crestez@nxp.com, festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFo0aR2fhCd8qCNAf7hoXSjV+9vG1BqB6vEM=B9Vpmpovg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mips@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Paul Burton <paul.burton@mips.com>, Linus Walleij <linus.walleij@linaro.org>, Paul Cercueil <paul@crapouillou.net>, Mathieu Malaterre <malat@debian.org>, YueHaibing <yuehaibing@huawei.com>, Ezequiel Garcia <ezequiel@collabora.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, syq@debian.org, jiaxun.yang@flygoat.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 10:39:19AM -0400, Anson Huang wrote:
-> i.MX8MN can reuse i.MX8MQ's src driver, add "fsl,imx8mq-src" as
-> src's fallback compatible to enable it.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Hi Uffe,
+On 2019=E5=B9=B410=E6=9C=8803=E6=97=A5 18:00, Ulf Hansson wrote:
+> On Thu, 5 Sep 2019 at 09:40, Zhou Yanjie <zhouyanjie@zoho.com> wrote:
+>> 1.add support for probing mmc driver on the JZ4760 Soc from Ingenic.
+>> 2.add support for Low Power Mode of Ingenic's MMC/SD Controller.
+> Normally we try to make "one" change per patch, unless there are some
+> good reasons not to.
+>
+> In this case, it seems like you should rather split this patch into
+> two separate pieces. Can you please do that?
 
-Applied, thanks.
+OK,I'll split it in v2.
+
+>
+> Additionally, please change the prefix for the commit message header
+> to start with "mmc: jz4740:"
+
+sure, it will be change in v2.
+
+>
+> [...]
+>
+> Kind regards
+> Uffe
+Thanks  and best regards!
