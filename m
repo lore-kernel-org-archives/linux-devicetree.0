@@ -1,8 +1,7 @@
 From: Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V4 04/10] ARM: dts: bcm283x: Move BCM2835/6/7 specific to
- bcm2835-common.dtsi
-Date: Sun,  6 Oct 2019 17:28:22 +0200
-Message-ID: <1570375708-26965-5-git-send-email-wahrenst@gmx.net>
+Subject: [PATCH V4 08/10] ARM: dts: Add minimal Raspberry Pi 4 support
+Date: Sun,  6 Oct 2019 17:28:26 +0200
+Message-ID: <1570375708-26965-9-git-send-email-wahrenst@gmx.net>
 References: <1570375708-26965-1-git-send-email-wahrenst@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,60 +21,243 @@ To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.co
 Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-bluetooth@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Stefan Wahren <wahrenst@gmx.net>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-As preparation we want all common BCM2711 + BCM2835/6/7 functions in
-bcm283x.dtsi and all BCM2835/6/7 specific in the new
-bcm2835-common.dtsi. Since i2c2 is BCM2835 specific, we also need
-to move it to bcm2835-common.dtsi.
+This adds minimal support for the new Raspberry Pi 4 without the
+fancy stuff like GENET, PCIe, xHCI, 40 bit DMA and V3D. The RPi 4 is
+available in 3 different variants (1, 2 and 4 GB RAM), so leave the memory
+size to zero and let the bootloader take care of it. The DWC2 is still
+usable as peripheral via the USB-C port.
+
+Other differences to the Raspberry Pi 3:
+- additional GIC 400 Interrupt controller
+- new thermal IP and HWRNG
+- additional MMC interface (emmc2)
+- additional UART, I2C, SPI and PWM interfaces
+- clock stretching bug in I2C IP has been fixed
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 Acked-by: Eric Anholt <eric@anholt.net>
+Acked-by: Florian Fanelli <f.fainelli@gmail.com>
 ---
- arch/arm/boot/dts/bcm2835-common.dtsi | 194 ++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/bcm2835-rpi.dtsi    |   4 -
- arch/arm/boot/dts/bcm2835.dtsi        |   1 +
- arch/arm/boot/dts/bcm2836.dtsi        |   1 +
- arch/arm/boot/dts/bcm2837.dtsi        |   1 +
- arch/arm/boot/dts/bcm283x.dtsi        | 174 +-----------------------------
- 6 files changed, 198 insertions(+), 177 deletions(-)
- create mode 100644 arch/arm/boot/dts/bcm2835-common.dtsi
+ arch/arm/boot/dts/Makefile                        |   1 +
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts             | 123 ++++
+ arch/arm/boot/dts/bcm2711.dtsi                    | 844 ++++++++++++++++++++++
+ arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi |   7 +
+ arch/arm/boot/dts/bcm283x.dtsi                    |   4 +-
+ 5 files changed, 977 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+ create mode 100644 arch/arm/boot/dts/bcm2711.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
 
-diff --git a/arch/arm/boot/dts/bcm2835-common.dtsi b/arch/arm/boot/dts/bcm2835-common.dtsi
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b21b3a6..21002cd 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -83,6 +83,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
+ 	bcm2837-rpi-3-b.dtb \
+ 	bcm2837-rpi-3-b-plus.dtb \
+ 	bcm2837-rpi-cm3-io3.dtb \
++	bcm2711-rpi-4-b.dtb \
+ 	bcm2835-rpi-zero.dtb \
+ 	bcm2835-rpi-zero-w.dtb
+ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
 new file mode 100644
-index 0000000..fe1ab40
+index 0000000..cccc1cc
 --- /dev/null
-+++ b/arch/arm/boot/dts/bcm2835-common.dtsi
-@@ -0,0 +1,194 @@
++++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+@@ -0,0 +1,123 @@
 +// SPDX-License-Identifier: GPL-2.0
-+
-+/* This include file covers the common peripherals and configuration between
-+ * bcm2835, bcm2836 and bcm2837 implementations.
-+ */
++/dts-v1/;
++#include "bcm2711.dtsi"
++#include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-usb-peripheral.dtsi"
 +
 +/ {
-+	interrupt-parent = <&intc>;
++	compatible = "raspberrypi,4-model-b", "brcm,bcm2711";
++	model = "Raspberry Pi 4 Model B";
++
++	chosen {
++		/* 8250 auxiliary UART instead of pl011 */
++		stdout-path = "serial1:115200n8";
++	};
++
++	/* Will be filled by the bootloader */
++	memory@0 {
++		device_type = "memory";
++		reg = <0 0 0>;
++	};
++
++	leds {
++		act {
++			gpios = <&gpio 42 GPIO_ACTIVE_HIGH>;
++		};
++
++		pwr {
++			label = "PWR";
++			gpios = <&expgpio 2 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	wifi_pwrseq: wifi-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&expgpio 1 GPIO_ACTIVE_LOW>;
++	};
++
++	sd_io_1v8_reg: sd_io_1v8_reg {
++		compatible = "regulator-gpio";
++		regulator-name = "vdd-sd-io";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++		regulator-settling-time-us = <5000>;
++		gpios = <&expgpio 4 GPIO_ACTIVE_HIGH>;
++		states = <1800000 0x1
++			  3300000 0x0>;
++		status = "okay";
++	};
++};
++
++&firmware {
++	expgpio: gpio {
++		compatible = "raspberrypi,firmware-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-line-names = "BT_ON",
++				  "WL_ON",
++				  "PWR_LED_OFF",
++				  "GLOBAL_RESET",
++				  "VDD_SD_IO_SEL",
++				  "CAM_GPIO",
++				  "",
++				  "";
++		status = "okay";
++	};
++};
++
++&pwm1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm1_0_gpio40 &pwm1_1_gpio41>;
++	status = "okay";
++};
++
++/* SDHCI is used to control the SDIO for wireless */
++&sdhci {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&emmc_gpio34>;
++	bus-width = <4>;
++	non-removable;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	status = "okay";
++
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
++};
++
++/* EMMC2 is used to drive the SD card */
++&emmc2 {
++	vqmmc-supply = <&sd_io_1v8_reg>;
++	broken-cd;
++	status = "okay";
++};
++
++/* uart0 communicates with the BT module */
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_ctsrts_gpio30 &uart0_gpio32>;
++	uart-has-rtscts;
++	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		max-speed = <2000000>;
++		shutdown-gpios = <&expgpio 0 GPIO_ACTIVE_HIGH>;
++	};
++};
++
++/* uart1 is mapped to the pin header */
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_gpio14>;
++	status = "okay";
++};
++
++&vchiq {
++	interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++};
+diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+new file mode 100644
+index 0000000..dfc035f
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm2711.dtsi
+@@ -0,0 +1,844 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "bcm283x.dtsi"
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/soc/bcm2835-pm.h>
++
++/ {
++	compatible = "brcm,bcm2711";
++
++	#address-cells = <2>;
++	#size-cells = <1>;
++
++	interrupt-parent = <&gicv2>;
 +
 +	soc {
++		/*
++		 * Defined ranges:
++		 *   Common BCM283x peripherals
++		 *   BCM2711-specific peripherals
++		 *   ARM-local peripherals
++		 */
++		ranges = <0x7e000000  0x0 0xfe000000  0x01800000>,
++			 <0x7c000000  0x0 0xfc000000  0x02000000>,
++			 <0x40000000  0x0 0xff800000  0x00800000>;
++		/* Emulate a contiguous 30-bit address range for DMA */
++		dma-ranges = <0xc0000000  0x0 0x00000000  0x3c000000>;
++
++		/*
++		 * This node is the provider for the enable-method for
++		 * bringing up secondary cores.
++		 */
++		local_intc: local_intc@40000000 {
++			compatible = "brcm,bcm2836-l1-intc";
++			reg = <0x40000000 0x100>;
++		};
++
++		gicv2: interrupt-controller@40041000 {
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			compatible = "arm,gic-400";
++			reg =	<0x40041000 0x1000>,
++				<0x40042000 0x2000>,
++				<0x40044000 0x2000>,
++				<0x40046000 0x2000>;
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
++						 IRQ_TYPE_LEVEL_HIGH)>;
++		};
++
 +		dma: dma@7e007000 {
 +			compatible = "brcm,bcm2835-dma";
-+			reg = <0x7e007000 0xf00>;
-+			interrupts = <1 16>,
-+				     <1 17>,
-+				     <1 18>,
-+				     <1 19>,
-+				     <1 20>,
-+				     <1 21>,
-+				     <1 22>,
-+				     <1 23>,
-+				     <1 24>,
-+				     <1 25>,
-+				     <1 26>,
-+				     /* dma channel 11-14 share one irq */
-+				     <1 27>,
-+				     <1 27>,
-+				     <1 27>,
-+				     <1 27>,
-+				     /* unused shared irq for all channels */
-+				     <1 28>;
++			reg = <0x7e007000 0xb00>;
++			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
++				     /* DMA lite 7 - 10 */
++				     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
 +			interrupt-names = "dma0",
 +					  "dma1",
 +					  "dma2",
@@ -86,21 +268,9 @@ index 0000000..fe1ab40
 +					  "dma7",
 +					  "dma8",
 +					  "dma9",
-+					  "dma10",
-+					  "dma11",
-+					  "dma12",
-+					  "dma13",
-+					  "dma14",
-+					  "dma-shared-all";
++					  "dma10";
 +			#dma-cells = <1>;
-+			brcm,dma-channel-mask = <0x7f35>;
-+		};
-+
-+		intc: interrupt-controller@7e00b200 {
-+			compatible = "brcm,bcm2835-armctrl-ic";
-+			reg = <0x7e00b200 0x200>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
++			brcm,dma-channel-mask = <0x07f5>;
 +		};
 +
 +		pm: watchdog@7e100000 {
@@ -108,7 +278,8 @@ index 0000000..fe1ab40
 +			#power-domain-cells = <1>;
 +			#reset-cells = <1>;
 +			reg = <0x7e100000 0x114>,
-+			      <0x7e00a000 0x24>;
++			      <0x7e00a000 0x24>,
++			      <0x7ec11000 0x20>;
 +			clocks = <&clocks BCM2835_CLOCK_V3D>,
 +				 <&clocks BCM2835_CLOCK_PERI_IMAGE>,
 +				 <&clocks BCM2835_CLOCK_H264>,
@@ -117,451 +288,791 @@ index 0000000..fe1ab40
 +			system-power-controller;
 +		};
 +
-+		pixelvalve@7e206000 {
-+			compatible = "brcm,bcm2835-pixelvalve0";
-+			reg = <0x7e206000 0x100>;
-+			interrupts = <2 13>; /* pwa0 */
-+		};
++		rng@7e104000 {
++			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
 +
-+		pixelvalve@7e207000 {
-+			compatible = "brcm,bcm2835-pixelvalve1";
-+			reg = <0x7e207000 0x100>;
-+			interrupts = <2 14>; /* pwa1 */
-+		};
-+
-+		thermal: thermal@7e212000 {
-+			compatible = "brcm,bcm2835-thermal";
-+			reg = <0x7e212000 0x8>;
-+			clocks = <&clocks BCM2835_CLOCK_TSENS>;
-+			#thermal-sensor-cells = <0>;
++			/* RNG is incompatible with brcm,bcm2835-rng */
 +			status = "disabled";
 +		};
 +
-+		i2c2: i2c@7e805000 {
-+			compatible = "brcm,bcm2835-i2c";
-+			reg = <0x7e805000 0x1000>;
-+			interrupts = <2 21>;
++		uart2: serial@7e201400 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x7e201400 0x200>;
++			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clocks BCM2835_CLOCK_UART>,
++				 <&clocks BCM2835_CLOCK_VPU>;
++			clock-names = "uartclk", "apb_pclk";
++			arm,primecell-periphid = <0x00241011>;
++			status = "disabled";
++		};
++
++		uart3: serial@7e201600 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x7e201600 0x200>;
++			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clocks BCM2835_CLOCK_UART>,
++				 <&clocks BCM2835_CLOCK_VPU>;
++			clock-names = "uartclk", "apb_pclk";
++			arm,primecell-periphid = <0x00241011>;
++			status = "disabled";
++		};
++
++		uart4: serial@7e201800 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x7e201800 0x200>;
++			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clocks BCM2835_CLOCK_UART>,
++				 <&clocks BCM2835_CLOCK_VPU>;
++			clock-names = "uartclk", "apb_pclk";
++			arm,primecell-periphid = <0x00241011>;
++			status = "disabled";
++		};
++
++		uart5: serial@7e201a00 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x7e201a00 0x200>;
++			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clocks BCM2835_CLOCK_UART>,
++				 <&clocks BCM2835_CLOCK_VPU>;
++			clock-names = "uartclk", "apb_pclk";
++			arm,primecell-periphid = <0x00241011>;
++			status = "disabled";
++		};
++
++		spi3: spi@7e204600 {
++			compatible = "brcm,bcm2835-spi";
++			reg = <0x7e204600 0x0200>;
++			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
 +			clocks = <&clocks BCM2835_CLOCK_VPU>;
 +			#address-cells = <1>;
 +			#size-cells = <0>;
-+			status = "okay";
-+		};
-+
-+		pixelvalve@7e807000 {
-+			compatible = "brcm,bcm2835-pixelvalve2";
-+			reg = <0x7e807000 0x100>;
-+			interrupts = <2 10>; /* pixelvalve */
-+		};
-+
-+		hdmi: hdmi@7e902000 {
-+			compatible = "brcm,bcm2835-hdmi";
-+			reg = <0x7e902000 0x600>,
-+			      <0x7e808000 0x100>;
-+			interrupts = <2 8>, <2 9>;
-+			ddc = <&i2c2>;
-+			clocks = <&clocks BCM2835_PLLH_PIX>,
-+				 <&clocks BCM2835_CLOCK_HSM>;
-+			clock-names = "pixel", "hdmi";
-+			dmas = <&dma 17>;
-+			dma-names = "audio-rx";
 +			status = "disabled";
 +		};
 +
-+		v3d: v3d@7ec00000 {
-+			compatible = "brcm,bcm2835-v3d";
-+			reg = <0x7ec00000 0x1000>;
-+			interrupts = <1 10>;
-+			power-domains = <&pm BCM2835_POWER_DOMAIN_GRAFX_V3D>;
++		spi4: spi@7e204800 {
++			compatible = "brcm,bcm2835-spi";
++			reg = <0x7e204800 0x0200>;
++			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
 +		};
 +
-+		vc4: gpu {
-+			compatible = "brcm,bcm2835-vc4";
++		spi5: spi@7e204a00 {
++			compatible = "brcm,bcm2835-spi";
++			reg = <0x7e204a00 0x0200>;
++			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		spi6: spi@7e204c00 {
++			compatible = "brcm,bcm2835-spi";
++			reg = <0x7e204c00 0x0200>;
++			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i2c3: i2c@7e205600 {
++			compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
++			reg = <0x7e205600 0x200>;
++			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i2c4: i2c@7e205800 {
++			compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
++			reg = <0x7e205800 0x200>;
++			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i2c5: i2c@7e205a00 {
++			compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
++			reg = <0x7e205a00 0x200>;
++			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		i2c6: i2c@7e205c00 {
++			compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
++			reg = <0x7e205c00 0x200>;
++			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
++		pwm1: pwm@7e20c800 {
++			compatible = "brcm,bcm2835-pwm";
++			reg = <0x7e20c800 0x28>;
++			clocks = <&clocks BCM2835_CLOCK_PWM>;
++			assigned-clocks = <&clocks BCM2835_CLOCK_PWM>;
++			assigned-clock-rates = <10000000>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
++		emmc2: emmc2@7e340000 {
++			compatible = "brcm,bcm2711-emmc2";
++			reg = <0x7e340000 0x100>;
++			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clocks BCM2711_CLOCK_EMMC2>;
++			status = "disabled";
++		};
++
++		hvs@7e400000 {
++			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
 +		};
 +	};
++
++	arm-pmu {
++		compatible = "arm,cortex-a72-pmu", "arm,armv8-pmuv3";
++		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) |
++					  IRQ_TYPE_LEVEL_LOW)>;
++		/* This only applies to the ARMv7 stub */
++		arm,cpu-registers-not-fw-configured;
++	};
++
++	cpus: cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		enable-method = "brcm,bcm2836-smp"; // for ARM 32-bit
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a72";
++			reg = <0>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x000000d8>;
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a72";
++			reg = <1>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x000000e0>;
++		};
++
++		cpu2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a72";
++			reg = <2>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x000000e8>;
++		};
++
++		cpu3: cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a72";
++			reg = <3>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x000000f0>;
++		};
++	};
++};
++
++&clk_osc {
++	clock-frequency = <54000000>;
++};
++
++&clocks {
++	compatible = "brcm,bcm2711-cprman";
 +};
 +
 +&cpu_thermal {
-+	thermal-sensors = <&thermal>;
++	coefficients = <(-487) 410040>;
++};
++
++&dsi0 {
++	interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
++};
++
++&dsi1 {
++	interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
 +};
 +
 +&gpio {
-+	i2c_slave_gpio18: i2c_slave_gpio18 {
-+		brcm,pins = <18 19 20 21>;
-+		brcm,function = <BCM2835_FSEL_ALT3>;
++	compatible = "brcm,bcm2711-gpio";
++	interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
++
++	gpclk0_gpio49: gpclk0_gpio49 {
++		pin-gpclk {
++			pins = "gpio49";
++			function = "alt1";
++			bias-disable;
++		};
++	};
++	gpclk1_gpio50: gpclk1_gpio50 {
++		pin-gpclk {
++			pins = "gpio50";
++			function = "alt1";
++			bias-disable;
++		};
++	};
++	gpclk2_gpio51: gpclk2_gpio51 {
++		pin-gpclk {
++			pins = "gpio51";
++			function = "alt1";
++			bias-disable;
++		};
 +	};
 +
-+	jtag_gpio4: jtag_gpio4 {
-+		brcm,pins = <4 5 6 12 13>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
++	i2c0_gpio46: i2c0_gpio46 {
++		pin-sda {
++			function = "alt0";
++			pins = "gpio46";
++			bias-pull-up;
++		};
++		pin-scl {
++			function = "alt0";
++			pins = "gpio47";
++			bias-disable;
++		};
++	};
++	i2c1_gpio46: i2c1_gpio46 {
++		pin-sda {
++			function = "alt1";
++			pins = "gpio46";
++			bias-pull-up;
++		};
++		pin-scl {
++			function = "alt1";
++			pins = "gpio47";
++			bias-disable;
++		};
++	};
++	i2c3_gpio2: i2c3_gpio2 {
++		pin-sda {
++			function = "alt5";
++			pins = "gpio2";
++			bias-pull-up;
++		};
++		pin-scl {
++			function = "alt5";
++			pins = "gpio3";
++			bias-disable;
++		};
++	};
++	i2c3_gpio4: i2c3_gpio4 {
++		pin-sda {
++			function = "alt5";
++			pins = "gpio4";
++			bias-pull-up;
++		};
++		pin-scl {
++			function = "alt5";
++			pins = "gpio5";
++			bias-disable;
++		};
++	};
++	i2c4_gpio6: i2c4_gpio6 {
++		pin-sda {
++			function = "alt5";
++			pins = "gpio6";
++			bias-pull-up;
++		};
++		pin-scl {
++			function = "alt5";
++			pins = "gpio7";
++			bias-disable;
++		};
++	};
++	i2c4_gpio8: i2c4_gpio8 {
++		pin-sda {
++			function = "alt5";
++			pins = "gpio8";
++			bias-pull-up;
++		};
++		pin-scl {
++			function = "alt5";
++			pins = "gpio9";
++			bias-disable;
++		};
++	};
++	i2c5_gpio10: i2c5_gpio10 {
++		pin-sda {
++			function = "alt5";
++			pins = "gpio10";
++			bias-pull-up;
++		};
++		pin-scl {
++			function = "alt5";
++			pins = "gpio11";
++			bias-disable;
++		};
++	};
++	i2c5_gpio12: i2c5_gpio12 {
++		pin-sda {
++			function = "alt5";
++			pins = "gpio12";
++			bias-pull-up;
++		};
++		pin-scl {
++			function = "alt5";
++			pins = "gpio13";
++			bias-disable;
++		};
++	};
++	i2c6_gpio0: i2c6_gpio0 {
++		pin-sda {
++			function = "alt5";
++			pins = "gpio0";
++			bias-pull-up;
++		};
++		pin-scl {
++			function = "alt5";
++			pins = "gpio1";
++			bias-disable;
++		};
++	};
++	i2c6_gpio22: i2c6_gpio22 {
++		pin-sda {
++			function = "alt5";
++			pins = "gpio22";
++			bias-pull-up;
++		};
++		pin-scl {
++			function = "alt5";
++			pins = "gpio23";
++			bias-disable;
++		};
++	};
++	i2c_slave_gpio8: i2c_slave_gpio8 {
++		pins-i2c-slave {
++			pins = "gpio8",
++			       "gpio9",
++			       "gpio10",
++			       "gpio11";
++			function = "alt3";
++		};
 +	};
 +
-+	pwm0_gpio12: pwm0_gpio12 {
-+		brcm,pins = <12>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
++	jtag_gpio48: jtag_gpio48 {
++		pins-jtag {
++			pins = "gpio48",
++			       "gpio49",
++			       "gpio50",
++			       "gpio51",
++			       "gpio52",
++			       "gpio53";
++			function = "alt4";
++		};
 +	};
-+	pwm0_gpio18: pwm0_gpio18 {
-+		brcm,pins = <18>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
++
++	mii_gpio28: mii_gpio28 {
++		pins-mii {
++			pins = "gpio28",
++			       "gpio29",
++			       "gpio30",
++			       "gpio31";
++			function = "alt4";
++		};
 +	};
-+	pwm0_gpio40: pwm0_gpio40 {
-+		brcm,pins = <40>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
++	mii_gpio36: mii_gpio36 {
++		pins-mii {
++			pins = "gpio36",
++			       "gpio37",
++			       "gpio38",
++			       "gpio39";
++			function = "alt5";
++		};
 +	};
-+	pwm1_gpio13: pwm1_gpio13 {
-+		brcm,pins = <13>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
++
++	pcm_gpio50: pcm_gpio50 {
++		pins-pcm {
++			pins = "gpio50",
++			       "gpio51",
++			       "gpio52",
++			       "gpio53";
++			function = "alt2";
++		};
 +	};
-+	pwm1_gpio19: pwm1_gpio19 {
-+		brcm,pins = <19>;
-+		brcm,function = <BCM2835_FSEL_ALT5>;
++
++	pwm0_0_gpio12: pwm0_0_gpio12 {
++		pin-pwm {
++			pins = "gpio12";
++			function = "alt0";
++			bias-disable;
++		};
 +	};
-+	pwm1_gpio41: pwm1_gpio41 {
-+		brcm,pins = <41>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
++	pwm0_0_gpio18: pwm0_0_gpio18 {
++		pin-pwm {
++			pins = "gpio18";
++			function = "alt5";
++			bias-disable;
++		};
 +	};
-+	pwm1_gpio45: pwm1_gpio45 {
-+		brcm,pins = <45>;
-+		brcm,function = <BCM2835_FSEL_ALT0>;
++	pwm1_0_gpio40: pwm1_0_gpio40 {
++		pin-pwm {
++			pins = "gpio40";
++			function = "alt0";
++			bias-disable;
++		};
++	};
++	pwm0_1_gpio13: pwm0_1_gpio13 {
++		pin-pwm {
++			pins = "gpio13";
++			function = "alt0";
++			bias-disable;
++		};
++	};
++	pwm0_1_gpio19: pwm0_1_gpio19 {
++		pin-pwm {
++			pins = "gpio19";
++			function = "alt5";
++			bias-disable;
++		};
++	};
++	pwm1_1_gpio41: pwm1_1_gpio41 {
++		pin-pwm {
++			pins = "gpio41";
++			function = "alt0";
++			bias-disable;
++		};
++	};
++	pwm0_1_gpio45: pwm0_1_gpio45 {
++		pin-pwm {
++			pins = "gpio45";
++			function = "alt0";
++			bias-disable;
++		};
++	};
++	pwm0_0_gpio52: pwm0_0_gpio52 {
++		pin-pwm {
++			pins = "gpio52";
++			function = "alt1";
++			bias-disable;
++		};
++	};
++	pwm0_1_gpio53: pwm0_1_gpio53 {
++		pin-pwm {
++			pins = "gpio53";
++			function = "alt1";
++			bias-disable;
++		};
++	};
++
++	rgmii_gpio35: rgmii_gpio35 {
++		pin-start-stop {
++			pins = "gpio35";
++			function = "alt4";
++		};
++		pin-rx-ok {
++			pins = "gpio36";
++			function = "alt4";
++		};
++	};
++	rgmii_irq_gpio34: rgmii_irq_gpio34 {
++		pin-irq {
++			pins = "gpio34";
++			function = "alt5";
++		};
++	};
++	rgmii_irq_gpio39: rgmii_irq_gpio39 {
++		pin-irq {
++			pins = "gpio39";
++			function = "alt4";
++		};
++	};
++	rgmii_mdio_gpio28: rgmii_mdio_gpio28 {
++		pins-mdio {
++			pins = "gpio28",
++			       "gpio29";
++			function = "alt5";
++		};
++	};
++	rgmii_mdio_gpio37: rgmii_mdio_gpio37 {
++		pins-mdio {
++			pins = "gpio37",
++			       "gpio38";
++			function = "alt4";
++		};
++	};
++
++	spi0_gpio46: spi0_gpio46 {
++		pins-spi {
++			pins = "gpio46",
++			       "gpio47",
++			       "gpio48",
++			       "gpio49";
++			function = "alt2";
++		};
++	};
++	spi2_gpio46: spi2_gpio46 {
++		pins-spi {
++			pins = "gpio46",
++			       "gpio47",
++			       "gpio48",
++			       "gpio49",
++			       "gpio50";
++			function = "alt5";
++		};
++	};
++	spi3_gpio0: spi3_gpio0 {
++		pins-spi {
++			pins = "gpio0",
++			       "gpio1",
++			       "gpio2",
++			       "gpio3";
++			function = "alt3";
++		};
++	};
++	spi4_gpio4: spi4_gpio4 {
++		pins-spi {
++			pins = "gpio4",
++			       "gpio5",
++			       "gpio6",
++			       "gpio7";
++			function = "alt3";
++		};
++	};
++	spi5_gpio12: spi5_gpio12 {
++		pins-spi {
++			pins = "gpio12",
++			       "gpio13",
++			       "gpio14",
++			       "gpio15";
++			function = "alt3";
++		};
++	};
++	spi6_gpio18: spi6_gpio18 {
++		pins-spi {
++			pins = "gpio18",
++			       "gpio19",
++			       "gpio20",
++			       "gpio21";
++			function = "alt3";
++		};
++	};
++
++	uart2_gpio0: uart2_gpio0 {
++		pin-tx {
++			pins = "gpio0";
++			function = "alt4";
++			bias-disable;
++		};
++		pin-rx {
++			pins = "gpio1";
++			function = "alt4";
++			bias-pull-up;
++		};
++	};
++	uart2_ctsrts_gpio2: uart2_ctsrts_gpio2 {
++		pin-cts {
++			pins = "gpio2";
++			function = "alt4";
++			bias-pull-up;
++		};
++		pin-rts {
++			pins = "gpio3";
++			function = "alt4";
++			bias-disable;
++		};
++	};
++	uart3_gpio4: uart3_gpio4 {
++		pin-tx {
++			pins = "gpio4";
++			function = "alt4";
++			bias-disable;
++		};
++		pin-rx {
++			pins = "gpio5";
++			function = "alt4";
++			bias-pull-up;
++		};
++	};
++	uart3_ctsrts_gpio6: uart3_ctsrts_gpio6 {
++		pin-cts {
++			pins = "gpio6";
++			function = "alt4";
++			bias-pull-up;
++		};
++		pin-rts {
++			pins = "gpio7";
++			function = "alt4";
++			bias-disable;
++		};
++	};
++	uart4_gpio8: uart4_gpio8 {
++		pin-tx {
++			pins = "gpio8";
++			function = "alt4";
++			bias-disable;
++		};
++		pin-rx {
++			pins = "gpio9";
++			function = "alt4";
++			bias-pull-up;
++		};
++	};
++	uart4_ctsrts_gpio10: uart4_ctsrts_gpio10 {
++		pin-cts {
++			pins = "gpio10";
++			function = "alt4";
++			bias-pull-up;
++		};
++		pin-rts {
++			pins = "gpio11";
++			function = "alt4";
++			bias-disable;
++		};
++	};
++	uart5_gpio12: uart5_gpio12 {
++		pin-tx {
++			pins = "gpio12";
++			function = "alt4";
++			bias-disable;
++		};
++		pin-rx {
++			pins = "gpio13";
++			function = "alt4";
++			bias-pull-up;
++		};
++	};
++	uart5_ctsrts_gpio14: uart5_ctsrts_gpio14 {
++		pin-cts {
++			pins = "gpio14";
++			function = "alt4";
++			bias-pull-up;
++		};
++		pin-rts {
++			pins = "gpio15";
++			function = "alt4";
++			bias-disable;
++		};
 +	};
 +};
 +
-+&i2s {
-+	dmas = <&dma 2>, <&dma 3>;
-+	dma-names = "tx", "rx";
++&i2c0 {
++	compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
++	interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++};
++
++&i2c1 {
++	compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
++	interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++};
++
++&mailbox {
++	interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++};
++
++&sdhci {
++	interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
 +};
 +
 +&sdhost {
-+	dmas = <&dma 13>;
-+	dma-names = "rx-tx";
++	interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
 +};
 +
 +&spi {
-+	dmas = <&dma 6>, <&dma 7>;
-+	dma-names = "tx", "rx";
++	interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
 +};
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index 6c6a7f6..394c8a7 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -59,10 +59,6 @@
- 	clock-frequency = <100000>;
- };
-
--&i2c2 {
--	status = "okay";
--};
--
- &usb {
- 	power-domains = <&power RPI_POWER_DOMAIN_USB>;
- };
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-index a5c3824..53bf457 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "bcm283x.dtsi"
-+#include "bcm2835-common.dtsi"
-
- / {
- 	compatible = "brcm,bcm2835";
-diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836.dtsi
-index c933e84..82d6c46 100644
---- a/arch/arm/boot/dts/bcm2836.dtsi
-+++ b/arch/arm/boot/dts/bcm2836.dtsi
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "bcm283x.dtsi"
-+#include "bcm2835-common.dtsi"
-
- / {
- 	compatible = "brcm,bcm2836";
-diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
-index beb6c50..9e95fee 100644
---- a/arch/arm/boot/dts/bcm2837.dtsi
-+++ b/arch/arm/boot/dts/bcm2837.dtsi
-@@ -1,4 +1,5 @@
- #include "bcm283x.dtsi"
-+#include "bcm2835-common.dtsi"
-
- / {
- 	compatible = "brcm,bcm2837";
++
++&spi1 {
++	interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
++};
++
++&spi2 {
++	interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
++};
++
++&system_timer {
++	interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
++};
++
++&txp {
++	interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
++};
++
++&uart0 {
++	interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
++};
++
++&uart1 {
++	interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
++};
++
++&usb {
++	interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
++};
++
++&vec {
++	interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
++};
+diff --git a/arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi b/arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
+new file mode 100644
+index 0000000..0ff0e9e
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
+@@ -0,0 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
++&usb {
++	dr_mode = "peripheral";
++	g-rx-fifo-size = <256>;
++	g-np-tx-fifo-size = <32>;
++	g-tx-fifo-size = <256 256 512 512 512 768 768>;
++};
 diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index ae8296f..addf3be 100644
+index addf3be..3caaa57 100644
 --- a/arch/arm/boot/dts/bcm283x.dtsi
 +++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -18,7 +18,6 @@
- / {
- 	compatible = "brcm,bcm2835";
- 	model = "BCM2835";
--	interrupt-parent = <&intc>;
- 	#address-cells = <1>;
- 	#size-cells = <1>;
+@@ -53,7 +53,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 
-@@ -36,8 +35,6 @@
- 			polling-delay-passive = <0>;
- 			polling-delay = <1000>;
+-		timer@7e003000 {
++		system_timer: timer@7e003000 {
+ 			compatible = "brcm,bcm2835-system-timer";
+ 			reg = <0x7e003000 0x1000>;
+ 			interrupts = <1 0>, <1 1>, <1 2>, <1 3>;
+@@ -64,7 +64,7 @@
+ 			clock-frequency = <1000000>;
+ 		};
 
--			thermal-sensors = <&thermal>;
--
- 			trips {
- 				cpu-crit {
- 					temperature	= <80000>;
-@@ -73,68 +70,6 @@
+-		txp@7e004000 {
++		txp: txp@7e004000 {
+ 			compatible = "brcm,bcm2835-txp";
+ 			reg = <0x7e004000 0x20>;
  			interrupts = <1 11>;
- 		};
-
--		dma: dma@7e007000 {
--			compatible = "brcm,bcm2835-dma";
--			reg = <0x7e007000 0xf00>;
--			interrupts = <1 16>,
--				     <1 17>,
--				     <1 18>,
--				     <1 19>,
--				     <1 20>,
--				     <1 21>,
--				     <1 22>,
--				     <1 23>,
--				     <1 24>,
--				     <1 25>,
--				     <1 26>,
--				     /* dma channel 11-14 share one irq */
--				     <1 27>,
--				     <1 27>,
--				     <1 27>,
--				     <1 27>,
--				     /* unused shared irq for all channels */
--				     <1 28>;
--			interrupt-names = "dma0",
--					  "dma1",
--					  "dma2",
--					  "dma3",
--					  "dma4",
--					  "dma5",
--					  "dma6",
--					  "dma7",
--					  "dma8",
--					  "dma9",
--					  "dma10",
--					  "dma11",
--					  "dma12",
--					  "dma13",
--					  "dma14",
--					  "dma-shared-all";
--			#dma-cells = <1>;
--			brcm,dma-channel-mask = <0x7f35>;
--		};
--
--		intc: interrupt-controller@7e00b200 {
--			compatible = "brcm,bcm2835-armctrl-ic";
--			reg = <0x7e00b200 0x200>;
--			interrupt-controller;
--			#interrupt-cells = <2>;
--		};
--
--		pm: watchdog@7e100000 {
--			compatible = "brcm,bcm2835-pm", "brcm,bcm2835-pm-wdt";
--			#power-domain-cells = <1>;
--			#reset-cells = <1>;
--			reg = <0x7e100000 0x114>,
--			      <0x7e00a000 0x24>;
--			clocks = <&clocks BCM2835_CLOCK_V3D>,
--				 <&clocks BCM2835_CLOCK_PERI_IMAGE>,
--				 <&clocks BCM2835_CLOCK_H264>,
--				 <&clocks BCM2835_CLOCK_ISP>;
--			clock-names = "v3d", "peri_image", "h264", "isp";
--			system-power-controller;
--		};
--
- 		clocks: cprman@7e101000 {
- 			compatible = "brcm,bcm2835-cprman";
- 			#clock-cells = <1>;
-@@ -184,8 +119,7 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-
--			/* Defines pin muxing groups according to
--			 * BCM2835-ARM-Peripherals.pdf page 102.
-+			/* Defines common pin muxing groups
- 			 *
- 			 * While each pin can have its mux selected
- 			 * for various functions individually, some
-@@ -263,15 +197,7 @@
- 				brcm,pins = <44 45>;
- 				brcm,function = <BCM2835_FSEL_ALT2>;
- 			};
--			i2c_slave_gpio18: i2c_slave_gpio18 {
--				brcm,pins = <18 19 20 21>;
--				brcm,function = <BCM2835_FSEL_ALT3>;
--			};
-
--			jtag_gpio4: jtag_gpio4 {
--				brcm,pins = <4 5 6 12 13>;
--				brcm,function = <BCM2835_FSEL_ALT5>;
--			};
- 			jtag_gpio22: jtag_gpio22 {
- 				brcm,pins = <22 23 24 25 26 27>;
- 				brcm,function = <BCM2835_FSEL_ALT4>;
-@@ -286,35 +212,6 @@
- 				brcm,function = <BCM2835_FSEL_ALT2>;
- 			};
-
--			pwm0_gpio12: pwm0_gpio12 {
--				brcm,pins = <12>;
--				brcm,function = <BCM2835_FSEL_ALT0>;
--			};
--			pwm0_gpio18: pwm0_gpio18 {
--				brcm,pins = <18>;
--				brcm,function = <BCM2835_FSEL_ALT5>;
--			};
--			pwm0_gpio40: pwm0_gpio40 {
--				brcm,pins = <40>;
--				brcm,function = <BCM2835_FSEL_ALT0>;
--			};
--			pwm1_gpio13: pwm1_gpio13 {
--				brcm,pins = <13>;
--				brcm,function = <BCM2835_FSEL_ALT0>;
--			};
--			pwm1_gpio19: pwm1_gpio19 {
--				brcm,pins = <19>;
--				brcm,function = <BCM2835_FSEL_ALT5>;
--			};
--			pwm1_gpio41: pwm1_gpio41 {
--				brcm,pins = <41>;
--				brcm,function = <BCM2835_FSEL_ALT0>;
--			};
--			pwm1_gpio45: pwm1_gpio45 {
--				brcm,pins = <45>;
--				brcm,function = <BCM2835_FSEL_ALT0>;
--			};
--
- 			sdhost_gpio48: sdhost_gpio48 {
- 				brcm,pins = <48 49 50 51 52 53>;
- 				brcm,function = <BCM2835_FSEL_ALT0>;
-@@ -410,8 +307,6 @@
- 			reg = <0x7e202000 0x100>;
- 			interrupts = <2 24>;
- 			clocks = <&clocks BCM2835_CLOCK_VPU>;
--			dmas = <&dma 13>;
--			dma-names = "rx-tx";
- 			status = "disabled";
- 		};
-
-@@ -419,10 +314,6 @@
- 			compatible = "brcm,bcm2835-i2s";
- 			reg = <0x7e203000 0x24>;
- 			clocks = <&clocks BCM2835_CLOCK_PCM>;
--
--			dmas = <&dma 2>,
--			       <&dma 3>;
--			dma-names = "tx", "rx";
- 			status = "disabled";
- 		};
-
-@@ -431,8 +322,6 @@
- 			reg = <0x7e204000 0x200>;
- 			interrupts = <2 22>;
- 			clocks = <&clocks BCM2835_CLOCK_VPU>;
--			dmas = <&dma 6>, <&dma 7>;
--			dma-names = "tx", "rx";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			status = "disabled";
-@@ -448,18 +337,6 @@
- 			status = "disabled";
- 		};
-
--		pixelvalve@7e206000 {
--			compatible = "brcm,bcm2835-pixelvalve0";
--			reg = <0x7e206000 0x100>;
--			interrupts = <2 13>; /* pwa0 */
--		};
--
--		pixelvalve@7e207000 {
--			compatible = "brcm,bcm2835-pixelvalve1";
--			reg = <0x7e207000 0x100>;
--			interrupts = <2 14>; /* pwa1 */
--		};
--
- 		dpi: dpi@7e208000 {
- 			compatible = "brcm,bcm2835-dpi";
- 			reg = <0x7e208000 0x8c>;
-@@ -490,14 +367,6 @@
-
- 		};
-
--		thermal: thermal@7e212000 {
--			compatible = "brcm,bcm2835-thermal";
--			reg = <0x7e212000 0x8>;
--			clocks = <&clocks BCM2835_CLOCK_TSENS>;
--			#thermal-sensor-cells = <0>;
--			status = "disabled";
--		};
--
- 		aux: aux@7e215000 {
- 			compatible = "brcm,bcm2835-aux";
- 			#clock-cells = <1>;
-@@ -587,16 +456,6 @@
- 			status = "disabled";
- 		};
-
--		i2c2: i2c@7e805000 {
--			compatible = "brcm,bcm2835-i2c";
--			reg = <0x7e805000 0x1000>;
--			interrupts = <2 21>;
--			clocks = <&clocks BCM2835_CLOCK_VPU>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--			status = "disabled";
--		};
--
- 		vec: vec@7e806000 {
- 			compatible = "brcm,bcm2835-vec";
- 			reg = <0x7e806000 0x1000>;
-@@ -605,26 +464,6 @@
- 			status = "disabled";
- 		};
-
--		pixelvalve@7e807000 {
--			compatible = "brcm,bcm2835-pixelvalve2";
--			reg = <0x7e807000 0x100>;
--			interrupts = <2 10>; /* pixelvalve */
--		};
--
--		hdmi: hdmi@7e902000 {
--			compatible = "brcm,bcm2835-hdmi";
--			reg = <0x7e902000 0x600>,
--			      <0x7e808000 0x100>;
--			interrupts = <2 8>, <2 9>;
--			ddc = <&i2c2>;
--			clocks = <&clocks BCM2835_PLLH_PIX>,
--				 <&clocks BCM2835_CLOCK_HSM>;
--			clock-names = "pixel", "hdmi";
--			dmas = <&dma 17>;
--			dma-names = "audio-rx";
--			status = "disabled";
--		};
--
- 		usb: usb@7e980000 {
- 			compatible = "brcm,bcm2835-usb";
- 			reg = <0x7e980000 0x10000>;
-@@ -636,17 +475,6 @@
- 			phys = <&usbphy>;
- 			phy-names = "usb2-phy";
- 		};
--
--		v3d: v3d@7ec00000 {
--			compatible = "brcm,bcm2835-v3d";
--			reg = <0x7ec00000 0x1000>;
--			interrupts = <1 10>;
--			power-domains = <&pm BCM2835_POWER_DOMAIN_GRAFX_V3D>;
--		};
--
--		vc4: gpu {
--			compatible = "brcm,bcm2835-vc4";
--		};
- 	};
-
- 	clocks {
 --
 2.7.4
