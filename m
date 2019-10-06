@@ -1,92 +1,125 @@
-From: Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH v1] usb: dwc3: enable otg mode for dwc3 usb ip on
- layerscape
-Date: Sat, 5 Oct 2019 21:58:12 -0500
-Message-ID: <CADRPPNQpGXf8kEGzP3ux7Zxu-Z_ztz6CRdr-B=3hWJdCg8gFFQ@mail.gmail.com>
-References: <20190909090244.42543-1-yinbo.zhu@nxp.com>
- <20191006025450.GO7150@dragon>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] arm64: dts: ls1028a: Add FlexSPI support for NXP LS1028
+Date: Sun, 6 Oct 2019 11:20:21 +0800
+Message-ID: <20191006032019.GP7150@dragon>
+References: <1568118055-9740-1-git-send-email-Ashish.Kumar@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191006025450.GO7150@dragon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jiafei Pan <jiafei.pan@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, Yinbo Zhu <yinbo.zhu@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1568118055-9740-1-git-send-email-Ashish.Kumar@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ashish Kumar <Ashish.Kumar@nxp.com>
+Cc: devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Oct 5, 2019 at 9:56 PM Shawn Guo <shawnguo@kernel.org> wrote:
->
-> On Mon, Sep 09, 2019 at 05:02:44PM +0800, Yinbo Zhu wrote:
-> > layerscape otg function should be supported HNP SRP and ADP protocol
-> > accroing to rm doc, but dwc3 code not realize it and use id pin to
-> > detect who is host or device(0 is host 1 is device) this patch is to
-> > enable OTG mode on ls1028ardb ls1088ardb and ls1046ardb in dts
-> >
-> > Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
->
-> The patch prefix should be something like: 'arm64: dts: ...'
->
-> @Leo, do you agree with the changes?
+On Tue, Sep 10, 2019 at 05:50:51PM +0530, Ashish Kumar wrote:
+> Add fspi node property for LS1028A SoC for FlexSPI driver.
+> Property added for FlexSPI controller and for the connected
+> slave device for the LS1028ARDB and LS1028AQDS target.
+> RDB and QDS is having one SPI-NOR flash device, mt35xu02g
+> connected at CS0.
+> This flash device "mt35xu02g" is tested for octal read
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
 
-No.  The USB mode of operation should be defined at board level.
+When you send a patch series, the patches should be numbered properly
+and preferably with a cover-letter.
 
->
-> Shawn
->
-> > ---
-> >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
-> >  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 2 +-
-> >  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 2 +-
-> >  3 files changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > index 7975519b4f56..5810d0400dbc 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > @@ -320,7 +320,7 @@
-> >                       compatible = "fsl,ls1028a-dwc3", "snps,dwc3";
-> >                       reg = <0x0 0x3110000 0x0 0x10000>;
-> >                       interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-> > -                     dr_mode = "host";
-> > +                     dr_mode = "otg";
-> >                       snps,dis_rxdet_inp3_quirk;
-> >                       snps,quirk-frame-length-adjustment = <0x20>;
-> >                       snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> > index b0ef08b090dd..ecce6151b9b0 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> > @@ -582,7 +582,7 @@
-> >                       compatible = "snps,dwc3";
-> >                       reg = <0x0 0x3000000 0x0 0x10000>;
-> >                       interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-> > -                     dr_mode = "host";
-> > +                     dr_mode = "otg";
-> >                       snps,quirk-frame-length-adjustment = <0x20>;
-> >                       snps,dis_rxdet_inp3_quirk;
-> >                       snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > index dacd8cf03a7f..4b5413f7c90c 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > @@ -385,7 +385,7 @@
-> >                       compatible = "snps,dwc3";
-> >                       reg = <0x0 0x3110000 0x0 0x10000>;
-> >                       interrupts = <0 81 IRQ_TYPE_LEVEL_HIGH>;
-> > -                     dr_mode = "host";
-> > +                     dr_mode = "otg";
-> >                       snps,quirk-frame-length-adjustment = <0x20>;
-> >                       snps,dis_rxdet_inp3_quirk;
-> >                       status = "disabled";
-> > --
-> > 2.17.1
-> >
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 15 +++++++++++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts | 15 +++++++++++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    | 13 +++++++++++++
+>  3 files changed, 43 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> index 5e14e5a..5d46993 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+> @@ -103,6 +103,21 @@
+>  	status = "okay";
+>  };
+>  
+> +&fspi {
+> +	status = "okay";
+
+Have a newline between properties and child node..
+
+> +	flash0: mt35xu02g@0 {
+
+Use a generic node name and specific label name.
+
+> +		compatible = "micron,mt35xu02g", "jedec,spi-nor";
+
+"micron,mt35xu02g" is undocumented.
+
+Shawn
+
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		m25p,fast-read;
+> +		spi-max-frequency = <50000000>;
+> +		reg = <0>;
+> +		/* The following setting enables 1-1-8 (CMD-ADDR-DATA) mode */
+> +		spi-rx-bus-width = <8>; /* 8 SPI Rx lines */
+> +		spi-tx-bus-width = <1>; /* 1 SPI Tx line */
+> +	};
+> +};
+> +
+>  &i2c0 {
+>  	status = "okay";
+>  
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> index 1a69221..f33cb2e 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+> @@ -96,6 +96,21 @@
+>  	status = "okay";
+>  };
+>  
+> +&fspi {
+> +	status = "okay";
+> +	flash0: mt35xu02g@0 {
+> +		compatible = "micron,mt35xu02g", "jedec,spi-nor";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		m25p,fast-read;
+> +		spi-max-frequency = <50000000>;
+> +		reg = <0>;
+> +		/* The following setting enables 1-1-8 (CMD-ADDR-DATA) mode */
+> +		spi-rx-bus-width = <8>; /* 8 SPI Rx lines */
+> +		spi-tx-bus-width = <1>; /* 1 SPI Tx line */
+> +	};
+> +};
+> +
+>  &i2c0 {
+>  	status = "okay";
+>  
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index b139b29..4aa1825 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -174,6 +174,19 @@
+>  			clocks = <&sysclk>;
+>  		};
+>  
+> +		fspi: spi@20c0000 {
+> +			compatible = "nxp,lx2160a-fspi";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x0 0x20c0000 0x0 0x10000>,
+> +			      <0x0 0x20000000 0x0 0x10000000>;
+> +			reg-names = "fspi_base", "fspi_mmap";
+> +			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+> +			clock-names = "fspi_en", "fspi";
+> +			status = "disabled";
+> +		};
+> +
+>  		i2c0: i2c@2000000 {
+>  			compatible = "fsl,vf610-i2c";
+>  			#address-cells = <1>;
+> -- 
+> 2.7.4
+> 
