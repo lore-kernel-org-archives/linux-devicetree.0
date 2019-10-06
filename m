@@ -1,7 +1,8 @@
 From: Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V4 09/10] arm64: dts: broadcom: Add reference to RPi 4 B
-Date: Sun,  6 Oct 2019 17:28:27 +0200
-Message-ID: <1570375708-26965-10-git-send-email-wahrenst@gmx.net>
+Subject: [PATCH V4 06/10] dt-bindings: arm: bcm2835: Add Raspberry Pi 4 to DT
+ schema
+Date: Sun,  6 Oct 2019 17:28:24 +0200
+Message-ID: <1570375708-26965-7-git-send-email-wahrenst@gmx.net>
 References: <1570375708-26965-1-git-send-email-wahrenst@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,35 +22,31 @@ To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.co
 Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-bluetooth@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Stefan Wahren <wahrenst@gmx.net>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a reference to the dts of the Raspberry Pi 4 B,
-so we don't need to maintain the content in arm64.
+Add new Raspberry Pi 4 to DT schema.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Acked-by: Eric Anholt <eric@anholt.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/boot/dts/broadcom/Makefile            | 3 ++-
- arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dts | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dts
+ Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
-index d1d31cc..cb7de8d 100644
---- a/arch/arm64/boot/dts/broadcom/Makefile
-+++ b/arch/arm64/boot/dts/broadcom/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
--dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-a-plus.dtb \
-+dtb-$(CONFIG_ARCH_BCM2835) += bcm2711-rpi-4-b.dtb \
-+			      bcm2837-rpi-3-a-plus.dtb \
- 			      bcm2837-rpi-3-b.dtb \
- 			      bcm2837-rpi-3-b-plus.dtb \
- 			      bcm2837-rpi-cm3-io3.dtb
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dts b/arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dts
-new file mode 100644
-index 0000000..d24c536
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dts
-@@ -0,0 +1,2 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "arm/bcm2711-rpi-4-b.dts"
+diff --git a/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml b/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
+index 67bf9e2..dd52e29 100644
+--- a/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
++++ b/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
+@@ -15,6 +15,12 @@ properties:
+     const: '/'
+   compatible:
+     oneOf:
++      - description: BCM2711 based Boards
++        items:
++          - enum:
++              - raspberrypi,4-model-b
++          - const: brcm,bcm2711
++
+       - description: BCM2835 based Boards
+         items:
+           - enum:
 --
 2.7.4
