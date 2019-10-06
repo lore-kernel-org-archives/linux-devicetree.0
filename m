@@ -1,59 +1,128 @@
-From: Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH V3 7/8] ARM: dts: Add minimal Raspberry Pi 4 support
-Date: Sun, 6 Oct 2019 15:28:21 +0200
-Message-ID: <4bc598da-e895-7223-73e8-b4ce6d2ac074@gmx.net>
-References: <1569672435-19823-1-git-send-email-wahrenst@gmx.net>
- <1569672435-19823-8-git-send-email-wahrenst@gmx.net>
- <77b0a773-912a-aa5b-6eb5-5423c2c07e58@gmail.com>
- <7d0414bb-fea8-e3e5-8b85-c18615a56c94@gmx.net>
- <e9e6491e-c53e-7255-98cc-dabdfa7ba753@gmail.com>
+From: Andreas Klinger <ak@it-klinger.de>
+Subject: [PATCH v2] dt-bindings: iio: maxbotix,mb1232.yaml: transform to yaml
+Date: Sun, 6 Oct 2019 16:27:25 +0200
+Message-ID: <20191006142715.45k64cgw7mzlekm5@arbad>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e9e6491e-c53e-7255-98cc-dabdfa7ba753@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, devicetree@vger.kernel.org, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, jic23@kernel.org
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 02.10.19 um 18:43 schrieb Florian Fainelli:
-> On 10/2/19 9:24 AM, Stefan Wahren wrote:
->> Hi Florian,
->>
->> Am 28.09.19 um 21:58 schrieb Florian Fainelli:
->>> On 9/28/2019 5:07 AM, Stefan Wahren wrote:
->>>
->>>> +	memory@0 {
->>>> +		device_type = "memory";
->>>> +		reg = <0 0 0x00000000>;
->>>> +	};
->>>> +
->>> [snip]
->>>
->>>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->>>> +#include <dt-bindings/soc/bcm2835-pm.h>
->>>> +
->>>> +/ {
->>>> +	compatible = "brcm,bcm2711";
->>>> +
->>>> +	#address-cells = <2>;
->>>> +	#size-cells = <1>;
->>> Trying to see if we may need a #size-cells property value of 2 here, for
->>> the 4GB model, I would assume that we would have to, unless we are fine
->>> with supporting 4GB - 1byte of DRAM?
->> I will try unless this requires a lot of adjustments or break the
->> bootloader.
-> OK.
-Unfortunately this breaks bootloader or firmware. Since the BCM2711 is
-able to address 16 GB RAM this should be fixed later. I will open an
-issue and submit V4 without this suggested change.
+transform existing documentation of maxbotix,mb1232 ultrasonic ranger
+from text documentation format into yaml.
+
+Changes in v2:
+- removed description of reg property
+- added a line:
+  additionalProperties: false
+
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+---
+ .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
+ .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 56 ++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 29 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+
+diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+deleted file mode 100644
+index dd1058fbe9c3..000000000000
+--- a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
++++ /dev/null
+@@ -1,29 +0,0 @@
+-* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
+-  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
+-  for ranging
+-
+-Required properties:
+- - compatible:		"maxbotix,mb1202",
+-			"maxbotix,mb1212",
+-			"maxbotix,mb1222",
+-			"maxbotix,mb1232",
+-			"maxbotix,mb1242",
+-			"maxbotix,mb7040" or
+-			"maxbotix,mb7137"
+-
+- - reg:			i2c address of the device, see also i2c/i2c.txt
+-
+-Optional properties:
+- - interrupts:		Interrupt used to announce the preceding reading
+-			request has finished and that data is available.
+-			If no interrupt is specified the device driver
+-			falls back to wait a fixed amount of time until
+-			data can be retrieved.
+-
+-Example:
+-proximity@70 {
+-	compatible = "maxbotix,mb1232";
+-	reg = <0x70>;
+-	interrupt-parent = <&gpio2>;
+-	interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+-};
+diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+new file mode 100644
+index 000000000000..e2fb1f6d4dbe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/proximity/maxbotix,mb1232.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MaxBotix I2CXL-MaxSonar ultrasonic distance sensor
++
++maintainers:
++  - Andreas Klinger <ak@it-klinger.de>
++
++description: |
++  MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
++  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
++  for ranging
++
++  Specifications about the devices can be found at:
++  https://www.maxbotix.com/documents/I2CXL-MaxSonar-EZ_Datasheet.pdf
++
++properties:
++  compatible:
++    enum:
++      - maxbotix,mb1202
++      - maxbotix,mb1212
++      - maxbotix,mb1222
++      - maxbotix,mb1232
++      - maxbotix,mb1242
++      - maxbotix,mb7040
++      - maxbotix,mb7137
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description:
++      Interrupt used to announce the preceding reading request has finished
++      and that data is available.  If no interrupt is specified the device
++      driver falls back to wait a fixed amount of time until data can be
++      retrieved.
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    proximity@70 {
++      compatible = "maxbotix,mb1232";
++      reg = <0x70>;
++      interrupt-parent = <&gpio2>;
++      interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
++    };
+-- 
+2.11.0
