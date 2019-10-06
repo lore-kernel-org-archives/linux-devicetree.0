@@ -1,14 +1,15 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: arm64: ls1028a-qds: correct bus of rtc
-Date: Sun, 6 Oct 2019 09:01:24 +0800
-Message-ID: <20191006010123.GF7150@dragon>
-References: <20190904085104.44709-1-biwen.li@nxp.com>
+Subject: Re: [PATCH v3 1/1] ARM: dts: colibri: introduce dts with UHS-I
+ support enabled
+Date: Sun, 6 Oct 2019 09:16:11 +0800
+Message-ID: <20191006011610.GH7150@dragon>
+References: <20190904110918.25009-1-igor.opaniuk@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190904085104.44709-1-biwen.li@nxp.com>
+In-Reply-To: <20190904110918.25009-1-igor.opaniuk@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,58 +19,143 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Biwen Li <biwen.li@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Igor Opaniuk <igor.opaniuk@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, marcel.ziswiler@toradex.com, s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, stefan@agner.ch, m.felsch@pengutronix.de, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com, linux-arm-kernel@lists.infradead.org, marcel@ziswiler.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 04:51:04PM +0800, Biwen Li wrote:
-> The rtc is on i2c2 bus(hardware), not on i2c1 channel 3,
-> so correct it
+On Wed, Sep 04, 2019 at 02:09:18PM +0300, Igor Opaniuk wrote:
+> From: Igor Opaniuk <igor.opaniuk@toradex.com>
 > 
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-
-This looks a like a fix.  Do we need a Fixes tag for it?
-
+> Introduce DTS for Colibri iMX6S/DL V1.1x re-design, where UHS-I support was
+> added. Provide proper configuration for VGEN3, which allows that rail to
+> be automatically switched to 1.8 volts for proper UHS-I operation mode.
+> 
+> Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
 > ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> index de6ef39f3118..6c0540ad9c59 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-> @@ -133,11 +133,6 @@
->  				vcc-supply = <&sb_3v3>;
->  			};
->  
-> -			rtc@51 {
-> -				compatible = "nxp,pcf2129";
-> -				reg = <0x51>;
-> -			};
-> -
->  			eeprom@56 {
->  				compatible = "atmel,24c512";
->  				reg = <0x56>;
-> @@ -166,6 +161,14 @@
->  	};
->  };
->  
-> +&i2c1 {
-> +	status = "okay";
+> v3:
+> - change hierarchy according to Marco's suggestions [Marco Felsch]
+> - adjust compatible string adding v1.1 [Stefan Agner]
+> 
+> v2:
+> - rework hierarchy of dts files, and a separate dtsi for Colibri
+>   iMX6S/DL V1.1x re-design, where UHS-I was added [Marcel Ziswiler]
+> - add comments about vgen3 power rail [Marcel Ziswiler]
+> - fix other minor issues, addressing Marcel's comments. [Marcel Ziswiler]
+> 
+>  arch/arm/boot/dts/Makefile                    |  1 +
+>  .../boot/dts/imx6dl-colibri-v1_1-eval-v3.dts  | 59 +++++++++++++++++++
+>  arch/arm/boot/dts/imx6qdl-colibri.dtsi        | 11 +++-
+>  3 files changed, 70 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/imx6dl-colibri-v1_1-eval-v3.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 9159fa2cea90..87dfc3db4343 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -401,6 +401,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+>  	imx6dl-aristainetos2_4.dtb \
+>  	imx6dl-aristainetos2_7.dtb \
+>  	imx6dl-colibri-eval-v3.dtb \
+> +	imx6dl-colibri-v1_1-eval-v3.dtb \
+>  	imx6dl-cubox-i.dtb \
+>  	imx6dl-cubox-i-emmc-som-v15.dtb \
+>  	imx6dl-cubox-i-som-v15.dtb \
+> diff --git a/arch/arm/boot/dts/imx6dl-colibri-v1_1-eval-v3.dts b/arch/arm/boot/dts/imx6dl-colibri-v1_1-eval-v3.dts
+> new file mode 100644
+> index 000000000000..92fcf4e62ba2
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6dl-colibri-v1_1-eval-v3.dts
+> @@ -0,0 +1,59 @@
+> +// SPDX-License-Identifier: GPL-2.0 OR X11
+> +/*
+> + * Copyright 2019 Toradex AG
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "imx6dl-colibri-eval-v3.dts"
+> +
+> +/ {
+> +	model = "Toradex Colibri iMX6DL/S V1.1 on Colibri Evaluation Board V3";
+> +	compatible = "toradex,colibri_imx6dl-v1_1-eval-v3",
+> +		     "toradex,colibri_imx6dl-v1_1",
+> +		     "toradex,colibri_imx6dl-eval-v3",
+> +		     "toradex,colibri_imx6dl",
 
-Please have a newline between properties and child node.
+Please make sure these compatibles are documented.
 
-Shawn
-
-> +	rtc@51 {
-> +		compatible = "nxp,pcf2129";
-> +		reg = <0x51>;
+> +		     "fsl,imx6dl";
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD1_CMD__SD1_CMD    0x170b1
+> +			MX6QDL_PAD_SD1_CLK__SD1_CLK    0x100b1
+> +			MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x170b1
+> +			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x170b1
+> +			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x170b1
+> +			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x170b1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_SD1_CMD__SD1_CMD    0x170f1
+> +			MX6QDL_PAD_SD1_CLK__SD1_CLK    0x100f1
+> +			MX6QDL_PAD_SD1_DAT0__SD1_DATA0 0x170f1
+> +			MX6QDL_PAD_SD1_DAT1__SD1_DATA1 0x170f1
+> +			MX6QDL_PAD_SD1_DAT2__SD1_DATA2 0x170f1
+> +			MX6QDL_PAD_SD1_DAT3__SD1_DATA3 0x170f1
+> +		>;
 > +	};
 > +};
 > +
->  &sai1 {
->  	status = "okay";
->  };
+> +/* Colibri MMC */
+> +&usdhc1 {
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +	pinctrl-0 = <&pinctrl_usdhc1 &pinctrl_mmc_cd>;
+> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz &pinctrl_mmc_cd>;
+> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz &pinctrl_mmc_cd>;
+> +	vmmc-supply = <&reg_module_3v3>;
+> +	vqmmc-supply = <&vgen3_reg>;
+> +	enable-sdio-wakeup;
+
+Check out Documentation/devicetree/bindings/power/wakeup-source.txt
+
+Shawn
+
+> +	keep-power-in-suspend;
+> +	sd-uhs-sdr12;
+> +	sd-uhs-sdr25;
+> +	sd-uhs-sdr50;
+> +	sd-uhs-sdr104;
+> +	status = "okay";
+> +	/delete-property/no-1-8-v;
+> +};
+> diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> index 1beac22266ed..27097ab5eaab 100644
+> --- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> @@ -215,7 +215,16 @@
+>  				regulator-always-on;
+>  			};
+>  
+> -			/* vgen3: unused */
+> +			/*
+> +			 * +V3.3_1.8_SD1 coming off VGEN3 and supplying
+> +			 * the i.MX 6 NVCC_SD1.
+> +			 */
+> +			vgen3_reg: vgen3 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+>  
+>  			vgen4_reg: vgen4 {
+>  				regulator-min-microvolt = <1800000>;
 > -- 
 > 2.17.1
 > 
