@@ -1,32 +1,49 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/2] arm64: dts: imx8mm: Remove incorrect fallback
- compatible for ocotp
-Date: Sun, 6 Oct 2019 15:44:49 +0800
-Message-ID: <20191006074447.GU7150@dragon>
-References: <1568211887-19318-1-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: etnaviv: Add #cooling-cells
+Date: Sun, 6 Oct 2019 16:04:44 +0800
+Message-ID: <20191006080442.GW7150@dragon>
+References: <cover.1568255903.git.agx@sigxcpu.org>
+ <6e9d761598b2361532146f43161fd05f3eee6545.1568255903.git.agx@sigxcpu.org>
+ <caf166f465465c61b70ad69d88f0634f1ca2ae64.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1568211887-19318-1-git-send-email-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ping.bai@nxp.com, daniel.baluta@nxp.com, s.hauer@pengutronix.de, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, leonard.crestez@nxp.com, festevam@gmail.com, linux-arm-kernel@lists.infradead.org, jun.li@nxp.com
+In-Reply-To: <caf166f465465c61b70ad69d88f0634f1ca2ae64.camel@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>, Anson Huang <Anson.Huang@nxp.com>, Carlo Caione <ccaione@baylibre.com>, David Airlie <airlied@linux.ie>, Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, "Angus Ainslie (Purism)" <angus@akkea.ca>, etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Russell King <linux+etnaviv@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Abel Vesa <abel.vesa@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 10:24:46AM -0400, Anson Huang wrote:
-> Compared to i.MX7D, i.MX8MM has different ocotp layout, so it should
-> NOT use "fsl,imx7d-ocotp" as ocotp's fallback compatible, remove it.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-
-Applied both, thanks.
+T24gTW9uLCBTZXAgMTYsIDIwMTkgYXQgMDQ6MzI6NTVQTSArMDIwMCwgTHVjYXMgU3RhY2ggd3Jv
+dGU6Cj4gT24gTWksIDIwMTktMDktMTEgYXQgMTk6NDAgLTA3MDAsIEd1aWRvIEfDvG50aGVyIHdy
+b3RlOgo+ID4gQWRkICNjb29saW5nLWNlbGxzIGZvciB3aGVuIHRoZSBncHUgYWN0cyBhcyBhIGNv
+b2xpbmcgZGV2aWNlLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBHdWlkbyBHw7xudGhlciA8YWd4
+QHNpZ3hjcHUub3JnPgo+IAo+IFJldmlld2VkLWJ5OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5n
+dXRyb25peC5kZT4KCkx1Y2FzLAoKSSBhc3N1bWUgeW91IHdpbGwgcGljayBpdCB1cC4KClNoYXdu
+Cgo+IAo+ID4gLS0tCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9ldG5hdml2
+L2V0bmF2aXYtZHJtLnR4dCAgICAgICAgICB8IDEgKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
+c2VydGlvbigrKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvZXRuYXZpdi9ldG5hdml2LWRybS50eHQgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4dAo+ID4g
+aW5kZXggOGRlZjExYjE2YTI0Li42NDA1OTJlOGFiMmUgMTAwNjQ0Cj4gPiAtLS0gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9ldG5hdml2L2V0bmF2aXYtZHJtLnR4
+dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZXRu
+YXZpdi9ldG5hdml2LWRybS50eHQKPiA+IEBAIC0yMSw2ICsyMSw3IEBAIFJlcXVpcmVkIHByb3Bl
+cnRpZXM6Cj4gPiAgT3B0aW9uYWwgcHJvcGVydGllczoKPiA+ICAtIHBvd2VyLWRvbWFpbnM6IGEg
+cG93ZXIgZG9tYWluIGNvbnN1bWVyIHNwZWNpZmllciBhY2NvcmRpbmcgdG8KPiA+ICAgIERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9wb3dlcl9kb21haW4udHh0Cj4gPiAr
+LSAjY29vbGluZy1jZWxsczogOiBJZiB1c2VkIGFzIGEgY29vbGluZyBkZXZpY2UsIG11c3QgYmUg
+PDI+Cj4gPiAgCj4gPiAgZXhhbXBsZToKPiA+ICAKPiAKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVs
