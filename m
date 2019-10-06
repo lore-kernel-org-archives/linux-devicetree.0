@@ -1,42 +1,85 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 03/10] ARM: dts: exynos: Rename SysRAM node to "sram"
-Date: Sun, 6 Oct 2019 17:48:57 +0200
-Message-ID: <20191006154857.GB29365@kozik-lap>
-References: <20191002164316.14905-1-krzk@kernel.org>
- <20191002164316.14905-3-krzk@kernel.org>
+From: "Theodore Y. Ts'o" <tytso@mit.edu>
+Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Date: Sun, 6 Oct 2019 12:54:36 -0400
+Message-ID: <20191006165436.GA29585@mit.edu>
+References: <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
+ <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
+ <20191004222714.GA107737@google.com>
+ <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
+ <20191004232955.GC12012@mit.edu>
+ <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
+ <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org>
+ <CAFd5g47wji3T9RFmqBwt+jPY0tb83y46oj_ttOq=rTX_N1Ggyg@mail.gmail.com>
+ <544bdfcb-fb35-5008-ec94-8d404a08fd14@kernel.org>
+ <CAFd5g467PkfELixpU0JbaepEAAD_ugAA340-uORngC-eXsQQ-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20191002164316.14905-3-krzk@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@bootlin.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Santosh Shilimkar <ssantosh@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org
+In-Reply-To: <CAFd5g467PkfELixpU0JbaepEAAD_ugAA340-uORngC-eXsQQ-g@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-nvdimm <linux-nvdimm@lists.01.org>, shuah <shuah@kernel.org>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Bird,
+ Timo
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 02, 2019 at 06:43:09PM +0200, Krzysztof Kozlowski wrote:
-> The device node name should reflect generic class of a device so rename
-> the SysRAM node from "sysram" to "sram".  The child nodes stay as before
-> as "smp-sysram" to match their real purpose.  This will be also in sync
-> with upcoming DT schema.  No functional change.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/boot/dts/exynos3250.dtsi | 2 +-
->  arch/arm/boot/dts/exynos4210.dtsi | 2 +-
->  arch/arm/boot/dts/exynos4412.dtsi | 2 +-
->  arch/arm/boot/dts/exynos5250.dtsi | 2 +-
->  arch/arm/boot/dts/exynos54xx.dtsi | 2 +-
-
-Applied this one to samsung-soc.
-
-Best regards,
-Krzysztof
+T24gRnJpLCBPY3QgMDQsIDIwMTkgYXQgMDY6MTg6MDRQTSAtMDcwMCwgQnJlbmRhbiBIaWdnaW5z
+IHdyb3RlOgo+ID4gTGV0J3MgdGFsayBhYm91dCBjdXJyZW50IHN0YXRlLiBSaWdodCBub3cga3Vu
+aXQgaXMgaW4gbGludXgtbmV4dCBhbmQKPiA+IHdlIHdhbnQgdG8gYWRkIGEgZmV3IG1vcmUgdGVz
+dHMuIFdlIHdpbGwgaGF2ZSB0byBjb29yZGluYXRlIHRoZSBlZmZvcnQuCj4gPiBPbmNlIGt1bml0
+IGdldCBpbnRvIG1haW5saW5lLCB0aGVuIHRoZSBuZWVkIGZvciB0aGlzIGNvb3JkaW5hdGlvbiBn
+b2VzCj4gPiBkb3duLgo+IAo+IFN1cmUsIEkgd2FzIGp1c3QgdGhpbmtpbmcgdGhhdCBnZXR0aW5n
+IG90aGVyIHBlb3BsZSB0byB3cml0ZSB0aGUgdGVzdHMKPiB3b3VsZCBiZSBiZXR0ZXIuIFNpbmNl
+IG5vdCBvbmx5IGlzIGl0IHRoZW4gdXNlZnVsIHRvIHNvbWVvbmUgZWxzZSwgaXQKPiBwcm92aWRl
+cyB0aGUgYmVzdCBwb3NzaWJsZSBleGVyY2lzZSBvZiBLVW5pdC4KCldlbGwsIG9uZSB0aGluZyB3
+ZSAqY2FuKiBkbyBpcyBpZiAoYSkgaWYgd2UgY2FuIGNyZWF0ZSBhIGtzZWxmdGVzdApicmFuY2gg
+d2hpY2ggd2Uga25vdyBpcyBzdGFibGUgYW5kIHdvbid0IGNoYW5nZSwgYW5kIChiKSB3ZSBjYW4g
+Z2V0CmFzc3VyYW5jZXMgdGhhdCBMaW51cyAqd2lsbCogYWNjZXB0IHRoYXQgYnJhbmNoIGR1cmlu
+ZyB0aGUgbmV4dCBtZXJnZQp3aW5kb3csIHRob3NlIHN1YnN5c3RlbXMgd2hpY2ggd2FudCB0byB1
+c2Uga3NlbGYgdGVzdCBjYW4gc2ltcGx5IHB1bGwKaXQgaW50byB0aGVpciB0cmVlLgoKV2UndmUg
+ZG9uZSB0aGlzIGJlZm9yZSBpbiB0aGUgZmlsZSBzeXN0ZW0gd29ybGQsIHdoZW4gdGhlcmUgaGFz
+IGJlZW4Kc29tZSBjb21tb24gc2V0IG9mIGNoYW5nZXMgbmVlZGVkIHRvIGltcHJvdmUsIHNheSwg
+RGlyZWN0IEkvTywgd2hlcmUKdGhlIGNoYW5nZXMgYXJlIHB1dCBpbnRvIGEgc3RhbmRhbG9uZSBi
+cmFuY2gsIHNheSwgaW4gdGhlIHhmcyB0cmVlLAphbmQgdGhvc2UgZmlsZSBzeXN0ZW1zIHdoaWNo
+IG5lZWQgaXQgYXMgYSBidWlsZGluZyBibG9jayBjYW4gcHVsbCBpdAppbnRvIHRoZWlyIHRyZWUs
+IGFuZCB0aGVuIGFkZCB0aGUgY2hhbmdlcyBuZWVkZWQgdG8gdXNlIHRob3NlIGNoYW5nZXMKaW50
+byB0aGVpciBmaWxlIHN5c3RlbSBnaXQgdHJlZS4gIFRoZXNlIGNoYW5nZXMgYXJlIGdlbmVyYWxs
+eSBub3QKdGVycmlibHkgY29udHJvdmVyc2lhbCwgYW5kIHdlJ3ZlIG5vdCBoYWQgdG8gd29ycnkg
+YWJvdXQgcGVvcGxlIHdhbnQKdG8gYmlrZXNoZWQgdGhlIGNoYW5nZXMuCgpUaGVyZSBpcyBhIHJp
+c2sgd2l0aCBkb2luZyB0aGlzIG9mIGNvdXJzZSwgd2hpY2ggaXMgdGhhdCBpZiB0aGUgYnJhbmNo
+CippcyogY29udHJvdmVyc2lhbCwgb3IgZ2V0cyBiaWtlLXNoZWRkZWQgZm9yIHNvbWUgcmVhc29u
+LCB0aGVuIExpbnVzCmdldHMgdXBzZXQgYW5kIGFueSBicmFuY2hlcyB3aGljaCBkZXBlbmRlZCBv
+biBzYWlkIGJyYW5jaCB3aWxsIGdldApyZWplY3RlZCBhdCB0aGUgbmV4dCBtZXJnZSB3aW5kb3cu
+ICBXaGljaCBpcyB0aGUgcmVxdWlyZW1lbnQgZm9yIChhKQphbmQgKGIpIGFib3ZlLiAgUHJlc3Vt
+YWJseSwgdGhlIGZhY3QgdGhhdCBwZW9wbGUgd2VyZSB1bndpbGxpbmcgdG8gbGV0Ckt1bml0IGxh
+bmQgZHVyaW5nIHRoaXMgbWVyZ2Ugd2luZG93IG1pZ2h0IHdpbGwgKmJlY2F1c2UqIHdlIHRoaW5r
+IG1vcmUKY2hhbmdlcyBtaWdodCBiZSBwZW5kaW5nPwoKVGhlIG90aGVyIHRoaW5nIEkgc3VwcG9z
+ZSBJIGNhbiBkbyBpcyB0byBsZXQgdGhlIGV4dDQga3VuaXQgdGVzdHMgbGFuZAppbiBleHQ0IHRy
+ZWUsIGJ1dCB3aXRoIHRoZSBuZWNlc3NhcnkgI2lmZGVmJ3MgYXJvdW5kIHRoaW5ncyBsaWtlCiIj
+aW5jbHVkZSA8a3VuaXQvdGVzdC5oPiIgc28gdGhhdCB0aGUgYnVpbGQgd29uJ3QgYmxvdyB1cCB3
+L28ga3VuaXQKY2hhbmdlcyBiZWluZyBpbiB0aGUgdHJlZSB0aGF0IEknbSBidWlsZGluZy4gIEl0
+IG1lYW5zIEkgd29uJ3QgYmUgYWJsZQp0byBydW4gdGhlIHRlc3RzIHdpdGhvdXQgY3JlYXRpbmcg
+YSB0ZXN0IGludGVncmF0aW9uIGJyYW5jaCBhbmQKbWVyZ2luZyBpbiBrdW5pdCBieSBoYW5kLCB3
+aGljaCB3aWxsIHN1cGVyLWFubm95aW5nLCBvZiBjb3Vyc2UuICBBbmQKaWYgc29tZSBvZiB0aGUg
+YmlrZS1zaGVkZGluZyBpcyBpbiBLdW5pdCdzIGludGVyZmFjZXMsIHRoZW4gdGhhdApiZWNvbWVz
+IHByb2JsZW1hdGljIGFzIHdlbGwsIHNpbmNlIGFueSB0ZXN0cyB0aGF0IGFyZSBpbiBleHQ0Lmdp
+dCB0cmVlCm1pZ2h0IGNoYW5nZSBpZiBwZW9wbGUgd2FudCB0byByZW5hbWUgS3VuaXQncyBwdWJs
+aWNhbGx5IGV4cG9ydGVkCmZ1bmN0aW9ucyAoZm9yIGV4YW1wbGUpLgoKPiBIZXkgVGVkLCBkbyB5
+b3Uga25vdyBpZiB0aGF0IGV4dDQgdGltZXN0YW1wIHRlc3QgY2FuIGdvIGluIHRocm91Z2gKPiBs
+aW51eC1rc2VsZnRlc3Q/IEl0IHNlZW1lZCBmYWlybHkgc2VsZi1jb250YWluZWQuIE9yIGlzIHRo
+YXQgd2hhdCB5b3UKPiB3ZXJlIHNheWluZyB3b3VsZG4ndCB3b3JrIGZvciB5b3U/CgpXZWxsLCBJ
+IHdhcyBob3BpbmcgdGhhdCB3ZSBtaWdodCBzdGFydCBjcmVhdGluZyBtb3JlIHRlc3RzIGJleW9u
+ZCBqdXN0CnRoZSBleHQ0IHRpbWVzdGFtcCB0ZXN0cy4uLi4KCgkJCQkJCS0gVGVkCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbA==
