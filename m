@@ -1,186 +1,138 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 4/7] iio: adc: max1027: Prepare the introduction of
- different resolutions
-Date: Sun, 6 Oct 2019 11:22:36 +0100
-Message-ID: <20191006112236.481102f8@archlinux>
+Subject: Re: [PATCH v2 5/7] iio: adc: max1027: Introduce 12-bit devices
+ support
+Date: Sun, 6 Oct 2019 11:24:59 +0100
+Message-ID: <20191006112459.55e8957a@archlinux>
 References: <20191003173401.16343-1-miquel.raynal@bootlin.com>
-        <20191003173401.16343-5-miquel.raynal@bootlin.com>
+        <20191003173401.16343-6-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191003173401.16343-5-miquel.raynal@bootlin.com>
+In-Reply-To: <20191003173401.16343-6-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Miquel Raynal <miquel.raynal@bootlin.com>
 Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  3 Oct 2019 19:33:58 +0200
+On Thu,  3 Oct 2019 19:33:59 +0200
 Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-> Maxim's max1027/29/31 series returns the measured voltages with a
-> resolution of 10 bits. There is a very similar series, max1227/29/31
-> which works identically but uses a resolution of 12 bits. Prepare the
-> support for these chips by turning the 'depth' into a macro parameter
-> instead of hardcoding it everywhere. Also reorganize just a bit the
-> macros at the top to avoid repeating tens of lines when adding support
-> for a new chip.
+> Maxim's max12xx series is very similar to the max10xx series, with the
+> difference of the measurements depth which is upgraded from 10 to 12
+> bits per channel. Everything else looks the same.
 > 
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Minor comments inline.
+Looks good.
+
+Thanks,
 
 Jonathan
 
 > ---
->  drivers/iio/adc/max1027.c | 78 ++++++++++++++++++---------------------
->  1 file changed, 36 insertions(+), 42 deletions(-)
+>  drivers/iio/adc/Kconfig   |  4 ++--
+>  drivers/iio/adc/max1027.c | 44 ++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 45 insertions(+), 3 deletions(-)
 > 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index f0af3a42f53c..6ac16d738822 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -508,8 +508,8 @@ config MAX1027
+>  	select IIO_BUFFER
+>  	select IIO_TRIGGERED_BUFFER
+>  	help
+> -	  Say yes here to build support for Maxim SPI ADC models
+> -	  max1027, max1029 and max1031.
+> +	  Say yes here to build support for Maxim SPI {10,12}-bit ADC models:
+> +	  max1027, max1029, max1031, max1227, max1229 and max1231.
+>  
+>  	  To compile this driver as a module, choose M here: the module will be
+>  	  called max1027.
 > diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-> index f9b473ee6711..5d5d223dd42a 100644
+> index 5d5d223dd42a..0d7116e9a63b 100644
 > --- a/drivers/iio/adc/max1027.c
 > +++ b/drivers/iio/adc/max1027.c
-> @@ -83,7 +83,7 @@ static const struct of_device_id max1027_adc_dt_ids[] = {
+> @@ -63,12 +63,18 @@ enum max1027_id {
+>  	max1027,
+>  	max1029,
+>  	max1031,
+> +	max1227,
+> +	max1229,
+> +	max1231,
+>  };
+>  
+>  static const struct spi_device_id max1027_id[] = {
+>  	{"max1027", max1027},
+>  	{"max1029", max1029},
+>  	{"max1031", max1031},
+> +	{"max1227", max1227},
+> +	{"max1229", max1229},
+> +	{"max1231", max1231},
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(spi, max1027_id);
+> @@ -78,6 +84,9 @@ static const struct of_device_id max1027_adc_dt_ids[] = {
+>  	{ .compatible = "maxim,max1027" },
+>  	{ .compatible = "maxim,max1029" },
+>  	{ .compatible = "maxim,max1031" },
+> +	{ .compatible = "maxim,max1227" },
+> +	{ .compatible = "maxim,max1229" },
+> +	{ .compatible = "maxim,max1231" },
+>  	{},
+>  };
 >  MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
->  #endif
->  
-> -#define MAX1027_V_CHAN(index)						\
-> +#define MAX1027_V_CHAN(index, depth)					\
->  	{								\
->  		.type = IIO_VOLTAGE,					\
->  		.indexed = 1,						\
-> @@ -93,7 +93,7 @@ MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
->  		.scan_index = index + 1,				\
->  		.scan_type = {						\
->  			.sign = 'u',					\
-> -			.realbits = 10,					\
-> +			.realbits = depth,				\
->  			.storagebits = 16,				\
->  			.shift = 2,					\
->  			.endianness = IIO_BE,				\
-> @@ -115,52 +115,42 @@ MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
->  		},							\
->  	}
->  
-> +#define MAX1X27_CHANNELS(depth)			\
-> +	MAX1027_T_CHAN,				\
-> +	MAX1027_V_CHAN(0, depth),		\
-> +	MAX1027_V_CHAN(1, depth),		\
-> +	MAX1027_V_CHAN(2, depth),		\
-> +	MAX1027_V_CHAN(3, depth),		\
-> +	MAX1027_V_CHAN(4, depth),		\
-> +	MAX1027_V_CHAN(5, depth),		\
-> +	MAX1027_V_CHAN(6, depth),		\
-> +	MAX1027_V_CHAN(7, depth)
-> +
-> +#define MAX1X29_CHANNELS(depth)			\
-> +	MAX1027_V_CHAN(8, depth),		\
-> +	MAX1027_V_CHAN(9, depth),		\
-> +	MAX1027_V_CHAN(10, depth),		\
-> +	MAX1027_V_CHAN(11, depth)
-> +
-
-Modify this a touch so the macro for MAX1X29_CHANNELS includes
-MAX1X27_CHANNELS.  That way each macro's name matches what it
-does rather than the 'additional channels' for that device.
-
-> +#define MAX1X31_CHANNELS(depth)			\
-> +	MAX1027_V_CHAN(12, depth),		\
-> +	MAX1027_V_CHAN(13, depth),		\
-> +	MAX1027_V_CHAN(14, depth),		\
-> +	MAX1027_V_CHAN(15, depth)
-> +
->  static const struct iio_chan_spec max1027_channels[] = {
-> -	MAX1027_T_CHAN,
-> -	MAX1027_V_CHAN(0),
-> -	MAX1027_V_CHAN(1),
-> -	MAX1027_V_CHAN(2),
-> -	MAX1027_V_CHAN(3),
-> -	MAX1027_V_CHAN(4),
-> -	MAX1027_V_CHAN(5),
-> -	MAX1027_V_CHAN(6),
-> -	MAX1027_V_CHAN(7)
-> +	MAX1X27_CHANNELS(10)
+> @@ -153,6 +162,21 @@ static const struct iio_chan_spec max1031_channels[] = {
+>  	MAX1X31_CHANNELS(10)
 >  };
 >  
->  static const struct iio_chan_spec max1029_channels[] = {
-> -	MAX1027_T_CHAN,
-> -	MAX1027_V_CHAN(0),
-> -	MAX1027_V_CHAN(1),
-> -	MAX1027_V_CHAN(2),
-> -	MAX1027_V_CHAN(3),
-> -	MAX1027_V_CHAN(4),
-> -	MAX1027_V_CHAN(5),
-> -	MAX1027_V_CHAN(6),
-> -	MAX1027_V_CHAN(7),
-> -	MAX1027_V_CHAN(8),
-> -	MAX1027_V_CHAN(9),
-> -	MAX1027_V_CHAN(10),
-> -	MAX1027_V_CHAN(11)
-> +	MAX1X27_CHANNELS(10),
-> +	MAX1X29_CHANNELS(10)
->  };
->  
->  static const struct iio_chan_spec max1031_channels[] = {
-> -	MAX1027_T_CHAN,
-> -	MAX1027_V_CHAN(0),
-> -	MAX1027_V_CHAN(1),
-> -	MAX1027_V_CHAN(2),
-> -	MAX1027_V_CHAN(3),
-> -	MAX1027_V_CHAN(4),
-> -	MAX1027_V_CHAN(5),
-> -	MAX1027_V_CHAN(6),
-> -	MAX1027_V_CHAN(7),
-> -	MAX1027_V_CHAN(8),
-> -	MAX1027_V_CHAN(9),
-> -	MAX1027_V_CHAN(10),
-> -	MAX1027_V_CHAN(11),
-> -	MAX1027_V_CHAN(12),
-> -	MAX1027_V_CHAN(13),
-> -	MAX1027_V_CHAN(14),
-> -	MAX1027_V_CHAN(15)
-> +	MAX1X27_CHANNELS(10),
-> +	MAX1X29_CHANNELS(10),
-> +	MAX1X31_CHANNELS(10)
->  };
->  
+> +static const struct iio_chan_spec max1227_channels[] = {
+> +	MAX1X27_CHANNELS(12)
+> +};
+> +
+> +static const struct iio_chan_spec max1229_channels[] = {
+> +	MAX1X27_CHANNELS(12),
+> +	MAX1X29_CHANNELS(12)
+> +};
+> +
+> +static const struct iio_chan_spec max1231_channels[] = {
+> +	MAX1X27_CHANNELS(12),
+> +	MAX1X29_CHANNELS(12),
+> +	MAX1X31_CHANNELS(12)
+> +};
+> +
 >  static const unsigned long max1027_available_scan_masks[] = {
-> @@ -181,6 +171,7 @@ static const unsigned long max1031_available_scan_masks[] = {
->  struct max1027_chip_info {
->  	const struct iio_chan_spec *channels;
->  	unsigned int num_channels;
-> +	unsigned int depth;
-
-Could we use the channel real_bits field instead of replicating the info?
-
->  	const unsigned long *available_scan_masks;
->  };
->  
-> @@ -188,16 +179,19 @@ static const struct max1027_chip_info max1027_chip_info_tbl[] = {
->  	[max1027] = {
->  		.channels = max1027_channels,
->  		.num_channels = ARRAY_SIZE(max1027_channels),
-> +		.depth = 10,
->  		.available_scan_masks = max1027_available_scan_masks,
->  	},
->  	[max1029] = {
->  		.channels = max1029_channels,
->  		.num_channels = ARRAY_SIZE(max1029_channels),
-> +		.depth = 10,
->  		.available_scan_masks = max1029_available_scan_masks,
->  	},
->  	[max1031] = {
->  		.channels = max1031_channels,
->  		.num_channels = ARRAY_SIZE(max1031_channels),
-> +		.depth = 10,
+>  	0x000001ff,
+>  	0x00000000,
+> @@ -194,6 +218,24 @@ static const struct max1027_chip_info max1027_chip_info_tbl[] = {
+>  		.depth = 10,
 >  		.available_scan_masks = max1031_available_scan_masks,
 >  	},
+> +	[max1227] = {
+> +		.channels = max1227_channels,
+> +		.num_channels = ARRAY_SIZE(max1227_channels),
+> +		.depth = 12,
+> +		.available_scan_masks = max1027_available_scan_masks,
+> +	},
+> +	[max1229] = {
+> +		.channels = max1229_channels,
+> +		.num_channels = ARRAY_SIZE(max1229_channels),
+> +		.depth = 12,
+> +		.available_scan_masks = max1029_available_scan_masks,
+> +	},
+> +	[max1231] = {
+> +		.channels = max1231_channels,
+> +		.num_channels = ARRAY_SIZE(max1231_channels),
+> +		.depth = 12,
+> +		.available_scan_masks = max1031_available_scan_masks,
+> +	},
 >  };
-> @@ -284,7 +278,7 @@ static int max1027_read_raw(struct iio_dev *indio_dev,
->  			break;
->  		case IIO_VOLTAGE:
->  			*val = 2500;
-> -			*val2 = 10;
-> +			*val2 = st->info->depth;
->  			ret = IIO_VAL_FRACTIONAL_LOG2;
->  			break;
->  		default:
+>  
+>  struct max1027_state {
+> @@ -490,5 +532,5 @@ static struct spi_driver max1027_driver = {
+>  module_spi_driver(max1027_driver);
+>  
+>  MODULE_AUTHOR("Philippe Reynes <tremyfr@yahoo.fr>");
+> -MODULE_DESCRIPTION("MAX1027/MAX1029/MAX1031 ADC");
+> +MODULE_DESCRIPTION("MAX1X27/MAX1X29/MAX1X31 ADC");
+>  MODULE_LICENSE("GPL v2");
