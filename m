@@ -1,52 +1,44 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Sun, 6 Oct 2019 10:18:11 -0700
-Message-ID: <CAHk-=wjcJxypxUOSF-jc=SQKT1CrOoTMyT7soYzbvK3965JmCA@mail.gmail.com>
-References: <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
- <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
- <20191004222714.GA107737@google.com>
- <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
- <20191004232955.GC12012@mit.edu>
- <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
- <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org>
- <CAFd5g47wji3T9RFmqBwt+jPY0tb83y46oj_ttOq=rTX_N1Ggyg@mail.gmail.com>
- <544bdfcb-fb35-5008-ec94-8d404a08fd14@kernel.org>
- <CAFd5g467PkfELixpU0JbaepEAAD_ugAA340-uORngC-eXsQQ-g@mail.gmail.com>
- <20191006165436.GA29585@mit.edu>
+From: Vicente Bergas <vicencb@gmail.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Fix usb-c on Hugsun X99 TV Box
+Date: Sun, 06 Oct 2019 21:50:16 +0200
+Message-ID: <4cb2b781-e177-4008-86ae-a9108bd303e4@gmail.com>
+References: <20190929032230.24628-1-npcomplete13@gmail.com>
+ <54c67ca8-8428-48ee-9a96-e1216ba02839@gmail.com>
+ <20190929234615.GA5355@vivek-desktop> <2223294.9I8gkMH88G@phil>
+ <20191005005200.GA11418@vivek-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20191006165436.GA29585@mit.edu>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, Brendan Higgins <brendanhiggins@google.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-nvdimm <linux-nvdimm@lists.01.org>, shuah <shuah@kernel.org>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, Linux
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20191005005200.GA11418@vivek-desktop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vivek Unune <npcomplete13@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Felipe Balbi <felipe.balbi@linux.intel.com>, Felipe Balbi <balbi@kernel.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, akash@openedev.com, ezequiel@collabora.com, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBPY3QgNiwgMjAxOSBhdCA5OjU1IEFNIFRoZW9kb3JlIFkuIFRzJ28gPHR5dHNvQG1p
-dC5lZHU+IHdyb3RlOgo+Cj4gV2VsbCwgb25lIHRoaW5nIHdlICpjYW4qIGRvIGlzIGlmIChhKSBp
-ZiB3ZSBjYW4gY3JlYXRlIGEga3NlbGZ0ZXN0Cj4gYnJhbmNoIHdoaWNoIHdlIGtub3cgaXMgc3Rh
-YmxlIGFuZCB3b24ndCBjaGFuZ2UsIGFuZCAoYikgd2UgY2FuIGdldAo+IGFzc3VyYW5jZXMgdGhh
-dCBMaW51cyAqd2lsbCogYWNjZXB0IHRoYXQgYnJhbmNoIGR1cmluZyB0aGUgbmV4dCBtZXJnZQo+
-IHdpbmRvdywgdGhvc2Ugc3Vic3lzdGVtcyB3aGljaCB3YW50IHRvIHVzZSBrc2VsZiB0ZXN0IGNh
-biBzaW1wbHkgcHVsbAo+IGl0IGludG8gdGhlaXIgdHJlZS4KClllcy4KCkF0IHRoZSBzYW1lIHRp
-bWUsIEkgZG9uJ3QgdGhpbmsgaXQgbmVlZHMgdG8gYmUgZXZlbiB0aGF0IGZhbmN5LiBFdmVuCmlm
-IGl0J3Mgbm90IGEgc3RhYmxlIGJyYW5jaCB0aGF0IGdldHMgc2hhcmVkIGJldHdlZW4gZGlmZmVy
-ZW50CmRldmVsb3BlcnMsIGl0IHdvdWxkIGJlIGdvb2QgdG8ganVzdCBoYXZlIHBlb3BsZSBkbyBh
-ICJsZXQncyB0cnkgdGhpcyIKdGhyb3ctYXdheSBicmFuY2ggdG8gdXNlIHRoZSBrdW5pdCBmdW5j
-dGlvbmFsaXR5IGFuZCB2ZXJpZnkgdGhhdAoieWVhaCwgdGhpcyBpcyBmYWlybHkgY29udmVuaWVu
-dCBmb3IgZXh0NCIuCgpJdCBkb2Vzbid0IGhhdmUgdG8gYmUgbWVyZ2VkIGluIHRoYXQgZm9ybSwg
-YnV0IGp1c3QgY29uZmlybWF0aW9uIHRoYXQKdGhlIGluZnJhc3RydWN0dXJlIGlzIGhlbHBmdWwg
-YmVmb3JlIGl0IGdldHMgbWVyZ2VkIHdvdWxkIGJlIGdvb2QuCgogICAgICAgICAgICAgICBMaW51
-cwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWw=
+T24gU2F0dXJkYXksIE9jdG9iZXIgNSwgMjAxOSAyOjUyOjAwIEFNIENFU1QsIFZpdmVrIFVudW5l
+IHdyb3RlOgo+IE9uIEZyaSwgT2N0IDA0LCAyMDE5IGF0IDExOjQ1OjA4UE0gKzAyMDAsIEhlaWtv
+IFN0dWVibmVyIHdyb3RlOgo+PiBIaSBWaXZlaywKPj4gCj4+IEFtIE1vbnRhZywgMzAuIFNlcHRl
+bWJlciAyMDE5LCAwMTo0NjoxNSBDRVNUIHNjaHJpZWIgVml2ZWsgVW51bmU6IC4uLgo+Cj4gSGkg
+SGVpa28sCj4KPiBJIHRlc3RlZCB0aGUgYzA5YjczY2YgcGF0Y2ggd2l0aG91dCBtb2RpZnlpbmcg
+ZXhzaXN0aW5nIGR0cy4gSSBjYW4gY29uZmlybQo+IHRoYXQgdGhhdCBwYXRjaCBkb2Vzbid0IHdv
+cmsgZm9yIG1lLiBObyB1c2ItYyBkZXZpY2VzIHdlcmUgcmVjb2duaXplZC4KPgo+IFZpY2Vuw6cg
+LSB3ZXJlIHlvdSBhYmxlIHRvIHRlc3QgaXQ/CgpJIGNhbiBhbHNvIGNvbmZpcm0gdGhhdAoKYzA5
+YjczY2ZhYzJhOTMxN2YxMTA0MTY5MDQ1YzUxOWM2MDIxYWExZAp1c2I6IGR3YzM6IGRvbid0IHNl
+dCBnYWRnZXQtPmlzX290ZyBmbGFnCgphbG9uZSBkb2VzIG5vdCBmaXggdGhlIGlzc3VlLgoKZTFk
+OTE0OWU4Mzg5ZjE2OTBjZGQ0ZTQwNTY3NjZkZDI2NDg4YTBmZQphcm02NDogZHRzOiByb2NrY2hp
+cDogRml4IFVTQjMgVHlwZS1DIG9uIHJrMzM5OS1zYXBwaGlyZQoKaXMgc3RpbGwgcmVxdWlyZWQg
+Zm9yIHRoZSBVU0ItQyB0byB3b3JrIG9uIHRoZSBTYXBwaGlyZSBib2FyZC4KClJlZ2FyZHMsCiAg
+VmljZW7Dpy4KCj4gQXMgc29vbiBhcyBJIGFwcGx5IGR0cyBwYXRjaCwgdXNiLWMgZGV2aWNlcyBh
+cmUgcmVjb2duaXplZC4KPgo+IFRoYW5rcywKPgo+IFZpdmVrCgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
