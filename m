@@ -1,88 +1,71 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [RFC][PATCH 2/3] usb: roles: Add usb role switch notifier.
-Date: Sun, 6 Oct 2019 17:22:28 +0200
-Message-ID: <fa44a7ab-14bc-24ec-a19b-7bf15e100ce1@redhat.com>
-References: <20191002231617.3670-1-john.stultz@linaro.org>
- <20191002231617.3670-3-john.stultz@linaro.org>
- <20191003112618.GA2420393@kroah.com>
- <CALAqxLWm_u3KsXHn4a6PdBCOKM1vs5k0xS3G5jY+M-=HBqUJag@mail.gmail.com>
- <9cfccb6a-fba1-61a3-3eb6-3009c2f5e747@redhat.com>
- <CALAqxLX3uSJKvRwzcQznaF4WK52BcM5Bh+PNXHmfDe1aTSUL8Q@mail.gmail.com>
+From: Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH V4 02/10] ARM: dts: bcm283x: Remove simple-bus from fixed
+ clocks
+Date: Sun,  6 Oct 2019 17:28:20 +0200
+Message-ID: <1570375708-26965-3-git-send-email-wahrenst@gmx.net>
+References: <1570375708-26965-1-git-send-email-wahrenst@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CALAqxLX3uSJKvRwzcQznaF4WK52BcM5Bh+PNXHmfDe1aTSUL8Q@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, lkml <linux-kernel@vger.kernel.org>, Yu Chen <chenyu56@huawei.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Jun Li <lijun.kernel@gmail.com>, Valentin Schneider <valentin.schneider@arm.com>, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1570375708-26965-1-git-send-email-wahrenst@gmx.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
+Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-bluetooth@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Stefan Wahren <wahrenst@gmx.net>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The fixed clocks doesn't form some kind of bus. So let's remove it.
+This fixes the follow DT schema warnings:
 
-On 10/3/19 11:33 PM, John Stultz wrote:
-> On Thu, Oct 3, 2019 at 1:56 PM Hans de Goede <hdegoede@redhat.com> wrote:
->> On 03-10-2019 22:45, John Stultz wrote:
->>> The HiKey960 has only one USB controller, but in order to support both
->>> USB-C gadget/OTG and USB-A (host only) ports. When the USB-C
->>> connection is attached, it powers down and disconnects the hub. When
->>> the USB-C connection is detached, it powers the hub on and connects
->>> the controller to the hub.
->>
->> When you say one controller, do you mean 1 host and 1 gadget controller,
->> or is this one of these lovely devices where a gadget controller gets
->> abused as / confused with a proper host controller?
->=20
-> I'm not totally sure myself, but I believe it's the latter, as the
-> host ports have to be disabled in order for the gadet/otg port to
-> function.
->=20
-> There was a similar situation w/ the original HiKey board (dwc2
-> controller) as well, though the switching was done fully in hardware
-> and we only needed some minor tweaks to the driver to keep the state
-> transitions straight.
->=20
->> And since you are doing a usb-role-switch driver, I guess that the
->> role-switch is integrated inside the SoC, so you only get one pair
->> of USB datalines to the outside ?
->=20
-> I believe so, but again, I don't have a ton of knowledge about the SoC
-> details, Chen Yu would probably be the right person to answer, but I
-> don't know if he's doing upstreaming anymore.
->=20
->> This does seem rather special, it might help if you can provide a diagra=
-m
->> with both the relevant bits inside the SoC as well as what lives outside
->> the Soc. even if it is in ASCII art...
->=20
-> There is a schematic pdf here:
-> https://github.com/96boards/documentation/raw/master/consumer/hikey/hikey=
-960/hardware-docs/HiKey960_Schematics.pdf
->=20
-> The larger block diagram on page 3 might be helpful, but you can find
-> more details on the usb hub bits on page 17 and 18.
+clocks: clock@3:reg:0: [3] is too short
+clocks: clock@4:reg:0: [4] is too short
+clocks: $nodename:0: 'clocks' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+clocks: #size-cells:0:0: 0 is not one of [1, 2]
+clocks: 'ranges' is a required property
+clock@3: 'reg' does not match any of the regexes: 'pinctrl-[0-9]+'
+clock@4: 'reg' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-Ok, so I took a quick look at the schematic and it is really funky.
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+---
+ arch/arm/boot/dts/bcm283x.dtsi | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-The USB3 superspeed data pairs are only going to the USB-3 hub and
-only the USB-2 lines are muxed between the TypeC and the HUB, so
-in theory superspeed devices could keep working while the TypeC is
-in device mode, since their data lines will still be connected,
-but I guess the controller in the SoC is switched to device mode
-then so this does not work. Likewise Vbus is an all or
-nothing thing, either both the TypeC connector + the 2 Type-A
-reeptacles get Vusb or none of them get Vusb. Also it is seems to use
-the TypeC connector in host-mode together with the A receptacles.
-I must say this is a weird design...
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 2d191fc..f16899d 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -650,22 +650,16 @@
+ 	};
 
-Anyways back the code to add a usb role switch notifier. I do
-not think that this is a good idea, this is making "core" changes
-to deal with a special case. If you are going to use a notfier for
-this then IMHO the notifier should be part of the hikey960 usb role
-swtich driver and not be in the usb-role-switch class code, since
-this is very much a device specific hack.
+ 	clocks {
+-		compatible = "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+ 		/* The oscillator is the root of the clock tree. */
+-		clk_osc: clock@3 {
++		clk_osc: clk-osc {
+ 			compatible = "fixed-clock";
+-			reg = <3>;
+ 			#clock-cells = <0>;
+ 			clock-output-names = "osc";
+ 			clock-frequency = <19200000>;
+ 		};
 
-Regards,
-
-Hans
+-		clk_usb: clock@4 {
++		clk_usb: clk-usb {
+ 			compatible = "fixed-clock";
+-			reg = <4>;
+ 			#clock-cells = <0>;
+ 			clock-output-names = "otg";
+ 			clock-frequency = <480000000>;
+--
+2.7.4
