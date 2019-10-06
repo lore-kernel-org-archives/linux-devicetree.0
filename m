@@ -1,14 +1,11 @@
 From: Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V4 05/10] dt-bindings: arm: Convert BCM2835 board/soc bindings
- to json-schema
-Date: Sun,  6 Oct 2019 17:28:23 +0200
-Message-ID: <1570375708-26965-6-git-send-email-wahrenst@gmx.net>
-References: <1570375708-26965-1-git-send-email-wahrenst@gmx.net>
+Subject: [PATCH V4 00/10] ARM: Add minimal Raspberry Pi 4 support
+Date: Sun,  6 Oct 2019 17:28:18 +0200
+Message-ID: <1570375708-26965-1-git-send-email-wahrenst@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1570375708-26965-1-git-send-email-wahrenst@gmx.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,145 +19,119 @@ To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.co
 Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-bluetooth@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Stefan Wahren <wahrenst@gmx.net>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Convert the BCM2835/6/7 SoC bindings to DT schema format using json-schema.
-All the other Broadcom boards are maintained by Florian Fainelli.
+This series adds minimal support for the new Raspberry Pi 4, so we are able
+to login via debug UART.
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Acked-by: Eric Anholt <eric@anholt.net>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/arm/bcm/bcm2835.yaml       | 48 ++++++++++++++++
- .../devicetree/bindings/arm/bcm/brcm,bcm2835.txt   | 67 ----------------------
- 2 files changed, 48 insertions(+), 67 deletions(-)
+Patch 1:     Bluetooth driver fix
+Patch 2-3:   Fix some DT schema warnings
+Patch 4-5:   Prepare DTS for the new SoC BMC2711
+Patch 6-9:   Add Raspberry Pi 4 DTS support
+Patch 10:    Update MAINTAINERS
+
+Unfortunately the Raspberry Pi Foundation didn't released a
+peripheral documentation for the new SoC yet. So we only have a preliminary
+datasheet [1] and reduced schematics [2].
+
+Known issues:
+Since Linux 5.3-rc1 DMA doesn't work properly on that platform.
+Nicolas Saenz Julienne investigates on that issue. As a temporary workaround
+i reverted the following patch to test this series:
+
+79a98672 "dma-mapping: remove dma_max_pfn"
+7559d612 "mmc: core: let the dma map ops handle bouncing"
+
+Changes in V4:
+- add Rob's Reviewed-by
+- enable ZONE_DMA for ARCH_BCM2835
+- fix spi reference in bcm2711.dtsi
+- fix bluetooth section in RPi 4 dts
+- drop "always-on" for armv8-timer
+- add necessary Bluetooth driver fix
+- add arm64 dts link
+- additional comments to the dts files as requested by Florian
+
+Changes in V3:
+- rebased series
+- add Reviewed-by
+- enable ARM_GIC for ARCH_BCM2835 on arm64 too
+- configure i2c pull-up in bcm2711.dtsi
+- move i2c2 to bcm2835-common.dtsi
+- add missing compatibles to DT schema as suggested by Rob
+- fix DT schema warnings in dtsi files
+- replace brcm pintrl with generic pinctrl as suggested by Linus
+- make dma_zone_size depend on CONFIG_ZONE_DMA as suggested by Matthias
+
+Changes in V2:
+- use separate board file for BCM2711
+- enable ARM_GIC for ARCH_BCM2835
+- add Acked-by and Reviewed-by
+- fix arm-pmu and timer nodes for BCM2711 reported by Marc Zyngier
+- enable HDMI at board level
+- move HDMI and pixelvalve into bcm2835-common.dtsi as suggested by Eric Anholt
+- fix DWC2 probing warning by setting USB role to peripheral
+- fix order of node references in bcm2711.dtsi
+- disable I2C clock stretching quirk for BCM2711
+- mark PLLD_PER as critical clock
+- make PLLH clock unavailable on BCM2711
+- fix compile warning in clk-bcm2835 for arm64
+
+Changes since RFC:
+- change BCM2838 -> BCM2711 as discussed in RFC
+- update MAINTAINERS accordingly
+- drop "spi: bcm2835: enable shared interrupt support" from series
+- squash all pinctrl-bcm2835 changes into one patch
+- introduce SoC specific clock registration as suggested by Florian
+- fix watchdog probing for Raspberry Pi 4
+- convert brcm,bcm2835.txt to json-schema
+- move VC4 node to bcm2835-common.dtsi
+- fallback to legacy pull config for Raspberry Pi 4
+- revert unintended change of mailbox in bcm283x.dtsi
+- add reference for arm64
+
+[1] - https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2711/rpi_DATA_2711_1p0_preliminary.pdf
+[2] - https://www.raspberrypi.org/documentation/hardware/raspberrypi/schematics/rpi_SCH_4b_4p0_reduced.pdf
+
+Stefan Wahren (10):
+  bluetooth: hci_bcm: Fix RTS handling during startup
+  ARM: dts: bcm283x: Remove simple-bus from fixed clocks
+  ARM: dts: bcm283x: Remove brcm,bcm2835-pl011 compatible
+  ARM: dts: bcm283x: Move BCM2835/6/7 specific to bcm2835-common.dtsi
+  dt-bindings: arm: Convert BCM2835 board/soc bindings to json-schema
+  dt-bindings: arm: bcm2835: Add Raspberry Pi 4 to DT schema
+  ARM: bcm: Add support for BCM2711 SoC
+  ARM: dts: Add minimal Raspberry Pi 4 support
+  arm64: dts: broadcom: Add reference to RPi 4 B
+  MAINTAINERS: Add BCM2711 to BCM2835 ARCH
+
+ .../devicetree/bindings/arm/bcm/bcm2835.yaml       |  54 ++
+ .../devicetree/bindings/arm/bcm/brcm,bcm2835.txt   |  67 --
+ MAINTAINERS                                        |   3 +-
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/bcm2711-rpi-4-b.dts              | 123 +++
+ arch/arm/boot/dts/bcm2711.dtsi                     | 844 +++++++++++++++++++++
+ arch/arm/boot/dts/bcm2835-common.dtsi              | 194 +++++
+ arch/arm/boot/dts/bcm2835-rpi.dtsi                 |   4 -
+ arch/arm/boot/dts/bcm2835.dtsi                     |   1 +
+ arch/arm/boot/dts/bcm2836.dtsi                     |   1 +
+ arch/arm/boot/dts/bcm2837.dtsi                     |   1 +
+ arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi  |   7 +
+ arch/arm/boot/dts/bcm283x.dtsi                     | 190 +----
+ arch/arm/mach-bcm/Kconfig                          |   4 +-
+ arch/arm/mach-bcm/Makefile                         |   3 +-
+ arch/arm/mach-bcm/bcm2711.c                        |  24 +
+ arch/arm64/Kconfig.platforms                       |   5 +-
+ arch/arm64/boot/dts/broadcom/Makefile              |   3 +-
+ arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dts   |   2 +
+ drivers/bluetooth/hci_bcm.c                        |   2 +
+ 20 files changed, 1272 insertions(+), 261 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
  delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+ create mode 100644 arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+ create mode 100644 arch/arm/boot/dts/bcm2711.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm2835-common.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
+ create mode 100644 arch/arm/mach-bcm/bcm2711.c
+ create mode 100644 arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml b/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
-new file mode 100644
-index 0000000..67bf9e2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/bcm/bcm2835.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom BCM2711/BCM2835 Platforms Device Tree Bindings
-+
-+maintainers:
-+  - Eric Anholt <eric@anholt.net>
-+  - Stefan Wahren <wahrenst@gmx.net>
-+
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    oneOf:
-+      - description: BCM2835 based Boards
-+        items:
-+          - enum:
-+              - raspberrypi,model-a
-+              - raspberrypi,model-a-plus
-+              - raspberrypi,model-b
-+              - raspberrypi,model-b-i2c0  # Raspberry Pi Model B (no P5)
-+              - raspberrypi,model-b-rev2
-+              - raspberrypi,model-b-plus
-+              - raspberrypi,compute-module
-+              - raspberrypi,model-zero
-+              - raspberrypi,model-zero-w
-+          - const: brcm,bcm2835
-+
-+      - description: BCM2836 based Boards
-+        items:
-+          - enum:
-+              - raspberrypi,2-model-b
-+          - const: brcm,bcm2836
-+
-+      - description: BCM2837 based Boards
-+        items:
-+          - enum:
-+              - raspberrypi,3-model-a-plus
-+              - raspberrypi,3-model-b
-+              - raspberrypi,3-model-b-plus
-+              - raspberrypi,3-compute-module
-+              - raspberrypi,3-compute-module-lite
-+          - const: brcm,bcm2837
-+
-+...
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
-deleted file mode 100644
-index 245328f..0000000
---- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
-+++ /dev/null
-@@ -1,67 +0,0 @@
--Broadcom BCM2835 device tree bindings
---------------------------------------------
--
--Raspberry Pi Model A
--Required root node properties:
--compatible = "raspberrypi,model-a", "brcm,bcm2835";
--
--Raspberry Pi Model A+
--Required root node properties:
--compatible = "raspberrypi,model-a-plus", "brcm,bcm2835";
--
--Raspberry Pi Model B
--Required root node properties:
--compatible = "raspberrypi,model-b", "brcm,bcm2835";
--
--Raspberry Pi Model B (no P5)
--early model B with I2C0 rather than I2C1 routed to the expansion header
--Required root node properties:
--compatible = "raspberrypi,model-b-i2c0", "brcm,bcm2835";
--
--Raspberry Pi Model B rev2
--Required root node properties:
--compatible = "raspberrypi,model-b-rev2", "brcm,bcm2835";
--
--Raspberry Pi Model B+
--Required root node properties:
--compatible = "raspberrypi,model-b-plus", "brcm,bcm2835";
--
--Raspberry Pi 2 Model B
--Required root node properties:
--compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
--
--Raspberry Pi 3 Model A+
--Required root node properties:
--compatible = "raspberrypi,3-model-a-plus", "brcm,bcm2837";
--
--Raspberry Pi 3 Model B
--Required root node properties:
--compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
--
--Raspberry Pi 3 Model B+
--Required root node properties:
--compatible = "raspberrypi,3-model-b-plus", "brcm,bcm2837";
--
--Raspberry Pi Compute Module
--Required root node properties:
--compatible = "raspberrypi,compute-module", "brcm,bcm2835";
--
--Raspberry Pi Compute Module 3
--Required root node properties:
--compatible = "raspberrypi,3-compute-module", "brcm,bcm2837";
--
--Raspberry Pi Compute Module 3 Lite
--Required root node properties:
--compatible = "raspberrypi,3-compute-module-lite", "brcm,bcm2837";
--
--Raspberry Pi Zero
--Required root node properties:
--compatible = "raspberrypi,model-zero", "brcm,bcm2835";
--
--Raspberry Pi Zero W
--Required root node properties:
--compatible = "raspberrypi,model-zero-w", "brcm,bcm2835";
--
--Generic BCM2835 board
--Required root node properties:
--compatible = "brcm,bcm2835";
 --
 2.7.4
