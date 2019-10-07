@@ -1,55 +1,57 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
-Date: Mon,  7 Oct 2019 13:16:49 +0000
-Message-ID: <20191007131649.1768-6-linux.amoon@gmail.com>
-References: <20191007131649.1768-1-linux.amoon@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 2/4] dt-bindings: rtc: s3c: Use defines instead of clock
+ numbers
+Date: Mon, 7 Oct 2019 15:17:36 +0200
+Message-ID: <20191007131736.GJ4254@piout.net>
+References: <20191002160744.11307-1-krzk@kernel.org>
+ <20191002160744.11307-2-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191007131649.1768-1-linux.amoon@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20191002160744.11307-2-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Sebastian Reichel <sre@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Using microSD card we cannot get the mainline kernel to boot
-using mainline u-boot it fails with below logs.
-Build PWM_MESSON as build-in solve the issue.
+On 02/10/2019 18:07:42+0200, Krzysztof Kozlowski wrote:
+> Make the examples in S3C RTC bindings more readable and bring them
+> closer to real DTS by using defines for clocks.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[    1.569240] meson-gx-mmc ffe05000.sd: Got CD GPIO
-[    1.599227] pwm-regulator regulator-vddcpu-a: Failed to get PWM: -517
-[    1.600605] pwm-regulator regulator-vddcpu-b: Failed to get PWM: -517
-[    1.607166] pwm-regulator regulator-vddcpu-a: Failed to get PWM: -517
-[    1.613273] pwm-regulator regulator-vddcpu-b: Failed to get PWM: -517
-[    1.619931] hctosys: unable to open rtc device (rtc0)
+> ---
+>  Documentation/devicetree/bindings/rtc/s3c-rtc.yaml | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> index 95570d7e19eb..4d91cdc9b998 100644
+> --- a/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> +++ b/Documentation/devicetree/bindings/rtc/s3c-rtc.yaml
+> @@ -75,11 +75,14 @@ allOf:
+>  
+>  examples:
+>    - |
+> +    #include <dt-bindings/clock/exynos5420.h>
+> +    #include <dt-bindings/clock/samsung,s2mps11.h>
+> +
+>      rtc@10070000 {
+>          compatible = "samsung,s3c6410-rtc";
+>          reg = <0x10070000 0x100>;
+>          interrupts = <0 44 4>, <0 45 4>;
+> -        clocks = <&clock 0>, // CLK_RTC
+> -                 <&s2mps11_osc 0>; // S2MPS11_CLK_AP
+> +        clocks = <&clock CLK_RTC>,
+> +                 <&s2mps11_osc S2MPS11_CLK_AP>;
+>          clock-names = "rtc", "rtc_src";
+>      };
+> -- 
+> 2.17.1
+> 
 
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-Odroid N2 Schematics says "GPIOC_6 should not pulled low if GPIOC is not
-work as SDCARD"
-Is their any other approch to help resolve this issue.
-
-Boot log failed with cold boot:
-[0] https://pastebin.com/cEtWq2iX
----
- arch/arm64/configs/defconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index c9a867ac32d4..72f6a7dca0d6 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -774,7 +774,7 @@ CONFIG_MPL3115=m
- CONFIG_PWM=y
- CONFIG_PWM_BCM2835=m
- CONFIG_PWM_CROS_EC=m
--CONFIG_PWM_MESON=m
-+CONFIG_PWM_MESON=y
- CONFIG_PWM_RCAR=m
- CONFIG_PWM_ROCKCHIP=y
- CONFIG_PWM_SAMSUNG=y
 -- 
-2.23.0
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
