@@ -1,171 +1,79 @@
-From: Parthiban Nallathambi <pn@denx.de>
-Subject: Re: [PATCH] ARM: dts: imx6: Extend support for Phytec phycore
- i.MX6ULL SoM
-Date: Mon, 7 Oct 2019 12:42:45 +0200
-Message-ID: <3c92e681-3b7b-fedf-48bc-cfb2080c3f12@denx.de>
-References: <20190912202928.946200-1-pn@denx.de>
- <20191006082349.GA7150@dragon>
+From: Maxime Ripard <mripard@kernel.org>
+Subject: Re: [PATCH] media: dt-bindings: media: Fixup Allwinner A10 CSI
+ binding
+Date: Mon, 7 Oct 2019 12:48:35 +0200
+Message-ID: <20191007104835.v6iqpoolqtajryik@gilmour>
+References: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
+ <20191003115154.6f2jgj3dnqsved2y@gilmour>
+ <CAHLCerNoLyQ-e70=1VMPO_J_amA+-2vtHwfoUabo4dhUWj-H0A@mail.gmail.com>
+ <20191007100535.6gp6b3h6ueyeln3b@gilmour>
+ <CAP245DXT=HL+m-LqoC25EBnOaPmF1pUW0fEZp6EZB-MdgOJoWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ehz75jskqgtqpnip"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191006082349.GA7150@dragon>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAP245DXT=HL+m-LqoC25EBnOaPmF1pUW0fEZp6EZB-MdgOJoWw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: pn@denx.de, robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--ehz75jskqgtqpnip
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 10/6/19 10:23 AM, Shawn Guo wrote:
-> On Thu, Sep 12, 2019 at 10:29:28PM +0200, Parthiban Nallathambi wrote:
->> Extend Phycore i.MX6UL SoM for i.MX6ULL with on board eMMC. Phycore
->> i.MX6ULL is deployed with same carrier board Segin as the pins are
->> compatible with UL version.
->>
->> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-> 
-> What is the base that the patch was generated from?  It doesn't apply to
-> my tree.
+On Mon, Oct 07, 2019 at 03:45:29PM +0530, Amit Kucheria wrote:
+> On Mon, Oct 7, 2019 at 3:35 PM Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > On Sat, Oct 05, 2019 at 04:15:57PM +0530, Amit Kucheria wrote:
+> > > On Thu, Oct 3, 2019 at 5:22 PM Maxime Ripard <mripard@kernel.org> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Thu, Oct 03, 2019 at 04:52:24PM +0530, Amit Kucheria wrote:
+> > > > > This new binding fails dt_binding_check due to a typo. Fix it up.
+> > > > >
+> > > > > linux.git/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
+> > > > > linux.git/Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts' failed
+> > > > > make[2]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts] Error 1
+> > > > > make[2]: *** Waiting for unfinished jobs....
+> > > > > linux.git/Makefile:1284: recipe for target 'dt_binding_check' failed
+> > > > > make[1]: *** [dt_binding_check] Error 2
+> > > > >
+> > > > > Fixes: c5e8f4ccd7750 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
+> > > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > >
+> > > > Thanks for your patch.
+> > > >
+> > > > It has already been submitted though:
+> > > > https://lore.kernel.org/linux-arm-kernel/1568808060-17516-1-git-send-email-pragnesh.patel@sifive.com/
+> > > >
+> > > > I'm not sure why it hasn't been applied yet though :/
+> > >
+> > > Perhaps a Fixes tag will allow more attention to it?
+> >
+> > I've added a fixes tag and merged it through the sunxi tree.
+> >
+> > Sorry for the time it took, and thanks for sending that fix!
+>
+> Will it get merged for -rc2?
 
-It was based on prior to 5.4 merge window. But there are series of patch
-which renamed the filename and the changes are already part of mainline
-from Phytec.
+-rc2 was released yesterday, so we're a bit late for that, but it's
+ going to be in next tomorrow.
 
-Please ignore this patch.
+Maxime
 
-Thanks,
-Parthiban N
+--ehz75jskqgtqpnip
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> Shawn
-> 
->> ---
->>   arch/arm/boot/dts/imx6ul-phytec-pcl063.dtsi   | 26 +++++++++++++++++--
->>   .../dts/imx6ul-phytec-phyboard-segin-full.dts |  5 ++++
->>   arch/arm/boot/dts/imx6ull-phytec-pcl063.dtsi  | 24 +++++++++++++++++
->>   3 files changed, 53 insertions(+), 2 deletions(-)
->>   create mode 100644 arch/arm/boot/dts/imx6ull-phytec-pcl063.dtsi
->>
->> diff --git a/arch/arm/boot/dts/imx6ul-phytec-pcl063.dtsi b/arch/arm/boot/dts/imx6ul-phytec-pcl063.dtsi
->> index fc2997449b49..822a178ce438 100644
->> --- a/arch/arm/boot/dts/imx6ul-phytec-pcl063.dtsi
->> +++ b/arch/arm/boot/dts/imx6ul-phytec-pcl063.dtsi
->> @@ -7,7 +7,6 @@
->>   #include <dt-bindings/gpio/gpio.h>
->>   #include <dt-bindings/interrupt-controller/irq.h>
->>   #include <dt-bindings/pwm/pwm.h>
->> -#include "imx6ul.dtsi"
->>   
->>   / {
->>   	model = "Phytec phyCORE i.MX6 UltraLite";
->> @@ -65,7 +64,7 @@
->>   	pinctrl-names = "default";
->>   	pinctrl-0 = <&pinctrl_gpmi_nand>;
->>   	nand-on-flash-bbt;
->> -	status = "okay";
->> +	status = "disabled";
->>   };
->>   
->>   &i2c1 {
->> @@ -90,6 +89,15 @@
->>   	status = "okay";
->>   };
->>   
->> +&usdhc2 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pinctrl_usdhc2>;
->> +	bus-width = <8>;
->> +	no-1-8-v;
->> +	non-removable;
->> +	status = "disabled";
->> +};
->> +
->>   &iomuxc {
->>   	pinctrl_enet1: enet1grp {
->>   		fsl,pins = <
->> @@ -145,4 +153,18 @@
->>   		>;
->>   	};
->>   
->> +	pinctrl_usdhc2: usdhc2grp {
->> +		fsl,pins = <
->> +			MX6UL_PAD_NAND_WE_B__USDHC2_CMD		0x170f9
->> +			MX6UL_PAD_NAND_RE_B__USDHC2_CLK		0x100f9
->> +			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0	0x170f9
->> +			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1	0x170f9
->> +			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2	0x170f9
->> +			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170f9
->> +			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4	0x170f9
->> +			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5	0x170f9
->> +			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6	0x170f9
->> +			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7	0x170f9
->> +		>;
->> +	};
->>   };
->> diff --git a/arch/arm/boot/dts/imx6ul-phytec-phyboard-segin-full.dts b/arch/arm/boot/dts/imx6ul-phytec-phyboard-segin-full.dts
->> index b6a1407a9d44..76f2447f2657 100644
->> --- a/arch/arm/boot/dts/imx6ul-phytec-phyboard-segin-full.dts
->> +++ b/arch/arm/boot/dts/imx6ul-phytec-phyboard-segin-full.dts
->> @@ -5,6 +5,7 @@
->>    */
->>   
->>   /dts-v1/;
->> +#include "imx6ul.dtsi"
->>   #include "imx6ul-phytec-pcl063.dtsi"
->>   #include "imx6ul-phytec-phyboard-segin.dtsi"
->>   #include "imx6ul-phytec-peb-eval-01.dtsi"
->> @@ -37,6 +38,10 @@
->>   	status = "okay";
->>   };
->>   
->> +&gpmi {
->> +	status = "okay";
->> +};
->> +
->>   &i2c_rtc {
->>   	status = "okay";
->>   };
->> diff --git a/arch/arm/boot/dts/imx6ull-phytec-pcl063.dtsi b/arch/arm/boot/dts/imx6ull-phytec-pcl063.dtsi
->> new file mode 100644
->> index 000000000000..3f749d9f09a5
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/imx6ull-phytec-pcl063.dtsi
->> @@ -0,0 +1,24 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +/*
->> + * Copyright (C) 2018 PHYTEC Messtechnik GmbH
->> + * Author: Stefan Riedmueller <s.riedmueller@phytec.de>
->> + */
->> +
->> +#include "imx6ul-phytec-pcl063.dtsi"
->> +
->> +/ {
->> +	model = "PHYTEC phyCORE-i.MX 6ULL";
->> +	compatible = "phytec,imx6ull-pcl063", "fsl,imx6ull";
->> +};
->> +
->> +&iomuxc {
->> +	/delete-node/ gpioledssomgrp;
->> +};
->> +
->> +&iomuxc_snvs {
->> +	pinctrl_gpioleds_som: gpioledssomgrp {
->> +		fsl,pins = <
->> +			MX6ULL_PAD_SNVS_TAMPER4__GPIO5_IO04	0x0b0b0
->> +		>;
->> +	};
->> +};
->> -- 
->> 2.21.0
->>
-> 
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Thanks,
-Parthiban N
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZsYAwAKCRDj7w1vZxhR
+xWygAQDjMWzwKSR39Yk842xwupPifmf7scmW28XyHRMhu+rdLgD9FRHsp8ggeM9o
+BD7c/B1rS9r+K2HAG1lCY0LOeHQ/LAk=
+=9BMd
+-----END PGP SIGNATURE-----
 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-22 Fax: (+49)-8142-66989-80 Email: pn@denx.de
+--ehz75jskqgtqpnip--
