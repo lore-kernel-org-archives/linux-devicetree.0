@@ -1,87 +1,39 @@
-From: Tzung-Bi Shih <tzungbi@google.com>
-Subject: Re: [PATCH v2 07/10] ASoC: cros_ec_codec: support WoV
-Date: Mon, 7 Oct 2019 15:04:24 +0800
-Message-ID: <CA+Px+wUqwjPKkbZAfJ0+a6JAhxRqGLqq_JRY6Qwoh49JrxKr8w@mail.gmail.com>
-References: <20191005164320.07.I5388b69a7a9c551078fed216a77440cee6dedf49@changeid>
- <201910060040.RXI5XB2W%lkp@intel.com>
+From: MarkLee <Mark-MC.Lee@mediatek.com>
+Subject: [PATCH net,v2 1/2] net: ethernet: mediatek: Fix MT7629 missing GMII mode support
+Date: Mon, 7 Oct 2019 15:08:43 +0800
+Message-ID: <20191007070844.14212-2-Mark-MC.Lee@mediatek.com>
+References: <20191007070844.14212-1-Mark-MC.Lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <201910060040.RXI5XB2W%lkp@intel.com>
-List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
-To: kbuild test robot <lkp@intel.com>, Guenter Roeck <groeck@google.com>
-Cc: Gwendal Grignou <gwendal@google.com>, devicetree@vger.kernel.org, ALSA development <alsa-devel@alsa-project.org>, Jimmy Cheng-Yi Chiang <cychiang@google.com>, Nicolas Boichat <drinkcat@google.com>, robh+dt@kernel.org, Mark Brown <broonie@kernel.org>, kbuild-all@01.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Benson Leung <bleung@google.com>, Dylan Reid <dgreid@google.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191007070844.14212-1-Mark-MC.Lee@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>, Sean Wang <sean.wang@mediatek.com>, John Crispin <john@phrozen.org>, Nelson Chang <nelson.chang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rene van Dorst <opensource@vdorst.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, MarkLee <Mark-MC.Lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 6, 2019 at 12:54 AM kbuild test robot <lkp@intel.com> wrote:
-> url:    https://github.com/0day-ci/linux/commits/Tzung-Bi-Shih/ASoC-mediatek-mt8183-mt6358-ts3a227-max98357-support-WoV/20191005-171021
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-> reproduce:
->         # apt-get install sparse
->         # sparse version: v0.6.1-rc1-42-g38eda53-dirty
->         make ARCH=x86_64 allmodconfig
->         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
->
->
-> sparse warnings: (new ones prefixed by >>)
->
-> >> sound/soc/codecs/cros_ec_codec.c:430:39: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void * @@    got void [noderef] <asvoid * @@
-> >> sound/soc/codecs/cros_ec_codec.c:430:39: sparse:    expected void *
-> >> sound/soc/codecs/cros_ec_codec.c:430:39: sparse:    got void [noderef] <asn:2> *
-> >> sound/soc/codecs/cros_ec_codec.c:549:69: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void const volatile [noderef] <asn:2> * @@    got latile [noderef] <asn:2> * @@
-> >> sound/soc/codecs/cros_ec_codec.c:549:69: sparse:    expected void const volatile [noderef] <asn:2> *
-> >> sound/soc/codecs/cros_ec_codec.c:549:69: sparse:    got unsigned char [usertype] *addr
-> >> sound/soc/codecs/cros_ec_codec.c:698:33: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void volatile [noderef] <asn:2> * @@    got latile [noderef] <asn:2> * @@
-> >> sound/soc/codecs/cros_ec_codec.c:698:33: sparse:    expected void volatile [noderef] <asn:2> *
-> >> sound/soc/codecs/cros_ec_codec.c:698:33: sparse:    got unsigned char [usertype] *wov_lang_shm_p
->    sound/soc/codecs/cros_ec_codec.c:699:48: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void volatile [noderef] <asn:2> * @@    got latile [noderef] <asn:2> * @@
->    sound/soc/codecs/cros_ec_codec.c:699:48: sparse:    expected void volatile [noderef] <asn:2> *
-> >> sound/soc/codecs/cros_ec_codec.c:699:48: sparse:    got unsigned char [usertype] *
+Add missing configuration for mt7629 gmii mode support
 
-I cannot reproduce the same sparse errors.
+Fixes: 7e538372694b ("net: ethernet: mediatek: Re-add support SGMII")
+Signed-off-by: MarkLee <Mark-MC.Lee@mediatek.com>
+--
+v1->v2:
+* no change
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-My commit stack: apply my patches onto broonie/sound.git for-next
-$ git log --oneline
-b4471777f5d8 (HEAD -> draft) ASoC: mediatek: mt8183: support WoV
-b6bb558fa59d ASoC: dt-bindings: mt8183: add ec-codec
-a08bede115d4 ASoC: mediatek: mt6358: support WoV
-f67068fd0c91 ASoC: cros_ec_codec: support WoV
-7e11271c070e ASoC: dt-bindings: cros_ec_codec: add SHM bindings
-fd04f20e77d3 ASoC: cros_ec_codec: read max DMIC gain from EC codec
-c008f01d5bc3 platform/chrome: cros_ec: add common commands for EC codec
-50d2c1f9b1f4 ASoC: cros_ec_codec: extract DMIC EC command from I2S RX
-00e5a1c121eb ASoC: cros_ec_codec: refactor I2S RX
-3f0c475d6ec8 platform/chrome: cros_ec: remove unused EC feature
-3877dcd0194c (mark/for-next, asoc-next) Merge branch 'asoc-5.5' into asoc-next
-
-My reproduce steps:
-$ make ARCH=x86_64 mrproper
-$ make ARCH=x86_64 allmodconfig
-$ make ARCH=x86_64 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' -j40
-2>&1 | grep -v sched | tee log.txt
-(Note: filter sched out to not get flood sparse errors)
-$ grep cros_ec_codec log.txt
-  CHECK   sound/soc/codecs/cros_ec_codec.c
-  CC [M]  sound/soc/codecs/cros_ec_codec.o
-
-It did not generate the same message as 0day reported.
-
-One difference would be the sparse version (it is from "apt install"
-in my environment):
-$ sparse --version
-0.6.0 (Debian: 0.6.0-3)
-On the other hand, 0day used "v0.6.1-rc1-42-g38eda53-dirty".
-
-Guenter, what we could do in the case?  Do you have any idea?
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index c61069340f4f..703adb96429e 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -261,6 +261,7 @@ static void mtk_mac_config(struct phylink_config *config, unsigned int mode,
+ 		ge_mode = 0;
+ 		switch (state->interface) {
+ 		case PHY_INTERFACE_MODE_MII:
++		case PHY_INTERFACE_MODE_GMII:
+ 			ge_mode = 1;
+ 			break;
+ 		case PHY_INTERFACE_MODE_REVMII:
+-- 
+2.17.1
