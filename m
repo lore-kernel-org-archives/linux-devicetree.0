@@ -1,48 +1,32 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 6/6] pwm: update comment on struct pwm_ops::apply
-Date: Sun, 6 Oct 2019 22:00:19 -0700
-Message-ID: <CAOCOHw7TXj2zr7qoown0rM=W0dns4n1o+9gOHr_8=vebzH=bMw@mail.gmail.com>
-References: <20191004133207.6663-1-linux@rasmusvillemoes.dk> <20191004133207.6663-7-linux@rasmusvillemoes.dk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH] soc: amlogic: meson-gx-socinfo: Add S905X3 ID for VIM3L
+Date: Mon,  7 Oct 2019 09:15:07 +0400
+Message-ID: <1570425307-3231-1-git-send-email-christianshewitt@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191004133207.6663-7-linux@rasmusvillemoes.dk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+To: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Christian Hewitt <christianshewitt@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 6:33 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
-> Commit 71523d1812ac (pwm: Ensure pwm_apply_state() doesn't modify the
-> state argument) updated the kernel-doc for pwm_apply_state(), but not
-> for the ->apply callback in the pwm_ops struct.
->
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+[    0.086470] soc soc0: Amlogic Meson SM1 (S905X3) Revision 2b:c (b0:2) Detected
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ drivers/soc/amlogic/meson-gx-socinfo.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> ---
->  include/linux/pwm.h | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
->
-> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> index b2c9c460947d..0ef808d925bb 100644
-> --- a/include/linux/pwm.h
-> +++ b/include/linux/pwm.h
-> @@ -243,10 +243,7 @@ pwm_set_relative_duty_cycle(struct pwm_state *state, unsigned int duty_cycle,
->   * @request: optional hook for requesting a PWM
->   * @free: optional hook for freeing a PWM
->   * @capture: capture and report PWM signal
-> - * @apply: atomically apply a new PWM config. The state argument
-> - *        should be adjusted with the real hardware config (if the
-> - *        approximate the period or duty_cycle value, state should
-> - *        reflect it)
-> + * @apply: atomically apply a new PWM config
->   * @get_state: get the current PWM state. This function is only
->   *            called once per PWM device when the PWM chip is
->   *            registered.
-> --
-> 2.20.1
->
+diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
+index 6d0d04f..dc744f1 100644
+--- a/drivers/soc/amlogic/meson-gx-socinfo.c
++++ b/drivers/soc/amlogic/meson-gx-socinfo.c
+@@ -68,6 +68,8 @@ static const struct meson_gx_package_id {
+ 	{ "S922X", 0x29, 0x40, 0xf0 },
+ 	{ "A311D", 0x29, 0x10, 0xf0 },
+ 	{ "S905X3", 0x2b, 0x5, 0xf },
++	{ "S905X3", 0x2b, 0xb0, 0xf2 },
++	{ "A113L", 0x2c, 0x0, 0xf8 },
+ };
+ 
+ static inline unsigned int socinfo_to_major(u32 socinfo)
+-- 
+2.7.4
