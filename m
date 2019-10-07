@@ -1,173 +1,112 @@
-From: "Ramuthevar, Vadivel MuruganX"
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
- for LGM eMMC PHY
-Date: Mon, 7 Oct 2019 15:42:17 +0800
-Message-ID: <3e06d22c-cd9a-d05f-b524-846bde6393b6@linux.intel.com>
-References: <20190904055344.25512-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190917142337.GA27151@bogus>
- <9cdc49bc-61af-5b36-6ef1-67d1f1977730@linux.intel.com>
+From: <Eugen.Hristev@microchip.com>
+Subject: Re: [PATCH v5 0/9] i2c: add support for filters
+Date: Mon, 7 Oct 2019 07:53:21 +0000
+Message-ID: <c17182ac-67dd-d11f-5daf-066bf446b969@microchip.com>
+References: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9cdc49bc-61af-5b36-6ef1-67d1f1977730@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1568189911-31641-1-git-send-email-eugen.hristev@microchip.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: kishon@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, andriy.shevchenko@intel.com, cheol.yong.kim@intel.com, qi-ming.wu@intel.com, peter.harliman.liem@intel.com
+Content-ID: <AFA9552F544D064B9390772CF4786D08@namprd11.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: wsa@the-dreams.de, peda@axentia.se, mark.rutland@arm.com, Ludovic.Desroches@microchip.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 18/9/2019 10:23 AM, Ramuthevar, Vadivel MuruganX wrote:
-> Hi Rob,
->
-> Thank you for the review comments.
->
-> On 17/9/2019 10:23 PM, Rob Herring wrote:
->> On Wed, Sep 04, 2019 at 01:53:43PM +0800, Ramuthevar,Vadivel MuruganX 
->> wrote:
->>> From: Ramuthevar Vadivel Murugan 
->>> <vadivel.muruganx.ramuthevar@linux.intel.com>
->>>
->>> Add a YAML schema to use the host controller driver with the
->>> eMMC PHY on Intel's Lightning Mountain SoC.
->>>
->>> Signed-off-by: Ramuthevar Vadivel Murugan 
->>> <vadivel.muruganx.ramuthevar@linux.intel.com>
->>> ---
->>> changes in v5:
->>>    - earlier Review-by tag given by Rob
->>>    - rework done with syscon parent node.
->>>
->>> changes in v4:
->>>    - As per Rob's review: validate 5.2 and 5.3
->>>    - drop unrelated items.
->>>
->>> changes in v3:
->>>    - resolve 'make dt_binding_check' warnings
->>>
->>> changes in v2:
->>>    As per Rob Herring review comments, the following updates
->>>   - change GPL-2.0 -> (GPL-2.0-only OR BSD-2-Clause)
->>>   - filename is the compatible string plus .yaml
->>>   - LGM: Lightning Mountain
->>>   - update maintainer
->>>   - add intel,syscon under property list
->>>   - keep one example instead of two
->>> ---
->>>   .../bindings/phy/intel,lgm-emmc-phy.yaml           | 69 
->>> ++++++++++++++++++++++
->>>   1 file changed, 69 insertions(+)
->>>   create mode 100644 
->>> Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->>>
->>> diff --git 
->>> a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml 
->>> b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->>> new file mode 100644
->>> index 000000000000..8f6ac8b3da42
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
->>> @@ -0,0 +1,69 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
->>> +
->>> +maintainers:
->>> +  - Ramuthevar Vadivel Murugan 
->>> <vadivel.muruganx.ramuthevar@linux.intel.com>
->>> +
->>> +description: Bindings for eMMC PHY on Intel's Lightning Mountain 
->>> SoC, syscon
->>> +  node is used to reference the base address of eMMC phy registers.
->>> +
->>> +select:
->>> +  properties:
->>> +    compatible:
->>> +      contains:
->>> +        const: intel,lgm-syscon
->> This, plus...
->
-> you mean, need to add two compatible here-itself look like below
->
-> const: intel,lgm-syscon
-> const: intel,lgm-emmc-phy
->
-> Is it right?
->
-Shall I proceed with above compatibles if you agree upon. Thanks!
 
-With Best Regards
-Vadivel Murugan
->>> +
->>> +    reg:
->>> +      maxItems: 1
->>> +
->>> +  required:
->>> +    - compatible
->>> +    - reg
->>> +
->>> +properties:
->>> +  "#phy-cells":
->>> +    const: 0
->>> +
->>> +  compatible:
->>> +    contains:
->>> +      const: intel,lgm-emmc-phy
->> ...this should not pass validation as they contradict each other.
-> when  I do "make dt_binding_check" didn't throw an error,  let me 
-> double confirm once clarified first comment.
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  clocks:
->>> +    maxItems: 1
->>> +
->>> +  clock-names:
->>> +    maxItems: 1
->>> +
->>> +required:
->>> +  - "#phy-cells"
->>> +  - compatible
->>> +  - reg
->>> +  - clocks
->>> +  - clock-names
->>> +
->>> +examples:
->>> +  - |
->>> +    sysconf: chiptop@e0200000 {
->>> +      compatible = "intel,lgm-syscon";
->>> +      reg = <0xe0200000 0x100>;
->> I'm still waiting for a complete description of what all is in this
->> block.
-> Agree!, I will  add it.
->>> +
->>> +      emmc-phy: emmc-phy {
->>> +        compatible = "intel,lgm-emmc-phy";
->>> +        reg = <0x00a8 0x4>,
->>> +              <0x00ac 0x4>,
->>> +              <0x00b0 0x4>,
->>> +              <0x00b4 0x4>;
->> Looks contiguous and can be a single entry:
->>
->> <0xa8 0x10>
-> Agreed, will fix it.
->
-> Best Regards
-> Vadivel
->>> +        clocks = <&emmc>;
->>> +        clock-names = "emmcclk";
->>> +        #phy-cells = <0>;
->>> +      };
->>> +    };
->>> +...
->>> -- 
->>> 2.11.0
->>>
+On 11.09.2019 11:24, Eugen Hristev - M18282 wrote:
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+> 
+> Hello,
+> 
+> This series adds support for analog and digital filters for i2c controllers
+> 
+> This series is based on the series:
+> [PATCH v2 0/9] i2c: at91: filters support for at91 SoCs
+> and later
+> [PATCH v4 0/9] i2c: add support for filters
+> and enhanced to add the bindings for all controllers plus an extra bindings
+> for the width of the spikes in nanoseconds (digital filters) and cut-off
+> frequency (analog filters)
+> 
+> First, bindings are created for
+> 'i2c-analog-filter'
+> 'i2c-digital-filter'
+> 'i2c-digital-filter-width-ns'
+> 'i2c-analog-filter-cutoff-frequency'
+> 
+> The support is added in the i2c core to retrieve filter width/cutoff frequency
+> and add it to the timings structure.
+> Next, the at91 driver is enhanced for supporting digital filter, advanced
+> digital filter (with selectable spike width) and the analog filter.
+> 
+> Finally the device tree for two boards are modified to make use of the
+> new properties.
+> 
+> This series is the result of the comments on the ML in the direction
+> requested: to make the bindings globally available for i2c drivers.
+> 
+> Changes in v5:
+> - renamed i2c-filter-width-ns to i2c-digital-filter-width-ns as this
+> is applicable only to digital filter
+> - created new binding i2c-digital-filter-width-ns for analog filters.
+
+Hello Wolfram and Peter,
+
+Are you happy with the changes in this version? I haven't heard from you 
+since this latest update.
+I am interested to know if anymore changes are required or maybe we can 
+move further with this support.
+
+Thanks !
+Eugen
+
+> 
+> Changes in v4:
+> - renamed i2c-ana-filter to i2c-analog-filter
+> - renamed i2c-dig-filter to i2c-digital-filter
+> 
+> Changes in v3:
+> - made bindings global for i2c controllers and modified accordingly
+> - gave up PADFCDF bit because it's a lack in datasheet
+> - the computation on the width of the spike is based on periph clock as it
+> is done for hold time.
+> 
+> Changes in v2:
+> - added device tree bindings and support for enable-ana-filt and
+> enable-dig-filt
+> - added the new properties to the DT for sama5d4_xplained/sama5d2_xplained
+> 
+> Eugen Hristev (9):
+>    dt-bindings: i2c: at91: add new compatible
+>    dt-bindings: i2c: add bindings for i2c analog and digital filter
+>    i2c: add support for filters optional properties
+>    i2c: at91: add new platform support for sam9x60
+>    i2c: at91: add support for digital filtering
+>    i2c: at91: add support for advanced digital filtering
+>    i2c: at91: add support for analog filtering
+>    ARM: dts: at91: sama5d2_xplained: add analog and digital filter for
+>      i2c
+>    ARM: dts: at91: sama5d4_xplained: add digital filter for i2c
+> 
+>   Documentation/devicetree/bindings/i2c/i2c-at91.txt |  3 +-
+>   Documentation/devicetree/bindings/i2c/i2c.txt      | 18 ++++++++
+>   arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  6 +++
+>   arch/arm/boot/dts/at91-sama5d4_xplained.dts        |  1 +
+>   drivers/i2c/busses/i2c-at91-core.c                 | 38 +++++++++++++++++
+>   drivers/i2c/busses/i2c-at91-master.c               | 49 ++++++++++++++++++++--
+>   drivers/i2c/busses/i2c-at91.h                      | 13 ++++++
+>   drivers/i2c/i2c-core-base.c                        |  6 +++
+>   include/linux/i2c.h                                |  6 +++
+>   9 files changed, 136 insertions(+), 4 deletions(-)
+> 
