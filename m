@@ -1,97 +1,72 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [RFC][PATCH v2 4/5] dt-bindings: usb: dwc3: of-simple: add
- compatible for HiSi
-Date: Mon, 7 Oct 2019 16:00:24 -0700
-Message-ID: <CALAqxLVpPvHf2RpwjHh5v9cnQm9CLtj0HHaqVH=EFQJk-GhaPQ@mail.gmail.com>
-References: <20191007175553.66940-1-john.stultz@linaro.org>
- <20191007175553.66940-5-john.stultz@linaro.org> <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
- <CALAqxLWB7Vd-H70LLLSW0Fv=_4-saQ9CE2k3-L_43E+F8mLj2w@mail.gmail.com> <CAL_JsqJ9uUtqTDEkLi86-BCvW+wM6Pgz_K+JuTsuOqHfFOHStA@mail.gmail.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: [PATCH 0/5] i2c: aspeed: Add buffer and DMA modes support
+Date: Mon,  7 Oct 2019 16:13:08 -0700
+Message-ID: <20191007231313.4700-1-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ9uUtqTDEkLi86-BCvW+wM6Pgz_K+JuTsuOqHfFOHStA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Yu Chen <chenyu56@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Brendan Higgins <brendanhiggins@google.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, Tao Ren <taoren@fb.com>
+Cc: devicetree@vger.kernel.org, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 7, 2019 at 2:11 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Mon, Oct 7, 2019 at 2:07 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > On Mon, Oct 7, 2019 at 11:38 AM Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Mon, Oct 7, 2019 at 12:56 PM John Stultz <john.stultz@linaro.org> wrote:
-> > > >
-> > > > Add necessary compatible flag for HiSi's DWC3 so
-> > > > dwc3-of-simple will probe.
-> > > >
-> > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > Cc: Felipe Balbi <balbi@kernel.org>
-> > > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > Cc: Yu Chen <chenyu56@huawei.com>
-> > > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> > > > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > > > Cc: linux-usb@vger.kernel.org
-> > > > Cc: devicetree@vger.kernel.org
-> > > > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > > > ---
-> > > > v2: Tweaked clock names as clk_usb3phy_ref didn't seem right.
-> > > > ---
-> > > >  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
-> > > >  1 file changed, 52 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
-> > >
-> > > Can you make this a schema.
-> >
-> > Sorry, I'm not sure exactly what you're asking. I'm guessing from
-> > grepping around you want the bindings in yaml instead (I see a few
-> > examples)?
->
-> Yes.
->
-> > Is there some pointer to documentation? The
-> > Documentation/devicetree/bindings/writing-bindings.txt file doesn't
-> > seem to say much on it.
->
-> You mean Documentation/devicetree/writing-schemas.rst? There's that
-> and Documentation/devicetree/bindings/example-schema.yaml which has a
-> bunch of annotations on what each part means.
+This patch series adds buffer mode and DMA mode transfer support for the
+Aspeed I2C driver. With this change, default transfer mode will be set to
+buffer mode for better performance, and DMA mode can be selectively used
+depends on platform configuration.
 
-Ah! Sorry for missing that. Thanks for the pointer, though I may get
-away with dropping this one.
+* Buffer mode
+  AST2400:
+    It has 2 KBytes (256 Bytes x 8 pages) of I2C SRAM buffer pool from
+    0x1e78a800 to 0x1e78afff that can be used for all busses with
+    buffer pool manipulation. To simplify implementation for supporting
+    both AST2400 and AST2500, it assigns each 128 Bytes per bus without
+    using buffer pool manipulation so total 1792 Bytes of I2C SRAM
+    buffer will be used.
 
-> > > If it's only clocks and resets for the wrapper node, just make this
-> > > all one node.
-> >
-> > Just to make sure I'm following, you're suggesting I put all the
-> > clocks/resets in the dwc3 node (renamed to usb for the node name) and
-> > not add the wrapper?
->
-> Yes.
->
-> > I'll have to see if that's possible. The generic dwc3 binding wants 3
-> > clocks, but I only have two in the code I've worked with (similarly it
-> > seems to only want two resets, not 4) so I'll have to see if I can
-> > figure out how to adapt that.
->
-> Possible since commit fe8abf332b8f ("usb: dwc3: support clocks and
-> resets for DWC3 core").
+  AST2500:
+    It has 16 Bytes of individual I2C SRAM buffer per each bus and its
+    range is from 0x1e78a200 to 0x1e78a2df, so it doesn't have 'buffer
+    page selection' bit field in the Function control register, and
+    neither 'base address pointer' bit field in the Pool buffer control
+    register it has. To simplify implementation for supporting both
+    AST2400 and AST2500, it writes zeros on those register bit fields
+    but it's okay because it does nothing in AST2500.
 
-Ok. It *seems* like I can get it working with the existing binding
-then. There's a little funkiness with the core expecting three clocks
-while I only have two (currently I'm duplicating the "bus_early" clk
-for "suspend". Is there a preferred way to do this sort of hack?), and
-I'm a little worried that only the first reset is being used (instead
-of the 4 specified), but it seems to work so far.
+* DMA mode
+  Only AST2500 and later versions support DMA mode under some limitations:
+    I2C is sharing the DMA H/W with UHCI host controller and MCTP
+    controller. Since those controllers operate with DMA mode only, I2C
+    has to use buffer mode or byte mode instead if one of those
+    controllers is enabled. Also make sure that if SD/eMMC or Port80
+    snoop uses DMA mode instead of PIO or FIFO respectively, I2C can't
+    use DMA mode.
 
-I still suspect the dwc3-of-simple.c method might be better since it
-can handle arbitrary sets of clks and resets instead of the fixed 3 &
-1 in the dwc3.txt binding.
-But if I can get away without having to add an extra binding here, I'd
-be happier.
+Please review it.
 
-thanks
--john
+-Jae
+
+Jae Hyun Yoo (5):
+  dt-bindings: i2c: aspeed: add buffer and DMA mode transfer support
+  ARM: dts: aspeed: add I2C buffer mode support
+  i2c: aspeed: fix master pending state handling
+  i2c: aspeed: add buffer mode transfer support
+  i2c: aspeed: add DMA mode transfer support
+
+ .../devicetree/bindings/i2c/i2c-aspeed.txt    |  67 ++-
+ arch/arm/boot/dts/aspeed-g4.dtsi              |  47 +-
+ arch/arm/boot/dts/aspeed-g5.dtsi              |  47 +-
+ drivers/i2c/busses/i2c-aspeed.c               | 513 ++++++++++++++++--
+ 4 files changed, 588 insertions(+), 86 deletions(-)
+
+-- 
+2.23.0
