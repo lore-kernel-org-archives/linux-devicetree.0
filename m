@@ -1,50 +1,50 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 2/3] watchdog: sam9x60_wdt: introduce sam9x60 watchdog
- timer driver
-Date: Mon, 7 Oct 2019 15:14:05 +0200
-Message-ID: <20191007131348.GH4254@piout.net>
-References: <1570001371-8174-1-git-send-email-eugen.hristev@microchip.com>
- <1570001371-8174-2-git-send-email-eugen.hristev@microchip.com>
- <e58a3ab5-69bc-cad3-5faa-ed00ff7906c7@roeck-us.net>
- <ab7b6b45-5e6f-100d-51af-a82ac325d948@microchip.com>
- <a9adf20c-f730-a7e9-a826-59216c17f03d@roeck-us.net>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [RFCv1 0/5] Odroid N2 failes to boot using upstream kernel & u-boot
+Date: Mon,  7 Oct 2019 13:16:44 +0000
+Message-ID: <20191007131649.1768-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a9adf20c-f730-a7e9-a826-59216c17f03d@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Eugen.Hristev@microchip.com, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, wim@linux-watchdog.org, robh+dt@kernel.org, Nicolas.Ferre@microchip.com
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/10/2019 05:36:38-0700, Guenter Roeck wrote:
-> On 10/7/19 12:58 AM, Eugen.Hristev@microchip.com wrote:
-> [ ... ]
-> > Hello Guenter,
-> > 
-> > Thank you for the feedback.
-> > After reviewing this, can you please guide me towards one of the
-> > possible two directions: merge this driver with sama5d4_wdt , and have a
-> > single driver with support for both hardware blocks; or, have this
-> > driver separately , as in this patch series?
-> > 
-> 
-> I noticed the similarities. I don't know if it makes sense to reconcile
-> the two drivers; it seems to me the new chip uses the same basic core with
-> enhancements. In general, I prefer a single driver, but only if the result
-> doesn't end up being an if/else mess. Ultimately, it is really your call
-> to make.
-> 
+We am trying to build the upstream u-boot and upstream kernel,
+but it fails to pass the initialization of PWM_MESON driver.
+So these patches help boot the kernel on microSD card.
 
-Most if not all your comments were already addressed in the other
-driver. The main difference in the register interface is the location of
-the counter that only really affects sama5d4_wdt_set_timeout and that
-could be abstracted away by using a different struct watchdog_ops.
-Interrupt enabling is also done differently, I don't think it has a huge
-impact.
+Patchs based on Linux 5.4-rc2
+
+Boot log failed are shown below.
+[0] https://pastebin.com/cEtWq2iX
+
+[    1.569240] meson-gx-mmc ffe05000.sd: Got CD GPIO
+[    1.599227] pwm-regulator regulator-vddcpu-a: Failed to get PWM: -517
+[    1.600605] pwm-regulator regulator-vddcpu-b: Failed to get PWM: -517
+[    1.607166] pwm-regulator regulator-vddcpu-a: Failed to get PWM: -517
+[    1.613273] pwm-regulator regulator-vddcpu-b: Failed to get PWM: -517
+[    1.619931] hctosys: unable to open rtc device (rtc0)
+
+My guess their is not much issue with eMMC module, if their is
+other approach to resolve this issue, I will give this a try.
+
+Best Regards
+-Anand
+
+Anand Moon (5):
+  arm64: dts: meson: Add missing 5V_EN gpio signal for VCC5V regulator
+  arm64: dts: meson: Add missing pwm control gpio signal for
+    pwm-regulator
+  arm64: dts: meson: Add missing regulator linked to VDDAO_3V3 regulator
+    to FLASH_VDD
+  arm64: dts: meson: Add missing regulator linked to VCCV5 regulator to
+    VDDIO_C/TF_IO
+  arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
+
+ .../arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 13 +++++++++++++
+ arch/arm64/configs/defconfig                        |  2 +-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.23.0
