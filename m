@@ -1,91 +1,110 @@
-From: =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
-Subject: Re: [PATCH net,v2 2/2] arm: dts: mediatek: Fix mt7629 dts to
- reflect the latest dt-binding
-Date: Mon, 07 Oct 2019 18:30:28 +0000
-Message-ID: <20191007183028.Horde.dCYJA3Xp9mBh_Bs9Ixa7Sh0@www.vdorst.com>
-References: <20191007070844.14212-1-Mark-MC.Lee@mediatek.com>
- <20191007070844.14212-3-Mark-MC.Lee@mediatek.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC][PATCH v2 4/5] dt-bindings: usb: dwc3: of-simple: add
+ compatible for HiSi
+Date: Mon, 7 Oct 2019 13:38:20 -0500
+Message-ID: <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
+References: <20191007175553.66940-1-john.stultz@linaro.org> <20191007175553.66940-5-john.stultz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191007070844.14212-3-Mark-MC.Lee@mediatek.com>
-Content-Disposition: inline
+In-Reply-To: <20191007175553.66940-5-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: MarkLee <Mark-MC.Lee@mediatek.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Sean Wang <sean.wang@mediatek.com>, John Crispin <john@phrozen.org>, Nelson Chang <nelson.chang@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: John Stultz <john.stultz@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Yu Chen <chenyu56@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting MarkLee <Mark-MC.Lee@mediatek.com>:
-
-> * Removes mediatek,physpeed property from dtsi that is useless in PHYLINK
-> * Use the fixed-link property speed = <2500> to set the phy in 2.5Gbit.
-> * Set gmac1 to gmii mode that connect to a internal gphy
+On Mon, Oct 7, 2019 at 12:56 PM John Stultz <john.stultz@linaro.org> wrote:
 >
-> Signed-off-by: MarkLee <Mark-MC.Lee@mediatek.com>
-> --
-> v1->v2:
-> * SGMII port only support BASE-X at 2.5Gbit.
+> Add necessary compatible flag for HiSi's DWC3 so
+> dwc3-of-simple will probe.
+>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Yu Chen <chenyu56@huawei.com>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Cc: linux-usb@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 > ---
->  arch/arm/boot/dts/mt7629-rfb.dts | 13 ++++++++++++-
->  arch/arm/boot/dts/mt7629.dtsi    |  2 --
->  2 files changed, 12 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/mt7629-rfb.dts  
-> b/arch/arm/boot/dts/mt7629-rfb.dts
-> index 3621b7d2b22a..9980c10c6e29 100644
-> --- a/arch/arm/boot/dts/mt7629-rfb.dts
-> +++ b/arch/arm/boot/dts/mt7629-rfb.dts
-> @@ -66,9 +66,21 @@
->  	pinctrl-1 = <&ephy_leds_pins>;
->  	status = "okay";
->
-> +	gmac0: mac@0 {
-> +		compatible = "mediatek,eth-mac";
-> +		reg = <0>;
-> +		phy-mode = "2500base-x";
-> +		fixed-link {
-> +			speed = <2500>;
-> +			full-duplex;
-> +			pause;
-> +		};
-> +	};
+> v2: Tweaked clock names as clk_usb3phy_ref didn't seem right.
+> ---
+>  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+
+Can you make this a schema.
+
+> diff --git a/Documentation/devicetree/bindings/usb/hisi,dwc3.txt b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> new file mode 100644
+> index 000000000000..3a3e5c320f2a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> @@ -0,0 +1,52 @@
+> +HiSi SuperSpeed DWC3 USB SoC controller
 > +
->  	gmac1: mac@1 {
->  		compatible = "mediatek,eth-mac";
->  		reg = <1>;
-> +		phy-mode = "gmii";
->  		phy-handle = <&phy0>;
->  	};
->
-> @@ -78,7 +90,6 @@
->
->  		phy0: ethernet-phy@0 {
->  			reg = <0>;
-> -			phy-mode = "gmii";
->  		};
->  	};
->  };
-> diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
-> index 9608bc2ccb3f..867b88103b9d 100644
-> --- a/arch/arm/boot/dts/mt7629.dtsi
-> +++ b/arch/arm/boot/dts/mt7629.dtsi
-> @@ -468,14 +468,12 @@
->  			compatible = "mediatek,mt7629-sgmiisys", "syscon";
->  			reg = <0x1b128000 0x3000>;
->  			#clock-cells = <1>;
-> -			mediatek,physpeed = "2500";
->  		};
->
->  		sgmiisys1: syscon@1b130000 {
->  			compatible = "mediatek,mt7629-sgmiisys", "syscon";
->  			reg = <0x1b130000 0x3000>;
->  			#clock-cells = <1>;
-> -			mediatek,physpeed = "2500";
->  		};
->  	};
->  };
+> +Required properties:
+> +- compatible:          should contain "hisilicon,hi3660-dwc3" for HiSi SoC
+> +- clocks:              A list of phandle + clock-specifier pairs for the
+> +                       clocks listed in clock-names
+> +- clock-names:         Should contain the following:
+> +  "clk_abb_usb"                USB reference clk
+> +  "aclk_usb3otg"       USB3 OTG aclk
+> +
+> +- assigned-clocks:     Should be:
+> +                               HI3660_ACLK_GATE_USB3OTG
+> +- assigned-clock-rates: Should be:
+> +                               229Mhz (229000000) for HI3660_ACLK_GATE_USB3OTG
+> +
+> +Optional properties:
+> +- resets:              Phandle to reset control that resets core and wrapper.
+
+Looks like 4 resets though.
+
+> +
+> +Required child node:
+> +A child node must exist to represent the core DWC3 IP block. The name of
+> +the node is not important. The content of the node is defined in dwc3.txt.
+> +
+> +Example device nodes:
+> +
+> +       usb3: hisi_dwc3 {
+> +               compatible = "hisilicon,hi3660-dwc3";
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               ranges;
+> +
+> +               clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
+> +                        <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> +               clock-names = "clk_abb_usb", "aclk_usb3otg";
+> +
+> +               assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> +               assigned-clock-rates = <229 000 000>;
+> +               resets = <&crg_rst 0x90 8>,
+> +                        <&crg_rst 0x90 7>,
+> +                        <&crg_rst 0x90 6>,
+> +                        <&crg_rst 0x90 5>;
+> +
+> +               dwc3: dwc3@ff100000 {
+
+If it's only clocks and resets for the wrapper node, just make this
+all one node.
+
+And 'usb3' for the node name.
+
+> +                       compatible = "snps,dwc3";
+> +                       reg = <0x0 0xff100000 0x0 0x100000>;
+> +                       interrupts = <0 159 4>, <0 161 4>;
+> +                       phys = <&usb_phy>;
+> +                       phy-names = "usb3-phy";
+> +                       dr_mode = "otg";
+> +
+> +                       ...
+> +               };
+> +       };
 > --
 > 2.17.1
-
-Reviewed-by: René van Dorst <opensource@vdorst.com>
+>
