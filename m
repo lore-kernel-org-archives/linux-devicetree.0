@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 07/21] media: ti-vpe: Set MAX height supported to 2048 pixels
-Date: Mon, 7 Oct 2019 10:09:55 -0500
-Message-ID: <20191007151009.22095-8-bparrot@ti.com>
+Subject: [Patch v3 09/21] media: ti-vpe: vpe: fix a v4l2-compliance warning about invalid pixel format
+Date: Mon, 7 Oct 2019 10:09:57 -0500
+Message-ID: <20191007151009.22095-10-bparrot@ti.com>
 References: <20191007151009.22095-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,36 +9,74 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191007151009.22095-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ram Prasad <x0038811@ti.com>, Benoit Parrot <bparrot@ti.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ram Prasad <x0038811@ti.com>
+v4l2-compliance warns with this message:
 
-VPE's max height supported MAX_H is set to 1184 which is the
-padded height from VC1 decoder output.
+   warn: v4l2-test-formats.cpp(717): \
+ 	TRY_FMT cannot handle an invalid pixelformat.
+   warn: v4l2-test-formats.cpp(718): \
+ 	This may or may not be a problem. For more information see:
+   warn: v4l2-test-formats.cpp(719): \
+ 	http://www.mail-archive.com/linux-media@vger.kernel.org/msg56550.html
+	...
+   test VIDIOC_TRY_FMT: FAIL
 
-In case of 90, 270 degree rotated video processing, input to
-VPE will be 1080x1920, 720x1280 etc and MAX_H needs to be set
-correct value. Setting MAX_H to 2048 as worst case height.
+We need to make sure that the returns a valid pixel format in all
+instance. Based on the v4l2 framework convention drivers must return a
+valid pixel format when the requested pixel format is either invalid or
+not supported.
 
-Signed-off-by: Ram Prasad <x0038811@ti.com>
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- drivers/media/platform/ti-vpe/vpe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/ti-vpe/vpe.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
-index f3ee9ff87927..bbbf11174e16 100644
+index 1278d457f753..d3f1ae8b72fa 100644
 --- a/drivers/media/platform/ti-vpe/vpe.c
 +++ b/drivers/media/platform/ti-vpe/vpe.c
-@@ -52,7 +52,7 @@
- #define MIN_W		32
- #define MIN_H		32
- #define MAX_W		2048
--#define MAX_H		1184
-+#define MAX_H		2048
+@@ -351,20 +351,25 @@ enum {
+ };
  
- /* required alignments */
- #define S_ALIGN		0	/* multiple of 1 */
+ /* find our format description corresponding to the passed v4l2_format */
+-static struct vpe_fmt *find_format(struct v4l2_format *f)
++static struct vpe_fmt *__find_format(u32 fourcc)
+ {
+ 	struct vpe_fmt *fmt;
+ 	unsigned int k;
+ 
+ 	for (k = 0; k < ARRAY_SIZE(vpe_formats); k++) {
+ 		fmt = &vpe_formats[k];
+-		if (fmt->fourcc == f->fmt.pix.pixelformat)
++		if (fmt->fourcc == fourcc)
+ 			return fmt;
+ 	}
+ 
+ 	return NULL;
+ }
+ 
++static struct vpe_fmt *find_format(struct v4l2_format *f)
++{
++	return __find_format(f->fmt.pix.pixelformat);
++}
++
+ /*
+  * there is one vpe_dev structure in the driver, it is shared by
+  * all instances.
+@@ -1599,9 +1604,9 @@ static int __vpe_try_fmt(struct vpe_ctx *ctx, struct v4l2_format *f,
+ 	unsigned int stride = 0;
+ 
+ 	if (!fmt || !(fmt->types & type)) {
+-		vpe_err(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
++		vpe_dbg(ctx->dev, "Fourcc format (0x%08x) invalid.\n",
+ 			pix->pixelformat);
+-		return -EINVAL;
++		fmt = __find_format(V4L2_PIX_FMT_YUYV);
+ 	}
+ 
+ 	if (pix->field != V4L2_FIELD_NONE &&
 -- 
 2.17.1
