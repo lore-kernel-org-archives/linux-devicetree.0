@@ -1,165 +1,87 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V6 1/3] mmc: mmci: add hardware busy timeout feature
-Date: Mon, 7 Oct 2019 08:48:35 +0200
-Message-ID: <CAPDyKFp0sia9RC1kX0nmfB2g4Wvk+Y_o1wM8yatrzTeHpRd_vg@mail.gmail.com>
-References: <20190905122112.29672-1-ludovic.Barre@st.com>
- <20190905122112.29672-2-ludovic.Barre@st.com>
- <CAPDyKFpcb=dT0XBAGVL68t--xi5853Dzsgak-vbx5VcvxLZ4zA@mail.gmail.com>
- <CAPDyKFrRDHeVs6RpM=qTT1AogLnFWJLh2S4-wCcrYAON9XVKCA@mail.gmail.com>
- <da9072ce-852c-a46c-ecdf-ea6bfd89ef79@st.com>
+From: Tzung-Bi Shih <tzungbi@google.com>
+Subject: Re: [PATCH v2 07/10] ASoC: cros_ec_codec: support WoV
+Date: Mon, 7 Oct 2019 15:04:24 +0800
+Message-ID: <CA+Px+wUqwjPKkbZAfJ0+a6JAhxRqGLqq_JRY6Qwoh49JrxKr8w@mail.gmail.com>
+References: <20191005164320.07.I5388b69a7a9c551078fed216a77440cee6dedf49@changeid>
+ <201910060040.RXI5XB2W%lkp@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <da9072ce-852c-a46c-ecdf-ea6bfd89ef79@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ludovic BARRE <ludovic.barre@st.com>
-Cc: DTML <devicetree@vger.kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <201910060040.RXI5XB2W%lkp@intel.com>
+List-Unsubscribe: <https://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <https://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: "Alsa-devel" <alsa-devel-bounces@alsa-project.org>
+To: kbuild test robot <lkp@intel.com>, Guenter Roeck <groeck@google.com>
+Cc: Gwendal Grignou <gwendal@google.com>, devicetree@vger.kernel.org, ALSA development <alsa-devel@alsa-project.org>, Jimmy Cheng-Yi Chiang <cychiang@google.com>, Nicolas Boichat <drinkcat@google.com>, robh+dt@kernel.org, Mark Brown <broonie@kernel.org>, kbuild-all@01.org, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Benson Leung <bleung@google.com>, Dylan Reid <dgreid@google.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCA0IE9jdCAyMDE5IGF0IDE0OjU5LCBMdWRvdmljIEJBUlJFIDxsdWRvdmljLmJhcnJl
-QHN0LmNvbT4gd3JvdGU6Cj4KPiBoaSBVbGYKPgo+IExlIDEwLzQvMTkgw6AgODoyMCBBTSwgVWxm
-IEhhbnNzb24gYSDDqWNyaXQgOgo+ID4gT24gRnJpLCA0IE9jdCAyMDE5IGF0IDA4OjEyLCBVbGYg
-SGFuc3NvbiA8dWxmLmhhbnNzb25AbGluYXJvLm9yZz4gd3JvdGU6Cj4gPj4KPiA+PiBPbiBUaHUs
-IDUgU2VwIDIwMTkgYXQgMTQ6MjEsIEx1ZG92aWMgQmFycmUgPGx1ZG92aWMuQmFycmVAc3QuY29t
-PiB3cm90ZToKPiA+Pj4KPiA+Pj4gRnJvbTogTHVkb3ZpYyBCYXJyZSA8bHVkb3ZpYy5iYXJyZUBz
-dC5jb20+Cj4gPj4+Cj4gPj4+IEluIHNvbWUgdmFyaWFudHMsIHRoZSBkYXRhIHRpbWVyIHN0YXJ0
-cyBhbmQgZGVjcmVtZW50cwo+ID4+PiB3aGVuIHRoZSBEUFNNIGVudGVycyBpbiBXYWl0X1Igb3Ig
-QnVzeSBzdGF0ZQo+ID4+PiAod2hpbGUgZGF0YSB0cmFuc2ZlciBvciBNTUNfUlNQX0JVU1kpLCBh
-bmQgZ2VuZXJhdGVzIGEKPiA+Pj4gZGF0YSB0aW1lb3V0IGVycm9yIGlmIHRoZSBjb3VudGVyIHJl
-YWNoIDAuCj4gPj4KPiA+Pgo+ID4+Pgo+ID4+PiAtRGVmaW5lIG1heF9idXN5X3RpbWVvdXQgKGlu
-IG1zKSBhY2NvcmRpbmcgdG8gY2xvY2suCj4gPj4+IC1TZXQgZGF0YSB0aW1lciByZWdpc3RlciBp
-ZiB0aGUgY29tbWFuZCBoYXMgcnNwX2J1c3kgZmxhZy4KPiA+Pj4gICBJZiBidXN5X3RpbWVvdXQg
-aXMgbm90IGRlZmluZWQgYnkgZnJhbWV3b3JrLCB0aGUgYnVzeQo+ID4+PiAgIGxlbmd0aCBhZnRl
-ciBEYXRhIEJ1cnN0IGlzIGRlZmluZWQgYXMgMSBzZWNvbmQKPiA+Pj4gICAocmVmZXI6IDQuNi4y
-LjIgV3JpdGUgb2Ygc2Qgc3BlY2lmaWNhdGlvbiBwYXJ0MSB2Ni0wKS4KPiA+Pgo+ID4+IEhvdyBh
-Ym91dCByZS1waHJhc2luZyB0aGlzIGFzIGJlbG93Ogo+ID4+Cj4gPj4gLS0tLS0KPiA+PiBJbiB0
-aGUgc3RtMzJfc2RtbWMgdmFyaWFudCwgdGhlIGRhdGF0aW1lciBpcyBhY3RpdmUgbm90IG9ubHkg
-ZHVyaW5nCj4gPj4gZGF0YSB0cmFuc2ZlcnMgd2l0aCB0aGUgRFBTTSwgYnV0IGFsc28gd2hpbGUg
-d2FpdGluZyBmb3IgdGhlIGJ1c3llbmQKPiA+PiBJUlFzIGZyb20gY29tbWFuZHMgaGF2aW5nIHRo
-ZSBNTUNfUlNQX0JVU1kgZmxhZyBzZXQuIFRoaXMgbGVhZHMgdG8gYW4KPiA+PiBpbmNvcnJlY3Qg
-SVJRIGJlaW5nIHJhaXNlZCB0byBzaWduYWwgTUNJX0RBVEFUSU1FT1VUIGVycm9yLCB3aGljaAo+
-ID4+IHNpbXBseSBicmVha3MgdGhlIGJlaGF2aW91ci4KPiA+Pgo+ID4+IEFkZHJlc3MgdGhpcyBi
-eSB1cGRhdGluZyB0aGUgZGF0YXRpbWVyIHZhbHVlIGJlZm9yZSBzZW5kaW5nIGEgY29tbWFuZAo+
-ID4+IGhhdmluZyB0aGUgTU1DX1JTUF9CVVNZIGZsYWcgc2V0LiBUbyBpbmZvcm0gdGhlIG1tYyBj
-b3JlIGFib3V0IHRoZQo+ID4+IG1heGltdW0gc3VwcG9ydGVkIGJ1c3kgdGltZW91dCwgd2hpY2gg
-YWxzbyBkZXBlbmRzIG9uIHRoZSBjdXJyZW50Cj4gPj4gY2xvY2sgcmF0ZSwgc2V0IC0+bWF4X2J1
-c3lfdGltZW91dCAoaW4gbXMpLgo+Cj4gVGhhbmtzIGZvciB0aGUgcmUtcGhyYXNpbmcuCj4KPiA+
-PiAtLS0tLQo+ID4+Cj4gPj4gUmVnYXJkaW5nIHRoZSBidXN5X3RpbWVvdXQsIHRoZSBjb3JlIHNo
-b3VsZCByZWFsbHkgYXNzaWduIGl0IGEgdmFsdWUKPiA+PiBmb3IgYWxsIGNvbW1hbmRzIGhhdmlu
-ZyB0aGUgUlNQX0JVU1kgZmxhZyBzZXQuIEhvd2V2ZXIsIEkgcmVhbGl6ZSB0aGUKPiA+PiBjb3Jl
-IG5lZWRzIHRvIGJlIGltcHJvdmVkIHRvIGNvdmVyIGFsbCB0aGVzZSBjYXNlcyAtIGFuZCBJIGFt
-IGxvb2tpbmcKPiA+PiBhdCB0aGF0LCBidXQgbm90IHRoZXJlIHlldC4KPiA+Pgo+ID4+IEkgd291
-bGQgYWxzbyBzdWdnZXN0IHRvIHVzZSBhIGdyZWF0ZXIgdmFsdWUgdGhhbiAxcywgYXMgdGhhdCBz
-ZWVtcyBhCj4gPj4gYml0IGxvdyBmb3IgdGhlICJ1bmRlZmluZWQiIGNhc2UuIFBlcmhhcHMgdXNl
-IHRoZSBtYXhfYnVzeV90aW1lb3V0LAo+ID4+IHdoaWNoIHdvdWxkIGJlIG5pY2UgYSBzaW1wbGUg
-b3IgMTBzLCB3aGljaCBJIHRoaW5rIGlzIHVzZWQgYnkgc29tZQo+ID4+IG90aGVyIGRyaXZlcnMu
-Cj4KPiBPSywgSSB3aWxsIHNldCAxMHMsIHRoZSBtYXhfYnVzeV90aW1lb3V0IGNvdWxkIGJlIHZl
-cnkgbG9uZyBmb3Igc21hbGwKPiBmcmVxdWVuY2llcyAoZXhhbXBsZSwgMjVNaHogPT4gMTcxcyku
-Cj4KPiA+Pgo+ID4+PiAtQWRkIE1DSV9EQVRBVElNRU9VVCBlcnJvciBtYW5hZ2VtZW50IGluIG1t
-Y2lfY21kX2lycS4KPiA+Pj4KPiA+Pj4gU2lnbmVkLW9mZi1ieTogTHVkb3ZpYyBCYXJyZSA8bHVk
-b3ZpYy5iYXJyZUBzdC5jb20+Cj4gPj4+IC0tLQo+ID4+PiAgIGRyaXZlcnMvbW1jL2hvc3QvbW1j
-aS5jIHwgNDIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0KPiA+Pj4g
-ICBkcml2ZXJzL21tYy9ob3N0L21tY2kuaCB8ICAzICsrKwo+ID4+PiAgIDIgZmlsZXMgY2hhbmdl
-ZCwgNDAgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKPiA+Pj4KPiA+Pj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvbW1jL2hvc3QvbW1jaS5jIGIvZHJpdmVycy9tbWMvaG9zdC9tbWNpLmMKPiA+
-Pj4gaW5kZXggYzM3ZTcwZGJlMjUwLi5jMzAzMTkyNTVkYzIgMTAwNjQ0Cj4gPj4+IC0tLSBhL2Ry
-aXZlcnMvbW1jL2hvc3QvbW1jaS5jCj4gPj4+ICsrKyBiL2RyaXZlcnMvbW1jL2hvc3QvbW1jaS5j
-Cj4gPj4+IEBAIC0xMDc1LDYgKzEwNzUsNyBAQCBzdGF0aWMgdm9pZAo+ID4+PiAgIG1tY2lfc3Rh
-cnRfY29tbWFuZChzdHJ1Y3QgbW1jaV9ob3N0ICpob3N0LCBzdHJ1Y3QgbW1jX2NvbW1hbmQgKmNt
-ZCwgdTMyIGMpCj4gPj4+ICAgewo+ID4+PiAgICAgICAgICB2b2lkIF9faW9tZW0gKmJhc2UgPSBo
-b3N0LT5iYXNlOwo+ID4+PiArICAgICAgIHVuc2lnbmVkIGxvbmcgbG9uZyBjbGtzOwo+ID4+Pgo+
-ID4+PiAgICAgICAgICBkZXZfZGJnKG1tY19kZXYoaG9zdC0+bW1jKSwgIm9wICUwMnggYXJnICUw
-OHggZmxhZ3MgJTA4eFxuIiwKPiA+Pj4gICAgICAgICAgICAgIGNtZC0+b3Bjb2RlLCBjbWQtPmFy
-ZywgY21kLT5mbGFncyk7Cj4gPj4+IEBAIC0xMDk3LDYgKzEwOTgsMTYgQEAgbW1jaV9zdGFydF9j
-b21tYW5kKHN0cnVjdCBtbWNpX2hvc3QgKmhvc3QsIHN0cnVjdCBtbWNfY29tbWFuZCAqY21kLCB1
-MzIgYykKPiA+Pj4gICAgICAgICAgICAgICAgICBlbHNlCj4gPj4+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICBjIHw9IGhvc3QtPnZhcmlhbnQtPmNtZHJlZ19zcnNwOwo+ID4+PiAgICAgICAgICB9
-Cj4gPj4+ICsKPiA+Pj4gKyAgICAgICBpZiAoaG9zdC0+dmFyaWFudC0+YnVzeV90aW1lb3V0ICYm
-IGNtZC0+ZmxhZ3MgJiBNTUNfUlNQX0JVU1kpIHsKPiA+Pj4gKyAgICAgICAgICAgICAgIGlmICgh
-Y21kLT5idXN5X3RpbWVvdXQpCj4gPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGNtZC0+YnVz
-eV90aW1lb3V0ID0gMTAwMDsKPiA+Pj4gKwo+ID4+PiArICAgICAgICAgICAgICAgY2xrcyA9ICh1
-bnNpZ25lZCBsb25nIGxvbmcpY21kLT5idXN5X3RpbWVvdXQgKiBob3N0LT5jY2xrOwo+ID4+PiAr
-ICAgICAgICAgICAgICAgZG9fZGl2KGNsa3MsIE1TRUNfUEVSX1NFQyk7Cj4gPj4+ICsgICAgICAg
-ICAgICAgICB3cml0ZWxfcmVsYXhlZChjbGtzLCBob3N0LT5iYXNlICsgTU1DSURBVEFUSU1FUik7
-Cj4gPj4+ICsgICAgICAgfQo+ID4+PiArCj4gPj4+ICAgICAgICAgIGlmICgvKmludGVycnVwdCov
-MCkKPiA+Pj4gICAgICAgICAgICAgICAgICBjIHw9IE1DSV9DUFNNX0lOVEVSUlVQVDsKPiA+Pj4K
-PiA+Pj4gQEAgLTEyMDEsNiArMTIxMiw3IEBAIHN0YXRpYyB2b2lkCj4gPj4+ICAgbW1jaV9jbWRf
-aXJxKHN0cnVjdCBtbWNpX2hvc3QgKmhvc3QsIHN0cnVjdCBtbWNfY29tbWFuZCAqY21kLAo+ID4+
-PiAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCBzdGF0dXMpCj4gPj4+ICAgewo+ID4+PiArICAg
-ICAgIHUzMiBlcnJfbXNrID0gTUNJX0NNRENSQ0ZBSUwgfCBNQ0lfQ01EVElNRU9VVDsKPiA+Pj4g
-ICAgICAgICAgdm9pZCBfX2lvbWVtICpiYXNlID0gaG9zdC0+YmFzZTsKPiA+Pj4gICAgICAgICAg
-Ym9vbCBzYmMsIGJ1c3lfcmVzcDsKPiA+Pj4KPiA+Pj4gQEAgLTEyMTUsOCArMTIyNywxMSBAQCBt
-bWNpX2NtZF9pcnEoc3RydWN0IG1tY2lfaG9zdCAqaG9zdCwgc3RydWN0IG1tY19jb21tYW5kICpj
-bWQsCj4gPj4+ICAgICAgICAgICAqIGhhbmRsaW5nLiBOb3RlIHRoYXQgd2UgdGFnIG9uIGFueSBs
-YXRlbnQgSVJRcyBwb3N0cG9uZWQKPiA+Pj4gICAgICAgICAgICogZHVlIHRvIHdhaXRpbmcgZm9y
-IGJ1c3kgc3RhdHVzLgo+ID4+PiAgICAgICAgICAgKi8KPiA+Pj4gLSAgICAgICBpZiAoISgoc3Rh
-dHVzfGhvc3QtPmJ1c3lfc3RhdHVzKSAmCj4gPj4+IC0gICAgICAgICAgICAgKE1DSV9DTURDUkNG
-QUlMfE1DSV9DTURUSU1FT1VUfE1DSV9DTURTRU5UfE1DSV9DTURSRVNQRU5EKSkpCj4gPj4+ICsg
-ICAgICAgaWYgKGhvc3QtPnZhcmlhbnQtPmJ1c3lfdGltZW91dCAmJiBidXN5X3Jlc3ApCj4gPj4+
-ICsgICAgICAgICAgICAgICBlcnJfbXNrIHw9IE1DSV9EQVRBVElNRU9VVDsKPiA+Pj4gKwo+ID4+
-PiArICAgICAgIGlmICghKChzdGF0dXMgfCBob3N0LT5idXN5X3N0YXR1cykgJgo+ID4+PiArICAg
-ICAgICAgICAgIChlcnJfbXNrIHwgTUNJX0NNRFNFTlQgfCBNQ0lfQ01EUkVTUEVORCkpKQo+ID4+
-PiAgICAgICAgICAgICAgICAgIHJldHVybjsKPiA+Pj4KPiA+Pj4gICAgICAgICAgLyogSGFuZGxl
-IGJ1c3kgZGV0ZWN0aW9uIG9uIERBVDAgaWYgdGhlIHZhcmlhbnQgc3VwcG9ydHMgaXQuICovCj4g
-Pj4+IEBAIC0xMjM1LDggKzEyNTAsNyBAQCBtbWNpX2NtZF9pcnEoc3RydWN0IG1tY2lfaG9zdCAq
-aG9zdCwgc3RydWN0IG1tY19jb21tYW5kICpjbWQsCj4gPj4+ICAgICAgICAgICAgICAgICAgICog
-d2hpbGUsIHRvIGFsbG93IGl0IHRvIGJlIHNldCwgYnV0IHRlc3RzIGluZGljYXRlcyB0aGF0IGl0
-Cj4gPj4+ICAgICAgICAgICAgICAgICAgICogaXNuJ3QgbmVlZGVkLgo+ID4+PiAgICAgICAgICAg
-ICAgICAgICAqLwo+ID4+PiAtICAgICAgICAgICAgICAgaWYgKCFob3N0LT5idXN5X3N0YXR1cyAm
-Jgo+ID4+PiAtICAgICAgICAgICAgICAgICAgICEoc3RhdHVzICYgKE1DSV9DTURDUkNGQUlMfE1D
-SV9DTURUSU1FT1VUKSkgJiYKPiA+Pj4gKyAgICAgICAgICAgICAgIGlmICghaG9zdC0+YnVzeV9z
-dGF0dXMgJiYgIShzdGF0dXMgJiBlcnJfbXNrKSAmJgo+ID4+PiAgICAgICAgICAgICAgICAgICAg
-ICAocmVhZGwoYmFzZSArIE1NQ0lTVEFUVVMpICYgaG9zdC0+dmFyaWFudC0+YnVzeV9kZXRlY3Rf
-ZmxhZykpIHsKPiA+Pj4KPiA+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgIHdyaXRlbChyZWFk
-bChiYXNlICsgTU1DSU1BU0swKSB8Cj4gPj4+IEBAIC0xMjkwLDYgKzEzMDQsOSBAQCBtbWNpX2Nt
-ZF9pcnEoc3RydWN0IG1tY2lfaG9zdCAqaG9zdCwgc3RydWN0IG1tY19jb21tYW5kICpjbWQsCj4g
-Pj4+ICAgICAgICAgICAgICAgICAgY21kLT5lcnJvciA9IC1FVElNRURPVVQ7Cj4gPj4+ICAgICAg
-ICAgIH0gZWxzZSBpZiAoc3RhdHVzICYgTUNJX0NNRENSQ0ZBSUwgJiYgY21kLT5mbGFncyAmIE1N
-Q19SU1BfQ1JDKSB7Cj4gPj4+ICAgICAgICAgICAgICAgICAgY21kLT5lcnJvciA9IC1FSUxTRVE7
-Cj4gPj4+ICsgICAgICAgfSBlbHNlIGlmIChob3N0LT52YXJpYW50LT5idXN5X3RpbWVvdXQgJiYg
-YnVzeV9yZXNwICYmCj4gPj4+ICsgICAgICAgICAgICAgICAgICBzdGF0dXMgJiBNQ0lfREFUQVRJ
-TUVPVVQpIHsKPiA+Pj4gKyAgICAgICAgICAgICAgIGNtZC0+ZXJyb3IgPSAtRVRJTUVET1VUOwo+
-ID4+Cj4gPj4gSXQncyBub3QgcmVhbGx5IGNsZWFyIHRvIG1lIHdoYXQgaGFwcGVucyB3aXRoIHRo
-ZSBidXN5IGRldGVjdGlvbgo+ID4+IHN0YXR1cyBiaXQgKHZhcmlhbnQtPmJ1c3lfZGV0ZWN0X2Zs
-YWcpLCBpbiBjYXNlIGEgTUNJX0RBVEFUSU1FT1VUIElSUQo+ID4+IGlzIHJhaXNlZCwgd2hpbGUg
-YWxzbyBoYXZpbmcgaG9zdC0+YnVzeV9zdGF0dXMgc2V0ICh3YWl0aW5nIGZvcgo+ID4+IGJ1c3ll
-bmQpLgo+ID4+Cj4gPj4gQnkgbG9va2luZyBhdCB0aGUgY29kZSBhIGZldyBsaW5lcyBhYm92ZSB0
-aGlzLCB3ZSBtYXkgZG8gYSAicmV0dXJuOyIKPiA+PiB3aGlsZSB3YWl0aW5nIGZvciB0aGUgYnVz
-eWVuZCBJUlEgZXZlbiBpZiBNQ0lfREFUQVRJTUVPVVQgYWxzbyBpcwo+ID4+IHJhaXNlZCwgcG90
-ZW50aWFsbHkgbG9zaW5nIHRoYXQgZnJvbSBiZWluZyBjYXVnaHQuIElzIHRoYXQgcmVhbGx5Cj4g
-Pj4gY29ycmVjdD8KPiA+Cj4gPiBBIHNlY29uZCB0aG91Z2h0LiBUaGF0ICJyZXR1cm47IiBpcyB0
-byBtYW5hZ2UgdGhlIGJ1c3llbmQgSVJRIGJlaW5nCj4gPiByYWlzZWQgb2YgdGhlIGZpcnN0IGVk
-Z2UgZHVlIHRvIGJyb2tlbiBIVy4gU28gSSBndWVzcywgdGhpcyBpc24ndCBhbgo+ID4gaXNzdWUg
-Zm9yIHN0bTMyX3NkbW1jIHZhcmlhbnQgYWZ0ZXIgYWxsPwo+ID4KPiA+IEkgaGF2ZSBhIGxvb2sg
-YXQgdGhlIG5leHQgcGF0Y2hlcyBpbiB0aGUgc2VyaWVzLi4KPgo+IHlvdSdyZSByZWZlcnJpbmcg
-dG8gInJldHVybiIgb2YgPwo+ICAgICAgICAgaWYgKGhvc3QtPmJ1c3lfc3RhdHVzICYmCj4gICAg
-ICAgICAgICAgKHN0YXR1cyAmIGhvc3QtPnZhcmlhbnQtPmJ1c3lfZGV0ZWN0X2ZsYWcpKSB7Cj4g
-ICAgICAgICAgICAgICAgIHdyaXRlbChob3N0LT52YXJpYW50LT5idXN5X2RldGVjdF9tYXNrLAo+
-ICAgICAgICAgICAgICAgICAgICAgICAgaG9zdC0+YmFzZSArIE1NQ0lDTEVBUik7Cj4gICAgICAg
-ICAgICAgICAgIHJldHVybjsKPiAgICAgICAgIH0KPgo+IEZvciBzdG0zMiB2YXJpYW50IChpbiBw
-YXRjaCAzLzMpOiB0aGUgImJ1c3kgY29tcGxldGlvbiIgaXMKPiByZWxlYXNlZCBpbW1lZGlhdGVs
-eSBpZiB0aGVyZSBpcyBhbiBlcnJvciBvciBidXN5ZDBlbmQsCj4gYW5kIGNsZWFuczogaXJxLCBi
-dXN5ZDBlbmQgbWFzaywgYnVzeV9zdGF0dXMgdmFyaWFibGUuCgpSaWdodCwgdGhhbmtzIGZvciBj
-bGFyaWZ5aW5nIQoKPgo+IEkgY291bGQgYWRkIHNpbWlsYXIgYWN0aW9uIGluIHBhdGNoIDIvMyBm
-dW5jdGlvbjogInV4NTAwX2J1c3lfY29tcGxldGUiCj4KPiBzdGF0aWMgYm9vbCB1eDUwMF9idXN5
-X2NvbXBsZXRlKHN0cnVjdCBtbWNpX2hvc3QgKmhvc3QsIHUzMiBzdGF0dXMsIHUzMgo+IGVycl9t
-c2spCj4gewo+ICAgICAgICAgdm9pZCBfX2lvbWVtICpiYXNlID0gaG9zdC0+YmFzZTsKPgo+ICAg
-ICAgICAgaWYgKHN0YXR1cyAmIGVycl9tc2spCj4gICAgICAgICAgICAgICAgIGdvdG8gY29tcGxl
-dGU7Cj4gLi4uCj4gY29tcGxldGU6Cj4gICAgICAgICAvKiBzcGVjaWZpYyBhY3Rpb24gdG8gY2xl
-YW4gYnVzeSBkZXRlY3Rpb24sIGlycSwgbWFzaywgYnVzeV9zdGF0dXMgKi8KPiB9Cj4KPiB3aGF0
-IGRvIHlvdSB0aGluayBhYm91dCBpdD8KCkZvciB0aGUgbGVnYWN5IHZhcmlhbnQsIHRoZSBNQ0lf
-REFUQVRJTUVPVVQgaXNuJ3QgYW4gaXNzdWUgYXMgaXQgY2FuJ3QKYmUgcmFpc2VkIHdoaWxlIHdh
-aXRpbmcgZm9yIGJ1c3llbmQuIFNvLCBJIHRoaW5rIHRoaXMgaXMgZmluZSBhcyBpcy4KCktpbmQg
-cmVnYXJkcwpVZmZlCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1hcm0ta2VybmVsCg==
+On Sun, Oct 6, 2019 at 12:54 AM kbuild test robot <lkp@intel.com> wrote:
+> url:    https://github.com/0day-ci/linux/commits/Tzung-Bi-Shih/ASoC-mediatek-mt8183-mt6358-ts3a227-max98357-support-WoV/20191005-171021
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> reproduce:
+>         # apt-get install sparse
+>         # sparse version: v0.6.1-rc1-42-g38eda53-dirty
+>         make ARCH=x86_64 allmodconfig
+>         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+>
+> sparse warnings: (new ones prefixed by >>)
+>
+> >> sound/soc/codecs/cros_ec_codec.c:430:39: sparse: sparse: incorrect type in return expression (different address spaces) @@    expected void * @@    got void [noderef] <asvoid * @@
+> >> sound/soc/codecs/cros_ec_codec.c:430:39: sparse:    expected void *
+> >> sound/soc/codecs/cros_ec_codec.c:430:39: sparse:    got void [noderef] <asn:2> *
+> >> sound/soc/codecs/cros_ec_codec.c:549:69: sparse: sparse: incorrect type in argument 2 (different address spaces) @@    expected void const volatile [noderef] <asn:2> * @@    got latile [noderef] <asn:2> * @@
+> >> sound/soc/codecs/cros_ec_codec.c:549:69: sparse:    expected void const volatile [noderef] <asn:2> *
+> >> sound/soc/codecs/cros_ec_codec.c:549:69: sparse:    got unsigned char [usertype] *addr
+> >> sound/soc/codecs/cros_ec_codec.c:698:33: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void volatile [noderef] <asn:2> * @@    got latile [noderef] <asn:2> * @@
+> >> sound/soc/codecs/cros_ec_codec.c:698:33: sparse:    expected void volatile [noderef] <asn:2> *
+> >> sound/soc/codecs/cros_ec_codec.c:698:33: sparse:    got unsigned char [usertype] *wov_lang_shm_p
+>    sound/soc/codecs/cros_ec_codec.c:699:48: sparse: sparse: incorrect type in argument 1 (different address spaces) @@    expected void volatile [noderef] <asn:2> * @@    got latile [noderef] <asn:2> * @@
+>    sound/soc/codecs/cros_ec_codec.c:699:48: sparse:    expected void volatile [noderef] <asn:2> *
+> >> sound/soc/codecs/cros_ec_codec.c:699:48: sparse:    got unsigned char [usertype] *
+
+I cannot reproduce the same sparse errors.
+
+My commit stack: apply my patches onto broonie/sound.git for-next
+$ git log --oneline
+b4471777f5d8 (HEAD -> draft) ASoC: mediatek: mt8183: support WoV
+b6bb558fa59d ASoC: dt-bindings: mt8183: add ec-codec
+a08bede115d4 ASoC: mediatek: mt6358: support WoV
+f67068fd0c91 ASoC: cros_ec_codec: support WoV
+7e11271c070e ASoC: dt-bindings: cros_ec_codec: add SHM bindings
+fd04f20e77d3 ASoC: cros_ec_codec: read max DMIC gain from EC codec
+c008f01d5bc3 platform/chrome: cros_ec: add common commands for EC codec
+50d2c1f9b1f4 ASoC: cros_ec_codec: extract DMIC EC command from I2S RX
+00e5a1c121eb ASoC: cros_ec_codec: refactor I2S RX
+3f0c475d6ec8 platform/chrome: cros_ec: remove unused EC feature
+3877dcd0194c (mark/for-next, asoc-next) Merge branch 'asoc-5.5' into asoc-next
+
+My reproduce steps:
+$ make ARCH=x86_64 mrproper
+$ make ARCH=x86_64 allmodconfig
+$ make ARCH=x86_64 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' -j40
+2>&1 | grep -v sched | tee log.txt
+(Note: filter sched out to not get flood sparse errors)
+$ grep cros_ec_codec log.txt
+  CHECK   sound/soc/codecs/cros_ec_codec.c
+  CC [M]  sound/soc/codecs/cros_ec_codec.o
+
+It did not generate the same message as 0day reported.
+
+One difference would be the sparse version (it is from "apt install"
+in my environment):
+$ sparse --version
+0.6.0 (Debian: 0.6.0-3)
+On the other hand, 0day used "v0.6.1-rc1-42-g38eda53-dirty".
+
+Guenter, what we could do in the case?  Do you have any idea?
