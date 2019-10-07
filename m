@@ -1,94 +1,152 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: light: Add binding for ADUX1020
-Date: Mon, 07 Oct 2019 18:10:50 +0530
-Message-ID: <4EC23AB5-B8BE-4E45-8E5B-FCCD5B1508BA@linaro.org>
-References: <20191007101027.8383-1-manivannan.sadhasivam@linaro.org> <20191007101027.8383-2-manivannan.sadhasivam@linaro.org> <a60fb9ea8922c1eb532e0b7ef0a69abcc9306255.camel@analog.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: iio: maxbotix,mb1232.yaml: transform to yaml
+Date: Mon, 7 Oct 2019 07:42:29 -0500
+Message-ID: <CAL_Jsq+0SpRVmGJSm5Hw8bQ_zdeJy5wfTb9RM1r=crkiT2uM-Q@mail.gmail.com>
+References: <20191006142715.45k64cgw7mzlekm5@arbad>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a60fb9ea8922c1eb532e0b7ef0a69abcc9306255.camel@analog.com>
+In-Reply-To: <20191006142715.45k64cgw7mzlekm5@arbad>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Hennerich, Michael" <Michael.Hennerich@analog.com>, "lars@metafoo.de" <lars@metafoo.de>, "jic23@kernel.org" <jic23@kernel.org>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "knaack.h@gmx.de" <knaack.h@gmx.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+To: Andreas Klinger <ak@it-klinger.de>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ardelean,=20
-
-On 7 October 2019 3:51:16 PM IST, "Ardelean, Alexandru" <alexandru=2EArdel=
-ean@analog=2Ecom> wrote:
->On Mon, 2019-10-07 at 15:40 +0530, Manivannan Sadhasivam wrote:
->> [External]
->>=20
->> Add devicetree binding for Analog Devices ADUX1020 Photometric
->> sensor=2E
->>=20
+On Sun, Oct 6, 2019 at 9:27 AM Andreas Klinger <ak@it-klinger.de> wrote:
 >
->Hey,
+> transform existing documentation of maxbotix,mb1232 ultrasonic ranger
+> from text documentation format into yaml.
 >
->Thanks for the patches=2E
+> Changes in v2:
+> - removed description of reg property
+> - added a line:
+>   additionalProperties: false
 >
->This dt-binding docs is in text format=2E
->dt-binding docs now need to be in YAML format=2E
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> ---
+>  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
+>  .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 56 ++++++++++++++++++++++
+>  2 files changed, 56 insertions(+), 29 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
 >
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> deleted file mode 100644
+> index dd1058fbe9c3..000000000000
+> --- a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
+> +++ /dev/null
+> @@ -1,29 +0,0 @@
+> -* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
+> -  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
+> -  for ranging
+> -
+> -Required properties:
+> - - compatible:         "maxbotix,mb1202",
+> -                       "maxbotix,mb1212",
+> -                       "maxbotix,mb1222",
+> -                       "maxbotix,mb1232",
+> -                       "maxbotix,mb1242",
+> -                       "maxbotix,mb7040" or
+> -                       "maxbotix,mb7137"
+> -
+> - - reg:                        i2c address of the device, see also i2c/i2c.txt
+> -
+> -Optional properties:
+> - - interrupts:         Interrupt used to announce the preceding reading
+> -                       request has finished and that data is available.
+> -                       If no interrupt is specified the device driver
+> -                       falls back to wait a fixed amount of time until
+> -                       data can be retrieved.
+> -
+> -Example:
+> -proximity@70 {
+> -       compatible = "maxbotix,mb1232";
+> -       reg = <0x70>;
+> -       interrupt-parent = <&gpio2>;
+> -       interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+> new file mode 100644
+> index 000000000000..e2fb1f6d4dbe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/proximity/maxbotix,mb1232.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MaxBotix I2CXL-MaxSonar ultrasonic distance sensor
+> +
+> +maintainers:
+> +  - Andreas Klinger <ak@it-klinger.de>
+> +
+> +description: |
+> +  MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
+> +  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
+> +  for ranging
+> +
+> +  Specifications about the devices can be found at:
+> +  https://www.maxbotix.com/documents/I2CXL-MaxSonar-EZ_Datasheet.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - maxbotix,mb1202
+> +      - maxbotix,mb1212
+> +      - maxbotix,mb1222
+> +      - maxbotix,mb1232
+> +      - maxbotix,mb1242
+> +      - maxbotix,mb7040
+> +      - maxbotix,mb7137
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description:
+> +      Interrupt used to announce the preceding reading request has finished
+> +      and that data is available.  If no interrupt is specified the device
+> +      driver falls back to wait a fixed amount of time until data can be
+> +      retrieved.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    proximity@70 {
 
-Sure=2E I can convert to YAML binding=2E=20
+Fails to build with 'make dt_binding_check':
 
->Also, patches for dt-bindings docs usually come after the driver is
->added=2E
->So, this patch should be the second in the series, not the first=2E
->
+Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dts:20.11-24:
+Warning (reg_format): /example-0/proximity@70:reg: property has
+invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
+Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dt.yaml:
+Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dt.yaml:
+Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dt.yaml:
+Warning (spi_bus_reg): Failed prerequisite 'reg_format'
 
-I don't think so=2E The convention is to put dt-bindings patch upfront for=
- all subsystems=2E Not sure if IIO differs here=2E=20
+You have to put this under an i2c bus node.
 
-Thanks,=20
-Mani
->Alex
->
->> Signed-off-by: Manivannan Sadhasivam
-><manivannan=2Esadhasivam@linaro=2Eorg>
->> ---
->>  =2E=2E=2E/bindings/iio/light/adux1020=2Etxt           | 22
->+++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->>  create mode 100644
->> Documentation/devicetree/bindings/iio/light/adux1020=2Etxt
->>=20
->> diff --git a/Documentation/devicetree/bindings/iio/light/adux1020=2Etxt
->> b/Documentation/devicetree/bindings/iio/light/adux1020=2Etxt
->> new file mode 100644
->> index 000000000000=2E=2Ee896dda30e36
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/light/adux1020=2Etxt
->> @@ -0,0 +1,22 @@
->> +Analog Devices ADUX1020 Photometric sensor
->> +
->> +Link to datasheet:=20
->>
->https://www=2Eanalog=2Ecom/media/en/technical-documentation/data-sheets/A=
-DUX1020=2Epdf
->> +
->> +Required properties:
->> +
->> + - compatible: should be "adi,adux1020"
->> + - reg: the I2C address of the sensor
->> +
->> +Optional properties:
->> +
->> + - interrupts: interrupt mapping for IRQ as documented in
->> + =20
->Documentation/devicetree/bindings/interrupt-controller/interrupts=2Etxt
->> +
->> +Example:
->> +
->> +adux1020@64 {
->> +	compatible =3D "adi,adux1020";
->> +	reg =3D <0x64>;
->> +	interrupt-parent =3D <&msmgpio>;
->> +	interrupts =3D <24 IRQ_TYPE_LEVEL_HIGH>;
->> +};
+i2c {
+  #address-cells = <1>;
+  #size-cells = <0>;
+  ...
+};
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+> +      compatible = "maxbotix,mb1232";
+> +      reg = <0x70>;
+> +      interrupt-parent = <&gpio2>;
+> +      interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> +    };
+> --
+> 2.11.0
