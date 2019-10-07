@@ -1,145 +1,145 @@
-From: Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 3/3] Input: mms114 - add support for mms345l
-Date: Mon,  7 Oct 2019 22:50:21 +0200
-Message-ID: <20191007205021.104402-1-stephan@gerhold.net>
-References: <20191007203343.101466-1-stephan@gerhold.net>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [RFC][PATCH v2 4/5] dt-bindings: usb: dwc3: of-simple: add
+ compatible for HiSi
+Date: Mon, 7 Oct 2019 16:11:02 -0500
+Message-ID: <CAL_JsqJ9uUtqTDEkLi86-BCvW+wM6Pgz_K+JuTsuOqHfFOHStA@mail.gmail.com>
+References: <20191007175553.66940-1-john.stultz@linaro.org>
+ <20191007175553.66940-5-john.stultz@linaro.org> <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
+ <CALAqxLWB7Vd-H70LLLSW0Fv=_4-saQ9CE2k3-L_43E+F8mLj2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191007203343.101466-1-stephan@gerhold.net>
+In-Reply-To: <CALAqxLWB7Vd-H70LLLSW0Fv=_4-saQ9CE2k3-L_43E+F8mLj2w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Andi Shyti <andi@etezian.org>, Simon Shields <simon@lineageos.org>, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
+To: John Stultz <john.stultz@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Yu Chen <chenyu56@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-MMS345L is another first generation touch screen from Melfas,
-which uses the same registers as MMS152.
+On Mon, Oct 7, 2019 at 2:07 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Mon, Oct 7, 2019 at 11:38 AM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Mon, Oct 7, 2019 at 12:56 PM John Stultz <john.stultz@linaro.org> wrote:
+> > >
+> > > Add necessary compatible flag for HiSi's DWC3 so
+> > > dwc3-of-simple will probe.
+> > >
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: Felipe Balbi <balbi@kernel.org>
+> > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Yu Chen <chenyu56@huawei.com>
+> > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> > > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > > Cc: linux-usb@vger.kernel.org
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > > ---
+> > > v2: Tweaked clock names as clk_usb3phy_ref didn't seem right.
+> > > ---
+> > >  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
+> > >  1 file changed, 52 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> >
+> > Can you make this a schema.
+>
+> Sorry, I'm not sure exactly what you're asking. I'm guessing from
+> grepping around you want the bindings in yaml instead (I see a few
+> examples)?
 
-However, using I2C_M_NOSTART for it causes errors when reading:
+Yes.
 
-	i2c i2c-0: sendbytes: NAK bailout.
-	mms114 0-0048: __mms114_read_reg: i2c transfer failed (-5)
+> Is there some pointer to documentation? The
+> Documentation/devicetree/bindings/writing-bindings.txt file doesn't
+> seem to say much on it.
 
-The driver works fine as soon as I2C_M_NOSTART is removed.
+You mean Documentation/devicetree/writing-schemas.rst? There's that
+and Documentation/devicetree/bindings/example-schema.yaml which has a
+bunch of annotations on what each part means.
 
-Add a separate melfas,mms345l binding, and make use of I2C_M_NOSTART
-only for MMS114 and MMS152.
+> > > diff --git a/Documentation/devicetree/bindings/usb/hisi,dwc3.txt b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> > > new file mode 100644
+> > > index 000000000000..3a3e5c320f2a
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> > > @@ -0,0 +1,52 @@
+> > > +HiSi SuperSpeed DWC3 USB SoC controller
+> > > +
+> > > +Required properties:
+> > > +- compatible:          should contain "hisilicon,hi3660-dwc3" for HiSi SoC
+> > > +- clocks:              A list of phandle + clock-specifier pairs for the
+> > > +                       clocks listed in clock-names
+> > > +- clock-names:         Should contain the following:
+> > > +  "clk_abb_usb"                USB reference clk
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
-Note: I was not able to find a datasheet for any of the models,
-so this change is merely based on testing and comparison with
-the downstream driver [1].
+Probably 'ref' from dwc3.txt.
 
-There was a related patch [2] that removes I2C_M_NOSTART for all models,
-but it seems abandoned and I do not have any other model for testing.
-Therefore, this patch implements the least instrusive solution
-and only removes I2C_M_NOSTART for MMS345L.
+> > > +  "aclk_usb3otg"       USB3 OTG aclk
 
-[1]: https://github.com/msm8916-mainline/android_kernel_qcom_msm8916/blob/SM-A500FU/drivers/input/touchscreen/mms300_a.c
-[2]: https://patchwork.kernel.org/patch/10189541/
----
- drivers/input/touchscreen/mms114.c | 43 +++++++++++++++++++++---------
- 1 file changed, 31 insertions(+), 12 deletions(-)
+'bus_early'? IIRC, 'aclk' is the clock name for AXI bus clock.
 
-diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
-index 69c6d559eeb0..d9f45755d073 100644
---- a/drivers/input/touchscreen/mms114.c
-+++ b/drivers/input/touchscreen/mms114.c
-@@ -54,6 +54,7 @@
- enum mms_type {
- 	TYPE_MMS114	= 114,
- 	TYPE_MMS152	= 152,
-+	TYPE_MMS345L	= 345,
- };
- 
- struct mms114_data {
-@@ -91,9 +92,14 @@ static int __mms114_read_reg(struct mms114_data *data, unsigned int reg,
- 	if (reg <= MMS114_MODE_CONTROL && reg + len > MMS114_MODE_CONTROL)
- 		BUG();
- 
--	/* Write register: use repeated start */
-+	/* Write register */
- 	xfer[0].addr = client->addr;
--	xfer[0].flags = I2C_M_TEN | I2C_M_NOSTART;
-+	if (data->type != TYPE_MMS345L)
-+		/* use repeated start */
-+		xfer[0].flags = I2C_M_TEN | I2C_M_NOSTART;
-+	else
-+		xfer[0].flags = client->flags & I2C_M_TEN;
-+
- 	xfer[0].len = 1;
- 	xfer[0].buf = &buf;
- 
-@@ -250,6 +256,15 @@ static int mms114_get_version(struct mms114_data *data)
- 	int error;
- 
- 	switch (data->type) {
-+	case TYPE_MMS345L:
-+		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
-+		if (error)
-+			return error;
-+
-+		dev_info(dev, "TSP FW Rev: bootloader 0x%x / core 0x%x / config 0x%x\n",
-+			 buf[0], buf[1], buf[2]);
-+		break;
-+
- 	case TYPE_MMS152:
- 		error = __mms114_read_reg(data, MMS152_FW_REV, 3, buf);
- 		if (error)
-@@ -287,8 +302,8 @@ static int mms114_setup_regs(struct mms114_data *data)
- 	if (error < 0)
- 		return error;
- 
--	/* MMS152 has no configuration or power on registers */
--	if (data->type == TYPE_MMS152)
-+	/* Only MMS114 has configuration and power on registers */
-+	if (data->type != TYPE_MMS114)
- 		return 0;
- 
- 	error = mms114_set_active(data, true);
-@@ -425,11 +440,16 @@ static int mms114_probe(struct i2c_client *client,
- {
- 	struct mms114_data *data;
- 	struct input_dev *input_dev;
--	const void *match_data;
-+	enum mms_type type;
- 	int error;
- 
--	if (!i2c_check_functionality(client->adapter,
--				I2C_FUNC_PROTOCOL_MANGLING)) {
-+	type = (enum mms_type)device_get_match_data(&client->dev);
-+	if (!type)
-+		return -EINVAL;
-+
-+	if (type != TYPE_MMS345L &&
-+	    !i2c_check_functionality(client->adapter,
-+				     I2C_FUNC_PROTOCOL_MANGLING)) {
- 		dev_err(&client->dev,
- 			"Need i2c bus that supports protocol mangling\n");
- 		return -ENODEV;
-@@ -446,11 +466,7 @@ static int mms114_probe(struct i2c_client *client,
- 	data->client = client;
- 	data->input_dev = input_dev;
- 
--	match_data = device_get_match_data(&client->dev);
--	if (!match_data)
--		return -EINVAL;
--
--	data->type = (enum mms_type)match_data;
-+	data->type = type;
- 
- 	input_set_capability(input_dev, EV_ABS, ABS_MT_POSITION_X);
- 	input_set_capability(input_dev, EV_ABS, ABS_MT_POSITION_Y);
-@@ -599,6 +615,9 @@ static const struct of_device_id mms114_dt_match[] = {
- 	}, {
- 		.compatible = "melfas,mms152",
- 		.data = (void *)TYPE_MMS152,
-+	}, {
-+		.compatible = "melfas,mms345l",
-+		.data = (void *)TYPE_MMS345L,
- 	},
- 	{ }
- };
--- 
-2.23.0
+> > > +
+> > > +- assigned-clocks:     Should be:
+> > > +                               HI3660_ACLK_GATE_USB3OTG
+> > > +- assigned-clock-rates: Should be:
+> > > +                               229Mhz (229000000) for HI3660_ACLK_GATE_USB3OTG
+> > > +
+> > > +Optional properties:
+> > > +- resets:              Phandle to reset control that resets core and wrapper.
+> >
+> > Looks like 4 resets though.
+>
+> Good point. I'll fix that up.
+>
+> > > +
+> > > +Required child node:
+> > > +A child node must exist to represent the core DWC3 IP block. The name of
+> > > +the node is not important. The content of the node is defined in dwc3.txt.
+> > > +
+> > > +Example device nodes:
+> > > +
+> > > +       usb3: hisi_dwc3 {
+> > > +               compatible = "hisilicon,hi3660-dwc3";
+> > > +               #address-cells = <2>;
+> > > +               #size-cells = <2>;
+> > > +               ranges;
+> > > +
+> > > +               clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
+> > > +                        <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> > > +               clock-names = "clk_abb_usb", "aclk_usb3otg";
+> > > +
+> > > +               assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> > > +               assigned-clock-rates = <229 000 000>;
+> > > +               resets = <&crg_rst 0x90 8>,
+> > > +                        <&crg_rst 0x90 7>,
+> > > +                        <&crg_rst 0x90 6>,
+> > > +                        <&crg_rst 0x90 5>;
+> > > +
+> > > +               dwc3: dwc3@ff100000 {
+> >
+> > If it's only clocks and resets for the wrapper node, just make this
+> > all one node.
+>
+> Just to make sure I'm following, you're suggesting I put all the
+> clocks/resets in the dwc3 node (renamed to usb for the node name) and
+> not add the wrapper?
+
+Yes.
+
+> I'll have to see if that's possible. The generic dwc3 binding wants 3
+> clocks, but I only have two in the code I've worked with (similarly it
+> seems to only want two resets, not 4) so I'll have to see if I can
+> figure out how to adapt that.
+
+Possible since commit fe8abf332b8f ("usb: dwc3: support clocks and
+resets for DWC3 core").
+
+>
+> If that approach is preferred, do I also no longer need a separate
+> binding document/schema?
+
+Correct. And then no need to convert to schema yet (though feel free
+to convert dwc3.txt :)).
+
+Rob
