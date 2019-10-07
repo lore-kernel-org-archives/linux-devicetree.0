@@ -1,32 +1,50 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: [PATCH 1/2] configs: ARM: omap2plus: Enable OMAP3_THERMAL
-Date: Mon,  7 Oct 2019 17:05:39 -0500
-Message-ID: <20191007220540.30690-1-aford173@gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
+Date: Mon, 07 Oct 2019 15:57:59 -0700
+Message-ID: <7hsgo4cgeg.fsf@baylibre.com>
+References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com> <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: adam.ford@logicpd.com, hns@goldelico.com, Adam Ford <aford173@gmail.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Anand Moon <linux.amoon@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The some in the OMAP3 family have a bandgap thermal sensor, but
-omap2plus has it disabled.
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-This patch enables the OMAP3_THERMAL by default like the rest of
-the OMAP family.
+> On Mon, Oct 7, 2019 at 3:17 PM Anand Moon <linux.amoon@gmail.com> wrote:
+> [...]
+>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+>> index c9a867ac32d4..72f6a7dca0d6 100644
+>> --- a/arch/arm64/configs/defconfig
+>> +++ b/arch/arm64/configs/defconfig
+>> @@ -774,7 +774,7 @@ CONFIG_MPL3115=m
+>>  CONFIG_PWM=y
+>>  CONFIG_PWM_BCM2835=m
+>>  CONFIG_PWM_CROS_EC=m
+>> -CONFIG_PWM_MESON=m
+>> +CONFIG_PWM_MESON=y
+>
+> some time ago I submitted a similar patch for the 32-bit SoCs
+> it turned that that pwm-meson can be built as module because the
+> kernel will run without CPU DVFS as long as the clock and regulator
+> drivers are returning -EPROBE_DEFER (-517)
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+On 64-bit SoCs, the kernel boots with PWM as a module also, but DVFS
+only works sometimes, and making it built-in fixes the problem.
+Actually, it doesn't fix, it just hides the problem, which is likely a
+race or timeout happening during deferred probing.
 
-diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-index 8f1c2b6f9e56..7e14a8c8bb29 100644
---- a/arch/arm/configs/omap2plus_defconfig
-+++ b/arch/arm/configs/omap2plus_defconfig
-@@ -292,6 +292,7 @@ CONFIG_THERMAL_GOV_FAIR_SHARE=y
- CONFIG_THERMAL_GOV_USER_SPACE=y
- CONFIG_CPU_THERMAL=y
- CONFIG_TI_THERMAL=y
-+CONFIG_OMAP3_THERMAL=y
- CONFIG_OMAP4_THERMAL=y
- CONFIG_OMAP5_THERMAL=y
- CONFIG_DRA752_THERMAL=y
--- 
-2.17.1
+> did you check whether there's some other problem like some unused
+> clock which is being disabled at that moment?
+> I've been hunting weird problems in the past where it turned out that
+> changing kernel config bits changed the boot timing - that masked the
+> original problem
+
+Right, I would definitely prefer to not make this built-in without a lot
+more information to *why* this is needed.  In figuring that out, we'll
+probably find the race/timeout that's the root cause.
+
+Kevin
