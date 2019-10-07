@@ -1,50 +1,97 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [RFCv1 5/5] arm64/ARM: configs: Change CONFIG_PWM_MESON from m to y
-Date: Mon, 07 Oct 2019 15:57:59 -0700
-Message-ID: <7hsgo4cgeg.fsf@baylibre.com>
-References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-6-linux.amoon@gmail.com> <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [RFC][PATCH v2 4/5] dt-bindings: usb: dwc3: of-simple: add
+ compatible for HiSi
+Date: Mon, 7 Oct 2019 16:00:24 -0700
+Message-ID: <CALAqxLVpPvHf2RpwjHh5v9cnQm9CLtj0HHaqVH=EFQJk-GhaPQ@mail.gmail.com>
+References: <20191007175553.66940-1-john.stultz@linaro.org>
+ <20191007175553.66940-5-john.stultz@linaro.org> <CAL_JsqJLY2n7hfneNptAGswVZtGm3vJbSR6W2wUG+ZTzMN8wZA@mail.gmail.com>
+ <CALAqxLWB7Vd-H70LLLSW0Fv=_4-saQ9CE2k3-L_43E+F8mLj2w@mail.gmail.com> <CAL_JsqJ9uUtqTDEkLi86-BCvW+wM6Pgz_K+JuTsuOqHfFOHStA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCAoJLZj9Kh+SfF4Q+0OCzac2+huon_BU=Q3yE7Fu38U3w@mail.gmail.com>
+In-Reply-To: <CAL_JsqJ9uUtqTDEkLi86-BCvW+wM6Pgz_K+JuTsuOqHfFOHStA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Anand Moon <linux.amoon@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Yu Chen <chenyu56@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Linux USB List <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
-
-> On Mon, Oct 7, 2019 at 3:17 PM Anand Moon <linux.amoon@gmail.com> wrote:
-> [...]
->> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
->> index c9a867ac32d4..72f6a7dca0d6 100644
->> --- a/arch/arm64/configs/defconfig
->> +++ b/arch/arm64/configs/defconfig
->> @@ -774,7 +774,7 @@ CONFIG_MPL3115=m
->>  CONFIG_PWM=y
->>  CONFIG_PWM_BCM2835=m
->>  CONFIG_PWM_CROS_EC=m
->> -CONFIG_PWM_MESON=m
->> +CONFIG_PWM_MESON=y
+On Mon, Oct 7, 2019 at 2:11 PM Rob Herring <robh+dt@kernel.org> wrote:
 >
-> some time ago I submitted a similar patch for the 32-bit SoCs
-> it turned that that pwm-meson can be built as module because the
-> kernel will run without CPU DVFS as long as the clock and regulator
-> drivers are returning -EPROBE_DEFER (-517)
+> On Mon, Oct 7, 2019 at 2:07 PM John Stultz <john.stultz@linaro.org> wrote:
+> >
+> > On Mon, Oct 7, 2019 at 11:38 AM Rob Herring <robh+dt@kernel.org> wrote:
+> > >
+> > > On Mon, Oct 7, 2019 at 12:56 PM John Stultz <john.stultz@linaro.org> wrote:
+> > > >
+> > > > Add necessary compatible flag for HiSi's DWC3 so
+> > > > dwc3-of-simple will probe.
+> > > >
+> > > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > Cc: Felipe Balbi <balbi@kernel.org>
+> > > > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > > Cc: Yu Chen <chenyu56@huawei.com>
+> > > > Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> > > > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > > > Cc: linux-usb@vger.kernel.org
+> > > > Cc: devicetree@vger.kernel.org
+> > > > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > > > ---
+> > > > v2: Tweaked clock names as clk_usb3phy_ref didn't seem right.
+> > > > ---
+> > > >  .../devicetree/bindings/usb/hisi,dwc3.txt     | 52 +++++++++++++++++++
+> > > >  1 file changed, 52 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/usb/hisi,dwc3.txt
+> > >
+> > > Can you make this a schema.
+> >
+> > Sorry, I'm not sure exactly what you're asking. I'm guessing from
+> > grepping around you want the bindings in yaml instead (I see a few
+> > examples)?
+>
+> Yes.
+>
+> > Is there some pointer to documentation? The
+> > Documentation/devicetree/bindings/writing-bindings.txt file doesn't
+> > seem to say much on it.
+>
+> You mean Documentation/devicetree/writing-schemas.rst? There's that
+> and Documentation/devicetree/bindings/example-schema.yaml which has a
+> bunch of annotations on what each part means.
 
-On 64-bit SoCs, the kernel boots with PWM as a module also, but DVFS
-only works sometimes, and making it built-in fixes the problem.
-Actually, it doesn't fix, it just hides the problem, which is likely a
-race or timeout happening during deferred probing.
+Ah! Sorry for missing that. Thanks for the pointer, though I may get
+away with dropping this one.
 
-> did you check whether there's some other problem like some unused
-> clock which is being disabled at that moment?
-> I've been hunting weird problems in the past where it turned out that
-> changing kernel config bits changed the boot timing - that masked the
-> original problem
+> > > If it's only clocks and resets for the wrapper node, just make this
+> > > all one node.
+> >
+> > Just to make sure I'm following, you're suggesting I put all the
+> > clocks/resets in the dwc3 node (renamed to usb for the node name) and
+> > not add the wrapper?
+>
+> Yes.
+>
+> > I'll have to see if that's possible. The generic dwc3 binding wants 3
+> > clocks, but I only have two in the code I've worked with (similarly it
+> > seems to only want two resets, not 4) so I'll have to see if I can
+> > figure out how to adapt that.
+>
+> Possible since commit fe8abf332b8f ("usb: dwc3: support clocks and
+> resets for DWC3 core").
 
-Right, I would definitely prefer to not make this built-in without a lot
-more information to *why* this is needed.  In figuring that out, we'll
-probably find the race/timeout that's the root cause.
+Ok. It *seems* like I can get it working with the existing binding
+then. There's a little funkiness with the core expecting three clocks
+while I only have two (currently I'm duplicating the "bus_early" clk
+for "suspend". Is there a preferred way to do this sort of hack?), and
+I'm a little worried that only the first reset is being used (instead
+of the 4 specified), but it seems to work so far.
 
-Kevin
+I still suspect the dwc3-of-simple.c method might be better since it
+can handle arbitrary sets of clks and resets instead of the fixed 3 &
+1 in the dwc3.txt binding.
+But if I can get away without having to add an extra binding here, I'd
+be happier.
+
+thanks
+-john
