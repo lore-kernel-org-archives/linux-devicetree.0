@@ -1,152 +1,63 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: iio: maxbotix,mb1232.yaml: transform to yaml
-Date: Mon, 7 Oct 2019 07:42:29 -0500
-Message-ID: <CAL_Jsq+0SpRVmGJSm5Hw8bQ_zdeJy5wfTb9RM1r=crkiT2uM-Q@mail.gmail.com>
-References: <20191006142715.45k64cgw7mzlekm5@arbad>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [Patch v2 16/21] media: ti-vpe: vpe: use standard struct instead
+ of duplicating fields
+Date: Mon, 7 Oct 2019 07:45:29 -0500
+Message-ID: <20191007124529.nnrzx2btnraimivq@ti.com>
+References: <20191004162952.4963-1-bparrot@ti.com>
+ <20191004162952.4963-17-bparrot@ti.com>
+ <cb01914f-3bca-2558-2b07-86ddbfc9626e@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191006142715.45k64cgw7mzlekm5@arbad>
+Content-Disposition: inline
+In-Reply-To: <cb01914f-3bca-2558-2b07-86ddbfc9626e@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 6, 2019 at 9:27 AM Andreas Klinger <ak@it-klinger.de> wrote:
->
-> transform existing documentation of maxbotix,mb1232 ultrasonic ranger
-> from text documentation format into yaml.
->
-> Changes in v2:
-> - removed description of reg property
-> - added a line:
->   additionalProperties: false
->
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> ---
->  .../bindings/iio/proximity/maxbotix,mb1232.txt     | 29 -----------
->  .../bindings/iio/proximity/maxbotix,mb1232.yaml    | 56 ++++++++++++++++++++++
->  2 files changed, 56 insertions(+), 29 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
->
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> deleted file mode 100644
-> index dd1058fbe9c3..000000000000
-> --- a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.txt
-> +++ /dev/null
-> @@ -1,29 +0,0 @@
-> -* MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
-> -  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
-> -  for ranging
-> -
-> -Required properties:
-> - - compatible:         "maxbotix,mb1202",
-> -                       "maxbotix,mb1212",
-> -                       "maxbotix,mb1222",
-> -                       "maxbotix,mb1232",
-> -                       "maxbotix,mb1242",
-> -                       "maxbotix,mb7040" or
-> -                       "maxbotix,mb7137"
-> -
-> - - reg:                        i2c address of the device, see also i2c/i2c.txt
-> -
-> -Optional properties:
-> - - interrupts:         Interrupt used to announce the preceding reading
-> -                       request has finished and that data is available.
-> -                       If no interrupt is specified the device driver
-> -                       falls back to wait a fixed amount of time until
-> -                       data can be retrieved.
-> -
-> -Example:
-> -proximity@70 {
-> -       compatible = "maxbotix,mb1232";
-> -       reg = <0x70>;
-> -       interrupt-parent = <&gpio2>;
-> -       interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-> new file mode 100644
-> index 000000000000..e2fb1f6d4dbe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/proximity/maxbotix,mb1232.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MaxBotix I2CXL-MaxSonar ultrasonic distance sensor
-> +
-> +maintainers:
-> +  - Andreas Klinger <ak@it-klinger.de>
-> +
-> +description: |
-> +  MaxBotix I2CXL-MaxSonar ultrasonic distance sensor of type  mb1202,
-> +  mb1212, mb1222, mb1232, mb1242, mb7040 or mb7137 using the i2c interface
-> +  for ranging
-> +
-> +  Specifications about the devices can be found at:
-> +  https://www.maxbotix.com/documents/I2CXL-MaxSonar-EZ_Datasheet.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - maxbotix,mb1202
-> +      - maxbotix,mb1212
-> +      - maxbotix,mb1222
-> +      - maxbotix,mb1232
-> +      - maxbotix,mb1242
-> +      - maxbotix,mb7040
-> +      - maxbotix,mb7137
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    description:
-> +      Interrupt used to announce the preceding reading request has finished
-> +      and that data is available.  If no interrupt is specified the device
-> +      driver falls back to wait a fixed amount of time until data can be
-> +      retrieved.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    proximity@70 {
+Hans Verkuil <hverkuil@xs4all.nl> wrote on Mon [2019-Oct-07 09:57:26 +0200]:
+> On 10/4/19 6:29 PM, Benoit Parrot wrote:
+> > For each queue we need to maintain resolutions, pixel format,
+> > bytesperline, sizeimage, colorspace, etc.
+> > 
+> > Instead of manually adding more entries in the vpe_q_data struct, it is
+> > better to just add a "struct v4l2_format" member and use that to store
+> > all needed information.
+> > 
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/platform/ti-vpe/vpe.c | 185 ++++++++++++++--------------
+> >  1 file changed, 91 insertions(+), 94 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+> > index d7f8eb901475..5b1e9908fff2 100644
+> > --- a/drivers/media/platform/ti-vpe/vpe.c
+> > +++ b/drivers/media/platform/ti-vpe/vpe.c
+> > @@ -319,14 +319,9 @@ static struct vpe_fmt vpe_formats[] = {
+> >   * there is one source queue and one destination queue for each m2m context.
+> >   */
+> >  struct vpe_q_data {
+> > -	unsigned int		width;				/* frame width */
+> > -	unsigned int		height;				/* frame height */
+> > -	unsigned int		nplanes;			/* Current number of planes */
+> > -	unsigned int		bytesperline[VPE_MAX_PLANES];	/* bytes per line in memory */
+> > -	enum v4l2_colorspace	colorspace;
+> > -	enum v4l2_field		field;				/* supported field value */
+> > +	/* current v4l2 format info */
+> > +	struct v4l2_format	format;
+> 
+> Wouldn't it make more sense to use struct v4l2_pix_format_mplane? That avoid having to
+> use the '.fmt.pix_mp' sequence every time you need to access it.
 
-Fails to build with 'make dt_binding_check':
+Maybe, I chose "struct v4l2_format" because that is the parameter type used
+in all related IOCTL. But I guess I can change it, if it make the code
+cleaner :).
 
-Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dts:20.11-24:
-Warning (reg_format): /example-0/proximity@70:reg: property has
-invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
-Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dt.yaml:
-Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dt.yaml:
-Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.example.dt.yaml:
-Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+Benoit
 
-You have to put this under an i2c bus node.
-
-i2c {
-  #address-cells = <1>;
-  #size-cells = <0>;
-  ...
-};
-
-> +      compatible = "maxbotix,mb1232";
-> +      reg = <0x70>;
-> +      interrupt-parent = <&gpio2>;
-> +      interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-> +    };
-> --
-> 2.11.0
+> 
+> Regards,
+> 
+> 	Hans
+> 
