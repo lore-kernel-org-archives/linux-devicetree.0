@@ -1,56 +1,60 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH] arm64: dts: rockchip: Enable nanopi4 HDMI audio
-Date: Mon,  7 Oct 2019 12:33:25 +0100
-Message-ID: <7fe6e94e4b9f5986f19f2637b7b716f0cb54de1b.1570444701.git.robin.murphy@arm.com>
+From: "Shenhar, Talel" <talel@amazon.com>
+Subject: Re: [UNVERIFIED SENDER] Re: [PATCH v4 2/2] soc: amazon: al-pos-edac:
+ Introduce Amazon's Annapurna Labs POS EDAC driver
+Date: Mon, 7 Oct 2019 14:34:03 +0300
+Message-ID: <6815f9e9-f250-bd62-33b3-e3ab30aa47e2@amazon.com>
+References: <1570102361-11696-1-git-send-email-talel@amazon.com>
+ <1570102361-11696-3-git-send-email-talel@amazon.com>
+ <86k19gztil.wl-maz@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: heiko@sntech.de
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <86k19gztil.wl-maz@kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <maz@kernel.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, bp@alien8.de, mchehab@kernel.org, james.morse@arm.com, davem@davemloft.net, gregkh@linuxfoundation.org, paulmck@linux.ibm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, dwmw@amazon.co.uk, benh@kernel.crashing.org, hhhawa@amazon.com, ronenk@amazon.com, jonnyc@amazon.com, hanochu@amazon.com, amirkl@amazon.com, barakw@amazon.com
 List-Id: devicetree@vger.kernel.org
 
-All the nanopi4 boards have HDMI, so let them make noise on it.
+thanks for the review
 
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On 10/7/2019 2:26 PM, Marc Zyngier wrote:
+> On Thu, 03 Oct 2019 12:32:41 +0100,
+> Talel Shenhar <talel@amazon.com> wrote:
+>> +	log1 = readl(al_pos->mmio_base + AL_POS_ERROR_LOG_1);
+> I already commented on the misuse of strict accesses. Unless you can
+> explain and document *why* you need the extra ordering, please use
+> relaxed accesses.
+agreeing on relaxed, shall be part of v5
+>
+>> +
+>> +	if (al_pos->irq > 0) {
+>> +		ret = devm_request_irq(&pdev->dev,
+>> +				       al_pos->irq,
+>> +				       al_pos_irq_handler,
+>> +				       0,
+>> +				       pdev->name,
+>> +				       pdev);
+>> +		if (ret != 0) {
+>> +			dev_err(&pdev->dev,
+>> +				"failed to register to irq %d (%d)\n",
+>> +				al_pos->irq, ret);
+>> +			goto err_remove_edac;
+> Would it be worth continuing without interrupts? After all, the
+> interrupt seems to be an optional part of the device...
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
-index 170f7ed6d773..b788ae4f47f0 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
-@@ -184,6 +184,10 @@
- 	status = "okay";
- };
- 
-+&hdmi_sound {
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	clock-frequency = <400000>;
- 	i2c-scl-rising-time-ns = <160>;
-@@ -459,6 +463,10 @@
- 	status = "okay";
- };
- 
-+&i2s2 {
-+	status = "okay";
-+};
-+
- &io_domains {
- 	bt656-supply = <&vcc_1v8>;
- 	audio-supply = <&vcca1v8_codec>;
--- 
-2.21.0.dirty
+indeed interrupts are optional, however, this is optional for some of 
+the systems.
+
+in some cases (and some systems), this error event is critical and 
+should cause fast handling. for those, we define the interrupts.
+
+so bottom line, i would like to keep this error in case of error in 
+interrupt.
+
+>
+> Thanks,
+>
+> 	M.
+>
