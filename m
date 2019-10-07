@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 3/8] iio: adc: max1027: Reset the device at probe time
-Date: Mon,  7 Oct 2019 15:26:52 +0200
-Message-ID: <20191007132657.4190-4-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 1/8] iio: adc: max1027: Add debugfs register read support
+Date: Mon,  7 Oct 2019 15:26:50 +0200
+Message-ID: <20191007132657.4190-2-miquel.raynal@bootlin.com>
 References: <20191007132657.4190-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,33 +12,36 @@ To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-
 Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-All the registers are configured by the driver, let's reset the chip
-at probe time, avoiding any conflict with a possible earlier
-configuration.
+Until now, only write operations were supported. Force two bytes read
+operation when reading, which should fit most of the development
+purposes. Of course, extended operations like buffered reads on
+multiple channels or even temperature + voltage reads will not be read
+entirely. Usually, just starting a new operation will work but in any
+case a software reset (done through the debufs interface too) will
+return the device in a usable state.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/iio/adc/max1027.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/iio/adc/max1027.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-index 823223b77a70..f9b473ee6711 100644
+index 214883458582..6cdfe9ef73fc 100644
 --- a/drivers/iio/adc/max1027.c
 +++ b/drivers/iio/adc/max1027.c
-@@ -466,6 +466,14 @@ static int max1027_probe(struct spi_device *spi)
- 		}
- 	}
+@@ -309,8 +309,11 @@ static int max1027_debugfs_reg_access(struct iio_dev *indio_dev,
+ 	struct max1027_state *st = iio_priv(indio_dev);
+ 	u8 *val = (u8 *)st->buffer;
  
-+	/* Internal reset */
-+	st->reg = MAX1027_RST_REG;
-+	ret = spi_write(st->spi, &st->reg, 1);
-+	if (ret < 0) {
-+		dev_err(&indio_dev->dev, "Failed to reset the ADC\n");
+-	if (readval != NULL)
+-		return -EINVAL;
++	if (readval) {
++		int ret = spi_read(st->spi, val, 2);
++		*readval = be16_to_cpu(st->buffer[0]);
 +		return ret;
 +	}
-+
- 	/* Disable averaging */
- 	st->reg = MAX1027_AVG_REG;
- 	ret = spi_write(st->spi, &st->reg, 1);
+ 
+ 	*val = (u8)writeval;
+ 	return spi_write(st->spi, val, 1);
 -- 
 2.20.1
