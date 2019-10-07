@@ -1,60 +1,145 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [RFCv1 4/5] arm64: dts: meson: Add missing regulator linked to
- VCCV5 regulator to VDDIO_C/TF_IO
-Date: Mon, 7 Oct 2019 21:24:41 +0530
-Message-ID: <CANAwSgQBMzkdnuHc8_hFx0+Es2PWmCwgeqykCTieZ3BtTK1W7A@mail.gmail.com>
-References: <20191007131649.1768-1-linux.amoon@gmail.com> <20191007131649.1768-5-linux.amoon@gmail.com>
- <a6daf5e5-fadf-ca72-fc7b-1789abaab605@baylibre.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH V6 3/3] mmc: mmci: sdmmc: add busy_complete callback
+Date: Mon, 7 Oct 2019 17:55:43 +0200
+Message-ID: <6a45203b-66c8-25d6-55d6-042778695c8d@st.com>
+References: <20190905122112.29672-1-ludovic.Barre@st.com>
+ <20190905122112.29672-4-ludovic.Barre@st.com>
+ <CAPDyKFqbEzYpNty8u_QuSDfLgPoiTMZS2Bx4GbzfX-Y9TqXJTg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a6daf5e5-fadf-ca72-fc7b-1789abaab605@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPDyKFqbEzYpNty8u_QuSDfLgPoiTMZS2Bx4GbzfX-Y9TqXJTg@mail.gmail.com>
+Content-Language: fr
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: DTML <devicetree@vger.kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
-
-On Mon, 7 Oct 2019 at 19:51, Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> On 07/10/2019 15:16, Anand Moon wrote:
-> > As per schematics add missing VCCV5 power supply to VDDIO_C/TF_IO
-> > regulator. Also add TF_3V3N_1V8_EN signal name to gpio pin.
-> >
-> > Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
-> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > Cc: Jerome Brunet <jbrunet@baylibre.com>
-> > Cc: Neil Armstrong <narmstrong@baylibre.com>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> > index 6bd23a1e7e1d..5daf176452f7 100644
-> > --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> > +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> > @@ -66,11 +66,14 @@
-> >               regulator-min-microvolt = <1800000>;
-> >               regulator-max-microvolt = <3300000>;
-> >
-> > +             /* TF_3V3N_1V8_EN */
-> >               gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
-> >               gpios-states = <0>;
-> >
-> >               states = <3300000 0>,
-> >                        <1800000 1>;
-> > +             /* U16 RT9179GB */
-> > +             vin-supply = <&vcc_5v>;
-> >       };
-> >
-> >       flash_1v8: regulator-flash_1v8 {
-> >
->
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-
-Thanks,
-
-Best Regards
--Anand
+aGkgVWxmCgpMZSAxMC80LzE5IMOgIDk6MzEgQU0sIFVsZiBIYW5zc29uIGEgw6ljcml0wqA6Cj4g
+T24gVGh1LCA1IFNlcCAyMDE5IGF0IDE0OjIyLCBMdWRvdmljIEJhcnJlIDxsdWRvdmljLkJhcnJl
+QHN0LmNvbT4gd3JvdGU6Cj4+Cj4+IEZyb206IEx1ZG92aWMgQmFycmUgPGx1ZG92aWMuYmFycmVA
+c3QuY29tPgo+Pgo+PiBUaGlzIHBhdGNoIGFkZHMgYSBzcGVjaWZpYyBidXN5X2NvbXBsZXRlIGNh
+bGxiYWNrIGZvciBzZG1tYyB2YXJpYW50Lgo+Pgo+PiBzZG1tYyBoYXMgMiBzdGF0dXMgZmxhZ3M6
+Cj4+IC1idXN5ZDA6IFRoaXMgaXMgYSBoYXJkd2FyZSBzdGF0dXMgZmxhZyAoaW52ZXJ0ZWQgdmFs
+dWUgb2YgZDAgbGluZSkuCj4+IGl0IGRvZXMgbm90IGdlbmVyYXRlIGFuIGludGVycnVwdC4KPj4g
+LWJ1c3lkMGVuZDogVGhpcyBpbmRpY2F0ZXMgb25seSBlbmQgb2YgYnVzeSBmb2xsb3dpbmcgYSBD
+TUQgcmVzcG9uc2UuCj4+IE9uIGJ1c3kgdG8gTm90IGJ1c3kgY2hhbmdlcywgYW4gaW50ZXJydXB0
+IGlzIGdlbmVyYXRlZCAoaWYgdW5tYXNrKQo+PiBhbmQgQlVTWUQwRU5EIHN0YXR1cyBmbGFnIGlz
+IHNldC4gU3RhdHVzIGZsYWcgaXMgY2xlYXJlZCBieSB3cml0aW5nCj4+IGNvcnJlc3BvbmRpbmcg
+aW50ZXJydXB0IGNsZWFyIGJpdCBpbiBNTUNJQ0xFQVIuCj4+Cj4+IFRoZSBsZWdhY3kgYnVzeSBj
+b21wbGV0aW9uIG1vbml0b3JzIHN0ZXAgYnkgc3RlcCB0aGUgYnVzeSBwcm9ncmVzc2lvbgo+PiBz
+dGFydC9pbi1wcm9ncmVzcy9lbmQuIE9uIHNkbW1jIHZhcmlhbnQsIHRoZSBtb25pdG9yaW5nIG9m
+IGJ1c3kgc3RlcHMKPj4gaXMgZGlmZmljdWx0IGFuZCBub3QgYWRhcHRlZCAodGhlIHNvZnR3YXJl
+IGNhbiBtaXNzIGEgc3RlcCBhbmQgbG9ja3MKPj4gdGhlIG1vbml0b3JpbmcpLCB0aGUgc2RtbWMg
+aGFzIGp1c3QgbmVlZCB0byB3YWl0IHRoZSBidXN5ZDBlbmQgYml0Cj4+IHdpdGhvdXQgbW9uaXRv
+cmluZyBhbGwgdGhlIGNoYW5nZXMuCj4gCj4gVG8gbWUgaXQncyBhIGJpdCBvZiB0aGUgb3Bwb3Np
+dGUgYXMgeW91IGRlc2NyaWJlIGl0IGFib3ZlLiBUaGUgbGVnYWN5Cj4gdmFyaWFudHMgc3VmZmVy
+cyBmcm9tIGEgc29tZXdoYXQgYnJva2VuIEhXIHRoYXQgZ2VuZXJhdGVzIGFsc28gYQo+ICJidXN5
+c3RhcnQiIElSUS4gRm9yIHRoZSBzdG0zMl9zZG1tYyB2YXJpYW50LCBpdCdzIG1vcmUgY2xlYW4v
+Y29ycmVjdAo+IGFzIG9ubHkgYSBidXN5ZW5kIElSUSBpcyByYWlzZWQuCj4gCj4gTWF5YmUgeW91
+IGNhbiByZXBocmFzZSB0aGUgYWJvdmUgYSBiaXQgdG8gbWFrZSB0aGF0IG1vcmUgY2xlYXIgc29t
+ZWhvdy4KClllcywgSSB3aWxsIHJlcGhyYXNlLgogICAgIFRoZSBsZWdhY3kgYnVzeSBjb21wbGV0
+aW9uIGhhcyBubyBkZWRpY2F0ZWQgaW50ZXJydXB0IGZvciB0aGUgZW5kCiAgICAgb2YgYnVzeSwg
+c28gaXQncyBtdXN0IG1vbml0b3Igc3RlcCBieSBzdGVwIHRoZSBidXN5IHByb2dyZXNzaW9uLgog
+ICAgIE9uIHNkbW1jIHZhcmlhbnQsIHRoaXMgcHJvY2VkdXJlIGlzIG5vdCBuZWVkZWQsIGl0J3Mg
+anVzdCBuZWVkCiAgICAgdG8gd2FpdCB0aGUgYnVzeWQwZW5kIHN0YXR1cy4KCj4gCj4+Cj4+IFNp
+Z25lZC1vZmYtYnk6IEx1ZG92aWMgQmFycmUgPGx1ZG92aWMuYmFycmVAc3QuY29tPgo+PiAtLS0K
+Pj4gICBkcml2ZXJzL21tYy9ob3N0L21tY2kuYyAgICAgICAgICAgICB8ICAzICsrKwo+PiAgIGRy
+aXZlcnMvbW1jL2hvc3QvbW1jaS5oICAgICAgICAgICAgIHwgIDEgKwo+PiAgIGRyaXZlcnMvbW1j
+L2hvc3QvbW1jaV9zdG0zMl9zZG1tYy5jIHwgMzggKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysKPj4gICAzIGZpbGVzIGNoYW5nZWQsIDQyIGluc2VydGlvbnMoKykKPj4KPj4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvbW1jL2hvc3QvbW1jaS5jIGIvZHJpdmVycy9tbWMvaG9zdC9tbWNpLmMKPj4g
+aW5kZXggZTIwMTY0ZjQzNTRkLi5hNjY2ZDgyNmRiYmQgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMv
+bW1jL2hvc3QvbW1jaS5jCj4+ICsrKyBiL2RyaXZlcnMvbW1jL2hvc3QvbW1jaS5jCj4+IEBAIC0y
+NjAsNiArMjYwLDkgQEAgc3RhdGljIHN0cnVjdCB2YXJpYW50X2RhdGEgdmFyaWFudF9zdG0zMl9z
+ZG1tYyA9IHsKPj4gICAgICAgICAgLmRhdGFsZW5ndGhfYml0cyAgICAgICAgPSAyNSwKPj4gICAg
+ICAgICAgLmRhdGFjdHJsX2Jsb2Nrc3ogICAgICAgPSAxNCwKPj4gICAgICAgICAgLnN0bTMyX2lk
+bWFic2l6ZV9tYXNrICAgPSBHRU5NQVNLKDEyLCA1KSwKPj4gKyAgICAgICAuYnVzeV90aW1lb3V0
+ICAgICAgICAgICA9IHRydWUsCj4+ICsgICAgICAgLmJ1c3lfZGV0ZWN0X2ZsYWcgICAgICAgPSBN
+Q0lfU1RNMzJfQlVTWUQwLAo+PiArICAgICAgIC5idXN5X2RldGVjdF9tYXNrICAgICAgID0gTUNJ
+X1NUTTMyX0JVU1lEMEVORE1BU0ssCj4+ICAgICAgICAgIC5pbml0ICAgICAgICAgICAgICAgICAg
+ID0gc2RtbWNfdmFyaWFudF9pbml0LAo+PiAgIH07Cj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L21tYy9ob3N0L21tY2kuaCBiL2RyaXZlcnMvbW1jL2hvc3QvbW1jaS5oCj4+IGluZGV4IDczM2Y5
+YTAzNWIwNi4uODQxYzUyODFiZWI1IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL21tYy9ob3N0L21t
+Y2kuaAo+PiArKysgYi9kcml2ZXJzL21tYy9ob3N0L21tY2kuaAo+PiBAQCAtMTY0LDYgKzE2NCw3
+IEBACj4+ICAgI2RlZmluZSBNQ0lfU1RfQ0FSREJVU1kgICAgICAgICAgICAgICAgKDEgPDwgMjQp
+Cj4+ICAgLyogRXh0ZW5kZWQgc3RhdHVzIGJpdHMgZm9yIHRoZSBTVE0zMiB2YXJpYW50cyAqLwo+
+PiAgICNkZWZpbmUgTUNJX1NUTTMyX0JVU1lEMCAgICAgICBCSVQoMjApCj4+ICsjZGVmaW5lIE1D
+SV9TVE0zMl9CVVNZRDBFTkQgICAgQklUKDIxKQo+Pgo+PiAgICNkZWZpbmUgTU1DSUNMRUFSICAg
+ICAgICAgICAgICAweDAzOAo+PiAgICNkZWZpbmUgTUNJX0NNRENSQ0ZBSUxDTFIgICAgICAoMSA8
+PCAwKQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tbWMvaG9zdC9tbWNpX3N0bTMyX3NkbW1jLmMg
+Yi9kcml2ZXJzL21tYy9ob3N0L21tY2lfc3RtMzJfc2RtbWMuYwo+PiBpbmRleCA4ZTgzYWU2OTIw
+YWUuLmJiNTQ5OWNjOWU4MSAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9tbWMvaG9zdC9tbWNpX3N0
+bTMyX3NkbW1jLmMKPj4gKysrIGIvZHJpdmVycy9tbWMvaG9zdC9tbWNpX3N0bTMyX3NkbW1jLmMK
+Pj4gQEAgLTI4Miw2ICsyODIsNDMgQEAgc3RhdGljIHUzMiBzZG1tY19nZXRfZGN0cmxfY2ZnKHN0
+cnVjdCBtbWNpX2hvc3QgKmhvc3QpCj4+ICAgICAgICAgIHJldHVybiBkYXRhY3RybDsKPj4gICB9
+Cj4+Cj4+ICtib29sIHNkbW1jX2J1c3lfY29tcGxldGUoc3RydWN0IG1tY2lfaG9zdCAqaG9zdCwg
+dTMyIHN0YXR1cywgdTMyIGVycl9tc2spCj4+ICt7Cj4+ICsgICAgICAgdm9pZCBfX2lvbWVtICpi
+YXNlID0gaG9zdC0+YmFzZTsKPj4gKyAgICAgICB1MzIgYnVzeV9kMCwgYnVzeV9kMGVuZCwgbWFz
+azsKPj4gKwo+PiArICAgICAgIG1hc2sgPSByZWFkbF9yZWxheGVkKGJhc2UgKyBNTUNJTUFTSzAp
+Owo+PiArICAgICAgIGJ1c3lfZDBlbmQgPSByZWFkbF9yZWxheGVkKGJhc2UgKyBNTUNJU1RBVFVT
+KSAmIE1DSV9TVE0zMl9CVVNZRDBFTkQ7Cj4+ICsgICAgICAgYnVzeV9kMCA9IHJlYWRsX3JlbGF4
+ZWQoYmFzZSArIE1NQ0lTVEFUVVMpICYgTUNJX1NUTTMyX0JVU1lEMDsKPiAKPiBJIGhhdmUgZm91
+bmQgc29tZSBwb3RlbnRpYWwgb3B0aW1pemF0aW9ucywgYnV0IEkgbGVhdmUgaXQgdG8geW91IHRv
+Cj4gZGVjaWRlIHdoYXQgdG8gZG8gd2l0aCBteSBjb21tZW50cy4KPiAKPiAqKSBZb3UgY291bGQg
+YXZvaWQgdG8gcmVhZCByZWdpc3RlcnMgdXBmcm9udCwgaWYgdGhhdCBiZSBza2lwcGVkCj4gYmVj
+YXVzZSBvZiBjaGVja2luZyBhIGtub3duIGVycm9yIGNvbmRpdGlvbi4gRm9yIGV4YW1wbGU6Cj4g
+ImlmICghaG9zdC0+YnVzeV9zdGF0dXMgJiYgIShzdGF0dXMgJiBlcnJfbXNrKSkiIC0gd291bGQg
+dGVsbCBpZiBpdCdzCj4gZXZlbiB3b3J0aCBjb25zaWRlcmluZyB0byB1bm1hc2sgdGhlIGJ1c3ll
+bmQgSVJRLgoKWWVzLCBpdCdzIGEgcG9zc2liaWxpdHksIGJ1dCBJIHByZWZlciB0byBrZWVwIHJl
+YWRpbmcgdGhlIGJpdHMKYnVzeV9kb2VuZCBhbmQgYnVzeV9kMC4gVGhpcyBpcyBub3QgdGhlIG1v
+c3Qgb3B0aW1pemVkIHdheSwgYnV0IGl0IGlzCmVhc2llciB0byB1bmRlcnN0YW5kIHRoZSBjb21w
+bGV0aW9uJ3MgcmVhc29uIChiYXNlZCBvbiBoYXJkd2FyZSBiaXQpLgpPbiB0aGUgb3RoZXIgaGFu
+ZCwgSSB3b3VsZCBiZSBpbmRlcGVuZGVudCBvZiBhbnkgY2hhbmdlIGFib3V0IHN0YXR1cyBvciAK
+YnVzeV9zdGF0dXMuCgo+IAo+ICoqKSBSZWFkaW5nIE1NQ0lTVEFUVVMgdHdpY2UgaW4gcm93IHNl
+ZW1zIGEgYml0IHNpbGx5LCB3aHkgbm90IHJlYWQgaXQKPiBvbmNlIGFuZCBzdG9yZSBpdHMgdmFs
+dWUgaW4gYSBsb2NhbCB2YXJpYWJsZSB0aGF0IHlvdSBvcGVyYXRlIHVwb24KPiBpbnN0ZWFkLgo+
+IAoKeWVzLCBJIHdpbGwgc3RvcmUgTU1DSVNUQVRVUyBpbiBsb2NhbCB2YXJpYWJsZSAodGh4KS4K
+Cj4+ICsKPj4gKyAgICAgICAvKiBjb21wbGV0ZSBpZiB0aGVyZSBpcyBhbiBlcnJvciBvciBidXN5
+X2QwZW5kICovCj4+ICsgICAgICAgaWYgKChzdGF0dXMgJiBlcnJfbXNrKSB8fCBidXN5X2QwZW5k
+KQo+PiArICAgICAgICAgICAgICAgZ290byBjb21wbGV0ZTsKPiAKPiAgRnJvbSBoZXJlLCB5b3Ug
+bWF5IGVuZCB1cCB3cml0aW5nIHRvIE1NQ0lNQVNLMCBhbmQgTU1DSUNMRUFSLCBldmVuIGlmCj4g
+eW91IGRpZG4ndCB1bm1hc2sgdGhlIGJ1c3llbmQgSVJRIGluIGZpcnN0IHBsYWNlLgoKSSB3aWxs
+IGFkZCB0aGlzIGNvbmRpdGlvbiBpbnRvCmNvbXBsZXRlOgoJaWYgKGhvc3QtPmJ1c3lfc3RhdHVz
+KSB7CgkJLi4uCgl9CglyZXR1cm4gdHJ1ZTsKfQoKPiAKPj4gKwo+PiArICAgICAgIC8qCj4+ICsg
+ICAgICAgICogT24gcmVzcG9uc2UgdGhlIGJ1c3kgc2lnbmFsaW5nIGlzIHJlZmxlY3RlZCBpbiB0
+aGUgQlVTWUQwIGZsYWcuCj4+ICsgICAgICAgICogaWYgYnVzeV9kMCBpcyBpbi1wcm9ncmVzcyB3
+ZSBtdXN0IGFjdGl2YXRlIGJ1c3lkMGVuZCBpbnRlcnJ1cHQKPj4gKyAgICAgICAgKiB0byB3YWl0
+IHRoaXMgY29tcGxldGlvbi4gRWxzZSB0aGlzIHJlcXVlc3QgaGFzIG5vIGJ1c3kgc3RlcC4KPj4g
+KyAgICAgICAgKi8KPj4gKyAgICAgICBpZiAoYnVzeV9kMCkgewo+PiArICAgICAgICAgICAgICAg
+aWYgKCFob3N0LT5idXN5X3N0YXR1cykgewo+PiArICAgICAgICAgICAgICAgICAgICAgICB3cml0
+ZWxfcmVsYXhlZChtYXNrIHwgaG9zdC0+dmFyaWFudC0+YnVzeV9kZXRlY3RfbWFzaywKPj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYmFzZSArIE1NQ0lNQVNLMCk7Cj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgIGhvc3QtPmJ1c3lfc3RhdHVzID0gc3RhdHVzICYKPj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAoTUNJX0NNRFNFTlQgfCBNQ0lfQ01EUkVT
+UEVORCk7Cj4+ICsgICAgICAgICAgICAgICB9Cj4+ICsgICAgICAgICAgICAgICByZXR1cm4gZmFs
+c2U7Cj4+ICsgICAgICAgfQo+PiArCj4+ICtjb21wbGV0ZToKPj4gKyAgICAgICB3cml0ZWxfcmVs
+YXhlZChtYXNrICYgfmhvc3QtPnZhcmlhbnQtPmJ1c3lfZGV0ZWN0X21hc2ssCj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgYmFzZSArIE1NQ0lNQVNLMCk7Cj4+ICsgICAgICAgd3JpdGVsX3JlbGF4
+ZWQoaG9zdC0+dmFyaWFudC0+YnVzeV9kZXRlY3RfbWFzaywgYmFzZSArIE1NQ0lDTEVBUik7Cj4+
+ICsgICAgICAgaG9zdC0+YnVzeV9zdGF0dXMgPSAwOwo+PiArCj4+ICsgICAgICAgcmV0dXJuIHRy
+dWU7Cj4+ICt9Cj4+ICsKPj4gICBzdGF0aWMgc3RydWN0IG1tY2lfaG9zdF9vcHMgc2RtbWNfdmFy
+aWFudF9vcHMgPSB7Cj4+ICAgICAgICAgIC52YWxpZGF0ZV9kYXRhID0gc2RtbWNfaWRtYV92YWxp
+ZGF0ZV9kYXRhLAo+PiAgICAgICAgICAucHJlcF9kYXRhID0gc2RtbWNfaWRtYV9wcmVwX2RhdGEs
+Cj4+IEBAIC0yOTIsNiArMzI5LDcgQEAgc3RhdGljIHN0cnVjdCBtbWNpX2hvc3Rfb3BzIHNkbW1j
+X3ZhcmlhbnRfb3BzID0gewo+PiAgICAgICAgICAuZG1hX2ZpbmFsaXplID0gc2RtbWNfaWRtYV9m
+aW5hbGl6ZSwKPj4gICAgICAgICAgLnNldF9jbGtyZWcgPSBtbWNpX3NkbW1jX3NldF9jbGtyZWcs
+Cj4+ICAgICAgICAgIC5zZXRfcHdycmVnID0gbW1jaV9zZG1tY19zZXRfcHdycmVnLAo+PiArICAg
+ICAgIC5idXN5X2NvbXBsZXRlID0gc2RtbWNfYnVzeV9jb21wbGV0ZSwKPj4gICB9Owo+Pgo+PiAg
+IHZvaWQgc2RtbWNfdmFyaWFudF9pbml0KHN0cnVjdCBtbWNpX2hvc3QgKmhvc3QpCj4+IC0tCj4+
+IDIuMTcuMQo+Pgo+IAo+IE90aGVyIHRoYW4gdGhlIGNvbW1lbnRzIGFib3ZlLCB3aGljaCBhcmUg
+cGxhaW4gc3VnZ2VzdGlvbnMgZm9yCj4gb3B0aW1pemF0aW9ucywgdGhlIGNvZGUgbG9va3MgY29y
+cmVjdCB0byBtZSEKCkkgd2lsbCBzZW5kIGEgbmV4dCBzZXJpZXMgc29vbiwgdGh4IGZvciByZXZp
+ZXcuCgo+IAo+IEtpbmQgcmVnYXJkcwo+IFVmZmUKPiAKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
