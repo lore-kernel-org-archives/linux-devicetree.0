@@ -1,68 +1,158 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH] media: dt-bindings: media: Fixup Allwinner A10 CSI
- binding
-Date: Mon, 7 Oct 2019 12:05:35 +0200
-Message-ID: <20191007100535.6gp6b3h6ueyeln3b@gilmour>
-References: <b47ec7088aa4b07458519ab151de92df552a9302.1570101510.git.amit.kucheria@linaro.org>
- <20191003115154.6f2jgj3dnqsved2y@gilmour>
- <CAHLCerNoLyQ-e70=1VMPO_J_amA+-2vtHwfoUabo4dhUWj-H0A@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH V4 00/10] ARM: Add minimal Raspberry Pi 4 support
+Date: Mon, 7 Oct 2019 12:07:56 +0200
+Message-ID: <fd251f79-0fd8-5e5b-c3de-e87bdeb8299a@gmail.com>
+References: <1570375708-26965-1-git-send-email-wahrenst@gmx.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vtzhpa6icwubspzk"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHLCerNoLyQ-e70=1VMPO_J_amA+-2vtHwfoUabo4dhUWj-H0A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1570375708-26965-1-git-send-email-wahrenst@gmx.net>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Wahren <wahrenst@gmx.net>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
+Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-bluetooth@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---vtzhpa6icwubspzk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Sat, Oct 05, 2019 at 04:15:57PM +0530, Amit Kucheria wrote:
-> On Thu, Oct 3, 2019 at 5:22 PM Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > Hi,
-> >
-> > On Thu, Oct 03, 2019 at 04:52:24PM +0530, Amit Kucheria wrote:
-> > > This new binding fails dt_binding_check due to a typo. Fix it up.
-> > >
-> > > linux.git/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml: $id: path/filename 'arm/allwinner,sun4i-a10-csi.yaml' doesn't match actual filename
-> > > linux.git/Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts' failed
-> > > make[2]: *** [Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.example.dts] Error 1
-> > > make[2]: *** Waiting for unfinished jobs....
-> > > linux.git/Makefile:1284: recipe for target 'dt_binding_check' failed
-> > > make[1]: *** [dt_binding_check] Error 2
-> > >
-> > > Fixes: c5e8f4ccd7750 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
-> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> >
-> > Thanks for your patch.
-> >
-> > It has already been submitted though:
-> > https://lore.kernel.org/linux-arm-kernel/1568808060-17516-1-git-send-email-pragnesh.patel@sifive.com/
-> >
-> > I'm not sure why it hasn't been applied yet though :/
->
-> Perhaps a Fixes tag will allow more attention to it?
+On 06/10/2019 17:28, Stefan Wahren wrote:
+> This series adds minimal support for the new Raspberry Pi 4, so we are able
+> to login via debug UART.
+> 
+> Patch 1:     Bluetooth driver fix
+> Patch 2-3:   Fix some DT schema warnings
+> Patch 4-5:   Prepare DTS for the new SoC BMC2711
+> Patch 6-9:   Add Raspberry Pi 4 DTS support
+> Patch 10:    Update MAINTAINERS
+> 
+> Unfortunately the Raspberry Pi Foundation didn't released a
+> peripheral documentation for the new SoC yet. So we only have a preliminary
+> datasheet [1] and reduced schematics [2].
+> 
+> Known issues:
+> Since Linux 5.3-rc1 DMA doesn't work properly on that platform.
+> Nicolas Saenz Julienne investigates on that issue. As a temporary workaround
+> i reverted the following patch to test this series:
+> 
+> 79a98672 "dma-mapping: remove dma_max_pfn"
+> 7559d612 "mmc: core: let the dma map ops handle bouncing"
+> 
 
-I've added a fixes tag and merged it through the sunxi tree.
+Just for reference, the patches from Nicolas are queued for v5.5 inclusion, so
+it is a better basis to test using his series:
+https://patchwork.kernel.org/cover/11141719/
 
-Sorry for the time it took, and thanks for sending that fix!
-Maxime
+Regards,
+Matthias
 
---vtzhpa6icwubspzk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZsN7wAKCRDj7w1vZxhR
-xZuhAQCdgJicTIV+SZaFXhQJ8O/6nn4LmVV2y3ElJZkaqAR2wgEAqJe2O+Nq++LE
-h2S1IrtaQMzZpcMjzksWn8n5JRZYSQA=
-=4Pja
------END PGP SIGNATURE-----
-
---vtzhpa6icwubspzk--
+> Changes in V4:
+> - add Rob's Reviewed-by
+> - enable ZONE_DMA for ARCH_BCM2835
+> - fix spi reference in bcm2711.dtsi
+> - fix bluetooth section in RPi 4 dts
+> - drop "always-on" for armv8-timer
+> - add necessary Bluetooth driver fix
+> - add arm64 dts link
+> - additional comments to the dts files as requested by Florian
+> 
+> Changes in V3:
+> - rebased series
+> - add Reviewed-by
+> - enable ARM_GIC for ARCH_BCM2835 on arm64 too
+> - configure i2c pull-up in bcm2711.dtsi
+> - move i2c2 to bcm2835-common.dtsi
+> - add missing compatibles to DT schema as suggested by Rob
+> - fix DT schema warnings in dtsi files
+> - replace brcm pintrl with generic pinctrl as suggested by Linus
+> - make dma_zone_size depend on CONFIG_ZONE_DMA as suggested by Matthias
+> 
+> Changes in V2:
+> - use separate board file for BCM2711
+> - enable ARM_GIC for ARCH_BCM2835
+> - add Acked-by and Reviewed-by
+> - fix arm-pmu and timer nodes for BCM2711 reported by Marc Zyngier
+> - enable HDMI at board level
+> - move HDMI and pixelvalve into bcm2835-common.dtsi as suggested by Eric Anholt
+> - fix DWC2 probing warning by setting USB role to peripheral
+> - fix order of node references in bcm2711.dtsi
+> - disable I2C clock stretching quirk for BCM2711
+> - mark PLLD_PER as critical clock
+> - make PLLH clock unavailable on BCM2711
+> - fix compile warning in clk-bcm2835 for arm64
+> 
+> Changes since RFC:
+> - change BCM2838 -> BCM2711 as discussed in RFC
+> - update MAINTAINERS accordingly
+> - drop "spi: bcm2835: enable shared interrupt support" from series
+> - squash all pinctrl-bcm2835 changes into one patch
+> - introduce SoC specific clock registration as suggested by Florian
+> - fix watchdog probing for Raspberry Pi 4
+> - convert brcm,bcm2835.txt to json-schema
+> - move VC4 node to bcm2835-common.dtsi
+> - fallback to legacy pull config for Raspberry Pi 4
+> - revert unintended change of mailbox in bcm283x.dtsi
+> - add reference for arm64
+> 
+> [1] - https://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2711/rpi_DATA_2711_1p0_preliminary.pdf
+> [2] - https://www.raspberrypi.org/documentation/hardware/raspberrypi/schematics/rpi_SCH_4b_4p0_reduced.pdf
+> 
+> Stefan Wahren (10):
+>   bluetooth: hci_bcm: Fix RTS handling during startup
+>   ARM: dts: bcm283x: Remove simple-bus from fixed clocks
+>   ARM: dts: bcm283x: Remove brcm,bcm2835-pl011 compatible
+>   ARM: dts: bcm283x: Move BCM2835/6/7 specific to bcm2835-common.dtsi
+>   dt-bindings: arm: Convert BCM2835 board/soc bindings to json-schema
+>   dt-bindings: arm: bcm2835: Add Raspberry Pi 4 to DT schema
+>   ARM: bcm: Add support for BCM2711 SoC
+>   ARM: dts: Add minimal Raspberry Pi 4 support
+>   arm64: dts: broadcom: Add reference to RPi 4 B
+>   MAINTAINERS: Add BCM2711 to BCM2835 ARCH
+> 
+>  .../devicetree/bindings/arm/bcm/bcm2835.yaml       |  54 ++
+>  .../devicetree/bindings/arm/bcm/brcm,bcm2835.txt   |  67 --
+>  MAINTAINERS                                        |   3 +-
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/bcm2711-rpi-4-b.dts              | 123 +++
+>  arch/arm/boot/dts/bcm2711.dtsi                     | 844 +++++++++++++++++++++
+>  arch/arm/boot/dts/bcm2835-common.dtsi              | 194 +++++
+>  arch/arm/boot/dts/bcm2835-rpi.dtsi                 |   4 -
+>  arch/arm/boot/dts/bcm2835.dtsi                     |   1 +
+>  arch/arm/boot/dts/bcm2836.dtsi                     |   1 +
+>  arch/arm/boot/dts/bcm2837.dtsi                     |   1 +
+>  arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi  |   7 +
+>  arch/arm/boot/dts/bcm283x.dtsi                     | 190 +----
+>  arch/arm/mach-bcm/Kconfig                          |   4 +-
+>  arch/arm/mach-bcm/Makefile                         |   3 +-
+>  arch/arm/mach-bcm/bcm2711.c                        |  24 +
+>  arch/arm64/Kconfig.platforms                       |   5 +-
+>  arch/arm64/boot/dts/broadcom/Makefile              |   3 +-
+>  arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dts   |   2 +
+>  drivers/bluetooth/hci_bcm.c                        |   2 +
+>  20 files changed, 1272 insertions(+), 261 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/bcm/bcm2835.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+>  create mode 100644 arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+>  create mode 100644 arch/arm/boot/dts/bcm2711.dtsi
+>  create mode 100644 arch/arm/boot/dts/bcm2835-common.dtsi
+>  create mode 100644 arch/arm/boot/dts/bcm283x-rpi-usb-peripheral.dtsi
+>  create mode 100644 arch/arm/mach-bcm/bcm2711.c
+>  create mode 100644 arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dts
+> 
+> --
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
