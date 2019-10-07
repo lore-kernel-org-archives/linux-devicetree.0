@@ -1,47 +1,54 @@
-From: <Eugen.Hristev@microchip.com>
-Subject: Re: [PATCH 2/3] watchdog: sam9x60_wdt: introduce sam9x60 watchdog
- timer driver
-Date: Mon, 7 Oct 2019 14:17:07 +0000
-Message-ID: <f07d299f-574b-8f48-9412-c9a9b50ccd3a@microchip.com>
-References: <1570001371-8174-1-git-send-email-eugen.hristev@microchip.com>
- <1570001371-8174-2-git-send-email-eugen.hristev@microchip.com>
- <e58a3ab5-69bc-cad3-5faa-ed00ff7906c7@roeck-us.net>
- <ab7b6b45-5e6f-100d-51af-a82ac325d948@microchip.com>
- <a9adf20c-f730-a7e9-a826-59216c17f03d@roeck-us.net>
- <20191007131348.GH4254@piout.net>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [RFCv1 1/5] arm64: dts: meson: Add missing 5V_EN gpio signal for
+ VCC5V regulator
+Date: Mon, 7 Oct 2019 16:19:31 +0200
+Message-ID: <c99adf31-42df-c88e-40d4-1dc383c990b1@baylibre.com>
+References: <20191007131649.1768-1-linux.amoon@gmail.com>
+ <20191007131649.1768-2-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191007131348.GH4254@piout.net>
+In-Reply-To: <20191007131649.1768-2-linux.amoon@gmail.com>
 Content-Language: en-US
-Content-ID: <2CADD20031B0D44993430B4B4818B0D0@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com, linux@roeck-us.net
-Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, wim@linux-watchdog.org, robh+dt@kernel.org, Nicolas.Ferre@microchip.com
+To: Anand Moon <linux.amoon@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA3LjEwLjIwMTkgMTY6MTQsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KDQo+IA0K
-PiBPbiAwNy8xMC8yMDE5IDA1OjM2OjM4LTA3MDAsIEd1ZW50ZXIgUm9lY2sgd3JvdGU6DQo+PiBP
-biAxMC83LzE5IDEyOjU4IEFNLCBFdWdlbi5IcmlzdGV2QG1pY3JvY2hpcC5jb20gd3JvdGU6DQo+
-PiBbIC4uLiBdDQo+Pj4gSGVsbG8gR3VlbnRlciwNCj4+Pg0KPj4+IFRoYW5rIHlvdSBmb3IgdGhl
-IGZlZWRiYWNrLg0KPj4+IEFmdGVyIHJldmlld2luZyB0aGlzLCBjYW4geW91IHBsZWFzZSBndWlk
-ZSBtZSB0b3dhcmRzIG9uZSBvZiB0aGUNCj4+PiBwb3NzaWJsZSB0d28gZGlyZWN0aW9uczogbWVy
-Z2UgdGhpcyBkcml2ZXIgd2l0aCBzYW1hNWQ0X3dkdCAsIGFuZCBoYXZlIGENCj4+PiBzaW5nbGUg
-ZHJpdmVyIHdpdGggc3VwcG9ydCBmb3IgYm90aCBoYXJkd2FyZSBibG9ja3M7IG9yLCBoYXZlIHRo
-aXMNCj4+PiBkcml2ZXIgc2VwYXJhdGVseSAsIGFzIGluIHRoaXMgcGF0Y2ggc2VyaWVzPw0KPj4+
-DQo+Pg0KPj4gSSBub3RpY2VkIHRoZSBzaW1pbGFyaXRpZXMuIEkgZG9uJ3Qga25vdyBpZiBpdCBt
-YWtlcyBzZW5zZSB0byByZWNvbmNpbGUNCj4+IHRoZSB0d28gZHJpdmVyczsgaXQgc2VlbXMgdG8g
-bWUgdGhlIG5ldyBjaGlwIHVzZXMgdGhlIHNhbWUgYmFzaWMgY29yZSB3aXRoDQo+PiBlbmhhbmNl
-bWVudHMuIEluIGdlbmVyYWwsIEkgcHJlZmVyIGEgc2luZ2xlIGRyaXZlciwgYnV0IG9ubHkgaWYg
-dGhlIHJlc3VsdA0KPj4gZG9lc24ndCBlbmQgdXAgYmVpbmcgYW4gaWYvZWxzZSBtZXNzLiBVbHRp
-bWF0ZWx5LCBpdCBpcyByZWFsbHkgeW91ciBjYWxsDQo+PiB0byBtYWtlLg0KPj4NCj4gDQo+IE1v
-c3QgaWYgbm90IGFsbCB5b3VyIGNvbW1lbnRzIHdlcmUgYWxyZWFkeSBhZGRyZXNzZWQgaW4gdGhl
-IG90aGVyDQo+IGRyaXZlci4gVGhlIG1haW4gZGlmZmVyZW5jZSBpbiB0aGUgcmVnaXN0ZXIgaW50
-ZXJmYWNlIGlzIHRoZSBsb2NhdGlvbiBvZg0KPiB0aGUgY291bnRlciB0aGF0IG9ubHkgcmVhbGx5
-IGFmZmVjdHMgc2FtYTVkNF93ZHRfc2V0X3RpbWVvdXQgYW5kIHRoYXQNCj4gY291bGQgYmUgYWJz
-dHJhY3RlZCBhd2F5IGJ5IHVzaW5nIGEgZGlmZmVyZW50IHN0cnVjdCB3YXRjaGRvZ19vcHMuDQo+
-IEludGVycnVwdCBlbmFibGluZyBpcyBhbHNvIGRvbmUgZGlmZmVyZW50bHksIEkgZG9uJ3QgdGhp
-bmsgaXQgaGFzIGEgaHVnZQ0KPiBpbXBhY3QuDQo+IA0KDQpUaGFuayB5b3UgR3VlbnRlciBhbmQg
-QWxleGFuZHJlLA0KDQpJIHdpbGwgc3RhcnQgd29ya2luZyBvbiBhIHYyIHdpdGggYSBtZXJnZWQg
-ZHJpdmVyLg0KDQpUaGFua3MgYWdhaW4sDQpFdWdlbg0K
+Hi Anand,
+
+On 07/10/2019 15:16, Anand Moon wrote:
+> As per schematics add missing 5V_EN gpio signal to enable
+> VCC5V regulator node.
+> 
+> Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> index 42f15405750c..a9a661258886 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> @@ -94,6 +94,9 @@
+>  		regulator-max-microvolt = <5000000>;
+>  		regulator-always-on;
+>  		vin-supply = <&main_12v>;
+> +		/* U12 NB679GD 5V_EN */
+> +		gpio = <&gpio GPIOH_8 GPIO_OPEN_DRAIN>;
+> +		enable-active-high;
+
+This GPIO is handled by the BL301 SCP firmware, I'm personally against
+adding this to the DT since it's out of control of Linux or any OS.
+
+Neil
+
+>  	};
+>  
+>  	vcc_1v8: regulator-vcc_1v8 {
+> 
