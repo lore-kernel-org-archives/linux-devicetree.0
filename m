@@ -1,47 +1,69 @@
-From: Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: media: Fix id path for sun4i-a10-csi
-Date: Mon, 7 Oct 2019 13:00:40 +0200
-Message-ID: <20191007110040.2mt5uxroos3hz6ic@gilmour>
-References: <20191007102552.19808-1-alexandre.torgue@st.com>
- <20191007102552.19808-2-alexandre.torgue@st.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 4/4] net: phy: realtek: Add LED configuration support
+ for RTL8211E
+Date: Mon, 7 Oct 2019 13:02:39 +0200
+Message-ID: <20191007110239.GA21484@amd>
+References: <20190813191147.19936-1-mka@chromium.org>
+ <20190813191147.19936-5-mka@chromium.org>
+ <20190816201342.GB1646@bug>
+ <20190816212728.GW250418@google.com>
+ <20190817140502.GA5878@amd>
+ <20190819003757.GB8981@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wtovumvb4os5l27j"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191007102552.19808-2-alexandre.torgue@st.com>
+In-Reply-To: <20190819003757.GB8981@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Alexandru Ardelean <alexaundru.ardelean@analog.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, netdev@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Matthias Kaehlcke <mka@chromium.org>, jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, dmurphy@ti.com, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
 
---wtovumvb4os5l27j
+--WIyZ46R2i8wDzkSu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Alexandre,
+On Mon 2019-08-19 02:37:57, Andrew Lunn wrote:
+> > Yes, I believe the integration is neccessary. Using same binding is
+> > neccessary for that, but not sufficient. For example, we need
+> > compatible trigger names, too.
+>=20
+> Hi Pavel
+>=20
+> Please could you explain what you mean by compatible trigger names?
 
-On Mon, Oct 07, 2019 at 12:25:50PM +0200, Alexandre Torgue wrote:
-> This commit fixes id path of allwinner,sun4i-a10-csi.yaml location.
->
-> Fixes: c5e8f4ccd775 ("media: dt-bindings: media: Add Allwinner A10 CSI binding")
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Well, you attempted to put trigger names in device tree. That means
+those names should work w.r.t. LED subsystem, too.
 
-I just merged a patch addressing the same issue earlier today.
+> > So... I'd really like to see proper integration is possible before we
+> > merge this.
+>=20
+> Please let me turn that around. What do you see as being impossible at
+> the moment? What do we need to convince you about?
 
-Thanks!
-Maxime
+That locking requirements are compatible, that triggers you invented
+can be implemented by LED subsystem, ...
 
---wtovumvb4os5l27j
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--WIyZ46R2i8wDzkSu
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXZsa2AAKCRDj7w1vZxhR
-xR8JAQCMAvM7SXG96je2bRTkUdjCkS6bG6EOoW4hgbX9bxr8cwEAmc4iiWubk//+
-S/jhKMDsvRBYt8C8CRty0bIvFTuRdQg=
-=+t0N
+iEYEARECAAYFAl2bG08ACgkQMOfwapXb+vLTsACguaZUSA7o5wiU8LUngEzV9LZ2
+S4QAoIuXQiHHVs6amdFdbIvXRo7LFifl
+=yXXm
 -----END PGP SIGNATURE-----
 
---wtovumvb4os5l27j--
+--WIyZ46R2i8wDzkSu--
