@@ -1,69 +1,30 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 4/4] net: phy: realtek: Add LED configuration support
- for RTL8211E
-Date: Mon, 7 Oct 2019 13:02:39 +0200
-Message-ID: <20191007110239.GA21484@amd>
-References: <20190813191147.19936-1-mka@chromium.org>
- <20190813191147.19936-5-mka@chromium.org>
- <20190816201342.GB1646@bug>
- <20190816212728.GW250418@google.com>
- <20190817140502.GA5878@amd>
- <20190819003757.GB8981@lunn.ch>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 0/7] add Tegra194 XUSB host and pad controller support
+Date: Mon, 7 Oct 2019 13:03:11 +0200
+Message-ID: <20191007110311.GA614644@kroah.com>
+References: <20191004162906.4818-1-jckuo@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190819003757.GB8981@lunn.ch>
+In-Reply-To: <20191004162906.4818-1-jckuo@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Matthias Kaehlcke <mka@chromium.org>, jacek.anaszewski@gmail.com, linux-leds@vger.kernel.org, dmurphy@ti.com, "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+To: JC Kuo <jckuo@nvidia.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, linux-tegra@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, nkristam@nvidia.com, skomatineni@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Oct 05, 2019 at 12:28:59AM +0800, JC Kuo wrote:
+> Hi,
+> 
+> This series introduces support for Tegra194 XUSB host and pad
+> controller. Tegra194 XUSB host and pad controller are highly
+> similar to the controllers found on Tegra186. Therefore, it's
+> possible to resue xhci-tegra.c and xusb-tegra186.c for Tegra194.
 
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I've taken patches 1 and 2 through my USB tree.  If you want/need me to
+take the others, please get acks from those maintainers on them so I can
+do so.
 
-On Mon 2019-08-19 02:37:57, Andrew Lunn wrote:
-> > Yes, I believe the integration is neccessary. Using same binding is
-> > neccessary for that, but not sufficient. For example, we need
-> > compatible trigger names, too.
->=20
-> Hi Pavel
->=20
-> Please could you explain what you mean by compatible trigger names?
+thanks,
 
-Well, you attempted to put trigger names in device tree. That means
-those names should work w.r.t. LED subsystem, too.
-
-> > So... I'd really like to see proper integration is possible before we
-> > merge this.
->=20
-> Please let me turn that around. What do you see as being impossible at
-> the moment? What do we need to convince you about?
-
-That locking requirements are compatible, that triggers you invented
-can be implemented by LED subsystem, ...
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl2bG08ACgkQMOfwapXb+vLTsACguaZUSA7o5wiU8LUngEzV9LZ2
-S4QAoIuXQiHHVs6amdFdbIvXRo7LFifl
-=yXXm
------END PGP SIGNATURE-----
-
---WIyZ46R2i8wDzkSu--
+greg k-h
