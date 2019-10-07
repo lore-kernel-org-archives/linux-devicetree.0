@@ -1,33 +1,45 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH v2 4/5] MIPS: CI20: DTS: Add Leds
-Date: Mon, 7 Oct 2019 17:53:57 +0000
-Message-ID: <MWHPR2201MB12775CA989C9C00AD5E92D32C19B0@MWHPR2201MB1277.namprd22.prod.outlook.com>
-References: <fa61d681bad1d551876ce879643226dd59611316.1569955865.git.agriveaux@deutnet.info>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+From: John Stultz <john.stultz@linaro.org>
+Subject: [RFC][PATCH v2 1/5] dt-bindings: usb: dwc3: Add a property to do a CGTL soft reset on mode switching
+Date: Mon,  7 Oct 2019 17:55:49 +0000
+Message-ID: <20191007175553.66940-2-john.stultz@linaro.org>
+References: <20191007175553.66940-1-john.stultz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fa61d681bad1d551876ce879643226dd59611316.1569955865.git.agriveaux@deutnet.info>
-Content-Language: en-US
+In-Reply-To: <20191007175553.66940-1-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ralf@linux-mips.org" <ralf@linux-mips.org>, Paul Burton <pburton@wavecomp.com>, "jhogan@kernel.org" <jhogan@kernel.org>, "agriveaux@deutnet.info" <agriveaux@deutnet.info>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: John Stultz <john.stultz@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Yu Chen <chenyu56@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Provide a dt-binding for quirk needed to do a GCTL soft reset on mode
+switching
 
-Alexandre GRIVEAUX wrote:
-> Adding leds and related triggers.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Yu Chen <chenyu56@huawei.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: linux-usb@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Applied to mips-next.
-
-> commit 24b0cb4f883a
-> https://git.kernel.org/mips/c/24b0cb4f883a
->=20
-> Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
-> Signed-off-by: Paul Burton <paul.burton@mips.com>
-
-Thanks,
-    Paul
-
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index 66780a47ad85..cf4ef6c22fb3 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -77,6 +77,8 @@ Optional properties:
+ 			during HS transmit.
+  - snps,dis_metastability_quirk: when set, disable metastability workaround.
+ 			CAUTION: use only if you are absolutely sure of it.
++ - snps,gctl-reset-quirk: when set, GCTL soft reset will be executed on mode
++			switch.
+  - snps,is-utmi-l1-suspend: true when DWC3 asserts output signal
+ 			utmi_l1_suspend_n, false when asserts utmi_sleep_n
+  - snps,hird-threshold: HIRD threshold
+-- 
+2.17.1
