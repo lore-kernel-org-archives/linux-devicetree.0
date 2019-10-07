@@ -1,105 +1,59 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v18 00/19] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Date: Mon, 7 Oct 2019 01:20:34 -0700
-Message-ID: <CAFd5g47XogYaO24fHnRR9wyki_r4oQg0qSWo9kOgnXpyTuJAWw@mail.gmail.com>
-References: <CAHk-=whX-JbpM2Sc85epng_GAgGGzxRAJ2SSKkMf9N1Lsqe+OA@mail.gmail.com>
- <56e2e1a7-f8fe-765b-8452-1710b41895bf@kernel.org>
- <20191004222714.GA107737@google.com>
- <ad800337-1ae2-49d2-e715-aa1974e28a10@kernel.org>
- <20191004232955.GC12012@mit.edu>
- <CAFd5g456rBSp177EkYAwsF+KZ0rxJa90mzUpW2M3R7tWbMAh9Q@mail.gmail.com>
- <63e59b0b-b51e-01f4-6359-a134a1f903fd@kernel.org>
- <CAFd5g47wji3T9RFmqBwt+jPY0tb83y46oj_ttOq=rTX_N1Ggyg@mail.gmail.com>
- <544bdfcb-fb35-5008-ec94-8d404a08fd14@kernel.org>
- <CAFd5g467PkfELixpU0JbaepEAAD_ugAA340-uORngC-eXsQQ-g@mail.gmail.com>
- <20191006165436.GA29585@mit.edu>
+From: Ulrich Hecht <uli-qwV78thtvt0@public.gmane.org>
+Subject: [PATCH v20 0/2] PS8640 MIPI-to-eDP bridge
+Date: Mon,  7 Oct 2019 10:22:27 +0200
+Message-ID: <1570436549-8694-1-git-send-email-uli@fpond.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20191006165436.GA29585@mit.edu>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc: Petr Mladek <pmladek@suse.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Amir Goldstein <amir73il@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, Sasha Levin <Alexander.Levin@microsoft.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michael Ellerman <mpe@ellerman.id.au>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-nvdimm <linux-nvdimm@lists.01.org>, shuah <shuah@kernel.org>, Knut Omang <knut.omang@oracle.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, wfg@linux.intel.com, Joel Stanley <joel@jms.id.au>, David Rientjes <rientjes@google.com>, Jeff Dike <jdike@addtoit.com>, Dan Carpenter <dan.carpenter@oracle.com>, devicetree <devicetree@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, Bird,
- Timo
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, Ulrich Hecht <uli-qwV78thtvt0@public.gmane.org>, stonea168-9Onoh4P/yGk@public.gmane.org, ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBPY3QgNiwgMjAxOSBhdCA5OjU1IEFNIFRoZW9kb3JlIFkuIFRzJ28gPHR5dHNvQG1p
-dC5lZHU+IHdyb3RlOgo+Cj4gT24gRnJpLCBPY3QgMDQsIDIwMTkgYXQgMDY6MTg6MDRQTSAtMDcw
-MCwgQnJlbmRhbiBIaWdnaW5zIHdyb3RlOgo+ID4gPiBMZXQncyB0YWxrIGFib3V0IGN1cnJlbnQg
-c3RhdGUuIFJpZ2h0IG5vdyBrdW5pdCBpcyBpbiBsaW51eC1uZXh0IGFuZAo+ID4gPiB3ZSB3YW50
-IHRvIGFkZCBhIGZldyBtb3JlIHRlc3RzLiBXZSB3aWxsIGhhdmUgdG8gY29vcmRpbmF0ZSB0aGUg
-ZWZmb3J0Lgo+ID4gPiBPbmNlIGt1bml0IGdldCBpbnRvIG1haW5saW5lLCB0aGVuIHRoZSBuZWVk
-IGZvciB0aGlzIGNvb3JkaW5hdGlvbiBnb2VzCj4gPiA+IGRvd24uCj4gPgo+ID4gU3VyZSwgSSB3
-YXMganVzdCB0aGlua2luZyB0aGF0IGdldHRpbmcgb3RoZXIgcGVvcGxlIHRvIHdyaXRlIHRoZSB0
-ZXN0cwo+ID4gd291bGQgYmUgYmV0dGVyLiBTaW5jZSBub3Qgb25seSBpcyBpdCB0aGVuIHVzZWZ1
-bCB0byBzb21lb25lIGVsc2UsIGl0Cj4gPiBwcm92aWRlcyB0aGUgYmVzdCBwb3NzaWJsZSBleGVy
-Y2lzZSBvZiBLVW5pdC4KPgo+IFdlbGwsIG9uZSB0aGluZyB3ZSAqY2FuKiBkbyBpcyBpZiAoYSkg
-aWYgd2UgY2FuIGNyZWF0ZSBhIGtzZWxmdGVzdAo+IGJyYW5jaCB3aGljaCB3ZSBrbm93IGlzIHN0
-YWJsZSBhbmQgd29uJ3QgY2hhbmdlLCBhbmQgKGIpIHdlIGNhbiBnZXQKPiBhc3N1cmFuY2VzIHRo
-YXQgTGludXMgKndpbGwqIGFjY2VwdCB0aGF0IGJyYW5jaCBkdXJpbmcgdGhlIG5leHQgbWVyZ2UK
-PiB3aW5kb3csIHRob3NlIHN1YnN5c3RlbXMgd2hpY2ggd2FudCB0byB1c2Uga3NlbGYgdGVzdCBj
-YW4gc2ltcGx5IHB1bGwKPiBpdCBpbnRvIHRoZWlyIHRyZWUuCgpZZWFoLCBJIGNhbid0IHRoaW5r
-IG9mIGFueSByZWFzb24gdGhhdCB5b3UgaGF2ZW4ndCBvdXRsaW5lZCBhbHJlYWR5CndoeSB0aGF0
-IG1pZ2h0IG5vdCB3b3JrLCBidXQgdGhhdCBzZWVtcyBraW5kIG9mIGxpa2UgY2lyY3VtdmVudGlu
-ZwpMaW51cy4KCj4gV2UndmUgZG9uZSB0aGlzIGJlZm9yZSBpbiB0aGUgZmlsZSBzeXN0ZW0gd29y
-bGQsIHdoZW4gdGhlcmUgaGFzIGJlZW4KPiBzb21lIGNvbW1vbiBzZXQgb2YgY2hhbmdlcyBuZWVk
-ZWQgdG8gaW1wcm92ZSwgc2F5LCBEaXJlY3QgSS9PLCB3aGVyZQo+IHRoZSBjaGFuZ2VzIGFyZSBw
-dXQgaW50byBhIHN0YW5kYWxvbmUgYnJhbmNoLCBzYXksIGluIHRoZSB4ZnMgdHJlZSwKPiBhbmQg
-dGhvc2UgZmlsZSBzeXN0ZW1zIHdoaWNoIG5lZWQgaXQgYXMgYSBidWlsZGluZyBibG9jayBjYW4g
-cHVsbCBpdAo+IGludG8gdGhlaXIgdHJlZSwgYW5kIHRoZW4gYWRkIHRoZSBjaGFuZ2VzIG5lZWRl
-ZCB0byB1c2UgdGhvc2UgY2hhbmdlcwo+IGludG8gdGhlaXIgZmlsZSBzeXN0ZW0gZ2l0IHRyZWUu
-ICBUaGVzZSBjaGFuZ2VzIGFyZSBnZW5lcmFsbHkgbm90Cj4gdGVycmlibHkgY29udHJvdmVyc2lh
-bCwgYW5kIHdlJ3ZlIG5vdCBoYWQgdG8gd29ycnkgYWJvdXQgcGVvcGxlIHdhbnQKPiB0byBiaWtl
-c2hlZCB0aGUgY2hhbmdlcy4KPgo+IFRoZXJlIGlzIGEgcmlzayB3aXRoIGRvaW5nIHRoaXMgb2Yg
-Y291cnNlLCB3aGljaCBpcyB0aGF0IGlmIHRoZSBicmFuY2gKPiAqaXMqIGNvbnRyb3ZlcnNpYWws
-IG9yIGdldHMgYmlrZS1zaGVkZGVkIGZvciBzb21lIHJlYXNvbiwgdGhlbiBMaW51cwo+IGdldHMg
-dXBzZXQgYW5kIGFueSBicmFuY2hlcyB3aGljaCBkZXBlbmRlZCBvbiBzYWlkIGJyYW5jaCB3aWxs
-IGdldAo+IHJlamVjdGVkIGF0IHRoZSBuZXh0IG1lcmdlIHdpbmRvdy4gIFdoaWNoIGlzIHRoZSBy
-ZXF1aXJlbWVudCBmb3IgKGEpCj4gYW5kIChiKSBhYm92ZS4gIFByZXN1bWFibHksIHRoZSBmYWN0
-IHRoYXQgcGVvcGxlIHdlcmUgdW53aWxsaW5nIHRvIGxldAo+IEt1bml0IGxhbmQgZHVyaW5nIHRo
-aXMgbWVyZ2Ugd2luZG93IG1pZ2h0IHdpbGwgKmJlY2F1c2UqIHdlIHRoaW5rIG1vcmUKPiBjaGFu
-Z2VzIG1pZ2h0IGJlIHBlbmRpbmc/CgpNeSB1bmRlcnN0YW5kaW5nLCBiYXNlZCBvbiB3aGF0IEkg
-aGF2ZSBiZWVuIHRvbGQsIGlzIHRoYXQgd2Ugd2VyZQpzaW1wbHkgdW5sdWNreSB3aXRoIHRoZSB0
-aW1pbmcgd2hlbiBMaW51cyBwdWxsZWQgdGhlIGJyYW5jaCBpbiB0aGUKZmlyc3Qgd2VlayBvZiB0
-aGUgNS40IG1lcmdlIHdpbmRvdyAoRnJpZGF5KSwgc3VjaCB0aGF0IG9uY2UgSSBmaXhlZAp0aGUg
-ZGlyZWN0b3J5IG5hbWluZyBpc3N1ZSwgdGhlIHVwZGF0ZWQgY2hhbmdlcyBkaWRuJ3Qgc3BlbmQg
-ZW5vdWdoCnRpbWUgaW4gbGludXgtbmV4dC4gQW5kIG5vdyB3aXRoIHRoaXMgaXNzdWUgZml4ZWQg
-YW5kIEtVbml0IGJhY2sgaW4KbGludXgtbmV4dCwgaWYgbm90aGluZyBpbnRlcmVzdGluZyBoYXBw
-ZW5zIGJldHdlZW4gbm93IGFuZCA1LjUsIGl0CndpbGwgYmUgYWNjZXB0ZWQgaW4gdGhlIDUuNSBt
-ZXJnZSB3aW5kb3cuIEkgZG8gbm90IHRoaW5rIHRoYXQgYW55b25lCmlzIGV4cGVjdGluZyBhbnlt
-b3JlIGNoYW5nZXMgYmVmb3JlIG1lcmdpbmcuCgpTaHVhaCwgTGludXMsIGlzIG15IHVuZGVyc3Rh
-bmRpbmcgY29ycmVjdD8KCj4gVGhlIG90aGVyIHRoaW5nIEkgc3VwcG9zZSBJIGNhbiBkbyBpcyB0
-byBsZXQgdGhlIGV4dDQga3VuaXQgdGVzdHMgbGFuZAo+IGluIGV4dDQgdHJlZSwgYnV0IHdpdGgg
-dGhlIG5lY2Vzc2FyeSAjaWZkZWYncyBhcm91bmQgdGhpbmdzIGxpa2UKPiAiI2luY2x1ZGUgPGt1
-bml0L3Rlc3QuaD4iIHNvIHRoYXQgdGhlIGJ1aWxkIHdvbid0IGJsb3cgdXAgdy9vIGt1bml0Cj4g
-Y2hhbmdlcyBiZWluZyBpbiB0aGUgdHJlZSB0aGF0IEknbSBidWlsZGluZy4gIEl0IG1lYW5zIEkg
-d29uJ3QgYmUgYWJsZQo+IHRvIHJ1biB0aGUgdGVzdHMgd2l0aG91dCBjcmVhdGluZyBhIHRlc3Qg
-aW50ZWdyYXRpb24gYnJhbmNoIGFuZAo+IG1lcmdpbmcgaW4ga3VuaXQgYnkgaGFuZCwgd2hpY2gg
-d2lsbCBzdXBlci1hbm5veWluZywgb2YgY291cnNlLiAgQW5kCj4gaWYgc29tZSBvZiB0aGUgYmlr
-ZS1zaGVkZGluZyBpcyBpbiBLdW5pdCdzIGludGVyZmFjZXMsIHRoZW4gdGhhdAo+IGJlY29tZXMg
-cHJvYmxlbWF0aWMgYXMgd2VsbCwgc2luY2UgYW55IHRlc3RzIHRoYXQgYXJlIGluIGV4dDQuZ2l0
-IHRyZWUKPiBtaWdodCBjaGFuZ2UgaWYgcGVvcGxlIHdhbnQgdG8gcmVuYW1lIEt1bml0J3MgcHVi
-bGljYWxseSBleHBvcnRlZAo+IGZ1bmN0aW9ucyAoZm9yIGV4YW1wbGUpLgoKWWVhaCwgdGhhdCBz
-ZWVtcyBldmVuIHdvcnNlLiBJJ20gc29ycnkgdG8gaGF2ZSBjYXVzZWQgdGhpcyBmcnVzdHJhdGlv
-bi4KCj4gPiBIZXkgVGVkLCBkbyB5b3Uga25vdyBpZiB0aGF0IGV4dDQgdGltZXN0YW1wIHRlc3Qg
-Y2FuIGdvIGluIHRocm91Z2gKPiA+IGxpbnV4LWtzZWxmdGVzdD8gSXQgc2VlbWVkIGZhaXJseSBz
-ZWxmLWNvbnRhaW5lZC4gT3IgaXMgdGhhdCB3aGF0IHlvdQo+ID4gd2VyZSBzYXlpbmcgd291bGRu
-J3Qgd29yayBmb3IgeW91Pwo+Cj4gV2VsbCwgSSB3YXMgaG9waW5nIHRoYXQgd2UgbWlnaHQgc3Rh
-cnQgY3JlYXRpbmcgbW9yZSB0ZXN0cyBiZXlvbmQganVzdAo+IHRoZSBleHQ0IHRpbWVzdGFtcCB0
-ZXN0cy4uLi4KCk9rYXksIHRoYXQncyB3aGF0IEkgdGhvdWdodCAoYW5kIHdoYXQgSSBob3BlZCkg
-eW91IHdlcmUgc2F5aW5nIDotKQoKSSBob3BlIHdlIGNhbiBmaWd1cmUgb3V0IHNvbWV0aGluZyB0
-aGF0IHdpbGwgd29yayBmb3IgeW91LiBPcgpvdGhlcndpc2UgdGhhdCB5b3Ugd29uJ3QgbWluZCB3
-YWl0aW5nIHVudGlsIDUuNS4KClNvcnJ5Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbA==
+Hi!
+
+This revision fixes a minor issue that keeps the driver from probing on
+the Elm platform. Thanks to Matthias Brugger for testing.
+
+This driver seems to have fallen by the wayside because, while otherwise
+fine, it has a firmware update feature that requires a blob that is not in
+the linux-firmware repo.[1]
+
+Whatever the cause for that may be, the update code is entirely optional
+(my chip works fine with whatever firmware is currently installed), so I
+have removed it in order to get this merged after all. I have also
+followed various trivial API changes that have piled up since 2016; see
+the individual patches for details.
+
+I'm using this driver on an Acer Chromebook R13 ("Elm"); see
+https://github.com/uli/kernel/tree/elm-working-5.4.
+
+CU
+Uli
+
+[1] https://patchwork.kernel.org/patch/9427543/
+
+
+Jitao Shi (2):
+  Documentation: bridge: Add documentation for ps8640 DT properties
+  drm/bridge: Add I2C based driver for ps8640 bridge
+
+ .../devicetree/bindings/display/bridge/ps8640.txt  |  44 ++
+ drivers/gpu/drm/bridge/Kconfig                     |  12 +
+ drivers/gpu/drm/bridge/Makefile                    |   1 +
+ drivers/gpu/drm/bridge/parade-ps8640.c             | 672 +++++++++++++++++++++
+ 4 files changed, 729 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ps8640.txt
+ create mode 100644 drivers/gpu/drm/bridge/parade-ps8640.c
+
+-- 
+2.7.4
