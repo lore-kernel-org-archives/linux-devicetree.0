@@ -1,7 +1,7 @@
 From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 01/21] media: ti-vpe: Fix a parallel build issue
-Date: Mon, 7 Oct 2019 10:09:49 -0500
-Message-ID: <20191007151009.22095-2-bparrot@ti.com>
+Subject: [Patch v3 02/21] media: ti-vpe: vpe: Fix Motion Vector vpdma stride
+Date: Mon, 7 Oct 2019 10:09:50 -0500
+Message-ID: <20191007151009.22095-3-bparrot@ti.com>
 References: <20191007151009.22095-1-bparrot@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,33 +9,98 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191007151009.22095-1-bparrot@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>, Jyri Sarha <jsarha@ti.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benoit Parrot <bparrot@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-When TI CAL was introduce as another driver under platform/ti-vpe
-adding a second entry into the ti-vpe directory in the platform
-Makefile caused issues during parallel build.
+commit 52831a418fa6 ("[media] media: ti-vpe: vpe: allow use of user
+specified stride") and commit 8c1e4fa17e92 ("[media] media: ti-vpe: vpdma:
+add support for user specified stride") resulted in the Motion Vector
+stride to be the same as the image stride.
 
+This caused memory corruption in the output image as mentionned in
+commit 44f98adf71a8 ("[media] media: ti-vpe: vpe: Fix line stride
+for output motion vector").
+
+Fixes: 52831a418fa6 ("[media] media: ti-vpe: vpe: allow use of user specified stride")
+Fixes: 8c1e4fa17e92 ("[media] media: ti-vpe: vpdma: add support for user specified stride")
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
+Acked-by: Nikhil Devshatwar <nikhil.nd@ti.com>
 ---
- drivers/media/platform/Makefile | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/media/platform/ti-vpe/vpe.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 6ee7eb0d36f4..d13db96e3015 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -19,9 +19,7 @@ obj-$(CONFIG_VIDEO_VIVID)		+= vivid/
- obj-$(CONFIG_VIDEO_VIM2M)		+= vim2m.o
- obj-$(CONFIG_VIDEO_VICODEC)		+= vicodec/
+diff --git a/drivers/media/platform/ti-vpe/vpe.c b/drivers/media/platform/ti-vpe/vpe.c
+index 60b575bb44c4..5ba72445584d 100644
+--- a/drivers/media/platform/ti-vpe/vpe.c
++++ b/drivers/media/platform/ti-vpe/vpe.c
+@@ -1013,11 +1013,14 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
+ 	dma_addr_t dma_addr;
+ 	u32 flags = 0;
+ 	u32 offset = 0;
++	u32 stride;
  
--obj-$(CONFIG_VIDEO_TI_VPE)		+= ti-vpe/
--
--obj-$(CONFIG_VIDEO_TI_CAL)		+= ti-vpe/
-+obj-y	+= ti-vpe/
+ 	if (port == VPE_PORT_MV_OUT) {
+ 		vpdma_fmt = &vpdma_misc_fmts[VPDMA_DATA_FMT_MV];
+ 		dma_addr = ctx->mv_buf_dma[mv_buf_selector];
+ 		q_data = &ctx->q_data[Q_DATA_SRC];
++		stride = ALIGN((q_data->width * vpdma_fmt->depth) >> 3,
++			       VPDMA_STRIDE_ALIGN);
+ 	} else {
+ 		/* to incorporate interleaved formats */
+ 		int plane = fmt->coplanar ? p_data->vb_part : 0;
+@@ -1044,6 +1047,7 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
+ 		}
+ 		/* Apply the offset */
+ 		dma_addr += offset;
++		stride = q_data->bytesperline[VPE_LUMA];
+ 	}
  
- obj-$(CONFIG_VIDEO_MX2_EMMAPRP)		+= mx2_emmaprp.o
- obj-$(CONFIG_VIDEO_CODA)		+= coda/
+ 	if (q_data->flags & Q_DATA_FRAME_1D)
+@@ -1055,7 +1059,7 @@ static void add_out_dtd(struct vpe_ctx *ctx, int port)
+ 			   MAX_W, MAX_H);
+ 
+ 	vpdma_add_out_dtd(&ctx->desc_list, q_data->width,
+-			  q_data->bytesperline[VPE_LUMA], &q_data->c_rect,
++			  stride, &q_data->c_rect,
+ 			  vpdma_fmt, dma_addr, MAX_OUT_WIDTH_REG1,
+ 			  MAX_OUT_HEIGHT_REG1, p_data->channel, flags);
+ }
+@@ -1074,10 +1078,13 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
+ 	dma_addr_t dma_addr;
+ 	u32 flags = 0;
+ 	u32 offset = 0;
++	u32 stride;
+ 
+ 	if (port == VPE_PORT_MV_IN) {
+ 		vpdma_fmt = &vpdma_misc_fmts[VPDMA_DATA_FMT_MV];
+ 		dma_addr = ctx->mv_buf_dma[mv_buf_selector];
++		stride = ALIGN((q_data->width * vpdma_fmt->depth) >> 3,
++			       VPDMA_STRIDE_ALIGN);
+ 	} else {
+ 		/* to incorporate interleaved formats */
+ 		int plane = fmt->coplanar ? p_data->vb_part : 0;
+@@ -1104,6 +1111,7 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
+ 		}
+ 		/* Apply the offset */
+ 		dma_addr += offset;
++		stride = q_data->bytesperline[VPE_LUMA];
+ 
+ 		if (q_data->flags & Q_DATA_INTERLACED_SEQ_TB) {
+ 			/*
+@@ -1139,10 +1147,10 @@ static void add_in_dtd(struct vpe_ctx *ctx, int port)
+ 	if (p_data->vb_part && fmt->fourcc == V4L2_PIX_FMT_NV12)
+ 		frame_height /= 2;
+ 
+-	vpdma_add_in_dtd(&ctx->desc_list, q_data->width,
+-			 q_data->bytesperline[VPE_LUMA], &q_data->c_rect,
+-		vpdma_fmt, dma_addr, p_data->channel, field, flags, frame_width,
+-		frame_height, 0, 0);
++	vpdma_add_in_dtd(&ctx->desc_list, q_data->width, stride,
++			 &q_data->c_rect, vpdma_fmt, dma_addr,
++			 p_data->channel, field, flags, frame_width,
++			 frame_height, 0, 0);
+ }
+ 
+ /*
 -- 
 2.17.1
