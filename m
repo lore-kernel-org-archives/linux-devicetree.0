@@ -1,7 +1,7 @@
 From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH 2/3] dt-bindings: pinctrl: stm32: Fix 'st,syscfg' description field
-Date: Mon, 7 Oct 2019 15:44:09 +0200
-Message-ID: <20191007134410.10337-3-alexandre.torgue@st.com>
+Subject: [PATCH 3/3] dt-bindings: usb: generic-ehci: Add "companion" entry
+Date: Mon, 7 Oct 2019 15:44:10 +0200
+Message-ID: <20191007134410.10337-4-alexandre.torgue@st.com>
 References: <20191007134410.10337-1-alexandre.torgue@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,29 +12,26 @@ To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-stm32@st-md-mailman.stormreply.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As there is only one item "st,syscfg" this commit moves phandle description
-fields under "description" tag. It'll fix a validation issue seen  during
-stm32 DT check.
+"companion" entry is present in "generic.txt" usb binding file. This commit
+adds it also in generic-ehci yaml binding.
 
 Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
-index 400df2da018a..754ea7ab040a 100644
---- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
-@@ -40,10 +40,9 @@ properties:
-     allOf:
-       - $ref: "/schemas/types.yaml#/definitions/phandle-array"
-     description: Should be phandle/offset/mask
--    items:
--      - description: Phandle to the syscon node which includes IRQ mux selection.
--      - description: The offset of the IRQ mux selection register.
--      - description: The field mask of IRQ mux, needed if different of 0xf.
-+      - Phandle to the syscon node which includes IRQ mux selection.
-+      - The offset of the IRQ mux selection register.
-+      - The field mask of IRQ mux, needed if different of 0xf.
+diff --git a/Documentation/devicetree/bindings/usb/generic-ehci.yaml b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
+index 059f6ef1ad4a..f89897fe2df6 100644
+--- a/Documentation/devicetree/bindings/usb/generic-ehci.yaml
++++ b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
+@@ -63,6 +63,11 @@ properties:
+     description:
+       Set this flag to force EHCI reset after resume.
  
-   st,package:
-     allOf:
++  companion:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description:
++     Phandle of a companion.
++
+   phys: true
+ 
+ required:
 -- 
 2.17.1
