@@ -1,70 +1,51 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [RFCv1 2/5] arm64: dts: meson: Add missing pwm control gpio
- signal for pwm-regulator
-Date: Mon, 7 Oct 2019 16:20:27 +0200
-Message-ID: <8a74834e-5cfa-3f3b-9ba6-e88e265b67a0@baylibre.com>
+Subject: Re: [RFCv1 3/5] arm64: dts: meson: Add missing regulator linked to
+ VDDAO_3V3 regulator to FLASH_VDD
+Date: Mon, 7 Oct 2019 16:20:59 +0200
+Message-ID: <b73a1302-90ae-f1db-ff43-84d56ca4ba39@baylibre.com>
 References: <20191007131649.1768-1-linux.amoon@gmail.com>
- <20191007131649.1768-3-linux.amoon@gmail.com>
+ <20191007131649.1768-4-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20191007131649.1768-3-linux.amoon@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191007131649.1768-4-linux.amoon@gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Anand Moon <linux.amoon@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 07/10/2019 15:16, Anand Moon wrote:
-> As per schematics add missing VDDCPUA_PWM and VDDCPUB_PWM
-> gpio signal use to enable/disable the pwm regulator for DVFS.
+> As per schematics add missing VDDAO_3V3 power supply to FLASH_VDD
+> regulator. Also add TFLASH_VDD_EN signal name to gpio pin.
 > 
-> Fixes: d14734a04a8a (arm64: dts: meson-g12b-odroid-n2: enable DVFS)
+> Fixes: c35f6dc5c377 (arm64: dts: meson: Add minimal support for Odroid-N2)
 > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > Cc: Jerome Brunet <jbrunet@baylibre.com>
 > Cc: Neil Armstrong <narmstrong@baylibre.com>
 > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > ---
->  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 4 ++++
->  1 file changed, 4 insertions(+)
+>  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> index a9a661258886..66262a6ab3fe 100644
+> index 66262a6ab3fe..6bd23a1e7e1d 100644
 > --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
 > +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> @@ -135,6 +135,8 @@
+> @@ -51,9 +51,12 @@
+>  		regulator-min-microvolt = <3300000>;
+>  		regulator-max-microvolt = <3300000>;
 >  
->  		regulator-boot-on;
+> +		/* TFLASH_VDD_EN */
+>  		gpio = <&gpio_ao GPIOAO_8 GPIO_ACTIVE_HIGH>;
+>  		enable-active-high;
 >  		regulator-always-on;
-> +		/* VDDCPUA_PWM */
-> +		enable-gpios = <&gpio GPIOE_1 GPIO_ACTIVE_HIGH>;
+> +		/* U18 FC8731-09VF05NRR */
+> +		vin-supply = <&vddao_3v3>;
 >  	};
 >  
->  	vddcpu_b: regulator-vddcpu-b {
-> @@ -154,6 +156,8 @@
->  
->  		regulator-boot-on;
->  		regulator-always-on;
-> +		/* VDDCPUB_PWM */
-> +		enable-gpios = <&gpio GPIOE_2 GPIO_ACTIVE_HIGH>;
->  	};
->  
->  	hub_5v: regulator-hub_5v {
+>  	tf_io: gpio-regulator-tf_io {
 > 
 
-Same as 5V_EN, This GPIO is handled by the BL301 SCP firmware, I'm personally against
-adding this to the DT since it's out of control of Linux or any OS.
-
-This GPIO id controlles by the PSCI call to SCP to enable/disable
-the CPU clusters.
-
-Neil
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
